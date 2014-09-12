@@ -1,0 +1,87 @@
+<?php
+// Post Titles
+$locale['400'] = "Forhåndsvising";
+$locale['401'] = "Lagre tråd";
+$locale['402'] = "Se svar";
+$locale['403'] = "Svar på tråd";
+$locale['404'] = "Lagre svar";
+$locale['405'] = "Se endringer";
+$locale['407'] = "Slett innlegg";
+$locale['408'] = "Rediger innlegg";
+$locale['409'] = "Lagre endringer";
+// Post Preview
+$locale['420'] = "Ingen overskrift";
+$locale['421'] = "Ingen tekst, innlegget vil bli avvist hvis du ikke skriver noen tekst";
+$locale['422'] = "Forfatter:";
+$locale['423'] = "Innlegg:";
+$locale['424'] = "Bosted:";
+$locale['425'] = "Medlem siden:";
+$locale['426'] = "Skrevet d. ";
+$locale['427'] = "Redigert av ";
+$locale['428'] = " d. ";
+$locale['429'] = " skrev:";
+
+$locale['430'] = "Brukers avatar";
+$locale['431'] = "Siste innlegg";
+$locale['432'] = "Siste %s innlegg";
+// Post Error/Success
+$locale['440a'] = "Vedlegg av denne typen er ikke tillatt.";
+$locale['440b'] = "Vedlegget har ugyldig filnavn eller -størrelse.";
+$locale['441'] = "Feil: Du må angi en overskrift og/eller en tekst";
+$locale['442'] = "Tråden din er lagret";
+$locale['443'] = "Svaret ditt er lagret";
+$locale['444'] = "Tråden er slettet";
+$locale['445'] = "Innlegget er slettet";
+$locale['446'] = "Innlegget ditt er oppdatert";
+$locale['447'] = "Tilbake til tråd";
+$locale['448'] = "Tilbake til debatt";
+$locale['449'] = "Tilbake til debattoversikt";
+$locale['450'] = "Feil: Din sesjon er utløpt, vennligst logg inn igjen og skriv innlegget på nytt";
+$locale['451'] = "Følg tråden";
+$locale['452'] = "Du følger nå denne tråden";
+$locale['453'] = "Du følger ikke lengre denne tråden";
+$locale['454'] = "Dette innlegget er låst. Kontakt ordstyreren for ytterlig innformasjon.";
+$locale['455'] = "Du kan først redigere et innlegg %d minutt(er) etter at du har lagret det.";
+// Post Form
+$locale['460'] = "Overskrift";
+$locale['461'] = "Melding";
+$locale['462'] = "Skriftfarge: ";
+$locale['463'] = "Valg";
+$locale['464'] = "Legg ved fil";
+$locale['465'] = " (Valgfritt)";
+$locale['466'] = "Maks. filstørrelse: %s / Tillatte filtyper: %s";
+$locale['467'] = "Start avstemming (valgfritt)";
+$locale['468'] = "Endre avstemming";
+$locale['469'] = "Avstemmingstittel";
+$locale['470'] = "Avstemmingsvalg";
+$locale['471'] = "Legg til valg";
+$locale['472'] = "Oppdater";
+$locale['473'] = "Slett";
+$locale['474'] = "Redigeringsårsak";
+// Post Form Options
+$locale['480'] = "Lås tråd til toppen av listen";
+$locale['481'] = "Lås tråd";
+$locale['482'] = "Slå av smilefjes i innlegget";
+$locale['483'] = "Vis signaturen min i innlegget";
+$locale['484'] = "Slett dette innlegget";
+$locale['485'] = "Slett vedlegg -";
+$locale['486'] = "Gi beskjed når det skrives svar";
+$locale['487'] = "Skjul redigering";
+$locale['488'] = "Lås innlegg";
+// Post Access Violation
+$locale['500'] = "Du har ikke rettigheter til å redigere dette innlegget.";
+// Forum Post Merger
+$locale['520'] = "Innlegget er lagret";
+
+// Search Forum Form
+$locale['530'] = "Søk i forum";
+$locale['531'] = "Søkeord";
+$locale['532'] = "Søk";
+
+// Forum Notification Email
+$locale['550'] = "Melding om svar på tråden - {THREAD_SUBJECT}";
+$locale['551'] = "Hei {USERNAME},Et svar har blitt skrevet i debatten '{THREAD_SUBJECT}' som du følger med på ".$settings['sitename'].". Du kan bruke denne lenken for å se svaret:
+{THREAD_URL}
+Hvis du ikke  ønsker å følge denne tråden kan du klikke 'Stopp følging av tråd' i bunnen av tråden.
+Vennlig hilsen ".$settings['siteusername'].".";
+?>

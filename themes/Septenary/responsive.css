@@ -1,0 +1,33 @@
+html {
+   -webkit-text-size-adjust: none;
+}
+.video embed,
+.video object,
+.video iframe {
+   width: 100%;
+   height: auto;
+}
+img{
+	max-width:100%;
+	height: auto;
+   	width: auto\9; /* ie8 */
+}
+
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+	nav{width:100%;}
+}
+
+@media only screen and (max-width: 767px) {
+	header {height: 150px;}
+	header #logo, header #search-box{margin:0 auto; text-align:center;}
+	nav {width:100%;background:none;height:auto;margin-top:10px;margin-left:-10px;}
+	nav ul {width:100%;}
+	nav ul li {float: none;padding: 6px 5px 0px 5px; background-color:#111111;border:1px solid #333333;text-align:center;}
+	nav  a:hover { background: transparent; }
+	#content{background-color:#ffffff;}
+	
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	
+}
