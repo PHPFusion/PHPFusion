@@ -1,0 +1,76 @@
+[30-Aug-2014 10:23:39 Europe/London] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42S22]: Column not found: 1054 Unknown column 'template_language' in 'field list'' in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php:37
+Stack trace:
+#0 /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php(37): PDOStatement->execute()
+#1 /home/nextphpf/public_html/dev7/administration/email.php(83): dbquery('SELECT template...')
+#2 {main}
+  thrown in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php on line 37
+[30-Aug-2014 10:23:41 Europe/London] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42S22]: Column not found: 1054 Unknown column 'template_language' in 'field list'' in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php:37
+Stack trace:
+#0 /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php(37): PDOStatement->execute()
+#1 /home/nextphpf/public_html/dev7/administration/email.php(83): dbquery('SELECT template...')
+#2 {main}
+  thrown in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php on line 37
+[30-Aug-2014 10:24:01 Europe/London] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42S22]: Column not found: 1054 Unknown column 'template_language' in 'field list'' in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php:37
+Stack trace:
+#0 /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php(37): PDOStatement->execute()
+#1 /home/nextphpf/public_html/dev7/administration/email.php(83): dbquery('SELECT template...')
+#2 {main}
+  thrown in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php on line 37
+[30-Aug-2014 13:05:51 Europe/London] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE rank_language='English' AND rank_apply='103'' at line 1' in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php:65
+Stack trace:
+#0 /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php(65): PDOStatement->execute()
+#1 /home/nextphpf/public_html/dev7/administration/forum_ranks.php(59): dbcount('(rank_id)', 'fusion7v6ZY_for...', 'WHERE rank_lang...')
+#2 {main}
+  thrown in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php on line 65
+[30-Aug-2014 13:07:33 Europe/London] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE rank_language='English' AND rank_apply='103'' at line 1' in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php:65
+Stack trace:
+#0 /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php(65): PDOStatement->execute()
+#1 /home/nextphpf/public_html/dev7/administration/forum_ranks.php(59): dbcount('(rank_id)', 'fusion7v6ZY_for...', 'WHERE rank_lang...')
+#2 {main}
+  thrown in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php on line 65
+[30-Aug-2014 13:32:57 Europe/London] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM fusion7v6ZY_email_templates WHERE template_language !='English' AND templat' at line 1' in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php:37
+Stack trace:
+#0 /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php(37): PDOStatement->execute()
+#1 /home/nextphpf/public_html/dev7/administration/settings_languages.php(103): dbquery('DELETE FROM FRO...')
+#2 {main}
+  thrown in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php on line 37
+[30-Aug-2014 13:35:01 Europe/London] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM fusion7v6ZY_forum_ranks WHERE rank_language !='English' AND rank_language !' at line 1' in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php:37
+Stack trace:
+#0 /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php(37): PDOStatement->execute()
+#1 /home/nextphpf/public_html/dev7/administration/settings_languages.php(108): dbquery('DELETE FROM FRO...')
+#2 {main}
+  thrown in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php on line 37
+[30-Aug-2014 13:35:41 Europe/London] PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42S22]: Column not found: 1054 Unknown column 'forum_language' in 'field list'' in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php:37
+Stack trace:
+#0 /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php(37): PDOStatement->execute()
+#1 /home/nextphpf/public_html/dev7/administration/settings_languages.php(179): dbquery('SELECT forum_la...')
+#2 {main}
+  thrown in /home/nextphpf/public_html/dev7/includes/db_handlers/pdo_functions_include.php on line 37
+[31-Aug-2014 17:15:01 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 16
+[31-Aug-2014 17:18:38 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 24
+[31-Aug-2014 17:18:47 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 13
+[31-Aug-2014 17:19:12 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 13
+[31-Aug-2014 17:20:24 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 25
+[31-Aug-2014 17:22:05 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:22:16 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:22:46 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:23:58 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:24:14 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:36:28 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:36:44 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:37:25 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:37:38 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:37:57 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:38:02 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:38:06 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:38:09 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:38:13 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:38:21 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:38:30 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:38:37 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:38:53 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:39:05 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:40:21 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:40:25 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:40:31 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2
+[31-Aug-2014 17:40:39 Europe/London] PHP Parse error:  syntax error, unexpected T_NS_SEPARATOR, expecting ',' or ';' in /home/nextphpf/public_html/dev7/administration/custom_pages.php(123) : eval()'d code on line 2

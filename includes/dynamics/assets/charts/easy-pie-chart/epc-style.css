@@ -1,0 +1,14 @@
+.epc-chart {
+    width:110px;
+	text-align:center;
+	margin:0 10px;
+	float:left;
+}
+.epc-percentage,
+.epc-label {
+    color:#666666;
+    font-weight: 100;
+    font-size: 12px;
+	margin-top:5px;
+}
+.epc-bold {font-weight: bold;}
