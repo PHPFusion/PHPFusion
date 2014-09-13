@@ -231,6 +231,7 @@ Regards,\n
     //Language Selection
     $locale['global_ML100'] = "Language:";
     $locale['global_ML101'] = "- Select Language -";
+	$locale['global_ML102'] = "Site language";
     // Tokens
     $locale['token_error_title'] = "Token Error";
     $locale['token_error']       = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";
