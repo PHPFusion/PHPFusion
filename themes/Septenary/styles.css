@@ -836,9 +836,8 @@ padding-left: 22px;
 
 
 .nocomments-message {
-	font-size: 12px;
-	background: #E8E8E8;
-	border: 1px solid #6B6B6B;
+	background: #f6f6f6;
+	border: 1px solid rgb(204,204,204);
 	padding: 10px 0 10px 20px;
 	margin-bottom: 20px;
 }
