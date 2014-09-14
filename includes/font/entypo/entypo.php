@@ -1,5 +1,5 @@
 <?php
-    require_once dirname(__FILE__)."../../../../../maincore.php";
+    require_once dirname(__FILE__)."../../../../maincore.php";
     require_once THEMES."templates/header.php";
 
     class icon {
