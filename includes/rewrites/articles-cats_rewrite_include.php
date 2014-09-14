@@ -20,19 +20,10 @@
     }
 
     $regex = array("%article_cat_id%" => "([0-9]+)", "%article_cat_title%" => "([a-zA-Z0-9-_]+)");
-    $pattern = array(//"articles" => "articles.php",
-                     "%article_cat_id%/articles/%article_cat_title%" => "articles.php?cat_id=%article_cat_id%");
-
-    /* $alias_pattern = array(
-        "articles/%alias%" => "%alias_target%",
-        "articles/%alias%#comments" => "%alias_target%#comments",
-        "articles/%alias%/%news_step%/%news_rowstart%" => "%alias_target%&amp;step=%news_step%&amp;rowstart=%news_rowstart%",
-        "articles/%alias%/%news_step%" => "%alias_target%&amp;step=%news_step%"
-    ); */
+    $pattern = array("article-category/%article_cat_id%/%article_cat_title%" => "articles.php?cat_id=%article_cat_id%");
 
     $dir_path = ROOT;
     $dbname = DB_ARTICLE_CATS;
     $dbid = array("%article_cat_id%" => "article_cat_id");
     $dbinfo = array("%article_cat_title%" => "article_cat_name");
-    // http://192.168.68.200/dev7/articles.php?cat_id=3
 ?>
