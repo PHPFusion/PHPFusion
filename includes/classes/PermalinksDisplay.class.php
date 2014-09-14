@@ -142,7 +142,9 @@
         * @data_type Boolean
         * @access protected
         */
-        public $debug = false;
+        private $debug = false;
+        private $sniffer_debug = false;
+        private $regexDebug = false;
 
         /*
         * Main Function : Handles the Output
@@ -326,17 +328,22 @@
         * @access private
         */
         private function sniffPatterns() {
+            //print_p(stripinput($this->output)); gives us ../../ which is not.
             if (is_array($this->patterns_regex)) {
                 foreach ($this->patterns_regex as $type => $values) {
                     if (is_array($this->patterns_regex[$type])) {
                         // $type refers to the Patterns type, i.e, news, threads, articles, etc
                         foreach ($this->patterns_regex[$type] as $key => $search) {
+                            $this->sniffer_debug ? print_p("Sniffing $search in..") : '';
+                            $this->sniffer_debug ? print_p($this->dbid[$type]) : '';
                             // As sniffPatterns is use to Detect ID to fetch Data from DB, so we will not use it for types who have no DB_ID
                             if (isset($this->dbid[$type])) {
                                 // If current Pattern is found in the Output, then continue.
                                 if (preg_match($search, $this->output)) {
                                     // Store all the matches into the $matches array
                                     preg_match_all($search, $this->output, $matches);
+                                    $this->sniffer_debug ? print_p("Matches") : '';
+                                    $this->sniffer_debug ? print_p($matches) : '';
                                     // Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
                                     $tag       = $this->getUniqueIDtag($type);
                                     $clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
@@ -347,6 +354,7 @@
                                         $found_matches = array_unique($matches[$pos]); // This is to remove duplicate matches
                                         // Each Match is Added into the Array
                                         // Example: $this->id_cache[news][news_id][] = $match;
+
                                         foreach ($found_matches as $mkey => $match) {
                                             $this->CacheInsertID($type, $match);
                                         }
@@ -354,11 +362,12 @@
                                     }
                                 }
                             }
+                            }
                         }
                     }
                 }
             }
-        }
+
 
         /*
         * Fetch : Fetch the Data for the matched IDs in the output
@@ -466,12 +475,15 @@
         private function replacePatterns() {
             if (is_array($this->pattern_search)) {
                 foreach ($this->pattern_search as $type => $values) {
+                    //print_p($values);
                     if (is_array($this->patterns_regex[$type])) {
                         foreach ($this->patterns_regex[$type] as $key => $search) {
+                            $this->regexDebug ? print_p($search) : '';
                             // If the Regex Pattern is found in the Output, then continue
                             if (preg_match($search, $this->output)) {
                                 // Store all the Matches in the $matches array
                                 preg_match_all($search, $this->output, $matches);
+                                $this->regexDebug ? print_p($matches) : '';
                                 // Replace the Unique ID Tag with the Regex Code
                                 // Example: Replace %news_id% with ([0-9]+)
                                 if (isset($this->dbid[$type])) {
@@ -519,7 +531,7 @@
                                         // Replace Tags with their suitable matches
                                         $replace = $this->replaceOtherTags($type, $this->pattern_search[$type][$key], $this->pattern_replace[$type][$key], $matches, $count);
                                         // Replacing the current match with suitable Replacement in Output
-                                        $this->output = preg_replace("#".$match."#is", $this->wrapQuotes($replace), $this->output);
+                                        $this->output = preg_replace("#".$match."#i", $this->wrapQuotes($replace), $this->output);
                                     }
                                 }
                             }
@@ -600,7 +612,7 @@
                             //echo $search."<br />";
                             //echo $match."<br />";
                             // Replacing the current match with suitable Replacement in Output
-                            $this->output = preg_replace("#".$match."#is", $this->wrapQuotes($replace_str), $this->output);
+                            $this->output = preg_replace("#".$match."#i", $this->wrapQuotes($replace_str), $this->output);
                         }
                     }
                 }
@@ -676,7 +688,7 @@
                             // Now Replace Pattern Tags with suitable Regex Codes
                             $search = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $search);
                             $search = $this->cleanRegex($search);
-                            $search = "#^".$search."$#";
+                            $search = "#^".$search."$";
                             // If the Pattern matches with URI
                             if (preg_match($search, $current_uri, $matches)) {
                                 $target_url = $replace;
@@ -965,7 +977,7 @@
                             }
                             //$regex = $this->appendDirPath($regex,$type);
                             $regex                             = $this->wrapQuotes($regex);
-                            $this->patterns_regex[$type][$key] = "#".$regex."#is";
+                            $this->patterns_regex[$type][$key] = "#".$regex."#i";
                         }
                     }
                 }
@@ -989,7 +1001,7 @@
                 $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
             }
             $regex = $this->wrapQuotes($regex);
-            $regex = "#".$regex."#is";
+            $regex = "#".$regex."#i";
             return $regex;
         }
 
@@ -1033,9 +1045,10 @@
         * @access private
         */
         private function appendRootAll() {
-            if (preg_match("/(href|src)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/si", $this->output)) {
+            if (preg_match("/(href|src)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
                 $basedir      = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
-                $this->output = preg_replace("/(href|src)='(".$basedir.")*([^\']*)'/si", "$1='".ROOT."$3'", $this->output);
+                //$this->output = preg_replace("/(href|src)='(".$basedir.")*([^\']*)'/i", "$1='".ROOT."$3'", $this->output);
+                $this->output = preg_replace("/(href|src)='(".$basedir.")*([^\']*)'/i", "$1='".ROOT."$3'", $this->output);
             }
         }
 
@@ -1080,10 +1093,10 @@
             if (function_exists('iconv')) {
                 $res = iconv("UTF-8", "ASCII//TRANSLIT", $res);
             }
-            $res = preg_replace("/&([^;]+);/is", "", $res); // Remove all Special entities like &#39;, &#copy;
-            $res = preg_replace("/[^a-zA-Z0-9_\.\/#|+ -]/is", "", $res); // # is allowed in some cases(like in threads for #post_10)
-            $res = preg_replace("/[\s]+/is", $delimiter, $res); // Replace All <space> by Delimiter
-            $res = preg_replace("/[\\".$delimiter."]+/is", $delimiter, $res); // Replace multiple occurences of Delimiter by 1 occurence only
+            $res = preg_replace("/&([^;]+);/i", "", $res); // Remove all Special entities like &#39;, &#copy;
+            $res = preg_replace("/[^a-zA-Z0-9_\.\/#|+ -]/i", "", $res); // # is allowed in some cases(like in threads for #post_10)
+            $res = preg_replace("/[\s]+/i", $delimiter, $res); // Replace All <space> by Delimiter
+            $res = preg_replace("/[\\".$delimiter."]+/i", $delimiter, $res); // Replace multiple occurences of Delimiter by 1 occurence only
             $res = strtolower(trim($res, "-"));
             return $res;
         }
