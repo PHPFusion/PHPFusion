@@ -270,8 +270,8 @@
             }
             opentable($locale['400'].": ".$data['download_title']);
             echo "<ol class='breadcrumb'>\n";
-            echo "<li><a href='".FUSION_SELF."'>".$locale['417']."</a> </li>\n";
-            echo "<li><a href='".FUSION_SELF."?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a></li>\n";
+            echo "<li><a href='".BASEDIR."downloads.php'>".$locale['417']."</a> </li>\n";
+            echo "<li><a href='".BASEDIR."downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a></li>\n";
             echo "<li>".$data['download_title']."</li>\n";
             echo "</ol>\n";
             echo "<!--pre_download_details-->\n";

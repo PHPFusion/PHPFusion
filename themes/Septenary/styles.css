@@ -46,6 +46,11 @@ body {
 	color: #555555;
 	font: 14px/21px 'helvetica neue',Arial,Tahoma,Century gothic, sans-serif !important;
 }
+/* Icon Font Size - adjust in relative to font: 14/21. +1/-1 to both if change*/
+button > .entypo {
+    font-size: 19px !Important;
+    line-height: 20px !Important;
+}
 a{
 	color: #606C88;
 	text-decoration: none;
