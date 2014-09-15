@@ -25,7 +25,7 @@ $posts_per_page = $settings['posts_per_page'];
 add_to_title($locale['global_200'].$locale['400']);
 
 if (!isset($_GET['thread_id']) && isset($_GET['pid']) && isnum($_GET['pid'])) {
-	$result = dbquery("SELECT thread_id FROM ".DB_POSTS." WHERE post_id='".$_GET['pid']."' LIMIT 1");
+	$result = dbquery("SELECT thread_id FROM ".DB_POSTS." WHERE post_id='".$_GET['pid']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		redirect("viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$_GET['pid']."#post_".$_GET['pid']);
