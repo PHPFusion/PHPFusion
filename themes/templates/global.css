@@ -13,7 +13,7 @@ dl, dt, dd {
 }
 .forum_cat_name h3,
 .forum_name h3 {
-	font-size: 12px;
+	/* font-size: 12px; */
 	margin: 0;
 }
 .forum_name h3 {

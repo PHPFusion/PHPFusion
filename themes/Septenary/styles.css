@@ -27,6 +27,13 @@ hr.side-hr {
 	font-style: normal;
 }
 
+@font-face {
+    font-family: 'NotoSans';
+    src: url('font/NotoSans-Regular.ttf') format('truetype');
+    font-weight:normal;
+    font-style:normal;
+}
+
 html, body {
 	width:100%; 
 	padding:0; 
@@ -44,7 +51,7 @@ body {
 	background: linear-gradient(to bottom,  #DBDBDB 0%,#DDDDDD 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#DBDBDB', endColorstr='#DDDDDD',GradientType=0 ); /* IE6-8 */
 	color: #555555;
-	font: 14px/21px 'helvetica neue',Arial,Tahoma,Century gothic, sans-serif !important;
+	font: 14px/21px 'NotoSans', 'Helvetica Neue', Arial,Tahoma,Century gothic, sans-serif !important;
 }
 /* Icon Font Size - adjust in relative to font: 14/21. +1/-1 to both if change*/
 button > .entypo {
@@ -517,9 +524,13 @@ ul.list li a:hover {
     color: rgb(51, 153, 255);
     outline: none;
 }
-.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+.nav-tabs > li > a:hover, .nav-tabs > li > a:hover {
     color: #444;
-    border: 1px solid transparent !important;
+}
+
+.nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    color: #444 !important;
+    border-bottom: 2px solid #fff !important;
 }
 
 .tab-content {
@@ -1022,13 +1033,81 @@ div.emulated-fieldset div.attachments-list {
 	margin: 2px 0 2px 0;
 	padding: 2px 2px 3px 2px;
 }
+/* Forum */
 .forum-caption {
-	font-size: 11px;
-	font-weight: bold;
-	color: #888888;
-	background-color: #F9F9F9;
-	padding: 2px 4px 4px 4px;
+    background-color: rgb(55, 73, 94);
+    color: rgb(116, 151, 184);
+	padding: 10px !important;
 	margin-bottom: 10px;
+    border-bottom:0px !important;
+    border-top: 1px solid #CCC !important;
+    font-weight:normal !important;
+}
+.forum-cat-description {
+    font-weight:normal !Important; /* override BS */
+}
+.forum-caption a {
+    font-size:18px !important;
+    font-weight: normal;
+}
+.forum_idx_table {
+     margin-bottom:20px !important;
+}
+
+.forum_idx_table td:first-child, .forum_idx_table th:first-child {
+    padding: 10px 0px 10px 15px !important;
+}
+.forum_idx_table th:first-child {
+    color: #fff;
+}
+.forum_idx_table td, .forum {
+    padding:20px 10px !important;
+}
+.forum-icon {
+    background: #fff !Important;
+}
+.forum-icon img {
+    max-width:25px;
+    margin-top: 11px !important;
+}
+.lastpost-avatar img {
+    width: 60px !important;
+}
+.forum-table-heading {
+    border-bottom: 0 !important;
+}
+.forum-table-container {
+    background-color: #f7f7f7;
+    font-size:17px;
+}
+.forum-cat-description {
+    font-size:14px;
+}
+.lastpost-title {
+
+}
+.lastpost-user {
+
+}
+
+.forum-name h3 {
+    margin:0 0 5px;
+    line-height:25px;
+}
+.forum-name h3 a {
+    font-size:16px;
+    font-weight: normal;
+    display: inline-block;
+}
+.forum-description {
+    color: rgb(117, 137, 156);
+}
+.forum-moderators {
+    font-size:13px;
+}
+.small {
+    font-size: 14px !Important;
+
 }
 .forum_breadcrumbs {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -1065,6 +1144,9 @@ div.emulated-fieldset div.attachments-list {
 .forum_thread_userbar {
 	border-bottom: 2px dashed #FFFFFF;
 }
+
+
+
 .profile, .profile_category {
 	width: 90%;
 }
