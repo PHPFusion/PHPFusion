@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 
 if (isset($_POST['previewreply'])) {
-	$message = trim(stripinput(censorwords($_POST['message'])));
+	$message = form_sanitizer($_POST['message'], '', 'message');
 	$sig_checked = isset($_POST['show_sig']) ? " checked='checked'" : "";
 	$disable_smileys_check = isset($_POST['disable_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? " checked='checked'" : "";
 	if ($settings['thread_notify']) $notify_checked = isset($_POST['notify_me']) ? " checked='checked'" : "";
@@ -40,14 +40,14 @@ if (isset($_POST['previewreply'])) {
 	$is_mod = iMOD && iUSER < "102" ? TRUE : FALSE;
 	opentable($locale['402']);
 	echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><span class='small'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</span></div>\n";
-	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
+	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border table table-responsive'>\n<tr>\n";
 	echo "<td colspan='2' class='tbl2'><strong>".$tdata['thread_subject']."</strong></td>\n</tr>\n";
 	echo "<tr>\n<td class='tbl2' style='width:140px;'>".profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status'])."</td>\n";
 	echo "<td class='tbl2'>".$locale['426'].showdate("forumdate", time())."</td>\n";
 	echo "</tr>\n<tr>\n<td valign='top' width='140' class='tbl2'>\n";
-	if ($userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar'])) {
-		echo "<img src='".IMAGES."avatars/".$userdata['user_avatar']."' alt='' /><br /><br />\n";
-	}
+	echo "<div class='thread_avatar m-b-10'>\n";
+	echo display_avatar($userdata, '100px');
+	echo "</div>\n";
 	echo "<span class='small'>".getuserlevel($userdata['user_level'])."</span><br /><br />\n";
 	echo "<span class='small'><strong>".$locale['423']."</strong> ".$userdata['user_posts']."</span><br />\n";
 	echo "<span class='small'><strong>".$locale['425']."</strong> ".showdate("shortdate", $userdata['user_joined'])."</span><br />\n";
@@ -55,14 +55,14 @@ if (isset($_POST['previewreply'])) {
 	echo "</tr>\n</table>\n";
 	closetable();
 }
-if (isset($_POST['postreply'])) {
-	$message = trim(stripinput(censorwords($_POST['message'])));
+if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
+	$message = form_sanitizer($_POST['message'], '', 'message'); // trim(stripinput(censorwords($_POST['message'])));
 	$flood = FALSE;
 	$error = 0;
 	$sig = isset($_POST['show_sig']) ? "1" : "0";
 	$smileys = isset($_POST['disable_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? "0" : "1";
 	if (iMEMBER) {
-		if ($message != "") {
+		if (!defined("FUSION_NULL")) { // token check and form sanitizer check
 			require_once INCLUDES."flood_include.php";
 			if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'")) {
 				if ($fdata['forum_merge'] && $tdata['thread_lastuser'] == $userdata['user_id']) {
@@ -167,14 +167,16 @@ if (isset($_POST['postreply'])) {
 	echo "<!--pre_postreply-->";
 	opentable($locale['403']);
 	if (!isset($_POST['previewreply'])) echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
-	echo "<form name='inputform' method='post' action='".FUSION_SELF."?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' enctype='multipart/form-data'>\n";
-	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
-	echo "<td valign='top' width='145' class='tbl2'>".$locale['461']."</td>\n";
-	echo "<td class='tbl1'><textarea name='message' cols='60' rows='15' class='textbox' style='width:98%'>$message</textarea></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='145' class='tbl2'>&nbsp;</td>\n";
-	echo "<td class='tbl1'>".display_bbcodes("99%", "message")."</td>\n";
-	echo "</tr>\n<tr>\n";
+
+	echo openform('input_form', 'input_form', 'post', FUSION_SELF."?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('enc_type'=>1));
+
+
+	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border table table-responsive'>\n<tbody>\n<tr>\n";
+	echo "<td valign='top' width='145' class='tbl2'><label for='message'>".$locale['461']."</label><span class='required'>*</span></td>\n";
+	echo "<td class='tbl1'>\n";
+	echo form_textarea('', 'message', 'message', $message, array('bbcode'=>1, 'required'=>1));
+	//echo "<textarea name='message' cols='60' rows='15' class='textbox' style='width:98%'>$message</textarea></td>\n";
+	echo "</td>\n</tr>\n";
 	echo "<td valign='top' width='145' class='tbl2'>".$locale['463']."</td>\n";
 	echo "<td class='tbl1'>\n";
 	echo "<label><input type='checkbox' name='disable_smileys' value='1'".$disable_smileys_check." /> ".$locale['482']."</label>";
@@ -203,9 +205,10 @@ if (isset($_POST['postreply'])) {
 		echo "</tr>\n";
 	}
 	echo "<tr>\n<td align='center' colspan='2' class='tbl1'>\n";
-	echo "<input type='submit' name='previewreply' value='".$locale['402']."' class='button' />\n";
-	echo "<input type='submit' name='postreply' value='".$locale['404']."' class='button' />\n";
-	echo "</td>\n</tr>\n</table>\n</form>\n";
+	echo form_button($locale['402'], 'previewreply', 'previewreply', $locale['402'], array('class'=>'btn-primary m-r-10'));
+	echo form_button($locale['404'], 'postreply', 'postreply', $locale['404'], array('class'=>'btn-primary m-r-10'));
+	echo "</td>\n</tr>\n</tbody>\n</table>\n";
+	echo closeform();
 	closetable();
 	echo "<!--sub_postreply-->";
 	if ($settings['forum_last_posts_reply'] != "0") {
@@ -224,7 +227,7 @@ if (isset($_POST['postreply'])) {
 			}
 			opentable($title);
 			echo "<div style='max-height:350px;overflow:auto;'>\n";
-			echo "<table cellpadding='1' cellspacing='1' width='100%' class='tbl-border forum_thread_table'>\n";
+			echo "<table cellpadding='1' cellspacing='1' width='100%' class='tbl-border forum_thread_table table table-responsive'>\n";
 			$i = $settings['forum_last_posts_reply'];
 			while ($data = dbarray($result)) {
 				$message = $data['post_message'];
@@ -240,11 +243,7 @@ if (isset($_POST['postreply'])) {
 				echo "<div class='small'>".$locale['426'].showdate("forumdate", $data['post_datestamp'])."</div>\n";
 				echo "</td>\n";
 				echo "</tr>\n<tr>\n<td valign='top' class='tbl2 forum_thread_user_info' style='width:10%'>\n";
-				if ($data['user_avatar'] && file_exists(IMAGES."avatars/".$data['user_avatar'])) {
-					echo "<img src='".IMAGES."avatars/".$data['user_avatar']."' alt='".$locale['430']."' style='height:50px;' />\n";
-				} else {
-					echo "<img src='".IMAGES."avatars/noavatar50.png' alt='".$locale['430']."' />\n";
-				}
+				echo display_avatar($data, '50px');
 				echo "</td>\n<td valign='top' class='tbl1 forum_thread_user_post'>\n";
 				echo nl2br($message);
 				echo "</td>\n</tr>\n";

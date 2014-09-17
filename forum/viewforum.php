@@ -232,8 +232,7 @@ if ($rows > $threads_per_page) {
 	$page_nav = "<div id='pagenav' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $threads_per_page, $rows, 3, FUSION_SELF."?forum_id=".$_GET['forum_id'].$filter_url."")."</div>\n";
 }
 // Add filter
-echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right',
-																												  'type' => 'button'));
+echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right', 'type' => 'button'));
 echo $page_nav;
 echo "</div>\n";
 // filter class extract
@@ -425,7 +424,7 @@ if ($rows) {
 			echo "</tr>\n";
 		}
 	} else {
-		echo "<tr>\n<td class='text-center' colspan='6'>No thread found.</td>\n</tr>\n";
+		echo "<tr>\n<td class='text-center' colspan='6'>".$locale['574']."</td>\n</tr>\n";
 	}
 	echo "</tbody>\n</table><!--sub_forum_table-->\n";
 } else {

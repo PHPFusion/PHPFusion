@@ -189,14 +189,43 @@ opentable($locale['500']);
 $caption = $fdata['forum_cat_name']." &raquo; <a href='viewforum.php?forum_id=".$fdata['forum_id']."'>".$fdata['forum_name']."</a>";
 echo "<!--pre_forum_thread--><div class='tbl2 forum_breadcrumbs' style='margin:0px 0px 4px 0px'><a href='index.php' id='top'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
 
-// thread
-list($rows, $last_post) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id) FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND post_hidden='0' GROUP BY thread_id"));
+// thread & filters
+if (isset($_GET['filter']) && $_GET['filter'] == 1) {
+	$time = isset($_GET['time']) && isnum($_GET['time']) ? $_GET['time'] : '';
+	$type = isset($_GET['type']) && isnum($_GET['type']) ? $_GET['type'] : '';
+	$order = isset($_GET['order']) && isnum($_GET['order']) ? $_GET['order'] : '';
+	$cond1 = '';
+	$col_time = 'p.post_datestamp';
+	if ($col_time && $time) {
+		$time_array = array('1' => time()-(24*60*60), '2' => time()-(7*24*60*60), '3' => time()-(30*24*60*60));
+		$cond1 = "AND ($col_time BETWEEN '".$time_array[$time]."' AND '".time()."') ";
+	}
+	if ($type) {
+		if ($type == 1) {
+			$cond1 .= "AND (attach_name IS NULL OR attach_name='') AND (forum_poll_title IS NULL OR forum_poll_title='') ";
+		} elseif ($type == 2) {
+			$cond1 .= "AND attach_name !='' AND forum_poll_title='' ";
+		} elseif ($type == 3) {
+			$cond1 .= "AND attach_name ='' AND forum_poll_title !='' ";
+		}
+	}
+	$cond2 = ($order) ? "DESC" : "ASC";
+	list($rows, $last_post) = dbarraynum(dbquery("SELECT COUNT(p.post_id), MAX(p.post_id)
+                FROM ".DB_POSTS." p
+				INNER JOIN ".DB_THREADS." t ON t.thread_id = p.thread_id
+                LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
+                LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
+                LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
+                LEFT JOIN ".DB_FORUM_POLLS." poll ON poll.thread_id = t.thread_id
+                WHERE t.thread_id='".$_GET['thread_id']."' AND thread_hidden='0' $cond1
+                GROUP BY t.thread_id"));
+} else {
+	list($rows, $last_post) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id) FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND post_hidden='0' GROUP BY thread_id"));
+}
+
 
 if (($rows > $posts_per_page) || ($can_post || $can_reply)) {
 	echo "<table cellspacing='0' cellpadding='0' width='100%'>\n<tr>\n";
-	if ($rows > $posts_per_page) {
-		echo "<td style='padding:4px 0px 4px 0px'>".makepagenav($_GET['rowstart'], $posts_per_page, $rows, 3, FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;")."</td>\n";
-	}
 	if (iMEMBER && $can_post) {
 		echo "<td align='right' style='padding:0px 0px 4px 0px'>\n<!--pre_forum_buttons-->\n";
 		if ($can_post) {
@@ -212,7 +241,114 @@ if (($rows > $posts_per_page) || ($can_post || $can_reply)) {
 	echo "</tr>\n</table>\n";
 }
 
+
+// forum jumper.
+echo "<div class='forum-table-container panel-body'>\n";
+$forum_list = array();
+$current_cat = "";
+$result2 = dbquery("SELECT f.forum_id, f.forum_name, f2.forum_id AS forum_cat_id, f2.forum_name AS forum_cat_name
+                    FROM ".DB_FORUMS." f
+                    INNER JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
+                    WHERE ".groupaccess('f.forum_access')." AND f.forum_cat!='0' ORDER BY f2.forum_order ASC, f.forum_order ASC");
+// group.
+
+while ($data2 = dbarray($result2)) {
+	// first, we sort the items out into parent-child array.
+	if ($data2['forum_cat_name'] != $current_cat) {
+		$forum_list[$data2['forum_cat_id']] = array('text' => $data2['forum_cat_name']);
+		$forum_list[$data2['forum_cat_id']]['children'][] = array('id' => $data2['forum_id'],
+																  'text' => $data2['forum_name']);
+	} else {
+		$forum_list[$data2['forum_cat_id']]['children'][] = array('id' => $data2['forum_id'],
+																  'text' => $data2['forum_name']);
+	}
+	$current_cat = $data2['forum_cat_name'];
+}
+// next json encode every array into a single string
+$forum_opts = '';
+$i = 0;
+foreach ($forum_list as $array) {
+	$forum_opts .= ($i == count($forum_list)-1) ? json_encode($array) : json_encode($array).",";
+	$i++;
+}
+echo form_hidden('', 'jump_id', 'jump_id', '');
+// finally, push string to select2, and invoke select2 to hidden input.
+// .. add a redirect to onchange event.
+
+add_to_jquery("
+    var this_data = [];
+    this_data.push($forum_opts);
+    $('#jump_id').select2({
+    placeholder: '".$locale['540']."',
+    allowClear: true,
+    data : this_data
+    }).bind('change', function() {
+       document.location.href='".FORUM."viewforum.php?forum_id='+$(this).val();
+    });
+    ");
+
+if ($rows > $posts_per_page) {
+	$filter_url = (isset($_GET['filter']) && $_GET['filter'] == 1) ? "&amp;time=".$_GET['time']."&amp;type=".$_GET['type']."&amp;filter=1&amp;" : "&amp;";
+	$page_nav = "<div id='pagenav-top' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $posts_per_page, $rows, 3, FUSION_SELF."?thread_id=".$_GET['thread_id'].$filter_url."")."</div>\n";
+}
+// Add filter
+echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right',
+																												  'type' => 'button'));
+echo $page_nav;
+echo "</div>\n";
+
+// filter class extract
+echo "<div id='filter' class='".(isset($_GET['filter']) && $_GET['filter'] == 1 ? '' : 'display-none')." panel-footer'>\n";
+echo openform('filterform', 'filterform', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=0", array('downtime' => 0));
+echo "<div class='row filter-form'>\n";
+echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+echo "<span><strong>".$locale['531']."</strong></span>\n<br/>";
+$array = array('0' => $locale['531a'], '1' => $locale['531b'], '2' => $locale['531c'], '3' => $locale['531d'],);
+foreach ($array as $key => $value) {
+	$selected = (isset($_GET['time']) && $_GET['time'] == $key) ? "checked" : "";
+	echo "<input id='$key-$value' type='radio' name='time' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$key-$value'>$value</label>\n<br/>\n";
+}
+echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+echo "<span><strong>".$locale['532']."</strong></span>\n<br/>";
+$array = array('0' => $locale['532a'], '1' => $locale['532b'], '2' => $locale['532c'], '3' => $locale['532d'],);
+foreach ($array as $key => $value) {
+	$selected = (isset($_GET['type']) && $_GET['type'] == $key) ? "checked" : "";
+	echo "<input id='$key-$value' type='radio' name='type' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$key-$value'>$value</label>\n<br/>\n";
+}
+echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+echo "<span><strong>".$locale['534']."</strong></span>\n<br/>";
+$array = array('0' => $locale['534a'], '1' => $locale['534b']);
+foreach ($array as $key => $value) {
+	$selected = (isset($_GET['order']) && $_GET['order'] == $key) ? "checked" : "";
+	echo "<input id='$key-$value' type='radio' name='order' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$key-$value'>$value</label>\n<br/>\n";
+}
+// do button here.
+echo form_button('Go', 'gofilter', 'gofilter', 'Go', array('class' => 'btn-primary pull-right'));
+echo "</div>\n</div>\n";
+echo closeform();
+echo "</div>\n";
+add_to_jquery("
+    $('#filter-btn').bind('click', function() {
+        $('#filter').slideToggle();
+    });
+    ");
+
+
 if ($rows != 0) {
+	if (isset($_POST['gofilter'])) {
+		foreach ($_POST as $key => $value) {
+			$_fdata[$key] = form_sanitizer($value, '0');
+		}
+		// redirect to get.
+		if (!defined('FUSION_NULL')) {
+			$time = isset($_fdata['time']) ? "&amp;time=".$_fdata['time']."" : '';
+			$type = isset($_fdata['type']) ? "&amp;type=".$_fdata['type']."" : '';
+			$order = isset($_fdata['order']) ? "&amp;order=".$_fdata['order']."" : '';
+			$filter = ($time || $type || $sort || $order) ? "&amp;filter=1" : '';
+			$filter_url = FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&rowstart=".$_GET['rowstart'].$time.$type.$order.$filter;
+			redirect($filter_url);
+		}
+	}
 	dbquery("UPDATE ".DB_THREADS." SET thread_postcount='$rows', thread_lastpostid='$last_post', thread_views=thread_views+1 WHERE thread_id='".$_GET['thread_id']."'");
 	/* poll */
 	if ($poll_on_first_page_only && $poll_there && $poll_data) {
@@ -245,7 +381,24 @@ if ($rows != 0) {
 		}
 	}
 	/* end poll */
-	$result = dbquery("SELECT p.forum_id, p.thread_id, p.post_id, p.post_message, p.post_showsig, p.post_smileys, p.post_author,
+	if (isset($_GET['filter']) && $_GET['filter'] == 1) {
+		$result = dbquery("SELECT p.forum_id, p.thread_id, p.post_id, p.post_message, p.post_showsig, p.post_smileys, p.post_author,
+		p.post_datestamp, p.post_ip, p.post_ip_type, p.post_edituser, p.post_edittime, p.post_editreason,
+		t.thread_id, u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups, u.user_joined,
+		".($user_field['user_sig'] ? " u.user_sig," : "").($user_field['user_web'] ? " u.user_web," : "")."
+		u2.user_name AS edit_name, u2.user_status AS edit_status,
+		a.attach_name, poll.forum_poll_title
+		FROM ".DB_POSTS." p
+		INNER JOIN ".DB_THREADS." t ON t.thread_id = p.thread_id
+		LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
+		LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
+		LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
+		LEFT JOIN ".DB_FORUM_POLLS." poll ON poll.thread_id = t.thread_id
+		WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0' $cond1
+		ORDER BY post_datestamp $cond2 LIMIT ".$_GET['rowstart'].",$posts_per_page");
+		$numrows = dbrows($result);
+	} else {
+		$result = dbquery("SELECT p.forum_id, p.thread_id, p.post_id, p.post_message, p.post_showsig, p.post_smileys, p.post_author,
 		p.post_datestamp, p.post_ip, p.post_ip_type, p.post_edituser, p.post_edittime, p.post_editreason,
 		u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups, u.user_joined,
 		".($user_field['user_sig'] ? " u.user_sig," : "").($user_field['user_web'] ? " u.user_web," : "")."
@@ -255,10 +408,12 @@ if ($rows != 0) {
 		LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
 		WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0'
 		ORDER BY post_datestamp LIMIT ".$_GET['rowstart'].",$posts_per_page");
-	if (iMOD) {
-		echo "<form name='mod_form' method='post' action='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>\n";
 	}
-	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border forum_thread_table'>\n";
+	if (iMOD) {
+		echo openform('mod_form', 'mod_form', 'post', FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('downtime' => 0,
+																																			 'notice' => 0));
+	}
+	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border forum_thread_table table table-responsive'>\n";
 	$numrows = dbrows($result);
 	$current_row = 1;
 	$colorbox_rel = array();
@@ -294,12 +449,10 @@ if ($rows != 0) {
 		echo "&nbsp;<a href='".BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$data['post_id']."&amp;nr=".($current_row+$_GET['rowstart'])."'><img src='".get_image("printer")."' alt='".$locale['519a']."' title='".$locale['519a']."' style='border:0;vertical-align:middle' /></a></div>\n";
 		echo "<div class='small'>".$locale['505'].showdate("forumdate", $data['post_datestamp'])."</div>\n";
 		echo "</td>\n";
-		echo "</tr>\n<tr>\n<td valign='top' class='tbl2 forum_thread_user_info' style='width:140px'>\n";
-		if ($data['user_avatar'] && file_exists(IMAGES."avatars/".$data['user_avatar']) && $data['user_status'] != 6 && $data['user_status'] != 5) {
-			echo "<img src='".IMAGES."avatars/".$data['user_avatar']."' alt='".$locale['567']."' /><br /><br />\n";
-		} else {
-			echo "<img src='".IMAGES."avatars/noavatar100.png' alt='".$locale['567']."' /><br /><br />\n";
-		}
+		echo "</tr>\n<tr>\n<td valign='top' class='tbl2 forum_thread_user_info text-center' style='width:140px'>\n";
+		echo "<div class='thread_avatar m-b-10'>\n";
+		echo display_avatar($data, '100px');
+		echo "</div>\n";
 		echo "<span class='small'>";
 		if ($data['user_level'] >= 102) {
 			echo $settings['forum_ranks'] ? show_forum_rank($data['user_posts'], $data['user_level'], $data['user_groups']) : getuserlevel($data['user_level']);
@@ -442,66 +595,41 @@ if ($rows != 0) {
 		$edit_reason_js .= "jQuery('#reason_div_pid_'+this.rel).stop().slideToggle('fast');";
 		$edit_reason_js .= "});";
 	}
+} else {
+	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border forum_thread_table table table-responsive'>\n";
+	echo "<tbody>\n<tr>\n<td class='tbl text-center'>\n";
+	echo $locale['575'];
+	echo "</td>\n</tr>\n</tbody>\n";
 }
-
 echo "</table><!--sub_forum_thread_table-->\n";
 
-if (iMOD) {
-	echo "<table cellspacing='0' cellpadding='0' width='100%'>\n<tr>\n<td style='padding-top:5px'>";
-	echo "<a href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['460']."</a> ::\n";
-	echo "<a href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['461']."</a></td>\n";
-	echo "<td align='right' style='padding-top:5px'><input type='submit' name='move_posts' value='".$locale['517a']."' class='button' onclick=\"return confirm('".$locale['518a']."');\" />\n<input type='submit' name='delete_posts' value='".$locale['517']."' class='button' onclick=\"return confirm('".$locale['518']."');\" /></td>\n";
-	echo "</tr>\n</table>\n</form>\n";
-}
-
-if ($rows > $posts_per_page) {
-	echo "<div align='center' style='padding-top:5px'>\n";
-	echo makepagenav($_GET['rowstart'], $posts_per_page, $rows, 3, FUSION_SELF."?thread_id=".$_GET['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : "")."&amp;")."\n";
+if (iMOD && $rows) {
+	echo "<div class='forum-table-container panel-body'>\n";
+	echo "<div class='btn-group m-r-10'>\n";
+	echo "<a id='check' class='btn btn-default button' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['460']."</a>\n";
+	echo "<a id='uncheck' class='btn btn-default button' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['461']."</a>\n";
+	echo "</div>\n";
+	echo form_button($locale['517a'], 'move_posts', 'move_posts', $locale['517a'], array('class' => 'btn-warning m-r-10'));
+	echo form_button($locale['518'], 'delete_posts', 'delete_posts', $locale['518'], array('class' => 'btn-danger m-r-10'));
+	echo closeform();
+	echo "</div>\n<div class='forum-table-container panel-footer clearfix'>\n";
+	echo openform('modopts', 'modopts', 'post', FORUM."options.php?forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('downtime' => 0));
+	$mod_options = array('renew' => $locale['527'], 'delete' => $locale['521'], 'renew' => $locale['527'],
+						 $fdata['thread_locked'] ? "unlock" : "lock" => $fdata['thread_locked'] ? $locale['523'] : $locale['522'],
+						 $fdata['thread_sticky'] ? "nonsticky" : "sticky" => $fdata['thread_sticky'] ? $locale['525'] : $locale['524'],
+						 'move' => $locale['526']);
+	echo "<label for='step'>".$locale['520']."</label>\n<br/>\n";
+	echo form_select('', 'step', 'step', $mod_options, '', array('placeholder' => $locale['choose'], 'allowclear' => 1,
+																 'class' => 'pull-left'));
+	echo form_button($locale['528'], 'go', 'go', $locale['528'], array('class' => 'btn-default m-l-10 pull-left'));
+	echo closeform();
 	echo "</div>\n";
 }
 
-$forum_list = "";
-$current_cat = "";
-$result = dbquery("SELECT f.forum_id, f.forum_name, f2.forum_name AS forum_cat_name
-	FROM ".DB_FORUMS." f
-	INNER JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-	WHERE ".groupaccess('f.forum_access')." AND f.forum_cat!='0'
-	ORDER BY f2.forum_order ASC, f.forum_order ASC");
-while ($data = dbarray($result)) {
-	if ($data['forum_cat_name'] != $current_cat) {
-		if ($current_cat != "") {
-			$forum_list .= "</optgroup>\n";
-		}
-		$current_cat = $data['forum_cat_name'];
-		$forum_list .= "<optgroup label='".$data['forum_cat_name']."'>\n";
-	}
-	$sel = ($data['forum_id'] == $fdata['forum_id'] ? " selected='selected'" : "");
-	$forum_list .= "<option value='".$data['forum_id']."'$sel>".$data['forum_name']."</option>\n";
-}
-$forum_list .= "</optgroup>\n";
-if (iMOD) {
-	echo "<form name='modopts' method='post' action='options.php?forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
-}
-echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
-echo "<td style='padding-top:5px'>".$locale['540']."<br />\n";
-echo "<select name='jump_id' class='textbox' onchange=\"jumpforum(this.options[this.selectedIndex].value);\">\n";
-echo $forum_list."</select></td>\n";
-
-if (iMOD) {
-	echo "<td align='right' style='padding-top:5px'>\n";
-	echo $locale['520']."<br />\n<select name='step' class='textbox'>\n";
-	echo "<option value='none'>&nbsp;</option>\n";
-	echo "<option value='renew'>".$locale['527']."</option>\n";
-	echo "<option value='delete'>".$locale['521']."</option>\n";
-	echo "<option value='".($fdata['thread_locked'] ? "unlock" : "lock")."'>".($fdata['thread_locked'] ? $locale['523'] : $locale['522'])."</option>\n";
-	echo "<option value='".($fdata['thread_sticky'] ? "nonsticky" : "sticky")."'>".($fdata['thread_sticky'] ? $locale['525'] : $locale['524'])."</option>\n";
-	echo "<option value='move'>".$locale['526']."</option>\n";
-	echo "</select>\n<input type='submit' name='go' value='".$locale['528']."' class='button' />\n";
-	echo "</td>\n";
-}
-echo "</tr>\n</table>\n";
-if (iMOD) {
-	echo "</form>\n";
+if ($rows > $posts_per_page) {
+	echo "<div class='clearfix'>\n<div id='pagenav-bottom' class='pull-right display-inline-block m-r-10'>\n";
+	echo makepagenav($_GET['rowstart'], $posts_per_page, $rows, 3, FUSION_SELF."?thread_id=".$_GET['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : "")."&amp;")."\n";
+	echo "</div>\n</div>\n";
 }
 
 if ($can_post || $can_reply) {
@@ -522,12 +650,11 @@ closetable();
 if ($can_reply && !$fdata['thread_locked']) {
 	require_once INCLUDES."bbcode_include.php";
 	opentable($locale['512']);
-	echo "<form name='inputform' method='post' action='".FORUM."post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>\n";
-	echo "<table cellpadding='0' cellspacing='1' class='tbl-border center'>\n<tr>\n";
-	echo "<td align='center' class='tbl1'><textarea name='message' cols='70' rows='7' class='textbox' style='width:98%'></textarea><br />\n";
-	echo display_bbcodes("360px", "message")."</td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td align='center' class='tbl2'><label><input type='checkbox' name='disable_smileys' value='1' /> ".$locale['513']."</label>";
+	echo openform('input_form', 'input_form', 'post', FORUM."post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']);
+	echo "<table class='tbl-border center table table-responsive'>\n<tbody>\n<tr>\n<td>\n";
+	echo form_textarea($locale['573'], 'message', 'message', '', array('bbcode' => 1, 'required' => 1));
+	echo "</td>\n</tr>\n<tr>\n";
+	echo "<td class='tbl2'><label><input type='checkbox' name='disable_smileys' value='1' /> ".$locale['513']."</label>";
 	if (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) {
 		echo "<br />\n<label><input type='checkbox' name='show_sig' value='1' checked='checked' /> ".$locale['513a']."</label>";
 	}
@@ -542,10 +669,12 @@ if ($can_reply && !$fdata['thread_locked']) {
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' class='tbl1'>\n";
-	echo "<input type='submit' name='previewreply' value='".$locale['514a']."' class='button' />&nbsp;\n";
-	echo "<input type='submit' name='postreply' value='".$locale['514']."' class='button' />\n";
+	echo form_button($locale['514a'], 'previewreply', 'previewreply', $locale['514a'], array('class' => 'btn-primary m-r-10'));
+	echo form_button($locale['514'], 'postreply', 'postreply', $locale['514'], array('class' => 'btn-primary m-r-10'));
 	echo "</td>\n";
-	echo "</tr>\n</table>\n</form><!--sub_forum_thread-->\n";
+	echo "</tr>\n</tbody>\n</table>\n";
+	echo closeform();
+	echo "<!--sub_forum_thread-->\n";
 	closetable();
 }
 

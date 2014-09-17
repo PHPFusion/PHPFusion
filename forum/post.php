@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 require_once "../maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/post.php";
@@ -29,10 +30,13 @@ if ($settings['forum_edit_lock'] == 1) {
 } else {
 	$lock_edit = FALSE;
 }
+
 $result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
 	FROM ".DB_FORUMS." f
 	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-	WHERE f.forum_id='".$_GET['forum_id']."' LIMIT 1");
+	WHERE f.forum_id='".$_GET['forum_id']."' LIMIT 1
+	");
+
 if (dbrows($result)) {
 	$fdata = dbarray($result);
 	if (!checkgroup($fdata['forum_access']) || !$fdata['forum_cat']) {
@@ -41,6 +45,7 @@ if (dbrows($result)) {
 } else {
 	redirect("index.php");
 }
+
 if (iSUPERADMIN) {
 	define("iMOD", TRUE);
 }

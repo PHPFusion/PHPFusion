@@ -56,7 +56,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 			add_to_head("<meta http-equiv='refresh' content='2; url=viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' />\n");
 			$output = TRUE;
 			opentable($locale['451']);
-			echo "<div style='text-align:center'><br />\n";
+			echo "<div class='alert alert-info' style='text-align:center'><br />\n";
 			if ($_GET['post'] == "on" && !dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
 				$result = dbquery("INSERT INTO ".DB_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
 				echo $locale['452']."<br /><br />\n";
@@ -74,7 +74,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 } elseif ($_GET['post'] == "new") {
 	add_to_title($locale['global_201'].$locale['401']);
 	opentable($locale['401']);
-	echo "<div style='text-align:center'><br />\n";
+	echo "<div class='alert ".($errorb ? "alert-warning" : "alert-info")."' style='text-align:center'><br />\n";
 	if ($errorb) {
 		echo $errorb."<br /><br />\n";
 	} else {
@@ -96,7 +96,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	}
 	add_to_title($locale['global_201'].$locale['403']);
 	opentable($locale['403']);
-	echo "<div style='text-align:center'><br />\n";
+	echo "<div class='alert ".($errorb ? "alert-warning" : "alert-info")."' style='text-align:center'><br />\n";
 	if ($errorb) {
 		echo $errorb."<br /><br />\n";
 	} else {
@@ -173,7 +173,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	add_to_title($locale['global_201'].$locale['409']);
 	add_to_head("<meta http-equiv='refresh' content='2; url=viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 	opentable($locale['409']);
-	echo "<div style='text-align:center'><br />\n";
+	echo "<div class='alert ".($errorb ? 'alert-warning' : 'alert-info')."' style='text-align:center'><br />\n";
 	if ($errorb) {
 		echo $errorb."<br /><br />\n";
 	} else {
