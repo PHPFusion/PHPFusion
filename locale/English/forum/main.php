@@ -120,6 +120,9 @@ $locale['569'] = "Quote";
 $locale['570'] = "wrote";
 $locale['571'] = "IP";
 $locale['572'] = "Send Private Message";
+$locale['573'] = "Message";
+$locale['574'] = "No threads found.";
+$locale['575'] = "No post found.";
 // Move Posts
 $locale['600'] = "Move posts";
 $locale['601'] = "Select new forum";

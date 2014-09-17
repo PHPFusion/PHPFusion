@@ -108,7 +108,10 @@ $locale['global_105'] = "Not a member yet? <a href='".BASEDIR."register.php' cla
 $locale['global_106'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
 $locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";
+
+
 // User Menu
+$locale['global_123'] = "Admin Panel";
 $locale['UM060'] = "Login";
 $locale['UM061'] = "Username";
 $locale['UM061a'] = "Email";
