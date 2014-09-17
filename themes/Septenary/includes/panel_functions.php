@@ -23,7 +23,7 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 function opentable($title) {
-	echo "<article><h2>".$title."</h2><div class='content'>\n";
+	echo "<article><h2 class='m-t-0 m-b-0'>".$title."</h2><div class='content'>\n";
 }
 
 function closetable() { echo "</div></article>\n"; }
