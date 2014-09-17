@@ -20,10 +20,11 @@
     height: 25px;
     font-size: 999px;
     text-align: right;
-    color: #fff;
+    color: #FFF;
     background: transparent url('../img/loading.gif') top left no-repeat;
     border: none;
 }
+
 .btn-file {
     position: relative;
     overflow: hidden;
@@ -61,7 +62,7 @@
 }
 
 .file-caption-disabled {
-    background-color: #EEEEEE;
+    background-color: #EEE;
     cursor: not-allowed;
     opacity: 1;
 }
@@ -72,7 +73,7 @@
 
 .file-preview {
     border-radius: 5px;
-    border: 1px solid #ddd;
+    border: 1px solid #DDD;
     padding: 5px;
     width: 100%;
     margin-bottom: 5px;
@@ -82,15 +83,15 @@
     display: table;
     margin: 8px;
     height: 160px;
-    border: 1px solid #ddd;
-    box-shadow: 1px 1px 5px 0px #a2958a;
+    border: 1px solid #DDD;
+    box-shadow: 1px 1px 5px 0px #A2958A;
     padding: 6px;
     float: left;
     text-align: center;
 }
 
 .file-preview-frame:hover {
-    background-color: #eee;
+    background-color: #EEE;
     box-shadow: 2px 2px 5px 0px #333;
 }
 
@@ -103,7 +104,7 @@
     display: table-cell;
     width: 150px;
     height: 150px;
-    color: #428bca;
+    color: #428BCA;
     font-size: 11px;
     vertical-align: middle;
     text-align: center;

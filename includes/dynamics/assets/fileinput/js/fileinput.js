@@ -202,7 +202,7 @@
             }
             else {
                 self.$preview.html('');
-                var cap = (!self.overwriteInitial && self.initialCaption.length > 0) ? 
+                var cap = (!self.overwriteInitial && self.initialCaption.length > 0) ?
                     self.original.caption : '';
                 self.$caption.html(cap);
                 self.$captionContainer.attr('title', '');
@@ -432,7 +432,7 @@
         elPreviewImage: null,
         elPreviewStatus: null
     };
-    
+
     /**
      * Convert automatically file inputs with class 'file'
      * into a bootstrap fileinput control.

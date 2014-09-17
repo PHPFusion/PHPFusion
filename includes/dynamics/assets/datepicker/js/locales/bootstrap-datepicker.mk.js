@@ -2,7 +2,8 @@
  * Macedonian translation for bootstrap-datepicker
  * Marko Aleksic <psybaron@gmail.com>
  */
-;(function($){
+;
+(function ($) {
     $.fn.datepicker.dates['mk'] = {
         days: ["Недела", "Понеделник", "Вторник", "Среда", "Четврток", "Петок", "Сабота", "Недела"],
         daysShort: ["Нед", "Пон", "Вто", "Сре", "Чет", "Пет", "Саб", "Нед"],

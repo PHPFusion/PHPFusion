@@ -1,14 +1,14 @@
 /**
  * Select2 Polish translation.
- * 
+ *
  * Author: Jan Kondratowicz <jan@kondratowicz.pl>
  */
 (function ($) {
     "use strict";
-    
-    var pl_suffix = function(n) {
-        if(n == 1) return "";
-        if((n%100 > 1 && n%100 < 5) || (n%100 > 20 && n%10 > 1 && n%10 < 5)) return "i";
+
+    var pl_suffix = function (n) {
+        if (n == 1) return "";
+        if ((n % 100 > 1 && n % 100 < 5) || (n % 100 > 20 && n % 10 > 1 && n % 10 < 5)) return "i";
         return "ów";
     };
 
