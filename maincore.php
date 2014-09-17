@@ -70,7 +70,7 @@ if (!isset($db_name)) {
 
 require_once INCLUDES."multisite_include.php";
 
-//PDO database functions
+// Select database handler
 if ($pdo_enabled == "1") {
 	require_once DB_HANDLERS."pdo_functions_include.php";
 } else {
