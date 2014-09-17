@@ -127,8 +127,6 @@
         define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
         define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
         define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
-    } else {
-        define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? str_replace($settings['site_path'], '', $_SERVER['REQUEST_URI']) : $_SERVER['SCRIPT_NAME']);
     }
     define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
     define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
@@ -1099,7 +1097,7 @@
         $res      = $locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt.": ";
         if ($idx_back >= 0) {
             if ($cur_page > ($range+1)) {
-                $res .= "<a href='".$link.$getname."=0'>1</a>";
+                $res .= "<a class='pagenavlink' data-value='0' href='".$link.$getname."=0'>1</a>";
                 if ($cur_page != ($range+2)) {
                     $res .= "...";
                 }
@@ -1116,7 +1114,7 @@
             if ($i == $cur_page) {
                 $res .= "<span><strong>".$i."</strong></span>";
             } else {
-                $res .= "<a href='".$link.$getname."=".$offset_page."'>".$i."</a>";
+                $res .= "<a class='pagenavlink' data-value='$offset_page' href='".$link.$getname."=".$offset_page."'>".$i."</a>";
             }
         }
         if ($idx_next < $total) {
@@ -1124,7 +1122,7 @@
                 if ($cur_page != ($pg_cnt-$range-1)) {
                     $res .= "...";
                 }
-                $res .= "<a href='".$link.$getname."=".($pg_cnt-1)*$count."'>".$pg_cnt."</a>\n";
+                $res .= "<a class='pagenavlink' data-value='".($pg_cnt-1)*$count."' href='".$link.$getname."=".($pg_cnt-1)*$count."'>".$pg_cnt."</a>\n";
             }
         }
         return "<div class='pagenav'>\n".$res."</div>\n";
