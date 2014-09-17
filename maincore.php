@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
-	die();
-}
+if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {	die(); }
 
 // Calculate script start/end time
 function get_microtime() {
@@ -96,7 +94,6 @@ if (dbrows($result)) {
 
 // Settings dependent functions
 date_default_timezone_set($settings['default_timezone']);
-//if (session_id() !== '') {
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
 // Session lifetime. After this time stored data will be seen as 'garbage' and cleaned up by the garbage collection process.
@@ -107,7 +104,6 @@ ini_set('session.cookie_lifetime', 172800); // 48 hours
 session_cache_limiter('private, must-revalidate');
 session_name(COOKIE_PREFIX.'session');
 session_start();
-//}
 //ob_start("ob_gzhandler"); //Uncomment this line and comment the one below to enable output compression.
 ob_start();
 
@@ -122,7 +118,7 @@ if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
 	redirect($settings['siteurl']);
 }
 
-// New in SEO - Disable FUSION_SELF and FUSION_QUERY in SEO mode.
+// Disable FUSION_SELF and FUSION_QUERY in SEO mode.
 if (!defined("IN_PERMALINK")) {
 	define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
 	define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
@@ -142,7 +138,6 @@ $forum_rank_cache = "";
 $forum_mod_rank_cache = "";
 $locale = array();
 
-// New in SEO
 // Calculate ROOT path for Permalinks
 $current_path = $_SERVER['REQUEST_URI'];
 if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
@@ -150,12 +145,15 @@ if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
 } else {
 	$current_path = ltrim($current_path, "/");
 }
+
 define("PERMALINK_CURRENT_PATH", $current_path);
 $count = substr_count(PERMALINK_CURRENT_PATH, "/");
 $root = "";
+
 for ($i = 0; $i < $count; $i++) {
 	$root .= "../";
 }
+
 define("ROOT", $root);
 
 // Calculate current true url
@@ -169,12 +167,11 @@ while ($base_url_count != 0) {
 	$base_url_count--;
 }
 
-// New in SEO - disable TRUE_PHP_SELF and START_PAGE
+// Disable TRUE_PHP_SELF and START_PAGE
 if (!defined("IN_PERMALINK")) {
 	define("TRUE_PHP_SELF", $current_page);
 	define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "", TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")), 1));
 }
-
 
 // Autenticate user
 require_once CLASSES."Authenticate.class.php";
@@ -213,8 +210,7 @@ function multilang_table($table) {
 
 // Get enabled language settings
 $enabled_languages = explode('.', $settings['enabled_languages']);
-// Select2 Language Array
-//$language_opts[] = $locale['global_ML101'];
+
 foreach ($enabled_languages as $_lang) {
 	$language_opts[$_lang] = $_lang;
 }
@@ -256,18 +252,20 @@ if (isset($_GET['lang']) && isset($_GET['lang']) != "" && preg_match("/^[\w-0-9a
 		// Sanitize guest sessions
 		$result = dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time()-(86400*60))."'");
 	}
-	if (FUSION_QUERY != "") {
-		if (stristr(FUSION_QUERY, '?')) {
-			$this_redir = str_replace("?lang=".$lang, "", FUSION_QUERY);
-		} elseif (stristr(FUSION_QUERY, '&amp;')) {
-			$this_redir = str_replace("&amp;lang=".$lang, "", FUSION_QUERY);
-		} elseif (stristr(FUSION_QUERY, '&')) {
-			$this_redir = str_replace("&lang=".$lang, "", FUSION_QUERY);
-		}
-		if ($this_redir != "") $this_redir = "?".$this_redir;
-	} else {
-		$this_redir = "";
+
+// Redirect handler to keep position upon lang switch
+if (FUSION_QUERY != "") {
+	if (stristr(FUSION_QUERY, '?')) {
+		$this_redir = str_replace("?lang=".$lang, "", FUSION_QUERY);
+	} elseif (stristr(FUSION_QUERY, '&amp;')) {
+		$this_redir = str_replace("&amp;lang=".$lang, "", FUSION_QUERY);
+	} elseif (stristr(FUSION_QUERY, '&')) {
+		$this_redir = str_replace("&lang=".$lang, "", FUSION_QUERY);
 	}
+	if ($this_redir != "") $this_redir = "?".$this_redir;
+} else {
+	$this_redir = "";
+}
 	redirect(FUSION_SELF.$this_redir);
 }
 
@@ -350,7 +348,6 @@ include INCLUDES."ip_handling_include.php";
 // Error Handling
 require_once INCLUDES."error_handling_include.php";
 
-// New in SEO
 // Redirects to the index if the URL is invalid (eg. file.php/folder/)
 if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
 	redirect($settings['siteurl']);
@@ -370,7 +367,6 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 	setcookie(COOKIE_PREFIX."visited", "yes", time()+31536000, "/", "", "0");
 }
 $lastvisited = Authenticate::setLastVisitCookie();
-
 
 // Set theme
 set_theme($userdata['user_theme']);
@@ -394,10 +390,8 @@ function theme_exists($theme) {
 function set_theme($theme) {
 	global $settings, $locale;
 	if (!defined("THEME")) {
-		// If the theme is valid set it
 		if (theme_exists($theme)) {
 			define("THEME", THEMES.($theme == "Default" ? $settings['theme'] : $theme)."/");
-			// The theme is invalid, search for a valid one inside themes folder and set it
 		} else {
 			$dh = opendir(THEMES);
 			while (FALSE !== ($entry = readdir($dh))) {
@@ -410,7 +404,6 @@ function set_theme($theme) {
 			}
 			closedir($dh);
 		}
-		// If can't find and set any valid theme show a warning
 		if (!defined("THEME")) {
 			echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
 			echo $locale['global_301'];
@@ -482,7 +475,6 @@ function stripget($check_url) {
 	return $return;
 }
 
-
 // Strip file name
 function stripfilename($filename) {
 	$filename = strtolower(str_replace(" ", "_", $filename));
@@ -522,7 +514,6 @@ function phpentities($text) {
 }
 
 // Trim a line of text to a preferred length
-// We are trimming, why are we changing to quot and etc.?
 function trimlink($text, $length) {
 	$dec = array("&", "\"", "'", "\\", '\"', "\'", "<", ">");
 	$enc = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
@@ -669,7 +660,6 @@ function parseubb($text, $selected = FALSE) {
 }
 
 // Javascript email encoder by Tyler Akins
-// http://rumkin.com/tools/mailto_encoder/
 function hide_email($email, $title = "", $subject = "") {
 	if (strpos($email, "@")) {
 		$parts = explode("@", $email);
@@ -724,7 +714,6 @@ function formatcode($text) {
 }
 
 // Highlights given words in subject
-// Don't forget to remove later
 function highlight_words($word, $subject) {
 	for ($i = 0, $l = count($word); $i < $l; $i++) {
 		$word[$i] = str_replace(array("\\", "+", "*", "?", "[", "^", "]", "$", "(", ")", "{", "}", "=", "!", "<", ">",
@@ -736,8 +725,7 @@ function highlight_words($word, $subject) {
 	return $subject;
 }
 
-
-// This function sanitises news & article submissions
+// This function sanitize news & article submissions
 function descript($text, $striptags = TRUE) {
 	// Convert problematic ascii characters to their true values
 	$search = array("40", "41", "58", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77",
@@ -773,7 +761,7 @@ function verify_image($file) {
 	$image_safe = TRUE;
 	if (preg_match('#<?php#i', $txt)) {
 		$image_safe = FALSE;
-	} //edit
+	} 
 	elseif (preg_match('#&(quot|lt|gt|nbsp|<?php);#i', $txt)) {
 		$image_safe = FALSE;
 	} elseif (preg_match("#&\#x([0-9a-f]+);#i", $txt)) {
@@ -808,8 +796,8 @@ function censorwords($text) {
 	return $text;
 }
 
+// Check file types of the uploaded file with known mime types list to prevent uploading unwanted files if enabled
 if ($settings['mime_check'] == "1") {
-	// Checking file types of the uploaded file with known mime types list to prevent uploading unwanted files
 	if (isset($_FILES) && count($_FILES)) {
 		require_once INCLUDES."mimetypes_include.php";
 		$mime_types = mimeTypes();
@@ -818,12 +806,9 @@ if ($settings['mime_check'] == "1") {
 				$file_info = pathinfo($each['name']);
 				$extension = $file_info['extension'];
 				if (array_key_exists($extension, $mime_types)) {
-					//An extension may have more than one mime type
 					if (is_array($mime_types[$extension])) {
-						//We should check each extension one by one
 						$valid_mimetype = FALSE;
 						foreach ($mime_types[$extension] as $each_mimetype) {
-							//If we have a match, we set the value to true and break the loop
 							if ($each_mimetype == $each['type']) {
 								$valid_mimetype = TRUE;
 								break;
@@ -838,10 +823,7 @@ if ($settings['mime_check'] == "1") {
 							die('Prevented an unwanted file upload attempt!');
 						}
 					}
-				} /*else { //Let's disable this for now
-				//almost impossible with provided array, but we throw an error anyways
-				die('Unknown file type');
-			}*/
+				} 
 				unset($file_info, $extension);
 			}
 		}
@@ -903,7 +885,6 @@ function checkAdminPageAccess($right) {
 }
 
 // Check if user is assigned to the specified user group
-
 function checkgroup($group) {
 	if (iSUPERADMIN) {
 		return TRUE;
@@ -914,14 +895,11 @@ function checkgroup($group) {
 	} elseif (iGUEST && $group == "0") {
 		return TRUE;
 	} elseif (iMEMBER && $group && in_array($group, explode(".", iUSER_GROUPS))) {
-		/* Reported bugs on group members of ID 103 able to view super admin material  */
-		/* Solution: do not use this function for user_level access rights material */
 		return TRUE;
 	} else {
 		return FALSE;
 	}
 }
-
 
 // Cache groups mysql
 function cache_groups() {
@@ -1006,9 +984,6 @@ function blacklist($field) {
 	global $userdata;
 	$blacklist = array();
 	if (in_array('user_blacklist', fieldgenerator(DB_USERS))) {
-		//$blacklist = $userdata['user_blacklist'] ? explode('.', $userdata['user_blacklist']) : array();
-		//$blacklist = array_filter($blacklist);
-		// there must be a dot in the first array for this to work.
 		$result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE user_blacklist REGEXP('^\\\.{$userdata['user_id']}$|\\\.{$userdata['user_id']}\\\.|\\\.{$userdata['user_id']}$')");
 		if (dbrows($result) > 0) {
 			while ($data = dbarray($result)) {
@@ -1044,8 +1019,6 @@ function user_blacklisted($user_id) {
 }
 
 // Create a list of files or folders and store them in an array
-// You may filter out extensions by adding them to $extfilter as:
-// $ext_filter = "gif|jpg"
 function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filter = "") {
 	$res = array();
 	$filter = explode("|", $filter);
@@ -1194,7 +1167,6 @@ $defender = new defender;
 require_once INCLUDES."dynamics/dynamics.inc.php";
 $dynamic = new dynamics();
 $dynamic->boot();
-
 
 function print_p($array, $modal = FALSE) {
 	echo ($modal) ? openmodal('Debug', 'Debug') : '';
