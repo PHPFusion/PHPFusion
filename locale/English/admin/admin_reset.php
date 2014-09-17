@@ -3,7 +3,6 @@
 $locale['apw_title'] = "Administrator Password Reset";
 $locale['apw_desc'] = "Changes Administrator login/admin passwords";
 $locale['apw_admin1'] = "Administrator Reset";
-
 $locale['400'] = "Administrator(s) to reset:";
 $locale['401'] = "All Administrators";
 $locale['402'] = "Only Super Administrators";

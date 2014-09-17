@@ -30,7 +30,7 @@ $locale['470'] = "Open Thread with new posts since last visit";
 $locale['471'] = "20 posts or more";
 $locale['472'] = "Open Thread with no new posts since last visit.";
 $locale['473'] = "Locked Thread.";
-$locale['474'] = "Sticky Thread.";
+$locale['474'] = "Sticky";
 // View Thread Poll
 $locale['480'] = "Total Votes";
 $locale['481'] = "Cast Vote";
@@ -81,8 +81,27 @@ $locale['525'] = "Make Thread Non-Sticky";
 $locale['526'] = "Move Thread";
 $locale['527'] = "Renew Thread";
 $locale['528'] = "Go";
+$locale['530'] = "Filter";
+$locale['531'] = "Time";
+$locale['531a'] = "All Time";
+$locale['531b'] = "Today";
+$locale['531c'] = "Last Week";
+$locale['531d'] = "Last Month";
+$locale['532'] = "Show";
+$locale['532a'] = "All";
+$locale['532b'] = "Discussions";
+$locale['532c'] = "Attachments";
+$locale['532d'] = "Polls";
+$locale['533'] = "Sortby";
+$locale['533a'] = "Date - last update";
+$locale['533b'] = "Date - started post";
+$locale['533c'] = "Replies";
+$locale['533d'] = "Title";
+$locale['534'] = "Order";
+$locale['534a'] = "Descending";
+$locale['534b'] = "Ascending";
 // Jump to Forum, back to top
-$locale['540'] = "Jump to Forum:";
+$locale['540'] = "Jump to Forum";
 $locale['541'] = "Top";
 $locale['542'] = "Back to top";
 // Search Forum

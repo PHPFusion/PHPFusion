@@ -103,7 +103,6 @@ $locale['561'] = "Lift Security Ban";
 $locale['562'] = "Ban User: ";
 $locale['563'] = "Security Ban User: ";
 $locale['585a'] = "Please specify a reason for why you are banning or unbanning ";
-
 $locale['566'] = "Ban lifted";
 $locale['568'] = "Security Ban imposed";
 $locale['569'] = "Security Ban lifted";
@@ -121,7 +120,6 @@ $locale['582'] = "Reactivate";
 $locale['583'] = "Re-instate";
 $locale['584'] = "Select new status";
 $locale['585'] = "This Member was originally banned for security reasons! Are you certain you want to unban this member now?";
-
 $locale['590'] = "Suspend";
 $locale['591'] = "Unsuspend";
 $locale['592'] = "suspending";
@@ -129,7 +127,6 @@ $locale['593'] = "unsuspending";
 $locale['594'] = "Please specify a reason for why you are ";
 $locale['595'] = " the user ";
 $locale['596'] = "Duration:";
-
 $locale['600'] = "Security ban";
 $locale['601'] = "security banning";
 $locale['602'] = "Unban";

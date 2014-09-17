@@ -2,22 +2,24 @@
 /*
 English Language Fileset
 Produced by Nick Jones (Digitanium)
+Email: digitanium@php-fusion.co.uk
+Web: http://www.php-fusion.co.uk
 */
 // Locale Settings
 setlocale(LC_TIME, "en", "GB"); // Linux Server (Windows may differ)
-$locale['charset']   = "iso-8859-1";
-$locale['xml_lang']  = "en";
-$locale['tinymce']   = "en";
+$locale['charset'] = "iso-8859-1";
+$locale['xml_lang'] = "en";
+$locale['tinymce'] = "en";
 $locale['phpmailer'] = "en";
 // Full & Short Months
-$locale['months']      = "&nbsp|January|February|March|April|May|June|July|August|September|October|November|December";
+$locale['months'] = "&nbsp|January|February|March|April|May|June|July|August|September|October|November|December";
 $locale['shortmonths'] = "&nbsp|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec";
 // Standard User Levels
-$locale['user0']          = "Public";
-$locale['user1']          = "Member";
-$locale['user2']          = "Administrator";
-$locale['user3']          = "Super Administrator";
-$locale['user_na']        = "N/A";
+$locale['user0'] = "Public";
+$locale['user1'] = "Member";
+$locale['user2'] = "Administrator";
+$locale['user3'] = "Super Administrator";
+$locale['user_na'] = "N/A";
 $locale['user_anonymous'] = "Anonymous User";
 // Standard User Status
 $locale['status0'] = "Active";
@@ -81,18 +83,18 @@ $locale['global_058'] = "Stop";
 $locale['global_059'] = "You're not tracking any threads.";
 $locale['global_060'] = "Stop tracking this thread?";
 // News & Articles
-$locale['global_070']  = "Posted by ";
-$locale['global_071']  = "on ";
-$locale['global_072']  = "Read More";
-$locale['global_073']  = " Comments";
+$locale['global_070'] = "Posted by ";
+$locale['global_071'] = "on ";
+$locale['global_072'] = "Read More";
+$locale['global_073'] = " Comments";
 $locale['global_073b'] = " Comment";
-$locale['global_074']  = " Reads";
-$locale['global_075']  = "Print";
-$locale['global_076']  = "Edit";
-$locale['global_077']  = "News";
-$locale['global_078']  = "No News has been posted yet";
-$locale['global_079']  = "In ";
-$locale['global_080']  = "Uncategorised";
+$locale['global_074'] = " Reads";
+$locale['global_075'] = "Print";
+$locale['global_076'] = "Edit";
+$locale['global_077'] = "News";
+$locale['global_078'] = "No News has been posted yet";
+$locale['global_079'] = "In ";
+$locale['global_080'] = "Uncategorised";
 // Page Navigation
 $locale['global_090'] = "Prev";
 $locale['global_091'] = "Next";
@@ -108,40 +110,17 @@ $locale['global_105'] = "Not a member yet? <a href='".BASEDIR."register.php' cla
 $locale['global_106'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
 $locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";
-// User Menu
-$locale['UM060'] = "Login";
-$locale['UM061'] = "Username";
-$locale['UM061a'] = "Email";
-$locale['UM061b'] = "Username or Email";
-$locale['UM062'] = "Password";
-$locale['UM063'] = "Remember Me";
-$locale['UM064'] = "Login";
-$locale['UM065'] = "Not a member yet?<br /><a href='".BASEDIR."register.php' class='side'>Click here</a> to register.";
-$locale['UM066'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
-$locale['UM080'] = "Edit Profile";
-$locale['UM081'] = "Private Messages";
-$locale['UM082'] = "Members List";
-$locale['UM083'] = "Admin Panel";
-$locale['UM084'] = "Logout";
-$locale['UM085'] = "You have %u new ";
-$locale['UM086'] = "message";
-$locale['UM087'] = "messages";
-$locale['UM088'] = "Followed threads";
-// Submit (news, link, article)
-$locale['UM089'] = "Submit...";
-$locale['UM090'] = "Add news";
-$locale['UM091'] = "Add link";
-$locale['UM092'] = "Add article";
-$locale['UM093'] = "Add photo";
-$locale['UM094'] = "Add download";
-// User Panel
-$locale['UM095'] = "Welcome: ";
-$locale['UM096'] = "Personal menu";
-$locale['UM097'] = "Switch Language";
-// Gauges
-$locale['UM098'] = "Messages inbox:";
-$locale['UM099'] = "Messages outbox:";
-$locale['UM100'] = "Messages archive:";
+// Member User Menu
+$locale['global_120'] = "Edit Profile";
+$locale['global_121'] = "Private Messages";
+$locale['global_122'] = "Members List";
+$locale['global_123'] = "Admin Panel";
+$locale['global_124'] = "Logout";
+$locale['global_125'] = "You have %u new ";
+$locale['global_126'] = "message";
+$locale['global_127'] = "messages";
+$locale['global_128'] = "submission";
+$locale['global_129'] = "submissions";
 // Poll
 $locale['global_130'] = "Member Poll";
 $locale['global_131'] = "Submit Vote";
@@ -246,22 +225,21 @@ $locale['global_465'] = "TB";
 $locale['global_500'] = "You are being redirected to %s, please wait. If you're not redirected, click here.";
 // Captcha Locales
 $locale['global_600'] = "Validation Code";
-$locale['recaptcha']  = "en";
+$locale['recaptcha'] = "en";
 //Miscellaneous
 $locale['global_900'] = "Unable to convert HEX to DEC";
 //Language Selection
 $locale['global_ML100'] = "Language:";
 $locale['global_ML101'] = "- Select Language -";
-$locale['global_ML102'] = "Site language";
 // Tokens
 $locale['token_error_title'] = "Token Error";
-$locale['token_error']       = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";
-$locale['token_error_1']     = "Session not started.";
-$locale['token_error_2']     = "Token was not posted.";
-$locale['token_error_3']     = "Invalid token.";
-$locale['token_error_4']     = "Invalid UserID within token.";
-$locale['token_error_5']     = "Invalid token datestamp.";
-$locale['token_error_6']     = "Post was made too fast.";
-$locale['token_error_7']     = "Invalid token hash.";
-$locale['token_error_8']     = "Invalid token format.";
+$locale['token_error'] = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";
+$locale['token_error_1'] = "Session not started.";
+$locale['token_error_2'] = "Token was not posted.";
+$locale['token_error_3'] = "Invalid token.";
+$locale['token_error_4'] = "Invalid UserID within token.";
+$locale['token_error_5'] = "Invalid token datestamp.";
+$locale['token_error_6'] = "Post was made too fast.";
+$locale['token_error_7'] = "Invalid token hash.";
+$locale['token_error_8'] = "Invalid token format.";
 ?>

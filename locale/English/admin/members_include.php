@@ -8,7 +8,6 @@ $locale['susp05'] = "Canceled";
 $locale['susp06'] = "Anonymized";
 $locale['susp07'] = "Deactivated";
 $locale['susp08'] = "Inactive";
-
 $locale['susp10'] = "Reinstate";
 $locale['susp11'] = "Ban";
 $locale['susp12'] = "Unactivate";
@@ -18,9 +17,7 @@ $locale['susp15'] = "Cancel";
 $locale['susp16'] = "Anonymize";
 $locale['susp17'] = "Deactivate";
 $locale['susp18'] = "Inactivate";
-
 $locale['susp_sys'] = "System Action";
-
 $locale['susp100'] = "User Log entries for %s";
 $locale['susp100b'] = "%s log entries for %s";
 $locale['susp101'] = "All User Log entries for user %s";
@@ -34,7 +31,7 @@ $locale['susp108'] = "IP";
 $locale['susp109'] = "System Action";
 $locale['susp110'] = "This user has no recorded actions in the log.";
 $locale['susp111'] = "Activated";
-$locale['susp112'] = "IP: "; 
+$locale['susp112'] = "IP: ";
 $locale['susp113'] = "Lifted";
 $locale['susp114'] = "Suspension Log";
 $locale['susp115'] = "Members";

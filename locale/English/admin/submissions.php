@@ -110,7 +110,6 @@ $locale['655'] = "Copyright:";
 $locale['656'] = "Comments:";
 $locale['657'] = "Ratings:";
 $locale['658'] = "Delete Screenshot";
-
 $locale['660'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
 $locale['661'] = "Comments";
 $locale['662'] = "Ratings";
