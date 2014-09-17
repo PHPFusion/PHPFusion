@@ -20,12 +20,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) {
-    die("Access Denied");
+	die("Access Denied");
 }
 if (file_exists(THEME."locale/".$settings['locale'].".php")) {
-    include THEME."locale/".$settings['locale'].".php";
+	include THEME."locale/".$settings['locale'].".php";
 } else {
-    include THEME."locale/English.php";
+	include THEME."locale/English.php";
 }
 global $aidlink, $locale;
 echo open_grid('footer', 1);
@@ -42,13 +42,13 @@ echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
 	<p>Septenary Theme by <a href='http://www.phpfusionmods.co.uk' target='_blank'>Craig</a> and <a href='http://www.guildsquare.com' target='_blank'>Hien</a></p>
 	<p>";
 if ($settings['visitorcounter_enabled']) {
-    echo "".showcounter();
+	echo "".showcounter();
 }
 if ($settings['rendertime_enabled'] == '1' || $settings['rendertime_enabled'] == '2') {
-    if ($settings['visitorcounter_enabled']) {
-        echo " | ";
-    }
-    echo showrendertime();
+	if ($settings['visitorcounter_enabled']) {
+		echo " | ";
+	}
+	echo showrendertime();
 }
 echo "</p>\n";
 echo "</div>\n";

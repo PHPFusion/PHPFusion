@@ -20,12 +20,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) {
-    die("Access Denied");
+	die("Access Denied");
 }
 if (file_exists(THEME."locale/".$settings['locale'].".php")) {
-    include THEME."locale/".$settings['locale'].".php";
+	include THEME."locale/".$settings['locale'].".php";
 } else {
-    include THEME."locale/English.php";
+	include THEME."locale/English.php";
 }
 // Septenary Theme Functions
 require_once THEME."includes/functions.php";
@@ -35,25 +35,25 @@ require_once INCLUDES."theme_functions_include.php";
 require_once THEME."includes/add_to_head.php";
 /* Theme Grid Controller */
 function open_grid($class, $box = FALSE) {
-    echo "<div class='".$class."'>\n";
-    echo ($box) ? "<div class='container'>\n" : '';
+	echo "<div class='".$class."'>\n";
+	echo ($box) ? "<div class='container'>\n" : '';
 }
 
 function close_grid($box = FALSE) {
-    echo "</div>\n";
-    echo ($box) ? "</div>\n" : '';
+	echo "</div>\n";
+	echo ($box) ? "</div>\n" : '';
 }
 
 function render_page($license = FALSE) {
-    //add_handler("theme_output");
-    global $settings, $main_style, $locale, $userdata, $aidlink, $mysql_queries_time;
-    require_once THEME."includes/header.php";
-    // Header - something fancy for login page.
-    if (FUSION_SELF !== 'login.php') {
-        require_once THEME."includes/content.php";
-    }
-    // Footer
-    require_once THEME."includes/footer.php";
+	//add_handler("theme_output");
+	global $settings, $main_style, $locale, $userdata, $aidlink, $mysql_queries_time;
+	require_once THEME."includes/header.php";
+	// Header - something fancy for login page.
+	if (FUSION_SELF !== 'login.php') {
+		require_once THEME."includes/content.php";
+	}
+	// Footer
+	require_once THEME."includes/footer.php";
 }
 
 // Render comments
