@@ -229,7 +229,7 @@ add_to_jquery("
     ");
 if ($rows > $threads_per_page) {
 	$filter_url = (isset($_GET['filter']) && $_GET['filter'] == 1) ? "&amp;time=".$_GET['time']."&amp;type=".$_GET['type']."&amp;sort=".$_GET['sort']."&amp;order=".$_GET['order']."&amp;filter=1&amp;" : "&amp;";
-	$page_nav = "<div id='pagenav' class='pull-right display-inline-block m-r-10'>".makepagenav($_GET['rowstart'], $threads_per_page, $rows, 3, FUSION_SELF."?forum_id=".$_GET['forum_id'].$filter_url."")."</div>\n";
+	$page_nav = "<div id='pagenav' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $threads_per_page, $rows, 3, FUSION_SELF."?forum_id=".$_GET['forum_id'].$filter_url."")."</div>\n";
 }
 // Add filter
 echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right',
@@ -245,28 +245,28 @@ echo "<span><strong>".$locale['531']."</strong></span>\n<br/>";
 $array = array('0' => $locale['531a'], '1' => $locale['531b'], '2' => $locale['531c'], '3' => $locale['531d'],);
 foreach ($array as $key => $value) {
 	$selected = (isset($_GET['time']) && $_GET['time'] == $key) ? "checked" : "";
-	echo "<input id='$arr-$value' type='radio' name='time' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$arr-$value'>$value</label>\n<br/>\n";
+	echo "<input id='$key-$value' type='radio' name='time' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$key-$value'>$value</label>\n<br/>\n";
 }
 echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 echo "<span><strong>".$locale['532']."</strong></span>\n<br/>";
 $array = array('0' => $locale['532a'], '1' => $locale['532b'], '2' => $locale['532c'], '3' => $locale['532d'],);
 foreach ($array as $key => $value) {
 	$selected = (isset($_GET['type']) && $_GET['type'] == $key) ? "checked" : "";
-	echo "<input id='$arr-$value' type='radio' name='type' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$arr-$value'>$value</label>\n<br/>\n";
+	echo "<input id='$key-$value' type='radio' name='type' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$key-$value'>$value</label>\n<br/>\n";
 }
 echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 echo "<span><strong>".$locale['533']."</strong></span>\n<br/>";
 $array = array('0' => $locale['533a'], '1' => $locale['533b'], '2' => $locale['533c'], '3' => $locale['533d'],);
 foreach ($array as $key => $value) {
 	$selected = (isset($_GET['sort']) && $_GET['sort'] == $key) ? "checked" : "";
-	echo "<input id='$arr-$value' type='radio' name='sort' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$arr-$value'>$value</label>\n<br/>\n";
+	echo "<input id='$key-$value' type='radio' name='sort' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$key-$value'>$value</label>\n<br/>\n";
 }
 echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 echo "<span><strong>".$locale['534']."</strong></span>\n<br/>";
 $array = array('0' => $locale['534a'], '1' => $locale['534b']);
 foreach ($array as $key => $value) {
 	$selected = (isset($_GET['order']) && $_GET['order'] == $key) ? "checked" : "";
-	echo "<input id='$arr-$value' type='radio' name='order' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$arr-$value'>$value</label>\n<br/>\n";
+	echo "<input id='$key-$value' type='radio' name='order' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$key-$value'>$value</label>\n<br/>\n";
 }
 // do button here.
 echo form_button('Go', 'gofilter', 'gofilter', 'Go', array('class' => 'btn-primary pull-right'));
@@ -436,14 +436,15 @@ if ($rows) {
 	}
 }
 if (iMOD) {
+
 	if ($rows) {
-		echo "<table cellspacing='0' cellpadding='0' width='100%'>\n<tr>\n<td style='padding-top:5px'>";
-		echo "<a href='#' onclick=\"javascript:setChecked('mod_form','check_mark[]',1);return false;\">".$locale['460']."</a> ::\n";
-		echo "<a href='#' onclick=\"javascript:setChecked('mod_form','check_mark[]',0);return false;\">".$locale['461']."</a></td>\n";
-		echo "<td align='right' style='padding-top:5px'>\n";
-		echo form_button($locale['463'], 'delete_threads', 'delete_threads', $locale['463'], array('class' => 'btn-danger'));
-		//<input type='submit' name='delete_threads' value='".$locale['462']."' class='button' onclick=\"return confirm('".$locale['463']."');\" /></td>\n";
-		echo "</td>\n</tr>\n</table>\n";
+		echo "<div class='forum-table-container panel-body'>\n";
+		echo "<div class='btn-group m-r-10'>\n";
+		echo "<a id='check' class='btn btn-default button' href='#' onclick=\"javascript:setChecked('mod_form','check_mark[]',1);return false;\">".$locale['460']."</a>\n";
+		echo "<a id='uncheck' class='btn btn-default button' href='#' onclick=\"javascript:setChecked('mod_form','check_mark[]',0);return false;\">".$locale['461']."</a>\n";
+		echo "</div>\n";
+		echo form_button($locale['463'], 'delete_threads', 'delete_threads', $locale['463'], array('class'=>'btn-danger m-r-10'));
+		echo "</div>\n";
 	}
 	echo "</form>\n";
 	if ($rows) {
@@ -457,6 +458,7 @@ if (iMOD) {
 	}
 }
 echo $post_info; // the button
+
 echo "<table class='tbl-border table table-responsive' border='0' width='100%' align='center'>";
 echo "<tr><td><img src='".get_image("foldernew")."' alt='".$locale['560']."' style='vertical-align:middle; width:24px;' /> - ".$locale['470']."</td>";
 echo "<td><img src='".get_image("folder")."' alt='".$locale['561']."' style='vertical-align:middle; width:24px;' /> - ".$locale['472']."</td></tr>";
