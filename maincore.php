@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {	die(); }
+if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) { die(); }
 
 // Calculate script start/end time
 function get_microtime() {
