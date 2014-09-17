@@ -2,8 +2,6 @@
 /*
 English Language Fileset
 Produced by Nick Jones (Digitanium)
-Email: digitanium@php-fusion.co.uk
-Web: http://www.php-fusion.co.uk
 */
 // Locale Settings
 setlocale(LC_TIME, "en", "GB"); // Linux Server (Windows may differ)
@@ -110,17 +108,40 @@ $locale['global_105'] = "Not a member yet? <a href='".BASEDIR."register.php' cla
 $locale['global_106'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
 $locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";
-// Member User Menu
-$locale['global_120'] = "Edit Profile";
-$locale['global_121'] = "Private Messages";
-$locale['global_122'] = "Members List";
-$locale['global_123'] = "Admin Panel";
-$locale['global_124'] = "Logout";
-$locale['global_125'] = "You have %u new ";
-$locale['global_126'] = "message";
-$locale['global_127'] = "messages";
-$locale['global_128'] = "submission";
-$locale['global_129'] = "submissions";
+// User Menu
+$locale['UM060'] = "Login";
+$locale['UM061'] = "Username";
+$locale['UM061a'] = "Email";
+$locale['UM061b'] = "Username or Email";
+$locale['UM062'] = "Password";
+$locale['UM063'] = "Remember Me";
+$locale['UM064'] = "Login";
+$locale['UM065'] = "Not a member yet?<br /><a href='".BASEDIR."register.php' class='side'>Click here</a> to register.";
+$locale['UM066'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
+$locale['UM080'] = "Edit Profile";
+$locale['UM081'] = "Private Messages";
+$locale['UM082'] = "Members List";
+$locale['UM083'] = "Admin Panel";
+$locale['UM084'] = "Logout";
+$locale['UM085'] = "You have %u new ";
+$locale['UM086'] = "message";
+$locale['UM087'] = "messages";
+$locale['UM088'] = "Followed threads";
+// Submit (news, link, article)
+$locale['UM089'] = "Submit...";
+$locale['UM090'] = "Add news";
+$locale['UM091'] = "Add link";
+$locale['UM092'] = "Add article";
+$locale['UM093'] = "Add photo";
+$locale['UM094'] = "Add download";
+// User Panel
+$locale['UM095'] = "Welcome: ";
+$locale['UM096'] = "Personal menu";
+$locale['UM097'] = "Switch Language";
+// Gauges
+$locale['UM098'] = "Messages inbox:";
+$locale['UM099'] = "Messages outbox:";
+$locale['UM100'] = "Messages archive:";
 // Poll
 $locale['global_130'] = "Member Poll";
 $locale['global_131'] = "Submit Vote";
@@ -231,6 +252,7 @@ $locale['global_900'] = "Unable to convert HEX to DEC";
 //Language Selection
 $locale['global_ML100'] = "Language:";
 $locale['global_ML101'] = "- Select Language -";
+$locale['global_ML102'] = "Site language";
 // Tokens
 $locale['token_error_title'] = "Token Error";
 $locale['token_error']       = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";
