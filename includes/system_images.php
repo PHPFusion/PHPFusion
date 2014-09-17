@@ -56,6 +56,7 @@ while ($data = dbarray($result)) {
 	-	newthread.gif
 	-	pm.gif
 	-	pollbar.gif
+	- 	profile.gif
 	-	quote.gif
 	-	reply.gif
 	-	stickythread.gif
