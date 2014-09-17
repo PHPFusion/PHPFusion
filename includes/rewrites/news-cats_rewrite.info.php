@@ -4,7 +4,7 @@
     | Copyright (C) 2002 - 2011 Nick Jones
     | http://www.php-fusion.co.uk/
     +--------------------------------------------------------+
-    | Filename: articles_rewrite_include.php
+    | Filename: news_rewrite_include.php
     | Author: Ankur Thakur
     +--------------------------------------------------------+
     | This program is released as free software under the
@@ -17,23 +17,6 @@
     +--------------------------------------------------------*/
     if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-    $regex = array(
-        "%group_id%" => "([0-9]+)", // this too. fine, np.
-        "%group_name%" => "([a-zA-Z0-9-_]+)", // this get from DB, fine np
-        "%step%" => "([0-9]+)", // only this.
-    );
-
-    // for installations?
-    $pattern = array(
-        "guild/%group_id%/%group_name%" => "page.php?guild=%group_id%",
-        "guild/%group_name%" => "page.php?guild=%group_id%",
-        "page/%group_id%/%group_name%/%step%" => "page.php?guild=%group_id%&amp;step=%step%",
-    );
-
-    $dbname = DB_USER_GROUPS;
-    $dbid = array("%group_id%" => "group_id");
-    $dbinfo = array(
-        "%group_name%" => "group_name"
-    );
-
+    $permalink_name = $locale['pl_news_cats_title'];
+    $permalink_desc = $locale['pl_news_cats_desc'];
 ?>

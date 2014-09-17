@@ -19,11 +19,13 @@
         die("Access Denied");
     }
 
-    $regex = array("%article_cat_id%" => "([0-9]+)", "%article_cat_title%" => "([a-zA-Z0-9-_]+)");
-    $pattern = array("article-category/%article_cat_id%/%article_cat_title%" => "articles.php?cat_id=%article_cat_id%");
+    $regex = array("%news_cat_id%" => "([0-9]+)", "%news_cat_name%" => "([a-zA-Z0-9-_]+)");
+    $pattern = array("news-category" => "news_cats.php",
+                     "%news_cat_id%/%news_cat_name%" => "news_cats.php?cat_id=%news_cat_id%");
 
     $dir_path = ROOT;
-    $dbname = DB_ARTICLE_CATS;
-    $dbid = array("%article_cat_id%" => "article_cat_id");
-    $dbinfo = array("%article_cat_title%" => "article_cat_name");
+    $dbname = DB_NEWS_CATS;
+    $dbid = array("%news_cat_id%" => "news_cat_id");
+    $dbinfo = array("%news_cat_name%" => "news_cat_name");
+
 ?>

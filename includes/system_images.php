@@ -52,10 +52,10 @@ $fusion_images = array(
 	//E
 	"edit" 			=> IMAGES."edit.png",
 	//F
-	"folder" 		=> THEME."forum/folder.gif",
-	"folderlock" 	=> THEME."forum/folderlock.gif",
-	"foldernew" 	=> THEME."forum/foldernew.gif",
-	"forum_edit" 	=> THEME."forum/edit.gif",
+	"folder" 		=> FORUM."images/folder.png",
+	"folderlock" 	=> FORUM."images/folderlock.png",
+	"foldernew" 	=> FORUM."images/foldernew.png",
+	"forum_edit" 	=> FORUM."images/edit.gif",
 	//G
 	"go_first" 		=> IMAGES."go_first.png",
 	"go_last" 		=> IMAGES."go_last.png",
@@ -76,7 +76,7 @@ $fusion_images = array(
 	"lastpostnew"	=> FORUM."images/lastpostnew.png",
 	//M
 	//N
-	"newthread" 	=> THEME."forum/newthread.gif",
+	"newthread" 	=> FORUM."images/newthread.png",
 	"no" 			=> IMAGES."no.png",
 	"noavatar50" 	=> "noavatar50.png",
 	"noavatar100" 	=> "noavatar100.png",
@@ -86,7 +86,7 @@ $fusion_images = array(
 	"panel_on" 		=> THEME."images/panel_on.gif",
 	"panel_off" 	=> THEME."images/panel_off.gif",
 	"pm" 			=> THEME."forum/pm.gif",
-	"poll_posticon" => FORUM."images/poll_posticon.gif",
+	"poll_posticon" => FORUM."images/poll.png",
 	"pollbar" 		=> THEME."images/pollbar.gif",
 	"printer" 		=> IMAGES."printer.png",
 	//Q
@@ -99,7 +99,7 @@ $fusion_images = array(
 	"screenshot"	=> IMAGES."dl_screenshot.png",
 	"star" 			=> IMAGES."star.png",
 	"statistics"	=> IMAGES."dl_stats.png",
-	"stickythread" 	=> THEME."forum/stickythread.gif",
+	"stickythread" 	=> FORUM."images/stickythread.png",
 	//T
 	"tick" 			=> IMAGES."tick.png",
 	//U

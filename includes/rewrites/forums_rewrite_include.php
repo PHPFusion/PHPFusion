@@ -15,21 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$regex = array(
-	"%forum_id%" => "([0-9]+)",
-	"%forum_title%" => "([a-zA-Z0-9-]+)"
-);
-$pattern = array(
-	"forum" => "forum/index.php",
-	"forum/" => "forum/index.php",
-	"forum/%forum_id%/%forum_title%" => "forum/viewforum.php?forum_id=%forum_id%"
-);
-$dbid = array("%forum_id%" => "forum_id");
-$dbname = DB_FORUMS;
-$dbinfo = array(
-	"%forum_title%" => "forum_name"
-);
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+$regex   = array("%forum_id%" => "([0-9]+)", "%forum_title%" => "([a-zA-Z0-9-]+)");
+$pattern = array("forum" => "forum/index.php", "forum/" => "forum/index.php", "forum/%forum_id%/%forum_title%" => "forum/viewforum.php?forum_id=%forum_id%");
+$dbid    = array("%forum_id%" => "forum_id");
+$dbname  = DB_FORUMS;
+$dbinfo  = array("%forum_title%" => "forum_name");
 
 ?>
