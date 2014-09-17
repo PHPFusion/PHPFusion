@@ -56,6 +56,9 @@
 .text-bigger { font-size: 110% !important; }
 .text-smaller { font-size: 90% !important; }
 .text-bold { font-weight: bold !important; }
+.text-normal { font-weight: normal !important; }
+.text-active { color: rgb(66, 139, 202); }
+.text-disabled { color: #f7f7f7; }
 .text-serif { font-family: 'Times New Roman', Courier, "Courier New" }
 .uppercase { text-transform: uppercase; }
 .text-uppercase { text-transform: uppercase; }

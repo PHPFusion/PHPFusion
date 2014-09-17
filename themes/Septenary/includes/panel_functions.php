@@ -19,33 +19,37 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+function opentable($title) {
+    echo "<article><h2>".$title."</h2><div class='content'>\n";
+}
 
-		function opentable($title) { 
-		echo "<article><h2>".$title."</h2><div class='content'>\n";
-		}
+function closetable() { echo "</div></article>\n"; }
 
-		function closetable() { echo "</div></article>\n"; }
+function openside($title, $collapse = FALSE, $state = "on") {
+    global $panel_collapse;
+    $panel_collapse = $collapse;
+    echo "<div class='heading'>\n";
+    echo "<div style='margin-left: 10px;'>".$title."</div>\n";
+    echo "</div>\n";
+    if ($collapse == TRUE) {
+        $boxname = str_replace(" ", "", $title);
+        echo "<div class='pull-right' style='padding-top: 10px;'>".panelbutton($state, $boxname)."</div>\n";
+    }
+    echo "<div class='content'>\n";
+    if ($collapse == TRUE) {
+        echo panelstate($state, $boxname);
+    }
+}
 
-		
-		
-		function openside($title, $collapse = false, $state = "on") {
-            global $panel_collapse; $panel_collapse = $collapse;
-            echo "<div class='heading'>\n";
-            echo "<div style='margin-left: 10px;'>".$title."</div>\n";
-            echo "</div>\n";
-            if ($collapse == true) {
-            $boxname = str_replace(" ", "", $title);
-            echo "<div class='pull-right' style='padding-top: 10px;'>".panelbutton($state, $boxname)."</div>\n";
-            }
-            echo "<div class='content'>\n";
-            if ($collapse == true) { echo panelstate($state, $boxname); }
-		}
+function closeside() {
+    global $panel_collapse;
+    if ($panel_collapse == TRUE) {
+        echo "</div>\n";
+    }
+    echo "</div>";
+}
 
-		function closeside() {
-            global $panel_collapse;
-            if ($panel_collapse == true) { echo "</div>\n"; }
-            echo"</div>";
-		}
-
-		?>
+?>

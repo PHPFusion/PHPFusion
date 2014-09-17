@@ -19,20 +19,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-    open_grid('section-3', 1);
-    echo "<div class='row'>\n";
-    echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 leftbar'>\n";
-    echo RIGHT.LEFT;
-    echo "</div>\n";
-    echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 main-content'>\n";
-    echo U_CENTER.CONTENT.L_CENTER;
-
-    echo "</div>\n";
-    echo "</div>\n";
-
-
-    close_grid(1);
+if (!defined("IN_FUSION")) {
+    die("Access Denied");
+}
+open_grid('section-3', 1);
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 leftbar'>\n";
+echo RIGHT.LEFT;
+echo "</div>\n";
+echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 main-content'>\n";
+echo U_CENTER.CONTENT.L_CENTER;
+echo "</div>\n";
+echo "</div>\n";
+close_grid(1);
 
 ?>
