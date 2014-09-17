@@ -18,9 +18,7 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."news_cats.php";
-
 add_to_title($locale['global_200'].$locale['400']);
-
 opentable($locale['400']);
 if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$res = 0;
@@ -47,7 +45,9 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 			echo "</td>\n</tr>\n</table><!--sub_news_cat-->\n";
 		}
 	}
-	if (!$res) { redirect(FUSION_SELF); }
+	if (!$res) {
+		redirect(FUSION_SELF);
+	}
 } else {
 	$res = 0;
 	$result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_id");
@@ -63,7 +63,9 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 				while ($data2 = dbarray($result2)) {
 					echo THEME_BULLET." <a href='news.php?readmore=".$data2['news_id']."'>".$data2['news_subject']."</a><br />\n";
 				}
-				if ($rows > 10) { echo "<div style='text-align:right'>".THEME_BULLET." <a href='".FUSION_SELF."?cat_id=".$data['news_cat_id']."'>".$locale['405']."</a></div>\n"; }
+				if ($rows > 10) {
+					echo "<div style='text-align:right'>".THEME_BULLET." <a href='".FUSION_SELF."?cat_id=".$data['news_cat_id']."'>".$locale['405']."</a></div>\n";
+				}
 			} else {
 				echo THEME_BULLET." ".$locale['404']."\n";
 			}
@@ -73,7 +75,9 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	}
 	$result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") AND news_draft='0' ORDER BY news_datestamp DESC LIMIT 10");
 	if (dbrows($result)) {
-		if ($res == 0) { echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n"; }
+		if ($res == 0) {
+			echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n";
+		}
 		$nrows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") AND news_draft='0'");
 		echo "<tr>\n<td width='150' class='tbl1' style='vertical-align:top'>".$locale['403']."<br />\n";
 		echo "<strong>".$locale['402']."</strong> $nrows</td>\n<td class='tbl1' style='vertical-align:top'>\n";
@@ -81,7 +85,9 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 			echo THEME_BULLET." <a href='news.php?readmore=".$data['news_id']."'>".$data['news_subject']."</a><br />\n";
 		}
 		$res = 1;
-		if ($nrows > 10) { echo "<div style='text-align:right'>".THEME_BULLET." <a href='".FUSION_SELF."?cat_id=0'>".$locale['405']."</a></div>\n"; }
+		if ($nrows > 10) {
+			echo "<div style='text-align:right'>".THEME_BULLET." <a href='".FUSION_SELF."?cat_id=0'>".$locale['405']."</a></div>\n";
+		}
 		echo "</td>\n</tr>\n";
 	}
 	if ($res == 1) {
@@ -91,6 +97,5 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	}
 }
 closetable();
-
 require_once THEMES."templates/footer.php";
 ?>

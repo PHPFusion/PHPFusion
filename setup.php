@@ -50,7 +50,8 @@ function opensetup() {
 	echo "<p class='text-right mid-opacity'>Version ".$locale['os_version']."</p>";
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
-	$steps = array('1' => $locale['001'], '2' => $locale['002'], '3' => $locale['003'], '4' => $locale['004'], '5' => $locale['005'], '6' => $locale['006']);
+	$steps = array('1' => $locale['001'], '2' => $locale['002'], '3' => $locale['003'], '4' => $locale['004'],
+	               '5' => $locale['005'], '6' => $locale['006']);
 	echo "<div class='list-group'>\n";
 	foreach ($steps as $arr => $value) {
 		if ($arr == 1) {
@@ -108,8 +109,14 @@ if (isset($_POST['step']) && $_POST['step'] == "2") {
 			fclose($handle);
 		}
 	}
-	$check_arr = array("administration/db_backups" => FALSE, "forum/attachments" => FALSE, "downloads" => FALSE, "downloads/images" => FALSE, "downloads/submissions/" => FALSE, "downloads/submissions/images" => FALSE, "ftp_upload" => FALSE, "images" => FALSE, "images/imagelist.js" => FALSE, "images/articles" => FALSE, "images/avatars" => FALSE, "images/news" => FALSE, "images/news/thumbs" => FALSE, "images/news_cats" => FALSE, "images/photoalbum" => FALSE, "images/photoalbum/submissions" => FALSE, "config.php" => FALSE, "robots.txt" => FALSE);
-	$write_check   = TRUE;
+	$check_arr = array("administration/db_backups" => FALSE, "forum/attachments" => FALSE, "downloads" => FALSE,
+	                   "downloads/images" => FALSE, "downloads/submissions/" => FALSE,
+	                   "downloads/submissions/images" => FALSE, "ftp_upload" => FALSE, "images" => FALSE,
+	                   "images/imagelist.js" => FALSE, "images/articles" => FALSE, "images/avatars" => FALSE,
+	                   "images/news" => FALSE, "images/news/thumbs" => FALSE, "images/news_cats" => FALSE,
+	                   "images/photoalbum" => FALSE, "images/photoalbum/submissions" => FALSE, "config.php" => FALSE,
+	                   "robots.txt" => FALSE);
+	$write_check = TRUE;
 	$check_display = "";
 	foreach ($check_arr as $key => $value) {
 		if (file_exists($key) && is_writable($key)) {
@@ -141,8 +148,8 @@ if (isset($_POST['step']) && $_POST['step'] == "2") {
 // Step 3
 if (isset($_POST['step']) && $_POST['step'] == "3") {
 	function createRandomPrefix($length = 5) {
-		$chars  = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
-		$count  = array((strlen($chars[0])-1), (strlen($chars[1])-1));
+		$chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
+		$count = array((strlen($chars[0])-1), (strlen($chars[1])-1));
 		$prefix = "";
 		for ($i = 0; $i < $length; $i++) {
 			$type = mt_rand(0, 1);
@@ -151,16 +158,16 @@ if (isset($_POST['step']) && $_POST['step'] == "3") {
 		return $prefix;
 	}
 
-	$db_prefix     = "fusion".createRandomPrefix()."_";
+	$db_prefix = "fusion".createRandomPrefix()."_";
 	$cookie_prefix = "fusion".createRandomPrefix()."_";
-	$db_host       = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "localhost");
-	$db_user       = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
-	$db_user       = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
-	$db_name       = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
-	$pdo_enabled   = (isset($_POST['pdo_enabled']) ? stripinput(trim($_POST['pdo_enabled'])) : "");
-	$db_prefix     = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : $db_prefix);
-	$db_error      = (isset($_POST['db_error']) && isnum($_POST['db_error']) ? $_POST['db_error'] : "0");
-	$field_class   = array("", "", "", "", "");
+	$db_host = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "localhost");
+	$db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
+	$db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
+	$db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
+	$pdo_enabled = (isset($_POST['pdo_enabled']) ? stripinput(trim($_POST['pdo_enabled'])) : "");
+	$db_prefix = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : $db_prefix);
+	$db_error = (isset($_POST['db_error']) && isnum($_POST['db_error']) ? $_POST['db_error'] : "0");
+	$field_class = array("", "", "", "", "");
 	if ($db_error > "0") {
 		$field_class[2] = " tbl-error";
 		if ($db_error == 1) {
@@ -226,12 +233,12 @@ if (isset($_POST['step']) && $_POST['step'] == "3") {
 }
 // Step 4
 if (isset($_POST['step']) && $_POST['step'] == "4") {
-	$db_host       = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "");
-	$db_user       = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
-	$db_pass       = (isset($_POST['db_pass']) ? stripinput(trim($_POST['db_pass'])) : "");
-	$db_name       = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
-	$pdo_enabled   = (isset($_POST['pdo_enabled']) ? stripinput(trim($_POST['pdo_enabled'])) : "");
-	$db_prefix     = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : "");
+	$db_host = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "");
+	$db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
+	$db_pass = (isset($_POST['db_pass']) ? stripinput(trim($_POST['db_pass'])) : "");
+	$db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
+	$pdo_enabled = (isset($_POST['pdo_enabled']) ? stripinput(trim($_POST['pdo_enabled'])) : "");
+	$db_prefix = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : "");
 	$cookie_prefix = (isset($_POST['cookie_prefix']) ? stripinput(trim($_POST['cookie_prefix'])) : "fusion_");
 	if ($db_prefix != "") {
 		$db_prefix_last = $db_prefix[strlen($db_prefix)-1];
@@ -249,7 +256,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 	function createRandomToken($length = 32) {
 		$chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
 		$count = array((strlen($chars[0])-1), (strlen($chars[1])-1));
-		$key   = "";
+		$key = "";
 		for ($i = 0; $i < $length; $i++) {
 			$type = mt_rand(0, 1);
 			$key .= substr($chars[$type], mt_rand(0, $count[$type]), 1);
@@ -257,31 +264,31 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 		return $key;
 	}
 
-	$secret_key      = "".createRandomToken()."";
+	$secret_key = "".createRandomToken()."";
 	$secret_key_salt = "".createRandomToken()."";
 	if ($db_host != "" && $db_user != "" && $db_name != "" && $db_prefix != "") {
 		if ($pdo_enabled == "1") {
 			require_once "includes/db_handlers/pdo_functions_include.php";
 			$pdo = NULL;
 			try {
-				$pdo        = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";encoding=utf8", $db_user, $db_pass);
+				$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";encoding=utf8", $db_user, $db_pass);
 				$db_connect = $pdo;
-				$db_select  = "True";
+				$db_select = "True";
 			} catch (PDOException $e) {
 				$db_connect = "False";
-				$db_select  = "False";
+				$db_select = "False";
 			}
 		} else {
 			require_once "includes/db_handlers/mysql_functions_include.php";
 			$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-			$db_select  = @mysql_select_db($db_name);
+			$db_select = @mysql_select_db($db_name);
 		}
 		if ($db_connect) {
 			if ($db_select) {
 				if (dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'")) == "0") {
 					$table_name = uniqid($db_prefix, FALSE);
-					$can_write  = TRUE;
-					$result     = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MYISAM;");
+					$can_write = TRUE;
+					$result = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MYISAM;");
 					if (!$result) {
 						$can_write = FALSE;
 					}
@@ -1183,20 +1190,20 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 								echo "<br />\n<i class='entypo check'></i> ".$locale['040']."<br /><br />\n<i class='entypo check'></i> ";
 								echo $locale['041']."<br /><br />\n<i class='entypo check'></i> ";
 								echo $locale['042']."<br /><br />\n";
-								$success  = TRUE;
+								$success = TRUE;
 								$db_error = 6;
 							} else {
 								echo "<br />\n<i class='entypo check'></i> ".$locale['040']."<br /><br />\n<i class='entypo check'></i> ";
 								echo $locale['041']."<br /><br />\n<i class='entypo icancel'></i> ";
 								echo "<strong>".$locale['043']."</strong> ".$locale['048']."<br /><br />\n";
-								$success  = FALSE;
+								$success = FALSE;
 								$db_error = 0;
 							}
 						} else {
 							echo "<br />\n".$locale['040']."<br /><br />\n";
 							echo "<strong>".$locale['043']."</strong> ".$locale['046']."<br />\n";
 							echo "<span class='small'>".$locale['047']."</span><br /><br />\n";
-							$success  = FALSE;
+							$success = FALSE;
 							$db_error = 5;
 						}
 					} else {
@@ -1205,7 +1212,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 						echo "<strong>".$locale['043']."</strong> ".$locale['054']."<br />\n";
 						echo "<span class='small'>".$locale['055']."</span><br /><br />\n";
 						echo "</div>\n";
-						$success  = FALSE;
+						$success = FALSE;
 						$db_error = 4;
 					}
 				} else {
@@ -1213,7 +1220,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 					echo "<strong>".$locale['043']."<strong> ".$locale['052']."<br />\n";
 					echo "<span class='small'>".$locale['053']."</span><br /><br />\n";
 					echo "</div>\n";
-					$success  = FALSE;
+					$success = FALSE;
 					$db_error = 3;
 				}
 			} else {
@@ -1221,7 +1228,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 				echo "<br />\n<strong>".$locale['043']."<strong> ".$locale['050']."<br />\n";
 				echo "<span class='small'>".$locale['051']."</span><br /><br />\n";
 				echo "</div>\n";
-				$success  = FALSE;
+				$success = FALSE;
 				$db_error = 2;
 			}
 		} else {
@@ -1229,7 +1236,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 			echo "<strong>".$locale['043']."<strong> ".$locale['044']."<br />\n";
 			echo "<span class='small'>".$locale['045']."</span><br /><br />\n";
 			echo "</div>\n";
-			$success  = FALSE;
+			$success = FALSE;
 			$db_error = 1;
 		}
 	} else {
@@ -1237,7 +1244,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 		echo "<strong>".$locale['043']."<strong> ".$locale['056']."<br />\n";
 		echo "".$locale['057']."<br /><br />\n";
 		echo "</div>\n";
-		$success  = FALSE;
+		$success = FALSE;
 		$db_error = 7;
 	}
 	echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
@@ -1258,8 +1265,8 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 }
 // Step 5
 if (isset($_POST['step']) && $_POST['step'] == "5") {
-	$username   = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
-	$email      = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
+	$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
+	$email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
 	$error_pass = (isset($_POST['error_pass']) && isnum($_POST['error_pass']) ? $_POST['error_pass'] : "0");
 	$error_name = (isset($_POST['error_name']) && isnum($_POST['error_name']) ? $_POST['error_name'] : "0");
 	$error_mail = (isset($_POST['error_mail']) && isnum($_POST['error_mail']) ? $_POST['error_mail'] : "0");
@@ -1300,22 +1307,22 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 		require_once "includes/db_handlers/pdo_functions_include.php";
 		$pdo = NULL;
 		try {
-			$pdo        = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";encoding=utf8", $db_user, $db_pass);
+			$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";encoding=utf8", $db_user, $db_pass);
 			$db_connect = $pdo;
-			$db_select  = "True";
+			$db_select = "True";
 		} catch (PDOException $e) {
 			$db_connect = "False";
-			$db_select  = "False";
+			$db_select = "False";
 		}
 	} else {
 		require_once "includes/db_handlers/mysql_functions_include.php";
 		$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-		$db_select  = @mysql_select_db($db_name);
+		$db_select = @mysql_select_db($db_name);
 	}
-	$error                          = "";
-	$error_pass                     = "0";
-	$error_name                     = "0";
-	$error_mail                     = "0";
+	$error = "";
+	$error_pass = "0";
+	$error_name = "0";
+	$error_mail = "0";
 	$settings['password_algorithm'] = "sha256";
 	$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
 	if ($username == "") {
@@ -1326,28 +1333,28 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 		$error_name = "1";
 	}
 	require_once "includes/classes/PasswordAuth.class.php";
-	$userPassword  = "";
+	$userPassword = "";
 	$adminPassword = "";
-	$userPass                    = new PasswordAuth();
-	$userPass->inputNewPassword  = (isset($_POST['password1']) ? stripinput(trim($_POST['password1'])) : "");
+	$userPass = new PasswordAuth();
+	$userPass->inputNewPassword = (isset($_POST['password1']) ? stripinput(trim($_POST['password1'])) : "");
 	$userPass->inputNewPassword2 = (isset($_POST['password2']) ? stripinput(trim($_POST['password2'])) : "");
-	$returnValue                 = $userPass->isValidNewPassword();
+	$returnValue = $userPass->isValidNewPassword();
 	if ($returnValue == 0) {
 		$userPassword = $userPass->getNewHash();
-		$userSalt     = $userPass->getNewSalt();
+		$userSalt = $userPass->getNewSalt();
 	} elseif ($returnValue == 2) {
 		$error .= $locale['071']."<br /><br />\n";
 		$error_pass = "1";
 	} elseif ($returnValue == 3) {
 		$error .= $locale['072']."<br /><br />\n";
 	}
-	$adminPass                    = new PasswordAuth();
-	$adminPass->inputNewPassword  = (isset($_POST['admin_password1']) ? stripinput(trim($_POST['admin_password1'])) : "");
+	$adminPass = new PasswordAuth();
+	$adminPass->inputNewPassword = (isset($_POST['admin_password1']) ? stripinput(trim($_POST['admin_password1'])) : "");
 	$adminPass->inputNewPassword2 = (isset($_POST['admin_password2']) ? stripinput(trim($_POST['admin_password2'])) : "");
-	$returnValue                  = $adminPass->isValidNewPassword();
+	$returnValue = $adminPass->isValidNewPassword();
 	if ($returnValue == 0) {
 		$adminPassword = $adminPass->getNewHash();
-		$adminSalt     = $adminPass->getNewSalt();
+		$adminSalt = $adminPass->getNewSalt();
 	} elseif ($returnValue == 2) {
 		$error .= $locale['073']."<br /><br />\n";
 		$error_pass = "1";
@@ -1370,7 +1377,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 	if ($error == "") {
 		if ($rows == 0) {
 			$siteurl = getCurrentURL();
-			$url     = parse_url($siteurl);
+			$url = parse_url($siteurl);
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('sitename', 'PHP-Fusion Powered Website')");
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('siteurl', '".$siteurl."')");
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('site_protocol', '".$url['scheme']."')");
@@ -1612,7 +1619,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 			$result = dbquery("INSERT INTO ".$db_prefix."smileys (smiley_code, smiley_image, smiley_text) VALUES (':D', 'grin.gif', '".$locale['217']."')");
 			$result = dbquery("INSERT INTO ".$db_prefix."smileys (smiley_code, smiley_image, smiley_text) VALUES (':@', 'angry.gif', '".$locale['218']."')");
 			$settings = array();
-			$result   = dbquery("SELECT * FROM ".$db_prefix."settings");
+			$result = dbquery("SELECT * FROM ".$db_prefix."settings");
 			if (dbrows($result)) {
 				while ($data = dbarray($result)) {
 					$settings[$data['settings_name']] = $data['settings_value'];
@@ -1620,7 +1627,6 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 			} else {
 				die("Settings do not exist, please check your config.php file or run setup.php again.");
 			}
-		
 			$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('Language Panel', 'language_panel', '', '1', '1', 'file', '0', '0', '1', '')");
 			$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['160']."', 'css_navigation_panel', '', '1', '1', 'file', '0', '0', '1', '')");
 			$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['161']."', 'online_users_panel', '', '1', '2', 'file', '0', '0', '1', '')");
@@ -1630,7 +1636,6 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 			$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['165']."', 'forum_threads_list_panel', '', '2', '2', 'file', '0', '0', '0', '')");
 			$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['166']."', 'user_info_panel', '', '4', 1, 'file', '0', '0', '1', '')");
 			$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['167']."', 'member_poll_panel', '', '4', '2', 'file', '0', '0', '0', '')");
-
 			// UF 1.02
 			$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (1, '".$locale['220']."', '', '', '', 0, 1)");
 			$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (2, '".$locale['221']."', '', '', '', 0, 2)");
@@ -1648,10 +1653,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 			$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_theme', '3', '0', '2')");
 			$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_sig', '3', '0', '3')");
 			$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_blacklist', '5', '0', '1')");
-
-			
-		$enabled_languages = explode('.', $settings['enabled_languages']);
-			
+			$enabled_languages = explode('.', $settings['enabled_languages']);
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				include "locale/".$enabled_languages[$i]."/setup.php";
 				$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['180']."', 'bugs.gif', '".$enabled_languages[$i]."')");
@@ -1671,7 +1673,6 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 				$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['194']."', 'themes.gif', '".$enabled_languages[$i]."')");
 				$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['195']."', 'windows.gif', '".$enabled_languages[$i]."')");
 			}
-			
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				include "locale/".$enabled_languages[$i]."/setup.php";
 				$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130']."', 'index.php', '0', '2', '0', '1', '".$enabled_languages[$i]."')");
@@ -1691,14 +1692,12 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 				$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['143']."', 'submit.php?stype=p', '101', '1', '0', '15', '".$enabled_languages[$i]."')");
 				$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['144']."', 'submit.php?stype=d', '101', '1', '0', '16', '".$enabled_languages[$i]."')");
 			}
-			
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				include "locale/".$enabled_languages[$i]."/setup.php";
 				$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
 				$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
 				$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
 			}
-
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				include "locale/".$enabled_languages[$i]."/setup.php";
 				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['200']."', 'rank_super_admin.png', 0, '1', 103, '".$enabled_languages[$i]."')");
@@ -1712,13 +1711,12 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['208']."', 'rank5.png', 1000, '0', 101, '".$enabled_languages[$i]."')");
 			}
 		}
-		
-	if (isset($_POST['localeset']) && file_exists("locale/".$_POST['localeset']) && is_dir("locale/".$_POST['localeset'])) {
-        include "locale/".$_POST['localeset']."/setup.php";
-    } else {
-        $_POST['localeset'] = "English";
-        include "locale/English/setup.php";
-    }
+		if (isset($_POST['localeset']) && file_exists("locale/".$_POST['localeset']) && is_dir("locale/".$_POST['localeset'])) {
+			include "locale/".$_POST['localeset']."/setup.php";
+		} else {
+			$_POST['localeset'] = "English";
+			include "locale/English/setup.php";
+		}
 		if (function_exists("chmod")) {
 			@chmod("config.php", 0644);
 		}
@@ -1755,9 +1753,9 @@ function get_microtime() {
 // Strip Input Function, prevents HTML in unwanted places
 function stripinput($text) {
 	if (ini_get('magic_quotes_gpc')) $text = stripslashes($text);
-	$search  = array("\"", "'", "\\", '\"', "\'", "<", ">", "&nbsp;");
+	$search = array("\"", "'", "\\", '\"', "\'", "<", ">", "&nbsp;");
 	$replace = array("&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
-	$text    = str_replace($search, $replace, $text);
+	$text = str_replace($search, $replace, $text);
 	return $text;
 }
 
@@ -1772,9 +1770,9 @@ function isnum($value) {
 
 // Create a list of files or folders and store them in an array
 function makefilelist($folder, $filter, $sort = TRUE, $type = "files") {
-	$res    = array();
+	$res = array();
 	$filter = explode("|", $filter);
-	$temp   = opendir($folder);
+	$temp = opendir($folder);
 	while ($file = readdir($temp)) {
 		if ($type == "files" && !in_array($file, $filter)) {
 			if (!is_dir($folder.$file)) $res[] = $file;
@@ -1799,17 +1797,17 @@ function makefileopts($files, $selected = "") {
 
 // Clean URL Function, prevents entities in server globals
 function cleanurl($url) {
-	$bad_entities  = array("&", "\"", "'", '\"', "\'", "<", ">", "(", ")", "*");
+	$bad_entities = array("&", "\"", "'", '\"', "\'", "<", ">", "(", ")", "*");
 	$safe_entities = array("&amp;", "", "", "", "", "", "", "", "", "");
-	$url           = str_replace($bad_entities, $safe_entities, $url);
+	$url = str_replace($bad_entities, $safe_entities, $url);
 	return $url;
 }
 
 // Get Current URL
 function getCurrentURL() {
-	$s        = empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on") ? "s" : "";
+	$s = empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on") ? "s" : "";
 	$protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
-	$port     = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
+	$port = ($_SERVER["SERVER_PORT"] == "80") ? "" : (":".$_SERVER["SERVER_PORT"]);
 	return $protocol."://".$_SERVER['SERVER_NAME'].$port.(str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
 }
 

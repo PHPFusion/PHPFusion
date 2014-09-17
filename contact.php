@@ -18,14 +18,13 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."contact.php";
-
 add_to_title($locale['global_200'].$locale['400']);
-
 if (isset($_POST['sendmessage'])) {
 	$error = "";
 	$mailname = isset($_POST['mailname']) ? substr(stripinput(trim($_POST['mailname'])), 0, 50) : "";
 	$email = isset($_POST['email']) ? substr(stripinput(trim($_POST['email'])), 0, 100) : "";
-	$subject = isset($_POST['subject']) ? substr(str_replace(array("\r","\n","@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 50) : "";
+	$subject = isset($_POST['subject']) ? substr(str_replace(array("\r", "\n",
+	                                                               "@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 50) : "";
 	$message = isset($_POST['message']) ? descript(stripslash(trim($_POST['message']))) : "";
 	if ($mailname == "") {
 		$error .= " <span class='alt'>".$locale['420']."</span><br />\n";
@@ -39,9 +38,9 @@ if (isset($_POST['sendmessage'])) {
 	if ($message == "") {
 		$error .= " <span class='alt'>".$locale['423']."</span><br />\n";
 	}
-	$_CAPTCHA_IS_VALID = false;
+	$_CAPTCHA_IS_VALID = FALSE;
 	include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
-	if ($_CAPTCHA_IS_VALID == false) {
+	if ($_CAPTCHA_IS_VALID == FALSE) {
 		$error .= " <span class='alt'>".$locale['424']."</span><br />\n";
 	}
 	if (!$error) {
@@ -58,12 +57,12 @@ if (isset($_POST['sendmessage'])) {
 					$error .= " <span class='alt'>".$locale['425']."</span><br />\n";
 				}
 			} else {
-				if (!sendemail($settings['siteusername'],$settings['siteemail'],$mailname,$email,$subject,$message)) {
+				if (!sendemail($settings['siteusername'], $settings['siteemail'], $mailname, $email, $subject, $message)) {
 					$error .= " <span class='alt'>".$locale['425']."</span><br />\n";
 				}
 			}
 		} else {
-			if (!sendemail($settings['siteusername'],$settings['siteemail'],$mailname,$email,$subject,$message)) {
+			if (!sendemail($settings['siteusername'], $settings['siteemail'], $mailname, $email, $subject, $message)) {
 				$error .= " <span class='alt'>".$locale['425']."</span><br />\n";
 			}
 		}
@@ -109,6 +108,5 @@ if (isset($_POST['sendmessage'])) {
 	echo "</tr>\n</table>\n</form>\n";
 	closetable();
 }
-
 require_once THEMES."templates/footer.php";
 ?>

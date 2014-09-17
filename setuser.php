@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-
 redirect($settings['opening_page']);
-
 mysql_close($db_connect);
 ?>

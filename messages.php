@@ -18,25 +18,28 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."messages.php";
-
-if (!iMEMBER) { redirect("index.php"); }
-
+if (!iMEMBER) {
+	redirect("index.php");
+}
 add_to_title($locale['global_200'].$locale['400']);
-
 $msg_settings = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0'"));
-
-if (iADMIN  || $userdata['user_id'] == 1) {
+if (iADMIN || $userdata['user_id'] == 1) {
 	$msg_settings['pm_inbox'] = 0;
 	$msg_settings['pm_savebox'] = 0;
 	$msg_settings['pm_sentbox'] = 0;
 }
-
-if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) { $_GET['folder'] = "inbox"; }
-if (isset($_POST['msg_send']) && isnum($_POST['msg_send'])) { $_GET['msg_send'] = $_POST['msg_send']; }
-if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group'])) { $_GET['msg_to_group'] = $_POST['msg_to_group']; }
-
-$error = ""; $msg_ids = ""; $check_count = 0;
-
+if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
+	$_GET['folder'] = "inbox";
+}
+if (isset($_POST['msg_send']) && isnum($_POST['msg_send'])) {
+	$_GET['msg_send'] = $_POST['msg_send'];
+}
+if (isset($_POST['msg_to_group']) && isnum($_POST['msg_to_group'])) {
+	$_GET['msg_to_group'] = $_POST['msg_to_group'];
+}
+$error = "";
+$msg_ids = "";
+$check_count = 0;
 if (isset($_POST['check_mark'])) {
 	if (is_array($_POST['check_mark']) && count($_POST['check_mark']) > 1) {
 		foreach ($_POST['check_mark'] as $thisnum) {
@@ -48,7 +51,6 @@ if (isset($_POST['check_mark'])) {
 		$check_count = 1;
 	}
 }
-
 if (isset($_POST['save_options'])) {
 	$pm_email_notify = isnum($_POST['pm_email_notify']) ? $_POST['pm_email_notify'] : "0";
 	$pm_save_sent = isnum($_POST['pm_save_sent']) ? $_POST['pm_save_sent'] : "0";
@@ -59,11 +61,10 @@ if (isset($_POST['save_options'])) {
 	}
 	redirect(FUSION_SELF."?folder=options");
 }
-
 if (isset($_GET['msg_id']) && isnum($_GET['msg_id'])) {
 	if (isset($_POST['save'])) {
 		$archive_total = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='2'");
-		if ($msg_settings['pm_savebox'] == "0" || ($archive_total + 1) <= $msg_settings['pm_savebox']) {
+		if ($msg_settings['pm_savebox'] == "0" || ($archive_total+1) <= $msg_settings['pm_savebox']) {
 			$result = dbquery("UPDATE ".DB_MESSAGES." SET message_folder='2' WHERE message_id='".$_GET['msg_id']."' AND message_to='".$userdata['user_id']."'");
 		} else {
 			$error = "1";
@@ -71,7 +72,7 @@ if (isset($_GET['msg_id']) && isnum($_GET['msg_id'])) {
 		redirect(FUSION_SELF."?folder=archive".($error ? "&error=$error" : ""));
 	} elseif (isset($_POST['unsave'])) {
 		$inbox_total = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='0'");
-		if ($msg_settings['pm_inbox'] == "0" || ($inbox_total + 1) <= $msg_settings['pm_inbox']) {
+		if ($msg_settings['pm_inbox'] == "0" || ($inbox_total+1) <= $msg_settings['pm_inbox']) {
 			$result = dbquery("UPDATE ".DB_MESSAGES." SET message_folder='0' WHERE message_id='".$_GET['msg_id']."' AND message_to='".$userdata['user_id']."'");
 		} else {
 			$error = "1";
@@ -82,18 +83,17 @@ if (isset($_GET['msg_id']) && isnum($_GET['msg_id'])) {
 		redirect(FUSION_SELF."?folder=".$_GET['folder']);
 	}
 }
-
 if ($msg_ids && $check_count > 0) {
 	if (isset($_POST['save_msg'])) {
 		$archive_total = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='2'");
-		if ($msg_settings['pm_savebox'] == "0" || ($archive_total + $check_count) <= $msg_settings['pm_savebox']) {
+		if ($msg_settings['pm_savebox'] == "0" || ($archive_total+$check_count) <= $msg_settings['pm_savebox']) {
 			$result = dbquery("UPDATE ".DB_MESSAGES." SET message_folder='2' WHERE message_id IN(".$msg_ids.") AND message_to='".$userdata['user_id']."'");
 		} else {
 			$error = "1";
 		}
 	} elseif (isset($_POST['unsave_msg'])) {
 		$inbox_total = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='0'");
-		if ($msg_settings['pm_inbox'] == "0" || ($inbox_total + $check_count) <= $msg_settings['pm_inbox']) {
+		if ($msg_settings['pm_inbox'] == "0" || ($inbox_total+$check_count) <= $msg_settings['pm_inbox']) {
 			$result = dbquery("UPDATE ".DB_MESSAGES." SET message_folder='0' WHERE message_id IN(".$msg_ids.") AND message_to='".$userdata['user_id']."'");
 		} else {
 			$error = "1";
@@ -107,7 +107,6 @@ if ($msg_ids && $check_count > 0) {
 	}
 	redirect(FUSION_SELF."?folder=".$_GET['folder'].($error ? "&error=$error" : ""));
 }
-
 if (isset($_POST['send_message'])) {
 	$result = dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='".$userdata['user_id']."'");
 	if (dbrows($result)) {
@@ -118,17 +117,17 @@ if (isset($_POST['send_message'])) {
 	}
 	$subject = stripinput(trim($_POST['subject']));
 	$message = stripinput(trim($_POST['message']));
-	if ($subject == "" || $message == "") { redirect(FUSION_SELF."?folder=inbox"); }
+	if ($subject == "" || $message == "") {
+		redirect(FUSION_SELF."?folder=inbox");
+	}
 	$smileys = isset($_POST['chk_disablesmileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? "n" : "y";
 	require_once INCLUDES."sendmail_include.php";
 	if (iADMIN && isset($_POST['chk_sendtoall']) && isnum($_POST['msg_to_group'])) {
 		$msg_to_group = $_POST['msg_to_group'];
 		if ($msg_to_group == "101" || $msg_to_group == "102" || $msg_to_group == "103") {
-			$result = dbquery(
-				"SELECT u.user_id, u.user_name, u.user_email, mo.pm_email_notify FROM ".DB_USERS." u
+			$result = dbquery("SELECT u.user_id, u.user_name, u.user_email, mo.pm_email_notify FROM ".DB_USERS." u
 				LEFT JOIN ".DB_MESSAGES_OPTIONS." mo USING(user_id)
-				WHERE user_level>='".$msg_to_group."' AND user_status='0'"
-			);
+				WHERE user_level>='".$msg_to_group."' AND user_status='0'");
 			if (dbrows($result)) {
 				while ($data = dbarray($result)) {
 					if ($data['user_id'] != $userdata['user_id']) {
@@ -155,11 +154,9 @@ if (isset($_POST['send_message'])) {
 				redirect(FUSION_SELF."?folder=inbox");
 			}
 		} else {
-			$result = dbquery(
-				"SELECT u.user_id, u.user_name, u.user_email, mo.pm_email_notify FROM ".DB_USERS." u
+			$result = dbquery("SELECT u.user_id, u.user_name, u.user_email, mo.pm_email_notify FROM ".DB_USERS." u
 				LEFT JOIN ".DB_MESSAGES_OPTIONS." mo USING(user_id)
-				WHERE user_groups REGEXP('^\\\.{$msg_to_group}$|\\\.{$msg_to_group}\\\.|\\\.{$msg_to_group}$') AND user_status='0'"
-			);
+				WHERE user_groups REGEXP('^\\\.{$msg_to_group}$|\\\.{$msg_to_group}\\\.|\\\.{$msg_to_group}$') AND user_status='0'");
 			if (dbrows($result)) {
 				while ($data = dbarray($result)) {
 					if ($data['user_id'] != $userdata['user_id']) {
@@ -189,18 +186,16 @@ if (isset($_POST['send_message'])) {
 	} elseif (isnum($_GET['msg_send'])) {
 		require_once INCLUDES."flood_include.php";
 		if (!flood_control("message_datestamp", DB_MESSAGES, "message_from='".$userdata['user_id']."'")) {
-			$result = dbquery(
-				"SELECT u.user_id, u.user_name, u.user_email, u.user_level, mo.pm_email_notify, s.pm_inbox, COUNT(message_id) as message_count
+			$result = dbquery("SELECT u.user_id, u.user_name, u.user_email, u.user_level, mo.pm_email_notify, s.pm_inbox, COUNT(message_id) as message_count
 				FROM ".DB_USERS." u
 				LEFT JOIN ".DB_MESSAGES_OPTIONS." mo USING(user_id)
 				LEFT JOIN ".DB_MESSAGES_OPTIONS." s ON s.user_id='0'
 				LEFT JOIN ".DB_MESSAGES." ON message_to=u.user_id AND message_folder='0'
-				WHERE u.user_id='".$_GET['msg_send']."' GROUP BY u.user_id"
-			);
+				WHERE u.user_id='".$_GET['msg_send']."' GROUP BY u.user_id");
 			if (dbrows($result)) {
 				$data = dbarray($result);
 				if ($data['user_id'] != $userdata['user_id']) {
-					if ($data['user_id'] == 1 || $data['user_level'] > 101 || $data['pm_inbox'] == "0" || ($data['message_count'] + 1) <= $data['pm_inbox']) {
+					if ($data['user_id'] == 1 || $data['user_level'] > 101 || $data['pm_inbox'] == "0" || ($data['message_count']+1) <= $data['pm_inbox']) {
 						$result = dbquery("INSERT INTO ".DB_MESSAGES." (message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('".$data['user_id']."','".$userdata['user_id']."','".$subject."','".$message."','".$smileys."','0','".time()."','0')");
 						$send_email = isset($data['pm_email_notify']) ? $data['pm_email_notify'] : $msg_settings['pm_email_notify'];
 						if ($send_email == "1") {
@@ -232,7 +227,7 @@ if (isset($_POST['send_message'])) {
 	if (!$error) {
 		$cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_to"));
 		if ($my_settings['pm_save_sent']) {
-			if ($msg_settings['pm_sentbox'] != "0" && ($cdata['outbox_count'] + 1) > $msg_settings['pm_sentbox']) {
+			if ($msg_settings['pm_sentbox'] != "0" && ($cdata['outbox_count']+1) > $msg_settings['pm_sentbox']) {
 				$result = dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id='".$cdata['last_message']."' AND message_to='".$userdata['user_id']."'");
 			}
 			if (isset($_POST['chk_sendtoall']) && isnum($_POST['msg_to_group'])) {
@@ -242,12 +237,13 @@ if (isset($_POST['send_message'])) {
 			} else {
 				$outbox_user = "";
 			}
-			if ($outbox_user && $outbox_user != $userdata['user_id']) { $result = dbquery("INSERT INTO ".DB_MESSAGES." (message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES ('".$userdata['user_id']."','".$outbox_user."','".$subject."','".$message."','".$smileys."','1','".time()."','1')"); }
+			if ($outbox_user && $outbox_user != $userdata['user_id']) {
+				$result = dbquery("INSERT INTO ".DB_MESSAGES." (message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES ('".$userdata['user_id']."','".$outbox_user."','".$subject."','".$message."','".$smileys."','1','".time()."','1')");
+			}
 		}
 	}
 	redirect(FUSION_SELF."?folder=inbox".($error ? "&error=$error" : ""));
 }
-
 if (isset($_GET['error'])) {
 	if ($_GET['error'] == "1") {
 		$message = $locale['629'];
@@ -265,59 +261,52 @@ if (isset($_GET['error'])) {
 	echo "<div style='text-align:center'>".$message."</div>\n";
 	closetable();
 }
-
 if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] != "options") {
-	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
-	$bdata = dbarray(dbquery(
-		"SELECT COUNT(IF(message_folder=0, 1, null)) inbox_total,
+	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
+		$_GET['rowstart'] = 0;
+	}
+	$bdata = dbarray(dbquery("SELECT COUNT(IF(message_folder=0, 1, null)) inbox_total,
 		COUNT(IF(message_folder=1, 1, null)) outbox_total, COUNT(IF(message_folder=2, 1, null)) archive_total
-		FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' GROUP BY message_to"
-	));
+		FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' GROUP BY message_to"));
 	$bdata['inbox_total'] = isset($bdata['inbox_total']) ? $bdata['inbox_total'] : "0";
 	$bdata['outbox_total'] = isset($bdata['outbox_total']) ? $bdata['outbox_total'] : "0";
 	$bdata['archive_total'] = isset($bdata['archive_total']) ? $bdata['archive_total'] : "0";
 	if ($_GET['folder'] == "inbox") {
 		$total_rows = $bdata['inbox_total'];
-		$result = dbquery(
-			"SELECT m.message_id, m.message_subject, m.message_read, m.message_datestamp,
+		$result = dbquery("SELECT m.message_id, m.message_subject, m.message_read, m.message_datestamp,
 			u.user_id, u.user_name, u.user_status
 			FROM ".DB_MESSAGES." m
 			LEFT JOIN ".DB_USERS." u ON m.message_from=u.user_id
 			WHERE message_to='".$userdata['user_id']."' AND message_folder='0'
-			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20"
-		);
+			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
 	} elseif ($_GET['folder'] == "outbox") {
 		$total_rows = $bdata['outbox_total'];
-		$result = dbquery(
-			"SELECT m.message_id, m.message_subject, m.message_read, m.message_datestamp,
+		$result = dbquery("SELECT m.message_id, m.message_subject, m.message_read, m.message_datestamp,
 			u.user_id, u.user_name, u.user_status
 			FROM ".DB_MESSAGES." m
 			LEFT JOIN ".DB_USERS." u ON m.message_from=u.user_id
 			WHERE message_to='".$userdata['user_id']."' AND message_folder='1'
-			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20"
-		);
+			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
 	} elseif ($_GET['folder'] == "archive") {
 		$total_rows = $bdata['archive_total'];
-		$result = dbquery(
-			"SELECT m.message_id, m.message_subject, m.message_read, m.message_datestamp,
+		$result = dbquery("SELECT m.message_id, m.message_subject, m.message_read, m.message_datestamp,
 			u.user_id, u.user_name, u.user_status
 			FROM ".DB_MESSAGES." m
 			LEFT JOIN ".DB_USERS." u ON m.message_from=u.user_id
 			WHERE message_to='".$userdata['user_id']."' AND message_folder='2'
-			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20"
-		);
+			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
 	}
-
-	$folders = array("inbox" => $locale['402'], "outbox" => $locale['403'], "archive" => $locale['404'], "options" => $locale['425']);
+	$folders = array("inbox" => $locale['402'], "outbox" => $locale['403'], "archive" => $locale['404'],
+	                 "options" => $locale['425']);
 	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
 	opentable($locale['400']);
 	if ($total_rows) echo "<form name='pm_form' method='post' action='".FUSION_SELF."?folder=".$_GET['folder']."'>\n";
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
 	echo "<tr>\n<td align='left' width='100%' class='tbl'><a href='".FUSION_SELF."?msg_send=0'>".$locale['401']."</a></td>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder']=="inbox"?"bold":"normal")."'><a href='".FUSION_SELF."?folder=inbox'>".$locale['402']." [".$bdata['inbox_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder']=="outbox"?"bold":"normal")."'><a href='".FUSION_SELF."?folder=outbox'>".$locale['403']." [".$bdata['outbox_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder']=="archive"?"bold":"normal")."'><a href='".FUSION_SELF."?folder=archive'>".$locale['404']." [".$bdata['archive_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder']=="options"?"bold":"normal")."'><a href='".FUSION_SELF."?folder=options'>".$locale['425']."</a></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "inbox" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=inbox'>".$locale['402']." [".$bdata['inbox_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "outbox" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=outbox'>".$locale['403']." [".$bdata['outbox_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "archive" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=archive'>".$locale['404']." [".$bdata['archive_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "options" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=options'>".$locale['425']."</a></td>\n";
 	echo "</tr>\n</table>\n";
 	if ($total_rows) {
 		echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n";
@@ -326,20 +315,25 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 		echo "<td width='1%' class='tbl2' style='white-space:nowrap'>".$locale['407']."</td>\n</tr>\n";
 		while ($data = dbarray($result)) {
 			$message_subject = $data['message_subject'];
-			if (!$data['message_read']) { $message_subject = "<strong>".$message_subject."</strong>"; }
+			if (!$data['message_read']) {
+				$message_subject = "<strong>".$message_subject."</strong>";
+			}
 			echo "<tr>\n<td class='tbl1'><input type='checkbox' name='check_mark[]' value='".$data['message_id']."' />\n";
 			echo "<a href='".FUSION_SELF."?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id']."'>".$message_subject."</a></td>\n";
 			echo "<td width='1%' class='tbl1' style='white-space:nowrap'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
 			echo "<td width='1%' class='tbl1' style='white-space:nowrap'>".showdate("shortdate", $data['message_datestamp'])."</td>\n</tr>\n";
 		}
 		echo "</table>\n";
-
 		echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n<td class='tbl'><a href='#' onclick=\"javascript:setChecked('pm_form','check_mark[]',1);return false;\">".$locale['410']."</a> |\n";
 		echo "<a href='#' onclick=\"javascript:setChecked('pm_form','check_mark[]',0);return false;\">".$locale['411']."</a></td>\n";
 		echo "<td align='right' class='tbl'>".$locale['409']."\n";
-		if ($_GET['folder'] == "inbox") { echo "<input type='submit' name='save_msg' value='".$locale['412']."' class='button' />\n"; }
-		if ($_GET['folder'] == "archive") { echo "<input type='submit' name='unsave_msg' value='".$locale['413']."' class='button' />\n"; }
+		if ($_GET['folder'] == "inbox") {
+			echo "<input type='submit' name='save_msg' value='".$locale['412']."' class='button' />\n";
+		}
+		if ($_GET['folder'] == "archive") {
+			echo "<input type='submit' name='unsave_msg' value='".$locale['413']."' class='button' />\n";
+		}
 		echo "<input type='submit' name='read_msg' value='".$locale['414']."' class='button' />\n";
 		echo "<input type='submit' name='unread_msg' value='".$locale['415']."' class='button' />\n";
 		echo "<input type='submit' name='delete_msg' value='".$locale['416']."' class='button' />\n";
@@ -368,22 +362,21 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 		$my_settings['pm_email_notify'] = $options['pm_email_notify'];
 		$update_type = "insert";
 	}
-	$bdata = dbarray(dbquery(
-		"SELECT COUNT(IF(message_folder=0, 1, null)) inbox_total,
+	$bdata = dbarray(dbquery("SELECT COUNT(IF(message_folder=0, 1, null)) inbox_total,
 		COUNT(IF(message_folder=1, 1, null)) outbox_total, COUNT(IF(message_folder=2, 1, null)) archive_total
-		FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' GROUP BY message_to"
-	));
+		FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' GROUP BY message_to"));
 	$bdata['inbox_total'] = isset($bdata['inbox_total']) ? $bdata['inbox_total'] : "0";
 	$bdata['outbox_total'] = isset($bdata['outbox_total']) ? $bdata['outbox_total'] : "0";
 	$bdata['archive_total'] = isset($bdata['archive_total']) ? $bdata['archive_total'] : "0";
-	$folders = array("inbox" => $locale['402'], "outbox" => $locale['403'], "archive" => $locale['404'], "options" => $locale['425']);
+	$folders = array("inbox" => $locale['402'], "outbox" => $locale['403'], "archive" => $locale['404'],
+	                 "options" => $locale['425']);
 	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
 	opentable($locale['400']);
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
 	echo "<tr>\n<td align='left' width='100%' class='tbl'><a href='".FUSION_SELF."?msg_send=0'>".$locale['401']."</a></td>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder']== "inbox" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=inbox'>".$locale['402']." [".$bdata['inbox_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder']== "outbox" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=outbox'>".$locale['403']." [".$bdata['outbox_total']."/".($msg_settings['pm_sentbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder']== "archive" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=archive'>".$locale['404']." [".$bdata['archive_total']."/".($msg_settings['pm_savebox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "inbox" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=inbox'>".$locale['402']." [".$bdata['inbox_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "outbox" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=outbox'>".$locale['403']." [".$bdata['outbox_total']."/".($msg_settings['pm_sentbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "archive" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=archive'>".$locale['404']." [".$bdata['archive_total']."/".($msg_settings['pm_savebox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
 	echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "options" ? "bold" : "normal")."'><a href='".FUSION_SELF."?folder=options'>".$locale['425']."</a></td>\n";
 	echo "</tr>\n</table>\n";
 	echo "<div style='margin:4px;'></div>\n";
@@ -405,13 +398,11 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 	echo "</table></form>\n";
 	closetable();
 } elseif ((isset($_GET['msg_read']) && isnum($_GET['msg_read'])) && ($_GET['folder'] == "inbox" || $_GET['folder'] == "archive" || $_GET['folder'] == "outbox")) {
-	$result = dbquery(
-		"SELECT m.message_id, m.message_subject, m.message_message, m.message_smileys,
+	$result = dbquery("SELECT m.message_id, m.message_subject, m.message_message, m.message_smileys,
 		m.message_datestamp, m.message_folder, u.user_id, u.user_name, u.user_status
 		FROM ".DB_MESSAGES." m
 		LEFT JOIN ".DB_USERS." u ON m.message_from=u.user_id
-		WHERE message_to='".$userdata['user_id']."' AND message_id='".$_GET['msg_read']."'"
-	);
+		WHERE message_to='".$userdata['user_id']."' AND message_id='".$_GET['msg_read']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		$result = dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".$data['message_id']."'");
@@ -432,9 +423,15 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 		echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
 		echo "<tr>\n<td colspan='2' class='tbl'><a href='".FUSION_SELF."?folder=".$_GET['folder']."'>".$locale['432']."</a></td>\n";
 		echo "<td align='right' class='tbl'>\n";
-		if ($_GET['folder'] == "inbox" && $data['message_folder'] == 0) { echo "<input type='submit' name='reply' value='".$locale['439']."' class='button' />\n"; }
-		if ($_GET['folder'] == "inbox" && $data['message_folder'] == 0) { echo "<input type='submit' name='save' value='".$locale['412']."' class='button' />\n"; }
-		if ($_GET['folder'] == "archive" && $data['message_folder'] == 2) { echo "<input type='submit' name='unsave' value='".$locale['413']."' class='button' />\n"; }
+		if ($_GET['folder'] == "inbox" && $data['message_folder'] == 0) {
+			echo "<input type='submit' name='reply' value='".$locale['439']."' class='button' />\n";
+		}
+		if ($_GET['folder'] == "inbox" && $data['message_folder'] == 0) {
+			echo "<input type='submit' name='save' value='".$locale['412']."' class='button' />\n";
+		}
+		if ($_GET['folder'] == "archive" && $data['message_folder'] == 2) {
+			echo "<input type='submit' name='unsave' value='".$locale['413']."' class='button' />\n";
+		}
 		echo "<input type='submit' name='delete' value='".$locale['416']."' class='button' />\n";
 		echo "</td>\n</tr>\n</table>\n</form>\n";
 		closetable();
@@ -466,16 +463,18 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 		echo "</table>\n";
 		closetable();
 	} else {
-		$subject = ""; $message = ""; $msg_send_state = ""; $msg_to_group = "";
-		$msg_to_group_state = " disabled"; $sendtoall_chk = ""; $disablesmileys_chk = "";
+		$subject = "";
+		$message = "";
+		$msg_send_state = "";
+		$msg_to_group = "";
+		$msg_to_group_state = " disabled";
+		$sendtoall_chk = "";
+		$disablesmileys_chk = "";
 	}
-
 	if (isset($_GET['msg_id']) && isnum($_GET['msg_id'])) {
-		$result = dbquery(
-			"SELECT m.message_subject, m.message_message, m.message_smileys, u.user_id, u.user_name FROM ".DB_MESSAGES." m
+		$result = dbquery("SELECT m.message_subject, m.message_message, m.message_smileys, u.user_id, u.user_name FROM ".DB_MESSAGES." m
 			LEFT JOIN ".DB_USERS." u ON m.message_from=u.user_id
-			WHERE message_to='".$userdata['user_id']."' AND message_id='".$_GET['msg_id']."'"
-		);
+			WHERE message_to='".$userdata['user_id']."' AND message_id='".$_GET['msg_id']."'");
 		$data = dbarray($result);
 		$_GET['msg_send'] = $data['user_id'];
 		if ($subject == "") $subject = (!strstr($data['message_subject'], "RE: ") ? "RE: " : "").$data['message_subject'];
@@ -484,8 +483,8 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 	} else {
 		$reply_message = "";
 	}
-
-	$user_list = ""; $user_types = "";
+	$user_list = "";
+	$user_types = "";
 	if (!isset($_POST['chk_sendtoall']) || $_GET['msg_send'] != "0") {
 		$sel = "";
 		$result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_status='0' ORDER BY user_level DESC, user_name ASC");
@@ -496,17 +495,15 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 			}
 		}
 	}
-
 	if (iADMIN && !isset($_GET['msg_id'])) {
 		$user_groups = getusergroups();
-		while(list($key, $user_group) = each($user_groups)){
+		while (list($key, $user_group) = each($user_groups)) {
 			if ($user_group['0'] != "0") {
 				$sel = ($msg_to_group == $user_group['0'] ? " selected='selected'" : "");
 				$user_types .= "<option value='".$user_group['0']."'$sel>".$user_group['1']."</option>\n";
 			}
 		}
 	}
-
 	add_to_title($locale['global_201'].$locale['420']);
 	opentable($locale['420']);
 	echo "<form name='inputform' method='post' action='".FUSION_SELF."?msg_send=0' onsubmit=\"return ValidateForm(this)\">\n";
@@ -552,10 +549,8 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 	echo "}\n";
 	echo "/* ]]>*/\n";
 	echo "</script>\n";
-
 } else {
 	redirect(FUSION_SELF);
 }
-
 require_once THEMES."templates/footer.php";
 ?>

@@ -21,8 +21,12 @@ require_once INCLUDES."comments_include.php";
 require_once INCLUDES."ratings_include.php";
 include LOCALE.LOCALESET."custom_pages.php";
 
-if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) { redirect("index.php"); }
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
+if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) {
+	redirect("index.php");
+}
+if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
+	$_GET['rowstart'] = 0;
+}
 
 $cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."'");
 if (dbrows($cp_result)) {
@@ -49,12 +53,16 @@ if (dbrows($cp_result)) {
 }
 closetable();
 if (isset($pagecount) && $pagecount > 1) {
-    echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, FUSION_SELF."?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
+	echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, FUSION_SELF."?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
 }
 echo "<!--custompages-after-content-->\n";
 if (dbrows($cp_result) && checkgroup($cp_data['page_access'])) {
-	if ($cp_data['page_allow_comments']) { showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'],FUSION_SELF."?page_id=".$_GET['page_id']); }
-	if ($cp_data['page_allow_ratings']) { showratings("C", $_GET['page_id'], FUSION_SELF."?page_id=".$_GET['page_id']); }
+	if ($cp_data['page_allow_comments']) {
+		showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'], FUSION_SELF."?page_id=".$_GET['page_id']);
+	}
+	if ($cp_data['page_allow_ratings']) {
+		showratings("C", $_GET['page_id'], FUSION_SELF."?page_id=".$_GET['page_id']);
+	}
 }
 
 require_once THEMES."templates/footer.php";

@@ -21,7 +21,9 @@ require_once THEMES."templates/header.php";
 require_once INCLUDES."suspend_include.php";
 include LOCALE.LOCALESET."reactivate.php";
 
-if (iMEMBER) { redirect("index.php"); }
+if (iMEMBER) {
+	redirect("index.php");
+}
 
 if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) && preg_check("/^[0-9a-z]{32}$/", $_GET['code'])) {
 	$result = dbquery("SELECT user_name, user_email, user_actiontime, user_password FROM ".DB_USERS." WHERE user_id='".$_GET['user_id']."' AND user_actiontime>'0' AND user_status='7'");
@@ -31,7 +33,7 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
 		if ($_GET['code'] == $code) {
 			if ($data['user_actiontime'] > time()) {
 				$result = dbquery("UPDATE ".DB_USERS." SET user_status='0', user_actiontime='0', user_lastvisit='".time()."' WHERE user_id='".$_GET['user_id']."'");
-				unsuspend_log($_GET['user_id'], 7, $locale['506'], true);
+				unsuspend_log($_GET['user_id'], 7, $locale['506'], TRUE);
 				$message = str_replace("[USER_NAME]", $data['user_name'], $locale['505']);
 				require_once INCLUDES."sendmail_include.php";
 				sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $locale['504'], $message);

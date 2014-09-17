@@ -20,13 +20,13 @@ require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include_once INCLUDES."bbcode_include.php";
 include LOCALE.LOCALESET."submit.php";
-
-if (!iMEMBER) { redirect("index.php"); }
-
-if (!isset($_GET['stype']) || !preg_check("/^[a-z]$/", $_GET['stype'])) { redirect("index.php"); }
-
+if (!iMEMBER) {
+	redirect("index.php");
+}
+if (!isset($_GET['stype']) || !preg_check("/^[a-z]$/", $_GET['stype'])) {
+	redirect("index.php");
+}
 $submit_info = array();
-
 if ($_GET['stype'] == "l") {
 	if (isset($_POST['submit_link'])) {
 		if ($_POST['link_name'] != "" && $_POST['link_url'] != "" && $_POST['link_description'] != "") {
@@ -106,11 +106,14 @@ if ($_GET['stype'] == "l") {
 			$news_snippet = "";
 			$news_body = "";
 		}
-		$cat_list = ""; $sel = "";
+		$cat_list = "";
+		$sel = "";
 		$result2 = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ORDER BY news_cat_name");
 		if (dbrows($result2)) {
 			while ($data2 = dbarray($result2)) {
-				if (isset($_POST['preview_news'])) { $sel = ($news_cat == $data2['news_cat_id'] ? " selected" : ""); }
+				if (isset($_POST['preview_news'])) {
+					$sel = ($news_cat == $data2['news_cat_id'] ? " selected" : "");
+				}
 				$cat_list .= "<option value='".$data2['news_cat_id']."'".$sel.">".$data2['news_cat_name']."</option>\n";
 			}
 		}
@@ -177,13 +180,16 @@ if ($_GET['stype'] == "l") {
 			$article_snippet = "";
 			$article_body = "";
 		}
-		$cat_list = ""; $sel = "";
+		$cat_list = "";
+		$sel = "";
 		add_to_title($locale['global_200'].$locale['500']);
 		opentable($locale['500']);
 		$result = dbquery("SELECT article_cat_id, article_cat_name FROM ".DB_ARTICLE_CATS." WHERE ".groupaccess("article_cat_access")." ORDER BY article_cat_name");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
-				if (isset($_POST['preview_article'])) { $sel = $article_cat == $data['article_cat_id'] ? " selected" : ""; }
+				if (isset($_POST['preview_article'])) {
+					$sel = $article_cat == $data['article_cat_id'] ? " selected" : "";
+				}
 				$cat_list .= "<option value='".$data['article_cat_id']."'".$sel.">".$data['article_cat_name']."</option>\n";
 			}
 			echo "<div class='submission-guidelines'>".$locale['520']."</div>\n";
@@ -226,14 +232,14 @@ if ($_GET['stype'] == "l") {
 		$submit_info['photo_description'] = stripinput($_POST['photo_description']);
 		$submit_info['album_id'] = isnum($_POST['album_id']) ? $_POST['album_id'] : "0";
 		if (is_uploaded_file($_FILES['photo_pic_file']['tmp_name'])) {
-			$photo_types = array(".gif",".jpg",".jpeg",".png");
+			$photo_types = array(".gif", ".jpg", ".jpeg", ".png");
 			$photo_pic = $_FILES['photo_pic_file'];
 			$photo_name = stripfilename(strtolower(substr($photo_pic['name'], 0, strrpos($photo_pic['name'], "."))));
-			$photo_ext = strtolower(strrchr($photo_pic['name'],"."));
+			$photo_ext = strtolower(strrchr($photo_pic['name'], "."));
 			$photo_dest = PHOTOS."submissions/";
 			if (!preg_match("/^[-0-9A-Z_\[\]]+$/i", $photo_name)) {
 				$error = 1;
-			} elseif ($photo_pic['size'] > $settings['photo_max_b']){
+			} elseif ($photo_pic['size'] > $settings['photo_max_b']) {
 				$error = 2;
 			} elseif (!in_array($photo_ext, $photo_types)) {
 				$error = 3;
@@ -262,10 +268,15 @@ if ($_GET['stype'] == "l") {
 			echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
 		} else {
 			echo "<div style='text-align:center'><br />\n".$locale['600']."<br /><br />\n";
-			if ($error == 1) { echo $locale['601']; }
-			elseif ($error == 2) { echo sprintf($locale['602'], $settings['photo_max_b']); }
-			elseif ($error == 3) { echo $locale['603']; }
-			elseif ($error == 4) { echo sprintf($locale['604'], $settings['photo_max_w'], $settings['photo_max_h']); }
+			if ($error == 1) {
+				echo $locale['601'];
+			} elseif ($error == 2) {
+				echo sprintf($locale['602'], $settings['photo_max_b']);
+			} elseif ($error == 3) {
+				echo $locale['603'];
+			} elseif ($error == 4) {
+				echo sprintf($locale['604'], $settings['photo_max_w'], $settings['photo_max_h']);
+			}
 			echo "<br /><br />\n<a href='submit.php?stype=p'>".$locale['581']."</a><br /><br />\n</div>\n";
 		}
 		closetable();
@@ -275,7 +286,9 @@ if ($_GET['stype'] == "l") {
 		opentable($locale['570']);
 		$result = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess("album_access")." ORDER BY album_title");
 		if (dbrows($result)) {
-			while ($data = dbarray($result)) $opts .= "<option value='".$data['album_id']."'>".$data['album_title']."</option>\n";
+			while ($data = dbarray($result)) {
+				$opts .= "<option value='".$data['album_id']."'>".$data['album_title']."</option>\n";
+			}
 			echo "<div class='submission-guidelines'>".$locale['620']."</div>\n";
 			echo "<form name='submit_form' method='post' action='".FUSION_SELF."?stype=p' enctype='multipart/form-data' onsubmit='return validatePhoto(this);'>\n";
 			echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
@@ -306,7 +319,7 @@ if ($_GET['stype'] == "l") {
 		$submit_info['download_title'] = stripinput($_POST['download_title']);
 		$submit_info['download_description'] = stripinput($_POST['download_description']);
 		$submit_info['download_description_short'] = stripinput($_POST['download_description_short']);
-		if (!$submit_info['download_title']){
+		if (!$submit_info['download_title']) {
 			$error = 1;
 		} elseif (!$submit_info['download_description_short']) {
 			$error = 2;
@@ -330,7 +343,7 @@ if ($_GET['stype'] == "l") {
 				$max_size = $settings['download_max_b'];
 				$upload = upload_file($source_file, $target_file, $target_folder, $settings['download_types'], $max_size);
 				if (!$upload['error']) {
-					$image_types = array(".gif",".jpg",".jpeg",".png");
+					$image_types = array(".gif", ".jpg", ".jpeg", ".png");
 					if (in_array($upload['source_ext'], $image_types) && (!@getimagesize($target_folder.$upload['target_file']) || !@verify_image($target_folder.$upload['target_file']))) {
 						unlink($upload['target_folder'].$upload['target_file']);
 						$error = 11;
@@ -343,10 +356,18 @@ if ($_GET['stype'] == "l") {
 					}
 				} else {
 					switch ($upload['error']) {
-						case 1 : $error = 4; break;
-						case 2 : $error = 5; break;
-						case 3 : $error = 6; break;
-						default: $error = 11; break;
+						case 1 :
+							$error = 4;
+							break;
+						case 2 :
+							$error = 5;
+							break;
+						case 3 :
+							$error = 6;
+							break;
+						default:
+							$error = 11;
+							break;
 					}
 				}
 			}
@@ -360,7 +381,7 @@ if ($_GET['stype'] == "l") {
 				$width = $settings['download_screen_max_w'];
 				$height = $settings['download_screen_max_h'];
 				$size = $settings['download_screen_max_b'];
-				$upload = upload_image($image, $name, $folder, $width, $height, $size, false, true, false, 1, $folder);
+				$upload = upload_image($image, $name, $folder, $width, $height, $size, FALSE, TRUE, FALSE, 1, $folder);
 				if (!$upload['error']) {
 					if (!@getimagesize($folder.$upload['image_name']) || !@verify_image($folder.$upload['image_name'])) {
 						unlink($folder.$upload['image_name']);
@@ -372,11 +393,21 @@ if ($_GET['stype'] == "l") {
 					}
 				} else {
 					switch ($upload['error']) {
-						case 1 : $error = 7; break;
-						case 2 : $error = 8; break;
-						case 3 : $error = 9; break;
-						case 4 : $error = 10; break;
-						default: $error = 11; break;
+						case 1 :
+							$error = 7;
+							break;
+						case 2 :
+							$error = 8;
+							break;
+						case 3 :
+							$error = 9;
+							break;
+						case 4 :
+							$error = 10;
+							break;
+						default:
+							$error = 11;
+							break;
 					}
 				}
 			}
@@ -391,17 +422,39 @@ if ($_GET['stype'] == "l") {
 		} else {
 			echo "<div style='text-align:center'><br />\n".$locale['670']."<br /><br />\n";
 			switch ($error) {
-				case 1 : echo $locale['674']; break;
-				case 2 : echo $locale['676']; break;
-				case 3 : echo $locale['675']; break;
-				case 4 : echo sprintf($locale['672'], parsebytesize($settings['download_max_b'])); break;
-				case 5 : echo sprintf($locale['673'], str_replace(',', ' ', $settings['download_types'])); break;
-				case 6 : echo $locale['671']; break;
-				case 7 : echo sprintf($locale['672a'], parsebytesize($settings['download_screen_max_b'])); break;
-				case 8 : echo sprintf($locale['673a'], ".gif .jpg .png"); break;
-				case 8 : echo sprintf($locale['672b'], $settings['download_screen_max_w']." x ".$settings['download_screen_max_h']); break;
-				case 10: echo $locale['671a']; break;
-				default: echo $locale['676a']; break;
+				case 1 :
+					echo $locale['674'];
+					break;
+				case 2 :
+					echo $locale['676'];
+					break;
+				case 3 :
+					echo $locale['675'];
+					break;
+				case 4 :
+					echo sprintf($locale['672'], parsebytesize($settings['download_max_b']));
+					break;
+				case 5 :
+					echo sprintf($locale['673'], str_replace(',', ' ', $settings['download_types']));
+					break;
+				case 6 :
+					echo $locale['671'];
+					break;
+				case 7 :
+					echo sprintf($locale['672a'], parsebytesize($settings['download_screen_max_b']));
+					break;
+				case 8 :
+					echo sprintf($locale['673a'], ".gif .jpg .png");
+					break;
+				case 8 :
+					echo sprintf($locale['672b'], $settings['download_screen_max_w']." x ".$settings['download_screen_max_h']);
+					break;
+				case 10:
+					echo $locale['671a'];
+					break;
+				default:
+					echo $locale['676a'];
+					break;
 			}
 			echo "<br /><br />\n<a href='submit.php?stype=d'>".$locale['661']."</a><br /><br />\n</div>\n";
 		}
@@ -412,7 +465,9 @@ if ($_GET['stype'] == "l") {
 		opentable($locale['650']);
 		$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." WHERE ".groupaccess("download_cat_access")." ORDER BY download_cat_name");
 		if (dbrows($result)) {
-			while ($data = dbarray($result)) $opts .= "<option value='".$data['download_cat_id']."'>".$data['download_cat_name']."</option>\n";
+			while ($data = dbarray($result)) {
+				$opts .= "<option value='".$data['download_cat_id']."'>".$data['download_cat_name']."</option>\n";
+			}
 			echo "<div class='submission-guidelines'>".$locale['680']."</div>\n";
 			echo "<form name='submit_form' method='post' action='".FUSION_SELF."?stype=d' enctype='multipart/form-data' onsubmit='return validateDownload(this);'>\n";
 			echo "<table cellpadding='0' cellspacing='0' class='center' style='width:500px;'>\n<tr>\n";
@@ -471,29 +526,29 @@ if ($_GET['stype'] == "l") {
 			echo "<td align='center' colspan='2' class='tbl'><br />\n";
 			echo "<input type='submit' name='submit_download' value='".$locale['695']."' class='button' />\n</td>\n";
 			echo "</tr>\n</table>\n</form>\n";
-			$jquery_upload_js  = '<script type="text/javascript">';
-			$jquery_upload_js .=  "/*<![CDATA[*/";			
-			$jquery_upload_js .=  "jQuery(document).ready(function(){";
-			$jquery_upload_js .=    "jQuery('#shortdesc_display').show();";
-			$jquery_upload_js .=    "jQuery('#calc_upload').click(function(){";
-			$jquery_upload_js .=        "if(jQuery('#calc_upload').attr('checked')){";
-			$jquery_upload_js .=        "jQuery('#download_filesize').attr('readonly','readonly');";
-			$jquery_upload_js .=        "jQuery('#download_filesize').val('');";
-			$jquery_upload_js .=        "jQuery('#calc_upload').attr('checked','checked');";
-			$jquery_upload_js .=      "}else{";
-			$jquery_upload_js .=        "jQuery('#download_filesize').removeAttr('readonly');";
-			$jquery_upload_js .=        "jQuery('#calc_upload').removeAttr('checked');";
-			$jquery_upload_js .=      "}";
-			$jquery_upload_js .=    "});";
-			$jquery_upload_js .=  "});";			
-			$jquery_upload_js .=  "function shortdesc_counter(textarea, counterID, maxLen){";
-			$jquery_upload_js .=    "cnt = document.getElementById(counterID);";
-			$jquery_upload_js .=    "if(textarea.value.length >= maxLen){";
-			$jquery_upload_js .=      "textarea.value = textarea.value.substring(0,maxLen);";
-			$jquery_upload_js .=    "}";
-			$jquery_upload_js .=    "cnt.innerHTML = maxLen - textarea.value.length;";
-			$jquery_upload_js .=  "}";			
-			$jquery_upload_js .=  "/*]]>*/";
+			$jquery_upload_js = '<script type="text/javascript">';
+			$jquery_upload_js .= "/*<![CDATA[*/";
+			$jquery_upload_js .= "jQuery(document).ready(function(){";
+			$jquery_upload_js .= "jQuery('#shortdesc_display').show();";
+			$jquery_upload_js .= "jQuery('#calc_upload').click(function(){";
+			$jquery_upload_js .= "if(jQuery('#calc_upload').attr('checked')){";
+			$jquery_upload_js .= "jQuery('#download_filesize').attr('readonly','readonly');";
+			$jquery_upload_js .= "jQuery('#download_filesize').val('');";
+			$jquery_upload_js .= "jQuery('#calc_upload').attr('checked','checked');";
+			$jquery_upload_js .= "}else{";
+			$jquery_upload_js .= "jQuery('#download_filesize').removeAttr('readonly');";
+			$jquery_upload_js .= "jQuery('#calc_upload').removeAttr('checked');";
+			$jquery_upload_js .= "}";
+			$jquery_upload_js .= "});";
+			$jquery_upload_js .= "});";
+			$jquery_upload_js .= "function shortdesc_counter(textarea, counterID, maxLen){";
+			$jquery_upload_js .= "cnt = document.getElementById(counterID);";
+			$jquery_upload_js .= "if(textarea.value.length >= maxLen){";
+			$jquery_upload_js .= "textarea.value = textarea.value.substring(0,maxLen);";
+			$jquery_upload_js .= "}";
+			$jquery_upload_js .= "cnt.innerHTML = maxLen - textarea.value.length;";
+			$jquery_upload_js .= "}";
+			$jquery_upload_js .= "/*]]>*/";
 			$jquery_upload_js .= "</script>";
 			add_to_footer($jquery_upload_js);
 			unset($jquery_upload_js);
@@ -505,45 +560,42 @@ if ($_GET['stype'] == "l") {
 } else {
 	redirect("index.php");
 }
-
-$submit_js  = '<script type="text/javascript">';
-$submit_js .=  "/*<![CDATA[*/";
+$submit_js = '<script type="text/javascript">';
+$submit_js .= "/*<![CDATA[*/";
 /************ weblinks **/
-$submit_js .=  "function validateLink(frm){";
-$submit_js .=    'if(frm.link_name.value=="" || frm.link_url.value=="" || frm.link_description.value==""){';
-$submit_js .=      'alert("'.$locale['550'].'"); return false;';
-$submit_js .=    "}";
-$submit_js .=  "}";
+$submit_js .= "function validateLink(frm){";
+$submit_js .= 'if(frm.link_name.value=="" || frm.link_url.value=="" || frm.link_description.value==""){';
+$submit_js .= 'alert("'.$locale['550'].'"); return false;';
+$submit_js .= "}";
+$submit_js .= "}";
 /************ news ******/
-$submit_js .=  "function validateNews(frm){";
-$submit_js .=    'if(frm.news_subject.value=="" || frm.news_body.value==""){';
-$submit_js .=      'alert("'.$locale['550'].'"); return false;';
-$submit_js .=    "}";
-$submit_js .=  "}";
+$submit_js .= "function validateNews(frm){";
+$submit_js .= 'if(frm.news_subject.value=="" || frm.news_body.value==""){';
+$submit_js .= 'alert("'.$locale['550'].'"); return false;';
+$submit_js .= "}";
+$submit_js .= "}";
 /************ articles **/
-$submit_js .=  "function validateArticle(frm){";
-$submit_js .=    'if(frm.article_subject.value=="" || frm.article_snippet.value=="" || frm.article_body.value==""){';
-$submit_js .=      'alert("'.$locale['550'].'"); return false;';
-$submit_js .=    "}";
-$submit_js .=  "}";
+$submit_js .= "function validateArticle(frm){";
+$submit_js .= 'if(frm.article_subject.value=="" || frm.article_snippet.value=="" || frm.article_body.value==""){';
+$submit_js .= 'alert("'.$locale['550'].'"); return false;';
+$submit_js .= "}";
+$submit_js .= "}";
 /************ photos ****/
-$submit_js .=  "function validatePhoto(frm){";
-$submit_js .=    'if(frm.photo_title.value=="" || frm.photo_description.value=="" || frm.photo_pic_file.value==""){';
-$submit_js .=      'alert("'.$locale['550'].'"); return false;';
-$submit_js .=    "}";
-$submit_js .=  "}";
+$submit_js .= "function validatePhoto(frm){";
+$submit_js .= 'if(frm.photo_title.value=="" || frm.photo_description.value=="" || frm.photo_pic_file.value==""){';
+$submit_js .= 'alert("'.$locale['550'].'"); return false;';
+$submit_js .= "}";
+$submit_js .= "}";
 /************ downloads */
-$submit_js .=  "function validateDownload(frm){";
-$submit_js .=    'if(frm.download_title.value=="" || frm.download_description_short.value=="" || (frm.download_url.value=="" && frm.download_file.value=="")){';
-$submit_js .=      'alert("'.$locale['550'].'"); return false;';
-$submit_js .=    "}";
-$submit_js .=  "}";
+$submit_js .= "function validateDownload(frm){";
+$submit_js .= 'if(frm.download_title.value=="" || frm.download_description_short.value=="" || (frm.download_url.value=="" && frm.download_file.value=="")){';
+$submit_js .= 'alert("'.$locale['550'].'"); return false;';
+$submit_js .= "}";
+$submit_js .= "}";
 /************ -- end -- */
-$submit_js .=  "/*]]>*/";
+$submit_js .= "/*]]>*/";
 $submit_js .= "</script>";
-
 add_to_footer($submit_js);
 unset($submit_js);
-
 require_once THEMES."templates/footer.php";
 ?>
