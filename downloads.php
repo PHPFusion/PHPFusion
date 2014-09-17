@@ -111,7 +111,7 @@ if (!isset($_GET['download_id']) || !isnum($_GET['download_id'])) {
 		}
 		if (isset($_POST['cat_id']) && isnum($_POST['cat_id']) && $_POST['cat_id'] != "all") {
 			$order_by_allowed = array("download_id", 'download_title', "download_user", "download_count",
-			                          "download_datestamp");
+									  "download_datestamp");
 			$getString[] = "cat_id=".$_POST['cat_id'];
 			if (isset($_POST['orderby']) && in_array($_POST['orderby'], $order_by_allowed)) {
 				$getString[] = "orderby=".$_POST['orderby'];
@@ -142,27 +142,27 @@ if (!isset($_GET['download_id']) || !isnum($_GET['download_id'])) {
 		echo "<div class='panel-body p-b-0'>\n";
 		echo openform('searchform', 'searchform', 'post', BASEDIR."search.php", array('downtime' => 0,));
 		echo form_text($locale['460'], 'stext', 'search_downloads', '', array('placeholder' => $locale['461'],
-		                                                                      'append_button' => 1));
+																			  'append_button' => 1));
 		echo form_hidden('stype', 'stype', 'stype', 'downloads');
 		echo closeform();
 		echo "</div>\n";
 		echo "<div class='panel-footer clearfix'>\n";
 		echo openform('filter_form', 'filter_form', 'post', FUSION_SELF, array('downtime' => 0, 'notice' => 0));
 		echo form_select($locale['462'], 'cat_id', 'cat_id', $catlist_opts, isset($_GET['cat_id']) ? $_GET['cat_id'] : '', array('class' => 'pull-left',
-		                                                                                                                         'inline' => 1));
+																																 'inline' => 1));
 		add_to_jquery("
             $('#cat_id').select2().bind('change', function() { this.form.submit(); });
             ");
 		if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 			$order_opts = array('download_id' => $locale['452'], 'download_title' => $locale['453'],
-			                    'download_user' => $locale['454'], 'download_count' => $locale['455'],
-			                    'download_datestamp' => $locale['456']);
+								'download_user' => $locale['454'], 'download_count' => $locale['455'],
+								'download_datestamp' => $locale['456']);
 			$sort_opts = array('ASC' => $locale['457'], 'DESC' => $locale['458']);
 			echo form_button($locale['459'], 'filter_button', 'filter_button', $locale['459'], array('class' => 'pull-right btn-default'));
 			echo form_select('', 'sort', 'sort_downloads', $sort_opts, $sort, array('class' => 'pull-right',
-			                                                                        'width' => '150px'));
+																					'width' => '150px'));
 			echo form_select('', 'orderby', 'orderby_downloads', $order_opts, $order_by, array('class' => 'pull-right m-r-10',
-			                                                                                   'width' => '100px'));
+																							   'width' => '100px'));
 			echo "<span class='p-r-15 pull-right'><strong>".$locale['463']."</strong></span>\n";
 			add_to_jquery("
                 $('#sort_downloads, #orderby_downloads').select2().bind('change', function() { this.form.submit(); });

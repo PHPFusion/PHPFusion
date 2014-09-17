@@ -100,7 +100,7 @@ if (iMEMBER) {
 	echo openform('loginpageform', 'loginpageform', 'POST', $action_url);
 	echo form_text('', 'user_name', 'user_name', $_POST['user_name'], array('placeholder' => $locale['global_101']));
 	echo form_text('', 'user_pass', 'user_pass', $_POST['user_pass'], array('placeholder' => $locale['global_102'],
-	                                                                        'password' => 1));
+																			'password' => 1));
 	//echo $locale['global_101']."<br />\n<input type='text' name='user_name' class='textbox form-control' style='width:100px' /><br />\n";
 	//echo $locale['global_102']."<br />\n<input type='password' name='user_pass' class='textbox form-control' style='width:100px' /><br />\n";
 	echo "<label><input type='checkbox' name='remember_me' value='y' /> ".$locale['global_103']."</label><br /><br />\n";

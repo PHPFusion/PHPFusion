@@ -58,14 +58,14 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 			}
 			$news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_news'])) : stripslashes($data['news_news'])));
 			$news_info = array("news_id" => $data['news_id'], "user_id" => $data['user_id'],
-			                   "user_name" => $data['user_name'], "user_status" => $data['user_status'],
-			                   "user_avatar" => $data['user_avatar'], "news_date" => $data['news_datestamp'],
-			                   "cat_id" => $data['news_cat'], "cat_name" => $data['news_cat_name'],
-			                   "cat_image" => $news_cat_image, "news_subject" => $data['news_subject'],
-			                   "news_image" => $news_image, "news_ext" => $data['news_extended'] ? "y" : "n",
-			                   "news_reads" => $data['news_reads'], "news_comments" => $comments,
-			                   "news_allow_comments" => $data['news_allow_comments'],
-			                   "news_sticky" => $data['news_sticky']);
+							   "user_name" => $data['user_name'], "user_status" => $data['user_status'],
+							   "user_avatar" => $data['user_avatar'], "news_date" => $data['news_datestamp'],
+							   "cat_id" => $data['news_cat'], "cat_name" => $data['news_cat_name'],
+							   "cat_image" => $news_cat_image, "news_subject" => $data['news_subject'],
+							   "news_image" => $news_image, "news_ext" => $data['news_extended'] ? "y" : "n",
+							   "news_reads" => $data['news_reads'], "news_comments" => $comments,
+							   "news_allow_comments" => $data['news_allow_comments'],
+							   "news_sticky" => $data['news_sticky']);
 			echo "<!--news_prepost_".$i."-->\n";
 			render_news($news_subject, $news_news, $news_info);
 		}
@@ -108,16 +108,16 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']));
 		$pagecount = count($news_news);
 		$news_info = array("news_id" => $data['news_id'], "user_id" => $data['user_id'],
-		                   "user_name" => $data['user_name'], "user_status" => $data['user_status'],
-		                   "user_joined" => $data['user_joined'], "user_level" => $data['user_level'],
-		                   "user_avatar" => $data['user_avatar'], "news_date" => $data['news_datestamp'],
-		                   "cat_id" => $data['news_cat'], "cat_name" => $data['news_cat_name'],
-		                   "news_image" => $news_image, "cat_image" => $news_cat_image,
-		                   "news_subject" => $data['news_subject'], "news_ext" => "n",
-		                   "news_reads" => $data['news_reads'],
-		                   "news_comments" => dbcount("(comment_id)", DB_COMMENTS, "comment_type='N' AND comment_item_id='".$data['news_id']."' AND comment_hidden='0'"),
-		                   "news_allow_comments" => $data['news_allow_comments'],
-		                   "news_sticky" => $data['news_sticky']);
+						   "user_name" => $data['user_name'], "user_status" => $data['user_status'],
+						   "user_joined" => $data['user_joined'], "user_level" => $data['user_level'],
+						   "user_avatar" => $data['user_avatar'], "news_date" => $data['news_datestamp'],
+						   "cat_id" => $data['news_cat'], "cat_name" => $data['news_cat_name'],
+						   "news_image" => $news_image, "cat_image" => $news_cat_image,
+						   "news_subject" => $data['news_subject'], "news_ext" => "n",
+						   "news_reads" => $data['news_reads'],
+						   "news_comments" => dbcount("(comment_id)", DB_COMMENTS, "comment_type='N' AND comment_item_id='".$data['news_id']."' AND comment_hidden='0'"),
+						   "news_allow_comments" => $data['news_allow_comments'],
+						   "news_sticky" => $data['news_sticky']);
 		add_to_title($locale['global_201'].$news_subject);
 		echo "<!--news_pre_readmore-->";
 		render_news($news_subject, $news_news[$_GET['rowstart']], $news_info);

@@ -60,7 +60,7 @@ if (iMEMBER) {
 		echo "<div style='text-align:center'><br />\n".$locale['403'].(isset($_GET['search_text']) ? $_GET['search_text'] : $_GET['sortby'])."<br /><br />\n</div>\n";
 	}
 	$search = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
-	                "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+					"U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
 	echo "<hr />\n<div style='text-align:center'>\n";
 	echo "<form name='searchform' method='get' action='".FUSION_SELF."'>\n";
 	echo $locale['408']." <input type='text' name='search_text' class='textbox' style='width:150px'/>\n";

@@ -6,6 +6,7 @@
 +--------------------------------------------------------+
 | Filename: articles.php
 | Author: Nick Jones (Digitanium)
+| Co-Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,10 +19,6 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."articles.php";
-# Breadcrumbs
-# Original Code from Rizald "Elyn" Maxwell
-# Rewritten for 7.02 by MarcusG
-# Bootstrapped by Hien.
 $isTrue = FALSE;
 $str = "";
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
@@ -75,14 +72,14 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		$pagecount = count($article);
 		$article_subject = stripslashes($data['article_subject']);
 		$article_info = array("article_id" => $_GET['article_id'], "cat_id" => $data['article_cat_id'],
-		                      "cat_name" => $data['article_cat_name'], "user_id" => $data['user_id'],
-		                      "user_name" => $data['user_name'], "user_status" => $data['user_status'],
-		                      "user_avatar" => $data['user_avatar'], "user_joined" => $data['user_joined'],
-		                      "user_level" => $data['user_level'], "article_date" => $data['article_datestamp'],
-		                      "article_breaks" => $data['article_breaks'],
-		                      "article_comments" => dbcount("(comment_id)", DB_COMMENTS, "comment_type='A' AND comment_item_id='".$_GET['article_id']."'"),
-		                      "article_reads" => $data['article_reads'],
-		                      "article_allow_comments" => $data['article_allow_comments']);
+							  "cat_name" => $data['article_cat_name'], "user_id" => $data['user_id'],
+							  "user_name" => $data['user_name'], "user_status" => $data['user_status'],
+							  "user_avatar" => $data['user_avatar'], "user_joined" => $data['user_joined'],
+							  "user_level" => $data['user_level'], "article_date" => $data['article_datestamp'],
+							  "article_breaks" => $data['article_breaks'],
+							  "article_comments" => dbcount("(comment_id)", DB_COMMENTS, "comment_type='A' AND comment_item_id='".$_GET['article_id']."'"),
+							  "article_reads" => $data['article_reads'],
+							  "article_allow_comments" => $data['article_allow_comments']);
 		add_to_title($locale['global_201'].$article_subject);
 		echo $str;
 		echo "<!--pre_article-->";

@@ -573,7 +573,7 @@ function cache_smileys() {
 		$smiley_cache = array();
 		while ($data = dbarray($result)) {
 			$smiley_cache[] = array("smiley_code" => $data['smiley_code'], "smiley_image" => $data['smiley_image'],
-			                        "smiley_text" => $data['smiley_text']);
+									"smiley_text" => $data['smiley_text']);
 		}
 	} else {
 		$smiley_cache = array();
@@ -728,7 +728,7 @@ function formatcode($text) {
 function highlight_words($word, $subject) {
 	for ($i = 0, $l = count($word); $i < $l; $i++) {
 		$word[$i] = str_replace(array("\\", "+", "*", "?", "[", "^", "]", "$", "(", ")", "{", "}", "=", "!", "<", ">",
-		                              "|", ":", "#", "-", "_"), "", $word[$i]);
+									  "|", ":", "#", "-", "_"), "", $word[$i]);
 		if (!empty($word[$i])) {
 			$subject = preg_replace("#($word[$i])(?![^<]*>)#i", "<span style='background-color:yellow;color:#333;font-weight:bold;padding-left:2px;padding-right:2px'>\${1}</span>", $subject);
 		}
@@ -741,12 +741,12 @@ function highlight_words($word, $subject) {
 function descript($text, $striptags = TRUE) {
 	// Convert problematic ascii characters to their true values
 	$search = array("40", "41", "58", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77",
-	                "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "97", "98", "99",
-	                "100", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113",
-	                "114", "115", "116", "117", "118", "119", "120", "121", "122");
+					"78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "97", "98", "99",
+					"100", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113",
+					"114", "115", "116", "117", "118", "119", "120", "121", "122");
 	$replace = array("(", ")", ":", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
-	                 "r", "s", "t", "u", "v", "w", "x", "y", "z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
-	                 "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
+					 "r", "s", "t", "u", "v", "w", "x", "y", "z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
+					 "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
 	$entities = count($search);
 	for ($i = 0; $i < $entities; $i++) {
 		$text = preg_replace("#(&\#)(0*".$search[$i]."+);*#si", $replace[$i], $text);
@@ -941,7 +941,7 @@ function cache_groups() {
 function getusergroups() {
 	global $locale, $groups_cache;
 	$groups_array = array(array("0", $locale['user0']), array("101", $locale['user1']), array("102", $locale['user2']),
-	                      array("103", $locale['user3']));
+						  array("103", $locale['user3']));
 	if (!$groups_cache) {
 		cache_groups();
 	}
@@ -1177,7 +1177,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 	global $locale, $settings;
 	$class = ($class ? " class='$class'" : "");
 	if ((in_array($user_status, array(0, 3,
-	                                  7)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0")
+									  7)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0")
 	) {
 		$link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".$user_name."</a>";
 	} elseif ($user_status == "5" || $user_status == "6") {

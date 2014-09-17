@@ -51,7 +51,7 @@ function opensetup() {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
 	$steps = array('1' => $locale['001'], '2' => $locale['002'], '3' => $locale['003'], '4' => $locale['004'],
-	               '5' => $locale['005'], '6' => $locale['006']);
+				   '5' => $locale['005'], '6' => $locale['006']);
 	echo "<div class='list-group'>\n";
 	foreach ($steps as $arr => $value) {
 		if ($arr == 1) {
@@ -110,12 +110,12 @@ if (isset($_POST['step']) && $_POST['step'] == "2") {
 		}
 	}
 	$check_arr = array("administration/db_backups" => FALSE, "forum/attachments" => FALSE, "downloads" => FALSE,
-	                   "downloads/images" => FALSE, "downloads/submissions/" => FALSE,
-	                   "downloads/submissions/images" => FALSE, "ftp_upload" => FALSE, "images" => FALSE,
-	                   "images/imagelist.js" => FALSE, "images/articles" => FALSE, "images/avatars" => FALSE,
-	                   "images/news" => FALSE, "images/news/thumbs" => FALSE, "images/news_cats" => FALSE,
-	                   "images/photoalbum" => FALSE, "images/photoalbum/submissions" => FALSE, "config.php" => FALSE,
-	                   "robots.txt" => FALSE);
+					   "downloads/images" => FALSE, "downloads/submissions/" => FALSE,
+					   "downloads/submissions/images" => FALSE, "ftp_upload" => FALSE, "images" => FALSE,
+					   "images/imagelist.js" => FALSE, "images/articles" => FALSE, "images/avatars" => FALSE,
+					   "images/news" => FALSE, "images/news/thumbs" => FALSE, "images/news_cats" => FALSE,
+					   "images/photoalbum" => FALSE, "images/photoalbum/submissions" => FALSE, "config.php" => FALSE,
+					   "robots.txt" => FALSE);
 	$write_check = TRUE;
 	$check_display = "";
 	foreach ($check_arr as $key => $value) {

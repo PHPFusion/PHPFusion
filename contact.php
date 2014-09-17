@@ -24,7 +24,7 @@ if (isset($_POST['sendmessage'])) {
 	$mailname = isset($_POST['mailname']) ? substr(stripinput(trim($_POST['mailname'])), 0, 50) : "";
 	$email = isset($_POST['email']) ? substr(stripinput(trim($_POST['email'])), 0, 100) : "";
 	$subject = isset($_POST['subject']) ? substr(str_replace(array("\r", "\n",
-	                                                               "@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 50) : "";
+																   "@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 50) : "";
 	$message = isset($_POST['message']) ? descript(stripslash(trim($_POST['message']))) : "";
 	if ($mailname == "") {
 		$error .= " <span class='alt'>".$locale['420']."</span><br />\n";

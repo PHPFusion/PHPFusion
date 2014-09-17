@@ -297,7 +297,7 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
 	}
 	$folders = array("inbox" => $locale['402'], "outbox" => $locale['403'], "archive" => $locale['404'],
-	                 "options" => $locale['425']);
+					 "options" => $locale['425']);
 	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
 	opentable($locale['400']);
 	if ($total_rows) echo "<form name='pm_form' method='post' action='".FUSION_SELF."?folder=".$_GET['folder']."'>\n";
@@ -369,7 +369,7 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 	$bdata['outbox_total'] = isset($bdata['outbox_total']) ? $bdata['outbox_total'] : "0";
 	$bdata['archive_total'] = isset($bdata['archive_total']) ? $bdata['archive_total'] : "0";
 	$folders = array("inbox" => $locale['402'], "outbox" => $locale['403'], "archive" => $locale['404'],
-	                 "options" => $locale['425']);
+					 "options" => $locale['425']);
 	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
 	opentable($locale['400']);
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
