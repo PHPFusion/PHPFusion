@@ -220,11 +220,11 @@ class defender {
 		if (is_array($value)) {
 			$vars = array();
 			foreach ($value as $val) {
-				$vars[] = stripinput(trim(preg_replace("/ +/i", " ", $val)));
+				$vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
 			}
 			$value = implode(',', $vars);
 		} else {
-			$value = stripinput(trim(preg_replace("/ +/i", " ", $value))); // very strong sanitization.
+			$value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($value)))); // very strong sanitization.
 		}
 		if ($safemode == 1) {
 			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) { // invalid chars
