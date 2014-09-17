@@ -15,12 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 
 include LOCALE.LOCALESET."search/photos.php";
 
 if (!defined("SAFEMODE")) {
-	define("SAFEMODE", @ini_get("safe_mode") ? true : false);
+	define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 }
 
 if ($_GET['stype'] == "photos" || $_GET['stype'] == "all") {
@@ -45,28 +47,24 @@ if ($_GET['stype'] == "photos" || $_GET['stype'] == "all") {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
-		$result = dbquery(
-			"SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
+		$result = dbquery("SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
 			INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
 			WHERE ".groupaccess('album_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND (photo_datestamp>=".(time() - $_GET['datelimit'])." OR album_datestamp>=".(time() - $_GET['datelimit']).")" : "")
-		);
+			".($_GET['datelimit'] != 0 ? " AND (photo_datestamp>=".(time()-$_GET['datelimit'])." OR album_datestamp>=".(time()-$_GET['datelimit']).")" : ""));
 		$rows = dbrows($result);
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
 		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=photos&amp;stext=".$_GET['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['p401'] : $locale['p402'])." ".$locale['522']."</a><br />\n";
-		$result = dbquery(
-			"SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
+		$result = dbquery("SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
 			INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
 			WHERE ".groupaccess('album_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND (photo_datestamp>=".(time() - $_GET['datelimit'])." OR album_datestamp>=".(time() - $_GET['datelimit']).")" : "")."
-			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : "")
-		);
+			".($_GET['datelimit'] != 0 ? " AND (photo_datestamp>=".(time()-$_GET['datelimit'])." OR album_datestamp>=".(time()-$_GET['datelimit']).")" : "")."
+			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";
-			if ($data['photo_datestamp'] + 604800 > time() + ($settings['timeoffset'] * 3600)) {
+			if ($data['photo_datestamp']+604800 > time()+($settings['timeoffset']*3600)) {
 				$new = " <span class='small'>".$locale['p403']."</span>";
 			} else {
 				$new = "";
@@ -77,7 +75,6 @@ if ($_GET['stype'] == "photos" || $_GET['stype'] == "all") {
 			// $text_frag = highlight_words($swords, $text_frag);
 			$subj_c = search_stringscount($data['photo_title'])+search_stringscount($data['album_title']);
 			$text_c = search_stringscount($data['photo_description'])+search_stringscount($data['album_description']);
-
 			$search_result .= "<table width='100%'>";
 			$search_result .= "<tr><td width='".$settings['thumb_w']."'>";
 			$photodir = PHOTOS.(!SAFEMODE ? "album_".$data['album_id']."/" : "");

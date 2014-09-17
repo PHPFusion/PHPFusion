@@ -16,9 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) {
-    die("Access Denied");
+	die("Access Denied");
 }
-$permalink_name      = $locale['pl_threads_title'];
-$permalink_desc      = $locale['pl_threads_desc'];
-$permalink_tags_desc = array("%thread_id%" => $locale['pl_tags_001'], "%thread_title%" => $locale['pl_tags_002'], "%post_id%" => $locale['pl_tags_003'], "%thread_rowstart%" => $locale['pl_tags_004']);
+$permalink_name = $locale['pl_threads_title'];
+$permalink_desc = $locale['pl_threads_desc'];
+$permalink_tags_desc = array("%thread_id%" => $locale['pl_tags_001'], "%thread_title%" => $locale['pl_tags_002'],
+							 "%post_id%" => $locale['pl_tags_003'], "%thread_rowstart%" => $locale['pl_tags_004']);
 ?>

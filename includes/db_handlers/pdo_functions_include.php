@@ -16,20 +16,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 // PDO variable
 $pdo = NULL;
-
 // MySQL database functions
 function dbquery($query) {
-	global $pdo, $mysql_queries_count, $mysql_queries_time; $mysql_queries_count++;
-
+	global $pdo, $mysql_queries_count, $mysql_queries_time;
+	$mysql_queries_count++;
 	$query_time = get_microtime();
 	$result = $pdo->prepare($query);
-	$query_time = substr((get_microtime() - $query_time),0,7);
+	$query_time = substr((get_microtime()-$query_time), 0, 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
-
 	if (!$result) {
 		print_r($result->errorInfo());
 		return FALSE;
@@ -40,24 +39,23 @@ function dbquery($query) {
 }
 
 function dbquery_exec($query) {
-	global $pdo, $mysql_queries_count, $mysql_queries_time; $mysql_queries_count++;
-
+	global $pdo, $mysql_queries_count, $mysql_queries_time;
+	$mysql_queries_count++;
 	$query_time = get_microtime();
 	$result = $pdo->exec($query);
-	$query_time = substr((get_microtime() - $query_time),0,7);
+	$query_time = substr((get_microtime()-$query_time), 0, 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
 	return $result;
 }
 
 function dbcount($field, $table, $conditions = "") {
-	global $pdo, $mysql_queries_count, $mysql_queries_time; $mysql_queries_count++;
-
+	global $pdo, $mysql_queries_count, $mysql_queries_time;
+	$mysql_queries_count++;
 	$cond = ($conditions ? " WHERE ".$conditions : "");
 	$query_time = get_microtime();
 	$result = $pdo->prepare("SELECT COUNT".$field." FROM ".$table.$cond);
-	$query_time = substr((get_microtime() - $query_time),0,7);
+	$query_time = substr((get_microtime()-$query_time), 0, 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, "SELECT COUNT".$field." FROM ".$table.$cond);
-
 	if (!$result) {
 		print_r($result->errorInfo());
 		return FALSE;
@@ -69,12 +67,10 @@ function dbcount($field, $table, $conditions = "") {
 
 function dbresult($query, $row) {
 	global $pdo, $mysql_queries_count, $mysql_queries_time;
-
 	$query_time = get_microtime();
 	$data = $query->fetchAll();
-	$query_time = substr((get_microtime() - $query_time),0,7);
+	$query_time = substr((get_microtime()-$query_time), 0, 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
-
 	if (!$query) {
 		print_r($query->errorInfo());
 		return FALSE;
@@ -90,14 +86,12 @@ function dbrows($query) {
 
 function dbarray($query) {
 	global $pdo;
-	
 	$query->setFetchMode(PDO::FETCH_ASSOC);
 	return $query->fetch();
 }
 
 function dbarraynum($query) {
 	global $pdo;
-	
 	$query->setFetchMode(PDO::FETCH_NUM);
 	return $query->fetch();
 }
@@ -107,8 +101,9 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name) {
 	try {
 		$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";encoding=utf8", $db_user, $db_pass);
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		} catch (PDOException $error) {
+	} catch (PDOException $error) {
 		die("<strong>Unable to select MySQL database</strong><br />".$error->getMessage());
 	}
 }
+
 ?>

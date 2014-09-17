@@ -17,31 +17,28 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 require_once THEMES."templates/header.php";
-
-if (!iMEMBER) { redirect("../../index.php"); }
-
+if (!iMEMBER) {
+	redirect("../../index.php");
+}
 add_to_title($locale['global_200'].$locale['global_041']);
-
 global $lastvisited;
-
-if (!isset($lastvisited) || !isnum($lastvisited)) { $lastvisited = time(); }
-
-$rows = dbrows(dbquery(
-	"SELECT tt.thread_id FROM ".DB_THREADS." tt INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-	WHERE ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'"
-));
+if (!isset($lastvisited) || !isnum($lastvisited)) {
+	$lastvisited = time();
+}
+$rows = dbrows(dbquery("SELECT tt.thread_id FROM ".DB_THREADS." tt INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
+	WHERE ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'"));
 if ($rows) {
-	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
-	$result = dbquery(
-		"SELECT tt.forum_id, tt.thread_id, tt.thread_subject, tt.thread_views, tt.thread_lastuser,
+	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
+		$_GET['rowstart'] = 0;
+	}
+	$result = dbquery("SELECT tt.forum_id, tt.thread_id, tt.thread_subject, tt.thread_views, tt.thread_lastuser,
 		tt.thread_lastpost, tt.thread_postcount, tf.forum_name, tf.forum_access, tu.user_id, tu.user_name,
 		tu.user_status
 		FROM ".DB_THREADS." tt
 		INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
 		INNER JOIN ".DB_USERS." tu ON tt.thread_lastuser = tu.user_id
 		WHERE ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'
-		ORDER BY tt.thread_lastpost DESC LIMIT ".$_GET['rowstart'].",20"
-	);
+		ORDER BY tt.thread_lastpost DESC LIMIT ".$_GET['rowstart'].",20");
 	$i = 0;
 	opentable($locale['global_041']);
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
@@ -52,7 +49,11 @@ if ($rows) {
 	echo "<td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_047']."</strong></td>\n";
 	echo "</tr>\n";
 	while ($data = dbarray($result)) {
-		if ($i % 2 == 0) { $row_color = "tbl1"; } else { $row_color = "tbl2"; }
+		if ($i%2 == 0) {
+			$row_color = "tbl1";
+		} else {
+			$row_color = "tbl2";
+		}
 		echo "<tr>\n";
 		echo "<td class='".$row_color."'>";
 		if ($data['thread_lastpost'] > $lastvisited) {
@@ -75,12 +76,13 @@ if ($rows) {
 	}
 	echo "</table>\n";
 	closetable();
-	if ($rows > 20) { echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3)."\n</div>\n"; }
+	if ($rows > 20) {
+		echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3)."\n</div>\n";
+	}
 } else {
 	opentable($locale['global_041']);
 	echo "<div style='text-align:center'><br />\n".$locale['global_053']."<br /><br />\n</div>\n";
 	closetable();
 }
-
 require_once THEMES."templates/footer.php";
 ?>

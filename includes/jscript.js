@@ -1,7 +1,7 @@
 /*------------------------------------------
  Flipbox written by CrappoMan
  simonpatterson@dsl.pipex.com
-------------------------------------------*/
+ ------------------------------------------*/
 function flipBox(b) {
     var a;
     if (document.images["b_" + b].src.indexOf("_on") == -1) {
@@ -99,7 +99,8 @@ function getStyle(c, b) {
         var a = document.getElementById(c)
     } else {
         var a = c
-    } if (a.currentStyle) {
+    }
+    if (a.currentStyle) {
         var d = a.currentStyle[b]
     } else {
         if (window.getComputedStyle) {
@@ -175,7 +176,8 @@ function resize_forum_imgs() {
                 e = 1000
             }
         }
-    } if (e <= 800) {
+    }
+    if (e <= 800) {
         f = 200
     } else {
         if (e < 1152) {

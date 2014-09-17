@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) {
-    die("Access Denied");
+	die("Access Denied");
 }
 
 $regex = array("%download_cat_id%" => "([0-9]+)", "%download_cat_name%" => "([a-zA-Z0-9-]+)");

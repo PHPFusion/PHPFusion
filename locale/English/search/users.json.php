@@ -35,7 +35,7 @@ if (dbrows($result) > 0) {
 		$user_name = $udata['user_name'];
 		$user_level = getuserlevel($udata['user_level']);
 		$user_opts[] = array('id' => "$user_id", 'text' => "$user_name", 'avatar' => "$user_avatar",
-		                     "level" => "$user_level");
+							 "level" => "$user_level");
 	}
 } else {
 	$user_opts[] = array('id' => '', 'text' => "No Results Found..", 'avatar' => '', 'level' => '');

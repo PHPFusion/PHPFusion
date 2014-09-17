@@ -38,44 +38,44 @@
  */
 require_once INCLUDES."output_handling_include.php"; // need to set jquery
 function addHelper($id, $title, $content, $opts = FALSE) {
-    /* Jquery Popover Helper Injector */
-    $title   = ($title && (!empty($title))) ? "title: '$title'," : "";
-    $content = ($content && (!empty($content))) ? "content: '$content'," : "";
-    if (!is_array($opts)) {
-        $placement = "";
-    } else {
-        $placement = (array_key_exists("placement", $opts) && (!empty($opts['placement']))) ? "placement: '".$opts['placement']."'" : "";
-    }
-    add_to_jquery("
+	/* Jquery Popover Helper Injector */
+	$title = ($title && (!empty($title))) ? "title: '$title'," : "";
+	$content = ($content && (!empty($content))) ? "content: '$content'," : "";
+	if (!is_array($opts)) {
+		$placement = "";
+	} else {
+		$placement = (array_key_exists("placement", $opts) && (!empty($opts['placement']))) ? "placement: '".$opts['placement']."'" : "";
+	}
+	add_to_jquery("
     $('#$id').popover({ $title $content $placement }).blur(function () { $(this).popover('hide'); });
     ");
 }
 
 function close_form() {
-    $html = "</div>";
-    return $html;
+	$html = "</div>";
+	return $html;
 }
 
 function open_form_title($title = FALSE, $input_id = FALSE, $helper_text = FALSE, $required = FALSE) {
-    $html = "<div class='panel panel-default'>\n";
-    $html .= "<div class='panel-heading' id='$input_id-group'><label for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : "")."</label></div>\n";
-    $html .= "<div class='panel-body'>\n";
-    return $html;
+	$html = "<div class='panel panel-default'>\n";
+	$html .= "<div class='panel-heading' id='$input_id-group'><label for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : "")."</label></div>\n";
+	$html .= "<div class='panel-body'>\n";
+	return $html;
 }
 
 function open_form_title_2($title = FALSE, $input_id = FALSE, $helper_text = FALSE, $required = FALSE) {
-    $label_class = (!$title) ? 'sr-only' : '';
-    $title = ($title) ? $title : $input_id;
-    $col_left_class = (!$title) ? '' : 'col-sm-3 col-md-3 col-lg-3 text-left';
-    $col_right_class = (!$title) ? '' : 'col-sm-9 col-md-9 col-lg-9';
-    $html = "<div id='$input_id-group' class='form-group'>";
-    $html .= "<label for='$input_id' class='$col_left_class $label_class'>$title ".($required == 1 ? "<span class='required'>*</span>" : "")."</label>";
-    $html .= "<div class='$col_right_class'>";
-    return $html;
+	$label_class = (!$title) ? 'sr-only' : '';
+	$title = ($title) ? $title : $input_id;
+	$col_left_class = (!$title) ? '' : 'col-sm-3 col-md-3 col-lg-3 text-left';
+	$col_right_class = (!$title) ? '' : 'col-sm-9 col-md-9 col-lg-9';
+	$html = "<div id='$input_id-group' class='form-group'>";
+	$html .= "<label for='$input_id' class='$col_left_class $label_class'>$title ".($required == 1 ? "<span class='required'>*</span>" : "")."</label>";
+	$html .= "<div class='$col_right_class'>";
+	return $html;
 }
 
 function close_form_title() {
-    return "</div>\n</div>\n";
+	return "</div>\n</div>\n";
 }
 
 /*

@@ -15,25 +15,22 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 if (dbcount("(online_user)", DB_ONLINE, (iMEMBER ? "online_user='".$userdata['user_id']."'" : "online_user='0' AND online_ip='".USER_IP."'")) == 1) {
-	$result = dbquery(
-		"UPDATE ".DB_ONLINE." SET online_lastactive='".time()."', online_ip='".USER_IP."'
+	$result = dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".time()."', online_ip='".USER_IP."'
 		WHERE ".(iMEMBER ? "online_user='".$userdata['user_id']."'" : "online_user='0' AND online_ip='".USER_IP."'"));
 } else {
-	$result = dbquery(
-		"INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive) 
+	$result = dbquery("INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive)
 		VALUES ('".(iMEMBER ? $userdata['user_id'] : 0)."', '".USER_IP."', '".USER_IP_TYPE."', '".time()."')");
 }
 $result = dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive<".(time()-60)."");
-
 openside($locale['global_010']);
-$result = dbquery(
-	"SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ONLINE." ton
-	LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id"
-);
-$guests = 0; $members = array();
+$result = dbquery("SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ONLINE." ton
+	LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id");
+$guests = 0;
+$members = array();
 while ($data = dbarray($result)) {
 	if ($data['online_user'] == "0") {
 		$guests++;
@@ -47,7 +44,11 @@ if (count($members)) {
 	$i = 1;
 	while (list($key, $member) = each($members)) {
 		echo "<span class='side'>".profile_link($member[0], $member[1], $member[2])."</span>";
-		if ($i != count($members)) { echo ",\n"; } else { echo "<br />\n"; }
+		if ($i != count($members)) {
+			echo ",\n";
+		} else {
+			echo "<br />\n";
+		}
 		$i++;
 	}
 }

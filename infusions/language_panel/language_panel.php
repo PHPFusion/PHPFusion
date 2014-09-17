@@ -16,16 +16,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 if (sizeof($enabled_languages) > 1) {
-
 	openside($locale['global_ML102']);
 	include_once INCLUDES."translate_include.php";
 	echo openform('lang_menu_form', 'lang_menu_form', 'post', FUSION_SELF);
 	echo form_select('', 'lang_menu', 'lang_menu', $language_opts, $settings['locale']);
 	echo closeform();
-	
 	add_to_jquery("
 	function showflag(item){
 		return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
@@ -40,7 +39,6 @@ if (sizeof($enabled_languages) > 1) {
 		window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
 	});
 ");
-
-closeside();
+	closeside();
 }
 ?>

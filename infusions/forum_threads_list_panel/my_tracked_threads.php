@@ -18,23 +18,25 @@
 require_once "../../maincore.php";
 require_once THEMES."templates/header.php";
 
-if (!iMEMBER) { redirect("../../index.php"); }
+if (!iMEMBER) {
+	redirect("../../index.php");
+}
 
 if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")) {
 	$result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);
 	redirect(FUSION_SELF);
 }
 
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
+if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
+	$_GET['rowstart'] = 0;
+}
 
 opentable($locale['global_056']);
 
-$result = dbquery(
-	"SELECT tn.thread_id FROM ".DB_THREAD_NOTIFY." tn
+$result = dbquery("SELECT tn.thread_id FROM ".DB_THREAD_NOTIFY." tn
 	INNER JOIN ".DB_THREADS." tt ON tn.thread_id = tt.thread_id
 	INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-	WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'"
-);
+	WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'");
 $rows = dbrows($result);
 
 if ($rows) {
@@ -59,11 +61,11 @@ if ($rows) {
 	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_050']."</strong></td>\n";
 	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_047']."</strong></td>\n";
 	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_046']."</strong></td>\n";
-	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_057']."</strong></td>\n";	
+	echo "<td class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_057']."</strong></td>\n";
 	echo "</tr>\n";
 	$i = 0;
 	while ($data = dbarray($result)) {
-		$row_color = ($i % 2 == 0 ? "tbl1" : "tbl2");
+		$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
 		echo "<tr>\n<td class='".$row_color."'><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."'>".$data['thread_subject']."</a></td>\n";
 		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['user_id1'], $data['user_name1'], $data['user_status1'])."</td>\n";
 		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['user_id2'], $data['user_name2'], $data['user_status2'])."<br />
@@ -75,7 +77,7 @@ if ($rows) {
 	}
 	echo "</table>\n";
 	closetable();
-	echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'],10,$rows,3,FUSION_SELF."?")."</div>\n";
+	echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";
 } else {
 	echo "<div style='text-align:center;'>".$locale['global_059']."</div>\n";
 	closetable();

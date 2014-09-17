@@ -17,25 +17,25 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("P") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkrights("P") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+	redirect("../index.php");
+}
 if (!isset($_GET['panel_side']) || !isNum($_GET['panel_side']) || $_GET['panel_side'] > 6) {
 	$panel_side = 1;
 } else {
 	$panel_side = $_GET['panel_side'];
 }
-
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/panels.php";
-
 $temp = opendir(INFUSIONS);
 while ($folder = readdir($temp)) {
-	if (!in_array($folder, array(".","..")) && strstr($folder, "_panel")) {
+	if (!in_array($folder, array(".", "..")) && strstr($folder, "_panel")) {
 		if (is_dir(INFUSIONS.$folder)) $panel_list[] = $folder;
 	}
 }
-closedir($temp); sort($panel_list); array_unshift($panel_list, "none");
-
+closedir($temp);
+sort($panel_list);
+array_unshift($panel_list, "none");
 if (isset($_POST['save'])) {
 	$error = "";
 	$panel_name = stripinput($_POST['panel_name']);
@@ -53,24 +53,27 @@ if (isset($_POST['save'])) {
 	}
 	$panel_access = isnum($_POST['panel_access']) ? $_POST['panel_access'] : "0";
 	$panel_langs = "";
-	for ($pl=0;$pl<sizeof($_POST['panel_languages']);$pl++) {
-	   $panel_langs .= $_POST['panel_languages'][$pl].($pl<(sizeof($_POST['panel_languages'])-1)?".":"");
+	for ($pl = 0; $pl < sizeof($_POST['panel_languages']); $pl++) {
+		$panel_langs .= $_POST['panel_languages'][$pl].($pl < (sizeof($_POST['panel_languages'])-1) ? "." : "");
 	}
 	if ($panel_side == "1" || $panel_side == "4") {
 		$panel_display = "0";
-		} else {
+	} else {
 		$panel_display = isset($_POST['panel_display']) ? "1" : "0";
 	}
-	
 	if (isset($_GET['panel_id']) && isnum($_GET['panel_id'])) {
 		if ($panel_name) {
 			$data = dbarray(dbquery("SELECT panel_name FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"));
 			if ($panel_name != $data['panel_name']) {
 				$result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$panel_name."'");
-				if (!empty($result)) { $error .= $locale['471']."<br />"; }
+				if (!empty($result)) {
+					$error .= $locale['471']."<br />";
+				}
 			}
 		}
-		if ($panel_type == "php" && $panel_content == "") { $error .= $locale['472']."<br />"; }
+		if ($panel_type == "php" && $panel_content == "") {
+			$error .= $locale['472']."<br />";
+		}
 		if (($panel_side == "2" || $panel_side == "3") && $panel_display == "0" && $panel_url_list !== "") {
 			$error .= $locale['475']."<br />";
 		}
@@ -78,13 +81,11 @@ if (isset($_POST['save'])) {
 			$error .= $locale['474']."<br />";
 		}
 		if (!$error) {
-			$result = dbquery(
-				"UPDATE ".DB_PANELS." SET
+			$result = dbquery("UPDATE ".DB_PANELS." SET
 					panel_name='".$panel_name."', panel_url_list='".$panel_url_list."', panel_restriction='".$panel_restriction."',
 					panel_type='".$panel_type."', panel_filename='".$panel_filename."', panel_content='".$panel_content."',
 					panel_access='".$panel_access."', panel_display='".$panel_display."', panel_languages='".$panel_langs."'
-				WHERE panel_id='".$_GET['panel_id']."'"
-			);
+				WHERE panel_id='".$_GET['panel_id']."'");
 		}
 		opentable($locale['480']);
 		echo "<div style='text-align:center'><br />\n";
@@ -101,10 +102,16 @@ if (isset($_POST['save'])) {
 	} else {
 		if ($panel_name) {
 			$result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$panel_name."'");
-			if (!empty($result)) { $error .= $locale['471']."<br />"; }
+			if (!empty($result)) {
+				$error .= $locale['471']."<br />";
+			}
 		}
-		if ($panel_type == "php" && $panel_content == "") { $error .= $locale['472']."<br />"; }
-		if ($panel_type == "file" && $panel_filename == "none") { $error .= $locale['473']."<br />"; }
+		if ($panel_type == "php" && $panel_content == "") {
+			$error .= $locale['472']."<br />";
+		}
+		if ($panel_type == "file" && $panel_filename == "none") {
+			$error .= $locale['473']."<br />";
+		}
 		if (($panel_side == "2" || $panel_side == "3") && $panel_display == "0" && $panel_url_list !== "") {
 			$error .= $locale['475']."<br />";
 		}
@@ -113,19 +120,21 @@ if (isset($_POST['save'])) {
 		}
 		if (!$error) {
 			$result = dbquery("SELECT panel_order FROM ".DB_PANELS." WHERE panel_side='".$panel_side."' ORDER BY panel_order DESC LIMIT 1");
-			if (dbrows($result) != 0) { $data = dbarray($result); $neworder = $data['panel_order'] + 1; } else { $neworder = 1; }
-			$result = dbquery(
-				"INSERT INTO ".DB_PANELS." (
+			if (dbrows($result) != 0) {
+				$data = dbarray($result);
+				$neworder = $data['panel_order']+1;
+			} else {
+				$neworder = 1;
+			}
+			$result = dbquery("INSERT INTO ".DB_PANELS." (
 					panel_name, panel_filename, panel_url_list, panel_restriction, panel_content,
 					panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_languages
 				) VALUES (
 					'".$panel_name."', '".$panel_filename."', '".$panel_url_list."', '".$panel_restriction."',
 					'".$panel_content."', '".$panel_side."', '".$neworder."', '".$panel_type."', '".$panel_access."',
 					'".$panel_display."', '0', '".$panel_langs."'
-				)"
-			);
+				)");
 		}
-		
 		opentable($locale['483']);
 		echo "<div style='text-align:center'><br />\n";
 		if ($error) {
@@ -168,11 +177,9 @@ if (isset($_POST['save'])) {
 		}
 	}
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['panel_id']) && isnum($_GET['panel_id']))) {
-		$result = dbquery(
-			"SELECT panel_name, panel_filename, panel_content, panel_type, panel_side,
+		$result = dbquery("SELECT panel_name, panel_filename, panel_content, panel_type, panel_side,
 				panel_access, panel_display, panel_url_list, panel_restriction, panel_languages
-			FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"
-		);
+			FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$panel_name = $data['panel_name'];
@@ -205,8 +212,8 @@ if (isset($_POST['save'])) {
 			$panel_type = "";
 			$panel_access = "";
 			$panel_languages = "";
-			for ($x=0;$x<sizeof($enabled_languages);$x++) {
-				$panel_languages .= $enabled_languages[$x].(($x<sizeof($enabled_languages)-1)?".":"");
+			for ($x = 0; $x < sizeof($enabled_languages); $x++) {
+				$panel_languages .= $enabled_languages[$x].(($x < sizeof($enabled_languages)-1) ? "." : "");
 			}
 			$panelon = "";
 			$panelopts = $panel_side == "1" || $panel_side == "4" ? " style='display:none'" : " style='display:block'";
@@ -214,8 +221,9 @@ if (isset($_POST['save'])) {
 		$action = FUSION_SELF.$aidlink."&amp;panel_side=".$panel_side;
 		opentable($locale['451']);
 	}
-	$user_groups = getusergroups(); $access_opts = "";
-	while(list($key, $user_group) = each($user_groups)){
+	$user_groups = getusergroups();
+	$access_opts = "";
+	while (list($key, $user_group) = each($user_groups)) {
 		$sel = (isset($panel_access) && $panel_access == $user_group['0'] ? " selected='selected'" : "");
 		$access_opts .= "<option value='".$user_group['0']."'$sel>".$user_group['1']."</option>\n";
 	}
@@ -228,7 +236,7 @@ if (isset($_POST['save'])) {
 		if ($panel_type == "file") {
 			echo "<tr>\n<td class='tbl'>".$locale['453']."</td>\n";
 			echo "<td colspan='2' class='tbl'><select name='panel_filename' class='textbox' style='width:200px;'>\n";
-			for ($i=0;$i < count($panel_list);$i++) {
+			for ($i = 0; $i < count($panel_list); $i++) {
 				echo "<option".($panel_filename == $panel_list[$i] ? " selected='selected'" : "").">".$panel_list[$i]."</option>\n";
 			}
 			echo "</select></td>\n</tr>\n";
@@ -236,7 +244,7 @@ if (isset($_POST['save'])) {
 	} else {
 		echo "<tr>\n<td class='tbl'>".$locale['453']."</td>\n";
 		echo "<td colspan='2' class='tbl'><select name='panel_filename' class='textbox' style='width:200px;'>\n";
-		for ($i=0;$i < count($panel_list);$i++) {
+		for ($i = 0; $i < count($panel_list); $i++) {
 			echo "<option".($panel_filename == $panel_list[$i] ? " selected='selected'" : "").">".$panel_list[$i]."</option>\n";
 		}
 		echo "</select>&nbsp;&nbsp;<span class='small2'>".$locale['454']."</span></td>\n</tr>\n";
@@ -261,7 +269,6 @@ if (isset($_POST['save'])) {
 	echo "<label><input type='radio' name='panel_restriction' value='1'".$exclude_check." /> ".$locale['464']."</label><br />\n";
 	echo "<label><input type='radio' name='panel_restriction' value='0'".$include_check." /> ".$locale['465']."</label><br />\n";
 	echo "</td>\n</tr>\n";
-	
 	if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 		echo "<tr>\n<td class='tbl'>".$locale['456']."</td>\n";
 		echo "<td colspan='2' class='tbl'><input type='password' name='admin_password' value='".(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")."' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
@@ -270,25 +277,22 @@ if (isset($_POST['save'])) {
 	echo "<tr>\n<td class='tbl'>".$locale['458']."</td>\n";
 	echo "<td colspan='2' class='tbl'><select name='panel_access' class='textbox' style='width:150px;'>\n".$access_opts."</select></td>\n";
 	echo "</tr>\n";
-	
 	echo "<tr>\n";
 	echo "<td class='tbl'>".$locale['466']."</td>";
 	echo "<td colspan='2' class='tbl'>";
-
 	if (isset($_POST['preview'])) {
 		$panel_langs = $panel_languages;
 	} else {
 		$panel_langs = explode('.', $panel_languages);
 	}
-	$locale_files = makefilelist(LOCALE, ".|..", true, "folders");
-   for ($i=0;$i<sizeof($locale_files);$i++) {
-   	if (in_array($locale_files[$i], $enabled_languages)) {
-	      echo "<input type='checkbox' value='".$locale_files[$i]."' name='panel_languages[]' class='textbox' ".(in_array($locale_files[$i], $panel_langs)?"checked='checked'":"")."> ".str_replace('_', ' ', $locale_files[$i])." ";
-	   }
-	   if ($i%4==0 && $i!=0) echo "<br  />";
-   }
-echo "</td></tr>";
-	
+	$locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
+	for ($i = 0; $i < sizeof($locale_files); $i++) {
+		if (in_array($locale_files[$i], $enabled_languages)) {
+			echo "<input type='checkbox' value='".$locale_files[$i]."' name='panel_languages[]' class='textbox' ".(in_array($locale_files[$i], $panel_langs) ? "checked='checked'" : "")."> ".str_replace('_', ' ', $locale_files[$i])." ";
+		}
+		if ($i%4 == 0 && $i != 0) echo "<br  />";
+	}
+	echo "</td></tr>";
 	echo "<tr><td align='center' colspan='3' class='tbl'>\n";
 	echo "<div id='panelopts'".$panelopts."><input type='checkbox' id='panel_display' name='panel_display' value='1'".$panelon." /> ".$locale['459']."</div>\n";
 	echo "<br />\n";
@@ -302,6 +306,5 @@ echo "</td></tr>";
 	echo "</tr>\n</table>\n</form>\n";
 	closetable();
 }
-
 require_once THEMES."templates/footer.php";
 ?>

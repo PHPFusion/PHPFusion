@@ -17,9 +17,9 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 include LOCALE.LOCALESET."admin/sitelinks.php";
-
-if (!checkrights("SL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
-
+if (!checkrights("SL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+	redirect("../index.php");
+}
 if (isset($_GET['listItem']) && is_array($_GET['listItem'])) {
 	foreach ($_GET['listItem'] as $position => $item) {
 		if (isnum($position) && isnum($item)) {

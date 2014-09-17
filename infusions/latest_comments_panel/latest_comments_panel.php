@@ -15,13 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 $displayComments = 10;
-
 openside($locale['global_025']);
-
 $result = dbquery("	SELECT comment_id, comment_item_id, comment_type, comment_message
 					FROM ".DB_COMMENTS."
 					WHERE comment_hidden='0'
@@ -30,12 +28,13 @@ $result = dbquery("	SELECT comment_id, comment_item_id, comment_type, comment_me
 if (dbrows($result)) {
 	$output = "";
 	$i = 0;
-	while($data = dbarray($result)) {
-		if ($i == $displayComments) { break; }
+	while ($data = dbarray($result)) {
+		if ($i == $displayComments) {
+			break;
+		}
 		switch ($data['comment_type']) {
 			case "N":
-				$access = dbcount(	"(news_id)", DB_NEWS,
-									"news_id='".$data['comment_item_id']."' AND
+				$access = dbcount("(news_id)", DB_NEWS, "news_id='".$data['comment_item_id']."' AND
 									".groupaccess('news_visibility')." AND
 									(news_start='0'||news_start<=".time().") AND
 									(news_end='0'||news_end>=".time().") AND
@@ -45,7 +44,7 @@ if (dbrows($result)) {
 					$comment = trimlink($data['comment_message'], 23);
 					$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='N' AND comment_id<=".$data['comment_id']);
 					if ($commentStart > $settings['comments_per_page']) {
-						$commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
+						$commentStart = "&amp;c_start=".floor($commentStart/$settings['comments_per_page'])*$settings['comments_per_page'];
 					} else {
 						$commentStart = "";
 					}
@@ -64,7 +63,7 @@ if (dbrows($result)) {
 					$comment = trimlink($data['comment_message'], 23);
 					$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='A' AND comment_id<=".$data['comment_id']);
 					if ($commentStart > $settings['comments_per_page']) {
-						$commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
+						$commentStart = "&amp;c_start=".floor($commentStart/$settings['comments_per_page'])*$settings['comments_per_page'];
 					} else {
 						$commentStart = "";
 					}
@@ -76,13 +75,12 @@ if (dbrows($result)) {
 				$access = dbquery("	SELECT photo_id FROM ".DB_PHOTOS." p, ".DB_PHOTO_ALBUMS." a WHERE
 									p.photo_id='".$data['comment_item_id']."' AND
 									p.album_id=a.album_id AND
-									".groupaccess('a.album_access')
-									);
+									".groupaccess('a.album_access'));
 				if (dbrows($access) > 0) {
 					$comment = trimlink($data['comment_message'], 23);
 					$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='P' AND comment_id<=".$data['comment_id']);
 					if ($commentStart > $settings['comments_per_page']) {
-						$commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
+						$commentStart = "&amp;c_start=".floor($commentStart/$settings['comments_per_page'])*$settings['comments_per_page'];
 					} else {
 						$commentStart = "";
 					}
@@ -96,7 +94,7 @@ if (dbrows($result)) {
 					$comment = trimlink($data['comment_message'], 23);
 					$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='C' AND comment_id<=".$data['comment_id']);
 					if ($commentStart > $settings['comments_per_page']) {
-						$commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
+						$commentStart = "&amp;c_start=".floor($commentStart/$settings['comments_per_page'])*$settings['comments_per_page'];
 					} else {
 						$commentStart = "";
 					}
@@ -108,13 +106,12 @@ if (dbrows($result)) {
 				$access = dbquery("	SELECT download_id FROM ".DB_DOWNLOADS." d, ".DB_DOWNLOAD_CATS." c WHERE
 									d.download_id='".$data['comment_item_id']."' AND
 									d.download_cat=c.download_cat_id AND
-									".groupaccess('c.download_cat_access')
-									);
+									".groupaccess('c.download_cat_access'));
 				if (dbrows($access) > 0) {
 					$comment = trimlink($data['comment_message'], 23);
 					$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='D' AND comment_id<=".$data['comment_id']);
 					if ($commentStart > $settings['comments_per_page']) {
-						$commentStart = "&amp;c_start=".floor($commentStart / $settings['comments_per_page']) * $settings['comments_per_page'];
+						$commentStart = "&amp;c_start=".floor($commentStart/$settings['comments_per_page'])*$settings['comments_per_page'];
 					} else {
 						$commentStart = "";
 					}

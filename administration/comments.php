@@ -17,13 +17,19 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 
-if (!checkrights("C") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+if (!checkrights("C") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+	redirect("../index.php");
+}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/comments.php";
 
-if (!isset($_GET['ctype']) || !preg_check("/^[0-9A-Z]+$/i", $_GET['ctype'])) { redirect("../index.php"); }
-if (!isset($_GET['cid']) || !isnum($_GET['cid'])) { redirect("../index.php"); }
+if (!isset($_GET['ctype']) || !preg_check("/^[0-9A-Z]+$/i", $_GET['ctype'])) {
+	redirect("../index.php");
+}
+if (!isset($_GET['cid']) || !isnum($_GET['cid'])) {
+	redirect("../index.php");
+}
 
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "su") {
@@ -31,7 +37,9 @@ if (isset($_GET['status']) && !isset($message)) {
 	} elseif ($_GET['status'] == "del") {
 		$message = $locale['411'];
 	}
-	if ($message) {	echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n"; }
+	if ($message) {
+		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+	}
 }
 
 if (isset($_POST['save_comment']) && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
@@ -61,16 +69,14 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['comme
 }
 opentable($locale['401']);
 $i = 0;
-$result = dbquery(
-	"SELECT c.comment_id, c.comment_name, c.comment_message, c.comment_datestamp, c.comment_ip, u.user_id, u.user_name, u.user_status FROM ".DB_COMMENTS." c
+$result = dbquery("SELECT c.comment_id, c.comment_name, c.comment_message, c.comment_datestamp, c.comment_ip, u.user_id, u.user_name, u.user_status FROM ".DB_COMMENTS." c
 	LEFT JOIN ".DB_USERS." u
 	ON c.comment_name=u.user_id
-	WHERE c.comment_type='".$_GET['ctype']."' AND c.comment_item_id='".$_GET['cid']."' ORDER BY c.comment_datestamp ASC"
-);
+	WHERE c.comment_type='".$_GET['ctype']."' AND c.comment_item_id='".$_GET['cid']."' ORDER BY c.comment_datestamp ASC");
 if (dbrows($result)) {
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border center'>\n";
 	while ($data = dbarray($result)) {
-		echo "<tr>\n<td class='".($i % 2 == 0 ? "tbl1" : "tbl2")."'><span class='comment-name'>";
+		echo "<tr>\n<td class='".($i%2 == 0 ? "tbl1" : "tbl2")."'><span class='comment-name'>";
 		if ($data['user_name']) {
 			echo "<span class='slink'>".profile_link($data['comment_name'], $data['user_name'], $data['user_status'])."</span>";
 		} else {

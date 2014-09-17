@@ -16,8 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) {
-    die("Access Denied");
+	die("Access Denied");
 }
-$pattern = array("login-to-website" => "login.php", "edit-profile" => "edit_profile.php", "website-members" => "members.php", "private-messages" => "messages.php", "logout-from-website" => "index.php?logout=yes");
+$pattern = array("login-to-website" => "login.php", "edit-profile" => "edit_profile.php",
+				 "website-members" => "members.php", "private-messages" => "messages.php",
+				 "logout-from-website" => "index.php?logout=yes");
 
 ?>

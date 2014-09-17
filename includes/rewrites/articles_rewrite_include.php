@@ -16,15 +16,19 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) {
-    die("Access Denied");
+	die("Access Denied");
 }
 $regex = array("%article_id%" => "([0-9]+)", "%comment_id%" => "([0-9]+)", "%article_title%" => "([a-zA-Z0-9-_]+)");
 // only accept &
-$pattern = array("articles"                                                                              => "articles.php", "articles/%article_id%/article/%article_title%" => "articles.php?article_id=%article_id%", "articles/%article_id%/article/%article_title%#comments" => "articles.php?article_id=%article_id%#comments", // not sure why not working.
-                 "articles/%article_id%/article/%article_title%/edit-comments/%comment_id%#edit_comment" => "articles.php?article_id=%article_id%&amp;c_action=edit&amp;comment_id=%comment_id%#edit_comment", "articles/%article_id%/article/%article_title%/delete-comments/%comment_id%" => "articles.php?article_id=%article_id%&amp;c_action=delete&amp;comment_id=%comment_id%",);
-$dbname  = DB_ARTICLES;
-$dbid    = array("%article_id%" => "article_id");
-$dbinfo  = array("%article_title%" => "article_subject");
+$pattern = array("articles" => "articles.php",
+				 "articles/%article_id%/article/%article_title%" => "articles.php?article_id=%article_id%",
+				 "articles/%article_id%/article/%article_title%#comments" => "articles.php?article_id=%article_id%#comments",
+				 // not sure why not working.
+				 "articles/%article_id%/article/%article_title%/edit-comments/%comment_id%#edit_comment" => "articles.php?article_id=%article_id%&amp;c_action=edit&amp;comment_id=%comment_id%#edit_comment",
+				 "articles/%article_id%/article/%article_title%/delete-comments/%comment_id%" => "articles.php?article_id=%article_id%&amp;c_action=delete&amp;comment_id=%comment_id%",);
+$dbname = DB_ARTICLES;
+$dbid = array("%article_id%" => "article_id");
+$dbinfo = array("%article_title%" => "article_subject");
 //http://192.168.68.200/dev7/articles.php?article_id=8#comments
 //http://192.168.68.200/dev7/articles.php?article_id=8&c_action=edit&comment_id=9#edit_comment
 //http://192.168.68.200/dev7/articles.php?article_id=8&c_action=delete&comment_id=9

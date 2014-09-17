@@ -1,44 +1,34 @@
 <?php
 
-    /* Updated 2014/July - https://github.com/sciactive/pnotify */
-    require_once INCLUDES."output_handling_include.php";
-
-    if (!defined('notification_ui')) {
-        add_to_footer("<script type='text/javascript' src='".INCLUDES."notify/pnotify.js'></script>\n");
-        add_to_head("<link href='".INCLUDES."notify/pnotify.custom.css' media='all' rel='stylesheet' type='text/css' />\n");
-        define('notification_ui', true);
-    }
-
-
-    function notify($title, $text, $opts=false) {
-
-        // init library
-        if (!is_array($opts)) {
-
-            $sticky = "";
-            $anime = "";
-            $icon = "notify_icon n-attention";
-
-        } else {
-
-            $sticky =  (array_key_exists("sticky", $opts)) ? "hide:false," : "";
-            $icon = (array_key_exists("icon", $opts)) ? $opts['icon'] : "notify_icon n-attention";
-            $animation = (array_key_exists("animate", $opts)) ? $opts['animate'] : "";
-
-            if ($animation == "1") {
-                $anime =  "animation: 'show',";
-            } elseif ($animation == "2") {
-                $anime = "animation: 'fade',";
-            } elseif ($animation == "3") {
-                $anime = "animation: 'slide',";
-            } else {
-                // reset
-                $anime = "";
-            }
-
-        }
-
-        add_to_jquery("
+/* Updated 2014/July - https://github.com/sciactive/pnotify */
+require_once INCLUDES."output_handling_include.php";
+if (!defined('notification_ui')) {
+	add_to_footer("<script type='text/javascript' src='".INCLUDES."notify/pnotify.js'></script>\n");
+	add_to_head("<link href='".INCLUDES."notify/pnotify.custom.css' media='all' rel='stylesheet' type='text/css' />\n");
+	define('notification_ui', TRUE);
+}
+function notify($title, $text, $opts = FALSE) {
+	// init library
+	if (!is_array($opts)) {
+		$sticky = "";
+		$anime = "";
+		$icon = "notify_icon n-attention";
+	} else {
+		$sticky = (array_key_exists("sticky", $opts)) ? "hide:false," : "";
+		$icon = (array_key_exists("icon", $opts)) ? $opts['icon'] : "notify_icon n-attention";
+		$animation = (array_key_exists("animate", $opts)) ? $opts['animate'] : "";
+		if ($animation == "1") {
+			$anime = "animation: 'show',";
+		} elseif ($animation == "2") {
+			$anime = "animation: 'fade',";
+		} elseif ($animation == "3") {
+			$anime = "animation: 'slide',";
+		} else {
+			// reset
+			$anime = "";
+		}
+	}
+	add_to_jquery("
         $(function(){
             new PNotify({
                 title: '$title',
@@ -51,7 +41,7 @@
             });
         });
         ");
-    }
+}
 
 /*
  *     var effect_in = $('#ui_effect_in').val(),
@@ -82,5 +72,4 @@
     }
     });
  */
-
 ?>

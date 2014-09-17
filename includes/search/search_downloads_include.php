@@ -15,10 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 include LOCALE.LOCALESET."search/downloads.php";
-
 if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
 	if ($_GET['sort'] == "datestamp") {
 		$sortby = "download_datestamp";
@@ -39,25 +39,21 @@ if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
-		$result = dbquery(
-			"SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
+		$result = dbquery("SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
 			INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
 			WHERE ".groupaccess('download_cat_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND download_datestamp>=".(time() - $_GET['datelimit']):"")
-		);
+			".($_GET['datelimit'] != 0 ? " AND download_datestamp>=".(time()-$_GET['datelimit']) : ""));
 		$rows = dbrows($result);
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
 		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=downloads&amp;stext=".$_GET['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."</a><br />\n";
-		$result = dbquery(
-			"SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
+		$result = dbquery("SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
 			INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
 			WHERE ".groupaccess('download_cat_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND download_datestamp>=".(time() - $_GET['datelimit']):"")."
-			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : "")
-		);
+			".($_GET['datelimit'] != 0 ? " AND download_datestamp>=".(time()-$_GET['datelimit']) : "")."
+			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";
 			if ($data['download_datestamp']+604800 > time()+($settings['timeoffset']*3600)) {

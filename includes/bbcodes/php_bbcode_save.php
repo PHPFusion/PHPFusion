@@ -19,19 +19,17 @@ require "../../maincore.php";
 require INCLUDES."class.httpdownload.php";
 
 function unstripinput($text) {
-   if (QUOTES_GPC) $text = stripslashes($text);
-   $search = array("\n", "&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
-   $replace = array("\r\n", "&", "\"", "'", "\\", '\"', "\'", "<", ">");
-   $text = str_replace($search, $replace, $text);
-   return $text;
+	if (QUOTES_GPC) $text = stripslashes($text);
+	$search = array("\n", "&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
+	$replace = array("\r\n", "&", "\"", "'", "\\", '\"', "\'", "<", ">");
+	$text = str_replace($search, $replace, $text);
+	return $text;
 }
 
 if ((isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && (isset($_GET['post_id']) && isnum($_GET['post_id'])) && (isset($_GET['code_id']) && isnum($_GET['code_id']))) {
-	$result = dbquery(
-		"SELECT fp.*, ff.* FROM ".DB_POSTS." AS fp
+	$result = dbquery("SELECT fp.*, ff.* FROM ".DB_POSTS." AS fp
 		INNER JOIN ".DB_FORUMS." AS ff ON ff.forum_id=fp.forum_id
-		WHERE fp.thread_id='".$_GET['thread_id']."' AND fp.post_id='".$_GET['post_id']."'"
-	);
+		WHERE fp.thread_id='".$_GET['thread_id']."' AND fp.post_id='".$_GET['post_id']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		if (!checkgroup($data['forum_access']) || !$data['forum_cat']) {
@@ -44,7 +42,7 @@ if ((isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && (isset($_GET['po
 			$filename = "php_".$_GET['thread_id']."_".$_GET['post_id']."_".$_GET['code_id'].".php";
 			$object = new httpdownload;
 			$object->set_bydata($text);
-			$object->use_resume = true;
+			$object->use_resume = TRUE;
 			$object->set_filename($filename);
 			$object->download();
 		}

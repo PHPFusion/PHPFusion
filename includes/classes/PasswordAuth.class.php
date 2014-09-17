@@ -15,31 +15,31 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 
 class PasswordAuth {
-
-	public $currentAlgo 					= "";
-	public $currentSalt 					= "";
-	public $currentPasswordHash 			= "";
-	public $inputPassword 					= "";
-
-	public $inputNewPassword				= "";
-	public $inputNewPassword2				= "";
-
+	public $currentAlgo = "";
+	public $currentSalt = "";
+	public $currentPasswordHash = "";
+	public $inputPassword = "";
+	public $inputNewPassword = "";
+	public $inputNewPassword2 = "";
 	private $_newAlgo;
 	private $_newSalt;
 	private $_newPasswordHash;
 
 	// Checks if Current Password is valid
-	public function isValidCurrentPassword($createNewHash = false) {
+	public function isValidCurrentPassword($createNewHash = FALSE) {
 		$inputPasswordHash = $this->_hashPassword($this->inputPassword, $this->currentAlgo, $this->currentSalt);
-
 		if ($inputPasswordHash == $this->currentPasswordHash) {
-			if ($createNewHash == true) { $this->_setNewHash($this->inputPassword); }
-			return true;
+			if ($createNewHash == TRUE) {
+				$this->_setNewHash($this->inputPassword);
+			}
+			return TRUE;
 		} else {
-			return false;
+			return FALSE;
 		}
 	}
 
@@ -82,18 +82,17 @@ class PasswordAuth {
 	// Generate new password hash and password salt
 	protected function _setNewHash($password) {
 		global $settings;
-
-		$this->_newAlgo 			= $settings['password_algorithm'];
-		$this->_newSalt 			= PasswordAuth::getNewRandomSalt();
-		$this->_newPasswordHash		= $this->_hashPassword($password, $this->_newAlgo, $this->_newSalt);
+		$this->_newAlgo = $settings['password_algorithm'];
+		$this->_newSalt = PasswordAuth::getNewRandomSalt();
+		$this->_newPasswordHash = $this->_hashPassword($password, $this->_newAlgo, $this->_newSalt);
 	}
 
 	// Checks if new password input is valid
 	private function _isValidPasswordInput() {
 		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->inputNewPassword)) {
-			return true;
+			return TRUE;
 		} else {
-			return false;
+			return FALSE;
 		}
 	}
 
@@ -109,16 +108,15 @@ class PasswordAuth {
 	// Generates a random password with given length
 	public static function getNewPassword($length = 12) {
 		$chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789", "@!#$%&/()=-_?+*.,:;");
-		$count = array((strlen($chars[0]) - 1), (strlen($chars[1]) - 1), (strlen($chars[2]) - 1));
-
-		if ($length > 64) { $length = 64; }
-
+		$count = array((strlen($chars[0])-1), (strlen($chars[1])-1), (strlen($chars[2])-1));
+		if ($length > 64) {
+			$length = 64;
+		}
 		$pass = "";
 		for ($i = 0; $i <= $length; $i++) {
 			$type = mt_rand(0, 2);
 			$pass .= substr($chars[$type], mt_rand(0, $count[$type]), 1);
 		}
-
 		return $pass;
 	}
 
@@ -127,4 +125,5 @@ class PasswordAuth {
 		return sha1(PasswordAuth::getNewPassword($length));
 	}
 }
+
 ?>

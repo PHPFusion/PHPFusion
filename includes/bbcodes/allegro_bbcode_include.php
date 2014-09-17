@@ -15,7 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 $text = preg_replace('#\[allegro\](.*?)\[/allegro\]#si', '<strong>'.$locale['bb_allegro'].':</strong> <a href=\'http://allegro.pl/search.php?string=\1\' target=\'_blank\'>\1</a>', $text);
 ?>

@@ -15,14 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 
 global $lastvisited;
 
-if (!isset($lastvisited) || !isnum($lastvisited)) { $lastvisited = time(); }
+if (!isset($lastvisited) || !isnum($lastvisited)) {
+	$lastvisited = time();
+}
 
-$data = dbarray(dbquery(
-	"SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,
+$data = dbarray(dbquery("SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,
 	f.forum_threadcount, f.forum_lastuser, f.forum_access, f2.forum_name AS forum_cat_name, f2.forum_description AS forum_cat_description,
 	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
 	u.user_id, u.user_name, u.user_status, u.user_avatar
@@ -31,13 +34,11 @@ $data = dbarray(dbquery(
 	LEFT JOIN ".DB_THREADS." t ON f.forum_id = t.forum_id AND f.forum_lastpost=t.thread_lastpost
 	LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_cat!='0'
-	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads'].""
-	));
+	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads'].""));
 
 $timeframe = empty($data['thread_lastpost']) ? 0 : $data['thread_lastpost'];
 
-$result = dbquery(
-	"SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,
+$result = dbquery("SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,
 	f.forum_threadcount, f.forum_lastuser, f.forum_access, f2.forum_name AS forum_cat_name, f2.forum_description AS forum_cat_description,
 	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll, 
 	u.user_id, u.user_name, u.user_status, u.user_avatar
@@ -46,8 +47,7 @@ $result = dbquery(
 	LEFT JOIN ".DB_THREADS." t ON f.forum_id = t.forum_id AND f.forum_lastpost=t.thread_lastpost
 	LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_cat!='0' AND t.thread_lastpost >= ".$timeframe." AND t.thread_hidden='0' 
-	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads'].""
-);
+	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads']."");
 
 if (dbrows($result)) {
 	$i = 0;
@@ -60,7 +60,7 @@ if (dbrows($result)) {
 	echo "<td width='1%' class='tbl2' style='text-align:center;white-space:nowrap'><strong>".$locale['global_047']."</strong></td>\n";
 	echo "</tr>\n";
 	while ($data = dbarray($result)) {
-		$row_color = ($i % 2 == 0 ? "tbl1" : "tbl2");
+		$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
 		echo "<tr>\n<td class='".$row_color."'>";
 		if ($data['thread_lastpost'] > $lastvisited) {
 			$thread_match = $data['thread_id']."\|".$data['thread_lastpost']."\|".$data['forum_id'];
@@ -90,7 +90,7 @@ if (dbrows($result)) {
 		echo "<div class='tbl1' style='text-align:center'><a href='".INFUSIONS."forum_threads_list_panel/my_threads.php'>".$locale['global_041']."</a> ::\n";
 		echo "<a href='".INFUSIONS."forum_threads_list_panel/my_posts.php'>".$locale['global_042']."</a> ::\n";
 		echo "<a href='".INFUSIONS."forum_threads_list_panel/new_posts.php'>".$locale['global_043']."</a>";
-		if($settings['thread_notify']) {
+		if ($settings['thread_notify']) {
 			echo " ::\n<a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['global_056']."</a>";
 		}
 		echo "</div>\n";

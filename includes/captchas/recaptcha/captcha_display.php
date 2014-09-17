@@ -15,20 +15,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 require_once "recaptchalib.php";
-
 $lang = array("en", "nl", "fr", "de", "pt", "ru", "es", "tr");
 $recaptchaLocale = "";
 if (!isset($locale['recaptcha']) || !in_array($locale['recaptcha'], $lang)) {
-	if (isset($locale['recaptcha'])&& isset($locale['recaptcha_l10n'])) {
+	if (isset($locale['recaptcha']) && isset($locale['recaptcha_l10n'])) {
 		$recaptchaLocale = "\n\t"."custom_translations : {".$locale['recaptcha_l10n']."}, ";
 	} elseif (!isset($locale['recaptcha'])) {
 		$locale['recaptcha'] = "en";
 	}
 }
-
 add_to_head("<script type=\"text/javascript\">
 /*<![CDATA[*/
 var RecaptchaOptions = { ".$recaptchaLocale."
@@ -37,9 +36,7 @@ var RecaptchaOptions = { ".$recaptchaLocale."
 };
 /*]]>*/
 </script>");
-
 // Hid extra input
-$_CAPTCHA_HIDE_INPUT = true;
-
+$_CAPTCHA_HIDE_INPUT = TRUE;
 echo recaptcha_get_html($settings['recaptcha_public']);
 ?>

@@ -15,14 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 include LOCALE.LOCALESET."ratings.php";
-
 function showratings($rating_type, $rating_item_id, $rating_link) {
-
 	global $settings, $locale, $userdata;
-	
 	if ($settings['ratings_enabled'] == "1") {
 		if (iMEMBER) {
 			$d_rating = dbarray(dbquery("SELECT rating_vote,rating_datestamp FROM ".DB_RATINGS." WHERE rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_user='".$userdata['user_id']."'"));
@@ -36,8 +34,8 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 				redirect($rating_link);
 			}
 		}
-		$ratings = array(5 => $locale['r120'], 4 => $locale['r121'], 3 => $locale['r122'], 2 => $locale['r123'], 1 => $locale['r124']);
-	
+		$ratings = array(5 => $locale['r120'], 4 => $locale['r121'], 3 => $locale['r122'], 2 => $locale['r123'],
+						 1 => $locale['r124']);
 		opentable($locale['r100']);
 		if (!iMEMBER) {
 			echo "<div style='text-align:center'>".$locale['r104']."</div>\n";
@@ -52,7 +50,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			echo "<form name='postrating' method='post' action='".$rating_link."'>\n";
 			echo $locale['r106'].": <select name='rating' class='textbox'>\n";
 			echo "<option value='0'>".$locale['r107']."</option>\n";
-			foreach($ratings as $rating=>$rating_info) {
+			foreach ($ratings as $rating => $rating_info) {
 				echo "<option value='".$rating."'>$rating_info</option>\n";
 			}
 			echo "</select>\n";
@@ -61,11 +59,11 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 		}
 		echo "<hr />";
 		$tot_votes = dbcount("(rating_item_id)", DB_RATINGS, "rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."'");
-		if($tot_votes){
+		if ($tot_votes) {
 			echo "<table cellpadding='0' cellspacing='1' class='tbl-border center'>\n";
-			foreach($ratings as $rating=>$rating_info) {
+			foreach ($ratings as $rating => $rating_info) {
 				$num_votes = dbcount("(rating_item_id)", DB_RATINGS, "rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_vote='".$rating."'");
-				$pct_rating = number_format(100 / $tot_votes * $num_votes);
+				$pct_rating = number_format(100/$tot_votes*$num_votes);
 				if ($num_votes == 0) {
 					$votecount = "[".$locale['r108']."]";
 				} elseif ($num_votes == 1) {
@@ -73,7 +71,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 				} else {
 					$votecount = "[".$num_votes." ".$locale['r110']."]";
 				}
-				$class = ($rating % 2==0?"tbl1":"tbl2");
+				$class = ($rating%2 == 0 ? "tbl1" : "tbl2");
 				echo "<tr>\n";
 				echo "<td class='$class'>".$rating_info."</td>\n";
 				echo "<td width='250' class='$class'><img src='".get_image("pollbar")."' alt='".$rating_info."' height='12' width='".$pct_rating."%' class='poll' /></td>\n";
@@ -88,4 +86,5 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 		closetable();
 	}
 }
+
 ?>

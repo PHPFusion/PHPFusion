@@ -14,7 +14,5 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 //Add your custom include files for the footer here
-
 ?>

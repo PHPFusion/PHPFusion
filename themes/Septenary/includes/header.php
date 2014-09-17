@@ -52,7 +52,7 @@ echo "</div>\n";
 echo "<div class='header-nav col-xs-12 col-sm-12 col-md-3 col-lg-3' style='padding-top:20px;'>\n";
 echo "<form name='search_form', method='GET' action='".BASEDIR."search.php?stype=all'>\n";
 echo form_text('', 'stext', 'stext', '', array('append_button' => 1, 'placeholder' => 'Search',
-                                               'class' => 'no-border'));
+											   'class' => 'no-border'));
 echo "</form>\n";
 echo "</div>\n</div>\n";
 close_grid();

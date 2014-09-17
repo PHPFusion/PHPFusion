@@ -15,20 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$imagetypes = array(
-	".bmp",
-	".gif",
-	".iff",
-	".jpg",
-	".jpeg",
-	".png",
-	".psd",
-	".tiff",
-	".wbmp"
-);
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
+$imagetypes = array(".bmp", ".gif", ".iff", ".jpg", ".jpeg", ".png", ".psd", ".tiff", ".wbmp");
 function attach_exists($file) {
 	$dir = FORUM."attachments/";
 	$i = 1;
@@ -66,7 +56,9 @@ function show_forum_rank($posts, $level, $groups) {
 	global $locale, $settings, $forum_mod_rank_cache, $forum_post_rank_cache, $forum_special_rank_cache;
 	$res = "";
 	if ($settings['forum_ranks']) {
-		if (!$forum_post_rank_cache) { forum_rank_cache(); }
+		if (!$forum_post_rank_cache) {
+			forum_rank_cache();
+		}
 		// Moderator ranks
 		if ($level > 101 && is_array($forum_mod_rank_cache) && count($forum_mod_rank_cache)) {
 			for ($i = 0; $i < count($forum_mod_rank_cache) && !$res; $i++) {
@@ -100,14 +92,13 @@ function show_forum_rank($posts, $level, $groups) {
 
 function display_image($file) {
 	$size = @getimagesize(FORUM."attachments/".$file);
-	
 	if ($size[0] > 300 || $size[1] > 200) {
 		if ($size[0] <= $size[1]) {
-			$img_w = round(($size[0] * 200) / $size[1]);
+			$img_w = round(($size[0]*200)/$size[1]);
 			$img_h = 200;
 		} elseif ($size[0] > $size[1]) {
 			$img_w = 300;
-			$img_h = round(($size[1] * 300) / $size[0]);
+			$img_h = round(($size[1]*300)/$size[0]);
 		} else {
 			$img_w = 300;
 			$img_h = 200;
@@ -116,26 +107,23 @@ function display_image($file) {
 		$img_w = $size[0];
 		$img_h = $size[1];
 	}
-	
 	if ($size[0] != $img_w || $size[1] != $img_h) {
 		$res = "<a href='".FORUM."attachments/".$file."'><img src='".FORUM."attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' /></a>";
 	} else {
 		$res = "<img src='".FORUM."attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' />";
 	}
-	
 	return $res;
 }
 
 function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
 	$size = @getimagesize(FORUM."attachments/".$file);
-		
 	if ($size [0] > $height || $size [1] > $width) {
 		if ($size [0] < $size [1]) {
-			$img_w = round ( ($size [0] * $width) / $size [1] );
+			$img_w = round(($size [0]*$width)/$size [1]);
 			$img_h = $width;
 		} elseif ($size [0] > $size [1]) {
 			$img_w = $height;
-			$img_h = round ( ($size [1] * $height) / $size [0] );
+			$img_h = round(($size [1]*$height)/$size [0]);
 		} else {
 			$img_w = $height;
 			$img_h = $width;
@@ -144,10 +132,7 @@ function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
 		$img_w = $size [0];
 		$img_h = $size [1];
 	}
-	
-	
 	$res = "<a target='_blank' href='".FORUM."attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img src='".FORUM."attachments/".$file."' alt='".$file."' style='border:0px; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
-	
 	return $res;
 }
 
@@ -161,7 +146,7 @@ if (isset($_GET['getfile']) && isnum($_GET['getfile'])) {
 			ob_end_clean();
 			$object = new httpdownload;
 			$object->set_byfile(FORUM."attachments/".$data['attach_name']);
-			$object->use_resume = true;
+			$object->use_resume = TRUE;
 			$object->download();
 		} else {
 			redirect("index.php");

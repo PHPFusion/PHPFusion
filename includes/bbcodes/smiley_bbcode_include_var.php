@@ -15,23 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 
-$__BBCODE__[] = 
-array(
-"description"		=>	$locale['bb_smiley_description'],
-"value"				=>	"smiley",
-"bbcode_start"		=>	"",
-"bbcode_end"		=>	"",
-"usage"				=>	$locale['bb_smiley_usage'],
-"onclick"			=>	"return overlay(this, 'bbcode_smileys_list_".$textarea_name."', '".((isset($p_data['panel_side']) && $p_data['panel_side'] == 4) ? "bottomright" : "bottomleft")."');",
-"onmouseover"		=>	"",
-"onmouseout"		=>	"",
-"html_start"		=>	"<div id='bbcode_smileys_list_".$textarea_name."' class='tbl1 bbcode-popup' style='display:none;border:1px solid black;position:absolute;overflow:auto;width:400px;height:auto;' onclick=\"overlayclose('bbcode_smileys_list_".$textarea_name."');\">",
-"includejscript"	=>	"",
-"calljscript"		=>	"",
-"phpfunction"		=>	"echo displaysmileys('$textarea_name', '$inputform_name');",
-"html_middle"		=>	"",
-"html_end"			=>	"</div>"
-);
+$__BBCODE__[] = array("description" => $locale['bb_smiley_description'], "value" => "smiley", "bbcode_start" => "",
+					  "bbcode_end" => "", "usage" => $locale['bb_smiley_usage'],
+					  "onclick" => "return overlay(this, 'bbcode_smileys_list_".$textarea_name."', '".((isset($p_data['panel_side']) && $p_data['panel_side'] == 4) ? "bottomright" : "bottomleft")."');",
+					  "onmouseover" => "", "onmouseout" => "",
+					  "html_start" => "<div id='bbcode_smileys_list_".$textarea_name."' class='tbl1 bbcode-popup' style='display:none;border:1px solid black;position:absolute;overflow:auto;width:400px;height:auto;' onclick=\"overlayclose('bbcode_smileys_list_".$textarea_name."');\">",
+					  "includejscript" => "", "calljscript" => "",
+					  "phpfunction" => "echo displaysmileys('$textarea_name', '$inputform_name');", "html_middle" => "",
+					  "html_end" => "</div>");
 ?>

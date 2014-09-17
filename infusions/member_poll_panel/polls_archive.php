@@ -17,10 +17,8 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 require_once THEMES."templates/header.php";
-
 add_to_title($locale['global_200'].$locale['global_138']);
-
-$result = dbquery("SELECT * FROM ".DB_POLLS." ".(multilang_table("PO") ?  "WHERE poll_language='".LANGUAGE."' AND" : "WHERE")." poll_ended!='0' ORDER BY poll_id DESC");
+$result = dbquery("SELECT * FROM ".DB_POLLS." ".(multilang_table("PO") ? "WHERE poll_language='".LANGUAGE."' AND" : "WHERE")." poll_ended!='0' ORDER BY poll_id DESC");
 if (dbrows($result)) {
 	$view_list = "";
 	while ($data = dbarray($result)) {
@@ -42,29 +40,35 @@ if (isset($_POST['view']) && (isset($_POST['viewpoll_id']) && isnum($_POST['view
 	if (dbrows($result)) {
 		$viewpoll_option = array();
 		$data = dbarray($result);
-		for ($i=0; $i <= 9; $i++) {
-			if ($data["poll_opt_".$i]) { $viewpoll_option[$i] = $data["poll_opt_".$i]; }
+		for ($i = 0; $i <= 9; $i++) {
+			if ($data["poll_opt_".$i]) {
+				$viewpoll_option[$i] = $data["poll_opt_".$i];
+			}
 		}
-		$poll_archive = ""; $i = 0; $viewpoll_option_counted = count($viewpoll_option);
+		$poll_archive = "";
+		$i = 0;
+		$viewpoll_option_counted = count($viewpoll_option);
 		$viewpoll_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "poll_id='".$data['poll_id']."'");
 		while ($i < $viewpoll_option_counted) {
 			$viewnum_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='$i' AND poll_id='".$data['poll_id']."'");
-			$viewopt_votes = ($viewpoll_votes ? number_format(100 / $viewpoll_votes * $viewnum_votes) : 0);
+			$viewopt_votes = ($viewpoll_votes ? number_format(100/$viewpoll_votes*$viewnum_votes) : 0);
 			$poll_archive .= $viewpoll_option[$i]."<br />\n";
 			$poll_archive .= "<img src='".get_image("pollbar")."' alt='".$viewpoll_option[$i]."' height='12' width='".$viewopt_votes."%' class='poll' /><br />\n";
 			$poll_archive .= $viewopt_votes."% [".$viewnum_votes." ".($viewnum_votes == 1 ? $locale['global_133'] : $locale['global_134'])."]<br />\n";
 			if (iADMIN) {
-				$result = dbquery(
-					"SELECT tp.*,user_id,user_name FROM ".DB_POLL_VOTES." tp
+				$result = dbquery("SELECT tp.*,user_id,user_name FROM ".DB_POLL_VOTES." tp
 					LEFT JOIN ".DB_USERS." tu ON tp.vote_user=tu.user_id
-					WHERE vote_opt='$i' AND poll_id='".$data['poll_id']."'"
-				);
+					WHERE vote_opt='$i' AND poll_id='".$data['poll_id']."'");
 				if (dbrows($result)) {
 					$a = 1;
 					$poll_archive .= "<span class='small2'>";
 					while ($data2 = dbarray($result)) {
 						$poll_archive .= $data2['user_name'];
-						if ($a == dbrows($result)) { $poll_archive .= "<br /><br />\n"; } else { $poll_archive .= ", "; }
+						if ($a == dbrows($result)) {
+							$poll_archive .= "<br /><br />\n";
+						} else {
+							$poll_archive .= ", ";
+						}
 						$a++;
 					}
 					$poll_archive .= "</span>";
@@ -86,6 +90,5 @@ if (isset($_POST['view']) && (isset($_POST['viewpoll_id']) && isnum($_POST['view
 		redirect(FUSION_SELF);
 	}
 }
-
 require_once THEMES."templates/footer.php";
 ?>

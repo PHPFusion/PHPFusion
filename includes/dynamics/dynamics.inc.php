@@ -24,41 +24,41 @@ include LOCALE.LOCALESET."oneword.locale.php";
 require_once INCLUDES."defender.inc.php";
 
 class dynamics {
-    static function boot() {
-        if (!defined('DYNAMICS')) {
-            define('DYNAMICS', INCLUDES."dynamics/");
-        }
-        require_once DYNAMICS."includes/form_main.php";
-        require_once DYNAMICS."includes/form_text.php";
-        require_once DYNAMICS."includes/form_name.php";
-        require_once DYNAMICS."includes/form_select.php";
-        require_once DYNAMICS."includes/form_textarea.php";
-        require_once DYNAMICS."includes/form_hidden.php";
-        require_once DYNAMICS."includes/form_alert.php";
-        require_once DYNAMICS."includes/form_labelling.php";
-        require_once DYNAMICS."includes/form_buttons.php";
-        require_once DYNAMICS."includes/form_ordering.php";
-        require_once DYNAMICS."includes/form_chain.php";
-        require_once DYNAMICS."includes/form_datepicker.php";
-        require_once DYNAMICS."includes/form_fileinput.php";
-        require_once DYNAMICS."includes/form_colorpicker.php";
-        require_once DYNAMICS."includes/form_geomap.php";
-        require_once DYNAMICS."includes/form_modal.php";
-        require_once DYNAMICS."includes/form_gallery.php";
-        require_once DYNAMICS."includes/form_antibot.php";
-        require_once DYNAMICS."includes/form_toggle.php";
-        require_once DYNAMICS."includes/form_paragraph.php";
-    }
+	static function boot() {
+		if (!defined('DYNAMICS')) {
+			define('DYNAMICS', INCLUDES."dynamics/");
+		}
+		require_once DYNAMICS."includes/form_main.php";
+		require_once DYNAMICS."includes/form_text.php";
+		require_once DYNAMICS."includes/form_name.php";
+		require_once DYNAMICS."includes/form_select.php";
+		require_once DYNAMICS."includes/form_textarea.php";
+		require_once DYNAMICS."includes/form_hidden.php";
+		require_once DYNAMICS."includes/form_alert.php";
+		require_once DYNAMICS."includes/form_labelling.php";
+		require_once DYNAMICS."includes/form_buttons.php";
+		require_once DYNAMICS."includes/form_ordering.php";
+		require_once DYNAMICS."includes/form_chain.php";
+		require_once DYNAMICS."includes/form_datepicker.php";
+		require_once DYNAMICS."includes/form_fileinput.php";
+		require_once DYNAMICS."includes/form_colorpicker.php";
+		require_once DYNAMICS."includes/form_geomap.php";
+		require_once DYNAMICS."includes/form_modal.php";
+		require_once DYNAMICS."includes/form_gallery.php";
+		require_once DYNAMICS."includes/form_antibot.php";
+		require_once DYNAMICS."includes/form_toggle.php";
+		require_once DYNAMICS."includes/form_paragraph.php";
+	}
 }
 
 function load_tablesorter($id) {
-    // implementation: use in table();
-    // to add: sortlist:[[0,0],[1,0]]
-    add_to_head("<script type='text/javascript' src='".DYNAMICS."assets/tablesorter/jquery.tablesorter.min.js'></script>");
-    add_to_jquery("
+	// implementation: use in table();
+	// to add: sortlist:[[0,0],[1,0]]
+	add_to_head("<script type='text/javascript' src='".DYNAMICS."assets/tablesorter/jquery.tablesorter.min.js'></script>");
+	add_to_jquery("
         $('#".$id."').tablesorter();
         ");
-    add_to_head("
+	add_to_head("
         <style>
         /* tables */
         table.tablesorter {}
@@ -76,7 +76,7 @@ function load_tablesorter($id) {
         table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {    }
         </style>
         ");
-    return "tablesorter";
+	return "tablesorter";
 }
 
 ?>

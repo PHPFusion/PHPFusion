@@ -15,13 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 require_once "recaptchalib.php";
-
-$resp = null; $error = null;
+$resp = NULL;
+$error = NULL;
 if (isset($_POST["recaptcha_challenge_field"]) && isset($_POST["recaptcha_response_field"])) {
 	$resp = recaptcha_check_answer($settings['recaptcha_private'], USER_IP, $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
-	if ($resp->is_valid) { $_CAPTCHA_IS_VALID = true; }
+	if ($resp->is_valid) {
+		$_CAPTCHA_IS_VALID = TRUE;
+	}
 }
 ?>

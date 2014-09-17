@@ -15,10 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 include LOCALE.LOCALESET."search/custompages.php";
-
 if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
 	$sortby = "page_title";
 	$ssubject = search_querylike("page_title");
@@ -33,18 +33,16 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
-		$result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE ".groupaccess('page_access')." AND ".$fieldsvar);	 
+		$result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE ".groupaccess('page_access')." AND ".$fieldsvar);
 		$rows = dbrows($result);
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
 		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=custompages&amp;stext=".$_GET['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['c401'] : $locale['c402'])." ".$locale['522']."</a><br />\n";
-		$result = dbquery(
-			"SELECT * FROM ".DB_CUSTOM_PAGES."
+		$result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES."
 			WHERE ".groupaccess('page_access')." AND ".$fieldsvar."
-			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : "")
-		);	 
+			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";
 			$text_all = stripslashes($data['page_content']);
@@ -67,7 +65,6 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
 	} else {
 		$items_count .= THEME_BULLET."&nbsp;0 ".$locale['c402']." ".$locale['522']."<br />\n";
 	}
-
 	$navigation_result = search_navigation($rows);
 }
 ?>

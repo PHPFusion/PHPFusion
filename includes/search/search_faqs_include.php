@@ -15,10 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 include LOCALE.LOCALESET."search/faqs.php";
-
 if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
 	$sortby = "faq_id";
 	$ssubject = search_querylike("faq_question");
@@ -33,11 +33,9 @@ if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
-		$result = dbquery(
-			"SELECT fq.*, fc.* FROM ".DB_FAQS." fq
+		$result = dbquery("SELECT fq.*, fc.* FROM ".DB_FAQS." fq
 			LEFT JOIN ".DB_FAQ_CATS." fc ON fq.faq_cat_id=fc.faq_cat_id
-			WHERE ".$fieldsvar
-		);
+			WHERE ".$fieldsvar);
 		$rows = dbrows($result);
 	} else {
 		$rows = 0;
@@ -52,9 +50,7 @@ if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
 			// $text_frag = highlight_words($swords, $text_frag);
 			$subj_c = search_stringscount($data['faq_question']);
 			$text_c = search_stringscount($data['faq_answer']);
-
 			$search_result .= "<a href='faq.php?cat_id=".$data['faq_cat_id']."'>".$data['faq_question']."</a>"."<br /><br />\n";
-
 			// $search_result .= "<a href='faq.php?cat_id=".$data['faq_cat_id']."'>".highlight_words($swords, $data['faq_question'])."</a>"."<br /><br />\n";
 			$search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
 			$search_result .= "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq404'].", ";

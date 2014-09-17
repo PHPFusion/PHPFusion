@@ -15,22 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 
 class VersionFileReader {
-
-	private $_currentVersion 						= false;
-	private $_newestVersion 						= false;
+	private $_currentVersion = FALSE;
+	private $_newestVersion = FALSE;
 	private $_versionURL;
-	
-	private $_errorNumber 							= 0;
-	private $_errorMessage 							= "OK";
-	
-	private $_jsonCompabilityMode 					= true;
-	private $_jsonVersionServer 					= "http://update.php-fusion.co.uk/";
-	private $_jsonFirstObject 						= "version";
-	
-	public function __construct() { 
+	private $_errorNumber = 0;
+	private $_errorMessage = "OK";
+	private $_jsonCompabilityMode = TRUE;
+	private $_jsonVersionServer = "http://update.php-fusion.co.uk/";
+	private $_jsonFirstObject = "version";
+
+	public function __construct() {
 		$this->_setVersionURL();
 		$this->_getVersionFile();
 	}
@@ -44,52 +43,49 @@ class VersionFileReader {
 	public function getCurrentVersion() {
 		return $this->_currentVersion;
 	}
-	
+
 	// Get newest version
 	public function getNewestVersion() {
 		return $this->_newestVersion;
 	}
-	
+
 	// Set json compability mode
 	public function setCompabilityMode($compabilityMode) {
 		if ($compabilityMode) {
-			$this->_jsonCompabilityMode = true;
+			$this->_jsonCompabilityMode = TRUE;
 		} else {
-			$this->_jsonCompabilityMode = false;
+			$this->_jsonCompabilityMode = FALSE;
 		}
 	}
-	
+
 	// Set json version server
 	public function setJsonVersionServer($jsonVersionServer) {
 		if ($jsonVersionServer != "") {
 			$this->_jsonVersionServer = $jsonVersionServer;
 		}
 	}
-	
+
 	// Set json first object
 	public function setJsonFirstObject($jsonFirstObject) {
 		if ($jsonFirstObject != "") {
 			$this->_jsonFirstObject = $jsonFirstObject;
 		}
 	}
-	
+
 	// Set version URL
 	private function _setVersionURL() {
 		global $settings;
-		
 		$version = explode(".", $settings['version']);
 		$this->_versionURL = $this->_jsonVersionServer."checker-".$version[0].$version[1].".json";
 	}
-	
+
 	// Read the version file
 	private function _getVersionFile() {
 		$file = new RemoteFileReader($this->_versionURL);
-		
 		// Save any error
 		$error = $file->getError();
 		$this->_errorNumber = $error['number'];
 		$this->_errorMessage = $error['message'];
-
 		if ($this->_errorNumber == 0) {
 			$this->_getJsonArray($file->getContent());
 		}
@@ -98,25 +94,35 @@ class VersionFileReader {
 	// Jeson object to array
 	private function _getJsonArray($content) {
 		global $settings;
-		
 		// Make JSON object
-		if ($this->_jsonCompabilityMode) { $content = substr($content, 1, -1); }
+		if ($this->_jsonCompabilityMode) {
+			$content = substr($content, 1, -1);
+		}
 		$jsonObject = @json_decode($content);
-		
 		// Render the array
 		if (is_object($jsonObject)) {
-			$i = 0; $c = false; $versionsArr = array();
+			$i = 0;
+			$c = FALSE;
+			$versionsArr = array();
 			$firstObject = $this->_jsonFirstObject;
 			foreach ($jsonObject->$firstObject as $version) {
 				$versionsArr[$i] = array();
 				foreach ($version as $key => $data) {
-					if (in_array($key, array("number", "severity", "meintenance", "date", "description")) && isnum($data)) {
+					if (in_array($key, array("number", "severity", "meintenance", "date",
+											 "description")) && isnum($data)
+					) {
 						$versionsArr[$i][$key] = $data;
-						if ($key == "number" && $data == str_replace(".", "", $settings['version'])) { $c = $i; }
+						if ($key == "number" && $data == str_replace(".", "", $settings['version'])) {
+							$c = $i;
+						}
 					}
 				}
-				if ($i == 0) { $this->_newestVersion = $versionsArr[$i]; }
-				if ($c == $i) { $this->_currentVersion = $versionsArr[$i]; }
+				if ($i == 0) {
+					$this->_newestVersion = $versionsArr[$i];
+				}
+				if ($c == $i) {
+					$this->_currentVersion = $versionsArr[$i];
+				}
 				$i++;
 			}
 		} else {
@@ -124,14 +130,10 @@ class VersionFileReader {
 			$this->_errorMessage = "Version file is not a compatible json file.";
 		}
 	}
-	
+
 	// Get severity from number
 	public static function getSeverity($severity) {
-		$severities = array(
-			1 => "High",
-			2 => "Medium",
-			3 => "Low"
-		);
+		$severities = array(1 => "High", 2 => "Medium", 3 => "Low");
 		if (isset($severities[$severity])) {
 			return $severities[$severity];
 		} else {
@@ -139,4 +141,5 @@ class VersionFileReader {
 		}
 	}
 }
+
 ?>

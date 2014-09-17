@@ -15,14 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-$__BBCODE__[] = 
-array(
-"description"		=>	$locale['bb_img_description'],
-"value"			=>	"img",
-"bbcode_start"		=>	"[img]",
-"bbcode_end"		=>	"[/img]",
-"usage"			=>	"[img]".$locale['bb_img_usage']."[/img]"
-);
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
+$__BBCODE__[] = array("description" => $locale['bb_img_description'], "value" => "img", "bbcode_start" => "[img]",
+					  "bbcode_end" => "[/img]", "usage" => "[img]".$locale['bb_img_usage']."[/img]");
 ?>

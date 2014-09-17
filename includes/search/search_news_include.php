@@ -15,10 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 include LOCALE.LOCALESET."search/news.php";
-
 if ($_GET['stype'] == "news" || $_GET['stype'] == "all") {
 	if ($_GET['sort'] == "datestamp") {
 		$sortby = "news_datestamp";
@@ -40,20 +40,18 @@ if ($_GET['stype'] == "news" || $_GET['stype'] == "all") {
 		$fieldsvar = "";
 	}
 	if ($fieldsvar) {
-		$rows = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND ".$fieldsvar." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") ".($_GET['datelimit'] != 0 ? " AND news_datestamp>=".(time() - $_GET['datelimit']) : ""));
+		$rows = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND ".$fieldsvar." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") ".($_GET['datelimit'] != 0 ? " AND news_datestamp>=".(time()-$_GET['datelimit']) : ""));
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
 		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=news&amp;stext=".$_GET['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['n401'] : $locale['n402'])." ".$locale['522']."</a><br />\n";
-		$result = dbquery(
-			"SELECT tn.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_NEWS." tn
+		$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_NEWS." tn
 			LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
 			WHERE ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().")
 			AND (news_end='0'||news_end>=".time().") AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND news_datestamp>=".(time() - $_GET['datelimit']) : "")."
-			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : "")
-		);
+			".($_GET['datelimit'] != 0 ? " AND news_datestamp>=".(time()-$_GET['datelimit']) : "")."
+			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";
 			$text_all = $data['news_news']." ".$data['news_extended'];
@@ -63,9 +61,7 @@ if ($_GET['stype'] == "news" || $_GET['stype'] == "all") {
 			$subj_c = search_stringscount($data['news_subject']);
 			$text_c = search_stringscount($data['news_news']);
 			$text_c2 = search_stringscount($data['news_extended']);
-
 			$search_result .= "<a href='news.php?readmore=".$data['news_id']."'>".$data['news_subject']."</a>"."<br /><br />\n";
-
 			// $search_result .= "<a href='news.php?readmore=".$data['news_id']."'>".highlight_words($swords, $data['news_subject'])."</a>"."<br /><br />\n";
 			$search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
 			$search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";

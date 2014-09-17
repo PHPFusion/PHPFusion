@@ -16,14 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { die("Acces Denied"); }
-
+if (!checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+	die("Acces Denied");
+}
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/errors.php";
-
 add_to_head("<link rel='stylesheet' href='".THEMES."templates/errors.css' type='text/css' media='all' />");
-
 // Setting maximum number of folders for an URL
 function getMaxFolders($url, $level = 2) {
 	$return = "";
@@ -36,62 +34,61 @@ function getMaxFolders($url, $level = 2) {
 	} else {
 		$return = implode("/", $tmpUrlArr);
 	}
-
 	return $return;
 }
 
 // Wrap code
 function codeWrap($code, $maxLength = 150) {
-    $lines = explode("\n", $code);
-    $count = count($lines);
-    for($i=0; $i<$count; ++$i) {
-        preg_match('`^\s*`', $code, $matches);
-		$lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", true);
-    }
-    return implode("\n", $lines);
+	$lines = explode("\n", $code);
+	$count = count($lines);
+	for ($i = 0; $i < $count; ++$i) {
+		preg_match('`^\s*`', $code, $matches);
+		$lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", TRUE);
+	}
+	return implode("\n", $lines);
 }
 
 // Print code
 function printCode($source_code, $starting_line, $error_line = "") {
-	if (is_array($source_code)) { return false; }
+	if (is_array($source_code)) {
+		return FALSE;
+	}
 	$source_code = explode("\n", str_replace(array("\r\n", "\r"), "\n", $source_code));
-	$line_count = $starting_line; $formatted_code = "";
+	$line_count = $starting_line;
+	$formatted_code = "";
 	foreach ($source_code as $code_line) {
 		$code_line = codeWrap($code_line, 145);
 		$line_class = ($line_count == $error_line ? "err_tbl-error-line" : "err_tbl1");
 		$formatted_code .= "<tr>\n<td class='err_tbl2' style='text-align:right;width:1%;'>".$line_count."</td>\n";
 		$line_count++;
 		if (preg_match('#<\?(php)?[^[:graph:]]#', $code_line)) {
-			$formatted_code .= "<td class='".$line_class."'>".str_replace(array('<code>', '</code>'), '', highlight_string($code_line, true))."</td>\n</tr>\n";
+			$formatted_code .= "<td class='".$line_class."'>".str_replace(array('<code>',
+																				'</code>'), '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
 		} else {
-			$formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(array('<code>', '</code>'), '', highlight_string('<?php '.$code_line, true)))."</td>\n</tr>\n";
+			$formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(array('<code>',
+																														 '</code>'), '', highlight_string('<?php '.$code_line, TRUE)))."</td>\n</tr>\n";
 		}
 	}
 	return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
 }
 
-if (isset($_POST['error_status']) && isnum($_POST['error_status'])
-			&& isset($_POST['error_id']) && isnum($_POST['error_id'])
+if (isset($_POST['error_status']) && isnum($_POST['error_status']) && isset($_POST['error_id']) && isnum($_POST['error_id'])
 ) {
-	$result = dbquery(
-		"UPDATE ".DB_ERRORS." SET error_status='".$_POST['error_status']."'
-		WHERE error_id='".$_POST['error_id']."'"
-	);
+	$result = dbquery("UPDATE ".DB_ERRORS." SET error_status='".$_POST['error_status']."'
+		WHERE error_id='".$_POST['error_id']."'");
 }
-
 if (isset($_POST['delete_entries']) && isset($_POST['delete_status']) && isnum($_POST['delete_status'])) {
 	$result = dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status='".$_POST['delete_status']."'");
 }
-
 opentable($locale['400']);
 $rows = dbcount("(error_id)", DB_ERRORS);
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
+if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
+	$_GET['rowstart'] = 0;
+}
 if ($rows != 0) {
 	$i = 0;
-	$result = dbquery(
-		"SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC
-		LIMIT ".$_GET['rowstart'].",20"
-	);
+	$result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC
+		LIMIT ".$_GET['rowstart'].",20");
 	echo "<a name='top'></a>\n<table cellpadding='0' cellspacing='1' class='tbl-border center' style='width:90%;'>\n";
 	echo "<tr>\n";
 	echo "<td class='tbl1' colspan='4' style='text-align:center;'>";
@@ -110,7 +107,7 @@ if ($rows != 0) {
 	echo "<td class='tbl2' style='text-align:center;width:5%;font-weight:bold;'>".$locale['414']."</td>\n";
 	echo "</tr>\n";
 	while ($data = dbarray($result)) {
-		$row_color = ($i % 2 == 0 ? "tbl1" : "tbl2");
+		$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
 		echo "<tr>\n";
 		echo "<td class='".$row_color."'>\n";
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file' title='".$data['error_file']."'>";
@@ -134,24 +131,27 @@ if ($rows != 0) {
 } else {
 	echo "<div style='text-align:center'><br />\n".$locale['418']."<br /><br />\n</div>\n";
 }
-if ($rows > 20) { echo "<div style='margin-top:5px;text-align:center;'>\n".makepagenav($_GET['rowstart'],20,$rows,3,FUSION_SELF.$aidlink."&amp;")."\n</div>\n"; }
+if ($rows > 20) {
+	echo "<div style='margin-top:5px;text-align:center;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF.$aidlink."&amp;")."\n</div>\n";
+}
 closetable();
-
 if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
 	$result = dbquery("SELECT * FROM ".DB_ERRORS." WHERE error_id='".$_GET['error_id']."' LIMIT 1");
-	if (dbrows($result) == 0) { redirect(FUSION_SELF.$aidlink); }
-
+	if (dbrows($result) == 0) {
+		redirect(FUSION_SELF.$aidlink);
+	}
 	$data = dbarray($result);
 	$thisFileContent = file($data['error_file']);
-	$line_start = ""; $line_end = "";
+	$line_start = "";
+	$line_end = "";
 	if (isset($data['error_line']) && isnum($data['error_line'])) {
-		$line_start = $data['error_line'] - 10;
+		$line_start = $data['error_line']-10;
 	} else {
 		$line_start = 1;
 	}
 	if (isset($data['error_line']) && isnum($data['error_line'])) {
-		if (($data['error_line'] + 10) <= count($thisFileContent)) {
-			$line_end = $data['error_line'] + 10;
+		if (($data['error_line']+10) <= count($thisFileContent)) {
+			$line_end = $data['error_line']+10;
 		} else {
 			$line_end = count($thisFileContent);
 		}
@@ -160,10 +160,9 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
 	}
 	opentable($locale['401']." ".getMaxFolders($data['error_file'], 3));
 	$output = "";
-	for($i=($line_start - 1); $i<($line_end - 1); $i++){
+	for ($i = ($line_start-1); $i < ($line_end-1); $i++) {
 		$output .= $thisFileContent[$i];
 	}
-
 	echo "<table cellpadding='0' cellspacing='1' class='tbl-border center' style='border-collapse:collapse;width:90%;'>\n";
 	echo "<tr>\n";
 	echo "<td colspan='4' class='tbl2'><a name='file'></a>\n<strong>".$locale['420']."</strong></td>\n";
@@ -206,10 +205,9 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
 	echo "</tr>\n<tr>\n";
 	echo "<td colspan='4'><div style='max-height:600px;overflow:auto;'>".printCode($output, $line_start, $data['error_line'])."</div>\n</td>\n";
 	echo "</tr>\n";
-
 	$thisPageContent = file(BASEDIR.$data['error_page']);
 	$output = "";
-	for($i=0; $i<count($thisPageContent); $i++){
+	for ($i = 0; $i < count($thisPageContent); $i++) {
 		$output .= $thisPageContent[$i];
 	}
 	echo "<tr>\n";
@@ -227,9 +225,7 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
 	echo "<a href='#top' title='".$locale['422']."'>".$locale['422']."</a>\n";
 	echo "</div>";
 	closetable();
-
 }
-
 // Show the "Apply"-button only when javascript is disabled"
 echo "<script language='JavaScript' type='text/javascript'>\n";
 echo "/* <![CDATA[ */\n";

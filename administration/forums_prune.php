@@ -15,8 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'] == "prune") && (isset($_GET['forum_id']) && isnum($_GET['forum_id']))) {
 	$result = dbquery("SELECT forum_name FROM ".DB_FORUMS." WHERE forum_id='".$_GET['forum_id']."' AND forum_cat!='0'");
 	if (dbrows($result)) {
@@ -45,7 +46,7 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
 		$data = dbarray($result);
 		opentable($locale['600'].": ".$data['forum_name']);
 		echo "<div style='text-align:center'>\n<strong>".$locale['608']."</strong></br /></br />\n";
-		$prune_time = (time() - (86400 * $_POST['prune_time']));
+		$prune_time = (time()-(86400*$_POST['prune_time']));
 		$result = dbquery("SELECT post_id, post_datestamp FROM ".DB_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
 		$delattach = 0;
 		if (dbrows($result)) {
@@ -77,34 +78,22 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
 		}
 		echo $locale['611'].mysql_affected_rows()."\n</div>";
-
-		$result = dbquery(
-			"SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_POSTS."
-			WHERE forum_id='".$_GET['forum_id']."' GROUP BY thread_id"
-		);
-
+		$result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_POSTS."
+			WHERE forum_id='".$_GET['forum_id']."' GROUP BY thread_id");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
 				dbquery("UPDATE ".DB_THREADS." SET thread_postcount='".$data['postcount']."' WHERE thread_id='".$data['thread_id']."'");
 			}
 		}
-
-		$result = dbquery(
-			"SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_THREADS."
-			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id"
-		);
-
+		$result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_THREADS."
+			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
 				dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$data['postcount']."' WHERE forum_id='".$data['forum_id']."'");
 			}
 		}
-
-		$result = dbquery(
-			"SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_THREADS."
-			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id"
-		);
-
+		$result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_THREADS."
+			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
 				dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount='".$data['threadcount']."' WHERE forum_id='".$data['forum_id']."'");

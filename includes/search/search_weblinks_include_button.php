@@ -15,14 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 include LOCALE.LOCALESET."search/weblinks.php";
-
-$form_elements['weblinks']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
+$form_elements['weblinks']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2",
+											  "chars");
 $form_elements['weblinks']['disabled'] = array();
 $form_elements['weblinks']['display'] = array();
 $form_elements['weblinks']['nodisplay'] = array();
-
 $radio_button['weblinks'] = "<label><input type='radio' name='stype' value='weblinks'".($_GET['stype'] == "weblinks" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['w400']."</label>";
 ?>

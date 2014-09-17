@@ -15,80 +15,85 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
-
 	global $settings;
-
-	if ($filetype == 1) { $origimage = imagecreatefromgif($origfile); }
-	elseif ($filetype == 2) { $origimage = imagecreatefromjpeg($origfile); }
-	elseif ($filetype == 3) { $origimage = imagecreatefrompng($origfile); }
-
+	if ($filetype == 1) {
+		$origimage = imagecreatefromgif($origfile);
+	} elseif ($filetype == 2) {
+		$origimage = imagecreatefromjpeg($origfile);
+	} elseif ($filetype == 3) {
+		$origimage = imagecreatefrompng($origfile);
+	}
 	$old_x = imagesx($origimage);
 	$old_y = imagesy($origimage);
-
-	$ratio_x = $old_x / $new_w;
-	$ratio_y = $old_y / $new_h;
+	$ratio_x = $old_x/$new_w;
+	$ratio_y = $old_y/$new_h;
 	if ($ratio_x > $ratio_y) {
-		$thumb_w = round($old_x / $ratio_x);
-		$thumb_h = round($old_y / $ratio_x);
+		$thumb_w = round($old_x/$ratio_x);
+		$thumb_h = round($old_y/$ratio_x);
 	} else {
-		$thumb_w = round($old_x / $ratio_y);
-		$thumb_h = round($old_y / $ratio_y);
+		$thumb_w = round($old_x/$ratio_y);
+		$thumb_h = round($old_y/$ratio_y);
 	};
-
 	if ($settings['thumb_compression'] == "gd1") {
-		$thumbimage = imagecreate($thumb_w,$thumb_h);
+		$thumbimage = imagecreate($thumb_w, $thumb_h);
 		$result = imagecopyresized($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
 	} else {
-		$thumbimage = imagecreatetruecolor($thumb_w,$thumb_h);
+		$thumbimage = imagecreatetruecolor($thumb_w, $thumb_h);
 		if ($filetype == 3) {
-			imagealphablending($thumbimage, false);
-			imagesavealpha($thumbimage, true);
+			imagealphablending($thumbimage, FALSE);
+			imagesavealpha($thumbimage, TRUE);
 		}
 		$result = imagecopyresampled($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
 	}
-
 	touch($thumbfile);
-
-	if ($filetype == 1) { imagegif($thumbimage, $thumbfile); }
-	elseif ($filetype == 2) { imagejpeg($thumbimage, $thumbfile); }
-	elseif ($filetype == 3) { imagepng($thumbimage, $thumbfile); }
-
+	if ($filetype == 1) {
+		imagegif($thumbimage, $thumbfile);
+	} elseif ($filetype == 2) {
+		imagejpeg($thumbimage, $thumbfile);
+	} elseif ($filetype == 3) {
+		imagepng($thumbimage, $thumbfile);
+	}
 	imagedestroy($origimage);
 	imagedestroy($thumbimage);
 }
 
 function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
 	global $settings;
-	if ($filetype == 1) { $origimage = imagecreatefromgif($origfile); }
-	elseif ($filetype == 2) { $origimage = imagecreatefromjpeg($origfile); }
-	elseif ($filetype == 3) { $origimage = imagecreatefrompng($origfile); }
-
+	if ($filetype == 1) {
+		$origimage = imagecreatefromgif($origfile);
+	} elseif ($filetype == 2) {
+		$origimage = imagecreatefromjpeg($origfile);
+	} elseif ($filetype == 3) {
+		$origimage = imagecreatefrompng($origfile);
+	}
 	$old_x = imagesx($origimage);
 	$old_y = imagesy($origimage);
-
-	$x = 0; $y = 0;
-
+	$x = 0;
+	$y = 0;
 	if ($old_x > $old_y) {
-		$x = ceil(($old_x - $old_y) / 2);
+		$x = ceil(($old_x-$old_y)/2);
 		$old_x = $old_y;
 	} elseif ($old_y > $old_x) {
-		$y = ceil(($old_y - $old_x) / 2);
+		$y = ceil(($old_y-$old_x)/2);
 		$old_y = $old_x;
 	}
-	$new_image = imagecreatetruecolor($new_size,$new_size);
+	$new_image = imagecreatetruecolor($new_size, $new_size);
 	if ($filetype == 3 && $settings['thumb_compression'] != "gd1") {
-		imagealphablending($new_image, false);
-		imagesavealpha($new_image, true);
+		imagealphablending($new_image, FALSE);
+		imagesavealpha($new_image, TRUE);
 	}
-	imagecopyresampled($new_image,$origimage,0,0,$x,$y,$new_size,$new_size,$old_x,$old_y);
-
-	if ($filetype == 1) { imagegif($new_image,$thumbfile,100); }
-	elseif ($filetype == 2) { imagejpeg($new_image,$thumbfile,100); }
-	elseif ($filetype == 3) { imagepng($new_image,$thumbfile,5); }
-
+	imagecopyresampled($new_image, $origimage, 0, 0, $x, $y, $new_size, $new_size, $old_x, $old_y);
+	if ($filetype == 1) {
+		imagegif($new_image, $thumbfile, 100);
+	} elseif ($filetype == 2) {
+		imagejpeg($new_image, $thumbfile, 100);
+	} elseif ($filetype == 3) {
+		imagepng($new_image, $thumbfile, 5);
+	}
 	imagedestroy($origimage);
 	imagedestroy($new_image);
 }
@@ -103,4 +108,5 @@ function image_exists($dir, $image) {
 	}
 	return $image;
 }
+
 ?>

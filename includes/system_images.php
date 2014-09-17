@@ -15,8 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 cache_smileys();
 $smiley_images = array();
 if (is_array($smiley_cache) && count($smiley_cache)) {
@@ -24,97 +25,55 @@ if (is_array($smiley_cache) && count($smiley_cache)) {
 		$smiley_images["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
 	}
 }
-
 $result = dbquery("SELECT news_cat_image, news_cat_name FROM ".DB_NEWS_CATS);
 $nc_images = array();
 while ($data = dbarray($result)) {
 	$nc_images["nc_".$data['news_cat_name']] = file_exists(IMAGES_NC.$data['news_cat_image']) ? IMAGES_NC.$data['news_cat_image'] : IMAGES."imagenotfound.jpg";
 }
-
 $result = dbquery("SELECT admin_title, admin_image FROM ".DB_ADMIN);
 $ac_images = array();
 while ($data = dbarray($result)) {
 	$ac_images["ac_".$data['admin_title']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists($data['admin_image']) ? $data['admin_image'] : ADMIN."images/infusion_panel.gif");
 }
-
-$fusion_images = array(
-	//A
-	"arrow" 		=> IMAGES."arrow.png",
-	"attach"        => FORUM."images/attach.png",
-	//B
-	"blank" 		=> THEME."images/blank.gif",
-	//C
-	"calendar" 		=> IMAGES."dl_calendar.png",
-	//D
-	"down" 			=> THEME."images/down.gif",
-	"download"		=> IMAGES."dl_download.png",
-	"downloads"		=> IMAGES."dl_downloads1.png",
-	//E
-	"edit" 			=> IMAGES."edit.png",
-	//F
-	"folder" 		=> FORUM."images/folder.png",
-	"folderlock" 	=> FORUM."images/folderlock.png",
-	"foldernew" 	=> FORUM."images/foldernew.png",
-	"forum_edit" 	=> FORUM."images/edit.gif",
-	//G
-	"go_first" 		=> IMAGES."go_first.png",
-	"go_last" 		=> IMAGES."go_last.png",
-	"go_next" 		=> IMAGES."go_next.png",
-	"go_previous" 	=> IMAGES."go_previous.png",
-	//H
-	"homepage" 		=> IMAGES."dl_homepage.png",
-	"hot"           => FORUM."images/hot.png",
-	//I
-	"info" 			=> IMAGES."dl_info.png",
-	"imagenotfound" => IMAGES."imagenotfound.jpg",
-	"image_attach"  => FORUM."images/image_attach.png",
-	//J
-	//K
-	//L
-	"left" 			=> THEME."images/left.gif",
-	"lastpost"		=> FORUM."images/lastpost.png",
-	"lastpostnew"	=> FORUM."images/lastpostnew.png",
-	//M
-	//N
-	"newthread" 	=> FORUM."images/newthread.png",
-	"no" 			=> IMAGES."no.png",
-	"noavatar50" 	=> "noavatar50.png",
-	"noavatar100" 	=> "noavatar100.png",
-	"noavatar150" 	=> "noavatar150.png",
-	//O
-	//P
-	"panel_on" 		=> THEME."images/panel_on.gif",
-	"panel_off" 	=> THEME."images/panel_off.gif",
-	"pm" 			=> THEME."forum/pm.gif",
-	"poll_posticon" => FORUM."images/poll.png",
-	"pollbar" 		=> THEME."images/pollbar.gif",
-	"printer" 		=> IMAGES."printer.png",
-	//Q
-	"quote" 		=> THEME."forum/quote.gif",
-	//R
-	"reply" 		=> THEME."forum/reply.gif",
-	"right" 		=> THEME."images/right.gif",
-	//S
-	"save"			=> IMAGES."php-save.png",
-	"screenshot"	=> IMAGES."dl_screenshot.png",
-	"star" 			=> IMAGES."star.png",
-	"statistics"	=> IMAGES."dl_stats.png",
-	"stickythread" 	=> FORUM."images/stickythread.png",
-	//T
-	"tick" 			=> IMAGES."tick.png",
-	//U
-	"up" 			=> THEME."images/up.gif",
-	//V
-	//W
-	"web" 			=> THEME."forum/web.gif",
-	//X
-	//Y
-	"yes" 			=> IMAGES."yes.png"
-	//Z
+$fusion_images = array(//A
+					   "arrow" => IMAGES."arrow.png", "attach" => FORUM."images/attach.png", //B
+					   "blank" => THEME."images/blank.gif", //C
+					   "calendar" => IMAGES."dl_calendar.png", //D
+					   "down" => THEME."images/down.gif", "download" => IMAGES."dl_download.png",
+					   "downloads" => IMAGES."dl_downloads1.png", //E
+					   "edit" => IMAGES."edit.png", //F
+					   "folder" => FORUM."images/folder.png", "folderlock" => FORUM."images/folderlock.png",
+					   "foldernew" => FORUM."images/foldernew.png", "forum_edit" => FORUM."images/edit.gif", //G
+					   "go_first" => IMAGES."go_first.png", "go_last" => IMAGES."go_last.png",
+					   "go_next" => IMAGES."go_next.png", "go_previous" => IMAGES."go_previous.png", //H
+					   "homepage" => IMAGES."dl_homepage.png", "hot" => FORUM."images/hot.png", //I
+					   "info" => IMAGES."dl_info.png", "imagenotfound" => IMAGES."imagenotfound.jpg",
+					   "image_attach" => FORUM."images/image_attach.png", //J
+					   //K
+					   //L
+					   "left" => THEME."images/left.gif", "lastpost" => FORUM."images/lastpost.png",
+					   "lastpostnew" => FORUM."images/lastpostnew.png", //M
+					   //N
+					   "newthread" => FORUM."images/newthread.png", "no" => IMAGES."no.png",
+					   "noavatar50" => "noavatar50.png", "noavatar100" => "noavatar100.png",
+					   "noavatar150" => "noavatar150.png", //O
+					   //P
+					   "panel_on" => THEME."images/panel_on.gif", "panel_off" => THEME."images/panel_off.gif",
+					   "pm" => THEME."forum/pm.gif", "poll_posticon" => FORUM."images/poll.png",
+					   "pollbar" => THEME."images/pollbar.gif", "printer" => IMAGES."printer.png", //Q
+					   "quote" => THEME."forum/quote.gif", //R
+					   "reply" => THEME."forum/reply.gif", "right" => THEME."images/right.gif", //S
+					   "save" => IMAGES."php-save.png", "screenshot" => IMAGES."dl_screenshot.png",
+					   "star" => IMAGES."star.png", "statistics" => IMAGES."dl_stats.png",
+					   "stickythread" => FORUM."images/stickythread.png", //T
+					   "tick" => IMAGES."tick.png", //U
+					   "up" => THEME."images/up.gif", //V
+					   //W
+					   "web" => THEME."forum/web.gif", //X
+					   //Y
+					   "yes" => IMAGES."yes.png"//Z
 );
-
 $fusion_images = array_merge($ac_images, $fusion_images, $nc_images, $smiley_images);
-
 function get_image($image, $alt = "", $style = "", $title = "", $atts = "") {
 	global $fusion_images;
 	if (isset($fusion_images[$image])) {
@@ -142,4 +101,5 @@ function redirect_img_dir($source, $target) {
 	}
 	$fusion_images = $new_images;
 }
+
 ?>
