@@ -186,8 +186,13 @@ if (iMEMBER) {
 opentable($locale['500']);
 
 // breadcrumbs
-$caption = $fdata['forum_cat_name']." &raquo; <a href='viewforum.php?forum_id=".$fdata['forum_id']."'>".$fdata['forum_name']."</a>";
-echo "<!--pre_forum_thread--><div class='tbl2 forum_breadcrumbs' style='margin:0px 0px 4px 0px'><a href='index.php' id='top'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+echo "<!--pre_forum_thread-->\n";
+echo "<ol class='forum_breadcrumbs breadcrumb'>\n";
+echo "<li><a href='".FORUM."index.php'>".$locale['400']."</a></li>\n";
+echo "<li><a href='".FORUM."index.php?cat=".$fdata['forum_cat']."'>".$fdata['forum_cat_name']."</a></li>\n";
+echo "<li><a href='".FORUM."viewforum.php?forum_id=".$fdata['forum_id']."'>".$fdata['forum_name']."</a></li>\n";
+echo "</ol>\n";
+
 
 // thread & filters
 if (isset($_GET['filter']) && $_GET['filter'] == 1) {

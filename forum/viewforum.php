@@ -79,7 +79,7 @@ if (!defined("iMOD") && iMEMBER && $fdata['forum_moderators']) {
 if (!defined("iMOD")) {
 	define("iMOD", FALSE);
 }
-$caption = $fdata['forum_cat_name']." &raquo; ".$fdata['forum_name'];
+
 add_to_title($locale['global_201'].$fdata['forum_name']);
 if (isset($_POST['delete_threads']) && iMOD) {
 	$thread_ids = "";
@@ -130,7 +130,14 @@ if (isset($_POST['delete_threads']) && iMOD) {
 	redirect(FUSION_SELF."?forum_id=".$_GET['forum_id']."&rowstart=".$_GET['rowstart']);
 }
 opentable($locale['450']);
-echo "<!--pre_forum--><div class='tbl2 forum_breadcrumbs'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+echo "<!--pre_forum-->\n";
+echo "<ol class='forum_breadcrumbs breadcrumb'>\n";
+echo "<li><a href='".FORUM."index.php'>".$locale['400']."</a></li>\n";
+echo "<li><a href='".BASEDIR."forum/index.php?cat=".$fdata['forum_cat']."'>".$fdata['forum_cat_name']."</a></li>\n";
+echo "<li>".$fdata['forum_name']."</li>\n";
+echo "</ol>\n";
+
+
 if (isset($_GET['filter']) && $_GET['filter'] == 1) {
 	$time = isset($_GET['time']) && isnum($_GET['time']) ? $_GET['time'] : '';
 	$type = isset($_GET['type']) && isnum($_GET['type']) ? $_GET['type'] : '';
