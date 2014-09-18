@@ -15,39 +15,43 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-/* Constant Debugs Output @ news.php
-TRUE_PHP_SELF = news.php
-$_SERVER['QUERY_STRING'] = 2;
-PERMALINK_CURRENT_PATH = ../../ definitions.
-ROOT is also ../../
-$filepath = news.php
- */
 define("IN_PERMALINK", TRUE);
 require_once dirname(__FILE__)."/maincore.php";
 require_once CLASSES."Rewrite.class.php";
 // Starting Rewrite Object
 $seo_rewrite = new Rewrite();
-// Call the main function - underrated comment of what it does.
-$seo_rewrite->rewritePage(); // it transforms the whole output into another file.
-// invoke the same here at rewrite.
-// Type of Page
+$seo_rewrite->rewritePage();
 $filepath = $seo_rewrite->getFilePath();
+
 if ($filepath != "") {
 	// Set FUSION_SELF to File path
+	$current_page = str_replace($settings['site_path'], "", $_SERVER['PHP_SELF']);
 	if (preg_match("/\.php/", basename($filepath))) {
 		// If it is a file
-		//define("FUSION_SELF", ROOT.basename($filepath)); // this is the cause of the whole non-stackable issue.
-		define("FUSION_SELF", BASEDIR.basename($filepath));
+		/* DEVELOPMENT IN PROGRESS. Don't Update */
+		/* Constant Debugs Output @ news.php
+		TRUE_PHP_SELF = news.php
+		$_SERVER['QUERY_STRING'] = 2;
+		PERMALINK_CURRENT_PATH = ../../ definitions.
+		ROOT is also ../../
+		$filepath = news.php
+		 */
+		//define("FUSION_SELF", FUSION_ROOT.basename($filepath)); // form paths
+		define("FUSION_SELF", FUSION_ROOT.$current_page); // form paths - this works for shoutbox.
+		//define("FUSION_SELF", BASEDIR.basename($filepath));
+		//define("FUSION_SELF", $current_page);
+		//print_p(FUSION_SELF);
 	} else {
 		// If it is a directory that actually exists(like /forum/)
 		define("FUSION_SELF", "index.php");
+		//print_p(FUSION_SELF);
 	}
 	// Define FUSION_QUERY
 	define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
 	// Define START_PAGE for Panels
-	$current_page = str_replace($settings['site_path'], "", $_SERVER['PHP_SELF']);
 	define("TRUE_PHP_SELF", $current_page);
 	define("START_PAGE", TRUE_PHP_SELF.($_SERVER['QUERY_STRING'] ? "?".$_SERVER['QUERY_STRING'] : ""));
+	//define("FUSION_SELF", TRUE_PHP_SELF);
 	// Include the corresponding File
 	define("FUSION_REQUEST", START_PAGE);
 	if ($_SERVER['PHP_SELF'] == $settings['opening_page']) {
@@ -61,7 +65,6 @@ if ($filepath != "") {
 	echo "We had been working on Custom Error Page I guess? We can call something like <strong>&#36;customErrors-&gt;Error()</strong>";
 }
 if (!defined("FUSION_SELF")) {
-	// define("FUSION_SELF", basename($_SERVER['PHP_SELF'])); // remove this.
+	define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 }
-
 ?>

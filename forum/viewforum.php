@@ -15,14 +15,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once dirname(__FILE__)."../../maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/main.php";
+if (!defined("SELECT2")) {
+	define("SELECT2", TRUE);
+	add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
+	add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
+}
 if (!isset($lastvisited) || !isnum($lastvisited)) {
 	$lastvisited = time();
 }
 if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) {
-	redirect("index.php");
+	//redirect("index.php");
 }
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 	$_GET['rowstart'] = 0;
@@ -161,6 +166,7 @@ if (isset($_GET['filter']) && $_GET['filter'] == 1) {
 	if ($col_order && $ordering) {
 		$cond2 = "ORDER BY $col_order $ordering";
 	}
+
 	$result = dbquery("SELECT t.thread_id
                 FROM ".DB_THREADS." t
                 LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
@@ -214,9 +220,11 @@ foreach ($forum_list as $array) {
 	$forum_opts .= ($i == count($forum_list)-1) ? json_encode($array) : json_encode($array).",";
 	$i++;
 }
+
 echo form_hidden('', 'jump_id', 'jump_id', '');
 // finally, push string to select2, and invoke select2 to hidden input.
 // .. add a redirect to onchange event.
+
 add_to_jquery("
     var this_data = [];
     this_data.push($forum_opts);
@@ -229,15 +237,17 @@ add_to_jquery("
     ");
 if ($rows > $threads_per_page) {
 	$filter_url = (isset($_GET['filter']) && $_GET['filter'] == 1) ? "&amp;time=".$_GET['time']."&amp;type=".$_GET['type']."&amp;sort=".$_GET['sort']."&amp;order=".$_GET['order']."&amp;filter=1&amp;" : "&amp;";
-	$page_nav = "<div id='pagenav' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $threads_per_page, $rows, 3, FUSION_SELF."?forum_id=".$_GET['forum_id'].$filter_url."")."</div>\n";
+	$page_nav = "<div id='pagenav' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $threads_per_page, $rows, 3, BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id'].$filter_url."")."</div>\n";
 }
 // Add filter
 echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right', 'type' => 'button'));
 echo $page_nav;
 echo "</div>\n";
+
 // filter class extract
 echo "<div id='filter' class='".(isset($_GET['filter']) && $_GET['filter'] == 1 ? '' : 'display-none')." panel-footer'>\n";
-echo openform('filterform', 'filterform', 'post', FORUM."viewforum.php?forum_id=".$_GET['forum_id']."&amp;rowstart=0", array('downtime' => 0));
+// problem with seo not posting to the correct url.
+echo openform('filterform', 'filterform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."viewforum.php?forum_id=".$_GET['forum_id']."&amp;filter=1", array('downtime' => 0));
 echo "<div class='row filter-form'>\n";
 echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 echo "<span><strong>".$locale['531']."</strong></span>\n<br/>";
@@ -267,8 +277,8 @@ foreach ($array as $key => $value) {
 	$selected = (isset($_GET['order']) && $_GET['order'] == $key) ? "checked" : "";
 	echo "<input id='$key-$value' type='radio' name='order' value='$key' $selected/><label class='m-l-10 text-normal text-smaller' for='$key-$value'>$value</label>\n<br/>\n";
 }
-// do button here.
-echo form_button('Go', 'gofilter', 'gofilter', 'Go', array('class' => 'btn-primary pull-right'));
+echo form_button('Go', 'gofilter', 'gofilter', 'go', array('class' => 'btn-primary pull-right'));
+
 echo "</div>\n</div>\n";
 echo closeform();
 echo "</div>\n";
@@ -277,6 +287,7 @@ add_to_jquery("
         $('#filter').slideToggle();
     });
     ");
+
 if (iMOD) {
 	echo openform('mod_form', 'mod_form', 'post', FORUM."viewforum.php?forum_id=".$_GET['forum_id']."&amp;rowstart=".$_GET['rowstart']);
 }
@@ -287,18 +298,19 @@ echo "<th class='tbl2 forum-caption' width='1%' style='white-space:nowrap' align
 echo "<th class='tbl2 forum-caption' width='1%' style='white-space:nowrap' align='center'>".$locale['454']."</th>\n";
 echo "<th class='tbl2 forum-caption' style='width: 250px;'>".$locale['404']."</th>\n</tr>\n</thead>\n<tbody id='threadlisting'>\n"; // <-- filter hit target
 if ($rows) {
+
 	if (isset($_POST['gofilter'])) {
-		foreach ($_POST as $key => $value) {
+			foreach ($_POST as $key => $value) {
 			$_fdata[$key] = form_sanitizer($value, '0');
 		}
 		// redirect to get.
 		if (!defined('FUSION_NULL')) {
-			$time = isset($_fdata['time']) ? "&amp;time=".$_fdata['time']."" : '';
-			$type = isset($_fdata['type']) ? "&amp;type=".$_fdata['type']."" : '';
-			$sort = isset($_fdata['sort']) ? "&amp;sort=".$_fdata['sort']."" : '';
-			$order = isset($_fdata['order']) ? "&amp;order=".$_fdata['order']."" : '';
-			$filter = ($time || $type || $sort || $order) ? "&amp;filter=1" : '';
-			$filter_url = FORUM."viewforum.php?forum_id=".$_GET['forum_id']."&rowstart=".$_GET['rowstart'].$time.$type.$sort.$order.$filter;
+			$time = isset($_fdata['time']) ? "&time=".$_fdata['time']."" : '&time=0';
+			$type = isset($_fdata['type']) ? "&type=".$_fdata['type']."" : '&type=0';
+			$sort = isset($_fdata['sort']) ? "&sort=".$_fdata['sort']."" : '&sort=0';
+			$order = isset($_fdata['order']) ? "&order=".$_fdata['order']."" : '&order=0';
+			$filter = "&amp;filter=1";
+			$filter_url = FORUM."viewforum.php?forum_id=".$_GET['forum_id'].$time.$type.$sort.$order.$filter;
 			redirect($filter_url);
 		}
 	}
@@ -376,7 +388,7 @@ if ($rows) {
 				echo "<td align='center' width='1%' class='tbl2 forum-icon' style='white-space:nowrap'>$folder</td>";
 			}
 			$reps = ceil($tdata['thread_postcount']/$threads_per_page);
-			$threadsubject = "<h3 class='display-inline'>$sticky_status<a href='viewthread.php?thread_id=".$tdata['thread_id']."'>".$tdata['thread_subject']."</a> $icon</h3>";
+			$threadsubject = "<h3 class='display-inline'>$sticky_status<a href='".FORUM."viewthread.php?thread_id=".$tdata['thread_id']."'>".$tdata['thread_subject']."</a> $icon</h3>";
 			if ($reps > 1) {
 				$ctr = 0;
 				$ctr2 = 1;
@@ -415,6 +427,8 @@ if ($rows) {
 			if ($settings['forum_last_post_avatar'] == 1) {
 				echo "<div class='clearfix'>\n";
 				if ($tdata['status_lastuser'] != 6 && $tdata['status_lastuser'] != 5) {
+					$tdata['user_status'] = $tdata['status_lastuser'];
+					$tdata['user_name'] = $tdata['user_lastuser'];
 					echo "<div class='pull-left lastpost-avatar m-r-10'>".display_avatar($tdata, '50px')."</div>";
 				}
 			}

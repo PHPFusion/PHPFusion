@@ -146,15 +146,25 @@ if (isset($settings['site_path']) && strcmp($settings['site_path'], "/") != 0) {
 	$current_path = ltrim($current_path, "/");
 }
 
+// for Permalinks include files.
 define("PERMALINK_CURRENT_PATH", $current_path);
 $count = substr_count(PERMALINK_CURRENT_PATH, "/");
 $root = "";
-
-for ($i = 0; $i < $count; $i++) {
+for ($i = 0; $i < $count; $i++) { // moved 0 to 1 will crash.
 	$root .= "../";
 }
-
 define("ROOT", $root);
+
+// for FUSION_SELF
+//print_p($count);
+//print_p(substr_count(BASEDIR, "/"));
+$root_count = $count-substr_count(BASEDIR, "/");
+$fusion_root = '';
+for ($i = 0; $i < $root_count; $i++) { // moved 0 to 1 will crash.
+	$fusion_root .= "../";
+}
+define("FUSION_ROOT", $fusion_root);
+
 
 // Calculate current true url
 $script_url = explode("/", $_SERVER['PHP_SELF']);

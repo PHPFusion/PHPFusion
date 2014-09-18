@@ -18,11 +18,31 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-$regex = array("%forum_id%" => "([0-9]+)", "%forum_title%" => "([a-zA-Z0-9-]+)");
-$pattern = array("forum" => "forum/index.php", "forum/" => "forum/index.php",
-				 "forum/%forum_id%/%forum_title%" => "forum/viewforum.php?forum_id=%forum_id%");
+$regex = array(
+	"%forum_id%" => "([0-9]+)",
+   	"%forum_name%" => "([a-zA-Z0-9-]+)",
+	"%rowstart%" => "([0-9]+)",
+	"%time%" => "([0-9]+)",
+	"%type%" => "([0-9]+)",
+	"%sort%" => "([0-9]+)",
+	"%order%" => "([0-9]+)",
+	"%filter%" => "([0-9]+)",
+);
+/* Whoever want to change anything here.. Good luck */
+$pattern = array(
+	"forum" => "forum/index.php",
+	"forum/%forum_id%/page/%forum_name%" => "forum/index.php?cat=%forum_id%",
+	"forum/%forum_id%/view/%forum_name%" => "forum/viewforum.php?forum_id=%forum_id%",
+	"forum/%forum_id%/browse/%rowstart%/%forum_name%" => "forum/viewforum.php?forum_id=%forum_id%&amp;rowstart=%rowstart%",
+	"forum/%forum_id%/filter/%time%/%type%/%sort%/%order%/%filter%/%forum_name%" => "forum/viewforum.php?forum_id=%forum_id%&amp;time=%time%&amp;type=%type%&amp;sort=%sort%&amp;order=%order%&amp;filter=%filter%", // permalink don't work, but rewrite class worked.
+	"forum/%forum_id%/filter/%time%/%type%/%sort%/%order%/%filter%/%rowstart%/%forum_name%" => "forum/viewforum.php?forum_id=%forum_id%&amp;time=%time%&amp;type=%type%&amp;sort=%sort%&amp;order=%order%&amp;filter=%filter%&amp;rowstart=%rowstart%", // permalink don't work, but rewrite class worked.
+	"forum/latest-threads" => "forum/index.php?section=latest",
+	"forum/tracked-threads" => "forum/index.php?section=tracked",
+);
+
+$dir = FORUM;
 $dbid = array("%forum_id%" => "forum_id");
 $dbname = DB_FORUMS;
-$dbinfo = array("%forum_title%" => "forum_name");
+$dbinfo = array("%forum_name%" => "forum_name");
 
 ?>

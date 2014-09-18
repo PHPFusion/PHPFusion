@@ -143,8 +143,8 @@ class PermalinksDisplay {
 	* @access protected
 	*/
 	private $debug = FALSE;
-	private $sniffer_debug = FALSE;
-	private $regexDebug = FALSE;
+	private $sniffer_debug = false;
+	private $regexDebug = false;
 
 	/*
 	* Main Function : Handles the Output
@@ -493,23 +493,30 @@ class PermalinksDisplay {
 								$pos = $this->getTagPosition($this->pattern_search[$type][$key], $clean_tag); // Get Position of Unique Tag
 								if ($pos != 0) {
 									$found_matches = $matches[$pos]; // This is to remove duplicate matches
-									foreach ($found_matches as $matchkey => $match) {
+									//print_p($found_matches);
+										foreach ($found_matches as $matchkey => $match) {
 										$replace = $this->pattern_replace[$type][$key];
 										// Replacing each Tag with its Database Value if any
 										// Example: %thread_title% should be replaced with thread_subject
-										if (isset($this->dbinfo[$type])) {
+										if (isset($this->dbinfo[$type])) { // have output return from dbquery based on id : [%forum_name%] => forum_name
 											foreach ($this->dbinfo[$type] as $other_tags => $other_attr) {
-												if (strstr($replace, $other_tags)) {
+													if (strstr($replace, $other_tags)) {
 													$replace = str_replace($other_tags, $this->data_cache[$type][$match][$other_attr], $replace);
 												}
 											}
 										}
 										// Replacing each of the Tag with its suitable match found on the Page
 										$replace = $this->replaceOtherTags($type, $this->pattern_search[$type][$key], $replace, $matches, $matchkey);
+										//print_p($replace);
 										$search = str_replace($tag, $match, $this->pattern_search[$type][$key]);
-										$search = $this->replaceOtherTags($type, $this->pattern_replace[$type][$key], $search, $matches, $matchkey); // Added: Replace Tags values in Search Pattern Also
+										//print_p($search);
+										// this might be the culprit in not making the navigation other tag work.
+										// FUCK I FOUND IT !!
+										//$search = $this->replaceOtherTags($type, $this->pattern_replace[$type][$key], $search, $matches, $matchkey); // Added: Replace Tags values in Search Pattern Also
+										//print_p($search);
 										$search = $this->makeSearchRegex($this->appendSearchPath($search), $type);
-										//$search = $this->makeSearchRegex($search, $type);
+										//	print_p($search);
+
 										$replace = self::cleanURL($replace);
 										$replace = $this->wrapQuotes($replace);
 										//echo $search."<br />";
@@ -632,6 +639,7 @@ class PermalinksDisplay {
 	* @access private
 	*/
 	private function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
+
 		if (isset($this->rewrite_code[$type])) {
 			foreach ($this->rewrite_code[$type] as $other_tags_keys => $other_tags) {
 				if (strstr($replace, $other_tags)) {
@@ -649,6 +657,7 @@ class PermalinksDisplay {
 				}
 			}
 		}
+		//print_p($replace); // final output
 		return $replace;
 	}
 
@@ -790,9 +799,6 @@ class PermalinksDisplay {
 		if (ob_get_length() !== FALSE) {
 			ob_end_clean();
 		}
-		//$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-		//$last = substr(strrchr($url, "/"), 1);
-		//$url = str_replace($last, $target, $url);
 		$url = $settings['siteurl'].$target;
 		header("HTTP/1.1 301 Moved Permanently");
 		header("Location: ".$url);

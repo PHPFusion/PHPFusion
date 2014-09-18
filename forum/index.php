@@ -15,9 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once dirname(__FILE__)."../../maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/main.php";
+
 add_to_title($locale['global_200'].$locale['400']);
 opentable($locale['400']);
 $tab_title['title'][] = "Forum";
@@ -37,9 +38,9 @@ echo form_hidden('stype', 'stype', 'stype', 'forums');
 echo form_text('', 'stext', 'stext', '', array('placeholder' => $locale['550'], 'append_button' => 1));
 echo closeform();
 echo "</div>\n";
-echo opentab($tab_title, $tab_active, 'forum_tabs', 1);
+echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM."index.php");
 // == using ID as key
-echo opentabbody($tab_title['title'], $tab_active, $tab_active, 1);
+echo opentabbody($tab_title['title'], $tab_active, $tab_active, FORUM."index.php");
 if (isset($_GET['section']) && $_GET['section'] == 'latest') {
 	latest();
 } elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {

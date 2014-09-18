@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once dirname(__FILE__)."../../maincore.php";
 require_once INCLUDES."forum_include.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/main.php";
@@ -229,7 +229,7 @@ if (($rows > $posts_per_page) || ($can_post || $can_reply)) {
 	if (iMEMBER && $can_post) {
 		echo "<td align='right' style='padding:0px 0px 4px 0px'>\n<!--pre_forum_buttons-->\n";
 		if ($can_post) {
-			echo "<a href='post.php?action=newthread&amp;forum_id=".$fdata['forum_id']."'>";
+			echo "<a href='".FORUM."post.php?action=newthread&amp;forum_id=".$fdata['forum_id']."'>";
 			echo "<img src='".get_image("newthread")."' alt='".$locale['566']."' style='border:0px' /></a>\n";
 		}
 		if (!$fdata['thread_locked'] && $can_reply) {
@@ -241,6 +241,8 @@ if (($rows > $posts_per_page) || ($can_post || $can_reply)) {
 	echo "</tr>\n</table>\n";
 }
 
+// dummy cacher, don't remove.
+echo "<a class='display-none' href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;time=1&amp;type=0&amp;order=1&amp;filter=0'>Filter Link</a>\n"; // dont remove this line.
 
 // forum jumper.
 echo "<div class='forum-table-container panel-body'>\n";
@@ -272,9 +274,6 @@ foreach ($forum_list as $array) {
 	$i++;
 }
 echo form_hidden('', 'jump_id', 'jump_id', '');
-// finally, push string to select2, and invoke select2 to hidden input.
-// .. add a redirect to onchange event.
-
 add_to_jquery("
     var this_data = [];
     this_data.push($forum_opts);
@@ -286,20 +285,19 @@ add_to_jquery("
        document.location.href='".FORUM."viewforum.php?forum_id='+$(this).val();
     });
     ");
-
+$page_nav = "";
 if ($rows > $posts_per_page) {
 	$filter_url = (isset($_GET['filter']) && $_GET['filter'] == 1) ? "&amp;time=".$_GET['time']."&amp;type=".$_GET['type']."&amp;filter=1&amp;" : "&amp;";
-	$page_nav = "<div id='pagenav-top' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $posts_per_page, $rows, 3, FUSION_SELF."?thread_id=".$_GET['thread_id'].$filter_url."")."</div>\n";
+	$page_nav = "<div id='pagenav-top' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $posts_per_page, $rows, 3, FORUM."viewthread.php?thread_id=".$_GET['thread_id'].$filter_url."")."</div>\n";
 }
 // Add filter
-echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right',
-																												  'type' => 'button'));
+echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right','type' => 'button'));
 echo $page_nav;
 echo "</div>\n";
 
 // filter class extract
 echo "<div id='filter' class='".(isset($_GET['filter']) && $_GET['filter'] == 1 ? '' : 'display-none')." panel-footer'>\n";
-echo openform('filterform', 'filterform', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=0", array('downtime' => 0));
+echo openform('filterform', 'filterform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;filter=1", array('downtime' => 0));
 echo "<div class='row filter-form'>\n";
 echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 echo "<span><strong>".$locale['531']."</strong></span>\n<br/>";
@@ -333,7 +331,6 @@ add_to_jquery("
     });
     ");
 
-
 if ($rows != 0) {
 	if (isset($_POST['gofilter'])) {
 		foreach ($_POST as $key => $value) {
@@ -341,14 +338,15 @@ if ($rows != 0) {
 		}
 		// redirect to get.
 		if (!defined('FUSION_NULL')) {
-			$time = isset($_fdata['time']) ? "&amp;time=".$_fdata['time']."" : '';
-			$type = isset($_fdata['type']) ? "&amp;type=".$_fdata['type']."" : '';
-			$order = isset($_fdata['order']) ? "&amp;order=".$_fdata['order']."" : '';
-			$filter = ($time || $type || $sort || $order) ? "&amp;filter=1" : '';
-			$filter_url = FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&rowstart=".$_GET['rowstart'].$time.$type.$order.$filter;
+			$time = isset($_fdata['time']) ? "&amp;time=".$_fdata['time']."" : '&amp;time=0';
+			$type = isset($_fdata['type']) ? "&amp;type=".$_fdata['type']."" : '&amp;type=0';
+			$order = isset($_fdata['order']) ? "&amp;order=".$_fdata['order']."" : '&amp;order=0';
+			$filter = "&amp;filter=1";
+			$filter_url = FORUM."viewthread.php?thread_id=".$_GET['thread_id'].$time.$type.$order.$filter;
 			redirect($filter_url);
 		}
 	}
+
 	dbquery("UPDATE ".DB_THREADS." SET thread_postcount='$rows', thread_lastpostid='$last_post', thread_views=thread_views+1 WHERE thread_id='".$_GET['thread_id']."'");
 	/* poll */
 	if ($poll_on_first_page_only && $poll_there && $poll_data) {
@@ -646,11 +644,10 @@ if ($can_post || $can_reply) {
 	echo "</td>\n</tr>\n</table>\n";
 }
 closetable();
-
 if ($can_reply && !$fdata['thread_locked']) {
 	require_once INCLUDES."bbcode_include.php";
 	opentable($locale['512']);
-	echo openform('input_form', 'input_form', 'post', FORUM."post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']);
+	echo openform('input_form', 'input_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']);
 	echo "<table class='tbl-border center table table-responsive'>\n<tbody>\n<tr>\n<td>\n";
 	echo form_textarea($locale['573'], 'message', 'message', '', array('bbcode' => 1, 'required' => 1));
 	echo "</td>\n</tr>\n<tr>\n";

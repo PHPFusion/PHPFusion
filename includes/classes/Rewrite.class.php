@@ -157,7 +157,7 @@ class Rewrite {
 	* @data_type Boolean
 	* @access public
 	*/
-	public $debug = FALSE;
+	public $debug = false;
 
 	/*
 	* Constructor
