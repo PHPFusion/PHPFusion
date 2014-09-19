@@ -27,15 +27,19 @@ $regex = array(
  	"%order%" => "([0-9]+)",
  	"%filter%" => "([0-9]+)",
  	"%post_id%" => "([0-9]+)",
+ 	"%quote_id%" => "([0-9]+)",
+ 	"%forum_id%" => "([0-9]+)",
+ 	"%action%" => "([a-zA-Z]+)",
    	);
+
 $pattern = array(
 	"forum/thread" => "forum/viewthread.php",
 	"forum/thread/%thread_id%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%",
-	"forum/thread/%thread_id%/browse/%thread_rowstart%/%thread_name%" => "forum/viewthread.php?thread_id=%cthread_id%&amp;rowstart=%thread_rowstart%",
+	"forum/thread/%thread_id%/browse/%thread_rowstart%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
+	"forum/thread/%thread_id%/post/%action%" => "forum/post.php?action=%action%&amp;&forum_id=%forum_id%&thread_id=%thread_id%",
 	"forum/thread/%thread_id%/filter/%time%/%type%/%order%/%filter%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;time=%time%&amp;type=%type%&amp;order=%order%&amp;filter=%filter%",
+	"forum/thread/%thread_id%/%forum_id%/post/%thread_name%/%action%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
 	"forum/thread/%thread_id%/filter/%time%/%type%/%order%/%filter%/%thread_rowstart%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;time=%time%&amp;type=%type%&amp;order=%order%&amp;filter=%filter%&amp;rowstart=%thread_rowstart%",
-	//"forum/thread/%thread_id%/post/%post_id%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%",
-	//"forum/thread/%thread_id%/post/%%post_id%/%thread_name%#post_%post_id%" => "forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%#post_%post_id%",
 );
 
 /* $alias_pattern = array("thread/%alias%" => "forum/%alias_target%",

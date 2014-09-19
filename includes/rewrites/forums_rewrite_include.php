@@ -27,6 +27,7 @@ $regex = array(
 	"%sort%" => "([0-9]+)",
 	"%order%" => "([0-9]+)",
 	"%filter%" => "([0-9]+)",
+	"%action%" => "([a-zA-Z]+)",
 );
 /* Whoever want to change anything here.. Good luck */
 $pattern = array(
@@ -38,6 +39,7 @@ $pattern = array(
 	"forum/%forum_id%/filter/%time%/%type%/%sort%/%order%/%filter%/%rowstart%/%forum_name%" => "forum/viewforum.php?forum_id=%forum_id%&amp;time=%time%&amp;type=%type%&amp;sort=%sort%&amp;order=%order%&amp;filter=%filter%&amp;rowstart=%rowstart%", // permalink don't work, but rewrite class worked.
 	"forum/latest-threads" => "forum/index.php?section=latest",
 	"forum/tracked-threads" => "forum/index.php?section=tracked",
+	"forum/%forum_id%/post/%forum_name%/%action%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%", // create new threads
 );
 
 $dir = FORUM;

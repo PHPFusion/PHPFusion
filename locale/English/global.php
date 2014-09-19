@@ -267,4 +267,5 @@ $locale['token_error_5'] = "Invalid token datestamp.";
 $locale['token_error_6'] = "Post was made too fast.";
 $locale['token_error_7'] = "Invalid token hash.";
 $locale['token_error_8'] = "Invalid token format.";
+$locale['flood'] = "You are barred to post until the flood period cooldown is over. Please wait for %t";
 ?>
