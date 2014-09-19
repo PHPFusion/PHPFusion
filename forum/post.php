@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-require_once "../maincore.php";
+require_once dirname(__FILE__)."../../maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/post.php";
 add_to_title($locale['global_204']);
@@ -36,7 +36,6 @@ $result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
 	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
 	WHERE f.forum_id='".$_GET['forum_id']."' LIMIT 1
 	");
-
 if (dbrows($result)) {
 	$fdata = dbarray($result);
 	if (!checkgroup($fdata['forum_access']) || !$fdata['forum_cat']) {
@@ -60,7 +59,9 @@ if (!defined("iMOD") && iMEMBER && $fdata['forum_moderators']) {
 if (!defined("iMOD")) {
 	define("iMOD", FALSE);
 }
-$caption = $fdata['forum_cat_name']." &raquo; <a href='".FORUM."viewforum.php?forum_id=".$fdata['forum_id']."'>".$fdata['forum_name']."</a>";
+$caption = "<li><a href='".FORUM."index.php?cat=".$fdata['forum_cat']."'>".$fdata['forum_cat_name']."</a></li>\n";
+$caption .= "<li><a href='".FORUM."viewforum.php?forum_id=".$fdata['forum_id']."'>".$fdata['forum_name']."</a></li>\n";
+
 if ((isset($_GET['action']) && $_GET['action'] == "newthread") && ($fdata['forum_post'] != 0 && checkgroup($fdata['forum_post']))) {
 	include "postnewthread.php";
 } elseif ((isset($_GET['action']) && $_GET['action'] == "reply") && ($fdata['forum_reply'] != 0 && checkgroup($fdata['forum_reply']))) {
@@ -113,6 +114,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "newthread") && ($fdata['forum
 		redirect("index.php");
 	}
 } else {
+	// Note: if edit/reply/quote redirected to forum/index.php, then $_GET['action'] is missing caused by URL Rewrite Class /includes/classes/rewrite.class.php
 	redirect("index.php");
 }
 require_once THEMES."templates/footer.php";

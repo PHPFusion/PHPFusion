@@ -84,7 +84,11 @@ if (isset($_POST['previewchanges']) || isset($_POST['delete_poll']) || isset($_P
 		$udata = dbarray(dbquery("SELECT user_id, user_name, user_status, user_avatar, user_level, user_posts, user_joined FROM ".DB_USERS." WHERE user_id='".$pdata['post_author']."'"));
 		add_to_title($locale['global_201'].$locale['405']);
 		opentable($locale['405']);
-		echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+		echo "<ol class='forum_breadcrumbs breadcrumb'>\n";
+		echo "<li><a href='".FORUM."index.php'>".$locale['400']."</a></li>\n";
+		echo $caption;
+		echo "</ol>\n";
+		//echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
 		if ($fdata['forum_poll'] && checkgroup($fdata['forum_poll'])) {
 			if ($tdata['thread_poll'] == 1 && ($pdata['post_author'] == $tdata['thread_author']) && ($userdata['user_id'] == $tdata['thread_author'] || iSUPERADMIN || iMOD)) {
 				if ((isset($poll_title) && $poll_title != "") && (isset($poll_opts) && is_array($poll_opts))) {
@@ -117,7 +121,7 @@ if (isset($_POST['previewchanges']) || isset($_POST['delete_poll']) || isset($_P
 	}
 }
 if (isset($_POST['savechanges'])) {
-	if (isset($_POST['delete'])) {
+	if (isset($_POST['delete']) && !defined('FUSION_NULL')) { // added token protection.
 		$result = dbquery("SELECT post_author FROM ".DB_POSTS." WHERE post_id='".$_GET['post_id']."' AND thread_id='".$_GET['thread_id']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
@@ -172,14 +176,14 @@ if (isset($_POST['savechanges'])) {
 	} else {
 		$error = 0;
 		if ($pdata['first_post'] == $_GET['post_id']) {
-			$subject = trim(stripinput(censorwords($_POST['subject'])));
+			$subject = form_sanitizer($_POST['subject'], '', 'subject'); // trim(stripinput(censorwords($_POST['subject'])));
 		}
-		$message = trim(stripinput(censorwords($_POST['message'])));
+		$message = form_sanitizer($_POST['message'], '', 'message'); // trim(stripinput(censorwords($_POST['message'])));
 		$smileys = isset($_POST['disable_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? "0" : "1";
 		$updateSig = (isset($_POST['post_showsig']) && $_POST['post_showsig'] == 1 ? 1 : 0);
 		$post_locked = (isset($_POST['post_locked']) && $_POST['post_locked'] == 1 ? 1 : 0);
 		if (iMEMBER) {
-			if ($message != "") {
+			if ($message != "" && !defined('FUSION_NULL')) { // added protection
 				if (isset($_POST['hide_edit'])) {
 					$post_edit_time = 0;
 					$reason = "";
@@ -254,13 +258,13 @@ if (isset($_POST['savechanges'])) {
 						}
 					}
 				}
-			} else {
-				$error = 3;
 			}
+			redirect("postify.php?post=edit&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
 		} else {
 			$error = 4;
+			redirect("postify.php?post=edit&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
 		}
-		redirect("postify.php?post=edit&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
+
 	}
 } else {
 	if (!isset($_POST['previewchanges']) && !isset($_POST['update_poll_title']) && !isset($_POST['update_poll_option']) && !isset($_POST['delete_poll_option']) && !isset($_POST['add_poll_option'])) {
@@ -284,24 +288,29 @@ if (isset($_POST['savechanges'])) {
 		}
 	}
 	opentable($locale['408']);
-	if (!isset($_POST['previewchanges'])) echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
-	echo "<form name='inputform' method='post' action='".FUSION_SELF."?action=edit&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id']."' enctype='multipart/form-data'>\n";
-	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
-	if ($pdata['first_post'] == $_GET['post_id']) {
-		echo "<td width='145' class='tbl2'>".$locale['460']."</td>\n";
-		echo "<td class='tbl2'><input type='text' name='subject' value='".$subject."' class='textbox' maxlength='255' style='width:250px' /></td>\n";
-		echo "</tr>\n<tr>\n";
+	if (!isset($_POST['previewchanges'])) {
+		echo "<ol class='forum_breadcrumbs breadcrumb'>\n";
+		echo "<li><a href='".FORUM."index.php'>".$locale['400']."</a></li>\n";
+		echo $caption;
+		echo "</ol>\n";
 	}
-	echo "<td valign='top' width='145' class='tbl2'>".$locale['461']."</td>\n";
-	echo "<td class='tbl1'><textarea name='message' cols='60' rows='15' class='textbox' style='width:98%'>".$message."</textarea></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='145' class='tbl2'>&nbsp;</td>\n";
-	echo "<td class='tbl1'>".display_bbcodes("99%", "message")."</td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='145' class='tbl2'>".$locale['474']."</td>\n";
-	echo "<td class='tbl1'><input type='text' name='edit_reason' class='textbox' style='width:250px;' value='".$edit_reason."' /></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td valign='top' width='145' class='tbl2'>".$locale['463']."</td>\n";
+	echo openform('input_form', 'input_form', 'post', FUSION_SELF."?action=edit&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id'], array('enc_type'=>1));
+	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border table table-responsive'>\n<tr>\n";
+	if ($pdata['first_post'] == $_GET['post_id']) {
+		echo "<td width='145' class='tbl2'></label for='subject'>".$locale['460']."</label> <span class='required'>*</span></td>\n";
+		echo "<td class='tbl2'>\n";
+		echo form_text('', 'subject', 'subject', $subject, array('max_length'=>255, 'required'=>1));
+		echo "</td>\n</tr>\n<tr>\n";
+	}
+	echo "<td valign='top' width='145' class='tbl2'><label for='message'>".$locale['461']."</label> <span class='required'>*</span></td>\n";
+	echo "<td class='tbl1'>\n";
+	echo form_textarea('', 'message', 'message', $message, array('requried'=>1, 'bbcode'=>1));
+	echo "</td>\n</tr>\n";
+	echo "<td width='145' class='tbl2'><label for='edit_reason'>".$locale['474']."</label></td>\n";
+	echo "<td class='tbl1'>\n";
+	echo form_text('', 'edit_reason', 'edit_reason', $edit_reason);
+	echo "</td>\n</tr>\n<tr>\n";
+	echo "<td valign='top' width='145' class='tbl2'><strong>".$locale['463']."</strong></td>\n";
 	echo "<td class='tbl1'>\n";
 	echo "<label><input type='checkbox' name='disable_smileys' value='1'".$disable_smileys_check." /> ".$locale['482']."</label><br />\n";
 	if (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) {
@@ -326,7 +335,7 @@ if (isset($_POST['savechanges'])) {
 			echo "<br /><br />\n";
 		}
 		$max = ($settings['attachmax_count']-$counter <= 0 ? "-2" : $settings['attachmax_count']-$counter);
-		echo "<input id='my_file_element' type='file' name='file_1' style='width:200px;' class='textbox' /><br />\n";
+		echo "<input id='my_file_element' type='file' name='file_1' style='width:200px;' class='form-control textbox' /><br />\n";
 		echo "<span class='small2'>".sprintf($locale['466'], parsebytesize($settings['attachmax']), str_replace(',', ' ', $settings['attachtypes']), $settings['attachmax_count'])."</span>\n";
 		echo "<div id='files_list'></div>\n";
 		echo "<script type='text/javascript'>\n";
@@ -341,34 +350,47 @@ if (isset($_POST['savechanges'])) {
 	}
 	if ($fdata['forum_poll'] && checkgroup($fdata['forum_poll'])) {
 		if ($tdata['thread_poll'] && ($pdata['post_author'] == $tdata['thread_author']) && ($userdata['user_id'] == $tdata['thread_author'] || iSUPERADMIN || iMOD)) {
-			echo "<tr>\n<td align='center' colspan='2' class='tbl2'>".$locale['468']."</td>\n";
+			echo "<tr>\n<td align='center' colspan='2' class='tbl2'><strong>".$locale['468']."</strong></td>\n";
 			echo "</tr>\n<tr>\n";
-			echo "<td width='145' class='tbl2'>".$locale['469']."</td>\n";
-			echo "<td class='tbl1'><input type='text' name='poll_title' value='".$poll_title."' class='textbox' maxlength='255' style='width:150px' />\n";
-			echo "<input type='submit' name='update_poll_title' value='".$locale['472']."' class='button' />\n";
-			echo "<input type='submit' name='delete_poll' value='".$locale['473']."' class='button' />\n</td>\n</tr>\n";
+			echo "<td width='145' class='tbl2'><label for='poll_title'>".$locale['469']."</label></td>\n";
+			echo "<td class='tbl1'>\n";
+			echo form_text('', 'poll_title', 'poll_title', $poll_title, array('max_length'=>255));
+			echo form_button($locale['472'], 'update_poll_title', 'update_poll_title', $locale['472'], array('class'=>'btn-default m-r-10'));
+			echo form_button($locale['473'], 'delete_title', 'delete_title', $locale['473']);
+			echo "</td>\n</tr>\n";
+			echo form_button($locale['473'], 'delete_poll', 'delete_poll', $locale['473']);
+			echo "</td>\n</tr>\n";
 			$i = 1;
 			if (isset($poll_opts) && is_array($poll_opts)) {
 				foreach ($poll_opts as $poll_option) {
-					echo "<tr>\n<td width='145' class='tbl2'>".$locale['470']." ".$i."</td>\n";
-					echo "<td class='tbl1'><input type='text' name='poll_options[$i]' value='".$poll_option."' class='textbox' maxlength='255' style='width:150px' />\n";
-					echo "<input type='submit' name='update_poll_option[$i]' value='".$locale['472']."' class='button' />\n";
-					echo "<input type='submit' name='delete_poll_option[$i]' value='".$locale['473']."' class='button' />\n</td>\n</tr>\n";
+					echo "<tr>\n<td width='145' class='tbl2'><label for='poll_options[$i]'>".$locale['470']." ".$i."</label></td>\n";
+					echo "<td class='tbl1'>\n";
+					echo form_text('', "poll_options[$i]", "poll_options[$i]", $poll_option, array('max_length'=>255));
+
+					echo form_button($locale['472'], "update_poll_option[$i]", "update_poll_option[$i]", $locale['472'], array('class'=>'btn-default m-r-10'));
+					echo form_button($locale['473'], "delete_poll_option[$i]", "delete_poll_option[$i]", $locale['473'],  array('class'=>'btn-default m-r-10'));
+					echo "</td>\n</tr>\n";
 					$i++;
 				}
-				echo "<tr>\n<td width='145' class='tbl2'>".$locale['470']." ".$i."</td>\n";
-				echo "<td class='tbl1'><input type='text' name='poll_options[$i]' class='textbox' maxlength='255' style='width:150px' />\n";
-				echo "<input type='submit' name='add_poll_option[$i]' value='".$locale['471']."' class='button' /></td>\n</tr>\n";
+				echo "<tr>\n<td width='145' class='tbl2'><label for='poll_options[$i]'>".$locale['470']." ".$i."</label></td>\n";
+				echo "<td class='tbl1'>\n";
+				echo form_text('', "poll_options[$i]", "poll_options[$i]", '', array('max_length'=>255));
+				echo form_button($locale['471'], "add_poll_option[$i]", "add_poll_option[$i]", $locale['471']);
+				echo "</td>\n</tr>\n";
+				//echo "<input type='submit' name='add_poll_option[$i]' value='".$locale['471']."' class='button' /></td>\n</tr>\n";
 			} else {
-				echo "<tr>\n<td width='145' class='tbl2'>".$locale['470']."</td>\n";
-				echo "<td class='tbl1'><input type='text' name='poll_options[$i]' class='textbox' maxlength='255' style='width:150px' />\n";
-				echo "<input type='submit' name='add_poll_option[$i]' value='".$locale['471']."' class='button' /></td>\n</tr>\n";
+				echo "<tr>\n<td width='145' class='tbl2'><label for='poll_options[$i]'>".$locale['470']."</label></td>\n";
+				echo "<td class='tbl1'>\n";
+				echo form_text('', "poll_options[$i]", "poll_options[$i]", '', array('max_length'=>255));
+				echo form_button($locale['471'], "add_poll_option[$i]", "add_poll_option[$i]", $locale['471']);
+				echo "</td>\n</tr>\n";
+
 			}
 		}
 	}
 	echo "<tr>\n<td align='center' colspan='2' class='tbl1'>\n";
-	echo "<input type='submit' name='previewchanges' value='".$locale['405']."' class='button' />\n";
-	echo "<input type='submit' name='savechanges' value='".$locale['409']."' class='button' />\n";
+	echo form_button($locale['405'], "previewchanges", "previewchanges", $locale['405'], array('class'=>'btn-primary m-r-10'));
+	echo form_button($locale['409'], "savechanges", "savechanges", $locale['409'], array('class'=>'btn-primary m-r-10'));
 	echo "</td>\n</tr>\n</table>\n</form>\n";
 	closetable();
 }

@@ -238,7 +238,7 @@ if (($rows > $posts_per_page) || ($can_post || $can_reply)) {
 			echo "<img src='".get_image("newthread")."' alt='".$locale['566']."' style='border:0px' /></a>\n";
 		}
 		if (!$fdata['thread_locked'] && $can_reply) {
-			echo "<a href='post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>";
+			echo "<a href='".FORUM."post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>";
 			echo "<img src='".get_image("reply")."' alt='".$locale['565']."' style='border:0px' /></a>\n";
 		}
 		echo "</td>\n";
@@ -296,7 +296,8 @@ if ($rows > $posts_per_page) {
 	$page_nav = "<div id='pagenav-top' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $posts_per_page, $rows, 3, FORUM."viewthread.php?thread_id=".$_GET['thread_id'].$filter_url."")."</div>\n";
 }
 // Add filter
-echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right','type' => 'button'));
+echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right',
+																												  'type' => 'button'));
 echo $page_nav;
 echo "</div>\n";
 
@@ -351,7 +352,6 @@ if ($rows != 0) {
 			redirect($filter_url);
 		}
 	}
-
 	dbquery("UPDATE ".DB_THREADS." SET thread_postcount='$rows', thread_lastpostid='$last_post', thread_views=thread_views+1 WHERE thread_id='".$_GET['thread_id']."'");
 	/* poll */
 	if ($poll_on_first_page_only && $poll_there && $poll_data) {
@@ -431,9 +431,9 @@ if ($rows != 0) {
 			if (iMEMBER && $settings['thread_notify']) {
 				if (dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
 					$result2 = dbquery("UPDATE ".DB_THREAD_NOTIFY." SET notify_datestamp='".time()."', notify_status='1' WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
-					echo "<a href='postify.php?post=off&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['515']."</a>";
+					echo "<a href='".FORUM."postify.php?post=off&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['515']."</a>";
 				} else {
-					echo "<a href='postify.php?post=on&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['516']."</a>";
+					echo "<a href='".FORUM."postify.php?post=on&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['516']."</a>";
 				}
 			}
 			echo "&nbsp;<a href='".BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."'><img src='".get_image("printer")."' alt='".$locale['519']."' title='".$locale['519']."' style='border:0;vertical-align:middle' /></a></div>\n";
@@ -551,12 +551,12 @@ if ($rows != 0) {
 		echo "</div>\n<div style='float:right' class='small'>\n";
 		if (iMEMBER && ($can_post || $can_reply)) {
 			if (!$fdata['thread_locked']) {
-				echo "<a href='post.php?action=reply&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."&amp;quote=".$data['post_id']."'><img src='".get_image("quote")."' alt='".$locale['569']."' style='border:0px;vertical-align:middle' /></a>\n";
+				echo "<a href='".FORUM."post.php?action=reply&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."&amp;quote=".$data['post_id']."'><img src='".get_image("quote")."' alt='".$locale['569']."' style='border:0px;vertical-align:middle' /></a>\n";
 				if (iMOD || (($lock_edit && $last_post['post_id'] == $data['post_id'] || !$lock_edit)) && ($userdata['user_id'] == $data['post_author']) && ($settings['forum_edit_timelimit'] <= 0 || time()-$settings['forum_edit_timelimit']*60 < $data['post_datestamp'])) {
-					echo "<a href='post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."'><img src='".get_image("forum_edit")."' alt='".$locale['568']."' style='border:0px;vertical-align:middle' /></a>\n";
+					echo "<a href='".FORUM."post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."'><img src='".get_image("forum_edit")."' alt='".$locale['568']."' style='border:0px;vertical-align:middle' /></a>\n";
 				}
 			} elseif (iMOD) {
-				echo "<a href='post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."'><img src='".get_image("forum_edit")."' alt='".$locale['568']."' style='border:0px;vertical-align:middle' /></a>\n";
+				echo "<a href='".FORUM."post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."'><img src='".get_image("forum_edit")."' alt='".$locale['568']."' style='border:0px;vertical-align:middle' /></a>\n";
 			}
 		}
 		echo "</div>\n</td>\n</tr>\n";
@@ -616,13 +616,16 @@ if (iMOD && $rows) {
 	echo form_button($locale['518'], 'delete_posts', 'delete_posts', $locale['518'], array('class' => 'btn-danger m-r-10'));
 	echo closeform();
 	echo "</div>\n<div class='forum-table-container panel-footer clearfix'>\n";
-	echo openform('modopts', 'modopts', 'post', FORUM."options.php?forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('downtime' => 0));
-	$mod_options = array('renew' => $locale['527'], 'delete' => $locale['521'], 'renew' => $locale['527'],
+	echo openform('modopts', 'modopts', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').FORUM."options.php?forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('downtime' => 0));
+	$mod_options = array('renew' => $locale['527'],
+						 'delete' => $locale['521'],
+						 'renew' => $locale['527'],
 						 $fdata['thread_locked'] ? "unlock" : "lock" => $fdata['thread_locked'] ? $locale['523'] : $locale['522'],
 						 $fdata['thread_sticky'] ? "nonsticky" : "sticky" => $fdata['thread_sticky'] ? $locale['525'] : $locale['524'],
 						 'move' => $locale['526']);
 	echo "<label for='step'>".$locale['520']."</label>\n<br/>\n";
-	echo form_select('', 'step', 'step', $mod_options, '', array('placeholder' => $locale['choose'], 'allowclear' => 1,
+	echo form_select('', 'step', 'step', $mod_options, '', array('placeholder' => $locale['choose'],
+																 'allowclear' => 1,
 																 'class' => 'pull-left'));
 	echo form_button($locale['528'], 'go', 'go', $locale['528'], array('class' => 'btn-default m-l-10 pull-left'));
 	echo closeform();
@@ -639,11 +642,11 @@ if ($can_post || $can_reply) {
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td align='right' style='padding-top:10px'>\n<!--post_forum_buttons-->\n";
 	if ($can_post) {
-		echo "<a href='post.php?action=newthread&amp;forum_id=".$fdata['forum_id']."'>";
+		echo "<a href='".FORUM."post.php?action=newthread&amp;forum_id=".$fdata['forum_id']."'>";
 		echo "<img src='".get_image("newthread")."' alt='".$locale['566']."' style='border:0px' /></a>\n";
 	}
 	if (!$fdata['thread_locked'] && $can_reply) {
-		echo "<a href='post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>";
+		echo "<a href='".FORUM."post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>";
 		echo "<img src='".get_image("reply")."' alt='".$locale['565']."' style='border:0px' /></a>\n";
 	}
 	echo "</td>\n</tr>\n</table>\n";

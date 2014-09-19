@@ -27,7 +27,7 @@ if (!isset($lastvisited) || !isnum($lastvisited)) {
 	$lastvisited = time();
 }
 if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) {
-	//redirect("index.php");
+	redirect("index.php");
 }
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 	$_GET['rowstart'] = 0;

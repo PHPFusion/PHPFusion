@@ -39,7 +39,11 @@ if (isset($_POST['previewreply'])) {
 	}
 	$is_mod = iMOD && iUSER < "102" ? TRUE : FALSE;
 	opentable($locale['402']);
-	echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><span class='small'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</span></div>\n";
+	//echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><span class='small'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</span></div>\n";
+	echo "<ol class='forum_breadcrumbs breadcrumb'>\n";
+	echo "<li><a href='".FORUM."index.php'>".$locale['400']."</a></li>\n";
+	echo $caption;
+	echo "</ol>\n";
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border table table-responsive'>\n<tr>\n";
 	echo "<td colspan='2' class='tbl2'><strong>".$tdata['thread_subject']."</strong></td>\n</tr>\n";
 	echo "<tr>\n<td class='tbl2' style='width:140px;'>".profile_link($userdata['user_id'], $userdata['user_name'], $userdata['user_status'])."</td>\n";
@@ -166,16 +170,18 @@ if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
 	add_to_title($locale['global_201'].$locale['403']);
 	echo "<!--pre_postreply-->";
 	opentable($locale['403']);
-	if (!isset($_POST['previewreply'])) echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+	if (!isset($_POST['previewreply'])) {
+		echo "<ol class='forum_breadcrumbs breadcrumb'>\n";
+		echo "<li><a href='".FORUM."index.php'>".$locale['400']."</a></li>\n";
+		echo $caption;
+		echo "</ol>\n";
+	}
 
 	echo openform('input_form', 'input_form', 'post', FUSION_SELF."?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('enc_type'=>1));
-
-
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border table table-responsive'>\n<tbody>\n<tr>\n";
 	echo "<td valign='top' width='145' class='tbl2'><label for='message'>".$locale['461']."</label><span class='required'>*</span></td>\n";
 	echo "<td class='tbl1'>\n";
 	echo form_textarea('', 'message', 'message', $message, array('bbcode'=>1, 'required'=>1));
-	//echo "<textarea name='message' cols='60' rows='15' class='textbox' style='width:98%'>$message</textarea></td>\n";
 	echo "</td>\n</tr>\n";
 	echo "<td valign='top' width='145' class='tbl2'>".$locale['463']."</td>\n";
 	echo "<td class='tbl1'>\n";
