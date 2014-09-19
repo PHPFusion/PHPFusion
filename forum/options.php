@@ -16,7 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+/* No SEO on non-public page */
+require_once dirname(__FILE__)."../../maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/options.php";
 if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
@@ -60,9 +61,11 @@ if (!iMOD) {
 if (isset($_POST['step']) && $_POST['step'] != "") {
 	$_GET['step'] = $_POST['step'];
 }
+
 if (isset($_POST['canceldelete'])) {
 	redirect("viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']);
 }
+
 if (isset($_GET['step']) && $_GET['step'] == "renew") {
 	$result = dbquery("SELECT p.post_id, p.post_author, p.post_datestamp FROM ".DB_POSTS." p
 		INNER JOIN ".DB_THREADS." t ON p.thread_id=t.thread_id
@@ -244,5 +247,6 @@ if (isset($_GET['step']) && $_GET['step'] == "renew") {
 } else {
 	redirect("index.php");
 }
+
 require_once THEMES."templates/footer.php";
 ?>

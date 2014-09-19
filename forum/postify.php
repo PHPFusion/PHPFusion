@@ -53,7 +53,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		if (checkgroup($data['forum_access'])) {
-			add_to_head("<meta http-equiv='refresh' content='2; url=viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' />\n");
+			add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' />\n");
 			$output = TRUE;
 			opentable($locale['451']);
 			echo "<div class='alert alert-info' style='text-align:center'><br />\n";
@@ -64,9 +64,9 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 				$result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
 				echo $locale['453']."<br /><br />\n";
 			}
-			echo "<a href='viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n";
-			echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
-			echo "<a href='index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
+			echo "<a href='".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n";
+			echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
+			echo "<a href='".FORUM."index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
 			closetable();
 		}
 	}
@@ -84,10 +84,10 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
 			redirect("index.php");
 		}
-		echo "<a href='viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n";
-		add_to_head("<meta http-equiv='refresh' content='2; url=viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
+		echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n";
+		add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
 	}
-	echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
+	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
 	echo "<a href='index.php'>".$locale['449']."</a><br /><br /></div>\n";
 	closetable();
 } elseif ($_GET['post'] == "reply") {
@@ -171,7 +171,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 		redirect("index.php");
 	}
 	add_to_title($locale['global_201'].$locale['409']);
-	add_to_head("<meta http-equiv='refresh' content='2; url=viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
+	add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 	opentable($locale['409']);
 	echo "<div class='alert ".($errorb ? 'alert-warning' : 'alert-info')."' style='text-align:center'><br />\n";
 	if ($errorb) {
@@ -179,9 +179,9 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	} else {
 		echo $locale['446']."<br /><br />\n";
 	}
-	echo "<a href='viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['447']."</a> ::\n";
-	echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
-	echo "<a href='index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
+	echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['447']."</a> ::\n";
+	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
+	echo "<a href='".FORUM."index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
 	closetable();
 }
 require_once THEMES."templates/footer.php";
