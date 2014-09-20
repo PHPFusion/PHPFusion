@@ -40,20 +40,30 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	if ($rows != 0) {
 		$counter = 0;
 		$columns = 2;
-		echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
+		echo "<div class='row m-0'>\n";
+
 		while ($data = dbarray($result)) {
-			if ($counter != 0 && ($counter%$columns == 0)) {
-				echo "</tr>\n<tr>\n";
-			}
+			$image = get_image('folder');
 			$num = dbcount("(weblink_cat)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."'");
-			echo "<td valign='top' width='50%' class='tbl'><a href='".FUSION_SELF."?cat_id=".$data['weblink_cat_id']."'>".$data['weblink_cat_name']."</a> <span class='small2'>($num)</span>";
-			if ($data['weblink_cat_description'] != "") {
-				echo "<br />\n<span class='small'>".$data['weblink_cat_description']."</span>";
+			if ($counter != 0 && ($counter%$columns == 0)) {
+				echo "</div>\n<div class='row m-0'>\n";
 			}
-			echo "</td>\n";
+			echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 p-t-20'>\n";
+
+				echo "<div class='media'>\n";
+				echo "<a class='pull-left flleft' href='".FUSION_SELF."?cat_id=".$data['weblink_cat_id']."'>\n";
+				echo "<img class='media-object' src='".$image."' alt='".$data['weblink_cat_name']."'>\n";
+				echo "</a>\n";
+				echo "<div class='media-body'>\n";
+				echo "<h4 class='media-heading'><a href='".FUSION_SELF."?cat_id=".$data['weblink_cat_id']."'>".$data['weblink_cat_name']."</a> <span class='small'>$num</span></h4>\n";
+				if ($data['weblink_cat_description'] != "") {
+					echo "<span class='small'>".$data['weblink_cat_description']."</span>";
+				}
+				echo "</div>\n</div>\n";
+			echo "</div>\n";
 			$counter++;
 		}
-		echo "</tr>\n</table>\n";
+		echo "</div>\n";
 	} else {
 		echo "<div style='text-align:center'><br />\n".$locale['430']."<br /><br />\n</div>\n";
 	}
@@ -66,6 +76,13 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 		if (checkgroup($cdata['weblink_cat_access'])) {
 			$res = 1;
 			add_to_title($locale['global_201'].$cdata['weblink_cat_name']);
+
+			// go for breadcrumbs.
+			echo "<ol class='breadcrumb'>\n";
+			echo "<li><a href='".BASEDIR."weblinks.php'>".$locale['400']."</a></li>\n";
+			echo "<li>".$cdata['weblink_cat_name']."</a></li>\n";
+			echo "</ol>\n";
+
 			opentable($locale['400'].": ".$cdata['weblink_cat_name']);
 			$rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."'");
 			if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
@@ -77,23 +94,22 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 				$i = 1;
 				while ($data = dbarray($result)) {
 					if ($data['weblink_datestamp']+604800 > time()+($settings['timeoffset']*3600)) {
-						$new = " <span class='small'>".$locale['410']."</span>";
+						$new = " <span class='label label-success m-r-10'>".$locale['410']."</span>";
 					} else {
 						$new = "";
 					}
-					echo "<table width='100%' cellpadding='0' cellspacing='1' class='tbl-border'>\n";
-					echo "<tr>\n<td colspan='2' class='tbl2'><a href='".FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;weblink_id=".$data['weblink_id']."' target='_blank'>".$data['weblink_name']."</a>$new</td>\n</tr>\n";
-					if ($data['weblink_description'] != "") echo "<tr>\n<td colspan='2' class='tbl1'>".nl2br(stripslashes($data['weblink_description']))."</td>\n</tr>\n";
-					echo "<tr>\n<td width='30%' class='tbl2'><strong>".$locale['411']."</strong> ".showdate("shortdate", $data['weblink_datestamp'])."</td>\n";
-					echo "<td width='70%' class='tbl1'><strong>".$locale['412']."</strong> ".$data['weblink_count']."</td>\n</tr>\n</table>\n";
-					if ($i != $numrows) {
-						echo "<div align='center'><img src='".get_image("blank")."' alt='' height='15' width='1' /></div>\n";
-						$i++;
-					}
+					echo "<aside class='display-inline-block ".($i > 1 ? 'm-t-20' : '' )."' style='width:100%;'>\n";
+					echo "<h4><a href='".BASEDIR."weblinks.php?cat_id=".$_GET['cat_id']."&amp;weblink_id=".$data['weblink_id']."' target='_blank'><strong>".$data['weblink_name']."</strong></a></h4>\n";
+					echo $new;
+					echo "<span class='text-lighter display-inline m-r-20'><strong>".$locale['411']."</strong> ".showdate("shortdate", $data['weblink_datestamp'])."</span>\n";
+					echo "<span class='text-lighter display-inline'><strong>".$locale['412']."</strong> ".$data['weblink_count']."</span>\n";
+					if ($data['weblink_description'] != "") echo "<div class='weblink-text text-smaller'>".nl2br(stripslashes($data['weblink_description']))."</div>\n";
+					echo "</aside>\n";
+					$i++;
 				}
 				closetable();
 				if ($rows > $settings['links_per_page']) {
-					echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['links_per_page'], $rows, 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;")."\n</div>\n";
+					echo "<div class='text-center m-t-10' align='center'>\n".makepagenav($_GET['rowstart'], $settings['links_per_page'], $rows, 3, BASEDIR."weblinks.php?cat_id=".$_GET['cat_id']."&amp;")."\n</div>\n";
 				}
 			} else {
 				echo $locale['431']."\n";

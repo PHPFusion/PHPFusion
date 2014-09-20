@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 Nick Jones
+| Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: threads_rewrite_include.php
-| Author: Ankur Thakur
+| File Category: Core Rewrite Modules for 7.03
+| Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -32,8 +32,6 @@ $pattern = array(
 	"forum/%action%/%thread_id%/%forum_id%/%post_id%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%", // edit
 	"forum/%action%/%thread_id%/%forum_id%/%post_id%/%quote_id%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%", // quote
 );
-//http://192.168.68.200/dev7/forum/viewthread.php?thread_id=5&pid=86#post_86
-// quote is not working
 
 $dir = FORUM;
 $dbname = DB_POSTS;

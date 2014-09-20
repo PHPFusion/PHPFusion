@@ -18,6 +18,17 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-$permalink_name = $locale['pl_post_title'];
-$permalink_desc = $locale['pl_post_desc'];
+
+$regex = array(
+	"%weblink_id%" => "([0-9]+)",
+	"%rowstart%" => "([0-9]+)",
+	"%weblink_cat_id%" => "([0-9]+)",
+);
+$pattern = array(
+	"links/%weblink_id%/%weblink_cat_id%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
+	"links/browse/%weblink_cat_id%/%rowstart%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%"
+);
+
+$dir_path = BASEDIR;
+
 ?>
