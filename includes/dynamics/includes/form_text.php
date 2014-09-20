@@ -47,6 +47,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 		$prepend_value = '';
 		$prepend_size = '';
 		$prepend_class = '';
+		$autocomplete_off = 0;
 	} else {
 		$icon = (array_key_exists('icon', $array)) ? $array['icon'] : "";
 		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "";
@@ -82,6 +83,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 		$length = (array_key_exists("max_length", $array)) ? $array['max_length'] : 50;
 		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
 		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
+		$autocomplete_off = (array_key_exists("autocomplete_off", $array) && $array['autocomplete_off'] == 1) ? 1 : 0;
 	}
 	$html .= "<div id='$input_id-field' class='form-group m-b-0 $class ".($icon ? 'has-feedback' : '')."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
@@ -90,7 +92,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 		$html .= "<div class='input-group'>\n";
 	}
 	$html .= ($prepend_button) ? "<span class='input-group-btn'>\n<button type='$prepend_type' value='submit-".$input_name."' class='btn $prepend_size $prepend_class'>$prepend_value</button></span>" : '';
-	$html .= "<input type='$type' class='form-control textbox' ".($width ? "style='width:$width;'" : '')." ".($length ? "maxlength='".$length."'" : '')." name='$input_name' id='".$input_id."' value='$input_value' placeholder='".$placeholder."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
+	$html .= "<input type='$type' class='form-control textbox' ".($width ? "style='width:$width;'" : '')." ".($length ? "maxlength='".$length."'" : '')." name='$input_name' id='".$input_id."' value='$input_value' placeholder='".$placeholder."' ".($autocomplete_off ? "autocomplete='off'" : '')." ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
 	$html .= ($append_button) ? "<span class='input-group-btn'><button type='$append_type' value='submit-".$input_name."' class='btn $append_size $append_class'>$append_value</button></span>" : '';
 	$html .= ($icon) ? "<div class='form-control-feedback'><i class='glyphicon $icon'></i></div>\n" : '';
 	if ($append_button || $prepend_button) {
