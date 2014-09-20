@@ -193,7 +193,6 @@ echo "<li><a href='".FORUM."index.php?cat=".$fdata['forum_cat']."'>".$fdata['for
 echo "<li><a href='".FORUM."viewforum.php?forum_id=".$fdata['forum_id']."'>".$fdata['forum_name']."</a></li>\n";
 echo "</ol>\n";
 
-
 // thread & filters
 if (isset($_GET['filter']) && $_GET['filter'] == 1) {
 	$time = isset($_GET['time']) && isnum($_GET['time']) ? $_GET['time'] : '';
@@ -227,7 +226,6 @@ if (isset($_GET['filter']) && $_GET['filter'] == 1) {
 } else {
 	list($rows, $last_post) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id) FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND post_hidden='0' GROUP BY thread_id"));
 }
-
 
 if (($rows > $posts_per_page) || ($can_post || $can_reply)) {
 	echo "<table cellspacing='0' cellpadding='0' width='100%'>\n<tr>\n";
@@ -634,7 +632,7 @@ if (iMOD && $rows) {
 
 if ($rows > $posts_per_page) {
 	echo "<div class='clearfix'>\n<div id='pagenav-bottom' class='pull-right display-inline-block m-r-10'>\n";
-	echo makepagenav($_GET['rowstart'], $posts_per_page, $rows, 3, FUSION_SELF."?thread_id=".$_GET['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : "")."&amp;")."\n";
+	echo makepagenav($_GET['rowstart'], $posts_per_page, $rows, 3, FORUM."viewthread.php?thread_id=".$_GET['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : "")."&amp;")."\n";
 	echo "</div>\n</div>\n";
 }
 
@@ -652,10 +650,13 @@ if ($can_post || $can_reply) {
 	echo "</td>\n</tr>\n</table>\n";
 }
 closetable();
+
+
 if ($can_reply && !$fdata['thread_locked']) {
 	require_once INCLUDES."bbcode_include.php";
 	opentable($locale['512']);
-	echo openform('input_form', 'input_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id']);
+	$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$fdata['forum_id']."&amp;thread_id=".$_GET['thread_id'];
+	echo openform('input_form', 'input_form', 'post', $form_action);
 	echo "<table class='tbl-border center table table-responsive'>\n<tbody>\n<tr>\n<td>\n";
 	echo form_textarea($locale['573'], 'message', 'message', '', array('bbcode' => 1, 'required' => 1));
 	echo "</td>\n</tr>\n<tr>\n";
@@ -673,8 +674,8 @@ if ($can_reply && !$fdata['thread_locked']) {
 	}
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
-	echo "<td align='center' class='tbl1'>\n";
-	echo form_button($locale['514a'], 'previewreply', 'previewreply', $locale['514a'], array('class' => 'btn-primary m-r-10'));
+	echo "<td align='right' class='text-right tbl1'>\n";
+	echo $settings['site_seo'] ? '' : form_button($locale['514a'], 'previewreply', 'previewreply', $locale['514a'], array('class' => 'btn-primary m-r-10')); // post lost.
 	echo form_button($locale['514'], 'postreply', 'postreply', $locale['514'], array('class' => 'btn-primary m-r-10'));
 	echo "</td>\n";
 	echo "</tr>\n</tbody>\n</table>\n";

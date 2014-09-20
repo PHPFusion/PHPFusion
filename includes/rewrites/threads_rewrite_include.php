@@ -33,13 +33,12 @@ $regex = array(
    	);
 
 $pattern = array(
-	"forum/thread" => "forum/viewthread.php",
-	"forum/thread/%thread_id%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%",
-	"forum/thread/%thread_id%/browse/%thread_rowstart%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
-	"forum/thread/%thread_id%/post/%action%" => "forum/post.php?action=%action%&amp;&forum_id=%forum_id%&thread_id=%thread_id%",
-	"forum/thread/%thread_id%/filter/%time%/%type%/%order%/%filter%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;time=%time%&amp;type=%type%&amp;order=%order%&amp;filter=%filter%",
-	"forum/thread/%thread_id%/%forum_id%/post/%thread_name%/%action%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%",
-	"forum/thread/%thread_id%/filter/%time%/%type%/%order%/%filter%/%thread_rowstart%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;time=%time%&amp;type=%type%&amp;order=%order%&amp;filter=%filter%&amp;rowstart=%thread_rowstart%",
+	"thread" => "forum/viewthread.php",
+	"thread/%thread_id%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%",
+	"thread/%thread_id%/%post_id%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%",
+	"thread/%thread_id%/browse/%thread_rowstart%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
+	"thread/%thread_id%/filter/%time%/%type%/%order%/%filter%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;time=%time%&amp;type=%type%&amp;order=%order%&amp;filter=%filter%",
+	"thread/%thread_id%/filter/%time%/%type%/%order%/%filter%/%thread_rowstart%/%thread_name%" => "forum/viewthread.php?thread_id=%thread_id%&amp;time=%time%&amp;type=%type%&amp;order=%order%&amp;filter=%filter%&amp;rowstart=%thread_rowstart%",
 );
 
 /* $alias_pattern = array("thread/%alias%" => "forum/%alias_target%",

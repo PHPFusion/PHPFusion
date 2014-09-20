@@ -39,7 +39,7 @@ if (isset($_POST['previewreply'])) {
 	}
 	$is_mod = iMOD && iUSER < "102" ? TRUE : FALSE;
 	opentable($locale['402']);
-	//echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><span class='small'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</span></div>\n";
+
 	echo "<ol class='forum_breadcrumbs breadcrumb'>\n";
 	echo "<li><a href='".FORUM."index.php'>".$locale['400']."</a></li>\n";
 	echo $caption;
@@ -59,6 +59,7 @@ if (isset($_POST['previewreply'])) {
 	echo "</tr>\n</table>\n";
 	closetable();
 }
+
 if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
 	$message = form_sanitizer($_POST['message'], '', 'message'); // trim(stripinput(censorwords($_POST['message'])));
 	$flood = FALSE;
@@ -146,6 +147,7 @@ if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
 		redirect("postify.php?post=reply&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=$post_id");
 	}
 } else {
+
 	if (!isset($_POST['previewreply'])) {
 		$message = "";
 		$disable_smileys_check = "";
@@ -158,6 +160,7 @@ if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
 			}
 		}
 	}
+
 	if (isset($_GET['quote']) && isnum($_GET['quote'])) {
 		$result = dbquery("SELECT post_message, user_name FROM ".DB_POSTS."
 			INNER JOIN ".DB_USERS." ON ".DB_POSTS.".post_author=".DB_USERS.".user_id
@@ -167,6 +170,7 @@ if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
 			$message = "[quote name=".$data['user_name']." post=".$_GET['quote']."]".strip_bbcodes($data['post_message'])."[/quote]";
 		}
 	}
+
 	add_to_title($locale['global_201'].$locale['403']);
 	echo "<!--pre_postreply-->";
 	opentable($locale['403']);
@@ -176,8 +180,10 @@ if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
 		echo $caption;
 		echo "</ol>\n";
 	}
+	/* Failed to fetch POST on previewpost if SEO is on - Someone fix this */
+	//print_p($_POST);
 
-	echo openform('input_form', 'input_form', 'post', FUSION_SELF."?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('enc_type'=>1));
+	echo openform('input_form', 'input_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('enc_type'=>1));
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border table table-responsive'>\n<tbody>\n<tr>\n";
 	echo "<td valign='top' width='145' class='tbl2'><label for='message'>".$locale['461']."</label><span class='required'>*</span></td>\n";
 	echo "<td class='tbl1'>\n";
@@ -210,8 +216,8 @@ if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
 		echo "</td>\n";
 		echo "</tr>\n";
 	}
-	echo "<tr>\n<td align='center' colspan='2' class='tbl1'>\n";
-	echo form_button($locale['402'], 'previewreply', 'previewreply', $locale['402'], array('class'=>'btn-primary m-r-10'));
+	echo "<tr>\n<td align='right' colspan='2' class='tbl1 text-right'>\n";
+	echo $settings['site_seo'] ? '' : form_button($locale['402'], 'previewreply', 'previewreply', $locale['402'], array('class'=>'btn-primary m-r-10'));
 	echo form_button($locale['404'], 'postreply', 'postreply', $locale['404'], array('class'=>'btn-primary m-r-10'));
 	echo "</td>\n</tr>\n</tbody>\n</table>\n";
 	echo closeform();

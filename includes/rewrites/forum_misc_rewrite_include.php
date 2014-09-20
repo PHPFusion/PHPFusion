@@ -28,11 +28,11 @@ $regex = array(
 );
 
 $pattern = array(
+	"forum/%action%/%thread_id%/%forum_id%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%", // reply
 	"forum/%action%/%thread_id%/%forum_id%/%post_id%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%", // edit
 	"forum/%action%/%thread_id%/%forum_id%/%post_id%/%quote_id%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%", // quote
-	"forum/viewpost/%thread_id%/%post_id%#post_%post_id%" => "forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%#post_%post_id%"
 );
-
+//http://192.168.68.200/dev7/forum/viewthread.php?thread_id=5&pid=86#post_86
 // quote is not working
 
 $dir = FORUM;
