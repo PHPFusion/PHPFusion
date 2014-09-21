@@ -1,7 +1,7 @@
 <?php
 $locale['400'] = "Web Links";
 // Download File Information
-$locale['410'] = "[NEW]";
+$locale['410'] = "New";
 $locale['411'] = "Date Added:";
 $locale['412'] = "Visits:";
 // Downloads Notices

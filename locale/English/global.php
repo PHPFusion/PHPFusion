@@ -256,16 +256,7 @@ $locale['global_900'] = "Unable to convert HEX to DEC";
 $locale['global_ML100'] = "Language:";
 $locale['global_ML101'] = "- Select Language -";
 $locale['global_ML102'] = "Site language";
-// Tokens
-$locale['token_error_title'] = "Token Error";
-$locale['token_error'] = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";
-$locale['token_error_1'] = "Session not started.";
-$locale['token_error_2'] = "Token was not posted.";
-$locale['token_error_3'] = "Invalid token.";
-$locale['token_error_4'] = "Invalid UserID within token.";
-$locale['token_error_5'] = "Invalid token datestamp.";
-$locale['token_error_6'] = "Post was made too fast.";
-$locale['token_error_7'] = "Invalid token hash.";
-$locale['token_error_8'] = "Invalid token format.";
+
 $locale['flood'] = "You are barred to post until the flood period cooldown is over. Please wait for %t";
+
 ?>
