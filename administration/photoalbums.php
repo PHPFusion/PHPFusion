@@ -73,10 +73,8 @@ if (function_exists('gd_info')) {
 			if (!isset($_POST['confirm_password'])) {
 				opentable($locale['430']);
 				echo "<div style='text-align:center'>\n";
-				echo openform('aform', 'aform', 'post', FUSION_SELF.$aidlink."&amp;action=delete&amp;album_id=".$_GET['album_id'], array('downtime' => 0,
-																																		 'notice' => 0));
-				echo form_text($locale['431'], 'admin_passwd', 'admin_passwd', '', array('password' => 1,
-																						 'class' => 'm-b-10'));
+				echo openform('aform', 'aform', 'post', FUSION_SELF.$aidlink."&amp;action=delete&amp;album_id=".$_GET['album_id'], array('downtime' => 0, 'notice' => 0));
+				echo form_text($locale['431'], 'admin_passwd', 'admin_passwd', '', array('password' => 1, 'class' => 'm-b-10'));
 				echo form_button($locale['432'], 'confirm_password', 'confirm_password', $locale['432'], array('class' => 'btn-primary m-r-10'));
 				echo form_button($locale['433'], 'cancel', 'cancel', $locale['433'], array('class' => 'btn-primary m-r-10'));
 				echo "</form>\n</div>\n";
@@ -253,52 +251,46 @@ if (function_exists('gd_info')) {
 	while (list($key, $user_group) = each($user_groups)) {
 		$access_opts[$user_group['0']] = $user_group['1'];
 	}
-	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 0, 'enctype' => '1'));
-	echo "<table cellspacing='0' cellpadding='0' class='center table table-responsive'>\n<tr>\n";
-	echo "<td class='tbl'><label for='album_title'>".$locale['440']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('', 'album_title', 'album_title', $album_title, array('max_length' => 100, 'required' => 1,
-																		 'error_text' => $locale['409']));
-	echo "</td>\n</tr>\n";
+	echo openform('input_form', 'input_form', 'post', $formaction, array('downtime' => 0, 'enctype' => '1'));
+	if ((isset($_GET['action']) && $_GET['action'] == "edit") && ($album_thumb && file_exists(PHOTOS.$album_thumb))) {
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<div class='panel panel-default'>\n";
+		echo "<img class='img-responsive' src='".PHOTOS.$album_thumb."' alt='album_thumb' />";
+		echo "<div class='panel-body'>\n";
+
+		echo "<a class='btn btn-block btn-primary button' href='".FUSION_SELF.$aidlink."&amp;action=deletethumb&amp;album_id=".$_GET['album_id']."'>".$locale['469']."</a>\n";
+		echo "</div>\n</div>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
+	} else {
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
+	}
+	echo form_text($locale['440'], 'album_title', 'album_title', $album_title, array('max_length' => 100, 'required' => 1, 'error_text' => $locale['409']));
 	if (multilang_table("PG")) {
-		echo "<tr><td class='tbl'><label for='album_language'>".$locale['global_ML100']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select('', 'album_language', 'album_language', $language_opts, $album_language, array('placeholder' => 1));
-		echo "</td>\n</tr>\n";
+		echo form_select($locale['global_ML100'], 'album_language', 'album_language', $language_opts, $album_language, array('placeholder' => 1));
 	} else {
 		echo form_hidden('', 'album_language', 'album_language', $album_language);
 	}
-	echo "<tr>\n";
-	echo "<td valign='top' class='tbl'><label for='album_description'>".$locale['441']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_textarea('', 'album_description', 'album_description', $album_description);
-	echo display_bbcodes("300px", "album_description", "inputform", "b|i|u|center|small|url|mail|img|quote")."</td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td class='tbl'><label for='album_access'>".$locale['442']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_select('', 'album_access', 'album_access', $access_opts, $album_access, array('placeholder' => 1,
-																							'class' => 'pull-left m-r-10'));
-	echo "</td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td class='tbl'><label for='album_order'>".$locale['443']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('', 'album_order', 'album_order', $album_order, array('number' => 1, 'width' => '100px'));
-	echo "</td>\n</tr>\n<tr>\n";
-	echo "<td valign='top' class='tbl'>".$locale['444'];
-	if ((isset($_GET['action']) && $_GET['action'] == "edit") && ($album_thumb && file_exists(PHOTOS.$album_thumb))) {
-		echo "<br /><br />\n<a class='small' href='".FUSION_SELF.$aidlink."&amp;action=deletethumb&amp;album_id=".$_GET['album_id']."'>".$locale['469']."</a></td>\n";
-		echo "<td class='tbl'><img src='".PHOTOS.$album_thumb."' alt='album_thumb' />";
-	} else {
-		echo "</td>\n<td class='tbl'><input type='file' name='album_pic_file' class='textbox' style='width:250px;' />";
+	echo form_textarea($locale['441'], 'album_description', 'album_description', $album_description, array('bbcodes'=>1));
+	echo form_select($locale['442'], 'album_access', 'album_access', $access_opts, $album_access, array('placeholder' => 1, 'class' => 'pull-left m-r-10'));
+	echo form_text($locale['443'], 'album_order', 'album_order', $album_order, array('number' => 1, 'width' => '100px'));
+
+	if (!isset($_GET['action'])) {
+		echo "<div class='form-group m-b-10'>\n";
+		echo "<label class='control-label p-l-0 col-xs-12 col-sm-12 col-md-12 col-lg-12'>".$locale['444']."</label><br/>\n";
+		echo "<input type='file' name='album_pic_file' class='textbox' style='width:250px;' />";
+		echo "</div>\n";
 	}
-	echo "</td>\n</tr>\n<tr>\n";
-	echo "<td colspan='2' align='center' class='tbl'><br />\n";
-	echo form_button($locale['445'], 'save_album', 'save_album', $locale['445'], array('class' => 'btn-primary'));
+
+	echo form_button($locale['445'], 'save_album', 'save_album', $locale['445'], array('class' => 'btn-primary m-t-10'));
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
-		echo form_button($locale['433'], 'cancel', 'cancel', $locale['433'], array('class' => 'm-l-10 btn-primary'));
+		echo form_button($locale['433'], 'cancel', 'cancel', $locale['433'], array('class' => 'm-l-10 btn-primary m-t-10'));
 	}
-	echo "</td>\n</tr>\n</table>\n</form>\n";
+	echo "</div>\n</div>\n";
+	echo closeform();
 	closetable();
+
 	opentable($locale['402']);
 	$rows = dbcount("(album_id)", "".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."'" : "")."");
 	if ($rows) {
@@ -335,20 +327,27 @@ if (function_exists('gd_info')) {
 				echo "</div>\n<div class='row'>\n";
 			}
 			echo "<div class='col-xs-12 col-sm-".floor(12/$settings['thumbs_per_row'])." col-md-".floor(12/$settings['thumbs_per_row'])." col-lg-".floor(12/$settings['thumbs_per_row'])."'>\n";
-			echo "<strong>".$data['album_title']."</strong><br /><br />\n<a href='photos.php".$aidlink."&amp;album_id=".$data['album_id']."'>";
+
+			echo "<div class='panel panel-default'>\n";
+			echo "<div class='img-container' style='overflow:hidden; max-height:100px;'>\n";
 			if ($data['album_thumb'] && file_exists(PHOTOS.$data['album_thumb'])) {
-				echo "<img class='img-responsive img-thumbnail' src='".PHOTOS.rawurlencode($data['album_thumb'])."' alt='".$locale['460']."' style='border:0px' />";
+				echo "<img class='img-responsive' src='".PHOTOS.rawurlencode($data['album_thumb'])."' alt='".$locale['460']."' style='width:200px; border:0px' />";
 			} else {
-				echo $locale['461'];
+				echo "<img class='img-responsive' src='holder.js/200x100/text:".$locale['460']."/grey' alt='".$locale['460']."' style='border:0px' />";
 			}
-			echo "</a><br /><br />\n<span class='small'>".$up;
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;album_id=".$data['album_id']."'>".$locale['468']."</a> &middot;\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;album_id=".$data['album_id']."' onclick=\"return PhotosWarning('".dbcount("(album_id)", DB_PHOTOS, "album_id='".$data['album_id']."'")."');\">".$locale['469']."</a> ".$down;
+			echo "</div>\n";
+			echo "<div class='panel-body'>\n";
+			echo "<a href='photos.php".$aidlink."&amp;album_id=".$data['album_id']."'><strong>".$data['album_title']."</strong></a>\n";
 			echo "<br /><br />\n".$locale['462'].showdate("shortdate", $data['album_datestamp'])."<br />\n";
 			echo $locale['463'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br />\n";
 			echo $locale['464'].getgroupname($data['album_access'])."<br />\n";
 			echo $locale['465'].dbcount("(photo_id)", DB_PHOTOS, "album_id='".$data['album_id']."'")."</span><br />\n";
-			echo "</div>\n";
+			echo "</div>\n<div class='panel-footer'>\n";
+			echo $up;
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;album_id=".$data['album_id']."'>".$locale['468']."</a> &middot;\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;album_id=".$data['album_id']."' onclick=\"return PhotosWarning('".dbcount("(album_id)", DB_PHOTOS, "album_id='".$data['album_id']."'")."');\">".$locale['469']."</a> ".$down;
+			echo "</div></div>\n";
+			echo "</div>\n"; // end col
 			$counter++;
 			$k++;
 		}

@@ -117,11 +117,15 @@ if (isset($_POST['savesettings'])) {
 		$htacess .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\n";
 		$htacess .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\n";
 		$htacess .= "RewriteRule .* - [F,L]\n";
+		//$htacess .= "# Exclude from rewrite all POST requests\n";
+		//$htacces .= "RewriteCond %{REQUEST_METHOD} =POST";
+		//$htacess .= "RewriteRule ^ - [L]\n";
 		$htacess .= "# Exclude /assets and /manager directories and images from rewrite rules\n";
 		$htacess .= "RewriteRule ^(administration|themes)/*$ - [L]\n";
 		$htacess .= "RewriteCond %{REQUEST_FILENAME} !-f\n";
 		$htacess .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
 		$htacess .= "RewriteCond %{REQUEST_FILENAME} !-l\n";
+		//$htacess .= "RewriteCond %{REQUEST_METHOD} !=POST\n";
 		$htacess .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\n";
 		$htacess .= "RewriteRule ^(.*?)$ rewrite.php [L]\n";
 		$temp = fopen(BASEDIR.".htaccess", "w");
