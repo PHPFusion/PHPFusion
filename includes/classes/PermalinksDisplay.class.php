@@ -467,8 +467,7 @@ class PermalinksDisplay {
 	* Replace : Replace the Patterns in the Output
 	*
 	* This function will replace the patterns in the current output with the required Replacement links.
-	*
-	* @access private
+	* MADMAN DEBUG MODE HERE - BUG KINGDOM.
 	*/
 	private function replacePatterns() {
 		if (is_array($this->pattern_search)) {
@@ -482,6 +481,7 @@ class PermalinksDisplay {
 							// Store all the Matches in the $matches array
 							preg_match_all($search, $this->output, $matches);
 							$this->regexDebug ? print_p($matches) : '';
+							//print_p($matches);
 							// Replace the Unique ID Tag with the Regex Code
 							// Example: Replace %news_id% with ([0-9]+)
 							if (isset($this->dbid[$type])) {
@@ -491,35 +491,39 @@ class PermalinksDisplay {
 								$clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
 								// +1 because Array key starts from 0 and matches[0] gives the complete match
 								$pos = $this->getTagPosition($this->pattern_search[$type][$key], $clean_tag); // Get Position of Unique Tag
+								//print_p("Position of Unique Tag -> $pos"); // found rowstart as 1st key.
 								if ($pos != 0) {
 									$found_matches = $matches[$pos]; // This is to remove duplicate matches
-									//print_p($found_matches);
+									//print_p($found_matches); // found 2 matches.
 										foreach ($found_matches as $matchkey => $match) {
-										$replace = $this->pattern_replace[$type][$key];
+										$replace = $this->pattern_replace[$type][$key]; // replace pattern
+										//print_p($replace);
 										// Replacing each Tag with its Database Value if any
 										// Example: %thread_title% should be replaced with thread_subject
 										if (isset($this->dbinfo[$type])) { // have output return from dbquery based on id : [%forum_name%] => forum_name
 											foreach ($this->dbinfo[$type] as $other_tags => $other_attr) {
 													if (strstr($replace, $other_tags)) {
 													$replace = str_replace($other_tags, $this->data_cache[$type][$match][$other_attr], $replace);
+														//print_p($replace);
 												}
 											}
 										}
-										// Replacing each of the Tag with its suitable match found on the Page
+										// Replacing each of the Tag with its suitable match found on the Page - Suitable becomes non-suitable if you put Pagenav inside a DBID Type.
+										// Every page nav becomes identical!
 										$replace = $this->replaceOtherTags($type, $this->pattern_search[$type][$key], $replace, $matches, $matchkey);
-										//print_p($replace);
+										//print_p('next round is...');
+										//print_p($replace); // go the correct increment output.
 										$search = str_replace($tag, $match, $this->pattern_search[$type][$key]);
-										//print_p($search);
-										// this might be the culprit in not making the navigation other tag work.
-										// FUCK I FOUND IT !!
-										//$search = $this->replaceOtherTags($type, $this->pattern_replace[$type][$key], $search, $matches, $matchkey); // Added: Replace Tags values in Search Pattern Also
+										//print_p("There are $match matches");
+										// this might be the culprit in not making the navigation other tag work and replication.
+										//$search = $this->replaceOtherTags($type, $this->pattern_replace[$type][$key], $search, $matches, $matchkey); // BUG This will stop &amp; parsing ! Added: Replace Tags values in Search Pattern Also
 										//print_p($search);
 										$search = $this->makeSearchRegex($this->appendSearchPath($search), $type);
-										//	print_p($search);
-
+										//print_p($replace);
 										$replace = self::cleanURL($replace);
 										$replace = $this->wrapQuotes($replace);
 										//echo $search."<br />";
+										//print_p("Search for.. $search .. and replacing it with.. $replace ");
 										// REPLACE IN OUTPUT
 										$this->output = preg_replace($search, $replace, $this->output);
 									}
