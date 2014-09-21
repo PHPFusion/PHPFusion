@@ -579,6 +579,7 @@ function cache_smileys() {
 	} else {
 		$smiley_cache = array();
 	}
+	return $smiley_cache;
 }
 
 // Parse smiley bbcode
@@ -631,6 +632,7 @@ function cache_bbcode() {
 	} else {
 		$bbcode_cache = array();
 	}
+	return $bbcode_cache;
 }
 
 // Parse bbcode
