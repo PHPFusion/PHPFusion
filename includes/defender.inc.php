@@ -19,33 +19,33 @@
 +--------------------------------------------------------*/
 $locale['validate'] = "Please check and revalidate the field.";
 require_once INCLUDES."notify/notify.inc.php";
+require_once LOCALE.LOCALESET."defender.php";
 
 class defender {
 	public $debug = FALSE;
 	public $ref = array();
 
 	/* Sanitize Fields Automatically */
-	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $required = FALSE, $safemode = FALSE, $error_text = FALSE, $path = FALSE, $maxsize = FALSE) {
+	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
 		/* Validation of Files */
 		if ($type == "textbox" || $type == 'dropdown' || $type == 'name' || $type == 'textarea') { // done.
-			return $this->validate_text($value, $default, $name, $id, $required, $safemode, $error_text);
+			return $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
 		} elseif ($type == "color") {
-			//return validate_color_field($value, $default, $name, $id);
+			return $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
+			//return validate_color_field($value, $default, $name, $id); on 8.00 only
 		} elseif ($type == "date") {
-			//return validate_date_field($value, $default, $name, $id); // must go to timestamp.
+			return $this->validate_number($value, $default, $name, $id, $safemode, $error_text);
+			//return validate_date_field($value, $default, $name, $id); on 8.00 only - outputs 10 int timestamp.
 		} elseif ($type == "password") {
-			return $this->validate_password($value, $default, $name, $id, $required, $safemode, $error_text);
+			return $this->validate_password($value, $default, $name, $id, $safemode, $error_text);
 		} elseif ($type == "email") { // done
-			return $this->validate_email($value, $default, $name, $id, $required, $safemode, $error_text);
+			return $this->validate_email($value, $default, $name, $id, $safemode, $error_text);
 		} elseif ($type == "number") {
-			return $this->validate_number($value, $default, $name, $id, $required, $safemode, $error_text);
+			return $this->validate_number($value, $default, $name, $id, $safemode, $error_text);
 		} elseif ($type == "url") {
-			return $this->validate_url($value, $default, $name, $id, $required, $safemode, $error_text);
+			return $this->validate_url($value, $default, $name, $id, $safemode, $error_text);
 		} elseif ($type == 'image' || $type == 'file') {
-			if ($this->debug) {
-				//print_p($location); // this generates upload based on location.
-			}
-			return $this->validate_file($value, $type, $path, $maxsize, $default, $name, $id, $required, $safemode, $error_text);
+			return $this->validate_file($value, $type, $path, $thumbnail, $default, $name, $id, $safemode, $error_text);
 		} else {
 			// default
 			$return_value = (isset($value) && ($value !== "")) ? stripinput($value) : $default;
@@ -179,6 +179,7 @@ class defender {
 	public function defenseOpts($input_name) {
 		$array = array();
 		$array = construct_array($input_name);
+		$data = array();
 		foreach ($array as $ks => $vs) {
 			$clean_up = str_replace("[", "", $vs);
 			$clean_up = str_replace("]", "", $clean_up);
@@ -193,13 +194,9 @@ class defender {
 			$opts['id'] = array_key_exists("id", $data) ? $data['id'] : "";
 			$opts['required'] = array_key_exists("required", $data) ? $data['required'] : 0;
 			$opts['safemode'] = array_key_exists("safemode", $data) ? $data['safemode'] : 0;
+			$opts['path'] = array_key_exists("path", $data) ? $data['path'] : '';
+			$opts['thumbnail'] = array_key_exists("thumbnail", $data) ? $data['thumbnail'] : '';
 			$opts['error_text'] = array_key_exists('error_text', $data) && $data['error_text'] ? $data['error_text'] : "".$opts['name']." needs your attention";
-			if (array_key_exists('path', $data) && $data['path']) {
-				$opts['path'] = $data['path'];
-			}
-			if (array_key_exists('maxsize', $data) && $data['maxsize']) {
-				$opts['maxsize'] = $data['maxsize'];
-			}
 			return $opts;
 		}
 		return FALSE;
@@ -216,7 +213,8 @@ class defender {
 	}
 
 	/* validation method */
-	private function validate_text($value, $default, $name, $id, $required = FALSE, $safemode = FALSE, $error_text = FALSE) {
+	private function validate_text($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+		global $locale;
 		if (is_array($value)) {
 			$vars = array();
 			foreach ($value as $val) {
@@ -230,8 +228,8 @@ class defender {
 			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) { // invalid chars
 				$this->stop();
 				$this->addError($id);
-				$this->addHelperText($id, 'Invalid characters');
-				$this->addNotice("<b>$name</b> contains invalid characters");
+				$this->addHelperText($id, sprintf($locale['df_400'], $name));
+				$this->addNotice(sprintf($locale['df_400'], $name));
 			} else {
 				$return_value = ($value) ? $value : $default;
 				return $return_value;
@@ -245,19 +243,21 @@ class defender {
 		}
 	}
 
-	private function validate_email($value, $default, $name, $id, $required = FALSE, $safemode = FALSE, $error_text = FALSE) {
+	private function validate_email($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+		global $locale;
 		$value = stripinput(trim(preg_replace("/ +/i", " ", $value)));
 		if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $value)) {
 			return $value;
 		} else {
 			$this->stop();
 			$this->addError($id);
-			$this->addHelperText($id, $error_text);
-			$this->addNotice("<b>$name</b> is not a valid email address.");
+			$this->addHelperText($id, sprintf($locale['df_401'], $name));
+			$this->addNotice(sprintf($locale['df_401'], $name));
 		}
 	}
 
-	private function validate_password($value, $default, $name, $id, $required = FALSE, $safemode = FALSE, $error_text = FALSE) {
+	private function validate_password($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+		global $locale;
 		// no safemode
 		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $value)) {
 			$return_value = (isset($value) && (($value) !== "")) ? $value : $default;
@@ -266,26 +266,42 @@ class defender {
 			// invalid password
 			$this->stop();
 			$this->addError($id);
-			$this->addHelperText($id, $error_text);
-			$this->addNotice("<b>$name</b> is not a valid password.");
+			$this->addHelperText($id, sprintf($locale['df_402'], $name));
+			$this->addNotice(sprintf($locale['df_402'], $name));
 		}
 	}
 
-	private function validate_number($value, $default, $name, $id, $required = FALSE, $safemode = FALSE, $error_text = FALSE) {
-		// no safemode
-		if ($value && isnum($value) || $value === 0) {
-			$return_value = (isset($value) && (($value) !== "")) ? $value : $default;
-			return $return_value;
+	private function validate_number($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+		global $locale;
+		if (is_array($value)) {
+			$vars = array();
+			foreach ($value as $val) {
+				$vars[] = stripinput($val);
+			}
+			$value = implode(',', $vars);
 		} else {
-			// invalid password
-			$this->stop();
-			$this->addError($id);
-			$this->addHelperText($id, $error_text);
-			$this->addNotice("<b>$name</b> is not a valid number.");
+			$value = stripinput($value);
+		}
+
+		if ($value) {
+			if (is_numeric($value)) {
+				return $value;
+			} else {
+				$this->stop();
+				$this->addError($id);
+				$this->addHelperText($id, sprintf($locale['df_403'], $name));
+				$this->addNotice(sprintf($locale['df_403'], $name));
+			}
+		} else {
+			if ($value) {
+				return $value;
+			} else {
+				return $default;
+			}
 		}
 	}
 
-	private function validate_url($value, $default, $name, $id, $required = FALSE, $safemode = FALSE, $error_text = FALSE) {
+	private function validate_url($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
 		if (isset($value) && $value !== "") {
 			return cleanurl($value);
 		} else {
@@ -293,76 +309,169 @@ class defender {
 		}
 	}
 
-	private function validate_file($value, $type, $path, $maxsize, $default, $name, $id, $required = FALSE, $safemode = FALSE, $error_text = FALSE) {
-		global $settings;
-		if ($required && $value['name']) {
+	private function validate_file($value, $type, $path, $thumbnail, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+		global $settings, $locale;
+		//@todo: To build the most complete File check ever on PHP-Fusion. Consolidate every code in one place. Add own logic.
+		$true_file = $default;
+		if ($value['name'] && is_uploaded_file($value['tmp_name'])) {
 			if (isset($value['name'])) {
 				require_once BASEDIR.'includes/mimetypes_include.php';
-				if ($type == 'image') {
-					$mimetypes = array('jpg' => 'image/jpg', 'jpeg' => 'image/jpeg', 'gif' => 'image/gif',
-									   'png' => 'image/png', 'tiff' => 'image/tiff', 'tif' => 'image/tif',
-									   'bmp' => 'image/x-ms-bmp', 'ico' => 'image/x-icon'); // all
-				} elseif ($type == 'file') {
-					$mimetypes = mimeTypes(); // all
-				}
-				$acceptable = explode(',', $settings['attachtypes']); //jpg.
-				foreach ($acceptable as $types_of_files_mime) {
-					$files_ext = $mimetypes[ltrim($types_of_files_mime, '.')];
-					if ($files_ext) {
-						$acceptable_files[] = $files_ext;
-					}
-				}
+				$mimetypes = array();
 				$errors = array();
-				$maxsize = $settings['attachmax'];
-				$file_max_size = parsebytesize($maxsize);
-				if (($value['size'] >= $maxsize) || ($value['size'] == 0)) {
-					$errors[] = 1;
-					$error_text = "File too large. File must be less than ".$file_max_size.".";
-					$this->stop();
-					$this->addError($id);
-					$this->addHelperText($id, $error_text);
-					$this->addNotice("<b>$name</b> is not a valid file type.");
-				}
-				if ((!in_array($value['type'], $acceptable_files)) && (!empty($value['type']))) {
-					$errors[] = 1;
-					$error_text = "Invalid file type. Only ".implode(", ", $acceptable)." is allowed.";
-					$this->stop();
-					$this->addError($id);
-					$this->addHelperText($id, $error_text);
-					$this->addNotice("<b>$name</b> is not a valid file type.");
-				}
-				if (count($errors) === 0) {
-					$ext = strrchr($value['name'], ".");
-					$secret_rand = rand(1000000, 9999999);
-					$hash = substr(md5($secret_rand), 8, 8);
-					$return_value = (isset($value['name']) && (($value['name']) !== "")) ? $location.$hash.$ext : $default;
-					if (!defined('FUSION_NULL')) {
-						if (is_uploaded_file($value['tmp_name'])) {
-							if (verify_image($value['tmp_name'])) {
-								//if (!file_exists($location)) {
-								//    mkdir($location, 0644, true);
-								//}
-								move_uploaded_file($value['tmp_name'], $location.$hash.$ext);
-							} else {
-								$this->addNotice("<b>$name</b> is failed verification check.");
-							}
-						} else {
-							$this->addNotice("<b>$name</b> is not uploaded.");
+				// copied from admin/photos.php
+				$file_name = stripfilename(str_replace(" ", "_", strtolower(substr($value['name'], 0, strrpos($value['name'], ".")))));
+				$file_ext = strtolower(strrchr($value['name'], "."));
+				$file_info = pathinfo($value['name']);
+				$extension = $file_info['extension'];
+				$file_dest = $path;
+				$max_size = '';
+				$maxWidth = '';
+				$maxHeight = '';
+				if ($type == 'image') { //// Idea: possibly add more types in like video/audio - which can be declared by Dynamics Opts.
+					$mimetypes = img_mimeTypes();
+					$maxsize = $settings['photo_max_b']; // max amount size.
+					$maxWidth = $settings['photo_max_w'];
+					$maxHeight = $settings['photo_max_h'];
+				} elseif ($type == 'system') {
+					$mimetypes = mimeTypes();
+					$acceptable_mime = explode(',', $settings['attachtypes']); // .7zip
+					foreach ($acceptable_mime as $file_mime) {
+						$files_mime = $mimetypes[ltrim($file_mime, '.')];
+						if ($files_mime) {
+							$mimetypes[] = $files_mime;
 						}
 					}
-					return $return_value;
+				} elseif ($type == 'all') {
+					$mimetypes = mimeTypes(); // all
+					$maxsize = $settings['attachmax']; // max amount size.
 				}
-				return $default;
-			} else {
-				$this->stop();
-				$this->addError($id);
-				$this->addHelperText($id, $error_text);
-				$this->addNotice("<b>$name</b> is not a valid file.");
+				$allowed_ext = array();
+				foreach ($mimetypes as $mime_type => $mime_hex) {
+					$allowed_ext[] = $mime_type;
+				}
+
+				// name check
+				if (!preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $file_name)) {
+					$errors[] = 1;
+					$this->stop();
+					$this->addError($id);
+					$this->addHelperText($id, $locale['df_415']);
+					$this->addNotice($locale['df_415']);
+				}
+				// filesize checking.
+				if (($value['size'] >= $maxsize) || ($value['size'] == 0)) {
+					$errors[] = 1;
+					$this->stop(); // declare FUSION_NULL. Protect the SQL from being executed.
+					$this->addError($id); // inject JS highlight the field ID dynamically.
+					$this->addHelperText($id, sprintf($locale['df_416'], parsebytesize($maxsize))); // inject field containers
+					$this->addNotice(sprintf($locale['df_416'], parsebytesize($maxsize))); // inject form with error text.
+				}
+				// first check on mime hex and then check for extensions.
+				// This is Arda's code on maincore.php, copied but altered to not die(). Instead, set an error, and protect SQL with FUSION_NULL.
+				if ($settings['mime_check']) {
+					$mime_error = 0;
+					if (array_key_exists($extension, $mimetypes)) {
+						if (is_array($mimetypes[$extension])) {
+							$valid_mimetype = FALSE;
+							foreach ($mimetypes[$extension] as $each_mimetype) {
+								if ($each_mimetype == $value['type']) {
+									$valid_mimetype = TRUE;
+									break;
+								}
+							}
+							if (!$valid_mimetype) {
+								$mime_error = 1;
+							}
+							unset($valid_mimetype);
+						} else {
+							if ($mimetypes[$extension] != $value['type']) {
+								$mime_error = 1;
+							}
+						}
+					}
+					unset($file_info, $extension);
+					if ($mime_error) {
+						$errors[] = 1;
+						$error_text = sprintf($locale['df_417'], implode(', ', $allowed_ext));
+						$this->stop();
+						$this->addError($id);
+						$this->addHelperText($id, $error_text);
+						$this->addNotice($error_text);
+					}
+				}
+
+				// verify the image for malicious code.
+				if ($type == 'image' && (!verify_image($value['tmp_name']))) {
+					$errors[] = 1;
+					$this->stop();
+					$this->addError($id);
+					$this->addHelperText($id, $locale['df_419']);
+					$this->addNotice($locale['df_419']);
+				}
+				// check on folder exist for path. if not exist, crash again.
+				if (!file_exists($path)) {
+					$errors[] = 1;
+					// Only available in 8.00
+					//if (!file_exists($path) && $settings['generate_folder']) {
+					//    mkdir($location, 0644, true);
+					//} else {
+					$this->stop();
+					$this->addError($id);
+					$this->addHelperText($id, $locale['df_420']);
+					$this->addNotice($locale['df_420']);
+					//}
+				}
+				// No major big errors.
+				if (count($errors) === 0) {
+					// last check - on extension name. Error to ask for rename of file.
+					if ((!in_array(ltrim($file_ext, '.'), $allowed_ext)) && (!empty($file_ext))) {
+						$this->stop();
+						$this->addError($id);
+						$this->addHelperText($id, $locale['df_418']);
+						$this->addNotice($locale['df_418']);
+					} else {
+						// Ok, no error and the file is perfectly normal.
+						// Drop original filename, use Hash Algorithm by Domi.
+						$ext = strrchr($value['name'], ".");
+						$secret_rand = rand(1000000, 9999999);
+						$hashed_filename = substr(md5($secret_rand), 8, 8);
+						$true_file = image_exists($path, $hashed_filename.$ext);
+						move_uploaded_file($value['tmp_name'], $path.$hashed_filename.$ext);
+						chmod($path.$true_file, 0666);
+						// ok for photo, we drop it if fail again.
+						if ($type == 'image') {
+							$image_file = @getimagesize($path.$true_file);
+							if ($image_file[0] > $settings['photo_max_w'] || $image_file[1] > $settings['photo_max_h']) {
+								unlink($path.$true_file);
+								$this->stop();
+								$this->addNotice(sprintf($locale['df_421'], $settings['photo_max_w'], $settings['photo_max_h']));
+							} else {
+								// generates a thumbnail folder on 8.00.
+								//if (!file_exists($path) && $settings['generate_thumbnail_folder']) {
+								//  mkdir($path."thumbnail", 0644, true);
+								//	$photo_thumb1 = image_exists($path, $true_file."_t1".$ext);
+								//	createthumbnail($image_file[2], $path."thumbnail/".$true_file, $path."thumbnail/".$photo_thumb1, $settings['thumb_w'], $settings['thumb_h']);
+								//}
+								if ($thumbnail) {
+									$photo_thumb1 = image_exists($path, $hashed_filename."_t1".$ext);
+									createthumbnail($image_file[2], $path.$true_file, $path.$photo_thumb1, $settings['thumb_w'], $settings['thumb_h']);
+									if ($image_file[0] > $settings['photo_w'] || $image_file[1] > $settings['photo_h']) {
+										// rewrite the image since both name is same.
+										$photo_thumb2 = image_exists($path, $hashed_filename."_t2".$ext);
+										createthumbnail($image_file[2], $path.$true_file, $path.$photo_thumb2, $settings['photo_w'], $settings['photo_h']);
+									}
+								}
+							}
+						}
+					}
+				}
+				return $true_file;
 			}
 		} else {
 			return $default;
 		}
 	}
+	// end class
 }
 
 function form_sanitizer($value, $default = "", $input_name = FALSE) {
@@ -382,11 +491,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE) {
 				$defender->addNotice($data['error_text']);
 			} else {
 				//$type, $value, $default, $name, $id, $opts;
-				if (isset($data['path'])) {
-					$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['required'], $data['safemode'], $data['error_text'], $data['path'], $data['maxsize']);
-				} else {
-					$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['required'], $data['safemode'], $data['error_text']);
-				}
+				$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['path'], $data['safemode'], $data['safemode'], $data['error_text'], $data['thumbnail']);
 				return $val;
 			}
 		} elseif (array_key_exists("single-multi", $_POST['def']) && isset($_POST['def']['single-multi'][$input_name])) {
@@ -521,7 +626,7 @@ function generate_token($form, $max_tokens = 10) {
 	$shuffle = str_shuffle("abcdefghijklmnopqrstuvwxyz1234567890");
 	if (!defined("TOKEN-$shuffle")) {
 		define("TOKEN-$shuffle", TRUE);
-		$html .= "<input type='hidden' name='fusion_token' value='$token' />\n"; // form token
+		$html .= "<input type='hidden' name='fusion_token' value='$token' readonly />\n"; // form token
 		$html .= "<input type='hidden' name='token_rings[$shuffle]' value='$form' readonly />\n";
 	}
 	return $html;
