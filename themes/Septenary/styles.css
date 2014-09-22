@@ -1161,14 +1161,12 @@ div.emulated-fieldset div.attachments-list {
 }
 
 .quote {
-    font-family: Arial, Verdana, Helvetica, sans-serif;
-    font-size: 11px;
     font-style: italic;
     font-weight: normal;
     color: #555;
     background-color: #F9F9F9;
     border-left: 8px solid #BFCADA;
-    padding: 5px 6px 5px 30px;
+    padding: 15px;
     margin: 0px 22px 0px 22px;
 }
 
@@ -1317,9 +1315,6 @@ div.emulated-fieldset div.attachments-list {
 
 
 .forum_breadcrumbs {
-    font-family: Arial, Verdana, Helvetica, sans-serif;
-    font-size: 12px;
-    font-style: italic;
     font-weight: normal;
     padding: 5px 6px 5px 30px;
     margin: 0;

@@ -24,10 +24,11 @@ if ($settings['site_seo']) {
 	$permalink = new PermalinksDisplay();
 	$result = dbquery("SELECT * FROM ".DB_PERMALINK_REWRITE."");
 	// Manual invoke method.
-	//$permalink->AddHandler('downloads');
+	//$permalink->AddHandler('threads');
 	//$permalink->AddHandler('downloads-cats');
 	if (dbrows($result) > 0) {
 		while ($_permalink = dbarray($result)) {
+			$rewrite_handler[] = $_permalink['rewrite_name'];
 			$permalink->AddHandler($_permalink['rewrite_name']);
 		}
 	}
