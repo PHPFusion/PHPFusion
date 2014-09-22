@@ -488,9 +488,9 @@ function countdown($time) {
 }
 
 // Simplified Tabs - Without Hierarchy
-function tab_active($tab_title, $num) { // tab title is array.
-	if (isset($_GET['section']) && $_GET['section']) {
-		$section = $_GET['section'];
+function tab_active($tab_title, $default_active, $link_mode=false) { // tab title is array.
+	if ($link_mode) {
+		$section = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : $default_active;
 		$count = count($tab_title['title']);
 		if ($count > 0) {
 			for ($i = 0; $i <= $count; $i++) {
@@ -500,30 +500,30 @@ function tab_active($tab_title, $num) { // tab title is array.
 				}
 			}
 		} else {
-			return $num;
+			return $default_active;
 		}
 	} else {
 		// to get the current active by id and title added together.
-		$id = $tab_title['id'][$num];
-		$title = $tab_title['title'][$num];
+		$id = $tab_title['id'][$default_active];
+		$title = $tab_title['title'][$default_active];
 		$v_link = str_replace(" ", "-", $title);
 		$v_link = str_replace("/", "-", $v_link);
 		return "".$id."$v_link";
 	}
 }
 
-function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE) {
+function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class=false) {
 	global $aidlink;
-	$link_mode = $link == 1 ? 1 : 0;
-	$html = "<div class='nav-wrapper'>\n";
-	$html .= "<ul class='nav nav-tabs' $id >\n";
+	$link_mode = $link ? $link : 0;
+	$html = "<div class='nav-wrapper $class'>\n";
+	$html .= "<ul class='nav nav-tabs' ".($id ? "id='".$id."'" : "")." >\n";
 	foreach ($tab_title['title'] as $arr => $v) {
 		$v_link = str_replace(" ", "-", $v);
 		$v_link = str_replace("/", "-", $v_link);
 		$v_title = str_replace("-", " ", $v);
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
 		$id = $tab_title['id'][$arr];
-		$link_url = ($aidlink && $link_mode) ? FUSION_SELF.(isset($_GET['aid']) ? $aidlink."&amp;" : '?')."section=".$id."" : FUSION_SELF."?section=$id";
+		$link_url = $link_mode ? $link.(isset($_GET['aid']) ? $aidlink."&amp;" : '?')."section=".$id."" : "#";
 		if ($link_mode) {
 			$html .= ($link_active_arrkey == $id) ? "<li class='active'>\n" : "<li>\n";
 		} else {

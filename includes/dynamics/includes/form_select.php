@@ -54,9 +54,9 @@ function form_select($title, $input_name, $input_id, $option_array, $input_value
 		}
 	}
 	$html = "";
-	$html .= "<div id='$input_id-field' class='form-group m-b-10 ".$class."'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$class."'>\n";
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-2 col-lg-2" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-10 col-lg-10'>\n" : "";
 	if ($jsonmode == 1) {
 		// json mode.
 		$html .= "<div id='$input_id-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
@@ -200,12 +200,12 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
 		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
 		$maximum_selection = (array_key_exists('maxselect', $array) && isnum($array['maxselect'])) ? $array['maxselect'] : 1;
 		$file = (array_key_exists('file', $array) && ($array['file'])) ? $array['file'] : '';
-		$inline = (array_key_exists("rowstart", $array)) ? 1 : 0;
+		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
 	}
 	$html = "";
-	$html .= "<div id='$input_id-field' class='form-group m-b-0'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($inline) ? "<div class='col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10'>\n";
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-2 col-lg-2" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-10 col-lg-10'>\n" : "";
 	$html .= "<input ".($required ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' data-placeholder='$placeholder' style='width:100%;' ".($deactivate == 1 ? "disabled" : "").">";
 	if ($deactivate == 1) {
 		$html .= form_hidden("", $input_name, $input_id, $input_value);
@@ -216,7 +216,7 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
 	$path = ($file) ? $array['file'] : INCLUDES."search/users.json.php";
 	if (!empty($input_value)) {
 		// json mode.
-		$encoded = ($file) ? pfdn_search($input_value) : user_search($input_value);
+		$encoded = ($file) ? $file : user_search($input_value);
 	} else {
 		$encoded = array();
 	}
@@ -256,6 +256,48 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
             ");
 	return $html;
 }
+
+function user_search($user_id)
+{
+	// returns json encoded object.
+	$user_id = stripinput($user_id);
+
+	$result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM " . DB_USERS . " WHERE user_status='0' AND user_id='$user_id'");
+
+	if (dbrows($result) > 0) {
+
+		while ($udata = dbarray($result)) {
+
+			$user_id = $udata['user_id'];
+
+			$user_text = $udata['user_name'];
+
+			$user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar50.png";
+
+			$user_name = $udata['user_name'];
+
+			$user_level = getuserlevel($udata['user_level']);
+
+			$user_opts[] = array('id' => "$user_id", 'text' => "$user_name", 'avatar' => "$user_avatar", "level" => "$user_level");
+
+		}
+
+		if (!isset($user_opts)) {
+			$user_opts = array();
+		}
+
+		$encoded = json_encode($user_opts);
+
+	} else {
+
+		$encoded = "";
+
+	}
+
+	return $encoded;
+
+}
+
 
 // Returns a full hierarchy nested dropdown.
 function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, $array = FALSE, $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {

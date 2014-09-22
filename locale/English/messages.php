@@ -23,6 +23,7 @@ $locale['419'] = "You have no Private Messages";
 $locale['420'] = "Send Private Message";
 $locale['421'] = "To";
 $locale['422'] = "Message";
+$locale['422a'] = "Original Message";
 $locale['423'] = "BB Code";
 $locale['424'] = "Smileys";
 $locale['425'] = "Options";

@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 function flood_control($field, $table, $where) {
-	global $userdata, $settings, $locale;
+	global $userdata, $settings, $locale, $defender;
 	$flood = FALSE;
 	if (!iSUPERADMIN && !iADMIN && (!defined("iMOD") || !iMOD)) {
 		$result = dbquery("SELECT MAX(".$field.") AS last_post FROM ".$table." WHERE ".$where);
@@ -40,6 +40,9 @@ function flood_control($field, $table, $where) {
 						$result = dbquery("INSERT INTO ".DB_BLACKLIST." (blacklist_ip, blacklist_ip_type, blacklist_email, blacklist_reason) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '', '".$locale['global_440']."')");
 					}
 				}
+			} else {
+				$defender->stop();
+				$defender->addNotice(sprintf($locale['flood'], countdown($settings['flood_interval']-(time()-$data['last+post']))));
 			}
 		}
 	}

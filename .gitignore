@@ -1,2 +1,4 @@
 
 config.php
+
+includes/jscripts/tiny_mce/plugins/xhtmlxtras/acronym.htm
