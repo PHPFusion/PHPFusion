@@ -90,22 +90,22 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			/* ]]>*/\n
 		</script>\n");
 		echo "<ol class='breadcrumb'>\n";
-		echo "<li><a href='".FUSION_SELF."'>".$locale['400']."</a></li>\n";
-		echo "<li><a href='".FUSION_SELF."?album_id=".$data['album_id']."'>".$data['album_title']."</a></li>\n";
+		echo "<li><a href='".BASEDIR."photogallery.php'>".$locale['400']."</a></li>\n";
+		echo "<li><a href='".BASEDIR."photogallery.php?album_id=".$data['album_id']."'>".$data['album_title']."</a></li>\n";
 		echo ($data['photo_title'] ? "<li><strong>".$data['photo_title']."</strong>" : "")."\n</li>\n";
 		echo "</ol>\n";
 		if ((isset($prev['photo_id']) && isnum($prev['photo_id'])) || (isset($next['photo_id']) && isnum($next['photo_id']))) {
 			if (isset($prev) && isset($first)) {
-				echo "<td width='1%' class='tbl2'><a href='".FUSION_SELF."?photo_id=".$first['photo_id']."' title='".$locale['459']."'>".get_image("go_first", $locale['459'], "border:none;", "", "")."</a></td>\n";
+				echo "<td width='1%' class='tbl2'><a href='".BASEDIR."photogallery.php?photo_id=".$first['photo_id']."' title='".$locale['459']."'>".get_image("go_first", $locale['459'], "border:none;", "", "")."</a></td>\n";
 			}
 			if (isset($prev)) {
-				echo "<td width='1%' class='tbl2'><a href='".FUSION_SELF."?photo_id=".$prev['photo_id']."' title='".$locale['451']."'>".get_image("go_previous", $locale['451'], "border:none;", "", "")."</a></td>\n";
+				echo "<td width='1%' class='tbl2'><a href='".BASEDIR."photogallery.php?photo_id=".$prev['photo_id']."' title='".$locale['451']."'>".get_image("go_previous", $locale['451'], "border:none;", "", "")."</a></td>\n";
 			}
 			if (isset($next)) {
-				echo "<td width='1%' class='tbl2'><a href='".FUSION_SELF."?photo_id=".$next['photo_id']."' title='".$locale['452']."'>".get_image("go_next", $locale['452'], "border:none;", "", "")."</a></td>\n";
+				echo "<td width='1%' class='tbl2'><a href='".BASEDIR."photogallery.php?photo_id=".$next['photo_id']."' title='".$locale['452']."'>".get_image("go_next", $locale['452'], "border:none;", "", "")."</a></td>\n";
 			}
 			if (isset($next) && isset($last)) {
-				echo "<td width='1%' class='tbl2'><a href='".FUSION_SELF."?photo_id=".$last['photo_id']."' title='".$locale['460']."'>".get_image("go_last", $locale['460'], "border:none;", "", "")."</a></td>\n";
+				echo "<td width='1%' class='tbl2'><a href='".BASEDIR."photogallery.php?photo_id=".$last['photo_id']."' title='".$locale['460']."'>".get_image("go_last", $locale['460'], "border:none;", "", "")."</a></td>\n";
 			}
 		}
 		echo "<div id='photogallery' class='panel-default tbl-border'>\n";
@@ -145,10 +145,10 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		echo "</div>\n";
 		echo "<!--sub_photo-->";
 		if ($data['photo_allow_comments']) {
-			showcomments("P", DB_PHOTOS, "photo_id", $_GET['photo_id'], FUSION_SELF."?photo_id=".$_GET['photo_id']);
+			showcomments("P", DB_PHOTOS, "photo_id", $_GET['photo_id'], BASEDIR."photogallery.php?photo_id=".$_GET['photo_id']);
 		}
 		if ($data['photo_allow_ratings']) {
-			showratings("P", $_GET['photo_id'], FUSION_SELF."?photo_id=".$_GET['photo_id']);
+			showratings("P", $_GET['photo_id'], BASEDIR."photogallery.php?photo_id=".$_GET['photo_id']);
 		}
 		closetable();
 	}
@@ -210,7 +210,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			closetable();
 			if ($rows) {
 				if ($rows > $settings['thumbs_per_page']) {
-					echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, FUSION_SELF."?album_id=".$_GET['album_id']."&amp;")."\n</div>\n";
+					echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, BASEDIR."photogallery.php?album_id=".$_GET['album_id']."&amp;")."\n</div>\n";
 				}
 				// new responsive template
 				echo "<div class='row m-0'>\n";
@@ -226,7 +226,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 				echo "</div>\n";
 			}
 			if ($rows > $settings['thumbs_per_page']) {
-				echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, FUSION_SELF."?album_id=".$_GET['album_id']."&amp;")."\n</div>\n";
+				echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, BASEDIR."photogallery.php?album_id=".$_GET['album_id']."&amp;")."\n</div>\n";
 			}
 		}
 	}
@@ -298,13 +298,13 @@ function photo_thumbnail($data) {
 	echo "<div class='panel panel-default tbl-border'>\n";
 	echo "<div class='p-0'>\n";
 	echo "<!--photogallery_album_photo_".$data['photo_id']."-->";
-	echo "<a href='".FUSION_SELF."?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'>\n";
+	echo "<a href='".BASEDIR."photogallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'>\n";
 	$thumb_img = ($data['photo_thumb1'] && file_exists(PHOTODIR.$data['photo_thumb1'])) ? PHOTODIR.$data['photo_thumb1'] : DOWNLOADS."images/no_image.jpg";
 	$title = ($data['album_thumb1'] && file_exists(PHOTOS.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['432'];
 	echo "<img class='photogallery_album_photo img-responsive' style='min-width:".$settings['thumb_w']."px; max-width:100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
 	echo "</a>\n";
 	echo "</div>\n<div class='panel-body photogallery_album_photo_info'>\n";
-	echo "<a href='".FUSION_SELF."?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'><strong>".$data['photo_title']."</strong></a>\n";
+	echo "<a href='".BASEDIR."photogallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'><strong>".$data['photo_title']."</strong></a>\n";
 	echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
 	echo "<!--photogallery_album_photo_info-->\n";
 	echo "<span class='display-inline-block'>\n";
