@@ -45,7 +45,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$width = (array_key_exists('width', $array)) ? $array['width'] : "98%";
 		$height = (array_key_exists('height', $array)) ? $array['height'] : "80";
 		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
-		$form_name = (array_key_exists('form_name', $array)) ? $array['form_name'] : 'input_form';
+		$form_name = (array_key_exists('form', $array)) ? $array['form'] : 'input_form';
 		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
 		$class = (array_key_exists("class", $array) && $array['class']) ? $array['class'] : '';
 	}

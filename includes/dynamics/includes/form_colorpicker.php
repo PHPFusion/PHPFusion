@@ -55,7 +55,7 @@ function form_colorpicker($title = FALSE, $input_name, $input_id, $input_value =
 		}
 	}
 	// start colorpicker
-	$html .= "<div id='$input_id' style='width:$width' class='input-group colorpicker-component bscp colorpicker-element' data-color='$input_value' data-color-format='$format'>";
+	$html .= "<div id='$input_id' style='width: ".$width."' class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='$format'>";
 	$html .= "<input type='text' name='$input_name' class='form-control $class' id='".$input_id."' value='$input_value' data-color-format='$format' placeholder='".$placeholder."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
 	$html .= "<input type='hidden' name='def[$input_name]' value='[type=color],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' readonly>";
 	$html .= "<span id='$input_id-cp' class='input-group-addon'>";
