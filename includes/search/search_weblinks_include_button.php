@@ -19,8 +19,7 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 include LOCALE.LOCALESET."search/weblinks.php";
-$form_elements['weblinks']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2",
-											  "chars");
+$form_elements['weblinks']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
 $form_elements['weblinks']['disabled'] = array();
 $form_elements['weblinks']['display'] = array();
 $form_elements['weblinks']['nodisplay'] = array();

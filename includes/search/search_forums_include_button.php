@@ -36,15 +36,14 @@ while ($data2 = dbarray($result)) {
 		$current_cat = $data2['forum_cat_name'];
 		$forum_list .= "<optgroup label='".trimlink($data2['forum_cat_name'], 20)."'>\n";
 	}
-	$sel = ($data2['forum_id'] == $_GET['forum_id'] ? " selected='selected'" : "");
+	$sel = ($data2['forum_id'] == $_POST['forum_id'] ? " selected='selected'" : "");
 	$forum_list .= "<option value='".$data2['forum_id']."'$sel>".trimlink($data2['forum_name'], 20)."</option>\n";
 }
 if ($rows2) {
 	$forum_list .= "</optgroup>\n";
 }
 $forum_list .= "</select>";
-$form_elements['forums']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2",
-											"chars");
+$form_elements['forums']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
 $form_elements['forums']['disabled'] = array();
 $form_elements['forums']['display'] = array();
 $form_elements['forums']['nodisplay'] = array();

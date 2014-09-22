@@ -34,8 +34,7 @@ if (dbrows($result) > 0) {
 		$user_avatar = ($udata['user_avatar'] && file_exists(IMAGES."avatars/".$udata['user_avatar'])) ? $udata['user_avatar'] : "noavatar50.png";
 		$user_name = $udata['user_name'];
 		$user_level = getuserlevel($udata['user_level']);
-		$user_opts[] = array('id' => "$user_id", 'text' => "$user_name", 'avatar' => "$user_avatar",
-							 "level" => "$user_level");
+		$user_opts[] = array('id' => "$user_id", 'text' => "$user_name", 'avatar' => "$user_avatar", "level" => "$user_level");
 	}
 } else {
 	$user_opts[] = array('id' => '', 'text' => "No Results Found..", 'avatar' => '', 'level' => '');

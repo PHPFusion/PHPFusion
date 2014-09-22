@@ -26,22 +26,22 @@ if (!defined("SAFEMODE")) {
 }
 
 if ($_GET['stype'] == "photos" || $_GET['stype'] == "all") {
-	if ($_GET['sort'] == "datestamp") {
+	if ($_POST['sort'] == "datestamp") {
 		$sortby = "photo_datestamp";
-	} else if ($_GET['sort'] == "subject") {
+	} else if ($_POST['sort'] == "subject") {
 		$sortby = "photo_title";
-	} else if ($_GET['sort'] == "author") {
+	} else if ($_POST['sort'] == "author") {
 		$sortby = "photo_user";
 	}
 	$ssubject1 = search_querylike("photo_title");
 	$smessage1 = search_querylike("photo_description");
 	$ssubject2 = search_querylike("album_title");
 	$smessage2 = search_querylike("album_description");
-	if ($_GET['fields'] == 0) {
+	if ($_POST['fields'] == 0) {
 		$fieldsvar = search_fieldsvar($ssubject1, $ssubject2);
-	} else if ($_GET['fields'] == 1) {
+	} else if ($_POST['fields'] == 1) {
 		$fieldsvar = search_fieldsvar($smessage1, $smessage2);
-	} else if ($_GET['fields'] == 2) {
+	} else if ($_POST['fields'] == 2) {
 		$fieldsvar = search_fieldsvar($ssubject1, $ssubject2, $smessage1, $smessage2);
 	} else {
 		$fieldsvar = "";
@@ -50,18 +50,18 @@ if ($_GET['stype'] == "photos" || $_GET['stype'] == "all") {
 		$result = dbquery("SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
 			INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
 			WHERE ".groupaccess('album_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND (photo_datestamp>=".(time()-$_GET['datelimit'])." OR album_datestamp>=".(time()-$_GET['datelimit']).")" : ""));
+			".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".(time()-$_POST['datelimit'])." OR album_datestamp>=".(time()-$_POST['datelimit']).")" : ""));
 		$rows = dbrows($result);
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
-		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=photos&amp;stext=".$_GET['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['p401'] : $locale['p402'])." ".$locale['522']."</a><br />\n";
+		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=photos&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['p401'] : $locale['p402'])." ".$locale['522']."</a><br />\n";
 		$result = dbquery("SELECT tp.*,ta.* FROM ".DB_PHOTOS." tp
 			INNER JOIN ".DB_PHOTO_ALBUMS." ta ON tp.album_id=ta.album_id
 			WHERE ".groupaccess('album_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND (photo_datestamp>=".(time()-$_GET['datelimit'])." OR album_datestamp>=".(time()-$_GET['datelimit']).")" : "")."
-			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : ""));
+			".($_POST['datelimit'] != 0 ? " AND (photo_datestamp>=".(time()-$_POST['datelimit'])." OR album_datestamp>=".(time()-$_POST['datelimit']).")" : "")."
+			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";
 			if ($data['photo_datestamp']+604800 > time()+($settings['timeoffset']*3600)) {

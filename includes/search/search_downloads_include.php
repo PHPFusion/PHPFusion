@@ -20,20 +20,20 @@ if (!defined("IN_FUSION")) {
 }
 include LOCALE.LOCALESET."search/downloads.php";
 if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
-	if ($_GET['sort'] == "datestamp") {
+	if ($_POST['sort'] == "datestamp") {
 		$sortby = "download_datestamp";
-	} else if ($_GET['sort'] == "subject") {
+	} else if ($_POST['sort'] == "subject") {
 		$sortby = "download_title";
 	} else {
 		$sortby = "download_datestamp";
 	}
 	$ssubject = search_querylike("download_title");
 	$smessage = search_querylike("download_description");
-	if ($_GET['fields'] == 0) {
+	if ($_POST['fields'] == 0) {
 		$fieldsvar = search_fieldsvar($ssubject);
-	} else if ($_GET['fields'] == 1) {
+	} else if ($_POST['fields'] == 1) {
 		$fieldsvar = search_fieldsvar($smessage);
-	} else if ($_GET['fields'] == 2) {
+	} else if ($_POST['fields'] == 2) {
 		$fieldsvar = search_fieldsvar($ssubject, $smessage);
 	} else {
 		$fieldsvar = "";
@@ -42,18 +42,18 @@ if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
 		$result = dbquery("SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
 			INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
 			WHERE ".groupaccess('download_cat_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND download_datestamp>=".(time()-$_GET['datelimit']) : ""));
+			".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".(time()-$_POST['datelimit']) : ""));
 		$rows = dbrows($result);
 	} else {
 		$rows = 0;
 	}
 	if ($rows != 0) {
-		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=downloads&amp;stext=".$_GET['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."</a><br />\n";
+		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=downloads&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['d401'] : $locale['d402'])." ".$locale['522']."</a><br />\n";
 		$result = dbquery("SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
 			INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
 			WHERE ".groupaccess('download_cat_access')." AND ".$fieldsvar."
-			".($_GET['datelimit'] != 0 ? " AND download_datestamp>=".(time()-$_GET['datelimit']) : "")."
-			ORDER BY ".$sortby." ".($_GET['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_GET['rowstart'].",10" : ""));
+			".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".(time()-$_POST['datelimit']) : "")."
+			ORDER BY ".$sortby." ".($_POST['order'] == 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {
 			$search_result = "";
 			if ($data['download_datestamp']+604800 > time()+($settings['timeoffset']*3600)) {

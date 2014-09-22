@@ -23,11 +23,11 @@ if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
 	$sortby = "faq_id";
 	$ssubject = search_querylike("faq_question");
 	$smessage = search_querylike("faq_answer");
-	if ($_GET['fields'] == 0) {
+	if ($_POST['fields'] == 0) {
 		$fieldsvar = search_fieldsvar($ssubject);
-	} else if ($_GET['fields'] == 1) {
+	} else if ($_POST['fields'] == 1) {
 		$fieldsvar = search_fieldsvar($smessage);
-	} else if ($_GET['fields'] == 2) {
+	} else if ($_POST['fields'] == 2) {
 		$fieldsvar = search_fieldsvar($ssubject, $smessage);
 	} else {
 		$fieldsvar = "";
@@ -41,7 +41,7 @@ if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
 		$rows = 0;
 	}
 	if ($rows != 0) {
-		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=faqs&amp;stext=".$_GET['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['fq401'] : $locale['fq402'])." ".$locale['522']."</a><br />\n";
+		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=faqs&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['fq401'] : $locale['fq402'])." ".$locale['522']."</a><br />\n";
 		while ($data = dbarray($result)) {
 			$search_result = "";
 			$text_all = $data['faq_answer'];
