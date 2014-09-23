@@ -55,8 +55,8 @@ function form_select($title, $input_name, $input_id, $option_array, $input_value
 	}
 	$html = "";
 	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$class."'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-2 col-lg-2" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-10 col-lg-10'>\n" : "";
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	if ($jsonmode == 1) {
 		// json mode.
 		$html .= "<div id='$input_id-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";

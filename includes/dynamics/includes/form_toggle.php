@@ -1,62 +1,51 @@
 <?php
-
-/* 1 or 0 only */
+/* http://zamanak.ir/themes/zamanak/bootstrap-switch-3.0/ */
+/* Version Bootstrap 3.00 RC */
 function form_toggle($title, $input_name, $input_id, $opts, $input_value, $array = FALSE) {
+	if (!defined("TOGGLE")) {
+		define("TOGGLE", TRUE);
+		add_to_footer("<script src='".DYNAMICS."assets/switch/js/bootstrap-switch.min.js'></script>");
+		add_to_head("<link href='".DYNAMICS."assets/switch/css/bootstrap-switch.min.css' rel='stylesheet' />");
+	}
 	$html = '';
 	$title2 = ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	if (!is_array($array)) {
-		$class = 'small';
-		$justified = "";
-		$well = "";
-		$wellclass = "";
-		$helper_text = "";
-		$slider = 0;
+		$class = '';
+		$error_text = '';
 		$required = 0;
-		$safemode = 0;
-		$type_config = 'toggle';
+		$inline = 0;
+		$keyflip = 0;
+		$deactivate = 0;
+		$value = '1';
 	} else {
-		$class = (array_key_exists("class", $array)) ? $array['class'] : "small";
-		$justified = (array_key_exists("justified", $array)) ? "btn-group-justified" : "";
-		$well = (array_key_exists('well', $array)) ? "style='margin-top:-10px;'" : "";
-		$helper_text = (array_key_exists("helper", $array)) ? $array['helper'] : "";
+		$class = (array_key_exists("class", $array)) ? $array['class'] : "";
+		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
-		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-		if (array_key_exists("checkbox", $array) && ($array['checkbox'] == 1)) {
-			$type_config = "checkbox";
-		} elseif (array_key_exists("slider", $array) && ($array['slider'] == 1)) {
-			$type_config = "slider";
-		} else {
-			$type_config = "toggle";
-		}
+		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
+		$keyflip = (array_key_exists('keyflip', $array)) ? $array['keyflip'] : 0;
+		$value = (array_key_exists('value', $array)) ? $array['value'] : '1';
+		$deactivate = (array_key_exists("deactivate", $array) && ($array['deactivate'] == "1")) ? 1 : 0;
 	}
-	$html .= "<div id='".$input_id."-field' class='field'/>\n";
-	if ($type_config !== 'checkbox') {
-		$text = ($input_value) ? $opts[1] : $opts[0];
-		$html .= "<label><h3>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</h3></label>\n";
-		$html .= "<div class='ui $type_config checkbox'>\n";
-		$html .= "<input id='$input_id' name='$input_name' value='1' type='checkbox' ".($input_value == 1 ? 'checked' : '')."/>\n";
-		$html .= "<label style='font-weight:bold;' id='$input_id-label' for='$input_id'/>$text</label>\n";
-		$html .= "</div>\n";
-		$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' readonly>";
-		add_to_jquery("
-            $('#".$input_id."-label').bind('click', function(e){
-            var text = $(this).text();
-            if (text == '".$opts[0]."') {
-                $(this).text('".$opts[1]."');
-            } else {
-                $(this).text('".$opts[0]."');
-            }
-            });
-            ");
-	} else {
-		$html .= "<div class='ui $type_config'/>\n";
-		$html .= "<input id='$input_id' name='$input_name' value='1' type='checkbox' ".($input_value == 1 ? 'checked' : '')."/>\n";
-		$html .= "<label style='font-weight:bold;' id='$input_id-label' for='$input_id'/>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n";
-		$html .= "</div>\n";
-		$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' readonly>";
+
+	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
+	$on_label = $opts['1'];
+	$off_label = $opts['0'];
+	if ($keyflip) {
+		$on_label = $opts['0'];
+		$off_label = $opts['1'];
 	}
+	$html .= "<input id='$input_id' name='$input_name' value='$value' type='checkbox' data-on-text='$on_label' data-off-text='$off_label' ".($deactivate ? 'readonly' : '')." ".($input_value == '1' ? 'checked' : '')." />\n"; ///>\n";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=$required]".($error_text ? ",[error_text=$error_text]" : '')."' readonly />";
+	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
+	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	//        $html .= "</div></div>\n";
+
+	/* For fancy customization, redeclare on script end*/
+	add_to_jquery("
+	$('#".$input_id."').bootstrapSwitch();
+	");
 	return $html;
 }
 

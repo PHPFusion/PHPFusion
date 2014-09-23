@@ -26,13 +26,12 @@ function form_colorpicker($title = FALSE, $input_name, $input_id, $input_value =
 		$placeholder = "";
 		$width = "250px";
 		$class = "";
-		$well = "";
 		$deactivate = "";
-		$stacking = "";
 		$format = "";
 		$helper_text = "";
-		$required = '0';
-		$safemode = '0';
+		$required = 0;
+		$safemode = 0;
+		$inline = 0;
 	} else {
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
 		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
@@ -40,31 +39,24 @@ function form_colorpicker($title = FALSE, $input_name, $input_id, $input_value =
 		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
 		$class = (array_key_exists('class', $array)) ? $array['class'] : "";
 		$width = (array_key_exists('width', $array)) ? $array['width'] : "250px";
-		$well = (array_key_exists('well', $array)) ? "style='margin-top:-10px;'" : "";
-		$stacking = (array_key_exists("stacking", $array)) ? 1 : "";
+		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
 		$format = (array_key_exists("format", $array)) ? $array['format'] : "rgba"; // options = the color format - hex | rgb | rgba.
 		$helper_text = (array_key_exists("helper", $array)) ? $array['helper'] : "";
 	}
 	$html = "";
-	if (!empty($title)) {
-		// turn off coloumn
-		if ($stacking == 1) {
-			$html .= open_form_title($title, $input_id, $helper_text, $required);
-		} else {
-			$html .= open_form_title_2($title, $input_id, $helper_text, $required);
-		}
-	}
-	// start colorpicker
+	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
 	$html .= "<div id='$input_id' style='width: ".$width."' class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='$format'>";
 	$html .= "<input type='text' name='$input_name' class='form-control $class' id='".$input_id."' value='$input_value' data-color-format='$format' placeholder='".$placeholder."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
 	$html .= "<input type='hidden' name='def[$input_name]' value='[type=color],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' readonly>";
 	$html .= "<span id='$input_id-cp' class='input-group-addon'>";
 	$html .= "<i style='background: rgba(255,255,255,1);'></i>";
 	$html .= "</span></div>";
-	if (!empty($title)) {
-		$html .= close_form_title();
-	}
-	$html .= add_to_jquery("
+	$html .= ($inline) ? "</div>\n" : "";
+	$html .= "</div>\n";
+
+	add_to_jquery("
     $('#$input_id').colorpicker(
     {
     format : '$format'
