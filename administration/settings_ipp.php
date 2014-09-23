@@ -55,59 +55,17 @@ while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 opentable($locale['400']);
-echo "<form name='settingsform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
-echo "<table cellpadding='0' cellspacing='0' width='500' class='table table-responsive center'>\n<tbody>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='newsperpage'>".$locale['669'].":</label> <span class='required'>*</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_text('', 'newsperpage', 'newsperpage', $settings2['newsperpage'], array('required' => 1,
-																				  'error_text' => $locale['error_value'],
-																				  'number' => 1, 'width' => '200px'));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='articles_per_page'>".$locale['910'].":</label> <span class='required'>*</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_text('', 'articles_per_page', 'articles_per_page', $settings2['articles_per_page'], array('required' => 1,
-																									'error_text' => $locale['error_value'],
-																									'number' => 1,
-																									'width' => '200px'));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='downloads_per_page'>".$locale['911'].":</label> <span class='required'>*</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_text('', 'downloads_per_page', 'downloads_per_page', $settings2['downloads_per_page'], array('required' => 1,
-																									   'error_text' => $locale['error_value'],
-																									   'number' => 1,
-																									   'width' => '200px'));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='links_per_page'>".$locale['912'].":</label> <span class='required'>*</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_text('', 'links_per_page', 'links_per_page', $settings2['links_per_page'], array('required' => 1,
-																						   'error_text' => $locale['error_value'],
-																						   'number' => 1,
-																						   'width' => '200px'));
-echo "</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='comments_per_page'>".$locale['913'].":</label> <span class='required'>*</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_text('', 'comments_per_page', 'comments_per_page', $settings2['comments_per_page'], array('required' => 1,
-																									'error_text' => $locale['error_value'],
-																									'number' => 1,
-																									'width' => '200px'));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='threads_per_page'>".$locale['914'].":</label> <span class='required'>*</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_text('', 'threads_per_page', 'threads_per_page', $settings2['threads_per_page'], array('required' => 1,
-																								 'error_text' => $locale['error_value'],
-																								 'number' => 1,
-																								 'width' => '200px'));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='posts_per_page'>".$locale['915'].":</label> <span class='required'>*</span></td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_text('', 'posts_per_page', 'posts_per_page', $settings2['posts_per_page'], array('required' => 1,
-																						   'error_text' => $locale['error_value'],
-																						   'number' => 1,
-																						   'width' => '200px'));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td align='center' colspan='2' class='tbl'><br />\n";
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink);
+echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
+echo form_text($locale['669'], 'newsperpage', 'newsperpage', $settings2['newsperpage'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['910'], 'articles_per_page', 'articles_per_page', $settings2['articles_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['911'], 'downloads_per_page', 'downloads_per_page', $settings2['downloads_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['912'], 'links_per_page', 'links_per_page', $settings2['links_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['913'], 'comments_per_page', 'comments_per_page', $settings2['comments_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['914'], 'threads_per_page', 'threads_per_page', $settings2['threads_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['915'], 'posts_per_page', 'posts_per_page', $settings2['posts_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo "</div>\n</div>\n";
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
-echo "</td>\n</tr>\n</table>\n";
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";

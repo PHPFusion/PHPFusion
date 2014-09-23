@@ -357,12 +357,12 @@ if (!empty($result)) {
 	}
 	require_once INCLUDES."bbcode_include.php";
 	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 0, 'enctype' => 1));
-	echo "<table cellpadding='0' cellspacing='0' class='center table table-responsive'>\n<tr>\n";
-	echo "<td class='tbl1' style='width:80px;'><label for='download_title'>".$locale['420']."</label></td>\n";
-	echo "<td class='tbl1'>\n";
-	echo form_text('', 'download_title', 'download_title', $download_title, array('required' => 1));
-	echo "</td>\n";
-	echo "</tr>\n";
+	//echo "<table cellpadding='0' cellspacing='0' class='center table table-responsive'>\n<tr>\n";
+	//echo "<td class='tbl1' style='width:80px;'><label for='download_title'>".$locale['420']."</label></td>\n";
+	//echo "<td class='tbl1'>\n";
+	echo form_text($locale['420'], 'download_title', 'download_title', $download_title, array('required' => 1));
+	//echo "</td>\n";
+	//echo "</tr>\n";
 	echo "<tr>\n<td class='tbl1' style='width:80px;vertical-align:top;'><label for='download_description_short'>".$locale['421b']."</label><br /><br />";
 	echo "<span id='shortdesc_display' style='padding: 1px 3px 1px 3px; border:1px solid rgba(204,204,204); display:none;'>";
 	echo "<strong>".(255-mb_strlen($download_description_short))."</strong>";
