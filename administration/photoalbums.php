@@ -290,7 +290,7 @@ if (function_exists('gd_info')) {
 	echo "</div>\n</div>\n";
 	echo closeform();
 	closetable();
-
+	
 	opentable($locale['402']);
 	$rows = dbcount("(album_id)", "".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."'" : "")."");
 	if ($rows) {

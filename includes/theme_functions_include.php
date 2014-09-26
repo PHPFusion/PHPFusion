@@ -442,7 +442,7 @@ function timer($updated = FALSE) {
 	$month = days_current_month()*$day;
 	$year = (date("L", $updated) > 0) ? 366*$day : 365*$day;
 	if ($calculated < 1) {
-		return "just now";
+		return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>just now</abbr>\n";
 	}
 	$timer = array($year => "year", $month => "month", $day => "day", $hour => "hour", $minute => "minute",
 				   $second => "second");
@@ -452,7 +452,7 @@ function timer($updated = FALSE) {
 			// stops the rest of the loop.
 			$answer = round($calc);
 			$s = ($answer > 1) ? "s" : "";
-			return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('newsdate', $updated)."'>$answer ".$unit.$s." ago</abbr>";
+			return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>$answer ".$unit.$s." ago</abbr>";
 		}
 	}
 }

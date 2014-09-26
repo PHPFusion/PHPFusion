@@ -19,7 +19,7 @@
 +--------------------------------------------------------*/
 $locale['validate'] = "Please check and revalidate the field.";
 require_once INCLUDES."notify/notify.inc.php";
-require_once LOCALE.LOCALESET."defender.php";
+include LOCALE.LOCALESET."defender.php";
 
 class defender {
 	public $debug = FALSE;
