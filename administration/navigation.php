@@ -19,21 +19,86 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 include LOCALE.LOCALESET."admin/main.php";
-include INFUSIONS."user_info_panel/user_info_panel.php";
+//include INFUSIONS."user_info_panel/user_info_panel.php";
 @list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
 add_to_title($locale['global_200'].$locale['global_123'].($title ? $locale['global_201'].$title : ""));
 $pages = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
 $index_link = FALSE;
 $admin_nav_opts = "";
 $current_page = 0;
-openside($locale['global_001']);
+
 $result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
 $rows = dbrows($result);
+$admin_url = array();
 while ($data = dbarray($result)) {
 	if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
+		$admin_pages[$data['admin_page']][$data['admin_title']] = $data['admin_link'];
 		$pages[$data['admin_page']] .= "<option value='".ADMIN.$data['admin_link'].$aidlink."'>".preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title'])."</option>\n";
 	}
 }
+
+
+	function admin_active() {
+		global $admin_pages;
+		foreach($admin_pages as $key =>$data) {
+			if (in_array(FUSION_SELF, $data)) {
+				return $key;
+			}
+		}
+		return '0';
+	}
+
+
+	function admin_nav($style=false) {
+		global $aidlink, $locale, $pages;
+		$admin_icon = array(
+			'0' => 'entypo gauge',
+			'1' => 'entypo docs',
+			'2' => 'entypo user',
+			'3' => 'entypo drive',
+			'4' => 'entypo cog',
+			'5' => 'entypo magnet'
+		);
+		if (!$style) {
+			// horizontal navigation with dropdown menu.
+			$html = "<ul class='admin-horizontal-link'>\n";
+			for ($i = 0; $i < 6; $i++) {
+				$html .= "<li><a href='".ADMIN.$aidlink."&amp;pagenum=$i'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]."</a></li>\n";
+			}
+			$html .= "</ul>\n";
+		} else {
+			$html = "<ul id='adl' class='admin-vertical-link'>\n";
+			for ($i = 0; $i < 6; $i++) {
+				$result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_link !='reserved' ORDER BY admin_title ASC");
+				$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && admin_active() == $i) ? 1 : 0;
+				$html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
+				if ($i == 0) {
+					$html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+				} else {
+					$html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+					$html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
+					if (dbrows($result)>0) {
+						$html .= "<ul class='admin-submenu'>\n";
+						while ($data = dbarray($result)) {
+							$secondary_active = FUSION_SELF == $data['admin_link'] ? 'active' : '';
+							$html .= checkrights($data['admin_rights']) ? "<li><a href='".ADMIN.$data['admin_link'].$aidlink."'> <img style='max-width:24px;' class='pull-right m-l-10' src='".get_image("ac_".$data['admin_title'])."'/> ".$data['admin_title']."</a></li>\n" : '';
+						}
+						$html .= "</ul>\n";
+					}
+					$html .= "</div>\n";
+					$html .= "</li>\n";
+				}
+			}
+			$html .= "</ul>\n";
+		}
+		return $html;
+	}
+
+
+
+
+/*
+ * openside($locale['global_001']);
 $content = FALSE;
 for ($i = 1; $i < 6; $i++) {
 	$page = $pages[$i];
@@ -57,4 +122,6 @@ for ($i = 1; $i < 6; $i++) {
 	}
 }
 closeside();
+*/
+
 ?>

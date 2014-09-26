@@ -21,7 +21,11 @@ if (!defined("IN_FUSION")) {
 define("ADMIN_PANEL", TRUE);
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."header_includes.php";
-require_once THEME."theme.php";
+//require_once THEME."theme.php";
+
+// Toggle a main settings injection at maincore.php
+require_once THEMES."admin_templates/Venus/acp_theme.php";
+
 if ($settings['maintenance'] == "1" && !iADMIN) {
 	redirect(BASEDIR."maintenance.php");
 }

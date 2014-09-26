@@ -21,7 +21,11 @@ if (!defined("IN_FUSION")) {
 require_once INCLUDES."footer_includes.php";
 define("CONTENT", ob_get_contents());
 ob_end_clean();
-render_page(FALSE);
+if (!defined('ADMIN_PANEL')) {
+    render_page(FALSE);
+} else {
+    render_adminpanel();
+}
 echo push_jquery(); // output here all jquery.
 // Cron Job (6 MIN)
 if ($settings['cronjob_hour'] < (time()-360)) {

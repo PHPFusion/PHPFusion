@@ -23,7 +23,10 @@ define("ADMIN_PANEL", TRUE);
 
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."header_includes.php";
-require_once THEME."theme.php";
+
+// Toggle a main settings injection at maincore.php
+require_once THEMES."admin_templates/Venus/acp_theme.php";
+
 
 if ($settings['maintenance'] == "1" && !iADMIN) {
 	redirect(BASEDIR."maintenance.php");
@@ -32,8 +35,7 @@ if (iMEMBER) {
 	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
 
-echo "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>\n";
-echo "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='".$locale['xml_lang']."' lang='".$locale['xml_lang']."'>\n";
+echo "<!DOCTYPE html>\n";
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
 echo "<meta http-equiv='Content-Type' content='text/html; charset=".$locale['charset']."' />\n";
 echo "<link rel='stylesheet' href='".THEME."styles.css' type='text/css' media='screen' />\n";

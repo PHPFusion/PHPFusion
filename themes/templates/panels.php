@@ -21,6 +21,7 @@ if (!defined("IN_FUSION")) {
 // Add admin message
 $ad_mess = array();
 $admin_mess = '';
+
 if (iADMIN && !defined("ADMIN_PANEL")) {
 	$admin_mess .= "<a id='content' name='content'></a>\n";
 	if (iSUPERADMIN && file_exists(BASEDIR."setup.php")) $ad_mess[] = $locale['global_198'];
@@ -80,7 +81,7 @@ foreach ($p_name as $p_key => $p_side) {
 				}
 			}
 		} else if ($p_key == 0) {
-			require_once ADMIN."navigation.php";
+			//require_once ADMIN."navigation.php";
 		}
 		define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : '').ob_get_contents());
 		ob_end_clean();

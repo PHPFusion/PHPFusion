@@ -23,7 +23,6 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 define("THEME_BULLET", "<img src='".THEME."images/bullet.png' class='bullet'  alt='&raquo;' />");
-
 /*
 set_image("printer", THEME."images/icons/printer.png");
 set_image("up", THEME."images/up.png");

@@ -198,7 +198,7 @@
 }
 
 .text-smaller {
-	font-size: 90% !important;
+	font-size: 85% !important;
 }
 
 .text-bold {
@@ -270,6 +270,46 @@ ol, ul {
 ul {
 	padding: 0px;
 }
+/* resets panelfor accordion */
+li.panel {
+	box-shadow: none !important;
+	margin-bottom: 0px !important;
+	background: none;
+	border: 0px;
+}
+.adl-link.collapsed > span.adl-drop:before {
+	font-family: "entypo" !important;
+	font-style: normal;
+	font-weight: normal;
+	speak: none;
+	display: inline-block;
+	text-decoration: inherit;
+	width: 1em;
+	margin-right: .2em;
+	text-align: center;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1em;
+	margin-left: .2em;
+	content: '\e82a';
+}
+
+.adl-link > span.adl-drop:before {
+	font-family: "entypo" !important;
+	font-style: normal;
+	font-weight: normal;
+	speak: none;
+	display: inline-block;
+	text-decoration: inherit;
+	width: 1em;
+	margin-right: .2em;
+	text-align: center;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1em;
+	margin-left: .2em;
+	content: '\e8d4';
+}
 
 ul > li {
 	padding: 0px;
@@ -278,10 +318,13 @@ ul > li {
 ul > li a {
 	display: inline-block;
 	color: rgb(51, 51, 51);
+	width: 100%;
+	outline: none;
 }
 
+/* all tabs must have class */
 ul > li.active > a {
-	background: #F6F6F6;
+	/* background: #F6F6F6; */
 }
 
 /* entypo icon */
