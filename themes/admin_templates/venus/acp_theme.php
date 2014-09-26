@@ -15,11 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
-require_once THEMES."templates/admin_header.php";
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
+
 require_once INCLUDES."theme_functions_include.php";
+
 add_to_head("<link rel='stylesheet' href='".THEMES."admin_templates/venus/acp_styles.css' type='text/css' media='screen' />\n");
+
 require_once ADMIN."navigation.php";
+
 function openside($title = FALSE, $class = FALSE) {
 	echo "<div class='panel panel-default tbl-border $class'>\n";
 	echo ($title) ? "<div class='panel-heading'>$title</div>\n" : '';
