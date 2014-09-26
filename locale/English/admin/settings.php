@@ -19,6 +19,7 @@ $locale['415'] = "Single Column";
 $locale['416'] = "Double Column";
 $locale['417'] = "Site locale:";
 $locale['418'] = "Site theme:";
+$locale['418a'] = "Site Admin Theme:";
 $locale['419'] = "Default search location:";
 $locale['420'] = "Exclude Left Panels:";
 $locale['421'] = "Exclude Upper Panels:";
