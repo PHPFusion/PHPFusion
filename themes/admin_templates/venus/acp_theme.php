@@ -18,34 +18,26 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-
 require_once INCLUDES."theme_functions_include.php";
-
 add_to_head("<link rel='stylesheet' href='".THEMES."admin_templates/venus/acp_styles.css' type='text/css' media='screen' />\n");
-
 require_once ADMIN."navigation.php";
-
 function openside($title = FALSE, $class = FALSE) {
 	echo "<div class='panel panel-default tbl-border $class'>\n";
 	echo ($title) ? "<div class='panel-heading'>$title</div>\n" : '';
 	echo "<div class='panel-body'>\n";
 }
-
 function closeside($title = FALSE) {
 	echo "</div>\n";
 	echo ($title) ? "<div class='panel-footer'>$title</div>\n" : '';
 	echo "</div>\n";
 }
-
 function opentable($title) {
 	echo "<div class='panel panel-default box-shadow' style='border:none;'>\n<div class='panel-body'>\n";
 	echo "<h3 class='m-b-20'>".$title."</h3>\n";
 }
-
 function closetable() {
 	echo "</div>\n</div>\n";
 }
-
 function render_adminpanel() {
 	global $locale, $userdata, $pages, $aidlink, $settings;
 	//print_p($pages);
@@ -80,5 +72,4 @@ function render_adminpanel() {
 	echo "</div>\n"; // end display-table.
 	echo "</div>\n"; // end admin-panel
 }
-
 ?>

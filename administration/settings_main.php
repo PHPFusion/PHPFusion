@@ -92,8 +92,10 @@ if (isset($_POST['savesettings'])) {
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslashes(addslashes($sitefooter))."' WHERE settings_name='footer'") : '';
 	$opening_page = form_sanitizer($_POST['opening_page'], '', 'opening_page');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$opening_page' WHERE settings_name='opening_page'") : '';
-	//$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$localeset' WHERE settings_name='locale'") : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['theme'])."' WHERE settings_name='theme'") : '';
+	$admin_theme = form_sanitizer($_POST['admin_theme'], '', 'admin_theme');
+	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$admin_theme' WHERE settings_name='admin_theme'") : '';
+	$theme = form_sanitizer($_POST['theme'], '', 'theme');
+	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$theme' WHERE settings_name='theme'") : '';
 	$bootstrap = form_sanitizer($_POST['bootstrap'], 1, 'bootstrap');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$bootstrap' WHERE settings_name='bootstrap'") : '';
 	$site_seo = form_sanitizer($_POST['site_seo'], 0, 'site_seo');
@@ -117,15 +119,11 @@ if (isset($_POST['savesettings'])) {
 		$htacess .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\n";
 		$htacess .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\n";
 		$htacess .= "RewriteRule .* - [F,L]\n";
-		//$htacess .= "# Exclude from rewrite all POST requests\n";
-		//$htacces .= "RewriteCond %{REQUEST_METHOD} =POST";
-		//$htacess .= "RewriteRule ^ - [L]\n";
 		$htacess .= "# Exclude /assets and /manager directories and images from rewrite rules\n";
 		$htacess .= "RewriteRule ^(administration|themes)/*$ - [L]\n";
 		$htacess .= "RewriteCond %{REQUEST_FILENAME} !-f\n";
 		$htacess .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
 		$htacess .= "RewriteCond %{REQUEST_FILENAME} !-l\n";
-		//$htacess .= "RewriteCond %{REQUEST_METHOD} !=POST\n";
 		$htacess .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\n";
 		$htacess .= "RewriteRule ^(.*?)$ rewrite.php [L]\n";
 		$temp = fopen(BASEDIR.".htaccess", "w");
@@ -161,32 +159,21 @@ $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
-$theme_files = makefilelist(THEMES, ".|..|templates", TRUE, "folders");
+$theme_files = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
+$admin_theme_files = makefilelist(THEMES."admin_templates/", ".|..",  TRUE, "folders");
+
 opentable($locale['400']);
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
-//echo "<table class='table table-responsive center'>\n<tbody>\n<tr>\n";
-//echo "<td width='35%' class='tbl'><label for='sitename'>".$locale['402']."</label> <span class='required'>*</span></td>\n";
-//echo "<td width='65%' class='tbl'>\n";
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-echo form_text($locale['402'], 'sitename', 'sitename', $settings2['sitename'], array('max_length' => 255, 'required' => 1,
-																		 'error_text' => $locale['error_value']));
-echo form_text($locale['404'], 'sitebanner', 'sitebanner', $settings2['sitebanner'], array('required' => 1,
-	'error_text' => $locale['error_value']));
-echo form_text($locale['405'], 'siteemail', 'siteemail', $settings2['siteemail'], array('max_length' => 128, 'required' => 1,
-	'error_text' => $locale['error_value'],
-	'email' => 1));
-echo form_text($locale['406'], 'username', 'username', $settings2['siteusername'], array('max_length' => 32, 'required' => 1,
-	'error_text' => $locale['error_value']));
+echo form_text($locale['402'], 'sitename', 'sitename', $settings2['sitename'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
+echo form_text($locale['404'], 'sitebanner', 'sitebanner', $settings2['sitebanner'], array('required' => 1, 'error_text' => $locale['error_value']));
+echo form_text($locale['405'], 'siteemail', 'siteemail', $settings2['siteemail'], array('max_length' => 128, 'required' => 1, 'error_text' => $locale['error_value'], 'email' => 1));
+echo form_text($locale['406'], 'username', 'username', $settings2['siteusername'], array('max_length' => 32, 'required' => 1, 'error_text' => $locale['error_value']));
 $opts = array('http' => 'http://', 'https' => 'https://');
-echo form_select($locale['426'], 'site_protocol', 'site_protocol', $opts, $settings2['site_protocol'], array('required' => 1,
-	'error_text' => $locale['error_value']));
-echo form_text($locale['427'], 'site_host', 'site_host', $settings2['site_host'], array('max_length' => 255, 'required' => 1,
-	'error_text' => $locale['error_value']));
-echo form_text($locale['429'], 'site_path', 'site_path', $settings2['site_path'], array('max_length' => 255, 'required' => 1,
-	'error_text' => $locale['error_value']));
-echo form_text($locale['430'], 'site_port', 'site_port', $settings2['site_port'], array('max_length' => 4, 'required' => 1,
-	'error_text' => $locale['error_value']));
-
+echo form_select($locale['426'], 'site_protocol', 'site_protocol', $opts, $settings2['site_protocol'], array('required' => 1, 'error_text' => $locale['error_value']));
+echo form_text($locale['427'], 'site_host', 'site_host', $settings2['site_host'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
+echo form_text($locale['429'], 'site_path', 'site_path', $settings2['site_path'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
+echo form_text($locale['430'], 'site_port', 'site_port', $settings2['site_port'], array('max_length' => 4, 'required' => 1, 'error_text' => $locale['error_value']));
 echo "<div class='well'><strong>\n".$locale['431']." ";
 echo "<span id='display_protocol'>".$settings2['site_protocol']."</span>://";
 echo "<span id='display_host'>".$settings2['site_host']."</span>";
@@ -194,19 +181,16 @@ echo "<span id='display_port'>".($settings2['site_port'] ? ":".$settings2['site_
 echo "<span id='display_path'>".$settings2['site_path']."</span>";
 echo "</strong></div>\n";
 echo "</div>\n</div>\n";
-//echo $locale['432'];
-echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
+
+echo "<div class='panel panel-default'>\n";
+echo "<div class='panel-heading'><strong>".$locale['432']."</strong></div>\n";
+echo "<div class='panel-body'>\n";
 echo form_textarea($locale['407'], 'intro', 'intro', $settings2['siteintro']);
 echo form_textarea($locale['409'], 'description', 'description', $settings2['description']);
 echo form_textarea($locale['410']."<br/><small>".$locale['411']."</small>", 'keywords', 'keywords', $settings2['keywords']);
-echo form_textarea($locale['412'], 'footer', 'footer', $settings2['footer'], array('required' => 1,
-	'error_text' => $locale['error_value']));
-echo form_text($locale['413'], 'opening_page', 'opening_page', $settings2['opening_page'], array('max_length' => 100,
-	'required' => 1,
-	'error_text' => $locale['error_value']));
+echo form_textarea($locale['412'], 'footer', 'footer', $settings2['footer'], array('required' => 1, 'error_text' => $locale['error_value']));
+echo form_text($locale['413'], 'opening_page', 'opening_page', $settings2['opening_page'], array('max_length' => 100, 'required' => 1, 'error_text' => $locale['error_value']));
 echo "</div>\n</div>\n";
-
-
 echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 if ($userdata['user_theme'] == "Default") {
 	if ($settings2['theme'] != str_replace(THEMES, "", substr(THEME, 0, strlen(THEME)-1))) {
@@ -217,11 +201,15 @@ $opts = array();
 foreach ($theme_files as $file) {
 	$opts[$file] = $file;
 }
-echo form_select($locale['418'], 'theme', 'theme', $opts, $settings2['theme'], array("required" => 1,
-	'error_text' => $locale['error_value']));
+echo form_select($locale['418'], 'theme', 'theme', $opts, $settings2['theme'], array("required" => 1, 'error_text' => $locale['error_value']));
+$opts = array();
+foreach ($admin_theme_files as $file) {
+	$opts[$file] = $file;
+}
+echo form_select($locale['418a'], 'admin_theme', 'admin_theme', $opts, $settings2['admin_theme'], array("required" => 1, 'error_text' => $locale['error_value']));
+
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_select($locale['437'], 'bootstrap', 'bootstrap', $opts, $settings2['bootstrap'], array("required" => 1,
-	'error_text' => $locale['error_value']));
+echo form_select($locale['437'], 'bootstrap', 'bootstrap', $opts, $settings2['bootstrap'], array("required" => 1, 'error_text' => $locale['error_value']));
 $dir = LOCALE.LOCALESET."search/";
 $temp = opendir($dir);
 $opts = array();
@@ -244,7 +232,6 @@ echo form_textarea($locale['436']."<small>".$locale['424']."</small><br/>\n", 'e
 echo form_textarea($locale['423']."<small>".$locale['424']."</small><br/>\n", 'exclude_right', 'exclude_right', $settings2['exclude_right']);
 echo form_hidden('', 'old_localeset', 'old_localeset', $settings2['locale']);
 echo "</div>\n</div>\n";
-
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
 echo closeform();
 closetable();
