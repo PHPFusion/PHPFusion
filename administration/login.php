@@ -1,58 +1,56 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: login.php
+| Author: Dan (JoiNNN)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 if (!defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
-
 $login_error = "";
-$admin_password = "";
-
-// Check if the user has admin password set
 if ($userdata['user_admin_password']) {
-	// Check if a password was entered
 	if (isset($_POST['admin_password'])) {
 		$login_error = $locale['global_182'];
-
-		// Verify the token before setting the admin cookie
-		if (verify_token('admin_login', 1, '')) {
-			$admin_password = stripinput($_POST['admin_password']);
+		$admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
+		if (!defined("FUSION_NULL")) {
 			set_admin_pass($admin_password);
-		} else {
-			$login_error = $locale['token_error'];
 		}
 	}
 } else {
-	$login_error = $locale['global_199'];
+	$defender->stop();
+	$defender->addNotice($locale['global_199']);
 }
-
-// Check if admin password is set
 if (!check_admin_pass($admin_password)) {
-	require_once THEMES."templates/admin_header.php";
-
-	// Show error, if any
-	if ($login_error) {
-		echo "<div class='admin-message'>".$login_error."</div>\n";
-	}
-
-	opentable($locale['270']);
-	echo "<form class='admin-login-form' name='admin_login' method='post' action='".FUSION_SELF."?".FUSION_QUERY."'>\n";
-	echo "<input type='hidden' name='fusion_token' value='".generate_token('admin_login', 1)."' />"; // form token
-	// Keep $_POST data if user is forced to relogin due to cookie expiration
-	//foreach ($_POST as $key => $value) {
-	//echo "<input type='hidden' name='".stripinput($key)."' value='".stripinput($value)."' />";
-	//}
-	echo "<table align='center' cellspacing='0' cellpadding='0'>\n<tr>\n";
-	echo "<td class='tbl'><label for='admin_password'>".$locale['271']."</label></td>\n";
-	echo "<td class='tbl'><input type='password' id='admin_password' name='admin_password' value='' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td align='center' colspan='2' class='tbl'>\n";
-	echo "<input class='button' type='submit' name='admin_login' value='".$locale['global_100']."' /></td>\n";
-	echo "</tr>\n</table>\n</form>\n";
-	closetable();
-
-	require_once THEMES."templates/footer.php";
-
-	exit();
+	$form_action = FUSION_SELF.$aidlink == FUSION_SELF."?".FUSION_QUERY ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
+	echo openform('admin-login-form', 'admin-login-form', 'post', $form_action, array('downtime'=>0));
+	openside('');
+	echo "<div class='m-t-10 clearfix row'>\n";
+	echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
+	echo "<div class='pull-right'>\n";
+	echo display_avatar($userdata, '90px');
+	echo "</div>\n";
+	echo "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
+	echo "<h5><strong>".$locale['welcome'].", ".(ucwords($userdata['user_name']))."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
+	echo "<div class='clearfix'>\n";
+	echo form_text('', 'admin_password', 'admin_password', '', array('placeholder'=>$locale['281'], 'autocomplete_off'=>1, 'password'=>1, 'required'=>1));
+	echo "</div>\n";
+	echo "</div>\n";
+	echo "</div>\n";
+	closeside();
+	echo form_button('Sign in', 'admin_login', 'admin_login', 'Sign in', array('class'=>'btn-primary btn-block'));
+	echo closeform();
+} else {
+	redirect($form_action);
 }
-
 unset($login_error, $admin_password);
 ?>

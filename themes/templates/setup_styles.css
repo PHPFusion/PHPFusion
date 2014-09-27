@@ -147,16 +147,10 @@ form {
 
 .button {
     color: #FFF;
-    background-color: #04688D;
-    height: 20px;
-    border: 1px solid #000;
-    margin-top: 2px;
 }
 
 .textbox {
-    color: #555;
-    background-color: #F8F8F8;
-    border: 1px solid #CCC;
+	font-size: 13px;
 }
 
 .center {

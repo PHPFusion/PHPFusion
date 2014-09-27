@@ -16,17 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
 if (!iADMIN || $userdata['user_rights'] == "" || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
 	redirect("../index.php");
 }
-
 require_once THEMES."templates/admin_header.php";
-
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) $_GET['pagenum'] = 1;
-
 $admin_images = TRUE;
-
 // Work out which tab is the active default (redirect if no tab available)
 // These come from Panels.
 $default = FALSE;

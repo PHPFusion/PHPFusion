@@ -113,7 +113,12 @@ if (isset($_POST['savesettings'])) {
 			}
 		}
 		// write file. wipe out all .htaccess current configuration.
-		$htacess = "Options +FollowSymlinks -MultiViews\n";
+		$htaccess = "ErrorDocument 400 ".$settings['site_path']."/error.php?code=400\n";
+		$htaccess .= "ErrorDocument 401 ".$settings['site_path']."/error.php?code=401\n";
+		$htaccess .= "ErrorDocument 403 ".$settings['site_path']."/error.php?code=403\n";
+		$htaccess .= "ErrorDocument 404 ".$settings['site_path']."/error.php?code=404\n";
+		$htaccess .= "ErrorDocument 500 ".$settings['site_path']."/error.php?code=500\n";
+		$htacess .= "Options +FollowSymlinks -MultiViews\n";
 		$htacess .= "RewriteEngine On\n";
 		$htacess .= "RewriteBase ".$settings['site_path']."\n";
 		$htacess .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\n";

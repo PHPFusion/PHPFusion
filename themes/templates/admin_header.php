@@ -18,27 +18,23 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-
 define("ADMIN_PANEL", TRUE);
-
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."header_includes.php";
-
-// Toggle a main settings injection at maincore.php
-require_once THEMES."admin_templates/Venus/acp_theme.php";
-
-
 if ($settings['maintenance'] == "1" && !iADMIN) {
 	redirect(BASEDIR."maintenance.php");
+} else {
+	if (file_exists(THEMES."admin_templates/".$settings['admin_theme']."/acp_theme.php") && preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme'])) {
+		require_once THEMES."admin_templates/".$settings['admin_theme']."/acp_theme.php";
+	}
 }
 if (iMEMBER) {
 	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
-
 echo "<!DOCTYPE html>\n";
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
 echo "<meta http-equiv='Content-Type' content='text/html; charset=".$locale['charset']."' />\n";
-echo "<link rel='stylesheet' href='".THEME."styles.css' type='text/css' media='screen' />\n";
+echo "<link rel='stylesheet' href='".THEMES."admin_templates/".$settings['admin_theme']."/acp_styles.css' type='text/css' media='screen' />\n";
 if (file_exists(IMAGES."favicon.ico")) {
 	echo "<link rel='shortcut icon' href='".IMAGES."favicon.ico' type='image/x-icon' />\n";
 }
@@ -51,6 +47,5 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></scr
 echo "</head>\n<body>\n";
 
 require_once THEMES."templates/panels.php";
-
 ob_start();
 ?>

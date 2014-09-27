@@ -2,6 +2,8 @@
 // Greetings
 $locale['hello'] = "Hello!";
 $locale['goodbye'] = "Goodbye!";
+$locale['welcome'] = "Welcome back";
+
 // Status
 $locale['error'] = "Error!";
 $locale['success'] = "Success!";
@@ -55,4 +57,5 @@ $locale['login'] = "Log in";
 $locale['logout'] = "Logout";
 $locale['message'] = "Private Messages";
 $locale['logged'] = "Logged in as ";
+$locale['version'] = "Version ";
 ?>

@@ -18,11 +18,9 @@
 echo "<section id='acp-header' class='clearfix' data-spy='affix' data-offset-top='0' data-offset-bottom='0'>\n";
 echo "<div class='brand pull-left'>\n";
 echo "<img src='".IMAGES."php-fusion-icon.png'>\n";
-//echo "<img src='".THEMES."admin_templates/venus/img/admin_logo.png'>";
 echo "<h4 class='brand-text'>Administrator</h4>\n";
 echo "</div>\n";
 echo "<nav>\n";
-// sample first.
 echo "<ul class='venus-toggler'>\n";
 echo "<li><a id='toggle-canvas' style='border-left:none;'><i class='entypo menu text-bigger'></i></a></li>\n";
 echo "</ul>\n";
