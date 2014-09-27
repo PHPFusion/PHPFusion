@@ -58,7 +58,6 @@ if (isset($_POST['savesettings'])) {
 	} else {
 		$defender->stop();
 		$defender->addNotice($locale['902']);
-		//redirect(FUSION_SELF.$aidlink."&error=2");
 	}
 	if (($_POST['site_path'] && $_POST['site_path'] != "/") || $site_path != "/") {
 		if ($site_path == "/") {
@@ -214,7 +213,7 @@ foreach ($admin_theme_files as $file) {
 echo form_select($locale['418a'], 'admin_theme', 'admin_theme', $opts, $settings2['admin_theme'], array("required" => 1, 'error_text' => $locale['error_value']));
 
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_select($locale['437'], 'bootstrap', 'bootstrap', $opts, $settings2['bootstrap'], array("required" => 1, 'error_text' => $locale['error_value']));
+echo form_select($locale['437'], 'bootstrap', 'bootstrap', $opts, $settings2['bootstrap']);
 $dir = LOCALE.LOCALESET."search/";
 $temp = opendir($dir);
 $opts = array();
