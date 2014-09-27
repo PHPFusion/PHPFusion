@@ -44,7 +44,7 @@ if ($_GET['stype'] == "l") {
 	}
 	add_to_title($locale['global_200'].$locale['400']);
 	opentable($locale['400']);
-	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name FROM ".DB_WEBLINK_CATS." WHERE ".groupaccess("weblink_cat_access")." ORDER BY weblink_cat_name");
+	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("weblink_cat_access")." ORDER BY weblink_cat_name");
 	if (dbrows($result) > 0) {
 		$opts = array();
 		while ($data = dbarray($result)) {
@@ -99,7 +99,8 @@ if ($_GET['stype'] == "l") {
 		$news_snippet = "";
 		$news_body = "";
 	}
-	$result2 = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ORDER BY news_cat_name");
+	
+	$result2 = dbquery("SELECT news_cat_id, news_cat_name, news_cat_language FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 
 	if (dbrows($result2)) {
 		$cat_list = array();
@@ -155,7 +156,7 @@ if ($_GET['stype'] == "l") {
 		}
 		add_to_title($locale['global_200'].$locale['500']);
 		opentable($locale['500']);
-		$result = dbquery("SELECT article_cat_id, article_cat_name FROM ".DB_ARTICLE_CATS." WHERE ".groupaccess("article_cat_access")." ORDER BY article_cat_name");
+		$result = dbquery("SELECT article_cat_id, article_cat_name FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("article_cat_access")." ORDER BY article_cat_name");
 		if (dbrows($result)) {
 			$cat_list = array();
 			while ($data = dbarray($result)) {
@@ -205,7 +206,7 @@ if ($_GET['stype'] == "l") {
 	$opts = "";
 	add_to_title($locale['global_200'].$locale['570']);
 	opentable($locale['570']);
-	$result = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess("album_access")." ORDER BY album_title");
+	$result = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("album_access")." ORDER BY album_title");
 	if (dbrows($result)) {
 		$opts = array();
 		while ($data = dbarray($result)) {
@@ -262,7 +263,7 @@ if ($_GET['stype'] == "l") {
 	}
 	add_to_title($locale['global_200'].$locale['650']);
 	opentable($locale['650']);
-	$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." WHERE ".groupaccess("download_cat_access")." ORDER BY download_cat_name");
+	$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("download_cat_access")." ORDER BY download_cat_name");
 	if (dbrows($result)) {
 		$opts = array();
 		while ($data = dbarray($result)) {
