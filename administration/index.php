@@ -359,8 +359,8 @@ if ($_GET['pagenum'] == 0) {
 			<a class='btn btn-xs btn-default' title='".$locale['276']."' href='".ADMIN."submissions.php".$aidlink."&amp;delete=".$data['submit_id']."'><i class='entypo trash'></i></a></div>\n";
 			echo "<strong>".profile_link($data['user_id'], ucwords($data['user_name']), $data['user_status'])."</strong>\n";
 			echo "<span class='text-smaller text-lighter'>".$locale['273b']." <strong>".$submit_type[$data['submit_type']]."</strong></span>";
-			echo "&nbsp;<span class='text-smaller'>".timer($data['comment_datestamp'])."</span><br/>\n";
-			echo "<span class='text-smaller text-lighter'>".trimlink(parseubb($data['comment_message']), 70)."</span>\n";
+			echo "&nbsp;<span class='text-smaller'>".timer($data['submit_datestamp'])."</span><br/>\n";
+			//echo "<span class='text-smaller text-lighter'>".trimlink(parseubb($data['comment_message']), 70)."</span>\n";
 			echo "</div>\n";
 			echo "<!--End Submissions Item-->\n";
 			$i++;
