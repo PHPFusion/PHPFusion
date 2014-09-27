@@ -76,6 +76,9 @@ pre {
     padding: 3px 4px 5px 4px;
     margin-bottom: 5px;
 }
+.shoutboxwrapper {
+	margin:5px 0;
+}
 
 /* Form element properties */
 
@@ -178,6 +181,7 @@ div.emulated-fieldset div.attachments-list {
 
 .sub-header ul li {
     display: inline;
+	float: left;
 }
 
 .sub-header ul li.first-link .bullet {

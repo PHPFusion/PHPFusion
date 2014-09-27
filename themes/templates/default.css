@@ -24,7 +24,12 @@
 .vb {
 	vertical-align: bottom;
 }
-
+.pull-left {
+	float: left;
+}
+.pull-right {
+	float: right;
+}
 /*spacers family*/
 .m-0 {
 	margin: 0px !important;
@@ -316,10 +321,9 @@ ul > li {
 }
 
 ul > li a {
-	display: inline-block;
 	color: rgb(51, 51, 51);
 	width: 100%;
-	outline: none;
+	outline: none;	
 }
 
 /* all tabs must have class */

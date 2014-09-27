@@ -16,13 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+$settings['bootstrap'] = 1;
 require_once INCLUDES."theme_functions_include.php";
 include_once THEMES."admin_templates/Venus/includes/functions.php";
 require_once ADMIN."navigation.php";
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 function render_adminpanel() {
 	global $locale, $userdata, $defender, $pages, $aidlink, $settings;
+
 	$admin_password = '';
+
 	if (!check_admin_pass($admin_password)) {
 		add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
 		echo "<aside class='block-container'>\n";
@@ -41,6 +44,7 @@ function render_adminpanel() {
 		echo "</div>\n";
 		echo "</aside>\n";
 	} else {
+
 		echo "<div id='admin-panel' ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? "class='in'" : '')." >\n";
 		include THEMES."admin_templates/Venus/includes/header.php";
 		echo "<div class='display-table' style='height:100%; width:100%;'>\n";
