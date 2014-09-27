@@ -30,8 +30,8 @@ if ($userdata['user_admin_password']) {
 	$defender->stop();
 	$defender->addNotice($locale['global_199']);
 }
+$form_action = FUSION_SELF.$aidlink == FUSION_SELF."?".FUSION_QUERY ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
 if (!check_admin_pass($admin_password)) {
-	$form_action = FUSION_SELF.$aidlink == FUSION_SELF."?".FUSION_QUERY ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
 	echo openform('admin-login-form', 'admin-login-form', 'post', $form_action, array('downtime'=>0));
 	openside('');
 	echo "<div class='m-t-10 clearfix row'>\n";

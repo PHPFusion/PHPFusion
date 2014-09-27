@@ -95,7 +95,7 @@ if (isset($_POST['savesettings'])) {
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$admin_theme' WHERE settings_name='admin_theme'") : '';
 	$theme = form_sanitizer($_POST['theme'], '', 'theme');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$theme' WHERE settings_name='theme'") : '';
-	$bootstrap = form_sanitizer($_POST['bootstrap'], 1, 'bootstrap');
+	$bootstrap = form_sanitizer($_POST['bootstrap'], 0, 'bootstrap');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$bootstrap' WHERE settings_name='bootstrap'") : '';
 	$site_seo = form_sanitizer($_POST['site_seo'], 0, 'site_seo');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$site_seo' WHERE settings_name='site_seo'") : '';
