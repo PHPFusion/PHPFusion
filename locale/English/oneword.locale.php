@@ -54,4 +54,5 @@ $locale['view'] = "View";
 $locale['login'] = "Log in";
 $locale['logout'] = "Logout";
 $locale['message'] = "Private Messages";
+$locale['logged'] = "Logged in as ";
 ?>
