@@ -180,8 +180,8 @@ class UserFields {
 			$Output .= ($this->showAdminOptions && iADMIN && checkrights("M") && $this->userData['user_id'] != $userdata['user_id'] && $this->userData['user_level'] < 102) ? $this->renderAdminOptions() : '';
 		}
 		$this->html .= ($this->showPages) ? "<ul id='profile-li'>\n" : '';
-		$this->html .= ($this->showPages) ? "<li ".(!isset($_GET['profiles']) ? "class='active'" : '')."><a href='".($this->baseRequest ? $base_request : FUSION_SELF)."'><i class='entypo cog m-r-10'></i>General</a></li>\n" : '';
-		$this->html .= ($this->showPages) ? "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? "class='active'" : '')."><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : FUSION_SELF."?")."profiles=biography")." '><i class='entypo lock m-r-10'></i>User Information</a></li>\n" : '';
+		$this->html .= ($this->showPages) ? "<li ".(!isset($_GET['profiles']) ? "class='active'" : '')."><a href='".($this->baseRequest ? $base_request : FUSION_SELF."?lookup=".$this->userData['user_id'])."'><i class='entypo cog m-r-10'></i>General</a></li>\n" : '';
+		$this->html .= ($this->showPages) ? "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? "class='active'" : '')."><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : FUSION_SELF."?")."profiles=biography&amp;lookup=".$this->userData['user_id']."")." '><i class='entypo lock m-r-10'></i>User Information</a></li>\n" : '';
 		$this->html .= ($this->showPages) ? $this->renderPageLink() : '';
 		$this->html .= ($this->showPages) ? "</div>\n" : '';
 		$this->html .= ($this->showPages) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
@@ -547,7 +547,7 @@ class UserFields {
 			if (count($link) && !empty($link)) {
 				foreach ($link as $data) {
 					$base_request = strtr(FUSION_REQUEST, array_combine($find, $replace));
-					$html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? "class='active'" : '')." /><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : FUSION_SELF."?")."profiles=".strtolower($data['field_cat_name'])."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
+					$html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? "class='active'" : '')." /><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : FUSION_SELF."?")."profiles=".strtolower($data['field_cat_name'])."&amp;lookup=".$this->userData['user_id']."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
 				}
 			}
 		}
