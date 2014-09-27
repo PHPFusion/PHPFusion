@@ -549,13 +549,15 @@ function trim_text($str, $length = FALSE) {
 }
 
 // Validate numeric input
-function isnum($value) {
+function isnum($value, $decimal=false) {
 	if (!is_array($value)) {
-		return (preg_match("/^[\w-0-9]+$/", $value));
+		if($decimal==true) return (preg_match("/^[0-9]+(\.{0,1})[0-9]*$/", $value));
+		return (preg_match("/^[0-9]+$/", $value));
 	} else {
-		return FALSE;
+		return false;
 	}
 }
+
 
 // Custom preg-match function
 function preg_check($expression, $value) {
