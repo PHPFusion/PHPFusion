@@ -45,39 +45,53 @@ echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script
 echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
 if ($settings['tinymce_enabled'] == 1) {
+	$tinymce_list = array();
+	$image_list = makefilelist(IMAGES, ".|..|");
+	$image_filter = array('png', 'PNG', 'bmp', 'BMP', 'jpg', 'JPG', 'jpeg', 'gif', 'GIF', 'tiff', 'TIFF');
+	foreach($image_list as $image_name) {
+		$image_1 = explode('.', $image_name);
+		$last_str = count($image_1)-1;
+		if (in_array($image_1[$last_str], $image_filter)) {
+			$tinymce_list[] = array('title'=>$image_name, 'value'=> IMAGES.$image_name);
+		}
+	}
+	$tinymce_list = json_encode($tinymce_list);
+
 	echo "<style type='text/css'>.mceIframeContainer iframe{width:100%!important;}</style>\n";
-	echo "<script language='javascript' type='text/javascript' src='".INCLUDES."jscripts/tiny_mce/tiny_mce.js'></script>\n
-<script type='text/javascript'>
-function advanced() {
-	tinyMCE.init({
-		relative_urls: false,
-		mode: 'textareas',
-		theme: 'advanced',
-		skin: 'o2k7',
-		skin_variant: 'silver',
-		pagebreak_separator: '<--PAGEBREAK-->',
-		language:'".$locale['tinymce']."',
-		plugins: 'safari,pagebreak,style,layer,table,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras',
-		theme_advanced_buttons1: 'newdocument,styleprops,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect',
-		theme_advanced_buttons2: 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor',
-		theme_advanced_buttons3: 'tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,ltr,rtl,|,print,fullscreen',
-		theme_advanced_buttons4: 'insertlayer,moveforward,movebackward,absolute,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,blockquote,pagebreak',
-		theme_advanced_toolbar_location: 'top',
-		theme_advanced_toolbar_align: 'left',
-		theme_advanced_statusbar_location: 'bottom',
-		theme_advanced_resizing: true,
-		invalid_elements:'script,object,applet,iframe',
-		content_css:'".THEME."styles.css',
-		external_image_list_url:'".IMAGES."imagelist.js',
-	});
+	echo "<script language='javascript' type='text/javascript' src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>\n
+	<script type='text/javascript'>
+	function advanced() {
+	tinymce.init({
+    selector: 'textarea',
+    theme: 'modern',
+    width: '100%',
+    height: 300,
+    plugins: [
+		'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+		'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+		'save table contextmenu directionality emoticons template paste textcolor'
+	],
+	image_list: $tinymce_list,
+   content_css: '".THEME."styles.css',
+   toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons',
+   style_formats: [
+        {title: 'Bold text', inline: 'b'},
+        {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+        {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+        {title: 'Example 1', inline: 'span', classes: 'example1'},
+        {title: 'Example 2', inline: 'span', classes: 'example2'},
+        {title: 'Table styles'},
+        {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+    ]
+ });
 }
 
 function simple() {
-	tinyMCE.init({
-	mode: 'textareas',
-	theme: 'simple',
-	language:'".$locale['tinymce']."'
-});
+tinymce.init({
+    selector: 'textarea',
+    theme: 'modern',
+    language:'".$locale['tinymce']."'
+ });
 }
 
 function toggleEditor(id) {
