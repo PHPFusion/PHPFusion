@@ -5,8 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: theme_functions_include.php
-| Author: Nick Jones (Digitanium)
-| Co-Author: Frederick MC Chan (Hien)
+| Author: Nick Jones (Digitanium), Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,7 +18,6 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-
 function load_bootstrap() {
 	define('bootstrapped', TRUE);
 	require_once INCLUDES."output_handling_include.php";
@@ -30,15 +28,16 @@ function load_bootstrap() {
 	add_to_head("<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' media='screen' />");
 }
 
-if ($settings['bootstrap']) {
+if ($settings['bootstrap'] == 1) {
 	load_bootstrap();
 }
-
+// port to header.php;
 add_to_head("<link href='".THEMES."templates/default.css' rel='stylesheet' media='screen' />");
 add_to_head("<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />");
 
 function openmodal($id, $title, $opts = FALSE) {
 	if (!empty($opts)) {
+		// trigger via button or via load.
 		if (array_key_exists('button_id', $opts) && $opts['button_id']) {
 			add_to_jquery("
                    $('#".$opts['button_id']."').bind('click', function(e){
@@ -164,9 +163,9 @@ function showbanners($display = "") {
 		if ($settings['sitebanner1']) {
 			eval("?>".stripslashes($settings['sitebanner1'])."\n<?php ");
 		} elseif ($settings['sitebanner']) {
-			echo "<a href='".BASEDIR."'><img src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
+			echo "<a href='".$settings['siteurl']."'><img src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
 		} else {
-			echo "<a href='".BASEDIR."'>".$settings['sitename']."</a>\n";
+			echo "<a href='".$settings['siteurl']."'>".$settings['sitename']."</a>\n";
 		}
 	}
 	$output = ob_get_contents();
@@ -440,7 +439,7 @@ function timer($updated = FALSE) {
 	$calculated = $current-$updated;
 	$second = 1;
 	$minute = $second*60;
-	$hour = $minute*60;
+	$hour = $minute*60; // microseconds
 	$day = 24*$hour;
 	$month = days_current_month()*$day;
 	$year = (date("L", $updated) > 0) ? 366*$day : 365*$day;
@@ -450,8 +449,9 @@ function timer($updated = FALSE) {
 	$timer = array($year => "year", $month => "month", $day => "day", $hour => "hour", $minute => "minute",
 				   $second => "second");
 	foreach ($timer as $arr => $unit) {
-		$calc = $calculated/$arr;
+		$calc = $calculated/$arr; // balance timestamp
 		if ($calc >= 1) {
+			// stops the rest of the loop.
 			$answer = round($calc);
 			$s = ($answer > 1) ? "s" : "";
 			return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>$answer ".$unit.$s." ago</abbr>";
@@ -460,6 +460,7 @@ function timer($updated = FALSE) {
 }
 
 function days_current_month() {
+	// calculate number of days in a month
 	$year = showdate("%Y", time());
 	$month = showdate("%m", time());
 	return $month == 2 ? ($year%4 ? 28 : ($year%100 ? 29 : ($year%400 ? 28 : 29))) : (($month-1)%7%2 ? 30 : 31);
@@ -469,14 +470,14 @@ function countdown($time) {
 	$updated = stripinput($time);
 	$second = 1;
 	$minute = $second*60;
-	$hour = $minute*60; 
+	$hour = $minute*60; // microseconds
 	$day = 24*$hour;
 	$month = days_current_month()*$day;
 	$year = (date("L", $updated) > 0) ? 366*$day : 365*$day;
 	$timer = array($year => "year", $month => "month", $day => "day", $hour => "hour", $minute => "minute",
 				   $second => "second");
 	foreach ($timer as $arr => $unit) {
-		$calc = $updated/$arr;
+		$calc = $updated/$arr; // balance timestamp
 		if ($calc >= 1) {
 			$answer = round($calc);
 			$s = ($answer > 1) ? "s" : "";
@@ -488,7 +489,8 @@ function countdown($time) {
 	}
 }
 
-function tab_active($tab_title, $default_active, $link_mode=false) {
+// Simplified Tabs - Without Hierarchy
+function tab_active($tab_title, $default_active, $link_mode=false) { // tab title is array.
 	if ($link_mode) {
 		$section = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : $default_active;
 		$count = count($tab_title['title']);
@@ -503,6 +505,7 @@ function tab_active($tab_title, $default_active, $link_mode=false) {
 			return $default_active;
 		}
 	} else {
+		// to get the current active by id and title added together.
 		$id = $tab_title['id'][$default_active];
 		$title = $tab_title['title'][$default_active];
 		$v_link = str_replace(" ", "-", $title);
@@ -530,7 +533,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class=fal
 		}
 		$html .= "<a ".(!$link_mode ? "data-toggle='tab' href='#".$id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='$icon'></i>" : '')." ".$v_title." </a>\n";
 		$html .= "</li>\n";
-	} 
+	} // end foreach
 	$html .= "</ul>\n";
 	$html .= "<div class='tab-content' >\n";
 	return $html;
@@ -563,6 +566,7 @@ function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE
 }
 
 function closetabbody() { return "</div>\n"; }
+
 function closetab() { return "</div>\n</div>\n"; }
 
 ?>
