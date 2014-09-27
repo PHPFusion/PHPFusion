@@ -92,7 +92,7 @@ form {
     color: #FFF;
     background-color: #F6A504;
     background-image: url(images/button.gif);
-    height: 20px;
+    height: auto;
     border: 1px solid #000;
 }
 
