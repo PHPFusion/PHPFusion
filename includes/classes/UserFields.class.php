@@ -78,7 +78,7 @@ class UserFields {
 		$this->html .= "<div class='row m-b-20'>\n";
 		if (!$this->registration) {
 			add_to_title("Edit Profile");
-			$this->html .= "<div class='col-xs-12 col-sm-3 col-md-2 col-lg-3 p-r-0'>\n";
+			$this->html .= "<div class='col-xs-12 col-sm-3 col-md-2 col-lg-3 p-r-0 pull-left'>\n";
 			$this->html .= "<ul id='profile-li'>\n";
 			$this->html .= "<li ".(!isset($_GET['profiles']) ? "class='active'" : '')."><a href='".FUSION_SELF."'><i class='entypo cog m-r-10'></i>General</a></li>\n";
 			$this->html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? "class='active'" : '')."><a href='".FUSION_SELF."?profiles=biography'><i class='entypo lock m-r-10'></i>User Information</a></li>\n";
@@ -86,7 +86,7 @@ class UserFields {
 			$this->html .= $this->renderPageLink();
 			$this->html .= "</ul>\n";
 			$this->html .= "</div>\n";
-			$this->html .= "<div class='col-xs-12 col-sm-9 col-md-10 col-lg-9' style='border-left:1px solid #ccc;'>\n";
+			$this->html .= "<div class='col-xs-12 col-sm-9 col-md-10 col-lg-9'>\n";
 		} else {
 			$this->html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
 		}
@@ -94,7 +94,6 @@ class UserFields {
 		$this->html .= "<div class='panel-body'>\n";
 		$this->html .= "<table cellpadding='0' cellspacing='0' class='table center edit-profile table-responsive'>\n";
 		$this->html .= $Output;
-		$this->html .= "</table>\n";
 		if ($this->displayValidation == 1) {
 			$this->renderValidation();
 		}
@@ -105,6 +104,7 @@ class UserFields {
 		$this->html .= "</div></div>\n";
 		$this->html .= "</div></div>\n";
 		$this->html .= "</table>\n</form>\n";
+
 		$this->js .= "<script type='text/javascript'>\n";
 		$this->js .= "/*<![CDATA[*/\n";
 		$this->js .= "	function ValidateForm(frm) {\n";
@@ -148,7 +148,7 @@ class UserFields {
 		global $locale, $userdata;
 		$this->method = "display";
 		$this->html .= ($this->showPages) ? "<section class='row'>\n" : '';
-		$this->html .= ($this->showPages) ? "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n" : '';
+		$this->html .= ($this->showPages) ? "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 pull-left'>\n" : '';
 		// display menu we'll skip into page according to the user fields class.
 		$find = array('&amp;profiles=biography');
 		$replace = array("");
@@ -180,8 +180,8 @@ class UserFields {
 			$Output .= ($this->showAdminOptions && iADMIN && checkrights("M") && $this->userData['user_id'] != $userdata['user_id'] && $this->userData['user_level'] < 102) ? $this->renderAdminOptions() : '';
 		}
 		$this->html .= ($this->showPages) ? "<ul id='profile-li'>\n" : '';
-		$this->html .= ($this->showPages) ? "<li ".(!isset($_GET['profiles']) ? "class='active'" : '')."><a href='".($this->baseRequest ? $base_request : FUSION_SELF."?lookup=".$this->userData['user_id'])."'><i class='entypo cog m-r-10'></i>General</a></li>\n" : '';
-		$this->html .= ($this->showPages) ? "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? "class='active'" : '')."><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : FUSION_SELF."?")."profiles=biography&amp;lookup=".$this->userData['user_id']."")." '><i class='entypo lock m-r-10'></i>User Information</a></li>\n" : '';
+		$this->html .= ($this->showPages) ? "<li ".(!isset($_GET['profiles']) ? "class='active'" : '')."><a href='".($this->baseRequest ? $base_request : BASEDIR."profile.php?lookup=".$this->userData['user_id'])."'><i class='entypo cog m-r-10'></i>General</a></li>\n" : '';
+		$this->html .= ($this->showPages) ? "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? "class='active'" : '')."><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : BASEDIR."profile.php?")."profiles=biography&amp;lookup=".$this->userData['user_id']."")." '><i class='entypo lock m-r-10'></i>User Information</a></li>\n" : '';
 		$this->html .= ($this->showPages) ? $this->renderPageLink() : '';
 		$this->html .= ($this->showPages) ? "</div>\n" : '';
 		$this->html .= ($this->showPages) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
@@ -547,7 +547,7 @@ class UserFields {
 			if (count($link) && !empty($link)) {
 				foreach ($link as $data) {
 					$base_request = strtr(FUSION_REQUEST, array_combine($find, $replace));
-					$html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? "class='active'" : '')." /><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : FUSION_SELF."?")."profiles=".strtolower($data['field_cat_name'])."&amp;lookup=".$this->userData['user_id']."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
+					$html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? "class='active'" : '')." /><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : BASEDIR."profile.php?")."profiles=".strtolower($data['field_cat_name'])."&amp;lookup=".$this->userData['user_id']."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
 				}
 			}
 		}
