@@ -112,26 +112,26 @@ if (isset($_POST['savesettings'])) {
 			}
 		}
 		// write file. wipe out all .htaccess current configuration.
-		$htaccess = "ErrorDocument 400 ".$settings['site_path']."/error.php?code=400\n";
-		$htaccess .= "ErrorDocument 401 ".$settings['site_path']."/error.php?code=401\n";
-		$htaccess .= "ErrorDocument 403 ".$settings['site_path']."/error.php?code=403\n";
-		$htaccess .= "ErrorDocument 404 ".$settings['site_path']."/error.php?code=404\n";
-		$htaccess .= "ErrorDocument 500 ".$settings['site_path']."/error.php?code=500\n";
-		$htacess .= "Options +FollowSymlinks -MultiViews\n";
-		$htacess .= "RewriteEngine On\n";
-		$htacess .= "RewriteBase ".$settings['site_path']."\n";
-		$htacess .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\n";
-		$htacess .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\n";
-		$htacess .= "RewriteRule .* - [F,L]\n";
-		$htacess .= "# Exclude /assets and /manager directories and images from rewrite rules\n";
-		$htacess .= "RewriteRule ^(administration|themes)/*$ - [L]\n";
-		$htacess .= "RewriteCond %{REQUEST_FILENAME} !-f\n";
-		$htacess .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
-		$htacess .= "RewriteCond %{REQUEST_FILENAME} !-l\n";
-		$htacess .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\n";
-		$htacess .= "RewriteRule ^(.*?)$ rewrite.php [L]\n";
+		$htc = "ErrorDocument 400 ".$settings['site_path']."/error.php?code=400\n";
+		$htc .= "ErrorDocument 401 ".$settings['site_path']."/error.php?code=401\n";
+		$htc .= "ErrorDocument 403 ".$settings['site_path']."/error.php?code=403\n";
+		$htc .= "ErrorDocument 404 ".$settings['site_path']."/error.php?code=404\n";
+		$htc .= "ErrorDocument 500 ".$settings['site_path']."/error.php?code=500\n";
+		$htc .= "Options +FollowSymlinks -MultiViews\n";
+		$htc .= "RewriteEngine On\n";
+		$htc .= "RewriteBase ".$settings['site_path']."\n";
+		$htc .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\n";
+		$htc .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\n";
+		$htc .= "RewriteRule .* - [F,L]\n";
+		$htc .= "# Exclude /assets and /manager directories and images from rewrite rules\n";
+		$htc .= "RewriteRule ^(administration|themes)/*$ - [L]\n";
+		$htc .= "RewriteCond %{REQUEST_FILENAME} !-f\n";
+		$htc .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
+		$htc .= "RewriteCond %{REQUEST_FILENAME} !-l\n";
+		$htc .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\n";
+		$htc .= "RewriteRule ^(.*?)$ rewrite.php [L]\n";
 		$temp = fopen(BASEDIR.".htaccess", "w");
-		if (fwrite($temp, $htacess)) {
+		if (fwrite($temp, $htc)) {
 			fclose($temp);
 		}
 	} else {
