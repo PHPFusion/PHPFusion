@@ -34,7 +34,7 @@ $inbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['us
 $outbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='1'");
 $archive_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='2'");
 
-echo "<div class='avatar-row'>\n";
+echo "<div class='avatar-row text-center'\n";
 echo "<div class='pull-left m-r-10'>\n";
 echo display_avatar($userdata, '90px');
 echo "</div>\n";
