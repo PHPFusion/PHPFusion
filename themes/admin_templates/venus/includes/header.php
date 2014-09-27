@@ -33,13 +33,19 @@ setTimeout(function() {
 $('#acp-main').toggleClass('in');
 $('#admin-panel').toggleClass('in');
 }, 30);
+panel_state = $('#acp-left').hasClass('in');
+if (panel_state) {
+$.cookie('Venus', '1', {expires: 7});
+} else {
+$.cookie('Venus', '0', {expires: 7});
+}
 });
 ");
 echo "<ul class='hidden-xs pull-right m-r-15'>\n";
 echo "<li><a target='_blank' title='".$locale['view']." ".$settings['sitename']."' href='".BASEDIR."'><i class='icon-xs entypo home'></i></a></li>\n";
 echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='icon-xs entypo mail'></i></a></li>\n";
 echo "<li><a title='".$locale['settings']."' href='".ADMIN."settings_main.php".$aidlink."'><i class='icon-xs entypo cog'></i></a></li>\n";
-echo "<li class='dropdown'><a class='dropdown-toggle' data-toggle='dropdown'>".$locale['acp_001'].$userdata['user_name']." <span class='caret'></span></a>\n";
+echo "<li class='dropdown'><a class='dropdown-toggle' data-toggle='dropdown'>".$locale['logged'].$userdata['user_name']." <span class='caret'></span></a>\n";
 echo "<ul class='dropdown-menu' role='menu'>\n";
 echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."edit_profile.php'>".$locale['edit']." ".$locale['profile']."</a></li>\n";
 echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>\n";
