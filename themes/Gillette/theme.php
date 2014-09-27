@@ -2,14 +2,13 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-
+$settings['bootstrap'] = '0';
 define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
 
 require_once INCLUDES."theme_functions_include.php";
 
 function render_page($license = FALSE) {
 	global $settings, $main_style, $locale, $mysql_queries_time;
-	$settings['bootstrap'] = 0;
 	//Header
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td class='full-header'>\n".showbanners()."</td>\n";
