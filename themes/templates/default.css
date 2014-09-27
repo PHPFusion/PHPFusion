@@ -411,6 +411,7 @@ a .entypo, a .entypo-social {
 #profile-li > li > a {
 	padding: 8px 3px;
 	width: 100%;
+	display: inline-block;
 }
 
 .select2-input {
