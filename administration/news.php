@@ -183,8 +183,9 @@ if (isset($_POST['save'])) {
 	}
 }
 if (isset($_POST['preview'])) {
-	$news_subject = form_sanitizer($_POST['news_subject'], '', 'news_subject'); //stripinput($_POST['news_subject']);
+	$news_subject = form_sanitizer($_POST['news_subject'], '', 'news_subject'); 
 	$news_cat = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
+	$news_language = form_sanitizer($_POST['news_language'], '', 'news_language'); 
 	$body = phpentities(stripslash($_POST['body']));
 	$bodypreview = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['body']));
 	if ($_POST['body2']) {
@@ -252,6 +253,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news
 		$news_cat = $data['news_cat'];
 		$body = phpentities(stripslashes($data['news_news']));
 		$body2 = phpentities(stripslashes($data['news_extended']));
+		$news_start = "";
+		$news_end = "";
 		if ($data['news_start'] > 0) $news_start = $data['news_start'];
 		if ($data['news_end'] > 0) $news_end = $data['news_end'];
 		$news_image = $data['news_image'];
@@ -282,8 +285,8 @@ if ((isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news
 		$news_visibility = 0;
 		$news_draft = "";
 		$news_sticky = "";
-		$news_start = '';
-		$news_end = '';
+		$news_start = "";
+		$news_end = "";
 		$news_breaks = " checked='checked'";
 		$news_comments = " checked='checked'";
 		$news_ratings = " checked='checked'";
