@@ -545,7 +545,7 @@ class UserFields {
 				foreach ($link as $data) {
 					$base_request = strtr(FUSION_REQUEST, array_combine($find, $replace));
 					$html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? "class='active'" : '')." />";
-					$html .= "<a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : "".(isset($_GET['aid']) ? $this->formaction."&amp;" : BASEDIR."edit_profile.php?")."")."profiles=".strtolower($data['field_cat_name'])."".(isset($_GET['aid']) ? '' : "&amp;lookup=".$this->userData['user_id']."")."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
+					$html .= "<a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : "".(isset($_GET['aid']) ? $this->formaction."&amp;" : BASEDIR."".($this->method == 'input' ? "edit_profile.php?" : "profile.php?")."")."")."profiles=".strtolower($data['field_cat_name'])."".(isset($_GET['aid']) ? '' : "&amp;lookup=".$this->userData['user_id']."")."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
 				}
 			}
 		}
