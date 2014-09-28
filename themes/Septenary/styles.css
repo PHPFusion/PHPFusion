@@ -290,6 +290,13 @@ input[type=text]:focus {
 .section-2-tab.active, .section-2-tab:hover {
     background-color: rgba(255, 255, 255, 0.4);
 }
+.avatar-row {
+	float:left;
+	display: inline;
+	width: auto !important;
+	margin-right: 10px;
+	margin-bottom: 20px;
+}
 
 .header-nav {
     height: 70px;
@@ -385,7 +392,9 @@ nav {
     text-decoration: none;
     outline: none;
 }
-
+.section-showcase a.side {
+	color: rgb(42, 100, 150);
+}
 /* Section 3 */
 .section-3 {
     background: transparent;
