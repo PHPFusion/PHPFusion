@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $settings['bootstrap'] = 1;
 require_once INCLUDES."theme_functions_include.php";
-include_once THEMES."admin_templates/Venus/includes/functions.php";
+include_once THEMES."admin_templates/venus/includes/functions.php";
 require_once ADMIN."navigation.php";
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 function render_adminpanel() {
@@ -50,8 +50,12 @@ function render_adminpanel() {
 		echo "<div id='acp-left' class='pull-left off-canvas ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' data-spy='affix' data-offset-top='0' data-offset-bottom='0' style='width:250px; height:100%;'>\n"; // collapse to top menu on sm and xs
 		echo "<div class='panel panel-default admin' style='border:0px; box-shadow: none;'><div class='panel-body clearfix'>\n";
 		echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '50px')."</div>\n";
-		echo "<span class='display-block m-t-5'><strong>\n".ucfirst($userdata['user_name'])."</strong>\n<br/>".getuserlevel($userdata['user_level'])."</span>\n";
-		echo "</div>\n</div>\n";
+		echo "<span class='display-block m-t-5'><strong>\n".ucfirst($userdata['user_name'])."</strong>\n<br/>".getuserlevel($userdata['user_level'])."</span></div>\n";
+		echo "<div class='text-center m-r-10'>\n";
+		echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
+		echo lang_switcher();
+		echo "</div>\n";
+		echo "</div>\n";
 		echo admin_nav(1);
 		echo "</div>\n";
 		echo "<!--end leftnav -->\n";
