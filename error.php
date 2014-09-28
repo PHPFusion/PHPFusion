@@ -18,7 +18,9 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
+
 include LOCALE.LOCALESET."error.php";
+
 if (isset($_GET['code']) && $_GET['code'] == "401") {
 	header("HTTP/1.1 401 Unauthorized");
 	$text = $locale['err401'];
@@ -40,17 +42,16 @@ if (isset($_GET['code']) && $_GET['code'] == "401") {
 	$img = "unknown.png";
 }
 opentable($text);
-echo "<center>";
-echo "<table width='100%'>";
+echo "<table class='table table-responsive' width='100%' style='text-center'>";
 echo "<tr>";
-echo "<td width='30%' align='center'><img src='".IMAGES."error/".$img."' alt='".$text."' border='0'></td>";
+echo "<td width='30%' align='center'><img class='img-responsive' src='".IMAGES."error/".$img."' alt='".$text."' border='0'></td>";
 echo "<td style='font-size:16px;color:red' align='center'>".$text."</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td colspan='2' align='center'><b><a class='button' href='".BASEDIR."index.php'>".$locale['errret']."</a></b></td>";
 echo "</tr>";
 echo "</table>";
-echo "</center>";
+
 closetable();
 require_once THEMES."templates/footer.php";
 ?>
