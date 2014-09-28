@@ -112,7 +112,7 @@ if (isset($_POST['savesettings'])) {
 			}
 		}
 		// write file. wipe out all .htaccess current configuration.
-		$htc .= "Options +FollowSymlinks -MultiViews\r\n";
+		$htc .= "Options +SymLinksIfOwnerMatch\r\n";
 		$htc .= "RewriteEngine On\r\n";
 		$htc .= "RewriteBase ".$settings['site_path']."\r\n";
 		$htc .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\r\n";
