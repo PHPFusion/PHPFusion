@@ -48,22 +48,20 @@ class UserFields {
 	private $_userNameChange = TRUE;
 
 	public function displayInput() {
-		global $locale;
+		global $locale, $aidlink;
 		$this->method = "input";
 		$enctype = $this->showAvatarInput ? " enctype='multipart/form-data'" : "";
 		$this->html .= openform($this->formname, $this->formname, 'post', $this->formaction, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."",
 																								   'downtime' => 0));
-		// table based for 7. div based for 8.
-		// do skeleton
-		if (!$this->registration) {
-			$title = "General Account Settings";
+		if (!$this->registration && !isset($_GET['aid'])) {
+			$title = $locale['uf_100'];
 			$Output = $this->renderBasicInputFields();
 			if (isset($_GET['profiles'])) {
 				if ($_GET['profiles'] == 'biography') {
-					$title = "User Information Settings";
+					$title = $locale['uf_101'];
 					$Output = $this->renderFields();
 				} elseif ($_GET['profiles'] == 'avatar' && ($this->showAvatarInput)) {
-					$title = "Avatar Settings";
+					$title = $locale['uf_102'];
 					$Output = $this->renderAvatarInput();
 				} else {
 					$title = ucwords($_GET['profiles'])." Settings"; // this need fix.
@@ -76,17 +74,18 @@ class UserFields {
 			$Output .= $this->renderFields();
 		}
 		$this->html .= "<div class='row m-b-20'>\n";
-		if (!$this->registration) {
-			add_to_title("Edit Profile");
-			$this->html .= "<div class='col-xs-12 col-sm-3 col-md-2 col-lg-3 p-r-0 pull-left'>\n";
-			$this->html .= "<ul id='profile-li'>\n";
-			$this->html .= "<li ".(!isset($_GET['profiles']) ? "class='active'" : '')."><a href='".FUSION_SELF."'><i class='entypo cog m-r-10'></i>General</a></li>\n";
-			$this->html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? "class='active'" : '')."><a href='".FUSION_SELF."?profiles=biography'><i class='entypo lock m-r-10'></i>User Information</a></li>\n";
-			$this->html .= ($this->showAvatarInput) ? "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'avatar' ? "class='active'" : '')." style='border-bottom:1px solid #ccc;'><a href='".FUSION_SELF."?profiles=avatar'><i class='entypo picture m-r-10'></i>Profile Picture</a></li>\n" : '';
+		if (!$this->registration && !isset($_GET['aid'])) {
+			// edit profile.
+			add_to_title($locale['u102']);
+			$this->html .= "<div class='col-xs-12 col-sm-3 col-md-2 col-lg-2 p-r-0'>\n";
+			$this->html .= "<ul id='profile-li' class='pull-left m-t-10'>\n";
+			$this->html .= "<li ".(!isset($_GET['profiles']) ? "class='active'" : '')."><a href='".(isset($_GET['aid']) ? $this->formaction : BASEDIR."edit_profile.php")."'><i class='entypo cog m-r-10'></i>".$locale['uf_103']."</a></li>\n";
+			$this->html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'biography' ? "class='active'" : '')."><a href='".(isset($_GET['aid']) ? $this->formaction."&amp;" : BASEDIR."edit_profile.php?")."profiles=biography'><i class='entypo lock m-r-10'></i>".$locale['uf_104']."</a></li>\n";
+			$this->html .= ($this->showAvatarInput) ? "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == 'avatar' ? "class='active'" : '')." style='border-bottom:1px solid #ccc;'><a href='".(isset($_GET['aid']) ? $this->formaction."&amp;" : BASEDIR."edit_profile.php?")."profiles=avatar'><i class='entypo picture m-r-10'></i>".$locale['uf_105']."</a></li>\n" : '';
 			$this->html .= $this->renderPageLink();
 			$this->html .= "</ul>\n";
 			$this->html .= "</div>\n";
-			$this->html .= "<div class='col-xs-12 col-sm-9 col-md-10 col-lg-9'>\n";
+			$this->html .= "<div class='col-xs-12 col-sm-9 col-md-10 col-lg-10'>\n";
 		} else {
 			$this->html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
 		}
@@ -161,11 +160,11 @@ class UserFields {
 		}
 		$base_request = strtr(FUSION_REQUEST, array_combine($find, $replace));
 		if ($this->showPages) {
-			$title = "Basic Information";
+			$title = $locale['uf_106'];
 			$Output = $this->renderBasicOutputFields();
 			if (isset($_GET['profiles'])) {
 				if ($_GET['profiles'] == 'biography') {
-					$title = "User Information";
+					$title = $locale['uf_104'];
 					$Output = $this->renderFields();
 				} else {
 					$title = ucwords($_GET['profiles'])." Settings";
@@ -185,7 +184,7 @@ class UserFields {
 		$this->html .= ($this->showPages) ? $this->renderPageLink() : '';
 		$this->html .= ($this->showPages) ? "</div>\n" : '';
 		$this->html .= ($this->showPages) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
-		$this->html .= ($this->showPages) ? "<div class='panel panel-default'>\n" : '';
+		$this->html .= ($this->showPages) ? "<div class='panel panel-default tbl-border'>\n" : '';
 		$this->html .= ($this->showPages) ? "<div class='panel-body'>\n" : '';
 		$this->html .= $Output;
 		$this->html .= ($this->showPages) ? "</div>\n</div>\n" : '';
@@ -455,16 +454,14 @@ class UserFields {
 		// API 1.02
 		$user_data = $this->userData;
 		if (isset($_GET['profiles']) && ($_GET['profiles'] !== 'biography') && !$this->registration) {
-			$user_data = $this->_findDB(); // override User_data on specific page
+			$user_data = $this->_findDB(); // Find new user_data on 3rd party database.
 		}
 		$profile_method = $this->method;
 		$fields = array();
 		$cats = array();
 		$obActiva = FALSE;
 		$i = 0;
-		// API 1.02
-		// there will be a page exist on every other page.
-		// if registration page, just go for single form.
+
 		if ($this->registration) {
 			// on registration
 			$where = "WHERE field_registration='1'";
@@ -479,7 +476,7 @@ class UserFields {
         ");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
-				$required = $data['field_required'] == 1 ? "<span style='color:#ff0000'>*</span>" : "";
+				$required = $data['field_required'] == 1 ? "<span class='required'>*</span>" : "";
 				if ($i != $data['field_cat']) {
 					if ($obActiva) {
 						$fields[$i] = ob_get_contents();
@@ -547,7 +544,8 @@ class UserFields {
 			if (count($link) && !empty($link)) {
 				foreach ($link as $data) {
 					$base_request = strtr(FUSION_REQUEST, array_combine($find, $replace));
-					$html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? "class='active'" : '')." /><a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : BASEDIR."profile.php?")."profiles=".strtolower($data['field_cat_name'])."&amp;lookup=".$this->userData['user_id']."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
+					$html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? "class='active'" : '')." />";
+					$html .= "<a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : "".(isset($_GET['aid']) ? $this->formaction."&amp;" : BASEDIR."edit_profile.php?")."")."profiles=".strtolower($data['field_cat_name'])."".(isset($_GET['aid']) ? '' : "&amp;lookup=".$this->userData['user_id']."")."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
 				}
 			}
 		}

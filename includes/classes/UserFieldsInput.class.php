@@ -94,20 +94,31 @@ class UserFieldsInput {
 
 	public function saveUpdate() {
 		$this->_method = "validate_update";
-		if (!isset($_GET['profiles'])) {
-			$this->_settUserName();
-			$this->_setNewUserPassword();
-			$this->_setNewAdminPassword();
-			$this->_setUserEmail();
-			if ($this->validation == 1) {
-				$this->_setValidationError();
-			}
-			$this->_setEmptyFields();
-		} elseif (isset($_GET['profiles']) && ($_GET['profiles'] == 'avatar')) {
-			$this->_setUserAvatar();
+		if (isset($_GET['aid'])) {
+				$this->_settUserName();
+				$this->_setNewUserPassword();
+				$this->_setNewAdminPassword();
+				$this->_setUserEmail();
+				$this->_setEmptyFields();
+				$this->_setUserAvatar();
+				$this->_setCustomUserFieldsData();
 		} else {
-			$this->_setCustomUserFieldsData();
+			if (!isset($_GET['profiles'])) {
+				$this->_settUserName();
+				$this->_setNewUserPassword();
+				$this->_setNewAdminPassword();
+				$this->_setUserEmail();
+				if ($this->validation == 1) {
+					$this->_setValidationError();
+				}
+				$this->_setEmptyFields();
+			} elseif (isset($_GET['profiles']) && ($_GET['profiles'] == 'avatar')) {
+				$this->_setUserAvatar();
+			} else {
+				$this->_setCustomUserFieldsData();
+			}
 		}
+
 		if ($this->_noErrors) {
 			$this->_setUserDataUpdate();
 		}
@@ -472,7 +483,7 @@ class UserFieldsInput {
 			}
 		} else {
 			// on edit.
-			if (isset($_GET['profiles']) && $_GET['profiles'] == 'biography' || $_GET['profiles'] == 'avatar') {
+			if ((isset($_GET['profiles']) && ($_GET['profiles'] == 'biography' || $_GET['profiles'] == 'avatar')) || isset($_GET['aid'])) {
 				$where = "WHERE tufc.field_cat_page !='1'";
 			} else {
 				$where = "WHERE tufc.field_cat_page='1' AND tufc.field_cat_name LIKE '".strtolower(stripinput($_GET['profiles']))."'";

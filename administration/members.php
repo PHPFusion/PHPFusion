@@ -391,7 +391,6 @@ if (isset($_POST['cancel'])) {
 			echo "<td valign='top' width='80' class='tbl'>".$locale['552']."</td>\n";
 			echo "<td class='tbl'>\n";
 			echo form_textarea('', 'suspend_reason', 'suspend_reason', '');
-			//<textarea name='suspend_reason' cols='60' rows='2' class='textbox' style='width:380px;'></textarea></td>\n";
 			echo "</td>\n</tr>\n<tr>\n";
 			echo "<td colspan='2' align='center'>\n";
 			echo form_button($locale['418'], 'cancel', 'cancel', $locale['418'], array('class' => 'btn-primary m-r-10'));
@@ -588,7 +587,7 @@ if (isset($_POST['cancel'])) {
 				}
 				echo "<a class='btn btn-primary' href='".stripinput(USER_MANAGEMENT_SELF."&step=delete&user_id=".$data['user_id'])."' onclick='return DeleteMember();'>".$locale['410']."</a>\n";
 				// more actions.
-				echo "<a class='btn btn-primary dropdown-toggle' style='padding:13px;' data-toggle='dropdown'>\n<span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></a>\n";
+				echo "<a class='btn btn-primary dropdown-toggle' data-toggle='dropdown'>\n<span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></a>\n";
 				echo "<ul class='dropdown-menu text-left' role='action-menu' style='left:70px;'>\n";
 				echo "<li><a href='$ban_link'>".getsuspension(1, TRUE)."</a></li>\n";
 				echo "<li><a href='$suspend_link'>".getsuspension(3, TRUE)."</a></li>\n";
