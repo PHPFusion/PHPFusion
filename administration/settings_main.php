@@ -35,6 +35,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 }
 if (isset($_POST['savesettings'])) {
 	$error = 0;
+	$htc = "";
 	$siteintro = descript(stripslash($_POST['intro']));
 	$sitefooter = descript(stripslash($_POST['footer']));
 	//$localeset     = stripinput($_POST['localeset']);
@@ -100,13 +101,12 @@ if (isset($_POST['savesettings'])) {
 	$site_seo = form_sanitizer($_POST['site_seo'], 0, 'site_seo');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$site_seo' WHERE settings_name='site_seo'") : '';
 	if ($site_seo == 1) {
-		// enable
 		// create .htaccess
-		if (!file_exists(BASEDIR.".htaccess")) {
+		
+			if (!file_exists(BASEDIR.".htaccess")) {
 			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
 				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
 			} else {
-				// create a file.
 				$handle = fopen(BASEDIR.".htaccess", "w");
 				fclose($handle);
 			}
@@ -130,8 +130,7 @@ if (isset($_POST['savesettings'])) {
 			fclose($temp);
 		}
 	} else {
-		// enable error handler
-		// create .htaccess
+		// enable default error handler in .htaccess
 		if (!file_exists(BASEDIR.".htaccess")) {
 			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
 				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
