@@ -19,10 +19,6 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 
-if (!defined('bootstrapped')) {
-	load_bootstrap();
-}
-
 if (iMEMBER) {
 	if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 		opensidex($locale['UM095'].$userdata['user_name'], "off");
@@ -35,20 +31,16 @@ $outbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['u
 $archive_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='2'");
 
 echo "<div class='avatar-row text-center'\n";
-echo "<div class='pull-left m-r-10'>\n";
-echo display_avatar($userdata, '90px');
-echo "</div>\n";
+echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '90px')."</div>\n";
 echo "<div class='clearfix'>\n";
 echo "<h4 class='m-t-10 m-b-0'><strong>".ucwords($userdata['user_name'])."</strong></h4>\n";
 echo "<small>".getuserlevel($userdata['user_level'])."</small>\n<br/>";
 echo "<ul class='user-info-bar'>\n";
 $msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
 echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
-echo "<li></li>\n";
-echo "<li></li>\n";
 echo "</ul>\n";
 echo "</div>\n";
-echo "</div>\n";
+
 $result = dbquery("SELECT * FROM ".DB_PREFIX."messages_options WHERE user_id='0'");
 $data = dbarray($result);
 $inbox_cfg = ($data['pm_inbox'] != 0 ? $data['pm_inbox'] : 1);
