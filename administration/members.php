@@ -380,7 +380,7 @@ if (isset($_POST['cancel'])) {
 			}
 			opentable($suspend_title);
 			echo openform('ban_user', 'ban_user', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=3&amp;user_id=".$user_id, array('downtime' => 0));
-			echo "<table cellpadding='0' cellspacing='0' width='460' class='table table-responsive center'>\n<tbody>\<tr>\n";
+			echo "<table cellpadding='0' cellspacing='0' width='460' class='table table-responsive center'>\n<tbody>\n<tr>\n";
 			echo "<td colspan='2' class='tbl'><strong>".$locale['594'].$action.$locale['595'].$udata['user_name'].".</strong></td>\n";
 			if ($udata['user_status'] != 3) {
 				echo "</tr>\n<tr>\n";
@@ -538,9 +538,8 @@ if (isset($_POST['cancel'])) {
 			$opts[$i] = getsuspension($i);
 		}
 	}
-	echo form_select($locale['405'], 'status', 'status', $opts, $_GET['status'], array('placeholder' => $locale['choose'],
-																					   'class' => 'display-block',
-																					   'allowclear' => 1));
+
+	echo form_select($locale['405'], 'status', 'status', $opts, $_GET['status'], array('placeholder' => $locale['choose'],'class' => 'display-block','allowclear' => 1));
 	add_to_jquery("$('#status').on('change', function() { this.form.submit(); });");
 	echo form_hidden('', 'rowstart', 'rowstart', $rowstart);
 	echo closeform();
