@@ -538,8 +538,8 @@ if (isset($_POST['cancel'])) {
 			$opts[$i] = getsuspension($i);
 		}
 	}
-
-	echo form_select($locale['405'], 'status', 'status', $opts, $_GET['status'], array('placeholder' => $locale['choose'],'class' => 'display-block','allowclear' => 1));
+	echo "<label class='pull-left m-r-10'>".$locale['405']."</label>\n";
+	echo form_select('', 'status', 'status', $opts, isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array('placeholder' => $locale['choose'],'class' => 'display-inline', 'allowclear' => 1));
 	add_to_jquery("$('#status').on('change', function() { this.form.submit(); });");
 	echo form_hidden('', 'rowstart', 'rowstart', $rowstart);
 	echo closeform();
