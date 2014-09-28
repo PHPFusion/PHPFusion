@@ -245,7 +245,14 @@
 /* image family*/
 .img-responsive {
 	display: block !important;
-	margin: 0 auto !important;
+	margin: 1px auto !important;
+}
+.pdisabled {
+	background-color: rgb(252, 248, 227);
+	border-color: rgb(250, 235, 204);
+}
+.pdisabled > .handle > a {
+	color: rgb(138, 109, 59) !important;
 }
 
 .image-wrap {
@@ -510,4 +517,37 @@ a .entypo, a .entypo-social {
 
 .required {
 	color: red !important;
+}
+
+
+a img {
+	border: 0
+}
+
+dl, dt, dd {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.forum_cat_name h3,
+.forum_name h3 {
+	/* font-size: 12px; */
+	margin: 0;
+}
+
+.forum_name h3 {
+	display: inline;
+	font-weight: normal;
+}
+
+.forum-icon,
+.forum-stats,
+.forum-lastpost {
+	white-space: nowrap;
+}
+
+.lastpost-avatar img {
+	width: 40px;
+	margin-right: 4px;
 }

@@ -23,11 +23,12 @@ if (!checkrights("P") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid
 }
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/panels.php";
+
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
 add_to_head("<link rel='stylesheet' href='".THEMES."templates/panels.css' type='text/css' media='all' />");
 add_to_head("<script type='text/javascript'>
     $(document).ready(function() {
-	$('.pdisabled').fadeTo(0, .5);
+//	$('.pdisabled').fadeTo(0, .5);
 	$('.panels-list').sortable({
 		handle : '.handle',
 		placeholder: 'state-highlight',
@@ -117,11 +118,10 @@ function display_header($side) {
 	} elseif ($side == 6) {
 		$type = $locale['427'];
 	}
-	$panel_header = "<div class='panels panel panel-default'>\n<div class='panel-heading'>\n"; // .floatfix removed
+	$panel_header = "<div class='panels panel panel-default clearfix'>\n<div class='panel-heading'>\n"; // .floatfix removed
 	$panel_header .= "<strong>$type <a class='pull-right' href='panel_editor.php".$aidlink."&amp;panel_side=".$side."'>".$locale['438']."</a></strong>";
 	$panel_header .= "</div>\n";
 	$panel_header .= "</div>\n";
-	$panel_header .= "<div style='clear:both;'></div>\n";
 	return $panel_header;
 }
 
@@ -134,10 +134,10 @@ function show_panels() {
 	$row_color = ($k%2 == 0 ? "tbl1" : "tbl2");
 	$type = $data['panel_type'] == "file" ? $locale['423'] : $locale['424'];
 	echo "<li id='listItem_".$data['panel_id']."' class='pointer list-group-item ".$row_color.($data['panel_status'] == 0 ? " pdisabled" : "")."'>\n";
-	echo "<div class='btn-group handle'>\n";
-	echo "<img src='".IMAGES."arrow.png' alt='move' class='pull-left m-t-5'/>\n";
-	echo "<a class='btn btn-sm btn-link dropdown-toggle' data-toggle='dropdown'>\n";
-	echo "<h5 class='m-t-0 m-b-5'><strong>".$data['panel_name']."</strong> <span class='caret'></span>\n</h5>\n";
+	echo "<div class='handle'>\n";
+	echo "<img class='pull-left m-r-10' src='".IMAGES."arrow.png' alt='move'/>\n";
+	echo "<a class='dropdown-toggle' data-toggle='dropdown'>\n";
+	echo "<strong>".$data['panel_name']."</strong> <span class='caret'></span>\n\n";
 	echo "</a>\n";
 	echo "<ul class='dropdown-menu' role='panel-options'>\n";
 	echo "<li style='padding:3px 20px;'>\n<i class='entypo users m-t-5'></i> ".getgroupname($data['panel_access'])."</li>\n";
