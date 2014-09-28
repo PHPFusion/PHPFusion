@@ -43,7 +43,8 @@ if (isset($_GET['status']) && !isset($message)) {
 	}
 }
 
-$result = dbcount("(article_cat_id)", DB_ARTICLE_CATS);
+$result = dbcount("(article_cat_id)", DB_ARTICLE_CATS );
+
 if (!empty($result)) {
 	if (isset($_POST['save'])) {
 		$subject = stripinput($_POST['subject']);
@@ -157,7 +158,7 @@ if (!empty($result)) {
 			}
 			opentable($locale['400']);
 		}
-		$result = dbquery("SELECT article_cat_id, article_cat_name FROM ".DB_ARTICLE_CATS." ORDER BY article_cat_name DESC");
+		$result = dbquery("SELECT article_cat_id, article_cat_name, article_cat_language FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name DESC");
 		$catlist = array();
 		while ($data = dbarray($result)) {
 			$catlist[$data['article_cat_id']] = $data['article_cat_name'];
