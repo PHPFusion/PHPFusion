@@ -41,6 +41,7 @@ if (isset($_GET['code']) && $_GET['code'] == "401") {
 	$text = $locale['errunk'];
 	$img = "unknown.png";
 }
+
 opentable($text);
 echo "<table class='table table-responsive' width='100%' style='text-center'>";
 echo "<tr>";
@@ -51,7 +52,7 @@ echo "<tr>";
 echo "<td colspan='2' align='center'><b><a class='button' href='".BASEDIR."index.php'>".$locale['errret']."</a></b></td>";
 echo "</tr>";
 echo "</table>";
-
 closetable();
+
 require_once THEMES."templates/footer.php";
 ?>
