@@ -130,7 +130,6 @@ if (isset($_POST['savesettings'])) {
 			fclose($temp);
 		}
 	} else {
-	
 		// enable error handler
 		// create .htaccess
 		if (!file_exists(BASEDIR.".htaccess")) {
@@ -143,11 +142,11 @@ if (isset($_POST['savesettings'])) {
 			}
 		}
 		//  Wipe out all .htaccess rewrite rules and add error handler only
-		$htc = "ErrorDocument 400 ".$settings['site_path']."error.php?code=400\r\n";
-		$htc .= "ErrorDocument 401 ".$settings['site_path']."error.php?code=401\r\n";
-		$htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403\r\n";
-		$htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404\r\n";
-		$htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500\r\n";
+		$htc = "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
+		$htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
+		$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
+		$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
+		$htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
 		$temp = fopen(BASEDIR.".htaccess", "w");
 		if (fwrite($temp, $htc)) {
 			fclose($temp);
