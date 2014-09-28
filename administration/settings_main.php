@@ -112,36 +112,45 @@ if (isset($_POST['savesettings'])) {
 			}
 		}
 		// write file. wipe out all .htaccess current configuration.
-		$htc = "ErrorDocument 400 ".$settings['site_path']."/error.php?code=400\n";
-		$htc .= "ErrorDocument 401 ".$settings['site_path']."/error.php?code=401\n";
-		$htc .= "ErrorDocument 403 ".$settings['site_path']."/error.php?code=403\n";
-		$htc .= "ErrorDocument 404 ".$settings['site_path']."/error.php?code=404\n";
-		$htc .= "ErrorDocument 500 ".$settings['site_path']."/error.php?code=500\n";
-		$htc .= "Options +FollowSymlinks -MultiViews\n";
-		$htc .= "RewriteEngine On\n";
-		$htc .= "RewriteBase ".$settings['site_path']."\n";
-		$htc .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\n";
-		$htc .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\n";
-		$htc .= "RewriteRule .* - [F,L]\n";
-		$htc .= "# Exclude /assets and /manager directories and images from rewrite rules\n";
-		$htc .= "RewriteRule ^(administration|themes)/*$ - [L]\n";
-		$htc .= "RewriteCond %{REQUEST_FILENAME} !-f\n";
+		$htc .= "Options +FollowSymlinks -MultiViews\r\n";
+		$htc .= "RewriteEngine On\r\n";
+		$htc .= "RewriteBase ".$settings['site_path']."\r\n";
+		$htc .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\r\n";
+		$htc .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\r\n";
+		$htc .= "RewriteRule .* - [F,L]\r\n";
+		$htc .= "# Exclude /assets and /manager directories and images from rewrite rules\r\n";
+		$htc .= "RewriteRule ^(administration|themes)/*$ - [L]\r\n";
+		$htc .= "RewriteCond %{REQUEST_FILENAME} !-f\r\n";
 		$htc .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
-		$htc .= "RewriteCond %{REQUEST_FILENAME} !-l\n";
-		$htc .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\n";
-		$htc .= "RewriteRule ^(.*?)$ rewrite.php [L]\n";
+		$htc .= "RewriteCond %{REQUEST_FILENAME} !-l\r\n";
+		$htc .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\r\n";
+		$htc .= "RewriteRule ^(.*?)$ rewrite.php [L]\r\n";
 		$temp = fopen(BASEDIR.".htaccess", "w");
 		if (fwrite($temp, $htc)) {
 			fclose($temp);
 		}
 	} else {
-		// disable
-		if (file_exists(BASEDIR.".htaccess")) {
-			// delete file. wipe out all main .htaccess settings to prevent redirect and crash the server.
-			if (file_exists(BASEDIR.".htaccess") && function_exists("rename")) {
-				// rename file.
-				@rename(BASEDIR.".htaccess", BASEDIR."_htaccess");
+	
+		// enable error handler
+		// create .htaccess
+		if (!file_exists(BASEDIR.".htaccess")) {
+			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+			} else {
+				// create a file.
+				$handle = fopen(BASEDIR.".htaccess", "w");
+				fclose($handle);
 			}
+		}
+		//  Wipe out all .htaccess rewrite rules and add error handler only
+		$htc = "ErrorDocument 400 ".$settings['site_path']."error.php?code=400\r\n";
+		$htc .= "ErrorDocument 401 ".$settings['site_path']."error.php?code=401\r\n";
+		$htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403\r\n";
+		$htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404\r\n";
+		$htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500\r\n";
+		$temp = fopen(BASEDIR.".htaccess", "w");
+		if (fwrite($temp, $htc)) {
+			fclose($temp);
 		}
 	}
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['default_search'])."' WHERE settings_name='default_search'") : '';
