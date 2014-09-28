@@ -44,7 +44,7 @@ function render_adminpanel() {
 	} else {
 
 		echo "<div id='admin-panel' ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? "class='in'" : '')." >\n";
-		include THEMES."admin_templates/Venus/includes/header.php";
+		include THEMES."admin_templates/venus/includes/header.php";
 		echo "<div class='display-table' style='height:100%; width:100%;'>\n";
 		echo "<!-- begin leftnav -->\n";
 		echo "<div id='acp-left' class='pull-left off-canvas ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' data-spy='affix' data-offset-top='0' data-offset-bottom='0' style='width:250px; height:100%;'>\n"; // collapse to top menu on sm and xs
