@@ -132,7 +132,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 		$link_name = stripinput($_POST['link_name']);
 		$link_url = stripinput($_POST['link_url']);
 		$link_description = stripinput($_POST['link_description']);
-		$result = dbquery("INSERT INTO ".DB_WEBLINKS." (weblink_name, weblink_description, weblink_url, weblink_cat, weblink_datestamp, weblink_count) VALUES ('$link_name', '$link_description', '$link_url', '".$_POST['link_category']."', '".time()."', '0' ,'".LANGUAGE."')");
+		$result = dbquery("INSERT INTO ".DB_WEBLINKS." (weblink_name, weblink_description, weblink_url, weblink_cat, weblink_datestamp, weblink_count) VALUES ('$link_name', '$link_description', '$link_url', '".$_POST['link_category']."', '".time()."', '0')");
 		$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
 		opentable($locale['430']);
 		echo "<br /><div style='text-align:center'>".$locale['431']."<br /><br />\n";
@@ -212,7 +212,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 			$news_snippet = addslash($_POST['news_snippet']);
 			$news_body = addslash($_POST['news_body']);
 			$news_breaks = ($_POST['news_breaks'] == "y") ? "y" : "n";
-			$result = dbquery("INSERT INTO ".DB_NEWS." (news_subject, news_cat, news_news, news_extended, news_breaks, news_name, news_datestamp, news_start, news_end, news_visibility, news_reads, news_allow_comments, news_allow_ratings) VALUES ('$news_subject', '$news_cat', '$news_snippet', '$news_body', '$news_breaks', '".$data['user_id']."', '".time()."', '0', '0', '0', '0', '1', '1' ,'".LANGUAGE."')");
+			$result = dbquery("INSERT INTO ".DB_NEWS." (news_subject, news_cat, news_news, news_extended, news_breaks, news_name, news_datestamp, news_start, news_end, news_visibility, news_reads, news_allow_comments, news_allow_ratings, news_language) VALUES ('$news_subject', '$news_cat', '$news_snippet', '$news_body', '$news_breaks', '".$data['user_id']."', '".time()."', '0', '0', '0', '0', '1', '1' ,'".LANGUAGE."')");
 			$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
 			opentable($locale['490']);
 			echo "<br /><div style='text-align:center'>".$locale['491']."<br /><br />\n";
@@ -324,7 +324,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 			$article_snippet = addslash($_POST['article_snippet']);
 			$article_body = addslash($_POST['article_body']);
 			$article_breaks = ($_POST['article_breaks'] == "y") ? "y" : "n";
-			$result = dbquery("INSERT INTO ".DB_ARTICLES." (article_cat, article_subject, article_snippet, article_article, article_breaks, article_name, article_datestamp, article_reads, article_allow_comments, article_allow_ratings) VALUES ('$article_cat', '$article_subject', '$article_snippet', '$article_body', '$article_breaks', '".$data['user_id']."', '".time()."', '0', '1', '1' ,'".LANGUAGE."')");
+			$result = dbquery("INSERT INTO ".DB_ARTICLES." (article_cat, article_subject, article_snippet, article_article, article_breaks, article_name, article_datestamp, article_reads, article_allow_comments, article_allow_ratings) VALUES ('$article_cat', '$article_subject', '$article_snippet', '$article_body', '$article_breaks', '".$data['user_id']."', '".time()."', '0', '1', '1')");
 			$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
 			opentable($locale['530']);
 			echo "<br /><div style='text-align:center'>".$locale['531']."<br /><br />\n";
@@ -448,7 +448,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 				createthumbnail($imagefile[2], $photo_dest.$photo_file, $photo_dest.$photo_thumb2, $settings['photo_w'], $settings['photo_h']);
 			}
 			$photo_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='$album_id'"), 0)+1;
-			$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('$album_id', '$photo_title', '$photo_description', '$photo_file', '$photo_thumb1', '$photo_thumb2', '".time()."', '".$data['submit_user']."', '0', '$photo_order', '1', '1' ,'".LANGUAGE."')");
+			$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('$album_id', '$photo_title', '$photo_description', '$photo_file', '$photo_thumb1', '$photo_thumb2', '".time()."', '".$data['submit_user']."', '0', '$photo_order', '1', '1')");
 			$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
 			opentable($locale['580']);
 			echo "<br /><div style='text-align:center'>".$locale['581']."<br /><br />\n";
@@ -595,7 +595,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 				download_allow_comments = '".$download_allow_comments."',
 				download_allow_ratings = '".$download_allow_ratings."',
 				download_datestamp = '".time()."',
-				download_count = '0' ,'".LANGUAGE."'");
+				download_count = '0'");
 			$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
 			opentable($locale['630']);
 			echo "<br /><div style='text-align:center'>".$locale['631']."<br /><br />\n";
