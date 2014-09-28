@@ -51,5 +51,4 @@ function closeside() {
 	}
 	echo "</div>";
 }
-
 ?>

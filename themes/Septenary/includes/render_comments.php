@@ -54,34 +54,8 @@ function render_comments($c_data, $c_info) {
 		echo $c_info['c_makepagenav'] ? "<div class='flleft'>".$c_info['c_makepagenav']."</div>\n" : "";
 		echo "</div>\n";
 		echo "</article>\n";
-		/*
-		echo "<div class='comments floatfix'>\n";	
-		echo "<div style='margin-bottom: 15px;' class='floatfix'>\n";
-
-
-		echo "</div>\n";
-
-		echo "<div class='comment-main'>\n";
-	foreach($c_data as $data) {
-
-
-
-
-
-
-
-		echo "<div class='comment-body'><p></p></div>\n";
-
-		echo "</div>\n";
-	}
-		echo "</div>\n";
-
-		echo $c_makepagenav;
-		echo "</div>\n";
-		*/
 	} else {
 		echo "<div class='nocomments-message spacer'>".$locale['c101']."</div>\n";
 	}
 }
-
 ?>

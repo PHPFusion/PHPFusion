@@ -22,6 +22,7 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
+
 function render_news($subject, $news, $info) {
 	global $locale, $settings, $aidlink;
 	$parameter = $settings['siteurl']."news.php?readmore=".$info['news_id'];
@@ -76,5 +77,4 @@ function render_article($subject, $article, $info) {
 	echo "</div>\n";
 	echo "</article>";
 }
-
 ?>
