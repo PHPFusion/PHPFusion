@@ -42,6 +42,7 @@ function render_adminpanel() {
 		echo "</div>\n";
 		echo "</aside>\n";
 	} else {
+
 		echo "<div id='admin-panel' ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? "class='in'" : '')." >\n";
 		include THEMES."admin_templates/Venus/includes/header.php";
 		echo "<div class='display-table' style='height:100%; width:100%;'>\n";
