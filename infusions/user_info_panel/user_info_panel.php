@@ -52,8 +52,10 @@ echo progress_bar($outbox_percent, $locale['UM099']);
 $archive_cfg = ($data['pm_savebox'] != 0 ? $data['pm_savebox'] : 1);
 $archive_percent = number_format(($archive_count/$archive_cfg)*99, 0);
 echo progress_bar($archive_percent, $locale['UM100']);
+if (sizeof($enabled_languages) > 1) {
 echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
 echo lang_switcher();
+}
 echo "<div id='navigation'>\n";
 echo "<h5><strong>".$locale['UM096']."</strong></h5>\n";
 echo "<hr class='side-hr'>\n";
@@ -91,8 +93,10 @@ if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 		}
 
 openside($locale['global_100']);
+if (sizeof($enabled_languages) > 1) {
 echo "<h5><strong>".$locale['UM096']."</strong></h5>";
 echo lang_switcher();
+}
 echo "<div class='m-t-10'>\n";
 echo openform('loginform', 'loginform', 'post', $action_url, array('downtime' => 10));
 echo form_text($locale['global_101'], 'user_name', 'user_name', '', array('placeholder' => $locale['global_101'],'required' => 1));
