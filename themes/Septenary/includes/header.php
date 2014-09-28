@@ -105,7 +105,4 @@ if (FUSION_SELF == 'login.php') {
 }
 close_grid();
 echo "</header>\n";
-
-
-
 ?>

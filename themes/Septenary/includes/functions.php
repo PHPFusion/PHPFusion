@@ -22,20 +22,9 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
+
 define("THEME_BULLET", "<img src='".THEME."images/bullet.png' class='bullet'  alt='&raquo;' />");
-/*
-set_image("printer", THEME."images/icons/printer.png");
-set_image("up", THEME."images/up.png");
-set_image("down", THEME."images/down.png");
-set_image("left", THEME."images/left.png");
-set_image("right", THEME."images/right.png");
-set_image("reply", "reply");
-set_image("newthread", "newthread.gif");
-set_image("web", "web");
-set_image("pm", "pm");
-set_image("quote", "quote");
-set_image("forum_edit", "forum_edit");
-*/
+
 function theme_output($output) {
 	$search = array("@><img src='reply' alt='(.*?)' style='border:0px' />@si",
 					"@><img src='newthread' alt='(.*?)' style='border:0px;?' />@si",
