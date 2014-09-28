@@ -33,7 +33,7 @@ $tab_title['icon'][] = "";
 $tab_active = isset($_GET['section']) ? tab_active($tab_title, 0) : 'thread';
 echo "<div class='panel tbl-border p-0'>\n";
 echo "<div class='pull-right'>\n";
-echo openform('searchform', 'searchform', 'post', BASEDIR."search?stype=forums", array('downtime' => 0));
+echo openform('searchform', 'searchform', 'post', BASEDIR."search.php?stype=forums", array('downtime' => 0));
 echo form_hidden('stype', 'stype', 'stype', 'forums');
 echo form_text('', 'stext', 'stext', '', array('placeholder' => $locale['550'], 'append_button' => 1));
 echo closeform();
