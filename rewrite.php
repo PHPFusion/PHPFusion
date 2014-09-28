@@ -60,9 +60,7 @@ if ($filepath != "") {
 		include_once $filepath;
 	}
 } else {
-	echo "<h1>404 - Page Not Found!</h1>";
-	echo "Or you can call Custom functions to display your own Error Messages.<br />";
-	echo "We had been working on Custom Error Page I guess? We can call something like <strong>&#36;customErrors-&gt;Error()</strong>";
+redirect(BASEDIR."error.php?code=404");
 }
 if (!defined("FUSION_SELF")) {
 	define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
