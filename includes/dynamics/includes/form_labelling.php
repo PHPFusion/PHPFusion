@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: form_labelling.php
+| Author: Frederick MC CHan (Hien)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 function form_label($title, $array = FALSE) {
 	if (isset($title) && ($title !== "")) {
 		$title = stripinput($title);

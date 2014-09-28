@@ -1,6 +1,21 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: form_toggle.php
+| Author: Frederick MC CHan (Hien)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 /* http://zamanak.ir/themes/zamanak/bootstrap-switch-3.0/ */
-/* Version Bootstrap 3.00 RC */
 function form_toggle($title, $input_name, $input_id, $opts, $input_value, $array = FALSE) {
 	if (!defined("TOGGLE")) {
 		define("TOGGLE", TRUE);

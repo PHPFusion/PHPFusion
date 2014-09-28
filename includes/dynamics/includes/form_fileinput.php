@@ -1,5 +1,20 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: form_fileinput.php
+| Author: Frederick MC CHan (Hien)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 /* http://gregpike.net/demos/bootstrap-file-input/demo.html*/
 function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $input_value = FALSE, $array = FALSE) {
 	$title = (isset($title) && (!empty($title))) ? stripinput($title) : "";

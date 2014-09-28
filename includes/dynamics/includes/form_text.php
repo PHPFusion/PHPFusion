@@ -1,15 +1,11 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion
+| Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Project File: Form API - Text Input Based
 | Filename: form_text.php
-| Author: PHP-Fusion 8 Development Team
-| Coded by : Frederick MC Chan (Hien)
-| Version : 8.1.0 (please update every commit)
+| Author: Frederick MC CHan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
