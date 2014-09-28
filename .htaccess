@@ -1,5 +1,0 @@
-ErrorDocument 400 /RC7/error.php?code=400
-ErrorDocument 401 /RC7/error.php?code=401
-ErrorDocument 403 /RC7/error.php?code=403
-ErrorDocument 404 /RC7/error.php?code=404
-ErrorDocument 500 /RC7/error.php?code=500
