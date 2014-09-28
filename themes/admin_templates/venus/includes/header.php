@@ -24,21 +24,23 @@ echo "<nav>\n";
 echo "<ul class='venus-toggler'>\n";
 echo "<li><a id='toggle-canvas' style='border-left:none;'><i class='entypo menu text-bigger'></i></a></li>\n";
 echo "</ul>\n";
+
 add_to_jquery("
 $('#toggle-canvas').bind('click', function(e) {
-$('#acp-left').toggleClass('in');
-setTimeout(function() {
-$('#acp-main').toggleClass('in');
-$('#admin-panel').toggleClass('in');
-}, 30);
-panel_state = $('#acp-left').hasClass('in');
-if (panel_state) {
-$.cookie('Venus', '1', {expires: 7});
-} else {
-$.cookie('Venus', '0', {expires: 7});
-}
+	$('#acp-left').toggleClass('in');
+	setTimeout(function() {
+		$('#acp-main').toggleClass('in');
+		$('#admin-panel').toggleClass('in');
+	}, 30);
+	panel_state = $('#acp-left').hasClass('in');
+	if (panel_state) {
+		$.cookie('Venus', '1', {expires: 7});
+	} else {
+		$.cookie('Venus', '0', {expires: 7});
+	 }
 });
 ");
+
 echo "<ul class='hidden-xs pull-right m-r-15'>\n";
 echo "<li><a title='".$locale['view']." ".$settings['sitename']."' href='".BASEDIR."'><i class='icon-xs entypo home'></i></a></li>\n";
 echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='icon-xs entypo mail'></i></a></li>\n";
@@ -54,6 +56,4 @@ echo "</li>\n";
 echo "</ul>\n";
 echo "</nav>\n";
 echo "</section>\n";
-
-
 ?>
