@@ -244,6 +244,26 @@ if (str_replace(".", "", $settings['version']) < "70300") {
 		//Forum's items per page
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('posts_per_page', '20')");
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('threads_per_page', '20')");
+		// enable default error handler in .htaccess and create a backup of existing one
+		if (!file_exists(BASEDIR.".htaccess")) {
+			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+			} else {
+				// create a file.
+				$handle = fopen(BASEDIR.".htaccess", "w");
+				fclose($handle);
+			}
+		}
+		// Wipe out all .htaccess rewrite rules and add error handler only
+		$htc = "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
+		$htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
+		$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
+		$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
+		$htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
+		$temp = fopen(BASEDIR.".htaccess", "w");
+		if (fwrite($temp, $htc)) {
+			fclose($temp);
+		}
 		echo $locale['502']."<br /><br />\n";
 		//User sig issue,
 		$result = dbquery("ALTER TABLE ".$db_prefix."users CHANGE user_sig user_sig VARCHAR(500) NOT NULL DEFAULT ''");
