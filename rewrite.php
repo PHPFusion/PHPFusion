@@ -60,7 +60,7 @@ if ($filepath != "") {
 		include_once $filepath;
 	}
 } else {
-redirect(BASEDIR."error.php?code=404");
+redirect($settings['siteurl']."error.php?code=404");
 }
 if (!defined("FUSION_SELF")) {
 	define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
