@@ -254,7 +254,7 @@ $current_cat = "";
 $result2 = dbquery("SELECT f.forum_id, f.forum_name, f2.forum_id AS forum_cat_id, f2.forum_name AS forum_cat_name
                     FROM ".DB_FORUMS." f
                     INNER JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-                    WHERE ".groupaccess('f.forum_access')." AND f.forum_cat!='0' ORDER BY f2.forum_order ASC, f.forum_order ASC");
+                    WHERE ".groupaccess('f.forum_access')." ".(multilang_table("FO") ? "AND f.forum_language='".LANGUAGE."' AND" : "AND")." f.forum_cat!='0' ORDER BY f2.forum_order ASC, f.forum_order ASC");
 // group.
 
 while ($data2 = dbarray($result2)) {
