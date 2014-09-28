@@ -28,7 +28,7 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
 
 $result = dbquery("SELECT tf.*, tt.* FROM ".DB_FORUMS." tf
 INNER JOIN ".DB_POSTS." tt USING(forum_id)
-WHERE ".groupaccess('forum_access').(multilang_table("FO")?" AND forum_language='".LANGUAGE."'":"")." 
+WHERE ".groupaccess('forum_access').(multilang_table("FO") ? " AND tf.forum_language='".LANGUAGE."'" : "")."
 ORDER BY post_datestamp DESC LIMIT 0,10");
 
 	echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
@@ -36,7 +36,7 @@ ORDER BY post_datestamp DESC LIMIT 0,10");
 
 if (dbrows($result) != 0) {
 
-echo "<title>".$settings['sitename'].$locale['rss001'].(multilang_table("FO")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n<link>".$settings['siteurl']."</link>\n";
+echo "<title>".$settings['sitename'].$locale['rss001'].(multilang_table("FO") ? " ".$locale['rss007']." ".LANGUAGE:"")."</title>\n<link>".$settings['siteurl']."</link>\n";
 echo "<description>".$settings['description']."</description>\n";
 
 while ($row=dbarray($result)) {
