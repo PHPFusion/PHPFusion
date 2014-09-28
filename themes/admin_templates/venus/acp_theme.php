@@ -22,7 +22,7 @@ include_once THEMES."admin_templates/venus/includes/functions.php";
 require_once ADMIN."navigation.php";
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 function render_adminpanel() {
-	global $locale, $userdata, $defender, $pages, $aidlink, $settings;
+	global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_languages;
 	$admin_password = '';
 	if (!check_admin_pass($admin_password)) {
 		add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
@@ -42,19 +42,20 @@ function render_adminpanel() {
 		echo "</div>\n";
 		echo "</aside>\n";
 	} else {
-
 		echo "<div id='admin-panel' ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? "class='in'" : '')." >\n";
 		include THEMES."admin_templates/venus/includes/header.php";
 		echo "<div class='display-table' style='height:100%; width:100%;'>\n";
 		echo "<!-- begin leftnav -->\n";
 		echo "<div id='acp-left' class='pull-left off-canvas ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' data-spy='affix' data-offset-top='0' data-offset-bottom='0' style='width:250px; height:100%;'>\n"; // collapse to top menu on sm and xs
 		echo "<div class='panel panel-default admin' style='border:0px; box-shadow: none;'><div class='panel-body clearfix'>\n";
-		echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '50px')."</div>\n";
-		echo "<span class='display-block m-t-5'><strong>\n".ucfirst($userdata['user_name'])."</strong>\n<br/>".getuserlevel($userdata['user_level'])."</span></div>\n";
+		if (sizeof($enabled_languages) > 1) {
 		echo "<div class='text-center m-r-10'>\n";
 		echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
 		echo lang_switcher();
 		echo "</div>\n";
+		}
+		echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '50px')."</div>\n";
+		echo "<span class='display-block m-t-5'><strong>\n".ucfirst($userdata['user_name'])."</strong>\n<br/>".getuserlevel($userdata['user_level'])."</span></div>\n";
 		echo "</div>\n";
 		echo admin_nav(1);
 		echo "</div>\n";
