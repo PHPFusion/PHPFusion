@@ -1,4 +1,39 @@
-/* Default PHP-Fusion CSS3 Class */
+/* Default PHP-Fusion CSS3 Class 
+   In order to keep compatibility with older themes
+   without making any modification to these themes
+   we add some global CSS rules to this file
+*/
+
+a img {
+	border: 0
+}
+
+dl, dt, dd {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.forum_cat_name h3,
+
+.forum_name h3 {
+	font-size: 12px;
+	margin: 0;
+}
+
+.forum_name h3 {
+	display: inline;
+	font-weight: normal;
+}
+
+.forum-icon, .forum-stats, .forum-lastpost {
+	white-space: nowrap;
+}
+
+.lastpost-avatar img {
+	width: 40px;
+	margin-right: 4px;
+}
 
 /* positioning */
 .top-0 {
