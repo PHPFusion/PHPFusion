@@ -187,14 +187,12 @@ if (str_replace(".", "", $settings['version']) < "70300") {
 			}
 		}
 		//Create guest language session tables
-		$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."language_sessions");
 		$result = dbquery("CREATE TABLE ".$db_prefix."language_sessions (
 		user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
 		user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',
 		user_datestamp INT(10) NOT NULL default '0'   
 		) ENGINE=MYISAM;");
 		//Create multilang tables
-		$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."mlt_tables");
 		$result = dbquery("CREATE TABLE ".$db_prefix."mlt_tables (
 		mlt_rights CHAR(4) NOT NULL DEFAULT '',
 		mlt_title VARCHAR(50) NOT NULL DEFAULT '',
@@ -241,10 +239,62 @@ if (str_replace(".", "", $settings['version']) < "70300") {
 			$result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."')");
 			$result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$settings['siteusername']."', '".$settings['siteemail']."')");
 		}
+		
 		//Forum's items per page
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('posts_per_page', '20')");
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('threads_per_page', '20')");
-		// enable default error handler in .htaccess and create a backup of existing one
+
+		// SEO tables.
+		$result = dbquery("CREATE TABLE ".$db_prefix."permalinks_alias (
+							alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+							alias_url VARCHAR(200) NOT NULL DEFAULT '',
+							alias_php_url VARCHAR(200) NOT NULL DEFAULT '',
+							alias_type VARCHAR(10) NOT NULL DEFAULT '',
+							alias_item_id INT(10) UNSIGNED NOT NULL DEFAULT '0',
+							PRIMARY KEY (alias_id),
+							KEY alias_id (alias_id)
+							) ENGINE=MYISAM;");
+
+		$result = dbquery("CREATE TABLE ".$db_prefix."permalinks_method (
+							pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+							pattern_type INT(5) UNSIGNED NOT NULL,
+							pattern_source VARCHAR(200) NOT NULL DEFAULT '',
+							pattern_target VARCHAR(200) NOT NULL DEFAULT '',
+							pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
+							PRIMARY KEY (pattern_id)
+							) ENGINE=MYISAM;");
+
+		$result = dbquery("CREATE TABLE ".$db_prefix."permalinks_rewrites (
+							rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+							rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
+							PRIMARY KEY (rewrite_id)
+							) ENGINE=MYISAM;");
+		// server settings for seo.
+		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='0' WHERE settings_name='site_seo'");
+		// create admin page for permalinks
+		$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalink.gif', '".$locale['SEO']."', 'permalink.php', '3')");
+		// upgrade admin rights for permalink admin
+		if ($result) {
+			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
+			while ($data = dbarray($result)) {
+				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".PL' WHERE user_id='".$data['user_id']."'");
+			}
+		}
+		// User Fields 1.02
+		$result = dbquery("ALTER TABLE ".$db_prefix."user_field_cats ADD field_cat_db VARCHAR(100) NOT NULL panel_languages VARCHAR(200),
+		 field_cat_index VARCHAR(100) NOT NULL, field_cat_class VARHCAR(50) NOT NULL, field_cat_page SMALLINT(1) NOT NULL UNSIGNED AFTER field_cat_name");
+		$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (5, '".$locale['UF']."', '', '', 'entypo shareable', 1, 5)");
+		$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_id, field_name, field_cat, field_required, field_log, field_registration, field_order) VALUES ('', 'user_blacklist', '5', '0', '0', '0', '1'");
+		$result = dbquery("ALTER TABLE ".$db_prefix."users ADD user_blacklist TEXT NOT NULL AFTER user_language");
+		// Admin Theme
+		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('admin_theme', 'Venus')");
+		// Bootstrap
+		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('bootstrap', '1')");
+		// Set a new default theme to prevent issues during upgrade
+		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Septenary' WHERE settings_name='theme'");
+		//User sig issue
+		$result = dbquery("ALTER TABLE ".$db_prefix."users CHANGE user_sig user_sig VARCHAR(500) NOT NULL DEFAULT ''");
+		// enable a default error handler with .htaccess and create a backup of existing one
 		if (!file_exists(BASEDIR.".htaccess")) {
 			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
 				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
@@ -264,11 +314,10 @@ if (str_replace(".", "", $settings['version']) < "70300") {
 		if (fwrite($temp, $htc)) {
 			fclose($temp);
 		}
-		echo $locale['502']."<br /><br />\n";
-		//User sig issue,
-		$result = dbquery("ALTER TABLE ".$db_prefix."users CHANGE user_sig user_sig VARCHAR(500) NOT NULL DEFAULT ''");
+		
 		//Set the new version
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='7.03.00' WHERE settings_name='version'");
+		echo $locale['502']."<br /><br />\n";
 	}
 } else {
 	echo $locale['401']."<br /><br />\n";
