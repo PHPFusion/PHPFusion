@@ -266,7 +266,7 @@ class UserFields {
 		$passRequired = $this->skipCurrentPass ? $locale['u136'] : "";
 		$passRequired = $this->isAdminPanel ? "" : $passRequired;
 		$html .= (!$this->registration) ? "<tr>\n<td colspan='2'><div class='alert alert-info'>".$locale['u100']."</div>\n</td></tr>\n" : '';
-		$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u132']."</strong></td>\n</tr>\n";
+		$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u133']."</strong></td>\n</tr>\n";
 		if (!$this->skipCurrentPass) {
 			$html .= $this->basicInputField("user_password", $locale['u133'], "64", "", "password", FALSE, "user_password");
 		}
