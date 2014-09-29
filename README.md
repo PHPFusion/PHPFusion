@@ -1,5 +1,6 @@
 PHP-Fusion
 ==========
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/php-fusion/PHP-Fusion?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 PHP-Fusion is a light-weight open-source content management system (CMS) written and developed by Nick Jones (also known as Digitanium) in PHP. It uses a MySQL database to store a web site's content and comes with a simple but comprehensive administration system. PHP-Fusion includes features common in many other CMS packages.
 
