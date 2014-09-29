@@ -68,11 +68,8 @@ class UserFieldsInput {
 
 	public function saveInsert() {
 		$this->_method = "validate_insert";
-		$this->userData = array("user_password" => "", "user_algo" => "", "user_salt" => "",
-								"user_admin_password" => "", "user_admin_algo" => "", "user_admin_salt" => "",
-								"user_name" => "", "user_email" => "");
-		$this->_fieldsRequired = array("user_name" => TRUE, "user_password" => TRUE, "user_email" => TRUE,
-									   "user_captcha" => TRUE, "email_activation" => TRUE);
+		$this->userData = array("user_password" => "", "user_algo" => "", "user_salt" => "","user_admin_password" => "", "user_admin_algo" => "", "user_admin_salt" => "","user_name" => "", "user_email" => "");
+		$this->_fieldsRequired = array("user_name" => TRUE, "user_password" => TRUE, "user_email" => TRUE,"user_captcha" => TRUE, "email_activation" => TRUE);
 		if ($this->_userNameChange) {
 			$this->_settUserName();
 		}
@@ -627,13 +624,11 @@ class UserFieldsInput {
 	private function _setUserDataUpdate() {
 		global $locale;
 		$this->_findDB();
-		//print_p($this->_dbValues);
 		if (!defined('FUSION_NULL')) {
 			if ($this->_method == 'validate_insert') {
 				$result = dbquery("INSERT INTO ".$this->field_db." (".$this->_dbFields.") VALUES (".$this->_dbValues.")");
 			} else {
 				$this->_saveUserLog();
-				//print_p("UPDATE ".$this->field_db." SET ".$this->_dbValues." WHERE ".$this->field_index."='".$this->userData['user_id']."'");
 				$result = dbquery("UPDATE ".$this->field_db." SET ".$this->_dbValues." WHERE ".$this->field_index."='".$this->userData['user_id']."'");
 			}
 			$this->_completeMessage = $locale['u163'];
@@ -669,5 +664,4 @@ class UserFieldsInput {
 		}
 	}
 }
-
 ?>

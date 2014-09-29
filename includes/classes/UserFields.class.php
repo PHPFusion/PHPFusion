@@ -51,8 +51,7 @@ class UserFields {
 		global $locale, $aidlink;
 		$this->method = "input";
 		$enctype = $this->showAvatarInput ? " enctype='multipart/form-data'" : "";
-		$this->html .= openform($this->formname, $this->formname, 'post', $this->formaction, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."",
-																								   'downtime' => 0));
+		$this->html .= openform($this->formname, $this->formname, 'post', $this->formaction, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."", 'downtime' => 0));
 		if (!$this->registration && !isset($_GET['aid'])) {
 			$title = $locale['uf_100'];
 			$Output = $this->renderBasicInputFields();
@@ -256,6 +255,13 @@ class UserFields {
 	private function renderBasicInputFields() {
 		global $locale;
 		$html = '';
+
+		// Account info
+		$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u129']."</strong></td></tr>\n";
+
+		// Username
+		$html .= (iADMIN || $this->_userNameChange ? $this->basicInputField("user_name", $locale['u127'], "30", $locale['u122']) : "");
+
 		// Login Password
 		$passRequired = $this->skipCurrentPass ? $locale['u136'] : "";
 		$passRequired = $this->isAdminPanel ? "" : $passRequired;
@@ -265,22 +271,25 @@ class UserFields {
 			$html .= $this->basicInputField("user_password", $locale['u133'], "64", "", "password", FALSE, "user_password");
 		}
 		$html .= $this->basicInputField("user_new_password", ($this->registration == TRUE ? $locale['u133'] : $locale['u134']), "64", $passRequired, "password", FALSE, "user_password");
-		$html .= "<tr>\n<td class='tbl'></td>\n<td class='tbl'><small>".$locale['u147']."</small></td>\n</tr>\n";
 		$html .= $this->basicInputField("user_new_password2", $locale['u135'], "64", $passRequired, "password", FALSE, "user_password");
+		$html .= "<tr>\n<td class='tbl'></td>\n<td class='tbl'><small>".$locale['u147']."</small></td>\n</tr>\n";
+
 		// Admin Password
 		if ($this->showAdminPass && iADMIN) {
-			$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u132']."</strong></td></tr>\n";
+			$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u130']."</strong></td></tr>\n";
 			if ($this->userData['user_admin_password']) {
 				$html .= $this->basicInputField("user_admin_password", $locale['u131'], "64", "", "password", FALSE, "user_admin_password");
 			}
 			$html .= $this->basicInputField("user_new_admin_password", ($this->userData['user_admin_password'] ? $locale['u144'] : $locale['u131']), "64", "", "password", FALSE, "user_admin_password");
-			$html .= "<tr>\n<td class='tbl'></td>\n<td class='tbl'><small>".$locale['u147']."</small></td>\n</tr>\n";
 			$html .= $this->basicInputField("user_new_admin_password2", $locale['u145'], "64", "", "password", FALSE, "user_admin_password");
+			$html .= "<tr>\n<td class='tbl'></td>\n<td class='tbl'><small>".$locale['u147']."</small></td>\n</tr>\n";
 		}
-		// Hide email
-		$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u129']."</strong></td></tr>\n";
-		$html .= (iADMIN || $this->_userNameChange ? $this->basicInputField("user_name", $locale['u127'], "30", $locale['u122']) : "");
+
+		// email field
+		$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u064']."</strong></td></tr>\n";
 		$html .= $this->basicInputField("user_email", $locale['u128'], "100", $locale['u126']);
+
+		// Hide email toggler
 		$hide = isset($this->userData['user_hide_email']) ? $this->userData['user_hide_email'] : 1;
 		$hide = isset($_POST['user_hide_email']) && isnum($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $hide;
 		$html .= "<tr>\n";
@@ -288,8 +297,6 @@ class UserFields {
 		$html .= "<label><input type='radio' name='user_hide_email' value='1'".($hide == 1 ? " checked='checked'" : "")." />".$locale['u052']."</label>\n";
 		$html .= "<label><input type='radio' name='user_hide_email' value='0'".($hide == 0 ? " checked='checked'" : "")." />".$locale['u053']."</label>";
 		$html .= "</td>\n</tr>\n";
-		// User Avatar
-		//if ($this->showAvatarInput) { $this->renderAvatarInput(); }
 		return $html;
 	}
 
