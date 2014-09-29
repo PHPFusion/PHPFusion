@@ -40,6 +40,19 @@ $locale['u102'] = "Edit Profile";
 $locale['u103'] = "Profile";
 $locale['u104'] = "Member Profile for";
 $locale['u105'] = "Update Profile";
+
+// New UF 1.20
+$locale['uf_100'] = "General Account Settings";
+$locale['uf_101'] = "User Information Settings";
+$locale['uf_102'] = "User Avatar Settings";
+$locale['uf_103'] = "General";
+$locale['uf_104'] = "User Info";
+$locale['uf_105'] = "Profile Picture";
+$locale['uf_106'] = "Basic Information";
+$locale['uf_107'] = "%s has no user information available.";
+$locale['uf_108'] = "User fields not found.";
+
+
 // View User Groups
 $locale['u110'] = "View User Group";
 $locale['u111'] = "%u user";

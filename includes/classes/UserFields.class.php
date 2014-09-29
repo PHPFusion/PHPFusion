@@ -102,7 +102,6 @@ class UserFields {
 		$this->html .= "</div></div>\n";
 		$this->html .= "</div></div>\n";
 		$this->html .= "</table>\n</form>\n";
-
 		$this->js .= "<script type='text/javascript'>\n";
 		$this->js .= "/*<![CDATA[*/\n";
 		$this->js .= "	function ValidateForm(frm) {\n";
@@ -255,13 +254,10 @@ class UserFields {
 	private function renderBasicInputFields() {
 		global $locale;
 		$html = '';
-
 		// Account info
 		$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u129']."</strong></td></tr>\n";
-
 		// Username
 		$html .= (iADMIN || $this->_userNameChange ? $this->basicInputField("user_name", $locale['u127'], "30", $locale['u122']) : "");
-
 		// Login Password
 		$passRequired = $this->skipCurrentPass ? $locale['u136'] : "";
 		$passRequired = $this->isAdminPanel ? "" : $passRequired;
@@ -273,7 +269,6 @@ class UserFields {
 		$html .= $this->basicInputField("user_new_password", ($this->registration == TRUE ? $locale['u133'] : $locale['u134']), "64", $passRequired, "password", FALSE, "user_password");
 		$html .= $this->basicInputField("user_new_password2", $locale['u135'], "64", $passRequired, "password", FALSE, "user_password");
 		$html .= "<tr>\n<td class='tbl'></td>\n<td class='tbl'><small>".$locale['u147']."</small></td>\n</tr>\n";
-
 		// Admin Password
 		if ($this->showAdminPass && iADMIN) {
 			$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u130']."</strong></td></tr>\n";
@@ -284,11 +279,9 @@ class UserFields {
 			$html .= $this->basicInputField("user_new_admin_password2", $locale['u145'], "64", "", "password", FALSE, "user_admin_password");
 			$html .= "<tr>\n<td class='tbl'></td>\n<td class='tbl'><small>".$locale['u147']."</small></td>\n</tr>\n";
 		}
-
 		// email field
 		$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u064']."</strong></td></tr>\n";
 		$html .= $this->basicInputField("user_email", $locale['u128'], "100", $locale['u126']);
-
 		// Hide email toggler
 		$hide = isset($this->userData['user_hide_email']) ? $this->userData['user_hide_email'] : 1;
 		$hide = isset($_POST['user_hide_email']) && isnum($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $hide;
@@ -468,7 +461,6 @@ class UserFields {
 		$cats = array();
 		$obActiva = FALSE;
 		$i = 0;
-
 		if ($this->registration) {
 			// on registration
 			$where = "WHERE field_registration='1'";
@@ -504,28 +496,36 @@ class UserFields {
 					include INCLUDES."user_fields/".$data['field_name']."_include.php";
 				}
 			}
+		} else {
+			echo "<div class='alert alert-danger text-center'>".$locale['108']."</div>\n";
 		}
 		if ($obActiva) {
 			$fields[$i] = ob_get_contents();
 			ob_end_clean();
 		}
 		$i = 1;
+		$c_html = '';
 		foreach ($cats as $cat) {
 			if (array_key_exists($cat['field_cat'], $fields) && $fields[$cat['field_cat']]) {
 				$html .= "<!--userfield_precat_".$i."-->\n";
 				// this is show in profile.
 				if ($this->method == "display") {
 					$html .= "<div style='margin:5px'></div>\n";
-					$html .= "<table cellpadding='0' cellspacing='1' width='400' class='table table-responsive profile_category tbl-border center'>\n";
+					$html .= "<table style='width:100%;' class='table table-responsive profile_category tbl-border center'>\n<tbody>\n";
 				}
 				$html .= "<tr>\n";
 				$html .= "<td colspan='2' class='profile_category_name tbl2'><strong>".$cat['field_cat_name']."</strong></td>\n";
-				$html .= "</tr>\n".$fields[$cat['field_cat']];
+				$html .= "</tr>\n";
+				$c_html .= $fields[$cat['field_cat']];
+				$html .= $c_html;
 				$i++;
 				if ($this->method == "display") {
-					$html .= "</table>\n";
+					$html .= "</tbody>\n</table>\n";
 				}
 			}
+		}
+		if (!$c_html) {
+			$html .= "<div class='text-center'>".sprintf($locale['uf_107'], ucwords($this->userData['user_name']))."</div>\n";
 		}
 		if (count($fields > 0)) {
 			$html .= "<!--userfield_end-->\n";

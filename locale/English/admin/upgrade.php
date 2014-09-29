@@ -41,4 +41,6 @@ $locale['T203'] = "Hello [RECEIVER],\r\n\r\nA reply has been posted in the forum
 $locale['T301'] = "Contact form";
 $locale['T302'] = "[SUBJECT]";
 $locale['T303'] = "[MESSAGE]";
+$locale['UF'] = "Privacy";
+$locale['SEO'] = "Permalinks";
 ?>
