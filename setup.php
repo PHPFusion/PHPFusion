@@ -1711,6 +1711,29 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['207']."', 'rank4.png', 500, '0', 101, '".$enabled_languages[$i]."')");
 				$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['208']."', 'rank5.png', 1000, '0', 101, '".$enabled_languages[$i]."')");
 			}
+	// enable default error handler
+	// create .htaccess for it
+$htc = "";
+if (!file_exists(BASEDIR.".htaccess")) {
+	if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+		@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+	} else {
+		// create a file.
+		$handle = fopen(BASEDIR.".htaccess", "w");
+		fclose($handle);
+	}
+}
+
+//  Wipe out all .htaccess rewrite rules and add error handler only
+$htc = "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
+$htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
+$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
+$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
+$htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
+$temp = fopen(BASEDIR.".htaccess", "w");
+if (fwrite($temp, $htc)) {
+	fclose($temp);
+}						
 		}
 		if (isset($_POST['localeset']) && file_exists("locale/".$_POST['localeset']) && is_dir("locale/".$_POST['localeset'])) {
 			include "locale/".$_POST['localeset']."/setup.php";
