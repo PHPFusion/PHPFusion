@@ -90,7 +90,11 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	$openTable = $locale['401'];
 }
 $image_files = makefilelist(IMAGES_NC, ".|..|index.php", TRUE);
-$image_list = makefileopts($image_files, $cat_image);
+$image_list = array();
+foreach($image_files as $image) {
+	$image_list[$image] = $image;
+}
+
 opentable($openTable);
 echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
