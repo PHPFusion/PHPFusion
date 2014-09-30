@@ -135,8 +135,7 @@ if (isset($_POST['save'])) {
 		echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
 		//<form name='selectform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
 		//echo "<select name='page_id' class='textbox' style='width:200px;'>\n".$editlist."</select>\n";
-		echo form_select('', 'page_id', 'page_id', $edit_opts, isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array('placeholder' => $locale['choose'],
-																																					'class' => 'pull-left'));
+		echo form_select('', 'page_id', 'page_id', $edit_opts, isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array('placeholder' => $locale['choose'], 'class' => 'pull-left'));
 		echo form_button($locale['420'], 'edit', 'edit', $locale['420'], array('class' => 'btn-primary pull-left m-l-10 m-r-10'));
 		echo form_button($locale['421'], 'delete', 'delete', $locale['421'], array('class' => 'btn-primary pull-left'));
 		//echo "<input type='submit' name='edit' value='".$locale['420']."' class='button' />\n";
@@ -193,13 +192,9 @@ if (isset($_POST['save'])) {
 	}
 	echo "<td class='tbl'><label for='page_title'>".$locale['422']."</label> <span class='required'>*</span></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'page_title', 'page_title', $page_title, array('width' => '300px',
-																	  'class' => 'pull-left m-r-10'));
+	echo form_text('', 'page_title', 'page_title', $page_title, array('width' => '300px', 'class' => 'pull-left m-r-10'));
 	echo "&nbsp;<label for='page_access' class='pull-left m-t-5'>".$locale['423']."</label>\n";
-	echo form_select('', 'page_access', 'page_access', $access_opts, $page_access, array('placeholder' => $locale['choose'],
-																						 'width' => '150px',
-																						 'inline' => 1,
-																						 'class' => 'pull-left'));
+	echo form_select('', 'page_access', 'page_access', $access_opts, $page_access, array('placeholder' => $locale['choose'], 'width' => '150px', 'inline' => 1, 'class' => 'pull-left'));
 	//<select name='page_access' class='textbox' style='width:150px;'>\n".$access_opts."</select></td>\n";
 	echo "</tr>\n";
 	if (multilang_table("CP")) {
@@ -221,19 +216,17 @@ if (isset($_POST['save'])) {
 	echo "</td>\n</tr>\n<tr>\n";
 	if (!isset($_COOKIE['custom_pages_tinymce']) || !$_COOKIE['custom_pages_tinymce'] || !$settings['tinymce_enabled']) {
 		echo "<td class='tbl'></td><td class='tbl'>\n";
-		echo "<input type='button btn btn-default' value='".$locale['431']."' class='button' onclick=\"insertText('page_content', '&lt;!--PAGEBREAK--&gt;');\" />\n";
-		echo "<input type='button btn btn-default' value='&lt;?php?&gt;' class='button' onclick=\"addText('page_content', '&lt;?php\\n', '\\n?&gt;');\" />\n";
-		echo "<input type='button btn btn-default' value='&lt;p&gt;' class='button' onclick=\"addText('page_content', '&lt;p&gt;', '&lt;/p&gt;');\" />\n";
-		echo "<input type='button btn btn-default' value='&lt;br /&gt;' class='button' onclick=\"insertText('page_content', '&lt;br /&gt;');\" />\n";
+		echo "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['431']."' onclick=\"insertText('page_content', '&lt;!--PAGEBREAK--&gt;');\">".$locale['431']."</button>\n";
+		echo "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' onclick=\"addText('page_content', '&lt;?php\\n', '\\n?&gt;');\">&lt;?php?&gt;</button>\n";
+		echo "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;p&gt;' onclick=\"addText('page_content', '&lt;p&gt;', '&lt;/p&gt;');\">&lt;p&gt;</button>\n";
+		echo "<button type='button' class='btn btn-default btn-sm button m-b-10' value='&lt;br /&gt;' onclick=\"insertText('page_content', '&lt;br /&gt;');\">&lt;br /&gt;</button>\n";
 		echo display_html("inputform", "page_content", TRUE)."</td>\n";
 		echo "</tr>\n<tr>\n";
 	}
 	if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 		echo "<td class='tbl'><label for='admin_password'>".$locale['425']." <span class='required'>*</span></label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_text('', 'admin_password', 'admin_password', isset($_POST['admin_password']) ? $_POST['admin_password'] : '', array('password' => 1,
-																																	  'width' => '250px'));
-		//<input type='password' name='admin_password' value='".(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")."' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
+		echo form_text('', 'admin_password', 'admin_password', isset($_POST['admin_password']) ? $_POST['admin_password'] : '', array('password' => 1, 'width' => '250px'));
 		echo "</td>\n";
 		echo "</tr>\n<tr>\n";
 	}
