@@ -280,7 +280,7 @@ function photo_cat_container($data) {
 	$thumb_img = ($data['album_thumb'] && file_exists(PHOTOS.$data['album_thumb'])) ? PHOTOS.$data['album_thumb'] : DOWNLOADS."images/no_image.jpg";
 	$title = ($data['album_thumb'] && file_exists(PHOTOS.$data['album_thumb'])) ? $data['album_thumb'] : $locale['402'];
 	echo "<a class='display-inline-block' style='width:100%;' href='".BASEDIR."photogallery.php?album_id=".$data['album_id']."'>\n";
-	echo "<img class='img-responsive img-thumbnail' style='min-width:".$settings['thumb_w']."px; min-height:".$settings['thumb_h']."px; max-width:100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
+	echo "<img class='img-responsive img-thumbnail' style='min-width:100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
 	echo "</a>\n";
 	echo "<div class='album-details m-t-10'>\n";
 	echo "<span><abbr title='".$locale['403'].showdate("shortdate", $data['album_datestamp'])."'><i class='entypo calendar text-lighter'></i></abbr></span>\n";
@@ -301,7 +301,7 @@ function photo_thumbnail($data) {
 	echo "<a href='".BASEDIR."photogallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'>\n";
 	$thumb_img = ($data['photo_thumb1'] && file_exists(PHOTODIR.$data['photo_thumb1'])) ? PHOTODIR.$data['photo_thumb1'] : DOWNLOADS."images/no_image.jpg";
 	$title = ($data['album_thumb1'] && file_exists(PHOTOS.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['432'];
-	echo "<img class='photogallery_album_photo img-responsive' style='min-width:".$settings['thumb_w']."px; max-width:100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
+	echo "<img class='photogallery_album_photo img-responsive' style='min-width: 100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
 	echo "</a>\n";
 	echo "</div>\n<div class='panel-body photogallery_album_photo_info'>\n";
 	echo "<a href='".BASEDIR."photogallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'><strong>".$data['photo_title']."</strong></a>\n";
