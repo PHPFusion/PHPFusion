@@ -190,7 +190,6 @@ if (isset($_POST['savesettings'])) {
 		}
 		if (($localeset != $old_localeset) && !$error) {
 			//If the system base language changes, replace Admin´s locale
-			// include email, ????
 			include LOCALE.$localeset."/admin/main.php";
 			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['201']."' WHERE admin_link='administrators.php'");
 			if (!$result) {

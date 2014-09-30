@@ -70,7 +70,6 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
 		$result = dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
 	}
 	redirect(FUSION_SELF.$aidlink);
-	// New in API 1.02 by Hien. Inclusion of Page and alter different DB.
 } elseif (isset($_GET['enable']) && preg_match("/^([a-z0-9_-]){2,50}$/i", stripinput($_GET['enable'])) && file_exists(INCLUDES."user_fields/".stripinput($_GET['enable'])."_include_var.php") && file_exists(INCLUDES."user_fields/".stripinput($_GET['enable'])."_include.php")
 ) {
 	$user_field_api_version = "1.00.00";
@@ -84,23 +83,18 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
 		$field_log = isset($_POST['field_log']) && $_POST['field_log'] == 1 ? 1 : 0;
 		$field_registration = isset($_POST['field_registration']) && $_POST['field_registration'] == 1 ? 1 : 0;
 		$rows = dbcount("(field_id)", DB_USER_FIELDS, "field_name='".stripinput($_GET['enable'])."'");
-		// existed in db. how come when enable there is existing record???
-		// check : not removed during disable??
 		if ($rows > 0) {
 			$result = dbquery("UPDATE ".DB_USER_FIELDS." SET
 					field_cat='".$field_cat."', field_required='".$field_required."', field_log='".$field_log."',
 					field_registration='".$field_registration."'
 				WHERE field_name='".stripinput($_GET['enable'])."'");
 		} else {
-			// new record
 			$field_order = dbresult(dbquery("SELECT MAX(field_order) FROM ".DB_USER_FIELDS." WHERE field_cat='".$field_cat."'"), 0)+1;
-			// new in api 1.02
 			$c_query = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id='".$field_cat."' LIMIT 1");
-			if (dbrows($c_query) > 0) { // existed
+			if (dbrows($c_query) > 0) {
 				$c_data = dbarray($c_query);
 				$field_cat_db = $c_data['field_cat_db'] ? DB_PREFIX.$c_data['field_cat_db'] : DB_USERS;
 			}
-			// change here.
 			if (!$user_field_dbinfo || $result = dbquery("ALTER TABLE ".$field_cat_db." ADD ".$user_field_dbname." ".$user_field_dbinfo)
 			) {
 				$result = dbquery("INSERT INTO ".DB_USER_FIELDS." (
@@ -111,7 +105,6 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
 					)");
 			}
 		}
-		//redirect(FUSION_SELF.$aidlink);
 	} else {
 		$result = dbquery("SELECT field_cat, field_required, field_log, field_registration FROM ".DB_USER_FIELDS."
 			WHERE field_name='".stripinput($_GET['enable'])."'");
