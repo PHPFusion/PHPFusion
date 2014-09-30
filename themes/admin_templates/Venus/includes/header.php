@@ -42,6 +42,17 @@ $('#toggle-canvas').bind('click', function(e) {
 ");
 
 echo "<ul class='hidden-xs pull-right m-r-15'>\n";
+if (sizeof($enabled_languages) > 1) {
+	echo "<li class='dropdown'><a class='dropdown-toggle' data-toggle='dropdown' title='".$locale['282']."'><i class='icon-xs entypo flag'></i><span class='caret'></span></a>\n";
+	echo "<ul class='dropdown-menu' role='lang-menu'>\n";
+	foreach($language_opts as $languages) {
+		echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".FUSION_REQUEST."&amp;lang=$languages'><img class='m-r-5' src='".BASEDIR."locale/$languages/$languages-s.png'> $languages</a></li>\n";
+	}
+	echo "</ul>\n";
+	echo "</li>\n";
+}
+
+
 echo "<li><a title='".$locale['view']." ".$settings['sitename']."' href='".BASEDIR."'><i class='icon-xs entypo home'></i></a></li>\n";
 echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='icon-xs entypo mail'></i></a></li>\n";
 echo "<li><a title='".$locale['settings']."' href='".ADMIN."settings_main.php".$aidlink."'><i class='icon-xs entypo cog'></i></a></li>\n";

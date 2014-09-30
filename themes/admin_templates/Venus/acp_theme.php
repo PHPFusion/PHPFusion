@@ -26,7 +26,7 @@ require_once ADMIN."navigation.php";
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
 function render_adminpanel() {
-global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_languages;
+global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_languages, $language_opts;
 $admin_password = '';
 
 	if (!check_admin_pass($admin_password)) {
@@ -55,14 +55,6 @@ $admin_password = '';
 		echo "<!-- begin leftnav -->\n";
 		echo "<div id='acp-left' class='pull-left off-canvas ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' data-spy='affix' data-offset-top='0' data-offset-bottom='0' style='width:250px; height:100%;'>\n"; // collapse to top menu on sm and xs
 		echo "<div class='panel panel-default admin' style='border:0px; box-shadow: none;'><div class='panel-body clearfix'>\n";
-
-		if (sizeof($enabled_languages) > 1) {
-			echo "<div class='text-center m-r-10'>\n";
-			echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
-			echo lang_switcher();
-			echo "</div>\n";
-		}
-
 		echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '50px')."</div>\n";
 		echo "<span class='display-block m-t-5'><strong>\n".ucfirst($userdata['user_name'])."</strong>\n<br/>".getuserlevel($userdata['user_level'])."</span></div>\n";
 		echo "</div>\n";

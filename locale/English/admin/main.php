@@ -95,4 +95,5 @@ $locale['278'] = "Latest Ratings";
 $locale['279'] = "Latest Submissions";
 $locale['280'] = "Administration Console Panel";
 $locale['281'] = "Please Enter Your Admin Password";
+$locale['282'] = "Switch Language";
 ?>
