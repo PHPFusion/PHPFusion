@@ -46,7 +46,7 @@ $formaction = FUSION_SELF.$aidlink;
 $message = "";
 $download_cat = '';
 
-$result = dbcount("(download_cat_id)", DB_DOWNLOAD_CATS);
+$result = dbcount("(download_cat_id)", DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
 
 if (!empty($result)) {
 	$download_file = "";
