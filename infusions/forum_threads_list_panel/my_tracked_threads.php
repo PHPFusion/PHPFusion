@@ -36,7 +36,7 @@ opentable($locale['global_056']);
 $result = dbquery("SELECT tn.thread_id FROM ".DB_THREAD_NOTIFY." tn
 	INNER JOIN ".DB_THREADS." tt ON tn.thread_id = tt.thread_id
 	INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-	WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'");
+	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'");
 $rows = dbrows($result);
 
 if ($rows) {
@@ -51,7 +51,7 @@ if ($rows) {
 		LEFT JOIN ".DB_USERS." tu ON tt.thread_author = tu.user_id
 		LEFT JOIN ".DB_USERS." tu2 ON tt.thread_lastuser = tu2.user_id
 		INNER JOIN ".DB_POSTS." tp ON tt.thread_id = tp.thread_id
-		WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'
+		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'
 		GROUP BY tn.thread_id
 		ORDER BY tn.notify_datestamp DESC
 		LIMIT ".$_GET['rowstart'].",10

@@ -26,7 +26,7 @@ opentable($locale['global_043']);
 $result = dbquery("SELECT tp.post_id FROM ".DB_POSTS." tp
 	LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
 	LEFT JOIN ".DB_THREADS." tt ON tp.thread_id = tt.thread_id
-	WHERE ".groupaccess('tf.forum_access')." AND tp.post_hidden='0' AND tt.thread_hidden='0' AND (tp.post_datestamp > ".$lastvisited." OR tp.post_edittime > ".$lastvisited.")");
+	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tp.post_hidden='0' AND tt.thread_hidden='0' AND (tp.post_datestamp > ".$lastvisited." OR tp.post_edittime > ".$lastvisited.")");
 $rows = dbrows($result);
 $threads = 0;
 if ($rows) {
@@ -39,7 +39,7 @@ if ($rows) {
 		LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
 		LEFT JOIN ".DB_THREADS." tt ON tp.thread_id = tt.thread_id
 		LEFT JOIN ".DB_USERS." tu ON tp.post_author = tu.user_id
-		WHERE ".groupaccess('tf.forum_access')." AND tp.post_hidden='0' AND tt.thread_hidden='0' AND (tp.post_datestamp > '".$lastvisited."' OR tp.post_edittime > '".$lastvisited."')
+		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tp.post_hidden='0' AND tt.thread_hidden='0' AND (tp.post_datestamp > '".$lastvisited."' OR tp.post_edittime > '".$lastvisited."')
 		GROUP BY tp.thread_id
 		ORDER BY post_timestamp DESC LIMIT ".$_GET['rowstart'].",20");
 	$i = 0;

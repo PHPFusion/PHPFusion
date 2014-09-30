@@ -26,7 +26,7 @@ if (!isset($lastvisited) || !isnum($lastvisited)) {
 	$lastvisited = time();
 }
 $rows = dbrows(dbquery("SELECT tt.thread_id FROM ".DB_THREADS." tt INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-	WHERE ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'"));
+	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'"));
 if ($rows) {
 	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 		$_GET['rowstart'] = 0;
@@ -37,7 +37,7 @@ if ($rows) {
 		FROM ".DB_THREADS." tt
 		INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
 		INNER JOIN ".DB_USERS." tu ON tt.thread_lastuser = tu.user_id
-		WHERE ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'
+		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'
 		ORDER BY tt.thread_lastpost DESC LIMIT ".$_GET['rowstart'].",20");
 	$i = 0;
 	opentable($locale['global_041']);
