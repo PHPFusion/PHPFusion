@@ -43,7 +43,7 @@ if (isset($_GET['status']) && !isset($message)) {
 	}
 }
 
-$result = dbcount("(article_cat_id)", DB_ARTICLE_CATS );
+$result = dbcount("(article_cat_id)", DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")."");
 
 if (!empty($result)) {
 	if (isset($_POST['save'])) {
