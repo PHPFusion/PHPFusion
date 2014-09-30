@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) 2002 - 2011 Nick Jones
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
-| Author: Hien (Frederick MC Chan)
+| Filename: articles_rewrite_include.php
+| Author: Ankur Thakur
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,6 +18,18 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-$permalink_name = $locale['pl_post_title'];
-$permalink_desc = $locale['pl_post_desc'];
+
+$regex = array(
+	"%weblink_id%" => "([0-9]+)",
+	"%rowstart%" => "([0-9]+)",
+	"%weblink_cat_id%" => "([0-9]+)",
+	"%weblink_name%" => "([a-zA-Z0-9-_]+)"
+);
+$pattern = array(
+	"links/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%"
+);
+
+$dir_path = BASEDIR;
+$dbname = DB_WEBLINKS;
+
 ?>

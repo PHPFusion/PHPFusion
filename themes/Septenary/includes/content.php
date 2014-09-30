@@ -28,7 +28,7 @@ echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 leftbar'>\n";
 echo RIGHT.LEFT;
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 main-content'>\n";
-echo U_CENTER.CONTENT.L_CENTER;
+echo AU_CENTER.U_CENTER.CONTENT.L_CENTER.BL_CENTER;
 echo "</div>\n";
 echo "</div>\n";
 close_grid(1);

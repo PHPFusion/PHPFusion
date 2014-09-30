@@ -248,12 +248,8 @@ input[type=text]:focus {
     box-shadow: none !important;
 }
 
-.section-1 {
-    margin-top: 15px;
-}
-
 .section-1 div > ul > li > a {
-    color: rbg(104, 104, 104);
+    color: rgb(104, 104, 104);
     font-size: 15px;
     padding-top: 5px;
 }

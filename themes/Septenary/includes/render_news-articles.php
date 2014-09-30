@@ -41,7 +41,7 @@ function render_news($subject, $news, $info) {
 	echo "</div>\n";
 	echo "<h2 class='news-title'><a href='".BASEDIR."news.php?readmore=".$info['news_id']."'>".$info['news_subject']."</a></h2>\n";
 	echo ($info['cat_image'] && !$info['news_image']) ? "<div class='pull-left m-r-20'>".$info['cat_image']."</div>\n" : '';
-	echo "<div class='article'>".$news;
+	echo "<div class='article clearfix'>".$news;
 	echo !isset($_GET['readmore']) && $info['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".BASEDIR."news.php?readmore=".$info['news_id']."' class='button'>".$locale['global_072']."</a>\n</div>\n" : "";
 	echo "</div>\n";
 	if (isset($_GET['readmore'])) {
