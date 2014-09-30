@@ -45,16 +45,17 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 							 'gray' => $locale['html416'], 'silver' => $locale['html417'],
 							 'white' => $locale['html418'],);
 		$placeholder = $locale['html400'];
-		$res .= form_select('', "setcolor-$formname", "setcolor-$formname", $color_array, '', array('placeholder' => $placeholder,
+		$seed = rand(0,100);
+		$res .= form_select('', "setcolor-$formname", "setcolor-$formname-$seed", $color_array, '', array('placeholder' => $placeholder,
 																									'class' => 'pull-left m-r-10',
 																									'allowclear' => 1));
 		add_to_jquery("
                 function color(item) {
                 if(!item.id) {return item.text;}
                 var color = item.text;
-                return '<table><tr><td><label style=\'display: inline-block; width: 18px; height:18px; margin:3px; margin-right:5px; padding: 0px 8px; background:'+item.text+'\'></label>'+item.text+'</td></tr></table>';
+                return '<table><tr><td><label style=\'display: inline-block; width: 10px; height:13px; margin: 0 10px 0 5px; padding: 0px 8px; background:'+item.text+'\'></label>'+item.text+'</td></tr></table>';
                 }
-                $('#setcolor-$formname').select2({
+                $('#setcolor-$formname-$seed').select2({
                 formatSelection: color,
                 escapeMarkup: function(m) { return m; },
                 formatResult: color,

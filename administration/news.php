@@ -183,9 +183,9 @@ if (isset($_POST['save'])) {
 	}
 }
 if (isset($_POST['preview'])) {
-	$news_subject = form_sanitizer($_POST['news_subject'], '', 'news_subject'); 
+	$news_subject = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 	$news_cat = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
-	$news_language = form_sanitizer($_POST['news_language'], '', 'news_language'); 
+	$news_language = form_sanitizer($_POST['news_language'], '', 'news_language');
 	$body = phpentities(stripslash($_POST['body']));
 	$bodypreview = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['body']));
 	if ($_POST['body2']) {
@@ -215,15 +215,15 @@ if (isset($_POST['preview'])) {
 	$news_ratings = isset($_POST['news_ratings']) ? " checked='checked'" : "";
 	if (!defined('FUSION_NULL')) {
 		opentable($news_subject);
-		echo "<div class='well'>\n";
 		echo "$bodypreview\n";
-		echo "</div>\n";
+		echo "<hr/>\n";
 		if (isset($body2preview)) {
 			echo "$body2preview\n";
 		}
 		closetable();
 	}
 }
+
 $result = dbquery("SELECT news_id, news_subject, news_draft FROM ".DB_NEWS." ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."'" : "")." ORDER BY news_draft DESC, news_datestamp DESC");
 if (dbrows($result) != 0) {
 	$editlist = array();
@@ -235,10 +235,8 @@ if (dbrows($result) != 0) {
 		$editlist[$data['news_id']] = "".($data['news_draft'] ? $locale['438']." " : "").$data['news_subject']."";
 	}
 	opentable($locale['400']);
-	echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 0,
-																									 'notice' => 0));
-	echo form_select('', 'news_id', 'news_id', $editlist, '', array('placeholder' => $locale['choose'],
-																	'class' => 'pull-left m-r-10'));
+	echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 0, 'notice' => 0));
+	echo form_select('', 'news_id', 'news_id', $editlist, '', array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
 	echo form_button($locale['420'], 'edit', 'edit', $locale['420'], array('class' => 'btn-primary pull-left m-r-10'));
 	echo form_button($locale['421'], 'delete', 'delete', $locale['421'], array('class' => 'btn-primary pull-left'));
 	echo closeform();
@@ -310,8 +308,7 @@ echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink, array('enc
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 echo "<td width='100' class='tbl'><label for='news_subject'>".$locale['422']."</label></td>\n";
 echo "<td width='80%' class='tbl'>\n";
-echo form_text('', 'news_subject', 'news_subject', $news_subject, array('required' => 1,
-																		'error_text' => $locale['450']));
+echo form_text('', 'news_subject', 'news_subject', $news_subject, array('required' => 1, 'error_text' => $locale['450']));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td width='100' class='tbl'><label for='news_cat'>".$locale['423']."</label></td>\n";
 echo "<td class='tbl'>\n";
@@ -352,7 +349,7 @@ echo form_textarea('', 'body2', 'body2', $body2);
 echo "</td>\n</tr>\n";
 if ($settings['tinymce_enabled'] != 1) {
 	echo "<tr>\n<td class='tbl'></td>\n<td class='tbl'>\n";
-	echo "<input type='button' value='".$locale['441']."' class='button' onclick=\"insertText('body2', '&lt;!--PAGEBREAK--&gt;');\" />\n";
+	echo "<button value='".$locale['441']."' class='btn btn-sm btn-default button m-b-10' onclick=\"insertText('body2', '&lt;!--PAGEBREAK--&gt;');\" />".$locale['441']."</button>\n";
 	echo display_html("inputform", "body2", TRUE, TRUE, TRUE, IMAGES_N);
 	echo "</td>\n</tr>\n";
 }

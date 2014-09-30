@@ -47,7 +47,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
 		$class = (array_key_exists("class", $array) && $array['class']) ? $array['class'] : '';
 	}
-	$input_value = phpentities(stripslashes($input_value));
+	$input_value = html_entity_decode(stripslashes($input_value));
 	$input_value = str_replace("<br />", "", $input_value);
 	if ($bbcode) {
 		require_once INCLUDES."bbcode_include.php";
