@@ -119,7 +119,13 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
 		if (!$result) {
 			$error = 1;
 		}
-		$last_insert_id = mysql_insert_id();
+	
+		if ($pdo_enabled == "1") {
+			$last_insert_id = $pdo->lastInsertId();
+		} else {
+			$last_insert_id = mysql_insert_id();
+		}
+		
 		if (isset($pattern) && is_array($pattern)) {
 			foreach ($pattern as $source => $target) {
 				$result = dbquery("INSERT INTO ".DB_PERMALINK_METHOD." (pattern_type, pattern_source, pattern_target, pattern_cat) VALUES ('".$last_insert_id."', '".$source."', '".$target."', 'normal')");
