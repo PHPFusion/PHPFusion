@@ -31,7 +31,7 @@ global $aidlink, $locale;
 echo open_grid('footer', 1);
 echo "<div class='footer-row row'>\n";
 echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-echo "<img style='width:80%;' class='img-responsive' src='".THEME."images/htmlcss.jpg'>";
+echo "<img style='width:80%;' class='img-responsive' src='".THEME."images/htmlcss.jpg' />";
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 footer-right-col'>\n";
 echo "<div class='pull-right'>\n";
