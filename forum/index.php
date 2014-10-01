@@ -32,12 +32,13 @@ $tab_title['id'][] = "tracked";
 $tab_title['icon'][] = "";
 $tab_active = isset($_GET['section']) ? tab_active($tab_title, 0) : 'thread';
 echo "<div class='panel tbl-border p-0'>\n";
-echo "<div class='pull-right'>\n";
+echo "<div class='display-inline-block pull-right' style='max-width:250px;'>\n";
 echo openform('searchform', 'searchform', 'post'," ".($settings['site_seo'] == "1" ? FUSION_ROOT : '').$settings['siteurl']."search.php?stype=forums", array('downtime' => 0));
 echo form_hidden('stype', 'stype', 'stype', 'forums');
 echo form_text('', 'stext', 'stext', '', array('placeholder' => $locale['550'], 'append_button' => 1));
 echo closeform();
 echo "</div>\n";
+
 echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM."index.php");
 // == using ID as key
 echo opentabbody($tab_title['title'], $tab_active, $tab_active, FORUM."index.php");
