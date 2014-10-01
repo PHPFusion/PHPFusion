@@ -103,6 +103,7 @@ if (FUSION_SELF == 'login.php') {
 	add_to_head('<style>.heading h2 { display:none !important; } .footer {margin-top:0px;}</style>');
 	echo CONTENT;
 }
-close_grid();
+close_grid(1);
+echo "</div>\n"; // .overlay
 echo "</header>\n";
 ?>

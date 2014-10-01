@@ -35,7 +35,7 @@ echo "<img style='width:80%;' class='img-responsive' src='".THEME."images/htmlcs
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 footer-right-col'>\n";
 echo "<div class='pull-right'>\n";
-echo "<h1><a href='#top'><i style='font-size:50px;' class='entypo mid-opacity up-circled'></i></a></h1>\n";
+echo "<div><a href='#top'><i style='font-size:50px;' class='entypo mid-opacity up-circled'></i></a></div>\n";
 echo "</div>\n";
 echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
 	<p>".showcopyright()."</p>
