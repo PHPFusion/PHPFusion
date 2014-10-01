@@ -23,7 +23,7 @@ $ad_mess = array();
 $admin_mess = '';
 
 if (iADMIN && !defined("ADMIN_PANEL")) {
-	$admin_mess .= "<a id='content' name='content'></a>\n";
+	$admin_mess .= "<a id='content'></a>\n";
 	if (iSUPERADMIN && file_exists(BASEDIR."setup.php")) $ad_mess[] = $locale['global_198'];
 	if ($settings['maintenance']) $ad_mess[] = $locale['global_190'];
 	if (!$userdata['user_admin_password']) $ad_mess[] = $locale['global_199'];
