@@ -22,14 +22,16 @@ $regex = array(
 	"%news_id%" => "([0-9]+)",
    	"%news_title%" => "([a-zA-Z0-9-]+)",
  	"%news_step%" => "([0-9]+)",
- 	"%news_rowstart%" => "([0-9]+)"
+ 	"%news_rowstart%" => "([0-9]+)",
+	"%c_start%" => "([0-9]+)",
 	);
 
 $pattern = array(
 	"news" => "news.php",
 	"news/%news_id%/%news_title%" => "news.php?readmore=%news_id%",
-	"news/%news_id%/%news_title%#comments" => "news.php?readmore=%news_id%#comments
-	");
+	"news/%news_id%/%news_title%#comments" => "news.php?readmore=%news_id%#comments",
+	"news/%c_start%/%news_id%/%news_title%" => "news.php?readmore=%news_id%&amp;c_start=%c_start%"
+	);
 
 $alias_pattern = array("news/%alias%" => "%alias_target%",
 					   "news/%alias%#comments" => "%alias_target%#comments",
