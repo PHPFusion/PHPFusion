@@ -26,11 +26,11 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
 
 openside($locale['rss009']);
 echo "<p style='text-align: center;'>\n";
-echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_news.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_news.gif' alt='".$locale['rss004']."' border='0'></a>\n";
-echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_articles.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_articles.gif' alt='".$locale['rss002']."' border='0'></a>\n";
-echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_downloads.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_downloads.gif' alt='".$locale['rss005']."' border='0'></a>\n";
-echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_weblinks.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_weblinks.gif' alt='".$locale['rss006']."' border='0'></a>\n";
-echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_forums.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_forums.gif' alt='".$locale['rss001']."' border='0'></a>\n";
+echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_news.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_news.gif' alt='".$locale['rss004']."'></a>\n";
+echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_articles.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_articles.gif' alt='".$locale['rss002']."'></a>\n";
+echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_downloads.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_downloads.gif' alt='".$locale['rss005']."'></a>\n";
+echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_weblinks.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_weblinks.gif' alt='".$locale['rss006']."'></a>\n";
+echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_forums.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_forums.gif' alt='".$locale['rss001']."'></a>\n";
 echo "</p>\n";
 closeside();
 ?>
