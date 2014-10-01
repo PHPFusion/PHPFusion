@@ -60,7 +60,7 @@ open_grid('section-showcase', 1);
 if ($settings['opening_page'] == FUSION_SELF) {
 	echo "<div class='text-center logo'> ".showbanners()." </div>\n";
 	echo "<h2 class='text-center text-uppercase' style='letter-spacing:10px; font-weight:300; font-size:36px;'>".$settings['sitename']."</h2>\n";
-	echo "<h4 class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</h4>\n";
+	echo "<div class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</div>\n";
 	echo "<div class='section-2-row row'>\n";
 	echo "<div class='col-sm-3 col-md-3 col-lg-3 section-2-tab text-center'>\n";
 	echo "<a href='".BASEDIR."news.php'>\n";
