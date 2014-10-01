@@ -68,7 +68,7 @@ $admin_password = '';
 		echo CONTENT;
 		echo "</div>\n";
 		echo "<div class='m-l-20 display-block'>\n";
-		echo "Venus Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
+		echo "Venus Admin &copy; ".date("Y")." created by <a href='http://www.php-fusion.co.uk' target='_blank'><strong>PHP-Fusion Inc.</strong></a>\n";
 		echo showcopyright();
 		echo "</div>\n";
 		echo "</div>\n";
