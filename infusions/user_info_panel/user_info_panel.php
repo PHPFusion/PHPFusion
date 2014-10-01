@@ -55,7 +55,7 @@ if (sizeof($enabled_languages) > 1) {
 echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
 echo lang_switcher();
 }
-echo "<div id='navigation'>\n";
+echo "<div id='navigation-user'>\n";
 echo "<h5><strong>".$locale['UM096']."</strong></h5>\n";
 echo "<hr class='side-hr'>\n";
 echo "<ul>\n";

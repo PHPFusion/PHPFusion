@@ -418,25 +418,29 @@ nav {
     margin: 0px -15px 0px;
 }
 
-#navigation h2 {
+#navigation h2,
+#navigation-user h2 {
     font-size: 12px;
     font-weight: bold;
     padding: 5px 0 3px 10px;
     margin: auto;
 }
 
-#navigation ul {
+#navigation ul,
+#navigation-user  ul {
     padding: 20px 0px 20px 18px;
     list-style-type: none;
     background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.5);
     margin: 0 -20px;
 }
 
-* html #navigation ul li {
+* html #navigation ul li,
+* html #navigation-user ul li {
     height: 1%;
 }
 
-#navigation a {
+#navigation a,
+#navigation-user a {
     display: block;
     color: #FFF;
     padding: 8px;
@@ -448,26 +452,31 @@ nav {
     transition: 0.1s ease-in-out;
 }
 
-#navigation span {
+#navigation span,
+#navigation-user span {
     padding-left: 10px;
 }
 
-#navigation a:hover {
+#navigation a:hover,
+#navigation-user a:hover {
     color: #FFF;
     background-color: #5A77A0;
 }
 
-#navigation li.first-link a {
+#navigation li.first-link a,
+#navigation-user li.first-link a {
     font-weight: bold;
 }
 
-#navigation li.first-link.current-link a {
+#navigation li.first-link.current-link a,
+#navigation-user li.first-link.current-link a {
     color: #555;
     font-weight: bold;
     background-color: #F3F3F3;
 }
 
-#navigation li.current-link a {
+#navigation li.current-link a,
+#navigation-user li.current-link a {
     color: #FFF;
     background-color: #1487CA;
 }
