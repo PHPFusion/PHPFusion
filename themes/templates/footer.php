@@ -91,6 +91,9 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 if (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0) {
 	echo "<div class='admin-message'>".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])."</div>\n";
 }
+// Stuff added with add_to_footer()
+echo $fusion_page_footer_tags;
+
 echo "</body>\n</html>\n";
 $output = ob_get_contents();
 if (ob_get_length() !== FALSE) {
