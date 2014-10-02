@@ -517,7 +517,19 @@ nav {
     border-radius: 6px;
 
 }
-
+.au-content, .bl-content {
+	padding: 25px 20px 50px !important;
+	border-left: 1px solid rgba(0,0,0,0.15);
+	border-right: 1px solid rgba(0,0,0,0.15);
+	background: rgba(255,255,255,0.33);
+}
+.au-content {
+	border-bottom: 1px solid rgba(0,0,0,0.15);
+}
+.bl-content {
+	border-top: 1px solid rgba(0,0,0,0.15);
+	border-bottom: 1px solid rgba(0,0,0,0.15);
+}
 .main-content {
     background: #FFF;
     padding-top: 10px;
