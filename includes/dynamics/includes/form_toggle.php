@@ -43,7 +43,7 @@ function form_toggle($title, $input_name, $input_id, $opts, $input_value, $array
 	}
 
 	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
 	$on_label = $opts['1'];
 	$off_label = $opts['0'];

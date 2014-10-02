@@ -62,7 +62,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 
 	$html = '';
 	$html .= "<div id='$input_id-field' class='form-group m-b-10 ".$class." '>\n";
-	$html .= "<label class='control-label ".($inline ? "col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n";
+	$html .= "<label class='control-label ".($inline ? "col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n";
 	$html .= ($inline) ? "<div class='col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= "<input type='file' name='$input_name' id='$input_id' class='file-preview-image' >\n";
 	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";

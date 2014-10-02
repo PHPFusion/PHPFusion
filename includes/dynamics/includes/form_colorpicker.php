@@ -55,7 +55,7 @@ function form_colorpicker($title = FALSE, $input_name, $input_id, $input_value =
 	}
 	$html = "";
 	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
 	$html .= "<div id='$input_id' style='width: ".$width."' class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='$format'>";
 	$html .= "<input type='text' name='$input_name' class='form-control $class' id='".$input_id."' value='$input_value' data-color-format='$format' placeholder='".$placeholder."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";

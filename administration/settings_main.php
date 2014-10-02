@@ -230,7 +230,7 @@ foreach ($admin_theme_files as $file) {
 echo form_select($locale['418a'], 'admin_theme', 'admin_theme', $opts, $settings2['admin_theme'], array("required" => 1, 'error_text' => $locale['error_value']));
 
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_toggle($locale['437'], 'bootstrap', 'bootstrap', $opts, $settings2['bootstrap']);
+echo form_toggle($locale['437'], 'bootstrap', 'bootstrap', $opts, $settings2['bootstrap'], array('inline'=>1));
 $dir = LOCALE.LOCALESET."search/";
 $temp = opendir($dir);
 $opts = array();
@@ -244,7 +244,7 @@ if (file_exists($dir)) {
 }
 echo form_select($locale['419'], 'default_search', 'default_search', $opts, $settings2['default_search'], array('required' => 1));
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings2['site_seo']);
+echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings2['site_seo'], array('inline'=>1));
 echo form_textarea($locale['420']."<small>".$locale['424']."</small><br/>\n", 'exclude_left', 'exclude_left', $settings2['exclude_left']);
 echo form_textarea($locale['421']."<small>".$locale['424']."</small><br/>\n", 'exclude_upper', 'exclude_upper', $settings2['exclude_upper']);
 echo form_textarea($locale['435']."<small>".$locale['424']."</small><br/>\n", 'exclude_aupper', 'exclude_aupper', $settings2['exclude_aupper']);
