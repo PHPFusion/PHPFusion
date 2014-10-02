@@ -100,6 +100,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 				} else {
 					$c_start = 0;
 				}
+
 				if (!$settings['site_seo']) { redirect($clink."&amp;c_start=".$c_start); }
 			}
 		}

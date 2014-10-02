@@ -86,13 +86,13 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		render_article($article_subject, $article[$_GET['rowstart']], $article_info);
 		echo "<!--sub_article-->";
 		if ($pagecount > 1) {
-			echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, FUSION_SELF."?article_id=".$_GET['article_id']."&amp;")."\n</div>\n";
+			echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, BASEDIR."articles.php?article_id=".$_GET['article_id']."&amp;")."\n</div>\n";
 		}
 		if ($data['article_allow_comments']) {
-			showcomments("A", DB_ARTICLES, "article_id", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']);
+			showcomments("A", DB_ARTICLES, "article_id", $_GET['article_id'], BASEDIR."articles.php?article_id=".$_GET['article_id']);
 		}
 		if ($data['article_allow_ratings']) {
-			showratings("A", $_GET['article_id'], FUSION_SELF."?article_id=".$_GET['article_id']);
+			showratings("A", $_GET['article_id'], BASEDIR."articles.php?article_id=".$_GET['article_id']);
 		}
 	} else {
 		redirect(FUSION_SELF);
@@ -156,7 +156,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 				}
 				echo "<!--sub_article_cat-->";
 				closetable();
-				if ($rows > $settings['articles_per_page']) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['articles_per_page'], $rows, 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;")."\n</div>\n";
+				if ($rows > $settings['articles_per_page']) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['articles_per_page'], $rows, 3, BASEDIR."articles.php?cat_id=".$_GET['cat_id']."&amp;")."\n</div>\n";
 			} else {
 				echo "<div style='text-align:center'>".$locale['403']."</div>\n";
 				echo "<!--sub_article_cat-->";

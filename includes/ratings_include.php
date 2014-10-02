@@ -21,6 +21,7 @@ if (!defined("IN_FUSION")) {
 include LOCALE.LOCALESET."ratings.php";
 function showratings($rating_type, $rating_item_id, $rating_link) {
 	global $settings, $locale, $userdata;
+	$rating_link = BASEDIR.$rating_link;
 	if ($settings['ratings_enabled'] == "1") {
 		if (iMEMBER) {
 			$d_rating = dbarray(dbquery("SELECT rating_vote,rating_datestamp FROM ".DB_RATINGS." WHERE rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_user='".$userdata['user_id']."'"));
@@ -28,10 +29,12 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 				if (isnum($_POST['rating']) && $_POST['rating'] > 0 && $_POST['rating'] < 6 && !isset($d_rating['rating_vote'])) {
 					$result = dbquery("INSERT INTO ".DB_RATINGS." (rating_item_id, rating_type, rating_user, rating_vote, rating_datestamp, rating_ip, rating_ip_type) VALUES ('$rating_item_id', '$rating_type', '".$userdata['user_id']."', '".$_POST['rating']."', '".time()."', '".USER_IP."', '".USER_IP_TYPE."')");
 				}
-				redirect($rating_link);
+				if (!$settings['site_seo']) {
+					redirect($rating_link);
+				}
 			} elseif (isset($_POST['remove_rating'])) {
 				$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$rating_item_id' AND rating_type='$rating_type' AND rating_user='".$userdata['user_id']."'");
-				redirect($rating_link);
+				//redirect($rating_link);
 			}
 		}
 		$ratings = array(5 => $locale['r120'], 4 => $locale['r121'], 3 => $locale['r122'], 2 => $locale['r123'],
@@ -41,13 +44,13 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			echo "<div style='text-align:center'>".$locale['r104']."</div>\n";
 		} elseif (isset($d_rating['rating_vote'])) {
 			echo "<div style='text-align:center'>\n";
-			echo "<form name='removerating' method='post' action='".$rating_link."'>\n";
+			echo "<form name='removerating' method='post' action='".($settings['site_seo'] ? FUSION_ROOT : '').$rating_link."'>\n";
 			echo sprintf($locale['r105'], $ratings[$d_rating['rating_vote']], showdate("longdate", $d_rating['rating_datestamp']))."<br /><br />\n";
 			echo "<input type='submit' name='remove_rating' value='".$locale['r102']."' class='button' />\n";
 			echo "</form>\n</div>\n";
 		} else {
 			echo "<div style='text-align:center'>\n";
-			echo "<form name='postrating' method='post' action='".$rating_link."'>\n";
+			echo "<form name='postrating' method='post' action='".($settings['site_seo'] ? FUSION_ROOT : '').$rating_link."'>\n";
 			echo $locale['r106'].": <select name='rating' class='textbox'>\n";
 			echo "<option value='0'>".$locale['r107']."</option>\n";
 			foreach ($ratings as $rating => $rating_info) {
