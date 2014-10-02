@@ -22,11 +22,13 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-if (file_exists(THEME."locale/".$settings['locale'].".php")) {
-	include THEME."locale/".$settings['locale'].".php";
+
+if (file_exists(THEME."locale/".LANGUAGE.".php")) {
+	include THEME."locale/".LANGUAGE.".php";
 } else {
 	include THEME."locale/English.php";
 }
+
 global $aidlink, $locale;
 echo open_grid('footer', 1);
 echo "<div class='footer-row row'>\n";
