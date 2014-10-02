@@ -18,16 +18,15 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-
 $regex = array(
-	"%cp_id%" => "([0-9]+)",
-	"%cp_title%" => "([a-zA-Z0-9-_]+)",
+	"%page_id%" => "([0-9]+)",
+	"%rowstart%" => "([0-9]+)",
+	"%c_start%" => "([0-9]+)",
 );
+
 $pattern = array(
-	"pages/%cp_id%/%cp_title%" => "viewpage.php?page_id=%cp_id%",
+	"pages/browse/%page_id%/%rowstart%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%",
+	"pages/comments/%page_id%/%c_start%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%",
 );
-$dbname = DB_CUSTOM_PAGES;
-$dbid = array("%cp_id%" => "page_id");
-$dbinfo = array("%cp_title%" => "page_title");
 
 ?>

@@ -100,8 +100,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 				} else {
 					$c_start = 0;
 				}
-				print_p("<a href='".$clink."&amp;c_start=".$c_start."'>Link</a>\n");
-				//redirect($clink."&amp;c_start=".$c_start);
+				if (!$settings['site_seo']) { redirect($clink."&amp;c_start=".$c_start); }
 			}
 		}
 		$c_arr = array("c_con" => array(), "c_info" => array("c_makepagenav" => FALSE, "admin_link" => FALSE));
