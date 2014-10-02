@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System Version 8
 | Copyright (C) 2002 - 2013 Nick Jones
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Project File: User Search Results for Form Select User V8
 | Filename: users.json.php

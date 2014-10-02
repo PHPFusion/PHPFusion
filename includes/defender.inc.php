@@ -3,7 +3,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System Version 8
 | Copyright (C) 2002 - 2014 PHP-Fusion Inc.
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: defender.inc.php
 | Author : Frederick MC Chan (Hien)
