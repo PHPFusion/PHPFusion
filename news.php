@@ -128,10 +128,10 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 			echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, FUSION_SELF."?readmore=".$_GET['readmore']."&amp;")."\n</div>\n";
 		}
 		if ($data['news_allow_comments']) {
-			showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], FUSION_SELF."?readmore=".$_GET['readmore']);
+			showcomments("N", DB_NEWS, "news_id", $_GET['readmore'], BASEDIR."news.php?readmore=".$_GET['readmore']);
 		}
 		if ($data['news_allow_ratings']) {
-			showratings("N", $_GET['readmore'], FUSION_SELF."?readmore=".$_GET['readmore']);
+			showratings("N", $_GET['readmore'], BASEDIR."news.php?readmore=".$_GET['readmore']);
 		}
 	} else {
 		redirect(FUSION_SELF);

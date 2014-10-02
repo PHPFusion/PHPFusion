@@ -21,6 +21,7 @@ if (!defined("IN_FUSION")) {
 include LOCALE.LOCALESET."comments.php";
 function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 	global $settings, $locale, $userdata, $aidlink;
+	$clink = BASEDIR.$clink;
 	$link = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
 	$link = preg_replace("^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $link);
 	$cpp = $settings['comments_per_page'];
@@ -28,7 +29,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 		if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$_GET['comment_id']."' AND comment_name='".$userdata['user_id']."'"))) {
 			$result = dbquery("DELETE FROM ".DB_COMMENTS."
 				WHERE comment_id='".$_GET['comment_id']."'".(iADMIN ? "" : "
-					AND comment_name='".$userdata['user_id']."'"));
+				AND comment_name='".$userdata['user_id']."'"));
 		}
 		redirect($clink.($settings['comments_sorting'] == "ASC" ? "" : "&amp;c_start=0"));
 	}
@@ -94,13 +95,13 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 					}
 				}
 				if ($settings['comments_sorting'] == "ASC") {
-					$c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$cid."'
-										AND comment_type='".$ctype."'");
+					$c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$cid."' AND comment_type='".$ctype."'");
 					$c_start = (ceil($c_count/$cpp)-1)*$cpp;
 				} else {
 					$c_start = 0;
 				}
-				redirect($clink."&amp;c_start=".$c_start);
+				print_p("<a href='".$clink."&amp;c_start=".$c_start."'>Link</a>\n");
+				//redirect($clink."&amp;c_start=".$c_start);
 			}
 		}
 		$c_arr = array("c_con" => array(), "c_info" => array("c_makepagenav" => FALSE, "admin_link" => FALSE));
@@ -176,14 +177,12 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 		if (iMEMBER || $settings['guestposts'] == "1") {
 			require_once INCLUDES."bbcode_include.php";
 			echo "<a id='edit_comment' name='edit_comment'></a>\n";
-			echo openform('inputform', 'inputform', 'post', $clink);
-			if (iGUEST) {
-				echo "<div align='center' class='tbl'>\n".$locale['c104']."<br />\n";
-				echo "<input type='text' name='comment_name' maxlength='30' class='textbox' style='width:360px' />\n";
-				echo "</div>\n";
-			}
+			echo openform('inputform', 'inputform', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').$clink);
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
+			if (iGUEST) {
+				echo form_text($locale['c104'], 'comment_name', 'comment_name', '', array('max_length'=>30));
+			}
 			echo form_textarea('', 'comment_message', 'comment_message', $comment_message, array('required' => 1));
 			echo display_bbcodes("360px", "comment_message");
 			if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
@@ -201,7 +200,9 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 			echo "</div>\n</div>\n";
 			echo closeform();
 		} else {
+			echo "<div class='well'>\n";
 			echo $locale['c105']."\n";
+			echo "</div>\n";
 		}
 		closetable();
 	}

@@ -19,17 +19,16 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 $regex = array(
+	"%album_id%" => "([0-9]+)",
 	"%photo_id%" => "([0-9]+)",
-	"%photo_title%" => "([a-zA-Z0-9-]+)",
+	"%rowstart%" => "([0-9]+)",
+	"%c_start%" => "([0-9]+)",
 );
 
 $pattern = array(
-	"photo/%photo_id%/%photo_title%" => "photogallery.php?photo_id=%photo_id%",
-	);
-
-$dbname = DB_PHOTOS;
-$dbid = array("%photo_id%" => "photo_id");
-$dbinfo = array(
-	"%photo_title%" => "photo_title"
+	"gallery/browse/%rowstart%" => "photogallery.php?rowstart=%rowstart%",
+	"gallery/browse/%album_id%/%rowstart%" => "photogallery.php?album_id=%album_id%&amp;rowstart=%rowstart%",
+	"photo/browse/%photo_id%/%c_start%" => "photogallery.php?photo_id=%album_id%&amp;c_start=%c_start%",
 );
+
 ?>

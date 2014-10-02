@@ -154,7 +154,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 	}
 } elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 	define("PHOTODIR", PHOTOS.(!SAFEMODE ? "album_".$_GET['album_id']."/" : ""));
-	$result = dbquery("SELECT album_title, album_description, album_thumb, album_access FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".$_GET['album_id']."'");
+	$result = dbquery("SELECT album_id, album_title, album_description, album_thumb, album_access FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".$_GET['album_id']."'");
 	if (!dbrows($result)) {
 		redirect(FUSION_SELF);
 	} else {
@@ -188,6 +188,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 				echo "<li><a href='".BASEDIR."photogallery.php?album_id=".$_GET['album_id']."'>".$data['album_title']."</a></li>\n";
 				echo "</ol>\n";
 			}
+
 			echo "<!--pre_album_info-->";
 			echo "<div class='panel panel-default tbl-border'>\n";
 			echo "<div class='panel-body'>\n";
@@ -210,7 +211,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			closetable();
 			if ($rows) {
 				if ($rows > $settings['thumbs_per_page']) {
-					echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, BASEDIR."photogallery.php?album_id=".$_GET['album_id']."&amp;")."\n</div>\n";
+					echo "<div class='m-t-5 m-b-10'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, BASEDIR."photogallery.php?album_id=".$_GET['album_id']."&amp;")."\n</div>\n";
 				}
 				// new responsive template
 				echo "<div class='row m-0'>\n";
@@ -247,7 +248,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		$r = 0;
 		$k = 1;
 		if ($rows > $settings['thumbs_per_page']) {
-			echo "<div align='right' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3)."\n</div>\n";
+			echo "<div align='right' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, BASEDIR."photogallery.php?")."\n</div>\n";
 		}
 		echo "<div class='row'>\n";
 		while ($data = dbarray($result)) {
@@ -263,7 +264,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		echo "</div>\n";
 		closetable();
 		if ($rows > $settings['thumbs_per_page']) {
-			echo "<div align='right' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3)."\n</div>\n";
+			echo "<div align='right' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, BASEDIR."photogallery.php?")."\n</div>\n";
 		}
 	} else {
 		echo "<div class='well m-t-20 m-b-20' style='text-align:center'>".$locale['406']."</div>\n";

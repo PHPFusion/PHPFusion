@@ -18,18 +18,6 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-$regex = array(
-	"%photo_id%" => "([0-9]+)",
-	"%photo_title%" => "([a-zA-Z0-9-]+)",
-);
-
-$pattern = array(
-	"photo/%photo_id%/%photo_title%" => "photogallery.php?photo_id=%photo_id%",
-	);
-
-$dbname = DB_PHOTOS;
-$dbid = array("%photo_id%" => "photo_id");
-$dbinfo = array(
-	"%photo_title%" => "photo_title"
-);
+$permalink_name = $locale['pl_pp_title'];
+$permalink_desc = $locale['pl_pp_desc'];
 ?>
