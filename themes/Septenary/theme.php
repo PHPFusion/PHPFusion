@@ -22,11 +22,13 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-if (file_exists(THEME."locale/".$settings['locale'].".php")) {
-	include THEME."locale/".$settings['locale'].".php";
+
+if (file_exists(THEME."locale/".LANGUAGE.".php")) {
+	include THEME."locale/".LANGUAGE.".php";
 } else {
 	include THEME."locale/English.php";
 }
+
 // Septenary Theme Functions
 require_once THEME."includes/functions.php";
 // Main Theme Functions
