@@ -3,7 +3,7 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
-+-------------------------ˆ-------------------------------+
++--------------------------------------------------------*
 | Filename: setup.php
 | Author: Nick Jones (Digitanium)
 +--------------------------------------------------------+
