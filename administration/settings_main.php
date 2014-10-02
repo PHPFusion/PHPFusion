@@ -21,6 +21,7 @@ if (!checkrights("S1") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['ai
 }
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
+
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	if ($_GET['error'] == 0) {
 		$message = $locale['900'];
@@ -30,9 +31,10 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 		$message = $locale['902'];
 	}
 	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>$message</div></div>\n";
 	}
 }
+
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	$htc = "";
@@ -102,7 +104,6 @@ if (isset($_POST['savesettings'])) {
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$site_seo' WHERE settings_name='site_seo'") : '';
 	if ($site_seo == 1) {
 		// create .htaccess
-		
 			if (!file_exists(BASEDIR.".htaccess")) {
 			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
 				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
@@ -164,6 +165,9 @@ if (isset($_POST['savesettings'])) {
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_blower' WHERE settings_name='exclude_blower'") : '';
 	$exclude_right = form_sanitizer($_POST['exclude_right'], '', 'exclude_right');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_right' WHERE settings_name='exclude_right'") : '';
+	if (!defined('FUSION_NULL')) {
+		redirect(FUSION_SELF.$aidlink."&amp;error=0");
+	}
 }
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
@@ -181,10 +185,16 @@ echo form_text($locale['404'], 'sitebanner', 'sitebanner', $settings2['sitebanne
 echo form_text($locale['405'], 'siteemail', 'siteemail', $settings2['siteemail'], array('max_length' => 128, 'required' => 1, 'error_text' => $locale['error_value'], 'email' => 1));
 echo form_text($locale['406'], 'username', 'username', $settings2['siteusername'], array('max_length' => 32, 'required' => 1, 'error_text' => $locale['error_value']));
 $opts = array('http' => 'http://', 'https' => 'https://');
-echo form_select($locale['426'], 'site_protocol', 'site_protocol', $opts, $settings2['site_protocol'], array('required' => 1, 'error_text' => $locale['error_value']));
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+echo form_select($locale['426'], 'site_protocol', 'site_protocol', $opts, $settings2['site_protocol'], array('width'=>'100%', 'required' => 1, 'error_text' => $locale['error_value']));
+echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 echo form_text($locale['427'], 'site_host', 'site_host', $settings2['site_host'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
+echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 echo form_text($locale['429'], 'site_path', 'site_path', $settings2['site_path'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
+echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 echo form_text($locale['430'], 'site_port', 'site_port', $settings2['site_port'], array('max_length' => 4, 'required' => 1, 'error_text' => $locale['error_value']));
+echo "</div>\n</div>\n";
 echo "<div class='well'><strong>\n".$locale['431']." ";
 echo "<span id='display_protocol'>".$settings2['site_protocol']."</span>://";
 echo "<span id='display_host'>".$settings2['site_host']."</span>";
@@ -220,7 +230,7 @@ foreach ($admin_theme_files as $file) {
 echo form_select($locale['418a'], 'admin_theme', 'admin_theme', $opts, $settings2['admin_theme'], array("required" => 1, 'error_text' => $locale['error_value']));
 
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_select($locale['437'], 'bootstrap', 'bootstrap', $opts, $settings2['bootstrap']);
+echo form_toggle($locale['437'], 'bootstrap', 'bootstrap', $opts, $settings2['bootstrap']);
 $dir = LOCALE.LOCALESET."search/";
 $temp = opendir($dir);
 $opts = array();
@@ -234,7 +244,7 @@ if (file_exists($dir)) {
 }
 echo form_select($locale['419'], 'default_search', 'default_search', $opts, $settings2['default_search'], array('required' => 1));
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_select($locale['438'], 'site_seo', 'site_seo', $opts, $settings2['site_seo']);
+echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings2['site_seo']);
 echo form_textarea($locale['420']."<small>".$locale['424']."</small><br/>\n", 'exclude_left', 'exclude_left', $settings2['exclude_left']);
 echo form_textarea($locale['421']."<small>".$locale['424']."</small><br/>\n", 'exclude_upper', 'exclude_upper', $settings2['exclude_upper']);
 echo form_textarea($locale['435']."<small>".$locale['424']."</small><br/>\n", 'exclude_aupper', 'exclude_aupper', $settings2['exclude_aupper']);
