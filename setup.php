@@ -3,7 +3,7 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
-+-------------------------ˆ-------------------------------+
++-------------------------Ë†-------------------------------+
 | Filename: setup.php
 | Author: Nick Jones (Digitanium)
 +--------------------------------------------------------+
@@ -1714,12 +1714,12 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 	// enable default error handler
 	// create .htaccess for it
 $htc = "";
-if (!file_exists(BASEDIR.".htaccess")) {
-	if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-		@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+if (!file_exists(".htaccess")) {
+	if (file_exists("_htaccess") && function_exists("rename")) {
+		@rename("_htaccess", ".htaccess");
 	} else {
 		// create a file.
-		$handle = fopen(BASEDIR.".htaccess", "w");
+		$handle = fopen(".htaccess", "w");
 		fclose($handle);
 	}
 }
@@ -1730,7 +1730,7 @@ $htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
 $htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
 $htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
 $htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
-$temp = fopen(BASEDIR.".htaccess", "w");
+$temp = fopen(".htaccess", "w");
 if (fwrite($temp, $htc)) {
 	fclose($temp);
 }						
