@@ -1,7 +1,7 @@
 <?php
 $locale['title'] = "PHP-Fusion Core 7 Edition Setup";
 $locale['sub-title'] = "PHP-Fusion Core 7 Edition Setup";
-$locale['os_version'] = '7.03.00';
+$locale['os_version'] = '9.0';
 $locale['xml_lang'] = "en";
 $locale['charset'] = "iso-8859-1";
 $locale['001'] = "Step 1: Locale";
