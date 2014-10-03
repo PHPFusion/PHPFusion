@@ -16,9 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Creates an unique filename if file already exists
 function filename_exists($dir, $file) {
 	$i = 1;

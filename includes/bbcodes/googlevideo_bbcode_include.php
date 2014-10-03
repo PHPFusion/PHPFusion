@@ -15,8 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $text = preg_replace('#\[googlevideo\](.*?)\[/googlevideo\]#si', '<strong>'.$locale['bb_googlevideo'].':</strong><br /><object width="425" height="350"><param name="movie" value="http://video.google.com/googleplayer.swf?docId=\1"><param name="wmode" value="transparent"></param><embed style="width:400px; height:326px;" id="VideoPlayback" type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=\1"></embed></object>', $text);
 ?>

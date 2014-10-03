@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $displayComments = 10;
 openside($locale['global_025']);
 $result = dbquery("	SELECT comment_id, comment_item_id, comment_type, comment_message

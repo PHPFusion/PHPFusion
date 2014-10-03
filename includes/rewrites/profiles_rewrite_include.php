@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array("%user_id%" => "([0-9]+)", "%user_name%" => "([a-zA-Z0-9-]+)");
 $pattern = array("profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%");
 $dbname = DB_USERS;

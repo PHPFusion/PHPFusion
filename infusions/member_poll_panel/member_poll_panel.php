@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (iMEMBER && isset($_POST['cast_vote']) && (isset($_POST['poll_id']) && isnum($_POST['poll_id'])) && (isset($_POST['voteoption']) && isnum($_POST['voteoption']))) {
 	$result = dbquery("SELECT v.vote_user, v.vote_id, p.poll_opt_0, p.poll_opt_1, p.poll_opt_2, p.poll_opt_3, p.poll_opt_4, p.poll_opt_5, p.poll_opt_6, p.poll_opt_7, p.poll_opt_8, p.poll_opt_9, p.poll_started, p.poll_ended
 		FROM ".DB_POLLS." p 

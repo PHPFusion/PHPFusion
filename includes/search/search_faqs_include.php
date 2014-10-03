@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."search/faqs.php";
 if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
 	$sortby = "faq_id";

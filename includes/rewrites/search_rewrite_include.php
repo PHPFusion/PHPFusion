@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array(
 	"%stype%" => "([0-9a-zA-Z-_]+)",
 	"%stext%" => "([0-9a-zA-Z -_]+)",

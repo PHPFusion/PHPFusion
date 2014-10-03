@@ -1,7 +1,5 @@
 <?php
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $settings['bootstrap'] = '0';
 define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
 

@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 openside($locale['global_030']);
 $result = dbquery("SELECT ta.article_id, ta.article_subject, tac.article_cat_id, tac.article_cat_access FROM ".DB_ARTICLES." ta
 	INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id

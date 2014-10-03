@@ -16,9 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."search/forums.php";
 $forum_list = "";
 $current_cat = "";

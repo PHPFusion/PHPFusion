@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array("%news_cat_id%" => "([0-9]+)", "%news_cat_name%" => "([a-zA-Z0-9-_]+)");
 $pattern = array("news-category" => "news_cats.php",

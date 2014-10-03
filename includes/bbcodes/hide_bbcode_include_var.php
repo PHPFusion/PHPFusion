@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (iADMIN) {
 	$__BBCODE__[] = array("description" => $locale['bb_hide_description'], "value" => "hide",
 						  "bbcode_start" => "[hide]", "bbcode_end" => "[/hide]",

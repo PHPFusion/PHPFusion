@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $before = "<div class='quote extended'><p class='citation'>";
 $endbefore = "</p><div class='blockquote'>";
 $after = "</div></div>";

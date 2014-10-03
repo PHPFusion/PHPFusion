@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (isset($_POST['previewchanges']) || isset($_POST['delete_poll']) || isset($_POST['update_poll_title']) || isset($_POST['update_poll_option']) || isset($_POST['delete_poll_option']) || isset($_POST['add_poll_option'])) {
 	$message = trim(stripinput(censorwords($_POST['message'])));
 	$subject = isset($_POST['subject']) ? trim(stripinput(censorwords($_POST['subject']))) : $tdata['thread_subject'];

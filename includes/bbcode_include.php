@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 function display_bbcodes($width, $textarea_name = "message", $inputform_name = "inputform", $selected = FALSE) {
 	global $bbcode_cache, $p_data;

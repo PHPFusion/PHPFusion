@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $imagetypes = array(".bmp", ".gif", ".iff", ".jpg", ".jpeg", ".png", ".psd", ".tiff", ".wbmp");
 function attach_exists($file) {
 	$dir = FORUM."attachments/";

@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 //Unordered list BBCode VARS
 $__BBCODE__[] = array("description" => $locale['bb_ulist_description'], "value" => "ulist",
 					  "bbcode_start" => "[ulist=TYPE]", "bbcode_end" => "[/ulist]",

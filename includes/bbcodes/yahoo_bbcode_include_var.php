@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $__BBCODE__[] = array("description" => $locale['bb_yahoo_description'], "value" => "yahoo", "bbcode_start" => "[yahoo]",
 					  "bbcode_end" => "[/yahoo]", "usage" => "[yahoo]".$locale['bb_yahoo_usage']."[/yahoo]");
 ?>

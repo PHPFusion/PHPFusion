@@ -19,9 +19,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if (file_exists(THEME."locale/".LANGUAGE.".php")) {
 	include THEME."locale/".LANGUAGE.".php";

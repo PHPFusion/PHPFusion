@@ -16,9 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $__BBCODE__[] = array("description" => $locale['bb_flash_description'], "value" => "flash",
 					  "bbcode_start" => "[flash width=200 height=50]", "bbcode_end" => "[/flash]",
 					  "usage" => "[flash width=".$locale['bb_flash_width']." height=".$locale['bb_flash_height']."]".$locale['bb_flash_usage']."[/flash]");

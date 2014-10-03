@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $__BBCODE__[] = array("description" => $locale['bb_size_description'], "value" => "size", "bbcode_start" => "",
 					  "bbcode_end" => "", "usage" => "[size=(12|16|20|24|28|32)]".$locale['bb_size_usage']."[/size]",
 					  "onclick" => "return overlay(this, 'bbcode_text_size_".$textarea_name."', 'rightbottom');",

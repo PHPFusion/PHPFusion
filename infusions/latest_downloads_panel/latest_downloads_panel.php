@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 openside($locale['global_032']);
 $result = dbquery("SELECT td.download_id, td.download_title, td.download_cat, td.download_datestamp,
 				tc.download_cat_id, tc.download_cat_access 

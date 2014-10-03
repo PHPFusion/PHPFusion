@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array("%article_id%" => "([0-9]+)", "%comment_id%" => "([0-9]+)", "%article_title%" => "([a-zA-Z0-9-_]+)");
 // only accept &
 $pattern = array("articles" => "articles.php",

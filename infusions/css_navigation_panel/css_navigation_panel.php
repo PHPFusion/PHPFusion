@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $list_open = FALSE;
 openside($locale['global_001']);
 $result = dbquery("SELECT link_name, link_url, link_window, link_visibility FROM ".DB_SITE_LINKS."

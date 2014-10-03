@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."search/faqs.php";
 $form_elements['faqs']['enabled'] = array("fields1", "fields2", "fields3", "order1", "order2");
 $form_elements['faqs']['disabled'] = array("datelimit", "sort", "chars");

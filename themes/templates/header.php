@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 if ($settings['site_seo']) {
 	// Object should be created before including output_handling_class because we are using this object in output handling
 	require_once CLASSES."PermalinksDisplay.class.php";

@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."search/downloads.php";
 if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
 	if ($_POST['sort'] == "datestamp") {

@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 function mimeTypes() {
 	/*-------------------------------------------------------+
 	| Taken From CodeIgniter 3.0 Dev Branch, 2013.06.26

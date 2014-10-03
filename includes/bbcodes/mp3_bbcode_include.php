@@ -15,8 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $text = preg_replace('#\[mp3\](.*?)\[/mp3\]#si', '<strong>'.$locale['bb_mp3'].'</strong> <object type=\'application/x-shockwave-flash\' width=\'17\' height=\'17\' data=\''.INCLUDES.'bbcodes/mp3player/mp3player.swf?&amp;song_url=\1\'><param name=\'movie\' value=\''.INCLUDES.'bbcodes/mp3player/mp3player.swf?&amp;song_url=\1\'><param name=\'wmode\' value=\'transparent\'><param name=\'quality\' value=\'high\'><param name=\'bgcolor\' value=\'#eeeeee\'></object>', $text);
 ?>

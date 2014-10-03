@@ -16,9 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."header_includes.php";
 require_once THEME."theme.php";

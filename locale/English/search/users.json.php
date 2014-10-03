@@ -19,9 +19,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 $q = $_GET['q'];
 // since search is on user_name.
 $result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE ".blacklist('user_id')." AND user_status='0' AND

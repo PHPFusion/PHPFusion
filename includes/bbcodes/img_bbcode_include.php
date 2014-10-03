@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (!function_exists("img_bbcode_callback")) {
 	function img_bbcode_callback($matches) {
 		if (substr($matches[3], -1, 1) != "/") {
