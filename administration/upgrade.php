@@ -28,7 +28,7 @@ if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
 opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
-if (str_replace(".", "", $settings['version']) < "70300") {
+if (str_replace(".", "", $settings['version']) < "90000") {
 	if (!isset($_POST['stage'])) {
 		echo sprintf($locale['500'], $locale['504'])."<br />\n".$locale['501']."<br /><br />\n";
 		echo "<input type='hidden' name='stage' value='2'>\n";
@@ -316,7 +316,7 @@ if (str_replace(".", "", $settings['version']) < "70300") {
 		}
 		
 		//Set the new version
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='7.03.00' WHERE settings_name='version'");
+		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='9.00.00' WHERE settings_name='version'");
 		echo $locale['502']."<br /><br />\n";
 	}
 } else {
