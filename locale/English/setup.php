@@ -1,6 +1,6 @@
 <?php
-$locale['title'] = "PHP-Fusion Core 7 Edition Setup";
-$locale['sub-title'] = "PHP-Fusion Core 7 Edition Setup";
+$locale['title'] = "PHP-Fusion Core 9 Edition Setup";
+$locale['sub-title'] = "PHP-Fusion Core 9 Edition Setup";
 $locale['os_version'] = '9.0';
 $locale['xml_lang'] = "en";
 $locale['charset'] = "iso-8859-1";
@@ -217,7 +217,7 @@ $locale['224'] = "Privacy";
 // Welcome message
 $locale['230'] = "Welcome to your site";
 // Final message
-$locale['240'] = "Setup is complete, PHP-Fusion 7 is now ready for use.<br />
+$locale['240'] = "Setup is complete, PHP-Fusion 9 is now ready for use.<br />
 Click Finish to go to your PHP-Fusion powered site.<br />
 <strong>Note:</strong> After you enter your site you should delete setup.php from
 your server and chmod your config.php back to 644 for security purposes.<br /><br />
