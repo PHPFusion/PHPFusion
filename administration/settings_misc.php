@@ -114,7 +114,7 @@ echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 echo form_text($locale['664']."<br/>", 'smtp_host', 'smtp_host', $settings['smtp_host'], array('max_length' => 200));
 echo form_text($locale['674'], 'smtp_port', 'smtp_port', $settings['smtp_port'], array('max_length' => 10));
 echo "<div class='pull-right'><span class='small2'>".$locale['665']."</span></div>\n";
-echo form_toggle($locale['698'], 'smtp-auth', 'smtp-auth', $choice_arr, $settings['smtp_auth'], array('value'=>'yes'));
+echo form_toggle($locale['698'], 'smtp_auth', 'smtp_auth', $choice_arr, $settings['smtp_auth'], array('value'=>'yes'));
 echo form_text($locale['666'], 'smtp_username', 'smtp_username', $settings['smtp_username'], array('max_length' => 100));
 echo form_text($locale['667'], 'smtp_password', 'smtp_password', $settings['smtp_password'], array('max_length' => 100));
 echo "</div>\n</div>\n";
