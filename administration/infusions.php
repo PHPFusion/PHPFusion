@@ -137,6 +137,9 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 	}
 	echo "</div>\n";
 	closetable();
+	echo "<div class='well text-center'>\n";
+	echo "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+	echo "</div>\n";
 }
 if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 	$error = "";
