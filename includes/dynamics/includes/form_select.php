@@ -354,6 +354,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$no_root = 0;
 		$inline = '';
 		$include_opts = ''; // for selective input. will not show items if value not in array.
+		$class = '';
 	} else {
 		$multiple = (array_key_exists('is_multiple', $array)) ? $array['is_multiple'] : "";
 		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : $locale['choose'];
@@ -363,21 +364,20 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$helper_text = (array_key_exists("helper", $array)) ? $array['helper'] : "";
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
 		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-		$stacking = (array_key_exists('stacking', $array)) && ($array['stacking'] == 1) ? 1 : 0;
 		$add_parent_opts = (array_key_exists('add_parent_opts', $array) && ($array['add_parent_opts'] == 1)) ? 1 : 0;
 		$no_root = (array_key_exists('no_root', $array)) && ($array['no_root'] == 1) ? 1 : 0;
 		$width = (array_key_exists('width', $array)) ? $array['width'] : '';
 		$multiple = ($multiple == 1) ? "multiple" : "";
-		$inline = (array_key_exists("rowstart", $array)) ? 1 : 0;
+		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
 		$include_opts = (array_key_exists("include_opts", $array)) ? $array['include_opts'] : '';
+		$class = (array_key_exists("class", $array)) ? $array['class'] : '';
 	}
 	// Patterns
 	if (!$level) {
 		$level = 0;
-		$html = "";
-		$html .= "<div id='$input_id-field' class='form-group m-b-0'>\n";
-		$html .= "<label class='control-label ".($inline ? "col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n";
-		$html .= ($inline) ? "<div class='col-sm-9 col-md-9 col-lg-9'>\n" : "";
+		$html = "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$class."'>\n";
+		$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+		$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	}
 	$opt_pattern = str_repeat("&#8212;", $level);
 	// no need to count here, it's cosmetics.
