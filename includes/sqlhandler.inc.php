@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System Version 8
+| PHP-Fusion Content Management System Version 9.00
 | Copyright (C) 2002 - 2013 Nick Jones
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
@@ -408,7 +408,7 @@ function sort_tree(&$result, $key) {
 
 // New SQL Row Modifier.
 function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
-	require_once OVERDRIVE."notify/notify.inc.php";
+	require_once INCLUDES."notify/notify.inc.php";
 	// php-fusion 8 sql_insert - enhance automation of sql insert dynamically.
 	// This function is a prototype function which eases the painful counting one by one, pair to pair everytime we code.
 	// consider this an automatic calculator, and automatic sanitization on the fourth time!
