@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_fileinput.php
 | Author: Frederick MC CHan (Hien)
@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 /* http://gregpike.net/demos/bootstrap-file-input/demo.html*/
 function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $input_value = FALSE, $array = FALSE) {
+	global $locale;
 	$title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
@@ -34,24 +35,24 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		$safemode = 1;
 		$deactivate = "";
 		$width = "";
-		$label = 'Browse ...';
+		$label = $locale['browse'];
 		$btn_class = 'btn-default';
 		$class = '';
-		$helper_text = '';
+		$error_text = '';
 		$inline = '';
 		$url = '';
 		$type = 'all';
 		$thumbnail = '';
 	} else {
 		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-		$label = (array_key_exists('label', $array)) ? $array['label'] : 'Browse ...';
+		$label = (array_key_exists('label', $array)) ? $array['label'] : $locale['browse'];
 		$btn_class = (array_key_exists('class', $array)) ? $array['class'] : 'btn-default';
 		$class = (array_key_exists('class', $array)) ? $array['class'] : "";
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? '1' : '0';
 		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? '1' : '0';
 		$width = (array_key_exists('width', $array)) ? $array['width'] : "";
-		$helper_text = (array_key_exists("helper", $array)) ? $array['helper'] : "";
-		$inline = (array_key_exists('rowstart', $array)) ? 1 : 0;
+		$error_text = (array_key_exists("error_text", $array)) ? $array['helper'] : "";
+		$inline = (array_key_exists('inline', $array)) ? 1 : 0;
 		$url = (array_key_exists('url', $array)) ? $array['url'] : ''; // for ajax uplaod file path
 		$type = 'all';
 		if (array_key_exists('image', $array) && $array['image'] == 1) {
@@ -60,15 +61,14 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		$thumbnail = (array_key_exists('thumbnail', $array)) ? 1 : 0;
 	}
 
-	$html = '';
-	$html .= "<div id='$input_id-field' class='form-group m-b-10 ".$class." '>\n";
-	$html .= "<label class='control-label ".($inline ? "col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n";
-	$html .= ($inline) ? "<div class='col-sm-9 col-md-9 col-lg-9'>\n" : "";
-	$html .= "<input type='file' name='$input_name' id='$input_id' class='file-preview-image' >\n";
+	$html = "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($inline) ? "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>\n" : "";
+	$html .= "<input type='file' name='".$input_name."' id='".$input_id."' class='file-preview-image' >\n";
 	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=$type],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode],[path=$upload_path],[thumbnail=$thumbnail]' readonly>\n";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=$type],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode],[path=$upload_path],[thumbnail=$thumbnail]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>\n";
 
 	add_to_jquery("
         $('#".$input_id."').fileinput({

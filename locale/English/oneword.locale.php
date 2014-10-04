@@ -58,4 +58,5 @@ $locale['logout'] = "Logout";
 $locale['message'] = "Private Messages";
 $locale['logged'] = "Logged in as ";
 $locale['version'] = "Version ";
+$locale['browse'] = "Browse ...";
 ?>
