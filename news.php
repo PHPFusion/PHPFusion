@@ -23,7 +23,7 @@ $i = 0;
 $items_per_page = $settings['newsperpage'];
 add_to_title($locale['global_200'].$locale['global_077']);
 if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
-	$rows = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().")
+	$rows = dbcount("(news_id)", DB_NEWS, (multilang_table("NS") ? "news_language='".LANGUAGE."' AND" : "")." ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().")
 										AND (news_end='0'||news_end>=".time().")
 										AND news_draft='0'");
 	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
