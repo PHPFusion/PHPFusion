@@ -36,7 +36,7 @@ if (!function_exists('show_blacklist')) {
 				}
 			}
 		} else {
-			echo $locale['uf_blacklist_003'];
+			echo (!$this->registration) ? $locale['uf_blacklist_003'] : '';
 		}
 		add_to_jquery("
             $('.unblock').bind('click', function(e) {

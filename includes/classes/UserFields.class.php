@@ -48,7 +48,6 @@ class UserFields {
 	public function displayInput() {
 		global $locale, $aidlink;
 		$this->method = "input";
-		$enctype = $this->showAvatarInput ? " enctype='multipart/form-data'" : "";
 		$this->html .= openform($this->formname, $this->formname, 'post', $this->formaction, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."", 'downtime' => 0));
 		if (!$this->registration && !isset($_GET['aid'])) {
 			$title = $locale['uf_100'];
@@ -471,6 +470,7 @@ class UserFields {
          INNER JOIN ".DB_USER_FIELDS." tuf ON (tufc.field_cat_id = tuf.field_cat)
         ".$where." ORDER BY field_cat_order, field_order
         ");
+
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
 				$required = $data['field_required'] == 1 ? "<span class='required'>*</span>" : "";
@@ -488,14 +488,14 @@ class UserFields {
 					$obActiva = TRUE;
 				}
 				if (file_exists(LOCALE.LOCALESET."user_fields/".$data['field_name'].".php")) {
-					include LOCALE.LOCALESET."user_fields/".$data['field_name'].".php";
+					include_once LOCALE.LOCALESET."user_fields/".$data['field_name'].".php";
 				}
 				if (file_exists(INCLUDES."user_fields/".$data['field_name']."_include.php")) {
-					include INCLUDES."user_fields/".$data['field_name']."_include.php";
+					include_once INCLUDES."user_fields/".$data['field_name']."_include.php";
 				}
 			}
 		} else {
-			echo "<div class='alert alert-danger text-center'>".$locale['108']."</div>\n";
+			echo (!$this->registration) ? "<div class='alert alert-danger text-center'>".$locale['108']."</div>\n" : '';
 		}
 		if ($obActiva) {
 			$fields[$i] = ob_get_contents();
@@ -514,8 +514,10 @@ class UserFields {
 				$html .= "<tr>\n";
 				$html .= "<td colspan='2' class='profile_category_name tbl2'><strong>".$cat['field_cat_name']."</strong></td>\n";
 				$html .= "</tr>\n";
-				$c_html .= $fields[$cat['field_cat']];
-				$html .= $c_html;
+				$html .= $fields[$cat['field_cat']];
+				if ($fields[$cat['field_cat']]) {
+					$c_html = 1;
+				}
 				$i++;
 				if ($this->method == "display") {
 					$html .= "</tbody>\n</table>\n";
@@ -523,7 +525,7 @@ class UserFields {
 			}
 		}
 		if (!$c_html) {
-			$html .= "<div class='text-center'>".sprintf($locale['uf_107'], ucwords($this->userData['user_name']))."</div>\n";
+			$html .= (!$this->registration) ? "<div class='text-center'>".sprintf($locale['uf_107'], ucwords($this->userData['user_name']))."</div>\n" : '';
 		}
 		if (count($fields > 0)) {
 			$html .= "<!--userfield_end-->\n";
