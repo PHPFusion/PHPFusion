@@ -93,18 +93,15 @@ if (iMEMBER) {
 		}
 		echo "</div>\n";
 	}
-	//echo "<form name='loginpageform' method='post' action='".$action_url."'>\n";
 	echo "<div id='login_form' class='panel panel-default'>\n";
 	echo "<div class='panel-body text-center text-dark' >\n";
 	echo "<div>".showbanners()."</div>\n";
+	$user_name = "";
+	$user_pass = "";
 	echo openform('loginpageform', 'loginpageform', 'POST', $action_url);
-	echo form_text('', 'user_name', 'user_name', $_POST['user_name'], array('placeholder' => $locale['global_101']));
-	echo form_text('', 'user_pass', 'user_pass', $_POST['user_pass'], array('placeholder' => $locale['global_102'],
-																			'password' => 1));
-	//echo $locale['global_101']."<br />\n<input type='text' name='user_name' class='textbox form-control' style='width:100px' /><br />\n";
-	//echo $locale['global_102']."<br />\n<input type='password' name='user_pass' class='textbox form-control' style='width:100px' /><br />\n";
+	echo form_text('', 'user_name', 'user_name', $user_name, array('placeholder' => $locale['global_101']));
+	echo form_text('', 'user_pass', 'user_pass', $user_pass, array('placeholder' => $locale['global_102'],'password' => 1));
 	echo "<label><input type='checkbox' name='remember_me' value='y' /> ".$locale['global_103']."</label><br /><br />\n";
-	//echo "<input type='submit' name='login' value='".$locale['global_104']."' class='button' /><br />\n";
 	echo form_button($locale['global_104'], 'login', 'login', $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20'));
 	echo closeform();
 	if ($settings['enable_registration']) {
