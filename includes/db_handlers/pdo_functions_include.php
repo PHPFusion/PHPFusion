@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: pdo_functions_include.php
 | Author: Yodix
-| Author: Joakim Falk (Domi)
+| Co-Author: Joakim Falk (Domi)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,8 +17,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 // PDO variable
 $pdo = NULL;
+
 // MySQL database functions
 function dbquery($query) {
 	global $pdo, $mysql_queries_count, $mysql_queries_time;
@@ -103,5 +105,4 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name) {
 		die("<strong>Unable to select MySQL database</strong><br />".$error->getMessage());
 	}
 }
-
 ?>
