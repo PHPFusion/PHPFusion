@@ -45,7 +45,7 @@ class defender {
 			return $this->validate_number($value, $default, $name, $id, $safemode, $error_text);
 		} elseif ($type == "url") {
 			return $this->validate_url($value, $default, $name, $id, $safemode, $error_text);
-		} elseif ($type == 'image' || $type == 'file') {
+		} elseif ($type == 'image' || $type == 'all') {
 			return $this->validate_file($value, $type, $path, $thumbnail, $default, $name, $id, $safemode, $error_text);
 		} else {
 			// default
@@ -339,7 +339,9 @@ class defender {
 	private function validate_file($value, $type, $path, $thumbnail, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
 		global $settings, $locale;
 		//@todo: To build the most complete File check ever on PHP-Fusion. Consolidate every code in one place. Add own logic.
+		require_once INCLUDES."photo_functions_include.php";
 		$true_file = $default;
+
 		if ($value['name'] && is_uploaded_file($value['tmp_name'])) {
 			if (isset($value['name'])) {
 				require_once BASEDIR.'includes/mimetypes_include.php';
@@ -517,8 +519,9 @@ function form_sanitizer($value, $default = "", $input_name = FALSE) {
 				$defender->addHelperText($data['id'], $data['error_text']);
 				$defender->addNotice($data['error_text']);
 			} else {
+				print_p($data);
 				//$type, $value, $default, $name, $id, $opts;
-				$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['path'], $data['safemode'], $data['safemode'], $data['error_text'], $data['thumbnail']);
+				$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['path'], $data['safemode'], $data['error_text'], $data['thumbnail']);
 				return $val;
 			}
 		} elseif (array_key_exists("single-multi", $_POST['def']) && isset($_POST['def']['single-multi'][$input_name])) {
