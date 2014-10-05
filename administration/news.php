@@ -16,16 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("N") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+if (!checkrights("N") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 require_once THEMES."templates/admin_header_mce.php";
 include LOCALE.LOCALESET."admin/news.php";
+
 if ($settings['tinymce_enabled']) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 } else {
 	require_once INCLUDES."html_buttons_include.php";
 }
+
 if (isset($_GET['status'])) {
 	if ($_GET['status'] == "sn") {
 		$message = $locale['410'];
@@ -38,6 +38,7 @@ if (isset($_GET['status'])) {
 		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
 	}
 }
+
 if (isset($_POST['save'])) {
 	$error = "";
 	$news_subject = form_sanitizer($_POST['news_subject'], '', 'news_subject');
@@ -125,9 +126,11 @@ if (isset($_POST['save'])) {
 	} else {
 		$news_breaks = "n";
 	}
+	
 	$news_comments = isset($_POST['news_comments']) ? "1" : "0";
 	$news_ratings = isset($_POST['news_ratings']) ? "1" : "0";
 	$news_language = stripinput($_POST['news_language']);
+
 	if (isset($_POST['news_id']) && isnum($_POST['news_id']) && !defined('FUSION_NULL')) {
 		$result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS." WHERE news_id='".$_POST['news_id']."' LIMIT 1");
 		if (dbrows($result)) {
@@ -182,6 +185,7 @@ if (isset($_POST['save'])) {
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
+
 if (isset($_POST['preview'])) {
 	$news_subject = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 	$news_cat = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
@@ -243,6 +247,7 @@ if (dbrows($result) != 0) {
 	closetable();
 	add_to_jquery("$('#delete').bind('click', function(){ DeleteNews(); });\n");
 }
+
 if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
 	$result = dbquery("SELECT news_subject, news_cat, news_news, news_extended, news_start, news_end, news_image, news_image_t1, news_image_t2, news_visibility, news_draft, news_sticky, news_breaks, news_allow_comments, news_allow_ratings, news_language FROM ".DB_NEWS." WHERE news_id='".(isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])."' LIMIT 1");
 	if (dbrows($result)) {
@@ -269,6 +274,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
+
 if ((isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
 	opentable($locale['402']);
 } else {
@@ -292,18 +298,24 @@ if ((isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news
 	}
 	opentable($locale['401']);
 }
+
 $result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 $news_cat_opts = array();
+$news_cat_opts['0'] = $locale['424'];
+
 if (dbrows($result)) {
 	while ($data = dbarray($result)) {
-		$news_cat_opts[$data['news_cat_id']] = $data['news_cat_name'];
+	$news_cat_opts[$data['news_cat_id']] = $data['news_cat_name'];
 	}
 }
+
 $visibility_opts = array();
 $user_groups = getusergroups();
+
 while (list($key, $user_group) = each($user_groups)) {
 	$visibility_opts[$user_group['0']] = $user_group['1'];
 }
+
 echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink, array('enctype' => 1, 'downtime' => 0));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 echo "<td width='100' class='tbl'><label for='news_subject'>".$locale['422']."</label></td>\n";
