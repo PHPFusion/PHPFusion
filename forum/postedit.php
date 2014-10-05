@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (isset($_POST['previewchanges']) || isset($_POST['delete_poll']) || isset($_POST['update_poll_title']) || isset($_POST['update_poll_option']) || isset($_POST['delete_poll_option']) || isset($_POST['add_poll_option'])) {
 	$message = trim(stripinput(censorwords($_POST['message'])));
 	$subject = isset($_POST['subject']) ? trim(stripinput(censorwords($_POST['subject']))) : $tdata['thread_subject'];
@@ -28,8 +29,8 @@ if (isset($_POST['previewchanges']) || isset($_POST['delete_poll']) || isset($_P
 	$post_locked = (isset($_POST['post_locked']) && $_POST['post_locked'] == 1 ? 1 : 0);
 	if ($fdata['forum_poll'] && checkgroup($fdata['forum_poll'])) {
 		if ($tdata['thread_poll'] == 1 && ($pdata['post_author'] == $tdata['thread_author']) && ($userdata['user_id'] == $tdata['thread_author'] || iSUPERADMIN || iMOD)) {
-			$poll_title = trim(stripinput(censorwords($_POST['poll_title'])));
-			if (isset($_POST['update_poll_title'])) {
+			$poll_title = form_sanitizer($_POST['poll_title'], '', 'poll_title');
+			if (isset($_POST['update_poll_title']) && $poll_title) {
 				$result = dbquery("UPDATE ".DB_FORUM_POLLS." SET forum_poll_title='$poll_title' WHERE thread_id='".$_GET['thread_id']."'");
 			} elseif (isset($_POST['delete_poll'])) {
 				$result = dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".$_GET['thread_id']."'");
@@ -86,7 +87,7 @@ if (isset($_POST['previewchanges']) || isset($_POST['delete_poll']) || isset($_P
 		echo "<li><a href='".FORUM."index.php'>".$locale['400']."</a></li>\n";
 		echo $caption;
 		echo "</ol>\n";
-		//echo "<div class='tbl2 forum_breadcrumbs' style='margin-bottom:5px'><a href='index.php'>".$settings['sitename']."</a> &raquo; ".$caption."</div>\n";
+
 		if ($fdata['forum_poll'] && checkgroup($fdata['forum_poll'])) {
 			if ($tdata['thread_poll'] == 1 && ($pdata['post_author'] == $tdata['thread_author']) && ($userdata['user_id'] == $tdata['thread_author'] || iSUPERADMIN || iMOD)) {
 				if ((isset($poll_title) && $poll_title != "") && (isset($poll_opts) && is_array($poll_opts))) {
@@ -174,14 +175,14 @@ if (isset($_POST['savechanges'])) {
 	} else {
 		$error = 0;
 		if ($pdata['first_post'] == $_GET['post_id']) {
-			$subject = form_sanitizer($_POST['subject'], '', 'subject'); // trim(stripinput(censorwords($_POST['subject'])));
+			$subject = form_sanitizer($_POST['subject'], '', 'subject');
 		}
-		$message = form_sanitizer($_POST['message'], '', 'message'); // trim(stripinput(censorwords($_POST['message'])));
+		$message = form_sanitizer($_POST['message'], '', 'message');
 		$smileys = isset($_POST['disable_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? "0" : "1";
 		$updateSig = (isset($_POST['post_showsig']) && $_POST['post_showsig'] == 1 ? 1 : 0);
 		$post_locked = (isset($_POST['post_locked']) && $_POST['post_locked'] == 1 ? 1 : 0);
 		if (iMEMBER) {
-			if ($message != "" && !defined('FUSION_NULL')) { // added protection
+			if ($message && !defined('FUSION_NULL')) { // added protection
 				if (isset($_POST['hide_edit'])) {
 					$post_edit_time = 0;
 					$reason = "";
@@ -302,7 +303,7 @@ if (isset($_POST['savechanges'])) {
 	}
 	echo "<td valign='top' width='145' class='tbl2'><label for='message'>".$locale['461']."</label> <span class='required'>*</span></td>\n";
 	echo "<td class='tbl1'>\n";
-	echo form_textarea('', 'message', 'message', $message, array('requried'=>1, 'bbcode'=>1));
+	echo form_textarea('', 'message', 'message', $message, array('required'=>1, 'bbcode'=>1));
 	echo "</td>\n</tr>\n";
 	echo "<td width='145' class='tbl2'><label for='edit_reason'>".$locale['474']."</label></td>\n";
 	echo "<td class='tbl1'>\n";

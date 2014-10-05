@@ -59,13 +59,13 @@ if (isset($_POST['previewreply'])) {
 }
 
 if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
-	$message = form_sanitizer($_POST['message'], '', 'message'); // trim(stripinput(censorwords($_POST['message'])));
+	$message = form_sanitizer($_POST['message'], '', 'message');
 	$flood = FALSE;
 	$error = 0;
 	$sig = isset($_POST['show_sig']) ? "1" : "0";
 	$smileys = isset($_POST['disable_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message) ? "0" : "1";
 	if (iMEMBER) {
-		if (!defined("FUSION_NULL")) { // token check and form sanitizer check
+		if (!defined("FUSION_NULL") && $message) {
 			require_once INCLUDES."flood_include.php";
 			if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'")) {
 				if ($fdata['forum_merge'] && $tdata['thread_lastuser'] == $userdata['user_id']) {
@@ -179,8 +179,6 @@ if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
 		echo "</ol>\n";
 	}
 	/* Failed to fetch POST on previewpost if SEO is on - Someone fix this */
-	//print_p($_POST);
-
 	echo openform('input_form', 'input_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('enc_type'=>1));
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border table table-responsive'>\n<tbody>\n<tr>\n";
 	echo "<td valign='top' width='145' class='tbl2'><label for='message'>".$locale['461']."</label><span class='required'>*</span></td>\n";
