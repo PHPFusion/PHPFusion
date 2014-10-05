@@ -1166,7 +1166,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 	if ((in_array($user_status, array(0, 3,
 									  7)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0")
 	) {
-		$link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".$user_name."</a>";
+		$link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".ucwords($user_name)."</a>";
 	} elseif ($user_status == "5" || $user_status == "6") {
 		$link = $locale['user_anonymous'];
 	} else {
@@ -1178,6 +1178,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 require_once INCLUDES."sqlhandler.inc.php";
 require_once INCLUDES."defender.inc.php";
 $defender = new defender;
+$defender->sniff_token();
 require_once INCLUDES."dynamics/dynamics.inc.php";
 $dynamic = new dynamics();
 $dynamic->boot();

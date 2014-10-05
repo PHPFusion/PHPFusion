@@ -1,13 +1,12 @@
 <?php
-
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System Version 8
+| PHP-Fusion Content Management System
 | Copyright (C) 2002 - 2014 PHP-Fusion Inc.
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: defender.inc.php
 | Author : Frederick MC Chan (Hien)
-| Version : 8.0.5 (please update every commit)
+| Version : 9.0.0 (please update every commit)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale['validate'] = "Please check and revalidate the field.";
+
 require_once INCLUDES."notify/notify.inc.php";
 include LOCALE.LOCALESET."defender.php";
 
@@ -27,6 +26,8 @@ class defender {
 
 	/* Sanitize Fields Automatically */
 	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
+		global $locale;
+
 		/* Validation of Files */
 		if ($type == "textbox" || $type == 'dropdown' || $type == 'name' || $type == 'textarea') { // done.
 			return $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
@@ -63,7 +64,7 @@ class defender {
 
 	public function verify_tokens($form, $post_time = 10, $preserve_token = FALSE) {
 		global $locale, $settings, $userdata;
-		// we are using this as many times of the form included in this file?
+
 		$error = array();
 		$user_id = (isset($userdata['user_id']) ? $userdata['user_id'] : 0);
 		$algo = $settings['password_algorithm'];
@@ -90,27 +91,22 @@ class defender {
 			if (count($token_data) == 3) {
 				list($tuser_id, $token_time, $hash) = $token_data;
 				if ($tuser_id != $user_id) { // check if the logged user has the same ID as the one in token
-					//$error[4] = $locale['token_error_4'];
 					$error = 1;
 					$this->stop($locale['token_error_4']);
 				} elseif (!isnum($token_time)) { // make sure the token datestamp is a number before performing calculations
-					//$error[5] = $locale['token_error_5'];
 					$error = 1;
 					$this->stop($locale['token_error_5']);
 					// token is not a number.
 				} elseif (time()-$token_time < $post_time) { // post made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-					//$error[6] = $locale['token_error_6'];
 					$error = 1;
 					$this->stop($locale['token_error_6']);
 					// check if the hash in token is valid
 				} elseif ($hash != hash_hmac($algo, $user_id.$token_time.$form.SECRET_KEY, $salt)) {
-					//$error[7] = $locale['token_error_7'];
 					$error = 1;
 					$this->stop($locale['token_error_7']);
 				}
 			} else {
 				// token incorrect format.
-				//$error[8] = $locale['token_error_8'];
 				$error = 1;
 				$this->stop($locale['token_error_8']);
 			}
@@ -151,6 +147,17 @@ class defender {
 		return $this->error_content;
 	}
 
+	/* Except for blank $_POST, every single form in must have token. */
+	public function sniff_token() {
+		global $locale;
+		if (!empty($_POST)) {
+			if (!isset($_POST['fusion_token'])) {
+				$this->stop();
+				$this->addNotice($locale['token_error_2']);
+			}
+		}
+	}
+
 	/* Aggregate notices */
 	public function Notice() {
 		if (isset($this->error_content)) {
@@ -166,7 +173,7 @@ class defender {
 			$html .= "<div class='admin-message alert alert-warning alert-dismissable' role='alert'>\n";
 			$html .= "<p><strong style='font-size:15px;'>Could you check something!</strong></p><br/>\n";
 			$html .= "<ul id='error_list'>\n";
-			foreach ($this->Notice() as $notices) {
+			foreach ($this->error_content as $notices) {
 				$html .= "<li>$notices</li>\n";
 			}
 			$html .= "</ul>\n";

@@ -1,4 +1,5 @@
 <?php
+$locale['validate'] = "Please check and revalidate the field.";
 // Tokens
 $locale['token_error_title'] = "Token Error";
 $locale['token_error'] = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";

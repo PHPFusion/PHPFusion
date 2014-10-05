@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_main.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -30,7 +30,7 @@ function openform($form_name, $form_id, $method, $action, $array = FALSE) {
 	}
 	$html = "<form name='".$form_name."' id='".$form_id."' method='".$method."' action='".$action."' class='".(defined('FUSION_NULL') ? 'warning' : '')." $class' ".($enctype ? "enctype='multipart/form-data'" : '')." >\n";
 	$html .= generate_token($form_name, $downtime);
-	if (defined('FUSION_NULL') && $notice) {
+	if (defined('FUSION_NULL')) {
 		echo $defender->showNotice();
 	}
 	return $html;

@@ -258,5 +258,5 @@ $locale['global_ML101'] = "- Select Language -";
 $locale['global_ML102'] = "Site language";
 
 $locale['flood'] = "You are barred to post until the flood period cooldown is over. Please wait for %t";
-
+$locale['no_image'] = "No Image";
 ?>
