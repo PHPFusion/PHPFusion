@@ -27,7 +27,7 @@ class defender {
 	/* Sanitize Fields Automatically */
 	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
 		global $locale;
-
+		$this->noAdminCookie();
 		/* Validation of Files */
 		if ($type == "textbox" || $type == 'dropdown' || $type == 'name' || $type == 'textarea') { // done.
 			return $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
@@ -61,6 +61,26 @@ class defender {
             $('#$id-field').addClass('has-error');
             ");
 	}
+
+	public function noAdminCookie() {
+		global $locale;
+		$admin_cookie = COOKIE_PREFIX."admin";
+		$input_password = '';
+		if (defined('ADMIN_PANEL') && !$_COOKIE[$admin_cookie]) {
+			if (isset($_POST['admin_login'])) {
+				check_admin_pass($input_password);
+			} else {
+				redirect(FUSION_REQUEST."&amp;cookie_expired");
+			}
+		} elseif (isset($_GET['cookie_expired'])) {
+			if (!isset($_COOKIE[$admin_cookie])) {
+				notify($locale['cookie_title'], $locale['cookie_description']);
+			} else {
+				redirect(str_replace("&amp;cookie_expired", "", FUSION_REQUEST));
+			}
+		}
+	}
+
 
 	public function verify_tokens($form, $post_time = 10, $preserve_token = FALSE) {
 		global $locale, $settings, $userdata;
