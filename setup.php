@@ -765,8 +765,8 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."online");
-							$result = dbquery("CREATE TABLE ".$db_prefix."online (
+						$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."online");
+						$result = dbquery("CREATE TABLE ".$db_prefix."online (
 						online_user VARCHAR(50) NOT NULL DEFAULT '',
 						online_ip VARCHAR(45) NOT NULL DEFAULT '',
 						online_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
@@ -775,13 +775,17 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
+						if (!empty($_POST['enabled_languages'])) {
 							for ($i = 0; $i < sizeof($_POST['enabled_languages']); $i++) {
 								$selected_langs .= $_POST['enabled_languages'][$i].".";
 							}
 							//Remove last dot
 							$selected_langs = substr($selected_langs, 0, (strlen($selected_langs)-1));
-							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."panels");
-							$result = dbquery("CREATE TABLE ".$db_prefix."panels (
+						} else {
+							$selected_langs = stripinput($_POST['localeset']);
+						}
+						$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."panels");
+						$result = dbquery("CREATE TABLE ".$db_prefix."panels (
 						panel_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 						panel_name VARCHAR(100) NOT NULL DEFAULT '',
 						panel_filename VARCHAR(100) NOT NULL DEFAULT '',
