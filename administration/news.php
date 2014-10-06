@@ -317,24 +317,20 @@ while (list($key, $user_group) = each($user_groups)) {
 }
 
 echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink, array('enctype' => 1, 'downtime' => 0));
-echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
-echo "<td width='100' class='tbl'><label for='news_subject'>".$locale['422']."</label></td>\n";
-echo "<td width='80%' class='tbl'>\n";
-echo form_text('', 'news_subject', 'news_subject', $news_subject, array('required' => 1, 'error_text' => $locale['450']));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='100' class='tbl'><label for='news_cat'>".$locale['423']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'news_cat', 'news_cat', $news_cat_opts, $news_cat, array('placeholder' => $locale['choose']));
-echo "</td>\n</tr>\n";
-if (multilang_table("NS")) {
-	echo "<tr><td class='tbl'><label for='news_language'>".$locale['global_ML100']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_select('', 'news_language', 'news_language', $language_opts, $news_language, array('placeholder' => $locale['choose']));
-	echo "</td>\n</tr>\n";
-} else {
-	echo form_hidden('', 'news_language', 'news_langugage', $news_language);
-}
-echo "<tr><td class='tbl' valign='top'><label for='news_image'>".$locale['439']."</label>:</td>\n<td class='tbl' valign='top'>";
+echo "<div class='text-right'>\n";
+echo form_button($locale['436'], 'preview', 'preview-1', $locale['436'], array('class' => 'btn-primary m-r-10'));
+echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-primary'));
+echo "</div>\n";
+echo "<hr/>\n";
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-9'>\n";
+echo form_text($locale['422'], 'news_subject', 'news_subject', $news_subject, array('required' => 1, 'error_text' => $locale['450']));
+echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-3'>\n";
+echo form_select($locale['423'], 'news_cat', 'news_cat', $news_cat_opts, $news_cat, array('placeholder' => $locale['choose'], 'width'=>'100%'));
+echo "</div>\n</div>\n";
+
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-9'>\n";
 if ($news_image != "" && $news_image_t1 != "") {
 	echo "<label><img src='".IMAGES_N_T.$news_image_t2."' alt='".$locale['439']."' /><br />\n";
 	echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['421']."</label>\n";
@@ -342,43 +338,38 @@ if ($news_image != "" && $news_image_t1 != "") {
 	echo "<input type='hidden' name='news_image_t1' value='".$news_image_t1."' />\n";
 	echo "<input type='hidden' name='news_image_t2' value='".$news_image_t2."' />\n";
 } else {
-	echo "<input type='file' id='news_image' name='news_image' class='textbox' style='width:250px;' /><br />\n";
-	echo sprintf($locale['440'], parsebytesize($settings['news_photo_max_b']))."\n";
+	echo form_fileinput($locale['439'], 'news_image', 'news_image', IMAGES_N, '', array('thumbnail'=>1));
+	//echo "<input type='file' id='news_image' name='news_image' class='textbox' style='width:250px;' /><br />\n";
+	echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['news_photo_max_b']))."</div>\n";
 }
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td valign='top' width='100' class='tbl'><label for='body'>".$locale['425']."</label></td>\n";
-echo "<td width='80%' class='tbl'>\n";
-echo form_textarea('', 'body', 'body', $body);
-echo "</td>\n</tr>\n";
+echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-3'>\n";
+if (multilang_table("NS")) {
+	echo form_select($locale['global_ML100'], 'news_language', 'news_language', $language_opts, $news_language, array('placeholder' => $locale['choose'], 'width'=>'100%'));
+} else {
+	echo form_hidden('', 'news_language', 'news_langugage', $news_language);
+}
+echo "</div>\n</div>\n";
+echo "<hr/>\n";
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-9' style='padding-bottom:10px;'>\n";
+echo form_datepicker($locale['427'], 'news_start', 'news_start', $news_start, array('class'=>'pull-left m-r-10'));
+echo form_datepicker($locale['428'], 'news_end', 'news_end', $news_end, array('class' => 'm-r-10 pull-left', 'placeholder'=>$locale['429']));
+echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-3'>\n";
+echo form_select($locale['430'], 'news_visibility', 'news_visibility', $visibility_opts, $news_visibility, array('placeholder' => $locale['choose'], 'width'=>'100%'));
+echo "</div>\n</div>\n";
+echo "<hr/>\n";
+echo form_textarea($locale['425'], 'body', 'body', $body);
 if (!$settings['tinymce_enabled']) {
-	echo "<tr>\n<td class='tbl'></td>\n<td class='tbl'>\n";
 	echo display_html("inputform", "body", TRUE, TRUE, TRUE, IMAGES_N);
-	echo "</td>\n</tr>\n";
 }
-echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='body2'>".$locale['426']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_textarea('', 'body2', 'body2', $body2);
-echo "</td>\n</tr>\n";
+echo "<hr/>\n";
+echo form_textarea($locale['426'], 'body2', 'body2', $body2);
 if ($settings['tinymce_enabled'] != 1) {
-	echo "<tr>\n<td class='tbl'></td>\n<td class='tbl'>\n";
 	echo "<button value='".$locale['441']."' class='btn btn-sm btn-default button m-b-10' onclick=\"insertText('body2', '&lt;!--PAGEBREAK--&gt;');\" />".$locale['441']."</button>\n";
 	echo display_html("inputform", "body2", TRUE, TRUE, TRUE, IMAGES_N);
-	echo "</td>\n</tr>\n";
 }
-echo "<tr>\n";
-echo "<td class='tbl'><label for='news_start'>".$locale['427']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_datepicker('', 'news_start', 'news_start', $news_start);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl'><label for='news_end'>".$locale['428']."</label></td><td class='tbl'>\n";
-echo form_datepicker('', 'news_end', 'news_end', $news_end, array('class' => 'm-r-10 pull-left'));
-echo "".$locale['429']."</td>\n";
-echo "</tr>\n<tr>\n";
-echo "<td class='tbl'><label for='news_visibility'>".$locale['430']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'news_visibility', 'news_visibility', $visibility_opts, $news_visibility, array('placeholder' => $locale['choose']));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl'></td><td class='tbl'>\n";
+echo "<hr/>\n";
+echo "<div class='well'>\n";
 echo "<label><input type='checkbox' name='news_draft' value='yes'".$news_draft." /> ".$locale['431']."</label><br />\n";
 echo "<label><input type='checkbox' name='news_sticky' value='yes'".$news_sticky." /> ".$locale['432']."</label><br />\n";
 if ($settings['tinymce_enabled'] != 1) {
@@ -393,8 +384,6 @@ echo "<label><input type='checkbox' name='news_ratings' value='yes'".$news_ratin
 if ($settings['ratings_enabled'] == "0") {
 	echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
 }
-echo "</td>\n";
-echo "</tr>\n";
 if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 	$sys = "";
 	if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
@@ -408,15 +397,17 @@ if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0")
 	echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['452'], $sys);
 	echo "</td>\n</tr>";
 }
-echo "<tr>\n";
-echo "<td align='center' colspan='2' class='tbl'><br />\n";
 if ((isset($_POST['edit']) && (isset($_POST['news_id']) && isnum($_POST['news_id']))) || (isset($_POST['preview']) && (isset($_POST['news_id']) && isnum($_POST['news_id']))) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
 	echo form_hidden('', 'news_id', 'news_id', isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id']);
 }
-echo form_button($locale['436'], 'preview', 'preview', $locale['436'], array('class' => 'btn-primary m-r-10'));
-echo form_button($locale['437'], 'save', 'save', $locale['437'], array('class' => 'btn-primary'));
-echo "</tr>\n</table>\n</form>\n";
+echo "</div>\n";
+echo form_button($locale['436'], 'preview', 'preview-1', $locale['436'], array('class' => 'btn-primary m-r-10'));
+echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-primary'));
+
+
+echo closeform();
 closetable();
+
 echo "<script type='text/javascript'>\n"."function DeleteNews() {\n";
 echo "return confirm('".$locale['451']."');\n}\n";
 echo "function ValidateForm(frm) {\n"."if(frm.news_subject.value=='') {\n";
