@@ -25,7 +25,7 @@ $locale['status1'] = "Banned";
 $locale['status2'] = "Unactivated";
 $locale['status3'] = "Suspended";
 $locale['status4'] = "Security Banned";
-$locale['status5'] = "Canceled";
+$locale['status5'] = "Cancelled";
 $locale['status6'] = "Anonymous";
 $locale['status7'] = "Deactivated";
 $locale['status8'] = "Inactive";
@@ -211,7 +211,7 @@ $locale['global_408'] = " for the following reason:";
 $locale['global_409'] = "This account has been banned for security reasons.";
 $locale['global_410'] = "The reason for this is: ";
 $locale['global_411'] = "This account has been cancelled.";
-$locale['global_412'] = "This account has been anonymized, probably becuase of inactivity.";
+$locale['global_412'] = "This account has been anonymized, probably because of inactivity.";
 // Banning due to flooding
 $locale['global_440'] = "Automatic Ban by Flood Control";
 $locale['global_441'] = "Your account on ".$settings['sitename']."has been banned";
