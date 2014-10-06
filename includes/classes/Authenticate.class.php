@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
 define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
 define("COOKIE_PATH", $settings['site_path']);
@@ -254,6 +255,11 @@ class Authenticate {
 			Authenticate::_setCookie(COOKIE_LASTVISIT, $lastvisit, time()+3600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
 		}
 		return $lastvisit;
+	}
+
+	public static function expireAdminCookie() {
+		setcookie(COOKIE_ADMIN, "", time()-3600*30);
+		redirect(BASEDIR."index.php");
 	}
 
 	// Checks and sets the admin last visit cookie

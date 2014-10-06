@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: acp_theme.php
+| Filename: Venus/acp_theme.php
 | Author: PHP-Fusion Inc.
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -27,8 +27,8 @@ add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cooki
 
 function render_adminpanel() {
 global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_languages, $language_opts;
-$admin_password = '';
-	// skip cookie check on infusions. They are non critical.
+
+	$admin_password = '';
 	if (!check_admin_pass($admin_password) && !stristr($_SERVER['PHP_SELF'], $settings['site_path']."infusions")) {
 		add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
 		echo "<aside class='block-container'>\n";
@@ -47,6 +47,12 @@ $admin_password = '';
 		echo "</div>\n";
 		echo "</aside>\n";
 	} else {
+
+		if (isset($_GET['logout'])) {
+			require_once CLASSES."Authenticate.class.php";
+			Authenticate::expireAdminCookie();
+		}
+
 		echo "<div id='admin-panel' ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? "class='in'" : '')." >\n";
 		include THEMES."admin_templates/Venus/includes/header.php";
 		echo "<div class='display-table' style='height:100%; width:100%;'>\n";
@@ -68,7 +74,7 @@ $admin_password = '';
 		echo CONTENT;
 		echo "</div>\n";
 		echo "<div class='m-l-20 display-block'>\n";
-		echo "Venus Admin &copy; ".date("Y")." created by <a href='http://www.php-fusion.co.uk' target='_blank'><strong>PHP-Fusion Inc.</strong></a>\n";
+		echo "Venus Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
 		echo showcopyright();
 		echo "</div>\n";
 		echo "</div>\n";

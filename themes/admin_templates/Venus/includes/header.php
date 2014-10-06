@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: header.php
+| Filename: Venus/header.php
 | Author: PHP-Fusion Inc.
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -61,6 +61,7 @@ echo "<ul class='dropdown-menu' role='menu'>\n";
 echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."edit_profile.php'>".$locale['edit']." ".$locale['profile']."</a></li>\n";
 echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>\n";
 echo "<li class='divider' class='display-block' style='width:100%'>\n</li>\n";
+echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".FUSION_REQUEST."&amp;logout'>".$locale['admin-logout']."</a></li>\n";
 echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
 echo "</ul>\n";
 echo "</li>\n";
