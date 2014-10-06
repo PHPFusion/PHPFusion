@@ -154,7 +154,7 @@ class defender {
 		if (!defined(".$id-help")) {
 			define(".$id-help", TRUE);
 			add_to_jquery("
-                $('#$id-help').addClass('label label-danger m-t-5 p-5 inline-block');
+                $('#$id-help').addClass('label label-danger m-t-5 p-5 display-inline-block');
                 $('#$id-help').append('$content');
                 ");
 		}
