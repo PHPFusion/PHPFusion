@@ -39,7 +39,11 @@ while (!file_exists($folder_level."config.php")) {
 	$folder_level .= "../";
 	$i++;
 	if ($i == 7) {
-		die("config.php file not found");
+		if (file_exists("setup.php")) {
+			redirect("setup.php");
+		} else {
+			die("config.php nor setup.php files where found");
+		}
 	}
 }
 
