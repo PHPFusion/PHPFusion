@@ -34,12 +34,14 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		echo "<input type='hidden' name='stage' value='2'>\n";
 		echo "<input type='submit' name='upgrade' value='".$locale['400']."' class='button'><br /><br />\n";
 	} elseif (isset($_POST['upgrade']) && isset($_POST['stage']) && $_POST['stage'] == 2) {
+	
 		//Get locales for required language injections
 		if (file_exists(LOCALE.LOCALESET."setup.php")) {
 			include LOCALE.LOCALESET."setup.php";
 		} else {
 			include LOCALE."setup.php";
 		}
+		
 		//Check files from earlier installations
 		echo "<div style='width:550px; margin:15px auto;' class='tbl'>\n";
 		echo "File check, please save and remove according to list.<br />\n";
@@ -157,7 +159,8 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		echo "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\"); <br />\n";
 		echo "</div><br />";
 		echo "Please note that you need to change the \$pdo_enabled = \"0\" to \$pdo_enabled = \"1\" manually in order to enable PDO</div>\n";
-		//Add language tables
+
+		//Add language tables to infusions and main content
 		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_access");
 		$result = dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER page_allow_ratings");
 		$result = dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." ADD download_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER download_cat_access");
@@ -172,12 +175,16 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("ALTER TABLE ".DB_SITE_LINKS." ADD link_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER link_order");
 		$result = dbquery("ALTER TABLE ".DB_USERS." ADD user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."'");
 		$result = dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER weblink_cat_access");
+
 		//Login methods
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('login_method', '0')"); // New: Login method feature
+
 		//Mime check for upload files
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('mime_check', '0')");
+
 		//Enabled languages array
-		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('enabled_languages', '".$_POST['enabled_languages']."')");
+		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('enabled_languages', '".$settings['locale']."')");
+
 		// Language settings admin section
 		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'languages.gif', '".$locale['129c']."', 'settings_languages.php', '4')");
 		if ($result) {
@@ -186,12 +193,14 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".LANG' WHERE user_id='".$data['user_id']."'");
 			}
 		}
+
 		//Create guest language session tables
 		$result = dbquery("CREATE TABLE ".$db_prefix."language_sessions (
 		user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
 		user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',
 		user_datestamp INT(10) NOT NULL default '0'   
 		) ENGINE=MYISAM;");
+
 		//Create multilang tables
 		$result = dbquery("CREATE TABLE ".$db_prefix."mlt_tables (
 		mlt_rights CHAR(4) NOT NULL DEFAULT '',
@@ -199,6 +208,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		mlt_status VARCHAR(50) NOT NULL DEFAULT '',
 		PRIMARY KEY (mlt_rights)
 		) ENGINE=MYISAM;");
+
 		//Add Multilang table rights and status
 		$result = dbquery("INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['MLT001']."', '1')");
 		$result = dbquery("INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('CP', '".$locale['MLT002']."', '1')");
@@ -213,6 +223,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('WL', '".$locale['MLT010']."', '1')");
 		$result = dbquery("INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('SL', '".$locale['MLT011']."', '1')");
 		$result = dbquery("INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('PN', '".$locale['MLT012']."', '1')");
+
 		// Email templates admin section
 		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 		if ($result) {
@@ -235,9 +246,9 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 			PRIMARY KEY (template_id)
 		) ENGINE=MyISAM;");
 		if ($result) {
-			$result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$settings['siteusername']."', '".$settings['siteemail']."')");
-			$result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."')");
-			$result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$settings['siteusername']."', '".$settings['siteemail']."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
 		}
 		
 		//Forum's items per page
