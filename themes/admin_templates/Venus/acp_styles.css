@@ -3,7 +3,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: acp_styles.css
+| Filename: Venus/acp_styles.css
 | Author: PHP-Fusion Inc.
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -25,6 +25,7 @@ html, body {
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d7dce0', endColorstr='#6f818f', GradientType=1);
 	background-position: 0px -80%;
 	font: 15px/18px 'Helvetica Neue', Arial !important;
+	overflow-x: hidden;
 }
 /* Globals */
 .panel {
