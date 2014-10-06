@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_datepicker.php
 | Author: Frederick MC CHan (Hien)
@@ -54,15 +54,15 @@ function form_datepicker($title, $input_name, $input_id, $input_value, $array = 
 		$deactivate = (array_key_exists('deactivate', $array) && ($array['deactivate'] == 1)) ? 1 : 0;
 		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
 	}
-	$html = "<div id='$input_id-field' class='form-group m-b-0 $class ".($icon ? 'has-feedback' : '')."'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html = "<div id='$input_id-field' class='form-group m-b-10 $class ".($icon ? 'has-feedback' : '')."'>\n";
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= "<div class='input-group date' ".($width ? "style='width:$width;'" : '').">\n";
 	$html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' placeholder='$placeholder' />\n";
 	$html .= ($icon) ? "<div class='form-control-feedback'><i class='glyphicon $icon'></i></div>\n" : '';
 	$html .= "<span class='input-group-addon'><i class='entypo calendar'></i></span>\n";
 	$html .= "</div>\n";
-	$html .= "<div id='$input_id-help' style='display:inline-block !important;'></div>";
+	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
 	// Generate Defender Strings

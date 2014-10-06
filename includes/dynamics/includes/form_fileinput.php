@@ -65,7 +65,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>\n" : "";
 	$html .= "<input type='file' name='".$input_name."' id='".$input_id."' class='file-preview-image' >\n";
-	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
+	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
 	$html .= "<input type='hidden' name='def[$input_name]' value='[type=$type],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode],[path=$upload_path],[thumbnail=$thumbnail]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>\n";

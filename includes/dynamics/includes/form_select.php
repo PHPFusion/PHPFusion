@@ -77,7 +77,7 @@ function form_select($title, $input_name, $input_id, $option_array, $input_value
 		$html .= "<input ".($required ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' ".(($width) ? "style='width: $width'" : "style='min-width: 250px'").">\n";
 	} else {
 		// normal mode
-		$html .= "<select name='$input_name' id='$input_id' ".(($width) ? "style='width: $width'" : "style='min-width: 250px'")." ".($deactivate == "1" && (isnum($deactivate)) ? "disabled" : "")." $multiple_attr >"; //
+		$html .= "<select name='$input_name' id='$input_id' ".(($width) ? "style='width: $width'" : "style='width:250px; max-width: 250px'")." ".($deactivate == "1" && (isnum($deactivate)) ? "disabled" : "")." $multiple_attr >"; //
 		$html .= ($allowclear) ? "<option value=''></option>" : "";
 		if (is_array($option_array)) {
 			foreach ($option_array as $arr => $v) { // outputs: key, value, class - in order
@@ -102,7 +102,7 @@ function form_select($title, $input_name, $input_id, $option_array, $input_value
 		}
 		$html .= "</select>";
 	}
-	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
+	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
 	if ($required) {

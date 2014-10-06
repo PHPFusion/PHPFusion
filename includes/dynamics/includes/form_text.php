@@ -94,7 +94,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 	if ($append_button || $prepend_button) {
 		$html .= "</div>\n";
 	}
-	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
+	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
 	// Generate Defender Strings
