@@ -48,4 +48,37 @@ if (!function_exists("render_comments")) {
 		closetable();
 	}
 }
+
+// Render breadcrumbs template
+if (!function_exists("render_breadcrumbs")) {
+	function render_breadcrumbs($show_home = TRUE, $last_no_link = FALSE, $class = 'breadcrumb') {
+		global $breadcrumbs, $locale;
+
+		$html = "<ol class='forum_breadcrumbs $class'>\n";
+
+		// Should we also show the Home link?
+		if ($show_home) {
+			$breadcrumbs = array_merge(array(BASEDIR.'index.php' => 'Home'), $breadcrumbs); // Home needs localised
+		}
+
+		$no_link = FALSE;
+		// Get the last link
+		$last_link = array_keys($breadcrumbs);
+		$last_link = array_pop($last_link);
+		// Loop through links and generate the HTML
+		foreach ($breadcrumbs as $link => $title) {
+			// Check if this item is the last and if we should make it a link or not
+			if ($last_no_link && ($link == $last_link)) {
+				$no_link = TRUE;
+			}
+			$html .= "<li class='crumb'>";
+			$html .= ($no_link) ? $title : "<a href='".$link."'>".$title."</a>";
+			$html .= "</li>\n";
+		}
+
+		$html .= "</ol>\n";
+
+		return $html;
+	}
+}
 ?>
