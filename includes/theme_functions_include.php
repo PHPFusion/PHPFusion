@@ -16,7 +16,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 function load_bootstrap() {
 	define('bootstrapped', TRUE);
 	require_once INCLUDES."output_handling_include.php";
@@ -24,8 +26,9 @@ function load_bootstrap() {
 	add_to_head("<meta name='viewport' content='width=device-width, initial-scale=1.0' />");
 	add_to_head("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
 	add_to_head("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
-	add_to_head("<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' media='screen' />");
+	add_to_head("<link href='".INCLUDES."bootstrap/bootstrap.css' rel='stylesheet' media='screen' />");
 }
+
 if ($settings['bootstrap']) {
 	load_bootstrap();
 }
@@ -62,11 +65,13 @@ $('#".$id."-Modal').modal('show');
 	$html .= "<div class='modal-body'>\n";
 	return $html;
 }
+
 function closemodal() {
 	$html = '';
 	$html .= "</div></div></div></div>\n";
 	return $html;
 }
+
 function progress_bar($percent, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE) {
 	$height = (!$height) ? $height : '20px';
 	$reverse = $reverse ? TRUE : FALSE;
@@ -86,12 +91,14 @@ function progress_bar($percent, $title = FALSE, $class = FALSE, $height = FALSE,
 	$html .= "</div></div>\n";
 	return $html;
 }
+
 function admin_message($text, $class = FALSE) {
 	$class = $class ? $class : 'alert-info';
 	return "<div class='alert $class text-center alert-dismissable' style='color:#222'>
 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
 <strong>$text</strong></div>\n";
 }
+
 function check_panel_status($side) {
 	global $settings;
 	$exclude_list = "";
@@ -139,6 +146,7 @@ function check_panel_status($side) {
 		return TRUE;
 	}
 }
+
 function showbanners($display = "") {
 	global $settings;
 	ob_start();
@@ -162,6 +170,7 @@ function showbanners($display = "") {
 	ob_end_clean();
 	return $output;
 }
+
 function showsublinks($sep = "&middot;", $class = "") {
 	global $settings;
 	require_once INCLUDES."mobile.menu.inc.php";
@@ -228,10 +237,12 @@ function showsublinks($sep = "&middot;", $class = "") {
 		return $res;
 	}
 }
+
 function showsubdate() {
 	global $settings;
 	return ucwords(showdate($settings['subheaderdate'], time()));
 }
+
 function newsposter($info, $sep = "", $class = "") {
 	global $locale;
 	$res = "";
@@ -241,6 +252,7 @@ function newsposter($info, $sep = "", $class = "") {
 	$res .= $info['news_ext'] == "y" || $info['news_allow_comments'] ? $sep."\n" : "\n";
 	return "<!--news_poster-->".$res;
 }
+
 function newsopts($info, $sep, $class = "") {
 	global $locale, $settings;
 	$res = "";
@@ -255,6 +267,7 @@ function newsopts($info, $sep, $class = "") {
 	$res .= "<a href='print.php?type=N&amp;item_id=".$info['news_id']."'><img src='".get_image("printer")."' alt='".$locale['global_075']."' style='vertical-align:middle;border:0;' /></a>\n";
 	return "<!--news_opts-->".$res;
 }
+
 function newscat($info, $sep = "", $class = "") {
 	global $locale;
 	$res = "";
@@ -267,6 +280,7 @@ function newscat($info, $sep = "", $class = "") {
 	}
 	return "<!--news_cat-->".$res." $sep ";
 }
+
 function articleposter($info, $sep = "", $class = "") {
 	global $locale, $settings;
 	$res = "";
@@ -276,6 +290,7 @@ function articleposter($info, $sep = "", $class = "") {
 	$res .= ($info['article_allow_comments'] && $settings['comments_enabled'] == "1" ? $sep."\n" : "\n");
 	return "<!--article_poster-->".$res;
 }
+
 function articleopts($info, $sep) {
 	global $locale, $settings;
 	$res = "";
@@ -286,6 +301,7 @@ function articleopts($info, $sep) {
 	$res .= "<a href='print.php?type=A&amp;item_id=".$info['article_id']."'><img src='".get_image("printer")."' alt='".$locale['global_075']."' style='vertical-align:middle;border:0;' /></a>\n";
 	return "<!--article_opts-->".$res;
 }
+
 function articlecat($info, $sep = "", $class = "") {
 	global $locale;
 	$res = "";
@@ -298,6 +314,7 @@ function articlecat($info, $sep = "", $class = "") {
 	}
 	return "<!--article_cat-->".$res." $sep ";
 }
+
 function itemoptions($item_type, $item_id) {
 	global $locale, $aidlink;
 	$res = "";
@@ -312,6 +329,7 @@ function itemoptions($item_type, $item_id) {
 	}
 	return $res;
 }
+
 function showrendertime($queries = TRUE) {
 	global $locale, $mysql_queries_count, $settings;
 	if ($settings['rendertime_enabled'] == 1 || ($settings['rendertime_enabled'] == 2 && iADMIN)) {
@@ -322,13 +340,15 @@ function showrendertime($queries = TRUE) {
 		return "";
 	}
 }
+
 function showcopyright($class = "", $nobreak = FALSE) {
 	$link_class = $class ? " class='$class' " : "";
-	$res = "Powered by <a href='http://www.php-fusion.co.uk'".$link_class." target='_blank'>PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP-Fusion Inc";
+	$res = "Powered by <a href='https://www.php-fusion.co.uk'".$link_class.">PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP-Fusion Inc";
 	$res .= ($nobreak ? "&nbsp;" : "<br />\n");
 	$res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
 	return $res;
 }
+
 function showcounter() {
 	global $locale, $settings;
 	if ($settings['visitorcounter_enabled']) {
@@ -337,6 +357,7 @@ function showcounter() {
 		return "";
 	}
 }
+
 function panelbutton($state, $bname) {
 	$bname = preg_replace("/[^a-zA-Z0-9\s]/", "_", $bname);
 	if (isset($_COOKIE["fusion_box_".$bname])) {
@@ -348,6 +369,7 @@ function panelbutton($state, $bname) {
 	}
 	return "<img src='".get_image("panel_".($state == "on" ? "off" : "on"))."' id='b_".$bname."' class='panelbutton' alt='' onclick=\"javascript:flipBox('".$bname."')\" />";
 }
+
 function panelstate($state, $bname, $element = "div") {
 	$bname = preg_replace("/[^a-zA-Z0-9\s]/", "_", $bname);
 	if (isset($_COOKIE["fusion_box_".$bname])) {
@@ -359,16 +381,20 @@ function panelstate($state, $bname, $element = "div") {
 	}
 	return "<$element id='box_".$bname."'".($state == "off" ? " style='display:none'" : "").">\n";
 }
+
 // v6 compatibility
 function opensidex($title, $state = "on") {
 	openside($title, TRUE, $state);
 }
+
 function closesidex() {
 	closeside();
 }
+
 function tablebreak() {
 	return TRUE;
 }
+
 function make_breadcrumb($title, $db, $id_col, $cat_col, $name_col, $id, $class = FALSE) {
 	global $aidlink;
 	echo "<ol class='breadcrumb $class'><i class='entypo location'></i>\n";
@@ -376,6 +402,7 @@ function make_breadcrumb($title, $db, $id_col, $cat_col, $name_col, $id, $class 
 	breadcrumb_items($db, $id_col, $cat_col, $name_col, $id);
 	echo "</ol>\n";
 }
+
 function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
 	global $aidlink;
 	$result = dbquery("SELECT $id_col, $cat_col, $name_col FROM $db WHERE $id_col='$id' LIMIT 1");
@@ -389,16 +416,53 @@ function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
 		}
 	}
 }
-function display_avatar($userdata, $size, $class = FALSE) {
+
+function display_avatar($userdata, $size, $class = FALSE, $link = TRUE) {
 	$class = ($class) ? "class='$class'" : '';
-	if (array_key_exists('user_avatar', $userdata) && $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] !='5' && $userdata['user_status'] !='6') {
+	if (array_key_exists('user_avatar', $userdata) && $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6') {
 		$userdata['user_id'] = array_key_exists('user_id', $userdata) && $userdata['user_id'] ? $userdata['user_id'] : 1;
-		return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'></a>\n";
+		if ($link) {
+			return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'></a>\n";
+		} else {
+			return "<img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'>\n";
+		}
 	} else {
 		$userdata['user_id'] = array_key_exists('user_id', $userdata) && $userdata['user_id'] ? $userdata['user_id'] : 1;
-		return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/noavatar100.png'></a>\n";
+		if ($link) {
+			return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/noavatar100.png'></a>\n";
+		} else {
+			return "<img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/noavatar100.png'>\n";
+		}
 	}
 }
+
+function thumbnail($src, $size, $url = FALSE) {
+	global $locale;
+	$src = file_exists($src) ? $src : '';
+	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-block image-wrap thumb pull-left m-2'>\n";
+	$html .= $url ? "<a href='".$url."'>" : '';
+	if ($src) {
+		$html .= "<img class='img-responsive' src='$src'/>\n";
+	} else {
+		$size = str_replace('px', '', $size);
+		$html .= "<img class='img-responsive' src='holder.js/".$size."x".$size."/text:".$locale['no_image']."'/>\n";
+	}
+	$html .= $url ? "</a>" : '';
+	$html .= "</div>\n";
+	return $html;
+}
+
+function lorem_ipsum($length) {
+	$text = "
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum aliquam felis nunc, in dignissim metus suscipit eget. Nunc scelerisque laoreet purus, in ullamcorper magna sagittis eget. Aliquam ac rhoncus orci, a lacinia ante. Integer sed erat ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce ullamcorper sapien mauris, et tempus mi tincidunt laoreet. Proin aliquam vulputate felis in viverra.</p>
+	<p>Duis sed lorem vitae nibh sagittis tempus sed sed enim. Mauris egestas varius purus, a varius odio vehicula quis. Donec cursus interdum libero, et ornare tellus mattis vitae. Phasellus et ligula velit. Vivamus ac turpis dictum, congue metus facilisis, ultrices lorem. Cras imperdiet lacus in tincidunt pellentesque. Sed consectetur nunc vitae fringilla volutpat. Mauris nibh justo, luctus eu dapibus in, pellentesque non urna. Nulla ullamcorper varius lacus, ut finibus eros interdum id. Proin at pellentesque sapien. Integer imperdiet, sapien nec tristique laoreet, sapien lacus porta nunc, tincidunt cursus risus mauris id quam.</p>
+	<p>Ut vulputate mauris in facilisis euismod. Ut id libero vitae neque laoreet placerat a id mi. Integer ornare risus placerat, interdum nisi sed, commodo ligula. Integer at ipsum id magna blandit volutpat. Sed euismod mi odio, vitae molestie diam ornare quis. Aenean id ligula finibus, convallis risus a, scelerisque tellus. Morbi quis pretium lectus. In convallis hendrerit sem. Vestibulum sed ultricies massa, ut tempus risus. Nunc aliquam at tellus quis lobortis. In hac habitasse platea dictumst. Vestibulum maximus, nibh at tristique viverra, eros felis ultrices nunc, et efficitur nunc augue a orci. Phasellus et metus mauris. Morbi ut ex ut urna tincidunt varius eu id diam. Aenean vestibulum risus sed augue vulputate, a luctus ligula laoreet.</p>
+	<p>Nam tempor sodales mi nec ullamcorper. Mauris tristique ligula augue, et lobortis turpis dictum vitae. Aliquam leo massa, posuere ac aliquet quis, ultricies eu elit. Etiam et justo et nulla cursus iaculis vel quis dolor. Phasellus viverra cursus metus quis luctus. Nulla massa turpis, porttitor vitae orci sed, laoreet consequat urna. Etiam congue turpis ac metus facilisis pretium. Nam auctor mi et auctor malesuada. Mauris blandit nulla quis ligula cursus, ut ullamcorper dui posuere. Fusce sed urna id quam finibus blandit tempus eu tellus. Vestibulum semper diam id ante iaculis iaculis.</p>
+	<p>Fusce suscipit maximus neque, sed consectetur elit hendrerit at. Sed luctus mi in ex auctor mollis. Suspendisse ac elementum tellus, ut malesuada purus. Mauris condimentum elit at dolor eleifend iaculis. Aenean eget faucibus mauris. Pellentesque fermentum mattis imperdiet. Donec mattis nisi id faucibus finibus. Vivamus in eleifend lorem, vel dictum nisl. Morbi ut mollis arcu.</p>
+	";
+	return trim_text($text, $length);
+}
+
 function timer($updated = FALSE) {
 	if (!$updated) {
 		$updated = time();
@@ -415,8 +479,7 @@ function timer($updated = FALSE) {
 	if ($calculated < 1) {
 		return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>just now</abbr>\n";
 	}
-	$timer = array($year => "year", $month => "month", $day => "day", $hour => "hour", $minute => "minute",
-		$second => "second");
+	$timer = array($year => "year", $month => "month", $day => "day", $hour => "hour", $minute => "minute", $second => "second");
 	foreach ($timer as $arr => $unit) {
 		$calc = $calculated/$arr;
 		if ($calc >= 1) {
@@ -426,11 +489,13 @@ function timer($updated = FALSE) {
 		}
 	}
 }
+
 function days_current_month() {
 	$year = showdate("%Y", time());
 	$month = showdate("%m", time());
 	return $month == 2 ? ($year%4 ? 28 : ($year%100 ? 29 : ($year%400 ? 28 : 29))) : (($month-1)%7%2 ? 30 : 31);
 }
+
 function countdown($time) {
 	$updated = stripinput($time);
 	$second = 1;
@@ -439,8 +504,7 @@ function countdown($time) {
 	$day = 24*$hour;
 	$month = days_current_month()*$day;
 	$year = (date("L", $updated) > 0) ? 366*$day : 365*$day;
-	$timer = array($year => "year", $month => "month", $day => "day", $hour => "hour", $minute => "minute",
-		$second => "second");
+	$timer = array($year => "year", $month => "month", $day => "day", $hour => "hour", $minute => "minute", $second => "second");
 	foreach ($timer as $arr => $unit) {
 		$calc = $updated/$arr;
 		if ($calc >= 1) {
@@ -453,7 +517,8 @@ function countdown($time) {
 		return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('newsdate', time())."'>now</abbr>";
 	}
 }
-function tab_active($tab_title, $default_active, $link_mode=false) {
+
+function tab_active($tab_title, $default_active, $link_mode = FALSE) {
 	if ($link_mode) {
 		$section = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : $default_active;
 		$count = count($tab_title['title']);
@@ -475,7 +540,8 @@ function tab_active($tab_title, $default_active, $link_mode=false) {
 		return "".$id."$v_link";
 	}
 }
-function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class=false) {
+
+function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE) {
 	global $aidlink;
 	$link_mode = $link ? $link : 0;
 	$html = "<div class='nav-wrapper $class'>\n";
@@ -486,7 +552,11 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class=fal
 		$v_title = str_replace("-", " ", $v);
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
 		$id = $tab_title['id'][$arr];
-		$link_url = $link_mode ? $link.(isset($_GET['aid']) ? $aidlink."&amp;" : '?')."section=".$id."" : "#";
+		if (defined('ADMIN_PANEL')) {
+			$link_url = $link_mode ? FUSION_REQUEST."&amp;section=".$id."" : "#";
+		} else {
+			$link_url = $link_mode ? $link.(isset($_GET['aid']) ? $aidlink."&amp;" : '?')."section=".$id."" : "#";
+		}
 		if ($link_mode) {
 			$html .= ($link_active_arrkey == $id) ? "<li class='active'>\n" : "<li>\n";
 		} else {
@@ -499,6 +569,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class=fal
 	$html .= "<div class='tab-content' >\n";
 	return $html;
 }
+
 function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE) {
 	if (isset($_GET['section']) || $link) {
 		$link = '';
@@ -524,6 +595,9 @@ function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE
 	}
 	return "<div class='normal-tab-pane tab-pane fade ".$status."' id='".$id."$link'>\n";
 }
+
 function closetabbody() { return "</div>\n"; }
+
 function closetab() { return "</div>\n</div>\n"; }
+
 ?>
