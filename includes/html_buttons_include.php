@@ -34,19 +34,28 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 		$res .= "</div>\n";
 	}
 	if ($colors) {
-		$color_array = array('maroon' => $locale['html402'], 'red' => $locale['html403'],
-							 'orange' => $locale['html404'], 'brown' => $locale['html405'],
-							 'yellow' => $locale['html406'], 'green' => $locale['html407'],
-							 'lime' => $locale['html408'], 'olive' => $locale['html409'], 'cyan' => $locale['html410'],
-							 'blue' => $locale['html411'], 'navy' => $locale['html412'], 'purple' => $locale['html413'],
-							 'violet' => $locale['html414'], 'black' => $locale['html415'],
-							 'gray' => $locale['html416'], 'silver' => $locale['html417'],
-							 'white' => $locale['html418'],);
+		$color_array = array(
+			'maroon' => $locale['html402'],
+			'red' => $locale['html403'],
+			'orange' => $locale['html404'],
+			'brown' => $locale['html405'],
+			'yellow' => $locale['html406'],
+			'green' => $locale['html407'],
+			'lime' => $locale['html408'],
+			'olive' => $locale['html409'],
+			'cyan' => $locale['html410'],
+			'blue' => $locale['html411'],
+			'navy' => $locale['html412'],
+			'purple' => $locale['html413'],
+			'violet' => $locale['html414'],
+			'black' => $locale['html415'],
+			'gray' => $locale['html416'],
+			'silver' => $locale['html417'],
+			'white' => $locale['html418']
+		);
 		$placeholder = $locale['html400'];
-		$seed = rand(0,100);
-		$res .= form_select('', "setcolor-$formname", "setcolor-$formname-$seed", $color_array, '', array('placeholder' => $placeholder,
-																									'class' => 'pull-left m-r-10',
-																									'allowclear' => 1));
+		$seed = rand(0, 1000000);
+		$res .= form_select('', "setcolor-$formname", "setcolor-$formname-$seed", $color_array, '', array('placeholder' => $placeholder, 'class' => 'pull-left m-r-10', 'allowclear' => 1));
 		add_to_jquery("
                 function color(item) {
                 if(!item.id) {return item.text;}
