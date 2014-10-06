@@ -327,7 +327,7 @@ function tracked() {
 			$i++;
 		}
 		echo "</table>\n";
-		echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";
+		echo "<div align='center' style='margin-top:5px;'>".makepagenav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";
 	} else {
 		echo "<div style='text-align:center;'>".$locale['global_059']."</div>\n";
 	}
