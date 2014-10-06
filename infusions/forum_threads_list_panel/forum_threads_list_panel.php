@@ -23,29 +23,24 @@ if (!isset($lastvisited) || !isnum($lastvisited)) {
 	$lastvisited = time();
 }
 
-$data = dbarray(dbquery("SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,
-	f.forum_threadcount, f.forum_lastuser, f.forum_access, f2.forum_name AS forum_cat_name, f2.forum_description AS forum_cat_description,
-	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
-	u.user_id, u.user_name, u.user_status, u.user_avatar
-	FROM ".DB_FORUMS." f
-	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-	LEFT JOIN ".DB_THREADS." t ON f.forum_id = t.forum_id AND f.forum_lastpost=t.thread_lastpost
-	LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
-	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_cat!='0'
-	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads'].""));
+$data = dbarray(dbquery(
+	"SELECT tt.thread_lastpost
+	FROM ".DB_FORUMS." tf
+	INNER JOIN ".DB_THREADS." tt ON tf.forum_id = tt.forum_id
+	WHERE ".groupaccess('tf.forum_access')." ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : "")." AND thread_hidden='0'
+	ORDER BY tt.thread_lastpost DESC LIMIT ".($settings['numofthreads']-1).", ".$settings['numofthreads']));
 
 $timeframe = empty($data['thread_lastpost']) ? 0 : $data['thread_lastpost'];
 
-$result = dbquery("SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,
-	f.forum_threadcount, f.forum_lastuser, f.forum_access, f2.forum_name AS forum_cat_name, f2.forum_description AS forum_cat_description,
-	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll, 
-	u.user_id, u.user_name, u.user_status, u.user_avatar
-	FROM ".DB_FORUMS." f
-	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-	LEFT JOIN ".DB_THREADS." t ON f.forum_id = t.forum_id AND f.forum_lastpost=t.thread_lastpost
-	LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
-	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_cat!='0' AND t.thread_lastpost >= ".$timeframe." AND t.thread_hidden='0' 
-	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads']."");
+$result = dbquery(
+	"SELECT tt.thread_id, tt.thread_subject, tt.thread_views, tt.thread_lastuser, tt.thread_lastpost,
+	tt.thread_poll, tf.forum_id, tf.forum_name, tf.forum_access, tt.thread_lastpostid, tt.thread_postcount, tu.user_id, tu.user_name,
+	tu.user_status
+	FROM ".DB_THREADS." tt
+	INNER JOIN ".DB_FORUMS." tf ON tt.forum_id=tf.forum_id
+	INNER JOIN ".DB_USERS." tu ON tt.thread_lastuser=tu.user_id
+	WHERE ".groupaccess('tf.forum_access')." ".(multilang_table("FO") ? "AND tf.forum_language='".LANGUAGE."'" : "")." AND tt.thread_lastpost >= ".$timeframe." AND tt.thread_hidden='0'
+	ORDER BY tt.thread_lastpost DESC LIMIT 0,".$settings['numofthreads']);
 
 if (dbrows($result)) {
 	$i = 0;
