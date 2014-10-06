@@ -73,7 +73,7 @@ global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_lang
 		echo "<div id='acp-content' class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
 		echo CONTENT;
 		echo "</div>\n";
-		echo "<div class='m-l-20 display-block'>\n";
+		echo "<div class='m-l-20 display-block m-b-20'>\n";
 		echo "Venus Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
 		echo showcopyright();
 		echo "</div>\n";
