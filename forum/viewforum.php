@@ -242,6 +242,7 @@ add_to_jquery("
        document.location.href='".FORUM."viewforum.php?forum_id='+$(this).val();
     });
     ");
+$page_nav = '';
 if ($rows > $threads_per_page) {
 	$filter_url = (isset($_GET['filter']) && $_GET['filter'] == 1) ? "&amp;time=".$_GET['time']."&amp;type=".$_GET['type']."&amp;sort=".$_GET['sort']."&amp;order=".$_GET['order']."&amp;filter=1&amp;" : "&amp;";
 	$page_nav = "<div id='pagenav' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $threads_per_page, $rows, 3, BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id'].$filter_url."")."</div>\n";
