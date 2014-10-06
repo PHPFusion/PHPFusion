@@ -217,7 +217,7 @@ if (!isset($_POST['previewpost'])) {
 	echo "</ol>\n";
 }
 
-echo openform('input_form', 'input_form', 'post', FUSION_SELF."?action=newthread&amp;forum_id=".$_GET['forum_id'], array('enc_type' => 1));
+echo openform('input_form', 'input_form', 'post', ($settings['site_seo'] == 1 ? FUSION_ROOT : '').FORUM."post.php?action=newthread&amp;forum_id=".$_GET['forum_id'], array('enc_type' => 1));
 echo "<table class='tbl-border table table-responsive '>\n<tbody>\n<tr>\n";
 echo "<td class='tbl2' width='145'><label for='subject'>".$locale['460']."</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl1'>\n";
