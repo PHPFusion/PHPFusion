@@ -15,16 +15,27 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Denied");
-	exit;
-}
+if (!defined("IN_FUSION")) { die("Denied");	exit; }
+
 function translate_lang_names($language) {
-	$translated_langs = array("Danish" => "Dansk", "Dutch" => "Dutch", "English" => "English", "French" => "Francais",
-							  "German" => "Deutsch", "Hungarian" => "Magyar", "Italian" => "Italiano",
-							  "Lithuanian" => "Lithuanian", "Malay"=>"Malay", "Persian" => "Persian", "Polish" => "Polski",
-							  "Russian" => "Ruski", "Spanish" => "Espanol", "Swedish" => "Svenska",
-							  "Turkish" => "Türkiye", "Norwegian" => "Norsk",);
+	$translated_langs = array("Danish" => "Dansk", 
+							  "Dutch" => "Dutch", 
+							  "English" => "English", 
+							  "French" => "Francais",
+							  "German" => "Deutsch", 
+							  "Hungarian" => "Magyar", 
+							  "Italian" => "Italiano",
+							  "Lithuanian" => "Lithuanian", 
+							  "Malay"=>"Malay", 
+							  "Persian" => "Persian", 
+							  "Polish" => "Polski",
+							  "Russian" => "Ruski", 
+							  "Spanish" => "Espanol", 
+							  "Swedish" => "Svenska",
+							  "Turkish" => "Türkiye", 
+							  "Norwegian" => "Norsk",
+							  );
+							  
 	if ($language != '') {
 		if ($translated_langs[$language] != '') {
 			return $translated_langs[$language];
@@ -34,16 +45,22 @@ function translate_lang_names($language) {
 	} else {
 		return $language;
 	}
+
 }
 
 function translate_country_names($country) {
-	$translated_countries = array("Hungary" => "Magyarország", "Poland" => "Polska", "Italy" => "Italia",
-								  "Germany" => "Deutchland");
+	$translated_countries = array("Hungary" => "Magyarország", 
+								  "Poland" => "Polska", 
+								  "Italy" => "Italia",
+								  "Germany" => "Deutchland"
+								  );
+								  
 	if ($translated_countries[$country] != '') {
 		return $translated_countries[$country];
 	} else {
 		return $country;
 	}
+	
 }
 
 ?>
