@@ -30,7 +30,7 @@ function openform($form_name, $form_id, $method, $action, $array = FALSE) {
 	}
 	$html = "<form name='".$form_name."' id='".$form_id."' method='".$method."' action='".$action."' class='".(defined('FUSION_NULL') ? 'warning' : '')." $class' ".($enctype ? "enctype='multipart/form-data'" : '')." >\n";
 	$html .= generate_token($form_name, $downtime);
-	if (defined('FUSION_NULL')) {
+	if (defined('FUSION_NULL') && $notice) {
 		echo $defender->showNotice();
 	}
 	return $html;
