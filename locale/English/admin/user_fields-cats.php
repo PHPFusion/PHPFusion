@@ -19,7 +19,9 @@ $locale['425'] = "Icon Class";
 $locale['426'] = "As New Page?";
 $locale['427'] = "Yes, create as new page.";
 $locale['428'] = "Primary Index";
-$locale['429'] = "Primary Column Name";
+$locale['429a'] = "3rd Party Database Name (optional)";
+$locale['429b'] = "Primary Column Name containing User ID (need if Category DB)";
+
 // User Fields Categories list
 $locale['430'] = "Order";
 $locale['431'] = "Options";
