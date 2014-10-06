@@ -96,11 +96,11 @@ if (iMEMBER) {
 	echo "<div id='login_form' class='panel panel-default'>\n";
 	echo "<div class='panel-body text-center text-dark' >\n";
 	echo "<div>".showbanners()."</div>\n";
-	$user_name = "";
-	$user_pass = "";
+	$_POST['user_name'] = isset($_POST['user_name']) ? $_POST['user_name'] : '';
+	$_POST['user_pass'] = isset($_POST['user_pass']) ? $_POST['user_pass'] : '';
 	echo openform('loginpageform', 'loginpageform', 'POST', $action_url);
-	echo form_text('', 'user_name', 'user_name', $user_name, array('placeholder' => $locale['global_101']));
-	echo form_text('', 'user_pass', 'user_pass', $user_pass, array('placeholder' => $locale['global_102'],'password' => 1));
+	echo form_text('', 'user_name', 'user_name', $_POST['user_name'], array('placeholder' => $locale['global_101']));
+	echo form_text('', 'user_pass', 'user_pass', $_POST['user_pass'], array('placeholder' => $locale['global_102'],'password' => 1));
 	echo "<label><input type='checkbox' name='remember_me' value='y' /> ".$locale['global_103']."</label><br /><br />\n";
 	echo form_button($locale['global_104'], 'login', 'login', $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20'));
 	echo closeform();
