@@ -8,7 +8,7 @@
 | Filename: content.php
 | Version: 1.00
 | Author: PHP-Fusion Mods UK
-| Developer & Designer: Craig
+| Developer & Designer: Craig, Hien
 | Site: http://www.phpfusionmods.co.uk
 +--------------------------------------------------------+
 | This program is released as free software under the

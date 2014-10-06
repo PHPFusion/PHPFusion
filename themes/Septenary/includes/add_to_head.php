@@ -21,7 +21,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-if (FUSION_SELF !== "maintenance.php" && FUSION_SELF !== "go.php" && FUSION_SELF !== "404.php") {
+if (FUSION_SELF !== "maintenance.php" && FUSION_SELF !== "go.php") {
 	add_to_head("<meta name='viewport' content='width=device-width, initial-scale=1'>
 			<link rel='stylesheet' href='".THEME."resp-grid.css'>
 			<link rel='stylesheet' href='".THEME."responsive.css'>

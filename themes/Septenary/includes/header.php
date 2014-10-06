@@ -29,14 +29,14 @@ echo "</div>\n";
 echo "<div class='col-xs-9 col-md-9 col-lg-9 text-right text-smaller p-t-5'>\n";
 echo "<ul class='display-inline-block text-right'>\n";
 if (!iMEMBER) {
-	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."login.php'>Login</a></li>\n";
-	echo "<li class='pull-left m-r-10 m-l-10'><a href='".BASEDIR."register.php'>Register</a></li>\n";
+	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."login.php'>".$locale['sept_001']."</a></li>\n";
+	echo "<li class='pull-left m-r-10 m-l-10'><a href='".BASEDIR."register.php'>".$locale['sept_002']."</a></li>\n";
 } else {
 	if (iADMIN) {
-		echo "<li class='pull-left m-r-20'><a href='".ADMIN.$aidlink."'>Admin Panel</a></li>\n";
+		echo "<li class='pull-left m-r-20'><a href='".ADMIN.$aidlink."'>".$locale['sept_003']."</a></li>\n";
 	}
-	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>My Profile</a></li>\n";
-	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."setuser.php?logout=yes'>Logout</a></li>\n";
+	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a></li>\n";
+	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."setuser.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
 }
 echo "</ul>\n";
 echo "</div>\n";
@@ -49,7 +49,7 @@ echo showsublinks('')."\n";
 echo "</div>\n";
 echo "<div class='header-nav col-xs-12 col-sm-12 col-md-3 col-lg-3' style='padding-top:20px;'>\n";
 echo "<form name='search_form' method='POST' action='".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."search.php?stype=all'>\n";
-echo form_text('', 'stext', 'stext', '', array('append_button' => 1, 'placeholder' => 'Search', 'class' => 'no-border'));
+echo form_text('', 'stext', 'stext', '', array('append_button' => 1, 'placeholder' => $locale['sept_006'], 'class' => 'no-border'));
 echo "</form>\n";
 echo "</div>\n</div>\n";
 close_grid();
@@ -63,25 +63,25 @@ if ($settings['opening_page'] == FUSION_SELF) {
 	echo "<div class='col-sm-3 col-md-3 col-lg-3 section-2-tab text-center'>\n";
 	echo "<a href='".BASEDIR."news.php'>\n";
 	echo "<i class='entypo pencil'></i>\n";
-	echo "<h4>News</h4>";
+	echo "<h4>".$locale['sept_007']."</h4>";
 	echo "</a>\n";
 	echo "</div>\n";
 	echo "<div class='col-sm-3 col-md-3 col-lg-3 section-2-tab text-center'>\n";
 	echo "<a href='".BASEDIR."photogallery.php'>\n";
 	echo "<i class='entypo camera'></i>\n";
-	echo "<h4>Gallery</h4>";
+	echo "<h4>".$locale['sept_008']."</h4>";
 	echo "</a>\n";
 	echo "</div>\n";
 	echo "<div class='col-sm-3 col-md-3 col-lg-3 section-2-tab text-center'>\n";
 	echo "<a href='".BASEDIR."forum/index.php'>\n";
 	echo "<i class='entypo icomment'></i>\n";
-	echo "<h4>Discussion</h4>";
+	echo "<h4>".$locale['sept_009']."</h4>";
 	echo "</a>\n";
 	echo "</div>\n";
 	echo "<div class='col-sm-3 col-md-3 col-lg-3 section-2-tab text-center'>\n";
 	echo "<a href='".BASEDIR."downloads.php'>\n";
 	echo "<i class='entypo window'></i>\n";
-	echo "<h4>Download</h4>";
+	echo "<h4>".$locale['sept_010']."</h4>";
 	echo "</a>\n";
 	echo "</div>\n";
 	echo "</div>\n";
