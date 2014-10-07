@@ -409,10 +409,6 @@ function sort_tree(&$result, $key) {
 // New SQL Row Modifier.
 function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 	require_once INCLUDES."notify/notify.inc.php";
-	// php-fusion 8 sql_insert - enhance automation of sql insert dynamically.
-	// This function is a prototype function which eases the painful counting one by one, pair to pair everytime we code.
-	// consider this an automatic calculator, and automatic sanitization on the fourth time!
-	//print_p($inputdata);
 	if (defined("ADMIN_PANEL")) {
 		global $aidlink;
 	} else {
@@ -421,9 +417,11 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 	if (is_array($options)) {
 		$redirect = (array_key_exists("noredirect", $options) && ($options['noredirect'] == "1")) ? "0" : "1";
 		$url = (array_key_exists("url", $options)) ? $options['url'] : "";
+		$debug = (array_key_exists("debug", $options)) ? 1 : 0;
 	} else {
 		$redirect = "1";
 		$url = "";
+		$debug = 0;
 	}
 	if (!defined("FUSION_NULL")) {
 		$columns = fieldgenerator($db);
@@ -470,15 +468,20 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 			foreach ($sanitized_input as $arr => $v) {
 				$the_value .= "$v";
 			}
-			//print_p($col_names);
-			//print_p($sanitized_input);
+			if ($debug) {
+				print_p($col_names);
+				print_p($sanitized_input);
+			}
 			if (count($col_names) !== count($sanitized_input)) {
 				die();
 			} else {
-				//$result = "INSERT INTO ".$db." ($the_column) VALUES ($the_value)";
-				//print_p($result);
-				$result = dbquery("INSERT INTO ".$db." ($the_column) VALUES ($the_value)");
-				if ($redirect == "1") {
+				if ($debug) {
+					$result = "INSERT INTO ".$db." ($the_column) VALUES ($the_value)";
+					print_p($result);
+				} else {
+					$result = dbquery("INSERT INTO ".$db." ($the_column) VALUES ($the_value)");
+				}
+				if ($redirect == "1" && !$debug) {
 					if ($url !== "") {
 						redirect($url);
 					} else {
@@ -494,16 +497,19 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 			// settings to use which field as the core for update.
 			$key = 0; // <----- the key
 			$update_core = "".$columns[$key]."='".$inputdata[$columns[$key]]."'";
-			//print_p($update_core);
-			//print_p($the_value);
+			if ($debug) {
+				print_p($update_core);
+				print_p($the_value);
+			}
 			if (count($col_names) !== count($sanitized_input)) {
 				die();
 			} else {
-				//$result = "UPDATE ".$db." SET $the_value WHERE $update_core";
-				//print_p($result);
-				$result = dbquery("UPDATE ".$db." SET $the_value WHERE $update_core");
-				// equals to
-				if ($redirect == "1") {
+				if ($debug) {
+					print_p("UPDATE ".$db." SET $the_value WHERE $update_core");
+				} else {
+					$result = dbquery("UPDATE ".$db." SET $the_value WHERE $update_core");
+				}
+				if ($redirect == "1" && !$debug) {
 					if ($url !== "") {
 						redirect($url);
 					} else {
@@ -518,11 +524,13 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 				//print_p($col);
 				//print_p($values);
 				if ($values !== $error) {
-					$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
-					//$result = "DELETE FROM ".$db." WHERE $col='$values'";
-					//print_p($result);
-					//redirect(FUSION_SELF.$aidlink."&status=deleted");
-					if ($redirect == "1") {
+					if ($debug) {
+						$result = "DELETE FROM ".$db." WHERE $col='$values'";
+						print_p($result);
+					} else {
+						$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
+					}
+					if ($redirect == "1" && !$debug) {
 						if ($url !== "") {
 							redirect($url);
 						} else {
