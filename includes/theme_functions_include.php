@@ -464,6 +464,7 @@ function lorem_ipsum($length) {
 }
 
 function timer($updated = FALSE) {
+	global $locale;
 	if (!$updated) {
 		$updated = time();
 	}
@@ -477,15 +478,17 @@ function timer($updated = FALSE) {
 	$month = days_current_month()*$day;
 	$year = (date("L", $updated) > 0) ? 366*$day : 365*$day;
 	if ($calculated < 1) {
-		return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>just now</abbr>\n";
+		return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$locale['just_now']."</abbr>\n";
 	}
-	$timer = array($year => "year", $month => "month", $day => "day", $hour => "hour", $minute => "minute", $second => "second");
+	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
+	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
+
 	foreach ($timer as $arr => $unit) {
 		$calc = $calculated/$arr;
 		if ($calc >= 1) {
 			$answer = round($calc);
-			$s = ($answer > 1) ? "s" : "";
-			return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>$answer ".$unit.$s." ago</abbr>";
+			$string = ($answer > 1) ? $timer_b[$arr] : $unit;
+			return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
 		}
 	}
 }
@@ -497,6 +500,7 @@ function days_current_month() {
 }
 
 function countdown($time) {
+	global $locale;
 	$updated = stripinput($time);
 	$second = 1;
 	$minute = $second*60;
@@ -504,13 +508,16 @@ function countdown($time) {
 	$day = 24*$hour;
 	$month = days_current_month()*$day;
 	$year = (date("L", $updated) > 0) ? 366*$day : 365*$day;
-	$timer = array($year => "year", $month => "month", $day => "day", $hour => "hour", $minute => "minute", $second => "second");
+
+	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
+	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
+
 	foreach ($timer as $arr => $unit) {
 		$calc = $updated/$arr;
 		if ($calc >= 1) {
 			$answer = round($calc);
-			$s = ($answer > 1) ? "s" : "";
-			return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='~".showdate('newsdate', $updated+time())."'>$answer ".$unit.$s."</abbr>";
+			$string = ($answer > 1) ? $timer_b[$arr] : $unit;
+			return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='~".showdate('newsdate', $updated+time())."'>$answer ".$string."</abbr>";
 		}
 	}
 	if (!isset($answer)) {

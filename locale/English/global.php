@@ -12,6 +12,21 @@ $locale['phpmailer'] = "en";
 // Full & Short Months
 $locale['months'] = "&nbsp|January|February|March|April|May|June|July|August|September|October|November|December";
 $locale['shortmonths'] = "&nbsp|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec";
+// Timers
+$locale['year'] = "year";
+$locale['year_a'] = "years";
+$locale['month'] = "month";
+$locale['month_a'] = "months";
+$locale['day'] = "day";
+$locale['day_a'] = "days";
+$locale['hour'] = "hour";
+$locale['hour_a'] = "hours";
+$locale['minute'] = "minute";
+$locale['minute_a'] = "minutes";
+$locale['second'] = "second";
+$locale['second_a'] = "seconds";
+$locale['just_now'] = "just now";
+$locale['ago'] = "ago";
 // Standard User Levels
 $locale['user0'] = "Public";
 $locale['user1'] = "Member";
