@@ -97,50 +97,52 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 	opentable($locale['400']);
 	echo "<div>\n";
 	if (count($inf)) {
-		echo "<table class='table table-responsive'>\n<thead>\n<tr>\n";
+		echo "<div class='list-group'>\n";
 		if (count($inf)) {
-			echo "<th class='tbl'>".$locale['400']."</th>\n";
-			echo "<th class='tbl'>".$locale['418']."</th>\n";
-			echo "<th class='tbl'>".$locale['420']."</th>\n";
-			echo "<th class='tbl'>".$locale['421']."</th>\n";
-			echo "<th class='tbl'>".$locale['419']."</th>\n";
-			echo "</thead>\n<tbody>\n";
+			echo "<div class='list-group-item hidden-xs'>\n";
+			echo "<div class='row'>\n";
+			echo "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>\n<strong>".$locale['419']."</strong></div>\n";
+			echo "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-5'>\n<strong>".$locale['400']."</strong></div>\n";
+			echo "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
+			echo "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
+			echo "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
+			echo "</div>\n</div>\n";
+
 			for ($i = 0; $i < count($inf); $i++) {
 				echo openform('infuseform', 'infuseform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
-				echo "<tr>\n";
-				echo "<td class='tbl'><strong>".$inf[$i]['inf_name']."</strong><br/>".trimlink($inf[$i]['inf_description'], 30)."</td>\n";
-				echo "<td class='tbl' width='1%'>".($inf[$i]['inf_status'] > 0 ? "<label class='label label-success display-inline-block'><h6>".$locale['415']."</h6></label>" : "<label class='label label-default display-inline-block'><h6>".$locale['414']."</h5></label>")."</td>\n";
-				echo "<td class='tbl' width='1%'>".($inf[$i]['inf_version'] ? $inf[$i]['inf_version'] : '')."</td>\n";
-				echo "<td class='tbl' width='1%' style='white-space:nowrap; padding-right:20px;'>".($inf[$i]['inf_developer'] ? $inf[$i]['inf_developer'] : '')."<br/>".($inf[$i]['inf_url'] ? "<a href='".$inf[$i]['inf_url']."' target='_blank'>".$locale['410']."</a>" : '')." ".($inf[$i]['inf_email'] ? "<a href='mailto:".$inf[$i]['inf_email']."'>".$locale['409']."</a>" : '')." </td>\n";
-				echo "<td class='tbl' width='1%'>\n";
+				echo "<div class='list-group-item'>\n";
+				echo "<div class='row'>\n";
+				echo "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>\n";
 				echo form_hidden('', 'infusion', 'infusion', $inf[$i]['inf_folder']);
 				if ($inf[$i]['inf_status'] > 0) {
 					if ($inf[$i]['inf_status'] > 1) {
-						echo form_button($locale['401'], 'infuse', "infuse-$i", $locale['401'], array('class' => 'btn-info m-t-5 infuse',
-																									  'icon' => 'entypo magnet'));
+						echo form_button($locale['401'], 'infuse', "infuse-$i", $locale['401'], array('class' => 'btn-info btn-xs m-t-5 infuse', 'icon' => 'entypo magnet'));
 					} else {
-						echo form_button($locale['411'], 'defuse', "defuse-$i", $locale['401'], array('class' => 'btn-default m-t-5 defuse',
-																									  'icon' => 'entypo trash'));
+						echo form_button($locale['411'], 'defuse', "defuse-$i", $locale['401'], array('class' => 'btn-default btn-xs m-t-5 defuse', 'icon' => 'entypo trash'));
 					}
 				} else {
-					echo form_button($locale['401'], 'infuse', "infuse-$i", $locale['401'], array('class' => 'btn-primary m-t-5 infuse',
-																								  'icon' => 'entypo install'));
+					echo form_button('', 'infuse', "infuse-$i", $locale['401'], array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
 				}
-				echo "</td>\n";
-				echo "</tr>\n";
+				echo "</div>\n";
+				echo "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-5'><strong>".$inf[$i]['inf_name']."</strong><br/>".trimlink($inf[$i]['inf_description'], 30)."</div>\n";
+				echo "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>".($inf[$i]['inf_status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
+				echo "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf[$i]['inf_version'] ? $inf[$i]['inf_version'] : '')."</div>\n";
+				echo "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($inf[$i]['inf_url'] ? "<a href='".$inf[$i]['inf_url']."' target='_blank'>" : "")." ".($inf[$i]['inf_developer'] ? $inf[$i]['inf_developer'] : $locale['410'])." ".($inf[$i]['inf_url'] ? "</a>" : "")." <br/>".($inf[$i]['inf_email'] ? "<a href='mailto:".$inf[$i]['inf_email']."'>".$locale['409']."</a>" : '')."</div>\n";
+				echo "</div>\n</div>\n";
 				echo closeform();
 			}
 		}
-		echo "</tbody>\n</table>\n";
 	} else {
 		echo "<br /><p class='text-center'>".$locale['417']."</p>\n";
 	}
-	echo "</div>\n";
+	echo "</div>\n</div>\n";
 	closetable();
-	echo "<div class='well text-center'>\n";
+
+	echo "<div class='well text-center m-t-10'>\n";
 	echo "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
 	echo "</div>\n";
 }
+
 if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 	$error = "";
 	$infusion = stripinput($_POST['infusion']);
