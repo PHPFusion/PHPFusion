@@ -40,10 +40,12 @@ function form_hidden($title, $input_name, $input_id, $input_value, $array = FALS
 	}
 	$html .= "<input type='hidden' name='$input_name' id='$input_id' value='$input_value' ".$width." ".($show_title ? "" : "readonly")." />\n";
 	if ($show_title) {
-		$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
+		$html .= "<div id='$input_id-help'></div>";
 		$html .= ($inline) ? "</div>\n" : "";
 		$html .= "</div>\n";
 	}
+	// Generate Defender Strings
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=0]' readonly />";
 	return $html;
 }
 
