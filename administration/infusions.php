@@ -116,9 +116,9 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 				echo form_hidden('', 'infusion', 'infusion', $inf[$i]['inf_folder']);
 				if ($inf[$i]['inf_status'] > 0) {
 					if ($inf[$i]['inf_status'] > 1) {
-						echo form_button($locale['401'], 'infuse', "infuse-$i", $locale['401'], array('class' => 'btn-info btn-xs m-t-5 infuse', 'icon' => 'entypo magnet'));
+						echo form_button('', 'infuse', "infuse-$i", $locale['401'], array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet'));
 					} else {
-						echo form_button($locale['411'], 'defuse', "defuse-$i", $locale['401'], array('class' => 'btn-default btn-xs m-t-5 defuse', 'icon' => 'entypo trash'));
+						echo form_button('', 'defuse', "defuse-$i", $locale['401'], array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash'));
 					}
 				} else {
 					echo form_button('', 'infuse', "infuse-$i", $locale['401'], array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
