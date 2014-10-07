@@ -23,12 +23,17 @@ if ($profile_method == "input") {
 		if ($this->isError()) {
 			$user_theme = isset($_POST['user_theme']) ? stripinput($_POST['user_theme']) : $user_theme;
 		}
-		$theme_files = makefilelist(THEMES, ".|..|templates|.svn", TRUE, "folders");
+		$theme_files = makefilelist(THEMES, ".|..|admin_templates|templates|.svn", TRUE, "folders");
 		array_unshift($theme_files, "Default");
 		echo "<tr>\n";
 		echo "<td class='tbl".$this->getErrorClass("user_theme")."'><label for='user_theme_input'>".$locale['uf_theme'].$required."</label></td>\n";
 		echo "<td class='tbl".$this->getErrorClass("user_theme")."'>";
-		echo "<select id='user_theme_input' name='user_theme' class='textbox' style='width:100px;'>\n".makefileopts($theme_files, $user_theme)."</select>";
+
+		$theme_opts = array();
+		foreach($theme_files as $theme) {
+			$theme_opts[$theme] = $theme;
+		}
+		echo form_select('', 'user_theme', 'user_theme_input', $theme_opts, $user_theme);
 		echo "</td>\n</tr>\n";
 	}
 	if ($required) {
