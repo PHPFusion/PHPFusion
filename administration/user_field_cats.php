@@ -100,7 +100,7 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
 		}
 	}
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-		$result = dbquery("SELECT field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_order FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id='".$_GET['cat_id']."'");
+		$result = dbquery("SELECT field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id='".$_GET['cat_id']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$cat_name = $data['field_cat_name'];
