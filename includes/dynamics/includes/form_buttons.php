@@ -37,13 +37,12 @@ function form_button($title, $input_name, $input_id, $input_value, $array = FALS
 		$btn_block = ($block == 1) ? "btn-block" : "";
 	}
 	if ($type == 'link') {
-		$html .= "<a id='".$input_id."' class='".($deactivate ? 'disabled' : '')." btn $class button' href='".$input_name."' data-value='".$input_value."' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</a>";
+		$html .= "<a id='".$input_id."' title='".$title."' class='".($deactivate ? 'disabled' : '')." btn $class button' href='".$input_name."' data-value='".$input_value."' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</a>";
 	} elseif ($type == 'button') {
-		$html .= "<button id='".$input_id."' class='".($deactivate ? 'disabled' : '')." btn $class button' name='".$input_name."' value='".$input_value."' type='button' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</button>";
+		$html .= "<button id='".$input_id."' title='".$title."' class='".($deactivate ? 'disabled' : '')." btn $class button' name='".$input_name."' value='".$input_value."' type='button' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</button>";
 	} else {
-		$html .= "<button id='".$input_id."' class='".($deactivate ? 'disabled' : '')." btn $class button' name='".$input_name."' value='".$input_value."' type='submit' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</button>";
+		$html .= "<button id='".$input_id."' title='".$title."' class='".($deactivate ? 'disabled' : '')." btn $class button' name='".$input_name."' value='".$input_value."' type='submit' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</button>";
 	}
-	//$html .= ($token == '1') ? generate_token($input_id) : '';
 	return $html;
 }
 
