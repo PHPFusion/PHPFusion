@@ -104,6 +104,7 @@ if ($_GET['stype'] == "l") {
 
 	if (dbrows($result2)) {
 		$cat_list = array();
+		$cat_list['0'] = $locale['477'];
 		while ($data2 = dbarray($result2)) {
 			$cat_list[$data2['news_cat_id']] = $data2['news_cat_name'];
 		}
