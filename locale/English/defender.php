@@ -3,6 +3,7 @@ $locale['validate'] = "Please check and revalidate the field.";
 $locale['cookie_expired'] = "The site admin cookie has expired. Please login again.";
 $locale['cookie_title'] = "Session Timed Out";
 $locale['cookie_description'] = "There are no valid authentication or your session has timed out. Please login again to continue.";
+$locale['validate_title'] = "Could you check something!";
 
 // Tokens
 $locale['token_error_title'] = "Token Error";

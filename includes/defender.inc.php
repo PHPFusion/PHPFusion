@@ -187,11 +187,12 @@ class defender {
 	}
 
 	public function showNotice() {
+		global $locale;
 		$html = '';
 		if (!empty($this->error_content)) {
 			$html .= "<div id='close-message'>\n";
 			$html .= "<div class='admin-message alert alert-warning alert-dismissable' role='alert'>\n";
-			$html .= "<p><strong style='font-size:15px;'>Could you check something!</strong></p><br/>\n";
+			$html .= "<span class='text-bigger'><strong>".$locale['validate_title']."</strong></p><br/>\n";
 			$html .= "<ul id='error_list'>\n";
 			foreach ($this->error_content as $notices) {
 				$html .= "<li>$notices</li>\n";
