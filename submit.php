@@ -171,7 +171,6 @@ if ($_GET['stype'] == "l") {
 			echo openform('submit_form', 'submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=a");
 			echo form_select($locale['521'], 'article_cat', 'article_cat', $cat_list, isset($_POST['preview_article']) ? $_POST['preview_article'] : '');
 			echo form_text($locale['522'], 'article_subject', 'article_subject', $article_subject, array('required' => 1));
-			echo form_text($locale['522'], 'article_subject', 'article_subject', $article_subject, array('required' => 1));
 			echo form_textarea($locale['523'], 'article_snippet', 'article_snippet', $article_snippet, array('bbcode' => 1, 'required' => 1));
 			echo form_textarea($locale['524'], 'article_body', 'article_body', $article_body, array('bbcode' => 1, 'required' => 1));
 			echo "</div>\n</div>\n";
