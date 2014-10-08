@@ -1090,19 +1090,13 @@ class PermalinksDisplay {
 	*/
 	public static function cleanURL($string, $delimiter = "-") {
 		$res = $string;
-		/*
-		$res = strtolower($res);
-		$search = array("&", "\"", "'", "\\", "\'", "<", ">", "~", "!", "@", "$", "%", "^", "*");
-		$res = str_replace($search, "", $res);
-		$res = preg_replace("/([\s\s]+)/", " ", $res);
-		$res = trim($res);
-		$res = str_replace(" ", "-", $res);
-		*/
+/*
 		if (function_exists('iconv')) {
 			$res = iconv("UTF-8", "ASCII//TRANSLIT", $res);
 		}
+*/
 		$res = preg_replace("/&([^;]+);/i", "", $res); // Remove all Special entities like &#39;, &#copy;
-		$res = preg_replace("/[^a-zA-Z0-9_\.\/#|+ -]/i", "", $res); // # is allowed in some cases(like in threads for #post_10)
+		$res = preg_replace("/[^+a-zA-Z0-9_\.\/#|+ -\W]/i", "", $res); // # is allowed in some cases(like in threads for #post_10)
 		$res = preg_replace("/[\s]+/i", $delimiter, $res); // Replace All <space> by Delimiter
 		$res = preg_replace("/[\\".$delimiter."]+/i", $delimiter, $res); // Replace multiple occurences of Delimiter by 1 occurence only
 		$res = strtolower(trim($res, "-"));
