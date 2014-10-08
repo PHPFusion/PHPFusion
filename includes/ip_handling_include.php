@@ -62,8 +62,8 @@ if (strpos(FUSION_IP, ".")) {
 	}
 } else {
 	// IPv6
-	define("USER_IP_TYPE", 6);
-	define("USER_IP", uncompressIPv6(FUSION_IP, 7));
+	!defined('USER_IP_TYPE') ? define("USER_IP_TYPE", 6) : '';
+	!defined('USER_IP') ? define("USER_IP", uncompressIPv6(FUSION_IP, 7)) : '';
 	$check_value = "blacklist_ip_type='6' AND blacklist_ip REGEXP '^";
 	$check_value .= str_replace(":", "(:", USER_IP, $i);
 	$check_value .= str_repeat(")?", $i);
