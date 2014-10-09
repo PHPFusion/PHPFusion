@@ -16,43 +16,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
-function load_bootstrap() {
-	define('bootstrapped', TRUE);
-	require_once INCLUDES."output_handling_include.php";
-	add_to_head("<meta http-equiv='X-UA-Compatible' content='IE=edge' />");
-	add_to_head("<meta name='viewport' content='width=device-width, initial-scale=1.0' />");
-	add_to_head("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
-	add_to_head("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
-	add_to_head("<link href='".INCLUDES."bootstrap/bootstrap.css' rel='stylesheet' media='screen' />");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-if ($settings['bootstrap']) {
-	load_bootstrap();
-}
-add_to_head("<link href='".THEMES."templates/default.css' rel='stylesheet' media='screen' />");
-add_to_head("<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />");
 function openmodal($id, $title, $opts = FALSE) {
 	if (!empty($opts)) {
 		if (array_key_exists('button_id', $opts) && $opts['button_id']) {
-			add_to_jquery("
-$('#".$opts['button_id']."').bind('click', function(e){
-$('#".$id."-Modal').modal('show');
-});
-");
+			add_to_jquery("$('#".$opts['button_id']."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
 		} else {
-			add_to_jquery("
-$('#".$id."-Modal').modal('show');
-");
+			add_to_jquery("$('#".$id."-Modal').modal('show');");
 		}
 	} else {
-		add_to_footer("
-<script type='text/javascript'>
-$('#".$id."-Modal').modal('show');
-</script>
-");
+		add_to_footer("<script type='text/javascript'>$('#".$id."-Modal').modal('show');</script>");
 	}
 	$html = '';
 	$html .= "<div class='modal fade' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";

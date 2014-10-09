@@ -16,8 +16,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-require_once INCLUDES."notify/notify.inc.php";
 include LOCALE.LOCALESET."defender.php";
 
 class defender {
@@ -57,9 +55,7 @@ class defender {
 	/* Jquery Error Class Injector */
 	public function addError($id) {
 		// add class to id.
-		add_to_jquery("
-            $('#$id-field').addClass('has-error');
-            ");
+		add_to_jquery("$('#$id-field').addClass('has-error');");
 	}
 
 	public function noAdminCookie() {

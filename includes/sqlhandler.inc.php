@@ -408,7 +408,6 @@ function sort_tree(&$result, $key) {
 
 // New SQL Row Modifier.
 function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
-	require_once INCLUDES."notify/notify.inc.php";
 	if (defined("ADMIN_PANEL")) {
 		global $aidlink;
 	} else {

@@ -32,9 +32,25 @@ if (iMEMBER) {
 echo "<!DOCTYPE html>\n";
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
 echo "<meta http-equiv='Content-Type' content='text/html; charset=".$locale['charset']."' />\n";
-echo "<link rel='stylesheet' href='".THEMES."admin_templates/".$settings['admin_theme']."/acp_styles.css' type='text/css' media='screen' />\n";
+// Load bootstrap
+if ($settings['bootstrap']) {
+	define('BOOTSTRAPPED', TRUE);
+	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
+	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
+	echo "<link href='".INCLUDES."bootstrap/bootstrap.css' rel='stylesheet' media='screen' />\n";
+	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
+	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
+}
+// Entypo icons
+echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />\n";
+// Include notify script
+require_once INCLUDES."notify/notify.inc.php";
+// Default CSS styling which applies to all themes but can be overriden
+echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
+// Admin Panel Theme CSS
+echo "<link href='".THEMES."admin_templates/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 if (file_exists(IMAGES."favicon.ico")) {
-	echo "<link rel='shortcut icon' href='".IMAGES."favicon.ico' type='image/x-icon' />\n";
+	echo "<link href='".IMAGES."favicon.ico' rel='shortcut icon' type='image/x-icon' />\n";
 }
 if (function_exists("get_head_tags")) {
 	echo get_head_tags();

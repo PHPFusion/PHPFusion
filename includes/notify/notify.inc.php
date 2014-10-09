@@ -1,12 +1,12 @@
 <?php
-
 /* Updated 2014/July - https://github.com/sciactive/pnotify */
-require_once INCLUDES."output_handling_include.php";
-if (!defined('notification_ui')) {
+
+if (!defined('NOTIFICATION_UI')) {
+    define('NOTIFICATION_UI', TRUE);
+    echo "<link href='".INCLUDES."notify/pnotify.custom.css' media='all' rel='stylesheet' type='text/css' />\n";
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."notify/pnotify.js'></script>\n");
-	add_to_head("<link href='".INCLUDES."notify/pnotify.custom.css' media='all' rel='stylesheet' type='text/css' />\n");
-	define('notification_ui', TRUE);
 }
+
 function notify($title, $text, $opts = FALSE) {
 	// init library
 	if (!is_array($opts)) {
