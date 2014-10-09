@@ -20,7 +20,7 @@ require_once "../maincore.php";
 if (!checkrights("SU") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
 	redirect("../index.php");
 }
-require_once THEMES."templates/admin_header_mce.php";
+require_once THEMES."templates/admin_header.php";
 if ($settings['tinymce_enabled'] != 1) {
 	require_once INCLUDES."html_buttons_include.php";
 }

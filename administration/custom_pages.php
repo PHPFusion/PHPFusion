@@ -19,7 +19,7 @@ require_once "../maincore.php";
 if (!checkrights("CP") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
 	redirect("../index.php");
 }
-require_once THEMES."templates/admin_header_mce.php";
+require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/custom_pages.php";
 if (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && $settings['tinymce_enabled']) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";

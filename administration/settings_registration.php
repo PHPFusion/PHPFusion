@@ -21,7 +21,7 @@ if (!checkrights("S4") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['ai
 	redirect("../index.php");
 }
 
-require_once THEMES."templates/admin_header_mce.php";
+require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
 if ($settings['tinymce_enabled']) {

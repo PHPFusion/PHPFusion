@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 if (!checkrights("N") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
-require_once THEMES."templates/admin_header_mce.php";
+require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/news.php";
 
 if ($settings['tinymce_enabled']) {
