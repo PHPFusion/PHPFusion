@@ -1189,10 +1189,14 @@ function add_to_breadcrumbs($link) {
 	}
 }
 
+require_once INCLUDES."output_handling_include.php";
+require_once INCLUDES."notify/notify.inc.php";
 require_once INCLUDES."sqlhandler.inc.php";
+
 require_once INCLUDES."defender.inc.php";
 $defender = new defender;
 $defender->sniff_token();
+
 require_once INCLUDES."dynamics/dynamics.inc.php";
 $dynamic = new dynamics();
 $dynamic->boot();

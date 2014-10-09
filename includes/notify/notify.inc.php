@@ -3,7 +3,7 @@
 
 if (!defined('NOTIFICATION_UI')) {
     define('NOTIFICATION_UI', TRUE);
-    echo "<link href='".INCLUDES."notify/pnotify.custom.css' media='all' rel='stylesheet' type='text/css' />\n";
+    add_to_head("<link href='".INCLUDES."notify/pnotify.custom.css' media='all' rel='stylesheet' type='text/css' />\n");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."notify/pnotify.js'></script>\n");
 }
 

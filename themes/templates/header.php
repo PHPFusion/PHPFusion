@@ -31,7 +31,6 @@ if ($settings['site_seo']) {
 		}
 	}
 }
-require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."header_includes.php";
 require_once THEME."theme.php";
 require_once THEMES."templates/render_functions.php";
@@ -59,8 +58,6 @@ if ($settings['bootstrap']) {
 }
 // Entypo icons
 echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />\n";
-// Include notify script
-require_once INCLUDES."notify/notify.inc.php";
 // Default CSS styling which applies to all themes but can be overriden
 echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // Theme CSS
