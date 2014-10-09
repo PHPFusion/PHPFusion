@@ -55,6 +55,12 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		if (file_exists(ADMIN."updateuser.php")) {
 			echo "<span style='color:red;'>administration/updateuser.php </span> need to be deleted<br />";
 		}
+		if (file_exists(THEMES."templates/header_mce.php")) {
+			echo "<span style='color:red;'>themes/templates/header_mce.php </span> need to be deleted<br />";
+		}
+		if (file_exists(THEMES."templates/admin_header_mce.php")) {
+			echo "<span style='color:red;'>themes/templates/admin_header_mce.php </span> need to be deleted<br />";
+		}
 		if (file_exists(IMAGES."edit.gif")) {
 			echo "<span style='color:red;'>images/edit.gif </span> need to be deleted<br />";
 		}
