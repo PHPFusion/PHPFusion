@@ -30,7 +30,7 @@ function render_news($subject, $news, $info) {
 	echo $info['news_image'] ? $info['news_image'] : '';
 	echo "<div class='m-t-15 news-info'>\n";
 	echo "Posted in ";
-	echo $info['cat_id'] ? "<a href='".BASEDIR."news_cats.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news_cats.php?cat_id=0'>".$locale['global_080']."</a>";
+	echo $info['cat_id'] ? "<a href='".BASEDIR."news_cats.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news_cats.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
 	echo "<span class='m-l-5'>on ".showdate($settings['newsdate'], $info['news_date'])."</span> and <a href='".BASEDIR."news.php?readmore=".$info['news_id']."#comments'>".$info['news_comments']." ".($info['news_comments'] > 1 ? 'comments' : 'comment')."\n";
 	echo "<div class='news-action pull-right'>\n";
 	echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$info['news_id']."'><i class='entypo print'></i></a>";
