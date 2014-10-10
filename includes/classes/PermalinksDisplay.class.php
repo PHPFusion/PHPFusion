@@ -1354,6 +1354,4 @@ $string = preg_replace("/[^\x9\xA\xD\x20-\x7F]/u", "", $string);
 
 return $string;
 }
-
-
 ?>
