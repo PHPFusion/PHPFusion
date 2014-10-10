@@ -1060,6 +1060,7 @@ class PermalinksDisplay {
 		}
 	}
 
+		
 	/*
 	* Wrap a String with Single Quotes (')
 	*
@@ -1089,14 +1090,17 @@ class PermalinksDisplay {
 	* @access private
 	*/
 	public static function cleanURL($string, $delimiter = "-") {
-		$res = $string;
-/*
+		
+
+/* 
 		if (function_exists('iconv')) {
-			$res = iconv("UTF-8", "ASCII//TRANSLIT", $res);
+			$res = iconv("UTF-8", "ASCII//TRANSLIT", $string);
 		}
 */
+
+		$res = ConvertAccentsToClosest($string);
 		$res = preg_replace("/&([^;]+);/i", "", $res); // Remove all Special entities like &#39;, &#copy;
-		$res = preg_replace("/[^+a-zA-Z0-9_\.\/#|+ -\W]/i", "", $res); // # is allowed in some cases(like in threads for #post_10)
+		$res = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -]/i", "", $res); // # is allowed in some cases(like in threads for #post_10)
 		$res = preg_replace("/[\s]+/i", $delimiter, $res); // Replace All <space> by Delimiter
 		$res = preg_replace("/[\\".$delimiter."]+/i", $delimiter, $res); // Replace multiple occurences of Delimiter by 1 occurence only
 		$res = strtolower(trim($res, "-"));
@@ -1272,5 +1276,84 @@ function toggledebugdiv() {
 		return $this->output;
 	}
 }
+
+/**
+	 * Replaces special characters in a string with their "non-special" counterpart.
+	 *
+	 * Useful for friendly URLs.
+	 *
+	 * @access public
+	 * @param string
+	 * @return string
+	 */
+	 
+function ConvertAccentsToClosest($string) {
+$table = array(
+	'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'A'=>'A', 'A'=>'A', 'A'=>'A', 'Æ'=>'A', '?'=>'A',
+	'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'a'=>'a', 'a'=>'a', 'a'=>'a', 'æ'=>'a', '?'=>'a',
+
+	'Þ'=>'B', 'þ'=>'b', 'ß'=>'Ss',
+
+	'Ç'=>'C', 'C'=>'C', 'C'=>'C', 'C'=>'C', 'C'=>'C',
+	'ç'=>'c', 'c'=>'c', 'c'=>'c', 'c'=>'c', 'c'=>'c',
+
+	'Ð'=>'Dj', 'D'=>'D', 'Ð'=>'D',
+	'd'=>'dj', 'd'=>'d',
+
+	'È'=>'E', 'É'=>'E', 'Ê'=>'E', 'Ë'=>'E', 'E'=>'E', 'E'=>'E', 'E'=>'E', 'E'=>'E',
+	'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'e'=>'e', 'e'=>'e', 'e'=>'e', 'e'=>'e',
+
+	'G'=>'G', 'G'=>'G', 'G'=>'G', 'G'=>'G',
+	'g'=>'g', 'g'=>'g', 'g'=>'g', 'g'=>'g',
+
+	'H'=>'H', 'H'=>'H',
+	'h'=>'h', 'h'=>'h',
+
+	'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'I'=>'I', 'I'=>'I', 'I'=>'I', 'I'=>'I', 'I'=>'I',
+	'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'i'=>'i', 'i'=>'i', 'i'=>'i', 'i'=>'i', 'i'=>'i',
+
+	'J'=>'J',
+	'j'=>'j',
+
+	'K'=>'K',
+	'k'=>'k', '?'=>'k',
+
+	'L'=>'L', 'L'=>'L', 'L'=>'L', '?'=>'L', 'L'=>'L',
+	'l'=>'l', 'l'=>'l', 'l'=>'l', '?'=>'l', 'l'=>'l',
+
+	'Ñ'=>'N', 'N'=>'N', 'N'=>'N', 'N'=>'N', '?'=>'N',
+	'ñ'=>'n', 'n'=>'n', 'n'=>'n', 'n'=>'n', '?'=>'n', '?'=>'n',
+
+	'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'O'=>'O', 'O'=>'O', 'O'=>'O', 'Œ'=>'O',
+	'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'o'=>'o', 'o'=>'o', 'o'=>'o', 'œ'=>'o', 'ð'=>'o',
+
+	'R'=>'R', 'R'=>'R',
+	'r'=>'r', 'r'=>'r', 'r'=>'r',
+
+	'Š'=>'S', 'S'=>'S', 'S'=>'S', 'S'=>'S',
+	'š'=>'s', 's'=>'s', 's'=>'s', 's'=>'s',
+
+	'T'=>'T', 'T'=>'T', 'T'=>'T',
+	't'=>'t', 't'=>'t', 't'=>'t',
+
+	'Ù'=>'U', 'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'U'=>'U', 'U'=>'U', 'U'=>'U', 'U'=>'U', 'U'=>'U', 'U'=>'U',
+	'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ü'=>'u', 'u'=>'u', 'u'=>'u', 'u'=>'u', 'u'=>'u', 'u'=>'u', 'u'=>'u',
+
+	'W'=>'W', '?'=>'W', '?'=>'W', '?'=>'W',
+	'w'=>'w', '?'=>'w', '?'=>'w', '?'=>'w',
+
+	'Ý'=>'Y', 'Ÿ'=>'Y', 'Y'=>'Y',
+	'ý'=>'y', 'ÿ'=>'y', 'y'=>'y',
+
+	'Ž'=>'Z', 'Z'=>'Z', 'Z'=>'Z', 'Ž'=>'Z',
+	'ž'=>'z', 'z'=>'z', 'z'=>'z', 'ž'=>'z'
+);
+
+$string = strtr($string, $table);
+$string = preg_replace("/[^\x9\xA\xD\x20-\x7F]/u", "", $string);
+
+return $string;
+}
+
 
 ?>
