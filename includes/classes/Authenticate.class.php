@@ -24,6 +24,8 @@ define("COOKIE_USER", COOKIE_PREFIX."user");
 define("COOKIE_ADMIN", COOKIE_PREFIX."admin");
 define("COOKIE_VISITED", COOKIE_PREFIX."visited");
 define("COOKIE_LASTVISIT", COOKIE_PREFIX."lastvisit");
+// Provisory variable if is decided upon adding this as an option
+$settings['extend_admin_cookie'] = 1;
 
 class Authenticate {
 	private $_userData = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => "Default");
@@ -167,8 +169,9 @@ class Authenticate {
 	}
 
 	public static function validateAuthAdmin($pass = "") {
-		global $userdata;
+		global $userdata, $settings;
 		if (iADMIN) {
+			// Validate existing admin cookie
 			if ($pass == "" && isset($_COOKIE[COOKIE_ADMIN]) && $_COOKIE[COOKIE_ADMIN] != "") {
 				$cookieDataArr = explode(".", $_COOKIE[COOKIE_ADMIN]);
 				if (count($cookieDataArr) == 3) {
@@ -182,11 +185,16 @@ class Authenticate {
 							$key = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $user['user_admin_salt']);
 							$hash = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $key);
 							if ($cookieHash == $hash) {
+								// Set admin cookie again, renewing it's life time
+								if ($settings['extend_admin_cookie'] == 1) {
+									Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
+								}
 								return TRUE;
 							}
 						}
 					}
 				}
+			// Validate a provided password
 			} elseif ($pass != "") {
 				$result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
 					WHERE user_id='".$userdata['user_id']."' AND user_level>101 AND  user_status='0' AND user_actiontime='0'
