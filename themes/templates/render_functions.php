@@ -51,15 +51,17 @@ if (!function_exists("render_comments")) {
 
 // Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
-	function render_breadcrumbs($show_home = TRUE, $last_no_link = FALSE, $class = 'breadcrumb') {
+	function render_breadcrumbs($data, $show_home = TRUE, $last_no_link = FALSE, $class = 'breadcrumb') {
 		global $breadcrumbs, $locale;
 
-		$html = "<ol class='forum_breadcrumbs $class'>\n";
+		$html = "<ol class='$class'>\n";
 
 		// Should we also show the Home link?
 		if ($show_home) {
 			$breadcrumbs = array_merge(array(BASEDIR.'index.php' => 'Home'), $breadcrumbs); // Home needs localised
 		}
+
+		require_once(BASEDIR.'breadcrumbs.php');
 
 		$no_link = FALSE;
 		// Get the last link

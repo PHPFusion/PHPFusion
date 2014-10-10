@@ -17,37 +17,36 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
+define('ARTICLES', TRUE);
+
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."articles.php";
-$isTrue = FALSE;
 $str = "";
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
-	$result = dbquery("SELECT ta.article_cat, tac.article_cat_name, ta.article_id, ta.article_subject FROM ".DB_ARTICLES." ta
-		LEFT JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
+	$result = dbquery("SELECT
+		ta.article_cat,
+			tac.article_cat_name,
+		ta.article_id,
+		ta.article_subject
+		FROM ".DB_ARTICLES." ta
+		LEFT JOIN ".DB_ARTICLE_CATS." tac
+		ON ta.article_cat=tac.article_cat_id
 		".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_id='".$_GET['article_id']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
-		$str .= "<ol class='breadcrumb'>\n<i class='entypo location'></i>\n";
-		$str .= "<li>\n<a href='".BASEDIR."articles.php'><strong>".$locale['404']."</strong></a></li>\n";
-		$str .= "<li>\n<a href='".BASEDIR."articles.php?cat_id=".$data['article_cat']."'>".$data['article_cat_name']."</a></li>\n";
-		$str .= "<li>\n<a href='".BASEDIR."articles.php?article_id=".$_GET['article_id']."'>".$data['article_subject']."</a></li>\n";
-		$str .= "</ol>\n";
-		$isTrue = TRUE;
+		// Render the breadcrumbs
+		echo render_breadcrumbs($data);
 	}
 } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$result = dbquery("SELECT article_cat_name FROM ".DB_ARTICLE_CATS."
 		".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_cat_id='".$_GET['cat_id']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
-		$str .= "<ol class='breadcrumb'>\n<i class='entypo location'></i>\n";
-		$str .= "<li>\n<a href='".BASEDIR."articles.php'><strong>".$locale['404']."</strong></a></li>\n";
-		$str .= "<li>\n<a href='".BASEDIR."articles.php?cat_id=".$_GET['cat_id']."'>".$data['article_cat_name']."</a></li>\n";
-		$str .= "</ol>\n";
-		$isTrue = TRUE;
+		// Render the breadcrumbs
+		echo render_breadcrumbs($data);
 	}
 }
-// redo the breadcrumb.
-# end of breadcrumbs
+
 add_to_title($locale['global_200'].$locale['400']);
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 	$result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks,

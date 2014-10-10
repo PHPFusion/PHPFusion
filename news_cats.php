@@ -16,18 +16,22 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
+define('NEWS_CAT', TRUE);
+
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."news_cats.php";
 add_to_title($locale['global_200'].$locale['400']);
 opentable($locale['400']);
 if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$res = 0;
-	$result = dbquery("SELECT news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".$_GET['cat_id']."'");
+	$result = dbquery("SELECT news_cat_name, news_cat_id FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".$_GET['cat_id']."'");
 	if (dbrows($result) || $_GET['cat_id'] == 0) {
 		$data = dbarray($result);
 		$rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$_GET['cat_id']."' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") AND news_draft='0'");
 		if ($rows) {
 			$res = 1;
+			// Render the breadcrumbs
+			echo render_breadcrumbs($data);
 			echo "<!--pre_news_cat--><table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n";
 			if ($_GET['cat_id'] != 0) {
 				echo "<tr>\n<td width='150' class='tbl1' style='vertical-align:top'><!--news_cat_image--><img class='news-category' src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' /><br /><br />\n";

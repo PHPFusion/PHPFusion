@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
+define('NEWS', TRUE);
+
 require_once THEMES."templates/header.php";
 // Predefined variables, do not edit these values
 $i = 0;
@@ -67,6 +69,9 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 							   "news_reads" => $data['news_reads'], "news_comments" => $comments,
 							   "news_allow_comments" => $data['news_allow_comments'],
 							   "news_sticky" => $data['news_sticky']);
+			// Render the breadcrumbs
+			//echo render_breadcrumbs($data); // no breadcrumbs on main page
+
 			echo "<!--news_prepost_".$i."-->\n";
 			render_news($news_subject, $news_news, $news_info);
 		}
@@ -120,6 +125,9 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 						   "news_comments" => dbcount("(comment_id)", DB_COMMENTS, "comment_type='N' AND comment_item_id='".$data['news_id']."' AND comment_hidden='0'"),
 						   "news_allow_comments" => $data['news_allow_comments'],
 						   "news_sticky" => $data['news_sticky']);
+		// Render the breadcrumbs
+		echo render_breadcrumbs($data);
+
 		add_to_title($locale['global_201'].$news_subject);
 		echo "<!--news_pre_readmore-->";
 		render_news($news_subject, $news_news[$_GET['rowstart']], $news_info);
