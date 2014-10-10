@@ -1090,16 +1090,15 @@ class PermalinksDisplay {
 	* @access private
 	*/
 	public static function cleanURL($string, $delimiter = "-") {
-		
 
-/* 
+/*	
 		if (function_exists('iconv')) {
 			$res = iconv("UTF-8", "ASCII//TRANSLIT", $string);
 		}
 */
 
-		$res = ConvertAccentsToClosest($string);
-		$res = preg_replace("/&([^;]+);/i", "", $res); // Remove all Special entities like &#39;, &#copy;
+		$res = normalize($string);
+		$res = preg_replace("/&([^;]+);/i", "", $res); // Remove all Special entities like ', &#copy;
 		$res = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -]/i", "", $res); // # is allowed in some cases(like in threads for #post_10)
 		$res = preg_replace("/[\s]+/i", $delimiter, $res); // Replace All <space> by Delimiter
 		$res = preg_replace("/[\\".$delimiter."]+/i", $delimiter, $res); // Replace multiple occurences of Delimiter by 1 occurence only
@@ -1286,9 +1285,10 @@ function toggledebugdiv() {
 	 * @param string
 	 * @return string
 	*/
-	
-function ConvertAccentsToClosest($string) {
-$replace = array(
+
+function normalize($string) {
+
+$table = array(
     '&amp;' => 'and',   '@' => 'at',    '©' => 'c', '®' => 'r', 'À' => 'a',
     'Á' => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae','Ç' => 'c',
     'È' => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
@@ -1344,9 +1344,7 @@ $replace = array(
     'צ' => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
 );
 
-$string = strtr($string, $replace);
-$string = preg_replace("/[^\x9\xA\xD\x20-\x7F]/u", "", $string);
-
-return $string;
+return strtr($string, $table);
 }
+
 ?>
