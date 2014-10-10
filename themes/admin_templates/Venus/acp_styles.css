@@ -228,9 +228,6 @@ html, body {
 
 /* Vertical Nav Styling */
 .admin-vertical-link {
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
 	border-top: 1px solid rgb(185, 196, 207);
 	width: 100%;
 	display: inline-block;
