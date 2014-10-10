@@ -147,17 +147,6 @@ if (isset($_POST['step']) && $_POST['step'] == "2") {
 }
 // Step 3
 if (isset($_POST['step']) && $_POST['step'] == "3") {
-	function createRandomPrefix($length = 5) {
-		$chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
-		$count = array((strlen($chars[0])-1), (strlen($chars[1])-1));
-		$prefix = "";
-		for ($i = 0; $i < $length; $i++) {
-			$type = mt_rand(0, 1);
-			$prefix .= substr($chars[$type], mt_rand(0, $count[$type]), 1);
-		}
-		return $prefix;
-	}
-
 	$db_prefix = "fusion".createRandomPrefix()."_";
 	$cookie_prefix = "fusion".createRandomPrefix()."_";
 	$db_host = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "localhost");
@@ -253,19 +242,9 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 		}
 	}
 	$selected_langs = '';
-	function createRandomToken($length = 32) {
-		$chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
-		$count = array((strlen($chars[0])-1), (strlen($chars[1])-1));
-		$key = "";
-		for ($i = 0; $i < $length; $i++) {
-			$type = mt_rand(0, 1);
-			$key .= substr($chars[$type], mt_rand(0, $count[$type]), 1);
-		}
-		return $key;
-	}
 
-	$secret_key = "".createRandomToken()."";
-	$secret_key_salt = "".createRandomToken()."";
+	$secret_key = createRandomPrefix(32);
+	$secret_key_salt = createRandomPrefix(32);
 	if ($db_host != "" && $db_user != "" && $db_name != "" && $db_prefix != "") {
 		if ($pdo_enabled == "1") {
 			require_once "includes/db_handlers/pdo_functions_include.php";
@@ -1776,6 +1755,19 @@ if (fwrite($temp, $htc)) {
 	}
 }
 closesetup();
+
+// Generate a random string
+function createRandomPrefix($length = 5) {
+	$chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
+	$count = array((strlen($chars[0])-1), (strlen($chars[1])-1));
+	$prefix = "";
+	for ($i = 0; $i < $length; $i++) {
+		$type = mt_rand(0, 1);
+		$prefix .= substr($chars[$type], mt_rand(0, $count[$type]), 1);
+	}
+	return $prefix;
+}
+
 // Calculate script start/end time
 function get_microtime() {
 	list($usec, $sec) = explode(" ", microtime());
