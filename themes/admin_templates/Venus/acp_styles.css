@@ -232,7 +232,9 @@ html, body {
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	border-top: 1px solid rgb(185, 196, 207);
-
+	width: 100%;
+	display: inline-block;
+	overflow-y: scroll;
 }
 .admin-vertical-link > li {
 	background: rgb(244,248,251);
