@@ -99,8 +99,9 @@ function dbarraynum($query) {
 function dbconnect($db_host, $db_user, $db_pass, $db_name) {
 	global $pdo;
 	try {
-		$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass);
-		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		 
 	} catch (PDOException $error) {
 		die("<strong>Unable to select MySQL database</strong><br />".$error->getMessage());
