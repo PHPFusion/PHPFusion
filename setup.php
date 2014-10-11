@@ -250,7 +250,8 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 			require_once "includes/db_handlers/pdo_functions_include.php";
 			$pdo = NULL;
 			try {
-				$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass);
+				$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+
 				$db_connect = $pdo;
 				$db_select = "True";
 			} catch (PDOException $e) {
@@ -1290,7 +1291,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 		require_once "includes/db_handlers/pdo_functions_include.php";
 		$pdo = NULL;
 		try {
-			$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass);
+			$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 			$db_connect = $pdo;
 			$db_select = "True";
 		} catch (PDOException $e) {
