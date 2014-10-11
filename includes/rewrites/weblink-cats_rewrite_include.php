@@ -21,6 +21,7 @@ $regex = array(
 	"%weblinks_cat_id%" => "([0-9]+)",
 	"%weblink_cat_name%" => "([a-zA-Z0-9-_]+)"
 );
+
 $pattern = array(
 	"links" => "weblinks.php",
 	"links/%weblinks_cat_id%/%weblink_cat_name%" => "weblinks.php?cat_id=%weblinks_cat_id%"

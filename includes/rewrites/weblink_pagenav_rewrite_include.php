@@ -23,11 +23,11 @@ $regex = array(
 	"%weblink_cat_id%" => "([0-9]+)",
 	"%weblink_name%" => "([a-zA-Z0-9-_]+)"
 );
+
 $pattern = array(
 	"links/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%"
 );
 
 $dir_path = BASEDIR;
 $dbname = DB_WEBLINKS;
-
 ?>

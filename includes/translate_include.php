@@ -32,7 +32,7 @@ function translate_lang_names($language) {
 							  "Russian" => "Ruski", 
 							  "Spanish" => "Espanol", 
 							  "Swedish" => "Svenska",
-							  "Turkish" => "Türkiye", 
+							  "Turkish" => "TÃ¼rkiye", 
 							  "Norwegian" => "Norsk",
 							  );
 							  
@@ -49,7 +49,7 @@ function translate_lang_names($language) {
 }
 
 function translate_country_names($country) {
-	$translated_countries = array("Hungary" => "Magyarország", 
+	$translated_countries = array("Hungary" => "MagyarorszÃ¡g", 
 								  "Poland" => "Polska", 
 								  "Italy" => "Italia",
 								  "Germany" => "Deutchland"
