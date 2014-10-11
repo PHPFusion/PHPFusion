@@ -18,32 +18,22 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 function form_address($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
-	if (isset($title) && ($title !== "")) {
-		$title = stripinput($title);
-	} else {
-		$title = "";
-	}
-	if (isset($input_name) && ($input_name !== "")) {
-		$input_name = stripinput($input_name);
-	} else {
-		$input_name = "";
-	}
-	if (isset($input_id) && ($input_id !== "")) {
-		$input_id = stripinput($input_id);
-	} else {
-		$input_id = "";
-	}
-	$input_id = str_replace(" ", "", $input_id);
-	$input_id = str_replace("/", "", $input_id);
+	global $locale;
+	$title = (isset($title) && (!empty($title))) ? $title : "";
+	$title2 = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
+	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
+
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
 		add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
 		add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
 	}
+	$countries = array();
 	require INCLUDES."geomap/geomap.inc.php";
-	// NOTE (remember to parse readback value as such):
-	// $input_value = "Lot 87, Taman Khidmat,|Lorong Pokok Seraya 3A,|North-Korea|Sabah|Kota Kinabalu|89350";
+	// NOTE (remember to parse readback value as of '|' seperator)
 	if (isset($input_value) && (!empty($input_value))) {
 		if (!is_array($input_value)) {
 			$input_value = construct_array($input_value, "", "|");
@@ -56,10 +46,8 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 		$input_value['4'] = "";
 		$input_value['5'] = "";
 	}
+	print_p($input_value);
 	if (!is_array($array)) {
-		$array = array();
-		$before = "";
-		$after = "";
 		$required = "";
 		$deactivate = "";
 		$width = "";
@@ -67,135 +55,114 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 		$well = "";
 		$required = 0;
 		$safemode = 0;
-		$stacking = 0;
-		$helper_text = "";
+		$inline = 0;
+		$flag = 0;
 	} else {
 		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
 		$class = (array_key_exists('class', $array)) ? $array['class'] : "";
 		$width = (array_key_exists('width', $array)) ? $array['width'] : "";
-		$well = (array_key_exists('well', $array)) ? "style='margin-top:-10px;'" : "";
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
 		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-		$stacking = (array_key_exists("stacking", $array)) ? 1 : "";
-		$helper_text = (array_key_exists("helper", $array)) ? $array['helper'] : "";
+		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
+		$flag = (array_key_exists("flag", $array)) ? 1 : 0;
 	}
 	$html = "";
-	$html .= "<div class='field'/>\n";
-	$html .= ($title) ? "<label for='$input_id'/><h3>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</h3></label>\n" : '';
-	$html .= "<div class='ui left labeled input'/>\n";
-	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street' value='".$input_value['0']."' placeholder='Street Address 1' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "")." />\n";
-	$html .= ($required) ? "<div class='ui corner label'/><i class='icon asterisk'/></i></div>\n" : '';
-	$html .= "<div id='$input_id-help'></div>";
+	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= "<div class='row'>\n";
+	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1']." ".($required == 1 ? '*':'')."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "")."/>\n";
+	$html .= "<div id='$input_id-street-help'></div>";
 	$html .= "</div>\n";
+
+	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "")."/>";
 	$html .= "</div>\n";
-	$html .= "<div class='field'>\n";
-	$html .= "<div class='ui left labeled input'/>\n";
-	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='Street Address 2' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
-	$html .= "<div id='$input_id-help'></div>";
-	$html .= "</div>\n";
-	$html .= "</div>\n";
-	$html .= "<div id='$input_id-field' class='three fields'/>\n";
-	$html .= "<div class='field'>\n";
-	$html .= "<div class='ui left labeled input'/>\n";
+
+	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
 	$html .= "<select name='".$input_name."[]' id='$input_id-country' style='width:100%;'/>\n";
 	$html .= "<option value=''></option>";
 	foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
 		$country_key = str_replace(" ", "-", $countryname);
-		if ($input_value['2'] == $country_key) {
-			$select = "selected";
-		} else {
-			$select = "";
-		}
-		$html .= "<option value='$country_key' $select>$countryname</option>";
+		$select = ($input_value[2] == $country_key) ? "selected" : '';
+		$html .= "<option value='$country_key' ".$select.">$countryname</option>";
 	}
 	$html .= "</select>\n";
-	$html .= "<div id='$input_id-help'></div>";
+	$html .= "<div id='$input_id-country-help'></div>";
 	$html .= "</div>\n";
-	$html .= "</div>\n";
-	$html .= "<div class='field'>\n";
-	$html .= "<div class='ui left labeled input'/>\n";
+	$html .= "<div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 m-b-10'>\n";
 	$html .= "<div id='state-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
 	$html .= "<input type='hidden' name='".$input_name."[]' id='$input_id-state' value='".$input_value['3']."' style='width:100%;' />\n";
-	$html .= "<div id='$input_id-help'></div>";
+	$html .= "<div id='$input_id-state-help'></div>";
 	$html .= "</div>\n";
+	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
+	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control input-sm' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "")."/>\n";
+	$html .= "<div id='$input_id-city-help'></div>";
 	$html .= "</div>\n";
-	$html .= "<div class='field'>\n";
-	$html .= "<div class='ui left labeled input'/>\n";
-	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' value='".$input_value['4']."' placeholder='City' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
-	$html .= "<div id='$input_id-help'></div>";
+	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
+	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control input-sm' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "")."/>\n";
+	$html .= "<div id='$input_id-postcode-help'></div>";
 	$html .= "</div>\n";
+	$html .= "</div>\n"; // close inner row
+	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	$html .= "</div>\n";
-	$html .= "<div id='$input_id-field' class='three fields'/>\n";
-	$html .= "<div class='field'>\n";
-	$html .= "<div class='ui left labeled input'/>\n";
-	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' value='".$input_value['5']."' placeholder='Postcode' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
-	$html .= "<div id='$input_id-help'></div>";
-	$html .= "</div>\n";
-	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=$title Street Address 1],[id=".$input_id."-street],[required=$required],[safemode=$safemode]' readonly />\n";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=$title Street Address 2],[id=".$input_id."-street2],[required=$required],[safemode=$safemode]' readonly>";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=dropdown],[title=$title Country],[id=".$input_id."-country],[required=$required],[safemode=$safemode]' readonly />\n";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=dropdown],[title=$title State],[id=".$input_id."-state],[required=$required],[safemode=$safemode]' readonly />\n";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=$title City],[id=".$input_id."-city],[required=$required],[safemode=$safemode]' readonly>";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=$title Postcode],[id=".$input_id."-postcode],[required=$required],[safemode=$safemode]' readonly>";
-	$html .= "</div>\n";
-	add_to_jquery("
-         $('#$input_id-country').select2({placeholder: 'Country'});
-         $('#".$input_id."-country').bind('change', function(){
+	// Defender Strings
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=address],[title=$input_name],[id=".$input_id."],[required=$required],[safemode=$safemode]' readonly />\n";
 
-            var ce_id = $(this).val();
-            $.ajax({
-                url: '".INCLUDES."geomap/form_geomap.json.php',
-                type: 'GET',
-                data: { id : ce_id },
-                dataType: 'json',
-                beforeSend: function(e) {
-//                $('#state-spinner').show();
-                },
-                success: function(data) {
-//                    $('#state-spinner').hide();
-                    $('#".$input_id."-state').select2({
-                    placeholder: 'Select State',
-                    allowClear: true,
-                    data : data
-                    });
-                },
-                error : function() {
-                        $.pnotify({title: 'Error! Something went wrong.',
-                        text: 'We cannot read the database, please recheck source codes.',
-                        icon: 'pngicon-l-badge-multiply',
-                        width: 'auto'
-                        });
-                }
-            })
-            }).trigger('change');
-         ");
-	/*
-	add_to_jquery("
-					//function icon(item) {
-					  //  if(!item.id) {return item.text;}
-					  //  var icon = 'pngicon-flag-'+ item.id.toLowerCase();
-					  //  return '<i style=\"float:left; margin-top:5px;\" class=\"' + icon + '\"/></i>' + item.text;
-					//}
-					$('#".$input_id."-country').select2({
-					placeholder: 'Select Country',
-					allowClear:true,
-					formatResult: icon,
-					formatSelection: icon,
-					escapeMarkup: function(m) { return m; }
-					});
+	$flag_function = ''; $flag_plugin = '';
+	if ($flag) {
+		$flag_function = "
+		function show_flag(item) {
+		if(!item.id) {return item.text;}
+		var icon = '".IMAGES."small_flag/flag_'+ item.id.replace(/-/gi,'_').toLowerCase() +'.png';
+		return '<img style=\"float:left; margin-right:5px; margin-top:3px;\" src=\"' + icon + '\"/></i>' + item.text;
+		}";
+		$flag_plugin = "
+         formatResult: show_flag,
+		 formatSelection: show_flag,
+		 escapeMarkup: function(m) { return m; },
+		";
+	}
 
-					$('#".$input_id."-state').select2({
-					placeholder: 'Select State',
-					allowClear:true,
-					data: [{id:'0', 'text' :'Select Country to View State'}]
-					});
+	add_to_jquery("
+	".$flag_function."
+    $('#$input_id-country').select2({
+	$flag_plugin
+	placeholder: 'Country ".($required == 1 ? '*':'')."'
+    });
+    $('#".$input_id."-country').bind('change', function(){
+    	var ce_id = $(this).val();
+        $.ajax({
+        url: '".INCLUDES."geomap/form_geomap.json.php',
+        type: 'GET',
+        data: { id : ce_id },
+        dataType: 'json',
+        beforeSend: function(e) {
+        //$('#state-spinner').show();
+        $('#".$input_id."-state').hide();
+        },
+        success: function(data) {
+        //$('#state-spinner').hide();
+
+        $('#".$input_id."-state').select2({
+        placeholder: 'Select State ".($required == 1 ? '*':'')."',
+        allowClear: true,
+        data : data
+        });
+        },
+        error : function() {
+		$.pnotify({title: 'Error! Something went wrong.',
+		text: 'We cannot read the database, please recheck source codes.',
+		icon: 'pngicon-l-badge-multiply',
+		width: 'auto'
+		});
+        }
+        })
+	}).trigger('change');
 	");
 
-
-
-	/*
+	/* deprecated in favor of Ajax solution
 	$html .= add_to_jquery("$('#".$input_id."-country').chained('#".$input_id."-country');");
 	*/
 	return $html;

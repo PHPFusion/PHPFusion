@@ -5,6 +5,13 @@ $locale['cookie_title'] = "Session Timed Out";
 $locale['cookie_description'] = "There are no valid authentication or your session has timed out. Please login again to continue.";
 $locale['validate_title'] = "Could you check something!";
 
+// Address errors
+$locale['street_error'] = "Street Address requires attention.";
+$locale['country_error'] = "Country requires attention.";
+$locale['state_error'] = "State requires attention.";
+$locale['city_error'] = "City requires attention.";
+$locale['postcode_error'] = "Postcode requires attention.";
+
 // Tokens
 $locale['token_error_title'] = "Token Error";
 $locale['token_error'] = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";

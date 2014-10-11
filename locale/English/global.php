@@ -27,6 +27,13 @@ $locale['second'] = "second";
 $locale['second_a'] = "seconds";
 $locale['just_now'] = "just now";
 $locale['ago'] = "ago";
+// Geo
+$locale['street1'] = "Street Address 1";
+$locale['street2'] = "Street Address 2";
+$locale['city'] = "City";
+$locale['postcode'] = "Postcode";
+$locale['sel_country'] = "Select Country";
+$locale['sel_state'] = "Select State";
 // Standard User Levels
 $locale['user0'] = "Public";
 $locale['user1'] = "Member";

@@ -124,9 +124,9 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
 		}
 		opentable($form_title);
 		echo openform('cat_form', 'cat_form', 'post', FUSION_SELF.$aidlink."&amp;enable=".stripinput($_GET['enable'])."", array('downtime' => 0));
-		echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
-		echo "<td class='tbl'>".$locale['422']."</td>\n";
-		echo "<td class='tbl'>".$user_field_name."</td>\n";
+		echo "<table class='table center'>\n<thead>\n<tr>\n";
+		echo "<th class='tbl'>".$locale['422']."</th>\n";
+		echo "<th class='tbl'>".$user_field_name."</th>\n";
 		echo "</tr>\n<tr>\n";
 		echo "<td class='tbl'>".$locale['426']."</td>\n";
 		echo "<td class='tbl'>".$user_field_api_version."</td>\n";
@@ -220,20 +220,20 @@ if ($temp = opendir(INCLUDES."user_fields/")) {
 }
 sort($available_fields);
 opentable($locale['400']);
-echo "<table cellpadding='0' cellspacing='1' width='80%' class='tbl-border center'>\n<tr>\n";
+echo "<table class='table table-responsive tbl-border center'>\n<thead>\n<tr>\n";
 $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_cat_name
-        FROM ".DB_USER_FIELDS." tuf
+	FROM ".DB_USER_FIELDS." tuf
 	INNER JOIN ".DB_USER_FIELD_CATS." tufc ON tuf.field_cat = tufc.field_cat_id
 	ORDER BY field_cat_order, field_order");
-if (dbrows($result)) {
-	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['401']."</strong></td>\n";
-	echo "<td class='tbl2' style='white-space:nowrap'><strong>".$locale['402']."</strong></td>\n";
-	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['427']."</strong></td>\n";
-	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['429']."</strong></td>\n";
-	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['480']."</strong></td>\n";
-	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['403']."</strong></td>\n";
-	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></td>\n";
-	echo "</tr>\n";
+if (dbrows($result)>0) {
+	echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['401']."</strong></th>\n";
+	echo "<th class='tbl2' style='white-space:nowrap'><strong>".$locale['402']."</strong></th>\n";
+	echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['427']."</strong></th>\n";
+	echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['429']."</strong></th>\n";
+	echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['480']."</strong></th>\n";
+	echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['403']."</strong></th>\n";
+	echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></th>\n";
+	echo "</tr>\n</thead>\n<tbody>\n";
 	$cat = 1;
 	$i = 1;
 	$k = 0;
@@ -280,18 +280,19 @@ if (dbrows($result)) {
 } else {
 	echo "<td align='center' class='tbl1'>".$locale['441']."</td>\n</tr>\n";
 }
-echo "</table>\n";
+echo "</tbody>\n</table>\n";
 if (dbrows($result)) {
 	echo "<div style='text-align:center;'>\n<a class='btn btn-primary m-t-10' href='".FUSION_SELF.$aidlink."&amp;action=refresh'>".$locale['409']."</a>\n</div>\n";
 }
 closetable();
 opentable($locale['430']);
-echo "<table cellpadding='0' cellspacing='1' width='80%' class='tbl-border center'>\n<tr>\n";
+echo "<table class='table tbl-border center'>\n<thead>\n<tr>\n";
+
 if (count($available_fields) != count($enabled_fields)) {
-	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['401']."</strong></td>\n";
-	echo "<td class='tbl2' style='white-space:nowrap'><strong>".$locale['402']."</strong></td>\n";
-	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></td>\n";
-	echo "</tr>\n";
+	echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['401']."</strong></th>\n";
+	echo "<th class='tbl2' style='white-space:nowrap'><strong>".$locale['402']."</strong></th>\n";
+	echo "<th width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></th>\n";
+	echo "</tr>\n</thead>\n<tbody>\n";
 	$i = 0;
 	for ($k = 0; $k < count($available_fields); $k++) {
 		if (!in_array($available_fields[$k], $enabled_fields)) {
@@ -310,7 +311,7 @@ if (count($available_fields) != count($enabled_fields)) {
 } else {
 	echo "<td align='center' class='tbl1'>".$locale['440']."</td>\n</tr>\n";
 }
-echo "</table>\n";
+echo "</tbody>\n</table>\n";
 closetable();
 require_once THEMES."templates/footer.php";
 ?>

@@ -16,12 +16,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+require_once INCLUDES."notify/notify.inc.php";
 include LOCALE.LOCALESET."defender.php";
 
 class defender {
 	public $debug = FALSE;
 	public $ref = array();
-
 	/* Sanitize Fields Automatically */
 	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
 		global $locale;
@@ -32,6 +33,42 @@ class defender {
 		} elseif ($type == "color") {
 			return $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
 			//return validate_color_field($value, $default, $name, $id); on 8.00 only
+		} elseif ($type == "address") {
+			$def = $this->DefenseOpts($_POST['def'][$name]);
+			if ($def['required'] && !$_POST[$name][0]) {
+				$this->stop();
+				$this->addError("$id-street");
+				$this->addHelperText("$id-street", $locale['street_error']);
+				$this->addNotice($locale['street_error']);
+			}
+			if ($def['required'] && !$_POST[$name][2]) {
+				$this->stop();
+				$this->addError("$id-country");
+				$this->addHelperText("$id-country", $locale['country_error']);
+				$this->addNotice($locale['country_error']);
+			}
+			if ($def['required'] && !$_POST[$name][3]) {
+				$this->stop();
+				$this->addError("$id-state");
+				$this->addHelperText("$id-state", $locale['state_error']);
+				$this->addNotice($locale['state_error']);
+			}
+			if ($def['required'] && !$_POST[$name][4]) {
+				$this->stop();
+				$this->addError("$id-city");
+				$this->addHelperText("$id-city", $locale['city_error']);
+				$this->addNotice($locale['city_error']);
+			}
+			if ($def['required'] && !$_POST[$name][5]) {
+				$this->stop();
+				$this->addError("$id-postcode");
+				$this->addHelperText("$id-postcode", $locale['postcode_error']);
+				$this->addNotice($locale['postcode_error']);
+			}
+			if (!defined('FUSION_NULL')) {
+				$return_value = $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
+				return $return_value;
+			}
 		} elseif ($type == "date") {
 			return $this->validate_number($value, $default, $name, $id, $safemode, $error_text);
 			//return validate_date_field($value, $default, $name, $id); on 8.00 only - outputs 10 int timestamp.
@@ -55,7 +92,9 @@ class defender {
 	/* Jquery Error Class Injector */
 	public function addError($id) {
 		// add class to id.
-		add_to_jquery("$('#$id-field').addClass('has-error');");
+		add_to_jquery("
+            $('#$id-field').addClass('has-error');
+            ");
 	}
 
 	public function noAdminCookie() {
@@ -244,7 +283,7 @@ class defender {
 			foreach ($value as $val) {
 				$vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
 			}
-			$value = implode(',', $vars);
+			$value = implode('|', $vars);
 		} else {
 			$value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($value)))); // very strong sanitization.
 		}
@@ -266,6 +305,7 @@ class defender {
 			}
 		}
 	}
+
 
 	private function validate_email($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
 		global $locale;
@@ -502,9 +542,7 @@ class defender {
 
 function form_sanitizer($value, $default = "", $input_name = FALSE) {
 	global $_POST, $locale, $defender;
-	//print_p($_POST['def']);
 	// Standard Sanitization
-	//$value = descript(stripinput($value));
 	if ($input_name) { // must have input name to initiate defender.
 		if (isset($_POST['def'][$input_name])) { // deprecate address config.
 			// Strips Defence Tags.
@@ -516,80 +554,10 @@ function form_sanitizer($value, $default = "", $input_name = FALSE) {
 				$defender->addHelperText($data['id'], $data['error_text']);
 				$defender->addNotice($data['error_text']);
 			} else {
-				print_p($data);
 				//$type, $value, $default, $name, $id, $opts;
 				$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['path'], $data['safemode'], $data['error_text'], $data['thumbnail']);
 				return $val;
 			}
-		} elseif (array_key_exists("single-multi", $_POST['def']) && isset($_POST['def']['single-multi'][$input_name])) {
-			// pending for deprecation.
-			// Make for multiple input [];
-			/*
-			if ($input_name) {
-
-				// this is imploded.
-				if (isset($_POST['def']['single-multi'][$input_name])) { // like no more already.
-				   // $data = construct_array($_POST['def']['single-multi'][$input_name]);
-					foreach ($data as $ks=>$vs) {
-						$clean_up = str_replace("[", "", $vs);
-						$clean_up = str_replace("]", "", $clean_up);
-					//    $cdata[$input_name][] = construct_array($clean_up, "", "=");
-					}
-					unset($data);
-					foreach ($cdata[$input_name] as $arr=>$v) {
-						$data[$v['0']] = $v['1'];
-					}
-					if ($data) {
-						$type = array_key_exists("type", $data) ? $data['type'] : "";
-						$name = array_key_exists("title", $data) ? $data['title'] : "";
-						$id = array_key_exists("id", $data) ? $data['id'] : "";
-						$required = array_key_exists("required", $data) ? $data['required'] : 0;
-						$safemode = array_key_exists("safemode", $data) ? $data['safemode'] : 0;
-						$opts = array(
-							"required"=>$required,
-							"safemode"=>$safemode
-						);
-					}
-					if (($opts['required'] == 1) && (!$value)) {
-						if (!defined("FUSION_NULL")) {
-							define("FUSION_NULL", true);
-						}
-
-						notify("The $name field seems to be blank", $locale['validate']);
-						addError($id, "error");
-						addContainerError($id, "error");
-						addHelper($id, "This field cannot be empty", "$name field seems to be blank, and should not be empty. Please fill in the required details.", array("placement"=>"left"));
-						addHelperText($id, "This field cannot be empty.");
-
-					} else {
-						if ($value) {
-							foreach($value as $arr=>$ms_value) {
-								$index[] = ''; //$defender->defender($type, $ms_value, $default, $name, $id, $opts); // this is not dangerous.
-							}
-					   //     $return = deconstruct_array($index, ",");
-							return $return; // will be plaintext to sql.
-						} else {
-							return $default;
-						}
-					}
-				} else {
-					/* for <input name='xxx[]'>
-					// print_p($input_name);
-					// print_p($_POST[$input_name]);
-					// sanitize directly here for multi text
-					if ($_POST[$input_name]) {
-						foreach ($_POST[$input_name] as $key=>$val) {
-							$index[] = stripinput($val); // this is not dangerous.
-						}
-					   // $return = deconstruct_array($index, ",");
-						return $return;
-					} else {
-						return $default;
-					}
-				}
-			}
-
-		} */
 		}
 	} else {
 		// returns descript, sanitized value.
