@@ -46,7 +46,6 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 		$input_value['4'] = "";
 		$input_value['5'] = "";
 	}
-	print_p($input_value);
 	if (!is_array($array)) {
 		$required = "";
 		$deactivate = "";
