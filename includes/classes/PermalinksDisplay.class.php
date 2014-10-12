@@ -1091,13 +1091,13 @@ class PermalinksDisplay {
 	*/
 	public static function cleanURL($string, $delimiter = "-") {
 
-/*	
-		if (function_exists('iconv')) {
-			$res = iconv("UTF-8", "ASCII//TRANSLIT", $string);
-		}
-*/
 
 		$res = normalize($string);
+
+		if (function_exists('iconv')) {
+			$res = iconv("UTF-8", "ASCII//TRANSLIT", $res);
+		}
+
 		$res = preg_replace("/&([^;]+);/i", "", $res); // Remove all Special entities like ', &#copy;
 		$res = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -]/i", "", $res); // # is allowed in some cases(like in threads for #post_10)
 		$res = preg_replace("/[\s]+/i", $delimiter, $res); // Replace All <space> by Delimiter
@@ -1346,5 +1346,4 @@ $table = array(
 
 return strtr($string, $table);
 }
-
 ?>
