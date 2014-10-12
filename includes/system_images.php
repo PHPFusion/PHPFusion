@@ -31,7 +31,7 @@ while ($data = dbarray($result)) {
 $result = dbquery("SELECT admin_title, admin_image FROM ".DB_ADMIN);
 $ac_images = array();
 while ($data = dbarray($result)) {
-	$ac_images["ac_".$data['admin_title']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists($data['admin_image']) ? $data['admin_image'] : ADMIN."images/infusion_panel.gif");
+	$ac_images["ac_".$data['admin_title']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists(INFUSIONS.$data['admin_image']) ? INFUSIONS.$data['admin_image'] : ADMIN."images/infusion_panel.gif");
 }
 
 /*
