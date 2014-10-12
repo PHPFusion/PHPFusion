@@ -37,9 +37,12 @@ while ($data = dbarray($result)) {
 }
 function admin_active() {
 	global $admin_pages, $settings, $aidlink;
-	$inf_page_request = '';
+	$inf_page_request = FUSION_REQUEST;
+	if (isset($_GET['section'])) {
+		$inf_page_request = str_replace("&amp;section=".$_GET['section']."", "", $inf_page_request);
+	}
 	if (stristr(FUSION_REQUEST, '/infusions/')) {
-		$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', FUSION_REQUEST));
+		$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', $inf_page_request));
 	}
 	foreach ($admin_pages as $key => $data) {
 		if (in_array(FUSION_SELF, $data) || in_array($inf_page_request, $data)) {
@@ -52,9 +55,12 @@ function admin_active() {
 function admin_nav($style = FALSE) {
 	global $aidlink, $locale, $settings, $pages;
 	$admin_icon = array('0' => 'entypo gauge', '1' => 'entypo docs', '2' => 'entypo user', '3' => 'entypo drive', '4' => 'entypo cog', '5' => 'entypo magnet');
-	$inf_page_request = '';
+	$inf_page_request = FUSION_REQUEST;
+	if (isset($_GET['section'])) {
+		$inf_page_request = str_replace("&amp;section=".$_GET['section']."", "", $inf_page_request);
+	}
 	if (stristr(FUSION_REQUEST, '/infusions/')) {
-		$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', FUSION_REQUEST));
+		$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', $inf_page_request));
 	}
 	if (!$style) {
 		// horizontal navigation with dropdown menu.
