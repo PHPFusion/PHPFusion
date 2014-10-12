@@ -36,9 +36,13 @@ while ($data = dbarray($result)) {
 	}
 }
 function admin_active() {
-	global $admin_pages;
+	global $admin_pages, $settings, $aidlink;
+	$inf_page_request = '';
+	if (stristr(FUSION_REQUEST, '/infusions/')) {
+		$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', FUSION_REQUEST));
+	}
 	foreach ($admin_pages as $key => $data) {
-		if (in_array(FUSION_SELF, $data)) {
+		if (in_array(FUSION_SELF, $data) || in_array($inf_page_request, $data)) {
 			return $key;
 		}
 	}
@@ -46,8 +50,12 @@ function admin_active() {
 }
 
 function admin_nav($style = FALSE) {
-	global $aidlink, $locale, $pages;
+	global $aidlink, $locale, $settings, $pages;
 	$admin_icon = array('0' => 'entypo gauge', '1' => 'entypo docs', '2' => 'entypo user', '3' => 'entypo drive', '4' => 'entypo cog', '5' => 'entypo magnet');
+	$inf_page_request = '';
+	if (stristr(FUSION_REQUEST, '/infusions/')) {
+		$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', FUSION_REQUEST));
+	}
 	if (!$style) {
 		// horizontal navigation with dropdown menu.
 		$html = "<ul class='admin-horizontal-link'>\n";
@@ -69,8 +77,8 @@ function admin_nav($style = FALSE) {
 				if (dbrows($result) > 0) {
 					$html .= "<ul class='admin-submenu'>\n";
 					while ($data = dbarray($result)) {
-						$secondary_active = FUSION_SELF == $data['admin_link'] ? 'active' : '';
-						$html .= checkrights($data['admin_rights']) ? "<li><a href='".ADMIN.$data['admin_link'].$aidlink."'> <img style='max-width:24px;' class='pull-right m-l-10' src='".get_image("ac_".$data['admin_title'])."'/> ".$data['admin_title']."</a></li>\n" : '';
+						$secondary_active = FUSION_SELF == $data['admin_link'] || $inf_page_request == $data['admin_link'] ? "class='active'" : '';
+						$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'> <img style='max-width:24px;' class='pull-right m-l-10' src='".get_image("ac_".$data['admin_title'])."'/> ".$data['admin_title']."</a></li>\n" : '';
 					}
 					$html .= "</ul>\n";
 				}

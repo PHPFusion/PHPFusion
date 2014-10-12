@@ -360,7 +360,7 @@ html, body {
 }
 .admin-vertical-link .admin-submenu > li.active > a, .admin-vertical-link .admin-submenu > li.active > a:hover, .admin-vertical-link .admin-submenu > li.active > a:focus {
 	font-weight: 600;
-	color: rgb(255,234,241);
+	background-color: rgba(91, 131, 180, 0.3);
 }
 
 /* Horizontal Navbar styling */
