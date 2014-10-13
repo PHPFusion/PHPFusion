@@ -248,7 +248,7 @@ if ($rows > $threads_per_page) {
 	$page_nav = "<div id='pagenav' class='pull-right display-inline-block m-r-10'>\n".makepagenav($_GET['rowstart'], $threads_per_page, $rows, 3, BASEDIR."forum/viewforum.php?forum_id=".$_GET['forum_id'].$filter_url."")."</div>\n";
 }
 // Add filter
-echo form_button($locale['530']." <span class='caret'></span>", 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right', 'type' => 'button'));
+echo form_button($locale['530'], 'filter-btn', 'filter-btn', $locale['530'], array('class' => 'btn-primary pull-right', 'type' => 'button', 'icon' => 'entypo caret'));
 echo $page_nav;
 echo "</div>\n";
 
