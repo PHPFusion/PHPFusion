@@ -42,9 +42,8 @@ if (iMEMBER) {
 		WHERE user_id='".$userdata['user_id']."'");
 }
 echo "<!DOCTYPE html>\n";
-//echo "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='".$locale['xml_lang']."' lang='".$locale['xml_lang']."'>\n"; // to delete?
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
-echo "<meta http-equiv='Content-Type' content='text/html; charset=".$locale['charset']."' />\n";
+echo "<meta charset='".$locale['charset']."' />";
 echo "<meta name='description' content='".$settings['description']."' />\n";
 echo "<meta name='keywords' content='".$settings['keywords']."' />\n";
 // Load bootstrap

@@ -31,7 +31,7 @@ if (iMEMBER) {
 }
 echo "<!DOCTYPE html>\n";
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
-echo "<meta http-equiv='Content-Type' content='text/html; charset=".$locale['charset']."' />\n";
+echo "<meta charset='".$locale['charset']."' />";
 // Load bootstrap
 if ($settings['bootstrap']) {
 	define('BOOTSTRAPPED', TRUE);
