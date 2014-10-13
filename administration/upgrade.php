@@ -197,14 +197,14 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
 		user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',
 		user_datestamp INT(10) NOT NULL default '0'   
-		) ENGINE=MYISAM;");
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		//Create multilang tables
 		$result = dbquery("CREATE TABLE ".$db_prefix."mlt_tables (
 		mlt_rights CHAR(4) NOT NULL DEFAULT '',
 		mlt_title VARCHAR(50) NOT NULL DEFAULT '',
 		mlt_status VARCHAR(50) NOT NULL DEFAULT '',
 		PRIMARY KEY (mlt_rights)
-		) ENGINE=MYISAM;");
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		//Add Multilang table rights and status
 		$result = dbquery("INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['MLT001']."', '1')");
 		$result = dbquery("INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('CP', '".$locale['MLT002']."', '1')");
@@ -239,7 +239,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 			template_sender_email VARCHAR(100) NOT NULL,			
 			template_language VARCHAR(50) NOT NULL,
 			PRIMARY KEY (template_id)
-		) ENGINE=MyISAM;");
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		if ($result) {
 			$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
 			$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
@@ -257,7 +257,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 							alias_item_id INT(10) UNSIGNED NOT NULL DEFAULT '0',
 							PRIMARY KEY (alias_id),
 							KEY alias_id (alias_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		$result = dbquery("CREATE TABLE ".$db_prefix."permalinks_method (
 							pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 							pattern_type INT(5) UNSIGNED NOT NULL,
@@ -265,12 +265,12 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 							pattern_target VARCHAR(200) NOT NULL DEFAULT '',
 							pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
 							PRIMARY KEY (pattern_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		$result = dbquery("CREATE TABLE ".$db_prefix."permalinks_rewrites (
 							rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 							rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
 							PRIMARY KEY (rewrite_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		// server settings for seo.
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='0' WHERE settings_name='site_seo'");
 		// create admin page for permalinks
@@ -297,7 +297,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		// Set a new default theme to prevent issues during upgrade
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Septenary' WHERE settings_name='theme'");
 		//User sig issue
-		$result = dbquery("ALTER TABLE ".$db_prefix."users CHANGE user_sig user_sig VARCHAR(500) NOT NULL DEFAULT ''");
+		$result = dbquery("ALTER TABLE ".$db_prefix."users CHANGE user_sig user_sig VARCHAR(255) NOT NULL DEFAULT ''");
 		// enable a default error handler with .htaccess and create a backup of existing one
 		if (!file_exists(BASEDIR.".htaccess")) {
 			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
@@ -309,7 +309,27 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 			}
 		}
 		// Wipe out all .htaccess rewrite rules and add error handler only
-		$htc = "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
+		$htc = "#Force utf-8 charset\r\n";
+		$htc .= "AddDefaultCharset utf-8\r\n";
+		$htc .= "#Security\r\n";
+		$htc .= "ServerSignature Off\r\n";
+		$htc .= "#secure htaccess file\r\n";
+		$htc .= "<Files .htaccess>\r\n";
+		$htc .= "order allow,deny\r\n";
+		$htc .= "deny from all\r\n";
+		$htc .= "</Files>\r\n";
+		$htc .= "#protect config.php\r\n";
+		$htc .= "<Files config.php>\r\n";
+		$htc .= "order allow,deny\r\n";
+		$htc .= "deny from all\r\n";
+		$htc .= "</Files>\r\n";
+		$htc .= "#Block Nasty Bots\r\n";
+		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT\r\n";
+		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT\r\n";
+		$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n";
+		$htc .= "#Disable directory listing\r\n";
+		$htc .= "Options All -Indexes\r\n";
+		$htc .= "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
 		$htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
 		$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
 		$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
