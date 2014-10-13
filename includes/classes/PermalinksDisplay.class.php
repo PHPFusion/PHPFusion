@@ -1095,7 +1095,7 @@ class PermalinksDisplay {
 		$res = normalize($string);
 
 		if (function_exists('iconv')) {
-			$res = iconv("UTF-8", "ASCII//TRANSLIT", $res);
+			$res = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $res);
 		}
 
 		$res = preg_replace("/&([^;]+);/i", "", $res); // Remove all Special entities like ', &#copy;
