@@ -91,11 +91,25 @@ function dbarraynum($query) {
 function dbconnect($db_host, $db_user, $db_pass, $db_name) {
 	global $db_connect;
 	$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
+	mysql_set_charset('utf8',$db_connect);
+	//dbquery("SET NAMES 'utf8'");
+	//dbquery("SET CHARACTER SET utf8");
+	//dbquery("SET COLLATION_CONNECTION = 'utf8_unicode_ci'");
 	$db_select = @mysql_select_db($db_name);
 	if (!$db_connect) {
 		die("<strong>Unable to establish connection to MySQL</strong><br />".mysql_errno()." : ".mysql_error());
 	} elseif (!$db_select) {
 		die("<strong>Unable to select MySQL database</strong><br />".mysql_errno()." : ".mysql_error());
 	}
+}
+
+if (function_exists('mysql_set_charset') === false) {
+    function mysql_set_charset($charset, $link_identifier = null) {
+        if ($link_identifier == null) {
+            return mysql_query('SET CHARACTER SET "'.$charset.'"');
+        } else {
+            return mysql_query('SET CHARACTER SET "'.$charset.'"', $link_identifier);
+        }
+    }
 }
 ?>
