@@ -38,8 +38,6 @@ if (isset($_POST['savesettings'])) {
 	$htc = "";
 	$siteintro = descript(stripslash($_POST['intro']));
 	$sitefooter = descript(stripslash($_POST['footer']));
-	//$localeset     = stripinput($_POST['localeset']);
-	$old_localeset = stripinput($_POST['old_localeset']);
 	$site_host = "";
 	$site_path = "/";
 	$site_protocol = "http";
@@ -98,58 +96,6 @@ if (isset($_POST['savesettings'])) {
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$theme' WHERE settings_name='theme'") : '';
 	$bootstrap = form_sanitizer($_POST['bootstrap'], 0, 'bootstrap');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$bootstrap' WHERE settings_name='bootstrap'") : '';
-	$site_seo = form_sanitizer($_POST['site_seo'], 0, 'site_seo');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$site_seo' WHERE settings_name='site_seo'") : '';
-	if ($site_seo == 1) {
-		// create .htaccess
-		if (!file_exists(BASEDIR.".htaccess")) {
-			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
-			} else {
-				$handle = fopen(BASEDIR.".htaccess", "w");
-				fclose($handle);
-			}
-		}
-		// write file. wipe out all .htaccess current configuration.
-		$htc .= "Options +SymLinksIfOwnerMatch\r\n";
-		$htc .= "RewriteEngine On\r\n";
-		$htc .= "RewriteBase ".$settings['site_path']."\r\n";
-		$htc .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\r\n";
-		$htc .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\r\n";
-		$htc .= "RewriteRule .* - [F,L]\r\n";
-		$htc .= "# Exclude /assets and /manager directories and images from rewrite rules\r\n";
-		$htc .= "RewriteRule ^(administration|themes)/*$ - [L]\r\n";
-		$htc .= "RewriteCond %{REQUEST_FILENAME} !-f\r\n";
-		$htc .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
-		$htc .= "RewriteCond %{REQUEST_FILENAME} !-l\r\n";
-		$htc .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\r\n";
-		$htc .= "RewriteRule ^(.*?)$ rewrite.php [L]\r\n";
-		$temp = fopen(BASEDIR.".htaccess", "w");
-		if (fwrite($temp, $htc)) {
-			fclose($temp);
-		}
-	} else {
-		// enable default error handler in .htaccess
-		if (!file_exists(BASEDIR.".htaccess")) {
-			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
-			} else {
-				// create a file.
-				$handle = fopen(BASEDIR.".htaccess", "w");
-				fclose($handle);
-			}
-		}
-		//  Wipe out all .htaccess rewrite rules and add error handler only
-		$htc = "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
-		$htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
-		$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
-		$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
-		$htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
-		$temp = fopen(BASEDIR.".htaccess", "w");
-		if (fwrite($temp, $htc)) {
-			fclose($temp);
-		}
-	}
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['default_search'])."' WHERE settings_name='default_search'") : '';
 	$exclude_left = form_sanitizer($_POST['exclude_left'], '', 'exclude_left');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_left' WHERE settings_name='exclude_left'") : '';
@@ -238,15 +184,12 @@ if (file_exists($dir)) {
 	}
 }
 echo form_select($locale['419'], 'default_search', 'default_search', $opts, $settings2['default_search'], array('required' => 1));
-$opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings2['site_seo'], array('inline' => 1));
 echo form_textarea($locale['420']."<small>".$locale['424']."</small><br/>\n", 'exclude_left', 'exclude_left', $settings2['exclude_left']);
 echo form_textarea($locale['421']."<small>".$locale['424']."</small><br/>\n", 'exclude_upper', 'exclude_upper', $settings2['exclude_upper']);
 echo form_textarea($locale['435']."<small>".$locale['424']."</small><br/>\n", 'exclude_aupper', 'exclude_aupper', $settings2['exclude_aupper']);
 echo form_textarea($locale['422']."<small>".$locale['424']."</small><br/>\n", 'exclude_lower', 'exclude_lower', $settings2['exclude_lower']);
 echo form_textarea($locale['436']."<small>".$locale['424']."</small><br/>\n", 'exclude_blower', 'exclude_blower', $settings2['exclude_blower']);
 echo form_textarea($locale['423']."<small>".$locale['424']."</small><br/>\n", 'exclude_right', 'exclude_right', $settings2['exclude_right']);
-echo form_hidden('', 'old_localeset', 'old_localeset', $settings2['locale']);
 echo "</div>\n</div>\n";
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
 echo closeform();

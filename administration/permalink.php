@@ -20,7 +20,119 @@ if (!checkrights("PL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['ai
 	redirect("../index.php");
 }
 require_once THEMES."templates/admin_header.php";
+include LOCALE.LOCALESET."admin/settings.php";
 include LOCALE.LOCALESET."admin/permalinks.php";
+
+
+if (isset($_POST['savesettings'])) {
+
+	$site_seo = form_sanitizer($_POST['site_seo'], 0, 'site_seo');
+	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$site_seo' WHERE settings_name='site_seo'") : '';
+	if ($site_seo == 1) {
+		// create .htaccess
+		if (!file_exists(BASEDIR.".htaccess")) {
+			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+			} else {
+				$handle = fopen(BASEDIR.".htaccess", "w");
+				fclose($handle);
+			}
+		}
+		// write file. wipe out all .htaccess current configuration.
+		$htc .= "#Force utf-8 charset\r\n";
+		$htc .= "AddDefaultCharset utf-8\r\n";
+		$htc .= "#Security\r\n";
+		$htc .= "ServerSignature Off\r\n";
+		$htc .= "#secure htaccess file\r\n";
+		$htc .= "<Files .htaccess>\r\n";
+		$htc .= "order allow,deny\r\n";
+		$htc .= "deny from all\r\n";
+		$htc .= "</Files>\r\n";
+		$htc .= "#protect config.php\r\n";
+		$htc .= "<Files config.php>\r\n";
+		$htc .= "order allow,deny\r\n";
+		$htc .= "deny from all\r\n";
+		$htc .= "</Files>\r\n";
+		$htc .= "#Block Nasty Bots\r\n";
+		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT\r\n";
+		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT\r\n";
+		$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n";
+		$htc .= "#Disable directory listing\r\n";
+		$htc .= "Options All -Indexes\r\n";
+		$htc .= "Options +SymLinksIfOwnerMatch\r\n";
+		$htc .= "RewriteEngine On\r\n";
+		$htc .= "RewriteBase ".$settings['site_path']."\r\n";
+		$htc .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\r\n";
+		$htc .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\r\n";
+		$htc .= "RewriteRule .* - [F,L]\r\n";
+		$htc .= "# Exclude /assets and /manager directories and images from rewrite rules\r\n";
+		$htc .= "RewriteRule ^(administration|themes)/*$ - [L]\r\n";
+		$htc .= "RewriteCond %{REQUEST_FILENAME} !-f\r\n";
+		$htc .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
+		$htc .= "RewriteCond %{REQUEST_FILENAME} !-l\r\n";
+		$htc .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\r\n";
+		$htc .= "RewriteRule ^(.*?)$ rewrite.php [L]\r\n";
+		$temp = fopen(BASEDIR.".htaccess", "w");
+		if (fwrite($temp, $htc)) {
+			fclose($temp);
+		}
+	} else {
+		// enable default error handler in .htaccess
+		if (!file_exists(BASEDIR.".htaccess")) {
+			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+			} else {
+				// create a file.
+				$handle = fopen(BASEDIR.".htaccess", "w");
+				fclose($handle);
+			}
+		}
+		//  Wipe out all .htaccess rewrite rules and add defaults and error handler only
+		$htc = "#Force utf-8 charset\r\n";
+		$htc .= "AddDefaultCharset utf-8\r\n";
+		$htc .= "#Security\r\n";
+		$htc .= "ServerSignature Off\r\n";
+		$htc .= "#secure htaccess file\r\n";
+		$htc .= "<Files .htaccess>\r\n";
+		$htc .= "order allow,deny\r\n";
+		$htc .= "deny from all\r\n";
+		$htc .= "</Files>\r\n";
+		$htc .= "#protect config.php\r\n";
+		$htc .= "<Files config.php>\r\n";
+		$htc .= "order allow,deny\r\n";
+		$htc .= "deny from all\r\n";
+		$htc .= "</Files>\r\n";
+		$htc .= "#Block Nasty Bots\r\n";
+		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT\r\n";
+		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT\r\n";
+		$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n";
+		$htc .= "#Disable directory listing\r\n";
+		$htc .= "Options All -Indexes\r\n";
+		$htc .= "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
+		$htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
+		$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
+		$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
+		$htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
+		$temp = fopen(BASEDIR.".htaccess", "w");
+		if (fwrite($temp, $htc)) {
+			fclose($temp);
+		}
+	}
+}
+
+$settings2 = array();
+$result = dbquery("SELECT * FROM ".DB_SETTINGS);
+while ($data = dbarray($result)) {
+	$settings2[$data['settings_name']] = $data['settings_value'];
+}
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
+$opts = array('0' => $locale['no'], '1' => $locale['yes']);
+echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings2['site_seo'], array('inline' => 1));
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary','inline' => 1));
+echo "</div></div>\n";
+echo closeform();
+
 if (isset($_POST['savepermalinks'])) {
 	$error = 0;
 	if (isset($_POST['permalink']) && is_array($_POST['permalink'])) {
