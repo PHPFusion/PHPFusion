@@ -250,7 +250,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 			require_once "includes/db_handlers/pdo_functions_include.php";
 			$pdo = NULL;
 			try {
-				$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+				$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 				$db_connect = $pdo;
 				$db_select = "True";
 			} catch (PDOException $e) {
@@ -260,6 +260,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 		} else {
 			require_once "includes/db_handlers/mysql_functions_include.php";
 			$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
+			mysql_set_charset('utf8',$db_connect);
 			$db_select = @mysql_select_db($db_name);
 		}
 		if ($db_connect) {
@@ -267,7 +268,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 				if (dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'")) == "0") {
 					$table_name = uniqid($db_prefix, FALSE);
 					$can_write = TRUE;
-					$result = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MYISAM;");
+					$result = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 					if (!$result) {
 						$can_write = FALSE;
 					}
@@ -301,7 +302,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 						   user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
 						   user_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							user_datestamp INT(10) NOT NULL default '0'
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -314,7 +315,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							admin_link VARCHAR(100) NOT NULL DEFAULT 'reserved',
 							admin_page TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 							PRIMARY KEY (admin_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -324,7 +325,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							mlt_title VARCHAR(50) NOT NULL DEFAULT '',
 							mlt_status VARCHAR(50) NOT NULL DEFAULT '',
 							PRIMARY KEY (mlt_rights)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -338,7 +339,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							reset_admins varchar(8) NOT NULL default '0',
 							reset_reason varchar(255) NOT NULL,
 							PRIMARY KEY (reset_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -360,7 +361,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							KEY article_cat (article_cat),
 							KEY article_datestamp (article_datestamp),
 							KEY article_reads (article_reads)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -374,7 +375,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY (article_cat_id),
 							KEY article_cat_access (article_cat_access)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -385,7 +386,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							bbcode_order SMALLINT(5) UNSIGNED NOT NULL,
 							PRIMARY KEY (bbcode_id),
 							KEY bbcode_order (bbcode_order)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -400,7 +401,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							blacklist_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 							PRIMARY KEY (blacklist_id),
 							KEY blacklist_ip_type (blacklist_ip_type)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -412,7 +413,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							captcha_encode VARCHAR(32) NOT NULL DEFAULT '',
 							captcha_string VARCHAR(15) NOT NULL DEFAULT '',
 							KEY captcha_datestamp (captcha_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -430,7 +431,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							comment_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 							PRIMARY KEY (comment_id),
 							KEY comment_datestamp (comment_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -444,7 +445,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							page_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 							page_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY (page_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -457,7 +458,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							download_cat_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 							download_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY (download_cat_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -485,7 +486,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							download_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 							PRIMARY KEY (download_id),
 							KEY download_datestamp (download_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -503,7 +504,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							error_status tinyint(1) NOT NULL default '0',
 							error_timestamp int(10) NOT NULL,
 							PRIMARY KEY (error_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -514,7 +515,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							faq_cat_description VARCHAR(250) NOT NULL DEFAULT '',
 							faq_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY(faq_cat_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -525,7 +526,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							faq_question VARCHAR(200) NOT NULL DEFAULT '',
 							faq_answer TEXT NOT NULL,
 							PRIMARY KEY(faq_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -535,7 +536,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							flood_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 							flood_timestamp INT(5) UNSIGNED NOT NULL DEFAULT '0',
 							KEY flood_timestamp (flood_timestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -549,7 +550,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							attach_size INT(20) UNSIGNED NOT NULL DEFAULT '0',
 							attach_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
 							PRIMARY KEY (attach_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -563,7 +564,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							rank_apply SMALLINT(5) UNSIGNED NOT NULL DEFAULT '101',
 							rank_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY (rank_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -574,7 +575,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							forum_poll_option_text VARCHAR(150) NOT NULL,
 							forum_poll_option_votes SMALLINT(5) UNSIGNED NOT NULL,
 							KEY thread_id (thread_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -585,7 +586,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							forum_vote_user_ip VARCHAR(45) NOT NULL,
 							forum_vote_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 							KEY thread_id (thread_id,forum_vote_user_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -597,7 +598,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							forum_poll_length iNT(10) UNSIGNED NOT NULL,
 							forum_poll_votes SMALLINT(5) unsigned NOT NULL,
 							KEY thread_id (thread_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -627,7 +628,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							KEY forum_lastpost (forum_lastpost),
 							KEY forum_postcount (forum_postcount),
 							KEY forum_threadcount (forum_threadcount)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -638,7 +639,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							inf_folder VARCHAR(100) NOT NULL DEFAULT '',
 							inf_version VARCHAR(10) NOT NULL DEFAULT '0',
 							PRIMARY KEY (inf_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -655,7 +656,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							message_folder TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0',
 							PRIMARY KEY (message_id),
 							KEY message_datestamp (message_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."messages_options");
 							$result = dbquery("CREATE TABLE ".$db_prefix."messages_options (
 							user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -665,7 +666,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							pm_savebox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
 							pm_sentbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
 							PRIMARY KEY (user_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -694,7 +695,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							PRIMARY KEY (news_id),
 							KEY news_datestamp (news_datestamp),
 							KEY news_reads (news_reads)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -705,7 +706,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							news_cat_image VARCHAR(100) NOT NULL DEFAULT '',
 							news_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY (news_cat_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -717,7 +718,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							user_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
 							user_info TEXT NOT NULL,
 							KEY user_datestamp (user_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."email_verify");
 							$result = dbquery("CREATE TABLE ".$db_prefix."email_verify (
 							user_id MEDIUMINT(8) NOT NULL,
@@ -725,7 +726,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							user_email VARCHAR(100) NOT NULL,
 							user_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
 							KEY user_datestamp (user_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -740,7 +741,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							rating_ip VARCHAR(45) NOT NULL DEFAULT '',
 							rating_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 							PRIMARY KEY (rating_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -750,7 +751,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 						online_ip VARCHAR(45) NOT NULL DEFAULT '',
 						online_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 						online_lastactive INT(10) UNSIGNED NOT NULL DEFAULT '0'
-						) ENGINE=MYISAM;");
+						) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -780,7 +781,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 						panel_languages VARCHAR(200) NOT NULL DEFAULT '".$selected_langs."',
 						PRIMARY KEY (panel_id),
 						KEY panel_order (panel_order)
-						) ENGINE=MYISAM;");
+						) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -793,7 +794,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							alias_item_id INT(10) UNSIGNED NOT NULL DEFAULT '0',
 							PRIMARY KEY (alias_id),
 							KEY alias_id (alias_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -805,7 +806,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							pattern_target VARCHAR(200) NOT NULL DEFAULT '',
 							pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
 							PRIMARY KEY (pattern_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -814,7 +815,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 							rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
 							PRIMARY KEY (rewrite_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -832,7 +833,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							PRIMARY KEY (album_id),
 							KEY album_order (album_order),
 							KEY album_datestamp (album_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -854,7 +855,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							PRIMARY KEY (photo_id),
 							KEY photo_order (photo_order),
 							KEY photo_datestamp (photo_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -865,7 +866,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							vote_opt SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',
 							poll_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 							PRIMARY KEY (vote_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -887,7 +888,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							poll_ended INT(10) UNSIGNED NOT NULL DEFAULT '0',
 							poll_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY (poll_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -911,7 +912,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							PRIMARY KEY (post_id),
 							KEY thread_id (thread_id),
 							KEY post_datestamp (post_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -945,7 +946,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							link_order SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',
 							link_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY (link_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -956,7 +957,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							smiley_image VARCHAR(100) NOT NULL,
 							smiley_text VARCHAR(100) NOT NULL,
 							PRIMARY KEY (smiley_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -968,7 +969,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							submit_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
 							submit_criteria TEXT NOT NULL,
 							PRIMARY KEY (submit_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -988,7 +989,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							reinstate_ip VARCHAR(45) NOT NULL DEFAULT '',
 							reinstate_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 							PRIMARY KEY (suspend_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1011,7 +1012,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							KEY thread_postcount (thread_postcount),
 							KEY thread_lastpost (thread_lastpost),
 							KEY thread_views (thread_views)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1022,7 +1023,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 							notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
 							KEY notify_datestamp (notify_datestamp)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1036,7 +1037,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							field_cat_page SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
 							field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
 							PRIMARY KEY (field_cat_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1051,7 +1052,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
 							PRIMARY KEY (field_id),
 							KEY field_order (field_order)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1061,7 +1062,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							group_name VARCHAR(100) NOT NULL,
 							group_description VARCHAR(200) NOT NULL,
 							PRIMARY KEY (group_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1076,7 +1077,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							PRIMARY KEY (userlog_id),
 							KEY userlog_user_id (userlog_user_id),
 							KEY userlog_field (userlog_field)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1113,13 +1114,13 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							user_icq VARCHAR(15) NOT NULL DEFAULT '',
 							user_yahoo VARCHAR(100) NOT NULL DEFAULT '',
 							user_web VARCHAR(200) NOT NULL DEFAULT '',
-							user_sig VARCHAR(500) NOT NULL DEFAULT '',
+							user_sig VARCHAR(255) NOT NULL DEFAULT '',
 							user_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY (user_id),
 							KEY user_name (user_name),
 							KEY user_joined (user_joined),
 							KEY user_lastvisit (user_lastvisit)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1132,7 +1133,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							weblink_cat_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 							weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 							PRIMARY KEY(weblink_cat_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1148,7 +1149,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							PRIMARY KEY(weblink_id),
 							KEY weblink_datestamp (weblink_datestamp),
 							KEY weblink_count (weblink_count)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1165,7 +1166,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							template_sender_email VARCHAR(100) NOT NULL,
 							template_language VARCHAR(50) NOT NULL,
 							PRIMARY KEY (template_id)
-							) ENGINE=MYISAM;");
+							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 							if (!$result) {
 								$fail = TRUE;
 							}
@@ -1290,7 +1291,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 		require_once "includes/db_handlers/pdo_functions_include.php";
 		$pdo = NULL;
 		try {
-			$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+			$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 			$db_connect = $pdo;
 			$db_select = "True";
 		} catch (PDOException $e) {
@@ -1300,6 +1301,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 	} else {
 		require_once "includes/db_handlers/mysql_functions_include.php";
 		$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
+		mysql_set_charset('utf8',$db_connect);
 		$db_select = @mysql_select_db($db_name);
 	}
 	$error = "";
@@ -1711,8 +1713,29 @@ if (!file_exists(".htaccess")) {
 	}
 }
 
-//  Wipe out all .htaccess rewrite rules and add error handler only
-$htc = "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
+//  create a new default .htaccess with some protection and error handler
+
+$htc = "#Force utf-8 charset\r\n";
+$htc .= "AddDefaultCharset utf-8\r\n";
+$htc .= "#Security\r\n";
+$htc .= "ServerSignature Off\r\n";
+$htc .= "#secure htaccess file\r\n";
+$htc .= "<Files .htaccess>\r\n";
+$htc .= "order allow,deny\r\n";
+$htc .= "deny from all\r\n";
+$htc .= "</Files>\r\n";
+$htc .= "#protect config.php\r\n";
+$htc .= "<Files config.php>\r\n";
+$htc .= "order allow,deny\r\n";
+$htc .= "deny from all\r\n";
+$htc .= "</Files>\r\n";
+$htc .= "#Block Nasty Bots\r\n";
+$htc .= "SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT\r\n";
+$htc .= "SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT\r\n";
+$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n";
+$htc .= "#Disable directory listing\r\n";
+$htc .= "Options All -Indexes\r\n";
+$htc .= "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
 $htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
 $htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
 $htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
@@ -1839,5 +1862,25 @@ function strleft($s1, $s2) {
 	return substr($s1, 0, strpos($s1, $s2));
 }
 
+if (function_exists('mysql_set_charset') === false) {
+    /**
+     * Sets the client character set.
+     *
+     * Note: This function requires MySQL 5.0.7 or later.
+     *
+     * @see http://www.php.net/mysql-set-charset
+     * @param string $charset A valid character set name
+     * @param resource $link_identifier The MySQL connection
+     * @return TRUE on success or FALSE on failure
+     */
+    function mysql_set_charset($charset, $link_identifier = null)
+    {
+        if ($link_identifier == null) {
+            return mysql_query('SET CHARACTER SET "'.$charset.'"');
+        } else {
+            return mysql_query('SET CHARACTER SET "'.$charset.'"', $link_identifier);
+        }
+    }
+}
 //if (isset($db_connect) && $db_connect != false) { mysql_close($db_connect); }
 ?>
