@@ -29,7 +29,7 @@ function render_adminpanel() {
 global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_languages, $language_opts;
 
 	$admin_password = '';
-	if (!check_admin_pass($admin_password) && !stristr($_SERVER['PHP_SELF'], $settings['site_path']."infusions")) {
+	if (!check_admin_pass($admin_password)) {
 		add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
 		echo "<aside class='block-container'>\n";
 		echo "<div class='block'>\n";
