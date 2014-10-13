@@ -312,7 +312,7 @@ echo "</div>\n";
 echo "<hr/>\n";
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-9'>\n";
-echo form_text($locale['422'], 'news_subject', 'news_subject', $news_subject, array('required' => 1, 'error_text' => $locale['450']));
+echo form_text($locale['422'], 'news_subject', 'news_subject', $news_subject, array('required' => 1, 'max_length' => 200, 'error_text' => $locale['450']));
 echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-3'>\n";
 echo form_select($locale['423'], 'news_cat', 'news_cat', $news_cat_opts, $news_cat, array('placeholder' => $locale['choose'], 'width' => '100%'));
 echo "</div>\n</div>\n";
