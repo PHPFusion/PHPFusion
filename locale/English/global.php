@@ -5,7 +5,7 @@ Produced by Nick Jones (Digitanium)
 */
 // Locale Settings
 setlocale(LC_TIME, "en_GB.utf8"); // Linux Server (Windows may differ)
-$locale['charset'] = "UTF-8";
+$locale['charset'] = "utf-8";
 $locale['xml_lang'] = "en";
 $locale['tinymce'] = "en";
 $locale['phpmailer'] = "en";
