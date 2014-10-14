@@ -530,12 +530,12 @@ function phpentities($text) {
 
 // Trim a line of text to a preferred length
 function trimlink($text, $length) {
-	$dec = array("&", "\"", "'", "\\", '\"', "\'", "<", ">");
-	$enc = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
-	$text = str_replace($enc, $dec, $text);
-	if (strlen($text) > $length) $text = substr($text, 0, ($length-3))."...";
-	$text = str_replace($dec, $enc, $text);
-	return $text;
+   $dec = array("&", "\"", "'", "\\", '\"', "\'", "<", ">");
+   $enc = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
+   $text = str_replace($enc, $dec, $text);
+   if (strlen($text) > $length) $text = mb_substr($text,0,($length-3),mb_detect_encoding($text))."...";
+   $text = str_replace($dec, $enc, $text);
+   return $text;
 }
 
 // Pure trim function
