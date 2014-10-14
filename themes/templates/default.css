@@ -586,3 +586,11 @@ dl, dt, dd {
 	width: 40px;
 	margin-right: 4px;
 }
+
+/* Editor */
+.editor-wrapper {
+	margin-top:-30px;
+}
+.editor-wrapper > ul > li {
+	float: right;
+}

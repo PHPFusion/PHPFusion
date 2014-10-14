@@ -17,8 +17,8 @@
 +--------------------------------------------------------*/
 
 require_once "../../../../maincore.php";
-
 if (isset($_POST['fusion_token']) && $defender->verify_tokens($_POST['id'],0)) {
+	echo "<div class='editor-preview-wrapper m-t-10'>\n";
 	if ($_POST['editor'] == 'html_input') {
 		$text = stripslash(nl2br(parsesmileys($_POST['text'])));
 		echo $text;
@@ -26,5 +26,6 @@ if (isset($_POST['fusion_token']) && $defender->verify_tokens($_POST['id'],0)) {
 		$text = parseubb(parsesmileys($_POST['text']));
 		echo $text;
 	}
+	echo "</div>\n";
 }
 ?>
