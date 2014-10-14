@@ -83,13 +83,13 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$html .= opentabbody($tab_title['title'][1], "txt-".$input_id."", $tab_active);
 	}
 
-		$html .= ($type) ? "<div class='panel panel-default' ".($preview ? "style='border-top:0;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
-		if ($bbcode) {
-			$html .= display_bbcodes('90%', $input_name, $form_name);
-		} elseif ($html_input) {
-			$html .= display_html($form_name, $input_name, TRUE, TRUE, TRUE, $path);
-		}
-		$html .= ($type) ? "</div>\n<div class='panel-body p-0'>\n" : '';
+	$html .= ($type) ? "<div class='panel panel-default' ".($preview ? "style='border-top:0;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
+	if ($bbcode) {
+		$html .= display_bbcodes('90%', $input_name, $form_name);
+	} elseif ($html_input) {
+		$html .= display_html($form_name, $input_name, TRUE, TRUE, TRUE, $path);
+	}
+	$html .= ($type) ? "</div>\n<div class='panel-body p-0'>\n" : '';
 
 	$html .= "<textarea name='$input_name' style='width:100%; min-height:100px;' class='form-control ".($bbcode || $html_input ? "no-shadow no-border" : '')." textbox' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
 

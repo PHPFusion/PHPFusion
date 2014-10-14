@@ -29,5 +29,7 @@ if (isset($_POST['fusion_token']) && $defender->verify_tokens($_POST['id'],0)) {
 	echo "</div>\n<div class='panel-footer'>\n";
 	echo "<small>Word Count: ".strlen($text)."</small>";
 	echo "</div>\n</div>\n";
+} else {
+	echo "Verify token failed";
 }
 ?>
