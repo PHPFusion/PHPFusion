@@ -21,7 +21,7 @@ require_once INCLUDES."notify/notify.inc.php";
 include LOCALE.LOCALESET."defender.php";
 
 class defender {
-	public $debug = FALSE;
+	public $debug = false;
 	public $ref = array();
 	/* Sanitize Fields Automatically */
 	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
@@ -129,15 +129,15 @@ class defender {
 		}
 		// check if a session is started
 		if (!isset($_SESSION['csrf_tokens'])) {
-			$error[1] = $locale['token_error_1'];
+			$error = $locale['token_error_1'];
 			$this->stop($locale['token_error_1']);
 			// check if a token is posted
 		} elseif (!isset($_POST['fusion_token'])) {
-			$error[2] = $locale['token_error_2'];
+			$error = $locale['token_error_2'];
 			$this->stop($locale['token_error_2']);
 			// check if the posted token exists
 		} elseif (!in_array($_POST['fusion_token'], isset($_SESSION['csrf_tokens'][$form]) ? $_SESSION['csrf_tokens'][$form] : array())) {
-			$error[3] = $locale['token_error_3'];
+			$error = $locale['token_error_3'];
 			$this->stop($locale['token_error_3']);
 			// invalid token - will not accept double posting.
 		} else {
@@ -146,23 +146,23 @@ class defender {
 			if (count($token_data) == 3) {
 				list($tuser_id, $token_time, $hash) = $token_data;
 				if ($tuser_id != $user_id) { // check if the logged user has the same ID as the one in token
-					$error = 1;
+					$error = $locale['token_error_4'];
 					$this->stop($locale['token_error_4']);
 				} elseif (!isnum($token_time)) { // make sure the token datestamp is a number before performing calculations
-					$error = 1;
+					$error = $locale['token_error_5'];
 					$this->stop($locale['token_error_5']);
 					// token is not a number.
 				} elseif (time()-$token_time < $post_time) { // post made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-					$error = 1;
+					$error = $locale['token_error_6'];
 					$this->stop($locale['token_error_6']);
 					// check if the hash in token is valid
 				} elseif ($hash != hash_hmac($algo, $user_id.$token_time.$form.SECRET_KEY, $salt)) {
-					$error = 1;
+					$error = $locale['token_error_7'];
 					$this->stop($locale['token_error_7']);
 				}
 			} else {
 				// token incorrect format.
-				$error = 1;
+				$error = $locale['token_error_8'];
 				$this->stop($locale['token_error_8']);
 			}
 		}
@@ -175,9 +175,13 @@ class defender {
 			}
 		}
 		if ($error) {
+			if ($this->debug) {
+				print_p($error);
+			}
 			return FALSE;
 		}
 		if ($this->debug) {
+			print_p('Validate success');
 			notify("Token Verification Success!", "The token on token ring has been passed and validated successfully.", array('icon' => 'notify_icon n-magic'));
 		}
 		return TRUE;
@@ -586,7 +590,7 @@ function sanitize_array($array) {
 	return $array;
 }
 
-function generate_token($form, $max_tokens = 10) {
+function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
 	global $settings, $userdata, $defender;
 	$being_posted = 0;
 	if (isset($_POST['token_rings']) && count($_POST['token_rings'])) {
@@ -619,10 +623,14 @@ function generate_token($form, $max_tokens = 10) {
 	}
 	$html = '';
 	$shuffle = str_shuffle("abcdefghijklmnopqrstuvwxyz1234567890");
-	if (!defined("TOKEN-$shuffle")) {
-		define("TOKEN-$shuffle", TRUE);
-		$html .= "<input type='hidden' name='fusion_token' value='$token' readonly />\n"; // form token
-		$html .= "<input type='hidden' name='token_rings[$shuffle]' value='$form' readonly />\n";
+	if ($return_token == 1) {
+		return $token;
+	} else {
+		if (!defined("TOKEN-$shuffle")) {
+			define("TOKEN-$shuffle", TRUE);
+			$html .= "<input type='hidden' name='fusion_token' value='$token' readonly />\n"; // form token
+			$html .= "<input type='hidden' name='token_rings[$shuffle]' value='$form' readonly />\n";
+		}
 	}
 	return $html;
 }

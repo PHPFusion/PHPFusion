@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 
 function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
-	global $userdata; // for editor
+	global $userdata, $userdata; // for editor
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
@@ -32,14 +32,18 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$inline = '';
 		$form_name = 'input_form';
 		$bbcode = 0;
+		$html_input = 0;
 		$error_text = '';
 		$class = '';
+		$preview = 1;
 	} else {
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
 		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
 		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "";
 		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
 		$bbcode = (array_key_exists('bbcode', $array) && $array['bbcode'] == 1) ? 1 : 0;
+		$html_input = (array_key_exists('html', $array) && $array['html'] == 1) ? 1 : 0;
+		$preview = (array_key_exists('preview', $array) && $array['preview'] == 1) ? 1 : 0;
 		$width = (array_key_exists('width', $array)) ? $array['width'] : "98%";
 		$height = (array_key_exists('height', $array)) ? $array['height'] : "80";
 		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
@@ -47,6 +51,14 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
 		$class = (array_key_exists("class", $array) && $array['class']) ? $array['class'] : '';
 	}
+
+	$type = '';
+	if ($bbcode) {
+		$type = 'bbcode';
+	} elseif ($html_input) {
+		$type = 'html_input';
+	}
+
 	$input_value = html_entity_decode(stripslashes($input_value));
 	$input_value = str_replace("<br />", "", $input_value);
 	if ($bbcode) {
@@ -56,8 +68,73 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	$html .= "<div id='$input_id-field' class='form-group m-b-10 ".$class."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
-	$html .= ($bbcode) ? "".display_bbcodes('90%', $input_name, $form_name)."" : '';
-	$html .= "<textarea name='$input_name' style='width:100%; min-height:100px;' class='form-control textbox' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
+	if ($preview && $type) {
+		$tab_title['title'][] = "Preview";
+		$tab_title['id'][] = 'prw';
+		$tab_title['icon'][] = '';
+		$tab_title['title'][] = "Text";
+		$tab_title['id'][] = 'txt';
+		$tab_title['icon'][] = '';
+		$tab_active = tab_active($tab_title, 1);
+		$html .= opentab($tab_title, $tab_active, "".$input_id."-link", '', 'editor-wrapper');
+		$html .= opentabbody($tab_title['title'][1], 'txt', $tab_active);
+	}
+	$html .= "<div class='panel panel-default' ".($preview ? "style='border-top:0;'" : '').">\n<div class='panel-heading clearfix'>\n";
+	if ($bbcode) {
+		$html .= display_bbcodes('90%', $input_name, $form_name);
+	} elseif ($html_input) {
+		$html .= display_html("news_form", "body", TRUE, TRUE, TRUE, IMAGES_N);
+	}
+	$html .= "</div>\n<div class='panel-body p-0'>\n";
+	$html .= "<textarea name='$input_name' style='width:100%; min-height:100px;' class='form-control ".($bbcode || $html_input ? "no-shadow no-border" : '')." textbox' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
+	if ($type) {
+		$html .= "</div>\n<div class='panel-footer'>\n";
+		$html .= "<small>Word Count: <span id='".$input_id."-wordcount'></span></small>";
+		add_to_jquery("
+		var init_str = $('#".$input_id."').val().length;
+		$('#".$input_id."-wordcount').text(init_str);
+		$('#".$input_id."').on('input propertychange paste', function() {
+		var str = $(this).val().length;
+		$('#".$input_id."-wordcount').text(str);
+		});
+		");
+	}
+	$html .= "</div>\n</div>\n";
+	if ($preview && $type) {
+		$html .= closetabbody();
+		$html .= opentabbody($tab_title['title'][0], 'prw', $tab_active);
+		$html .= closetabbody();
+		$html .= closetab($tab_title, $tab_active, "".$input_id."-link");
+		add_to_jquery("
+		// preview syntax
+		$('#tab-prwPreview').bind('click',function(){
+		var txt_data = $('#".$input_id."').val();
+		var format = '".$type."';
+		var cid = '".$input_id."';
+		$.ajax({
+			url: '".INCLUDES."dynamics/assets/preview/preview.ajax.php',
+			type: 'POST',
+			dataType: 'html',
+			data : { text: txt_data, editor: format, fusion_token: '".generate_token($input_id, 1, 1)."', id: cid},
+			success: function(result){
+			$('#prwPreview').html(result);
+			},
+			error: function(result) {
+				new PNotify({
+					title: 'Error fetching result',
+					text: 'There are server error and preview cannot be resolved. Please contact administrator.',
+					icon: 'notify_icon n-attention',
+					animation: 'fade',
+					width: 'auto',
+					delay: '3000'
+				});
+			}
+			});
+		});
+		");
+
+	}
+
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
