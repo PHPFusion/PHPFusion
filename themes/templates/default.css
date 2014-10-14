@@ -241,7 +241,7 @@ dl, dt, dd {
 	font-size: 85% !important;
 }
 
-.text-bold {
+.text-bold, .strong {
 	font-weight: bold !important;
 }
 
