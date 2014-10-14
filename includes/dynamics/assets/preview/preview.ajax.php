@@ -18,7 +18,7 @@
 
 require_once "../../../../maincore.php";
 if (isset($_POST['fusion_token']) && $defender->verify_tokens($_POST['id'],0)) {
-	echo "<div class='editor-preview-wrapper m-t-10'>\n";
+	echo "<div class='panel panel-default' style='border-top:0;'>\n<div class='panel-body' style='min-height:150px;'>\n";
 	if ($_POST['editor'] == 'html_input') {
 		$text = stripslash(nl2br(parsesmileys($_POST['text'])));
 		echo $text;
@@ -26,6 +26,8 @@ if (isset($_POST['fusion_token']) && $defender->verify_tokens($_POST['id'],0)) {
 		$text = parseubb(parsesmileys($_POST['text']));
 		echo $text;
 	}
-	echo "</div>\n";
+	echo "</div>\n<div class='panel-footer'>\n";
+	echo "<small>Word Count: ".strlen($text)."</small>";
+	echo "</div>\n</div>\n";
 }
 ?>
