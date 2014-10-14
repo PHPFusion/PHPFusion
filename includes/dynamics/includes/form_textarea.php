@@ -36,6 +36,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$error_text = '';
 		$class = '';
 		$preview = 1;
+		$path = IMAGES;
 	} else {
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
 		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
@@ -50,6 +51,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$form_name = (array_key_exists('form', $array)) ? $array['form'] : 'input_form';
 		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
 		$class = (array_key_exists("class", $array) && $array['class']) ? $array['class'] : '';
+		$path = (array_key_exists("path", $array) && $array['path']) ? $array['path'] : '';
 	}
 
 	$type = '';
@@ -68,6 +70,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	$html .= "<div id='$input_id-field' class='form-group m-b-10 ".$class."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+
 	if ($preview && $type) {
 		$tab_title['title'][] = "Preview";
 		$tab_title['id'][] = 'prw';
@@ -78,15 +81,17 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$tab_active = tab_active($tab_title, 1);
 		$html .= opentab($tab_title, $tab_active, "".$input_id."-link", '', 'editor-wrapper');
 		$html .= opentabbody($tab_title['title'][1], 'txt', $tab_active);
+		$html .= "<div class='panel panel-default' ".($preview ? "style='border-top:0;'" : '').">\n<div class='panel-heading clearfix'>\n";
+		if ($bbcode) {
+			$html .= display_bbcodes('90%', $input_name, $form_name);
+		} elseif ($html_input) {
+			$html .= display_html($form_name, $input_name, TRUE, TRUE, TRUE, $path);
+		}
+		$html .= "</div>\n<div class='panel-body p-0'>\n";
 	}
-	$html .= "<div class='panel panel-default' ".($preview ? "style='border-top:0;'" : '').">\n<div class='panel-heading clearfix'>\n";
-	if ($bbcode) {
-		$html .= display_bbcodes('90%', $input_name, $form_name);
-	} elseif ($html_input) {
-		$html .= display_html("news_form", "body", TRUE, TRUE, TRUE, IMAGES_N);
-	}
-	$html .= "</div>\n<div class='panel-body p-0'>\n";
+
 	$html .= "<textarea name='$input_name' style='width:100%; min-height:100px;' class='form-control ".($bbcode || $html_input ? "no-shadow no-border" : '')." textbox' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
+
 	if ($type) {
 		$html .= "</div>\n<div class='panel-footer'>\n";
 		$html .= "<small>Word Count: <span id='".$input_id."-wordcount'></span></small>";
@@ -98,8 +103,9 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$('#".$input_id."-wordcount').text(str);
 		});
 		");
+		$html .= "</div>\n</div>\n";
 	}
-	$html .= "</div>\n</div>\n";
+
 	if ($preview && $type) {
 		$html .= closetabbody();
 		$html .= opentabbody($tab_title['title'][0], 'prw', $tab_active);
