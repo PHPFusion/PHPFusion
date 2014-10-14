@@ -48,7 +48,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$width = (array_key_exists('width', $array)) ? $array['width'] : "98%";
 		$height = (array_key_exists('height', $array)) ? $array['height'] : "80";
 		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
-		$form_name = (array_key_exists('form', $array)) ? $array['form'] : 'input_form';
+		$form_name = (array_key_exists('form_name', $array)) ? $array['form_name'] : 'input_form';
 		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
 		$class = (array_key_exists("class", $array) && $array['class']) ? $array['class'] : '';
 		$path = (array_key_exists("path", $array) && $array['path']) ? $array['path'] : '';
@@ -73,22 +73,23 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 
 	if ($preview && $type) {
 		$tab_title['title'][] = "Preview";
-		$tab_title['id'][] = 'prw';
+		$tab_title['id'][] = "prw-".$input_id."";
 		$tab_title['icon'][] = '';
 		$tab_title['title'][] = "Text";
-		$tab_title['id'][] = 'txt';
+		$tab_title['id'][] = "txt-".$input_id."";
 		$tab_title['icon'][] = '';
 		$tab_active = tab_active($tab_title, 1);
 		$html .= opentab($tab_title, $tab_active, "".$input_id."-link", '', 'editor-wrapper');
-		$html .= opentabbody($tab_title['title'][1], 'txt', $tab_active);
-		$html .= "<div class='panel panel-default' ".($preview ? "style='border-top:0;'" : '').">\n<div class='panel-heading clearfix'>\n";
+		$html .= opentabbody($tab_title['title'][1], "txt-".$input_id."", $tab_active);
+	}
+
+		$html .= ($type) ? "<div class='panel panel-default' ".($preview ? "style='border-top:0;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
 		if ($bbcode) {
 			$html .= display_bbcodes('90%', $input_name, $form_name);
 		} elseif ($html_input) {
 			$html .= display_html($form_name, $input_name, TRUE, TRUE, TRUE, $path);
 		}
-		$html .= "</div>\n<div class='panel-body p-0'>\n";
-	}
+		$html .= ($type) ? "</div>\n<div class='panel-body p-0'>\n" : '';
 
 	$html .= "<textarea name='$input_name' style='width:100%; min-height:100px;' class='form-control ".($bbcode || $html_input ? "no-shadow no-border" : '')." textbox' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
 
@@ -108,12 +109,12 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 
 	if ($preview && $type) {
 		$html .= closetabbody();
-		$html .= opentabbody($tab_title['title'][0], 'prw', $tab_active);
+		$html .= opentabbody($tab_title['title'][0], "prw-".$input_id."", $tab_active);
 		$html .= closetabbody();
 		$html .= closetab($tab_title, $tab_active, "".$input_id."-link");
 		add_to_jquery("
 		// preview syntax
-		$('#tab-prwPreview').bind('click',function(){
+		$('#tab-prw-".$input_id."Preview').bind('click',function(){
 		var txt_data = $('#".$input_id."').val();
 		var format = '".$type."';
 		var cid = '".$input_id."';
@@ -123,7 +124,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 			dataType: 'html',
 			data : { text: txt_data, editor: format, fusion_token: '".generate_token($input_id, 1, 1)."', id: cid},
 			success: function(result){
-			$('#prwPreview').html(result);
+			$('#prw-".$input_id."Preview').html(result);
 			},
 			error: function(result) {
 				new PNotify({
