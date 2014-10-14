@@ -71,7 +71,7 @@ function form_select($title, $input_name, $input_id, $option_array, $input_value
 	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$class."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
-	if ($jsonmode == 1) {
+	if ($jsonmode == 1 || $tags == 1) {
 		// json mode.
 		$html .= "<div id='$input_id-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
 		$html .= "<input ".($required ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' ".(($width) ? "style='width: $width'" : "style='min-width: 250px'").">\n";
@@ -91,7 +91,7 @@ function form_select($title, $input_name, $input_id, $option_array, $input_value
 				} else { // normal mode = store array keys
 					$chain = ($chainable == "1") ? "class='$arr'" : "";
 					$select = '';
-					if ($input_value || $input_value == '0') {
+					if ($input_value || $input_value === '0') {
 						$input_value = stripinput($input_value); // make selected based on $input_value.
 						$select = (isset($input_value) && $input_value == $arr) ? "selected" : "";
 					}
@@ -119,30 +119,38 @@ function form_select($title, $input_name, $input_id, $option_array, $input_value
 		if ($multiple) {
 			$max_js = "maximumSelectionSize : $maximum_selection,";
 		}
+		$tag_js = '';
+		if ($tags) {
+			//option_array
+			$tag_value = json_encode($option_array);
+			$tag_js = ($tag_value) ? "tags: $tag_value" : "tags: []";
+		}
 		if ($required) {
 			add_to_jquery("
-                    var init_value = $('#".$input_id."').select2('val');
-                    if (init_value) {
-                    $('dummy-".$input_id."').val(init_value);
-                    } else {
-                    $('dummy-".$input_id."').val('');
-                    }
-                    $('#".$input_id."').select2({
-                        placeholder: '".$placeholder."',
-                        ".$max_js."
-                        ".$allowclear."
-                    }).bind('change', function(e) {
-                    $('#dummy-".$input_id."').val($(this).val());
-                    });
-                    ");
+			var init_value = $('#".$input_id."').select2('val');
+			if (init_value) {
+			$('dummy-".$input_id."').val(init_value);
+			} else {
+			$('dummy-".$input_id."').val('');
+			}
+			$('#".$input_id."').select2({
+				placeholder: '".$placeholder."',
+				".$max_js."
+				".$allowclear."
+				".$tag_js."
+			}).bind('change', function(e) {
+			$('#dummy-".$input_id."').val($(this).val());
+			});
+			");
 		} else {
 			add_to_jquery("
-                    $('#".$input_id."').select2({
-                        placeholder: '".$placeholder."',
-                        ".$max_js."
-                        ".$allowclear."
-                    });
-                    ");
+			$('#".$input_id."').select2({
+				placeholder: '".$placeholder."',
+				".$max_js."
+				".$allowclear."
+				".$tag_js."
+			});
+			");
 		}
 	} else {
 		// json mode
@@ -275,31 +283,20 @@ function user_search($user_id)
 {
 	// returns json encoded object.
 	$user_id = stripinput($user_id);
-
 	$result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM " . DB_USERS . " WHERE user_status='0' AND user_id='$user_id'");
 
 	if (dbrows($result) > 0) {
-
 		while ($udata = dbarray($result)) {
-
 			$user_id = $udata['user_id'];
-
 			$user_text = $udata['user_name'];
-
 			$user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar50.png";
-
 			$user_name = $udata['user_name'];
-
 			$user_level = getuserlevel($udata['user_level']);
-
 			$user_opts[] = array('id' => "$user_id", 'text' => "$user_name", 'avatar' => "$user_avatar", "level" => "$user_level");
-
 		}
-
 		if (!isset($user_opts)) {
 			$user_opts = array();
 		}
-
 		$encoded = json_encode($user_opts);
 
 	} else {
@@ -357,20 +354,19 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$class = '';
 	} else {
 		$multiple = (array_key_exists('is_multiple', $array)) ? $array['is_multiple'] : "";
-		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : $locale['choose'];
+		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : '';
 		$allowclear = (!empty($placeholder) && ($multiple !== 1)) ? "allowClear:true" : "";
 		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-		$labeloff = (array_key_exists('labeloff', $array)) ? $array['labeloff'] : "";
-		$helper_text = (array_key_exists("helper", $array)) ? $array['helper'] : "";
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
 		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
 		$add_parent_opts = (array_key_exists('add_parent_opts', $array) && ($array['add_parent_opts'] == 1)) ? 1 : 0;
 		$no_root = (array_key_exists('no_root', $array)) && ($array['no_root'] == 1) ? 1 : 0;
 		$width = (array_key_exists('width', $array)) ? $array['width'] : '';
 		$multiple = ($multiple == 1) ? "multiple" : "";
-		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
 		$include_opts = (array_key_exists("include_opts", $array)) ? $array['include_opts'] : '';
+		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
 		$class = (array_key_exists("class", $array)) ? $array['class'] : '';
+		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
 	}
 	// Patterns
 	if (!$level) {
@@ -424,8 +420,8 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 	}
 	if (!$level) {
 		$html .= "</select>";
-		$html .= "<br/><div id='$input_id-help' style='display:inline-block !important;'></div>";
-		$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' readonly>";
+		$html .= "<br/><div id='$input_id-help'></div>";
+		$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>";
 		$html .= "</div>\n";
 	}
 	return $html;
