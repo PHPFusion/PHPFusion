@@ -160,9 +160,6 @@ for ($i = 0; $i < $count; $i++) { // moved 0 to 1 will crash.
 }
 define("ROOT", $root);
 
-// for FUSION_SELF
-//print_p($count);
-//print_p(substr_count(BASEDIR, "/"));
 $root_count = $count-substr_count(BASEDIR, "/");
 $fusion_root = '';
 for ($i = 0; $i < $root_count; $i++) { // moved 0 to 1 will crash.
@@ -1204,7 +1201,7 @@ $dynamic->boot();
 function print_p($array, $modal = FALSE) {
 	echo ($modal) ? openmodal('Debug', 'Debug') : '';
 	echo "<pre style='white-space:pre-wrap !important;'>";
-	print_r($array);
+	echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
 	echo "</pre>";
 	echo ($modal) ? closemodal() : '';
 }
