@@ -533,8 +533,9 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		$v_title = str_replace("-", " ", $v);
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
 		$id = $tab_title['id'][$arr];
+		$request = isset($_GET['section']) ? str_replace("&amp;section=".$_GET['section']."", '', FUSION_REQUEST) : '';
 		if (defined('ADMIN_PANEL')) {
-			$link_url = $link_mode ? FUSION_REQUEST."&amp;section=".$id."" : "#";
+			$link_url = $link_mode ? $request."&amp;section=".$id."" : "#";
 		} else {
 			$link_url = $link_mode ? $link.(isset($_GET['aid']) ? $aidlink."&amp;" : '?')."section=".$id."" : "#";
 		}
@@ -543,16 +544,17 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		} else {
 			$html .= ($link_active_arrkey == "".$id."$v_link") ? "<li class='active'>\n" : "<li>\n";
 		}
-		$html .= "<a ".(!$link_mode ? "data-toggle='tab' href='#".$id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='$icon'></i>" : '')." ".$v_title." </a>\n";
+		$html .= "<a ".(!$link_mode ? "id='tab-".$id.$v_link."' data-toggle='tab' data-target='#".$id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='$icon'></i>" : '')." ".$v_title." </a>\n";
 		$html .= "</li>\n";
 	}
 	$html .= "</ul>\n";
-	$html .= "<div class='tab-content' >\n";
+	$html .= "<div class='tab-content'>\n";
 	return $html;
 }
 
-function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE) {
-	if (isset($_GET['section']) || $link) {
+function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE, $key = FALSE) {
+	$key = $key ? $key : 'section';
+	if (isset($_GET[$key]) && $link == 1) {
 		$link = '';
 		if ($link_active_arrkey == $id) {
 			$status = 'in active';
@@ -574,7 +576,7 @@ function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE
 			$status = "";
 		}
 	}
-	return "<div class='normal-tab-pane tab-pane fade ".$status."' id='".$id."$link'>\n";
+	return "<div class='tab-pane fade ".$status."' id='".$id."$link'>\n";
 }
 
 function closetabbody() { return "</div>\n"; }
