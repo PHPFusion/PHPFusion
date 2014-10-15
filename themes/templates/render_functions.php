@@ -51,33 +51,18 @@ if (!function_exists("render_comments")) {
 
 // Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
-	function render_breadcrumbs($data, $show_home = TRUE, $last_no_link = FALSE, $class = 'breadcrumb') {
+	function render_breadcrumbs($data, $class = 'breadcrumb') {
 		global $breadcrumbs, $locale;
 
+		// Generates and populates the breacrumbs array
+		generate_breadcrumbs($data);
+
 		$html = "<ol class='$class'>\n";
-
-		// Should we also show the Home link?
-		if ($show_home) {
-			$breadcrumbs = array_merge(array(BASEDIR.'index.php' => 'Home'), $breadcrumbs); // Home needs localised
-		}
-
-		require_once(BASEDIR.'breadcrumbs.php');
-
-		$no_link = FALSE;
-		// Get the last link
-		$last_link = array_keys($breadcrumbs);
-		$last_link = array_pop($last_link);
-		// Loop through links and generate the HTML
-		foreach ($breadcrumbs as $link => $title) {
-			// Check if this item is the last and if we should make it a link or not
-			if ($last_no_link && ($link == $last_link)) {
-				$no_link = TRUE;
-			}
+		foreach ($breadcrumbs as $breadcrumb) {
 			$html .= "<li class='crumb'>";
-			$html .= ($no_link) ? $title : "<a href='".$link."'>".$title."</a>";
+			$html .= ($breadcrumb['link']) ? "<a href='".$breadcrumb['link']."'>".$breadcrumb['title']."</a>" : $breadcrumb['title'];
 			$html .= "</li>\n";
 		}
-
 		$html .= "</ol>\n";
 
 		return $html;

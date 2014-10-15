@@ -1182,7 +1182,7 @@ function add_to_breadcrumbs($link) {
 	global $breadcrumbs;
 
 	if (is_array($link) && !empty($link)) {
-		$breadcrumbs = array_merge($breadcrumbs, $link);
+		$breadcrumbs[] = $link;
 	}
 }
 
