@@ -581,12 +581,18 @@ dl, dt, dd {
 .forum-lastpost {
 	white-space: nowrap;
 }
-
 .lastpost-avatar img {
 	width: 40px;
 	margin-right: 4px;
 }
 
+.animated-height {
+	-webkit-transition: height 0.2s;
+	-moz-transition: height 0.2s;
+	-ms-transition: height 0.2s;
+	-o-transition: height 0.2s;
+	transition: height 0.2s;
+}
 /* Editor */
 .editor-wrapper {
 	margin-top:-30px;

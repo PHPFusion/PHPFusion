@@ -25,7 +25,6 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$required = 0;
 		$safemode = 0;
 		$deactivate = "";
-		$width = "100%";
 		$height = "80px";
 		$editor = 0;
 		$placeholder = "";
@@ -36,8 +35,11 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$error_text = '';
 		$class = '';
 		$preview = 1;
+		$autosize = 0;
+		$resize = 1;
 		$path = IMAGES;
 	} else {
+		$resize = (array_key_exists('resize', $array) && ($array['resize'] == 0)) ? 0 : 1;
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
 		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
 		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "";
@@ -46,8 +48,9 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$html_input = (array_key_exists('html', $array) && $array['html'] == 1) ? 1 : 0;
 		$preview = (array_key_exists('preview', $array) && $array['preview'] == 1) ? 1 : 0;
 		$width = (array_key_exists('width', $array)) ? $array['width'] : "98%";
-		$height = (array_key_exists('height', $array)) ? $array['height'] : "80";
+		$height = (array_key_exists('height', $array)) ? $array['height'] : "80px";
 		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
+		$autosize = (array_key_exists("autosize", $array)) ? 1 : 0;
 		$form_name = (array_key_exists('form_name', $array)) ? $array['form_name'] : 'input_form';
 		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
 		$class = (array_key_exists("class", $array) && $array['class']) ? $array['class'] : '';
@@ -59,6 +62,14 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$type = 'bbcode';
 	} elseif ($html_input) {
 		$type = 'html_input';
+	}
+
+	if (!defined('autogrow') && $autosize) {
+		define('autogrow', true);
+		add_to_footer("<script src='".DYNAMICS."assets/autosize/jquery.autosize.min.js'></script>");
+		add_to_jquery("
+		$('#".$input_id."').autosize();
+		");
 	}
 
 	$input_value = html_entity_decode(stripslashes($input_value));
@@ -91,7 +102,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	}
 	$html .= ($type) ? "</div>\n<div class='panel-body p-0'>\n" : '';
 
-	$html .= "<textarea name='$input_name' style='width:100%; min-height:100px;' class='form-control ".($bbcode || $html_input ? "no-shadow no-border" : '')." textbox' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
+	$html .= "<textarea name='$input_name' style='width:100%; height:$height; ".($resize == '0' ? 'resize: none;' : '')."' class='form-control p-10 $class ".($autosize ? 'animated-height' : '')." ".($bbcode || $html_input ? "no-shadow no-border" : '')." textbox ' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
 
 	if ($type) {
 		$html .= "</div>\n<div class='panel-footer'>\n";
