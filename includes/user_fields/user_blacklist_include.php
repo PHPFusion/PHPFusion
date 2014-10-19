@@ -91,7 +91,7 @@ if ($profile_method == "input") {
 } elseif ($profile_method == "display") {
 	// do not show blacklist openly.
 	echo "<tr>\n";
-	echo "<td colspan='4'>Not available.</td>\n";
+	echo "<td colspan='4'>".$locale['uf_blacklist_007']."</td>\n";
 	echo "</tr>\n";
 	// Insert and update
 } elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
