@@ -52,7 +52,7 @@ if (!check_admin_pass($admin_password) && !stristr($_SERVER['PHP_SELF'], $settin
 	echo "</div>\n";
 	echo "</div>\n";
 	closeside();
-	echo form_button('Sign in', 'admin_login', 'admin_login', 'Sign in', array('class' => 'btn-primary btn-block'));
+	echo form_button($locale['login'], 'admin_login', 'admin_login', 'Sign in', array('class' => 'btn-primary btn-block'));
 	echo closeform();
 } else {
 	redirect($form_action);
