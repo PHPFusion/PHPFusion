@@ -295,7 +295,9 @@ input[type=text]:focus {
     /* background: rgba(255,255,255,0.5); */
     background: rgba(55, 73, 94, 1);
 }
-
+#navigation-user > h5 {
+	padding-bottom:20px;
+}
 nav {
     margin-top: 0px !important;
 }
