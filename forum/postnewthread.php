@@ -221,7 +221,7 @@ echo openform('input_form', 'input_form', 'post', ($settings['site_seo'] == 1 ? 
 echo "<table class='tbl-border table table-responsive '>\n<tbody>\n<tr>\n";
 echo "<td class='tbl2' width='145'><label for='subject'>".$locale['460']."</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl1'>\n";
-echo form_text('', 'subject', 'subject', $subject, array('required' => 1, 'error_text' => ''));
+echo form_text('', 'subject', 'subject', $subject, array('required' => 1, 'max_length'=>'100'));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td valign='top' width='145' class='tbl2'><label for='message'>".$locale['461']."</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl1'>\n";
