@@ -41,13 +41,13 @@ echo "</ul>\n";
 $result = dbquery("SELECT * FROM ".DB_PREFIX."messages_options WHERE user_id='0'");
 $data = dbarray($result);
 $inbox_cfg = ($data['pm_inbox'] != 0 ? $data['pm_inbox'] : 1);
-$inbox_percent = number_format(($inbox_count/$inbox_cfg)*99, 0);
+$inbox_percent = $inbox_cfg !== 1 ? number_format(($inbox_count/$inbox_cfg)*99, 0) : number_format(0*99,0);
 echo progress_bar($inbox_percent, $locale['UM098']);
 $outbox_cfg = ($data['pm_sentbox'] != 0 ? $data['pm_sentbox'] : 1);
-$outbox_percent = number_format(($outbox_count/$outbox_cfg)*99, 0);
+$outbox_percent = $outbox_cfg !== 1 ? number_format(($outbox_count/$outbox_cfg)*99, 0) : number_format(0*99,0);
 echo progress_bar($outbox_percent, $locale['UM099']);
 $archive_cfg = ($data['pm_savebox'] != 0 ? $data['pm_savebox'] : 1);
-$archive_percent = number_format(($archive_count/$archive_cfg)*99, 0);
+$archive_percent = $archive_cfg !== 1 ? number_format(($archive_count/$archive_cfg)*99, 0) : number_format(0*99,0);
 echo progress_bar($archive_percent, $locale['UM100']);
 if (sizeof($enabled_languages) > 1) {
 echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
