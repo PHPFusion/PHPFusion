@@ -586,6 +586,7 @@ dl, dt, dd {
 	margin-right: 4px;
 }
 
+/* Admin Panel */
 .animated-height {
 	-webkit-transition: height 0.2s;
 	-moz-transition: height 0.2s;
@@ -595,7 +596,24 @@ dl, dt, dd {
 }
 /* Editor */
 .editor-wrapper {
-	margin-top:-30px;
+	margin-top:-20px !important;
+}
+.editor-wrapper > ul > li > a {
+	margin-bottom: 0 !important;
+}
+.editor-wrapper > ul {
+	margin: 0 !important;
+	padding: 0 !important;
+	height: auto;
+}
+.editor-wrapper .panel-heading {
+	-webkit-border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	border-radius: 0 !important;
+}
+.editor-wrapper > div.tab-content {
+	padding: 0 !important;
+	margin: 0 !important;
 }
 .editor-wrapper > ul > li {
 	float: right;

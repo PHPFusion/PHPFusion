@@ -16,8 +16,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+
+
 function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
-	global $userdata, $userdata; // for editor
+	global $locale, $userdata, $userdata; // for editor
+
+	require_once INCLUDES."bbcode_include.php";
+	include_once LOCALE.LOCALESET."admin/html_buttons.php";
+	require_once INCLUDES."html_buttons_include.php";
+
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
@@ -67,16 +74,11 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	if (!defined('autogrow') && $autosize) {
 		define('autogrow', true);
 		add_to_footer("<script src='".DYNAMICS."assets/autosize/jquery.autosize.min.js'></script>");
-		add_to_jquery("
-		$('#".$input_id."').autosize();
-		");
 	}
 
 	$input_value = html_entity_decode(stripslashes($input_value));
 	$input_value = str_replace("<br />", "", $input_value);
-	if ($bbcode) {
-		require_once INCLUDES."bbcode_include.php";
-	}
+
 	$html = "";
 	$html .= "<div id='$input_id-field' class='form-group m-b-10 ".$class."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
@@ -150,7 +152,12 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 			});
 		});
 		");
+	}
 
+	if ($autosize) {
+		add_to_jquery("
+		$('#".$input_id."').autosize();
+		");
 	}
 
 	$html .= "<div id='$input_id-help'></div>";

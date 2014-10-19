@@ -17,7 +17,8 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
-include_once INCLUDES."bbcode_include.php";
+//include_once INCLUDES."bbcode_include.php";
+//include_once INCLUDES."html_buttons_include.php";
 include LOCALE.LOCALESET."submit.php";
 if (!iMEMBER) {
 	redirect("index.php");
@@ -116,8 +117,8 @@ if ($_GET['stype'] == "l") {
 	echo openform('submit_form', 'submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=n");
 	echo form_text($locale['471'], 'news_subject', 'news_subject', $news_subject, array("required" => 1));
 	echo form_select($locale['476'], 'news_cat', 'news_cat', $cat_list, $news_cat, array("required" => 1));
-	echo form_textarea($locale['478'], 'news_snippet', 'news_snippet', $news_snippet, array('bbcode' => 1, 'form' => 'submit_form'));
-	echo form_textarea($locale['472'], 'news_body', 'news_body', $news_body, array("required" => 1, 'bbcode' => 1, 'form' => 'submit_form'));
+	echo form_textarea($locale['478'], 'news_snippet', 'news_snippet', $news_snippet, array('html' => 1, 'autosize'=>1, 'form_name'=>'submit_form', 'preview'=>1));
+	echo form_textarea($locale['472'], 'news_body', 'news_body', $news_body, array('required' => 1, 'html'=>1, 'autosize'=>1, 'form_name'=>'submit_form', 'preview'=>1));
 	echo $settings['site_seo'] ? '' : form_button($locale['474'], 'preview_news', 'preview_news', $locale['474'], array('class' => 'btn-primary m-r-10'));
 	echo form_button($locale['475'], 'submit_news', 'submit_news', $locale['475'], array('class' => 'btn-primary'));
 	echo closeform();
@@ -171,8 +172,8 @@ if ($_GET['stype'] == "l") {
 			echo openform('submit_form', 'submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=a");
 			echo form_select($locale['521'], 'article_cat', 'article_cat', $cat_list, isset($_POST['preview_article']) ? $_POST['preview_article'] : '');
 			echo form_text($locale['522'], 'article_subject', 'article_subject', $article_subject, array('required' => 1));
-			echo form_textarea($locale['523'], 'article_snippet', 'article_snippet', $article_snippet, array('bbcode' => 1, 'required' => 1));
-			echo form_textarea($locale['524'], 'article_body', 'article_body', $article_body, array('bbcode' => 1, 'required' => 1));
+			echo form_textarea($locale['523'], 'article_snippet', 'article_snippet', $article_snippet, array('html' => 1, 'autosize'=>1, 'preview'=>1, 'form_name'=>'submit_form', 'required' => 1));
+			echo form_textarea($locale['524'], 'article_body', 'article_body', $article_body, array('html' => 1, 'autosize'=>1, 'preview'=>1, 'form_name'=>'submit_form', 'required' => 1));
 			echo "</div>\n</div>\n";
 			echo $settings['site_seo'] ? '' : form_button($locale['526'], 'preview_article', 'preview_article', $locale['526'], array('class' => 'btn-primary m-r-10'));
 			echo form_button($locale['527'], 'submit_article', 'submit_article', $locale['527'], array('class' => 'btn-primary'));
@@ -273,8 +274,8 @@ if ($_GET['stype'] == "l") {
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 		echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['680']."</div>\n";
 		echo form_text($locale['681'], 'download_title', 'download_title', '', array('required' => 1, 'error_text' => $locale['674']));
-		echo form_textarea($locale['682b'], 'download_description_short', 'download_description_short', '', array('bbcode' => 1, 'required' => 1, 'error_text' => $locale['676']));
-		echo form_textarea($locale['682'], 'download_description', 'download_description', '', array('bbcode' => 1, 'required' => 1));
+		echo form_textarea($locale['682b'], 'download_description_short', 'download_description_short', '', array('html' => 1, 'autosize'=>1, 'form_name'=>'submit_form', 'preview'=>1, 'required' => 1, 'error_text' => $locale['676']));
+		echo form_textarea($locale['682'], 'download_description', 'download_description', '', array('html' => 1, 'autosize'=>1, 'form_name'=>'submit_form', 'preview'=>1, 'required' => 1));
 		echo form_text($locale['683'], 'download_url', 'download_url', '', array('required' => 1, 'error_text' => $locale['675']));
 		echo "<div class='pull-right'>\n<small>\n";
 		echo sprintf($locale['694'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";

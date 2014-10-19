@@ -17,10 +17,10 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."admin/html_buttons.php";
+
 function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "") {
 	global $locale;
 	$res = "";
-
 	if ($html) {
 		$res .= "<div class='btn-group'>\n";
 		$res .= "<button type='button' value='b' title='".$locale['html_000']."' class='btn btn-sm btn-default m-b-10 button' style='font-weight:bold;' onclick=\"addText('".$textarea."', '&lt;strong&gt;', '&lt;/strong&gt;', '".$formname."');\"><i class='glyphicon glyphicon-bold'></i></button>\n";
