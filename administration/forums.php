@@ -408,73 +408,94 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 opentable($locale['550']);
 $i = 1;
 $k = 1;
-echo "<table cellpadding='0' cellspacing='1' width='100%' class='table table-responsive tbl-border'>\n<thead>\n";
 $result = dbquery("SELECT forum_id, forum_name, forum_description, forum_order FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='0' ORDER BY forum_order");
 if (dbrows($result) != 0) {
-	echo "<tr>\n<th class='tbl2'><strong>".$locale['551']."</strong></th>\n";
-	echo "<th align='center' colspan='2' width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['552']."</strong></th>\n";
-	echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['553']."</strong></th>\n";
-	echo "</tr>\n";
-	echo "</thead>\n<tbody>\n";
-	$i = 1;
-	while ($data = dbarray($result)) {
-		echo "<tr>\n<td class='tbl2'><strong>".$data['forum_name']."</strong><br />\n";
-		echo ($data['forum_description'] ? "<span class='small'>".nl2br(parseubb($data['forum_description']))."</span>" : "")."</td>\n";
-		echo "<td align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$data['forum_order']."</td>\n";
-		echo "<td align='center' width='1%' class='tbl2' style='white-space:nowrap'>\n";
-		if (dbrows($result) != 1) {
-			$up = $data['forum_order']-1;
-			$down = $data['forum_order']+1;
-			if ($i == 1) {
-				echo "<a href='".FUSION_SELF.$aidlink."&amp;action=md&amp;order=$down&amp;forum_id=".$data['forum_id']."&amp;t=cat'><img src='".get_image("down")."' alt='".$locale['557']."' title='".$locale['557']."' style='border:0px;' /></a>\n";
-			} elseif ($i < dbrows($result)) {
-				echo "<a href='".FUSION_SELF.$aidlink."&amp;action=mu&amp;order=$up&amp;forum_id=".$data['forum_id']."&amp;t=cat'><img src='".get_image("up")."' alt='".$locale['556']."' title='".$locale['558']."' style='border:0px;' /></a>\n";
-				echo "<a href='".FUSION_SELF.$aidlink."&amp;action=md&amp;order=$down&amp;forum_id=".$data['forum_id']."&amp;t=cat'><img src='".get_image("down")."' alt='".$locale['557']."' title='".$locale['557']."' style='border:0px;' /></a>\n";
-			} else {
-				echo "<a href='".FUSION_SELF.$aidlink."&amp;action=mu&amp;order=$up&amp;forum_id=".$data['forum_id']."&amp;t=cat'><img src='".get_image("up")."' alt='".$locale['556']."' title='".$locale['558']."' style='border:0px;' /></a>\n";
-			}
-		}
-		$i++;
-		echo "</td>\n";
-		echo "<td align='center' width='1%' class='tbl2' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;forum_id=".$data['forum_id']."&amp;t=cat'>".$locale['554']."</a> ::\n";
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$data['forum_id']."&amp;t=cat' onclick=\"return confirm('".$locale['440']."');\">".$locale['555']."</a></td>\n";
-		echo "</tr>\n";
-		$result2 = dbquery("SELECT forum_id, forum_name, forum_description, forum_cat, forum_order FROM ".DB_FORUMS." WHERE forum_cat='".$data['forum_id']."' ORDER BY forum_order");
-		if (dbrows($result2)) {
-			$k = 1;
-			while ($data2 = dbarray($result2)) {
-				echo "<tr>\n";
-				echo "<td class='tbl1'><span class='alt'><strong>".$data2['forum_name']."</strong></span>\n";
-				echo "<a class='btn btn-default btn-xs pull-right' href='".FUSION_SELF.$aidlink."&amp;action=prune&amp;forum_id=".$data2['forum_id']."'>".$locale['563']."</a><br />\n";
-				echo ($data2['forum_description'] ? "<span class='small'>".nl2br(parseubb($data2['forum_description']))."</span>" : "")."</td>\n";
-				echo "<td align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$data2['forum_order']."</td>\n";
-				echo "<td align='center' width='1%' class='tbl1' style='white-space:nowrap'>\n";
-				if (dbrows($result2) != 1) {
-					$up = $data2['forum_order']-1;
-					$down = $data2['forum_order']+1;
-					if ($k == 1) {
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=md&amp;order=$down&amp;forum_id=".$data2['forum_id']."&amp;t=forum&amp;cat=".$data2['forum_cat']."'><img src='".get_image("down")."' alt='".$locale['557']."' title='".$locale['557']."' style='border:0px;' /></a>\n";
-					} elseif ($k < dbrows($result2)) {
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=mu&amp;order=$up&amp;forum_id=".$data2['forum_id']."&amp;t=forum&amp;cat=".$data2['forum_cat']."'><img src='".get_image("up")."' alt='".$locale['556']."' title='".$locale['558']."' style='border:0px;' /></a>\n";
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=md&amp;order=$down&amp;forum_id=".$data2['forum_id']."&amp;t=forum&amp;cat=".$data2['forum_cat']."'><img src='".get_image("down")."' alt='".$locale['557']."' title='".$locale['557']."' style='border:0px;' /></a>\n";
-					} else {
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=mu&amp;order=$up&amp;forum_id=".$data2['forum_id']."&amp;t=forum&amp;cat=".$data2['forum_cat']."'><img src='".get_image("up")."' alt='".$locale['556']."' title='".$locale['558']."' style='border:0px;' /></a>\n";
-					}
-				}
-				$k++;
-				echo "</td>\n";
-				echo "<td align='center' width='1%' class='tbl1' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;forum_id=".$data2['forum_id']."&amp;t=forum'>".$locale['554']."</a> ::\n";
-				echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$data2['forum_id']."&amp;t=forum' onclick=\"return confirm('".$locale['570']."');\">".$locale['555']."</a></td>\n";
-				echo "</tr>\n";
-			}
-		}
-	}
-	echo "<tr>\n<td align='center' colspan='5' class='tbl2'><a class='btn btn-primary btn-block' href='".FUSION_SELF.$aidlink."&amp;action=refresh'>".$locale['562']."</a></td>\n</tr>\n";
 } else {
-	echo "<tr>\n<td align='center' class='tbl1'>".$locale['560']."</td>\n</tr>\n";
+	echo "<div class='well text-center'>".$locale['560']."</div>\n";
 }
-echo "</tbody>\n";
-echo "</table>\n";
+$_data = dbquery_tree_full(DB_FORUMS, 'forum_id', 'forum_cat', "".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."'" : "")." ORDER BY forum_order");
+echo list_forum($_data, 0);
+echo "<a class='btn btn-primary btn-block' href='".FUSION_SELF.$aidlink."&amp;action=refresh'>".$locale['562']."</a>";
+
+/* The working method for doing hierarchy. */
+//print_p($_data); // <-- uncomment and see for yourself.
+function list_forum($data, $id = FALSE, $level = FALSE, $count = FALSE) {
+	global $locale, $aidlink;
+	$html = & $html;
+	$level = ($level) ? $level : 0;
+	$count = ($count) ? $count : 0;
+	foreach ($data[$id] as $key => $forum_data) {
+		if ($level == 0) {
+			$html .= "<div class='panel panel-default'>\n";
+			$html .= "<div class='panel-heading'>\n";
+			$html .= "<div class='row'>\n";
+			$html .= "<div class='col-xs-8 col-sm-4 col-md-3 col-lg-3 strong'>\n";
+			$html .= "<div class='m-t-5 strong'><i class='entypo window m-r-10'></i>".$forum_data['forum_name']."</div>";
+			$html .= "</div>\n<div class='col-xs-4 col-sm-8 col-md-8 col-lg-8'>\n";
+			if ($count >= 0) {
+				$up = $forum_data['forum_order']-1;
+				$down = $forum_data['forum_order']+1;
+				if ($count == '0') {
+					$html .= "<a title='".$locale['557']."' href='".FUSION_SELF.$aidlink."&amp;action=md&amp;order=$down&amp;forum_id=".$forum_data['forum_id']."&amp;t=cat' class='btn btn-xs btn-primary'><i class='entypo down'></i></a>\n";
+				} elseif ($count < count($data[$id])-1) {
+					$html .= "<div class='btn-group'>\n";
+					$html .= "<a title='".$locale['556']."' href='".FUSION_SELF.$aidlink."&amp;action=mu&amp;order=$up&amp;forum_id=".$forum_data['forum_id']."&amp;t=cat' class='btn btn-xs btn-primary'><i class='entypo up'></i></a>\n";
+					$html .= "<a title='".$locale['557']."' href='".FUSION_SELF.$aidlink."&amp;action=md&amp;order=$down&amp;forum_id=".$forum_data['forum_id']."&amp;t=cat' class='btn btn-xs btn-primary'><i class='entypo down'></i></a>\n";
+					$html .= "</div>\n";
+				} else {
+					$html .= "<a title='".$locale['556']."' href='".FUSION_SELF.$aidlink."&amp;action=mu&amp;order=$up&amp;forum_id=".$forum_data['forum_id']."&amp;t=cat' class='btn btn-xs btn-primary'><i class='entypo up'></i></a>\n";
+				}
+			}
+			$html .= "<div class='btn-group pull-right'>\n";
+			$html .= "<a class='btn btn-default btn-xs' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;forum_id=".$forum_data['forum_id']."&amp;t=cat'>".$locale['554']."</a>\n";
+			$html .= "<a class='btn btn-default btn-xs' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$forum_data['forum_id']."&amp;t=cat' onclick=\"return confirm('".$locale['440']."');\">".$locale['555']."</a></td>\n";
+			$html .= "</div>\n";
+			$html .= "</div>\n</div>\n"; // end row
+			$html .= "</div>\n";
+			$html .= "<div class='panel-body'>\n".nl2br(parseubb($forum_data['forum_description']))."</div>\n";
+			if (isset($data[$forum_data['forum_id']])) {
+				$html .= list_forum($data, $forum_data['forum_id'], $level+1);
+			} else {
+				$html .= "<div class='panel-footer text-center'>".$locale['561']."</div>\n";
+			}
+		} else {
+			$html .= "<div class='panel-footer'>\n";
+			$html .= "<div class='row'>\n";
+			$html .= "<div class='col-xs-4 col-sm-3 col-md-3 col-lg-3 strong'>\n";
+			$html .= "".$forum_data['forum_name']."";
+			$html .= "</div>\n<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
+			$html .= "".$forum_data['forum_description']."";
+			$html .= "</div>\n<div class='col-xs-4 col-sm-5 col-md-4 col-lg-4'>\n";
+			if ($count >= 0) {
+				$up = $forum_data['forum_order']-1;
+				$down = $forum_data['forum_order']+1;
+				if ($count == 0) {
+					$html .= "<a title='".$locale['557']."' href='".FUSION_SELF.$aidlink."&amp;action=md&amp;order=$down&amp;forum_id=".$forum_data['forum_id']."&amp;t=forum&amp;cat=".$forum_data['forum_cat']."' class='btn btn-xs btn-primary'><i class='entypo down'></i></a>\n";
+				} elseif ($count < count($data[$id])-1) {
+					$html .= "<div class='btn-group'>\n";
+					$html .= "<a title='".$locale['558']."' href='".FUSION_SELF.$aidlink."&amp;action=mu&amp;order=$up&amp;forum_id=".$forum_data['forum_id']."&amp;t=forum&amp;cat=".$forum_data['forum_cat']."' class='btn btn-xs btn-primary'><i class='entypo up'></i></a>\n";
+					$html .= "<a title='".$locale['556']."' href='".FUSION_SELF.$aidlink."&amp;action=md&amp;order=$down&amp;forum_id=".$forum_data['forum_id']."&amp;t=forum&amp;cat=".$forum_data['forum_cat']."' class='btn btn-xs btn-primary'><i class='entypo down'></i></a>\n";
+					$html .= "</div>\n";
+				} else {
+					$html .= "<a title='".$locale['558']."' href='".FUSION_SELF.$aidlink."&amp;action=mu&amp;order=$up&amp;forum_id=".$forum_data['forum_id']."&amp;t=forum&amp;cat=".$forum_data['forum_cat']."' class='btn btn-xs btn-primary'><i class='entypo up'></i></a>\n";
+				}
+			}
+			$html .= "<div class='btn-group pull-right'>\n";
+			$html .= "<a class='btn btn-default btn-xs' href='".FUSION_SELF.$aidlink."&amp;action=prune&amp;forum_id=".$forum_data['forum_id']."'>".$locale['563']."</a>\n";
+			$html .= "<a class='btn btn-default btn-xs' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;forum_id=".$forum_data['forum_id']."&amp;t=forum'>".$locale['554']."</a>";
+			$html .= "<a class='btn btn-default btn-xs' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$forum_data['forum_id']."&amp;t=forum' onclick=\"return confirm('".$locale['570']."');\">".$locale['555']."</a>";
+			$html .= "</div>\n";
+			$html .= "</div>\n</div>\n"; // end row
+			$html .= "</div>\n"; // end panel footer
+		}
+		if ($level == 0) {
+			$html .= "</div>\n";
+		}
+		$count++;
+	}
+	return $html;
+}
+
 closetable();
 require_once THEMES."templates/footer.php";
 ?>
