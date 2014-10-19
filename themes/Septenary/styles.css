@@ -201,13 +201,13 @@ header #search-form {
     -moz-border-radius: 4px;
     border-radius: 4px;
 }
-
 .section-1 {
     color: rgb(104, 104, 104);
     background-color: #FFF;
-    /* background: rgb(2, 52, 74); */
 }
-
+.section-1 > .container {
+	padding-top: 10px;
+}
 /* Form Dynamics Section */
 /* bootstrap overrides */
 input[type=text] {
@@ -335,7 +335,7 @@ nav {
     outline: none;
 }
 
-.nav > li > a:hover, .nav > li > a:focus {
+#mp .nav > li > a:hover, #mp .nav > li > a:focus {
     color: #FFF;
     background: transparent !important;
     border: 1px solid rgb(255, 255, 255);
@@ -640,25 +640,27 @@ ul.list li a:hover {
 }
 
 .nav-tabs {
-    margin-right: 0px;
-    margin-bottom: 20px;
-    padding: 10px 0px 0px 10px;
-    height: 49px;
-    margin-top: 10px !important;
+	padding: 0 !important;
 }
-
 .nav-tabs > li > a {
     color: rgb(51, 153, 255);
     outline: none;
+	margin-bottom: 0 !important;
+	padding: 10px 15px !important;
 }
-
+.nav-tabs > li.active > a {
+	border: 1px solid #DDD;
+	border-bottom: 1px solid transparent !important;
+}
+.nav-tabs > li.active:hover, .nav-tabs > li:focus {
+	background-color: transparent;
+}
 .nav-tabs > li > a:hover, .nav-tabs > li > a:hover {
     color: #444;
 }
-
 .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     color: #444 !important;
-    border-bottom: 2px solid #FFF !important;
+	border-bottom: 1px solid transparent !important;
 }
 
 .tab-content {
@@ -1220,6 +1222,9 @@ div.emulated-fieldset div.attachments-list {
 }
 
 /* Forum */
+#stext-field {
+	margin-bottom: 0;
+}
 .forum-caption {
     background-color: rgb(55, 73, 94);
     color: rgb(116, 151, 184);

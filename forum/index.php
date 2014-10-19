@@ -30,8 +30,10 @@ $tab_title['icon'][] = "";
 $tab_title['title'][] = $locale['global_056'];
 $tab_title['id'][] = "tracked";
 $tab_title['icon'][] = "";
-$tab_active = isset($_GET['section']) ? tab_active($tab_title, 0) : 'thread';
-echo "<div class='panel tbl-border p-0'>\n";
+
+$tab_active = isset($_GET['section']) ? tab_active($tab_title, $_GET['section'], 1) : 'thread';
+
+echo "<div class='panel p-0'>\n";
 echo "<div class='display-inline-block pull-right' style='max-width:250px;'>\n";
 echo openform('searchform', 'searchform', 'post'," ".($settings['site_seo'] == "1" ? FUSION_ROOT : '').$settings['siteurl']."search.php?stype=forums", array('downtime' => 0));
 echo form_hidden('stype', 'stype', 'stype', 'forums');
@@ -179,7 +181,9 @@ function forum() {
 		echo "</tbody></table>\n<!--sub_forum_idx_table-->\n";
 		echo "</div>\n</div>\n";
 	} else {
+		echo "<div class='well text-center'>\n";
 		echo $locale['407']."\n";
+		echo "</div>\n";
 	}
 }
 
@@ -238,18 +242,21 @@ function latest() {
 			}
 		}
 		echo "</tbody>\n</table>\n";
+
+		echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
+		$opts = array('0' => 'All Results', '1' => '1 Day', '7' => '7 Days', '14' => '2 Weeks', '30' => '1 Month',
+			'90' => '3 Months', '180' => '6 Months', '365' => '1 Year');
+		echo openform('filter_form', 'filter_form', 'post', FORUM."index.php?section=latest", array('downtime' => 0));
+		echo form_button('Go', 'go', 'go', 'Go', array('class' => 'btn-primary pull-right'));
+		echo form_select('', 'filter', 'filter', $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '200px',
+			'class' => 'pull-right m-l-10 m-r-10'));
+		echo "<label for='filter' class='pull-right'>Display Posts from Previous</label>\n";
+		echo closeform();
+
 	} else {
 		echo "<div class='well text-center'>\n".$locale['global_023']."</div>\n";
 	}
-	echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
-	$opts = array('0' => 'All Results', '1' => '1 Day', '7' => '7 Days', '14' => '2 Weeks', '30' => '1 Month',
-				  '90' => '3 Months', '180' => '6 Months', '365' => '1 Year');
-	echo openform('filter_form', 'filter_form', 'post', FORUM."index.php?section=latest", array('downtime' => 0));
-	echo form_button('Go', 'go', 'go', 'Go', array('class' => 'btn-primary pull-right'));
-	echo form_select('', 'filter', 'filter', $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '200px',
-																															  'class' => 'pull-right m-l-10 m-r-10'));
-	echo "<label for='filter' class='pull-right'>Display Posts from Previous</label>\n";
-	echo closeform();
+
 	echo "</div>\n</div>\n";
 }
 
@@ -329,7 +336,7 @@ function tracked() {
 		echo "</table>\n";
 		echo "<div align='center' style='margin-top:5px;'>".makepagenav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";
 	} else {
-		echo "<div style='text-align:center;'>".$locale['global_059']."</div>\n";
+		echo "<div class='well text-center'>".$locale['global_059']."</div>\n";
 	}
 }
 
