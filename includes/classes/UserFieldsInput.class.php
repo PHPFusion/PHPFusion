@@ -474,7 +474,7 @@ class UserFieldsInput {
 			// on registration
 			$where = "";
 			if ($this->registration) {
-				$where = "field_registration='1'";
+				$where = "WHERE field_registration='1'";
 			}
 		} else {
 			// on edit.
@@ -577,7 +577,7 @@ class UserFieldsInput {
 
 	private function _setUserDataInput() {
 		global $locale, $settings, $userdata, $aidlink;
-		$result = dbquery("INSERT INTO ".DB_USERS." (".$this->_dbFields.") VALUES(".$this->_dbValues.")");
+		$result = dbquery("INSERT INTO ".DB_USERS." (".$this->_dbFields.") VALUES (".$this->_dbValues.")");
 		if ($this->adminActivation) {
 			$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u162'];
 		} else {
