@@ -117,7 +117,7 @@ if (dbrows($result)) {
 	echo openform('editform', 'editform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
 	echo form_select('', 'poll_id', 'poll_id', $editlist, '', array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
 	echo form_button($locale['421'], 'edit', 'edit', $locale['421'], array('class' => 'btn-primary m-r-10 pull-left'));
-	echo form_button($locale['421'], 'delete', 'delete', $locale['422'], array('class' => 'btn-primary pull-left'));
+	echo form_button($locale['422'], 'delete', 'delete', $locale['422'], array('class' => 'btn-primary pull-left'));
 	echo closeform();
 	closetable();
 }
