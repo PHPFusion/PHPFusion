@@ -34,7 +34,7 @@ if (isset($_POST['stext'])) {
 if (isset($_POST['method'])) {
 	$_POST['method'] = ($_POST['method'] == "OR" || $_POST['method'] == "AND") ? $_POST['method'] : "OR";
 } else {
-	$_POST['method'] = (isset($_GET['method']) && $_GET['method'] == "OR" || $_GET['method'] == "AND") ? $_GET['method'] : 'OR';
+	$_POST['method'] = (isset($_GET['method']) && ($_GET['method'] == "OR" || $_GET['method'] == "AND")) ? $_GET['method'] : 'OR';
 }
 if (isset($_POST['datelimit'])) {
 	$_POST['datelimit'] = isnum($_POST['datelimit']) ? $_POST['datelimit'] : 0;
