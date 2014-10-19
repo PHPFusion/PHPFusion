@@ -21,7 +21,7 @@ define('ARTICLES', TRUE);
 
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."articles.php";
-$str = "";
+
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 	$result = dbquery("SELECT
 		ta.article_cat,
@@ -80,7 +80,6 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 							  "article_reads" => $data['article_reads'],
 							  "article_allow_comments" => $data['article_allow_comments']);
 		add_to_title($locale['global_201'].$article_subject);
-		echo $str;
 		echo "<!--pre_article-->";
 		render_article($article_subject, $article[$_GET['rowstart']], $article_info);
 		echo "<!--sub_article-->";
@@ -134,7 +133,6 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		if (checkgroup($cdata['article_cat_access'])) {
 			$res = 1;
 			add_to_title($locale['global_201'].$cdata['article_cat_name']);
-			echo $str;
 			opentable($locale['400'].": ".$cdata['article_cat_name']);
 			echo "<!--pre_article_cat-->";
 			$rows = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."' AND article_draft='0'");
