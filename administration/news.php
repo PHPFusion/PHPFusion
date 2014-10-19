@@ -345,16 +345,13 @@ echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-3'>\n";
 echo form_select($locale['430'], 'news_visibility', 'news_visibility', $visibility_opts, $news_visibility, array('placeholder' => $locale['choose'], 'width' => '100%'));
 echo "</div>\n</div>\n";
 echo "<hr/>\n";
-echo form_textarea($locale['425'], 'body', 'body', $body);
+$fusion_mce = '';
 if (!$settings['tinymce_enabled']) {
-	echo display_html("inputform", "body", TRUE, TRUE, TRUE, IMAGES_N);
+$fusion_mce = array('preview'=>1, 'html'=>1, 'autosize'=>1, 'form_name'=>'inputform');
 }
+echo form_textarea($locale['425'], 'body', 'body', $body, $fusion_mce);
 echo "<hr/>\n";
-echo form_textarea($locale['426'], 'body2', 'body2', $body2);
-if ($settings['tinymce_enabled'] != 1) {
-	echo "<button value='".$locale['441']."' class='btn btn-sm btn-default button m-b-10' onclick=\"insertText('body2', '&lt;!--PAGEBREAK--&gt;');\" />".$locale['441']."</button>\n";
-	echo display_html("inputform", "body2", TRUE, TRUE, TRUE, IMAGES_N);
-}
+echo form_textarea($locale['426'], 'body2', 'body2', $body2, $fusion_mce);
 echo "<hr/>\n";
 echo "<div class='well'>\n";
 echo "<label><input type='checkbox' name='news_draft' value='yes'".$news_draft." /> ".$locale['431']."</label><br />\n";
