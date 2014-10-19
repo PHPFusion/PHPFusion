@@ -271,8 +271,6 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 							rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
 							PRIMARY KEY (rewrite_id)
 							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-		// server settings for seo.
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='0' WHERE settings_name='site_seo'");
 		// create admin page for permalinks
 		$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalink.gif', '".$locale['SEO']."', 'permalink.php', '3')");
 		// upgrade admin rights for permalink admin
@@ -290,6 +288,8 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_id, field_name, field_cat, field_required, field_log, field_registration, field_order) VALUES ('', 'user_blacklist', '5', '0', '0', '0', '1'");
 		// Add black list table
 		$result = dbquery("ALTER TABLE ".$db_prefix."users ADD user_blacklist TEXT NOT NULL AFTER user_language");
+		// site settings for SEO / SEF
+		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('site_seo', '0')");
 		// Admin Theme
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('admin_theme', 'Venus')");
 		// Bootstrap
