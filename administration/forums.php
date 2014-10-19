@@ -268,6 +268,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 		while (list($key, $option) = each($_access)) {
 			$access_opts[$option['0']] = $option['1'];
 		}
+		unset($access_opts['0']);
 		opentable($forum_title);
 		echo openform('addforum', 'addforum', 'post', $forum_action, array('downtime' => 0, 'notice' => 0));
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tr>\n";
