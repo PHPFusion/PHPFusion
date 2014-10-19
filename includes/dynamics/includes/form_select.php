@@ -422,7 +422,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$html .= "</select>";
 		$html .= "<br/><div id='$input_id-help'></div>";
 		$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>";
-		$html .= "</div>\n";
+		$html .= "</div>\n</div>\n";
 	}
 	return $html;
 }
