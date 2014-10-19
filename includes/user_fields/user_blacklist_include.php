@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (!function_exists('show_blacklist')) {
-	function show_blacklist($data) {
+	function show_blacklist($data, $register) {
 		global $locale;
 		echo "<div class='alert alert-info display-none' id='ignore-message'></div>\n";
 		if (is_array($data) && count($data) > 0) {
@@ -36,7 +36,7 @@ if (!function_exists('show_blacklist')) {
 				}
 			}
 		} else {
-			echo (!$this->registration) ? $locale['uf_blacklist_003'] : '';
+			echo (!$register) ? $locale['uf_blacklist_003'] : '';
 		}
 		add_to_jquery("
             $('.unblock').bind('click', function(e) {
@@ -82,7 +82,7 @@ if ($profile_method == "input") {
 	echo "<td colspan='2' class='tbl".$this->getErrorClass("user_blacklist")."'>";
 	echo "<p><strong>".$locale['uf_blacklist_000']."</strong></p>";
 	$user_blacklist = array_filter(explode(".", $user_blacklist));
-	show_blacklist($user_blacklist);
+	show_blacklist($user_blacklist, $this->registration);
 	echo "</td></tr>\n";
 	if ($required) {
 		$this->setRequiredJavaScript("user_blacklist", $locale['uf_blacklist_error']);
