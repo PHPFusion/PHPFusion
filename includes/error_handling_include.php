@@ -25,7 +25,7 @@ $_errorHandler = array();
 function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
 	global $pdo, $pdo_enabled, $userdata, $_errorHandler, $settings;
 	$showError = TRUE;
-	var_dump($error_file);
+
 	$result = dbquery("SELECT error_id, error_status FROM ".DB_ERRORS."
 		WHERE error_level='".intval($error_level)."' AND error_file='".addslash($error_file)."'
 		AND error_line='".intval($error_line)."' AND error_status!='1'
