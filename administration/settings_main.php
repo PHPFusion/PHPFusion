@@ -123,12 +123,12 @@ $admin_theme_files = makefilelist(THEMES."admin_templates/", ".|..", TRUE, "fold
 opentable($locale['400']);
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-echo form_text($locale['402'], 'sitename', 'sitename', $settings2['sitename'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
-echo form_text($locale['404'], 'sitebanner', 'sitebanner', $settings2['sitebanner'], array('required' => 1, 'error_text' => $locale['error_value']));
-echo form_text($locale['405'], 'siteemail', 'siteemail', $settings2['siteemail'], array('max_length' => 128, 'required' => 1, 'error_text' => $locale['error_value'], 'email' => 1));
-echo form_text($locale['406'], 'username', 'username', $settings2['siteusername'], array('max_length' => 32, 'required' => 1, 'error_text' => $locale['error_value']));
+echo form_text($locale['402'], 'sitename', 'sitename', $settings2['sitename'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
+echo form_text($locale['404'], 'sitebanner', 'sitebanner', $settings2['sitebanner'], array('required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
+echo form_text($locale['405'], 'siteemail', 'siteemail', $settings2['siteemail'], array('max_length' => 128, 'required' => 1, 'error_text' => $locale['error_value'], 'email' => 1, 'inline' => 1));
+echo form_text($locale['406'], 'username', 'username', $settings2['siteusername'], array('max_length' => 32, 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
 $opts = array('http' => 'http://', 'https' => 'https://');
-echo "<div class='row'>\n";
+echo "<hr /><div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-2'>\n";
 echo form_select($locale['426'], 'site_protocol', 'site_protocol', $opts, $settings2['site_protocol'], array('width' => '100%', 'required' => 1, 'error_text' => $locale['error_value']));
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-5'>\n";
@@ -148,11 +148,11 @@ echo "</div>\n</div>\n";
 echo "<div class='panel panel-default'>\n";
 echo "<div class='panel-heading'><strong>".$locale['432']."</strong></div>\n";
 echo "<div class='panel-body'>\n";
-echo form_textarea($locale['407'], 'intro', 'intro', $settings2['siteintro']);
-echo form_textarea($locale['409'], 'description', 'description', $settings2['description']);
-echo form_textarea($locale['410']."<br/><small>".$locale['411']."</small>", 'keywords', 'keywords', $settings2['keywords']);
-echo form_textarea($locale['412'], 'footer', 'footer', $settings2['footer']);
-echo form_text($locale['413'], 'opening_page', 'opening_page', $settings2['opening_page'], array('max_length' => 100, 'required' => 1, 'error_text' => $locale['error_value']));
+echo form_textarea($locale['407'], 'intro', 'intro', $settings2['siteintro'], array('inline' => 1));
+echo form_textarea($locale['409'], 'description', 'description', $settings2['description'], array('inline' => 1));
+echo form_textarea($locale['410']."<br/><small>".$locale['411']."</small>", 'keywords', 'keywords', $settings2['keywords'], array('inline' => 1));
+echo form_textarea($locale['412'], 'footer', 'footer', $settings2['footer'], array('inline' => 1));
+echo form_text($locale['413'], 'opening_page', 'opening_page', $settings2['opening_page'], array('max_length' => 100, 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
 echo "</div>\n</div>\n";
 echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 if ($userdata['user_theme'] == "Default") {
@@ -164,33 +164,32 @@ $opts = array();
 foreach ($theme_files as $file) {
 	$opts[$file] = $file;
 }
-echo form_select($locale['418'], 'theme', 'theme', $opts, $settings2['theme'], array("required" => 1, 'error_text' => $locale['error_value']));
+echo form_select($locale['418'], 'theme', 'theme', $opts, $settings2['theme'], array('error_text' => $locale['error_value'], 'inline' => 1));
 $opts = array();
 foreach ($admin_theme_files as $file) {
 	$opts[$file] = $file;
 }
-echo form_select($locale['418a'], 'admin_theme', 'admin_theme', $opts, $settings2['admin_theme'], array("required" => 1, 'error_text' => $locale['error_value']));
+echo form_select($locale['418a'], 'admin_theme', 'admin_theme', $opts, $settings2['admin_theme'], array('error_text' => $locale['error_value'], 'inline' => 1));
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
 echo form_toggle($locale['437'], 'bootstrap', 'bootstrap', $opts, $settings2['bootstrap'], array('inline' => 1));
 $dir = LOCALE.LOCALESET."search/";
 $temp = opendir($dir);
 $opts = array();
 if (file_exists($dir)) {
-	include LOCALE.LOCALESET."search/converter.php";
 	while ($folder = readdir($temp)) {
-		if (!in_array($folder, array("..", ".", 'users.json.php', 'converter.php', '.DS_Store', 'index.php'))) {
-			$val = $filename_locale[$folder];
+		if (!in_array($folder, array("..", ".", 'users.json.php', '.DS_Store', 'index.php'))) {
+			$val = str_replace(".php", '', $folder);
 			$opts[$val] = ucwords($val);
 		}
 	}
 }
-echo form_select($locale['419'], 'default_search', 'default_search', $opts, $settings2['default_search'], array('required' => 1));
-echo form_textarea($locale['420']."<small>".$locale['424']."</small><br/>\n", 'exclude_left', 'exclude_left', $settings2['exclude_left']);
-echo form_textarea($locale['421']."<small>".$locale['424']."</small><br/>\n", 'exclude_upper', 'exclude_upper', $settings2['exclude_upper']);
-echo form_textarea($locale['435']."<small>".$locale['424']."</small><br/>\n", 'exclude_aupper', 'exclude_aupper', $settings2['exclude_aupper']);
-echo form_textarea($locale['422']."<small>".$locale['424']."</small><br/>\n", 'exclude_lower', 'exclude_lower', $settings2['exclude_lower']);
-echo form_textarea($locale['436']."<small>".$locale['424']."</small><br/>\n", 'exclude_blower', 'exclude_blower', $settings2['exclude_blower']);
-echo form_textarea($locale['423']."<small>".$locale['424']."</small><br/>\n", 'exclude_right', 'exclude_right', $settings2['exclude_right']);
+echo form_select($locale['419'], 'default_search', 'default_search', $opts, $settings2['default_search'], array('inline' => 1));
+echo form_textarea($locale['420']."<br/><small>".$locale['424']."</small>\n", 'exclude_left', 'exclude_left', $settings2['exclude_left'], array('inline' => 1));
+echo form_textarea($locale['421']."<br/><small>".$locale['424']."</small>\n", 'exclude_upper', 'exclude_upper', $settings2['exclude_upper'], array('inline' => 1));
+echo form_textarea($locale['435']."<br/><small>".$locale['424']."</small>\n", 'exclude_aupper', 'exclude_aupper', $settings2['exclude_aupper'], array('inline' => 1));
+echo form_textarea($locale['422']."<br/><small>".$locale['424']."</small>\n", 'exclude_lower', 'exclude_lower', $settings2['exclude_lower'], array('inline' => 1));
+echo form_textarea($locale['436']."<br/><small>".$locale['424']."</small>\n", 'exclude_blower', 'exclude_blower', $settings2['exclude_blower'], array('inline' => 1));
+echo form_textarea($locale['423']."<br/><small>".$locale['424']."</small>\n", 'exclude_right', 'exclude_right', $settings2['exclude_right'], array('inline' => 1));
 echo "</div>\n</div>\n";
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
 echo closeform();

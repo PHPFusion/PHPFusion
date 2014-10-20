@@ -36,7 +36,13 @@ html, body {
 	-moz-box-shadow: 1px 1px 3px rgb(156,190,223);
 	box-shadow: 1px 1px 3px rgb(156,190,223);
 }
-
+label small {
+	font-weight: normal;
+}
+.form-group label,
+.form-group > div {
+	padding: 0
+}
 /* off canvas */
 @media all and (min-width:0px) and (max-width: 768px) {
 	.venus-toggler {
