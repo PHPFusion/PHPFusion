@@ -176,9 +176,10 @@ $dir = LOCALE.LOCALESET."search/";
 $temp = opendir($dir);
 $opts = array();
 if (file_exists($dir)) {
+	include LOCALE.LOCALESET."search/converter.php";
 	while ($folder = readdir($temp)) {
-		if (!in_array($folder, array("..", ".", 'users.json.php', '.DS_Store', 'index.php'))) {
-			$val = str_replace(".php", '', $folder);
+		if (!in_array($folder, array("..", ".", 'users.json.php', 'converter.php', '.DS_Store', 'index.php'))) {
+			$val = $filename_locale[$folder];
 			$opts[$val] = ucwords($val);
 		}
 	}
