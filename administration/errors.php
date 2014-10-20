@@ -108,8 +108,8 @@ if ($rows != 0) {
 		$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
 		echo "<tr>\n";
 		echo "<td class='".$row_color."'>\n";
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file' title='".$data['error_file']."'>";
-		echo getMaxFolders($data['error_file'], 2)."</a><br />\n";
+		echo "<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file' title='".stripslashes($data['error_file'])."'>";
+		echo getMaxFolders(stripslashes($data['error_file']), 2)."</a><br />\n";
 		echo "<span class='small2'>".$data['error_message']." ".$locale['415']." ".$data['error_line']."</span>";
 		echo "</td>\n";
 		echo "<td class='".$row_color."' style='white-space:nowrap;'>".showdate("longdate", $data['error_timestamp'])."</td>\n";
@@ -156,7 +156,7 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
 	} else {
 		$line_end = count($thisFileContent);
 	}
-	opentable($locale['401']." ".getMaxFolders($data['error_file'], 3));
+	opentable($locale['401']." ".getMaxFolders(stripslashes($data['error_file']), 3));
 	$output = "";
 	for ($i = ($line_start-1); $i < ($line_end-1); $i++) {
 		$output .= $thisFileContent[$i];
@@ -171,7 +171,7 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
 	echo "<td class='tbl1 err_tbl-error'>".$data['error_line']."</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td class='tbl2' style='width:5%;white-space:nowrap;'>".$locale['419'].":</td>\n";
-	echo "<td class='tbl1'><strong>".getMaxFolders($data['error_file'], 3)."</strong></td>\n";
+	echo "<td class='tbl1'><strong>".getMaxFolders(stripslashes($data['error_file']), 3)."</strong></td>\n";
 	echo "<td class='tbl2' style='width:5%;white-space:nowrap;'>".$locale['411'].":</td>\n";
 	echo "<td class='tbl1'>";
 	echo "<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#page' title='".$data['error_page']."'>";
