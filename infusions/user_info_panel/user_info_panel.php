@@ -75,7 +75,7 @@ echo "</li>\n";
 echo "</ul>\n";
 echo "</div>\n";
 echo "<div class='m-t-20'>\n";
-echo "<a class='btn btn-block btn-primary' href='".BASEDIR."setuser.php?logout=yes'>".$locale['UM084']."</a>\n";
+echo "<a class='btn btn-block btn-primary' href='".BASEDIR."index.php?logout=yes'>".$locale['UM084']."</a>\n";
 echo "</div>\n";
 if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 		closesidex();
