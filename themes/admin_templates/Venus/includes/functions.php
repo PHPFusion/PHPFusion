@@ -38,7 +38,7 @@ function closetable() {
 
 // Dashboard template
 function render_admin_dashboard() {
-	if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
+	if (isset($_GET['pagenum']) && $_GET['pagenum']>0) {
 		render_admin_icon();
 	} else {
 		render_dashboard();
