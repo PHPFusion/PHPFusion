@@ -52,7 +52,6 @@ function render_dashboard() {
 	$laptop = '6';
 	$desktop = '3';
 	opentable($locale['250']);
-	//echo "<a href='".ADMIN."members.php".$aidlink."&amp;status=8'>".$locale['264']."</a> $members_inactive<br />\n";
 	echo "<!--Start Members-->\n";
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
@@ -234,6 +233,7 @@ function render_dashboard() {
 	}
 	closeside();
 	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-4'>\n";
+
 	// Ratings
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['278']."</strong></span>");
 	if (count($global_ratings['data']) > 0) {
@@ -243,7 +243,7 @@ function render_dashboard() {
 			echo "<div class='pull-left m-r-10 display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($ratings_data, '40px')."</div>\n";
 			echo "<strong>".profile_link($ratings_data['user_id'], ucwords($ratings_data['user_name']), $ratings_data['user_status'])."</strong>\n";
 			echo "<span class='text-smaller text-lighter'>".$locale['273a']."</span>\n";
-			echo "<a class='text-smaller' href='".sprintf($link_type[$ratings_data['rating_type']], $data['rating_item_id'])."'><strong>".$comments_type[$ratings_data['rating_type']]."</strong></a>";
+			echo "<a class='text-smaller' href='".sprintf($link_type[$ratings_data['rating_type']], $ratings_data['rating_item_id'])."'><strong>".$comments_type[$ratings_data['rating_type']]."</strong></a>";
 			echo "<span class='text-smaller text-lighter m-l-10'>".str_repeat("<i class='entypo star'></i>", $ratings_data['rating_vote'])."</span>\n";
 			echo "&nbsp;<span class='text-smaller'>".timer($ratings_data['rating_datestamp'])."</span><br/>\n";
 			echo "</div>\n";
@@ -258,6 +258,7 @@ function render_dashboard() {
 		echo "<div class='text-center'>".$global_ratings['nodata']."</div>\n";
 	}
 	closeside();
+	// Submissions
 	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-4'>\n";
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['279']."</strong></span><span class='pull-right label label-warning'>".number_format($global_submissions['rows'])."</span>");
 	if (count($global_submissions['data']) > 0) {
@@ -339,5 +340,4 @@ function render_admin_icon() {
 	echo "</td></tr></table>\n";
 	closetable();
 }
-
 ?>
