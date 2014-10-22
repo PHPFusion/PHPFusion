@@ -232,6 +232,7 @@ function render_dashboard() {
 	} else {
 		echo "<div class='text-center'>".$global_comments['nodata']."</div>\n";
 	}
+	closeside();
 	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-4'>\n";
 	// Ratings
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['278']."</strong></span>");
