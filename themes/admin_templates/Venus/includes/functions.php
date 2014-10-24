@@ -119,7 +119,7 @@ function render_dashboard() {
 	echo "</div>\n";
 	echo "<div class='pull-left display-inline-block m-r-10'>\n";
 	echo "<span class='text-smaller'>".$locale['257']."</span>\n<br/>\n";
-	echo "<h4 class='m-t-0'>".number_format($download['comment_id'])."</h4>\n";
+	echo "<h4 class='m-t-0'>".number_format($download['comment'])."</h4>\n";
 	echo "</div>\n";
 	echo "<div class='pull-left display-inline-block m-r-10'>\n";
 	echo "<span class='text-smaller'>".$locale['254']."</span>\n<br/>\n";
@@ -233,7 +233,6 @@ function render_dashboard() {
 	}
 	closeside();
 	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-4'>\n";
-
 	// Ratings
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['278']."</strong></span>");
 	if (count($global_ratings['data']) > 0) {
@@ -258,7 +257,6 @@ function render_dashboard() {
 		echo "<div class='text-center'>".$global_ratings['nodata']."</div>\n";
 	}
 	closeside();
-	// Submissions
 	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-4'>\n";
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['279']."</strong></span><span class='pull-right label label-warning'>".number_format($global_submissions['rows'])."</span>");
 	if (count($global_submissions['data']) > 0) {
@@ -340,4 +338,5 @@ function render_admin_icon() {
 	echo "</td></tr></table>\n";
 	closetable();
 }
+
 ?>

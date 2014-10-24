@@ -61,7 +61,7 @@ $forum['post'] = dbcount("('post_id')", DB_POSTS);
 $forum['users'] = dbcount("('user_id')", DB_USERS, "user_posts > '0'");
 // downloads stats
 $download['download'] = dbcount("('download_id')", DB_DOWNLOADS);
-$download['comment_id'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='d'");
+$download['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='d'");
 $download['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'");
 // articles stats
 $articles['article'] = dbcount("('article_id')", DB_ARTICLES);
