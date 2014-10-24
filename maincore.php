@@ -1177,15 +1177,6 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 	return $link;
 }
 
-// Add links to breadcrumbs array
-function add_to_breadcrumbs($link) {
-	global $breadcrumbs;
-
-	if (is_array($link) && !empty($link)) {
-		$breadcrumbs[] = $link;
-	}
-}
-
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."notify/notify.inc.php";
 require_once INCLUDES."sqlhandler.inc.php";

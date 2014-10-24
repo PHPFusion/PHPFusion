@@ -129,4 +129,12 @@ function add_to_jquery($tag = '') {
 	$fusion_jquery_tags[] = $tag;
 }
 
+// Add links to breadcrumbs array
+function add_to_breadcrumbs($link) {
+	global $breadcrumbs;
+	if (is_array($link) && !empty($link)) {
+		$breadcrumbs[] = $link;
+	}
+}
+
 ?>
