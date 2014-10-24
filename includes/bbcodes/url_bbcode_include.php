@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: url_bbcode_include.php
-| Author: Wooya
+| Author: JoiNNN
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,22 +17,15 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-if (phpversion()>5) {
-	$text = preg_replace_callback(
-		"#\[url\]([\r\n]*)(http://|ftp://|https://|ftps://)([^\s\'\"]*?)([\r\n]*)\[/url\]#si",
-		function($m) {
-			require LOCALE.LOCALESET."bbcodes/url.php";
-			$this_url = $m['2'].$m['3'];
-			return "<a href='$this_url' target='_blank' title='$this_url'/>
-                ".trimlink($this_url, 20). (strlen($this_url)>30 ? substr($this_url, strlen($this_url)-10, strlen($this_url)):'')."
-                </a>";
-		}, $text);
-} else {
-	//Url BBCode with auto triming long links
-	$text = preg_replace('#\[url\]([\r\n]*)(http://|ftp://|https://|ftps://)([^\s\'\"]*?)([\r\n]*)\[/url\]#sie', "'<a href=\'\\2\\3\' target=\'_blank\' title=\'\\2\\3\'>'.trimlink('\\2\\3', 20).(strlen('\\2\\3')>30?substr('\\2\\3', strlen('\\2\\3')-10, strlen('\\2\\3')):'').'</a>'", $text);
-}
+if (!function_exists('replace_url')) {
+	function replace_url($m) {
+		// Get input url if any, if not get the content as a url but check if has a schema, if not add one
+		$this_url = (!empty($m['url']) ? $m['url'] : (preg_match("#^(http://|ftp://|https://|ftps://)#i", $m['content']) ? $m['content'] : "http://".$m['content']));
+		// Trim only the default url
+		$content = (empty($m['url']) ? trimlink($m['content'], 40).(strlen($m['content']) > 40 ? substr($m['content'], strlen($m['content'])-10, strlen($m['content'])) : '') : $m['content']);
 
-//Url BBCode with auto triming long links
-$text = preg_replace('#\[url=([\r\n]*)(http://|ftp://|https://|ftps://)([^\s\'\"]*?)\](.*?)([\r\n]*)\[/url\]#si', '<a href=\'\2\3\' target=\'_blank\' title=\'\2\3\'>\4</a>', $text);
-$text = preg_replace('#\[url=([\r\n]*)([^\s\'\"]*?)\](.*?)([\r\n]*)\[/url\]#si', '<a href=\'http://\2\' target=\'_blank\' title=\'\2\'>\3</a>', $text);
+		return "<a href='$this_url' target='_blank' title='".urldecode($this_url)."'>".$content."</a>";
+	}
+}
+$text = preg_replace_callback('#\[url(=(?P<url>(http://|ftp://|https://|ftps://)(.*?)))?\](?P<content>.*?)\[/url\]#iU', 'replace_url', $text);
 ?>
