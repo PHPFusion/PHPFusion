@@ -113,11 +113,4 @@ if (function_exists('mysql_set_charset') === false) {
     }
 }
 
-function db_exists($table) {
-	if (dbrows(dbquery("SHOW TABLES LIKE '".$table."'")) == 1) {
-		return true;
-	}
-	return false;
-}
-
 ?>

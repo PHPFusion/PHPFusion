@@ -671,4 +671,11 @@ function dbcompress($data, $mode, $delimiter = FALSE, $sdelimiter = FALSE) {
 	}
 }
 
+function table_exists($table) {
+	if (dbrows(dbquery("SHOW TABLES LIKE '".DB_PREFIX.$table."'")) == 1) {
+		return true;
+	}
+	return false;
+}
+
 ?>
