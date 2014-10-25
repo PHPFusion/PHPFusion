@@ -84,10 +84,10 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 
 	if ($preview && $type) {
-		$tab_title['title'][] = "Preview";
+		$tab_title['title'][] = $locale['preview'];
 		$tab_title['id'][] = "prw-".$input_id."";
 		$tab_title['icon'][] = '';
-		$tab_title['title'][] = "Text";
+		$tab_title['title'][] = $locale['texts'];
 		$tab_title['id'][] = "txt-".$input_id."";
 		$tab_title['icon'][] = '';
 		$tab_active = tab_active($tab_title, 1);
@@ -103,7 +103,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	}
 	$html .= ($type) ? "</div>\n<div class='panel-body p-0'>\n" : '';
 
-	$html .= "<textarea name='$input_name' style='width:100%; height:$height; ".($resize == '0' ? 'resize: none;' : '')."' class='form-control p-10 $class ".($autosize ? 'animated-height' : '')." ".($bbcode || $html_input ? "no-shadow no-border" : '')." textbox ' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
+	$html .= "<textarea name='$input_name' style='width:100%; height:$height; ".($resize == '0' ? 'resize: none;' : '')."' class='form-control m-0 p-10 $class ".($autosize ? 'animated-height' : '')." ".($bbcode || $html_input ? "no-shadow no-border" : '')." textbox ' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
 
 	if ($type) {
 		$html .= "</div>\n<div class='panel-footer'>\n";
