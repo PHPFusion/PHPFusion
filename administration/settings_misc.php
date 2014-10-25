@@ -37,7 +37,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 
 if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	$error = 0;
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['tinymce_enabled']) ? $_POST['tinymce_enabled'] : "0")."' WHERE settings_name='tinymce_enabled'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['tinymce_enabled']) && isnum($_POST['tinymce_enabled']) ? $_POST['tinymce_enabled'] : "0")."' WHERE settings_name='tinymce_enabled'");
 	if (!$result) {
 		$error = 1;
 	}
@@ -62,31 +62,31 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	if (!$result) {
 		$error = 1;
 	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['login_method']) ? $_POST['login_method'] : "0")."' WHERE settings_name='login_method'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['login_method']) && isnum($_POST['login_method']) ? $_POST['login_method'] : "0")."' WHERE settings_name='login_method'");
 	if (!$result) {
 		$error = 1;
 	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['mime_check']) ? $_POST['mime_check'] : "0")."' WHERE settings_name='mime_check'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['mime_check']) && isnum($_POST['mime_check']) ? $_POST['mime_check'] : "0")."' WHERE settings_name='mime_check'");
 	if (!$result) {
 		$error = 1;
 	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['guestposts']) ? $_POST['guestposts'] : "0")."' WHERE settings_name='guestposts'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['guestposts']) && isnum($_POST['guestposts']) ? $_POST['guestposts'] : "0")."' WHERE settings_name='guestposts'");
 	if (!$result) {
 		$error = 1;
 	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['comments_enabled']) ? $_POST['comments_enabled'] : "0")."' WHERE settings_name='comments_enabled'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['comments_enabled']) && isnum($_POST['comments_enabled']) ? $_POST['comments_enabled'] : "0")."' WHERE settings_name='comments_enabled'");
 	if (!$result) {
 		$error = 1;
 	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['ratings_enabled']) ? $_POST['ratings_enabled'] : "0")."' WHERE settings_name='ratings_enabled'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['ratings_enabled']) && isnum($_POST['ratings_enabled']) ? $_POST['ratings_enabled'] : "0")."' WHERE settings_name='ratings_enabled'");
 	if (!$result) {
 		$error = 1;
 	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['visitorcounter_enabled']) ? $_POST['visitorcounter_enabled'] : "0")."' WHERE settings_name='visitorcounter_enabled'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['visitorcounter_enabled']) && isnum($_POST['visitorcounter_enabled']) ? $_POST['visitorcounter_enabled'] : "0")."' WHERE settings_name='visitorcounter_enabled'");
 	if (!$result) {
 		$error = 1;
 	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['rendertime_enabled']) ? $_POST['rendertime_enabled'] : "0")."' WHERE settings_name='rendertime_enabled'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['rendertime_enabled']) && isnum($_POST['rendertime_enabled']) ? $_POST['rendertime_enabled'] : "0")."' WHERE settings_name='rendertime_enabled'");
 	if (!$result) {
 		$error = 1;
 	}
@@ -94,11 +94,10 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	if (!$result) {
 		$error = 1;
 	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['comments_avatar']) ? $_POST['comments_avatar'] : "0")."' WHERE settings_name='comments_avatar'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['comments_avatar']) && isnum($_POST['comments_avatar']) ? $_POST['comments_avatar'] : "0")."' WHERE settings_name='comments_avatar'");
 	if (!$result) {
 		$error = 1;
 	}
-	//print_p($_POST);
 	redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
