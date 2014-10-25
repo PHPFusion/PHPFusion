@@ -534,6 +534,18 @@ function trimlink($text, $length) {
    $text = str_replace($dec, $enc, $text);
    return $text;
 }
+// Wanabo trim word function
+function trim_word($text, $word_length) {
+	$string = preg_replace('/(?<=\S,)(?=\S)/', ' ', $text);
+	$string = str_replace("\n", " ", $string);
+	$array  = explode(" ", $string);
+	if (count($array)<=$word_length) {
+		$string = $string;
+	} else {
+		array_splice($array, $word_length); $string = implode(" ", $array)   ;
+	}
+	return $string;
+}
 
 // Pure trim function
 function trim_text($str, $length = FALSE) {
