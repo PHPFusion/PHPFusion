@@ -17,10 +17,11 @@
 +--------------------------------------------------------*/
 $fusion_page_replacements = "";
 $fusion_output_handlers = "";
-$fusion_page_title = $settings['sitename'];
+$fusion_page_title = "";
 $fusion_page_meta = array("description" => $settings['description'], "keywords" => $settings['keywords']);
 $fusion_page_head_tags = "";
 $fusion_page_footer_tags = "";
+
 function set_title($title = "") {
 	global $fusion_page_title;
 	$fusion_page_title = $title;
@@ -28,6 +29,7 @@ function set_title($title = "") {
 
 function add_to_title($addition = "") {
 	global $fusion_page_title;
+   $addition = preg_replace("/".$GLOBALS['locale']['global_200']."/", '', $addition, 1);
 	$fusion_page_title .= $addition;
 }
 
@@ -78,20 +80,21 @@ function add_permalink_handler($name) {
 
 function handle_output($output) {
 	global $permalink, $fusion_page_head_tags, $fusion_page_footer_tags, $fusion_page_title, $fusion_page_meta, $fusion_page_replacements, $fusion_output_handlers, $settings;
-	//if (!empty($fusion_page_footer_tags)) {
-	//	$output = preg_replace("#</body>#", $fusion_page_footer_tags."</body>", $output, 1);
-	//}
+
 	if (!empty($fusion_page_head_tags)) {
 		$output = preg_replace("#</head>#", $fusion_page_head_tags."</head>", $output, 1);
 	}
+
 	if ($fusion_page_title != $settings['sitename']) {
-		$output = preg_replace("#<title>.*</title>#i", "<title>".$fusion_page_title."</title>", $output, 1);
+		$output = preg_replace("#<title>.*</title>#i", "<title>".$fusion_page_title.$GLOBALS['locale']['global_200'].$settings['sitename']."</title>", $output, 1);
 	}
+	
 	if (!empty($fusion_page_meta)) {
 		foreach ($fusion_page_meta as $name => $content) {
 			$output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
 		}
 	}
+
 	if (!empty($fusion_page_replacements)) {
 		eval($fusion_page_replacements);
 	}
