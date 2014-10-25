@@ -16,13 +16,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once INCLUDES."notify/notify.inc.php";
 include LOCALE.LOCALESET."defender.php";
 
 class defender {
-	public $debug = false;
+	public $debug = FALSE;
 	public $ref = array();
+
 	/* Sanitize Fields Automatically */
 	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
 		global $locale;
@@ -92,9 +92,7 @@ class defender {
 	/* Jquery Error Class Injector */
 	public function addError($id) {
 		// add class to id.
-		add_to_jquery("
-            $('#$id-field').addClass('has-error');
-            ");
+		add_to_jquery("$('#$id-field').addClass('has-error');");
 	}
 
 	public function noAdminCookie() {
@@ -116,10 +114,8 @@ class defender {
 		}
 	}
 
-
 	public function verify_tokens($form, $post_time = 10, $preserve_token = FALSE) {
 		global $locale, $settings, $userdata;
-
 		$error = array();
 		$user_id = (isset($userdata['user_id']) ? $userdata['user_id'] : 0);
 		$algo = $settings['password_algorithm'];
@@ -195,7 +191,7 @@ class defender {
 			add_to_jquery("
                 $('#$id-help').addClass('label label-danger m-t-5 p-5 display-inline-block');
                 $('#$id-help').append('$content');
-                ");
+			");
 		}
 	}
 
@@ -244,6 +240,7 @@ class defender {
 
 	/* Read Dynamics Data - Build Defense Config */
 	public function defenseOpts($input_name) {
+		global $locale;
 		$array = array();
 		$array = construct_array($input_name);
 		$data = array();
@@ -263,7 +260,9 @@ class defender {
 			$opts['safemode'] = array_key_exists("safemode", $data) ? $data['safemode'] : 0;
 			$opts['path'] = array_key_exists("path", $data) ? $data['path'] : '';
 			$opts['thumbnail'] = array_key_exists("thumbnail", $data) ? $data['thumbnail'] : '';
-			$opts['error_text'] = array_key_exists('error_text', $data) && $data['error_text'] ? $data['error_text'] : "".$opts['name']." needs your attention";
+			$opts['thumbnail_db'] = array_key_exists("thumbnail_db", $data) ? $data['thumbnail_db'] : '';
+			$opts['error_text'] = array_key_exists('error_text', $data) && $data['error_text'] ? $data['error_text'] : sprintf($locale['df_error_text'], $opts['name']);
+			//"".$opts['name']." needs your attention";
 			return $opts;
 		}
 		return FALSE;
@@ -310,7 +309,6 @@ class defender {
 		}
 	}
 
-
 	private function validate_email($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
 		global $locale;
 		$value = stripinput(trim(preg_replace("/ +/i", " ", $value)));
@@ -350,7 +348,6 @@ class defender {
 		} else {
 			$value = stripinput($value);
 		}
-
 		if ($value) {
 			if (is_numeric($value)) {
 				return $value;
@@ -382,7 +379,6 @@ class defender {
 		//@todo: To build the most complete File check ever on PHP-Fusion. Consolidate every code in one place. Add own logic.
 		require_once INCLUDES."photo_functions_include.php";
 		$true_file = $default;
-
 		if ($value['name'] && is_uploaded_file($value['tmp_name'])) {
 			if (isset($value['name'])) {
 				require_once BASEDIR.'includes/mimetypes_include.php';
@@ -419,7 +415,6 @@ class defender {
 				foreach ($mimetypes as $mime_type => $mime_hex) {
 					$allowed_ext[] = $mime_type;
 				}
-
 				// name check
 				if (!preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $file_name)) {
 					$errors[] = 1;
@@ -469,7 +464,6 @@ class defender {
 						$this->addNotice($error_text);
 					}
 				}
-
 				// verify the image for malicious code.
 				if ($type == 'image' && (!verify_image($value['tmp_name']))) {
 					$errors[] = 1;
@@ -478,18 +472,17 @@ class defender {
 					$this->addHelperText($id, $locale['df_419']);
 					$this->addNotice($locale['df_419']);
 				}
-				// check on folder exist for path. if not exist, crash again.
 				if (!file_exists($path)) {
-					$errors[] = 1;
 					// Only available in 8.00
-					//if (!file_exists($path) && $settings['generate_folder']) {
-					//    mkdir($location, 0644, true);
-					//} else {
-					$this->stop();
-					$this->addError($id);
-					$this->addHelperText($id, $locale['df_420']);
-					$this->addNotice($locale['df_420']);
-					//}
+					if (!SAFEMODE && !file_exists($path)) {
+						mkdir($path, 0755, TRUE);
+					} else {
+						$errors[] = 1;
+						$this->stop();
+						$this->addError($id);
+						$this->addHelperText($id, $locale['df_420']);
+						$this->addNotice($locale['df_420']);
+					}
 				}
 				// No major big errors.
 				if (count($errors) === 0) {
@@ -517,18 +510,16 @@ class defender {
 								$this->addNotice(sprintf($locale['df_421'], $settings['photo_max_w'], $settings['photo_max_h']));
 							} else {
 								// generates a thumbnail folder on 8.00.
-								//if (!file_exists($path) && $settings['generate_thumbnail_folder']) {
-								//  mkdir($path."thumbnail", 0644, true);
-								//	$photo_thumb1 = image_exists($path, $true_file."_t1".$ext);
-								//	createthumbnail($image_file[2], $path."thumbnail/".$true_file, $path."thumbnail/".$photo_thumb1, $settings['thumb_w'], $settings['thumb_h']);
-								//}
+								if ($thumbnail && !file_exists($thumbnail)) {
+									mkdir($thumbnail, 0755, TRUE);
+								}
 								if ($thumbnail) {
-									$photo_thumb1 = image_exists($path, $hashed_filename."_t1".$ext);
-									createthumbnail($image_file[2], $path.$true_file, $path.$photo_thumb1, $settings['thumb_w'], $settings['thumb_h']);
+									$photo_thumb1 = image_exists($thumbnail, $hashed_filename."_t1".$ext);
+									createthumbnail($image_file[2], $path.$true_file, $thumbnail.$photo_thumb1, $settings['thumb_w'], $settings['thumb_h']);
 									if ($image_file[0] > $settings['photo_w'] || $image_file[1] > $settings['photo_h']) {
 										// rewrite the image since both name is same.
-										$photo_thumb2 = image_exists($path, $hashed_filename."_t2".$ext);
-										createthumbnail($image_file[2], $path.$true_file, $path.$photo_thumb2, $settings['photo_w'], $settings['photo_h']);
+										$photo_thumb2 = image_exists($thumbnail, $hashed_filename."_t2".$ext);
+										createthumbnail($image_file[2], $path.$true_file, $thumbnail.$photo_thumb2, $settings['photo_w'], $settings['photo_h']);
 									}
 								}
 							}
@@ -559,7 +550,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE) {
 				$defender->addNotice($data['error_text']);
 			} else {
 				//$type, $value, $default, $name, $id, $opts;
-				$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['path'], $data['safemode'], $data['error_text'], $data['thumbnail']);
+				$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['path'], $data['safemode'], $data['error_text'], $data['thumbnail'], $data['thumbnail_db']);
 				return $val;
 			}
 		}

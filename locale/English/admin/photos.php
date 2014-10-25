@@ -41,6 +41,7 @@ $locale['456'] = "Date: ";
 $locale['457'] = "Added by: ";
 $locale['458'] = "Views: ";
 $locale['459'] = "Comments: ";
+$locale['460'] = "No Thumbnail";
 // Current Photos options
 $locale['470'] = "Select all";
 $locale['471'] = "Unselect all";
@@ -75,6 +76,7 @@ $locale['507'] = "3. You can select more than one photo by holding the key [SHIF
 $locale['508'] = "Select photo(s):";
 $locale['509'] = "Add selected photo(s) to album";
 $locale['510'] = "No photos found";
+$locale['511'] = "Photo Options";
 // Messages
 $locale['520'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
 $locale['521'] = "Comments";

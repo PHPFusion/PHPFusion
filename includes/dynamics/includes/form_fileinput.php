@@ -43,6 +43,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		$url = '';
 		$type = 'all';
 		$thumbnail = '';
+		$thumbnail_db = '';
 	} else {
 		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
 		$label = (array_key_exists('label', $array)) ? $array['label'] : $locale['browse'];
@@ -51,14 +52,15 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? '1' : '0';
 		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? '1' : '0';
 		$width = (array_key_exists('width', $array)) ? $array['width'] : "";
-		$error_text = (array_key_exists("error_text", $array)) ? $array['helper'] : "";
+		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
 		$inline = (array_key_exists('inline', $array)) ? 1 : 0;
 		$url = (array_key_exists('url', $array)) ? $array['url'] : ''; // for ajax uplaod file path
 		$type = 'all';
 		if (array_key_exists('image', $array) && $array['image'] == 1) {
 			$type = 'image';
 		} // can add type here with elseif.
-		$thumbnail = (array_key_exists('thumbnail', $array)) ? 1 : 0;
+		$thumbnail = (array_key_exists('thumbnail_path', $array)) ? $array['thumbnail_path'] : '';
+		$thumbnail_db = (array_key_exists('thumbnail_db', $array)) ? $array['thumbnail_db'] : ''; // not yet supported
 	}
 
 	$html = "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
@@ -68,7 +70,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=$type],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode],[path=$upload_path],[thumbnail=$thumbnail]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>\n";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=$type],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode],[path=$upload_path],[thumbnail=$thumbnail],[thumbnail_db=$thumbnail_db]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>\n";
 
 	add_to_jquery("
         $('#".$input_id."').fileinput({

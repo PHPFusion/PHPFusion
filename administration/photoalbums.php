@@ -149,8 +149,8 @@ if (function_exists('gd_info')) {
 	} elseif (isset($_POST['save_album'])) {
 		$error = "";
 		$album_title = form_sanitizer($_POST['album_title'], '', 'album_title');
-		$album_description = stripinput($_POST['album_description']);
-		$album_language = stripinput($_POST['album_language']);
+		$album_description = form_sanitizer($_POST['album_description'], '', 'album_description');
+		$album_language = form_sanitizer($_POST['album_language'], '', 'album_language');
 		$album_access = isnum($_POST['album_access']) ? $_POST['album_access'] : "0";
 		$album_order = isnum($_POST['album_order']) ? $_POST['album_order'] : "";
 		if (!SAFEMODE && (!isset($_GET['action']) || $_GET['action'] != "edit")) {
@@ -251,6 +251,7 @@ if (function_exists('gd_info')) {
 	while (list($key, $user_group) = each($user_groups)) {
 		$access_opts[$user_group['0']] = $user_group['1'];
 	}
+	echo "<div class='panel panel-default'><div class='panel-body'>\n";
 	echo openform('input_form', 'input_form', 'post', $formaction, array('downtime' => 0, 'enctype' => '1'));
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && ($album_thumb && file_exists(PHOTOS.$album_thumb))) {
 		echo "<div class='row'>\n";
@@ -275,10 +276,7 @@ if (function_exists('gd_info')) {
 	echo form_select($locale['442'], 'album_access', 'album_access', $access_opts, $album_access, array('placeholder' => 1, 'class' => 'pull-left m-r-10'));
 	echo form_text($locale['443'], 'album_order', 'album_order', $album_order, array('number' => 1, 'width' => '100px'));
 	if (!isset($_GET['action'])) {
-		echo "<div class='form-group m-b-10'>\n";
-		echo "<label class='control-label p-l-0 col-xs-12 col-sm-12 col-md-12 col-lg-12'>".$locale['444']."</label><br/>\n";
-		echo "<input type='file' name='album_pic_file' class='textbox' style='width:250px;' />";
-		echo "</div>\n";
+		echo form_fileinput($locale['444'], 'album_pic_file', 'album_pic_file', IMAGES."photoalbum/", '', array('image'=>1, 'thumbnail_path'=>1, 'thumbnail_db'=>DB_PHOTO_ALBUMS));
 	}
 	echo form_button($locale['445'], 'save_album', 'save_album', $locale['445'], array('class' => 'btn-primary m-t-10'));
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
@@ -286,7 +284,9 @@ if (function_exists('gd_info')) {
 	}
 	echo "</div>\n</div>\n";
 	echo closeform();
+	echo "</div>\n</div>\n";
 	closetable();
+
 	opentable($locale['402']);
 	$rows = dbcount("(album_id)", "".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."'" : "")."");
 	if ($rows) {
@@ -324,9 +324,9 @@ if (function_exists('gd_info')) {
 			}
 			echo "<div class='col-xs-12 col-sm-".floor(12/$settings['thumbs_per_row'])." col-md-".floor(12/$settings['thumbs_per_row'])." col-lg-".floor(12/$settings['thumbs_per_row'])."'>\n";
 			echo "<div class='panel panel-default'>\n";
-			echo "<div class='img-container' style='overflow:hidden; max-height:100px;'>\n";
+			echo "<div class='img-container text-center' style='overflow:hidden; max-height:100px;'>\n";
 			if ($data['album_thumb'] && file_exists(PHOTOS.$data['album_thumb'])) {
-				echo "<img class='img-responsive' src='".PHOTOS.rawurlencode($data['album_thumb'])."' alt='".$locale['460']."' style='width:200px; border:0px' />";
+				echo "<img class='img-center img-responsive' src='".PHOTOS.rawurlencode($data['album_thumb'])."' alt='".$locale['460']."' style='width:200px; border:0px' />";
 			} else {
 				echo "<img class='img-responsive' src='holder.js/200x100/text:".$locale['460']."/grey' alt='".$locale['460']."' style='border:0px' />";
 			}
