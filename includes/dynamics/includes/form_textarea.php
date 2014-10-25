@@ -20,10 +20,11 @@
 
 function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
 	global $locale, $userdata, $userdata; // for editor
-
+	// use once because we might use multiple textarea in a single page.
 	require_once INCLUDES."bbcode_include.php";
-	include_once LOCALE.LOCALESET."admin/html_buttons.php";
 	require_once INCLUDES."html_buttons_include.php";
+	include_once LOCALE.LOCALESET."admin/html_buttons.php";
+	include_once LOCALE.LOCALESET."error.php";
 
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
@@ -108,7 +109,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 
 	if ($type) {
 		$html .= "</div>\n<div class='panel-footer'>\n";
-		$html .= "<small>Word Count: <span id='".$input_id."-wordcount'></span></small>";
+		$html .= "<small>".$locale['word_count'].": <span id='".$input_id."-wordcount'></span></small>";
 		add_to_jquery("
 		var init_str = $('#".$input_id."').val().length;
 		$('#".$input_id."-wordcount').text(init_str);
@@ -141,8 +142,8 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 			},
 			error: function(result) {
 				new PNotify({
-					title: 'Error fetching result',
-					text: 'There are server error and preview cannot be resolved. Please contact administrator.',
+					title: '".$locale['error_preview']."',
+					text: '".$locale['error_preview_text']."',
 					icon: 'notify_icon n-attention',
 					animation: 'fade',
 					width: 'auto',
