@@ -237,7 +237,7 @@ echo "</div>\n";
 
 echo "<div class='clearfix'>\n";
 echo "<label for='photo_watermark_save'>".$locale['617']."</label>\n<span class='small2'>".$locale['618']."</span>\n<br/>\n";
-echo form_select('', 'photo_watermark_save', 'photo_watermark_save', $yes_no_array, $settings2['photo_watermark']);
+echo form_select('', 'photo_watermark_save', 'photo_watermark_save', $yes_no_array, $settings2['photo_watermark_save']);
 echo form_button($locale['619'], 'delete_watermarks', 'delete_watermarks', $locale['619'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0, 'class' => 'm-t-10 m-b-10 btn-primary'));
 echo "</div>\n";
 
