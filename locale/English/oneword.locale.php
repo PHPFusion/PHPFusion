@@ -13,11 +13,16 @@ $locale['no'] = "No";
 $locale['yes'] = "Yes";
 $locale['off'] = "Off";
 $locale['on'] = "On";
+$locale['or'] = "or";
+$locale['by'] = "by";
+$locale['in'] = "in";
+$locale['of'] = "of";
 // Navigation
 $locale['next'] = "Next";
 $locale['pevious'] = "Previous";
 $locale['back'] = "Back";
 $locale['forward'] = "Forward";
+$locale['go'] = "Go";
 // Action
 $locale['add'] = "Add";
 $locale['save'] = "Save";

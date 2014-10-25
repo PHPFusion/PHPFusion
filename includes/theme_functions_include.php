@@ -16,25 +16,44 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {die("Access Denied");}
 
-function openmodal($id, $title, $opts = FALSE) {
-	if (!empty($opts)) {
-		if (array_key_exists('button_id', $opts) && $opts['button_id']) {
-			add_to_jquery("$('#".$opts['button_id']."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
+function dynamic_block($title, $description, $form_input) {
+	return "
+		<div class='dms-switch list-group-item'>\n
+		<div class='row pointer dms-block'>\n
+		<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 text-black'>\n<img style='display:none;' class='loader p-a m-r-10' src='".IMAGES."loader.gif'> <b>$title</b></div>\n
+		<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8 grey'>\n$description</div>\n
+		<div class='col-2 status'><i class='entypo pencil'></i>Edit</div>\n
+		</div>\n
+		<div class='row pointer display-none dms-form'>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 text-black'>\n<img style='display:none;' class='loader p-b m-r-10' src='".IMAGES."loader.gif'> <strong>$title</strong></div>\n
+		<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8 grey'>\n
+		$form_input
+		</div>\n<div class='col-2'>&nbsp;</div>\n</div>\n
+		</div>";
+}
+
+function openmodal($id, $title, $array = FALSE) {
+
+	if (!is_array($array)) {
+		add_to_jquery("	$('#".$id."-Modal').modal('show');");
+		$class = 'modal-lg';
+	} else {
+		if (array_key_exists('button_id', $array) && $array['button_id']) {
+			add_to_jquery("$('#".$array['button_id']."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
 		} else {
 			add_to_jquery("$('#".$id."-Modal').modal('show');");
 		}
-	} else {
-		add_to_footer("<script type='text/javascript'>$('#".$id."-Modal').modal('show');</script>");
+		$class = array_key_exists('class', $array) && $array['class'] ? $array['class'] : 'modal-lg';
 	}
+
 	$html = '';
-	$html .= "<div class='modal fade' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
-	$html .= "<div class='modal-dialog modal-lg'>\n";
+	$html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
+	$html .= "<div class='modal-dialog ".$class."'>\n";
 	$html .= "<div class='modal-content'>\n";
 	$html .= "<div class='modal-header'>";
 	$html .= "<button type='button' class='btn btn-sm pull-right btn-default' data-dismiss='modal'><i class='entypo cross'></i> Close</button>\n";
-	$html .= "<h4 class='modal-title text-dark' id='myModalLabel'>$title</h4>\n";
+	$html .= "<h4 class='modal-title text-dark' id='$id-title'>$title</h4>\n";
 	$html .= "</div>\n";
 	$html .= "<div class='modal-body'>\n";
 	return $html;
@@ -46,31 +65,55 @@ function closemodal() {
 	return $html;
 }
 
-function progress_bar($percent, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE) {
-	$height = (!$height) ? $height : '20px';
-	$reverse = $reverse ? TRUE : FALSE;
-	if ($percent > 71) {
-		$auto_class = ($reverse) ? 'progress-bar-danger' : 'progress-bar-success';
-	} elseif ($percent > 55) {
-		$auto_class = ($reverse) ? 'progress-bar-warning' : 'progress-bar-info';
-	} elseif ($percent > 25) {
-		$auto_class = ($reverse) ? 'progress-bar-info' : 'progress-bar-warning';
-	} elseif ($percent < 25) {
-		$auto_class = ($reverse) ? 'progress-bar-success' : 'progress-bar-danger';
+function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE) {
+	$height = ($height) ? $height : '20px';
+	if (!function_exists('bar_color')) {
+		function bar_color($num, $reverse) {
+		if ($num > 71) {
+			$auto_class = ($reverse) ? 'progress-bar-danger' : 'progress-bar-success';
+		} elseif ($num > 55) {
+			$auto_class = ($reverse) ? 'progress-bar-warning' : 'progress-bar-info';
+		} elseif ($num > 25) {
+			$auto_class = ($reverse) ? 'progress-bar-info' : 'progress-bar-warning';
+		} elseif ($num < 25) {
+			$auto_class = ($reverse) ? 'progress-bar-success' : 'progress-bar-danger';
+		}
+		return $auto_class;
+		}
 	}
-	$class = (!$class) ? $auto_class : $class;
-	$html = "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$percent%</span></div>\n";
-	$html .= "<div class='progress' style='height: ".$height." !important;'>\n";
-	$html .= "<div class='progress-bar ".$class." bar' role='progressbar' aria-valuenow='$percent' aria-valuemin='0' aria-valuemax='100' style='width: $percent%'>\n";
-	$html .= "</div></div>\n";
+	$_barcolor = array('progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger');
+	$_barcolor_reverse = array('progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger');
+	$html = '';
+
+	if (is_array($num)) {
+		$html .= "<div class='progress' style='height: ".$height." !important;'>\n";
+		$i = 0;
+		foreach($num as $value) {
+			$value = $value > 0 ? $value : '0';
+			$auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
+			$classes = (is_array($class)) ? $class[$i] : $auto_class;
+			$html .= "<div class='progress-bar ".$classes." bar' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $value%'>\n";
+			$html .= "</div>\n";
+			$i++;
+		}
+		$html .= "</div>\n";
+	} else {
+		$num = $num > 0 ? $num : '0';
+		$auto_class = bar_color($num, $reverse);
+		$class = (!$class) ? $auto_class : $class;
+		$html .= "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num ".($as_percent ? '%' : '')."</span></div>\n";
+		$html .= "<div class='progress m-b-10' style='height: ".$height." !important;'>\n";
+		$html .= "<div class='progress-bar ".$class." bar' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $num%'>\n";
+		$html .= "</div></div>\n";
+	}
 	return $html;
 }
 
 function admin_message($text, $class = FALSE) {
 	$class = $class ? $class : 'alert-info';
 	return "<div class='alert $class text-center alert-dismissable' style='color:#222'>
-<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-<strong>$text</strong></div>\n";
+	<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+	<strong>$text</strong></div>\n";
 }
 
 function check_panel_status($side) {
@@ -391,21 +434,21 @@ function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
 	}
 }
 
-function display_avatar($userdata, $size, $class = FALSE, $link = TRUE) {
+function display_avatar($userdata, $size, $class = FALSE, $link = TRUE, $img_class='img-thumbnail') {
 	$class = ($class) ? "class='$class'" : '';
 	if (array_key_exists('user_avatar', $userdata) && $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6') {
 		$userdata['user_id'] = array_key_exists('user_id', $userdata) && $userdata['user_id'] ? $userdata['user_id'] : 1;
 		if ($link) {
-			return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'></a>\n";
+			return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive $img_class m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'></a>\n";
 		} else {
-			return "<img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'>\n";
+			return "<img class='img-responsive $img_class m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'>\n";
 		}
 	} else {
 		$userdata['user_id'] = array_key_exists('user_id', $userdata) && $userdata['user_id'] ? $userdata['user_id'] : 1;
 		if ($link) {
-			return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/noavatar100.png'></a>\n";
+			return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive $img_class m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/noavatar100.png'></a>\n";
 		} else {
-			return "<img class='img-responsive img-thumbnail m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/noavatar100.png'>\n";
+			return "<img class='img-responsive $img_class m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/noavatar100.png'>\n";
 		}
 	}
 }
@@ -562,13 +605,17 @@ function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE
 			$status = '';
 		}
 	} else {
-		if (is_array($tab_title)) {
-			$title = $tab_title['title'];
-			$link = str_replace(" ", "-", $title);
-			$link = str_replace("/", "-", $link);
+		if (!$link) {
+			if (is_array($tab_title)) {
+				$title = $tab_title['title'];
+				$link = str_replace(" ", "-", $title);
+				$link = str_replace("/", "-", $link);
+			} else {
+				$link = str_replace(" ", "-", $tab_title);
+				$link = str_replace("/", "-", $link);
+			}
 		} else {
-			$link = str_replace(" ", "-", $tab_title);
-			$link = str_replace("/", "-", $link);
+			$link = '';
 		}
 		if ($link_active_arrkey == "".$id."$link") {
 			$status = "in active";

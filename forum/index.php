@@ -21,7 +21,7 @@ include LOCALE.LOCALESET."forum/main.php";
 
 add_to_title($locale['global_200'].$locale['400']);
 opentable($locale['400']);
-$tab_title['title'][] = "Forum";
+$tab_title['title'][] = $locale['401'];
 $tab_title['id'][] = "thread";
 $tab_title['icon'][] = "";
 $tab_title['title'][] = $locale['global_021'];
@@ -30,10 +30,9 @@ $tab_title['icon'][] = "";
 $tab_title['title'][] = $locale['global_056'];
 $tab_title['id'][] = "tracked";
 $tab_title['icon'][] = "";
+$tab_active = isset($_GET['section']) ? tab_active($tab_title, 0) : 'thread';
 
-$tab_active = isset($_GET['section']) ? tab_active($tab_title, $_GET['section'], 1) : 'thread';
-
-echo "<div class='panel p-0'>\n";
+echo "<div class='panel tbl-border p-0'>\n";
 echo "<div class='display-inline-block pull-right' style='max-width:250px;'>\n";
 echo openform('searchform', 'searchform', 'post'," ".($settings['site_seo'] == "1" ? FUSION_ROOT : '').$settings['siteurl']."search.php?stype=forums", array('downtime' => 0));
 echo form_hidden('stype', 'stype', 'stype', 'forums');
@@ -108,7 +107,7 @@ function forum() {
 				echo "</div>\n";
 				echo "<table class='forum_idx_table table table-responsive' id='forum_cat_".$data['forum_cat']."' cellpadding='0' cellspacing='0' width='100%'>\n<thead>\n<tr class='forum-cat-head'>\n";
 				echo "<th class='forum-caption forum_cat_name' colspan='2'><!--forum_cat_name-->";
-				echo "Directory";
+				echo $locale['412'];
 				echo "</th>\n";
 				echo "<th class='forum-caption' width='1%' style='white-space:nowrap'>".$locale['402']."</th>\n";
 				echo "<th class='forum-caption' width='1%' style='white-space:nowrap'>".$locale['403']."</th>\n";
@@ -172,18 +171,16 @@ function forum() {
 				}
 				//echo $fim;
 				echo "</a>$fim <br />\n";
-				echo "<span class='lastpost-user small'>by ".profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status'])."</span><br />\n";
+				echo "<span class='lastpost-user small'>".$locale['by']." ".profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status'])."</span><br />\n";
 				echo "<span class='lastpost-date small'>".showdate("forumdate", $data['forum_lastpost'])."</span> \n";
 				echo "</div>\n</td>\n";
 				echo "</tr>\n";
 			}
 		}
-		echo "</tbody></table>\n<!--sub_forum_idx_table-->\n";
+		echo "</tbody>\n</table>\n<!--sub_forum_idx_table-->\n";
 		echo "</div>\n</div>\n";
 	} else {
-		echo "<div class='well text-center'>\n";
 		echo $locale['407']."\n";
-		echo "</div>\n";
 	}
 }
 
@@ -219,7 +216,7 @@ function latest() {
 			echo "<tr id='forum_".$data['forum_id']."' >\n";
 			$sdata['user_avatar'] = $data['s_user_avatar'];
 			echo "<td class='tbl1 forum-name'><!--forum_name--><h3><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."'>".$itemsubject."</a></h3>\n";
-			echo "<div class='m-t-10'>\nby ".display_avatar($sdata, '25px')." ".profile_link($data['s_user_id'], $data['s_user_name'], $data['s_user_status'])." in <a href='".FORUM."index.php?cat_id=".$data['forum_id']."'>".$data['forum_name']."</a> of <a href='".FORUM."index.php?cat_id=".$data['forum_cat_id']."'>".$data['forum_cat_name']."</a>\n</div>\n";
+			echo "<div class='m-t-10'>\n".$locale['by']." ".display_avatar($sdata, '25px')." ".profile_link($data['s_user_id'], $data['s_user_name'], $data['s_user_status'])." ".$locale['in']." <a href='".FORUM."index.php?cat_id=".$data['forum_id']."'>".$data['forum_name']."</a> ".$locale['of']." <a href='".FORUM."index.php?cat_id=".$data['forum_cat_id']."'>".$data['forum_cat_name']."</a>\n</div>\n";
 			echo "</td>\n";
 			echo "<td class='tbl forum-stats text-center'>\n";
 			echo number_format($data['forum_threadcount']);
@@ -235,28 +232,24 @@ function latest() {
 				if ($settings['forum_last_post_avatar'] == 1) {
 					echo "<div class='pull-left lastpost-avatar m-r-10'>".display_avatar($data, '50px')."</div>";
 				}
-				echo "<span class='lastpost-user small'>by ".profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status'])."</span><br />\n";
+				echo "<span class='lastpost-user small'>".$locale['by']." ".profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status'])."</span><br />\n";
 				echo "<span class='lastpost-date small'>".showdate("forumdate", $data['forum_lastpost'])."</span> \n";
 				echo "</div>\n</td>\n";
 				echo "</tr>\n";
 			}
 		}
 		echo "</tbody>\n</table>\n";
-
-		echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
-		$opts = array('0' => 'All Results', '1' => '1 Day', '7' => '7 Days', '14' => '2 Weeks', '30' => '1 Month',
-			'90' => '3 Months', '180' => '6 Months', '365' => '1 Year');
-		echo openform('filter_form', 'filter_form', 'post', FORUM."index.php?section=latest", array('downtime' => 0));
-		echo form_button('Go', 'go', 'go', 'Go', array('class' => 'btn-primary pull-right'));
-		echo form_select('', 'filter', 'filter', $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '200px',
-			'class' => 'pull-right m-l-10 m-r-10'));
-		echo "<label for='filter' class='pull-right'>Display Posts from Previous</label>\n";
-		echo closeform();
-
 	} else {
 		echo "<div class='well text-center'>\n".$locale['global_023']."</div>\n";
 	}
-
+	echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
+	$opts = array('0' => 'All Results', '1' => '1 Day', '7' => '7 Days', '14' => '2 Weeks', '30' => '1 Month',
+				  '90' => '3 Months', '180' => '6 Months', '365' => '1 Year');
+	echo openform('filter_form', 'filter_form', 'post', FORUM."index.php?section=latest", array('downtime' => 0));
+	echo form_button($locale['go'], 'go', 'go', $locale['go'], array('class' => 'btn-primary pull-right'));
+	echo form_select('', 'filter', 'filter', $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '200px', 'class' => 'pull-right m-l-10 m-r-10'));
+	echo "<label for='filter' class='pull-right'>".$locale['413']."</label>\n";
+	echo closeform();
 	echo "</div>\n</div>\n";
 }
 
@@ -314,7 +307,7 @@ function tracked() {
 			$itemsubject = trimlink($data['thread_subject'], 23);
 			echo "<tr>\n";
 			echo "<td class='tbl1 forum-name'><!--forum_name--><h3><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."'>".$itemsubject."</a></h3>\n";
-			echo "<div class='m-t-10'>\nby ".display_avatar($sdata, '25px')." ".profile_link($data['user_id1'], $data['user_name1'], $data['user_status1'])." in <a href='".FORUM."index.php?cat_id=".$data['forum_id']."'>".$data['forum_name']."</a> of <a href='".FORUM."index.php?cat_id=".$data['forum_cat_id']."'>".$data['forum_cat_name']."</a>\n</div>\n";
+			echo "<div class='m-t-10'>\n".$locale['by']." ".display_avatar($sdata, '25px')." ".profile_link($data['user_id1'], $data['user_name1'], $data['user_status1'])." ".$locale['in']." <a href='".FORUM."index.php?cat_id=".$data['forum_id']."'>".$data['forum_name']."</a> ".$locale['of']." <a href='".FORUM."index.php?cat_id=".$data['forum_cat_id']."'>".$data['forum_cat_name']."</a>\n</div>\n";
 			echo "</td>\n";
 			echo "<td class='tbl2' style='text-align:center;white-space:nowrap'>".($data['thread_postcount']-1)."</td>\n";
 			echo "<td class='tbl1 forum-lastpost'>";
@@ -325,7 +318,7 @@ function tracked() {
 				if ($settings['forum_last_post_avatar'] == 1) {
 					echo "<div class='pull-left lastpost-avatar m-r-10'>".display_avatar($sdata2, '50px')."</div>";
 				}
-				echo "<span class='lastpost-user small'>by ".profile_link($data['user_id2'], $data['user_name2'], $data['user_status2'])."</span><br />\n";
+				echo "<span class='lastpost-user small'>".$locale['by']." ".profile_link($data['user_id2'], $data['user_name2'], $data['user_status2'])."</span><br />\n";
 				echo "<span class='lastpost-date small'>".showdate("forumdate", $data['thread_lastpost'])."</span> \n";
 				echo "</div>\n</td>\n";
 			}
@@ -334,9 +327,9 @@ function tracked() {
 			$i++;
 		}
 		echo "</table>\n";
-		echo "<div align='center' style='margin-top:5px;'>".makepagenav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";
+		echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";
 	} else {
-		echo "<div class='well text-center'>".$locale['global_059']."</div>\n";
+		echo "<div style='text-align:center;'>".$locale['global_059']."</div>\n";
 	}
 }
 

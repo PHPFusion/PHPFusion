@@ -12,6 +12,8 @@ $locale['408'] = "There are no Forum Categories defined.";
 $locale['409'] = "Forum with new posts since last visit.";
 $locale['410'] = "Forum with no new posts since last visit.";
 $locale['411'] = "Moderated by: ";
+$locale['412'] = "Directory";
+$locale['413'] = "Display posts from previous";
 // View Forum
 $locale['450'] = "View Forum";
 $locale['451'] = "Subject";
