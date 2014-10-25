@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-
-
 function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
 	global $locale, $userdata, $userdata; // for editor
 	// use once because we might use multiple textarea in a single page.
@@ -111,10 +109,10 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$html .= "</div>\n<div class='panel-footer'>\n";
 		$html .= "<small>".$locale['word_count'].": <span id='".$input_id."-wordcount'></span></small>";
 		add_to_jquery("
-		var init_str = $('#".$input_id."').val().length;
+		var init_str = $('#".$input_id."').val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
 		$('#".$input_id."-wordcount').text(init_str);
 		$('#".$input_id."').on('input propertychange paste', function() {
-		var str = $(this).val().length;
+		var str = $(this).val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
 		$('#".$input_id."-wordcount').text(str);
 		});
 		");

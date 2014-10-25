@@ -61,5 +61,5 @@ $locale['color_036'] = "Pale cyan";
 $locale['color_037'] = "Pale blue";
 $locale['color_038'] = "Plum";
 $locale['color_039'] = "No Color";
-
+$locale['word_count'] = "Word Count";
 ?>
