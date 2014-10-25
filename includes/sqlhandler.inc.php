@@ -672,6 +672,7 @@ function dbcompress($data, $mode, $delimiter = FALSE, $sdelimiter = FALSE) {
 }
 
 function table_exists($table) {
+	$table = str_replace(DB_PREFIX, '', $table);
 	if (dbrows(dbquery("SHOW TABLES LIKE '".DB_PREFIX.$table."'")) == 1) {
 		return true;
 	}
