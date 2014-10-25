@@ -39,6 +39,7 @@ if (isset($_POST['savesettings'])) {
 			}
 		}
 		// write file. wipe out all .htaccess current configuration.
+		$htc = '';
 		$htc .= "#Force utf-8 charset\r\n";
 		$htc .= "AddDefaultCharset utf-8\r\n";
 		$htc .= "#Security\r\n";
