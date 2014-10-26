@@ -1195,8 +1195,9 @@ require_once INCLUDES."sqlhandler.inc.php";
 
 require_once INCLUDES."defender.inc.php";
 $defender = new defender;
+$defender->debug_notice = true; // turn this off after beta.
 $defender->sniff_token();
-
+$defender->debug_notice = false; // turn this off after beta.
 require_once INCLUDES."dynamics/dynamics.inc.php";
 $dynamic = new dynamics();
 $dynamic->boot();

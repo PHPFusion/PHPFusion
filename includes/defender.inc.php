@@ -21,6 +21,7 @@ include LOCALE.LOCALESET."defender.php";
 
 class defender {
 	public $debug = FALSE;
+	public $debug_notice = FALSE;
 	public $ref = array();
 
 	/* Sanitize Fields Automatically */
@@ -202,13 +203,24 @@ class defender {
 		return $this->error_content;
 	}
 
-	/* Except for blank $_POST, every single form in must have token. */
+	/* Except for blank $_POST, every single form in must have token - added to maincore */
 	public function sniff_token() {
 		global $locale;
 		if (!empty($_POST)) {
 			if (!isset($_POST['fusion_token'])) {
 				$this->stop();
 				$this->addNotice($locale['token_error_2']);
+			} else {
+				// check token.
+				if (isset($_POST['token_rings']) && !empty($_POST['token_rings'])) {
+					foreach($_POST['token_rings'] as $hash => $form_name) {
+						$this->verify_tokens($form_name, 0);
+					}
+				} else {
+					// token tampered
+					$this->stop();
+					$this->addNotice($locale['token_error_2']);
+				}
 			}
 		}
 	}
@@ -270,7 +282,7 @@ class defender {
 
 	/* Inject FUSION_NULL */
 	public function stop($ref = FALSE) {
-		if ($ref && $this->debug) {
+		if ($ref && $this->debug_notice) {
 			notify('There was an error processing your request.', $ref);
 		}
 		if (!defined('FUSION_NULL')) {
