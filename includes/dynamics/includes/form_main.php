@@ -15,18 +15,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function openform($form_name, $form_id, $method, $action, $array = FALSE) {
+function openform($form_name, $form_id, $method, $action, $options = FALSE) {
 	global $defender;
-	if (!is_array($array)) {
+	if (!is_array($options)) {
 		$class = '';
 		$enctype = '';
 		$downtime = 10;
 		$notice = 1;
+		$dropzone = 0;
 	} else {
-		$class = array_key_exists('class', $array) && $array['class'] ? $array['class'] : '';
-		$enctype = array_key_exists('enctype', $array) && $array['enctype'] == 1 ? 1 : 0;
-		$downtime = array_key_exists('downtime', $array) && isnum($array['downtime']) ? $array['downtime'] : 10;
-		$notice = array_key_exists('notice', $array) && isnum($array['notice']) ? $array['notice'] : 1;
+		$class = isset($options['class']) && $options['class'] ? $options['class'] : '';
+		$enctype = isset($options['enctype']) && $options['enctype'] == 1 ? 1 : 0;
+		$downtime = isset($options['downtime']) && isnum($options['downtime']) ? $options['downtime'] : 10;
+		$notice = isset($options['notice']) && $options['notice'] == 0 ? 0 : 1;
 	}
 	$html = "<form name='".$form_name."' id='".$form_id."' method='".$method."' action='".$action."' class='".(defined('FUSION_NULL') ? 'warning' : '')." $class' ".($enctype ? "enctype='multipart/form-data'" : '')." >\n";
 	$html .= generate_token($form_name, $downtime);
