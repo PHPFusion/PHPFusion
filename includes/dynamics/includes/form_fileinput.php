@@ -16,25 +16,23 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 /* http://gregpike.net/demos/bootstrap-file-input/demo.html*/
-function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $input_value = FALSE, $array = FALSE) {
+function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $input_value = FALSE, $options = FALSE) {
 	global $locale;
 	$title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-	// ok, start
+
 	if (!defined('form_fileinput')) {
 		add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
 		add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/fileinput.min.js' type='text/javascript'></script>");
 		define('form_fileinput', TRUE);
 	}
-	// 4 choices to sub-array
-	// a. icon, b. button, c.dropdown list d.dropdown with modal
-	if (!is_array($array)) {
-		$array = array();
+
+	if (!is_array($options)) {
 		$required = 0;
 		$safemode = 1;
-		$deactivate = "";
-		$width = "";
+		$deactivate = '';
+		$width = '';
 		$label = $locale['browse'];
 		$btn_class = 'btn-default';
 		$class = '';
@@ -45,28 +43,28 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		$thumbnail = '';
 		$thumbnail_db = '';
 	} else {
-		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-		$label = (array_key_exists('label', $array)) ? $array['label'] : $locale['browse'];
-		$btn_class = (array_key_exists('class', $array)) ? $array['class'] : 'btn-default';
-		$class = (array_key_exists('class', $array)) ? $array['class'] : "";
-		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? '1' : '0';
-		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? '1' : '0';
-		$width = (array_key_exists('width', $array)) ? $array['width'] : "";
-		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
-		$inline = (array_key_exists('inline', $array)) ? 1 : 0;
-		$url = (array_key_exists('url', $array)) ? $array['url'] : ''; // for ajax uplaod file path
+		$deactivate = isset($options['deactivate']) && $options['deactivate'] == 1 ? $options['deactivate'] : '';
+		$label = isset($options['label']) && $options['label'] ? $options['label'] : $locale['browse'];
+		$btn_class = isset($options['btn_class']) && $options['btn_class'] ? $options['btn_class'] : 'btn-default';
+		$class = isset($options['class']) && $options['class'] ? $options['class'] : "";
+		$required = isset($options['required']) && $options['required'] == 1 ? 1 : 0;
+		$safemode = isset($options['safemode']) && $options['safemode'] == 1 ? 1 : 0; // we also use SAFEMODE. - maybe increment on this later.
+		$width = isset($options['width']) && $options['width'] ? $options['width'] : "";
+		$error_text = isset($options['error_text']) && $options['error_text'] ? $options['error_text'] : "";
+		$inline = isset($options['inline']) && $options['inline'] == 1 ? 1 : 0;
+		$url = isset($options['url']) && $options['url'] ? $options['url'] : ''; // for ajax uplaod file path when used with form_sanitizer();
 		$type = 'all';
-		if (array_key_exists('image', $array) && $array['image'] == 1) {
+		if (isset($options['image']) && $options['image'] == 1) {
 			$type = 'image';
-		} // can add type here with elseif.
-		$thumbnail = (array_key_exists('thumbnail_path', $array)) ? $array['thumbnail_path'] : '';
-		$thumbnail_db = (array_key_exists('thumbnail_db', $array)) ? $array['thumbnail_db'] : ''; // not yet supported
+		} // can add type here with elseif like video upload etc.
+		$thumbnail = isset($options['thumbnail_path']) && $options['thumbnail_path'] ? $options['thumbnail_path'] : '';
+		$thumbnail_db = isset($options['thumbnail_db']) && $options['thumbnail_db'] ? $options['thumbnail_db'] : ''; // not yet supported to auto name thumbnail folder
 	}
 
 	$html = "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
 	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>\n" : "";
-	$html .= "<input type='file' name='".$input_name."' id='".$input_id."' class='file-preview-image' >\n";
+	$html .= "<input type='file' name='".$input_name."' id='".$input_id."' class='file-preview-image' ".($deactivate ? 'readonly' : '')." />\n";
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
@@ -87,5 +85,4 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
     ");
 	return $html;
 }
-
 ?>
