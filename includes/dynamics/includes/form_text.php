@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_text.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -47,7 +47,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 	} else {
 		$icon = isset($options['icon']) && $options['icon'] ? $options['icon'] : '';
 		$placeholder = isset($options['placeholder']) && $options['placeholder'] ? $options['placeholder'] : '';
-		$deactivate = isset($options['deactivate']) && $options['deactivate'] ? $options['deactivate'] : '';
+		$deactivate = isset($options['deactivate']) && $options['deactivate'] == 1 ? 1 : 0;
 		$class = isset($options['class']) && $options['class'] ? $options['class'] : '';
 		$required = isset($options['required']) && $options['required'] == 1 ? 1 : 0;
 		$safemode = isset($options['safemode']) && $options['safemode'] == 1  ? 1 : 0;
@@ -88,7 +88,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 		$html .= "<div class='input-group'>\n";
 	}
 	$html .= ($prepend_button) ? "<span class='input-group-btn'>\n<button type='$prepend_type' value='submit-".$input_name."' class='btn $prepend_size $prepend_class'>$prepend_value</button></span>" : '';
-	$html .= "<input type='$type' class='form-control textbox' ".($width ? "style='width:$width;'" : '')." ".($length ? "maxlength='".$length."'" : '')." name='$input_name' id='".$input_id."' value='$input_value' placeholder='".$placeholder."' ".($autocomplete_off ? "autocomplete='off'" : '')." ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
+	$html .= "<input type='$type' class='form-control textbox' ".($width ? "style='width:$width;'" : '')." ".($length ? "maxlength='".$length."'" : '')." name='$input_name' id='".$input_id."' value='$input_value' placeholder='".$placeholder."' ".($autocomplete_off ? "autocomplete='off'" : '')." ".($deactivate ? "readonly" : "").">";
 	$html .= ($append_button) ? "<span class='input-group-btn'><button type='$append_type' value='submit-".$input_name."' class='btn $append_size $append_class'>$append_value</button></span>" : '';
 	$html .= ($icon) ? "<div class='form-control-feedback' style='top:0;'><i class='glyphicon $icon'></i></div>\n" : '';
 	if ($append_button || $prepend_button) {
