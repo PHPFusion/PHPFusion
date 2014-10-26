@@ -20,12 +20,12 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (!function_exists('replace_url')) {
 	function replace_url($m) {
 		// Get input url if any, if not get the content as a url but check if has a schema, if not add one
-		$this_url = (!empty($m['url']) ? $m['url'] : (preg_match("#^(http://|ftp://|https://|ftps://)#i", $m['content']) ? $m['content'] : "http://".$m['content']));
+		$this_url = (!empty($m['url']) ? $m['url'] : (preg_match("#^((f|ht)tp(s)?://)#i", $m['content']) ? $m['content'] : "http://".$m['content']));
 		// Trim only the default url
 		$content = (empty($m['url']) ? trimlink($m['content'], 40).(strlen($m['content']) > 40 ? substr($m['content'], strlen($m['content'])-10, strlen($m['content'])) : '') : $m['content']);
 
 		return "<a href='$this_url' target='_blank' title='".urldecode($this_url)."'>".$content."</a>";
 	}
 }
-$text = preg_replace_callback('#\[url(=(?P<url>(http://|ftp://|https://|ftps://)(.*?)))?\](?P<content>.*?)\[/url\]#iU', 'replace_url', $text);
+$text = preg_replace_callback('#\[url(=(?P<url>((f|ht)tp(s)?://)(.*?)))?\](?P<content>.*?)\[/url\]#iU', 'replace_url', $text);
 ?>
