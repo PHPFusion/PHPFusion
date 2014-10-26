@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_buttons.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC Chan (Hien)
 | Co-Author : Tyler Hurlbut
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,25 +16,23 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_button($title, $input_name, $input_id, $input_value, $array = FALSE) {
-	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+function form_button($title, $input_name, $input_id, $input_value, $options = FALSE) {
+	$input_value = stripinput($input_value);
 	$html = "";
-	if (!is_array($array)) {
+	if (!is_array($options)) {
 		$class = "btn-default";
 		$icon = "";
 		$type = '';
 		$icon_stack = 0;
-		$block = 0;
 		$btn_block = '';
 		$deactivate = '';
 	} else {
-		$class = array_key_exists("class", $array) ? stripinput($array['class']) : "btn-default";
-		$icon = array_key_exists("icon", $array) ? $array['icon'] : "";
-		$deactivate = array_key_exists("deactivate", $array) && ($array['deactivate'] == 1) ? 1 : 0;
-		$icon_stack = (array_key_exists("icon_stack", $array) && isnum($array['icon_stack']) && ($array['icon_stack'] == 1)) ? 1 : 0;
-		$type = (array_key_exists("type", $array) && ($array['type'])) ? $array['type'] : '';
-		$block = (array_key_exists("block", $array) && ($array['block'] == 1)) ? 1 : 0;
-		$btn_block = ($block == 1) ? "btn-block" : "";
+		$class = isset($options['class']) && $options['class'] ? $options['class'] : 'btn-default';
+		$icon = isset($options['icon']) && $options['icon'] ? $options['icon'] : "";
+		$deactivate = isset($options['deactivate']) && $options['deactivate'] == 1 ? 1 : 0;
+		$icon_stack = isset($options['icon_stack']) && $options['icon_stack'] == 1 ? 1 : 0;
+		$type = isset($options['type']) && $options['type'] ? $options['type'] : '';
+		$btn_block = isset($options['block']) && $options['block'] == 1 ? 'btn-block' : 0;
 	}
 	if ($type == 'link') {
 		$html .= "<a id='".$input_id."' title='".$title."' class='".($deactivate ? 'disabled' : '')." btn $class button' href='".$input_name."' data-value='".$input_value."' ".($deactivate ? "disabled='disabled'" : '')." >".($icon ? "<i class='$icon'></i>" : '')." ".$title."</a>";
@@ -46,50 +44,46 @@ function form_button($title, $input_name, $input_id, $input_value, $array = FALS
 	return $html;
 }
 
-function form_btngroup($title, $input_name, $input_id, $options, $input_value, $array = FALSE) {
-	$title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
+function form_btngroup($title, $input_name, $input_id, $opts, $input_value, $options = FALSE) {
 	$title2 = ucfirst(strtolower(str_replace("_", " ", $input_name)));
-	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
 	$input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
-	if (!is_array($array)) {
-		$class = 'small';
-		$justified = "";
-		$well = "";
-		$wellclass = "";
-		$helper_text = "";
-		$slider = 0;
+	if (!is_array($options)) {
+		$class = '';
+		$well = '';
+		$error_text = '';
 		$required = 0;
 		$safemode = 0;
 		$inline = '';
 	} else {
-		$class = (array_key_exists("class", $array)) ? $array['class'] : "small";
-		$justified = (array_key_exists("justified", $array)) ? "btn-group-justified" : "";
-		$well = (array_key_exists('well', $array)) ? "style='margin-top:-10px;'" : "";
-		$helper_text = (array_key_exists("helper", $array)) ? $array['helper'] : "";
-		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
-		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-		$inline = (array_key_exists("rowstart", $array)) ? 1 : 0;
+		$class = isset($options['class']) && $options['class'] ? $options['class'] : '';
+		$well = isset($options['well']) && $options['well'] ? "style='margin-top:-10px;'" : "";
+		$error_text = isset($options['error_text']) && $options['error_text'] ? $options['error_text'] : "";
+		$required = isset($options['required']) && $options['required'] == 1 ? 1 : 0;
+		$safemode = isset($options['safemode']) && $options['safemode'] == 1  ? 1 : 0;
+		$inline = isset($options['inline']) && $options['inline'] == 1 ? 1 : 0;
 	}
-	$html = "";
-	$html .= (!$inline) ? "<div class='field'/>\n" : '';
-	$html .= "<label><h3>$title</h3></label>\n";
-	$html .= "<div class='ui buttons $justified' id='".$input_id."'>";
+	$html = '';
+	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 $class ".($icon ? 'has-feedback' : '')."'>\n";
+	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= "<div class='btn-group' id='".$input_id."'>";
 	$x = 1;
-	$active = '';
-	foreach ($options as $arr => $v) {
-		if (($input_value == $arr)) {
-			$active = "active";
-		} else {
+	if (is_array($opts)) {
+		foreach ($opts as $arr => $v) {
 			$active = '';
+			if (($input_value == $arr)) { $active = "active"; }
+			$html .= "<div data-value='$arr' class='btn $class ".((count($options) == $x ? 'last-child' : ''))." $active'>".$v."</div>\n";
+			$x++;
 		}
-		$html .= "<span data-value='$arr' class='ui button $class ".((count($options) == $x ? 'last-child' : ''))." $active'/>";
-		$html .= "$v";
-		$html .= "</span>";
-		$x++;
 	}
-	$html .= "<input readonly type='hidden' id='".$input_id."-text' value='$input_value'>\n";
 	$html .= "</div>\n";
+	$html .= "<input readonly name='$input_name' type='hidden' id='".$input_id."-text' value='$input_value' />\n";
+	$html .= "<div id='$input_id-help'></div>";
+	$html .= ($inline) ? "</div>\n" : "";
+	$html .= "</div>\n";
+
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' readonly />";
+
 	add_to_jquery("
         $('#".$input_id." span').bind('click', function(e){
             $('#".$input_id." span').removeClass('active');
@@ -98,8 +92,6 @@ function form_btngroup($title, $input_name, $input_id, $options, $input_value, $
             $('#".$input_id."-text').val(value);
         });
         ");
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' readonly>";
-	$html .= (!$inline) ? "</div/>\n" : '';
 	return $html;
 }
 
