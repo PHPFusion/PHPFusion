@@ -534,17 +534,17 @@ function trimlink($text, $length) {
    $text = str_replace($dec, $enc, $text);
    return $text;
 }
-// Wanabo trim word function
-function trim_word($text, $word_length) {
-	$string = preg_replace('/(?<=\S,)(?=\S)/', ' ', $text);
-	$string = str_replace("\n", " ", $string);
-	$array  = explode(" ", $string);
-	if (count($array)<=$word_length) {
-		$string = $string;
-	} else {
-		array_splice($array, $word_length); $string = implode(" ", $array)   ;
+// Trim a paragraph to a word length.
+function trim_word($text, $limit) {
+	if (str_word_count($text, 0) > $limit) {
+		$words = str_word_count($text, 2);
+		$pos = array_keys($words);
+		// Position at which this word begins + it's own length
+		$rpos = $pos[$limit-1] + strlen($words[$pos[$limit-1]]);
+
+		$text = substr($text, 0, $rpos) . '&hellip;';
 	}
-	return $string;
+	return $text;
 }
 
 // Pure trim function
