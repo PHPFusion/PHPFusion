@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: photo_functions_include
 | Author: Nick Jones (Digitanium)
@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
 	global $settings;
 	if ($filetype == 1) {
@@ -51,9 +53,9 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
 	if ($filetype == 1) {
 		imagegif($thumbimage, $thumbfile);
 	} elseif ($filetype == 2) {
-		imagejpeg($thumbimage, $thumbfile);
+		imagejpeg($thumbimage, $thumbfile, 100);
 	} elseif ($filetype == 3) {
-		imagepng($thumbimage, $thumbfile);
+		imagepng($thumbimage, $thumbfile, 9, PNG_ALL_FILTERS);
 	}
 	imagedestroy($origimage);
 	imagedestroy($thumbimage);
@@ -86,16 +88,17 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
 	}
 	imagecopyresampled($new_image, $origimage, 0, 0, $x, $y, $new_size, $new_size, $old_x, $old_y);
 	if ($filetype == 1) {
-		imagegif($new_image, $thumbfile, 100);
+		imagegif($new_image, $thumbfile);
 	} elseif ($filetype == 2) {
 		imagejpeg($new_image, $thumbfile, 100);
 	} elseif ($filetype == 3) {
-		imagepng($new_image, $thumbfile, 5);
+		imagepng($new_image, $thumbfile, 9, PNG_ALL_FILTERS);
 	}
 	imagedestroy($origimage);
 	imagedestroy($new_image);
 }
 
+// returns the image name.
 function image_exists($dir, $image) {
 	$i = 1;
 	$image_name = substr($image, 0, strrpos($image, "."));
