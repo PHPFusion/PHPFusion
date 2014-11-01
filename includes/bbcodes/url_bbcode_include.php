@@ -27,5 +27,5 @@ if (!function_exists('replace_url')) {
 		return "<a href='$this_url' target='_blank' title='".urldecode($this_url)."'>".$content."</a>";
 	}
 }
-$text = preg_replace_callback('#\[url(=(?P<url>((f|ht)tp(s)?://)(.*?)))?\](?P<content>.*?)\[/url\]#iU', 'replace_url', $text);
+$text = preg_replace_callback('#\[url(=(?P<url>((f|ht)tp(s)?://)(.*?)))?\](?P<content>.*?)\[/url\]#i', 'replace_url', $text);
 ?>
