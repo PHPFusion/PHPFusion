@@ -689,7 +689,7 @@ function parseubb($text, $selected = FALSE) {
 
 // Javascript email encoder by Tyler Akins
 function hide_email($email, $title = "", $subject = "") {
-	if (strpos($email, "@")) {
+	if (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
 		$parts = explode("@", $email);
 		$MailLink = "<a href='mailto:".$parts[0]."@".$parts[1];
 		if ($subject != "") {
