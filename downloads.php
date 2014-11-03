@@ -298,7 +298,7 @@ if (isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 		echo $data['download_description'] != "" ? nl2br(parseubb(parsesmileys($data['download_description']))) : nl2br(stripslashes($data['download_description_short']));
 		echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 text-smaller'>\n";
 		if ($data['download_homepage'] != "") {
-			if (!strstr($data['download_homepage'], "http://") && !strstr($data['download_homepage'], "https://")) {
+			if (!preg_match("#^http(s)?://#i", $data['download_homepage'])) {
 				$urlprefix = "http://";
 			} else {
 				$urlprefix = "";
