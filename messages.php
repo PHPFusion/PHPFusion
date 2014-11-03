@@ -103,7 +103,7 @@ if (isset($_GET['msg_read']) && isnum($_GET['msg_read'])) {
 		if (dbrows($_sresult) > 0) {
 			$sdata = dbarray($_sresult);
 			$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
-			AND message_user='".$userdata['user_id']."' AND message_folder='".$sdata['message_folder']."'
+			AND message_user='".$userdata['user_id']."'
 			ORDER BY message_datestamp ASC");
 			if (dbrows($c_sresult) > 0) {
 				while ($cdata = dbarray($c_sresult)) {
@@ -116,8 +116,6 @@ if (isset($_GET['msg_read']) && isnum($_GET['msg_read'])) {
 }
 // Read or Unread Message
 if ($msg_ids && $check_count > 0) {
-	print_p($check_count);
-	print_p($msg_ids);
 
 	$msg_ids = explode(',', $msg_ids);
 	if (isset($_POST['read_msg'])) {
@@ -160,7 +158,7 @@ if ($msg_ids && $check_count > 0) {
 			if (dbrows($_sresult) > 0) {
 				$sdata = dbarray($_sresult);
 				$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
-				AND message_user='".$userdata['user_id']."' AND message_folder='".$sdata['message_folder']."'
+				AND message_user='".$userdata['user_id']."'
 				ORDER BY message_datestamp ASC");
 				if (dbrows($c_sresult) > 0) {
 					while ($cdata = dbarray($c_sresult)) {
@@ -183,7 +181,7 @@ if ($msg_ids && $check_count > 0) {
 			if (dbrows($_sresult) > 0) {
 				$sdata = dbarray($_sresult);
 				$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
-				AND message_user='".$userdata['user_id']."' AND message_folder='".$sdata['message_folder']."'
+				AND message_user='".$userdata['user_id']."'
 				ORDER BY message_datestamp ASC");
 				if (dbrows($c_sresult) > 0) {
 					while ($cdata = dbarray($c_sresult)) {
