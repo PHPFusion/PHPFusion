@@ -16,9 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
-	global $locale, $userdata, $userdata; // for editor
-	// use once because we might use multiple textarea in a single page.
+function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FALSE, $options = array()) {
+	global $locale, $userdata; // for editor
+
 	require_once INCLUDES."bbcode_include.php";
 	require_once INCLUDES."html_buttons_include.php";
 	include_once LOCALE.LOCALESET."admin/html_buttons.php";
@@ -27,50 +27,28 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
-	if (!is_array($array)) {
-		$required = 0;
-		$safemode = 0;
-		$deactivate = "";
-		$height = "80px";
-		$editor = 0;
-		$placeholder = "";
-		$inline = '';
-		$form_name = 'input_form';
-		$bbcode = 0;
-		$html_input = 0;
-		$error_text = '';
-		$class = '';
-		$preview = 1;
-		$autosize = 0;
-		$resize = 1;
-		$path = IMAGES;
-	} else {
-		$resize = (array_key_exists('resize', $array) && ($array['resize'] == 0)) ? 0 : 1;
-		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
-		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "";
-		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-		$bbcode = (array_key_exists('bbcode', $array) && $array['bbcode'] == 1) ? 1 : 0;
-		$html_input = (array_key_exists('html', $array) && $array['html'] == 1) ? 1 : 0;
-		$preview = (array_key_exists('preview', $array) && $array['preview'] == 1) ? 1 : 0;
-		$width = (array_key_exists('width', $array)) ? $array['width'] : "98%";
-		$height = (array_key_exists('height', $array)) ? $array['height'] : "80px";
-		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
-		$autosize = (array_key_exists("autosize", $array)) ? 1 : 0;
-		$form_name = (array_key_exists('form_name', $array)) ? $array['form_name'] : 'input_form';
-		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
-		$class = (array_key_exists("class", $array) && $array['class']) ? $array['class'] : '';
-		$path = (array_key_exists("path", $array) && $array['path']) ? $array['path'] : '';
-	}
 
-	$type = '';
-	if ($bbcode) {
-		$type = 'bbcode';
-	} elseif ($html_input) {
-		$type = 'html_input';
-	}
+	$options += array(
+		'required' => !empty($options['required']) ? : '0',
+		'placeholder' => !empty($options['placeholder']) ? : '',
+		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? : '',
+		'width' => !empty($options['width']) ? : '98%',
+		'height' => !empty($options['height']) ? : '80px',
+		'class' => !empty($options['class']) ? : '',
+		'inline' => !empty($options['inline']) ? : '',
+		'length' => !empty($options['length']) ? : '200',
+		'error_text' => !empty($options['error_text']) ? : '',
+		'safemode' => !empty($options['safemode']) ? : '',
+		'form_name' => !empty($options['form_name']) ? : 'input_form',
+		'bbcode' => !empty($options['bbcode']) && $options['bbcode'] == 1 ? : 0,
+		'html' => !empty($options['html']) && $options['html'] == 1 ? : 0,
+		'resize' => !empty($options['resize']) && $options['resize'] == 0 ? : 1,
+		'autosize' => !empty($options['autosize']) && $options['autosize'] == 1 ? : 0,
+		'preview' => !empty($options['preview']) && $options['preview'] == 1 ? : 0,
+		'path' => !empty($options['path']) && $options['path'] ? : IMAGES,
+	);
 
-	if (!defined('autogrow') && $autosize) {
+	if (!defined('autogrow') && $options['autosize']) {
 		define('autogrow', true);
 		add_to_footer("<script src='".DYNAMICS."assets/autosize/jquery.autosize.min.js'></script>");
 	}
@@ -79,11 +57,11 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	$input_value = str_replace("<br />", "", $input_value);
 
 	$html = "";
-	$html .= "<div id='$input_id-field' class='form-group m-b-10 clearfix ".$class."'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
+	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 
-	if ($preview && $type) {
+	if ($options['preview'] && $options['bbcode'] || $options['html']) {
 		$tab_title['title'][] = $locale['preview'];
 		$tab_title['id'][] = "prw-".$input_id."";
 		$tab_title['icon'][] = '';
@@ -95,17 +73,16 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$html .= opentabbody($tab_title['title'][1], "txt-".$input_id."", $tab_active);
 	}
 
-	$html .= ($type) ? "<div class='panel panel-default' ".($preview ? "style='border-top:0;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
-	if ($bbcode) {
-		$html .= display_bbcodes('90%', $input_name, $form_name);
-	} elseif ($html_input) {
-		$html .= display_html($form_name, $input_name, TRUE, TRUE, TRUE, $path);
+	$html .= ($options['bbcode'] || $options['html']) ? "<div class='panel panel-default' ".($options['preview'] ? "style='border-top:0 !important; border-radius:0 !important;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
+	if ($options['bbcode'] && $options['form_name']) {
+		$html .= display_bbcodes('90%', $input_name, $options['form_name']);
+	} elseif ($options['html'] && $options['form_name']) {
+		$html .= display_html($options['form_name'], $input_name, TRUE, TRUE, TRUE, $options['path']);
 	}
-	$html .= ($type) ? "</div>\n<div class='panel-body p-0'>\n" : '';
+	$html .= ($options['bbcode'] || $options['html']) ? "</div>\n<div class='panel-body p-0'>\n" : '';
+	$html .= "<textarea name='$input_name' style='width:99%; height:".$options['height']."; ".($options['resize'] == '0' ? 'resize: none;' : '')."' class='form-control m-0 p-10 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".($options['bbcode'] || $options['html'] ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='$input_id' ".($options['deactivate'] == '1' ? 'readonly' : '').">$input_value</textarea>\n";
 
-	$html .= "<textarea name='$input_name' style='width:100%; height:$height; ".($resize == '0' ? 'resize: none;' : '')."' class='form-control m-0 p-10 $class ".($autosize ? 'animated-height' : '')." ".($bbcode || $html_input ? "no-shadow no-border" : '')." textbox ' placeholder='$placeholder' id='$input_id' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">$input_value</textarea>\n";
-
-	if ($type) {
+	if ($options['bbcode'] || $options['html']) {
 		$html .= "</div>\n<div class='panel-footer'>\n";
 		$html .= "<small>".$locale['word_count'].": <span id='".$input_id."-wordcount'></span></small>";
 		add_to_jquery("
@@ -119,23 +96,29 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$html .= "</div>\n</div>\n";
 	}
 
-	if ($preview && $type) {
+	if ($options['preview'] && $options['bbcode'] || $options['html']) {
 		$html .= closetabbody();
 		$html .= opentabbody($tab_title['title'][0], "prw-".$input_id."", $tab_active);
 		$html .= closetabbody();
 		$html .= closetab($tab_title, $tab_active, "".$input_id."-link");
 		add_to_jquery("
 		// preview syntax
+		var form = $('#".$options['form_name']."');
 		$('#tab-prw-".$input_id."Preview').bind('click',function(){
-		var txt_data = $('#".$input_id."').val();
-		var format = '".$type."';
-		var cid = '".$input_id."';
+		var text = $('#".$input_id."').val();
+		var format = '".($options['bbcode'] ? 'bbcode' : 'html')."';
+		var data = {
+			'text' : text,
+			'editor' : format
+		};
+		var sendData = form.serialize() + '&' + $.param(data);
 		$.ajax({
 			url: '".INCLUDES."dynamics/assets/preview/preview.ajax.php',
 			type: 'POST',
 			dataType: 'html',
-			data : { text: txt_data, editor: format, fusion_token: '".generate_token($input_id, 1, 1)."', id: cid},
+			data : sendData,
 			success: function(result){
+			console.log(result);
 			$('#prw-".$input_id."Preview').html(result);
 			},
 			error: function(result) {
@@ -152,17 +135,15 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		});
 		");
 	}
-
-	if ($autosize) {
+	if ($options['autosize']) {
 		add_to_jquery("
 		$('#".$input_id."').autosize();
 		");
 	}
-
 	$html .= "<div id='$input_id-help'></div>";
-	$html .= ($inline) ? "</div>\n" : "";
+	$html .= $options['inline'] ? "</div>\n" : '';
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=textarea],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly />";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=textarea],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' readonly />";
 	return $html;
 }
 

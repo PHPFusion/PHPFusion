@@ -16,20 +16,20 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-require_once "../../../../maincore.php";
-if (isset($_POST['fusion_token']) && $defender->verify_tokens($_POST['id'],0)) {
-	echo "<div class='panel panel-default' style='border-top:0;'>\n<div class='panel-body' style='min-height:150px;'>\n";
+require_once dirname(__FILE__)."../../../../../maincore.php";
+if (!defined('FUSION_NULL')) {
+	echo "<div class='preview-response p-t-20 m-b-20'>\n";
 	if ($_POST['editor'] == 'html_input') {
 		$text = stripslash(nl2br(parsesmileys($_POST['text'])));
-		echo $text;
+		echo $text ? : 'Nothing to preview';
 	} elseif ($_POST['editor'] == 'bbcode') {
 		$text = parseubb(parsesmileys($_POST['text']));
-		echo $text;
+		echo $text ? : 'Nothing to preview';
 	}
-	echo "</div>\n<div class='panel-footer'>\n";
-	echo "<small>Word Count: ".strlen($text)."</small>";
-	echo "</div>\n</div>\n";
-} else {
-	echo "Verify token failed";
+	echo "<hr>\n";
+
+	echo "</div>\n";
 }
+
+
 ?>
