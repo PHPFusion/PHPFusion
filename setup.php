@@ -648,6 +648,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							message_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 							message_to MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 							message_from MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+							message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 							message_subject VARCHAR(100) NOT NULL DEFAULT '',
 							message_message TEXT NOT NULL,
 							message_smileys CHAR(1) NOT NULL DEFAULT '',
