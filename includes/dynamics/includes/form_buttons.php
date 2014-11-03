@@ -21,10 +21,10 @@ function form_button($title, $input_name, $input_id, $input_value, $options = FA
 	$html = "";
 
 	$options += array(
-		'class' => !empty($options['class']) ? : 'btn-default',
-		'icon' => !empty($options['icon']) ? : '',
-		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? : '0',
-		'type' => !empty($options['type']) ? : 'submit',
+		'class' => !empty($options['class']) ? $options['class'] : 'btn-default',
+		'icon' => !empty($options['icon']) ? $options['icon'] : '',
+		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+		'type' => !empty($options['type']) ? $options['type']  : 'submit',
 		'block' => !empty($options['block']) && $options['block'] == 1 ? 'btn-block' : ''
 	);
 
@@ -45,13 +45,13 @@ function form_btngroup($title, $input_name, $input_id, $opts, $input_value, $opt
 	$input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
 
 	$options += array(
-		'class' => !empty($options['class']) ? : 'btn-default',
-		'icon' => !empty($options['icon']) ? : '',
-		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? : '0',
-		'error_text' => !empty($options['error_text']) ? : '',
-		'inline' => !empty($options['inline']) ? : 0,
-		'safemode' => !empty($options['safemode']) ? : 0,
-		'required' => !empty($options['required']) ? : 0,
+		'class' => !empty($options['class']) ? $options['class'] : 'btn-default',
+		'icon' => !empty($options['icon']) ? $options['icon']  : '',
+		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+		'error_text' => !empty($options['error_text']) ? $options['error_text']  : '',
+		'inline' => !empty($options['inline']) ? $options['inline']  : 0,
+		'safemode' => !empty($options['safemode']) ? $options['safemode']  : 0,
+		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : 0,
 	);
 
 	$html = '';
