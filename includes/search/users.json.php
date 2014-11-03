@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System Version 8
 | Copyright (C) 2002 - 2013 Nick Jones
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Project File: User Search Results for Form Select User V8
 | Filename: users.json.php
@@ -18,11 +18,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__)."../../../maincore.php";
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+require_once dirname(__FILE__).'../../../maincore.php';
+if (!defined("IN_FUSION")) {die("Access Denied");}
+
 $q = $_GET['q'];
 // since search is on user_name.
-$result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE ".blacklist('user_id')." AND user_status='0' AND
+$result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE ".(blacklist('user_id') ? blacklist('user_id').' AND' : '')." user_status='0' AND
     user_name LIKE '$q%' AND user_id !='".$userdata['user_id']."'
     ORDER BY user_level DESC, user_name ASC");
 if (dbrows($result) > 0) {
