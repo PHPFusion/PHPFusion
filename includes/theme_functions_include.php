@@ -33,26 +33,30 @@ function dynamic_block($title, $description, $form_input) {
 		</div>";
 }
 
-function openmodal($id, $title, $array = FALSE) {
+function openmodal($id, $title, $options=array()) {
+	global $locale;
+	$options += array(
+		'class' => !empty($options['class']) ? : 'modal-lg',
+		'button_id' => !empty($options['button_id']) ? : 0,
+		'static' => !empty($options['static']) ? : 0,
+	);
 
-	if (!is_array($array)) {
-		add_to_jquery("	$('#".$id."-Modal').modal('show');");
-		$class = 'modal-lg';
+	if ($options['static'] && $options['button_id']) {
+		add_to_jquery("$('#".$options['button_id']."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); });");
+	} elseif ($options['static'] && empty($options['button_id'])) {
+		add_to_jquery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
+	} elseif ($options['button_id'] && empty($options['static'])) {
+		add_to_jquery("$('#".$options['button_id']."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
 	} else {
-		if (array_key_exists('button_id', $array) && $array['button_id']) {
-			add_to_jquery("$('#".$array['button_id']."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); });");
-		} else {
-			add_to_jquery("$('#".$id."-Modal').modal('show');");
-		}
-		$class = array_key_exists('class', $array) && $array['class'] ? $array['class'] : 'modal-lg';
+		add_to_jquery("	$('#".$id."-Modal').modal('show');");
 	}
 
 	$html = '';
 	$html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
-	$html .= "<div class='modal-dialog ".$class."'>\n";
+	$html .= "<div class='modal-dialog ".$options['class']."'>\n";
 	$html .= "<div class='modal-content'>\n";
 	$html .= "<div class='modal-header'>";
-	$html .= "<button type='button' class='btn btn-sm pull-right btn-default' data-dismiss='modal'><i class='entypo cross'></i> Close</button>\n";
+	$html .= (empty($options['static'])) ? "<button type='button' class='btn btn-sm pull-right btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n" : '';
 	$html .= "<h4 class='modal-title text-dark' id='$id-title'>$title</h4>\n";
 	$html .= "</div>\n";
 	$html .= "<div class='modal-body'>\n";
@@ -61,7 +65,7 @@ function openmodal($id, $title, $array = FALSE) {
 
 function closemodal() {
 	$html = '';
-	$html .= "</div></div></div></div>\n";
+	$html .= "</div>\n</div>\n</div>\n</div>\n";
 	return $html;
 }
 
@@ -441,7 +445,7 @@ function display_avatar($userdata, $size, $class = FALSE, $link = TRUE, $img_cla
 		if ($link) {
 			return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive $img_class m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'></a>\n";
 		} else {
-			return "<img class='img-responsive $img_class m-r-10' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'>\n";
+			return "<img class='img-responsive $img_class' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'>\n";
 		}
 	} else {
 		$userdata['user_id'] = array_key_exists('user_id', $userdata) && $userdata['user_id'] ? $userdata['user_id'] : 1;
@@ -580,7 +584,12 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		if (defined('ADMIN_PANEL')) {
 			$link_url = $link_mode ? $request."&amp;section=".$id."" : "#";
 		} else {
-			$link_url = $link_mode ? $link.(isset($_GET['aid']) ? $aidlink."&amp;" : '?')."section=".$id."" : "#";
+			if (strpos($link, "?")) {
+				$link_url = $link_mode ? $link.(isset($_GET['aid']) ? $aidlink."&amp;" : '&amp;')."section=".$id."" : "#";
+			} else {
+				$link_url = $link_mode ? $link.(isset($_GET['aid']) ? $aidlink."&amp;" : '?')."section=".$id."" : "#";
+			}
+
 		}
 		if ($link_mode) {
 			$html .= ($link_active_arrkey == $id) ? "<li class='active'>\n" : "<li>\n";
@@ -591,7 +600,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		$html .= "</li>\n";
 	}
 	$html .= "</ul>\n";
-	$html .= "<div class='tab-content'>\n";
+	$html .= "<div id='tab-content-$id' class='tab-content'>\n";
 	return $html;
 }
 
