@@ -45,7 +45,7 @@ if (dbrows($result) != 0) {
 	$description = stripslashes(nl2br($row['article_snippet']));
 	$description = strip_tags($description, "<a><p><br /><br /><hr />");
    echo "<item>\n";
-   echo "<title>".htmlspecialchars($rtitle).(multilang_table("AR")?" - ".$locale['rss007'].$row['article_language']:"")."</title>\n";
+   echo "<title>".htmlspecialchars($rtitle).(multilang_table("AR")?" - ".$locale['rss007'].$row['article_cat_language']:"")."</title>\n";
    echo "<link>".$settings['siteurl']."readarticle.php?article_id=".$rsid."</link>\n";
    echo "<description>".htmlspecialchars($description)."</description>\n";
    echo "</item>\n";
