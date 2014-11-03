@@ -6,6 +6,8 @@
 +--------------------------------------------------------+
 | Filename: user_offset_include.php
 | Author: Maarten Kossen (mistermartin75)
+| Fixed: Chubatyj Vitalij (Rizado) Oct 20 2014
+| Reason: some new timezones
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -34,6 +36,7 @@ if ($profile_method == "input") {
 	echo "<option value='-7.0'".($user_offset == "-7.0" ? " selected='selected'" : "").">".$locale['offset_n0700']."</option>\n";
 	echo "<option value='-6.0'".($user_offset == "-6.0" ? " selected='selected'" : "").">".$locale['offset_n0600']."</option>\n";
 	echo "<option value='-5.0'".($user_offset == "-5.0" ? " selected='selected'" : "").">".$locale['offset_n0500']."</option>\n";
+	echo "<option value='-4.5'".($user_offset == "-4.5" ? " selected='selected'" : "").">".$locale['offset_n0450']."</option>\n";
 	echo "<option value='-4.0'".($user_offset == "-4.0" ? " selected='selected'" : "").">".$locale['offset_n0400']."</option>\n";
 	echo "<option value='-3.5'".($user_offset == "-3.5" ? " selected='selected'" : "").">".$locale['offset_n0350']."</option>\n";
 	echo "<option value='-3.0'".($user_offset == "-3.0" ? " selected='selected'" : "").">".$locale['offset_n0300']."</option>\n";
@@ -50,13 +53,21 @@ if ($profile_method == "input") {
 	echo "<option value='5.5'".($user_offset == "5.5" ? " selected='selected'" : "").">".$locale['offset_p0550']."</option>\n";
 	echo "<option value='5.75'".($user_offset == "5.75" ? " selected='selected'" : "").">".$locale['offset_p0575']."</option>\n";
 	echo "<option value='6.0'".($user_offset == "6.0" ? " selected='selected'" : "").">".$locale['offset_p0600']."</option>\n";
+	echo "<option value='6.5'".($user_offset == "6.5" ? " selected='selected'" : "").">".$locale['offset_p0650']."</option>\n";
 	echo "<option value='7.0'".($user_offset == "7.0" ? " selected='selected'" : "").">".$locale['offset_p0700']."</option>\n";
 	echo "<option value='8.0'".($user_offset == "8.0" ? " selected='selected'" : "").">".$locale['offset_p0800']."</option>\n";
+	echo "<option value='8.75'".($user_offset == "8.75" ? " selected='selected'" : "").">".$locale['offset_p0875']."</option>\n";
 	echo "<option value='9.0'".($user_offset == "9.0" ? " selected='selected'" : "").">".$locale['offset_p0900']."</option>\n";
 	echo "<option value='9.5'".($user_offset == "9.5" ? " selected='selected'" : "").">".$locale['offset_p0950']."</option>\n";
 	echo "<option value='10.0'".($user_offset == "10.0" ? " selected='selected'" : "").">".$locale['offset_p1000']."</option>\n";
+	echo "<option value='10.5'".($user_offset == "10.5" ? " selected='selected'" : "").">".$locale['offset_p1050']."</option>\n";
 	echo "<option value='11.0'".($user_offset == "11.0" ? " selected='selected'" : "").">".$locale['offset_p1100']."</option>\n";
+	echo "<option value='11.5'".($user_offset == "11.5" ? " selected='selected'" : "").">".$locale['offset_p1150']."</option>\n";
 	echo "<option value='12.0'".($user_offset == "12.0" ? " selected='selected'" : "").">".$locale['offset_p1200']."</option>\n";
+	echo "<option value='12.75'".($user_offset == "12.75" ? " selected='selected'" : "").">".$locale['offset_p1275']."</option>\n";
+	echo "<option value='13.0'".($user_offset == "13.0" ? " selected='selected'" : "").">".$locale['offset_p1300']."</option>\n";
+	echo "<option value='13.75'".($user_offset == "13.75" ? " selected='selected'" : "").">".$locale['offset_p1375']."</option>\n";
+	echo "<option value='14.0'".($user_offset == "14.0" ? " selected='selected'" : "").">".$locale['offset_p1400']."</option>\n";
 	echo "</select></td>\n";
 	echo "</tr>\n";
 	// Display in profile
