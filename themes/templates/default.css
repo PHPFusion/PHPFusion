@@ -1,39 +1,4 @@
-/* Default PHP-Fusion CSS3 Class 
-   In order to keep compatibility with older themes
-   without making any modification to these themes
-   we add some global CSS rules to this file
-*/
-
-a img {
-	border: 0
-}
-
-dl, dt, dd {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-.forum_cat_name h3,
-
-.forum_name h3 {
-	font-size: 12px;
-	margin: 0;
-}
-
-.forum_name h3 {
-	display: inline;
-	font-weight: normal;
-}
-
-.forum-icon, .forum-stats, .forum-lastpost {
-	white-space: nowrap;
-}
-
-.lastpost-avatar img {
-	width: 40px;
-	margin-right: 4px;
-}
+/* Default PHP-Fusion CSS3 Class */
 
 /* positioning */
 .top-0 {
@@ -69,119 +34,83 @@ dl, dt, dd {
 .m-0 {
 	margin: 0px !important;
 }
+.m-1 {
+	margin:1px;
+}
+.m-2 {
+	margin:2px;
+}
+.m-3 {
+	margin: 3px;
+}
+.m-5 {
+	margin: 5px;
+}
+.m-10 {
+	margin: 10px;
+}
 
 .m-b-0 {
 	margin-bottom: 0px;
 }
-
 .m-b-10 {
 	margin-bottom: 10px;
 }
-
+.m-b-15 {
+	margin-bottom:15px;
+}
 .m-b-20 {
 	margin-bottom: 20px;
 }
-
 .m-b-50 {
 	margin-bottom: 50px;
 }
 
-.m-t-0 {
-	margin-top: 0px !important;
-}
-
-.m-t-10 {
-	margin-top: 10px;
-}
-
-.m-t-20 {
-	margin-top: 20px;
-}
-
-.m-t-30 {
-	margin-top: 30px;
-}
-
-.m-l-0 {
-	margin-left: 0px;
-}
-
-.m-l-10 {
-	margin-left: 10px;
-}
-
-.m-l-20 {
-	margin-left: 20px;
-}
-
-.m-r-0 {
-	margin-right: 0px;
-}
-
-.m-r-10 {
-	margin-right: 10px;
-}
-
-.m-r-20 {
-	margin-right: 20px;
-}
+.m-t-0 {margin-top: 0 !important;}
+.m-t-3 { margin-top:3px;}
+.m-t-5 { margin-top: 5px;}
+.m-t-10 {margin-top: 10px;}
+.m-t-15 {margin-top:15px;}
+.m-t-20 {margin-top: 20px;}
+.m-t-30 {margin-top: 30px;}
+.m-l-0 {margin-left: 0 !important;}
+.m-l-10 {margin-left: 10px;}
+.m-l-15 {margin-left: 15px;}
+.m-l-20 {margin-left: 20px;}
+.m-r-0 {margin-right: 0 !important;}
+.m-r-10 {margin-right: 10px;}
+.m-r-15 {margin-right: 15px;}
+.m-r-20 {margin-right: 20px;}
 
 /*padding family*/
-.p-0 {
-	padding: 0px !important;
-}
-
-.p-5 {
-	padding: 5px !important;
-}
-
-.p-10 {
-	padding: 10px !important;
-}
-
-.p-t-0 {
-	padding-top: 0px !important;
-}
-
-.p-t-10 {
-	padding-top: 10px !important;
-}
-
-.p-t-20 {
-	padding-top: 20px !important;
-}
-
-.p-l-0 {
-	padding-left: 0px !important;
-}
-
-.p-l-10 {
-	padding-left: 10px !important;
-}
-
-.p-l-20 {
-	padding-left: 20px !important;
-}
-
-.p-r-0 {
-	padding-right: 0px !important;
-}
-
-.p-r-10 {
-	padding-right: 10px !important;
-}
-
-.p-r-20 {
-	padding-right: 20px !important;
-}
-
+.p-0 {padding: 0 !important;}
+.p-5 {padding: 5px !important;}
+.p-10 {	padding: 10px !important;}
+.p-t-0 { padding-top: 0 !important;}
+.p-t-10 {padding-top: 10px;}
+.p-t-15 {padding-top: 15px;}
+.p-t-20 {padding-top: 20px; }
+.p-l-0 {padding-left: 0 !important; }
+.p-l-10 {padding-left: 10px; }
+.p-l-15 { padding-left:15px; }
+.p-l-20 {padding-left: 20px; }
+.p-r-0 {padding-right: 0 !important; }
+.p-r-5 {padding-right: 5px; }
+.p-r-10 {padding-right: 10px; }
+.p-r-15 {padding-right: 15px; }
+.p-r-20 {padding-right: 20px; }
+.p-b-0 {padding-bottom: 0 !important; }
+.p-b-5 {padding-bottom: 5px; }
+.p-b-10 {padding-bottom: 10px; }
+.p-b-15 {padding-bottom: 15px; }
+.p-b-20 {padding-bottom: 20px; }
 /* display family */
 .overflow-hide {
 	overflow: hidden !important;
 }
 
 .display-none {
-	display: none;
+	display: none !important;
 }
 
 .display-block {
@@ -211,6 +140,27 @@ dl, dt, dd {
 .position-absolute {
 	position: absolute !important;
 }
+
+/* decoratives */
+.form-group {
+	display: inline-block;
+	width: 100%;
+}
+.no-shadow {
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	box-shadow: none !important;
+}
+/* borders */
+.bbr-0 { border-radius: 0 !important; }
+.no-border, .br-0 {
+	border:0 !important;
+}
+.br-l-0 { border-left: 0; }
+.br-r-0 { border-right: 0; }
+.br-t-0 { border-top: 0; }
+.br-b-0 { border-bottom: 0; }
+
 
 /* text family */
 .text-white {
@@ -278,10 +228,27 @@ dl, dt, dd {
 }
 
 /* image family*/
-.img-responsive {
-	display: block !important;
-	margin: 1px auto !important;
+.img-center {
+	display: inline-block;
+	position:relative !important;
+	left:100% !important;
+	margin-left:-200% !important;
 }
+.thumb > img {
+	width: auto;
+	height: auto;
+	margin-left: auto;
+	margin-right: auto;
+	display: inline-block;
+}
+.thumb > span {
+	background-color:	#ddd;
+	text-align: center;
+}
+.thumb .entypo {
+	opacity: 0.5;
+}
+
 .pdisabled {
 	background-color: rgb(252, 248, 227);
 	border-color: rgb(250, 235, 204);
@@ -294,7 +261,9 @@ dl, dt, dd {
 	position: relative;
 	overflow: hidden;
 }
-
+.blur {
+	-webkit-filter: blur(5px) grayscale(50%);
+}
 /* cursors*/
 .pointer {
 	cursor: pointer;
@@ -304,7 +273,6 @@ dl, dt, dd {
 .no-border {
 	border: 0 !important;
 }
-
 .bordered {
 	border: 1px solid;
 }
@@ -454,6 +422,7 @@ a .entypo, a .entypo-social {
 	padding: 8px 3px;
 	width: 100%;
 	display: inline-block;
+	outline: none;
 }
 
 .select2-input {
@@ -581,12 +550,14 @@ dl, dt, dd {
 .forum-lastpost {
 	white-space: nowrap;
 }
+
 .lastpost-avatar img {
 	width: 40px;
 	margin-right: 4px;
 }
 
 /* Admin Panel */
+.dms-switch:hover, .list-group-item:hover .status { text-decoration: underline;	}
 .animated-height {
 	-webkit-transition: height 0.2s;
 	-moz-transition: height 0.2s;
@@ -596,25 +567,16 @@ dl, dt, dd {
 }
 /* Editor */
 .editor-wrapper {
-	margin-top:-20px !important;
+	margin-top:-30px;
 }
-.editor-wrapper > ul > li > a {
-	margin-bottom: 0 !important;
-}
-.editor-wrapper > ul {
-	margin: 0 !important;
-	padding: 0 !important;
-	height: auto;
-}
-.editor-wrapper .panel-heading {
-	-webkit-border-radius: 0 !important;
-	-moz-border-radius: 0 !important;
-	border-radius: 0 !important;
-}
-.editor-wrapper > div.tab-content {
-	padding: 0 !important;
-	margin: 0 !important;
+.editor-wrapper .panel-heading, .editor-wrapper .panel-footer {
+	background: transparent;
 }
 .editor-wrapper > ul > li {
 	float: right;
+}
+
+/* List group item */
+.list-group-item.active {
+	background-color: rgba(204,204,204,0.35);
 }
