@@ -46,7 +46,7 @@ if (!isset($_GET['readmore']) || !isnum($_GET['readmore'])) {
 			$comments = dbcount("(comment_id)", DB_COMMENTS." WHERE comment_type='N' AND comment_hidden='0' AND comment_item_id='".$data['news_id']."'");
 			$news_cat_image = "";
 			$news_image = "";
-			$news_subject = "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>".stripslashes($data['news_subject']);
+			$news_subject = stripslashes($data['news_subject']);
 			if ($data['news_image'] && $settings['news_image_frontpage'] == 0) {
 				$news_image = "<a href='".($settings['news_image_link'] == 0 ? "news_cats.php?cat_id=".$data['news_cat'] : FUSION_SELF."?readmore=".$data['news_id'])."'>";
 				$news_image .= "<img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' /></a>";
