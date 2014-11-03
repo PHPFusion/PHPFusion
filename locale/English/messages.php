@@ -12,11 +12,11 @@ $locale['408'] = "Site Owner";
 $locale['409'] = "Do with the checked items:";
 $locale['410'] = "Check all";
 $locale['411'] = "Uncheck all";
-$locale['412'] = "Save";
-$locale['413'] = "Unsave";
+$locale['412'] = "Save Conversation";
+$locale['413'] = "Unsave"; // lets not unsave.
 $locale['414'] = "Read";
 $locale['415'] = "Unread";
-$locale['416'] = "Delete";
+$locale['416'] = "Delete Conversation";
 $locale['417'] = "Show sender with Letters:";
 $locale['418'] = "All";
 $locale['419'] = "You have no Private Messages";
@@ -63,6 +63,13 @@ $locale['462'] = "Subject";
 $locale['463'] = "Message";
 $locale['464'] = "Sender";
 $locale['465'] = "Date/Time received";
+
+
+$locale['466'] = 'Not Selected';
+$locale['467'] = 'No Conversation Selected';
+$locale['468'] = 'Start a new conversation with %s';
+$locale['469'] = 'Reply to %s';
+$locale['470'] = 'Search Filter (Not functional yet)';
 
 // Error Messages
 $locale['480'] = "Error";
