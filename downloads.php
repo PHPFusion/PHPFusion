@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: downloads.php
 | Author: Nick Jones (Digitanium)
@@ -87,8 +87,8 @@ if (dbrows($result) != 0) {
 	}
 	$dl_stats .= "</div>\n";
 }
-$dl_stats .= "</div>\n</div>\n";
-$dl_stats .= "</div>\n</div>\n";
+$dl_stats .= "</div>\n</div>\n</div>\n";
+
 // Filter form, list of existing cats and downloads
 if (!isset($_GET['download_id']) || !isnum($_GET['download_id'])) {
 	opentable($locale['400']);
