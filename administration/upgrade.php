@@ -280,11 +280,14 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".PL' WHERE user_id='".$data['user_id']."'");
 			}
 		}
+		// Messages
+		$result = dbquery("ALTER TABLE ".$db_prefix."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
 		// User Fields 1.02
+		$result = dbquery("ALTER TABLE ".$db_prefix."user_field_cats ADD field_cat_db VARCHAR(200) NOT NULL AFTER field_cat_name");
 		$result = dbquery("ALTER TABLE ".$db_prefix."user_field_cats ADD field_cat_index VARCHAR(200) NOT NULL AFTER field_cat_db");
 		$result = dbquery("ALTER TABLE ".$db_prefix."user_field_cats ADD field_cat_class VARCHAR(50) NOT NULL AFTER field_cat_index");
 		$result = dbquery("ALTER TABLE ".$db_prefix."user_field_cats ADD field_cat_page SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER field_cat_class");
-		$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (5, '".$locale['UF']."', '', '', 'entypo shareable', 1, 5)");
+        $result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (5, 'Privacy', '', '', 'entypo shareable', 1, 5)");
 		$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_id, field_name, field_cat, field_required, field_log, field_registration, field_order) VALUES ('', 'user_blacklist', '5', '0', '0', '0', '1'");
 		// Add black list table
 		$result = dbquery("ALTER TABLE ".$db_prefix."users ADD user_blacklist TEXT NOT NULL AFTER user_language");
