@@ -14,7 +14,22 @@ a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, bo
     outline: 0;
     vertical-align: top;
 }
-
+#person {
+	margin-top: 5px;
+}
+#person > a {
+	font-size: 22px;
+	font-weight: bold;
+}
+p {
+	margin: 10px 0 20px;
+}
+.editor-wrapper {
+	margin-top:	-30px !important;
+}
+#tab-content-txt-message {
+	padding: 0;
+}
 blockquote, q {
     quotes: none;
 }
@@ -204,6 +219,7 @@ header #search-form {
 .section-1 {
     color: rgb(104, 104, 104);
     background-color: #FFF;
+	padding: 10px 0;
 }
 .section-1 > .container {
 	padding-top: 10px;
