@@ -128,6 +128,7 @@ if (isset($_POST['save'])) {
 	$news_comments = isset($_POST['news_comments']) ? "1" : "0";
 	$news_ratings = isset($_POST['news_ratings']) ? "1" : "0";
 	$news_language = stripinput($_POST['news_language']);
+
 	if (isset($_POST['news_id']) && isnum($_POST['news_id']) && !defined('FUSION_NULL')) {
 		$result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS." WHERE news_id='".$_POST['news_id']."' LIMIT 1");
 		if (dbrows($result)) {
@@ -234,7 +235,7 @@ if (dbrows($result) != 0) {
 		$editlist[$data['news_id']] = "".($data['news_draft'] ? $locale['438']." " : "").$data['news_subject']."";
 	}
 	opentable($locale['400']);
-	echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 0, 'notice' => 0));
+	echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 10, 'notice' => 0));
 	echo form_select('', 'news_id', 'news_id', $editlist, '', array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
 	echo form_button($locale['420'], 'edit', 'edit', $locale['420'], array('class' => 'btn-primary pull-left m-r-10'));
 	echo form_button($locale['421'], 'delete', 'delete', $locale['421'], array('class' => 'btn-primary pull-left'));
@@ -326,7 +327,6 @@ if ($news_image != "" && $news_image_t1 != "") {
 	echo "<input type='hidden' name='news_image_t2' value='".$news_image_t2."' />\n";
 } else {
 	echo form_fileinput($locale['439'], 'news_image', 'news_image', IMAGES_N, '', array('thumbnail' => 1));
-	//echo "<input type='file' id='news_image' name='news_image' class='textbox' style='width:250px;' /><br />\n";
 	echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['news_photo_max_b']))."</div>\n";
 }
 echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-3'>\n";
@@ -345,7 +345,7 @@ echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-3'>\n";
 echo form_select($locale['430'], 'news_visibility', 'news_visibility', $visibility_opts, $news_visibility, array('placeholder' => $locale['choose'], 'width' => '100%'));
 echo "</div>\n</div>\n";
 echo "<hr/>\n";
-$fusion_mce = '';
+$fusion_mce = array();
 if (!$settings['tinymce_enabled']) {
 $fusion_mce = array('preview'=>1, 'html'=>1, 'autosize'=>1, 'form_name'=>'inputform');
 }
