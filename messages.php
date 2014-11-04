@@ -21,8 +21,8 @@ if (!iMEMBER) {	redirect("index.php"); }
 
 // Saving options
 if (isset($_POST['save_options'])) {
-	$pm_email_notify = isset($_POST['pm_email_notify']) && isnum($_POST['pm_email_notify']) ? $_POST['pm_email_notify'] : "0";
-	$pm_save_sent = isset($_POST['pm_save_sent']) && isnum($_POST['pm_save_sent']) ? $_POST['pm_save_sent'] : "0";
+	$pm_email_notify = isset($_POST['pm_email_notify']) && isnum($_POST['pm_email_notify']) ? "1" : "0";
+	$pm_save_sent = isset($_POST['pm_save_sent']) && isnum($_POST['pm_save_sent']) ? "1" : "0";
 
 	$result = dbquery("INSERT INTO ".DB_MESSAGES_OPTIONS." (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox)
 						VALUES ('".$userdata['user_id']."', '$pm_email_notify', '$pm_save_sent', '0', '0', '0')
