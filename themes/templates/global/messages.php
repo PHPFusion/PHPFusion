@@ -276,7 +276,6 @@ if (!function_exists('render_inbox')) {
 			echo form_button($locale['623'], 'save_options', 'save_options', $locale['623'], array('class' => 'btn btn-sm btn-primary pull-right'));
 			echo form_toggle($locale['621'], 'pm_email_notify', 'pm_email_notify', array($locale['632'], $locale['631']), $info['pm_email_notify']);
 			echo form_toggle($locale['622'], 'pm_save_sent', 'pm_save_sent', array($locale['632'], $locale['631']), $info['pm_save_sent']);
-			echo form_hidden('', 'update_type', 'update_type', $info['update_type']);
 			echo "</div>\n";
 			echo closeform();
 		}

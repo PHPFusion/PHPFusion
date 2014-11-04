@@ -17,21 +17,39 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
+if (!iMEMBER) {	redirect("index.php"); }
+
+// Saving options
+if (isset($_POST['save_options'])) {
+	$pm_email_notify = isset($_POST['pm_email_notify']) && isnum($_POST['pm_email_notify']) ? $_POST['pm_email_notify'] : "0";
+	$pm_save_sent = isset($_POST['pm_save_sent']) && isnum($_POST['pm_save_sent']) ? $_POST['pm_save_sent'] : "0";
+
+	$result = dbquery("INSERT INTO ".DB_MESSAGES_OPTIONS." (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox)
+						VALUES ('".$userdata['user_id']."', '$pm_email_notify', '$pm_save_sent', '0', '0', '0')
+						ON DUPLICATE KEY UPDATE pm_email_notify='$pm_email_notify', pm_save_sent='$pm_save_sent'");
+
+	redirect(FUSION_SELF."?folder=options");
+}
+
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";
-if (!iMEMBER) {	redirect("index.php"); }
 
 add_to_title($locale['global_200'].$locale['400']);
 $msg_settings = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0'"));
+
+// Admins have unlimited storage
 if (iADMIN || $userdata['user_id'] == 1) {
 	$msg_settings['pm_inbox'] = 0;
 	$msg_settings['pm_savebox'] = 0;
 	$msg_settings['pm_sentbox'] = 0;
 }
+
+// Check if the folder name is a valid one
 if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
 	$_GET['folder'] = "inbox";
 }
+
 if (isset($_POST['msg_send']) && isnum($_POST['msg_send'])) {
 	$_GET['msg_send'] = $_POST['msg_send'];
 }
@@ -51,17 +69,6 @@ if (isset($_POST['check_mark'])) {
 		if (isnum($_POST['check_mark'][0])) $msg_ids = $_POST['check_mark'][0];
 		$check_count = 1;
 	}
-}
-
-if (isset($_POST['save_options'])) {
-	$pm_email_notify = isnum($_POST['pm_email_notify']) ? $_POST['pm_email_notify'] : "0";
-	$pm_save_sent = isnum($_POST['pm_save_sent']) ? $_POST['pm_save_sent'] : "0";
-	if ($_POST['update_type'] == "insert") {
-		$result = dbquery("INSERT INTO ".DB_MESSAGES_OPTIONS." (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox) VALUES ('".$userdata['user_id']."', '$pm_email_notify', '$pm_save_sent', '0', '0', '0')");
-	} else {
-		$result = dbquery("UPDATE ".DB_MESSAGES_OPTIONS." SET pm_email_notify='$pm_email_notify', pm_save_sent='$pm_save_sent' WHERE user_id='".$userdata['user_id']."'");
-	}
-	redirect(FUSION_SELF."?folder=options");
 }
 
 // Archive, Delete and Saves Options.
@@ -114,6 +121,7 @@ if (isset($_GET['msg_read']) && isnum($_GET['msg_read'])) {
 		redirect(FUSION_SELF."?folder=".$_GET['folder']);
 	}
 }
+
 // Read or Unread Message
 if ($msg_ids && $check_count > 0) {
 
@@ -218,7 +226,7 @@ if ($msg_ids && $check_count > 0) {
 	redirect(FUSION_SELF."?folder=".$_GET['folder'].($error ? "&error=$error" : ""));*/
 }
 
-// Reply and Send Actions.
+// Reply and Send actions
 if (isset($_POST['send_message'])) {
 	$personal_settings = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='".$userdata['user_id']."'"));
 	$my_settings['pm_save_sent'] = $personal_settings['pm_save_sent'] ? : $msg_settings['pm_save_sent'];
@@ -418,13 +426,11 @@ if ($_GET['folder'] == "inbox" || $_GET['folder'] == 'options') {
 	if ($_GET['folder'] == 'options') {
 		$c_result = dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='".$userdata['user_id']."'");
 		if (dbrows($c_result)) {
-			$info['my_settings'] = dbarray($c_result);
-			$info['update_type'] = "update";
+			$info += dbarray($c_result);
 		} else {
 			$options = dbarray(dbquery("SELECT pm_save_sent, pm_email_notify FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0' LIMIT 1"));
 			$info['pm_save_sent'] = $options['pm_save_sent'];
 			$info['pm_email_notify'] = $options['pm_email_notify'];
-			$info['update_type'] = "insert";
 		}
 	}
 	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
