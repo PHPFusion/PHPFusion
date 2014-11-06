@@ -51,16 +51,25 @@ if (!function_exists("render_comments")) {
 
 // Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
-	function render_breadcrumbs($data, $class = 'breadcrumb') {
+	function render_breadcrumbs(array $data = array(), $class = 'breadcrumb', $show_home = TRUE, $last_no_link = TRUE) {
 		global $breadcrumbs, $locale;
 
 		// Generates and populates the breacrumbs array
 		generate_breadcrumbs($data);
 
+		if ($last_no_link) {
+			$last_link = array_keys($breadcrumbs);
+			$last_link = array_pop($last_link);
+			$breadcrumbs[$last_link]['link'] = '';
+		}
+
 		$html = "<ol class='$class'>\n";
+		if ($show_home) {
+			$html .= "<li class='crumb'><a href='".BASEDIR."index.php' title='".$locale['home']."'>".$locale['home']."</a></li>\n";
+		}
 		foreach ($breadcrumbs as $breadcrumb) {
 			$html .= "<li class='crumb'>";
-			$html .= ($breadcrumb['link']) ? "<a href='".$breadcrumb['link']."'>".$breadcrumb['title']."</a>" : $breadcrumb['title'];
+			$html .= ($breadcrumb['link']) ? "<a title='".$breadcrumb['title']."' href='".$breadcrumb['link']."'>".$breadcrumb['title']."</a>" : $breadcrumb['title'];
 			$html .= "</li>\n";
 		}
 		$html .= "</ol>\n";
@@ -68,4 +77,7 @@ if (!function_exists("render_breadcrumbs")) {
 		return $html;
 	}
 }
+
+
+
 ?>

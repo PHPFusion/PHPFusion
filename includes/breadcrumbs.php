@@ -21,13 +21,13 @@
 
 if (!defined('IN_FUSION')) { die('Access Denied'); }
 
-function generate_breadcrumbs($data, $show_home = TRUE, $last_no_link = TRUE) {
+function generate_breadcrumbs($data) {
 	global $breadcrumbs, $locale;
 
 	// Should we also show the Home link ?
-	if ($show_home) {
-		$breadcrumbs[] = array('link' => BASEDIR.'index.php', 'title' => 'Home'); // Home needs localised
-	}
+	//if ($show_home) {
+	//	$breadcrumbs[] = array('link' => BASEDIR.'index.php', 'title' => 'Home'); // Home needs localised
+	//}
 
 	// articles.php
 	if (defined('ARTICLES')) {
@@ -48,18 +48,16 @@ function generate_breadcrumbs($data, $show_home = TRUE, $last_no_link = TRUE) {
 		}
 		add_to_breadcrumbs(array('link' => BASEDIR.'news.php', 'title' => 'News')); // News needs to be localised
 		add_to_breadcrumbs(array('link' => BASEDIR.'news_cats.php?cat_id='.$data['news_cat_id'], 'title' => $data['news_cat_name']));
-
 		// news.php
 		if (defined('NEWS') && isset($_GET['readmore'])) {
 			add_to_breadcrumbs(array('link' => BASEDIR.'news.php?readmore='.$_GET['readmore'], 'title' => $data['news_subject']));
 		}
 	}
-
 	// No link for last item ?
-	if ($last_no_link) {
-		$last_link = array_keys($breadcrumbs);
-		$last_link = array_pop($last_link);
-		$breadcrumbs[$last_link]['link'] = '';
-	}
+	//if ($last_no_link) {
+	//	$last_link = array_keys($breadcrumbs);
+	//	$last_link = array_pop($last_link);
+	//	$breadcrumbs[$last_link]['link'] = '';
+	//}
 	//var_dump($breadcrumbs);
 }
