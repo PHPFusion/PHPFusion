@@ -133,7 +133,7 @@ function add_to_jquery($tag = '') {
 }
 
 // Add links to breadcrumbs array
-function add_to_breadcrumbs($link) {
+function add_to_breadcrumbs(array $link=array()) {
 	global $breadcrumbs;
 	if (is_array($link) && !empty($link)) {
 		$breadcrumbs[] = $link;
