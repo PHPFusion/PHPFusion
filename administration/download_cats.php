@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: download_cats.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -30,8 +30,11 @@ if (isset($_GET['status']) && !isset($message)) {
 		$message = $locale['414'];
 	}
 	if ($message) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+		echo "<div id='close-message'><div class='admin-message alert alert-warning m-t-10'>".$message."</div></div>\n";
 	}
+}
+if (isset($_POST['cancel'])) {
+	redirect(FUSION_SELF.$aidlink);
 }
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(download_cat)", DB_DOWNLOADS, "download_cat='".$_GET['cat_id']."'");
@@ -111,74 +114,77 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	while (list($key, $user_group) = each($user_groups)) {
 		$access_opts[$user_group['0']] = $user_group['1'];
 	}
+
 	opentable($openTable);
-	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0));
-	echo "<table cellpadding='0' cellspacing='0' width='400' class='table table-responsive'>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_name'>".$locale['420']."</label> <span class='required'>*</span></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('', 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
-	echo "</td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_description'>".$locale['421']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('', 'cat_description', 'cat_description', $cat_description);
-	echo "</td>\n";
-	echo "</tr>\n";
-	if (multilang_table("DL")) {
-		echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select('', 'cat_language', 'cat_language', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
-		echo "</td>\n";
-		echo "</tr>\n";
-	} else {
-		form_hidden('', 'cat_language', 'cat_language', $cat_language);
-	}
-	echo "<tr><td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_sort_by'>".$locale['422']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	$array = array('1' => $locale['423'], '2' => $locale['424'], '3' => $locale['425']);
-	echo form_select('', 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
-	$array = array('ASC' => $locale['426'], 'DESC' => $locale['427']);
-	echo form_select('', 'cat_sort_order', 'cat_sort_order', $array, $cat_sort_order, array('placeholder' => $locale['choose']));
-	echo "</td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_access'>".$locale['428']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_select('', 'cat_access', 'cat_access', $access_opts, $cat_access, array('placeholder' => $locale['choose']));
-	echo "</td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td align='center' colspan='2' class='tbl'>\n";
-	echo form_button($locale['429'], 'save_cat', 'save_cat', $locale['429'], array('class' => 'btn-primary m-t-10'));
-	echo "</td>\n";
-	echo "</tr>\n</table>\n</form>\n";
-	closetable();
-	opentable($locale['402']);
-	echo "<table width='400' cellspacing='1' cellpadding='0' class='tbl-border table table-responsive center'>\n";
+
+	$tab_title['title'][] = "Category Listing";
+	$tab_title['id'][] = "dcats";
+	$tab_title['icon'][] = '';
+
+	$tab_title['title'][] = "Add Category";
+	$tab_title['id'][] = "dadd";
+	$tab_title['icon'][] = '';
+
+	$tab_active = tab_active($tab_title, 0);
+
+	echo opentab($tab_title, $tab_active, 'dcategory');
+
+	echo opentabbody($tab_title['title'][0], 'dcats', $tab_active);
+	echo "<div class='list-group m-t-20'>\n";
 	$result = dbquery("SELECT download_cat_id, download_cat_name, download_cat_description, download_cat_access FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name");
 	if (dbrows($result) != 0) {
 		$i = 0;
-		echo "<tr>\n";
-		echo "<th class='tbl2'>".$locale['440']."</th>\n";
-		echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['441']."</th>\n";
-		echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['442']."</th>\n";
-		echo "</tr>\n";
 		while ($data = dbarray($result)) {
-			$cell_color = ($i%2 == 0 ? "tbl1" : "tbl2");
-			echo "<tr>\n";
-			echo "<td class='".$cell_color."'>".$data['download_cat_name']."\n";
+			echo "<div class='list-group-item clearfix'>\n";
+
+			echo "<div class='btn-group pull-right m-t-5'>\n";
+			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'>".$locale['443']."</a>";
+			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['444']."</a>\n";
+			echo "</div>\n";
+
+			echo "<div class='overflow-hide p-r-10'>\n";
+			echo "<span class='display-inline-block m-r-10 strong text-bigger'>".$data['download_cat_name']."</span> <span class='text-smaller text-uppercase strong'>(".getgroupname($data['download_cat_access']).")</span>";
 			if ($data['download_cat_description']) {
-				echo "<br /><span class='small'>".trimlink($data['download_cat_description'], 45)."</span>";
+				echo "<br /><span class='small'>".trim_word($data['download_cat_description'], 50)."</span>";
 			}
-			echo "</td>\n<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'>".getgroupname($data['download_cat_access'])."</td>\n";
-			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'>".$locale['443']."</a> -\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['444']."</a></td>\n";
-			echo "</tr>\n";
-			$i++;
+			echo "</div>\n";
+			echo "</div>\n";
 		}
-		echo "</table>\n";
 	} else {
-		echo "<tr><td align='center' class='tbl1'>".$locale['445']."</td></tr>\n</table>\n";
+		echo "<div class='well text-center'>".$locale['445']."</div>\n";
 	}
+	echo "</div>\n";
+	echo closetabbody();
+
+	echo opentabbody($tab_title['title'][1], 'dadd', $tab_active);
+	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0, 'class'=>'m-t-20'));
+	echo form_text($locale['420'], 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
+	echo form_textarea($locale['421'], 'cat_description', 'cat_description', $cat_description, array('resize'=>0));
+	if (multilang_table("DL")) {
+		echo form_select($locale['global_ML100'], 'cat_language', 'cat_language', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
+	} else {
+		form_hidden('', 'cat_language', 'cat_language', $cat_language);
+	}
+	$array = array('1' => $locale['423'], '2' => $locale['424'], '3' => $locale['425']);
+	$array2 = array('ASC' => $locale['426'], 'DESC' => $locale['427']);
+	echo "<div class='clearfix'>\n";
+	echo form_select($locale['422'], 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
+	echo form_select('', 'cat_sort_order', 'cat_sort_order', $array2, $cat_sort_order, array('placeholder' => $locale['choose']));
+	echo "</div>\n";
+	echo form_select($locale['428'], 'cat_access', 'cat_access', $access_opts, $cat_access, array('placeholder' => $locale['choose']));
+	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-t-10 m-r-10'));
+	echo form_button($locale['429'], 'save_cat', 'save_cat', $locale['429'], array('class' => 'btn-primary btn-sm m-t-10'));
+	echo closeform();
+	echo closetabbody();
+	echo closetab();
 	closetable();
+}
+if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id'])) {
+	add_to_jquery("
+		// change the name of the second tab and activate it.
+		$('#tab-daddAdd-Category').text('Edit Category');
+		$('#dcategory a:last').tab('show');
+		");
 }
 require_once THEMES."templates/footer.php";
 ?>
