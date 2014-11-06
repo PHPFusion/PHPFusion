@@ -457,19 +457,27 @@ function display_avatar($userdata, $size, $class = FALSE, $link = TRUE, $img_cla
 	}
 }
 
-function thumbnail($src, $size, $url = FALSE) {
+function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE) {
 	global $locale;
 	$src = file_exists($src) ? $src : '';
-	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-block image-wrap thumb pull-left m-2'>\n";
-	$html .= $url ? "<a href='".$url."'>" : '';
+	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-block image-wrap thumb text-center overflow-hide pull-left m-2'>\n";
+	$html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
 	if ($src) {
 		$html .= "<img class='img-responsive' src='$src'/>\n";
 	} else {
 		$size = str_replace('px', '', $size);
 		$html .= "<img class='img-responsive' src='holder.js/".$size."x".$size."/text:".$locale['no_image']."'/>\n";
 	}
-	$html .= $url ? "</a>" : '';
+	$html .= $url || $colorbox ? "</a>" : '';
 	$html .= "</div>\n";
+	if ($colorbox && $src && !defined('colorbox')) {
+		define('colorbox', true);
+		add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
+		add_to_jquery("$('.colorbox').colorbox();");
+	}
+
+
 	return $html;
 }
 
@@ -596,7 +604,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		} else {
 			$html .= ($link_active_arrkey == "".$id."$v_link") ? "<li class='active'>\n" : "<li>\n";
 		}
-		$html .= "<a ".(!$link_mode ? "id='tab-".$id.$v_link."' data-toggle='tab' data-target='#".$id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='$icon'></i>" : '')." ".$v_title." </a>\n";
+		$html .= "<a class='pointer' ".(!$link_mode ? "id='tab-".$id.$v_link."' data-toggle='tab' data-target='#".$id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='$icon'></i>" : '')." ".$v_title." </a>\n";
 		$html .= "</li>\n";
 	}
 	$html .= "</ul>\n";
