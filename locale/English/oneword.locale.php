@@ -44,7 +44,6 @@ $locale['sort'] = 'Sort';
 $locale['id'] = 'ID';
 $locale['title'] = 'Title';
 $locale['rights'] = 'Rights';
-$locale['image'] = 'Image/Icons';
 $locale['info'] = 'Info';
 $locale['image'] = 'Image';
 // Forms
