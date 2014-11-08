@@ -46,10 +46,6 @@ if (isset($_GET['status']) && !isset($message)) {
 		$message = $locale['410'];
 	} elseif ($_GET['status'] == "savecu") {
 		$message = $locale['411'];
-		//} elseif ($_GET['status'] == "savect") {
-		//$message = $locale['516'];
-		//} elseif ($_GET['status'] == "saveft") { // enter a unique name.
-		//  $message = $locale['517'];
 	} elseif ($_GET['status'] == "savefn") {
 		$message = $locale['510'];
 	} elseif ($_GET['status'] == "savefu") {
@@ -69,8 +65,9 @@ if (isset($_GET['status']) && !isset($message)) {
 		echo "<div id='close-message'><div class='alert alert-info m-t-10 admin-message'>".$message."</div></div>\n";
 	}
 }
+
 if (isset($_POST['save_cat'])) {
-	$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name'); // trim(stripinput($_POST['cat_name'])); // required.
+	$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
 	$cat_description = trim(stripinput($_POST['cat_description']));
 	$forum_language = stripinput($_POST['forum_language']);
 	if (!defined('FUSION_NULL')) {
@@ -81,7 +78,7 @@ if (isset($_POST['save_cat'])) {
 			$cat_order = isnum($_POST['cat_order']) ? $_POST['cat_order'] : "";
 			if (!$cat_order) $cat_order = dbresult(dbquery("SELECT MAX(forum_order) FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='0'"), 0)+1;
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='0' AND forum_order>='$cat_order'");
-			$result = dbquery("INSERT INTO ".DB_FORUMS." (forum_cat, forum_name, forum_order, forum_description, forum_moderators, forum_access, forum_post, forum_reply, forum_poll, forum_vote, forum_attach, forum_lastpost, forum_lastuser, forum_merge, forum_language) VALUES ('0', '$cat_name', '$cat_order', '$cat_description', '', '0', '0', '0', '0', '0', '0', '0', '0', '0', '$forum_language')");
+			$result = dbquery("INSERT INTO ".DB_FORUMS." (forum_cat, forum_name, forum_order, forum_description, forum_moderators, forum_access, forum_post, forum_reply, forum_poll, forum_vote, forum_attach, forum_lastpost, forum_lastuser, forum_merge, forum_language) VALUES ('0', '$cat_name', '$cat_order', '$cat_description', '', '', '101', '101', '101', '101', '101', '101', '101', '0', '$forum_language')");
 			redirect(FUSION_SELF.$aidlink."&status=savecn");
 		}
 	}
@@ -112,7 +109,7 @@ if (isset($_POST['save_cat'])) {
 			$forum_order = isnum($_POST['forum_order']) ? $_POST['forum_order'] : "";
 			if (!$forum_order) $forum_order = dbresult(dbquery("SELECT MAX(forum_order) FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='$forum_cat'"), 0)+1;
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='$forum_cat' AND forum_order>='$forum_order'");
-			$result = dbquery("INSERT INTO ".DB_FORUMS." (forum_cat, forum_name, forum_order, forum_description, forum_moderators, forum_access, forum_post, forum_reply, forum_attach, forum_attach_download, forum_poll, forum_vote, forum_lastpost, forum_lastuser, forum_merge, forum_language) VALUES ('".$forum_cat."', '".$forum_name."', '".$forum_order."', '".$forum_description."', '103', '101', '101', '101', '0', '0', '0', '0', '0', '0', '0', '".$forum_language."')");
+			$result = dbquery("INSERT INTO ".DB_FORUMS." (forum_cat, forum_name, forum_order, forum_description, forum_moderators, forum_access, forum_post, forum_reply, forum_attach, forum_attach_download, forum_poll, forum_vote, forum_lastpost, forum_lastuser, forum_merge, forum_language) VALUES ('".$forum_cat."', '".$forum_name."', '".$forum_order."', '".$forum_description."', '103', '0', '101', '101', '101', '101', '101', '101', '101', '101', '0', '".$forum_language."')");
 			redirect(FUSION_SELF.$aidlink."&status=savefn");
 		}
 	}
@@ -263,12 +260,21 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 		while ($data2 = dbarray($result2)) {
 			$cat_opts[$data2['forum_id']] = $data2['forum_name'];
 		}
+
 		$_access = getusergroups();
 		$access_opts['0'] = $locale['531'];
 		while (list($key, $option) = each($_access)) {
 			$access_opts[$option['0']] = $option['1'];
 		}
+
 		unset($access_opts['0']);
+		
+		$_access_alt = getusergroups();
+		$access_opts_alt['0'] = $locale['531'];
+		while (list($key, $option) = each($_access_alt)) {
+			$access_opts_alt[$option['0']] = $option['1'];
+		}
+
 		opentable($forum_title);
 		echo openform('addforum', 'addforum', 'post', $forum_action, array('downtime' => 0, 'notice' => 0));
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tr>\n";
@@ -305,7 +311,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 			echo "</tr>\n<tr>\n";
 			echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='forum_access'>".$locale['525']."</label></td>\n";
 			echo "<td class='tbl'>\n";
-			echo form_select('', 'forum_access', 'forum_access', $access_opts, $forum_access, array('placeholder' => $locale['choose']));
+			echo form_select('', 'forum_access', 'forum_access', $access_opts_alt, $forum_access, array('placeholder' => $locale['choose']));
 			echo "</td>\n";
 			echo "</tr>\n<tr>\n";
 			echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='forum_post'>".$locale['526']."</label></td>\n<td class='tbl'>\n";
