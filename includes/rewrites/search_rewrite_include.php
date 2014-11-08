@@ -17,14 +17,14 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array(
-	"%stype%" => "([0-9a-zA-Z-_]+)",
-	"%stext%" => "([0-9a-zA-Z -_]+)",
-	"%method%" => "([0-9a-zA-Z-_]+)",
+	"%stype%" => "([\p{L}-0-9a-zA-Z._]+)",
+	"%stext%" => "([\p{L}-0-9a-zA-Z._]+)",
+	"%method%" => "([\p{L}-0-9a-zA-Z._]+)",
 	"%datelimit%" => "([0-9]+)",
 	"%fields%" => "([0-9]+)",
-	"%sort%" => "([a-zA-Z-_]+)",
+	"%sort%" => "([\p{L}a-zA-Z]+)",
 	"%order%" => "([0-9]+)",
-	"%chars%" => "([a-zA-Z-_]+)",
+	"%chars%" => "([\p{L}a-zA-Z]+)",
 	"%forum_id%" => "([0-9]+)"
 );
 

@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array(
 	"%album_id%" => "([0-9]+)",
-	"%album_title%" => "([a-zA-Z0-9-]+)",
+	"%album_title%" => "([\p{L}-0-9a-zA-Z._]+)",
 );
 
 $pattern = array(

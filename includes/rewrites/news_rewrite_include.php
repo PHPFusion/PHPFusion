@@ -16,10 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $regex = array(
 	"%news_id%" => "([0-9]+)",
-   	"%news_title%" => "([\w-0-9A-Z_]+)",
- 	"%news_step%" => "([0-9]+)",
+	"%news_title%" => "([\p{L}-0-9a-zA-Z._]+)",
+	"%news_step%" => "([0-9]+)",
  	"%news_rowstart%" => "([0-9]+)",
 	"%c_start%" => "([0-9]+)",
 	);

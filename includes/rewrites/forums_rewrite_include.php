@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array(
 	"%forum_id%" => "([0-9]+)",
-   	"%forum_name%" => "([a-zA-Z0-9-]+)",
+   	"%forum_name%" => "([\p{L}-0-9a-zA-Z._]+)",
 	"%rowstart%" => "([0-9]+)",
 	"%time%" => "([0-9]+)",
 	"%type%" => "([0-9]+)",

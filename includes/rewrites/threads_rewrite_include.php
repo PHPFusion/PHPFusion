@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array(
-	"%thread_name%" => "([a-zA-Z0-9-]+)",
+	"%thread_name%" => "([\p{L}-0-9a-zA-Z._]+)",
    	"%thread_id%" => "([0-9]+)",
    	"%thread_rowstart%" => "([0-9]+)",
  	"%time%" => "([0-9]+)",
