@@ -554,6 +554,24 @@ function countdown($time) {
 	}
 }
 
+function opencollapse($id) {
+	return "<div class='panel-group' id='".$id."' role='tablist' aria-multiselectable='true'>\n";
+}
+function collapse_header_link($id, $title, $active, $class = FALSE) {
+	$active = ($active) ? '' : 'collapsed';
+	$title =  str_replace('/[^A-Z]+$/i', " ",$title);
+	$title_id_cc = str_replace(" ", "-", $title);
+	return "class='$class $active' data-toggle='collapse' data-parent='#".$id."' href='#".$title_id_cc."-".$id."' aria-expanded='true' aria-controls='".$title_id_cc."-".$id."'";
+}
+function collapse_footer_link($id, $title, $active, $class = FALSE) {
+	$active = ($active) ? 'in' : '';
+	$title =  str_replace('/[^A-Z]+$/i', " ", $title);
+	$title_id_cc = str_replace(" ", "-", $title);
+	return "id='".$title_id_cc."-".$id."' class='panel-collapse collapse ".$active." ".$class."' role='tabpanel' aria-labelledby='headingOne'";
+}
+function closecollapse() {
+	return "</div>\n";
+}
 function tab_active($tab_title, $default_active, $link_mode = FALSE) {
 	if ($link_mode) {
 		$section = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : $default_active;
@@ -576,6 +594,8 @@ function tab_active($tab_title, $default_active, $link_mode = FALSE) {
 		return "".$id."$v_link";
 	}
 }
+
+
 
 function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE) {
 	global $aidlink;
