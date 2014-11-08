@@ -70,5 +70,6 @@ $locale['logged'] = 'Logged in as ';
 $locale['version'] = 'Version ';
 $locale['browse'] = 'Browse ...';
 $locale['close'] = 'Close';
+$locale['nopreview'] = 'There is nothing to Preview';
 
 ?>

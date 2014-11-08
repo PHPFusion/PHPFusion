@@ -15,21 +15,38 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once dirname(__FILE__)."../../../../../maincore.php";
+$text = $_POST['text'];
+include LOCALE.LOCALESET."oneword.locale.php";
 if (!defined('FUSION_NULL')) {
+	// filter to relative path conversion
 	echo "<div class='preview-response p-t-20 m-b-20'>\n";
 	if ($_POST['editor'] == 'html_input') {
-		$text = stripslash(nl2br(parsesmileys($_POST['text'])));
-		echo $text ? : 'Nothing to preview';
+		$text = stripslash(nl2br(parsesmileys($text)));
+		if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
+			$images = str_replace('../../../', '', IMAGES);
+			$text = str_replace(IMAGES, $images, $text);
+			$text = str_replace(IMAGES_N, $images, $text);
+		}
+		echo $text ? : $locale['nopreview'];
 	} elseif ($_POST['editor'] == 'bbcode') {
-		$text = parseubb(parsesmileys($_POST['text']));
-		echo $text ? : 'Nothing to preview';
+		$text = parseubb(parsesmileys($text));
+		if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
+			$images = str_replace('../../../', '', IMAGES);
+			$text = str_replace(IMAGES, $images, $text);
+			$text = str_replace(IMAGES_N, $images, $text);
+		}
+		echo $text ? : $locale['nopreview'];
+	} else {
+		$text = parsesmileys($text);
+		if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
+			$images = str_replace('../../../', '', IMAGES);
+			$text = str_replace(IMAGES, $images, $text);
+			$text = str_replace(IMAGES_N, $images, $text);
+		}
+		echo $text ? : $locale['nopreview'];
 	}
 	echo "<hr>\n";
-
 	echo "</div>\n";
 }
-
-
 ?>
