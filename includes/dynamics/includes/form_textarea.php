@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FALSE, $options = array()) {
+function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
 	global $locale, $userdata; // for editor
 
 	require_once INCLUDES."bbcode_include.php";
