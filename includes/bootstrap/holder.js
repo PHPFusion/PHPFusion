@@ -80,6 +80,12 @@ var Holder = Holder || {};
                 background: "#F8591A",
                 foreground: "#1C2846",
                 size: 12
+            },
+            "entypo": {
+                background: "#eee",
+                foreground: "#aaa",
+                size: 32,
+                font:"entypo"
             }
         }
     };
