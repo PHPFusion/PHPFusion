@@ -297,15 +297,6 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							if (!$result) {
 								$fail = TRUE;
 							}
-							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."language_sessions");
-							$result = dbquery("CREATE TABLE ".$db_prefix."language_sessions (
-						   user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
-						   user_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
-							user_datestamp INT(10) NOT NULL default '0'
-							) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-							if (!$result) {
-								$fail = TRUE;
-							}
 							$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."admin");
 							$result = dbquery("CREATE TABLE ".$db_prefix."admin (
 							admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,

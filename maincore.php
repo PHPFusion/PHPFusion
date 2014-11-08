@@ -254,16 +254,17 @@ if (isset($_GET['lang']) && isset($_GET['lang']) != "" && preg_match("/^[\w-0-9a
 	if (iMEMBER) {
 		$result = dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
 	} else {
-		$result = dbquery("SELECT user_language FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'");
-		$rows = dbrows($result);
-		if ($rows != 0) {
-			$result = dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
-		} else {
-			$result = dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".time()."');");
-		}
-		// Sanitize guest sessions
-		$result = dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time()-(86400*60))."'");
+	$cookieName = "guest_language";
+	$cookieContent = $lang;
+	$cookieExpiration = time()+86400*60; 
+	$cookiePath = COOKIE_PATH;
+	$cookieDomain = COOKIE_DOMAIN;
+	if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
+	setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE, FALSE);
+	} else {
+	setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE);
 	}
+}
 
 // Redirect handler to keep position upon lang switch
 if (FUSION_QUERY != "") {
@@ -339,12 +340,9 @@ if (iMEMBER) {
 		define("LOCALESET", $data['user_language']."/");
 	}
 } else {
-	$result = dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'");
-	$rows = dbrows($result);
-	if ($rows != 0) {
-		$data = dbarray($result);
-		define("LANGUAGE", $data['user_language']);
-		define("LOCALESET", $data['user_language']."/");
+if (isset($_COOKIE['guest_language']) && $_COOKIE['guest_language'] != '' && preg_match("/^[0-9a-zA-Z_]+$/", $_COOKIE['guest_language'])) {
+	define("LANGUAGE", $_COOKIE['guest_language']);
+	define("LOCALESET", $_COOKIE['guest_language']."/");
 	}
 }
 

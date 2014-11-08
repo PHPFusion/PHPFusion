@@ -192,12 +192,6 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".LANG' WHERE user_id='".$data['user_id']."'");
 			}
 		}
-		//Create guest language session tables
-		$result = dbquery("CREATE TABLE ".$db_prefix."language_sessions (
-		user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
-		user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',
-		user_datestamp INT(10) NOT NULL default '0'   
-		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		//Create multilang tables
 		$result = dbquery("CREATE TABLE ".$db_prefix."mlt_tables (
 		mlt_rights CHAR(4) NOT NULL DEFAULT '',
