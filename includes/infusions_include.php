@@ -48,6 +48,7 @@ if (!function_exists('filename_exists')) {
 				'extension' => '',
 				'filename' => ''
 			);
+
 		if ($parts['extension']) {
 			//check if filename starts with dot
 			if ($parts['filename']) {
@@ -91,6 +92,7 @@ if (!function_exists('filename_exists')) {
 		return $new_file;
 	}
 }
+
 if (!function_exists('set_setting')) {
 	// Sets the value of a setting in the settings_inf table
 	function set_setting($setting_name, $setting_value, $setting_inf) {
@@ -267,6 +269,11 @@ if (!function_exists('upload_image')) {
 					// Invalid image resolution
 					$image_info['error'] = 3;
 				} else {
+
+					if (!file_exists($target_folder)) {
+						mkdir($target_folder, '0755');
+					}
+
 					$image_name_full = filename_exists($target_folder, $image_name.$image_ext);
 					$image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
 					$image_info['image_name'] = $image_name_full;
@@ -288,6 +295,9 @@ if (!function_exists('upload_image')) {
 								$image_info['thumb1_name'] = $image_info['image_name'];
 								$image_info['thumb1'] = TRUE;
 							} else {
+								if (!file_exists($thumb1_folder)) {
+									mkdir($thumb1_folder, 0755);
+								}
 								$image_name_t1 = filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext);
 								$image_info['thumb1_name'] = $image_name_t1;
 								$image_info['thumb1'] = TRUE;
@@ -304,6 +314,9 @@ if (!function_exists('upload_image')) {
 								$image_info['thumb2_name'] = $image_info['image_name'];
 								$image_info['thumb2'] = TRUE;
 							} else {
+								if (!file_exists($thumb2_folder)) {
+									mkdir($thumb1_folder, 0755);
+								}
 								$image_name_t2 = filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext);
 								$image_info['thumb2_name'] = $image_name_t2;
 								$image_info['thumb2'] = TRUE;
