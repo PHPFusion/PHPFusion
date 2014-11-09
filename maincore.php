@@ -249,7 +249,7 @@ function get_available_languages_array($language_list = "") {
 }
 
 // If language change is initiated and if the selected language exists, allowed by site
-if (isset($_GET['lang']) && isset($_GET['lang']) != "" && preg_match("/^[\w-0-9a-zA-Z_]+$/", $_GET['lang']) && file_exists(LOCALE.$_GET['lang']."/global.php") && in_array($_GET['lang'], $enabled_languages)) {
+if (isset($_GET['lang']) && isset($_GET['lang']) != "" && preg_match("/^[0-9a-zA-Z_]+$/", $_GET['lang']) && file_exists(LOCALE.$_GET['lang']."/global.php") && in_array($_GET['lang'], $enabled_languages)) {
 	$lang = stripinput($_GET['lang']);
 	if (iMEMBER) {
 		$result = dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
@@ -334,16 +334,14 @@ function lang_switcher() {
 if (iMEMBER) {
 	$result = dbquery("SELECT user_language FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."'");
 	$rows = dbrows($result);
-	if ($rows != 0) {
-		$data = dbarray($result);
-		define("LANGUAGE", $data['user_language']);
-		define("LOCALESET", $data['user_language']."/");
-	}
-} else {
-if (isset($_COOKIE['guest_language']) && $_COOKIE['guest_language'] != "" && preg_match("/^[\w-0-9a-zA-Z_]+$/", $_COOKIE['guest_language']) && file_exists(LOCALE.$_COOKIE['guest_language']."/global.php") && in_array($_COOKIE['guest_language'], $enabled_languages)) {
+		if ($rows != 0) {
+			$data = dbarray($result);
+			define("LANGUAGE", $data['user_language']);
+			define("LOCALESET", $data['user_language']."/");
+		} 
+} elseif (isset($_COOKIE['guest_language']) && $_COOKIE['guest_language'] != "" && preg_match("/^[0-9a-zA-Z_]+$/", $_COOKIE['guest_language']) && file_exists(LOCALE.$_COOKIE['guest_language']."/global.php") && in_array($_COOKIE['guest_language'], $enabled_languages)) {
 	define("LANGUAGE", $_COOKIE['guest_language']);
 	define("LOCALESET", $_COOKIE['guest_language']."/");
-	}
 }
 
 // No definitions have been set, set default language to system language
@@ -376,6 +374,7 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
 	setcookie(COOKIE_PREFIX."visited", "yes", time()+31536000, "/", "", "0");
 }
+
 $lastvisited = Authenticate::setLastVisitCookie();
 
 // Set theme
