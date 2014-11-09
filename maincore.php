@@ -792,29 +792,29 @@ function descript($text, $striptags = TRUE) {
 // Scan image files for malicious code
 function verify_image($file) {
 	$txt = file_get_contents($file);
-	$image_safe = TRUE;
 	if (preg_match('#<\?php#i', $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	} elseif (preg_match('#&(quot|lt|gt|nbsp|<?php);#i', $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	} elseif (preg_match("#&\#x([0-9a-f]+);#i", $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	} elseif (preg_match('#&\#([0-9]+);#i', $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	} elseif (preg_match("#([a-z]*)=([\`\'\"]*)script:#iU", $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	} elseif (preg_match("#([a-z]*)=([\`\'\"]*)javascript:#iU", $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	} elseif (preg_match("#([a-z]*)=([\'\"]*)vbscript:#iU", $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	} elseif (preg_match("#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU", $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	} elseif (preg_match("#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU", $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	} elseif (preg_match("#</*(applet|link|style|script|iframe|frame|frameset)[^>]*>#i", $txt)) {
-		$image_safe = FALSE;
+		return FALSE;
 	}
-	return $image_safe;
+
+	return TRUE;
 }
 
 // Replace offensive words with the defined replacement word
