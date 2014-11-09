@@ -548,7 +548,7 @@ class defender {
 }
 
 function form_sanitizer($value, $default = "", $input_name = FALSE) {
-	global $_POST, $locale, $defender;
+	global $locale, $defender;
 	// Standard Sanitization
 	if ($input_name) { // must have input name to initiate defender.
 		if (isset($_POST['def'][$input_name])) { // deprecate address config.
