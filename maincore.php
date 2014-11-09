@@ -793,7 +793,7 @@ function descript($text, $striptags = TRUE) {
 function verify_image($file) {
 	$txt = file_get_contents($file);
 	$image_safe = TRUE;
-	if (preg_match('#<?php#i', $txt)) {
+	if (preg_match('#<\?php#i', $txt)) {
 		$image_safe = FALSE;
 	} elseif (preg_match('#&(quot|lt|gt|nbsp|<?php);#i', $txt)) {
 		$image_safe = FALSE;
