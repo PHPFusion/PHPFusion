@@ -340,7 +340,7 @@ if (iMEMBER) {
 		define("LOCALESET", $data['user_language']."/");
 	}
 } else {
-if (isset($_COOKIE['guest_language']) && $_COOKIE['guest_language'] != '' && preg_match("/^[0-9a-zA-Z_]+$/", $_COOKIE['guest_language'])) {
+if (isset($_COOKIE['guest_language']) && $_COOKIE['guest_language'] != "" && preg_match("/^[\w-0-9a-zA-Z_]+$/", $_COOKIE['guest_language']) && file_exists(LOCALE.$_COOKIE['guest_language']."/global.php") && in_array($_COOKIE['guest_language'], $enabled_languages)) {
 	define("LANGUAGE", $_COOKIE['guest_language']);
 	define("LOCALESET", $_COOKIE['guest_language']."/");
 	}
