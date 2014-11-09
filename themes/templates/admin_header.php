@@ -76,6 +76,7 @@ if ($settings['tinymce_enabled'] == 1) {
 	tinymce.init({
     selector: 'textarea',
     theme: 'modern',
+    entity_encoding : 'raw',
     width: '100%',
     height: 300,
     plugins: [
@@ -102,6 +103,7 @@ function simple() {
 tinymce.init({
     selector: 'textarea',
     theme: 'modern',
+    entity_encoding : 'raw',
     language:'".$locale['tinymce']."'
  });
 }
