@@ -209,9 +209,11 @@ function news_form() {
 			$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['news_image_t1']) ? $_POST['news_image_t1'] : "") : "");
 			$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['news_image_t2']) ? $_POST['news_image_t2'] : "") : "");
 		}
-		$data['news_news'] = form_sanitizer($_POST['news_news'], '', 'news_news');
-		$data['news_extended'] = form_sanitizer($_POST['news_extended'], '', 'news_extended'); // table-safe values.
-		//$body2 = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['body2'])); // why are we removing paragraphs? required to format Tiny MCE.
+		//$data['news_news'] = form_sanitizer($_POST['news_news'], '', 'news_news'); // Destroys HTML coding,
+		//$data['news_extended'] = form_sanitizer($_POST['news_extended'], '', 'news_extended'); // table-safe values, // Destroys HTML coding.
+		$data['news_news'] = addslash($_POST['news_news']);
+		$data['news_extended'] = addslash($_POST['news_extended']);
+		$data['news_datestamp'] = time();
 		$data['news_start_date'] = 0;
 		$data['news_end_date'] = 0;
 		$data['news_start_date'] = form_sanitizer($_POST['news_start'], '', 'news_start');
@@ -221,7 +223,7 @@ function news_form() {
 		$data['news_sticky'] = isset($_POST['news_sticky']) ? "1" : "0";
 		$data['news_allow_comments'] = isset($_POST['news_allow_comments']) ? "1" : "0";
 		$data['news_allow_ratings'] = isset($_POST['news_allow_ratings']) ? "1" : "0";
-		$data['news_language'] = form_sanitizer($_POST['news_language'], '', 'news_language'); // stripinput($_POST['news_language']);
+		$data['news_language'] = form_sanitizer($_POST['news_language'], '', 'news_language');
 		if ($settings['tinymce_enabled'] != 1) {
 			$data['news_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
 		} else {
@@ -301,6 +303,7 @@ function news_form() {
 				'news_extended' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['news_extended'], // phpentities(stripslashes($data['news_extended']));
 				'news_start' => (!empty($_POST['news_start'])) ? $_POST['news_start'] : $data2['news_start'],
 				'news_end' => (!empty($_POST['news_end'])) ? $_POST['news_end'] : $data2['news_end'],
+				'news_datestamp' => (!empty($_POST['news_datestamp'])) ? $_POST['news_datestamp'] : $data2['news_datestamp'],
 				'news_image' => (!empty($_POST['news_image'])) ? $_POST['news_image'] : $data2['news_image'],
 				'news_image_t1' => (!empty($_POST['news_image_t1'])) ? $_POST['news_image_t1'] : $data2['news_image_t1'],
 				'news_image_t2' => (!empty($_POST['news_image_t2'])) ? $_POST['news_image_t2'] : $data2['news_image_t2'],
@@ -316,7 +319,7 @@ function news_form() {
 			redirect(FUSION_SELF.$aidlink);
 		}
 	} else {
-		$data['news_draft'] = '1';
+		$data['news_draft'] = '0';
 		$data['news_sticky'] = '0';
 		$data['news_news'] = '';
 		$data['news_extended'] = '';
@@ -328,6 +331,7 @@ function news_form() {
 		$data['news_subject'] = '';
 		$data['news_start'] = '';
 		$data['news_end'] = '';
+		$data['news_datestamp'] = time();
 		$data['news_cat'] = '0';
 		$data['news_image'] = '';
 	}
