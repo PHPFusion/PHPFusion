@@ -555,7 +555,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE) {
 			// Strips Defence Tags.
 			$data = $defender->DefenseOpts($_POST['def'][$input_name]);
 			// already filter out required. validate doesn't need anymore.
-			if ($data['required'] == 1 && $value != "") { // it is required field but does not contain any value.. do reject.
+			if ($data['required'] == 1 && $value == "") { // it is required field but does not contain any value.. do reject.
 				$defender->stop();
 				$defender->addError($data['id']);
 				$defender->addHelperText($data['id'], $data['error_text']);
