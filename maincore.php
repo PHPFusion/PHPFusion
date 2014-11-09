@@ -286,7 +286,7 @@ if (FUSION_QUERY != "") {
 function lang_switcher() {
 	global $settings, $enabled_languages;
 	if (sizeof($enabled_languages) > 1) {
-		if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
+		if (defined('ADMIN_PANEL')) {
 			$this_link = FUSION_REQUEST."&amp;lang=";
 		} else {
 			if (stristr(FUSION_REQUEST, '?')) {
@@ -295,36 +295,35 @@ function lang_switcher() {
 				$this_link = FUSION_REQUEST."?lang=";
 			}
 		}
-		if (sizeof($enabled_languages) > 1) {
-			include_once INCLUDES."translate_include.php";
-			if ($handle = opendir(LOCALE)) {
-				/* This is the correct way to loop over the directory. */
-				while (FALSE !== ($file = readdir($handle))) {
-					if ($file != "." && $file != ".." && $file != "/" && $file != "index.php") {
-						if (in_array($file, $enabled_languages)) {
-							$img_files[] = $file;
-						}
+
+		include_once INCLUDES."translate_include.php";
+		if ($handle = opendir(LOCALE)) {
+			/* This is the correct way to loop over the directory. */
+			while (FALSE !== ($file = readdir($handle))) {
+				if ($file != "." && $file != ".." && $file != "/" && $file != "index.php") {
+					if (in_array($file, $enabled_languages)) {
+						$img_files[] = $file;
 					}
 				}
-				closedir($handle);
 			}
-			$row = 0;
-			if (sizeof($img_files) > 1) {
-				for ($i = 0; $i < sizeof($img_files); $i++) {
-					if ($row == 4) {
-						echo "<br />";
-						$row = 0;
-					}
-					$row++;
-					$lang_text = translate_lang_names($img_files[$i]);
-					echo "<div class='lang_selector display-inline-block clearfix'>\n";
-					if ($img_files[$i] == LANGUAGE) {
-						echo "<img class='display-block img-responsive' src='".LOCALE.$img_files[$i]."/".$img_files[$i].".png' alt='' title='".$lang_text."' style='min-width:20px;'>\n ";
-					} else {
-						echo "<a class='side pull-left display-block' style='max-width:25px;' href='".$this_link."".$img_files[$i]."'><img src='".LOCALE.$img_files[$i]."/".$img_files[$i].".png' alt='' title='".$lang_text."' style='min-width:20px;'></a>\n ";
-					}
-					echo "</div>\n";
+			closedir($handle);
+		}
+		$row = 0;
+		if (sizeof($img_files) > 1) {
+			for ($i = 0; $i < sizeof($img_files); $i++) {
+				if ($row == 4) {
+					echo "<br />";
+					$row = 0;
 				}
+				$row++;
+				$lang_text = translate_lang_names($img_files[$i]);
+				echo "<div class='lang_selector display-inline-block clearfix'>\n";
+				if ($img_files[$i] == LANGUAGE) {
+					echo "<img class='display-block img-responsive' src='".LOCALE.$img_files[$i]."/".$img_files[$i].".png' alt='' title='".$lang_text."' style='min-width:20px;'>\n ";
+				} else {
+					echo "<a class='side pull-left display-block' style='max-width:25px;' href='".$this_link."".$img_files[$i]."'><img src='".LOCALE.$img_files[$i]."/".$img_files[$i].".png' alt='' title='".$lang_text."' style='min-width:20px;'></a>\n ";
+				}
+				echo "</div>\n";
 			}
 		}
 	}
