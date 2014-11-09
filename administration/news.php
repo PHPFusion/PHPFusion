@@ -43,7 +43,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_i
 		$result = dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='".$_POST['news_id']."'");
 		$result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$_POST['news_id']."' and comment_type='N'");
 		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$_POST['news_id']."' and rating_type='N'");
-		//redirect(FUSION_SELF.$aidlink."&status=del");
 		dbquery_insert(DB_NEWS, $del_data, 'delete');
 	} else {
 		redirect(FUSION_SELF.$aidlink);
@@ -211,9 +210,9 @@ function news_form() {
 		}
 		//$data['news_news'] = form_sanitizer($_POST['news_news'], '', 'news_news'); // Destroys HTML coding,
 		//$data['news_extended'] = form_sanitizer($_POST['news_extended'], '', 'news_extended'); // table-safe values, // Destroys HTML coding.
-		$data['news_news'] = addslash($_POST['news_news']);
-		$data['news_extended'] = addslash($_POST['news_extended']);
-		$data['news_datestamp'] = time();
+		$data['news_news'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])); // Needed for HTML to work
+		$data['news_extended'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])); // Needed for HTML to work
+		$data['news_datestamp'] = form_sanitizer($_POST['news_datestamp'], '', 'news_datestamp');
 		$data['news_start_date'] = 0;
 		$data['news_end_date'] = 0;
 		$data['news_start_date'] = form_sanitizer($_POST['news_start'], '', 'news_start');
@@ -251,7 +250,7 @@ function news_form() {
 					$data['news_image_t1'] = "";
 					$data['news_image_t2'] = "";
 				}
-				dbquery_insert(DB_NEWS, $data, 'update');
+				 dbquery_insert(DB_NEWS, $data, 'update');
 			} else {
 				redirect(FUSION_SELF.$aidlink);
 			}
@@ -293,7 +292,7 @@ function news_form() {
 		$visibility_opts[$user_group['0']] = $user_group['1'];
 	}
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
-		$result = dbquery("SELECT news_subject, news_cat, news_news, news_extended, news_start, news_end, news_image, news_image_t1, news_image_t2, news_visibility, news_draft, news_sticky, news_breaks, news_allow_comments, news_allow_ratings, news_language FROM ".DB_NEWS." WHERE news_id='".(isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])."' LIMIT 1");
+		$result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id='".(isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])."' LIMIT 1");
 		if (dbrows($result)) {
 			$data2 = dbarray($result);
 			$data += array(
@@ -301,9 +300,9 @@ function news_form() {
 				'news_cat' => (!empty($_POST['news_cat'])) ? $_POST['news_cat'] : $data2['news_cat'],
 				'news_news' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['news_news'], // phpentities(stripslashes($data['news_news'])),
 				'news_extended' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['news_extended'], // phpentities(stripslashes($data['news_extended']));
+				'news_datestamp' => $data2['news_datestamp'],
 				'news_start' => (!empty($_POST['news_start'])) ? $_POST['news_start'] : $data2['news_start'],
 				'news_end' => (!empty($_POST['news_end'])) ? $_POST['news_end'] : $data2['news_end'],
-				'news_datestamp' => (!empty($_POST['news_datestamp'])) ? $_POST['news_datestamp'] : $data2['news_datestamp'],
 				'news_image' => (!empty($_POST['news_image'])) ? $_POST['news_image'] : $data2['news_image'],
 				'news_image_t1' => (!empty($_POST['news_image_t1'])) ? $_POST['news_image_t1'] : $data2['news_image_t1'],
 				'news_image_t2' => (!empty($_POST['news_image_t2'])) ? $_POST['news_image_t2'] : $data2['news_image_t2'],
@@ -316,12 +315,13 @@ function news_form() {
 				'news_language' => (!empty($_POST['news_language'])) ? $_POST['news_language'] : $data2['news_language']
 			);
 		} else {
-			redirect(FUSION_SELF.$aidlink);
+//			redirect(FUSION_SELF.$aidlink);
 		}
 	} else {
 		$data['news_draft'] = '0';
 		$data['news_sticky'] = '0';
 		$data['news_news'] = '';
+		$data['news_datestamp'] = time();
 		$data['news_extended'] = '';
 		$data['news_breaks'] = " 1";
 		$data['news_allow_comments'] = " 1";
@@ -331,7 +331,6 @@ function news_form() {
 		$data['news_subject'] = '';
 		$data['news_start'] = '';
 		$data['news_end'] = '';
-		$data['news_datestamp'] = time();
 		$data['news_cat'] = '0';
 		$data['news_image'] = '';
 	}
@@ -422,6 +421,7 @@ function news_form() {
 	} else {
 		echo form_hidden('', 'news_language', 'news_langugage', $data['news_language']);
 	}
+	echo form_hidden('', 'news_datestamp', 'news_datestamp', $data['news_datestamp']);
 	echo form_select($locale['430'], 'news_visibility', 'news_visibility', $visibility_opts, $data['news_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	closeside();
 	openside('');
