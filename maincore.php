@@ -333,13 +333,12 @@ function lang_switcher() {
 // Main language detection procedure
 if (iMEMBER) {
 	$result = dbquery("SELECT user_language FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."'");
-	$rows = dbrows($result);
-		if ($rows != 0) {
-			$data = dbarray($result);
-			define("LANGUAGE", $data['user_language']);
-			define("LOCALESET", $data['user_language']."/");
-		} 
-} elseif (isset($_COOKIE['guest_language']) && $_COOKIE['guest_language'] != "" && preg_match("/^[0-9a-zA-Z_]+$/", $_COOKIE['guest_language']) && file_exists(LOCALE.$_COOKIE['guest_language']."/global.php") && in_array($_COOKIE['guest_language'], $enabled_languages)) {
+	if (dbrows($result) > 0) {
+		$data = dbarray($result);
+		define("LANGUAGE", $data['user_language']);
+		define("LOCALESET", $data['user_language']."/");
+	}
+} elseif (isset($_COOKIE['guest_language']) && preg_match("/^[0-9A-Z_]+$/i", $_COOKIE['guest_language']) && in_array($_COOKIE['guest_language'], $enabled_languages)) {
 	define("LANGUAGE", $_COOKIE['guest_language']);
 	define("LOCALESET", $_COOKIE['guest_language']."/");
 }
