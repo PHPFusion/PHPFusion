@@ -222,7 +222,6 @@ function multilang_table($table) {
 
 // Get enabled language settings
 $enabled_languages = explode('.', $settings['enabled_languages']);
-
 foreach ($enabled_languages as $_lang) {
 	$language_opts[$_lang] = $_lang;
 }
@@ -248,37 +247,36 @@ function get_available_languages_array($language_list = "") {
 	return $res;
 }
 
-// If language change is initiated and if the selected language exists, allowed by site
-if (isset($_GET['lang']) && isset($_GET['lang']) != "" && preg_match("/^[0-9a-zA-Z_]+$/", $_GET['lang']) && file_exists(LOCALE.$_GET['lang']."/global.php") && in_array($_GET['lang'], $enabled_languages)) {
+// If language change is initiated and if the selected language is valid
+if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 	$lang = stripinput($_GET['lang']);
 	if (iMEMBER) {
-		$result = dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
+		dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
 	} else {
-	$cookieName = "guest_language";
-	$cookieContent = $lang;
-	$cookieExpiration = time()+86400*60; 
-	$cookiePath = COOKIE_PATH;
-	$cookieDomain = COOKIE_DOMAIN;
-	if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
-	setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE, FALSE);
+		$cookieName = "guest_language";
+		$cookieContent = $lang;
+		$cookieExpiration = time()+86400*60; 
+		$cookiePath = COOKIE_PATH;
+		$cookieDomain = COOKIE_DOMAIN;
+		if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
+			setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE, FALSE);
+		} else {
+			setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE);
+		}
+	}
+	// Redirect handler to keep position upon lang switch
+	if (FUSION_QUERY != "") {
+		if (stristr(FUSION_QUERY, '?')) {
+			$this_redir = str_replace("?lang=".$lang, "", FUSION_QUERY);
+		} elseif (stristr(FUSION_QUERY, '&amp;')) {
+			$this_redir = str_replace("&amp;lang=".$lang, "", FUSION_QUERY);
+		} elseif (stristr(FUSION_QUERY, '&')) {
+			$this_redir = str_replace("&lang=".$lang, "", FUSION_QUERY);
+		}
+		if ($this_redir != "") $this_redir = "?".$this_redir;
 	} else {
-	setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE);
+		$this_redir = "";
 	}
-}
-
-// Redirect handler to keep position upon lang switch
-if (FUSION_QUERY != "") {
-	if (stristr(FUSION_QUERY, '?')) {
-		$this_redir = str_replace("?lang=".$lang, "", FUSION_QUERY);
-	} elseif (stristr(FUSION_QUERY, '&amp;')) {
-		$this_redir = str_replace("&amp;lang=".$lang, "", FUSION_QUERY);
-	} elseif (stristr(FUSION_QUERY, '&')) {
-		$this_redir = str_replace("&lang=".$lang, "", FUSION_QUERY);
-	}
-	if ($this_redir != "") $this_redir = "?".$this_redir;
-} else {
-	$this_redir = "";
-}
 	redirect(FUSION_SELF.$this_redir);
 }
 
@@ -329,21 +327,34 @@ function lang_switcher() {
 	}
 }
 
-// Main language detection procedure
-if (iMEMBER) {
-	$result = dbquery("SELECT user_language FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."'");
-	if (dbrows($result) > 0) {
-		$data = dbarray($result);
-		define("LANGUAGE", $data['user_language']);
-		define("LOCALESET", $data['user_language']."/");
+/**
+ * Check if a given language is valid or if exists
+ *
+ * Checks whether a language can be found in enabled languages array
+ * Can also be used to check whether a language actually exists
+ *
+ * @param string $lang
+ * @param bool $file_check intended to be used when enabling languages in Admin Panel
+ * @return bool
+ */
+function valid_language($lang, $file_check = FALSE) {
+	global $enabled_languages;
+
+	if (preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : in_array($lang, $enabled_languages))) {
+		return TRUE;
 	}
-} elseif (isset($_COOKIE['guest_language']) && preg_match("/^[0-9A-Z_]+$/i", $_COOKIE['guest_language']) && in_array($_COOKIE['guest_language'], $enabled_languages)) {
-	define("LANGUAGE", $_COOKIE['guest_language']);
-	define("LOCALESET", $_COOKIE['guest_language']."/");
+
+	return FALSE;
 }
 
-// No definitions have been set, set default language to system language
-if (!defined("LANGUAGE")) {
+// Main language detection procedure
+if (iMEMBER && valid_language($userdata['user_language'])) {
+	define("LANGUAGE", $userdata['user_language']);
+	define("LOCALESET", $userdata['user_language']."/");
+} elseif (isset($_COOKIE['guest_language']) && valid_language($_COOKIE['guest_language'])) {
+	define("LANGUAGE", $_COOKIE['guest_language']);
+	define("LOCALESET", $_COOKIE['guest_language']."/");
+} else {
 	define ("LANGUAGE", $settings['locale']);
 	define ("LOCALESET", $settings['locale']."/");
 }
@@ -784,8 +795,7 @@ function verify_image($file) {
 	$image_safe = TRUE;
 	if (preg_match('#<?php#i', $txt)) {
 		$image_safe = FALSE;
-	} 
-	elseif (preg_match('#&(quot|lt|gt|nbsp|<?php);#i', $txt)) {
+	} elseif (preg_match('#&(quot|lt|gt|nbsp|<?php);#i', $txt)) {
 		$image_safe = FALSE;
 	} elseif (preg_match("#&\#x([0-9a-f]+);#i", $txt)) {
 		$image_safe = FALSE;
