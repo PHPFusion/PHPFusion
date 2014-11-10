@@ -28,7 +28,7 @@ if (isset($_POST['cancel'])) {
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
 	$del_data['news_id'] = $_GET['news_id'];
-	$result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS." WHERE news_id='".$del_data['news_id']."' LIMIT 1");
+	$result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS." WHERE news_id='".$del_data['news_id']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
@@ -229,7 +229,7 @@ function news_form() {
 			$data['news_breaks'] = "n";
 		}
 		if (isset($_POST['news_id']) && isnum($_POST['news_id']) && !defined('FUSION_NULL')) {
-			$result = dbquery("SELECT news_image, news_image_t1, news_image_t2, news_sticky FROM ".DB_NEWS." WHERE news_id='".$_POST['news_id']."' LIMIT 1");
+			$result = dbquery("SELECT news_image, news_image_t1, news_image_t2, news_sticky FROM ".DB_NEWS." WHERE news_id='".$_POST['news_id']."'");
 			if (dbrows($result)) {
 				$data2 = dbarray($result);
 				if ($data['news_sticky'] == "1") {
@@ -292,7 +292,7 @@ function news_form() {
 		$visibility_opts[$user_group['0']] = $user_group['1'];
 	}
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
-		$result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id='".(isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])."' LIMIT 1");
+		$result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id='".(isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])."'");
 		if (dbrows($result)) {
 			$data2 = dbarray($result);
 			$data += array(
