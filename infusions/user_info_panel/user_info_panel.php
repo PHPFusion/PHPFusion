@@ -61,7 +61,7 @@ echo "<li><a class='side' href='".BASEDIR."edit_profile.php'>".$locale['UM080'].
 echo "<li><a class='side' href='".BASEDIR."messages.php'>".$locale['UM081']." <i class='pull-right entypo mail'></i></a></li>\n";
 echo "<li><a class='side' href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['UM088']." <i class='pull-right entypo eye'></i></a></li>\n";
 echo "<li><a class='side' href='".BASEDIR."members.php'>".$locale['UM082']." <i class='pull-right entypo users'></i></a></li>\n";
-echo (iADMIN) ? "<li><a class='side' href='".ADMIN."index.php".$aidlink."'>".$locale['UM083']." <i class='pull-right entypo cog'></i></a></li>\n" : '';
+echo (iADMIN) ? "<li><a class='side' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['UM083']." <i class='pull-right entypo cog'></i></a></li>\n" : '';
 echo "<li><a class='side' href=\"javascript:show_hide('ShowHide001')\">".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a></li>\n";
 echo "<li>\n";
 echo "<div id='ShowHide001' style='display:none'>\n";
