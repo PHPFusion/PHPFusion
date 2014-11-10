@@ -33,7 +33,7 @@ if (!iMEMBER) {
 	echo "<li class='pull-left m-r-10 m-l-10'><a href='".BASEDIR."register.php'>".$locale['sept_002']."</a></li>\n";
 } else {
 	if (iADMIN) {
-		echo "<li class='pull-left m-r-20'><a href='".ADMIN.$aidlink."'>".$locale['sept_003']."</a></li>\n";
+		echo "<li class='pull-left m-r-20'><a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['sept_003']."</a></li>\n";
 	}
 	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a></li>\n";
 	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."index.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
