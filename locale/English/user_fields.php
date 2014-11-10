@@ -89,7 +89,7 @@ $locale['u143a'] = " can not be left empty.";
 $locale['u144'] = "New admin password";
 $locale['u145'] = "Confirm admin password";
 $locale['u146'] = " can not be the same as your current ";
-$locale['u147'] = "Password must be between 8 and 64 chars long.<br />Allowed symbols are a-z, 0-9 and @!#$%&amp;\/()=-_?+*.,:;";
+$locale['u147'] = "Password must be between 8 and 64 chars long.<br />Allowed symbols are a-z, 0-9 and @!#$%&amp;/()=-_?+*.,:;";
 $locale['u148'] = "New Login Passwords are not identical.";
 $locale['u148a'] = "New Admin Passwords are not identical.";
 $locale['u149'] = "Your Current Login Password was not specified or is invalid.";
