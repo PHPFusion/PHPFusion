@@ -794,7 +794,7 @@ function verify_image($file) {
 	$txt = file_get_contents($file);
 	if (preg_match('#<\?php#i', $txt)) {
 		return FALSE;
-	} elseif (preg_match('#&(quot|lt|gt|nbsp|<\?php);#i', $txt)) {
+	} elseif (preg_match('#&(quot|lt|gt|nbsp);#i', $txt)) {
 		return FALSE;
 	} elseif (preg_match("#&\#x([0-9a-f]+);#i", $txt)) {
 		return FALSE;
