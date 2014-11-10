@@ -792,7 +792,7 @@ function descript($text, $striptags = TRUE) {
 // Scan image files for malicious code
 function verify_image($file) {
 	$txt = file_get_contents($file);
-	if (preg_match('#<\?php#i', $txt)) {
+	if (preg_match('#\<\?php#i', $txt)) {
 		return FALSE;
 	} elseif (preg_match('#&(quot|lt|gt|nbsp);#i', $txt)) {
 		return FALSE;
