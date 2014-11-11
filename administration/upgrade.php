@@ -25,6 +25,7 @@ if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
 } else {
 	include LOCALE."English/admin/upgrade.php";
 }
+
 opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
@@ -38,7 +39,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		if (file_exists(LOCALE.LOCALESET."setup.php")) {
 			include LOCALE.LOCALESET."setup.php";
 		} else {
-			include LOCALE."setup.php";
+		include LOCALE."English/setup.php";
 		}
 		//Check files from earlier installations
 		echo "<div style='width:550px; margin:15px auto;' class='tbl'>\n";
