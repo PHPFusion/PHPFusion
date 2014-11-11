@@ -163,7 +163,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		echo "define(\"SECRET_KEY\", \"".$secret_key."\"); <br />\n";
 		echo "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\"); <br />\n";
 		echo "</div><br />";
-		echo "Please note that you need to change the \$pdo_enabled = \"0\" to \$pdo_enabled = \"1\" manually in order to enable PDO</div>\n";
+		echo "Please note that you need to change the \$pdo_enabled = \"0\" to \$pdo_enabled = \"1\" manually in order to enable PDO</div><br />\n";
 		//Add language tables to infusions and main content
 		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_access");
 		$result = dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER page_allow_ratings");
@@ -341,10 +341,10 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		}
 		//Set the new version
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='9.00.00' WHERE settings_name='version'");
-		echo $locale['502']."<br /><br />\n";
+		echo "<br />".$locale['502']."<br /><br />\n";
 	}
 } else {
-	echo $locale['401']."<br /><br />\n";
+		echo "<br />".$locale['401']."<br /><br />\n";
 }
 echo "</form>\n</div>\n";
 closetable();
