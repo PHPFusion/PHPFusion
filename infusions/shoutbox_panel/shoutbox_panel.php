@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: shoutbox_panel.php
 | Author: Nick Jones (Digitanium)
@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 include_once INFUSIONS."shoutbox_panel/infusion_db.php";
 include_once INCLUDES."infusions_include.php";
 // Check if a locale file is available that match the selected locale.
@@ -140,8 +142,9 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 		$shout_link = $link;
 		$shout_message = "";
 	}
+	unset($_SESSION);
 	echo "<a id='edit_shout' name='edit_shout'></a>\n";
-	echo openform('shout_form', 'shout_form', 'post', $shout_link, array('notice' => 0));
+	echo openform('shout_form', 'shout_form', 'post', $shout_link, array('notice' => 0, 'downtime'=>10));
 	if (iGUEST) {
 		echo $locale['SB_name']."<br />\n";
 		echo "<input type='text' name='shout_name' value='' class='textbox' maxlength='30' style='width:140px' /><br />\n";
