@@ -71,7 +71,7 @@ class defender {
 				return $return_value;
 			}
 		} elseif ($type == "date") {
-			return $this->validate_number($value, $default, $name, $id, $safemode, $error_text);
+			return $this->validate_date($value, $default, $name, $id, $safemode, $error_text);
 			//return validate_date_field($value, $default, $name, $id); on 8.00 only - outputs 10 int timestamp.
 		} elseif ($type == "password") {
 			return $this->validate_password($value, $default, $name, $id, $safemode, $error_text);
@@ -118,9 +118,9 @@ class defender {
 	public function verify_tokens($form, $post_time = 10, $preserve_token = FALSE) {
 		global $locale, $settings, $userdata;
 		$error = array();
-		$user_id = (isset($userdata['user_id']) ? $userdata['user_id'] : 0);
+		$user_id = isset($userdata['user_id']) && !isset($_POST['login']) ? $userdata['user_id'] : 0;
 		$algo = $settings['password_algorithm'];
-		$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+		$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
 		if ($this->debug) {
 			print_p($_POST);
 		}
@@ -210,6 +210,9 @@ class defender {
 			if (!isset($_POST['fusion_token'])) {
 				$this->stop();
 				$this->addNotice($locale['token_error_2']);
+				if ($this->debug_notice) {
+					print_p($locale['token_error_2']);
+				}
 			} else {
 				// check token.
 				if (isset($_POST['token_rings']) && !empty($_POST['token_rings'])) {
@@ -220,6 +223,9 @@ class defender {
 					// token tampered
 					$this->stop();
 					$this->addNotice($locale['token_error_2']);
+					if ($this->debug_notice) {
+						print_p($locale['token_error_2']." Tampered.");
+					}
 				}
 			}
 		}
@@ -381,6 +387,38 @@ class defender {
 	private function validate_url($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
 		if (isset($value) && $value !== "") {
 			return cleanurl($value);
+		} else {
+			return $default;
+		}
+	}
+
+	private function validate_date($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+		global $locale;
+
+		//$news_start = isset($_POST['news_start']) && $_POST['news_start'] ? explode('-', $_POST['news_start']) : '';
+		//$news_start_date = (!empty($news_start)) ? mktime(0, 0, 0, $news_start[1], $news_start[0], $news_start[2]) : '';
+
+
+		// pair each other to determine which is month.
+		// the standard value for dynamics is day-month-year.
+		if ($value !=0) {
+
+			if (stristr($value, '-')) {
+				$value = explode('-', $value);
+			} elseif (stristr($value, '/')) {
+				$value = explode('/', $value);
+			} else {
+				$value = explode('.', $value);
+			}
+
+			if (checkdate($value[1], $value[0], $value[2])) {
+				return mktime(0, 0, 0, $value[1], $value[0], $value[2]);
+			} else {
+				$this->stop();
+				$this->addError($id);
+				$this->addHelperText($id, sprintf($locale['df_404'], $name));
+				$this->addNotice(sprintf($locale['df_404'], $name));
+			}
 		} else {
 			return $default;
 		}
@@ -555,7 +593,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE) {
 			// Strips Defence Tags.
 			$data = $defender->DefenseOpts($_POST['def'][$input_name]);
 			// already filter out required. validate doesn't need anymore.
-			if ($data['required'] == 1 && $value == "") { // it is required field but does not contain any value.. do reject.
+			if ($data['required'] == 1 && (!$value)) { // it is required field but does not contain any value.. do reject.
 				$defender->stop();
 				$defender->addError($data['id']);
 				$defender->addHelperText($data['id'], $data['error_text']);
