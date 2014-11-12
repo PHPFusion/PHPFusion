@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: panels.php
 | Author: PHP-Fusion Development Team
@@ -15,13 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 // Add admin message
 $ad_mess = array();
 $admin_mess = '';
-
 if (iADMIN && !defined("ADMIN_PANEL")) {
-	$admin_mess .= "<a id='content'></a>\n";
+	$admin_mess .= "<a id='content' name='content'></a>\n";
 	if (iSUPERADMIN && file_exists(BASEDIR."setup.php")) $ad_mess[] = $locale['global_198'];
 	if ($settings['maintenance']) $ad_mess[] = $locale['global_190'];
 	if (!$userdata['user_admin_password']) $ad_mess[] = $locale['global_199'];
@@ -87,6 +88,7 @@ foreach ($p_name as $p_key => $p_side) {
 		define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
 	}
 }
+
 unset($panels_cache);
 if (defined("ADMIN_PANEL") || LEFT && !RIGHT) {
 	$main_style = "side-left";

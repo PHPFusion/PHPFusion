@@ -142,7 +142,6 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 		$shout_link = $link;
 		$shout_message = "";
 	}
-	unset($_SESSION);
 	echo "<a id='edit_shout' name='edit_shout'></a>\n";
 	echo openform('shout_form', 'shout_form', 'post', $shout_link, array('notice' => 0, 'downtime'=>10));
 	if (iGUEST) {

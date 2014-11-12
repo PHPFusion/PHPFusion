@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: footer.php
 | Author: Nick Jones (Digitanium)
@@ -15,16 +15,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
+
 require_once INCLUDES."footer_includes.php";
 define("CONTENT", ob_get_contents());
 ob_end_clean();
 if (!defined('ADMIN_PANEL')) {
-    render_page(FALSE);
+	render_page();
 } else {
     render_adminpanel();
 }
 echo push_jquery(); // output here all jquery.
+
 // Cron Job (6 MIN)
 if ($settings['cronjob_hour'] < (time()-360)) {
 	$result = dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < '".(time()-360)."'");
@@ -89,9 +93,7 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 if (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0) {
 	echo "<div class='admin-message'>".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])."</div>\n";
 }
-// Stuff added with add_to_footer()
 echo $fusion_page_footer_tags;
-
 echo "</body>\n</html>\n";
 $output = ob_get_contents();
 if (ob_get_length() !== FALSE) {
@@ -116,5 +118,5 @@ if ($pdo_enabled == "1") {
 
 // Shows allocated memory and the actual memory used for generatig a page
 echo "Memory: alloc. ".(memory_get_peak_usage(true)/1024/1024)." MB / used ".number_format((memory_get_peak_usage(false)/1024/1024), 2)." MB";
-
+//var_dump($_SESSION);
 ?>

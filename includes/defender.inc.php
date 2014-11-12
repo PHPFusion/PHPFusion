@@ -27,6 +27,7 @@ class defender {
 	/* Sanitize Fields Automatically */
 	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
 		global $locale;
+
 		$this->noAdminCookie();
 		/* Validation of Files */
 		if ($type == "textbox" || $type == 'dropdown' || $type == 'name' || $type == 'textarea') { // done.
@@ -166,7 +167,7 @@ class defender {
 		// remove the token from the array as it has been used
 		if ($post_time > 0) { // token with $post_time 0 are reusable
 			foreach ($_SESSION['csrf_tokens'][$form] as $key => $val) {
-				if ($val == $_POST['fusion_token']) {
+				if (isset($_POST['fusion_token']) && $val == $_POST['fusion_token']) {
 					unset($_SESSION['csrf_tokens'][$form][$key]);
 				}
 			}
@@ -397,8 +398,6 @@ class defender {
 
 		//$news_start = isset($_POST['news_start']) && $_POST['news_start'] ? explode('-', $_POST['news_start']) : '';
 		//$news_start_date = (!empty($news_start)) ? mktime(0, 0, 0, $news_start[1], $news_start[0], $news_start[2]) : '';
-
-
 		// pair each other to determine which is month.
 		// the standard value for dynamics is day-month-year.
 		if ($value !=0) {
@@ -642,7 +641,7 @@ function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
 		}
 	}
 	// reuse a posted token if is valid instead of generating a new one - fixed: reuse on the form that is being posted only. Generate new on all others.
-	if (isset($_POST['fusion_token']) && $being_posted && $defender->verify_tokens($form, $max_tokens)) {
+	if (isset($_POST['fusion_token']) && $being_posted && $defender->verify_tokens($form, $max_tokens)) {  // will delete max token out. hence flush out previous token..
 		$token = stripinput($_POST['fusion_token']);
 	} else {
 		$user_id = (isset($userdata['user_id']) ? $userdata['user_id'] : 0);
@@ -652,15 +651,17 @@ function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
 		$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
 		// generate a new token and store it
 		$token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
+		// $max_tokens override for guest.
+		if ($user_id == 0) { $max_tokens = 1; }
+		// generate a new token.
 		$_SESSION['csrf_tokens'][$form][] = $token;
 		// store just one token for each form, if the user is a guest
-		if ($user_id == 0) {
-			$max_tokens = 1;
-		}
-		// maximum number of tokens to be stored for each form
+
+		//print_p("Max token allowed in $form is $max_tokens");
 		if ($max_tokens > 0 && count($_SESSION['csrf_tokens'][$form]) > $max_tokens) {
-			array_shift($_SESSION['csrf_tokens'][$form]); // remove first element
+			array_shift($_SESSION['csrf_tokens'][$form]); // remove first element - this keeps changing
 		}
+		//print_p("And we have ".count($_SESSION['csrf_tokens'][$form])." tokens in place...");
 	}
 	$html = '';
 	$shuffle = str_shuffle("abcdefghijklmnopqrstuvwxyz1234567890");

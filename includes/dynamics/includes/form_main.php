@@ -15,23 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function openform($form_name, $form_id, $method, $action, $options = FALSE) {
+function openform($form_name, $form_id, $method, $action, array $options = array()) {
 	global $defender;
-	if (!is_array($options)) {
-		$class = '';
-		$enctype = '';
-		$downtime = 10;
-		$notice = 1;
-		$dropzone = 0;
-	} else {
-		$class = isset($options['class']) && $options['class'] ? $options['class'] : '';
-		$enctype = isset($options['enctype']) && $options['enctype'] == 1 ? 1 : 0;
-		$downtime = isset($options['downtime']) && isnum($options['downtime']) ? $options['downtime'] : 10;
-		$notice = isset($options['notice']) && $options['notice'] == 0 ? 0 : 1;
-	}
-	$html = "<form name='".$form_name."' id='".$form_id."' method='".$method."' action='".$action."' class='".(defined('FUSION_NULL') ? 'warning' : '')." $class' ".($enctype ? "enctype='multipart/form-data'" : '')." >\n";
-	$html .= generate_token($form_name, $downtime);
-	if (defined('FUSION_NULL') && $notice) {
+	$options += array(
+		'class' => !empty($options['class']) ? $options['class'] : '',
+		'enctype' => !empty($options['enctype']) && $options['enctype'] == 1 ? 1 : 0,
+		'notice' => !empty($options['notice']) && $options['notice'] == 0 ? 0 : 1,
+		'downtime' => !empty($options['downtime']) && isnum($options['downtime']) ? $options['downtime'] : 1,
+	);
+	$html = "<form name='".$form_name."' id='".$form_id."' method='".$method."' action='".$action."' class='".(defined('FUSION_NULL') ? 'warning' : '')." ".$options['class']." ' ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
+	$html .= generate_token($form_name, $options['downtime']);
+	if (defined('FUSION_NULL') && $options['notice']) {
 		echo $defender->showNotice();
 	}
 	return $html;
