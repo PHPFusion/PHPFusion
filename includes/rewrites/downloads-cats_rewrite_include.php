@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%download_cat_id%" => "([0-9]+)", "%download_cat_name%" => "([\p{L}-0-9a-zA-Z._]+)");
+$regex = array("%download_cat_id%" => "([0-9]+)", "%download_cat_name%" => "([0-9a-zA-Z._\W]+)");
 $pattern = array("dl-cats/%download_cat_id%/%download_cat_name%" => "downloads.php?cat_id=%download_cat_id%",);
 
 $dir_path = ROOT;

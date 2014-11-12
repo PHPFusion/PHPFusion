@@ -17,9 +17,9 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array(
-	"%stype%" => "([\p{L}-0-9a-zA-Z._]+)",
-	"%stext%" => "([\p{L}-0-9a-zA-Z._]+)",
-	"%method%" => "([\p{L}-0-9a-zA-Z._]+)",
+	"%stype%" => "([0-9a-zA-Z._\W]+)",
+	"%stext%" => "([0-9a-zA-Z._\W]+)",
+	"%method%" => "([0-9a-zA-Z._\W]+)",
 	"%datelimit%" => "([0-9]+)",
 	"%fields%" => "([0-9]+)",
 	"%sort%" => "([\p{L}a-zA-Z]+)",

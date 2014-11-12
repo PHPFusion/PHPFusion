@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array(
-	"%post_message%" => "([\p{L}-0-9a-zA-Z._]+)",
+	"%post_message%" => "([0-9a-zA-Z._\W]+)",
 	"%post_id%" => "([0-9]+)",
 	"%quote_id%" => "([0-9]+)",
 	"%forum_id%" => "([0-9]+)",

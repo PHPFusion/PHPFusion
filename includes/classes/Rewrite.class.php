@@ -157,15 +157,15 @@ class Rewrite {
 	* @data_type Boolean
 	* @access public
 	*/
-	public $debug = false;
-
+	public $debug = true;
 	/*
 	* Constructor
 	*
 	* @access public
 	*/
 	public function __construct() {
-		$this->requesturi = PERMALINK_CURRENT_PATH;
+		$this->requesturi = urldecode(PERMALINK_CURRENT_PATH);
+		//$this->requesturi = PERMALINK_CURRENT_PATH;
 	}
 
 	/*
@@ -191,6 +191,7 @@ class Rewrite {
 	* @access public
 	*/
 	public function rewritePage() {
+	global $settings;
 		// Import the required Handlers
 		$this->importHandlers();
 		// Include the Rewrites
@@ -213,9 +214,11 @@ class Rewrite {
 		if ($this->pathtofile == "") {
 			$this->setWarning(6);
 		}
+		if ($settings['debug_seo'] == "1") {
 		// If any Warnings to be shown, or in Debug mode
-		if ($this->debug) {
-			$this->displayWarnings();
+			if ($this->debug) {
+				$this->displayWarnings();
+			}
 		}
 	}
 
@@ -898,9 +901,6 @@ class Rewrite {
 		if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
 			$regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
 		}
-		//$regex = str_replace("/", "\/", $regex);
-		//$regex = str_replace(".", "\.", $regex);
-		//$regex = str_replace("?", "\?", $regex);
 		$regex = $this->cleanRegex($regex);
 		$regex = "/^".$regex."$/";
 		return $regex;

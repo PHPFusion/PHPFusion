@@ -288,6 +288,8 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("ALTER TABLE ".$db_prefix."users ADD user_blacklist TEXT NOT NULL AFTER user_language");
 		// site settings for SEO / SEF
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('site_seo', '0')");
+		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('normalize_seo', '0')");
+		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('debug_seo', '0')");
 		// site settings panel exclusions for the new positons
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('exclude_aupper', '')");
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('exclude_blower', '')");

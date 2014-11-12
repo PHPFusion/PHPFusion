@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%article_id%" => "([0-9]+)", "%comment_id%" => "([0-9]+)", "%article_title%" => "([\p{L}-0-9a-zA-Z._]+)");
+$regex = array("%article_id%" => "([0-9]+)", "%comment_id%" => "([0-9]+)", "%article_title%" => "([0-9a-zA-Z._\W]+)");
 
 // only accept &
 $pattern = array("articles" => 

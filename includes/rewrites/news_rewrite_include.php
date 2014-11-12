@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
 	"%news_id%" => "([0-9]+)",
-	"%news_title%" => "([\p{L}-0-9a-zA-Z._]+)",
+	"%news_title%" => "([0-9a-zA-Z._\W]+)",
 	"%news_step%" => "([0-9]+)",
  	"%news_rowstart%" => "([0-9]+)",
 	"%c_start%" => "([0-9]+)",

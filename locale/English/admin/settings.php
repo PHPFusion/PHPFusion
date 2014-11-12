@@ -40,6 +40,8 @@ $locale['435'] = "Exclude Above Upper Panels:";
 $locale['436'] = "Exclude Below Lower Panels:";
 $locale['437'] = "Bootstrap Framework:";
 $locale['438'] = "Search Engine Friendly URL (SEF):";
+$locale['439'] = "Normalize Friendly URLs:";
+$locale['440'] = "Enable SEO Debug Mode:";
 // Time & Date Settings
 $locale['450'] = "Time and Date";
 $locale['451'] = "Short date format:";

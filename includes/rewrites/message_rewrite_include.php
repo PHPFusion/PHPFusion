@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array(
 	"%msg_send%" => "([0-9]+)",
 	"%msg_read%" => "([0-9]+)",
-	"%folder%" => "([\p{L}-0-9a-zA-Z._]+)"
+	"%folder%" => "([0-9a-zA-Z._\W]+)"
 );
 
 $pattern = array(

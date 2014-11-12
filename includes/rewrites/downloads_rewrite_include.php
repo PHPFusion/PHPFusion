@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-$regex = array("%download_id%" => "([0-9]+)", "%cat_id%" => "([0-9]+)", "%download_title%" => "([\p{L}-0-9a-zA-Z._]+)",
+$regex = array("%download_id%" => "([0-9]+)", "%cat_id%" => "([0-9]+)", "%download_title%" => "([0-9a-zA-Z._\W]+)",
 			   "%file_id%" => "([0-9]+)",);
 $pattern = array("download" => "downloads.php",
 				 "download/%cat_id%/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",

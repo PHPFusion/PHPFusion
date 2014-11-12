@@ -142,7 +142,7 @@ class PermalinksDisplay {
 	* @data_type Boolean
 	* @access protected
 	*/
-	private $debug = FALSE;
+	private $debug = true;
 	private $sniffer_debug = false;
 	private $regexDebug = false;
 
@@ -156,6 +156,8 @@ class PermalinksDisplay {
 	* @access private
 	*/
 	private function handleOutput($output) {
+	global $settings;
+	
 		// Sets the Output
 		$this->output = $output;
 		// verify Handlers
@@ -180,10 +182,10 @@ class PermalinksDisplay {
 		// Check if the URI is a PHP File. So we need a 301 Redirect to the Permalink.
 		$this->validateURI();
 		// For Developer, to see what is happening behind
-		if ($this->debug) {
-			$this->showQueries();
+		if ($settings['debug_seo'] == "1") {
+				$this->showQueries();
 		}
-	}
+}
 
 	/*
 	* Adds the Handler in the Queue
@@ -328,22 +330,23 @@ class PermalinksDisplay {
 	* @access private
 	*/
 	private function sniffPatterns() {
-		//print_p(stripinput($this->output)); gives us ../../ which is not.
+	global $settings;
+	//print_p(stripinput($this->output)); gives us ../../ which is not.
 		if (is_array($this->patterns_regex)) {
 			foreach ($this->patterns_regex as $type => $values) {
 				if (is_array($this->patterns_regex[$type])) {
 					// $type refers to the Patterns type, i.e, news, threads, articles, etc
 					foreach ($this->patterns_regex[$type] as $key => $search) {
-						$this->sniffer_debug ? print_p("Sniffing $search in..") : '';
-						$this->sniffer_debug ? print_p($this->dbid[$type]) : '';
-						// As sniffPatterns is use to Detect ID to fetch Data from DB, so we will not use it for types who have no DB_ID
+							$this->sniffer_debug ? print_p("Sniffing $search in..") : '';
+							$this->sniffer_debug ? print_p($this->dbid[$type]) : '';
+					// As sniffPatterns is use to Detect ID to fetch Data from DB, so we will not use it for types who have no DB_ID
 						if (isset($this->dbid[$type])) {
 							// If current Pattern is found in the Output, then continue.
 							if (preg_match($search, $this->output)) {
 								// Store all the matches into the $matches array
 								preg_match_all($search, $this->output, $matches);
-								$this->sniffer_debug ? print_p("Matches") : '';
-								$this->sniffer_debug ? print_p($matches) : '';
+										$this->sniffer_debug ? print_p("Matches") : '';
+										$this->sniffer_debug ? print_p($matches) : '';
 								// Returns the Tag from the Unique DBID by which the Pattern in recognized, i.e, %news_id%, %thread_id%
 								$tag = $this->getUniqueIDtag($type);
 								$clean_tag = str_replace("%", "", $tag); // Remove % for Searching the Tag
@@ -470,17 +473,18 @@ class PermalinksDisplay {
 	* MADMAN DEBUG MODE HERE - BUG KINGDOM.
 	*/
 	private function replacePatterns() {
-		if (is_array($this->pattern_search)) {
+	global $settings;
+	if (is_array($this->pattern_search)) {
 			foreach ($this->pattern_search as $type => $values) {
 				//print_p($values);
 				if (is_array($this->patterns_regex[$type])) {
 					foreach ($this->patterns_regex[$type] as $key => $search) {
-						$this->regexDebug ? print_p($search) : '';
+							$this->regexDebug ? print_p($search) : '';
 						// If the Regex Pattern is found in the Output, then continue
 						if (preg_match($search, $this->output)) {
 							// Store all the Matches in the $matches array
 							preg_match_all($search, $this->output, $matches);
-							$this->regexDebug ? print_p($matches) : '';
+									$this->regexDebug ? print_p($matches) : '';
 							//print_p($matches);
 							// Replace the Unique ID Tag with the Regex Code
 							// Example: Replace %news_id% with ([0-9]+)
@@ -1090,20 +1094,21 @@ class PermalinksDisplay {
 	* @access private
 	*/
 	public static function cleanURL($string, $delimiter = "-") {
+	global $settings;
 
-
-		$res = normalize($string);
-
+if ($settings['normalize_seo'] == "1") {		
+		$string = normalize($string);
 		if (function_exists('iconv')) {
-			$res = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $res);
+			$string = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $string);
 		}
-
-		$res = preg_replace("/&([^;]+);/i", "", $res); // Remove all Special entities like ', &#copy;
-		$res = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -]/i", "", $res); // # is allowed in some cases(like in threads for #post_10)
-		$res = preg_replace("/[\s]+/i", $delimiter, $res); // Replace All <space> by Delimiter
-		$res = preg_replace("/[\\".$delimiter."]+/i", $delimiter, $res); // Replace multiple occurences of Delimiter by 1 occurence only
-		$res = strtolower(trim($res, "-"));
-		return $res;
+}
+		$string = preg_replace("/&([^;]+);/i", "", $string); // Remove all Special entities like ', &#copy;
+		$string = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -\W]/i", "", $string); // # is allowed in some cases(like in threads for #post_10)
+		
+		$string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
+		$string = preg_replace("/[\\".$delimiter."]+/i", $delimiter, $string); // Replace multiple occurences of Delimiter by 1 occurence only
+		$string = strtolower(trim($string, "-"));
+		return $string;
 	}
 
 	/*

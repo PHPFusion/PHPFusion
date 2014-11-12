@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-$regex = array("%user_id%" => "([0-9]+)", "%user_name%" => "([\p{L}-0-9a-zA-Z._]+)");
+$regex = array("%user_id%" => "([0-9]+)", "%user_name%" => "([0-9a-zA-Z._\W]+)");
 $pattern = array("profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%");
 $dbname = DB_USERS;
 $dbid = array("%user_id%" => "user_id");

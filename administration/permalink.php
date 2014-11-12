@@ -28,6 +28,13 @@ if (isset($_POST['savesettings'])) {
 
 	$site_seo = form_sanitizer($_POST['site_seo'], 0, 'site_seo');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$site_seo' WHERE settings_name='site_seo'") : '';
+
+	$normalize_seo = form_sanitizer($_POST['normalize_seo'], 0, 'normalize_seo');
+	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$normalize_seo' WHERE settings_name='normalize_seo'") : '';
+
+	$debug_seo = form_sanitizer($_POST['debug_seo'], 0, 'debug_seo');
+	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$debug_seo' WHERE settings_name='debug_seo'") : '';
+	
 	if ($site_seo == 1) {
 		// create .htaccess
 		if (!file_exists(BASEDIR.".htaccess")) {
@@ -130,6 +137,8 @@ echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, arra
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
 echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings2['site_seo'], array('inline' => 1));
+echo form_toggle($locale['439'], 'normalize_seo', 'normalize_seo', $opts, $settings2['normalize_seo'], array('inline' => 1));
+echo form_toggle($locale['440'], 'debug_seo', 'debug_seo', $opts, $settings2['debug_seo'], array('inline' => 1));
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary','inline' => 1));
 echo "</div></div>\n";
 echo closeform();

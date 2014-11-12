@@ -21,7 +21,7 @@ $regex = array(
 	"%weblink_id%" => "([0-9]+)",
 	"%rowstart%" => "([0-9]+)",
 	"%weblink_cat_id%" => "([0-9]+)",
-	"%weblink_name%" => "([\p{L}-0-9a-zA-Z._]+)"
+	"%weblink_name%" => "([0-9a-zA-Z._\W]+)"
 );
 
 $pattern = array(
