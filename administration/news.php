@@ -143,6 +143,7 @@ function news_form() {
 		$data['news_id'] = isset($_POST['news_id']) ? form_sanitizer($_POST['news_id'], '', 'news_id') : '';
 		$data['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 		$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
+		$data['news_name'] = $userdata['user_id'];
 		if (!empty($_FILES['news_image']['name']) && is_uploaded_file($_FILES['news_image']['tmp_name'])) {
 			//require_once INCLUDES."photo_functions_include.php";
 			require_once INCLUDES."infusions_include.php";
@@ -212,7 +213,7 @@ function news_form() {
 		//$data['news_extended'] = form_sanitizer($_POST['news_extended'], '', 'news_extended'); // table-safe values, // Destroys HTML coding.
 		$data['news_news'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])); // Needed for HTML to work
 		$data['news_extended'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])); // Needed for HTML to work
-		$data['news_datestamp'] = form_sanitizer($_POST['news_datestamp'], '', 'news_datestamp');
+		$data['news_datestamp'] = form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp');
 		$data['news_start_date'] = 0;
 		$data['news_end_date'] = 0;
 		$data['news_start_date'] = form_sanitizer($_POST['news_start'], '', 'news_start');
@@ -229,7 +230,7 @@ function news_form() {
 			$data['news_breaks'] = "n";
 		}
 		if (isset($_POST['news_id']) && isnum($_POST['news_id']) && !defined('FUSION_NULL')) {
-			$result = dbquery("SELECT news_image, news_image_t1, news_image_t2, news_sticky FROM ".DB_NEWS." WHERE news_id='".$_POST['news_id']."'");
+			$result = dbquery("SELECT news_image, news_image_t1, news_image_t2, news_sticky, news_datestamp FROM ".DB_NEWS." WHERE news_id='".$_POST['news_id']."'");
 			if (dbrows($result)) {
 				$data2 = dbarray($result);
 				if ($data['news_sticky'] == "1") {
@@ -250,7 +251,7 @@ function news_form() {
 					$data['news_image_t1'] = "";
 					$data['news_image_t2'] = "";
 				}
-				 dbquery_insert(DB_NEWS, $data, 'update');
+				dbquery_insert(DB_NEWS, $data, 'update');
 			} else {
 				redirect(FUSION_SELF.$aidlink);
 			}
@@ -333,7 +334,9 @@ function news_form() {
 		$data['news_end'] = '';
 		$data['news_cat'] = '0';
 		$data['news_image'] = '';
+
 	}
+
 	if (isset($_POST['preview'])) {
 		$data['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 		$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
@@ -363,6 +366,7 @@ function news_form() {
 		$data['news_sticky'] = isset($_POST['news_sticky']) ? " 1" : "";
 		$data['news_allow_comments'] = isset($_POST['news_allow_comments']) ? " 1" : "";
 		$data['news_allow_ratings'] = isset($_POST['news_allow_ratings']) ? " 1" : "";
+		$data['news_datestamp'] = isset($_POST['news_datestamp']) ? $_POST['news_datestamp'] : '';
 		if (!defined('FUSION_NULL')) {
 			echo openmodal('news_preview', 'News Preview');
 			echo $data['news_news'];
@@ -373,6 +377,9 @@ function news_form() {
 			echo closemodal();
 		}
 	}
+
+
+
 	$formaction = FUSION_SELF.$aidlink;
 	if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
 		$formaction = FUSION_SELF.$aidlink."&action=edit&news_id=".$_GET['news_id'];

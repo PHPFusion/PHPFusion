@@ -119,6 +119,7 @@ echo "<td align='center' colspan='2' class='tbl'><br />\n";
 echo form_button($locale['432'], 'save_cat', 'save_cat', $locale['432'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</table>\n</form>\n";
 closetable();
+
 opentable($locale['402']);
 $result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 $rows = dbrows($result);

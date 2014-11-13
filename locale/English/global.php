@@ -115,22 +115,34 @@ $locale['global_077'] = "News";
 $locale['global_078'] = "No News has been posted yet";
 $locale['global_079'] = "In ";
 $locale['global_080'] = "Uncategorised";
+$locale['global_081'] = "News Home";
+$locale['global_082'] = "News Center";
+$locale['global_083'] = "Last Updated";
+$locale['global_084'] = "News Category";
+$locale['global_085'] = "All Other Categories";
+$locale['global_086'] = "Most Recent News";
+$locale['global_087'] = "Most Commented News";
+$locale['global_088'] = "Highest Rating News";
+$locale['global_089'] = "Be the first to comment on %s";
+$locale['global_089a'] = "Be the first to rate on this %s";
 // Page Navigation
 $locale['global_090'] = "Prev";
 $locale['global_091'] = "Next";
 $locale['global_092'] = "Page ";
 $locale['global_093'] = " of ";
+$locale['global_094'] = " out of ";
+
 // Guest User Menu
 $locale['global_100'] = "Login";
-$locale['global_101'] = "Username";
+$locale['global_101'] = "Login ID";
+$locale['global_101a'] = "Please enter your Login ID";
 $locale['global_102'] = "Password";
-$locale['global_103'] = "Remember Me";
-$locale['global_104'] = "Login";
+$locale['global_103'] = "Keep me logged in";
+$locale['global_104'] = "Log in";
 $locale['global_105'] = "Not a member yet? <a href='".BASEDIR."register.php' class='side'>Click here</a> to register.";
 $locale['global_106'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
-$locale['global_107'] = "Register";
+$locale['global_107'] = "Sign up";
 $locale['global_108'] = "Lost password";
-
 
 // User Menu
 $locale['global_123'] = "Admin Panel";
@@ -181,6 +193,7 @@ $locale['global_139'] = "Select a Poll to view from the list:";
 $locale['global_140'] = "View";
 $locale['global_141'] = "View Poll";
 $locale['global_142'] = "There are no polls defined.";
+$locale['global_143'] = "Ratings";
 // Captcha
 $locale['global_150'] = "Validation Code:";
 $locale['global_151'] = "Enter Validation Code:";
@@ -196,8 +209,8 @@ $locale['global_182'] = "<strong>Notice:</strong> Admin Password not entered or 
 // Miscellaneous
 $locale['global_190'] = "Maintenance Mode Activated";
 $locale['global_191'] = "Your IP address is currently blacklisted.";
-$locale['global_192'] = "Your user cookie has expired. Please log in again to proceed.";
-$locale['global_193'] = "Could not set user cookie. Please make sure you have cookies enabled to be able to log in properly.";
+$locale['global_192'] = "Your login session has expired. Please log in again to proceed.";
+$locale['global_193'] = "Could not set document cookie. Please make sure you have cookies enabled to be able to log in properly.";
 $locale['global_194'] = "This account is currently suspended.";
 $locale['global_195'] = "This account has not been activated.";
 $locale['global_196'] = "Invalid username or password.";
