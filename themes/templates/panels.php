@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| http://www.php-fusion.co.uk/
+| https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: panels.php
 | Author: PHP-Fusion Development Team
@@ -15,14 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Add admin message
 $ad_mess = array();
 $admin_mess = '';
+
 if (iADMIN && !defined("ADMIN_PANEL")) {
-	$admin_mess .= "<a id='content' name='content'></a>\n";
+	$admin_mess .= "<a id='content'></a>\n";
 	if (iSUPERADMIN && file_exists(BASEDIR."setup.php")) $ad_mess[] = $locale['global_198'];
 	if ($settings['maintenance']) $ad_mess[] = $locale['global_190'];
 	if (!$userdata['user_admin_password']) $ad_mess[] = $locale['global_199'];
@@ -42,17 +41,19 @@ $p_name = array(array('name' => 'LEFT', 'side' => 'left'), array('name' => 'U_CE
 // Get panels data to array
 $panels_cache = array();
 $p_result = dbquery("SELECT panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order");
-while ($panel_data = dbarray($p_result)) {
-	if (multilang_table("PN")) {
-		$p_langs = explode('.', $panel_data['panel_languages']);
-		if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
-			$panels_cache[$panel_data['panel_side']][] = $panel_data;
+if (multilang_table("PN")) {
+	while ($panel_data = dbarray($p_result)) {
+			$p_langs = explode('.', $panel_data['panel_languages']);
+			if (checkgroup($panel_data['panel_access']) && in_array(LANGUAGE, $p_langs)) {
+				$panels_cache[$panel_data['panel_side']][] = $panel_data;
+			}
 		}
-	} else {
-		if (checkgroup($panel_data['panel_access'])) {
-			$panels_cache[$panel_data['panel_side']][] = $panel_data;
+} else {
+		while ($panel_data = dbarray($p_result)) {
+			if (checkgroup($panel_data['panel_access'])) {
+				$panels_cache[$panel_data['panel_side']][] = $panel_data;
+			}
 		}
-	}
 }
 $url_arr = array();
 foreach ($p_name as $p_key => $p_side) {
@@ -88,7 +89,6 @@ foreach ($p_name as $p_key => $p_side) {
 		define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
 	}
 }
-
 unset($panels_cache);
 if (defined("ADMIN_PANEL") || LEFT && !RIGHT) {
 	$main_style = "side-left";
