@@ -22,7 +22,7 @@ function dbquery($query) {
 	$mysql_queries_count++;
 	$query_time = get_microtime();
 	$result = @mysql_query($query);
-	$query_time = substr((get_microtime()-$query_time), 0, 7);
+	$query_time = round((get_microtime()-$query_time), 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
 	if (!$result) {
 		echo mysql_error();
