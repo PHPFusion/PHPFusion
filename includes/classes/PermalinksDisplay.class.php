@@ -407,7 +407,7 @@ class PermalinksDisplay {
 						$unique_col = $name; // The Unique Column name for WHERE condition
 						$items = array_unique($items); // Remove any duplicates from the Array
 						$ids_to_fetch = implode(",", $items); // IDs to fetch data of
-						$fetch_query = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col." IN(".$ids_to_fetch.")"; // The Query
+						$fetch_query = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col.(count($items) > 1 ? " IN(".$ids_to_fetch.")" : "='".$ids_to_fetch."'"); // The Query
 						$result = dbquery($fetch_query); // Execute Query
 						$this->queries[] = $fetch_query;
 						if (dbrows($result)) {
@@ -453,7 +453,7 @@ class PermalinksDisplay {
 			$column_arr[] = $unique_col; // Also fetch the Unique_ID like news_id, thread_id
 			$column_names = implode(",", $column_arr); // Array to String conversion for MySQL Query
 			$dbname = $this->dbname[$type]; // Table Name in Database
-			$fetch_query = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col." IN(".$id.")"; // The Query
+			$fetch_query = "SELECT ".$column_names." FROM ".$dbname." WHERE ".$unique_col."='".$id."'"; // The Query
 			$result = dbquery($fetch_query); // Execute Query
 			$this->queries[] = $fetch_query;
 			if (dbrows($result)) {
