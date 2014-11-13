@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../../maincore.php";
+require_once dirname(__FILE__)."../../../../maincore.php";
 
 header('Content-Type: application/rss+xml; charset='.$locale['charset'].'');
 
