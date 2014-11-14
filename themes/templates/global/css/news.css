@@ -11,6 +11,9 @@
 	color: #FFF !important;
 	text-decoration: none !important;
 }
+.carousel-indicators > li {
+	border:1px solid #eee;
+}
 .news-footer > a {
 	color: rgb(153, 153, 153);
 	font-weight: 600;
@@ -54,7 +57,13 @@
 	padding-left: 20px;
 	text-align: left !important;
 	width: 100%;
-	background: rgba(0, 0, 0, 0.8);
+	background: -moz-linear-gradient(top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.65)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
 }
 #news-slideshow .profile-link {
 	color: rgb(21, 133, 212) !important;

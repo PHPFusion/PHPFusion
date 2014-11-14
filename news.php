@@ -57,7 +57,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$news_subject = $data['news_subject'];
 		if ($data['news_image'] && $settings['news_image_frontpage'] == 0) {
 			$news_image = "<a href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$data['news_cat'] : FUSION_SELF."?readmore=".$data['news_id'])."'>";
-			$news_image .= "<img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' /></a>";
+			$news_image .= "<img src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' /></a>";
 		}
 		if ($data['news_image_t1'] && $settings['news_image_readmore'] == "0") {
 			$img_size = @getimagesize(IMAGES_N.$data['news_image']);
@@ -96,11 +96,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$info['news_item'] = $news_info;
 		$info['news_item']['page_count'] = $pagecount;
 	} else {
-		redirect(FUSION_SELF);
+		redirect(BASEDIR."news.php");
 	}
-
 } else {
-
 	// Front Page
 	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
 	/* Init */
@@ -176,7 +174,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				AND (news_end='0'||news_end>=".time().") AND news_draft='0'
 				GROUP BY news_id
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$items_per_page);
-				$info['news_item_rows'] = dbrows($result);
+				$info['news_item_rows'] = $rows;
 				add_to_breadcrumbs(array('link'=>BASEDIR."news.php?cat_id=".$data['news_cat_id'], 'title'=>$data['news_cat_name']));
 			}
 		} else {
@@ -216,7 +214,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$news_cat_image = '';	$news_image = '';	$news_img_src = '';
 				$news_subject = stripslashes($data['news_subject']);
 				if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image']) && $settings['news_image_frontpage'] == 0) {
-					$news_image = "<a href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$data['news_cat'] : FUSION_SELF."?readmore=".$data['news_id'])."'>";
+					$news_image = "<a class='img-link' href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$data['news_cat'] : FUSION_SELF."?readmore=".$data['news_id'])."'>";
 					$news_image .= "<img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' /></a>";
 					$news_img_src = IMAGES_N.$data['news_image'];
 				}
@@ -256,6 +254,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				);
 			}
 			$info['news_items'] = $news_info;
+			//	if ($info['news_item_rows'] > $items_per_page) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $items_per_page, $info['news_item_rows'], 3)."\n</div>\n";
 		} else {
 		$info['news_items'] = array();
 	}
