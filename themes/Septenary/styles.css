@@ -14,9 +14,6 @@ a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, bo
 	outline: 0;
 	vertical-align: top;
 }
-.breadcrumb {
-	margin-bottom: 40px;
-}
 .nav-pills > li > a {
 	color: rgb(21, 133, 212) !important;
 }
@@ -688,54 +685,9 @@ ul.list li a:hover {
 	margin-top: -120px;
 	margin-left: 30px;
 }
-/*
-article .news-date {
-	color: rgb(148, 148, 148);
+.popover .text-smaller {
+	color: rgba(0, 0, 0, 0.55);
 }
-
-article .news-info {
-	font-weight: bold;
-	font-size: 14px;
-	color: rgb(175, 175, 175);
-}
-
-article .news-action {
-	float: right;
-	width: 100px;
-}
-
-article .news-action > a {
-	color: rgb(175, 175, 175);
-	font-size: 20px !important;
-	-webkit-transition: 0.5s ease-in-out;
-	-moz-transition: 0.5s ease-in-out;
-	-ms-transition: 0.5s ease-in-out;
-	-o-transition: 0.5s ease-in-out;
-	transition: 0.5s ease-in-out;
-}
-
-article .news-action > a:hover, article .news-action > a:focus {
-	color: rgb(54, 63, 72);
-}
-
-article .news-user-info {
-	background: none repeat scroll 0% 0% rgb(54, 63, 72);
-	color: rgb(255, 255, 255);
-	margin: 30px 0px 0px;
-	padding: 20px 20px 20px 20px;
-	position: relative;
-	min-height: 170px;
-}
-
-article .news-title, article .news-title a {
-	color: rgb(54, 63, 72);
-	font-weight: bold;
-}
-
-article .news-title a:hover, article .news-title a:focus {
-	text-decoration: none;
-} */
-
 .panelbutton {
 	padding: 3px 5px 0 0;
 }
