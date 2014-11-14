@@ -667,4 +667,32 @@ function closetabbody() { return "</div>\n"; }
 
 function closetab() { return "</div>\n</div>\n"; }
 
+
+/* Standard ratings display */
+function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE, $mode = '1') {
+	global $locale;
+	$start_link = $link ? "<a class='comments-item m-r-10 ".$class."' href='".$link."'>" : '';
+	$end_link = $link ? "</a>\n" : '';
+	if ($total_votes > 0) {
+		$average = number_format($total_sum/$total_votes, 1);
+		$str = $mode == 1 ? $average.$locale['global_094'].$total_votes." ".($total_votes > 1 ? $locale['global_134'] : $locale['global_133']) : "$average/$total_votes";
+		$answer = $start_link."<i title='".$locale['global_143']."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
+	} else {
+		$answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='entypo thumbs-up high-opacity m-l-0'></i> 0 ".$end_link;
+	}
+	return $answer;
+}
+
+/* Standard comment display */
+function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode = '1') {
+	global $locale;
+	$start_link = $link ? "<a class='comments-item m-r-10 ".$class."' href='".$link."'>" : '';
+	$end_link = $link ? "</a>\n" : '';
+	if ($news_comments > 0) {
+		$str = $mode == 1 ? $news_comments." ".($news_comments > 1 ? $locale['global_073'] : $locale['global_073b']) : $news_comments;
+		return $start_link."<i title='".$locale['global_073']."' class='entypo icomment high-opacity m-l-0'></i>".$str.$end_link;
+	} else {
+		return $start_link."<i title='".sprintf($locale['global_089'], $locale['global_077'])."' class='entypo icomment high-opacity m-l-0'></i> 0".$end_link;
+	}
+}
 ?>

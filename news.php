@@ -256,7 +256,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				);
 			}
 			$info['news_items'] = $news_info;
-			//	if ($info['news_item_rows'] > $items_per_page) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $items_per_page, $info['news_item_rows'], 3)."\n</div>\n";
 		} else {
 		$info['news_items'] = array();
 	}

@@ -21,6 +21,10 @@
 .news-img-header {
 	max-height: 150px;
 }
+.news-img-header > a > img.img-responsive {
+	height:260px;
+	min-width: 100%;
+}
 .news-avatar {
 	background-color: #FFF; position: relative; margin-bottom: 20px; margin-top: -15px; padding-top: 5px; padding-right: 5px; z-index: 100;
 }
