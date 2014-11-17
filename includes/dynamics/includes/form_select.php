@@ -110,7 +110,7 @@ function form_select($title, $input_name, $input_id, $option_array, $input_value
 	}
 	// Generate Defender Tag
 	$input_name = ($multiple) ? str_replace("[]", "", $input_name) : $input_name;
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly />";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
 	// Initialize Select2
 	// Select 2 Multiple requires hidden DOM.
 	if ($jsonmode == 0) {
@@ -412,7 +412,7 @@ $allowclear
 	if (!$level) {
 		$html .= "</select>";
 		$html .= "<br/><div id='$input_id-help'></div>";
-		$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>";
+		$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
 		$html .= "</div>\n</div>\n";
 	}
 	return $html;

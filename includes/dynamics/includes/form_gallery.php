@@ -49,8 +49,8 @@ function form_photosize($title, $input_name, $input_id, $input_value_width, $inp
 	$html .= "<div id='$input_id-help' style='display:inline-block !important;'></div>";
 	$html .= "</div>\n";
 	$html .= "</div></div>\n";
-	$html .= "<input type='hidden' name='def['".$input_name."_w']' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=0]".($error_text ? ",[error_text=$error_text]" : '')."' readonly />";
-	$html .= "<input type='hidden' name='def['".$input_name."_h']' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=0]".($error_text ? ",[error_text=$error_text]" : '')."' readonly />";
+	$html .= "<input type='hidden' name='def['".$input_name."_w']' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=0]".($error_text ? ",[error_text=$error_text]" : '')."' />";
+	$html .= "<input type='hidden' name='def['".$input_name."_h']' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=0]".($error_text ? ",[error_text=$error_text]" : '')."' />";
 	return $html;
 }
 

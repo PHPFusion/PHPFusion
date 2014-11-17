@@ -93,7 +93,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($options['inline']) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=file],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."],[path=$upload_path],[thumbnail=".$options['thumbnail']."],".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."' readonly />\n";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=file],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."],[path=$upload_path],[thumbnail=".$options['thumbnail']."],".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."' />\n";
 
 	add_to_jquery("
 	$('#".$input_id."').fileinput({

@@ -52,7 +52,7 @@ function form_toggle($title, $input_name, $input_id, $opts, $input_value, $array
 		$off_label = $opts['1'];
 	}
 	$html .= "<input id='$input_id' name='$input_name' value='$value' type='checkbox' data-on-text='$on_label' data-off-text='$off_label' ".($deactivate ? 'readonly' : '')." ".($input_value == '1' ? 'checked' : '')." />\n"; ///>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=$required]".($error_text ? ",[error_text=$error_text]" : '')."' readonly />";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=$required]".($error_text ? ",[error_text=$error_text]" : '')."' />";
 	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";

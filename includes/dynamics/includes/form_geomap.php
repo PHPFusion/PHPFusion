@@ -107,7 +107,7 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
 	// Defender Strings
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=address],[title=$input_name],[id=".$input_id."],[required=$required],[safemode=$safemode]' readonly />\n";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=address],[title=$input_name],[id=".$input_id."],[required=$required],[safemode=$safemode]' />\n";
 
 	$flag_function = ''; $flag_plugin = '';
 	if ($flag) {

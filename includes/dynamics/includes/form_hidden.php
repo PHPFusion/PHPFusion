@@ -37,13 +37,13 @@ function form_hidden($title, $input_name, $input_id, $input_value, $options = FA
 		$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 		$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	}
-	$html .= "<input type='hidden' name='$input_name' id='$input_id' value='$input_value' ".$width." ".($show_title ? "" : "readonly")." />\n";
+	$html .= "<input type='hidden' name='$input_name' id='$input_id' value='$input_value' ".$width." />\n";
 	if ($show_title) {
 		$html .= "<div id='$input_id-help'></div>";
 		$html .= ($inline) ? "</div>\n" : "";
 		$html .= "</div>\n";
 	}
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=0]' readonly />";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=$required],[safemode=0]' />";
 	return $html;
 }
 

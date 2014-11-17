@@ -66,7 +66,7 @@ function form_datepicker($title, $input_name, $input_id, $input_value, $array = 
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
 	// Generate Defender Strings
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=date],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly />";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=date],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
 	if ($deactivate !== 1) {
 		add_to_jquery("
         $('#$input_id-field .input-group.date').datepicker({

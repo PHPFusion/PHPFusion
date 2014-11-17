@@ -69,12 +69,12 @@ function form_btngroup($title, $input_name, $input_id, $opts, $input_value, $opt
 		}
 	}
 	$html .= "</div>\n";
-	$html .= "<input readonly name='$input_name' type='hidden' id='".$input_id."-text' value='$input_value' />\n";
+	$html .= "<input name='$input_name' type='hidden' id='".$input_id."-text' value='$input_value' />\n";
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= $options['inline'] ? "</div>\n" : '';
 	$html .= "</div>\n";
 
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]' readonly />";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]' />";
 
 	add_to_jquery("
 	$('#".$input_id." span').bind('click', function(e){

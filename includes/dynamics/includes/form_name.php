@@ -94,9 +94,9 @@ function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 	$html .= "</div>\n";
 	$html .= "</div>\n";
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=First Name],[id=".$input_id."-0],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=Middle Name],[id=".$input_id."-1],[required=0],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=Last Name],[id=".$input_id."-2],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' readonly>";
+	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=First Name],[id=".$input_id."-0],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
+	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=Middle Name],[id=".$input_id."-1],[required=0],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
+	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=Last Name],[id=".$input_id."-2],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
 	return $html;
 }
 

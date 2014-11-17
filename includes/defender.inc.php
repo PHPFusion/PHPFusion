@@ -670,8 +670,8 @@ function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
 	} else {
 		if (!defined("TOKEN-$shuffle")) {
 			define("TOKEN-$shuffle", TRUE);
-			$html .= "<input type='hidden' name='fusion_token' value='$token' readonly />\n"; // form token
-			$html .= "<input type='hidden' name='token_rings[$shuffle]' value='$form' readonly />\n";
+			$html .= "<input type='hidden' name='fusion_token' value='$token' />\n"; // form token
+			$html .= "<input type='hidden' name='token_rings[$shuffle]' value='$form' />\n";
 		}
 	}
 	return $html;

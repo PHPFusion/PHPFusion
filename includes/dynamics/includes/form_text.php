@@ -74,7 +74,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($options['inline']) ? "</div>\n" : '';
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=$type_config],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' readonly />";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=$type_config],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
 	if ($options['number']) {
 		add_to_jquery("
 		$('#".$input_id."').keypress(function(e) {
