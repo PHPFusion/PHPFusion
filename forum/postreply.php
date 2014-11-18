@@ -179,7 +179,7 @@ if (isset($_POST['postreply']) && !defined('FUSION_NULL')) {
 		echo "</ol>\n";
 	}
 	/* Failed to fetch POST on previewpost if SEO is on - Someone fix this */
-	echo openform('input_form', 'input_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('enc_type'=>1));
+	echo openform('input_form', 'input_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('enctype'=>1));
 	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border table table-responsive'>\n<tbody>\n<tr>\n";
 	echo "<td valign='top' width='145' class='tbl2'><label for='message'>".$locale['461']."</label><span class='required'>*</span></td>\n";
 	echo "<td class='tbl1'>\n";
