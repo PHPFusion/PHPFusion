@@ -128,7 +128,7 @@ if ($settings['forum_ranks']) {
 	echo "</tr>\n<tr>\n";
 	echo "<td class='tbl'><label for='rank_posts'>".$locale['422']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'rank_posts', 'rank_posts', $rank_posts, "".($rank_type != 0 ? array('disabled' => 1) : '')."");
+	echo form_text('', 'rank_posts', 'rank_posts', $rank_posts, array('disabled' => $rank_type != 0));
 	echo "</tr>\n<tr>\n";
 	echo "<td class='tbl'><label for='rank_apply_normal'>".$locale['423']."</label></td>\n<td class='tbl'>\n";
 	$array = array('101' => $locale['424'], '104' => $locale['425'], '102' => $locale['426'], '103' => $locale['427']);

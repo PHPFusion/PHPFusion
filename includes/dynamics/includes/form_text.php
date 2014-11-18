@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE, $options = array()) {
+function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
 	$html = '';
 	$title = (isset($title) && (!empty($title))) ? $title : "";
 	$title2 = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
