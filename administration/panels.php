@@ -24,7 +24,6 @@ if (!checkrights("P") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/panels.php";
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
-add_to_head("<link rel='stylesheet' href='".THEMES."templates/panels.css' type='text/css' media='all' />");
 add_to_head("<script type='text/javascript'>
     $(document).ready(function() {
 //	$('.pdisabled').fadeTo(0, .5);

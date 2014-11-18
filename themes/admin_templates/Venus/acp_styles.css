@@ -185,8 +185,8 @@ label small {
 	background-color: rgb(221, 228, 239);
 	transition: left 0.20s ease-in;
 	border-right: 1px solid rgb(170, 183, 205);
-    z-index: 3000;
-    min-height: 1124px;
+	z-index: 3000;
+	min-height: 1124px;
 	width:251px;
 }
 #acp-left.affix {
@@ -441,3 +441,47 @@ nav > ul > li > a:hover {
 	color: rgb(255,255,255);
 }
 
+/* site_links.css */
+#site-links {
+	list-style: none;
+	min-height: 20px;
+	height: auto !important;
+	height: 20px;
+}
+
+#site-links li {
+	display: block;
+	margin: 30;
+	padding: 10;
+}
+
+#site-links li img.handle {
+	cursor: ns-resize;
+}
+
+.state-highlight {
+	background: #FFC;
+	height: 20px;
+}
+
+.floatfix {
+	overflow: hidden;
+}
+
+/* panels.css */
+#panel-side1, #panel-side2, #panel-side3, #panel-side4, #panel-side5, #panel-side6 {
+    list-style: none;
+    min-height: 20px;
+    height: auto !important;
+    height: 20px;
+}
+
+#panel-side1 li, #panel-side2 li, #panel-side3 li, #panel-side4 li, #panel-side5 li, #panel-side6 li {
+    display: block;
+    margin: 30;
+    padding: 10;
+}
+
+#panel-side1 li img.handle, #panel-side2 li img.handle, #panel-side3 li img.handle, #panel-side4 li img.handle, #panel-side5 li img.handle, #panel-side6 li img.handle {
+    cursor: ns-resize;
+}
