@@ -265,7 +265,7 @@ function render_dashboard() {
 			echo "<div data-id='$i' class='submission_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
 			echo "<div class='pull-left m-r-10 display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($submit_data, '40px')."</div>\n";
 			echo "<div id='submission_action-$i' class='btn-group pull-right display-none' style='position:absolute; right: 30px; margin-top:10px;'>\n
-				<a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."submissions.php".$aidlink."&amp;action=2&amp;t=".$data['submit_type']."&amp;submit_id=".$submit_data['submit_id']."'><i class='entypo eye'></i></a>
+				<a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."submissions.php".$aidlink."&amp;action=2&amp;t=".$submit_data['submit_type']."&amp;submit_id=".$submit_data['submit_id']."'><i class='entypo eye'></i></a>
 				<a class='btn btn-xs btn-default' title='".$locale['276']."' href='".ADMIN."submissions.php".$aidlink."&amp;delete=".$submit_data['submit_id']."'><i class='entypo trash'></i></a></div>\n";
 			echo "<strong>".profile_link($submit_data['user_id'], ucwords($submit_data['user_name']), $submit_data['user_status'])."</strong>\n";
 			echo "<span class='text-smaller text-lighter'>".$locale['273b']." <strong>".$submit_type[$submit_data['submit_type']]."</strong></span>";
