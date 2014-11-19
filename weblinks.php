@@ -80,7 +80,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 			// go for breadcrumbs.
 			echo "<ol class='breadcrumb'>\n";
 			echo "<li><a href='".BASEDIR."weblinks.php'>".$locale['400']."</a></li>\n";
-			echo "<li>".$cdata['weblink_cat_name']."</a></li>\n";
+			echo "<li>".$cdata['weblink_cat_name']."</li>\n";
 			echo "</ol>\n";
 
 			opentable($locale['400'].": ".$cdata['weblink_cat_name']);
