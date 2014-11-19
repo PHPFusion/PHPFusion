@@ -21,6 +21,7 @@ $fusion_page_title = "";
 $fusion_page_meta = array("description" => $settings['description'], "keywords" => $settings['keywords']);
 $fusion_page_head_tags = "";
 $fusion_page_footer_tags = "";
+$fusion_jquery_tags = "";
 
 function set_title($title = "") {
 	global $fusion_page_title;
@@ -29,7 +30,7 @@ function set_title($title = "") {
 
 function add_to_title($addition = "") {
 	global $fusion_page_title;
-   $addition = preg_replace("/".$GLOBALS['locale']['global_200']."/", '', $addition, 1);
+	$addition = preg_replace("/".$GLOBALS['locale']['global_200']."/", '', $addition, 1);
 	$fusion_page_title .= $addition;
 }
 
@@ -104,32 +105,9 @@ function handle_output($output) {
 	return $output;
 }
 
-// Jquery Output Handlers
-function push_jquery() {
+function add_to_jquery($tag = "") {
 	global $fusion_jquery_tags;
-	if (count($fusion_jquery_tags) > 0 && is_array($fusion_jquery_tags)) {
-		$jquery_output = open_jquery();
-		foreach ($fusion_jquery_tags as $arr => $v) {
-			$jquery_output .= $v;
-		}
-		$jquery_output .= close_jquery();
-	} else {
-		$jquery_output = "";
-	}
-	return $jquery_output;
-}
-
-function open_jquery() {
-	return "<script type=\"text/javascript\">\n$(function() {\n";
-}
-
-function close_jquery() {
-	return "});\n</script>";
-}
-
-function add_to_jquery($tag = '') {
-	global $fusion_jquery_tags;
-	$fusion_jquery_tags[] = $tag;
+	$fusion_jquery_tags .= $tag."\n";
 }
 
 // Add links to breadcrumbs array

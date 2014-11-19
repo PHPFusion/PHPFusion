@@ -15,11 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 require_once INCLUDES."footer_includes.php";
+
 define("CONTENT", ob_get_contents());
 ob_end_clean();
 if (!defined('ADMIN_PANEL')) {
@@ -27,7 +26,6 @@ if (!defined('ADMIN_PANEL')) {
 } else {
     render_adminpanel();
 }
-echo push_jquery(); // output here all jquery.
 
 // Cron Job (6 MIN)
 if ($settings['cronjob_hour'] < (time()-360)) {
@@ -93,20 +91,32 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 if (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0) {
 	echo "<div class='admin-message'>".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])."</div>\n";
 }
+// Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
+// Output lines added with add_to_jquery()
+if (!empty($fusion_jquery_tags)) {
+	echo "<script type=\"text/javascript\">\n$(function() {\n";
+	echo $fusion_jquery_tags;
+	echo "});\n</script>\n";
+}
+// End HTML document
 echo "</body>\n</html>\n";
+
 $output = ob_get_contents();
 if (ob_get_length() !== FALSE) {
 	ob_end_clean();
 }
+// Do the final output manipulation
 $output = handle_output($output);
+
 if (!defined("ADMIN_PANEL") && $settings['site_seo']) {
 	$output = $permalink->getOutput($output);
 }
-if (isset($permalink)) {
-	unset($permalink);
-}
+if (isset($permalink)) { unset($permalink); }
+
+// Output the final complete page content
 echo $output;
+
 if (ob_get_length() !== FALSE) {
 	ob_end_flush();
 }
