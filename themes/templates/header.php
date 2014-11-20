@@ -16,6 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+// Check if Maintenance is Enabled
+if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == "1" && $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level']))) {
+	redirect(BASEDIR."maintenance.php");
+}
+
 if ($settings['site_seo']) {
 	// Object should be created before including output_handling_class because we are using this object in output handling
 	require_once CLASSES."PermalinksDisplay.class.php";
@@ -31,13 +37,12 @@ if ($settings['site_seo']) {
 		}
 	}
 }
+
 require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
 require_once THEME."theme.php";
 require_once THEMES."templates/render_functions.php";
-if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == "1" && $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level']))) {
-	redirect(BASEDIR."maintenance.php");
-}
+
 if (iMEMBER) {
 	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."'
 		WHERE user_id='".$userdata['user_id']."'");
