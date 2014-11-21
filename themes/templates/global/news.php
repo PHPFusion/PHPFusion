@@ -23,6 +23,7 @@ if (!function_exists('render_main_news')) {
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 		if (isset($_POST['switchview'])) {
 			add_to_jquery("$.cookie('fusion_news_view', '".$_POST['switchview']."', {expires: 7});");
+			$_COOKIE['fusion_news_view'] = $_POST['switchview'];
 		}
 		opentable($locale['global_077']);
 		echo render_breadcrumbs();
@@ -102,7 +103,7 @@ if (!function_exists('render_main_news')) {
 			echo openform('viewform', 'viewform', 'post', FUSION_REQUEST, array('downtime' => 0,
 				'class' => 'pull-right display-inline-block m-l-10'));
 			echo "<div class='btn-group'>\n";
-			$active = (isset($_POST['switchview'])) ? $_POST['switchview'] : $_COOKIE['fusion_news_view'];
+			$active = isset($_COOKIE['fusion_news_view']) ? $_COOKIE['fusion_news_view'] : '';
 			echo form_button('', 'switchview', 'switch-vw1', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",
 				'icon' => 'entypo layout',
 				'alt' => 'Thumb View'));
