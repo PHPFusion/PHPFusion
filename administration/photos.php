@@ -497,7 +497,7 @@ if (function_exists('gd_info')) {
 	echo form_text($locale['432'], 'photo_title', 'photo_title', $photo_title, array('max_length' => 100, 'required' => 1, 'error_text' => ''));
 	echo form_textarea($locale['433'], 'photo_description', 'photo_description', $photo_description, array('bbcode' => 1, 'autosize'=>1, 'resize'=>0));
 	if (!isset($_GET['action'])) {
-		echo form_fileinput($locale['436'], 'photo_pic_file', 'photo_pic_file', PHOTODIR, '', array('image' => 1, 'thumbnail_path'=>PHOTODIR, 'required' => 1, 'error_text' => $locale['421']));
+		echo form_fileinput($locale['436'], 'photo_pic_file', 'photo_pic_file', PHOTODIR, '', array('type' => 'image', 'thumbnail_path'=>PHOTODIR, 'required' => 1, 'error_text' => $locale['421']));
 	}
 	echo form_text($locale['434'], 'photo_order', 'photo_order', $photo_order, array('number' => 1, 'width' => '100px'));
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";

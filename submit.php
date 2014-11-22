@@ -188,10 +188,10 @@ if ($_GET['stype'] == "l") {
 		$submit_info['photo_title'] = form_sanitizer($_POST['photo_title'], '', 'photo_title');
 		$submit_info['photo_description'] = form_sanitizer($_POST['photo_description'], '', 'photo_description');
 		$submit_info['album_id'] = isnum($_POST['album_id']) ? $_POST['album_id'] : "0";
-		$submit_info['album_photo_file'] = form_sanitizer($_FILES['album_photo_file'], '', 'album_photo_file');
+		$submit_info['photo_pic_file'] = form_sanitizer($_FILES['photo_pic_file'], '', 'photo_pic_file');
 		add_to_title($locale['global_200'].$locale['570']);
 		opentable($locale['570']);
-		if (!defined('FUSION_NULL')) {
+		if (!defined('FUSION_NULL')) { 
 			$result = dbquery("INSERT INTO ".DB_SUBMISSIONS." (submit_type, submit_user, submit_datestamp, submit_criteria) VALUES ('p', '".$userdata['user_id']."', '".time()."', '".addslashes(serialize($submit_info))."')");
 			echo "<div style='text-align:center'><br />\n".$locale['580']."<br /><br />\n";
 			echo "<a href='submit.php?stype=p'>".$locale['581']."</a><br /><br />\n";
@@ -211,7 +211,7 @@ if ($_GET['stype'] == "l") {
 		while ($data = dbarray($result)) {
 			$opts[$data['album_id']] = $data['album_title'];
 		}
-		echo openform('submit_form', 'submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=p", array('enc_type' => 1));
+		echo openform('submit_form', 'submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=p", array('enctype' => 1));
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 		echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['620']."</div>\n";
 		echo form_select($locale['625'], 'album_id', 'album_id', $opts, '');

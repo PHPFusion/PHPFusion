@@ -47,6 +47,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$format = '';
 	$max_b = $options['max_b'] ? $options['max_b'] : $settings['download_max_b'];
 	// file type if single filter, if not will accept as object if left empty.
+	$type_for_js = null;
 	if ($options['type']) {
 		if (!stristr($options['type'], ',') && $options['type']) {
 			if ($options['type'] == 'image') {
@@ -61,7 +62,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 				$format = $options['format'];
 			}
 		}
-		$options['type'] = json_encode($options['type']);
+		$type_for_js = json_encode((array)$options['type']);
 	}
 
 	if ($options['mime']) {
@@ -93,13 +94,14 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($options['inline']) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=file],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."],[path=$upload_path],[thumbnail=".$options['thumbnail']."],".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."' />\n";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=".((array)$options['type']==array('image') ? 'image' : 'file')."],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."],[path=$upload_path],[thumbnail=".$options['thumbnail']."],".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."' />\n";
 
 	add_to_jquery("
 	$('#".$input_id."').fileinput({
 	".($value ? "initialPreview: ".$value.", " : '')."
 	".($options['preview_off'] ? "showPreview: false, " : '')."
-	".($options['type'] ? "allowedFileTypes: ".$options['type'].", allowedPreviewTypes : ".$options['type'].", " : '')."
+	allowedFileTypes: ".$type_for_js.",  
+	allowedPreviewTypes : ".$type_for_js.",
 	browseClass: 'btn ".$options['btn_class']." button',
 	uploadClass: 'btn btn-default button',
 	captionClass : '',
