@@ -159,7 +159,6 @@ if (!function_exists('render_news')) {
 		$parameter = $settings['siteurl']."news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
 		if ($list_view) {
-
 			echo "<article class='panel panel-default'>\n";
 			echo "<div class='pull-left m-r-10'>\n";
 			echo display_avatar($info, '70px', '', '', '');
@@ -177,7 +176,7 @@ if (!function_exists('render_news')) {
 			echo "<div class='m-t-10'><span class='news-date'>".showdate($settings['newsdate'], $info['news_date'])." -- </span>\n";
 			echo "<span class='news-text m-t-10'>".$info['news_news']."</span>\n</div>";
 			echo "<div class='news-category m-t-10'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
-			echo $info['cat_id'] ? "<a href='".BASEDIR."news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
+			echo $info['cat_name'] ? "<a href='".BASEDIR."news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
 			echo "</div>\n";
 			if ($info['news_image']) {
 				echo "</div>\n";
@@ -230,7 +229,7 @@ if (!function_exists('render_news')) {
 			echo "<div class='news-date m-t-10'>".showdate($settings['newsdate'], $info['news_date'])."</div>\n";
 			echo empty($info['news_image']) ? "<div class='news-text m-t-10'>".$info['news_news']."</div>\n" : '';
 			echo "<div class='news-category m-t-10'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
-			echo $info['cat_id'] ? "<a href='".BASEDIR."news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
+			echo $info['cat_name'] ? "<a href='".BASEDIR."news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div class='news-footer panel-footer'>\n";
@@ -282,12 +281,13 @@ if (!function_exists('render_news_item')) {
 		echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
 		echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
 		if ($data['news_image']) {
-		echo "<a class='".$data['news_ialign']." news-image-overlay img-responsive' href='".IMAGES_N.$data['news_image']."'><img src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$settings['news_photo_h']."; overflow:hidden;' /></a>";
-		} else {
+		echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$settings['news_photo_h']."; overflow:hidden;' /></a>";
+		} elseif ($info['cat_id'] !=0) {
 		echo "<a class='".$data['news_ialign']."' href='news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
 		}
 		echo $data['news_news'];
 		echo "</div>\n";
+		echo "<div style='clear:both;'></div>\n";
 		echo "<div class='well m-t-5 text-center'>\n";
 		echo "<span class='news-action m-r-10'><i class='entypo user'></i>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>\n";
 		echo "<span class='news-action m-r-10'><i class='entypo calendar'></i>".showdate($settings['newsdate'], $data['news_date'])."</span>\n";
@@ -299,7 +299,7 @@ if (!function_exists('render_news_item')) {
 		echo "</div>";
 		echo "<!--news_sub_readmore-->";
 		echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".BASEDIR."news.php?readmore=".$data['news_id']."' class='button'>".$locale['global_072']."</a>\n</div>\n" : "";
-		if ($data['page_count'] > 1) {
+		if ($data['page_count'] > 0) {
 			echo "<div class='text-center m-t-10'>\n".makepagenav($_GET['rowstart'], 1, $data['page_count'], 3, BASEDIR."news.php?readmore=".$_GET['readmore']."&amp;")."\n</div>\n";
 		}
 		if ($data['news_allow_comments']) {

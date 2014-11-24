@@ -137,7 +137,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		// Filtered by Category ID.
 		$result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".$_GET['cat_id']."'");
-		if (dbrows($result) || $_GET['cat_id'] == 0) {
+		if (dbrows($result)) {
+		
 			$data = dbarray($result);
 			// build categorial data.
 			$info['news_cat_id'] = $data['news_cat_id'];
@@ -146,7 +147,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				"<img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image']."' />" :
 				"<img class='img-responsive' src='holder.js/80x80/text:".$locale['no_image']."/grey' />";
 			$info['news_cat_language'] = $data['news_cat_language'];
-
 			$rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$data['news_cat_id']."' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") AND news_draft='0'");
 			if ($rows) {
 				// apply filter.
@@ -167,8 +167,29 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$info['news_item_rows'] = $rows;
 				add_to_breadcrumbs(array('link'=>BASEDIR."news.php?cat_id=".$data['news_cat_id'], 'title'=>$data['news_cat_name']));
 			}
+		} elseif ($_GET['cat_id'] == 0) {
+			$rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") AND news_draft='0'");
+			if ($rows) {
+				// apply filter.
+				$result = dbquery("SELECT tn.*, tc.*,
+				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+				SUM(tr.rating_vote) AS sum_rating,
+				COUNT(tr.rating_item_id) AS count_votes,
+				COUNT(td.comment_item_id) AS count_comment
+				FROM ".DB_NEWS." tn
+				LEFT JOIN ".DB_USERS." tu ON tn.news_name=tu.user_id
+				LEFT JOIN ".DB_NEWS_CATS." tc ON tn.news_cat=tc.news_cat_id
+				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'
+				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'
+				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')." AND news_cat='0' AND (news_start='0'||news_start<=".time().")
+				AND (news_end='0'||news_end>=".time().") AND news_draft='0'
+				GROUP BY news_id
+				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$settings['newsperpage']);
+				$info['news_item_rows'] = $rows;
+				add_to_breadcrumbs(array('link'=>BASEDIR."news.php?cat_id=".$_GET['cat_id'], 'title'=>$locale['global_080']));
+			}
 		} else {
-			redirect(BASEDIR."news.php");
+		redirect(BASEDIR."news.php");
 		}
 	} else {
 		// All Results
