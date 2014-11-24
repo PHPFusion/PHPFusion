@@ -19,10 +19,11 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/news.php";
+
+if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {	$_GET['rowstart'] = 0;	}
+
 // Predefined variables, do not edit these values
 $i = 0;
-// Number of news displayed
-$items_per_page = $settings['newsperpage'];
 add_to_title($locale['global_200'].$locale['global_077']);
 $info = array();
 add_to_breadcrumbs(array('link' => BASEDIR.'news.php', 'title' => $locale['global_081'])); // News needs to be localised
@@ -30,7 +31,6 @@ add_to_breadcrumbs(array('link' => BASEDIR.'news.php', 'title' => $locale['globa
 if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 
 	// news item page
-	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {	$_GET['rowstart'] = 0;	}
 	$result = dbquery("SELECT tn.*, tc.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 	 				SUM(tr.rating_vote) AS sum_rating,
 					COUNT(tr.rating_item_id) AS count_votes,
@@ -55,18 +55,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$news_cat_image = "";
 		$news_image = "";
 		$news_subject = $data['news_subject'];
-		/*
-		if ($data['news_image'] && $settings['news_image_frontpage'] == 0) {
-			$news_image = "<a href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$data['news_cat'] : FUSION_SELF."?readmore=".$data['news_id'])."'>";
-			$news_image .= "<img src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' /></a>";
-		}
-		if ($data['news_image_t1'] && $settings['news_image_readmore'] == "0") {
-			$img_size = @getimagesize(IMAGES_N.$data['news_image']);
-			$news_cat_image = "<a href=\"javascript:;\" onclick=\"window.open('".IMAGES_N.$data['news_image']."','','scrollbars=yes,toolbar=no,status=no,resizable=yes,width=".($img_size[0]+20).",height=".($img_size[1]+20)."')\"><img src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$data['news_subject']."' class='news-category' /></a>";
-		} elseif ($data['news_cat_image']) {
-			$news_cat_image = "<a href='news.php?cat_id=".$data['news_cat']."'><img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='news-category' /></a>";
-		}
-		*/
 		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']));
 		$pagecount = count($news_news);
 		$news_info = array(	"news_id" => $data['news_id'],
@@ -103,7 +91,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	}
 } else {
 	// Front Page
-	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
 	/* Init */
 	$result = '';
 	$info['news_cat_id'] = '0';
@@ -176,7 +163,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')." AND news_cat='".$data['news_cat_id']."' AND (news_start='0'||news_start<=".time().")
 				AND (news_end='0'||news_end>=".time().") AND news_draft='0'
 				GROUP BY news_id
-				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$items_per_page);
+				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$settings['newsperpage']);
 				$info['news_item_rows'] = $rows;
 				add_to_breadcrumbs(array('link'=>BASEDIR."news.php?cat_id=".$data['news_cat_id'], 'title'=>$data['news_cat_name']));
 			}
@@ -200,12 +187,12 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().")
 			AND (news_end='0'||news_end>=".time().") AND news_draft='0'
 			GROUP BY news_id
-			ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$items_per_page);
+			ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$settings['newsperpage']);
 			$info['news_item_rows'] = dbrows($result);
 		} else {
 			$info['news_item_rows'] = 0;
 		}
-	}
+}
 	// end sql
 		$info['news_last_updated'] = 0;
 		if (!empty($info['news_item_rows'])) {
@@ -257,12 +244,12 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				);
 			}
 			$info['news_items'] = $news_info;
-			//	if ($info['news_item_rows'] > $items_per_page) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $items_per_page, $info['news_item_rows'], 3)."\n</div>\n";
-		} else {
+			} else {
 		$info['news_items'] = array();
 	}
 }
 //print_p($info);
 render_main_news($info);
+if ($rows > $settings['newsperpage']) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['newsperpage'], $rows , 3)."\n</div>\n";
 require_once THEMES."templates/footer.php";
 ?>
