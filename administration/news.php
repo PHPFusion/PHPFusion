@@ -440,12 +440,12 @@ function news_form() {
 		echo "<input type='hidden' name='news_image_t1' value='".$data['news_image_t1']."' />\n";
 		echo "<input type='hidden' name='news_image_t2' value='".$data['news_image_t2']."' />\n";
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select('Select the News image alignment', 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
+		echo form_select($locale['442'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
 		} else {
 		echo form_fileinput($locale['439'], 'news_image', 'news_image', IMAGES_N, '', array('thumbnail' => IMAGES_N_T, 'type' => 'image'));
 		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['news_photo_max_b']))."</div>\n";
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select('Select the News image alignment', 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
+		echo form_select($locale['442'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
 }	
 	$fusion_mce = array();
 	if (!$settings['tinymce_enabled']) {

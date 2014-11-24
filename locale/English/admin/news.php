@@ -35,6 +35,7 @@ $locale['438'] = "Draft";
 $locale['439'] = "News Image";
 $locale['440'] = "Max. filesize %s / Allowed filetypes GIF, JPEG or PNG.";
 $locale['441'] = "Pagebreak";
+$locale['442'] = "Select the News image alignment";
 // Popup Error/Warning Messages
 $locale['450'] = "Please specify a subject";
 $locale['451'] = "Delete this News?";
