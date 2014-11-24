@@ -182,7 +182,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 				echo form_text($locale['c104'], 'comment_name', 'comment_name', '', array('max_length'=>30));
 			}
 			echo form_textarea('', 'comment_message', 'comment_message', $comment_message, array('required' => 1));
-			echo display_bbcodes("360px", "comment_message");
+			echo display_bbcodes("100%", "comment_message");
 			if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
 				$_CAPTCHA_HIDE_INPUT = FALSE;
 				echo "<div style='width:360px; margin:10px auto;'>";
