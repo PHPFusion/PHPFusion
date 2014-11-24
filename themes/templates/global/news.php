@@ -246,30 +246,57 @@ if (!function_exists('render_news')) {
 }
 if (!function_exists('render_news_item')) {
 	function render_news_item($info) {
-		global $locale, $settings;
+		global $locale, $settings, $aidlink;
+
+    add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
+
+      add_to_footer('<script type="text/javascript">
+        $(document).ready(function() {
+
+            $(".news-image-overlay").colorbox({
+                transition: "elasic",
+                height:"100%",
+                width:"100%",
+                maxWidth:"98%",
+                maxHeight:"98%",
+                scrolling:false,
+                overlayClose:true,
+                close:false,
+                photo:true,
+                onComplete: function(result) {
+                    $("#colorbox").live("click", function(){
+                    $(this).unbind("click");
+                    $.fn.colorbox.close();
+                    });
+                },
+                onLoad: function () {
+                }
+           });
+        });
+        </script>');
+
 		$data = $info['news_item'];
 		echo "<!--news_pre_readmore-->";
 		echo "<article class='news-item'>\n";
-		echo "<div class='display-block text-center'  style='margin-top:10px; max-height:".$settings['news_photo_h']."; display:block; width:100%; overflow:hidden;'>\n";
-		echo $data['news_image'] ? $data['news_image'] : $data['cat_image'];
-		echo "</div>\n";
-		echo "<div class='news-subheader' style='margin-top:-40px; position:relative; z-index:1;'>\n";
-		echo "<div class='text-center'>\n";
-		echo display_avatar($data, '80px');
-		echo "<h4 class='text-dark text-normal news-poster-name m-b-0'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</h4>\n";
-		echo getuserlevel($data['user_level']);
-		echo "</div>\n";
-		echo "</div>\n";
 		echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
-		echo "<div class='m-t-10 text-center'>\n";
-		echo "<span class='news-action m-r-10'>".showdate($settings['newsdate'], $data['news_date'])."</span>\n";
-		echo "<span class='news-action'> <i class='entypo eye'></i> <span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
-		echo $data['news_allow_comments'] ? display_comments($data['news_comments'], BASEDIR."news.php?readmore=".$data['news_id']."#comments") : '';
-		echo $data['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['news_sum_rating'], $data['news_count_votes'], BASEDIR."news.php?readmore=".$data['news_id']."#postrating")." </span>" : '';
-		echo "</div>";
 		echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
+		if ($data['news_image']) {
+		echo "<a class='".$data['news_ialign']." news-image-overlay img-responsive' href='".IMAGES_N.$data['news_image']."'><img src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$settings['news_photo_h']."; overflow:hidden;' /></a>";
+		} else {
+		echo "<a class='".$data['news_ialign']."' href='news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
+		}
 		echo $data['news_news'];
 		echo "</div>\n";
+		echo "<div class='well m-t-5 text-center'>\n";
+		echo "<span class='news-action m-r-10'><i class='entypo user'></i>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>\n";
+		echo "<span class='news-action m-r-10'><i class='entypo calendar'></i>".showdate($settings['newsdate'], $data['news_date'])."</span>\n";
+		echo "<span class='news-action'><i class='entypo eye'></i><span class='text-dark m-r-10'>".number_format($data['news_reads'])."</span>\n</span>";
+		echo $data['news_allow_comments'] ? display_comments($data['news_comments'], BASEDIR."news.php?readmore=".$data['news_id']."#comments") : '';
+		echo $data['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['news_sum_rating'], $data['news_count_votes'], BASEDIR."news.php?readmore=".$data['news_id']."#postrating")." </span>" : '';
+		echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='entypo print'></i></a>";
+		echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".ADMIN."news.php".$aidlink."&amp;action=edit&amp;news_id=".$data['news_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
+		echo "</div>";
 		echo "<!--news_sub_readmore-->";
 		echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".BASEDIR."news.php?readmore=".$data['news_id']."' class='button'>".$locale['global_072']."</a>\n</div>\n" : "";
 		if ($data['page_count'] > 1) {

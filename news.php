@@ -55,6 +55,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$news_cat_image = "";
 		$news_image = "";
 		$news_subject = $data['news_subject'];
+		/*
 		if ($data['news_image'] && $settings['news_image_frontpage'] == 0) {
 			$news_image = "<a href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$data['news_cat'] : FUSION_SELF."?readmore=".$data['news_id'])."'>";
 			$news_image .= "<img src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' /></a>";
@@ -65,6 +66,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		} elseif ($data['news_cat_image']) {
 			$news_cat_image = "<a href='news.php?cat_id=".$data['news_cat']."'><img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='news-category' /></a>";
 		}
+		*/
 		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']));
 		$pagecount = count($news_news);
 		$news_info = array(	"news_id" => $data['news_id'],
@@ -75,10 +77,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			"user_level" => $data['user_level'],
 			"user_avatar" => $data['user_avatar'],
 			"news_date" => $data['news_datestamp'],
+			"news_ialign" => $data['news_ialign'],
 			"cat_id" => $data['news_cat'],
 			"cat_name" => $data['news_cat_name'],
-			"news_image" => $news_image,
-			"cat_image" => $news_cat_image,
+			"news_image" => $data['news_image'],
+			"cat_image" => $data['news_cat_image'],
 			"news_subject" => $data['news_subject'],
 			'news_news' => $news_news[$_GET['rowstart']],
 			"news_ext" => "n",

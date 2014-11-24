@@ -16,15 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("N") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+if (!checkrights("N") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/news.php";
 
-if (isset($_POST['cancel'])) {
-	redirect(FUSION_SELF.$aidlink);
-}
+if (isset($_POST['cancel'])) { redirect(FUSION_SELF.$aidlink); }
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
 	$del_data['news_id'] = $_GET['news_id'];
@@ -137,6 +133,31 @@ function news_listing() {
 
 function news_form() {
 	global $userdata, $locale, $settings, $aidlink, $language_opts, $defender;
+
+	/* Something like this is needed at some point before release.
+	
+	$result = dbquery("SELECT news_id, news_subject, news_draft FROM ".DB_NEWS." ".(multilang_table("NS") ?  "WHERE news_language='".LANGUAGE."'" : "")." ORDER BY news_draft DESC, news_datestamp DESC");
+	if (dbrows($result) != 0) {
+		$editlist = ""; $sel = "";
+		while ($data = dbarray($result)) {
+			if ((isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
+				$news_id = isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'];
+				$sel = ($news_id == $data['news_id'] ? " selected='selected'" : "");
+			}
+			$editlist .= "<option value='".$data['news_id']."'$sel>".($data['news_draft'] ? $locale['438']." " : "").$data['news_subject']."</option>\n";
+		}
+		opentable($locale['400']);
+		$editnewsaction = FUSION_SELF.$aidlink."&action=edit";
+		echo "<div class='pull-left'>\n";
+		echo openform('editnews', 'editnews', 'post', $editnewsaction, array('downtime' => 0));
+		echo "<select name='news_id' class='textbox' style='width:250px'>\n".$editlist."</select>\n";
+		echo "<input type='submit' name='edit' value='".$locale['420']."' class='button' />\n";
+		echo "<input type='submit' name='delete' value='".$locale['421']."' onclick='return DeleteNews();' class='button' />\n";
+		echo closeform();
+		echo "</div>\n";
+		closetable();
+	}
+*/
 	$data = array();
 	if (isset($_POST['save'])) {
 		$error = "";
@@ -189,11 +210,13 @@ function news_form() {
 				$data['news_image'] = (isset($_POST['news_image']) ? $_POST['news_image'] : "");
 				$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "");
 				$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
-			} else {
+				$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
+				} else {
 				// !upload success
 				$data['news_image'] = $upload['image_name'];
 				$data['news_image_t1'] = $upload['thumb1_name'];
 				$data['news_image_t2'] = $upload['thumb2_name'];
+				$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
 			}
 			/* Pending for code reviews on the forum.
 			$image = $_FILES['news_image'];
@@ -208,6 +231,7 @@ function news_form() {
 			$data['news_image'] = (isset($_POST['news_image']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['news_image']) ? $_POST['news_image'] : "") : "");
 			$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['news_image_t1']) ? $_POST['news_image_t1'] : "") : "");
 			$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['news_image_t2']) ? $_POST['news_image_t2'] : "") : "");
+			$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
 		}
 		//$data['news_news'] = form_sanitizer($_POST['news_news'], '', 'news_news'); // Destroys HTML coding,
 		//$data['news_extended'] = form_sanitizer($_POST['news_extended'], '', 'news_extended'); // table-safe values, // Destroys HTML coding.
@@ -307,6 +331,7 @@ function news_form() {
 				'news_image' => (!empty($_POST['news_image'])) ? $_POST['news_image'] : $data2['news_image'],
 				'news_image_t1' => (!empty($_POST['news_image_t1'])) ? $_POST['news_image_t1'] : $data2['news_image_t1'],
 				'news_image_t2' => (!empty($_POST['news_image_t2'])) ? $_POST['news_image_t2'] : $data2['news_image_t2'],
+				'news_ialign' => (!empty($_POST['news_ialign'])) ? $_POST['news_ialign'] : $data2['news_ialign'],
 				'news_visibility' => (!empty($_POST['news_visibility'])) ? $_POST['news_visibility'] : $data2['news_visibility'],
 				'news_draft' => (!empty($_POST['news_draft'])) ? "1" : $data2['news_draft'] ? "1" : '',
 				'news_sticky' => (!empty($_POST['news_sticky'])) ? "1" : $data2['news_sticky'] ? "1" : '',
@@ -334,7 +359,7 @@ function news_form() {
 		$data['news_end'] = '';
 		$data['news_cat'] = '0';
 		$data['news_image'] = '';
-
+		$data['news_ialign'] = 'pull-left';
 	}
 
 	if (isset($_POST['preview'])) {
@@ -361,6 +386,7 @@ function news_form() {
 		$data['news_image'] = isset($_POST['news_image']) ? $_POST['news_image'] : '';
 		$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "");
 		$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
+		$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
 		$data['news_visibility'] = isnum($_POST['news_visibility']) ? $_POST['news_visibility'] : "0";
 		$data['news_draft'] = isset($_POST['news_draft']) ? " 1" : "";
 		$data['news_sticky'] = isset($_POST['news_sticky']) ? " 1" : "";
@@ -377,15 +403,14 @@ function news_form() {
 			echo closemodal();
 		}
 	}
-
-
-
 	$formaction = FUSION_SELF.$aidlink;
 	if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
 		$formaction = FUSION_SELF.$aidlink."&action=edit&news_id=".$_GET['news_id'];
 	}
+
 	echo "<div class='m-t-20'>\n";
 	// remove downtime after beta.
+	
 	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 0));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
@@ -395,26 +420,37 @@ function news_form() {
 	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
 	echo form_datepicker($locale['428'], 'news_end', 'news_end', $data['news_end'], array('placeholder' => $locale['429']));
 	echo "</div>\n";
-	echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
+	echo "</div>\n";
+	
+	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	echo form_select($locale['423'], 'news_cat', 'news_cat', $news_cat_opts, $data['news_cat'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
 	echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-primary btn-sm'));
 	closeside();
 	echo "</div>\n</div>\n";
+	
 	// second row
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
+		$locale['left'] = "Left";
+		$locale['center'] = "Center";
+		$locale['right'] = "Right";
+
 	if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
 		echo "<label><img src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$locale['439']."' /><br />\n";
 		echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['421']."</label>\n";
 		echo "<input type='hidden' name='news_image' value='".$data['news_image']."' />\n";
 		echo "<input type='hidden' name='news_image_t1' value='".$data['news_image_t1']."' />\n";
 		echo "<input type='hidden' name='news_image_t2' value='".$data['news_image_t2']."' />\n";
-	} else {
+		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
+		echo form_select('Select the News image alignment', 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
+		} else {
 		echo form_fileinput($locale['439'], 'news_image', 'news_image', IMAGES_N, '', array('thumbnail' => IMAGES_N_T, 'type' => 'image'));
 		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['news_photo_max_b']))."</div>\n";
-	}
+		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
+		echo form_select('Select the News image alignment', 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
+}	
 	$fusion_mce = array();
 	if (!$settings['tinymce_enabled']) {
 		$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');

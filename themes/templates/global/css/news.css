@@ -82,3 +82,9 @@
 	color: rgb(21, 133, 212) !important;
 	opacity: 1;
 }
+.news-img-center {
+display: block; 
+margin-top : 5px;
+margin-left: auto; 
+margin-right: auto; 
+}

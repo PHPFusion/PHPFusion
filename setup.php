@@ -669,6 +669,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							news_image VARCHAR(100) NOT NULL DEFAULT '',
 							news_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
 							news_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
+							news_ialign VARCHAR(15) NOT NULL DEFAULT '',
 							news_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 							news_news TEXT NOT NULL,
 							news_extended TEXT NOT NULL,
@@ -1373,7 +1374,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('footer', '<div style=\'text-align:center\'>Copyright &copy; ".@date("Y")."</div>')");
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('opening_page', 'news.php')");
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('news_thumb_ratio', '0')");
-			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('news_image_link', '0')");
+			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('news_image_link', '1')");
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('news_thumb_w', '100')");
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('news_thumb_h', '100')");
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('news_photo_max_w', '1800')");
