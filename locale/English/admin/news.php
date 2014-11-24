@@ -12,7 +12,6 @@ $locale['414'] = "Image must be less than %s."; // $locale['415a'] = "Image must
 $locale['415'] = "Image must be one of the following file types %s.";
 $locale['416'] = "Image must be no bigger than %s pixels.";
 $locale['417'] = "Unknown error";
-
 // News form
 $locale['420'] = "Edit";
 $locale['421'] = "Delete";
@@ -45,5 +44,8 @@ $locale['453'] = "Comments";
 $locale['454'] = "Ratings";
 $locale['455'] = $locale['453']." and ".$locale['454'];
 $locale['456'] = 'There are no news in this category.';
-
+//Alignment
+$locale['left'] = "Left";
+$locale['center'] = "Center";
+$locale['right'] = "Right";
 ?>

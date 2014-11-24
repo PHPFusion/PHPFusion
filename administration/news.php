@@ -433,10 +433,6 @@ function news_form() {
 	// second row
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
-		$locale['left'] = "Left";
-		$locale['center'] = "Center";
-		$locale['right'] = "Right";
-
 	if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
 		echo "<label><img src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$locale['439']."' /><br />\n";
 		echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['421']."</label>\n";
