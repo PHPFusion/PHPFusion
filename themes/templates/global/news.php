@@ -190,12 +190,11 @@ if (!function_exists('render_news')) {
 			echo "</div>\n";
 			echo "</article>\n";
 		} else {
-			echo "<article class='panel panel-default' style='min-height:371px'>\n";
+			echo "<article class='panel panel-default' style='min-height:395px'>\n";
 			if ($info['news_image']) {
 				echo "<div class='overflow-hide news-img-header'>\n";
 				echo $info['news_image'];
-				echo "<a class='opacity-none transition news-snippet' href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$info['cat_id'] : FUSION_SELF."?readmore=".$info['news_id'])."'>
-				".trim_word($info['news_news'], 20)."</a>\n";
+				echo "<a class='opacity-none transition news-snippet' href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$info['cat_id'] : FUSION_SELF."?readmore=".$info['news_id'])."'>".trim_word($info['news_news'], 20)."</a>\n";
 				add_to_jquery("
 				$('.news-img-header').hover(
 					function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 1}); },
@@ -223,12 +222,12 @@ if (!function_exists('render_news')) {
 				echo "</div>\n";
 				echo "</div>\n";
 			}
-			echo "<div class='panel-body' ".(empty($info['news_image']) ? "style='min-height:255px;'" : "style='min-height:133px;'")." >\n";
+			echo "<div class='panel-body' ".(empty($info['news_image']) ? "style='min-height:221px;'" : "style='min-height:133px;'")." >\n";
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
 			echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".BASEDIR."news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
-			echo "<div class='news-date m-t-10'>".showdate($settings['newsdate'], $info['news_date'])."</div>\n";
-			echo empty($info['news_image']) ? "<div class='news-text m-t-10'>".$info['news_news']."</div>\n" : '';
-			echo "<div class='news-category m-t-10'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
+			echo "<div class='news-date m-t-5'>".showdate($settings['newsdate'], $info['news_date'])."</div>\n";
+			echo "<div class='news-text m-t-5'>".trim_word($info['news_news'], 10)."</div>\n";
+			echo "<div class='news-category m-t-5'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
 			echo $info['cat_name'] ? "<a href='".BASEDIR."news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
 			echo "</div>\n";
 			echo "</div>\n";
@@ -282,7 +281,7 @@ if (!function_exists('render_news_item')) {
 		echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
 		if ($data['news_image']) {
 		echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$settings['news_photo_h']."; overflow:hidden;' /></a>";
-		} elseif ($info['cat_id'] !=0) {
+		} elseif ($data['cat_name']) {
 		echo "<a class='".$data['news_ialign']."' href='news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
 		}
 		echo $data['news_news'];

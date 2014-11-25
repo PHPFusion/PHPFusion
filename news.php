@@ -20,7 +20,7 @@ require_once "maincore.php";
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/news.php";
 
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {	$_GET['rowstart'] = 0;	}
+if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {	$_GET['rowstart'] = 0;	$rows = 0; }
 
 // Predefined variables, do not edit these values
 $i = 0;
@@ -269,8 +269,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$info['news_items'] = array();
 	}
 }
-//print_p($info);
 render_main_news($info);
-if ($rows > $settings['newsperpage']) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['newsperpage'], $rows , 3)."\n</div>\n";
+if ($rows > $settings['newsperpage'] && (!isset($_GET['readmore']) || !isnum($_GET['readmore']))) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['newsperpage'], $rows , 3)."\n</div>\n";
 require_once THEMES."templates/footer.php";
 ?>
