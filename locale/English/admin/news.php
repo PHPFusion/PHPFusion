@@ -36,6 +36,7 @@ $locale['439'] = "News Image";
 $locale['440'] = "Max. filesize %s / Allowed filetypes GIF, JPEG or PNG.";
 $locale['441'] = "Pagebreak";
 $locale['442'] = "Select the News image alignment";
+$locale['443'] = "Keywords (separate each keyword with a ,)";
 // Popup Error/Warning Messages
 $locale['450'] = "Please specify a subject";
 $locale['451'] = "Delete this News?";
@@ -45,6 +46,7 @@ $locale['453'] = "Comments";
 $locale['454'] = "Ratings";
 $locale['455'] = $locale['453']." and ".$locale['454'];
 $locale['456'] = 'There are no news in this category.';
+$locale['457'] = "Please specify keywords";
 //Alignment
 $locale['left'] = "Left";
 $locale['center'] = "Center";

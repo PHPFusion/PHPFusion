@@ -673,6 +673,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							news_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 							news_news TEXT NOT NULL,
 							news_extended TEXT NOT NULL,
+							news_keywords VARCHAR(250) NOT NULL DEFAULT '',
 							news_breaks CHAR(1) NOT NULL DEFAULT '',
 							news_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
 							news_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',

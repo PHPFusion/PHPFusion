@@ -237,6 +237,7 @@ function news_form() {
 		//$data['news_extended'] = form_sanitizer($_POST['news_extended'], '', 'news_extended'); // table-safe values, // Destroys HTML coding.
 		$data['news_news'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])); // Needed for HTML to work
 		$data['news_extended'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])); // Needed for HTML to work
+		$data['news_keywords'] = form_sanitizer($_POST['news_keywords'], '', 'news_keywords');
 		$data['news_datestamp'] = form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp');
 		$data['news_start_date'] = 0;
 		$data['news_end_date'] = 0;
@@ -325,6 +326,7 @@ function news_form() {
 				'news_cat' => (!empty($_POST['news_cat'])) ? $_POST['news_cat'] : $data2['news_cat'],
 				'news_news' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['news_news'], // phpentities(stripslashes($data['news_news'])),
 				'news_extended' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['news_extended'], // phpentities(stripslashes($data['news_extended']));
+				'news_keywords' => (!empty($_POST['news_keywords'])) ? $_POST['news_keywords'] : $data2['news_keywords'],
 				'news_datestamp' => $data2['news_datestamp'],
 				'news_start' => (!empty($_POST['news_start'])) ? $_POST['news_start'] : $data2['news_start'],
 				'news_end' => (!empty($_POST['news_end'])) ? $_POST['news_end'] : $data2['news_end'],
@@ -349,6 +351,7 @@ function news_form() {
 		$data['news_news'] = '';
 		$data['news_datestamp'] = time();
 		$data['news_extended'] = '';
+		$data['news_keywords'] = '';
 		$data['news_breaks'] = " 1";
 		$data['news_allow_comments'] = " 1";
 		$data['news_allow_ratings'] = " 1";
@@ -373,6 +376,7 @@ function news_form() {
 			$data['news_extended'] = phpentities(stripslash($_POST['news_extended']));
 			$data['news_extended'] = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['news_extended']));
 		}
+		$data['news_keywords'] = form_sanitizer($_POST['news_keywords'], '', 'news_keywords');
 		$data['news_breaks'] = "";
 		if (isset($_POST['line_breaks'])) {
 			$data['news_breaks'] = " 1";
@@ -453,6 +457,7 @@ function news_form() {
 	}
 	echo form_textarea($locale['425'], 'news_news', 'news_news', $data['news_news'], $fusion_mce);
 	echo form_textarea($locale['426'], 'news_extended', 'news_extended', $data['news_extended'], $fusion_mce);
+	echo form_text($locale['443'], 'news_keywords', 'news_keywords', $data['news_keywords'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['457']));
 	echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	if (multilang_table("NS")) {

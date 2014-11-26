@@ -275,6 +275,7 @@ if (!function_exists('render_news_item')) {
         </script>');
 
 		$data = $info['news_item'];
+		if ($data['news_keywords'] !=="") { set_meta("keywords", $data['news_keywords']); }
 		echo "<!--news_pre_readmore-->";
 		echo "<article class='news-item'>\n";
 		echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
