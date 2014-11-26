@@ -22,6 +22,8 @@ define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
 define("DB_ARTICLES", DB_PREFIX."articles");
 define("DB_BBCODES", DB_PREFIX."bbcodes");
 define("DB_BLACKLIST", DB_PREFIX."blacklist");
+define("DB_BLOG", DB_PREFIX."blog");
+define("DB_BLOG_CATS", DB_PREFIX."blog_cats");
 define("DB_CAPTCHA", DB_PREFIX."captcha");
 define("DB_COMMENTS", DB_PREFIX."comments");
 define("DB_CUSTOM_PAGES", DB_PREFIX."custom_pages");

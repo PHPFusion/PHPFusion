@@ -13,6 +13,8 @@ $locale['424'] = "News Images";
 $locale['425'] = "You can only upload images in gif, jpg or png format";
 $locale['426'] = "Image Uploaded";
 $locale['427'] = "News Cats Images";
+$locale['428'] = "Blog Images";
+$locale['429'] = "Blog Cats Images";
 // View Image
 $locale['440'] = "View Image";
 $locale['441'] = "Unknown file format, cannot display image.";

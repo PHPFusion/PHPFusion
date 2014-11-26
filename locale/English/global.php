@@ -102,7 +102,7 @@ $locale['global_057'] = "Options";
 $locale['global_058'] = "Stop";
 $locale['global_059'] = "You're not tracking any threads.";
 $locale['global_060'] = "Stop tracking this thread?";
-// News & Articles
+// Blog, News & Articles
 $locale['global_070'] = "Posted by ";
 $locale['global_071'] = "on ";
 $locale['global_072'] = "Read More";
@@ -113,16 +113,24 @@ $locale['global_075'] = "Print";
 $locale['global_076'] = "Edit";
 $locale['global_077'] = "News";
 $locale['global_078'] = "No News has been posted yet";
+$locale['global_077b'] = "Blog";
+$locale['global_078b'] = "No Blogs has been posted yet";
 $locale['global_079'] = "In ";
 $locale['global_080'] = "Uncategorised";
 $locale['global_081'] = "News Home";
 $locale['global_082'] = "News Center";
+$locale['global_081b'] = "Blog Home";
+$locale['global_082b'] = "Blog Center";
 $locale['global_083'] = "Last Updated";
 $locale['global_084'] = "News Category";
+$locale['global_084b'] = "Blog Category";
 $locale['global_085'] = "All Other Categories";
 $locale['global_086'] = "Most Recent News";
 $locale['global_087'] = "Most Commented News";
 $locale['global_088'] = "Highest Rating News";
+$locale['global_086b'] = "Most Recent Blogs";
+$locale['global_087b'] = "Most Commented Blog";
+$locale['global_088b'] = "Highest Rating Blog";
 $locale['global_089'] = "Be the first to comment on %s";
 $locale['global_089a'] = "Be the first to rate on this %s";
 // Page Navigation

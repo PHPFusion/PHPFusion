@@ -23,6 +23,11 @@ if (is_array($smiley_cache) && count($smiley_cache)) {
 		$smiley_images["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
 	}
 }
+$result = dbquery("SELECT blog_cat_image, blog_cat_name FROM ".DB_BLOG_CATS);
+$bl_images = array();
+while ($data = dbarray($result)) {
+	$bl_images["bl_".$data['blog_cat_name']] = file_exists(IMAGES_NC.$data['blog_cat_image']) ? IMAGES_NC.$data['blog_cat_image'] : IMAGES."imagenotfound.jpg";
+}
 $result = dbquery("SELECT news_cat_image, news_cat_name FROM ".DB_NEWS_CATS);
 $nc_images = array();
 while ($data = dbarray($result)) {
@@ -139,7 +144,7 @@ $fusion_images = array(
 	//Z
 );
 
-$fusion_images = array_merge($ac_images, $fusion_images, $nc_images, $smiley_images);
+$fusion_images = array_merge($ac_images, $fusion_images, $nc_images, $bl_images, $smiley_images);
 function get_image($image, $alt = "", $style = "", $title = "", $atts = "") {
 	global $fusion_images;
 	if (isset($fusion_images[$image])) {

@@ -76,10 +76,6 @@ if (isset($_POST['savesettings'])) {
 			//Give the Administration new locale based on site´s main locale settings
 			$enabled_languages = explode('.', $settings['enabled_languages']);
 			$old_enabled_languages = explode('.', $old_enabled_languages);
-			//Remove language from guest user settings
-			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
-				$result = dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_language !='".$enabled_languages[$i]."'");
-			}
 			//Sanitize users languages
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				$result = dbquery("UPDATE ".DB_USERS." SET user_language = '".$settings['locale']."' WHERE user_language !='".$enabled_languages[$i]."'");
@@ -97,6 +93,10 @@ if (isset($_POST['savesettings'])) {
 			//Sanitize news_cat_languages
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 				$result = dbquery("DELETE FROM ".DB_NEWS_CATS." WHERE news_cat_language !='".$enabled_languages[$i]."' AND news_cat_language !='".$settings['locale']."'");
+			}
+			//Sanitize blog_cat_languages
+			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+				$result = dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_language !='".$enabled_languages[$i]."' AND blog_cat_language !='".$settings['locale']."'");
 			}
 			//Sanitize site links_languages
 			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
@@ -132,6 +132,30 @@ if (isset($_POST['savesettings'])) {
 						$result = dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['193']."', 'software.gif', '".$enabled_languages[$i]."')");
 						$result = dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['194']."', 'themes.gif', '".$enabled_languages[$i]."')");
 						$result = dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['195']."', 'windows.gif', '".$enabled_languages[$i]."')");
+					}
+				}
+			}
+			//update blog cats with a new language if we have it
+			if (!empty($settings['enabled_languages'])) {
+				for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+					$language_exist = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_BLOG_CATS." WHERE blog_cat_language ='".$enabled_languages[$i]."'"));
+					if (is_null($language_exist['blog_cat_language'])) {
+						include LOCALE."".$enabled_languages[$i]."/setup.php";
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['180']."', 'bugs.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['181']."', 'downloads.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['182']."', 'games.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['183']."', 'graphics.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['184']."', 'hardware.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['185']."', 'journal.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['186']."', 'members.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['187']."', 'mods.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['188']."', 'movies.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['189']."', 'network.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['191']."', 'php-fusion.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['192']."', 'security.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['193']."', 'software.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['194']."', 'themes.gif', '".$enabled_languages[$i]."')");
+						$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['195']."', 'windows.gif', '".$enabled_languages[$i]."')");
 					}
 				}
 			}
@@ -255,6 +279,14 @@ if (isset($_POST['savesettings'])) {
 				$error = 1;
 			}
 			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['213']."' WHERE admin_link='infusions.php'");
+			if (!$result) {
+				$error = 1;
+			}
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['249a']."' WHERE admin_link='blog.php'");
+			if (!$result) {
+				$error = 1;
+			}
+			$result = dbquery("UPDATE ".DB_ADMIN." SET admin_title='".$locale['249b']."' WHERE admin_link='blog_cats.php'");
 			if (!$result) {
 				$error = 1;
 			}
@@ -401,8 +433,26 @@ if (isset($_POST['savesettings'])) {
 			$result = dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_name='".$locale['194']."' WHERE news_cat_language='".$old_localeset."' AND news_cat_image='themes.gif'");
 			$result = dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_name='".$locale['195']."' WHERE news_cat_language='".$old_localeset."' AND news_cat_image='windows.gif'");
 			$result = dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_language='".$localeset."' WHERE news_cat_language='".$old_localeset."'");
+			//update default blog cats with the set language
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['180']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='bugs.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['181']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='downloads.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['182']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='games.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['183']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='graphics.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['184']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='hardware.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['185']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='journal.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['186']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='members.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['187']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='mods.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['188']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='movies.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['189']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='network.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['191']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='php-fusion.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['192']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='security.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['193']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='software.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['194']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='themes.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['195']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='windows.gif'");
+			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_language='".$localeset."' WHERE blog_cat_language='".$old_localeset."'");
 			//update default site links with the set language
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['130']."' WHERE link_language='".$old_localeset."' AND link_url='index.php'");
+			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['131']."' WHERE link_language='".$old_localeset."' AND link_url='articles.php'");
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['131']."' WHERE link_language='".$old_localeset."' AND link_url='articles.php'");
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['132']."' WHERE link_language='".$old_localeset."' AND link_url='downloads.php'");
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['133']."' WHERE link_language='".$old_localeset."' AND link_url='faq.php'");
@@ -428,6 +478,10 @@ if (isset($_POST['savesettings'])) {
 				$error = 1;
 			}
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT003']."' WHERE mlt_rights='DL'");
+			if (!$result) {
+				$error = 1;
+			}
+			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT014']."' WHERE mlt_rights='BL'");
 			if (!$result) {
 				$error = 1;
 			}

@@ -162,6 +162,7 @@ $locale['683ML'] = "Enable Multilingal System";
 $locale['684ML'] = "Enabled Languages";
 $locale['685ML'] = "Select allowed languages. <br /><b>Please note</b>: By removing a language you also remove all customized site links, categories and any other multilangual content for the specific language from the system.";
 $locale['669'] = "News per page";
+$locale['669b'] = "Blogs per page";
 $locale['670'] = "Should be an uneven number";
 $locale['671'] = "Enable comment system?";
 $locale['672'] = "Enable ratings system?";
@@ -245,11 +246,12 @@ $locale['935'] = "Width x Height";
 $locale['936'] = "Maximum screenshot file size (bytes):";
 $locale['937'] = "Maximum screenshot thumb size:";
 $locale['938'] = "Enable screenshots?";
-// News Settings
+// Blog & News Settings
 $locale['950'] = "Image Upload";
 $locale['951'] = "Image link:";
 $locale['952'] = "Category";
 $locale['953'] = "News Item";
+$locale['953b'] = "Blog Item";
 $locale['954'] = "Thumb ratio:";
 $locale['955'] = "Original";
 $locale['956'] = "Square";

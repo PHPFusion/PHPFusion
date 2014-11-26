@@ -22,7 +22,7 @@ if (!checkrights("IM") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['ai
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/image_uploads.php";
 if (isset($_GET['action']) && $_GET['action'] = "update") include INCLUDES."buildlist.php";
-$folders = array("images" => IMAGES, "imagesa" => IMAGES_A, "imagesn" => IMAGES_N, "imagesnc" => IMAGES_NC);
+$folders = array("images" => IMAGES, "imagesa" => IMAGES_A, "imagesn" => IMAGES_N, "imagesnc" => IMAGES_NC, "imagesb" => IMAGES_B, "imagesbc" => IMAGES_BC);
 if (isset($_GET['ifolder']) && ctype_alnum($_GET['ifolder']) == 1 && isset($folders[$_GET['ifolder']])) {
 	$_GET['ifolder'] = stripinput($_GET['ifolder']);
 	$afolder = $folders[$_GET['ifolder']];
@@ -108,6 +108,8 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 		echo "<a class='btn btn-default ".($_GET['ifolder'] == "imagesa" ? "active" : "")."' href='".FUSION_SELF.$aidlink."&amp;ifolder=imagesa'>".$locale['423']."</a>\n";
 		echo "<a class='btn btn-default ".($_GET['ifolder'] == "imagesn" ? "active" : "")."' href='".FUSION_SELF.$aidlink."&amp;ifolder=imagesn'>".$locale['424']."</a>\n";
 		echo "<a class='btn btn-default ".($_GET['ifolder'] == "imagesnc" ? "active" : "")."' href='".FUSION_SELF.$aidlink."&amp;ifolder=imagesnc'>".$locale['427']."</a>\n";
+		echo "<a class='btn btn-default ".($_GET['ifolder'] == "imagesb" ? "active" : "")."' href='".FUSION_SELF.$aidlink."&amp;ifolder=imagesb'>".$locale['428']."</a>\n";
+		echo "<a class='btn btn-default ".($_GET['ifolder'] == "imagesbc" ? "active" : "")."' href='".FUSION_SELF.$aidlink."&amp;ifolder=imagesbc'>".$locale['429']."</a>\n";
 		echo "</div>\n";
 		echo "</td>\n</tr>\n";
 		if ($image_list) {

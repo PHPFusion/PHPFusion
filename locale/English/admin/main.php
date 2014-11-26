@@ -56,7 +56,8 @@ $locale['246'] = "Security";
 $locale['247'] = "User Management";
 $locale['248'] = "Admin Password Reset";
 $locale['249'] = "Error Log";
-
+$locale['249a'] = "Blog";
+$locale['249b'] = "Blog Categories";
 // Site Information
 $locale['250'] = "Dashboard <small>Site Overview</small>";
 $locale['251'] = "Registered Members";

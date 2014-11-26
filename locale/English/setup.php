@@ -131,6 +131,8 @@ $locale['129a'] = "User Log";
 $locale['129b'] = "robots.txt";
 $locale['129c'] = "Language Settings";
 $locale['129d'] = "Permalinks";
+$locale['130a'] = "Blog Categories";
+$locale['130b'] = "Blog";
 //Multilanguage table rights
 $locale['MLT001'] = "Articles";
 $locale['MLT002'] = "Custom Pages";
@@ -145,6 +147,7 @@ $locale['MLT010'] = "Weblinks";
 $locale['MLT011'] = "Sitelinks";
 $locale['MLT012'] = "Panels";
 $locale['MLT013'] = "Forum Ranks";
+$locale['MLT014'] = "Blog";
 // Step 6 - Navigation Links
 $locale['130'] = "Home";
 $locale['131'] = "Articles";
