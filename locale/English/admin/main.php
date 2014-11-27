@@ -82,6 +82,7 @@ $locale['266'] = "User Log";
 $locale['267'] = "robots.txt";
 $locale['268'] = "Downloads";
 $locale['269'] = "News";
+$locale['269b'] = "Blog";
 $locale['270'] = "Articles";
 $locale['271'] = "Weblinks";
 $locale['272'] = "Gallery";
