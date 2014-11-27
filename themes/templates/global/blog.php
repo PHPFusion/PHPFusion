@@ -225,7 +225,7 @@ if (!function_exists('render_blog')) {
 			echo "<div class='panel-body' ".(empty($info['blog_image']) ? "style='min-height:221px;'" : "style='min-height:133px;'")." >\n";
 			echo ($info['blog_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
 			echo "<h4 class='blog-title panel-title'><a class='strong text-dark' href='".BASEDIR."blog.php?readmore=".$info['blog_id']."' >".$info['blog_subject']."</a></h4>\n";
-			echo "<div class='blog-date m-t-5'>".showdate($settings['blogdate'], $info['blog_date'])."</div>\n";
+			echo "<div class='blog-date m-t-5'>".showdate($settings['newsdate'], $info['blog_date'])."</div>\n";
 			echo "<div class='blog-text m-t-5'>".trim_word($info['blog_blog'], 10)."</div>\n";
 			echo "<div class='blog-category m-t-5'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
 			echo $info['cat_name'] ? "<a href='".BASEDIR."blog.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."blog.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
