@@ -27,6 +27,7 @@ if ($settings['tinymce_enabled'] != 1) {
 include LOCALE.LOCALESET."admin/submissions.php";
 $links = "";
 $news = "";
+$blog = "";
 $articles = "";
 $photos = "";
 $downloads = "";
@@ -79,6 +80,17 @@ if (!isset($_GET['action']) || $_GET['action'] == "1") {
 		} else {
 			$news = "<tr>\n<td colspan='2' class='tbl1'>".$locale['415']."</td>\n</tr>\n";
 		}
+				$result = dbquery("SELECT submit_id, submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='b' ORDER BY submit_datestamp DESC");
+		if (dbrows($result)) {
+			while ($data = dbarray($result)) {
+				$submit_criteria = unserialize($data['submit_criteria']);
+				$blog .= "<tr>\n<td class='tbl1'>".$submit_criteria['blog_subject']."</td>\n";
+				$blog .= "<td align='right' width='1%' class='tbl1' style='white-space:nowrap'><span class='small'><a href='".FUSION_SELF.$aidlink."&amp;action=2&amp;t=b&amp;submit_id=".$data['submit_id']."'>".$locale['417b']."</a></span> |\n";
+				$blog .= "<span class='small'><a href='".FUSION_SELF.$aidlink."&amp;delete=".$data['submit_id']."'>".$locale['418b']."</a></span></td>\n</tr>\n";
+			}
+		} else {
+			$blog = "<tr>\n<td colspan='2' class='tbl1'>".$locale['415b']."</td>\n</tr>\n";
+		}
 		$result = dbquery("SELECT submit_id, submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='a' ORDER BY submit_datestamp DESC");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
@@ -118,6 +130,8 @@ if (!isset($_GET['action']) || $_GET['action'] == "1") {
 		echo "</tr>".$links."<tr>\n";
 		echo "<td colspan='2' class='tbl2'><a id='news_submissions' name='news_submissions'></a>\n".$locale['412']."</td>\n";
 		echo "</tr>\n".$news."<tr>\n";
+		echo "<td colspan='2' class='tbl2'><a id='news_submissions' name='news_submissions'></a>\n".$locale['412b']."</td>\n";
+		echo "</tr>\n".$blog."<tr>\n";
 		echo "<td colspan='2' class='tbl2'><a id='article_submissions' name='article_submissions'></a>\n".$locale['413']."</td>\n";
 		echo "</tr>\n".$articles."<tr>\n";
 		echo "<td colspan='2' class='tbl2'><a id='photo_submissions' name='photo_submissions'></a>\n".$locale['419']."</td>\n";
@@ -303,6 +317,116 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 			echo "<input type='submit' name='preview' value='".$locale['510']."' class='button' />\n";
 			echo "<input type='submit' name='publish' value='".$locale['503']."' class='button' />\n";
 			echo "<input type='submit' name='delete' value='".$locale['504']."' class='button' />\n";
+			echo "</td>\n</tr>\n</table>\n</form>\n";
+			closetable();
+		} else {
+			redirect(FUSION_SELF.$aidlink);
+		}
+	}
+}
+if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && $_GET['t'] == "b")) {
+	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+		$result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
+			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+			WHERE submit_id='".$_GET['submit_id']."'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
+			$blog_subject = stripinput($_POST['blog_subject']);
+			$blog_cat = isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : "0";
+			$blog_snippet = addslash($_POST['blog_snippet']);
+			$blog_body = addslash($_POST['blog_body']);
+			$blog_breaks = ($_POST['blog_breaks'] == "y") ? "y" : "n";
+			$result = dbquery("INSERT INTO ".DB_BLOG." (blog_subject, blog_cat, blog_blog, blog_extended, blog_breaks, blog_name, blog_datestamp, blog_start, blog_end, blog_visibility, blog_reads, blog_allow_comments, blog_allow_ratings, blog_language) VALUES ('$blog_subject', '$blog_cat', '$blog_snippet', '$blog_body', '$blog_breaks', '".$data['user_id']."', '".time()."', '0', '0', '0', '0', '1', '1' ,'".LANGUAGE."')");
+			$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
+			opentable($locale['490b']);
+			echo "<br /><div style='text-align:center'>".$locale['491b']."<br /><br />\n";
+			echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['402b']."</a><br /><br />\n";
+			echo "<a href='index.php".$aidlink."'>".$locale['403b']."</a></div><br />\n";
+			closetable();
+		} else {
+			redirect(FUSION_SELF.$aidlink);
+		}
+	} else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+		opentable($locale['492b']);
+		$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
+		echo "<br /><div style='text-align:center'>".$locale['493b']."<br /><br />\n";
+		echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['402b']."</a><br /><br />\n";
+		echo "<a href='index.php".$aidlink."'>".$locale['403b']."</a></div><br />\n";
+		closetable();
+	} else {
+		if ($settings['tinymce_enabled'] == 1) echo "<script type='text/javascript'>advanced();</script>\n";
+		$result = dbquery("SELECT ts.submit_criteria, tu.user_id, tu.user_name, tu.user_status
+			FROM ".DB_SUBMISSIONS." ts
+			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+			WHERE submit_id='".$_GET['submit_id']."'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
+			$submit_criteria = unserialize($data['submit_criteria']);
+			$blog_subject = $submit_criteria['blog_subject'];
+			$blog_cat = $submit_criteria['blog_cat'];
+			if (isset($submit_criteria['blog_snippet'])) {
+				$blog_snippet = phpentities(stripslashes($submit_criteria['blog_snippet']));
+			} else {
+				$blog_snippet = "";
+			}
+			$blog_body = phpentities(stripslashes($submit_criteria['blog_body']));
+			$blog_breaks = "";
+			$blog_cat_opts = "";
+			$sel = "";
+			$result2 = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ORDER BY blog_cat_name");
+			if (dbrows($result2)) {
+				while ($data2 = dbarray($result2)) {
+					if (isset($blog_cat)) $sel = ($blog_cat == $data2['blog_cat_id'] ? " selected='selected'" : "");
+					$blog_cat_opts .= "<option value='".$data2['blog_cat_id']."'$sel>".$data2['blog_cat_name']."</option>\n";
+				}
+			}
+			add_to_title($locale['global_200'].$locale['503b'].$locale['global_201'].$blog_subject."?");
+			if (isset($_POST['preview']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+				$blog_subject = stripinput($_POST['blog_subject']);
+				$blog_cat = isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : "0";
+				$blog_snippet = stripslash($_POST['blog_snippet']);
+				$blog_body = stripslash($_POST['blog_body']);
+				$breaks = (isset($_POST['line_breaks']) ? " checked='checked'" : "");
+				opentable($blog_subject);
+				echo $locale['509b']." ".(isset($_POST['line_breaks']) ? nl2br($blog_snippet) : $blog_snippet)."<br /><br />";
+				echo $locale['508b']." ".(isset($_POST['line_breaks']) ? nl2br($blog_body) : $blog_body);
+				closetable();
+			}
+			opentable($locale['500b']);
+			echo "<form name='publish' method='post' action='".FUSION_SELF.$aidlink."&amp;sub=submissions&amp;action=2&amp;t=b&amp;submit_id=".$_GET['submit_id']."'>\n";
+			echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
+			echo "<td width='100' class='tbl'>".$locale['505b']."</td>\n";
+			echo "<td width='80%' class='tbl'><input type='text' name='blog_subject' value='$blog_subject' class='textbox' style='width: 250px' /></td>\n";
+			echo "</tr>\n<tr>\n";
+			echo "<td width='100' class='tbl'>".$locale['506b']."</td>\n";
+			echo "<td width='80%' class='tbl'><select name='blog_cat' class='textbox'>\n";
+			echo "<option value='0'>".$locale['507b']."</option>\n".$blog_cat_opts."</select></td>\n";
+			echo "</tr>\n<tr>\n";
+			echo "<td valign='top' width='100' class='tbl'>".$locale['509b']."</td>\n";
+			echo "<td width='80%' class='tbl'><textarea name='blog_snippet' cols='60' rows='10' class='textbox' style='width:300px;'>".$blog_snippet."</textarea></td>\n";
+			echo "</tr>\n";
+			if ($settings['tinymce_enabled'] != 1) {
+				echo "<tr>\n<td class='tbl'></td>\n<td class='tbl'>\n";
+				echo display_html("publish", "blog_snippet", TRUE, TRUE, TRUE);
+				echo "</td>\n</tr>\n";
+			}
+			echo "<tr>\n";
+			echo "<td valign='top' width='100' class='tbl'>".$locale['508b']."</td>\n";
+			echo "<td width='80%' class='tbl'><textarea name='blog_body' cols='60' rows='10' class='textbox' style='width:300px;'>".$blog_body."</textarea></td>\n";
+			echo "</tr>\n";
+			if ($settings['tinymce_enabled'] != 1) {
+				echo "<tr>\n<td class='tbl'></td>\n<td class='tbl'>\n";
+				echo display_html("publish", "blog_body", TRUE, TRUE, TRUE);
+				echo "</td>\n</tr>\n";
+			}
+			echo "<tr>\n";
+			echo "<td align='center' colspan='2' class='tbl1'><br />\n";
+			echo $locale['501b'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br /><br />\n";
+			echo $locale['502b']."<br />\n";
+			echo "<input type='hidden' name='blog_breaks' value='".$blog_breaks."' />\n";
+			echo "<input type='submit' name='preview' value='".$locale['510b']."' class='button' />\n";
+			echo "<input type='submit' name='publish' value='".$locale['503b']."' class='button' />\n";
+			echo "<input type='submit' name='delete' value='".$locale['504b']."' class='button' />\n";
 			echo "</td>\n</tr>\n</table>\n</form>\n";
 			closetable();
 		} else {
