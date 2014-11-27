@@ -175,15 +175,16 @@ $locale['UM087'] = "messages";
 $locale['UM088'] = "Followed threads";
 // Submit (news, link, article)
 $locale['UM089'] = "Submit...";
-$locale['UM090'] = "Add news";
-$locale['UM091'] = "Add link";
-$locale['UM092'] = "Add article";
-$locale['UM093'] = "Add photo";
-$locale['UM094'] = "Add download";
+$locale['UM090'] = "Submit News";
+$locale['UM091'] = "Submit Link";
+$locale['UM092'] = "Submit Article";
+$locale['UM093'] = "Submit Photo";
+$locale['UM094'] = "Submit Download";
+$locale['UM095'] = "Submit Blog";
 // User Panel
-$locale['UM095'] = "Welcome: ";
-$locale['UM096'] = "Personal menu";
-$locale['UM097'] = "Switch Language";
+$locale['UM096'] = "Welcome: ";
+$locale['UM097'] = "Personal menu";
+$locale['UM101'] = "Switch Language";
 // Gauges
 $locale['UM098'] = "Messages inbox:";
 $locale['UM099'] = "Messages outbox:";
