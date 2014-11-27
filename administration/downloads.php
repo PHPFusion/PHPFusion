@@ -32,6 +32,7 @@ $download_homepage = "";
 $download_title = "";
 $download_description_short = "";
 $download_description = "";
+$download_keywords = "";
 $download_image = "";
 $download_image_thumb = "";
 $download_url = "";
@@ -173,6 +174,7 @@ if (!empty($result)) {
 		}
 		$download_description_short = stripinput($_POST['download_description_short']);
 		$download_description = stripinput($_POST['download_description']);
+		$download_keywords = stripinput($_POST['download_keywords']);
 		if (!$download_description_short) {
 			$error = 6;
 		}
@@ -319,6 +321,7 @@ if (!empty($result)) {
 					download_title='".$download_title."',
 					download_description_short='".$download_description_short."',
 					download_description='".$download_description."',
+					download_keywords='".$download_keywords."',
 					download_image='".$download_image."',
 					download_image_thumb='".$download_image_thumb."',
 					download_url='".$download_url."',
@@ -340,6 +343,7 @@ if (!empty($result)) {
 				download_title = '".$download_title."',
 				download_description_short = '".$download_description_short."',
 				download_description = '".$download_description."',
+				download_keywords='".$download_keywords."',
 				download_image = '".$download_image."',
 				download_image_thumb = '".$download_image_thumb."',
 				download_url = '".$download_url."',
@@ -412,6 +416,7 @@ if (!empty($result)) {
 			$download_title = $data['download_title'];
 			$download_description_short = $data['download_description_short'];
 			$download_description = $data['download_description'];
+			$download_keywords = $data['download_keywords'];
 			$download_image = $data['download_image'];
 			$download_image_thumb = $data['download_image_thumb'];
 			$download_url = $data['download_url'];
@@ -528,6 +533,7 @@ if (!empty($result)) {
 	echo "<div class='col-xs-12 col-sm-8 col-md-7 col-lg-8'>\n";
 	echo form_textarea($locale['421b'], 'download_description_short', 'download_description_short', $download_description_short, array('no_resize' => '1', 'maxlength' => '255', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
 	echo form_textarea($locale['421'], 'download_description', 'download_description', $download_description, array('no_resize' => '1', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
+	echo form_text($locale['421c'], 'download_keywords', 'download_keywords', $download_keywords);
 	// go for multiple.
 	if ($settings['download_screenshot']) {
 		if (!empty($download_image) && !empty($download_image_thumb)) {

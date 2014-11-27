@@ -258,6 +258,9 @@ if (!function_exists('render_downloads')) {
 		} elseif (isset($_GET['download_id'])) {
 
 			$data = $info['data'];
+
+			if ($data['download_keywords'] !=="") { set_meta("keywords", $data['download_keywords']); }
+
 			echo "<h3 class='m-t-0 m-b-0'>".$data['download_title']."</h3>\n";
 			echo "<div class='m-b-20'>\n";
 			echo nl2br(parseubb(parsesmileys($data['download_description'])));

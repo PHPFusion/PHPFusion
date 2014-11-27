@@ -504,6 +504,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							download_title VARCHAR(100) NOT NULL DEFAULT '',
 							download_description_short VARCHAR(255) NOT NULL,
 							download_description TEXT NOT NULL,
+							download_keywords VARCHAR(250) NOT NULL DEFAULT '',
 							download_image VARCHAR(100) NOT NULL DEFAULT '',
 							download_image_thumb VARCHAR(100) NOT NULL DEFAULT '',
 							download_url VARCHAR(200) NOT NULL DEFAULT '',

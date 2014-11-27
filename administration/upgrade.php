@@ -183,6 +183,8 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("ALTER TABLE ".DB_NEWS." ADD news_ialign VARCHAR(15) NOT NULL DEFAULT '' AFTER news_image_t2");
 		//Option to use keywords in news
 		$result = dbquery("ALTER TABLE ".DB_NEWS." ADD news_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER news_extended");
+		//Option to use keywords in downloads
+		$result = dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER download_description");
 		//Login methods
 		$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('login_method', '0')"); // New: Login method feature
 		//Mime check for upload files
