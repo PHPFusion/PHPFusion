@@ -121,6 +121,7 @@ $locale['global_081'] = "News Home";
 $locale['global_082'] = "News Center";
 $locale['global_081b'] = "Blog Home";
 $locale['global_082b'] = "Blog Center";
+$locale['global_082c'] = "Blog Archive Panel";
 $locale['global_083'] = "Last Updated";
 $locale['global_084'] = "News Category";
 $locale['global_084b'] = "Blog Category";
