@@ -186,7 +186,7 @@ if (!function_exists('render_blog')) {
 			echo $info['blog_allow_comments'] ? display_comments($info['blog_comments'], BASEDIR."blog.php?readmore=".$info['blog_id']."#comments") : '';
 			echo $info['blog_allow_ratings'] ? display_ratings($info['blog_sum_rating'], $info['blog_count_votes'], BASEDIR."blog.php?readmore=".$info['blog_id']."#postrating") : '';
 			echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$info['blog_id']."'><i class='entypo print'></i></a>";
-			echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$info['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
+			echo iADMIN && checkrights("B") ? "<a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$info['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
 			echo "</div>\n";
 			echo "</article>\n";
 		} else {
@@ -236,7 +236,7 @@ if (!function_exists('render_blog')) {
 			echo $info['blog_allow_comments'] ? display_comments($info['blog_comments'], BASEDIR."blog.php?readmore=".$info['blog_id']."#comments", '', 2) : '';
 			echo $info['blog_allow_ratings'] ? "".display_ratings($info['blog_sum_rating'], $info['blog_count_votes'], BASEDIR."blog.php?readmore=".$info['blog_id']."#postrating", '', 2)."" : '';
 			echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$info['blog_id']."'><i class='entypo print'></i></a>";
-			echo iADMIN && checkrights("N") ? "<a class='pull-right' title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$info['blog_id']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : "";
+			echo iADMIN && checkrights("B") ? "<a class='pull-right' title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$info['blog_id']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : "";
 			echo "</div>\n";
 			echo "</article>\n";
 		}
@@ -295,7 +295,7 @@ if (!function_exists('render_blog_item')) {
 		echo $data['blog_allow_comments'] ? display_comments($data['blog_comments'], BASEDIR."blog.php?readmore=".$data['blog_id']."#comments") : '';
 		echo $data['blog_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['blog_sum_rating'], $data['blog_count_votes'], BASEDIR."blog.php?readmore=".$data['blog_id']."#postrating")." </span>" : '';
 		echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['blog_id']."'><i class='entypo print'></i></a>";
-		echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$data['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
+		echo iADMIN && checkrights("B") ? "<a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$data['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
 		echo "</div>";
 		echo "<!--blog_sub_readmore-->";
 		echo !isset($_GET['readmore']) && $data['blog_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".BASEDIR."blog.php?readmore=".$data['blog_id']."' class='button'>".$locale['global_072']."</a>\n</div>\n" : "";
@@ -303,10 +303,10 @@ if (!function_exists('render_blog_item')) {
 			echo "<div class='text-center m-t-10'>\n".makepagenav($_GET['rowstart'], 1, $data['page_count'], 3, BASEDIR."blog.php?readmore=".$_GET['readmore']."&amp;")."\n</div>\n";
 		}
 		if ($data['blog_allow_comments']) {
-			showcomments("N", DB_BLOG, "blog_id", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
+			showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
 		}
 		if ($data['blog_allow_ratings']) {
-			showratings("N", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
+			showratings("B", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
 		}
 		echo "</article>\n";
 	}
