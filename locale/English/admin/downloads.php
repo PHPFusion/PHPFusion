@@ -22,6 +22,7 @@ $locale['419a'] = "Unknown error";
 $locale['420'] = "Download Title:";
 $locale['421'] = "Full Review:";
 $locale['421b'] = "Short description:";
+$locale['421c'] = "Keywords (separate each keyword with a ,):";
 $locale['422'] = "URL:";
 $locale['423'] = "Category:";
 $locale['424'] = "License:";
