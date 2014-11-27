@@ -1,4 +1,5 @@
 <?php
+$locale['rss000'] = " - Blog";
 $locale['rss001'] = " - Forums";
 $locale['rss002'] = " - Articles";
 $locale['rss003'] = " - Downloads";

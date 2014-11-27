@@ -21,7 +21,7 @@ $pattern = array("rss-news" => "infusions/rss_feeds_panel/feeds/rss_news.php",
 	"rss-articles" => "infusions/rss_feeds_panel/feeds/rss_articles.php",
 	"rss-downloads" => "infusions/rss_feeds_panel/feeds/rss_downloads.php",
 	"rss-weblinks" => "infusions/rss_feeds_panel/feeds/rss_weblinks.php",
-	"rss-forums" => "infusions/rss_feeds_panel/feeds/rss_forums.php"
+	"rss-forums" => "infusions/rss_feeds_panel/feeds/rss_forums.php",
+	"rss-blog" => "infusions/rss_feeds_panel/feeds/rss_blog.php"
 );
-
 ?>
