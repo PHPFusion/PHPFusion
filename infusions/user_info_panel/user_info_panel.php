@@ -19,9 +19,9 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if (iMEMBER) {
 	if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-		opensidex($locale['UM095'].$userdata['user_name'], "off");
+		opensidex($locale['UM096'].$userdata['user_name'], "off");
 	} else {
-		openside($locale['UM095'].$userdata['user_name']);
+		openside($locale['UM096'].$userdata['user_name']);
 }
 	
 $inbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='0'");
@@ -50,11 +50,11 @@ $archive_cfg = ($data['pm_savebox'] != 0 ? $data['pm_savebox'] : 1);
 $archive_percent = $archive_cfg !== 1 ? number_format(($archive_count/$archive_cfg)*99, 0) : number_format(0*99,0);
 echo progress_bar($archive_percent, $locale['UM100']);
 if (sizeof($enabled_languages) > 1) {
-echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
+echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
 echo lang_switcher();
 }
 echo "<div id='navigation-user'>\n";
-echo "<h5><strong>".$locale['UM096']."</strong></h5>\n";
+echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
 echo "<hr class='side-hr'>\n";
 echo "<ul>\n";
 echo "<li><a class='side' href='".BASEDIR."edit_profile.php'>".$locale['UM080']." <i class='pull-right entypo suitcase'></i></a></li>\n";
@@ -66,6 +66,7 @@ echo "<li><a class='side' href=\"javascript:show_hide('ShowHide001')\">".$locale
 echo "<li>\n";
 echo "<div id='ShowHide001' style='display:none'>\n";
 echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=n'>".$locale['UM090']."</a>\n";
+echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=b'>".$locale['UM095']."</a>\n";
 echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=l'>".$locale['UM091']."</a>\n";
 echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=a'>".$locale['UM092']."</a>\n";
 echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=p'>".$locale['UM093']."</a>\n";
@@ -91,7 +92,7 @@ if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 
 openside($locale['global_100']);
 if (sizeof($enabled_languages) > 1) {
-echo "<h5><strong>".$locale['UM096']."</strong></h5>";
+echo "<h5><strong>".$locale['UM098']."</strong></h5>";
 echo lang_switcher();
 }
 echo "<div class='m-t-10'>\n";
