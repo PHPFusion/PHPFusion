@@ -23,32 +23,29 @@ if (!checkrights("SL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['ai
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/sitelinks.php";
-
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
-add_to_head("<script type='text/javascript'>
-    $(document).ready(function() {
-        $('.site-links').sortable({
-            handle : '.handle',
-            placeholder: 'state-highlight',
-            connectWith: '.connected',
-            scroll: true,
-            axis: 'y',
-            update: function () {
-                var ul = $(this),
-                    order = ul.sortable('serialize'),
-                    i = 0;
-                $('#info').load('site_links_updater.php".$aidlink."&'+order);
-                ul.find('.num').each(function(i) {
-                    $(this).text(i+1);
-                });
-                ul.find('li').removeClass('tbl2').removeClass('tbl1');
-                ul.find('li:odd').addClass('tbl2');
-                ul.find('li:even').addClass('tbl1');
-                window.setTimeout('closeDiv();',2500);
-            }
-        });
-    });
-    </script>");
+add_to_jquery("
+$('.site-links').sortable({
+	handle : '.handle',
+	placeholder: 'state-highlight',
+	connectWith: '.connected',
+	scroll: true,
+	axis: 'y',
+	update: function () {
+		var ul = $(this),
+			order = ul.sortable('serialize'),
+			i = 0;
+		$('#info').load('site_links_updater.php".$aidlink."&'+order);
+		ul.find('.num').each(function(i) {
+			$(this).text(i+1);
+		});
+		ul.find('li').removeClass('tbl2').removeClass('tbl1');
+		ul.find('li:odd').addClass('tbl2');
+		ul.find('li:even').addClass('tbl1');
+		window.setTimeout('closeDiv();',2500);
+	}
+});
+");
 
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
