@@ -100,7 +100,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$('#".$input_id."').fileinput({
 	".($value ? "initialPreview: ".$value.", " : '')."
 	".($options['preview_off'] ? "showPreview: false, " : '')."
-	allowedFileTypes: ".$type_for_js.",  
+	allowedFileTypes: ".$type_for_js.",
 	allowedPreviewTypes : ".$type_for_js.",
 	browseClass: 'btn ".$options['btn_class']." button',
 	uploadClass: 'btn btn-default button',

@@ -3,7 +3,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System Version 8
 | Copyright (C) 2002 - 2013 Nick Jones
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Project File: Dynamic Form Builder formstack() i/o
 | Filename: dynamics.inc.php
@@ -48,6 +48,7 @@ class dynamics {
 		require_once DYNAMICS."includes/form_antibot.php";
 		require_once DYNAMICS."includes/form_toggle.php";
 		require_once DYNAMICS."includes/form_paragraph.php";
+		require_once DYNAMICS."includes/form_ultimate.php";
 	}
 }
 

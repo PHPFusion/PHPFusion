@@ -42,8 +42,10 @@ function form_datepicker($title, $input_name, $input_id, $input_value, $array = 
 		$inline = 0;
 		$error_text = '';
 		$class = '';
+		$fieldicon_off = '1';
 	} else {
 		$icon = (array_key_exists('icon', $array)) ? $array['icon'] : "";
+		$fieldicon_off = (array_key_exists('fieldicon', $array) && $array['fieldicon'] == 0) ? 1 : 0;
 		$placeholder = (array_key_exists("placeholder", $array)) ? $array['placeholder'] : "";
 		$width = (array_key_exists("width", $array)) ? $array['width'] : "250px";
 		$date_format = (array_key_exists("date_format", $array)) ? $array['date_format'] : "dd-mm-yyyy";
@@ -54,13 +56,13 @@ function form_datepicker($title, $input_name, $input_id, $input_value, $array = 
 		$deactivate = (array_key_exists('deactivate', $array) && ($array['deactivate'] == 1)) ? 1 : 0;
 		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
 	}
-	$html = "<div id='$input_id-field' class='form-group m-b-10 $class ".($icon ? 'has-feedback' : '')."'>\n";
+	$html = "<div id='$input_id-field' class='form-group $class ".($icon ? 'has-feedback' : '')."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= "<div class='input-group date' ".($width ? "style='width:$width;'" : '').">\n";
 	$html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' placeholder='$placeholder' />\n";
 	$html .= ($icon) ? "<div class='form-control-feedback'><i class='glyphicon $icon'></i></div>\n" : '';
-	$html .= "<span class='input-group-addon'><i class='entypo calendar'></i></span>\n";
+	$html .= "<span class='input-group-addon ".($fieldicon_off ? 'display-none' : '')."'><i class='entypo calendar'></i></span>\n";
 	$html .= "</div>\n";
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($inline) ? "</div>\n" : "";

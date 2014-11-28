@@ -42,7 +42,7 @@ function form_toggle($title, $input_name, $input_id, $opts, $input_value, $array
 		$deactivate = (array_key_exists("deactivate", $array) && ($array['deactivate'] == "1")) ? 1 : 0;
 	}
 
-	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
+	$html .= "<div id='$input_id-field' class='form-group clearfix $class'>\n";
 	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
 	$on_label = $opts['1'];
@@ -62,6 +62,27 @@ function form_toggle($title, $input_name, $input_id, $opts, $input_value, $array
 	$('#".$input_id."').bootstrapSwitch();
 	");
 	return $html;
+}
+
+function form_checkbox($title, $input_name, $input_id, $input_value, array $options = array()) {
+	$title2 = ucfirst(strtolower(str_replace("_", " ", $input_name)));
+	$options += array(
+		'class' => !empty($options['class']) ? $options['class'] : '',
+		'error_text' => !empty($options['error_text']) ? $options['error_text'] : '',
+		'required' => !empty($options['required']) ? $options['required'] : '',
+		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? 1 : 0,
+		'value' => !empty($options['value']) && $options['value'] ? $options['value'] : 1
+	);
+
+	$html = "<div id='$input_id-field' class='form-group clearfix ".$options['class']."'>\n";
+	$html .= "<label class='control-label col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0' for='$input_id'>\n";
+	$html .= "<input id='$input_id' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['deactivate'] ? 'readonly' : '')." ".($input_value == '1' ? 'checked' : '')." />\n";
+	$html .= "$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=".$options['required']."".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."' readonly />";
+	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
+	$html .= "</div>\n";
+	return $html;
+
 }
 
 ?>

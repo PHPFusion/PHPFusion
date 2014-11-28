@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_paragraph.php
 | Author: Frederick MC CHan (Hien)

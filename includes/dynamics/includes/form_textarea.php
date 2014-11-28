@@ -57,7 +57,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	$input_value = str_replace("<br />", "", $input_value);
 
 	$html = "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
-	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 
 	if ($options['preview'] && $options['bbcode'] || $options['html']) {
@@ -72,14 +72,14 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		$html .= opentabbody($tab_title['title'][1], "txt-".$input_id."", $tab_active);
 	}
 
-	$html .= ($options['bbcode'] || $options['html']) ? "<div class='panel panel-default' ".($options['preview'] ? "style='border-top:0 !important; border-radius:0 !important;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
+	$html .= ($options['bbcode'] || $options['html']) ? "<div class='panel panel-default m-b-0' ".($options['preview'] ? "style='border-top:0 !important; border-radius:0 !important;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
 	if ($options['bbcode'] && $options['form_name']) {
 		$html .= display_bbcodes('90%', $input_name, $options['form_name']);
 	} elseif ($options['html'] && $options['form_name']) {
 		$html .= display_html($options['form_name'], $input_name, TRUE, TRUE, TRUE, $options['path']);
 	}
 	$html .= ($options['bbcode'] || $options['html']) ? "</div>\n<div class='panel-body p-0'>\n" : '';
-	$html .= "<textarea name='$input_name' style='width:100%; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-10 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".($options['bbcode'] || $options['html'] ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='$input_id' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
+	$html .= "<textarea name='$input_name' style='width:100%; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".($options['bbcode'] || $options['html'] ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='$input_id' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
 
 	if ($options['bbcode'] || $options['html']) {
 		$html .= "</div>\n<div class='panel-footer'>\n";
@@ -119,7 +119,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 			dataType: 'html',
 			data : sendData,
 			success: function(result){
-			console.log(result);
+			//console.log(result);
 			$('#prw-".$input_id."Preview').html(result);
 			},
 			error: function(result) {

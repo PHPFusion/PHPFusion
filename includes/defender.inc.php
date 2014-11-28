@@ -610,7 +610,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE) {
 				if (intval($value)) {
 					return stripinput($value); // numbers
 				} else {
-					return addslash(trim(stripinput($value))); // text
+					return stripinput(trim(preg_replace("/ +/i", " ", censorwords($value))));
 				}
 			} else {
 				// flatten array;
@@ -625,7 +625,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE) {
 
 function sanitize_array($array) {
 	foreach ($array as $name => $value) {
-		$array[stripinput($name)] = stripinput($value);
+		$array[stripinput($name)] = trim(censorwords(stripinput($value)));
 	}
 	return $array;
 }
