@@ -56,11 +56,11 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 	if ($options['jsonmode'] || $options['tags']) {
 		// json mode.
 		$html .= "<div id='$input_id-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
-		$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' ".(($options['width']) ? "style='".($options['width'] && $title ? "width: ".$options['width']." " : 'width:250px;')."'" : "style='min-width: 250px'").">\n";
+		$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' />\n";
 	} else {
 		// normal mode
-		$html .= "<select name='$input_name' id='$input_id' ".($options['width'] && $title ? "style='width: ".$options['width']." " : "style='width:250px; max-width: 250px'").($options['deactivate'] ? 'disabled' : '').($options['multiple'] ? 'multiple' : '')." />";
-		$html .= ($options['allowclear']) ? "<option value=''></option>" : "";
+		$html .= "<select name='$input_name' id='$input_id' style='width: ".($options['width'] && $title ? $options['width'] : "250px")."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+		$html .= ($options['allowclear']) ? "<option value=''> </option>" : "";
 		if (is_array($option_array)) {
 			foreach ($option_array as $arr => $v) { // outputs: key, value, class - in order
 				$chain = ''; $select = '';
@@ -93,7 +93,7 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 	}
 	// Generate Defender Tag
 	$input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' readonly />";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
 	// Initialize Select2
 	// Select 2 Multiple requires hidden DOM.
 	if ($options['jsonmode'] == 0) {
@@ -163,8 +163,8 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
 	global $userdata, $locale;
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
-		add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
 		add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
+		add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
 	}
 	$title = (isset($title) && (!empty($title))) ? $title : "";
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -342,7 +342,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
             ");
 		$html .= "<select name='$input_name' style='".($width && $title ? "width: ".$width." " : 'min-width:250px;')."' id='$input_id' class='".$class."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : '')." $multiple>";
 		if ($allowclear) {
-			$html .= "<option value=''></option>";
+			$html .= "<option value=''> </option>";
 		}
 		if ($no_root !== 1) { // api options to remove root from selector. used in items creation.
 			$this_select = '';
