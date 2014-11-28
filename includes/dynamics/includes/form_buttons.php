@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_button($title, $input_name, $input_id, $input_value, $options = FALSE) {
+function form_button($title, $input_name, $input_id, $input_value, array $options = array()) {
 	$input_value = stripinput($input_value);
 	$html = "";
 
