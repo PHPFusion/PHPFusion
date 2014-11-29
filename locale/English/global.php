@@ -140,19 +140,28 @@ $locale['global_091'] = "Next";
 $locale['global_092'] = "Page ";
 $locale['global_093'] = " of ";
 $locale['global_094'] = " out of ";
-
 // Guest User Menu
 $locale['global_100'] = "Login";
 $locale['global_101'] = "Login ID";
 $locale['global_101a'] = "Please enter your Login ID";
 $locale['global_102'] = "Password";
-$locale['global_103'] = "Keep me logged in";
+$locale['global_103'] = "Remember Me";
 $locale['global_104'] = "Log in";
 $locale['global_105'] = "Not a member yet? <a href='".BASEDIR."register.php' class='side'>Click here</a> to register.";
 $locale['global_106'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
-$locale['global_107'] = "Sign up";
+$locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";
-
+// Member User Menu
+$locale['global_120'] = "Edit Profile";
+$locale['global_121'] = "Private Messages";
+$locale['global_122'] = "Members List";
+$locale['global_123'] = "Admin Panel";
+$locale['global_124'] = "Logout";
+$locale['global_125'] = "You have %u new ";
+$locale['global_126'] = "message";
+$locale['global_127'] = "messages";
+$locale['global_128'] = "submission";
+$locale['global_129'] = "submissions";
 // User Menu
 $locale['global_123'] = "Admin Panel";
 $locale['UM060'] = "Login";
