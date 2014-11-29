@@ -43,7 +43,7 @@ if (!function_exists('render_main_blog')) {
 						<img src='".$blog_item['blog_image_src']."' alt='".$blog_item['blog_subject']."'>
 						<div class='carousel-caption clearfix'>
 							<div class='pull-left m-r-10'>".display_avatar($blog_item, '50px', '', '', '')."</div>
-							<div class='overflow-hide'>".profile_link($blog_item['user_id'], $blog_item['user_name'], $blog_item['user_status'])." - ".showdate('blogdate', $blog_item['blog_date'])."<br/>
+							<div class='overflow-hide'>".profile_link($blog_item['user_id'], $blog_item['user_name'], $blog_item['user_status'])." - ".showdate('newsdate', $blog_item['blog_date'])."<br/>
 							<a class='text-white' href='".BASEDIR."blog.php?readmore=".$blog_item['blog_id']."'><h4 class='text-white m-t-10'>".$blog_item['blog_subject']."</h4></a>\n
 							<span class='blog-carousel-action m-r-10'><i class='entypo eye'></i> ".$blog_item['blog_reads']."</span>
 							".($blog_item['blog_allow_comments'] ? "<span class='m-r-10'>".display_comments($blog_item['blog_comments'], BASEDIR."blog.php?readmore=".$blog_item['blog_id']."#comments")."</span>" : '')."
@@ -82,7 +82,7 @@ if (!function_exists('render_main_blog')) {
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
-			echo "<h3 class='display-inline text-dark'>".$info['blog_cat_name']."</h3><br/><span class='strong'>".$locale['global_083'].":</span> <span class='text-dark'>".showdate('blogdate', $info['blog_last_updated'])."</span>";
+			echo "<h3 class='display-inline text-dark'>".$info['blog_cat_name']."</h3><br/><span class='strong'>".$locale['global_083'].":</span> <span class='text-dark'>".showdate('newsdate', $info['blog_last_updated'])."</span>";
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div id='blogcat' class='panel-collapse collapse m-b-10'>\n";
@@ -173,7 +173,7 @@ if (!function_exists('render_blog')) {
 				echo "<div class='overflow-hide'>\n";
 			}
 			echo "<h4 class='blog-title panel-title'><a class='strong text-dark' href='".BASEDIR."blog.php?readmore=".$info['blog_id']."' >".$info['blog_subject']."</a></h4>\n";
-			echo "<div class='m-t-10'><span class='blog-date'>".showdate($settings['blogdate'], $info['blog_date'])." -- </span>\n";
+			echo "<div class='m-t-10'><span class='blog-date'>".showdate($settings['newsdate'], $info['blog_date'])." -- </span>\n";
 			echo "<span class='blog-text m-t-10'>".$info['blog_blog']."</span>\n</div>";
 			echo "<div class='blog-category m-t-10'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
 			echo $info['cat_name'] ? "<a href='".BASEDIR."blog.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."blog.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
@@ -185,7 +185,7 @@ if (!function_exists('render_blog')) {
 			echo "<span><i class='entypo eye'></i> ".number_format($info['blog_reads'])."</span>";
 			echo $info['blog_allow_comments'] ? display_comments($info['blog_comments'], BASEDIR."blog.php?readmore=".$info['blog_id']."#comments") : '';
 			echo $info['blog_allow_ratings'] ? display_ratings($info['blog_sum_rating'], $info['blog_count_votes'], BASEDIR."blog.php?readmore=".$info['blog_id']."#postrating") : '';
-			echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$info['blog_id']."'><i class='entypo print'></i></a>";
+			echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=B&amp;item_id=".$info['blog_id']."'><i class='entypo print'></i></a>";
 			echo iADMIN && checkrights("B") ? "<a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$info['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
 			echo "</div>\n";
 			echo "</article>\n";
@@ -235,7 +235,7 @@ if (!function_exists('render_blog')) {
 			echo "<span class='m-r-10'><i class='entypo eye'></i> ".number_format($info['blog_reads'])."</span>";
 			echo $info['blog_allow_comments'] ? display_comments($info['blog_comments'], BASEDIR."blog.php?readmore=".$info['blog_id']."#comments", '', 2) : '';
 			echo $info['blog_allow_ratings'] ? "".display_ratings($info['blog_sum_rating'], $info['blog_count_votes'], BASEDIR."blog.php?readmore=".$info['blog_id']."#postrating", '', 2)."" : '';
-			echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$info['blog_id']."'><i class='entypo print'></i></a>";
+			echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=B&amp;item_id=".$info['blog_id']."'><i class='entypo print'></i></a>";
 			echo iADMIN && checkrights("B") ? "<a class='pull-right' title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$info['blog_id']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : "";
 			echo "</div>\n";
 			echo "</article>\n";
@@ -290,11 +290,11 @@ if (!function_exists('render_blog_item')) {
 		echo "<div style='clear:both;'></div>\n";
 		echo "<div class='well m-t-5 text-center'>\n";
 		echo "<span class='blog-action m-r-10'><i class='entypo user'></i>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>\n";
-		echo "<span class='blog-action m-r-10'><i class='entypo calendar'></i>".showdate($settings['blogdate'], $data['blog_date'])."</span>\n";
+		echo "<span class='blog-action m-r-10'><i class='entypo calendar'></i>".showdate($settings['newsdate'], $data['blog_date'])."</span>\n";
 		echo "<span class='blog-action'><i class='entypo eye'></i><span class='text-dark m-r-10'>".number_format($data['blog_reads'])."</span>\n</span>";
 		echo $data['blog_allow_comments'] ? display_comments($data['blog_comments'], BASEDIR."blog.php?readmore=".$data['blog_id']."#comments") : '';
 		echo $data['blog_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['blog_sum_rating'], $data['blog_count_votes'], BASEDIR."blog.php?readmore=".$data['blog_id']."#postrating")." </span>" : '';
-		echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['blog_id']."'><i class='entypo print'></i></a>";
+		echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=B&amp;item_id=".$data['blog_id']."'><i class='entypo print'></i></a>";
 		echo iADMIN && checkrights("B") ? "<a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$data['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
 		echo "</div>";
 		echo "<!--blog_sub_readmore-->";

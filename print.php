@@ -103,6 +103,40 @@ if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) &
 	if (!$res) {
 		redirect("index.php");
 	}
+} elseif ((isset($_GET['type']) && $_GET['type'] == "B") && (isset($_GET['item_id']) && isnum($_GET['item_id']))) {
+	$result = dbquery("SELECT tn.blog_subject, tn.blog_blog, tn.blog_extended, tn.blog_breaks, tn.blog_datestamp, tn.blog_visibility,
+		tu.user_id, tu.user_name, tu.user_status
+		FROM ".DB_BLOG." tn
+		LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
+		WHERE blog_id='".$_GET['item_id']."' AND blog_draft='0'");
+	$res = FALSE;
+	if (dbrows($result) != 0) {
+		$data = dbarray($result);
+		if (checkgroup($data['blog_visibility'])) {
+			$res = TRUE;
+			$blog = stripslashes($data['blog_blog']);
+			if ($data['blog_breaks'] == "y") {
+				$blog = nl2br($blog);
+			}
+			if ($data['blog_extended']) {
+				$blog_extended = stripslashes($data['blog_extended']);
+				if ($data['blog_breaks'] == "y") {
+					$blog_extended = nl2br($blog_extended);
+				}
+			} else {
+				$blog_extended = "";
+			}
+			echo "<strong>".$data['blog_subject']."</strong><br />\n";
+			echo "<span class='small'>".$locale['400'].profile_link($data['user_id'], $data['user_name'], $data['user_status']).$locale['401'].ucfirst(showdate("longdate", $data['blog_datestamp']))."</span>\n";
+			echo "<hr />".$blog."\n";
+			if ($blog_extended) {
+				echo "<hr />\n<strong>".$locale['403']."</strong>\n<hr />\n$blog_extended\n";
+			}
+		}
+	}
+	if (!$res) {
+		redirect("index.php");
+	}
 } elseif ((isset($_GET['type']) && $_GET['type'] == "F") && (isset($_GET['thread']) && isnum($_GET['thread'])) && !isset($_GET['post'])) {
 	$posts_per_page = 20;
 	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
