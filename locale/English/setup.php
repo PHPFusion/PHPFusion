@@ -1,30 +1,56 @@
 <?php
-$locale['title'] = "PHP-Fusion Core 9 Edition Setup";
+$locale['setup_title'] = "PHP-Fusion Core 9 Edition Setup";
 $locale['sub-title'] = "PHP-Fusion Core 9 Edition Setup";
+$locale['welcome_title'] = 'Welcome to PHP-Fusion 9.00 Installation<';
+$locale['welcome_desc'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208'>Online Installation Documentation</a>.";
+$locale['terms'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/'>terms and conditions use</a>.";
+$locale['error_000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
 $locale['os_version'] = '9.0';
 $locale['xml_lang'] = "en";
 $locale['charset'] = "iso-8859-1";
-$locale['001'] = "Step 1: Locale";
-$locale['002'] = "Step 2: File and Folder Permissions";
-$locale['003'] = "Step 3: Database Settings";
-$locale['004'] = "Step 4: Config / Database Setup";
-$locale['005'] = "Step 5: Primary Admin Details";
-$locale['006'] = "Step 6: Final Settings";
+// Index
+$locale['step1'] = "Step 1: Introduction";
+$locale['step2'] = "Step 2: File and Folder Diagnostics";
+$locale['step3'] = "Step 3: Database Settings";
+$locale['step4'] = "Step 4: Config / Database Setup";
+$locale['step5'] = "Step 5: Configure Core System";
+$locale['step6'] = "Step 6: Primary Admin Details";
+$locale['final'] = "Step 7: Final Settings";
+// Buttons
+$locale['006'] = "Finish Cofiguration";
 $locale['007'] = "Next";
 $locale['008'] = "Try Again";
 $locale['009'] = "Finish";
 // Step 1
 $locale['010'] = "Please select the required locale (language):";
 $locale['011'] = "Download more locales from <a href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>PHP-Fusion Official Support Site</strong></a>";
+$locale['1001'] = 'Welcome to PHP-Fusion 9.00 Recovery Mode.';
+$locale['1002'] = 'We have detected that there is an existing system installed.<br/><br/>Please choose any of the following to proceed.';
+$locale['1003'] = 'Clean Installation';
+$locale['1004'] = 'You can uninstall and clean your database and start a clean installation again.';
+$locale['1005'] = 'PLEASE BACKUP YOUR CONFIG.PHP. IT WILL BE REMOVED FROM THE SYSTEM DURING UNINSTALL.';
+$locale['1006'] = 'Uninstall and Start Again';
+$locale['1007'] = 'Core System Installer';
+$locale['1008'] = 'Change core system configurations.';
+$locale['1009'] = 'Go to System Installer';
+$locale['1010'] = 'Change Primary Account Details';
+$locale['1011'] = 'Change System Super Administrator details without need to recover password or transfer SA account ownership to another person.';
+$locale['1012'] = 'Change Super Admin Details';
+$locale['1013'] = 'Rebuild .htaccess';
+$locale['1014'] = 'Discard current file and replace with a standard version of the .htaccess file';
+$locale['1015'] = 'Build file';
 // Step 2
-$locale['020'] = "In order for setup to continue, the following files/folders must be writable:";
-$locale['021'] = "Write permissions check passed, click Next to continue.";
-$locale['022'] = "Write permissions check failed, please CHMOD files/folders marked Failed.";
-$locale['023'] = "Passed";
-$locale['024'] = "Failed";
-$locale['025'] = "Refresh";
+$locale['2001'] = 'Passed';
+$locale['2002'] = 'Failed';
+$locale['2003'] = 'In order for setup to continue, the following files/folders must be marked as <span class="label label-success">writable</span> and should any tests fail, please chmod it to 755 or 777';
+$locale['2004'] = 'Write permissions check passed, click Next to continue.';
+$locale['2005'] = 'Write permissions check failed, please CHMOD files/folders marked Failed.';
+$locale['2006'] = 'Refresh';
+$locale['2007'] = 'File Structure Diagnostics';
+
 // Step 3 - Access criteria
-$locale['030'] = "Please enter your MySQL database access settings.";
+$locale['3001'] = 'Database Settings and Server Paths';
+$locale['3002'] = 'Please enter your MySQL database access settings.';
 $locale['031'] = "Database Hostname:";
 $locale['032'] = "Database Username:";
 $locale['033'] = "Database Password:";
@@ -37,15 +63,15 @@ $locale['039'] = "No";
 $locale['039b'] = "Yes";
 $locale['039c'] = "Select languages to use:";
 // Step 4 - Database Setup
-$locale['040'] = "Database connection established.";
-$locale['041'] = "Config file successfully written.";
-$locale['042'] = "Database tables created.";
-$locale['043'] = "Error:";
-$locale['044'] = "Unable to connect with MySQL.";
-$locale['045'] = "Please ensure your MySQL username and password are correct.";
-$locale['046'] = "Unable to write config file.";
-$locale['047'] = "Please ensure config.php is writable.";
-$locale['048'] = "Unable to create database tables.";
+$locale['4001'] = "Database connection established.";
+$locale['4002'] = "Config file successfully written.";
+$locale['4003'] = "Database tables created.";
+$locale['4004'] = "Error:";
+$locale['4005'] = "Unable to connect with MySQL.";
+$locale['4006'] = "Please ensure your MySQL username and password are correct.";
+$locale['4007'] = "Unable to write config file.";
+$locale['4008'] = "Please ensure config.php is writable.";
+$locale['4009'] = "Unable to create database tables.";
 $locale['049'] = "Please specify your database name.";
 $locale['050'] = "Unable to connect with MySQL database.";
 $locale['051'] = "The specified MySQL database does not exist.";
@@ -55,8 +81,16 @@ $locale['054'] = "Could not write or delete MySQL tables.";
 $locale['055'] = "Please make sure your MySQL user has read, write and delete permission for the selected database.";
 $locale['056'] = "Empty fields.";
 $locale['057'] = "Please make sure you have filled out all the MySQL connection fields.";
-// Step 5 - Super Admin login
-$locale['060'] = "Primary Super Admin login details";
+// Step 5
+$locale['5001'] = "Please configure your core system.";
+$locale['5002'] = "IMPORTANT: Please back up your data if any before proceed. Removing a System will permanently erase all existing records.";
+$locale['5003'] = "Core System Ready.";
+$locale['5004'] = "Your website is now fully configured.<br/><br/>If you have not setup your Super Admin account yet, please proceed to the next step, otherwise, you can remove the installer.";
+// Step 6 - Super Admin login
+$locale['6001'] = "Primary Super Admin Account";
+$locale['6002'] = "Configure your Super Administrator account details.";
+$locale['6003'] = "Change Primary Super Admin Account";
+$locale['6004'] = "We have detected an existing Super Administrator Account. If you need to change details of this account, please type in new particulars to update the system with a new Super Administrator Account. ";
 $locale['061'] = "Username:";
 $locale['062'] = "Login Password:";
 $locale['063'] = "Repeat Login password:";
@@ -131,6 +165,8 @@ $locale['129a'] = "User Log";
 $locale['129b'] = "robots.txt";
 $locale['129c'] = "Language Settings";
 $locale['129d'] = "Permalinks";
+$locale['129f'] = "eShop";
+
 $locale['130a'] = "Blog Categories";
 $locale['130b'] = "Blog";
 //Multilanguage table rights
@@ -220,11 +256,10 @@ $locale['224'] = "Privacy";
 // Welcome message
 $locale['230'] = "Welcome to your site";
 // Final message
-$locale['240'] = "Setup is complete, PHP-Fusion 9 is now ready for use.<br />
-Click Finish to go to your PHP-Fusion powered site.<br />
-<strong>Note:</strong> After you enter your site you should delete setup.php from
-your server and chmod your config.php back to 644 for security purposes.<br /><br />
-Thank you for choosing PHP-Fusion.";
+$locale['7001'] = "Setup is Complete";
+$locale['7002'] = "PHP-Fusion 9.00 is now ready for use. Click Finish to rewrite your config_temp.php file to config.php<br/>";
+$locale['7003'] = "<strong>Note: After you enter your site you should delete the entire /install folder and chmod your config.php back to 0644 for security reasons.</strong>";
+$locale['7004'] = "Thank you for choosing PHP-Fusion.";
 // Default time settings
 // http://php.net/manual/en/function.strftime.php
 $locale['shortdate'] = "%d.%m.%y";
@@ -246,4 +281,27 @@ $locale['T302'] = "[SUBJECT]";
 $locale['T303'] = "[MESSAGE]";
 // Language Admin
 $locale['L001'] = "Multi Language";
+
+// Official Supported System List
+$locale['articles']['title'] = "Articles";
+$locale['articles']['description'] = "A Standard Documentation System.";
+$locale['blog']['title'] = "Blog";
+$locale['blog']['description'] = "A Standard Blogging System.";
+$locale['downloads']['title'] = "Downloads";
+$locale['downloads']['description'] = "A Standard Downloads System.";
+$locale['eshop']['title'] = "E-Shop";
+$locale['eshop']['description'] = "An Electronic Commerce System.";
+$locale['faqs']['title'] = "Frequent Asked Questions";
+$locale['faqs']['description'] = "A Knowledgebase FAQ System.";
+$locale['forums']['title'] = "Forum";
+$locale['forums']['description'] = "A Bulletin Board Forum System.";
+$locale['news']['title'] = "News";
+$locale['news']['description'] = "A News Publishing System.";
+$locale['photos']['title'] = "Photo";
+$locale['photos']['description'] = "A Photo Gallery Publishing System.";
+$locale['polls']['title'] = "Polls";
+$locale['polls']['description'] = "A Poll and User Voting System.";
+$locale['weblinks']['title'] = "Weblinks";
+$locale['weblinks']['description'] = "A Web Directory System.";
+$locale['install'] = "Install Core";
 ?>

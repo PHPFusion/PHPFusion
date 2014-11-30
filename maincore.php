@@ -6,6 +6,7 @@
 +--------------------------------------------------------+
 | Filename: maincore.php
 | Author: Nick Jones (Digitanium)
+| Co-Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -26,12 +27,10 @@ function get_microtime() {
 // Define script start time
 define("START_TIME", get_microtime());
 define("IN_FUSION", TRUE);
-
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {
 	die("Prevented a XSS attack through a GET variable!");
 }
-
 // Locate config.php and set the basedir path
 $folder_level = "";
 $i = 0;
@@ -39,8 +38,8 @@ while (!file_exists($folder_level."config.php")) {
 	$folder_level .= "../";
 	$i++;
 	if ($i == 7) {
-		if (file_exists("setup.php")) {
-			redirect("setup.php");
+		if (file_exists("install/index.php")) {
+			redirect("install/index.php");
 		} else {
 			die("config.php nor setup.php files where found");
 		}
@@ -581,7 +580,6 @@ function isnum($value, $decimal=false) {
 	}
 }
 
-
 // Custom preg-match function
 function preg_check($expression, $value) {
 	if (!is_array($value)) {
@@ -644,7 +642,6 @@ function displaysmileys($textarea, $form = "inputform") {
 	}
 	return $smileys;
 }
-
 
 /**
  * @ tag a user by simply just posting his name like @hien and if found, returns a tooltip.
@@ -850,7 +847,6 @@ function verify_image($file) {
 	} elseif (preg_match("#</*(applet|link|style|script|iframe|frame|frameset)[^>]*>#i", $txt)) {
 		return FALSE;
 	}
-
 	return TRUE;
 }
 
@@ -1234,7 +1230,6 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."notify/notify.inc.php";
 require_once INCLUDES."sqlhandler.inc.php";
-
 require_once INCLUDES."defender.inc.php";
 $defender = new defender;
 $defender->debug_notice = true; // turn this off after beta.
