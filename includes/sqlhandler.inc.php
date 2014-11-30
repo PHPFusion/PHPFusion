@@ -18,15 +18,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-// Hierarchies
-function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $filter_order = FALSE, $filter_show = FALSE) {
+
+/*	Hierarchy Index - returns $id array */
+function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE) {
 	$data = array();
 	$index = array();
-	//$ordering = "ORDER BY $id_col ASC, $cat_col ASC";
-	//$filter_orders = ($filter_order && $ordering) ? ", $filter_order" : "$filter_order";
-	$filter_order = ($filter_order) ? "ORDER BY $filter_order" : '';
-	$query = dbquery("SELECT $id_col, $cat_col FROM ".$db." $filter $filter_order $filter_show"); // mysql_query("SELECT id, parent_id, name FROM categories ORDER BY name");
-	//print_p("SELECT $id_col, $cat_col FROM ".$db." $filter ORDER BY $filter_order $filter_show");
+	$query = dbquery("SELECT $id_col, $cat_col FROM ".$db." $filter");
 	while ($row = dbarray($query)) {
 		$id = $row[$id_col];
 		$parent_id = $row[$cat_col] === NULL ? "NULL" : $row[$cat_col];
@@ -35,11 +32,10 @@ function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE, $filter_order = F
 	return $index;
 }
 
+/* Hierarchy Data - returns full data array */
 function dbquery_tree_data($db, $id_col, $cat_col, $filter = FALSE, $filter_order = FALSE, $filter_show = FALSE) {
 	$data = array();
 	$index = array();
-	//$ordering = "ORDER BY $id_col ASC, $cat_col ASC";
-	//$filter_order = ($filter_order && $ordering) ? ", $filter_order" : "$filter_order";
 	$filter_order = ($filter_order) ? "ORDER BY $filter_order" : '';
 	$query = dbquery("SELECT * FROM ".$db." $filter $filter_order $filter_show"); // mysql_query("SELECT id, parent_id, name FROM categories ORDER BY name");
 	while ($row = dbarray($query)) {
@@ -49,6 +45,7 @@ function dbquery_tree_data($db, $id_col, $cat_col, $filter = FALSE, $filter_orde
 	return $data;
 }
 
+/* old model of Hierarchy Data with ['children'] nesting. */
 function dbquery_tree_full($db, $id_col, $cat_col, $sql_cond = FALSE, $array = FALSE) {
 	$data = array();
 	$index = array();
@@ -67,6 +64,7 @@ function dbquery_tree_full($db, $id_col, $cat_col, $sql_cond = FALSE, $array = F
 	return $index;
 }
 
+/* Not documented */
 function tree_list($data, $id = FALSE, $indent = FALSE) {
 	if (!$id) {
 		$id = 0;
@@ -89,7 +87,8 @@ function tree_list($data, $id = FALSE, $indent = FALSE) {
 	return $cdata;
 }
 
-function get_tree_root($index, $child_id) {
+/* Get the branch ID or the first parent from dbquery_tree() */
+function get_root(array $index, $child_id) {
 	/*
 	* Display tree root
 	*/
@@ -98,13 +97,37 @@ function get_tree_root($index, $child_id) {
 			if ($key == 0) {
 				return $child_id;
 			} else {
-				return get_tree_root($index, $key);
+				return get_root($index, $key);
 			}
 		}
 	}
 }
 
-function get_parent($index, $child_id) {
+/* Get the branch ID or the first parent from dbquery_tree() via SQL */
+function get_hkey($db, $id_col, $cat_col, $parent_id) {
+	$hkey = & $hkey;
+	$query = "SELECT $id_col, $cat_col FROM ".$db." WHERE $id_col = '$parent_id' LIMIT 1";
+	//echo $query;
+	$result = dbquery($query);
+	if (dbrows($result) > 0) {
+		$data = dbarray($result);
+		//print_p($data);
+		if ($data[$cat_col] > 0) {
+			$hkey = get_hkey($db, $id_col, $cat_col, $data[$cat_col]);
+		} else {
+			$hkey = $data[$id_col];
+		}
+	} else {
+		// predict current row.
+		$rows = dbarray(dbquery("SELECT MAX($id_col) as row FROM ".$db.""));
+		$rows = $rows['row'];
+		$hkey = $rows+1;
+	}
+	return $hkey;
+}
+
+/* Get immediate Parent ID from dbquery_tree() result */
+function get_parent(array $index, $child_id) {
 	foreach ($index as $key => $value) {
 		if (in_array($child_id, $value)) {
 			return $key;
@@ -112,6 +135,22 @@ function get_parent($index, $child_id) {
 	}
 }
 
+/* Get all parent ID from dbquery_tree() */
+function get_all_parent(array $index, $child_id, array $list = array()) {
+	$list = &$list;
+	foreach ($index as $key => $value) {
+		if (in_array($child_id, $value)) {
+			if ($key == 0) {
+				return $list;
+			} else {
+				$list[] = $key;
+				return get_all_parent($index, $key, $list);
+			}
+		}
+	}
+}
+
+/* Get Child IDs from dbquery_tree() result */
 function get_child($index, $parent_id, &$children = FALSE) {
 	/*
 	* Retrieving nodes using variables passed as reference:
@@ -127,6 +166,7 @@ function get_child($index, $parent_id, &$children = FALSE) {
 	return $children;
 }
 
+/* Get current depth from dbquery_tree() result */
 function get_depth($index, $child_id, $depth = FALSE) {
 	if (!$depth) {
 		$depth = 1;
@@ -142,26 +182,7 @@ function get_depth($index, $child_id, $depth = FALSE) {
 	}
 }
 
-// end of hierarchies
-function get_hkey($db, $id_col, $cat_col, $parent_id) {
-	$hkey = & $hkey;
-	$query = "SELECT $id_col, $cat_col FROM ".$db." WHERE $id_col = '$parent_id' LIMIT 1";
-	//echo $query;
-	$result = dbquery($query);
-	if (dbrows($result) > 0) {
-		$data = dbarray($result);
-		if ($data[$cat_col] > 0) {
-			$hkey = get_hkey($db, $id_col, $cat_col, $data[$cat_col]);
-		} else {
-			$hkey = $data[$id_col];
-		}
-	} else {
-		// predict current row.
-		$rows = dbrows(dbquery("SELECT $id_col FROM ".$db.""));
-		$hkey = $rows+1;
-	}
-	return $hkey;
-}
+
 
 /* used to make searches on field */
 // echo search_field(array('admin_title','admin_link'), 'ac c d ghi');
@@ -277,7 +298,9 @@ function array_depth($array) {
 	return $max_depth;
 }
 
-function tree_path_no_use($db, $id_col, $cat_col, $filter = FALSE, $filter_order = FALSE, $filter_show = FALSE, $depth = FALSE) {
+/* The oldest trick in the book by joining SQL over infinite number of columns in cats to make a tree - The output traverse model sucks */
+/* But it can tell you the depth directly */
+function tree_path_deprecated($db, $id_col, $cat_col, $filter = FALSE, $filter_order = FALSE, $filter_show = FALSE, $depth = FALSE) {
 	$selector = '';
 	$column = '';
 	$conditions = '';
@@ -316,7 +339,7 @@ function tree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
 		if ($data[$cat_col] == $cat_value) {
 			$list[$data[$id_col]] = & $thisref;
 		} else {
-			$refs[$data[$cat_col]]['children'][$data[$id_col]] = & $thisref;
+			$refs[$data[$cat_col]]['child'][$data[$id_col]] = & $thisref;
 		}
 		$i++;
 	} // end while
@@ -408,6 +431,7 @@ function sort_tree(&$result, $key) {
 
 // New SQL Row Modifier.
 function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
+	require_once INCLUDES."notify/notify.inc.php";
 	if (defined("ADMIN_PANEL")) {
 		global $aidlink;
 	} else {
@@ -416,11 +440,13 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 	if (is_array($options)) {
 		$redirect = (array_key_exists("noredirect", $options) && ($options['noredirect'] == "1")) ? "0" : "1";
 		$url = (array_key_exists("url", $options)) ? $options['url'] : "";
-		$debug = (array_key_exists("debug", $options)) ? 1 : 0;
+		$debug = (array_key_exists("debug", $options) && $options['debug'] == 1) ? 1 : 0;
+		$pkey = (array_key_exists("primary_key", $options)) ? $options['primary_key'] : 0;
 	} else {
 		$redirect = "1";
 		$url = "";
 		$debug = 0;
+		$pkey = 0;
 	}
 	if (!defined("FUSION_NULL")) {
 		$columns = fieldgenerator($db);
@@ -432,30 +458,69 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 		// for delete, status=del
 		// Prime Module
 		foreach ($columns as $arr => $v) {
-			if ($arr !== 0) {
-				if ($mode == "save") {
+			if ($pkey) {
+				// using PKEY - when the UNIQUE Auto Increment Column is NOT in the first column.
+				if ($mode == "save" && $pkey !==$v) {
 					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
 				} elseif ($mode == "update") {
 					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v"; // all with no comma
 				}
+				// check whether there is a value or not.
 				if (array_key_exists($v, $inputdata)) {
 					$values = $inputdata[$v]; // go through the super sanitizer first.
-					if (isset($error) && ($values == $error)) {
+					/* if (isset($error) && ($values == $error)) {
 						redirect(FUSION_SELF.$aidlink."&status=error".($error ? "&error=$error" : ""));
-					}
+					} */
 					if ($mode == "save") {
 						$sanitized_input[] = ($arr == ($col_rows-1)) ? "'$values'" : "'$values',";
 					} elseif ($mode == "update") {
 						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v='$values'" : "$v='$values',";
 					}
 				} else {
-					if ($mode == "save") {
+					if ($mode == "save" && $pkey !==$v) {
 						$sanitized_input[] = ($arr == ($col_rows-1)) ? "''" : "'',";
 					} elseif ($mode == "update") {
 						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v=''" : "$v='',";
 					}
 				}
-			} // skips 1st id array.
+
+			} else {
+				// we assume that UNIQUE Auto Increment is The First Column.
+				if ($arr !== 0) {
+					if ($mode == "save") {
+						$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
+					} elseif ($mode == "update") {
+						$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v"; // all with no comma
+					}
+					// check whether there is a value or not.
+					if (array_key_exists($v, $inputdata)) {
+						$values = $inputdata[$v]; // go through the super sanitizer first.
+						/* if (isset($error) && ($values == $error)) {
+							redirect(FUSION_SELF.$aidlink."&status=error".($error ? "&error=$error" : ""));
+						} */
+						if ($mode == "save") {
+							$sanitized_input[] = ($arr == ($col_rows-1)) ? "'$values'" : "'$values',";
+						} elseif ($mode == "update") {
+							$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v='$values'" : "$v='$values',";
+						}
+					} else {
+						if ($mode == "save") {
+							$sanitized_input[] = ($arr == ($col_rows-1)) ? "''" : "'',";
+						} elseif ($mode == "update") {
+							$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v=''" : "$v='',";
+						}
+					}
+				} // skips 1st id array.
+			}
+		}
+		$key = 0;
+		if ($pkey) {
+			foreach($columns as $ckey => $col) {
+				if ($col == $pkey) {
+					$key = $ckey;
+					break;
+				}
+			}
 		}
 		if ($mode == "save") {
 			// counter to make sure it's the same.
@@ -494,7 +559,6 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 				$the_value .= "$v";
 			}
 			// settings to use which field as the core for update.
-			$key = 0; // <----- the key
 			$update_core = "".$columns[$key]."='".$inputdata[$columns[$key]]."'";
 			if ($debug) {
 				print_p($update_core);
@@ -518,7 +582,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 			}
 		} elseif ($mode == "delete") {
 			if ($aidlink !== "") { // since only admin can launch deletion?
-				$col = $columns['0'];
+				$col = $columns[$key];
 				$values = $inputdata[$col];
 				//print_p($col);
 				//print_p($values);
@@ -671,12 +735,11 @@ function dbcompress($data, $mode, $delimiter = FALSE, $sdelimiter = FALSE) {
 	}
 }
 
-function table_exists($table) {
+function db_exists($table) {
 	$table = str_replace(DB_PREFIX, '', $table);
 	if (dbrows(dbquery("SHOW TABLES LIKE '".DB_PREFIX.$table."'")) == 1) {
 		return true;
 	}
 	return false;
 }
-
 ?>
