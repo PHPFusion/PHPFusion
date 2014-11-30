@@ -366,7 +366,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 	$secret_key_salt = createRandomPrefix(32);
 	if ($db_host != "" && $db_user != "" && $db_name != "" && $db_prefix != "") {
 		if ($pdo_enabled == "1") {
-			require_once "includes/db_handlers/pdo_functions_include.php";
+			require_once INCLUDES."db_handlers/pdo_functions_include.php";
 			$pdo = NULL;
 			try {
 				$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => FALSE,
