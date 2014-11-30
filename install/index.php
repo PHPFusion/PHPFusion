@@ -79,14 +79,14 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 		@rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
 		@chmod(BASEDIR.'config_temp.php', 0755);
 	}
-
-	if (isset($_POST['htaccess'])) {
-		write_htaccess();
-		redirect(FUSION_SELF);
+	// temp is blank.
+	if (file_exists(BASEDIR.'config_temp.php')) {
+		include BASEDIR.'config_temp.php';
 	}
 
-	if (isset($_POST['uninstall'])) {
-		include BASEDIR.'config_temp.php';
+	$settings = array();
+
+	if (isset($db_prefix)) {
 		if ($pdo_enabled == "1") {
 			require_once INCLUDES."db_handlers/pdo_functions_include.php";
 			$pdo = NULL;
@@ -106,10 +106,27 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 			mysql_set_charset('utf8', $db_connect);
 			$db_select = @mysql_select_db($db_name);
 		}
-		include 'includes/core.setup.php';
-		@unlink(BASEDIR.'config_temp.php');
-		@unlink(BASEDIR.'config.php');
+
+		$result = dbquery("SELECT * FROM ".$db_prefix."settings");
+		if (dbrows($result)) {
+			while ($data = dbarray($result)) {
+				$settings[$data['settings_name']] = $data['settings_value'];
+			}
+		}
+	}
+
+	if (isset($_POST['htaccess']) && isset($db_prefix) && !empty($settings)) {
+		write_htaccess();
 		redirect(FUSION_SELF);
+	}
+
+	if (isset($_POST['uninstall'])) {
+		if (isset($db_prefix)) {
+			include 'includes/core.setup.php';
+			@unlink(BASEDIR.'config_temp.php');
+			@unlink(BASEDIR.'config.php');
+			redirect(FUSION_SELF);
+		}
 	}
 
 	if (!file_exists(BASEDIR.'config.php') && !file_exists(BASEDIR.'config_temp.php') && !isset($_POST['uninstall'])) {
@@ -150,13 +167,15 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 		echo "<span class='strong display-inline-block m-b-10'>".$locale['1010']."</span>\n<br/><p>".$locale['1011']."</p>";
 		echo form_button($locale['1012'], 'step', 'step', '6', array('class' => 'btn-primary btn-sm m-r-10'));
 		echo "</div>\n";
-
-		echo "<div class='well'>\n";
-		echo "<span class='strong display-inline-block m-b-10'>".$locale['1013']."</span>\n<br/><p>".$locale['1014']."</p>";
-		echo form_button($locale['1015'], 'htaccess', 'htaccess', 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
-		echo "</div>\n";
-
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
+
+		if (isset($db_prefix)) {
+			echo "<div class='well'>\n";
+			echo "<span class='strong display-inline-block m-b-10'>".$locale['1013']."</span>\n<br/><p>".$locale['1014']."</p>";
+			echo form_button($locale['1015'], 'htaccess', 'htaccess', 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
+			echo "</div>\n";
+		}
+
 	}
 }
 
@@ -408,6 +427,13 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 								echo $locale['4003']."<br /><br />\n";
 								$success = TRUE;
 								$db_error = 6;
+								// get settings for htaccess.
+								$result = dbquery("SELECT * FROM ".$db_prefix."settings");
+								if (dbrows($result)) {
+									while ($data = dbarray($result)) {
+										$settings[$data['settings_name']] = $data['settings_value'];
+									}
+								}
 							} else {
 								echo "<br />\n<i class='entypo check'></i> ".$locale['4001']."<br /><br />\n<i class='entypo check'></i> ";
 								echo $locale['4002']."<br /><br />\n<i class='entypo icancel'></i> ";
@@ -422,11 +448,9 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							$success = FALSE;
 							$db_error = 5;
 						}
+
 						write_htaccess();
-						if (!file_exists(BASEDIR.'.htaccess')) {
-							$success = FALSE;
-							$db_error = 5;
-						}
+
 					} else {
 						echo "<div class='alert alert-danger'>\n";
 						echo $locale['4001']."<br /><br />\n";
@@ -468,6 +492,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 		$success = FALSE;
 		$db_error = 7;
 	}
+
 	echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
 	echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
 	echo "<input type='hidden' name='enabled_languages' value='".$selected_langs."' />\n";
@@ -492,7 +517,6 @@ if (isset($_POST['step']) && $_POST['step'] == '5') {
 	$db_name = '';
 	$db_user = '';
 	$db_pass = '';
-	var_dump($_POST);
 	if (!isset($_POST['done'])) {
 		// Load Config and SQL handler.
 		if (file_exists(BASEDIR.'config_temp.php')) {

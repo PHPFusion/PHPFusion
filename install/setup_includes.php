@@ -217,13 +217,14 @@ function hide_email() { }
 
 // Generate a standard .htaccess file
 function write_htaccess() {
+	global $settings;
 	$htc = "";
-	if (!file_exists(".htaccess")) {
-		if (file_exists("_htaccess") && function_exists("rename")) {
-			@rename("_htaccess", ".htaccess");
+	if (!file_exists(BASEDIR.'.htaccess')) {
+		if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+			@rename(BASEDIR."_htaccess", ".htaccess");
 		} else {
 			// create a file.
-			$handle = fopen(".htaccess", "w");
+			$handle = fopen(BASEDIR.".htaccess", "w");
 			fclose($handle);
 		}
 	}
