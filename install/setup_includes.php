@@ -253,7 +253,7 @@ function write_htaccess() {
 	$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
 	$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
 	$htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
-	$temp = fopen(".htaccess", "w");
+	$temp = fopen(BASEDIR.".htaccess", "w");
 	if (fwrite($temp, $htc)) {
 		fclose($temp);
 	}
