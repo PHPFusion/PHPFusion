@@ -26,7 +26,7 @@ define("THEMES", BASEDIR."themes/");
 define("USER_IP", $_SERVER['REMOTE_ADDR']);
 if (!defined('DYNAMICS')) { define('DYNAMICS', INCLUDES."dynamics/"); }
 
-if (isset($_POST['localeset']) && file_exists("locale/".$_POST['localeset']) && is_dir("locale/".$_POST['localeset'])) {
+if (isset($_POST['localeset']) && file_exists(LOCALE.$_POST['localeset']) && is_dir(LOCALE.$_POST['localeset'])) {
 	include LOCALE.$_POST['localeset']."/setup.php";
 	define("LOCALESET", $_POST['localeset']."/");
 } else {
@@ -138,7 +138,7 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 			echo "<span>".$locale['welcome_desc']."</span>\n";
 		}
 		echo "<span class='display-block m-t-20 m-b-10 strong'>".$locale['010']."</span>\n";
-		echo form_select('', 'localset', 'localeset', $locale_files, '', array('placeholder' => $locale['choose']));
+		echo form_select('', 'localeset', 'localeset', array_combine($locale_files, $locale_files), '', array('placeholder' => $locale['choose']));
 		echo "<div>".$locale['011']."</div>\n";
 		echo "<hr>\n";
 		echo form_checkbox($locale['terms'], 'license', 'license', '');
