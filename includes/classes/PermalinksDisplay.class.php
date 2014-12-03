@@ -330,7 +330,6 @@ class PermalinksDisplay {
 	* @access private
 	*/
 	private function sniffPatterns() {
-	global $settings;
 	//print_p(stripinput($this->output)); gives us ../../ which is not.
 		if (is_array($this->patterns_regex)) {
 			foreach ($this->patterns_regex as $type => $values) {
@@ -473,8 +472,7 @@ class PermalinksDisplay {
 	* MADMAN DEBUG MODE HERE - BUG KINGDOM.
 	*/
 	private function replacePatterns() {
-	global $settings;
-	if (is_array($this->pattern_search)) {
+		if (is_array($this->pattern_search)) {
 			foreach ($this->pattern_search as $type => $values) {
 				//print_p($values);
 				if (is_array($this->patterns_regex[$type])) {
@@ -987,7 +985,6 @@ class PermalinksDisplay {
 						if (isset($this->rewrite_code[$type]) && isset($this->rewrite_replace[$type])) {
 							$regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
 						}
-						//$regex = $this->appendDirPath($regex,$type);
 						$regex = $this->wrapQuotes($regex);
 						$this->patterns_regex[$type][$key] = "#".$regex."#i";
 					}
@@ -1057,13 +1054,14 @@ class PermalinksDisplay {
 	* @access private
 	*/
 	private function appendRootAll() {
+	global $settings;
 		if (preg_match("/(href|src)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
 			$basedir = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
-			//$this->output = preg_replace("/(href|src)='(".$basedir.")*([^\']*)'/i", "$1='".ROOT."$3'", $this->output);
-			$this->output = preg_replace("/(href|src)='(".$basedir.")*([^\']*)'/i", "$1='".ROOT."$3'", $this->output);
+			$basedir = preg_replace("/(href|src)='(".$basedir.")*([^\']*)'/i", "$1='".ROOT."$3'", $this->output);
+			$basedir = str_replace("../".$settings['siteurl']."","".$settings['siteurl']."", $basedir);
+			$this->output = $basedir;
 		}
 	}
-
 		
 	/*
 	* Wrap a String with Single Quotes (')
@@ -1096,15 +1094,15 @@ class PermalinksDisplay {
 	public static function cleanURL($string, $delimiter = "-") {
 	global $settings;
 
-if ($settings['normalize_seo'] == "1") {		
-		$string = normalize($string);
-		if (function_exists('iconv')) {
-			$string = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $string);
+		if ($settings['normalize_seo'] == "1") {		
+				$string = normalize($string);
+				if (function_exists('iconv')) {
+					$string = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $string);
+				}
 		}
-}
+
 		$string = preg_replace("/&([^;]+);/i", "", $string); // Remove all Special entities like ', &#copy;
 		$string = preg_replace("/[^+a-zA-Z0-9_.\/#|+ -\W]/i", "", $string); // # is allowed in some cases(like in threads for #post_10)
-		
 		$string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
 		$string = preg_replace("/[\\".$delimiter."]+/i", $delimiter, $string); // Replace multiple occurences of Delimiter by 1 occurence only
 		$string = strtolower(trim($string, "-"));
