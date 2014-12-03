@@ -1058,7 +1058,11 @@ class PermalinksDisplay {
 		if (preg_match("/(href|src)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
 			$basedir = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
 			$basedir = preg_replace("/(href|src)='(".$basedir.")*([^\']*)'/i", "$1='".ROOT."$3'", $this->output);
-			$basedir = str_replace("../".$settings['siteurl']."","".$settings['siteurl']."", $basedir);
+			$basedir = str_replace("../".$settings['siteurl']."","".$settings['siteurl']."", $basedir); // Static fix for site internal URL.
+			//Temp fixes for external URL links - We need wildcard for this and a switch for http/https before it is OK.
+			$basedir = str_replace("../../../http://","http://", $basedir); 
+			$basedir = str_replace("../../http://","http://", $basedir);
+			$basedir = str_replace("../http://","http://", $basedir);
 			$this->output = $basedir;
 		}
 	}
