@@ -52,7 +52,7 @@ function translate_lang_names($language) {
 }
 
 function translate_country_names($country) {
-	$translated_countries = array("Hungary" => "Magyarorsz�g", "Poland" => "Polska", "Italy" => "Italia",
+	$translated_countries = array("Hungary" => "Magyarország", "Poland" => "Polska", "Italy" => "Italia",
 								  "Germany" => "Deutchland");
 	if ($translated_countries[$country] != '') {
 		return $translated_countries[$country];
