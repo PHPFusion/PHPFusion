@@ -16,16 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("CP") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+if (!checkrights("CP") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/custom_pages.php";
+
 if (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && $settings['tinymce_enabled']) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 } else {
 	require_once INCLUDES."html_buttons_include.php";
 }
+
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
 		$message = $locale['410']."<br />\n".$locale['412']."\n";
@@ -47,6 +47,7 @@ if (isset($_GET['status']) && !isset($message)) {
 		}
 	}
 }
+
 if (isset($_POST['save'])) {
 	$page_title = stripinput($_POST['page_title']);
 	$page_access = isnum($_POST['page_access']) ? $_POST['page_access'] : "0";
@@ -120,26 +121,18 @@ if (isset($_POST['save'])) {
 		}
 		$page_content = phpentities($page_content);
 	}
-	// do here.
 	$result = dbquery("SELECT page_id, page_title, page_language FROM ".DB_CUSTOM_PAGES." ".(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."'" : "")." ORDER BY page_title");
 	if (dbrows($result) != 0) {
 		$edit_opts = array();
-		//$sel = "";
 		while ($data = dbarray($result)) {
 			$edit_opts[$data['page_id']] = "[".$data['page_id']."] ".$data['page_title']."";
-			//if (isset($_POST['page_id'])) { $sel = ($_POST['page_id'] == $data['page_id'] ? " selected='selected'" : ""); }
-			//$editlist .= "<option value='".$data['page_id']."'$sel>[".$data['page_id']."] ".$data['page_title']."</option>\n";
 		}
 		opentable($locale['402']);
 		echo "<div style='text-align:center'>\n";
 		echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
-		//<form name='selectform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
-		//echo "<select name='page_id' class='textbox' style='width:200px;'>\n".$editlist."</select>\n";
 		echo form_select('', 'page_id', 'page_id', $edit_opts, isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '', array('placeholder' => $locale['choose'], 'class' => 'pull-left'));
 		echo form_button($locale['420'], 'edit', 'edit', $locale['420'], array('class' => 'btn-primary pull-left m-l-10 m-r-10'));
 		echo form_button($locale['421'], 'delete', 'delete', $locale['421'], array('class' => 'btn-primary pull-left'));
-		//echo "<input type='submit' name='edit' value='".$locale['420']."' class='button' />\n";
-		//echo "<input type='submit' name='delete' value='".$locale['421']."' onclick='return DeletePage();' class='button' />\n";
 		echo closeform();
 		echo "</div>\n";
 		closetable();
@@ -179,11 +172,8 @@ if (isset($_POST['save'])) {
 	$sel = "";
 	while (list($key, $user_group) = each($user_groups)) {
 		$access_opts[$user_group['0']] = $user_group['1'];
-		//$sel = ($page_access == $user_group['0'] ? " selected='selected'" : "");
-		//$access_opts .= "<option value='".$user_group['0']."'$sel>".$user_group['1']."</option>\n";
 	}
 	echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
-	//echo "<form name='inputform' method='post' action='".FUSION_SELF.$aidlink."' onsubmit='return ValidateForm(this);'>\n";
 	echo "<table cellpadding='0' cellspacing='0' class='center table table-responsive'>\n<tr>\n";
 	if ($settings['tinymce_enabled']) {
 		echo "<td width='100' class='tbl'>".$locale['460']."</td>\n";
@@ -193,26 +183,22 @@ if (isset($_POST['save'])) {
 	echo "<td class='tbl'><label for='page_title'>".$locale['422']."</label> <span class='required'>*</span></td>\n";
 	echo "<td class='tbl'>\n";
 	echo form_text('', 'page_title', 'page_title', $page_title, array('width' => '300px', 'class' => 'pull-left m-r-10'));
-	echo "&nbsp;<label for='page_access' class='pull-left m-t-5'>".$locale['423']."</label>\n";
+	echo "</td></tr><tr><td class='tbl'><label for='page_access' class='pull-left m-t-5'>".$locale['423']."</label></td>\n";
+	echo "<td class='tbl'>\n";
 	echo form_select('', 'page_access', 'page_access', $access_opts, $page_access, array('placeholder' => $locale['choose'], 'width' => '150px', 'inline' => 1, 'class' => 'pull-left'));
-	//<select name='page_access' class='textbox' style='width:150px;'>\n".$access_opts."</select></td>\n";
-	echo "</tr>\n";
+	echo "</td></tr>\n";
 	if (multilang_table("CP")) {
 		echo "<tr>\n";
 		echo "<td class='tbl'><label for='page_language'>".$locale['global_ML100']."</label></td>\n";
-		//$opts = get_available_languages_list($selected_language = "$page_language");
 		echo "<td class='tbl'>\n";
 		echo form_select('', 'page_language', 'page_language', $language_opts, $page_language, array('placeholder' => $locale['choose']));
-		//<select name='page_language' class='textbox'>".$opts."</select></td>\n";
 		echo "</td>\n</tr>\n";
 	} else {
 		echo form_hidden('', 'page_language', 'page_language', $page_language);
-		//echo "<input type='hidden' name='page_language' value='".$page_language."' />\n";
 	}
 	echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='page_content'>".$locale['424']."</label></td>\n";
 	echo "<td width='80%' class='tbl'>\n";
 	echo form_textarea('', 'page_content', 'page_content', $page_content);
-	//<textarea name='page_content' cols='95' rows='15' class='textbox' style='width:98%'>".$page_content."</textarea></td>\n";
 	echo "</td>\n</tr>\n<tr>\n";
 	if (!isset($_COOKIE['custom_pages_tinymce']) || !$_COOKIE['custom_pages_tinymce'] || !$settings['tinymce_enabled']) {
 		echo "<td class='tbl'></td><td class='tbl'>\n";
@@ -261,16 +247,12 @@ if (isset($_POST['save'])) {
 	echo "<td align='center' colspan='2' class='tbl'><br />\n";
 	if (isset($_POST['page_id']) && isnum($_POST['page_id'])) {
 		echo form_hidden('', 'page_id', 'page_id', $_POST['page_id']);
-		//echo "<input type='hidden' name='page_id' value='".$_POST['page_id']."' />\n";
 	}
 	echo form_button($locale['429'], 'preview', 'preview', $locale['429'], array('class' => 'btn-primary m-r-10'));
 	echo form_button($locale['430'], 'save', 'save', $locale['430'], array('class' => 'btn-primary m-r-10'));
-	//echo "<input type='submit' name='preview' value='".$locale['429']."' class='button' />\n";
-	//echo "<input type='submit' name='save' value='".$locale['430']."' class='button' /></td>\n";
 	echo "</tr>\n</table>\n</form>\n";
 	closetable();
 	add_to_jquery("
-
     $('#delete').bind('click', function() { confirm('".$locale['450']."'); });
     $('#save, #preview').bind('click', function() {
     var page_title = $('#page_title').val();
