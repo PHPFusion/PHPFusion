@@ -33,11 +33,11 @@ function translate_lang_names($language) {
 						"Malay"=>"Malay",
 						"Persian" => "Persian",
 						"Polish" => "Polski",
-					  	"Russian" => "Russkij",
+					  	"Russian" => "Русский",
 						"Spanish" => "Espanol",
 						"Swedish" => "Svenska",
 						"Turkish" => "Türkiye",
-						"Ukrainian" => "Ukrayin'ska",
+						"Ukrainian" => "Українська",
 						"Norwegian" => "Norsk"
 						);
 	if ($language != '') {
