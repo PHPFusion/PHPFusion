@@ -22,7 +22,7 @@ include LOCALE.LOCALESET."photogallery.php";
 define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 add_to_title($locale['global_200'].$locale['400']);
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
-	$result = dbquery("SELECT tp.photo_title, tp.photo_description, tp.photo_filename, tp.photo_thumb2, tp.photo_datestamp, tp.photo_views,
+	$result = dbquery("SELECT tp.photo_title, tp.photo_description, tp.photo_keywords, tp.photo_filename, tp.photo_thumb2, tp.photo_datestamp, tp.photo_views,
 		tp.photo_order, tp.photo_allow_comments, tp.photo_allow_ratings, ta.album_id, ta.album_title, ta.album_access,
 		tu.user_id, tu.user_name, tu.user_status, SUM(tr.rating_vote) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes
 		FROM ".DB_PHOTOS." tp
@@ -34,6 +34,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 	if (!checkgroup($data['album_access'])) {
 		redirect(FUSION_SELF);
 	} else {
+		if ($data['photo_keywords'] !=="") { set_meta("keywords", $data['photo_keywords']); }
 		define("PHOTODIR", PHOTOS.(!SAFEMODE ? "album_".$data['album_id']."/" : ""));
 		include INCLUDES."comments_include.php";
 		include INCLUDES."ratings_include.php";

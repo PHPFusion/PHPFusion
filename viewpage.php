@@ -31,6 +31,7 @@ if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 $cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."' ".(multilang_table("CP") ? "AND page_language='".LANGUAGE."'" : "")."");
 if (dbrows($cp_result)) {
 	$cp_data = dbarray($cp_result);
+	if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
 	add_to_title($locale['global_200'].$cp_data['page_title']);
 	echo "<!--custompages-pre-content-->\n";
 	opentable($cp_data['page_title']);
