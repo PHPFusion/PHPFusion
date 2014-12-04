@@ -1058,14 +1058,12 @@ class PermalinksDisplay {
 		if (preg_match("/(href|src)='((?!(htt|ft)p(s)?:\/\/)[^\']*)'/i", $this->output)) {
 			$basedir = str_replace(array(".", "/"), array("\.", "\/"), BASEDIR);
 			$basedir = preg_replace("/(href|src)='(".$basedir.")*([^\']*)'/i", "$1='".ROOT."$3'", $this->output);
-			$basedir = str_replace("../".$settings['siteurl']."","".$settings['siteurl']."", $basedir); // Static fix for site internal URL.
-			//Temp fixes for external URL links - We need wildcard for this and a switch for http/https before it is OK.
-			// insufficient to cover mods and rowstart with just 3 levels... topping up like ice cream. 7 scoops.
-			$loop = 7; // <---- $settings['ninja_seo']
+			// Remove ../ before http://
+			$loop = 7;
 			for ($i = 1; $i <=$loop; $i++) {
 				$basedir = str_replace(str_repeat('../', $i).'http://', 'http://', $basedir);
 			}
-			// And for copyright footer... php-fusion main site is https://
+			// Remove ../ before https://
 			for ($i = 1; $i <=$loop; $i++) {
 				$basedir = str_replace(str_repeat('../', $i).'https://', 'https://', $basedir);
 			}
