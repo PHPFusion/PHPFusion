@@ -163,7 +163,6 @@ $locale['global_127'] = "messages";
 $locale['global_128'] = "submission";
 $locale['global_129'] = "submissions";
 // User Menu
-$locale['global_123'] = "Admin Panel";
 $locale['UM060'] = "Login";
 $locale['UM061'] = "Username";
 $locale['UM061a'] = "Email";
