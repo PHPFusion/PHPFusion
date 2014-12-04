@@ -322,7 +322,7 @@ if (function_exists('gd_info')) {
 				if (!$error) {
 					$photo_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".$_GET['album_id']."'"), 0)+1;
 					$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order+1) WHERE photo_order>='$photo_order' AND album_id='".$_GET['album_id']."'");
-					$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('".$_GET['album_id']."', '', '', '".$photo_file."', '".$photo_thumb1."', '".$photo_thumb2."', '".time()."', '".$userdata['user_id']."', '0', '".$photo_order."', '".$photo_comments."', '".$photo_ratings."')");
+					$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_keywords, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('".$_GET['album_id']."', '', '', '', '".$photo_file."', '".$photo_thumb1."', '".$photo_thumb2."', '".time()."', '".$userdata['user_id']."', '0', '".$photo_order."', '".$photo_comments."', '".$photo_ratings."')");
 				}
 				$i++;
 			}
@@ -392,7 +392,7 @@ if (function_exists('gd_info')) {
 				if (!$error) {
 					$photo_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".$_GET['album_id']."'"), 0)+1;
 					$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order+1) WHERE photo_order>='$photo_order' AND album_id='".$_GET['album_id']."'");
-					$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('".$_GET['album_id']."', '', '', '".$photo_file."', '".$photo_thumb1."', '".$photo_thumb2."', '".time()."', '".$userdata['user_id']."', '0', '".$photo_order."', '".$photo_comments."', '".$photo_ratings."')");
+					$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_keywords, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('".$_GET['album_id']."', '', '', '', '".$photo_file."', '".$photo_thumb1."', '".$photo_thumb2."', '".time()."', '".$userdata['user_id']."', '0', '".$photo_order."', '".$photo_comments."', '".$photo_ratings."')");
 				}
 				$i++;
 				$x = array_search($image, $multi_image);
@@ -411,6 +411,7 @@ if (function_exists('gd_info')) {
 		$error = "";
 		$photo_title = form_sanitizer($_POST['photo_title'], '', 'photo_title');
 		$photo_description = form_sanitizer($_POST['photo_description'], '', 'photo_description');
+		$photo_keywords = form_sanitizer($_POST['photo_keywords'], '', 'photo_keywords');
 		$photo_order = form_sanitizer($_POST['photo_order'], '', 'photo_order');
 		$photo_comments = isset($_POST['photo_comments']) ? "1" : "0";
 		$photo_ratings = isset($_POST['photo_ratings']) ? "1" : "0";
@@ -435,7 +436,7 @@ if (function_exists('gd_info')) {
 					$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order+1) WHERE photo_order<'$old_photo_order' AND photo_order>='$photo_order' AND album_id='".$_GET['album_id']."'");
 				}
 				$update_photos = $photo_file ? "photo_filename='$photo_file', photo_thumb1='$photo_thumb1', photo_thumb2='$photo_thumb2', " : "";
-				$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_title='$photo_title', photo_description='$photo_description', ".$update_photos."photo_datestamp='".time()."', photo_order='$photo_order', photo_allow_comments='$photo_comments', photo_allow_ratings='$photo_ratings' WHERE photo_id='".$_GET['photo_id']."'");
+				$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_title='$photo_title', photo_description='$photo_description', photo_keywords='$photo_keywords', ".$update_photos."photo_datestamp='".time()."', photo_order='$photo_order', photo_allow_comments='$photo_comments', photo_allow_ratings='$photo_ratings' WHERE photo_id='".$_GET['photo_id']."'");
 				$rowstart = $photo_order > $settings['thumbs_per_page'] ? ((ceil($photo_order/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
 				redirect(FUSION_SELF.$aidlink."&status=su&album_id=".$_GET['album_id']."&rowstart=$rowstart");
 			} else {
@@ -443,7 +444,7 @@ if (function_exists('gd_info')) {
 					$photo_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".$_GET['album_id']."'"), 0)+1;
 				}
 				$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order+1) WHERE photo_order>='$photo_order' AND album_id='".$_GET['album_id']."'");
-				$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('".$_GET['album_id']."', '$photo_title', '$photo_description', '$photo_file', '$photo_thumb1', '$photo_thumb2', '".time()."', '".$userdata['user_id']."', '0', '$photo_order', '$photo_comments', '$photo_ratings')");
+				$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_keywords, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('".$_GET['album_id']."', '$photo_title', '$photo_description', '$photo_keywords', '$photo_file', '$photo_thumb1', '$photo_thumb2', '".time()."', '".$userdata['user_id']."', '0', '$photo_order', '$photo_comments', '$photo_ratings')");
 				$rowstart = $photo_order > $settings['thumbs_per_page'] ? ((ceil($photo_order/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
 				redirect(FUSION_SELF.$aidlink."&status=sn&album_id=".$_GET['album_id']."&rowstart=$rowstart");
 			}
@@ -453,12 +454,13 @@ if (function_exists('gd_info')) {
 	$album_title = $data3['album_title'];
 	// data callback
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
-		$result = dbquery("SELECT photo_title, photo_description, photo_filename, photo_thumb1, photo_thumb2, photo_order, photo_allow_comments, photo_allow_ratings FROM ".DB_PHOTOS." WHERE photo_id='".$_GET['photo_id']."'");
+		$result = dbquery("SELECT photo_title, photo_description, photo_keywords, photo_filename, photo_thumb1, photo_thumb2, photo_order, photo_allow_comments, photo_allow_ratings FROM ".DB_PHOTOS." WHERE photo_id='".$_GET['photo_id']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$photo_id = $_GET['photo_id'];
 			$photo_title = $data['photo_title'];
 			$photo_description = $data['photo_description'];
+			$photo_keywords = $data['photo_keywords'];
 			$photo_filename = $data['photo_filename'];
 			$photo_thumb1 = $data['photo_thumb1'];
 			$photo_thumb2 = $data['photo_thumb2'];
@@ -474,6 +476,7 @@ if (function_exists('gd_info')) {
 	} else {
 		$photo_title = "";
 		$photo_description = "";
+		$photo_keywords = "";
 		$photo_filename = "";
 		$photo_thumb1 = "";
 		$photo_thumb2 = "";
@@ -496,6 +499,7 @@ if (function_exists('gd_info')) {
 	echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 	echo form_text($locale['432'], 'photo_title', 'photo_title', $photo_title, array('max_length' => 100, 'required' => 1, 'error_text' => ''));
 	echo form_textarea($locale['433'], 'photo_description', 'photo_description', $photo_description, array('bbcode' => 1, 'autosize'=>1, 'resize'=>0));
+	echo form_text($locale['441'], 'photo_keywords', 'photo_keywords', $photo_keywords, array('max_length' => 250));
 	if (!isset($_GET['action'])) {
 		echo form_fileinput($locale['436'], 'photo_pic_file', 'photo_pic_file', PHOTODIR, '', array('type' => 'image', 'thumbnail_path'=>PHOTODIR, 'required' => 1, 'error_text' => $locale['421']));
 	}

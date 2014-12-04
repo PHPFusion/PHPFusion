@@ -43,6 +43,7 @@ if (isset($_POST['uninstall'])) {
 			album_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			photo_title VARCHAR(100) NOT NULL DEFAULT '',
 			photo_description TEXT NOT NULL,
+			photo_keywords VARCHAR(250) NOT NULL DEFAULT '',
 			photo_filename VARCHAR(100) NOT NULL DEFAULT '',
 			photo_thumb1 VARCHAR(100) NOT NULL DEFAULT '',
 			photo_thumb2 VARCHAR(100) NOT NULL DEFAULT '',

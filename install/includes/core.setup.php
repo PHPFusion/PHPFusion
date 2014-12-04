@@ -136,6 +136,7 @@ if (isset($_POST['uninstall'])) {
 				page_title VARCHAR(200) NOT NULL DEFAULT '',
 				page_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 				page_content TEXT NOT NULL,
+				page_keywords VARCHAR(250) NOT NULL DEFAULT '',
 				page_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 				page_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 				page_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',

@@ -30,6 +30,7 @@ $locale['437'] = "Enable Comments";
 $locale['438'] = "Enable Ratings";
 $locale['439'] = "Save Photo";
 $locale['440'] = "Cancel";
+$locale['441'] = "Keywords (separate each keyword with a ,):";
 // Current Photos
 $locale['450'] = "No image";
 $locale['451'] = "Click to view";

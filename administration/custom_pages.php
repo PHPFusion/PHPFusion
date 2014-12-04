@@ -52,6 +52,7 @@ if (isset($_POST['save'])) {
 	$page_title = stripinput($_POST['page_title']);
 	$page_access = isnum($_POST['page_access']) ? $_POST['page_access'] : "0";
 	$page_content = addslash($_POST['page_content']);
+	$page_keywords = stripinput($_POST['page_keywords']);
 	$page_language = stripinput($_POST['page_language']);
 	$comments = isset($_POST['page_comments']) ? "1" : "0";
 	$ratings = isset($_POST['page_ratings']) ? "1" : "0";
@@ -61,15 +62,16 @@ if (isset($_POST['save'])) {
 					page_title='".$page_title."',
 					page_access='".$page_access."',
 					page_content='".$page_content."',
+					page_keywords='".$page_keywords."',
 					page_allow_comments='".$comments."',
 					page_allow_ratings='".$ratings."',
 					page_language='".$page_language."'
 					WHERE page_id='".$_POST['page_id']."'");
 		} else {
 			$result = dbquery("INSERT INTO ".DB_CUSTOM_PAGES." (
-					page_title, page_access, page_content, page_allow_comments, page_allow_ratings, page_language
+					page_title, page_access, page_content, page_keywords, page_allow_comments, page_allow_ratings, page_language
 				) VALUES (
-					'".$page_title."', '".$page_access."', '".$page_content."', '".$comments."', '".$ratings."', '".$page_language."'
+					'".$page_title."', '".$page_access."', '".$page_content."', '".$page_keywords."', '".$comments."', '".$ratings."', '".$page_language."'
 				)");
 			if ($pdo_enabled == "1") {
 				$page_id = $pdo->lastInsertId();
@@ -105,6 +107,7 @@ if (isset($_POST['save'])) {
 		$page_title = stripinput($_POST['page_title']);
 		$page_access = $_POST['page_access'];
 		$page_content = stripslash($_POST['page_content']);
+		$page_keywords = stripinput($_POST['page_keywords']);
 		$page_language = stripslash($_POST['page_language']);
 		$comments = isset($_POST['page_comments']) ? " checked='checked'" : "";
 		$ratings = isset($_POST['page_ratings']) ? " checked='checked'" : "";
@@ -146,6 +149,7 @@ if (isset($_POST['save'])) {
 			$page_access = $data['page_access'];
 			$page_language = $data['page_language'];
 			$page_content = phpentities(stripslashes($data['page_content']));
+			$page_keywords = $data['page_keywords'];
 			$comments = ($data['page_allow_comments'] == "1" ? " checked='checked'" : "");
 			$ratings = ($data['page_allow_ratings'] == "1" ? " checked='checked'" : "");
 			$addlink = "";
@@ -160,6 +164,7 @@ if (isset($_POST['save'])) {
 			$page_title = "";
 			$page_access = "";
 			$page_content = "";
+			$page_keywords = "";
 			$page_language = LANGUAGE;
 			$comments = " checked='checked'";
 			$ratings = " checked='checked'";
@@ -199,6 +204,10 @@ if (isset($_POST['save'])) {
 	echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='page_content'>".$locale['424']."</label></td>\n";
 	echo "<td width='80%' class='tbl'>\n";
 	echo form_textarea('', 'page_content', 'page_content', $page_content);
+	echo "</td>\n</tr>\n<tr>\n";
+	echo "<td class='tbl'><label for='page_title'>".$locale['432']."</label></td>\n";
+	echo "<td class='tbl'>\n";
+	echo form_text('', 'page_keywords', 'page_keywords', $page_keywords, array('width' => '300px', 'class' => 'pull-left m-r-10'));
 	echo "</td>\n</tr>\n<tr>\n";
 	if (!isset($_COOKIE['custom_pages_tinymce']) || !$_COOKIE['custom_pages_tinymce'] || !$settings['tinymce_enabled']) {
 		echo "<td class='tbl'></td><td class='tbl'>\n";
