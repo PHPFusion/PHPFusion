@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: forum_include.php
 | Author: Nick Jones (Digitanium)
@@ -15,8 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
+
+// Upload acceptable types for Forum
 $imagetypes = array(".bmp", ".gif", ".iff", ".jpg", ".jpeg", ".png", ".psd", ".tiff", ".wbmp");
+$attachtypes = explode(",", $settings['attachtypes']);
+
+/* deprecate - replicated filename_exists function */
 function attach_exists($file) {
 	$dir = FORUM."attachments/";
 	$i = 1;
@@ -130,7 +137,7 @@ function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
 		$img_w = $size [0];
 		$img_h = $size [1];
 	}
-	$res = "<a target='_blank' href='".FORUM."attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img src='".FORUM."attachments/".$file."' alt='".$file."' style='border:0px; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
+	$res = "<a target='_blank' href='".FORUM."attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img class='img-thumbnail' src='".FORUM."attachments/".$file."' alt='".$file."' style='border:0px; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
 	return $res;
 }
 
@@ -152,4 +159,18 @@ if (isset($_GET['getfile']) && isnum($_GET['getfile'])) {
 	}
 	exit;
 }
+
+function define_forum_mods($info) {
+	if (iSUPERADMIN) { define("iMOD", TRUE); }
+	if (!defined("iMOD") && iMEMBER && $info['forum_mods']) {
+		$mod_groups = explode(".", $info['forum_mods']);
+		foreach ($mod_groups as $mod_group) {
+			if (!defined("iMOD") && checkgroup($mod_group)) {
+				define("iMOD", TRUE);
+			}
+		}
+	}
+	if (!defined("iMOD")) { define("iMOD", FALSE);}
+}
+
 ?>
