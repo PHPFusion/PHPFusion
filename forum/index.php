@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: index.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,323 +15,382 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 require_once dirname(__FILE__)."../../maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum/main.php";
+require_once INCLUDES."forum_include.php";
+include THEMES."templates/global/forum.index.php";
+$info = array();
+$info['lastvisited'] = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
 
+$_GET['forum_id'] =  (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
+$_GET['forum_cat'] =  (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? $_GET['forum_cat'] : 0;
+$_GET['forum_branch'] =  (isset($_GET['forum_branch']) && isnum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0;
+$_GET['parent_id'] =  (isset($_GET['parent_id']) && isnum($_GET['parent_id'])) ? $_GET['parent_id'] : 0;
+$ext = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '';
+/* Lets do a new forum */
+// start via templating now.
+// todo: Your post, New post, unread post, unanswered post, active topics, search, members, the team.
+$forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
+/* Push breadcrumb */
 add_to_title($locale['global_200'].$locale['400']);
-opentable($locale['400']);
-$tab_title['title'][] = $locale['401'];
-$tab_title['id'][] = "thread";
-$tab_title['icon'][] = "";
-$tab_title['title'][] = $locale['global_021'];
-$tab_title['id'][] = "latest";
-$tab_title['icon'][] = "";
-$tab_title['title'][] = $locale['global_056'];
-$tab_title['id'][] = "tracked";
-$tab_title['icon'][] = "";
-$tab_active = isset($_GET['section']) ? tab_active($tab_title, 0) : 'thread';
 
-echo "<div class='panel tbl-border p-0'>\n";
-echo "<div class='display-inline-block pull-right' style='max-width:250px;'>\n";
-echo openform('searchform', 'searchform', 'post'," ".($settings['site_seo'] == "1" ? FUSION_ROOT : '').$settings['siteurl']."search.php?stype=forums", array('downtime' => 0));
-echo form_hidden('stype', 'stype', 'stype', 'forums');
-echo form_text('', 'stext', 'stext', '', array('placeholder' => $locale['550'], 'append_button' => 1));
-echo closeform();
-echo "</div>\n";
+/* Sanitize Globals */
+$_GET['forum_id'] =  (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
+$_GET['forum_cat'] =  (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? $_GET['forum_cat'] : 0;
+$_GET['forum_branch'] =  (isset($_GET['forum_branch']) && isnum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0;
+$_GET['parent_id'] =  (isset($_GET['parent_id']) && isnum($_GET['parent_id'])) ? $_GET['parent_id'] : 0;
+$ext = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '';
+/* Page navigation */
+$info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$_GET['parent_id']."'"); // need max rows
+$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows']) ? $_GET['rowstart'] : '0';
 
-echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM."index.php");
-// == using ID as key
-echo opentabbody($tab_title['title'], $tab_active, $tab_active, FORUM."index.php");
-if (isset($_GET['section']) && $_GET['section'] == 'latest') {
-	latest();
-} elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
-	echo tracked();
-} elseif (!isset($_GET['section']) || isset($_GET['section']) && $_GET['section'] == 'thread') {
-	echo forum();
-}
-echo closetabbody();
-closetable();
-// Main Forum Category Function.
-function forum() {
-	global $locale, $userdata, $settings;
-	$forum_list = "";
-	$current_cat = "";
-	$forumCollapsed = FALSE;
-	$forumCollapse = TRUE;
-	if (!isset($lastvisited) || !isnum($lastvisited)) {
-		$lastvisited = time();
-	}
-	$catWhere = "";
-	$catID = "";
-	if (isset($_GET['cat']) && isnum($_GET['cat'])) {
-		$check = dbcount("(forum_id)", DB_FORUMS, "forum_id='cat' AND forum_cat='0'");
-		if ($check == 0) {
-			$catID = $_GET['cat'];
-			$catWhere = "f2.forum_id='".$catID."' AND";
+$info['posts_per_page'] = $settings['posts_per_page'];
+$info['threads_per_page'] = $settings['threads_per_page'];
+
+$forum_list = "";
+$current_cat = "";
+$forumCollapsed = FALSE;
+$forumCollapse = TRUE;
+/*
+ * 	add_to_title($locale['global_201'].$data['forum_name']);
+	set_meta("description", $data['forum_name']);
+ */
+if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['parent_id']) && isnum($_GET['parent_id']) && isset($_GET['viewforum'])) {
+	// view forum.
+	//add_to_title($locale['global_201'].$fdata['forum_name']);
+	/* Filter Core */
+	//$col_time = 't.thread_lastpost';
+	// init
+	$sort = isset($_GET['sort']) ? $_GET['sort'] : '';
+	$time = isset($_GET['time']) ? $_GET['time'] : '';
+	$type = isset($_GET['type']) ? $_GET['type'] : '';
+	$order = isset($_GET['order']) ? $_GET['order'] : '';
+	$timeCol = '';
+	$typeCol = '';
+	if ($time) {
+		$time_array = array(
+			'today' => strtotime('today'),
+			'2days' => strtotime('-2 day'),
+			'1week' => strtotime('-1 week'),
+			'2week' => strtotime('-2 week'),
+			'1month' => strtotime('-2 month'),
+			'2month' => strtotime('-2 month'),
+			'3month' => strtotime('-2 month'),
+			'6month' => strtotime('-6 month'),
+			'1year' => strtotime('-1 year'),
+		);
+
+		$time_stop = '';
+		foreach($time_array as $key =>$value) {
+			if ($time == $key) {
+				$time_stop = prev($time_array);
+				$time_stop = prev($time_array);
+				break;
+			}
 		}
+		// Debug
+		//print_p($time_array);
+		//print_p($time_array[$time]);
+		//print_p($time_stop);
+
+		if ($time !=='today') {
+			$timeCol = "AND ((post_datestamp >= '".$time_array[$time]."' OR t.thread_lastpost >= '".$time_array[$time]."') AND (post_datestamp <= '".$time_stop."' OR t.thread_lastpost <= '".$time_stop."')) ";
+		} else {
+			$timeCol = "AND (post_datestamp >= '".$time_array[$time]."' OR t.thread_lastpost >= '".$time_array[$time]."') ";
+		}
+
 	}
-	$result = dbquery("SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,
-        f.forum_threadcount, f.forum_lastuser, f.forum_access, f2.forum_id AS forum_cat_id, f2.forum_name AS forum_cat_name, f2.forum_description AS forum_cat_description,
-        t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
-        u.user_id, u.user_name, u.user_status, u.user_avatar
-        FROM ".DB_FORUMS." f
-        LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-        LEFT JOIN ".DB_THREADS." t ON f.forum_id = t.forum_id AND f.forum_lastpost=t.thread_lastpost
-        LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
-        ".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".$catWhere." ".groupaccess('f.forum_access')." AND f.forum_cat!='0'
-        GROUP BY forum_id ORDER BY f2.forum_order ASC, f.forum_order ASC, t.thread_lastpost DESC");
-	$i = 0;
-	if (dbrows($result) != 0) {
-		echo "<div class='panel-body m-t-20 p-0'>\n";
+	if ($type) {
+		$type_array = array(
+			'all' => '',
+			'discussions' => "AND (attach_name IS NULL or attach_name='') AND (forum_poll_title IS NULL or forum_poll_title='')",
+			'attachments' => "AND attach_name !='' AND (forum_poll_title IS NULL or forum_poll_title='')",
+			'poll' => "AND (attach_name IS NULL or attach_name='')  AND forum_poll_title !=''",
+			'solved' => "AND t.thread_answered = '1'",
+			'unsolved' => "AND t.thread_answered = '0'",
+		);
+		$typeCol = $type_array[$type];
+	}
+	// sort
+	$sortCol = "ORDER BY t.thread_lastpost ";
+	$orderCol = 'ASC';
+	if ($sort) {
+		$sort_array = array(
+			'author'=>'t.thread_author',
+			'time'=> 't.thread_lastpost',
+			'subject'=>'t.thread_subject',
+			'reply' => 't.thread_postcount',
+			'view' => 't.thread_views'
+		);
+		$sortCol = "ORDER BY ".$sort_array[$sort]." ";
+	}
+	if ($order) {
+		$order_array = array(
+			'ascending' => 'ASC',
+			'descending' => 'DESC'
+		);
+		$orderCol = $order_array[$order];
+	}
+
+	$sql_condition = $timeCol.$typeCol;
+	$sql_order = $sortCol.$orderCol;
+
+	// Filter Links
+	$timeExt = isset($_GET['time']) ? "&amp;time=".$_GET['time'] : '';
+	$typeExt = isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '';
+	$sortExt = isset($_GET['sort']) ? "&amp;sort=".$_GET['sort'] : '';
+	$orderExt = isset($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
+	$baseLink = FORUM.'index.php?viewforum&amp;forum_id='.$_GET['forum_id'].'&amp;parent_id='.$_GET['parent_id'].'&amp;';
+	$timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
+	$info['filter']['time'] = array(
+		'All Time' => FORUM.'index.php?viewforum&amp;forum_id='.$_GET['forum_id'].'&amp;parent_id='.$_GET['parent_id'],
+		'Today' => $timeLink.'&amp;time=today', // must be static.
+		'2 Days' => $timeLink.'&amp;time=2days',
+		'1 Week'=> $timeLink.'&amp;time=1week',
+		'2 Weeks' => $timeLink.'&amp;time=2week',
+		'1 Month' => $timeLink.'&amp;time=1month',
+		'2 Months' => $timeLink.'&amp;time=2month',
+		'3 Months' => $timeLink.'&amp;time=3month',
+		'6 Months' => $timeLink.'&amp;time=6month',
+		'1 Year' => $timeLink.'&amp;time=1year'
+	);
+	$typeLink = $baseLink.$timeExt.$sortExt.$orderExt;
+	$info['filter']['type'] = array(
+		'All Topics' => $typeLink.'&amp;type=all',
+		'Discussions' => $typeLink.'&amp;type=discussions',
+		'Attachments' => $typeLink.'&amp;type=attachments',
+		'Polls' => $typeLink.'&amp;type=poll',
+		'Solved' => $typeLink.'&amp;type=solved',
+		'Unsolved' => $typeLink.'&amp;type=unsolved',
+	);
+	$sortLink = $baseLink.$timeExt.$typeExt.$orderExt;
+	$info['filter']['sort'] = array(
+		'Author' => $sortLink.'&amp;sort=author',
+		'Post time' => $sortLink.'&amp;sort=time',
+		'Subject' => $sortLink.'&amp;sort=subject',
+		'Replies' => $sortLink.'&amp;sort=reply',
+		'Views' => $sortLink.'&amp;sort=view',
+	);
+	$orderLink = $baseLink.$timeExt.$typeExt.$sortExt;
+	$info['filter']['order'] = array(
+		'Descending' => $orderLink.'&amp;order=descending',
+		'Ascending' => $orderLink.'&amp;order=ascending'
+	);
+
+	$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
+				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
+				u.user_id, u.user_name, u.user_status, u.user_avatar
+				FROM ".DB_FORUMS." f
+				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
+				LEFT JOIN ".DB_THREADS." t ON f.forum_lastpostid=t.thread_lastpostid
+				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser=u.user_id
+				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')."
+				AND f.forum_id='".$_GET['forum_id']."' OR f.forum_cat='".$_GET['forum_id']."' OR f.forum_branch='".$_GET['forum_branch']."'
+				ORDER BY forum_cat ASC
+				");
+	$refs = array();
+	if (dbrows($result)>0) {
 		while ($data = dbarray($result)) {
-			if ($catID != "") {
-				add_to_title($locale['global_201'].$data['forum_cat_name']);
-				set_meta("description", $data['forum_cat_name']);
-			}
-			if ($data['forum_cat_name'] != $current_cat) {
-				if ($i > 0) {
-					echo "</tbody></table>\n<!--sub_forum_idx_table-->\n";
-				}
-				$current_cat = $data['forum_cat_name'];
-				$forumStatus = ($forumCollapsed ? "off" : "on");
-				$boxname = "forum_".$data['forum_id'];
-				$element = "tbody";
-				if ($i == 0) {
-					echo "<!--pre_forum_idx-->";
-				}
-				echo "<div class='forum-table-container panel-body'><strong><a href='".BASEDIR."forum/index.php?cat=".$data['forum_cat']."'>".$data['forum_cat_name']."</a></strong>";
-				if ($data['forum_cat_description']) {
-					echo " - <span class='forum-cat-description'>".nl2br(parseubb($data['forum_cat_description']))."</span>";
-				}
-				echo "</div>\n";
-				echo "<table class='forum_idx_table table table-responsive' id='forum_cat_".$data['forum_cat']."' cellpadding='0' cellspacing='0' width='100%'>\n<thead>\n<tr class='forum-cat-head'>\n";
-				echo "<th class='forum-caption forum_cat_name' colspan='2'><!--forum_cat_name-->";
-				echo $locale['412'];
-				echo "</th>\n";
-				echo "<th class='forum-caption' width='1%' style='white-space:nowrap'>".$locale['402']."</th>\n";
-				echo "<th class='forum-caption' width='1%' style='white-space:nowrap'>".$locale['403']."</th>\n";
-				echo "<th class='forum-caption' style='width: 250px;'><span class='flleft'>".$locale['404']."</span>".($forumCollapse ? "<div class='flright'>".panelbutton($forumStatus, $boxname)."</div>\n" : "")."</th>\n";
-				echo "</tr>\n</thead>\n";
-				echo($forumCollapse ? "".panelstate($forumStatus, $boxname, "tbody")."\n" : "<tbody>");
-			}
-			$i++;
-			$moderators = "";
-			if ($data['forum_moderators']) {
-				$mod_groups = explode(".", $data['forum_moderators']);
-				foreach ($mod_groups as $mod_group) {
-					if ($moderators) $moderators .= ", ";
-					$moderators .= $mod_group < 101 ? "<a href='".BASEDIR."profile.php?group_id=".$mod_group."'>".getgroupname($mod_group)."</a>" : getgroupname($mod_group);
-				}
-			}
-			$forum_match = "\|".$data['forum_lastpost']."\|".$data['forum_id'];
-			$fclass = 'icon-old';
-			if ($data['forum_lastpost'] > $lastvisited) {
-				if (iMEMBER && ($data['forum_lastuser'] == $userdata['user_id'] || preg_match("({$forum_match}\.|{$forum_match}$)", $userdata['user_threads']))) {
-					$fim = "<img src='".get_image("folder")."' title='".$locale['561']."' />";
-				} else {
-					$fim = "<img class='img-responsive' src='".get_image("foldernew")."' title='".$locale['560']."' />";
-					$fclass = 'icon-new';
-				}
+			$thisref = &$refs[$data['forum_id']];
+			$thisref = $data;
+			// do a last post here. keep compare and replace until the end of loop.
+			if ($data['forum_cat'] == $_GET['parent_id']) {
+				$info['item'][$data['forum_id']] = &$thisref;
 			} else {
-				$fim = "<img class='img-responsive' src='".get_image("folder")."' title='".$locale['561']."' />";
+				$refs[$data['forum_cat']]['child'][$data['forum_id']] = &$thisref;
 			}
-			echo "<tr id='forum_".$data['forum_id']."' >\n";
-			echo "<td class='tbl2 forum-icon ".$fclass."' width='1%'>".$fim."</td>\n";
-			echo "<td class='tbl1 forum-name'><!--forum_name--><h3><a href='".FORUM."viewforum.php?forum_id=".$data['forum_id']."'>".$data['forum_name']."</a></h3>\n";
-			if ($data['forum_description'] || $moderators) {
-				echo "<span class='forum-description small'>".nl2br(parseubb($data['forum_description']))."</span>".($data['forum_description'] && $moderators ? "<br />\n" : "");
-				echo ($moderators ? "<span class='forum-moderators'><strong>".$locale['411']."</strong>".$moderators."</span>\n" : "")."\n";
-			}
-			echo "</td>\n";
-			echo "<td class='tbl forum-stats text-center'>\n";
-			echo number_format($data['forum_threadcount']);
-			echo "</td>\n";
-			echo "<td class='tbl2 forum-stats text-center'>\n";
-			echo number_format($data['forum_postcount']);
-			echo "</td>\n";
-			echo "<td class='tbl1 forum-lastpost'>";
-			if ($data['forum_lastpost'] == 0) {
-				echo $locale['405']."</td>\n</tr>\n";
-			} else {
-				echo "<div class='clearfix'>\n";
-				if ($settings['forum_last_post_avatar'] == 1) {
-					echo "<div class='pull-left lastpost-avatar m-r-10'>".display_avatar($data, '60px')."</div>";
-				}
-				echo "<a class='lastpost-title' href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 25)."</a> ";
-				echo "<a class='lastpost-goto' href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>";
-				if ($data['forum_lastpost'] > $lastvisited) {
-					if (iMEMBER && preg_match("({$forum_match}\.|{$forum_match}$)", $userdata['user_threads'])) {
-						$fim = "<img src='".get_image("lastpost")."' alt='".$locale['404']."' title='".$locale['404']."' />";
-					} else {
-						$fim = "<img src='".get_image("lastpostnew")."' alt='".$locale['404']."' title='".$locale['404']."' />";
+
+			// post permission of the current forum view.
+			if ($data['forum_id'] == $_GET['forum_id'] && $data['forum_type'] !=='1') {
+				add_to_title($locale['global_201'].$data['forum_name']);
+				$info['post_access'] = ($data['forum_post']) ? checkgroup($data['forum_post']) : 0;
+				// define mods
+				define_forum_mods($data);
+				// get thread and apply filter
+				$info['thread_item_rows'] = dbcount("('t.thread_id')",
+												DB_THREADS." t
+												LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
+												LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
+												LEFT JOIN ".DB_POSTS." p1 ON p1.thread_id = t.thread_id
+												LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
+												LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id",
+												"t.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' $sql_condition
+												");
+
+				$_GET['rowstart_thread'] = isset($_GET['rowstart_thread']) && isnum($_GET['rowstart_thread']) && $_GET['rowstart_thread'] <= $info['thread_item_rows'] ? $_GET['rowstart_thread'] : 0;
+
+				$t_result = dbquery("SELECT t.*, tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
+                tu2.user_name AS last_user_name, tu2.user_status AS last_user_status, tu2.user_avatar AS last_user_avatar,
+                p1.post_datestamp,
+                a.attach_name, p.forum_poll_title,
+                count(v.post_id) AS vote_count
+                FROM ".DB_THREADS." t
+                LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
+                LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
+                LEFT JOIN ".DB_POSTS." p1 ON p1.thread_id = t.thread_id
+                LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
+                LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
+                LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
+                WHERE t.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' $sql_condition
+                GROUP BY t.thread_id $sql_order LIMIT ".$_GET['rowstart'].", ".$info['threads_per_page']."
+                ");
+
+				if (dbrows($t_result)>0) {
+					while ($tdata = dbarray($t_result)) {
+						//print_p($tdata);
+						$tdata['forum_type'] = $data['forum_type'];
+						if ($tdata['thread_sticky']) {
+							$info['threads']['sticky'][$tdata['thread_id']] = $tdata;
+						} else {
+							$info['threads']['item'][$tdata['thread_id']] = $tdata;
+						}
 					}
+				}
+			}
+		}
+	} else {
+		//echo "lang fail";
+		redirect("index.php");
+	}
+
+
+}
+elseif (isset($_GET['section']) && $_GET['section'] == 'mypost') {
+	include FORUM."sections/my_posts.php";
+}
+elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
+	include FORUM."sections/laft.php";
+}
+elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
+	include FORUM."sections/tracked.php";
+}
+else {
+	// index
+	// this might fetch category which is not output --- still can be optimized by 1 level?
+	$result = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
+			tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost,
+			t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
+        	u.user_id, u.user_name, u.user_status, u.user_avatar
+			FROM ".DB_FORUMS." tf
+			LEFT JOIN ".DB_THREADS." t ON tf.forum_id = t.forum_id AND tf.forum_lastpost = t.thread_lastpost
+        	LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
+	 		".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tf.forum_cat='".$_GET['parent_id']."'
+	 		GROUP BY tf.forum_id ORDER BY tf.forum_order ASC, t.thread_lastpost DESC
+	 		");
+	if (dbrows($result)>0) {
+		while ($data = dbarray($result)) {
+
+			/* Show moderators */
+			$moderators = '';
+			if ($data['forum_mods']) {
+				$_mgroup = explode('.', $data['forum_mods']);
+				if (!empty($_mgroup)) {
+					foreach ($_mgroup as $mod_group) {
+						if ($moderators) $moderators .= ", ";
+						$moderators .= $mod_group < 101 ? "<a href='".BASEDIR."profile.php?group_id=".$mod_group."'>".getgroupname($mod_group)."</a>" : getgroupname($mod_group);
+					}
+				}
+			}
+			$data['moderators'] = $moderators;
+			// push
+			$info['item'][$data['forum_id']] = $data;
+
+			$check_child = dbcount("('forum_id')" , DB_FORUMS, "".(multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." ".groupaccess('forum_access')." AND forum_cat='".$data['forum_id']."'");
+
+			if ($check_child !=0) {
+				if ($data['forum_type'] == '1') {
+					// Max info to show sub-forum data when the parent is a category.
+					$c_result = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
+								tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
+								t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
+								u.user_id, u.user_name, u.user_status, u.user_avatar
+								FROM ".DB_FORUMS." tf
+								LEFT JOIN ".DB_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
+								LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
+								".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tf.forum_cat='".$data['forum_id']."'
+								GROUP BY tf.forum_id ORDER BY tf.forum_order ASC, t.thread_lastpost DESC
+							");
 				} else {
-					$fim = "<img src='".get_image("lastpost")."' alt='".$locale['404']."' title='".$locale['404']."' />";
+					$c_result = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
+								tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost
+								FROM ".DB_FORUMS." tf
+								".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tf.forum_cat='".$data['forum_id']."'
+								GROUP BY tf.forum_id ORDER BY tf.forum_order ASC
+								");
 				}
-				//echo $fim;
-				echo "</a>$fim <br />\n";
-				echo "<span class='lastpost-user small'>".$locale['by']." ".profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status'])."</span><br />\n";
-				echo "<span class='lastpost-date small'>".showdate("forumdate", $data['forum_lastpost'])."</span> \n";
-				echo "</div>\n</td>\n";
-				echo "</tr>\n";
+				if (dbrows($c_result)>0) {
+					while ($cdata = dbarray($c_result)) {
+						$info['item'][$data['forum_id']]['child'][$cdata['forum_id']] = $cdata;
+						// another level down if it is a category
+						if ($data['forum_type'] == '1') {
+							$check_subforums = dbcount("('forum_id')", DB_FORUMS, "".(multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." ".groupaccess('forum_access')." AND forum_cat='".$cdata['forum_id']."'");
+							if ($check_subforums) {
+								$d_result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name FROM ".DB_FORUMS."
+											".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')." AND forum_cat='".$cdata['forum_id']."'
+											");
+								if (dbrows($d_result)>0) {
+									while ($sub = dbarray($d_result)) {
+										$info['item'][$data['forum_id']]['child'][$cdata['forum_id']]['child'][] = $sub;
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
-		echo "</tbody>\n</table>\n<!--sub_forum_idx_table-->\n";
-		echo "</div>\n</div>\n";
-	} else {
-		echo $locale['407']."\n";
 	}
 }
+forum_breadcrumbs($forum_index);
+render_forum($info);
 
-function latest() {
-	global $locale, $settings;
-	$_GET['rowstart'] = 0;
-	$result = dbquery("SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,
-            f.forum_threadcount, f.forum_lastuser, f.forum_access, f2.forum_id AS forum_cat_id, f2.forum_name AS forum_cat_name, f2.forum_description AS forum_cat_description,
-            t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll, t.thread_lastpost,
-            u.user_id, u.user_name, u.user_status, u.user_avatar,
-            uc.user_id AS s_user_id, uc.user_name AS s_user_name, uc.user_status AS s_user_status, uc.user_avatar AS s_user_avatar
-            FROM ".DB_FORUMS." f
-            LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-            LEFT JOIN ".DB_THREADS." t ON f.forum_id = t.forum_id AND f.forum_lastpost=t.thread_lastpost
-            LEFT JOIN ".DB_USERS." u ON u.user_id=t.thread_lastuser
-            LEFT JOIN ".DB_USERS." uc ON uc.user_id=t.thread_author
-            ".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_cat!='0' AND t.thread_hidden='0' ".(isset($_POST['filter']) && $_POST['filter'] ? "AND t.thread_lastpost < '".(time()-($_POST['filter']*24*3600))."'" : '')."
-            GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$_GET['rowstart'].", ".$settings['numofthreads']."");
-	if (dbrows($result) > 0) {
-		echo "<div class='forum-table-container panel-body'>\n";
-		echo "<strong>".$locale['global_021']."</strong>\n";
-		echo "</div>\n";
-		echo "<table class='forum_idx_table table table-responsive' cellpadding='0' cellspacing='0' width='100%'>\n<thead>\n<tr class='forum-cat-head'>\n";
-		echo "<th class='forum-caption forum_cat_name'><!--forum_cat_name-->";
-		echo "Directory";
-		echo "</th>\n";
-		echo "<th class='forum-caption' width='1%' style='white-space:nowrap'>".$locale['402']."</th>\n";
-		echo "<th class='forum-caption' width='1%' style='white-space:nowrap'>".$locale['403']."</th>\n";
-		echo "<th class='forum-caption' style='width: 250px;'>".$locale['404']."</th>\n";
-		echo "</tr>\n</thead>\n<tbody>\n";
-		while ($data = dbarray($result)) {
-			$itemsubject = trimlink($data['thread_subject'], 23);
-			echo "<tr id='forum_".$data['forum_id']."' >\n";
-			$sdata['user_avatar'] = $data['s_user_avatar'];
-			echo "<td class='tbl1 forum-name'><!--forum_name--><h3><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."'>".$itemsubject."</a></h3>\n";
-			echo "<div class='m-t-10'>\n".$locale['by']." ".display_avatar($sdata, '25px')." ".profile_link($data['s_user_id'], $data['s_user_name'], $data['s_user_status'])." ".$locale['in']." <a href='".FORUM."index.php?cat_id=".$data['forum_id']."'>".$data['forum_name']."</a> ".$locale['of']." <a href='".FORUM."index.php?cat_id=".$data['forum_cat_id']."'>".$data['forum_cat_name']."</a>\n</div>\n";
-			echo "</td>\n";
-			echo "<td class='tbl forum-stats text-center'>\n";
-			echo number_format($data['forum_threadcount']);
-			echo "</td>\n";
-			echo "<td class='tbl2 forum-stats text-center'>\n";
-			echo number_format($data['forum_postcount']);
-			echo "</td>\n";
-			echo "<td class='tbl1 forum-lastpost'>";
-			if ($data['forum_lastpost'] == 0) {
-				echo $locale['405']."</td>\n</tr>\n";
-			} else {
-				echo "<div class='clearfix'>\n";
-				if ($settings['forum_last_post_avatar'] == 1) {
-					echo "<div class='pull-left lastpost-avatar m-r-10'>".display_avatar($data, '50px')."</div>";
+
+
+/* 	Autopush Breadcrumb (better to Core)
+| 	Note that this function is not the same as the admin one
+|	The back end do not require current directory detail.
+|	Hence, the parent_id was actual forum_id in admin,
+|	but here the parent_id is forum_cat
+*/
+
+function forum_breadcrumbs() {
+	global $aidlink, $forum_index;
+	/* Make an infinity traverse */
+	function breadcrumb_arrays($index, $id) {
+		global $aidlink;
+		$crumb = &$crumb;
+		//$crumb += $crumb;
+		if (isset($index[get_parent($index, $id)])) {
+			$_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
+			$crumb = array('link'=>FORUM."index.php?viewforum&amp;forum_id=".$_name['forum_id']."&amp;parent_id=".$_name['forum_cat'], 'title'=>$_name['forum_name']);
+			if (isset($index[get_parent($index, $id)])) {
+				if (get_parent($index, $id) == 0) {
+					return $crumb;
 				}
-				echo "<span class='lastpost-user small'>".$locale['by']." ".profile_link($data['forum_lastuser'], $data['user_name'], $data['user_status'])."</span><br />\n";
-				echo "<span class='lastpost-date small'>".showdate("forumdate", $data['forum_lastpost'])."</span> \n";
-				echo "</div>\n</td>\n";
-				echo "</tr>\n";
+				$crumb_1 = breadcrumb_arrays($index, get_parent($index, $id));
+				$crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
 			}
 		}
-		echo "</tbody>\n</table>\n";
-	} else {
-		echo "<div class='well text-center'>\n".$locale['global_023']."</div>\n";
+		return $crumb;
 	}
-	echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
-	$opts = array('0' => 'All Results', '1' => '1 Day', '7' => '7 Days', '14' => '2 Weeks', '30' => '1 Month',
-				  '90' => '3 Months', '180' => '6 Months', '365' => '1 Year');
-	echo openform('filter_form', 'filter_form', 'post', FORUM."index.php?section=latest", array('downtime' => 0));
-	echo form_button($locale['go'], 'go', 'go', $locale['go'], array('class' => 'btn-primary pull-right'));
-	echo form_select('', 'filter', 'filter', $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '200px', 'class' => 'pull-right m-l-10 m-r-10'));
-	echo "<label for='filter' class='pull-right'>".$locale['413']."</label>\n";
-	echo closeform();
-	echo "</div>\n</div>\n";
-}
-
-function tracked() {
-	global $userdata, $locale, $settings;
-	if (!iMEMBER) {
-		redirect("../../index.php");
-	}
-	if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")) {
-		$result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);
-		redirect(FUSION_SELF);
-	}
-	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
-		$_GET['rowstart'] = 0;
-	}
-	$result = dbquery("SELECT tn.thread_id FROM ".DB_THREAD_NOTIFY." tn
-            INNER JOIN ".DB_THREADS." tt ON tn.thread_id = tt.thread_id
-            INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-            WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'");
-	$rows = dbrows($result);
-	if ($rows) {
-		$result = dbquery("
-                SELECT tf.forum_id, tf.forum_name, tf.forum_access, tn.thread_id, tn.notify_datestamp, tn.notify_user,
-                ttc.forum_id AS forum_cat_id, ttc.forum_name AS forum_cat_name,
-                tt.thread_subject, tt.forum_id, tt.thread_lastpost, tt.thread_lastpostid, tt.thread_lastuser, tt.thread_postcount,
-                tu.user_id AS user_id1, tu.user_name AS user_name1, tu.user_status AS user_status1, tu.user_avatar AS user_avatar1,
-                tu2.user_id AS user_id2, tu2.user_name AS user_name2, tu2.user_status AS user_status2, tu2.user_avatar AS user_avatar2
-                FROM ".DB_THREAD_NOTIFY." tn
-                INNER JOIN ".DB_THREADS." tt ON tn.thread_id = tt.thread_id
-                INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
-                LEFT JOIN ".DB_FORUMS." ttc ON ttc.forum_id = tf.forum_cat
-                LEFT JOIN ".DB_USERS." tu ON tt.thread_author = tu.user_id
-                LEFT JOIN ".DB_USERS." tu2 ON tt.thread_lastuser = tu2.user_id
-                INNER JOIN ".DB_POSTS." tp ON tt.thread_id = tp.thread_id
-                WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'
-                GROUP BY tn.thread_id
-                ORDER BY tn.notify_datestamp DESC
-                LIMIT ".$_GET['rowstart'].",10
-            ");
-		echo "<div class='forum-table-container panel-body'>\n";
-		echo "<strong>".$locale['global_056']."</strong>\n";
-		echo "</div>\n";
-		echo "<table class='forum_idx_table table table-responsive'>\n<thead>\n<tr class='forum-cat-head'>\n";
-		echo "<th class='forum-caption forum_cat_name'><!--forum_cat_name-->";
-		echo $locale['global_044'];
-		echo "</th>\n";
-		echo "<th class='forum-caption' width='1%' style='white-space:nowrap'>".$locale['403']."</th>\n";
-		echo "<th class='forum-caption' style='width:250px' style='white-space:nowrap'>".$locale['404']."</th>\n";
-		echo "<th class='forum-caption' width='1%''>".$locale['global_057']."</th>\n";
-		echo "</tr>\n</thead>\n<tbody>\n";
-		$i = 0;
-		while ($data = dbarray($result)) {
-			$sdata['user_avatar'] = $data['user_avatar1'];
-			$sdata2['user_avatar'] = $data['user_avatar2'];
-			$itemsubject = trimlink($data['thread_subject'], 23);
-			echo "<tr>\n";
-			echo "<td class='tbl1 forum-name'><!--forum_name--><h3><a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."'>".$itemsubject."</a></h3>\n";
-			echo "<div class='m-t-10'>\n".$locale['by']." ".display_avatar($sdata, '25px')." ".profile_link($data['user_id1'], $data['user_name1'], $data['user_status1'])." ".$locale['in']." <a href='".FORUM."index.php?cat_id=".$data['forum_id']."'>".$data['forum_name']."</a> ".$locale['of']." <a href='".FORUM."index.php?cat_id=".$data['forum_cat_id']."'>".$data['forum_cat_name']."</a>\n</div>\n";
-			echo "</td>\n";
-			echo "<td class='tbl2' style='text-align:center;white-space:nowrap'>".($data['thread_postcount']-1)."</td>\n";
-			echo "<td class='tbl1 forum-lastpost'>";
-			if ($data['thread_lastpost'] == 0) {
-				echo $locale['405']."</td>\n";
-			} else {
-				echo "<div class='clearfix'>\n";
-				if ($settings['forum_last_post_avatar'] == 1) {
-					echo "<div class='pull-left lastpost-avatar m-r-10'>".display_avatar($sdata2, '50px')."</div>";
-				}
-				echo "<span class='lastpost-user small'>".$locale['by']." ".profile_link($data['user_id2'], $data['user_name2'], $data['user_status2'])."</span><br />\n";
-				echo "<span class='lastpost-date small'>".showdate("forumdate", $data['thread_lastpost'])."</span> \n";
-				echo "</div>\n</td>\n";
-			}
-			echo "<td class='tbl1 text-center'><a class='btn btn-default' href='".FUSION_SELF."?delete=".$data['thread_id']."' onclick=\"return confirm('".$locale['global_060']."');\">".$locale['global_058']."</a></td>\n";
-			echo "</tr>\n";
-			$i++;
+	// then we make a infinity recursive function to loop/break it out.
+	$crumb = breadcrumb_arrays($forum_index, $_GET['forum_id']);
+	// then we sort in reverse.
+	if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
+	// then we loop it out using Dan's breadcrumb.
+	add_to_breadcrumbs(array('link'=>FORUM.'index.php', 'title'=>'Forum Board Index'));
+	if (count($crumb['title']) > 1) {
+		foreach($crumb['title'] as $i => $value) {
+			add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$value));
 		}
-		echo "</table>\n";
-		echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";
-	} else {
-		echo "<div style='text-align:center;'>".$locale['global_059']."</div>\n";
+	} elseif (isset($crumb['title'])) {
+		add_to_breadcrumbs(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
 	}
+	// hola!
 }
 
 require_once THEMES."templates/footer.php";
+
 ?>
