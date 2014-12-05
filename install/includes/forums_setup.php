@@ -25,6 +25,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."posts");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."threads");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."thread_notify");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_votes");
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_attachments");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_ranks");
@@ -35,16 +36,28 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."posts");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."threads");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."thread_notify");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_votes");
 
 	$result = dbquery("CREATE TABLE ".$db_prefix."forum_attachments (
 			attach_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 			thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			attach_name VARCHAR(100) NOT NULL DEFAULT '',
-			attach_ext VARCHAR(5) NOT NULL DEFAULT '',
+			attach_mime VARCHAR(20) NOT NULL DEFAULT '',
 			attach_size INT(20) UNSIGNED NOT NULL DEFAULT '0',
 			attach_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			PRIMARY KEY (attach_id)
+			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+	if (!$result) {
+		$fail = TRUE;
+	}
+	$result = dbquery("CREATE TABLE ".$db_prefix."forum_votes (
+			forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			vote_points DECIMAL(3,0) NOT NULL DEFAULT '',
+			vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	if (!$result) {
 		$fail = TRUE;
@@ -96,23 +109,35 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("CREATE TABLE ".$db_prefix."forums (
 			forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 			forum_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			forum_branch MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_name VARCHAR(50) NOT NULL DEFAULT '',
+			forum_type TINYINT(1) NOT NULL DEFAULT '1',
+			forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15',
+			forum_lock TINYINT(1) NOT NULL DEFAULT '0',
 			forum_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
 			forum_description TEXT NOT NULL,
-			forum_moderators TEXT NOT NULL,
+			forum_rules TEXT NOT NULL,
+			forum_mods TEXT NOT NULL,
 			forum_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 			forum_post SMALLINT(3) UNSIGNED DEFAULT '101',
 			forum_reply SMALLINT(3) UNSIGNED DEFAULT '101',
 			forum_poll SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
 			forum_vote SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
-			forum_attach SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
+			forum_image VARCHAR(100) NOT NULL DEFAULT '',
+			forum_post_ratings SMALLINT(3) UNSIGNED NOT NULL DEFAULT '101',
+			forum_users TINYINT(1) NOT NULL DEFAULT '0',
+			forum_allow_attach SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
 			forum_attach_download SMALLINT(3) UNSIGNED NOT NULL DEFAULT'0',
+			forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0',
+			forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '',
 			forum_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			forum_postcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_threadcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_lastuser MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_merge TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 			forum_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+			forum_meta TEXT NOT NULL,
+			forum_alias VARCHAR(50) NOT NULL DEFAULT '',
 			PRIMARY KEY (forum_id),
 			KEY forum_order (forum_order),
 			KEY forum_lastpost (forum_lastpost),
