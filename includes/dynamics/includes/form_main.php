@@ -31,18 +31,9 @@ function openform($form_name, $form_id, $method, $action, array $options = array
 	return $html;
 }
 
-function form_rowstart() {
-	return "<div class='inline field'>\n";
-}
-
-function form_rowend() {
-	return "</div>\n";
-}
-
 function closeform() {
 	$html = '';
 	$html .= "</form>\n";
 	return $html;
 }
-
 ?>

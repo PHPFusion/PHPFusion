@@ -78,7 +78,7 @@ function form_checkbox($title, $input_name, $input_id, $input_value, array $opti
 	$html .= "<label class='control-label col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0' for='$input_id'>\n";
 	$html .= "<input id='$input_id' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['deactivate'] ? 'readonly' : '')." ".($input_value == '1' ? 'checked' : '')." />\n";
 	$html .= "$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=".$options['required']."".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."' readonly />";
+	$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=".$options['required']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."'/>";
 	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
 	$html .= "</div>\n";
 	return $html;

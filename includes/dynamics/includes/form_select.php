@@ -60,7 +60,7 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 	} else {
 		// normal mode
 		$html .= "<select name='$input_name' id='$input_id' style='width: ".($options['width'] && $title ? $options['width'] : "250px")."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
-		$html .= ($options['allowclear']) ? "<option value=''> </option>" : "";
+		$html .= ($options['allowclear']) ? "<option value=''></option>" : '';
 		if (is_array($option_array)) {
 			foreach ($option_array as $arr => $v) { // outputs: key, value, class - in order
 				$chain = ''; $select = '';
@@ -227,7 +227,7 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
                 $('#".$input_id."').select2({
                 $length
                 multiple: true,
-                maximumSelectionSize: ".$options['maximum_selection'].",
+                maximumSelectionSize: ".$options['maxselect'].",
                 placeholder: '".$options['placeholder']."',
                 ajax: {
                 url: '$path',
