@@ -17,7 +17,7 @@ $locale['step5'] = "Step 5: Configure Core System";
 $locale['step6'] = "Step 6: Primary Admin Details";
 $locale['final'] = "Step 7: Final Settings";
 // Buttons
-$locale['006'] = "Finish Cofiguration";
+$locale['006'] = "Finish Configuration";
 $locale['007'] = "Next";
 $locale['008'] = "Try Again";
 $locale['009'] = "Finish";
