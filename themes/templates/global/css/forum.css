@@ -1,0 +1,125 @@
+#forum_tabs, #post_tabs {
+	padding:0;
+	margin-bottom:20px;
+}
+#forum_tabs > li, #post_tabs > li {
+	margin-right:5px;
+}
+#forum_tabs > li:first-child, #post_tabs > li:first-child {
+	margin-left:15px;
+}
+#forum_tabs > li > a, #post_tabs > li > a {
+	padding: 10px 10px !important;
+	font-size:13px;
+	font-weight: 600;
+	color: rgb(59, 89, 152);
+}
+.post_title, .thread_title {
+	font-size:14px;
+	font-weight: 600;
+}
+
+.forum-new-icon {
+	margin-bottom:-10px; position:absolute; z-index:1;
+	float:left;
+}
+.forum-new-icon > .entypo {
+	color:rgb(92, 184, 92); font-size:20px;
+}
+.forum-thumbnail {
+	width:50px; overflow: hidden;
+}
+.forum-list {
+	border:0; border-top:1px solid #ddd;
+}
+
+.panel > .nav-wrapper > ul {
+	padding: 10px 15px 0 !important;
+	background-color: rgb(245,245,245);
+	border-radius: 5px 5px 0 0;
+}
+.panel > .nav-wrapper > .tab-content {
+	padding: 15px 15px 10px !important;
+}
+.forum-icon {
+	width: 16px;
+}
+.thread-subject, .forum-subject {
+	font-weight: 600;
+	font-size:14px !important;
+}
+.thread-header {
+	font-weight: 600;
+	color: rgb(0,0,0);
+	font-size:25px;
+	margin-bottom:20px;
+}
+.forum-subject {
+	font-size:14px;
+}
+.forum-subforum, .forum_track {
+	font-size:12px;
+	font-weight: 600;
+}
+.forum-description {
+	padding:0;
+	font-size:12px;
+}
+.thread_subheader {
+	border-bottom: 1px solid rgb(204, 204, 204);
+	padding:10px 0;
+}
+.thread_date {
+	font-weight:400;
+	font-size:11px !important;
+	color: rgba(0,0,0,0.45);
+}
+.thread_pagenav {
+	color: rgb(0,0,0);
+	font-size:12px;
+}
+.thread-footer {
+	font-size:12px;
+	padding:3px 0px;
+	background-color: rgba(242, 242, 242, 0.3);
+	border-top: 1px solid rgb(204, 204, 204);
+}
+
+/* Posts */
+.forum_cat {
+	font-weight:600;
+	margin-bottom:15px;
+	display: inline-block;
+}
+.forum_rank {
+	font-size:11px;
+}
+.forum_profile_link a {
+	font-size:12px !important;
+	font-weight: 600;
+}
+.profile-link  {
+	font-size: 14px !important;
+}
+.forum_date, .forum_user_post_count {
+	font-size:11px;
+	color: rgba(0,0,0,0.55);
+}
+.forum_user_actions {
+	font-size:11px;
+	font-weight: 600;
+}
+.forum_sig {
+	font-size:11px;
+}
+.forum_thread_user_post {
+	font-size:13px;
+	margin:15px 0;
+	color: rgb(0,0,0);
+}
+.edit_reason > a, .reason_div {
+	font-size:11px !important;
+}
+#input_form > .panel > .nav-wrapper {
+	margin-top:0;
+}
