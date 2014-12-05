@@ -167,10 +167,6 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 		echo form_button($locale['1012'], 'step', 'step', '6', array('class' => 'btn-primary btn-sm m-r-10'));
 		echo "</div>\n";
 
-		echo "<div class='well'>\n";
-		echo "<span class='strong display-inline-block m-b-10'>".$locale['1010']."</span>\n<br/><p>".$locale['1011']."</p>";
-		echo form_button($locale['1012'], 'step', 'step', '6', array('class' => 'btn-primary btn-sm m-r-10'));
-		echo "</div>\n";
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
 
 		if (isset($db_prefix)) {
