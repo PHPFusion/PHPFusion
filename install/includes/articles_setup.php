@@ -63,6 +63,26 @@ if (isset($_POST['uninstall'])) {
 	} else {
 		$fail = TRUE;
 	}
+
+	// admin pages
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('AC', 'article_cats.gif', '".$locale['081']."', 'article_cats.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('A', 'articles.gif', '".$locale['082']."', 'articles.php', '1')");
+	// panel
+	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['163']."', 'latest_articles_panel', '', '1', '5', 'file', '0', '0', '1', '')");
+	// links
+	$enabled_languages = explode('.', $settings['enabled_languages']);
+	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+		include LOCALE.$enabled_languages[$i]."/setup.php";
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['131']."', 'articles.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')");
+		if (!$result) { $fail = TRUE; }
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['142']."', 'submit.php?stype=a', '101', '1', '0', '14', '".$enabled_languages[$i]."')");
+		if (!$result) { $fail = TRUE; }
+	}
+
+
+
+
+
 }
 
 

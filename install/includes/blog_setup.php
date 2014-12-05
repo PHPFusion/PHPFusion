@@ -91,7 +91,17 @@ if (isset($_POST['uninstall'])) {
 		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['195']."', 'windows.gif', '".$enabled_languages[$i]."')");
 	}
 
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('BLC', 'blog_cats.gif', '".$locale['130a']."', 'blog_cats.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('BLOG', 'blog.gif', '".$locale['130b']."', 'blog.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S13', 'settings_blog.gif', '".$locale['130b']."', 'settings_blog.php', '4')");
 
+	// site links
+	$enabled_languages = explode('.', $settings['enabled_languages']);
+	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+		include LOCALE.$enabled_languages[$i]."/setup.php";
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130b']."', 'blog.php', '0', '2', '0', '3', '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
+	}
 }
 
 

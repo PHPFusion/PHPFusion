@@ -26,6 +26,10 @@ define("THEMES", BASEDIR."themes/");
 define("USER_IP", $_SERVER['REMOTE_ADDR']);
 if (!defined('DYNAMICS')) { define('DYNAMICS', INCLUDES."dynamics/"); }
 
+//$siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
+//$url = parse_url($siteurl);
+//var_dump($url);
+
 if (isset($_POST['localeset']) && file_exists(LOCALE.$_POST['localeset']) && is_dir(LOCALE.$_POST['localeset'])) {
 	include LOCALE.$_POST['localeset']."/setup.php";
 	define("LOCALESET", $_POST['localeset']."/");
@@ -840,7 +844,6 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 		renderButton(1);
 
 	} elseif ($rows == 0) {
-
 		echo "<br />\n".$locale['077']."<br /><br />\n".$error;
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
 		echo "<input type='hidden' name='error_pass' value='".$error_pass."' />\n";
@@ -850,9 +853,7 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 		echo "<input type='hidden' name='email' value='".$email."' />\n";
 		echo "<input type='hidden' name='step' value='6' />\n";
 		echo "<button type='submit' name='back' value=".$locale['008']."' class='btn btn-md btn-warning'><i class='entypo cw'></i> ".$locale['008']."</button>\n";
-
 	} else {
-
 		echo "<div class='m-b-20'><h4>".$locale['7001']."</h4> ".$locale['7002']."</div>\n";
 		echo "<div class='m-b-10'>".$locale['7003']."</div>\n";
 		echo "<div class='m-b-10'>".$locale['7004']."</div>\n";
@@ -861,6 +862,8 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 		renderButton(1);
 	}
 }
+
+// Step 8 - ?
 closesetup();
 
 ?>
