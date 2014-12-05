@@ -638,8 +638,8 @@ class UserFieldsInput {
 	// API 1.02
 	private function _saveUserLog() {
 		$i = 0;
-		$sql = "";
-		global $userdata;
+		$sql = "INSERT INTO ".DB_USER_LOG." (userlog_user_id, userlog_field, userlog_value_new, userlog_value_old, userlog_timestamp) VALUES ";
+
 		$this->_findDB();
 		foreach ($this->_userLogData AS $field => $value) {
 			// get old value.
@@ -653,11 +653,11 @@ class UserFieldsInput {
 			} else {
 				$old_value = $this->userData[$field];
 			}
-			$sql = "INSERT INTO ".DB_USER_LOG." (userlog_user_id, userlog_field, userlog_value_new, userlog_value_old, userlog_timestamp) VALUES ";
+			
 			$sql .= ($i > 0 ? ", " : "")."('".$this->userData['user_id']."', '".$field."', '".$value."', '$old_value', '".time()."')";
 			$i++;
 		}
-		if ($sql != "") {
+		if ($i > 0) {
 			$result = dbquery($sql);
 		}
 	}
