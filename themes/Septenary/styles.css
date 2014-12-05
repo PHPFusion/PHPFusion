@@ -104,22 +104,21 @@ body {
 	background: -ms-linear-gradient(top, #DBDBDB 0%, #DDD 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #DBDBDB 0%, #DDD 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBDBDB', endColorstr='#DDDDDD', GradientType=0); /* IE6-8 */
-	color: #555;
-	font: 14px/21px 'NotoSans', 'Helvetica Neue', Arial, Tahoma, Century gothic, sans-serif !important;
+	color: #000;
+	font: 13px/20px 'Lucida Grande', 'Helvetica Neue', Arial, Tahoma, Century gothic, sans-serif !important;
 }
 
-a {
-	color: #606C88;
+.main-content a {
+	color: rgb(59, 89, 152);
 	text-decoration: none;
 }
-
 a:hover {
 	color: #7D828E;
 	text-decoration: none;
 }
 
 a.side {
-	color: rgb(51, 153, 255);
+	color: rgb(51, 153, 255) !important;
 	text-decoration: underline;
 	-webkit-transition: 0.3s ease-in-out;
 	-moz-transition: 0.3s ease-in-out;
@@ -667,7 +666,7 @@ ul.list li a:hover {
 }
 
 .tab-content {
-	padding: 10px 0px;
+	padding: 0px 0px;
 }
 
 /* Login Form */
@@ -711,7 +710,7 @@ ul.list li a:hover {
 }
 
 .admin-message {
-	font-size: 15px;
+	font-size: 12px;
 	margin-bottom: 20px;
 }
 
@@ -798,7 +797,7 @@ ul.list li a:hover {
 .textbox {
 	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
 	font-size: 12px;
-	color: #A0A09E;
+	color: rgb(0,0,0);
 	background: #F2F2F2;
 	border: 1px solid #CACACA;
 	border-radius: 2px;
@@ -807,7 +806,12 @@ ul.list li a:hover {
 	margin: 0 0 2px;
 	padding: 5px 2px 5px 5px;
 }
-
+.textbox:focus {
+	background: #FFF;
+}
+.control-label {
+	margin-bottom:10px;
+}
 div.emulated-fieldset {
 	position: relative;
 	margin: 20px 0px 10px 0px;
