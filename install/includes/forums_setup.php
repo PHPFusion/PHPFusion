@@ -56,8 +56,8 @@ if (isset($_POST['uninstall'])) {
 			thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			vote_points DECIMAL(3,0) NOT NULL DEFAULT '',
-			vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+			vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
+			vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0'
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	if (!$result) {
 		$fail = TRUE;
@@ -130,7 +130,7 @@ if (isset($_POST['uninstall'])) {
 			forum_allow_attach SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
 			forum_attach_download SMALLINT(3) UNSIGNED NOT NULL DEFAULT'0',
 			forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0',
-			forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '',
+			forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			forum_postcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_threadcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
