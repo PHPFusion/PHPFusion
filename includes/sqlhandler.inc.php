@@ -442,13 +442,17 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 		$url = (array_key_exists("url", $options)) ? $options['url'] : "";
 		$debug = (array_key_exists("debug", $options) && $options['debug'] == 1) ? 1 : 0;
 		$pkey = (array_key_exists("primary_key", $options)) ? $options['primary_key'] : 0;
+		$no_unique = (array_key_exists("no_unique", $options)) ? 1 : 0;
 	} else {
 		$redirect = "1";
 		$url = "";
 		$debug = 0;
 		$pkey = 0;
+		$no_unique = 0;
 	}
+
 	if (!defined("FUSION_NULL")) {
+
 		$columns = fieldgenerator($db);
 		$col_rows = count($columns);
 		$col_names = array();
@@ -456,11 +460,12 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 		// for save, status=success
 		// for update, status=updated
 		// for delete, status=del
+		//@todo: optimize code later. there are repeated sections.
 		// Prime Module
 		foreach ($columns as $arr => $v) {
-			if ($pkey) {
-				// using PKEY - when the UNIQUE Auto Increment Column is NOT in the first column.
-				if ($mode == "save" && $pkey !==$v) {
+			if ($no_unique) {
+				// no_unique  - that every single column have a value.
+				if ($mode == "save") { // if have AI column, just save in.
 					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
 				} elseif ($mode == "update") {
 					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v"; // all with no comma
@@ -483,9 +488,34 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v=''" : "$v='',";
 					}
 				}
-
+			} elseif ($pkey) {
+				// using PKEY - when the UNIQUE Auto Increment Column is NOT in the first column. - not to save on AI.
+				if ($mode == "save" && $pkey !==$v) {
+				//if ($mode == "save") { // if have AI column, just save in.
+					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
+				} elseif ($mode == "update") {
+					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v"; // all with no comma
+				}
+				// check whether there is a value or not.
+				if (array_key_exists($v, $inputdata)) {
+					$values = $inputdata[$v]; // go through the super sanitizer first.
+					/* if (isset($error) && ($values == $error)) {
+						redirect(FUSION_SELF.$aidlink."&status=error".($error ? "&error=$error" : ""));
+					} */
+					if ($mode == "save") {
+						$sanitized_input[] = ($arr == ($col_rows-1)) ? "'$values'" : "'$values',";
+					} elseif ($mode == "update") {
+						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v='$values'" : "$v='$values',";
+					}
+				} else {
+					if ($mode == "save" && $pkey !==$v) {
+						$sanitized_input[] = ($arr == ($col_rows-1)) ? "''" : "'',";
+					} elseif ($mode == "update") {
+						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v=''" : "$v='',";
+					}
+				}
 			} else {
-				// we assume that UNIQUE Auto Increment is The First Column.
+				// Skip 1st column - we assume that UNIQUE Auto Increment is The First Column.
 				if ($arr !== 0) {
 					if ($mode == "save") {
 						$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
@@ -606,6 +636,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 			die();
 		}
 	} else {
+		echo 'yes';
 		notify('Script stopped as an illegal operation is found.', 'Fusion Defender stopped SQL, auto exit before execution.');
 	}
 }
