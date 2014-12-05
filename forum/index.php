@@ -18,7 +18,7 @@
 
 require_once dirname(__FILE__)."../../maincore.php";
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."forum/main.php";
+include LOCALE.LOCALESET."forum.php";
 require_once INCLUDES."forum_include.php";
 include THEMES."templates/global/forum.index.php";
 $info = array();
@@ -34,7 +34,7 @@ $ext = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? "&amp;parent_id=
 // todo: Your post, New post, unread post, unanswered post, active topics, search, members, the team.
 $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 /* Push breadcrumb */
-add_to_title($locale['global_200'].$locale['400']);
+add_to_title($locale['global_200'].$locale['forum_0000']);
 
 /* Sanitize Globals */
 $_GET['forum_id'] =  (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;

@@ -18,7 +18,7 @@
 require_once dirname(__FILE__)."../../maincore.php";
 require_once INCLUDES."forum_include.php";
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."forum/main.php";
+include LOCALE.LOCALESET."forum.php";
 // Load Template
 include THEMES."templates/global/forum.index.php";
 
@@ -29,7 +29,7 @@ $_GET['forum_cat'] = (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? 
 $_GET['forum_branch'] = (isset($_GET['forum_branch']) && isnum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0;
 $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart'])) ? $_GET['rowstart'] : '0';
 $edit_reason = FALSE;
-add_to_title($locale['global_200'].$locale['400']);
+add_to_title($locale['global_200'].$locale['forum_0000']);
 
 $info = array();
 $info['posts_per_page'] = $settings['posts_per_page'];
@@ -166,19 +166,19 @@ if (dbrows($result) > 0) {
 	if (iMEMBER && $settings['thread_notify']) {
 		if (dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
 			$result2 = dbquery("UPDATE ".DB_THREAD_NOTIFY." SET notify_datestamp='".time()."', notify_status='1' WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
-			$info['notify'] = array('link'=>FORUM."postify.php?post=off&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['515']);
+			$info['notify'] = array('link'=>FORUM."postify.php?post=off&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['forum_0174']);
 		} else {
-			$info['notify'] = array('link'=>FORUM."postify.php?post=on&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['516']);
+			$info['notify'] = array('link'=>FORUM."postify.php?post=on&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['forum_0175']);
 		}
 	}
-	$info['print'] = array('link'=>BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], 'name'=>$locale['519']);
+	$info['print'] = array('link'=>BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], 'name'=>$locale['forum_0178']);
 	if (iMEMBER) {
 		if (checkgroup($info['permissions']['can_post']) or checkgroup($info['permissions']['can_reply'])) {
 			if (checkgroup($info['permissions']['can_post'])) {
-				$info['newthread'] = array('link'=>FORUM."post.php?action=newthread&amp;forum_id=".$info['forum_id'], 'name'=>$locale['566']);
+				$info['newthread'] = array('link'=>FORUM."post.php?action=newthread&amp;forum_id=".$info['forum_id'], 'name'=>$locale['forum_0264']);
 			}
 			if (checkgroup($info['permissions']['can_reply']) && !$info['thread_locked']) {
-				$info['reply'] = array('link'=>FORUM."post.php?action=reply&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['650']);
+				$info['reply'] = array('link'=>FORUM."post.php?action=reply&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['forum_0360']);
 			}
 		}
 	}
@@ -253,7 +253,7 @@ if (dbrows($result) > 0) {
 		}
 		// Website
 		if (isset($data['user_web']) && $data['user_web'] && (iADMIN || $data['user_status'] != 6 && $data['user_status'] != 5)) {
-			$data['user_web'] = array('link'=>$data['user_web'], 'name'=>$locale['654']);
+			$data['user_web'] = array('link'=>$data['user_web'], 'name'=>$locale['forum_0364']);
 		}
 		// Message
 		if (iMEMBER && $data['user_id'] != $userdata['user_id'] && (iADMIN || $data['user_status'] != 6 && $data['user_status'] != 5)) {
@@ -261,7 +261,7 @@ if (dbrows($result) > 0) {
 		}
 		// IP
 		if (($settings['forum_ips'] && iMEMBER) || iMOD) {
-			$data['user_ip'] = $locale['571'].' '.$data['post_ip'];
+			$data['user_ip'] = $locale['forum_0268'].' '.$data['post_ip'];
 		}
 		// User Sig
 		if ($data['post_showsig'] && isset($data['user_sig']) && $data['user_sig'] && $data['user_status'] != 6 && $data['user_status'] != 5) {
@@ -270,12 +270,12 @@ if (dbrows($result) > 0) {
 		// Quote & Edit
 		if (iMEMBER && ($info['permissions']['can_post'] || $info['permissions']['can_reply'])) {
 			if (!$info['thread_locked']) {
-				$data['post_quote'] = array('link'=>FORUM."post.php?action=reply&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."&amp;quote=".$data['post_id'], 'name'=>$locale['569']);
+				$data['post_quote'] = array('link'=>FORUM."post.php?action=reply&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']."&amp;quote=".$data['post_id'], 'name'=>$locale['forum_0266']);
 				if (iMOD || (($info['permissions']['edit_lock'] && $info['post_lastpost'] == $data['post_id'] || !$info['permissions']['edit_lock'])) && ($userdata['user_id'] == $data['post_author']) && ($settings['forum_edit_timelimit'] <= 0 || time()-$settings['forum_edit_timelimit']*60 < $data['post_datestamp'])) {
-					$data['post_edit'] =  array('link'=>FORUM."post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id'], 'name'=>$locale['568']);
+					$data['post_edit'] =  array('link'=>FORUM."post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id'], 'name'=>$locale['forum_0265']);
 				}
 			} elseif (iMOD) {
-				$data['post_edit'] = array('link'=>FORUM."post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id'], 'name'=>$locale['568']);
+				$data['post_edit'] = array('link'=>FORUM."post.php?action=edit&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id'], 'name'=>$locale['forum_0265']);
 			}
 		}
 		// Voting - need up or down link - accessible to author also the vote
@@ -288,8 +288,8 @@ if (dbrows($result) > 0) {
 			if (checkgroup($info['forum_vote'])) { // everyone can vote as long pass checkgroup.
 				// check for own vote link.
 				if ($data['user_id'] !== $userdata['user_id']) {
-					$data['vote_up'] = array('link'=>FORUM."post.php?action=voteup&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id'], 'name'=>$locale['568']);
-					$data['vote_down'] = array('link'=>FORUM."post.php?action=votedown&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id'], 'name'=>$locale['568']);
+					$data['vote_up'] = array('link'=>FORUM."post.php?action=voteup&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id'], 'name'=>$locale['forum_0265']);
+					$data['vote_down'] = array('link'=>FORUM."post.php?action=votedown&amp;forum_id=".$data['forum_id']."&amp;thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id'], 'name'=>$locale['forum_0265']);
 				}
 				$data['vote_points'] = !empty($data['vote_points']) ? $data['vote_points'] : 0;
 				//print_p($data['vote_points']);
@@ -301,15 +301,15 @@ if (dbrows($result) > 0) {
 		$data['marker'] = array('link'=>"#post_".$data['post_id'], 'name'=>"#".($i+$_GET['rowstart']), 'id'=>"post_".$data['post_id']);
 
 		// Print
-		$data['print'] =  array('link'=>BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$data['post_id']."&amp;nr=".($i+$_GET['rowstart']), 'name'=>$locale['519a']);
+		$data['print'] =  array('link'=>BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$data['post_id']."&amp;nr=".($i+$_GET['rowstart']), 'name'=>$locale['forum_0179']);
 		// Edit Reason - NOT WORKING?
 		$data['edit_reason'] = '';
 		if ($data['post_edittime']) {
-			$edit_time = "<span class='text-smaller'>".$locale['508'].profile_link($data['post_edituser'], $data['edit_name'], $data['edit_status']).$locale['509'].showdate("forumdate", $data['post_edittime'])."</span>\n";
+			$edit_time = "<span class='text-smaller'>".$locale['forum_0164'].profile_link($data['post_edituser'], $data['edit_name'], $data['edit_status']).$locale['forum_0167'].showdate("forumdate", $data['post_edittime'])."</span>\n";
 			if ($data['post_editreason'] && iMEMBER) {
 				$edit_reason = TRUE;
 				$edit_time .= "<br /><div class='edit_reason'><a id='reason_pid_".$data['post_id']."' rel='".$data['post_id']."' class='reason_button small' href='#reason_div_pid_".$data['post_id']."'>";
-				$edit_time .= "<strong>".$locale['508a']."</strong>";
+				$edit_time .= "<strong>".$locale['forum_0165']."</strong>";
 				$edit_time .= "</a>\n";
 				$edit_time .= "<div id='reason_div_pid_".$data['post_id']."' class='reason_div small'>".$data['post_editreason']."</div></div>\n";
 			}
@@ -330,7 +330,7 @@ if (dbrows($result) > 0) {
 					$i_image++;
 				} else {
 					$data['attach-files'] .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;getfile=".$attach['attach_id']."'>".$attach['attach_name']."</a>&nbsp;";
-					$data['attach-files'] .= "[<span class='small'>".parsebytesize(filesize(FORUM."attachments/".$attach['attach_name']))." / ".$attach['attach_count'].$locale['507a']."</span>]</div>\n";
+					$data['attach-files'] .= "[<span class='small'>".parsebytesize(filesize(FORUM."attachments/".$attach['attach_name']))." / ".$attach['attach_count'].$locale['forum_0162']."</span>]</div>\n";
 					$i_files++;
 				}
 			}
@@ -342,7 +342,7 @@ if (dbrows($result) > 0) {
 					define('COLORBOX', true);
 					add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
 					add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-					add_to_jquery("$('a[rel^=\"attach\"]').colorbox({ current: '".$locale['506e']." {current} ".$locale['506f']." {total}',width:'80%',height:'80%'});");
+					add_to_jquery("$('a[rel^=\"attach\"]').colorbox({ current: '".$locale['forum_0159']." {current} ".$locale['forum_0160']." {total}',width:'80%',height:'80%'});");
 				}
 			}
 		}
@@ -455,7 +455,7 @@ if ($edit_reason) {
 	$edit_reason_js .= "jQuery('div[id^=\"reason_div_pid\"]').hide();";
 	$edit_reason_js .= "jQuery('div').find('a[id^=\"reason_pid\"]').css({cursor:'pointer'})";
 	$edit_reason_js .= ".removeAttr('href')";
-	$edit_reason_js .= ".attr('title','".str_replace("'", "&#39;", $locale['508b'])."')";
+	$edit_reason_js .= ".attr('title','".str_replace("'", "&#39;", $locale['forum_0166'])."')";
 	$edit_reason_js .= ".bind('click',function(){";
 	$edit_reason_js .= "jQuery('#reason_div_pid_'+this.rel).stop().slideToggle('fast');";
 	$edit_reason_js .= "});";

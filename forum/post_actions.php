@@ -17,7 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-add_to_title($locale['global_201'].$locale['401']);
+add_to_title($locale['global_201'].$locale['forum_0501']);
 
 // poll add option not adding option.
 $can_poll = $info['forum_poll'] && checkgroup($info['forum_poll']) ? 1  : 0;
@@ -276,15 +276,15 @@ if ($executable && iMEMBER) {
 						$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".$pdata2['post_datestamp']."', thread_lastpostid='".$pdata2['post_id']."', thread_postcount=thread_postcount-1, thread_lastuser='".$pdata2['post_author']."' WHERE thread_id='".$_GET['thread_id']."'");
 					}
 				}
-				add_to_title($locale['global_201'].$locale['407']);
+				add_to_title($locale['global_201'].$locale['forum_0506']);
 				//notify
-				opentable($locale['407']);
-				echo "<div style='text-align:center'><br />\n".$locale['445']."<br /><br />\n";
+				opentable($locale['forum_0506']);
+				echo "<div style='text-align:center'><br />\n".$locale['forum_0546']."<br /><br />\n";
 				if ($posts > 0) {
-					echo "<a href='viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['447']."</a> ::\n";
+					echo "<a href='viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
 				}
-				echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['448']."</a> ::\n";
-				echo "<a href='index.php'>".$locale['449']."</a><br /><br />\n</div>\n";
+				echo "<a href='viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+				echo "<a href='index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
 				closetable();
 			}
 		} else {
@@ -303,7 +303,7 @@ if ($executable && iMEMBER) {
 			if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'")) {
 				if ($info['forum_merge'] && $data['thread_lastuser'] == $userdata['user_id']) {
 					$mergeData = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
-					$data['post_message'] = $mergeData['post_message']."\n\n".$locale['520']." ".showdate("longdate", time()).":\n".$data['post_message'];
+					$data['post_message'] = $mergeData['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$data['post_message'];
 					$data['post_edittime'] = time();
 					$data['post_id'] = $mergeData['post_id'];
 					$data['post_edituser'] = $userdata['user_id'];
@@ -353,7 +353,7 @@ if ($executable && iMEMBER) {
 	elseif (isset($_POST['previewpost'])) {
 		// Prepare Preview Data
 		if (!$data['post_message']) {
-			$data['preview_message'] = $locale['421'];
+			$data['preview_message'] = $locale['forum_0520'];
 		} else {
 			$data['preview_message'] = $data['post_message'];
 			if ($data['post_showsig']) {

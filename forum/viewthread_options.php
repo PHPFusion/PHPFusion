@@ -95,18 +95,18 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 		if (dbrows($move_result)) {
 			$pdata = dbarray($move_result);
 			$num_posts = $pdata['num_posts'];
-			opentable($locale['600']);
+			opentable($locale['forum_0300']);
 			if ($f_post) {
 				echo "<div id='close-message'><div class='admin-message'>";
 				if ($num_posts != dbcount("(post_id)", DB_POSTS, "thread_id='".$pdata['thread_id']."'")) {
 					$dell_f_post = TRUE;
-					echo $locale['605']."<br />\n";
+					echo $locale['forum_0305']."<br />\n";
 				} else {
-					echo $locale['606']."<br />\n";
+					echo $locale['forum_0306']."<br />\n";
 				}
 				if ($dell_f_post && count($array_post) == 1) {
-					echo "<br /><strong>".$locale['607']."</strong><br /><br />\n";
-					echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['609']."</a>";
+					echo "<br /><strong>".$locale['forum_0307']."</strong><br /><br />\n";
+					echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['forum_0309']."</a>";
 					$f_post_blo = TRUE;
 				}
 				echo "</div></div>\n";
@@ -141,17 +141,17 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 					$forum_list .= "</optgroup>\n";
 					echo "<form name='modopts' method='post' action='".FUSION_SELF."?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>\n";
 					echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'>\n<tr>\n";
-					echo "<td style='padding-top:5px' align='center'>".$locale['601']."\n";
+					echo "<td style='padding-top:5px' align='center'>".$locale['forum_0301']."\n";
 					echo "<select name='new_forum_id' class='textbox'>\n$forum_list</select>\n";
 					foreach ($array_post as $value) {
 						echo "<input type='hidden' name='delete_post[]' value='".$value."' />\n";
 					}
 					echo "<input type='hidden' name='move_posts' value='1' />\n";
-					echo "<input type='submit' name='go' value='".$locale['602']."' class='button' /></td>\n</tr>\n</table>\n</form>\n";
+					echo "<input type='submit' name='go' value='".$locale['forum_0302']."' class='button' /></td>\n</tr>\n</table>\n</form>\n";
 				} else {
 					echo "<div id='close-message'><div class='admin-message'><br />\n";
-					echo "<strong>".$locale['610']."</strong><br /><br />\n";
-					echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['609']."</a><br /><br />\n";
+					echo "<strong>".$locale['forum_0310']."</strong><br /><br />\n";
+					echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['forum_0309']."</a><br /><br />\n";
 					echo "</div></div>";
 				}
 			} elseif (isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && !isset($_POST['new_thread_id']) && !$f_post_blo) {
@@ -169,18 +169,18 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 					}
 					echo "<form name='modopts' method='post' action='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;sv'>\n";
 					echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'>\n<tr>\n";
-					echo "<td style='padding-top:5px' align='center'>".$locale['603']."\n";
+					echo "<td style='padding-top:5px' align='center'>".$locale['forum_0303']."\n";
 					echo "<input type='hidden' name='new_forum_id' value='".$_POST['new_forum_id']."' />\n";
 					echo "<select name='new_thread_id' class='textbox' >\n$forum_list</select>\n";
 					foreach ($array_post as $value) {
 						echo "<input type='hidden' name='delete_post[]' value='".$value."' />\n";
 					}
 					echo "<input type='hidden' name='move_posts' value='1' />\n";
-					echo "<input type='submit' name='go' value='".$locale['604']."' class='button' /></td>\n";
+					echo "<input type='submit' name='go' value='".$locale['forum_0304']."' class='button' /></td>\n";
 					echo "</tr></table></form>";
 				} else {
-					echo "<div id='close-message'><div class='admin-message'>".$locale['608']."<br /><br />\n";
-					echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."'>".$locale['609']."</a>\n";
+					echo "<div id='close-message'><div class='admin-message'>".$locale['forum_0308']."<br /><br />\n";
+					echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."'>".$locale['forum_0309']."</a>\n";
 					echo "</div></div><br />\n";
 				}
 			} elseif (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id'])) {
@@ -267,7 +267,7 @@ if (isset($_POST['delete_posts']) && isset($_POST['delete_post']) && is_array($_
 	if ($message != "") {
 		opentable($locale['error-MP000']);
 		echo "<div id='close-message'><div class='admin-message'>".$message."<br /><br />\n";
-		echo "<a href='".FORUM."viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['609']."</a><br />";
+		echo "<a href='".FORUM."viewthread.php?thread_id=".$fdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['forum_0309']."</a><br />";
 		echo "</div></div>\n";
 		closetable();
 		require_once THEMES."templates/footer.php";

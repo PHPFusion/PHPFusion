@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once dirname(__FILE__)."../../maincore.php";
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."forum/post.php";
+include LOCALE.LOCALESET."forum.php";
 add_to_title($locale['global_204']);
 require_once INCLUDES."forum_include.php";
 require_once INCLUDES."bbcode_include.php";
@@ -98,9 +98,9 @@ elseif ((isset($_GET['action']) && $_GET['action'] == 'newthread') && ($info['fo
 		$data = dbarray($result);
 		if ($data['thread_locked']) { redirect(FORUM.'index.php'); }
 		$data['reply'] = 1;
-		add_to_title($locale['global_201'].$locale['403']);
+		add_to_title($locale['global_201'].$locale['forum_0503']);
 		add_to_breadcrumbs(array('link'=>FORUM."viewthread.php?thread_id=".$data['thread_id'], 'title'=>$data['thread_subject']));
-		add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['403']));
+		add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['forum_0503']));
 		if (isset($_GET['quote']) && isnum($_GET['quote'])) {
 			$quote_result = dbquery("SELECT a.post_message, b.user_name
 			FROM ".DB_POSTS." a
