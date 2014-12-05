@@ -23,14 +23,13 @@
 require_once "../maincore.php";
 require_once INCLUDES."bbcode_include.php";
 require_once THEMES."templates/render_functions.php";
-require_once INCLUDES."forum_functions_include.php";
-
 if (!checkrights("F") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
 	//redirect("../index.php");
 }
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/forums.php";
+require_once INCLUDES."forum_functions_include.php";
 
 /* Global Sanitize */
 $_GET['forum_id'] =  (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
@@ -76,6 +75,7 @@ elseif ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET[
 		prune_threads($_GET['forum_id']);
 		recalculate_post($_GET['forum_id']);
 		prune_forums('', $_GET['forum_id']); // without index, this prune will delete only one.
+		redirect(FUSION_SELF.$aidlink."&status=crf");
 	}
 }
 /* Delete Finalised - Remove */
@@ -135,23 +135,23 @@ elseif (isset($_POST['save_forum'])) {
 		}
 	}
 	// Then $data override if exist.
-	$data['forum_name'] = form_sanitizer($_POST['forum_name'], '', 'forum_name'); //
-	$data['forum_description'] = form_sanitizer($_POST['forum_description'], '', 'forum_description'); //
-	$data['forum_cat'] = form_sanitizer($_POST['forum_cat'], '', 'forum_cat'); //
-	$data['forum_type'] = form_sanitizer($_POST['forum_type'], '', 'forum_type'); //
-	$data['forum_language'] = form_sanitizer($_POST['forum_language'], '', 'forum_language'); //
-	$data['forum_alias'] = form_sanitizer($_POST['forum_alias'], '', 'forum_alias'); //
+	$data['forum_name'] = form_sanitizer($_POST['forum_name'], '', 'forum_name');
+	$data['forum_description'] = form_sanitizer($_POST['forum_description'], '', 'forum_description');
+	$data['forum_cat'] = form_sanitizer($_POST['forum_cat'], '', 'forum_cat');
+	$data['forum_type'] = form_sanitizer($_POST['forum_type'], '', 'forum_type');
+	$data['forum_language'] = form_sanitizer($_POST['forum_language'], '', 'forum_language');
+	$data['forum_alias'] = form_sanitizer($_POST['forum_alias'], '', 'forum_alias');
 	$data['forum_alias'] = $data['forum_alias'] ? str_replace(' ', '-', $data['forum_alias']) : '';
-	$data['forum_meta'] = form_sanitizer($_POST['forum_meta'], '', 'forum_meta'); //
-	$data['forum_rules'] = form_sanitizer($_POST['forum_rules'], '', 'forum_rules'); //
-	$data['forum_image_enable'] = isset($_POST['forum_image_enable']) ? 1 : 0; //
-	$data['forum_merge'] = isset($_POST['forum_merge']) ? 1 : 0; //
-	$data['forum_allow_attach'] = isset($_POST['forum_allow_attach']) ? 1 : 0; //
-	$data['forum_quick_edit'] = isset($_POST['forum_quick_edit']) ? 1 : 0; //
-	$data['forum_poll'] = isset($_POST['forum_poll']) ? 1 : 0; //
-	$data['forum_post_ratings'] = isset($_POST['forum_post_ratings']) ? 1 : 0; //
-	$data['forum_users'] = isset($_POST['forum_users']) ? 1 : 0; //
-	$data['forum_lock'] = isset($_POST['forum_lock']) ? 1 : 0; //
+	$data['forum_meta'] = form_sanitizer($_POST['forum_meta'], '', 'forum_meta');
+	$data['forum_rules'] = form_sanitizer($_POST['forum_rules'], '', 'forum_rules');
+	$data['forum_image_enable'] = isset($_POST['forum_image_enable']) ? 1 : 0;
+	$data['forum_merge'] = isset($_POST['forum_merge']) ? 1 : 0;
+	$data['forum_allow_attach'] = isset($_POST['forum_allow_attach']) ? 1 : 0;
+	$data['forum_quick_edit'] = isset($_POST['forum_quick_edit']) ? 1 : 0;
+	$data['forum_poll'] = isset($_POST['forum_poll']) ? 1 : 0;
+	$data['forum_allow_ratings'] = isset($_POST['forum_allow_ratings']) ? 1 : 0;
+	$data['forum_users'] = isset($_POST['forum_users']) ? 1 : 0;
+	$data['forum_lock'] = isset($_POST['forum_lock']) ? 1 : 0;
 	$data['forum_permissions'] = isset($_POST['forum_permissions']) ? form_sanitizer($_POST['forum_permissions'], 0, 'forum_permissions') : 0;
 	$data['forum_order'] = isset($_POST['forum_order']) ? form_sanitizer($_POST['forum_order']) : '';
 	// check integrity so far.
@@ -255,12 +255,19 @@ elseif (isset($_POST['save_forum'])) {
 		}
 
 		// forum_permissions
-		if ($data['forum_permissions']) {
+		if ($data['forum_permissions'] !=0) {
 			$p_fields = dbarray(dbquery("SELECT
 			forum_access, forum_post, forum_reply, forum_post_ratings, forum_poll, forum_vote, forum_answer_threshold, forum_attach, forum_attach_download, forum_mods
 			FROM ".DB_FORUMS." WHERE forum_id='".$data['forum_permissions']."'
 			"));
 			$data += $p_fields;
+		} else {
+			$data['forum_access'] = 0;
+			$data['forum_post'] = 101; // create new topics
+			$data['forum_reply'] = 101; // reply
+			$data['forum_post_ratings'] = 101; // cast vote on answers
+			$data['forum_poll'] = 101; // vote
+			$data['forum_vote'] = 101; // cast vote on poll.
 		}
 		if ($data['forum_id']) {
 			// check old order.
@@ -276,16 +283,26 @@ elseif (isset($_POST['save_forum'])) {
 			if (!$data['forum_order']) $data['forum_order'] = dbresult(dbquery("SELECT MAX(forum_order) FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$data['forum_cat']."'"), 0)+1;
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$data['forum_cat']."' AND forum_order>='".$data['forum_order']."'");
 			dbquery_insert(DB_FORUMS, $data, 'save', array('noredirect'=>1));
+			if ($pdo_enabled == 1) {
+				$this_forum_id = $pdo->lastInsertId();
+			} else {
+				$this_forum_id = mysql_insert_id();
+			}
 			if (!defined('FUSION_NULL')) {
 				$ext = isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '';
-				if ($data['forum_type'] == 1) {
-					redirect(FUSION_SELF.$aidlink.$ext."&amp;status=cns");
-				} elseif ($data['forum_type'] == 2) {
-					redirect(FUSION_SELF.$aidlink.$ext."&amp;status=cfs");
-				} elseif ($data['forum_type'] == 3) {
-					redirect(FUSION_SELF.$aidlink.$ext."&amp;status=cls");
-				} elseif ($data['forum_type'] == 4) {
-					redirect(FUSION_SELF.$aidlink.$ext."&amp;status=cas");
+				// added jump to permissions if the category is 0.
+				if (!$data['forum_cat']) {
+					redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$this_forum_id."&amp;parent_id=0");
+				} else {
+					if ($data['forum_type'] == 1) {
+						redirect(FUSION_SELF.$aidlink.$ext."&amp;status=cns");
+					} elseif ($data['forum_type'] == 2) {
+						redirect(FUSION_SELF.$aidlink.$ext."&amp;status=cfs");
+					} elseif ($data['forum_type'] == 3) {
+						redirect(FUSION_SELF.$aidlink.$ext."&amp;status=cls");
+					} elseif ($data['forum_type'] == 4) {
+						redirect(FUSION_SELF.$aidlink.$ext."&amp;status=cas");
+					}
 				}
 			}
 		}
@@ -366,12 +383,11 @@ function forum_form(array $data = array()) {
 		'forum_image' => !empty($data['forum_image']) ? $data['forum_image'] : '',
 		'forum_image_url' => !empty($data['forum_image_url']) ? $data['forum_image_url'] : '',
 		'forum_rules' => !empty($data['forum_rules']) ? $data['forum_rules'] : '',
-		'forum_image_enable' => !empty($data['forum_image_enable']) ? $data['forum_image_enable'] : 0,
 		'forum_merge' => !empty($data['forum_merge']) ? $data['forum_merge'] : 0,
 		'forum_attach' => !empty($data['forum_attach']) ? $data['forum_attach'] : 0,
 		'forum_quick_edit' => !empty($data['forum_quick_edit']) ? $data['forum_quick_edit'] : 1,
 		'forum_poll' => !empty($data['forum_poll']) ? $data['forum_poll'] : 0,
-		'forum_post_ratings' => !empty($data['forum_post_ratings']) ? $data['forum_post_ratings'] : 0,
+		'forum_allow_ratings' => !empty($data['forum_allow_ratings']) ? $data['forum_allow_ratings'] : 1,
 		'forum_users' => !empty($data['forum_users']) ? $data['forum_users'] : 1,
 		'forum_permissions' => !empty($data['forum_permissions']) ? $data['forum_permissions'] : '',
 		'forum_lock' => !empty($data['forum_lock']) ? $data['forum_lock'] : 0,
@@ -453,11 +469,10 @@ function forum_form(array $data = array()) {
 	echo form_checkbox($locale['forum_026'], 'forum_lock', 'forum_lock', $data['forum_lock']);
 	echo form_checkbox($locale['forum_024'], 'forum_users', 'forum_users', $data['forum_users']);
 	echo form_checkbox($locale['forum_021'], 'forum_quick_edit', 'forum_quick_edit', $data['forum_quick_edit']);
-	echo form_checkbox($locale['forum_018'], 'forum_image_enable', 'forum_image_enable', $data['forum_image_enable']);
 	echo form_checkbox($locale['forum_019'], 'forum_merge', 'forum_merge', $data['forum_merge']);
 	echo form_checkbox($locale['forum_020'], 'forum_allow_attach', 'forum_allow_attach', $data['forum_attach']);
 	echo form_checkbox($locale['forum_022'], 'forum_poll', 'forum_poll', $data['forum_poll']);
-	echo form_checkbox($locale['forum_023'], 'forum_post_ratings', 'forum_post_ratings', $data['forum_post_ratings']);
+	echo form_checkbox($locale['forum_023'], 'forum_allow_ratings', 'forum_allow_ratings', $data['forum_allow_ratings']);
 	echo form_hidden('', 'forum_id', 'forum_id', $data['forum_id']);
 	echo form_hidden('', 'forum_branch', 'forum_branch', $data['forum_branch']);
 	closeside();
@@ -692,23 +707,28 @@ function remove_forum() {
 	$delete_forums = isset($_POST['delete_forums']) ? 1 : 0;
 	// indexed forum branch.
 	//$branch = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', "WHERE forum_branch='".$forum_branch."'");
-	// threads
+
+	// move whole forum to another location
 	if (!$delete_threads && $threads_to_forum) {
 		// simple move
 		dbquery("UPDATE ".DB_THREADS." SET forum_id='".$threads_to_forum."' WHERE forum_id='".$forum_id."'");
 		dbquery("UPDATE ".DB_POSTS." SET forum_id='".$threads_to_forum."' WHERE forum_id='".$forum_id."'");
 		prune_forums($forum_index, $forum_id);
-	} elseif ($delete_threads) {
+	}
+	// wipe everything
+	elseif ($delete_threads) {
 		// remove all threads and all posts in this forum.
 		prune_attachment($forum_id); // wipe
 		prune_posts($forum_id); // wipe
 		prune_threads($forum_id); // wipe
 		recalculate_post($forum_id); // wipe
 		prune_forums($forum_index, $forum_id); // wipe recursively
-	} else {
+	}
+	else {
 		$defender->stop();
 		$defender->addNotice('You cannot move threads and post back to itself.');
 	}
+
 	// Subforums
 	if (!$delete_forums && $subforums_to_forum) {
 		dbquery("UPDATE ".DB_FORUMS." SET forum_cat='".$subforums_to_forum."', forum_branch='".get_hkey(DB_FORUMS, 'forum_id', 'forum_cat', $subforums_to_forum)."' ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$forum_id."'");
