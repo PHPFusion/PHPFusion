@@ -56,10 +56,10 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 	if ($options['jsonmode'] || $options['tags']) {
 		// json mode.
 		$html .= "<div id='$input_id-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
-		$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' />\n";
+		$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' style='width: ".($options['width'] && $title ? $options['width'] : "250px")."'/>\n";
 	} else {
 		// normal mode
-		$html .= "<select name='$input_name' id='$input_id' style='width: ".($options['width'] && $title ? $options['width'] : "250px")."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+		$html .= "<select name='$input_name' id='$input_id' style='width: ".($options['width'] && $title ? $options['width'] : "250px")."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
 		$html .= ($options['allowclear']) ? "<option value=''></option>" : '';
 		if (is_array($option_array)) {
 			foreach ($option_array as $arr => $v) { // outputs: key, value, class - in order
