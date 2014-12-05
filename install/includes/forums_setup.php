@@ -15,9 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-var_dump($_POST);
-
-
 if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_attachments");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_ranks");
