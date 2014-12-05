@@ -550,6 +550,7 @@ if (isset($_POST['step']) && $_POST['step'] == '5') {
 		} else {
 			redirect(FUSION_SELF);
 		}
+		var_dump($settings);
 		$fail = FALSE;
 		$message = '';
 		// Do installation

@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+var_dump($_POST);
+
+
 if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_attachments");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_ranks");
@@ -56,8 +59,8 @@ if (isset($_POST['uninstall'])) {
 			thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			vote_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			vote_points DECIMAL(3,0) NOT NULL DEFAULT '',
-			vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+			vote_points DECIMAL(3,0) NOT NULL DEFAULT '0',
+			vote_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0'
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	if (!$result) {
 		$fail = TRUE;
@@ -106,7 +109,7 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) {
 		$fail = TRUE;
 	}
-	$result = dbquery("CREATE TABLE ".$db_prefix."forums (
+	 $result = dbquery("CREATE TABLE ".$db_prefix."forums (
 			forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 			forum_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_branch MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -129,7 +132,7 @@ if (isset($_POST['uninstall'])) {
 			forum_allow_attach SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
 			forum_attach_download SMALLINT(3) UNSIGNED NOT NULL DEFAULT'0',
 			forum_quick_edit TINYINT(1) NOT NULL DEFAULT '0',
-			forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '',
+			forum_lastpostid MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_lastpost INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			forum_postcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_threadcount MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -140,7 +143,7 @@ if (isset($_POST['uninstall'])) {
 			forum_alias VARCHAR(50) NOT NULL DEFAULT '',
 			PRIMARY KEY (forum_id),
 			KEY forum_order (forum_order),
-			KEY forum_lastpost (forum_lastpost),
+			KEY forum_lastpostid (forum_lastpostid),
 			KEY forum_postcount (forum_postcount),
 			KEY forum_threadcount (forum_threadcount)
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
