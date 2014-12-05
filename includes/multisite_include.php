@@ -40,8 +40,13 @@ define("DB_FORUM_POLL_OPTIONS", DB_PREFIX."forum_poll_options");
 define("DB_FORUM_POLL_VOTERS", DB_PREFIX."forum_poll_voters");
 define("DB_FORUM_POLLS", DB_PREFIX."forum_polls");
 define("DB_FORUM_RANKS", DB_PREFIX."forum_ranks");
+define("DB_FORUM_VOTES", DB_PREFIX."forum_votes");
+
+
+
 define("DB_FORUMS", DB_PREFIX."forums");
 define("DB_INFUSIONS", DB_PREFIX."infusions");
+define("DB_INFUSIONS_CAT", DB_PREFIX."infusions_cat");
 define("DB_LANGUAGE_TABLES", DB_PREFIX."mlt_tables");
 define("DB_MESSAGES", DB_PREFIX."messages");
 define("DB_MESSAGES_OPTIONS", DB_PREFIX."messages_options");
@@ -74,4 +79,5 @@ define("DB_USER_LOG", DB_PREFIX."user_log");
 define("DB_USERS", DB_PREFIX."users");
 define("DB_WEBLINK_CATS", DB_PREFIX."weblink_cats");
 define("DB_WEBLINKS", DB_PREFIX."weblinks");
+
 ?>
