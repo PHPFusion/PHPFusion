@@ -29,11 +29,9 @@ $_GET['forum_cat'] =  (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ?
 $_GET['forum_branch'] =  (isset($_GET['forum_branch']) && isnum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0;
 $_GET['parent_id'] =  (isset($_GET['parent_id']) && isnum($_GET['parent_id'])) ? $_GET['parent_id'] : 0;
 $ext = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '';
-/* Lets do a new forum */
-// start via templating now.
-// todo: Your post, New post, unread post, unanswered post, active topics, search, members, the team.
+
 $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-/* Push breadcrumb */
+
 add_to_title($locale['global_200'].$locale['forum_0000']);
 
 /* Sanitize Globals */
@@ -64,9 +62,11 @@ if (isset($_GET['section']) && $_GET['section'] == 'mypost') {
 elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
 	include FORUM."sections/laft.php";
 }
+
 elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
 	include FORUM."sections/tracked.php";
 }
+
 // view forum.
 elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['parent_id']) && isnum($_GET['parent_id']) && isset($_GET['viewforum'])) {
 
@@ -277,107 +277,12 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 // Forum Board Index
 else {
 
-	/*-------------------------------------------------
-	+ Init Commit 9.0 Model: Conventional PHP-Fusion Method
-	+ This model will not trigger 2nd query on fail of dbcount() for sub - additional 1 query.
-	+ Execution Time Logged: 38 queries, 0.23 sec - Mem usage 2.82mb/3mb alloc.
-	* ------------------------------------------------*/
-	/*
-	$result = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
-			tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost,
-			t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
-        	u.user_id, u.user_name, u.user_status, u.user_avatar
-			FROM ".DB_FORUMS." tf
-			LEFT JOIN ".DB_THREADS." t ON tf.forum_lastpostid = t.thread_id
-        	LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
-	 		".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tf.forum_cat='".$_GET['parent_id']."'
-	 		GROUP BY tf.forum_id ORDER BY tf.forum_order ASC, t.thread_lastpost DESC
-	 		");
-
-	if (dbrows($result)>0) {
-		while ($data = dbarray($result)) {
-			// Show moderators
-			$moderators = '';
-			if ($data['forum_mods']) {
-				$_mgroup = explode('.', $data['forum_mods']);
-				if (!empty($_mgroup)) {
-					foreach ($_mgroup as $mod_group) {
-						if ($moderators) $moderators .= ", ";
-						$moderators .= $mod_group < 101 ? "<a href='".BASEDIR."profile.php?group_id=".$mod_group."'>".getgroupname($mod_group)."</a>" : getgroupname($mod_group);
-					}
-				}
-			}
-			$data['moderators'] = $moderators;
-
-			// push
-			$info['item'][$data['forum_id']] = $data; //<------ ROOT
-
-			// Now, You DB Count and check for subs .. + 1 query
-
-			$check_child = dbcount("('forum_id')" , DB_FORUMS, "".(multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." ".groupaccess('forum_access')." AND forum_cat='".$data['forum_id']."'");
-			if ($check_child !=0) {
-				if ($data['forum_type'] == '1') {
-					// max child query for type 1 forum
-					$c_result = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
-								tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
-								t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
-								u.user_id, u.user_name, u.user_status, u.user_avatar
-								FROM ".DB_FORUMS." tf
-								LEFT JOIN ".DB_THREADS." t ON tf.forum_lastpostid = t.thread_id
-								LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
-								".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tf.forum_cat='".$data['forum_id']."'
-								GROUP BY tf.forum_id ORDER BY tf.forum_order ASC, t.thread_lastpost DESC
-								");
-				} else {
-					// min child query for type 2,3,4 forum.
-					$c_result = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
-								tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost
-								FROM ".DB_FORUMS." tf
-								".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tf.forum_cat='".$data['forum_id']."'
-								GROUP BY tf.forum_id ORDER BY tf.forum_order ASC
-								");
-				}
-				if (dbrows($c_result)>0) {
-					while ($cdata = dbarray($c_result)) {
-						$info['item'][$data['forum_id']]['child'][$cdata['forum_id']] = $cdata;
-
-						// another level down if it is a category... minimum query
-
-						if ($data['forum_type'] == '1') {
-							$check_subforums = dbcount("('forum_id')", DB_FORUMS, "".(multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." ".groupaccess('forum_access')." AND forum_cat='".$cdata['forum_id']."'");
-							if ($check_subforums) {
-								$d_result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name FROM ".DB_FORUMS."
-											".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('forum_access')." AND forum_cat='".$cdata['forum_id']."'
-											");
-								if (dbrows($d_result)>0) {
-									while ($sub = dbarray($d_result)) {
-										$info['item'][$data['forum_id']]['child'][$cdata['forum_id']]['child'][] = $sub;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		} // end while.
-	} // end dbrows
-	*/
-
-	/*-------------------------------------------------
-	+ Second Commit 9.0 Model: 6th Dec 2015
-	+ This model will swipe in full.
-	+ Execution Time Logged: 26 queries, 0.20 sec - Mem usage 2.82mb/3mb alloc.
-	+ Faster by 30.76% or so compared to first model.
-	+ Result: Massive difference - cutting down by 12 query with just 8 forums (2 primary, 2 secondary, 2 tertiary, 2 quadrant)
-	+ Limitations: This model cannot be paginated as pagination will break the while loop.
-	* ------------------------------------------------*/
-
 	 $result = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
-			tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost,
+			tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
 			t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
         	u.user_id, u.user_name, u.user_status, u.user_avatar
 			FROM ".DB_FORUMS." tf
-			LEFT JOIN ".DB_THREADS." t ON tf.forum_lastpostid = t.thread_id
+			LEFT JOIN ".DB_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
         	LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
 	 		".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
 	 		GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC
@@ -412,7 +317,6 @@ else {
 }
 
 forum_breadcrumbs($forum_index);
-
 render_forum($info);
 
 /* 	Autopush Breadcrumb (better to Core)

@@ -297,7 +297,6 @@ if ($executable && iMEMBER) {
 
 	// On Reply Post Execution
 	if (isset($_POST['postreply'])) {
-
 		if (!defined("FUSION_NULL") && $data['post_message']) {
 			require_once INCLUDES."flood_include.php";
 			if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'")) {
@@ -322,9 +321,10 @@ if ($executable && iMEMBER) {
 				$forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 				$list_of_forums = get_all_parent($forum_index, $_GET['forum_id']);
 				foreach($list_of_forums as $forum_id) {
-					$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', ".$postCount." forum_lastpostid='".$data['post_id']."', forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$forum_id."'") : '';
+					$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', ".$postCount." forum_lastpostid='".$data['post_id']."', forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$forum_id."'");
 				}
-				$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', ".$postCount." forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$_GET['forum_id']."'") : '';
+				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', ".$postCount." forum_lastpostid='".$data['post_id']."', forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$_GET['forum_id']."'");
+
 				$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', ".$threadCount." thread_lastuser='".$userdata['user_id']."' WHERE thread_id='".$_GET['thread_id']."'") : '';
 				if ($settings['thread_notify'] && isset($_POST['notify_me']) && !defined('FUSION_NULL')) {
 					if (!dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {

@@ -276,6 +276,7 @@ if (!function_exists('forum_viewforum')) {
 			}
 			echo "</div>\n";
 		}
+
 		if (isset($info['threads'])) {
 			echo "<!--pre_forum-->\n";
 			if (!empty($info['threads']['sticky'])) {
