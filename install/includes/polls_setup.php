@@ -18,6 +18,8 @@
 if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."poll_votes");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."polls");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='PO'");
+	$result = dbquery("DELETE FROM ".$db_prefix."panels WHERE panel_filename='member_poll_panel'");
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."poll_votes");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."polls");
@@ -56,5 +58,4 @@ if (isset($_POST['uninstall'])) {
 	// panel
 	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['167']."', 'member_poll_panel', '', '4', '2', 'file', '0', '0', '0', '')");
 }
-
 ?>

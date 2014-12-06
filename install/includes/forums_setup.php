@@ -26,6 +26,12 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."threads");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."thread_notify");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_votes");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='F'");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='S3'");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='FR'");
+	$result = dbquery("DELETE FROM ".$db_prefix."panels WHERE panel_filename='forum_threads_panel'");
+	$result = dbquery("DELETE FROM ".$db_prefix."panels WHERE panel_filename='forum_threads_list_panel'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='forum/index.php'");
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_attachments");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_ranks");

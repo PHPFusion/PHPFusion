@@ -18,6 +18,11 @@
 if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."news");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."news_cats");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='NC'");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='N'");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='S8'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='news_cats.php'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='submit.php?stype=n'");
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."news");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."news_cats");
@@ -108,7 +113,5 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('NC', 'news_cats.gif', '".$locale['097']."', 'news_cats.php', '1')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('N', 'news.gif', '".$locale['098']."', 'news.php', '1')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S8', 'settings_news.gif', '".$locale['121']."', 'settings_news.php', '4')");
-
-
 }
 ?>
