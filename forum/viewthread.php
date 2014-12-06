@@ -65,17 +65,16 @@ $result = dbquery("SELECT t.*, f.*, f2.forum_name AS forum_cat_name
 if (dbrows($result) > 0) {
 	$info += dbarray($result);
 	ksort($info);
-	if (!checkgroup($info['forum_access']) or $info['thread_hidden'] == "1") {
-		redirect("index.php");
-	}
-
-	// Moderators
+	// boot if no access
+	if (!checkgroup($info['forum_access']) or $info['thread_hidden'] == "1") redirect("index.php");
+	// Moderators - returns iMOD constants
 	define_forum_mods($info);
+
 	if (iMOD && (((isset($_POST['delete_posts']) || isset($_POST['move_posts'])) && isset($_POST['delete_post'])) || isset($_GET['error']))) {
 		require_once FORUM."viewthread_options.php";
 	}
 
-	// Forum Polls.
+	// Forum Permissions - Polls (can view and vote)
 	$info['permissions']['can_view_poll'] = checkgroup($info['forum_poll']) ? 1 : 0;
 	if (checkgroup($info['forum_poll']) && $info['thread_poll']) {
 		// for those who have access to see the poll.
@@ -94,8 +93,8 @@ if (dbrows($result) > 0) {
 			$info['poll'] = dbarray($poll_result);
 			// get the options
 			$p_options = dbquery("SELECT forum_poll_option_votes, forum_poll_option_text FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."'
-					ORDER BY forum_poll_option_id ASC
-					");
+						ORDER BY forum_poll_option_id ASC
+						");
 			$poll_option_rows = dbrows($p_options);
 			$info['poll']['max_option_id'] = $poll_option_rows;
 			if ($poll_option_rows > 0) {
@@ -103,7 +102,7 @@ if (dbrows($result) > 0) {
 					$info['poll']['poll_opts'][] = $pdata;
 				}
 			}
-			// override can vote or not.
+			// if voted, cannot vote
 			$info['permissions']['can_vote_poll'] = isset($info['poll']['forum_vote_user_id']) ? 0 : 1;
 		}
 		if ((isset($_POST['poll_option']) && isnum($_POST['poll_option']) && $_POST['poll_option'] <= $info['poll']['max_option_id']) && $info['permissions']['can_vote_poll'] && !defined('FUSION_NULL')) {
@@ -153,16 +152,18 @@ if (dbrows($result) > 0) {
 		}
 	}
 
+	// Whether user is tracking thread
 	$info['tracked_threads'] = dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'") ? TRUE : FALSE;
 
 	// Forum Permissions
 	$info['permissions']['can_post'] = $info['forum_post'] && checkgroup($info['forum_post']) ? 1 : 0;
 	$info['permissions']['can_reply'] = $info['forum_reply'] && checkgroup($info['forum_reply']) ? 1 : 0;
 	$info['permissions']['edit_lock'] = $settings['forum_edit_lock'] ? 1 : 0;
-	$info['permissions']['can_vote'] = ($info['forum_type'] == 4 && $info['forum_allow_post_ratings']) ? 1 : 0;
+	$info['permissions']['can_rate'] = $info['forum_type'] == 4 && $info['forum_allow_ratings'] ? 1 : 0;
 
 	// Buttons
 	$info['forum_cat_link'] = FORUM."index.php?viewforum&amp;forum_id=".$info['forum_id']."&amp;forum_cat=".$info['forum_cat']."&amp;forum_branch=".$info['forum_branch'];
+	// Notification Link
 	if (iMEMBER && $settings['thread_notify']) {
 		if (dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
 			$result2 = dbquery("UPDATE ".DB_THREAD_NOTIFY." SET notify_datestamp='".time()."', notify_status='1' WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
@@ -182,21 +183,16 @@ if (dbrows($result) > 0) {
 			}
 		}
 	}
-
-	// Filters
+	// Filters -- Locale.
 	$info['allowed-post-filters'] = array('oldest', 'latest');
-	$info['post-filters'][0] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=oldest',
-		'locale' => 'Oldest');
-	$info['post-filters'][1] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=latest',
-		'locale' => 'Latest');
-
-	if ($info['permissions']['can_vote']) {
+	$info['post-filters'][0] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=oldest', 'locale' => 'Oldest');
+	$info['post-filters'][1] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=latest', 'locale' => 'Latest');
+	if ($info['permissions']['can_rate']) {
 		$info['allowed-post-filters'][2] = 'high';
 		$info['post-filters'][2] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=high',
 			'locale' => 'Highest Ratings');
 	}
-
-	// Filters to SQL
+	// Internal SQL conditions filters
 	$sortCol = 'post_datestamp ASC';
 	if (isset($_GET['section'])) {
 		if ($_GET['section'] == 'oldest') {
@@ -223,9 +219,14 @@ if (dbrows($result) > 0) {
 		LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
 		WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0' ".($info['forum_type'] == '4' ? "OR p.post_id='".$first_post."'" : '')."
 		GROUP by p.post_id ORDER BY $sortCol LIMIT ".$_GET['rowstart'].", ".$info['posts_per_page']);
-	$info['post_item_rows'] = dbrows($result);
-	$i = 1;
 
+	$info['post_item_rows'] = dbrows($result);
+
+	// Page Navigation
+	$info['page_nav'] = $info['post_item_rows'].$locale['652'].' ';
+	$info['page_nav'] .= $info['post_item_rows'] > $info['posts_per_page'] ? makepagenav($_GET['rowstart'], $info['posts_per_page'], $info['post_item_rows'], 3, FORUM."viewthread.php?thread_id=".$_GET['thread_id']) : '';
+
+	$i = 1;
 	while ($data = dbarray($result)) {
 		$data['first_post'] = $data['post_id'] == $first_post ? 1 : 0;
 		$data['last_post'] = $data['post_id'] == $last_post ? 1 : 0;
@@ -281,7 +282,7 @@ if (dbrows($result) > 0) {
 		// Voting - need up or down link - accessible to author also the vote
 
 		$data['vote_time'] = 0;
-		if ($info['permissions']['can_vote']) { // can vote.
+		if ($info['permissions']['can_rate']) { // can vote.
 			$data['vote_time'] = 1; // pass forum settings
 			$data['vote_up'] = '';
 			$data['vote_down'] = '';
@@ -402,11 +403,12 @@ add_to_title($locale['global_201'].$info['thread_subject']);
 add_to_breadcrumbs(array('link' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'],
 					   'title' => $info['thread_subject']));
 
-/* Get Post data ? */
+/* Get Post data */
 if (isset($_GET['pid']) && isnum($_GET['pid'])) {
 	$reply_count = dbcount("(post_id)", DB_POSTS, "thread_id='".$info['thread_id']."' AND post_id<='".$_GET['pid']."' AND post_hidden='0'");
 	$info['reply_rows'] = $reply_count;
 	if ($reply_count > $info['posts_per_page']) {
+		// force set it to max?
 		$_GET['rowstart'] = ((ceil($reply_count/$info['posts_per_page'])-1)*$posts_per_page);
 	}
 }
@@ -426,14 +428,10 @@ if (is_array($fusion_images)) {
 	}
 }
 
-
 //javascript to footer
-$highlight_js = "";
-$colorbox_js = "";
-$edit_reason_js = "";
-
-
+$highlight_js = ""; $colorbox_js = ""; $edit_reason_js = "";
 /** javascript **/
+
 // highlight jQuery plugin
 if (isset($_GET['highlight'])) {
 	$words = explode(" ", urldecode($_GET['highlight']));

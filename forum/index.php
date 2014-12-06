@@ -251,8 +251,8 @@ if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['parent_
 			}
 		}
 	} else {
-		//echo "lang fail";
-		redirect("index.php");
+		echo "lang fail";
+		//redirect("index.php");
 	}
 
 
