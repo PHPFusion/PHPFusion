@@ -1177,15 +1177,24 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 // Format the date & time accordingly
 function showdate($format, $val) {
 	global $settings, $userdata;
-	if (isset($userdata['user_offset'])) {
-		$offset = $userdata['user_offset']+$settings['serveroffset'];
+
+	$tz_server = $settings['serveroffset'];
+	if (isset($userdata['user_timezone'])) {
+		$tz_client = $userdata['user_timezone'];
 	} else {
-		$offset = $settings['timeoffset']+$settings['serveroffset'];
+		$tz_client = $settings['timeoffset'];
 	}
+
+	$server_dtz = new DateTimeZone($tz_server);
+	$client_dtz = new DateTimeZone($tz_client);
+	$server_dt = new DateTime("now", $server_dtz);
+	$client_dt = new DateTime("now", $client_dtz);
+	$offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
+
 	if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
-		return strftime($settings[$format], $val+($offset*3600));
+		return strftime($settings[$format], $val + $offset);
 	} else {
-		return strftime($format, $val+($offset*3600));
+		return strftime($format, $val + $offset);
 	}
 }
 

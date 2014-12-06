@@ -816,13 +816,13 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 				user_email='".$email."'	WHERE user_id='1'");
 			} else {
 				$result = dbquery("INSERT INTO ".$db_prefix."users (
-				user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_offset,
+				user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_timezone,
 				user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights,
 				user_groups, user_level, user_status, user_theme, user_location, user_birthdate, user_aim,
 				user_icq, user_yahoo, user_web, user_sig
 				) VALUES (
 				'".$username."', 'sha256', '".$userSalt."', '".$userPassword."', 'sha256', '".$adminSalt."', '".$adminPassword."',
-				'".$email."', '1', '0', '',  '0', '0', '".time()."', '0', '0.0.0.0',
+				'".$email."', '1', 'Europe/London', '',  '0', '0', '".time()."', '0', '0.0.0.0',
 				'A.AC.AD.APWR.B.BB.BLOG.BLC.C.CP.DB.DC.D.ERRO.FQ.F.FR.IM.I.IP.M.MAIL.N.NC.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.W.WC.MAIL.LANG.ESHP',
 				'', '103', '0', 'Default', '', '0000-00-00', '', '',  '', '', ''
 				)");
