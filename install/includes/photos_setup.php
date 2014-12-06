@@ -18,6 +18,10 @@
 if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."photo_albums");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."photos");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='PH'");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='S5'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='photogallery.php'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='submit.php?stype=p'");
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."photo_albums");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."photos");
@@ -72,8 +76,5 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) $fail = TRUE;
 		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['143']."', 'submit.php?stype=p', '101', '1', '0', '15', '".$enabled_languages[$i]."')");		if (!$result) $fail = TRUE;
 	}
-
 }
-
-
 ?>

@@ -18,6 +18,11 @@
 if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."download_cats");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."downloads");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='DC'");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='D'");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='S11'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='downloads.php'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='submit.php?stype=d'");
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."download_cats");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."downloads");
@@ -82,6 +87,4 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 }
-
-
 ?>

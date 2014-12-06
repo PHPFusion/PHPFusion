@@ -18,6 +18,11 @@
 if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."articles");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."article_cats");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='A'");
+	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='AC'");
+	$result = dbquery("DELETE FROM ".$db_prefix."panels WHERE panel_filename='latest_articles_panel'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='articles.php'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='submit.php?stype=a'");
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."articles");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."article_cats");
@@ -75,13 +80,8 @@ if (isset($_POST['uninstall'])) {
 		include LOCALE.$enabled_languages[$i]."/setup.php";
 		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['131']."', 'articles.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')");
 		if (!$result) { $fail = TRUE; }
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['142']."', 'submit.php?stype=a', '101', '1', '0', '12', '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 	}
-
-
-
-
-
 }
-
-
 ?>
