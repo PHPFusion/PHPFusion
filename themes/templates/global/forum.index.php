@@ -257,7 +257,7 @@ if (!function_exists('forum_viewforum')) {
 		if ($data['forum_type'] > 1) {
 			// post button & forum filter
 			echo "<div class='clearfix m-b-20'>\n";
-			if (iMEMBER && $info['post_access'] or iMOD or iSUPERADMIN) {
+			if (iMEMBER && $info['permissions']['can_post'] or iMOD or iSUPERADMIN) {
 				echo "<a title='".$locale['forum_0264']."' alt='".$locale['forum_0264']."' class='btn button btn-sm btn-primary text-white' href='".FORUM."post.php?action=newthread&amp;forum_id=".$_GET['forum_id']."'><i class='entypo plus-circled'></i> ".$locale['forum_0264']."</a>";
 			}
 			echo "<div class='pull-right'>\n";

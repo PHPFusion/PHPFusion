@@ -205,7 +205,9 @@ if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['parent_
 			// post permission of the current forum view.
 			if ($data['forum_id'] == $_GET['forum_id'] && $data['forum_type'] !=='1') {
 				add_to_title($locale['global_201'].$data['forum_name']);
-				$info['post_access'] = ($data['forum_post']) ? checkgroup($data['forum_post']) : 0;
+
+				$info['permissions']['can_post'] = ($data['forum_post']) ? checkgroup($data['forum_post']) : 0;
+
 				// define mods
 				define_forum_mods($data);
 				// get thread and apply filter
@@ -251,8 +253,8 @@ if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['parent_
 			}
 		}
 	} else {
-		echo "lang fail";
-		//redirect("index.php");
+		//echo "lang fail";
+		redirect(FORUM.'index.php');
 	}
 
 
@@ -344,9 +346,10 @@ else {
 	}
 }
 forum_breadcrumbs($forum_index);
+
+//print_p($info);
+
 render_forum($info);
-
-
 
 /* 	Autopush Breadcrumb (better to Core)
 | 	Note that this function is not the same as the admin one
@@ -355,8 +358,8 @@ render_forum($info);
 |	but here the parent_id is forum_cat
 */
 
-function forum_breadcrumbs() {
-	global $aidlink, $forum_index;
+function forum_breadcrumbs($forum_index) {
+	global $aidlink;
 	/* Make an infinity traverse */
 	function breadcrumb_arrays($index, $id) {
 		global $aidlink;
@@ -388,7 +391,6 @@ function forum_breadcrumbs() {
 	} elseif (isset($crumb['title'])) {
 		add_to_breadcrumbs(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
 	}
-	// hola!
 }
 
 require_once THEMES."templates/footer.php";
