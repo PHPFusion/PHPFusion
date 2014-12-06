@@ -37,7 +37,6 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."threads");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."thread_notify");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_votes");
-
 	$result = dbquery("CREATE TABLE ".$db_prefix."forum_attachments (
 			attach_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 			thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -106,7 +105,7 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) {
 		$fail = TRUE;
 	}
-	 $result = dbquery("CREATE TABLE ".$db_prefix."forums (
+	$result = dbquery("CREATE TABLE ".$db_prefix."forums (
 			forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 			forum_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_branch MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -228,14 +227,15 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) $fail = TRUE;
 	}
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('F', 'forums.gif', '".$locale['092']."', 'forums.php', '1')");
+	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'settings_forum.gif', '".$locale['113']."', 'settings_forum.php', '4')");
+	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FR', 'forum_ranks.gif', '".$locale['119']."', 'forum_ranks.php', '2')");
+	if (!$result) $fail = TRUE;
 	// panel
 	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['162']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '')");
+	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['165']."', 'forum_threads_list_panel', '', '2', '2', 'file', '0', '0', '0', '')");
-
+	if (!$result) $fail = TRUE;
 }
-
-
-
 ?>
