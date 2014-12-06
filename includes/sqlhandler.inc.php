@@ -363,34 +363,34 @@ function display_parent_nodes($data, $id_col, $cat_col, $id) {
 }
 
 ## Will deprecate dbtree when RC1.
-function dbtree($db, $id_col, $cat_col, $cat_value, $ordering = FALSE, $filter = '', $filter_order = '', $filter_show = '') {
+function dbtree($db, $id_col, $cat_col, $cat_value=FALSE, $ordering = FALSE, $filter = '', $filter_order = '', $filter_show = '') {
 	## V8 Universal Hierarchy Tree Coded by Hien.
 	$refs = array();
 	$list = array();
 	$col_names = fieldgenerator($db);
 	if ($filter || $filter_order || $filter_show) {
 		$result = dbquery("SELECT * FROM ".$db." $filter $filter_order $filter_show");
-		//        print_p(dbrows($result));
 	} else {
 		$ordering = (isset($ordering) && (!empty($ordering))) ? "order by $ordering" : "";
 		$result = dbquery("SELECT * FROM ".$db." $ordering");
 	}
-	//$result = dbquery("SELECT * FROM ".$db." $condition ");
+
 	while ($data = dbarray($result)) {
+
 		foreach ($col_names as $arr => $v) {
 			if ($v == $id_col) {
-				$thisref = & $refs[$data[$id_col]];
+				$thisref = &$refs[$data[$id_col]];
 			}
 			$thisref[$v] = $data[$v];
 		}
 		if ($data[$id_col] == $cat_value) { // cat_val = 0 = impossible
-			$list[$data[$id_col]] = & $thisref; // pushing mechanism.
+			$list[$data[$id_col]] = &$thisref; // pushing mechanism.
 		} elseif ($data[$cat_col] == $cat_value) { // 0;
 			// if current $data[article_cat_cat] == "3"
 			// $list[1] <-- inject in array. // list the current children.
-			$refs[$data[$cat_col]]['children'][$data[$id_col]] = & $thisref;
+			$refs[$data[$cat_col]]['children'][$data[$id_col]] = &$thisref;
 		} else {
-			$refs[$data[$cat_col]]['children'][$data[$id_col]] = & $thisref;
+			$refs[$data[$cat_col]]['children'][$data[$id_col]] = &$thisref;
 		}
 	} // end while
 	return $list;
@@ -432,19 +432,24 @@ function sort_tree(&$result, $key) {
 // New SQL Row Modifier.
 function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 	require_once INCLUDES."notify/notify.inc.php";
+	global $pdo_enabled;
+	if ($pdo_enabled == 1) {
+		require_once INCLUDES."db_handlers/mysql_functions_include.php";
+	} else {
+		require_once INCLUDES."db_handlers/mysql_functions_include.php";
+	}
+
 	if (defined("ADMIN_PANEL")) {
 		global $aidlink;
 	} else {
 		$aidlink = '?';
 	}
 	if (is_array($options)) {
-		$redirect = (array_key_exists("noredirect", $options) && ($options['noredirect'] == "1")) ? "0" : "1";
 		$url = (array_key_exists("url", $options)) ? $options['url'] : "";
 		$debug = (array_key_exists("debug", $options) && $options['debug'] == 1) ? 1 : 0;
 		$pkey = (array_key_exists("primary_key", $options)) ? $options['primary_key'] : 0;
 		$no_unique = (array_key_exists("no_unique", $options)) ? 1 : 0;
 	} else {
-		$redirect = "1";
 		$url = "";
 		$debug = 0;
 		$pkey = 0;
@@ -574,12 +579,10 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					print_p($result);
 				} else {
 					$result = dbquery("INSERT INTO ".$db." ($the_column) VALUES ($the_value)");
-				}
-				if ($redirect == "1" && !$debug) {
-					if ($url !== "") {
-						redirect($url);
+					if ($pdo_enabled == '1') {
+						return $pdo->lastInsertId();
 					} else {
-						redirect(FUSION_SELF.$aidlink."&status=success");
+						return mysql_insert_id();
 					}
 				}
 			}
@@ -602,41 +605,22 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 				} else {
 					$result = dbquery("UPDATE ".$db." SET $the_value WHERE $update_core");
 				}
-				if ($redirect == "1" && !$debug) {
-					if ($url !== "") {
-						redirect($url);
-					} else {
-						redirect(FUSION_SELF.$aidlink."&status=updated");
-					}
-				}
 			}
 		} elseif ($mode == "delete") {
 			if ($aidlink !== "") { // since only admin can launch deletion?
 				$col = $columns[$key];
 				$values = $inputdata[$col];
-				//print_p($col);
-				//print_p($values);
-				if ($values !== $error) {
-					if ($debug) {
-						$result = "DELETE FROM ".$db." WHERE $col='$values'";
-						print_p($result);
-					} else {
-						$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
-					}
-					if ($redirect == "1" && !$debug) {
-						if ($url !== "") {
-							redirect($url);
-						} else {
-							redirect(FUSION_SELF.$aidlink."&status=del");
-						}
-					}
+				if ($debug) {
+					$result = "DELETE FROM ".$db." WHERE $col='$values'";
+					print_p($result);
+				} else {
+					$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
 				}
 			}
 		} else {
 			die();
 		}
 	} else {
-		echo 'yes';
 		notify('Script stopped as an illegal operation is found.', 'Fusion Defender stopped SQL, auto exit before execution.');
 	}
 }

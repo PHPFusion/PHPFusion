@@ -189,10 +189,8 @@ if ($executable && iMEMBER) {
 	if (isset($_POST['postnewthread'])) {
 		require_once INCLUDES."flood_include.php";
 		if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'") && !defined('FUSION_NULL')) {
-			dbquery_insert(DB_THREADS, $data, 'save', array('noredirect'=>1, 'primary_key'=>'thread_id', 'debug'=>$debug)); // forum id is missing.
-			$data['thread_id'] = $pdo_enabled ? $pdo->lastInsertId() : mysql_insert_id();
-			dbquery_insert(DB_POSTS, $data, 'save', array('noredirect'=>1, 'primary_key'=>'post_id'));
-			$data['post_id'] = $pdo_enabled ? $pdo->lastInsertId() : mysql_insert_id();
+			$data['thread_id'] = dbquery_insert(DB_THREADS, $data, 'save', array('primary_key'=>'thread_id')); // forum id is missing.
+			$data['post_id'] = dbquery_insert(DB_POSTS, $data, 'save', array('primary_key'=>'post_id'));
 			$forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 			$list_of_forums = get_all_parent($forum_index, $_GET['forum_id']);
 			// update every parent node as well
@@ -256,14 +254,14 @@ if ($executable && iMEMBER) {
 				// set last post.
 				$result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id='".$_GET['forum_id']."' AND forum_lastuser='".$pdata['post_author']."' AND forum_lastpost='".$pdata['post_datestamp']."'");
 				if (dbrows($result)>0) {
-					$result = dbquery("	SELECT p.forum_id, p.post_author, p.post_datestamp
+					$result = dbquery("	SELECT p.forum_id, p.post_id, p.post_author, p.post_datestamp
 									FROM ".DB_POSTS." p
 									LEFT JOIN ".DB_THREADS." t ON p.thread_id=t.thread_id
 									WHERE p.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' AND post_hidden='0'
 									ORDER BY post_datestamp DESC LIMIT 1");
 					if (dbrows($result)>0) {
 						$pdata2 = dbarray($result);
-						$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$pdata2['post_datestamp']."', forum_lastuser='".$pdata2['post_author']."' WHERE forum_id='".$_GET['forum_id']."'");
+						$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpostid='".$pdata2['post_id']."', forum_lastpost='".$pdata2['post_datestamp']."', forum_lastuser='".$pdata2['post_author']."' WHERE forum_id='".$_GET['forum_id']."'");
 					} else {
 						$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
 					}
@@ -306,13 +304,12 @@ if ($executable && iMEMBER) {
 					$data['post_edittime'] = time();
 					$data['post_id'] = $mergeData['post_id'];
 					$data['post_edituser'] = $userdata['user_id'];
-					dbquery_insert(DB_POSTS, $data, 'update', array('noredirect'=>1, 'primary_key'=>'post_id'));
-					$post_id = $mergeData['post_id'];
+					dbquery_insert(DB_POSTS, $data, 'update', array('primary_key'=>'post_id'));
 					$threadCount = "";
 					$postCount = "";
 				} else {
-					dbquery_insert(DB_POSTS, $data, 'save', array('noredirect'=>1, 'primary_key'=>'post_id'));
-					$data['post_id'] = $pdo_enabled ? $pdo->lastInsertId() : mysql_insert_id();
+					$data['post_id'] = dbquery_insert(DB_POSTS, $data, 'save', array('primary_key'=>'post_id'));
+					//$data['post_id'] = $pdo_enabled ? $pdo->lastInsertId() : mysql_insert_id(); // not sure why it did not work.
 					$result = (!defined("FUSION_NULL")) ? dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$userdata['user_id']."'") : '';
 					$threadCount = "thread_postcount=thread_postcount+1,";
 					$postCount = "forum_postcount=forum_postcount+1,";
@@ -324,8 +321,7 @@ if ($executable && iMEMBER) {
 					$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', ".$postCount." forum_lastpostid='".$data['post_id']."', forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$forum_id."'");
 				}
 				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', ".$postCount." forum_lastpostid='".$data['post_id']."', forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$_GET['forum_id']."'");
-
-				$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', ".$threadCount." thread_lastuser='".$userdata['user_id']."' WHERE thread_id='".$_GET['thread_id']."'") : '';
+				$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', ".$threadCount." thread_lastuser='".$userdata['user_id']."' WHERE thread_id='".$_GET['thread_id']."'");
 				if ($settings['thread_notify'] && isset($_POST['notify_me']) && !defined('FUSION_NULL')) {
 					if (!dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
 						$result = dbquery("INSERT INTO ".DB_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
@@ -530,10 +526,8 @@ if ($executable && iMEMBER) {
 			redirect("postify.php?post=new&error=$error&forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."&amp;thread_id=".$data['thread_id']."");
 		}
 	}
-
-
 } else {
-	//redirect("postify.php?post=new&error=4&forum_id=".$_GET['forum_id']."&amp;parent_id=".$data['forum_id']);
+	if (!$data['new']) redirect(FORUM."postify.php?post=new&error=4&forum_id=".$_GET['forum_id']."&amp;parent_id=".$data['forum_id']);
 }
 
 ?>
