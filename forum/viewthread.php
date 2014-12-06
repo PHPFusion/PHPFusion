@@ -223,7 +223,7 @@ if (dbrows($result) > 0) {
 	$info['post_item_rows'] = dbrows($result);
 
 	// Page Navigation
-	$info['page_nav'] = $info['post_item_rows'].$locale['652'].' ';
+	$info['page_nav'] = $info['post_item_rows'].$locale['forum_0362'].' ';
 	$info['page_nav'] .= $info['post_item_rows'] > $info['posts_per_page'] ? makepagenav($_GET['rowstart'], $info['posts_per_page'], $info['post_item_rows'], 3, FORUM."viewthread.php?thread_id=".$_GET['thread_id']) : '';
 
 	$i = 1;
