@@ -62,6 +62,7 @@ $locale['038'] = "PDO seems to not be available";
 $locale['039'] = "No";
 $locale['039b'] = "Yes";
 $locale['039c'] = "Select languages to use:";
+$locale['039n'] = "Site Owner Name";
 // Step 4 - Database Setup
 $locale['4001'] = "Database connection established.";
 $locale['4002'] = "Config file successfully written.";

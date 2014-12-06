@@ -305,7 +305,7 @@ if (isset($_POST['step']) && $_POST['step'] == "3") {
 		echo "</select>\n";
 	}
 	echo "</td>\n</tr>\n";
-	echo "<tr>\n<td class='tbl1'>Site Owner Name</td>\n";
+	echo "<tr>\n<td class='tbl1'>".$locale['039n']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='text' name='username' value='".$username."' placeholder='Admin' maxlength='255' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
 	echo "<tr>\n<td class='tbl1'>".$locale['066']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
