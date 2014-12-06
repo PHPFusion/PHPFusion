@@ -608,14 +608,9 @@ if (!function_exists('render_post')) {
 			// show the page
 			echo "<div class='clearfix thread_subheader'>\n";
 			echo "<span class='thread_date'>".$locale['forum_0363'].showdate('forumdate', $info['thread_lastpost'])." - ".timer($info['thread_lastpost'])."</span>\n";
-			echo "<div id='top' class='thread_pagenav pull-right'>\n";
-			$nav = $locale['forum_0361']."<strong>".($_GET['rowstart'] > 1 ? $_GET['rowstart']/$info['posts_per_page'] : 1)."</strong> ".$locale['of']." <strong>".$info['post_item_rows']."</strong>\n";
-			if ($info['post_item_rows'] > $info['posts_per_page']) {
-				$nav = makepagenav($_GET['rowstart'], $info['posts_per_page'], $info['post_item_rows'], 3, FORUM."viewthread.php?thread_id=".$_GET['thread_id']);
-			}
-			echo $info['post_item_rows'].$locale['forum_0362'].$nav;
+			echo "<div id='top' class='thread_pagenav pull-right'>\n".$info['page_nav']."</div>\n";
 			echo "</div>\n";
-			echo "</div>\n";
+
 			echo "<!--pre_forum_thread-->\n";
 			echo iMOD ? openform('mod_form', 'mod_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('downtime' => 0,'notice' => 0)) : '';
 			$i = 0;
@@ -660,10 +655,9 @@ if (!function_exists('render_post')) {
 				echo closeform();
 			}
 
-			// do the quick reply table here.
 			// Quick reply
 			echo "<hr>";
-			if (checkgroup($info['permissions']['can_post']) && !$info['thread_locked']) {
+			if (checkgroup($info['permissions']['can_post']) && !$info['thread_locked'] && $info['forum_quick_edit']) {
 				$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'];
 				echo "<h4 class='m-t-20'>".$locale['forum_0168']."</h4>\n";
 				echo openform('qr_form', 'qr_form', 'post', $form_action, array('class'=>'m-b-20'));
@@ -685,6 +679,7 @@ if (!function_exists('render_post')) {
 				//echo "<!--sub_forum_thread-->\n";
 			}
 
+			echo "</div>\n";
 			echo "</div>\n";
 			echo "</div>\n";
 		} else {
@@ -710,7 +705,7 @@ if (!function_exists('render_post_item')) {
 		$marker = !empty($data['marker']) ? "<a class='marker' href='".$data['marker']['link']."' id='".$data['marker']['id']."'>".$data['marker']['name']."</a>" : '';
 		$edit_reason = !empty($data['edit_reason']) ? $data['edit_reason'] : '';
 		$vote = '';
-		if ($info['permissions']['can_vote'] && $data['vote_time']) {
+		if ($info['permissions']['can_rate'] && $data['vote_time']) {
 			$vote = "<div class='text-center'>\n";
 			if (!empty($data['vote_up'])) {
 				$vote .= "<a href='".$data['vote_up']['link']."' class='mid-opacity text-dark'>\n<i class='entypo up-dir icon-sm'></i></a>\n";
@@ -794,11 +789,13 @@ if (!function_exists('render_mypost')) {
 			$last_date = ''; $i = 0;
 			foreach($info['item'] as $data) {
 				$cur_date = date('M d, Y', $data['post_datestamp']);
+				$xim = '';
 				if ($cur_date != $last_date) {
 					$last_date = $cur_date;
 					$title = "<div class='post_title m-b-10'>Posts on ".$last_date."</div>\n";
 					echo $i > 0 ? "</div>\n".$title."<div class='list-group'>\n" : $title."<div class='list-group'>\n";
 				}
+
 				echo "<div class='list-group-item clearfix'>\n";
 				echo "<div class='pull-left m-r-10'>\n";
 				echo "<i class='".$type_icon[$data['forum_type']]." icon-sm low-opacity'></i>";
@@ -810,6 +807,9 @@ if (!function_exists('render_mypost')) {
 				echo "</div>\n";
 				$i++;
 			}
+
+			echo "</div>\n"; // addition of a div the first time which did not close where $i = 0;
+
 			if ($info['post_rows'] > 20) {
 				echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $info['post_rows'], 3)."\n</div>\n";
 			}
