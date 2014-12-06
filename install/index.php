@@ -616,10 +616,6 @@ if (isset($_POST['step']) && $_POST['step'] == '5') {
 			}
 		}
 	} elseif (isset($_POST['done'])) {
-		if (file_exists(BASEDIR.'config_temp.php')) {
-			@rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
-			@chmod(BASEDIR.'config.php', 0644);
-		}
 		// system ready
 		echo "<div class='m-b-20'><h4>".$locale['5003']."</h4> ".$locale['5004']."</div>\n";
 	}
@@ -826,7 +822,7 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 				user_icq, user_yahoo, user_web, user_sig
 				) VALUES (
 				'".$username."', 'sha256', '".$userSalt."', '".$userPassword."', 'sha256', '".$adminSalt."', '".$adminPassword."',
-				'".$email."', '1', '0', '',  '0', '', '".time()."', '0', '0.0.0.0',
+				'".$email."', '1', '0', '',  '0', '0', '".time()."', '0', '0.0.0.0',
 				'A.AC.AD.APWR.B.BB.BLOG.BLC.C.CP.DB.DC.D.ERRO.FQ.F.FR.IM.I.IP.M.MAIL.N.NC.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.W.WC.MAIL.LANG.ESHP',
 				'', '103', '0', 'Default', '', '0000-00-00', '', '',  '', '', ''
 				)");
