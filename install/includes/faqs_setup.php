@@ -41,7 +41,7 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) 	$fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FQ', 'faq.gif', '".$locale['091']."', 'faq.php', '1')");
 	if (!$result) 	$fail = TRUE;
-
+	
 	$enabled_languages = explode('.', $settings['enabled_languages']);
 	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 		include LOCALE.$enabled_languages[$i]."/setup.php";

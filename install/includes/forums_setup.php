@@ -106,13 +106,13 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) {
 		$fail = TRUE;
 	}
-	$result = dbquery("CREATE TABLE ".$db_prefix."forums (
+	 $result = dbquery("CREATE TABLE ".$db_prefix."forums (
 			forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 			forum_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_branch MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			forum_name VARCHAR(50) NOT NULL DEFAULT '',
 			forum_type TINYINT(1) NOT NULL DEFAULT '1',
-			forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '0',
+			forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15',
 			forum_lock TINYINT(1) NOT NULL DEFAULT '0',
 			forum_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
 			forum_description TEXT NOT NULL,
@@ -121,10 +121,9 @@ if (isset($_POST['uninstall'])) {
 			forum_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 			forum_post SMALLINT(3) UNSIGNED DEFAULT '101',
 			forum_reply SMALLINT(3) UNSIGNED DEFAULT '101',
-			forum_poll SMALLINT(3) UNSIGNED NOT NULL DEFAULT '101',
-			forum_vote SMALLINT(3) UNSIGNED NOT NULL DEFAULT '101',
+			forum_poll SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
+			forum_vote SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
 			forum_image VARCHAR(100) NOT NULL DEFAULT '',
-			forum_allow_ratings SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
 			forum_post_ratings SMALLINT(3) UNSIGNED NOT NULL DEFAULT '101',
 			forum_users TINYINT(1) NOT NULL DEFAULT '0',
 			forum_allow_attach SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
@@ -141,7 +140,7 @@ if (isset($_POST['uninstall'])) {
 			forum_alias VARCHAR(50) NOT NULL DEFAULT '',
 			PRIMARY KEY (forum_id),
 			KEY forum_order (forum_order),
-			KEY forum_lastpost (forum_lastpost),
+			KEY forum_lastpostid (forum_lastpostid),
 			KEY forum_postcount (forum_postcount),
 			KEY forum_threadcount (forum_threadcount)
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
@@ -208,15 +207,33 @@ if (isset($_POST['uninstall'])) {
 	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 		include LOCALE.$enabled_languages[$i]."/setup.php";
 		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['200']."', 'rank_super_admin.png', 0, '1', 103, '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['201']."', 'rank_admin.png', 0, '1', 102, '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['202']."', 'rank_mod.png', 0, '1', 104, '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['203']."', 'rank0.png', 0, '0', 101, '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['204']."', 'rank1.png', 10, '0', 101, '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['205']."', 'rank2.png', 50, '0', 101, '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['206']."', 'rank3.png', 200, '0', 101, '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['207']."', 'rank4.png', 500, '0', 101, '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['208']."', 'rank5.png', 1000, '0', 101, '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['134']."', 'forum/index.php', '0', '2', '0', '5', '".$enabled_languages[$i]."')");
+		if (!$result) $fail = TRUE;
 	}
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('F', 'forums.gif', '".$locale['092']."', 'forums.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'settings_forum.gif', '".$locale['113']."', 'settings_forum.php', '4')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FR', 'forum_ranks.gif', '".$locale['119']."', 'forum_ranks.php', '2')");
+	// panel
+	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['162']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '')");
+	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['165']."', 'forum_threads_list_panel', '', '2', '2', 'file', '0', '0', '0', '')");
+
 }
 
 

@@ -75,8 +75,6 @@ if (isset($_POST['uninstall'])) {
 		include LOCALE.$enabled_languages[$i]."/setup.php";
 		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['131']."', 'articles.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')");
 		if (!$result) { $fail = TRUE; }
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['142']."', 'submit.php?stype=a', '101', '1', '0', '14', '".$enabled_languages[$i]."')");
-		if (!$result) { $fail = TRUE; }
 	}
 
 

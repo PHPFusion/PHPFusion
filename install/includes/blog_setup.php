@@ -100,7 +100,6 @@ if (isset($_POST['uninstall'])) {
 	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 		include LOCALE.$enabled_languages[$i]."/setup.php";
 		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130b']."', 'blog.php', '0', '2', '0', '3', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
 	}
 }
 
