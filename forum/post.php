@@ -22,6 +22,7 @@ add_to_title($locale['global_204']);
 require_once INCLUDES."forum_include.php";
 require_once INCLUDES."bbcode_include.php";
 require_once THEMES."templates/global/forum.forms.php";
+require_once INCLUDES."mimetypes_include.php";
 
 if (!iMEMBER || !isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) { redirect("index.php"); }
 if (isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) {	redirect(FORUM.'index.php'); }
