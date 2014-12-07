@@ -271,7 +271,7 @@ function user_search($user_id) {
 }
 
 // Returns a full hierarchy nested dropdown.
-function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, $array = FALSE, $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
+function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, array $options = array(), $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
 	global $_POST, $locale;
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
@@ -284,74 +284,59 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 	$id_col = (isset($id_col) && ($id_col != "")) ? stripinput($id_col) : '';
 	$cat_col = (isset($cat_col) && ($cat_col != "")) ? stripinput($cat_col) : '';
 
-	if (!is_array($array)) {
-		$array = array();
-		$state_validation = "";
-		$required = 0;
-		$safemode = 0;
-		$allowclear = "";
-		$placeholder = $locale['choose'];
-		$deactivate = "";
-		$labeloff = "";
-		$multiple = "";
-		$stacking = 0;
-		$width = "250px";
-		$add_parent_opts = 0;
-		$no_root = 0;
-		$inline = '';
-		$disable_branch = 0;
-		$include_opts = ''; // for selective input. will not show items if value not in array.
-		$class = '';
-		$error_text = '';
-		$parent_value = $locale['root'];
-		$show_current_item = 0;
-	} else {
-		$multiple = (array_key_exists('is_multiple', $array)) ? $array['is_multiple'] : "";
-		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : '';
-		$allowclear = (!empty($placeholder) && ($multiple !== 1)) ? "allowClear:true" : "";
-		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
-		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-		$add_parent_opts = (array_key_exists('add_parent_opts', $array) && ($array['add_parent_opts'] == 1)) ? 1 : 0;
-		$no_root = (array_key_exists('no_root', $array)) && ($array['no_root'] == 1) ? 1 : 0;
-		$disable_branch = (array_key_exists('disable_branch', $array)) && ($array['disable_branch'] == 1) ? 1 : 0;
-		$show_current_item = (array_key_exists('show_current', $array)) && ($array['show_current'] == 1) ? 1 : 0;
-		$width = (array_key_exists('width', $array)) ? $array['width'] : '250px';
-		$multiple = ($multiple == 1) ? "multiple" : "";
-		$include_opts = (array_key_exists("include_opts", $array)) ? $array['include_opts'] : '';
-		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
-		$class = (array_key_exists("class", $array)) ? $array['class'] : '';
-		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
-		$parent_value = (array_key_exists("parent_value", $array)) ? $array['parent_value'] : $locale['root'];
+	/* Documentation Included */
+	$options += array(
+		'required' => !empty($options['required']) && $options['required'] == 1 ? 1 : 0, // to set required field
+		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? 1 : 0, // to init safemode filter
+		'allowclear' => !empty($options['allowclear']) ? 1 : 0, // to have an "X" to reset selection
+		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : $locale['choose'], // to add a placeholder
+		'deactivate' => !empty($options['deactivate']) ? 1 : 0, // to disable the entire field
+		'multiple' => !empty($options['multiple']) ? 1 : 0, // to make this field a multiple input
+		'width' => !empty($options['width']) ? $options['width'] : '250px', // to set a preset width of the selector
+		'parent_value' => !empty($options['parent_value']) ? $options['parent_value'] : $locale['root'], // to change the name of the root item. need add_parent_opts
+		'add_parent_opts' => !empty($options['add_parent_opts']) && $options['add_parent_opts'] == 1 ? 1 : 0, // add a 'parent' or not.
+		'no_root' => !empty($options['no_root']) && $options['no_root'] == 1 ? 1 : 0, // remove 'root'
+		'show_current' => !empty($options['show_current']) && $options['show_current'] == 1 ? 1 : 0, // place a (Current Item) marker
+		'error_text' => !empty($options['error_text']) ? $options['error_text'] : '', // set error text on fail validation
+		'class' => !empty($options['class']) ? $options['class'] : '', // append a css class to the selector
+		'inline' => !empty($options['inline']) ? $options['inline'] : '', // make the label and field on the same row
+		'disable_opts' => !empty($options['disable_opts']) ? $options['disable_opts'] : '', // disable selection , accept either exploded array or imploded text
+		'hide_disabled' => !empty($options['hide_disabled']) && $options['hide_disabled'] == 1 ? 1 : 0  // to hide any disabled opts. required $options['disabled_opts']
+	);
+
+	$allowclear = $options['placeholder'] && $options['multiple'] ? "allowClear:true" : '';
+	$multiple = $options['multiple'] ? 'multiple' : '';
+	$disable_opts = '';
+	if ($options['disable_opts']) {
+		$disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
 	}
+
 	/* Child patern */
 	$opt_pattern = str_repeat("&#8212;", $level);
 	if (!$level) {
 		$level = 0;
-		$html = "<div id='$input_id-field' class='form-group m-b-10 ".$class."' ".($inline && $width && !$title ? "style='width: ".$width." !important;'" : '').">\n";
-		$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-		$html .= ($inline && $title) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
+		$html = "<div id='$input_id-field' class='form-group m-b-10 ".$options['class']."' ".($options['inline'] && $options['width'] && !$title ? "style='width: ".$options['width']." !important;'" : '').">\n";
+		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+		$html .= ($options['inline'] && $title) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
 	}
 	if ($level == 0) {
 		$html = &$html;
 		add_to_jquery("
-            $('#".$input_id."').select2({
-            placeholder: '".$placeholder."',
-            $allowclear
-            });
-            ");
-		$html .= "<select name='$input_name' style='".($width && $title ? "width: ".$width." " : 'min-width:250px;')."' id='$input_id' class='".$class."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : '')." $multiple>";
-		if ($allowclear) {
-			$html .= "<option value=''> </option>";
-		}
-		if ($no_root !== 1) { // api options to remove root from selector. used in items creation.
+		$('#".$input_id."').select2({
+		placeholder: '".$options['placeholder']."',
+		$allowclear
+		});
+		");
+		$html .= "<select name='$input_name' style='".($options['width'] && $title ? "width: ".$options['width']." " : 'min-width:250px;')."' id='$input_id' class='".$options['class']."' ".($options['deactivate'] == 1 ? "readonly" : '')." $multiple>";
+		$html .= $allowclear ? "<option value=''></option>" : '';
+		if ($options['no_root'] !== 1) { // api options to remove root from selector. used in items creation.
 			$this_select = '';
 			if ($input_value !== NULL) {
 				if ($input_value == '0') {
 					$this_select = 'selected';
 				}
 			}
-			$html .= ($add_parent_opts == '1') ? "<option value='0' ".$this_select.">$opt_pattern ".$locale['parent']."</option>\n" : "<option value='0' ".$this_select." >$opt_pattern ".$parent_value."</option>\n";
+			$html .= ($options['add_parent_opts'] == 1) ? "<option value='0' ".$this_select.">$opt_pattern ".$locale['parent']."</option>\n" : "<option value='0' ".$this_select." >$opt_pattern ".$options['parent_value']."</option>\n";
 		}
 		$index = dbquery_tree($db, $id_col, $cat_col);
 		$data = dbquery_tree_data($db, $id_col, $cat_col);
@@ -359,19 +344,19 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 	if (!$id) {
 		$id = 0;
 	}
+
 	if (isset($index[$id])) {
 		foreach ($index[$id] as $key => $value) {
-			$hide = $disable_branch && $value == $self_id ? 1 : 0;
+			//$hide = $disable_branch && $value == $self_id ? 1 : 0;
 			$html = &$html;
 			$name = $data[$value][$name_col];
 			$select = ($input_value !== "" && ($input_value == $value)) ? 'selected' : '';
-			if (isset($include_opts) && is_array($include_opts) && in_array($array, $include_opts)) {
-				$html .= (!$hide) ? "<option value='$value' ".$select." ".($self_id == $value ? 'disabled' : '').">$opt_pattern $name ".($show_current_item && $self_id == $value ? '(Current Item)' : '')."</option>\n" : '';
-			} else {
-				$html .= (!$hide) ? "<option value='$value' ".$select." ".($self_id == $value ? 'disabled' : '').">$opt_pattern $name ".($show_current_item && $self_id == $value ? '(Current Item)' : '')." </option>\n" : '';
-			}
+			$disabled = $disable_opts && in_array($value, $disable_opts) ? 1 : 0;
+			$hide = $disabled && $options['hide_disabled'] ? 1 : 0;
+			// do a disable for filter_opts item.
+			$html .= (!$hide) ? "<option value='$value' ".$select." ".($disable_opts && in_array($value, $disable_opts) ? 'disabled' : '')." >$opt_pattern $name ".($options['show_current'] && $self_id == $value ? '(Current Item)' : '')."</option>\n" : '';
 			if (isset($index[$value]) && (!$hide)) {
-				$html .= form_select_tree($title, $input_name, $input_id, $input_value, $array, $db, $name_col, $id_col, $cat_col, $self_id, $value, $level+1, $index, $data);
+				$html .= form_select_tree($title, $input_name, $input_id, $input_value, $options, $db, $name_col, $id_col, $cat_col, $self_id, $value, $level+1, $index, $data);
 			}
 		}
 	}
@@ -379,8 +364,8 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$html = &$html;
 		$html .= "</select>";
 		$html .= "<br/><div id='$input_id-help'></div>";
-		$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
-		$html .= ($inline && $title) ? "</div>\n" : '';
+		$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required'].",[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
+		$html .= ($options['inline'] && $title) ? "</div>\n" : '';
 		$html .= "</div>\n";
 
 	}
