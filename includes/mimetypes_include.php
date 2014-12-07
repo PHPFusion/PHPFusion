@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: mimetypes_include.php
 | Author: Arda Kilicdagi (Arda, SoulSmasher)
@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 function mimeTypes() {
 	/*-------------------------------------------------------+
 	| Taken From CodeIgniter 3.0 Dev Branch, 2013.06.26
@@ -275,7 +277,4 @@ function img_mimeTypes() {
 		'ico' => 'image/x-icon'
 	);
 }
-
-function upload_file() {
-
-}
+?>
