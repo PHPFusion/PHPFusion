@@ -163,6 +163,7 @@ if (dbrows($result) > 0) {
 
 	// Buttons
 	$info['forum_cat_link'] = FORUM."index.php?viewforum&amp;forum_id=".$info['forum_id']."&amp;forum_cat=".$info['forum_cat']."&amp;forum_branch=".$info['forum_branch'];
+
 	// Notification Link
 	if (iMEMBER && $settings['thread_notify']) {
 		if (dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
@@ -172,7 +173,9 @@ if (dbrows($result) > 0) {
 			$info['notify'] = array('link'=>FORUM."postify.php?post=on&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['forum_0175']);
 		}
 	}
+
 	$info['print'] = array('link'=>BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], 'name'=>$locale['forum_0178']);
+
 	if (iMEMBER) {
 		if (checkgroup($info['permissions']['can_post']) or checkgroup($info['permissions']['can_reply'])) {
 			if (checkgroup($info['permissions']['can_post'])) {
@@ -327,7 +330,7 @@ if (dbrows($result) > 0) {
 			$data['attach-files'] = '';
 			foreach($info['attachments'][$data['post_id']] as $attach) {
 				if (in_array($attach['attach_mime'], img_mimeTypes())) {
-					$data['attach-image'] .= display_image_attach($attach['attach_name'], "100", "100", $post_data['post_id'])."\n";
+					$data['attach-image'] .= display_image_attach($attach['attach_name'], "100", "100", $data['post_id'])."\n";
 					$i_image++;
 				} else {
 					$data['attach-files'] .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;getfile=".$attach['attach_id']."'>".$attach['attach_name']."</a>&nbsp;";
