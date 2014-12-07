@@ -193,6 +193,9 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('login_method', '0')"); // New: Login method feature
 		//Mime check for upload files
 		$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('mime_check', '0')");
+		//Delete user_offset field an replace it with user_timezone
+		$result = dbquery("ALTER TABLE ".DB_USERS." ADD user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London' AFTER user_offset");
+		$result = dbquery("ALTER TABLE ".DB_USERS." DROP COLUMN user_offset");
 		//Blog settings
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('blog_image_readmore', '0')");
 			$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('blog_image_frontpage', '0')");
