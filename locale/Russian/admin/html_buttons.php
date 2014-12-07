@@ -41,7 +41,7 @@ $locale['color_016'] = "Красный";
 $locale['color_017'] = "Янтарь";
 $locale['color_018'] = "Светло-зелёный";
 $locale['color_019'] = "Морской зелёный";
-$locale['color_020'] = "Turqoise";
+$locale['color_020'] = "Светло-бирюзовый";
 $locale['color_021'] = "Королевский синий";
 $locale['color_022'] = "Перперный";
 $locale['color_023'] = "Умеренный серый";
@@ -63,7 +63,7 @@ $locale['color_038'] = "Слива";
 $locale['color_039'] = "Нет цвета";
 $locale['texts'] = "Текст";
 $locale['preview'] = "Предпросмотр";
-$locale['word_count'] = "Количество слов";
+$locale['word_count'] = "Количество знаков";
 $locale['error_preview'] = "Ошибка предпросмотра";
 $locale['error_preview_text'] = "Предпросмотр временно не может быть создан. Пожалуйста, перезагрузите страницу и попробуйте еще раз.";
 ?>
