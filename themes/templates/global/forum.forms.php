@@ -1,35 +1,26 @@
 <?php
 // new thread does not have a category.
-function postform($data) {
-	global $locale, $userdata, $settings, $info, $can_poll;
+function postform($data, $info) {
+	global $locale, $userdata, $settings, $can_poll;
 	$data += array('edit' => !empty($data['edit']) && $data['edit'] == 1 ? 1 : 0,
 		'new' => !empty($data['new']) && $data['new'] == 1 ? 1 : 0,
 		'reply' => !empty($data['reply']) && $data['reply'] == 1 ? 1 : 0,
 		'forum_id' => dbcount("('forum_id')", DB_FORUMS, "forum_id = '".$_GET['forum_id']."'") ? $_GET['forum_id'] : 0,
-		//
 		'thread_subject' => !empty($data['thread_subject']) ? $data['thread_subject'] : '',
-		//
 		'post_message' => !empty($data['post_message']) ? $data['post_message'] : '',
 		'thread_sticky' => !empty($data['thread_sticky']) ? $data['thread_sticky'] : '',
-		//
 		'thread_locked' => !empty($data['thread_locked']) ? $data['thread_locked'] : '',
-		//
 		'post_smileys' => !empty($data['post_smileys']) ? $data['post_smileys'] : '',
-		//
 		'post_showsig' => !empty($data['post_showsig']) ? $data['post_showsig'] : '',
-		//
 		'notify_me' => !empty($data['notify_me']) ? $data['notify_me'] : '',
-		//
 		// forum poll.
 		'thread_poll' => !empty($data['thread_poll']) && $data['thread_poll'] == 1 ? 1 : 0,
 		'forum_poll_title' => !empty($data['forum_poll_title']) ? $data['forum_poll_title'] : '',
-		//
 		'poll_opts' => !empty($data['poll_opts']) ? $data['poll_opts'] : '',
 		// For Post Editing only. Requires $data['edit'] = 1.
 		'first_post' => !empty($data['first_post']) && !empty($data['edit']) ? $data['first_post'] : '',
 		// only for post edit.
 		'post_editreason' => !empty($data['post_editreason']) && !empty($data['edit']) ? $data['post_editreason'] : '',
-		// only for post edit.
 	);
 	add_to_head("<link href='".THEMES."templates/global/css/forum.css' rel='stylesheet'/>\n");
 	echo render_breadcrumbs();
@@ -49,6 +40,7 @@ function postform($data) {
 	} elseif ($data['new']) {
 		$formaction .= FORUM."post.php?action=newthread&amp;forum_id=".$_GET['forum_id'];
 	}
+
 	echo openform('input_form', 'input_form', 'post', $formaction, array('enctype' => 1, 'downtime' => 0));
 	if ($data['edit'] or $data['reply']) {
 		if ($data['reply']) {
@@ -79,7 +71,7 @@ function postform($data) {
 	$tab_title['title'][0] = $locale['forum_0602'];
 	$tab_title['id'][0] = 'postopts';
 	$tab_title['icon'][0] = '';
-	if ($info['forum_attach'] && checkgroup($info['forum_attach'])) {
+	if ($info['forum_attach'] && checkgroup($info['forum_attach']) && $info['forum_allow_attach']) {
 		$tab_title['title'][1] = $locale['forum_0557'];
 		$tab_title['id'][1] = 'attach';
 		$tab_title['icon'][1] = '';
@@ -113,7 +105,7 @@ function postform($data) {
 		echo form_checkbox($locale['forum_0626'], 'notify_me', 'notify_me', $data['notify_me'], array('class' => 'm-b-0'));
 	}
 	echo closetabbody();
-	if ($info['forum_attach'] && checkgroup($info['forum_attach'])) {
+	if ($info['forum_attach'] && checkgroup($info['forum_attach']) && $info['forum_allow_attach']) {
 		echo opentabbody($tab_title['title'][1], 'attach', $tab_active);
 		add_to_head("<script type='text/javascript' src='".INCLUDES."multi_attachment.js'></script>\n");
 		if (isset($info['attachment']) && !empty($info['attachment'])) {

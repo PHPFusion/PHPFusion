@@ -527,7 +527,10 @@ if ($executable && iMEMBER) {
 		}
 	}
 } else {
-	if (!$data['new']) redirect(FORUM."postify.php?post=new&error=4&forum_id=".$_GET['forum_id']."&amp;parent_id=".$data['forum_id']);
+	if ($data['new'] or $data['reply'] or $data['edit']) {
+	} else {
+		redirect(FORUM."postify.php?post=new&error=4&forum_id=".$_GET['forum_id']."&amp;parent_id=".$data['forum_id']);
+	}
 }
 
 ?>

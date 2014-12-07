@@ -184,7 +184,7 @@ else {
 
 if (iMEMBER){
 	include "post_actions.php";
-	postform($data);
+	postform($data, $info);
 } else {
 	// cookie suddenly expire.
 	$defender->stop();
