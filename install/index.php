@@ -78,18 +78,20 @@ opensetup();
 
 // Introduction
 if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
-
+	// in order to go clean install.. must not have config, and must not have config_temp.php,
+	// because we are creating new prefixes and a totally new tables.
+	// so.. if config file exist, rename.
 	if (file_exists(BASEDIR.'config.php')) {
 		@rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
 		@chmod(BASEDIR.'config_temp.php', 0755);
 	}
-	// temp is blank.
+	// then include the temp file.
 	if (file_exists(BASEDIR.'config_temp.php')) {
 		include BASEDIR.'config_temp.php';
 	}
 
 	$settings = array();
-
+	// reading temp file. if it's blank, would not invoke.
 	if (isset($db_prefix)) {
 		if ($pdo_enabled == "1") {
 			require_once INCLUDES."db_handlers/pdo_functions_include.php";
@@ -129,7 +131,7 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 			include 'includes/core.setup.php';
 			@unlink(BASEDIR.'config_temp.php');
 			@unlink(BASEDIR.'config.php');
-			redirect(FUSION_SELF);
+			redirect(BASEDIR."install/index.php");
 		}
 	}
 
@@ -149,9 +151,9 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 		echo "<hr>\n";
 		echo "<input type='hidden' name='step' value='2' />\n";
 		renderButton();
+	}
 
-	} elseif (!isset($_POST['uninstall'])) {
-
+	elseif (!isset($_POST['uninstall'])) {
 		echo "<h4 class='strong'>".$locale['1001']."</h4>\n";
 		echo "<span class='display-block m-t-20 m-b-10'>".$locale['1002']."</span>\n";
 		echo "<div class='well'>\n";
@@ -166,16 +168,16 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 		echo "<span class='strong display-inline-block m-b-10'>".$locale['1010']."</span>\n<br/><p>".$locale['1011']."</p>";
 		echo form_button($locale['1012'], 'step', 'step', '6', array('class' => 'btn-primary btn-sm m-r-10'));
 		echo "</div>\n";
-
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
-
 		if (isset($db_prefix)) {
 			echo "<div class='well'>\n";
 			echo "<span class='strong display-inline-block m-b-10'>".$locale['1013']."</span>\n<br/><p>".$locale['1014']."</p>";
 			echo form_button($locale['1015'], 'htaccess', 'htaccess', 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
 			echo "</div>\n";
 		}
-
+	}
+	else {
+		redirect(BASEDIR."index.php");
 	}
 }
 
