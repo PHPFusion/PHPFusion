@@ -407,7 +407,7 @@ function forum_form(array $data = array()) {
 	echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 	openside('');
 	$self_id = $data['forum_id'] ? $data['forum_id'] : '';
-	echo form_select_tree($locale['forum_008'], 'forum_cat', 'forum_cat', $data['forum_cat'], array('add_parent_opts'=>1, 'disable_branch'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id);
+	echo form_select_tree($locale['forum_008'], 'forum_cat', 'forum_cat', $data['forum_cat'], array('add_parent_opts'=>1, 'disable_opts'=>$self_id, 'hide_disabled'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id);
 	echo form_select($locale['forum_009'], 'forum_type', 'forum_type', $type_opts, $data['forum_type']);
 	echo form_select($locale['forum_010'], 'forum_language', 'forum_lang', $language_opts, $data['forum_language']);
 	echo form_text($locale['forum_043'], 'forum_order', 'forum_order', $data['forum_order'], array('number'=>1));
@@ -417,8 +417,7 @@ function forum_form(array $data = array()) {
 	echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 	echo form_text($locale['forum_011'], 'forum_alias', 'forum_alias', $data['forum_alias']); // need ajax check
 	echo form_select($locale['forum_012'], 'forum_meta', 'forum_meta', array(), $data['forum_meta'], array('tags'=>1, 'multiple'=>1, 'width'=>'100%'));
-
-	// exploit: if image is tied to a url. we can remove it after assigning to other's people page? what if i split to image_url ?
+	// possible bug? - if image is tied to a url. we can remove it after assigning to other's people page? what if i split to image_url ?
 	if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
 		openside();
 		echo "<div class='pull-left m-r-10'>\n";
@@ -428,7 +427,7 @@ function forum_form(array $data = array()) {
 		echo "<span class='strong'>".$locale['forum_013']."</span><br/>\n";
 		echo "<span class='text-smaller'>".sprintf($locale['forum_027'], $image_size[0], $image_size[1])."</span><br/>";
 		echo form_button($locale['forum_028'], 'remove_image', 'remove_image', $locale['forum_028'], array('class'=>'btn-default btn-xs m-t-10', 'icon'=>'entypo trash'));
-		// this form has forum_id.
+		// this form has forum_id - onclick of button - will also post forum_id @ L475
 		echo "</div>\n";
 		closeside();
 	} else {
@@ -675,14 +674,14 @@ function move_form() {
 	echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
 	echo "<span class='text-dark strong'>".$locale['forum_052']."</span><br/>\n";
 	echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
-	echo form_select_tree('', 'move_threads', 'move_threads', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_branch'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
+	echo form_select_tree('', 'move_threads', 'move_threads', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_opts'=>$_GET['forum_id'], 'hide_disabled'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
 	echo form_checkbox($locale['forum_053'], 'delete_threads', 'delete_threads', '');
 	echo "</div>\n</div>\n";
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
 	echo "<span class='text-dark strong'>".$locale['forum_054']."</span><br/>\n"; // if you move, then need new hcat_key
 	echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
-	echo form_select_tree('', 'move_forums', 'move_forums', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_branch'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
+	echo form_select_tree('', 'move_forums', 'move_forums', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_opts'=>$_GET['forum_id'], 'hide_disabled'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
 	echo form_checkbox($locale['forum_055'], 'delete_forums', 'delete_forums', '');
 	echo "</div>\n</div>\n";
 	echo "<div class='clearfix'>\n";
