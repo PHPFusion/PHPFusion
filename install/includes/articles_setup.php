@@ -33,6 +33,7 @@ if (isset($_POST['uninstall'])) {
 			article_subject VARCHAR(200) NOT NULL DEFAULT '',
 			article_snippet TEXT NOT NULL,
 			article_article TEXT NOT NULL,
+			article_keywords VARCHAR(250) NOT NULL DEFAULT '',
 			article_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 			article_breaks CHAR(1) NOT NULL DEFAULT '',
 			article_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',

@@ -23,6 +23,7 @@ $locale['430'] = "Preview Article";
 $locale['431'] = "Save Article";
 $locale['432'] = "Page Break";
 $locale['433'] = "[DRAFT]";
+$locale['444'] = "Keywords (separate each keyword with a ,)";
 // Popup Error/Warning Messages
 $locale['450'] = "Please specify a subject";
 $locale['451'] = "Delete this article?";
@@ -34,4 +35,5 @@ $locale['456'] = "%s are disabled for all items.<br />This setting will only tak
 $locale['457'] = "Comments";
 $locale['458'] = "Ratings";
 $locale['459'] = $locale['457']." and ".$locale['458'];
+$locale['460'] = "Please specify keywords";
 ?>
