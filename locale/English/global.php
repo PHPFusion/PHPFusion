@@ -135,8 +135,6 @@ $locale['global_088b'] = "Highest Rating Blog";
 $locale['global_089'] = "Be the first to comment on %s";
 $locale['global_089a'] = "Be the first to rate on this %s";
 // Page Navigation
-$locale['global_090'] = "Prev";
-$locale['global_091'] = "Next";
 $locale['global_092'] = "Page ";
 $locale['global_093'] = " of ";
 $locale['global_094'] = " out of ";
@@ -163,7 +161,6 @@ $locale['global_127'] = "messages";
 $locale['global_128'] = "submission";
 $locale['global_129'] = "submissions";
 // User Menu
-$locale['global_123'] = "Admin Panel";
 $locale['UM060'] = "Login";
 $locale['UM061'] = "Username";
 $locale['UM061a'] = "Email";
@@ -315,4 +312,80 @@ $locale['flood'] = "You are barred to post until the flood period cooldown is ov
 $locale['no_image'] = "No Image";
 $locale['send_message'] = 'Send Message';
 $locale['go_profile'] = 'Go to %s Profile Page';
+// ex oneword.locale.php
+// Greetings
+$locale['hello'] = 'Hello!';
+$locale['goodbye'] = 'Goodbye!';
+$locale['welcome'] = 'Welcome back';
+$locale['home'] = 'Home';
+// Status
+$locale['error'] = 'Error!';
+$locale['success'] = 'Success!';
+$locale['enable'] = 'Enable';
+$locale['disable'] = 'Disable';
+$locale['no'] = 'No';
+$locale['yes'] = 'Yes';
+$locale['off'] = 'Off';
+$locale['on'] = 'On';
+$locale['or'] = 'or';
+$locale['by'] = 'by';
+$locale['in'] = 'in';
+$locale['of'] = 'of';
+// Navigation
+$locale['next'] = 'Next';
+$locale['pevious'] = 'Previous';
+$locale['back'] = 'Back';
+$locale['forward'] = 'Forward';
+$locale['go'] = 'Go';
+$locale['cancel'] = 'Cancel';
+// Action
+$locale['add'] = 'Add';
+$locale['save'] = 'Save';
+$locale['update'] = 'Update';
+$locale['updated'] = 'Updated';
+$locale['remove'] = 'Remove';
+$locale['delete'] = 'Delete';
+$locale['search'] = 'Search';
+$locale['help'] = 'Help';
+$locale['register'] = 'Register';
+$locale['ban'] = 'Ban';
+$locale['reactivate'] = 'Reactivate';
+$locale['user'] = 'User';
+$locale['promote'] = 'Promote';
+$locale['show'] = 'Show';
+//Tables
+$locale['status'] = 'Status';
+$locale['order'] = 'Order';
+$locale['sort'] = 'Sort';
+$locale['id'] = 'ID';
+$locale['title'] = 'Title';
+$locale['rights'] = 'Rights';
+$locale['info'] = 'Info';
+$locale['image'] = 'Image';
+// Forms
+$locale['choose'] = 'Please Choose One...';
+$locale['root'] = 'As Parent';
+$locale['choose-user'] = 'Please Choose a User...';
+$locale['parent'] = 'Create as New Parent..';
+$locale['order'] = 'Item Ordering';
+$locale['status'] = 'Status';
+$locale['note'] = 'Make a note of this item';
+$locale['publish'] = 'Published';
+$locale['unpublish'] = 'Unpublished';
+$locale['draft'] = 'Draft';
+$locale['settings'] = 'Settings';
+$locale['posted'] = 'posted';
+$locale['in'] = 'in';
+$locale['profile'] = 'Profile';
+$locale['edit'] = 'Edit';
+$locale['view'] = 'View';
+$locale['login'] = 'Log in';
+$locale['logout'] = 'Logout';
+$locale['admin-logout'] = 'Admin Logout';
+$locale['message'] = 'Private Messages';
+$locale['logged'] = 'Logged in as ';
+$locale['version'] = 'Version ';
+$locale['browse'] = 'Browse ...';
+$locale['close'] = 'Close';
+$locale['nopreview'] = 'There is nothing to Preview';
 ?>

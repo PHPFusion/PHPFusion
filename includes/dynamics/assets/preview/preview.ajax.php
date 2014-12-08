@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 require_once dirname(__FILE__)."../../../../../maincore.php";
 $text = $_POST['text'];
-include LOCALE.LOCALESET."oneword.locale.php";
 if (!defined('FUSION_NULL')) {
 	// filter to relative path conversion
 	echo "<div class='preview-response p-t-20 m-b-20'>\n";
