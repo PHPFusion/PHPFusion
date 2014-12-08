@@ -333,7 +333,7 @@ $locale['in'] = 'in';
 $locale['of'] = 'of';
 // Navigation
 $locale['next'] = 'Next';
-$locale['pevious'] = 'Previous';
+$locale['previous'] = 'Previous';
 $locale['back'] = 'Back';
 $locale['forward'] = 'Forward';
 $locale['go'] = 'Go';
@@ -367,8 +367,6 @@ $locale['choose'] = 'Please Choose One...';
 $locale['root'] = 'As Parent';
 $locale['choose-user'] = 'Please Choose a User...';
 $locale['parent'] = 'Create as New Parent..';
-$locale['order'] = 'Item Ordering';
-$locale['status'] = 'Status';
 $locale['note'] = 'Make a note of this item';
 $locale['publish'] = 'Published';
 $locale['unpublish'] = 'Unpublished';

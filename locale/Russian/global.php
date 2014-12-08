@@ -334,7 +334,7 @@ $locale['in'] = "в";
 $locale['of'] = "из";
 // Navigation
 $locale['next'] = "След.";
-$locale['pevious'] = "Пред.";
+$locale['previous'] = "Пред.";
 $locale['back'] = "Назад";
 $locale['forward'] = "Вперёд";
 $locale['go'] = "Перейти";
@@ -367,8 +367,6 @@ $locale['image'] = 'Изображение';
 $locale['choose'] = "Пожалуйста, выберите вариант...";
 $locale['choose-user'] = 'Пожалуйста, выберите пользователя...';
 $locale['parent'] = "Создать как нового предка...";
-$locale['order'] = "Порядок элементов";
-$locale['status'] = "Статус";
 $locale['note'] = "Отметить этот элемент";
 $locale['publish'] = "Опубликовано";
 $locale['unpublish'] = "Не опубликовано";
