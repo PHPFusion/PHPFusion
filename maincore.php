@@ -195,6 +195,7 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
 	$auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
 	$userdata = $auth->getUserData();
 	unset($auth, $_POST['user_name'], $_POST['user_pass']);
+	redirect(FUSION_REQUEST);
 } elseif (isset($_GET['logout']) && $_GET['logout'] == "yes") {
 	$userdata = Authenticate::logOut();
 	redirect(BASEDIR."index.php");
