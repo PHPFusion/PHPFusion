@@ -92,7 +92,7 @@ if (!function_exists('render_forum_main')) {
 		global $userdata, $settings, $locale;
 		$type_icon = array('1'=>'entypo folder', '2'=>'entypo chat', '3'=>'entypo link', '4'=>'entypo graduation-cap');
 		echo "<div class='m-t-10'>\n";
-		if (!empty($info)) {
+		if (!empty($info['item'])) {
 			foreach($info['item'] as $data) {
 				// template for category type.
 				if ($data['forum_type'] == '1') {
@@ -117,6 +117,8 @@ if (!function_exists('render_forum_main')) {
 					render_forum_item_type($data, 0);
 				}
 			}
+		} else {
+			echo "<div class='well text-center'>".$locale['forum_0328']."</div>\n";
 		}
 		echo "</div>\n";
 	}
@@ -785,7 +787,7 @@ if (!function_exists('render_mypost')) {
 	function render_mypost($info) {
 		global $locale;
 		$type_icon = array('1'=>'entypo folder', '2'=>'entypo chat', '3'=>'entypo link', '4'=>'entypo graduation-cap');
-		if (!empty($info)) {
+		if (!empty($info['item'])) {
 			// sort by date.
 			$last_date = ''; $i = 0;
 			foreach($info['item'] as $data) {
@@ -815,7 +817,7 @@ if (!function_exists('render_mypost')) {
 				echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $info['post_rows'], 3)."\n</div>\n";
 			}
 		} else {
-			echo "<div class='alert alert-info strong'>".$locale['global_054']."</div>\n";
+			echo "<div class='well text-center'>".$locale['global_054']."</div>\n";
 		}
 		// not used locale. global_042, 048, 044, 049
 	}
@@ -833,7 +835,7 @@ if (!function_exists('render_laft')) {
 				$i++;
 			}
 		} else {
-			echo "<div class='alert alert-info strong'>".$locale['global_023']."</div>\n";
+			echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
 		}
 		// filter --- this need to be translated to links.
 		$opts = array('0' => 'All Results', '1' => '1 Day', '7' => '7 Days', '14' => '2 Weeks', '30' => '1 Month',
@@ -858,7 +860,7 @@ if (!function_exists('render_tracked')) {
 				$i++;
 			}
 		} else {
-			echo "<div class='alert alert-info strong'>".$locale['global_059']."</div>\n";
+			echo "<div class='well text-center'>".$locale['global_059']."</div>\n";
 		}
 	}
 }
