@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once INCLUDES."notify/notify.inc.php";
+
 include LOCALE.LOCALESET."defender.php";
 
 class defender {
@@ -27,7 +27,7 @@ class defender {
 	/* Sanitize Fields Automatically */
 	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
 		global $locale;
-
+		require_once INCLUDES."notify/notify.inc.php";
 		$this->noAdminCookie();
 		/* Validation of Files */
 		if ($type == "textbox" || $type == 'dropdown' || $type == 'name' || $type == 'textarea') { // done.
@@ -101,7 +101,7 @@ class defender {
 		global $locale;
 		$admin_cookie = COOKIE_PREFIX."admin";
 		$input_password = '';
-		if (defined('ADMIN_PANEL') && !$_COOKIE[$admin_cookie]) {
+		if (defined('ADMIN_PANEL') && !isset($_COOKIE[$admin_cookie])) {
 			if (isset($_POST['admin_login'])) {
 				check_admin_pass($input_password);
 			} else {
