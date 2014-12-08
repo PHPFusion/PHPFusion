@@ -33,7 +33,7 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 		'multiple' => !empty($options['multiple']) && $options['multiple'] == 1 ? '1' : '0',
 		'width' => !empty($options['width']) ? $options['width'] : '',
 		'keyflip' => !empty($options['keyflip']) && $options['keyflip'] == 1 ? '1' : '0',
-		'tags' => !empty($options['tags']) && $options['tags'] == 1 ? '1' : '0',
+		'tags' => !empty($options['tags']) && $options['tags'] == 1 ? 1 : 0,
 		'jsonmode' => !empty($options['jsonmode']) && $options['jsonmode'] == 1 ? '1' : '0',
 		'chainable' => !empty($options['chainable']) ? $options['chainable'] : '',
 		'maxselect' => !empty($options['maxselect']) && isnum($options['maxselect']) ? $options['maxselect'] : 30,

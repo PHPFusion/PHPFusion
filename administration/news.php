@@ -40,6 +40,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_i
 		$result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$_POST['news_id']."' and comment_type='N'");
 		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$_POST['news_id']."' and rating_type='N'");
 		dbquery_insert(DB_NEWS, $del_data, 'delete');
+		redirect(FUSION_SELF.$aidlink."&amp;status=del");
 	} else {
 		redirect(FUSION_SELF.$aidlink);
 	}
@@ -134,30 +135,6 @@ function news_listing() {
 function news_form() {
 	global $userdata, $locale, $settings, $aidlink, $language_opts, $defender;
 
-	/* Something like this is needed at some point before release.
-	
-	$result = dbquery("SELECT news_id, news_subject, news_draft FROM ".DB_NEWS." ".(multilang_table("NS") ?  "WHERE news_language='".LANGUAGE."'" : "")." ORDER BY news_draft DESC, news_datestamp DESC");
-	if (dbrows($result) != 0) {
-		$editlist = ""; $sel = "";
-		while ($data = dbarray($result)) {
-			if ((isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
-				$news_id = isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'];
-				$sel = ($news_id == $data['news_id'] ? " selected='selected'" : "");
-			}
-			$editlist .= "<option value='".$data['news_id']."'$sel>".($data['news_draft'] ? $locale['438']." " : "").$data['news_subject']."</option>\n";
-		}
-		opentable($locale['400']);
-		$editnewsaction = FUSION_SELF.$aidlink."&action=edit";
-		echo "<div class='pull-left'>\n";
-		echo openform('editnews', 'editnews', 'post', $editnewsaction, array('downtime' => 0));
-		echo "<select name='news_id' class='textbox' style='width:250px'>\n".$editlist."</select>\n";
-		echo "<input type='submit' name='edit' value='".$locale['420']."' class='button' />\n";
-		echo "<input type='submit' name='delete' value='".$locale['421']."' onclick='return DeleteNews();' class='button' />\n";
-		echo closeform();
-		echo "</div>\n";
-		closetable();
-	}
-*/
 	$data = array();
 	if (isset($_POST['save'])) {
 		$error = "";
@@ -233,8 +210,6 @@ function news_form() {
 			$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['news_image_t2']) ? $_POST['news_image_t2'] : "") : "");
 			$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
 		}
-		//$data['news_news'] = form_sanitizer($_POST['news_news'], '', 'news_news'); // Destroys HTML coding,
-		//$data['news_extended'] = form_sanitizer($_POST['news_extended'], '', 'news_extended'); // table-safe values, // Destroys HTML coding.
 		$data['news_news'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])); // Needed for HTML to work
 		$data['news_extended'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])); // Needed for HTML to work
 		$data['news_keywords'] = form_sanitizer($_POST['news_keywords'], '', 'news_keywords');
@@ -277,6 +252,7 @@ function news_form() {
 					$data['news_image_t2'] = "";
 				}
 				dbquery_insert(DB_NEWS, $data, 'update');
+				redirect(FUSION_SELF.$aidlink."&amp;status=updated");
 			} else {
 				redirect(FUSION_SELF.$aidlink);
 			}
@@ -285,6 +261,7 @@ function news_form() {
 				$result = dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
 			}
 			dbquery_insert(DB_NEWS, $data, 'save');
+			redirect(FUSION_SELF.$aidlink."&amp;status=success");
 		}
 	}
 	if ($settings['tinymce_enabled']) {
@@ -292,18 +269,7 @@ function news_form() {
 	} else {
 		require_once INCLUDES."html_buttons_include.php";
 	}
-	if (isset($_GET['status'])) {
-		if ($_GET['status'] == "success") {
-			$message = $locale['410'];
-		} elseif ($_GET['status'] == "updated") {
-			$message = $locale['411'];
-		} elseif ($_GET['status'] == "del") {
-			$message = $locale['412'];
-		}
-		if ($message) {
-			echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-		}
-	}
+
 	$result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 	$news_cat_opts = array();
 	$news_cat_opts['0'] = $locale['424'];
@@ -457,7 +423,7 @@ function news_form() {
 	}
 	echo form_textarea($locale['425'], 'news_news', 'news_news', $data['news_news'], $fusion_mce);
 	echo form_textarea($locale['426'], 'news_extended', 'news_extended', $data['news_extended'], $fusion_mce);
-	echo form_text($locale['443'], 'news_keywords', 'news_keywords', $data['news_keywords'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['457']));
+	echo form_select($locale['443'], 'news_keywords', 'news_keywords', array(), $data['news_keywords'], array('max_length' => 200, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1));
 	echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	if (multilang_table("NS")) {
@@ -507,9 +473,22 @@ $master_title['title'][] = $locale['401'];
 $master_title['id'][] = 'nform';
 $master_title['icon'] = '';
 
-$tab_active = tab_active($master_title, 1);
+$tab_active = isset($_GET['status']) ? tab_active($master_title, 0) : tab_active($master_title, 1);
 
 opentable('News');
+
+if (isset($_GET['status'])) {
+	if ($_GET['status'] == "success") {
+		$message = $locale['410'];
+	} elseif ($_GET['status'] == "updated") {
+		$message = $locale['411'];
+	} elseif ($_GET['status'] == "del") {
+		$message = $locale['412'];
+	}
+	if ($message) {
+		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+	}
+}
 echo opentab($master_title, $tab_active, 'news');
 echo opentabbody($master_title['title'][0], 'news', $tab_active);
 news_listing();
