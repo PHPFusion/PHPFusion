@@ -227,7 +227,8 @@ if (isset($_POST['save'])) {
 		$sel = (isset($panel_access) && $panel_access == $user_group['0'] ? " selected='selected'" : "");
 		$access_opts .= "<option value='".$user_group['0']."'$sel>".$user_group['1']."</option>\n";
 	}
-	echo "<form name='editform' method='post' action='$action'>\n";
+
+	echo openform('editform', 'editform', 'post', $action, array('downtime'=>0));
 	echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
 	echo "<td class='tbl'>".$locale['452']."</td>\n";
 	echo "<td colspan='2' class='tbl'><input type='text' name='panel_name' value='$panel_name' class='textbox' style='width:200px;' /></td>\n";
@@ -303,7 +304,8 @@ if (isset($_POST['save'])) {
 	}
 	echo "<input type='submit' name='preview' value='".$locale['460']."' class='button' />\n";
 	echo "<input type='submit' name='save' value='".$locale['461']."' class='button' /></td>\n";
-	echo "</tr>\n</table>\n</form>\n";
+	echo "</tr>\n</table>\n";
+	echo closeform();
 	closetable();
 }
 require_once THEMES."templates/footer.php";
