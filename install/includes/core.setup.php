@@ -51,16 +51,19 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."users");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."email_templates");
 	// drop all custom tables.
-	if (file_exists('articles_setup.php')) include 'articles_setup.php';
-	if (file_exists('blog_setup.php')) include 'blog_setup.php';
-	if (file_exists('downloads_setup.php')) include 'downloads_setup.php';
-	if (file_exists('eshop_setup.php')) include 'eshop_setup.php';
-	if (file_exists('faqs_setup.php')) include 'faqs_setup.php';
-	if (file_exists('forums_setup.php')) include 'forums_setup.php';
-	if (file_exists('news_setup.php')) include 'news_setup.php';
-	if (file_exists('photo_setup.php')) include 'photo_setup.php';
-	if (file_exists('polls_setup.php')) include 'polls_setup.php';
-	if (file_exists('weblinks_setup.php')) include 'weblinks_setup.php';
+	if (file_exists(BASEDIR.'install/includes/articles_setup.php')) include BASEDIR.'install/includes/articles_setup.php';
+	if (file_exists(BASEDIR.'install/includes/blog_setup.php')) include BASEDIR.'install/includes/blog_setup.php';
+	if (file_exists(BASEDIR.'install/includes/downloads_setup.php')) include BASEDIR.'install/includes/downloads_setup.php';
+	if (file_exists(BASEDIR.'install/includes/eshop_setup.php')) include BASEDIR.'install/includes/eshop_setup.php';
+	if (file_exists(BASEDIR.'install/includes/faqs_setup.php')) include BASEDIR.'install/includes/faqs_setup.php';
+	if (file_exists(BASEDIR.'install/includes/forums_setup.php')) include BASEDIR.'install/includes/forums_setup.php';
+	if (file_exists(BASEDIR.'install/includes/news_setup.php')) include BASEDIR.'install/includes/news_setup.php';
+	if (file_exists(BASEDIR.'install/includes/photo_setup.php')) include BASEDIR.'install/includes/photo_setup.php';
+	if (file_exists(BASEDIR.'install/includes/polls_setup.php')) include BASEDIR.'install/includes/polls_setup.php';
+	if (file_exists(BASEDIR.'install/includes/weblinks_setup.php')) include BASEDIR.'install/includes/weblinks_setup.php';
+
+
+
 } else {
 	$result = dbquery("CREATE TABLE ".$db_prefix."admin (
 				admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
