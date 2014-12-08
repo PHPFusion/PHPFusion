@@ -404,6 +404,9 @@ nav {
 	background-color: rgba(55, 73, 94, 1);
 	color: #FFF;
 }
+.leftbar a {
+	color: #FFF !important;
+}
 
 .leftbar .heading {
 	font-size: 15px;
