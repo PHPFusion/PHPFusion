@@ -99,7 +99,7 @@ $locale['global_054'] = "You have not posted any forum messages yet.";
 $locale['global_055'] = "There are %u new posts in %u different threads since your last visit.";
 $locale['global_056'] = "My Tracked Threads";
 $locale['global_057'] = "Options";
-$locale['global_058'] = "Stop";
+$locale['global_058'] = "Stop Tracking";
 $locale['global_059'] = "You're not tracking any threads.";
 $locale['global_060'] = "Stop tracking this thread?";
 // Blog, News & Articles
@@ -163,6 +163,7 @@ $locale['global_127'] = "messages";
 $locale['global_128'] = "submission";
 $locale['global_129'] = "submissions";
 // User Menu
+$locale['global_123'] = "Admin Panel";
 $locale['UM060'] = "Login";
 $locale['UM061'] = "Username";
 $locale['UM061a'] = "Email";
@@ -234,7 +235,7 @@ $locale['global_195'] = "This account has not been activated.";
 $locale['global_196'] = "Invalid username or password.";
 $locale['global_197'] = "Please wait while we transfer you...<br /><br />
 [ <a href='index.php'>Or click here if you do not wish to wait</a> ]";
-$locale['global_198'] = "<strong>WARNING:</strong> INSTALLER DETECTED, PLEASE DELETE IT IMMEDIATELY.";
+$locale['global_198'] = "<strong>WARNING:</strong> INSTALLER DETECTED, PLEASE DELETE THE /INSTALL/ FOLDER IMMEDIATELY.";
 $locale['global_199'] = "<strong>Warning:</strong> admin password not set, click <a href='".BASEDIR."edit_profile.php'>Edit Profile</a> to set it.";
 //Titles
 $locale['global_200'] = " - ";
