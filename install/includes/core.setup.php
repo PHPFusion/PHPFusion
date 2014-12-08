@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 // Installs 33 Core Tables and Inserts
 if (isset($_POST['uninstall'])) {
+
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."admin");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."mlt_tables");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."admin_resetlog");
@@ -50,6 +51,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."user_log");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."users");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."email_templates");
+
 	// drop all custom tables.
 	if (file_exists(BASEDIR.'install/includes/articles_setup.php')) include BASEDIR.'install/includes/articles_setup.php';
 	if (file_exists(BASEDIR.'install/includes/blog_setup.php')) include BASEDIR.'install/includes/blog_setup.php';
@@ -61,8 +63,6 @@ if (isset($_POST['uninstall'])) {
 	if (file_exists(BASEDIR.'install/includes/photo_setup.php')) include BASEDIR.'install/includes/photo_setup.php';
 	if (file_exists(BASEDIR.'install/includes/polls_setup.php')) include BASEDIR.'install/includes/polls_setup.php';
 	if (file_exists(BASEDIR.'install/includes/weblinks_setup.php')) include BASEDIR.'install/includes/weblinks_setup.php';
-
-
 
 } else {
 	$result = dbquery("CREATE TABLE ".$db_prefix."admin (
@@ -763,15 +763,22 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_sig', '3', '0', '3')");
 	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_blacklist', '5', '0', '1')");
 
-	for ($i = 0; $i < sizeof($_POST['enabled_languages']); $i++) {
-		include_once LOCALE."".$_POST['enabled_languages'][$i]."/setup.php";
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130']."', 'index.php', '0', '2', '0', '1', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['135']."', 'contact.php', '0', '1', '0', '8', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['139']."', 'search.php', '0', '1', '0', '10', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('---', '---', '101', '1', '0', '11', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$username."', '".$email."', '".$enabled_languages[$i]."')");
+	$lang = explode('.', $enabled_languages);
+	if (!function_exists('install_multiple_lang')) {
+		function install_multiple_lang($db_prefix, $_lang, $username, $email) {
+			include LOCALE.$_lang.'/setup.php';
+			$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130']."', 'index.php', '0', '2', '0', '1', '".$_lang."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['135']."', 'contact.php', '0', '1', '0', '8', '".$_lang."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['139']."', 'search.php', '0', '1', '0', '10', '".$_lang."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('---', '---', '101', '1', '0', '11', '".$_lang."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$username."', '".$email."', '".$_lang."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$username."', '".$email."', '".$_lang."')");
+			$result = dbquery("INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$username."', '".$email."', '".$_lang."')");
+		}
+	}
+
+	foreach($lang as $_lang) {
+		install_multiple_lang($db_prefix, $_lang, $username, $email);
 	}
 }
 

@@ -196,10 +196,9 @@ form {
 }
 
 .tbl-error {
-    color: #AC260F;
-    font-weight: bold;
-    background-color: #FCCAC2;
-    border: 2px solid #EB5339;
+    color: #AC260F !important;
+    background-color: #FCCAC2 !important;
+    border: 1px solid #EB5339 !important;
 }
 
 .small {

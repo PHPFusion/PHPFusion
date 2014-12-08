@@ -113,10 +113,17 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 			$db_select = @mysql_select_db($db_name);
 		}
 
-		$result = dbquery("SELECT * FROM ".$db_prefix."settings");
-		if (dbrows($result)) {
-			while ($data = dbarray($result)) {
-				$settings[$data['settings_name']] = $data['settings_value'];
+		if (isset($_POST['uninstall'])) {
+			include_once 'includes/core.setup.php'; // why does it still produce flash of error message?
+			@unlink(BASEDIR.'config_temp.php');
+			@unlink(BASEDIR.'config.php');
+			redirect(BASEDIR."install/index.php", 1); // temp fix.
+		} else {
+			$result = dbquery("SELECT * FROM ".$db_prefix."settings");
+			if (dbrows($result)) {
+				while ($data = dbarray($result)) {
+					$settings[$data['settings_name']] = $data['settings_value'];
+				}
 			}
 		}
 	}
@@ -126,14 +133,7 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 		redirect(FUSION_SELF);
 	}
 
-	if (isset($_POST['uninstall'])) {
-		if (isset($db_prefix)) {
-			include 'includes/core.setup.php';
-			@unlink(BASEDIR.'config_temp.php');
-			@unlink(BASEDIR.'config.php');
-			redirect(BASEDIR."install/index.php");
-		}
-	}
+
 
 	if (!file_exists(BASEDIR.'config.php') && !file_exists(BASEDIR.'config_temp.php') && !isset($_POST['uninstall'])) {
 		$locale_list = makefileopts($locale_files, $_POST['localeset']);
