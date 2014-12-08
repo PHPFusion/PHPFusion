@@ -50,6 +50,7 @@ $locale['info'] = 'Info';
 $locale['image'] = 'Image';
 // Forms
 $locale['choose'] = 'Please Choose One...';
+$locale['root'] = 'As Parent';
 $locale['choose-user'] = 'Please Choose a User...';
 $locale['parent'] = 'Create as New Parent..';
 $locale['order'] = 'Item Ordering';
