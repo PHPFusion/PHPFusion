@@ -58,8 +58,6 @@ function render_page($license = FALSE) {
 
 // Render comments
 require_once THEME."includes/render_comments.php";
-// Render News And Articles
-require_once THEME."includes/render_news-articles.php";
 // Panel Functions
 require_once THEME."includes/panel_functions.php";
 ?>
