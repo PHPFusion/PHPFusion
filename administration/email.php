@@ -80,19 +80,23 @@ if (isset($_POST['save_template'])) {
 	}
 }
 $result = dbquery("SELECT template_id, template_key, template_name, template_language FROM ".DB_EMAIL_TEMPLATES." ".(multilang_table("ET") ? "WHERE template_language='".LANGUAGE."'" : "")." ORDER BY template_id ASC");
+$template = array();
 if (dbrows($result) != 0) {
 	$editlist = array();
 	while ($data = dbarray($result)) {
 		$template[$data['template_id']] = $data['template_name'];
 	}
 }
+$tab_title = array();
 foreach ($template as $id => $tname) {
 	$tab_title['title'][$id] = $tname;
 	$tab_title['id'][$id] = $id;
 	$tab_title['icon'][$id] = '';
 }
+
 $_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
-$tab_active = tab_active($tab_title, $_GET['section'], 1);
+$tab_active = isset($_GET['section']) ? $_GET['section'] : tab_active($tab_title, $_GET['section'], 1);
+
 echo opentab($tab_title, $tab_active, 'menu', 1);
 echo opentabbody($tab_title['title'][$_GET['section']], $_GET['section'], $tab_active);
 $template_id = isset($_GET['section']) && isnum($_GET['section']) ? $_GET['section'] : 0;
@@ -127,6 +131,7 @@ if (dbrows($result)) {
 } else {
 	//redirect(FUSION_SELF.$aidlink);
 }
+add_to_breadcrumbs(array('link'=>ADMIN.$aidlink, 'title'=>$locale['400']));
 opentable($locale['400']);
 require_once INCLUDES."html_buttons_include.php";
 echo openform('emailtemplateform', 'emailtemplateform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
