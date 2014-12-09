@@ -346,7 +346,6 @@ if (isset($_POST['uninstall'])) {
 	// Core Inserts
 	//$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129d']."', 'eshop.php', '1')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'eshop.php', '1')");
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'settings_eshop.php', '4')");
 	if (!$result) $fail = TRUE;
 	// go for settings.
 	$enabled_languages = explode('.', $settings['enabled_languages']);
