@@ -65,6 +65,7 @@ define("LOCALE", BASEDIR."locale/");
 define("FORUM", BASEDIR."forum/");
 define("INFUSIONS", BASEDIR."infusions/");
 define("PHOTOS", IMAGES."photoalbum/");
+define("SHOP", BASEDIR."eshop/");
 define("THEMES", BASEDIR."themes/");
 define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
 
