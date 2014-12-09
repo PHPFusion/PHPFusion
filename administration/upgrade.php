@@ -584,7 +584,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		(1, 'Invoice', 'We will send an Invoice to your adress. \r\nA credit check will be run.\r\nIn order to make a credit check we need your complete date of birth.', 'invoice.png', 2, '', 'invoice.php', '1'),
 		(2, 'PayPal', 'Checkout with PayPal, It´s safe and fast. \r\nYou can use most credit cards here.', 'Paypal.png', 0, '', 'paypal.php', '1'),
 		(3, 'Prepayment', 'If you select this option you will need to transfer money directly to our account from your account. \r\nSubmit this order for account details.', 'creditcards.png', 0, '', 'prepayment.php', '1'),
-		(4, 'Visit store', 'If you select this option you will need to come and visit our store and pay your order.\r\n Please bring your OrderID.', 'cash.png', 0, '', '', '1')");
+		(4, 'Visit store', 'If you select this option you will need to visit our store and pay your order.\r\n Please bring your OrderID.', 'cash.png', 0, '', '', '1')");
 
 	//Add a link
 		$result = dbquery("INSERT INTO ".DB_PREFIX."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['129f']."', 'eshop.php', '0', '2', '0', '3', '".$settings['locale']."')");
