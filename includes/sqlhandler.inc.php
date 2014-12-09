@@ -432,13 +432,13 @@ function sort_tree(&$result, $key) {
 // New SQL Row Modifier.
 function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 	require_once INCLUDES."notify/notify.inc.php";
-	global $pdo_enabled;
+	global $pdo, $pdo_enabled;
 	if ($pdo_enabled == 1) {
-		require_once INCLUDES."db_handlers/mysql_functions_include.php";
+		require_once INCLUDES."db_handlers/pdo_functions_include.php";
 	} else {
 		require_once INCLUDES."db_handlers/mysql_functions_include.php";
 	}
-
+	
 	if (defined("ADMIN_PANEL")) {
 		global $aidlink;
 	} else {
