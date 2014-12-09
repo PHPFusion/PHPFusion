@@ -16,6 +16,18 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-$permalink_name = $locale['pl_news_cats_title'];
-$permalink_desc = $locale['pl_news_cats_desc'];
+$regex = array(
+	"%category%" => "([0-9]+)",
+	"%details%" => "([0-9]+)",
+	"%rowstart%" => "([0-9]+)",
+	"%c_start%" => "([0-9]+)",
+);
+
+$pattern = array(
+	"shop/browse/%rowstart%" => "eshop.php?rowstart=%rowstart%",
+	"shop/browse/%rowstart%" => "eshop.php?rowstart=%rowstart%",
+	"shop/browse/%category%/%rowstart%" => "eshop.php?category=%category%&amp;rowstart=%rowstart%",
+	"shop/browse/%category%/%rowstart%" => "eshop.php?rowstart=%rowstart%&amp;category=%category%",
+	"shop/browse/%details%/%c_start%" => "eshop.php?details=%details%&amp;c_start=%c_start%",
+);
 ?>
