@@ -73,11 +73,7 @@ if (isset($_POST['save'])) {
 				) VALUES (
 					'".$page_title."', '".$page_access."', '".$page_content."', '".$page_keywords."', '".$comments."', '".$ratings."', '".$page_language."'
 				)");
-			if ($pdo_enabled == "1") {
-				$page_id = $pdo->lastInsertId();
-			} else {
-				$page_id = mysql_insert_id();
-			}
+			$page_id = dblastid();
 			if (isset($_POST['add_link'])) {
 				$data = dbarray(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : "")." ORDER BY link_order DESC LIMIT 1"));
 				$link_order = $data['link_order']+1;

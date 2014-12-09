@@ -210,7 +210,7 @@ if ($executable && iMEMBER) {
 					$data['forum_poll_length'] = 0;
 					$data['forum_poll_votes'] = 0;
 					dbquery_insert(DB_FORUM_POLLS, $data, 'save', array('noredirect'=>1));
-					$data['forum_poll_id'] = $pdo_enabled ? $pdo->lastInsertId() : mysql_insert_id();
+					$data['forum_poll_id'] = dblastid();
 					$i = 1;
 					foreach ($data['poll_opts'] as $option_text) {
 						$data['forum_poll_option_id'] = $i;

@@ -432,12 +432,6 @@ function sort_tree(&$result, $key) {
 // New SQL Row Modifier.
 function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 	require_once INCLUDES."notify/notify.inc.php";
-	global $pdo, $pdo_enabled;
-	if ($pdo_enabled == 1) {
-		require_once INCLUDES."db_handlers/pdo_functions_include.php";
-	} else {
-		require_once INCLUDES."db_handlers/mysql_functions_include.php";
-	}
 	
 	if (defined("ADMIN_PANEL")) {
 		global $aidlink;
@@ -579,11 +573,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					print_p($result);
 				} else {
 					$result = dbquery("INSERT INTO ".$db." ($the_column) VALUES ($the_value)");
-					if ($pdo_enabled == '1') {
-						return $pdo->lastInsertId();
-					} else {
-						return mysql_insert_id();
-					}
+					return dblastid();
 				}
 			}
 		} elseif ($mode == "update") {

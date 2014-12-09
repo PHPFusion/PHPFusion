@@ -23,7 +23,7 @@ set_error_handler("setError");
 $_errorHandler = array();
 // PHP-Fusion Error Handler
 function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
-	global $pdo, $pdo_enabled, $userdata, $_errorHandler, $settings;
+	global $userdata, $_errorHandler, $settings;
 	$showError = TRUE;
 
 	$result = dbquery("SELECT error_id, error_status FROM ".DB_ERRORS."
@@ -40,11 +40,7 @@ function setError($error_level, $error_message, $error_file, $error_line, $error
 				'".TRUE_PHP_SELF."', '".$userdata['user_level']."', '".USER_IP."', '".USER_IP_TYPE."',
 				'0', '".time()."'
 			)");
-		if ($pdo_enabled == "1") {
-			$errorId = $pdo->lastInsertId();
-		} else {
-			$errorId = mysql_insert_id();
-		}
+		$errorId = dblastid();
 	} else {
 		$data = dbarray($result);
 		$errorId = $data['error_id'];

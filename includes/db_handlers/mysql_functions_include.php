@@ -103,6 +103,17 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name) {
 	}
 }
 
+/**
+ * Get the last inserted auto increment id
+ * 
+ * @global resource $db_connect
+ * @return int 
+ */
+function dblastid() {
+	global $db_connect;
+	return (int) mysql_insert_id($db_connect);
+}
+
 if (function_exists('mysql_set_charset') === false) {
     function mysql_set_charset($charset, $link_identifier = null) {
         if ($link_identifier == null) {

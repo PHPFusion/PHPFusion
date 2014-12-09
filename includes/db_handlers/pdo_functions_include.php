@@ -154,4 +154,16 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name) {
 		die("<strong>Unable to select MySQL database</strong><br />".$error->getMessage());
 	}
 }
+
+/**
+ * Get the last inserted auto increment id
+ * 
+ * @global \PDO $pdo
+ * @return int 
+ */
+function dblastid() {
+	global $pdo;
+	return (int) $pdo->lastInsertId();
+}
+
 ?>

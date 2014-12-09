@@ -283,11 +283,8 @@ elseif (isset($_POST['save_forum'])) {
 			if (!$data['forum_order']) $data['forum_order'] = dbresult(dbquery("SELECT MAX(forum_order) FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$data['forum_cat']."'"), 0)+1;
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$data['forum_cat']."' AND forum_order>='".$data['forum_order']."'");
 			dbquery_insert(DB_FORUMS, $data, 'save', array('noredirect'=>1));
-			if ($pdo_enabled == 1) {
-				$this_forum_id = $pdo->lastInsertId();
-			} else {
-				$this_forum_id = mysql_insert_id();
-			}
+			$this_forum_id = dblastid();
+			
 			if (!defined('FUSION_NULL')) {
 				$ext = isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '';
 				// added jump to permissions if the category is 0.
