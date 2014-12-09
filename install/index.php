@@ -137,7 +137,7 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 
 	if (!file_exists(BASEDIR.'config.php') && !file_exists(BASEDIR.'config_temp.php') && !isset($_POST['uninstall'])) {
 		$locale_list = makefileopts($locale_files, $_POST['localeset']);
-		echo "<h4 class='strong'>".$locale['welcome_title']."/h4>\n";
+		echo "<h4 class='strong'>".$locale['welcome_title']."</h4>\n";
 		if (isset($_GET['error']) && $_GET['error'] == 'license') {
 			echo "<div class='alert alert-danger'>".$locale['error_000']."</div>\n";
 		} else {
