@@ -218,7 +218,7 @@ function hide_email() { }
 // Generate a standard .htaccess file
 function write_htaccess() {
 	global $settings;
-	$htc = "";
+
 	if (!file_exists(BASEDIR.'.htaccess')) {
 		if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
 			@rename(BASEDIR."_htaccess", ".htaccess");
@@ -247,12 +247,12 @@ function write_htaccess() {
 	$htc .= "SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT\r\n";
 	$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n";
 	$htc .= "#Disable directory listing\r\n";
-	$htc .= "Options All -Indexes\r\n";
-	$htc .= "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
-	$htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
-	$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
-	$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
-	$htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
+	$htc .= "Options -Indexes\r\n";
+	$htc .= "ErrorDocument 400 ".$settings['site_path']."error.php?code=400\r\n";
+	$htc .= "ErrorDocument 401 ".$settings['site_path']."error.php?code=401\r\n";
+	$htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403\r\n";
+	$htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404\r\n";
+	$htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500\r\n";
 	$temp = fopen(BASEDIR.".htaccess", "w");
 	if (fwrite($temp, $htc)) {
 		fclose($temp);
