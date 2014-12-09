@@ -461,18 +461,28 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'settings_eshop.php', '4')");
 	if (!$result) $fail = TRUE;
 	// Local Inserts
-	$result = dbquery("INSERT INTO ".$db_prefix."eshop_shippingcats (cid, title, image) VALUES (5, 'DHL', 'dhl.png'),(4, 'FedEX', 'fedex.png'),	(6, 'UPS', 'ups.png'), (7, 'Generic', 'generic.png'),(10, 'Post Office', 'postoffice.png'), (11, 'Ptt', 'ptt.png'),(12, 'TNT', 'tnt.png')");
+	$result = dbquery("INSERT INTO ".$db_prefix."eshop_shippingcats (cid, title, image) VALUES 
+				(1, 'Generic', 'generic.png'),
+				(2, 'DHL', 'dhl.png'),
+				(3, 'FedEX', 'fedex.png'),	
+				(4, 'UPS', 'ups.png'), 
+				(5, 'Post Office', 'postoffice.png'), 
+				(6, 'Ptt', 'ptt.png'),
+				(7, 'TNT', 'tnt.png')");
 	if (!$result) $fail = TRUE;
+
 	$result = dbquery("INSERT INTO ".$db_prefix."eshop_shippingitems (sid, cid, method, dtime, destination, weightmin, weightmax, weightcost, initialcost, active) VALUES
-				(13, 6, 'UPS Express', '1 Day', '2', '0.00', '150', 0, 250, '1'),
-				(10, 5, 'DHL Worldwide Priority Express', '1 - 2 Days', '3', '0.00', '150', 6, 69, '1'),
-				(12, 5, 'DHL National Priority Express', '1 - 2 Days', '2', '0.00', '150', 0, 150, '1')");
+				(1, 1, 'No Shipping - Visit store', '0', '0', '0.00', '0', 0, 0, '1'),
+				(2, 4, 'UPS Express', '1 Day', '2', '0.00', '150', 0, 250, '1'),
+				(3, 4, 'UPS Express', '1 Day', '2', '0.00', '150', 0, 250, '1'),
+				(4, 2, 'DHL Worldwide Priority Express', '1 - 2 Days', '3', '0.00', '150', 6, 69, '1'),
+				(5, 2, 'DHL National Priority Express', '1 - 2 Days', '2', '0.00', '150', 0, 150, '1')");
 	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."eshop_payments (pid, method, description, image, surcharge, code, cfile, active) VALUES
 				(1, 'Invoice', 'We will send an Invoice to your adress. \r\nA credit check will be run.\r\nIn order to make a credit check we need your complete date of birth.', 'invoice.png', 2, '', 'invoice.php', '1'),
 				(2, 'PayPal', 'Checkout with PayPal, It´s safe and fast. \r\nYou can use most credit cards here.', 'Paypal.png', 0, '', 'paypal.php', '1'),
-				(3, 'Prepayment', 'If you select this option you will need to transfer money directly to our account from your account. \r\nSubmit this order for account details.', 'creditcards.png', 0, '', 'prepayment.php', '1')");
-	if (!$result) $fail = TRUE;
-
+				(3, 'Prepayment', 'If you select this option you will need to transfer money directly to our account from your account. \r\nSubmit this order for account details.', 'creditcards.png', 0, '', 'prepayment.php', '1'),
+				(3, 'Visit store', 'If you select this option you will need to come and visit our store and pay your order.\r\n Please bring your OrderID.', 'cash.png', 0, '', '', '1')");
+				if (!$result) $fail = TRUE;
 }
 ?>
