@@ -7,6 +7,7 @@
 | Filename: rss_weblinks.php
 | Author: Robert Gaudyn (Wooya)
 | Co-Author: Joakim Falk (Domi)
+| Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -26,35 +27,38 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
 	include INFUSIONS."rss_feeds_panel/locale/English.php";
 }
 
-$result = dbquery("
-SELECT tbl1.*, tbl2.* FROM ".DB_WEBLINK_CATS." tbl1
-RIGHT JOIN ".DB_WEBLINKS." tbl2 ON tbl1.weblink_cat_id=tbl2.weblink_cat
-WHERE ".groupaccess('weblink_cat_access').(multilang_table("WL")?" AND weblink_cat_language='".LANGUAGE."'":"")."
-ORDER BY tbl2.weblink_count DESC LIMIT 0,10");
+if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
+
+	$result = dbquery("
+	SELECT tbl1.*, tbl2.* FROM ".DB_WEBLINK_CATS." tbl1
+	RIGHT JOIN ".DB_WEBLINKS." tbl2 ON tbl1.weblink_cat_id=tbl2.weblink_cat
+	WHERE ".groupaccess('weblink_cat_access').(multilang_table("WL")?" AND weblink_cat_language='".LANGUAGE."'":"")."
+	ORDER BY tbl2.weblink_count DESC LIMIT 0,10");
 
 	echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
 	echo "<rss version=\"2.0\">\n\n
 	<channel>\n";
 
-if (dbrows($result) != 0) {
+	if (dbrows($result) != 0) {
 
-echo "<title>".$settings['sitename'].$locale['rss006'].(multilang_table("WL")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n";
-echo "<link>".$settings['siteurl']."</link>\n<description>".$settings['description']."</description>\n";
+		echo "<title>".$settings['sitename'].$locale['rss006'].(multilang_table("WL")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n";
+		echo "<link>".$settings['siteurl']."</link>\n<description>".$settings['description']."</description>\n";
 
-while ($row=dbarray($result)) {
-	$rsid = intval($row['weblink_id']);
-	$rtitle = $row['weblink_name'];
-	$description = stripslashes(nl2br($row['weblink_description']));
-	$description = strip_tags($description, "<a><p><br /><hr />");
-	echo "<item>\n<title>".htmlspecialchars($rtitle)."</title>\n";
-	echo "<link>".$base."weblinks.php?weblink_id=".$rsid."</link>\n";
-	echo "<description>".htmlspecialchars($description)."</description>\n";
-	echo "</item>\n";
+		while ($row=dbarray($result)) {
+			$rsid = intval($row['weblink_id']);
+			$rtitle = $row['weblink_name'];
+			$description = stripslashes(nl2br($row['weblink_description']));
+			$description = strip_tags($description, "<a><p><br /><hr />");
+			echo "<item>\n<title>".htmlspecialchars($rtitle)."</title>\n";
+			echo "<link>".$base."weblinks.php?weblink_id=".$rsid."</link>\n";
+			echo "<description>".htmlspecialchars($description)."</description>\n";
+			echo "</item>\n";
+		}
+	} else {
+		echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
+		<link>".$settings['siteurl']."</link>\n
+		<description>".$locale['rss008']."</description>\n";
+	}
+	echo "</channel></rss>";
 }
-} else {
-	echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
-	<link>".$settings['siteurl']."</link>\n
-	<description>".$locale['rss008']."</description>\n";
-}
-echo "</channel></rss>";
 ?>
