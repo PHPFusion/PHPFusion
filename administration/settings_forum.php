@@ -90,7 +90,7 @@ function calculate_byte($download_max_b) {
 	}
 	return 1000000;
 }
-$yes_no_array = array('0' => $locale['yes'], '1' => $locale['no']);
+$yes_no_array = array('1' => $locale['yes'], '0' => $locale['no']);
 
 opentable($locale['400']);
 echo openform('settingsform', 'settingsfrom', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
