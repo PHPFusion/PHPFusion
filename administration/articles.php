@@ -50,6 +50,7 @@ if (!empty($result)) {
 		$subject = stripinput($_POST['subject']);
 		$body = addslash($_POST['body']);
 		$body2 = addslash($_POST['body2']);
+		$keywords = stripinput($_POST['keywords']);
 		$draft = isset($_POST['article_draft']) ? "1" : "0";
 		if ($settings['tinymce_enabled'] != 1) {
 			$breaks = isset($_POST['line_breaks']) ? "y" : "n";
@@ -59,10 +60,10 @@ if (!empty($result)) {
 		$comments = isset($_POST['article_comments']) ? "1" : "0";
 		$ratings = isset($_POST['article_ratings']) ? "1" : "0";
 		if (isset($_POST['article_id']) && isnum($_POST['article_id']) && !defined("FUSION_NULL")) {
-			$result = dbquery("UPDATE ".DB_ARTICLES." SET article_cat='".intval($_POST['article_cat'])."', article_subject='$subject', article_snippet='$body', article_article='$body2', article_draft='$draft', article_breaks='$breaks', article_allow_comments='$comments', article_allow_ratings='$ratings' WHERE article_id='".$_POST['article_id']."'");
+			$result = dbquery("UPDATE ".DB_ARTICLES." SET article_cat='".intval($_POST['article_cat'])."', article_subject='$subject', article_snippet='$body', article_article='$body2', article_keywords='$keywords', article_draft='$draft', article_breaks='$breaks', article_allow_comments='$comments', article_allow_ratings='$ratings' WHERE article_id='".$_POST['article_id']."'");
 			redirect(FUSION_SELF.$aidlink."&status=su");
 		} elseif (!defined("FUSION_NULL")) {
-			$result = dbquery("INSERT INTO ".DB_ARTICLES." (article_cat, article_subject, article_snippet, article_article, article_draft, article_breaks, article_name, article_datestamp, article_reads, article_allow_comments, article_allow_ratings) VALUES ('".intval($_POST['article_cat'])."', '$subject', '$body', '$body2', '$draft', '$breaks', '".$userdata['user_id']."', '".time()."', '0', '$comments', '$ratings')");
+			$result = dbquery("INSERT INTO ".DB_ARTICLES." (article_cat, article_subject, article_snippet, article_article, article_keywords, article_draft, article_breaks, article_name, article_datestamp, article_reads, article_allow_comments, article_allow_ratings) VALUES ('".intval($_POST['article_cat'])."', '$subject', '$body', '$body2', '$keywords', '$draft', '$breaks', '".$userdata['user_id']."', '".time()."', '0', '$comments', '$ratings')");
 			redirect(FUSION_SELF.$aidlink."&status=sn");
 		}
 	} else if (isset($_POST['delete']) && (isset($_POST['article_id']) && isnum($_POST['article_id']))) {
@@ -76,6 +77,7 @@ if (!empty($result)) {
 			$subject = stripinput($_POST['subject']);
 			$body = phpentities(stripslash($_POST['body']));
 			$body2 = phpentities(stripslash($_POST['body2']));
+			$keywords = stripinput($_POST['keywords']);
 			$bodypreview = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslash($_POST['body']));
 			$body2preview = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslash($_POST['body2']));
 			$draft = isset($_POST['article_draft']) ? " checked='checked'" : "";
@@ -126,13 +128,14 @@ if (!empty($result)) {
 			} elseif (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 				$id = $_GET['article_id'];
 			}
-			$result = dbquery("SELECT article_cat, article_subject, article_snippet, article_article, article_draft, article_breaks, article_allow_comments, article_allow_ratings FROM ".DB_ARTICLES." WHERE article_id='".$id."'");
+			$result = dbquery("SELECT article_cat, article_subject, article_snippet, article_article, article_keywords, article_draft, article_breaks, article_allow_comments, article_allow_ratings FROM ".DB_ARTICLES." WHERE article_id='".$id."'");
 			if (dbrows($result)) {
 				$data = dbarray($result);
 				$article_cat = $data['article_cat'];
 				$subject = $data['article_subject'];
 				$body = phpentities(stripslashes($data['article_snippet']));
 				$body2 = phpentities(stripslashes($data['article_article']));
+				$keywords = $data['article_keywords'];
 				$draft = $data['article_draft'] ? " checked='checked'" : "";
 				$breaks = $data['article_breaks'] == "y" ? " checked='checked'" : "";
 				$comments = $data['article_allow_comments'] ? " checked='checked'" : "";
@@ -149,6 +152,7 @@ if (!empty($result)) {
 				$subject = "";
 				$body = "";
 				$body2 = "";
+				$keywords = "";
 				$draft = "";
 				$breaks = " checked='checked'";
 				$comments = " checked='checked'";
@@ -192,6 +196,12 @@ if (!empty($result)) {
 			echo display_html("input_form", "body2", TRUE, TRUE, TRUE, IMAGES_A);
 			echo "</td>\n</tr>\n";
 		}
+
+		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='keywords'>".$locale['434']."</label></td>\n";
+		echo "<td class='tbl'>\n";
+		echo form_select('', 'keywords', 'keywords', array(), $keywords, array('max_length' => 200, 'width'=>'100%', 'error_text' => $locale['460'], 'tags'=>1));
+		echo "</td>\n</tr>\n";
+					
 		echo "<tr>\n";
 		echo "<td class='tbl'></td><td class='tbl'>\n";
 		echo "<label><input type='checkbox' name='article_draft' value='yes'".$draft." /> ".$locale['426']."</label><br />\n";

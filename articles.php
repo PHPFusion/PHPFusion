@@ -27,7 +27,7 @@ add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php', 'title'=>$locale['400']
 /* Render Articles */
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 
-	$result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks,
+	$result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_keywords, ta.article_breaks,
 		ta.article_datestamp, ta.article_reads, ta.article_allow_comments, ta.article_allow_ratings,
 		tac.article_cat_id, tac.article_cat_name,
 		tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_joined, tu.user_level
@@ -48,6 +48,8 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 
 		add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php?cat_id='.$data['article_cat_id'], 'title'=>$data['article_cat_name']));
 		add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php?article_id='.$_GET['article_id'], 'title'=>$data['article_subject']));
+
+		if ($data['article_keywords'] !=="") { set_meta("keywords", $data['article_keywords']); }
 
 		$article_info = array(
 			"article_id" => $_GET['article_id'],
