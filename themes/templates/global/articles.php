@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined('render_article')) {
+if (!function_exists('render_article')) {
 	function render_article($subject, $article, $info) {
 		global $locale, $settings, $aidlink;
 		$category = "<a href='".BASEDIR."articles.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>\n";
@@ -46,7 +46,7 @@ if (!defined('render_article')) {
 	}
 }
 
-if (!defined('render_articles_main')) {
+if (!function_exists('render_articles_main')) {
 	function render_articles_main($info) {
 		global $locale;
 		echo render_breadcrumbs();
@@ -76,7 +76,7 @@ if (!defined('render_articles_main')) {
 	}
 }
 
-if (!defined('render_articles_category')) {
+if (!function_exists('render_articles_category')) {
 	function render_articles_category($info) {
 		global $locale;
 		if (isset($info['articles']['category'])) {

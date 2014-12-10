@@ -7,6 +7,7 @@
 | Filename: rss_news.php
 | Author: Robert Gaudyn (Wooya)
 | Co-Author: Joakim Falk (Domi)
+| Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -26,39 +27,42 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
 	include INFUSIONS."rss_feeds_panel/locale/English.php";
 }
 
-$result = dbquery("
-SELECT * FROM ".DB_NEWS."
-WHERE ".groupaccess('news_visibility').(multilang_table("NS")?" AND news_language='".LANGUAGE."'":"")."
-ORDER BY news_datestamp DESC LIMIT 0,10");
+if (db_exists(DB_NEWS)) {
 
-if (dbrows($result) != 0) {
+	$result = dbquery("
+	SELECT * FROM ".DB_NEWS."
+	WHERE ".groupaccess('news_visibility').(multilang_table("NS")?" AND news_language='".LANGUAGE."'":"")."
+	ORDER BY news_datestamp DESC LIMIT 0,10");
 
-	$rssimage = $settings['siteurl'].$settings['sitebanner']; 
-	echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
-	echo "<rss version=\"2.0\">\n\n
-	<image>\n
-	<url>$rssimage</url>\n
-	</image>\n
-	<channel>\n";
+	if (dbrows($result) != 0) {
+
+		$rssimage = $settings['siteurl'].$settings['sitebanner']; 
+		echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
+		echo "<rss version=\"2.0\">\n\n
+		<image>\n
+		<url>$rssimage</url>\n
+		</image>\n
+		<channel>\n";
 	
-   echo "<title>".$settings['sitename'].$locale['rss004'].(multilang_table("NS")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n";
-   echo "<link>".$settings['siteurl']."</link>\n<description>".$settings['description']."</description>\n";
+		echo "<title>".$settings['sitename'].$locale['rss004'].(multilang_table("NS")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n";
+		echo "<link>".$settings['siteurl']."</link>\n<description>".$settings['description']."</description>\n";
 
-	while ($row=dbarray($result)) {
-	   $rsid = intval($row['news_id']);
-	   $rtitle = $row['news_subject'];
-	   $description = stripslashes(nl2br($row['news_news']));
-	   $description = strip_tags($description, "<a><p><br /><br /><hr />");
-      echo "<item>\n";
-      echo "<title>".htmlspecialchars($rtitle)."</title>\n";
-      echo "<link>".$settings['siteurl']."news.php?readmore=".$rsid."</link>\n";
-      echo "<description>".htmlspecialchars($description)."</description>\n";
-      echo "</item>\n";
+		while ($row=dbarray($result)) {
+			$rsid = intval($row['news_id']);
+			$rtitle = $row['news_subject'];
+			$description = stripslashes(nl2br($row['news_news']));
+			$description = strip_tags($description, "<a><p><br /><br /><hr />");
+			echo "<item>\n";
+			echo "<title>".htmlspecialchars($rtitle)."</title>\n";
+			echo "<link>".$settings['siteurl']."news.php?readmore=".$rsid."</link>\n";
+			echo "<description>".htmlspecialchars($description)."</description>\n";
+			echo "</item>\n";
+		}
+	} else {
+		echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
+		<link>".$settings['siteurl']."</link>\n
+		<description>".$locale['rss008']."</description>\n";
 	}
-} else {
-	echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
-	<link>".$settings['siteurl']."</link>\n
-	<description>".$locale['rss008']."</description>\n";
+	echo "</channel></rss>";
 }
-echo "</channel></rss>";
 ?>
