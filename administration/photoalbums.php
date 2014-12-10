@@ -68,7 +68,8 @@ if (function_exists('gd_info')) {
 		$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_thumb='' WHERE album_id='".$_GET['album_id']."'");
 		@unlink(PHOTOS.$data['album_thumb']);
 		redirect(FUSION_SELF.$aidlink."&status=delt&album_id=".$_GET['album_id']);
-	} elseif ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
+	}
+	elseif ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
 		if (dbcount("(photo_id)", DB_PHOTOS, "album_id='".$_GET['album_id']."'")) {
 			if (!isset($_POST['confirm_password'])) {
 				opentable($locale['430']);
@@ -134,19 +135,22 @@ if (function_exists('gd_info')) {
 			}
 			redirect(FUSION_SELF.$aidlink."&status=dely");
 		}
-	} elseif ((isset($_GET['action']) && $_GET['action'] == "mup") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
+	}
+	elseif ((isset($_GET['action']) && $_GET['action'] == "mup") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
 		$data = dbarray(dbquery("SELECT album_id FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_order='".intval($_GET['order'])."'"));
 		$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=album_order+1 ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$data['album_id']."'");
 		$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=album_order-1 ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$_GET['album_id']."'");
 		$rowstart = $_GET['order'] > $settings['thumbs_per_page'] ? ((ceil($_GET['order']/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
 		redirect(FUSION_SELF.$aidlink."&rowstart=$rowstart");
-	} elseif ((isset($_GET['action']) && $_GET['action'] == "mdown") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
+	}
+	elseif ((isset($_GET['action']) && $_GET['action'] == "mdown") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
 		$data = dbarray(dbquery("SELECT album_id FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_order='".intval($_GET['order'])."'"));
 		$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=album_order-1 ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$data['album_id']."'");
 		$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=album_order+1 ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$_GET['album_id']."'");
 		$rowstart = $_GET['order'] > $settings['thumbs_per_page'] ? ((ceil($_GET['order']/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
 		redirect(FUSION_SELF.$aidlink."&rowstart=$rowstart");
-	} elseif (isset($_POST['save_album'])) {
+	}
+	elseif (isset($_POST['save_album'])) {
 		$error = "";
 		$album_title = form_sanitizer($_POST['album_title'], '', 'album_title');
 		$album_description = form_sanitizer($_POST['album_description'], '', 'album_description');

@@ -492,22 +492,23 @@ if (function_exists('gd_info')) {
 
 			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
 				$old_photo_order = dbresult(dbquery("SELECT photo_order FROM ".DB_PHOTOS." WHERE photo_id='".$_GET['photo_id']."'"), 0);
-				if ($photo_order > $old_photo_order) {
-					$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order-1) WHERE photo_order>'$old_photo_order' AND photo_order<='$photo_order' AND album_id='".$_GET['album_id']."'");
-				} elseif ($photo_order < $old_photo_order) {
-					$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order+1) WHERE photo_order<'$old_photo_order' AND photo_order>='$photo_order' AND album_id='".$_GET['album_id']."'");
+				if ($data['photo_order'] > $old_photo_order) {
+					$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order-1) WHERE photo_order>'$old_photo_order' AND photo_order<='".$data['photo_order']."' AND album_id='".$_GET['album_id']."'");
+				} elseif ($data['photo_order'] < $old_photo_order) {
+					$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order+1) WHERE photo_order<'$old_photo_order' AND photo_order>='".$data['photo_order']."' AND album_id='".$_GET['album_id']."'");
 				}
-				$update_photos = $photo_file ? "photo_filename='$photo_file', photo_thumb1='$photo_thumb1', photo_thumb2='$photo_thumb2', " : "";
-				$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_title='$photo_title', photo_description='$photo_description', ".$update_photos."photo_datestamp='".time()."', photo_order='$photo_order', photo_allow_comments='$photo_comments', photo_allow_ratings='$photo_ratings' WHERE photo_id='".$_GET['photo_id']."'");
-				$rowstart = $photo_order > $settings['thumbs_per_page'] ? ((ceil($photo_order/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
+				//$update_photos = $data['photo_file'] ? "photo_filename='".$data['photo_file']."', photo_thumb1='".$data['photo_thumb1']."', photo_thumb2='".$data['photo_thumb2']."', " : "";
+				//$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_title='$photo_title', photo_description='$photo_description', ".$update_photos."photo_datestamp='".time()."', photo_order='$photo_order', photo_allow_comments='$photo_comments', photo_allow_ratings='$photo_ratings' WHERE photo_id='".$_GET['photo_id']."'");
+				dbquery_insert(DB_PHOTOS, $data, 'update');
+				$rowstart = $data['photo_order'] > $settings['thumbs_per_page'] ? ((ceil($data['photo_order']/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
 				redirect(FUSION_SELF.$aidlink."&status=su&album_id=".$_GET['album_id']."&rowstart=$rowstart");
 			}
 			else {
 
-				if (!$photo_order) {
-					$photo_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".$_GET['album_id']."'"), 0)+1;
+				if (!$data['photo_order']) {
+					$data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".$_GET['album_id']."'"), 0)+1;
 				}
-				$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order+1) WHERE photo_order>='$photo_order' AND album_id='".$_GET['album_id']."'");
+				$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order+1) WHERE photo_order>='".$data['photo_order']."' AND album_id='".$_GET['album_id']."'");
 				dbquery_insert(DB_PHOTOS, $data, 'save');
 				$rowstart = $photo_order > $settings['thumbs_per_page'] ? ((ceil($photo_order/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
 				redirect(FUSION_SELF.$aidlink."&status=sn&album_id=".$_GET['album_id']."&rowstart=$rowstart");
