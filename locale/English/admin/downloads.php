@@ -1,6 +1,7 @@
 <?php
 // Downloads titles
 $locale['400'] = "Add Download";
+$locale['400b'] = "Downloads";
 $locale['401'] = "Edit Download";
 $locale['402'] = "Current Downloads";
 // Downloads messages
@@ -23,6 +24,7 @@ $locale['420'] = "Download Title:";
 $locale['421'] = "Full Review:";
 $locale['421b'] = "Short description:";
 $locale['421c'] = "Keywords (separate each keyword with a ,):";
+$locale['421d'] = "Download Source (Either one required):";
 $locale['422'] = "URL:";
 $locale['423'] = "Category:";
 $locale['424'] = "License:";
@@ -31,7 +33,8 @@ $locale['426'] = "Version:";
 $locale['427'] = "Filesize:";
 $locale['428'] = "Save Download";
 $locale['429'] = "Update Publication Date";
-$locale['430'] = "Download File:";
+$locale['430'] = "Download File";
+$locale['430b'] = "Download Link";
 $locale['431'] = "Delete";
 $locale['432'] = "Calculate file size";
 $locale['433'] = "Max. filesize: %s / Allowed filetypes: %s";
