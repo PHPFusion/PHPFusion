@@ -43,6 +43,16 @@ label small {
 .form-group > div {
 	padding: 0
 }
+.admin-message {
+    font-size: 12px;
+	color: #006699;
+	text-align: center;
+	background-color: #e8eef1;
+	border-top: 2px solid #1380b1;
+	border-bottom: 2px solid #1380b1;
+	padding: 15px 0 15px 50px;
+	margin-bottom: 10px;
+}
 
 /* General table properties */
 
