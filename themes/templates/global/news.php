@@ -154,7 +154,7 @@ if (!function_exists('render_main_news')) {
 	}
 }
 if (!function_exists('render_news')) {
-	function render_news($subject, $news, $info, $list_view = FALSE) {
+	function render_news($info, $list_view = FALSE) {
 		global $locale, $settings, $aidlink;
 		$parameter = $settings['siteurl']."news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
