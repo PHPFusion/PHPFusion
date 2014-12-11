@@ -129,7 +129,7 @@ elseif ($_GET['a_page'] == "customers") {
 include ADMIN."eshop/customers.php";
 }
 elseif ($_GET['a_page'] == "cupons") {
-include ADMIN."eshop/cupons.php";
+include ADMIN."eshop/coupons.php";
 }
 elseif ($_GET['a_page'] == "featured") {
 include ADMIN."eshop/featured.php";

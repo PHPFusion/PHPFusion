@@ -1282,7 +1282,7 @@ $cupons = stripinput($_POST['cupon']);
 	$verifycupon = dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE ccupons LIKE '%.".$cupons."' LIMIT 0,1");
 
 if (!dbrows($verifycupon) != 0) {
-	$cupon = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CUPONS." WHERE cuid='".$cupons."' AND active = '1' AND (custart='0'||custart<=".time().") AND (cuend='0'||cuend>=".time().") LIMIT 0,1"));
+	$cupon = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$cupons."' AND active = '1' AND (custart='0'||custart<=".time().") AND (cuend='0'||cuend>=".time().") LIMIT 0,1"));
 	$cuponsum = dbarray(dbquery("SELECT sum(cprice*cqty) as totals FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='1'"));
 	$cuponexcluded = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='0'"));
 	$cupons = ".".$cupon['cuid']."";

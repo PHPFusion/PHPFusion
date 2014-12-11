@@ -417,7 +417,7 @@ echo "<tr>
 <td align='left'><input type='text' name='email' value='$email' class='textbox' style='width:210px;'></td>
 </tr>";
 function getcodename($code) {
-$datacatar = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CUPONS." WHERE cuid='".$code."' LIMIT 0,1"));
+$datacatar = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$code."' LIMIT 0,1"));
 return $datacatar['cuname'];
 }
 echo "<input type='hidden' name='ccupons' value='$ccupons'>";

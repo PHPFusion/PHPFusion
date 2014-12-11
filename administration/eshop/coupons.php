@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: cupons.php
+| Filename: coupons.php
 | Author: Joakim Falk (Domi)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if (isset($_GET['step']) && $_GET['step'] == "delete") {
 	if (!preg_match("/^[-0-9A-ZÅÄÖ._@\s]+$/i", $_GET['cuid'])) { die("Denied"); exit; }
-	$result = dbquery("DELETE FROM ".DB_ESHOP_CUPONS." WHERE cuid='".$_GET['cuid']."'");
+	$result = dbquery("DELETE FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$_GET['cuid']."'");
 } 
 
 if (isset($_POST['save_item'])) {
@@ -41,15 +41,15 @@ $end = 0;
 	}
 
 if (isset($_GET['step']) && $_GET['step'] == "edit") {
-	$result = dbquery("UPDATE ".DB_ESHOP_CUPONS." SET cuid = '$cuid', cuname = '$name', cutype = '$type' , cuvalue = '$value' , custart = '$start', cuend = '$end', active = '$active' WHERE cuid ='".$_GET['cuid']."'");
+	$result = dbquery("UPDATE ".DB_ESHOP_COUPONS." SET cuid = '$cuid', cuname = '$name', cutype = '$type' , cuvalue = '$value' , custart = '$start', cuend = '$end', active = '$active' WHERE cuid ='".$_GET['cuid']."'");
 } else {
-	$result = dbquery("INSERT INTO ".DB_ESHOP_CUPONS." (cuid,cuname,cutype,cuvalue,custart,cuend,active) VALUES('$cuid','$name','$type','$value','$start','$end','$active')");
+	$result = dbquery("INSERT INTO ".DB_ESHOP_COUPONS." (cuid,cuname,cutype,cuvalue,custart,cuend,active) VALUES('$cuid','$name','$type','$value','$start','$end','$active')");
 }
 	redirect(FUSION_SELF.$aidlink."&amp;a_page=cupons&amp;cuid=$cuid");
 }
 
 if (isset($_GET['step']) && $_GET['step'] == "edit") {
-	$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CUPONS." WHERE cuid='".$_GET['cuid']."'"));
+	$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$_GET['cuid']."'"));
 	$cuid = $data['cuid'];
 	$name = $data['cuname'];
 	$type = $data['cutype'];
@@ -126,7 +126,7 @@ echo "</form>\n";
 
 echo "<div class='clear'></div>";
 echo "<hr />";
-$result = dbquery("SELECT * FROM ".DB_ESHOP_CUPONS."");
+$result = dbquery("SELECT * FROM ".DB_ESHOP_COUPONS."");
 $rows = dbrows($result);
 if ($rows != 0) {
 echo "<br /><table align='center' cellspacing='4' cellpadding='0' class='tbl-border' width='99%'><tr>
@@ -137,7 +137,7 @@ echo "<br /><table align='center' cellspacing='4' cellpadding='0' class='tbl-bor
 <td class='tbl2' align='center' width='1%'><b>Options</b></td>
 </tr>\n";
 
-$result = dbquery("SELECT * FROM ".DB_ESHOP_CUPONS." LIMIT ".$_GET['rowstart'].",15");
+$result = dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." LIMIT ".$_GET['rowstart'].",15");
 while ($data = dbarray($result)) {
 echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
 echo "<td align='center' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=cupons&amp;step=edit&amp;cuid=".$data['cuid']."'><b>".$data['cuid']."</b></a></td>\n";

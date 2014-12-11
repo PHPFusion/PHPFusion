@@ -41,7 +41,7 @@ define("DB_ESHOP_SHIPPINGITEMS", DB_PREFIX."eshop_shippingitems");
 define("DB_ESHOP_PAYMENTS", DB_PREFIX."eshop_payments");
 define("DB_ESHOP_CUSTOMERS", DB_PREFIX."eshop_customers");
 define("DB_ESHOP_ORDERS", DB_PREFIX."eshop_orders");
-define("DB_ESHOP_CUPONS", DB_PREFIX."eshop_cupons");
+define("DB_ESHOP_COUPONS", DB_PREFIX."eshop_coupons");
 define("DB_ESHOP_FEATITEMS", DB_PREFIX."eshop_featitems");
 define("DB_ESHOP_FEATBANNERS", DB_PREFIX."eshop_featbanners");
 define("DB_FAQ_CATS", DB_PREFIX."faq_cats");
