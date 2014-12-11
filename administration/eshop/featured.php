@@ -327,7 +327,7 @@ $result = dbquery("select * FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_cid =
 		if ($counter != 0 && ($counter % 1	== 0)) echo "</tr>\n<tr>\n";
     echo "<td align='center' class='tbl'>\n";
 		echo "<b>".$data['featbanner_order']." - ".$itemdatab['title']." - ".$data['featbanner_banner']."</b><br /><br />\n";
-		echo "<a href='".BASEDIR."eshop/eshop.php?details=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/banners/category_".$_REQUEST['category']."/".$data['featbanner_banner'])."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' border='0' style='padding:4px;' /></a>";
+		echo "<a href='".BASEDIR."eshop/eshop.php?product=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/banners/category_".$_REQUEST['category']."/".$data['featbanner_banner'])."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' border='0' style='padding:4px;' /></a>";
 		echo "<br /><br />\n ".$upb;
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;action=delbanner&amp;category=".$_REQUEST['category']."&amp;id=".$data['featbanner_id']."'>".$locale['ESHFEAT121']."</a> ".$downb;
 	echo "</td>\n";
@@ -366,9 +366,9 @@ $counter = 0; $k = 1;
 		echo "<td align='center' valign='top' class='tbl'>\n";
 		echo "<b>".$data['featitem_order']." ".$itemdata['title']."</b><br /><br />\n";
 		if ($settings['eshop_ratios'] == "1") {
-		echo "<a href='".BASEDIR."eshop/eshop.php?details=".$itemdata['id']."'><img src='".($itemdata['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$itemdata['thumb']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' height='100%' border='0' style='padding:4px;' /></a>";
+		echo "<a href='".BASEDIR."eshop/eshop.php?product=".$itemdata['id']."'><img src='".($itemdata['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$itemdata['thumb']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' height='100%' border='0' style='padding:4px;' /></a>";
 } else {
-	echo "<a href='".BASEDIR."eshop/eshop.php?details=".$itemdata['id']."'><img src='".($itemdata['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$itemdata['thumb']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' width='".$settings['eshop_idisp_w']."' height='".$settings['eshop_idisp_h']."' border='0' style='padding:4px;' /></a>";
+	echo "<a href='".BASEDIR."eshop/eshop.php?product=".$itemdata['id']."'><img src='".($itemdata['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$itemdata['thumb']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' width='".$settings['eshop_idisp_w']."' height='".$settings['eshop_idisp_h']."' border='0' style='padding:4px;' /></a>";
 }
 		echo "<br /><br />\n ".$up;
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=Main&amp;action=edit&amp;id=".$itemdata['id']."&amp;category=".$_REQUEST['category']."'>".$locale['ESHFEAT120']."</a> &middot;\n";

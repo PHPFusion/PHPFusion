@@ -288,9 +288,9 @@ echo "<div ".$slide." class='slide'>";
 	echo "<div class='slider-title'><h2>";
 	if ($data['featbanner_id']) {
 		$itemtitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP." WHERE id = '".$data['featbanner_id']."'"));
-		echo "<a href='".FUSION_SELF."?details=".$data['featbanner_id']."'>".$itemtitle['title']."</a>";
+		echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'>".$itemtitle['title']."</a>";
 		echo "</h2></div>";	
-     	echo "<a href='".FUSION_SELF."?details=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
+     	echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
 } else if ($data['featbanner_cat']) {
 		$cattitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP_CATS." WHERE cid = '".$data['featbanner_cat']."'"));
 		echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'>".$cattitle['title']."</a>";
@@ -313,9 +313,9 @@ echo "<div class='slide'>";
 	echo "<div class='slider-title'><h2>";
 	if ($data['featbanner_id']) {
 		$itemtitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP." WHERE id = '".$data['featbanner_id']."'"));
-		echo "<a href='".FUSION_SELF."?details=".$data['featbanner_id']."'>".$itemtitle['title']."</a>";
+		echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'>".$itemtitle['title']."</a>";
 		echo "</h2></div>";	
-     	echo "<a href='".FUSION_SELF."?details=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
+     	echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
 } else if ($data['featbanner_cat']) {
 		$cattitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP_CATS." WHERE cid = '".$data['featbanner_cat']."'"));
 		echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'>".$cattitle['title']."</a>";
@@ -494,14 +494,14 @@ echo "<legend style='width:85% !important;text-align:center;word-break:normal;'>
 if (checkrights("ESHP")) { 
 echo "<a href='".ADMIN."eshop.php".$aidlink."&amp;a_page=Main&action=edit&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$data['cid']."" : "")."'><img style='float:left;width:10px;height:10px;margin-top:3px;' src='".IMAGES."edit.png' border='0' /></a>";
 }
-echo "<a href='".BASEDIR."eshop.php?details=".$data['id']."'><b> ".$data['title']." </b></a></legend>";
+echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><b> ".$data['title']." </b></a></legend>";
 echo "<table width='100%' cellspacing='0' cellpadding='0' border='0' class='product_slot_".$data['id']."'>";
 echo "<tr><td ".($settings['eshop_pretext'] =="1" ? "align='left' style='width:100%;padding-top:6px;'" : "align='center' style='width:100%;padding-top:6px;'").">";
 
 if ($settings['eshop_ratios'] == "1") {
-		echo "<a href='".BASEDIR."eshop.php?details=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:100%;padding:4px;' /></a>";
+		echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:100%;padding:4px;' /></a>";
 } else {
-	echo "<a href='".BASEDIR."eshop.php?details=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:".$settings['eshop_idisp_h']."px;width:".$settings['eshop_idisp_w']."px;padding:4px;' /></a>";
+	echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:".$settings['eshop_idisp_h']."px;width:".$settings['eshop_idisp_w']."px;padding:4px;' /></a>";
 }
 echo "</td>";
 
@@ -525,7 +525,7 @@ if ($data['status'] == "1") {
 
 if ($settings['eshop_shopmode'] == "1") {
 	echo "<tr><td ".($settings['eshop_pretext'] =="1" ? "colspan='2' style='height:50px;padding:6px;'" : "")." align='center' style='height:77px;padding:6px;'>";
-	echo "&nbsp;&nbsp;<a class='".($settings['eshop_info_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?details=".$data['id']."'>".$locale['ESHPF108']."</a>";
+	echo "&nbsp;&nbsp;<a class='".($settings['eshop_info_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?product=".$data['id']."'>".$locale['ESHPF108']."</a>";
 echo "</td></tr>";
  }
 }
@@ -735,7 +735,7 @@ if ($data['buynow']  == "1") {
 	echo "<div class='col'>&nbsp;&nbsp;<a class='".($settings['eshop_buynow_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_buynow_color']."")."' href='".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."buynow.php?id=".$data['id']."'>".$locale['ESHPF111']."</a></div>";
 }
 
-echo "<div class='col'>&nbsp;&nbsp;<a class='".($settings['eshop_info_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?details=".$data['id']."'>".$locale['ESHPF108']."</a></div>";
+echo "<div class='col'>&nbsp;&nbsp;<a class='".($settings['eshop_info_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?product=".$data['id']."'>".$locale['ESHPF108']."</a></div>";
 echo "</div>";
 echo "<div style='clear:both;'></div>";
 echo "</td></tr>";
@@ -1352,7 +1352,7 @@ if (isset($_POST['buynow'])) {
 	</tr><tr>";
 
 	$order.="<td class='tbl' align='center' valign='middle' width='1%'>".($itemdata['artno'] !== '' ? "".$itemdata['artno']."" : "".$itemdata['id']."")."</td>
-	<td class='tbl' align='center' valign='middle' width='1%'><a href='".$settings['siteurl']."eshop.php?details=".$itemdata['id']."'>".$itemdata['title']."</a></td>
+	<td class='tbl' align='center' valign='middle' width='1%'><a href='".$settings['siteurl']."eshop.php?product=".$itemdata['id']."'>".$itemdata['title']."</a></td>
 	<td class='tbl' align='center' valign='middle' width='1%'></td>
 	<td class='tbl' align='center' valign='middle' width='1%'>"; 
 	if ($itemdata['dynf'] || $itemdata['dync']) { $order.="".$itemdata['dynf']." : ".$itemdata['dync'].""; } 
@@ -1374,7 +1374,7 @@ $order.="<table align='center' width='100%' cellpadding='0' cellspacing='0' clas
 while ($data = dbarray($result)) {
 if ($counter != 0 && ($counter % 1 == 0)) $order.="</tr>\n<tr>";
 	$order.="<td class='tbl' align='center' valign='middle' width='1%'>".($data['artno'] !== '' ? "".$data['artno']."" : "".$data['prid']."")."</td>
-	<td class='tbl' align='center' valign='middle' width='1%'><a href='".$settings['siteurl']."eshop.php?details=".$data['prid']."'>".$data['citem']."</a></td>
+	<td class='tbl' align='center' valign='middle' width='1%'><a href='".$settings['siteurl']."eshop.php?product=".$data['prid']."'>".$data['citem']."</a></td>
 	<td class='tbl' align='center' valign='middle' width='1%'>".getcolorname($data['cclr'])."</td>
 	<td class='tbl' align='center' valign='middle' width='1%'>"; 
 	

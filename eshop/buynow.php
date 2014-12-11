@@ -469,7 +469,7 @@ echo "<table width='345' height='100%' align='center' cellspacing='0' cellpaddin
 
 	$itemdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'"));
 
-    echo "<tr><td class='tbl' align='left'  width='25%'><a href='".BASEDIR."eshop/eshop.php?details=".$itemdata['id']."'><img src='".($itemdata['thumb'] ? "".checkeShpImageExists(INFUSIONS."eshop/pictures/".$itemdata['thumb']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' width='60' border='0' /></a></td>";
+    echo "<tr><td class='tbl' align='left'  width='25%'><a href='".BASEDIR."eshop/eshop.php?product=".$itemdata['id']."'><img src='".($itemdata['thumb'] ? "".checkeShpImageExists(INFUSIONS."eshop/pictures/".$itemdata['thumb']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' width='60' border='0' /></a></td>";
  	if ($settings['eshop_pretext'] == "1") {
 	echo "<td class='tbl' align='left' width='50%'><div style='padding:4px;word-wrap: break-word;vertical-align:middle;width:".$settings['eshop_pretext_w'].";'>".parseubb(nl2br($itemdata['introtext']))."</div></td>";
 	} else {

@@ -18,7 +18,7 @@
 require_once dirname(__FILE__)."/maincore.php";
 require_once THEMES."templates/header.php";
 if (isset($_GET['category']) && !isnum($_GET['category'])) die("Denied");
-if (isset($_GET['details']) && !isnum($_GET['details'])) die("Denied");
+if (isset($_GET['product']) && !isnum($_GET['product'])) die("Denied");
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
 if (isset($_POST['FilterSelect']) && !isnum($_POST['FilterSelect'])) die("Denied");
 
@@ -43,7 +43,7 @@ echo "<div class='clear'></div>";
 
 buildeshopheader();
 
-if (!isset($_GET['category']) && (!isset($_GET['details']))) {
+if (!isset($_GET['category']) && (!isset($_GET['product']))) {
 add_to_title($locale['ESHP031']);
 
 //Front view start
@@ -89,7 +89,7 @@ $result = dbquery("select * FROM ".DB_ESHOP." WHERE active = '1' AND ".groupacce
 }
 
 //item details start
-else if (isset($_GET['details'])) {
+else if (isset($_GET['product'])) {
 
 echo '<script type="text/javascript">
 <!--
@@ -141,10 +141,10 @@ $(document).ready(function() {
 });
 -->
 </script>';
-$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['details']."' AND ".groupaccess('access')." AND active = '1' LIMIT 0,1"));
+$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['product']."' AND ".groupaccess('access')." AND active = '1' LIMIT 0,1"));
 
 if ($data) {
-add_to_head("<link rel='canonical' href='".$settings['siteurl']."eshop.php?details=".$data['id']."' />");
+add_to_head("<link rel='canonical' href='".$settings['siteurl']."eshop.php?product=".$data['id']."' />");
 add_to_title(" - ".$data['title']."");
 
 if ($settings['eshop_cats'] == "1" && $settings['eshop_folderlink'] == "1") {
@@ -175,12 +175,12 @@ if ($data['gallery_on'] == "1") {
 echo "<div id='carousel-wrapper'><div id='carousel'>";
 
 if ($settings['eshop_ratios'] == "1") {
-	echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/".$data['picture']."' id='".$_GET['details']."' title='".$data['title']."'><img class='imageclass' src='".($data['picture'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['picture']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' align='center' alt='".$data['title']."' /></a>";
+	echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/".$data['picture']."' id='".$_GET['product']."' title='".$data['title']."'><img class='imageclass' src='".($data['picture'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['picture']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' align='center' alt='".$data['title']."' /></a>";
 } else {
-	echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/".$data['picture']."' id='".$_GET['details']."' title='".$data['title']."'><img src='".($data['picture'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['picture']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' width='".$settings['eshop_idisp_w2']."' height='".$settings['eshop_idisp_h2']."' align='middle'  alt='".$data['title']."' /></a>";
+	echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/".$data['picture']."' id='".$_GET['product']."' title='".$data['title']."'><img src='".($data['picture'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['picture']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' width='".$settings['eshop_idisp_w2']."' height='".$settings['eshop_idisp_h2']."' align='middle'  alt='".$data['title']."' /></a>";
 }
 
-$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".$_GET['details']."' ORDER BY photo_order");
+$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".$_GET['product']."' ORDER BY photo_order");
 
 while ($pdata = dbarray($result)) {
 	echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_filename']."' id='".$pdata['photo_id']."' title='".$pdata['photo_title']."'><img class='imageclass' src='".($pdata['photo_filename'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_filename']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' alt='".$data['title']."'	/></a>";
@@ -188,12 +188,12 @@ while ($pdata = dbarray($result)) {
 	echo "</div></div><div id='thumbs-wrapper'><div id='thumbs'>";
 
 if ($settings['eshop_ratios'] == "1") {
-	echo "<a href='#".$_GET['details']."' class='selected'><img class='imageclass' src='".($data['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' align='middle'  alt='".$data['title']."' /></a>";
+	echo "<a href='#".$_GET['product']."' class='selected'><img class='imageclass' src='".($data['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' align='middle'  alt='".$data['title']."' /></a>";
 } else {
-	echo "<a href='#".$_GET['details']."' class='selected'><img src='".($data['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' width='".$settings['eshop_image_tw']."' height='".$settings['eshop_image_th']."' align='middle'  alt='".$data['title']."' /></a>";
+	echo "<a href='#".$_GET['product']."' class='selected'><img src='".($data['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' width='".$settings['eshop_image_tw']."' height='".$settings['eshop_image_th']."' align='middle'  alt='".$data['title']."' /></a>";
 }
 
-$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".$_GET['details']."' ORDER BY photo_order");
+$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".$_GET['product']."' ORDER BY photo_order");
 while ($pdata = dbarray($result)) {
 echo "<a href='#".$pdata['photo_id']."'><img class='imageclass' src='".($pdata['photo_thumb1'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_thumb1']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' alt='".$data['title']."' /></a>";
 }									    
@@ -477,7 +477,7 @@ echo "<div id='FbCont".$data['id']."'>
 <script type='text/javascript'>
 <!--//--><![CDATA[//><!--
 var fb = document.createElement('fb:like'); 
-fb.setAttribute('href','".$settings['siteurl']."eshop.php?details=".$data['id']."'); 
+fb.setAttribute('href','".$settings['siteurl']."eshop.php?product=".$data['id']."'); 
 fb.setAttribute('layout','button_count');
 fb.setAttribute('show_faces','true');
 fb.setAttribute('width','1');
@@ -492,7 +492,7 @@ echo "<div style='float:left;margin-left:35px;'>";
 echo "<script type='text/javascript'>
 //<![CDATA[
 (function() {
-    document.write('<a href=\"http://twitter.com/share\" class=\"twitter-share-button\" data-count=\"horizontal\" data-url=\"".$settings['siteurl']."eshop.php?details=".$data['id']."\" data-text=\"".$current['title']."\" data-via=\"eShop\">Tweet</a>');
+    document.write('<a href=\"http://twitter.com/share\" class=\"twitter-share-button\" data-count=\"horizontal\" data-url=\"".$settings['siteurl']."eshop.php?product=".$data['id']."\" data-text=\"".$current['title']."\" data-via=\"eShop\">Tweet</a>');
     var s = document.createElement('SCRIPT'), s1 = document.getElementsByTagName('SCRIPT')[0];
     s.type = 'text/javascript';
     s.async = true;
@@ -509,7 +509,7 @@ echo "<div class='g-plusone' id='gplusone".$data['id']."'></div>
 var Validplus=document.getElementById('gplusone".$data['id']."'); 
 Validplus.setAttribute('data-size','medium'); 
 Validplus.setAttribute('data-count','true'); 
-Validplus.setAttribute('data-href','".$settings['siteurl']."eshop.php?details=".$data['id']."'); 
+Validplus.setAttribute('data-href','".$settings['siteurl']."eshop.php?product=".$data['id']."'); 
 </script>";
 echo "</div>";
 //End share buttons

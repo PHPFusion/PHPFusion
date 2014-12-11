@@ -46,7 +46,7 @@ echo "<table align='center' width='100%' cellpadding='2' cellspacing='0' class='
 while ($data = dbarray($result)) {
 
 if ($counter != 0 && ($counter % 1 == 0)) echo "</tr>\n<tr>\n";
-	echo "<td class='tbl' align='center' valign='middle' width='1%'>&nbsp;&nbsp;<a href='".BASEDIR."eshop.php?details=".$data['prid']."'><img src='".($data['cimage'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['cimage']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' width='40' border='0' /></a></td>";
+	echo "<td class='tbl' align='center' valign='middle' width='1%'>&nbsp;&nbsp;<a href='".BASEDIR."eshop.php?product=".$data['prid']."'><img src='".($data['cimage'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$data['cimage']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' width='40' border='0' /></a></td>";
 	echo "<td class='tbl' align='center' valign='middle' width='1%'><input type='hidden' value='".$data['citem']."' id='prod_".$data['tid']."' name='prod_".$data['tid']."' />".$data['citem']."</td>";
 	echo "<td class='tbl' align='center' valign='middle' width='1%'>".getcolorname($data['cclr'])."</td>";
 	echo "<td class='tbl' align='center' valign='middle' width='1%'>"; if ($data['cdynt'] || $data['cdyn']) { echo "".$data['cdynt']." : ".$data['cdyn'].""; } echo "</td>";

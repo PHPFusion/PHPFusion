@@ -31,9 +31,9 @@ $regex = array(
 	"shop/cart" => "eshop/cart.php",
 	"shop/checkout" => "eshop/checkout.php",
 	"shop/checkout-completed" => "eshop/checkedout.php",
-	"shop/%details%/%title%" => "eshop.php?details=%details%",
-	"shop/%details%/%title%#comments" => "eshop.php?details=%details%#comments",
-	"shop/%c_start%/%details%/%title%" => "eshop.php?details=%details%&amp;c_start=%c_start%",
+	"shop/%details%/%title%" => "eshop.php?product=%details%",
+	"shop/%details%/%title%#comments" => "eshop.php?product=%details%#comments",
+	"shop/%c_start%/%details%/%title%" => "eshop.php?product=%details%&amp;c_start=%c_start%",
 	);
 
 $alias_pattern = array("shop/%alias%" => "%alias_target%",

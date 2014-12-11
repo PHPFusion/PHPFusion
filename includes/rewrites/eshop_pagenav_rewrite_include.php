@@ -28,6 +28,6 @@ $pattern = array(
 	"shop/browse/%rowstart%" => "eshop.php?rowstart=%rowstart%",
 	"shop/browse/%category%/%rowstart%" => "eshop.php?category=%category%&amp;rowstart=%rowstart%",
 	"shop/browse/%category%/%rowstart%" => "eshop.php?rowstart=%rowstart%&amp;category=%category%",
-	"shop/browse/%details%/%c_start%" => "eshop.php?details=%details%&amp;c_start=%c_start%",
+	"shop/browse/%details%/%c_start%" => "eshop.php?product=%details%&amp;c_start=%c_start%",
 );
 ?>
