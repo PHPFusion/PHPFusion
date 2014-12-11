@@ -344,7 +344,6 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 	// Core Inserts
-	//$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129d']."', 'eshop.php', '1')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'eshop.php', '1')");
 	if (!$result) $fail = TRUE;
 	// go for settings.
@@ -428,7 +427,7 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('eshop_return_color', 'yellow')");
 	if (!$result) $fail = TRUE;
-	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('eshop_pretext', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('eshop_pretext', '0')");
 	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('eshop_pretext_w', '190px')");
 	if (!$result) $fail = TRUE;
