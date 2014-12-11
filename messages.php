@@ -28,14 +28,15 @@ if (isset($_POST['save_options'])) {
 						VALUES ('".$userdata['user_id']."', '$pm_email_notify', '$pm_save_sent', '0', '0', '0')
 						ON DUPLICATE KEY UPDATE pm_email_notify='$pm_email_notify', pm_save_sent='$pm_save_sent'");
 
-	redirect(FUSION_SELF."?folder=options");
+	redirect(FUSION_SELF."?folder=inbox");
 }
-
+define('RIGHT_OFF', 1);
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."messages.php";
 include THEMES."templates/global/messages.php";
 
 add_to_title($locale['global_200'].$locale['400']);
+
 $msg_settings = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0'"));
 
 // Admins have unlimited storage
@@ -44,7 +45,8 @@ if (iADMIN || $userdata['user_id'] == 1) {
 	$msg_settings['pm_savebox'] = 0;
 	$msg_settings['pm_sentbox'] = 0;
 }
-
+$info['chat_rows'] = 0;
+$info['channel'] = '';
 // Check if the folder name is a valid one
 if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
 	$_GET['folder'] = "inbox";
@@ -193,7 +195,7 @@ if ($msg_ids && $check_count > 0) {
 				ORDER BY message_datestamp ASC");
 				if (dbrows($c_sresult) > 0) {
 					while ($cdata = dbarray($c_sresult)) {
-						dbquery_insert(DB_MESSAGES, $cdata, 'delete', array('noredirect' => 1));
+						dbquery_insert(DB_MESSAGES, $cdata, 'delete');
 					}
 				}
 			}
@@ -397,32 +399,22 @@ if (isset($_GET['error'])) {
 	closetable();
 }
 
-
-
 // Callback Section
 $folders = array("inbox" => $locale['402'], "outbox" => $locale['403'], "archive" => $locale['404'], "options" => $locale['425']);
+
 $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart'])) ? : 0;
-$info = dbarray(dbquery("SELECT COUNT(IF(message_folder=0, 1, null)) inbox_total,
-			COUNT(IF(message_folder=1, 1, null)) outbox_total, COUNT(IF(message_folder=2, 1, null)) archive_total
-			FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' GROUP BY message_to"));
-$info['inbox_total'] = isset($info['inbox_total']) ? $info['inbox_total'] : "0";
-$info['outbox_total'] = isset($info['outbox_total']) ? $info['outbox_total'] : "0";
-$info['archive_total'] = isset($info['archive_total']) ? $info['archive_total'] : "0";
 
-$total_rows = 0;
 
+$info['inbox_total'] = dbrows(dbquery("SELECT count('message_id') as total FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='0' GROUP BY message_subject"));
+$info['outbox_total'] = dbrows(dbquery("SELECT count('message_id') as total FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_subject"));
+$info['archive_total'] = dbrows(dbquery("SELECT message_id FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='2' GROUP BY message_subject"));
+
+/* Global Buttons */
+$info['button']['new'] = array('link'=>FUSION_SELF."?folder=".$_GET['folder']."&amp;msg_send=0", 'name'=>$locale['401']);
+$info['button']['options'] = array('link'=>FUSION_SELF."?folder=options", 'name'=>$locale['425']);
+
+/* Inbox Channelling */
 if ($_GET['folder'] == "inbox" || $_GET['folder'] == 'options') {
-	$total_rows = $info['inbox_total'] ? $info['inbox_total'] : $info['outbox_total'];
-	// Message Listing on the Left bar.
-	$result = dbquery("SELECT m.message_id, m.message_subject, m.message_datestamp, m.message_from, m.message_read,
-			u.user_id, u.user_name, u.user_status, u.user_avatar,
-			max(m.message_id) as last_message
-			FROM ".DB_MESSAGES." m
-			LEFT JOIN ".DB_USERS." u ON IF(m.message_from='".$userdata['user_id']."', m.message_to=u.user_id, m.message_from=u.user_id)
-			WHERE m.message_user='".$userdata['user_id']."' AND m.message_folder !='2'
-			GROUP BY message_subject
-			ORDER BY m.message_datestamp ASC
-			");
 	if ($_GET['folder'] == 'options') {
 		$c_result = dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='".$userdata['user_id']."'");
 		if (dbrows($c_result)) {
@@ -432,47 +424,144 @@ if ($_GET['folder'] == "inbox" || $_GET['folder'] == 'options') {
 			$info['pm_save_sent'] = $options['pm_save_sent'];
 			$info['pm_email_notify'] = $options['pm_email_notify'];
 		}
-	}
-	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
-} elseif ($_GET['folder'] == "outbox") {
-	$total_rows = $info['outbox_total'];
-	$result = dbquery("SELECT m.message_id, m.message_to, m.message_from, m.message_subject, m.message_read, m.message_message, m.message_smileys, m.message_datestamp,
-			u.user_id, u.user_name, u.user_status, u.user_avatar, max(m.message_id) as last_message
-			FROM ".DB_MESSAGES." m
-			LEFT JOIN ".DB_USERS." u ON m.message_from=u.user_id
-			WHERE message_to='".$userdata['user_id']."' AND message_folder='1'
-			AND message_user='".$userdata['user_id']."'
-			GROUP BY message_subject
-			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
-	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
-} elseif ($_GET['folder'] == "archive") {
-	$total_rows = $info['archive_total'];
-	$result = dbquery("SELECT m.message_id, m.message_subject, m.message_datestamp, m.message_from, m.message_read,
-			u.user_id, u.user_name, u.user_status, u.user_avatar, up.user_id AS sender_id, up.user_name AS sender_name, up.user_status AS sender_status, up.user_avatar AS sender_avatar,
+	} else {
+		if ($info['inbox_total'] > 0 ) {
+			$result = dbquery("SELECT m.message_id, m.message_subject, m.message_folder, m.message_datestamp, m.message_from, m.message_read,
+			u.user_id, u.user_name, u.user_status, u.user_avatar,
+			up.user_id as contact_id, up.user_name as contact_name, up.user_status as contact_status, up.user_avatar as contact_avatar,
 			max(m.message_id) as last_message
 			FROM ".DB_MESSAGES." m
-			LEFT JOIN ".DB_USERS." u ON IF(m.message_from='".$userdata['user_id']."', m.message_to=u.user_id, m.message_from=u.user_id)
-			LEFT JOIN ".DB_USERS." up ON IF(m.message_from='".$userdata['user_id']."' AND m.message_folder='1', .m.message_to=u.user_id, m.message_from=u.user_id)
-			WHERE m.message_user='".$userdata['user_id']."' AND message_folder='2'
-			GROUP BY message_subject
+			LEFT JOIN ".DB_USERS." u ON (m.message_to=u.user_id)
+			LEFT JOIN ".DB_USERS." up ON (m.message_from=up.user_id)
+			WHERE m.message_user='".$userdata['user_id']."' AND m.message_folder ='0'
+			GROUP BY m.message_from
 			ORDER BY m.message_datestamp ASC
 			");
-	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
-}
-$info['total_rows'] = $total_rows;
-// chat listing and messages.
-if ($total_rows > 0) {
-	while ($data = dbarray($result)) { // threads
-		$sql_joins = isset($_GET['folder']) && $_GET['folder'] == 'archive' ? "IF(m.message_folder='0', m.message_from=u.user_id, m.message_to=u.user_id)" : "IF(m.message_to='".$userdata['user_id']."' AND m.message_folder='1', m.message_to=u.user_id, m.message_from=u.user_id)";
-		$info['data'][$data['message_from']][] =
-			dbarray(dbquery("SELECT m.message_id, m.message_from, m.message_to, m.message_subject, m.message_read, m.message_message, m.message_smileys, m.message_datestamp,
-			u.user_id, u.user_name, u.user_status, u.user_avatar
-			FROM ".DB_MESSAGES." m
-			LEFT JOIN ".DB_USERS." u ON ".$sql_joins."
-			WHERE m.message_id='".$data['last_message']."' LIMIT 1"));
-		$info['chat_list'][$data['message_from']] = $data; // polls last.
+			$info['chat_rows'] = dbrows($result);
+			if (dbrows($result)>0) {
+				add_to_title($locale['global_201'].$folders[$_GET['folder']]);
+				while ($data = dbarray($result)) { // threads
+					$data['contact_user'] = array('user_id'=>$data['contact_id'], 'user_name'=>$data['contact_name'], 'user_status'=>$data['contact_status'], 'user_avatar'=>$data['contact_avatar']);
+					$data['message'] = array('link'=>BASEDIR."messages.php?folder=inbox&amp;msg_user=".$data['contact_id'], 'name'=>$data['message_subject']);
+					$info['chat_list'][$data['contact_id']] = $data; // group by contact_id.
+				}
+
+				// channeling - to reduce scope of sql search.
+				if (isset($_GET['msg_user']) && isnum($_GET['msg_user'])) {
+					$result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar
+						FROM ".DB_MESSAGES." m
+						LEFT JOIN ".DB_USERS." u ON m.message_from=u.user_id
+						WHERE m.message_user='".$userdata['user_id']."' AND m.message_from='".$_GET['msg_user']."' and message_folder='0'
+						GROUP BY message_subject ORDER BY message_datestamp DESC
+						");
+					$info['max_rows'] = dbrows($result);
+					if ($info['max_rows']>0) {
+						while ($topics = dbarray($result)) {
+							$info['item'][] = $topics;
+							$info['channel'] = profile_link($topics['user_id'], $topics['user_name'], $topics['user_status']); // bah let it loop
+						}
+					}
+				} else {
+					$info['channel'] = $locale['467'];
+				}
+				// end channeling.
+			}
+		}
 	}
 }
+/* Outbox Channeling */
+elseif ($_GET['folder'] == "outbox") {
+	add_to_title($locale['global_201'].$folders[$_GET['folder']]);
+	if ($info['outbox_total'] > 0 ) {
+		$result = dbquery("SELECT m.message_id, m.message_subject, m.message_folder, m.message_datestamp, m.message_from, m.message_read,
+			u.user_id, u.user_name, u.user_status, u.user_avatar,
+			up.user_id as contact_id, up.user_name as contact_name, up.user_status as contact_status, up.user_avatar as contact_avatar,
+			max(m.message_id) as last_message
+			FROM ".DB_MESSAGES." m
+			LEFT JOIN ".DB_USERS." u ON (m.message_to=u.user_id)
+			LEFT JOIN ".DB_USERS." up ON (m.message_from=up.user_id)
+			WHERE m.message_user='".$userdata['user_id']."' AND m.message_folder ='1'
+			GROUP BY m.message_to
+			ORDER BY m.message_datestamp ASC
+			");
+		$info['chat_rows'] = dbrows($result);
+		if (dbrows($result)>0) {
+			add_to_title($locale['global_201'].$folders[$_GET['folder']]);
+			while ($data = dbarray($result)) { // threads
+				$data['contact_user'] = array('user_id'=>$data['contact_id'], 'user_name'=>$data['contact_name'], 'user_status'=>$data['contact_status'], 'user_avatar'=>$data['contact_avatar']);
+				$data['message'] = array('link'=>BASEDIR."messages.php?folder=outbox&amp;msg_user=".$data['contact_id'], 'name'=>$data['message_subject']);
+				$info['chat_list'][$data['contact_id']] = $data; // group by contact_id.
+			}
+			// Outbox channeling - to reduce scope of sql search.
+			if (isset($_GET['msg_user']) && isnum($_GET['msg_user'])) {
+				$result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar,
+						up.user_id as contact_id, up.user_name as contact_name, up.user_status as contact_status
+						FROM ".DB_MESSAGES." m
+						LEFT JOIN ".DB_USERS." u ON m.message_to=u.user_id
+						LEFT JOIN ".DB_USERS." up ON m.message_from=up.user_id
+						WHERE m.message_user='".$userdata['user_id']."' AND m.message_from='".$_GET['msg_user']."' and message_folder='1'
+						GROUP BY message_subject ORDER BY message_datestamp DESC
+						");
+				$info['max_rows'] = dbrows($result);
+				if ($info['max_rows']>0) {
+					while ($topics = dbarray($result)) {
+						$info['item'][] = $topics;
+						$info['channel'] = profile_link($topics['contact_id'], $topics['contact_name'], $topics['contact_status']); // bah let it loop
+					}
+				}
+			} else {
+				$info['channel'] = $locale['467'];
+			}
+			// end channeling.
+		}
+	}
+}
+/* Archive Channeling */
+elseif ($_GET['folder'] == "archive") {
+
+	if ($info['archive_total'] > 0 ) {
+		$result = dbquery("SELECT m.message_id, m.message_subject, m.message_folder, m.message_datestamp, m.message_from, m.message_read,
+			up.user_id as contact_id, up.user_name as contact_name, up.user_status as contact_status, up.user_avatar as contact_avatar,
+			max(m.message_id) as last_message
+			FROM ".DB_MESSAGES." m
+			LEFT JOIN ".DB_USERS." up ON IF(m.message_from='".$userdata['user_id']."', m.message_to=up.user_id, m.message_from=up.user_id)
+			WHERE m.message_user='".$userdata['user_id']."' AND m.message_folder ='2'
+			GROUP BY m.message_subject
+			ORDER BY m.message_datestamp ASC
+			");
+		$info['chat_rows'] = dbrows($result);
+		if (dbrows($result)>0) {
+			add_to_title($locale['global_201'].$folders[$_GET['folder']]);
+			while ($data = dbarray($result)) { // threads
+				$data['contact_user'] = array('user_id'=>$data['contact_id'], 'user_name'=>$data['contact_name'], 'user_status'=>$data['contact_status'], 'user_avatar'=>$data['contact_avatar']);
+				$data['message'] = array('link'=>BASEDIR."messages.php?folder=archive&amp;msg_user=".$data['contact_id'], 'name'=>$data['message_subject']);
+				$info['chat_list'][$data['contact_id']] = $data; // group by contact_id.
+			}
+
+			// channeling - to reduce scope of sql search.
+			if (isset($_GET['msg_user']) && isnum($_GET['msg_user'])) {
+				$result = dbquery("SELECT m.*, u.user_id, u.user_name, u.user_status, u.user_avatar
+						FROM ".DB_MESSAGES." m
+						LEFT JOIN ".DB_USERS." u ON IF(m.message_from='".$userdata['user_id']."', m.message_to=u.user_id, m.message_from=u.user_id)
+						WHERE m.message_user='".$userdata['user_id']."' AND (m.message_to='".$_GET['msg_user']."' or m.message_from='".$_GET['msg_user']."') AND message_folder='2'
+						GROUP BY message_subject ORDER BY message_datestamp DESC
+						");
+				$info['max_rows'] = dbrows($result);
+				if ($info['max_rows']>0) {
+					while ($topics = dbarray($result)) {
+						$info['item'][] = $topics;
+						$info['channel'] = profile_link($topics['user_id'], $topics['user_name'], $topics['user_status']); // bah let it loop
+					}
+				}
+			} else {
+				$info['channel'] = $locale['467'];
+			}
+			// end channeling.
+		}
+	}
+}
+
+
 if ((isset($_GET['msg_read']) && isnum($_GET['msg_read'])) && ($_GET['folder'] == "inbox" || $_GET['folder'] == "archive" || $_GET['folder'] == "outbox")) {
 	// real full pm - debug success - nothing here.
 	$p_result = dbquery("SELECT message_id, message_subject FROM ".DB_MESSAGES." WHERE message_id='".$_GET['msg_read']."' LIMIT 1");
@@ -486,7 +575,7 @@ if ((isset($_GET['msg_read']) && isnum($_GET['msg_read'])) && ($_GET['folder'] =
 				FROM ".DB_MESSAGES." m
 				LEFT JOIN ".DB_USERS." u ON IF(message_folder=1, m.message_to=u.user_id, m.message_from=u.user_id)
 				WHERE message_from !='".$userdata['user_id']."' AND message_subject='$message_subject' AND message_folder='0' OR
-					  message_to='".$userdata['user_id']."' AND message_subject='".$p_data['message_subject']."' AND message_folder='1' AND message_user='".$userdata['user_id']."'
+				message_to='".$userdata['user_id']."' AND message_subject='".$p_data['message_subject']."' AND message_folder='1' AND message_user='".$userdata['user_id']."'
 				ORDER BY message_datestamp ASC");
 		} elseif ($_GET['folder'] == 'outbox') {
 			$result = dbquery("SELECT  m.message_id, m.message_subject, m.message_message, m.message_smileys,
@@ -522,15 +611,11 @@ if ((isset($_GET['msg_read']) && isnum($_GET['msg_read'])) && ($_GET['folder'] =
 
 //print_p($info); // var_dump(info);
 render_inbox($info);
-
-echo "<script type='text/javascript'>\n";
-echo "/* <![CDATA[ */\n";
-echo "function setChecked(frmName,chkName,val) {"."\n";
-echo "dml=document.forms[frmName];"."\n"."len=dml.elements.length;"."\n"."for(i=0;i < len;i++) {"."\n";
-echo "if(dml.elements[i].name == chkName) {"."\n"."dml.elements[i].checked = val;"."\n";
-echo "}\n}\n}\n";
-echo "/* ]]> */\n";
-echo "</script>\n";
-
+add_to_jquery("
+var l_height = $('.left_pm').height(), r_height = $('.right_pm').height();
+if (l_height > r_height) { $('.right_pm').height(l_height); } else { $('.left_pm').height(r_height); }
+$('#setcheck_all').bind('click', function() { $('.checkbox').prop('checked', true); });
+$('#setcheck_none').bind('click', function() { $('.checkbox').prop('checked', false); });
+");
 require_once THEMES."templates/footer.php";
 ?>
