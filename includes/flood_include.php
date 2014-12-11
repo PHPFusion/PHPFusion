@@ -22,9 +22,11 @@ function flood_control($field, $table, $where) {
 	if (!iSUPERADMIN && !iADMIN && (!defined("iMOD") || !iMOD)) {
 		$result = dbquery("SELECT MAX(".$field.") AS last_post FROM ".$table." WHERE ".$where);
 		if (dbrows($result)) {
+			$time = time();
 			$data = dbarray($result);
-			$data['last_post'] = $data['last_post'] > 0 ? $data['last_post'] : time();
-			if ((time()-$data['last_post']) < $settings['flood_interval']) {
+			if (($time-$data['last_post']) < $settings['flood_interval']) {
+				$defender->stop();
+				$defender->addNotice(sprintf($locale['flood'], countdown($settings['flood_interval']-($time-$data['last_post']))));
 				$flood = TRUE;
 				$result = dbquery("INSERT INTO ".DB_FLOOD_CONTROL." (flood_ip, flood_ip_type, flood_timestamp) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '".time()."')");
 				if (dbcount("(flood_ip)", DB_FLOOD_CONTROL, "flood_ip='".USER_IP."'") > 4) {
@@ -39,9 +41,6 @@ function flood_control($field, $table, $where) {
 						$result = dbquery("INSERT INTO ".DB_BLACKLIST." (blacklist_ip, blacklist_ip_type, blacklist_email, blacklist_reason) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '', '".$locale['global_440']."')");
 					}
 				}
-			} else {
-				$defender->stop();
-				$defender->addNotice(sprintf($locale['flood'], countdown($settings['flood_interval']-(time()-$data['last+post']))));
 			}
 		}
 	}
