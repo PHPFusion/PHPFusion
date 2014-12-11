@@ -186,7 +186,7 @@ if ($executable && iMEMBER) {
 
 	$flood = FALSE;
 	// On New Thread Post Execution
-	if (isset($_POST['postnewthread'])) {
+	if (isset($_POST['postnewthread']) && checkgroup($info['forum_post'])) {
 		require_once INCLUDES."flood_include.php";
 		if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'") && !defined('FUSION_NULL')) {
 			$data['thread_id'] = dbquery_insert(DB_THREADS, $data, 'save', array('primary_key'=>'thread_id')); // forum id is missing.
@@ -225,8 +225,9 @@ if ($executable && iMEMBER) {
 	}
 
 	// On Edit Post Execution
-	if (isset($_POST['savechanges'])) {
+	if (isset($_POST['savechanges']) && checkgroup($info['forum_post'])) {
 		// Delete Action - maybe can change to a stand alone button
+		if (!$data['edit']) redirect(FORUM."index.php");
 		if (isset($_POST['delete']) && !defined('FUSION_NULL')) { // added token protection.
 			$result = dbquery("SELECT post_author FROM ".DB_POSTS." WHERE post_id='".$_GET['post_id']."' AND thread_id='".$_GET['thread_id']."'");
 			if (dbrows($result)) {
@@ -294,7 +295,7 @@ if ($executable && iMEMBER) {
 	}
 
 	// On Reply Post Execution
-	if (isset($_POST['postreply'])) {
+	if (isset($_POST['postreply']) && checkgroup($info['forum_reply'])) {
 		if (!defined("FUSION_NULL") && $data['post_message']) {
 			require_once INCLUDES."flood_include.php";
 			if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'")) {
