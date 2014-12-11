@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2013 Nick Jones
+| Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: paypal.php

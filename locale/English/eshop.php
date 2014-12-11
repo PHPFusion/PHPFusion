@@ -504,7 +504,7 @@ $locale['ESHP334'] = array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday
 $locale['ESHP335'] = "Time";
 
 //Administration settings
-$locale['ESHP500'] = "Setting updates";
+$locale['ESHP500'] = "Settings updated";
 $locale['ESHP501'] = "No settings found, please check the database and make sure eShop is Infused";
 $locale['ESHP502'] = "Settings";
 $locale['ESHP503'] = "Categorys ";
