@@ -408,7 +408,7 @@ echo "</table></fieldset>";
 echo "<div style='float:left;margin-top:5px;padding:3px;'>";
 echo"<fieldset style='width:100%;padding:2px;'><legend style='width:90% !important;'>&nbsp; ".$locale['ESHPCHK170']." &nbsp;</legend>";
 echo "<table width='290' height='100%' align='center' cellspacing='0' cellpadding='2' border='0'>";
-echo "<tr><td class='tbl' align='center'><input type='text' name='cupon' id='cupon' value='".$locale['ESHPCHK171']."' onblur=\"if(this.value=='') this.value='".$locale['ESHPCHK171']."';\" onfocus=\"if(this.value=='".$locale['ESHPCHK171']."') this.value='';\" class='textbox' style='width:130px;' onKeyDown=\"textCounter(document.inputform.cupon,document.inputform.remLen1,15)\" onKeyUp=\"textCounter(document.inputform.cupon,document.inputform.remLen1,15)\" /> ".$locale['ESHPCHK175']." <input readonly type='text' class='textbox' name='remLen1' style='width:18px;' value='15' /> <br /><a class='button' href='javascript:;' onclick='javascript:cuponcheck()'>".$locale['ESHPCHK172']."</a></td></tr>";
+echo "<tr><td class='tbl' align='center'><input type='text' name='cupon' id='cupon' value='".$locale['ESHPCHK171']."' onblur=\"if(this.value=='') this.value='".$locale['ESHPCHK171']."';\" onfocus=\"if(this.value=='".$locale['ESHPCHK171']."') this.value='';\" class='textbox' style='width:150px;' onKeyDown=\"textCounter(document.inputform.cupon,document.inputform.remLen1,15)\" onKeyUp=\"textCounter(document.inputform.cupon,document.inputform.remLen1,15)\" /> ".$locale['ESHPCHK175']." <input readonly type='text' class='textbox' name='remLen1' style='width:20px;' value='15' /> <br /><a class='button' href='javascript:;' onclick='javascript:cuponcheck(); return false;'>".$locale['ESHPCHK172']."</a></td></tr>";
 echo "</table></fieldset></div>";
 
 echo "</div>";
@@ -429,7 +429,7 @@ $rows = dbrows($result);
 if ($rows != 0) {
 $result = dbquery("SELECT * FROM ".DB_ESHOP_PAYMENTS." WHERE active='1' ORDER BY pid ASC");
 while ($data = dbarray($result)) {
-      echo "<tr><td class='tbl' align='left'  valign='middle' width='5%'><input type='radio' name='paymethod' id='payment_".$data['pid']."' value='".$data['pid']."'  onclick='javascript:payment(".$data['pid'].")' /></td>
+      echo "<tr><td class='tbl' align='left'  valign='middle' width='5%'><input type='radio' name='paymethod' id='payment_".$data['pid']."' value='".$data['pid']."'  onclick='javascript:payment(".$data['pid'].");' /></td>
       <td class='tbl' align='left' width='20%'><img style='width:40px; height:40px;' src='".SHOP."paymentimgs/".$data['image']."' border='0' alt='' /></td>
 	  <td class='tbl' align='left' width='50%'>".$data['method']." <a href='javascript:;' class='info'><span>".nl2br($data['description'])."</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a></td>
 	  <td class='tbl' align='left' width='30%'>".$locale['ESHPCHK121']." <br /> ".$data['surcharge']." ".$settings['eshop_currency']."</td>
@@ -456,7 +456,7 @@ while ($data = dbarray($result)) {
     if ($data['destination'] == "1") { $destlocale = $locale['D101']; }
 	if ($data['destination'] == "2") { $destlocale = $locale['D102']; }
 	if ($data['destination'] == "3") { $destlocale = $locale['D103']; }
-    echo "<tr><td class='tbl' align='left' valign='middle' width='5%'><input type='radio' name='shipping' id='shipping_".$data['sid']."' value='".$data['sid']."' onclick='javascript:shipment(".$data['sid'].")' /></td>
+    echo "<tr><td class='tbl' align='left' valign='middle' width='5%'><input type='radio' name='shipping' id='shipping_".$data['sid']."' value='".$data['sid']."' onclick='javascript:shipment(".$data['sid'].");' /></td>
     <td class='tbl' align='left' width='55%'>".$data['method']."<br />".$data['dtime']." - ".$destlocale."</td>
 	<td class='tbl' align='left' width='20%'>".$locale['ESHPCHK124']."<br /> ".$data['initialcost']." ".$settings['eshop_currency']."</td>
 	<td class='tbl' align='left' width='20%'>".$locale['ESHPCHK121']."/".$settings['eshop_weightscale']."<br />".$data['weightcost']." ".$settings['eshop_currency']."</td>
