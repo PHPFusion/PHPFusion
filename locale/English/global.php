@@ -311,7 +311,7 @@ $locale['global_ML100'] = "Language:";
 $locale['global_ML101'] = "- Select Language -";
 $locale['global_ML102'] = "Site language";
 
-$locale['flood'] = "You are barred to post until the flood period cooldown is over. Please wait for %t";
+$locale['flood'] = "You are barred to post until the flood period cooldown is over. Please wait for %s.";
 $locale['no_image'] = "No Image";
 $locale['send_message'] = 'Send Message';
 $locale['go_profile'] = 'Go to %s Profile Page';
