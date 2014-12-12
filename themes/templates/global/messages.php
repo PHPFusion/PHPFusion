@@ -165,7 +165,7 @@ if (!function_exists('render_inbox')) {
 						echo "<div class='overflow-hide'>\n";
 						echo "<span class='pull-right text-smaller'>".date('d/m/y, h:i a', $mdata['message_datestamp'])."</span>\n";
 						echo profile_link($mdata['user_id'], $mdata['user_name'], $mdata['user_status']);
-						echo "<p>".censorwords($mdata['message_message'])."</p>";
+						echo "<p>".trim_word(censorwords(parseubb($mdata['message_message'])), 50)."</p>";
 						echo "</span>\n";
 						echo "</div>\n";
 						echo "</div>\n";
@@ -190,7 +190,7 @@ if (!function_exists('render_inbox')) {
 						echo "<input class='checkbox pull-right' type='checkbox' name='check_mark[]' value='".$messages['message_id']."' />";
 						echo "<span class='pull-right m-r-10'>".date('d/m/y, h:i a', $messages['message_datestamp'])."</span>\n";
 						echo "<span class='strong'><a href='".BASEDIR."messages.php?folder=".$_GET['folder']."&msg_user=".$_GET['msg_user']."&amp;msg_read=".$messages['message_id']."'>".censorwords($messages['message_subject'])."</a></span><br/>";
-						echo "<p>".trim_word(censorwords($messages['message_message']), 50)."</p>";
+						echo "<p>".censorwords(parseubb($messages['message_message']))."</p>";
 						echo "</span>\n";
 						echo "</div>\n";
 						echo "</div>\n";
