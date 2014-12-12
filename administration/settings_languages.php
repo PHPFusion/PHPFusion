@@ -485,10 +485,6 @@ if (isset($_POST['savesettings'])) {
 			if (!$result) {
 				$error = 1;
 			}
-			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT015']."' WHERE mlt_rights='ES'");
-			if (!$result) {
-				$error = 1;
-			}
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT004']."' WHERE mlt_rights='FQ'");
 			if (!$result) {
 				$error = 1;

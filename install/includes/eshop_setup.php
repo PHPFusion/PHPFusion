@@ -139,12 +139,9 @@ if (isset($_POST['uninstall'])) {
 				cupons char(1) NOT NULL default '',
 				access tinyint(3) NOT NULL default '0',
 				campaign char(1) NOT NULL default '',
-				comments char(1) NOT NULL default '',
-				ratings char(1) NOT NULL default '',
-				linebreaks char(1) NOT NULL default '',
-				keywords varchar(255) NOT NULL default '',
-				product_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['enabled_languages']."',
 				dateadded int(10) unsigned NOT NULL default '1',
+				keywords varchar(255) NOT NULL default '',
+				product_languages VARCHAR(200) NOT NULL DEFAULT '".$_POST['localeset']."',
 				PRIMARY KEY  (id),
 				KEY cid (cid)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
@@ -160,7 +157,7 @@ if (isset($_POST['uninstall'])) {
 				image varchar(45) NOT NULL default '0',
 				parentid mediumint(8) NOT NULL default '0',
 				status char(1) NOT NULL default '0',
-				cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['enabled_languages']."',
+				cat_languages VARCHAR(200) NOT NULL DEFAULT '".$_POST['localeset']."',
 				PRIMARY KEY  (cid)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		if (!$result) {

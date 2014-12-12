@@ -186,15 +186,6 @@ $cupons = stripinput($_POST['cupons']);
 $access = stripinput($_POST['access']);
 $dateadded = stripinput($_POST['dateadded']);
 $campaign = stripinput($_POST['campaign']);
-$ratings = stripinput($_POST['ratings']);
-$comments = stripinput($_POST['comments']);
-$linebreaks = stripinput($_POST['linebreaks']);
-$keywords = stripinput($_POST['keywords']);
-$languages = "";
-
-for ($pl=0;$pl<sizeof($_POST['languages']);$pl++) {
-   $languages .= $_POST['languages'][$pl].($pl<(sizeof($_POST['languages'])-1)?".":"");
-}
 
 if (isset($_POST['cList'])) {
 for ($i = 0, $l = count($_POST['cList']); $i < $l; $i++) {
@@ -215,11 +206,11 @@ $result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$categ
 } elseif ($iorder < $old_iorder) {
 $result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$category."' AND iorder<'$old_iorder' AND iorder>='$iorder'");
  }
-$result = dbquery("UPDATE ".DB_ESHOP." SET title='$title', cid='$category', picture='$photo_file', thumb='$photo_thumb1',thumb2='$photo_thumb2',introtext='$introtext',description='$description',anything1='$anything1',anything1n='$anything1n',anything2='$anything2',anything2n='$anything2n',anything3='$anything3',anything3n='$anything3n',weight='$weight',price='$price',xprice='$xprice',stock='$stock',version='$version',status='$status',active='$active',gallery_on='$gallery_on',delivery='$delivery', demo='$demo',cart_on='$cart_on',buynow='$buynow',rpage='$rpage',icolor='$clist',dynf='$dynf',dync='$slist',qty='$qty',sellcount='$sellcount',iorder='$iorder',artno='$artno',sartno='$sartno',instock='$instock',dmulti='$dmulti',cupons='$cupons',access='$access',campaign='$campaign',comments='$comments',ratings='$ratings',linebreaks='$linebreaks',keywords='$keywords',product_languages='$languages',dateadded='$dateadded' WHERE id='".$_GET['id']."'");
+$result = dbquery("UPDATE ".DB_ESHOP." SET title='$title', cid='$category', picture='$photo_file', thumb='$photo_thumb1',thumb2='$photo_thumb2',introtext='$introtext',description='$description',anything1='$anything1',anything1n='$anything1n',anything2='$anything2',anything2n='$anything2n',anything3='$anything3',anything3n='$anything3n',weight='$weight',price='$price',xprice='$xprice',stock='$stock',version='$version',status='$status',active='$active',gallery_on='$gallery_on',delivery='$delivery', demo='$demo',cart_on='$cart_on',buynow='$buynow',rpage='$rpage',icolor='$clist',dynf='$dynf',dync='$slist',qty='$qty',sellcount='$sellcount',iorder='$iorder',artno='$artno',sartno='$sartno',instock='$instock',dmulti='$dmulti',cupons='$cupons',access='$access',campaign='$campaign',dateadded='$dateadded' WHERE id='".$_GET['id']."'");
 } else {
 if (!$iorder) { $iorder = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid = '".$category."'"), 0) + 1; }
 $result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$category."' AND iorder>='$iorder'");	
-$result = dbquery("INSERT INTO ".DB_ESHOP." VALUES('', '$title',  '$category', '$photo_file', '$photo_thumb1','$photo_thumb2', '$introtext','$description','$anything1','$anything1n','$anything2','$anything2n','$anything3','$anything3n','$weight','$price','$xprice','$stock','$version','$status','$active','$gallery_on','$delivery','$demo','$cart_on','$buynow','$rpage','$clist','$dynf','$slist','$qty','$sellcount','$iorder','$artno','$sartno','$instock','$dmulti','$cupons','$access','$campaign','$comments','$ratings','$linebreaks','$keywords','$languages','".time()."')");
+$result = dbquery("INSERT INTO ".DB_ESHOP." VALUES('', '$title',  '$category', '$photo_file', '$photo_thumb1','$photo_thumb2', '$introtext','$description','$anything1','$anything1n','$anything2','$anything2n','$anything3','$anything3n','$weight','$price','$xprice','$stock','$version','$status','$active','$gallery_on','$delivery','$demo','$cart_on','$buynow','$rpage','$clist','$dynf','$slist','$qty','$sellcount','$iorder','$artno','$sartno','$instock','$dmulti','$cupons','$access','$campaign','".time()."','','')");
  }
 redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
 }
@@ -268,12 +259,6 @@ $qty = $data['qty'];
 $sellcount = $data['sellcount'];
 $dateadded = $data['dateadded'];
 $campaign = $data['campaign'];
-$languages = $data['product_languages'];
-$ratings = $data['ratings'];
-$comments = $data['comments'];
-$linebreaks = $data['linebreaks'];
-$keywords = $data['keywords'];
-
 $formaction = "".FUSION_SELF.$aidlink."&amp;action=edit&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."";
 
 } else {
@@ -320,11 +305,7 @@ $qty = "";
 $sellcount = "";
 $dateadded = "";
 $campaign = "";
-$languages = "";
-$ratings = "";
-$comments = "";
-$linebreaks = "";
-$keywords = "";
+
 $formaction = FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" && isset($_REQUEST['category']) ? "&amp;category=".$_REQUEST['category']."" : "")."";
 }
 
@@ -461,7 +442,7 @@ echo "<option value='".$cat_data['cid']."'>".$cat_data['title']."</option>";
 echo "</select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO103']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr></table></form><hr />";
   }
  }
@@ -486,48 +467,30 @@ echo "</select></td></tr>";
 } else {
 echo "<tr><td align='left'>".$locale['ESHPPRO105']."</td><td align='left'><input type='hidden' name='cid' value='$category'>".$locale['ESHPPRO106']."</td></tr>";
 }
-
-for ($x=0;$x<sizeof($enabled_languages);$x++) {
-	$languages .= $enabled_languages[$x].(($x<sizeof($enabled_languages)-1)?".":"");
-}
-
-$langs = explode('.', $languages);
-$locale_files = makefilelist(LOCALE, ".|..", true, "folders");
-
-echo "<td class='tbl'>".$locale['ESHPPRO191']."</td>";
-echo "<td colspan='2' class='tbl'>";
-for ($i=0;$i<sizeof($locale_files);$i++) {
-if (in_array($locale_files[$i], $enabled_languages)) {
-echo "<input type='checkbox' value='".$locale_files[$i]."' name='languages[]' class='textbox' ".(in_array($locale_files[$i], $langs)?"checked='checked'":"")."> ".str_replace('_', ' ', $locale_files[$i])." ";
-}
-if ($i%4==0 && $i!=0) echo "<br  />";
-}
-echo "</td></tr>";
-echo "<tr><td align='left'>".$locale['ESHPPRO192']."</td><td align='left'><input type='text' name='keywords' value='".$keywords."' class='textbox' style='width:190px;'></td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO107']."</td><td align='left'><input type='text' name='artno' value='".$artno."' class='textbox' style='width:190px;'></td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO108']."</td><td align='left'><input type='text' name='sartno' value='".$sartno."' class='textbox' style='width:190px;'></td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO109']."</td><td align='left'><input type='file' name='imagefile' enctype='image/jpeg' value='$image_url' class='textbox' style='width:180px;'>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO110']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 
 echo "<tr><td align='left'>".$locale['ESHPPRO111']."</td><td align='left'><input type='text' name='price' value='$price' class='textbox'  style='width:60px;'>  ".$settings['eshop_currency']."</td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO112']."</td><td align='left'><input type='text' name='xprice' value='$xprice' class='textbox' style='width:60px;'>  ".$settings['eshop_currency']."
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO113']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a></td></tr>";
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a></td></tr>";
 
 echo "<tr><td align='left'>".$locale['ESHPPRO114']."</td><td align='left'><input type='text' name='weight' value='$weight' class='textbox' style='width:60px;'>  ".$settings['eshop_weightscale']."
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO115']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a></td></tr>";
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a></td></tr>";
 
 echo "<tr><td align='left'><input type='text' name='dynf' value='$dynf' class='textbox' style='width:100px;'></td>";
 echo "<td align='left'><input type='text' name='dyncList' id='dyncList' class='textbox' style='width:70px;'><a href='javascript:;' id='adddync' class='button'>".$locale['ESHPPRO116']."</a>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO117']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a></td></tr>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a></td></tr>
 
 <tr><td align='left' valign='middle'>".$locale['ESHPPRO118']."</td><td align='left'>
 <div id ='sList' style='width:250px;margin-top:5px;margin-bottom:5px;height:150px;overflow: auto;position:relative;'></div></td>
@@ -673,7 +636,7 @@ echo "<option value='135' style='background-color:#9ACD32;'>".$ESHPCLRS['135']."
 echo "</select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO121']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 <br />
 <div id ='cList' style='width:250px;margin-top:5px;height:150px;overflow: auto;position:relative;'></div></td>
 </tr>";
@@ -684,12 +647,12 @@ echo "<table width='100%' cellspacing='4' cellpadding='0' align='center'>";
 echo "<tr><td align='left'>".$locale['ESHPPRO122']." </td><td align='left'><input type='text' name='iorder' value='$iorder' class='textbox' style='width:40px;'>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO123']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO124']." </td><td align='left'><input type='text' name='sellcount' value='$sellcount' class='textbox' style='width:40px;'>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO125']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO184']."</td><td align='left'><select name='campaign' class='textbox'>
        <option value='0'".($campaign == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
@@ -697,7 +660,7 @@ echo "<tr><td align='left'>".$locale['ESHPPRO184']."</td><td align='left'><selec
 	   </select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO185']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 
 echo "<tr><td align='left'>".$locale['ESHPPRO182']."</td><td align='left'><select name='cupons' class='textbox'>
@@ -706,7 +669,7 @@ echo "<tr><td align='left'>".$locale['ESHPPRO182']."</td><td align='left'><selec
 	   </select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO183']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO126']."</td><td align='left'><select name='gallery_on' class='textbox'>
        <option value='0'".($gallery_on == "0" ? " selected" : "").">".$locale['ESHPPRO127']."</option>
@@ -714,7 +677,7 @@ echo "<tr><td align='left'>".$locale['ESHPPRO126']."</td><td align='left'><selec
       </select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO129']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO130']."</td><td align='left'><input type='text' name='image' value='$image_url' class='textbox' readonly style='width:200px;'></td></tr>
 <tr><td align='left'>".$locale['ESHPPRO131']."</td><td align='left'><input type='text' name='thumb' value='$thumb_url' class='textbox' readonly style='width:200px;'></td></tr>
@@ -722,12 +685,12 @@ echo "<tr><td align='left'>".$locale['ESHPPRO130']."</td><td align='left'><input
 echo "<tr><td align='left'>".$locale['ESHPPRO133']."</td><td align='left'><input type='text' name='version' value='$version' class='textbox' style='width:60px;'>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO134']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO135']."</td><td align='left'><input type='text' name='demo' value='$demo' class='textbox' style='width:170px;'>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO136']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO137']."</td><td align='left'><select name='stock' class='textbox'>
       <option value='1'".($stock == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
@@ -735,17 +698,17 @@ echo "<tr><td align='left'>".$locale['ESHPPRO137']."</td><td align='left'><selec
 	  </select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO140']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO141']."</td><td align='left'><input type='text' name='instock' value='$instock' class='textbox' style='width:40px;'>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO142']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO143']."</td><td align='left'><input type='text' name='delivery' value='$delivery' class='textbox' style='width:170px;' />
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO144']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 
 echo "<tr><td align='left'>".$locale['ESHPPRO145']."</td><td align='left'><select name='status' class='textbox'>
@@ -754,7 +717,7 @@ echo "<tr><td align='left'>".$locale['ESHPPRO145']."</td><td align='left'><selec
       </select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO146']." 
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 
 echo "<tr><td align='left'>".$locale['ESHPPRO147']."</td><td align='left'><select name='active' class='textbox'>
@@ -763,7 +726,7 @@ echo "<tr><td align='left'>".$locale['ESHPPRO147']."</td><td align='left'><selec
       </select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO148']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>".$locale['ESHPPRO149']."</td><td align='left'><select name='cart_on' class='textbox'>
       <option value='1'".($cart_on == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
@@ -771,7 +734,7 @@ echo "<tr><td align='left'>".$locale['ESHPPRO149']."</td><td align='left'><selec
       </select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO150']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 echo "<tr><td align='left'>Allow to buy multiple items</td><td align='left'><select name='qty' class='textbox'>
       <option value='1'".($qty == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
@@ -779,13 +742,13 @@ echo "<tr><td align='left'>Allow to buy multiple items</td><td align='left'><sel
       </select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO151']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 
 echo "<tr><td align='left'>".$locale['ESHPPRO152']."</td><td align='left'><input type='text' name='dmulti' value='$dmulti' class='textbox' style='width:40px;'>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO153']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 
 echo "<tr><td align='left'>".$locale['ESHPPRO154']."</td><td align='left'><select name='buynow' class='textbox'>
@@ -794,25 +757,7 @@ echo "<tr><td align='left'>".$locale['ESHPPRO154']."</td><td align='left'><selec
       </select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO155']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
-</td></tr>";
-
-echo "<tr><td align='left'>".$locale['ESHPPRO188']."</td><td align='left'><select name='ratings' class='textbox'>
-      <option value='0'".($ratings == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($ratings == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO188']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
-</td></tr>";
-
-echo "<tr><td align='left'>".$locale['ESHPPRO189']."</td><td align='left'><select name='comments' class='textbox'>
-      <option value='0'".($comments == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($comments == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO189']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 
 echo "<tr><td align='left'>".$locale['ESHPPRO156']."</td><td>";
@@ -825,24 +770,14 @@ echo "<tr><td align='left'>".$locale['ESHPPRO156']."</td><td>";
 echo "</select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO158']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
-
-echo "<tr><td align='left'>".$locale['ESHPPRO190']."</td><td align='left'><select name='linebreaks' class='textbox'>
-      <option value='0'".($linebreaks == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($linebreaks == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO190']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
-</td></tr>";
-
 echo "<tr><td align='left'>".$locale['ESHPCATS109']."</td>
 <td align='left'><select name='access' class='textbox'>
 $visibility_opts</select>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO159']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
 </td></tr>";
 
 echo "</table>";
@@ -854,7 +789,7 @@ if ($settings['eshop_pretext'] == "1") {
 echo "<tr><td align='left'>".$locale['ESHPPRO160']."</td><td align='left'><textarea name='introtext' cols='90' rows='3' class='textbox span6'>$introtext</textarea>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO161']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
 </td></tr>";
 } else {
 echo "<input type='hidden' name='introtext' value='$introtext'>";
@@ -863,7 +798,7 @@ echo "<input type='hidden' name='introtext' value='$introtext'>";
 echo "<tr><td align='left'>".$locale['ESHPPRO162']."</td><td align='left'><textarea name='description' cols='90' rows='6' class='textbox span6'>$description</textarea>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO163']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
 </td></tr>";
 echo "</table>\n";
 
@@ -873,7 +808,7 @@ echo "<table width='100%' cellspacing='4' cellpadding='0'>";
 echo "<tr><td align='left'><input type='text' name='anything1n' value='$anything1n' class='textbox' style='width:90px;'></td><td align='left'><textarea name='anything1' cols='90' rows='6' class='textbox span6'>$anything1</textarea>
 <a href='javascript:;' class='info'><span>
 ".$locale['ESHPPRO165']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
 
 </td></tr>";
 echo "<tr><td align='left'><input type='text' name='anything2n' value='$anything2n' class='textbox' style='width:90px;'></td><td align='left'><textarea name='anything2' cols='90' rows='6' class='textbox span6'>$anything2</textarea></td></tr>";
@@ -902,7 +837,7 @@ while ($data = dbarray($result)) {
 echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
 echo "<td width='1%' align='left'><a href='".FUSION_SELF.$aidlink."&amp;a_page=Main&action=edit&amp;category=0&amp;id=".$data['id']."'><b>".$data['title']."</b></a></td>\n";
 echo "<td width='1%' align='center'>".$locale['ESHPPRO180']."</td>\n";
-echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;action=delete&id=".$data['id']."' onClick='return confirmdelete();'><img src='".SHOP."img/remove.png' border='0' height='20' style='vertical-align:middle;'  alt='' /></a></td></tr>";
+echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;action=delete&id=".$data['id']."' onClick='return confirmdelete();'><img src='".BASEDIR."eshop/img/remove.png' border='0' height='20' style='vertical-align:middle;'  alt='' /></a></td></tr>";
 echo "</td>";
 }
 echo "</table>\n";
@@ -966,7 +901,7 @@ echo "<a href='".FUSION_SELF.$aidlink."&amp;action=moveup&amp;order=$up&amp;id="
 }
 $k++;
 echo " #".$data['iorder']."</td>\n";
-echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;action=delete&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."' onClick='return confirmdelete();'><img src='".SHOP."img/remove.png' border='0' height='20' style='vertical-align:middle;'  alt='' /></a></td></tr>";
+echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;action=delete&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."' onClick='return confirmdelete();'><img src='".BASEDIR."eshop/img/remove.png' border='0' height='20' style='vertical-align:middle;'  alt='' /></a></td></tr>";
 echo "</td>";
 }
 echo "</table>\n";
@@ -996,6 +931,6 @@ $searchtext = stripinput($_POST['psrchtext']);
 echo "<div style='float:right;margin-top:5px;'><form id='search_form'  name='inputform' method='post' action='".FUSION_SELF.$aidlink."&amp;psearch'>
 <span style='vertical-align:middle;font-size:14px;'>".$locale['ESHPPRO178']."</span>";
 echo "<input type='text' name='psrchtext' class='textbox' style='margin-left:1px; margin-right:1px; margin-bottom:5px; width:160px;'  value='".$searchtext."' onblur=\"if(this.value=='') this.value='".$searchtext."';\" onfocus=\"if(this.value=='".$searchtext."') this.value='';\" />";
-echo "<input type='image' id='search_image' src='".SHOP."img/search_icon.png' alt='".$locale['SRCH162']."' />";
+echo "<input type='image' id='search_image' src='".BASEDIR."eshop/img/search_icon.png' alt='".$locale['SRCH162']."' />";
 echo "</form></div>";
 ?>
