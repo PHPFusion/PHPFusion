@@ -332,7 +332,6 @@ function forum_breadcrumbs($forum_index) {
 	function breadcrumb_arrays($index, $id) {
 		global $aidlink;
 		$crumb = &$crumb;
-		//$crumb += $crumb;
 		if (isset($index[get_parent($index, $id)])) {
 			$_name = dbarray(dbquery("SELECT forum_id, forum_name, forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$id."'"));
 			$crumb = array('link'=>FORUM."index.php?viewforum&amp;forum_id=".$_name['forum_id']."&amp;parent_id=".$_name['forum_cat'], 'title'=>$_name['forum_name']);

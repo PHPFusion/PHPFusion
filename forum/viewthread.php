@@ -70,8 +70,20 @@ if (dbrows($result) > 0) {
 	// Moderators - returns iMOD constants
 	define_forum_mods($info);
 
-	if (iMOD && (((isset($_POST['delete_posts']) || isset($_POST['move_posts'])) && isset($_POST['delete_post'])) || isset($_GET['error']))) {
+	if (iMOD) {
+
+		if ((isset($_POST['delete_posts']) || isset($_POST['move_posts'])) or isset($_GET['error'])) {
 		require_once FORUM."viewthread_options.php";
+	}
+
+		$info['mod_options'] = array(
+			'renew' => $locale['forum_0207'],
+			'delete' => $locale['forum_0201'],
+			$info['thread_locked'] ? "unlock" : "lock" => $info['thread_locked'] ? $locale['forum_0203'] : $locale['forum_0202'],
+			$info['thread_sticky'] ? "nonsticky" : "sticky" => $info['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
+			'move' => $locale['forum_0206']
+		);
+		$info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'];
 	}
 
 	// Forum Permissions - Polls (can view and vote)
@@ -173,19 +185,15 @@ if (dbrows($result) > 0) {
 			$info['notify'] = array('link'=>FORUM."postify.php?post=on&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['forum_0175']);
 		}
 	}
-
 	$info['print'] = array('link'=>BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], 'name'=>$locale['forum_0178']);
-
 	if (iMEMBER) {
-		if (checkgroup($info['permissions']['can_post']) or checkgroup($info['permissions']['can_reply'])) {
-			if (checkgroup($info['permissions']['can_post'])) {
-				$info['newthread'] = array('link'=>FORUM."post.php?action=newthread&amp;forum_id=".$info['forum_id'], 'name'=>$locale['forum_0264']);
-			}
-			if (checkgroup($info['permissions']['can_reply']) && !$info['thread_locked']) {
-				$info['reply'] = array('link'=>FORUM."post.php?action=reply&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['forum_0360']);
-			}
-		}
-	}
+		if ($info['permissions']['can_post']) {
+            $info['newthread'] = array('link'=>FORUM."post.php?action=newthread&amp;forum_id=".$info['forum_id'], 'name'=>$locale['forum_0264']);
+        }
+		if ($info['permissions']['can_reply'] && !$info['thread_locked']) {
+            $info['reply'] = array('link'=>FORUM."post.php?action=reply&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['forum_0360']);
+        }
+    }
 	// Filters -- Locale.
 	$info['allowed-post-filters'] = array('oldest', 'latest');
 	$info['post-filters'][0] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=oldest', 'locale' => 'Oldest');
@@ -283,7 +291,6 @@ if (dbrows($result) > 0) {
 			}
 		}
 		// Voting - need up or down link - accessible to author also the vote
-
 		$data['vote_time'] = 0;
 		if ($info['permissions']['can_rate']) { // can vote.
 			$data['vote_time'] = 1; // pass forum settings
@@ -358,10 +365,11 @@ if (dbrows($result) > 0) {
 	redirect("index.php");
 }
 
+
 // Set breadcrumbs, Meta & Title
 $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-function forum_breadcrumbs() {
-	global $aidlink, $forum_index;
+function forum_breadcrumbs($index) {
+	global $aidlink;
 	/* Make an infinity traverse */
 	function breadcrumb_arrays($index, $id) {
 		global $aidlink;
@@ -383,7 +391,7 @@ function forum_breadcrumbs() {
 	}
 
 	// then we make a infinity recursive function to loop/break it out.
-	$crumb = breadcrumb_arrays($forum_index, $_GET['forum_id']);
+	$crumb = breadcrumb_arrays($index, $_GET['forum_id']);
 	// then we sort in reverse.
 	if (count($crumb['title']) > 1) {
 		krsort($crumb['title']);
@@ -400,8 +408,9 @@ function forum_breadcrumbs() {
 	}
 	// hola!
 }
+
 $_GET['forum_id'] = $info['forum_id'];
-forum_breadcrumbs();
+forum_breadcrumbs($forum_index);
 add_to_title($locale['global_201'].$info['thread_subject']);
 add_to_breadcrumbs(array('link' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'],
 					   'title' => $info['thread_subject']));

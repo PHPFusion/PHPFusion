@@ -625,27 +625,29 @@ if (!function_exists('render_post')) {
 			}
 
 			// Moderation Panel
-			$mod_options = array(
-				'renew' => $locale['forum_0207'],
-				'delete' => $locale['forum_0201'],
-				'renew' => $locale['forum_0207'],
-				$info['thread_locked'] ? "unlock" : "lock" => $info['thread_locked'] ? $locale['forum_0203'] : $locale['forum_0202'],
-				$info['thread_sticky'] ? "nonsticky" : "sticky" => $info['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
-				'move' => $locale['forum_0206']
-			);
-			echo "<hr>\n";
-			echo "<div class='btn-group m-r-10'>\n";
-			echo "<a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n";
-			echo "<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n";
-			echo "</div>\n";
+			if (iMOD) {
+				$mod_options = array(
+					'renew' => $locale['forum_0207'],
+					'delete' => $locale['forum_0201'],
+					'renew' => $locale['forum_0207'],
+					$info['thread_locked'] ? "unlock" : "lock" => $info['thread_locked'] ? $locale['forum_0203'] : $locale['forum_0202'],
+					$info['thread_sticky'] ? "nonsticky" : "sticky" => $info['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
+					'move' => $locale['forum_0206']
+				);
+				echo "<hr>\n";
+				echo "<div class='btn-group m-r-10'>\n";
+				echo "<a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n";
+				echo "<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n";
+				echo "</div>\n";
 
-			echo form_button($locale['forum_0176'], 'move_posts', 'move_posts', $locale['forum_0176'], array('class' => 'btn-default btn-sm m-r-10'));
-			echo form_button($locale['forum_0177'], 'delete_posts', 'delete_posts', $locale['forum_0177'], array('class' => 'btn-default btn-sm'));
+				echo form_button($locale['forum_0176'], 'move_posts', 'move_posts', $locale['forum_0176'], array('class' => 'btn-default btn-sm m-r-10'));
+				echo form_button($locale['forum_0177'], 'delete_posts', 'delete_posts', $locale['forum_0177'], array('class' => 'btn-default btn-sm'));
 
-			echo "<div class='pull-right'>\n";
-			echo form_select('', 'step', 'step', $mod_options, '', array('placeholder' => $locale['forum_0200'], 'width'=>'250px', 'allowclear'=>1, 'class'=>'m-b-0', 'inline'=>1));
-			echo form_button($locale['forum_0208'], 'go', 'go', $locale['forum_0208'], array('class' => 'btn-default btn-sm m-l-10'));
-			echo "</div>\n";
+				echo "<div class='pull-right'>\n";
+				echo form_select('', 'step', 'step', $mod_options, '', array('placeholder' => $locale['forum_0200'], 'width'=>'250px', 'allowclear'=>1, 'class'=>'m-b-0', 'inline'=>1));
+				echo form_button($locale['forum_0208'], 'go', 'go', $locale['forum_0208'], array('class' => 'btn-default btn-sm m-l-10'));
+				echo "</div>\n";
+			}
 
 			// buttons
 			echo "<div class='clearfix m-t-20'>\n";
@@ -660,7 +662,7 @@ if (!function_exists('render_post')) {
 
 			// Quick reply
 			echo "<hr>";
-			if (checkgroup($info['permissions']['can_post']) && !$info['thread_locked'] && $info['forum_quick_edit']) {
+			if ($info['permissions']['can_reply'] && $info['forum_quick_edit'] && !$info['thread_locked']) {
 				$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'];
 				echo "<h4 class='m-t-20'>".$locale['forum_0168']."</h4>\n";
 				echo openform('qr_form', 'qr_form', 'post', $form_action, array('class'=>'m-b-20'));
