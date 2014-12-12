@@ -182,6 +182,7 @@ $locale['MLT011'] = "Навигация";
 $locale['MLT012'] = "Панели";
 $locale['MLT013'] = "Ранги форума";
 $locale['MLT014'] = "Блог";
+$locale['MLT015'] = "Электронный магазин";
 // Step 6 - Navigation Links
 $locale['130'] = "Главная";
 $locale['131'] = "Статьи";
