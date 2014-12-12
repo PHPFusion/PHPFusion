@@ -139,6 +139,7 @@ $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POS
 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['itembox_h'])."' WHERE settings_name='eshop_itembox_h'");
 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['cipr'])."' WHERE settings_name='eshop_cipr'");
 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['newtime'])."' WHERE settings_name='eshop_newtime'");
+$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['coupons'])."' WHERE settings_name='eshop_coupons'");
 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['freeshipsum'])."' WHERE settings_name='eshop_freeshipsum'");
 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['terms']))."' WHERE settings_name='eshop_terms'");
 echo "<div class='admin-message'>".$locale['ESHP500']."</div>";
@@ -232,6 +233,16 @@ echo "<form name='optionsform' method='post' action='".FUSION_SELF.$aidlink."&am
 				<option value='2419200'".($settings2['eshop_newtime'] == "2419200" ? " selected" : "").">".$locale['ESHP845']."</option>
             </select></td>
             <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP838']."</span></td>
+	</tr>
+	
+		<tr>
+            <td class='tbl1' width='30%' align='left'>".$locale['ESHP848']."</td>
+            <td class='tbl1' width='20%'  align='left'>
+            <select name='coupons' class='textbox'>
+                <option value='1'".($settings2['eshop_coupons'] == "1" ? " selected" : "").">".$locale['ESHP564']."</option>
+                <option value='0'".($settings2['eshop_coupons'] == "0" ? " selected" : "").">".$locale['ESHP565']."</option>
+            </select></td>
+            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP849']."</span></td>
 	</tr>
 	
 	<tr>

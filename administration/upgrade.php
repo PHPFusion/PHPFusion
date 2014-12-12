@@ -233,6 +233,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('CP', '".$locale['MLT002']."', '1')");
 		$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('BL', '".$locale['MLT014']."', '1')");
 		$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('DL', '".$locale['MLT003']."', '1')");
+		$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('ES', '".$locale['MLT015']."', '1')");
 		$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('FQ', '".$locale['MLT004']."', '1')");
 		$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('FO', '".$locale['MLT005']."', '1')");
 		$result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('FR', '".$locale['MLT013']."', '1')");
@@ -307,8 +308,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("INSERT INTO ".DB_PREFIX."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['195']."', 'windows.gif', '".$settings['locale']."')");
 
 		
-		
-				//eShop section
+		//eShop section
 		$result = dbquery("CREATE TABLE ".DB_PREFIX."eshop (
 		id mediumint(8) unsigned NOT NULL auto_increment,
 		title varchar(200) NOT NULL default '',
@@ -350,9 +350,12 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		cupons char(1) NOT NULL default '',
 		access tinyint(3) NOT NULL default '0',
 		campaign char(1) NOT NULL default '',
-		dateadded int(10) unsigned NOT NULL default '1',
+		comments char(1) NOT NULL default '',
+		ratings char(1) NOT NULL default '',
+		linebreaks char(1) NOT NULL default '',
 		keywords varchar(255) NOT NULL default '',
 		product_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."',
+		dateadded int(10) unsigned NOT NULL default '1',
 		PRIMARY KEY  (id),
 		KEY cid (cid)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
@@ -588,7 +591,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		(3, 'Prepayment', 'If you select this option you will need to transfer money directly to our account from your account. \r\nSubmit this order for account details.', 'creditcards.png', 0, '', 'prepayment.php', '1'),
 		(4, 'Visit store', 'If you select this option you will need to visit our store and pay your order.\r\n Please bring your OrderID.', 'cash.png', 0, '', '', '1')");
 
-	//Add a link
+	//Add a site link
 		$result = dbquery("INSERT INTO ".DB_PREFIX."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['129f']."', 'eshop.php', '0', '2', '0', '3', '".$settings['locale']."')");
 
 		// eShop admin and rights sections
@@ -600,6 +603,14 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".ESHP' WHERE user_id='".$data['user_id']."'");
 			}
 		}
+		
+		//Update tables from previous installs
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD comments char(1) NOT NULL default '' AFTER campaign");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD ratings char(1) NOT NULL default '' AFTER comments");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD linebreaks char(1) NOT NULL default '' AFTER ratings");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD keywords varchar(255) NOT NULL default '' AFTER linebreaks");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop product_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."' AFTER keywords");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop_cats cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."' AFTER status");
 		
 		// Email templates admin section
 		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
