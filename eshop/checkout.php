@@ -53,9 +53,7 @@ $result = dbquery("SELECT * FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' 
 
 if (dbrows($result) != 0) {
 	saveorder();
-//	redirect("".($settings['site_seo'] ? FUSION_ROOT : '')."".SHOP."checkedout.php");
 	redirect(SHOP."checkedout.php");
-	//redirect($settings['siteurl']."eshop/checkedout.php");
 } else {
 	redirect(SHOP."eshop.php");
  }
@@ -405,12 +403,13 @@ echo "</table></fieldset>";
 
 
 //Coupon system
+if ($settings['eshop_coupons'] == "1") {
 echo "<div style='float:left;margin-top:5px;padding:3px;'>";
 echo"<fieldset style='width:100%;padding:2px;'><legend style='width:90% !important;'>&nbsp; ".$locale['ESHPCHK170']." &nbsp;</legend>";
 echo "<table width='290' height='100%' align='center' cellspacing='0' cellpadding='2' border='0'>";
-echo "<tr><td class='tbl' align='center'><input type='text' name='cupon' id='cupon' value='".$locale['ESHPCHK171']."' onblur=\"if(this.value=='') this.value='".$locale['ESHPCHK171']."';\" onfocus=\"if(this.value=='".$locale['ESHPCHK171']."') this.value='';\" class='textbox' style='width:150px;' onKeyDown=\"textCounter(document.inputform.cupon,document.inputform.remLen1,15)\" onKeyUp=\"textCounter(document.inputform.cupon,document.inputform.remLen1,15)\" /> ".$locale['ESHPCHK175']." <input readonly type='text' class='textbox' name='remLen1' style='width:20px;' value='15' /> <br /><a class='button' href='javascript:;' onclick='javascript:cuponcheck(); return false;'>".$locale['ESHPCHK172']."</a></td></tr>";
+echo "<tr><td class='tbl' align='center'><input type='text' name='cupon' id='cupon' value='".$locale['ESHPCHK171']."' onblur=\"if(this.value=='') this.value='".$locale['ESHPCHK171']."';\" onfocus=\"if(this.value=='".$locale['ESHPCHK171']."') this.value='';\" class='textbox' style='width:150px;' onKeyDown=\"textCounter(document.inputform.cupon,document.inputform.remLen1,15)\" onKeyUp=\"textCounter(document.inputform.cupon,document.inputform.remLen1,15)\" /> ".$locale['ESHPCHK175']." <input readonly type='text' class='textbox' name='remLen1' style='width:30px;' value='15' /> <br /><a class='button' href='javascript:;' onclick='javascript:cuponcheck(); return false;'>".$locale['ESHPCHK172']."</a></td></tr>";
 echo "</table></fieldset></div>";
-
+}
 echo "</div>";
 
 echo "<div style='display:none'><div id='terms_content' style='padding:10px;text-align:left'>";
@@ -544,7 +543,6 @@ if ($settings['eshop_coupons'] == "1") {
 $result = dbquery("SELECT * FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='0' ORDER BY tid ASC");
 if (dbrows($result) != 0) {
 $counter = 0; 
-
 echo "<table align='center' width='100%' cellpadding='2' cellspacing='0' class='eshptable'><tr>
 	<td class='tbl2' width='1%' align='center' colspan='2'><b>".$locale['ESHPC102']."</b></td>
 	<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPC103']."</b></td>
@@ -555,7 +553,6 @@ echo "<table align='center' width='100%' cellpadding='2' cellspacing='0' class='
 
 while ($data = dbarray($result)) {
 if ($counter != 0 && ($counter % 1 == 0)) echo "</tr>\n<tr>\n";
-
 	echo "<td class='tbl' align='center' valign='middle' width='1%'>&nbsp;&nbsp;<a href='".SHOP."eshop.php?product=".$data['prid']."'><img src='".($data['cimage'] ? "".checkeShpImageExists(SHOP."pictures/".$data['cimage']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' width='40' border='0' /></a></td>";
 	echo "<td class='tbl' align='center' valign='middle' width='1%'>".$data['citem']."</td>";
 	echo "<td class='tbl' align='center' valign='middle' width='1%'>".getcolorname($data['cclr'])."</td>";
@@ -580,9 +577,7 @@ else
 cntfield.value = maxlimit - field.value.length;
 }
 
-
 function ValidateForm(frm) {
-	
 var pcheck = $('input[name=paymethod]');
 var paycheck = pcheck.filter(':checked').val();
 
@@ -664,10 +659,8 @@ echo "<br /><div class='admin-message'>".$locale['ESHPCHK147']."</div>";
 echo "<div class='clear'></div>";
 echo "<div style='float:left;margin-top:15px;padding:10px;'><a class='".($settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_return_color']."")."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>&laquo; ".$locale['ESHP030']."</a> &nbsp;&nbsp; </div>";
 echo "<div class='clear'></div>";
-
 }
 
 closetable();
-	
 require_once THEMES."templates/footer.php";
 ?>
