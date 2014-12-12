@@ -137,7 +137,7 @@ if (isset($_POST['save'])) {
 		closetable();
 	}
 	if (isset($_POST['edit']) && (isset($_POST['page_id']) && isnum($_POST['page_id']))) {
-		$result = dbquery("SELECT page_id, page_title, page_access, page_content, page_allow_comments, page_allow_ratings, page_language
+		$result = dbquery("SELECT page_id, page_title, page_access, page_content, page_keywords, page_allow_comments, page_allow_ratings, page_language
                 FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_POST['page_id']."' LIMIT 1");
 		if (dbrows($result)) {
 			$data = dbarray($result);
