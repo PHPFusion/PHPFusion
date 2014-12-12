@@ -377,7 +377,6 @@ if (isset($_POST['send_message'])) {
 		}
 	}
 	redirect(BASEDIR."messages.php?folder=".$_GET['folder']."&msg_user=".$_GET['msg_user'].(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''));
-	redirect(FUSION_SELF."?folder=inbox".($error ? "&error=$error" : ""));
 }
 
 // Error Section.
