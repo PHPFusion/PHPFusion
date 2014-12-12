@@ -701,8 +701,8 @@ if (!function_exists('render_post_item')) {
 
 		$post_reply = !empty($data['post_quote']) ? "<a class='forum_user_actions' title='".$data['post_quote']['name']."' href='".$data['post_quote']['link']."'>".$data['post_quote']['name']."</a>\n" : '';
 		$post_reply .= !empty($data['post_edit']) ? " &middot; <a class='forum_user_actions' title='".$data['post_edit']['name']."' href='".$data['post_edit']['link']."'>".$data['post_edit']['name']."</a>\n" : '';
-		$print = !empty($data['print']) ? " &middot; <a class='forum_user_actions' title='".$data['print']['name']."' href='".$data['print']['link']."'>".$data['print']['name']."</a> - " : '';
-		$user_web = !empty($data['user_web']) ? "<a class='forum_user_actions' href='".$data['user_web']['link']."' target='_blank'>".$data['user_web']['name']."</a>" : '';
+		$print = !empty($data['print']) ? " &middot; <a class='forum_user_actions' title='".$data['print']['name']."' href='".$data['print']['link']."'>".$data['print']['name']."</a>" : '';
+		$user_web = !empty($data['user_web']) ? "&middot; <a class='forum_user_actions' href='".$data['user_web']['link']."' target='_blank'>".$data['user_web']['name']."</a>" : '';
 		$user_msg = !empty($data['user_message']) ? "<a class='forum_user_actions' href='".$data['user_message']['link']."' target='_blank'>".$data['user_message']['name']."</a>" : '';
 		$user_ip = !empty($data['user_ip']) ? "<span class='forum_thread_ip text-smaller'>".$data['user_ip']."</span>\n" : '';
 		$user_sig = !empty($data['user_ip']) ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : '';
@@ -777,6 +777,7 @@ if (!function_exists('render_post_item')) {
 
 		echo "<!--sub_forum_post_message-->";
 		echo $edit_reason ? $edit_reason : '';
+		echo "<div class='user_signature'>".$user_sig."</div>\n";
 		echo "<!--sub_forum_post-->";
 		echo "<div class='thread-footer'>".$user_web.$user_msg.$post_reply.$print.$user_ip;
 		echo "</div>\n";
