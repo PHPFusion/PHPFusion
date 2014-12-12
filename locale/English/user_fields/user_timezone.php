@@ -1,5 +1,5 @@
 <?php
-$locale['uf_offset'] = "Timezone";
-$locale['uf_offset_desc'] = "User defined timezone.";
-$locale['uf_offset_error'] = "Timezone was not set correctly.";
+$locale['uf_timezone'] = "Timezone";
+$locale['uf_timezone_desc'] = "User defined timezone.";
+$locale['uf_timezone_error'] = "Timezone was not set correctly.";
 ?>
