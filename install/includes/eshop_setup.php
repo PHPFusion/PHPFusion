@@ -160,6 +160,7 @@ if (isset($_POST['uninstall'])) {
 				image varchar(45) NOT NULL default '0',
 				parentid mediumint(8) NOT NULL default '0',
 				status char(1) NOT NULL default '0',
+				cat_order mediumint(8) unsigned NOT NULL,
 				cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['enabled_languages']."',
 				PRIMARY KEY  (cid)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");

@@ -512,7 +512,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		KEY featbanner_id (featbanner_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 
-		//Populate shop settings
+	//Populate shop settings
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('eshop_cats', '1')");
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('eshop_cat_disp', '1')");
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('eshop_nopp', '6')");
@@ -576,6 +576,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 				(5, 'Post Office', 'postoffice.png'), 
 				(6, 'Ptt', 'ptt.png'),
 				(7, 'TNT', 'tnt.png')");
+				
 	//Populate shipping items with some defaults
 		$result = dbquery("INSERT INTO ".DB_PREFIX."eshop_shippingitems (sid, cid, method, dtime, destination, weightmin, weightmax, weightcost, initialcost, active) VALUES
 				(1, 1, 'No Shipping - Visit store', '0', '0', '0.00', '0', 0, 0, '1'),
@@ -594,7 +595,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 	//Add a site link
 		$result = dbquery("INSERT INTO ".DB_PREFIX."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['129f']."', 'eshop.php', '0', '2', '0', '3', '".$settings['locale']."')");
 
-		// eShop admin and rights sections
+	// eShop admin and rights sections
 		$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'eshop.php', '1')");
 		$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'settings_eshop.php', '4')");
 		if ($result) {
@@ -609,8 +610,10 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD ratings char(1) NOT NULL default '' AFTER comments");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD linebreaks char(1) NOT NULL default '' AFTER ratings");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD keywords varchar(255) NOT NULL default '' AFTER linebreaks");
-		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop product_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."' AFTER keywords");
-		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop_cats cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."' AFTER status");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop ADD product_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."' AFTER keywords");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop_cats ADD cat_order MEDIUMINT(8) UNSIGNED NOT NULL AFTER status");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop_cats ADD cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."' AFTER cat_order");
+		$result = dbquery("RENAME TABLE `".DB_PREFIX."eshop_cupons` TO `".DB_PREFIX."eshop_coupons`");		
 		
 		// Email templates admin section
 		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
