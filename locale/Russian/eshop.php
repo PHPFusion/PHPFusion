@@ -146,7 +146,7 @@ $locale['ESHPF207'] = "Filter by :";
 
 //checkout // Administration customers
 $locale['ESHPCHK100'] = "Checkout";
-$locale['ESHPCHK101'] = "If this is your first visit please <a class='button' href='".BASEDIR."register.php'>register</a> if you want us to save your data.<br />If you already are a registred customer you can <a class='button' href='".BASEDIR."login.php'>login here</a> to retrive your data.";
+$locale['ESHPCHK101'] = "If this is your first visit please <a class='eshpbutton green' href='".BASEDIR."register.php'>register</a> if you want us to save your data.<br />If you already are a registred customer you can <a class='eshpbutton yellow' href='".BASEDIR."login.php'>login here</a> to retrive your data.";
 $locale['ESHPCHK102'] = "Information for billing and shipping";
 $locale['ESHPCHK103'] = "First name";
 $locale['ESHPCHK104'] = "Last name";
@@ -332,6 +332,11 @@ $locale['ESHPPRO184'] = "Campaign";
 $locale['ESHPPRO185'] = "If you want this product to be listed as a Campaign. Campaign ribbon will be shown and it will be listed in the campaign section.";
 $locale['ESHPPRO186'] = "Select a category for product management";
 $locale['ESHPPRO187'] = "This category has the following sub-categorys";
+$locale['ESHPPRO188'] = "Enable ratings for this product";
+$locale['ESHPPRO189'] = "Enable comments for this product";
+$locale['ESHPPRO190'] = "Enable line breaks in description tabs, ( need to be off for HTML ).";
+$locale['ESHPPRO191'] = "Product Language(s)";
+$locale['ESHPPRO192'] = "Keywords. <br />Separate each keyword with a ,";
 
 //Administration coupons
 $locale['ESHPCUPNS101'] = "Code";
@@ -504,7 +509,7 @@ $locale['ESHP334'] = array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday
 $locale['ESHP335'] = "Time";
 
 //Administration settings
-$locale['ESHP500'] = "Setting updates";
+$locale['ESHP500'] = "Settings updated";
 $locale['ESHP501'] = "No settings found, please check the database and make sure eShop is Infused";
 $locale['ESHP502'] = "Settings";
 $locale['ESHP503'] = "Categorys ";
@@ -635,6 +640,8 @@ $locale['ESHP844'] = "2 Weeks";
 $locale['ESHP845'] = "4 Weeks";
 $locale['ESHP846'] = "Free shipping";
 $locale['ESHP847'] = "The value you enter here will give customers free shipping if their cart value reachs this value. A 0 value will disable this function.";
+$locale['ESHP848'] = "Allow coupons";
+$locale['ESHP849'] = "You can disable the coupon system here.";
 
 //Photos admin & additional globals for Photohandling
 $locale['ESHPHOTOS101'] = "Your limit of max number of";
