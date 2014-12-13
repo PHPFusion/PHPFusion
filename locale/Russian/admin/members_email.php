@@ -20,7 +20,7 @@ $locale['email_deactivate_message'] = "Приветствую, [USER_NAME]!\
 ".$settings['siteurl']."reactivate.php?user_id=[USER_ID]&code=[CODE]\n\n
 С наилучшими пожеланиями,\n
 ".$settings['siteusername'];
-$locale['email_ban_subject'] = "Ваша учётная запись на сайте ".$settings['sitename']." has been banned";
+$locale['email_ban_subject'] = "Ваша учётная запись на сайте ".$settings['sitename']." была заблокирована.";
 $locale['email_ban_message'] = "Приветствую, [USER_NAME]!\n
 Ваша учётная запись на сайте ".$settings['sitename']." была заблокирована администратором ".$userdata['user_name']." по следующим причинам:\n
 [REASON].\n
