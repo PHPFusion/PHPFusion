@@ -60,7 +60,6 @@ $locale['unpublish'] = "Не опубликовано";
 $locale['draft'] = "Черновик";
 $locale['settings'] = "Параметры";
 $locale['posted'] = "размещено";
-$locale['in'] = "в";
 $locale['profile'] = "Профиль";
 $locale['edit'] = "Изменить";
 $locale['view'] = "Смотреть";

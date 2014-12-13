@@ -61,7 +61,6 @@ $locale['unpublish'] = 'Unpublished';
 $locale['draft'] = 'Draft';
 $locale['settings'] = 'Settings';
 $locale['posted'] = 'posted';
-$locale['in'] = 'in';
 $locale['profile'] = 'Profile';
 $locale['edit'] = 'Edit';
 $locale['view'] = 'View';
