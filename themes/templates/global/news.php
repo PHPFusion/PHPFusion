@@ -129,9 +129,7 @@ if (!function_exists('render_main_news')) {
 				foreach ($info['news_items'] as $i => $news_info) {
 					echo "<div class='col-xs-12 col-sm-$news_span col-md-$news_span col-lg-$news_span'>\n";
 					echo "<!--news_prepost_".$i."-->\n";
-					$subject_news = $news_info['news_subject'];
-					$news = $news_info['news_news'];
-					render_news($subject_news, $news, $news_info, $active == 2 ? 1 : 0);
+					render_news($news_info, $active == 2);
 					echo "<!--sub_news_idx-->\n";
 					echo "</div>\n";
 				}
