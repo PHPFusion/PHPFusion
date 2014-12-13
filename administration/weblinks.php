@@ -55,7 +55,7 @@ if (!empty($result)) {
 		}
 	}
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['weblink_id']) && isnum($_GET['weblink_id']))) {
-		$result = dbquery("SELECT weblink_name, weblink_description, weblink_url, weblink_cat FROM ".DB_WEBLINKS." weblink_id='".$_GET['weblink_id']."'");
+		$result = dbquery("SELECT weblink_name, weblink_description, weblink_url, weblink_cat FROM ".DB_WEBLINKS." where weblink_id='".$_GET['weblink_id']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$weblink_name = $data['weblink_name'];
