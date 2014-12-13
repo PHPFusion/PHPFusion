@@ -4,3 +4,4 @@
 *.xml
 
 *.iml
+/nbproject/private/
