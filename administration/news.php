@@ -384,9 +384,6 @@ function news_form() {
 		}
 	}
 	$formaction = FUSION_SELF.$aidlink;
-	if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
-		$formaction = FUSION_SELF.$aidlink."&action=edit&news_id=".$_GET['news_id'];
-	}
 
 	echo "<div class='m-t-20'>\n";
 	// remove downtime after beta.
