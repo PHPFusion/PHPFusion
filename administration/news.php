@@ -214,10 +214,8 @@ function news_form() {
 		$data['news_extended'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])); // Needed for HTML to work
 		$data['news_keywords'] = form_sanitizer($_POST['news_keywords'], '', 'news_keywords');
 		$data['news_datestamp'] = form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp');
-		$data['news_start_date'] = 0;
-		$data['news_end_date'] = 0;
-		$data['news_start_date'] = form_sanitizer($_POST['news_start'], '', 'news_start');
-		$data['news_end_date'] = form_sanitizer($_POST['news_end'], '', 'news_end');
+		$data['news_start'] = form_sanitizer($_POST['news_start'], 0, 'news_start');
+		$data['news_end'] = form_sanitizer($_POST['news_end'], 0, 'news_end');
 		$data['news_visibility'] = form_sanitizer($_POST['news_visibility'], '0', 'news_visibility');
 		$data['news_draft'] = isset($_POST['news_draft']) ? "1" : "0";
 		$data['news_sticky'] = isset($_POST['news_sticky']) ? "1" : "0";
