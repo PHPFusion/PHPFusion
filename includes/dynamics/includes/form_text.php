@@ -29,7 +29,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 		'width' => !empty($options['width']) ?  $options['width']  : '100%',
 		'class' => !empty($options['class']) ?  $options['class']  : '',
 		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
-		'length' => !empty($options['length']) ?  $options['length']  : '200',
+		'max_length' => !empty($options['max_length']) ?  $options['max_length']  : '200',
 		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
 		'icon' => !empty($options['icon']) ?  $options['icon']  : '',
@@ -67,7 +67,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "<div class='input-group'>\n" : '';
 	$html .= ($options['prepend_button']) ? "<span class='input-group-btn'>\n<button type='".$options['prepend_type']."' value='submit-".$input_name."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button></span>" : '';
-	$html .= "<input type='".$options['type']."' class='form-control textbox' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['length'] ? "maxlength='".$options['length']."'" : '')." name='$input_name' id='".$input_id."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+	$html .= "<input type='".$options['type']."' class='form-control textbox' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='$input_name' id='".$input_id."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 	$html .= ($options['append_button']) ? "<span class='input-group-btn'><button type='".$options['append_type']."' value='submit-".$input_name."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button></span>" : '';
 	$html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='glyphicon ".$options['icon']."'></i></div>\n" : '';
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "</div>\n" : '';
