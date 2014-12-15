@@ -110,7 +110,7 @@ echo "</td>\n</tr>\n";
 echo "<tr><td width='130' class='tbl'><label for='cat_image'>".$locale['437']."</label></td>\n";
 echo "<td class='tbl'>\n";
 echo form_select_tree("", "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
-echo "</td>\n</tr>\n<tr>\n";
+echo "</td>\n</tr>\n";
 if (multilang_table("NS")) {
 	echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
 	$opts = get_available_languages_list($selected_language = "$cat_language");

@@ -287,6 +287,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		$result = dbquery("CREATE TABLE ".DB_PREFIX."blog_cats (
 		blog_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		blog_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 		blog_cat_name VARCHAR(100) NOT NULL DEFAULT '',
 		blog_cat_image VARCHAR(100) NOT NULL DEFAULT '',
 		blog_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',

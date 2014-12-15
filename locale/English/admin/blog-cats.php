@@ -17,6 +17,7 @@ $locale['433'] = "Edit";
 $locale['434'] = "Delete";
 $locale['435'] = "No Blog Categories defined";
 $locale['436'] = "Click Here to upload category images";
+$locale['437'] = "Parent";
 // Popup Error/Warning Messages
 $locale['450'] = "Delete this Blog category?";
 // Error Messages

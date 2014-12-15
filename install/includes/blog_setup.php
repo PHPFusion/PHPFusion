@@ -62,6 +62,7 @@ if (isset($_POST['uninstall'])) {
 	if (!db_exists($db_prefix."blog_cats")) {
 		$result = dbquery("CREATE TABLE ".$db_prefix."blog_cats (
 				blog_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+				blog_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 				blog_cat_name VARCHAR(100) NOT NULL DEFAULT '',
 				blog_cat_image VARCHAR(100) NOT NULL DEFAULT '',
 				blog_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
