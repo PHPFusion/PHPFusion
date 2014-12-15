@@ -45,16 +45,17 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	}
 } elseif (isset($_POST['save_cat'])) {
 	$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
+	$cat_parent = isnum($_POST['cat_parent']) ? $_POST['cat_parent'] : "0";
 	$cat_image = stripinput($_POST['cat_image']);
 	$cat_language = stripinput($_POST['cat_language']);
 	if ($cat_name && $cat_image && !defined('FUSION_NULL')) {
 		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-			$result = dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_name='$cat_name', news_cat_image='$cat_image', news_cat_language='$cat_language' WHERE news_cat_id='".$_GET['cat_id']."'");
+			$result = dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_name='$cat_name', news_cat_parent='$cat_parent', news_cat_image='$cat_image', news_cat_language='$cat_language' WHERE news_cat_id='".$_GET['cat_id']."'");
 			redirect(FUSION_SELF.$aidlink."&status=su");
 		} else {
 			$checkCat = dbcount("(news_cat_id)", DB_NEWS_CATS, "news_cat_name='".$cat_name."'");
 			if ($checkCat == 0) {
-				$result = dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('$cat_name', '$cat_image', '$cat_language')");
+				$result = dbquery("INSERT INTO ".DB_NEWS_CATS." (news_cat_name, news_cat_parent, news_cat_image, news_cat_language) VALUES ('$cat_name', '$cat_parent', '$cat_image', '$cat_language')");
 				redirect(FUSION_SELF.$aidlink."&status=sn");
 			} else {
 				$error = 2;
@@ -71,10 +72,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$openTable = $locale['401'];
 	}
 } elseif ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-	$result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_image, news_cat_language FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".$_GET['cat_id']."'");
+	$result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent, news_cat_image, news_cat_language FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".$_GET['cat_id']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		$cat_name = $data['news_cat_name'];
+		$cat_hidden = array($data['news_cat_id']);
+		$cat_parent = $data['news_cat_parent'];
 		$cat_image = $data['news_cat_image'];
 		$cat_language = $data['news_cat_language'];
 		$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['news_cat_id'];
@@ -84,6 +87,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	}
 } else {
 	$cat_name = "";
+	$cat_hidden = array();
+	$cat_parent = 0;
 	$cat_image = "";
 	$cat_language = LANGUAGE;
 	$formaction = FUSION_SELF.$aidlink;
@@ -102,6 +107,10 @@ echo "<td width='130' class='tbl'><label for='cat_name'>".$locale['430']."</labe
 echo "<td class='tbl'>\n";
 echo form_text('', 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
 echo "</td>\n</tr>\n";
+echo "<tr><td width='130' class='tbl'><label for='cat_image'>".$locale['437']."</label></td>\n";
+echo "<td class='tbl'>\n";
+echo form_select_tree("", "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
+echo "</td>\n</tr>\n<tr>\n";
 if (multilang_table("NS")) {
 	echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
 	$opts = get_available_languages_list($selected_language = "$cat_language");

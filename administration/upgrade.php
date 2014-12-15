@@ -198,6 +198,8 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		//Delete user_offset field an replace it with user_timezone
 		$result = dbquery("ALTER TABLE ".DB_USERS." ADD user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London' AFTER user_offset");
 		$result = dbquery("ALTER TABLE ".DB_USERS." DROP COLUMN user_offset");
+		// Sub-categories for news
+		$result = dbquery("ALTER TABLE ".DB_NEWS_CATS." ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id");
 		//Blog settings
 			$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_image_readmore', '0')");
 			$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_image_frontpage', '0')");

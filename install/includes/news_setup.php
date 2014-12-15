@@ -58,6 +58,7 @@ if (isset($_POST['uninstall'])) {
 	}
 	$result = dbquery("CREATE TABLE ".$db_prefix."news_cats (
 			news_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+			news_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			news_cat_name VARCHAR(100) NOT NULL DEFAULT '',
 			news_cat_image VARCHAR(100) NOT NULL DEFAULT '',
 			news_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
