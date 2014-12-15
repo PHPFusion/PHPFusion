@@ -3,6 +3,7 @@
 $locale['400'] = "Current News";
 $locale['401'] = "Add News";
 $locale['402'] = "Edit News";
+$locale['405'] = "News";
 // News messages
 $locale['410'] = "News Item added";
 $locale['411'] = "News Item updated";

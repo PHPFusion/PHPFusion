@@ -509,7 +509,7 @@ $master_title['icon'] = '';
 
 $tab_active = tab_active($master_title, 1);
 
-opentable('blog');
+opentable($locale['405']);
 echo opentab($master_title, $tab_active, 'blog');
 echo opentabbody($master_title['title'][0], 'blog', $tab_active);
 blog_listing();
@@ -520,7 +520,6 @@ echo closetabbody();
 echo closetab();
 closetable();
 
-
 if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id'])) {
 	add_to_jquery("
 		// change the name of the second tab and activate it.
@@ -528,7 +527,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id'
 		$('#blog a:last').tab('show');
 		");
 }
-
 
 require_once THEMES."templates/footer.php";
 ?>

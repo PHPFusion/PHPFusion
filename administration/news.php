@@ -480,7 +480,7 @@ $master_title['icon'] = '';
 
 $tab_active = isset($_GET['status']) ? tab_active($master_title, 0) : tab_active($master_title, 1);
 
-opentable('News');
+opentable($locale['405']);
 echo opentab($master_title, $tab_active, 'news');
 echo opentabbody($master_title['title'][0], 'news', $tab_active);
 news_listing();
@@ -491,7 +491,6 @@ echo closetabbody();
 echo closetab();
 closetable();
 
-
 if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id'])) {
 	add_to_jquery("
 		// change the name of the second tab and activate it.
@@ -499,7 +498,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id'
 		$('#news a:last').tab('show');
 		");
 }
-
 
 require_once THEMES."templates/footer.php";
 ?>

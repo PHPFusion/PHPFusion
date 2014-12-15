@@ -3,6 +3,7 @@
 $locale['400'] = "Current Blogs";
 $locale['401'] = "Add Blog";
 $locale['402'] = "Edit Blog";
+$locale['405'] = "Blogs";
 // Blog messages
 $locale['410'] = "Blog Item added";
 $locale['411'] = "Blog Item updated";
