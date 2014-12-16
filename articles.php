@@ -34,7 +34,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		FROM ".DB_ARTICLES." ta
 		INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 		LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-		WHERE ".groupaccess('article_cat_access')." AND article_id='".$_GET['article_id']."' AND article_draft='0'");
+		WHERE ".groupaccess('article_visibility')." AND article_id='".$_GET['article_id']."' AND article_draft='0'");
 
 	if (dbrows($result)>0) {
 		$data = dbarray($result);
@@ -81,7 +81,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	$result = dbquery("SELECT ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, COUNT(a.article_cat) AS article_count FROM ".DB_ARTICLES." a
 		LEFT JOIN ".DB_ARTICLE_CATS." ac ON a.article_cat=ac.article_cat_id
-		".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('ac.article_cat_access')."
+		".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('a.article_visibility')."
 		GROUP BY ac.article_cat_id
 		ORDER BY ac.article_cat_name");
 	$info['articles_rows'] = dbrows($result);
@@ -95,29 +95,24 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 
 /* Category View */
 else {
-
-	$result = dbquery("SELECT article_cat_name, article_cat_sorting, article_cat_access FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$_GET['cat_id']."'");
+	$result = dbquery("SELECT article_cat_name, article_cat_sorting FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$_GET['cat_id']."'");
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
-		if (checkgroup($cdata['article_cat_access'])) {
-			add_to_title($locale['global_201'].$cdata['article_cat_name']);
-			add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php?cat_id='.$_GET['cat_id'], 'title'=>$cdata['article_cat_name']));
-			$info['articles']['category'] = $cdata;
-			$info['articles_max_rows'] = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."' AND article_draft='0'");
-			$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['articles_max_rows']) ? $_GET['rowstart'] : 0;
-			if ($info['articles_max_rows'] > 0) {
-				$result = dbquery("SELECT article_id, article_subject, article_snippet, article_datestamp FROM ".DB_ARTICLES."
-							WHERE article_cat='".$_GET['cat_id']."' AND article_draft='0' ORDER BY ".$cdata['article_cat_sorting']."
-							LIMIT ".$_GET['rowstart'].",".$settings['articles_per_page']);
-				$info['articles_rows'] = dbrows($result);
-				while ($data = dbarray($result)) {
-					$data['new'] = ($data['article_datestamp']+604800 > time()+($settings['timeoffset']*3600)) ? $locale['402'] : '';
-					$info['articles']['item'][] = $data;
-				}
-				$info['page_nav'] = ($info['articles_rows'] > $settings['articles_per_page']) ? makepagenav($_GET['rowstart'], $settings['articles_per_page'], $info['articles_rows'], 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;") : '';
+		add_to_title($locale['global_201'].$cdata['article_cat_name']);
+		add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php?cat_id='.$_GET['cat_id'], 'title'=>$cdata['article_cat_name']));
+		$info['articles']['category'] = $cdata;
+		$info['articles_max_rows'] = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."' AND article_draft='0'");
+		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['articles_max_rows']) ? $_GET['rowstart'] : 0;
+		if ($info['articles_max_rows'] > 0) {
+			$result = dbquery("SELECT article_id, article_subject, article_snippet, article_datestamp FROM ".DB_ARTICLES."
+						WHERE article_cat='".$_GET['cat_id']."' AND article_draft='0' AND ".groupaccess('article_visibility')." ORDER BY ".$cdata['article_cat_sorting']."
+						LIMIT ".$_GET['rowstart'].",".$settings['articles_per_page']);
+			$info['articles_rows'] = dbrows($result);
+			while ($data = dbarray($result)) {
+				$data['new'] = ($data['article_datestamp']+604800 > time()+($settings['timeoffset']*3600)) ? $locale['402'] : '';
+				$info['articles']['item'][] = $data;
 			}
-		} else {
-			redirect(BASEDIR.'articles.php');
+			$info['page_nav'] = ($info['articles_rows'] > $settings['articles_per_page']) ? makepagenav($_GET['rowstart'], $settings['articles_per_page'], $info['articles_rows'], 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;") : '';
 		}
 	} else {
 		redirect(BASEDIR.'articles.php');

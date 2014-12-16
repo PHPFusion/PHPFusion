@@ -47,7 +47,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	if (isset($_POST['save_cat'])) {
 		$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
 		$cat_description = form_sanitizer($_POST['cat_description'], '', 'cat_description');
-		$cat_access = isnum($_POST['cat_access']) ? $_POST['cat_access'] : "0";
+		$cat_parent = isnum($_POST['cat_parent']) ? $_POST['cat_parent'] : "0";
 		$cat_language = stripinput(trim($_POST['cat_language']));
 		if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "1") {
 			$cat_sorting = "article_id ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
@@ -60,12 +60,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		}
 		if ($cat_name && !defined('FUSION_NULL')) {
 			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-				$result = dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_name='$cat_name', article_cat_description='$cat_description', article_cat_sorting='$cat_sorting', article_cat_access='$cat_access', article_cat_language='$cat_language'  WHERE article_cat_id='".$_GET['cat_id']."'");
+				$result = dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_name='$cat_name', article_cat_description='$cat_description', article_cat_sorting='$cat_sorting', article_cat_parent='$cat_parent', article_cat_language='$cat_language'  WHERE article_cat_id='".$_GET['cat_id']."'");
 				redirect(FUSION_SELF.$aidlink."&status=su");
 			} else {
 				$checkCat = dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_name='".$cat_name."'");
 				if ($checkCat == 0) {
-					$result = dbquery("INSERT INTO ".DB_ARTICLE_CATS." (article_cat_name, article_cat_description, article_cat_sorting, article_cat_access, article_cat_language) VALUES ('$cat_name', '$cat_description', '$cat_sorting', '$cat_access', '".$cat_language."')");
+					$result = dbquery("INSERT INTO ".DB_ARTICLE_CATS." (article_cat_name, article_cat_description, article_cat_sorting, article_cat_parent, article_cat_language) VALUES ('$cat_name', '$cat_description', '$cat_sorting', '$cat_parent', '".$cat_language."')");
 					redirect(FUSION_SELF.$aidlink."&status=sn");
 				} else {
 					// method to validate.
@@ -76,7 +76,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		}
 	}
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-		$result = dbquery("SELECT article_cat_name, article_cat_description, article_cat_sorting, article_cat_access, article_cat_language FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$_GET['cat_id']."'");
+		$result = dbquery("SELECT article_cat_name, article_cat_description, article_cat_sorting, article_cat_parent, article_cat_language FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$_GET['cat_id']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$cat_name = $data['article_cat_name'];
@@ -93,7 +93,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 				$cat_sort_by = "3";
 			}
 			$cat_sort_order = $cat_sorting[1];
-			$cat_access = $data['article_cat_access'];
+			$cat_parent = $data['article_cat_parent'];
+			$cat_hidden = array($_GET['cat_id']);
 			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$_GET['cat_id'];
 			$openTable = $locale['401'];
 		} else {
@@ -105,14 +106,10 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$cat_language = LANGUAGE;
 		$cat_sort_by = "2";
 		$cat_sort_order = "ASC";
-		$cat_access = "";
+		$cat_parent = "0";
+		$cat_hidden = array();
 		$formaction = FUSION_SELF.$aidlink;
 		$openTable = $locale['400'];
-	}
-	$user_groups = getusergroups();
-	$access_opts = array();
-	while (list($key, $user_group) = each($user_groups)) {
-		$access_opts[$user_group['0']] = $user_group['1'];
 	}
 	opentable($openTable);
 	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0));
@@ -125,6 +122,11 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_description'>".$locale['421']."</label></td>\n";
 	echo "<td class='tbl'>\n";
 	echo form_text('', 'cat_description', 'cat_description', $cat_description);
+	echo "</td>\n";
+	echo "</tr>\n<tr>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_parent'>".$locale['428']."</label></td>\n";
+	echo "<td class='tbl'>\n";
+	echo form_select_tree("", "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 	echo "</td>\n";
 	echo "</tr>\n";
 	if (multilang_table("AR")) {
@@ -143,10 +145,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo form_select('', 'cat_sort_order', 'cat_sort_order', $array, $cat_sort_order, array('placeholder' => $locale['choose']));
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_access'>".$locale['428']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_select('', 'cat_access', 'cat_access', $access_opts, $cat_access, array('placeholder' => $locale['choose']));
-	echo "</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";
 	echo form_button($locale['429'], 'save_cat', 'save_cat', $locale['429'], array('class' => 'btn-primary', 'inline' => 1));
 	echo "</tr>\n</table>\n";
@@ -154,12 +152,11 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	closetable();
 	opentable($locale['402']);
 	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
-	$result = dbquery("SELECT article_cat_id, article_cat_name, article_cat_description, article_cat_access FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name");
+	$result = dbquery("SELECT article_cat_id, article_cat_name, article_cat_description FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name");
 	if (dbrows($result) != 0) {
 		$i = 0;
 		echo "<tr>\n";
 		echo "<td class='tbl2'>".$locale['440']."</td>\n";
-		echo "<td align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['441']."</td>\n";
 		echo "<td align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['442']."</td>\n";
 		echo "</tr>\n";
 		while ($data = dbarray($result)) {
@@ -169,7 +166,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 			if ($data['article_cat_description']) {
 				echo "<br /><span class='small'>".trimlink($data['article_cat_description'], 45)."</span></td>\n";
 			}
-			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'>".getgroupname($data['article_cat_access'])."</td>\n";
 			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['article_cat_id']."'>".$locale['443']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['article_cat_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['444']."</a></td>\n";
 			echo "</tr>\n";

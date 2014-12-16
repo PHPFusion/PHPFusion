@@ -38,6 +38,7 @@ if (isset($_POST['uninstall'])) {
 			article_breaks CHAR(1) NOT NULL DEFAULT '',
 			article_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
 			article_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+			article_visibility TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 			article_reads MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			article_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 			article_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
@@ -55,10 +56,10 @@ if (isset($_POST['uninstall'])) {
 	if (!db_exists($db_prefix."article_cats")) {
 		$result = dbquery("CREATE TABLE ".$db_prefix."article_cats (
 				article_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+				article_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 				article_cat_name VARCHAR(100) NOT NULL DEFAULT '',
 				article_cat_description VARCHAR(200) NOT NULL DEFAULT '',
 				article_cat_sorting VARCHAR(50) NOT NULL DEFAULT 'article_subject ASC',
-				article_cat_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 				article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 				PRIMARY KEY (article_cat_id),
 				KEY article_cat_access (article_cat_access)

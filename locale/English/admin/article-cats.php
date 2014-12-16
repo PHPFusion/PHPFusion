@@ -18,11 +18,10 @@ $locale['424'] = "Article Subject";
 $locale['425'] = "Article Date";
 $locale['426'] = "Ascending";
 $locale['427'] = "Descending";
-$locale['428'] = "Category Access:";
+$locale['428'] = "Category Parent:";
 $locale['429'] = "Save Category";
 // Current category options
 $locale['440'] = "Category";
-$locale['441'] = "Access";
 $locale['442'] = "Options";
 $locale['443'] = "Edit";
 $locale['444'] = "Delete";

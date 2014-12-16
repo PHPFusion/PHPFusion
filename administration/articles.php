@@ -51,6 +51,7 @@ if (!empty($result)) {
 		$body = addslash($_POST['body']);
 		$body2 = addslash($_POST['body2']);
 		$keywords = stripinput($_POST['keywords']);
+		$article_visibility = form_sanitizer($_POST['article_visibility'], '0', 'article_visibility');
 		$draft = isset($_POST['article_draft']) ? "1" : "0";
 		if ($settings['tinymce_enabled'] != 1) {
 			$breaks = isset($_POST['line_breaks']) ? "y" : "n";
@@ -60,10 +61,10 @@ if (!empty($result)) {
 		$comments = isset($_POST['article_comments']) ? "1" : "0";
 		$ratings = isset($_POST['article_ratings']) ? "1" : "0";
 		if (isset($_POST['article_id']) && isnum($_POST['article_id']) && !defined("FUSION_NULL")) {
-			$result = dbquery("UPDATE ".DB_ARTICLES." SET article_cat='".intval($_POST['article_cat'])."', article_subject='$subject', article_snippet='$body', article_article='$body2', article_keywords='$keywords', article_draft='$draft', article_breaks='$breaks', article_allow_comments='$comments', article_allow_ratings='$ratings' WHERE article_id='".$_POST['article_id']."'");
+			$result = dbquery("UPDATE ".DB_ARTICLES." SET article_cat='".intval($_POST['article_cat'])."', article_subject='$subject', article_snippet='$body', article_article='$body2', article_keywords='$keywords', article_visibility='$article_visibility', article_draft='$draft', article_breaks='$breaks', article_allow_comments='$comments', article_allow_ratings='$ratings' WHERE article_id='".$_POST['article_id']."'");
 			redirect(FUSION_SELF.$aidlink."&status=su");
 		} elseif (!defined("FUSION_NULL")) {
-			$result = dbquery("INSERT INTO ".DB_ARTICLES." (article_cat, article_subject, article_snippet, article_article, article_keywords, article_draft, article_breaks, article_name, article_datestamp, article_reads, article_allow_comments, article_allow_ratings) VALUES ('".intval($_POST['article_cat'])."', '$subject', '$body', '$body2', '$keywords', '$draft', '$breaks', '".$userdata['user_id']."', '".time()."', '0', '$comments', '$ratings')");
+			$result = dbquery("INSERT INTO ".DB_ARTICLES." (article_cat, article_subject, article_snippet, article_article, article_keywords, article_draft, article_breaks, article_name, article_datestamp, article_visibility, article_reads, article_allow_comments, article_allow_ratings) VALUES ('".intval($_POST['article_cat'])."', '$subject', '$body', '$body2', '$keywords', '$draft', '$breaks', '".$userdata['user_id']."', '".time()."', '$article_visibility', '0', '$comments', '$ratings')");
 			redirect(FUSION_SELF.$aidlink."&status=sn");
 		}
 	} else if (isset($_POST['delete']) && (isset($_POST['article_id']) && isnum($_POST['article_id']))) {
@@ -80,6 +81,7 @@ if (!empty($result)) {
 			$keywords = stripinput($_POST['keywords']);
 			$bodypreview = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslash($_POST['body']));
 			$body2preview = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslash($_POST['body2']));
+			$article_visibility = form_sanitizer($_POST['article_visibility'], '0', 'article_visibility');
 			$draft = isset($_POST['article_draft']) ? " checked='checked'" : "";
 			if (isset($_POST['line_breaks'])) {
 				$breaks = " checked='checked'";
@@ -128,7 +130,7 @@ if (!empty($result)) {
 			} elseif (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 				$id = $_GET['article_id'];
 			}
-			$result = dbquery("SELECT article_cat, article_subject, article_snippet, article_article, article_keywords, article_draft, article_breaks, article_allow_comments, article_allow_ratings FROM ".DB_ARTICLES." WHERE article_id='".$id."'");
+			$result = dbquery("SELECT article_cat, article_subject, article_snippet, article_article, article_keywords, article_visibility, article_draft, article_breaks, article_allow_comments, article_allow_ratings FROM ".DB_ARTICLES." WHERE article_id='".$id."'");
 			if (dbrows($result)) {
 				$data = dbarray($result);
 				$article_cat = $data['article_cat'];
@@ -136,6 +138,7 @@ if (!empty($result)) {
 				$body = phpentities(stripslashes($data['article_snippet']));
 				$body2 = phpentities(stripslashes($data['article_article']));
 				$keywords = $data['article_keywords'];
+				$article_visibility = $data['article_visibility'];
 				$draft = $data['article_draft'] ? " checked='checked'" : "";
 				$breaks = $data['article_breaks'] == "y" ? " checked='checked'" : "";
 				$comments = $data['article_allow_comments'] ? " checked='checked'" : "";
@@ -153,6 +156,7 @@ if (!empty($result)) {
 				$body = "";
 				$body2 = "";
 				$keywords = "";
+				$article_visibility = "0";
 				$draft = "";
 				$breaks = " checked='checked'";
 				$comments = " checked='checked'";
@@ -160,16 +164,18 @@ if (!empty($result)) {
 			}
 			opentable($locale['400']);
 		}
-		$result = dbquery("SELECT article_cat_id, article_cat_name, article_cat_language FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name DESC");
-		$catlist = array();
-		while ($data = dbarray($result)) {
-			$catlist[$data['article_cat_id']] = $data['article_cat_name'];
+
+		$visibility_opts = array();
+		$user_groups = getusergroups();
+		while (list($key, $user_group) = each($user_groups)) {
+			$visibility_opts[$user_group['0']] = $user_group['1'];
 		}
+
 		echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='article_cat'>".$locale['422']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('', 'article_cat', 'article_cat', $catlist, $article_cat, array('placeholder' => $locale['choose']));
+		echo form_select_tree("", "article_cat", "article_cat", $article_cat, array("no_root" => 1, "placeholder" => $locale['choose']), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 		echo "</td>\n</tr>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='subject'>".$locale['423']." <span class='required'>*</span></label></td>\n";
 		echo "<td class='tbl'>\n";
@@ -200,6 +206,11 @@ if (!empty($result)) {
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='keywords'>".$locale['434']."</label></td>\n";
 		echo "<td class='tbl'>\n";
 		echo form_select('', 'keywords', 'keywords', array(), $keywords, array('max_length' => 200, 'width'=>'100%', 'error_text' => $locale['460'], 'tags'=>1));
+		echo "</td>\n</tr>\n";
+					
+		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='article_visibility'>".$locale['435']."</label></td>\n";
+		echo "<td class='tbl'>\n";
+		echo form_select("", 'article_visibility', 'article_visibility', $visibility_opts, $data['article_visibility'], array('placeholder' => $locale['choose']));
 		echo "</td>\n</tr>\n";
 					
 		echo "<tr>\n";

@@ -200,6 +200,16 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("ALTER TABLE ".DB_USERS." DROP COLUMN user_offset");
 		// Sub-categories for news
 		$result = dbquery("ALTER TABLE ".DB_NEWS_CATS." ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id");
+		// Moving access level from article categories to articles and create field for subcategories
+		$result = dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_visibility TINYINT(3) NOT NULL DEFAULT '0' AFTER article_datestamp");
+		$result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
+		if (dbrows($result)) {
+			while($data = dbarray($result)) {
+				$result1 = dbquery("UPDATE ".DB_ARTICLES. " SET article_visibility='".$data['article_cat_access']."' WHERE article_cat='".$data['article_cat_id']."'");
+			}
+		}
+		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP COLUMN article_cat_access");
+		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id");
 		//Blog settings
 			$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_image_readmore', '0')");
 			$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_image_frontpage', '0')");

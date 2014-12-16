@@ -24,6 +24,7 @@ $locale['431'] = "Save Article";
 $locale['432'] = "Page Break";
 $locale['433'] = "[DRAFT]";
 $locale['434'] = "Keywords (separate each keyword with a ,)";
+$locale['435'] = "Visibility";
 // Popup Error/Warning Messages
 $locale['450'] = "Please specify a subject";
 $locale['451'] = "Delete this article?";
