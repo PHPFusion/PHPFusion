@@ -1,7 +1,7 @@
 <?php
 $locale['setup_title'] = "PHP-Fusion Core 9 Edition Setup";
 $locale['sub-title'] = "PHP-Fusion Core 9 Edition Setup";
-$locale['welcome_title'] = 'Welcome to PHP-Fusion 9.00 Installation<';
+$locale['welcome_title'] = 'Welcome to PHP-Fusion 9.00 Installation';
 $locale['welcome_desc'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=208'>Online Installation Documentation</a>.";
 $locale['terms'] = " I have read and agreed to the PHP-Fusion <a href='https://php-fusion.co.uk/license/'>terms and conditions use</a>.";
 $locale['error_000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion</a>.";
