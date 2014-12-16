@@ -356,7 +356,7 @@ function blog_form() {
 		$data['blog_allow_comments'] = " 1";
 		$data['blog_allow_ratings'] = " 1";
 		$data['blog_language'] = LANGUAGE;
-		$data['blog_visibility'] = '';
+		$data['blog_visibility'] = '0';
 		$data['blog_subject'] = '';
 		$data['blog_start'] = '';
 		$data['blog_end'] = '';

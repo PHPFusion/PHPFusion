@@ -330,7 +330,7 @@ function news_form() {
 		$data['news_allow_comments'] = " 1";
 		$data['news_allow_ratings'] = " 1";
 		$data['news_language'] = LANGUAGE;
-		$data['news_visibility'] = '';
+		$data['news_visibility'] = '0';
 		$data['news_subject'] = '';
 		$data['news_start'] = '';
 		$data['news_end'] = '';
