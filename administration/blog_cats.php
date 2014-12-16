@@ -34,7 +34,7 @@ if (isset($_GET['status']) && !isset($message)) {
 	}
 }
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-	$result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'");
+	$result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'") || dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
 		redirect(FUSION_SELF.$aidlink."&status=dn");
 	} else {

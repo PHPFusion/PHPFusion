@@ -7,7 +7,7 @@ $locale['402'] = "Current News Categories";
 $locale['420'] = "News Category added";
 $locale['421'] = "News Category updated";
 $locale['422'] = "News Category cannot be deleted";
-$locale['423'] = "There are news items linked to this category";
+$locale['423'] = "There are news items or sub-categories linked to this category";
 $locale['424'] = "News Category deleted";
 // News Categories form
 $locale['430'] = "Category Name:";

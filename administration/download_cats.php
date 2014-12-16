@@ -37,7 +37,7 @@ if (isset($_POST['cancel'])) {
 	redirect(FUSION_SELF.$aidlink);
 }
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-	$result = dbcount("(download_cat)", DB_DOWNLOADS, "download_cat='".$_GET['cat_id']."'");
+	$result = dbcount("(download_cat)", DB_DOWNLOADS, "download_cat='".$_GET['cat_id']."'") || dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, "download_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
 		redirect(FUSION_SELF.$aidlink."&status=deln");
 	} else {

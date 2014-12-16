@@ -34,7 +34,7 @@ if (isset($_GET['status']) && !isset($message)) {
 	}
 }
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-	$result = dbcount("(weblink_cat)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."'");
+	$result = dbcount("(weblink_cat)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."'") || dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
 		redirect(FUSION_SELF.$aidlink."&status=deln");
 	} else {

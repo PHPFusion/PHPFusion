@@ -7,7 +7,7 @@ $locale['402'] = "Current Blog Categories";
 $locale['420'] = "Blog Category added";
 $locale['421'] = "Blog Category updated";
 $locale['422'] = "Blog Category cannot be deleted";
-$locale['423'] = "There are Blog items linked to this category";
+$locale['423'] = "There are Blog items or Sub-Categories linked to this category";
 $locale['424'] = "Blog Category deleted";
 // Blog Categories form
 $locale['430'] = "Category Name:";

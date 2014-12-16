@@ -7,7 +7,7 @@ $locale['402'] = "Current Article Categories";
 $locale['410'] = "Article Category added";
 $locale['411'] = "Article Category updated";
 $locale['412'] = "Article Category cannot be deleted";
-$locale['413'] = "There are Articles linked to this category";
+$locale['413'] = "There are Articles or Sub-Categories linked to this category";
 $locale['414'] = "Article Category deleted";
 // Category form
 $locale['420'] = "Category Name:";

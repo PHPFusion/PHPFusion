@@ -7,7 +7,7 @@ $locale['402'] = "Current Web Link Categories";
 $locale['410'] = "Web Link Category added";
 $locale['411'] = "Web Link Category updated";
 $locale['412'] = "Web Link Category cannot be deleted";
-$locale['413'] = "There are Web Links linked to this category";
+$locale['413'] = "There are Web Links or Sub-Categories linked to this category";
 $locale['414'] = "Web Link Category deleted";
 // Add/Edit Web Link Category Form
 $locale['420'] = "Category Name:";

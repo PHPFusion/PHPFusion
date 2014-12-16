@@ -7,7 +7,7 @@ $locale['402'] = "Current Download Categories";
 $locale['410'] = "Download Category added";
 $locale['411'] = "Download Category updated";
 $locale['412'] = "Download Category cannot be deleted";
-$locale['413'] = "There are downloads linked to this category";
+$locale['413'] = "There are Downloads or Sub-Categories linked to this category";
 $locale['414'] = "Download Category deleted";
 // Download Category form
 $locale['420'] = "Category Name:";
