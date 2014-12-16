@@ -41,27 +41,29 @@ if (!empty($result)) {
 	if (isset($_POST['save_link'])) {
 		$weblink_name = form_sanitizer($_POST['weblink_name'], '', 'weblink_name'); //stripinput($_POST['weblink_name']);
 		$weblink_description = addslash($_POST['weblink_description']);
+		$weblink_visibility = form_sanitizer($_POST['weblink_visibility'], '0', 'weblink_visibility');
 		$weblink_url = stripinput($_POST['weblink_url']);
 		$weblink_cat = intval($_POST['weblink_cat']);
 		if (!defined('FUSION_NULL')) {
 			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['weblink_id']) && isnum($_GET['weblink_id']))) {
 				$weblink_datestamp = isset($_POST['update_datestamp']) ? ", weblink_datestamp='".time()."'" : "";
-				$result = dbquery("UPDATE ".DB_WEBLINKS." SET weblink_name='$weblink_name', weblink_description='$weblink_description', weblink_url='$weblink_url', weblink_cat='$weblink_cat'".$weblink_datestamp." WHERE weblink_id='".$_GET['weblink_id']."'");
+				$result = dbquery("UPDATE ".DB_WEBLINKS." SET weblink_name='$weblink_name', weblink_description='$weblink_description', weblink_url='$weblink_url', weblink_cat='$weblink_cat', weblink_visibility='$weblink_visibility'".$weblink_datestamp." WHERE weblink_id='".$_GET['weblink_id']."'");
 				redirect(FUSION_SELF.$aidlink."&weblink_cat_id=$weblink_cat&amp;status=su");
 			} else {
-				$result = dbquery("INSERT INTO ".DB_WEBLINKS." (weblink_name, weblink_description, weblink_url, weblink_cat, weblink_datestamp, weblink_count) VALUES ('$weblink_name', '$weblink_description', '$weblink_url', '$weblink_cat', '".time()."', '0')");
+				$result = dbquery("INSERT INTO ".DB_WEBLINKS." (weblink_name, weblink_description, weblink_url, weblink_cat, weblink_datestamp, weblink_visibility, weblink_count) VALUES ('$weblink_name', '$weblink_description', '$weblink_url', '$weblink_cat', '".time()."', '$weblink_visibility', '0')");
 				redirect(FUSION_SELF.$aidlink."&weblink_cat_id=$weblink_cat&amp;status=sn");
 			}
 		}
 	}
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['weblink_id']) && isnum($_GET['weblink_id']))) {
-		$result = dbquery("SELECT weblink_name, weblink_description, weblink_url, weblink_cat FROM ".DB_WEBLINKS." WHERE weblink_id='".$_GET['weblink_id']."'");
+		$result = dbquery("SELECT weblink_name, weblink_description, weblink_url, weblink_cat, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id='".$_GET['weblink_id']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$weblink_name = $data['weblink_name'];
 			$weblink_description = stripslashes($data['weblink_description']);
 			$weblink_url = $data['weblink_url'];
 			$weblink_cat = $data['weblink_cat'];
+			$weblink_visibility = $data['weblink_visibility'];
 			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;weblink_id=".$_GET['weblink_id'];
 			opentable($locale['501']);
 		} else {
@@ -71,17 +73,18 @@ if (!empty($result)) {
 		$weblink_name = "";
 		$weblink_description = "";
 		$weblink_url = "http://";
-		$weblink_cat = "";
+		$weblink_cat = "0";
+		$weblink_visibility = "0";
 		$formaction = FUSION_SELF.$aidlink;
 		opentable($locale['500']);
 	}
-	$editlist = array();
-	$result2 = dbquery("SELECT weblink_cat_id, weblink_cat_name FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_name");
-	if (dbrows($result2) != 0) {
-		while ($data2 = dbarray($result2)) {
-			$editlist[$data2['weblink_cat_id']] = $data2['weblink_cat_name'];
-		}
+
+	$visibility_opts = array();
+	$user_groups = getusergroups();
+	while (list($key, $user_group) = each($user_groups)) {
+		$visibility_opts[$user_group['0']] = $user_group['1'];
 	}
+
 	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 0));
 	echo "<table cellspacing='0' cellpadding='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='weblink_name'>".$locale['520']."</label></td>\n";
@@ -102,9 +105,12 @@ if (!empty($result)) {
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='weblink_cat'>".$locale['523']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_select('', 'weblink_cat', 'weblink_cat', $editlist, $weblink_cat, array('placeholder' => $locale['choose'])); //its easy.
-	echo "</td>\n";
-	echo "</tr>\n";
+	echo form_select_tree("", "weblink_cat", "weblink_cat", $weblink_cat, array("no_root" => 1, "placeholder" => $locale['choose']), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
+	echo "</td>\n</tr>\n<tr>\n";
+	echo "<td width='80' class='tbl'><label for='weblink_visibility'>".$locale['428a']."</label></td>\n";
+	echo "<td class='tbl'>\n";
+	echo form_select("", 'weblink_visibility', 'weblink_visibility', $visibility_opts, $weblink_visibility, array('placeholder' => $locale['choose']));
+	echo "</td>\n</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>";
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {

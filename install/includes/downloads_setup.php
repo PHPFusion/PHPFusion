@@ -29,10 +29,10 @@ if (isset($_POST['uninstall'])) {
 	if (!db_exists($db_prefix."download_cats")) {
 		$result = dbquery("CREATE TABLE ".$db_prefix."download_cats (
 					download_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+					download_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 					download_cat_name VARCHAR(100) NOT NULL DEFAULT '',
 					download_cat_description TEXT NOT NULL,
 					download_cat_sorting VARCHAR(50) NOT NULL DEFAULT 'download_title ASC',
-					download_cat_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 					download_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 					PRIMARY KEY (download_cat_id)
 					) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
@@ -62,6 +62,7 @@ if (isset($_POST['uninstall'])) {
 				download_version VARCHAR(20) NOT NULL DEFAULT '',
 				download_filesize VARCHAR(20) NOT NULL DEFAULT '',
 				download_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+				download_visibility TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 				download_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
 				download_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 				download_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',

@@ -49,7 +49,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
 		$cat_description = stripinput($_POST['cat_description']);
 		$cat_language = stripinput($_POST['cat_language']);
-		$cat_access = isnum($_POST['cat_access']) ? $_POST['cat_access'] : "0";
+		$cat_parent = isnum($_POST['cat_parent']) ? $_POST['cat_parent'] : "0";
 		if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "1") {
 			$cat_sorting = "download_id ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
 		} else if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "2") {
@@ -61,12 +61,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		}
 		if ($cat_name && !defined('FUSION_NULL')) {
 			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-				$result = dbquery("UPDATE ".DB_DOWNLOAD_CATS." SET download_cat_name='$cat_name', download_cat_description='$cat_description', download_cat_sorting='$cat_sorting', download_cat_access='$cat_access', download_cat_language='$cat_language' WHERE download_cat_id='".$_GET['cat_id']."'");
+				$result = dbquery("UPDATE ".DB_DOWNLOAD_CATS." SET download_cat_parent = '$cat_parent', download_cat_name='$cat_name', download_cat_description='$cat_description', download_cat_sorting='$cat_sorting', download_cat_language='$cat_language' WHERE download_cat_id='".$_GET['cat_id']."'");
 				redirect(FUSION_SELF.$aidlink."&status=su");
 			} else {
 				$checkCat = dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, "download_cat_name='".$cat_name."'");
 				if ($checkCat == 0) {
-					$result = dbquery("INSERT INTO ".DB_DOWNLOAD_CATS." (download_cat_name, download_cat_description, download_cat_sorting, download_cat_access, download_cat_language) VALUES('$cat_name', '$cat_description', '$cat_sorting', '$cat_access', '$cat_language')");
+					$result = dbquery("INSERT INTO ".DB_DOWNLOAD_CATS." (download_cat_parent, download_cat_name, download_cat_description, download_cat_sorting, download_cat_language) VALUES('$cat_parent', '$cat_name', '$cat_description', '$cat_sorting', '$cat_language')");
 					redirect(FUSION_SELF.$aidlink."&status=sn");
 				} else {
 					$defender->stop();
@@ -79,6 +79,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$result = dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." download_cat_id='".$_GET['cat_id']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
+			$cat_parent = $data['download_cat_parent'];
+			$cat_hidden = array($data['download_cat_id']);
 			$cat_name = $data['download_cat_name'];
 			$cat_description = $data['download_cat_description'];
 			$cat_language = $data['download_cat_language'];
@@ -93,26 +95,21 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 				$cat_sort_by = "";
 			}
 			$cat_sort_order = $cat_sorting[1];
-			$cat_access = $data['download_cat_access'];
 			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['download_cat_id'];
 			$openTable = $locale['400'];
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
 	} else {
+		$cat_parent = "0";
+		$cat_hidden = array();
 		$cat_name = "";
 		$cat_description = "";
 		$cat_language = LANGUAGE;
 		$cat_sort_by = "";
 		$cat_sort_order = "ASC";
-		$cat_access = "";
 		$formaction = FUSION_SELF.$aidlink;
 		$openTable = $locale['401'];
-	}
-	$user_groups = getusergroups();
-	$access_opts = array();
-	while (list($key, $user_group) = each($user_groups)) {
-		$access_opts[$user_group['0']] = $user_group['1'];
 	}
 
 	opentable($openTable);
@@ -131,7 +128,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 
 	echo opentabbody($tab_title['title'][0], 'dcats', $tab_active);
 	echo "<div class='list-group m-t-20'>\n";
-	$result = dbquery("SELECT download_cat_id, download_cat_name, download_cat_description, download_cat_access FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name");
+	$result = dbquery("SELECT download_cat_id, download_cat_name, download_cat_description FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name");
 	if (dbrows($result) != 0) {
 		$i = 0;
 		while ($data = dbarray($result)) {
@@ -143,7 +140,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 			echo "</div>\n";
 
 			echo "<div class='overflow-hide p-r-10'>\n";
-			echo "<span class='display-inline-block m-r-10 strong text-bigger'>".$data['download_cat_name']."</span> <span class='text-smaller text-uppercase strong'>(".getgroupname($data['download_cat_access']).")</span>";
+			echo "<span class='display-inline-block m-r-10 strong text-bigger'>".$data['download_cat_name']."</span>";
 			if ($data['download_cat_description']) {
 				echo "<br /><span class='small'>".trim_word($data['download_cat_description'], 50)."</span>";
 			}
@@ -160,6 +157,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0, 'class'=>'m-t-20'));
 	echo form_text($locale['420'], 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
 	echo form_textarea($locale['421'], 'cat_description', 'cat_description', $cat_description, array('resize'=>0));
+	echo form_select_tree($locale['428'], "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 	if (multilang_table("DL")) {
 		echo form_select($locale['global_ML100'], 'cat_language', 'cat_language', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
 	} else {
@@ -171,7 +169,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo form_select($locale['422'], 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
 	echo form_select('', 'cat_sort_order', 'cat_sort_order', $array2, $cat_sort_order, array('placeholder' => $locale['choose']));
 	echo "</div>\n";
-	echo form_select($locale['428'], 'cat_access', 'cat_access', $access_opts, $cat_access, array('placeholder' => $locale['choose']));
 	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-t-10 m-r-10'));
 	echo form_button($locale['429'], 'save_cat', 'save_cat', $locale['429'], array('class' => 'btn-primary btn-sm m-t-10'));
 	echo closeform();

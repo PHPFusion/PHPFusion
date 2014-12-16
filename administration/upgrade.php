@@ -210,6 +210,26 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		}
 		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP COLUMN article_cat_access");
 		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id");
+		// Moving access level from downloads categories to downloads and create field for subcategories
+		$result = dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_visibility TINYINT(3) NOT NULL DEFAULT '0' AFTER download_datestamp");
+		$result = dbquery("SELECT download_cat_id, download_cat_access FROM ".DB_DOWNLOAD_CATS);
+		if (dbrows($result)) {
+			while($data = dbarray($result)) {
+				$result1 = dbquery("UPDATE ".DB_DOWNLOADS. " SET download_visibility='".$data['download_cat_access']."' WHERE download_cat='".$data['download_cat_id']."'");
+			}
+		}
+		$result = dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." DROP COLUMN download_cat_access");
+		$result = dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." ADD download_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER download_cat_id");
+		// Moving access level from weblinks categories to weblinks and create field for subcategories
+		$result = dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_visibility TINYINT(3) NOT NULL DEFAULT '0' AFTER weblink_datestamp");
+		$result = dbquery("SELECT weblink_cat_id, weblink_cat_access FROM ".DB_WEBLINK_CATS);
+		if (dbrows($result)) {
+			while($data = dbarray($result)) {
+				$result1 = dbquery("UPDATE ".DB_WEBLINKS. " SET weblink_visibility='".$data['weblink_cat_access']."' WHERE weblink_cat='".$data['weblink_cat_id']."'");
+			}
+		}
+		$result = dbquery("ALTER TABLE ".DB_WEBLINK_CATS." DROP COLUMN weblink_cat_access");
+		$result = dbquery("ALTER TABLE ".DB_WEBLINK_CATS." ADD weblink_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER weblink_cat_id");
 		//Blog settings
 			$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_image_readmore', '0')");
 			$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('blog_image_frontpage', '0')");

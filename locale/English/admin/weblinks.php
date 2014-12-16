@@ -18,11 +18,11 @@ $locale['424'] = "Weblink Name";
 $locale['425'] = "Weblink Date";
 $locale['426'] = "Ascending";
 $locale['427'] = "Descending";
-$locale['428'] = "Category Access:";
+$locale['428'] = "Parent Category";
+$locale['428a'] = "Visibility";
 $locale['429'] = "Save Category";
 // Current Web Link categories
 $locale['430'] = "Category";
-$locale['431'] = "Access";
 // Delete Web Link category
 $locale['440'] = "Delete web link category?";
 // Error Messages

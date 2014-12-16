@@ -90,6 +90,7 @@ function download_form() {
 		$data['download_os'] = isset($_POST['download_os']) ? form_sanitizer($_POST['download_os'], '', 'download_os') : '';
 		$data['download_version'] = isset($_POST['download_version']) ? form_sanitizer($_POST['download_version'], '', 'download_version') : '';
 		$data['download_filesize'] = isset($_POST['download_filesize']) ? form_sanitizer($_POST['download_filesize'], '', 'download_filesize') : '';
+		$data['download_visibility'] = isset($_POST['download_visibility']) ? form_sanitizer($_POST['download_visibility'], '', 'download_visibility') : '';
 		$data['download_allow_comments'] = isset($_POST['download_allow_comments']) ? 1 : 0;
 		$data['download_allow_ratings'] = isset($_POST['download_allow_ratings']) ? 1 : 0;
 
@@ -281,6 +282,7 @@ function download_form() {
 			$data['download_user'] = isset($_POST['download_user']) ? form_sanitizer($_POST['download_user'], '', 'download_user') : $data['download_user'];
 			$data['download_homepage'] = isset($_POST['download_homepage']) ? form_sanitizer($_POST['download_homepage'], '', 'download_homepage') : $data['download_homepage'];
 			$data['download_title'] = isset($_POST['download_title']) ? form_sanitizer($_POST['download_title'], '', 'download_title') : $data['download_title'];
+			$data['download_cat'] = isset($_POST['download_cat']) ? form_sanitizer($_POST['download_cat'], '', 'download_cat') : $data['download_cat'];
 			$data['download_description_short'] = isset($_POST['download_description_short']) ? form_sanitizer($_POST['download_description_short'], '', 'download_description_short') : $data['download_description_short'];
 			$data['download_description'] = isset($_POST['download_description']) ? form_sanitizer($_POST['download_description'], '', 'download_description') : $data['download_description'];
 			$data['download_keywords'] = isset($_POST['download_keywords']) ? form_sanitizer($_POST['download_keywords'], '', 'download_keywords') : $data['download_keywords'];
@@ -292,6 +294,7 @@ function download_form() {
 			$data['download_copyright'] = isset($_POST['download_copyright']) ? form_sanitizer($_POST['download_copyright'], '', 'download_copyright') : $data['download_copyright'];
 			$data['download_os'] = isset($_POST['download_os']) ? form_sanitizer($_POST['download_os'], '', 'download_os') : $data['download_os'];
 			$data['download_version'] = isset($_POST['download_version']) ? form_sanitizer($_POST['download_version'], '', 'download_version') : $data['download_version'];
+			$data['download_visibility'] = isset($_POST['download_visibility']) ? form_sanitizer($_POST['download_visibility'], '', 'download_visibility') : $data['download_visibility'];
 			$data['download_allow_comments'] = isset($_POST['download_allow_comments']) ? form_sanitizer($_POST['download_allow_comments'], 0, 'download_allow_comments') : $data['download_allow_comments'];
 			$data['download_allow_ratings'] = isset($_POST['download_allow_ratings']) ? form_sanitizer($_POST['download_allow_ratings'], 0, 'download_allow_ratings') : $data['download_allow_ratings'];
 			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;download_cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id'];
@@ -307,7 +310,7 @@ function download_form() {
 		$data['download_keywords'] = isset($_POST['download_keywords']) ? form_sanitizer($_POST['download_keywords'], '', 'download_keywords') : '';
 		$data['download_homepage'] = isset($_POST['download_homepage']) ? form_sanitizer($_POST['download_homepage'], '', 'download_homepage') : '';
 		$data['download_title'] = isset($_POST['download_title']) ? form_sanitizer($_POST['download_title'], '', 'download_title') : '';
-		$data['download_cat'] = isset($_POST['download_cat']) ? form_sanitizer($_POST['download_cat'], '', 'download_cat') : '';
+		$data['download_cat'] = isset($_POST['download_cat']) ? form_sanitizer($_POST['download_cat'], '', 'download_cat') : '0';
 		$data['download_description_short'] = isset($_POST['download_description_short']) ? form_sanitizer($_POST['download_description_short'], '', 'download_description_short') : '';
 		$data['download_description'] = isset($_POST['download_description']) ? form_sanitizer($_POST['download_description'], '', 'download_description') : '';
 		$data['download_keywords'] = isset($_POST['download_keywords']) ? form_sanitizer($_POST['download_keywords'], '', 'download_keywords') : '';
@@ -319,20 +322,16 @@ function download_form() {
 		$data['download_os'] = isset($_POST['download_os']) ? form_sanitizer($_POST['download_os'], '', 'download_os') : '';
 		$data['download_version'] = isset($_POST['download_version']) ? form_sanitizer($_POST['download_version'], '', 'download_version') : '';
 		$data['download_filesize'] = isset($_POST['download_filesize']) ? form_sanitizer($_POST['download_filesize'], '', 'download_filesize') : '';
+		$data['download_visibility'] = isset($_POST['download_visibility']) ? form_sanitizer($_POST['download_visibility'], '', 'download_visibility') : '0';
 		$data['download_allow_comments'] = isset($_POST['download_allow_comments']) ? 1 : 0;
 		$data['download_allow_ratings'] = isset($_POST['download_allow_ratings']) ? 1 : 0;
 		$formaction = FUSION_SELF.$aidlink;
 	}
 
-	$editlist = array();
-	$result2 = dbquery("
-	SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS."
-	".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name
-	");
-	if (dbrows($result2) != 0) {
-		while ($data2 = dbarray($result2)) {
-			$editlist[$data2['download_cat_id']] = $data2['download_cat_name'];
-		}
+	$visibility_opts = array();
+	$user_groups = getusergroups();
+	while (list($key, $user_group) = each($user_groups)) {
+		$visibility_opts[$user_group['0']] = $user_group['1'];
 	}
 
 	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 0, 'enctype' => 1));
@@ -343,7 +342,7 @@ function download_form() {
 	echo "<hr/>\n";
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-5 col-lg-4'>\n";
 	openside();
-	echo form_select($locale['423'], 'download_cat', 'download_cat', $editlist, $data['download_cat'], array('placeholder' => $locale['choose'], 'width' => '100%'));
+	echo form_select_tree($locale['423'], "download_cat", "download_cat", $data['download_cat'], array("no_root" => 1, "placeholder" => $locale['choose']), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 	echo form_hidden('', 'download_id', 'download_id', $data['download_id']);
 	echo form_button($locale['428'], 'save_download', 'save_download', $locale['428'], array('class' => 'btn-primary m-r-10'));
 	closeside();
@@ -399,6 +398,9 @@ function download_form() {
 	echo form_text($locale['436'], 'download_copyright', 'download_copyright', $data['download_copyright'], array('inline' => 1));
 	echo "</div></div>\n";
 	echo "<hr/>\n";
+
+	echo "<hr/>\n";
+
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-5 col-lg-4'>\n";
 	openside('Additional Info');
 	echo form_text($locale['425'], 'download_os', 'download_os', $data['download_os'], array('inline' => 1));
@@ -411,6 +413,7 @@ function download_form() {
 	echo "<div class='col-xs-12 col-sm-8 col-md-7 col-lg-8'>\n";
 	echo form_textarea($locale['421b'], 'download_description_short', 'download_description_short', $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['419'], 'no_resize' => '1', 'maxlength' => '255', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
 	echo form_textarea($locale['421'], 'download_description', 'download_description', $data['download_description'], array('no_resize' => '1', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
+	echo form_select($locale['421e'], 'download_visibility', 'download_visibility', $visibility_opts, $data['download_visibility'], array('placeholder' => $locale['choose'], 'inline' => 1));
 
 	// go for multiple.
 	if ($settings['download_screenshot']) {

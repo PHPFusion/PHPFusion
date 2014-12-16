@@ -46,7 +46,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name'); // stripinput($_POST['cat_name']);
 		$cat_description = stripinput($_POST['cat_description']);
 		$cat_language = stripinput($_POST['cat_language']);
-		$cat_access = isnum($_POST['cat_access']) ? $_POST['cat_access'] : "0";
+		$cat_parent = isnum($_POST['cat_parent']) ? $_POST['cat_parent'] : "0";
 		if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "1") {
 			$cat_sorting = "weblink_id ".($_POST['cat_sort_order'] == "ASC" ? "ASC" : "DESC");
 		} else if (isnum($_POST['cat_sort_by']) && $_POST['cat_sort_by'] == "2") {
@@ -58,12 +58,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		}
 		if (!defined('FUSION_NULL')) {
 			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-				$result = dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_name='$cat_name', weblink_cat_description='$cat_description', weblink_cat_sorting='$cat_sorting', weblink_cat_access='$cat_access', weblink_cat_language='$cat_language' WHERE weblink_cat_id='".$_GET['cat_id']."'");
+				$result = dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_parent='$cat_parent', weblink_cat_name='$cat_name', weblink_cat_description='$cat_description', weblink_cat_sorting='$cat_sorting', weblink_cat_language='$cat_language' WHERE weblink_cat_id='".$_GET['cat_id']."'");
 				redirect(FUSION_SELF.$aidlink."&status=su");
 			} else {
 				$checkCat = dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_name='".$cat_name."'");
 				if ($checkCat == 0) {
-					$result = dbquery("INSERT INTO ".DB_WEBLINK_CATS." (weblink_cat_name, weblink_cat_description, weblink_cat_sorting, weblink_cat_access, weblink_cat_language) VALUES ('$cat_name', '$cat_description', '$cat_sorting', '$cat_access', '$cat_language')");
+					$result = dbquery("INSERT INTO ".DB_WEBLINK_CATS." (weblink_cat_parent, weblink_cat_name, weblink_cat_description, weblink_cat_sorting, weblink_cat_language) VALUES ('$cat_parent', '$cat_name', '$cat_description', '$cat_sorting', '$cat_language')");
 					redirect(FUSION_SELF.$aidlink."&status=sn");
 				} else {
 					$defender->stop();
@@ -73,9 +73,11 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		}
 	}
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-		$result = dbquery("SELECT weblink_cat_name, weblink_cat_description, weblink_cat_sorting, weblink_cat_access, weblink_cat_language FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".$_GET['cat_id']."' LIMIT 1");
+		$result = dbquery("SELECT weblink_cat_parent, weblink_cat_name, weblink_cat_description, weblink_cat_sorting, weblink_cat_language FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".$_GET['cat_id']."' LIMIT 1");
 		if (dbrows($result)) {
 			$data = dbarray($result);
+			$cat_parent = $data['weblink_cat_parent'];
+			$cat_hidden = array($_GET['cat_id']);
 			$cat_name = $data['weblink_cat_name'];
 			$cat_description = $data['weblink_cat_description'];
 			$cat_language = $data['weblink_cat_language'];
@@ -88,27 +90,23 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 				$cat_sort_by = "3";
 			}
 			$cat_sort_order = $cat_sorting[1];
-			$cat_access = $data['weblink_cat_access'];
 			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$_GET['cat_id'];
 			$openTable = $locale['401'];
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
 	} else {
+		$cat_parent = "0";
+		$cat_hidden = array();
 		$cat_name = "";
 		$cat_description = "";
 		$cat_language = LANGUAGE;
 		$cat_sort_by = "weblink_name";
 		$cat_sort_order = "ASC";
-		$cat_access = "";
 		$formaction = FUSION_SELF.$aidlink;
 		$openTable = $locale['400'];
 	}
-	$user_groups = getusergroups();
-	$access_opts = array();
-	while (list($key, $user_group) = each($user_groups)) {
-		$access_opts[$user_group['0']] = $user_group['1'];
-	}
+
 	opentable($openTable);
 	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tr>\n";
@@ -120,6 +118,10 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "<td class='tbl'>\n";
 	echo form_text('', 'cat_description', 'cat_description', $cat_description);
 	echo "</tr>\n";
+	echo "<tr>\n<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_parent'>".$locale['428']."</label></td>\n";
+	echo "<td class='tbl'>\n";
+	echo form_select_tree("", "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
+	echo "</td>\n</tr>\n";
 	if (multilang_table("WL")) {
 		echo "<tr><td class='tbl'><label for='cat_language'>\n".$locale['global_ML100']."</label></td>\n";
 		echo "<td class='tbl'>\n";
@@ -134,24 +136,19 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo form_select('', 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
 	$array = array('ASC' => $locale['426'], 'DESC' => $locale['427']);
 	echo form_select('', 'cat_sort_order', 'cat_sort_order', $array, $cat_sort_order, array('placeholder' => $locale['choose'], 'class' => 'pull-left'));
-	echo "</td>\n</tr>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'>".$locale['428']."</td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_select('', 'cat_access', 'cat_access', $access_opts, $cat_access, array('placeholder' => $locale['choose']));
-	echo "</td>\n</tr>\n<tr>\n";
-	echo "<td align='center' colspan='2' class='tbl'>\n";
+	echo "</td>\n</tr>\n";
+	echo "<tr>\n<td align='center' colspan='2' class='tbl'>\n";
 	echo form_button($locale['429'], 'save_cat', 'save_cat', $locale['429'], array('class' => 'btn-primary m-t-10'));
-	echo "</tr>\n</table>\n";
+	echo "</td>\n</tr>\n</table>\n";
 	echo closeform();
 	closetable();
 	opentable($locale['402']);
 	echo "<table cellpadding='0' cellspacing='1' width='400' class='table table-responsive tbl-border center'>\n<thead>\n";
-	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_description, weblink_cat_access, weblink_cat_language FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_name");
+	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_description, weblink_cat_language FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_name");
 	if (dbrows($result) != 0) {
 		$i = 0;
 		echo "<tr>\n";
 		echo "<th class='tbl2'>".$locale['430']."</th>\n";
-		echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['431']."</th>\n";
 		echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['532']."</th>\n";
 		echo "</tr>\n";
 		echo "</thead>\n<tbody>\n";
@@ -160,7 +157,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 			echo "<tr>\n";
 			echo "<td class='$cell_color'><strong>".$data['weblink_cat_name']."</strong>\n";
 			echo ($data['weblink_cat_description'] ? "<br />\n<span class='small'>".trimlink($data['weblink_cat_description'], 45)."</span>" : "")."</td>\n";
-			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'>".getgroupname($data['weblink_cat_access'])."</td>\n";
 			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['weblink_cat_id']."'>".$locale['533']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['weblink_cat_id']."' onclick=\"return confirm('".$locale['440']."');\">".$locale['534']."</a></td>\n";
 			echo "</tr>\n";

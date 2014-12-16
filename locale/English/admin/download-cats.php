@@ -18,7 +18,7 @@ $locale['424'] = "Download Title";
 $locale['425'] = "Download Date";
 $locale['426'] = "Ascending";
 $locale['427'] = "Descending";
-$locale['428'] = "Category Access:";
+$locale['428'] = "Parent category:";
 $locale['429'] = "Save Category";
 // Current Download Categories
 $locale['440'] = "Category";
