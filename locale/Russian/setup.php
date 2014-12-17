@@ -247,6 +247,7 @@ $locale['216'] = "Cool";
 $locale['217'] = "Grin";
 $locale['218'] = "Angry";
 // Stage 6 - User Field Categories
+$locale['219'] = "Профиль";
 $locale['220'] = "Контакная информация";
 $locale['221'] = "Прочая информация";
 $locale['222'] = "Параметры";
