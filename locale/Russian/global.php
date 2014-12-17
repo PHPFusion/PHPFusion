@@ -342,6 +342,8 @@ $locale['back'] = "Назад";
 $locale['forward'] = "Вперёд";
 $locale['go'] = "Перейти";
 $locale['cancel'] = 'Отмена';
+$locale['move_up'] = "Переместить вверх";
+$locale['move_down'] = "Переместить вниз";
 // Action
 $locale['add'] = "Добавить";
 $locale['save'] = "Сохранить";

@@ -341,6 +341,8 @@ $locale['back'] = 'Back';
 $locale['forward'] = 'Forward';
 $locale['go'] = 'Go';
 $locale['cancel'] = 'Cancel';
+$locale['move_up'] = "Move up";
+$locale['move_down'] = "Move down";
 // Action
 $locale['add'] = 'Add';
 $locale['save'] = 'Save';
