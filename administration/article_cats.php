@@ -150,32 +150,44 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "</tr>\n</table>\n";
 	echo closeform();
 	closetable();
+
+	$row_num = 0;
+
 	opentable($locale['402']);
 	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
-	$result = dbquery("SELECT article_cat_id, article_cat_name, article_cat_description FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name");
+
+	$row_num = 0;
+	
+	showcatlist();
+
+	if ($row_num == 0) {
+		echo "<tr><td align='center' class='tbl1' colspan='2'>".$locale['445']."</td></tr>\n";
+	}
+	echo "</table>\n";
+	closetable();
+}
+
+function showcatlist($parent = 0, $level = 0) {
+	global $locale, $aidlink, $row_num;
+
+	$result = dbquery("SELECT article_cat_id, article_cat_name, article_cat_description FROM ".DB_ARTICLE_CATS." WHERE article_cat_parent='".$parent."'".(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name");
+
 	if (dbrows($result) != 0) {
-		$i = 0;
-		echo "<tr>\n";
-		echo "<td class='tbl2'>".$locale['440']."</td>\n";
-		echo "<td align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['442']."</td>\n";
-		echo "</tr>\n";
 		while ($data = dbarray($result)) {
-			$cell_color = ($i%2 == 0 ? "tbl1" : "tbl2");
+			$cell_color = ($row_num%2 == 0 ? "tbl1" : "tbl2");
 			echo "<tr>\n";
-			echo "<td class='$cell_color'><strong>".$data['article_cat_name']."</strong>\n";
+			echo "<td class='$cell_color'><strong>".str_repeat("&mdash;", $level).$data['article_cat_name']."</strong>\n";
 			if ($data['article_cat_description']) {
-				echo "<br /><span class='small'>".trimlink($data['article_cat_description'], 45)."</span></td>\n";
+				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trimlink($data['article_cat_description'], 45)."</span></td>\n";
 			}
 			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['article_cat_id']."'>".$locale['443']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['article_cat_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['444']."</a></td>\n";
 			echo "</tr>\n";
-			$i++;
+			$row_num++;
+			showcatlist($data['article_cat_id'], $level + 1);
 		}
-		echo "</table>\n";
-	} else {
-		echo "<tr><td align='center' class='tbl1'>".$locale['445']."</td></tr>\n</table>\n";
 	}
-	closetable();
 }
+
 require_once THEMES."templates/footer.php";
 ?>
