@@ -139,7 +139,7 @@ if ($rows != 0) {
 	while ($data = dbarray($result)) {
 		if ($counter != 0 && ($counter%$columns == 0)) echo "</div>\n<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 text-left'>\n";
-		echo "<strong>".$data['news_cat_name']."</strong>\n<br/>\n";
+		echo "<strong>".getNewsCatPath($data['news_cat_id'])."</strong>\n<br/>\n";
 		echo "<img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='news-category img-thumbnail m-r-20' />\n<br /><br />\n";
 		echo "<div class='block-inline' style='width:100%;'><span class='small'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['news_cat_id']."'>".$locale['433']."</a> -\n";
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['news_cat_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['434']."</a></span></div>\n";
@@ -152,5 +152,20 @@ if ($rows != 0) {
 }
 echo "<div style='text-align:center'><br />\n<a class='btn btn-primary' href='".ADMIN."images.php".$aidlink."&amp;ifolder=imagesnc'>".$locale['436']."</a><br /><br />\n</div>\n";
 closetable();
+
+function getNewsCatPath($item_id) {
+	$full_path = "";
+	while ($item_id > 0) {
+		$result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent FROM ".DB_NEWS_CATS." WHERE news_cat_id='$item_id'".(multilang_table("NS") ? " AND news_cat_language='".LANGUAGE."'" : ""));
+		if (dbrows($result)) {
+			$data = dbarray($result);
+			if ($full_path) { $full_path = " / ".$full_path; }
+			$full_path = $data['news_cat_name'].$full_path;
+			$item_id = $data['news_cat_parent'];
+		}
+	}
+	return $full_path;
+}
+
 require_once THEMES."templates/footer.php";
 ?>
