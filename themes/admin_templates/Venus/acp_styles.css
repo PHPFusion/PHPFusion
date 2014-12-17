@@ -597,3 +597,7 @@ nav > ul > li > a:hover {
 #panel-side1 li img.handle, #panel-side2 li img.handle, #panel-side3 li img.handle, #panel-side4 li img.handle, #panel-side5 li img.handle, #panel-side6 li img.handle {
     cursor: ns-resize;
 }
+
+.profile_category_name {
+	font-size:18px;
+}
