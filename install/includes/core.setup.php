@@ -399,10 +399,10 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("CREATE TABLE ".$db_prefix."user_field_cats (
 				field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
 				field_cat_name VARCHAR(200) NOT NULL ,
+				field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 				field_cat_db VARCHAR(100) NOT NULL,
 				field_cat_index VARCHAR(200) NOT NULL,
 				field_cat_class VARCHAR(50) NOT NULL,
-				field_cat_page SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0',
 				field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
 				PRIMARY KEY (field_cat_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
@@ -411,12 +411,18 @@ if (isset($_POST['uninstall'])) {
 	}
 	$result = dbquery("CREATE TABLE ".$db_prefix."user_fields (
 				field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+				field_title VARCHAR(50) NOT NULL,
 				field_name VARCHAR(50) NOT NULL,
 				field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+				field_type VARCHAR(25) NOT NULL,
+				field_default TEXT NOT NULL,
+				field_options TEXT NOT NULL,
+				field_error VARCHAR(50) NOT NULL,
 				field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 				field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 				field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 				field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+				field_config TEXT NOT NULL,
 				PRIMARY KEY (field_id),
 				KEY field_order (field_order)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
@@ -714,7 +720,6 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S10', 'settings_ipp.gif', '".$locale['124']."', 'settings_ipp.php', '4')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S12', 'security.gif', '".$locale['125']."', 'settings_security.php', '4')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('UF', 'user_fields.gif', '".$locale['118']."', 'user_fields.php', '2')");
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('UFC', 'user_fields_cats.gif', '".$locale['120']."', 'user_field_cats.php', '2')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('UL', 'user_log.gif', '".$locale['129a']."', 'user_log.php', '2')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ROB', 'robots.gif', '".$locale['129b']."', 'robots.php', '3')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '3')");
@@ -746,23 +751,24 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['164']."', 'welcome_message_panel', '', '2', '1', 'file', '0', '0', '1', '')");
 	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['166']."', 'user_info_panel', '', '4', 1, 'file', '0', '0', '1', '')");
 	// UF 1.02
-	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (1, '".$locale['220']."', '', '', 'entypo user', 0, 1)");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (2, '".$locale['221']."', '', '', 'entypo user', 0, 2)");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (3, '".$locale['222']."', '', '', 'entypo user', 0, 3)");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (4, '".$locale['223']."', '', '', 'entypo user', 0, 4)");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (5, '".$locale['224']."', '', '', 'entypo shareable', 1, 5)");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES (1, '".$locale['219']."', 0, '', '', 'entypo user', 1)");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES (2, '".$locale['220']."',1, '', '', 'entypo user', 1)");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES (3, '".$locale['221']."',1, '', '', 'entypo user', 2)");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES (4, '".$locale['222']."',1, '', '', 'entypo user', 3)");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES (5, '".$locale['223']."',1, '', '', 'entypo user', 4)");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES (6, '".$locale['224']."',1,  '', '', 'entypo shareable', 5)");
 	// Install UF Modules
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_location', '2', '0', '1')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_birthdate', '2', '0', '2')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_skype', '1', '0', '1')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_aim', '1', '0', '2')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_icq', '1', '0', '3')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_yahoo', '1', '0', '5')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_web', '1', '0', '6')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_timezone', '3', '0', '1')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_theme', '3', '0', '2')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_sig', '3', '0', '3')");
-	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_required, field_order) VALUES ('user_blacklist', '5', '0', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_location', '3', 'file', '0', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_birthdate', '3', 'file', '0', '2')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_skype', '2', 'file', '0', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_aim', '2', 'file', '0', '2')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_icq', '2', 'file', '0', '3')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_yahoo', '2', 'file', '0', '5')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_web', '2', 'file', '0', '6')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_timezone', '4', 'file', '0', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_theme', '4', 'file', '0', '2')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_sig', '4', 'file', '0', '3')");
+	$result = dbquery("INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ('user_blacklist', '5', 'file', '0', '1')");
 
 	$lang = explode('.', $enabled_languages);
 	if (!function_exists('install_multiple_lang')) {
