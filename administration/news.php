@@ -138,7 +138,7 @@ function news_form() {
 	$data = array();
 	if (isset($_POST['save'])) {
 		$error = "";
-		$data['news_id'] = isset($_POST['news_id']) ? form_sanitizer($_POST['news_id'], '', 'news_id') : '';
+		$data['news_id'] = isset($_POST['news_id']) ? form_sanitizer($_POST['news_id'], '', 'news_id') : 0;
 		$data['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 		$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
 		$data['news_name'] = $userdata['user_id'];
@@ -227,40 +227,36 @@ function news_form() {
 		} else {
 			$data['news_breaks'] = "n";
 		}
-		if (isset($_POST['news_id']) && isnum($_POST['news_id']) && !defined('FUSION_NULL')) {
-			$result = dbquery("SELECT news_image, news_image_t1, news_image_t2, news_sticky, news_datestamp FROM ".DB_NEWS." WHERE news_id='".$_POST['news_id']."'");
-			if (dbrows($result)) {
-				$data2 = dbarray($result);
-				if ($data['news_sticky'] == "1") {
-					// reset other sticky.
-					$result = dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
-				}
-				if (isset($_POST['del_image'])) {
-					if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
-						unlink(IMAGES_N.$data['news_image']);
-					}
-					if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
-						unlink(IMAGES_N_T.$data['news_image_t1']);
-					}
-					if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
-						unlink(IMAGES_N_T.$data['news_image_t2']);
-					}
-					$data['news_image'] = "";
-					$data['news_image_t1'] = "";
-					$data['news_image_t2'] = "";
-				}
-				dbquery_insert(DB_NEWS, $data, 'update');
-			} else {
-				redirect(FUSION_SELF.$aidlink);
+
+		if ($data['news_sticky'] == "1") $result = dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'"); // reset other sticky
+		// delete image
+		if (isset($_POST['del_image'])) {
+			if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
+				unlink(IMAGES_N.$data['news_image']);
 			}
+			if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+				unlink(IMAGES_N_T.$data['news_image_t1']);
+			}
+			if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+				unlink(IMAGES_N_T.$data['news_image_t2']);
+			}
+			$data['news_image'] = "";
+			$data['news_image_t1'] = "";
+			$data['news_image_t2'] = "";
+		}
+
+		$rows = dbcount("('news_id')", DB_NEWS, "news_id='".$data['news_id']."'");
+		if ($rows >0) {
+			// is edit
+			dbquery_insert(DB_NEWS, $data, 'update');
+			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=updated");
 		} else {
-			if ($data['news_sticky'] == "1") {
-				$result = dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
-			}
+			// is save
 			dbquery_insert(DB_NEWS, $data, 'save');
-			redirect(FUSION_SELF.$aidlink."&amp;status=success");
+			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=success");
 		}
 	}
+
 	if ($settings['tinymce_enabled']) {
 		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 	} else {
@@ -390,6 +386,8 @@ function news_form() {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 	echo form_text($locale['422'], 'news_subject', 'news_subject', $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['450']));
+	// move keywords here because it's required
+	echo form_select($locale['443'], 'news_keywords', 'news_keywords', array(), $data['news_keywords'], array('required' => 1, 'max_length' => 320, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1, 'multiple' => 1));
 	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
 	echo form_datepicker($locale['427'], 'news_start', 'news_start', $data['news_start'], array('placeholder' => $locale['429']));
 	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
@@ -408,6 +406,7 @@ function news_form() {
 	// second row
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
+	openside('');
 	if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
 		echo "<label><img src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$locale['439']."' /><br />\n";
 		echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['421']."</label>\n";
@@ -426,9 +425,9 @@ function news_form() {
 	if (!$settings['tinymce_enabled']) {
 		$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
 	}
+	closeside();
 	echo form_textarea($locale['425'], 'news_news', 'news_news', $data['news_news'], $fusion_mce);
 	echo form_textarea($locale['426'], 'news_extended', 'news_extended', $data['news_extended'], $fusion_mce);
-	echo form_select($locale['443'], 'news_keywords', 'news_keywords', array(), $data['news_keywords'], array('required' => 1, 'max_length' => 320, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1, 'multiple' => 1));
 	echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	if (multilang_table("NS")) {
