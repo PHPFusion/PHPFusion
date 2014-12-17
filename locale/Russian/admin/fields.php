@@ -110,6 +110,6 @@ $locale['fields_0505'] = "Switch";
 $locale['fields_0506'] = "Date";
 $locale['fields_0507'] = "Color";
 $locale['fields_0508'] = "File";
-$locale['fields_0500'] = "Hidden";
+$locale['fields_0509'] = "Hidden";
 $locale['fields_0510'] = "Address";
 ?>
