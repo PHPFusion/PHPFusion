@@ -1,0 +1,35 @@
+a:active, a:focus, input[type="image"] {
+outline: 0;
+}
+
+.eshoptreemenu {
+	white-space: nowrap;
+}
+
+.eshoptreemenu img {
+	vertical-align: middle;
+	border: 0px;
+}
+
+.eshoptreemenu a {
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+.eshoptreemenu a.node, .menu a.nodeSel {
+	white-space: nowrap;
+	padding: 1px 0px 1px 0px;
+}
+
+.eshoptreemenu a.node:hover, .menu a.nodeSel:hover {
+
+	text-decoration: underline;
+}
+
+.eshoptreemenu a.nodeSel {
+	background-color: #eee;
+}
+
+.eshoptreemenu .clip {
+	overflow: hidden;
+}
