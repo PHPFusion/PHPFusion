@@ -17,7 +17,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+require_once LOCALE.LOCALESET.'admin/fields.php';
 class quantumFields {
 	// Setup XUI
 	public $system_title = '';

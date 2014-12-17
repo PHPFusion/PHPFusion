@@ -16,7 +16,6 @@
 +--------------------------------------------------------*/
 
 require_once "../maincore.php";
-include LOCALE.LOCALESET.'admin/fields.php';
 if (!checkrights('UFC') || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 require_once THEMES."templates/admin_header.php";
 require_once CLASSES."quantumFields.class.php";
