@@ -18,7 +18,7 @@
 require_once "../maincore.php";
 if (!checkrights('UFC') || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 require_once THEMES."templates/admin_header.php";
-require_once CLASSES."quantumFields.class.php";
+require_once CLASSES."QuantumFields.class.php";
 
 $user_field = new quantumFields();
 $user_field->system_title = 'User Profile Configuration';
