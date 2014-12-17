@@ -151,8 +151,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo closeform();
 	closetable();
 
-	$row_num = 0;
-
 	opentable($locale['402']);
 	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
 
@@ -164,6 +162,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		echo "<tr><td align='center' class='tbl1' colspan='2'>".$locale['445']."</td></tr>\n";
 	}
 	echo "</table>\n";
+
 	closetable();
 }
 

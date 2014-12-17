@@ -128,26 +128,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 
 	echo opentabbody($tab_title['title'][0], 'dcats', $tab_active);
 	echo "<div class='list-group m-t-20'>\n";
-	$result = dbquery("SELECT download_cat_id, download_cat_name, download_cat_description FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name");
-	if (dbrows($result) != 0) {
-		$i = 0;
-		while ($data = dbarray($result)) {
-			echo "<div class='list-group-item clearfix'>\n";
 
-			echo "<div class='btn-group pull-right m-t-5'>\n";
-			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'>".$locale['443']."</a>";
-			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['444']."</a>\n";
-			echo "</div>\n";
+	$row_num = 0;
+	
+	showcatlist();
 
-			echo "<div class='overflow-hide p-r-10'>\n";
-			echo "<span class='display-inline-block m-r-10 strong text-bigger'>".$data['download_cat_name']."</span>";
-			if ($data['download_cat_description']) {
-				echo "<br /><span class='small'>".trim_word($data['download_cat_description'], 50)."</span>";
-			}
-			echo "</div>\n";
-			echo "</div>\n";
-		}
-	} else {
+	if ($row_num == 0) {
 		echo "<div class='well text-center'>".$locale['445']."</div>\n";
 	}
 	echo "</div>\n";
@@ -183,5 +169,33 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']
 		$('#dcategory a:last').tab('show');
 		");
 }
+
+function showcatlist($parent = 0, $level = 0) {
+	global $locale, $aidlink, $row_num;
+
+	$result = dbquery("SELECT download_cat_id, download_cat_name, download_cat_description FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_parent='$parent'".(multilang_table("DL") ? " AND download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name");
+
+	if (dbrows($result) != 0) {
+		while ($data = dbarray($result)) {
+			echo "<div class='list-group-item clearfix'>\n";
+
+			echo "<div class='btn-group pull-right m-t-5'>\n";
+			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'>".$locale['443']."</a>";
+			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['444']."</a>\n";
+			echo "</div>\n";
+
+			echo "<div class='overflow-hide p-r-10'>\n";
+			echo "<span class='display-inline-block m-r-10 strong text-bigger'>".str_repeat("&mdash;", $level).$data['download_cat_name']."</span>";
+			if ($data['download_cat_description']) {
+				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trim_word($data['download_cat_description'], 50)."</span>";
+			}
+			echo "</div>\n";
+			echo "</div>\n";
+			$row_num++;
+			showcatlist($data['download_cat_id'], $level + 1);
+		}
+	}
+}
+
 require_once THEMES."templates/footer.php";
 ?>

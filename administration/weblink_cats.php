@@ -142,32 +142,42 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "</td>\n</tr>\n</table>\n";
 	echo closeform();
 	closetable();
+
 	opentable($locale['402']);
 	echo "<table cellpadding='0' cellspacing='1' width='400' class='table table-responsive tbl-border center'>\n<thead>\n";
-	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_description, weblink_cat_language FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_name");
+
+	$row_num = 0;
+	
+	showcatlist();
+
+	if ($row_num == 0) {
+		echo "<tr><td align='center' class='tbl1'>".$locale['536']."</td></tr>\n";
+	}
+	echo "</table>\n";
+	closetable();
+}
+
+function showcatlist($parent = 0, $level = 0) {
+	global $locale, $aidlink, $row_num;
+
+	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name, weblink_cat_description FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_parent='".$parent."'".(multilang_table("WL") ? " AND weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_name");
+
 	if (dbrows($result) != 0) {
-		$i = 0;
-		echo "<tr>\n";
-		echo "<th class='tbl2'>".$locale['430']."</th>\n";
-		echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['532']."</th>\n";
-		echo "</tr>\n";
-		echo "</thead>\n<tbody>\n";
 		while ($data = dbarray($result)) {
-			$cell_color = ($i%2 == 0 ? "tbl1" : "tbl2");
+			$cell_color = ($row_num%2 == 0 ? "tbl1" : "tbl2");
 			echo "<tr>\n";
-			echo "<td class='$cell_color'><strong>".$data['weblink_cat_name']."</strong>\n";
-			echo ($data['weblink_cat_description'] ? "<br />\n<span class='small'>".trimlink($data['weblink_cat_description'], 45)."</span>" : "")."</td>\n";
+			echo "<td class='$cell_color'><strong>".str_repeat("&mdash;", $level).$data['weblink_cat_name']."</strong>\n";
+			if ($data['weblink_cat_description']) {
+				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trimlink($data['weblink_cat_description'], 45)."</span></td>\n";
+			}
 			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['weblink_cat_id']."'>".$locale['533']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['weblink_cat_id']."' onclick=\"return confirm('".$locale['440']."');\">".$locale['534']."</a></td>\n";
 			echo "</tr>\n";
-			$i++;
+			$row_num++;
+			showcatlist($data['weblink_cat_id'], $level + 1);
 		}
-		echo "</tbody>\n";
-		echo "</table>\n";
-	} else {
-		echo "<tr><td align='center' class='tbl1'>".$locale['536']."</td></tr>\n</table>\n";
 	}
-	closetable();
 }
+
 require_once THEMES."templates/footer.php";
 ?>
