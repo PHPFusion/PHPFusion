@@ -262,18 +262,7 @@ function news_form() {
 	} else {
 		require_once INCLUDES."html_buttons_include.php";
 	}
-	if (isset($_GET['status'])) {
-		if ($_GET['status'] == "success") {
-			$message = $locale['410'];
-		} elseif ($_GET['status'] == "updated") {
-			$message = $locale['411'];
-		} elseif ($_GET['status'] == "del") {
-			$message = $locale['412'];
-		}
-		if ($message) {
-			echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-		}
-	}
+
 	$result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 	$news_cat_opts = array();
 	$news_cat_opts['0'] = $locale['424'];
@@ -381,7 +370,6 @@ function news_form() {
 
 	echo "<div class='m-t-20'>\n";
 	// remove downtime after beta.
-
 	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 0));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
@@ -478,6 +466,19 @@ $master_title['id'][] = 'nform';
 $master_title['icon'] = '';
 
 $tab_active = isset($_GET['status']) ? tab_active($master_title, 0) : tab_active($master_title, 1);
+
+if (isset($_GET['status'])) {
+	if ($_GET['status'] == "success") {
+		$message = $locale['410'];
+	} elseif ($_GET['status'] == "updated") {
+		$message = $locale['411'];
+	} elseif ($_GET['status'] == "del") {
+		$message = $locale['412'];
+	}
+	if ($message) {
+		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+	}
+}
 
 opentable($locale['405']);
 echo opentab($master_title, $tab_active, 'news');
