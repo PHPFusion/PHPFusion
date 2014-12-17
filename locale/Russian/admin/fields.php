@@ -26,15 +26,6 @@ $locale['fields_0309'] = "Edit Field";
 $locale['fields_0310'] = "Edit Module";
 $locale['fields_0311'] = "Add New Category";
 $locale['fields_0312'] = "Install";
-$locale['fields_0313'] = "";
-$locale['fields_0314'] = "";
-$locale['fields_0315'] = "";
-$locale['fields_0316'] = "";
-$locale['fields_0317'] = "";
-$locale['fields_0300'] = "";
-$locale['fields_0300'] = "";
-$locale['fields_0300'] = "";
-$locale['fields_0300'] = "";
 
 $locale['fields_0400'] = "Module Fields Information";
 $locale['fields_0401'] = "Version:";
