@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array(
-	"%details%" => "([0-9]+)",
+	"%product%" => "([0-9]+)",
 	"%title%" => "([0-9a-zA-Z._\W]+)",
 	"%step%" => "([0-9]+)",
  	"%rowstart%" => "([0-9]+)",
@@ -31,9 +31,9 @@ $regex = array(
 	"shop/cart" => "eshop/cart.php",
 	"shop/checkout" => "eshop/checkout.php",
 	"shop/checkout-completed" => "eshop/checkedout.php",
-	"shop/%details%/%title%" => "eshop.php?product=%details%",
-	"shop/%details%/%title%#comments" => "eshop.php?product=%details%#comments",
-	"shop/%c_start%/%details%/%title%" => "eshop.php?product=%details%&amp;c_start=%c_start%",
+	"shop/%product%/%title%" => "eshop.php?product=%product%",
+	"shop/%product%/%title%#comments" => "eshop.php?product=%product%#comments",
+	"shop/%c_start%/%product%/%title%" => "eshop.php?product=%product%&amp;c_start=%c_start%",
 	);
 
 $alias_pattern = array("shop/%alias%" => "%alias_target%",
@@ -43,6 +43,6 @@ $alias_pattern = array("shop/%alias%" => "%alias_target%",
 					   ");
 
 $dbname = DB_ESHOP;
-$dbid = array("%details%" => "id");
+$dbid = array("%product%" => "id");
 $dbinfo = array("%title%" => "title");
 ?>

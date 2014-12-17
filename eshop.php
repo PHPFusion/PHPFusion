@@ -71,17 +71,30 @@ echo "<hr />";
 //add filters
 buildfilters();
 
-$result = dbquery("select * FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY ".$filter."");
+$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY ".$filter."");
 $rows = dbrows($result);
-$result = dbquery("select * FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY ".$filter." LIMIT ".$_GET['rowstart'].",".$settings['eshop_noppf']."");
-	$counter = 0; 
+$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY ".$filter." LIMIT ".$_GET['rowstart'].",".$settings['eshop_noppf']."");
+$counter = 0; 
 	echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'><tr>\n";
+if (multilang_table("ES")) {
+		while ($data = dbarray($result)) {
+			$es_langs = explode('.', $data['product_languages']);
+			if (in_array(LANGUAGE, $es_langs)) {
+				if ($counter != 0 && ($counter % $settings['eshop_ipr'] == 0)) echo "</tr>\n<tr>\n";
+				echo "<td align='center' class='tbl'>\n";
+				eshopitems();
+				echo "</td>\n";
+				$counter++;
+			}
+		}
+} else {
 	while ($data = dbarray($result)) {
 	if ($counter != 0 && ($counter % $settings['eshop_ipr'] == 0)) echo "</tr>\n<tr>\n";
     echo "<td align='center' class='tbl'>\n";
 	eshopitems();
 	echo "</td>\n";
 	$counter++;
+	}
 }
 	echo "</tr>\n</table>\n";
 	if ($rows > $settings['eshop_noppf']) echo "<div align='center' style='margin-top:5px;'>\n".makeeshoppagenav($_GET['rowstart'],$settings['eshop_noppf'],$rows,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;" : "" )."")."\n</div>\n";
@@ -133,8 +146,8 @@ $(document).ready(function() {
 
 				$("#thumbs a").click(function() {
 					$("#carousel").trigger("slideTo", "#" + this.href.split("#").pop() );
-					$("#thumbs a").removeClass("selected");
-					$(this).addClass("selected");
+					$("#thumbs a").removeClass("SELECTed");
+					$(this).addClass("SELECTed");
 					return false;
 				});
 		});
@@ -146,7 +159,7 @@ $data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['product']
 if ($data) {
 add_to_head("<link rel='canonical' href='".$settings['siteurl']."eshop.php?product=".$data['id']."' />");
 add_to_title(" - ".$data['title']."");
-
+if ($data['keywords'] !=="") { set_meta("keywords", $data['keywords']); }
 if ($settings['eshop_cats'] == "1" && $settings['eshop_folderlink'] == "1") {
 	echo '<div class="tbl-border" style="float:left;padding-left: 7px;padding-top: 5px;padding-bottom: 5px;background-color:#f8f8f8;width:99%;line-height:15px !important;height:15px !important;display:inline;"> '.breadcrumb($data['cid']).'  <div class="crumbarrow" style="padding-top:0px;"></div><h1 style="margin:0px !important;line-height:15px !important;height:15px !important;padding:0px !important;font-size:14px;display:inline;"> '.$data['title'].' </h1></div>';
 	echo '<script type="text/javascript"> 

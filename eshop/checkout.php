@@ -452,6 +452,7 @@ if ($rows != 0) {
 $result = dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGITEMS." WHERE active='1' ORDER BY cid,sid ASC");
 
 while ($data = dbarray($result)) {
+	$destlocale = "";
     if ($data['destination'] == "1") { $destlocale = $locale['D101']; }
 	if ($data['destination'] == "2") { $destlocale = $locale['D102']; }
 	if ($data['destination'] == "3") { $destlocale = $locale['D103']; }

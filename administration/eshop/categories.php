@@ -59,10 +59,15 @@ $title = stripinput($_POST['title']);
 $image = stripinput($_POST['image']);
 $parentid = stripinput($_POST['parentid']);
 $status = stripinput($_POST['status']);
+$order = "";
+$languages = "";
 
-dbquery("UPDATE ".DB_ESHOP_CATS." SET title = '$title', access= '$access',  image = '$image', parentid = '$parentid', status = '$status' WHERE cid ='$cid' LIMIT 1");
-redirect("".FUSION_SELF.$aidlink."&amp;a_page=Categories&catupdated");
+for ($pl=0;$pl<sizeof($_POST['languages']);$pl++) {
+   $languages .= $_POST['languages'][$pl].($pl<(sizeof($_POST['languages'])-1)?".":"");
+}
 
+dbquery("UPDATE ".DB_ESHOP_CATS." SET title = '$title', access= '$access',  image = '$image', parentid = '$parentid', status = '$status', cat_order='$order', cat_languages='$languages' WHERE cid ='$cid' LIMIT 1");
+//redirect("".FUSION_SELF.$aidlink."&amp;a_page=Categories&catupdated");
 }
 
 if (isset($_POST['EditCurrentCategory'])) {
@@ -73,6 +78,8 @@ if (isset($_POST['EditCurrentCategory'])) {
 	$title1="$stitle";
 	$image=$cat_data['image'];
 	$access = $cat_data['access'];
+	$order = $cat_data['cat_order'];
+	$languages = $cat_data['cat_languages'];
 
 
 echo"<fieldset style='align:left;width:97%;display:block;float:left;margin-left:10px;margin-right:10px;margin-top:2px;margin-bottom:2px;'>
@@ -80,32 +87,38 @@ echo"<fieldset style='align:left;width:97%;display:block;float:left;margin-left:
 
 echo "<form name='addcat' action='".FUSION_SELF.$aidlink."&amp;a_page=Categories&SaveCategoryChanges' method='post'>";
 echo '<table width="100%" cellspacing="1" cellpadding="1" border="0" align="center">
-<tr>
-<td>'.$locale['ESHPCATS106'].'</td>
-<td><input class="textbox" type="text" name="title" size="30" value="'.$cat_data['title'].'"/></td>
-</tr>
-<tr>
-<td>'.$locale['ESHPCATS105'].'</td>';
-echo "
-<td width='35%'><select name='image' class='textbox' style='width:200px;'>
-<option value='".$image."' ".($image == "$image" ? " selected" : "").">".$image."</option>
-$cat_list</select>
+<tr><td>'.$locale['ESHPCATS106'].'</td><td><input class="textbox" type="text" name="title" size="30" value="'.$cat_data['title'].'"/></td></tr>';
+
+for ($x=0;$x<sizeof($enabled_languages);$x++) {
+	$languages .= $enabled_languages[$x].(($x<sizeof($enabled_languages)-1)?".":"");
+}
+
+$langs = explode('.', $languages);
+$locale_files = makefilelist(LOCALE, ".|..", true, "folders");
+
+echo "<td>".$locale['ESHPPRO191']."</td>";
+echo "<td colspan='2'>";
+for ($i=0;$i<sizeof($locale_files);$i++) {
+if (in_array($locale_files[$i], $enabled_languages)) {
+echo "<input type='checkbox' value='".$locale_files[$i]."' name='languages[]' class='textbox' ".(in_array($locale_files[$i], $langs)?"checked='checked'":"")."> ".str_replace('_', ' ', $locale_files[$i])." ";
+}
+if ($i%2==0 && $i!=0) echo "<br  />";
+}
+echo "</td></tr>";
+
+echo '<tr><td>'.$locale['ESHPCATS105'].'</td>';
+echo "<td width='35%'><select name='image' class='textbox' style='width:200px;'><option value='".$image."' ".($image == "$image" ? " selected" : "").">".$image."</option>$cat_list</select>
 </td><td width='25%'><img style='height:50px;width:50px;' src='".CAT_DIR.($image!=''?$image:"")."' name='image_preview' alt='' /></td>";
 
-echo '<tr>
-<td>'.$locale['ESHPCATS107'].'</td>
-<td><select class="textbox" name="parentid">';
-if ($cat_data['parentid'])
-{
+echo '<tr><td>'.$locale['ESHPCATS107'].'</td><td><select class="textbox" name="parentid">';
+if ($cat_data['parentid']) {
 echo '<option value="'.$cat_data['parentid'].'">'.$title1.'</option>';
 }
 echo '<option value="0">'.$locale['ESHPCATS108'].'</option>';
 
 $result=dbquery("select cid, title, parentid from ".DB_ESHOP_CATS." WHERE cid!='".$_REQUEST['cid']."' order by parentid,title");
-while(list($cidp, $title, $parentid) = dbarraynum($result)) 
-{
-if ($parentid!=0) 
-{
+while(list($cidp, $title, $parentid) = dbarraynum($result)) {
+if ($parentid!=0) {
 $title=getparent($parentid,$title);
 }
 echo '<option value="'.$cidp.'">'.$title.'</option>';
@@ -136,23 +149,33 @@ $cid = stripinput($_POST['cid']);
 $title = stripinput($_POST['title']);
 $image = stripinput($_POST['image']);
 $status = stripinput($_POST['status']);
+$languages = "";
 
-dbquery("INSERT INTO ".DB_ESHOP_CATS." ( cid , title ,access, image , parentid , status )VALUES (NULL, '$title','$access', '$image', '$cid', '$status');"); 
+for ($pl=0;$pl<sizeof($_POST['languages']);$pl++) {
+   $languages .= $_POST['languages'][$pl].($pl<(sizeof($_POST['languages'])-1)?".":"");
+}
+
+$order = "";
+dbquery("INSERT INTO ".DB_ESHOP_CATS." (cid,title,access,image,parentid,status,cat_order,cat_languages)VALUES (NULL, '$title','$access', '$image', '$cid', '$status','$order','$languages');"); 
 redirect("".FUSION_SELF.$aidlink."&amp;a_page=Categories&catadded");
 }
 
 
 if (isset($_POST['AddMainCategory'])) {
 
-$parentid= "0"; 
 $cid = stripinput($_POST['cid']);
 $title = stripinput($_POST['title']);
 $image = stripinput($_POST['image']);
 $status = stripinput($_POST['status']);
+$languages = "";
 
-dbquery("INSERT INTO ".DB_ESHOP_CATS." (cid, title ,access, image , parentid , status )VALUES (NULL, '$title','$access', '$image', '0', '$status');");
+for ($pl=0;$pl<sizeof($_POST['languages']);$pl++) {
+   $languages .= $_POST['languages'][$pl].($pl<(sizeof($_POST['languages'])-1)?".":"");
+}
+
+$order = "";
+dbquery("INSERT INTO ".DB_ESHOP_CATS." (cid,title,access,image,parentid,status,cat_order,cat_languages)VALUES (NULL, '$title','$access', '$image', '0', '$status','$order','$languages');"); 
 redirect("".FUSION_SELF.$aidlink."&amp;a_page=Categories&catadded");
-
 }
 
 
@@ -162,9 +185,28 @@ echo '<table width="100%" cellspacing="1" cellpadding="1" border="0">';
 echo "<form name='addcat' action='".FUSION_SELF.$aidlink."&amp;a_page=Categories&AddMainCategory' method='post'>";
 echo '<input type="hidden" name="AddMainCategory" value="AddMainCategory" /><tr>
 <td>'.$locale['ESHPCATS100'].'</td>
-<td><input class="textbox" type="text" name="title" size="30" maxlength="100"/></td>
-</tr>
-<tr>
+<td><input class="textbox" type="text" name="title" size="30" maxlength="100"/></td></tr>';
+
+$languages = "";
+
+for ($x=0;$x<sizeof($enabled_languages);$x++) {
+	$languages .= $enabled_languages[$x].(($x<sizeof($enabled_languages)-1)?".":"");
+}
+
+$langs = explode('.', $languages);
+$locale_files = makefilelist(LOCALE, ".|..", true, "folders");
+
+echo "<td>".$locale['ESHPPRO191']."</td>";
+echo "<td colspan='2'>";
+for ($i=0;$i<sizeof($locale_files);$i++) {
+if (in_array($locale_files[$i], $enabled_languages)) {
+echo "<input type='checkbox' value='".$locale_files[$i]."' name='languages[]' class='textbox' ".(in_array($locale_files[$i], $langs)?"checked='checked'":"")."> ".str_replace('_', ' ', $locale_files[$i])." ";
+}
+if ($i%2==0 && $i!=0) echo "<br  />";
+}
+echo "</td></tr>";
+
+echo '<tr>
 <td>'.$locale['ESHPCATS105'].'</td><td>';
 $image="default.png";
 echo "<select name='image' class='textbox' style='width:200px;'><option value='default.png'>".$locale['ESHPCATS122']."</option>$cat_list</select>";
@@ -185,11 +227,9 @@ echo '<tr><td colspan="2" align="center">
 </tr>
 </table></form></fieldset>';
 
-
 echo "<br />";
 echo"<fieldset style='align:left;width:97%;display:block;float:left;margin-left:10px;margin-right:10px;margin-top:2px;margin-bottom:2px;'>
 <legend>&nbsp;<b> ".$locale['ESHPCATS124']." </b>&nbsp;</legend>";
-
 $result = dbquery("select * from ".DB_ESHOP_CATS."");
 	$numrows = dbrows($result);
 	if ($numrows > 0) {
@@ -202,15 +242,29 @@ echo '<tr><td>'.$locale['ESHPCATS113'].' </td>
 echo "<select name='image' class='textbox' style='width:200px;'><option value='default.png'>".$locale['ESHPCATS122']."</option>$cat_list</select>";
 echo '</td></tr><tr><td>'.$locale['ESHPCATS107'].'</td>
 <td><select class="textbox" name="cid">';
-
 $result=dbquery("select cid, title, parentid from ".DB_ESHOP_CATS."  order by parentid,title");
-while(list($cidp, $title, $parentid) = dbarraynum($result)) 
-	{
+while(list($cidp, $title, $parentid) = dbarraynum($result))	{
 	if ($parentid!=0) $title=getparent($parentid,$title);
 	echo '<option value="'.$cidp.'">'.$title.'</option>';
-	}
-echo '</select></td></tr><tr>
-<td>'.$locale['ESHPCATS101'].' </td>
+}
+echo '</select></td></tr>';
+for ($x=0;$x<sizeof($enabled_languages);$x++) {
+	$languages .= $enabled_languages[$x].(($x<sizeof($enabled_languages)-1)?".":"");
+}
+
+$langs = explode('.', $languages);
+$locale_files = makefilelist(LOCALE, ".|..", true, "folders");
+
+echo "<td>".$locale['ESHPPRO191']."</td>";
+echo "<td colspan='2'>";
+for ($i=0;$i<sizeof($locale_files);$i++) {
+if (in_array($locale_files[$i], $enabled_languages)) {
+echo "<input type='checkbox' value='".$locale_files[$i]."' name='languages[]' class='textbox' ".(in_array($locale_files[$i], $langs)?"checked='checked'":"")."> ".str_replace('_', ' ', $locale_files[$i])." ";
+}
+if ($i%2==0 && $i!=0) echo "<br  />";
+}
+echo "</td></tr>";
+echo '<tr><td>'.$locale['ESHPCATS101'].' </td>
 <td><select class="textbox" name="status" size="1">
 <option value="1" SELECTED>'.$locale['ESHPCATS102'].'</option>
 <option value="1">'.$locale['ESHPCATS103'].'</option>

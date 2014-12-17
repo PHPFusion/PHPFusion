@@ -47,21 +47,21 @@ if ($pdata['code']) {
 }
 
 //Ok the order is stored and handled let´s send a confirmation to the customer, PM and a mail to the webmaster about this order.
-/*
+
 //send a PM confirmation to site superadmin
 $omessage = "[url=".$settings['siteurl']."administration/eshop/msghandler.php?id=".$odata['oid']."]".$locale['ESHP306']." : ".$odata['oid']." [/url] \n\n [url=".$settings['siteurl']."eshop/administration/msghandler.php]".$locale['ESHP209']."[/url] \n\n ".$locale['ESHP307']." ".$odata['oname']."\n\n";
-dbquery("INSERT INTO ".DB_MESSAGES." ( message_id , message_to , message_from , message_subject , message_message , message_smileys , message_read , message_datestamp , message_folder )VALUES ('', '1', '".(iMEMBER ? $userdata['user_id'] : 1)."', '".$locale['ESHP306']." : ".$odata['oid']."', '".$omessage."', 'y', '0', '".time()."' , '0');");
+dbquery("INSERT INTO ".DB_MESSAGES." ( message_id , message_to , message_user, message_from , message_subject , message_message , message_smileys , message_read , message_datestamp , message_folder )VALUES ('', '1', '".(iMEMBER ? $userdata['user_id'] : 1)."', '".(iMEMBER ? $userdata['user_id'] : 1)."', '".$locale['ESHP306']." : ".$odata['oid']."', '".$omessage."', 'y', '0', '".time()."' , '0');");
 
 require_once INCLUDES."sendmail_include.php";
 
 //send a mail confirmation to site email
 $subject = "".$locale['ESHP306']." : ".$odata['oid']."";
-$message = "<a href='".$settings['siteurl']."administration/eshop/msghandler.php?id=".$odata['oid']."'>".$locale['ESHP306']." : ".$odata['oid']." </a> <br /> <a href='".$settings['siteurl']."administration/eshop/msghandler.php'>".$locale['ESHP209']."</a> <br /> ".$locale['ESHP307']." ".$odata['oname']."\n\n";
+$message = "\n<a href='".$settings['siteurl']."administration/eshop/msghandler.php?id=".$odata['oid']."'>".$locale['ESHP306']." : ".$odata['oid']." </a> <br /> <a href='".$settings['siteurl']."administration/eshop/msghandler.php'>".$locale['ESHP209']."</a> <br /> ".$locale['ESHP307']." ".$odata['oname']."\n\n";
 sendemail($settings['sitename'],$settings['siteemail'],$settings['sitename'],$odata['oemail'],$subject,$message,$type="html");
 
 //send a mail confirmation of the whole order to the customer
 sendemail($odata['oname'],$odata['oemail'],$settings['sitename'],$settings['siteemail'],$locale['ESHPI103'],$odata['oorder'],$type="html");
-*/
+
 closetable();
 require_once THEMES."templates/footer.php";
 ?>
