@@ -20,7 +20,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 include LOCALE.LOCALESET."admin/members.php";
-include LOCALE.LOCALESET."oneword.locale.php";
 require_once INCLUDES."defender.inc.php";
 
 class dynamics {
