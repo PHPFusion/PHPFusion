@@ -20,25 +20,31 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 if ($profile_method == "input") {
 	if ($settings['userthemes'] == 1 || iADMIN) {
 		$user_theme = isset($user_data['user_theme']) ? $user_data['user_theme'] : "";
-		if ($this->isError()) {
+		//if ($this->isError()) {
 			$user_theme = isset($_POST['user_theme']) ? stripinput($_POST['user_theme']) : $user_theme;
-		}
+		//}
 		$theme_files = makefilelist(THEMES, ".|..|admin_templates|templates|.svn", TRUE, "folders");
 		array_unshift($theme_files, "Default");
-		echo "<tr>\n";
-		echo "<td class='tbl".$this->getErrorClass("user_theme")."'><label for='user_theme_input'>".$locale['uf_theme'].$required."</label></td>\n";
-		echo "<td class='tbl".$this->getErrorClass("user_theme")."'>";
 
 		$theme_opts = array();
 		foreach($theme_files as $theme) {
 			$theme_opts[$theme] = $theme;
 		}
+		/*
+		echo "<tr>\n";
+		echo "<td class='tbl".$this->getErrorClass("user_theme")."'><label for='user_theme_input'>".$locale['uf_theme'].$required."</label></td>\n";
+		echo "<td class='tbl".$this->getErrorClass("user_theme")."'>";
 		echo form_select('', 'user_theme', 'user_theme_input', $theme_opts, $user_theme);
-		echo "</td>\n</tr>\n";
+		echo "</td>\n</tr>\n"; */
+		$options +=array('inline'=>1);
+		$user_fields = form_select($locale['uf_theme'], 'user_theme', 'user_theme_input', $theme_opts, $user_theme, $options);
+		/*
+		if ($required) {
+			$this->setRequiredJavaScript("user_theme", $locale['uf_theme_error']);
+		} */
 	}
-	if ($required) {
-		$this->setRequiredJavaScript("user_theme", $locale['uf_theme_error']);
-	}
+
+
 	// Display in profile
 } elseif ($profile_method == "display") {
 	// Insert and update

@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) 2002 - 2014 PHP-Fusion Inc.
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_blacklist_include.php
 | Author: Hien (Frederick MC Chan)
@@ -15,9 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 if (!function_exists('show_blacklist')) {
-	function show_blacklist($data, $register) {
+	function show_blacklist($data) {
 		global $locale;
 		echo "<div class='alert alert-info display-none' id='ignore-message'></div>\n";
 		if (is_array($data) && count($data) > 0) {
@@ -36,7 +38,7 @@ if (!function_exists('show_blacklist')) {
 				}
 			}
 		} else {
-			echo (!$register) ? $locale['uf_blacklist_003'] : '';
+			//echo $locale['uf_blacklist_003'];
 		}
 		add_to_jquery("
             $('.unblock').bind('click', function(e) {
@@ -59,6 +61,7 @@ if (!function_exists('show_blacklist')) {
             ");
 	}
 }
+
 // Display user field input
 if ($profile_method == "input") {
 	if (isset($user_data['user_blacklist']) && $user_data['user_blacklist']) {
@@ -67,7 +70,7 @@ if ($profile_method == "input") {
 		$user_blacklist = "";
 	}
 	// read back.
-	echo "<tr>\n";
+	/*echo "<tr>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_blacklist")."'>";
 	echo "<label for='user_blacklist'>".$locale['uf_blacklist'].$required."</label></td>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_blacklist")."'>";
@@ -82,18 +85,14 @@ if ($profile_method == "input") {
 	echo "<td colspan='2' class='tbl".$this->getErrorClass("user_blacklist")."'>";
 	echo "<p><strong>".$locale['uf_blacklist_000']."</strong></p>";
 	$user_blacklist = array_filter(explode(".", $user_blacklist));
-	show_blacklist($user_blacklist, $this->registration);
+	show_blacklist($user_blacklist);
 	echo "</td></tr>\n";
 	if ($required) {
 		$this->setRequiredJavaScript("user_blacklist", $locale['uf_blacklist_error']);
 	}
-	// Display in profile
+	// Display in profile */
 } elseif ($profile_method == "display") {
-	// do not show blacklist openly.
-	echo "<tr>\n";
-	echo "<td colspan='4'>".$locale['uf_blacklist_007']."</td>\n";
-	echo "</tr>\n";
-	// Insert and update
+
 } elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
 	// Get input data // format
 	$user_blacklist = '';

@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_sig_include_var.php
 | Author: Digitanium
@@ -15,12 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 // Version of the user fields api
 $user_field_api_version = "1.01.00";
 $user_field_name = $locale['uf_sig'];
 $user_field_desc = $locale['uf_sig_desc'];
 $user_field_dbname = "user_sig";
 $user_field_group = 3;
-$user_field_dbinfo = "TEXT NOT NULL";
+$user_field_dbinfo = "VARCHAR(200) NOT NULL DEFAULT ''";
 ?>

@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_aim_include.php
 | Author: Digitanium
@@ -15,13 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 // Display user field input
 if ($profile_method == "input") {
 	$user_aim = isset($user_data['user_aim']) ? $user_data['user_aim'] : "";
-	if ($this->isError()) {
+	//if ($this->isError()) {
 		$user_aim = isset($_POST['user_aim']) ? stripinput($_POST['user_aim']) : $user_aim;
-	}
+	//}
+	/*
 	echo "<tr>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_aim")."'><label for='user_aim'>".$locale['uf_aim'].$required."</label></td>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_aim")."'>";
@@ -29,14 +32,15 @@ if ($profile_method == "input") {
 	echo "</td>\n</tr>\n";
 	if ($required) {
 		$this->setRequiredJavaScript("user_aim", $locale['uf_aim_error']);
-	}
+	} */
+	$options +=array('inline'=>1, 'max_length'=>16, 'width'=>'200px');
+	$user_fields = form_text($locale['uf_aim'], 'user_aim', 'user_aim', $user_aim, $options);
+
+
 	// Display in profile
 } elseif ($profile_method == "display") {
 	if ($user_data['user_aim']) {
-		echo "<tr>\n";
-		echo "<td class='tbl1'>".$locale['uf_aim']."</td>\n";
-		echo "<td align='right' class='tbl1'>".$user_data['user_aim']."</td>\n";
-		echo "</tr>\n";
+		$user_fields = array('title'=>$locale['uf_aim'], 'value'=>$user_data['user_aim']);
 	}
 	// Insert and update
 } elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {

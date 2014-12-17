@@ -18,28 +18,28 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
+
 	$user_address = isset($user_data['user_address']) ? $user_data['user_address'] : "";
-	if ($this->isError()) {
-		$user_address = isset($_POST['user_address']) ? form_sanitizer($_POST['user_address'], '', 'user_address') : $user_address;
-	}
-	echo "<tr>\n<td colspan='2'>\n";
-	echo form_address('', 'user_address', 'user_address', $user_address, array('flag'=>1));
-	echo "</td>\n</tr>\n";
-	// Display in profile
-} elseif ($profile_method == "display") {
+	$user_address = isset($_POST['user_address']) ? form_sanitizer($_POST['user_address'], '', 'user_address') : $user_address;
+	$options += array('inline'=>1, 'flag'=>1);
+
+	$user_fields = form_address($locale['uf_address'], 'user_address', 'user_address', $user_address, $options);
+
+}
+
+elseif ($profile_method == "display") {
 	if ($user_data['user_address']) {
 		$address = explode('|', $user_data['user_address']);
 		$add = '';
 		foreach($address as $value) {
 			$add .= "$value<br/>\n";
 		}
-		echo "<tr>\n";
-		echo "<td class='tbl1'>".$locale['uf_address']."</td>\n";
-		echo "<td align='left' class='tbl1'>$add</td>\n";
-		echo "</tr>\n";
+		$user_fields = array('title'=>$locale['uf_address'], 'value'=>$add);
 	}
+}
+
+elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
 	// Insert and update
-} elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
 	// Get input data
 	if (isset($_POST['user_address']) && ($_POST['user_address'] != "" || $this->_isNotRequired("user_address"))) {
 		// Set update or insert user data

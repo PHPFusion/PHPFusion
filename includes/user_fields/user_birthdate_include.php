@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_birthdate_include.php
 | Author: Digitanium
@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 // Display user field input
 if ($profile_method == "input") {
 	if (isset($user_data['user_birthdate']) && $user_data['user_birthdate'] != "0000-00-00") {
@@ -23,10 +25,16 @@ if ($profile_method == "input") {
 	} else {
 		$user_birthdate = "0-0-0";
 	}
+	/*
 	$user_birthdate = explode("-", $user_birthdate);
 	$user_year = number_format($user_birthdate['0'], 0, ".", "");
 	$user_month = number_format($user_birthdate['1'], 0, ".", "");
 	$user_day = number_format($user_birthdate['2'], 0, ".", "");
+	*/
+	$options +=array('inline'=>1);
+	$user_fields = form_datepicker($locale['uf_birthdate'], 'user_birthdate', 'user_birthdate', $user_birthdate, array('inline'=>1));
+
+	/*
 	echo "<tr>\n";
 	echo "<td class='tbl".$this->getErrorClass("user_birthdate")."'>";
 	echo "<label for='user_day_input'>".$locale['uf_birthdate'].$required." <span class='small2'>(dd/mm/yyyy)</span></label></td>\n";
@@ -50,16 +58,13 @@ if ($profile_method == "input") {
 		$this->setRequiredJavaScript("user_month", $locale['uf_birthdate_error']);
 		$this->setRequiredJavaScript("user_year", $locale['uf_birthdate_error']);
 	}
+	*/
 	// Display in profile
 } elseif ($profile_method == "display") {
 	if ($user_data['user_birthdate'] != "0000-00-00") {
-		echo "<tr>\n";
-		echo "<td class='tbl1'>".$locale['uf_birthdate']."</td>\n";
-		echo "<td align='right' class='tbl1'>";
 		$months = explode("|", $locale['months']);
 		$user_birthdate = explode("-", $user_data['user_birthdate']);
-		echo $months[number_format($user_birthdate['1'])]." ".number_format($user_birthdate['2'])." ".$user_birthdate['0'];
-		echo "</td>\n</tr>\n";
+		$user_fields = array('title'=>$locale['uf_birthdate'], 'value'=>$months[number_format($user_birthdate['1'])]." ".$user_birthdate['2']." ".$user_birthdate['0']);
 	}
 	// Insert and update
 } elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
