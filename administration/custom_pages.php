@@ -201,9 +201,9 @@ if (isset($_POST['save'])) {
 	echo "<td width='80%' class='tbl'>\n";
 	echo form_textarea('', 'page_content', 'page_content', $page_content);
 	echo "</td>\n</tr>\n<tr>\n";
-	echo "<td class='tbl'><label for='page_title'>".$locale['432']."</label></td>\n";
+	echo "<td class='tbl'><label for='page_keywords'>".$locale['432']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'page_keywords', 'page_keywords', $page_keywords, array('width' => '300px', 'class' => 'pull-left m-r-10'));
+	echo form_select('', 'page_keywords', 'page_keywords', array(), $page_keywords, array('max_length' => 320, 'width'=>'100%', 'tags'=>1, 'multiple' => 1));
 	echo "</td>\n</tr>\n<tr>\n";
 	if (!isset($_COOKIE['custom_pages_tinymce']) || !$_COOKIE['custom_pages_tinymce'] || !$settings['tinymce_enabled']) {
 		echo "<td class='tbl'></td><td class='tbl'>\n";

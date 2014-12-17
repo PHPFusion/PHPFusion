@@ -205,7 +205,7 @@ if (!empty($result)) {
 
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='keywords'>".$locale['434']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('', 'keywords', 'keywords', array(), $keywords, array('max_length' => 200, 'width'=>'100%', 'error_text' => $locale['460'], 'tags'=>1));
+		echo form_select('', 'keywords', 'keywords', array(), $keywords, array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['460'], 'tags'=>1, 'multiple' => 1));
 		echo "</td>\n</tr>\n";
 					
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='article_visibility'>".$locale['435']."</label></td>\n";

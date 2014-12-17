@@ -338,7 +338,7 @@ function download_form() {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8 col-md-7 col-lg-8'>\n";
 	echo form_text($locale['420'], 'download_title', 'download_title', $data['download_title'], array('required' => 1, 'error_text'=>$locale['417']));
-	echo form_select($locale['421c'], 'download_keywords', 'download_keywords', array(), $data['download_keywords'], array('tags'=>1, 'width'=>'100%'));
+	echo form_select($locale['421c'], 'download_keywords', 'download_keywords', array(), $data['download_keywords'], array('max_length' => 320, 'width'=>'100%', 'tags'=>1, 'multiple' => 1));
 	echo "<hr/>\n";
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-5 col-lg-4'>\n";
 	openside();
