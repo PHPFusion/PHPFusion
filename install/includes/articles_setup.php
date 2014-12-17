@@ -61,8 +61,7 @@ if (isset($_POST['uninstall'])) {
 				article_cat_description VARCHAR(200) NOT NULL DEFAULT '',
 				article_cat_sorting VARCHAR(50) NOT NULL DEFAULT 'article_subject ASC',
 				article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
-				PRIMARY KEY (article_cat_id),
-				KEY article_cat_access (article_cat_access)
+				PRIMARY KEY (article_cat_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		if (!$result) {
 			$fail = TRUE;
