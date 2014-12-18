@@ -50,6 +50,7 @@ class quantumFields {
 		$this->load_field_cats();
 		$this->move_fields();
 		$this->delete_category();
+		$this->delete_fields();
 		$this->available_fields();
 		$this->render_fields();
 	}
@@ -166,10 +167,11 @@ class quantumFields {
 								if ($k != 0) echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order']-1)."'>".$locale['move_up']."</a> - ";
 								if ($k !== $item_counter) echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order']+1)."'>".$locale['move_down']."</a> - ";
 								if ($field_data['field_type'] == 'file') {
-									echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."'>".$locale['edit']."</a>";
+									echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=module_edit&amp;module_id=".$field_data['field_id']."'>".$locale['edit']."</a> - ";
 								} else {
-									echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."'>".$locale['edit']."</a>";
+									echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_edit&amp;field_id=".$field_data['field_id']."'>".$locale['edit']."</a> - ";
 								}
+								echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=field_delete&amp;field_id=".$field_data['field_id']."'>".$locale['delete']."</a>";
 								echo "</div>\n";
 								echo $this->phpfusion_field_DOM($field_data);
 								$k++;
@@ -223,6 +225,7 @@ class quantumFields {
 		}
 	}
 
+	/* Execution of delete category */
 	private function delete_category() {
 		global $defender, $aidlink;
 		$locale = $this->locale;
@@ -380,6 +383,36 @@ class quantumFields {
 				} else {
 					redirect(FUSION_SELF.$aidlink);
 				}
+			}
+		}
+	}
+
+	/* Execution of delete fields */
+	private function delete_fields() {
+		global $aidlink;
+		if (isset($_GET['action']) && $_GET['action'] == 'field_delete' && isset($_GET['field_id']) && isnum($_GET['field_id'])) {
+			$result = dbquery("SELECT field.field_id, field.field_cat, field.field_order, field.field_name, u.field_cat_id, u.field_parent, root.field_cat_db
+			FROM ".$this->field_db." field
+			LEFT JOIN ".$this->category_db." u ON (field.field_cat=u.field_cat_id)
+			LEFT JOIN ".$this->category_db." root on (u.field_parent = root.field_cat_id)
+			WHERE field_id='".intval($_GET['field_id'])."'
+			");
+			if (dbrows($result)>0) {
+				$data = dbarray($result);
+				$target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
+				$field_list = fieldgenerator($target_database);
+				if (in_array($data['field_name'], $field_list)) {
+					// drop database
+					if (!$this->debug && ($target_database)) $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
+					if ($this->debug) print_p("DROP ".$data['field_name']." FROM ".$target_database);
+					// reorder the rest of the same cat minus 1
+					if (!$this->debug && ($target_database)) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
+					if (!$this->debug && ($target_database)) $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
+					if ($this->debug) print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+				}
+				if (!$this->debug) redirect(FUSION_SELF.$aidlink."status=field_deleted");
+			} else {
+				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			}
 		}
 	}
