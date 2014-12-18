@@ -529,3 +529,11 @@ dl, dt, dd {
 .list-group-item.active { background-color: rgba(204,204,204,0.35); }
 /* Parse Users */
 .user-tooltip { width: 250px; padding-bottom:10px; }
+
+/* Modal */
+.modal-center {
+	top:25%;
+}
+.zindex-boost {
+	z-index: 999;
+}

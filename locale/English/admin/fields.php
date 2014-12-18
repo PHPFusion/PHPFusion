@@ -26,6 +26,7 @@ $locale['fields_0309'] = "Edit Field";
 $locale['fields_0310'] = "Edit Module";
 $locale['fields_0311'] = "Add New Category";
 $locale['fields_0312'] = "Install";
+$locale['fields_0313'] = "Delete Category";
 
 $locale['fields_0400'] = "Module Fields Information";
 $locale['fields_0401'] = "Version:";
