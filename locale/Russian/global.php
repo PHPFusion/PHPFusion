@@ -397,4 +397,8 @@ $locale['nopreview'] = 'Нет данных для предпросмотра';
 $locale['left'] = "Влево";
 $locale['center'] = "По центру";
 $locale['right'] = "Вправо";
+// Comments and ratings
+$locale['comments'] = "Комментарии";
+$locale['ratings'] = "Оценки";
+$locale['comments_ratings'] = "Комментарии и оценки";
 ?>

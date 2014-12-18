@@ -79,7 +79,7 @@ function news_listing() {
 		}
 	} else {
 		echo "<div class='panel-body text-center'>\n";
-		echo $locale['news_0257'];
+		echo $locale['news_0254'];
 		echo "</div>\n";
 	}
 	// news listing.
@@ -119,7 +119,7 @@ function news_listing() {
 				}
 			} else {
 				echo "<div class='panel-body text-center'>\n";
-				echo $locale['news_0257'];
+				echo $locale['news_0254'];
 				echo "</div>\n";
 			}
 			// news listing.
@@ -375,7 +375,7 @@ function news_form() {
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 	echo form_text($locale['news_0200'], 'news_subject', 'news_subject', $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['news_0250']));
 	// move keywords here because it's required
-	echo form_select($locale['news_0205'], 'news_keywords', 'news_keywords', array(), $data['news_keywords'], array('required' => 1, 'max_length' => 320, 'width'=>'100%', 'error_text' => $locale['news_0258'], 'tags'=>1, 'multiple' => 1));
+	echo form_select($locale['news_0205'], 'news_keywords', 'news_keywords', array(), $data['news_keywords'], array('required' => 1, 'max_length' => 320, 'width'=>'100%', 'error_text' => $locale['news_0255'], 'tags'=>1, 'multiple' => 1));
 	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
 	echo form_datepicker($locale['news_0206'], 'news_start', 'news_start', $data['news_start'], array('placeholder' => $locale['news_0208']));
 	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
@@ -430,11 +430,11 @@ function news_form() {
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 		$sys = "";
 		if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
-			$sys = $locale['news_0256'];
+			$sys = $locale['comments_ratings'];
 		} elseif ($settings['comments_enabled'] == "0") {
-			$sys = $locale['news_0254'];
+			$sys = $locale['comments'];
 		} else {
-			$sys = $locale['news_0255'];
+			$sys = $locale['ratings'];
 		}
 		echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['news_0253'], $sys)."</span><br/>\n";
 	}

@@ -51,11 +51,8 @@ $locale['news_0250'] = "Please specify a subject";
 $locale['news_0251'] = "Delete this News?";
 $locale['news_0252'] = "Delete this news category?";
 $locale['news_0253'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
-$locale['news_0254'] = "Comments";
-$locale['news_0255'] = "Ratings";
-$locale['news_0256'] = $locale['news_0254']." and ".$locale['news_0255'];
-$locale['news_0257'] = 'There are no news in this category.';
-$locale['news_0258'] = "Please specify keywords";
+$locale['news_0254'] = 'There are no news in this category.';
+$locale['news_0255'] = "Please specify keywords";
 // News Categories form
 $locale['news_0300'] = "Category Name:";
 $locale['news_0301'] = "Category Image:";

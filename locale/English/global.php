@@ -396,4 +396,8 @@ $locale['nopreview'] = 'There is nothing to Preview';
 $locale['left'] = "Left";
 $locale['center'] = "Center";
 $locale['right'] = "Right";
+// Comments and ratings
+$locale['comments'] = "Comments";
+$locale['ratings'] = "Ratings";
+$locale['comments_ratings'] = "Comments and Ratings";
 ?>

@@ -205,7 +205,7 @@ if (!empty($result)) {
 
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='keywords'>".$locale['articles_0204']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('', 'keywords', 'keywords', array(), $keywords, array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['articles_0260'], 'tags'=>1, 'multiple' => 1));
+		echo form_select('', 'keywords', 'keywords', array(), $keywords, array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['articles_0257'], 'tags'=>1, 'multiple' => 1));
 		echo "</td>\n</tr>\n";
 					
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='article_visibility'>".$locale['articles_0211']."</label></td>\n";
@@ -233,11 +233,11 @@ if (!empty($result)) {
 		if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 			$sys = "";
 			if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
-				$sys = $locale['articles_0259'];
+				$sys = $locale['comments_ratings'];
 			} elseif ($settings['comments_enabled'] == "0") {
-				$sys = $locale['articles_0257'];
+				$sys = $locale['comments'];
 			} else {
-				$sys = $locale['articles_0258'];
+				$sys = $locale['ratings'];
 			}
 			echo "<tr>\n<td colspan='2' class='tbl1' style='font-weight:bold;text-align:left; color:black !important; background-color:#FFDBDB;'>";
 			echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['articles_0256'], $sys);

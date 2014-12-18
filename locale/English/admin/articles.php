@@ -41,10 +41,7 @@ $locale['articles_0253'] = "You must define at least one category before you can
 $locale['articles_0254'] = "Click here";
 $locale['articles_0255'] = " to go to Article Categories";
 $locale['articles_0256'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
-$locale['articles_0257'] = "Comments";
-$locale['articles_0258'] = "Ratings";
-$locale['articles_0259'] = $locale['articles_0257']." and ".$locale['articles_0258'];
-$locale['articles_0260'] = "Please specify keywords";
+$locale['articles_0257'] = "Please specify keywords";
 // Category form
 $locale['articles_0300'] = "Category Name:";
 $locale['articles_0301'] = "Category Description:";
