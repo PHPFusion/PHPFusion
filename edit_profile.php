@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: edit_profile.php
 | Author: Nick Jones (Digitanium)
@@ -20,6 +20,7 @@ require_once THEMES."templates/header.php";
 require_once CLASSES."UserFields.class.php";
 require_once CLASSES."UserFieldsInput.class.php";
 include LOCALE.LOCALESET."user_fields.php";
+define('RIGHT_OFF', true);
 if (!iMEMBER) {
 	redirect("index.php");
 }
@@ -55,10 +56,13 @@ $userFields = new UserFields();
 $userFields->postName = "update_profile";
 $userFields->postValue = $locale['u105'];
 $userFields->userData = $userdata;
-$userFields->errorsArray = $errors;
-$userFields->showAvatarInput = TRUE;
+$userFields->plugin_folder = INCLUDES."user_fields/";
+$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+$userFields->errorsArray = $errors; // cut
+$userFields->showAvatarInput = TRUE; // cut
 $userFields->setUserNameChange($settings['userNameChange']);
-$userFields->displayInput();
+$userFields->method = 'input';
+$userFields->renderInput();
 closetable();
 require_once THEMES."templates/footer.php";
 ?>
