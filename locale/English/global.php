@@ -392,4 +392,8 @@ $locale['version'] = 'Version ';
 $locale['browse'] = 'Browse ...';
 $locale['close'] = 'Close';
 $locale['nopreview'] = 'There is nothing to Preview';
+//Alignment
+$locale['left'] = "Left";
+$locale['center'] = "Center";
+$locale['right'] = "Right";
 ?>

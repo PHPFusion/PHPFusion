@@ -393,4 +393,8 @@ $locale['version'] = "Версия ";
 $locale['browse'] = "Обзор ...";
 $locale['close'] = 'Закрыть';
 $locale['nopreview'] = 'Нет данных для предпросмотра';
+//Alignment
+$locale['left'] = "Влево";
+$locale['center'] = "По центру";
+$locale['right'] = "Вправо";
 ?>

@@ -19,7 +19,7 @@ require_once "../maincore.php";
 if (!checkrights("N") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/news.php";
-add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['400']));
+add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['news_0000']));
 if (isset($_POST['cancel'])) { redirect(FUSION_SELF.$aidlink); }
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
@@ -56,7 +56,7 @@ function news_listing() {
 	echo "<div class='panel panel-default'>\n";
 	echo "<div class='panel-heading clearfix'>\n";
 	echo "<div class='overflow-hide'>\n";
-	echo "<span class='display-inline-block strong'><a ".collapse_header_link('news-list', '0', '0', 'm-r-10').">".$locale['424']."</a></span>\n";
+	echo "<span class='display-inline-block strong'><a ".collapse_header_link('news-list', '0', '0', 'm-r-10').">".$locale['news_0202']."</a></span>\n";
 	echo "<span class='text-smaller strong'>".LANGUAGE."</span>";
 	echo "</div>\n";
 	echo "</div>\n"; // end panel heading
@@ -72,14 +72,14 @@ function news_listing() {
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
 			echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".trim_word($data2['news_news'], '50')."</div>\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;news_id=".$data2['news_id']."'>".$locale['420']."</a> -\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['451']."');\">".$locale['421']."</a>\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 			echo "</div>\n";
 			echo "</li>\n";
 		}
 	} else {
 		echo "<div class='panel-body text-center'>\n";
-		echo $locale['456'];
+		echo $locale['news_0257'];
 		echo "</div>\n";
 	}
 	// news listing.
@@ -92,8 +92,8 @@ function news_listing() {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-heading clearfix'>\n";
 				echo "<div class='btn-group pull-right m-t-5'>\n";
-				echo "<a class='btn btn-xs btn-default' href='".ADMIN."news_cats.php".$aidlink."&amp;action=edit&amp;cat_id=".$data['news_cat_id']."'>".$locale['420']."</a>";
-				echo "<a class='btn btn-xs btn-default' href='".ADMIN."news_cats.php".$aidlink."&amp;action=delete&amp;cat_id=".$data['news_cat_id']."' onclick=\"return confirm('".$locale['451b']."');\">".$locale['421']."</a>\n";
+				echo "<a class='btn btn-xs btn-default' href='".ADMIN."news_cats.php".$aidlink."&amp;action=edit&amp;cat_id=".$data['news_cat_id']."'>".$locale['edit']."</a>";
+				echo "<a class='btn btn-xs btn-default' href='".ADMIN."news_cats.php".$aidlink."&amp;action=delete&amp;cat_id=".$data['news_cat_id']."' onclick=\"return confirm('".$locale['news_0252']."');\">".$locale['delete']."</a>\n";
 				echo "</div>\n";
 				echo "<div class='overflow-hide p-r-10'>\n";
 				echo "<span class='display-inline-block strong'><a ".collapse_header_link('news-list', $data['news_cat_id'], '0', 'm-r-10').">".$data['news_cat_name']."</a></span>\n";
@@ -112,14 +112,14 @@ function news_listing() {
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
 					echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".trim_word($data2['news_news'], '50')."</div>\n";
-					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;news_id=".$data2['news_id']."'>".$locale['420']."</a> -\n";
-					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['451']."');\">".$locale['421']."</a>\n";
+					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
+					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 					echo "</div>\n";
 					echo "</li>\n";
 				}
 			} else {
 				echo "<div class='panel-body text-center'>\n";
-				echo $locale['456'];
+				echo $locale['news_0257'];
 				echo "</div>\n";
 			}
 			// news listing.
@@ -164,24 +164,24 @@ function news_form() {
 				$defender->stop();
 				switch ($upload['error']) { // 415a, 416a, 415b, 419a
 					case 1:
-						$defender->addNotice(sprintf($locale['414'], parsebytesize($settings['news_photo_max_b'])));
+						$defender->addNotice(sprintf($locale['news_0104'], parsebytesize($settings['news_photo_max_b'])));
 						// Invalid file size
 						break;
 					case 2:
 						// Unsupported image type
-						$defender->addNotice(sprintf($locale['415'], ".gif .jpg .png"));
+						$defender->addNotice(sprintf($locale['news_0105'], ".gif .jpg .png"));
 						break;
 					case 3:
 						// Invalid image resolution
-						$defender->addNotice(sprintf($locale['416'], $settings['news_photo_max_w']." x ".$settings['news_photo_max_h']));
+						$defender->addNotice(sprintf($locale['news_0106'], $settings['news_photo_max_w']." x ".$settings['news_photo_max_h']));
 						break;
 					case 4:
 						// Invalid query string
-						$defender->addNotice($locale['417']);
+						$defender->addNotice($locale['news_0107']);
 						break;
 					case 5:
 						// Image not uploaded
-						$defender->addNotice($locale['417']);
+						$defender->addNotice($locale['news_0107']);
 						break;
 				}
 				$data['news_image'] = (isset($_POST['news_image']) ? $_POST['news_image'] : "");
@@ -201,7 +201,7 @@ function news_form() {
 			$image_ext = strtolower(strrchr($image['name'], "."));
 			if (!preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $image_name)) {
 				$defender->stop();
-				$defender->addNotice($locale['413']);
+				$defender->addNotice($locale['news_0103']);
 				$error = 1;
 			} */
 		} else {
@@ -265,7 +265,7 @@ function news_form() {
 
 	$result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 	$news_cat_opts = array();
-	$news_cat_opts['0'] = $locale['424'];
+	$news_cat_opts['0'] = $locale['news_0202'];
 	if (dbrows($result)) {
 		while ($odata = dbarray($result)) {
 			$news_cat_opts[$odata['news_cat_id']] = $odata['news_cat_name'];
@@ -373,21 +373,21 @@ function news_form() {
 	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 0));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
-	echo form_text($locale['422'], 'news_subject', 'news_subject', $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['450']));
+	echo form_text($locale['news_0200'], 'news_subject', 'news_subject', $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['news_0250']));
 	// move keywords here because it's required
-	echo form_select($locale['443'], 'news_keywords', 'news_keywords', array(), $data['news_keywords'], array('required' => 1, 'max_length' => 320, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1, 'multiple' => 1));
+	echo form_select($locale['news_0205'], 'news_keywords', 'news_keywords', array(), $data['news_keywords'], array('required' => 1, 'max_length' => 320, 'width'=>'100%', 'error_text' => $locale['news_0258'], 'tags'=>1, 'multiple' => 1));
 	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker($locale['427'], 'news_start', 'news_start', $data['news_start'], array('placeholder' => $locale['429']));
+	echo form_datepicker($locale['news_0206'], 'news_start', 'news_start', $data['news_start'], array('placeholder' => $locale['news_0208']));
 	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker($locale['428'], 'news_end', 'news_end', $data['news_end'], array('placeholder' => $locale['429']));
+	echo form_datepicker($locale['news_0207'], 'news_end', 'news_end', $data['news_end'], array('placeholder' => $locale['news_0208']));
 	echo "</div>\n";
 	echo "</div>\n";
 
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
-	echo form_select_tree($locale['423'], "news_cat", "news_cat", $data['news_cat'], array("parent_value" => $locale['424']), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
+	echo form_select_tree($locale['news_0201'], "news_cat", "news_cat", $data['news_cat'], array("parent_value" => $locale['news_0202']), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
-	echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-primary btn-sm'));
+	echo form_button($locale['news_0241'], 'save', 'save-1', $locale['news_0241'], array('class' => 'btn-primary btn-sm'));
 	closeside();
 	echo "</div>\n</div>\n";
 
@@ -396,26 +396,26 @@ function news_form() {
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 	openside('');
 	if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
-		echo "<label><img src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$locale['439']."' /><br />\n";
-		echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['421']."</label>\n";
+		echo "<label><img src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$locale['news_0216']."' /><br />\n";
+		echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['delete']."</label>\n";
 		echo "<input type='hidden' name='news_image' value='".$data['news_image']."' />\n";
 		echo "<input type='hidden' name='news_image_t1' value='".$data['news_image_t1']."' />\n";
 		echo "<input type='hidden' name='news_image_t2' value='".$data['news_image_t2']."' />\n";
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select($locale['442'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
+		echo form_select($locale['news_0218'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
 	} else {
-		echo form_fileinput($locale['439'], 'news_image', 'news_image', IMAGES_N, '', array('thumbnail' => IMAGES_N_T, 'type' => 'image'));
-		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['news_photo_max_b']))."</div>\n";
+		echo form_fileinput($locale['news_0216'], 'news_image', 'news_image', IMAGES_N, '', array('thumbnail' => IMAGES_N_T, 'type' => 'image'));
+		echo "<div class='small m-b-10'>".sprintf($locale['news_0217'], parsebytesize($settings['news_photo_max_b']))."</div>\n";
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select($locale['442'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
+		echo form_select($locale['news_0218'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
 	}
 	$fusion_mce = array();
 	if (!$settings['tinymce_enabled']) {
 		$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
 	}
 	closeside();
-	echo form_textarea($locale['425'], 'news_news', 'news_news', $data['news_news'], $fusion_mce);
-	echo form_textarea($locale['426'], 'news_extended', 'news_extended', $data['news_extended'], $fusion_mce);
+	echo form_textarea($locale['news_0203'], 'news_news', 'news_news', $data['news_news'], $fusion_mce);
+	echo form_textarea($locale['news_0204'], 'news_extended', 'news_extended', $data['news_extended'], $fusion_mce);
 	echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	if (multilang_table("NS")) {
@@ -424,44 +424,44 @@ function news_form() {
 		echo form_hidden('', 'news_language', 'news_langugage', $data['news_language']);
 	}
 	echo form_hidden('', 'news_datestamp', 'news_datestamp', $data['news_datestamp']);
-	echo form_select($locale['430'], 'news_visibility', 'news_visibility', $visibility_opts, $data['news_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
+	echo form_select($locale['news_0209'], 'news_visibility', 'news_visibility', $visibility_opts, $data['news_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	closeside();
 	openside('');
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 		$sys = "";
 		if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
-			$sys = $locale['455'];
+			$sys = $locale['news_0256'];
 		} elseif ($settings['comments_enabled'] == "0") {
-			$sys = $locale['453'];
+			$sys = $locale['news_0254'];
 		} else {
-			$sys = $locale['454'];
+			$sys = $locale['news_0255'];
 		}
-		echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['452'], $sys)."</span><br/>\n";
+		echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['news_0253'], $sys)."</span><br/>\n";
 	}
-	echo "<label><input type='checkbox' name='news_draft' value='yes'".($data['news_draft'] ? "checked='checked'" : "")." /> ".$locale['431']."</label><br />\n";
-	echo "<label><input type='checkbox' name='news_sticky' value='yes'".($data['news_sticky'] ? "checked='checked'" : "")."  /> ".$locale['432']."</label><br />\n";
+	echo "<label><input type='checkbox' name='news_draft' value='yes'".($data['news_draft'] ? "checked='checked'" : "")." /> ".$locale['news_0210']."</label><br />\n";
+	echo "<label><input type='checkbox' name='news_sticky' value='yes'".($data['news_sticky'] ? "checked='checked'" : "")."  /> ".$locale['news_0211']."</label><br />\n";
 	if ($settings['tinymce_enabled'] != 1) {
-		echo "<label><input type='checkbox' name='line_breaks' value='yes'".($data['news_breaks'] ? "checked='checked'" : "")." /> ".$locale['433']."</label><br />\n";
+		echo "<label><input type='checkbox' name='line_breaks' value='yes'".($data['news_breaks'] ? "checked='checked'" : "")." /> ".$locale['news_0212']."</label><br />\n";
 	}
-	echo "<label><input type='checkbox' name='news_allow_comments' value='yes' onclick='SetRatings();'".($data['news_allow_comments'] ? "checked='checked'" : "")." /> ".$locale['434']."</label><br/>";
-	echo "<label><input type='checkbox' name='news_allow_ratings' value='yes'".($data['news_allow_ratings'] ? "checked='checked'" : "")." /> ".$locale['435']."</label>";
+	echo "<label><input type='checkbox' name='news_allow_comments' value='yes' onclick='SetRatings();'".($data['news_allow_comments'] ? "checked='checked'" : "")." /> ".$locale['news_0213']."</label><br/>";
+	echo "<label><input type='checkbox' name='news_allow_ratings' value='yes'".($data['news_allow_ratings'] ? "checked='checked'" : "")." /> ".$locale['news_0214']."</label>";
 	closeside();
 	if (isset($_GET['action']) && isset($_GET['news_id']) && isnum($_GET['news_id']) || (isset($_POST['preview']) && (isset($_POST['news_id']) && isnum($_POST['news_id']))) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
 		$news_id = isset($_GET['news_id']) && isnum($_GET['news_id']) ? $_GET['news_id'] : '';
 		echo form_hidden('', 'news_id', 'news_id', $news_id);
 	}
 	echo "</div>\n</div>\n";
-	echo form_button($locale['436'], 'preview', 'preview-1', $locale['436'], array('class' => 'btn-primary m-r-10'));
-	echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-primary'));
+	echo form_button($locale['news_0240'], 'preview', 'preview-1', $locale['news_0240'], array('class' => 'btn-primary m-r-10'));
+	echo form_button($locale['news_0241'], 'save', 'save-1', $locale['news_0241'], array('class' => 'btn-primary'));
 	echo closeform();
 	echo "</div>\n";
 }
 
-$master_title['title'][] = $locale['400'];
+$master_title['title'][] = $locale['news_0000'];
 $master_title['id'][] = 'news';
 $master_title['icon'] = '';
 
-$master_title['title'][] = $locale['401'];
+$master_title['title'][] = $locale['news_0002'];
 $master_title['id'][] = 'nform';
 $master_title['icon'] = '';
 
@@ -469,18 +469,18 @@ $tab_active = isset($_GET['status']) ? tab_active($master_title, 0) : tab_active
 
 if (isset($_GET['status'])) {
 	if ($_GET['status'] == "success") {
-		$message = $locale['410'];
+		$message = $locale['news_0100'];
 	} elseif ($_GET['status'] == "updated") {
-		$message = $locale['411'];
+		$message = $locale['news_0101'];
 	} elseif ($_GET['status'] == "del") {
-		$message = $locale['412'];
+		$message = $locale['news_0102'];
 	}
 	if ($message) {
 		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
 	}
 }
 
-opentable($locale['405']);
+opentable($locale['news_0001']);
 echo opentab($master_title, $tab_active, 'news');
 echo opentabbody($master_title['title'][0], 'news', $tab_active);
 news_listing();
@@ -494,7 +494,7 @@ closetable();
 if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id'])) {
 	add_to_jquery("
 		// change the name of the second tab and activate it.
-		$('#tab-nformAdd-News').text('".$locale['402']."');
+		$('#tab-nformAdd-News').text('".$locale['news_0003']."');
 		$('#news a:last').tab('show');
 		");
 }
