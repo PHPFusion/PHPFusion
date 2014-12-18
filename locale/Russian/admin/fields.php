@@ -27,6 +27,11 @@ $locale['fields_0310'] = "Edit Module";
 $locale['fields_0311'] = "Add New Category";
 $locale['fields_0312'] = "Install";
 $locale['fields_0313'] = "Delete Category";
+$locale['fields_0314'] = "Move Category";
+$locale['fields_0315'] = "Delete all categories and all fields under it";
+$locale['fields_0316'] = "Move Fields";
+$locale['fields_0317'] = "Delete all fields under this category";
+$locale['fields_0318'] = "Save Category";
 
 $locale['fields_0400'] = "Module Fields Information";
 $locale['fields_0401'] = "Version:";
@@ -104,4 +109,7 @@ $locale['fields_0507'] = "Color";
 $locale['fields_0508'] = "File";
 $locale['fields_0509'] = "Hidden";
 $locale['fields_0510'] = "Address";
+
+$locale['fields_0600'] = "There are %s sub-category(s) in this category";
+$locale['fields_0601'] = "There are %s field(s) in this category";
 ?>
