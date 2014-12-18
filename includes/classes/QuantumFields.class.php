@@ -200,24 +200,24 @@ class quantumFields {
 		global $aidlink;
 		if (isset($_GET['action']) && isset($_GET['order']) && isnum($_GET['order']) && isset($_GET['parent_id']) && isnum($_GET['parent_id'])) {
 			if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) && ($_GET['action'] == 'cmu' or $_GET['action'] == 'cmd')) {
-				$data = dbarray(dbquery("SELECT field_cat_id FROM ".DB_USER_FIELD_CATS." WHERE field_parent='".intval($_GET['parent_id'])."' AND field_cat_order='".intval($_GET['order'])."'")); // more than 1.
+				$data = dbarray(dbquery("SELECT field_cat_id FROM ".$this->category_db." WHERE field_parent='".intval($_GET['parent_id'])."' AND field_cat_order='".intval($_GET['order'])."'")); // more than 1.
 				if ($_GET['action'] == 'cmu') { // category move up.
-					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELD_CATS." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$data['field_cat_id']."'");
-					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELD_CATS." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
+					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$data['field_cat_id']."'");
+					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$_GET['cat_id']."'");
 				} elseif ($_GET['action'] == 'cmd') {
-					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELD_CATS." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$data['field_cat_id']."'");
-					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELD_CATS." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
+					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order-1 WHERE field_cat_id='".$data['field_cat_id']."'");
+					if (!$this->debug) $result = dbquery("UPDATE ".$this->category_db." SET field_cat_order=field_cat_order+1 WHERE field_cat_id='".$_GET['cat_id']."'");
 				}
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			} elseif (isset($_GET['field_id']) && isnum($_GET['field_id']) && ($_GET['action'] == 'fmu' or $_GET['action'] == 'fmd')) {
-				$data = dbarray(dbquery("SELECT field_id FROM ".DB_USER_FIELDS." WHERE field_cat='".intval($_GET['parent_id'])."' AND field_order='".intval($_GET['order'])."'"));
+				$data = dbarray(dbquery("SELECT field_id FROM ".$this->field_db." WHERE field_cat='".intval($_GET['parent_id'])."' AND field_order='".intval($_GET['order'])."'"));
 				if ($_GET['action'] == 'fmu') { // field move up.
 					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$data['field_id']."'");
-					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
+					if (!$this->debug) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
 					if ($this->debug) print_p("Move Field ID ".$_GET['field_id']." Up a slot and Field ID ".$data['field_id']." down a slot.");
 				} elseif ($_GET['action'] == 'fmd') {
-					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
-					if (!$this->debug) $result = dbquery("UPDATE ".DB_USER_FIELDS." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
+					if (!$this->debug) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$data['field_id']."'");
+					if (!$this->debug) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
 					if ($this->debug) print_p("Move Field ID ".$_GET['field_id']." down a slot and Field ID ".$data['field_id']." up a slot.");
 				}
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
@@ -483,7 +483,7 @@ class quantumFields {
 		if ($rows) {
 			if ($this->debug) print_p('Update mode');
 			// update
-			// Alter DB_USER_FIELDS table - change and modify column.
+			// Alter $this->field_db table - change and modify column.
 			$old_record = dbquery("SELECT uf.*, cat.field_cat_id, cat.field_parent, cat.field_cat_order, root.field_cat_db, root.field_cat_index
 									FROM ".$this->field_db." uf
 									LEFT JOIN ".$this->category_db." cat ON (cat.field_cat_id = uf.field_cat)
@@ -560,7 +560,7 @@ class quantumFields {
 			}
 		} else {
 			if ($this->debug) print_p('Save Mode');
-			// Alter DB_USER_FIELDS table - add column.
+			// Alter $this->field_db table - add column.
 			$cresult = dbquery("SELECT cat.field_cat_id, cat.field_parent, cat.field_cat_order, root.field_cat_db, root.field_cat_index
 									FROM ".$this->category_db." cat
 									LEFT JOIN ".$this->category_db." root ON (cat.field_parent = root.field_cat_id)
