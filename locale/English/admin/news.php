@@ -5,9 +5,9 @@ $locale['news_0001'] = "News";
 $locale['news_0002'] = "Add News";
 $locale['news_0003'] = "Edit News";
 // News Categories titles
+$locale['news_0020'] = "Current News Categories";
 $locale['news_0021'] = "Edit News Category";
 $locale['news_0022'] = "Add News Category";
-$locale['news_0020'] = "Current News Categories";
 // News messages
 $locale['news_0100'] = "News Item added";
 $locale['news_0101'] = "News Item updated";

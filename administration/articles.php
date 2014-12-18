@@ -32,11 +32,11 @@ if ($settings['tinymce_enabled'] == 1) {
 
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
-		$message = $locale['410'];
+		$message = $locale['articles_0100'];
 	} elseif ($_GET['status'] == "su") {
-		$message = $locale['411'];
+		$message = $locale['articles_0101'];
 	} elseif ($_GET['status'] == "del") {
-		$message = $locale['412'];
+		$message = $locale['articles_0102'];
 	}
 	if ($message) {
 		echo "<div id='close-message'><div class='alert alert-info m-t-10 admin-message'>".$message."</div></div>\n";
@@ -96,10 +96,10 @@ if (!empty($result)) {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-body'>\n";
 			echo "<div class='well'>\n";
-			echo "<small><strong>".$locale['424']."</strong></small><br/>";
+			echo "<small><strong>".$locale['articles_0202']."</strong></small><br/>";
 			echo $bodypreview."\n";
 			echo "</div>\n";
-			echo "<small><strong>".$locale['425']."</strong></small><br/>";
+			echo "<small><strong>".$locale['articles_0203']."</strong></small><br/>";
 			echo $body2preview."\n";
 			echo "</div>\n</div>\n";
 			closetable();
@@ -108,14 +108,14 @@ if (!empty($result)) {
 		if (dbrows($result)) {
 			$editlist = array();
 			while ($data = dbarray($result)) {
-				$editlist[$data['article_id']] = "".($data['article_draft'] ? $locale['433']." " : "").$data['article_subject']."";
+				$editlist[$data['article_id']] = "".($data['article_draft'] ? $locale['articles_0210']." " : "").$data['article_subject']."";
 			}
-			opentable($locale['402']);
+			opentable($locale['articles_0000']);
 			echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 0));
 			echo "<div class='text-center'>\n";
 			echo form_select('', 'article_id', 'article_id', $editlist, '', array('placeholder' => $locale['choose'], 'inline' => 1, 'class' => 'pull-left'));
-			echo form_button($locale['420'], 'edit', 'edit', $locale['420'], array('class' => 'pull-left btn-primary m-l-10 m-r-10'));
-			echo form_button($locale['421'], 'delete', 'delete', $locale['421'], array('class' => 'pull-left btn-primary'));
+			echo form_button($locale['edit'], 'edit', 'edit', $locale['edit'], array('class' => 'pull-left btn-primary m-l-10 m-r-10'));
+			echo form_button($locale['delete'], 'delete', 'delete', $locale['delete'], array('class' => 'pull-left btn-primary'));
 			add_to_jquery("
                 $('#delete').bind('click',function(e){ DeleteArticle(); });
                 ");
@@ -148,7 +148,7 @@ if (!empty($result)) {
 			}
 		}
 		if ((isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
-			opentable($locale['401']);
+			opentable($locale['articles_0003']);
 		} else {
 			if (!isset($_POST['preview'])) {
 				$article_cat = '';
@@ -162,7 +162,7 @@ if (!empty($result)) {
 				$comments = " checked='checked'";
 				$ratings = " checked='checked'";
 			}
-			opentable($locale['400']);
+			opentable($locale['articles_0002']);
 		}
 
 		$visibility_opts = array();
@@ -173,16 +173,16 @@ if (!empty($result)) {
 
 		echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
-		echo "<td width='100' class='tbl'><label for='article_cat'>".$locale['422']."</label></td>\n";
+		echo "<td width='100' class='tbl'><label for='article_cat'>".$locale['articles_0201']."</label></td>\n";
 		echo "<td class='tbl'>\n";
 		echo form_select_tree("", "article_cat", "article_cat", $article_cat, array("no_root" => 1, "placeholder" => $locale['choose']), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 		echo "</td>\n</tr>\n<tr>\n";
-		echo "<td width='100' class='tbl'><label for='subject'>".$locale['423']." <span class='required'>*</span></label></td>\n";
+		echo "<td width='100' class='tbl'><label for='subject'>".$locale['articles_0200']." <span class='required'>*</span></label></td>\n";
 		echo "<td class='tbl'>\n";
 		echo form_text('', 'subject', 'subject', $subject, array('required' => 1));
 		echo "</td>\n";
 		echo "</tr>\n<tr>\n";
-		echo "<td valign='top' width='100' class='tbl'><label for='body'>".$locale['424']."</label></td>\n";
+		echo "<td valign='top' width='100' class='tbl'><label for='body'>".$locale['articles_0202']."</label></td>\n";
 		echo "<td class='tbl'>\n";
 		echo form_textarea('', 'body', 'body', $body);
 		echo "</td>\n";
@@ -192,39 +192,39 @@ if (!empty($result)) {
 			echo display_html("input_form", "body", TRUE, TRUE, TRUE, IMAGES_A);
 			echo "</td>\n</tr>\n";
 		}
-		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='body2'>".$locale['425']."</label></td>\n";
+		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='body2'>".$locale['articles_0203']."</label></td>\n";
 		echo "<td class='tbl'>\n";
 		echo form_textarea('', 'body2', 'body2', $body2);
 		echo "</tr>\n";
 		if ($settings['tinymce_enabled'] != 1) {
 			echo "<tr>\n<td class='tbl'></td><td class='tbl'>\n";
-			echo "<input type='button' value='".$locale['432']."' class='button' onclick=\"insertText('body2', '&lt;!--PAGEBREAK--&gt;');\" />\n";
+			echo "<input type='button' value='".$locale['articles_0209']."' class='button' onclick=\"insertText('body2', '&lt;!--PAGEBREAK--&gt;');\" />\n";
 			echo display_html("input_form", "body2", TRUE, TRUE, TRUE, IMAGES_A);
 			echo "</td>\n</tr>\n";
 		}
 
-		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='keywords'>".$locale['434']."</label></td>\n";
+		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='keywords'>".$locale['articles_0204']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('', 'keywords', 'keywords', array(), $keywords, array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['460'], 'tags'=>1, 'multiple' => 1));
+		echo form_select('', 'keywords', 'keywords', array(), $keywords, array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['articles_0260'], 'tags'=>1, 'multiple' => 1));
 		echo "</td>\n</tr>\n";
 					
-		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='article_visibility'>".$locale['435']."</label></td>\n";
+		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='article_visibility'>".$locale['articles_0211']."</label></td>\n";
 		echo "<td class='tbl'>\n";
 		echo form_select("", 'article_visibility', 'article_visibility', $visibility_opts, $data['article_visibility'], array('placeholder' => $locale['choose']));
 		echo "</td>\n</tr>\n";
 					
 		echo "<tr>\n";
 		echo "<td class='tbl'></td><td class='tbl'>\n";
-		echo "<label><input type='checkbox' name='article_draft' value='yes'".$draft." /> ".$locale['426']."</label><br />\n";
+		echo "<label><input type='checkbox' name='article_draft' value='yes'".$draft." /> ".$locale['articles_0205']."</label><br />\n";
 		if ($settings['tinymce_enabled'] != 1) {
-			echo "<label><input type='checkbox' name='line_breaks' value='yes'".$breaks." /> ".$locale['427']."</label><br />\n";
+			echo "<label><input type='checkbox' name='line_breaks' value='yes'".$breaks." /> ".$locale['articles_0206']."</label><br />\n";
 		}
-		echo "<label><input type='checkbox' name='article_comments' value='yes'".$comments." /> ".$locale['428']."</label>";
+		echo "<label><input type='checkbox' name='article_comments' value='yes'".$comments." /> ".$locale['articles_0207']."</label>";
 		if ($settings['comments_enabled'] == "0") {
 			echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
 		}
 		echo "<br />\n";
-		echo "<label><input type='checkbox' name='article_ratings' value='yes'".$ratings." /> ".$locale['429']."</label>";
+		echo "<label><input type='checkbox' name='article_ratings' value='yes'".$ratings." /> ".$locale['articles_0208']."</label>";
 		if ($settings['ratings_enabled'] == "0") {
 			echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
 		}
@@ -233,14 +233,14 @@ if (!empty($result)) {
 		if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 			$sys = "";
 			if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
-				$sys = $locale['459'];
+				$sys = $locale['articles_0259'];
 			} elseif ($settings['comments_enabled'] == "0") {
-				$sys = $locale['457'];
+				$sys = $locale['articles_0257'];
 			} else {
-				$sys = $locale['458'];
+				$sys = $locale['articles_0258'];
 			}
 			echo "<tr>\n<td colspan='2' class='tbl1' style='font-weight:bold;text-align:left; color:black !important; background-color:#FFDBDB;'>";
-			echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['456'], $sys);
+			echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['articles_0256'], $sys);
 			echo "</td>\n</tr>";
 		}
 		echo "<tr>\n";
@@ -249,22 +249,22 @@ if (!empty($result)) {
 			echo form_hidden('', 'article_id', 'article_id', isset($_POST['article_id']) ? $_POST['article_id'] : $_GET['article_id']);
 			//echo "<input type='hidden' name='article_id' value='".(isset($_POST['article_id']) ? $_POST['article_id'] : $_GET['article_id'])."' />\n";
 		}
-		echo form_button($locale['430'], 'preview', 'preview', $locale['430'], array('class' => 'btn-primary m-r-10'));
-		echo form_button($locale['431'], 'save', 'save', $locale['431'], array('class' => 'btn-primary'));
+		echo form_button($locale['articles_0240'], 'preview', 'preview', $locale['articles_0240'], array('class' => 'btn-primary m-r-10'));
+		echo form_button($locale['articles_0241'], 'save', 'save', $locale['articles_0241'], array('class' => 'btn-primary'));
 		echo "</tr>\n</table>\n</form>\n";
 		closetable();
 		add_to_jquery("
-            function DeleteArticle() { return confirm('".$locale['451']."');}
+            function DeleteArticle() { return confirm('".$locale['articles_0251']."');}
             $('#save, #preview').bind('click', function(e) {
             var subject = $('#subject').val();
-            if (subject == '') { alert('".$locale['450']."'); return false; }
+            if (subject == '') { alert('".$locale['articles_0250']."'); return false; }
             });
             ");
 	}
 } else {
-	opentable($locale['403']);
-	echo "<div style='text-align:center'>".$locale['452']."<br />\n".$locale['453']."<br />\n";
-	echo "<a href='article_cats.php".$aidlink."'>".$locale['454']."</a>".$locale['455']."</div>\n";
+	opentable($locale['articles_0001']);
+	echo "<div style='text-align:center'>".$locale['articles_0252']."<br />\n".$locale['articles_0253']."<br />\n";
+	echo "<a href='article_cats.php".$aidlink."'>".$locale['articles_0254']."</a>".$locale['articles_0255']."</div>\n";
 	closetable();
 }
 

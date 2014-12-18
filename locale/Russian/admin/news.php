@@ -5,9 +5,9 @@ $locale['news_0001'] = "Новости";
 $locale['news_0002'] = "Добавить новость";
 $locale['news_0003'] = "Изменить новость";
 // News Categories titles
+$locale['news_0020'] = "Созданные категории";
 $locale['news_0021'] = "Изменить категорию";
 $locale['news_0022'] = "Добавить категорию";
-$locale['news_0020'] = "Созданные категории";
 // News messages
 $locale['news_0100'] = "Новость добавлена";
 $locale['news_0101'] = "Новость обновлена";

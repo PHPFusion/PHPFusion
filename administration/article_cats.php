@@ -20,16 +20,16 @@ if (!checkRights("AC") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['ai
 	redirect("../index.php");
 }
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/article-cats.php";
+include LOCALE.LOCALESET."admin/articles.php";
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
-		$message = $locale['410'];
+		$message = $locale['articles_0150'];
 	} elseif ($_GET['status'] == "su") {
-		$message = $locale['411'];
+		$message = $locale['articles_0151'];
 	} elseif ($_GET['status'] == "deln") {
-		$message = $locale['412']."<br />\n<span class='small'>".$locale['413']."</span>";
+		$message = $locale['articles_0152']."<br />\n<span class='small'>".$locale['articles_0153']."</span>";
 	} elseif ($_GET['status'] == "dely") {
-		$message = $locale['414'];
+		$message = $locale['articles_0154'];
 	}
 	if ($message) {
 		echo "<div id='close-message'><div class='alert alert-info m-t-10 admin-message'>".$message."</div></div>\n";
@@ -70,7 +70,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 				} else {
 					// method to validate.
 					$defender->stop();
-					$defender->addNotice($locale['461']);
+					$defender->addNotice($locale['articles_0352']);
 				}
 			}
 		}
@@ -96,7 +96,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 			$cat_parent = $data['article_cat_parent'];
 			$cat_hidden = array($_GET['cat_id']);
 			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$_GET['cat_id'];
-			$openTable = $locale['401'];
+			$openTable = $locale['articles_0022'];
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
@@ -109,22 +109,22 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$cat_parent = "0";
 		$cat_hidden = array();
 		$formaction = FUSION_SELF.$aidlink;
-		$openTable = $locale['400'];
+		$openTable = $locale['articles_0021'];
 	}
 	opentable($openTable);
 	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_name'>".$locale['420']." <span class='required'>*</span></label></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_name'>".$locale['articles_0300']." <span class='required'>*</span></label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
+	echo form_text('', 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['articles_0351']));
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_description'>".$locale['421']."</label></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_description'>".$locale['articles_0301']."</label></td>\n";
 	echo "<td class='tbl'>\n";
 	echo form_text('', 'cat_description', 'cat_description', $cat_description);
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
-	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_parent'>".$locale['428']."</label></td>\n";
+	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_parent'>".$locale['articles_0308']."</label></td>\n";
 	echo "<td class='tbl'>\n";
 	echo form_select_tree("", "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 	echo "</td>\n";
@@ -137,21 +137,21 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	} else {
 		echo form_hidden('', 'cat_language', 'cat_language', $cat_language);
 	}
-	echo "<tr><td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_sort_by'>".$locale['422']."</label></td>\n";
+	echo "<tr><td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_sort_by'>".$locale['articles_0302']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	$array = array('1' => $locale['423'], '2' => $locale['424'], '3' => $locale['425']);
+	$array = array('1' => $locale['articles_0303'], '2' => $locale['articles_0304'], '3' => $locale['articles_0305']);
 	echo form_select('', 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
-	$array = array('ASC' => $locale['426'], 'DESC' => $locale['427']);
+	$array = array('ASC' => $locale['articles_0306'], 'DESC' => $locale['articles_0307']);
 	echo form_select('', 'cat_sort_order', 'cat_sort_order', $array, $cat_sort_order, array('placeholder' => $locale['choose']));
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";
-	echo form_button($locale['429'], 'save_cat', 'save_cat', $locale['429'], array('class' => 'btn-primary', 'inline' => 1));
+	echo form_button($locale['articles_0309'], 'save_cat', 'save_cat', $locale['articles_0309'], array('class' => 'btn-primary', 'inline' => 1));
 	echo "</tr>\n</table>\n";
 	echo closeform();
 	closetable();
 
-	opentable($locale['402']);
+	opentable($locale['articles_0020']);
 	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
 
 	$row_num = 0;
@@ -159,7 +159,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	showcatlist();
 
 	if ($row_num == 0) {
-		echo "<tr><td align='center' class='tbl1' colspan='2'>".$locale['445']."</td></tr>\n";
+		echo "<tr><td align='center' class='tbl1' colspan='2'>".$locale['articles_0342']."</td></tr>\n";
 	}
 	echo "</table>\n";
 
@@ -179,8 +179,8 @@ function showcatlist($parent = 0, $level = 0) {
 			if ($data['article_cat_description']) {
 				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trimlink($data['article_cat_description'], 45)."</span></td>\n";
 			}
-			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['article_cat_id']."'>".$locale['443']."</a> -\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['article_cat_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['444']."</a></td>\n";
+			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['article_cat_id']."'>".$locale['edit']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['article_cat_id']."' onclick=\"return confirm('".$locale['articles_0350']."');\">".$locale['delete']."</a></td>\n";
 			echo "</tr>\n";
 			$row_num++;
 			showcatlist($data['article_cat_id'], $level + 1);
