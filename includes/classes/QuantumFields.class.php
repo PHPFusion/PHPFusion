@@ -342,7 +342,7 @@ class quantumFields {
 						echo openform('delete_cat_form', 'delete_cat_form', 'post', $form_action, array('downtime'=>0));
 						if (isset($this->page[$_GET['cat_id']])) {
 							echo "<div class='row'>\n";
-							echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n<span class='strong'>There are ".count($this->page[$_GET['cat_id']])." sub-category in this category</span><br/>\n";
+							echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n<span class='strong'>".sprintf($locale['fields_0600'], count($this->page[$_GET['cat_id']]) )."</span><br/>\n";
 							echo "<div class='alert alert-info m-t-10 text-smaller strong'>\n";
 							foreach($this->page[$_GET['cat_id']] as $arr=>$field_category) {
 								echo "- ".$field_category['field_cat_name']."<br/>\n";
@@ -352,15 +352,15 @@ class quantumFields {
 							$page_list = $this->page_list;
 							unset($page_list[$_GET['cat_id']]);
 							if (count($page_list) >0) {
-								echo form_select('Move Category', 'move_subcat', 'move_subcat', $page_list, '');
+								echo form_select($locale['fields_0314'], 'move_subcat', 'move_subcat', $page_list, '');
 							}
-							echo form_checkbox('Delete all categories and all fields under it', 'delete_subcat', 'delete_subcat', '');
+							echo form_checkbox($locale['fields_0315'], 'delete_subcat', 'delete_subcat', '');
 							echo "</div></div>";
 						}
 
 						if (isset($field_list[$_GET['cat_id']])) {
 							echo "<div class='row'>\n";
-							echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n<span class='strong'>There are ".count($field_list[$_GET['cat_id']])." fields in this category</span><br/>\n";
+							echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n<span class='strong'>".sprintf($locale['fields_0601'], count($field_list[$_GET['cat_id']]))."</span><br/>\n";
 							echo "<div class='alert alert-info m-t-10 text-smaller strong'>\n";
 							foreach($field_list[$_GET['cat_id']] as $arr=>$field) {
 								echo "- ".$field."<br/>\n";
@@ -371,8 +371,8 @@ class quantumFields {
 							foreach($this->page_list as $page_id => $page_name) {
 								$exclude_list[] = $page_id;
 							}
-							echo form_select_tree('Move Fields', 'move_field', 'move_field', '', array('no_root'=>1, 'disable_opts'=>$exclude_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-							echo form_checkbox('Delete all fields under this category', 'delete_field', 'delete_field', '');
+							echo form_select_tree($locale['fields_0316'], 'move_field', 'move_field', '', array('no_root'=>1, 'disable_opts'=>$exclude_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+							echo form_checkbox($locale['fields_0317'], 'delete_field', 'delete_field', '');
 							echo "</div></div>";
 						}
 						echo form_button($locale['fields_0313'], 'delete_cat', 'delete_cat', $locale['fields_0313'], array('class'=>'btn-danger btn-sm'));
@@ -467,6 +467,7 @@ class quantumFields {
 
 	private function synthesize_fields($data, $type = 'dynamics') {
 		global $aidlink, $defender;
+		$locale = $this->locale;
 		$field_attr = '';
 		if ($type == 'dynamics') {
 			$field_attr = $this->dynamics_fieldinfo($data['field_type'], $data['field_default']);
@@ -606,7 +607,7 @@ class quantumFields {
 					$data += unserialize($data['config']); // uncompress serialized extended information.
 				}
 			} else {
-				//	redirect(FUSION_SELF.$aidlink);
+				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			}
 			if ($this->debug) print_p($data);
 			// Initialize Constructor Fields
@@ -862,12 +863,11 @@ class quantumFields {
 		$form_action = FUSION_SELF.$aidlink;
 		if (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id'])) {
 			$form_action .= "&amp;action=".$_GET['action']."&amp;module_id=".$_GET['module_id'];
-
 			$result = dbquery("SELECT * FROM ".$this->field_db." WHERE field_id='".$_GET['module_id']."'");
 			if (dbrows($result) > 0) {
 				$data += dbarray($result);
 			} else {
-				//	redirect(FUSION_SELF.$aidlink);
+				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			}
 			if ($this->debug) print_p($data);
 			$data['add_module'] = isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $data['field_name'];
@@ -979,7 +979,7 @@ class quantumFields {
 			if (dbrows($result) > 0) {
 				$data += dbarray($result);
 			} else {
-				redirect(FUSION_SELF.$aidlink);
+				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			}
 			// override by post.
 			$data['field_cat_id'] = isset($_POST['field_cat_id']) ? form_sanitizer($_POST['field_cat_id'], '', 'field_cat_id') : $data['field_cat_id'];
@@ -1086,7 +1086,7 @@ class quantumFields {
 		$(this).val() == '0' ? $('#page_settings').show() : $('#page_settings').hide()
 		});
 		");
-		echo form_button('Save Category', 'save_cat', 'save_cat', 'save_cat', array('class' => 'btn-sm btn-primary'));
+		echo form_button($locale['fields_0318'], 'save_cat', 'save_cat', 'save_cat', array('class' => 'btn-sm btn-primary'));
 		echo closeform();
 	}
 
