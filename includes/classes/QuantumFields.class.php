@@ -38,6 +38,8 @@ class quantumFields {
 	private $available_fields = array();
 	private $available_field_info = array();
 	private $user_field_dbinfo = '';
+	public $method = 'input';
+	public $callback_data = array(); // $data of a $result;
 
 	/* Constructor */
 	public function boot() {
@@ -137,7 +139,7 @@ class quantumFields {
 					echo "</div>\n";
 				}
 				if (isset($this->page[$page_id])) {
-					echo "<div class='list-group-item display-inline-block'>\n";
+					echo "<div class='list-group-item display-inline-block m-t-20'>\n";
 					echo "<span class='strong'>".$page_details['field_cat_name']."</span> <a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$locale['edit']."</a> - ";
 					echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$locale['delete']."</a>";
 					echo "</div>\n";
@@ -1237,14 +1239,17 @@ class quantumFields {
 	}
 
 	/* Stable components only */
-	private function phpfusion_field_DOM($data) {
+	public function phpfusion_field_DOM($data) {
 		// deactivate all.
 		//print_p($data);
-		global $settings, $locale;
-		$profile_method = 'input';
-		$user_data = array();
+		global $settings, $aidlink;
+		$locale = $this->locale;
+
 		$options['deactivate'] = 0;
 		$options['inline'] = 1;
+		$profile_method = $this->method;
+		$user_data = ($this->callback_data) ? $this->callback_data : array();
+
 		if ($data['field_error']) $options['error_text'] = $data['field_error'];
 		if ($data['field_required']) $options['required'] = $data['field_required'];
 		if ($data['field_default']) $options['placeholder'] = $data['field_default'];
@@ -1254,28 +1259,30 @@ class quantumFields {
 			if (file_exists($this->plugin_folder.$data['field_name']."_include.php")) include $this->plugin_folder.$data['field_name']."_include.php";
 			if (isset($user_fields)) return $user_fields;
 		} elseif ($data['field_type'] == 'textbox') {
-			return form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			return ($profile_method == 'input') ? form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options) : $user_data[$data['field_name']] ? array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]) : '';
 		} elseif ($data['field_type'] == 'select') {
-			return form_select($data['field_title'], $data['field_name'], $data['field_name'], $option_list, '', $options);
+			return ($profile_method == 'input') ? form_select($data['field_title'], $data['field_name'], $data['field_name'], $option_list, '', $options) : "<span class='profile_text'>".$this->subject[$data['field_name']]."</span>";
 		} elseif ($data['field_type'] == 'textarea') {
-			return form_textarea($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			return ($profile_method == 'input') ? form_textarea($data['field_title'], $data['field_name'], $data['field_name'], '', $options) : "<span class='profile_text'>".$this->user_data[$data['field_name']]."</span>";
 		} elseif ($data['field_type'] == 'checkbox') {
-			return form_checkbox($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			return ($profile_method == 'input') ? form_checkbox($data['field_title'], $data['field_name'], $data['field_name'], '', $options) : "<span class='profile_text'>".$user_data[$data['field_name']]."</span>";
 		} elseif ($data['field_type'] == 'datepicker') {
-			return form_datepicker($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			return ($profile_method == 'input') ? form_datepicker($data['field_title'], $data['field_name'], $data['field_name'], '', $options) : "<span class='profile_text'>".$user_data[$data['field_name']]."</span>";
 		} elseif ($data['field_type'] == 'colorpicker') {
-			return form_colorpicker($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			return ($profile_method == 'input') ? form_colorpicker($data['field_title'], $data['field_name'], $data['field_name'], '', $options) : "<span class='profile_text'>".$user_data[$data['field_name']]."</span>";
 		} elseif ($data['field_type'] == 'uploader') {
-			return form_fileinput($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			return ($profile_method == 'input') ? form_fileinput($data['field_title'], $data['field_name'], $data['field_name'], '', $options) : "<span class='profile_text'>".$user_data[$data['field_name']]."</span>";
 		} elseif ($data['field_type'] == 'hidden') {
-			return form_hidden($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			return ($profile_method == 'input') ? form_hidden($data['field_title'], $data['field_name'], $data['field_name'], '', $options) : '';
 		} elseif ($data['field_type'] == 'address') {
-			return form_address($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			return ($profile_method == 'input') ? form_address($data['field_title'], $data['field_name'], $data['field_name'], '', $options) : "<span class='profile_text'>".$user_data[$data['field_name']]."</span>";
 		} elseif ($data['field_type'] == 'toggle') {
-			return form_toggle($data['field_title'], $data['field_name'], $data['field_name'], array($locale['off'],
-				$locale['on']), $data['field_name'], $options);
+			return ($profile_method == 'input') ? form_toggle($data['field_title'], $data['field_name'], $data['field_name'], array($locale['off'],	$locale['on']), $data['field_name'], $options) : "<span class='profile_text'>".$user_data[$data['field_name']]."</span>";
 		}
 	}
+
+
+
 }
 
 ?>
