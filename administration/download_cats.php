@@ -18,16 +18,16 @@
 require_once "../maincore.php";
 if (!checkrights("DC") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) redirect("../index.php");
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/download-cats.php";
+include LOCALE.LOCALESET."admin/downloads.php";
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
-		$message = $locale['410'];
+		$message = $locale['download_0150'];
 	} elseif ($_GET['status'] == "su") {
-		$message = $locale['411'];
+		$message = $locale['download_0151'];
 	} elseif ($_GET['status'] == "deln") {
-		$message = $locale['412']."<br />\n<span class='small'>".$locale['413']."</span>";
+		$message = $locale['download_0152']."<br />\n<span class='small'>".$locale['download_0153']."</span>";
 	} elseif ($_GET['status'] == "dely") {
-		$message = $locale['414'];
+		$message = $locale['download_0154'];
 	}
 	if ($message) {
 		echo "<div id='close-message'><div class='admin-message alert alert-warning m-t-10'>".$message."</div></div>\n";
@@ -70,7 +70,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 					redirect(FUSION_SELF.$aidlink."&status=sn");
 				} else {
 					$defender->stop();
-					$defender->addNotice($locale['461']);
+					$defender->addNotice($locale['download_0352']);
 				}
 			}
 		}
@@ -96,7 +96,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 			}
 			$cat_sort_order = $cat_sorting[1];
 			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['download_cat_id'];
-			$openTable = $locale['400'];
+			$openTable = $locale['download_0021'];
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
@@ -109,16 +109,16 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$cat_sort_by = "";
 		$cat_sort_order = "ASC";
 		$formaction = FUSION_SELF.$aidlink;
-		$openTable = $locale['401'];
+		$openTable = $locale['download_0022'];
 	}
 
 	opentable($openTable);
 
-	$tab_title['title'][] = "Category Listing";
+	$tab_title['title'][] = $locale['download_0020'];
 	$tab_title['id'][] = "dcats";
 	$tab_title['icon'][] = '';
 
-	$tab_title['title'][] = "Add Category";
+	$tab_title['title'][] = $locale['download_0022'];
 	$tab_title['id'][] = "dadd";
 	$tab_title['icon'][] = '';
 
@@ -134,29 +134,29 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	showcatlist();
 
 	if ($row_num == 0) {
-		echo "<div class='well text-center'>".$locale['445']."</div>\n";
+		echo "<div class='well text-center'>".$locale['download_0313']."</div>\n";
 	}
 	echo "</div>\n";
 	echo closetabbody();
 
 	echo opentabbody($tab_title['title'][1], 'dadd', $tab_active);
 	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0, 'class'=>'m-t-20'));
-	echo form_text($locale['420'], 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
-	echo form_textarea($locale['421'], 'cat_description', 'cat_description', $cat_description, array('resize'=>0));
-	echo form_select_tree($locale['428'], "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
+	echo form_text($locale['download_0300'], 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['download_0351']));
+	echo form_textarea($locale['download_0301'], 'cat_description', 'cat_description', $cat_description, array('resize'=>0));
+	echo form_select_tree($locale['download_0308'], "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 	if (multilang_table("DL")) {
 		echo form_select($locale['global_ML100'], 'cat_language', 'cat_language', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
 	} else {
 		form_hidden('', 'cat_language', 'cat_language', $cat_language);
 	}
-	$array = array('1' => $locale['423'], '2' => $locale['424'], '3' => $locale['425']);
-	$array2 = array('ASC' => $locale['426'], 'DESC' => $locale['427']);
+	$array = array('1' => $locale['download_0303'], '2' => $locale['download_0304'], '3' => $locale['download_0305']);
+	$array2 = array('ASC' => $locale['download_0306'], 'DESC' => $locale['download_0307']);
 	echo "<div class='clearfix'>\n";
-	echo form_select($locale['422'], 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
+	echo form_select($locale['download_0302'], 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
 	echo form_select('', 'cat_sort_order', 'cat_sort_order', $array2, $cat_sort_order, array('placeholder' => $locale['choose']));
 	echo "</div>\n";
 	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-t-10 m-r-10'));
-	echo form_button($locale['429'], 'save_cat', 'save_cat', $locale['429'], array('class' => 'btn-primary btn-sm m-t-10'));
+	echo form_button($locale['download_0309'], 'save_cat', 'save_cat', $locale['download_0309'], array('class' => 'btn-primary btn-sm m-t-10'));
 	echo closeform();
 	echo closetabbody();
 	echo closetab();
@@ -180,8 +180,8 @@ function showcatlist($parent = 0, $level = 0) {
 			echo "<div class='list-group-item clearfix'>\n";
 
 			echo "<div class='btn-group pull-right m-t-5'>\n";
-			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'>".$locale['443']."</a>";
-			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['450']."');\">".$locale['444']."</a>\n";
+			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'>".$locale['edit']."</a>";
+			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\">".$locale['delete']."</a>\n";
 			echo "</div>\n";
 
 			echo "<div class='overflow-hide p-r-10'>\n";

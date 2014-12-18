@@ -23,34 +23,34 @@ if (!checkrights("D") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include LOCALE.LOCALESET."admin/downloads.php";
-add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['400b']));
+add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['download_0001']));
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;
 
 $message = '';
 if (isset($_GET['status'])) {
 	if ($_GET['status'] == "sn") {
-		$message .= $locale['410'];
+		$message .= $locale['download_0100'];
 	} elseif ($_GET['status'] == "su") {
-		$message .= $locale['411'];
+		$message .= $locale['download_0101'];
 	} elseif ($_GET['status'] == "del") {
-		$message .= $locale['412'];
+		$message .= $locale['download_0102'];
 	}
 }
 if ($message != "") {
 	echo "<div id='close-message'><div class='alert alert-info m-t-10 admin-message'>".$message."</div></div>\n";
 }
 	// master template
-	$master_tab_title['title'][] = $locale['402'];
+	$master_tab_title['title'][] = $locale['download_0000'];
 	$master_tab_title['id'][] = "downloads";
 	$master_tab_title['icon'][] = "";
 
-	$master_tab_title['title'][] = isset($_GET['action']) ? $locale['401'] : $locale['400'];
+	$master_tab_title['title'][] = isset($_GET['action']) ? $locale['download_0003'] : $locale['download_0002'];
 	$master_tab_title['id'][] = "dlopts";
 	$master_tab_title['icon'][] = "";
 
 	$master_tab_active = isset($_GET['status']) ? tab_active($master_tab_title, 0) : tab_active($master_tab_title, 1);
 
-	opentable($locale['400b']);
+	opentable($locale['download_0001']);
 	echo opentab($master_tab_title, $master_tab_active, 'download-master');
 	echo opentabbody($master_tab_title['title'][0], 'downloads', $master_tab_active);
 	echo "<div class='m-t-20'>\n";
@@ -127,16 +127,16 @@ function download_form() {
 				$defender->stop();
 				if ($upload['error'] == 1) {
 					// Maximum file size exceeded
-					$defender->addNotice(sprintf($locale['415'], $max_size));
+					$defender->addNotice(sprintf($locale['download_0105'], $max_size));
 				} elseif ($upload['error'] == 2) {
 					// Invalid file extension
-					$defender->addNotice(sprintf($locale['416'], $settings['download_types']));
+					$defender->addNotice(sprintf($locale['download_0108'], $settings['download_types']));
 				} elseif ($upload['error'] == 3) {
 					// Invalid query string
-					$defender->addNotice($locale['419a']);
+					$defender->addNotice($locale['download_0113']);
 				} elseif ($upload['error'] == 4) {
 					// File not uploaded
-					$defender->addNotice($locale['418']);
+					$defender->addNotice($locale['download_0111']);
 				}
 			}
 			else {
@@ -159,7 +159,7 @@ function download_form() {
 
 		else {
 			$defender->stop();
-			$defender->addNotice($locale['418']);
+			$defender->addNotice($locale['download_0111']);
 		}
 
 
@@ -197,27 +197,27 @@ function download_form() {
 				switch ($upload['error']) {
 					case 1:
 						// Invalid file size
-						$defender->addNotice(sprintf($locale['415'], $settings['download_screen_max_b']));
+						$defender->addNotice(sprintf($locale['download_0105'], $settings['download_screen_max_b']));
 						break;
 					case 2:
 						// Unsupported image type
 						$error = 10;
-						$defender->addNotice(sprintf($locale['416a'], '.jpg,.png,.gif'));
+						$defender->addNotice(sprintf($locale['download_0109'], '.jpg,.png,.gif'));
 						break;
 					case 3:
 						// Invalid image resolution
 						$error = 11;
-						$defender->addNotice(sprintf($locale['415'], "".$width." x ".$height.""));
+						$defender->addNotice(sprintf($locale['download_0105'], "".$width." x ".$height.""));
 						break;
 					case 4:
 						// Invalid query string
 						$error = 12;
-						$defender->addNotice($locale['419a']);
+						$defender->addNotice($locale['download_0113']);
 						break;
 					case 5:
 						// Image not uploaded
 						//$error = 13;
-						$defender->addNotice($locale['419a']);
+						$defender->addNotice($locale['download_0113']);
 						break;
 				}
 				/*
@@ -337,42 +337,42 @@ function download_form() {
 	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 0, 'enctype' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8 col-md-7 col-lg-8'>\n";
-	echo form_text($locale['420'], 'download_title', 'download_title', $data['download_title'], array('required' => 1, 'error_text'=>$locale['417']));
-	echo form_select($locale['421c'], 'download_keywords', 'download_keywords', array(), $data['download_keywords'], array('max_length' => 320, 'width'=>'100%', 'tags'=>1, 'multiple' => 1));
+	echo form_text($locale['download_0200'], 'download_title', 'download_title', $data['download_title'], array('required' => 1, 'error_text'=>$locale['download_0110']));
+	echo form_select($locale['download_0203'], 'download_keywords', 'download_keywords', array(), $data['download_keywords'], array('max_length' => 320, 'width'=>'100%', 'tags'=>1, 'multiple' => 1));
 	echo "<hr/>\n";
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-5 col-lg-4'>\n";
 	openside();
-	echo form_select_tree($locale['423'], "download_cat", "download_cat", $data['download_cat'], array("no_root" => 1, "placeholder" => $locale['choose']), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
+	echo form_select_tree($locale['download_0207'], "download_cat", "download_cat", $data['download_cat'], array("no_root" => 1, "placeholder" => $locale['choose']), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 	echo form_hidden('', 'download_id', 'download_id', $data['download_id']);
-	echo form_button($locale['428'], 'save_download', 'save_download', $locale['428'], array('class' => 'btn-primary m-r-10'));
+	echo form_button($locale['download_0212'], 'save_download', 'save_download', $locale['download_0212'], array('class' => 'btn-primary m-r-10'));
 	closeside();
 	echo "</div>\n</div>\n"; // end row.
 	// second row
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8 col-md-7 col-lg-8'>\n";
-	$tab_title['title'][] = $locale['430'];
+	$tab_title['title'][] = $locale['download_0214'];
 	$tab_title['id'][] = 'dlf';
 	$tab_title['icon'][] = '';
-	$tab_title['title'][] = $locale['430b'];
+	$tab_title['title'][] = $locale['download_0215'];
 	$tab_title['id'][] = 'dll';
 	$tab_title['icon'][] = '';
 	$tab_active = tab_active($tab_title, 0);
-	echo "<p class='strong pull-right'>".$locale['421d']." <span class='required'>*</span></p>";
+	echo "<p class='strong pull-right'>".$locale['download_0204']." <span class='required'>*</span></p>";
 	echo opentab($tab_title, $tab_active, 'downloadtab');
 	echo opentabbody($tab_title['title'][0], 'dlf', $tab_active);
 	if (!empty($data['download_file'])) {
-		echo "<div class='list-group-item m-t-10'>".$locale['430']." - <a href='".DOWNLOADS.$data['download_file']."'>".DOWNLOADS.$data['download_file']."</a>\n";
+		echo "<div class='list-group-item m-t-10'>".$locale['download_0214']." - <a href='".DOWNLOADS.$data['download_file']."'>".DOWNLOADS.$data['download_file']."</a>\n";
 		echo "<hr/>\n";
-		echo form_checkbox($locale['431'], 'del_upload', 'del_upload', '', array('class'=>'m-b-0'));
+		echo form_checkbox($locale['download_0216'], 'del_upload', 'del_upload', '', array('class'=>'m-b-0'));
 		echo "</div>\n";
 		echo form_hidden('', 'download_file', 'download_file', $data['download_file']);
 	} else {
 		echo "<div class='list-group m-t-10'><div class='list-group-item'>\n";
-		echo form_fileinput($locale['430'], 'download_file', 'download_file', DOWNLOADS, ''); // all file types.
-		echo sprintf($locale['433'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
+		echo form_fileinput($locale['download_0214'], 'download_file', 'download_file', DOWNLOADS, ''); // all file types.
+		echo sprintf($locale['download_0218'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
 		echo "</div>\n";
 		echo "<div class='list-group-item'>\n";
-		echo "<input type='checkbox' name='calc_upload' id='calc_upload' value='1' /> <label for='calc_upload'>".$locale['432']."</label>\n";
+		echo "<input type='checkbox' name='calc_upload' id='calc_upload' value='1' /> <label for='calc_upload'>".$locale['download_0217']."</label>\n";
 		echo "</div>\n";
 		echo "</div>\n";
 	}
@@ -381,7 +381,7 @@ function download_form() {
 	echo opentabbody($tab_title['title'][1], 'dll', $tab_active);
 	if (empty($data['download_file'])) {
 		echo "<div class='list-group m-t-10'><div class='list-group-item'>\n";
-		echo form_text($locale['422'], 'download_url', 'download_url', $data['download_url']);
+		echo form_text($locale['download_0206'], 'download_url', 'download_url', $data['download_url']);
 		echo "</div>\n</div>\n";
 	} else {
 		echo "<div class='alert alert-info m-t-10'>\n";
@@ -393,9 +393,9 @@ function download_form() {
 	echo closetab();
 	echo "<hr/>\n";
 	echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-	echo form_text($locale['424'], 'download_license', 'download_license', $data['download_license'], array('inline' => 1));
+	echo form_text($locale['download_0208'], 'download_license', 'download_license', $data['download_license'], array('inline' => 1));
 	echo "</div><div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-	echo form_text($locale['436'], 'download_copyright', 'download_copyright', $data['download_copyright'], array('inline' => 1));
+	echo form_text($locale['download_0222'], 'download_copyright', 'download_copyright', $data['download_copyright'], array('inline' => 1));
 	echo "</div></div>\n";
 	echo "<hr/>\n";
 
@@ -403,28 +403,28 @@ function download_form() {
 
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-5 col-lg-4'>\n";
 	openside('Additional Info');
-	echo form_text($locale['425'], 'download_os', 'download_os', $data['download_os'], array('inline' => 1));
-	echo form_text($locale['426'], 'download_version', 'download_version', $data['download_version'], array('inline' => 1));
-	echo form_text($locale['435'], 'download_homepage', 'download_homepage', $data['download_homepage'], array('inline' => 1));
-	echo form_text($locale['427'], 'download_filesize', 'download_filesize', $data['download_filesize'], array('inline' => 1));
+	echo form_text($locale['download_0209'], 'download_os', 'download_os', $data['download_os'], array('inline' => 1));
+	echo form_text($locale['download_0210'], 'download_version', 'download_version', $data['download_version'], array('inline' => 1));
+	echo form_text($locale['download_0221'], 'download_homepage', 'download_homepage', $data['download_homepage'], array('inline' => 1));
+	echo form_text($locale['download_0211'], 'download_filesize', 'download_filesize', $data['download_filesize'], array('inline' => 1));
 	closeside();
 	echo "</div>\n</div>\n"; // end row.
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8 col-md-7 col-lg-8'>\n";
-	echo form_textarea($locale['421b'], 'download_description_short', 'download_description_short', $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['419'], 'no_resize' => '1', 'maxlength' => '255', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
-	echo form_textarea($locale['421'], 'download_description', 'download_description', $data['download_description'], array('no_resize' => '1', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
-	echo form_select($locale['421e'], 'download_visibility', 'download_visibility', $visibility_opts, $data['download_visibility'], array('placeholder' => $locale['choose'], 'inline' => 1));
+	echo form_textarea($locale['download_0202'], 'download_description_short', 'download_description_short', $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['download_0112'], 'no_resize' => '1', 'maxlength' => '255', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
+	echo form_textarea($locale['download_0201'], 'download_description', 'download_description', $data['download_description'], array('no_resize' => '1', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
+	echo form_select($locale['download_0205'], 'download_visibility', 'download_visibility', $visibility_opts, $data['download_visibility'], array('placeholder' => $locale['choose'], 'inline' => 1));
 
 	// go for multiple.
 	if ($settings['download_screenshot']) {
 		if (!empty($data['download_image']) && !empty($data['download_image_thumb'])) {
 			echo "<img src='".DOWNLOADS."images/".$data['download_image_thumb']."' /><br />\n";
-			echo "<label><input type='checkbox' name='del_image' value='1' /> ".$locale['431']."</label>\n";
+			echo "<label><input type='checkbox' name='del_image' value='1' /> ".$locale['download_0216']."</label>\n";
 			echo "<input type='hidden' name='download_image' value='".$data['download_image']."' />";
 			echo "<input type='hidden' name='download_image_thumb' value='".$data['download_image_thumb']."' />";
 		} else {
-			echo form_fileinput($locale['434'], 'download_image', 'download_image', DOWNLOADS, '', array('type' => 'image')); // all file types.
-			echo sprintf($locale['433b'], parsebytesize($settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $settings['download_screen_max_w'], $settings['download_screen_max_h'])."<br />\n";
+			echo form_fileinput($locale['download_0220'], 'download_image', 'download_image', DOWNLOADS, '', array('type' => 'image')); // all file types.
+			echo sprintf($locale['download_0219'], parsebytesize($settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $settings['download_screen_max_w'], $settings['download_screen_max_h'])."<br />\n";
 		}
 	}
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-5 col-lg-4'>\n";
@@ -432,27 +432,27 @@ function download_form() {
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 		$sys = "";
 		if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
-			$sys = $locale['464'];
+			$sys = $locale['comments_ratings'];
 		} elseif ($settings['comments_enabled'] == "0") {
-			$sys = $locale['462'];
+			$sys = $locale['comments'];
 		} else {
-			$sys = $locale['463'];
+			$sys = $locale['ratings'];
 		}
-		echo "<div class='well'>".sprintf($locale['461'], $sys)."</div>\n";
+		echo "<div class='well'>".sprintf($locale['download_0256'], $sys)."</div>\n";
 	}
-	echo form_checkbox($locale['437'], 'download_allow_comments', 'download_allow_comments', $data['download_allow_comments']);
-	echo form_checkbox($locale['438'], 'download_allow_ratings', 'download_allow_ratings', $data['download_allow_ratings']);
+	echo form_checkbox($locale['download_0223'], 'download_allow_comments', 'download_allow_comments', $data['download_allow_comments']);
+	echo form_checkbox($locale['download_0224'], 'download_allow_ratings', 'download_allow_ratings', $data['download_allow_ratings']);
 
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
-		echo form_checkbox($locale['429'], 'update_datestamp', 'update_datestamp', '');
+		echo form_checkbox($locale['download_0213'], 'update_datestamp', 'update_datestamp', '');
 	}
 	closeside();
 	echo "</div>\n</div>\n"; // end row.
 	echo form_hidden('', 'download_user', 'download_user', $userdata['user_id']);
 	echo "<div class='m-t-20'>\n";
-	echo form_button($locale['428'], 'save_download', 'save_download2', $locale['428'], array('class' => 'btn-primary m-r-10'));
+	echo form_button($locale['download_0212'], 'save_download', 'save_download2', $locale['download_0212'], array('class' => 'btn-primary m-r-10'));
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
-		echo "<button type='reset' name='reset' value='".$locale['439']."' class='button btn btn-default' onclick=\"location.href='".FUSION_SELF.$aidlink."';\"/>".$locale['439']."</button>";
+		echo "<button type='reset' name='reset' value='".$locale['download_0225']."' class='button btn btn-default' onclick=\"location.href='".FUSION_SELF.$aidlink."';\"/>".$locale['download_0225']."</button>";
 	}
 	echo "</div>\n";
 	echo closeform();
@@ -464,7 +464,7 @@ function download_listing() {
 
 	$result = dbcount("(download_cat_id)", DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
 	if (!empty($result)) {
-		opentable($locale['402']);
+		opentable($locale['download_0000']);
 		$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ORDER BY download_cat_name");
 		if (dbrows($result)) {
 			echo opencollapse('download-list');
@@ -481,8 +481,8 @@ function download_listing() {
 				echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 				// edit link
 				echo "<div class='btn-group pull-right'>\n";
-				echo "<a class='btn btn-default btn-xs' href='".ADMIN."download_cats.php".$aidlink."&amp;action=edit&cat_id=".$data['download_cat_id']."'>".$locale['442']."</a>\n";
-				echo "<a class='btn btn-default btn-xs' href='".ADMIN."download_cats.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."'>".$locale['443']."</a>\n";
+				echo "<a class='btn btn-default btn-xs' href='".ADMIN."download_cats.php".$aidlink."&amp;action=edit&cat_id=".$data['download_cat_id']."'>".$locale['edit']."</a>\n";
+				echo "<a class='btn btn-default btn-xs' href='".ADMIN."download_cats.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."'>".$locale['delete']."</a>\n";
 				echo "</div>\n";
 				echo "</div>\n</div>\n"; // end row
 				echo "</div>\n"; // end panel-heading
@@ -509,9 +509,9 @@ function download_listing() {
 						echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";
 						echo nl2br(parseubb($data2['download_description_short']));
 						echo "<div>\n";
-						echo "<a class='m-r-10' href='$download_url'>".$locale['400b']."</a>\n";
-						echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."'>".$locale['442']."</a>\n";
-						echo "<a  class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."' onclick=\"return confirm('".$locale['460']."');\">".$locale['443']."</a>\n";
+						echo "<a class='m-r-10' href='$download_url'>".$locale['download_0001']."</a>\n";
+						echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."'>".$locale['edit']."</a>\n";
+						echo "<a  class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."' onclick=\"return confirm('".$locale['download_0255']."');\">".$locale['delete']."</a>\n";
 						echo "</div>\n";
 
 						echo "</div>\n";
@@ -525,13 +525,13 @@ function download_listing() {
 			}
 			echo closecollapse();
 		} else {
-			echo "<div class='well text-center'>".$locale['450']."</div>\n";
+			echo "<div class='well text-center'>".$locale['download_0250']."</div>\n";
 		}
 		closetable();
 	} else {
 		echo "<div class='well text-center'>\n";
-		echo "".$locale['451']."<br />\n".$locale['452']."<br />\n";
-		echo "<a href='download_cats.php".$aidlink."'>".$locale['453']."</a>".$locale['454']."</div>\n";
+		echo "".$locale['download_0251']."<br />\n".$locale['download_0252']."<br />\n";
+		echo "<a href='download_cats.php".$aidlink."'>".$locale['download_0253']."</a>".$locale['download_0254']."</div>\n";
 		echo "</div>\n";
 	}
 }

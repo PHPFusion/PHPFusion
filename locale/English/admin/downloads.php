@@ -1,66 +1,92 @@
 <?php
 // Downloads titles
-$locale['400'] = "Add Download";
-$locale['400b'] = "Downloads";
-$locale['401'] = "Edit Download";
-$locale['402'] = "Current Downloads";
+$locale['download_0000'] = "Current Downloads";
+$locale['download_0001'] = "Downloads";
+$locale['download_0002'] = "Add Download";
+$locale['download_0003'] = "Edit Download";
+// Download Category titles
+$locale['download_0020'] = "Current Download Categories";
+$locale['download_0021'] = "Edit Download Category";
+$locale['download_0022'] = "Add Download Category";
 // Downloads messages
-$locale['410'] = "Download added";
-$locale['411'] = "Download updated";
-$locale['412'] = "Download deleted";
-$locale['413'] = "The following error has occured:";
-$locale['414'] = "Invalid filename.";
-$locale['415'] = "File must be less than %s.";
-$locale['415a'] = "Image must be less than %s.";
-$locale['415b'] = "Image must be smaller than %s.";
-$locale['416'] = "File must be one of the following file types: %s.";
-$locale['416a'] = "Image must be one of the following file types: %s.";
-$locale['417'] = "Download title cannot be left empty.";
-$locale['418'] = "Download file or url cannot be left empty.";
-$locale['419'] = "Download short description cannot be left empty.";
-$locale['419a'] = "Unknown error";
+$locale['download_0100'] = "Download added";
+$locale['download_0101'] = "Download updated";
+$locale['download_0102'] = "Download deleted";
+$locale['download_0103'] = "The following error has occured:";
+$locale['download_0104'] = "Invalid filename.";
+$locale['download_0105'] = "File must be less than %s.";
+$locale['download_0106'] = "Image must be less than %s.";
+$locale['download_0107'] = "Image must be smaller than %s.";
+$locale['download_0108'] = "File must be one of the following file types: %s.";
+$locale['download_0109'] = "Image must be one of the following file types: %s.";
+$locale['download_0110'] = "Download title cannot be left empty.";
+$locale['download_0111'] = "Download file or url cannot be left empty.";
+$locale['download_0112'] = "Download short description cannot be left empty.";
+$locale['download_0113'] = "Unknown error";
+// Download Category messages
+$locale['download_0150'] = "Download Category added";
+$locale['download_0151'] = "Download Category updated";
+$locale['download_0152'] = "Download Category cannot be deleted";
+$locale['download_0153'] = "There are Downloads or Sub-Categories linked to this category";
+$locale['download_0154'] = "Download Category deleted";
 // Downloads form
-$locale['420'] = "Download Title:";
-$locale['421'] = "Full Review:";
-$locale['421b'] = "Short description:";
-$locale['421c'] = "Keywords (separate each keyword with a ,):";
-$locale['421d'] = "Download Source (Either one required):";
-$locale['421e'] = "Visibility";
-$locale['422'] = "URL:";
-$locale['423'] = "Category:";
-$locale['424'] = "License:";
-$locale['425'] = "O/S:";
-$locale['426'] = "Version:";
-$locale['427'] = "Filesize:";
-$locale['428'] = "Save Download";
-$locale['429'] = "Update Publication Date";
-$locale['430'] = "Download File";
-$locale['430b'] = "Download Link";
-$locale['431'] = "Delete";
-$locale['432'] = "Calculate file size";
-$locale['433'] = "Max. filesize: %s / Allowed filetypes: %s";
-$locale['433b'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
-$locale['434'] = "Download Screenshot:";
-$locale['435'] = "Homepage:";
-$locale['436'] = "Copyright:";
-$locale['437'] = "Enable Comments";
-$locale['438'] = "Enable Ratings";
-$locale['439'] = "Cancel";
+$locale['download_0200'] = "Download Title:";
+$locale['download_0201'] = "Full Review:";
+$locale['download_0202'] = "Short description:";
+$locale['download_0203'] = "Keywords (separate each keyword with a ,):";
+$locale['download_0204'] = "Download Source (Either one required):";
+$locale['download_0205'] = "Visibility";
+$locale['download_0206'] = "URL:";
+$locale['download_0207'] = "Category:";
+$locale['download_0208'] = "License:";
+$locale['download_0209'] = "O/S:";
+$locale['download_0210'] = "Version:";
+$locale['download_0211'] = "Filesize:";
+$locale['download_0212'] = "Save Download";
+$locale['download_0213'] = "Update Publication Date";
+$locale['download_0214'] = "Download File";
+$locale['download_0215'] = "Download Link";
+$locale['download_0216'] = "Delete";
+$locale['download_0217'] = "Calculate file size";
+$locale['download_0218'] = "Max. filesize: %s / Allowed filetypes: %s";
+$locale['download_0219'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
+$locale['download_0220'] = "Download Screenshot:";
+$locale['download_0221'] = "Homepage:";
+$locale['download_0222'] = "Copyright:";
+$locale['download_0223'] = "Enable Comments";
+$locale['download_0224'] = "Enable Ratings";
+$locale['download_0225'] = "Cancel";
 // Current Downloads
-$locale['440'] = "Download Item [Click to Test]";
-$locale['441'] = "Options";
-$locale['442'] = "Edit";
-$locale['443'] = "Delete";
+$locale['download_0226'] = "Download Item [Click to Test]";
+$locale['download_0227'] = "Options";
 // No Downloads/Download Categories Defined
-$locale['450'] = "No Downloads have been addded to this Category";
-$locale['451'] = "There are no Download Categories defined";
-$locale['452'] = "You must define at least one category before you can add any Downloads";
-$locale['453'] = "Click here";
-$locale['454'] = " to go to Download Categories";
+$locale['download_0250'] = "No Downloads have been addded to this Category";
+$locale['download_0251'] = "There are no Download Categories defined";
+$locale['download_0252'] = "You must define at least one category before you can add any Downloads";
+$locale['download_0253'] = "Click here";
+$locale['download_0254'] = " to go to Download Categories";
 // Popup Error/Warning Messages
-$locale['460'] = "Delete this Download?";
-$locale['461'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
-$locale['462'] = "Comments";
-$locale['463'] = "Ratings";
-$locale['464'] = $locale['462']." and ".$locale['463'];
+$locale['download_0255'] = "Delete this Download?";
+$locale['download_0256'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
+// Download Category form
+$locale['download_0300'] = "Category Name:";
+$locale['download_0301'] = "Category Description:";
+$locale['download_0302'] = "Category Sorting:";
+$locale['download_0303'] = "Download ID";
+$locale['download_0304'] = "Download Title";
+$locale['download_0305'] = "Download Date";
+$locale['download_0306'] = "Ascending";
+$locale['download_0307'] = "Descending";
+$locale['download_0308'] = "Parent category:";
+$locale['download_0309'] = "Save Category";
+// Current Download Categories
+$locale['download_0310'] = "Category";
+$locale['download_0311'] = "Access";
+$locale['download_0312'] = "Options";
+$locale['download_0313'] = "There are no Download Categories defined";
+// Delete Download category
+$locale['download_0350'] = "Delete this download category?";
+// Error Messages
+$locale['download_0351'] = "Please enter a category name.";
+$locale['download_0352'] = "This category already exists.";
 ?>
