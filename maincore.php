@@ -298,7 +298,6 @@ function lang_switcher() {
 			}
 		}
 
-		include_once INCLUDES."translate_include.php";
 		if ($handle = opendir(LOCALE)) {
 			/* This is the correct way to loop over the directory. */
 			while (FALSE !== ($file = readdir($handle))) {
@@ -1238,6 +1237,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 	return $link;
 }
 
+require_once INCLUDES."translate_include.php";
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."notify/notify.inc.php";
 require_once INCLUDES."sqlhandler.inc.php";
