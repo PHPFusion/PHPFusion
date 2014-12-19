@@ -61,6 +61,7 @@ if ($profile_method == "input") {
 	*/
 	// Display in profile
 } elseif ($profile_method == "display") {
+	include LOCALE.LOCALESET."global.php";
 	if ($user_data['user_birthdate'] != "0000-00-00") {
 		$months = explode("|", $locale['months']);
 		$user_birthdate = explode("-", $user_data['user_birthdate']);

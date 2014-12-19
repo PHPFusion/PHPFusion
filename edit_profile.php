@@ -58,8 +58,8 @@ $userFields->postValue = $locale['u105'];
 $userFields->userData = $userdata;
 $userFields->plugin_folder = INCLUDES."user_fields/";
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-$userFields->errorsArray = $errors; // cut
-$userFields->showAvatarInput = TRUE; // cut
+//$userFields->errorsArray = $errors; // cut
+//$userFields->showAvatarInput = TRUE; // cut
 $userFields->setUserNameChange($settings['userNameChange']);
 $userFields->method = 'input';
 $userFields->renderInput();

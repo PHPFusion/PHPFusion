@@ -47,7 +47,8 @@ if ($profile_method == "input") {
 
 	// Display in profile
 } elseif ($profile_method == "display") {
-	// Insert and update
+	// no displaying.
+
 } elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
 	if ($settings['userthemes'] == 1 || iADMIN) {
 		// Get input data

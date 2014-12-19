@@ -295,7 +295,9 @@ class UserFields extends quantumFields {
 						$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
 						if (isset($item[$cat_id])) {
 							foreach($item[$cat_id] as $field_id => $field) {
-								$this->info['user_field'] .= $this->phpfusion_field_DOM($field);
+								if (!is_array($this->phpfusion_field_DOM($field))) {
+									$this->info['user_field'] .= $this->phpfusion_field_DOM($field);
+								}
 							}
 						}
 					} elseif ($this->method == 'display') { // model as array because profile can be templated.
