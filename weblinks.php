@@ -22,7 +22,7 @@ include THEMES."templates/global/weblinks.php";
 if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 	$res = 0;
 	$data = dbarray(dbquery("SELECT weblink_url,weblink_cat, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id='".$_GET['weblink_id']."'"));
-	if (checkgroup($data1['weblink_visibility'])) {
+	if (checkgroup($data['weblink_visibility'])) {
 		$res = 1;
 		$result = dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id='".$_GET['weblink_id']."'");
 		redirect($data['weblink_url']);
