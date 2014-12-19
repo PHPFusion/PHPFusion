@@ -21,49 +21,18 @@ if (!defined("IN_FUSION")) {
 // Display user field input
 if ($profile_method == "input") {
 	if (isset($user_data['user_birthdate']) && $user_data['user_birthdate'] != "0000-00-00") {
-		$user_birthdate = $user_data['user_birthdate'];
+		$user_birthdate = date('d-m-Y', $user_data['user_birthdate']);
 	} else {
-		$user_birthdate = "0-0-0";
+		$user_birthdate = '';
 	}
-	/*
-	$user_birthdate = explode("-", $user_birthdate);
-	$user_year = number_format($user_birthdate['0'], 0, ".", "");
-	$user_month = number_format($user_birthdate['1'], 0, ".", "");
-	$user_day = number_format($user_birthdate['2'], 0, ".", "");
-	*/
 	$options +=array('inline'=>1);
 	$user_fields = form_datepicker($locale['uf_birthdate'], 'user_birthdate', 'user_birthdate', $user_birthdate, array('inline'=>1));
-
-	/*
-	echo "<tr>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_birthdate")."'>";
-	echo "<label for='user_day_input'>".$locale['uf_birthdate'].$required." <span class='small2'>(dd/mm/yyyy)</span></label></td>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_birthdate")."'>";
-	echo "<select id='user_day_input' name='user_day' class='textbox'>\n<option value=''>&nbsp;</option>\n";
-	for ($bi = 1; $bi <= 31; $bi++) {
-		echo "<option value='".$bi."'".($user_day == $bi ? " selected='selected'" : "").">".$bi."</option>\n";
-	}
-	echo "</select>\n<select id='user_month_input' name='user_month' class='textbox'>\n<option value=''>&nbsp;</option>\n";
-	for ($bi = 1; $bi <= 12; $bi++) {
-		echo "<option value='".$bi."'".($user_month == $bi ? " selected='selected'" : "").">".$bi."</option>\n";
-	}
-	echo "</select>\n<select id='user_year_input' name='user_year' class='textbox'>\n<option value=''>&nbsp;</option>\n";
-	for ($bi = date("Y"); $bi > (date("Y")-99); $bi--) {
-		echo "<option value='".$bi."'".($user_year == $bi ? " selected='selected'" : "").">".$bi."</option>\n";
-	}
-	echo "</select>\n</td>\n";
-	echo "</tr>\n";
-	if ($required) {
-		$this->setRequiredJavaScript("user_day", $locale['uf_birthdate_error']);
-		$this->setRequiredJavaScript("user_month", $locale['uf_birthdate_error']);
-		$this->setRequiredJavaScript("user_year", $locale['uf_birthdate_error']);
-	}
-	*/
 	// Display in profile
 } elseif ($profile_method == "display") {
 	include LOCALE.LOCALESET."global.php";
 	if ($user_data['user_birthdate'] != "0000-00-00") {
 		$months = explode("|", $locale['months']);
+		// need to validate this part after display.input class done.
 		$user_birthdate = explode("-", $user_data['user_birthdate']);
 		$user_fields = array('title'=>$locale['uf_birthdate'], 'value'=>$months[number_format($user_birthdate['1'])]." ".$user_birthdate['2']." ".$user_birthdate['0']);
 	}
