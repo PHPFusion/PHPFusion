@@ -44,7 +44,7 @@ if ($_GET['stype'] == "l") {
 	}
 	add_to_title($locale['global_200'].$locale['400']);
 	opentable($locale['400']);
-	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("weblink_visibility")." ORDER BY weblink_cat_name");
+	$result = dbquery("SELECT weblink_cat_id, weblink_cat_name FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")." ORDER BY weblink_cat_name");
 	if (dbrows($result) > 0) {
 		$opts = array();
 		while ($data = dbarray($result)) {
@@ -320,7 +320,7 @@ if ($_GET['stype'] == "l") {
 	}
 	add_to_title($locale['global_200'].$locale['650']);
 	opentable($locale['650']);
-	$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("download_visibility")." ORDER BY download_cat_name");
+	$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name");
 	if (dbrows($result)) {
 		$opts = array();
 		while ($data = dbarray($result)) {
