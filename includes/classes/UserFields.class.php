@@ -32,8 +32,6 @@ class UserFields extends quantumFields {
 	public $showAdminOptions = FALSE;
 	public $showAdminPass = TRUE;
 	public $showAvatarInput = TRUE;
-	public $showAvatarOutput = TRUE; // new in API 1.02 - opts to turn off Avatar
-	public $showPages = TRUE; // new in API 1.02 - opts to break fields into pages.
 	public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
 	public $skipCurrentPass = FALSE;
 	public $registration = FALSE;
@@ -304,7 +302,7 @@ class UserFields extends quantumFields {
 						$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
 						if (isset($item[$cat_id])) {
 							foreach($item[$cat_id] as $field_id => $field) {
-								if ($this->callback_data[$field['field_name']] && $this->phpfusion_field_DOM($field)) $this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->phpfusion_field_DOM($field);
+								if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->phpfusion_field_DOM($field)) $this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->phpfusion_field_DOM($field);
 							}
 						}
 					}
