@@ -46,7 +46,7 @@ echo "<style type='text/css'>
 </style>\n";
 echo "</head>\n<body>\n";
 if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) && isnum($_GET['item_id']))) {
-	$result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, tac.article_cat_access,
+	$result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, article_datestamp, ta.article_visibility,
 		tu.user_id, tu.user_name, tu.user_status
 		FROM ".DB_ARTICLES." ta
 		INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
@@ -55,7 +55,7 @@ if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) &
 	$res = FALSE;
 	if (dbrows($result)) {
 		$data = dbarray($result);
-		if (checkgroup($data['article_cat_access'])) {
+		if (checkgroup($data['article_visibility'])) {
 			$res = TRUE;
 			$article = str_replace("<--PAGEBREAK-->", "", stripslashes($data['article_article']));
 			if ($data['article_breaks'] == "y") {

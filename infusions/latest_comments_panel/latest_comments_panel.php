@@ -54,7 +54,7 @@ if (dbrows($result)) {
 				$access = dbquery("	SELECT article_id FROM ".DB_ARTICLES." a, ".DB_ARTICLE_CATS." c WHERE
 									a.article_id='".$data['comment_item_id']."' AND
 									a.article_cat=c.article_cat_id AND
-									".groupaccess('c.article_cat_access')." AND
+									".groupaccess('a.article_visibility')." AND
 									a.article_draft='0'
 									");
 				if (dbrows($access) > 0) {

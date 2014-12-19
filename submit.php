@@ -214,7 +214,7 @@ if ($_GET['stype'] == "l") {
 		}
 		add_to_title($locale['global_200'].$locale['500']);
 		opentable($locale['500']);
-		$result = dbquery("SELECT article_cat_id, article_cat_name FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess("article_cat_access")." ORDER BY article_cat_name");
+		$result = dbquery("SELECT article_cat_id, article_cat_name FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name");
 		if (dbrows($result)) {
 			$cat_list = array();
 			while ($data = dbarray($result)) {

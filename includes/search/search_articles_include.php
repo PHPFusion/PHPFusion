@@ -40,7 +40,7 @@ if ($_GET['stype'] == "articles" || $_GET['stype'] == "all") {
 	if ($fieldsvar) {
 		$result = dbquery("SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
 			INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-			WHERE ".groupaccess('article_cat_access')." AND ".$fieldsvar."
+			WHERE ".groupaccess('article_visibility')." AND ".$fieldsvar."
 			".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".(time()-$_POST['datelimit']) : ""));
 		$rows = dbrows($result);
 	} else {
@@ -51,7 +51,7 @@ if ($_GET['stype'] == "articles" || $_GET['stype'] == "all") {
 		$result = dbquery("SELECT ta.*,tac.*, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ARTICLES." ta
 			INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 			LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-			WHERE ".groupaccess('article_cat_access')." AND ".$fieldsvar."
+			WHERE ".groupaccess('article_visibility')." AND ".$fieldsvar."
 			".($_POST['datelimit'] != 0 ? " AND article_datestamp>=".(time()-$_POST['datelimit']) : "")."
 			ORDER BY ".$sortby." ".($_POST['order'] != 1 ? "ASC" : "DESC").($_GET['stype'] != "all" ? " LIMIT ".$_POST['rowstart'].",10" : ""));
 		while ($data = dbarray($result)) {

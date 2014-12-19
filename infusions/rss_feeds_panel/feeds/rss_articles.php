@@ -31,7 +31,7 @@ if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
 
 	$result = dbquery("SELECT ta.*,tac.* FROM ".DB_ARTICLES." ta
 	INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-	WHERE ".groupaccess('article_cat_access').(multilang_table("AR")?" AND article_cat_language='".LANGUAGE."'":"")."
+	WHERE ".groupaccess('article_visibility').(multilang_table("AR")?" AND article_cat_language='".LANGUAGE."'":"")."
 	ORDER BY article_datestamp DESC LIMIT 0,10");
 
 	echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
