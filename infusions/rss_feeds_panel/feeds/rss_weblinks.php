@@ -32,7 +32,7 @@ if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
 	$result = dbquery("
 	SELECT tbl1.*, tbl2.* FROM ".DB_WEBLINK_CATS." tbl1
 	RIGHT JOIN ".DB_WEBLINKS." tbl2 ON tbl1.weblink_cat_id=tbl2.weblink_cat
-	WHERE ".groupaccess('weblink_cat_access').(multilang_table("WL")?" AND weblink_cat_language='".LANGUAGE."'":"")."
+	WHERE ".groupaccess('weblink_visibility').(multilang_table("WL")?" AND weblink_cat_language='".LANGUAGE."'":"")."
 	ORDER BY tbl2.weblink_count DESC LIMIT 0,10");
 
 	echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";

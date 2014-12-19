@@ -39,7 +39,7 @@ if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
 	if ($fieldsvar) {
 		$result = dbquery("SELECT td.*,tdc.* FROM ".DB_DOWNLOADS." td
 			INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
-			WHERE ".groupaccess('download_cat_access')." AND ".$fieldsvar."
+			WHERE ".groupaccess('download_visibility')." AND ".$fieldsvar."
 			".($_POST['datelimit'] != 0 ? " AND download_datestamp>=".(time()-$_POST['datelimit']) : ""));
 		$rows = dbrows($result);
 	} else {

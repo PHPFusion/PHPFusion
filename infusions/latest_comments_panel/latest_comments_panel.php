@@ -104,7 +104,7 @@ if (dbrows($result)) {
 				$access = dbquery("	SELECT download_id FROM ".DB_DOWNLOADS." d, ".DB_DOWNLOAD_CATS." c WHERE
 									d.download_id='".$data['comment_item_id']."' AND
 									d.download_cat=c.download_cat_id AND
-									".groupaccess('c.download_cat_access'));
+									".groupaccess('d.download_visibility'));
 				if (dbrows($access) > 0) {
 					$comment = trimlink($data['comment_message'], 23);
 					$commentStart = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$data['comment_item_id']."' AND comment_type='D' AND comment_id<=".$data['comment_id']);

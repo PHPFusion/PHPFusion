@@ -40,7 +40,7 @@ if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
 	if ($fieldsvar) {
 		$result = dbquery("SELECT tw.*,twc.* FROM ".DB_WEBLINKS." tw
 			INNER JOIN ".DB_WEBLINK_CATS." twc ON tw.weblink_cat=twc.weblink_cat_id
-			WHERE ".groupaccess('weblink_cat_access')." AND ".$fieldsvar."
+			WHERE ".groupaccess('weblink_visibility')." AND ".$fieldsvar."
 			".($_POST['datelimit'] != 0 ? " AND weblink_datestamp>=".(time()-$_POST['datelimit']) : ""));
 		$rows = dbrows($result);
 	} else {

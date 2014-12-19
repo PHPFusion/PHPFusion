@@ -31,7 +31,7 @@ if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
 
 	$result = dbquery("SELECT tbl1.*, tbl2.* FROM ".DB_DOWNLOAD_CATS." tbl1
 	RIGHT JOIN ".DB_DOWNLOADS." tbl2 ON tbl1.download_cat_id=tbl2.download_cat
-	WHERE ".groupaccess('download_cat_access').(multilang_table("DL")?" AND download_cat_language='".LANGUAGE."'":"")."
+	WHERE ".groupaccess('download_visibility').(multilang_table("DL")?" AND download_cat_language='".LANGUAGE."'":"")."
 	ORDER BY tbl2.download_count DESC LIMIT 0,10");
 
 	echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
