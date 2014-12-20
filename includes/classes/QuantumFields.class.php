@@ -98,9 +98,11 @@ class quantumFields {
 	public function load_data() {
 		// get the page first.
 		$this->page = dbquery_tree_full($this->category_db, 'field_cat_id', 'field_parent', "ORDER BY field_cat_order ASC");
-		$result = dbquery("SELECT field.*, cat.* FROM
+		$result = dbquery("SELECT field.*, cat.field_cat_id, cat.field_cat_name,  cat.field_parent, cat.field_cat_class,
+		root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index FROM
 		".$this->field_db." field
 		LEFT JOIN ".$this->category_db." cat on (cat.field_cat_id = field.field_cat)
+		LEFT JOIN ".$this->category_db." root on (root.field_cat_id = cat.field_parent)
 		ORDER BY cat.field_cat_order ASC, field.field_order ASC
 		");
 		$this->max_rows = dbrows($result);
@@ -1316,6 +1318,34 @@ class quantumFields {
 				return form_toggle($data['field_title'], $data['field_name'], $data['field_name'], $option_array, $data['field_name'], $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return array('title'=>$data['field_title'], 'value'=>$option_array[$this->callback_data[$data['field_name']]]);
+			}
+		}
+	}
+
+	/* record fields */
+	public function infinity_insert($mode) {
+		// print_p($this->fields);
+		// here i pair database to fields, and then i grab the $_post,
+		// run validation via defender and then return the value.
+		$infinity_list = array();
+		$target_database = '';
+		foreach($this->fields as $cat_id => $fields) {
+			foreach($fields as $field_id => $field_data) {
+				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
+				$infinity_list[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : '';
+			}
+		}
+		// now I will have the value of each post, all securely validated by defender.
+		//print_p($insert_list);
+		if (db_exists($target_database)) {
+			foreach($infinity_list as $database_name => $infinity_fields) {
+				/* if ($mode == 'update') {
+					dbquery_insert($database_name, $infinity_fields, 'update');
+				} else {
+					dbquery_insert($database_name, $infinity_fields, 'save');
+				} */
+				// which can be simplified again to
+				dbquery_insert($database_name, $infinity_fields, $mode);
 			}
 		}
 	}
