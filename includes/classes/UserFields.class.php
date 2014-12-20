@@ -137,17 +137,23 @@ class UserFields extends quantumFields {
 		// Account info
 		// Username
 		$html .= form_para($locale['u129'], 'account', 'profile_category_name');
-		$html .= (iADMIN || $this->_userNameChange) ? form_text($locale['u127'], 'user_name', 'user_name', $this->userData['user_name'], array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1)) : '';
+		if ($this->registration) {
+			$user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], '', 'user_name') : '';
+		} else {
+			$user_name = $this->userData['user_name'];
+		}
+
+		$html .= (iADMIN || $this->_userNameChange) ? form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1)) : '';
 		// Login Password
-		$passRequired = $this->skipCurrentPass ? 1 : 0; // $locale['u136'], password cannot be left empty.
-		$passRequired = $this->isAdminPanel ? 0 : $passRequired;
+		$passRequired = $this->registration ? 1 : 0;
+
 		$html .= (!$this->registration) ? "<div class='alert alert-info'>".$locale['u100']."</div>" : '';
 		$html .= form_para($locale['u132'], 'password', 'profile_category_name');
-		if (!$this->skipCurrentPass) {
-			$html .= form_text($locale['u133'], 'user_password', 'user_password_id', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+		if (!$passRequired) { // will not show on register.
+			$html .= form_text($locale['u133'], 'user_password', 'user_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 		}
-		$html .= form_text($this->registration ? $locale['u133'] : $locale['u134'], 'user_new_password',' user_new_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
-		$html .= form_text($locale['u135'], 'user_new_password2', 'user_new_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
+		$html .= form_text($this->registration ? $locale['u133'] : $locale['u134'], 'user_new_password',' user_new_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>$passRequired));
+		$html .= form_text($locale['u135'], 'user_new_password2', 'user_new_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>$passRequired));
 		$html .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
 		// Admin Password
 		if ($this->showAdminPass && iADMIN) {
