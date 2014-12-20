@@ -19,6 +19,7 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 require_once CLASSES."PasswordAuth.class.php";
+require_once CLASSES."QuantumFields.class.php";
 
 class UserFieldsInput {
 	public $adminActivation = 1;
@@ -109,11 +110,11 @@ class UserFieldsInput {
 		}
 		$this->_setEmptyFields();
 		$this->_setUserAvatar();
-		$this->_setCustomUserFieldsData();
+		// to deprecate this
+		//$this->_setCustomUserFieldsData();
 		print_p($this->data);
-		if ($this->_noErrors) {
-			$this->_setUserDataUpdate();
-		}
+		$this->_setUserDataUpdate();
+
 	}
 
 	public function getErrorsArray() {
@@ -706,7 +707,18 @@ class UserFieldsInput {
 	private function _setUserDataUpdate() {
 		global $locale;
 		$this->_saveUserLog();
-		$result = dbquery("UPDATE ".DB_USERS." SET ".$this->_dbValues." WHERE user_id='".$this->userData['user_id']."'");
+		$quantum = new quantumFields();
+		$quantum->category_db = DB_USER_FIELD_CATS;
+		$quantum->field_db = DB_USER_FIELDS;
+		$quantum->plugin_folder = INCLUDES."user_fields/";
+		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+		$quantum->load_data();
+
+		$result = dbquery_insert(DB_USERS, $this->data, 'update');
+		if ($result) {
+			$quantum->infinity_insert('update');
+		}
+		//$result = dbquery("UPDATE ".DB_USERS." SET ".$this->_dbValues." WHERE user_id='".$this->userData['user_id']."'");
 		$this->_completeMessage = $locale['u163'];
 	}
 
