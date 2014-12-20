@@ -178,12 +178,14 @@ class UserFieldsInput {
 	}
 
 	private function _settUserName() {
-		global $locale;
+		global $locale, $defender;
 		$this->_userName = isset($_POST['user_name']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_name']))) : "";
-
 		if ($this->_userName != "" && $this->_userName != $this->userData['user_name']) {
 			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
-				$this->_setError("user_name", $locale['u120']);
+				$defender->stop();
+				$defender->addNotice('user_name');
+				$defender->addHelperText('user_name', $locale['u120']);
+				$defender->addNotice($locale['u120']);
 			} else {
 				$name_active = dbcount("(user_id)", DB_USERS, "user_name='".$this->_userName."'");
 				$name_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_name='".$this->_userName."'");
@@ -191,11 +193,21 @@ class UserFieldsInput {
 					$this->_userLogFields[] = "user_name";
 					$this->_setDBValue("user_name", $this->_userName);
 				} else {
-					$this->_setError("user_name", $locale['u121']);
+					$defender->stop();
+					$defender->addNotice('user_name');
+					$defender->addHelperText('user_name', $locale['u121']);
+					$defender->addNotice($locale['u121']);
 				}
 			}
 		} else {
-			$this->_setError("user_name", $locale['u122'], true);
+			// User Name Cannot Be Left Empty
+			if ($this->_method != 'validate_update') {
+				$defender->stop();
+				$defender->addNotice('user_name');
+				$defender->addHelperText('user_name', $locale['u122']);
+				$defender->addNotice($locale['u122']);
+			}
+			//$this->_setError("user_name", $locale['u122'], true);
 		}
 	}
 

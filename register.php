@@ -76,12 +76,14 @@ if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['regi
 	$userFields->postValue = $locale['u101'];
 	$userFields->displayValidation = $settings['display_validation'];
 	$userFields->displayTerms = $settings['enable_terms'];
+	$userFields->plugin_folder = INCLUDES."user_fields/";
+	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 	$userFields->showAdminPass = FALSE;
 	$userFields->showAvatarInput = FALSE;
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->registration = TRUE;
-	$userFields->errorsArray = $errors;
-	$userFields->displayInput();
+	$userFields->method = 'input';
+	$userFields->renderInput();
 	closetable();
 }
 require_once THEMES."templates/footer.php";

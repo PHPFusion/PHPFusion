@@ -27,8 +27,8 @@ echo "</object><br />";
 // Display New Capthca Button
 echo "<a href='#' onclick=\"document.getElementById('captcha').src = '".INCLUDES."captchas/securimage2/securimage_show.php?sid=' + Math.random(); return false\">";
 echo "<img src='".INCLUDES."captchas/securimage2/images/refresh.gif' alt='' align='bottom' class='tbl-border' /></a>\n";
-if (isset($this)) {
-	$this->setRequiredJavaScript("captcha_code", $locale['u195']);
-}
+//if (isset($this)) {
+//	$this->setRequiredJavaScript("captcha_code", $locale['u195']);
+//}
 echo "</div>\n";
 ?>
