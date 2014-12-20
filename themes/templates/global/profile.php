@@ -99,10 +99,10 @@ if (!function_exists('render_userform')) {
 		echo $info['openform'];
 		if (isset($info['basic_field'])) echo $info['basic_field'];
 		echo $info['user_field'];
-		echo $info['closeform'];
 		echo isset($info['validate']) ? $info['validate'] : '';
 		echo isset($info['terms']) ? $info['terms'] : '';
 		echo $info['button'];
+		echo $info['closeform'];
 		echo "</div>\n</div>\n";
 		echo "</div>\n";
 	}

@@ -137,7 +137,7 @@ class UserFields extends quantumFields {
 		// Account info
 		// Username
 		$html .= form_para($locale['u129'], 'account', 'profile_category_name');
-		$html .= (iADMIN || $this->_userNameChange) ? form_text($locale['u127'], 'user_name', 'user_name', '', array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1)) : '';
+		$html .= (iADMIN || $this->_userNameChange) ? form_text($locale['u127'], 'user_name', 'user_name', $this->userData['user_name'], array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1)) : '';
 		// Login Password
 		$passRequired = $this->skipCurrentPass ? 1 : 0; // $locale['u136'], password cannot be left empty.
 		$passRequired = $this->isAdminPanel ? 0 : $passRequired;
@@ -161,7 +161,7 @@ class UserFields extends quantumFields {
 		}
 		// email field
 		$html .= form_para($locale['u064'], 'email', 'profile_category_name');
-		$html .= form_text($locale['u128'], 'user_email', 'user_email', '', array('email'=>1, 'inline'=>1, 'max_length'=>'100', 'error_text'=>$locale['u126']));
+		$html .= form_text($locale['u128'], 'user_email', 'user_email', $this->userData['user_email'], array('email'=>1, 'inline'=>1, 'max_length'=>'100', 'error_text'=>$locale['u126']));
 		// Hide email toggler
 		$hide = isset($this->userData['user_hide_email']) ? $this->userData['user_hide_email'] : 1;
 		$hide = isset($_POST['user_hide_email']) && isnum($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $hide;
