@@ -214,6 +214,7 @@ class UserFieldsInput {
 		}
 	}
 
+	/* Always to return FALSE unless you key in a valid password */
 	private function _isValidCurrentPassword($loginPass = TRUE, $skipCurrentPass = FALSE) {
 		if ($loginPass && !$skipCurrentPass) {
 			$this->_userHash = $this->_getPasswordInput("user_hash");
@@ -247,6 +248,7 @@ class UserFieldsInput {
 				return FALSE;
 			}
 		} else {
+			// force true if you $skip this function - set to 1
 			return TRUE;
 		}
 	}
@@ -254,7 +256,9 @@ class UserFieldsInput {
 	// Set New User Password
 	private function _setNewUserPassword() {
 		global $locale, $defender;
-		$this->_isValidCurrentPassword = $this->_isValidCurrentPassword(TRUE, $this->skipCurrentPass); // true false on edit profile
+		// this is used by many of the following functions - username and email. it will always be false unless you submit a password
+		$this->_isValidCurrentPassword = $this->_isValidCurrentPassword(TRUE, $this->skipCurrentPass); // $skipCurrentPass is 1 on edit profile
+		print_p($this->skipCurrentPass);
 		$this->_newUserPassword = $this->_getPasswordInput("user_new_password");
 		$this->_newUserPassword2 = $this->_getPasswordInput("user_new_password2");
 		if ($this->_newUserPassword) {
@@ -416,16 +420,20 @@ class UserFieldsInput {
 
 	// Set New User Email
 	private function _setUserEmail() {
-		global $locale, $settings;
+		global $locale, $settings, $defender;
 		$this->_userEmail = (isset($_POST['user_email']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_email']))) : "");
 		if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
 			// Require user password for email change
 			if ($this->_isValidCurrentPassword) {
 				// Require a valid email account
-				if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->_userEmail)) {
+				if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
 					$email_domain = substr(strrchr($this->_userEmail, "@"), 1);
 					if (dbcount("(blacklist_id)", DB_BLACKLIST, "blacklist_email='".$this->_userEmail."' OR blacklist_email='".$email_domain."'") != 0) {
-						$this->_setError("user_email", $locale['u124']);
+						// this email blacklisted.
+						$defender->stop();
+						$defender->addError('user_email');
+						$defender->addHelperText('user_email', $locale['u124']);
+						$defender->addNotice($locale['u124']);
 					} else {
 						$email_active = dbcount("(user_id)", DB_USERS, "user_email='".$this->_userEmail."'");
 						$email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
@@ -434,20 +442,41 @@ class UserFieldsInput {
 								$this->_verifyNewEmail();
 							} else {
 								$this->_userLogFields[] = "user_email";
-								$this->_setDBValue("user_email", $this->_userEmail);
+								$this->_setDBValue("user_email", $this->_userEmail); // ###
+								$this->data['user_email'] = $this->_userEmail;
 							}
 						} else {
-							$this->_setError("user_email", $locale['u125']);
+							// email taken
+							$defender->stop();
+							$defender->addError('user_email');
+							$defender->addHelperText('user_email', $locale['u125']);
+							$defender->addNotice($locale['u125']);
 						}
 					}
 				} else {
-					$this->_setError("user_email", $locale['u123']);
+					// invalid email address
+					$defender->stop();
+					$defender->addError('user_email');
+					$defender->addHelperText('user_email', $locale['u123']);
+					$defender->addNotice($locale['u123']);
 				}
 			} else {
-				$this->_setError("user_email", $locale['u156']);
+				// must have a valid password to change email
+				$defender->stop();
+				$defender->addError('user_email');
+				$defender->addHelperText('user_email', $locale['u156']);
+				$defender->addNotice($locale['u156']);
 			}
 		} else {
-			$this->_setError("user_email", $locale['u126'], TRUE);
+
+			if ($this->_method !== 'validate_update') { // for register only
+				$defender->stop();
+				$defender->addError('user_email');
+				$defender->addHelperText('user_email', $locale['u126']);
+				$defender->addNotice($locale['u126']);
+			} else { // update profile will copy back from DB
+				$this->data['user_email'] = $this->userData['user_email'];
+			}
 		}
 	}
 
