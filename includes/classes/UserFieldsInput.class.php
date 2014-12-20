@@ -480,6 +480,7 @@ class UserFieldsInput {
 		}
 	}
 
+	// Send Verification code when you change email
 	private function _verifyNewEmail() {
 		global $locale, $settings, $userdata;
 		require_once INCLUDES."sendmail_include.php";
@@ -497,12 +498,16 @@ class UserFieldsInput {
 		$result = dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
 	}
 
+	// Captcha validation
 	private function _setValidationError() {
-		global $locale, $settings;
+		global $locale, $settings, $defender;
 		$_CAPTCHA_IS_VALID = FALSE;
 		include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
 		if ($_CAPTCHA_IS_VALID == FALSE) {
-			$this->_setError("user_captcha", $locale['u194']);
+			$defender->stop();
+			$defender->addError('user_captcha');
+			$defender->addHelperText('user_captcha', $locale['u194']);
+			$defender->addNotice($locale['u194']);
 		}
 	}
 
