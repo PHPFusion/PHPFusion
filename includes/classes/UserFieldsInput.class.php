@@ -511,33 +511,58 @@ class UserFieldsInput {
 		}
 	}
 
+	// Change Avatar, Drop Avatar, New Avatar Upload
 	private function _setUserAvatar() {
-		global $locale, $settings;
+		global $locale, $settings, $defender;
 		if (isset($_POST['delAvatar'])) {
 			if ($this->userData['user_avatar'] != "" && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
 				unlink(IMAGES."avatars/".$this->userData['user_avatar']);
 			}
-			$this->_setDBValue("user_avatar", "");
+			$this->data['user_avatar'] = '';
+			$this->_setDBValue("user_avatar", ""); // ####
 		}
-		if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name'] != "") {
+		if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name'] != "") { // uploaded avatar
 			require_once INCLUDES."infusions_include.php";
 			$avatarUpload = upload_image("user_avatar", "", IMAGES."avatars/", "2000", "2000", $settings['avatar_filesize'], TRUE, TRUE, FALSE, $settings['avatar_ratio'], IMAGES."avatars/", "[".$this->userData['user_id']."]", $settings['avatar_width'], $settings['avatar_height']);
 			if ($avatarUpload['error'] == 0) {
 				if ($this->userData['user_avatar'] != "" && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
 					unlink(IMAGES."avatars/".$this->userData['user_avatar']);
 				}
-				$this->_setDBValue("user_avatar", $avatarUpload['thumb1_name']);
-			} elseif ($avatarUpload['error'] == 1) {
-				$this->_setError("user_avatar", $locale['u180']);
-			} elseif ($avatarUpload['error'] == 2) {
-				$this->_setError("user_avatar", $locale['u181']);
-			} elseif ($avatarUpload['error'] == 3) {
-				$this->_setError("user_avatar", $locale['u182']);
-			} elseif ($avatarUpload['error'] == 4) {
-				// Invalid query string
-			} elseif ($avatarUpload['error'] == 5) {
-				$this->_setError("user_avatar", $locale['u183']);
+				$this->data['user_avatar'] = $avatarUpload['thumb1_name'];
+				$this->_setDBValue("user_avatar", $avatarUpload['thumb1_name']); // #####
+			} else {
+				$this->data['user_avatar'] = '';
+				$defender->stop();
+				$defender->addError('user_avatar');
+				switch($avatarUpload['error']) {
+					case 1:
+						$defender->addHelperText('user_avatar', sprintf($locale['u180'], parsebytesize($settings['avatar_filesize'])));
+						$defender->addNotice($locale['u180']);
+						break;
+					case 2:
+						$defender->addHelperText('user_avatar', $locale['u181']);
+						$defender->addNotice($locale['u181']);
+						break;
+					case 3:
+						$defender->addHelperText('user_avatar',  sprintf($locale['u182'], $settings['avatar_width'], $settings['avatar_height']));
+						$defender->addNotice($locale['u182']);
+						break;
+					case 4:
+						$defender->addHelperText('user_avatar', $locale['u183']);
+						$defender->addNotice($locale['u183']);
+						break;
+					case 5:
+						$defender->addHelperText('user_avatar', $locale['u183']);
+						$defender->addNotice($locale['u183']);
+						break;
+					default:
+						$defender->addHelperText('user_avatar', $locale['u183']);
+						$defender->addNotice($locale['u183']);
+						break;
+				}
 			}
+		} else {
+			$this->data['user_avatar'] = $this->userData['user_avatar'];
 		}
 	}
 
