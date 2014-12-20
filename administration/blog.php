@@ -239,10 +239,8 @@ function blog_form() {
 		$data['blog_extended'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_extended'])); // Needed for HTML to work
 		$data['blog_keywords'] = form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords');
 		$data['blog_datestamp'] = form_sanitizer($_POST['blog_datestamp'], time(), 'blog_datestamp');
-		$data['blog_start_date'] = 0;
-		$data['blog_end_date'] = 0;
-		$data['blog_start_date'] = form_sanitizer($_POST['blog_start'], '', 'blog_start');
-		$data['blog_end_date'] = form_sanitizer($_POST['blog_end'], '', 'blog_end');
+		$data['blog_start'] = form_sanitizer($_POST['blog_start'], 0, 'blog_start');
+		$data['blog_end'] = form_sanitizer($_POST['blog_end'], 0, 'blog_end');
 		$data['blog_visibility'] = form_sanitizer($_POST['blog_visibility'], '0', 'blog_visibility');
 		$data['blog_draft'] = isset($_POST['blog_draft']) ? "1" : "0";
 		$data['blog_sticky'] = isset($_POST['blog_sticky']) ? "1" : "0";
