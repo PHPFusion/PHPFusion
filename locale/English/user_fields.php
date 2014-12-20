@@ -125,9 +125,9 @@ $locale['u172'] = "Member successfully added.";
 $locale['u173'] = "Back to User Management.";
 $locale['u174'] = "Add another member.";
 // Avatar upload
-$locale['u180'] = "Your avatar exceeded file size allowed, the limit is ".parsebytesize($settings['avatar_filesize']).".";
+$locale['u180'] = "Your avatar exceeded file size allowed, the limit is %s.";
 $locale['u181'] = "Your avatar appears to be an unsupported image type, supported image types are jpg, png and gif.";
-$locale['u182'] = "Your avatar exceeded ".$settings['avatar_width']."x".$settings['avatar_height']." pixels.";
+$locale['u182'] = "Your avatar exceeded %s x %s pixels.";
 $locale['u183'] = "Your avatar was not uploaded correctly.";
 $locale['u184'] = "Max. file size: %s / Max. size: %ux%u pixels";
 $locale['u185'] = "Avatar";
