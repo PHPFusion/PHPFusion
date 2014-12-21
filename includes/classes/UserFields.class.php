@@ -146,7 +146,7 @@ class UserFields extends quantumFields {
 		$html .= (iADMIN || $this->_userNameChange) ? form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1)) : '';
 		// Login Password
 		$passRequired = $this->registration ? 1 : 0;
-
+		$html .= form_hidden('', 'user_id', 'user_id', $this->userData['user_id']);
 		$html .= (!$this->registration) ? "<div class='alert alert-info'>".$locale['u100']."</div>" : '';
 		$html .= form_para($locale['u132'], 'password', 'profile_category_name');
 		if (!$passRequired) { // will not show on register.
