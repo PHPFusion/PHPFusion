@@ -698,11 +698,10 @@ class UserFieldsInput {
 		$quantum->plugin_folder = INCLUDES."user_fields/";
 		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 		$quantum->load_data();
-
+		print_p($this->data);
 		$result = dbquery_insert(DB_USERS, $this->data, 'update'); // user-id.
-		if ($result) {
-			$quantum->infinity_insert('update');
-		}
+		$quantum->infinity_insert('update');
+
 		$this->_completeMessage = $locale['u163'];
 	}
 
