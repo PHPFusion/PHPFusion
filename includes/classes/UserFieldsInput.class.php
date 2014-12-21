@@ -111,8 +111,6 @@ class UserFieldsInput {
 		}
 		$this->_setEmptyFields();
 		$this->_setUserAvatar();
-		// to deprecate this
-		//$this->_setCustomUserFieldsData();
 		$this->_setUserDataUpdate();
 	}
 
@@ -509,17 +507,32 @@ class UserFieldsInput {
 			$this->data['user_avatar'] = '';
 			$this->_setDBValue("user_avatar", ""); // ####
 		}
-		if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name'] != "") { // uploaded avatar
+		if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name']) { // uploaded avatar
 			require_once INCLUDES."infusions_include.php";
-			$avatarUpload = upload_image("user_avatar", "", IMAGES."avatars/", "2000", "2000", $settings['avatar_filesize'], TRUE, TRUE, FALSE, $settings['avatar_ratio'], IMAGES."avatars/", "[".$this->userData['user_id']."]", $settings['avatar_width'], $settings['avatar_height']);
+
+			$source_name = 'user_avatar';
+			$target_name = '';
+			$target_folder = IMAGES.'avatars/';
+			$target_width = 2000;
+			$target_height = 2000;
+			$max_size = $settings['avatar_filesize'];
+			$delete_original = TRUE;
+			$create_thumb1 = TRUE;
+			$create_thumb2 = FALSE;
+			$ratio = $settings['avatar_ratio'];
+			$thumb1_suffix = "[".$this->userData['user_id']."]";
+			$thumb1_height = $settings['avatar_height'];
+			$thumb1_width = $settings['avatar_width'];
+
+			$avatarUpload = upload_image($source_name, $target_name, $target_folder, $target_width, $target_height, $max_size, $delete_original, $create_thumb1, $create_thumb2, $ratio, $target_folder, $thumb1_suffix, $thumb1_width, $thumb1_height);
 			if ($avatarUpload['error'] == 0) {
-				if ($this->userData['user_avatar'] != "" && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
+				if ($this->userData['user_avatar'] && $this->userData['user_avatar'] !== $avatarUpload['thumb1_name'] && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
+					//print_p('unlinked '.IMAGES."avatars/".$this->userData['user_avatar']);
 					unlink(IMAGES."avatars/".$this->userData['user_avatar']);
 				}
 				$this->data['user_avatar'] = $avatarUpload['thumb1_name'];
-				$this->_setDBValue("user_avatar", $avatarUpload['thumb1_name']); // #####
+				//$this->_setDBValue("user_avatar", $avatarUpload['thumb1_name']); // #####
 			} else {
-				$this->data['user_avatar'] = '';
 				$defender->stop();
 				$defender->addError('user_avatar');
 				switch($avatarUpload['error']) {
@@ -698,10 +711,8 @@ class UserFieldsInput {
 		$quantum->plugin_folder = INCLUDES."user_fields/";
 		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 		$quantum->load_data();
-		print_p($this->data);
 		$result = dbquery_insert(DB_USERS, $this->data, 'update'); // user-id.
 		$quantum->infinity_insert('update');
-
 		$this->_completeMessage = $locale['u163'];
 	}
 

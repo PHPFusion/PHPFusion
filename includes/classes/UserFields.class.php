@@ -132,7 +132,7 @@ class UserFields extends quantumFields {
 
 	/* injected core input fields */
 	private function basicInputFields() {
-		global $locale;
+		global $locale, $settings;
 		$html = '';
 		// Account info
 		// Username
@@ -162,9 +162,20 @@ class UserFields extends quantumFields {
 				$html .= form_text($locale['u131'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 			}
 			$html .= form_text(($this->userData['user_admin_password'] ? $locale['u144'] : $locale['u131']), 'user_new_admin_password', 'user_new_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
-			$html .= form_text($locale['u145'], 'user_new_admin_password2', 'user_new_admin_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+			$html .= form_text($locale['u145'], 'user_new_admin_password2', 'user_new_admin_password2', '', array('class'=>'m-b-0', 'password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 			$html .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
 		}
+
+		if (isset($this->userData['user_avatar']) && $this->userData['user_avatar'] != "") {
+			$this->html .= "<label for='user_avatar_upload'><img src='".IMAGES."avatars/".$this->userData['user_avatar']."' alt='".$locale['u185']."' />";
+			$this->html .= "</label>\n<br />\n";
+			$this->html .= "<input type='checkbox' name='delAvatar' value='1' class='textbox' /> ".$locale['u187']."<br />\n<br />\n";
+		}
+
+		// avatar field
+		$html .= form_fileinput($locale['u185'], 'user_avatar', 'user_avatar_upload', '', '', array('type'=>'image', 'inline'=>1, 'class'=>'m-t-10 m-b-0'));
+		$html .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".sprintf($locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height'])."</span></div>\n";
+
 		// email field
 		$html .= form_para($locale['u064'], 'email', 'profile_category_name');
 		$html .= form_text($locale['u128'], 'user_email', 'user_email', $this->userData['user_email'], array('email'=>1, 'inline'=>1, 'max_length'=>'100', 'error_text'=>$locale['u126']));
