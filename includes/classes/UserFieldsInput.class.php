@@ -101,6 +101,7 @@ class UserFieldsInput {
 
 	public function saveUpdate() {
 		$this->_method = "validate_update";
+		$this->data = $this->userData;
 		$this->_settUserName();
 		$this->_setNewUserPassword();
 		$this->_setNewAdminPassword();
@@ -112,9 +113,7 @@ class UserFieldsInput {
 		$this->_setUserAvatar();
 		// to deprecate this
 		//$this->_setCustomUserFieldsData();
-		print_p($this->data);
 		$this->_setUserDataUpdate();
-
 	}
 
 	public function getErrorsArray() {
@@ -322,11 +321,6 @@ class UserFieldsInput {
 				$defender->addError('user_new_password');
 				$defender->addHelperText('user_new_password', $locale['u134'].$locale['u143a']);
 				$defender->addNotice($locale['u134'].$locale['u143a']);
-			} else {
-				// no input on new_user_password on validate_update mode.
-				$this->data['user_password'] = $this->userData['user_password'];
-				$this->data['user_algo'] = $this->userData['user_algo'];
-				$this->data['user_salt'] = $this->userData['user_salt'];
 			}
 		}
 	}
@@ -404,10 +398,6 @@ class UserFieldsInput {
 						$defender->addError('user_admin_password');
 						$defender->addHelperText('user_admin_password', $locale['u149b']);
 					}
-				} else { // you do not want to change an admin password - so get from db
-					$this->data['user_admin_password'] = $this->userData['user_admin_password'];
-					$this->data['user_admin_salt'] = $this->userData['user_admin_salt'];
-					$this->data['user_admin_algo'] = $this->userData['user_admin_algo'];
 				}
 			} else {
 				// not a valid user admin password
@@ -469,14 +459,11 @@ class UserFieldsInput {
 				$defender->addNotice($locale['u156']);
 			}
 		} else {
-
 			if ($this->_method !== 'validate_update') { // for register only
 				$defender->stop();
 				$defender->addError('user_email');
 				$defender->addHelperText('user_email', $locale['u126']);
 				$defender->addNotice($locale['u126']);
-			} else { // update profile will copy back from DB
-				$this->data['user_email'] = $this->userData['user_email'];
 			}
 		}
 	}
@@ -562,8 +549,6 @@ class UserFieldsInput {
 						break;
 				}
 			}
-		} else {
-			$this->data['user_avatar'] = $this->userData['user_avatar'];
 		}
 	}
 
@@ -714,11 +699,10 @@ class UserFieldsInput {
 		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 		$quantum->load_data();
 
-		$result = dbquery_insert(DB_USERS, $this->data, 'update');
+		$result = dbquery_insert(DB_USERS, $this->data, 'update'); // user-id.
 		if ($result) {
 			$quantum->infinity_insert('update');
 		}
-		//$result = dbquery("UPDATE ".DB_USERS." SET ".$this->_dbValues." WHERE user_id='".$this->userData['user_id']."'");
 		$this->_completeMessage = $locale['u163'];
 	}
 

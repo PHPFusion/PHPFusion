@@ -1339,12 +1339,8 @@ class quantumFields {
 		//print_p($insert_list);
 		if (db_exists($target_database)) {
 			foreach($infinity_list as $database_name => $infinity_fields) {
-				/* if ($mode == 'update') {
-					dbquery_insert($database_name, $infinity_fields, 'update');
-				} else {
-					dbquery_insert($database_name, $infinity_fields, 'save');
-				} */
 				// which can be simplified again to
+				//print_p($infinity_fields);
 				dbquery_insert($database_name, $infinity_fields, $mode);
 			}
 		}
