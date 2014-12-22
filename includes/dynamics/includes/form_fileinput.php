@@ -36,7 +36,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		'url' => !empty($options['url']) && $options['url'] ? $options['url'] : '', // path to store the image
 		'thumbnail' => !empty($options['thumbnail']) && $options['thumbnail'] ? $options['thumbnail'] : '', // path to store the thumbnail.
 		'max_b' => !empty($options['max_b']) && isnum($options['max_b']) ? $options['max_b'] : 0, // maximum bytes allowed.
-		'type' => !empty($options['type']) && $options['type'] ?$options['type'] : 0, // ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+		'type' => !empty($options['type']) && $options['type'] ? $options['type'] : 'object', // ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
 		'preview_off' => !empty($options['preview_off']) && $options['preview_off'] == 1 ? 1 : 0,
 		'mime' => !empty($options['mime']) && $options['mime'] ? $options['mime'] : 0,
 		'jsonmode' => !empty($options['jsonmode']) && $options['jsonmode'] ? $options['jsonmode'] : 0,
@@ -57,9 +57,6 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 				$format = "video/*";
 			} elseif ($options['type'] == 'audio') {
 				$format = "audio/*";
-			} elseif (isset($options['format']) && $options['format'] && isset($options['type']) && $options['type']) {
-				/* http://www.iana.org/assignments/media-types/media-types.xhtml */
-				$format = $options['format'];
 			}
 		}
 		$type_for_js = json_encode((array)$options['type']);
