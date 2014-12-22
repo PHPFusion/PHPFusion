@@ -1186,11 +1186,11 @@ function showdate($format, $val) {
 		$tz_client = $settings['timeoffset'];
 	}
 
-	//$server_dtz = new DateTimeZone($tz_server);
-	//$client_dtz = new DateTimeZone($tz_client);
-	//$server_dt = new DateTime("now", $server_dtz);
-	//$client_dt = new DateTime("now", $client_dtz);
-	//$offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
+	$server_dtz = new DateTimeZone($tz_server);
+	$client_dtz = new DateTimeZone($tz_client);
+	$server_dt = new DateTime("now", $server_dtz);
+	$client_dt = new DateTime("now", $client_dtz);
+	$offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
 
 	if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
 		return strftime($settings[$format], $val + $offset);
