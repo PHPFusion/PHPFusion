@@ -601,8 +601,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 				$col = $columns[$key];
 				$values = $inputdata[$col];
 				if ($debug) {
-					$result = "DELETE FROM ".$db." WHERE $col='$values'";
-					print_p($result);
+					print_p("DELETE FROM ".$db." WHERE $col='$values'");
 				} else {
 					$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
 				}
