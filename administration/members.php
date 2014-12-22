@@ -8,6 +8,7 @@
 | Author: Nick Jones (Digitanium)
 | Author: Paul Buek (Muscapaul)
 | Author: Hans Kristian Flaatten (Starefossen)
+| Author: Frederick Chan MC (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
