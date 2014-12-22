@@ -387,14 +387,15 @@ class UserFields extends quantumFields {
 		$html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
 		$html .= form_checkbox($locale['u193'], 'agreement', 'agreement', '');
 		$html .= "</div>\n";
-		$this->javaScriptOther .= "$('#agreement').bind('click', function() { checkagreement(); });";
-		$this->javaScriptOther .= "	function checkagreement() {\n";
-		$this->javaScriptOther .= "		if(document.inputform.agreement.checked) {\n";
-		$this->javaScriptOther .= "			document.inputform.register.disabled=false;\n";
-		$this->javaScriptOther .= "		} else {\n";
-		$this->javaScriptOther .= "			document.inputform.register.disabled=true;\n";
-		$this->javaScriptOther .= "		}\n";
-		$this->javaScriptOther .= "	}\n";
+		add_to_jquery("
+		$('#agreement').bind('click', function() {
+			if (document.inputform.agreement.checked) {
+			document.inputform.register.disabled=false;
+			} else {
+			document.inputform.register.disabled=true;
+			}
+		});
+		");
 		return $html;
 	}
 	private function renderValidation() {
