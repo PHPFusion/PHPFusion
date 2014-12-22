@@ -68,7 +68,6 @@ elseif (isset($_POST['register'])) {
 	$userInput->registration = TRUE;
 	$userInput->saveInsert();
 	$userInput->displayMessages();
-	$errors = $userInput->getErrorsArray();
 	unset($userInput);
 }
 if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['register']) && defined('FUSION_NULL'))) {
