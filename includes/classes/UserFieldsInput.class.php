@@ -30,10 +30,8 @@ class UserFieldsInput {
 	public $validation = 0;
 	public $registration = FALSE;
 	// On insert or admin edit
-	public $skipCurrentPass = FALSE;
+	public $skipCurrentPass = FALSE; // FALSE to skip pass. True to validate password. New Register always FALSE.
 	private $_completeMessage;
-	private $_errorMessages = array();
-	private $_fieldsRequired = array();
 	private $_method;
 	private $_noErrors = TRUE;
 	private $_userEmail;
@@ -65,6 +63,7 @@ class UserFieldsInput {
 
 	public function saveInsert() {
 		$this->_method = "validate_insert";
+
 		$this->data = array("user_password" => "",
 							"user_algo" => "",
 							"user_salt" => "",
@@ -109,7 +108,7 @@ class UserFieldsInput {
 
 	public function displayMessages() {
 		global $locale;
-
+		$title = ''; $message = '';
 		if (!defined('FUSION_NULL')) {
 			if ($this->_method == "validate_insert") {
 				$title = $locale['u170'];
@@ -118,12 +117,10 @@ class UserFieldsInput {
 				$title = $locale['u169'];
 				$message = "<br />\n".$this->_completeMessage."<br /><br />\n";
 			}
+			opentable($title);
+			echo $message;
+			closetable();
 		}
-		opentable($title);
-		echo $message;
-		closetable();
-
-
 	}
 
 	public function setUserNameChange($value) {
@@ -199,6 +196,7 @@ class UserFieldsInput {
 	/* Always to return FALSE unless you key in a valid password */
 	private function _isValidCurrentPassword($loginPass = TRUE, $skipCurrentPass = FALSE) {
 		if ($loginPass && !$skipCurrentPass) {
+			// used on register.
 			$this->_userHash = $this->_getPasswordInput("user_hash");
 			$this->_userPassword = $this->_getPasswordInput("user_password");
 			$password = $this->_userPassword;
@@ -240,7 +238,7 @@ class UserFieldsInput {
 	private function _setNewUserPassword() {
 		global $locale, $defender;
 		// this is used by many of the following functions - username and email. it will always be false unless you submit a password
-		$this->_isValidCurrentPassword = $this->_isValidCurrentPassword(TRUE, $this->skipCurrentPass); // $skipCurrentPass is 1 on edit profile
+		$this->_isValidCurrentPassword = $this->_isValidCurrentPassword(TRUE, $this->skipCurrentPass); // $skipCurrentPass is 1 on edit profile // false on register
 		$this->_newUserPassword = $this->_getPasswordInput("user_new_password");
 		$this->_newUserPassword2 = $this->_getPasswordInput("user_new_password2");
 		if ($this->_newUserPassword) {
@@ -295,7 +293,7 @@ class UserFieldsInput {
 			}
 		} else {
 			// New user password is empty
-			if ($this->_method != 'validate_update') {
+			if ($this->_method == 'validate_insert') {
 				$defender->stop();
 				$defender->addError('user_new_password');
 				$defender->addHelperText('user_new_password', $locale['u134'].$locale['u143a']);

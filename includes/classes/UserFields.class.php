@@ -35,7 +35,7 @@ class UserFields extends quantumFields {
 	public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
 	public $skipCurrentPass = FALSE;
 	public $registration = FALSE;
-	public $userData = array("user_name", "user_password", "user_admin_password", "user_email");
+	public $userData = array("user_id", "user_name", "user_password", "user_admin_password", "user_email");
 
 	/* Quantum Fields Extensions */
 	public $system_title = '';
@@ -88,7 +88,7 @@ class UserFields extends quantumFields {
 						$cur_link = FUSION_REQUEST;
 					} else {
 						if ($this->baseRequest) {
-							$cur_link = $base_request."&amp;";
+							$cur_link .= $base_request."&amp;";
 						} else {
 							$cur_link = BASEDIR;
 							if ($this->method == 'input') {
@@ -134,7 +134,6 @@ class UserFields extends quantumFields {
 	private function basicInputFields() {
 		global $locale, $settings;
 		$html = '';
-		// Account info
 		// Username
 		$html .= form_para($locale['u129'], 'account', 'profile_category_name');
 		if ($this->registration) {
@@ -144,11 +143,10 @@ class UserFields extends quantumFields {
 			$user_name = $this->userData['user_name'];
 			$user_email = $this->userData['user_email'];
 		}
-
 		$html .= (iADMIN || $this->_userNameChange) ? form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1)) : '';
 		// Login Password
 		$passRequired = $this->registration ? 1 : 0;
-		$html .= form_hidden('', 'user_id', 'user_id', $this->userData['user_id']);
+		$html .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id']: 0);
 		$html .= (!$this->registration) ? "<div class='alert alert-info'>".$locale['u100']."</div>" : '';
 		$html .= form_para($locale['u132'], 'password', 'profile_category_name');
 		if (!$passRequired) { // will not show on register.
