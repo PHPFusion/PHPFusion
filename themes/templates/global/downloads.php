@@ -348,6 +348,4 @@ if (!function_exists('render_downloads')) {
 		closetable();
 	}
 }
-
-
 ?>

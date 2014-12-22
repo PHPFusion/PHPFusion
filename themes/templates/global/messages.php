@@ -76,7 +76,6 @@ if (!function_exists('render_inbox')) {
 			echo "</span>\n";
 		//}
 		echo "</div>\n</div>\n";
-		//if ($info['chat_rows']) echo openform('inputform', 'inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''), array('notice' => 0));
 		// action buttons
 		if ($info['chat_rows'] && isset($_GET['msg_user']) or isset($_GET['msg_read'])) {
 			echo openform('inputform', 'inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''), array('notice' => 0));
@@ -266,27 +265,26 @@ if (!function_exists('render_inbox')) {
 	}
 }
 
-
-
-function render_chat_list($info) {
-	global $locale;
-	echo "<div class='msg-list-item list-group'>\n";
-	if ($info['chat_rows'] > 0) {
-		foreach ($info['chat_list'] as $contact_id => $chat_list) {
-			echo "<!--- start message list -->\n";
-			echo "<div class='list-group-item clearfix ".(isset($_GET['msg_user']) && $_GET['msg_user'] == $chat_list['contact_id'] ? 'active' : '')." bbr-0 br-l-0 br-r-0'>\n";
-			echo "<div class='pull-left m-r-10'>\n".display_avatar($chat_list['contact_user'], '40px', '', TRUE, '')." </div>\n";
-			echo "<div class='overflow-hide'>";
-			echo "<span class='profile_link'>".profile_link($chat_list['contact_user']['user_id'], $chat_list['contact_user']['user_name'], $chat_list['contact_user']['user_status'])."</span><span class='text-smaller'> - ".date('d M', $chat_list['message_datestamp'])."</span><br/>";
-			echo "<a href='".$chat_list['message']['link']."' class='display-inline-block ".($chat_list['message_read'] > 0 ? 'text-dark text-normal' : '')."'>".trimlink($chat_list['message']['name'], 50)."</a>\n";
-			echo "</div>\n";
-			echo "</div>\n";
-			echo "<!--- end message list -->\n";
+if (!function_exists('render_chat_list')) {
+	function render_chat_list($info) {
+		global $locale;
+		echo "<div class='msg-list-item list-group'>\n";
+		if ($info['chat_rows'] > 0) {
+			foreach ($info['chat_list'] as $contact_id => $chat_list) {
+				echo "<!--- start message list -->\n";
+				echo "<div class='list-group-item clearfix ".(isset($_GET['msg_user']) && $_GET['msg_user'] == $chat_list['contact_id'] ? 'active' : '')." bbr-0 br-l-0 br-r-0'>\n";
+				echo "<div class='pull-left m-r-10'>\n".display_avatar($chat_list['contact_user'], '40px', '', TRUE, '')." </div>\n";
+				echo "<div class='overflow-hide'>";
+				echo "<span class='profile_link'>".profile_link($chat_list['contact_user']['user_id'], $chat_list['contact_user']['user_name'], $chat_list['contact_user']['user_status'])."</span><span class='text-smaller'> - ".date('d M', $chat_list['message_datestamp'])."</span><br/>";
+				echo "<a href='".$chat_list['message']['link']."' class='display-inline-block ".($chat_list['message_read'] > 0 ? 'text-dark text-normal' : '')."'>".trimlink($chat_list['message']['name'], 50)."</a>\n";
+				echo "</div>\n";
+				echo "</div>\n";
+				echo "<!--- end message list -->\n";
+			}
+		} else {
+			echo "<div class='list-group-item text-center bbr-0 br-0'>".$locale['461']."</div>";
 		}
-	} else {
-		echo "<div class='list-group-item text-center bbr-0 br-0'>".$locale['461']."</div>";
+		echo "</div>\n";
 	}
-	echo "</div>\n";
 }
-
 ?>

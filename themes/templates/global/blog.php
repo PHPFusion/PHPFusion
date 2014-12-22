@@ -59,35 +59,6 @@ if (!function_exists('render_main_blog')) {
 			else {
 				echo "<div class='well text-center'>".$locale['global_078b']."</div>\n";
 			}
-
-			// make a panel for blog and then push to left.
-			/*
-			echo "<div class='panel panel-default panel-blog-header'>\n";
-			echo "<div class='panel-body'>\n";
-			echo "<div class='pull-right'>\n";
-			echo "<a class='btn btn-sm btn-default text-dark' href='".BASEDIR."blog.php'><i class='entypo newspaper'></i> ".$locale['global_082b']."</a>\n";
-			echo "<button type='button' class='btn btn-sm btn-primary' data-toggle='collapse' data-target='#blogcat' aria-expanded='true' aria-controls='blogcat'><i class='entypo book open'></i> ".$locale['global_084b']."</button>\n";
-			echo "</div>\n";
-			echo "<div class='pull-left m-r-10' style='position:relative; margin-top:-30px;'>\n";
-			echo "<div style='max-width:80px;'>\n";
-			echo $info['blog_cat_image'];
-			echo "</div>\n";
-			echo "</div>\n";
-			echo "<div class='overflow-hide'>\n";
-			echo "<h3 class='display-inline text-dark'>".$info['blog_cat_name']."</h3><br/><span class='strong'>".$locale['global_083'].":</span> <span class='text-dark'>".showdate('newsdate', $info['blog_last_updated'])."</span>";
-			echo "</div>\n";
-			echo "</div>\n";
-			echo "<div id='blogcat' class='panel-collapse collapse m-b-10'>\n";
-			echo "<ul class='list-group'>\n";
-			echo "<li class='list-group-item'><hr class='m-t-0 m-b-5'>\n";
-			echo "<span class='display-inline-block m-b-10 strong text-smaller text-uppercase'> ".$locale['global_085']."</span><br/>\n";
-			foreach ($info['blog_categories'] as $cat_id => $cat_name) {
-				echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".BASEDIR."blog.php?cat_id=".$cat_id."' class='btn btn-sm btn-default'>".$cat_name."</a>";
-			}
-			echo "</li>";
-			echo "</ul>\n";
-			echo "</div>\n</div>\n";
-			*/
 		} else {
 			render_blog_item($info);
 		}
@@ -222,7 +193,4 @@ if (!function_exists('render_blog_item')) {
 		echo "</article>\n";
 	}
 }
-
-
-
 ?>

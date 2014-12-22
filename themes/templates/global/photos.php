@@ -83,7 +83,6 @@ if (!function_exists('render_photo_category')) {
 	}
 }
 
-
 /* The photo container */
 if (!function_exists('render_photo_item')) {
 	function render_photo_item($data) {
@@ -189,5 +188,4 @@ if (!function_exists('render_photo')) {
 		closetable();
 	}
 }
-
 ?>

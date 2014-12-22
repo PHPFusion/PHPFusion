@@ -109,7 +109,4 @@ if (!function_exists('render_userform')) {
 		echo "</div>\n";
 	}
 }
-
-
-
 ?>
