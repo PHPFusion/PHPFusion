@@ -101,10 +101,6 @@ class UserFieldsInput {
 		if (!defined('FUSION_NULL')) $this->_setUserDataUpdate();
 	}
 
-	public function getErrorsArray() {
-		return $this->_errorMessages;
-	}
-
 	public function displayMessages() {
 		global $locale;
 		$title = ''; $message = '';

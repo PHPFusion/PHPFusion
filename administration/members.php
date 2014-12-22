@@ -173,7 +173,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		$userInput->skipCurrentPass = TRUE;
 		$userInput->saveUpdate();
 		$userInput->displayMessages();
-		$errors = $userInput->getErrorsArray();
 		$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
 		unset($userInput);
 	}
