@@ -610,9 +610,10 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 		} else {
 			die();
 		}
-	} else {
-		notify('Script stopped as an illegal operation is found.', 'Fusion Defender stopped SQL, auto exit before execution.');
 	}
+	//else {
+		//notify('Script stopped as an illegal operation is found.', 'Fusion Defender stopped SQL, auto exit before execution.');
+	//}
 }
 
 function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
