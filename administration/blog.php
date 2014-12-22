@@ -417,6 +417,7 @@ function blog_form() {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 	echo form_text($locale['422'], 'blog_subject', 'blog_subject', $data['blog_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['450']));
+	echo form_select($locale['443'], 'blog_keywords', 'blog_keywords', array(), $data['blog_keywords'], array('required' => 1, 'max_length' => 320, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1, 'multiple' => 1));
 	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
 	echo form_datepicker($locale['427'], 'blog_start', 'blog_start', $data['blog_start'], array('placeholder' => $locale['429']));
 	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
@@ -455,7 +456,6 @@ function blog_form() {
 	}
 	echo form_textarea($locale['425'], 'blog_blog', 'blog_blog', $data['blog_blog'], $fusion_mce);
 	echo form_textarea($locale['426'], 'blog_extended', 'blog_extended', $data['blog_extended'], $fusion_mce);
-	echo form_select($locale['443'], 'blog_keywords', 'blog_keywords', array(), $data['blog_keywords'], array('required' => 1, 'max_length' => 320, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1, 'multiple' => 1));
 	echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	if (multilang_table("NS")) {
