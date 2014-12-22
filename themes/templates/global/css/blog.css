@@ -54,7 +54,9 @@
 	display: inline-block;
 }
 .view_author_blog {
-	display: block;
+	display: inline-block;
+	outline: 0;
 	margin: 10px 0;
+	font-size:12px;
 	text-transform: uppercase;
 }

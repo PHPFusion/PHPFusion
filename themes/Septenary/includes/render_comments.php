@@ -23,8 +23,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 function render_comments($c_data, $c_info) {
 	global $locale, $settings;
 	if (!empty($c_data)) {
-		echo "<article>\n";
-		echo "<div class='clearfix'>\n";
+		echo "<div class='clearfix m-b-20'>\n";
 		if ($c_info['admin_link'] !== FALSE) {
 			echo "<div class='pull-right'>".$c_info['admin_link']."</div>\n";
 		}
@@ -51,7 +50,6 @@ function render_comments($c_data, $c_info) {
 		}
 		echo $c_info['c_makepagenav'] ? "<div class='flleft'>".$c_info['c_makepagenav']."</div>\n" : "";
 		echo "</div>\n";
-		echo "</article>\n";
 	} else {
 		echo "<div class='nocomments-message spacer'>".$locale['c101']."</div>\n";
 	}

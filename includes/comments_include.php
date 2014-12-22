@@ -175,7 +175,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 		if (iMEMBER || $settings['guestposts'] == "1") {
 			require_once INCLUDES."bbcode_include.php";
 			echo "<a id='edit_comment' name='edit_comment'></a>\n";
-			echo openform('inputform', 'inputform', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').$clink);
+			echo openform('inputform', 'inputform', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').$clink, array('class'=>'m-b-20'));
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
 			if (iGUEST) {
