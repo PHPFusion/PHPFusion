@@ -1364,7 +1364,7 @@ class quantumFields {
 		}
 		if (db_exists($target_database) && $db == $target_database) {
 			foreach($infinity_list as $database_name => $infinity_fields) {
-				if ($target_index && $index_value) {
+				if ($target_database && $target_index) {
 					return $infinity_fields;
 				}
 			}

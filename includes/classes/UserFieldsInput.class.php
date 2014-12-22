@@ -535,6 +535,7 @@ class UserFieldsInput {
 	}
 
 	private function _setEmptyFields() {
+		global $settings;
 		$this->_userHideEmail = isset($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
 		$userStatus = $this->adminActivation == 1 ? 2 : 0;
 		if ($this->_method == "validate_insert") {
@@ -550,6 +551,9 @@ class UserFieldsInput {
 			$this->data['user_groups'] = '';
 			$this->data['user_level'] = 101;
 			$this->data['user_status'] = $userStatus;
+			$this->data['user_timezone'] = $settings['timeoffset'];
+			$this->data['user_theme'] = 'Default';
+			$this->data['user_language'] = LANGUAGE;
 		} else {
 			$this->data['user_hide_email'] = $this->_userHideEmail;
 		}
@@ -577,14 +581,8 @@ class UserFieldsInput {
 			$quantum->load_data();
 			$userInfo = $this->data;
 			if ($quantum->output_fields(DB_USERS)) $userInfo += $quantum->output_fields(DB_USERS);
+			$userInfo += $quantum->output_fields(DB_USERS);
 			$userInfo = serialize($userInfo);
-			/*$userInfo = serialize(array("user_name" => $this->_userName,
-									  "user_password" => $this->_newUserPasswordHash,
-									  "user_salt" => $this->_newUserPasswordSalt,
-									  "user_algo" => $this->_newUserPasswordAlgo,
-									  "user_email" => $this->_userEmail,
-									  "user_field_fields" => $this->_dbFields,
-									  "user_field_inputs" => $this->_dbValues));*/
 			$userInfo = addslash($userInfo);
 			$result = dbquery("INSERT INTO ".DB_NEW_USERS."
 					(user_code, user_name, user_email, user_datestamp, user_info)
