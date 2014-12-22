@@ -1347,6 +1347,29 @@ class quantumFields {
 		}
 	}
 
+	/* Single array output match against $db */
+	public function output_fields($db) {
+		$infinity_list = array();
+		$target_database = '';
+		$target_index = '';
+		$index_value = '';
+		foreach($this->fields as $cat_id => $fields) {
+			foreach($fields as $field_id => $field_data) {
+				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
+				$target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
+				$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : '';
+				if (!isset($infinity_list[$target_database][$target_index])) $infinity_list[$target_database][$target_index] = $index_value;
+				$infinity_list[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : '';
+			}
+		}
+		if (db_exists($target_database) && $db == $target_database) {
+			foreach($infinity_list as $database_name => $infinity_fields) {
+				if ($target_index && $index_value) {
+					return $infinity_fields;
+				}
+			}
+		}
+	}
 
 
 }
