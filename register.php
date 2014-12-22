@@ -23,6 +23,7 @@ include LOCALE.LOCALESET."user_fields.php";
 if (iMEMBER || !$settings['enable_registration']) {
 	redirect("index.php");
 }
+
 $errors = array();
 if (isset($_GET['email']) && isset($_GET['code'])) {
 	if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $_GET['email'])) {
@@ -57,7 +58,8 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 	} else {
 		redirect("index.php");
 	}
-} elseif (isset($_POST['register'])) {
+}
+elseif (isset($_POST['register'])) {
 	$userInput = new UserFieldsInput();
 	$userInput->validation = $settings['display_validation'];
 	$userInput->emailVerification = $settings['email_verification'];
@@ -69,7 +71,8 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 	$errors = $userInput->getErrorsArray();
 	unset($userInput);
 }
-if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['register']) && count($errors) > 0)) {
+if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['register']) && defined('FUSION_NULL'))) {
+	// hide by default
 	opentable($locale['u101']);
 	$userFields = new UserFields();
 	$userFields->postName = "register";
@@ -79,7 +82,6 @@ if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['regi
 	$userFields->plugin_folder = INCLUDES."user_fields/";
 	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 	$userFields->showAdminPass = FALSE;
-	$userFields->showAvatarInput = FALSE;
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->registration = TRUE;
 	$userFields->method = 'input';
