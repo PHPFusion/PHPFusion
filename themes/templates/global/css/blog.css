@@ -44,3 +44,17 @@
 .blog_readmore_link:hover,.blog_readmore_link:focus {
 	background: rgb(255,255,255);
 }
+.blog_author_section {
+	padding:25px;
+}
+.blog_author_info  {
+	font-size:15px;
+	font-weight: 600;
+	margin: 10px 0;
+	display: inline-block;
+}
+.view_author_blog {
+	display: block;
+	margin: 10px 0;
+	text-transform: uppercase;
+}

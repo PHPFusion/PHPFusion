@@ -104,6 +104,7 @@ $locale['global_059'] = "You're not tracking any threads.";
 $locale['global_060'] = "Stop tracking this thread?";
 // Blog, News & Articles
 $locale['global_070'] = "Posted by ";
+$locale['global_071b'] = "View all Post by %s";
 $locale['global_071'] = "on ";
 $locale['global_072'] = "Continue Reading";
 $locale['global_073'] = " Comments";
@@ -402,4 +403,11 @@ $locale['right'] = "Right";
 $locale['comments'] = "Comments";
 $locale['ratings'] = "Ratings";
 $locale['comments_ratings'] = "Comments and Ratings";
+
+$locale['testimonial_rank'] = "I am the %s of this website";
+$locale['testimonial_location'] = "and I currently live in %s";
+$locale['testimonial_join'] = ". I joined this website on %s";
+$locale['testimonial_web'] = ". I also run another website at %s";
+$locale['testimonial_contact'] = ". If you need to contact me, you can reach me at %s";
+$locale['testimonial_email'] = ". You can also reach me at my e-mail address at %s";
 ?>

@@ -31,7 +31,7 @@ add_to_breadcrumbs(array('link' => BASEDIR.'blog.php', 'title' => $locale['globa
 if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 
 	// blog items page
-	$result = dbquery("SELECT tn.*, tc.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+	$result = dbquery("SELECT tn.*, tc.*, tu.*,
 	 				SUM(tr.rating_vote) AS sum_rating,
 					COUNT(tr.rating_item_id) AS count_votes,
 					COUNT(td.comment_item_id) AS count_comment
@@ -44,10 +44,17 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 					LIMIT 1
 					");
 
-	if (dbrows($result)) {
+
+
+	if (dbrows($result)>0) {
 		include INCLUDES."comments_include.php";
 		include INCLUDES."ratings_include.php";
 		$data = dbarray($result);
+		// protect password
+		unset($data['user_password']);
+		unset($data['user_algo']);
+		unset($data['user_salt']);
+
 		if (!isset($_POST['post_comment']) && !isset($_POST['post_rating'])) {
 			$result2 = dbquery("UPDATE ".DB_BLOG." SET blog_reads=blog_reads+1 WHERE blog_id='".$_GET['readmore']."'");
 			$data['blog_reads']++;
@@ -57,7 +64,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$blog_subject = $data['blog_subject'];
 		$blog_blog = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['blog_breaks'] == "y" ? nl2br(stripslashes($data['blog_extended'] ? $data['blog_extended'] : $data['blog_blog'])) : stripslashes($data['blog_extended'] ? $data['blog_extended'] : $data['blog_blog']));
 		$pagecount = count($blog_blog);
-		$blog_info = array(	"blog_id" => $data['blog_id'],
+		$blog_info = array(
+			"blog_id" => $data['blog_id'],
 			"user_id" => $data['user_id'],
 			"user_name" => $data['user_name'],
 			"user_status" => $data['user_status'],
@@ -67,7 +75,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			"blog_date" => $data['blog_datestamp'],
 			"blog_ialign" => $data['blog_ialign'],
 			"cat_id" => $data['blog_cat'],
-			"cat_name" => $data['blog_cat_name'],
+			"cat_name" => $data['blog_cat_name'] ? $data['blog_cat_name'] : $locale['global_080'],
+			"cat_link" => "<a href='".BASEDIR."blog.php?cat_id=".$data['blog_cat']."'>".($data['blog_cat_name'] ? $data['blog_cat_name'] : $locale['global_080'])."</a>",
 			"blog_image" => $data['blog_image'],
 			"cat_image" => $data['blog_cat_image'],
 			"blog_subject" => $data['blog_subject'],
@@ -82,6 +91,26 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			'blog_allow_ratings' => $data['blog_allow_ratings'],
 			"blog_sticky" => $data['blog_sticky']
 		);
+
+		// get UF and merge for testimonial
+
+		if ($data['user_email'] && $data['user_hide_email'] == 0) $blog_info['user_email'] = "<a mailto='".$data['user_email']."'>".$data['user_email']."</a>";
+		if ($data['user_location']) $blog_info['user_location'] = $data['user_location'];
+		if ($data['user_web']) $blog_info['user_web'] = $data['user_web'];
+
+		$blog_info['user_contact'] = '';
+		$_fieldquery = dbquery("SELECT field_name FROM ".DB_USER_FIELDS."");
+		if (dbrows($_fieldquery)>0) {
+			while ($_field = dbarray($_fieldquery)) {
+				$field_list[] = $_field['field_name'];
+			}
+			// i just need these
+			if (in_array('user_skype', $field_list) && $data['user_skype']) $blog_info['user_contact'] .= " <strong>Skype:</strong> ".$data['user_skype'];
+			if (in_array('user_aim', $field_list) && $data['user_aim']) $blog_info['user_contact'] .= " <strong>AIM:</strong> ".$data['user_aim'];
+			if (in_array('user_yahoo', $field_list) && $data['user_yahoo']) $blog_info['user_contact'] .= " <strong>Yahoo:</strong> ".$data['user_yahoo'];
+			if (in_array('user_icq', $field_list) && $data['user_icq']) $blog_info['user_contact'] .= " <strong>ICQ:</strong> ".$data['user_icq'];
+		}
+
 		add_to_title($locale['global_201'].$blog_subject);
 		$cat_name = $data['blog_cat_name'] ? $data['blog_cat_name'] : $locale['global_080'];
 		add_to_breadcrumbs(array('link'=>BASEDIR."blog.php?cat_id=".$data['blog_cat'], 'title'=>$cat_name));
