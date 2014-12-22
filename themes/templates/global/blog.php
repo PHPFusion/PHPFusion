@@ -178,8 +178,10 @@ if (!function_exists('render_blog_item')) {
 		echo "<article class='blog-item'>\n";
 		echo "<h2 class='text-center'>".$data['blog_subject']."</h2>\n";
 		echo "<div class='text-center'>\n";
-		echo "<span class='blog_info_item'>".showdate($settings['newsdate'], $data['blog_date'])." ".$locale['in']." ".$data['cat_link']." </span> ";
-		echo "<span class='blog_info_item'>".number_format($data['blog_reads'])." ".($data['blog_reads'] >1 ? $locale['global_074'] : $locale['global_074b'])."</span> ";
+		echo "<span class='blog_info_item'>".showdate($settings['newsdate'], $data['blog_date'])." ".$locale['in']." ".$data['cat_link']." </span>";
+		echo "<span class='blog_info_item'>".number_format($data['blog_reads'])." ".($data['blog_reads'] >1 ? $locale['global_074'] : $locale['global_074b'])."</span>";
+		echo "<span class='blog_info_item'><a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=B&amp;item_id=".$data['blog_id']."'><i class='entypo print'></i> ".$locale['global_075']."</a></span>";
+		if (iADMIN && checkrights("B")) echo  "<span class='blog_info_item'><a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$data['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n</span>";
 		echo "</div>\n";
 		echo "<hr>\n";
 		echo "<div class='blog_blog text-dark m-t-20 m-b-20 clearfix'>\n";
@@ -196,28 +198,16 @@ if (!function_exists('render_blog_item')) {
 		echo "<div class='pull-right m-t-20 m-l-20'>".display_avatar($data, '70px', '', '', 'img-circle')."</div>\n";
 		echo "<div class='overflow-hide'>\n";
 		echo "<span class='blog_author_info'>".$locale['global_070']." ".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span><br/>\n";
-
 		if ($data['user_level']) echo sprintf($locale['testimonial_rank'], $data['user_level']);
 		if ($data['user_location']) echo sprintf($locale['testimonial_location'], $data['user_location']);
 		if ($data['user_joined']) echo sprintf($locale['testimonial_location'], showdate('newsdate', $data['user_joined']));
 		if ($data['user_web']) echo sprintf($locale['testimonial_web'], $data['user_web']);
 		if ($data['user_contact']) echo sprintf($locale['testimonial_contact'], $data['user_contact']);
 		if ($data['user_email']) echo sprintf($locale['testimonial_email'], $data['user_email']);
-
-		echo "<a class='view_author_blog' href='#'>".sprintf($locale['global_071b'], ucwords($data['user_name']))." <i class='entypo right-thin'></i></a>";
+		echo "<div><a class='view_author_blog' href='".$data['blog_author_link']['link']."'>".$data['blog_author_link']['name']." <i class='entypo right-thin'></i></a></div>";
 		echo "</div>\n";
 		echo "</div>\n";
-
-
-
-
-
-		echo "<div class='well m-t-5 text-center'>\n";
-		echo "<span class='blog-action'><i class='entypo eye'></i><span class='text-dark m-r-10'></span>\n</span>";
-
-		echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=B&amp;item_id=".$data['blog_id']."'><i class='entypo print'></i></a>";
-		echo iADMIN && checkrights("B") ? "<a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$data['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
-		echo "</div>";
+		// sub
 		echo "<!--blog_sub_readmore-->";
 		echo !isset($_GET['readmore']) && $data['blog_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".BASEDIR."blog.php?readmore=".$data['blog_id']."' class='button'>".$locale['global_072']."</a>\n</div>\n" : "";
 		if ($data['page_count'] > 0) {
