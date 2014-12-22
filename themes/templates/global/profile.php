@@ -82,11 +82,13 @@ if (!function_exists('render_userprofile')) {
 if (!function_exists('render_userform')) {
 	function render_userform($info) {
 		// page navigation
-		$nav = "<ul class='profile_link_nav m-t-20'>";
-		foreach ($info['section'] as $page_section) {
-			$nav .= "<li ".($page_section['active'] ? "class='active'" : '')."><a href='".$page_section['link']."'>".$page_section['name']."</a></li>\n";
+		if (isset($info['section'])) {
+			$nav = "<ul class='profile_link_nav m-t-20'>";
+			foreach ($info['section'] as $page_section) {
+				$nav .= "<li ".($page_section['active'] ? "class='active'" : '')."><a href='".$page_section['link']."'>".$page_section['name']."</a></li>\n";
+			}
+			$nav .= "</ul>\n";
 		}
-		$nav .= "</ul>\n";
 		echo "<div id='register_form'>\n";
 		echo "<div class='row'>\n";
 		if (!$info['register']) {
@@ -98,7 +100,7 @@ if (!function_exists('render_userform')) {
 		}
 		echo $info['openform'];
 		if (isset($info['basic_field'])) echo $info['basic_field'];
-		echo $info['user_field'];
+		if (isset($info['user_field']))	echo $info['user_field'];
 		echo isset($info['validate']) ? $info['validate'] : '';
 		echo isset($info['terms']) ? $info['terms'] : '';
 		echo $info['button'];
