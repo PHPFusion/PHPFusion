@@ -83,7 +83,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			"blog_sticky" => $data['blog_sticky']
 		);
 		add_to_title($locale['global_201'].$blog_subject);
-		add_to_breadcrumbs(array('link'=>BASEDIR."blog.php?cat_id=".$data['blog_cat'], 'title'=>$data['blog_cat_name']));
+		$cat_name = $data['blog_cat_name'] ? $data['blog_cat_name'] : $locale['global_080'];
+		add_to_breadcrumbs(array('link'=>BASEDIR."blog.php?cat_id=".$data['blog_cat'], 'title'=>$cat_name));
 		add_to_breadcrumbs(array('link'=>BASEDIR."blog.php?readmore=".$data['blog_id'], 'title'=>$data['blog_subject']));
 		$info['blog_item'] = $blog_info;
 		$info['blog_item']['page_count'] = $pagecount;
@@ -226,11 +227,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$blog_cat_image = '';	$blog_image = '';	$blog_img_src = '';
 				$blog_subject = stripslashes($data['blog_subject']);
 				if ($data['blog_image'] && file_exists(IMAGES_B.$data['blog_image']) && $settings['blog_image_frontpage'] == 0) {
-					$blog_image = "<a class='img-link' href='".($settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : FUSION_SELF."?readmore=".$data['blog_id'])."'>";
+					$blog_image = "<a class='img-link' href='".($settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : BASEDIR."blog.php?readmore=".$data['blog_id'])."'>";
 					$blog_image .= "<img class='img-responsive' src='".IMAGES_B.$data['blog_image']."' alt='".$data['blog_subject']."' /></a>";
-					$blog_img_src = IMAGES_B.$data['blog_image'];
+					$blog_img_src = "<img src='".IMAGES_B.$data['blog_image']."' alt='".$data['blog_subject']."' />";
 				}
-				$blog_cat_image = "<a href='".($settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : FUSION_SELF."?readmore=".$data['blog_id'])."'>";
+				$blog_cat_image = "<a href='".($settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : BASEDIR."blog.php?readmore=".$data['blog_id'])."'>";
 				if ($data['blog_image_t2'] && $settings['blog_image_frontpage'] == 0) {
 					$blog_cat_image .= "<img src='".IMAGES_B_T.$data['blog_image_t2']."' alt='".$data['blog_subject']."' class='img-responsive blog-category' /></a>";
 				} elseif ($data['blog_cat_image']) {
