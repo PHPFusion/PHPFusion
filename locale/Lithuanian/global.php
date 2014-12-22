@@ -338,4 +338,11 @@ $locale['flood'] = "Jums yra draudžiama rašyti. Prašome palaukti kol nuslūgs
 $locale['no_image'] = "Nėra paveiksliuko";
 $locale['send_message'] = 'Siųsti žinutę';
 $locale['go_profile'] = 'Eiti į %s profilį';
+// Testimonials // translate following lines
+$locale['testimonial_rank'] = "I am the %s of this website";
+$locale['testimonial_location'] = "and I currently live in %s";
+$locale['testimonial_join'] = ". I joined this website on %s.";
+$locale['testimonial_join'] = "I also run my website at %s.";
+$locale['testimonial_contact'] = "If you need to contact me, you can reach me at %s.";
+$locale['testimonial_email'] = "You can also reach me at my e-mail address at %s.";
 ?>

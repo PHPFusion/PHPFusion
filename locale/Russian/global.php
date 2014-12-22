@@ -404,4 +404,11 @@ $locale['right'] = "Вправо";
 $locale['comments'] = "Комментарии";
 $locale['ratings'] = "Оценки";
 $locale['comments_ratings'] = "Комментарии и оценки";
+// Testimonials
+$locale['testimonial_rank'] = "На этом сайте я %s";
+$locale['testimonial_location'] = "и сейчас я живу в %s";
+$locale['testimonial_join'] = ". Я зарегитсрировался здесь %s.";
+$locale['testimonial_join'] = "Также я запустил(-а) свой сайт по адресу %s.";
+$locale['testimonial_contact'] = "Если Вам нужно связаться со мной, вы можете связаться со мной по адресу %s.";
+$locale['testimonial_email'] = "Также Вы можете отправить мне сообщение по электропочте на %s.";
 ?>
