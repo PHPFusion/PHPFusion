@@ -26,7 +26,6 @@ class UserFields extends quantumFields {
 	public $errorsArray = array();
 	public $formaction = FUSION_REQUEST; // changed in API 1.02
 	public $formname = "inputform";
-	public $isAdminPanel = FALSE;
 	public $postName;
 	public $postValue;
 	public $showAdminOptions = FALSE;
@@ -58,7 +57,6 @@ class UserFields extends quantumFields {
 	/* User Fields class 9.00 */
 	private $info = array(); // MVC var
 	public $paginate = TRUE; // new in API v2.00
-	//	private $field_index = 'user_id';
 
 	public function setUserNameChange($value) {
 		$this->_userNameChange = $value;
@@ -106,8 +104,6 @@ class UserFields extends quantumFields {
 						'link'=>$cur_link,
 						'name'=>ucwords($data['field_cat_name'])
 					);
-					//$html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? "class='active'" : '')." />";
-					//$html .= "<a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : "".(isset($_GET['aid']) ? $this->formaction."&amp;" : BASEDIR."".($this->method == 'input' ? "edit_profile.php?" : "profile.php?")."")."")."profiles=".strtolower($data['field_cat_name'])."".(isset($_GET['aid']) ? '' : "&amp;lookup=".$this->userData['user_id']."")."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
 					$i++;
 				}
 			}
@@ -422,12 +418,10 @@ class UserFields extends quantumFields {
 	private function renderButton() {
 		$dissabled = $this->displayTerms == 1 ? " disabled='disabled'" : "";
 		$html = '';
-		//$html .= "<tr>\n<td align='center' colspan='2'><br />\n";
 		if (!$this->skipCurrentPass) {
 			$html .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
 		}
 		$html .= "<button type='submit' name='".$this->postName."' value='".$this->postValue."' class='btn btn-primary'".$dissabled." />".$this->postValue."</button>\n";
-		//$this->html .= "</td>\n</tr>\n";
 		return $html;
 	}
 

@@ -112,7 +112,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && defined('FUSION_NULL'))) {
 		opentable($locale['480']);
 		member_nav(member_url("add", "")."| ".$locale['480']);
-
 		$userFields = new UserFields();
 		$userFields->postName = "add_user";
 		$userFields->postValue = $locale['480'];
@@ -155,22 +154,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	$userFields->userData = $user_data;
 	$userFields->method = 'input';
 	$userFields->renderInput();
-
-
-
-
-
-
-
-
-
-
-
-
-//	$userFields = new UserFields();
-//	$userFields->userData = $user_data;
-//	$userFields->displayOutput();
-//	closetable();
+	closetable();
 	// Edit User Profile
 } elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	require_once CLASSES."UserFields.class.php";
@@ -209,18 +193,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	$userFields->userData = $user_data;
 	$userFields->method = 'input';
 	$userFields->renderInput();
-
-
-	/* $userFields = new UserFields();
-	$userFields->postName = "savechanges";
-	$userFields->postValue = $locale['430'];
-	//$userFields->formaction = FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$user_id;
-	$userFields->isAdminPanel = TRUE;
-	$userFields->showAdminPass = FALSE;
-	$userFields->skipCurrentPass = TRUE;
-	$userFields->userData = $user_data;
-	$userFields->errorsArray = $errors;
-	$userFields->displayInput(); */
 	closetable();
 	// Delete User
 } elseif (isset($_GET['step']) && $_GET['step'] == "delete" && $user_id && (!$isAdmin || iSUPERADMIN)) {

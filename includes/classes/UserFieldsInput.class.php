@@ -24,7 +24,6 @@ require_once CLASSES."QuantumFields.class.php";
 class UserFieldsInput {
 	public $adminActivation = 1;
 	public $emailVerification = 1;
-	public $isAdminPanel = FALSE;
 	public $verifyNewEmail = FALSE;
 	public $userData;
 	public $validation = 0;
@@ -259,7 +258,7 @@ class UserFieldsInput {
 					$this->data['user_algo'] = $this->_newUserPasswordAlgo;
 					$this->data['user_salt'] = $this->_newUserPasswordSalt;
 					$this->data['user_password'] = $this->_newUserPasswordHash;
-					if (!$this->isAdminPanel && !$this->skipCurrentPass) {
+					if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
 						Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
 					}
 				} else {
@@ -307,7 +306,7 @@ class UserFieldsInput {
 		global $locale, $defender;
 		// - update on edit profile only and must be admin to have admin password fields.
 		// Only accept if user is admin, updating his profile (not admin panel)
-		if (iADMIN && $this->_method == "validate_update" && !$this->isAdminPanel) {
+		if (iADMIN && $this->_method == "validate_update" && !defined('ADMIN_PANEL')) {
 			if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
 				$this->_isValidCurrentAdminPassword = $this->_isValidCurrentPassword(FALSE, FALSE); // authenticate
 			} else { // check password
@@ -619,7 +618,7 @@ class UserFieldsInput {
 		if ($this->adminActivation) {
 			$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u162'];
 		} else {
-			if (!$this->isAdminPanel) {
+			if (!defined('ADMIN_PANEL')) {
 				$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u161'];
 			} else {
 				require_once LOCALE.LOCALESET."admin/members_email.php";
