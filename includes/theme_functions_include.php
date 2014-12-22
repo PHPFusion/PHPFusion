@@ -673,12 +673,12 @@ function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE
 	global $locale;
 	$start_link = $link ? "<a class='comments-item m-r-10 ".$class."' href='".$link."'>" : '';
 	$end_link = $link ? "</a>\n" : '';
+	$average = $total_votes > 0 ? number_format($total_sum/$total_votes, 2) : 0;
+	$str = $mode == 1 ? $average.$locale['global_094'].$total_votes." ".($total_votes > 1 ? $locale['global_134'] : $locale['global_133']) : "$average/$total_votes";
 	if ($total_votes > 0) {
-		$average = number_format($total_sum/$total_votes, 1);
-		$str = $mode == 1 ? $average.$locale['global_094'].$total_votes." ".($total_votes > 1 ? $locale['global_134'] : $locale['global_133']) : "$average/$total_votes";
 		$answer = $start_link."<i title='".$locale['global_143']."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
 	} else {
-		$answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='entypo thumbs-up high-opacity m-l-0'></i> 0 ".$end_link;
+		$answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
 	}
 	return $answer;
 }
@@ -688,11 +688,11 @@ function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode =
 	global $locale;
 	$start_link = $link ? "<a class='comments-item m-r-10 ".$class."' href='".$link."'>" : '';
 	$end_link = $link ? "</a>\n" : '';
+	$str = $mode == 1 ? $news_comments." ".($news_comments > 1 ? $locale['global_073'] : $locale['global_073b']) : $news_comments;
 	if ($news_comments > 0) {
-		$str = $mode == 1 ? $news_comments." ".($news_comments > 1 ? $locale['global_073'] : $locale['global_073b']) : $news_comments;
 		return $start_link."<i title='".$locale['global_073']."' class='entypo icomment high-opacity m-l-0'></i>".$str.$end_link;
 	} else {
-		return $start_link."<i title='".sprintf($locale['global_089'], $locale['global_077'])."' class='entypo icomment high-opacity m-l-0'></i> 0".$end_link;
+		return $start_link."<i title='".sprintf($locale['global_089'], $locale['global_077'])."' class='entypo icomment high-opacity m-l-0'></i> ".$str.$end_link;
 	}
 }
 ?>
