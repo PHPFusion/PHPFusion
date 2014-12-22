@@ -126,6 +126,7 @@ $locale['global_072'] = "Toliau...";
 $locale['global_073'] = " komentarai";
 $locale['global_073b'] = " komentaras";
 $locale['global_074'] = " Peržiūros";
+$locale['global_074b'] = " Peržiūros"; // please, sync this value with English locale
 $locale['global_075'] = "Spausdinti";
 $locale['global_076'] = "Redaguoti";
 $locale['global_077'] = "Naujienos";

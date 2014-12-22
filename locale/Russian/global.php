@@ -28,6 +28,8 @@ $locale['second'] = "секунда";
 $locale['second_a'] = "секунд(-ы)";
 $locale['just_now'] = "только что";
 $locale['ago'] = "назад";
+// for format_word() function
+
 // Geo
 $locale['street1'] = "Улица, адрес 1";
 $locale['street2'] = "Улица, адрес 2";
@@ -106,10 +108,11 @@ $locale['global_060'] = "Прекратить отслеживать тему?";
 // Blog, News & Articles
 $locale['global_070']  = "Опубликовано ";
 $locale['global_071']  = "в ";
-$locale['global_072']  = "Читать далее";
+$locale['global_072']  = "Продолжить чтение";
 $locale['global_073']  = " комментариев";
 $locale['global_073b'] = " комментарий";
 $locale['global_074']  = " прочтений";
+$locale['global_074b']  = " прочтение";
 $locale['global_075']  = "Печать";
 $locale['global_076']  = "Правка";
 $locale['global_077']  = "Новости";
@@ -209,7 +212,7 @@ $locale['global_135'] = "Голосов: ";
 $locale['global_136'] = "начало: ";
 $locale['global_137'] = "Окончание: ";
 $locale['global_138'] = "Архив опросов";
-$locale['global_139'] = "Для просмотра выберите опрос из списка:";
+$locale['global_139'] = "Пожалуйста, выберите опрос из списка для просмотра:";
 $locale['global_140'] = "Просмотр";
 $locale['global_141'] = "Смотреть опрос";
 $locale['global_142'] = "Опросы не созданы.";
