@@ -24,7 +24,7 @@ class atom {
 	}
 
 	public function set_theme() {
-
+		print_p($_POST);
 	}
 
 	public function theme_editor() {
@@ -81,7 +81,7 @@ class atom {
 		$color_options = array("placeholder" => "Choose Color", 'width'=>'100%', "format" => "hex");
 		$font_options = array('width' => '100%', 'placeholder' => 'Pick the font and build your collection.', 'tags'=>1, 'multiple'=>1, 'max_select'=>6, 'inline'=>1);
 		$font_type_options = array('placeholder' => 'Select a Base Font', 'width' => '280px', 'inline'=>1);
-		$font_size_options = array('placeholder' => '(px)', 'width' => '250px', 'number'=>1, 'class'=>'pull-left display-inline m-r-10');
+		$font_size_options = array('placeholder' => '(px)', 'width' => '100%', 'number'=>1, 'class'=>'pull-left display-inline m-r-10');
 		$fonts_family_opts = array(
 			'0'=>'Sans Serif Font Family',
 			'1'=>'Monospace Font Family',
@@ -96,14 +96,14 @@ class atom {
 
 		echo form_select("Base Font", "base_font", "base_font", $fonts_family_opts, $data['base_font'], $font_type_options);
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Base Font Sizes', 'base-font-size');
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Base Font Size", "base_font_size", "base_font_size", $data['base_font_size'], $font_size_options);
 		echo form_text("Line Spacing", "base_font_height", "base_font_height", $data['base_font_height'], $font_size_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Base Font Size Large", "base_font_size_l", "base_font_size_l", $data['base_font_size_l'], $font_size_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Base Font Size Small", "base_font_size_s", "base_font_size_s", $data['base_font_size_s'], $font_size_options);
 		echo "</div>\n</div>\n";
 
@@ -111,14 +111,14 @@ class atom {
 		echo "<hr>\n";
 		// h1
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 1', 'h1');
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Font Size", "font_size_h1", "font_size_h1", $data['font_size_h1'], $font_size_options);
 		echo form_text("Line Spacing", "font_h1_height", "font_h1_height", $data['font_h1_height'], $font_size_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h1", "font_color_h1", $data['font_color_h1'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h1", "font_decoration_h1", $text_decoration, $data['font_decoration_h1'], $color_options);
 		echo "</div>\n</div>\n";
 
@@ -126,12 +126,12 @@ class atom {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 2', 'h2');
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Font Size", "font_size_h2", "font_size_h2", $data['font_size_h2'], $font_size_options);
 		echo form_text("Line Spacing", "font_h2_height", "font_h2_height", $data['font_h2_height'], $font_size_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h2", "font_color_h2", $data['font_color_h2'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h2", "font_decoration_h2", $text_decoration, $data['font_decoration_h2'], $color_options);
 		echo "</div>\n</div>\n";
 
@@ -139,18 +139,18 @@ class atom {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 3', 'h3');
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Font Size", "font_size_h3", "font_size_h2", $data['font_size_h3'], $font_size_options);
 		echo form_text("Line Spacing", "font_h3_height", "font_h3_height", $data['font_h3_height'], $font_size_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h3", "font_color_h3", $data['font_color_h3'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h3", "font_decoration_h3", $text_decoration, $data['font_decoration_h3'], $color_options);
 		echo "</div>\n</div>\n";
 
 		// h4
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 4', 'h4');
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_text("Font Size", "font_size_h4", "font_size_h4", $data['font_size_h4'], $font_size_options);
@@ -165,25 +165,25 @@ class atom {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 5', 'h5');
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Font Size", "font_size_h5", "font_size_h5", $data['font_size_h5'], $font_size_options);
 		echo form_text("Line Spacing", "font_h5_height", "font_h5_height", $data['font_h5_height'], $font_size_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h5", "font_color_h5", $data['font_color_h5'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h5", "font_decoration_h5", $text_decoration, $data['font_decoration_h5'], $color_options);
 		echo "</div>\n</div>\n";
 
 		// h6
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 6', 'h6');
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Font Size", "font_size_h6", "font_size_h6", $data['font_size_h6'], $font_size_options);
 		echo form_text("Line Spacing", "font_h6_height", "font_h6_height", $data['font_h6_height'], $font_size_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h6", "font_color_h6", $data['font_color_h6'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h6", "font_decoration_h6", $text_decoration, $data['font_decoration_h6'], $color_options);
 		echo "</div>\n</div>\n";
 
@@ -192,13 +192,13 @@ class atom {
 		// link
 		$text_decoration = array('Normal', 'Bold', 'Underlined', 'Bold and Underlined');
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Link Settings', 'link');
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Link Base Color', "link_color", "link_color", $data['link_color'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Link Hover Color', "link_hover_color", "link_hover_color", $data['link_hover_color'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Link Hover Effects', "link_hover_effect", "link_hover_effect", $text_decoration, $data['link_hover_effect'], $color_options);
 		echo "</div>\n</div>\n";
 
@@ -206,28 +206,27 @@ class atom {
 		echo "<hr>\n";
 		// code
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Code Font Settings', 'link');
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Code Base Color', "code_color", "code_color", $data['code_color'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Background Color', "code_bgcolor", "code_bgcolor", $data['code_bgcolor'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
-
 
 		// blockquote
 		echo form_para("Blockquote Font", 'quote_settings');
 		echo "<hr>\n";
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Blockquote', 'blockquote');
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Font Size", "font_size_quote", "font_size_quote", $data['font_size_quote'], $font_size_options);
 		echo form_text("Line Spacing", "font_quote_height", "font_quote_height", $data['font_quote_height'], $font_size_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_quote", "font_color_quote", $data['font_color_quote'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_quote", "font_decoration_quote", $text_decoration, $data['font_decoration_quote'], $color_options);
 		echo "</div>\n</div>\n";
 
