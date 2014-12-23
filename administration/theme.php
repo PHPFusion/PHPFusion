@@ -81,6 +81,7 @@ closetable();
 
 function theme_editor() {
 	$atom = new atom();
+	$atom->set_theme();
 	$atom->theme_editor();
 }
 
