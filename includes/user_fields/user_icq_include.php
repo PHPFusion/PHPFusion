@@ -33,7 +33,7 @@ if ($profile_method == "input") {
 	if ($required) {
 		$this->setRequiredJavaScript("user_icq", $locale['uf_icq_error']);
 	} */
-	$options +=array('inline'=>1, 'max_length'=>16);
+	$options +=array('inline'=>1, 'number'=>1, 'max_length'=>16);
 	$user_fields = form_text($locale['uf_icq'], 'user_icq', 'user_icq', $user_icq, $options);
 
 	// Display in profile

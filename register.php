@@ -23,29 +23,27 @@ include LOCALE.LOCALESET."user_fields.php";
 if (iMEMBER || !$settings['enable_registration']) {
 	redirect("index.php");
 }
+
 $errors = array();
 if (isset($_GET['email']) && isset($_GET['code'])) {
-	if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $_GET['email'])) {
-		redirect("register.php?error=activate");
-	}
-	if (!preg_check("/^[0-9a-z]{40}$/", $_GET['code'])) {
-		redirect("register.php?error=activate");
-	}
+
+	if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $_GET['email'])) 	redirect("register.php?error=activate");
+	if (!preg_check("/^[0-9a-z]{40}$/", $_GET['code'])) redirect("register.php?error=activate");
+
 	$result = dbquery("SELECT user_info FROM ".DB_NEW_USERS."
-		WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."'
-		LIMIT 1");
-	if (dbrows($result)) {
+				WHERE user_code='".$_GET['code']."' AND user_email='".$_GET['email']."'
+				LIMIT 1");
+
+	if (dbrows($result)>0) {
+
 		add_to_title($locale['global_200'].$locale['u155']);
-		// getmequick at gmail dot com
-		// http://www.php.net/manual/en/function.unserialize.php#71270
 		function unserializeFix($var) {
 			$var = preg_replace('!s:(\d+):"(.*?)";!e', "'s:'.strlen('$2').':\"$2\";'", $var);
 			return unserialize($var);
 		}
-
 		$data = dbarray($result);
 		$user_info = unserializeFix(stripslashes($data['user_info']));
-		$result = dbquery("INSERT INTO ".DB_USERS." (".$user_info['user_field_fields'].") VALUES (".$user_info['user_field_inputs'].")");
+		dbquery_insert(DB_USERS, $user_info, 'save');
 		$result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' LIMIT 1");
 		opentable($locale['u155']);
 		if ($settings['admin_activation'] == "1") {
@@ -57,7 +55,8 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 	} else {
 		redirect("index.php");
 	}
-} elseif (isset($_POST['register'])) {
+}
+elseif (isset($_POST['register'])) {
 	$userInput = new UserFieldsInput();
 	$userInput->validation = $settings['display_validation'];
 	$userInput->emailVerification = $settings['email_verification'];
@@ -66,10 +65,10 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 	$userInput->registration = TRUE;
 	$userInput->saveInsert();
 	$userInput->displayMessages();
-	$errors = $userInput->getErrorsArray();
 	unset($userInput);
 }
-if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['register']) && count($errors) > 0)) {
+if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['register']) && defined('FUSION_NULL'))) {
+	// hide by default
 	opentable($locale['u101']);
 	$userFields = new UserFields();
 	$userFields->postName = "register";
@@ -79,7 +78,6 @@ if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['regi
 	$userFields->plugin_folder = INCLUDES."user_fields/";
 	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 	$userFields->showAdminPass = FALSE;
-	$userFields->showAvatarInput = FALSE;
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->registration = TRUE;
 	$userFields->method = 'input';

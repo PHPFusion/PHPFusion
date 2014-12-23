@@ -8,6 +8,7 @@
 | Author: Nick Jones (Digitanium)
 | Author: Paul Buek (Muscapaul)
 | Author: Hans Kristian Flaatten (Starefossen)
+| Author: Frederick Chan MC (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -39,10 +40,12 @@ if ($checkRights > 0) {
 }
 if (isset($_POST['cancel'])) {
 	redirect(USER_MANAGEMENT_SELF);
-} elseif (isset($_GET['step']) && $_GET['step'] == "log" && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['step']) && $_GET['step'] == "log" && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	display_suspend_log($user_id, "all", $rowstart);
 	// Deactivate Inactive Users
-} elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $settings['enable_deactivation'] == 1 && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $settings['enable_deactivation'] == 1 && (!$isAdmin || iSUPERADMIN)) {
 	$inactive = dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level<'103' AND user_lastvisit<'$time_overdue' AND user_actiontime='0'");
 	$action = ($settings['deactivation_action'] == 0 ? $locale['616'] : $locale['615']);
 	$button = $locale['614'].($inactive == 1 ? " 1 ".$locale['612'] : " 50 ".$locale['613']);
@@ -89,36 +92,38 @@ if (isset($_POST['cancel'])) {
 		redirect(FUSION_SELF.$aidlink);
 	}
 	// Add new User
-} elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERADMIN)) {
 	require_once CLASSES."UserFields.class.php";
 	require_once CLASSES."UserFieldsInput.class.php";
 	$errors = array();
+
 	if (isset($_POST['add_user'])) {
 		$userInput = new UserFieldsInput();
-		$userInput->adminActivation = 0;
-		$userInput->emailVerification = 0;
-		$userInput->isAdminPanel = TRUE;
-		$userInput->skipCurrentPass = TRUE;
 		$userInput->validation = 0;
+		$userInput->emailVerification = 0;
+		$userInput->adminActivation = 0;
+		$userInput->registration = TRUE;
+		$userInput->skipCurrentPass = TRUE;
 		$userInput->saveInsert();
 		$userInput->displayMessages();
-		$errors = $userInput->getErrorsArray();
 		unset($userInput);
 	}
-	if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && count($errors) > 0)) {
+
+	if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && defined('FUSION_NULL'))) {
 		opentable($locale['480']);
 		member_nav(member_url("add", "")."| ".$locale['480']);
 		$userFields = new UserFields();
 		$userFields->postName = "add_user";
 		$userFields->postValue = $locale['480'];
-		$userFields->formaction = FUSION_SELF.$aidlink."&amp;step=add";
-		$userFields->isAdminPanel = TRUE;
+		$userFields->displayValidation = $settings['display_validation'];
+		$userFields->plugin_folder = INCLUDES."user_fields/";
+		$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 		$userFields->showAdminPass = FALSE;
-		$userFields->showAvatarInput = FALSE;
 		$userFields->skipCurrentPass = TRUE;
-		$userFields->errorsArray = $errors;
 		$userFields->registration = TRUE;
-		$userFields->displayInput();
+		$userFields->method = 'input';
+		$userFields->renderInput();
 		closetable();
 	}
 	// View User Profile
@@ -138,8 +143,18 @@ if (isset($_POST['cancel'])) {
 	member_nav(member_url("view", $user_id)."|".$user_data['user_name']);
 	opentable($locale['u104']." ".$user_data['user_name']);
 	$userFields = new UserFields();
+	$userFields->postName = "register";
+	$userFields->postValue = $locale['u101'];
+	$userFields->displayValidation = $settings['display_validation'];
+	$userFields->displayTerms = $settings['enable_terms'];
+	$userFields->plugin_folder = INCLUDES."user_fields/";
+	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+	$userFields->showAdminPass = FALSE;
+	$userFields->skipCurrentPass = TRUE;
+	$userFields->registration = TRUE;
 	$userFields->userData = $user_data;
-	$userFields->displayOutput();
+	$userFields->method = 'input';
+	$userFields->renderInput();
 	closetable();
 	// Edit User Profile
 } elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmin || iSUPERADMIN)) {
@@ -159,22 +174,25 @@ if (isset($_POST['cancel'])) {
 		$userInput->skipCurrentPass = TRUE;
 		$userInput->saveUpdate();
 		$userInput->displayMessages();
-		$errors = $userInput->getErrorsArray();
 		$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
 		unset($userInput);
 	}
 	opentable($locale['430']);
 	member_nav(member_url("edit", $user_id)."| ".$locale['430']);
+
 	$userFields = new UserFields();
 	$userFields->postName = "savechanges";
 	$userFields->postValue = $locale['430'];
 	$userFields->formaction = FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$user_id;
-	$userFields->isAdminPanel = TRUE;
+	$userFields->displayValidation = $settings['display_validation'];
+	$userFields->displayTerms = $settings['enable_terms'];
+	$userFields->plugin_folder = INCLUDES."user_fields/";
+	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 	$userFields->showAdminPass = FALSE;
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->userData = $user_data;
-	$userFields->errorsArray = $errors;
-	$userFields->displayInput();
+	$userFields->method = 'input';
+	$userFields->renderInput();
 	closetable();
 	// Delete User
 } elseif (isset($_GET['step']) && $_GET['step'] == "delete" && $user_id && (!$isAdmin || iSUPERADMIN)) {

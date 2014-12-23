@@ -127,6 +127,6 @@ if ($pdo_enabled == "1") {
 }
 
 // Shows allocated memory and the actual memory used for generatig a page
-echo "Memory: alloc. ".(memory_get_peak_usage(true)/1024/1024)." MB / used ".number_format((memory_get_peak_usage(false)/1024/1024), 2)." MB";
+//echo "Memory: alloc. ".(memory_get_peak_usage(true)/1024/1024)." MB / used ".number_format((memory_get_peak_usage(false)/1024/1024), 2)." MB";
 //var_dump($_SESSION);
 ?>

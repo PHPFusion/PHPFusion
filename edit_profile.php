@@ -33,7 +33,6 @@ if (isset($_POST['update_profile'])) {
 	$userInput->userData = $userdata; // inject to override so whatever not in this page is not lost.. deprecate
 	$userInput->saveUpdate();
 	$userInput->displayMessages();
-	$errors = $userInput->getErrorsArray();
 	if (empty($errors) && $userInput->themeChanged()) redirect(BASEDIR.'index.php');
 	$userdata = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."'"));
 	unset($userInput);

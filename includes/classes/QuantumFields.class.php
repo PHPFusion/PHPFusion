@@ -1324,32 +1324,52 @@ class quantumFields {
 
 	/* record fields */
 	public function infinity_insert($mode) {
-		// print_p($this->fields);
-		// here i pair database to fields, and then i grab the $_post,
-		// run validation via defender and then return the value.
 		$infinity_list = array();
 		$target_database = '';
+		$target_index = '';
+		$index_value = '';
 		foreach($this->fields as $cat_id => $fields) {
 			foreach($fields as $field_id => $field_data) {
 				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
+				$target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
+				$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : '';
+				if (!isset($infinity_list[$target_database][$target_index])) $infinity_list[$target_database][$target_index] = $index_value;
 				$infinity_list[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : '';
 			}
 		}
-		// now I will have the value of each post, all securely validated by defender.
-		//print_p($insert_list);
 		if (db_exists($target_database)) {
 			foreach($infinity_list as $database_name => $infinity_fields) {
-				/* if ($mode == 'update') {
-					dbquery_insert($database_name, $infinity_fields, 'update');
-				} else {
-					dbquery_insert($database_name, $infinity_fields, 'save');
-				} */
-				// which can be simplified again to
-				dbquery_insert($database_name, $infinity_fields, $mode);
+				if ($target_index && $index_value) {
+					$infinity_fields += dbarray(dbquery("SELECT * FROM ".$target_database." WHERE ".$target_index." = '".$index_value."' "));
+					dbquery_insert($database_name, $infinity_fields, $mode);
+				}
 			}
 		}
 	}
 
+	/* Single array output match against $db */
+	public function output_fields($db) {
+		$infinity_list = array();
+		$target_database = '';
+		$target_index = '';
+		$index_value = '';
+		foreach($this->fields as $cat_id => $fields) {
+			foreach($fields as $field_id => $field_data) {
+				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
+				$target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
+				$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : '';
+				if (!isset($infinity_list[$target_database][$target_index])) $infinity_list[$target_database][$target_index] = $index_value;
+				$infinity_list[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : '';
+			}
+		}
+		if (db_exists($target_database) && $db == $target_database) {
+			foreach($infinity_list as $database_name => $infinity_fields) {
+				if ($target_database && $target_index) {
+					return $infinity_fields;
+				}
+			}
+		}
+	}
 
 
 }

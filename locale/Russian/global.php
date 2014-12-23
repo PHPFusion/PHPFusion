@@ -28,6 +28,8 @@ $locale['second'] = "секунда";
 $locale['second_a'] = "секунд(-ы)";
 $locale['just_now'] = "только что";
 $locale['ago'] = "назад";
+// for format_word() function
+
 // Geo
 $locale['street1'] = "Улица, адрес 1";
 $locale['street2'] = "Улица, адрес 2";
@@ -106,10 +108,11 @@ $locale['global_060'] = "Прекратить отслеживать тему?";
 // Blog, News & Articles
 $locale['global_070']  = "Опубликовано ";
 $locale['global_071']  = "в ";
-$locale['global_072']  = "Читать далее";
+$locale['global_072']  = "Продолжить чтение";
 $locale['global_073']  = " комментариев";
 $locale['global_073b'] = " комментарий";
 $locale['global_074']  = " прочтений";
+$locale['global_074b']  = " прочтение";
 $locale['global_075']  = "Печать";
 $locale['global_076']  = "Правка";
 $locale['global_077']  = "Новости";
@@ -120,7 +123,7 @@ $locale['global_079']  = "В ";
 $locale['global_080']  = "Без категории";
 $locale['global_081'] = "В начало новостей";
 $locale['global_082'] = "Центр новостей";
-$locale['global_081b'] = "В началое блогов";
+$locale['global_081b'] = "В начало блогов";
 $locale['global_082b'] = "Центр блогов";
 $locale['global_082c'] = "Панель архива блогов";
 $locale['global_083'] = "Последнее обновлённое";
@@ -209,7 +212,7 @@ $locale['global_135'] = "Голосов: ";
 $locale['global_136'] = "начало: ";
 $locale['global_137'] = "Окончание: ";
 $locale['global_138'] = "Архив опросов";
-$locale['global_139'] = "Для просмотра выберите опрос из списка:";
+$locale['global_139'] = "Пожалуйста, выберите опрос из списка для просмотра:";
 $locale['global_140'] = "Просмотр";
 $locale['global_141'] = "Смотреть опрос";
 $locale['global_142'] = "Опросы не созданы.";
@@ -401,4 +404,11 @@ $locale['right'] = "Вправо";
 $locale['comments'] = "Комментарии";
 $locale['ratings'] = "Оценки";
 $locale['comments_ratings'] = "Комментарии и оценки";
+// Testimonials
+$locale['testimonial_rank'] = "На этом сайте я %s";
+$locale['testimonial_location'] = "и сейчас я живу в %s";
+$locale['testimonial_join'] = ". Я зарегитсрировался здесь %s.";
+$locale['testimonial_join'] = "Также я запустил(-а) свой сайт по адресу %s.";
+$locale['testimonial_contact'] = "Если Вам нужно связаться со мной, вы можете связаться со мной по адресу %s.";
+$locale['testimonial_email'] = "Также Вы можете отправить мне сообщение по электропочте на %s.";
 ?>

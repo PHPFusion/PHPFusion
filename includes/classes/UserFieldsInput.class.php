@@ -24,16 +24,13 @@ require_once CLASSES."QuantumFields.class.php";
 class UserFieldsInput {
 	public $adminActivation = 1;
 	public $emailVerification = 1;
-	public $isAdminPanel = FALSE;
 	public $verifyNewEmail = FALSE;
 	public $userData;
 	public $validation = 0;
 	public $registration = FALSE;
 	// On insert or admin edit
-	public $skipCurrentPass = FALSE;
+	public $skipCurrentPass = FALSE; // FALSE to skip pass. True to validate password. New Register always FALSE.
 	private $_completeMessage;
-	private $_errorMessages = array();
-	private $_fieldsRequired = array();
 	private $_method;
 	private $_noErrors = TRUE;
 	private $_userEmail;
@@ -54,9 +51,7 @@ class UserFieldsInput {
 	private $_userAdminPassword = FALSE;
 	private $_newUserAdminPassword = FALSE;
 	private $_newUserAdminPassword2 = FALSE;
-	// Database inputs
-	private $_dbFields;
-	private $_dbValues;
+
 	// User Log System
 	private $_userLogData = array();
 	private $_userLogFields = array();
@@ -67,30 +62,24 @@ class UserFieldsInput {
 
 	public function saveInsert() {
 		$this->_method = "validate_insert";
-		$this->userData = array("user_password" => "",
-			"user_algo" => "",
-			"user_salt" => "",
-			"user_admin_password" => "",
-			"user_admin_algo" => "",
-			"user_admin_salt" => "",
-			"user_name" => "",
-			"user_email" => "");
-		$this->_fieldsRequired = array("user_name" => TRUE,
-			"user_password" => TRUE,
-			"user_email" => TRUE,
-			"user_captcha" => TRUE,
-			"email_activation" => TRUE);
+
+		$this->data = array("user_password" => "",
+							"user_algo" => "",
+							"user_salt" => "",
+							"user_admin_password" => "",
+							"user_admin_algo" => "",
+							"user_admin_salt" => "",
+							"user_name" => "",
+							"user_email" => ""
+		);
 		if ($this->_userNameChange) {
 			$this->_settUserName();
 		}
 		$this->_setNewUserPassword();
 		$this->_setUserEmail();
-		if ($this->validation == 1) {
-			$this->_setValidationError();
-		}
+		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setEmptyFields();
-		$this->_setCustomUserFieldsData();
-		if ($this->_noErrors) {
+		if (!defined('FUSION_NULL')) {
 			if ($this->emailVerification) {
 				$this->_setEmailVerification();
 			} else {
@@ -101,29 +90,21 @@ class UserFieldsInput {
 
 	public function saveUpdate() {
 		$this->_method = "validate_update";
+		$this->data = $this->userData;
 		$this->_settUserName();
 		$this->_setNewUserPassword();
 		$this->_setNewAdminPassword();
 		$this->_setUserEmail();
-		if ($this->validation == 1) {
-			$this->_setValidationError();
-		}
+		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setEmptyFields();
 		$this->_setUserAvatar();
-		// to deprecate this
-		//$this->_setCustomUserFieldsData();
-		print_p($this->data);
-		$this->_setUserDataUpdate();
-
-	}
-
-	public function getErrorsArray() {
-		return $this->_errorMessages;
+		if (!defined('FUSION_NULL')) $this->_setUserDataUpdate();
 	}
 
 	public function displayMessages() {
 		global $locale;
-		if ($this->_noErrors) {
+		$title = ''; $message = '';
+		if (!defined('FUSION_NULL')) {
 			if ($this->_method == "validate_insert") {
 				$title = $locale['u170'];
 				$message = "<br />\n".$this->_completeMessage."<br /><br />\n";
@@ -131,17 +112,10 @@ class UserFieldsInput {
 				$title = $locale['u169'];
 				$message = "<br />\n".$this->_completeMessage."<br /><br />\n";
 			}
-		} else {
-			$title = $this->_method == "validate_insert" ? $locale['u165'] : $locale['u164'];
-			$message = $title." ".$locale['u167']."<br /><br />\n";
-			foreach ($this->_errorMessages as $err => $msg) {
-				$message .= $msg."<br />\n";
-			}
-			$message .= "\n".$locale['u168'];
+			opentable($title);
+			echo $message;
+			closetable();
 		}
-		opentable($title);
-		echo "<div style='text-align:center'>".$message."</div>\n";
-		closetable();
 	}
 
 	public function setUserNameChange($value) {
@@ -193,7 +167,6 @@ class UserFieldsInput {
 				$name_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_name='".$this->_userName."'");
 				if ($name_active == 0 && $name_inactive == 0) {
 					$this->_userLogFields[] = "user_name";
-					$this->_setDBValue("user_name", $this->_userName); // ### to cut
 					$this->data['user_name'] = $this->_userName;
 				} else {
 					$defender->stop();
@@ -218,13 +191,15 @@ class UserFieldsInput {
 	/* Always to return FALSE unless you key in a valid password */
 	private function _isValidCurrentPassword($loginPass = TRUE, $skipCurrentPass = FALSE) {
 		if ($loginPass && !$skipCurrentPass) {
+			// used on register.
 			$this->_userHash = $this->_getPasswordInput("user_hash");
 			$this->_userPassword = $this->_getPasswordInput("user_password");
 			$password = $this->_userPassword;
 			$hash = $this->userData['user_password'];
 			$salt = $this->userData['user_salt'];
 			$algo = $this->userData['user_algo'];
-		} elseif ($loginPass == FALSE && !$skipCurrentPass) {
+		}
+		elseif ($loginPass == FALSE && !$skipCurrentPass) {
 			$this->_userAdminPassword = $this->_getPasswordInput("user_admin_password");
 			$password = $this->_userAdminPassword;
 			$hash = $this->userData['user_admin_password'];
@@ -258,8 +233,7 @@ class UserFieldsInput {
 	private function _setNewUserPassword() {
 		global $locale, $defender;
 		// this is used by many of the following functions - username and email. it will always be false unless you submit a password
-		$this->_isValidCurrentPassword = $this->_isValidCurrentPassword(TRUE, $this->skipCurrentPass); // $skipCurrentPass is 1 on edit profile
-		print_p($this->skipCurrentPass);
+		$this->_isValidCurrentPassword = $this->_isValidCurrentPassword(TRUE, $this->skipCurrentPass); // $skipCurrentPass is 1 on edit profile // false on register
 		$this->_newUserPassword = $this->_getPasswordInput("user_new_password");
 		$this->_newUserPassword2 = $this->_getPasswordInput("user_new_password2");
 		if ($this->_newUserPassword) {
@@ -277,13 +251,10 @@ class UserFieldsInput {
 					$this->_newUserPasswordHash = $passAuth->getNewHash();
 					$this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
 					$this->_newUserPasswordSalt = $passAuth->getNewSalt();
-					$this->_setDBValue("user_algo", $this->_newUserPasswordAlgo); // ###
-					$this->_setDBValue("user_salt", $this->_newUserPasswordSalt); // ###
-					$this->_setDBValue("user_password", $this->_newUserPasswordHash); // ###
 					$this->data['user_algo'] = $this->_newUserPasswordAlgo;
 					$this->data['user_salt'] = $this->_newUserPasswordSalt;
-					$this->data['user_alpasswordgo'] = $this->_newUserPasswordHash;
-					if (!$this->isAdminPanel && !$this->skipCurrentPass) {
+					$this->data['user_password'] = $this->_newUserPasswordHash;
+					if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
 						Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
 					}
 				} else {
@@ -317,16 +288,11 @@ class UserFieldsInput {
 			}
 		} else {
 			// New user password is empty
-			if ($this->_method != 'validate_update') {
+			if ($this->_method == 'validate_insert') {
 				$defender->stop();
 				$defender->addError('user_new_password');
 				$defender->addHelperText('user_new_password', $locale['u134'].$locale['u143a']);
 				$defender->addNotice($locale['u134'].$locale['u143a']);
-			} else {
-				// no input on new_user_password on validate_update mode.
-				$this->data['user_password'] = $this->userData['user_password'];
-				$this->data['user_algo'] = $this->userData['user_algo'];
-				$this->data['user_salt'] = $this->userData['user_salt'];
 			}
 		}
 	}
@@ -336,7 +302,7 @@ class UserFieldsInput {
 		global $locale, $defender;
 		// - update on edit profile only and must be admin to have admin password fields.
 		// Only accept if user is admin, updating his profile (not admin panel)
-		if (iADMIN && $this->_method == "validate_update" && !$this->isAdminPanel) {
+		if (iADMIN && $this->_method == "validate_update" && !defined('ADMIN_PANEL')) {
 			if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
 				$this->_isValidCurrentAdminPassword = $this->_isValidCurrentPassword(FALSE, FALSE); // authenticate
 			} else { // check password
@@ -404,10 +370,6 @@ class UserFieldsInput {
 						$defender->addError('user_admin_password');
 						$defender->addHelperText('user_admin_password', $locale['u149b']);
 					}
-				} else { // you do not want to change an admin password - so get from db
-					$this->data['user_admin_password'] = $this->userData['user_admin_password'];
-					$this->data['user_admin_salt'] = $this->userData['user_admin_salt'];
-					$this->data['user_admin_algo'] = $this->userData['user_admin_algo'];
 				}
 			} else {
 				// not a valid user admin password
@@ -443,7 +405,6 @@ class UserFieldsInput {
 								$this->_verifyNewEmail();
 							} else {
 								$this->_userLogFields[] = "user_email";
-								$this->_setDBValue("user_email", $this->_userEmail); // ###
 								$this->data['user_email'] = $this->_userEmail;
 							}
 						} else {
@@ -469,14 +430,11 @@ class UserFieldsInput {
 				$defender->addNotice($locale['u156']);
 			}
 		} else {
-
 			if ($this->_method !== 'validate_update') { // for register only
 				$defender->stop();
 				$defender->addError('user_email');
 				$defender->addHelperText('user_email', $locale['u126']);
 				$defender->addNotice($locale['u126']);
-			} else { // update profile will copy back from DB
-				$this->data['user_email'] = $this->userData['user_email'];
 			}
 		}
 	}
@@ -520,19 +478,30 @@ class UserFieldsInput {
 				unlink(IMAGES."avatars/".$this->userData['user_avatar']);
 			}
 			$this->data['user_avatar'] = '';
-			$this->_setDBValue("user_avatar", ""); // ####
 		}
-		if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name'] != "") { // uploaded avatar
+		if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['name']) { // uploaded avatar
 			require_once INCLUDES."infusions_include.php";
-			$avatarUpload = upload_image("user_avatar", "", IMAGES."avatars/", "2000", "2000", $settings['avatar_filesize'], TRUE, TRUE, FALSE, $settings['avatar_ratio'], IMAGES."avatars/", "[".$this->userData['user_id']."]", $settings['avatar_width'], $settings['avatar_height']);
+			$source_name = 'user_avatar';
+			$target_name = '';
+			$target_folder = IMAGES.'avatars/';
+			$target_width = 2000;
+			$target_height = 2000;
+			$max_size = $settings['avatar_filesize'];
+			$delete_original = TRUE;
+			$create_thumb1 = TRUE;
+			$create_thumb2 = FALSE;
+			$ratio = $settings['avatar_ratio'];
+			$thumb1_suffix = "[".$this->userData['user_id']."]";
+			$thumb1_height = $settings['avatar_height'];
+			$thumb1_width = $settings['avatar_width'];
+
+			$avatarUpload = upload_image($source_name, $target_name, $target_folder, $target_width, $target_height, $max_size, $delete_original, $create_thumb1, $create_thumb2, $ratio, $target_folder, $thumb1_suffix, $thumb1_width, $thumb1_height);
 			if ($avatarUpload['error'] == 0) {
-				if ($this->userData['user_avatar'] != "" && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
+				if ($this->userData['user_avatar'] && $this->userData['user_avatar'] !== $avatarUpload['thumb1_name'] && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
 					unlink(IMAGES."avatars/".$this->userData['user_avatar']);
 				}
 				$this->data['user_avatar'] = $avatarUpload['thumb1_name'];
-				$this->_setDBValue("user_avatar", $avatarUpload['thumb1_name']); // #####
 			} else {
-				$this->data['user_avatar'] = '';
 				$defender->stop();
 				$defender->addError('user_avatar');
 				switch($avatarUpload['error']) {
@@ -562,90 +531,31 @@ class UserFieldsInput {
 						break;
 				}
 			}
-		} else {
-			$this->data['user_avatar'] = $this->userData['user_avatar'];
 		}
 	}
 
 	private function _setEmptyFields() {
+		global $settings;
 		$this->_userHideEmail = isset($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
 		$userStatus = $this->adminActivation == 1 ? 2 : 0;
 		if ($this->_method == "validate_insert") {
-			$this->_setDBValue("user_hide_email", $this->_userHideEmail);
-			$this->_setDBValue("user_avatar", "");
-			$this->_setDBValue("user_posts", 0);
-			$this->_setDBValue("user_threads", 0);
-			$this->_setDBValue("user_joined", time());
-			$this->_setDBValue("user_lastvisit", 0);
-			$this->_setDBValue("user_ip", USER_IP);
-			$this->_setDBValue("user_ip_type", USER_IP_TYPE);
-			$this->_setDBValue("user_rights", "");
-			$this->_setDBValue("user_groups", "");
-			$this->_setDBValue("user_level", 101);
-			$this->_setDBValue("user_status", $userStatus);
+			$this->data['user_hide_email'] = $this->_userHideEmail;
+			$this->data['user_avatar'] = '';
+			$this->data['user_posts'] = 0;
+			$this->data['user_threads'] = 0;
+			$this->data['user_joined'] = time();
+			$this->data['user_lastvisit'] = 0;
+			$this->data['user_ip'] = USER_IP;
+			$this->data['user_ip_type'] = USER_IP_TYPE;
+			$this->data['user_rights'] = '';
+			$this->data['user_groups'] = '';
+			$this->data['user_level'] = 101;
+			$this->data['user_status'] = $userStatus;
+			$this->data['user_timezone'] = $settings['timeoffset'];
+			$this->data['user_theme'] = 'Default';
+			$this->data['user_language'] = LANGUAGE;
 		} else {
-			$this->_setDBValue("user_hide_email", $this->_userHideEmail);
-		}
-	}
-
-	private function _setCustomUserFieldsData() {
-		global $locale, $settings;
-		$profile_method = $this->_method;
-		if ($this->registration) {
-			$where = "WHERE field_registration='1'";
-		} else {
-			$where = "";
-		}
-		$result = dbquery("SELECT * FROM ".DB_USER_FIELDS." tuf
-			INNER JOIN ".DB_USER_FIELD_CATS." tufc ON tuf.field_cat = tufc.field_cat_id
-			".$where."
-			ORDER BY field_cat_order, field_order");
-		if (dbrows($result)) {
-			while ($data = dbarray($result)) {
-				$db_fields = "";
-				$db_values = "";
-				if ($data['field_required'] == 1) {
-					$this->_fieldsRequired[$data['field_name']] = TRUE;
-				}
-				if ($data['field_log'] == 1) {
-					$this->_userLogFields[] = $data['field_name'];
-				}
-				if (file_exists(LOCALE.LOCALESET."user_fields/".$data['field_name'].".php")) {
-					include LOCALE.LOCALESET."user_fields/".$data['field_name'].".php";
-				}
-				if (file_exists(INCLUDES."user_fields/".$data['field_name']."_include.php")) {
-					include INCLUDES."user_fields/".$data['field_name']."_include.php";
-				}
-				$this->_dbFields .= $db_fields;
-				$this->_dbValues .= $db_values;
-			}
-		}
-	}
-
-	private function _setDBValue($field, $value) {
-		if ($this->_method == "validate_insert") {
-			$this->_dbFields .= ($this->_dbFields != "" ? ", " : "").$field;
-			$this->_dbValues .= ($this->_dbValues != "" ? ", " : "")."'".$value."'";
-		} else {
-			if (in_array($field, $this->_userLogFields)) {
-				$this->_userLogData[$field] = $value;
-			}
-			$this->_dbValues .= ($this->_dbValues != "" ? ", " : "").$field."='".$value."'";
-		}
-	}
-
-	private function _setError($field, $message, $empty = FALSE) {
-		if (!$empty || (isset($this->_fieldsRequired[$field]) && $this->_fieldsRequired[$field] == TRUE)) {
-			$this->_noErrors = FALSE;
-			$this->_errorMessages[$field] = $message;
-		}
-	}
-
-	private function _isNotRequired($field) {
-		if (isset($this->_fieldsRequired[$field])) {
-			return FALSE;
-		} else {
-			return TRUE;
+			$this->data['user_hide_email'] = $this->_userHideEmail;
 		}
 	}
 
@@ -655,7 +565,7 @@ class UserFieldsInput {
 	}
 
 	private function _setEmailVerification() {
-		global $settings, $locale;
+		global $settings, $locale, $defender;
 		require_once INCLUDES."sendmail_include.php";
 		$userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $this->_userEmail);
 		$activationUrl = $settings['siteurl']."register.php?email=".$this->_userEmail."&code=".$userCode;
@@ -663,32 +573,46 @@ class UserFieldsInput {
 		$message = str_replace("USER_PASSWORD", $this->_newUserPassword, $message);
 		$message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
 		if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u151'], $message)) {
-			$userInfo = serialize(array("user_name" => $this->_userName,
-									  "user_password" => $this->_newUserPasswordHash,
-									  "user_salt" => $this->_newUserPasswordSalt,
-									  "user_algo" => $this->_newUserPasswordAlgo,
-									  "user_email" => $this->_userEmail,
-									  "user_field_fields" => $this->_dbFields,
-									  "user_field_inputs" => $this->_dbValues));
+			$quantum = new quantumFields();
+			$quantum->category_db = DB_USER_FIELD_CATS;
+			$quantum->field_db = DB_USER_FIELDS;
+			$quantum->plugin_folder = INCLUDES."user_fields/";
+			$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+			$quantum->load_data();
+			$userInfo = $this->data;
+			if ($quantum->output_fields(DB_USERS)) $userInfo += $quantum->output_fields(DB_USERS);
+			$userInfo += $quantum->output_fields(DB_USERS);
+			$userInfo = serialize($userInfo);
 			$userInfo = addslash($userInfo);
-			$result = dbquery("INSERT INTO ".DB_NEW_USERS." (
-					user_code, user_name, user_email, user_datestamp, user_info
-				) VALUES(
-					'".$userCode."', '".$this->_userName."', '".$this->_userEmail."', '".time()."', '".$userInfo."'
-				)");
+			$result = dbquery("INSERT INTO ".DB_NEW_USERS."
+					(user_code, user_name, user_email, user_datestamp, user_info)
+					VALUES
+					('".$userCode."', '".$this->data['user_name']."', '".$this->data['user_email']."', '".time()."', '".$userInfo."'
+					)");
 			$this->_completeMessage = $locale['u150'];
 		} else {
-			$this->_setError("email_activation", $locale['u153']."<br />".$locale['u154']);
+			$defender->stop();
+			$defender->setNoticeTitle($locale['u165']);
+			$defender->addNotice($locale['u153']."<br />".$locale['u154']);
 		}
 	}
 
 	private function _setUserDataInput() {
 		global $locale, $settings, $userdata, $aidlink;
-		$result = dbquery("INSERT INTO ".DB_USERS." (".$this->_dbFields.") VALUES(".$this->_dbValues.")");
+
+		$quantum = new quantumFields();
+		$quantum->category_db = DB_USER_FIELD_CATS;
+		$quantum->field_db = DB_USER_FIELDS;
+		$quantum->plugin_folder = INCLUDES."user_fields/";
+		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+		$quantum->load_data();
+		dbquery_insert(DB_USERS, $this->data, 'save');
+		$_POST['user_id'] = dblastid();
+		$quantum->infinity_insert('update');
 		if ($this->adminActivation) {
 			$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u162'];
 		} else {
-			if (!$this->isAdminPanel) {
+			if (!defined('ADMIN_PANEL')) {
 				$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u161'];
 			} else {
 				require_once LOCALE.LOCALESET."admin/members_email.php";
@@ -713,12 +637,8 @@ class UserFieldsInput {
 		$quantum->plugin_folder = INCLUDES."user_fields/";
 		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 		$quantum->load_data();
-
-		$result = dbquery_insert(DB_USERS, $this->data, 'update');
-		if ($result) {
-			$quantum->infinity_insert('update');
-		}
-		//$result = dbquery("UPDATE ".DB_USERS." SET ".$this->_dbValues." WHERE user_id='".$this->userData['user_id']."'");
+		dbquery_insert(DB_USERS, $this->data, 'update');
+		$quantum->infinity_insert('update');
 		$this->_completeMessage = $locale['u163'];
 	}
 

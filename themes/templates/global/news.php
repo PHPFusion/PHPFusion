@@ -16,7 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!function_exists('render_main_news')) {
-
 	function render_main_news($info) {
 		global $userdata, $settings, $locale;
 		add_to_head("<link href='".THEMES."templates/global/css/news.css' rel='stylesheet'/>\n");
@@ -309,7 +308,4 @@ if (!function_exists('render_news_item')) {
 		echo "</article>\n";
 	}
 }
-
-
-
 ?>

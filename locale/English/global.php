@@ -104,11 +104,13 @@ $locale['global_059'] = "You're not tracking any threads.";
 $locale['global_060'] = "Stop tracking this thread?";
 // Blog, News & Articles
 $locale['global_070'] = "Posted by ";
+$locale['global_071b'] = "View all Post by %s";
 $locale['global_071'] = "on ";
-$locale['global_072'] = "Read More";
+$locale['global_072'] = "Continue Reading";
 $locale['global_073'] = " Comments";
 $locale['global_073b'] = " Comment";
 $locale['global_074'] = " Reads";
+$locale['global_074b'] = " Read";
 $locale['global_075'] = "Print";
 $locale['global_076'] = "Edit";
 $locale['global_077'] = "News";
@@ -208,11 +210,12 @@ $locale['global_135'] = "Votes: ";
 $locale['global_136'] = "Started: ";
 $locale['global_137'] = "Ended: ";
 $locale['global_138'] = "Polls Archive";
-$locale['global_139'] = "Select a Poll to view from the list:";
+$locale['global_139'] = "Please select a poll to view from the list:";
 $locale['global_140'] = "View";
 $locale['global_141'] = "View Poll";
 $locale['global_142'] = "There are no polls defined.";
 $locale['global_143'] = "Ratings";
+
 // Captcha
 $locale['global_150'] = "Validation Code:";
 $locale['global_151'] = "Enter Validation Code:";
@@ -400,4 +403,11 @@ $locale['right'] = "Right";
 $locale['comments'] = "Comments";
 $locale['ratings'] = "Ratings";
 $locale['comments_ratings'] = "Comments and Ratings";
+
+$locale['testimonial_rank'] = "I am the %s of this website";
+$locale['testimonial_location'] = "and I currently live in %s";
+$locale['testimonial_join'] = ". I joined this website on %s";
+$locale['testimonial_web'] = ". I also run another website at %s";
+$locale['testimonial_contact'] = ". If you need to contact me, you can reach me at %s";
+$locale['testimonial_email'] = ". You can also reach me at my e-mail address at %s";
 ?>

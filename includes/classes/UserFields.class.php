@@ -26,7 +26,6 @@ class UserFields extends quantumFields {
 	public $errorsArray = array();
 	public $formaction = FUSION_REQUEST; // changed in API 1.02
 	public $formname = "inputform";
-	public $isAdminPanel = FALSE;
 	public $postName;
 	public $postValue;
 	public $showAdminOptions = FALSE;
@@ -35,7 +34,7 @@ class UserFields extends quantumFields {
 	public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
 	public $skipCurrentPass = FALSE;
 	public $registration = FALSE;
-	public $userData = array("user_name", "user_password", "user_admin_password", "user_email");
+	public $userData = array("user_id", "user_name", "user_password", "user_admin_password", "user_email");
 
 	/* Quantum Fields Extensions */
 	public $system_title = '';
@@ -58,7 +57,6 @@ class UserFields extends quantumFields {
 	/* User Fields class 9.00 */
 	private $info = array(); // MVC var
 	public $paginate = TRUE; // new in API v2.00
-	//	private $field_index = 'user_id';
 
 	public function setUserNameChange($value) {
 		$this->_userNameChange = $value;
@@ -88,7 +86,7 @@ class UserFields extends quantumFields {
 						$cur_link = FUSION_REQUEST;
 					} else {
 						if ($this->baseRequest) {
-							$cur_link = $base_request."&amp;";
+							$cur_link .= $base_request."&amp;";
 						} else {
 							$cur_link = BASEDIR;
 							if ($this->method == 'input') {
@@ -106,8 +104,6 @@ class UserFields extends quantumFields {
 						'link'=>$cur_link,
 						'name'=>ucwords($data['field_cat_name'])
 					);
-					//$html .= "<li ".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? "class='active'" : '')." />";
-					//$html .= "<a href='".(isset($_GET['profiles']) && $_GET['profiles'] == strtolower($data['field_cat_name']) ? FUSION_REQUEST : "".($this->baseRequest ? $base_request."&amp;" : "".(isset($_GET['aid']) ? $this->formaction."&amp;" : BASEDIR."".($this->method == 'input' ? "edit_profile.php?" : "profile.php?")."")."")."profiles=".strtolower($data['field_cat_name'])."".(isset($_GET['aid']) ? '' : "&amp;lookup=".$this->userData['user_id']."")."")." '>".($data['field_cat_class'] ? "<i class='m-r-10 entypo ".$data['field_cat_class']."'/></i>" : "")."".ucwords($data['field_cat_name'])."</a></li>\n";
 					$i++;
 				}
 			}
@@ -132,21 +128,21 @@ class UserFields extends quantumFields {
 
 	/* injected core input fields */
 	private function basicInputFields() {
-		global $locale;
+		global $locale, $settings;
 		$html = '';
-		// Account info
 		// Username
 		$html .= form_para($locale['u129'], 'account', 'profile_category_name');
 		if ($this->registration) {
 			$user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], '', 'user_name') : '';
+			$user_email = isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], '', 'user_email') : '';
 		} else {
 			$user_name = $this->userData['user_name'];
+			$user_email = $this->userData['user_email'];
 		}
-
 		$html .= (iADMIN || $this->_userNameChange) ? form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1)) : '';
 		// Login Password
 		$passRequired = $this->registration ? 1 : 0;
-
+		$html .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id']: 0);
 		$html .= (!$this->registration) ? "<div class='alert alert-info'>".$locale['u100']."</div>" : '';
 		$html .= form_para($locale['u132'], 'password', 'profile_category_name');
 		if (!$passRequired) { // will not show on register.
@@ -162,12 +158,25 @@ class UserFields extends quantumFields {
 				$html .= form_text($locale['u131'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 			}
 			$html .= form_text(($this->userData['user_admin_password'] ? $locale['u144'] : $locale['u131']), 'user_new_admin_password', 'user_new_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
-			$html .= form_text($locale['u145'], 'user_new_admin_password2', 'user_new_admin_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+			$html .= form_text($locale['u145'], 'user_new_admin_password2', 'user_new_admin_password2', '', array('class'=>'m-b-0', 'password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 			$html .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
 		}
+		if (!$this->registration) {
+			if (isset($this->userData['user_avatar']) && $this->userData['user_avatar'] != "") {
+				$this->html .= "<label for='user_avatar_upload'><img src='".IMAGES."avatars/".$this->userData['user_avatar']."' alt='".$locale['u185']."' />";
+				$this->html .= "</label>\n<br />\n";
+				$this->html .= "<input type='checkbox' name='delAvatar' value='1' class='textbox' /> ".$locale['u187']."<br />\n<br />\n";
+			}
+
+			// avatar field
+			$html .= form_fileinput($locale['u185'], 'user_avatar', 'user_avatar_upload', '', '', array('type'=>'image', 'inline'=>1, 'class'=>'m-t-10 m-b-0'));
+			$html .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".sprintf($locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height'])."</span></div>\n";
+
+		}
+
 		// email field
 		$html .= form_para($locale['u064'], 'email', 'profile_category_name');
-		$html .= form_text($locale['u128'], 'user_email', 'user_email', $this->userData['user_email'], array('email'=>1, 'inline'=>1, 'max_length'=>'100', 'error_text'=>$locale['u126']));
+		$html .= form_text($locale['u128'], 'user_email', 'user_email', $user_email, array('email'=>1, 'inline'=>1, 'max_length'=>'100', 'error_text'=>$locale['u126']));
 		// Hide email toggler
 		$hide = isset($this->userData['user_hide_email']) ? $this->userData['user_hide_email'] : 1;
 		$hide = isset($_POST['user_hide_email']) && isnum($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $hide;
@@ -378,14 +387,15 @@ class UserFields extends quantumFields {
 		$html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
 		$html .= form_checkbox($locale['u193'], 'agreement', 'agreement', '');
 		$html .= "</div>\n";
-		$this->javaScriptOther .= "$('#agreement').bind('click', function() { checkagreement(); });";
-		$this->javaScriptOther .= "	function checkagreement() {\n";
-		$this->javaScriptOther .= "		if(document.inputform.agreement.checked) {\n";
-		$this->javaScriptOther .= "			document.inputform.register.disabled=false;\n";
-		$this->javaScriptOther .= "		} else {\n";
-		$this->javaScriptOther .= "			document.inputform.register.disabled=true;\n";
-		$this->javaScriptOther .= "		}\n";
-		$this->javaScriptOther .= "	}\n";
+		add_to_jquery("
+		$('#agreement').bind('click', function() {
+			if (document.inputform.agreement.checked) {
+			document.inputform.register.disabled=false;
+			} else {
+			document.inputform.register.disabled=true;
+			}
+		});
+		");
 		return $html;
 	}
 	private function renderValidation() {
@@ -409,12 +419,10 @@ class UserFields extends quantumFields {
 	private function renderButton() {
 		$dissabled = $this->displayTerms == 1 ? " disabled='disabled'" : "";
 		$html = '';
-		//$html .= "<tr>\n<td align='center' colspan='2'><br />\n";
 		if (!$this->skipCurrentPass) {
 			$html .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
 		}
 		$html .= "<button type='submit' name='".$this->postName."' value='".$this->postValue."' class='btn btn-primary'".$dissabled." />".$this->postValue."</button>\n";
-		//$this->html .= "</td>\n</tr>\n";
 		return $html;
 	}
 

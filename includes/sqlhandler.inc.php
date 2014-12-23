@@ -601,8 +601,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 				$col = $columns[$key];
 				$values = $inputdata[$col];
 				if ($debug) {
-					$result = "DELETE FROM ".$db." WHERE $col='$values'";
-					print_p($result);
+					print_p("DELETE FROM ".$db." WHERE $col='$values'");
 				} else {
 					$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
 				}
@@ -610,9 +609,10 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 		} else {
 			die();
 		}
-	} else {
-		notify('Script stopped as an illegal operation is found.', 'Fusion Defender stopped SQL, auto exit before execution.');
 	}
+	//else {
+		//notify('Script stopped as an illegal operation is found.', 'Fusion Defender stopped SQL, auto exit before execution.');
+	//}
 }
 
 function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {

@@ -126,6 +126,7 @@ $locale['global_072'] = "Toliau...";
 $locale['global_073'] = " komentarai";
 $locale['global_073b'] = " komentaras";
 $locale['global_074'] = " Peržiūros";
+$locale['global_074b'] = " Peržiūros"; // please, sync this value with English locale
 $locale['global_075'] = "Spausdinti";
 $locale['global_076'] = "Redaguoti";
 $locale['global_077'] = "Naujienos";
@@ -337,4 +338,98 @@ $locale['flood'] = "Jums yra draudžiama rašyti. Prašome palaukti kol nuslūgs
 $locale['no_image'] = "Nėra paveiksliuko";
 $locale['send_message'] = 'Siųsti žinutę';
 $locale['go_profile'] = 'Eiti į %s profilį';
+// ex. oneword.locale.php file
+// translate next lines by yourself
+// Greetings
+$locale['hello'] = 'Hello!';
+$locale['goodbye'] = 'Goodbye!';
+$locale['welcome'] = 'Welcome back';
+$locale['home'] = 'Home';
+// Status
+$locale['error'] = 'Error!';
+$locale['success'] = 'Success!';
+$locale['enable'] = 'Enable';
+$locale['disable'] = 'Disable';
+$locale['no'] = 'No';
+$locale['yes'] = 'Yes';
+$locale['off'] = 'Off';
+$locale['on'] = 'On';
+$locale['or'] = 'or';
+$locale['by'] = 'by';
+$locale['in'] = 'in';
+$locale['of'] = 'of';
+// Navigation
+$locale['next'] = 'Next';
+$locale['pevious'] = 'Previous';
+$locale['back'] = 'Back';
+$locale['forward'] = 'Forward';
+$locale['go'] = 'Go';
+$locale['cancel'] = 'Cancel';
+$locale['move_up'] = "Move up";
+$locale['move_down'] = "Move down";
+// Action
+$locale['add'] = 'Add';
+$locale['save'] = 'Save';
+$locale['update'] = 'Update';
+$locale['updated'] = 'Updated';
+$locale['remove'] = 'Remove';
+$locale['delete'] = 'Delete';
+$locale['search'] = 'Search';
+$locale['help'] = 'Help';
+$locale['register'] = 'Register';
+$locale['ban'] = 'Ban';
+$locale['reactivate'] = 'Reactivate';
+$locale['user'] = 'User';
+$locale['promote'] = 'Promote';
+$locale['show'] = 'Show';
+//Tables
+$locale['status'] = 'Status';
+$locale['order'] = 'Order';
+$locale['sort'] = 'Sort';
+$locale['id'] = 'ID';
+$locale['title'] = 'Title';
+$locale['rights'] = 'Rights';
+$locale['info'] = 'Info';
+$locale['image'] = 'Image';
+// Forms
+$locale['choose'] = 'Please Choose One...';
+$locale['root'] = 'As Parent';
+$locale['choose-user'] = 'Please Choose a User...';
+$locale['parent'] = 'Create as New Parent..';
+$locale['order'] = 'Item Ordering';
+$locale['status'] = 'Status';
+$locale['note'] = 'Make a note of this item';
+$locale['publish'] = 'Published';
+$locale['unpublish'] = 'Unpublished';
+$locale['draft'] = 'Draft';
+$locale['settings'] = 'Settings';
+$locale['posted'] = 'posted';
+$locale['profile'] = 'Profile';
+$locale['edit'] = 'Edit';
+$locale['view'] = 'View';
+$locale['login'] = 'Log in';
+$locale['logout'] = 'Logout';
+$locale['admin-logout'] = 'Admin Logout';
+$locale['message'] = 'Private Messages';
+$locale['logged'] = 'Logged in as ';
+$locale['version'] = 'Version ';
+$locale['browse'] = 'Browse ...';
+$locale['close'] = 'Close';
+$locale['nopreview'] = 'There is nothing to Preview';
+//Alignment
+$locale['left'] = "Left";
+$locale['center'] = "Center";
+$locale['right'] = "Right";
+// Comments and ratings
+$locale['comments'] = "Comments";
+$locale['ratings'] = "Ratings";
+$locale['comments_ratings'] = "Comments and Ratings";
+
+// Testimonials // translate following lines
+$locale['testimonial_rank'] = "I am the %s of this website";
+$locale['testimonial_location'] = "and I currently live in %s";
+$locale['testimonial_join'] = ". I joined this website on %s.";
+$locale['testimonial_join'] = "I also run my website at %s.";
+$locale['testimonial_contact'] = "If you need to contact me, you can reach me at %s.";
+$locale['testimonial_email'] = "You can also reach me at my e-mail address at %s.";
 ?>

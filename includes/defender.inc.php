@@ -24,6 +24,9 @@ class defender {
 	public $debug_notice = FALSE;
 	public $ref = array();
 
+	public $error_content = array();
+	public $error_title = '';
+
 	/* Sanitize Fields Automatically */
 	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
 		global $locale;
@@ -197,13 +200,6 @@ class defender {
 		}
 	}
 
-	/* Inject form notice */
-	public function addNotice($content) {
-		// add prevention of double entry should the fields are the same id.
-		$this->error_content[] = $content;
-		return $this->error_content;
-	}
-
 	/* Except for blank $_POST, every single form in must have token - added to maincore */
 	public function sniff_token() {
 		global $locale;
@@ -232,6 +228,17 @@ class defender {
 		}
 	}
 
+	/* Inject form notice */
+	public function addNotice($content) {
+		// add prevention of double entry should the fields are the same id.
+		$this->error_content[] = $content;
+		return $this->error_content;
+	}
+
+	public function setNoticeTitle($title) {
+		$this->error_title = $title;
+	}
+
 	/* Aggregate notices */
 	public function Notice() {
 		if (isset($this->error_content)) {
@@ -243,13 +250,14 @@ class defender {
 	public function showNotice() {
 		global $locale;
 		$html = '';
+		$title = $this->error_title ? $this->error_title : $locale['validate_title'];
 		if (!empty($this->error_content)) {
 			$html .= "<div id='close-message'>\n";
-			$html .= "<div class='admin-message alert alert-warning alert-dismissable' role='alert'>\n";
-			$html .= "<span class='text-bigger'><strong>".$locale['validate_title']."</strong></p><br/>\n";
+			$html .= "<div class='admin-message alert alert-danger alert-dismissable' role='alert'>\n";
+			$html .= "<span class='text-bigger'><strong>".$title."</strong></p><br/>\n";
 			$html .= "<ul id='error_list'>\n";
 			foreach ($this->error_content as $notices) {
-				$html .= "<li>$notices</li>\n";
+				$html .= "<li>".$notices."</li>\n";
 			}
 			$html .= "</ul>\n";
 			$html .= "</div>\n</div>\n";
