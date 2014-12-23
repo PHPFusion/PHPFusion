@@ -33,10 +33,10 @@ $nc_images = array();
 while ($data = dbarray($result)) {
 	$nc_images["nc_".$data['news_cat_name']] = file_exists(IMAGES_NC.$data['news_cat_image']) ? IMAGES_NC.$data['news_cat_image'] : IMAGES."imagenotfound.jpg";
 }
-$result = dbquery("SELECT admin_title, admin_image FROM ".DB_ADMIN);
+$result = dbquery("SELECT admin_rights, admin_image FROM ".DB_ADMIN);
 $ac_images = array();
 while ($data = dbarray($result)) {
-	$ac_images["ac_".$data['admin_title']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists(INFUSIONS.$data['admin_image']) ? INFUSIONS.$data['admin_image'] : ADMIN."images/infusion_panel.gif");
+	$ac_images["ac_".$data['admin_rights']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists(INFUSIONS.$data['admin_image']) ? INFUSIONS.$data['admin_image'] : ADMIN."images/infusion_panel.gif");
 }
 
 /*
