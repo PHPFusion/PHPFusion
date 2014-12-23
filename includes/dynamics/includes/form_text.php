@@ -78,7 +78,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 	if ($options['number']) {
 		add_to_jquery("
 		$('#".$input_id."').keypress(function(e) {
-		var key_codes = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
+		var key_codes = [46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
 		if (!($.inArray(e.which, key_codes) >= 0)) {
 		e.preventDefault();
 		}
