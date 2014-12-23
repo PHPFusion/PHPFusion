@@ -18,9 +18,7 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 
-if (!checkrights("PH") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+if (!checkrights("PH") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."photo_functions_include.php";
