@@ -5,3 +5,5 @@
 
 *.iml
 /nbproject/private/
+.htaccess
+config.php
