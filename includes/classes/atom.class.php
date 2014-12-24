@@ -20,7 +20,9 @@
 class atom {
 
 	public $target_folder = '';
-	public $mode = 'classic'; // compressed or classic
+	public $theme_name = '';
+	public $compress = FALSE;
+
 
 	// bootstrap default configurations here.
 	private $font_decoration_options = array('Normal', 'Bold', 'Italic', 'Underlined', 'Bold and Underlined', 'Italic and Bold', 'Italic and Underlined', 'Italic, Bold and Underlined');
@@ -71,18 +73,19 @@ class atom {
 		// link
 		'link_color' => '#428bca',
 		'link_hover_color' => '#428bca',
-		'link_hover_effect' => 0,
+		'link_decoration' => 0,
+		'link_hover_decoration' => 0,
 		// code
 		'code_color' =>'#c7254e',
-		'code_bgcolor' => '#f9f2f4',
+		'code_bgcolor' => '#f9f2f4', //f9f2f4
 		// quote
-		'font_size_quote' => 14,
-		'font_height_quote' => 1.1,
-		'font_color_quote' => '#000000',
-		'font_decoration_quote'=> 5,
+		'quote_size' => 14,
+		'quote_height' => 1.1,
+		'quote_color' => '#000000',
+		'quote_decoration'=> 5,
 	);
 	private $less_var = array();
-
+	private $debug = true;
 
 
 	public function load_theme() {
@@ -90,59 +93,45 @@ class atom {
 	}
 
 	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
-	private function buildCss() {
+	private function buildCss($file_ext) {
+		global $defender;
 		$inputFile = INCLUDES."atom/atom.less";
-		$outputFile = THEMES.$this->target_folder."/fusion.css"; // or min.css
+		$outputFolder = THEMES.$this->target_folder."/";
+		$outputFile = THEMES.$this->target_folder."/fusion_".$file_ext.".css"; // or min.css
+		$directories = array( INCLUDES."atom/less/" => 'includes/atom/less/' );
+		$options = array(
+			'output' => $outputFile,
+			'compress' => $this->compress,
+		);
 		$this->set_less_variables();
 		if (!empty($this->less_var)) {
-			$less = new lessc;
-			$less->setFormatter("classic"); // compressed, classic
-			$less->setImportDir(array(INCLUDES."atom/less"));
-			$less->setVariables($this->less_var);
-			//try {
-			//     $less->compile("} invalid LESS }}}");
-			// } catch (Exception $ex) {
-			//print_p("lessphp fatal error: ".$ex->getMessage()."");
-			// }
-			$newCache = $less->compileFile($inputFile, $outputFile);
-		}
-	}
-
-	/* add quotes for font name with whitespace */
-	private function parse_fonts($font) {
-		$_parsedFonts = array();
-		if ($font) {
-			$font = explode(',', $font);
-			if (count($font)) {
-				foreach($font as $font_name) {
-					$_parsedFonts[] = (preg_match('/\s/',$font_name)) ? '"'.$font_name.'"' : $font_name;
-				}
-				return implode(', ', $_parsedFonts);
+			print_p($this->less_var);
+			print_p($inputFile);
+			print_p($outputFile);
+			require_once INCLUDES."atom/lessc.inc.php";
+			try{
+				$parser = new Less_Parser($options);
+				$parser->SetImportDirs( $directories );
+				$parser->parseFile( $inputFile, $outputFolder );
+				$parser->ModifyVars($this->less_var);
+				$css = $parser->getCss();
+				print_p($css);
+				//$temp = fopen($outputFile, "w");
+				//if (fwrite($temp, $css)) {
+				//	fclose($temp);
+				//}
+			}catch(Exception $e){
+				$error_message = $e->getMessage();
+				print_p($error_message);
 			}
+
+
+			//print_p($css);
+		} else {
+			$defender->stop();
+			$defender->setNoticeTitle('Theme cannot rebuild due to the following reason(s):');
+			$defender->addNotice('Variables were not set');
 		}
-	}
-	/* return the font sets */
-	private function parse_font_set($font) {
-		$fonts_family_opts = array(
-			'0'=>'@font-family-sans-serif',
-			'1'=>'@font-family-monospace',
-			'2'=>'@font-family-serif'
-		);
-		return $fonts_family_opts[$font];
-	}
-	/* parse the font size metrics - can be edited to use 'px', 'em', 'rem' */
-	private function parse_font_size($font) {
-		return $font.'px';
-	}
-	/* parse font decoration and weight */
-	private function parse_font_weight($font) {
-		return $this->text_weight[$font];
-	}
-	private function parse_font_decoration($font) {
-		return $this->text_decoration[$font];
-	}
-	private function parse_font_style($font) {
-		return $this->text_style[$font];
 	}
 
 	private function set_less_variables() {
@@ -186,12 +175,23 @@ class atom {
 		$this->less_var['font_style_h6'] = $this->parse_font_style($this->data['font_decoration_h6']);
 		$this->less_var['font_decoration_h6'] = $this->parse_font_decoration($this->data['font_decoration_h6']);
 
+		// link
+		$this->less_var['link_weight'] = $this->parse_font_weight($this->data['link_decoration']);
+		$this->less_var['link_style'] = $this->parse_font_style($this->data['link_decoration']);
+		$this->less_var['link_decoration'] = $this->parse_font_decoration($this->data['link_decoration']);
+		$this->less_var['link_hover_weight'] = $this->parse_font_weight($this->data['link_decoration']);
+		$this->less_var['link_hover_style'] = $this->parse_font_style($this->data['link_decoration']);
+		$this->less_var['link_hover_decoration'] = $this->parse_font_decoration($this->data['link_decoration']);
+		// code follow back $data.
+		//quote decorations
+		$this->less_var['quote_weight'] = $this->parse_font_weight($this->data['quote_decoration']);
+		$this->less_var['quote_style'] = $this->parse_font_style($this->data['quote_decoration']);
+		$this->less_var['quote_decoration'] = $this->parse_font_decoration($this->data['quote_decoration']);
 	}
 
 
 	public function set_theme() {
-		//print_p($_POST);
-
+		global $userdata, $aidlink;
 		// Font Settings
 		$this->data['sans_serif_fonts'] = isset($_POST['sans_serif_fonts']) ? form_sanitizer($_POST['sans_serif_fonts'], '', 'sans_serif_fonts') : $this->data['sans_serif_fonts'];
 		$this->data['serif_fonts'] = isset($_POST['serif_fonts']) ? form_sanitizer($_POST['serif_fonts'], '', 'serif_fonts') : $this->data['serif_fonts'];
@@ -202,12 +202,10 @@ class atom {
 		$this->data['base_font_height'] = isset($_POST['base_font_height']) ? form_sanitizer($_POST['base_font_height'], '', 'base_font_height') : $this->data['base_font_height'];
 		$this->data['base_font_size_l'] = isset($_POST['base_font_size_l']) ? form_sanitizer($_POST['base_font_size_l'], '', 'base_font_size_l') : $this->data['base_font_size_l'];
 		$this->data['base_font_size_s'] = isset($_POST['base_font_size_s']) ? form_sanitizer($_POST['base_font_size_s'], '', 'base_font_size_s') : $this->data['base_font_size_s'];
-
 		$this->data['font_size_h1'] = isset($_POST['font_size_h1']) ? form_sanitizer($_POST['font_size_h1'], '', 'font_size_h1') : $this->data['font_size_h1'];
 		$this->data['font_height_h1'] = isset($_POST['font_height_h1']) ? form_sanitizer($_POST['font_height_h1'], '', 'font_height_h1') : $this->data['font_height_h1'];
 		$this->data['font_color_h1'] = isset($_POST['font_color_h1']) ? form_sanitizer($_POST['font_color_h1'], '', 'font_color_h1') : $this->data['font_color_h1'];
 		$this->data['font_decoration_h1'] = isset($_POST['font_decoration_h1']) ? form_sanitizer($_POST['font_decoration_h1'], '0', 'font_decoration_h1') : $this->data['font_decoration_h1'];
-
 		$this->data['font_size_h2'] = isset($_POST['font_size_h2']) ? form_sanitizer($_POST['font_size_h2'], '', 'font_size_h2') : $this->data['font_size_h2'];
 		$this->data['font_height_h2'] = isset($_POST['font_height_h2']) ? form_sanitizer($_POST['font_height_h2'], '', 'font_height_h2') : $this->data['font_height_h2'];
 		$this->data['font_color_h2'] = isset($_POST['font_color_h2']) ? form_sanitizer($_POST['font_color_h2'], '', 'font_color_h2') : $this->data['font_color_h2'];
@@ -230,21 +228,40 @@ class atom {
 		$this->data['font_decoration_h6'] = isset($_POST['font_decoration_h6']) ? form_sanitizer($_POST['font_decoration_h6'], '0', 'font_decoration_h6') : $this->data['font_decoration_h6'];
 		$this->data['link_color'] = isset($_POST['link_color']) ? form_sanitizer($_POST['link_color'], '', 'link_color') : $this->data['link_color'];
 		$this->data['link_hover_color'] = isset($_POST['link_hover_color']) ? form_sanitizer($_POST['link_hover_color'], '', 'link_hover_color') : $this->data['link_hover_color'];
-		$this->data['link_hover_effect'] = isset($_POST['link_hover_effect']) ? form_sanitizer($_POST['link_hover_effect'], '', 'link_hover_effect') : $this->data['link_hover_effect'];
+		$this->data['link_decoration'] = isset($_POST['link_decoration']) ? form_sanitizer($_POST['link_decoration'], '0', 'link_decoration') : $this->data['link_decoration'];
+		$this->data['link_hover_decoration'] = isset($_POST['link_hover_decoration']) ? form_sanitizer($_POST['link_hover_decoration'], '0', 'link_hover_decoration') : $this->data['link_hover_decoration'];
+
 		$this->data['code_color'] = isset($_POST['code_color']) ? form_sanitizer($_POST['code_color'], '', 'code_color') : $this->data['code_color'];
 		$this->data['code_bgcolor'] = isset($_POST['code_bgcolor']) ? form_sanitizer($_POST['code_bgcolor'], '', 'code_bgcolor') : $this->data['code_bgcolor'];
-		$this->data['font_size_quote'] = isset($_POST['font_size_quote']) ? form_sanitizer($_POST['font_size_quote'], '', 'font_size_quote') : $this->data['font_size_quote'];
-		$this->data['font_height_quote'] = isset($_POST['font_height_quote']) ? form_sanitizer($_POST['font_height_quote'], '', 'font_height_quote') : $this->data['font_height_quote'];
-		$this->data['font_color_quote'] = isset($_POST['font_color_quote']) ? form_sanitizer($_POST['font_color_quote'], '', 'font_color_quote') : $this->data['font_color_quote'];
-		$this->data['font_decoration_quote'] = isset($_POST['font_decoration_quote']) ? form_sanitizer($_POST['font_decoration_quote'], '', 'font_decoration_quote') : $this->data['font_decoration_quote'];
+
+		$this->data['quote_size'] = isset($_POST['quote_size']) ? form_sanitizer($_POST['quote_size'], '', 'quote_size') : $this->data['quote_size'];
+		$this->data['quote_height'] = isset($_POST['quote_height']) ? form_sanitizer($_POST['quote_height'], '', 'quote_height') : $this->data['quote_height'];
+		$this->data['quote_color'] = isset($_POST['quote_color']) ? form_sanitizer($_POST['quote_color'], '', 'quote_color') : $this->data['quote_color'];
+		$this->data['quote_decoration'] = isset($_POST['quote_decoration']) ? form_sanitizer($_POST['quote_decoration'], '0', 'quote_decoration') : $this->data['quote_decoration'];
 		// End Font Settings.
-
-		$data = addslash(serialize($this->data));
-
-		$this->set_less_variables();
-		print_p($this->less_var);
-		//$this->buildCss();
+		if (isset($_POST['save_theme'])) {
+			$this->save_theme();
+		}
 	}
+
+	private function save_theme() {
+		global $userdata, $aidlink;
+		$data['theme_name'] = $this->theme_name;
+		$data['theme_title'] = 'Septenary';
+		$data['theme_datestamp'] = time();
+		$data['theme_user'] = $userdata['user_id'];
+		$data['theme_active'] = '1';
+		$data['theme_config'] = addslash(serialize($this->data));
+		if (!$this->debug) {
+			dbquery_insert(DB_THEME, $data, 'save');
+			$id = dblastid();
+		} else {
+			print_p($data);
+			$id = 'debug_sample';
+		}
+		$this->buildCss($id);
+	}
+
 
 	public function theme_editor() {
 		global $aidlink, $locale;
@@ -265,8 +282,10 @@ class atom {
 		$tab_title['icon'][] = '';
 
 		$tab_active = tab_active($tab_title, 0);
-
-		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit");
+		if ($this->debug) {
+			print_p($_POST);
+		}
+		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime'=>0));
 		echo form_button('Save Theme', 'save_theme', 'save_theme', 'save_theme', array('class'=>'btn-primary pull-right'));
 		echo opentab($tab_title, $tab_active, 'atom');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
@@ -403,17 +422,18 @@ class atom {
 
 		echo form_para("Link Color Settings", 'link_settings');
 		echo "<hr>\n";
-		// link
 
+		// link
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Link Settings', 'link');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Link Base Color', "link_color", "link_color", $this->data['link_color'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Link Hover Color', "link_hover_color", "link_hover_color", $this->data['link_hover_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Link Hover Effects', "link_hover_effect", "link_hover_effect", $this->font_decoration_options, $this->data['link_hover_effect'], $color_options);
+		echo form_select('Font Styling', "link_decoration", "link_decoration", $this->font_decoration_options, $this->data['link_decoration'], $color_options);
+		echo form_select('Hover Font Styling', "link_hover_decoration", "link_hover_decoration", $this->font_decoration_options, $this->data['link_hover_decoration'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
 
 		echo form_para("Code Font", 'code_settings');
@@ -436,12 +456,12 @@ class atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Blockquote', 'blockquote');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Font Size", "font_size_quote", "font_size_quote", $this->data['font_size_quote'], $font_size_options);
-		echo form_text("Line Spacing", "font_height_quote", "font_height_quote", $this->data['font_height_quote'], $font_size_options);
+		echo form_text("Font Size", "quote_size", "quote_size", $this->data['quote_size'], $font_size_options);
+		echo form_text("Line Spacing", "quote_height", "quote_height", $this->data['quote_height'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker('Font Color', "font_color_quote", "font_color_quote", $this->data['font_color_quote'], $color_options);
+		echo form_colorpicker('Font Color', "quote_color", "quote_color", $this->data['quote_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_quote", "font_decoration_quote", $this->font_decoration_options, $this->data['font_decoration_quote'], $color_options);
+		echo form_select('Font Styling', "quote_decoration", "quote_decoration", $this->font_decoration_options, $this->data['quote_decoration'], $color_options);
 		echo "</div>\n</div>\n";
 
 
@@ -1135,6 +1155,43 @@ class atom {
 		//print_p($os_faces);
 	}
 
-
+	/* add quotes for font name with whitespace */
+	private function parse_fonts($font) {
+		$_parsedFonts = array();
+		if ($font) {
+			$font = explode(',', $font);
+			if (count($font)) {
+				foreach($font as $font_name) {
+					$_parsedFonts[] = (preg_match('/\s/',$font_name)) ? '"'.$font_name.'"' : $font_name;
+				}
+				return implode(', ', $_parsedFonts);
+			}
+		}
+	}
+	/* return the font sets */
+	private function parse_font_set($font) {
+		$fonts_family_opts = array(
+			'0'=>'@font-family-sans-serif',
+			'1'=>'@font-family-monospace',
+			'2'=>'@font-family-serif'
+		);
+		return $fonts_family_opts[$font];
+	}
+	/* parse the font size metrics - can be edited to use 'px', 'em', 'rem' */
+	private function parse_font_size($font) {
+		return $font.'px';
+	}
+	/* parse font-weight */
+	private function parse_font_weight($font) {
+		return $this->text_weight[$font];
+	}
+	/* parse text-decoration */
+	private function parse_font_decoration($font) {
+		return $this->text_decoration[$font];
+	}
+	/* parse font-style */
+	private function parse_font_style($font) {
+		return $this->text_style[$font];
+	}
 }
 ?>
