@@ -83,7 +83,7 @@ function theme_editor() {
 	global $aidlink;
 	if (!isset($_POST['theme'])) redirect(FUSION_SELF.$aidlink);
 	$atom = new atom();
-	$atom->target_folder = $_GET['theme'];
+	$atom->target_folder = $_POST['theme'];
 	$atom->set_theme();
 	$atom->theme_editor();
 }
