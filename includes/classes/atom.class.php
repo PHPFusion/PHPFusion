@@ -84,19 +84,31 @@ class atom {
 		'quote_decoration'=> 5,
 	);
 	private $less_var = array();
-
-
+	private $theme_data = array();
 
 	public function load_theme() {
+		$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_active='1'");
+		if (dbrows($result)>0) {
+			$this->theme_data = dbarray($result);
+		}
+	}
 
+	public function infuse_theme() {
+		$this->load_theme();
+		if (!empty($this->theme_data)) {
+			add_to_head("<link href='".THEMES.$this->theme_data['theme_file']."' rel='stylesheet' media='screen' />\n");
+		} else {
+			add_to_head("<link href='".INCLUDES."bootstrap/bootstrap.css' rel='stylesheet' media='screen' />\n");
+		}
 	}
 
 	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
-	private function buildCss($file_ext) {
+	private function buildCss() {
 		global $defender;
 		$inputFile = INCLUDES."atom/atom.less";
 		$outputFolder = THEMES.$this->target_folder."/";
-		$outputFile = THEMES.$this->target_folder."/fusion_".$file_ext.".css"; // or min.css
+		$outputFile = THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
+		$returnFile = str_replace(THEMES, '', $outputFile);
 		$directories = array( INCLUDES."atom/less/" => 'includes/atom/less/' );
 		$options = array(
 			'output' => $outputFile,
@@ -114,21 +126,26 @@ class atom {
 				$parser->parseFile( $inputFile, $outputFolder );
 				$parser->ModifyVars($this->less_var);
 				$css = $parser->getCss();
-				if ($this->debug) {
+				if (!$this->debug) {
 					$css_file = fopen($outputFile, "w");
 					if (fwrite($css_file, $css)) {
 						fclose($css_file);
+					}
+					if ($css_file) {
+						$this->load_theme();
+						$result = dbquery("UPDATE ".DB_THEME." SET theme_active='0' WHERE theme_id='".$this->theme_data['theme_id']."'");
+						if (mysql_affected_rows()) {
+							return $returnFile;
+						}
 					}
 				} else {
 					print_p($css); // this is your css
 				}
 			}catch(Exception $e){
 				$error_message = $e->getMessage();
-				print_p($error_message);
+				$defender->stop();
+				$defender->addNotice($error_message);
 			}
-
-
-			//print_p($css);
 		} else {
 			$defender->stop();
 			$defender->setNoticeTitle('Theme cannot rebuild due to the following reason(s):');
@@ -248,20 +265,22 @@ class atom {
 
 	private function save_theme() {
 		global $userdata, $aidlink;
+
+		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
+
 		$data['theme_name'] = $this->theme_name;
 		$data['theme_title'] = 'Septenary';
 		$data['theme_datestamp'] = time();
 		$data['theme_user'] = $userdata['user_id'];
 		$data['theme_active'] = '1';
 		$data['theme_config'] = addslash(serialize($this->data));
-		if (!$this->debug) {
+		$data['theme_file'] = $this->buildCss();
+		if (!$this->debug && $data['theme_file']) {
 			dbquery_insert(DB_THEME, $data, 'save');
-			$id = dblastid();
+			redirect(FUSION_SELF.$aidlink);
 		} else {
 			print_p($data);
-			$id = 'debug_sample';
 		}
-		$this->buildCss($id);
 	}
 
 
@@ -275,7 +294,7 @@ class atom {
 		$tab_title['id'][] = 'grid';
 		$tab_title['icon'][] = '';
 
-		$tab_title['title'][] = 'Navigations';
+		$tab_title['title'][] = 'Navigation';
 		$tab_title['id'][] = 'nav';
 		$tab_title['icon'][] = '';
 
@@ -287,7 +306,15 @@ class atom {
 		if ($this->debug) {
 			print_p($_POST);
 		}
+
+		// do a pop up notice. important. pressing save twice will create a massive stress on server resource.
+		echo openmodal('dbi', 'Rebuilding New '.$this->theme_name.' Theme', array('class'=>'zindex-boost modal-center', 'button_id'=>'save_theme', 'static'=>1));
+		echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
+		echo "<div class='overflow-hide text-smaller'>\n<strong>The Atom Theme Engine is currently rebuilding your theme and may take up to 15 to 30 seconds depending of network status.</strong><br/>Please do not close or refresh the window.</div>\n";
+		echo closemodal();
+
 		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime'=>0));
+		echo form_button('Close', 'close_theme', 'close_theme', 'close_theme', array('class'=>'btn-default m-l-10 pull-right'));
 		echo form_button('Save Theme', 'save_theme', 'save_theme', 'save_theme', array('class'=>'btn-primary pull-right'));
 		echo opentab($tab_title, $tab_active, 'atom');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
