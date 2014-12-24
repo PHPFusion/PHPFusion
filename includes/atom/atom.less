@@ -1,0 +1,799 @@
+@import "bootstrap.less";
+//
+// Variables
+// --------------------------------------------------
+
+.background(0, @start: #fff, @stop:#fff){
+  background:@start;
+}
+.background(1, @start: #000, @stop:#fff){
+  //horizontal
+  background: @start;
+  background: -moz-linear-gradient(left, @start 0%, @stop 100%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,@start), color-stop(100%,@stop));
+  background: -webkit-linear-gradient(left, @start 0%,@stop 100%);
+  background: -o-linear-gradient(left, @start 0%,@stop 100%);
+  background: -ms-linear-gradient(left, @start 0%,@stop 100%);
+  background: linear-gradient(to right, @start 0%,@stop 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@start', endColorstr='@stop',GradientType=1 );
+}
+.background(2, @start: #000, @stop:#fff){
+  //vertical
+  background: @start;
+  background: -moz-linear-gradient(top, @start 0%, @stop 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start), color-stop(100%,@stop));
+  background: -webkit-linear-gradient(top, @start 0%,@stop 100%);
+  background: -o-linear-gradient(top, @start 0%,@stop 100%);
+  background: -ms-linear-gradient(top, @start 0%,@stop 100%);
+  background: linear-gradient(to bottom, @start 0%,@stop 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@start', endColorstr='@stop',GradientType=0 );
+}
+
+.background(3, @start: #000, @stop:#fff){
+  // radial
+  background: @start;
+  background: -moz-radial-gradient(center, ellipse cover, @start 0%, #ffffff 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,@start), color-stop(100%,@stop));
+  background: -webkit-radial-gradient(center, ellipse cover, @start 0%,@stop 100%);
+  background: -o-radial-gradient(center, ellipse cover, @start 0%,@stop 100%);
+  background: -ms-radial-gradient(center, ellipse cover, @start 0%,@stop 100%);
+  background: radial-gradient(ellipse at center, @start 0%,@stop 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@start', endColorstr='@stop',GradientType=1 );
+}
+
+.background(4, @start: #000, @stop:#fff){
+  // diagonal
+  background: @start;
+  background: -moz-linear-gradient(-45deg, @start 0%, @stop 100%);
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,@start), color-stop(100%,@stop));
+  background: -webkit-linear-gradient(-45deg, @start 0%,@stop 100%);
+  background: -o-linear-gradient(-45deg, @start 0%,@stop 100%);
+  background: -ms-linear-gradient(-45deg, @start 0%,@stop 100%);
+  background: linear-gradient(135deg, @start 0%,@stop 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@start', endColorstr='@stop',GradientType=1);
+}
+
+// Global values
+// --------------------------------------------------
+
+// Grays
+// -------------------------
+
+@gray-darker:            lighten(#000, 13.5%); // #222
+@gray-dark:              lighten(#000, 20%);   // #333
+@gray:                   lighten(#000, 33.5%); // #555
+@gray-light:             lighten(#000, 60%);   // #999
+@gray-lighter:           lighten(#000, 93.5%); // #eee
+
+// Brand colors
+// -------------------------
+
+@brand-primary:         @theme_brand_primary;
+@brand-success:         @theme_brand_success;
+@brand-warning:         @theme_brand_warning;
+@brand-danger:          @theme_brand_danger;
+@brand-info:            @theme_brand_info;
+@brand-inverse:         @theme_brand_inverse; // unused
+
+// Scaffolding
+// -------------------------
+
+//@body-bg:               #fff; //flatter(#fff, #000); //background(@theme_gradient_bg_type, @theme_start, @theme_stop);
+@text-color:            @theme_text_color; //@gray-dark;
+
+// Links
+// -------------------------
+
+@link-color:            @theme_link_color; //@brand-primary;
+@link-hover-color:      @theme_link_hover_color; //darken(@link-color, 15%);
+
+// Typography
+// -------------------------
+
+@font-family-sans-serif:  @theme_font_family_sans_serif; //"Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-serif:       @theme_font_family_serif; //Georgia, "Times New Roman", Times, serif;
+@font-family-monospace:   @theme_font_family_monospace; //Monaco, Menlo, Consolas, "Courier New", monospace;
+@font-family-base:        @theme_font_family_base; //@font-family-sans-serif;
+
+@font-size-base:          @theme_font_base; //14px;
+@font-size-large:         ceil(@font-size-base * 1.25); // ~18px
+@font-size-small:         ceil(@font-size-base * 0.85); // ~12px
+
+@line-height-base:        @theme_line_height; //1.4; // 20/14
+@line-height-computed:    floor(@font-size-base * @line-height-base); // ~20px
+
+@headings-font-family:    @font-family-base;
+@headings-font-weight:    500;
+@headings-line-height:    @theme_font_headings_line_height; //1.1;
+
+// Iconography
+// -------------------------
+
+@icon-font-path:          "../fonts/";
+@icon-font-name:          "glyphicons-halflings-regular";
+
+
+// Components
+// -------------------------
+// Based on 14px font-size and 1.428 line-height (~20px to start)
+
+@padding-base-vertical:          6px;
+@padding-base-horizontal:        12px;
+
+@padding-large-vertical:         10px;
+@padding-large-horizontal:       16px;
+
+@padding-small-vertical:         5px;
+@padding-small-horizontal:       10px;
+
+@line-height-large:              1.33;
+@line-height-small:              1.5;
+
+@border-radius-base:             4px;
+@border-radius-large:            6px;
+@border-radius-small:            3px;
+
+@component-active-bg:            @brand-primary;
+
+@caret-width-base:               4px;
+@caret-width-large:              5px;
+
+// Tables
+// -------------------------
+
+@table-cell-padding:                 @theme_tbl_cell_padding; //8px;
+@table-condensed-cell-padding:       @theme_tbl_condensed_cell_padding; //5px;
+
+@table-bg:                           @theme_tbl_bg; //transparent; // overall background-color
+@table-bg-accent:                    @theme_tbl_accent_bg; //#f9f9f9; // for striping
+@table-bg-hover:                     @theme_tbl_bg_hover; //#f5f5f5;
+@table-bg-active:                    @theme_tbl_bg_active; //@table-bg-hover;
+
+@table-border-color:                 @theme_tbl_borderbg; //#ddd; // table and cell border
+
+
+// Buttons
+// -------------------------
+
+@btn-font-weight:                normal;
+
+@btn-default-color:              #333;
+@btn-default-bg:                 #fff;
+@btn-default-border:             #ccc;
+
+@btn-primary-color:              #fff;
+@btn-primary-bg:                 @brand-primary;
+@btn-primary-border:             darken(@btn-primary-bg, 5%);
+
+@btn-success-color:              #fff;
+@btn-success-bg:                 @brand-success;
+@btn-success-border:             darken(@btn-success-bg, 5%);
+
+@btn-warning-color:              #fff;
+@btn-warning-bg:                 @brand-warning;
+@btn-warning-border:             darken(@btn-warning-bg, 5%);
+
+@btn-danger-color:               #fff;
+@btn-danger-bg:                  @brand-danger;
+@btn-danger-border:              darken(@btn-danger-bg, 5%);
+
+@btn-info-color:                 #fff;
+@btn-info-bg:                    @brand-info;
+@btn-info-border:                darken(@btn-info-bg, 5%);
+
+@btn-link-disabled-color:        @gray-light;
+
+
+// Forms
+// -------------------------
+
+@input-bg:                       @theme_form_inputbg; //#fff;
+@input-bg-disabled:              @theme_form_input_disabledbg; //@gray-lighter;
+
+@input-color:                    @theme_form_input_text_color; //@gray;
+@input-border:                   @theme_form_input_borderbg; //#ccc;
+@input-border-radius:            @theme_form_input_border_radius; //@border-radius-base;
+@input-border-focus:             @theme_form_input_border_focusbg; //#66afe9;
+
+@input-color-placeholder:        @theme_form_input_placeholder_color; //@gray-light;
+
+@input-height-base:              @theme_form_input_lineheight_base; //(@line-height-computed + (@padding-base-vertical * 2) + 0);
+@input-height-large:             @@theme_form_input_lineheight_large; //(floor(@font-size-large * @line-height-large) + (@padding-large-vertical * 2) + 2);
+@input-height-small:             @theme_form_input_lineheight_small; //(floor(@font-size-small * @line-height-small) + (@padding-small-vertical * 2) + 2);
+
+@legend-color:                   @theme_form_legend_text_color; //@gray-dark;
+@legend-border-color:            @theme_form_legend_borderbg; //#e5e5e5;
+
+@input-group-addon-bg:           @theme_form_inputgroup_addonbg; //@gray-lighter;
+@input-group-addon-border-color: @input-border;
+
+
+// Dropdowns
+// -------------------------
+
+@dropdown-bg:                    #fff;
+@dropdown-border:                rgba(0,0,0,.15);
+@dropdown-fallback-border:       #ccc;
+@dropdown-divider-bg:            #e5e5e5;
+
+@dropdown-link-active-color:     #fff;
+@dropdown-link-active-bg:        @component-active-bg;
+
+@dropdown-link-color:            @gray-dark;
+@dropdown-link-hover-color:      #fff;
+@dropdown-link-hover-bg:         @dropdown-link-active-bg;
+
+@dropdown-link-disabled-color:   @gray-light;
+
+@dropdown-header-color:          @gray-light;
+
+@dropdown-caret-color:           #000;
+
+
+// COMPONENT VARIABLES
+// --------------------------------------------------
+
+
+// Z-index master list
+// -------------------------
+// Used for a bird's eye view of components dependent on the z-axis
+// Try to avoid customizing these :)
+
+@zindex-navbar:            1000;
+@zindex-dropdown:          1000;
+@zindex-popover:           1010;
+@zindex-tooltip:           1030;
+@zindex-navbar-fixed:      1030;
+@zindex-modal-background:  1040;
+@zindex-modal:             1050;
+
+// Media queries breakpoints
+// --------------------------------------------------
+// Extra small screen / phone
+@screen-xs:                  480px; //@theme_container_size_phone;
+@screen-phone:               @screen-xs;
+// Small screen / tablet
+@screen-sm:                  768px; // @theme_container_size_tablet;
+@screen-tablet:              @screen-sm;
+// Medium screen / desktop
+@screen-md:                  992px; // @theme_container_size_desktop;
+@screen-desktop:             @screen-md;
+// Large screen / wide desktop
+@screen-lg:                  1200px; // @theme_container_size_large_desktop;
+@screen-lg-desktop:          @screen-lg;
+// So media queries don't overlap when required, provide a maximum
+@screen-xs-max:              (@screen-sm - 1);
+@screen-sm-max:              (@screen-md - 1);
+@screen-md-max:              (@screen-lg - 1);
+
+
+// Grid system
+// --------------------------------------------------
+
+// Number of columns in the grid system
+@grid-columns:              12;
+// Padding, to be divided by two and applied to the left and right of all columns
+@grid-gutter-width:         30px;
+// Point at which the navbar stops collapsing
+@grid-float-breakpoint:     @screen-tablet;
+
+
+// Navbar
+// -------------------------
+// Basics of a navbar
+@navbar-height:                    @theme_nav_height;
+@navbar-margin-bottom:             @line-height-computed;
+@navbar-default-color:             #777;
+
+@navbar-default-bg:                #eee;
+//background(@theme_nav_bg_gradient_type, @theme_nav_bg_start, @theme_nav_bg_stop);
+@navbar-default-border:            darken(@navbar-default-bg, 6.5%);
+@navbar-border-radius:             @theme_nav_border_radius; // @border-radius-base;
+@navbar-padding-horizontal:        floor(@grid-gutter-width / 2);
+@navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2-1.5);
+
+// Navbar links
+@navbar-default-link-color:                @theme_nav_link;
+@navbar-default-link-hover-color:          @theme_nav_linkhover;
+@navbar-default-link-hover-bg:             #fff; //background(@theme_nav_hoverbg_gradient_type, @theme_nav_hoverbg_start, @theme_nav_hoverbg_stop);
+@navbar-default-link-active-color:         @theme_nav_linkactive;
+@navbar-default-link-active-bg:            @theme_nav_border_bg; //darken(@navbar-default-bg, 6.5%);
+@navbar-default-link-disabled-color:       @theme_nav_linkdisabled;
+@navbar-default-link-disabled-bg:          transparent;
+
+// Navbar brand label
+@navbar-default-brand-color:               @navbar-default-link-color;
+@navbar-default-brand-hover-color:         darken(@navbar-default-link-color, 10%);
+@navbar-default-brand-hover-bg:            transparent;
+
+// Navbar toggle
+@navbar-default-toggle-hover-bg:           #ddd;
+@navbar-default-toggle-icon-bar-bg:        #ccc;
+@navbar-default-toggle-border-color:       #ddd;
+
+
+// Inverted navbar
+//
+// Reset inverted navbar basics
+@navbar-inverse-color:                      @gray-light;
+@navbar-inverse-bg:                         #222;
+@navbar-inverse-border:                     darken(@navbar-inverse-bg, 10%);
+
+// Inverted navbar links
+@navbar-inverse-link-color:                 @gray-light;
+@navbar-inverse-link-hover-color:           #fff;
+@navbar-inverse-link-hover-bg:              transparent;
+@navbar-inverse-link-active-color:          @navbar-inverse-link-hover-color;
+@navbar-inverse-link-active-bg:             darken(@navbar-inverse-bg, 10%);
+@navbar-inverse-link-disabled-color:        #444;
+@navbar-inverse-link-disabled-bg:           transparent;
+
+// Inverted navbar brand label
+@navbar-inverse-brand-color:                @navbar-inverse-link-color;
+@navbar-inverse-brand-hover-color:          #fff;
+@navbar-inverse-brand-hover-bg:             transparent;
+
+// Inverted navbar search
+// Normal navbar needs no special styles or vars
+@navbar-inverse-search-bg:                  lighten(@navbar-inverse-bg, 25%);
+@navbar-inverse-search-bg-focus:            #fff;
+@navbar-inverse-search-border:              @navbar-inverse-bg;
+@navbar-inverse-search-placeholder-color:   #ccc;
+
+// Inverted navbar toggle
+@navbar-inverse-toggle-hover-bg:            #333;
+@navbar-inverse-toggle-icon-bar-bg:         #fff;
+@navbar-inverse-toggle-border-color:        #333;
+
+
+// Navs
+// -------------------------
+@nav-link-padding:                          10px 15px;
+@nav-link-hover-bg:                         @gray-lighter;
+
+@nav-disabled-link-color:                   @gray-light;
+@nav-disabled-link-hover-color:             @gray-light;
+
+@nav-open-link-hover-color:                 #fff;
+@nav-open-caret-border-color:               #fff;
+
+// Tabs
+@nav-tabs-border-color:                     #ddd;
+
+@nav-tabs-link-hover-border-color:          @gray-lighter;
+
+@nav-tabs-active-link-hover-bg:             @body-bg;
+@nav-tabs-active-link-hover-color:          @gray;
+@nav-tabs-active-link-hover-border-color:   #ddd;
+
+@nav-tabs-justified-link-border-color:            #ddd;
+@nav-tabs-justified-active-link-border-color:     @body-bg;
+
+// Pills
+@nav-pills-active-link-hover-bg:            @component-active-bg;
+@nav-pills-active-link-hover-color:         #fff;
+
+
+// Pagination
+// -------------------------
+@pagination-bg:                        #fff;
+@pagination-border:                    #ddd;
+
+@pagination-hover-bg:                  @gray-lighter;
+
+@pagination-active-bg:                 @brand-primary;
+@pagination-active-color:              #fff;
+
+@pagination-disabled-color:            @gray-light;
+
+
+// Pager
+// -------------------------
+
+@pager-border-radius:                  15px;
+@pager-disabled-color:                 @gray-light;
+
+
+// Jumbotron
+// -------------------------
+
+@jumbotron-padding:              30px;
+@jumbotron-color:                inherit;
+@jumbotron-bg:                   @gray-lighter;
+
+@jumbotron-heading-color:        inherit;
+
+
+// Form states and alerts
+// -------------------------
+
+@state-warning-text:             #c09853;
+@state-warning-bg:               #fcf8e3;
+@state-warning-border:           darken(spin(@state-warning-bg, -10), 3%);
+
+@state-danger-text:              #b94a48;
+@state-danger-bg:                #f2dede;
+@state-danger-border:            darken(spin(@state-danger-bg, -10), 3%);
+
+@state-success-text:             #468847;
+@state-success-bg:               #dff0d8;
+@state-success-border:           darken(spin(@state-success-bg, -10), 5%);
+
+@state-info-text:                #3a87ad;
+@state-info-bg:                  #d9edf7;
+@state-info-border:              darken(spin(@state-info-bg, -10), 7%);
+
+
+// Tooltips
+// -------------------------
+@tooltip-max-width:           200px;
+@tooltip-color:               #fff;
+@tooltip-bg:                  #000;
+
+@tooltip-arrow-width:         5px;
+@tooltip-arrow-color:         @tooltip-bg;
+
+
+// Popovers
+// -------------------------
+@popover-bg:                          #fff;
+@popover-max-width:                   276px;
+@popover-border-color:                rgba(0,0,0,.2);
+@popover-fallback-border-color:       #ccc;
+
+@popover-title-bg:                    darken(@popover-bg, 3%);
+
+@popover-arrow-width:                 10px;
+@popover-arrow-color:                 #fff;
+
+@popover-arrow-outer-width:           (@popover-arrow-width + 1);
+@popover-arrow-outer-color:           rgba(0,0,0,.25);
+@popover-arrow-outer-fallback-color:  #999;
+
+
+// Labels
+// -------------------------
+
+@label-default-bg:            @gray-light;
+@label-primary-bg:            @brand-primary;
+@label-success-bg:            @brand-success;
+@label-info-bg:               @brand-info;
+@label-warning-bg:            @brand-warning;
+@label-danger-bg:             @brand-danger;
+
+@label-color:                 #fff;
+@label-link-hover-color:      #fff;
+
+
+// Modals
+// -------------------------
+@modal-inner-padding:         20px;
+
+@modal-title-padding:         15px;
+@modal-title-line-height:     @line-height-base;
+
+@modal-content-bg:                             #fff;
+@modal-content-border-color:                   rgba(0,0,0,.2);
+@modal-content-fallback-border-color:          #999;
+
+@modal-backdrop-bg:           #000;
+@modal-header-border-color:   #e5e5e5;
+@modal-footer-border-color:   @modal-header-border-color;
+
+
+// Alerts
+// -------------------------
+@alert-padding:               15px;
+@alert-border-radius:         @border-radius-base;
+@alert-link-font-weight:      bold;
+
+@alert-success-bg:            @state-success-bg;
+@alert-success-text:          @state-success-text;
+@alert-success-border:        @state-success-border;
+
+@alert-info-bg:               @state-info-bg;
+@alert-info-text:             @state-info-text;
+@alert-info-border:           @state-info-border;
+
+@alert-warning-bg:            @state-warning-bg;
+@alert-warning-text:          @state-warning-text;
+@alert-warning-border:        @state-warning-border;
+
+@alert-danger-bg:             @state-danger-bg;
+@alert-danger-text:           @state-danger-text;
+@alert-danger-border:         @state-danger-border;
+
+
+// Progress bars
+// -------------------------
+@progress-bg:                 #f5f5f5;
+@progress-bar-color:          #fff;
+
+@progress-bar-bg:             @brand-primary;
+@progress-bar-success-bg:     @brand-success;
+@progress-bar-warning-bg:     @brand-warning;
+@progress-bar-danger-bg:      @brand-danger;
+@progress-bar-info-bg:        @brand-info;
+
+
+// List group
+// -------------------------
+@list-group-bg:               #fff;
+@list-group-border:           #ddd;
+@list-group-border-radius:    @border-radius-base;
+
+@list-group-hover-bg:         #f5f5f5;
+@list-group-active-color:     #fff;
+@list-group-active-bg:        @component-active-bg;
+@list-group-active-border:    @list-group-active-bg;
+
+@list-group-link-color:          #555;
+@list-group-link-heading-color:  #333;
+
+
+// Panels
+// -------------------------
+@panel-bg:                    #fff;
+@panel-inner-border:          #ddd;
+@panel-border-radius:         @border-radius-base;
+@panel-footer-bg:             #f5f5f5;
+
+@panel-default-text:          @gray-dark;
+@panel-default-border:        #ddd;
+@panel-default-heading-bg:    #f5f5f5;
+
+@panel-primary-text:          #fff;
+@panel-primary-border:        @brand-primary;
+@panel-primary-heading-bg:    @brand-primary;
+
+@panel-success-text:          @state-success-text;
+@panel-success-border:        @state-success-border;
+@panel-success-heading-bg:    @state-success-bg;
+
+@panel-warning-text:          @state-warning-text;
+@panel-warning-border:        @state-warning-border;
+@panel-warning-heading-bg:    @state-warning-bg;
+
+@panel-danger-text:           @state-danger-text;
+@panel-danger-border:         @state-danger-border;
+@panel-danger-heading-bg:     @state-danger-bg;
+
+@panel-info-text:             @state-info-text;
+@panel-info-border:           @state-info-border;
+@panel-info-heading-bg:       @state-info-bg;
+
+
+// Thumbnails
+// -------------------------
+@thumbnail-padding:           4px;
+@thumbnail-bg:                @body-bg;
+@thumbnail-border:            #ddd;
+@thumbnail-border-radius:     @border-radius-base;
+
+@thumbnail-caption-color:     @text-color;
+@thumbnail-caption-padding:   9px;
+
+
+// Wells
+// -------------------------
+@well-bg:                     #f5f5f5;
+
+
+// Badges
+// -------------------------
+@badge-color:                 #fff;
+@badge-link-hover-color:      #fff;
+@badge-bg:                    @gray-light;
+
+@badge-active-color:          @link-color;
+@badge-active-bg:             #fff;
+
+@badge-font-weight:           bold;
+@badge-line-height:           1;
+@badge-border-radius:         10px;
+
+
+// Breadcrumbs
+// -------------------------
+@breadcrumb-bg:               #f5f5f5;
+@breadcrumb-color:            #ccc;
+@breadcrumb-active-color:     @gray-light;
+
+
+// Carousel
+// ------------------------
+
+@carousel-text-shadow:                        0 1px 2px rgba(0,0,0,.6);
+
+@carousel-control-color:                      #fff;
+@carousel-control-width:                      15%;
+@carousel-control-opacity:                    .5;
+@carousel-control-font-size:                  20px;
+
+@carousel-indicator-active-bg:                #fff;
+@carousel-indicator-border-color:             #fff;
+
+@carousel-caption-color:                      #fff;
+
+
+// Close
+// ------------------------
+@close-color:                 #000;
+@close-font-weight:           bold;
+@close-text-shadow:           0 1px 0 #fff;
+
+
+// Code
+// ------------------------
+@code-color:                  @theme_code_color; //#c7254e;
+@code-bg:                     @theme_codebg; //#f9f2f4;
+
+@pre-bg:                      #f5f5f5;
+@pre-color:                   @gray-dark;
+@pre-border-color:            #ccc;
+@pre-scrollable-max-height:   340px;
+
+// Type
+// ------------------------
+@text-muted:                  @gray-light;
+@abbr-border-color:           @gray-light;
+@headings-small-color:        @gray-light;
+@blockquote-small-color:      @gray-light;
+@blockquote-border-color:     @gray-lighter;
+@page-header-border-color:    @gray-lighter;
+
+// Miscellaneous
+// -------------------------
+
+// Hr border color
+@hr-border:                   @gray-lighter;
+
+// Horizontal forms & lists
+@component-offset-horizontal: 180px;
+
+
+// Container sizes (Done)
+// --------------------------------------------------
+// Small screen / tablet
+@container-tablet:            ((@theme_container_size_tablet + @grid-gutter-width));
+// Medium screen / desktop
+@container-desktop:           ((@theme_container_size_desktop + @grid-gutter-width));
+// Large screen / wide desktop
+@container-lg-desktop:        ((@theme_container_size_large_desktop + @grid-gutter-width));
+
+
+// PHP-Fusion Default Colors .less file
+// --------------------------------
+// You can configure in includes/atom/atom.inc.php the output for default.
+// --------------------------------
+
+// Searchbar I/O
+// --------------------------------
+.input-searchbar {
+  margin-top:5px;
+  height:34px;
+}
+.input-searchbar:focus {
+  height:34px;
+}
+.btn-searchbar {
+  margin-top:5px;
+}
+
+// Gridmap I/O
+.container-section { padding-top:10px; }
+
+// Default Menu Component I/O
+// --------------------------------
+.img-avatar {
+  height:40px;
+  margin-top:-10px;
+  margin-right:10px;
+  float:left;
+  display:block;
+}
+.btn-searchbar { margin-left: -1px; }
+h1, .h1 { font-size: @theme_font_size_h1; color: @theme_font_headings_color; }
+h2, .h2 { font-size: @theme_font_size_h2; color: @theme_font_headings_color; }
+h3, .h3 { font-size: @theme_font_size_h3; color: @theme_font_headings_color;  }
+h4, .h4 { font-size: @theme_font_size_h4; color: @theme_font_headings_color;  }
+h5, .h5 { font-size: @theme_font_size_h5; color: @theme_font_headings_color;  }
+h6, .h6 { font-size: @theme_font_size_h6; color: @theme_font_headings_color;  }
+
+// CSS colors
+// ----------------------------------------------------------
+// Need to find all v6-v7 Commonly Used PHP-Fusion CSS Class
+// ----------------------------------------------------------
+
+/*
+body{
+  .background(@theme_gradient_bg_type, @theme_start, @theme_stop);
+  font-family: @theme_font !important;
+  font-size: @theme_font_size !important;
+  font-color: @theme_fontbg !important;
+  overflow-x:hidden;
+}
+
+.side-body {
+  font-family: @theme_font !important;
+  font-size: @theme_font_size !important;
+  font-color: @theme_fontbg !important;
+}
+
+a {
+  font-color: @theme_linkbg !important;
+}
+
+a:hover, a:focus, a:active {
+  font-color: @theme_linkbg !important;
+}
+
+h1 {
+  font-family: @theme_h1_font !important;
+  font-size: @theme_h1_font_size !important;
+  color: @theme_h1_fontbg !important;
+}
+
+h2 {
+  font-family: @theme_h2_font !important;
+  font-size: @theme_h2_font_size !important;
+  color: @theme_h2_fontbg;
+}
+
+h3 {
+  font-family: @theme_h3_font !important;
+  font-size: @theme_h3_font_size !important;
+  color: @theme_h3_fontbg !important;
+}
+
+h4 {
+  font-family: @theme_h4_font !important;
+  font-size: @theme_h4_font_size !important;
+  color: @theme_h4_fontbg !important;
+}
+
+h5 {
+  font-family: @theme_h5_font !important;
+  font-size: @theme_h5_font_size !important;
+  color: @theme_h5_fontbg !important;
+}
+
+h6 {
+  font-family: @theme_h6_font !important;
+  font-size: @theme_h6_font_size !important;
+  color: @theme_h6_fontbg !important;
+}
+*/
+// Menu
+//-------
+
+// Configurtion Parameters Missing in Atom
+/*
+@navbar-default-bg; // menu bg
+@navbar-default-border; // menu border
+@navbar-default-brand-color; // menu text
+@navbar-default-brand-hover-bg; // menu text hover
+*/
+
+/*
+@navbar-default-color; // menu link a
+@navbar-default-hover-color; // menu link a:hover
+*/
+
+/*
+//menu & dropdowns
+@navbar-default-link-color;
+@navbar-default-link-hover-color;
+@navbar-default-link-hover-bg;
+@navbar-default-link-active-color; //dropdown bg a
+@navbar-default-link-active-bg; //dropdown bg
+@navbar-default-link-disabled-color;
+@navbar-default-link-disabled-bg;
+@navbar-default-toggle-border-color;
+@navbar-default-toggle-hover-bg;
+@navbar-default-toggle-icon-bar-bg;
+@navbar-default-toggle-icon-bar-bg;
+*/
+
+
+

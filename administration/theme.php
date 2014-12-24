@@ -36,20 +36,23 @@ if (isset($_GET['status'])) {
 	}
 }
 
-
 opentable('Theme Management');
+
+$edit_mode = ((isset($_GET['action']) && $_GET['action'] == 'edit') && (isset($_GET['theme']) && file_exists(THEMES.$_GET['theme']))) ? 1 : 0;
 
 $tab_title['title'][] = 'Current Themes';
 $tab_title['id'][] = 'its';
 $tab_title['icon'][] = '';
-/*
-$tab_title['title'][] = 'Edit Theme';
-$tab_title['id'][] = 'edt';
-$tab_title['icon'][] = '';
-*/
-$tab_title['title'][] = 'Install New Theme';
-$tab_title['id'][] = 'upt';
-$tab_title['icon'][] = '';
+
+if ($edit_mode) {
+	$tab_title['title'][] = 'Edit Theme';
+	$tab_title['id'][] = 'edt';
+	$tab_title['icon'][] = '';
+} else {
+	$tab_title['title'][] = 'Install New Theme';
+	$tab_title['id'][] = 'upt';
+	$tab_title['icon'][] = '';
+}
 
 $active_tab = tab_active($tab_title,1);
 
@@ -59,28 +62,28 @@ echo "<div class='m-t-20'>\n";
 list_theme();
 echo "</div>\n";
 echo closetabbody();
-
-//echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $active_tab);
-//echo "<div class='m-t-20'>\n";
-//theme_uploader();
-//echo "</div>\n";
-//echo closetabbody();
-
-echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $active_tab);
-echo "<div class='m-t-20'>\n";
-theme_editor();
-echo "</div>\n";
-echo closetabbody();
-
-
-
-
+if ($edit_mode) {
+	echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $active_tab);
+	echo "<div class='m-t-20'>\n";
+	theme_editor();
+	echo "</div>\n";
+	echo closetabbody();
+} else {
+	echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $active_tab);
+	echo "<div class='m-t-20'>\n";
+	theme_uploader();
+	echo "</div>\n";
+	echo closetabbody();
+}
 echo closetab();
-
 closetable();
 
+/* Theme Engine editor */
 function theme_editor() {
+	global $aidlink;
+	if (!isset($_GET['theme'])) redirect(FUSION_SELF.$aidlink);
 	$atom = new atom();
+	$atom->target_folder = $_GET['theme'];
 	$atom->set_theme();
 	$atom->theme_editor();
 }
@@ -124,7 +127,7 @@ function list_theme() {
 		echo "<div class='panel-body'>\n";
 		echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '100px')."</div>\n";
 		echo "<div class='btn-group pull-right m-t-20'>\n";
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;theme=".$theme_data['theme_name']."' class='btn btn-default btn-sm'>Edit Theme</a>";
+		echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;theme=".$theme_name."' class='btn btn-default btn-sm'>Edit Theme</a>";
 		echo "</div>\n";
 		echo "<div class='overflow-hide'>\n";
 		echo "<div class='strong text-dark m-b-20'>".$theme_data['title']."</div>";

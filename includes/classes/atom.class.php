@@ -18,6 +18,10 @@
  --------------------------------------------------------*/
 
 class atom {
+
+	public $target_folder = '';
+	public $mode = 'classic'; // compressed or classic
+
 	// bootstrap default configurations here.
 	private $text_decoration = array('Normal', 'Bold', 'Italic', 'Underlined', 'Bold and Underlined', 'Italic and Bold', 'Italic and Underlined', 'Italic, Bold and Underlined');
 	private $data = array(
@@ -78,13 +82,31 @@ class atom {
 
 	}
 
+	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
+	private function buildCss() {
+		$inputFile = INCLUDES."atom/atom.less";
+		$outputFile = THEMES.$this->target_folder."/fusion.css"; // or min.css
+		$less = new lessc;
+		$less->setFormatter("classic"); // compressed, classic
+		$less->setVariables($this->data);
+		$less->setImportDir(array(INCLUDES."atom/bootstrap"));
+		//try {
+		//     $less->compile("} invalid LESS }}}");
+		// } catch (Exception $ex) {
+		//print_p("lessphp fatal error: ".$ex->getMessage()."");
+		// }
+		$newCache = $less->compileFile($inputFile, $outputFile);
+
+	}
+
+
 	public function set_theme() {
 		print_p($_POST);
 		// do this tomorrow
 		$this->data['sans_serif_fonts'] = isset($_POST['sans_serif_fonts']) ? form_sanitizer($_POST['sans_serif_fonts'], '', 'sans_serif_fonts') : $this->data['sans_serif_fonts'];
 		$this->data['serif_fonts'] = isset($_POST['serif_fonts']) ? form_sanitizer($_POST['serif_fonts'], '', 'serif_fonts') : $this->data['serif_fonts'];
 		$this->data['monospace_fonts'] = isset($_POST['monospace_fonts']) ? form_sanitizer($_POST['monospace_fonts'], '', 'monospace_fonts') : $this->data['monospace_fonts'];
-		$this->data['base_fonts'] = isset($_POST['base_fonts']) ? form_sanitizer($_POST['base_fonts'], '', 'base_fonts') : $this->data['base_fonts'];
+		$this->data['base_font'] = isset($_POST['base_font']) ? form_sanitizer($_POST['base_font'], '', 'base_font') : $this->data['base_font'];
 		$this->data['base_font_size'] = isset($_POST['base_font_size']) ? form_sanitizer($_POST['base_font_size'], '', 'base_font_size') : $this->data['base_font_size'];
 		$this->data['base_font_height'] = isset($_POST['base_font_height']) ? form_sanitizer($_POST['base_font_height'], '', 'base_font_height') : $this->data['base_font_height'];
 		$this->data['base_font_color'] = isset($_POST['base_font_color']) ? form_sanitizer($_POST['base_font_color'], '', 'base_font_color') : $this->data['base_font_color'];
@@ -123,9 +145,7 @@ class atom {
 		$this->data['font_height_quote'] = isset($_POST['font_height_quote']) ? form_sanitizer($_POST['font_height_quote'], '', 'font_height_quote') : $this->data['font_height_quote'];
 		$this->data['font_color_quote'] = isset($_POST['font_color_quote']) ? form_sanitizer($_POST['font_color_quote'], '', 'font_color_quote') : $this->data['font_color_quote'];
 		$this->data['font_decoration_quote'] = isset($_POST['font_decoration_quote']) ? form_sanitizer($_POST['font_decoration_quote'], '', 'font_decoration_quote') : $this->data['font_decoration_quote'];
-
-
-
+		$data = addslash(serialize($this->data));
 	}
 
 	public function theme_editor() {
