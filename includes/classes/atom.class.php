@@ -22,14 +22,13 @@ class atom {
 	public $target_folder = '';
 	public $theme_name = '';
 	public $compress = FALSE;
-
+	public $debug = FALSE;
 
 	// bootstrap default configurations here.
 	private $font_decoration_options = array('Normal', 'Bold', 'Italic', 'Underlined', 'Bold and Underlined', 'Italic and Bold', 'Italic and Underlined', 'Italic, Bold and Underlined');
 	private $text_weight = array('400', '600', '400', '400', '600', '600', '400', '600');
 	private $text_decoration = array('none', 'none', 'none', 'underline', 'underline', 'none', 'underline', 'underline');
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
-
 	private $data = array(
 		'sans_serif_fonts' => 'Helvetica Neue, Helvetica, Arial, sans-serif',
 		'serif_fonts' => 'Georgia, Times New Roman, Times, serif',
@@ -85,7 +84,7 @@ class atom {
 		'quote_decoration'=> 5,
 	);
 	private $less_var = array();
-	private $debug = true;
+
 
 
 	public function load_theme() {
@@ -105,9 +104,9 @@ class atom {
 		);
 		$this->set_less_variables();
 		if (!empty($this->less_var)) {
-			print_p($this->less_var);
-			print_p($inputFile);
-			print_p($outputFile);
+			if ($this->debug) print_p($this->less_var);
+			if ($this->debug) print_p($inputFile);
+			if ($this->debug) print_p($outputFile);
 			require_once INCLUDES."atom/lessc.inc.php";
 			try{
 				$parser = new Less_Parser($options);
@@ -115,11 +114,14 @@ class atom {
 				$parser->parseFile( $inputFile, $outputFolder );
 				$parser->ModifyVars($this->less_var);
 				$css = $parser->getCss();
-				print_p($css);
-				//$temp = fopen($outputFile, "w");
-				//if (fwrite($temp, $css)) {
-				//	fclose($temp);
-				//}
+				if ($this->debug) {
+					$css_file = fopen($outputFile, "w");
+					if (fwrite($css_file, $css)) {
+						fclose($css_file);
+					}
+				} else {
+					print_p($css); // this is your css
+				}
 			}catch(Exception $e){
 				$error_message = $e->getMessage();
 				print_p($error_message);
