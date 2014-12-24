@@ -30,6 +30,7 @@ class atom {
 	private $text_decoration = array('none', 'none', 'none', 'underline', 'underline', 'none', 'underline', 'underline');
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
 	private $data = array(
+		'theme_title' => '',
 		'sans_serif_fonts' => 'Helvetica Neue, Helvetica, Arial, sans-serif',
 		'serif_fonts' => 'Georgia, Times New Roman, Times, serif',
 		'monospace_fonts' => 'Menlo, Monaco, Consolas, Courier New, monospace',
@@ -99,6 +100,40 @@ class atom {
 			add_to_head("<link href='".THEMES.$this->theme_data['theme_file']."' rel='stylesheet' media='screen' />\n");
 		} else {
 			add_to_head("<link href='".INCLUDES."bootstrap/bootstrap.css' rel='stylesheet' media='screen' />\n");
+		}
+	}
+
+	/* to roll out only on future versions */
+	public function render_theme_presets() {
+		global $settings;
+		echo form_para('Theme Presets', 'theme_presets');
+		$theme_dbfile = '/theme_db.php';
+		if (file_exists(THEMES.$this->theme_name.$theme_dbfile)) { // new 9.00
+			include THEMES.$this->theme_name.$theme_dbfile;
+			$screenshot = isset($theme_screenshot) && file_exists(THEMES.$this->theme_name."/".$theme_screenshot) ? THEMES.$this->theme_name."/".$theme_screenshot : IMAGES.'imagenotfound.jpg';
+		} else {
+			$screenshot = file_exists(THEMES.$this->theme_name."/screenshot.jpg") ? THEMES.$this->theme_name."/screenshot.jpg" : IMAGES.'imagenotfound.jpg';
+		}
+
+		$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' ORDER BY theme_datestamp DESC");
+		if (dbrows($result)>0) {
+			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
+			while ($preset = dbarray($result)) {
+				echo "<div class='list-group-item m-t-10' style='display:inline-block; clear:both; text-align:center;'>\n".thumbnail($screenshot, '150px')."<div class='display-block panel-title text-smaller strong m-t-10'>".$preset['theme_title']."</div>";
+				echo "<div class='btn-group m-t-10 m-b-10'>\n";
+				if (!$preset['theme_active']) {
+					echo openform('preset-form', 'preset-form-'.$preset['theme_id'], 'post', array('notice'=>0, 'downtime'=>0));
+					echo form_button('Load', 'load_preset', 'load_preset', $preset['theme_id'], array('class'=>'btn-sm btn-default', 'icon'=>'entypo upload'));
+					echo form_button('Delete', 'delete_preset', 'delete_preset', $preset['theme_id'], array('class'=>'btn-sm btn-default', 'icon'=>'entypo trash'));
+					echo form_hidden('', 'theme', 'theme', $preset['theme_name']);
+					echo closeform();
+				} else {
+					echo form_button('Active', 'active', 'active', 'active', array('class'=>'btn-sm btn-default active', 'deactivate'=>1));
+				}
+				echo "</div>\n";
+				echo "</div>\n";
+			}
+			echo "</div>\n";
 		}
 	}
 
@@ -208,7 +243,6 @@ class atom {
 		$this->less_var['quote_decoration'] = $this->parse_font_decoration($this->data['quote_decoration']);
 	}
 
-
 	public function set_theme() {
 		global $userdata, $aidlink;
 		// Font Settings
@@ -269,7 +303,7 @@ class atom {
 		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
 
 		$data['theme_name'] = $this->theme_name;
-		$data['theme_title'] = 'Septenary';
+		$data['theme_title'] = form_sanitizer($_POST['theme_title'], '', 'theme_title');
 		$data['theme_datestamp'] = time();
 		$data['theme_user'] = $userdata['user_id'];
 		$data['theme_active'] = '1';
@@ -314,6 +348,9 @@ class atom {
 		echo closemodal();
 
 		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime'=>0));
+
+		echo form_text('Style Title', 'theme_title', 'theme_title', $this->data['theme_title'], array('inline'=>1, 'required'=>1));
+		echo form_text('Template', 'theme_name', 'theme_name', $this->theme_name, array('inline'=>1, 'deactivate'=>1));
 		echo form_button('Close', 'close_theme', 'close_theme', 'close_theme', array('class'=>'btn-default m-l-10 pull-right'));
 		echo form_button('Save Theme', 'save_theme', 'save_theme', 'save_theme', array('class'=>'btn-primary pull-right'));
 		echo opentab($tab_title, $tab_active, 'atom');

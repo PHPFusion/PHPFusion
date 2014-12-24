@@ -85,7 +85,9 @@ function theme_editor() {
 	$atom = new atom();
 	$atom->target_folder = $_POST['theme'];
 	$atom->theme_name = $_POST['theme'];
+	$atom->load_theme();
 	$atom->set_theme();
+	$atom->render_theme_presets();
 	$atom->theme_editor();
 }
 
@@ -140,6 +142,7 @@ function list_theme() {
 		if (!empty($theme_data['version'])) echo "<span class='display-inline-block m-r-10'><span class='text-dark'>Version</span> ".$theme_data['version']."</span>\n";
 		if (!empty($theme_data['author'])) echo "<span class='display-inline-block m-r-10'>Created by ".$theme_data['author']."</span>";
 		if (!empty($theme_data['web'])) echo  "<span><a href='".$theme_data['web']."'>".$theme_data['web']."</a></span>";
+		echo "<h5><label class='label label-success'>Primary Theme</label></h5>\n";
 		echo "</div>\n";
 
 		echo "</div>\n";
