@@ -126,7 +126,7 @@ function list_theme() {
 		//print_p($theme_data);
 		echo "<div class='panel panel-default'>\n";
 		echo "<div class='panel-body'>\n";
-		echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '100px')."</div>\n";
+		echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
 		echo "<div class='btn-group pull-right m-t-20'>\n";
 		echo openform('editfrm', 'editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0));
 		echo form_button('Configure Theme', 'theme', 'theme', $theme_name, array('class'=>'btn-default btn-sm'));
@@ -152,7 +152,7 @@ function list_theme() {
 		//print_p($theme_data);
 		echo "<div class='panel panel-default'>\n";
 		echo "<div class='panel-body'>\n";
-		echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '100px')."</div>\n";
+		echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
 		echo "<div class='btn-group pull-right m-t-20'>\n";
 		echo "<a href='' class='btn btn-default btn-sm'>Set as Active</a>";
 		echo "<a href='' class='btn btn-default btn-sm'>Delete</a>";
