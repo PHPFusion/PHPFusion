@@ -426,10 +426,10 @@ $locale['ratings'] = "Ratings";
 $locale['comments_ratings'] = "Comments and Ratings";
 
 // Testimonials // translate following lines
-$locale['testimonial_rank'] = "I am the %s of this website";
-$locale['testimonial_location'] = "and I currently live in %s";
-$locale['testimonial_join'] = ". I joined this website on %s.";
-$locale['testimonial_join'] = "I also run my website at %s.";
-$locale['testimonial_contact'] = "If you need to contact me, you can reach me at %s.";
-$locale['testimonial_email'] = "You can also reach me at my e-mail address at %s.";
+$locale['testimonial_rank'] = "Aš esu šio tinklapio %s";
+$locale['testimonial_location'] = "ir šiuo metu gyvenu %s";
+$locale['testimonial_join'] = ". Prie šio tinklapio prisiregistravau %s.";
+$locale['testimonial_join'] = "Taip pat turiu savo tinklapį %s.";
+$locale['testimonial_contact'] = "Jeigu norite su manimi susisiekti, tą padaryti galite per %s.";
+$locale['testimonial_email'] = "Taip pat galite man rašyti el. paštu %s.";
 ?>

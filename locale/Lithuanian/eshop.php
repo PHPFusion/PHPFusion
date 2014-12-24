@@ -243,9 +243,9 @@ $locale['SRCH162'] = "Ieškoti prekių";
 $locale['SRCH163'] = "eShop prekių ieškiklis";
 
 //Administration products
-$locale['ESHPPRO100'] = "Product ordering has been refreshed";
-$locale['ESHPPRO101'] = "Product deletion completed";
-$locale['ESHPPRO102'] = "You have enabled categories, please use the category tab and make some categories before adding your products.";
+$locale['ESHPPRO100'] = "Prekių išdėstymas buvo atnaujintas";
+$locale['ESHPPRO101'] = "Prekių trinimas baigtas";
+$locale['ESHPPRO102'] = "Jūs įjungėt kategorijos, prašom pasinaudoti kategorijų skiltimi, kad galėtumėt sukurti kategorijų ir į jas talpinti prekes.";
 $locale['ESHPPRO103'] = "Please note that you have a sub category here! <br />You need to have the setting Folder links: true for any product´s to be listed in a middle category. <br /> It´s also recommended that you have this set to true if you plan to use featured products here.";
 $locale['ESHPPRO104'] = "Product title";
 $locale['ESHPPRO105'] = "Category";
