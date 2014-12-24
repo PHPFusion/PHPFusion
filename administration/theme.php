@@ -38,7 +38,7 @@ if (isset($_GET['status'])) {
 
 opentable('Theme Management');
 
-$edit_mode = ((isset($_GET['action']) && $_GET['action'] == 'edit') && (isset($_GET['theme']) && file_exists(THEMES.$_GET['theme']))) ? 1 : 0;
+$edit_mode = ((isset($_GET['action']) && $_GET['action'] == 'edit') && (isset($_POST['theme']) && file_exists(THEMES.$_POST['theme']))) ? 1 : 0;
 
 $tab_title['title'][] = 'Current Themes';
 $tab_title['id'][] = 'its';
@@ -81,7 +81,7 @@ closetable();
 /* Theme Engine editor */
 function theme_editor() {
 	global $aidlink;
-	if (!isset($_GET['theme'])) redirect(FUSION_SELF.$aidlink);
+	if (!isset($_POST['theme'])) redirect(FUSION_SELF.$aidlink);
 	$atom = new atom();
 	$atom->target_folder = $_GET['theme'];
 	$atom->set_theme();
@@ -127,7 +127,9 @@ function list_theme() {
 		echo "<div class='panel-body'>\n";
 		echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '100px')."</div>\n";
 		echo "<div class='btn-group pull-right m-t-20'>\n";
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;theme=".$theme_name."' class='btn btn-default btn-sm'>Edit Theme</a>";
+		echo openform('editfrm', 'editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0));
+		echo form_button('Configure Theme', 'theme', 'theme', $theme_name, array('class'=>'btn-default btn-sm'));
+		echo closeform();
 		echo "</div>\n";
 		echo "<div class='overflow-hide'>\n";
 		echo "<div class='strong text-dark m-b-20'>".$theme_data['title']."</div>";
