@@ -234,8 +234,9 @@ class quantumFields {
 		global $defender, $aidlink;
 		$locale = $this->locale;
 		$data = array();
+		if (isset($_POST['cancel'])) redirect(FUSION_SELF.$aidlink);
 		if (isset($_GET['action']) && $_GET['action'] == 'cat_delete' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-			// do action
+			// do action of the interior form
 			if (isset($_POST['delete_cat'])) {
 				// get root node
 				if (isset($_POST['delete_subcat']) or isset($_POST['delete_field'])) {
@@ -252,7 +253,6 @@ class quantumFields {
 					}
 					if ($this->debug) print_p($field_list);
 					if ($this->debug) print_p($target_database);
-
 				}
 				// root deletion path 1
 				if (isset($_POST['delete_subcat'])) {
@@ -321,16 +321,19 @@ class quantumFields {
 						if ($this->debug) print_p("DELETE ".$_GET['cat_id']." FROM ".$this->category_db);
 					}
 				}
+				else {
+					//delete just the category as it is without child.
+					if (!$this->debug) $result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'");
+				}
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink."&amp;status=cat_deleted");
 			}
-			// show form
+			// show interior form
 			else {
 				$form_action = FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$_GET['cat_id'];
 				$result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."'");
 				if (dbrows($result) > 0) {
 					$data += dbarray($result);
-
-					// get field list
+					// get field list - populate child fields of a category.
 					$field_list = array();
 					$result = dbquery("SELECT field_id, field_name, field_cat FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
 					if (dbrows($result)>0) {
@@ -339,9 +342,7 @@ class quantumFields {
 							$field_list[$data['field_cat']][$data['field_id']] = $data['field_name'];
 						}
 					}
-
-
-					if (isset($this->page[$_GET['cat_id']]) or $field_list[$_GET['cat_id']] > 0) {
+					if (isset($this->page[$data['field_parent']]) or $field_list[$_GET['cat_id']] > 0) {
 						echo openmodal("delete", $locale['fields_0313'], array('class'=>'modal-lg modal-center zindex-boost', 'static'=>1));
 						echo openform('delete_cat_form', 'delete_cat_form', 'post', $form_action, array('downtime'=>0));
 						if (isset($this->page[$_GET['cat_id']])) {
@@ -361,7 +362,6 @@ class quantumFields {
 							echo form_checkbox($locale['fields_0315'], 'delete_subcat', 'delete_subcat', '');
 							echo "</div></div>";
 						}
-
 						if (isset($field_list[$_GET['cat_id']])) {
 							echo "<div class='row'>\n";
 							echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n<span class='strong'>".sprintf($locale['fields_0601'], count($field_list[$_GET['cat_id']]))."</span><br/>\n";
@@ -385,7 +385,8 @@ class quantumFields {
 						echo closemodal();
 					}
 				} else {
-					redirect(FUSION_SELF.$aidlink);
+					if ($this->debug) notify('Cat ID was not found. Please check again.', 'Category ID was not found. Please check again.');
+					if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 				}
 			}
 		}
@@ -414,7 +415,7 @@ class quantumFields {
 					if (!$this->debug && ($target_database)) $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
 					if ($this->debug) print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
 				}
-				if (!$this->debug) redirect(FUSION_SELF.$aidlink."status=field_deleted");
+				if (!$this->debug) redirect(FUSION_SELF.$aidlink."&amp;status=field_deleted");
 			} else {
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			}
@@ -734,6 +735,7 @@ class quantumFields {
 				$file_image_list[] = '.'.$file_ext;
 			}
 			function calculate_byte($download_max_b) {
+				global $locale;
 				$calc_opts = array(1 => $locale['fields_0490'], 1000 => $locale['fields_0491'], 1000000 => $locale['fields_0492']);
 				foreach ($calc_opts as $byte => $val) {
 					if ($download_max_b/$byte <= 999) {

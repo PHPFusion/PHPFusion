@@ -130,7 +130,7 @@ function list_theme() {
 		echo "<div class='panel-body'>\n";
 		echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
 		echo "<div class='btn-group pull-right m-t-20'>\n";
-		echo openform('editfrm', 'editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0));
+		echo openform('editfrm', 'editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'downtime'=>0));
 		echo form_button('Configure Theme', 'theme', 'theme', $theme_name, array('class'=>'btn-default btn-sm'));
 		echo closeform();
 		echo "</div>\n";
