@@ -22,18 +22,7 @@ if (!defined("IN_FUSION")) {
 // Display user field input
 if ($profile_method == "input") {
 	$user_yahoo = isset($user_data['user_yahoo']) ? $user_data['user_yahoo'] : "";
-	//if ($this->isError()) {
-		$user_yahoo = isset($_POST['user_yahoo']) ? stripinput($_POST['user_yahoo']) : $user_yahoo;
-	//}
-	/*
-	echo "<tr>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_yahoo")."'><label for='user_yahoo'>".$locale['uf_yahoo'].$required."</label></td>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_yahoo")."'>";
-	echo "<input type='text' id='user_yahoo' name='user_yahoo' value='".$user_yahoo."' maxlength='100' class='textbox form-control' style='width:200px;' />";
-	echo "</td>\n</tr>\n";
-	if ($required) {
-		$this->setRequiredJavaScript("user_yahoo", $locale['uf_yahoo_error']);
-	} */
+	$user_yahoo = isset($_POST['user_yahoo']) ? stripinput($_POST['user_yahoo']) : $user_yahoo;
 	$options +=array('inline'=>1, 'max_length'=>100, 'width'=>'200px');
 	$user_fields = form_text($locale['uf_yahoo'], 'user_yahoo', 'user_yahoo', $user_yahoo, $options);
 	// Display in profile

@@ -479,7 +479,6 @@ class quantumFields {
 		} elseif ($type == 'module') {
 			$field_attr = $this->user_field_dbinfo;
 		}
-
 		$max_order = dbresult(dbquery("SELECT MAX(field_order) FROM ".$this->field_db." WHERE field_cat='".$data['field_cat']."'"), 0)+1;
 		if ($data['field_order'] == 0 or $data['field_order'] > $max_order) {
 			$data['field_order'] = $max_order;
@@ -557,7 +556,7 @@ class quantumFields {
 						if ($this->debug) print_p("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_order < '".$cat_data['field_order']."' AND field_order >= '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
 					}
 				}
-				if ($this->debug) print_p($data);
+				if ($this->debug) print_p('Going to Synthesize this'); print_p($data);
 				if (!$this->debug && !defined('FUSION_NULL')) dbquery_insert($this->field_db, $data, 'update');
 				if (!$this->debug && !defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.'&amp;status=field_updated');
 			} else {
@@ -875,7 +874,8 @@ class quantumFields {
 			} else {
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			}
-			if ($this->debug) print_p($data);
+
+			if ($this->debug) print_p('Old Data'); print_p($data);
 			$data['add_module'] = isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $data['field_name'];
 			$data['field_type'] = 'file'; //
 			$data['field_id'] = isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '', 'field_id') : isset($_GET['module_id']) && isnum($_GET['module_id']) ? $_GET['module_id'] : 0;
@@ -885,9 +885,15 @@ class quantumFields {
 			$data['field_cat'] = isset($_POST['field_cat']) ? form_sanitizer($_POST['field_cat'], '', 'field_cat') : $data['field_cat']; //
 			$data['field_default'] = isset($_POST['field_default']) ? form_sanitizer($_POST['field_default'], '', 'field_default') : $data['field_default']; //
 			$data['field_error'] = isset($_POST['field_error']) ? form_sanitizer($_POST['field_error'], '', 'field_error') : $data['field_error'];
-			$data['field_required'] = isset($_POST['field_required']) ? 1 : isset($_POST['field_id']) ? 0 : $data['field_required'];
-			$data['field_log'] = isset($_POST['field_log']) ? 1 : isset($_POST['field_id']) ? 0 : $data['field_log'];
-			$data['field_registration'] = isset($_POST['field_registration']) ? 1 : isset($_POST['field_id']) ? 0 : $data['field_registration'];
+			if (isset($_POST['field_title'])) {
+				$data['field_required'] = isset($_POST['field_required']) ? 1 : 0;
+				$data['field_registration'] = isset($_POST['field_registration']) ? 1 : 0;
+				$data['field_log'] = isset($_POST['field_log']) ? 1 : 0;
+			} else {
+				$data['field_required'] = $data['field_required'] ? 1 : 0;
+				$data['field_registration'] = $data['field_registration'] ? 1 : 0;
+				$data['field_log'] = $data['field_log'] ? 1 : 0;
+			}
 			$data['field_order'] = isset($_POST['field_order']) ? form_sanitizer($_POST['field_order'], '0', 'field_order') : $data['field_order'];
 		} else {
 			// new
