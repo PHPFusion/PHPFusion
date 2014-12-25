@@ -167,7 +167,7 @@ $locale['129d'] = "Постоянные ссылки";
 $locale['129f'] = "Электронный магазин";
 $locale['130a'] = "Категории блогов";
 $locale['130b'] = "Блог";
-$locale['130c'] = "Theme";
+$locale['130c'] = "Темы";
 //Multilanguage table rights
 $locale['MLT001'] = "Статьи";
 $locale['MLT002'] = "Страницы";
