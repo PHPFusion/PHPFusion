@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php" || $settings['opening_page'] == "/") {
-	redirect("news.php");
+	redirect("home.php");
 } else {
 	redirect($settings['opening_page']);
 }
