@@ -19,7 +19,7 @@
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 require_once CLASSES."atom.class.php";
-include LOCALE.LOCALESET."admin/theme.php";
+require_once LOCALE.LOCALESET."admin/theme.php";
 if (isset($_GET['status'])) {
 	$message = '';
 	if ($_GET['status'] == 'uploaded') {

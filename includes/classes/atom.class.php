@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
  --------------------------------------------------------*/
-
+require_once LOCALE.LOCALESET.'admin/atom.php';
 class atom {
 
 	public $target_folder = '';
