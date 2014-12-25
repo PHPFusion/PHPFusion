@@ -45,6 +45,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."smileys");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."submissions");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."suspends");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."theme");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."user_field_cats");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."user_fields");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."user_groups");

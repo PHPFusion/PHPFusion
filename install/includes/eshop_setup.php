@@ -21,6 +21,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cupons");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_photos");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cart");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_customers");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_featbanners");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_featitems");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_shippingcats");
