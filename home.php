@@ -34,7 +34,7 @@ if (db_exists(DB_NEWS) && db_exists(DB_NEWS_CATS)) {
 
 	if (dbrows($result)) {
 
-		$colwidth = floor(12 / mysql_num_rows($result));
+		$colwidth = floor(12 / dbrows($result));
 
 		echo "<div class='row'>\n";
 
@@ -66,7 +66,7 @@ if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
 
 	if (dbrows($result)) {
 
-		$colwidth = floor(12 / mysql_num_rows($result));
+		$colwidth = floor(12 / dbrows($result));
 
 		echo "<div class='row'>\n";
 
@@ -98,7 +98,7 @@ if (db_exists(DB_BLOG) && db_exists(DB_BLOG_CATS)) {
 
 	if (dbrows($result)) {
 
-		$colwidth = floor(12 / mysql_num_rows($result));
+		$colwidth = floor(12 / dbrows($result));
 
 		echo "<div class='row'>\n";
 
@@ -130,7 +130,7 @@ if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
 
 	if (dbrows($result)) {
 
-		$colwidth = floor(12 / mysql_num_rows($result));
+		$colwidth = floor(12 / dbrows($result));
 
 		echo "<div class='row'>\n";
 
