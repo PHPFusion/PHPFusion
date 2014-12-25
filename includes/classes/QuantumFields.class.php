@@ -917,6 +917,10 @@ class quantumFields {
 			include $this->plugin_locale_folder.stripinput($data['add_module']).".php";
 			include $this->plugin_folder.stripinput($data['add_module'])."_include_var.php";
 			$this->user_field_dbinfo = $user_field_dbinfo;
+			if (!$user_field_dbinfo) {
+				$defender->stop();
+				$defender->addNotice($locale['fields_0602']);
+			}
 		} else {
 			$defender->stop();
 			$defender->addNotice($locale['fields_0109']);
