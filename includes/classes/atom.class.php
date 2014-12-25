@@ -577,10 +577,7 @@ class atom {
 
 	/* Returns list of google_fonts */
 	function google_font() {
-		$google_font = array("Arial" => "Arial",
-			"Lucida" => "Lucida",
-			"Trebuchet" => "Trebuchet",
-			"Geneva" => "Geneva",
+		$google_font = array(
 			"ABeeZee" => "ABeeZee",
 			"Abel" => "Abel",
 			"Abril Fatface" => "Abril+Fatface",
