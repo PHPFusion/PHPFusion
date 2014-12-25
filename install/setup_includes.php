@@ -35,7 +35,7 @@ if (function_exists('mysql_set_charset') === FALSE) {
 }
 // Start of template
 function opensetup() {
-	global $locale, $fusion_page_head_tags;;
+	global $locale, $fusion_page_head_tags;
 	echo "<!DOCTYPE html>\n";
 	echo "<head>\n";
 	echo "<title>".$locale['setup_title']."</title>\n";

@@ -30,6 +30,8 @@ if (!defined('DYNAMICS')) { define('DYNAMICS', INCLUDES."dynamics/"); }
 //$url = parse_url($siteurl);
 //var_dump($url);
 
+ob_start();
+
 if (isset($_POST['localeset']) && file_exists(LOCALE.$_POST['localeset']) && is_dir(LOCALE.$_POST['localeset'])) {
 	include LOCALE.$_POST['localeset']."/setup.php";
 	define("LOCALESET", $_POST['localeset']."/");
