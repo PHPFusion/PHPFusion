@@ -67,9 +67,6 @@ if ($settings['bootstrap']) {
 	} else {
 		echo "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' media='screen' />\n";
 	}
-
-
-
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
 }

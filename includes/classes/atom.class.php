@@ -17,20 +17,32 @@
 | written permission from the original author(s).
  --------------------------------------------------------*/
 require_once LOCALE.LOCALESET.'admin/atom.php';
-class atom {
 
+class atom {
 	public $target_folder = '';
 	public $theme_name = '';
 	public $compress = FALSE;
 	public $debug = FALSE;
-
 	// bootstrap default configurations here.
-	private $font_decoration_options = array('Normal', 'Bold', 'Italic', 'Underlined', 'Bold and Underlined', 'Italic and Bold', 'Italic and Underlined', 'Italic, Bold and Underlined');
+	private $font_decoration_options = array('Normal',
+		'Bold',
+		'Italic',
+		'Underlined',
+		'Bold and Underlined',
+		'Italic and Bold',
+		'Italic and Underlined',
+		'Italic, Bold and Underlined');
 	private $text_weight = array('400', '600', '400', '400', '600', '600', '400', '600');
-	private $text_decoration = array('none', 'none', 'none', 'underline', 'underline', 'none', 'underline', 'underline');
+	private $text_decoration = array('none',
+		'none',
+		'none',
+		'underline',
+		'underline',
+		'none',
+		'underline',
+		'underline');
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
-	private $data = array(
-		'theme_id'	=> 0,
+	private $data = array('theme_id' => 0,
 		'theme_title' => '',
 		'sans_serif_fonts' => 'Helvetica Neue, Helvetica, Arial, sans-serif',
 		'serif_fonts' => 'Georgia, Times New Roman, Times, serif',
@@ -45,7 +57,7 @@ class atom {
 		'font_size_h1' => 36,
 		'font_height_h1' => 1.1,
 		'font_color_h1' => '#333333',
-		'font_decoration_h1'=> 0,
+		'font_decoration_h1' => 0,
 		//h2
 		'font_size_h2' => 30,
 		'font_height_h2' => 1.1,
@@ -77,14 +89,13 @@ class atom {
 		'link_decoration' => 0,
 		'link_hover_decoration' => 0,
 		// code
-		'code_color' =>'#c7254e',
+		'code_color' => '#c7254e',
 		'code_bgcolor' => '#f9f2f4', //f9f2f4
 		// quote
 		'quote_size' => 14,
 		'quote_height' => 1.1,
 		'quote_color' => '#000000',
-		'quote_decoration'=> 5,
-	);
+		'quote_decoration' => 5,);
 	private $less_var = array();
 	private $theme_data = array();
 
@@ -104,7 +115,7 @@ class atom {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_active='1'");
 		}
 		if (!isset($_POST['new_preset'])) {
-			if (dbrows($result)>0) {
+			if (dbrows($result) > 0) {
 				$this->data = dbarray($result);
 				if ($this->data['theme_config']) {
 					$this->data += unserialize(stripslashes($this->data['theme_config']));
@@ -125,7 +136,6 @@ class atom {
 	/* to roll out only on future versions */
 	public function render_theme_presets() {
 		global $settings, $aidlink;
-
 		$theme_dbfile = '/theme_db.php';
 		if (file_exists(THEMES.$this->theme_name.$theme_dbfile)) { // new 9.00
 			include THEMES.$this->theme_name.$theme_dbfile;
@@ -133,22 +143,26 @@ class atom {
 		} else {
 			$screenshot = file_exists(THEMES.$this->theme_name."/screenshot.jpg") ? THEMES.$this->theme_name."/screenshot.jpg" : IMAGES.'imagenotfound.jpg';
 		}
-
 		$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' ORDER BY theme_datestamp DESC");
-		if (dbrows($result)>0) {
+		if (dbrows($result) > 0) {
 			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
-			echo openform('preset-form', 'preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'downtime'=>0));
-			echo form_button('Create New', 'new_preset', 'new_preset', 'new_preset', array('class'=>'btn-sm btn-primary pull-right', 'icon'=>'entypo plus'));
+			echo openform('preset-form', 'preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0,
+				'downtime' => 0));
+			echo form_button('Create New', 'new_preset', 'new_preset', 'new_preset', array('class' => 'btn-sm btn-primary pull-right',
+				'icon' => 'entypo plus'));
 			echo form_para('Theme Presets', 'theme_presets');
 			while ($preset = dbarray($result)) {
 				echo "<div class='list-group-item m-t-10' style='display:inline-block; clear:both; text-align:center;'>\n".thumbnail($screenshot, '150px')."<div class='display-block panel-title text-smaller strong m-t-10'>".trimlink($preset['theme_title'], 30)."</div>";
 				echo "<div class='btn-group m-t-10 m-b-10'>\n";
 				if ($this->data['theme_id'] == $preset['theme_id']) {
-					echo form_button('Loaded', 'active', 'active', 'active', array('class'=>'btn-sm btn-default active', 'deactivate'=>1));
+					echo form_button('Loaded', 'active', 'active', 'active', array('class' => 'btn-sm btn-default active',
+						'deactivate' => 1));
 				} else {
-					echo form_button('Load', 'load_preset', 'load_preset', $preset['theme_id'], array('class'=>'btn-sm btn-default', 'icon'=>'entypo upload'));
+					echo form_button('Load', 'load_preset', 'load_preset', $preset['theme_id'], array('class' => 'btn-sm btn-default',
+						'icon' => 'entypo upload'));
 				}
-				echo form_button('Delete', 'delete_preset', 'delete_preset', $preset['theme_id'], array('class'=>'btn-sm btn-default', 'icon'=>'entypo trash'));
+				echo form_button('Delete', 'delete_preset', 'delete_preset', $preset['theme_id'], array('class' => 'btn-sm btn-default',
+					'icon' => 'entypo trash'));
 				echo form_hidden('', 'theme', 'theme', $preset['theme_name']);
 				echo "</div>\n";
 				echo "</div>\n";
@@ -165,21 +179,20 @@ class atom {
 		$outputFolder = THEMES.$this->target_folder."/";
 		$outputFile = THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
 		$returnFile = str_replace(THEMES, '', $outputFile);
-		$directories = array( INCLUDES."atom/less/" => 'includes/atom/less/' );
-		$options = array(
-			'output' => $outputFile,
-			'compress' => $this->compress,
-		);
+		$directories = array(INCLUDES."atom/less/" => 'includes/atom/less/');
+		$options = array('output' => $outputFile,
+			'compress' => $this->compress,);
 		$this->set_less_variables();
 		if (!empty($this->less_var)) { // this needs troubleshoot.
-			if ($this->debug) print_p("current less var"); print_p($this->less_var);
+			if ($this->debug) print_p("current less var");
+			print_p($this->less_var);
 			if ($this->debug) print_p($inputFile);
 			if ($this->debug) print_p($outputFile);
 			require_once INCLUDES."atom/lessc.inc.php";
-			try{
+			try {
 				$parser = new Less_Parser($options);
-				$parser->SetImportDirs( $directories );
-				$parser->parseFile( $inputFile, $outputFolder );
+				$parser->SetImportDirs($directories);
+				$parser->parseFile($inputFile, $outputFolder);
 				$parser->ModifyVars($this->less_var);
 				$css = $parser->getCss();
 				if (!$this->debug) {
@@ -193,7 +206,7 @@ class atom {
 				} else {
 					//print_p($css); // this is your css
 				}
-			}catch(Exception $e){
+			} catch (Exception $e) {
 				$error_message = $e->getMessage();
 				$defender->stop();
 				$defender->addNotice($error_message);
@@ -245,7 +258,6 @@ class atom {
 		$this->less_var['font_weight_h6'] = $this->parse_font_weight($this->data['font_decoration_h6']);
 		$this->less_var['font_style_h6'] = $this->parse_font_style($this->data['font_decoration_h6']);
 		$this->less_var['font_decoration_h6'] = $this->parse_font_decoration($this->data['font_decoration_h6']);
-
 		// link
 		$this->less_var['link_weight'] = $this->parse_font_weight($this->data['link_decoration']);
 		$this->less_var['link_style'] = $this->parse_font_style($this->data['link_decoration']);
@@ -329,75 +341,71 @@ class atom {
 		$data['theme_datestamp'] = time();
 		$data['theme_user'] = $userdata['user_id'];
 		$data['theme_file'] = $this->buildCss();
-
 		$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'");
-			if ($rows) {
-				$data['theme_active'] = $this->data['theme_active'];
-				$data['theme_config'] = addslashes(serialize($this->data));
-				if (!$this->debug && $data['theme_file']) {
-					@unlink(THEMES.$old_file);
-					dbquery_insert(DB_THEME, $data, 'update');
-					redirect(FUSION_SELF.$aidlink."&amp;status=updated");
-				} else {
-					print_p('Update Mode');
-					print_p($data);
-				}
+		if ($rows) {
+			$data['theme_active'] = $this->data['theme_active'];
+			$data['theme_config'] = addslashes(serialize($this->data));
+			if (!$this->debug && $data['theme_file']) {
+				@unlink(THEMES.$old_file);
+				dbquery_insert(DB_THEME, $data, 'update');
+				redirect(FUSION_SELF.$aidlink."&amp;status=updated");
 			} else {
-				if (!$this->debug && $data['theme_file']) {
-					$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
-					$data['theme_active'] = $rows < 1 ? 1 : 0;
-					dbquery_insert(DB_THEME, $data, 'save');
-					$this->data['theme_id'] = dblastid();
-					$this->data['theme_title'] = $data['theme_name'];
-					$data['theme_config'] = addslashes(serialize($this->data));
-					dbquery_insert(DB_THEME, $data, 'update');
-					redirect(FUSION_SELF.$aidlink."&amp;status=success");
-				} else {
-					print_p($data);
-				}
+				print_p('Update Mode');
+				print_p($data);
 			}
-
+		} else {
+			if (!$this->debug && $data['theme_file']) {
+				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
+				$data['theme_active'] = $rows < 1 ? 1 : 0;
+				dbquery_insert(DB_THEME, $data, 'save');
+				$this->data['theme_id'] = dblastid();
+				$this->data['theme_title'] = $data['theme_name'];
+				$data['theme_config'] = addslashes(serialize($this->data));
+				dbquery_insert(DB_THEME, $data, 'update');
+				redirect(FUSION_SELF.$aidlink."&amp;status=success");
+			} else {
+				print_p($data);
+			}
+		}
 	}
-
 
 	public function theme_editor() {
 		global $aidlink, $locale;
 		$tab_title['title'][] = 'Base Fonts';
 		$tab_title['id'][] = 'font';
 		$tab_title['icon'][] = '';
-
 		$tab_title['title'][] = 'Layout Design';
 		$tab_title['id'][] = 'grid';
 		$tab_title['icon'][] = '';
-
 		$tab_title['title'][] = 'Navigation';
 		$tab_title['id'][] = 'nav';
 		$tab_title['icon'][] = '';
-
 		$tab_title['title'][] = 'Table and Fieldsets';
 		$tab_title['id'][] = 'panel';
 		$tab_title['icon'][] = '';
-
 		$tab_active = tab_active($tab_title, 0);
 		if ($this->debug) {
 			print_p($_POST);
 		}
-
 		// do a pop up notice. important. pressing save twice will create a massive stress on server resource.
-		echo openmodal('dbi', 'Rebuilding New '.$this->theme_name.' Theme', array('class'=>'zindex-boost modal-center', 'button_id'=>'save_theme', 'static'=>1));
+		echo openmodal('dbi', 'Rebuilding New '.$this->theme_name.' Theme', array('class' => 'zindex-boost modal-center',
+			'button_id' => 'save_theme',
+			'static' => 1));
 		echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
 		echo "<div class='overflow-hide text-smaller'>\n<strong>The Atom Theme Engine is currently rebuilding your theme and may take up to 15 to 30 seconds depending of network status.</strong><br/>Please do not close or refresh the window.</div>\n";
 		echo closemodal();
-		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime'=>0));
+		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 0));
 		echo form_hidden('', 'theme_id', 'theme_id', $this->data['theme_id']);
-		echo form_text('Style Title', 'theme_title', 'theme_title', $this->data['theme_title'], array('inline'=>1, 'required'=>1));
-		echo form_text('Template', 'theme_name', 'theme_name', $this->theme_name, array('inline'=>1, 'deactivate'=>1));
-		echo form_button('Close', 'close_theme', 'close_theme', 'close_theme', array('class'=>'btn-default m-l-10 pull-right'));
-		echo form_button('Save Theme', 'save_theme', 'save_theme', 'save_theme', array('class'=>'btn-primary pull-right'));
+		echo form_text('Style Title', 'theme_title', 'theme_title', $this->data['theme_title'], array('inline' => 1,
+			'required' => 1));
+		echo form_text('Template', 'theme_name', 'theme_name', $this->theme_name, array('inline' => 1,
+			'deactivate' => 1));
+		echo form_button('Close', 'close_theme', 'close_theme', 'close_theme', array('class' => 'btn-default m-l-10 pull-right'));
+		echo form_button('Save Theme', 'save_theme', 'save_theme', 'save_theme', array('class' => 'btn-primary pull-right'));
 		echo opentab($tab_title, $tab_active, 'atom');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 		echo "<div class='m-t-20'>\n";
-			$this->font_admin();
+		$this->font_admin();
 		echo "</div>\n";
 		echo closetabbody();
 		echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
@@ -406,27 +414,29 @@ class atom {
 		echo closetabbody();
 		echo opentabbody($tab_title['title'][3], $tab_title['id'][3], $tab_active);
 		echo closetabbody();
-
 		echo closetab();
 		echo closeform();
 	}
 
-
 	private function font_admin() {
-
 		$base_font = array_values(array_flip($this->base_font()));
 		$web_font = array_values(array_flip($this->google_font()));
 		$font_list = array_merge($base_font, $web_font);
-
-		$color_options = array("placeholder" => "Choose Color", 'width'=>'100%', "format" => "hex");
-		$font_options = array('width' => '100%', 'placeholder' => 'Pick the font and build your collection.', 'tags'=>1, 'multiple'=>1, 'max_select'=>6, 'inline'=>1);
-		$font_type_options = array('placeholder' => 'Select a Base Font', 'width' => '280px', 'inline'=>1);
-		$font_size_options = array('placeholder' => '(px)', 'width' => '100%', 'number'=>1, 'class'=>'pull-left display-inline m-r-10');
-		$fonts_family_opts = array(
-			'0'=>'Sans Serif Font Family',
-			'1'=>'Monospace Font Family',
-			'2'=>'Serif Font Family'
-		);
+		$color_options = array("placeholder" => "Choose Color", 'width' => '100%', "format" => "hex");
+		$font_options = array('width' => '100%',
+			'placeholder' => 'Pick the font and build your collection.',
+			'tags' => 1,
+			'multiple' => 1,
+			'max_select' => 6,
+			'inline' => 1);
+		$font_type_options = array('placeholder' => 'Select a Base Font', 'width' => '280px', 'inline' => 1);
+		$font_size_options = array('placeholder' => '(px)',
+			'width' => '100%',
+			'number' => 1,
+			'class' => 'pull-left display-inline m-r-10');
+		$fonts_family_opts = array('0' => 'Sans Serif Font Family',
+			'1' => 'Monospace Font Family',
+			'2' => 'Serif Font Family');
 		echo form_hidden('', 'theme', 'theme', $_POST['theme']);
 		echo form_para("Base Font Settings", 'font_settings');
 		echo "<hr>\n";
@@ -446,7 +456,6 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Base Font Size Small", "base_font_size_s", "base_font_size_s", $this->data['base_font_size_s'], $font_size_options);
 		echo "</div>\n</div>\n";
-
 		echo form_para("Header Font Settings", 'font_settings');
 		echo "<hr>\n";
 		// h1
@@ -461,7 +470,6 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h1", "font_decoration_h1", $this->font_decoration_options, $this->data['font_decoration_h1'], $color_options);
 		echo "</div>\n</div>\n";
-
 		// h2
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
@@ -474,7 +482,6 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h2", "font_decoration_h2", $this->font_decoration_options, $this->data['font_decoration_h2'], $color_options);
 		echo "</div>\n</div>\n";
-
 		// h3
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
@@ -487,7 +494,6 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h3", "font_decoration_h3", $this->font_decoration_options, $this->data['font_decoration_h3'], $color_options);
 		echo "</div>\n</div>\n";
-
 		// h4
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -500,7 +506,6 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h4", "font_decoration_h4", $this->font_decoration_options, $this->data['font_decoration_h4'], $color_options);
 		echo "</div>\n</div>\n";
-
 		// h5
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
@@ -513,7 +518,6 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h5", "font_decoration_h5", $this->font_decoration_options, $this->data['font_decoration_h5'], $color_options);
 		echo "</div>\n</div>\n";
-
 		// h6
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -526,10 +530,8 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h6", "font_decoration_h6", $this->font_decoration_options, $this->data['font_decoration_h6'], $color_options);
 		echo "</div>\n</div>\n";
-
 		echo form_para("Link Color Settings", 'link_settings');
 		echo "<hr>\n";
-
 		// link
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -542,7 +544,6 @@ class atom {
 		echo form_select('Hover Font Styling', "link_hover_decoration", "link_hover_decoration", $this->font_decoration_options, $this->data['link_hover_decoration'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
-
 		echo form_para("Code Font", 'code_settings');
 		echo "<hr>\n";
 		// code
@@ -555,7 +556,6 @@ class atom {
 		echo form_colorpicker('Background Color', "code_bgcolor", "code_bgcolor", $this->data['code_bgcolor'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
-
 		// blockquote
 		echo form_para("Blockquote Font", 'quote_settings');
 		echo "<hr>\n";
@@ -570,18 +570,14 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "quote_decoration", "quote_decoration", $this->font_decoration_options, $this->data['quote_decoration'], $color_options);
 		echo "</div>\n</div>\n";
-
-
 	}
 
 	public function add_panel() {
-
 	}
 
 	/* Returns list of google_fonts */
 	function google_font() {
-		$google_font = array(
-			"Arial" => "Arial",
+		$google_font = array("Arial" => "Arial",
 			"Lucida" => "Lucida",
 			"Trebuchet" => "Trebuchet",
 			"Geneva" => "Geneva",
@@ -1229,18 +1225,15 @@ class atom {
 			"Yellowtail" => "Yellowtail",
 			"Yeseva One" => "Yeseva+One",
 			"Yesteryear" => "Yesteryear",
-			"Zeyada" => "Zeyada"
-		);
+			"Zeyada" => "Zeyada");
 		//api at google : <link href=http://fonts.googleapis.com/css?family=Signika Negative rel=stylesheet type=text/css>
 		return $google_font;
-
 	}
 
 	/* Returns list of common base fonts */
 	function base_font() {
 		// OS Font Defaults
-		return array(
-			"Arial" => "Arial",
+		return array("Arial" => "Arial",
 			"Avant Garde" => "Avant+Garde",
 			"Cambria" => "Cambria",
 			"Copse" => "Copse",
@@ -1256,9 +1249,7 @@ class atom {
 			"Lucida Sans Unicode" => "Lucida+Sans+Unicode",
 			"Verdana" => "Verdana",
 			"sans-serif" => "sans-serif",
-			"serif" => "serif"
-		);
-
+			"serif" => "serif");
 		//print_p($os_faces);
 	}
 
@@ -1268,37 +1259,41 @@ class atom {
 		if ($font) {
 			$font = explode(',', $font);
 			if (count($font)) {
-				foreach($font as $font_name) {
-					$_parsedFonts[] = (preg_match('/\s/',$font_name)) ? '"'.$font_name.'"' : $font_name;
+				foreach ($font as $font_name) {
+					$_parsedFonts[] = (preg_match('/\s/', $font_name)) ? '"'.$font_name.'"' : $font_name;
 				}
 				return implode(', ', $_parsedFonts);
 			}
 		}
 	}
+
 	/* return the font sets */
 	private function parse_font_set($font) {
-		$fonts_family_opts = array(
-			'0'=>'@font-family-sans-serif',
-			'1'=>'@font-family-monospace',
-			'2'=>'@font-family-serif'
-		);
+		$fonts_family_opts = array('0' => '@font-family-sans-serif',
+			'1' => '@font-family-monospace',
+			'2' => '@font-family-serif');
 		return $fonts_family_opts[$font];
 	}
+
 	/* parse the font size metrics - can be edited to use 'px', 'em', 'rem' */
 	private function parse_font_size($font) {
 		return $font.'px';
 	}
+
 	/* parse font-weight */
 	private function parse_font_weight($font) {
 		return $this->text_weight[$font];
 	}
+
 	/* parse text-decoration */
 	private function parse_font_decoration($font) {
 		return $this->text_decoration[$font];
 	}
+
 	/* parse font-style */
 	private function parse_font_style($font) {
 		return $this->text_style[$font];
 	}
 }
+
 ?>
