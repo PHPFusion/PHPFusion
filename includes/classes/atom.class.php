@@ -22,7 +22,7 @@ class atom {
 	public $target_folder = '';
 	public $theme_name = '';
 	public $compress = FALSE;
-	public $debug = TRUE;
+	public $debug = false;
 
 	// bootstrap default configurations here.
 	private $font_decoration_options = array('Normal', 'Bold', 'Italic', 'Underlined', 'Bold and Underlined', 'Italic and Bold', 'Italic and Underlined', 'Italic, Bold and Underlined');
@@ -30,6 +30,7 @@ class atom {
 	private $text_decoration = array('none', 'none', 'none', 'underline', 'underline', 'none', 'underline', 'underline');
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
 	private $data = array(
+		'theme_id'	=> 0,
 		'theme_title' => '',
 		'sans_serif_fonts' => 'Helvetica Neue, Helvetica, Arial, sans-serif',
 		'serif_fonts' => 'Georgia, Times New Roman, Times, serif',
@@ -89,6 +90,7 @@ class atom {
 
 	public function load_theme() {
 		global $defender, $aidlink;
+		$result = '';
 		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
 		if (isset($_POST['delete_preset']) && isnum($_POST['delete_preset'])) {
 			// check if active, if not delete and remove css file
@@ -96,16 +98,17 @@ class atom {
 			@unlink(THEMES.$file['theme_file']);
 			$result = dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'");
 			redirect(FUSION_SELF.$aidlink."&amp;status=deleted");
-
 		} elseif (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_id='".$_POST['load_preset']."'");
-		} else {
+		} elseif (!isset($_POST['new_preset'])) {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_active='1'");
 		}
-		if (dbrows($result)>0) {
-			$this->data = dbarray($result);
-			if ($this->data['theme_config']) {
-				$this->data += unserialize(stripslashes($this->data['theme_config']));
+		if (!isset($_POST['new_preset'])) {
+			if (dbrows($result)>0) {
+				$this->data = dbarray($result);
+				if ($this->data['theme_config']) {
+					$this->data += unserialize(stripslashes($this->data['theme_config']));
+				}
 			}
 		}
 	}
@@ -122,7 +125,7 @@ class atom {
 	/* to roll out only on future versions */
 	public function render_theme_presets() {
 		global $settings, $aidlink;
-		echo form_para('Theme Presets', 'theme_presets');
+
 		$theme_dbfile = '/theme_db.php';
 		if (file_exists(THEMES.$this->theme_name.$theme_dbfile)) { // new 9.00
 			include THEMES.$this->theme_name.$theme_dbfile;
@@ -135,17 +138,18 @@ class atom {
 		if (dbrows($result)>0) {
 			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
 			echo openform('preset-form', 'preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'downtime'=>0));
+			echo form_button('Create New', 'new_preset', 'new_preset', 'new_preset', array('class'=>'btn-sm btn-primary pull-right', 'icon'=>'entypo plus'));
+			echo form_para('Theme Presets', 'theme_presets');
 			while ($preset = dbarray($result)) {
 				echo "<div class='list-group-item m-t-10' style='display:inline-block; clear:both; text-align:center;'>\n".thumbnail($screenshot, '150px')."<div class='display-block panel-title text-smaller strong m-t-10'>".trimlink($preset['theme_title'], 30)."</div>";
 				echo "<div class='btn-group m-t-10 m-b-10'>\n";
-				if ($this->data['theme_id'] == $preset['theme_id'] or !$this->data['theme_id'] && $preset['theme_active']) {
+				if ($this->data['theme_id'] == $preset['theme_id']) {
 					echo form_button('Loaded', 'active', 'active', 'active', array('class'=>'btn-sm btn-default active', 'deactivate'=>1));
 				} else {
 					echo form_button('Load', 'load_preset', 'load_preset', $preset['theme_id'], array('class'=>'btn-sm btn-default', 'icon'=>'entypo upload'));
 				}
 				echo form_button('Delete', 'delete_preset', 'delete_preset', $preset['theme_id'], array('class'=>'btn-sm btn-default', 'icon'=>'entypo trash'));
 				echo form_hidden('', 'theme', 'theme', $preset['theme_name']);
-
 				echo "</div>\n";
 				echo "</div>\n";
 			}
@@ -184,14 +188,10 @@ class atom {
 						fclose($css_file);
 					}
 					if ($css_file) {
-						$this->load_theme();
-						$result = dbquery("UPDATE ".DB_THEME." SET theme_active='0' WHERE theme_id='".$this->theme_data['theme_id']."'");
-						if (mysql_affected_rows()) {
-							return $returnFile;
-						}
+						return $returnFile;
 					}
 				} else {
-					print_p($css); // this is your css
+					//print_p($css); // this is your css
 				}
 			}catch(Exception $e){
 				$error_message = $e->getMessage();
@@ -300,10 +300,8 @@ class atom {
 		$this->data['link_hover_color'] = isset($_POST['link_hover_color']) ? form_sanitizer($_POST['link_hover_color'], '', 'link_hover_color') : $this->data['link_hover_color'];
 		$this->data['link_decoration'] = isset($_POST['link_decoration']) ? form_sanitizer($_POST['link_decoration'], '0', 'link_decoration') : $this->data['link_decoration'];
 		$this->data['link_hover_decoration'] = isset($_POST['link_hover_decoration']) ? form_sanitizer($_POST['link_hover_decoration'], '0', 'link_hover_decoration') : $this->data['link_hover_decoration'];
-
 		$this->data['code_color'] = isset($_POST['code_color']) ? form_sanitizer($_POST['code_color'], '', 'code_color') : $this->data['code_color'];
 		$this->data['code_bgcolor'] = isset($_POST['code_bgcolor']) ? form_sanitizer($_POST['code_bgcolor'], '', 'code_bgcolor') : $this->data['code_bgcolor'];
-
 		$this->data['quote_size'] = isset($_POST['quote_size']) ? form_sanitizer($_POST['quote_size'], '', 'quote_size') : $this->data['quote_size'];
 		$this->data['quote_height'] = isset($_POST['quote_height']) ? form_sanitizer($_POST['quote_height'], '', 'quote_height') : $this->data['quote_height'];
 		$this->data['quote_color'] = isset($_POST['quote_color']) ? form_sanitizer($_POST['quote_color'], '', 'quote_color') : $this->data['quote_color'];
@@ -322,29 +320,32 @@ class atom {
 		$data['theme_id'] = form_sanitizer($_POST['theme_id'], '0', 'theme_id');
 		$data['theme_datestamp'] = time();
 		$data['theme_user'] = $userdata['user_id'];
-		if (!$this->debug && $data['theme_file']) {
+
 			if ($data['theme_id']) {
 				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'");
-				if ($rows) {
+				if (!$this->debug && $rows) {
+					$data['theme_file'] = $this->data['theme_file'];
 					$data['theme_config'] = $this->data['theme_config'];
 					$data['theme_active'] = $this->data['theme_active'];
 					//dbquery_insert(DB_THEME, $data, 'update');
 					//redirect(FUSION_SELF.$aidlink."&amp;status=updated");
 				} else {
-					redirect(FUSION_SELF.$aidlink);
+					print_p($data);
+					//redirect(FUSION_SELF.$aidlink);
 				}
 			} else {
-				$data['theme_active'] = '1'; // check more than 1.
-				$data['theme_file'] = $this->buildCss();
+				$rows = dbcount("(field_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
+				$data['theme_active'] = $rows < 1 ? 1 : 0;
 				$data['theme_config'] = addslash(serialize($this->data));
-				if ($data['theme_file']) {
+				$data['theme_file'] = $this->buildCss();
+				if (!$this->debug && $data['theme_file']) {
 					dbquery_insert(DB_THEME, $data, 'save');
 					redirect(FUSION_SELF.$aidlink."&amp;status=success");
+				} else {
+					print_p($data);
 				}
 			}
-		} else {
-			print_p($data);
-		}
+
 	}
 
 
