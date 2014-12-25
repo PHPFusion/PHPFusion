@@ -169,6 +169,7 @@ $locale['129d'] = "Permalinks";
 $locale['129f'] = "eShop";
 $locale['130a'] = "Blog Categories";
 $locale['130b'] = "Blog";
+$locale['130c'] = "Theme";
 //Multilanguage table rights
 $locale['MLT001'] = "Articles";
 $locale['MLT002'] = "Custom Pages";

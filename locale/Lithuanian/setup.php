@@ -194,6 +194,7 @@ $locale['129d'] = "Pastovios nuorodos";
 $locale['129f'] = "eShop";
 $locale['130a'] = "Tinklaraščių kategorijos";
 $locale['130b'] = "Tinklaraščiai";
+$locale['130c'] = "Theme";
 //Multilanguage table rights
 $locale['MLT001'] = "Straipsniai";
 $locale['MLT002'] = "Pridėtiniai puslapiai";

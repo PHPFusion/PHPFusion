@@ -510,6 +510,20 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) {
 		$fail = TRUE;
 	}
+	$result = dbquery("CREATE TABLE ".$db_prefix."theme (
+				theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+				theme_name VARCHAR(50) NOT NULL,
+				theme_title VARCHAR(50) NOT NULL,
+				theme_file VARCHAR(200) NOT NULL,
+				theme_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+				theme_user MEDIUMINT(8) UNSIGNED NOT NULL,
+				theme_active TINYINT(1) UNSIGNED NOT NULL,
+				theme_config TEXT NOT NULL,
+				PRIMARY KEY (theme_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+	if (!$result) {
+		$fail = TRUE;
+	}
 	// System Inserts
 	$siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
 	$url = parse_url($siteurl);
@@ -710,6 +724,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('SM', 'smileys.gif', '".$locale['105']."', 'smileys.php', '3')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('SU', 'submissions.gif', '".$locale['106']."', 'submissions.php', '2')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('U', 'upgrade.gif', '".$locale['107']."', 'upgrade.php', '3')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['130c']."', 'theme.php', '3')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('UG', 'user_groups.gif', '".$locale['108']."', 'user_groups.php', '2')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S1', 'settings.gif', '".$locale['111']."', 'settings_main.php', '4')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S2', 'settings_time.gif', '".$locale['112']."', 'settings_time.php', '4')");
