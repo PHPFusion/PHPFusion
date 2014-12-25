@@ -22,7 +22,7 @@ class atom {
 	public $target_folder = '';
 	public $theme_name = '';
 	public $compress = FALSE;
-	public $debug = false;
+	public $debug = FALSE;
 
 	// bootstrap default configurations here.
 	private $font_decoration_options = array('Normal', 'Bold', 'Italic', 'Underlined', 'Bold and Underlined', 'Italic and Bold', 'Italic and Underlined', 'Italic, Bold and Underlined');
@@ -171,8 +171,8 @@ class atom {
 			'compress' => $this->compress,
 		);
 		$this->set_less_variables();
-		if (!empty($this->less_var)) {
-			if ($this->debug) print_p($this->less_var);
+		if (!empty($this->less_var)) { // this needs troubleshoot.
+			if ($this->debug) print_p("current less var"); print_p($this->less_var);
 			if ($this->debug) print_p($inputFile);
 			if ($this->debug) print_p($outputFile);
 			require_once INCLUDES."atom/lessc.inc.php";
@@ -314,32 +314,43 @@ class atom {
 
 	private function save_theme() {
 		global $userdata, $aidlink;
-
+		$old_file = isset($this->data['theme_file']) ? $this->data['theme_file'] : '';
+		if (isset($this->data['theme_config'])) unset($this->data['theme_config']);
+		if (isset($this->data['theme_id'])) unset($this->data['theme_id']);
+		if (isset($this->data['theme_title'])) unset($this->data['theme_title']);
+		if (isset($this->data['theme_name'])) unset($this->data['theme_name']);
+		if (isset($this->data['theme_file'])) unset($this->data['theme_file']);
+		if (isset($this->data['theme_datestamp'])) unset($this->data['theme_datestamp']);
+		if (isset($this->data['theme_user'])) unset($this->data['theme_user']);
+		// rebuild
 		$data['theme_name'] = $this->theme_name;
 		$data['theme_title'] = form_sanitizer($_POST['theme_title'], '', 'theme_title');
 		$data['theme_id'] = form_sanitizer($_POST['theme_id'], '0', 'theme_id');
 		$data['theme_datestamp'] = time();
 		$data['theme_user'] = $userdata['user_id'];
+		$data['theme_file'] = $this->buildCss();
 
-			if ($data['theme_id']) {
-				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'");
-				if (!$this->debug && $rows) {
-					$data['theme_file'] = $this->data['theme_file'];
-					$data['theme_config'] = $this->data['theme_config'];
-					$data['theme_active'] = $this->data['theme_active'];
-					//dbquery_insert(DB_THEME, $data, 'update');
-					//redirect(FUSION_SELF.$aidlink."&amp;status=updated");
+		$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'");
+			if ($rows) {
+				$data['theme_active'] = $this->data['theme_active'];
+				$data['theme_config'] = addslashes(serialize($this->data));
+				if (!$this->debug && $data['theme_file']) {
+					@unlink(THEMES.$old_file);
+					dbquery_insert(DB_THEME, $data, 'update');
+					redirect(FUSION_SELF.$aidlink."&amp;status=updated");
 				} else {
+					print_p('Update Mode');
 					print_p($data);
-					//redirect(FUSION_SELF.$aidlink);
 				}
 			} else {
-				$rows = dbcount("(field_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
-				$data['theme_active'] = $rows < 1 ? 1 : 0;
-				$data['theme_config'] = addslash(serialize($this->data));
-				$data['theme_file'] = $this->buildCss();
 				if (!$this->debug && $data['theme_file']) {
+					$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
+					$data['theme_active'] = $rows < 1 ? 1 : 0;
 					dbquery_insert(DB_THEME, $data, 'save');
+					$this->data['theme_id'] = dblastid();
+					$this->data['theme_title'] = $data['theme_name'];
+					$data['theme_config'] = addslashes(serialize($this->data));
+					dbquery_insert(DB_THEME, $data, 'update');
 					redirect(FUSION_SELF.$aidlink."&amp;status=success");
 				} else {
 					print_p($data);
@@ -377,9 +388,8 @@ class atom {
 		echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
 		echo "<div class='overflow-hide text-smaller'>\n<strong>The Atom Theme Engine is currently rebuilding your theme and may take up to 15 to 30 seconds depending of network status.</strong><br/>Please do not close or refresh the window.</div>\n";
 		echo closemodal();
-
 		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime'=>0));
-
+		echo form_hidden('', 'theme_id', 'theme_id', $this->data['theme_id']);
 		echo form_text('Style Title', 'theme_title', 'theme_title', $this->data['theme_title'], array('inline'=>1, 'required'=>1));
 		echo form_text('Template', 'theme_name', 'theme_name', $this->theme_name, array('inline'=>1, 'deactivate'=>1));
 		echo form_button('Close', 'close_theme', 'close_theme', 'close_theme', array('class'=>'btn-default m-l-10 pull-right'));

@@ -31,6 +31,9 @@ if (isset($_GET['status'])) {
 	elseif ($_GET['status'] == 'version_error') {
 		$message = "Your server do not support ZipArchive. Please extract the zip and do a manual FTP upload.";
 	}
+	elseif ($_GET['status'] == 'success') {
+		$message = "Theme presets is successfully created.";
+	}
 	if ($message) {
 		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
 	}
@@ -54,7 +57,7 @@ if ($edit_mode) {
 	$tab_title['icon'][] = '';
 }
 
-$active_tab = tab_active($tab_title,1);
+$active_tab = tab_active($tab_title, $edit_mode);
 
 echo opentab($tab_title, $active_tab, 'theme_tab');
 echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $active_tab);
@@ -131,7 +134,7 @@ function list_theme() {
 		echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
 		echo "<div class='btn-group pull-right m-t-20'>\n";
 		echo openform('editfrm', 'editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'downtime'=>0));
-		echo form_button('Configure Theme', 'theme', 'theme', $theme_name, array('class'=>'btn-default btn-sm'));
+		echo form_button('Configure Theme', 'theme', 'theme', $theme_name, array('class'=>'btn-default'));
 		echo closeform();
 		echo "</div>\n";
 		echo "<div class='overflow-hide'>\n";

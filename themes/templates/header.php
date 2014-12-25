@@ -57,7 +57,19 @@ if ($settings['bootstrap']) {
 	define('BOOTSTRAPPED', TRUE);
 	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
 	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
-	echo "<link href='".INCLUDES."bootstrap/bootstrap.css' rel='stylesheet' media='screen' />\n";
+	// ok now there is a theme at play here.
+	// at maincore, lets load atom.
+	$theme_name = isset($userdata['user_theme']) && $userdata['user_theme'] !== 'Default' ? $userdata['user_theme'] : $settings['theme'];
+	$result = dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'");
+	if (dbrows($result)>0) {
+		$theme_data = dbarray($result);
+		echo "<link href='".THEMES.$theme_data['theme_file']."' rel='stylesheet' media='screen' />\n";
+	} else {
+		echo "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' media='screen' />\n";
+	}
+
+
+
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
 }
