@@ -44,7 +44,7 @@ if (db_exists(DB_NEWS) && db_exists(DB_NEWS_CATS)) {
 
 			echo "<div class='col-xs-".$colwidth." col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content'>\n";
 			echo "<h3><a href='".BASEDIR."news.php?readmore=".$data['news_id']."'>".$data['news_subject']."</a></h3>\n";
-			echo "<div class='small m-b-10'>".$locale['home_0105']..profile_link($data['user_id'], $data['user_name'], $data['user_status'])." ".showdate('newsdate', $data['news_datestamp']).$locale['home_0106'].$news_cat."</div>\n";
+			echo "<div class='small m-b-10'>".$locale['home_0105'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])." ".showdate('newsdate', $data['news_datestamp']).$locale['home_0106'].$news_cat."</div>\n";
 			echo "<div>".stripslashes($data['news_news'])."</div>\n";
 			echo "</div>\n";
 		}
