@@ -34,6 +34,9 @@ if (isset($_GET['status'])) {
 	elseif ($_GET['status'] == 'success') {
 		$message = "Theme presets is successfully created.";
 	}
+	elseif ($_GET['status'] == 'updated') {
+		$message = "Theme presets is successfully updated.";
+	}
 	if ($message) {
 		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
 	}
