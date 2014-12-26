@@ -91,7 +91,7 @@ function theme_editor() {
 	$atom = new atom();
 	$atom->target_folder = $_POST['theme'];
 	$atom->theme_name = $_POST['theme'];
-	$atom->load_theme();
+	$atom->load_theme_actions();
 	$atom->set_theme();
 	$atom->render_theme_presets();
 	$atom->theme_editor();

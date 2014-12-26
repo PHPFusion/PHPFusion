@@ -2,21 +2,19 @@
 //
 // Easily pump out default styles, as well as :hover, :focus, :active,
 // and disabled options for all buttons
-
-.button-variant(@color; @background; @border) {
+.button-variant(@color; @color-hover; @color-active; @background; @background-hover; @background-active; @border; @border-hover; @border-active; @background_fill) {
   color: @color;
-  background-color: @background;
+  .background(@background_fill, @background);
   border-color: @border;
-
   &:hover,
   &:focus,
   &.focus,
   &:active,
   &.active,
   .open > .dropdown-toggle& {
-    color: @color;
-    background-color: darken(@background, 10%);
-        border-color: darken(@border, 12%);
+    color: @color-active;
+    .background(@background_fill, @background-active);
+    border-color: @border-active;
   }
   &:active,
   &.active,
@@ -32,8 +30,9 @@
     &.focus,
     &:active,
     &.active {
-      background-color: @background;
-          border-color: @border;
+      color: @color-hover;
+      .background(@background_fill, @background-hover);
+      border-color: @border-hover;
     }
   }
 
@@ -43,10 +42,57 @@
   }
 }
 
+
+
 // Button sizes
 .button-size(@padding-vertical; @padding-horizontal; @font-size; @line-height; @border-radius) {
   padding: @padding-vertical @padding-horizontal;
   font-size: @font-size;
   line-height: @line-height;
   border-radius: @border-radius;
+}
+
+// Background Fills
+.background(0, @start: #fff){
+  background:@start;
+}
+//horizontal
+.background(1, @start: #fff){
+  background: @start;
+  background: -moz-linear-gradient(left, @start 0%, darken(@start, 20%) 100%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,@start), color-stop(100%,darken(@start, 20%)));
+  background: -webkit-linear-gradient(left, @start 0%,darken(@start, 20%) 100%);
+  background: -o-linear-gradient(left, @start 0%,darken(@start, 20%) 100%);
+  background: -ms-linear-gradient(left, @start 0%,darken(@start, 20%) 100%);
+  background: linear-gradient(to right, @start 0%,darken(@start, 20%) 100%);
+}
+//vertical
+.background(2, @start: #fff){
+  background: @start;
+  background: -moz-linear-gradient(top, @start 0%, darken(@start, 20%) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start), color-stop(100%,darken(@start, 20%)));
+  background: -webkit-linear-gradient(top, @start 0%,darken(@start, 20%) 100%);
+  background: -o-linear-gradient(top, @start 0%,darken(@start, 20%) 100%);
+  background: -ms-linear-gradient(top, @start 0%,darken(@start, 20%) 100%);
+  background: linear-gradient(to bottom, @start 0%,darken(@start, 20%) 100%);
+}
+// radial
+.background(3, @start: #fff){
+  background: @start;
+  background: -moz-radial-gradient(center, ellipse cover, @start 0%, #ffffff 100%);
+  background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,@start), color-stop(100%,darken(@start, 20%)));
+  background: -webkit-radial-gradient(center, ellipse cover, @start 0%,darken(@start, 20%) 100%);
+  background: -o-radial-gradient(center, ellipse cover, @start 0%,darken(@start, 20%) 100%);
+  background: -ms-radial-gradient(center, ellipse cover, @start 0%,darken(@start, 20%) 100%);
+  background: radial-gradient(ellipse at center, @start 0%,darken(@start, 20%) 100%);
+}
+// diagonal
+.background(4, @start: #fff){
+  background: @start;
+  background: -moz-linear-gradient(-45deg, @start 0%, darken(@start, 20%) 100%);
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,@start), color-stop(100%,darken(@start, 20%)));
+  background: -webkit-linear-gradient(-45deg, @start 0%,darken(@start, 20%) 100%);
+  background: -o-linear-gradient(-45deg, @start 0%,darken(@start, 20%) 100%);
+  background: -ms-linear-gradient(-45deg, @start 0%,darken(@start, 20%) 100%);
+  background: linear-gradient(135deg, @start 0%,darken(@start, 20%) 100%);
 }

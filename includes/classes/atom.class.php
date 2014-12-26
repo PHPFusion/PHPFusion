@@ -23,6 +23,7 @@ class atom {
 	public $theme_name = '';
 	public $compress = FALSE;
 	public $debug = FALSE;
+	public $Compiler = TRUE;
 	// bootstrap default configurations here.
 	private $font_decoration_options = array('Normal',
 		'Bold',
@@ -41,8 +42,10 @@ class atom {
 		'none',
 		'underline',
 		'underline');
+	private $fills = array('Flat Color', 'Horizontal Gradient', 'Vertical Gradient', 'Radial Gradient', 'Diagonal Gradient');
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
-	private $data = array('theme_id' => 0,
+	private $data = array(
+		'theme_id' => 0,
 		'theme_title' => '',
 		'sans_serif_fonts' => 'Helvetica Neue, Helvetica, Arial, sans-serif',
 		'serif_fonts' => 'Georgia, Times New Roman, Times, serif',
@@ -95,26 +98,75 @@ class atom {
 		'quote_size' => 14,
 		'quote_height' => 1.1,
 		'quote_color' => '#000000',
-		'quote_decoration' => 5,);
+		'quote_decoration' => 5,
+		// components
+		'container_sm' => 720,
+		'container_md' => 940,
+		'container_lg' => 1140,
+		'btn_fill' => 0,
+		'btn_border' => 1, //
+		'btn_radius' => 4, //
+		// btn-primary
+		'btn_primary' => '#428bca',
+		'btn_primary_color' => '#ffffff',
+		'btn_primary_hover' => '#3276b1',
+		'btn_primary_color_hover' => '#ffffff',
+		'btn_primary_active' => '#3276b1',
+		'btn_primary_color_active' => '#ffffff',
+		// btn-info
+		'btn_info' => '#5bc0de',
+		'btn_info_color' => '#ffffff',
+		'btn_info_hover' => '#39b3d7',
+		'btn_info_color_hover' => '#ffffff',
+		'btn_info_active' => '#39b3d7',
+		'btn_info_color_active' => '#ffffff',
+		// btn-success
+		'btn_success' => '#5cb85c',
+		'btn_success_color' => '#ffffff',
+		'btn_success_hover' => '#47a447',
+		'btn_success_color_hover' => '#ffffff',
+		'btn_success_active' => '#47a447',
+		'btn_success_color_active' => '#ffffff',
+		// btn-warning
+		'btn_warning' => '#f0ad4e',
+		'btn_warning_color' => '#ffffff',
+		'btn_warning_hover' => '#ed9c28',
+		'btn_warning_color_hover' => '#ffffff',
+		'btn_warning_active' => '#ed9c28',
+		'btn_warning_color_active' => '#ffffff',
+		// btn-danger
+		'btn_danger' => '#d9534f',
+		'btn_danger_color' => '#ffffff',
+		'btn_danger_hover' => '#d2322d',
+		'btn_danger_color_hover' => '#ffffff',
+		'btn_danger_active' => '#d2322d',
+		'btn_danger_color_active' => '#ffffff',
+	);
+
 	private $less_var = array();
 	private $theme_data = array();
 
-	public function load_theme() {
+	public function load_theme_actions() {
 		global $defender, $aidlink;
-		$result = '';
+
 		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
+		// when we click delete preset
 		if (isset($_POST['delete_preset']) && isnum($_POST['delete_preset'])) {
 			// check if active, if not delete and remove css file
 			$file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'"));
 			@unlink(THEMES.$file['theme_file']);
 			$result = dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'");
 			redirect(FUSION_SELF.$aidlink."&amp;status=deleted");
-		} elseif (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
+		}
+		// when we click load preset
+		elseif (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_id='".$_POST['load_preset']."'");
-		} elseif (!isset($_POST['new_preset'])) {
+		}
+		// except for save theme, or click on new - will load
+		elseif (!isset($_POST['new_preset']) && !isset($_POST['save_theme'])) {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_active='1'");
 		}
-		if (!isset($_POST['new_preset'])) {
+		if (!isset($_POST['new_preset']) && !isset($_POST['save_theme'])) {
 			if (dbrows($result) > 0) {
 				$this->data = dbarray($result);
 				if ($this->data['theme_config']) {
@@ -125,7 +177,7 @@ class atom {
 	}
 
 	public function infuse_theme() {
-		$this->load_theme();
+		$this->load_theme_actions();
 		if (!empty($this->theme_data)) {
 			add_to_head("<link href='".THEMES.$this->theme_data['theme_file']."' rel='stylesheet' media='screen' />\n");
 		} else {
@@ -148,8 +200,7 @@ class atom {
 			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
 			echo openform('preset-form', 'preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0,
 				'downtime' => 0));
-			echo form_button('Create New', 'new_preset', 'new_preset', 'new_preset', array('class' => 'btn-sm btn-primary pull-right',
-				'icon' => 'entypo plus'));
+			echo form_button('Create New', 'new_preset', 'new_preset', 'new_preset', array('class' => 'btn-sm btn-primary pull-right', 'icon' => 'entypo plus'));
 			echo form_para('Theme Presets', 'theme_presets');
 			while ($preset = dbarray($result)) {
 				echo "<div class='list-group-item m-t-10' style='display:inline-block; clear:both; text-align:center;'>\n".thumbnail($screenshot, '150px')."<div class='display-block panel-title text-smaller strong m-t-10'>".trimlink($preset['theme_title'], 30)."</div>";
@@ -158,11 +209,9 @@ class atom {
 					echo form_button('Loaded', 'active', 'active', 'active', array('class' => 'btn-sm btn-default active',
 						'deactivate' => 1));
 				} else {
-					echo form_button('Load', 'load_preset', 'load_preset', $preset['theme_id'], array('class' => 'btn-sm btn-default',
-						'icon' => 'entypo upload'));
+					echo form_button('Load', 'load_preset', 'load_preset', $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo upload'));
 				}
-				echo form_button('Delete', 'delete_preset', 'delete_preset', $preset['theme_id'], array('class' => 'btn-sm btn-default',
-					'icon' => 'entypo trash'));
+				echo form_button('Delete', 'delete_preset', 'delete_preset', $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo trash'));
 				echo form_hidden('', 'theme', 'theme', $preset['theme_name']);
 				echo "</div>\n";
 				echo "</div>\n";
@@ -175,7 +224,7 @@ class atom {
 	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
 	private function buildCss() {
 		global $defender;
-		$inputFile = INCLUDES."atom/atom.less";
+		$inputFile = INCLUDES."atom/less/atom.less";
 		$outputFolder = THEMES.$this->target_folder."/";
 		$outputFile = THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
 		$returnFile = str_replace(THEMES, '', $outputFile);
@@ -183,7 +232,7 @@ class atom {
 		$options = array('output' => $outputFile,
 			'compress' => $this->compress,);
 		$this->set_less_variables();
-		if (!empty($this->less_var)) { // this needs troubleshoot.
+		if (!empty($this->less_var) && !defined('FUSION_NULL') && $this->Compiler) {
 			if ($this->debug) print_p("current less var");
 			print_p($this->less_var);
 			if ($this->debug) print_p($inputFile);
@@ -191,7 +240,7 @@ class atom {
 			require_once INCLUDES."atom/lessc.inc.php";
 			try {
 				$parser = new Less_Parser($options);
-				$parser->SetImportDirs($directories);
+				//$parser->SetImportDirs($directories);
 				$parser->parseFile($inputFile, $outputFolder);
 				$parser->ModifyVars($this->less_var);
 				$css = $parser->getCss();
@@ -204,7 +253,7 @@ class atom {
 						return $returnFile;
 					}
 				} else {
-					//print_p($css); // this is your css
+					print_p($css); // this is your css
 				}
 			} catch (Exception $e) {
 				$error_message = $e->getMessage();
@@ -212,14 +261,21 @@ class atom {
 				$defender->addNotice($error_message);
 			}
 		} else {
-			$defender->stop();
-			$defender->setNoticeTitle('Theme cannot rebuild due to the following reason(s):');
-			$defender->addNotice('Variables were not set');
+			if (!$this->Compiler) {
+				$defender->stop();
+				$defender->setNoticeTitle('Compiler is turned OFF:');
+				$defender->addNotice('No CSS Output.');
+			} else {
+				$defender->stop();
+				$defender->setNoticeTitle('Theme cannot rebuild due to the following reason(s):');
+				$defender->addNotice('Variables were not set or form is has error.');
+			}
 		}
 	}
 
 	private function set_less_variables() {
 		$this->less_var = $this->data;
+		// css which requires atom's custom parse rules.
 		// base foot parsing.
 		$this->less_var['sans_serif_fonts'] = $this->parse_fonts($this->data['sans_serif_fonts']);
 		$this->less_var['serif_fonts'] = $this->parse_fonts($this->data['serif_fonts']);
@@ -270,10 +326,20 @@ class atom {
 		$this->less_var['quote_weight'] = $this->parse_font_weight($this->data['quote_decoration']);
 		$this->less_var['quote_style'] = $this->parse_font_style($this->data['quote_decoration']);
 		$this->less_var['quote_decoration'] = $this->parse_font_decoration($this->data['quote_decoration']);
+		// max screen
+		$this->less_var['container_sm'] = $this->parse_font_size($this->data['container_sm']);
+		$this->less_var['container_md'] = $this->parse_font_size($this->data['container_md']);
+		$this->less_var['container_lg'] = $this->parse_font_size($this->data['container_lg']);
+		$this->less_var['btn_border'] = $this->parse_font_size($this->data['btn_border']);
+		$this->less_var['btn_radius'] = $this->parse_font_size($this->data['btn_radius']);
 	}
 
+	/* Handling Posts and Feedback. Watch out for Unsets */
 	public function set_theme() {
 		global $userdata, $aidlink;
+		// Feedback to Form
+		$this->data['theme_id'] = isset($_POST['theme_id']) ? form_sanitizer($_POST['theme_id'], '', 'theme_id') : $this->data['theme_id'];
+		$this->data['theme_title'] = isset($_POST['theme_title']) ? form_sanitizer($_POST['theme_title'], '', 'theme_title') : $this->data['theme_title'];
 		// Font Settings
 		$this->data['sans_serif_fonts'] = isset($_POST['sans_serif_fonts']) ? form_sanitizer($_POST['sans_serif_fonts'], '', 'sans_serif_fonts') : $this->data['sans_serif_fonts'];
 		$this->data['serif_fonts'] = isset($_POST['serif_fonts']) ? form_sanitizer($_POST['serif_fonts'], '', 'serif_fonts') : $this->data['serif_fonts'];
@@ -318,6 +384,48 @@ class atom {
 		$this->data['quote_height'] = isset($_POST['quote_height']) ? form_sanitizer($_POST['quote_height'], '', 'quote_height') : $this->data['quote_height'];
 		$this->data['quote_color'] = isset($_POST['quote_color']) ? form_sanitizer($_POST['quote_color'], '', 'quote_color') : $this->data['quote_color'];
 		$this->data['quote_decoration'] = isset($_POST['quote_decoration']) ? form_sanitizer($_POST['quote_decoration'], '0', 'quote_decoration') : $this->data['quote_decoration'];
+		$this->data['container_sm'] = isset($_POST['container_sm']) ? form_sanitizer($_POST['container_sm'], '0', 'container_sm') : $this->data['container_sm'];
+		$this->data['container_md'] = isset($_POST['container_md']) ? form_sanitizer($_POST['container_md'], '0', 'container_md') : $this->data['container_md'];
+		$this->data['container_lg'] = isset($_POST['container_lg']) ? form_sanitizer($_POST['container_lg'], '0', 'container_lg') : $this->data['container_lg'];
+		$this->data['btn_fill'] = isset($_POST['btn_fill']) ? form_sanitizer($_POST['btn_fill'], '0', 'btn_fill') : $this->data['btn_fill'];
+		$this->data['btn_border'] = isset($_POST['btn_border']) ? form_sanitizer($_POST['btn_border'], '0', 'btn_border') : $this->data['btn_border'];
+		$this->data['btn_radius'] = isset($_POST['btn_radius']) ? form_sanitizer($_POST['btn_radius'], '0', 'btn_radius') : $this->data['btn_radius'];
+		// btn-primary
+		$this->data['btn_primary'] = isset($_POST['btn_primary']) ? form_sanitizer($_POST['btn_primary'], '0', 'btn_primary') : $this->data['btn_primary'];
+		$this->data['btn_primary_color'] = isset($_POST['btn_primary_color']) ? form_sanitizer($_POST['btn_primary_color'], '0', 'btn_primary_color') : $this->data['btn_primary_color'];
+		$this->data['btn_primary_hover'] = isset($_POST['btn_primary_hover']) ? form_sanitizer($_POST['btn_primary_hover'], '0', 'btn_primary_hover') : $this->data['btn_primary_hover'];
+		$this->data['btn_primary_color_hover'] = isset($_POST['btn_primary_color_hover']) ? form_sanitizer($_POST['btn_primary_color_hover'], '0', 'btn_primary_color_hover') : $this->data['btn_primary_color_hover'];
+		$this->data['btn_primary_active'] = isset($_POST['btn_primary_active']) ? form_sanitizer($_POST['btn_primary_active'], '0', 'btn_primary_active') : $this->data['btn_primary_active'];
+		$this->data['btn_primary_color_active'] = isset($_POST['btn_primary_color_active']) ? form_sanitizer($_POST['btn_primary_color_active'], '0', 'btn_primary_color_active') : $this->data['btn_primary_color_active'];
+		// btn-info
+		$this->data['btn_info'] = isset($_POST['btn_info']) ? form_sanitizer($_POST['btn_info'], '0', 'btn_info') : $this->data['btn_info'];
+		$this->data['btn_info_color'] = isset($_POST['btn_info_color']) ? form_sanitizer($_POST['btn_info_color'], '0', 'btn_info_color') : $this->data['btn_info_color'];
+		$this->data['btn_info_hover'] = isset($_POST['btn_info_hover']) ? form_sanitizer($_POST['btn_info_hover'], '0', 'btn_info_hover') : $this->data['btn_info_hover'];
+		$this->data['btn_info_color_hover'] = isset($_POST['btn_info_color_hover']) ? form_sanitizer($_POST['btn_info_color_hover'], '0', 'btn_info_color_hover') : $this->data['btn_info_color_hover'];
+		$this->data['btn_info_active'] = isset($_POST['btn_info_active']) ? form_sanitizer($_POST['btn_info_active'], '0', 'btn_info_active') : $this->data['btn_info_active'];
+		$this->data['btn_info_color_active'] = isset($_POST['btn_info_color_active']) ? form_sanitizer($_POST['btn_info_color_active'], '0', 'btn_info_color_active') : $this->data['btn_info_color_active'];
+		// btn-success
+		$this->data['btn_success'] = isset($_POST['btn_success']) ? form_sanitizer($_POST['btn_success'], '0', 'btn_success') : $this->data['btn_success'];
+		$this->data['btn_success_color'] = isset($_POST['btn_success_color']) ? form_sanitizer($_POST['btn_success_color'], '0', 'btn_success_color') : $this->data['btn_success_color'];
+		$this->data['btn_success_hover'] = isset($_POST['btn_success_hover']) ? form_sanitizer($_POST['btn_success_hover'], '0', 'btn_success_hover') : $this->data['btn_success_hover'];
+		$this->data['btn_success_color_hover'] = isset($_POST['btn_success_color_hover']) ? form_sanitizer($_POST['btn_success_color_hover'], '0', 'btn_success_color_hover') : $this->data['btn_success_color_hover'];
+		$this->data['btn_success_active'] = isset($_POST['btn_success_active']) ? form_sanitizer($_POST['btn_success_active'], '0', 'btn_success_active') : $this->data['btn_success_active'];
+		$this->data['btn_success_color_active'] = isset($_POST['btn_success_color_active']) ? form_sanitizer($_POST['btn_success_color_active'], '0', 'btn_success_color_active') : $this->data['btn_success_color_active'];
+		// btn-warning
+		$this->data['btn_warning'] = isset($_POST['btn_warning']) ? form_sanitizer($_POST['btn_warning'], '0', 'btn_warning') : $this->data['btn_warning'];
+		$this->data['btn_warning_color'] = isset($_POST['btn_warning_color']) ? form_sanitizer($_POST['btn_warning_color'], '0', 'btn_warning_color') : $this->data['btn_warning_color'];
+		$this->data['btn_warning_hover'] = isset($_POST['btn_warning_hover']) ? form_sanitizer($_POST['btn_warning_hover'], '0', 'btn_warning_hover') : $this->data['btn_warning_hover'];
+		$this->data['btn_warning_color_hover'] = isset($_POST['btn_warning_color_hover']) ? form_sanitizer($_POST['btn_warning_color_hover'], '0', 'btn_warning_color_hover') : $this->data['btn_warning_color_hover'];
+		$this->data['btn_warning_active'] = isset($_POST['btn_warning_active']) ? form_sanitizer($_POST['btn_warning_active'], '0', 'btn_warning_active') : $this->data['btn_warning_active'];
+		$this->data['btn_warning_color_active'] = isset($_POST['btn_warning_color_active']) ? form_sanitizer($_POST['btn_warning_color_active'], '0', 'btn_warning_color_active') : $this->data['btn_warning_color_active'];
+		// btn-danger
+		$this->data['btn_danger'] = isset($_POST['btn_danger']) ? form_sanitizer($_POST['btn_danger'], '0', 'btn_danger') : $this->data['btn_danger'];
+		$this->data['btn_danger_color'] = isset($_POST['btn_danger_color']) ? form_sanitizer($_POST['btn_danger_color'], '0', 'btn_danger_color') : $this->data['btn_danger_color'];
+		$this->data['btn_danger_hover'] = isset($_POST['btn_danger_hover']) ? form_sanitizer($_POST['btn_danger_hover'], '0', 'btn_danger_hover') : $this->data['btn_danger_hover'];
+		$this->data['btn_danger_color_hover'] = isset($_POST['btn_danger_color_hover']) ? form_sanitizer($_POST['btn_danger_color_hover'], '0', 'btn_danger_color_hover') : $this->data['btn_danger_color_hover'];
+		$this->data['btn_danger_active'] = isset($_POST['btn_danger_active']) ? form_sanitizer($_POST['btn_danger_active'], '0', 'btn_danger_active') : $this->data['btn_danger_active'];
+		$this->data['btn_danger_color_active'] = isset($_POST['btn_danger_color_active']) ? form_sanitizer($_POST['btn_danger_color_active'], '0', 'btn_danger_color_active') : $this->data['btn_danger_color_active'];
+
 		// End Font Settings.
 		if (isset($_POST['save_theme'])) {
 			$this->save_theme();
@@ -327,14 +435,9 @@ class atom {
 	private function save_theme() {
 		global $userdata, $aidlink;
 		$old_file = isset($this->data['theme_file']) ? $this->data['theme_file'] : '';
-		if (isset($this->data['theme_config'])) unset($this->data['theme_config']);
-		if (isset($this->data['theme_id'])) unset($this->data['theme_id']);
-		if (isset($this->data['theme_title'])) unset($this->data['theme_title']);
-		if (isset($this->data['theme_name'])) unset($this->data['theme_name']);
-		if (isset($this->data['theme_file'])) unset($this->data['theme_file']);
-		if (isset($this->data['theme_datestamp'])) unset($this->data['theme_datestamp']);
-		if (isset($this->data['theme_user'])) unset($this->data['theme_user']);
-		// rebuild
+		if (isset($this->data['theme_config'])) unset($this->data['theme_config']); // will need to rebuild. unset it.
+		if (isset($this->data['theme_file'])) unset($this->data['theme_file']); // important to unset.
+		// rebuild entire structure
 		$data['theme_name'] = $this->theme_name;
 		$data['theme_title'] = form_sanitizer($_POST['theme_title'], '', 'theme_title');
 		$data['theme_id'] = form_sanitizer($_POST['theme_id'], '0', 'theme_id');
@@ -374,7 +477,7 @@ class atom {
 		$tab_title['title'][] = 'Base Fonts';
 		$tab_title['id'][] = 'font';
 		$tab_title['icon'][] = '';
-		$tab_title['title'][] = 'Layout Design';
+		$tab_title['title'][] = 'Theme Components';
 		$tab_title['id'][] = 'grid';
 		$tab_title['icon'][] = '';
 		$tab_title['title'][] = 'Navigation';
@@ -383,9 +486,9 @@ class atom {
 		$tab_title['title'][] = 'Table and Fieldsets';
 		$tab_title['id'][] = 'panel';
 		$tab_title['icon'][] = '';
-		$tab_active = tab_active($tab_title, 0);
+		$tab_active = tab_active($tab_title, 1);
 		if ($this->debug) {
-			print_p($_POST);
+			//print_p($_POST);
 		}
 		// do a pop up notice. important. pressing save twice will create a massive stress on server resource.
 		echo openmodal('dbi', 'Rebuilding New '.$this->theme_name.' Theme', array('class' => 'zindex-boost modal-center',
@@ -396,10 +499,8 @@ class atom {
 		echo closemodal();
 		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 0));
 		echo form_hidden('', 'theme_id', 'theme_id', $this->data['theme_id']);
-		echo form_text('Style Title', 'theme_title', 'theme_title', $this->data['theme_title'], array('inline' => 1,
-			'required' => 1));
-		echo form_text('Template', 'theme_name', 'theme_name', $this->theme_name, array('inline' => 1,
-			'deactivate' => 1));
+		echo form_text('Style Title', 'theme_title', 'theme_title', $this->data['theme_title'], array('inline' => 1, 'required' => 1));
+		echo form_text('Template', 'theme_name', 'theme_name', $this->theme_name, array('inline' => 1, 'deactivate' => 1));
 		echo form_button('Close', 'close_theme', 'close_theme', 'close_theme', array('class' => 'btn-default m-l-10 pull-right'));
 		echo form_button('Save Theme', 'save_theme', 'save_theme', 'save_theme', array('class' => 'btn-primary pull-right'));
 		echo opentab($tab_title, $tab_active, 'atom');
@@ -409,6 +510,9 @@ class atom {
 		echo "</div>\n";
 		echo closetabbody();
 		echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
+		echo "<div class='m-t-20'>\n";
+		$this->layout_admin();
+		echo "</div>\n";
 		echo closetabbody();
 		echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
 		echo closetabbody();
@@ -570,6 +674,194 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "quote_decoration", "quote_decoration", $this->font_decoration_options, $this->data['quote_decoration'], $color_options);
 		echo "</div>\n</div>\n";
+	}
+
+	private function layout_admin() {
+		$width_options = array("width" => "100%", 'placeholder'=>'px');
+		$color_options = array("placeholder" => "Choose Color", "width" => "100%", "format" => "hex");
+		$fill_options = array("placeholder" => "Select Background Color Fill Type", "width" => "280px");
+
+		// max widths
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Max Theme Width Settings', 'max_width');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Tablets", "container_sm", "container_sm", $this->data['container_sm'], $width_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Laptops", "container_md", "container_md", $this->data['container_md'], $width_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Large Screens", "container_lg", "container_lg", $this->data['container_lg'], $width_options);
+		echo "</div>\n</div>\n";
+		//buttons
+		echo form_para('Button Settings', 'btns');
+		echo "<hr>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Button Parameters', 'btneff');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_select("Fill Type", "btn_fill", "btn_fill", $this->fills, $this->data['btn_fill'],  $fill_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Border Widths", "btn_border", "btn_border", $this->data['btn_border'], $width_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Border Radius", "btn_radius", "btn_radius", $this->data['btn_radius'], $width_options);
+		echo "</div>\n</div>\n";
+		echo "<hr>\n";
+		// button primary
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Primary Type', 'btn-p');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Normal State', 'btn-p-normal');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Background", "btn_primary", "btn_primary", $this->data['btn_primary'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_primary_color", "btn_primary_color", $this->data['btn_primary_color'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Hover State', 'btn-p-hover');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Hover Background", "btn_primary_hover", "primary_hover", $this->data['btn_primary_hover'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_primary_color_hover", "btn_primary_color_hover", $this->data['btn_primary_color_hover'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Active State', 'btn-p-active');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Active Background", "btn_primary_active", "btn_primary_active", $this->data['btn_primary_active'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_primary_color_active", "btn_primary_color_active", $this->data['btn_primary_color_active'], $color_options);
+		echo "</div></div>\n";
+		echo "</div>\n</div>\n";
+		echo "<hr>\n";
+		// button info
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Info Type', 'btn-p');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Normal State', 'btn-info-normal');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Background", "btn_info", "btn_info", $this->data['btn_info'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_info_color", "btn_info_color", $this->data['btn_info_color'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Hover State', 'btn-p-hover');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Hover Background", "btn_info_hover", "info_hover", $this->data['btn_info_hover'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_info_color_hover", "btn_info_color_hover", $this->data['btn_info_color_hover'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Active State', 'btn-p-active');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Active Background", "btn_info_active", "btn_info_active", $this->data['btn_info_active'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_info_color_active", "btn_info_color_active", $this->data['btn_info_color_active'], $color_options);
+		echo "</div></div>\n";
+		echo "</div>\n</div>\n";
+		echo "<hr>\n";
+		// success
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Success Type', 'btn-scs');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Normal State', 'btn-success-normal');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Background", "btn_success", "btn_success", $this->data['btn_success'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_success_color", "btn_success_color", $this->data['btn_success_color'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Hover State', 'btn-p-hover');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Hover Background", "btn_success_hover", "success_hover", $this->data['btn_success_hover'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_success_color_hover", "btn_success_color_hover", $this->data['btn_success_color_hover'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Active State', 'btn-p-active');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Active Background", "btn_success_active", "btn_success_active", $this->data['btn_success_active'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_success_color_active", "btn_success_color_active", $this->data['btn_success_color_active'], $color_options);
+		echo "</div></div>\n";
+		echo "</div>\n</div>\n";
+		echo "<hr>\n";
+		// warning
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Warning Type', 'btn-warning');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Normal State', 'btn-warning-normal');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Background", "btn_warning", "btn_warning", $this->data['btn_warning'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_warning_color", "btn_warning_color", $this->data['btn_warning_color'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Hover State', 'btn-p-hover');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Hover Background", "btn_warning_hover", "warning_hover", $this->data['btn_warning_hover'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_warning_color_hover", "btn_warning_color_hover", $this->data['btn_warning_color_hover'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Active State', 'btn-p-active');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Active Background", "btn_warning_active", "btn_warning_active", $this->data['btn_warning_active'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_warning_color_active", "btn_warning_color_active", $this->data['btn_warning_color_active'], $color_options);
+		echo "</div></div>\n";
+		echo "</div>\n</div>\n";
+		echo "<hr>\n";
+		// danger
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Danger Type', 'btn-danger');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Normal State', 'btn-danger-normal');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Background", "btn_danger", "btn_danger", $this->data['btn_danger'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_danger_color", "btn_danger_color", $this->data['btn_danger_color'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Hover State', 'btn-p-hover');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Hover Background", "btn_danger_hover", "danger_hover", $this->data['btn_danger_hover'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_danger_color_hover", "btn_danger_color_hover", $this->data['btn_danger_color_hover'], $color_options);
+		echo "</div></div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Active State', 'btn-p-active');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Active Background", "btn_danger_active", "btn_danger_active", $this->data['btn_danger_active'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Font Color", "btn_danger_color_active", "btn_danger_color_active", $this->data['btn_danger_color_active'], $color_options);
+		echo "</div></div>\n";
+		echo "</div>\n</div>\n";
+		echo "<hr>\n";
+
 	}
 
 	public function add_panel() {
@@ -1291,6 +1583,98 @@ class atom {
 	private function parse_font_style($font) {
 		return $this->text_style[$font];
 	}
+
+	/* Outputs adjusted colors */
+	static function adjustBrightness($hex, $percent) {
+		/* Function by Torkill Johnsen */
+		// Steps should be between -255 and 255. Negative = darker, positive = lighter
+		//$steps = max(-255, min(255));
+		$steps = $percent > 0 ? 255*($percent/100) : -255*($percent/100);
+		$steps = $steps >= 255 ? 255 : $steps;
+		$steps = $steps <= 255 ? -255 : $steps;
+		// Format the hex color string
+		$hex = str_replace('#', '', $hex);
+		if (strlen($hex) == 3) {
+			$hex = str_repeat(substr($hex,0,1), 2).str_repeat(substr($hex,1,1), 2).str_repeat(substr($hex,2,1), 2);
+		}
+		// Get decimal values
+		$r = hexdec(substr($hex,0,2));
+		$g = hexdec(substr($hex,2,2));
+		$b = hexdec(substr($hex,4,2));
+		// Adjust number of steps and keep it inside 0 to 255
+		$r = max(0,min(255,$r + $steps));
+		$g = max(0,min(255,$g + $steps));
+		$b = max(0,min(255,$b + $steps));
+		$r_hex = str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
+		$g_hex = str_pad(dechex($g), 2, '0', STR_PAD_LEFT);
+		$b_hex = str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
+		return '#'.$r_hex.$g_hex.$b_hex;
+	}
+
+	/* Background parser */
+	private function parse_background($hex, $fill_type) {
+		// possible fill types in atom
+		// darken or lighten functions via steps of 255 max.
+		$hex_value = str_replace('#', '', $hex);
+		$stop_hex = $this->adjustBrightness($hex_value, -20);
+		switch ($fill_type) {
+			case 0: // flat
+				return $hex;
+				break;
+			case 1: // horizontal
+				return "
+					background: ".$hex.";
+				  	background: -moz-linear-gradient(left, ".$hex." 0%, ".$stop_hex." 100%);
+				  	background: -webkit-gradient(linear, left top, right top, color-stop(0%, ".$hex."), color-stop(100%, ".$stop_hex."));
+				  	background: -webkit-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
+				  	background: -o-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
+				  	background: -ms-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
+				  	background: linear-gradient(to right, ".$hex." 0%,".$stop_hex." 100%);
+				  	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1 );
+				";
+				break;
+			case 2: // vertical
+				return "
+					background: ".$hex.";
+				  	background: -moz-linear-gradient(top, ".$hex." 0%, ".$stop_hex." 100%);
+				  	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
+				  	background: -webkit-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
+				  	background: -o-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
+				  	background: -ms-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
+				  	background: linear-gradient(to bottom, ".$hex." 0%,".$stop_hex." 100%);
+				  	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=0 );
+				";
+				break;
+			case 3: //radial
+				return "
+					background: ".$hex.";
+				  	background: -moz-radial-gradient(center, ellipse cover, ".$hex." 0%, ".$stop_hex." 100%);
+				  	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
+				  	background: -webkit-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
+				  	background: -o-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
+				  	background: -ms-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
+				  	background: radial-gradient(ellipse at center, ".$hex." 0%,".$stop_hex." 100%);
+				  	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1 );
+				";
+				break;
+			case 4: // diagonal
+				return "
+					background: ".$hex.";
+  					background: -moz-linear-gradient(-45deg, ".$hex." 0%, ".$stop_hex." 100%);
+  					background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
+  					background: -webkit-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
+  					background: -o-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
+  					background: -ms-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
+  					background: linear-gradient(135deg, ".$hex." 0%,".$stop_hex." 100%);
+  					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1);
+				";
+				break;
+			default:
+				return $hex;
+		}
+	}
+
+
 }
 
 ?>

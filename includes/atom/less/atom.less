@@ -138,3 +138,92 @@
 @caret-width-base:          4px;
 //** Carets increase slightly in size for larger components.
 @caret-width-large:         5px;
+//== Container sizes
+//## Define the maximum width of `.container` for different screen sizes.
+// Small screen / tablet
+@container-tablet:             (@container_sm + @grid-gutter-width);
+//** For `@screen-sm-min` and up.
+@container-sm:                 @container-tablet;
+// Medium screen / desktop
+@container-desktop:            (@container_md + @grid-gutter-width);
+//** For `@screen-md-min` and up.
+@container-md:                 @container-desktop;
+// Large screen / wide desktop
+@container-large-desktop:      (@container_lg + @grid-gutter-width);
+//** For `@screen-lg-min` and up.
+@container-lg:                 @container-large-desktop;
+
+
+//== Buttons
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+@btn-border-width:              @btn_border;
+@btn-radius:                    @btn_radius;
+@btn-font-weight:                normal;
+
+@btn-default-color:              #333;
+@btn-default-bg:                 #fff;
+@btn-default-border:             #ccc;
+@btn-fill:                      @btn_fill;
+
+// Button Primary
+@btn-primary-bg:                 @btn_primary;
+@btn-primary-color:              @btn_primary_color;
+@btn-primary-bg-hover:              @btn_primary_hover;
+@btn-primary-color-hover:        @btn_primary_color_hover;
+@btn-primary-bg-active:              @btn_primary_active;
+@btn-primary-color-active:        @btn_primary_color_hover;
+@btn-primary-border:             darken(@btn-primary-bg, 5%);
+@btn-primary-border-hover:       darken(@btn-primary-bg-hover, 5%);
+@btn-primary-border-active:      darken(@btn-primary-bg-active, 5%);
+
+// Button Info
+@btn-info-bg:                 @btn_info;
+@btn-info-color:              @btn_info_color;
+@btn-info-bg-hover:              @btn_info_hover;
+@btn-info-color-hover:        @btn_info_color_hover;
+@btn-info-bg-active:              @btn_info_active;
+@btn-info-color-active:        @btn_info_color_hover;
+@btn-info-border:             darken(@btn-info-bg, 5%);
+@btn-info-border-hover:       darken(@btn-info-bg-hover, 5%);
+@btn-info-border-active:      darken(@btn-info-bg-active, 5%);
+
+// Button Success
+@btn-success-bg:                 @btn_success;
+@btn-success-color:              @btn_success_color;
+@btn-success-bg-hover:              @btn_success_hover;
+@btn-success-color-hover:        @btn_success_color_hover;
+@btn-success-bg-active:              @btn_success_active;
+@btn-success-color-active:        @btn_success_color_hover;
+@btn-success-border:             darken(@btn-success-bg, 5%);
+@btn-success-border-hover:       darken(@btn-success-bg-hover, 5%);
+@btn-success-border-active:      darken(@btn-success-bg-active, 5%);
+
+// Button Warning
+@btn-warning-bg:                 @btn_warning;
+@btn-warning-color:              @btn_warning_color;
+@btn-warning-bg-hover:              @btn_warning_hover;
+@btn-warning-color-hover:        @btn_warning_color_hover;
+@btn-warning-bg-active:              @btn_warning_active;
+@btn-warning-color-active:        @btn_warning_color_hover;
+@btn-warning-border:             darken(@btn-warning-bg, 5%);
+@btn-warning-border-hover:       darken(@btn-warning-bg-hover, 5%);
+@btn-warning-border-active:      darken(@btn-warning-bg-active, 5%);
+
+// Button Danger
+@btn-danger-bg:                 @btn_danger;
+@btn-danger-color:              @btn_danger_color;
+@btn-danger-bg-hover:              @btn_danger_hover;
+@btn-danger-color-hover:        @btn_danger_color_hover;
+@btn-danger-bg-active:              @btn_danger_active;
+@btn-danger-color-active:        @btn_danger_color_hover;
+@btn-danger-border:             darken(@btn-danger-bg, 5%);
+@btn-danger-border-hover:       darken(@btn-danger-bg-hover, 5%);
+@btn-danger-border-active:      darken(@btn-danger-bg-active, 5%);
+
+@btn-link-disabled-color:        @gray-light;
+
+
+
+
+
