@@ -32,6 +32,7 @@ if ($temp = opendir(INCLUDES."captchas/")) {
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	if (!defined('FUSION_NULL')) {
+		$privacy_policy = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy']));
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['flood_interval']) ? $_POST['flood_interval'] : "15")."' WHERE settings_name='flood_interval'");
 		if (!$result) {
 			$error = 1;
@@ -162,10 +163,10 @@ echo "<td valign='top' width='50%' class='tbl'><label for='maintenance_message'>
 echo "<td width='50%' class='tbl'>\n";
 echo form_textarea('', 'maintenance_message', 'maintenance_message', $settings['maintenance_message']);
 echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl' colspan='2'><label for='privacy_policy'>".$locale['559']."</td>\n";
+echo "<td class='tbl' colspan='2'><label for='privacy_policy'>".$locale['820']."</td>\n";
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl' colspan='2'>\n";
-echo form_textarea('', 'privacy_policy', 'privacy_policy', $settings2['privacy_policy']);
+echo form_textarea('', 'privacy_policy', 'privacy_policy', $settings['privacy_policy']);
 echo "</td>\n</tr>\n";
 if (!$settings['tinymce_enabled']) {
 	echo "<tr>\n<td class='tbl' colspan='2'>\n";
