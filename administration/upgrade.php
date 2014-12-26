@@ -599,6 +599,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('eshop_freeshipsum', '0')");
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('eshop_coupons', '0')");
 	$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'settings_eshop.php', '4')");
+	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('privacy_policy', '')");
 
 	//Populate shipping cats with some defaults
 		$result = dbquery("INSERT INTO ".DB_PREFIX."eshop_shippingcats (cid, title, image) VALUES 

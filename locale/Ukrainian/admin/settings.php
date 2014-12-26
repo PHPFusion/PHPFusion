@@ -227,6 +227,9 @@ $locale['801'] = "Повідомлень видалено: ";
 $locale['802'] = "Тем видалено: ";
 $locale['803'] = "Вкладень видалено: ";
 
+// Privacy policy
+$locale['820'] = "Privacy Policy";
+
 // Private Message Settings
 $locale['850'] = "Банери";
 $locale['851'] = "Банер 1";

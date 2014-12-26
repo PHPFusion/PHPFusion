@@ -221,6 +221,8 @@ $locale['800'] = "Sumažinti forumus";
 $locale['801'] = "Žinučių ištrina: ";
 $locale['802'] = "Temų ištrina: ";
 $locale['803'] = "Prisegimų ištrina: ";
+// Privacy policy
+$locale['820'] = "Privacy Policy";
 // Banners Settings
 $locale['850'] = "Baneriai";
 $locale['851'] = "Baneris 1";

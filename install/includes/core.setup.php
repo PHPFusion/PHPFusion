@@ -685,6 +685,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('mime_check', '0')");
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('normalize_seo', '0')");
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('debug_seo', '0')");
+	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('privacy_policy', '')");
 	if (isset($_POST['enabled_languages']) && !empty($_POST['enabled_languages'])) {
 		$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('enabled_languages', '".stripinput($enabled_languages)."')");
 	} else {

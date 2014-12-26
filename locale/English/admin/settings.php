@@ -218,6 +218,8 @@ $locale['800'] = "Prune forums";
 $locale['801'] = "Posts deleted: ";
 $locale['802'] = "Threads deleted: ";
 $locale['803'] = "Attachments deleted: ";
+// Privacy policy
+$locale['820'] = "Privacy Policy";
 // Banners Settings
 $locale['850'] = "Banners";
 $locale['851'] = "Banner 1";

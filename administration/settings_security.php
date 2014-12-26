@@ -84,6 +84,10 @@ if (isset($_POST['savesettings'])) {
 				$error = 1;
 			}
 		}
+		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$privacy_policy' WHERE settings_name='privacy_policy'");
+		if (!$result) {
+			$error = 1;
+		}
 		redirect(FUSION_SELF.$aidlink."&error=".$error);
 	}
 }
@@ -158,6 +162,17 @@ echo "<td valign='top' width='50%' class='tbl'><label for='maintenance_message'>
 echo "<td width='50%' class='tbl'>\n";
 echo form_textarea('', 'maintenance_message', 'maintenance_message', $settings['maintenance_message']);
 echo "</td>\n</tr>\n<tr>\n";
+echo "<td class='tbl' colspan='2'><label for='privacy_policy'>".$locale['559']."</td>\n";
+echo "</td>\n</tr>\n<tr>\n";
+echo "<td class='tbl' colspan='2'>\n";
+echo form_textarea('', 'privacy_policy', 'privacy_policy', $settings2['privacy_policy']);
+echo "</td>\n</tr>\n";
+if (!$settings['tinymce_enabled']) {
+	echo "<tr>\n<td class='tbl' colspan='2'>\n";
+	echo display_html("settingsform", "privacy_policy", TRUE, TRUE, TRUE);
+	echo "</td>\n</tr>\n";
+}
+echo "<tr>\n";
 echo "<td align='center' colspan='2' class='tbl'><br />\n";
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</tbody>\n</table>\n";
