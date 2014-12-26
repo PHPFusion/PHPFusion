@@ -63,18 +63,18 @@ if (isset($_POST['uninstall'])) {
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	if (!$result) $fail = TRUE;
 
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PH', 'photoalbums.gif', '".$locale['100']."', 'photoalbums.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PH', 'photoalbums.gif', '".$locale['setup_3020']."', 'photoalbums.php', '1')");
 	if (!$result) $fail = TRUE;
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S5', 'photoalbums.gif', '".$locale['115']."', 'settings_photo.php', '4')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S5', 'photoalbums.gif', '".$locale['setup_3034']."', 'settings_photo.php', '4')");
 	if (!$result) $fail = TRUE;
 
 	$enabled_languages = explode('.', $settings['enabled_languages']);
 	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 		include LOCALE.$enabled_languages[$i]."/setup.php";
 		// links
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['138']."', 'photogallery.php', '0', '1', '0', '9', '".$enabled_languages[$i]."')");
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3308']."', 'photogallery.php', '0', '1', '0', '9', '".$enabled_languages[$i]."')");
 		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['143']."', 'submit.php?stype=p', '101', '1', '0', '15', '".$enabled_languages[$i]."')");		if (!$result) $fail = TRUE;
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', '101', '1', '0', '15', '".$enabled_languages[$i]."')");		if (!$result) $fail = TRUE;
 	}
 }
 ?>

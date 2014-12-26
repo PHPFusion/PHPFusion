@@ -30,7 +30,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_orders");
 	// Remove Custom Inserts
 	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='ESHP'");
-	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_name='".$locale['129f']."'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_name='".$locale['setup_3053']."'");
 	$result = dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_cats'");
 	$result = dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_cat_disp'");
 	$result = dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_nopp'");
@@ -375,13 +375,13 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 	// Core Inserts
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'eshop.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['setup_3053']."', 'eshop.php', '1')");
 	if (!$result) $fail = TRUE;
 	// go for settings.
 	$enabled_languages = explode('.', $settings['enabled_languages']);
 	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 		include LOCALE.$enabled_languages[$i]."/setup.php";
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['129f']."', 'eshop.php', '0', '2', '0', '3', '".$enabled_languages[$i]."')");
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3053']."', 'eshop.php', '0', '2', '0', '3', '".$enabled_languages[$i]."')");
 		if (!$result) $fail = TRUE;
 	}
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('eshop_cats', '1')");
@@ -488,7 +488,7 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('eshop_coupons', '0')");
 	if (!$result) $fail = TRUE;
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'settings_eshop.php', '4')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['setup_3053']."', 'settings_eshop.php', '4')");
 	if (!$result) $fail = TRUE;
 	// Local Inserts
 	$result = dbquery("INSERT INTO ".$db_prefix."eshop_shippingcats (cid, title, image) VALUES 

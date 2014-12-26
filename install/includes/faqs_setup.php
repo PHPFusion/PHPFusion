@@ -41,13 +41,13 @@ if (isset($_POST['uninstall'])) {
 			PRIMARY KEY(faq_id)
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	if (!$result) 	$fail = TRUE;
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FQ', 'faq.gif', '".$locale['091']."', 'faq.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FQ', 'faq.gif', '".$locale['setup_3011']."', 'faq.php', '1')");
 	if (!$result) 	$fail = TRUE;
 	
 	$enabled_languages = explode('.', $settings['enabled_languages']);
 	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
 		include LOCALE.$enabled_languages[$i]."/setup.php";
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['133']."', 'faq.php', '0', '1', '0', '4', '".$enabled_languages[$i]."')");
+		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3303']."', 'faq.php', '0', '1', '0', '4', '".$enabled_languages[$i]."')");
 		if (!$result) $fail = TRUE;
 	}
 }

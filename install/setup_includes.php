@@ -38,8 +38,8 @@ function opensetup() {
 	global $locale, $fusion_page_head_tags;
 	echo "<!DOCTYPE html>\n";
 	echo "<head>\n";
-	echo "<title>".$locale['setup_title']."</title>\n";
-	echo "<meta charset='".$locale['charset']."' />";
+	echo "<title>".$locale['setup_0000']."</title>\n";
+	echo "<meta charset='".$locale['setup_0012']."' />";
 	echo "<link rel='shortcut icon' href='".IMAGES."favicon.ico' type='image/x-icon' />";
 	echo "<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />\n";
 	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
@@ -56,19 +56,19 @@ function opensetup() {
 	echo "<form name='setupform' method='post' action='".FUSION_SELF."'>\n";
 	echo "<div class='block'>\n";
 	echo "<div class='block-content'>\n";
-		echo "<h6><strong>".$locale['setup_title']."</strong></h6>\n";
+		echo "<h6><strong>".$locale['setup_0000']."</strong></h6>\n";
 		echo "<img class='pf-logo position-absolute' alt='PHP-Fusion' src='".IMAGES."php-fusion-icon.png'/>";
-		echo "<p class='text-right mid-opacity'>Version ".$locale['os_version']."</p>";
+		echo "<p class='text-right mid-opacity'>Version ".$locale['setup_0010']."</p>";
 
 		echo "<div class='row'>\n";
 			echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
-			$steps = array('1' => $locale['step1'],
-		'2' => $locale['step2'],
-		'3' => $locale['step3'],
-		'4' => $locale['step4'],
-		'5' => $locale['step5'],
-		'6' => $locale['step6'],
-		'7' => $locale['final']);
+			$steps = array('1' => $locale['setup_0101'],
+		'2' => $locale['setup_0102'],
+		'3' => $locale['setup_0103'],
+		'4' => $locale['setup_0104'],
+		'5' => $locale['setup_0105'],
+		'6' => $locale['setup_0106'],
+		'7' => $locale['setup_0107']);
 			echo "<div class='list-group'>\n";
 				foreach ($steps as $arr => $value) {
 		if ($arr == 1) {
@@ -104,12 +104,12 @@ function renderButton($int = FALSE) {
 	global $locale;
 	$btn_name = 'next';
 	if ($int == 1) {
-		$locale = $locale['009'];
+		$locale = $locale['setup_0123'];
 	} elseif ($int == '2') {
-		$locale = $locale['006'];
+		$locale = $locale['setup_0120'];
 		$btn_name = 'done';
 	} else {
-		$locale = $locale['007'];
+		$locale = $locale['setup_0121'];
 	}
 	echo "<div class='text-right'>\n";
 	echo "<button type='submit' name='".$btn_name."' value='$locale' class='btn btn-primary'><i class='entypo right-dir'></i> $locale</button>\n";

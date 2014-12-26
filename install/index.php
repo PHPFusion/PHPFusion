@@ -50,11 +50,11 @@ if (isset($_POST['step']) && $_POST['step'] == "8") {
 }
 
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
-$settings['description'] = $locale['setup_title'];
+$settings['description'] = $locale['setup_0000'];
 $settings['keywords'] = "";
 $settings['siteemail'] = '';
 $settings['sitename'] = '';
-$settings['siteusername'] = $locale['welcome_title'];
+$settings['siteusername'] = $locale['setup_0002'];
 $settings['siteurl'] = FUSION_SELF;
 require_once LOCALE.LOCALESET.'global.php';
 require_once INCLUDES."output_handling_include.php";
@@ -64,7 +64,7 @@ $dynamics = new dynamics();
 $dynamics->boot();
 $system_apps = array(
 	// dbname to locale application title
-	'articles' => $locale['articles']['title'],
+	'articles' => $locale['setup_4001'],
 	'blog' => $locale['blog']['title'],
 	'downloads' => $locale['downloads']['title'],
 	'eshop' => $locale['eshop']['title'],
@@ -139,42 +139,42 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 
 	if (!file_exists(BASEDIR.'config.php') && !file_exists(BASEDIR.'config_temp.php') && !isset($_POST['uninstall'])) {
 		$locale_list = makefileopts($locale_files, $_POST['localeset']);
-		echo "<h4 class='strong'>".$locale['welcome_title']."</h4>\n";
+		echo "<h4 class='strong'>".$locale['setup_0002']."</h4>\n";
 		if (isset($_GET['error']) && $_GET['error'] == 'license') {
-			echo "<div class='alert alert-danger'>".$locale['error_000']."</div>\n";
+			echo "<div class='alert alert-danger'>".$locale['setup_5000']."</div>\n";
 		} else {
-			echo "<span>".$locale['welcome_desc']."</span>\n";
+			echo "<span>".$locale['setup_0003']."</span>\n";
 		}
-		echo "<span class='display-block m-t-20 m-b-10 strong'>".$locale['010']."</span>\n";
+		echo "<span class='display-block m-t-20 m-b-10 strong'>".$locale['setup_1000']."</span>\n";
 		echo form_select('', 'localeset', 'localeset', array_combine($locale_files, $locale_files), '', array('placeholder' => $locale['choose']));
-		echo "<div>".$locale['011']."</div>\n";
+		echo "<div>".$locale['setup_1001']."</div>\n";
 		echo "<hr>\n";
-		echo form_checkbox($locale['terms'], 'license', 'license', '');
+		echo form_checkbox($locale['setup_0005'], 'license', 'license', '');
 		echo "<hr>\n";
 		echo "<input type='hidden' name='step' value='2' />\n";
 		renderButton();
 	}
 
 	elseif (!isset($_POST['uninstall'])) {
-		echo "<h4 class='strong'>".$locale['1001']."</h4>\n";
-		echo "<span class='display-block m-t-20 m-b-10'>".$locale['1002']."</span>\n";
+		echo "<h4 class='strong'>".$locale['setup_1002']."</h4>\n";
+		echo "<span class='display-block m-t-20 m-b-10'>".$locale['setup_1003']."</span>\n";
 		echo "<div class='well'>\n";
-		echo "<span class='strong display-inline-block m-b-10'>".$locale['1003']."</span><br/><p>".$locale['1004']." <span class='strong'>".$locale['1005']."</span></span></p>";
-		echo form_button($locale['1006'], 'uninstall', 'uninstall', 'uninstall', array('class' => 'btn-danger btn-sm m-t-10'));
+		echo "<span class='strong display-inline-block m-b-10'>".$locale['setup_1004']."</span><br/><p>".$locale['setup_1005']." <span class='strong'>".$locale['setup_1006']."</span></span></p>";
+		echo form_button($locale['setup_1007'], 'uninstall', 'uninstall', 'uninstall', array('class' => 'btn-danger btn-sm m-t-10'));
 		echo "</div>\n";
 		echo "<div class='well'>\n";
-		echo "<span class='strong display-inline-block m-b-10'>".$locale['1007']."</span>\n<br/><p>".$locale['1008']."</p>";
-		echo form_button($locale['1009'], 'step', 'step', '5', array('class' => 'btn-primary btn-sm m-r-10'));
+		echo "<span class='strong display-inline-block m-b-10'>".$locale['setup_1008']."</span>\n<br/><p>".$locale['setup_1009']."</p>";
+		echo form_button($locale['setup_1010'], 'step', 'step', '5', array('class' => 'btn-primary btn-sm m-r-10'));
 		echo "</div>\n";
 		echo "<div class='well'>\n";
-		echo "<span class='strong display-inline-block m-b-10'>".$locale['1010']."</span>\n<br/><p>".$locale['1011']."</p>";
-		echo form_button($locale['1012'], 'step', 'step', '6', array('class' => 'btn-primary btn-sm m-r-10'));
+		echo "<span class='strong display-inline-block m-b-10'>".$locale['setup_1011']."</span>\n<br/><p>".$locale['setup_1012']."</p>";
+		echo form_button($locale['setup_1013'], 'step', 'step', '6', array('class' => 'btn-primary btn-sm m-r-10'));
 		echo "</div>\n";
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
 		if (isset($db_prefix)) {
 			echo "<div class='well'>\n";
-			echo "<span class='strong display-inline-block m-b-10'>".$locale['1013']."</span>\n<br/><p>".$locale['1014']."</p>";
-			echo form_button($locale['1015'], 'htaccess', 'htaccess', 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
+			echo "<span class='strong display-inline-block m-b-10'>".$locale['setup_1014']."</span>\n<br/><p>".$locale['setup_1015']."</p>";
+			echo form_button($locale['setup_1016'], 'htaccess', 'htaccess', 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
 			echo "</div>\n";
 		}
 	}
@@ -230,13 +230,13 @@ if (isset($_POST['step']) && $_POST['step'] == "2") {
 			}
 		}
 		$check_display .= "<tr>\n<td class='tbl1'>".$key."</td>\n";
-		$check_display .= "<td class='tbl1' style='text-align:right'>".($check_arr[$key] == TRUE ? "<label class='label label-success'>".$locale['2001']."</label>" : "<label class='label label-warning'>".$locale['2002']."</label>")."</td>\n</tr>\n";
+		$check_display .= "<td class='tbl1' style='text-align:right'>".($check_arr[$key] == TRUE ? "<label class='label label-success'>".$locale['setup_1100']."</label>" : "<label class='label label-warning'>".$locale['setup_1101']."</label>")."</td>\n</tr>\n";
 	}
-	echo "<div class='m-b-20'><h4>".$locale['2007']."</h4> ".$locale['2003']."</div>\n";
+	echo "<div class='m-b-20'><h4>".$locale['setup_1106']."</h4> ".$locale['setup_1102']."</div>\n";
 	echo "<table class='table table-responsive'>\n".$check_display."\n</table><br /><br />\n";
 
 	if ($write_check) {
-		echo "<p><strong>".$locale['2004']."</strong></p>\n";
+		echo "<p><strong>".$locale['setup_1103']."</strong></p>\n";
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
 		echo "<input type='hidden' name='step' value='3' />\n";
 		renderButton();
@@ -244,7 +244,7 @@ if (isset($_POST['step']) && $_POST['step'] == "2") {
 		echo "<p><strong>".$locale['022']."</strong></p>\n";
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
 		echo "<input type='hidden' name='step' value='2' />\n";
-		echo "<br/><button type='submit' name='next' value='".$locale['2006']."' class='btn btn-md btn-primary'><i class='entypo cw'></i> ".$locale['2006']."</button>\n";
+		echo "<br/><button type='submit' name='next' value='".$locale['setup_1105']."' class='btn btn-md btn-primary'><i class='entypo cw'></i> ".$locale['setup_1105']."</button>\n";
 	}
 }
 // Step 3 - Database Settings
@@ -286,34 +286,34 @@ if (isset($_POST['step']) && $_POST['step'] == "3") {
 		}
 	}
 
-	echo "<div class='m-b-20'><h4>".$locale['3001']."</h4> ".$locale['3002']."</div>\n";
+	echo "<div class='m-b-20'><h4>".$locale['setup_1200']."</h4> ".$locale['setup_1201']."</div>\n";
 
 	echo "<table class='table table-responsive'>\n<tr>\n";
-	echo "<td class='tbl1' style='text-align:left'>".$locale['031']."</td>\n";
+	echo "<td class='tbl1' style='text-align:left'>".$locale['setup_1202']."</td>\n";
 	echo "<td class='tbl1'><input type='text' value='".$db_host."' name='db_host' class='form-control input-sm textbox".$field_class[0]."' style='width:200px' /></td>\n</tr>\n";
-	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['032']."</td>\n";
+	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['setup_1203']."</td>\n";
 	echo "<td class='tbl1'><input type='text' value='".$db_user."' name='db_user' class='form-control input-sm textbox".$field_class[1]."' style='width:200px' /></td>\n</tr>\n";
-	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['033']."</td>\n";
+	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['setup_1204']."</td>\n";
 	echo "<td class='tbl1'><input type='password' value='' name='db_pass' class='form-control input-sm textbox".$field_class[2]."' style='width:200px' /></td>\n</tr>\n";
-	echo "<tr>\n<td class='tbl1'>".$locale['034']."</td>\n";
+	echo "<tr>\n<td class='tbl1'>".$locale['setup_1205']."</td>\n";
 	echo "<td class='tbl1'><input type='text' value='".$db_name."' name='db_name' class='form-control input-sm textbox".$field_class[3]."' style='width:200px' /></td>\n</tr>\n";
-	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['037']."</td>\n";
+	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['setup_1208']."</td>\n";
 	// enable PDO
 	echo "<td class='tbl1'>\n";
 	if (!defined('PDO::ATTR_DRIVER_NAME')) {
-		echo $locale['038'];
+		echo $locale['setup_1209'];
 	} else {
 		echo "<select name='pdo_enabled' class='form-control input-sm textbox' style='width:200px'>\n";
-		echo "<option value='0' selected='selected'>".$locale['039']."</option>\n";
-		echo "<option value='1'>".$locale['039b']."</option>\n";
+		echo "<option value='0' selected='selected'>".$locale['setup_1210']."</option>\n";
+		echo "<option value='1'>".$locale['setup_1211']."</option>\n";
 		echo "</select>\n";
 	}
 	echo "</td>\n</tr>\n";
-	echo "<tr>\n<td class='tbl1'>".$locale['039n']."</td>\n";
+	echo "<tr>\n<td class='tbl1'>".$locale['setup_1213']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='text' name='username' value='".$username."' placeholder='Admin' maxlength='255' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
-	echo "<tr>\n<td class='tbl1'>".$locale['066']."</td>\n";
+	echo "<tr>\n<td class='tbl1'>".$locale['setup_1509']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
-	echo "<tr><td class='tbl1'>".$locale['039c']."</td>\n";
+	echo "<tr><td class='tbl1'>".$locale['setup_1212']."</td>\n";
 	echo "<td class='tbl1'>\n";
 	for ($i = 0; $i < sizeof($locale_files); $i++) {
 		if (file_exists(BASEDIR.'locale/'.$locale_files[$i].'/setup.php')) {
@@ -321,9 +321,9 @@ if (isset($_POST['step']) && $_POST['step'] == "3") {
 		}
 	}
 	echo "</td></tr>\n";
-	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['035']."</td>\n";
+	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['setup_1206']."</td>\n";
 	echo "<td class='tbl1'><input type='text' value='".$db_prefix."' name='db_prefix' class='form-control input-sm textbox".$field_class[4]."' style='width:200px' /></td>\n</tr>\n";
-	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['036']."</td>\n";
+	echo "<tr>\n<td class='tbl1' style='text-align:left'>".$locale['setup_1207']."</td>\n";
 	echo "<td class='tbl1'><input type='text' value='".$cookie_prefix."' name='cookie_prefix' class='form-control input-sm textbox' style='width:200px' /></td>\n</tr>\n";
 	echo "</table>\n";
 	echo "</td>\n</tr>\n<tr>\n<td class='tbl2' style='text-align:center'>\n";
@@ -426,9 +426,9 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 							// install core tables fully injected.
 							include 'includes/core.setup.php';
 							if (!$fail) {
-								echo "<i class='entypo check'></i> ".$locale['4001']."<br /><br />\n<i class='entypo check'></i> ";
-								echo $locale['4002']."<br /><br />\n<i class='entypo check'></i> ";
-								echo $locale['4003']."<br /><br />\n";
+								echo "<i class='entypo check'></i> ".$locale['setup_1300']."<br /><br />\n<i class='entypo check'></i> ";
+								echo $locale['setup_1301']."<br /><br />\n<i class='entypo check'></i> ";
+								echo $locale['setup_1302']."<br /><br />\n";
 								$success = TRUE;
 								$db_error = 6;
 								// get settings for htaccess.
@@ -439,16 +439,16 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 									}
 								}
 							} else {
-								echo "<br />\n<i class='entypo check'></i> ".$locale['4001']."<br /><br />\n<i class='entypo check'></i> ";
-								echo $locale['4002']."<br /><br />\n<i class='entypo icancel'></i> ";
-								echo "<strong>".$locale['4004']."</strong> ".$locale['4009']."<br /><br />\n";
+								echo "<br />\n<i class='entypo check'></i> ".$locale['setup_1300']."<br /><br />\n<i class='entypo check'></i> ";
+								echo $locale['setup_1301']."<br /><br />\n<i class='entypo icancel'></i> ";
+								echo "<strong>".$locale['setup_1303']."</strong> ".$locale['setup_1308']."<br /><br />\n";
 								$success = FALSE;
 								$db_error = 0;
 							}
 						} else {
-							echo "<br />\n".$locale['4001']."<br /><br />\n";
-							echo "<strong>".$locale['4004']."</strong> ".$locale['4007']."<br />\n";
-							echo "<span class='small'>".$locale['4008']."</span><br /><br />\n";
+							echo "<br />\n".$locale['setup_1300']."<br /><br />\n";
+							echo "<strong>".$locale['setup_1303']."</strong> ".$locale['setup_1306']."<br />\n";
+							echo "<span class='small'>".$locale['setup_1307']."</span><br /><br />\n";
 							$success = FALSE;
 							$db_error = 5;
 						}
@@ -457,41 +457,41 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 
 					} else {
 						echo "<div class='alert alert-danger'>\n";
-						echo $locale['4001']."<br /><br />\n";
-						echo "<strong>".$locale['4004']."</strong> ".$locale['054']."<br />\n";
-						echo "<span class='small'>".$locale['055']."</span><br /><br />\n";
+						echo $locale['setup_1300']."<br /><br />\n";
+						echo "<strong>".$locale['setup_1303']."</strong> ".$locale['setup_1314']."<br />\n";
+						echo "<span class='small'>".$locale['setup_1315']."</span><br /><br />\n";
 						echo "</div>\n";
 						$success = FALSE;
 						$db_error = 4;
 					}
 				} else {
 					echo "<div class='alert alert-danger'>\n";
-					echo "<strong>".$locale['4004']."<strong> ".$locale['052']."<br />\n";
-					echo "<span class='small'>".$locale['053']."</span><br /><br />\n";
+					echo "<strong>".$locale['setup_1303']."<strong> ".$locale['setup_1312']."<br />\n";
+					echo "<span class='small'>".$locale['setup_1313']."</span><br /><br />\n";
 					echo "</div>\n";
 					$success = FALSE;
 					$db_error = 3;
 				}
 			} else {
 				echo "<div class='alert alert-danger'>\n";
-				echo "<br />\n<strong>".$locale['4004']."<strong> ".$locale['050']."<br />\n";
-				echo "<span class='small'>".$locale['051']."</span><br /><br />\n";
+				echo "<br />\n<strong>".$locale['setup_1303']."<strong> ".$locale['setup_1310']."<br />\n";
+				echo "<span class='small'>".$locale['setup_1311']."</span><br /><br />\n";
 				echo "</div>\n";
 				$success = FALSE;
 				$db_error = 2;
 			}
 		} else {
 			echo "<div class='alert alert-danger'>\n";
-			echo "<strong>".$locale['4004']."<strong> ".$locale['4005']."<br />\n";
-			echo "<span class='small'>".$locale['4006']."</span><br /><br />\n";
+			echo "<strong>".$locale['setup_1303']."<strong> ".$locale['setup_1304']."<br />\n";
+			echo "<span class='small'>".$locale['setup_1305']."</span><br /><br />\n";
 			echo "</div>\n";
 			$success = FALSE;
 			$db_error = 1;
 		}
 	} else {
 		echo "<div class='alert alert-danger'>\n";
-		echo "<strong>".$locale['4004']."<strong> ".$locale['056']."<br />\n";
-		echo "".$locale['057']."<br /><br />\n";
+		echo "<strong>".$locale['setup_1303']."<strong> ".$locale['setup_1316']."<br />\n";
+		echo "".$locale['setup_1317']."<br /><br />\n";
 		echo "</div>\n";
 		$success = FALSE;
 		$db_error = 7;
@@ -510,7 +510,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 		echo "<input type='hidden' name='db_name' value='".$db_name."' />\n";
 		echo "<input type='hidden' name='db_prefix' value='".$db_prefix."' />\n";
 		echo "<input type='hidden' name='db_error' value='".$db_error."' />\n";
-		echo "<button type='submit' name='next' value='".$locale['008']."' class='btn btn-md btn-warning'><i class='entypo cw'></i> ".$locale['008']."</button>\n";
+		echo "<button type='submit' name='next' value='".$locale['setup_0122']."' class='btn btn-md btn-warning'><i class='entypo cw'></i> ".$locale['setup_0122']."</button>\n";
 	}
 }
 // Step 5 - Configure Core System - $settings accessible - Requires Config_temp.php (Shut down site when upgrading).
@@ -591,7 +591,7 @@ if (isset($_POST['step']) && $_POST['step'] == '5') {
 				}
 			}
 		}
-		echo "<div class='m-b-20'><h4>".$locale['5001']."</h4> ".$locale['5002']."</div>\n";
+		echo "<div class='m-b-20'><h4>".$locale['setup_1400']."</h4> ".$locale['setup_1401']."</div>\n";
 		echo $message;
 		if (!empty($apps[1])) {
 			foreach ($apps[1] as $k => $v) {
@@ -621,7 +621,7 @@ if (isset($_POST['step']) && $_POST['step'] == '5') {
 		}
 	} elseif (isset($_POST['done'])) {
 		// system ready
-		echo "<div class='m-b-20'><h4>".$locale['5003']."</h4> ".$locale['5004']."</div>\n";
+		echo "<div class='m-b-20'><h4>".$locale['setup_1402']."</h4> ".$locale['setup_1403']."</div>\n";
 	}
 
 	if (isset($_POST['done'])) {
@@ -696,26 +696,26 @@ if (isset($_POST['step']) && $_POST['step'] == '6') {
 
 
 	if ($iOWNER) {
-		echo "<div class='m-b-20'><h4>".$locale['6003']."</h4> ".$locale['6004']."</div>\n";
+		echo "<div class='m-b-20'><h4>".$locale['setup_1502']."</h4> ".$locale['setup_1503']."</div>\n";
 		echo "<input type='hidden' name='transfer' value='1'>\n";
 		// load authentication during post.
 		// in development.
 	} else {
-		echo "<div class='m-b-20'><h4>".$locale['6001']."</h4> ".$locale['6002']."</div>\n";
+		echo "<div class='m-b-20'><h4>".$locale['setup_1500']."</h4> ".$locale['setup_1501']."</div>\n";
 	}
 
 	echo "<table class='table table-responsive'>\n<tr>\n";
-	echo "<td class='tbl1'>".$locale['061']."</td>\n";
+	echo "<td class='tbl1'>".$locale['setup_1504']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='text' name='username' value='".$username."' maxlength='30' class='form-control input-sm textbox".$field_class[0]."' style='width:200px' /></td></tr>\n";
-	echo "<tr>\n<td class='tbl1'>".$locale['066']."</td>\n";
+	echo "<tr>\n<td class='tbl1'>".$locale['setup_1509']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
-	echo "<tr>\n<td class='tbl1'>".$locale['062']."</td>\n";
+	echo "<tr>\n<td class='tbl1'>".$locale['setup_1505']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='password' name='password1' maxlength='64' class='form-control input-sm textbox".$field_class[1]."' style='width:200px' /></td></tr>\n";
-	echo "<tr>\n<td class='tbl1'>".$locale['063']."</td>\n";
+	echo "<tr>\n<td class='tbl1'>".$locale['setup_1506']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='password' name='password2' maxlength='64' class='form-control input-sm textbox".$field_class[2]."' style='width:200px' /></td></tr>\n";
-	echo "<tr>\n<td class='tbl1'>".$locale['064']."</td>\n";
+	echo "<tr>\n<td class='tbl1'>".$locale['setup_1507']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='password' name='admin_password1' maxlength='64' class='form-control input-sm textbox".$field_class[3]."' style='width:200px' /></td></tr>\n";
-	echo "<tr>\n<td class='tbl1'>".$locale['065']."</td>\n";
+	echo "<tr>\n<td class='tbl1'>".$locale['setup_1508']."</td>\n";
 	echo "<td class='tbl1' style='text-align:right'><input type='password' name='admin_password2' maxlength='64' class='form-control input-sm textbox".$field_class[4]."' style='width:200px' /></td></tr>\n";
 	echo "</table>\n";
 	echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
@@ -764,10 +764,10 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 	$settings['password_algorithm'] = "sha256";
 	$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
 	if ($username == "") {
-		$error .= $locale['070b']."<br /><br />\n";
+		$error .= $locale['setup_5011']."<br /><br />\n";
 		$error_name = "1";
 	} elseif (!preg_match("/^[-0-9A-Z_@\s]+$/i", $username)) {
-		$error .= $locale['070']."<br /><br />\n";
+		$error .= $locale['setup_5010']."<br /><br />\n";
 		$error_name = "1";
 	}
 	require_once INCLUDES."/classes/PasswordAuth.class.php";
@@ -781,10 +781,10 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 		$userPassword = $userPass->getNewHash();
 		$userSalt = $userPass->getNewSalt();
 	} elseif ($returnValue == 2) {
-		$error .= $locale['071']."<br /><br />\n";
+		$error .= $locale['setup_5012']."<br /><br />\n";
 		$error_pass = "1";
 	} elseif ($returnValue == 3) {
-		$error .= $locale['072']."<br /><br />\n";
+		$error .= $locale['setup_5013']."<br /><br />\n";
 	}
 	$adminPass = new PasswordAuth();
 	$adminPass->inputNewPassword = (isset($_POST['admin_password1']) ? stripinput(trim($_POST['admin_password1'])) : "");
@@ -794,21 +794,21 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 		$adminPassword = $adminPass->getNewHash();
 		$adminSalt = $adminPass->getNewSalt();
 	} elseif ($returnValue == 2) {
-		$error .= $locale['073']."<br /><br />\n";
+		$error .= $locale['setup_5015']."<br /><br />\n";
 		$error_pass = "1";
 	} elseif ($returnValue == 3) {
-		$error .= $locale['075']."<br /><br />\n";
+		$error .= $locale['setup_5017']."<br /><br />\n";
 	}
 	if ($userPass->inputNewPassword == $adminPass->inputNewPassword) {
-		$error .= $locale['074']."<br /><br />\n";
+		$error .= $locale['setup_5016']."<br /><br />\n";
 		$error_pass = "1";
 	}
 	$email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
 	if ($email == "") {
-		$error .= $locale['076b']."<br /><br />\n";
+		$error .= $locale['setup_5020']."<br /><br />\n";
 		$error_mail = "1";
 	} elseif (!preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
-		$error .= $locale['076']."<br /><br />\n";
+		$error .= $locale['setup_5019']."<br /><br />\n";
 		$error_mail = "1";
 	}
 	$rows = dbrows(dbquery("SELECT user_id FROM ".$db_prefix."users"));
@@ -832,15 +832,15 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 				)");
 			}
 		}
-		echo "<div class='m-b-20'><h4>".$locale['7001']."</h4> ".$locale['7002']."</div>\n";
-		echo "<div class='m-b-10'>".$locale['7003']."</div>\n";
-		echo "<div class='m-b-10'>".$locale['7004']."</div>\n";
+		echo "<div class='m-b-20'><h4>".$locale['setup_1600']."</h4> ".$locale['setup_1601']."</div>\n";
+		echo "<div class='m-b-10'>".$locale['setup_1602']."</div>\n";
+		echo "<div class='m-b-10'>".$locale['setup_1603']."</div>\n";
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
 		echo "<input type='hidden' name='step' value='8' />\n";
 		renderButton(1);
 
 	} elseif ($rows == 0) {
-		echo "<br />\n".$locale['077']."<br /><br />\n".$error;
+		echo "<br />\n".$locale['setup_5021']."<br /><br />\n".$error;
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
 		echo "<input type='hidden' name='error_pass' value='".$error_pass."' />\n";
 		echo "<input type='hidden' name='error_name' value='".$error_name."' />\n";
@@ -848,11 +848,11 @@ if (isset($_POST['step']) && $_POST['step'] == "7") {
 		echo "<input type='hidden' name='username' value='".$username."' />\n";
 		echo "<input type='hidden' name='email' value='".$email."' />\n";
 		echo "<input type='hidden' name='step' value='6' />\n";
-		echo "<button type='submit' name='back' value=".$locale['008']."' class='btn btn-md btn-warning'><i class='entypo cw'></i> ".$locale['008']."</button>\n";
+		echo "<button type='submit' name='back' value=".$locale['setup_0122']."' class='btn btn-md btn-warning'><i class='entypo cw'></i> ".$locale['setup_0122']."</button>\n";
 	} else {
-		echo "<div class='m-b-20'><h4>".$locale['7001']."</h4> ".$locale['7002']."</div>\n";
-		echo "<div class='m-b-10'>".$locale['7003']."</div>\n";
-		echo "<div class='m-b-10'>".$locale['7004']."</div>\n";
+		echo "<div class='m-b-20'><h4>".$locale['setup_1600']."</h4> ".$locale['setup_1601']."</div>\n";
+		echo "<div class='m-b-10'>".$locale['setup_1602']."</div>\n";
+		echo "<div class='m-b-10'>".$locale['setup_1603']."</div>\n";
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
 		echo "<input type='hidden' name='step' value='8' />\n";
 		renderButton(1);
