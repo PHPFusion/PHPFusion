@@ -213,7 +213,7 @@ if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) &
 	echo "<span class='small'>".$locale['601']." ".ucfirst(showdate("longdate", $settings['license_lastupdate']))."</span>\n";
 	echo "<hr />".stripslashes($settings['license_agreement'])."\n";
 } elseif (isset($_GET['type']) && $_GET['type'] == "P") {
-	echo "<strong>".$settings['sitename']." ".$locale['600']."</strong><br />\n";
+	echo "<strong>".$settings['sitename']." ".$locale['700']."</strong><br />\n";
 	echo "<hr />".stripslashes($settings['privacy_policy'])."\n";
 } else {
 	redirect("index.php");
