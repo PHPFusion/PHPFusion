@@ -44,7 +44,7 @@ class atom {
 		'underline');
 	private $fills = array('Flat Color', 'Horizontal Gradient', 'Vertical Gradient', 'Radial Gradient', 'Diagonal Gradient');
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
-/*	private $data = array(
+	private $data = array(
 		'theme_id' => 0,
 		'theme_title' => '',
 		'sans_serif_fonts' => 'Helvetica Neue, Helvetica, Arial, sans-serif',
@@ -170,7 +170,7 @@ class atom {
 		'navbar_link_decoration_hover' => 0,
 		'navbar_link_color_active' => '#555',
 		'navbar_link_decoration_active' => 0,
-	); */
+	); 
 
 	private $less_var = array();
 	private $theme_data = array();
