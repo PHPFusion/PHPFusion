@@ -44,7 +44,7 @@ class atom {
 		'underline');
 	private $fills = array('Flat Color', 'Horizontal Gradient', 'Vertical Gradient', 'Radial Gradient', 'Diagonal Gradient');
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
-	private $data = array(
+/*	private $data = array(
 		'theme_id' => 0,
 		'theme_title' => '',
 		'sans_serif_fonts' => 'Helvetica Neue, Helvetica, Arial, sans-serif',
@@ -106,6 +106,12 @@ class atom {
 		'btn_fill' => 0,
 		'btn_border' => 1, //
 		'btn_radius' => 4, //
+		// colors
+		'primary_color' => '#428bca',
+		'warning_color' => '#f0ad4e',
+		'success_color' => '#5cb85c',
+		'danger_color'	=> '#d9534f',
+		'info_color'	=> '#5bc0de',
 		// btn-primary
 		'btn_primary' => '#428bca',
 		'btn_primary_color' => '#ffffff',
@@ -141,7 +147,30 @@ class atom {
 		'btn_danger_color_hover' => '#ffffff',
 		'btn_danger_active' => '#d2322d',
 		'btn_danger_color_active' => '#ffffff',
-	);
+
+		// global navbars
+		'navbar_height'	=> 50,
+		'navbar_border' => 1,
+		'navbar_radius' => 4,
+		// navbar 1
+		'navbar_fill' => 0,
+		'navbar_bg' => '#f8f8f8',
+		'navbar_bg_hover' => '#f8f8f8', // need this
+		'navbar_bg_active' => '#e7e7e7', // need this
+		'navbar_link_border' => 0,
+		'navbar_link_radius' => 0,
+		'navbar_link_border_color' => '#f8f8f8',
+		'navbar_brand_color' => '#777',
+		'navbar_font_color' => '#777',
+		'navbar_brand_decoration' => 0,
+		'navbar_font_decoration' => 0,
+		'navbar_link_color' => '#777',
+		'navbar_link_decoration' => 0,
+		'navbar_link_color_hover' => '#333',
+		'navbar_link_decoration_hover' => 0,
+		'navbar_link_color_active' => '#555',
+		'navbar_link_decoration_active' => 0,
+	); */
 
 	private $less_var = array();
 	private $theme_data = array();
@@ -229,8 +258,7 @@ class atom {
 		$outputFile = THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
 		$returnFile = str_replace(THEMES, '', $outputFile);
 		$directories = array(INCLUDES."atom/less/" => 'includes/atom/less/');
-		$options = array('output' => $outputFile,
-			'compress' => $this->compress,);
+		$options = array('output' => $outputFile, 'compress' => $this->compress,);
 		$this->set_less_variables();
 		if (!empty($this->less_var) && !defined('FUSION_NULL') && $this->Compiler) {
 			if ($this->debug) print_p("current less var");
@@ -281,36 +309,36 @@ class atom {
 		$this->less_var['serif_fonts'] = $this->parse_fonts($this->data['serif_fonts']);
 		$this->less_var['monospace_fonts'] = $this->parse_fonts($this->data['monospace_fonts']);
 		$this->less_var['base_font'] = $this->parse_font_set($this->data['base_font']);
-		$this->less_var['base_font_size'] = $this->parse_font_size($this->data['base_font_size']);
-		$this->less_var['base_font_size_l'] = $this->parse_font_size($this->data['base_font_size_l']);
-		$this->less_var['base_font_size_s'] = $this->parse_font_size($this->data['base_font_size_s']);
+		$this->less_var['base_font_size'] = $this->parse_size($this->data['base_font_size']);
+		$this->less_var['base_font_size_l'] = $this->parse_size($this->data['base_font_size_l']);
+		$this->less_var['base_font_size_s'] = $this->parse_size($this->data['base_font_size_s']);
 		//h1
-		$this->less_var['font_size_h1'] = $this->parse_font_size($this->data['font_size_h1']);
+		$this->less_var['font_size_h1'] = $this->parse_size($this->data['font_size_h1']);
 		$this->less_var['font_weight_h1'] = $this->parse_font_weight($this->data['font_decoration_h1']);
 		$this->less_var['font_style_h1'] = $this->parse_font_style($this->data['font_decoration_h1']);
 		$this->less_var['font_decoration_h1'] = $this->parse_font_decoration($this->data['font_decoration_h1']);
 		//h2
-		$this->less_var['font_size_h2'] = $this->parse_font_size($this->data['font_size_h2']);
+		$this->less_var['font_size_h2'] = $this->parse_size($this->data['font_size_h2']);
 		$this->less_var['font_weight_h2'] = $this->parse_font_weight($this->data['font_decoration_h2']);
 		$this->less_var['font_style_h2'] = $this->parse_font_style($this->data['font_decoration_h2']);
 		$this->less_var['font_decoration_h2'] = $this->parse_font_decoration($this->data['font_decoration_h2']);
 		//h3
-		$this->less_var['font_size_h3'] = $this->parse_font_size($this->data['font_size_h3']);
+		$this->less_var['font_size_h3'] = $this->parse_size($this->data['font_size_h3']);
 		$this->less_var['font_weight_h3'] = $this->parse_font_weight($this->data['font_decoration_h3']);
 		$this->less_var['font_style_h3'] = $this->parse_font_style($this->data['font_decoration_h3']);
 		$this->less_var['font_decoration_h3'] = $this->parse_font_decoration($this->data['font_decoration_h3']);
 		//h4
-		$this->less_var['font_size_h4'] = $this->parse_font_size($this->data['font_size_h4']);
+		$this->less_var['font_size_h4'] = $this->parse_size($this->data['font_size_h4']);
 		$this->less_var['font_weight_h4'] = $this->parse_font_weight($this->data['font_decoration_h4']);
 		$this->less_var['font_style_h4'] = $this->parse_font_style($this->data['font_decoration_h4']);
 		$this->less_var['font_decoration_h4'] = $this->parse_font_decoration($this->data['font_decoration_h4']);
 		//h5
-		$this->less_var['font_size_h5'] = $this->parse_font_size($this->data['font_size_h5']);
+		$this->less_var['font_size_h5'] = $this->parse_size($this->data['font_size_h5']);
 		$this->less_var['font_weight_h5'] = $this->parse_font_weight($this->data['font_decoration_h5']);
 		$this->less_var['font_style_h5'] = $this->parse_font_style($this->data['font_decoration_h5']);
 		$this->less_var['font_decoration_h5'] = $this->parse_font_decoration($this->data['font_decoration_h5']);
 		//h6
-		$this->less_var['font_size_h6'] = $this->parse_font_size($this->data['font_size_h6']);
+		$this->less_var['font_size_h6'] = $this->parse_size($this->data['font_size_h6']);
 		$this->less_var['font_weight_h6'] = $this->parse_font_weight($this->data['font_decoration_h6']);
 		$this->less_var['font_style_h6'] = $this->parse_font_style($this->data['font_decoration_h6']);
 		$this->less_var['font_decoration_h6'] = $this->parse_font_decoration($this->data['font_decoration_h6']);
@@ -327,11 +355,39 @@ class atom {
 		$this->less_var['quote_style'] = $this->parse_font_style($this->data['quote_decoration']);
 		$this->less_var['quote_decoration'] = $this->parse_font_decoration($this->data['quote_decoration']);
 		// max screen
-		$this->less_var['container_sm'] = $this->parse_font_size($this->data['container_sm']);
-		$this->less_var['container_md'] = $this->parse_font_size($this->data['container_md']);
-		$this->less_var['container_lg'] = $this->parse_font_size($this->data['container_lg']);
-		$this->less_var['btn_border'] = $this->parse_font_size($this->data['btn_border']);
-		$this->less_var['btn_radius'] = $this->parse_font_size($this->data['btn_radius']);
+		$this->less_var['container_sm'] = $this->parse_size($this->data['container_sm']);
+		$this->less_var['container_md'] = $this->parse_size($this->data['container_md']);
+		$this->less_var['container_lg'] = $this->parse_size($this->data['container_lg']);
+		$this->less_var['btn_border'] = $this->parse_size($this->data['btn_border']);
+		$this->less_var['btn_radius'] = $this->parse_size($this->data['btn_radius']);
+
+		// global navbars
+		$this->less_var['navbar_height'] = $this->parse_size($this->data['navbar_height']);
+		$this->less_var['navbar_border'] = $this->parse_size($this->data['navbar_border']);
+		$this->less_var['navbar_radius'] = $this->parse_size($this->data['navbar_radius']);
+		$this->less_var['navbar_link_border'] = $this->parse_size($this->data['navbar_link_border']);
+		$this->less_var['navbar_link_radius'] = $this->parse_size($this->data['navbar_link_radius']);
+
+		$this->less_var['navbar_brand_weight'] = $this->parse_font_weight($this->data['navbar_brand_decoration']);
+		$this->less_var['navbar_brand_style'] = $this->parse_font_style($this->data['navbar_brand_decoration']);
+		$this->less_var['navbar_brand_decoration'] = $this->parse_font_decoration($this->data['navbar_brand_decoration']);
+
+		$this->less_var['navbar_font_weight'] = $this->parse_font_weight($this->data['navbar_font_decoration']);
+		$this->less_var['navbar_font_style'] = $this->parse_font_style($this->data['navbar_font_decoration']);
+		$this->less_var['navbar_font_decoration'] = $this->parse_font_decoration($this->data['navbar_font_decoration']);
+
+		$this->less_var['navbar_link_weight'] = $this->parse_font_weight($this->data['navbar_link_decoration']);
+		$this->less_var['navbar_link_style'] = $this->parse_font_style($this->data['navbar_link_decoration']);
+		$this->less_var['navbar_link_decoration'] = $this->parse_font_decoration($this->data['navbar_link_decoration']);
+
+		$this->less_var['navbar_link_weight_hover'] = $this->parse_font_weight($this->data['navbar_link_decoration_hover']);
+		$this->less_var['navbar_link_style_hover'] = $this->parse_font_style($this->data['navbar_link_decoration_hover']);
+		$this->less_var['navbar_link_decoration_hover'] = $this->parse_font_decoration($this->data['navbar_link_decoration_hover']);
+
+		$this->less_var['navbar_link_weight_active'] = $this->parse_font_weight($this->data['navbar_link_decoration_active']);
+		$this->less_var['navbar_link_style_active'] = $this->parse_font_style($this->data['navbar_link_decoration_active']);
+		$this->less_var['navbar_link_decoration_active'] = $this->parse_font_decoration($this->data['navbar_link_decoration_active']);
+
 	}
 
 	/* Handling Posts and Feedback. Watch out for Unsets */
@@ -426,6 +482,28 @@ class atom {
 		$this->data['btn_danger_active'] = isset($_POST['btn_danger_active']) ? form_sanitizer($_POST['btn_danger_active'], '0', 'btn_danger_active') : $this->data['btn_danger_active'];
 		$this->data['btn_danger_color_active'] = isset($_POST['btn_danger_color_active']) ? form_sanitizer($_POST['btn_danger_color_active'], '0', 'btn_danger_color_active') : $this->data['btn_danger_color_active'];
 
+		$this->data['navbar_fill'] = isset($_POST['navbar_fill']) ? form_sanitizer($_POST['navbar_fill'], '0', 'navbar_fill') : $this->data['navbar_fill'];
+		$this->data['navbar_border'] = isset($_POST['navbar_border']) ? form_sanitizer($_POST['navbar_border'], '0', 'navbar_border') : $this->data['navbar_border'];
+		$this->data['navbar_radius'] = isset($_POST['navbar_radius']) ? form_sanitizer($_POST['navbar_radius'], '0', 'navbar_radius') : $this->data['navbar_radius'];
+		$this->data['navbar_bg'] = isset($_POST['navbar_bg']) ? form_sanitizer($_POST['navbar_bg'], '', 'navbar_bg') : $this->data['navbar_bg'];
+		$this->data['navbar_height'] = isset($_POST['navbar_height']) ? form_sanitizer($_POST['navbar_bg'], '', 'navbar_height') : $this->data['navbar_height'];
+
+		$this->data['navbar_bg_hover'] = isset($_POST['navbar_bg_hover']) ? form_sanitizer($_POST['navbar_bg_hover'], '', 'navbar_bg_hover') : $this->data['navbar_bg_hover'];
+		$this->data['navbar_bg_active'] = isset($_POST['navbar_bg_active']) ? form_sanitizer($_POST['navbar_bg_active'], '', 'navbar_bg_active') : $this->data['navbar_bg_active'];
+		$this->data['navbar_link_border'] = isset($_POST['navbar_link_border']) ? form_sanitizer($_POST['navbar_link_border'], '0', 'navbar_link_border') : $this->data['navbar_link_border'];
+		$this->data['navbar_link_radius'] = isset($_POST['navbar_link_radius']) ? form_sanitizer($_POST['navbar_link_radius'], '0', 'navbar_link_radius') : $this->data['navbar_link_radius'];
+		$this->data['navbar_link_border_color'] = isset($_POST['navbar_link_border_color']) ? form_sanitizer($_POST['navbar_link_border_color'], '0', 'navbar_link_border_color') : $this->data['navbar_link_border_color'];
+		$this->data['navbar_brand_color'] = isset($_POST['navbar_brand_color']) ? form_sanitizer($_POST['navbar_brand_color'], '', 'navbar_brand_color') : $this->data['navbar_brand_color'];
+		$this->data['navbar_font_color'] = isset($_POST['navbar_font_color']) ? form_sanitizer($_POST['navbar_font_color'], '', 'navbar_font_color') : $this->data['navbar_font_color'];
+		$this->data['navbar_brand_decoration'] = isset($_POST['navbar_brand_decoration']) ? form_sanitizer($_POST['navbar_brand_decoration'], '0', 'navbar_brand_decoration') : $this->data['navbar_brand_decoration'];
+		$this->data['navbar_font_decoration'] = isset($_POST['navbar_font_decoration']) ? form_sanitizer($_POST['navbar_font_decoration'], '0', 'navbar_font_decoration') : $this->data['navbar_font_decoration'];
+		$this->data['navbar_link_color'] = isset($_POST['navbar_link_color']) ? form_sanitizer($_POST['navbar_link_color'], '', 'navbar_link_color') : $this->data['navbar_link_color'];
+		$this->data['navbar_link_decoration'] = isset($_POST['navbar_link_decoration']) ? form_sanitizer($_POST['navbar_link_decoration'], '0', 'navbar_link_decoration') : $this->data['navbar_link_decoration'];
+		$this->data['navbar_link_color_hover'] = isset($_POST['navbar_link_color_hover']) ? form_sanitizer($_POST['navbar_link_color_hover'], '', 'navbar_link_color_hover') : $this->data['navbar_link_color_hover'];
+		$this->data['navbar_link_decoration_hover'] = isset($_POST['navbar_link_decoration_hover']) ? form_sanitizer($_POST['navbar_link_decoration_hover'], '0', 'navbar_link_decoration_hover') : $this->data['navbar_link_decoration_hover'];
+		$this->data['navbar_link_color_active'] = isset($_POST['navbar_link_color_active']) ? form_sanitizer($_POST['navbar_link_color_active'], '', 'navbar_link_color_active') : $this->data['navbar_link_color_active'];
+		$this->data['navbar_link_decoration_active'] = isset($_POST['navbar_link_decoration_active']) ? form_sanitizer($_POST['navbar_link_decoration_active'], '0', 'navbar_link_decoration_active') : $this->data['navbar_link_decoration_active'];
+
 		// End Font Settings.
 		if (isset($_POST['save_theme'])) {
 			$this->save_theme();
@@ -472,6 +550,7 @@ class atom {
 		}
 	}
 
+	/* Administration Menus - Main */
 	public function theme_editor() {
 		global $aidlink, $locale;
 		$tab_title['title'][] = 'Base Fonts';
@@ -486,7 +565,7 @@ class atom {
 		$tab_title['title'][] = 'Table and Fieldsets';
 		$tab_title['id'][] = 'panel';
 		$tab_title['icon'][] = '';
-		$tab_active = tab_active($tab_title, 1);
+		$tab_active = tab_active($tab_title, 2);
 		if ($this->debug) {
 			//print_p($_POST);
 		}
@@ -515,13 +594,16 @@ class atom {
 		echo "</div>\n";
 		echo closetabbody();
 		echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
+		echo "<div class='m-t-20'>\n";
+		$this->nav_admin();
+		echo "</div>\n";
 		echo closetabbody();
 		echo opentabbody($tab_title['title'][3], $tab_title['id'][3], $tab_active);
 		echo closetabbody();
 		echo closetab();
 		echo closeform();
 	}
-
+	/* Administration Menus - Part I - Font Settings */
 	private function font_admin() {
 		$base_font = array_values(array_flip($this->base_font()));
 		$web_font = array_values(array_flip($this->google_font()));
@@ -675,12 +757,11 @@ class atom {
 		echo form_select('Font Styling', "quote_decoration", "quote_decoration", $this->font_decoration_options, $this->data['quote_decoration'], $color_options);
 		echo "</div>\n</div>\n";
 	}
-
+	/* Administration Menus - Part II - Components & Layout Settings */
 	private function layout_admin() {
 		$width_options = array("width" => "100%", 'placeholder'=>'px');
 		$color_options = array("placeholder" => "Choose Color", "width" => "100%", "format" => "hex");
 		$fill_options = array("placeholder" => "Select Background Color Fill Type", "width" => "280px");
-
 		// max widths
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -692,6 +773,23 @@ class atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Large Screens", "container_lg", "container_lg", $this->data['container_lg'], $width_options);
 		echo "</div>\n</div>\n";
+		// primary color themes
+		echo form_para('Labelling and Info Colors', 'infotxt');
+		echo "<hr>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Default Info Colors', 'info-default');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker('Primary Color', "primary_color", "primary_color", $this->data['primary_color'], $color_options);
+		echo form_colorpicker('Warning Color', "warning_color", "warning_color", $this->data['warning_color'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker('Success Color', "success_color", "success_color", $this->data['success_color'], $color_options);
+		echo form_colorpicker('Danger Color', "danger_color", "danger_color", $this->data['danger_color'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker('Info Color', "info_color", "info_color", $this->data['info_color'], $color_options);
+		echo "</div>\n</div>\n";
+		echo "<hr>\n";
+
 		//buttons
 		echo form_para('Button Settings', 'btns');
 		echo "<hr>\n";
@@ -863,6 +961,77 @@ class atom {
 		echo "<hr>\n";
 
 	}
+	private function nav_admin() {
+		global $locale;
+		$width_options = array("width" => "100%", 'placeholder'=>'px');
+		$color_options = array("placeholder" => "Choose Color", "width" => "100%", "format" => "hex");
+		$fill_options = array("placeholder" => "Select Background Color Fill Type", "width" => "280px");
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Horizontal Navbar Settings', 'navbar-h');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Navbar Height", "navbar_height", "navbar_height", $this->data['navbar_height'], $width_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Navbar Border Widths", "navbar_border", "navbar_border", $this->data['navbar_border'], $width_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Navbar Border Radius", "navbar_radius", "navbar_radius", $this->data['navbar_radius'], $width_options);
+		echo "</div>\n</div>\n";
+		echo "<hr>\n";
+		echo form_para('Horizontal Navbar Settings Set 1', 'navbar-first');
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Navbar Background', 'navbar-h2a');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
+		echo form_select("Fill Type", "navbar_fill", "navbar_fill", $this->fills, $this->data['navbar_fill'],  $fill_options);
+		echo "</div>\n</div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Background Color", "navbar_bg", "navbar_bg", $this->data['navbar_bg'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker('Hover Background Color', "navbar_bg_hover", "navbar_bg_hover", $this->data['navbar_bg_hover'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker('Active Background Color', "navbar_bg_active", "navbar_bg_active", $this->data['navbar_bg_active'], $color_options);
+		echo "</div>\n</div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Navbar Borders', 'navbar-h2');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Link Border Width", "navbar_link_border", "navbar_link_border", $this->data['navbar_link_border'], $width_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_text("Link Border Radius", "navbar_link_radius", "navbar_link_radius", $this->data['navbar_link_radius'], $width_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker("Border Color", "navbar_link_border_color", "navbar_link_border_color", $this->data['navbar_link_border_color'], $color_options);
+		echo "</div>\n</div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Horizontal Logo Texts', 'navbar-h3');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker('Logo Text Color', "navbar_brand_color", "navbar_brand_color", $this->data['navbar_brand_color'], $color_options);
+		echo form_colorpicker('Font Color', "navbar_font_color", "navbar_font_color", $this->data['navbar_font_color'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_select('Logo Text Styling', "navbar_brand_decoration", "navbar_brand_decoration", $this->font_decoration_options, $this->data['navbar_brand_decoration'], $color_options);
+		echo form_select('Font Styling', "navbar_font_decoration", "navbar_font_decoration", $this->font_decoration_options, $this->data['navbar_font_decoration'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo "</div>\n</div>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_para('Horizontal Navbar Links', 'navbar-h4');
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker('Link Color', "navbar_link_color", "navbar_link_color", $this->data['navbar_link_color'], $color_options);
+		echo form_select('Link Styling', "navbar_link_decoration", "navbar_link_decoration", $this->font_decoration_options, $this->data['navbar_link_decoration'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker('Link Hover Color', "navbar_link_color_hover", "navbar_link_color_hover", $this->data['navbar_link_color_hover'], $color_options);
+		echo form_select('Link Hover Styling', "navbar_link_decoration_hover", "navbar_link_decoration_hover", $this->font_decoration_options, $this->data['navbar_link_decoration_hover'], $color_options);
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
+		echo form_colorpicker('Link Active Color', "navbar_link_color_active", "navbar_link_color_active", $this->data['navbar_link_color_active'], $color_options);
+		echo form_select('Link Active Styling', "navbar_link_decoration_active", "navbar_link_decoration_active", $this->font_decoration_options, $this->data['navbar_link_decoration_active'], $color_options);
+		echo "</div>\n</div>\n";
+
+
+	}
+
+
 
 	public function add_panel() {
 	}
@@ -1565,8 +1734,8 @@ class atom {
 	}
 
 	/* parse the font size metrics - can be edited to use 'px', 'em', 'rem' */
-	private function parse_font_size($font) {
-		return $font.'px';
+	private function parse_size($font) {
+		return $font > 0 ? $font.'px' : 0;
 	}
 
 	/* parse font-weight */

@@ -175,29 +175,39 @@
 //##
 
 // Basics of a navbar
-@navbar-height:                    50px;
+@navbar-height:                    @navbar_height;
+@navbar-border:                    @navbar_border;
+@navbar-border-radius:             @navbar_radius;
+@navbar-fill:                      @navbar_fill;
+
 @navbar-margin-bottom:             @line-height-computed;
-@navbar-border-radius:             @border-radius-base;
+
 @navbar-padding-horizontal:        floor((@grid-gutter-width / 2));
 @navbar-padding-vertical:          ((@navbar-height - @line-height-computed) / 2);
 @navbar-collapse-max-height:       340px;
 
-@navbar-default-color:             #777;
-@navbar-default-bg:                #f8f8f8;
+@navbar-default-color:             @navbar_font_color; // text
+@navbar-default-bg:                @navbar_bg;
 @navbar-default-border:            darken(@navbar-default-bg, 6.5%);
 
 // Navbar links
-@navbar-default-link-color:                #777;
-@navbar-default-link-hover-color:          #333;
-@navbar-default-link-hover-bg:             transparent;
-@navbar-default-link-active-color:         #555;
-@navbar-default-link-active-bg:            darken(@navbar-default-bg, 6.5%);
+@navbar-link-border:                       @navbar_link_border;
+@navbar-link-radius:                       @navbar_link_radius;
+@navbar-link-border-color:                 @navbar_link_border_color;
+@navbar-default-link-color:                @navbar_link_color;
+@navbar-default-link-hover-color:          @navbar_link_color_hover;
+@navbar-default-link-hover-bg:             @navbar_bg_hover;
+@navbar-default-link-active-color:         @navbar_link_color_active;
+@navbar-default-link-active-bg:            @navbar_bg_active;
 @navbar-default-link-disabled-color:       #ccc;
 @navbar-default-link-disabled-bg:          transparent;
 
+// Extended
+
+
 // Navbar brand label
-@navbar-default-brand-color:               @navbar-default-link-color;
-@navbar-default-brand-hover-color:         darken(@navbar-default-brand-color, 10%);
+@navbar-default-brand-color:               @navbar_brand_color;
+@navbar-default-brand-hover-color:         darken(@navbar_brand_color, 10%);
 @navbar-default-brand-hover-bg:            transparent;
 
 // Navbar toggle
