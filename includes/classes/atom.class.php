@@ -163,10 +163,10 @@ class atom {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_id='".$_POST['load_preset']."'");
 		}
 		// except for save theme, or click on new - will load
-		elseif (!isset($_POST['new_preset']) && !isset($_POST['save_theme'])) {
+		elseif (!isset($_POST['new_preset'])) {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_active='1'");
 		}
-		if (!isset($_POST['new_preset']) && !isset($_POST['save_theme'])) {
+		if (!isset($_POST['new_preset'])) {
 			if (dbrows($result) > 0) {
 				$this->data = dbarray($result);
 				if ($this->data['theme_config']) {
@@ -460,13 +460,13 @@ class atom {
 			if (!$this->debug && $data['theme_file']) {
 				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
 				$data['theme_active'] = $rows < 1 ? 1 : 0;
-				dbquery_insert(DB_THEME, $data, 'save');
-				$this->data['theme_id'] = dblastid();
-				$this->data['theme_title'] = $data['theme_name'];
 				$data['theme_config'] = addslashes(serialize($this->data));
-				dbquery_insert(DB_THEME, $data, 'update');
+				dbquery_insert(DB_THEME, $data, 'save');
 				redirect(FUSION_SELF.$aidlink."&amp;status=success");
 			} else {
+				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
+				$data['theme_active'] = $rows < 1 ? 1 : 0;
+				$data['theme_config'] = addslashes(serialize($this->data));
 				print_p($data);
 			}
 		}
