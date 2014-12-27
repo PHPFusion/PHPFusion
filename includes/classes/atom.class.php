@@ -562,10 +562,7 @@ class atom {
 		$tab_title['title'][] = 'Navigation';
 		$tab_title['id'][] = 'nav';
 		$tab_title['icon'][] = '';
-		$tab_title['title'][] = 'Table and Fieldsets';
-		$tab_title['id'][] = 'panel';
-		$tab_title['icon'][] = '';
-		$tab_active = tab_active($tab_title, 2);
+		$tab_active = tab_active($tab_title, 0);
 		if ($this->debug) {
 			//print_p($_POST);
 		}
@@ -597,8 +594,6 @@ class atom {
 		echo "<div class='m-t-20'>\n";
 		$this->nav_admin();
 		echo "</div>\n";
-		echo closetabbody();
-		echo opentabbody($tab_title['title'][3], $tab_title['id'][3], $tab_active);
 		echo closetabbody();
 		echo closetab();
 		echo closeform();
@@ -963,76 +958,6 @@ class atom {
 	}
 	/* Administration Menus - Part III - Navigation Settings */
 	private function nav_admin() {
-		global $locale;
-		$width_options = array("width" => "100%", 'placeholder'=>'px');
-		$color_options = array("placeholder" => "Choose Color", "width" => "100%", "format" => "hex");
-		$fill_options = array("placeholder" => "Select Background Color Fill Type", "width" => "280px");
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Horizontal Navbar Settings', 'navbar-h');
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Navbar Height", "navbar_height", "navbar_height", $this->data['navbar_height'], $width_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Navbar Border Widths", "navbar_border", "navbar_border", $this->data['navbar_border'], $width_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Navbar Border Radius", "navbar_radius", "navbar_radius", $this->data['navbar_radius'], $width_options);
-		echo "</div>\n</div>\n";
-		echo "<hr>\n";
-		echo form_para('Horizontal Navbar Settings Set 1', 'navbar-first');
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Navbar Background', 'navbar-h2a');
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
-		echo form_select("Fill Type", "navbar_fill", "navbar_fill", $this->fills, $this->data['navbar_fill'],  $fill_options);
-		echo "</div>\n</div>\n";
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("Background Color", "navbar_bg", "navbar_bg", $this->data['navbar_bg'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker('Hover Background Color', "navbar_bg_hover", "navbar_bg_hover", $this->data['navbar_bg_hover'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker('Active Background Color', "navbar_bg_active", "navbar_bg_active", $this->data['navbar_bg_active'], $color_options);
-		echo "</div>\n</div>\n";
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Navbar Borders', 'navbar-h2');
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Link Border Width", "navbar_link_border", "navbar_link_border", $this->data['navbar_link_border'], $width_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Link Border Radius", "navbar_link_radius", "navbar_link_radius", $this->data['navbar_link_radius'], $width_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("Border Color", "navbar_link_border_color", "navbar_link_border_color", $this->data['navbar_link_border_color'], $color_options);
-		echo "</div>\n</div>\n";
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Horizontal Logo Texts', 'navbar-h3');
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker('Logo Text Color', "navbar_brand_color", "navbar_brand_color", $this->data['navbar_brand_color'], $color_options);
-		echo form_colorpicker('Font Color', "navbar_font_color", "navbar_font_color", $this->data['navbar_font_color'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Logo Text Styling', "navbar_brand_decoration", "navbar_brand_decoration", $this->font_decoration_options, $this->data['navbar_brand_decoration'], $color_options);
-		echo form_select('Font Styling', "navbar_font_decoration", "navbar_font_decoration", $this->font_decoration_options, $this->data['navbar_font_decoration'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo "</div>\n</div>\n";
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Horizontal Navbar Links', 'navbar-h4');
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker('Link Color', "navbar_link_color", "navbar_link_color", $this->data['navbar_link_color'], $color_options);
-		echo form_select('Link Styling', "navbar_link_decoration", "navbar_link_decoration", $this->font_decoration_options, $this->data['navbar_link_decoration'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker('Link Hover Color', "navbar_link_color_hover", "navbar_link_color_hover", $this->data['navbar_link_color_hover'], $color_options);
-		echo form_select('Link Hover Styling', "navbar_link_decoration_hover", "navbar_link_decoration_hover", $this->font_decoration_options, $this->data['navbar_link_decoration_hover'], $color_options);
-		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker('Link Active Color', "navbar_link_color_active", "navbar_link_color_active", $this->data['navbar_link_color_active'], $color_options);
-		echo form_select('Link Active Styling', "navbar_link_decoration_active", "navbar_link_decoration_active", $this->font_decoration_options, $this->data['navbar_link_decoration_active'], $color_options);
-		echo "</div>\n</div>\n";
-
-
-	}
-	/* Administration Menus - Part III - Fields Settings */
-	private function fields_admin() {
 		global $locale;
 		$width_options = array("width" => "100%", 'placeholder'=>'px');
 		$color_options = array("placeholder" => "Choose Color", "width" => "100%", "format" => "hex");
