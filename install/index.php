@@ -250,7 +250,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$cookie_prefix = "fusion".createRandomPrefix()."_";
 		$db_host = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "localhost");
 		$db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
-		$db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
 		$db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
 		$email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
 		$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
