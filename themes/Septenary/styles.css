@@ -58,7 +58,9 @@ embed {
 article, aside, audio, canvas, command, datalist, details, embed, figcaption, figure, footer, header, hgroup, keygen, meter, nav, output, progress, section, source, video {
 	display: block;
 }
-
+article {
+	margin-bottom:25px;
+}
 mark, rp, rt, ruby, summary, time {
 	display: inline;
 }
@@ -538,10 +540,10 @@ nav {
 }
 
 .main-content h2 {
-	font-size: 35px;
+	font-size: 25px;
 	line-height: 35px;
 	font-weight: 600;
-	margin: 30px 0px;
+	margin: 25px 0px;
 }
 .main-content h3 {
 	font-size: 20px;
