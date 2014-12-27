@@ -64,7 +64,7 @@ $dynamics = new dynamics();
 $dynamics->boot();
 $system_apps = array(
 	// dbname to locale application title
-	'articles' => $locale['setup_4001'],
+	'articles' => $locale['setup_3001'],
 	'blog' => $locale['blog']['title'],
 	'downloads' => $locale['downloads']['title'],
 	'eshop' => $locale['eshop']['title'],
