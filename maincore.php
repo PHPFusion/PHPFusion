@@ -223,7 +223,6 @@ function multilang_table($table) {
 		return FALSE;
 	}
 }
-
 // Get enabled language settings
 $enabled_languages = explode('.', $settings['enabled_languages']);
 foreach ($enabled_languages as $_lang) {
@@ -251,6 +250,7 @@ function get_available_languages_array($language_list = "") {
 	return $res;
 }
 
+
 // If language change is initiated and if the selected language is valid
 if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 	$lang = stripinput($_GET['lang']);
@@ -270,6 +270,7 @@ if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 	}
 	// Redirect handler to keep position upon lang switch
 	if (FUSION_QUERY != "") {
+		$this_redir = '';
 		if (stristr(FUSION_QUERY, '?')) {
 			$this_redir = str_replace("?lang=".$lang, "", FUSION_QUERY);
 		} elseif (stristr(FUSION_QUERY, '&amp;')) {
@@ -342,12 +343,11 @@ function lang_switcher() {
  */
 function valid_language($lang, $file_check = FALSE) {
 	global $enabled_languages;
-
 	if (preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : in_array($lang, $enabled_languages))) {
 		return TRUE;
+	} else {
+		return FALSE;
 	}
-
-	return FALSE;
 }
 
 // Main language detection procedure
