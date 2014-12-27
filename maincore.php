@@ -323,7 +323,7 @@ function lang_switcher() {
 				if ($img_files[$i] == LANGUAGE) {
 					echo "<img class='display-block img-responsive' src='".LOCALE.$img_files[$i]."/".$img_files[$i].".png' alt='' title='".$lang_text."' style='min-width:20px;'>\n ";
 				} else {
-					echo "<a class='side pull-left display-block' style='max-width:25px;' href='".$this_link."".$img_files[$i]."'><img src='".LOCALE.$img_files[$i]."/".$img_files[$i].".png' alt='' title='".$lang_text."' style='min-width:20px;'></a>\n ";
+					echo "<a class='side pull-left display-block' href='".$this_link."".$img_files[$i]."'><img src='".LOCALE.$img_files[$i]."/".$img_files[$i].".png' alt='' title='".$lang_text."' style='min-width:20px;'></a>\n ";
 				}
 				echo "</div>\n";
 			}

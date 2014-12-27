@@ -92,7 +92,7 @@ if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 
 openside($locale['global_100']);
 if (sizeof($enabled_languages) > 1) {
-echo "<h5><strong>".$locale['UM098']."</strong></h5>";
+echo "<h5 class='m-b-10'><strong>".$locale['UM101']."</strong></h5>";
 echo lang_switcher();
 }
 echo "<div class='m-t-10'>\n";
