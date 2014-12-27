@@ -46,21 +46,22 @@ opentable('Theme Management');
 
 $edit_mode = ((isset($_GET['action']) && $_GET['action'] == 'edit') && (isset($_POST['theme']) && file_exists(THEMES.$_POST['theme']))) ? 1 : 0;
 
-$tab_title['title'][] = 'Current Themes';
-$tab_title['id'][] = 'its';
-$tab_title['icon'][] = '';
 
 if ($edit_mode) {
 	$tab_title['title'][] = 'Edit Theme';
 	$tab_title['id'][] = 'edt';
 	$tab_title['icon'][] = '';
+	$active_tab = tab_active($tab_title, 0);
 } else {
+	$tab_title['title'][] = 'Current Themes';
+	$tab_title['id'][] = 'its';
+	$tab_title['icon'][] = '';
 	$tab_title['title'][] = 'Install New Theme';
 	$tab_title['id'][] = 'upt';
 	$tab_title['icon'][] = '';
+	$active_set = isset($_POST['upload']) ? 1 : 0;
+	$active_tab = tab_active($tab_title, $active_set);
 }
-
-$active_tab = tab_active($tab_title, $edit_mode);
 
 echo opentab($tab_title, $active_tab, 'theme_tab');
 echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $active_tab);
@@ -216,8 +217,14 @@ function theme_uploader() {
 					$zip = new ZipArchive;
 					$res = $zip->open($target_file);
 					if ($res === TRUE) {
-						// extract it to the path we determined above
-						$zip->extractTo($path);
+						// checks if first folder is theme.php
+						if ($zip->locateName('theme.php') !== false) {
+							// extract it to the path we determined above
+							$zip->extractTo($path);
+						} else {
+							$defender->stop();
+							$defender->addNotice('The theme package is not found or archived properly.');
+						}
 						$zip->close();
 						@unlink($target_file);
 						redirect(FUSION_SELF.$aidlink."&amp;status=uploaded");
