@@ -225,8 +225,7 @@ function write_htaccess() {
 			@rename(BASEDIR."_htaccess", ".htaccess");
 		} else {
 			// create a file.
-			$handle = fopen(BASEDIR.".htaccess", "w");
-			fclose($handle);
+			touch(BASEDIR.".htaccess");
 		}
 	}
 	$htc = "#Force utf-8 charset\r\n";
@@ -254,9 +253,6 @@ function write_htaccess() {
 	$htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403\r\n";
 	$htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404\r\n";
 	$htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500\r\n";
-	$temp = fopen(BASEDIR.".htaccess", "w");
-	if (fwrite($temp, $htc)) {
-		fclose($temp);
-	}
+	file_put_contents(BASEDIR.".htaccess", $htc);
 }
 ?>

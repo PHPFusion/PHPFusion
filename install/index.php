@@ -191,8 +191,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
 				@rename(BASEDIR."_config.php", BASEDIR."config_temp.php");
 			} else {
-				$handle = fopen(BASEDIR."config_temp.php", "w");
-				fclose($handle);
+				touch(BASEDIR."config_temp.php");
 			}
 		}
 		$check_arr = array(
