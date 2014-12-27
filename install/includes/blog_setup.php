@@ -80,7 +80,7 @@ if (isset($_POST['uninstall'])) {
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
 		return "('".$locale['setup_3500']."', 'bugs.gif', '".$language."'),
-			 ('".$locale['setup_3501']."', 'downloads.gif', '".$language."'),
+			('".$locale['setup_3501']."', 'downloads.gif', '".$language."'),
 			('".$locale['setup_3502']."', 'games.gif', '".$language."'),
 			('".$locale['setup_3503']."', 'graphics.gif', '".$language."'),
 			('".$locale['setup_3504']."', 'hardware.gif', '".$language."'),
