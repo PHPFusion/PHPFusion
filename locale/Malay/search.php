@@ -1,48 +1,48 @@
 <?php
-$locale['400'] = "Search ".$settings['sitename'];
-$locale['401'] = "Search for:";
-$locale['402'] = "Search";
-$locale['403'] = "search any of those words";
-$locale['404'] = "result has to contain all those words";
-$locale['405'] = "Where:";
-$locale['406'] = "Options:";
-$locale['407'] = "Entire site";
-$locale['408'] = "Search Results";
+$locale['400'] = "Cari ".$settings['sitename'];
+$locale['401'] = "Mencari:";
+$locale['402'] = "Cari";
+$locale['403'] = "cari apapun atas kalimat tersebut";
+$locale['404'] = "pencarian harus termasuk seluruh kalimat tersebut";
+$locale['405'] = "Dimana:";
+$locale['406'] = "Pengaturan:";
+$locale['407'] = "Seluruh Laman Web ini";
+$locale['408'] = "Hasil Pencarian";
 //addition date
-$locale['420'] = "Search:";
-$locale['421'] = "all";
-$locale['422'] = "last day";
-$locale['423'] = "last week";
-$locale['424'] = "last two weeks";
-$locale['425'] = "last month";
-$locale['426'] = "last three months";
-$locale['427'] = "last six months";
+$locale['420'] = "Cari:";
+$locale['421'] = "semua";
+$locale['422'] = "sehari terakhir";
+$locale['423'] = "seminggu terakhir";
+$locale['424'] = "dua minggu terakhir";
+$locale['425'] = "sebulan terakhir";
+$locale['426'] = "tiga bulan terakhir";
+$locale['427'] = "enam bulan terakhir";
 //where
-$locale['430'] = "title and message";
-$locale['431'] = "only message";
-$locale['432'] = "only title";
+$locale['430'] = "tajuk dan pesanan";
+$locale['431'] = "pesanan sahaja";
+$locale['432'] = "tajuk sahaja";
 //sort by
-$locale['440'] = "Sort by:";
-$locale['441'] = "addition date";
-$locale['442'] = "title";
-$locale['443'] = "author";
+$locale['440'] = "Susunan berdasarkan:";
+$locale['441'] = "Tarikh penambahan";
+$locale['442'] = "tajuk";
+$locale['443'] = "Penulis";
 //
-$locale['450'] = "descending";
-$locale['451'] = "ascending";
+$locale['450'] = "turun";
+$locale['451'] = "naik";
 //characters in results
-$locale['460'] = "Show:";
-$locale['461'] = "characters in result";
-$locale['462'] = "entire text";
+$locale['460'] = "Tampilkan:";
+$locale['461'] = "huruf di hasil pencarian";
+$locale['462'] = "seluruh teks";
 //No results
-$locale['500'] = "No matches found.";
-$locale['501'] = "Search text must be at least 3 characters long.";
-$locale['502'] = "Search strings with less than three characters (%s) are ignored in the search.";
+$locale['500'] = "Tiada hasil yang bercocokan.";
+$locale['501'] = "Teks pencarian harus setidaknya berisi 3 huruf.";
+$locale['502'] = "String pencarian kurang dari 3 huruf (%s) akan diabaikan dalam pencarian.";
 //Global search
-$locale['510'] = "matches in global site search";
+$locale['510'] = "kecocokan dalam pencarian laman web secara peringkat global";
 //
-$locale['520'] = "match";
-$locale['521'] = "matches";
-$locale['522'] = "found matching search criteria";
+$locale['520'] = "cocok";
+$locale['521'] = "kecocokan";
+$locale['522'] = "ditemukan kriteria kecocokan pencarian";
 //more than 100 results
-$locale['530'] = "Please be more precise in your query. Your query returns %s results. We are displaying just 100 top results";
+$locale['530'] = "Sila menggunakan teks pencarian lebih telus dan jelas. Permintaan anda menemukan %s hasil. Sistem menampilkan hanya 100 hasil utama";
 ?>
