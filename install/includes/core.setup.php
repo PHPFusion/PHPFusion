@@ -528,6 +528,7 @@ if (isset($_POST['uninstall'])) {
 	}
 	// System Inserts
 	$siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
+	$siteurl = str_replace('install/', '', $siteurl);
 	$url = parse_url($siteurl);
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('sitename', 'PHP-Fusion Powered Website')");
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('siteurl', '".$siteurl."')");
