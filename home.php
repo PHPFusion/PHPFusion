@@ -22,6 +22,8 @@ require_once THEMES."templates/header.php";
 
 include LOCALE.LOCALESET."homepage.php";
 
+add_to_title($locale['home']);
+
 $acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 
 $content_installed = false;
