@@ -219,7 +219,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$write_check = TRUE;
 		$check_display = "";
 		foreach ($check_arr as $key => $value) {
-			if (file_exists($key) && is_writable(BASEDIR.$key)) {
+			if (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key)) {
 				$check_arr[$key] = TRUE;
 			} else {
 				if (file_exists(BASEDIR.$key) && function_exists("chmod") && @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key)) {
