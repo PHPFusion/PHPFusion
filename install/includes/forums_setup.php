@@ -209,30 +209,31 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 	// Local inserts
-	$enabled_languages = explode('.', $settings['enabled_languages']);
-	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
-		include LOCALE.$enabled_languages[$i]."/setup.php";
-		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['setup_3600']."', 'rank_super_admin.png', 0, '1', 103, '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['setup_3601']."', 'rank_admin.png', 0, '1', 102, '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['setup_3602']."', 'rank_mod.png', 0, '1', 104, '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['setup_3603']."', 'rank0.png', 0, '0', 101, '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['setup_3604']."', 'rank1.png', 10, '0', 101, '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['setup_3605']."', 'rank2.png', 50, '0', 101, '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['setup_3606']."', 'rank3.png', 200, '0', 101, '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['setup_3607']."', 'rank4.png', 500, '0', 101, '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."forum_ranks VALUES ('', '".$locale['setup_3608']."', 'rank5.png', 1000, '0', 101, '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3304']."', 'forum/index.php', '0', '2', '0', '5', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
+	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
+	$links_sql .= implode(",\n", array_map(function ($language) {
+		include LOCALE.$language."/setup.php";
+		return "('".$locale['setup_3304']."', 'forum/index.php', '0', '2', '0', '5', '".$language."')";
+	}, explode('.', $settings['enabled_languages'])));
+	if(!dbquery($links_sql)) {
+		$fail = TRUE;
 	}
+	$forum_ranks_sql = "INSERT INTO ".$db_prefix."forum_ranks VALUES \n";
+	$forum_ranks_sql .= implode(",\n", array_map(function ($language) {
+		include LOCALE.$language."/setup.php";
+		return "(NULL, '".$locale['setup_3600']."', 'rank_super_admin.png', 0, '1', 103, '".$language."'),
+				(NULL, '".$locale['setup_3601']."', 'rank_admin.png', 0, '1', 102, '".$language."'),
+				(NULL, '".$locale['setup_3602']."', 'rank_mod.png', 0, '1', 104, '".$language."'),
+				(NULL, '".$locale['setup_3603']."', 'rank0.png', 0, '0', 101, '".$language."'),
+				(NULL, '".$locale['setup_3604']."', 'rank1.png', 10, '0', 101, '".$language."'),
+				(NULL, '".$locale['setup_3605']."', 'rank2.png', 50, '0', 101, '".$language."'),
+				(NULL, '".$locale['setup_3606']."', 'rank3.png', 200, '0', 101, '".$language."'),
+				(NULL, '".$locale['setup_3607']."', 'rank4.png', 500, '0', 101, '".$language."'),
+				(NULL, '".$locale['setup_3608']."', 'rank5.png', 1000, '0', 101, '".$language."')";
+	}, explode('.', $settings['enabled_languages'])));
+	if(!dbquery($forum_ranks_sql)) {
+		$fail = TRUE;
+	}
+
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('F', 'forums.gif', '".$locale['setup_3012']."', 'forums.php', '1')");
 	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'settings_forum.gif', '".$locale['setup_3032']."', 'settings_forum.php', '4')");

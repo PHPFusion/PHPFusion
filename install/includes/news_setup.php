@@ -68,47 +68,38 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 	// Local inserts
-	$enabled_languages = explode('.', $settings['enabled_languages']);
-	for ($i = 0; $i < sizeof($enabled_languages); $i++) {
-		include LOCALE.$enabled_languages[$i]."/setup.php";
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3502']."', 'games.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3503']."', 'graphics.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3504']."', 'hardware.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3505']."', 'journal.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3506']."', 'members.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3507']."', 'mods.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3508']."', 'movies.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3509']."', 'network.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3510']."', 'news.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3511']."', 'php-fusion.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3512']."', 'security.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3513']."', 'software.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3514']."', 'themes.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		$result = dbquery("INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3515']."', 'windows.gif', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		// links
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3306']."', 'news_cats.php', '0', '2', '0', '7', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
-		// submits
-		$result = dbquery("INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', '101', '1', '0', '13', '".$enabled_languages[$i]."')");
-		if (!$result) $fail = TRUE;
+	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
+	$links_sql .= implode(",\n", array_map(function ($language) {
+		include LOCALE.$language."/setup.php";
+		return "('".$locale['setup_3306']."', 'news_cats.php', '0', '2', '0', '7', '".$language."'),
+				('".$locale['setup_3311']."', 'submit.php?stype=n', '101', '1', '0', '13', '".$language."')";
+	}, explode('.', $settings['enabled_languages'])));
+	if(!dbquery($links_sql)) {
+		$fail = TRUE;
+	}
+	
+	$news_cats_sql = "INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES \n";
+	$news_cats_sql .= implode(",\n", array_map(function ($language) {
+		include LOCALE.$language."/setup.php";
+		return "('".$locale['setup_3500']."', 'bugs.gif', '".$language."'),
+				('".$locale['setup_3501']."', 'downloads.gif', '".$language."'),
+				('".$locale['setup_3502']."', 'games.gif', '".$language."'),
+				('".$locale['setup_3503']."', 'graphics.gif', '".$language."'),
+				('".$locale['setup_3504']."', 'hardware.gif', '".$language."'),
+				('".$locale['setup_3505']."', 'journal.gif', '".$language."'),
+				('".$locale['setup_3506']."', 'members.gif', '".$language."'),
+				('".$locale['setup_3507']."', 'mods.gif', '".$language."'),
+				('".$locale['setup_3508']."', 'movies.gif', '".$language."'),
+				('".$locale['setup_3509']."', 'network.gif', '".$language."'),
+				('".$locale['setup_3510']."', 'news.gif', '".$language."'),
+				('".$locale['setup_3511']."', 'php-fusion.gif', '".$language."'),
+				('".$locale['setup_3512']."', 'security.gif', '".$language."'),
+				('".$locale['setup_3513']."', 'software.gif', '".$language."'),
+				('".$locale['setup_3514']."', 'themes.gif', '".$language."'),
+				('".$locale['setup_3515']."', 'windows.gif', '".$language."')";
+	}, explode('.', $settings['enabled_languages'])));
+	if(!dbquery($news_cats_sql)) {
+		$fail = TRUE;
 	}
 
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('NC', 'news_cats.gif', '".$locale['setup_3017']."', 'news_cats.php', '1')");
