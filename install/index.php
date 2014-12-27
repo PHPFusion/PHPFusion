@@ -195,7 +195,8 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				fclose($handle);
 			}
 		}
-		$check_arr = array("administration/db_backups" => FALSE,
+		$check_arr = array(
+			"administration/db_backups" => FALSE,
 			"forum/attachments" => FALSE,
 			"downloads" => FALSE,
 			"downloads/images" => FALSE,
