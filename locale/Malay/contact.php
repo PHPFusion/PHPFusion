@@ -1,27 +1,26 @@
 <?php
 // Contact Form
-$locale['400'] = "Contact Me";
-$locale['401'] = "There are several ways you can contact me. You can email me directly at 
-".hide_email($settings['siteemail']).". If you are a Member you can send me a
-<a href='messages.php?msg_send=1'>Private Message</a>. Alternatively, you can fill in
-the form on this page which sends your message to me via Email.";
-$locale['402'] = "Name:";
-$locale['403'] = "Email Address:";
-$locale['404'] = "Subject:";
-$locale['405'] = "Message:";
-$locale['406'] = "Send Message";
-$locale['407'] = "Validation Code:";
-$locale['408'] = "Enter Validation Code:";
+$locale['400'] = "Hubungi Saya";
+$locale['401'] = "Anda boleh menghubungi saya dalam beberapa cara. Saya boleh dihubungi oleh alamat emel melalui ".hide_email($settings['siteemail']).". Jika anda adalah ahli daftar
+halaman ini, anda boleh menghatar <a href='messages.php?msg_send=1'>Mesej Peribadi</a> kepada saya. Selain daripada ini, anda juga boleh berhubung dengan saya dengan mengisi borang di bawah untuk menghantar
+mesej kepada saya melalui Emel server ini.";
+$locale['402'] = "Nama:";
+$locale['403'] = "Alamat Emel:";
+$locale['404'] = "Tajuk:";
+$locale['405'] = "Mesej:";
+$locale['406'] = "Hantar Mesej";
+$locale['407'] = "Kod Pengesahan:";
+$locale['408'] = "Sila isi Kod Pengesahan:";
 // Contact Errors
-$locale['420'] = "You must specify a Name";
-$locale['421'] = "You must specify an Email Address";
-$locale['422'] = "You must specify a Subject";
-$locale['423'] = "You must specify a Message";
-$locale['424'] = "You must enter correct Validation Code";
-$locale['425'] = "Internal error: cannot send your message.";
+$locale['420'] = "Anda mesti mengisi nama anda";
+$locale['421'] = "Anda mesti mengisi alamat emel anda";
+$locale['422'] = "Anda mesti mengisi tajuk mesej";
+$locale['423'] = "Anda mesti mengisi mesej";
+$locale['424'] = "Anda mesti mengisi Kod Pengesahan";
+$locale['425'] = "Kesilapan Pendalaman: tidak dapat menghantar mesej.";
 // Message Sent
-$locale['440'] = "Your Message has been sent";
-$locale['441'] = "Thank You";
-$locale['442'] = "Your message was not sent for the following reason(s):";
-$locale['443'] = "Please try again.";
+$locale['440'] = "Mesej berjaya dihantarkan";
+$locale['441'] = "Terima Kasih";
+$locale['442'] = "Mesej anda tidak dihantar oleh sebab-sebab berikut:";
+$locale['443'] = "Sila cuba sekali lagi.";
 ?>
