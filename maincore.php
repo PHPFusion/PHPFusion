@@ -72,7 +72,7 @@ define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
 require_once BASEDIR."config.php";
 // If config.php is empty, activate setup.php script
 if (!isset($db_name)) {
-	redirect("setup.php");
+	redirect("install/index.php");
 }
 
 require_once INCLUDES."multisite_include.php";
