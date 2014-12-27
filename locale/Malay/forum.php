@@ -116,37 +116,28 @@ $locale['forum_0306'] = "Anda hendak pindah Pos pertama dalam utusan perbincanga
 $locale['forum_0307'] = "Tiada Pos untuk dipindah.";
 $locale['forum_0308'] = "Tiada utusan dalam Forum ini";
 $locale['forum_0309'] = $locale['forum_0240'];
-
-
-
 $locale['forum_0310'] = "Tiada Utusan lain untuk pindah Pos ini.";
 // Viewforum icons
 $locale['forum_0311'] = "Utusan Panas";
 $locale['forum_0312'] = "Fail dilampirkan";
 $locale['forum_0313'] = "Gambar dilampirkan";
 $locale['forum_0314'] = "Undian";
-
 $locale['forum_0320'] = "bahasa fail";
-
 $locale['forum_0325'] = 'Trofi';
 $locale['forum_0326'] = 'atau Mulakan Topic';
 $locale['forum_0327'] = 'Tiada forum disenaraikan dalam Kategori ini';
 $locale['forum_0328'] = 'Tiada forum disenaraikan.';
-
 $locale['forum_0340'] = 'Soalan';
 $locale['forum_0341'] = 'Tajuk';
-
 $locale['forum_0350'] = "Peraturan Forum:";
 $locale['forum_0351'] = "Subforums";
 $locale['forum_0352'] = "Pengumuman";
-
 $locale['forum_0360'] = " Buat Pos Balasan";
 $locale['forum_0361'] = "&middot; Halaman ";
 $locale['forum_0362'] = ' Pos ';
 $locale['forum_0363'] = "Dikemaskinikan akhir pada ";
 $locale['forum_0364'] = " Halaman Web Ahli";
 $locale['forum_0365'] = " Balasan";
-
 $locale['forum_0370'] = "Kunjungan";
 $locale['forum_0371'] = "Pos";
 $locale['forum_0372'] = "Penilaian";
@@ -206,11 +197,9 @@ $locale['forum_0553'] = "Anda telah mengikut utusan perbincangan ini";
 $locale['forum_0554'] = "Anda telah tidak mengikut utusan perbincangan ini";
 $locale['forum_0555'] = "Pos ini dikunci. Sila hubungi pengurus forum ini untuk keterangan lanjut.";
 $locale['forum_0556'] = "Anda hanya dibenarkan untuk sunting post anda dalam %d minit selepas masa Pos.";
-
 $locale['forum_0557'] = "Lampiran";
 $locale['forum_0558'] = " (Optional)";
 $locale['forum_0559'] = "Max. Size Fail: %s / Lampiran jenis fail: %s / Max. Lampiran dibenarkan: %s";
-
 $locale['forum_0570'] = "Fail gambar saiz maksimum terlanjur. Anda hanya dibenarkan untuk muat naik sebanyak ";
 $locale['forum_0571'] = 'Gambar tidak di muat naik';
 $locale['forum_0572'] = " Pos dipadamkan";
@@ -224,12 +213,10 @@ $locale['forum_0581'] = "Current Mode is --- ";
 $locale['forum_0582'] = "EDIT MODE";
 $locale['forum_0583'] = "REPLY MODE";
 $locale['forum_0584'] = "POST NEW THREAD MODE.";
-
 $locale['forum_0591'] = 'Flush Post';
 $locale['forum_0592'] = 'Flush Threads';
 $locale['forum_0593'] = 'Flush Attachments';
 $locale['forum_0595'] = 'Flush Poll';
-
 // Post Form
 $locale['forum_0600'] = "Tajuk Topik";
 $locale['forum_0601'] = "Mesej";
@@ -265,7 +252,6 @@ Anda dihubungi kerana ada pos balasan di forum perbincangan '{THREAD_SUBJECT}' y
 Jika anda tidak ingin lagi mengikuti utusan perbincangan ini, sila klik pada `".$locale['forum_0174']."` di atas halaman Utusan ini.
 Kirim Salam,
 ".$settings['siteusername'].".";
-
 // Delete Thread
 $locale['forum_0700'] = "Padam Utusan";
 $locale['forum_0701'] = "Utusan ini telah dipadamkan.";
@@ -296,7 +282,6 @@ $locale['forum_2000'] = "Tajuk Topik: ";
 $locale['forum_2001'] = 'Apakah yang mahu disoalkan?';
 $locale['forum_2002'] = "Tajuk: ";
 $locale['forum_2010'] = 'Undi';
-
 // Period for search & filter
 $locale['forum_p000'] = 'Hari Ini';
 $locale['forum_p001'] = "1 Hari";
