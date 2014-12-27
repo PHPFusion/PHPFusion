@@ -219,15 +219,13 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$write_check = TRUE;
 		$check_display = "";
 		foreach ($check_arr as $key => $value) {
-			if (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key)) {
-				$check_arr[$key] = TRUE;
-			} else {
-				if (file_exists(BASEDIR.$key) && function_exists("chmod") && @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key)) {
-					$check_arr[$key] = TRUE;
-				} else {
-					$write_check = FALSE;
-				}
+			$check_arr[$key] = (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key))
+							or (file_exists(BASEDIR.$key) && function_exists("chmod") 
+								&& @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key));
+			if (!$check_arr[$key]) {
+				$write_check = FALSE;
 			}
+			
 			$check_display .= "<tr>\n<td class='tbl1'>".$key."</td>\n";
 			$check_display .= "<td class='tbl1' style='text-align:right'>".($check_arr[$key] == TRUE ? "<label class='label label-success'>".$locale['setup_1100']."</label>" : "<label class='label label-warning'>".$locale['setup_1101']."</label>")."</td>\n</tr>\n";
 		}
