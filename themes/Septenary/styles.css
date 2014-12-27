@@ -953,9 +953,9 @@ div.emulated-fieldset div.attachments-list {
 }
 
 .side-label {
-	color: #555;
-	background-color: #F1F1F1;
-	margin: 2px 0 2px 0;
+	color: #FFF;
+	background-color: transparent;
+	margin: 10px 0;
 	padding: 2px 2px 3px 2px;
 }
 
