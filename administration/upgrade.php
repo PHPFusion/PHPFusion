@@ -710,13 +710,42 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".PL' WHERE user_id='".$data['user_id']."'");
 			}
 		}
+		// install theme db.
+		$result = dbquery("CREATE TABLE ".$db_prefix."theme (
+				theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+				theme_name VARCHAR(50) NOT NULL,
+				theme_title VARCHAR(50) NOT NULL,
+				theme_file VARCHAR(200) NOT NULL,
+				theme_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+				theme_user MEDIUMINT(8) UNSIGNED NOT NULL,
+				theme_active TINYINT(1) UNSIGNED NOT NULL,
+				theme_config TEXT NOT NULL,
+				PRIMARY KEY (theme_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+		$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')");
+		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
+		if ($result) {
+			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
+			while ($data = dbarray($result)) {
+				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".TS' WHERE user_id='".$data['user_id']."'");
+			}
+		}
 		// Messages
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
-		// User Fields 1.02
-		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_db VARCHAR(200) NOT NULL AFTER field_cat_name");
+		// UF 2.00
+
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_parent MEDIUMINT(8) NOT NULL AFTER field_cat_name");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_db VARCHAR(200) NOT NULL AFTER field_parent");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_index VARCHAR(200) NOT NULL AFTER field_cat_db");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_class VARCHAR(50) NOT NULL AFTER field_cat_index");
-		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_page SMALLINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER field_cat_class");
+
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_title VARCHAR(50) NOT NULL AFTER field_id");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_type VARCHAR(25) NOT NULL AFTER field_cat");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_default TEXT NOT NULL AFTER field_type");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_options TEXT NOT NULL AFTER field_default");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_error VARCHAR(50) NOT NULL AFTER field_options");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_config TEXT NOT NULL AFTER field_order");
+
         $result = dbquery("INSERT INTO ".DB_PREFIX."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (5, 'Privacy', '', '', 'entypo shareable', 1, 5)");
 		$result = dbquery("INSERT INTO ".DB_PREFIX."user_fields (field_id, field_name, field_cat, field_required, field_log, field_registration, field_order) VALUES ('', 'user_blacklist', '5', '0', '0', '0', '1'");
 		// Add black list table

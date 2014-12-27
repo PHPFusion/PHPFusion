@@ -52,6 +52,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."user_log");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."users");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."email_templates");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."theme");
 
 	// drop all custom tables.
 	if (file_exists(BASEDIR.'install/includes/articles_setup.php')) include BASEDIR.'install/includes/articles_setup.php';
