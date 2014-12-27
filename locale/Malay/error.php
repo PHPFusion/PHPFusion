@@ -1,8 +1,8 @@
 <?php
-$locale['err401'] = "Unauthorized access to this page!";
-$locale['err403'] = "Access forbidden to this page!";
-$locale['err404'] = "This page was not found on this server!";
-$locale['err500'] = "Internal server error!";
-$locale['errunk'] = "Unknown error";
-$locale['errret'] = "Return to main site";
+$locale['err401'] = "Tidak dibenarkan untuk melihat laman ini!";
+$locale['err403'] = "Tidak dibenarkan untuk melihat laman ini!";
+$locale['err404'] = "Halaman ini tidak terdapat dalam server ini!";
+$locale['err500'] = "Kesalahan Pendalaman Server!";
+$locale['errunk'] = "Kesalahan Pendalaman lain lain";
+$locale['errret'] = "Kembali ke Halaman Utama";
 ?>

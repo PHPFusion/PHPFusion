@@ -239,7 +239,7 @@ $locale['global_196'] = "Username atau password tidak betul.";
 $locale['global_197'] = "Sila tunggu sementara kami membuat pindahan Anda...<br /><br />
 [ <a href='index.php'>ataupun klik sini jika anda tidak ingin menunggu</a> ]";
 $locale['global_198'] = "<strong>AMARAN:</strong> SISTEM PEMASANGAN DIKESAN, SILA MEMADAMKAN FOLDER /INSTALL/ SEKARANG.";
-$locale['global_199'] = "<strong>Amaran:</strong> Kata aluan Admin belum ditetapkan lagi, klik <a href='".BASEDIR."edit_profile.php'>Edit Profil</a> untuk menetapkan kata aluan anda.";
+$locale['global_199'] = "<strong>Amaran:</strong> Kata aluan Admin belum ditetapkan lagi, klik <a href='".BASEDIR."edit_profile.php'>Ubah Profil</a> untuk menetapkan kata aluan anda.";
 //Titles
 $locale['global_200'] = " - ";
 $locale['global_201'] = ": ";
@@ -386,7 +386,7 @@ $locale['draft'] = 'Draf';
 $locale['settings'] = 'Pengaturan';
 $locale['posted'] = 'diposkan';
 $locale['profile'] = 'Profil';
-$locale['edit'] = 'Edit';
+$locale['edit'] = 'Sunting';
 $locale['view'] = 'Dilihati';
 $locale['login'] = 'Log Masuk';
 $locale['logout'] = 'Log Keluar';

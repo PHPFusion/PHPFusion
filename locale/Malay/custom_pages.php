@@ -1,6 +1,6 @@
 <?php
-$locale['400'] = "<span style='color:#ff0000;'><b>Access Denied!</b></span><br />You are not permitted to view this page.";
-$locale['401'] = "Internal Error";
-$locale['402'] = "Unable to retrieve page content.";
-$locale['403'] = "Go Back";
+$locale['400'] = "<span style='color:#ff0000;'><b>Kemasukan ditolak</b></span><br />Anda tidak diizinkan untuk melihat halaman ini..";
+$locale['401'] = "Kesalahan Pendalaman";
+$locale['402'] = "Tidak dapat memuat isi halaman.";
+$locale['403'] = "Kembali";
 ?>
