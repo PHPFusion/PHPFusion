@@ -387,8 +387,10 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 		} else {
 			require_once INCLUDES."db_handlers/mysql_functions_include.php";
 			$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-			mysql_set_charset('utf8', $db_connect);
-			$db_select = @mysql_select_db($db_name);
+			if ($db_connect) {
+				mysql_set_charset('utf8', $db_connect);
+				$db_select = @mysql_select_db($db_name);
+			}
 		}
 		if ($db_connect) {
 			if ($db_select) {
