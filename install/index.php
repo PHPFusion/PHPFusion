@@ -32,11 +32,11 @@ if (!defined('DYNAMICS')) { define('DYNAMICS', INCLUDES."dynamics/"); }
 
 ob_start();
 
-if (isset($_POST['localeset']) && file_exists(LOCALE.$_POST['localeset']) && is_dir(LOCALE.$_POST['localeset'])) {
-	include LOCALE.$_POST['localeset']."/setup.php";
-	define("LOCALESET", $_POST['localeset']."/");
+if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_dir(LOCALE.$_GET['localeset'])) {
+	include LOCALE.$_GET['localeset']."/setup.php";
+	define("LOCALESET", $_GET['localeset']."/");
 } else {
-	$_POST['localeset'] = "English";
+	$_GET['localeset'] = "English";
 	define("LOCALESET", "English/");
 	include LOCALE.LOCALESET."setup.php";
 }
@@ -80,21 +80,25 @@ opensetup();
 
 // Introduction
 if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
-	// in order to go clean install.. must not have config, and must not have config_temp.php,
-	// because we are creating new prefixes and a totally new tables.
-	// so.. if config file exist, rename.
+	$settings = array();
+	// create htaccess file.
+	if (isset($_POST['htaccess']) && isset($db_prefix) && !empty($settings)) {
+		write_htaccess();
+		redirect(FUSION_SELF."?localeset=".$_GET['localeset']);
+	}
+
+	// ALWAYS reset config to config_temp.php
 	if (file_exists(BASEDIR.'config.php')) {
 		@rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
 		@chmod(BASEDIR.'config_temp.php', 0755);
 	}
-	// then include the temp file.
+
+	// Must always include a temp file.
 	if (file_exists(BASEDIR.'config_temp.php')) {
 		include BASEDIR.'config_temp.php';
 	}
-
-	$settings = array();
-	// reading temp file. if it's blank, would not invoke.
-	if (isset($db_prefix)) {
+	/* 1. To enter Recovery. CONFIG TEMP file must have dbprefix and have value in dbprefix. */
+	if (isset($db_prefix) && $db_prefix) {
 		if ($pdo_enabled == "1") {
 			require_once INCLUDES."db_handlers/pdo_functions_include.php";
 			$pdo = NULL;
@@ -128,34 +132,6 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 				}
 			}
 		}
-	}
-
-	if (isset($_POST['htaccess']) && isset($db_prefix) && !empty($settings)) {
-		write_htaccess();
-		redirect(FUSION_SELF);
-	}
-
-
-
-	if (!file_exists(BASEDIR.'config.php') && !file_exists(BASEDIR.'config_temp.php') && !isset($_POST['uninstall'])) {
-		$locale_list = makefileopts($locale_files, $_POST['localeset']);
-		echo "<h4 class='strong'>".$locale['setup_0002']."</h4>\n";
-		if (isset($_GET['error']) && $_GET['error'] == 'license') {
-			echo "<div class='alert alert-danger'>".$locale['setup_5000']."</div>\n";
-		} else {
-			echo "<span>".$locale['setup_0003']."</span>\n";
-		}
-		echo "<span class='display-block m-t-20 m-b-10 strong'>".$locale['setup_1000']."</span>\n";
-		echo form_select('', 'localeset', 'localeset', array_combine($locale_files, $locale_files), '', array('placeholder' => $locale['choose']));
-		echo "<div>".$locale['setup_1001']."</div>\n";
-		echo "<hr>\n";
-		echo form_checkbox($locale['setup_0005'], 'license', 'license', '');
-		echo "<hr>\n";
-		echo "<input type='hidden' name='step' value='2' />\n";
-		renderButton();
-	}
-
-	elseif (!isset($_POST['uninstall'])) {
 		echo "<h4 class='strong'>".$locale['setup_1002']."</h4>\n";
 		echo "<span class='display-block m-t-20 m-b-10'>".$locale['setup_1003']."</span>\n";
 		echo "<div class='well'>\n";
@@ -170,24 +146,49 @@ if (!isset($_POST['step']) || $_POST['step'] == "" || $_POST['step'] == "0") {
 		echo "<span class='strong display-inline-block m-b-10'>".$locale['setup_1011']."</span>\n<br/><p>".$locale['setup_1012']."</p>";
 		echo form_button($locale['setup_1013'], 'step', 'step', '6', array('class' => 'btn-primary btn-sm m-r-10'));
 		echo "</div>\n";
-		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
+		echo "<input type='hidden' name='localeset' value='".stripinput($_GET['localeset'])."' />\n";
 		if (isset($db_prefix)) {
 			echo "<div class='well'>\n";
 			echo "<span class='strong display-inline-block m-b-10'>".$locale['setup_1014']."</span>\n<br/><p>".$locale['setup_1015']."</p>";
 			echo form_button($locale['setup_1016'], 'htaccess', 'htaccess', 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
 			echo "</div>\n";
 		}
+
 	}
-	else {
-		redirect(BASEDIR."index.php");
+	/* Without click uninstall this is the opening page of installer - just for safety. if not, an else suffices */
+	elseif (!isset($_POST['uninstall'])) {
+		// no db_prefix
+		$locale_list = makefileopts($locale_files, $_GET['localeset']);
+		echo "<h4 class='strong'>".$locale['setup_0002']."</h4>\n";
+		if (isset($_GET['error']) && $_GET['error'] == 'license') {
+			echo "<div class='alert alert-danger'>".$locale['setup_5000']."</div>\n";
+		} else {
+			echo "<span>".$locale['setup_0003']."</span>\n";
+		}
+		echo "<span class='display-block m-t-20 m-b-10 strong'>".$locale['setup_1000']."</span>\n";
+		echo form_select('', 'localeset', 'localeset', array_combine($locale_files, $locale_files), $_GET['localeset'], array('placeholder' => $locale['choose']));
+		echo "<script>\n";
+		echo "$('#localeset').bind('change', function() {
+			var value = $(this).val();
+			document.location.href='".FUSION_SELF."?localeset='+value;
+		});";
+		echo "</script>\n";
+		echo "<div>".$locale['setup_1001']."</div>\n";
+		echo "<hr>\n";
+		echo form_checkbox($locale['setup_0005'], 'license', 'license', '');
+		echo "<hr>\n";
+		echo "<input type='hidden' name='step' value='2' />\n";
+		renderButton();
 	}
+
 }
 
 // Step 2 - File and Folder Permissions
 if (isset($_POST['step']) && $_POST['step'] == "2") {
-	if (!isset($_POST['license'])) {
-		redirect(FUSION_SELF."?error=license");
-	}
+
+	if (!isset($_POST['license'])) redirect(FUSION_SELF."?error=license&localeset=".$_GET['localeset']);
+
+	// Create a blank config temp by now if not exist.
 	if (!file_exists(BASEDIR."config_temp.php")) {
 		if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
 			@rename(BASEDIR."_config.php", BASEDIR."config_temp.php");
@@ -234,7 +235,7 @@ if (isset($_POST['step']) && $_POST['step'] == "2") {
 	}
 	echo "<div class='m-b-20'><h4>".$locale['setup_1106']."</h4> ".$locale['setup_1102']."</div>\n";
 	echo "<table class='table table-responsive'>\n".$check_display."\n</table><br /><br />\n";
-
+	// can proceed
 	if ($write_check) {
 		echo "<p><strong>".$locale['setup_1103']."</strong></p>\n";
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
@@ -345,6 +346,7 @@ if (isset($_POST['step']) && $_POST['step'] == "4") {
 	$email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
 	$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
 	$enabled_languages = '';
+
 	if (!empty($_POST['enabled_languages'])) {
 		for ($i = 0; $i < sizeof($_POST['enabled_languages']); $i++) {
 			$enabled_languages .= $_POST['enabled_languages'][$i].".";
@@ -546,44 +548,46 @@ if (isset($_POST['step']) && $_POST['step'] == '5') {
 			}
 			$settings = array();
 			$result = dbquery("SELECT * FROM ".$db_prefix."settings");
-			if (dbrows($result)) {
+			if (dbrows($result)>0) {
 				while ($data = dbarray($result)) {
 					$settings[$data['settings_name']] = $data['settings_value'];
 				}
+			} else {
+				redirect(FUSION_SELF);
 			}
 		} else {
-			redirect(FUSION_SELF);
+			redirect(FUSION_SELF); // start all over again if you tampered config_temp here.
 		}
 		$fail = FALSE;
 		$message = '';
+
 		// Do installation
 		if (isset($_POST['install'])) {
 			$_apps = stripinput($_POST['install']);
 			if (file_exists('includes/'.$_apps.'_setup.php')) {
 				include 'includes/'.$_apps.'_setup.php';
-				$message = "<div class='alert alert-success'><i class='entypo check'></i> ".$system_apps[$_apps]." system have been successfully installed.</div>";
+				$message = "<div class='alert alert-success strong'><i class='entypo check'></i>".sprintf($locale['setup_1406'], $system_apps[$_apps])."</div>";
 				if ($fail) {
-					$message = "<div class='alert alert-danger'><i class='entypo icancel'></i> ".$system_apps[$_apps]." system installation failed.</div>";
+					$message = "<div class='alert alert-danger strong'><i class='entypo icancel'></i>".sprintf($locale['setup_1407'], $system_apps[$_apps])."</div>";
 				}
 			}
 		}
+
 		// Do uninstallation
 		if (isset($_POST['uninstall'])) {
 			$_apps = stripinput($_POST['uninstall']);
 			if (file_exists('includes/'.$_apps.'_setup.php')) {
 				include 'includes/'.$_apps.'_setup.php';
-				$message = "<div class='alert alert-warning'><i class='entypo check'></i> ".$system_apps[$_apps]." system have been successfully removed.</div>";
+				$message = "<div class='alert alert-warning'><i class='entypo check'></i>".sprintf($locale['setup_1408'], $system_apps[$_apps])."</div>";
 				if ($fail) {
-					$message = "<div class='alert alert-danger'><i class='entypo icancel'></i> ".$system_apps[$_apps]." system cannot be removed or failed.</div>";
+					$message = "<div class='alert alert-danger'><i class='entypo icancel'></i>".sprintf($locale['setup_1409'], $system_apps[$_apps])."</div>";
 				}
 			}
 		}
 		foreach ($system_apps as $_apps_key => $_apps) {
 			if (file_exists('includes/'.$_apps_key.'_setup.php')) {
 				$installed = db_exists($db_prefix.$_apps_key);
-				$apps_data = array('title' => $locale[$_apps_key]['title'],
-					'description' => $locale[$_apps_key]['description'],
-					'key' => $_apps_key);
+				$apps_data = array('title' => $locale[$_apps_key]['title'], 'description' => $locale[$_apps_key]['description'], 'key' => $_apps_key);
 				if ($installed) {
 					$apps['1'][] = $apps_data;
 				} else {
@@ -599,7 +603,7 @@ if (isset($_POST['step']) && $_POST['step'] == '5') {
 				echo "<div class='row'>\n";
 				echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".ucwords($v['title']);
 				echo "<div class='pull-right'>\n";
-				echo form_button('Remove', 'uninstall', 'uninstall', $v['key'], array('class' => 'btn-xs btn-default',
+				echo form_button($locale['setup_1405'], 'uninstall', 'uninstall', $v['key'], array('class' => 'btn-xs btn-default',
 					'icon' => 'entypo trash'));
 				echo "</div>\n";
 				echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>".$v['description']."";
@@ -612,8 +616,7 @@ if (isset($_POST['step']) && $_POST['step'] == '5') {
 				echo "<div class='row'>\n";
 				echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".ucwords($v['title']);
 				echo "<div class='pull-right'>\n";
-				echo form_button('Install', 'install', 'install', $v['key'], array('class' => 'btn-xs btn-default',
-					'icon' => 'entypo publish'));
+				echo form_button($locale['setup_1404'], 'install', 'install', $v['key'], array('class' => 'btn-xs btn-default', 'icon' => 'entypo publish'));
 				echo "</div>\n";
 				echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>".$v['description']."";
 				echo "</div>\n</div>\n";

@@ -53,7 +53,8 @@ function opensetup() {
 	echo $fusion_page_head_tags;
 	echo "</head>\n<body>\n";
 	echo "<div class='block-container'>\n";
-	echo "<form name='setupform' method='post' action='".FUSION_SELF."'>\n";
+	$form_action = FUSION_SELF."?localeset=".$_GET['localeset'];
+	echo "<form name='setupform' method='post' action='$form_action'>\n";
 	echo "<div class='block'>\n";
 	echo "<div class='block-content'>\n";
 		echo "<h6><strong>".$locale['setup_0000']."</strong></h6>\n";
@@ -63,12 +64,12 @@ function opensetup() {
 		echo "<div class='row'>\n";
 			echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
 			$steps = array('1' => $locale['setup_0101'],
-		'2' => $locale['setup_0102'],
-		'3' => $locale['setup_0103'],
-		'4' => $locale['setup_0104'],
-		'5' => $locale['setup_0105'],
-		'6' => $locale['setup_0106'],
-		'7' => $locale['setup_0107']);
+			'2' => $locale['setup_0102'],
+			'3' => $locale['setup_0103'],
+			'4' => $locale['setup_0104'],
+			'5' => $locale['setup_0105'],
+			'6' => $locale['setup_0106'],
+			'7' => $locale['setup_0107']);
 			echo "<div class='list-group'>\n";
 				foreach ($steps as $arr => $value) {
 		if ($arr == 1) {

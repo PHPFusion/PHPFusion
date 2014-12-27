@@ -87,6 +87,12 @@ $locale['setup_1400'] = "Please configure your core system.";
 $locale['setup_1401'] = "IMPORTANT: Please back up your data if any before proceed. Removing a System will permanently erase all existing records.";
 $locale['setup_1402'] = "Core System Ready.";
 $locale['setup_1403'] = "Your website is now fully configured.<br/><br/>If you have not setup your Super Admin account yet, please proceed to the next step, otherwise, you can remove the installer.";
+$locale['setup_1404'] = 'Install';
+$locale['setup_1405'] = 'Uninstall';
+$locale['setup_1406'] = '%s system have been successfully installed.';
+$locale['setup_1407'] = '%s system system installation failed.';
+$locale['setup_1408'] = '%s system have been successfully removed.';
+$locale['setup_1409'] = '%s system cannot be removed or failed.';
 // Step 6 - Super Admin login
 $locale['setup_1500'] = "Primary Super Admin Account";
 $locale['setup_1501'] = "Configure your Super Administrator account details.";
