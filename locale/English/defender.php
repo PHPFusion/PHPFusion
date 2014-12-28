@@ -31,11 +31,13 @@ $locale['df_403'] = "%s is not a valid number.";
 
 $locale['df_415'] = "Invalid filename.";
 $locale['df_416'] = "Upload file too large. File must be less than %s.";
-$locale['df_417'] = "Upload file is not a valid file type. Only %s are accepted.";
+$locale['df_417'] = "Upload file is not a valid file type. Image must be one of the following file types - %s";
 $locale['df_418'] = "Upload file is fine, but the extension is invalid one. Please rename your file extension and try again.";
 $locale['df_419'] = "Image failed verification check. Please re-do your image.";
 $locale['df_420'] = "Folder does not exist. Please create the folder via FTP and try again.";
 $locale['df_421'] = "Image must be no bigger than %uw x %uh pixels.";
+$locale['df_422'] = "Unknown error (Query)";
+$locale['df_423'] = "Image was not uploaded properely. Please try again";
 
 $locale['df_error_text'] = "%s has error and requires your attention.";
 ?>

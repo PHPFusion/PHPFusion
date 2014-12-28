@@ -59,6 +59,8 @@ class defender {
 			'color' => 'textbox',
 			'address' => 'address',
 			'url'	=> 'url',
+			'image' => 'image',
+			'file'	=> 'file',
 		);
 		// execute sanitisation rules at point blank precision using switch
 		try {
@@ -123,6 +125,9 @@ class defender {
 							return $return_value;
 						}
 						break;
+					case 'image' :
+						return $this->verify_image_upload();
+						break;
 					default:
 						$this->stop();
 						$this->addNotice($this->field_name);
@@ -144,17 +149,19 @@ class defender {
 
 	}
 
-	// when you load, add_field is injected into defender. then, hacker deletes the field.
+	/* Adds the field sessions on document load */
 	public function add_field_session(array $array) {
 		global $userdata;
 		$_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
 	}
-	// fetch you users field sessions so you can do anything with it
+
+	/* Fetches your users field sessions so you can do anything with it */
 	static function my_field_session() {
 		global $userdata;
 		return $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']];
 	}
-	// destroy a users field session. use carefully
+
+	/* Destroys a users field session. use carefully */
 	public function unset_field_session() {
 		global $userdata;
 		unset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']]);
@@ -489,6 +496,69 @@ class defender {
 			return $this->field_default;
 		}
 	}
+
+	/* Verify and upload image on success. Returns array on file, thumb and thumb2 file names */
+	/* You can use this function anywhere whether bottom or top most of your codes - order unaffected */
+	private function verify_image_upload() {
+		global $locale;
+		require_once INCLUDES."infusions_include.php";
+		if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
+			$upload = upload_image(	$this->field_config['input_name'],
+									$_FILES[$this->field_config['input_name']]['name'],
+									$this->field_config['path'],
+									$this->field_config['max_width'],
+									$this->field_config['max_height'],
+									$this->field_config['max_byte'],
+									$this->field_config['delete_original'],
+									$this->field_config['thumbnail'],
+									$this->field_config['thumbnail2'],
+									1,
+									$this->field_config['path'].'thumbs/',
+									'_t1',
+									$this->field_config['thumbnail_w'],
+									$this->field_config['thumbnail_h'],
+									0,
+									$this->field_config['path'].'thumbs/',
+									'_t2',
+									$this->field_config['thumbnail2_w'],
+									$this->field_config['thumbnail2_h']
+						);
+			if ($upload['error'] != 0) {
+				$this->stop();
+				$this->addError($this->field_config['id']);
+				switch ($upload['error']) {
+					case 1: // Invalid file size
+						$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+						$this->addHelperText($$this->field_config['id'], $locale['df_416']);
+						break;
+					case 2:	// Unsupported image type
+						$this->addNotice(sprintf($locale['df_417'], ".gif .jpg .png"));
+						$this->addHelperText($$this->field_config['id'], $locale['df_417']);
+						break;
+					case 3: // Invalid image resolution
+						$this->addNotice(sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+						$this->addHelperText($$this->field_config['id'], $locale['df_421']);
+						break;
+					case 4: // Invalid query string
+						$this->addNotice($locale['df_422']);
+						$this->addHelperText($$this->field_config['id'], $locale['df_422']);
+						break;
+					case 5: // Image not uploaded
+						$this->addNotice($locale['df_423']);
+						$this->addHelperText($$this->field_config['id'], $locale['df_423']);
+						break;
+				}
+			} else {
+				return $upload;
+			}
+		} else {
+			return array();
+		}
+	}
+
+
+
+
 
 	private function verify_file() {
 		global $settings, $locale;

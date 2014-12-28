@@ -136,79 +136,25 @@ function news_form() {
 	global $userdata, $locale, $settings, $aidlink, $language_opts, $defender;
 	$data = array();
 	if (isset($_POST['save'])) {
-		$error = "";
+
 		$data['news_id'] = isset($_POST['news_id']) ? form_sanitizer($_POST['news_id'], '', 'news_id') : 0;
 		$data['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 		$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
 		$data['news_name'] = $userdata['user_id'];
-		if (!empty($_FILES['news_image']['name']) && is_uploaded_file($_FILES['news_image']['tmp_name'])) {
-			//require_once INCLUDES."photo_functions_include.php";
-			require_once INCLUDES."infusions_include.php";
-			$image = "news_image";
-			// Left blank to use the image name as it is
-			$name = $_FILES['news_image']['name'];
-			// Upload folder
-			$folder = IMAGES_N;
-			$thumb_folder = IMAGES_N_T;
-			// Maximum image width in pixels
-			$width = $settings['news_photo_max_w'];
-			// Maximum image height in pixels
-			$height = $settings['news_photo_max_w'];
-			// Maximum file size in bytes
-			$size = $settings['news_photo_max_b'];
-			$upload = upload_image($image, $name, $folder, $width, $height, $size, FALSE, TRUE, TRUE, 1, $thumb_folder, '_t1', $settings['news_thumb_w'], $settings['news_thumb_h'],
-								   0, IMAGES_N_T, "_t2", $settings['news_photo_w'], $settings['news_photo_h']
-			);
-			if ($upload['error'] != 0) {
-				$defender->stop();
-				switch ($upload['error']) { // 415a, 416a, 415b, 419a
-					case 1:
-						$defender->addNotice(sprintf($locale['news_0104'], parsebytesize($settings['news_photo_max_b'])));
-						// Invalid file size
-						break;
-					case 2:
-						// Unsupported image type
-						$defender->addNotice(sprintf($locale['news_0105'], ".gif .jpg .png"));
-						break;
-					case 3:
-						// Invalid image resolution
-						$defender->addNotice(sprintf($locale['news_0106'], $settings['news_photo_max_w']." x ".$settings['news_photo_max_h']));
-						break;
-					case 4:
-						// Invalid query string
-						$defender->addNotice($locale['news_0107']);
-						break;
-					case 5:
-						// Image not uploaded
-						$defender->addNotice($locale['news_0107']);
-						break;
-				}
-				$data['news_image'] = (isset($_POST['news_image']) ? $_POST['news_image'] : "");
-				$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "");
-				$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
-				$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
-			} else {
-				// !upload success
-				$data['news_image'] = $upload['image_name'];
-				$data['news_image_t1'] = $upload['thumb1_name'];
-				$data['news_image_t2'] = $upload['thumb2_name'];
-				$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
-			}
-			/* Pending for code reviews on the forum.
-			$image = $_FILES['news_image'];
-			$image_name = stripfilename(str_replace(" ", "_", strtolower(substr($image['name'], 0, strrpos($image['name'], ".")))));
-			$image_ext = strtolower(strrchr($image['name'], "."));
-			if (!preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $image_name)) {
-				$defender->stop();
-				$defender->addNotice($locale['news_0103']);
-				$error = 1;
-			} */
+
+		$upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
+		if (!empty($news_upload)) {
+			$data['news_image'] = $upload['image_name'];
+			$data['news_image_t1'] = $upload['thumb1_name'];
+			$data['news_image_t2'] = $upload['thumb2_name'];
+			$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
 		} else {
-			$data['news_image'] = (isset($_POST['news_image']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['news_image']) ? $_POST['news_image'] : "") : "");
-			$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['news_image_t1']) ? $_POST['news_image_t1'] : "") : "");
-			$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['news_image_t2']) ? $_POST['news_image_t2'] : "") : "");
+			$data['news_image'] = (isset($_POST['news_image']) ? $_POST['news_image'] : "");
+			$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "");
+			$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
 			$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
 		}
+
 		$data['news_news'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])); // Needed for HTML to work
 		$data['news_extended'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])); // Needed for HTML to work
 		$data['news_keywords'] = form_sanitizer($_POST['news_keywords'], '', 'news_keywords');
@@ -401,7 +347,24 @@ function news_form() {
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
 		echo form_select($locale['news_0218'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
 	} else {
-		echo form_fileinput($locale['news_0216'], 'news_image', 'news_image', IMAGES_N, '', array('thumbnail' => IMAGES_N_T, 'type' => 'image'));
+
+		$file_input_options = array(
+			'max_width' => $settings['news_photo_max_w'],
+			'max_height' => $settings['news_photo_max_h'],
+			'max_byte' => $settings['news_photo_max_b'],
+			// set thumbnail
+			'thumbnail' => 1,
+			'thumbnail_w' => $settings['news_thumb_w'],
+			'thumbnail_h' => $settings['news_thumb_h'],
+			'thumb_folder' => 1,
+			'delete_original' => 0,
+			// set thumbnail 2 settings
+			'thumbnail2' => 1,
+			'thumbnail2_w' => $settings['news_photo_w'],
+			'thumbnail2_h' => $settings['news_photo_h'],
+			'type' => 'image'
+		);
+		echo form_fileinput($locale['news_0216'], 'news_image', 'news_image', IMAGES_N, '', $file_input_options);
 		echo "<div class='small m-b-10'>".sprintf($locale['news_0217'], parsebytesize($settings['news_photo_max_b']))."</div>\n";
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
 		echo form_select($locale['news_0218'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
