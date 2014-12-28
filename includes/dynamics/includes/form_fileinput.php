@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 /* http://plugins.krajee.com/file-input  - many many more options */
 function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $input_value = FALSE, array $options = array()) {
-	global $locale, $settings;
+	global $locale, $settings, $defender;
 	$title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
@@ -33,26 +33,36 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		'class' => !empty($options['class']) && $options['class'] ? $options['class'] : '', // form-group class
 		'btn_class' => !empty($options['btn_class']) && $options['btn_class'] ? $options['btn_class'] : 'btn-default', // upload button class
 		'icon' => !empty($options['icon']) && $options['icon'] ? $options['icon'] : 'entypo upload-cloud', // upload button class
-		'url' => !empty($options['url']) && $options['url'] ? $options['url'] : '', // path to store the image
-		'thumbnail' => !empty($options['thumbnail']) && $options['thumbnail'] ? $options['thumbnail'] : '', // path to store the thumbnail.
-		'max_b' => !empty($options['max_b']) && isnum($options['max_b']) ? $options['max_b'] : 0, // maximum bytes allowed.
-		'type' => !empty($options['type']) && $options['type'] ? $options['type'] : 'object', // ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
 		'preview_off' => !empty($options['preview_off']) && $options['preview_off'] == 1 ? 1 : 0,
-		'mime' => !empty($options['mime']) && $options['mime'] ? $options['mime'] : 0,
-		'jsonmode' => !empty($options['jsonmode']) && $options['jsonmode'] ? $options['jsonmode'] : 0,
+		'type' => !empty($options['type']) && $options['type'] ? $options['type'] : 'object', // ['image', 'html', 'text', 'video', 'audio', 'flash', 'object'] <--- defender goes for this maybe
+		'valid_ext' => !empty($options['valid_ext']) && $options['valid_ext'] ? $options['valid_ext'] : '',
+		// ajax
+		'jsonurl' => !empty($options['jsonurl']) && $options['jsonurl'] ? $options['jsonurl'] : 0,
+		// the only real thumbnail
+		'thumbnail' => !empty($options['thumbnail']) && $options['thumbnail'] == 1 ? 1 : 0,
+		'thumbnail_w' 	=> !empty($options['thumbnail_w']) && isnum($options['thumbnail_w']) ? $options['thumbnail_w'] : 150,
+		'thumbnail_h' 	=> !empty($options['thumbnail_h']) && isnum($options['thumbnail_h']) ? $options['thumbnail_h'] : 150,
+		'thumb_folder' 	=> !empty($options['thumb_folder']) && $options['thumb_folder'] == 1 && $options['thumbnail'] ? 1 : 0,
+		// fusion use this to shrink image and delete original as true
+		'thumbnail2' 	=> !empty($options['thumbnail2']) && $options['thumbnail2'] == 1 ? 1 : 0,
+		'thumbnail2_w' 	=> !empty($options['thumbnail2_w']) && isnum($options['thumbnail2_w']) ? $options['thumbnail2_w'] : 150,
+		'thumbnail2_h' 	=> !empty($options['thumbnail2_h']) && isnum($options['thumbnail2_h']) ? $options['thumbnail2_h'] : 150,
+		'delete_original' => !empty($options['delete_original']) && $options['delete_original'] == 1 ? 1 : 0,
+		// max upload
+		'max_width'		=>	!empty($options['max_width']) && isnum($options['max_width']) ? $options['max_width'] : 1800,
+		'max_height'	=>	!empty($options['max_height']) && isnum($options['max_height']) ? $options['max_height'] : 1600,
+		'max_byte'		=>	!empty($options['max_byte']) && isnum($options['max_byte']) ? $options['max_byte'] : 1500000, // 1.5 million bytes is 1.5mb
 		'multiple' => !empty($options['multiple']) && $options['multiple'] == 1 ? 1 : 0,
 	);
 
 	// default max file size
 	$format = '';
-	$max_b = $options['max_b'] ? $options['max_b'] : $settings['download_max_b'];
 	// file type if single filter, if not will accept as object if left empty.
 	$type_for_js = null;
 	if ($options['type']) {
 		if (!stristr($options['type'], ',') && $options['type']) {
 			if ($options['type'] == 'image') {
 				$format = "image/*";
-				$max_b = $options['max_b'] ? $options['max_b'] : $settings['photo_max_b']/1000000;
 			} elseif ($options['type'] == 'video') {
 				$format = "video/*";
 			} elseif ($options['type'] == 'audio') {
@@ -60,10 +70,6 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 			}
 		}
 		$type_for_js = json_encode((array)$options['type']);
-	}
-
-	if ($options['mime']) {
-		$options['mime'] = json_encode($options['mime']);
 	}
 
 	$value = '';
@@ -91,8 +97,33 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($options['inline']) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=".((array)$options['type']==array('image') ? 'image' : 'file')."],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."],[path=$upload_path],[thumbnail=".$options['thumbnail']."],".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."' />\n";
-
+	/*$html .= "<input type='hidden' name='def[$input_name]' value='
+	[type=".((array)$options['type']==array('image') ? 'image' : 'file')."]
+	,[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."],[path=$upload_path],
+	[thumbnail=".$options['thumbnail']."],".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."' />\n"; */
+	$defender->add_field_session(array(
+		'input_name' 	=> 	$input_name,
+		'type'			=>	((array)$options['type']==array('image') ? 'image' : 'file'),
+		'title'			=>	$title2,
+		'id' 			=>	$input_id,
+		'required'		=>	$options['required'],
+		'safemode' 		=> 	$options['safemode'],
+		'error_text'	=> 	$options['error_text'],
+		'path'			=> $upload_path,
+		'thumb_folder'	=>	$options['thumb_folder'],
+		'thumbnail' 	=> $options['thumbnail'],
+		'thumbnail_w' 	=> $options['thumbnail_w'],
+		'thumbnail_h' 	=> $options['thumbnail_h'],
+		'thumbnail2'	=> $options['thumbnail2'],
+		'thumbnail2_w' 	=> $options['thumbnail2_w'],
+		'thumbnail2_h' 	=> $options['thumbnail2_h'],
+		'delete_original' => FALSE,
+		'max_width'		=>	$options['max_width'],
+		'max_height'	=>	$options['max_height'],
+		'max_byte'		=>	$options['max_byte'],
+		'multiple'		=>	$options['multiple'],
+		'valid_ext'		=>	$options['valid_ext'],
+	 ));
 	add_to_jquery("
 	$('#".$input_id."').fileinput({
 	".($value ? "initialPreview: ".$value.", " : '')."
@@ -105,8 +136,8 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	removeClass : 'btn btn-default button',
 	browseLabel: '".$options['label']."',
 	browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
-	".($options['url'] && $options['jsonmode'] ? "uploadUrl : '".$options['url']."'," : '')."
-	".($options['url'] && $options['jsonmode'] ? '' : 'showUpload: false')."
+	".($options['jsonurl'] ? "uploadUrl : '".$options['url']."'," : '')."
+	".($options['jsonurl'] ? '' : 'showUpload: false')."
 	});
 	");
 

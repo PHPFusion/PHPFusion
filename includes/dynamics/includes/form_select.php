@@ -282,7 +282,7 @@ function user_search($user_id) {
 
 // Returns a full hierarchy nested dropdown.
 function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, array $options = array(), $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
-	global $_POST, $locale;
+	global $defender, $locale;
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
 		add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js' /></script>\n");
@@ -374,10 +374,18 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$html = &$html;
 		$html .= "</select>";
 		$html .= "<br/><div id='$input_id-help'></div>";
-		$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required'].",[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
 		$html .= ($options['inline'] && $title) ? "</div>\n" : '';
 		$html .= "</div>\n";
-
+		//$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required'].",[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
+		$defender->add_field_session(array(
+			 'input_name' 	=> 	$input_name,
+			 'type'			=>	'dropdown',
+			 'title'		=>	$title2,
+			 'id' 			=>	$input_id,
+			 'required'		=>	$options['required'],
+			 'safemode' 	=> 	$options['safemode'],
+			 'error_text'	=> 	$options['error_text']
+		 ));
 	}
 	return $html;
 }
