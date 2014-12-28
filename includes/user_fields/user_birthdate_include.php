@@ -21,9 +21,9 @@ if (!defined("IN_FUSION")) {
 // Display user field input
 if ($profile_method == "input") {
 	if (isset($user_data['user_birthdate']) && $user_data['user_birthdate'] != "0000-00-00") {
-		$user_birthdate = date('d-m-Y', $user_data['user_birthdate']);
+		$user_birthdate = date('d-m-Y', strtotime($user_data['user_birthdate']));
 	} else {
-		$user_birthdate = '';
+		$user_birthdate = '0000-00-00';
 	}
 	$options +=array('inline'=>1);
 	$user_fields = form_datepicker($locale['uf_birthdate'], 'user_birthdate', 'user_birthdate', $user_birthdate, $options);
