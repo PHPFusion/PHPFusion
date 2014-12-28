@@ -16,23 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-/**
- * Sets the client character set.
- * Note: This function requires MySQL 5.0.7 or later.
- * @see http://www.php.net/mysql-set-charset
- * @param string   $charset - A valid character set name
- * @param resource $link_identifier The MySQL connection
- * @return TRUE on success or FALSE on failure
- */
-if (function_exists('mysql_set_charset') === FALSE) {
-	function mysql_set_charset($charset, $link_identifier = NULL) {
-		if ($link_identifier == NULL) {
-			return mysql_query('SET CHARACTER SET "'.$charset.'"');
-		} else {
-			return mysql_query('SET CHARACTER SET "'.$charset.'"', $link_identifier);
-		}
-	}
-}
 // Start of template
 function opensetup() {
 	global $locale, $fusion_page_head_tags;

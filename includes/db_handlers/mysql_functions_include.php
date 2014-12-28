@@ -120,14 +120,4 @@ function dblastid() {
 	return (int) mysql_insert_id($db_connect);
 }
 
-if (function_exists('mysql_set_charset') === false) {
-    function mysql_set_charset($charset, $link_identifier = null) {
-        if ($link_identifier == null) {
-            return mysql_query('SET CHARACTER SET "'.$charset.'"');
-        } else {
-            return mysql_query('SET CHARACTER SET "'.$charset.'"', $link_identifier);
-        }
-    }
-}
-
 ?>
