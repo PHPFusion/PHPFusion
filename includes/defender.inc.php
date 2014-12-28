@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: defender.inc.php
 | Author : Frederick MC Chan (Hien)
-| Version : 9.0.0 (please update every commit)
+| Version : 9.0.2 (please update every commit)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -23,75 +23,135 @@ class defender {
 	public $debug = FALSE;
 	public $debug_notice = FALSE;
 	public $ref = array();
-
 	public $error_content = array();
 	public $error_title = '';
+	public $field = array();
+	public $field_name = ''; // declared by form_sanitizer()
+	public $field_value = ''; // declared by form_sanitizer()
+	public $field_default = ''; // declared by form_sanitizer()
+	public $field_config = array(
+		'type' => '',
+		'value' => '',
+		'default' => '',
+		'name' => '',
+		'id' => '',
+		'safemode' => '',
+		// the file uploads
+		'path'	=> '',
+		'thumbnail_1' => '',
+		'thumbnail_2' => '',
+
+	); // declared by form_sanitizer()
 
 	/* Sanitize Fields Automatically */
-	public function defender($type = FALSE, $value = FALSE, $default = FALSE, $name = FALSE, $id = FALSE, $path = FALSE, $safemode = FALSE, $error_text = FALSE, $thumbnail = FALSE) {
+	public function defender() {
 		global $locale;
 		require_once INCLUDES."notify/notify.inc.php";
 		$this->noAdminCookie();
-		/* Validation of Files */
-		if ($type == "textbox" || $type == 'dropdown' || $type == 'name' || $type == 'textarea') { // done.
-			return $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
-		} elseif ($type == "color") {
-			return $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
-			//return validate_color_field($value, $default, $name, $id); on 8.00 only
-		} elseif ($type == "address") {
-			$def = $this->DefenseOpts($_POST['def'][$name]);
-			if ($def['required'] && !$_POST[$name][0]) {
-				$this->stop();
-				$this->addError("$id-street");
-				$this->addHelperText("$id-street", $locale['street_error']);
-				$this->addNotice($locale['street_error']);
+		// declare the validation rules and assign them
+		// type of fields vs type of validator
+		$validation_rules_assigned = array(
+			'textbox' => 'textbox',
+			'dropdown' => 'textbox',
+			'name' => 'textbox',
+			'password' => 'password',
+			'email' => 'email',
+			'date' => 'date',
+			'color' => 'textbox',
+			'address' => 'address',
+			'url'	=> 'url',
+		);
+		// execute sanitisation rules at point blank precision using switch
+		try {
+			if (!empty($this->field_config['type'])) {
+				switch ($validation_rules_assigned[$this->field_config['type']]) {
+					case 'textbox':
+						return $this->verify_text();
+						break;
+					case 'date':
+						return $this->verify_date();
+						break;
+					case 'password':
+						return $this->verify_password();
+						break;
+					case 'email':
+						return $this->verify_email();
+						break;
+					case 'number' :
+						return $this->verify_number();
+						break;
+					case 'file' :
+						return $this->verify_file();
+						break;
+					case 'url' :
+						return $this->verify_url();
+						break;
+					case 'address':
+						$name = $this->field_name;
+						//$def = $this->get_full_options($this->field_config);
+						if ($this->field_config['required'] && !$_POST[$name][0]) {
+							$this->stop();
+							$this->addError($this->field_config['id'].'-street');
+							$this->addHelperText($this->field_config['id'].'-street', $locale['street_error']);
+							$this->addNotice($locale['street_error']);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][2]) {
+							$this->stop();
+							$this->addError($this->field_config['id'].'-country');
+							$this->addHelperText($this->field_config['id'].'-country', $locale['country_error']);
+							$this->addNotice($locale['country_error']);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][3]) {
+							$this->stop();
+							$this->addError($this->field_config['id'].'-state');
+							$this->addHelperText($this->field_config['id'].'-state', $locale['state_error']);
+							$this->addNotice($locale['state_error']);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][4]) {
+							$this->stop();
+							$this->addError($this->field_config['id'].'-city');
+							$this->addHelperText($this->field_config['id'].'-city', $locale['city_error']);
+							$this->addNotice($locale['city_error']);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][5]) {
+							$this->stop();
+							$this->addError($this->field_config['id'].'-postcode');
+							$this->addHelperText($this->field_config['id'].'-postcode', $locale['postcode_error']);
+							$this->addNotice($locale['postcode_error']);
+						}
+						if (!defined('FUSION_NULL')) {
+							$return_value = $this->validate_text();
+							return $return_value;
+						}
+						break;
+					default:
+						$this->stop();
+						$this->addNotice($this->field_name);
+						$this->addNotice(var_dump($this->field_config));
+						$this->addNotice('Verification on unknown type of fields is prohibited.');
+
+				}
+			} else {
+				return $this->field_default;
+				//$this->stop();
+				//$message = $this->field_name.' has no value.'; // this has no value and must pushed out.
+				//$this->addNotice($message);
 			}
-			if ($def['required'] && !$_POST[$name][2]) {
-				$this->stop();
-				$this->addError("$id-country");
-				$this->addHelperText("$id-country", $locale['country_error']);
-				$this->addNotice($locale['country_error']);
-			}
-			if ($def['required'] && !$_POST[$name][3]) {
-				$this->stop();
-				$this->addError("$id-state");
-				$this->addHelperText("$id-state", $locale['state_error']);
-				$this->addNotice($locale['state_error']);
-			}
-			if ($def['required'] && !$_POST[$name][4]) {
-				$this->stop();
-				$this->addError("$id-city");
-				$this->addHelperText("$id-city", $locale['city_error']);
-				$this->addNotice($locale['city_error']);
-			}
-			if ($def['required'] && !$_POST[$name][5]) {
-				$this->stop();
-				$this->addError("$id-postcode");
-				$this->addHelperText("$id-postcode", $locale['postcode_error']);
-				$this->addNotice($locale['postcode_error']);
-			}
-			if (!defined('FUSION_NULL')) {
-				$return_value = $this->validate_text($value, $default, $name, $id, $safemode, $error_text);
-				return $return_value;
-			}
-		} elseif ($type == "date") {
-			return $this->validate_date($value, $default, $name, $id, $safemode, $error_text);
-			//return validate_date_field($value, $default, $name, $id); on 8.00 only - outputs 10 int timestamp.
-		} elseif ($type == "password") {
-			return $this->validate_password($value, $default, $name, $id, $safemode, $error_text);
-		} elseif ($type == "email") { // done
-			return $this->validate_email($value, $default, $name, $id, $safemode, $error_text);
-		} elseif ($type == "number") {
-			return $this->validate_number($value, $default, $name, $id, $safemode, $error_text);
-		} elseif ($type == "url") {
-			return $this->validate_url($value, $default, $name, $id, $safemode, $error_text);
-		} elseif ($type == 'image' || $type == 'all') {
-			return $this->validate_file($value, $type, $path, $thumbnail, $default, $name, $id, $safemode, $error_text);
-		} else {
-			// default
-			$return_value = (isset($value) && ($value !== "")) ? stripinput($value) : $default;
-			return $return_value;
+		} catch (Exception $e) {
+			$error_message = $e->getMessage();
+			$this->stop();
+			$this->addNotice($error_message);
 		}
+
+	}
+
+	// when you load, add_field is injected into defender. then, hacker deletes the field.
+	public function add_field_session(array $array) {
+		$_SESSION['form_fields'][FUSION_SELF][$array['input_name']] = $array;
+	}
+
+	public function unset_field_session() {
+		unset($_SESSION['form_fields'][FUSION_SELF]);
 	}
 
 	/* Jquery Error Class Injector */
@@ -265,36 +325,6 @@ class defender {
 		return $html;
 	}
 
-	/* Read Dynamics Data - Build Defense Config */
-	public function defenseOpts($input_name) {
-		global $locale;
-		$array = array();
-		$array = construct_array($input_name);
-		$data = array();
-		foreach ($array as $ks => $vs) {
-			$clean_up = str_replace("[", "", $vs);
-			$clean_up = str_replace("]", "", $clean_up);
-			$cdata[$input_name][] = construct_array($clean_up, "", "=");
-		}
-		foreach ($cdata[$input_name] as $arr => $v) {
-			$data[$v['0']] = array_key_exists('1', $v) ? $v['1'] : '';
-		}
-		if ($data) {
-			$opts['type'] = array_key_exists("type", $data) ? $data['type'] : "";
-			$opts['name'] = array_key_exists("title", $data) ? rtrim($data['title'], ':') : "";
-			$opts['id'] = array_key_exists("id", $data) ? $data['id'] : "";
-			$opts['required'] = array_key_exists("required", $data) ? $data['required'] : 0;
-			$opts['safemode'] = array_key_exists("safemode", $data) ? $data['safemode'] : 0;
-			$opts['path'] = array_key_exists("path", $data) ? $data['path'] : '';
-			$opts['thumbnail'] = array_key_exists("thumbnail", $data) ? $data['thumbnail'] : '';
-			$opts['thumbnail_db'] = array_key_exists("thumbnail_db", $data) ? $data['thumbnail_db'] : '';
-			$opts['error_text'] = array_key_exists('error_text', $data) && $data['error_text'] ? $data['error_text'] : sprintf($locale['df_error_text'], $opts['name']);
-			//"".$opts['name']." needs your attention";
-			return $opts;
-		}
-		return FALSE;
-	}
-
 	/* Inject FUSION_NULL */
 	public function stop($ref = FALSE) {
 		if ($ref && $this->debug_notice) {
@@ -305,134 +335,158 @@ class defender {
 		}
 	}
 
-	/* validation method */
-	private function validate_text($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+	// Field Verifications Rules
+
+	/* validate and sanitize a text
+ 	 * accepts only 50 characters + @ + 4 characters
+ 	 */
+	private function verify_text() {
 		global $locale;
-		if (is_array($value)) {
+		$return_value = ''; $value = '';
+		if (is_array($this->field_value)) {
 			$vars = array();
-			foreach ($value as $val) {
+			foreach ($this->field_value as $val) {
 				$vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
 			}
-			$value = implode('|', $vars);
+			$value = implode('|', $vars); // this is where the pipe is.
 		} else {
-			$value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($value)))); // very strong sanitization.
+			$value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($this->field_value)))); // very strong sanitization.
 		}
-		if ($safemode == 1) {
-			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) { // invalid chars
+		if ($this->field_config['safemode'] == 1) {
+			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->field_value)) { // invalid chars
 				$this->stop();
-				$this->addError($id);
-				$this->addHelperText($id, sprintf($locale['df_400'], $name));
-				$this->addNotice(sprintf($locale['df_400'], $name));
+				$this->addError($this->field_config['id']);
+				$this->addHelperText($this->field_config['id'], sprintf($locale['df_400'], $this->field_config['title'])); // maybe name, maybe
+				$this->addNotice(sprintf($locale['df_400'], $this->field_config['title']));
 			} else {
-				$return_value = ($value) ? $value : $default;
+				$return_value = ($value) ? $value : $this->field_default;
 				return $return_value;
 			}
 		} else {
 			if ($value) {
 				return $value;
 			} else {
-				return $default;
+				return $this->field_default;
 			}
 		}
 	}
 
-	private function validate_email($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+	/* validate an email address
+	 * accepts only 50 characters + @ + 4 characters
+	 */
+	private function verify_email() {
 		global $locale;
-		$value = stripinput(trim(preg_replace("/ +/i", " ", $value)));
-		if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $value)) {
-			return $value;
+		if ($this->field_value) {
+			$value = stripinput(trim(preg_replace("/ +/i", " ", $this->field_value)));
+			if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $value)) {
+				return $value;
+			} else {
+				$this->stop();
+				$this->addError($this->field_config['id']);
+				$this->addHelperText($this->field_config['id'], sprintf($locale['df_401'], $this->field_config['name']));
+				$this->addNotice(sprintf($locale['df_401'], $this->field_config['name']));
+			}
 		} else {
-			$this->stop();
-			$this->addError($id);
-			$this->addHelperText($id, sprintf($locale['df_401'], $name));
-			$this->addNotice(sprintf($locale['df_401'], $name));
+			return $this->field_default;
 		}
 	}
 
-	private function validate_password($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+	/* validate a valid password
+	 * accepts minimum of 8 and maximum of 64 due to encrypt limit
+	 * returns a default if blank
+	 */
+	private function verify_password() {
 		global $locale;
-		// no safemode
-		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $value)) {
-			$return_value = (isset($value) && (($value) !== "")) ? $value : $default;
-			return $return_value;
+		// add min length, add max length, add strong password into roadmaps.
+		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
+			return $this->field_default;
 		} else {
 			// invalid password
 			$this->stop();
-			$this->addError($id);
-			$this->addHelperText($id, sprintf($locale['df_402'], $name));
-			$this->addNotice(sprintf($locale['df_402'], $name));
+			$this->addError($this->field_config['id']);
+			$this->addHelperText($this->field_config['id'], sprintf($locale['df_402'], $this->field_config['name']));
+			$this->addNotice(sprintf($locale['df_402'], $this->field_config['name']));
 		}
 	}
 
-	private function validate_number($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+	/* validate a valid number
+	 * accepts only integer and decimal .
+	 * returns a default if blank
+	 */
+	private function verify_number() {
 		global $locale;
-		if (is_array($value)) {
+		$value = '';
+		if (is_array($this->field_value)) {
 			$vars = array();
-			foreach ($value as $val) {
+			foreach ($this->field_value as $val) {
 				$vars[] = stripinput($val);
 			}
 			$value = implode(',', $vars);
 		} else {
-			$value = stripinput($value);
+			$value = intval(stripinput($this->field_value));
 		}
+
 		if ($value) {
-			if (is_numeric($value)) {
-				return $value;
+			if (is_numeric($this->field_value)) {
+				return $this->field_value;
 			} else {
 				$this->stop();
-				$this->addError($id);
-				$this->addHelperText($id, sprintf($locale['df_403'], $name));
-				$this->addNotice(sprintf($locale['df_403'], $name));
+				$this->addError($this->field_config['id']);
+				$this->addHelperText($id, sprintf($locale['df_403'], $this->field_config['name']));
+				$this->addNotice(sprintf($locale['df_403'], $this->field_config['name']));
 			}
 		} else {
-			if ($value) {
-				return $value;
-			} else {
-				return $default;
-			}
+			return $this->field_default;
 		}
 	}
 
-	private function validate_url($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
-		if (isset($value) && $value !== "") {
-			return cleanurl($value);
+	/* validate a valid url
+	* require path.
+	* returns a default if blank
+	*/
+	private function verify_url() {
+		if ($this->field_value) {
+			return filter_var($this->field_value, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
+			//return cleanurl($this->field_value);
 		} else {
-			return $default;
+			return $this->field_default;
 		}
 	}
 
-	private function validate_date($value, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+	/* returns 10 integer timestamp
+	 * accepts date format in - , / and . delimiters
+	 * returns a default if blank
+	 */
+	private function verify_date() {
 		global $locale;
-
 		//$news_start = isset($_POST['news_start']) && $_POST['news_start'] ? explode('-', $_POST['news_start']) : '';
 		//$news_start_date = (!empty($news_start)) ? mktime(0, 0, 0, $news_start[1], $news_start[0], $news_start[2]) : '';
 		// pair each other to determine which is month.
 		// the standard value for dynamics is day-month-year.
-		if ($value !=0) {
-
-			if (stristr($value, '-')) {
-				$value = explode('-', $value);
-			} elseif (stristr($value, '/')) {
-				$value = explode('/', $value);
+		if ($this->field_value) {
+			if (stristr($this->field_value, '-')) {
+				$this->field_value = explode('-', $this->field_value);
+			} elseif (stristr($this->field_value, '/')) {
+				$this->field_value = explode('/', $this->field_value);
 			} else {
-				$value = explode('.', $value);
+				$this->field_value = explode('.', $this->field_value);
 			}
-
-			if (checkdate($value[1], $value[0], $value[2])) {
-				return mktime(0, 0, 0, $value[1], $value[0], $value[2]);
+			if (checkdate($this->field_value[1], $this->field_value[0], $this->field_value[2])) {
+				return mktime(0, 0, 0, $this->field_value[1], $this->field_value[0], $this->field_value[2]);
 			} else {
 				$this->stop();
-				$this->addError($id);
-				$this->addHelperText($id, sprintf($locale['df_404'], $name));
-				$this->addNotice(sprintf($locale['df_404'], $name));
+				$this->addError($this->field_config['id']);
+				$this->addHelperText($this->field_config['id'], sprintf($locale['df_404'], $this->field_config['title']));
+				$this->addNotice(sprintf($locale['df_404'], $this->field_config['title']));
 			}
 		} else {
-			return $default;
+			return $this->field_default;
 		}
 	}
 
-	private function validate_file($value, $type, $path, $thumbnail, $default, $name, $id, $safemode = FALSE, $error_text = FALSE) {
+	private function verify_file() {
 		global $settings, $locale;
+		/*
 		//@todo: To build the most complete File check ever on PHP-Fusion. Consolidate every code in one place. Add own logic.
 		require_once INCLUDES."photo_functions_include.php";
 		$true_file = $default;
@@ -586,28 +640,29 @@ class defender {
 				return $true_file;
 			}
 		} else {
-			return $default;
+			return $this->field_default;
 		}
+		*/
 	}
 	// end class
 }
 
 function form_sanitizer($value, $default = "", $input_name = FALSE) {
 	global $locale, $defender;
-	// Standard Sanitization
-	if ($input_name) { // must have input name to initiate defender.
-		if (isset($_POST['def'][$input_name])) { // deprecate address config.
-			// Strips Defence Tags.
-			$data = $defender->DefenseOpts($_POST['def'][$input_name]);
-			// already filter out required. validate doesn't need anymore.
-			if ($data['required'] == 1 && (!$value)) { // it is required field but does not contain any value.. do reject.
+	if ($input_name) {
+		if (isset($_SESSION['form_fields'][FUSION_SELF][$input_name])) {
+			$defender->field_config = $_SESSION['form_fields'][FUSION_SELF][$input_name];
+			$defender->field_name = $input_name;
+			$defender->field_value = $value;
+			$defender->field_default = $default;
+			//$data = $defender->get_full_options($defender->field_config);
+			if ($defender->field_config['required'] == 1 && (!$value)) { // it is required field but does not contain any value.. do reject.
 				$defender->stop();
-				$defender->addError($data['id']);
-				$defender->addHelperText($data['id'], $data['error_text']);
-				$defender->addNotice($data['error_text']);
+				$defender->addError($defender->field_config['id']);
+				$defender->addHelperText($defender->field_config['id'], $defender->field_config['error_text']);
+				$defender->addNotice($defender->field_config['error_text']);
 			} else {
-				//$type, $value, $default, $name, $id, $opts;
-				$val = $defender->defender($data['type'], $value, $default, $data['name'], $data['id'], $data['path'], $data['safemode'], $data['error_text'], $data['thumbnail'], $data['thumbnail_db']);
+				$val = $defender->defender();
 				return $val;
 			}
 		}
@@ -664,7 +719,6 @@ function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
 		// generate a new token.
 		$_SESSION['csrf_tokens'][$form][] = $token;
 		// store just one token for each form, if the user is a guest
-
 		//print_p("Max token allowed in $form is $max_tokens");
 		if ($max_tokens > 0 && count($_SESSION['csrf_tokens'][$form]) > $max_tokens) {
 			array_shift($_SESSION['csrf_tokens'][$form]); // remove first element - this keeps changing

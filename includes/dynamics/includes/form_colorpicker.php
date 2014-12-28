@@ -18,60 +18,54 @@
 /*
 Courtesy of : Mjolnic @ http://mjolnic.github.io/bootstrap-colorpicker/
 */
-function form_colorpicker($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
+function form_colorpicker($title = FALSE, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
+	global $defender;
 	if (!defined("COLORPICKER")) {
 		define("COLORPICKER", TRUE);
 		add_to_head("<link href='".DYNAMICS."assets/colorpick/css/bootstrap-colorpicker.css' rel='stylesheet' media='screen' />");
 		add_to_head("<script src='".DYNAMICS."assets/colorpick/js/bootstrap-colorpicker.js'></script>");
 	}
-	global $_POST;
 	$title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
 	$input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
-	if (!is_array($array)) {
-		$array = array();
-		$state_validation = "";
-		$placeholder = "";
-		$width = "250px";
-		$class = "";
-		$deactivate = "";
-		$format = "";
-		$helper_text = "";
-		$required = 0;
-		$safemode = 0;
-		$inline = 0;
-	} else {
-		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
-		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "";
-		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-		$class = (array_key_exists('class', $array)) ? $array['class'] : "";
-		$width = (array_key_exists('width', $array)) ? $array['width'] : "250px";
-		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
-		$format = (array_key_exists("format", $array)) ? $array['format'] : "rgba"; // options = the color format - hex | rgb | rgba.
-		$helper_text = (array_key_exists("helper", $array)) ? $array['helper'] : "";
-	}
+	$options += array(
+		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
+		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
+		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+		'width' => !empty($options['width']) ?  $options['width']  : '250px',
+		'class' => !empty($options['class']) ?  $options['class']  : '',
+		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
+		'max_length' => !empty($options['max_length']) ?  $options['max_length']  : '200',
+		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
+		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
+		'icon' => !empty($options['icon']) ?  $options['icon']  : '',
+		'format' => !empty($options['format']) ?  $options['format']  : 'hex', //options = the color format - hex | rgb | rgba.
+	);
+
 	$html = "";
-	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
-	$html .= "<div id='$input_id' style='width: ".$width."' class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='$format'>";
-	$html .= "<input type='text' name='$input_name' class='form-control $class' id='".$input_id."' value='$input_value' data-color-format='$format' placeholder='".$placeholder."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
+	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$options['class']." '>\n";
+	$html .= $options['title'] ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
+	$html .= "<div id='$input_id' style='width: ".$options['width']."' class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='".$options['format']."'>";
+	$html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."' placeholder='".$options['placeholder']."' ".($options['deactivate'] ? "readonly" : "").">";
 	$html .= "<span id='$input_id-cp' class='input-group-addon'>";
 	$html .= "<i style='background: rgba(255,255,255,1);'></i>";
 	$html .= "</span></div>";
-	$html .= ($inline) ? "</div>\n" : "";
+	$html .= $options['inline'] ? "</div>\n" : "";
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=color],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' />";
-
-	add_to_jquery("
-    $('#$input_id').colorpicker(
-    {
-    format : '$format'
-    });
-    ");
+	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=color],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' />";
+	$defender->add_field_session(array(
+		'input_name' 	=> 	$input_name,
+		'type'			=>	'color',
+	 	'title'			=>	$title2,
+		'id' 			=>	$input_id,
+		'required'		=>	$options['required'],
+		'safemode' 		=> 	$options['safemode'],
+		'error_text'	=> 	$options['error_text']
+	 ));
+	add_to_jquery("$('#$input_id').colorpicker({ format : '".$options['format']."'  });");
 	return $html;
 }
 

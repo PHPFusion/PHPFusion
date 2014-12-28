@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 
 function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
-	global $locale, $userdata; // for editor
+	global $locale, $defender, $userdata; // for editor
 
 	require_once INCLUDES."bbcode_include.php";
 	require_once INCLUDES."html_buttons_include.php";
@@ -144,7 +144,19 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= $options['inline'] ? "</div>\n" : '';
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=textarea],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
+	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=textarea],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
+
+	$defender->add_field_session(array(
+			 'input_name' 	=> 	$input_name,
+			 'type'			=>	'textarea',
+			 'title'		=>	$title2,
+			 'id' 			=>	$input_id,
+			 'required'		=>	$options['required'],
+			 'safemode' 	=> 	$options['safemode'],
+			 'error_text'	=> 	$options['error_text']
+		 ));
+
+
 	return $html;
 }
 

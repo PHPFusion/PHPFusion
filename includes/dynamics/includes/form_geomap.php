@@ -19,13 +19,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_address($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
-	global $locale;
+function form_address($title = FALSE, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
+	global $locale, $defender;
 	$title = (isset($title) && (!empty($title))) ? $title : "";
 	$title2 = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
-
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
 		add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
@@ -46,37 +45,31 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 		$input_value['4'] = "";
 		$input_value['5'] = "";
 	}
-	if (!is_array($array)) {
-		$required = "";
-		$deactivate = "";
-		$width = "";
-		$class = "";
-		$well = "";
-		$required = 0;
-		$safemode = 0;
-		$inline = 0;
-		$flag = 0;
-	} else {
-		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-		$class = (array_key_exists('class', $array)) ? $array['class'] : "";
-		$width = (array_key_exists('width', $array)) ? $array['width'] : "";
-		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
-		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? 1 : 0;
-		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
-		$flag = (array_key_exists("flag", $array)) ? 1 : 0;
-	}
+
+	$options += array(
+		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
+		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
+		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+		'width' => !empty($options['width']) ?  $options['width']  : '100%',
+		'class' => !empty($options['class']) ?  $options['class']  : '',
+		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
+		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
+		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
+		'flag' => !empty($options['flag']) ?  $options['flag']  : '',
+	);
+
 	$html = "";
-	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 $class'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$options['class']."' >\n";
+	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
 	$html .= "<div class='row'>\n";
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1']." ".($required == 1 ? '*':'')."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "")."/>\n";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
 	$html .= "<div id='$input_id-street-help'></div>";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "")."/>";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
@@ -96,21 +89,30 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 	$html .= "<div id='$input_id-state-help'></div>";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control input-sm' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "")."/>\n";
+	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control input-sm' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
 	$html .= "<div id='$input_id-city-help'></div>";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control input-sm' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "")."/>\n";
+	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control input-sm' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
 	$html .= "<div id='$input_id-postcode-help'></div>";
 	$html .= "</div>\n";
 	$html .= "</div>\n"; // close inner row
 	$html .= ($inline) ? "</div>\n" : "";
 	$html .= "</div>\n";
 	// Defender Strings
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=address],[title=$input_name],[id=".$input_id."],[required=$required],[safemode=$safemode]' />\n";
+	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=address],[title=$input_name],[id=".$input_id."],[required=$required],[safemode=$safemode]' />\n";
+	$defender->add_field_session(array(
+		 'input_name' 	=> 	$input_name,
+		 'type'			=>	'address',
+		 'title'		=>	$title2,
+		 'id' 			=>	$input_id,
+		 'required'		=>	$options['required'],
+		 'safemode'		=> 	$options['safemode'],
+		 'error_text'	=> 	$options['error_text']
+	 ));
 
 	$flag_function = ''; $flag_plugin = '';
-	if ($flag) {
+	if ($options['flag']) {
 		$flag_function = "
 		function show_flag(item) {
 		if(!item.id) {return item.text;}
@@ -128,7 +130,7 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 	".$flag_function."
     $('#$input_id-country').select2({
 	$flag_plugin
-	placeholder: 'Country ".($required == 1 ? '*':'')."'
+	placeholder: 'Country ".($options['required'] == 1 ? '*':'')."'
     });
     $('#".$input_id."-country').bind('change', function(){
     	var ce_id = $(this).val();
@@ -143,9 +145,8 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
         },
         success: function(data) {
         //$('#state-spinner').hide();
-
         $('#".$input_id."-state').select2({
-        placeholder: 'Select State ".($required == 1 ? '*':'')."',
+        placeholder: 'Select State ".($options['required'] == 1 ? '*':'')."',
         allowClear: true,
         data : data
         });
@@ -160,10 +161,6 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
         })
 	}).trigger('change');
 	");
-
-	/* deprecated in favor of Ajax solution
-	$html .= add_to_jquery("$('#".$input_id."-country').chained('#".$input_id."-country');");
-	*/
 	return $html;
 }
 

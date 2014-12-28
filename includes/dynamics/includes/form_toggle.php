@@ -16,7 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 /* http://zamanak.ir/themes/zamanak/bootstrap-switch-3.0/ */
-function form_toggle($title, $input_name, $input_id, $opts, $input_value, $array = FALSE) {
+function form_toggle($title, $input_name, $input_id, $opts, $input_value, array $options = array()) {
+	global $defender;
 	if (!defined("TOGGLE")) {
 		define("TOGGLE", TRUE);
 		add_to_footer("<script src='".DYNAMICS."assets/switch/js/bootstrap-switch.min.js'></script>");
@@ -24,37 +25,38 @@ function form_toggle($title, $input_name, $input_id, $opts, $input_value, $array
 	}
 	$html = '';
 	$title2 = ucfirst(strtolower(str_replace("_", " ", $input_name)));
-	if (!is_array($array)) {
-		$class = '';
-		$error_text = '';
-		$required = 0;
-		$inline = 0;
-		$keyflip = 0;
-		$deactivate = 0;
-		$value = '1';
-	} else {
-		$class = (array_key_exists("class", $array)) ? $array['class'] : "";
-		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
-		$required = (array_key_exists('required', $array) && ($array['required'] == 1)) ? 1 : 0;
-		$inline = (array_key_exists("inline", $array)) ? 1 : 0;
-		$keyflip = (array_key_exists('keyflip', $array)) ? $array['keyflip'] : 0;
-		$value = (array_key_exists('value', $array)) ? $array['value'] : '1';
-		$deactivate = (array_key_exists("deactivate", $array) && ($array['deactivate'] == "1")) ? 1 : 0;
-	}
+	$options += array(
+		'class' => !empty($options['class']) ? $options['class'] : '',
+		'inline' => !empty($options['inline']) && $options['inline'] == 1 ? 1 : 0,
+		'keyflip' => !empty($options['keyflip']) && $options['keyflip'] == 1 ? 1 : 0,
+		'error_text' => !empty($options['error_text']) ? $options['error_text'] : '',
+		'required' => !empty($options['required']) ? $options['required'] : '',
+		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? 1 : 0,
+		'value' => !empty($options['value']) && $options['value'] ? $options['value'] : 1
+	);
 
-	$html .= "<div id='$input_id-field' class='form-group clearfix $class'>\n";
-	$html .= ($title) ? "<label class='control-label ".($inline ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($required == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($inline) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
+	$html .= "<div id='$input_id-field' class='form-group clearfix ".$options['class']."'>\n";
+	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
 	$on_label = $opts['1'];
 	$off_label = $opts['0'];
-	if ($keyflip) {
+	if ($options['keyflip']) {
 		$on_label = $opts['0'];
 		$off_label = $opts['1'];
 	}
-	$html .= "<input id='$input_id' name='$input_name' value='$value' type='checkbox' data-on-text='$on_label' data-off-text='$off_label' ".($deactivate ? 'readonly' : '')." ".($input_value == '1' ? 'checked' : '')." />\n"; ///>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=$required]".($error_text ? ",[error_text=$error_text]" : '')."' />";
+	$html .= "<input id='$input_id' name='$input_name' value='".$options['value']."' type='checkbox' data-on-text='$on_label' data-off-text='$off_label' ".($options['deactivate'] ? 'readonly' : '')." ".($input_value == '1' ? 'checked' : '')." />\n";
+	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=$required]".($error_text ? ",[error_text=$error_text]" : '')."' />";
+	$defender->add_field_session(array(
+		 'input_name' 	=> 	$input_name,
+		 'type'			=>	'number',
+		 'title'		=>	$title2,
+		 'id' 			=>	$input_id,
+		 'required'		=>	$options['required'],
+		 'safemode' 	=> 	$options['safemode'],
+		 'error_text'	=> 	$options['error_text']
+	 ));
 	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
-	$html .= ($inline) ? "</div>\n" : "";
+	$html .= $options['inline'] ? "</div>\n" : "";
 	$html .= "</div>\n";
 
 	/* For fancy customization, redeclare on script end*/
@@ -65,6 +67,7 @@ function form_toggle($title, $input_name, $input_id, $opts, $input_value, $array
 }
 
 function form_checkbox($title, $input_name, $input_id, $input_value, array $options = array()) {
+	global $defender;
 	$title2 = ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$options += array(
 		'class' => !empty($options['class']) ? $options['class'] : '',
@@ -78,7 +81,16 @@ function form_checkbox($title, $input_name, $input_id, $input_value, array $opti
 	$html .= "<label class='control-label col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0' for='$input_id'>\n";
 	$html .= "<input id='$input_id' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['deactivate'] ? 'readonly' : '')." ".($input_value == '1' ? 'checked' : '')." />\n";
 	$html .= "$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=".$options['required']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."'/>";
+	$defender->add_field_session(array(
+		 'input_name' 	=> 	$input_name,
+		 'type'			=>	'number',
+		 'title'		=>	$title2,
+		 'id' 			=>	$input_id,
+		 'required'		=>	$options['required'],
+		 'safemode' 	=> 	$options['safemode'],
+		 'error_text'	=> 	$options['error_text']
+	 ));
+	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=".$options['required']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."'/>";
 	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
 	$html .= "</div>\n";
 	return $html;

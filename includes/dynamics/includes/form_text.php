@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
+	global $defender;
 	$html = '';
 	$title = (isset($title) && (!empty($title))) ? $title : "";
 	$title2 = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -74,7 +75,17 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($options['inline']) ? "</div>\n" : '';
 	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=$type_config],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
+	// new model for sanitization
+	$defender->add_field_session(array(
+				'input_name' 	=> 	$input_name,
+				'type'			=>	$type_config,
+				'title'			=>	$title2,
+				'id' 			=>	$input_id,
+				'required'		=>	$options['required'],
+				'safemode' 		=> 	$options['safemode'],
+				'error_text'	=> 	$options['error_text']
+			 ));
+
 	if ($options['number']) {
 		add_to_jquery("
 		$('#".$input_id."').keypress(function(e) {

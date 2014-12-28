@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_select($title, $input_name, $input_id, array $option_array = array(), $input_value = FALSE, array $options = array()) {
+	global $defender;
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
 		add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
@@ -93,7 +94,16 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 	}
 	// Generate Defender Tag
 	$input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
+	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
+	$defender->add_field_session(array(
+							 'input_name' 	=> 	$input_name,
+							 'type'			=>	'dropdown',
+							 'title'		=>	$title2,
+							 'id' 			=>	$input_id,
+							 'required'		=>	$options['required'],
+							 'safemode' 	=> 	$options['safemode'],
+							 'error_text'	=> 	$options['error_text']
+						 ));
 	// Initialize Select2
 	// Select 2 Multiple requires hidden DOM.
 	if ($options['jsonmode'] == 0) {

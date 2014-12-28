@@ -41,7 +41,7 @@ function form_button($title, $input_name, $input_id, $input_value, array $option
 
 
 function form_btngroup($title, $input_name, $input_id, $opts, $input_value, array $options = array()) {
-
+	global $defender;
 	$title2 = ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
 
@@ -75,8 +75,16 @@ function form_btngroup($title, $input_name, $input_id, $opts, $input_value, arra
 	$html .= $options['inline'] ? "</div>\n" : '';
 	$html .= "</div>\n";
 
-	$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]' />";
-
+	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]' />";
+	$defender->add_field_session(array(
+			 'input_name' 	=> 	$input_name,
+			 'type'			=>	'text',
+		 	 'title'		=>	$title2,
+			 'id' 			=>	$input_id,
+			 'required'		=>	$options['required'],
+			 'safemode' 	=> 	$options['safemode'],
+			 'error_text'	=> 	$options['error_text']
+	));
 	add_to_jquery("
 	$('#".$input_id." button').bind('click', function(e){
 		$('#".$input_id." button').removeClass('active');
