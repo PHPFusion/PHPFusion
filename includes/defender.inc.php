@@ -40,7 +40,6 @@ class defender {
 		'path'	=> '',
 		'thumbnail_1' => '',
 		'thumbnail_2' => '',
-
 	); // declared by form_sanitizer()
 
 	/* Sanitize Fields Automatically */
@@ -147,11 +146,18 @@ class defender {
 
 	// when you load, add_field is injected into defender. then, hacker deletes the field.
 	public function add_field_session(array $array) {
-		$_SESSION['form_fields'][FUSION_SELF][$array['input_name']] = $array;
+		global $userdata;
+		$_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
 	}
-
+	// fetch you users field sessions so you can do anything with it
+	static function my_field_session() {
+		global $userdata;
+		return $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']];
+	}
+	// destroy a users field session. use carefully
 	public function unset_field_session() {
-		unset($_SESSION['form_fields'][FUSION_SELF]);
+		global $userdata;
+		unset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']]);
 	}
 
 	/* Jquery Error Class Injector */
@@ -648,10 +654,10 @@ class defender {
 }
 
 function form_sanitizer($value, $default = "", $input_name = FALSE) {
-	global $locale, $defender;
+	global $userdata, $defender;
 	if ($input_name) {
-		if (isset($_SESSION['form_fields'][FUSION_SELF][$input_name])) {
-			$defender->field_config = $_SESSION['form_fields'][FUSION_SELF][$input_name];
+		if (isset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name])) {
+			$defender->field_config = $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name];
 			$defender->field_name = $input_name;
 			$defender->field_value = $value;
 			$defender->field_default = $default;
