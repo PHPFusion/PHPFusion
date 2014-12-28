@@ -143,16 +143,30 @@ function dbarraynum($statement) {
  * @param string $db_user
  * @param string $db_pass
  * @param string $db_name
+ * @param boolean $halt_on_error If it is TRUE, the script will halt in case of error
  */
-function dbconnect($db_host, $db_user, $db_pass, $db_name) {
+function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE) {
 	global $pdo;
+	$db_connect = TRUE;
+	$db_select = TRUE;
 	try {
 		$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass);
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
 	} catch (PDOException $error) {
-		die("<strong>Unable to select MySQL database</strong><br />".$error->getMessage());
+		$db_connect = $error->getCode() === 1049; //unknown database
+		$db_select = FALSE;
+		if ($halt_on_error and !$db_connect) {
+			die("<strong>Unable to establish connection to MySQL</strong><br />".$error->getCode()." : ".$error->getMessage());
+		} elseif ($halt_on_error) {
+			die("<strong>Unable to select MySQL database</strong><br />".$error->getCode()." : ".$error->getMessage());
+		}
+
 	}
+	return array(
+		'connection_success' => $db_connect,
+		'dbselection_success' => $db_select
+	);
 }
 
 /**

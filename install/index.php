@@ -49,6 +49,25 @@ if (isset($_POST['step']) && $_POST['step'] == "8") {
 	redirect(BASEDIR.'index.php');
 }
 
+//determine the chosen database functions
+$pdo_enabled = filter_input(INPUT_POST, 'pdo_enabled', FILTER_VALIDATE_BOOLEAN);
+$db_host = 'localhost';
+$db_user = '';
+$db_pass = '';
+$db_name = '';
+$db_prefix = '';
+if (file_exists(BASEDIR.'config.php')) { include BASEDIR.'config.php'; }
+elseif (file_exists(BASEDIR.'config_temp.php')) { include BASEDIR.'config_temp.php'; }
+if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+	$pdo_enabled = (bool) intval($pdo_enabled);
+	$db_host = stripinput(trim(strval(filter_input(INPUT_POST, 'db_host')))) ? : $db_host;
+	$db_user = stripinput(trim(strval(filter_input(INPUT_POST, 'db_user')))) ? : $db_user;
+	$db_pass = stripinput(trim(strval(filter_input(INPUT_POST, 'db_pass')))) ? : $db_pass;
+	$db_name = stripinput(trim(strval(filter_input(INPUT_POST, 'db_name')))) ? : $db_name;
+	$db_prefix = stripinput(trim(strval(filter_input(INPUT_POST, 'db_prefix')))) ? : $db_prefix;
+}
+
+
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
 $settings['description'] = $locale['setup_0000'];
 $settings['keywords'] = "";
@@ -60,6 +79,7 @@ require_once LOCALE.LOCALESET.'global.php';
 require_once INCLUDES."output_handling_include.php";
 include_once INCLUDES."dynamics/dynamics.inc.php";
 require_once INCLUDES."sqlhandler.inc.php";
+require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
 $dynamics = new dynamics();
 $dynamics->boot();
 $system_apps = array(
@@ -95,31 +115,9 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		}
 
 		// Must always include a temp file.
-		if (file_exists(BASEDIR.'config_temp.php')) {
-			include BASEDIR.'config_temp.php';
-		}
 		/* 1. To enter Recovery. CONFIG TEMP file must have dbprefix and have value in dbprefix. */
 		if (isset($db_prefix) && $db_prefix) {
-			if ($pdo_enabled == "1") {
-				require_once INCLUDES."db_handlers/pdo_functions_include.php";
-				$pdo = NULL;
-				try {
-					$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => FALSE,
-						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-						PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-					$db_connect = $pdo;
-					$db_select = "True";
-				} catch (PDOException $e) {
-					$db_connect = "False";
-					$db_select = "False";
-				}
-			} else {
-				require_once INCLUDES."db_handlers/mysql_functions_include.php";
-				$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-				mysql_set_charset('utf8', $db_connect);
-				$db_select = @mysql_select_db($db_name);
-			}
-
+			dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
 			if (isset($_POST['uninstall'])) {
 				include_once 'includes/core.setup.php'; // why does it still produce flash of error message?
 				@unlink(BASEDIR.'config_temp.php');
@@ -246,15 +244,12 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 	break;
 	// Step 3 - Database Settings
 	case 3:
-		$db_prefix = "fusion".createRandomPrefix()."_";
+		if (!$db_prefix) {
+			$db_prefix = "fusion".createRandomPrefix()."_";
+		}
 		$cookie_prefix = "fusion".createRandomPrefix()."_";
-		$db_host = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "localhost");
-		$db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
-		$db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
 		$email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
 		$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
-		$pdo_enabled = (isset($_POST['pdo_enabled']) ? stripinput(trim($_POST['pdo_enabled'])) : "");
-		$db_prefix = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : $db_prefix);
 		$db_error = (isset($_POST['db_error']) && isnum($_POST['db_error']) ? $_POST['db_error'] : "0");
 		$field_class = array("", "", "", "", "");
 		if ($db_error > "0") {
@@ -330,12 +325,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 	// Step 4 - Config / Database Setup
 	case 4:
 		// Generate All Core Tables - this includes settings and all its injections
-		$db_host = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "");
-		$db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
-		$db_pass = (isset($_POST['db_pass']) ? stripinput(trim($_POST['db_pass'])) : "");
-		$db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
-		$pdo_enabled = (isset($_POST['pdo_enabled']) ? stripinput(trim($_POST['pdo_enabled'])) : "");
-		$db_prefix = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : "");
 		$cookie_prefix = (isset($_POST['cookie_prefix']) ? stripinput(trim($_POST['cookie_prefix'])) : "fusion_");
 		$email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
 		$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
@@ -365,27 +354,9 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$secret_key = createRandomPrefix(32);
 		$secret_key_salt = createRandomPrefix(32);
 		if ($db_host != "" && $db_user != "" && $db_name != "" && $db_prefix != "") {
-			if ($pdo_enabled == "1") {
-				require_once INCLUDES."db_handlers/pdo_functions_include.php";
-				$pdo = NULL;
-				try {
-					$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => FALSE,
-						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-						PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-					$db_connect = $pdo;
-					$db_select = "True";
-				} catch (PDOException $e) {
-					$db_connect = "False";
-					$db_select = "False";
-				}
-			} else {
-				require_once INCLUDES."db_handlers/mysql_functions_include.php";
-				$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-				if ($db_connect) {
-					mysql_set_charset('utf8', $db_connect);
-					$db_select = @mysql_select_db($db_name);
-				}
-			}
+			$connection_info = dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+			$db_connect = $connection_info['connection_success'];
+			$db_select = $connection_info['dbselection_success'];
 			if ($db_connect) {
 				if ($db_select) {
 					if (dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'")) == "0") {
@@ -408,15 +379,13 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 							$config .= "\$db_pass = '".$db_pass."';\n";
 							$config .= "\$db_name = '".$db_name."';\n";
 							$config .= "\$db_prefix = '".$db_prefix."';\n";
-							$config .= "\$pdo_enabled = '".$pdo_enabled."';\n";
+							$config .= "\$pdo_enabled = ".intval($pdo_enabled).";\n";
 							$config .= "define(\"DB_PREFIX\", \"".$db_prefix."\");\n";
 							$config .= "define(\"COOKIE_PREFIX\", \"".$cookie_prefix."\");\n";
 							$config .= "define(\"SECRET_KEY\", \"".$secret_key."\");\n";
 							$config .= "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\");\n";
 							$config .= "?>";
-							$temp = fopen(BASEDIR.'config_temp.php', 'w');
-							if (fwrite($temp, $config)) {
-								fclose($temp);
+							if (file_put_contents(BASEDIR.'config_temp.php', $config)) {
 								$fail = FALSE;
 								if (!$result) {
 									$fail = TRUE;
@@ -513,35 +482,12 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 	break;
 	// Step 5 - Configure Core System - $settings accessible - Requires Config_temp.php (Shut down site when upgrading).
 	case 5:
-		$db_prefix = '';
-		$pdo_enabled = '';
-		$db_host = '';
-		$db_name = '';
-		$db_user = '';
-		$db_pass = '';
 		if (!isset($_POST['done'])) {
 			// Load Config and SQL handler.
 			if (file_exists(BASEDIR.'config_temp.php')) {
-				include BASEDIR.'config_temp.php';
-				if ($pdo_enabled == "1") {
-					require_once INCLUDES."db_handlers/pdo_functions_include.php";
-					$pdo = NULL;
-					try {
-						$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => FALSE,
-							PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-							PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-						$db_connect = $pdo;
-						$db_select = "True";
-					} catch (PDOException $e) {
-						$db_connect = "False";
-						$db_select = "False";
-					}
-				} else {
-					require_once INCLUDES."db_handlers/mysql_functions_include.php";
-					$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-					mysql_set_charset('utf8', $db_connect);
-					$db_select = @mysql_select_db($db_name);
-				}
+				$connection_info = dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+				$db_connect = $connection_info['connection_success'];
+				$db_select = $connection_info['dbselection_success'];
 				$settings = array();
 				$result = dbquery("SELECT * FROM ".$db_prefix."settings");
 				if (dbrows($result)>0) {
@@ -657,28 +603,9 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		}
 		// to scan whether User Acccount exists.
 		if (file_exists(BASEDIR.'config.php') || file_exists(BASEDIR.'config_temp.php')) {
-			if (file_exists(BASEDIR.'config.php')) { include BASEDIR.'config.php'; }
-			elseif (file_exists(BASEDIR.'config_temp.php')) { include BASEDIR.'config_temp.php'; }
-
-			if ($pdo_enabled == "1") {
-				require_once INCLUDES."db_handlers/pdo_functions_include.php";
-				$pdo = NULL;
-				try {
-					$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => FALSE,
-						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-						PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-					$db_connect = $pdo;
-					$db_select = "True";
-				} catch (PDOException $e) {
-					$db_connect = "False";
-					$db_select = "False";
-				}
-			} else {
-				require_once INCLUDES."db_handlers/mysql_functions_include.php";
-				$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-				mysql_set_charset('utf8', $db_connect);
-				$db_select = @mysql_select_db($db_name);
-			}
+			$connection_info = dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+			$db_connect = $connection_info['connection_success'];
+			$db_select = $connection_info['dbselection_success'];
 			$settings = array();
 			$result = dbquery("SELECT * FROM ".$db_prefix."settings");
 			if (dbrows($result)) {
@@ -725,26 +652,9 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 	// Step 7 - Final Settings
 	case 7:
 		if (file_exists(BASEDIR.'config_temp.php')) {
-			include BASEDIR.'config_temp.php';
-			if ($pdo_enabled == "1") {
-				require_once INCLUDES."db_handlers/pdo_functions_include.php";
-				$pdo = NULL;
-				try {
-					$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";", $db_user, $db_pass, array(PDO::ATTR_EMULATE_PREPARES => FALSE,
-						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-						PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-					$db_connect = $pdo;
-					$db_select = "True";
-				} catch (PDOException $e) {
-					$db_connect = "False";
-					$db_select = "False";
-				}
-			} else {
-				require_once INCLUDES."db_handlers/mysql_functions_include.php";
-				$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-				mysql_set_charset('utf8', $db_connect);
-				$db_select = @mysql_select_db($db_name);
-			}
+			$connection_info = dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+			$db_connect = $connection_info['connection_success'];
+			$db_select = $connection_info['dbselection_success'];
 			$settings = array();
 			$result = dbquery("SELECT * FROM ".$db_prefix."settings");
 			if (dbrows($result)) {
