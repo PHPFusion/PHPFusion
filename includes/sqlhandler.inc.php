@@ -8,7 +8,7 @@
 | Filename: sqlhandler.inc.php
 | Author: PHP-Fusion 8 Development Team
 | Coded by : Frederick MC Chan (Hien)
-| Version : 8.1.6 (please update every commit)
+| Version : 9.1.1 (please update every commit)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -431,8 +431,8 @@ function sort_tree(&$result, $key) {
 
 // New SQL Row Modifier.
 function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
+	global $defender;
 	require_once INCLUDES."notify/notify.inc.php";
-	
 	if (defined("ADMIN_PANEL")) {
 		global $aidlink;
 	} else {
@@ -449,9 +449,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 		$pkey = 0;
 		$no_unique = 0;
 	}
-
 	if (!defined("FUSION_NULL")) {
-
 		$columns = fieldgenerator($db);
 		$col_rows = count($columns);
 		$col_names = array();
@@ -573,6 +571,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					print_p($result);
 				} else {
 					$result = dbquery("INSERT INTO ".$db." ($the_column) VALUES ($the_value)");
+					$defender->unset_field_session();
 					return dblastid();
 				}
 			}
@@ -594,6 +593,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					print_p("UPDATE ".$db." SET $the_value WHERE $update_core");
 				} else {
 					$result = dbquery("UPDATE ".$db." SET $the_value WHERE $update_core");
+					$defender->unset_field_session();
 				}
 			}
 		} elseif ($mode == "delete") {
@@ -604,6 +604,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					print_p("DELETE FROM ".$db." WHERE $col='$values'");
 				} else {
 					$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
+					$defender->unset_field_session();
 				}
 			}
 		} else {
