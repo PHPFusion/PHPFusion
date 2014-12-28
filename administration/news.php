@@ -143,7 +143,7 @@ function news_form() {
 		$data['news_name'] = $userdata['user_id'];
 
 		$upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
-		if (!empty($news_upload)) {
+		if (!empty($upload)) {
 			$data['news_image'] = $upload['image_name'];
 			$data['news_image_t1'] = $upload['thumb1_name'];
 			$data['news_image_t2'] = $upload['thumb2_name'];
@@ -356,7 +356,7 @@ function news_form() {
 			'thumbnail' => 1,
 			'thumbnail_w' => $settings['news_thumb_w'],
 			'thumbnail_h' => $settings['news_thumb_h'],
-			'thumb_folder' => 1,
+			'thumbnail_folder' => 'thumbs',
 			'delete_original' => 0,
 			// set thumbnail 2 settings
 			'thumbnail2' => 1,

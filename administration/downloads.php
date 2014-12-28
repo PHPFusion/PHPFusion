@@ -94,7 +94,15 @@ function download_form() {
 		$data['download_allow_comments'] = isset($_POST['download_allow_comments']) ? 1 : 0;
 		$data['download_allow_ratings'] = isset($_POST['download_allow_ratings']) ? 1 : 0;
 
-		if (isset($_POST['del_upload']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
+		$upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
+		if ($upload) {
+			// new upload
+			$data['download_file'] = $upload['target_file'];
+			if ($data['download_filesize'] == "" || isset($_POST['calc_upload'])) {
+				$data['download_filesize'] = parsebytesize($upload['source_size']);
+			}
+		} elseif (isset($_POST['del_upload']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
+			// delete
 			$result2 = dbquery("SELECT download_file FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
 			if (dbrows($result2)) {
 				$data2 = dbarray($result2);
@@ -105,65 +113,28 @@ function download_form() {
 			$data['download_file'] = '';
 			$data['download_filesize'] = '';
 		}
-
-		elseif (!empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
-
-			require_once INCLUDES."infusions_include.php";
-			$data['download_url'] = '';
-			// Name of $_FILE key which holds the upload
-			$source_file = "download_file";
-			// Left blank to use the filename as it is
-			$target_file = $_FILES['download_file']['name'];
-			// Upload folder
-			$target_folder = DOWNLOADS;
-			// Valid file extensions
-			// $valid_ext = explode(",", $settings['download_types']);
-			// $valid_ext = implode("|", $valid_ext);
-			// Maximum file size in bytes
-			$max_size = $settings['download_max_b'];
-			$upload = upload_file($source_file, $target_file, $target_folder, $settings['download_types'], $max_size);
-			if ($upload['error'] !=0) {
-
-				$defender->stop();
-				if ($upload['error'] == 1) {
-					// Maximum file size exceeded
-					$defender->addNotice(sprintf($locale['download_0105'], $max_size));
-				} elseif ($upload['error'] == 2) {
-					// Invalid file extension
-					$defender->addNotice(sprintf($locale['download_0108'], $settings['download_types']));
-				} elseif ($upload['error'] == 3) {
-					// Invalid query string
-					$defender->addNotice($locale['download_0113']);
-				} elseif ($upload['error'] == 4) {
-					// File not uploaded
-					$defender->addNotice($locale['download_0111']);
-				}
-			}
-			else {
-				// Successful upload!
-				$data['download_file'] = $upload['target_file'];
-				if ($data['download_filesize'] == "" || isset($_POST['calc_upload'])) {
-					$data['download_filesize'] = parsebytesize($upload['source_size']);
-				}
-			}
-		}
-
 		elseif (isset($_POST['download_file']) && $_POST['download_file'] != "") {
+			// post an edited hidden field file name
 			$data['download_file'] = $_POST['download_file'];
 		}
-
 		elseif ((isset($_POST['download_url']) && $_POST['download_url'] != "")) {
+			// post a url
 			$data['download_url'] = (isset($_POST['download_url']) ? stripinput($_POST['download_url']) : "");
 			$data['download_file'] = '';
 		}
-
 		else {
+			// no filename
 			$defender->stop();
 			$defender->addNotice($locale['download_0111']);
 		}
 
-
-		if (isset($_POST['del_image']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
+		$upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
+		if ($upload) {
+			// new image
+			$data['download_image'] = $upload['image_name'];
+			$data['download_image_thumb'] = $upload['thumb1_name'];
+		} elseif (isset($_POST['del_image']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
+			// delete image
 			$result = dbquery("SELECT download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
 			if (dbrows($result)) {
 				$data += dbarray($result);
@@ -176,84 +147,20 @@ function download_form() {
 			}
 			$data['download_image'] = '';
 			$data['download_image_thumb'] = '';
-		}
-		elseif (!empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
-			require_once INCLUDES."infusions_include.php";
-			// Name of $_FILE key which holds the uploaded image
-			$image = "download_image";
-			// Left blank to use the image name as it is
-			$name = $_FILES['download_image']['name'];
-			// Upload folder
-			$folder = DOWNLOADS."images/";
-			// Maximum image width in pixels
-			$width = $settings['download_screen_max_w'];
-			// Maximum image height in pixels
-			$height = $settings['download_screen_max_w'];
-			// Maximum file size in bytes
-			$size = $settings['download_screen_max_b'];
-			$upload = upload_image($image, $name, $folder, $width, $height, $size, FALSE, TRUE, FALSE, 1, $folder, "_thumb", $settings['download_thumb_max_w'], $settings['download_thumb_max_h']);
-			if ($upload['error'] > 0) {
-				$defender->stop();
-				switch ($upload['error']) {
-					case 1:
-						// Invalid file size
-						$defender->addNotice(sprintf($locale['download_0105'], $settings['download_screen_max_b']));
-						break;
-					case 2:
-						// Unsupported image type
-						$error = 10;
-						$defender->addNotice(sprintf($locale['download_0109'], '.jpg,.png,.gif'));
-						break;
-					case 3:
-						// Invalid image resolution
-						$error = 11;
-						$defender->addNotice(sprintf($locale['download_0105'], "".$width." x ".$height.""));
-						break;
-					case 4:
-						// Invalid query string
-						$error = 12;
-						$defender->addNotice($locale['download_0113']);
-						break;
-					case 5:
-						// Image not uploaded
-						//$error = 13;
-						$defender->addNotice($locale['download_0113']);
-						break;
-				}
-				/*
-				$data['download_image'] = (isset($_POST['download_image']) ? $_POST['download_image'] : "");
-				$data['download_image_thumb'] = (isset($_POST['download_image_thumb']) ? $_POST['download_image_thumb'] : "");
-				if (isset($_POST['download_file']) && $_POST['download_file'] != "") {
-					$data['download_file'] = $_POST['download_file'];
-				} elseif ((isset($_POST['download_url']) && $_POST['download_url'] != "")) {
-					$data['download_url'] = (isset($_POST['download_url']) ? stripinput($_POST['download_url']) : "");
-					$data['download_file'] = "";
-				} else {
-					@unlink(DOWNLOADS.$data['download_file']);
-					$data['download_file'] = '';
-				} */
-			} else {
-				// Successful upload!
-				$data['download_image'] = $upload['image_name'];
-				$data['download_image_thumb'] = $upload['thumb1_name'];
-			}
-		}
-		elseif (isset($_POST['download_image']) && $_POST['download_image'] != "") {
+		} elseif (isset($_POST['download_image']) && $_POST['download_image'] != "") {
+			// posted image file name
 			$data['download_image'] = $_POST['download_image'];
 			$data['download_image_thumb'] = $_POST['download_image_thumb'];
 		}
 
-		if (!defined('FUSION_NULL')) {
-			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['download_id']) && isnum($_GET['download_id']))) {
-				$data['download_datestamp'] = isset($_POST['update_datestamp']) ? time() : '';
-				dbquery_insert(DB_DOWNLOADS, $data, 'update');
-				redirect(FUSION_SELF.$aidlink."&status=su");
-			} else {
-				dbquery_insert(DB_DOWNLOADS, $data, 'save');
-				redirect(FUSION_SELF.$aidlink."&status=sn");
-			}
+		$row_check = dbcount("(download_id)", DB_DOWNLOADS, "download_id='".$data['download_id']."'");
+		if ($row_check > 0) {
+			$data['download_datestamp'] = isset($_POST['update_datestamp']) ? time() : '';
+			dbquery_insert(DB_DOWNLOADS, $data, 'update');
+			redirect(FUSION_SELF.$aidlink."&status=su");
 		} else {
-			echo "FUSION_NULL DECLARED";
+			dbquery_insert(DB_DOWNLOADS, $data, 'save');
+			redirect(FUSION_SELF.$aidlink."&status=sn");
 		}
 	}
 	/* delete */
@@ -367,8 +274,14 @@ function download_form() {
 		echo "</div>\n";
 		echo form_hidden('', 'download_file', 'download_file', $data['download_file']);
 	} else {
+
+		$file_options = array(
+			'max_bytes' => $settings['download_max_b'],
+			'valid_ext' => $settings['download_types'],
+		);
+
 		echo "<div class='list-group m-t-10'><div class='list-group-item'>\n";
-		echo form_fileinput($locale['download_0214'], 'download_file', 'download_file', DOWNLOADS, ''); // all file types.
+		echo form_fileinput($locale['download_0214'], 'download_file', 'download_file', DOWNLOADS, '', $file_options);
 		echo sprintf($locale['download_0218'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
 		echo "</div>\n";
 		echo "<div class='list-group-item'>\n";
@@ -423,7 +336,20 @@ function download_form() {
 			echo "<input type='hidden' name='download_image' value='".$data['download_image']."' />";
 			echo "<input type='hidden' name='download_image_thumb' value='".$data['download_image_thumb']."' />";
 		} else {
-			echo form_fileinput($locale['download_0220'], 'download_image', 'download_image', DOWNLOADS, '', array('type' => 'image')); // all file types.
+			$file_options = array(
+				'max_width' => $settings['download_screen_max_w'],
+				'max_height' => $settings['download_screen_max_w'],
+				'max_byte' => $settings['download_screen_max_b'],
+				'type' => 'image',
+				'delete_original' => 0,
+				'thumbnail_folder' => '',
+				'thumbnail' => 1,
+				'thumbnail_suffix'=> '_thumb',
+				'thumbnail_w'=> $settings['download_thumb_max_w'],
+				'thumbnail_h' => $settings['download_thumb_max_h'],
+				'thumbnail2' => 0
+			);
+			echo form_fileinput($locale['download_0220'], 'download_image', 'download_image', DOWNLOADS."images/", '', $file_options); // all file types.
 			echo sprintf($locale['download_0219'], parsebytesize($settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $settings['download_screen_max_w'], $settings['download_screen_max_h'])."<br />\n";
 		}
 	}

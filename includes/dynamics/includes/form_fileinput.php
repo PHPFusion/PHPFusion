@@ -42,11 +42,13 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		'thumbnail' => !empty($options['thumbnail']) && $options['thumbnail'] == 1 ? 1 : 0,
 		'thumbnail_w' 	=> !empty($options['thumbnail_w']) && isnum($options['thumbnail_w']) ? $options['thumbnail_w'] : 150,
 		'thumbnail_h' 	=> !empty($options['thumbnail_h']) && isnum($options['thumbnail_h']) ? $options['thumbnail_h'] : 150,
-		'thumb_folder' 	=> !empty($options['thumb_folder']) && $options['thumb_folder'] == 1 && $options['thumbnail'] ? 1 : 0,
+		'thumbnail_folder' 	=> !empty($options['thumbnail_folder']) && $options['thumbnail_folder'] && $options['thumbnail'] ? rtrim($options['thumbnail_folder'], '/') : '',
+		'thumbnail_suffix' 	=> !empty($options['thumbnail_suffix']) ? $options['thumbnail_suffix'] : '_t1',
 		// fusion use this to shrink image and delete original as true
 		'thumbnail2' 	=> !empty($options['thumbnail2']) && $options['thumbnail2'] == 1 ? 1 : 0,
 		'thumbnail2_w' 	=> !empty($options['thumbnail2_w']) && isnum($options['thumbnail2_w']) ? $options['thumbnail2_w'] : 150,
 		'thumbnail2_h' 	=> !empty($options['thumbnail2_h']) && isnum($options['thumbnail2_h']) ? $options['thumbnail2_h'] : 150,
+		'thumbnail2_suffix' 	=> !empty($options['thumbnail2_suffix']) ? $options['thumbnail2_suffix'] : '_t2',
 		'delete_original' => !empty($options['delete_original']) && $options['delete_original'] == 1 ? 1 : 0,
 		// max upload
 		'max_width'		=>	!empty($options['max_width']) && isnum($options['max_width']) ? $options['max_width'] : 1800,

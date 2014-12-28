@@ -82,7 +82,7 @@ class defender {
 						return $this->verify_number();
 						break;
 					case 'file' :
-						return $this->verify_file();
+						return $this->verify_file_upload();
 						break;
 					case 'url' :
 						return $this->verify_url();
@@ -513,13 +513,13 @@ class defender {
 									$this->field_config['thumbnail'],
 									$this->field_config['thumbnail2'],
 									1,
-									$this->field_config['path'].'thumbs/',
-									'_t1',
+									$this->field_config['path'].$this->field_config['thumbnail_folder']."/",
+									$this->field_config['thumbnail_suffix'],
 									$this->field_config['thumbnail_w'],
-									$this->field_config['thumbnail_h'],
+									$this->	field_config['thumbnail_h'],
 									0,
 									$this->field_config['path'].'thumbs/',
-									'_t2',
+									$this->field_config['thumbnail2_suffix'],
 									$this->field_config['thumbnail2_w'],
 									$this->field_config['thumbnail2_h']
 						);
@@ -556,171 +556,45 @@ class defender {
 		}
 	}
 
-
-
-
-
-	private function verify_file() {
-		global $settings, $locale;
-		/*
-		//@todo: To build the most complete File check ever on PHP-Fusion. Consolidate every code in one place. Add own logic.
-		require_once INCLUDES."photo_functions_include.php";
-		$true_file = $default;
-		if ($value['name'] && is_uploaded_file($value['tmp_name'])) {
-			if (isset($value['name'])) {
-				require_once BASEDIR.'includes/mimetypes_include.php';
-				$mimetypes = array();
-				$errors = array();
-				// copied from admin/photos.php
-				$file_name = stripfilename(str_replace(" ", "_", strtolower(substr($value['name'], 0, strrpos($value['name'], ".")))));
-				$file_ext = strtolower(strrchr($value['name'], "."));
-				$file_info = pathinfo($value['name']);
-				$extension = $file_info['extension'];
-				$file_dest = $path;
-				$max_size = '';
-				$maxWidth = '';
-				$maxHeight = '';
-				if ($type == 'image') { //// Idea: possibly add more types in like video/audio - which can be declared by Dynamics Opts.
-					$mimetypes = img_mimeTypes();
-					$maxsize = $settings['photo_max_b']; // max amount size.
-					$maxWidth = $settings['photo_max_w'];
-					$maxHeight = $settings['photo_max_h'];
-				} elseif ($type == 'system') {
-					$mimetypes = mimeTypes();
-					$acceptable_mime = explode(',', $settings['attachtypes']); // .7zip
-					foreach ($acceptable_mime as $file_mime) {
-						$files_mime = $mimetypes[ltrim($file_mime, '.')];
-						if ($files_mime) {
-							$mimetypes[] = $files_mime;
-						}
-					}
-				} elseif ($type == 'all') {
-					$mimetypes = mimeTypes(); // all
-					$maxsize = $settings['attachmax']; // max amount size.
+	private function verify_file_upload() {
+		global $locale;
+		require_once INCLUDES."infusions_include.php";
+		if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
+			$upload = upload_file(
+				$this->field_config['input_name'],
+				$_FILES[$this->field_config['input_name']]['name'],
+				$this->field_config['path'],
+				$this->field_config['valid_ext'],
+				$this->field_config['max_byte']
+			);
+			if ($upload['error'] !=0) {
+				$this->stop();
+				$this->addError($this->field_config['id']);
+				switch ($upload['error']) {
+					case 1: // Maximum file size exceeded
+						$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+						$this->addHelperText($$this->field_config['id'], $locale['df_416']);
+						break;
+					case 2: // Invalid File extensions
+						$this->addNotice(sprintf($locale['df_417'], $this->field_config['valid_ext']));
+						$this->addHelperText($$this->field_config['id'], $locale['df_417']);
+						break;
+					case 3: // Invalid Query String
+						$this->addNotice($locale['df_422']);
+						$this->addHelperText($$this->field_config['id'], $locale['df_422']);
+						break;
+					case 4: // File not uploaded
+						$this->addNotice($locale['df_423']);
+						$this->addHelperText($$this->field_config['id'], $locale['df_423']);
+						break;
 				}
-				$allowed_ext = array();
-				foreach ($mimetypes as $mime_type => $mime_hex) {
-					$allowed_ext[] = $mime_type;
-				}
-				// name check
-				if (!preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $file_name)) {
-					$errors[] = 1;
-					$this->stop();
-					$this->addError($id);
-					$this->addHelperText($id, $locale['df_415']);
-					$this->addNotice($locale['df_415']);
-				}
-				// filesize checking.
-				if (($value['size'] >= $maxsize) || ($value['size'] == 0)) {
-					$errors[] = 1;
-					$this->stop(); // declare FUSION_NULL. Protect the SQL from being executed.
-					$this->addError($id); // inject JS highlight the field ID dynamically.
-					$this->addHelperText($id, sprintf($locale['df_416'], parsebytesize($maxsize))); // inject field containers
-					$this->addNotice(sprintf($locale['df_416'], parsebytesize($maxsize))); // inject form with error text.
-				}
-				// first check on mime hex and then check for extensions.
-				// This is Arda's code on maincore.php, copied but altered to not die(). Instead, set an error, and protect SQL with FUSION_NULL.
-				if ($settings['mime_check']) {
-					$mime_error = 0;
-					if (array_key_exists($extension, $mimetypes)) {
-						if (is_array($mimetypes[$extension])) {
-							$valid_mimetype = FALSE;
-							foreach ($mimetypes[$extension] as $each_mimetype) {
-								if ($each_mimetype == $value['type']) {
-									$valid_mimetype = TRUE;
-									break;
-								}
-							}
-							if (!$valid_mimetype) {
-								$mime_error = 1;
-							}
-							unset($valid_mimetype);
-						} else {
-							if ($mimetypes[$extension] != $value['type']) {
-								$mime_error = 1;
-							}
-						}
-					}
-					unset($file_info, $extension);
-					if ($mime_error) {
-						$errors[] = 1;
-						$error_text = sprintf($locale['df_417'], implode(', ', $allowed_ext));
-						$this->stop();
-						$this->addError($id);
-						$this->addHelperText($id, $error_text);
-						$this->addNotice($error_text);
-					}
-				}
-				// verify the image for malicious code.
-				if ($type == 'image' && (!verify_image($value['tmp_name']))) {
-					$errors[] = 1;
-					$this->stop();
-					$this->addError($id);
-					$this->addHelperText($id, $locale['df_419']);
-					$this->addNotice($locale['df_419']);
-				}
-				if (!file_exists($path)) {
-					// Only available in 8.00
-					if (!SAFEMODE && !file_exists($path)) {
-						mkdir($path, 0755, TRUE);
-					} else {
-						$errors[] = 1;
-						$this->stop();
-						$this->addError($id);
-						$this->addHelperText($id, $locale['df_420']);
-						$this->addNotice($locale['df_420']);
-					}
-				}
-				// No major big errors.
-				if (count($errors) === 0) {
-					// last check - on extension name. Error to ask for rename of file.
-					if ((!in_array(ltrim($file_ext, '.'), $allowed_ext)) && (!empty($file_ext))) {
-						$this->stop();
-						$this->addError($id);
-						$this->addHelperText($id, $locale['df_418']);
-						$this->addNotice($locale['df_418']);
-					} else {
-						// Ok, no error and the file is perfectly normal.
-						// Drop original filename, use Hash Algorithm by Domi.
-						$ext = strrchr($value['name'], ".");
-						$secret_rand = rand(1000000, 9999999);
-						$hashed_filename = substr(md5($secret_rand), 8, 8);
-						$true_file = image_exists($path, $hashed_filename.$ext);
-						move_uploaded_file($value['tmp_name'], $path.$hashed_filename.$ext);
-						chmod($path.$true_file, 0666);
-						// ok for photo, we drop it if fail again.
-						if ($type == 'image') {
-							$image_file = @getimagesize($path.$true_file);
-							if ($image_file[0] > $settings['photo_max_w'] || $image_file[1] > $settings['photo_max_h']) {
-								unlink($path.$true_file);
-								$this->stop();
-								$this->addNotice(sprintf($locale['df_421'], $settings['photo_max_w'], $settings['photo_max_h']));
-							} else {
-								// generates a thumbnail folder on 8.00.
-								if ($thumbnail && !file_exists($thumbnail)) {
-									mkdir($thumbnail, 0755, TRUE);
-								}
-								if ($thumbnail) {
-									$photo_thumb1 = image_exists($thumbnail, $hashed_filename."_t1".$ext);
-									createthumbnail($image_file[2], $path.$true_file, $thumbnail.$photo_thumb1, $settings['thumb_w'], $settings['thumb_h']);
-									if ($image_file[0] > $settings['photo_w'] || $image_file[1] > $settings['photo_h']) {
-										// rewrite the image since both name is same.
-										$photo_thumb2 = image_exists($thumbnail, $hashed_filename."_t2".$ext);
-										createthumbnail($image_file[2], $path.$true_file, $thumbnail.$photo_thumb2, $settings['photo_w'], $settings['photo_h']);
-									}
-								}
-							}
-						}
-					}
-				}
-				return $true_file;
+			} else {
+				return $upload;
 			}
 		} else {
-			return $this->field_default;
+			return array();
 		}
-		*/
 	}
-	// end class
 }
 
 function form_sanitizer($value, $default = "", $input_name = FALSE) {
