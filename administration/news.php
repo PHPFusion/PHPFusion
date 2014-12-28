@@ -134,7 +134,6 @@ function news_listing() {
 
 function news_form() {
 	global $userdata, $locale, $settings, $aidlink, $language_opts, $defender;
-
 	$data = array();
 	if (isset($_POST['save'])) {
 		$error = "";
@@ -256,13 +255,11 @@ function news_form() {
 			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=success");
 		}
 	}
-
 	if ($settings['tinymce_enabled']) {
 		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 	} else {
 		require_once INCLUDES."html_buttons_include.php";
 	}
-
 	$result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 	$news_cat_opts = array();
 	$news_cat_opts['0'] = $locale['news_0202'];
@@ -370,7 +367,7 @@ function news_form() {
 
 	echo "<div class='m-t-20'>\n";
 	// remove downtime after beta.
-	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 0));
+	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 10));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 	echo form_text($locale['news_0200'], 'news_subject', 'news_subject', $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['news_0250']));
