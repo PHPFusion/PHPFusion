@@ -1,5 +1,6 @@
 <?php
 $filename_locale['articles.php'] = "Articles";
+$filename_locale['blog.php'] = "Blog";
 $filename_locale['custompages.php'] = "Custom Pages";
 $filename_locale['downloads.php'] = "Downloads";
 $filename_locale['faqs.php'] = "FAQ";
