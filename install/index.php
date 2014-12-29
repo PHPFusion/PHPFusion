@@ -733,7 +733,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				// Create Super Admin with Full Modular Rights - We don't need to update Super Admin later.
 				if (isset($_POST['transfer']) && $_POST['transfer'] == 1) {
 					$result = dbquery("UPDATE ".$db_prefix."users user_name='".$username."', user_salt='".$userSalt."', user_password='".$userPassword."', user_admin_salt='".$adminSalt."', user_admin_password='".$adminPassword."'
-					user_email='".$email."'	WHERE user_id='1'");
+					user_email='".$email."', user_theme='Default', user_timezone='Europe/London' WHERE user_id='1'");
 				} else {
 					$result = dbquery("INSERT INTO ".$db_prefix."users (
 					user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_timezone,

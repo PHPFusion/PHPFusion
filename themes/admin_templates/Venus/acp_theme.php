@@ -27,9 +27,8 @@ add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cooki
 
 function render_adminpanel() {
 global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_languages, $language_opts;
-
 	$admin_password = '';
-	if (!check_admin_pass($admin_password)) {
+	if (!check_admin_pass(stripinput($_POST['admin_password']))) {
 		add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
 		echo "<aside class='block-container'>\n";
 		echo "<div class='block'>\n";

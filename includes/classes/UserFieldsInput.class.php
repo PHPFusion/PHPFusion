@@ -326,9 +326,9 @@ class UserFieldsInput {
 							$new_admin_password = $passAuth->getNewHash();
 							$new_admin_salt = $passAuth->getNewSalt();
 							$new_admin_algo = $passAuth->getNewAlgo();
-							$this->_setDBValue("user_admin_algo", $passAuth->getNewAlgo()); // ###
-							$this->_setDBValue("user_admin_salt", $passAuth->getNewSalt()); // ###
-							$this->_setDBValue("user_admin_password", $passAuth->getNewHash()); // ###
+							//$this->_setDBValue("user_admin_algo", $passAuth->getNewAlgo()); // ###
+							//$this->_setDBValue("user_admin_salt", $passAuth->getNewSalt()); // ###
+							//$this->_setDBValue("user_admin_password", $passAuth->getNewHash()); // ###
 							if ($new_admin_password != $this->data['user_admin_password']) {
 								// New password is valid
 								$data['user_admin_algo'] = $new_admin_password;
