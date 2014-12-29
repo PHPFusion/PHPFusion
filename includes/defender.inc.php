@@ -412,7 +412,7 @@ class defender {
 		global $locale;
 		// add min length, add max length, add strong password into roadmaps.
 		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
-			return $this->field_default;
+			return $this->field_value;
 		} else {
 			// invalid password
 			$this->stop();

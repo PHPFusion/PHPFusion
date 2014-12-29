@@ -27,8 +27,8 @@ add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cooki
 
 function render_adminpanel() {
 global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_languages, $language_opts;
-	$admin_password = '';
-	if (!check_admin_pass(stripinput($_POST['admin_password']))) {
+	$cookie_not_available = '';
+	if (!check_admin_pass($cookie_not_available)) {
 		add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
 		echo "<aside class='block-container'>\n";
 		echo "<div class='block'>\n";
@@ -46,7 +46,6 @@ global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_lang
 		echo "</div>\n";
 		echo "</aside>\n";
 	} else {
-
 		if (isset($_GET['logout'])) {
 			require_once CLASSES."Authenticate.class.php";
 			Authenticate::expireAdminCookie();

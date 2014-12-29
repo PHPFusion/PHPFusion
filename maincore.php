@@ -438,6 +438,7 @@ function set_theme($theme) {
 }
 
 // Set the admin password when needed
+// used at administration/login.php
 function set_admin_pass($password) {
 	Authenticate::setAdminCookie($password);
 }
