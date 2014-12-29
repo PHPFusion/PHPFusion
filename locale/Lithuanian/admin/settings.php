@@ -222,7 +222,7 @@ $locale['801'] = "Žinučių ištrina: ";
 $locale['802'] = "Temų ištrina: ";
 $locale['803'] = "Prisegimų ištrina: ";
 // Privacy policy
-$locale['820'] = "Privacy Policy";
+$locale['820'] = "Privatumo politika";
 // Banners Settings
 $locale['850'] = "Baneriai";
 $locale['851'] = "Baneris 1";
