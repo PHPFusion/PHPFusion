@@ -54,6 +54,8 @@ class defender {
 			'dropdown' => 'textbox',
 			'name' => 'textbox',
 			'password' => 'password',
+			'textarea' => 'textbox',
+			'number' => 'number',
 			'email' => 'email',
 			'date' => 'date',
 			'color' => 'textbox',
