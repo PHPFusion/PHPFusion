@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once 'setup_includes.php';
+
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 define("IN_FUSION", TRUE);
 define("BASEDIR", '../');
@@ -40,6 +41,13 @@ if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_di
 	define("LOCALESET", "English/");
 	include LOCALE.LOCALESET."setup.php";
 }
+
+define('SETUP', true);
+$settings = array('description'=>'', 'keywords'=>'');
+include "../includes/defender.inc.php";
+include "../includes/output_handling_include.php";
+$defender = new defender();
+
 
 if (isset($_POST['step']) && $_POST['step'] == "8") {
 	if (file_exists(BASEDIR.'config_temp.php')) {

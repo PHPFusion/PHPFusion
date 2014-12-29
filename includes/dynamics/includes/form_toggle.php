@@ -52,7 +52,7 @@ function form_toggle($title, $input_name, $input_id, $opts, $input_value, array 
 		 'title'		=>	$title2,
 		 'id' 			=>	$input_id,
 		 'required'		=>	$options['required'],
-		 'safemode' 	=> 	$options['safemode'],
+		 'safemode' 	=> 	0,
 		 'error_text'	=> 	$options['error_text']
 	 ));
 	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
@@ -87,7 +87,7 @@ function form_checkbox($title, $input_name, $input_id, $input_value, array $opti
 		 'title'		=>	$title2,
 		 'id' 			=>	$input_id,
 		 'required'		=>	$options['required'],
-		 'safemode' 	=> 	$options['safemode'],
+		 'safemode' 	=> 	0,
 		 'error_text'	=> 	$options['error_text']
 	 ));
 	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=".$options['required']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."'/>";

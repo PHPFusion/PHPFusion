@@ -46,7 +46,7 @@ class defender {
 	public function defender() {
 		global $locale;
 		require_once INCLUDES."notify/notify.inc.php";
-		$this->noAdminCookie();
+		if (!defined('SETUP')) $this->noAdminCookie();
 		// declare the validation rules and assign them
 		// type of fields vs type of validator
 		$validation_rules_assigned = array(
