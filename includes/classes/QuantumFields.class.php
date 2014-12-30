@@ -1338,9 +1338,11 @@ class quantumFields {
 	public function infinity_insert($mode) {
 		$infinity_list = array();
 		$infinity_ref = array();
+		// bug fix: to get only the relevant fields on specific page.
+		$field_list = flatten_array($this->fields);
 		// to generate $infinity_ref and $infinity_list as reference and validate the $_POST input value.
-		foreach($this->fields as $cat_id => $fields) {
-			foreach($fields as $field_id => $field_data) {
+		foreach($field_list as $field_id => $field_data) {
+			if ($field_data['field_parent'] == $this->input_page) {
 				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
 				$target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
 				$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : '';
@@ -1350,6 +1352,7 @@ class quantumFields {
 				$infinity_list[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : '';
 			}
 		}
+
 		if (!empty($infinity_list)) {
 			$temp_table = ''; $user_data = array();
 			$i = 1;

@@ -632,6 +632,7 @@ class UserFieldsInput {
 		$quantum->field_db = DB_USER_FIELDS;
 		$quantum->plugin_folder = INCLUDES."user_fields/";
 		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+		$quantum->input_page = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 		$quantum->load_data();
 		dbquery_insert(DB_USERS, $this->data, 'update', array('keep_session'=>1));
 		$quantum->infinity_insert('update');
