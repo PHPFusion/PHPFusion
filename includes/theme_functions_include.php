@@ -191,24 +191,36 @@ function showbanners($display = "") {
 	ob_end_clean();
 	return $output;
 }
-
-function showsublinks($sep = "&middot;", $class = "") {
+// cant change the parameter or else risk destruct all older themes
+function showsublinks($sep = "&middot;", $class = "", array $options = array()) {
 	global $settings;
 	require_once INCLUDES."mobile.menu.inc.php";
+
+	$options += array(
+		'logo' => '',
+		'container' => FALSE,
+	);
 	$mobile_icon = isset($default_mobile_icon) ? $default_mobile_icon : '';
 	$sres = dbquery("SELECT link_name, link_url, link_window, link_visibility FROM ".DB_SITE_LINKS."
-".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_position>='2' ORDER BY link_order");
+	".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_position>='2' ORDER BY link_order");
 	$mobile_link = array();
-	if (dbrows($sres)) {
+	$res = '';
+
+	if ($settings['bootstrap']) {
+		$res .= "<nav class='navbar navbar-default' role='navigation'>\n";
+			if ($options['container']) $res .= "<div class='container fluid'>\n";
+			$res .= "<div class='mobile-menu'>\n";
+			$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#fusion-menu'><i class='entypo menu'></i></button>\n";
+			$res .= "<a class='navbar-brand' href='".BASEDIR."index.php'>".$options['logo']."</a>";
+			$res .= "</div>\n";
+			$res .= "<div class='navbar-collapse collapse col-xs-hidden'>\n";
+			$res .= "<ul class='nav navbar-nav'>\n";
+	} else {
+		$res .= "<ul>\n";
+	}
+
+	if (dbrows($sres)>0) {
 		$i = 0;
-		if ($settings['bootstrap']) {
-			$res = "<nav class='navbar' role='navigation'>\n";
-			$res .= "<div class='mobile-menu'>\n<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#mp'><i class='entypo menu'></i></button>\n</div>\n";
-			$res .= "<div id='mp' class='navbar-collapse collapse'>\n"; // collect all navbar item.
-			$res .= "<ul class='nav navbar-nav hidden-xs'>\n";
-		} else {
-			$res = "<ul>\n";
-		}
 		while ($sdata = dbarray($sres)) {
 			$mobile_link[$sdata['link_name']] = $sdata['link_url']; // order, visibility, language - complied.
 			$li_class = $class;
@@ -216,10 +228,10 @@ function showsublinks($sep = "&middot;", $class = "") {
 			if ($sdata['link_url'] != "---" && checkgroup($sdata['link_visibility'])) {
 				$link_target = ($sdata['link_window'] == "1" ? " target='_blank'" : "");
 				if ($i == 1) {
-					$li_class .= ($li_class ? " " : "")."first-link";
+					$li_class .= ($li_class ? " " : "")."first-link ".(START_PAGE == $sdata['link_url'] || START_PAGE == $settings['opening_page'] ? 'active' : '')."";
 				}
 				if (START_PAGE == $sdata['link_url']) {
-					$li_class .= ($li_class ? " " : "")."current-link";
+					$li_class .= ($li_class ? " " : "")."current-link active";
 				}
 				if (preg_match("!^(ht|f)tp(s)?://!i", $sdata['link_url'])) {
 					$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."<a href='".$sdata['link_url']."'".$link_target.">\n";
@@ -230,33 +242,36 @@ function showsublinks($sep = "&middot;", $class = "") {
 				}
 			}
 		}
-		if ($settings['bootstrap']) {
-			$res .= "</ul>\n";
-			$res .= "<!--start of mobile menu -->\n";
-			$res .= "<div class='hidden-sm hidden-md hidden-lg mobile-panel m-0'>\n";
-			$res .= "<div class='mobile-pane'>\n";
-			$res .= "<div class='mobile-header'>\n";
-			$res .= "<button class='btn mobile-btn-close' data-toggle='collapse' data-target='#mp'>Close</button>\n";
-			$res .= "<div class='mobile-header-text text-center'>Navigation</div>";
-			$res .= "</div>\n";
-			if (count($mobile_link) > 0) {
-				$res .= "<div class='row m-0 mobile-body'>\n";
-				foreach ($mobile_link as $link_name => $link_url) {
-					$icon = array_key_exists($link_url, $mobile_icon) ? $mobile_icon[$link_url] : 'entypo layout';
-					$res .= "<div class='col-xs-3 mobile-grid text-center'><a href='$link_url' class='btn btn-menu btn-block btn-default m-b-10'><i class='".$icon."'></i><br/><span class='mobile-text'>".trimlink($link_name, 10)."</span></a></div>\n";
-				}
-				$res .= "</div>\n";
+	}
+
+
+	if ($settings['bootstrap']) {
+		$res .= "</ul>\n";
+		$res .= "<!--start of mobile menu -->\n";
+		$res .= "<div id='fusion-menu' class='navbar-collase collapse hidden-sm hidden-md hidden-lg mobile-panel m-0'>\n";
+		$res .= "<div class='mobile-pane'>\n";
+		$res .= "<div class='mobile-header'>\n";
+		$res .= "<button class='btn mobile-btn-close' data-toggle='collapse' data-target='#mp'>Close</button>\n";
+		$res .= "<div class='mobile-header-text text-center'>Navigation</div>";
+		$res .= "</div>\n";
+		if (count($mobile_link) > 0) {
+			$res .= "<div class='row m-0 mobile-body'>\n";
+			foreach ($mobile_link as $link_name => $link_url) {
+				$icon = array_key_exists($link_url, $mobile_icon) ? $mobile_icon[$link_url] : 'entypo layout';
+				$res .= "<div class='col-xs-3 mobile-grid text-center'><a href='$link_url' class='btn btn-menu btn-block btn-default m-b-10'><i class='".$icon."'></i><br/><span class='mobile-text'>".trimlink($link_name, 10)."</span></a></div>\n";
 			}
 			$res .= "</div>\n";
-			$res .= "</div>\n";
-			$res .= "<!--end of mobile menu -->\n";
-		} else {
-			$res .= "</ul>\n";
 		}
 		$res .= "</div>\n";
+		$res .= "</div>\n";
+		$res .= "<!--end of mobile menu -->\n";
+		if ($options['container']) $res .= "</div>\n";
 		$res .= "</nav>\n";
-		return $res;
+	} else {
+		$res .= "</ul>\n";
 	}
+
+	return $res;
 }
 
 function showsubdate() {
