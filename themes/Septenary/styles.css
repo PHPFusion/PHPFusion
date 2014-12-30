@@ -14,6 +14,10 @@ a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, bo
 	outline: 0;
 	vertical-align: top;
 }
+.profile_category_name {
+	font-size:20px;
+}
+
 .nav-pills > li > a {
 	color: rgb(21, 133, 212) !important;
 }
