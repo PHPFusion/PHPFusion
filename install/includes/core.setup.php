@@ -331,7 +331,7 @@ if (isset($_POST['uninstall'])) {
 				settings_name VARCHAR(200) NOT NULL DEFAULT '',
 				settings_value TEXT NOT NULL,
 				PRIMARY KEY (settings_name)
-				) ENGINE=MYISAM");
+				) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	if (!$result) {
 		$fail = TRUE;
 	}
@@ -340,7 +340,7 @@ if (isset($_POST['uninstall'])) {
 				settings_value TEXT NOT NULL,
 				settings_inf VARCHAR(200) NOT NULL DEFAULT '',
 				PRIMARY KEY (settings_name)
-				) ENGINE=MYISAM");
+				) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	if (!$result) {
 		$fail = TRUE;
 	}
