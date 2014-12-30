@@ -169,7 +169,7 @@ class UserFields extends quantumFields {
 			}
 
 			// avatar field
-			$html .= form_fileinput($locale['u185'], 'user_avatar', 'user_avatar_upload', '', '', array('type'=>'image', 'inline'=>1, 'class'=>'m-t-10 m-b-0'));
+			$html .= form_fileinput($locale['u185'], 'user_avatar', 'user_avatar_upload', '', '', array('type'=>'image', 'inline'=>1, 'width'=>'100%', 'class'=>'m-t-10 m-b-0'));
 			$html .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".sprintf($locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height'])."</span></div>\n";
 
 		}

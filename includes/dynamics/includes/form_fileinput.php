@@ -94,15 +94,11 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 
 	$html = "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>\n" : "";
-	$html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$input_id."'  ".($options['deactivate'] ? 'readonly' : '')." />\n"; //class='file-preview-".$type."'
+	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "";
+	$html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$input_id."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." />\n"; //class='file-preview-".$type."'
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($options['inline']) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	/*$html .= "<input type='hidden' name='def[$input_name]' value='
-	[type=".((array)$options['type']==array('image') ? 'image' : 'file')."]
-	,[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."],[path=$upload_path],
-	[thumbnail=".$options['thumbnail']."],".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."' />\n"; */
 	$defender->add_field_session(array(
 		'input_name' 	=> 	$input_name,
 		'type'			=>	((array)$options['type']==array('image') ? 'image' : 'file'),
