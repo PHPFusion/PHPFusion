@@ -33,6 +33,7 @@ if ($userdata['user_admin_password']) {
 } else {
 	$defender->stop();
 	$defender->addNotice($locale['global_199']);
+    $admin_password = "";
 }
 // will not login in infusions admin pages.
 $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
