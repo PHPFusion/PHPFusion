@@ -443,12 +443,15 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 		$debug = (array_key_exists("debug", $options) && $options['debug'] == 1) ? 1 : 0;
 		$pkey = (array_key_exists("primary_key", $options)) ? $options['primary_key'] : 0;
 		$no_unique = (array_key_exists("no_unique", $options)) ? 1 : 0;
+		$keep_session = array_key_exists('keep_session', $options) ? 1 : 0;
 	} else {
 		$url = "";
 		$debug = 0;
 		$pkey = 0;
 		$no_unique = 0;
+		$keep_session = 0;
 	}
+
 	if (!defined("FUSION_NULL")) {
 		$columns = fieldgenerator($db);
 		$col_rows = count($columns);
@@ -571,7 +574,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					print_p($result);
 				} else {
 					$result = dbquery("INSERT INTO ".$db." ($the_column) VALUES ($the_value)");
-					$defender->unset_field_session();
+					if (!$keep_session) $defender->unset_field_session();
 					return dblastid();
 				}
 			}
@@ -593,7 +596,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					print_p("UPDATE ".$db." SET $the_value WHERE $update_core");
 				} else {
 					$result = dbquery("UPDATE ".$db." SET $the_value WHERE $update_core");
-					$defender->unset_field_session();
+					if (!$keep_session) $defender->unset_field_session();
 				}
 			}
 		} elseif ($mode == "delete") {
@@ -604,7 +607,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					print_p("DELETE FROM ".$db." WHERE $col='$values'");
 				} else {
 					$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
-					$defender->unset_field_session();
+					if (!$keep_session) $defender->unset_field_session();
 				}
 			}
 		} else {

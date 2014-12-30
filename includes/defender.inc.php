@@ -166,7 +166,7 @@ class defender {
 	/* Destroys a users field session. use carefully */
 	public function unset_field_session() {
 		global $userdata;
-		unset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']]);
+		unset($_SESSION['form_fields'][$userdata['user_id']]);
 	}
 
 	/* Jquery Error Class Injector */
