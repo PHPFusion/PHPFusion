@@ -20,8 +20,8 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Step 1 - determine the total side length
 function total_side_span($value) {
 	$count = 0;
-	if (defined('LEFT')) $count = $count+$value;
-	if (defined('RIGHT')) $count = $count+$value;
+	if (defined('LEFT') && LEFT) $count = $count+$value;
+	if (defined('RIGHT') && RIGHT) $count = $count+$value;
 	if ($count > 12) $count = 12;
 	return $count;
 }
