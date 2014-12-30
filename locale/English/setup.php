@@ -39,6 +39,12 @@ $locale['setup_1013'] = 'Change Super Admin Details';
 $locale['setup_1014'] = 'Rebuild .htaccess';
 $locale['setup_1015'] = 'Discard current file and replace with a standard version of the .htaccess file';
 $locale['setup_1016'] = 'Build file';
+
+$locale['setup_1017'] = 'Cancel and Exit this Installer';
+$locale['setup_1018'] = 'You can exit this installer right now by clicking the button below. This will rename yoru config_temp.php file back to config.php.';
+$locale['setup_1019'] = 'Exit Installer';
+
+
 // Step 2
 $locale['setup_1100'] = 'Passed';
 $locale['setup_1101'] = 'Failed';

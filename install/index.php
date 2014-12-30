@@ -141,6 +141,12 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			}
 			echo "<h4 class='strong'>".$locale['setup_1002']."</h4>\n";
 			echo "<span class='display-block m-t-20 m-b-10'>".$locale['setup_1003']."</span>\n";
+
+			echo "<div class='well'>\n";
+			echo "<span class='strong display-inline-block m-b-10'>".$locale['setup_1017']."</span><br/><p>".$locale['setup_1018']."</p>";
+			echo form_button($locale['setup_1019'], 'step', 'step', '8', array('class' => 'btn-success btn-sm m-t-10'));
+			echo "</div>\n";
+
 			echo "<div class='well'>\n";
 			echo "<span class='strong display-inline-block m-b-10'>".$locale['setup_1004']."</span><br/><p>".$locale['setup_1005']." <span class='strong'>".$locale['setup_1006']."</span></span></p>";
 			echo form_button($locale['setup_1007'], 'uninstall', 'uninstall', 'uninstall', array('class' => 'btn-danger btn-sm m-t-10'));

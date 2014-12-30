@@ -16,6 +16,12 @@ $locale['setup_0104'] = "Крок 4: Налаштування / Встановл
 $locale['setup_0105'] = "Крок 5: Налаштування базової системи";
 $locale['setup_0106'] = "Крок 6: Налаштування головного адміністратора";
 $locale['setup_0107'] = "Крок 7: Остаточні налаштування";
+
+$locale['setup_1017'] = 'Ukraine: Cancel and Exit this Installer';
+$locale['setup_1018'] = 'You can exit this installer right now by clicking the button below. This will rename yoru config_temp.php file back to config.php.';
+$locale['setup_1019'] = 'Exit Installer';
+
+
 // Buttons
 $locale['setup_0120'] = "Завершення встановлення";
 $locale['setup_0121'] = "Далі";

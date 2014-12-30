@@ -40,6 +40,11 @@ $locale['setup_1013'] = 'Tukar Butiran Admin Utama.';
 $locale['setup_1014'] = 'Menjana semula fail .htaccess';
 $locale['setup_1015'] = 'Discard current file and replace with a standard version of the .htaccess file';
 $locale['setup_1016'] = 'Menjana Fail';
+
+$locale['setup_1017'] = 'Keluar dari Sistem Pemantauan.';
+$locale['setup_1018'] = 'Anda boleh keluar dari sistem pemantauan ini dengan menggunakan pautan di bawah. Ia akan menamakan fail sistem config_temp.php ke config.php.';
+$locale['setup_1019'] = 'Keluar';
+
 // Step 2
 
 $locale['setup_1100'] = 'Lulus';
