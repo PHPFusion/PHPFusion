@@ -20,7 +20,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-echo "<header id='top'>";
+echo "<header id='top' style='background-image:url(".THEME."images/bg_main.jpg)'>";
 echo "<div class='overlay'>\n";
 open_grid('section-1', 1);
 echo "<div class='row hidden-xs'>\n";

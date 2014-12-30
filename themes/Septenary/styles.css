@@ -109,7 +109,6 @@ body {
 	background: -o-linear-gradient(top, #DBDBDB 0%, #DDD 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top, #DBDBDB 0%, #DDD 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #DBDBDB 0%, #DDD 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBDBDB', endColorstr='#DDDDDD', GradientType=0); /* IE6-8 */
 	color: #000;
 	font: 13px/20px 'Lucida Grande', 'Helvetica Neue', Arial, Tahoma, Century gothic, sans-serif !important;
 }
@@ -170,7 +169,6 @@ input.button {
 
 /* Section 1 */
 header {
-	background-image: url('../themes/Septenary/images/bg_main.jpg');
 	background-repeat: no-repeat;
 	background-size: cover;
 	height: auto !important;
