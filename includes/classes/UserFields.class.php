@@ -302,6 +302,7 @@ class UserFields extends quantumFields {
 			// require to inject id when id not present in other pages to make reference as Quantum Fields $index_value
 			if ($index_page_id !=='1') {
 				$this->info['user_field'] .= form_hidden('', 'user_id', 'user_id', $this->userData['user_id']);
+				$this->info['user_field'] .= form_hidden('', 'user_name', 'user_name', $this->userData['user_name']);
 			}
 			// filter display - input and display method.
 			if (isset($category[$index_page_id])) {
