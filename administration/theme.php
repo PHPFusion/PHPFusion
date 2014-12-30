@@ -64,18 +64,18 @@ if ($edit_mode) {
 }
 
 echo opentab($tab_title, $active_tab, 'theme_tab');
-echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $active_tab);
-echo "<div class='m-t-20'>\n";
-list_theme();
-echo "</div>\n";
-echo closetabbody();
 if ($edit_mode) {
-	echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $active_tab);
+	echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $active_tab);
 	echo "<div class='m-t-20'>\n";
 	theme_editor();
 	echo "</div>\n";
 	echo closetabbody();
 } else {
+	echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $active_tab);
+	echo "<div class='m-t-20'>\n";
+	list_theme();
+	echo "</div>\n";
+	echo closetabbody();
 	echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $active_tab);
 	echo "<div class='m-t-20'>\n";
 	theme_uploader();

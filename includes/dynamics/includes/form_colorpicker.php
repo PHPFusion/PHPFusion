@@ -46,7 +46,7 @@ function form_colorpicker($title = FALSE, $input_name, $input_id, $input_value =
 
 	$html = "";
 	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$options['class']." '>\n";
-	$html .= $options['title'] ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= $title ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "<br/>\n";
 	$html .= "<div id='$input_id' style='width: ".$options['width']."' class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='".$options['format']."'>";
 	$html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."' placeholder='".$options['placeholder']."' ".($options['deactivate'] ? "readonly" : "").">";
