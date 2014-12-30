@@ -27,6 +27,7 @@ class quantumFields {
 	public $plugin_folder = '';
 	public $plugin_locale_folder = '';
 	public $debug = FALSE;
+	public $input_page = 1;
 	// System Internals
 	private $max_rows = 0;
 	private $locale = array();
