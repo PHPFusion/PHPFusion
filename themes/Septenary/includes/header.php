@@ -87,7 +87,7 @@ if ($settings['opening_page'] == FUSION_SELF) {
 	echo "</div>\n";
 } else {
 	// use SQL search for page title.
-	$result = dbquery("SELECT link_name FROM ".DB_SITE_LINKS." WHERE link_url='".FUSION_SELF."'");
+	$result = dbquery("SELECT link_name FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")."  link_url='".FUSION_SELF."'");
 	if (dbrows($result) > 0) {
 		$data = dbarray($result);
 		$link_name = $data['link_name'];
