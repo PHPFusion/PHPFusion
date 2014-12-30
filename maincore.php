@@ -390,11 +390,12 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 $lastvisited = Authenticate::setLastVisitCookie();
 
 // Set theme
-if (isset($userdata['user_theme'])) {
-	set_theme($userdata['user_theme']);
-} else {
+if (!isset($userdata['user_theme']) || !$userdata['user_theme']) {
 	set_theme($settings['theme']);
+} else {
+	set_theme($userdata['user_theme']);
 }
+
 
 // Check if a given theme exists and is valid
 function theme_exists($theme) {
