@@ -123,10 +123,14 @@ function createRandomPrefix($length = 5) {
 	return $prefix;
 }
 
-// Calculate script start/end time
+/**
+ * Current microtime as float to calculate script start/end time
+ * 
+ * @deprecated since version 9.00, use microtime(TRUE) instead
+ * @return float
+ */
 function get_microtime() {
-	list($usec, $sec) = explode(" ", microtime());
-	return ((float)$usec+(float)$sec);
+	return microtime(TRUE);
 }
 
 // Strip Input Function, prevents HTML in unwanted places

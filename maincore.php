@@ -18,14 +18,18 @@
 +--------------------------------------------------------*/
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) { die(); }
 
-// Calculate script start/end time
+/**
+ * Current microtime as float to calculate script start/end time
+ * 
+ * @deprecated since version 9.00, use microtime(TRUE) instead
+ * @return float
+ */
 function get_microtime() {
-	list($usec, $sec) = explode(" ", microtime());
-	return ((float)$usec+(float)$sec);
+	return microtime(TRUE);
 }
 
 // Define script start time
-define("START_TIME", get_microtime());
+define("START_TIME", microtime(TRUE));
 define("IN_FUSION", TRUE);
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {

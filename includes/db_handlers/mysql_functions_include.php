@@ -20,9 +20,9 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 function dbquery($query) {
 	global $mysql_queries_count, $mysql_queries_time;
 	$mysql_queries_count++;
-	$query_time = get_microtime();
+	$query_time = microtime(TRUE);
 	$result = @mysql_query($query);
-	$query_time = round((get_microtime()-$query_time), 7);
+	$query_time = round((microtime(TRUE)-$query_time), 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
 	if (!$result) {
 		echo mysql_error();
@@ -36,9 +36,9 @@ function dbcount($field, $table, $conditions = "") {
 	global $mysql_queries_count, $mysql_queries_time;
 	$mysql_queries_count++;
 	$cond = ($conditions ? " WHERE ".$conditions : "");
-	$query_time = get_microtime();
+	$query_time = microtime(TRUE);
 	$result = @mysql_query("SELECT Count".$field." FROM ".$table.$cond);
-	$query_time = substr((get_microtime()-$query_time), 0, 7);
+	$query_time = substr((microtime(TRUE)-$query_time), 0, 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, "SELECT COUNT".$field." FROM ".$table.$cond);
 	if (!$result) {
 		echo mysql_error();
@@ -51,9 +51,9 @@ function dbcount($field, $table, $conditions = "") {
 
 function dbresult($query, $row) {
 	global $mysql_queries_count, $mysql_queries_time;
-	$query_time = get_microtime();
+	$query_time = microtime(TRUE);
 	$result = @mysql_result($query, $row);
-	$query_time = substr((get_microtime()-$query_time), 0, 7);
+	$query_time = substr((microtime(TRUE)-$query_time), 0, 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
 	if (!$result) {
 		echo mysql_error();

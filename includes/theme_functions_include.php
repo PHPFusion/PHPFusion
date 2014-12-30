@@ -369,7 +369,7 @@ function itemoptions($item_type, $item_id) {
 function showrendertime($queries = TRUE) {
 	global $locale, $mysql_queries_count, $settings;
 	if ($settings['rendertime_enabled'] == 1 || ($settings['rendertime_enabled'] == 2 && iADMIN)) {
-		$res = sprintf($locale['global_172'], substr((get_microtime()-START_TIME), 0, 4));
+		$res = sprintf($locale['global_172'], substr((microtime(TRUE)-START_TIME), 0, 4));
 		$res .= ($queries ? " - $mysql_queries_count ".$locale['global_173'] : "");
 		return $res;
 	} else {

@@ -34,11 +34,11 @@ $pdo = NULL;
  */
 function dbquery($query) {
 	global $pdo, $mysql_queries_count, $mysql_queries_time;
-	$start_time = get_microtime();
+	$start_time = microtime(TRUE);
 	try {
 		$result = $pdo->prepare($query);
 		$result->execute();
-		$query_time = round((get_microtime()-$start_time), 7);
+		$query_time = round((microtime(TRUE)-$start_time), 7);
 		$mysql_queries_time[++$mysql_queries_count] = array($query_time, $query);
 		return $result;
 	} catch (PDOException $e) {
@@ -51,9 +51,9 @@ function dbquery($query) {
 function dbquery_exec($query) {
 	global $pdo, $mysql_queries_count, $mysql_queries_time;
 	$mysql_queries_count++;
-	$query_time = get_microtime();
+	$query_time = microtime(TRUE);
 	$result = $pdo->exec($query);
-	$query_time = substr((get_microtime()-$query_time), 0, 7);
+	$query_time = substr((microtime(TRUE)-$query_time), 0, 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
 	return $result;
 }
@@ -73,12 +73,12 @@ function dbcount($field, $table, $conditions = "") {
 	global $pdo, $mysql_queries_count, $mysql_queries_time;
 	
 	$cond = ($conditions ? " WHERE ".$conditions : "");
-	$start_time = get_microtime();
+	$start_time = microtime(TRUE);
 	$sql = "SELECT COUNT".$field." FROM ".$table.$cond;
 	try {
 		$statement = $pdo->prepare($sql);
 		$statement->execute();
-		$query_time = round((get_microtime()-$start_time), 7);
+		$query_time = round((microtime(TRUE)-$start_time), 7);
 		$mysql_queries_time[++$mysql_queries_count] = array($query_time, $sql);
 		return $statement->fetchColumn();
 	} catch (PDOException $e) {
