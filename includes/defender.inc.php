@@ -58,6 +58,7 @@ class defender {
 			'number' => 'number',
 			'email' => 'email',
 			'date' => 'date',
+			'timestamp'=>'date',
 			'color' => 'textbox',
 			'address' => 'address',
 			'url'	=> 'url',
@@ -447,7 +448,7 @@ class defender {
 			} else {
 				$this->stop();
 				$this->addError($this->field_config['id']);
-				$this->addHelperText($id, sprintf($locale['df_403'], $this->field_config['name']));
+				$this->addHelperText($this->field_config['id'], sprintf($locale['df_403'], $this->field_config['name']));
 				$this->addNotice(sprintf($locale['df_403'], $this->field_config['name']));
 			}
 		} else {
@@ -474,10 +475,9 @@ class defender {
 	 */
 	private function verify_date() {
 		global $locale;
-		//$news_start = isset($_POST['news_start']) && $_POST['news_start'] ? explode('-', $_POST['news_start']) : '';
-		//$news_start_date = (!empty($news_start)) ? mktime(0, 0, 0, $news_start[1], $news_start[0], $news_start[2]) : '';
 		// pair each other to determine which is month.
 		// the standard value for dynamics is day-month-year.
+		// the standard value for mysql is year-month-day.
 		if ($this->field_value) {
 			if (stristr($this->field_value, '-')) {
 				$this->field_value = explode('-', $this->field_value);
@@ -487,7 +487,13 @@ class defender {
 				$this->field_value = explode('.', $this->field_value);
 			}
 			if (checkdate($this->field_value[1], $this->field_value[0], $this->field_value[2])) {
-				return mktime(0, 0, 0, $this->field_value[1], $this->field_value[0], $this->field_value[2]);
+				if ($this->field_config['type'] == 'timestamp') {
+					return mktime(0, 0, 0, $this->field_value[1], $this->field_value[0], $this->field_value[2]);
+				} elseif ($this->field_config['type'] == 'date') {
+					// year month day.
+					$return_value = $this->field_value[2]."-".$this->field_value[1]."-".$this->field_value[0];
+					return $return_value;
+				}
 			} else {
 				$this->stop();
 				$this->addError($this->field_config['id']);

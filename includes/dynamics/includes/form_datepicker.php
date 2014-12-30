@@ -28,7 +28,7 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
 
-	if ($input_value && strstr($input_value, "-")) { // then this is date.
+	if ($input_value && strstr($input_value, "-")) { // must be -
 		$input_value = $input_value;
 	} else {
 		$input_value = ($input_value) ? date("d-m-Y", $input_value) : '';
@@ -46,6 +46,7 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
 		'icon' => !empty($options['icon']) ?  $options['icon']  : '',
 		'date_format' => !empty($options['date_format']) ?  $options['date_format']  : 'dd-mm-yyyy',
 		'fieldicon_off' => !empty($options['fieldicon']) && $options['fieldicon'] == 1 ?  1  : 0,
+		'type' => !empty($options['type']) && $options['type'] == 'date' ? 'date' : 'timestamp',
 	);
 
 	$html = "<div id='$input_id-field' class='form-group ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
@@ -63,7 +64,7 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
 	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=date],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
 	$defender->add_field_session(array(
 			 'input_name' 	=> 	$input_name,
-			 'type'			=>	'date',
+			 'type'			=>	$options['type'],
 			 'title'		=>	$title2,
 			 'id' 			=>	$input_id,
 			 'required'		=>	$options['required'],

@@ -122,7 +122,7 @@ class UserFields extends quantumFields {
 	/* Main user fields form */
 	public function renderInput() {
 		$this->UserForm();
-		require_once THEMES."templates/global/profile.php";
+		include THEMES."templates/global/profile.php";
 		render_userform($this->info);
 	}
 
@@ -153,7 +153,6 @@ class UserFields extends quantumFields {
 		$html .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
 		// Admin Password
 		if ($this->showAdminPass && iADMIN) {
-			//$html .= "<tr>\n<td colspan='2' class='profile_category_name tbl2'><strong>".$locale['u130']."</strong></td></tr>\n";
 			if ($this->userData['user_admin_password']) {
 				$html .= form_text($locale['u131'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 			}
@@ -167,7 +166,6 @@ class UserFields extends quantumFields {
 				$this->html .= "</label>\n<br />\n";
 				$this->html .= "<input type='checkbox' name='delAvatar' value='1' class='textbox' /> ".$locale['u187']."<br />\n<br />\n";
 			}
-
 			// avatar field
 			$html .= form_fileinput($locale['u185'], 'user_avatar', 'user_avatar_upload', '', '', array('type'=>'image', 'inline'=>1, 'width'=>'100%', 'class'=>'m-t-10 m-b-0'));
 			$html .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".sprintf($locale['u184'], parsebytesize($settings['avatar_filesize']), $settings['avatar_width'], $settings['avatar_height'])."</span></div>\n";

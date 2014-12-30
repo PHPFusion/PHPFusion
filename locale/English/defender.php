@@ -28,6 +28,7 @@ $locale['df_400'] = "%s contains invalid character.";
 $locale['df_401'] = "%s is not a valid email address.";
 $locale['df_402'] = "%s is not a valid password.";
 $locale['df_403'] = "%s is not a valid number.";
+$locale['df_404'] = "%s is not a valid date.";
 
 $locale['df_415'] = "Invalid filename.";
 $locale['df_416'] = "Upload file too large. File must be less than %s.";

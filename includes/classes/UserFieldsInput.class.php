@@ -326,9 +326,6 @@ class UserFieldsInput {
 							$new_admin_password = $passAuth->getNewHash();
 							$new_admin_salt = $passAuth->getNewSalt();
 							$new_admin_algo = $passAuth->getNewAlgo();
-							//$this->_setDBValue("user_admin_algo", $passAuth->getNewAlgo()); // ###
-							//$this->_setDBValue("user_admin_salt", $passAuth->getNewSalt()); // ###
-							//$this->_setDBValue("user_admin_password", $passAuth->getNewHash()); // ###
 							if ($new_admin_password != $this->data['user_admin_password']) {
 								// New password is valid
 								$data['user_admin_algo'] = $new_admin_password;
@@ -494,7 +491,6 @@ class UserFieldsInput {
 			$thumb1_suffix = "[".$this->userData['user_id']."]";
 			$thumb1_height = $settings['avatar_height'];
 			$thumb1_width = $settings['avatar_width'];
-
 			$avatarUpload = upload_image($source_name, $target_name, $target_folder, $target_width, $target_height, $max_size, $delete_original, $create_thumb1, $create_thumb2, $ratio, $target_folder, $thumb1_suffix, $thumb1_width, $thumb1_height);
 			if ($avatarUpload['error'] == 0) {
 				if ($this->userData['user_avatar'] && $this->userData['user_avatar'] !== $avatarUpload['thumb1_name'] && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
@@ -637,7 +633,7 @@ class UserFieldsInput {
 		$quantum->plugin_folder = INCLUDES."user_fields/";
 		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 		$quantum->load_data();
-		dbquery_insert(DB_USERS, $this->data, 'update');
+		dbquery_insert(DB_USERS, $this->data, 'update', array('keep_session'=>1));
 		$quantum->infinity_insert('update');
 		$this->_completeMessage = $locale['u163'];
 	}
