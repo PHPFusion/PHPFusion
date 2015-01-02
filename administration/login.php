@@ -22,6 +22,7 @@ if (!defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
 	redirect("../index.php");
 }
 $login_error = "";
+$admin_password = "";
 if ($userdata['user_admin_password']) {
 	if (isset($_POST['admin_password'])) {
 		$login_error = $locale['global_182'];
