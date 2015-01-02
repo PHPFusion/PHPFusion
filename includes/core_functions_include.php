@@ -90,26 +90,21 @@ function theme_exists($theme) {
  */
 function set_theme($theme) {
 	global $settings, $locale;
-	if (!defined("THEME")) {
-		if (theme_exists($theme)) {
-			define("THEME", THEMES.($theme == "Default" ? $settings['theme'] : $theme)."/");
-		} else {
-			$dh = opendir(THEMES);
-			while (FALSE !== ($entry = readdir($dh))) {
-				if ($entry != "." && $entry != ".." && is_dir(THEMES.$entry)) {
-					if (theme_exists($entry)) {
-						define("THEME", THEMES.$entry."/");
-						break;
-					}
-				}
-			}
-			closedir($dh);
-		}
-		if (!defined("THEME")) {
-			echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
-			echo $locale['global_301'];
-			die();
-		}
+	if (defined("THEME")) {
+		return;
+	}
+	if (theme_exists($theme)) {
+		define("THEME", THEMES.($theme == "Default" ? $settings['theme'] : $theme)."/");
+		return;
+	}
+	//$iterator->getBasename() returns the first subdirectory
+	$iterator = new GlobIterator(BASEDIR.'themes/*');
+	if (theme_exists($iterator->getBasename())) {
+		define("THEME", THEMES.$iterator->getBasename()."/");
+	} else {
+		echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
+		echo $locale['global_301'];
+		die();
 	}
 }
 
