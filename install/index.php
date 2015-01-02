@@ -399,7 +399,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 							$config .= "define(\"SECRET_KEY\", \"".$secret_key."\");\n";
 							$config .= "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\");\n";
 							$config .= "?>";
-							if (file_put_contents(BASEDIR.'config_temp.php', $config)) {
+							if (fusion_file_put_contents(BASEDIR.'config_temp.php', $config)) {
 								$fail = FALSE;
 								if (!$result) {
 									$fail = TRUE;

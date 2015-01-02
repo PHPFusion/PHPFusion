@@ -242,4 +242,33 @@ function write_htaccess() {
 	$htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500\r\n";
 	file_put_contents(BASEDIR.".htaccess", $htc);
 }
+
+/**
+ * A wrapper function for file_put_contents with cache invalidation
+ * 
+ * If opcache is enabled on the server, this function will write the file
+ * as the original file_put_contents and invalidate the cache of the file.
+ * 
+ * It is needed when you create a file dynamically and want to include it 
+ * before the cache is invalidated. Redirection does not matter.  
+ * 
+ * @todo Find a better place and/or name for this function 
+ * 
+ * @param string $file file path
+ * @param string|string[] $data
+ * @param int $flags
+ * @return int Number of written bytes
+ */
+function fusion_file_put_contents($file, $data, $flags = null) {
+	$bytes = null;
+	if ($flags === null) {
+		$bytes = \file_put_contents($file, $data);
+	} else {
+		$bytes = \file_put_contents($file, $data, $flags);
+	}
+	if (function_exists('opcache_invalidate')) {
+		\opcache_invalidate($file, TRUE);
+	}
+	return $bytes;
+}
 ?>
