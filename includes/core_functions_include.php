@@ -97,15 +97,15 @@ function set_theme($theme) {
 		define("THEME", THEMES.($theme == "Default" ? $settings['theme'] : $theme)."/");
 		return;
 	}
-	//$iterator->getBasename() returns the first subdirectory
-	$iterator = new GlobIterator(BASEDIR.'themes/*');
-	if (theme_exists($iterator->getBasename())) {
-		define("THEME", THEMES.$iterator->getBasename()."/");
-	} else {
-		echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
-		echo $locale['global_301'];
-		die();
+	foreach (new GlobIterator(THEMES.'*') as $dir) {
+		if ($dir->isDir() and theme_exists($dir->getBasename())) {
+			define("THEME", $dir->getPathname()."/");
+			return;
+		}
 	}
+	echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
+	echo $locale['global_301'];
+	die();
 }
 
 /**
