@@ -75,13 +75,10 @@ function theme_exists($theme) {
 	if ($theme == "Default") {
 		$theme = $settings['theme'];
 	}
-	if (!file_exists(THEMES) || !is_dir(THEMES) || !is_string($theme) || !preg_match("/^([a-z0-9_-]){2,50}$/i", $theme) || !file_exists(THEMES.$theme)) {
-		return FALSE;
-	} elseif (file_exists(THEMES.$theme."/theme.php") && file_exists(THEMES.$theme."/styles.css")) {
-		return TRUE;
-	} else {
-		return FALSE;
-	}
+	return is_string($theme)
+		and preg_match("/^([a-z0-9_-]){2,50}$/i", $theme)
+		and file_exists(THEMES.$theme."/theme.php")
+		and file_exists(THEMES.$theme."/styles.css");
 }
 
 /**
