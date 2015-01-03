@@ -151,10 +151,9 @@ define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 
 // Get enabled language settings
-$enabled_languages = fusion_get_enabled_languages();
-foreach ($enabled_languages as $_lang) {
-	$language_opts[$_lang] = $_lang;
-}
+// @todo find occurrences of $language_opts (26) and $enabled_languages (143) and change the codes to use one of them
+$language_opts = fusion_get_enabled_languages();
+$enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid
 if (isset($_GET['lang']) && valid_language($_GET['lang'])) {

@@ -363,7 +363,8 @@ function forum_jumper() {
 }
 /* Full forum creation form */
 function forum_form(array $data = array()) {
-	global $aidlink, $settings, $locale, $language_opts;
+	global $aidlink, $settings, $locale;
+	$language_opts = fusion_get_enabled_languages();
 
 	add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['forum_001']));
 

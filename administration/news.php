@@ -133,7 +133,8 @@ function news_listing() {
 }
 
 function news_form() {
-	global $userdata, $locale, $settings, $aidlink, $language_opts, $defender;
+	global $userdata, $locale, $settings, $aidlink, $defender;
+	$language_opts = fusion_get_enabled_languages();
 	$data = array();
 	if (isset($_POST['save'])) {
 

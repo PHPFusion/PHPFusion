@@ -26,7 +26,9 @@ require_once ADMIN."navigation.php";
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
 function render_adminpanel() {
-global $locale, $userdata, $defender, $pages, $aidlink, $settings, $enabled_languages, $language_opts;
+	global $locale, $userdata, $defender, $pages, $aidlink, $settings;
+	$language_opts = fusion_get_enabled_languages();
+	$enabled_languages = array_keys($language_opts); //remove it if it is not needed
 	$cookie_not_available = '';
 	if (!check_admin_pass($cookie_not_available)) {
 		add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");

@@ -147,12 +147,9 @@ function get_available_languages_array(array $language_list) {
 
 /**
  * Language switcher function
- * 
- * @global string[] $settings
- * @global string[] $enabled_languages
  */
 function lang_switcher() {
-	global $settings, $enabled_languages;
+	$enabled_languages = fusion_get_enabled_languages();
 	if (sizeof($enabled_languages) > 1) {
 		if (defined('ADMIN_PANEL')) {
 			$this_link = FUSION_REQUEST."&amp;lang=";
@@ -1331,7 +1328,8 @@ function fusion_get_enabled_languages() {
 	static $enabled_languages = NULL;
 	if ($enabled_languages === NULL) {
 		$settings = fusion_get_settings();
-		$enabled_languages = explode('.', $settings['enabled_languages']);
+		$values = explode('.', $settings['enabled_languages']);
+		$enabled_languages = array_combine($values, $values);
 	}
 	return $enabled_languages;
 }

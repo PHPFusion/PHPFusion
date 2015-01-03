@@ -132,7 +132,8 @@ function blog_listing() {
 }
 
 function blog_form() {
-	global $userdata, $locale, $settings, $aidlink, $language_opts, $defender;
+	global $userdata, $locale, $settings, $aidlink, $defender;
+	$language_opts = fusion_get_enabled_languages();
 
 	/* Something like this is needed at some point before release.
 	
