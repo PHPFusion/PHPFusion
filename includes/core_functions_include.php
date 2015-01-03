@@ -135,8 +135,11 @@ function get_available_languages_list($selected_language = "") {
 function get_available_languages_array(array $language_list) {
 	$enabled_languages = fusion_get_enabled_languages();
 	$res = "";
-	for ($i = 0; $i < sizeof($language_list); $i++) {
-		$res .= "<input type='checkbox' value='".$language_list[$i]."' name='enabled_languages[]'  ".(in_array($language_list[$i], $enabled_languages) ? "checked='checked'" : "")."> ".str_replace('_', ' ', $language_list[$i])." <br  />";
+	$template = "<input type='checkbox' value='%s' name='enabled_languages[]' %s> %s <br  />";
+	foreach ($language_list as $language) {
+		$ischecked = (in_array($language, $enabled_languages) ? "checked='checked'" : "");
+		$label = str_replace('_', ' ', $language);
+		$res .= sprintf($template, $language, $ischecked, $label);
 	}
 	return $res;
 }
