@@ -151,7 +151,7 @@ define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 
 // Get enabled language settings
-$enabled_languages = explode('.', $settings['enabled_languages']);
+$enabled_languages = fusion_get_enabled_languages();
 foreach ($enabled_languages as $_lang) {
 	$language_opts[$_lang] = $_lang;
 }

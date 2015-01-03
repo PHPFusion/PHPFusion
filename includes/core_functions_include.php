@@ -55,7 +55,7 @@ function multilang_table($table) {
  * @return bool
  */
 function valid_language($lang, $file_check = FALSE) {
-	global $enabled_languages;
+	$enabled_languages = fusion_get_enabled_languages();
 	if (preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : in_array($lang, $enabled_languages))) {
 		return TRUE;
 	} else {
@@ -116,7 +116,7 @@ function set_theme($theme) {
  * @return string
  */
 function get_available_languages_list($selected_language = "") {
-	global $enabled_languages;
+	$enabled_languages = fusion_get_enabled_languages();
 	$res = "";
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 		$sel = ($selected_language == $enabled_languages[$i] ? " selected='selected'" : "");
@@ -133,7 +133,7 @@ function get_available_languages_list($selected_language = "") {
  * @return string
  */
 function get_available_languages_array($language_list = "") {
-	global $enabled_languages;
+	$enabled_languages = fusion_get_enabled_languages();
 	$res = "";
 	for ($i = 0; $i < sizeof($language_list); $i++) {
 		echo "<input type='checkbox' value='".$language_list[$i]."' name='enabled_languages[]'  ".(in_array($language_list[$i], $enabled_languages) ? "checked='checked'" : "")."> ".str_replace('_', ' ', $language_list[$i])." <br  />";
@@ -1315,4 +1315,19 @@ function fusion_detect_installation() {
 		fusion_run_installer();
 	}
 	return $config_path;
+}
+
+/**
+ * Geth the array of enabled languages
+ * 
+ * @staticvar string[] $enabled_languages
+ * @return string[]
+ */
+function fusion_get_enabled_languages() {
+	static $enabled_languages = NULL;
+	if ($enabled_languages === NULL) {
+		$settings = fusion_get_settings();
+		$enabled_languages = explode('.', $settings['enabled_languages']);
+	}
+	return $enabled_languages;
 }
