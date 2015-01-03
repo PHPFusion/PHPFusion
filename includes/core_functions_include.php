@@ -47,8 +47,6 @@ function multilang_table($table) {
  *
  * Checks whether a language can be found in enabled languages array
  * Can also be used to check whether a language actually exists
- *
- * @global string[] $enabled_languages
  * 
  * @param string $lang
  * @param bool $file_check intended to be used when enabling languages in Admin Panel
@@ -111,7 +109,8 @@ function set_theme($theme) {
 /**
  * Create a selection list of possible languages in list
  * 
- * @global string[] $enabled_languages
+ * @todo rename it from get_available_languages_list to a more proper name
+ * 
  * @param string $selected_language
  * @return string
  */
@@ -128,15 +127,16 @@ function get_available_languages_list($selected_language = "") {
 /**
  * Create a selection list of possible languages in array
  * 
- * @global string[] $enabled_languages
- * @param string $language_list
+ * @todo rename it from get_available_languages_array to a more proper name
+ * 
+ * @param string[] $language_list
  * @return string
  */
-function get_available_languages_array($language_list = "") {
+function get_available_languages_array(array $language_list) {
 	$enabled_languages = fusion_get_enabled_languages();
 	$res = "";
 	for ($i = 0; $i < sizeof($language_list); $i++) {
-		echo "<input type='checkbox' value='".$language_list[$i]."' name='enabled_languages[]'  ".(in_array($language_list[$i], $enabled_languages) ? "checked='checked'" : "")."> ".str_replace('_', ' ', $language_list[$i])." <br  />";
+		$res .= "<input type='checkbox' value='".$language_list[$i]."' name='enabled_languages[]'  ".(in_array($language_list[$i], $enabled_languages) ? "checked='checked'" : "")."> ".str_replace('_', ' ', $language_list[$i])." <br  />";
 	}
 	return $res;
 }
