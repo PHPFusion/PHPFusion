@@ -28,15 +28,6 @@ require __DIR__.'/includes/core_resources_include.php';
 if (stripget($_GET)) {
 	die("Prevented a XSS attack through a GET variable!");
 }
-// Detect whether the system is installed and load config.php if it is.
-require_once fusion_detect_installation();
-
-// Select database handler
-if ($pdo_enabled == "1") {
-	require_once DB_HANDLERS."pdo_functions_include.php";
-} else {
-	require_once DB_HANDLERS."mysql_functions_include.php";
-}
 
 // Establish mySQL database connection
 $link = dbconnect($db_host, $db_user, $db_pass, $db_name);
