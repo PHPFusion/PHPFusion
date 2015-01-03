@@ -28,19 +28,16 @@ if (stripget($_GET)) {
 	die("Prevented a XSS attack through a GET variable!");
 }
 // Locate config.php and set the basedir path
-$folder_level = "";
-$i = 0;
-while (!file_exists($folder_level."config.php")) {
-	$folder_level .= "../";
-	$i++;
-	if ($i == 7) {
-		if (file_exists("install/index.php")) {
-			redirect("install/index.php");
-		} else {
-			die("config.php nor setup.php files where found");
-		}
+
+$config_path = fusion_get_relative_path_to_config();
+if ($config_path === NULL) {
+	if (file_exists("install/index.php")) {
+		redirect("install/index.php");
+	} else {
+		die("config.php nor setup.php files were found");
 	}
 }
+$folder_level = dirname($config_path).'/';
 
 // Path definitions
 define("BASEDIR", $folder_level);
@@ -85,15 +82,7 @@ $link = dbconnect($db_host, $db_user, $db_pass, $db_name);
 unset($db_host, $db_user, $db_pass);
 
 // Fetch the settings from the database
-$settings = array();
-$result = dbquery("SELECT * FROM ".DB_SETTINGS);
-if (dbrows($result)) {
-	while ($data = dbarray($result)) {
-		$settings[$data['settings_name']] = $data['settings_value'];
-	}
-} else {
-	die("Settings do not exist, please check your config.php file or run setup.php again.");
-}
+$settings = fusion_get_settings();
 
 // Settings dependent functions
 date_default_timezone_set($settings['default_timezone']);

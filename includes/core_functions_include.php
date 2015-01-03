@@ -1247,3 +1247,43 @@ function print_p($array, $modal = FALSE) {
 	echo "</pre>";
 	echo ($modal) ? closemodal() : '';
 }
+
+/**
+ * Fetch the settings from the database
+ * 
+ * @todo Exception instead of die()
+ * 
+ * @return string[] Associative array of settings
+ */
+function fusion_get_settings() {
+	// It is initialized only once because of 'static'
+	static $settings = array();
+	if (empty($settings)) {
+		$result = dbquery("SELECT * FROM ".DB_SETTINGS);
+		while ($data = dbarray($result)) {
+			$settings[$data['settings_name']] = $data['settings_value'];
+		}
+		if (empty($settings)) {
+			die("Settings do not exist, please check your config.php file or run setup.php again.");
+		}
+	}
+	return $settings;
+}
+
+/**
+ * Get path of config.php
+ * 
+ * @param int $max_level 
+ * @return string|null The relative path of the base directory 
+ * or NULL if config.php was not found
+ */
+function fusion_get_relative_path_to_config($max_level = 7)
+{
+	$basedir = "./";
+	$i = 0;
+	while ($i <= $max_level and !file_exists($basedir."config.php")) {
+		$basedir .= "../";
+		$i++;
+	}
+	return file_exists($basedir."config.php") ? $basedir."config.php" : NULL;
+}
