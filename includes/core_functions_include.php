@@ -117,9 +117,10 @@ function set_theme($theme) {
 function get_available_languages_list($selected_language = "") {
 	$enabled_languages = fusion_get_enabled_languages();
 	$res = "";
-	for ($i = 0; $i < count($enabled_languages); $i++) {
-		$sel = ($selected_language == $enabled_languages[$i] ? " selected='selected'" : "");
-		$res .= "<option value='".$enabled_languages[$i]."'$sel>".$enabled_languages[$i]."</option>\n";
+	foreach ($enabled_languages as $language) {
+		$sel = ($selected_language == $language ? " selected='selected'" : "");
+		$label = str_replace('_', ' ', $language);
+		$res .= "<option value='".$language."'$sel>".$label."</option>\n";
 	}
 	return $res;
 }
