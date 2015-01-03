@@ -18,57 +18,18 @@
 +--------------------------------------------------------*/
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) { die(); }
 
-require __DIR__.'/includes/core_functions_include.php';
-
 // Define script start time
 define("START_TIME", microtime(TRUE));
 define("IN_FUSION", TRUE);
+
+require __DIR__.'/includes/core_resources_include.php';
+
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {
 	die("Prevented a XSS attack through a GET variable!");
 }
-// Locate config.php and set the basedir path
-
-$config_path = fusion_get_relative_path_to_config();
-if ($config_path === NULL) {
-	if (file_exists("install/index.php")) {
-		redirect("install/index.php");
-	} else {
-		die("config.php nor setup.php files were found");
-	}
-}
-$folder_level = dirname($config_path).'/';
-
-// Path definitions
-define("BASEDIR", $folder_level);
-define("ADMIN", BASEDIR."administration/");
-define("CLASSES", BASEDIR."includes/classes/");
-define("DOWNLOADS", BASEDIR."downloads/");
-define("IMAGES", BASEDIR."images/");
-define("IMAGES_A", IMAGES."articles/");
-define("IMAGES_N", IMAGES."news/");
-define("IMAGES_N_T", IMAGES."news/thumbs/");
-define("IMAGES_NC", IMAGES."news_cats/");
-define("IMAGES_B", IMAGES."blog/");
-define("IMAGES_B_T", IMAGES."blog/thumbs/");
-define("IMAGES_BC", IMAGES."blog_cats/");
-define("RANKS", IMAGES."ranks/");
-define("INCLUDES", BASEDIR."includes/");
-define("LOCALE", BASEDIR."locale/");
-define("FORUM", BASEDIR."forum/");
-define("INFUSIONS", BASEDIR."infusions/");
-define("PHOTOS", IMAGES."photoalbum/");
-define("SHOP", BASEDIR."eshop/");
-define("THEMES", BASEDIR."themes/");
-define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
-
-require_once BASEDIR."config.php";
-// If config.php is empty, activate setup.php script
-if (!isset($db_name)) {
-	redirect("install/index.php");
-}
-
-require_once INCLUDES."multisite_include.php";
+// Detect whether the system is installed and load config.php if it is.
+require_once fusion_detect_installation();
 
 // Select database handler
 if ($pdo_enabled == "1") {

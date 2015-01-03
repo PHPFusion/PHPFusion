@@ -1279,11 +1279,40 @@ function fusion_get_settings() {
  */
 function fusion_get_relative_path_to_config($max_level = 7)
 {
-	$basedir = "./";
-	$i = 0;
-	while ($i <= $max_level and !file_exists($basedir."config.php")) {
-		$basedir .= "../";
-		$i++;
+	static $config_path = NULL;
+	if ($config_path === NULL) {
+		$basedir = "./";
+		$i = 0;
+		while ($i <= $max_level and !file_exists($basedir."config.php")) {
+			$basedir .= "../";
+			$i++;
+		}
+		$config_path = file_exists($basedir."config.php") ? $basedir."config.php" : NULL;
 	}
-	return file_exists($basedir."config.php") ? $basedir."config.php" : NULL;
+	return $config_path;
+
+}
+
+/**
+ * Run the installer or halt the script
+ */
+function fusion_run_installer() {
+	if (file_exists("install/index.php")) {
+		redirect("install/index.php");
+	} else {
+		die("config.php nor setup.php files were found");
+	}
+}
+
+/**
+ * Detect whether the system is installed and return the config file path
+ * 
+ * @return string
+ */
+function fusion_detect_installation() {
+	$config_path = fusion_get_relative_path_to_config();
+	if ($config_path === NULL or !filesize($config_path)) {
+		fusion_run_installer();
+	}
+	return $config_path;
 }
