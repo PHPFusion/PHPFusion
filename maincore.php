@@ -30,7 +30,7 @@ if (stripget($_GET)) {
 }
 
 // Establish mySQL database connection
-$link = dbconnect($db_host, $db_user, $db_pass, $db_name);
+dbconnect($db_host, $db_user, $db_pass, $db_name);
 unset($db_host, $db_user, $db_pass);
 
 // Fetch the settings from the database
