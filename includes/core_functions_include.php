@@ -238,20 +238,16 @@ function stripinput($text) {
  * @return boolean TRUE if the URL is not secure
  */
 function stripget($check_url) {
-	$return = FALSE;
-	if (is_array($check_url)) {
-		foreach ($check_url as $value) {
-			if (stripget($value) == TRUE) {
-				return TRUE;
-			}
-		}
-	} else {
+	if (!is_array($check_url)) {
 		$check_url = str_replace(array("\"", "\'"), array("", ""), urldecode($check_url));
-		if (preg_match("/<[^<>]+>/i", $check_url)) {
+		return (bool) preg_match("/<[^<>]+>/i", $check_url);
+	}
+	foreach ($check_url as $value) {
+		if (stripget($value)) {
 			return TRUE;
 		}
 	}
-	return $return;
+	return FALSE;
 }
 
 /**
@@ -261,14 +257,12 @@ function stripget($check_url) {
  * @return string
  */
 function stripfilename($filename) {
-	$filename = strtolower(str_replace(" ", "_", $filename));
-	$filename = preg_replace("/[^a-zA-Z0-9_-]/", "", $filename);
-	$filename = preg_replace("/^\W/", "", $filename);
-	$filename = preg_replace('/([_-])\1+/', '$1', $filename);
-	if ($filename == "") {
-		$filename = (string) time();
-	}
-	return $filename;
+	$patterns = array(
+		'/\s+/' => '_',
+		'/[^a-z0-9_-]|^\W/i' => '',
+		'/([_-])\1+/' => '$1'
+	);
+	return preg_replace(array_keys($patterns), $patterns, strtolower($filename)) ? : (string) time();
 }
 
 /**
