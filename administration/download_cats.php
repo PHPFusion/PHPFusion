@@ -187,7 +187,7 @@ function showcatlist($parent = 0, $level = 0) {
 			echo "<div class='overflow-hide p-r-10'>\n";
 			echo "<span class='display-inline-block m-r-10 strong text-bigger'>".str_repeat("&mdash;", $level).$data['download_cat_name']."</span>";
 			if ($data['download_cat_description']) {
-				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".trim_word($data['download_cat_description'], 50)."</span>";
+				echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".fusion_first_words($data['download_cat_description'], 50)."</span>";
 			}
 			echo "</div>\n";
 			echo "</div>\n";

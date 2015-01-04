@@ -191,7 +191,7 @@ if (!function_exists('render_news')) {
 			if ($info['news_image']) {
 				echo "<div class='overflow-hide news-img-header'>\n";
 				echo $info['news_image'];
-				echo "<a class='opacity-none transition news-snippet' href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$info['cat_id'] : FUSION_SELF."?readmore=".$info['news_id'])."'>".trim_word($info['news_news'], 20)."</a>\n";
+				echo "<a class='opacity-none transition news-snippet' href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$info['cat_id'] : FUSION_SELF."?readmore=".$info['news_id'])."'>".fusion_first_words($info['news_news'], 20)."</a>\n";
 				add_to_jquery("
 				$('.news-img-header').hover(
 					function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 1}); },
@@ -223,7 +223,7 @@ if (!function_exists('render_news')) {
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
 			echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".BASEDIR."news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
 			echo "<div class='news-date m-t-5'>".showdate($settings['newsdate'], $info['news_date'])."</div>\n";
-			echo "<div class='news-text m-t-5'>".trim_word($info['news_news'], 10)."</div>\n";
+			echo "<div class='news-text m-t-5'>".fusion_first_words($info['news_news'], 10)."</div>\n";
 			echo "<div class='news-category m-t-5'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
 			echo $info['cat_name'] ? "<a href='".BASEDIR."news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
 			echo "</div>\n";

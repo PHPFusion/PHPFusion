@@ -71,7 +71,7 @@ function news_listing() {
 			echo thumbnail($img_thumb, '50px');
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
-			echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".trim_word($data2['news_news'], '50')."</div>\n";
+			echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words($data2['news_news'], '50')."</div>\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 			echo "</div>\n";
@@ -111,7 +111,7 @@ function news_listing() {
 					echo thumbnail($img_thumb, '50px');
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
-					echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".trim_word($data2['news_news'], '50')."</div>\n";
+					echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words($data2['news_news'], '50')."</div>\n";
 					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
 					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 					echo "</div>\n";

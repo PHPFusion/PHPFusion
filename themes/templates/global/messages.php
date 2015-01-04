@@ -163,7 +163,7 @@ if (!function_exists('render_inbox')) {
 						echo "<div class='overflow-hide'>\n";
 						echo "<span class='pull-right text-smaller'>".date('d/m/y, h:i a', $mdata['message_datestamp'])."</span>\n";
 						echo profile_link($mdata['user_id'], $mdata['user_name'], $mdata['user_status']);
-						echo "<p>".trim_word(censorwords(parseubb(parsesmileys($mdata['message_message']))), 50)."</p>";
+						echo "<p>".fusion_first_words(censorwords(parseubb(parsesmileys($mdata['message_message']))), 50)."</p>";
 						echo "</span>\n";
 						echo "</div>\n";
 						echo "</div>\n";

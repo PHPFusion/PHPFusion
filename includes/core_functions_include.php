@@ -328,7 +328,7 @@ function trimlink($text, $length) {
  * Tip: You can pass an html link to the full content.
  * @return string
  */
-function trim_word($text, $limit, $suffix = '&hellip;') {
+function fusion_first_words($text, $limit, $suffix = '&hellip;') {
 	return preg_replace('~^(\s*\w+'.
 		str_repeat('\W+\w+', $limit-1).
 		'(?(?=[?!:;.])
