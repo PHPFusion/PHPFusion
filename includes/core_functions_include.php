@@ -324,18 +324,16 @@ function trimlink($text, $length) {
  * 
  * @param string $text
  * @param int $limit The number of words
+ * @param string $suffix If $text is longer than $limit, $suffix will be appended.
+ * Tip: You can pass an html link to the full content.
  * @return string
  */
-function trim_word($text, $limit) {
-	if (str_word_count($text, 0) > $limit) {
-		$words = str_word_count($text, 2);
-		$pos = array_keys($words);
-		// Position at which this word begins + it's own length
-		$rpos = $pos[$limit-1] + strlen($words[$pos[$limit-1]]);
-
-		$text = substr($text, 0, $rpos) . '&hellip;';
-	}
-	return $text;
+function trim_word($text, $limit, $suffix = '&hellip;') {
+	return preg_replace('~^(\s*\w+'.
+		str_repeat('\W+\w+', $limit-1).
+		'(?(?=[?!:;.])
+				[[:punct:]]\s*
+		))\b(.+)$~isxu', '$1'.$suffix, $text);
 }
 
 /**
