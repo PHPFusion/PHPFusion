@@ -68,9 +68,6 @@ if (!defined("IN_PERMALINK")) {
 	define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 	define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
 }
-define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
-define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
-define("USER_IP", $_SERVER['REMOTE_ADDR']);
 
 // Variables initializing
 $mysql_queries_count = 0;

@@ -212,27 +212,21 @@ function redirect($location, $script = FALSE) {
 function cleanurl($url) {
 	$bad_entities = array("&", "\"", "'", '\"', "\'", "<", ">", "(", ")", "*");
 	$safe_entities = array("&amp;", "", "", "", "", "", "", "", "", "");
-	$url = str_replace($bad_entities, $safe_entities, $url);
-	return $url;
+	return str_replace($bad_entities, $safe_entities, $url);
 }
 
 /**
  * Strip Input Function, prevents HTML in unwanted places
  * 
- * @param string $text
- * @return string|array
+ * @param string|string[] $text
+ * @return string|string[]
  */
 function stripinput($text) {
 	if (!is_array($text)) {
-		$text = stripslash(trim($text));
-		$text = preg_replace("/(&amp;)+(?=\#([0-9]{2,3});)/i", "&", $text);
-		$search = array("&", "\"", "'", "\\", '\"', "\'", "<", ">", "&nbsp;");
-		$replace = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
-		$text = str_replace($search, $replace, $text);
-	} else {
-		foreach ($text as $key => $value) {
-			$text[$key] = stripinput($value);
-		}
+		return str_replace('\\', '&#092;', htmlspecialchars(stripslash(trim($text)), ENT_QUOTES));
+	}
+	foreach ($text as $i => $item) {
+		$text[$i] = stripinput($item);
 	}
 	return $text;
 }

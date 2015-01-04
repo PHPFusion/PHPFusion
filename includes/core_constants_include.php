@@ -38,5 +38,8 @@ define("PHOTOS", IMAGES."photoalbum/");
 define("SHOP", BASEDIR."eshop/");
 define("THEMES", BASEDIR."themes/");
 define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
+define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
+define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
+define("USER_IP", $_SERVER['REMOTE_ADDR']);
 
 require_once __DIR__.'/multisite_include.php';
