@@ -300,10 +300,7 @@ function addslash($text) {
  * @return string
  */
 function phpentities($text) {
-	$search = array("&", "\"", "'", "\\", "<", ">");
-	$replace = array("&amp;", "&quot;", "&#39;", "&#92;", "&lt;", "&gt;");
-	$text = str_replace($search, $replace, $text);
-	return $text;
+	return str_replace('\\', '&#092;', htmlspecialchars($text, ENT_QUOTES));
 }
 
 /**
