@@ -18,8 +18,8 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $list_open = FALSE;
 openside($locale['global_001']);
-$result = dbquery("SELECT link_name, link_url, link_window, link_visibility FROM ".DB_SITE_LINKS."
-	".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_position>='1' ORDER BY link_order");
+$result = dbquery("SELECT link_name, link_url, link_window, link_visibility FROM ".DB_SITE_LINKS." WHERE
+	".(multilang_table("SL") ? " link_language='".LANGUAGE."' AND" : "")." link_position in (1, 2) ORDER BY link_order");
 if (dbrows($result)) {
 	$i = 0;
 	echo "<div id='navigation'>\n";
