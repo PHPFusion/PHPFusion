@@ -426,17 +426,15 @@ if (isset($_GET['pid']) && isnum($_GET['pid'])) {
 }
 
 //locale dependent forum buttons
-if (is_array($fusion_images)) {
-	if ($settings['locale'] != "English") {
-		$newpath = "";
-		$oldpath = explode("/", $fusion_images['newthread']);
-		$c_path = count($oldpath);
-		for ($i = 0; $i < $c_path-1; $i++) {
-			$newpath .= $oldpath[$i]."/";
-		}
-		if (is_dir($newpath.$settings['locale'])) {
-			redirect_img_dir($newpath, $newpath.$settings['locale']."/");
-		}
+if ($settings['locale'] != "English") {
+	$newpath = "";
+	$oldpath = explode("/", get_image('newthread'));
+	$c_path = count($oldpath);
+	for ($i = 0; $i < $c_path-1; $i++) {
+		$newpath .= $oldpath[$i]."/";
+	}
+	if (is_dir($newpath.$settings['locale'])) {
+		redirect_img_dir($newpath, $newpath.$settings['locale']."/");
 	}
 }
 

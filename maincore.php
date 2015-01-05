@@ -72,7 +72,6 @@ if (!defined("IN_PERMALINK")) {
 // Variables initializing
 $mysql_queries_count = 0;
 $mysql_queries_time = array();
-$smiley_cache = "";
 $bbcode_cache = "";
 $groups_cache = "";
 $forum_rank_cache = "";
