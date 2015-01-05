@@ -154,26 +154,46 @@ namespace PHPFusion {
 				//Z
 			);
 			//</editor-fold>
+			//TODO: real check
+			$installedTables = array(
+				'blog' => TRUE,
+				'news' => TRUE
+			);
+
+			$selects = array(
+				"SELECT admin_image as image, admin_rights as name, 'ac_' as prefix FROM ".DB_ADMIN
+			);
+			if ($installedTables['blog']) {
+				$selects[] = "SELECT blog_cat_image as image, blog_cat_name as name, 'bl_' as prefix FROM ".DB_BLOG_CATS;
+			}
+				
+			if ($installedTables['news']) {
+				$selects[] = "SELECT news_cat_image as image, news_cat_name as name, 'nc_' as prefix FROM ".DB_NEWS_CATS;
+			}
+			
 			//smiley
 			foreach (cache_smileys() as $smiley) {
 				self::$imagePaths["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
 			}
-			//blogcat
-			$result = dbquery("SELECT blog_cat_image, blog_cat_name FROM ".DB_BLOG_CATS);
-			while ($data = dbarray($result)) {
-				self::$imagePaths["bl_".$data['blog_cat_name']] = file_exists(IMAGES_NC.$data['blog_cat_image']) ? IMAGES_NC.$data['blog_cat_image'] : IMAGES."imagenotfound.jpg";
-			}
-			//newscat
-			$result = dbquery("SELECT news_cat_image, news_cat_name FROM ".DB_NEWS_CATS);
-			while ($data = dbarray($result)) {
-				self::$imagePaths["nc_".$data['news_cat_name']] = file_exists(IMAGES_NC.$data['news_cat_image']) ? IMAGES_NC.$data['news_cat_image'] : IMAGES."imagenotfound.jpg";
-			}
-			//admin rights
-			$result = dbquery("SELECT admin_rights, admin_image FROM ".DB_ADMIN);
-			while ($data = dbarray($result)) {
-				self::$imagePaths["ac_".$data['admin_rights']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists(INFUSIONS.$data['admin_image']) ? INFUSIONS.$data['admin_image'] : ADMIN."images/infusion_panel.gif");
-			}
 			
+			$union = implode(' union ', $selects);
+			$result = dbquery($union);
+			while ($data = dbarray($result)) {
+				$image = "";
+				switch ($data['prefix']) {
+					case 'ac_':
+						$image = file_exists(ADMIN."images/".$data['image']) 
+							? ADMIN."images/".$data['image'] 
+							: (file_exists(INFUSIONS.$data['image']) 
+								? INFUSIONS.$data['image'] 
+								: ADMIN."images/infusion_panel.gif");
+						break;
+					case 'bl_': case 'nc_': default:
+						$image = file_exists(IMAGES_NC.$data['image']) ? IMAGES_NC.$data['image'] : IMAGES."imagenotfound.jpg";
+						break;
+				}
+				self::$imagePaths[$data['prefix'].$data['name']] = file_exists(IMAGES_NC.$data['image']) ? IMAGES_NC.$data['image'] : IMAGES."imagenotfound.jpg";
+			}			
 		}
 
 		/**
