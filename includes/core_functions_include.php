@@ -360,17 +360,13 @@ function trim_text($str, $length = FALSE) {
 /**
  * Validate numeric input
  * 
- * @param string $value
- * @param boolean $decimal TRUE if it can be float
+ * @param string|number $value The first character must not be + nor -
+ * @param boolean $decimal TRUE if $value can be float
  * @return boolean
  */
 function isnum($value, $decimal=false) {
-	if (!is_array($value)) {
-		if($decimal==true) return (preg_match("/^[0-9]+(\.{0,1})[0-9]*$/", $value));
-		return (preg_match("/^[0-9]+$/", $value));
-	} else {
-		return false;
-	}
+	$float = $decimal ? '(\.{0,1})[0-9]*' : '';
+	return !is_array($value) and preg_match("/^[0-9]+".$float."$/", $value);
 }
 
 /**
@@ -381,11 +377,7 @@ function isnum($value, $decimal=false) {
  * @return boolean FALSE when $value is an array
  */
 function preg_check($expression, $value) {
-	if (!is_array($value)) {
-		return preg_match($expression, $value);
-	} else {
-		return FALSE;
-	}
+	return !is_array($value) and preg_match($expression, $value);
 }
 
 /**
