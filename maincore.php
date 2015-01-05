@@ -278,6 +278,4 @@ $defender->debug_notice = false; // turn this off after beta.
 require_once INCLUDES."dynamics/dynamics.inc.php";
 $dynamic = new dynamics();
 $dynamic->boot();
-
-include INCLUDES."system_images.php";
 ?>
