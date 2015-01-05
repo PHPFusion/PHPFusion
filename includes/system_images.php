@@ -16,15 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-cache_smileys();
+
 $smiley_images = array();
-if (is_array($smiley_cache) && count($smiley_cache)) {
-	foreach ($smiley_cache as $smiley) {
-		$smiley_images["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
-	}
+foreach (cache_smileys() as $smiley) {
+	$smiley_images["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
 }
+
 $result = dbquery("SELECT blog_cat_image, blog_cat_name FROM ".DB_BLOG_CATS);
-$bl_images = array();
+$bl_images = array(); 
 while ($data = dbarray($result)) {
 	$bl_images["bl_".$data['blog_cat_name']] = file_exists(IMAGES_NC.$data['blog_cat_image']) ? IMAGES_NC.$data['blog_cat_image'] : IMAGES."imagenotfound.jpg";
 }

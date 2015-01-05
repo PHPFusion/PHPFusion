@@ -383,20 +383,18 @@ function preg_check($expression, $value) {
 /**
  * Cache smileys mysql
  * 
- * @global array $smiley_cache
  * @return array
  */
 function cache_smileys() {
-	global $smiley_cache;
-	$result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
-	if (dbrows($result)) {
+	static $smiley_cache = NULL;
+	if ($smiley_cache === NULL) {
 		$smiley_cache = array();
+		$result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
 		while ($data = dbarray($result)) {
-			$smiley_cache[] = array("smiley_code" => $data['smiley_code'], "smiley_image" => $data['smiley_image'],
+			$smiley_cache[] = array("smiley_code" => $data['smiley_code'], 
+									"smiley_image" => $data['smiley_image'],
 									"smiley_text" => $data['smiley_text']);
 		}
-	} else {
-		$smiley_cache = array();
 	}
 	return $smiley_cache;
 }
@@ -404,22 +402,15 @@ function cache_smileys() {
 /**
  * Parse smiley bbcode
  * 
- * @global array $smiley_cache
  * @param string $message
  * @return string
  */
 function parsesmileys($message) {
-	global $smiley_cache;
 	if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message)) {
-		if (!$smiley_cache) {
-			cache_smileys();
-		}
-		if (is_array($smiley_cache) && count($smiley_cache)) {
-			foreach ($smiley_cache as $smiley) {
-				$smiley_code = preg_quote($smiley['smiley_code'], '#');
-				$smiley_image = "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
-				$message = preg_replace("#{$smiley_code}#si", $smiley_image, $message);
-			}
+		foreach (cache_smileys() as $smiley) {
+			$smiley_code = preg_quote($smiley['smiley_code'], '#');
+			$smiley_image = "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
+			$message = preg_replace("#{$smiley_code}#si", $smiley_image, $message);
 		}
 	}
 	return parseUser($message);
@@ -428,26 +419,19 @@ function parsesmileys($message) {
 /**
  * Show smiley icons in comments, forum and other post pages
  * 
- * @global array $smiley_cache
  * @param string $textarea The name of the textarea
  * @param string $form The name of the form
  * @return string
  */
 function displaysmileys($textarea, $form = "inputform") {
-	global $smiley_cache;
 	$smileys = "";
 	$i = 0;
-	if (!$smiley_cache) {
-		cache_smileys();
-	}
-	if (is_array($smiley_cache) && count($smiley_cache)) {
-		foreach ($smiley_cache as $smiley) {
-			if ($i != 0 && ($i%10 == 0)) {
-				$smileys .= "<br />\n";
-				$i++;
-			}
-			$smileys .= "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\" />\n";
+	foreach (cache_smileys() as $smiley) {
+		if ($i != 0 && ($i%10 == 0)) {
+			$smileys .= "<br />\n";
 		}
+		$i++;
+		$smileys .= "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\" />\n";
 	}
 	return $smileys;
 }
