@@ -18,8 +18,6 @@
 +--------------------------------------------------------*/
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) { die(); }
 
-// Define script start time
-define("START_TIME", microtime(TRUE));
 define("IN_FUSION", TRUE);
 
 require __DIR__.'/includes/core_resources_include.php';
@@ -162,11 +160,7 @@ if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 		$cookieExpiration = time()+86400*60; 
 		$cookiePath = COOKIE_PATH;
 		$cookieDomain = COOKIE_DOMAIN;
-		if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
-			setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE, FALSE);
-		} else {
-			setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE);
-		}
+		setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE, FALSE);
 	}
 	// Redirect handler to keep position upon lang switch
 	if (FUSION_QUERY != "") {
