@@ -192,7 +192,7 @@ namespace PHPFusion {
 						$image = file_exists(IMAGES_NC.$data['image']) ? IMAGES_NC.$data['image'] : IMAGES."imagenotfound.jpg";
 						break;
 				}
-				self::$imagePaths[$data['prefix'].$data['name']] = file_exists(IMAGES_NC.$data['image']) ? IMAGES_NC.$data['image'] : IMAGES."imagenotfound.jpg";
+				self::$imagePaths[$data['prefix'].$data['name']] = $image;
 			}			
 		}
 
