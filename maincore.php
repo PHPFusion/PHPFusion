@@ -120,8 +120,6 @@ if (!defined("IN_PERMALINK")) {
 }
 
 // Autenticate user
-require_once CLASSES."Authenticate.class.php";
-
 // Log in user
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
 	$auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));

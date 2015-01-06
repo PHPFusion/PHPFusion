@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+$settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
 define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
 define("COOKIE_PATH", $settings['site_path']);
@@ -24,8 +24,6 @@ define("COOKIE_USER", COOKIE_PREFIX."user");
 define("COOKIE_ADMIN", COOKIE_PREFIX."admin");
 define("COOKIE_VISITED", COOKIE_PREFIX."visited");
 define("COOKIE_LASTVISIT", COOKIE_PREFIX."lastvisit");
-// Provisory variable if is decided upon adding this as an option
-$settings['extend_admin_cookie'] = 1;
 
 class Authenticate {
 	private $_userData = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => "Default");
@@ -186,9 +184,7 @@ class Authenticate {
 							$hash = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $key);
 							if ($cookieHash == $hash) {
 								// Set admin cookie again, renewing it's life time
-								if ($settings['extend_admin_cookie'] == 1) {
-									Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
-								}
+								Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
 								return TRUE;
 							}
 						}

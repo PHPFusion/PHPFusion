@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+require_once __DIR__.'/autoloader.php';
+
 require_once __DIR__.'/core_functions_include.php';
 require_once fusion_detect_installation();
 require_once __DIR__.'/core_constants_include.php';
