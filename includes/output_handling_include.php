@@ -43,9 +43,9 @@ namespace PHPFusion {
 		/**
 		 * PHP code to execute using eval replace anything in the output
 		 *
-		 * @var string
+		 * @var callback[]
 		 */
-		private static $outputHandlers = "";
+		private static $outputHandlers = array();
 		
 		/**
 		 * Additional tags to the html head
@@ -151,23 +151,25 @@ namespace PHPFusion {
 		/**
 		 * Add a new output handler function
 		 * 
-		 * @param string $name The name of the output handler function
+		 * @param callback $callback The name of a function or other callable object
 		 */
-		public static function addHandler($name) {
-			if (!empty($name)) {
-				self::$outputHandlers .= "\$output = $name(\$output);";
+		public static function addHandler($callback) {
+			if (is_callable($callback)) {
+				self::$outputHandlers[] = $callback;
 			}
 		}
 		
 		/**
 		 * Add handler to the $permalink object
 		 * 
-		 * @param string $name
+		 * @param string $callback
 		 */
-		public static function addPermalinkHandler($name) {
+		public static function addPermalinkHandler($callback) {
 			$settings = \fusion_get_settings();
-			if (!empty($name) && $settings['site_seo']) {
-				self::$outputHandlers .= '\PHPFusion\OutputHandler\AddHandler("'.$name.'");';
+			if ($settings['site_seo'] and is_callable($callback)) {
+				self::$outputHandlers[] = function() use($callback) {
+					PermalinksDisplay::getInstance()->AddHandler($callback);
+				};
 			}
 		}
 		
@@ -203,7 +205,6 @@ namespace PHPFusion {
 		 */
 		public static function handleOutput($output) {
 			//TODO: remove global variables
-			$permalink = PermalinksDisplay::getInstance();
 			$settings = \fusion_get_settings();
 			
 			if (!empty(self::$pageHeadTags)) {
@@ -223,8 +224,9 @@ namespace PHPFusion {
 			if (!empty(self::$pageReplacements)) {
 				eval(self::$pageReplacements);
 			}
-			if (!empty(self::$outputHandlers)) {
-				eval(self::$outputHandlers);
+			
+			foreach (self::$outputHandlers as $handler) {
+				$output = $handler($output);
 			}
 
 			return $output;
@@ -303,10 +305,10 @@ namespace {
 	/**
 	 * Add a new output handler function
 	 * 
-	 * @param string $name The name of the output handler function
+	 * @param callback $callback The name of a function or other callable object
 	 */
-	function add_handler($name) {
-		OutputHandler::addHandler($name);
+	function add_handler($callback) {
+		OutputHandler::addHandler($callback);
 	}
 
 	/**
