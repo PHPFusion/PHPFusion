@@ -21,3 +21,10 @@ require fusion_detect_installation();
 require __DIR__.'/core_constants_include.php';
 require DB_HANDLERS.(intval($pdo_enabled) === 1 ? 'pdo' : 'mysql')."_functions_include.php";
 require __DIR__."/system_images.php";
+
+require __DIR__."/output_handling_include.php";
+require __DIR__."/translate_include.php";
+require __DIR__."/notify/notify.inc.php";
+require __DIR__."/sqlhandler.inc.php";
+require __DIR__."/defender.inc.php";
+require __DIR__."/dynamics/dynamics.inc.php";

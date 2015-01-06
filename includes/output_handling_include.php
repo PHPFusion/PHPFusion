@@ -15,107 +15,164 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$fusion_page_replacements = "";
-$fusion_output_handlers = "";
-$fusion_page_title = "";
-$fusion_page_meta = array("description" => $settings['description'], "keywords" => $settings['keywords']);
-$fusion_page_head_tags = "";
-$fusion_page_footer_tags = "";
-$fusion_jquery_tags = "";
+namespace PHPFusion {
+	//TODO: PHPDoc comments
+	class OutputHandler {
+		private static $pageMeta = array();
+		private static $pageTitle = "";
+		private static $pageReplacements = "";
+		private static $outputHandlers = "";
+		
+		public static $pageHeadTags = "";
+		public static $pageFooterTags = "";
+		public static $jqueryTags = "";
+		
+		public static function setTitle($title = "") {
+			self::$pageTitle = $title;
+		}
+		
+		public static function addToTitle($addition = "") {
+			self::$pageTitle .= preg_replace("/".$GLOBALS['locale']['global_200']."/", '', $addition, 1);
+		}
+		
+		public static function setMeta($name, $content = "") {
+			self::$pageMeta[$name] = $content;
+		}
+		
+		public static function addToMeta($name, $addition = "") {
+			$settings = \fusion_get_settings();
+			if (empty(self::$pageMeta)) {
+				self::$pageMeta =  array(
+					"description" => $settings['description'], 
+					"keywords" => $settings['keywords']
+				);
+			}
+			if (isset(self::$pageMeta[$name])) {
+				self::$pageMeta[$name] .= $addition;
+			}
+		}
+		
+		public static function addToHead($tag = "") {
+			if (!\stristr(self::$pageHeadTags, $tag)) {
+				self::$pageHeadTags .= $tag."\n";
+			}
+		}
+		
+		public static function addToFooter($tag = "") {
+			if (!stristr(self::$pageFooterTags, $tag)) {
+				self::$pageFooterTags .= $tag."\n";
+			}
+		}
+		
+		public static function replaceInOutput($target, $replace, $modifiers = "") {
+			self::$pageReplacements .= "\$output = preg_replace('^$target^$modifiers', '$replace', \$output);";
+		}
+		
+		public static function addHandler($name) {
+			if (!empty($name)) {
+				self::$outputHandlers .= "\$output = $name(\$output);";
+			}
+		}
+		
+		public static function addPermalinkHandler($name) {
+			//TODO: test it
+			$settings = \fusion_get_settings();
+			if (!empty($name) && $settings['site_seo']) {
+				self::$outputHandlers .= "\$permalink->AddHandler(\"$name\");";
+			}
+		}
+		
+		public static function addToJQuery ($tag = "") {
+			self::$jqueryTags .= $tag;
+		}
+		
+		public static function addToBreadCrumbs(array $link = array()) {
+			//TODO: remove global variable
+			global $breadcrumbs;
+			if (!empty($link)) {
+				$breadcrumbs[] = $link;
+			}
+		}
+		
+		public static function handleOutput($output) {
+			//TODO: remove global variables
+			global $permalink;
+			$settings = \fusion_get_settings();
+			
+			if (!empty(self::$pageHeadTags)) {
+				$output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);
+			}
 
-function set_title($title = "") {
-	global $fusion_page_title;
-	$fusion_page_title = $title;
-}
+			if (self::$pageTitle != $settings['sitename']) {
+				$output = preg_replace("#<title>.*</title>#i", "<title>".self::$pageTitle.$GLOBALS['locale']['global_200'].$settings['sitename']."</title>", $output, 1);
+			}
 
-function add_to_title($addition = "") {
-	global $fusion_page_title;
-	$addition = preg_replace("/".$GLOBALS['locale']['global_200']."/", '', $addition, 1);
-	$fusion_page_title .= $addition;
-}
+			if (!empty(self::$pageMeta)) {
+				foreach (self::$pageMeta as $name => $content) {
+					$output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
+				}
+			}
 
-function set_meta($name, $content = "") {
-	global $fusion_page_meta;
-	$fusion_page_meta[$name] = $content;
-}
+			if (!empty(self::$pageReplacements)) {
+				eval(self::$pageReplacements);
+			}
+			if (!empty(self::$outputHandlers)) {
+				eval(self::$outputHandlers);
+			}
 
-function add_to_meta($name, $addition = "") {
-	global $fusion_page_meta;
-	if (isset($fusion_page_meta[$name])) {
-		$fusion_page_meta[$name] .= $addition;
-	}
-}
-
-function add_to_head($tag = "") {
-	global $fusion_page_head_tags;
-	if (!stristr($fusion_page_head_tags, $tag)) {
-		$fusion_page_head_tags .= $tag."\n";
-	}
-}
-
-function add_to_footer($tag = "") {
-	global $fusion_page_footer_tags;
-	if (!stristr($fusion_page_footer_tags, $tag)) {
-		$fusion_page_footer_tags .= $tag."\n";
-	}
-}
-
-function replace_in_output($target, $replace, $modifiers = "") {
-	global $fusion_page_replacements;
-	$fusion_page_replacements .= "\$output = preg_replace('^$target^$modifiers', '$replace', \$output);";
-}
-
-function add_handler($name) {
-	global $fusion_output_handlers;
-	if (!empty($name)) {
-		$fusion_output_handlers .= "\$output = $name(\$output);";
-	}
-}
-
-function add_permalink_handler($name) {
-	global $fusion_output_handlers, $settings;
-	if (!empty($name) && $settings['site_seo']) {
-		$fusion_output_handlers .= "\$permalink->AddHandler(\"$name\");";
-	}
-}
-
-function handle_output($output) {
-	global $permalink, $fusion_page_head_tags, $fusion_page_footer_tags, $fusion_page_title, $fusion_page_meta, $fusion_page_replacements, $fusion_output_handlers, $settings;
-
-	if (!empty($fusion_page_head_tags)) {
-		$output = preg_replace("#</head>#", $fusion_page_head_tags."</head>", $output, 1);
-	}
-
-	if ($fusion_page_title != $settings['sitename']) {
-		$output = preg_replace("#<title>.*</title>#i", "<title>".$fusion_page_title.$GLOBALS['locale']['global_200'].$settings['sitename']."</title>", $output, 1);
-	}
-	
-	if (!empty($fusion_page_meta)) {
-		foreach ($fusion_page_meta as $name => $content) {
-			$output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
+			return $output;
 		}
 	}
-
-	if (!empty($fusion_page_replacements)) {
-		eval($fusion_page_replacements);
-	}
-	if (!empty($fusion_output_handlers)) {
-		eval($fusion_output_handlers);
-	}
-	return $output;
 }
+namespace {
+	use PHPFusion\OutputHandler;
+	function set_title($title = "") {
+		OutputHandler::setTitle($title);
+	}
 
-function add_to_jquery($tag = "") {
-	global $fusion_jquery_tags;
-	$fusion_jquery_tags .= $tag."\n";
-}
+	function add_to_title($addition = "") {
+		OutputHandler::addToTitle($addition);
+	}
 
-// Add links to breadcrumbs array
-function add_to_breadcrumbs(array $link=array()) {
-	global $breadcrumbs;
-	if (is_array($link) && !empty($link)) {
-		$breadcrumbs[] = $link;
+	function set_meta($name, $content = "") {
+		OutputHandler::setMeta($name, $content);
+	}
+
+	function add_to_meta($name, $addition = "") {
+		OutputHandler::addToMeta($name, $addition);
+	}
+
+	function add_to_head($tag = "") {
+		OutputHandler::addToHead($tag);
+	}
+
+	function add_to_footer($tag = "") {
+		OutputHandler::addToFooter($tag);
+	}
+
+	function replace_in_output($target, $replace, $modifiers = "") {
+		OutputHandler::replaceInOutput($target, $replace, $modifiers);
+	}
+
+	function add_handler($name) {
+		OutputHandler::addHandler($name);
+	}
+
+	function add_permalink_handler($name) {
+		OutputHandler::addPermalinkHandler($name);
+	}
+
+	function handle_output($output) {
+		return OutputHandler::handleOutput($output);
+	}
+
+	function add_to_jquery($tag = "") {
+		OutputHandler::addToJQuery($tag);
+	}
+
+	// Add links to breadcrumbs array
+	function add_to_breadcrumbs(array $link=array()) {
+		OutputHandler::addToBreadCrumbs($link);
 	}
 }
-
 ?>

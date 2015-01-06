@@ -9,7 +9,7 @@
 | Filename: dynamics.inc.php
 | Author: PHP-Fusion 8 Development Team
 | Coded by : Frederick MC Chan (Hien)
-| Version : 8.2.0 (please update every commit)
+| Version : 8.2.1 (please update every commit)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,11 +19,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-include LOCALE.LOCALESET."admin/members.php";
-require_once INCLUDES."defender.inc.php";
 
 class dynamics {
 	static function boot() {
+		//Are these two include really necessary?
+		include LOCALE.LOCALESET."admin/members.php";
+		require_once INCLUDES."defender.inc.php";
+		
 		if (!defined('DYNAMICS')) {
 			define('DYNAMICS', INCLUDES."dynamics/");
 		}

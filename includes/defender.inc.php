@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: defender.inc.php
 | Author : Frederick MC Chan (Hien)
-| Version : 9.0.2 (please update every commit)
+| Version : 9.0.3 (please update every commit)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,8 +16,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-include LOCALE.LOCALESET."defender.php";
 
 class defender {
 	public $debug = FALSE;
@@ -42,9 +40,28 @@ class defender {
 		'thumbnail_2' => '',
 	); // declared by form_sanitizer()
 
+	/**
+	 * Load locales for defender
+	 * 
+	 * This solution was needed to load the defender.inc.php before
+	 * defining LOCALESET
+	 * 
+	 * @staticvar array $locale
+	 * @return array
+	 */
+
+	
 	/* Sanitize Fields Automatically */
 	public function defender() {
 		global $locale;
+		/*
+		 * Keep this include in the constructor!
+		 * 
+		 * This solution was needed to load the defender.inc.php before
+		 * defining LOCALESET
+		 */
+		include LOCALE.LOCALESET."defender.php";
+		
 		require_once INCLUDES."notify/notify.inc.php";
 		if (!defined('SETUP')) $this->noAdminCookie();
 		// declare the validation rules and assign them

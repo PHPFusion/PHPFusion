@@ -219,11 +219,7 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 $lastvisited = Authenticate::setLastVisitCookie();
 
 // Set theme
-if (!isset($userdata['user_theme']) || !$userdata['user_theme']) {
-	set_theme($settings['theme']);
-} else {
-	set_theme($userdata['user_theme']);
-}
+set_theme(empty($userdata['user_theme']) ? $settings['theme'] : $userdata['user_theme']);
 
 // Check file types of the uploaded file with known mime types list to prevent uploading unwanted files if enabled
 if ($settings['mime_check'] == "1") {
@@ -260,16 +256,16 @@ if ($settings['mime_check'] == "1") {
 	}
 }
 
-require_once INCLUDES."translate_include.php";
-require_once INCLUDES."output_handling_include.php";
-require_once INCLUDES."notify/notify.inc.php";
-require_once INCLUDES."sqlhandler.inc.php";
-require_once INCLUDES."defender.inc.php";
 $defender = new defender;
 $defender->debug_notice = false; // turn this off after beta.
 $defender->sniff_token();
 $defender->debug_notice = false; // turn this off after beta.
-require_once INCLUDES."dynamics/dynamics.inc.php";
+
 $dynamic = new dynamics();
 $dynamic->boot();
+
+// & is important after equal sign!
+$fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
+$fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
+$fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
 ?>
