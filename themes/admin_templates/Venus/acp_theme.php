@@ -49,7 +49,6 @@ function render_adminpanel() {
 		echo "</aside>\n";
 	} else {
 		if (isset($_GET['logout'])) {
-			require_once CLASSES."Authenticate.class.php";
 			Authenticate::expireAdminCookie();
 		}
 
