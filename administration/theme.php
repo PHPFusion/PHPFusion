@@ -18,7 +18,6 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
-require_once CLASSES."atom.class.php";
 require_once LOCALE.LOCALESET."admin/theme.php";
 if (isset($_GET['status'])) {
 	$message = '';

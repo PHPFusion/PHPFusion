@@ -25,7 +25,6 @@ if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level
 }
 
 if ($settings['site_seo']) {
-	require_once CLASSES."PermalinksDisplay.class.php";
 	$permalink = PermalinksDisplay::getInstance();
 	$result = dbquery("SELECT * FROM ".DB_PERMALINK_REWRITE);
 	// Manual invoke method.

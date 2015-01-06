@@ -699,7 +699,6 @@ class Rewrite {
 		*/
 	private function cleanURL($string, $delimiter = "-") {
 		/* Alias of Static Function of PermalinksDisplay */
-		require_once dirname(__FILE__)."/PermalinksDisplay.class.php";
 		$string = PermalinksDisplay::cleanURL($string, $delimiter);
 		return $string;
 	}
