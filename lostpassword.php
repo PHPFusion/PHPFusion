@@ -20,12 +20,6 @@ require_once THEMES."templates/header.php";
 require_once INCLUDES."sendmail_include.php";
 include LOCALE.LOCALESET."lostpassword.php";
 if (iMEMBER) redirect("index.php");
-function __autoload($class) {
-	require CLASSES.$class.".class.php";
-	if (!class_exists($class)) {
-		die("Class not found");
-	}
-}
 
 add_to_title($locale['global_200'].$locale['400']);
 opentable($locale['400']);
