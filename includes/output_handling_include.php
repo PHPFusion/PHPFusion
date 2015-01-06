@@ -36,7 +36,7 @@ namespace PHPFusion {
 		/**
 		 * Output handlers for PermalinkDisplay
 		 *
-		 * @var callback[]
+		 * @var string[]
 		 */
 		private static $permalinkHandlers = array();
 		
