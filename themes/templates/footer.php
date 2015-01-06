@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
+use PHPFusion\PermalinksDisplay;
+
 require_once INCLUDES."footer_includes.php";
 
 define("CONTENT", ob_get_contents());
@@ -110,7 +112,7 @@ if (ob_get_length() !== FALSE) {
 $output = handle_output($output);
 
 if (!defined("ADMIN_PANEL") && $settings['site_seo']) {
-	$output = $permalink->getOutput($output);
+	$output = PermalinksDisplay::getInstance()->getOutput($output);
 }
 if (isset($permalink)) { unset($permalink); }
 

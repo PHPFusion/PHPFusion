@@ -26,6 +26,8 @@
 | requests.
 */
 
+use PHPFusion\PermalinksDisplay;
+
 class Rewrite {
 	/*
 	* Portion of the URL to match in the Regex

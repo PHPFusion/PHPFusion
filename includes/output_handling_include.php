@@ -6,6 +6,7 @@
 +--------------------------------------------------------+
 | Filename: output_handling_include.php
 | Author: Max Toball (Matonor)
+| Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -164,10 +165,9 @@ namespace PHPFusion {
 		 * @param string $name
 		 */
 		public static function addPermalinkHandler($name) {
-			//TODO: test it
 			$settings = \fusion_get_settings();
 			if (!empty($name) && $settings['site_seo']) {
-				self::$outputHandlers .= "\$permalink->AddHandler(\"$name\");";
+				self::$outputHandlers .= '\PHPFusion\OutputHandler\AddHandler("'.$name.'");';
 			}
 		}
 		
@@ -197,13 +197,13 @@ namespace PHPFusion {
 		/**
 		 * Execute the output handlers
 		 * 
-		 * @global \PermalinksDisplay $permalink
+		 * @global array $locale
 		 * @param string $output
 		 * @return string
 		 */
 		public static function handleOutput($output) {
 			//TODO: remove global variables
-			global $permalink;
+			$permalink = PermalinksDisplay::getInstance();
 			$settings = \fusion_get_settings();
 			
 			if (!empty(self::$pageHeadTags)) {

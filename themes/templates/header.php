@@ -17,16 +17,17 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
+use PHPFusion\PermalinksDisplay;
+
 // Check if Maintenance is Enabled
 if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == "1" && $userdata['user_id'] != "1") || ($settings['maintenance_level'] > $userdata['user_level']))) {
 	redirect(BASEDIR."maintenance.php");
 }
 
 if ($settings['site_seo']) {
-	// Object should be created before including output_handling_class because we are using this object in output handling
 	require_once CLASSES."PermalinksDisplay.class.php";
-	$permalink = new PermalinksDisplay();
-	$result = dbquery("SELECT * FROM ".DB_PERMALINK_REWRITE."");
+	$permalink = PermalinksDisplay::getInstance();
+	$result = dbquery("SELECT * FROM ".DB_PERMALINK_REWRITE);
 	// Manual invoke method.
 	//$permalink->AddHandler('threads');
 	//$permalink->AddHandler('downloads-cats');
