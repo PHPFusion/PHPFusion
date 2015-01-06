@@ -215,11 +215,11 @@ class PermalinksDisplay {
 	* Example: AddHandler("news") will allow us to fetch information from
 	* news_rewrite_include.php
 	*
-	* @param callback $handler Name of Handler or other callable object.
+	* @param string $handler Name of Handler.
 	* @access public
 	*/
 	public function AddHandler($handler) {
-		if (is_callable($handler) and !in_array($handler, $this->handlers)) {
+		if (!empty($handler) and !in_array($handler, $this->handlers)) {
 			$this->handlers[] = $handler;
 		}
 	}

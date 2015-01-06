@@ -34,6 +34,13 @@ namespace PHPFusion {
 		private static $pageTitle = "";
 				
 		/**
+		 * Output handlers for PermalinkDisplay
+		 *
+		 * @var callback[]
+		 */
+		private static $permalinkHandlers = array();
+		
+		/**
 		 * PHP code to execute using eval replace anything in the output
 		 *
 		 * @var callback[]
@@ -139,7 +146,7 @@ namespace PHPFusion {
 		 */
 		public static function replaceInOutput($target, $replace, $modifiers = "") {
 			self::$outputHandlers[] = function($output) use($target, $replace, $modifiers) {
-				preg_replace('^'.preg_quote($target, "^").'^'.$modifiers, $replace, $output);
+				return preg_replace('^'.preg_quote($target, "^").'^'.$modifiers, $replace, $output);
 			};
 		}
 		
@@ -162,9 +169,7 @@ namespace PHPFusion {
 		public static function addPermalinkHandler($callback) {
 			$settings = \fusion_get_settings();
 			if ($settings['site_seo'] and is_callable($callback)) {
-				self::$outputHandlers[] = function() use($callback) {
-					PermalinksDisplay::getInstance()->AddHandler($callback);
-				};
+				self::$permalinkHandlers[] = $callback;
 			}
 		}
 		
@@ -214,6 +219,10 @@ namespace PHPFusion {
 				foreach (self::$pageMeta as $name => $content) {
 					$output = preg_replace("#<meta (http-equiv|name)='$name' content='.*' />#i", "<meta \\1='".$name."' content='".$content."' />", $output, 1);
 				}
+			}
+			
+			foreach (self::$permalinkHandlers as $handler) {
+				PermalinksDisplay::getInstance()->AddHandler($handler);
 			}
 			
 			foreach (self::$outputHandlers as $handler) {
