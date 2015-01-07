@@ -52,15 +52,13 @@ if (!function_exists("render_comments")) {
 // Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
 	function render_breadcrumbs(array $data = array(), $class = 'breadcrumb', $show_home = TRUE, $last_no_link = TRUE) {
-		global $breadcrumbs, $locale;
+		global $locale;
 
 		// Generates and populates the breacrumbs array
-		generate_breadcrumbs($data);
-
-		if ($last_no_link) {
-			$last_link = array_keys($breadcrumbs);
-			$last_link = array_pop($last_link);
-			$breadcrumbs[$last_link]['link'] = '';
+		$breadcrumbs = generate_breadcrumbs($data);
+		$count = count($breadcrumbs);
+		if ($last_no_link and $count) {
+			$breadcrumbs[$count-1]['link'] = '';
 		}
 
 		$html = "<ol class='$class'>\n";

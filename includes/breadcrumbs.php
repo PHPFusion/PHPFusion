@@ -22,7 +22,7 @@
 if (!defined('IN_FUSION')) { die('Access Denied'); }
 
 function generate_breadcrumbs($data) {
-	global $breadcrumbs, $locale;
+	global $locale;
 
 	// Should we also show the Home link ?
 	//if ($show_home) {
@@ -60,6 +60,7 @@ function generate_breadcrumbs($data) {
 	//	$breadcrumbs[$last_link]['link'] = '';
 	//}
 	//var_dump($breadcrumbs);
+	return PHPFusion\OutputHandler::getBreadcrumbs();
 }
 
 function catFullPath($cat_id, $cat_tbl, $col_id, $col_parent, $col_title) {

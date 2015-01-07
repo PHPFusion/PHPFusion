@@ -48,6 +48,15 @@ namespace PHPFusion {
 		private static $outputHandlers = array();
 		
 		/**
+		 * Miltidimensional array
+		 * 
+		 * Keys of elements: link, title
+		 *
+		 * @var array
+		 */
+		private static $breadcrumbs = array();
+		
+		/**
 		 * Additional tags to the html head
 		 *
 		 * @var string 
@@ -185,15 +194,26 @@ namespace PHPFusion {
 		/**
 		 * Add a link to the breadcrumb
 		 * 
-		 * @global array $breadcrumbs
 		 * @param array $link Keys: link, title
 		 */
-		public static function addToBreadCrumbs(array $link = array()) {
-			//TODO: remove global variable
-			global $breadcrumbs;
-			if (!empty($link)) {
-				$breadcrumbs[] = $link;
+		public static function addToBreadCrumbs(array $link) {
+			$link += array(
+				'title' => '',
+				'link' => ''
+			);
+			$link['title'] = trim($link['title']);
+			if (!empty($link['title'])) {
+				self::$breadcrumbs[] = $link;
 			}
+		}
+		
+		/**
+		 * Get breadcrumbs
+		 * 
+		 * @return array Keys of elements: title, link
+		 */
+		public static function getBreadcrumbs() {
+			return self::$breadcrumbs;
 		}
 		
 		/**

@@ -75,7 +75,6 @@ $groups_cache = "";
 $forum_rank_cache = "";
 $forum_mod_rank_cache = "";
 $locale = array();
-$breadcrumbs = array();
 
 // Calculate ROOT path for Permalinks
 $current_path = $_SERVER['REQUEST_URI'];
