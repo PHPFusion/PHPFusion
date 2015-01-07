@@ -635,31 +635,25 @@ function highlight_words($word, $subject) {
  */
 function descript($text, $striptags = TRUE) {
 	// Convert problematic ascii characters to their true values
-	$search = array("40", "41", "58", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77",
-					"78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "97", "98", "99",
-					"100", "101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113",
-					"114", "115", "116", "117", "118", "119", "120", "121", "122");
-	$replace = array("(", ")", ":", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
-					 "r", "s", "t", "u", "v", "w", "x", "y", "z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
-					 "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
-	$entities = count($search);
-	for ($i = 0; $i < $entities; $i++) {
-		$text = preg_replace("#(&\#)(0*".$search[$i]."+);*#si", $replace[$i], $text);
+	$patterns = array(
+		'#(&\#x)([0-9A-F]+);*#si' => '',
+		'#(<[^>]+[/\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onfocus|onload|xmlns)[^>]*>#iU' => '>',
+		'#([a-z]*)=([\`\'\"]*)script:#iU' => '$1=$2nojscript...',
+		'#([a-z]*)=([\`\'\"]*)javascript:#iU' => '$1=$2nojavascript...',
+		'#([a-z]*)=([\'\"]*)vbscript:#iU' => '$1=$2novbscript...',
+		'#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU' => "$1>",
+		'#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU' => "$1>"
+	);
+	foreach (array_merge(array('(', ')', ':'), range('A', 'Z'), range('a', 'z')) as $chr) {
+		$patterns["#(&\#)(0*".ord($chr)."+);*#si"] =  $chr;
 	}
-	$text = preg_replace('#(&\#x)([0-9A-F]+);*#si', "", $text);
-	$text = preg_replace('#(<[^>]+[/\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onfocus|onload|xmlns)[^>]*>#iU', ">", $text);
-	$text = preg_replace('#([a-z]*)=([\`\'\"]*)script:#iU', '$1=$2nojscript...', $text);
-	$text = preg_replace('#([a-z]*)=([\`\'\"]*)javascript:#iU', '$1=$2nojavascript...', $text);
-	$text = preg_replace('#([a-z]*)=([\'\"]*)vbscript:#iU', '$1=$2novbscript...', $text);
-	$text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU', "$1>", $text);
-	$text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU', "$1>", $text);
 	if ($striptags) {
 		do {
-			$thistext = $text;
-			$text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text);
-		} while ($thistext != $text);
+			$count = 0;
+			$text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
+		} while ($count);
 	}
-	return $text;
+	return preg_replace(array_keys($patterns), $patterns, $text);
 }
 
 /**
@@ -670,26 +664,22 @@ function descript($text, $striptags = TRUE) {
  */
 function verify_image($file) {
 	$txt = file_get_contents($file);
-	if (preg_match('#\<\?php#i', $txt)) {
-		return FALSE;
-	} elseif (preg_match('#&(quot|lt|gt|nbsp);#i', $txt)) {
-		return FALSE;
-	} elseif (preg_match("#&\#x([0-9a-f]+);#i", $txt)) {
-		return FALSE;
-	} elseif (preg_match('#&\#([0-9]+);#i', $txt)) {
-		return FALSE;
-	} elseif (preg_match("#([a-z]*)=([\`\'\"]*)script:#iU", $txt)) {
-		return FALSE;
-	} elseif (preg_match("#([a-z]*)=([\`\'\"]*)javascript:#iU", $txt)) {
-		return FALSE;
-	} elseif (preg_match("#([a-z]*)=([\'\"]*)vbscript:#iU", $txt)) {
-		return FALSE;
-	} elseif (preg_match("#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU", $txt)) {
-		return FALSE;
-	} elseif (preg_match("#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU", $txt)) {
-		return FALSE;
-	} elseif (preg_match("#</*(applet|link|style|script|iframe|frame|frameset)[^>]*>#i", $txt)) {
-		return FALSE;
+	$patterns = array(
+		'#\<\?php#i',
+		'#&(quot|lt|gt|nbsp);#i',
+		'#&\#x([0-9a-f]+);#i',
+		'#&\#([0-9]+);#i'.
+		"#([a-z]*)=([\`\'\"]*)script:#iU",
+		"#([a-z]*)=([\`\'\"]*)javascript:#iU",
+		"#([a-z]*)=([\'\"]*)vbscript:#iU",
+		"#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU",
+		"#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU",
+		"#</*(applet|link|style|script|iframe|frame|frameset)[^>]*>#i"
+	);
+	foreach ($patterns as $pattern) {
+		if (preg_match($pattern, $txt)) {
+			return FALSE;
+		}
 	}
 	return TRUE;
 }
@@ -697,17 +687,15 @@ function verify_image($file) {
 /**
  * Replace offensive words with the defined replacement word
  * 
- * @global string[] $settings
  * @param string $text
  * @return string
  */
 function censorwords($text) {
-	global $settings;
-	if ($settings['bad_words_enabled'] == "1" && $settings['bad_words'] != "") {
-		$word_list = explode("\r\n", $settings['bad_words']);
-		for ($i = 0; $i < count($word_list); $i++) {
-			if ($word_list[$i] != "") $text = preg_replace("/".$word_list[$i]."/si", $settings['bad_word_replace'], $text);
-		}
+	$settings = fusion_get_settings();
+	$settings['bad_words'] = trim($settings['bad_words']);
+	if ($settings['bad_words_enabled'] == "1" && $settings['bad_words']) {
+		$words = preg_replace("/\s+/", "|", $settings['bad_words']);
+		$text = preg_replace("/".$words."/si", $settings['bad_word_replace'], $text);
 	}
 	return $text;
 }
@@ -952,14 +940,8 @@ function blacklist($field) {
  */
 function user_blacklisted($user_id) {
 	global $userdata;
-	if (in_array('user_blacklist', fieldgenerator(DB_USERS))) {
-		$user_blacklist = explode('.', $userdata['user_blacklist']);
-		if (in_array($user_id, $user_blacklist)) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
+	return in_array('user_blacklist', fieldgenerator(DB_USERS))
+		and in_array($user_id, explode('.', $userdata['user_blacklist']));
 }
 
 /**
@@ -1010,11 +992,11 @@ function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filt
  * @param string $selected
  * @return string
  */
-function makefileopts($files, $selected = "") {
+function makefileopts(array $files, $selected = "") {
 	$res = "";
-	for ($i = 0; $i < count($files); $i++) {
-		$sel = ($selected == $files[$i] ? " selected='selected'" : "");
-		$res .= "<option value='".$files[$i]."'$sel>".$files[$i]."</option>\n";
+	foreach ($files as $file) {
+		$sel = ($selected == $file ? " selected='selected'" : "");
+		$res .= "<option value='".$file."'$sel>".$file."</option>\n";
 	}
 	return $res;
 }
