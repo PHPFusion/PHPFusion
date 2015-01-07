@@ -72,8 +72,6 @@ $mysql_queries_count = 0;
 $mysql_queries_time = array();
 $bbcode_cache = "";
 $groups_cache = "";
-$forum_rank_cache = "";
-$forum_mod_rank_cache = "";
 $locale = array();
 
 // Calculate ROOT path for Permalinks

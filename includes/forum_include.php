@@ -36,61 +36,83 @@ function attach_exists($file) {
 	return $file;
 }
 
+/**
+ * Get records of cached forum ranks
+ * 
+ * @staticvar array $forum_rank_cache
+ * @return array Cached forum ranks
+ */
 function forum_rank_cache() {
-	global $settings, $forum_mod_rank_cache, $forum_post_rank_cache, $forum_special_rank_cache;
-	$forum_post_rank_cache = array();
-	$forum_mod_rank_cache = array();
-	$forum_special_rank_cache = array();
-	if ($settings['forum_ranks']) {
+	static $forum_rank_cache = NULL;
+	$settings = fusion_get_settings();
+	$known_types = array(
+		0 => 'post',
+		1 => 'mod'
+	);
+	if ($forum_rank_cache === NULL and $settings['forum_ranks']) {
+		$forum_rank_cache = array(
+			'post' => array(),
+			'mod' => array(),
+			'special' => array(),
+		);
 		$result = dbquery("SELECT rank_title, rank_image, rank_type, rank_posts, rank_apply, rank_language FROM ".DB_FORUM_RANKS." ".(multilang_table("FR") ? "WHERE rank_language='".LANGUAGE."'" : "")." ORDER BY rank_apply DESC, rank_posts ASC");
-		if (dbrows($result)) {
-			while ($data = dbarray($result)) {
-				if ($data['rank_type'] == 0) {
-					$forum_post_rank_cache[] = $data;
-				} elseif ($data['rank_type'] == 1) {
-					$forum_mod_rank_cache[] = $data;
-				} else {
-					$forum_special_rank_cache[] = $data;
-				}
+		while ($data = dbarray($result)) {
+			$type = isset($known_types[$data['rank_type']]) ? $known_types[$data['rank_type']] : 'special';
+			$forum_rank_cache[$type][] = $data;
+		}
+	}
+	return $forum_rank_cache;
+}
+
+/**
+ * Get HTML source of forum rank images of a member
+ * 
+ * @param int $posts The number of posts of the member
+ * @param int $level The level of the member
+ * @param array $groups The groups of the member
+ * @return string HTML source of forum rank images
+ */
+function show_forum_rank($posts, $level, $groups) {
+	$settings = fusion_get_settings();
+	$ranks = array();
+	if (!$settings['forum_ranks']) {
+		return '';
+	}
+	$forum_rank_cache = forum_rank_cache();
+	// Moderator ranks
+	if ($level > 101) {
+		foreach ($forum_rank_cache['mod'] as $rank) {
+			if ($level == $rank['rank_apply']) {
+				$ranks[] = $rank;
+				break;
 			}
 		}
 	}
-}
-
-function show_forum_rank($posts, $level, $groups) {
-	global $locale, $settings, $forum_mod_rank_cache, $forum_post_rank_cache, $forum_special_rank_cache;
-	$res = "";
-	if ($settings['forum_ranks']) {
-		if (!$forum_post_rank_cache) {
-			forum_rank_cache();
+	// Special ranks
+	if (!empty($groups)) {
+		if (!is_array($groups)) {
+			$groups = explode(".", $groups);
 		}
-		// Moderator ranks
-		if ($level > 101 && is_array($forum_mod_rank_cache) && count($forum_mod_rank_cache)) {
-			for ($i = 0; $i < count($forum_mod_rank_cache) && !$res; $i++) {
-				if ($level == $forum_mod_rank_cache[$i]['rank_apply']) {
-					$res = $forum_mod_rank_cache[$i]['rank_title']."<br />\n<img src='".RANKS.$forum_mod_rank_cache[$i]['rank_image']."' alt='' style='border:0' /><br />";
-				}
+		foreach ($forum_rank_cache['special'] as $rank) {
+			if (in_array($rank['rank_apply'], $groups)) {
+				$ranks[] = $rank;
 			}
 		}
-		// Special ranks
-		if ($groups != "" && is_array($forum_special_rank_cache) && count($forum_special_rank_cache)) {
-			for ($i = 0; $i < count($forum_special_rank_cache); $i++) {
-				if (in_array($forum_special_rank_cache[$i]['rank_apply'], explode(".", $groups))) {
-					$res .= $forum_special_rank_cache[$i]['rank_title']."<br />\n<img src='".RANKS.$forum_special_rank_cache[$i]['rank_image']."' alt='' style='border:0' /><br />";
-				}
+	}
+	// Post count ranks
+	if (!$ranks) {
+		foreach ($forum_rank_cache['post'] as $rank) {
+			if ($posts >= $rank['rank_posts']) {
+				$ranks[] = $rank;
 			}
 		}
-		// Post count ranks
-		if (!$res && is_array($forum_post_rank_cache) && count($forum_post_rank_cache)) {
-			for ($i = 0; $i < count($forum_post_rank_cache); $i++) {
-				if ($posts >= $forum_post_rank_cache[$i]['rank_posts']) {
-					$res = $forum_post_rank_cache[$i]['rank_title']."<br />\n<img src='".RANKS.$forum_post_rank_cache[$i]['rank_image']."' alt='' style='border:0' /><br />";
-				}
-			}
-			if (!$res) {
-				$res .= $forum_post_rank_cache[0]['rank_title']."<br />\n<img src='".RANKS.$forum_post_rank_cache[0]['rank_image']."' alt='' style='border:0' /><br />";
-			}
+		if (!$ranks) {
+			$ranks[] = $forum_rank_cache['post'][0];
 		}
+	}
+	$res = '';
+	foreach ($ranks as $rank) {
+		$res .= $rank['rank_title']."<br />\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' /><br />";
 	}
 	return $res;
 }
