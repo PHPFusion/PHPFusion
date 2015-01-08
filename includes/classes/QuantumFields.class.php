@@ -27,6 +27,7 @@ class quantumFields {
 	public $plugin_folder = '';
 	public $plugin_locale_folder = '';
 	public $debug = FALSE;
+	public $dom_debug = FALSE;
 	public $input_page = 1;
 	// System Internals
 	private $max_rows = 0;
@@ -445,9 +446,11 @@ class quantumFields {
 		$info = array('textbox' => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
 			'select' => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
 			'textarea' => "TEXT NOT NULL",
+			'tags' => "TEXT NOT NULL",
 			'checkbox' => "TINYINT(3) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
 			'toggle' => "TINYINT(3) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
 			'datepicker' => "TINYINT(10) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
+			'location' => "VARCHAR(50) NOT NULL DEFAULT '".$default_value."'",
 			'colorpicker' => "VARCHAR(10) NOT NULL DEFAULT '".$default_value."'",
 			'upload' => "VARCHAR(100) NOT NULL DEFAULT '".$default_value."'",
 			'hidden' => "VARCHAR(50) NOT NULL DEFAULT '".$default_value."'",
@@ -468,7 +471,10 @@ class quantumFields {
 			'colorpicker'   => $locale['fields_0507'],
 			'upload'        => $locale['fields_0508'],
 			'hidden'        => $locale['fields_0509'],
-			'address'       => $locale['fields_0510']);
+			'address'       => $locale['fields_0510'],
+			'tags'       	=> $locale['fields_0511'],
+			'location'      => $locale['fields_0512'],
+		);
 	}
 
 	private function synthesize_fields($data, $type = 'dynamics') {
@@ -875,8 +881,10 @@ class quantumFields {
 			} else {
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			}
-
-			if ($this->debug) print_p('Old Data'); print_p($data);
+			if ($this->debug) {
+				print_p('Old Data');
+				print_p($data);
+			}
 			$data['add_module'] = isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $data['field_name'];
 			$data['field_type'] = 'file'; //
 			$data['field_id'] = isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '', 'field_id') : isset($_GET['module_id']) && isnum($_GET['module_id']) ? $_GET['module_id'] : 0;
@@ -1268,64 +1276,98 @@ class quantumFields {
 		if ($data['field_error']) $options['error_text'] = $data['field_error'];
 		if ($data['field_required']) $options['required'] = $data['field_required'];
 		if ($data['field_default']) $options['placeholder'] = $data['field_default'];
-		if ($data['field_options']) $option_list = explode(',', $data['field_options']);
+		$option_list = $data['field_options'] ? explode(',', $data['field_options']) : array();
 		if ($data['field_type'] == 'file') {
+			if ($this->dom_debug) print_p("Finding ".$this->plugin_locale_folder.$data['field_name'].".php");
 			if (file_exists($this->plugin_locale_folder.$data['field_name'].".php")) include $this->plugin_locale_folder.$data['field_name'].".php";
+			if ($this->dom_debug && file_exists($this->plugin_locale_folder.$data['field_name'].".php")) {
+				print_p($data['field_name']." locale loaded");
+			}
+			if ($this->dom_debug) print_p("Finding ".$this->plugin_folder.$data['field_name']."_include.php");
 			if (file_exists($this->plugin_folder.$data['field_name']."_include.php")) include $this->plugin_folder.$data['field_name']."_include.php";
+			if ($this->dom_debug && file_exists($this->plugin_folder.$data['field_name']."_include.php")) {
+				print_p($data['field_name']." module loaded");
+			}
 			if (isset($user_fields)) return $user_fields;
-		} elseif ($data['field_type'] == 'textbox') {
+		}
+		elseif ($data['field_type'] == 'textbox') {
 			if ($this->method == 'input') {
 				return  form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
 			}
-		} elseif ($data['field_type'] == 'select') {
+		}
+		elseif ($data['field_type'] == 'select') {
 			if ($this->method == 'input') {
 				return form_select($data['field_title'], $data['field_name'], $data['field_name'], $option_list, '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
 			}
-		} elseif ($data['field_type'] == 'textarea') {
+		}
+		elseif ($data['field_type'] == 'tags') {
+			if ($this->method == 'input') {
+				$options += array('tags'=>1, 'multiple'=>1, 'width'=>'100%');
+				return form_select($data['field_title'], $data['field_name'], $data['field_name'], $option_list, '', $options);
+			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
+				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+			}
+		}
+		elseif ($data['field_type'] == 'location') {
+			if ($this->method == 'input') {
+				$options += array('width'=>'100%');
+				return form_location($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
+				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+			}
+		}
+		elseif ($data['field_type'] == 'textarea') {
 			if ($this->method == 'input') {
 				return form_textarea($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
 			}
-		} elseif ($data['field_type'] == 'checkbox') {
+		}
+		elseif ($data['field_type'] == 'checkbox') {
 			if ($this->method == 'input') {
 				return form_checkbox($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
 			}
-		} elseif ($data['field_type'] == 'datepicker') {
+		}
+		elseif ($data['field_type'] == 'datepicker') {
 			if ($this->method == 'input') {
 				return form_datepicker($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return array('title'=>$data['field_title'], 'value'=>showdate('shortdate', $this->callback_data[$data['field_name']]));
 			}
-		} elseif ($data['field_type'] == 'colorpicker') {
+		}
+		elseif ($data['field_type'] == 'colorpicker') {
 			if ($this->method == 'input') {
 				return form_colorpicker($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
 			}
-		} elseif ($data['field_type'] == 'uploader') {
+		}
+		elseif ($data['field_type'] == 'uploader') {
 			if ($this->method == 'input') {
 				return form_fileinput($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return 'Work in Progress';
 			}
-		} elseif ($data['field_type'] == 'hidden') {
+		}
+		elseif ($data['field_type'] == 'hidden') {
 			if ($this->method == 'input') {
 				return form_hidden($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
 			}
-		} elseif ($data['field_type'] == 'address') {
+		}
+		elseif ($data['field_type'] == 'address') {
 			if ($this->method == 'input') {
 				return form_address($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return array('title'=>$data['field_title'], 'value'=>implode('|', $this->callback_data[$data['field_name']]));
 			}
-		} elseif ($data['field_type'] == 'toggle') {
+		}
+		elseif ($data['field_type'] == 'toggle') {
 			$option_array = array($locale['off'], $locale['on']);
 			if ($this->method == 'input') {
 				return form_toggle($data['field_title'], $data['field_name'], $data['field_name'], $option_array, $data['field_name'], $options);
