@@ -340,10 +340,9 @@ class UserFields extends quantumFields {
 
 	/* Accessories */
 	private function renderAdminOptions() {
-		global $locale, $groups_cache, $aidlink;
-		if (!$groups_cache) {
-			cache_groups();
-		}
+		global $locale, $aidlink;
+		
+		$groups_cache = cache_groups();
 		$user_groups_opts = "";
 		$this->html .= "<div style='margin:5px'></div>\n";
 		$this->html .= "<form name='admin_form' method='post' action='".FUSION_SELF."?lookup=".$this->userData['user_id']."'>\n";

@@ -792,40 +792,34 @@ function checkgroup($group) {
 
 /**
  * Cache groups' data into an array
- *  
- * @global array $groups_cache
+ * 
+ * @return array
  */
 function cache_groups() {
-	global $groups_cache;
-	$result = dbquery("SELECT * FROM ".DB_USER_GROUPS." ORDER BY group_id ASC");
-	if (dbrows($result)) {
+	static $groups_cache = NULL;
+	if ($groups_cache === NULL) {
 		$groups_cache = array();
+		$result = dbquery("SELECT * FROM ".DB_USER_GROUPS." ORDER BY group_id ASC");
 		while ($data = dbarray($result)) {
 			$groups_cache[] = $data;
 		}
-	} else {
-		$groups_cache = array();
 	}
+	return $groups_cache;
 }
 
 /**
  * Compile access levels & user group array
  * 
  * @global array $locale
- * @global array $groups_cache
  * @return array structure of elements: array($levelOrGroupid, $levelnameOrGroupname)
  */
 function getusergroups() {
-	global $locale, $groups_cache;
+	global $locale;
 	$groups_array = array(array("0", $locale['user0']), array("101", $locale['user1']), array("102", $locale['user2']),
 						  array("103", $locale['user3']));
-	if (!$groups_cache) {
-		cache_groups();
-	}
-	if (is_array($groups_cache) && count($groups_cache)) {
-		foreach ($groups_cache as $group) {
-			array_push($groups_array, array($group['group_id'], $group['group_name']));
-		}
+	$groups_cache = cache_groups();
+	foreach ($groups_cache as $group) {
+		array_push($groups_array, array($group['group_id'], $group['group_name']));
 	}
 	return $groups_array;
 }
@@ -834,35 +828,20 @@ function getusergroups() {
  * Get the name of the access level or user group
  * 
  * @global array $locale
- * @global array $groups_cache
  * @param int $group_id
  * @param boolean $return_desc If TRUE, group_description will be returned instead of group_name
  * @return array
  */
 function getgroupname($group_id, $return_desc = FALSE) {
-	global $locale, $groups_cache;
-	if ($group_id == "0") {
-		return $locale['user0'];
-	} elseif ($group_id == "101") {
-		return $locale['user1'];
-		exit;
-	} elseif ($group_id == "102") {
-		return $locale['user2'];
-		exit;
-	} elseif ($group_id == "103") {
-		return $locale['user3'];
-		exit;
-	} else {
-		if (!$groups_cache) {
-			cache_groups();
-		}
-		if (is_array($groups_cache) && count($groups_cache)) {
-			foreach ($groups_cache as $group) {
-				if ($group_id == $group['group_id']) {
-					return ($return_desc ? ($group['group_description'] ? $group['group_description'] : '-') : $group['group_name']);
-					exit;
-				}
-			}
+	global $locale;
+	$specials = array(0 => 'user0', 101 => 'user1', 102 => 'user2', 103 => 'user3');
+	if (in_array($group_id, $specials)) {
+		return $locale[$specials[$group_id]];
+	} 
+	$groups_cache = cache_groups();
+	foreach ($groups_cache as $group) {
+		if ($group_id == $group['group_id']) {
+			return ($return_desc ? ($group['group_description'] ? : '-') : $group['group_name']);
 		}
 	}
 	return $locale['user_na'];

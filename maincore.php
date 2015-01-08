@@ -70,7 +70,6 @@ if (!defined("IN_PERMALINK")) {
 // Variables initializing
 $mysql_queries_count = 0;
 $mysql_queries_time = array();
-$groups_cache = "";
 $locale = array();
 
 // Calculate ROOT path for Permalinks
