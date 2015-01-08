@@ -18,7 +18,6 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-require_once CLASSES."PasswordAuth.class.php";
 require_once CLASSES."QuantumFields.class.php";
 
 class UserFieldsInput {

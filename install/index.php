@@ -692,7 +692,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$error .= $locale['setup_5010']."<br /><br />\n";
 			$error_name = "1";
 		}
-		require_once INCLUDES."/classes/PasswordAuth.class.php";
 		$userPassword = "";
 		$adminPassword = "";
 		$userPass = new PasswordAuth();

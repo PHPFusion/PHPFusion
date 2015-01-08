@@ -20,7 +20,6 @@ if (!checkrights("APWR") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['
 	redirect("../index.php");
 }
 require_once THEMES."templates/admin_header.php";
-require_once CLASSES."PasswordAuth.class.php";
 include LOCALE.LOCALESET."admin/admin_reset.php";
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "pw") {

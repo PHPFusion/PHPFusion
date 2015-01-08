@@ -47,7 +47,7 @@ class Authenticate {
 		$result = dbquery("SELECT * FROM ".DB_USERS." WHERE ".$where."='".$inputUserName."' LIMIT 1");
 		if (dbrows($result) == 1) {
 			$user = dbarray($result);
-			require_once CLASSES."PasswordAuth.class.php";
+
 			// Initialize password auth
 			$passAuth = new PasswordAuth();
 			$passAuth->currentAlgo = $user["user_algo"];
@@ -270,7 +270,6 @@ class Authenticate {
 	public static function setAdminCookie($inputPassword) {
 		global $userdata;
 		if (iADMIN) {
-			require_once CLASSES."PasswordAuth.class.php";
 			// Initialize password auth
 			$passAuth = new PasswordAuth();
 			$passAuth->currentAlgo = $userdata['user_admin_algo'];
