@@ -88,7 +88,7 @@ closetable();
 function theme_editor() {
 	global $aidlink;
 	if (!isset($_POST['theme'])) redirect(FUSION_SELF.$aidlink);
-	$atom = new atom();
+	$atom = new Atom();
 	$atom->target_folder = $_POST['theme'];
 	$atom->theme_name = $_POST['theme'];
 	$atom->load_theme_actions();
