@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
-require_once CLASSES."UserFields.class.php";
 include LOCALE.LOCALESET."user_fields.php";
 define('RIGHT_OFF', 1);
 if (!iMEMBER && $settings['hide_userprofiles'] == 1) {

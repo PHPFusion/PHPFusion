@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
-require_once CLASSES."UserFields.class.php";
 require_once CLASSES."UserFieldsInput.class.php";
 include LOCALE.LOCALESET."user_fields.php";
 if (iMEMBER || !$settings['enable_registration']) {
