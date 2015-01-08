@@ -400,7 +400,7 @@ if (isset($_POST['uninstall'])) {
 	}
 	$result = dbquery("CREATE TABLE ".$db_prefix."user_field_cats (
 				field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
-				field_cat_name VARCHAR(200) NOT NULL ,
+				field_cat_name TEXT NOT NULL,
 				field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 				field_cat_db VARCHAR(100) NOT NULL,
 				field_cat_index VARCHAR(200) NOT NULL,
@@ -413,7 +413,7 @@ if (isset($_POST['uninstall'])) {
 	}
 	$result = dbquery("CREATE TABLE ".$db_prefix."user_fields (
 				field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-				field_title VARCHAR(50) NOT NULL,
+				field_title TEXT NOT NULL,
 				field_name VARCHAR(50) NOT NULL,
 				field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
 				field_type VARCHAR(25) NOT NULL,
