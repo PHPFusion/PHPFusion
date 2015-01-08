@@ -115,6 +115,84 @@ class quantumFields {
 		}
 	}
 
+	/* Read into serialized field label and returns the value */
+	 /*
+	 * @author	Chris Smith <code+php@chris.cs278.org>, Frank Bültge <frank@bueltge.de>
+	 * @copyright	Copyright (c) 2009 Chris Smith (http://www.cs278.org/), 2011 Frank Bültge (http://bueltge.de)
+	 * @license	http://sam.zoy.org/wtfpl/ WTFPL
+	 * @param	string $value Value to test for serialized form
+	 * @param	mixed $result Result of unserialize() of the $value
+	 * @return	boolean True if $value is serialized data, otherwise FALSE
+	 */
+	static function is_serialized( $value, &$result = null ) {
+		// Bit of a give away this one
+		if ( ! is_string( $value ) ) {
+			return FALSE;
+		}
+		// Serialized FALSE, return TRUE. unserialize() returns FALSE on an
+		// invalid string or it could return FALSE if the string is serialized
+		// FALSE, eliminate that possibility.
+		if ( 'b:0;' === $value ) {
+			$result = FALSE;
+			return TRUE;
+		}
+		$length	= strlen($value);
+		$end	= '';
+		if ( isset( $value[0] ) ) {
+			switch ($value[0]) {
+				case 's':
+					if ( '"' !== $value[$length - 2] )
+						return FALSE;
+				case 'b':
+				case 'i':
+				case 'd':
+					// This looks odd but it is quicker than isset()ing
+					$end .= ';';
+				case 'a':
+				case 'O':
+					$end .= '}';
+					if ( ':' !== $value[1] )
+						return FALSE;
+					switch ( $value[2] ) {
+						case 0:
+						case 1:
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+						case 6:
+						case 7:
+						case 8:
+						case 9:
+							break;
+						default:
+							return FALSE;
+					}
+				case 'N':
+					$end .= ';';
+					if ( $value[$length - 1] !== $end[0] )
+						return FALSE;
+					break;
+				default:
+					return FALSE;
+			}
+		}
+		if ( ( $result = @unserialize($value) ) === FALSE ) {
+			$result = null;
+			return FALSE;
+		}
+		return TRUE;
+	}
+
+	static function parse_label($value) {
+		if (self::is_serialized($value)) {
+			$value = unserialize($value);
+			return (isset($value[LANGUAGE])) ? $value[LANGUAGE] : $value['English'];
+		} else {
+			return $value;
+		}
+	}
+
 	public function render_fields() {
 		global $aidlink;
 		$locale = $this->locale;
@@ -155,7 +233,7 @@ class quantumFields {
 						// field category information
 						if ($this->debug) print_p($field_cat);
 						echo "<div class='clearfix'>\n";
-						echo form_para($field_cat['field_cat_name'], $cat_id.'-'.$field_cat['field_cat_name'], 'profile_category_name display-inline-block pull-left');
+						echo form_para(self::parse_label($field_cat['field_cat_name']), $cat_id.'-'.$field_cat['field_cat_name'], 'profile_category_name display-inline-block pull-left');
 						echo "<div class='pull-left m-t-10 m-l-10'>\n";
 						if ($i != 0) echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmu&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order']-1)."'>".$locale['move_up']."</a> - ";
 						if ($i !== $counter) echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cmd&amp;cat_id=".$cat_id."&amp;parent_id=".$field_cat['field_parent']."&amp;order=".($field_cat['field_cat_order']+1)."'>".$locale['move_down']."</a> - ";
@@ -1009,9 +1087,34 @@ class quantumFields {
 		echo "</div>\n";
 	}
 
+	static function serialize_fields($input_name) {
+		if (isset($_POST[$input_name])) {
+			$field_var = array();
+			foreach($_POST[$input_name] as $language => $value) {	$field_var[$language] = form_sanitizer($value, ''); }
+			return serialize($field_var);
+		}
+		return false;
+	}
+
+	static function fusion_getlocale($data, $input_name) {
+		global $language_opts;
+		if (isset($_POST[$input_name])) {
+			return self::serialize_fields($input_name);
+		} else {
+			if (self::is_serialized($data[$input_name])) {
+				return unserialize($data[$input_name]);
+			} else {
+				foreach($language_opts as $lang) {
+					$value[$lang] = $data[$input_name];
+				}
+				return $value;
+			}
+		}
+	}
+
 	/* Category & Page Form */
 	private function category_form() {
-		global $aidlink, $defender;
+		global $aidlink, $defender, $language_opts;
 		$locale = $this->locale;
 		$data = array();
 		if (isset($_GET['action']) && $_GET['action'] == 'cat_edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
@@ -1023,15 +1126,18 @@ class quantumFields {
 			}
 			// override by post.
 			$data['field_cat_id'] = isset($_POST['field_cat_id']) ? form_sanitizer($_POST['field_cat_id'], '', 'field_cat_id') : $data['field_cat_id'];
-			$data['field_cat_name'] = isset($_POST['field_cat_name']) ? form_sanitizer($_POST['field_cat_name'], '', 'field_cat_name') : $data['field_cat_name'];
+			// multiLang serialization
+			$data['field_cat_name'] = self::fusion_getlocale($data, 'field_cat_name');
+
 			$data['field_parent'] = isset($_POST['field_parent']) ? form_sanitizer($_POST['field_parent'], '', 'field_parent') : $data['field_parent'];
 			$data['field_cat_order'] = isset($_POST['field_cat_order']) ? form_sanitizer($_POST['field_cat_order'], '', 'field_cat_order') : $data['field_cat_order'];
 			$data['field_cat_db'] = isset($_POST['field_cat_db']) ? form_sanitizer($_POST['field_cat_db'], '', 'field_cat_db') : $data['field_cat_db'];
 			$data['field_cat_index'] = isset($_POST['field_cat_index']) ? form_sanitizer($_POST['field_cat_index'], '', 'field_cat_index') : $data['field_cat_index'];
 			$data['field_cat_class'] = isset($_POST['field_cat_class']) ? form_sanitizer($_POST['field_cat_class'], '', 'field_cat_class') : $data['field_cat_class'];
+
 		} else {
 			$data['field_cat_id'] = isset($_POST['field_cat_id']) ? form_sanitizer($_POST['field_cat_id'], '', 'field_cat_id') : 0;
-			$data['field_cat_name'] = isset($_POST['field_cat_name']) ? form_sanitizer($_POST['field_cat_name'], '', 'field_cat_name') : '';
+			$data['field_cat_name'] = self::fusion_getlocale($data, 'field_cat_name');
 			$data['field_parent'] = isset($_POST['field_parent']) ? form_sanitizer($_POST['field_parent'], '', 'field_parent') : '';
 			$data['field_cat_order'] = isset($_POST['field_cat_order']) ? form_sanitizer($_POST['field_cat_order'], '', 'field_cat_order') : 0;
 			$data['field_cat_db'] = isset($_POST['field_cat_db']) ? form_sanitizer($_POST['field_cat_db'], '', 'field_cat_db') : '';
@@ -1105,7 +1211,12 @@ class quantumFields {
 			}
 		}
 		echo openform('cat_form', 'cat_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
-		echo form_text($locale['fields_0430'], 'field_cat_name', 'field_cat_name', $data['field_cat_name'], array('required' => 1));
+		echo "<label class='label-control m-b-20'>".$locale['fields_0430']."</label>\n";
+		echo "<div class='well'>\n";
+		foreach($language_opts as $lang) {
+			echo form_text($lang, "field_cat_name[$lang]", 'field_cat_name-'.$lang, $data['field_cat_name'][$lang], array('required' => 1));
+		}
+		echo "</div>\n";
 		echo form_select_tree($locale['fields_0431'], 'field_parent', 'field_parent', $data['field_parent'], array('parent_value' => $locale['fields_0432'],
 			'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 		echo form_text($locale['fields_0433'], 'field_cat_order', 'field_cat_order', $data['field_cat_order'], array('number' => 1));
