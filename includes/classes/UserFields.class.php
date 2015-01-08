@@ -34,7 +34,7 @@ class UserFields extends quantumFields {
 	public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
 	public $skipCurrentPass = FALSE;
 	public $registration = FALSE;
-	public $userData = array("user_id", "user_name", "user_password", "user_admin_password", "user_email");
+	public $userData = array("user_id"=>'', 'user_realname'=>'', "user_name"=>'', "user_password"=>'', "user_admin_password"=>'', "user_email"=>'', "user_language"=>LANGUAGE, 'user_timezone'=>'Europe/London');
 
 	/* Quantum Fields Extensions */
 	public $system_title = '';
@@ -126,23 +126,21 @@ class UserFields extends quantumFields {
 		render_userform($this->info);
 	}
 
-	/* injected core input fields */
+	/* Basic Account Settings */
 	private function basicInputFields() {
-		global $locale, $settings;
+		global $locale, $settings, $language_opts;
 		$html = '';
+
+		// need to call back all the file.
+		$user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], '') : $this->userData['user_name'];
+		$user_email = isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], '') : $this->userData['user_email'];
+
 		// Username
 		$html .= form_para($locale['u129'], 'account', 'profile_category_name');
-		if ($this->registration) {
-			$user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], '', 'user_name') : '';
-			$user_email = isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], '', 'user_email') : '';
-		} else {
-			$user_name = $this->userData['user_name'];
-			$user_email = $this->userData['user_email'];
-		}
 		$html .= (iADMIN || $this->_userNameChange) ? form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1)) : '';
 		// Login Password
 		$passRequired = $this->registration ? 1 : 0;
-		$html .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id']: 0);
+		if (!$this->registration) $html .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id']: 0);
 		$html .= (!$this->registration) ? "<div class='alert alert-info'>".$locale['u100']."</div>" : '';
 		$html .= form_para($locale['u132'], 'password', 'profile_category_name');
 		if (!$passRequired) { // will not show on register.
@@ -179,26 +177,35 @@ class UserFields extends quantumFields {
 		$hide = isset($this->userData['user_hide_email']) ? $this->userData['user_hide_email'] : 1;
 		$hide = isset($_POST['user_hide_email']) && isnum($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $hide;
 		$html .= form_btngroup($locale['u051'], 'user_hide_email', 'user_hide_email', array($locale['u053'], $locale['u052']), $hide, array('inline'=>1));
-		return $html;
+
+        return $html;
 	}
 
 	private function UserForm() {
-		global $locale, $userdata, $aidlink;
+		global $settings, $userdata, $aidlink;
 		// Page Navigation - lets just shut off for registration - stupid to have multi page registration page
 		if ($this->paginate && !$this->registration)  $this->info['section'] = $this->renderPageLink();
 		$this->info['register'] = $this->registration;
+		$this->info['basic_field'] = '';
+		//$form_action = str_replace($settings['site_path'], '', FUSION_REQUEST);
+		$form_action = FUSION_REQUEST;
 		// Form Section
-		// open form for token
-		$this->info['openform'] = openform($this->formname, $this->formname, 'post', $this->formaction, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."", 'downtime' => 0));
-		// Basic account credentials - valid or we need to render hidden fields?
+		$this->info['openform'] = openform($this->formname, $this->formname, 'post', $form_action, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."", 'downtime' => 0));
+
 		if (!isset($_GET['profiles']) or (isset($_GET['profiles']) && $_GET['profiles'] == 1)) $this->info['basic_field'] = $this->basicInputFields();
-		// Extended UF modules
-		$this->get_userFields();
+			// Extended UF modules
+			if (defined('ADMIN_PANEL')) $this->info['basic_field'] = $this->basicInputFields(); // basic account info
+			$this->get_userFields();
 		// Captcha
-		if ($this->displayValidation == 1) $this->info['validate'] = $this->renderValidation();
+		if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) $this->info['validate'] = $this->renderValidation();
 		// Website terms
 		if ($this->displayTerms == 1) $this->info['terms'] = $this->renderTerms();
 		// Close form html tag
+
+        // User Hash
+        if (!$this->skipCurrentPass) { 	// meaning we are not going to skip the password check if new password is not empty
+            $this->info['basic_field'] .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
+        }
 		$this->info['closeform'] = closeform();
 		// Button
 		$this->info['button'] = $this->renderButton();
@@ -221,7 +228,6 @@ class UserFields extends quantumFields {
 	/* New profile page output */
 	private function UserProfile() {
 		global $locale, $userdata, $aidlink;
-
 		if (!isset($_GET['profiles']) or isset($_GET['profiles']) && $_GET['profiles'] == 1) {
 			if (empty($this->userData['user_avatar']) or !file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) $this->userData['user_avatar'] = "noavatar100.png";
 			$this->info['core_field']['profile_user_avatar'] = array('title'=>$locale['u186'], 'value'=>$this->userData['user_avatar'], 'status'=>$this->userData['user_status']);
@@ -263,7 +269,7 @@ class UserFields extends quantumFields {
 
 		// Module Items
 		$this->get_userFields();
-		// Dyanmics core UF fields
+		// Dynamics core UF fields
 		$this->info['item'][3] = '';
 		// buttons.. 2 of them.
 		if (iMEMBER && $userdata['user_id'] != $this->userData['user_id']) {
@@ -280,17 +286,19 @@ class UserFields extends quantumFields {
 	private function get_userFields() {
 		global $locale, $settings, $aidlink;
 		$this->callback_data = $this->userData;
+		$first_rows = dbarray(dbquery("SELECT field_cat_id FROM ".DB_USER_FIELD_CATS." WHERE field_parent ='0' AND field_cat_id !='1' order by field_cat_order ASC limit 1"));
+		$index_page_id = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : $first_rows['field_cat_id'];
 		$result = dbquery("SELECT field.*,
 				cat.field_cat_id, cat.field_cat_name, cat.field_parent,
 				root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index
 				FROM ".DB_USER_FIELDS." field
 				LEFT JOIN ".DB_USER_FIELD_CATS." cat ON (cat.field_cat_id = field.field_cat)
 				LEFT JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id)
-				".($this->registration ? "WHERE field_registration = '1'" : '')."
+				WHERE cat.field_cat_id='$index_page_id' OR root.field_cat_id='$index_page_id'
 				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
 		if (dbrows($result)>0) {
-			$index_page_id = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 			$this->info['user_field'] = ($this->method == 'display') ? array() : '';
+			// loop
 			while ($data = dbarray($result)) {
 				if ($data['field_cat_id']) $category[$data['field_parent']][$data['field_cat_id']] = $data['field_cat_name'];
 				if ($data['field_cat']) $item[$data['field_cat']][] = $data;
@@ -299,6 +307,7 @@ class UserFields extends quantumFields {
 					$this->callback_data += dbarray(dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'"));
 				}
 			}
+
 			// require to inject id when id not present in other pages to make reference as Quantum Fields $index_value
 			if ($index_page_id !=='1' && $this->method !=='display') {
 				$this->info['user_field'] .= form_hidden('', 'user_id', 'user_id', $this->userData['user_id']);
