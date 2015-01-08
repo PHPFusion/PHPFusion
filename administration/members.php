@@ -96,7 +96,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 	// Add new User
 }
 elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERADMIN)) {
-	require_once CLASSES."UserFieldsInput.class.php";
 	$errors = array();
 
 	if (isset($_POST['add_user'])) {
@@ -163,7 +162,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "view" && $user_id && (!$isAdmi
 	// Edit User Profile
 }
 elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmin || iSUPERADMIN)) {
-	require_once CLASSES."UserFieldsInput.class.php";
 	$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
 	if (!$user_data || $user_data['user_level'] == 103) {
 		redirect(FUSION_SELF.$aidlink);
