@@ -296,7 +296,6 @@ function render_dashboard() {
 	$('#submission_action-'+$(this).data('id')).addClass('display-none');
 	});
 	");
-	closeside();
 }
 
 function render_admin_icon() {
