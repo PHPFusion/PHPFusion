@@ -116,14 +116,20 @@ class quantumFields {
 	}
 
 	/* Read into serialized field label and returns the value */
-	 /*
-	 * @author	Chris Smith <code+php@chris.cs278.org>, Frank Bültge <frank@bueltge.de>
-	 * @copyright	Copyright (c) 2009 Chris Smith (http://www.cs278.org/), 2011 Frank Bültge (http://bueltge.de)
-	 * @license	http://sam.zoy.org/wtfpl/ WTFPL
-	 * @param	string $value Value to test for serialized form
-	 * @param	mixed $result Result of unserialize() of the $value
-	 * @return	boolean True if $value is serialized data, otherwise FALSE
-	 */
+	/* if you ask me, i'll use my function below */
+	/* static function is_serialized($value) {
+		if (!is_string( $value ) ) {
+			return FALSE;
+		}
+		if (stristr('b:0;', $value)) {
+			return TRUE;
+		}
+		if (strpos($value, "a:") !== FALSE) {
+			return TRUE;
+		}
+		return FALSE;
+	} */
+	/* This is the more pro edition by Chris Smith <code+php@chris.cs278.org>, Frank Bültge <frank@bueltge.de> */
 	static function is_serialized( $value, &$result = null ) {
 		// Bit of a give away this one
 		if ( ! is_string( $value ) ) {
@@ -186,7 +192,7 @@ class quantumFields {
 
 	static function parse_label($value) {
 		if (self::is_serialized($value)) {
-			$value = unserialize($value);
+			$value = unserialize($value); // if anyone can give me a @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
 			return (isset($value[LANGUAGE])) ? $value[LANGUAGE] : $value['English'];
 		} else {
 			return $value;
@@ -716,9 +722,8 @@ class quantumFields {
 			if ($this->debug) print_p($data);
 			// Initialize Constructor Fields
 			$data['field_type'] = isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'], '') : $data['field_type'];
-			//if (!$data['field_type']) redirect(FUSION_SELF.$aidlink);
 			$data['field_id'] = isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '', 'field_id') : $data['field_id'];
-			$data['field_title'] = isset($_POST['field_title']) ? form_sanitizer($_POST['field_title'], '', 'field_title') : $data['field_title'];
+			$data['field_title'] = self::fusion_getlocale($data, 'field_title');
 			$data['field_name'] = isset($_POST['field_name']) ? form_sanitizer($_POST['field_name'], '', 'field_name') : $data['field_name'];
 			$data['field_name'] = str_replace(' ', '_', $data['field_name']); // make sure no space.
 			$data['field_cat'] = isset($_POST['field_cat']) ? form_sanitizer($_POST['field_cat'], '', 'field_cat') : $data['field_cat'];
@@ -755,7 +760,7 @@ class quantumFields {
 			$data['field_type'] = isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'], '') : '';
 			if (!$data['field_type']) redirect(FUSION_SELF.$aidlink);
 			$data['field_id'] = isset($_POST['field_id']) ? form_sanitizer($_POST['field_id'], '', 'field_id') : isset($_GET['field_id']) && isnum($_GET['field_id']) ? $_GET['field_id'] : 0;
-			$data['field_title'] = isset($_POST['field_title']) ? form_sanitizer($_POST['field_title'], '', 'field_title') : '';
+			$data['field_title'] = self::fusion_getlocale($data, 'field_title');
 			$data['field_name'] = isset($_POST['field_name']) ? form_sanitizer($_POST['field_name'], '', 'field_name') : '';
 			$data['field_name'] = strtolower(str_replace(' ', '_', $data['field_name'])); // make sure no space.
 			$data['field_cat'] = isset($_POST['field_cat']) ? form_sanitizer($_POST['field_cat'], '', 'field_cat') : 0;
@@ -812,12 +817,13 @@ class quantumFields {
 		foreach ($this->page_list as $index => $v) {
 			$disable_opts[] = $index;
 		}
-		echo form_select_tree($locale['fields_0450'], 'field_cat', 'field_cat', $data['field_cat'], array('no_root' => 1,
-			'disable_opts' => $disable_opts), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-		echo form_text($locale['fields_0451'], 'field_title', 'field_title', $data['field_title'], array('placeholder' => $locale['fields_0452'],
-			'required' => 1)); //
-		echo form_text($locale['fields_0453'], 'field_name', 'field_name', $data['field_name'], array('placeholder' => $locale['fields_0454'],
-			'required' => 1)); //
+		// ok the value generated needs to be parsed by quantum
+		echo form_select_tree($locale['fields_0450'], 'field_cat', 'field_cat', $data['field_cat'], array('no_root' => 1, 'disable_opts' => $disable_opts), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+		echo "<label class='label-control m-b-20'>".$locale['fields_0451']."</label>\n";
+		echo "<div class='well'>\n";
+		echo self::quantum_multilocale_fields($data, 'field_title');
+		echo "</div>\n";
+		echo form_text($locale['fields_0453'], 'field_name', 'field_name', $data['field_name'], array('placeholder' => $locale['fields_0454'], 'required' => 1));
 		if ($data['field_type'] == 'select') echo form_select($locale['fields_0455'], 'field_options', 'field_options', array(), $data['field_options'], array('required' => 1,
 			'tags' => 1,
 			'multiple' => 1));
@@ -1096,22 +1102,28 @@ class quantumFields {
 		return false;
 	}
 
+	/* Parse serialized language data of $_POST fields,
+	 * or if not exist, read serialized data from DB.
+	 * If value is not serialized on read, to duplicate primary value across all language  */
 	static function fusion_getlocale($data, $input_name) {
 		global $language_opts;
 		if (isset($_POST[$input_name])) {
 			return self::serialize_fields($input_name);
 		} else {
-			if (self::is_serialized($data[$input_name])) {
-				return unserialize($data[$input_name]);
-			} else {
-				foreach($language_opts as $lang) {
-					$value[$lang] = $data[$input_name];
+			if (isset($data[$input_name])) {
+				if (self::is_serialized($data[$input_name])) {
+					return unserialize($data[$input_name]);
+				} else {
+					foreach($language_opts as $lang) {
+						$value[$lang] = $data[$input_name];
+					}
+					return $value;
 				}
-				return $value;
 			}
 		}
 	}
 
+	/* Outputs a multilocale single field */
 	static function quantum_multilocale_fields($data, $field_name) {
 		global $language_opts;
 		$html = '';
@@ -1142,7 +1154,6 @@ class quantumFields {
 			$data['field_cat_db'] = isset($_POST['field_cat_db']) ? form_sanitizer($_POST['field_cat_db'], '', 'field_cat_db') : $data['field_cat_db'];
 			$data['field_cat_index'] = isset($_POST['field_cat_index']) ? form_sanitizer($_POST['field_cat_index'], '', 'field_cat_index') : $data['field_cat_index'];
 			$data['field_cat_class'] = isset($_POST['field_cat_class']) ? form_sanitizer($_POST['field_cat_class'], '', 'field_cat_class') : $data['field_cat_class'];
-
 		} else {
 			$data['field_cat_id'] = isset($_POST['field_cat_id']) ? form_sanitizer($_POST['field_cat_id'], '', 'field_cat_id') : 0;
 			$data['field_cat_name'] = self::fusion_getlocale($data, 'field_cat_name');
@@ -1224,8 +1235,7 @@ class quantumFields {
 		echo "<div class='well'>\n";
 		echo self::quantum_multilocale_fields($data, 'field_cat_name');
 		echo "</div>\n";
-		echo form_select_tree($locale['fields_0431'], 'field_parent', 'field_parent', $data['field_parent'], array('parent_value' => $locale['fields_0432'],
-			'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
+		echo form_select_tree($locale['fields_0431'], 'field_parent', 'field_parent', $data['field_parent'], array('parent_value' => $locale['fields_0432'], 'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 		echo form_text($locale['fields_0433'], 'field_cat_order', 'field_cat_order', $data['field_cat_order'], array('number' => 1));
 		echo form_hidden('', 'field_cat_id', 'field_cat_id', $data['field_cat_id'], array('number' => 1));
 		echo form_hidden('', 'add_cat', 'add_cat', 'add_cat');
@@ -1425,111 +1435,111 @@ class quantumFields {
 		}
 		elseif ($data['field_type'] == 'textbox') {
 			if ($this->method == 'input') {
-				return  form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return  form_text(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'number') {
 			if ($this->method == 'input') {
 				$options += array('number'=>1);
-				return  form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return  form_text(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'url') {
 			if ($this->method == 'input') {
 				$options += array('url'=>1);
-				return  form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return  form_text(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'email') {
 			if ($this->method == 'input') {
 				$options += array('email'=>1);
-				return  form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return  form_text(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'select') {
 			if ($this->method == 'input') {
-				return form_select($data['field_title'], $data['field_name'], $data['field_name'], $option_list, '', $options);
+				return form_select(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], $option_list, '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'tags') {
 			if ($this->method == 'input') {
 				$options += array('tags'=>1, 'multiple'=>1, 'width'=>'100%');
-				return form_select($data['field_title'], $data['field_name'], $data['field_name'], $option_list, '', $options);
+				return form_select(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], $option_list, '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'location') {
 			if ($this->method == 'input') {
 				$options += array('width'=>'100%');
-				return form_location($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return form_location(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'textarea') {
 			if ($this->method == 'input') {
-				return form_textarea($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return form_textarea(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'checkbox') {
 			if ($this->method == 'input') {
-				return form_checkbox($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return form_checkbox(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'datepicker') {
 			if ($this->method == 'input') {
-				return form_datepicker($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return form_datepicker(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>showdate('shortdate', $this->callback_data[$data['field_name']]));
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>showdate('shortdate', $this->callback_data[$data['field_name']]));
 			}
 		}
 		elseif ($data['field_type'] == 'colorpicker') {
 			if ($this->method == 'input') {
-				return form_colorpicker($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return form_colorpicker(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$this->callback_data[$data['field_name']]);
 			}
 		}
 		elseif ($data['field_type'] == 'uploader') {
 			if ($this->method == 'input') {
-				return form_fileinput($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return form_fileinput(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return 'Work in Progress';
 			}
 		}
 		elseif ($data['field_type'] == 'hidden') {
 			if ($this->method == 'input') {
-				return form_hidden($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return form_hidden(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			}
 		}
 		elseif ($data['field_type'] == 'address') {
 			if ($this->method == 'input') {
-				return form_address($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+				return form_address(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>implode('|', $this->callback_data[$data['field_name']]));
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>implode('|', $this->callback_data[$data['field_name']]));
 			}
 		}
 		elseif ($data['field_type'] == 'toggle') {
 			$option_array = array($locale['off'], $locale['on']);
 			if ($this->method == 'input') {
-				return form_toggle($data['field_title'], $data['field_name'], $data['field_name'], $option_array, $data['field_name'], $options);
+				return form_toggle(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], $option_array, $data['field_name'], $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
-				return array('title'=>$data['field_title'], 'value'=>$option_array[$this->callback_data[$data['field_name']]]);
+				return array('title'=>self::parse_label($data['field_title']), 'value'=>$option_array[$this->callback_data[$data['field_name']]]);
 			}
 		}
 	}
