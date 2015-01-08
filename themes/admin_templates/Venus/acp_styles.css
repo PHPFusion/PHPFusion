@@ -15,14 +15,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 html, body {
-	background: rgb(235, 239, 245);
+	background: #F4F8FF;
+	/* background: rgb(235, 239, 245);
 	background: -moz-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
 	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(215, 220, 224, 1)), color-stop(100%, rgba(111, 129, 143, 1)));
 	background: -webkit-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
 	background: -o-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
 	background: -ms-radial-gradient(center, ellipse cover, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
 	background: radial-gradient(ellipse at center, rgba(215, 220, 224, 1) 0%, rgba(111, 129, 143, 1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d7dce0', endColorstr='#6f818f', GradientType=1);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d7dce0', endColorstr='#6f818f', GradientType=1); */
 	background-position: 0px -80%;
 	font: 15px/18px 'Helvetica Neue', Arial !important;
 	overflow-x: hidden;
