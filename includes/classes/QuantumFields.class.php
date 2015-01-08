@@ -1112,9 +1112,18 @@ class quantumFields {
 		}
 	}
 
+	static function quantum_multilocale_fields($data, $field_name) {
+		global $language_opts;
+		$html = '';
+		foreach($language_opts as $lang) {
+			$html .= form_text($lang, "".$field_name."[$lang]", $field_name."-".$lang, $data[$field_name][$lang], array('required' => 1));
+		}
+		return $html;
+	}
+
 	/* Category & Page Form */
 	private function category_form() {
-		global $aidlink, $defender, $language_opts;
+		global $aidlink, $defender;
 		$locale = $this->locale;
 		$data = array();
 		if (isset($_GET['action']) && $_GET['action'] == 'cat_edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
@@ -1128,7 +1137,6 @@ class quantumFields {
 			$data['field_cat_id'] = isset($_POST['field_cat_id']) ? form_sanitizer($_POST['field_cat_id'], '', 'field_cat_id') : $data['field_cat_id'];
 			// multiLang serialization
 			$data['field_cat_name'] = self::fusion_getlocale($data, 'field_cat_name');
-
 			$data['field_parent'] = isset($_POST['field_parent']) ? form_sanitizer($_POST['field_parent'], '', 'field_parent') : $data['field_parent'];
 			$data['field_cat_order'] = isset($_POST['field_cat_order']) ? form_sanitizer($_POST['field_cat_order'], '', 'field_cat_order') : $data['field_cat_order'];
 			$data['field_cat_db'] = isset($_POST['field_cat_db']) ? form_sanitizer($_POST['field_cat_db'], '', 'field_cat_db') : $data['field_cat_db'];
@@ -1210,12 +1218,11 @@ class quantumFields {
 				$cat_list[] = $id;
 			}
 		}
+
 		echo openform('cat_form', 'cat_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
 		echo "<label class='label-control m-b-20'>".$locale['fields_0430']."</label>\n";
 		echo "<div class='well'>\n";
-		foreach($language_opts as $lang) {
-			echo form_text($lang, "field_cat_name[$lang]", 'field_cat_name-'.$lang, $data['field_cat_name'][$lang], array('required' => 1));
-		}
+		echo self::quantum_multilocale_fields($data, 'field_cat_name');
 		echo "</div>\n";
 		echo form_select_tree($locale['fields_0431'], 'field_parent', 'field_parent', $data['field_parent'], array('parent_value' => $locale['fields_0432'],
 			'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
