@@ -31,6 +31,8 @@ $sortby = (isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
 $status = (isset($_GET['status']) && isnum($_GET['status'] && $_GET['status'] < 9) ? $_GET['status'] : 0);
 $user_id = (isset($_GET['user_id']) && isnum($_GET['user_id']) ? $_GET['user_id'] : FALSE);
 $action = (isset($_GET['action']) && isnum($_GET['action']) ? $_GET['action'] : "");
+add_to_breadcrumbs(array('link'=>ADMIN.'members.php'.$aidlink, 'title'=>$locale['400']));
+
 define("USER_MANAGEMENT_SELF", FUSION_SELF.$aidlink."&sortby=$sortby&status=$status&rowstart=$rowstart");
 $checkRights = dbcount("(user_id)", DB_USERS, "user_id='".$user_id."' AND user_level>101");
 if ($checkRights > 0) {
@@ -112,6 +114,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 
 	if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && defined('FUSION_NULL'))) {
 		opentable($locale['480']);
+		add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['480']));
+
 		member_nav(member_url("add", "")."| ".$locale['480']);
 		$userFields = new UserFields();
 		$userFields->postName = "add_user";
@@ -127,7 +131,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		closetable();
 	}
 	// View User Profile
-} elseif (isset($_GET['step']) && $_GET['step'] == "view" && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['step']) && $_GET['step'] == "view" && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	require_once CLASSES."UserFields.class.php";
 	$result = dbquery("SELECT u.*, s.suspend_reason
 		FROM ".DB_USERS." u
@@ -140,8 +145,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	} else {
 		redirect(FUSION_SELF.$aidlink);
 	}
-	member_nav(member_url("view", $user_id)."|".$user_data['user_name']);
 	opentable($locale['u104']." ".$user_data['user_name']);
+	member_nav(member_url("view", $user_id)."|".$user_data['user_name']);
 	$userFields = new UserFields();
 	$userFields->postName = "register";
 	$userFields->postValue = $locale['u101'];
@@ -153,11 +158,13 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->registration = TRUE;
 	$userFields->userData = $user_data;
-	$userFields->method = 'input';
-	$userFields->renderInput();
+	$userFields->method = 'display';
+	//$userFields->renderInput();
+	$userFields->renderOutput();
 	closetable();
 	// Edit User Profile
-} elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	require_once CLASSES."UserFields.class.php";
 	require_once CLASSES."UserFieldsInput.class.php";
 	$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
@@ -179,7 +186,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	}
 	opentable($locale['430']);
 	member_nav(member_url("edit", $user_id)."| ".$locale['430']);
-
 	$userFields = new UserFields();
 	$userFields->postName = "savechanges";
 	$userFields->postValue = $locale['430'];
@@ -195,7 +201,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	$userFields->renderInput();
 	closetable();
 	// Delete User
-} elseif (isset($_GET['step']) && $_GET['step'] == "delete" && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['step']) && $_GET['step'] == "delete" && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	if (isset($_POST['delete_user'])) {
 		$result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
 		if (dbrows($result)) {
@@ -305,7 +312,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		closetable();
 	}
 	// Ban User
-} elseif (isset($_GET['action']) && $_GET['action'] == 1 && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['action']) && $_GET['action'] == 1 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	require_once LOCALE.LOCALESET."admin/members_email.php";
 	require_once INCLUDES."sendmail_include.php";
 	$result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
@@ -351,7 +359,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		redirect(USER_MANAGEMENT_SELF."&status=ber");
 	}
 	// Activate User
-} elseif (isset($_GET['action']) && $_GET['action'] == 2 && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['action']) && $_GET['action'] == 2 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	require_once LOCALE.LOCALESET."admin/members_email.php";
 	require_once INCLUDES."sendmail_include.php";
 	$result = dbquery("SELECT user_name, user_email FROM ".DB_USERS." WHERE user_id='".$user_id."' LIMIT 1");
@@ -367,7 +376,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		redirect(USER_MANAGEMENT_SELF."&status=aer");
 	}
 	// Suspend User
-} elseif (isset($_GET['action']) && $_GET['action'] == 3 && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['action']) && $_GET['action'] == 3 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	include LOCALE.LOCALESET."admin/members_email.php";
 	require_once INCLUDES."sendmail_include.php";
 	$result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
@@ -421,7 +431,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		redirect(USER_MANAGEMENT_SELF."&status=ser");
 	}
 	// Security Ban User
-} elseif (isset($_GET['action']) && $_GET['action'] == 4 && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['action']) && $_GET['action'] == 4 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	require_once LOCALE.LOCALESET."admin/members_email.php";
 	require_once INCLUDES."sendmail_include.php";
 	$result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
@@ -467,7 +478,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		redirect(USER_MANAGEMENT_SELF."&status=sber");
 	}
 	// Cancel User
-} elseif (isset($_GET['action']) && $_GET['action'] == 5 && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['action']) && $_GET['action'] == 5 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	$result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
 	if (dbrows($result)) {
 		$udata = dbarray($result);
@@ -483,7 +495,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		redirect(USER_MANAGEMENT_SELF);
 	}
 	// Annonymise User
-} elseif (isset($_GET['action']) && $_GET['action'] == 6 && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['action']) && $_GET['action'] == 6 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	$result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
 	if (dbrows($result)) {
 		$udata = dbarray($result);
@@ -499,7 +512,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		redirect(USER_MANAGEMENT_SELF);
 	}
 	// Deactivate User
-} elseif (isset($_GET['action']) && $_GET['action'] == 7 && $user_id && (!$isAdmin || iSUPERADMIN)) {
+}
+elseif (isset($_GET['action']) && $_GET['action'] == 7 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	$result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
 	if (dbrows($result)) {
 		$udata = dbarray($result);
@@ -522,7 +536,8 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	} else {
 		redirect(USER_MANAGEMENT_SELF);
 	}
-} else {
+}
+else {
 	opentable($locale['400']);
 	if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
 		$user_name = " user_name LIKE '".stripinput($_GET['search_text'])."%' AND";
@@ -546,44 +561,42 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		WHERE $user_name user_status='$usr_mysql_status' AND user_level<'103'
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
-	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<tr>\n<td class='tbl1' style='width:80%'>\n";
-	echo "<form name='viewstatus' method='get' action='".FUSION_SELF."'>\n";
+
+	echo "<form name='viewstatus' method='get' class='clearfix' action='".FUSION_SELF."'>\n";
+
+	echo "<div class='btn-group'>\n";
+	echo "<a class='button btn btn-sm btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
+	if ($settings['enable_deactivation'] == 1) {
+		if (dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level<'103' AND user_lastvisit<'$time_overdue' AND user_actiontime='0'")) {
+			echo "<a class='button btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;step=inactive'>".$locale['580']."</a>\n";
+		}
+	}
+	echo "</div>\n";
+
+
 	echo form_hidden('', 'aid', 'aid', iAUTH);
 	echo form_hidden('', 'sortby', 'sortby', $sortby);
+	echo form_hidden('', 'rowstart', 'rowstart', $rowstart);
 	for ($i = 0; $i < 9; $i++) {
 		if ($i < 8 || $settings['enable_deactivation'] == 1) {
 			$opts[$i] = getsuspension($i);
 		}
 	}
-	echo "<label class='pull-left m-r-10'>".$locale['405']."</label>\n";
-	echo form_select('', 'status', 'status', $opts, isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array('placeholder' => $locale['choose'], 'class' => 'display-inline', 'allowclear' => 1));
+	echo "<div class='display-inline-block pull-right'>\n";
+	echo form_select($locale['405'], 'status', 'status', $opts, isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array('placeholder' => $locale['choose'], 'class'=>'col-sm-3 col-md-3 col-lg-3', 'allowclear' => 1));
+	echo "</div>\n";
 	add_to_jquery("$('#status').on('change', function() { this.form.submit(); });");
 	echo form_hidden('', 'rowstart', 'rowstart', $rowstart);
 	echo closeform();
-	echo "</td>\n<td class='tbl1' align='right'>\n";
-	echo "<div class='btn-group'>\n";
-	echo "<a class='btn btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
-	if ($settings['enable_deactivation'] == 1) {
-		if (dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level<'103' AND user_lastvisit<'$time_overdue' AND user_actiontime='0'")) {
-			echo "<a class='btn btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=inactive'>".$locale['580']."</a>\n";
-		}
-	}
-	echo "</div>\n";
-	echo "</td>\n</tr>\n</table>\n";
-	echo "<div style='text-align:center;margin-bottom:10px;'></div>\n";
+
 	if ($rows) {
 		$i = 0;
-		echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<thead>\n<tr>\n";
-		echo "<th class='tbl2'><div class='pull-left m-r-10'><strong>".$locale['401']."</strong></th>\n";
-		echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['403']."</strong></th>\n";
-		echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></th>\n";
-		echo "</tr>\n</thead>\n<tbody>\n";
+		echo "<div class='list-group'>\n";
 		while ($data = dbarray($result)) {
-			$cell_color = ($i%2 == 0 ? "tbl1" : "tbl2");
-			$title = "";
-			echo "<tr>\n<td class='$cell_color'><a href='".FUSION_SELF.$aidlink."&amp;step=view&amp;user_id=".$data['user_id']."'><div class='pull-left m-r-10'>\n".display_avatar($data, '50px')."</div>\n ".$data['user_name']."</a></td>\n";
-			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'>".getuserlevel($data['user_level'])."</td>\n";
-			echo "<td align='center' width='40%' class='$cell_color' style='white-space:nowrap'>";
+		echo "<div class='list-group-item clearfix'>\n";
+		echo "<div class='pull-left m-r-10'>\n".display_avatar($data, '50px', '', '', 'img-rounded')."</div>\n";
+
+			echo "<div class='pull-right m-l-15'>\n";
 			$ban_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=1";
 			$suspend_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=3";
 			$cancel_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=5";
@@ -592,21 +605,22 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 			$inac_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=8";
 			echo "<div class='btn-group'>\n";
 			if (iSUPERADMIN || $data['user_level'] < 102) {
-				echo "<a class='btn btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."'>".$locale['406']."</a>\n";
+				echo "<a class='btn button btn-sm btn-default ' href='".FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$data['user_id']."&amp;settings'>".$locale['406']."</a>\n";
 				if ($status == 0) {
-					echo "<a class='btn btn-primary' href='".stripinput(USER_MANAGEMENT_SELF."&action=3&user_id=".$data['user_id'])."'>".$locale['553']."</a>\n";
+					echo "<a class='btn button btn-sm btn-default ' href='".stripinput(USER_MANAGEMENT_SELF."&action=3&user_id=".$data['user_id'])."'>".$locale['553']."</a>\n";
 				} elseif ($status == 2) {
 					$title = $locale['407'];
 				} elseif ($status != 8) {
 					$title = $locale['419'];
 				}
 				if ($title) {
-					echo "<a class='btn btn-primary' href='".stripinput(USER_MANAGEMENT_SELF."&action=$status&user_id=".$data['user_id'])."'>$title</a>\n";
+					echo "<a class='btn button btn-sm btn-default' href='".stripinput(USER_MANAGEMENT_SELF."&action=$status&user_id=".$data['user_id'])."'>$title</a>\n";
 				}
-				echo "<a class='btn btn-primary' href='".stripinput(USER_MANAGEMENT_SELF."&step=delete&user_id=".$data['user_id'])."' onclick='return DeleteMember();'>".$locale['410']."</a>\n";
+				echo "<div class='btn-group'>\n";
+				echo "<a class='btn button btn-sm btn-default' href='".stripinput(USER_MANAGEMENT_SELF."&step=delete&user_id=".$data['user_id'])."' onclick='return DeleteMember();'>".$locale['410']."</a>\n";
 				// more actions.
-				echo "<a class='btn btn-primary dropdown-toggle' data-toggle='dropdown'>\n<span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></a>\n";
-				echo "<ul class='dropdown-menu text-left' role='action-menu' style='left:70px;'>\n";
+				echo "<a class='btn button btn-sm btn-default dropdown-toggle' data-toggle='dropdown'>\n<span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></a>\n";
+				echo "<ul class='dropdown-menu text-left' role='action-menu'>\n";
 				echo "<li><a href='$ban_link'>".getsuspension(1, TRUE)."</a></li>\n";
 				echo "<li><a href='$suspend_link'>".getsuspension(3, TRUE)."</a></li>\n";
 				echo "<li><a href='$cancel_link'>".getsuspension(5, TRUE)."</a></li>\n";
@@ -614,12 +628,19 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 				echo "<li><a href='$deac_link'>".getsuspension(7, TRUE)."</a></li>\n";
 				echo "<li><a href='$inac_link'>".getsuspension(8, TRUE)."</a></li>\n";
 				echo "</ul>\n";
+				echo "</div>\n";
 			}
 			echo "</div>\n";
-			echo "</td>\n</tr>\n";
+			echo "</div>\n";
+
+			echo "<div class='overflow-hide'>\n";
+			echo "<a class='strong display-inline-block' href='".FUSION_SELF.$aidlink."&amp;step=view&amp;user_id=".$data['user_id']."'>".$data['user_name']."</a>\n";
+			echo "<br/><span class='text-smaller'>".getuserlevel($data['user_level'])."</span>\n";
+			echo "</div>\n";
+			echo "</div>\n";
 			$i++;
 		}
-		echo "</tbody>\n</table>\n";
+		echo "<div>\n";
 	} else {
 		if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
 			echo "<div style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).$locale['413']."'".stripinput($_GET['search_text'])."'<br /><br />\n</div>\n";
@@ -627,28 +648,31 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 			echo "<div style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).($_GET['sortby'] == "all" ? "" : $locale['412'].$_GET['sortby']).".<br /><br />\n</div>\n";
 		}
 	}
+	echo "<hr/>\n";
 	$alphanum = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
-	echo "<div style='margin-top:10px;'></div>\n";
 	echo "<table cellpadding='0' cellspacing='1' width='450' class='table table-responsive tbl-border center'>\n<tr>\n";
-	echo "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF.$aidlink."&amp;status=".$status."'>".$locale['414']."</a></td>";
+	echo "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF.$aidlink."&amp;status=".$status."'>".$locale['414']."</a></td>";
 	for ($i = 0; $i < 36; $i++) {
 		echo "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF.$aidlink."&amp;sortby=".$alphanum[$i]."&amp;status=$status'>".$alphanum[$i]."</a></div></td>";
 		echo($i == 17 ? "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF.$aidlink."&amp;status=".$status."'>".$locale['414']."</a></td>\n</tr>\n<tr>\n" : "\n");
 	}
 	echo "</tr>\n</table>\n";
+
 	echo "<hr />\n";
+
 	echo openform('searchform', 'searchform', 'post', FUSION_SELF, array('downtime' => 0, 'notice' => 0));
-	echo "<div style='text-align:center'>\n";
+
 	echo form_hidden('', 'aid', 'aid', iAUTH);
 	echo form_hidden('', 'status', 'status', $status);
-	echo "<div class='pull-left'><strong>".$locale['415']."</strong></div>\n";
-	echo form_button($locale['416'], 'search', 'search', $locale['416'], array('class' => 'pull-right btn-primary'));
-	echo form_text('', 'search_text', 'search_text', '', array('class' => 'pull-right m-r-10'));
-	echo "</div>\n</form>\n";
+	echo form_text($locale['415'], 'search_text', 'search_text', '', array('inline'=>1));
+	echo form_button($locale['416'], 'search', 'search', $locale['416'], array('class' => 'col-sm-offset-3 btn-sm btn-primary'));
+	echo closeform();
 	closetable();
 	if ($rows > 20) {
 		echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($rowstart, 20, $rows, 3, FUSION_SELF.$aidlink."&amp;sortby=".$sortby."&amp;status=".$status."&amp;")."\n</div>\n";
 	}
+    echo "</div>\n";
+    echo "</div>\n";
 	echo "<script type='text/javascript'>"."\n"."function DeleteMember(username) {\n";
 	echo "return confirm('".$locale['423']."');\n}\n</script>\n";
 }
