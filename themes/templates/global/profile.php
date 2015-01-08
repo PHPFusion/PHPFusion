@@ -31,7 +31,8 @@ if (!function_exists('render_userprofile')) {
 				$xxx['user_status'] = $data['status'];
 				$user_avatar = display_avatar($xxx, '50px', '', FALSE, '');
 			} elseif ($field_id == 'profile_user_name') {
-				$user_name = "<div id='".$field_id."' style='padding-top:10px; padding-bottom:10px; border-bottom:1px solid #ccc;'>".$data['value']."</div>\n";
+				//$user_name = "<div id='".$field_id."' style='padding-top:10px; padding-bottom:10px; border-bottom:1px solid #ccc;'>".$data['value']."</div>\n";
+				$user_name = $data['value'];
 			} else {
 				$user_info .= "<div id='".$field_id."' class='p-b-5'><span class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>".$data['title']."</span><div class='profile_text overflow-hide'>".$data['value']."</div></div>\n";
 			}
@@ -45,7 +46,8 @@ if (!function_exists('render_userprofile')) {
 				}
 			}
 		}
-		echo "<section id='user-profile' class='row m-b-20'>\n";
+
+		echo "<section id='user-profile' class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-2'>\n";
 		// page navigation
 		echo "<ul class='profile_link_nav m-t-20'>";
