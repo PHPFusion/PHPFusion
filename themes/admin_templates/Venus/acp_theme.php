@@ -65,7 +65,7 @@ function render_adminpanel() {
 		echo "</div>\n";
 		echo "<!--end leftnav -->\n";
 		echo "<!-- begin main content -->\n";
-		echo "<div id='acp-main' class='display-block acp ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' style='margin-top:50px; min-height:1125px; width:100%; vertical-align:top;'>\n";
+		echo "<div id='acp-main' class='display-block acp ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' style='margin-top:50px; width:100%; vertical-align:top;'>\n";
 		echo "<div id='acp-toolkit' class='hidden-xs hidden-sm col-md-12 col-lg-12 m-b-10 m-r-0' style='width:100%' role='toolkits'>\n";
 		echo "<nav>".admin_nav()."</nav>";
 		echo "</div>\n";
