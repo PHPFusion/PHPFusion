@@ -443,7 +443,8 @@ class quantumFields {
 
 	/* Hardcoded Column Attributes - Can be added to forms but is it too technical for non coders? */
 	private function dynamics_fieldinfo($type, $default_value) {
-		$info = array('textbox' => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
+		$info = array(
+			'textbox' => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
 			'select' => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
 			'textarea' => "TEXT NOT NULL",
 			'tags' => "TEXT NOT NULL",
@@ -454,7 +455,11 @@ class quantumFields {
 			'colorpicker' => "VARCHAR(10) NOT NULL DEFAULT '".$default_value."'",
 			'upload' => "VARCHAR(100) NOT NULL DEFAULT '".$default_value."'",
 			'hidden' => "VARCHAR(50) NOT NULL DEFAULT '".$default_value."'",
-			'address' => "TEXT NOT NULL",);
+			'address' => "TEXT NOT NULL",
+			'number' => "INT(10) UNSIGNED NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
+			'email' => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
+			'url' => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
+		);
 		return $info[$type];
 	}
 
@@ -474,6 +479,9 @@ class quantumFields {
 			'address'       => $locale['fields_0510'],
 			'tags'       	=> $locale['fields_0511'],
 			'location'      => $locale['fields_0512'],
+			'number'      => $locale['fields_0513'],
+			'email'      => $locale['fields_0514'],
+			'url'      => $locale['fields_0515'],
 		);
 	}
 
@@ -1292,6 +1300,30 @@ class quantumFields {
 		}
 		elseif ($data['field_type'] == 'textbox') {
 			if ($this->method == 'input') {
+				return  form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
+				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+			}
+		}
+		elseif ($data['field_type'] == 'number') {
+			if ($this->method == 'input') {
+				$options += array('number'=>1);
+				return  form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
+				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+			}
+		}
+		elseif ($data['field_type'] == 'url') {
+			if ($this->method == 'input') {
+				$options += array('url'=>1);
+				return  form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
+			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
+				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
+			}
+		}
+		elseif ($data['field_type'] == 'email') {
+			if ($this->method == 'input') {
+				$options += array('email'=>1);
 				return  form_text($data['field_title'], $data['field_name'], $data['field_name'], '', $options);
 			} elseif ($this->method == 'display' && isset($user_data[$data['field_name']]) && $user_data[$data['field_name']]) {
 				return array('title'=>$data['field_title'], 'value'=>$this->callback_data[$data['field_name']]);
