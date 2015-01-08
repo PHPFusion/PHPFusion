@@ -18,7 +18,6 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-require_once CLASSES."QuantumFields.class.php";
 
 class UserFieldsInput {
 	public $adminActivation = 1;
@@ -568,7 +567,7 @@ class UserFieldsInput {
 		$message = str_replace("USER_PASSWORD", $this->_newUserPassword, $message);
 		$message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
 		if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u151'], $message)) {
-			$quantum = new quantumFields();
+			$quantum = new QuantumFields();
 			$quantum->category_db = DB_USER_FIELD_CATS;
 			$quantum->field_db = DB_USER_FIELDS;
 			$quantum->plugin_folder = INCLUDES."user_fields/";
@@ -595,7 +594,7 @@ class UserFieldsInput {
 	private function _setUserDataInput() {
 		global $locale, $settings, $userdata, $aidlink;
 
-		$quantum = new quantumFields();
+		$quantum = new QuantumFields();
 		$quantum->category_db = DB_USER_FIELD_CATS;
 		$quantum->field_db = DB_USER_FIELDS;
 		$quantum->plugin_folder = INCLUDES."user_fields/";
@@ -626,7 +625,7 @@ class UserFieldsInput {
 	private function _setUserDataUpdate() {
 		global $locale;
 		$this->_saveUserLog();
-		$quantum = new quantumFields();
+		$quantum = new QuantumFields();
 		$quantum->category_db = DB_USER_FIELD_CATS;
 		$quantum->field_db = DB_USER_FIELDS;
 		$quantum->plugin_folder = INCLUDES."user_fields/";

@@ -356,8 +356,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 	}
 
 	if (isset($index[$id])) {
-		require_once CLASSES.'QuantumFields.class.php';
-		$quantum = new quantumFields();
+		$quantum = new QuantumFields();
 		foreach ($index[$id] as $key => $value) {
 			//$hide = $disable_branch && $value == $self_id ? 1 : 0;
 			$html = &$html;

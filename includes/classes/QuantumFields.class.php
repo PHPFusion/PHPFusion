@@ -16,8 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once LOCALE.LOCALESET.'admin/fields.php';
-class quantumFields {
+
+class QuantumFields {
 	// Setup XUI
 	public $system_title = '';
 	public $admin_rights = '';
@@ -46,6 +46,7 @@ class quantumFields {
 	/* Constructor */
 	public function boot() {
 		global $locale;
+		require_once LOCALE.LOCALESET.'admin/fields.php';
 		$this->locale = $locale;
 		add_to_breadcrumbs(array('link' => '', 'title' => $this->system_title));
 		add_to_title(': '.$this->system_title);

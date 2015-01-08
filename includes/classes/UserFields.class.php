@@ -18,9 +18,8 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 require_once THEMES."templates/global/profile.php";
-require_once CLASSES."QuantumFields.class.php";
 
-class UserFields extends quantumFields {
+class UserFields extends QuantumFields {
 	public $displayTerms = 0;
 	public $displayValidation = 0;
 	public $errorsArray = array();
