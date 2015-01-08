@@ -26,7 +26,7 @@ class quantumFields {
 	public $field_db = '';
 	public $plugin_folder = '';
 	public $plugin_locale_folder = '';
-	public $debug = FALSE;
+	public $debug = false;
 	public $dom_debug = FALSE;
 	public $input_page = 1;
 	// System Internals
@@ -405,9 +405,11 @@ class quantumFields {
 			WHERE field_id='".intval($_GET['field_id'])."'
 			");
 			if (dbrows($result)>0) {
+				if ($this->debug) print_p('Obtained Field Data');
 				$data = dbarray($result);
 				$target_database = $data['field_cat_db'] ? DB_PREFIX.$data['field_cat_db'] : DB_USERS;
 				$field_list = fieldgenerator($target_database);
+				if ($this->debug) print_p($field_list);
 				if (in_array($data['field_name'], $field_list)) {
 					// drop database
 					if (!$this->debug && ($target_database)) $result = dbquery("ALTER TABLE ".$target_database." DROP ".$data['field_name']);
@@ -416,9 +418,14 @@ class quantumFields {
 					if (!$this->debug && ($target_database)) $result = dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
 					if (!$this->debug && ($target_database)) $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
 					if ($this->debug) print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+				} else {
+					// just delete the field
+					if ($this->debug) print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
+					if (!$this->debug) $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
 				}
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink."&amp;status=field_deleted");
 			} else {
+				if ($this->debug) print_p('Did not get field data.');
 				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
 			}
 		}
