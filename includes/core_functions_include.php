@@ -1141,19 +1141,16 @@ function print_p($array, $modal = FALSE) {
  * 
  * @return string[] Associative array of settings
  */
-function fusion_get_settings() {
+function fusion_get_settings($key = NULL) {
 	// It is initialized only once because of 'static'
 	static $settings = array();
-	if (empty($settings)) {
+	if (empty($settings) and dbconnection()) {
 		$result = dbquery("SELECT * FROM ".DB_SETTINGS);
 		while ($data = dbarray($result)) {
 			$settings[$data['settings_name']] = $data['settings_value'];
 		}
-		if (empty($settings)) {
-			die("Settings do not exist, please check your config.php file or run setup.php again.");
-		}
 	}
-	return $settings;
+	return $key === NULL ? $settings : (isset($settings[$key]) ? $settings[$key] : NULL);
 }
 
 /**
