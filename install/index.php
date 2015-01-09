@@ -77,11 +77,11 @@ $settings['siteemail'] = '';
 $settings['sitename'] = '';
 $settings['siteusername'] = $locale['setup_0002'];
 $settings['siteurl'] = FUSION_SELF;
-require_once LOCALE.LOCALESET.'global.php';
 require_once INCLUDES."output_handling_include.php";
 include_once INCLUDES."dynamics/dynamics.inc.php";
 require_once INCLUDES."sqlhandler.inc.php";
 require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
+require_once LOCALE.LOCALESET.'global.php';
 $dynamics = new dynamics();
 $dynamics->boot();
 $system_apps = array(
