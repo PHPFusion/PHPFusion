@@ -97,14 +97,14 @@ $locale['u149a'] = "Your Current Admin Password was not specified or is invalid.
 $locale['u149b'] = "Your Current Login Password was not specified or is invalid.<br />You can't set your admin password without your correct login password.";
 // Email actiation
 $locale['u150'] = "Your registration is almost complete, you will receive an email containing your login details along with a link to verify your account.";
-$locale['u151'] = "Welcome to ".$settings['sitename'];
+$locale['u151'] = "Welcome to ".fusion_get_settings('sitename');
 $locale['u152'] = "Hello USER_NAME,\n
-Welcome to ".$settings['sitename'].". Here are your login details:\n
+Welcome to ".fusion_get_settings('sitename').". Here are your login details:\n
 Username: USER_NAME
 Password: USER_PASSWORD\n
 Please activate your account via the following link: ACTIVATION_LINK\n\n
 Regards,
-".$settings['sitename'];
+".fusion_get_settings('sitename');
 $locale['u153'] = "Activation email could not be sent.";
 $locale['u154'] = "Please <a href='".BASEDIR."contact.php'>contact</a> the Site Administrator.";
 $locale['u155'] = "Activate Account";
@@ -143,14 +143,14 @@ $locale['u195'] = "Captcha code can not be left empty.";
 // E-mail Change Confirmation
 $locale['u200'] = "A verify email has been sent to your new email address (%s).";
 $locale['u201'] = "Your email address will be changed when you click the link in the mail.";
-$locale['u202'] = "E-mail address verify - ".$settings['sitename'];
+$locale['u202'] = "E-mail address verify - ".fusion_get_settings('sitename');
 $locale['u203'] = "Hello [USER_NAME],\n
 Someone set this email address in his account on our site.\n
 If you realy want to change your email address to this one please click the following link:\n
 [EMAIL_VERIFY_LINK]\n
 Note: you have to be logged in to proceed.\n
 Regards,
-".$settings['siteusername']."
-".$settings['sitename'];
+".fusion_get_settings('siteusername')."
+".fusion_get_settings('sitename');
 
 ?>

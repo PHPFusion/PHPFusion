@@ -1,7 +1,7 @@
 <?php
 // Contact Form
 $locale['400'] = "Hubungi Saya";
-$locale['401'] = "Anda boleh menghubungi saya dalam beberapa cara. Saya boleh dihubungi oleh alamat emel melalui ".hide_email($settings['siteemail']).". Jika anda adalah ahli daftar
+$locale['401'] = "Anda boleh menghubungi saya dalam beberapa cara. Saya boleh dihubungi oleh alamat emel melalui ".hide_email(fusion_get_settings('siteemail')).". Jika anda adalah ahli daftar
 halaman ini, anda boleh menghatar <a href='messages.php?msg_send=1'>Mesej Peribadi</a> kepada saya. Selain daripada ini, anda juga boleh berhubung dengan saya dengan mengisi borang di bawah untuk menghantar
 mesej kepada saya melalui Emel server ini.";
 $locale['402'] = "Nama:";

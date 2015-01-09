@@ -274,14 +274,14 @@ $locale['forum_0650'] = 'Užfiksuotas floodinimas.';
 $locale['forum_0660'] = "Temos atsakymo pranešimas - {THREAD_SUBJECT}";
 $locale['forum_0661'] = "Sveiki {USERNAME},
 
-Forumo temoje '{THREAD_SUBJECT}', kurią Jūs sekate tinklapyje ".$settings['sitename'].", buvo parašytas atsakymas. Gali pasinaudoti žemiau esančia nuoroda ir pamatyti atsakymą:
+Forumo temoje '{THREAD_SUBJECT}', kurią Jūs sekate tinklapyje ".fusion_get_settings('sitename').", buvo parašytas atsakymas. Gali pasinaudoti žemiau esančia nuoroda ir pamatyti atsakymą:
 
 {THREAD_URL}
 
 Jeigu daugiau nebenorite sekti šios temos, galite paspausti 'Nebesekti šios temos' nuorodą, kurią rasite temos viršuje.
 
 Linkėjimai,
-".$settings['siteusername'].".";
+".fusion_get_settings('siteusername').".";
 
 // Delete Thread
 $locale['forum_0700'] = "Ištrinti temą";

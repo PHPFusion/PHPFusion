@@ -2,7 +2,7 @@
 // Contact Form
 $locale['400'] = "Susisiekti";
 $locale['401'] = "Su mumis galite susisiekti el. paštu
-".hide_email($settings['siteemail']).". Arba, jeigu esate užsiregistravęs, gali mums parašyti <a href='messages.php?msg_send=1'>Asmeninę žinutę</a>. Taip pat galite užpildyti formą, esančią šiame puslapyje, ir Jūsų žinutė mums bus atsiųsta e-paštu.";
+".hide_email(fusion_get_settings('siteemail')).". Arba, jeigu esate užsiregistravęs, gali mums parašyti <a href='messages.php?msg_send=1'>Asmeninę žinutę</a>. Taip pat galite užpildyti formą, esančią šiame puslapyje, ir Jūsų žinutė mums bus atsiųsta e-paštu.";
 $locale['402'] = "Vardas:";
 $locale['403'] = "El.pašto adresas:";
 $locale['404'] = "Pavadinimas:";

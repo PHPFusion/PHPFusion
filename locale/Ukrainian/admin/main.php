@@ -1,6 +1,6 @@
 <?php
 // Admin Links
-$locale['200'] = "Центр керування - <<".$settings['sitename'].">>";
+$locale['200'] = "Центр керування - <<".fusion_get_settings('sitename').">>";
 $locale['ac00'] = "Центр керування";
 $locale['ac01'] = "Сайт";
 $locale['ac02'] = "Користувачі";

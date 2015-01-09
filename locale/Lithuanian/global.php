@@ -267,7 +267,7 @@ $locale['global_204'] = $locale['global_200']."Forumas";
 $locale['global_210'] = "Peršokti prie turinio";
 // No themes found
 $locale['global_300'] = "dizainų nerasta";
-$locale['global_301'] = "Atsiprašome, bet negalime atvaizduoti šio puslapio. Dėl kažkokių aplinkybių nebuvo rastas joks portalo dizainas. Jeigu Jūs esate puslapio administratorius, naudodamiesi savo FTP klientu įkelkite kokį nors dizainą skirtą <em>PHP-Fusion v7</em> sistemai į <em>themes/</em> FTP katalogą. Po įkėlimo <em>Pagrindiniuose nustatymuose</em> patikrinkite ar pasirinktas dizainas buvo teisingai įkeltas į Jūsų <em>themes/</em> FTP katalogą. Nepamirškite, kad įkelto dizaino katalogas turi turėti tokį patį pavadinimą(įskaitant ir didžiąsias/mažąsias raides, kas yra svarbu Unix pagrindu paremtiems serveriams) kaip ir esate pasirinke <em>Pagrindinių nustatymų</em> puslapyje.<br /><br />Jeigu esate paprastas šio portalo lankytojas, prašome susisiekti su portalo administratoriumi el. paštu: ".hide_email($settings['siteemail'])." ir pranešti apie šią problemą.";
+$locale['global_301'] = "Atsiprašome, bet negalime atvaizduoti šio puslapio. Dėl kažkokių aplinkybių nebuvo rastas joks portalo dizainas. Jeigu Jūs esate puslapio administratorius, naudodamiesi savo FTP klientu įkelkite kokį nors dizainą skirtą <em>PHP-Fusion v7</em> sistemai į <em>themes/</em> FTP katalogą. Po įkėlimo <em>Pagrindiniuose nustatymuose</em> patikrinkite ar pasirinktas dizainas buvo teisingai įkeltas į Jūsų <em>themes/</em> FTP katalogą. Nepamirškite, kad įkelto dizaino katalogas turi turėti tokį patį pavadinimą(įskaitant ir didžiąsias/mažąsias raides, kas yra svarbu Unix pagrindu paremtiems serveriams) kaip ir esate pasirinke <em>Pagrindinių nustatymų</em> puslapyje.<br /><br />Jeigu esate paprastas šio portalo lankytojas, prašome susisiekti su portalo administratoriumi el. paštu: ".hide_email(fusion_get_settings('siteemail'))." ir pranešti apie šią problemą.";
 $locale['global_302'] = "Dizainas, pasirinktas &#39;pagrindiniuose nustatymuose&#39; neegzistuoja arba yra nebaigtas!";
 // JavaScript Not Enabled
 $locale['global_303'] = "Oj! Kur dingo <strong>JavaScript</strong>?<br />Jūsų naršyklėje yra išjungtas JavaScript palaikymas, arba jo išvis nėra. Prašome <strong>įjungti JavaScript</strong> savo naršyklėje, jeigu norite matyti šį puslapį tvarkingai,<br /> arba <strong>atnaujinkite</strong> savo naršyklę į tokią, kuri palaiko JavaScript; < href='http://firefox.com' rel='nofollow' title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>, <a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome' rel='nofollow' title='Google Chrome'>Chrome</a> arba į naujesnę <a href='http://www.microsoft.com/windows/internet-explorer/' rel='nofollow' title='Internet Explorer'>Internet Explorer</a> naršyklę, negu versija 6.";
@@ -288,30 +288,30 @@ $locale['global_411'] = "Anketa buvo atšaukta.";
 $locale['global_412'] = "Anketa buvo padaryta anonimine, greičiausiai dėl neaktyvumo.";
 // Banning due to flooding
 $locale['global_440'] = "Automatinis flodo kontrolės sistemos blokavimas";
-$locale['global_441'] = "Jūsų vartotojas ".$settings['sitename']." buvo blokuotas";
+$locale['global_441'] = "Jūsų vartotojas ".fusion_get_settings('sitename')." buvo blokuotas";
 $locale['global_442'] = "Sveiki [USER_NAME],\n
-Jūsų vartotojas tinklapyje ".$settings['sitename']." buvo pagautas pateikiantis per daug įrašų trumpame periode iš IP ".USER_IP.", ir todėl buvo blokuotas. Tai buvo padaryta siekiant apsisaugoti nuo botų, siunčiančių šlamšto pobūdžio informaciją.\n
-Prašome susisiekti su administratoriumi paštu ".$settings['siteemail']." norėdami, kad Jūsų vartotojas būtų atkurtas arba pranešti kad tai ne Jūsų kaltė dėl šio saugumo blokavimo.\n
-".$settings['siteusername'];
+Jūsų vartotojas tinklapyje ".fusion_get_settings('sitename')." buvo pagautas pateikiantis per daug įrašų trumpame periode iš IP ".USER_IP.", ir todėl buvo blokuotas. Tai buvo padaryta siekiant apsisaugoti nuo botų, siunčiančių šlamšto pobūdžio informaciją.\n
+Prašome susisiekti su administratoriumi paštu ".fusion_get_settings('siteemail')." norėdami, kad Jūsų vartotojas būtų atkurtas arba pranešti kad tai ne Jūsų kaltė dėl šio saugumo blokavimo.\n
+".fusion_get_settings('siteusername');
 // Lifting of suspension
 $locale['global_450'] = "Suspendavimą automatiškai pašalino sistema";
-$locale['global_451'] = "Suspendavimas pašalintas ".$settings['sitename'];
+$locale['global_451'] = "Suspendavimas pašalintas ".fusion_get_settings('sitename');
 $locale['global_452'] = "Sveiki USER_NAME,\n
-Jūsų anketos blokavimas tinklapyje ".$settings['siteurl']." buvo pašalintas. Jūsų prisijungimo detalės:\n
+Jūsų anketos blokavimas tinklapyje ".fusion_get_settings('siteurl')." buvo pašalintas. Jūsų prisijungimo detalės:\n
 Slapyvardis: USER_NAME
 Slaptažodis: Nerodomas dėl saugumo motyvų\n
 Jeigu pamiršote savo slaptažodį, jį galite nustatyti nauju čia: LOST_PASSWORD\n\n
 Pagarbiai,\n
-".$settings['siteusername'];
+".fusion_get_settings('siteusername');
 $locale['global_453'] = "Sveiki USER_NAME,\n
-Jūsų anketos blokavimas tinklapyje ".$settings['siteurl']." buvo pašalintas.\n\n
+Jūsų anketos blokavimas tinklapyje ".fusion_get_settings('siteurl')." buvo pašalintas.\n\n
 Pagarbiai,\n
-".$settings['siteusername'];
-$locale['global_454'] = "Vartotojas reaktyvuotas ".$settings['sitename'];
+".fusion_get_settings('siteusername');
+$locale['global_454'] = "Vartotojas reaktyvuotas ".fusion_get_settings('sitename');
 $locale['global_455'] = "Sveiki USER_NAME,\n
-Paskutinį kartą kai prisijungė, Jūsų anketa buvo reaktyvuota tinklapyje ".$settings['siteurl']." ir ji nėra daugiau pažymėta kaip neaktyvi.\n\n
+Paskutinį kartą kai prisijungė, Jūsų anketa buvo reaktyvuota tinklapyje ".fusion_get_settings('siteurl')." ir ji nėra daugiau pažymėta kaip neaktyvi.\n\n
 Pagarbiai,\n
-".$settings['siteusername'];
+".fusion_get_settings('siteusername');
 // Function parsebytesize()
 $locale['global_460'] = "Tuščias";
 $locale['global_461'] = "Baitai";

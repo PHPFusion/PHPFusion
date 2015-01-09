@@ -13,7 +13,7 @@ $locale['405'] = "Atstatyti tiek prisijungimo tiek administratoriaus slaptažod�
 $locale['406'] = "Atstatyti slaptažodžius";
 $locale['407'] = "Slaptažodžiai atstatyti ";
 $locale['408'] = "Sveiki [USER_NAME],
-jūsų administratoriaus slaptažodis puslapyje ".$settings['siteurl']." buvo atstatytas:
+jūsų administratoriaus slaptažodis puslapyje ".fusion_get_settings('siteurl')." buvo atstatytas:
 
 
 
@@ -34,7 +34,7 @@ Pagarbiai,
 
 [ADMIN]";
 $locale['409'] = "Sveiki [USER_NAME],
-Jūsų prisijungimo ir administratoriaus slaptažodžiai puslapyje ".$settings['siteurl']." buvo atstatyti:
+Jūsų prisijungimo ir administratoriaus slaptažodžiai puslapyje ".fusion_get_settings('siteurl')." buvo atstatyti:
 
 
 Prisijungimo slaptažodis: [NEW_PASS]

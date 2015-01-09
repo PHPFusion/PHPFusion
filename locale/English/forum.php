@@ -274,14 +274,14 @@ $locale['forum_0650'] = 'Flood control nice message.';
 $locale['forum_0660'] = "Thread Reply Notification - {THREAD_SUBJECT}";
 $locale['forum_0661'] = "Hello {USERNAME},
 
-A reply has been posted in the forum thread '{THREAD_SUBJECT}' which you are tracking at ".$settings['sitename'].". You can use the following link to view the reply:
+A reply has been posted in the forum thread '{THREAD_SUBJECT}' which you are tracking at ".fusion_get_settings('sitename').". You can use the following link to view the reply:
 
 {THREAD_URL}
 
 If you no longer wish to watch this thread you can click the 'Stop tracking this thread' link located at the top of the thread.
 
 Regards,
-".$settings['siteusername'].".";
+".fusion_get_settings('siteusername').".";
 
 // Delete Thread
 $locale['forum_0700'] = "Delete Thread";

@@ -2,7 +2,7 @@
 // Contact Form
 $locale['400'] = "Contact Me";
 $locale['401'] = "There are several ways you can contact me. You can email me directly at 
-".hide_email($settings['siteemail']).". If you are a Member you can send me a
+".hide_email(fusion_get_settings('siteemail')).". If you are a Member you can send me a
 <a href='messages.php?msg_send=1'>Private Message</a>. Alternatively, you can fill in
 the form on this page which sends your message to me via Email.";
 $locale['402'] = "Name:";

@@ -100,14 +100,14 @@ $locale['u149b'] = "Jūsų dabartinis prisijungimo slaptažodis buvo nenurodytas
 
 // Email actiation
 $locale['u150'] = "Jūsų registracija beveik baigta, neužilgo gausite el. laišką su prisijungimo duomenimis bei vartotojo paskyros patvirtinimo nuoroda.";
-$locale['u151'] = "Sveikiname užsiregistravus ".$settings['sitename'];
+$locale['u151'] = "Sveikiname užsiregistravus ".fusion_get_settings('sitename');
 $locale['u152'] = "Sveiki USER_NAME,\n
-Sveikiname sėkmingai užsiregistravus ".$settings['sitename']." svetainėje. Jūsų prisijungimo duomenys:\n
+Sveikiname sėkmingai užsiregistravus ".fusion_get_settings('sitename')." svetainėje. Jūsų prisijungimo duomenys:\n
 Vartotojo vardas: USER_NAME
 Slaptažodis: USER_PASSWORD\n
 Prašome aktyvuoti savo vartotojo paskyra paspausdami šią nuorodą: ACTIVATION_LINK\n\n
 Linkėjimai,
-".$settings['sitename'];
+".fusion_get_settings('sitename');
 $locale['u153'] = "Aktyvacijos laiško siuntimas negalimas.";
 $locale['u154'] = "Prašome <a href='".BASEDIR."contact.php'>susisiekti</a> su tinklapio Administracija.";
 $locale['u155'] = "Aktyvuoti vartotoją";
@@ -153,14 +153,14 @@ $locale['u195'] = "Patvirtinimo kodo laukelis negali būt paliktas tuščias.";
 // E-mail Change Confirmation
 $locale['u200'] = "Patvirtinimo laiškas sėkmingai išsiųsta nauju adresu (%s).";
 $locale['u201'] = "Jūsų el. pašto adresas bus pakeistas kai paspausite nuorodą kurią gavote naujuoju el. pašto adresu.";
-$locale['u202'] = "El. pašto adreso patvirtinimas - ".$settings['sitename'];
+$locale['u202'] = "El. pašto adreso patvirtinimas - ".fusion_get_settings('sitename');
 $locale['u203'] = "Sveiki [USER_NAME],\n
 Šį el. pašto adresą panaudojo vartotojas mūsų tinklapyje.\n
 IJei tikrai norite pasikeisti el. pašto adresą spauskite šią nuorodą:\n
 [EMAIL_VERIFY_LINK]\n
 Pastaba: Jūs turite būti prisijungęs.\n
 Linkėjimai,
-".$settings['siteusername']."
-".$settings['sitename'];
+".fusion_get_settings('siteusername')."
+".fusion_get_settings('sitename');
 
 ?>

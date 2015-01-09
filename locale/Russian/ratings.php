@@ -3,7 +3,7 @@ $locale['r100'] = "Оценки";
 $locale['r101'] = "Оценок ещё не было.";
 $locale['r102'] = "Убрать оценку";
 $locale['r103'] = "Добавить оценку";
-$locale['r104'] = "Оценка доступна только для участников.<br /><br />Пожалуйста, <a href='".BASEDIR."login.php'>авторизуйтесь</a>".($settings['enable_registration'] ? " или <a href='".BASEDIR."register.php'>зарегистрируйтесь</a>" : "")." для оценивания.";
+$locale['r104'] = "Оценка доступна только для участников.<br /><br />Пожалуйста, <a href='".BASEDIR."login.php'>авторизуйтесь</a>".(fusion_get_settings('enable_registration') ? " или <a href='".BASEDIR."register.php'>зарегистрируйтесь</a>" : "")." для оценивания.";
 $locale['r105'] = "Вы оценили это как <strong>%s</strong> on %s";
 $locale['r106'] = "Пожалуйста, выберите Вашу оценку";
 $locale['r107'] = "Выберите оценку:";

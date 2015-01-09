@@ -3,7 +3,7 @@ $locale['400'] = "Submit Link";
 // Submit Link Success
 $locale['410'] = "Thank you for submitting your Link";
 $locale['411'] = "Submit another Link";
-$locale['412'] = "Return to ".$settings['sitename'];
+$locale['412'] = "Return to ".fusion_get_settings('sitename');
 // Submit Link Form
 $locale['420'] = "Use the following form to submit a Link. Your submission will be verified by an
 Administrator. Links deemed unsuitable will not be accepted.";
@@ -22,7 +22,7 @@ $locale['460b'] = "Thank you for submitting your Blog";
 $locale['461b'] = "Submit another Blog item";
 // Submit News & Blog Form
 $locale['470'] = "Use the following form to submit News. Your submission will be reviewed by an
-Administrator. ".$settings['sitename']." reserves the right to amend or edit any submission. News
+Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. News
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['471'] = "Subject:";
 $locale['472'] = "News:";
@@ -33,7 +33,7 @@ $locale['476'] = "Category:";
 $locale['477'] = "- None -";
 $locale['478'] = "News Snippet:";
 $locale['470b'] = "Use the following form to submit a Blog. Your submission will be reviewed by an
-Administrator. ".$settings['sitename']." reserves the right to amend or edit any submission. Blog
+Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Blog
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['471b'] = "Subject:";
 $locale['472b'] = "Blog:";
@@ -50,7 +50,7 @@ $locale['510'] = "Thank you for submitting your Article";
 $locale['511'] = "Submit another Article";
 // Submit Article Form
 $locale['520'] = "Use the following form to submit an Article. Your submission will be reviewed by an
-Administrator. ".$settings['sitename']." reserves the right to amend or edit any submission. Articles
+Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Articles
 should be applicable to the content of this site. Unsuitable submissions will be deleted.";
 $locale['521'] = "Category:";
 $locale['522'] = "Subject:";
@@ -76,7 +76,7 @@ $locale['603'] = "Image must be a GIF, JPEG or PNG file.";
 $locale['604'] = "Image must be no bigger than %uw x %uh pixels.";
 // Submit Photo Form
 $locale['620'] = "Use the following form to submit a Photo. Your submission will be reviewed by an
-Administrator. ".$settings['sitename']." reserves the right to amend or edit any submission. Photos
+Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Photos
 should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
 $locale['621'] = "Title:";
 $locale['622'] = "Description:";
@@ -104,7 +104,7 @@ $locale['676'] = "Download short description cannot be left empty.";
 $locale['676a'] = "Unknown error";
 // Submit Download Form
 $locale['680'] = "Use the following form to submit a Download. Your submission will be reviewed by an
-Administrator. ".$settings['sitename']." reserves the right to amend or edit any submission. Downloads
+Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Downloads
 should be applicable to the content of this site. Submissions deemed unsuitable will be rejected.";
 $locale['681'] = "Title:";
 $locale['682'] = "Description:";

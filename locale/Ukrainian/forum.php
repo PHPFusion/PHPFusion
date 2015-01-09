@@ -270,12 +270,12 @@ $locale['forum_0650'] = 'Попередження про флуд.';
 // Forum Notification Email
 $locale['forum_0660'] = "Сповіщення про нове повідомлення у темі - {THREAD_SUBJECT}";
 $locale['forum_0661'] = "Вітаємо, {USERNAME},
-<br>З'явилось нове повідомлення у темі '{THREAD_SUBJECT}', за якою Ви стежите на сайті ".$settings['sitename'].".
+<br>З'явилось нове повідомлення у темі '{THREAD_SUBJECT}', за якою Ви стежите на сайті ".fusion_get_settings('sitename').".
 <br>Ви можете скористатись нижченаведеним посиланням для його перегляду:
 <br>{THREAD_URL}
 <br>Якщо Ви не бажаєте більше отримувати подібні сповіщення, можете натиснути посилання 'Припинити стеження за цією темою' у верхній частині теми.
 <br>З повагою,
-<br>".$settings['siteusername'].".";
+<br>".fusion_get_settings('siteusername').".";
 
 // Delete Thread
 $locale['forum_0700'] = "Видалення теми";

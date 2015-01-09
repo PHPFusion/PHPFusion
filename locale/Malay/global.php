@@ -251,7 +251,7 @@ $locale['global_210'] = "Langkau ke Kandungan";
 // No themes found
 $locale['global_300'] = "tidak ada tema dikesan";
 $locale['global_301'] = "Harap Maaf, tetapi halaman ini tidak dapat dipaparkan kerana tidak ada tema situs dikesan oleh sistem ini. Jika anda adalah Pengurus Sistem Administrator, sila gunakan klien FTP untuk memuat naik sebarang tema yang direka untuk <em>PHP-Fusion v7</em> ke folder <em>themes</em>. Selepas memuat naik, sila kunjungi <em>Pengaturan Utama</em> untuk menetapkan tema telah dibetulkan. Sila memastikan tema yang dimuat naikkan ke folder `theme` mestilah mempunyai nama sama (termasuk huruf besar atau huruf kecil, yang penting untuk Sistem Server jenis Unix) yang seperti di halaman <em>Pengaturan Utama</em>.<br/><br/>.
-Jika anda adalah ahli-ahli laman web ini, sila hubungi Pengurus Sistem Administrator di alamat emel - ".hide_email($settings['siteemail'])." and meberitahu tentang isu ini.";
+Jika anda adalah ahli-ahli laman web ini, sila hubungi Pengurus Sistem Administrator di alamat emel - ".hide_email(fusion_get_settings('siteemail'))." and meberitahu tentang isu ini.";
 $locale['global_302'] = "Tema yang dipilih tidak dapat dikesan ataupun rosak!";
 // JavaScript Not Enabled
 $locale['global_303'] = "Alamak! Mana </strong>Javascript</strong> anda?<br/> Pelayar Web anda tidak ada sebarang JavaScript. Sila pastikan <strong>Javascript</strong> di pelayar Web ini telah dibuka dan boleh digunakan untuk mengguna laman web ini tanpa ganguan<br/> atau <strong>upgrade</strong> pelayar anda ke versi yang boleh mengunakan Javascript; Susah kalau tidak ada. Kami mensyorkan -
@@ -273,30 +273,30 @@ $locale['global_411'] = "Akaun ini telah ditamatkan.";
 $locale['global_412'] = "Akaun ini telah dilindungkan, kemungkinan kerana tidak aktif.";
 // Banning due to flooding
 $locale['global_440'] = "Dihentikan secara otomatik oleh Sistem kawalan pos banjir.";
-$locale['global_441'] = "Akaun anda di ".$settings['sitename']." telah dihentikan";
+$locale['global_441'] = "Akaun anda di ".fusion_get_settings('sitename')." telah dihentikan";
 $locale['global_442'] = "Salam sejahtera kepada [USER_NAME],\n
-Akaun anda di ".$settings['sitename']." telah dikesan memposkan terlalu banyak item pada masa yang singkat di alamat IP ".USER_IP.", dan menyebabkan akaun anda dihentikan sementara waktu.
-Jika ada soalan yang selanjut yang berkenaan, sila hubungi Site Administrator di ".$settings['siteemail']." untuk mendapat jawapan atau memulihkan akaun atau membuat laporan jika anda tidak menyebabkan perhentian ini.\n
-Sekian, ".$settings['siteusername'];
+Akaun anda di ".fusion_get_settings('sitename')." telah dikesan memposkan terlalu banyak item pada masa yang singkat di alamat IP ".USER_IP.", dan menyebabkan akaun anda dihentikan sementara waktu.
+Jika ada soalan yang selanjut yang berkenaan, sila hubungi Site Administrator di ".fusion_get_settings('siteemail')." untuk mendapat jawapan atau memulihkan akaun atau membuat laporan jika anda tidak menyebabkan perhentian ini.\n
+Sekian, ".fusion_get_settings('siteusername');
 // Lifting of suspension
 $locale['global_450'] = "Akaun dipulihkan secara automatik oleh sistem.";
-$locale['global_451'] = "Akaun dipulihkan di ".$settings['sitename'];
+$locale['global_451'] = "Akaun dipulihkan di ".fusion_get_settings('sitename');
 $locale['global_452'] = "Salam sejahtera kepada USER_NAME,\n
-Akaun anda di ".$settings['siteurl']." telah dipulihkan dari senarai hitam kami. Berikut adalah butir-butir akauan anda:\n
+Akaun anda di ".fusion_get_settings('siteurl')." telah dipulihkan dari senarai hitam kami. Berikut adalah butir-butir akauan anda:\n
 Username: USER_NAME
 Kata Aluan: Lindung untuk sebab keselamatan\n
 Jika anda telah lupa kata aluan akauan, anda boleh dapatkan kata aluan yang baru melalui pautan web: LOST_PASSWORD\n\n
 Sekian,\n
-".$settings['siteusername'];
+".fusion_get_settings('siteusername');
 $locale['global_453'] = "Salam Sejahtera kepada USER_NAME,\n
-Akauan anda di ".$settings['siteurl']." telah dipulihkan dari senarai hitam kami..\n\n
+Akauan anda di ".fusion_get_settings('siteurl')." telah dipulihkan dari senarai hitam kami..\n\n
 Sekian,\n
-".$settings['siteusername'];
-$locale['global_454'] = "Akaun diaktifkan di ".$settings['sitename'];
+".fusion_get_settings('siteusername');
+$locale['global_454'] = "Akaun diaktifkan di ".fusion_get_settings('sitename');
 $locale['global_455'] = "Salam Sejahtera kepada USER_NAME,\n
-Semenjak lawatan yang terakhir baru baru ini, akaun anda telah diaktifkan di ".$settings['siteurl']." dan akaun anda sedia dan dipulihkan dari senarai akaun tidak aktif kami.\n\n
+Semenjak lawatan yang terakhir baru baru ini, akaun anda telah diaktifkan di ".fusion_get_settings('siteurl')." dan akaun anda sedia dan dipulihkan dari senarai akaun tidak aktif kami.\n\n
 Sekian,\n
-".$settings['siteusername'];
+".fusion_get_settings('siteusername');
 // Function parsebytesize()
 $locale['global_460'] = "Kosong";
 $locale['global_461'] = "Byte";

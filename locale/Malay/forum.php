@@ -247,11 +247,11 @@ $locale['forum_0650'] = 'Flood control nice message.';
 // Forum Notification Email
 $locale['forum_0660'] = "Makluman Balasan Pos Utusan Perbincangan - {THREAD_SUBJECT}";
 $locale['forum_0661'] = "Salam Sejahtera {USERNAME},
-Anda dihubungi kerana ada pos balasan di forum perbincangan '{THREAD_SUBJECT}' yang diikuti oleh anda di ".$settings['sitename'].". Anda boleh mengguna pautan berikut untuk mengunjungi balasan tersebut di:
+Anda dihubungi kerana ada pos balasan di forum perbincangan '{THREAD_SUBJECT}' yang diikuti oleh anda di ".fusion_get_settings('sitename').". Anda boleh mengguna pautan berikut untuk mengunjungi balasan tersebut di:
 {THREAD_URL}
 Jika anda tidak ingin lagi mengikuti utusan perbincangan ini, sila klik pada `".$locale['forum_0174']."` di atas halaman Utusan ini.
 Kirim Salam,
-".$settings['siteusername'].".";
+".fusion_get_settings('siteusername').".";
 // Delete Thread
 $locale['forum_0700'] = "Padam Utusan";
 $locale['forum_0701'] = "Utusan ini telah dipadamkan.";

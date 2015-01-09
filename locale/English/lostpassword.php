@@ -11,15 +11,15 @@ A new password will be created and sent to this address.";
 $locale['408'] = "Send Password";
 $locale['409'] = "New password for ";
 $locale['410'] = "Hello [USER_NAME],\n
-You have or someone has requested a new password to access your ".$settings['sitename']." account.\n
+You have or someone has requested a new password to access your ".fusion_get_settings('sitename')." account.\n
 To change your password please click the following link:\n
 [NEW_PASS_LINK]\n
 Regards,
-".$settings['siteusername'];
+".fusion_get_settings('siteusername');
 $locale['411'] = "Hello [USER_NAME],\n
-Your new password to access your ".$settings['sitename']." account is:\n
+Your new password to access your ".fusion_get_settings('sitename')." account is:\n
 [NEW_PASS]\n
 Regards,
-".$settings['siteusername'];
+".fusion_get_settings('siteusername');
 $locale['412'] = "There was an error, please try again.";
 ?>

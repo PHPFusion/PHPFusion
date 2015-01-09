@@ -250,7 +250,7 @@ $locale['global_204'] = $locale['global_200']."Forum";
 $locale['global_210'] = "Skip to content";
 // No themes found
 $locale['global_300'] = "no theme found";
-$locale['global_301'] = "We are really sorry but this page cannot be displayed. Due to some circumstances no site theme can be found. If you are a Site Administrator, please use your FTP client to upload any theme designed for <em>PHP-Fusion v7</em> to the <em>themes/</em> folder. After upload check in <em>Main Settings</em> to see if the selected theme was correctly uploaded to your <em>themes/</em> directory. Please note that the uploaded theme folder has to have the exact same name (including character case, which is important on Unix based servers) as chosen in <em>Main Settings</em> page.<br /><br />If you are regular member of this site, please contact the site\'s administrator via ".hide_email($settings['siteemail'])." e-mail and report this issue.";
+$locale['global_301'] = "We are really sorry but this page cannot be displayed. Due to some circumstances no site theme can be found. If you are a Site Administrator, please use your FTP client to upload any theme designed for <em>PHP-Fusion v7</em> to the <em>themes/</em> folder. After upload check in <em>Main Settings</em> to see if the selected theme was correctly uploaded to your <em>themes/</em> directory. Please note that the uploaded theme folder has to have the exact same name (including character case, which is important on Unix based servers) as chosen in <em>Main Settings</em> page.<br /><br />If you are regular member of this site, please contact the site\'s administrator via ".hide_email(fusion_get_settings('siteemail'))." e-mail and report this issue.";
 $locale['global_302'] = "The Theme chosen in Main Settings does not exist or is incomplete!";
 // JavaScript Not Enabled
 $locale['global_303'] = "Oh no! Where's the <strong>JavaScript</strong>?<br />Your Web browser does not have JavaScript enabled or does not support JavaScript. Please <strong>enable JavaScript</strong> on your Web browser to properly view this Web site,<br /> or <strong>upgrade</strong> to a Web browser that does support JavaScript; <a href='http://firefox.com' rel='nofollow' title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>, <a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome' rel='nofollow' title='Google Chrome'>Chrome</a> or a version of <a href='http://www.microsoft.com/windows/internet-explorer/' rel='nofollow' title='Internet Explorer'>Internet Explorer</a> newer then version 6.";
@@ -271,30 +271,30 @@ $locale['global_411'] = "This account has been cancelled.";
 $locale['global_412'] = "This account has been anonymized, probably because of inactivity.";
 // Banning due to flooding
 $locale['global_440'] = "Automatic Ban by Flood Control";
-$locale['global_441'] = "Your account on ".$settings['sitename']."has been banned";
+$locale['global_441'] = "Your account on ".fusion_get_settings('sitename')."has been banned";
 $locale['global_442'] = "Hello [USER_NAME],\n
-Your account on ".$settings['sitename']." was caught posting too many items to the system in very short time from the IP ".USER_IP.", and have therefor been banned. This is done to prevent bots from submitting spam messages in rapid succession.\n
-Please contact the site administrator at ".$settings['siteemail']." to have your account restored or report if this was not you causing this security ban.\n
-".$settings['siteusername'];
+Your account on ".fusion_get_settings('sitename')." was caught posting too many items to the system in very short time from the IP ".USER_IP.", and have therefor been banned. This is done to prevent bots from submitting spam messages in rapid succession.\n
+Please contact the site administrator at ".fusion_get_settings('siteemail')." to have your account restored or report if this was not you causing this security ban.\n
+".fusion_get_settings('siteusername');
 // Lifting of suspension
 $locale['global_450'] = "Suspension automatically lifted by system";
-$locale['global_451'] = "Suspension lifted at ".$settings['sitename'];
+$locale['global_451'] = "Suspension lifted at ".fusion_get_settings('sitename');
 $locale['global_452'] = "Hello USER_NAME,\n
-The suspension of your account at ".$settings['siteurl']." has been lifted. Here are your login details:\n
+The suspension of your account at ".fusion_get_settings('siteurl')." has been lifted. Here are your login details:\n
 Username: USER_NAME
 Password: Hidden for security reasons\n
 If you have forgot your password you can reset it via the following link: LOST_PASSWORD\n\n
 Regards,\n
-".$settings['siteusername'];
+".fusion_get_settings('siteusername');
 $locale['global_453'] = "Hello USER_NAME,\n
-The suspension of your account at ".$settings['siteurl']." has been lifted.\n\n
+The suspension of your account at ".fusion_get_settings('siteurl')." has been lifted.\n\n
 Regards,\n
-".$settings['siteusername'];
-$locale['global_454'] = "Account reactivated at ".$settings['sitename'];
+".fusion_get_settings('siteusername');
+$locale['global_454'] = "Account reactivated at ".fusion_get_settings('sitename');
 $locale['global_455'] = "Hello USER_NAME,\n
-Last time you logged in your account was reactivated at ".$settings['siteurl']." and your account is no longer marked as inactive.\n\n
+Last time you logged in your account was reactivated at ".fusion_get_settings('siteurl')." and your account is no longer marked as inactive.\n\n
 Regards,\n
-".$settings['siteusername'];
+".fusion_get_settings('siteusername');
 // Function parsebytesize()
 $locale['global_460'] = "Empty";
 $locale['global_461'] = "Bytes";

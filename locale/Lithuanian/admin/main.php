@@ -1,6 +1,6 @@
 <?php
 // Admin Links
-$locale['200'] = $settings['sitename']." valdymo pultas";
+$locale['200'] = fusion_get_settings('sitename')." valdymo pultas";
 $locale['ac00'] = "Adm. pagrindinis";
 $locale['ac01'] = "Turinio valdymas";
 $locale['ac02'] = "Vartotojų valdymas";

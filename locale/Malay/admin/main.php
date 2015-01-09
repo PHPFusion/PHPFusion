@@ -1,6 +1,6 @@
 <?php
 // Admin Links
-$locale['200'] = $settings['sitename']." Admin Panel";
+$locale['200'] = fusion_get_settings('sitename')." Admin Panel";
 $locale['ac00'] = "Dashboard";
 $locale['ac01'] = "Pengurusan Kandungan";
 $locale['ac02'] = "Pengurusan Ahli";

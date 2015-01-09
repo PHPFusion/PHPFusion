@@ -13,7 +13,7 @@ $locale['406'] = "Reset Passwords";
 $locale['407'] = "Password reset at ";
 $locale['408'] = "Hello [USER_NAME],
 
-Your admin password has been reset at ".$settings['siteurl'].":
+Your admin password has been reset at ".fusion_get_settings('siteurl').":
 
 Admin Password: [NEW_ADMIN_PASS]
 
@@ -23,7 +23,7 @@ Regards,
 [ADMIN]";
 $locale['409'] = "Hello [USER_NAME],
 
-Your login and admin passwords have been reset at ".$settings['siteurl'].":
+Your login and admin passwords have been reset at ".fusion_get_settings('siteurl').":
 
 Login Password: [NEW_PASS]
 Admin Password: [NEW_ADMIN_PASS]
