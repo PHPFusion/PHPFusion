@@ -149,7 +149,7 @@ if (isset($_POST['btn_do_restore'])) {
 					if (in_array($tbl, $_POST['list_tbl'])) {
 						$result = preg_replace("/^DROP TABLE IF EXISTS `$inf_tblpre(.*?)`/im", "DROP TABLE IF EXISTS `$restore_tblpre\\1`", $result);
 						if ($pdo_enabled == "1") {
-							$rct1 = $pdo->prepare($result, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE));
+							$rct1 = dbconnection()->prepare($result, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE));
 							$rct1->execute();
 						} else {
 							mysql_unbuffered_query($result);
@@ -161,7 +161,7 @@ if (isset($_POST['btn_do_restore'])) {
 					if (in_array($tbl, $_POST['list_tbl'])) {
 						$result = preg_replace("/^CREATE TABLE `$inf_tblpre(.*?)`/im", "CREATE TABLE `$restore_tblpre\\1`", $result);
 						if ($pdo_enabled == "1") {
-							$rct2 = $pdo->prepare($result, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE));
+							$rct2 = dbconnection()->prepare($result, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE));
 							$rct2->execute();
 						} else {
 							mysql_unbuffered_query($result);
@@ -177,7 +177,7 @@ if (isset($_POST['btn_do_restore'])) {
 					if (in_array($ins, $_POST['list_ins'])) {
 						$result = preg_replace("/INSERT INTO `$inf_tblpre(.*?)`/i", "INSERT INTO `$restore_tblpre\\1`", $result);
 						if ($pdo_enabled == "1") {
-							$rct3 = $pdo->prepare($result, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE));
+							$rct3 = dbconnection()->prepare($result, array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE));
 							$rct3->execute();
 						} else {
 							mysql_unbuffered_query($result);

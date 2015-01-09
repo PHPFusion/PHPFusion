@@ -21,11 +21,11 @@ function dbquery($query) {
 	global $mysql_queries_count, $mysql_queries_time;
 	$mysql_queries_count++;
 	$query_time = microtime(TRUE);
-	$result = @mysql_query($query);
+	$result = @mysql_query($query, dbconnection());
 	$query_time = round((microtime(TRUE)-$query_time), 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
 	if (!$result) {
-		echo mysql_error();
+		echo mysql_error(dbconnection());
 		return FALSE;
 	} else {
 		return $result;
@@ -37,11 +37,11 @@ function dbcount($field, $table, $conditions = "") {
 	$mysql_queries_count++;
 	$cond = ($conditions ? " WHERE ".$conditions : "");
 	$query_time = microtime(TRUE);
-	$result = @mysql_query("SELECT Count".$field." FROM ".$table.$cond);
+	$result = @mysql_query("SELECT Count".$field." FROM ".$table.$cond, dbconnection());
 	$query_time = substr((microtime(TRUE)-$query_time), 0, 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, "SELECT COUNT".$field." FROM ".$table.$cond);
 	if (!$result) {
-		echo mysql_error();
+		echo mysql_error(dbconnection());
 		return FALSE;
 	} else {
 		$rows = mysql_result($result, 0);
@@ -56,7 +56,7 @@ function dbresult($query, $row) {
 	$query_time = substr((microtime(TRUE)-$query_time), 0, 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
 	if (!$result) {
-		echo mysql_error();
+		echo mysql_error(dbconnection());
 		return FALSE;
 	} else {
 		return $result;
@@ -71,7 +71,7 @@ function dbrows($query) {
 function dbarray($query) {
 	$result = @mysql_fetch_assoc($query);
 	if (!$result) {
-		echo mysql_error();
+		echo mysql_error(dbconnection());
 		return FALSE;
 	} else {
 		return $result;
@@ -81,7 +81,7 @@ function dbarray($query) {
 function dbarraynum($query) {
 	$result = @mysql_fetch_row($query);
 	if (!$result) {
-		echo mysql_error();
+		echo mysql_error(dbconnection());
 		return FALSE;
 	} else {
 		return $result;
@@ -89,13 +89,12 @@ function dbarraynum($query) {
 }
 
 function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE) {
-	global $db_connect;
-	$db_connect = @mysql_connect($db_host, $db_user, $db_pass);
-	mysql_set_charset('utf8',$db_connect);
+	$db_connect = dbconnection(@mysql_connect($db_host, $db_user, $db_pass));
+	mysql_set_charset('utf8', $db_connect);
 	//dbquery("SET NAMES 'utf8'");
 	//dbquery("SET CHARACTER SET utf8");
 	//dbquery("SET COLLATION_CONNECTION = 'utf8_unicode_ci'");
-	$db_select = @mysql_select_db($db_name);
+	$db_select = @mysql_select_db($db_name, $db_connect);
 	if ($halt_on_error) {
 		if (!$db_connect) {
 			die("<strong>Unable to establish connection to MySQL</strong><br />".mysql_errno()." : ".mysql_error());
@@ -116,8 +115,19 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
  * @return int 
  */
 function dblastid() {
-	global $db_connect;
-	return (int) mysql_insert_id($db_connect);
+	return (int) mysql_insert_id(dbconnection());
 }
 
-?>
+/**
+ * Get and set the database connection resource
+ * 
+ * @sttaic resource $resource
+ * @return boolean
+ */
+function dbconnection($resource = NULL) {
+	static $_resource = NULL;
+	if (!empty($resource) and is_resource($resource)) {
+		$_resource = $resource;
+	}
+	return $_resource;
+}

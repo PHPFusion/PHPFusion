@@ -18,25 +18,21 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-// PDO variable
-$pdo = NULL;
-
 // MySQL database functions
 
 /**
  * Send a database query
  * 
- * @global PDO $pdo
  * @global int $mysql_queries_count
  * @global array $mysql_queries_time
  * @param string $query SQL 
  * @return \PDOStatement or FALSE on error
  */
 function dbquery($query) {
-	global $pdo, $mysql_queries_count, $mysql_queries_time;
+	global $mysql_queries_count, $mysql_queries_time;
 	$start_time = microtime(TRUE);
 	try {
-		$result = $pdo->prepare($query);
+		$result = dbconnection()->prepare($query);
 		$result->execute();
 		$query_time = round((microtime(TRUE)-$start_time), 7);
 		$mysql_queries_time[++$mysql_queries_count] = array($query_time, $query);
@@ -48,20 +44,9 @@ function dbquery($query) {
 	}
 }
 
-function dbquery_exec($query) {
-	global $pdo, $mysql_queries_count, $mysql_queries_time;
-	$mysql_queries_count++;
-	$query_time = microtime(TRUE);
-	$result = $pdo->exec($query);
-	$query_time = substr((microtime(TRUE)-$query_time), 0, 7);
-	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
-	return $result;
-}
-
 /**
  * Count the number of rows in a table filtered by conditions
  * 
- * @global \PDO $pdo
  * @global int $mysql_queries_count
  * @global array $mysql_queries_time
  * @param string $field Parenthesized field name
@@ -70,13 +55,13 @@ function dbquery_exec($query) {
  * @return boolean
  */
 function dbcount($field, $table, $conditions = "") {
-	global $pdo, $mysql_queries_count, $mysql_queries_time;
+	global $mysql_queries_count, $mysql_queries_time;
 	
 	$cond = ($conditions ? " WHERE ".$conditions : "");
 	$start_time = microtime(TRUE);
 	$sql = "SELECT COUNT".$field." FROM ".$table.$cond;
 	try {
-		$statement = $pdo->prepare($sql);
+		$statement = dbconnection()->prepare($sql);
 		$statement->execute();
 		$query_time = round((microtime(TRUE)-$start_time), 7);
 		$mysql_queries_time[++$mysql_queries_count] = array($query_time, $sql);
@@ -146,11 +131,10 @@ function dbarraynum($statement) {
  * @param boolean $halt_on_error If it is TRUE, the script will halt in case of error
  */
 function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE) {
-	global $pdo;
 	$db_connect = TRUE;
 	$db_select = TRUE;
 	try {
-		$pdo = new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass);
+		$pdo = dbconnection(new PDO("mysql:host=".$db_host.";dbname=".$db_name.";charset=utf8", $db_user, $db_pass));
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
 	} catch (PDOException $error) {
@@ -172,12 +156,23 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
 /**
  * Get the last inserted auto increment id
  * 
- * @global \PDO $pdo
  * @return int 
  */
 function dblastid() {
-	global $pdo;
-	return (int) $pdo->lastInsertId();
+	return (int) dbconnection()->lastInsertId();
 }
 
-?>
+/**
+ * Get and set the \PDO instance
+ * 
+ * @static \PDO|NULL $_pdo
+ * @param \PDO $pdo
+ * @return \PDO|NULL
+ */
+function dbconnection(\PDO $pdo = NULL) {
+	static $_pdo = NULL;
+	if (!empty($pdo) and $pdo instanceof \PDO) {
+		$_pdo = $pdo;
+	}
+	return $_pdo;
+}

@@ -1,5 +1,6 @@
 <?php
 /* Updated 2014/July - https://github.com/sciactive/pnotify */
+require_once __DIR__.'/../output_handling_include.php';
 
 if (!defined('NOTIFICATION_UI')) {
     define('NOTIFICATION_UI', TRUE);

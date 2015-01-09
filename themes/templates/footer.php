@@ -122,12 +122,15 @@ echo $output;
 if (ob_get_length() !== FALSE) {
 	ob_end_flush();
 }
+
+/* //We don't need to close the connection manually at the very end of the script
+ * //The PHP will close the opened resourses itself
 if ($pdo_enabled == "1") {
 	$pdo = NULL;
 } else {
 	mysql_close($db_connect);
 }
-
+*/
 // Shows allocated memory and the actual memory used for generatig a page
 //echo "Memory: alloc. ".(memory_get_peak_usage(true)/1024/1024)." MB / used ".number_format((memory_get_peak_usage(false)/1024/1024), 2)." MB";
 //var_dump($_SESSION);
