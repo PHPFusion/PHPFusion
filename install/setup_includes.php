@@ -16,6 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+require_once __DIR__.'/../includes/autoloader.php';
+require_once __DIR__.'/../includes/core_functions_include.php';
+require_once __DIR__.'/../includes/core_constants_include.php';
+
 // Start of template
 function opensetup() {
 	global $locale, $fusion_page_head_tags;
@@ -100,17 +104,6 @@ function renderButton($int = FALSE) {
 	echo "</div>\n";
 }
 
-// Redirect Function
-function redirect($location, $script = FALSE) {
-	if (!$script) {
-		header("Location: ".str_replace("&amp;", "&", $location));
-		exit;
-	} else {
-		echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
-		exit;
-	}
-}
-
 // Generate a random string
 function createRandomPrefix($length = 5) {
 	$chars = array("abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789");
@@ -121,69 +114,6 @@ function createRandomPrefix($length = 5) {
 		$prefix .= substr($chars[$type], mt_rand(0, $count[$type]), 1);
 	}
 	return $prefix;
-}
-
-/**
- * Current microtime as float to calculate script start/end time
- * 
- * @deprecated since version 9.00, use microtime(TRUE) instead
- * @return float
- */
-function get_microtime() {
-	return microtime(TRUE);
-}
-
-// Strip Input Function, prevents HTML in unwanted places
-function stripinput($text) {
-	if (ini_get('magic_quotes_gpc')) $text = stripslashes($text);
-	$search = array("\"", "'", "\\", '\"', "\'", "<", ">", "&nbsp;");
-	$replace = array("&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
-	$text = str_replace($search, $replace, $text);
-	return $text;
-}
-
-// Validate numeric input
-function isnum($value) {
-	if (!is_array($value)) {
-		return (preg_match("/^[0-9]+$/", $value));
-	} else {
-		return FALSE;
-	}
-}
-
-// Create a list of files or folders and store them in an array
-function makefilelist($folder, $filter, $sort = TRUE, $type = "files") {
-	$res = array();
-	$filter = explode("|", $filter);
-	$temp = opendir($folder);
-	while ($file = readdir($temp)) {
-		if ($type == "files" && !in_array($file, $filter)) {
-			if (!is_dir($folder.$file)) $res[] = $file;
-		} elseif ($type == "folders" && !in_array($file, $filter)) {
-			if (is_dir($folder.$file)) $res[] = $file;
-		}
-	}
-	closedir($temp);
-	if ($sort) sort($res);
-	return $res;
-}
-
-// Create a selection list from an array created by makefilelist()
-function makefileopts($files, $selected = "") {
-	$res = "";
-	for ($i = 0; $i < count($files); $i++) {
-		$sel = ($selected == $files[$i] ? " selected='selected'" : "");
-		$res .= "<option value='".$files[$i]."'$sel>".$files[$i]."</option>\n";
-	}
-	return $res;
-}
-
-// Clean URL Function, prevents entities in server globals
-function cleanurl($url) {
-	$bad_entities = array("&", "\"", "'", '\"', "\'", "<", ">", "(", ")", "*");
-	$safe_entities = array("&amp;", "", "", "", "", "", "", "", "", "");
-	$url = str_replace($bad_entities, $safe_entities, $url);
-	return $url;
 }
 
 // Get Current URL
@@ -197,11 +127,6 @@ function getCurrentURL() {
 function strleft($s1, $s2) {
 	return substr($s1, 0, strpos($s1, $s2));
 }
-
-
-//if (isset($db_connect) && $db_connect != false) { mysql_close($db_connect); }
-// needed in global locale.. @todo: remove function use in LANGUAGE files..
-function hide_email() { }
 
 // Generate a standard .htaccess file
 function write_htaccess() {

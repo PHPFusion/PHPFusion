@@ -19,12 +19,6 @@ require_once 'setup_includes.php';
 
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 define("IN_FUSION", TRUE);
-define("BASEDIR", '../');
-define("INCLUDES", BASEDIR."includes/");
-define("LOCALE", BASEDIR."locale/");
-define("IMAGES", BASEDIR."images/");
-define("THEMES", BASEDIR."themes/");
-define("USER_IP", $_SERVER['REMOTE_ADDR']);
 if (!defined('DYNAMICS')) { define('DYNAMICS', INCLUDES."dynamics/"); }
 
 //$siteurl = rtrim(dirname(getCurrentURL()), '/').'/';

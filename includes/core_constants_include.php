@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 
 // Path definitions
-define("BASEDIR", dirname(fusion_get_relative_path_to_config()).'/');
+define("BASEDIR", dirname(fusion_get_relative_path_to_config() ? : '../fake').'/');
 define("ADMIN", BASEDIR."administration/");
 define("CLASSES", BASEDIR."includes/classes/");
 define("DOWNLOADS", BASEDIR."downloads/");
@@ -43,5 +43,3 @@ define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
 define("USER_IP", $_SERVER['REMOTE_ADDR']);
 // Define script start time
 define("START_TIME", microtime(TRUE));
-
-require_once __DIR__.'/multisite_include.php';
