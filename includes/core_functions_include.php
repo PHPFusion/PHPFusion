@@ -1137,9 +1137,9 @@ function print_p($array, $modal = FALSE) {
 /**
  * Fetch the settings from the database
  * 
- * @todo Exception instead of die()
- * 
- * @return string[] Associative array of settings
+ * @param string $key The key of one setting
+ * @return string[]|string Associative array of settings or one setting by key
+ * if $key was given
  */
 function fusion_get_settings($key = NULL) {
 	// It is initialized only once because of 'static'

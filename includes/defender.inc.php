@@ -213,10 +213,10 @@ class defender {
 	}
 
 	public function verify_tokens($form, $post_time = 10, $preserve_token = FALSE) {
-		global $locale, $settings, $userdata;
+		global $locale, $userdata;
 		$error = array();
 		$user_id = isset($userdata['user_id']) && !isset($_POST['login']) ? $userdata['user_id'] : 0;
-		$algo = $settings['password_algorithm'];
+		$algo = fusion_get_settings('password_algorithm');
 		$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
 		if ($this->debug) {
 			print_p($_POST);
@@ -669,7 +669,7 @@ function sanitize_array($array) {
 }
 
 function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
-	global $settings, $userdata, $defender;
+	global $userdata, $defender;
 	$being_posted = 0;
 	if (isset($_POST['token_rings']) && count($_POST['token_rings'])) {
 		foreach ($_POST['token_rings'] as $rings => $form_name) {
@@ -684,7 +684,7 @@ function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
 	} else {
 		$user_id = (isset($userdata['user_id']) ? $userdata['user_id'] : 0);
 		$token_time = time();
-		$algo = $settings['password_algorithm'];
+		$algo = fusion_get_settings('password_algorithm');
 		$key = $user_id.$token_time.$form.SECRET_KEY;
 		$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
 		// generate a new token and store it

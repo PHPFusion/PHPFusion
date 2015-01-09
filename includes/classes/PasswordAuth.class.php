@@ -6,6 +6,7 @@
 +--------------------------------------------------------+
 | Filename: PasswordAuth.class.php
 | Author: Hans Kristian Flaatten (Starefossen)
+| Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -27,6 +28,10 @@ class PasswordAuth {
 	private $_newAlgo;
 	private $_newSalt;
 	private $_newPasswordHash;
+	
+	public function __construct($passwordAlgorithm = 'sha256') {
+		$this->_newAlgo = $passwordAlgorithm;
+	}
 
 	// Checks if Current Password is valid
 	public function isValidCurrentPassword($createNewHash = FALSE) {
@@ -79,8 +84,6 @@ class PasswordAuth {
 
 	// Generate new password hash and password salt
 	protected function _setNewHash($password) {
-		global $settings;
-		$this->_newAlgo = $settings['password_algorithm'];
 		$this->_newSalt = PasswordAuth::getNewRandomSalt();
 		$this->_newPasswordHash = $this->_hashPassword($password, $this->_newAlgo, $this->_newSalt);
 	}

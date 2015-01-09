@@ -48,7 +48,7 @@ if (isset($_POST['uninstall'])) {
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
 		return "('".$locale['setup_3303']."', 'faq.php', '0', '1', '0', '4', '".$language."')";
-	}, explode('.', $settings['enabled_languages'])));
+	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
 	}

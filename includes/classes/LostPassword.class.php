@@ -117,11 +117,11 @@ class LostPassword extends PasswordAuth {
 	}
 
 	private function _sendNewPassword() {
-		global $settings, $locale;
+		global $locale;
 		$mailbody = str_replace("[NEW_PASS]", $this->_newPassword, $locale['411']);
 		$mailbody = str_replace("[USER_NAME]", $this->_userName, $mailbody);
-		sendemail($this->_userName, $this->_userEMail, $settings['siteusername'], $settings['siteemail'], $locale['409'].$settings['sitename'], $mailbody);
-		$result = dbquery("UPDATE ".DB_USERS." SET user_algo='".$settings['password_algorithm']."', user_password='".$this->getNewHash()."', user_salt='".$this->getNewSalt()."' WHERE user_email='".$this->_userEMail."'");
+		sendemail($this->_userName, $this->_userEMail, fusion_get_settings('siteusername'), fusion_get_Settings('siteemail'), $locale['409'].fusion_get_settings('sitename'), $mailbody);
+		$result = dbquery("UPDATE ".DB_USERS." SET user_algo='".fusion_get_settings('password_algorithm')."', user_password='".$this->getNewHash()."', user_salt='".$this->getNewSalt()."' WHERE user_email='".$this->_userEMail."'");
 		$this->_html .= "<div style='text-align:center'><br />\n".$locale['402']."<br /><br />\n<a href='index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
 	}
 }

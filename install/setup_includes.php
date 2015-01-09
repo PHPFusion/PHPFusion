@@ -129,9 +129,7 @@ function strleft($s1, $s2) {
 }
 
 // Generate a standard .htaccess file
-function write_htaccess() {
-	global $settings;
-
+function write_htaccess($site_path) {
 	if (!file_exists(BASEDIR.'.htaccess')) {
 		if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
 			@rename(BASEDIR."_htaccess", ".htaccess");
@@ -160,11 +158,11 @@ function write_htaccess() {
 	$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n";
 	$htc .= "#Disable directory listing\r\n";
 	$htc .= "Options -Indexes\r\n";
-	$htc .= "ErrorDocument 400 ".$settings['site_path']."error.php?code=400\r\n";
-	$htc .= "ErrorDocument 401 ".$settings['site_path']."error.php?code=401\r\n";
-	$htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403\r\n";
-	$htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404\r\n";
-	$htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500\r\n";
+	$htc .= "ErrorDocument 400 ".$site_path."error.php?code=400\r\n";
+	$htc .= "ErrorDocument 401 ".$site_path."error.php?code=401\r\n";
+	$htc .= "ErrorDocument 403 ".$site_path."error.php?code=403\r\n";
+	$htc .= "ErrorDocument 404 ".$site_path."error.php?code=404\r\n";
+	$htc .= "ErrorDocument 500 ".$site_path."error.php?code=500\r\n";
 	file_put_contents(BASEDIR.".htaccess", $htc);
 }
 

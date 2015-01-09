@@ -73,7 +73,7 @@ if (isset($_POST['uninstall'])) {
 		include LOCALE.$language."/setup.php";
 		return "('".$locale['setup_3308']."', 'photogallery.php', '0', '1', '0', '9', '".$language."'),
 				('".$locale['setup_3313']."', 'submit.php?stype=p', '101', '1', '0', '15', '".$language."')";
-	}, explode('.', $settings['enabled_languages'])));
+	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
 	}

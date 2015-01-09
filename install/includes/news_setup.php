@@ -73,7 +73,7 @@ if (isset($_POST['uninstall'])) {
 		include LOCALE.$language."/setup.php";
 		return "('".$locale['setup_3306']."', 'news_cats.php', '0', '2', '0', '7', '".$language."'),
 				('".$locale['setup_3311']."', 'submit.php?stype=n', '101', '1', '0', '13', '".$language."')";
-	}, explode('.', $settings['enabled_languages'])));
+	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
 	}
@@ -97,7 +97,7 @@ if (isset($_POST['uninstall'])) {
 				('".$locale['setup_3513']."', 'software.gif', '".$language."'),
 				('".$locale['setup_3514']."', 'themes.gif', '".$language."'),
 				('".$locale['setup_3515']."', 'windows.gif', '".$language."')";
-	}, explode('.', $settings['enabled_languages'])));
+	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($news_cats_sql)) {
 		$fail = TRUE;
 	}

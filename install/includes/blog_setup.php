@@ -94,7 +94,7 @@ if (isset($_POST['uninstall'])) {
 			('".$locale['setup_3513']."', 'software.gif', '".$language."'),
 			('".$locale['setup_3514']."', 'themes.gif', '".$language."'),
 			('".$locale['setup_3515']."', 'windows.gif', '".$language."')";
-	}, explode('.', $settings['enabled_languages'])));
+	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
 	}
@@ -108,7 +108,7 @@ if (isset($_POST['uninstall'])) {
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
 		return "('".$locale['setup_3055']."', 'blog.php', '0', '2', '0', '3', '".$language."')";
-	}, explode('.', $settings['enabled_languages'])));
+	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
 	}

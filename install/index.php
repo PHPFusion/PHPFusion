@@ -37,7 +37,6 @@ if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_di
 }
 
 define('SETUP', true);
-$settings = array('description'=>'', 'keywords'=>'');
 include "../includes/defender.inc.php";
 include "../includes/output_handling_include.php";
 $defender = new defender();
@@ -71,12 +70,6 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
 
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
-$settings['description'] = $locale['setup_0000'];
-$settings['keywords'] = "";
-$settings['siteemail'] = '';
-$settings['sitename'] = '';
-$settings['siteusername'] = $locale['setup_0002'];
-$settings['siteurl'] = FUSION_SELF;
 require_once INCLUDES."output_handling_include.php";
 include_once INCLUDES."dynamics/dynamics.inc.php";
 require_once INCLUDES."sqlhandler.inc.php";
@@ -103,10 +96,19 @@ opensetup();
 switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 	// Introduction
 	case 1: default:
-		$settings = array();
 		// create htaccess file.
-		if (isset($_POST['htaccess']) && isset($db_prefix) && !empty($settings)) {
-			write_htaccess();
+		
+		if (isset($_POST['htaccess'])) {
+			dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+			/*
+			 * We need to include it to create DB_SETTINGS 
+			 * for fusion_get_settings()
+			 * 
+			 * TODO: Find better way
+			 */
+			require_once INCLUDES.'multisite_include.php';
+			$site_path = fusion_get_settings('site_path');
+			write_htaccess($site_path);
 			redirect(FUSION_SELF."?localeset=".$_GET['localeset']);
 		}
 
@@ -125,13 +127,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				@unlink(BASEDIR.'config_temp.php');
 				@unlink(BASEDIR.'config.php');
 				redirect(BASEDIR."install/index.php", 1); // temp fix.
-			} else {
-				$result = dbquery("SELECT * FROM ".$db_prefix."settings");
-				if (dbrows($result)) {
-					while ($data = dbarray($result)) {
-						$settings[$data['settings_name']] = $data['settings_value'];
-					}
-				}
 			}
 			echo "<h4 class='strong'>".$locale['setup_1002']."</h4>\n";
 			echo "<span class='display-block m-t-20 m-b-10'>".$locale['setup_1003']."</span>\n";
@@ -394,6 +389,14 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 							$config .= "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\");\n";
 							$config .= "?>";
 							if (fusion_file_put_contents(BASEDIR.'config_temp.php', $config)) {
+								/*
+								 * We need to include them to create DB_SETTINGS 
+								 * for fusion_get_settings() in write_htaccess()
+								 * 
+								 * TODO: Find better way
+								 */
+								require BASEDIR.'config_temp.php';
+								require_once INCLUDES.'multisite_include.php';
 								$fail = FALSE;
 								if (!$result) {
 									$fail = TRUE;
@@ -406,13 +409,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 									echo $locale['setup_1302']."<br /><br />\n";
 									$success = TRUE;
 									$db_error = 6;
-									// get settings for htaccess.
-									$result = dbquery("SELECT * FROM ".$db_prefix."settings");
-									if (dbrows($result)) {
-										while ($data = dbarray($result)) {
-											$settings[$data['settings_name']] = $data['settings_value'];
-										}
-									}
 								} else {
 									echo "<br />\n<i class='entypo check'></i> ".$locale['setup_1300']."<br /><br />\n<i class='entypo check'></i> ";
 									echo $locale['setup_1301']."<br /><br />\n<i class='entypo icancel'></i> ";
@@ -428,7 +424,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 								$db_error = 5;
 							}
 
-							write_htaccess();
+							write_htaccess(fusion_get_settings('site_path'));
 
 						} else {
 							echo "<div class='alert alert-danger'>\n";
@@ -493,16 +489,15 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		if (!isset($_POST['done'])) {
 			// Load Config and SQL handler.
 			if (file_exists(BASEDIR.'config_temp.php')) {
-				$connection_info = dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
-				$db_connect = $connection_info['connection_success'];
-				$db_select = $connection_info['dbselection_success'];
-				$settings = array();
-				$result = dbquery("SELECT * FROM ".$db_prefix."settings");
-				if (dbrows($result)>0) {
-					while ($data = dbarray($result)) {
-						$settings[$data['settings_name']] = $data['settings_value'];
-					}
-				} else {
+				/*
+				 * We need to include it to create DB_SETTINGS 
+				 * for fusion_get_settings()
+				 * 
+				 * TODO: Find better way
+				 */
+				require_once INCLUDES.'multisite_include.php';
+				dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+				if (!fusion_get_settings()) {
 					redirect(FUSION_SELF);
 				}
 			} else {
@@ -611,17 +606,14 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		}
 		// to scan whether User Acccount exists.
 		if (file_exists(BASEDIR.'config.php') || file_exists(BASEDIR.'config_temp.php')) {
-			$connection_info = dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
-			$db_connect = $connection_info['connection_success'];
-			$db_select = $connection_info['dbselection_success'];
-			$settings = array();
-			$result = dbquery("SELECT * FROM ".$db_prefix."settings");
-			if (dbrows($result)) {
-				while ($data = dbarray($result)) {
-					$settings[$data['settings_name']] = $data['settings_value'];
-				}
-			}
-
+			/*
+			 * We need to include it to create DB_SETTINGS 
+			 * for fusion_get_settings()
+			 * 
+			 * TODO: Find better way
+			 */
+			require_once INCLUDES.'multisite_include.php';
+			dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
 			$iOWNER = dbcount("('user_id')", $db_prefix."users", "user_id='1'");
 
 		} else {
@@ -653,31 +645,21 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		echo "<td class='tbl1' style='text-align:right'><input type='password' name='admin_password2' maxlength='64' class='form-control input-sm textbox".$field_class[4]."' style='width:200px' /></td></tr>\n";
 		echo "</table>\n";
 		echo "<input type='hidden' name='localeset' value='".stripinput($_POST['localeset'])."' />\n";
-		echo "<input type='hidden' name='enabled_languages' value='".$settings['enabled_languages']."' />\n";
+		echo "<input type='hidden' name='enabled_languages' value='".fusion_get_settings('enabled_languages')."' />\n";
 		echo "<input type='hidden' name='step' value='7' />\n";
 		renderButton();
 	break;
 	// Step 7 - Final Settings
 	case 7:
-		if (file_exists(BASEDIR.'config_temp.php')) {
-			$connection_info = dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
-			$db_connect = $connection_info['connection_success'];
-			$db_select = $connection_info['dbselection_success'];
-			$settings = array();
-			$result = dbquery("SELECT * FROM ".$db_prefix."settings");
-			if (dbrows($result)) {
-				while ($data = dbarray($result)) {
-					$settings[$data['settings_name']] = $data['settings_value'];
-				}
-			}
-		} else {
+		if (!file_exists(BASEDIR.'config_temp.php')) {
 			redirect(FUSION_SELF);
 		}
+		dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
 		$error = "";
 		$error_pass = "0";
 		$error_name = "0";
 		$error_mail = "0";
-		$settings['password_algorithm'] = "sha256";
+		$password_algorithm = "sha256";
 		$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
 		if ($username == "") {
 			$error .= $locale['setup_5011']."<br /><br />\n";
@@ -688,7 +670,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		}
 		$userPassword = "";
 		$adminPassword = "";
-		$userPass = new PasswordAuth();
+		$userPass = new PasswordAuth($password_algorithm);
 		$userPass->inputNewPassword = (isset($_POST['password1']) ? stripinput(trim($_POST['password1'])) : "");
 		$userPass->inputNewPassword2 = (isset($_POST['password2']) ? stripinput(trim($_POST['password2'])) : "");
 		$returnValue = $userPass->isValidNewPassword();
@@ -701,7 +683,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		} elseif ($returnValue == 3) {
 			$error .= $locale['setup_5013']."<br /><br />\n";
 		}
-		$adminPass = new PasswordAuth();
+		$adminPass = new PasswordAuth($password_algorithm);
 		$adminPass->inputNewPassword = (isset($_POST['admin_password1']) ? stripinput(trim($_POST['admin_password1'])) : "");
 		$adminPass->inputNewPassword2 = (isset($_POST['admin_password2']) ? stripinput(trim($_POST['admin_password2'])) : "");
 		$returnValue = $adminPass->isValidNewPassword();

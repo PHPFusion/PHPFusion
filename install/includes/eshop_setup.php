@@ -144,7 +144,7 @@ if (isset($_POST['uninstall'])) {
 				ratings char(1) NOT NULL default '',
 				linebreaks char(1) NOT NULL default '',
 				keywords varchar(255) NOT NULL default '',
-				product_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['enabled_languages']."',
+				product_languages VARCHAR(200) NOT NULL DEFAULT '".fusion_get_settings('enabled_languages')."',
 				dateadded int(10) unsigned NOT NULL default '1',
 				PRIMARY KEY  (id),
 				KEY cid (cid)
@@ -162,7 +162,7 @@ if (isset($_POST['uninstall'])) {
 				parentid mediumint(8) NOT NULL default '0',
 				status char(1) NOT NULL default '0',
 				cat_order mediumint(8) unsigned NOT NULL,
-				cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['enabled_languages']."',
+				cat_languages VARCHAR(200) NOT NULL DEFAULT '".fusion_get_settings('enabled_languages')."',
 				PRIMARY KEY  (cid)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		if (!$result) {
@@ -382,7 +382,7 @@ if (isset($_POST['uninstall'])) {
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
 		return "('".$locale['setup_3053']."', 'eshop.php', '0', '2', '0', '3', '".$language."')";
-	}, explode('.', $settings['enabled_languages'])));
+	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
 	}

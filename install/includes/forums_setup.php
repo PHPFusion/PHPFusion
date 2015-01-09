@@ -213,7 +213,7 @@ if (isset($_POST['uninstall'])) {
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
 		return "('".$locale['setup_3304']."', 'forum/index.php', '0', '2', '0', '5', '".$language."')";
-	}, explode('.', $settings['enabled_languages'])));
+	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
 	}
@@ -229,7 +229,7 @@ if (isset($_POST['uninstall'])) {
 				(NULL, '".$locale['setup_3606']."', 'rank3.png', 200, '0', 101, '".$language."'),
 				(NULL, '".$locale['setup_3607']."', 'rank4.png', 500, '0', 101, '".$language."'),
 				(NULL, '".$locale['setup_3608']."', 'rank5.png', 1000, '0', 101, '".$language."')";
-	}, explode('.', $settings['enabled_languages'])));
+	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($forum_ranks_sql)) {
 		$fail = TRUE;
 	}
