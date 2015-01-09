@@ -37,11 +37,9 @@ $locale['setup_1013'] = 'Изменить данные главного адми
 $locale['setup_1014'] = 'Пересоздать файл &laquo;.htaccess&raquo;';
 $locale['setup_1015'] = 'Удалить текущий файл и &laquo;.htaccess&raquo; заменить его стандартной версией';
 $locale['setup_1016'] = 'Собрать файл';
-
-$locale['setup_1017'] = 'Russia: xxxxx - Cancel and Exit this Installer';
-$locale['setup_1018'] = 'You can exit this installer right now by clicking the button below. This will rename yoru config_temp.php file back to config.php.';
-$locale['setup_1019'] = 'Exit Installer';
-
+$locale['setup_1017'] = 'Отмена и выход из установки';
+$locale['setup_1018'] = 'Вы можете выйти из установки прямо сейчас, нажав кнопку ниже. Этодействие вызовет переименование вашего файла &laquo;config_temp.php&raquo; обратно в &laquo;config.php&raquo;.';
+$locale['setup_1019'] = 'Выйти из установки';
 
 // Step 2
 $locale['setup_1100'] = "Пройдено";

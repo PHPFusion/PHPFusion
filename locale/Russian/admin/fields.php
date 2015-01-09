@@ -109,6 +109,11 @@ $locale['fields_0507'] = "Цвет";
 $locale['fields_0508'] = "Файл";
 $locale['fields_0509'] = "Скрытое";
 $locale['fields_0510'] = "Адрес";
+$locale['fields_0511'] = "Метки";
+$locale['fields_0512'] = "Расположение";
+$locale['fields_0513'] = "Номер";
+$locale['fields_0514'] = "Электропочта";
+$locale['fields_0515'] = "Ссылка";
 
 $locale['fields_0600'] = "В этой категории есть %s влженных категорий";
 $locale['fields_0601'] = "В этой категории есть %s полей";

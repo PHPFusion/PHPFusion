@@ -1,6 +1,6 @@
 <?php
 $filename_locale['articles.php'] = "Статьи";
-$filename_locale['blog.php'] = "Blog";
+$filename_locale['blog.php'] = "Блог";
 $filename_locale['custompages.php'] = "Страницы";
 $filename_locale['downloads.php'] = "Загрузки";
 $filename_locale['faqs.php'] = "ЧаВо";
