@@ -47,9 +47,7 @@ echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='sc
 echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
 // Admin Panel Theme CSS
 echo "<link href='".THEMES."admin_templates/".$settings['admin_theme']."/acp_styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
-if (file_exists(IMAGES."favicon.ico")) {
-	echo "<link href='".IMAGES."favicon.ico' rel='shortcut icon' type='image/x-icon' />\n";
-}
+echo render_favicons(IMAGES);
 if (function_exists("get_head_tags")) {
 	echo get_head_tags();
 }
