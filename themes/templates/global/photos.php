@@ -139,6 +139,7 @@ if (!function_exists('render_photo')) {
 		global $locale, $settings, $userdata;
 
 		opentable($locale['450']);
+		echo render_breadcrumbs();
 		echo "<!--pre_photo-->";
 
 		echo "<div class='photo_cover'>\n";
