@@ -32,7 +32,7 @@ if (db_exists(DB_NEWS) && db_exists(DB_NEWS_CATS)) {
 
 	opentable($locale['home_0000']);
 
-	$result = dbquery("SELECT ne.news_id, ne.news_subject, ne.news_news, ne.news_datestamp, us.user_id, us.user_name, us.user_status, nc.news_cat_id, nc.news_cat_name FROM ".DB_NEWS." as ne LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ne.news_cat INNER JOIN ".DB_USERS." as us ON ne.news_name = us.user_id WHERE (".time()." > ne.news_start OR ne.news_start = 0) AND (".time()." < ne.news_end OR ne.news_end = 0) AND ne.news_visibility <= ".$acclevel." ORDER BY ne.news_datestamp DESC LIMIT 3");
+	$result = dbquery("SELECT ne.news_id, ne.news_subject, ne.news_news, ne.news_datestamp, us.user_id, us.user_name, us.user_status, nc.news_cat_id, nc.news_cat_name FROM ".DB_NEWS." as ne LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ne.news_cat INNER JOIN ".DB_USERS." as us ON ne.news_name = us.user_id WHERE (".time()." > ne.news_start OR ne.news_start = 0) AND (".time()." < ne.news_end OR ne.news_end = 0) AND ne.news_visibility <= ".$acclevel." AND news_language='".LANGUAGE."' ORDER BY ne.news_datestamp DESC LIMIT 3");
 
 	$items_count = dbrows($result);
 
@@ -66,7 +66,7 @@ if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
 
 	opentable($locale['home_0001']);
 
-	$result = dbquery("SELECT ar.article_id, ar.article_subject, ar.article_snippet, ar.article_datestamp, ac.article_cat_id, ac.article_cat_name, us.user_id, us.user_name, us.user_status FROM ".DB_ARTICLES." as ar INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name WHERE ar.article_visibility <= ".$acclevel." ORDER BY ar.article_datestamp DESC LIMIT 3;");
+	$result = dbquery("SELECT ar.article_id, ar.article_subject, ar.article_snippet, ar.article_datestamp, ac.article_cat_id, ac.article_cat_name, us.user_id, us.user_name, us.user_status FROM ".DB_ARTICLES." as ar INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name WHERE ar.article_visibility <= ".$acclevel." AND ac.article_cat_language='".LANGUAGE."' ORDER BY ar.article_datestamp DESC LIMIT 3;");
 
 	$items_count = dbrows($result);
 
@@ -100,7 +100,7 @@ if (db_exists(DB_BLOG) && db_exists(DB_BLOG_CATS)) {
 
 	opentable($locale['home_0002']);
 
-	$result = dbquery("SELECT bl.blog_id, bl.blog_subject, bl.blog_blog, bl.blog_datestamp, us.user_id, us.user_name, us.user_status, bc.blog_cat_id, bc.blog_cat_name FROM ".DB_BLOG." as bl LEFT JOIN ".DB_BLOG_CATS." as bc ON bc.blog_cat_id = bl.blog_cat INNER JOIN ".DB_USERS." as us ON bl.blog_name = us.user_id WHERE (".time()." > bl.blog_start OR bl.blog_start = 0) AND (".time()." < bl.blog_end OR bl.blog_end = 0) AND bl.blog_visibility <= ".$acclevel." ORDER BY bl.blog_datestamp DESC LIMIT 3");
+	$result = dbquery("SELECT bl.blog_id, bl.blog_subject, bl.blog_blog, bl.blog_datestamp, us.user_id, us.user_name, us.user_status, bc.blog_cat_id, bc.blog_cat_name FROM ".DB_BLOG." as bl LEFT JOIN ".DB_BLOG_CATS." as bc ON bc.blog_cat_id = bl.blog_cat INNER JOIN ".DB_USERS." as us ON bl.blog_name = us.user_id WHERE (".time()." > bl.blog_start OR bl.blog_start = 0) AND (".time()." < bl.blog_end OR bl.blog_end = 0) AND bl.blog_visibility <= ".$acclevel." AND blog_language='".LANGUAGE."' ORDER BY bl.blog_datestamp DESC LIMIT 3");
 
 	$items_count = dbrows($result);
 
@@ -134,7 +134,7 @@ if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
 
 	opentable($locale['home_0003']);
 
-	$result = dbquery("SELECT dl.download_id, dl.download_title, dl.download_description_short, dl.download_datestamp, dc.download_cat_id, dc.download_cat_name, us.user_id, us.user_name, us.user_status FROM ".DB_DOWNLOADS." dl INNER JOIN ".DB_DOWNLOAD_CATS." dc ON dc.download_cat_id = dl.download_cat INNER JOIN ".DB_USERS." us ON us.user_id = dl.download_user WHERE dl.download_visibility <= ".$acclevel." ORDER BY dl.download_datestamp DESC LIMIT 3");
+	$result = dbquery("SELECT dl.download_id, dl.download_title, dl.download_description_short, dl.download_datestamp, dc.download_cat_id, dc.download_cat_name, us.user_id, us.user_name, us.user_status FROM ".DB_DOWNLOADS." dl INNER JOIN ".DB_DOWNLOAD_CATS." dc ON dc.download_cat_id = dl.download_cat INNER JOIN ".DB_USERS." us ON us.user_id = dl.download_user WHERE dl.download_visibility <= ".$acclevel." AND dc.download_cat_language='".LANGUAGE."' ORDER BY dl.download_datestamp DESC LIMIT 3");
 
 	$items_count = dbrows($result);
 
