@@ -23,12 +23,7 @@ if (!defined('IN_FUSION')) { die('Access Denied'); }
 
 function generate_breadcrumbs($data) {
 	global $locale;
-
-	// Should we also show the Home link ?
-	//if ($show_home) {
-	//	$breadcrumbs[] = array('link' => BASEDIR.'index.php', 'title' => 'Home'); // Home needs localised
-	//}
-
+	// Demo of usage:
 	// articles.php
 	if (defined('ARTICLES')) {
 		// Articles page
@@ -53,13 +48,6 @@ function generate_breadcrumbs($data) {
 			add_to_breadcrumbs(array('link' => BASEDIR.'news.php?readmore='.$_GET['readmore'], 'title' => $data['news_subject']));
 		}
 	}
-	// No link for last item ?
-	//if ($last_no_link) {
-	//	$last_link = array_keys($breadcrumbs);
-	//	$last_link = array_pop($last_link);
-	//	$breadcrumbs[$last_link]['link'] = '';
-	//}
-	//var_dump($breadcrumbs);
 	return PHPFusion\OutputHandler::getBreadcrumbs();
 }
 
