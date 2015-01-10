@@ -28,17 +28,19 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
  * @param string $query SQL 
  * @return \PDOStatement or FALSE on error
  */
-function dbquery($query) {
+function dbquery($query, $print = false) {
 	global $mysql_queries_count, $mysql_queries_time;
 	$start_time = microtime(TRUE);
 	try {
 		$result = dbconnection()->prepare($query);
 		$result->execute();
+		if ($print == 1) var_dump($query);
 		$query_time = round((microtime(TRUE)-$start_time), 7);
 		$mysql_queries_time[++$mysql_queries_count] = array($query_time, $query);
 		return $result;
 	} catch (PDOException $e) {
 		trigger_error($e->getMessage(), E_USER_ERROR);
+		if ($print == 1) var_dump($query);
 		echo $e;
 		return FALSE;
 	}

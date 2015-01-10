@@ -17,13 +17,14 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 // MySQL database functions
-function dbquery($query) {
+function dbquery($query, $print = FALSE) {
 	global $mysql_queries_count, $mysql_queries_time;
 	$mysql_queries_count++;
 	$query_time = microtime(TRUE);
 	$result = @mysql_query($query, dbconnection());
 	$query_time = round((microtime(TRUE)-$query_time), 7);
 	$mysql_queries_time[$mysql_queries_count] = array($query_time, $query);
+	if ($print == 1) var_dump($query);
 	if (!$result) {
 		echo mysql_error(dbconnection());
 		return FALSE;
