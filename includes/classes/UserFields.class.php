@@ -299,7 +299,7 @@ class UserFields extends QuantumFields {
 			$this->info['user_field'] = ($this->method == 'display') ? array() : '';
 			// loop
 			while ($data = dbarray($result)) {
-				if ($data['field_cat_id']) $category[$data['field_parent']][$data['field_cat_id']] = $data['field_cat_name'];
+				if ($data['field_cat_id']) $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
 				if ($data['field_cat']) $item[$data['field_cat']][] = $data;
 				if ($data['field_cat_db'] && $data['field_cat_index'] && $data['field_cat_db'] !== 'users') {
 					// extend userData
