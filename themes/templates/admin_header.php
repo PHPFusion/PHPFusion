@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 define("ADMIN_PANEL", TRUE);
-
+require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
 require_once THEMES."templates/render_functions.php";
 if ($settings['maintenance'] == "1" && !iADMIN) {
