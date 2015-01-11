@@ -378,16 +378,14 @@ $core_tables = array(
 );
 //</editor-fold>
 if (isset($_POST['uninstall'])) {
-	
-	foreach (array_keys($core_tables) as $table) {
-		dbquery("DROP TABLE IF EXISTS ".$db_prefix.$table);
-	}
-	
 	// drop all custom tables.
 	foreach (array(
 		'articles', 'blog', 'downloads', 'eshop', 'faqs', 
-		'forums', 'news', 'photo', 'polls', 'weblinks') as $table) {
+		'forums', 'news', 'photos', 'polls', 'weblinks') as $table) {
 		include __DIR__.'/'.$table.'_setup.php';
+	}
+	foreach (array_keys($core_tables) as $table) {
+		dbquery("DROP TABLE IF EXISTS ".$db_prefix.$table);
 	}
 } else {
 	foreach ($core_tables as $table => $sql) {
