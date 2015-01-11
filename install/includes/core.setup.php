@@ -16,19 +16,370 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 // Installs 33 Core Tables and Inserts
+//<editor-fold desc="create table sql for core tables" >
 $core_tables = array(
-		"admin", "admin_resetlog", "bbcodes", "blacklist",
-		"captcha", "comments", "custom_pages", "email_templates",
-		"email_verify", "errors", "flood_control", "infusions",
-		"messages", "messages_options", "mlt_tables", "new_users",
-		"online", "panels", "permalinks_alias", "permalinks_method",
-		"permalinks_rewrites", "ratings", "settings", "settings_inf",
-		"site_links", "smileys", "submissions", "suspends",
-		"theme", "theme", "users", "user_fields",
-		"user_field_cats", "user_groups", "user_log");
+	"admin" => " (
+		admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		admin_rights CHAR(4) NOT NULL DEFAULT '',
+		admin_image VARCHAR(50) NOT NULL DEFAULT '',
+		admin_title VARCHAR(50) NOT NULL DEFAULT '',
+		admin_link VARCHAR(100) NOT NULL DEFAULT 'reserved',
+		admin_page TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+		PRIMARY KEY (admin_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"mlt_tables" => " (
+		mlt_rights CHAR(4) NOT NULL DEFAULT '',
+		mlt_title VARCHAR(50) NOT NULL DEFAULT '',
+		mlt_status VARCHAR(50) NOT NULL DEFAULT '',
+		PRIMARY KEY (mlt_rights)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"admin_resetlog" => " (
+		reset_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+		reset_admin_id mediumint(8) unsigned NOT NULL default '1',
+		reset_timestamp int(10) unsigned NOT NULL default '0',
+		reset_sucess text NOT NULL,
+		reset_failed text NOT NULL,
+		reset_admins varchar(8) NOT NULL default '0',
+		reset_reason varchar(255) NOT NULL,
+		PRIMARY KEY (reset_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"bbcodes" => " (
+		bbcode_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		bbcode_name VARCHAR(20) NOT NULL DEFAULT '',
+		bbcode_order SMALLINT(5) UNSIGNED NOT NULL,
+		PRIMARY KEY (bbcode_id),
+		KEY bbcode_order (bbcode_order)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"blacklist" => " (
+		blacklist_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		blacklist_user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		blacklist_ip VARCHAR(45) NOT NULL DEFAULT '',
+		blacklist_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		blacklist_email VARCHAR(100) NOT NULL DEFAULT '',
+		blacklist_reason TEXT NOT NULL,
+		blacklist_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		PRIMARY KEY (blacklist_id),
+		KEY blacklist_ip_type (blacklist_ip_type)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"captcha" => " (
+		captcha_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		captcha_ip VARCHAR(45) NOT NULL DEFAULT '',
+		captcha_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		captcha_encode VARCHAR(32) NOT NULL DEFAULT '',
+		captcha_string VARCHAR(15) NOT NULL DEFAULT '',
+		KEY captcha_datestamp (captcha_datestamp)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"custom_pages" => " (
+		page_id MEDIUMINT(8) NOT NULL AUTO_INCREMENT,
+		page_title VARCHAR(200) NOT NULL DEFAULT '',
+		page_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+		page_content TEXT NOT NULL,
+		page_keywords VARCHAR(250) NOT NULL DEFAULT '',
+		page_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		page_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		page_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+		PRIMARY KEY (page_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"comments" => " (
+		comment_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		comment_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		comment_type CHAR(2) NOT NULL DEFAULT '',
+		comment_cat MEDIUMINT(8) NOT NULL DEFAULT '0',
+		comment_name VARCHAR(50) NOT NULL DEFAULT '',
+		comment_message TEXT NOT NULL,
+		comment_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		comment_ip VARCHAR(45) NOT NULL DEFAULT '',
+		comment_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		comment_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		PRIMARY KEY (comment_id),
+		KEY comment_datestamp (comment_datestamp)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"errors" => " (
+		error_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+		error_level smallint(5) unsigned NOT NULL,
+		error_message text NOT NULL,
+		error_file varchar(255) NOT NULL,
+		error_line smallint(5) NOT NULL,
+		error_page varchar(200) NOT NULL,
+		error_user_level smallint(3) NOT NULL,
+		error_user_ip varchar(45) NOT NULL default '',
+		error_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		error_status tinyint(1) NOT NULL default '0',
+		error_timestamp int(10) NOT NULL,
+		PRIMARY KEY (error_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"flood_control" => " (
+		flood_ip VARCHAR(45) NOT NULL DEFAULT '',
+		flood_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		flood_timestamp INT(5) UNSIGNED NOT NULL DEFAULT '0',
+		KEY flood_timestamp (flood_timestamp)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"infusions" => " (
+		inf_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		inf_title VARCHAR(100) NOT NULL DEFAULT '',
+		inf_folder VARCHAR(100) NOT NULL DEFAULT '',
+		inf_version VARCHAR(10) NOT NULL DEFAULT '0',
+		PRIMARY KEY (inf_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"messages" => " (
+		message_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		message_to MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		message_from MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		message_subject VARCHAR(100) NOT NULL DEFAULT '',
+		message_message TEXT NOT NULL,
+		message_smileys CHAR(1) NOT NULL DEFAULT '',
+		message_read TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		message_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		message_folder TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0',
+		PRIMARY KEY (message_id),
+		KEY message_datestamp (message_datestamp)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"messages_options" => " (
+		user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		pm_email_notify tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+		pm_save_sent tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+		pm_inbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
+		pm_savebox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
+		pm_sentbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
+		PRIMARY KEY (user_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"new_users" => " (
+		user_code VARCHAR(40) NOT NULL,
+		user_name VARCHAR(30) NOT NULL,
+		user_email VARCHAR(100) NOT NULL,
+		user_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+		user_info TEXT NOT NULL,
+		KEY user_datestamp (user_datestamp)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"email_verify" => " (
+		user_id MEDIUMINT(8) NOT NULL,
+		user_code VARCHAR(32) NOT NULL,
+		user_email VARCHAR(100) NOT NULL,
+		user_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+		KEY user_datestamp (user_datestamp)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"email_templates" => " (
+		template_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		template_key VARCHAR(10) NOT NULL,
+		template_format VARCHAR(10) NOT NULL,
+		template_active TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		template_name VARCHAR(300) NOT NULL,
+		template_subject TEXT NOT NULL,
+		template_content TEXT NOT NULL,
+		template_sender_name VARCHAR(30) NOT NULL,
+		template_sender_email VARCHAR(100) NOT NULL,
+		template_language VARCHAR(50) NOT NULL,
+		PRIMARY KEY (template_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"ratings" => " (
+		rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		rating_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		rating_type CHAR(1) NOT NULL DEFAULT '',
+		rating_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		rating_vote TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		rating_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		rating_ip VARCHAR(45) NOT NULL DEFAULT '',
+		rating_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		PRIMARY KEY (rating_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"online" => " (
+		online_user VARCHAR(50) NOT NULL DEFAULT '',
+		online_ip VARCHAR(45) NOT NULL DEFAULT '',
+		online_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		online_lastactive INT(10) UNSIGNED NOT NULL DEFAULT '0'
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"panels" => " (
+		panel_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		panel_name VARCHAR(100) NOT NULL DEFAULT '',
+		panel_filename VARCHAR(100) NOT NULL DEFAULT '',
+		panel_content TEXT NOT NULL,
+		panel_side TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+		panel_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+		panel_type VARCHAR(20) NOT NULL DEFAULT '',
+		panel_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+		panel_display TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		panel_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		panel_url_list TEXT NOT NULL,
+		panel_restriction TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		panel_languages VARCHAR(200) NOT NULL DEFAULT '".$enabled_languages."',
+		PRIMARY KEY (panel_id),
+		KEY panel_order (panel_order)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"permalinks_alias" => " (
+		alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		alias_url VARCHAR(200) NOT NULL DEFAULT '',
+		alias_php_url VARCHAR(200) NOT NULL DEFAULT '',
+		alias_type VARCHAR(10) NOT NULL DEFAULT '',
+		alias_item_id INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		PRIMARY KEY (alias_id),
+		KEY alias_id (alias_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"permalinks_method" => " (
+		pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		pattern_type INT(5) UNSIGNED NOT NULL,
+		pattern_source VARCHAR(200) NOT NULL DEFAULT '',
+		pattern_target VARCHAR(200) NOT NULL DEFAULT '',
+		pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
+		PRIMARY KEY (pattern_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"permalinks_rewrites" => " (
+		rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
+		PRIMARY KEY (rewrite_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"settings" => " (
+		settings_name VARCHAR(200) NOT NULL DEFAULT '',
+		settings_value TEXT NOT NULL,
+		PRIMARY KEY (settings_name)
+		) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"settings_inf" => " (
+		settings_name VARCHAR(200) NOT NULL DEFAULT '',
+		settings_value TEXT NOT NULL,
+		settings_inf VARCHAR(200) NOT NULL DEFAULT '',
+		PRIMARY KEY (settings_name)
+		) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"site_links" => " (
+		link_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		link_name VARCHAR(100) NOT NULL DEFAULT '',
+		link_url VARCHAR(200) NOT NULL DEFAULT '',
+		link_visibility TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+		link_position TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+		link_window TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		link_order SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',
+		link_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+		PRIMARY KEY (link_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"smileys" => " (
+		smiley_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		smiley_code VARCHAR(50) NOT NULL,
+		smiley_image VARCHAR(100) NOT NULL,
+		smiley_text VARCHAR(100) NOT NULL,
+		PRIMARY KEY (smiley_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"submissions" => " (
+		submit_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		submit_type CHAR(1) NOT NULL,
+		submit_user MEDIUMINT(8) UNSIGNED DEFAULT '0' NOT NULL,
+		submit_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+		submit_criteria TEXT NOT NULL,
+		PRIMARY KEY (submit_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"suspends" => " (
+		suspend_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		suspended_user MEDIUMINT(8) UNSIGNED NOT NULL,
+		suspending_admin MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+		suspend_ip VARCHAR(45) NOT NULL DEFAULT '',
+		suspend_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		suspend_date INT(10) NOT NULL DEFAULT '0',
+		suspend_reason TEXT NOT NULL,
+		suspend_type TINYINT(1) NOT NULL DEFAULT '0',
+		reinstating_admin MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+		reinstate_reason TEXT NOT NULL,
+		reinstate_date INT(10) NOT NULL DEFAULT '0',
+		reinstate_ip VARCHAR(45) NOT NULL DEFAULT '',
+		reinstate_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		PRIMARY KEY (suspend_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"user_field_cats" => " (
+		field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
+		field_cat_name TEXT NOT NULL,
+		field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		field_cat_db VARCHAR(100) NOT NULL,
+		field_cat_index VARCHAR(200) NOT NULL,
+		field_cat_class VARCHAR(50) NOT NULL,
+		field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
+		PRIMARY KEY (field_cat_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"user_fields" => " (
+		field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		field_title TEXT NOT NULL,
+		field_name VARCHAR(50) NOT NULL,
+		field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+		field_type VARCHAR(25) NOT NULL,
+		field_default TEXT NOT NULL,
+		field_options TEXT NOT NULL,
+		field_error VARCHAR(50) NOT NULL,
+		field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+		field_config TEXT NOT NULL,
+		PRIMARY KEY (field_id),
+		KEY field_order (field_order)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"user_groups" => " (
+		group_id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+		group_name VARCHAR(100) NOT NULL,
+		group_description VARCHAR(200) NOT NULL,
+		PRIMARY KEY (group_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"user_log" => " (
+		userlog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		userlog_user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		userlog_field VARCHAR(50) NOT NULL DEFAULT '',
+		userlog_value_new TEXT NOT NULL,
+		userlog_value_old TEXT NOT NULL,
+		userlog_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		PRIMARY KEY (userlog_id),
+		KEY userlog_user_id (userlog_user_id),
+		KEY userlog_field (userlog_field)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"users" => " (
+		user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		user_name VARCHAR(30) NOT NULL DEFAULT '',
+		user_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
+		user_salt VARCHAR(40) NOT NULL DEFAULT '',
+		user_password VARCHAR(64) NOT NULL DEFAULT '',
+		user_admin_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
+		user_admin_salt VARCHAR(40) NOT NULL DEFAULT '',
+		user_admin_password VARCHAR(64) NOT NULL DEFAULT '',
+		user_email VARCHAR(100) NOT NULL DEFAULT '',
+		user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+		user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London',
+		user_avatar VARCHAR(100) NOT NULL DEFAULT '',
+		user_posts SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+		user_threads TEXT NOT NULL,
+		user_joined INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		user_lastvisit INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		user_ip VARCHAR(45) NOT NULL DEFAULT '0.0.0.0',
+		user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		user_rights TEXT NOT NULL,
+		user_groups TEXT NOT NULL,
+		user_level TINYINT(3) UNSIGNED NOT NULL DEFAULT '101',
+		user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
+		user_location VARCHAR(50) NOT NULL DEFAULT '',
+		user_birthdate DATE NOT NULL DEFAULT '0000-00-00',
+		user_skype VARCHAR(100) NOT NULL DEFAULT '',
+		user_aim VARCHAR(16) NOT NULL DEFAULT '',
+		user_icq VARCHAR(15) NOT NULL DEFAULT '',
+		user_yahoo VARCHAR(100) NOT NULL DEFAULT '',
+		user_web VARCHAR(200) NOT NULL DEFAULT '',
+		user_sig VARCHAR(255) NOT NULL DEFAULT '',
+		user_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+		PRIMARY KEY (user_id),
+		KEY user_name (user_name),
+		KEY user_joined (user_joined),
+		KEY user_lastvisit (user_lastvisit)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"theme" => " (
+		theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		theme_name VARCHAR(50) NOT NULL,
+		theme_title VARCHAR(50) NOT NULL,
+		theme_file VARCHAR(200) NOT NULL,
+		theme_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
+		theme_user MEDIUMINT(8) UNSIGNED NOT NULL,
+		theme_active TINYINT(1) UNSIGNED NOT NULL,
+		theme_config TEXT NOT NULL,
+		PRIMARY KEY (theme_id)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci"
+);
+//</editor-fold>
 if (isset($_POST['uninstall'])) {
 	
-	foreach ($core_tables as $table) {
+	foreach (array_keys($core_tables) as $table) {
 		dbquery("DROP TABLE IF EXISTS ".$db_prefix.$table);
 	}
 
@@ -42,368 +393,7 @@ if (isset($_POST['uninstall'])) {
 		}
 	}
 } else {
-	//<editor-fold desc="create table sql for core tables" >
-	$sqls = array(
-		"admin" => " (
-			admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			admin_rights CHAR(4) NOT NULL DEFAULT '',
-			admin_image VARCHAR(50) NOT NULL DEFAULT '',
-			admin_title VARCHAR(50) NOT NULL DEFAULT '',
-			admin_link VARCHAR(100) NOT NULL DEFAULT 'reserved',
-			admin_page TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-			PRIMARY KEY (admin_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"mlt_tables" => " (
-			mlt_rights CHAR(4) NOT NULL DEFAULT '',
-			mlt_title VARCHAR(50) NOT NULL DEFAULT '',
-			mlt_status VARCHAR(50) NOT NULL DEFAULT '',
-			PRIMARY KEY (mlt_rights)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"admin_resetlog" => " (
-			reset_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-			reset_admin_id mediumint(8) unsigned NOT NULL default '1',
-			reset_timestamp int(10) unsigned NOT NULL default '0',
-			reset_sucess text NOT NULL,
-			reset_failed text NOT NULL,
-			reset_admins varchar(8) NOT NULL default '0',
-			reset_reason varchar(255) NOT NULL,
-			PRIMARY KEY (reset_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"bbcodes" => " (
-			bbcode_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			bbcode_name VARCHAR(20) NOT NULL DEFAULT '',
-			bbcode_order SMALLINT(5) UNSIGNED NOT NULL,
-			PRIMARY KEY (bbcode_id),
-			KEY bbcode_order (bbcode_order)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"blacklist" => " (
-			blacklist_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			blacklist_user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			blacklist_ip VARCHAR(45) NOT NULL DEFAULT '',
-			blacklist_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			blacklist_email VARCHAR(100) NOT NULL DEFAULT '',
-			blacklist_reason TEXT NOT NULL,
-			blacklist_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			PRIMARY KEY (blacklist_id),
-			KEY blacklist_ip_type (blacklist_ip_type)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"captcha" => " (
-			captcha_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			captcha_ip VARCHAR(45) NOT NULL DEFAULT '',
-			captcha_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			captcha_encode VARCHAR(32) NOT NULL DEFAULT '',
-			captcha_string VARCHAR(15) NOT NULL DEFAULT '',
-			KEY captcha_datestamp (captcha_datestamp)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"custom_pages" => " (
-			page_id MEDIUMINT(8) NOT NULL AUTO_INCREMENT,
-			page_title VARCHAR(200) NOT NULL DEFAULT '',
-			page_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
-			page_content TEXT NOT NULL,
-			page_keywords VARCHAR(250) NOT NULL DEFAULT '',
-			page_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			page_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			page_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
-			PRIMARY KEY (page_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"comments" => " (
-			comment_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			comment_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			comment_type CHAR(2) NOT NULL DEFAULT '',
-			comment_cat MEDIUMINT(8) NOT NULL DEFAULT '0',
-			comment_name VARCHAR(50) NOT NULL DEFAULT '',
-			comment_message TEXT NOT NULL,
-			comment_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			comment_ip VARCHAR(45) NOT NULL DEFAULT '',
-			comment_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			comment_hidden TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			PRIMARY KEY (comment_id),
-			KEY comment_datestamp (comment_datestamp)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"errors" => " (
-			error_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-			error_level smallint(5) unsigned NOT NULL,
-			error_message text NOT NULL,
-			error_file varchar(255) NOT NULL,
-			error_line smallint(5) NOT NULL,
-			error_page varchar(200) NOT NULL,
-			error_user_level smallint(3) NOT NULL,
-			error_user_ip varchar(45) NOT NULL default '',
-			error_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			error_status tinyint(1) NOT NULL default '0',
-			error_timestamp int(10) NOT NULL,
-			PRIMARY KEY (error_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"flood_control" => " (
-			flood_ip VARCHAR(45) NOT NULL DEFAULT '',
-			flood_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			flood_timestamp INT(5) UNSIGNED NOT NULL DEFAULT '0',
-			KEY flood_timestamp (flood_timestamp)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"infusions" => " (
-			inf_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			inf_title VARCHAR(100) NOT NULL DEFAULT '',
-			inf_folder VARCHAR(100) NOT NULL DEFAULT '',
-			inf_version VARCHAR(10) NOT NULL DEFAULT '0',
-			PRIMARY KEY (inf_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"messages" => " (
-			message_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			message_to MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			message_from MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			message_subject VARCHAR(100) NOT NULL DEFAULT '',
-			message_message TEXT NOT NULL,
-			message_smileys CHAR(1) NOT NULL DEFAULT '',
-			message_read TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			message_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			message_folder TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0',
-			PRIMARY KEY (message_id),
-			KEY message_datestamp (message_datestamp)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"messages_options" => " (
-			user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			pm_email_notify tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-			pm_save_sent tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-			pm_inbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
-			pm_savebox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
-			pm_sentbox SMALLINT(5) UNSIGNED DEFAULT '0' NOT NULL,
-			PRIMARY KEY (user_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"new_users" => " (
-			user_code VARCHAR(40) NOT NULL,
-			user_name VARCHAR(30) NOT NULL,
-			user_email VARCHAR(100) NOT NULL,
-			user_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
-			user_info TEXT NOT NULL,
-			KEY user_datestamp (user_datestamp)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"email_verify" => " (
-			user_id MEDIUMINT(8) NOT NULL,
-			user_code VARCHAR(32) NOT NULL,
-			user_email VARCHAR(100) NOT NULL,
-			user_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
-			KEY user_datestamp (user_datestamp)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"email_templates" => " (
-			template_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			template_key VARCHAR(10) NOT NULL,
-			template_format VARCHAR(10) NOT NULL,
-			template_active TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			template_name VARCHAR(300) NOT NULL,
-			template_subject TEXT NOT NULL,
-			template_content TEXT NOT NULL,
-			template_sender_name VARCHAR(30) NOT NULL,
-			template_sender_email VARCHAR(100) NOT NULL,
-			template_language VARCHAR(50) NOT NULL,
-			PRIMARY KEY (template_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"ratings" => " (
-			rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			rating_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			rating_type CHAR(1) NOT NULL DEFAULT '',
-			rating_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			rating_vote TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			rating_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			rating_ip VARCHAR(45) NOT NULL DEFAULT '',
-			rating_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			PRIMARY KEY (rating_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"online" => " (
-			online_user VARCHAR(50) NOT NULL DEFAULT '',
-			online_ip VARCHAR(45) NOT NULL DEFAULT '',
-			online_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			online_lastactive INT(10) UNSIGNED NOT NULL DEFAULT '0'
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"panels" => " (
-			panel_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			panel_name VARCHAR(100) NOT NULL DEFAULT '',
-			panel_filename VARCHAR(100) NOT NULL DEFAULT '',
-			panel_content TEXT NOT NULL,
-			panel_side TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-			panel_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-			panel_type VARCHAR(20) NOT NULL DEFAULT '',
-			panel_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
-			panel_display TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			panel_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			panel_url_list TEXT NOT NULL,
-			panel_restriction TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			panel_languages VARCHAR(200) NOT NULL DEFAULT '".$enabled_languages."',
-			PRIMARY KEY (panel_id),
-			KEY panel_order (panel_order)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"permalinks_alias" => " (
-			alias_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			alias_url VARCHAR(200) NOT NULL DEFAULT '',
-			alias_php_url VARCHAR(200) NOT NULL DEFAULT '',
-			alias_type VARCHAR(10) NOT NULL DEFAULT '',
-			alias_item_id INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			PRIMARY KEY (alias_id),
-			KEY alias_id (alias_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"permalinks_method" => " (
-			pattern_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			pattern_type INT(5) UNSIGNED NOT NULL,
-			pattern_source VARCHAR(200) NOT NULL DEFAULT '',
-			pattern_target VARCHAR(200) NOT NULL DEFAULT '',
-			pattern_cat VARCHAR(10) NOT NULL DEFAULT '',
-			PRIMARY KEY (pattern_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"permalinks_rewrites" => " (
-			rewrite_id INT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			rewrite_name VARCHAR(50) NOT NULL DEFAULT '',
-			PRIMARY KEY (rewrite_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"settings" => " (
-			settings_name VARCHAR(200) NOT NULL DEFAULT '',
-			settings_value TEXT NOT NULL,
-			PRIMARY KEY (settings_name)
-			) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"settings_inf" => " (
-			settings_name VARCHAR(200) NOT NULL DEFAULT '',
-			settings_value TEXT NOT NULL,
-			settings_inf VARCHAR(200) NOT NULL DEFAULT '',
-			PRIMARY KEY (settings_name)
-			) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"site_links" => " (
-			link_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			link_name VARCHAR(100) NOT NULL DEFAULT '',
-			link_url VARCHAR(200) NOT NULL DEFAULT '',
-			link_visibility TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
-			link_position TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-			link_window TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			link_order SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',
-			link_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
-			PRIMARY KEY (link_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"smileys" => " (
-			smiley_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			smiley_code VARCHAR(50) NOT NULL,
-			smiley_image VARCHAR(100) NOT NULL,
-			smiley_text VARCHAR(100) NOT NULL,
-			PRIMARY KEY (smiley_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"submissions" => " (
-			submit_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			submit_type CHAR(1) NOT NULL,
-			submit_user MEDIUMINT(8) UNSIGNED DEFAULT '0' NOT NULL,
-			submit_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
-			submit_criteria TEXT NOT NULL,
-			PRIMARY KEY (submit_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"suspends" => " (
-			suspend_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			suspended_user MEDIUMINT(8) UNSIGNED NOT NULL,
-			suspending_admin MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-			suspend_ip VARCHAR(45) NOT NULL DEFAULT '',
-			suspend_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			suspend_date INT(10) NOT NULL DEFAULT '0',
-			suspend_reason TEXT NOT NULL,
-			suspend_type TINYINT(1) NOT NULL DEFAULT '0',
-			reinstating_admin MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-			reinstate_reason TEXT NOT NULL,
-			reinstate_date INT(10) NOT NULL DEFAULT '0',
-			reinstate_ip VARCHAR(45) NOT NULL DEFAULT '',
-			reinstate_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			PRIMARY KEY (suspend_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"user_field_cats" => " (
-			field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
-			field_cat_name TEXT NOT NULL,
-			field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			field_cat_db VARCHAR(100) NOT NULL,
-			field_cat_index VARCHAR(200) NOT NULL,
-			field_cat_class VARCHAR(50) NOT NULL,
-			field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
-			PRIMARY KEY (field_cat_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"user_fields" => " (
-			field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			field_title TEXT NOT NULL,
-			field_name VARCHAR(50) NOT NULL,
-			field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-			field_type VARCHAR(25) NOT NULL,
-			field_default TEXT NOT NULL,
-			field_options TEXT NOT NULL,
-			field_error VARCHAR(50) NOT NULL,
-			field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-			field_config TEXT NOT NULL,
-			PRIMARY KEY (field_id),
-			KEY field_order (field_order)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"user_groups" => " (
-			group_id TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
-			group_name VARCHAR(100) NOT NULL,
-			group_description VARCHAR(200) NOT NULL,
-			PRIMARY KEY (group_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"user_log" => " (
-			userlog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			userlog_user_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			userlog_field VARCHAR(50) NOT NULL DEFAULT '',
-			userlog_value_new TEXT NOT NULL,
-			userlog_value_old TEXT NOT NULL,
-			userlog_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			PRIMARY KEY (userlog_id),
-			KEY userlog_user_id (userlog_user_id),
-			KEY userlog_field (userlog_field)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"users" => " (
-			user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			user_name VARCHAR(30) NOT NULL DEFAULT '',
-			user_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
-			user_salt VARCHAR(40) NOT NULL DEFAULT '',
-			user_password VARCHAR(64) NOT NULL DEFAULT '',
-			user_admin_algo VARCHAR(10) NOT NULL DEFAULT 'sha256',
-			user_admin_salt VARCHAR(40) NOT NULL DEFAULT '',
-			user_admin_password VARCHAR(64) NOT NULL DEFAULT '',
-			user_email VARCHAR(100) NOT NULL DEFAULT '',
-			user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-			user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London',
-			user_avatar VARCHAR(100) NOT NULL DEFAULT '',
-			user_posts SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-			user_threads TEXT NOT NULL,
-			user_joined INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			user_lastvisit INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			user_ip VARCHAR(45) NOT NULL DEFAULT '0.0.0.0',
-			user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-			user_rights TEXT NOT NULL,
-			user_groups TEXT NOT NULL,
-			user_level TINYINT(3) UNSIGNED NOT NULL DEFAULT '101',
-			user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
-			user_location VARCHAR(50) NOT NULL DEFAULT '',
-			user_birthdate DATE NOT NULL DEFAULT '0000-00-00',
-			user_skype VARCHAR(100) NOT NULL DEFAULT '',
-			user_aim VARCHAR(16) NOT NULL DEFAULT '',
-			user_icq VARCHAR(15) NOT NULL DEFAULT '',
-			user_yahoo VARCHAR(100) NOT NULL DEFAULT '',
-			user_web VARCHAR(200) NOT NULL DEFAULT '',
-			user_sig VARCHAR(255) NOT NULL DEFAULT '',
-			user_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
-			PRIMARY KEY (user_id),
-			KEY user_name (user_name),
-			KEY user_joined (user_joined),
-			KEY user_lastvisit (user_lastvisit)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
-		"theme" => " (
-			theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			theme_name VARCHAR(50) NOT NULL,
-			theme_title VARCHAR(50) NOT NULL,
-			theme_file VARCHAR(200) NOT NULL,
-			theme_datestamp INT(10) UNSIGNED DEFAULT '0' NOT NULL,
-			theme_user MEDIUMINT(8) UNSIGNED NOT NULL,
-			theme_active TINYINT(1) UNSIGNED NOT NULL,
-			theme_config TEXT NOT NULL,
-			PRIMARY KEY (theme_id)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci"
-	);
-	//</editor-fold>
-	foreach ($sqls as $table => $sql) {
+	foreach ($core_tables as $table => $sql) {
 		if (!dbquery("CREATE TABLE ".$db_prefix.$table.$sql)) {
 			$fail = TRUE;
 		}
