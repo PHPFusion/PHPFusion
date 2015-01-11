@@ -11,6 +11,7 @@ $locale['country_error'] = "Значення країни потребує ув�
 $locale['state_error'] = "Значення регіону потребує уваги.";
 $locale['city_error'] = "Значення міста потребує уваги.";
 $locale['postcode_error'] = "Значення поштового індексу потребує уваги.";
+$locale['field_error_blank'] = "%s cannot be left empty."; // translate this
 
 // Tokens
 $locale['token_error_title'] = "Помилка ключа";

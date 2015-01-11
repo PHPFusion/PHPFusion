@@ -11,6 +11,7 @@ $locale['country_error'] = "Country requires attention.";
 $locale['state_error'] = "State requires attention.";
 $locale['city_error'] = "City requires attention.";
 $locale['postcode_error'] = "Postcode requires attention.";
+$locale['field_error_blank'] = "%s cannot be left empty."; // translate this
 
 // Tokens
 $locale['token_error_title'] = "Token Error";

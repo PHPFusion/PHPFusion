@@ -11,6 +11,7 @@ $locale['country_error'] = "Требуется указание страны.";
 $locale['state_error'] = "Требуется указание штата.";
 $locale['city_error'] = "Требуется указание города.";
 $locale['postcode_error'] = "Требуется указание почтового индекса.";
+$locale['field_error_blank'] = "%s не может быть пустым.";
 
 // Tokens
 $locale['token_error_title'] = "Ошибка токена";
