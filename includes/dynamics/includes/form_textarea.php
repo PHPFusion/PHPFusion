@@ -24,7 +24,11 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	include_once LOCALE.LOCALESET."admin/html_buttons.php";
 	include_once LOCALE.LOCALESET."error.php";
 
-	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+	if ($options['field_title']) {
+		$title2 = $options['field_title'];
+	} else {
+		$title2 = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+	}
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
 
