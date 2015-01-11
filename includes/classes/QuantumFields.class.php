@@ -18,7 +18,6 @@
 +--------------------------------------------------------*/
 
 class QuantumFields {
-	// Setup XUI
 	public $system_title = '';
 	public $admin_rights = '';
 	public $locale_file = '';
@@ -27,6 +26,7 @@ class QuantumFields {
 	public $plugin_folder = '';
 	public $plugin_locale_folder = '';
 	public $debug = false;
+	private $module_debug = false;
 	public $dom_debug = FALSE;
 	public $input_page = 1;
 	// System Internals
@@ -46,6 +46,7 @@ class QuantumFields {
 	/* Constructor */
 	public function boot() {
 		global $locale;
+		define('IN_QUANTUM', true);
 		require_once LOCALE.LOCALESET.'admin/fields.php';
 		$this->locale = $locale;
 		add_to_breadcrumbs(array('link' => '', 'title' => $this->system_title));
@@ -1124,12 +1125,17 @@ class QuantumFields {
 		}
 	}
 
-	/* Outputs a multilocale single field */
-	static function quantum_multilocale_fields($data, $field_name) {
-		global $language_opts;
+	/* Outputs a multilocale single field
+	 * Updated: you can pass any $options variable in such as required, safemode, etc.
+	*/
+	static function quantum_multilocale_fields($data, $field_name, array $options = array()) {
 		$html = '';
+		$language_opts = fusion_get_enabled_languages();
+		$options += array(
+			'function' => !empty($options['textarea']) && $options['textarea'] == 1 ? 'form_textarea' : 'form_text', // only 2 fields type need a multiple locale logically
+		);
 		foreach($language_opts as $lang) {
-			$html .= form_text($lang, "".$field_name."[$lang]", $field_name."-".$lang, $data[$field_name][$lang], array('required' => 1));
+			$html .= $options['function']($lang, "".$field_name."[$lang]", $field_name."-".$lang, (isset($data[$field_name][$lang]) ? $data[$field_name][$lang] : $data[$field_name]), $options);
 		}
 		return $html;
 	}
@@ -1280,13 +1286,16 @@ class QuantumFields {
 						$field_name = explode("_", $file);
 						$field_title = $field_name[0].'_'.$field_name[1];
 						if (!in_array($field_title, $this->enabled_fields)) {
-							// ok need to get locale.
+							if ($this->module_debug) print_p($field_title." set for load.");
 							if (file_exists($this->plugin_locale_folder.$field_title.".php")) {
 								include $this->plugin_locale_folder.$field_title.".php";
 								include $this->plugin_folder.$field_title."_include_var.php";
 								$this->available_field_info[$field_title] = array('title' => $user_field_name,
 									'description' => $user_field_desc);
 								$this->available_fields[$field_title] = $user_field_name;
+								if ($this->module_debug) print_p($field_title." loaded.");
+							} elseif ($this->module_debug) {
+								print_p($field_title." locale missing!");
 							}
 						}
 						unset($field_name);
@@ -1606,7 +1615,5 @@ class QuantumFields {
 		}
 	}
 
-
 }
-
 ?>
