@@ -821,10 +821,7 @@ class QuantumFields {
 		}
 		// ok the value generated needs to be parsed by quantum
 		echo form_select_tree($locale['fields_0450'], 'field_cat', 'field_cat', $data['field_cat'], array('no_root' => 1, 'disable_opts' => $disable_opts), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-		echo "<label class='label-control m-b-20'>".$locale['fields_0451']."</label>\n";
-		echo "<div class='well'>\n";
-		echo self::quantum_multilocale_fields($data, 'field_title');
-		echo "</div>\n";
+		echo self::quantum_multilocale_fields($locale['fields_0451'], 'field_title', 'field_title', $data, array('required'=>1));
 		echo form_text($locale['fields_0453'], 'field_name', 'field_name', $data['field_name'], array('placeholder' => $locale['fields_0454'], 'required' => 1));
 		if ($data['field_type'] == 'select') echo form_select($locale['fields_0455'], 'field_options', 'field_options', array(), $data['field_options'], array('required' => 1,
 			'tags' => 1,
@@ -1127,16 +1124,32 @@ class QuantumFields {
 
 	/* Outputs a multilocale single field
 	 * Updated: you can pass any $options variable in such as required, safemode, etc.
+	 * $input_value must be the whole $data because this is a super dynamic field and callback is auto.
 	*/
-	static function quantum_multilocale_fields($data, $field_name, array $options = array()) {
+	static function quantum_multilocale_fields($title, $input_name, $input_id, array $input_value, array $options = array()) {
 		$html = '';
 		$language_opts = fusion_get_enabled_languages();
 		$options += array(
 			'function' => !empty($options['textarea']) && $options['textarea'] == 1 ? 'form_textarea' : 'form_text', // only 2 fields type need a multiple locale logically
+			'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
+			'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
+			'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+			'width' => !empty($options['width']) ?  $options['width']  : '100%',
+			'class' => !empty($options['class']) ?  $options['class']  : '',
+			'inline' => !empty($options['inline']) ?  $options['inline']  : '',
+			'max_length' => !empty($options['max_length']) ?  $options['max_length']  : '200',
+			'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
+			'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
+			'icon' => !empty($options['icon']) ?  $options['icon']  : '',
 		);
+		$html .= "<div id='$input_id-field' class='form-group p-r-15 ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
+		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 well" : "col-sm-12 col-md-12 col-lg-12 well")."'>\n" : "<div class='well p-b-5 p-t-5'>";
 		foreach($language_opts as $lang) {
-			$html .= $options['function']($lang, "".$field_name."[$lang]", $field_name."-".$lang, (isset($data[$field_name][$lang]) ? $data[$field_name][$lang] : $data[$field_name]), $options);
+			$html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, (isset($input_value[$input_name][$lang]) ? $input_value[$input_name][$lang] : $input_value[$input_name]), $options);
 		}
+		$html .= "</div>\n";
+		$html .= "</div>\n";
 		return $html;
 	}
 
@@ -1238,10 +1251,7 @@ class QuantumFields {
 		}
 
 		echo openform('cat_form', 'cat_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
-		echo "<label class='label-control m-b-20'>".$locale['fields_0430']."</label>\n";
-		echo "<div class='well'>\n";
-		echo self::quantum_multilocale_fields($data, 'field_cat_name');
-		echo "</div>\n";
+		echo self::quantum_multilocale_fields($locale['fields_0430'], 'field_cat_name', 'field_cat_name', $data, array('required'=>1));
 		echo form_select_tree($locale['fields_0431'], 'field_parent', 'field_parent', $data['field_parent'], array('parent_value' => $locale['fields_0432'], 'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 		echo form_text($locale['fields_0433'], 'field_cat_order', 'field_cat_order', $data['field_cat_order'], array('number' => 1));
 		echo form_hidden('', 'field_cat_id', 'field_cat_id', $data['field_cat_id'], array('number' => 1));
