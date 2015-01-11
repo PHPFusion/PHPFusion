@@ -77,7 +77,7 @@ $core_tables = array(
 		page_keywords VARCHAR(250) NOT NULL DEFAULT '',
 		page_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		page_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-		page_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+		page_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
 		PRIMARY KEY (page_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"comments" => " (
@@ -202,7 +202,7 @@ $core_tables = array(
 		panel_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		panel_url_list TEXT NOT NULL,
 		panel_restriction TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-		panel_languages VARCHAR(200) NOT NULL DEFAULT '".$enabled_languages."',
+		panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ? : array())."',
 		PRIMARY KEY (panel_id),
 		KEY panel_order (panel_order)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
@@ -247,7 +247,7 @@ $core_tables = array(
 		link_position TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 		link_window TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		link_order SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',
-		link_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+		link_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
 		PRIMARY KEY (link_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"smileys" => " (
@@ -358,7 +358,7 @@ $core_tables = array(
 		user_yahoo VARCHAR(100) NOT NULL DEFAULT '',
 		user_web VARCHAR(200) NOT NULL DEFAULT '',
 		user_sig VARCHAR(255) NOT NULL DEFAULT '',
-		user_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+		user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
 		PRIMARY KEY (user_id),
 		KEY user_name (user_name),
 		KEY user_joined (user_joined),
@@ -382,15 +382,12 @@ if (isset($_POST['uninstall'])) {
 	foreach (array_keys($core_tables) as $table) {
 		dbquery("DROP TABLE IF EXISTS ".$db_prefix.$table);
 	}
-
+	
 	// drop all custom tables.
 	foreach (array(
 		'articles', 'blog', 'downloads', 'eshop', 'faqs', 
 		'forums', 'news', 'photo', 'polls', 'weblinks') as $table) {
-		$filename = __DIR__.'/includes/'.$table.'_setup.php';
-		if (file_exists($filename)) { 
-			include $filename;
-		}
+		include __DIR__.'/'.$table.'_setup.php';
 	}
 } else {
 	foreach ($core_tables as $table => $sql) {
