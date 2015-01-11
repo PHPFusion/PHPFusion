@@ -87,20 +87,24 @@ function closesetup() {
 	echo "</body>\n";
 	echo "</html>\n";
 }
-// Next button
-function renderButton($int = FALSE) {
-	global $locale;
-	$btn_name = 'next';
-	if ($int == 1) {
-		$locale = $locale['setup_0123'];
-	} elseif ($int == '2') {
-		$locale = $locale['setup_0120'];
-		$btn_name = 'done';
-	} else {
-		$locale = $locale['setup_0121'];
+
+/**
+ * Render button with custom name and label
+ * 
+ * @param string $name
+ * @param string $label 
+ */
+function renderButton($name, $label, $mode = 'next') {
+	$icon = 'right-dir';
+	$btnType = 'btn-primary';
+	if ($mode === 'refresh') {
+		$icon = 'cw';
+	} elseif ($mode === 'tryagain') {
+		$btnType = 'btn-warning';
+		$icon = 'cw';
 	}
 	echo "<div class='text-right'>\n";
-	echo "<button type='submit' name='".$btn_name."' value='$locale' class='btn btn-primary'><i class='entypo right-dir'></i> $locale</button>\n";
+	echo "<button type='submit' name='".$name."' value='$label' class='btn $btnType'><i class='entypo $icon'></i> $label</button>\n";
 	echo "</div>\n";
 }
 
