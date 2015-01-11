@@ -622,24 +622,47 @@ class defender {
 	}
 }
 
-function form_sanitizer($value, $default = "", $input_name = FALSE) {
-	global $userdata, $defender;
+function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang = FALSE) {
+	global $userdata, $defender, $locale;
 	if ($input_name) {
+		if ($multilang) {
+			foreach(fusion_get_enabled_languages() as $lang) {
+				//$field_name = ucfirst(strtolower(str_replace("_", " ", $input_name))).' ('.$lang.')';
+				$input_name = $input_name."[".$lang."]";
 		if (isset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name])) {
 			$defender->field_config = $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name];
 			$defender->field_name = $input_name;
-			$defender->field_value = $value;
-			$defender->field_default = $default;
-			//$data = $defender->get_full_options($defender->field_config);
-			if ($defender->field_config['required'] == 1 && (!$value)) { // it is required field but does not contain any value.. do reject.
-				$defender->stop();
-				$defender->addError($defender->field_config['id']);
-				$defender->addHelperText($defender->field_config['id'], $defender->field_config['error_text']);
-				$defender->addNotice($defender->field_config['error_text']);
-			} else {
-				$val = $defender->defender();
-				return $val;
+					$defender->field_value = $value[$lang];
+					$defender->field_default = $default;
+					if ($defender->field_config['required'] == 1 && (!$value[$lang])) { // it is required field but does not contain any value.. do reject.
+						$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['field_error_blank'], $defender->field_config['title']);
+						$defender->stop();
+						$defender->addError($defender->field_config['id']);
+						$defender->addHelperText($defender->field_config['id'], $helper_text);
+						$defender->addNotice($helper_text);
+					} else {
+						$val = $defender->defender();
+						return $val;
+					}
+				}
 			}
+		} else {
+			if (isset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name])) {
+				$defender->field_config = $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name];
+				$defender->field_name = $input_name;
+                $defender->field_value = $value;
+                $defender->field_default = $default;
+                if ($defender->field_config['required'] == 1 && (!$value)) { // it is required field but does not contain any value.. do reject.
+                    $helper_text = $defender->field_config['error_text'] ? :  sprintf($locale['field_error_blank'], $defender->field_config['title']);
+                    $defender->stop();
+                    $defender->addError($defender->field_config['id']);
+                    $defender->addHelperText($defender->field_config['id'], $helper_text);
+                    $defender->addNotice($helper_text);
+                } else {
+                    $val = $defender->defender();
+                    return $val;
+                }
+		    }
 		}
 	} else {
 		// returns descript, sanitized value.
