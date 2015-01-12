@@ -203,7 +203,7 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
 	echo "</tr>\n<tr>\n";
 	echo "<td colspan='4'><div style='max-height:600px;overflow:auto;'>".printCode($output, $line_start, $data['error_line'])."</div>\n</td>\n";
 	echo "</tr>\n";
-	$thisPageContent = file(BASEDIR.$data['error_page']);
+	$thisPageContent = file(BASEDIR.substr($data['error_page'], strlen(fusion_get_settings('site_path'))));
 	$output = "";
 	for ($i = 0; $i < count($thisPageContent); $i++) {
 		$output .= $thisPageContent[$i];
