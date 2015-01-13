@@ -53,7 +53,7 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 
 	$html = "<div id='$input_id-field' class='form-group ".$options['class']."' ".($options['inline'] && $options['width'] && !$title ? "style='width: ".$options['width']." !important;'" : '').">\n";
 	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($options['inline'] && $title) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")." p-l-0'>\n" : "";
 	if ($options['jsonmode'] || $options['tags']) {
 		// json mode.
 		$html .= "<div id='$input_id-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
@@ -84,14 +84,17 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 				unset($arr);
 			} // end foreach
 		}
-		$html .= "</select>";
+		$html .= "</select>\n";
 	}
 	$html .= "<div id='$input_id-help'></div>";
-	$html .= ($options['inline'] && $title) ? "</div>\n" : "";
+	$html .= ($options['inline']) ? "</div>\n" : '';
 	$html .= "</div>\n";
 	if ($options['required']) {
 		$html .= "<input class='req' id='dummy-$input_id' type='hidden'>\n"; // for jscheck
 	}
+
+
+
 	// Generate Defender Tag
 	$input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
@@ -169,7 +172,7 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 	return $html;
 }
 
-function form_user_select($title, $input_name, $input_id, $input_value = FALSE, array $array = array()) {
+function form_user_select($title, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
 	global $userdata, $locale;
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
@@ -205,7 +208,7 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
 	$html = "";
 	$html .= "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3  p-l-0" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")." p-l-0'>\n" : "";
 	$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' data-placeholder='".$options['placeholder']."' style='width:100%;' ".($options['deactivate'] ? 'disabled' : '')." />";
 	if ($options['deactivate']) {
 		$html .= form_hidden("", $input_name, $input_id, $input_value);
@@ -213,7 +216,7 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= $options['inline'] ? "</div>\n" : '';
 	$html .= "</div>\n";
-	$path = $options['file'] ? $array['file'] : INCLUDES."search/users.json.php";
+	$path = $options['file'] ? $options['file'] : INCLUDES."search/users.json.php";
 
 	if (!empty($input_value)) {
 		// json mode.
@@ -221,7 +224,6 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
 	} else {
 		$encoded = json_encode(array());
 	}
-
 
 	add_to_jquery("
                 function avatar(item) {
@@ -327,7 +329,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$level = 0;
 		$html = "<div id='$input_id-field' class='form-group m-b-10 ".$options['class']."' ".($options['inline'] && $options['width'] && !$title ? "style='width: ".$options['width']." !important;'" : '').">\n";
 		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-		$html .= ($options['inline'] && $title) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
+		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")." p-l-0'>\n" : "";
 	}
 	if ($level == 0) {
 		$html = &$html;
@@ -356,13 +358,11 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 	}
 
 	if (isset($index[$id])) {
-		$quantum = new QuantumFields();
 		foreach ($index[$id] as $key => $value) {
 			//$hide = $disable_branch && $value == $self_id ? 1 : 0;
 			$html = &$html;
 			$name = $data[$value][$name_col];
-			// need to unserialize damn it.
-			$name = $quantum::parse_label($name);
+			$name = QuantumFields::parse_label($name);
 			$select = ($input_value !== "" && ($input_value == $value)) ? 'selected' : '';
 			$disabled = $disable_opts && in_array($value, $disable_opts) ? 1 : 0;
 			$hide = $disabled && $options['hide_disabled'] ? 1 : 0;
@@ -379,7 +379,6 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$html .= "<br/><div id='$input_id-help'></div>";
 		$html .= ($options['inline'] && $title) ? "</div>\n" : '';
 		$html .= "</div>\n";
-		//$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required'].",[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
 		$defender->add_field_session(array(
 			 'input_name' 	=> 	$input_name,
 			 'type'			=>	'dropdown',
@@ -392,5 +391,4 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 	}
 	return $html;
 }
-
 ?>
