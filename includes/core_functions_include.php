@@ -396,12 +396,11 @@ function clean_request($request_link, array $filter) {
 	if (FUSION_QUERY) {
 		$_query = explode("&amp;", str_replace("?", "&amp;", FUSION_REQUEST));
 		array_shift($_query);
-		$sign = count($_query) > 1 ? '&amp;' : '?'; // if we have more than 1.
 		$i = 0;
 		foreach($_query as $query) {
 			$query_part = explode("=", $query);
 			if (!in_array($query_part[0], $filter)) {
-				$find[] = ($i == 0 ? $sign : '&amp;').$query;
+				$find[] = ($i == 0 ? '?' : '&amp;').$query;
 				$replace[] = '';
 			}
 			$i++;
