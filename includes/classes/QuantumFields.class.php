@@ -118,19 +118,6 @@ class QuantumFields {
 	}
 
 	/* Read into serialized field label and returns the value */
-	/* if you ask me, i'll use my function below */
-	/* static function is_serialized($value) {
-		if (!is_string( $value ) ) {
-			return FALSE;
-		}
-		if (stristr('b:0;', $value)) {
-			return TRUE;
-		}
-		if (strpos($value, "a:") !== FALSE) {
-			return TRUE;
-		}
-		return FALSE;
-	} */
 	/* This is the more pro edition by Chris Smith <code+php@chris.cs278.org>, Frank Bültge <frank@bueltge.de> */
 	static function is_serialized( $value, &$result = null ) {
 		// Bit of a give away this one
@@ -210,7 +197,7 @@ class QuantumFields {
 		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 		if (!empty($this->page[0])) {
 			foreach ($this->page[0] as $page_id => $page_data) {
-				$tab_title['title'][$page_id] = $page_data['field_cat_name'];
+				$tab_title['title'][$page_id] = self::parse_label($page_data['field_cat_name']);
 				$tab_title['id'][$page_id] = $page_id;
 				$tab_title['icon'][$page_id] = '';
 			}
@@ -230,7 +217,7 @@ class QuantumFields {
 				}
 				if (isset($this->page[$page_id])) {
 					echo "<div class='list-group-item display-inline-block m-t-20'>\n";
-					echo "<span class='strong'>".$page_details['field_cat_name']."</span> <a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$locale['edit']."</a> - ";
+					echo "<span class='strong'>".self::parse_label($page_details['field_cat_name'])."</span> <a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$locale['edit']."</a> - ";
 					echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$locale['delete']."</a>";
 					echo "</div>\n";
 
@@ -1146,6 +1133,7 @@ class QuantumFields {
 		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 well" : "col-sm-12 col-md-12 col-lg-12 well")."'>\n" : "<div class='well p-b-5 p-t-5'>";
 		foreach($language_opts as $lang) {
+			$options['field_title'] = $title." (".$lang.")";
 			$html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, (isset($input_value[$input_name][$lang]) ? $input_value[$input_name][$lang] : $input_value[$input_name]), $options);
 		}
 		$html .= "</div>\n";
@@ -1564,13 +1552,14 @@ class QuantumFields {
 		}
 	}
 
-	/* record fields */
-	public function infinity_insert($mode) {
-		$infinity_list = array();
+	/* record fields each modules, and fields */
+	/* will only update Modules. core fields is not going to be recorded, so you need to import $data in. */
+	public function quantum_insert(array $data) {
+		$quantum_fields = array();
 		$infinity_ref = array();
 		// bug fix: to get only the relevant fields on specific page.
 		$field_list = flatten_array($this->fields);
-		// to generate $infinity_ref and $infinity_list as reference and validate the $_POST input value.
+		// to generate $infinity_ref and $quantum_fields as reference and validate the $_POST input value.
 		foreach($field_list as $field_id => $field_data) {
 			if ($field_data['field_parent'] == $this->input_page) {
 				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
@@ -1578,32 +1567,28 @@ class QuantumFields {
 				$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : '';
 				// create reference array
 				$infinity_ref[$target_database] = array('index'=>$target_index, 'value'=>$index_value);
-				// create list array
-				$infinity_list[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : '';
+				$quantum_fields[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : isset($data[$field_data['field_name']]) ? : '';
 			}
 		}
-
-		if (!empty($infinity_list)) {
-			$temp_table = ''; $user_data = array();
-			$i = 1;
-			foreach($infinity_list as $_dbname => $_field_values) {
-				$merged_data = $_field_values;
-				if ($temp_table !== $_dbname && db_exists($_dbname)) { // if $temp_table is different. check if table exist. run once if pass
+		if (!empty($quantum_fields)) {
+			$temp_table = '';
+			foreach($quantum_fields as $_dbname => $_field_values) {
+				$merged_data = array();
+				$merged_data += $_field_values;
+				$merged_data += $data; // appends all other necessary values to fill up the entire table values.
+				if ($temp_table !== $_dbname) { // if $temp_table is different. check if table exist. run once if pass
+					$merged_data += array($infinity_ref[$_dbname]['index'] => $infinity_ref[$_dbname]['value']); // Primary Key and Value.
+					// ensure nothing is missing. this might be overkill. I would shut it down if not neccessary to lighten the load by 1-2 uncessary query.
 					$merged_data += dbarray(dbquery("SELECT * FROM ".$_dbname." WHERE ".$infinity_ref[$_dbname]['index']." = '".$infinity_ref[$_dbname]['value']."' ")); // this has overriden the value.
 				}
-				if (count($infinity_list) == $i) { // end of loop
 					dbquery_insert($_dbname, $merged_data, 'update');
-				} else {
-					dbquery_insert($_dbname, $merged_data, 'update', array('keep_session'=>1));
 				}
-			$i++;
 			}
 		}
-	}
 
 	/* Single array output match against $db */
 	public function output_fields($db) {
-		$infinity_list = array();
+		$quantum_fields = array();
 		$target_database = '';
 		$target_index = '';
 		$index_value = '';
@@ -1612,12 +1597,12 @@ class QuantumFields {
 				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
 				$target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
 				$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : '';
-				if (!isset($infinity_list[$target_database][$target_index])) $infinity_list[$target_database][$target_index] = $index_value;
-				$infinity_list[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : '';
+				if (!isset($quantum_fields[$target_database][$target_index])) $quantum_fields[$target_database][$target_index] = $index_value;
+				$quantum_fields[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : '';
 			}
 		}
 		if (db_exists($target_database) && $db == $target_database) {
-			foreach($infinity_list as $database_name => $infinity_fields) {
+			foreach($quantum_fields as $database_name => $infinity_fields) {
 				if ($target_database && $target_index) {
 					return $infinity_fields;
 				}
