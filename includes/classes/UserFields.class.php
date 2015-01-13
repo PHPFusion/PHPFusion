@@ -68,43 +68,14 @@ class UserFields extends QuantumFields {
 		$section = array();
 		$result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent='0' ORDER BY field_cat_order");
 		if (dbrows($result) > 0) {
-			$link = array();
-			$find = array(); $replace = array();
+			$cur = ($this->method == 'input') ? 'edit_profile.php' : 'profile.php';
+			$aid = isset($_GET['aid']) ? $aidlink.'&amp;' : '';
 			while ($data = dbarray($result)) {
-				$find[] = "&amp;profiles=".$data['field_cat_id'];
-				$replace[] = '';
-				$link[] = $data;
-			}
-			// self regeneration.
-			if (count($link) && !empty($link)) {
-				$i = 0;
-				foreach ($link as $data) {
-					$base_request = strtr(FUSION_REQUEST, array_combine($find, $replace));
-					$cur_link = '';
-					if (isset($_GET['profiles']) && $_GET['profiles'] == $data['field_cat_id']) {
-						$cur_link = FUSION_REQUEST;
-					} else {
-						if ($this->baseRequest) {
-							$cur_link .= $base_request."&amp;";
-						} else {
-							$cur_link = BASEDIR;
-							if ($this->method == 'input') {
-								$cur_link .= "edit_profile.php";
-							} else {
-								$cur_link .= "profile.php";
-							}
-							$cur_link .= isset($_GET['aid']) ? $aidlink."&amp;profiles=".$data['field_cat_id'] : "?profiles=".$data['field_cat_id'];
-							$cur_link .= "&amp;lookup=".$this->userData['user_id'];
-						}
-					}
-
-					$section[] = array(
-						'active'=>(isset($_GET['profiles']) && $_GET['profiles'] == $data['field_cat_id']) ? 1 : (!isset($_GET['profiles']) && $i == 0 ? 1 : 0),
-						'link'=>$cur_link,
-						'name'=>ucwords($data['field_cat_name'])
-					);
-					$i++;
-				}
+				$section[] = array(
+					'active'=>(isset($_GET['profiles']) && $_GET['profiles'] == $data['field_cat_id']) ? 1 : (!isset($_GET['profiles']) && $i == 0 ? 1 : 0),
+					'link'=>$cur.clean_request($aid.'profiles='.$data['field_cat_id'].'&amp;lookup='.$this->userData['user_id'], array()),
+					'name'=>ucwords(self::parse_label($data['field_cat_name']))
+				);
 			}
 		}
 		return $section;
