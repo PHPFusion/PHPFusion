@@ -70,12 +70,14 @@ class UserFields extends QuantumFields {
 		if (dbrows($result) > 0) {
 			$cur = ($this->method == 'input') ? 'edit_profile.php' : 'profile.php';
 			$aid = isset($_GET['aid']) ? $aidlink.'&amp;' : '';
+			$i = 0;
 			while ($data = dbarray($result)) {
 				$section[] = array(
 					'active'=>(isset($_GET['profiles']) && $_GET['profiles'] == $data['field_cat_id']) ? 1 : (!isset($_GET['profiles']) && $i == 0 ? 1 : 0),
 					'link'=>$cur.clean_request($aid.'profiles='.$data['field_cat_id'].'&amp;lookup='.$this->userData['user_id'], array()),
 					'name'=>ucwords(self::parse_label($data['field_cat_name']))
 				);
+				$i++;
 			}
 		}
 		return $section;
