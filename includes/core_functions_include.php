@@ -381,6 +381,38 @@ function preg_check($expression, $value) {
 }
 
 /**
+ * @return string
+ * @param string $request_link
+ * @param array $filter
+ * // Document like this Rimelek?
+ * // But how about Explanations?
+ * explanation: currently in your URL is.. http://www.php-fusion.co.uk/file.php?one=1&two=2&three=3.
+ * url as FUSION_REQUEST always return all. But if you just want 1 request, it will append resulting double request var in your url link.
+ * This function eliminates it - href='".clean_request('three=3', array('one')."' will return file.php?one=1&three=3 in your url link.
+ * This will not clean hardcoded $_GETs, and remains unaffected.
+ */
+function clean_request($request_link, array $filter) {
+	$find = array(); $replace = array();
+	if (FUSION_QUERY) {
+		$_query = explode("&amp;", str_replace("?", "&amp;", FUSION_REQUEST));
+		array_shift($_query);
+		$sign = count($_query) > 1 ? '&amp;' : '?'; // if we have more than 1.
+		$i = 0;
+		foreach($_query as $query) {
+			$query_part = explode("=", $query);
+			if (!in_array($query_part[0], $filter)) {
+				$find[] = ($i == 0 ? $sign : '&amp;').$query;
+				$replace[] = '';
+			}
+			$i++;
+		}
+	}
+	$return_value = strtr(FUSION_REQUEST, array_combine($find, $replace));
+	if ($request_link) $return_value .= (stristr($return_value, '?') ? '&amp;' : '?').$request_link;
+	return $return_value;
+}
+
+/**
  * Cache smileys mysql
  * 
  * @return array
