@@ -60,7 +60,6 @@ class UserFieldsInput {
 
 	public function saveInsert() {
 		$this->_method = "validate_insert";
-
 		$this->data = array("user_password" => "",
 							"user_algo" => "",
 							"user_salt" => "",
@@ -150,6 +149,34 @@ class UserFieldsInput {
 		return $this->_themeChanged;
 	}
 
+	private function _setFields($field_name, $unique = '0', $db_name = FALSE) {
+		global $defender;
+		$db_name = $db_name ? $db_name : DB_USERS;
+		$input_var = isset($_POST[$field_name]) ? form_sanitizer($_POST[$field_name], 0, $field_name) : $this->data[$field_name];
+		if ($unique && !defined("FUSION_NULL")) {
+			if ($input_var && $input_var != $this->userData[$field_name]) {
+				// check for the field name where this field value does not exist.
+				$rows = dbcount("(".$field_name.")", $db_name, "".$field_name."='".$input_var."'");
+				if (!$rows) {
+					$this->data[$field_name] = $input_var;
+				} else {
+					$defender->stop();
+					$defender->addError($field_name);
+					$defender->addNotice($field_name." is already taken.");
+				}
+			} else {
+				// set back the old value.
+				$this->data[$field_name] = $this->userData[$field_name];
+			}
+		} else {
+			if (!defined("FUSION_NULL")) {
+				$this->data[$field_name] = $input_var;
+			} else {
+				$this->data[$field_name] = $this->userData[$field_name];
+			}
+		}
+	}
+
 	private function _settUserName() {
 		global $locale, $defender;
 		$this->_userName = isset($_POST['user_name']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_name']))) : "";
@@ -187,6 +214,8 @@ class UserFieldsInput {
 	}
 
 	/* Always to return FALSE unless you key in a valid password */
+	// Login pass means if this is a login password or not.
+	// skipCurrentPassword - False means to validate.
 	private function _isValidCurrentPassword($loginPass = TRUE, $skipCurrentPass = FALSE) {
 		if ($loginPass && !$skipCurrentPass) {
 			// used on register.
@@ -231,7 +260,7 @@ class UserFieldsInput {
 	private function _setNewUserPassword() {
 		global $locale, $defender;
 		// this is used by many of the following functions - username and email. it will always be false unless you submit a password
-		$this->_isValidCurrentPassword = $this->_isValidCurrentPassword(TRUE, $this->skipCurrentPass); // $skipCurrentPass is 1 on edit profile // false on register
+		$this->_isValidCurrentPassword = $this->_isValidCurrentPassword(TRUE, $this->skipCurrentPass); // $skipCurrentPass is FALSE on edit profile // false on register
 		$this->_newUserPassword = $this->_getPasswordInput("user_new_password");
 		$this->_newUserPassword2 = $this->_getPasswordInput("user_new_password2");
 		if ($this->_newUserPassword) {
@@ -632,10 +661,11 @@ class UserFieldsInput {
 		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 		$quantum->input_page = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 		$quantum->load_data();
-		dbquery_insert(DB_USERS, $this->data, 'update', array('keep_session'=>1));
-		$quantum->infinity_insert('update');
+		$quantum->quantum_insert($this->data); // update database
 		$this->_completeMessage = $locale['u163'];
 	}
+
+
 
 	private function _saveUserLog() {
 		$i = 0;
