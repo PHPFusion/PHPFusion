@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+require_once THEMES."templates/admin_header.php";
 if (!checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
 	die("Acces Denied");
 }
@@ -88,7 +89,6 @@ while ($data = dbarray($result)) {
 }
 $rows = $errors ? dbcount('(error_id)', DB_ERRORS) : 0;
 
-require_once THEMES."templates/admin_header.php";
 opentable($locale['400']);
 if ($errors) : ?>
 	<a name='top'></a>
@@ -192,7 +192,7 @@ if ($error_id) {
 					<select name='error_status' class='textbox' onchange='this.form.submit();'>
 						<option value='0' <?php echo ($data['error_status'] == 0 ? "selected='selected'" : "") ?>><?php echo $locale['450'] ?></option>
 						<option value='1' <?php echo ($data['error_status'] == 1 ? "selected='selected'" : "") ?>><?php echo $locale['451'] ?></option>
-						<option value='2' <?php echo ($data['error_status'] == 2 ? " selected='selected'" : "") ?>><?php echo $locale['452'] ?></option>
+						<option value='2' <?php echo ($data['error_status'] == 2 ? "selected='selected'" : "") ?>><?php echo $locale['452'] ?></option>
 					</select>
 					<input type='submit' class='button change_status' value='<?php echo $locale['453'] ?>' style='margin-left:5px;' />
 				</form>
