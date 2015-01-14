@@ -54,35 +54,49 @@ if ($settings['enable_deactivation'] == "1") {
 	$time_overdue = time()-(86400*$settings['deactivation_period']);
 	$members['inactive'] = dbcount("(user_id)", DB_USERS, "user_lastvisit<'$time_overdue' AND user_actiontime='0' AND user_joined<'$time_overdue' AND user_status='0'");
 }
-// forums stats
-$forum['count'] = dbcount("('forum_id')", DB_FORUMS);
-$forum['thread'] = dbcount("('post_id')", DB_THREADS);
-$forum['post'] = dbcount("('post_id')", DB_POSTS);
-$forum['users'] = dbcount("('user_id')", DB_USERS, "user_posts > '0'");
-// downloads stats
-$download['download'] = dbcount("('download_id')", DB_DOWNLOADS);
-$download['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='d'");
-$download['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'");
-// articles stats
-$articles['article'] = dbcount("('article_id')", DB_ARTICLES);
-$articles['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='A'");
-$articles['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'");
-// weblink stats
-$weblinks['weblink'] = dbcount("('weblink_id')", DB_WEBLINKS);
-$weblinks['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='L'");
-$weblinks['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'");
-// news stats
-$news['news'] = dbcount("('news_id')", DB_NEWS);
-$news['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='n'");
-$news['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'");
-// blog stats
-$blog['blog'] = dbcount("('blog_id')", DB_BLOG);
-$blog['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='b'");
-$blog['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'");
-// photo gallery stats
-$photos['photo'] = dbcount("('photo_id')", DB_PHOTOS);
-$photos['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='P'");
-$photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
+if (db_exists(DB_FORUMS)) {
+	// forums stats
+	$forum['count'] = dbcount("('forum_id')", DB_FORUMS);
+	$forum['thread'] = dbcount("('post_id')", DB_THREADS);
+	$forum['post'] = dbcount("('post_id')", DB_POSTS);
+	$forum['users'] = dbcount("('user_id')", DB_USERS, "user_posts > '0'");
+}
+if (db_exists(DB_DOWNLOADS)) {
+	// downloads stats
+	$download['download'] = dbcount("('download_id')", DB_DOWNLOADS);
+	$download['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='d'");
+	$download['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'");
+}
+if (db_exists(DB_ARTICLES)) {
+	// articles stats
+	$articles['article'] = dbcount("('article_id')", DB_ARTICLES);
+	$articles['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='A'");
+	$articles['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'");
+}
+if (db_exists(DB_WEBLINKS)) {
+	// weblink stats
+	$weblinks['weblink'] = dbcount("('weblink_id')", DB_WEBLINKS);
+	$weblinks['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='L'");
+	$weblinks['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'");
+}
+if (db_exists(DB_NEWS)) {
+	// news stats
+	$news['news'] = dbcount("('news_id')", DB_NEWS);
+	$news['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='n'");
+	$news['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'");
+}
+if (db_exists(DB_BLOG)) {
+	// blog stats
+	$blog['blog'] = dbcount("('blog_id')", DB_BLOG);
+	$blog['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='b'");
+	$blog['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'");
+}
+if (db_exists(DB_PHOTOS)) {
+	// photo gallery stats
+	$photos['photo'] = dbcount("('photo_id')", DB_PHOTOS);
+	$photos['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='P'");
+	$photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
+}
 
 $comments_type = array('N' => $locale['269'], 'D' => $locale['268'], 'P' => $locale['272'], 'A' => $locale['270'],'B' => $locale['269b'],);
 $submit_type = array('n' => $locale['269'], 'd' => $locale['268'], 'p' => $locale['272'], 'a' => $locale['270'], 'l' => $locale['271'],'b' => $locale['269b'],);
