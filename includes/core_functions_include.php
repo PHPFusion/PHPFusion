@@ -29,17 +29,21 @@ function get_microtime() {
 /**
  * check multilang tables
  * 
+ * @staticvar boolean[] $tables
  * @param string $table Table name
  * @return boolean 
  */
 function multilang_table($table) {
-	$result = dbquery("SELECT mlt_rights FROM ".DB_LANGUAGE_TABLES." WHERE mlt_rights='".$table."' AND mlt_status='1' LIMIT 0,1");
-	$rows = dbrows($result);
-	if ($rows != 0) {
-		return TRUE;
-	} else {
-		return FALSE;
+	static $tables = NULL;
+	
+	if ($tables === NULL) {
+		$tables = array();
+		$result = dbquery("SELECT mlt_rights FROM ".DB_LANGUAGE_TABLES." WHERE mlt_status='1'");
+		while ($row = dbarraynum($result)) {
+			$tables[$row[0]] = TRUE;
+		}
 	}
+	return isset($tables[$table]);
 }
 
 /**
