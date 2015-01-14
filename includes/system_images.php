@@ -154,10 +154,9 @@ namespace PHPFusion {
 				//Z
 			);
 			//</editor-fold>
-			//TODO: real check
 			$installedTables = array(
-				'blog' => TRUE,
-				'news' => TRUE
+				'blog' => db_exists('blog'),
+				'news' => db_exists('news')
 			);
 
 			$selects = array(

@@ -744,11 +744,34 @@ function dbcompress($data, $mode, $delimiter = FALSE, $sdelimiter = FALSE) {
 	}
 }
 
+/**
+ * Check if a PHPFusion table exists
+ *
+ * However you can pass the table name with or without prefix,
+ * this fucntion only check the prefixed tables of the PHPFusion
+ * 
+ * @todo We should find a better name. fusion_table_exists or fusion_dbtable_exists...
+ * 
+ * @staticvar boolean[] $tables
+ * @param string $table The name of the table with or without prefix
+ * @return boolean
+ */
 function db_exists($table) {
-	$table = str_replace(DB_PREFIX, '', $table);
-	if (dbrows(dbquery("SHOW TABLES LIKE '".DB_PREFIX.$table."'")) == 1) {
-		return true;
+	static $tables = NULL;
+	
+	$length = strlen(DB_PREFIX);
+	if (substr($table, 0, $length) === DB_PREFIX) {
+		$table = substr($table, $length);
 	}
-	return false;
+	if ($tables === NULL) {
+		$result = dbquery(
+			"SELECT substring(table_name, ".($length+1).") "
+			." FROM information_schema.tables WHERE table_schema = database() "
+			. " AND table_name LIKE '".str_replace('_', '\_', DB_PREFIX)."%'");
+		while ($row = dbarraynum($result)) {
+			$tables[$row[0]] = TRUE;
+		}
+	}
+	return isset($tables[$table]);
 }
 ?>
