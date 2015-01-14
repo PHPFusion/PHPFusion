@@ -98,7 +98,6 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_orders");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_settings");
 	// Create Tables
-	if (!db_exists($db_prefix."eshop")) {
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop (
 				id mediumint(8) unsigned NOT NULL auto_increment,
 				title varchar(200) NOT NULL default '',
@@ -152,8 +151,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	}
-	if (!db_exists($db_prefix."eshop_cats")) {
+
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_cats (
 				cid mediumint(8) unsigned NOT NULL auto_increment,
 				title varchar(45) NOT NULL default '',
@@ -168,11 +166,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
 	
-	if (!db_exists($db_prefix."eshop_customers")) {
 	$result = dbquery("CREATE TABLE ".$db_prefix."eshop_customers (
 			  cuid mediumint(8) NOT NULL default '0',
 			  cfirstname varchar(50) NOT NULL default '',
@@ -190,14 +184,10 @@ if (isset($_POST['uninstall'])) {
 			  ccupons text NOT NULL,
 			  PRIMARY KEY  (cuid)
 			  ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-		if (!$result) {
-			$fail = TRUE;
-		}
-	} else {
+	if (!$result) {
 		$fail = TRUE;
 	}
 
-	if (!db_exists($db_prefix."eshop_photos")) {
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_photos (
 			photo_id mediumint(8) unsigned NOT NULL auto_increment,
 			album_id mediumint(8) unsigned NOT NULL default '0',
@@ -218,10 +208,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
-	if (!db_exists($db_prefix."eshop_cart")) {
+
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_cart (
 			tid mediumint(8) NOT NULL auto_increment,
 			puid varchar(45) NOT NULL default '0',
@@ -243,10 +230,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
-	if (!db_exists($db_prefix."eshop_shippingcats")) {
+
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_shippingcats (
 			cid mediumint(8) NOT NULL auto_increment,
 			title varchar(50) NOT NULL default '',
@@ -256,10 +240,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
-	if (!db_exists($db_prefix."eshop_shippingitems")) {
+
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_shippingitems (
 			sid mediumint(8) NOT NULL auto_increment,
 			cid mediumint(8) NOT NULL default '0',
@@ -276,10 +257,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
-	if (!db_exists($db_prefix."eshop_payments")) {
+
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_payments (
 			pid mediumint(8) NOT NULL auto_increment,
 			method text NOT NULL,
@@ -294,10 +272,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
-	if (!db_exists($db_prefix."eshop_orders")) {
+
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_orders (
 			oid mediumint(8) NOT NULL auto_increment,
 			ouid varchar(15) NOT NULL default '',
@@ -321,10 +296,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
-	if (!db_exists($db_prefix."eshop_cupons")) {
+
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_cupons (
 			cuid VARCHAR( 15 ) NOT NULL DEFAULT  '',
 			cuname varchar(50) NOT NULL default '',
@@ -338,10 +310,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
-	if (!db_exists($db_prefix."eshop_featitems")) {
+		
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_featitems (
 			featitem_id mediumint(8) unsigned NOT NULL auto_increment,
 			featitem_item mediumint(8) unsigned NOT NULL default '0',
@@ -353,10 +322,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
-	if (!db_exists($db_prefix."eshop_featbanners")) {
+
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_featbanners (
 			featbanner_aid mediumint(8) unsigned NOT NULL auto_increment,
 			featbanner_id mediumint(8) unsigned NOT NULL default '0',
@@ -371,9 +337,7 @@ if (isset($_POST['uninstall'])) {
 		if (!$result) {
 			$fail = TRUE;
 		}
-	} else {
-		$fail = TRUE;
-	}
+
 	// Core Inserts
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['setup_3053']."', 'eshop.php', '1')");
 	if (!$result) $fail = TRUE;

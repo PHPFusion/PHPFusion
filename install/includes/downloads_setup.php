@@ -26,24 +26,21 @@ if (isset($_POST['uninstall'])) {
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."download_cats");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."downloads");
-	if (!db_exists($db_prefix."download_cats")) {
-		$result = dbquery("CREATE TABLE ".$db_prefix."download_cats (
-					download_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-					download_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-					download_cat_name VARCHAR(100) NOT NULL DEFAULT '',
-					download_cat_description TEXT NOT NULL,
-					download_cat_sorting VARCHAR(50) NOT NULL DEFAULT 'download_title ASC',
-					download_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
-					PRIMARY KEY (download_cat_id)
-					) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-		if (!$result) {
-			$fail = TRUE;
-		}
-	} else {
+
+	$result = dbquery("CREATE TABLE ".$db_prefix."download_cats (
+				download_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+				download_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+				download_cat_name VARCHAR(100) NOT NULL DEFAULT '',
+				download_cat_description TEXT NOT NULL,
+				download_cat_sorting VARCHAR(50) NOT NULL DEFAULT 'download_title ASC',
+				download_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+				PRIMARY KEY (download_cat_id)
+				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+	if (!$result) {
 		$fail = TRUE;
 	}
-	if (!db_exists($db_prefix."downloads")) {
-		$result = dbquery("CREATE TABLE ".$db_prefix."downloads (
+
+	$result = dbquery("CREATE TABLE ".$db_prefix."downloads (
 				download_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 				download_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 				download_homepage VARCHAR(100) NOT NULL DEFAULT '',
@@ -69,23 +66,19 @@ if (isset($_POST['uninstall'])) {
 				PRIMARY KEY (download_id),
 				KEY download_datestamp (download_datestamp)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-		if (!$result) { $fail = TRUE; }
+	if (!$result) { $fail = TRUE; }
 
-		$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('DC', 'dl_cats.gif', '".$locale['setup_3009']."', 'download_cats.php', '1')");
-		$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('D', 'dl.gif', '".$locale['setup_3010']."', 'downloads.php', '1')");
-		$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S11', 'settings_dl.gif', '".$locale['setup_3042']."', 'settings_dl.php', '4')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('DC', 'dl_cats.gif', '".$locale['setup_3009']."', 'download_cats.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('D', 'dl.gif', '".$locale['setup_3010']."', 'downloads.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S11', 'settings_dl.gif', '".$locale['setup_3042']."', 'settings_dl.php', '4')");
 
-		$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
-		$links_sql .= implode(",\n", array_map(function ($language) {
-			include LOCALE.$language."/setup.php";
-			return "('".$locale['setup_3302']."', 'downloads.php', '0', '2', '0', '3', '".$language."'),
-					('".$locale['setup_3314']."', 'submit.php?stype=d', '101', '1', '0', '16', '".$language."')";
-		}, explode('.', fusion_get_settings('enabled_languages'))));
-		if(!dbquery($links_sql)) {
-			$fail = TRUE;
-		}
-
-	} else {
+	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
+	$links_sql .= implode(",\n", array_map(function ($language) {
+		include LOCALE.$language."/setup.php";
+		return "('".$locale['setup_3302']."', 'downloads.php', '0', '2', '0', '3', '".$language."'),
+				('".$locale['setup_3314']."', 'submit.php?stype=d', '101', '1', '0', '16', '".$language."')";
+	}, explode('.', fusion_get_settings('enabled_languages'))));
+	if(!dbquery($links_sql)) {
 		$fail = TRUE;
 	}
 }

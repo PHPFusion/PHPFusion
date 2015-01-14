@@ -25,53 +25,47 @@ if (isset($_POST['uninstall'])) {
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."blog");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."blog_cats");
-	if (!db_exists($db_prefix."blog")) {
-		$result = dbquery("CREATE TABLE ".$db_prefix."blog (
-			blog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-			blog_subject VARCHAR(200) NOT NULL DEFAULT '',
-			blog_image VARCHAR(100) NOT NULL DEFAULT '',
-			blog_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
-			blog_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
-			blog_ialign VARCHAR(15) NOT NULL DEFAULT '',
-			blog_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			blog_blog TEXT NOT NULL,
-			blog_extended TEXT NOT NULL,
-			blog_keywords VARCHAR(250) NOT NULL DEFAULT '',
-			blog_breaks CHAR(1) NOT NULL DEFAULT '',
-			blog_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-			blog_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			blog_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			blog_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			blog_visibility TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
-			blog_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			blog_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			blog_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			blog_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-			blog_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-			blog_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
-			PRIMARY KEY (blog_id),
-			KEY blog_datestamp (blog_datestamp),
-			KEY blog_reads (blog_reads)
-			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+	$result = dbquery("CREATE TABLE ".$db_prefix."blog (
+		blog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+		blog_subject VARCHAR(200) NOT NULL DEFAULT '',
+		blog_image VARCHAR(100) NOT NULL DEFAULT '',
+		blog_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
+		blog_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
+		blog_ialign VARCHAR(15) NOT NULL DEFAULT '',
+		blog_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+		blog_blog TEXT NOT NULL,
+		blog_extended TEXT NOT NULL,
+		blog_keywords VARCHAR(250) NOT NULL DEFAULT '',
+		blog_breaks CHAR(1) NOT NULL DEFAULT '',
+		blog_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
+		blog_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		blog_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		blog_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		blog_visibility TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+		blog_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
+		blog_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		blog_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+		blog_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+		blog_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+		blog_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+		PRIMARY KEY (blog_id),
+		KEY blog_datestamp (blog_datestamp),
+		KEY blog_reads (blog_reads)
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	if (!$result) {
 		$fail = TRUE;
 	}
-	} else {
-		$fail = TRUE;
-	}
-	if (!db_exists($db_prefix."blog_cats")) {
-		$result = dbquery("CREATE TABLE ".$db_prefix."blog_cats (
-				blog_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-				blog_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-				blog_cat_name VARCHAR(100) NOT NULL DEFAULT '',
-				blog_cat_image VARCHAR(100) NOT NULL DEFAULT '',
-				blog_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
-				PRIMARY KEY (blog_cat_id)
-				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-		if (!$result) {
-			$fail = TRUE;
-		}
-	} else {
+
+	$result = dbquery("CREATE TABLE ".$db_prefix."blog_cats (
+			blog_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+			blog_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+			blog_cat_name VARCHAR(100) NOT NULL DEFAULT '',
+			blog_cat_image VARCHAR(100) NOT NULL DEFAULT '',
+			blog_cat_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
+			PRIMARY KEY (blog_cat_id)
+			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+	if (!$result) {
 		$fail = TRUE;
 	}
 
