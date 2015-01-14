@@ -748,7 +748,7 @@ function dbcompress($data, $mode, $delimiter = FALSE, $sdelimiter = FALSE) {
  * Check if a PHPFusion table exists
  *
  * However you can pass the table name with or without prefix,
- * this fucntion only check the prefixed tables of the PHPFusion
+ * this function only check the prefixed tables of the PHPFusion
  * 
  * @todo We should find a better name. fusion_table_exists or fusion_dbtable_exists...
  * 
