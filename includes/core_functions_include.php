@@ -695,7 +695,7 @@ function verify_image($file) {
 		'#\<\?php#i',
 		'#&(quot|lt|gt|nbsp);#i',
 		'#&\#x([0-9a-f]+);#i',
-		'#&\#([0-9]+);#i'.
+		'#&\#([0-9]+);#i',
 		"#([a-z]*)=([\`\'\"]*)script:#iU",
 		"#([a-z]*)=([\`\'\"]*)javascript:#iU",
 		"#([a-z]*)=([\'\"]*)vbscript:#iU",
