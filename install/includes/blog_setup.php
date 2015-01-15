@@ -94,7 +94,7 @@ if (isset($_POST['uninstall'])) {
 	}
 
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('BLC', 'blog_cats.gif', '".$locale['setup_3054']."', 'blog_cats.php', '1')");
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('BLOG', 'blog.gif', '".$locale['setup_3055']."', 'blog.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('BLOG', 'blog.png', '".$locale['setup_3055']."', 'blog.php', '1')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S13', 'settings_blog.gif', '".$locale['setup_3055']."', 'settings_blog.php', '4')");
 
 	// site links

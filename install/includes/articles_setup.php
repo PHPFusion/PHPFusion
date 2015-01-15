@@ -66,7 +66,7 @@ if (isset($_POST['uninstall'])) {
 
 	// admin pages
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('AC', 'article_cats.gif', '".$locale['setup_3001']."', 'article_cats.php', '1')");
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('A', 'articles.gif', '".$locale['setup_3002']."', 'articles.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('A', 'articles.png', '".$locale['setup_3002']."', 'articles.php', '1')");
 	// panel
 	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['setup_3403']."', 'latest_articles_panel', '', '1', '5', 'file', '0', '0', '1', '')");
 	// links
