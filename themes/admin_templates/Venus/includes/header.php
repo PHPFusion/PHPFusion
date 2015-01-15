@@ -15,6 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+add_to_head("<script src='".THEMES."admin_templates/Venus/includes/jquery.slimscroll.min.js'></script>");
+add_to_jquery("
+$('#adl').slimScroll({
+        height: '950px',
+        width: '100%'
+    });
+
+");
 echo "<section id='acp-header' class='clearfix' data-spy='affix' data-offset-top='0' data-offset-bottom='0'>\n";
 echo "<div class='brand pull-left'>\n";
 echo "<img src='".IMAGES."php-fusion-icon.png'>\n";
