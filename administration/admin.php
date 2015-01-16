@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 /**
  * Class Admin
  */
@@ -91,12 +91,38 @@ class Admin {
 		'S12'	=>	'fa fa-fw fa-shield',			// Security Settings
 		'S13'	=>	'fa fa-fw fa-graduation-cap',	// Blog Settings
 	);
-
+	/**
+	 * @var array
+	 */
+	private $admin_pages = array();
+	/**
+	 * @var array
+	 */
+	private $pages = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALSE);
 	/**
 	 *	Constructor class. No Params
 	 */
 	public function __construct() {
+		global $aidlink, $locale, $pages, $admin_pages, $settings;
 		add_to_head("<link rel='stylesheet' href='".INCLUDES."font/".$this->icon_repo."/css/".$this->icon_repo.".min.css' type='text/css' />");
+		@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
+
+		add_to_title($locale['global_200'].$locale['global_123'].($title ? $locale['global_201'].$title : ""));
+
+		$this->admin_pages = $admin_pages;
+		$this->pages = $pages;
+		// search
+		/*
+		$result = dbquery("SELECT admin_title, admin_page, admin_rights, admin_link FROM ".DB_ADMIN." ORDER BY admin_page DESC, admin_title ASC");
+		$rows = dbrows($result);
+		if ($rows > 0) {
+			while ($data = dbarray($result)) {
+				if ($data['admin_link'] != "reserved" && checkrights($data['admin_rights'])) {
+					$this->admin_pages[$data['admin_page']][$data['admin_title']] = $data['admin_link'];
+					$this->pages[$data['admin_page']] .= "<option value='".ADMIN.$data['admin_link'].$aidlink."'>".preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title'])."</option>\n";
+				}
+			}
+		} */
 	}
 
 	/**
@@ -110,25 +136,27 @@ class Admin {
 		}
 		return false;
 	}
+
+	/**
+	 * @param $page_number
+	 * @return string
+	 */
 	public function get_admin_page_icons($page_number) {
 		if (isset($this->admin_page_icons[$page_number]) && $this->admin_page_icons[$page_number]) {
 			return "<i class='admin_ico ".$this->admin_page_icons[$page_number]."'></i>\n";
 		}
 	}
+
 	/**
 	 * @return string
 	 */
 	public function vertical_admin_nav() {
 		global $aidlink, $locale, $settings;
 
-		$admin_icon = array('0' => 'entypo gauge', '1' => 'entypo docs', '2' => 'entypo user', '3' => 'entypo drive', '4' => 'entypo cog', '5' => 'entypo magnet');
-
 		$inf_page_request = FUSION_REQUEST;
-
 		if (isset($_GET['section'])) {
 			$inf_page_request = str_replace("&amp;section=".$_GET['section']."", "", $inf_page_request);
 		}
-
 		if (stristr(FUSION_REQUEST, '/infusions/')) {
 			$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', $inf_page_request));
 		}
@@ -136,8 +164,7 @@ class Admin {
 		$html = "<ul id='adl' class='admin-vertical-link'>\n";
 		for ($i = 0; $i < 6; $i++) {
 			$result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_link !='reserved' ORDER BY admin_title ASC");
-
-			$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && admin_active() == $i) ? 1 : 0;
+			$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
 			$html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 			if ($i == 0) {
 				$html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
@@ -163,17 +190,34 @@ class Admin {
 	}
 
 	/**
-	 *
+	 * @return int|string
 	 */
-	public function horiziontal_nav() {
-		//if (!$style) {
-		// horizontal navigation with dropdown menu.
-		//	$html = "<ul class='admin-horizontal-link'>\n";
-		//	for ($i = 0; $i < 6; $i++) {
-		//		$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && admin_active() == $i) ? 1 : 0;
-		//		$html .= "<li ".($active ? "class='active'" : '')."><a href='".ADMIN.$aidlink."&amp;pagenum=$i'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]."</a></li>\n";
-		//	}
-		//	$html .= "</ul>\n";
+	private function _isActive() {
+		global $admin_pages, $settings, $aidlink;
+		$inf_page_request = FUSION_REQUEST;
+		if (isset($_GET['section'])) {
+			$inf_page_request = str_replace("&amp;section=".$_GET['section']."", "", $inf_page_request);
+		}
+		if (stristr(FUSION_REQUEST, '/infusions/')) {
+			$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', $inf_page_request));
+		}
+		foreach ($this->admin_pages as $key => $data) {
+			if (in_array(FUSION_SELF, $data) || in_array($inf_page_request, $data)) {
+				return $key;
+			}
+		}
+		return '0';
+	}
+
+	public function horiziontal_admin_nav() {
+		global $aidlink, $locale;
+		$html = "<ul class='admin-horizontal-link'>\n";
+		for ($i = 0; $i < 6; $i++) {
+			$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
+			$html .= "<li ".($active ? "class='active'" : '')."><a href='".ADMIN.$aidlink."&amp;pagenum=$i'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i]."</a></li>\n";
+			}
+		$html .= "</ul>\n";
+		return $html;
 	}
 
 

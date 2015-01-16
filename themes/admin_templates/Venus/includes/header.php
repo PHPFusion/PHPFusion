@@ -15,13 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-add_to_head("<script src='".THEMES."admin_templates/Venus/includes/jquery.slimscroll.min.js'></script>");
-add_to_jquery("
-$('#adl').slimScroll({
-        height: '950px',
-        width: '100%'
-    });
-");
+
 echo "<section id='acp-header' class='clearfix' data-spy='affix' data-offset-top='0' data-offset-bottom='0'>\n";
 echo "<div class='brand pull-left'>\n";
 echo "<img src='".IMAGES."php-fusion-icon.png'>\n";
@@ -29,10 +23,41 @@ echo "<h4 class='brand-text'>Administrator</h4>\n";
 echo "</div>\n";
 echo "<nav>\n";
 echo "<ul class='venus-toggler'>\n";
-echo "<li><a id='toggle-canvas' class='pointer' style='border-left:none;'><i class='entypo menu text-bigger'></i></a></li>\n";
+echo "<li><a id='toggle-canvas' class='pointer' style='border-left:none;'><i class='fa fa-ellipsis-v fa-lg'></i></a></li>\n";
 echo "</ul>\n";
+echo "<ul class='hidden-xs pull-right m-r-15'>\n";
+if (sizeof($enabled_languages) > 1) {
+	echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-flag fa-lg'></i><span class='caret'></span></a>\n";
+	echo "<ul class='dropdown-menu' role='lang-menu'>\n";
+	foreach($language_opts as $languages) {
+		echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".FUSION_REQUEST."&amp;lang=$languages'><img class='m-r-5' src='".BASEDIR."locale/$languages/$languages-s.png'> $languages</a></li>\n";
+	}
+	echo "</ul>\n";
+	echo "</li>\n";
+}
 
+echo "<li><a title='".$locale['view']." ".$settings['sitename']."' href='".BASEDIR."'><i class='fa fa-home fa-lg'></i></a></li>\n";
+echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='fa fa-inbox fa-lg'></i></a></li>\n";
+echo "<li><a title='".$locale['settings']."' href='".ADMIN."settings_main.php".$aidlink."'><i class='fa fa-cog fa-lg'></i></a></li>\n";
+echo "<li class='dropdown'><a class='dropdown-toggle pointer strong' data-toggle='dropdown'>".display_avatar($userdata, '18px', '', '', '')." ".$locale['logged'].$userdata['user_name']." <span class='caret'></span></a>\n";
+echo "<ul class='dropdown-menu' role='menu'>\n";
+echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."edit_profile.php'>".$locale['edit']." ".$locale['profile']."</a></li>\n";
+echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>\n";
+echo "<li class='divider display-block'>\n</li>\n";
+echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".FUSION_REQUEST."&amp;logout'>".$locale['admin-logout']."</a></li>\n";
+echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
+echo "</ul>\n";
+echo "</li>\n";
+echo "</ul>\n";
+echo "</nav>\n";
+echo "</section>\n";
+
+add_to_head("<script src='".THEMES."admin_templates/Venus/includes/jquery.slimscroll.min.js'></script>");
 add_to_jquery("
+$('#adl').slimScroll({
+        height: '950px',
+        width: '100%'
+    });
 $('#toggle-canvas').bind('click', function(e) {
 	$('#acp-left').toggleClass('in');
 	setTimeout(function() {
@@ -48,31 +73,4 @@ $('#toggle-canvas').bind('click', function(e) {
 });
 ");
 
-echo "<ul class='hidden-xs pull-right m-r-15'>\n";
-if (sizeof($enabled_languages) > 1) {
-	echo "<li class='dropdown'><a class='dropdown-toggle' data-toggle='dropdown' title='".$locale['282']."'><i class='icon-xs entypo flag'></i><span class='caret'></span></a>\n";
-	echo "<ul class='dropdown-menu' role='lang-menu'>\n";
-	foreach($language_opts as $languages) {
-		echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".FUSION_REQUEST."&amp;lang=$languages'><img class='m-r-5' src='".BASEDIR."locale/$languages/$languages-s.png'> $languages</a></li>\n";
-	}
-	echo "</ul>\n";
-	echo "</li>\n";
-}
-
-
-echo "<li><a title='".$locale['view']." ".$settings['sitename']."' href='".BASEDIR."'><i class='icon-xs entypo home'></i></a></li>\n";
-echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='icon-xs entypo mail'></i></a></li>\n";
-echo "<li><a title='".$locale['settings']."' href='".ADMIN."settings_main.php".$aidlink."'><i class='icon-xs entypo cog'></i></a></li>\n";
-echo "<li class='dropdown'><a class='dropdown-toggle' data-toggle='dropdown'>".$locale['logged'].$userdata['user_name']." <span class='caret'></span></a>\n";
-echo "<ul class='dropdown-menu' role='menu'>\n";
-echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."edit_profile.php'>".$locale['edit']." ".$locale['profile']."</a></li>\n";
-echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['view']." ".$locale['profile']."</a></li>\n";
-echo "<li class='divider' class='display-block' style='width:100%'>\n</li>\n";
-echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".FUSION_REQUEST."&amp;logout'>".$locale['admin-logout']."</a></li>\n";
-echo "<li style='width:100%;'><a class='display-block' style='width:100%' href='".BASEDIR."index.php?logout=yes'>".$locale['logout']."</a></li>\n";
-echo "</ul>\n";
-echo "</li>\n";
-echo "</ul>\n";
-echo "</nav>\n";
-echo "</section>\n";
 ?>

@@ -67,16 +67,17 @@ function render_adminpanel() {
 		echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '50px', '', '', '')."</div>\n";
 		echo "<span class='display-block m-t-5'><strong>\n".ucfirst($userdata['user_name'])."</strong>\n<br/>".getuserlevel($userdata['user_level'])."</span></div>\n";
 		echo "</div>\n";
-		//echo admin_nav(1);
 		echo $admin->vertical_admin_nav();
 		echo "</div>\n";
 		echo "<!--end leftnav -->\n";
 		echo "<!-- begin main content -->\n";
 		echo "<div id='acp-main' class='display-block acp ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' style='margin-top:50px; width:100%; vertical-align:top;'>\n";
-		echo "<div id='acp-toolkit' class='hidden-xs hidden-sm col-md-12 col-lg-12 m-b-10 m-r-0' style='width:100%' role='toolkits'>\n";
-		echo "<nav>".admin_nav()."</nav>";
+
+		echo "<div id='acp-toolkit' data-offset-top='0' data-spy='affix' class='hidden-xs hidden-sm col-md-12 col-lg-12 m-r-0' style='width:100%; z-index:333;' role='toolkits'>\n";
+		echo "<nav>".$admin->horiziontal_admin_nav()."</nav>";
 		echo "</div>\n";
-		echo "<div id='acp-content' class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
+
+		echo "<div id='acp-content' class='m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
 		echo CONTENT;
 		echo "</div>\n";
 		echo "<div class='m-l-20 display-block m-b-20'>\n";

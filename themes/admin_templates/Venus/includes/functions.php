@@ -29,7 +29,7 @@ function closeside($title = FALSE) {
 
 function opentable($title, $class = FALSE) {
 	echo "<div class='panel panel-default $class' style='border:none;'>\n<div class='panel-body'>\n";
-	echo "<h3 class='m-b-20'>".$title."</h3>\n";
+	echo "<h3>".$title."</h3>\n";
 }
 
 function closetable() {
@@ -55,6 +55,7 @@ function render_dashboard() {
 	echo "<!--Start Members-->\n";
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-$mobile col-sm-$tablet col-md-$laptop col-lg-$desktop'>\n";
+
 	openside();
 	echo "<img class='pull-left m-r-10' src='".get_image("ac_M")."'/>\n";
 	echo "<h4 class='text-right m-t-0 m-b-0'>\n".number_format($members['registered'])."</h4>";
@@ -318,41 +319,52 @@ function render_dashboard() {
 
 function render_admin_icon() {
 	global $locale, $settings, $pages, $admin_icons, $admin_images, $aidlink;
-	opentable($locale['200']." - v".$settings['version']);
+
+	opentable($locale['200']);
+
+	echo "<div class='row'>\n";
+	if (count($admin_icons['data']) > 0) {
+		foreach ($admin_icons['data'] as $i => $data) {
+			echo "<div class='icon-wrapper col-xs-12 col-sm-4 col-md-2 col-lg-2'>\n";
+			if ($admin_images) {
+				echo "<div class='icon-container'>\n";
+				echo "<a href='".$data['admin_link'].$aidlink."'><img src='".get_image("ac_".$data['admin_rights'])."' alt='".$data['admin_title']."'/>\n</a>\n";
+				echo "<div class='overflow-hide'>\n";
+				echo "<a class='icon-title' href='".$data['admin_link'].$aidlink."'>".$data['admin_title']."</a>\n";
+				//echo "<br/><span class='icon-description'>Descriptior</span>\n";
+				echo "</div>\n";
+
+				echo "</div>\n";
+			} else {
+				echo "<span class='small'>".THEME_BULLET." <a href='".$data['admin_link'].$aidlink."'>".$data['admin_title']."</a></span>";
+			}
+			echo "</div>\n";
+		}
+	}
+
+	echo "</div>\n";
+
+
+
+
+
+/*
 	echo "<table class='table table-responsive tbl-border'>\n<tr>\n";
 	for ($i = 1; $i < 6; $i++) {
 		$_GET['pagenum'] = ($_GET['pagenum'] == 0) ? 0 : $_GET['pagenum'];
 		$class = ($_GET['pagenum'] == $i ? "tbl1" : "tbl2");
 		if ($pages[$i]) {
-			echo "<td align='center' width='20%' class='$class'><span class='small'>\n";
-			echo ($_GET['pagenum'] == $i ? "<strong>".$locale['ac0'.$i]."</strong>" : "<a href='index.php".$aidlink."&amp;pagenum=$i'>".$locale['ac0'.$i]."</a>")."</span></td>\n";
+			echo "<td align='center' width='20%' class='$class'>\n";
+			echo ($_GET['pagenum'] == $i ? "<strong>".$locale['ac0'.$i]."</strong>" : "<a href='index.php".$aidlink."&amp;pagenum=$i'>".$locale['ac0'.$i]."</a>")."</td>\n";
 		} else {
-			echo "<td align='center' width='20%' class='$class'><span class='small' style='text-decoration:line-through'>\n";
+			echo "<td align='center' width='20%' class='$class'><span style='text-decoration:line-through'>\n";
 			echo $locale['ac0'.$i]."</span></td>\n";
 		}
 	}
 	echo "</tr>\n<tr>\n<td colspan='5' class='tbl'>\n";
-	if (count($admin_icons['data']) > 0) {
-		$counter = 0;
-		$columns = 4;
-		$align = $admin_images ? "center" : "left";
-		echo "<table style='width:100%;'>\n<tr>\n";
-		foreach ($admin_icons['data'] as $i => $data) {
-			if ($counter != 0 && ($counter%$columns == 0)) {
-				echo "</tr>\n<tr>\n";
-			}
-			echo "<td align='$align' width='20%' class='tbl'>";
-			if ($admin_images) {
-				echo "<span class='small'><a href='".$data['admin_link'].$aidlink."'><img src='".get_image("ac_".$data['admin_rights'])."' alt='".$data['admin_title']."' style='border:0px;' /></a><br />\n".$data['admin_title']."</span>";
-			} else {
-				echo "<span class='small'>".THEME_BULLET." <a href='".$data['admin_link'].$aidlink."'>".$data['admin_title']."</a></span>";
-			}
-			echo "</td>\n";
-			$counter++;
-		}
-		echo "</tr>\n</table>\n";
-	}
-	echo "</td></tr></table>\n";
+
+
+	echo "</td></tr></table>\n"; */
 	closetable();
 }
 
