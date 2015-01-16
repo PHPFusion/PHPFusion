@@ -278,7 +278,7 @@ legend {
 #acp-left {
 	padding: 0px;
 	color: rgb(101, 107, 147);
-	background-color: rgb(221, 228, 239);
+	background-color: rgb(34, 43, 45);
 	transition: left 0.20s ease-in;
 	border-right: 1px solid rgb(170, 183, 205);
 	z-index: 3000;
@@ -312,17 +312,8 @@ legend {
 }
 
 #acp-toolkit {
-	background-color: rgb(238, 238, 238);
-	background: rgb(244,244,244); /* Old browsers */
-	background: -moz-linear-gradient(top, rgba(244,244,244,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(244,244,244,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, rgba(244,244,244,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, rgba(244,244,244,1) 0%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, rgba(244,244,244,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom, rgba(244,244,244,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
-	border-right:1px solid #b9c4cf;
-	box-shadow:inset 0 1px rgba(255,255,255,.7);
+	background-color: rgb(255,255,255);
+	margin-right:10px;
 	font-size: 13px;
 	color: rgb(117, 127, 140);
 	text-shadow: 0px 1px rgb(255, 255, 255);
@@ -369,24 +360,18 @@ legend {
 	border-top:1px solid #035491;
 	border-bottom:1px solid #035491;
 	outline: none;
+	text-shadow: 1px 1px 1px rgb(0,0,0);
 }
 
 .admin-vertical-link > li > .adl-link {
-
 	font-weight: 600;
+	font-size: 105%;
+	color: rgb(48, 81, 132);
 	padding: 15px 20px;
 	transition: color 0.2s ease-in-out 0s;
 	outline: medium none;
-	color: rgb(117, 127, 140);
 	text-shadow: 0px 1px rgb(255, 255, 255);
-	background:#B9C4CF;
 	position:relative;
-	background-color: #ff2b2b;
-	background-image: -webkit-linear-gradient(bottom, #d9dee3 11%, #ebeef1 94%, #edf0f2 99%, #fafbfb);
-	background-image: -moz-linear-gradient(bottom, #d9dee3 11%, #ebeef1 94%, #edf0f2 99%, #fafbfb);
-	background-image: -o-linear-gradient(bottom, #d9dee3 11%, #ebeef1 94%, #edf0f2 99%, #fafbfb);
-	background-image: -ms-linear-gradient(bottom, #d9dee3 11%, #ebeef1 94%, #edf0f2 99%, #fafbfb);
-	background-image: linear-gradient(to top, #d9dee3 11%, #ebeef1 94%, #edf0f2 99%, #fafbfb);
 	border-bottom:1px solid #B9C4CF;
 	/* border-bottom: 1px solid rgb(51, 55, 61);
 	box-shadow: 0px 1px 0px 0px rgb(135, 142, 152) inset;
@@ -419,7 +404,6 @@ legend {
 	background-color: rgb(1, 99, 172);
 	background-image: linear-gradient(to top, rgb(1, 99, 172) 11%, rgb(67, 166, 218) 99%, rgb(115, 189, 228));
 	color: rgb(255, 255, 255);
-	border-top: 1px solid rgb(3, 84, 145);
 	border-bottom: 1px solid rgb(3, 84, 145);
 	outline: medium none;
 }
@@ -439,16 +423,16 @@ legend {
 
 /* Sub menus */
 .admin-vertical-link .admin-submenu {
-	padding: 10px 0px;
-	border-bottom: 1px solid rgb(185, 196, 207);
-	background: rgba(255, 255, 255, 0.95);
+	padding: 0;
+	background-color: rgb(44, 62, 80);
 }
 .admin-vertical-link .admin-submenu > li > a {
 	display: inline-block;
 	width:100%;
 	font-weight: 400;
-	padding: 6px 15px 6px 30px;
-	color: rgb(101, 107, 147);
+	padding: 11px 15px 9px 30px;
+	color: rgb(255, 255, 255);
+	text-shadow: 1px 1px 0px rgb(0,0,0);
 	outline: none;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;
@@ -456,14 +440,19 @@ legend {
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
 }
+.admin-vertical-link .fa {
+	margin-right: 10px;
+	font-size: 140%;
+}
 .admin-vertical-link .admin-submenu > li > a:hover, .admin-vertical-link .admin-submenu > li > a:focus {
-	color:	rgb(0,0,0);
+	color:	rgb(255,255,255);
 	background-color: rgba(91, 131, 180, 0.3);
 	text-decoration: none;
 }
 .admin-vertical-link .admin-submenu > li.active > a, .admin-vertical-link .admin-submenu > li.active > a:hover, .admin-vertical-link .admin-submenu > li.active > a:focus {
 	font-weight: 600;
 	background-color: rgba(91, 131, 180, 0.3);
+	color: rgb(255, 255, 255);
 }
 
 /* Horizontal Navbar styling */
@@ -487,7 +476,8 @@ nav ul > li {
 }
 #acp-toolkit nav > ul > li > a {
 	padding: 20px 15px;
-	color: rgb(54, 53, 72);
+	color: rgb(119, 119, 119);
+	font-weight: normal;
 	outline: none;
 	display: inline-block;
 }
@@ -505,7 +495,17 @@ nav > ul > li > a:hover {
 	border-right: 1px solid rgb(191, 208, 231);
 	background-color: rgba(228, 236, 246, 0.55);
 }
-
+#acp-toolkit nav > ul > li > a:hover {
+	background: none;
+	color: rgb(0,0,0);
+	border-right: 1px solid transparent;
+	border-left: 1px solid transparent;
+}
+#acp-toolkit nav > ul > li.active > a {
+	font-weight: 600;
+	color:	rgb(42, 100, 150);
+	border-bottom: 2px solid rgb(42, 100, 150);
+}
 
 /* Site Information */
 .blank-stats .panel-body {

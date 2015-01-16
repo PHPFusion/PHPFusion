@@ -53,8 +53,12 @@ function admin_active() {
 }
 
 function admin_nav($style = FALSE) {
-	global $aidlink, $locale, $settings, $pages;
+	global $aidlink, $locale, $settings;
+
 	$admin_icon = array('0' => 'entypo gauge', '1' => 'entypo docs', '2' => 'entypo user', '3' => 'entypo drive', '4' => 'entypo cog', '5' => 'entypo magnet');
+
+
+
 	$inf_page_request = FUSION_REQUEST;
 	if (isset($_GET['section'])) {
 		$inf_page_request = str_replace("&amp;section=".$_GET['section']."", "", $inf_page_request);
@@ -66,7 +70,8 @@ function admin_nav($style = FALSE) {
 		// horizontal navigation with dropdown menu.
 		$html = "<ul class='admin-horizontal-link'>\n";
 		for ($i = 0; $i < 6; $i++) {
-			$html .= "<li><a href='".ADMIN.$aidlink."&amp;pagenum=$i'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]."</a></li>\n";
+			$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && admin_active() == $i) ? 1 : 0;
+			$html .= "<li ".($active ? "class='active'" : '')."><a href='".ADMIN.$aidlink."&amp;pagenum=$i'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]."</a></li>\n";
 		}
 		$html .= "</ul>\n";
 	} else {
@@ -84,7 +89,7 @@ function admin_nav($style = FALSE) {
 					$html .= "<ul class='admin-submenu'>\n";
 					while ($data = dbarray($result)) {
 						$secondary_active = FUSION_SELF == $data['admin_link'] || $inf_page_request == $data['admin_link'] ? "class='active'" : '';
-						$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'> <img style='max-width:24px;' class='pull-right m-l-10' src='".get_image("ac_".$data['admin_rights'])."'/> ".$data['admin_title']."</a></li>\n" : '';
+						$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'> <img style='max-width:28px;' class='m-r-10' src='".get_image("ac_".$data['admin_rights'])."'/> ".$data['admin_title']."</a></li>\n" : '';
 					}
 					$html .= "</ul>\n";
 				}

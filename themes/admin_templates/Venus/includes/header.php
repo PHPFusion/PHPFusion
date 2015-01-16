@@ -21,7 +21,6 @@ $('#adl').slimScroll({
         height: '950px',
         width: '100%'
     });
-
 ");
 echo "<section id='acp-header' class='clearfix' data-spy='affix' data-offset-top='0' data-offset-bottom='0'>\n";
 echo "<div class='brand pull-left'>\n";
@@ -30,7 +29,7 @@ echo "<h4 class='brand-text'>Administrator</h4>\n";
 echo "</div>\n";
 echo "<nav>\n";
 echo "<ul class='venus-toggler'>\n";
-echo "<li><a id='toggle-canvas' style='border-left:none;'><i class='entypo menu text-bigger'></i></a></li>\n";
+echo "<li><a id='toggle-canvas' class='pointer' style='border-left:none;'><i class='entypo menu text-bigger'></i></a></li>\n";
 echo "</ul>\n";
 
 add_to_jquery("
