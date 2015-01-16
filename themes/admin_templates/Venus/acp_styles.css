@@ -96,6 +96,7 @@ td {
 }
 .icon-wrapper {
 	margin-bottom:40px;
+	min-height:100px;
 }
 .icon-container {
 	text-align: center;
