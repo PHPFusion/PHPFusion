@@ -140,7 +140,6 @@ echo form_text('', 'link_name', 'link_name', $link_name, array('max_length' => 1
 echo "</td>\n</tr>\n";
 if (multilang_table("SL")) {
 	echo "<tr><td class='tbl'><label for='link_language'>".$locale['global_ML100']."</label></td>\n";
-	$opts = get_available_languages_list($selected_language = "$link_language");
 	echo "<td class='tbl'>\n";
 	echo form_select('', 'link_language', 'link_language', $language_opts, $link_language, array('placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
