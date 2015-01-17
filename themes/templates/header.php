@@ -44,46 +44,21 @@ require_once THEME."theme.php";
 require_once THEMES."templates/render_functions.php";
 
 if (iMEMBER) {
-	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."'
+	dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."'
 		WHERE user_id='".$userdata['user_id']."'");
-}
-echo "<!DOCTYPE html>\n";
-echo "<head>\n<title>".$settings['sitename']."</title>\n";
-echo "<meta charset='".$locale['charset']."' />";
-echo "<meta name='description' content='".$settings['description']."' />\n";
-echo "<meta name='keywords' content='".$settings['keywords']."' />\n";
+} 
+
+$bootstrap_theme_css_src = '';
 // Load bootstrap
 if ($settings['bootstrap']) {
 	define('BOOTSTRAPPED', TRUE);
-	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
-	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
 	// ok now there is a theme at play here.
 	// at maincore, lets load atom.
 	$theme_name = isset($userdata['user_theme']) && $userdata['user_theme'] !== 'Default' ? $userdata['user_theme'] : $settings['theme'];
 	$result = dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'");
-	if (dbrows($result)>0) {
-		$theme_data = dbarray($result);
-		echo "<link href='".THEMES.$theme_data['theme_file']."' rel='stylesheet' media='screen' />\n";
-	} else {
-		echo "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' media='screen' />\n";
-	}
+	$bootstrap_theme_css_src = dbrows($result)>0 ? THEMES.$theme_data['theme_file'] : INCLUDES.'bootstrap/bootstrap.min.css';
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
 }
-// Entypo icons
-echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />\n";
-// Default CSS styling which applies to all themes but can be overriden
-echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
-// Theme CSS
-echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
-echo render_favicons(IMAGES);
-if (function_exists("get_head_tags")) {
-	echo get_head_tags();
-}
-echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
-echo "</head>\n<body>\n";
-
 require_once THEMES."templates/panels.php";
 ob_start();
-?>

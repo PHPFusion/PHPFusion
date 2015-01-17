@@ -21,14 +21,7 @@ use PHPFusion\PermalinksDisplay;
 
 require_once INCLUDES."footer_includes.php";
 
-define("CONTENT", ob_get_contents());
-ob_end_clean();
-if (!defined('ADMIN_PANEL')) {
-	render_page();
-} else {
-    render_adminpanel();
-}
-
+define("CONTENT", ob_get_clean()); //ob_start() called in header.php
 // Cron Job (6 MIN)
 if ($settings['cronjob_hour'] < (time()-360)) {
 	dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < '".(time()-360)."'");
@@ -90,21 +83,14 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$new_time."' WHERE settings_name='cronjob_day'");
 }
 // Error handling
-if (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0) {
-	echo "<div class='admin-message'>".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])."</div>\n";
+$footerError = (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0)
+	?  str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])
+	: '';
+if (!isset($fusion_jquery_tags)) {
+	$fusion_jquery_tags = '';
 }
-// Output lines added with add_to_footer()
-echo $fusion_page_footer_tags;
-// Output lines added with add_to_jquery()
-if (!empty($fusion_jquery_tags)) {
-	echo "<script type=\"text/javascript\">\n$(function() {\n";
-	echo $fusion_jquery_tags;
-	echo "});\n</script>\n";
-}
-// End HTML document
-echo "</body>\n</html>\n";
-
-$output = ob_get_contents();
+require_once __DIR__.'/layout.php';
+$output = ob_get_contents(); //ob_start() called in maincore
 if (ob_get_length() !== FALSE) {
 	ob_end_clean();
 }
