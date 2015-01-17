@@ -870,9 +870,9 @@ function getusergroups() {
 function getgroupname($group_id, $return_desc = FALSE) {
 	global $locale;
 	$specials = array(0 => 'user0', 101 => 'user1', 102 => 'user2', 103 => 'user3');
-	if (in_array($group_id, $specials)) {
+	if (isset($specials[$group_id])) {
 		return $locale[$specials[$group_id]];
-	} 
+	}
 	$groups_cache = cache_groups();
 	foreach ($groups_cache as $group) {
 		if ($group_id == $group['group_id']) {
