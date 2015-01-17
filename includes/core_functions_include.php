@@ -736,13 +736,12 @@ function censorwords($text) {
  */
 function getuserlevel($userlevel) {
 	global $locale;
-	if ($userlevel == 101) {
-		return $locale['user1'];
-	} elseif ($userlevel == 102) {
-		return $locale['user2'];
-	} elseif ($userlevel == 103) {
-		return $locale['user3'];
-	}
+	$userlevels = array(
+		101 => $locale['user1'], 
+		102 => $locale['user2'], 
+		103 => $locale['user3']
+	);
+	return isset($userlevels[$userlevel]) ? $userlevels[$userlevel] : NULL;
 }
 
 /**
@@ -750,29 +749,11 @@ function getuserlevel($userlevel) {
  * 
  * @global array $locale
  * @param int $userstatus
- * @return array
+ * @return string|NULL NULL if the status does not exist
  */
 function getuserstatus($userstatus) {
 	global $locale;
-	if ($userstatus == 0) {
-		return $locale['status0'];
-	} elseif ($userstatus == 1) {
-		return $locale['status1'];
-	} elseif ($userstatus == 2) {
-		return $locale['status2'];
-	} elseif ($userstatus == 3) {
-		return $locale['status3'];
-	} elseif ($userstatus == 4) {
-		return $locale['status4'];
-	} elseif ($userstatus == 5) {
-		return $locale['status5'];
-	} elseif ($userstatus == 6) {
-		return $locale['status6'];
-	} elseif ($userstatus == 7) {
-		return $locale['status7'];
-	} elseif ($userstatus == 8) {
-		return $locale['status8'];
-	}
+	return ($userstatus >= 0 and $userstatus <= 8) ? $locale['status'.$userstatus] : NULL;
 }
 
 /**
