@@ -1564,7 +1564,7 @@ class QuantumFields {
 			if ($field_data['field_parent'] == $this->input_page) {
 				$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
 				$target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
-				$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : '';
+				$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : $data[$target_index];
 				// create reference array
 				$infinity_ref[$target_database] = array('index'=>$target_index, 'value'=>$index_value);
 				$quantum_fields[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : isset($data[$field_data['field_name']]) ? : '';

@@ -608,7 +608,7 @@ else {
 				} elseif ($status != 8) {
 					$title = $locale['419'];
 				}
-				if ($title) {
+				if (isset($title)) {
 					echo "<a class='btn button btn-sm btn-default' href='".stripinput(USER_MANAGEMENT_SELF."&action=$status&user_id=".$data['user_id'])."'>$title</a>\n";
 				}
 				echo "<div class='btn-group'>\n";

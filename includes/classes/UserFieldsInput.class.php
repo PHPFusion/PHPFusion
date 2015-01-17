@@ -629,9 +629,9 @@ class UserFieldsInput {
 		$quantum->plugin_folder = INCLUDES."user_fields/";
 		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 		$quantum->load_data();
-		dbquery_insert(DB_USERS, $this->data, 'save');
-		$_POST['user_id'] = dblastid();
-		$quantum->infinity_insert('update');
+		dbquery_insert(DB_USERS, $this->data, 'save', array('keep_session'=>1));
+		$this->data['user_id'] = dblastid();
+		$quantum->quantum_insert($this->data);
 		if ($this->adminActivation) {
 			$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u162'];
 		} else {
