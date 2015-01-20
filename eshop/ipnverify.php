@@ -89,8 +89,8 @@ fclose ($fp);
 
 if (iMEMBER) {
 	$pm_subject = "Invalid source";
-	$pm_message = "The call to our verification file was not valid.\n Please write to management@php-fusion.co.uk for clarifications.\n If your payment went thru on your side, we will need transaction ID and your full name\n You can not reply to this automated message.\n\n Regards,\n Autobot";
-	dbquery("INSERT INTO ".DB_MESSAGES." (message_id, message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('', '".$userdata['user_id']."', '15756', '$pm_subject', '$pm_message', 'n', '0', '".time()."', '0')");
+	$pm_message = "The call to our verification file was not valid.\n Please write to ".$settings['siteemail']." for clarifications.\n If your payment went thru on your side, we will need transaction ID and your full name\n You can not reply to this automated message.\n\n Regards,\n Admin";
+	dbquery("INSERT INTO ".DB_MESSAGES." (message_id, message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('', '".$userdata['user_id']."', '1', '$pm_subject', '$pm_message', 'n', '0', '".time()."', '0')");
  }
 }
 ?>
