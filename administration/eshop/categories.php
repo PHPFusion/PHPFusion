@@ -352,8 +352,8 @@ $result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='0' ORDER BY c
 			echo "<div class='pull-right'>\n";
 			echo ($i == 1) ? "" : "<a title='mup' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;action=moveup&amp;order=$up&amp;cid=".$data['cid']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 			echo ($i == $rows) ? "" : "<a title='mdown' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;action=movedown&amp;order=$down&amp;cid=".$data['cid']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-			echo "<a title='Edit' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;EditCurrentCategory&cid=".$data['cid']."'><i class='entypo cog m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; 
-			echo "<a title='Delete' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;deletecat&amp;cid=".$data['cid']."' onclick=\"return confirm('".$locale['delete_notice']."');\"><i class='entypo icancel m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+			echo "<a title='".$locale['ESHPCATS133']."' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;EditCurrentCategory&cid=".$data['cid']."'><i class='entypo cog m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; 
+			echo "<a title='".$locale['ESHPCATS117']."' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;deletecat&amp;cid=".$data['cid']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\"><i class='entypo icancel m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 			echo "</div>\n";
 			$subcats = get_child($cat_index, $data['cid']);
 			$subcats = !empty($subcats) ? count($subcats) : 0;
@@ -400,8 +400,8 @@ $result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='".$_GET['cid'
 			echo "<div class='pull-right'>\n";
 			echo ($i == 1) ? "" : "<a title='mup' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;action=moveupsub&amp;order=$up&amp;cid=".$data['cid']."&amp;mcid=".$_GET['cid']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 			echo ($i == $rows) ? "" : "<a title='mdown' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;action=movedownsub&amp;order=$down&amp;cid=".$data['cid']."&amp;mcid=".$_GET['cid']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-			echo "<a title='Edit' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;EditCurrentCategory&cid=".$data['cid']."'><i class='entypo cog m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; 
-			echo "<a title='Delete' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;deletecat&amp;cid=".$data['cid']."' onclick=\"return confirm('".$locale['delete_notice']."');\"><i class='entypo icancel m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+			echo "<a title='".$locale['ESHPCATS133']."' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;EditCurrentCategory&cid=".$data['cid']."'><i class='entypo cog m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; 
+			echo "<a title='".$locale['ESHPCATS117']."' href='".FUSION_SELF.$aidlink."&amp;a_page=Categories&amp;deletecat&amp;cid=".$data['cid']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\"><i class='entypo icancel m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 			echo "</div>\n";
 			$subcats = get_child($cat_index, $data['cid']);
 			$subcats = !empty($subcats) ? count($subcats) : 0;

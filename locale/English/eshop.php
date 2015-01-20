@@ -459,6 +459,8 @@ $locale['ESHPCATS129'] = "The category limit has been reached";
 $locale['ESHPCATS130'] = "Refresh category ordering";
 $locale['ESHPCATS131'] = "Refresh Sub-category ordering";
 $locale['ESHPCATS132'] = "Sub-categories";
+$locale['ESHPCATS133'] = "Edit";
+$locale['ESHPCATS134'] = "Are you sure you want to delet this category?";
 
 //Administration main
 $locale['ESHP201'] = "eShop Administration";  
