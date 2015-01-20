@@ -546,6 +546,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 
 	//Populate shop settings
+	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('eshop_ipn', '1')");
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('eshop_cats', '1')");
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('eshop_cat_disp', '1')");
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('eshop_nopp', '6')");
