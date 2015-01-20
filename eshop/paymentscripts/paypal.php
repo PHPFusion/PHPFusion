@@ -75,13 +75,16 @@ setInterval(function(){ countdown(); },1000);
 //<input type="hidden" name="notify_url" value="'.$settings['siteurl'].'eshop/ipnverify.php" />
 echo '
 <form name="cart" id="cart" action="https://www.paypal.com/cgi-bin/webscr" method="post" />
-<input type="hidden" name="cmd" value="_cart" /> 
-<input type="hidden" name="upload" value="1" />
-<input type="hidden" name="business" value="'.$settings['eshop_ppmail'].'" />
-<input type="hidden" name="page_style" value="PayPal" />
-<input type="hidden" name="return" value="'.$settings['siteurl'].'eshop/'.$settings['eshop_returnpage'].'" />
-<input type="hidden" name="currency_code" value="'.$settings['eshop_currency'].'" />
-<input type="hidden" name="cancel_return" value="'.$settings['siteurl'].'eshop/eshop.php" />';
+<input type="hidden" name="cmd" value="_cart" readonly /> 
+<input type="hidden" name="upload" value="1" readonly />
+<input type="hidden" name="business" value="'.$settings['eshop_ppmail'].'" readonly />
+<input type="hidden" name="page_style" value="PayPal" readonly />
+<input type="hidden" name="return" value="'.$settings['siteurl'].'eshop/'.$settings['eshop_returnpage'].'" readonly />
+<input type="hidden" name="currency_code" value="'.$settings['eshop_currency'].'" readonly />
+<input type="hidden" name="cancel_return" value="'.$settings['siteurl'].'eshop/eshop.php" readonly />';
+if ($settings['eshop_ipn']) {
+echo '<input type="hidden" name="notify_url" value="' . $settings['siteurl'] . 'eshop/ipn_verify.php" readonly />';
+}
 $uodata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid = '".$username."' ORDER BY oid DESC LIMIT 0,1"));
 $weight = dbarray(dbquery("SELECT sum(cweight*cqty) as weight FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' ORDER BY tid ASC"));
 $shipping = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGITEMS." WHERE active='1' AND sid='".$uodata['oshipmethod']."' ORDER BY cid,sid ASC"));
@@ -93,22 +96,22 @@ $shippingtotal = $shippingsurcharge+$shippinginitial;
     $result = dbquery("SELECT * FROM ".DB_ESHOP_CART." WHERE puid = '".$username."'");
        $i=1;
        while ($data = dbarray($result)) {
-        echo '<input type="hidden" name="item_name_'.$i.'" value="'.$data['citem'].'" />
-        <input type="hidden" name="amount_'.$i.'" value="'.$data['cprice'].'" />
-		<input type="hidden" name="quantity_'.$i.'" value="'.$data['cqty'].'" />';
+        echo '<input type="hidden" name="item_name_'.$i.'" value="'.$data['citem'].'" readonly />
+        <input type="hidden" name="amount_'.$i.'" value="'.$data['cprice'].'" readonly />
+		<input type="hidden" name="quantity_'.$i.'" value="'.$data['cqty'].'" readonly />';
 		if ($data['cclr']) {
-		echo '<input type="hidden" name="on1_'.$i.'" value="'.$locale['ESHPC103'].'" />
-		<input type="hidden" name="os1_'.$i.'" value="'.getcolorname($data['cclr']).'" />';
+		echo '<input type="hidden" name="on1_'.$i.'" value="'.$locale['ESHPC103'].'" readonly />
+		<input type="hidden" name="os1_'.$i.'" value="'.getcolorname($data['cclr']).'" readonly />';
 		}
 		if ($data['cdynt'] || $data['cdyn']) { 
-		echo '<input type="hidden" name="on0_'.$i.'" value="'.$data['cdynt'].'" /> 
-		<input type="hidden" name="os0_'.$i.'" value="'.$data['cdyn'].'" />';
+		echo '<input type="hidden" name="on0_'.$i.'" value="'.$data['cdynt'].'" readonly /> 
+		<input type="hidden" name="os0_'.$i.'" value="'.$data['cdyn'].'" readonly />';
 		} 
 	$i++;
     }
 	   
 $discount = preg_replace("/[^0-9]/","",''.$uodata['odiscount'].'');
-echo '<input type="hidden" name="discount_amount_cart" value="'.$discount.'" />';
+echo '<input type="hidden" name="discount_amount_cart" value="'.$discount.'" readonly />';
 
 if ($settings['eshop_freeshipsum'] !=0) { 
 if ($settings['eshop_freeshipsum'] <= $totalincvat) { $shippingtotal = "0"; } 
