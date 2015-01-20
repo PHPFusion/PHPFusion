@@ -456,6 +456,11 @@ $locale['ESHPCATS126'] = "The category limit has been reached";
 $locale['ESHPCATS127'] = ", no new categories can be created.";
 $locale['ESHPCATS128'] = "Edit a category";
 $locale['ESHPCATS129'] = "The category limit has been reached";
+$locale['ESHPCATS130'] = "Refresh category ordering";
+$locale['ESHPCATS131'] = "Refresh Sub-category ordering";
+$locale['ESHPCATS132'] = "Sub-categories";
+$locale['ESHPCATS133'] = "Edit";
+$locale['ESHPCATS134'] = "Are you sure you want to delete this category?";
 
 //Administration main
 $locale['ESHP201'] = "eShop Administration";  
@@ -642,6 +647,8 @@ $locale['ESHP846'] = "Free shipping";
 $locale['ESHP847'] = "The value you enter here will give customers free shipping if their cart value reachs this value. A 0 value will disable this function.";
 $locale['ESHP848'] = "Allow coupons";
 $locale['ESHP849'] = "You can disable the coupon system here.";
+$locale['ESHP850'] = "Use IPN verification?";
+$locale['ESHP851'] = "You must also enable IPN from your PayPal account to enable IPN.";
 
 //Photos admin & additional globals for Photohandling
 $locale['ESHPHOTOS101'] = "Your limit of max number of";
@@ -1020,7 +1027,7 @@ $locale['ccode_ms'] = "Montserrat";
 $locale['ccode_ma'] = "Morocco";
 $locale['ccode_mz'] = "Mozambique";
 $locale['ccode_mm'] = "Myanmar";
-$locale['ccode_na'] = "Namibia";
+$locale['ccode_na'] = "Nambia";
 $locale['ccode_nr'] = "Nauru";
 $locale['ccode_np'] = "Nepal";
 $locale['ccode_an'] = "Netherland Antilles";
@@ -1093,7 +1100,7 @@ $locale['ccode_tt'] = "Trinidad &amp; Tobago";
 $locale['ccode_tn'] = "Tunisia";
 $locale['ccode_tr'] = "Turkey";
 $locale['ccode_tm'] = "Turkmenistan";
-$locale['ccode_tc'] = "Turks &amp; Caicos Islands";
+$locale['ccode_tc'] = "Turks &amp; Caicos Is";
 $locale['ccode_tv'] = "Tuvalu";
 $locale['ccode_ug'] = "Uganda";
 $locale['ccode_ua'] = "Ukraine";

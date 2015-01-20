@@ -350,6 +350,8 @@ if (isset($_POST['uninstall'])) {
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
 	}
+	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('eshop_ipn', '1')");
+	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('eshop_cats', '1')");
 	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ('eshop_cat_disp', '1')");

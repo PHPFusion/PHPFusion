@@ -89,8 +89,8 @@ $("#6" + showcolorbutton6).show();
 </script>';
 opentable("settings");
 if (isset($_POST['update_settings'])) {
+$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['ipn'])."' WHERE settings_name='eshop_ipn'");
 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['cats'])."' WHERE settings_name='eshop_cats'");
-
 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['cat_disp'])."' WHERE settings_name='eshop_cat_disp'");
 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['nopp'])."' WHERE settings_name='eshop_nopp'");
 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['noppf'])."' WHERE settings_name='eshop_noppf'");
@@ -169,6 +169,16 @@ echo "<form name='optionsform' method='post' action='".FUSION_SELF.$aidlink."&am
             <td class='tbl1' width='20%'  align='left'>
 	    <input type='text' name='returnpage' value='".$settings2['eshop_returnpage']."' class='textbox' style='width:150px;'></td>
             <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP554']."</span></td>
+	</tr>
+
+	<tr>
+            <td class='tbl1' width='30%' align='left'>".$locale['ESHP850']."</td>
+            <td class='tbl1' width='20%'  align='left'>
+            <select name='ipn' class='textbox'>
+                <option value='1'".($settings2['eshop_ipn'] == "1" ? " selected" : "").">".$locale['ESHP564']."</option>
+                <option value='0'".($settings2['eshop_ipn'] == "0" ? " selected" : "").">".$locale['ESHP565']."</option>
+            </select></td>
+            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP851']."</span></td>
 	</tr>
 
 	<tr>

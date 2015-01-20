@@ -41,8 +41,7 @@ if (!$fp) {
         if (strcmp ($res, "VERIFIED") == 0) {
 
 
-
-$customer = stripinput($_POST['custom']);
+	$customer = stripinput($_POST['custom']);
 
 //check the order
 $odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid='".$customer."' ORDER BY oid DESC LIMIT 0,1"));
@@ -50,35 +49,48 @@ $odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid='".$custo
 //Mark it as paied
 dbquery("UPDATE ".DB_ESHOP_ORDERS." SET opaid='1' WHERE oid='".$odata['oid']."'");
 
+//clear the cart.
+dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE puid ='".$customer."'");
+
 } else if (strcmp ($res, "INVALID") == 0) {
 
-	$customer = stripinput($_POST['custom']);
-	$pm_subject = "Failed verification";
-    $pm_message = "The verification for your payment failed.\n Please write to management@php-fusion.co.uk for clarifications.\n If your payment went thru on your side, we will need transaction ID and your full name.\n You can not reply to this automated message.\n\n Regards,\n Autobot";
-	dbquery("INSERT INTO ".DB_MESSAGES." (message_id, message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('', '".$customer."', '15756', '$pm_subject', '$pm_message', 'n', '0', '".time()."', '0')");
+$customer = stripinput($_POST['custom']);
 
 //check the order
 $odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid='".$customer."' ORDER BY oid DESC LIMIT 0,1"));
 
-//send us a message
+//Send a message about the failed order
 require_once INCLUDES."sendmail_include.php";
 
-//Send us a message about it
 $subject = "OrderID ".$odata['oid']." Failed verification";
-$toemail = "management@php-fusion.co.uk";
-$toname = "PHP-Fusion Management";
+$toemail = $settings['siteemail'];
+$toname = $settings['sitename'];
 $message = $odata['oorder'];
 sendemail($toname,$toemail,$settings['sitename'],$settings['siteemail'],$subject,$message,$type="html");
+
+// Adjust stock and sell count.
+$items = $odata['oitems'];
+$items = explode(".", substr($items, 1));
+    for ($i = 0;$i < count($items);$i++)  {
+//update sellcount
+dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount-1 WHERE id = '".$items[$i]."'");
+//update stock count. 
+dbquery("UPDATE ".DB_ESHOP." SET instock=instock+1 WHERE id = '".$items[$i]."'");
+} 
+//Remove the order
+$result = dbquery("DELETE FROM ".DB_ESHOP_ORDERS." WHERE oid='".$odata['oid']."'");
+
 	}
 }
 fclose ($fp);
- }
+}
+ 
 } else {
-echo "Not a valid PayPal source";
+
 if (iMEMBER) {
 	$pm_subject = "Invalid source";
-	$pm_message = "The call to our verification file was not valid.\n Please write to management@php-fusion.co.uk for clarifications.\n If your payment went thru on your side, we will need transaction ID and your full name\n You can not reply to this automated message.\n\n Regards,\n Autobot";
-	dbquery("INSERT INTO ".DB_MESSAGES." (message_id, message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('', '".$userdata['user_id']."', '15756', '$pm_subject', '$pm_message', 'n', '0', '".time()."', '0')");
+	$pm_message = "The call to our verification file was not valid.\n Please write to ".$settings['siteemail']." for clarifications.\n If your payment went thru on your side, we will need transaction ID and your full name\n You can not reply to this automated message.\n\n Regards,\n Admin";
+	dbquery("INSERT INTO ".DB_MESSAGES." (message_id, message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('', '".$userdata['user_id']."', '1', '$pm_subject', '$pm_message', 'n', '0', '".time()."', '0')");
  }
 }
 ?>
