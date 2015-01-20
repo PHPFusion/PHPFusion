@@ -61,7 +61,6 @@ echo "<tr><td class='tbl2' width='1%' align='center'><a href='".FUSION_SELF.$aid
 echo "</table>";
 $result = dbquery("DELETE FROM ".DB_ESHOP_ORDERS." WHERE oid='".$_GET['orderid']."'");
 
-//redirect(FUSION_SELF.$aidlink."&amp;a_page=orders");
 } 
 
 if (isset($_GET['updateorder'])) {
