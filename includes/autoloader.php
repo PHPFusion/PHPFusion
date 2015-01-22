@@ -28,16 +28,7 @@ spl_autoload_register(function ($className) {
 	$extensions = array(
 		'class.php', 'php'
 	);
-	$classNameComponents = explode('\\', $className);
-	$count = count($classNameComponents);
-	if ($count > 1) {
-		if($classNameComponents[0] !== 'PHPFusion') {
-			//The autoloader only for PHPFusion classes
-			return;
-		}
-		array_shift($classNameComponents);
-	}
-	$path = implode('/', $classNameComponents);
+	$path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
 	
 	foreach ($extensions as $extension) {
 		$fullPath = $baseDir.$path.'.'.$extension;
