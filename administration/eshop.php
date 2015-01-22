@@ -15,11 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 if (!checkrights("ESHP") || !defined("iAUTH") || $_GET['aid'] != iAUTH) { die("Denied"); }
 include LOCALE.LOCALESET."eshop.php";
+
+
 
 // your https shop works even better now.
 class eShop {
@@ -58,6 +59,7 @@ class eShop {
 		return confirm(\"".$locale['ESHP210']."\")
 		}
 		");
+
 	}
 
 	// Primary E-shop Admin
@@ -73,11 +75,14 @@ class eShop {
 		echo "</nav>\n";
 		self::loadPage($this->settings);
 		closetable();
+
 	}
 
 	// Return the included file
 	private function loadPage($settings) {
 		global $locale, $aidlink;
+		$enabled_languages = fusion_get_enabled_languages();
+		add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$this->pages[$_GET['a_page']]['title']));
 		include_once INCLUDES."eshop_functions_include.php";
 		require_once INCLUDES."photo_functions_include.php";
 		include $this->pages[$_GET['a_page']]['file'];
@@ -87,7 +92,7 @@ class eShop {
 // Objective to secure against strings injections in any way.
 $eShop = new eShop();
 $eShop->eshopAdmin();
-
 require_once THEMES."templates/footer.php";
+
 
 ?>
