@@ -6,8 +6,8 @@
 +--------------------------------------------------------+
 | Filename: home.php
 | Author: Chubatyj Vitalij (Rizado)
-| Co-Author: Takács Ákos (Rimelek)
 | Web: http://chubatyj.ru/
+| Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
