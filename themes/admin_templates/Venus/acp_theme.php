@@ -78,6 +78,9 @@ function render_adminpanel() {
 		echo "</div>\n";
 
 		echo "<div id='acp-content' class='m-t-20 col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
+		echo "<div style='margin-top:40px;'>\n";
+		echo render_breadcrumbs();
+		echo "</div>\n";
 		echo CONTENT;
 		echo "</div>\n";
 		echo "<div class='m-l-20 display-block m-b-20'>\n";
