@@ -90,7 +90,6 @@ function form_checkbox($title, $input_name, $input_id, $input_value, array $opti
 		 'safemode' 	=> 	0,
 		 'error_text'	=> 	$options['error_text']
 	 ));
-	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=checkbox],[title=$title2],[id=$input_id],[required=".$options['required']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."" : '')."'/>";
 	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
 	$html .= "</div>\n";
 	return $html;
