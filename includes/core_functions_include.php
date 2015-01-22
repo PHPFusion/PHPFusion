@@ -396,6 +396,7 @@ function preg_check($expression, $value) {
  * This will not clean hardcoded $_GETs, and remains unaffected.
  */
 function clean_request($request_link, array $filter) {
+	global $aidlink;
 	$find = array(); $replace = array();
 	if (FUSION_QUERY) {
 		$_query = explode("&amp;", str_replace("?", "&amp;", FUSION_REQUEST));
