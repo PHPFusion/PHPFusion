@@ -458,6 +458,17 @@ $locale['ESHPCATS126'] = "The category limit has been reached";
 $locale['ESHPCATS127'] = ", no new categories can be created.";
 $locale['ESHPCATS128'] = "Edit a category";
 $locale['ESHPCATS129'] = "The category limit has been reached";
+$locale['ESHPCATS130'] = "Refresh category ordering";
+$locale['ESHPCATS131'] = "Refresh Sub-category ordering";
+$locale['ESHPCATS132'] = "Sub-categories";
+$locale['ESHPCATS133'] = "Edit";
+$locale['ESHPCATS134'] = "Are you sure you want to delete this category?";
+$locale['ESHPCATS135'] = "Options";
+$locale['ESHPCATS136'] = "Order";
+$locale['ESHPCATS137'] = "Move Up";
+$locale['ESHPCATS138'] = "Move Down";
+$locale['ESHPCATS139'] = 'Edit Category';
+$locale['ESHPCATS140'] = 'Add Category';
 
 //Administration main
 $locale['ESHP201'] = "eShop Administration";  

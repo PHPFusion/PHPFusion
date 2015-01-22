@@ -387,6 +387,7 @@ $locale['settings'] = 'Pengaturan';
 $locale['posted'] = 'diposkan';
 $locale['profile'] = 'Profil';
 $locale['edit'] = 'Sunting';
+$locale['qedit'] = 'Sunting Pintas';
 $locale['view'] = 'Dilihati';
 $locale['login'] = 'Log Masuk';
 $locale['logout'] = 'Log Keluar';

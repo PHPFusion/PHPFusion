@@ -17,7 +17,7 @@
 html, body {
 	background: rgb(255,255,255);
 	background-position: 0px -80%;
-	font: 13px/18px 'Helvetica Neue', Arial !important;
+	font: 14px/150% "Helvetica Neue",Arial !important;
 	overflow-x: hidden;
 }
 /* Globals */
@@ -61,21 +61,10 @@ table {
 	border-spacing: 0;
 }
 
-td {
-	font-size: 13px;
-	letter-spacing: 1px;
-}
-
-.tbl {
-	padding: 5px;
-}
-
 .tbl1 {
-	padding: 5px;
 }
 
 .tbl2 {
-	padding: 5px;
 	background-color:#f8f8f8;
 	border: 1px solid #F5F5F5;
 }
@@ -467,6 +456,7 @@ legend {
 	-ms-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
 	transition: all 0.3s ease-in-out;
+	font-size: 95%;
 }
 .admin-vertical-link .fa {
 	margin-right: 10px;
@@ -486,7 +476,6 @@ legend {
 /* Horizontal Navbar styling */
 #acp-toolkit {
 	background-color: rgb(255,255,255);
-	font-size: 13px;
 	color: rgb(117, 127, 140);
 	text-shadow: 0px 1px rgb(255, 255, 255);
 	border-bottom: 1px solid rgb(235, 235, 235);
@@ -525,7 +514,6 @@ nav ul > li {
 	transition: color 0.1s ease-in-out;
 }
 nav > ul > li > a {
-	font-size: 13px;
 	padding:15px !important;
 	color: #444;
 	border-left: 1px solid transparent;

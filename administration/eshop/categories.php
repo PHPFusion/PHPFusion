@@ -17,66 +17,113 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) die("Access Denied");
 
+/**
+ * Class eShop_cats
+ */
 class eShop_cats {
-
-
-private $data = array(
-					'cid' => 0,
-					'title' => '',
-					'parentid' => '',
-					'image' => '',
-					'status' => '',
-					'cat_languages' => array(),
-					'cat_order'	=> 0,
-					'access' => 0,
-				);
-
+	/**
+	 * @var array|bool
+	 */
+	private $data = array(
+		'cid' => 0,
+		'title' => '',
+		'parentid' => '',
+		'image' => '',
+		'status' => '',
+		'cat_languages' => array(),
+		'cat_order' => 0,
+		'access' => 0,);
+	/**
+	 * @var array
+	 */
 	private $eshop_cat_index = array();
+	/**
+	 * @var array
+	 */
+	private $eshop_data_tree = array();
 
+	/**
+	 *
+	 */
 	public function __construct() {
+		global $aidlink;
 		define("CAT_DIR", BASEDIR."eshop/categoryimgs/");
 		if (isset($_REQUEST['cid']) && !isnum($_REQUEST['cid'])) die("Denied");
 		if (isset($_POST['status']) && !isnum($_POST['status'])) die("Denied");
 		if (isset($_POST['access']) && !isnum($_POST['access'])) die("Denied");
-
-		$access = isset($_POST['access']) ? $_POST['access'] : 0; // not sure what is this for yet.
-
 		// sanitize all vars
 		$_GET['cid'] = isset($_GET['cid']) && isnum($_GET['cid']) ? $_GET['cid'] : 0;
 		$_GET['parent_id'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
-
-		switch($_GET['action']) {
+		switch ($_GET['action']) {
 			case 'refresh' :
 				self::refresh_category();
 				break;
 			case 'refresh_sub_cats' :
 				self::refresh_subcats();
 				break;
-
+			case 'moveup' :
+				self::cats_moveup();
+				break;
+			case 'movedown':
+				self::cats_movedown();
+				break;
+			case 'delete':
+				self::cats_delete();
+				break;
 		}
-
-
 		if (isset($_POST['save_cat'])) { // the only post for saving category
 			self::set_categorydb();
 		}
 		// do breadcrumbs
 		$this->eshop_cat_index = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid');
-		self::doBreadcrumbs($this->eshop_cat_index);
+		$this->eshop_data_tree = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
+		self::make_breads($this->eshop_cat_index);
+		if (self::verify_cat_edit($_GET['cid']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
+			$this->data = self::get_data();
+		}
+		self::quick_save();
+	}
 
+	// quick saving function
+	/**
+	 *
+	 */
+	static function quick_save() {
+		global $aidlink;
+		if (isset($_POST['cats_quicksave'])) {
+			//self::quick_save();
+			$quick['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '0', 'cid') : 0;
+			$quick['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
+			$quick['image'] = isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '';
+			$quick['status'] = isset($_POST['status']) ? form_sanitizer($_POST['status'], '', 'status') : '';
+			$quick['access'] = isset($_POST['access']) ? form_sanitizer($_POST['access'], '0', 'access') : 0;
+			if ($quick['cid']) {
+				$c_result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid='".intval($quick['cid'])."'");
+				if (dbrows($c_result) > 0) {
+					$quick += dbarray($c_result);
+					dbquery_insert(DB_ESHOP_CATS, $quick, 'update');
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=categories");
+				}
+			}
+		}
 	}
 
 	// return breadcrumbs output
-	private function doBreadcrumbs($eshop_cat_index) {
+	/**
+	 * @param $eshop_cat_index
+	 */
+	private function make_breads($eshop_cat_index) {
 		global $aidlink;
 		/* Make an infinity traverse */
 		function breadcrumb_arrays($index, $id) {
 			global $aidlink;
-			$crumb = &$crumb;
+			$crumb = & $crumb;
 			//$crumb += $crumb;
 			if (isset($index[get_parent($index, $id)])) {
 				$_name = dbarray(dbquery("SELECT cid, title FROM ".DB_ESHOP_CATS." WHERE cid='".$id."'"));
-				$crumb = array('link'=>FUSION_SELF.$aidlink."&amp;parent_id=".$_name['cid'], 'title'=>$_name['title']);
+				$crumb = array('link' => FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$_name['cid'],
+					'title' => $_name['title']);
 				if (isset($index[get_parent($index, $id)])) {
 					if (get_parent($index, $id) == 0) {
 						return $crumb;
@@ -87,81 +134,158 @@ private $data = array(
 			}
 			return $crumb;
 		}
+
 		// then we make a infinity recursive function to loop/break it out.
 		$crumb = breadcrumb_arrays($eshop_cat_index, $_GET['parent_id']);
 		// then we sort in reverse.
-		if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
+		if (count($crumb['title']) > 1) {
+			krsort($crumb['title']);
+			krsort($crumb['link']);
+		}
 		// then we loop it out using Dan's breadcrumb.
 		if (count($crumb['title']) > 1) {
-			foreach($crumb['title'] as $i => $value) {
-				add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$value));
+			foreach ($crumb['title'] as $i => $value) {
+				add_to_breadcrumbs(array('link' => $crumb['link'][$i], 'title' => $value));
 			}
 		} elseif (isset($crumb['title'])) {
-			add_to_breadcrumbs(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
+			add_to_breadcrumbs(array('link' => $crumb['link'], 'title' => $crumb['title']));
 		}
 		// hola!
 	}
 
 
-	// Actions
+	/**
+	 * SQL Action Refresh Category
+	 */
 	static function refresh_category() {
 		global $aidlink;
 		$i = 1;
-		$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='0'");
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='".$_GET['pid']."'");
 		while ($data = dbarray($result)) {
 			dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order='".$i."' WHERE cid='".$data['cid']."'");
 			$i++;
 		}
-		redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;cat_orderrefresh");
+		redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;status=refresh");
 	}
 
-
-	static function refresh_subcats() {
+	/**
+	 * SQL Action Move Up
+	 */
+	static function cats_moveup() {
 		global $aidlink;
-		$i = 1;
-		$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='".$_GET['cid']."' ORDER BY cat_order");
-		while ($data = dbarray($result)) {
-			dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order='".$i."' WHERE cid='".$data['cid']."'");
-			$i++;
+		if (isset($_GET['cid']) && isnum($_GET['cid'])) {
+			$data = dbarray(dbquery("SELECT cat_order, parentid FROM ".DB_ESHOP_CATS." WHERE cid = '".$_GET['cid']."'")); // subtract 1. so i'm 5, i need to find 4
+			$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE parentid='".$data['parentid']."' AND cat_order='".($data['cat_order']-1)."'");
+			$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE cid='".$_GET['cid']."'");
+			redirect(FUSION_SELF.$aidlink."&amp;a_page=categories");
 		}
-		redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;enter_cat&amp;cid=".$_GET['cid']."&amp;cat_orderrefresh");
+	}
+
+	/**
+	 * SQL Action Move Down
+	 */
+	static function cats_movedown() {
+		global $aidlink;
+		if (isset($_GET['cid']) && isnum($_GET['cid'])) {
+			$data = dbarray(dbquery("SELECT cat_order, parentid FROM ".DB_ESHOP_CATS." WHERE cid = '".$_GET['cid']."'"));
+			$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE parentid='".$data['parentid']."' AND cat_order='".($data['cat_order']+1)."'");
+			$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE cid='".$_GET['cid']."'");
+			redirect(FUSION_SELF.$aidlink."&amp;a_page=categories");
+		}
+	}
+
+	/**
+	 * SQL Action Delete Category
+	 */
+	static function cats_delete() {
+		global $aidlink;
+		if (isset($_GET['cid']) && isnum($_GET['cid'])) {
+			$data = dbarray(dbquery("SELECT cat_order, parentid FROM ".DB_ESHOP_CATS." WHERE cid = '".$_GET['cid']."'"));
+			$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE parentid='".$data['parentid']."' AND cat_order > '".($data['cat_order'])."'");
+			$result = dbquery("DELETE FROM ".DB_ESHOP_CATS." WHERE cid='".intval($_GET['cid'])."'");
+			$result2 = dbquery("UPDATE ".DB_ESHOP." SET cid='0' WHERE cid='".intval($_GET['cid'])."'"); // what holds this?
+			redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;status=del");
+		}
 	}
 
 
-	// returns an array of $cat_files;
+	/**
+	 * Outputs Image Filename arrays
+	 * @return array
+	 */
 	static function getImageOpts() {
 		global $locale;
-
 		$cat_files = array('default.png' => $locale['ESHPCATS122']);
 		$cat_list = makefilelist(CAT_DIR, ".|..|index.php", TRUE);
-		foreach($cat_list as $files) {
+		foreach ($cat_list as $files) {
 			$cat_files[$files] = $files;
 		}
 		return $cat_files;
 	}
-	// Return the sizes
+
+
+	/**
+	 * Return the status
+	 * @return array
+	 */
 	static function getSizeOpts() {
 		global $locale;
-		return array(
-			'1' => $locale['ESHPCATS103'],
-			'2' => $locale['ESHPCATS104'],
-		);
+		return array('1' => $locale['ESHPCATS103'],
+			'2' => $locale['ESHPCATS104'],);
 	}
-	// Return access levels
+
+
+	/**
+	 * Return access levels
+	 * @return array
+	 */
 	static function getVisibilityOpts() {
 		$visibility_opts = array();
 		$user_groups = getusergroups();
-		while(list($key, $user_group) = each($user_groups)){
+		while (list($key, $user_group) = each($user_groups)) {
 			$visibility_opts[$user_group[0]] = $user_group[1];
 		}
 		return $visibility_opts;
 	}
-	// Return rows
+
+	/**
+	 * Shows Message based on $_GET['status']
+	 */
+	static function getMessage() {
+		global $locale;
+		$message = '';
+		if (isset($_GET['status'])) {
+			switch ($_GET['status']) {
+				case 'sn' :
+					$message = $locale['ESHPCATS119'];
+					break;
+				case 'su' :
+					$message = $locale['ESHPCATS120'];
+					break;
+				case 'del' :
+					$message = $locale['ESHPCATS118'];
+					break;
+			}
+			if ($message) {
+				echo "<div class='admin-message'>$message</div>";
+			}
+		}
+	}
+
+
+	/**
+	 * Validate whether an ID exist
+	 * @param $cid
+	 * @return bool|string
+	 */
 	static function verify_cat_edit($cid) {
 		return dbcount("(cid)", DB_ESHOP_CATS, "cid='".$cid."'");
 	}
 
-	// MYSQL set or update
+
+	/**
+	 * MYSQL Actions - Save or Update
+	 */
 	private function set_categorydb() {
 		global $aidlink;
 		$this->data['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '0', 'cid') : 0;
@@ -188,318 +312,213 @@ private $data = array(
 			dbquery_insert(DB_ESHOP_CATS, $this->data, 'save');
 			if (!defined("FUSION_NULL")) redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&status=sn");
 		}
-
 	}
 
-	// the form
+	/**
+	 * Fetch edit data
+	 * @return array|bool
+	 */
+	private function get_data() {
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid='".intval($_GET['cid'])."'");
+		if (dbrows($result) > 0) {
+			return dbarray($result);
+		}
+		return FALSE;
+	}
+
+
+	/**
+	 * render form template
+	 */
 	public function add_cat_form() {
 		global $locale, $aidlink;
 		$enabled_languages = fusion_get_enabled_languages();
-
 		$this->data['cat_languages'] = (is_array($this->data['cat_languages'])) ? $this->data['cat_languages'] : array();
-
 		$form_action = FUSION_SELF.$aidlink."&amp;a_page=categories";
-		echo openform('addcat', 'add_cat', 'post', $form_action, array('class'=>'m-t-20'));
-		echo form_text($locale['ESHPCATS100'], 'title', 'title', $this->data['title'], array('max_length'=>100, 'inline'=>1));
-		echo form_select_tree('Category', 'parentid', 'parentid', $this->data['parentid'], array('inline'=>1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo openform('addcat', 'add_cat', 'post', $form_action, array('class' => 'm-t-20', 'downtime' => 10));
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
+		echo form_text($locale['ESHPCATS100'], 'title', 'titles', $this->data['title'], array('max_length' => 100,
+			'inline' => 1));
+		echo form_select_tree($locale['ESHPCATS106'], 'parentid', 'parentids', $this->data['parentid'], array('inline' => 1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo form_select($locale['ESHPCATS105'], 'image', 'images', self::getImageOpts(), $this->data['image'], array('inline' => 1));
 		// Languages in a row.
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo "<label class='control-label'>".$locale['ESHPPRO191']."</label>";
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
-
-		foreach($enabled_languages as $lang) {
+		foreach ($enabled_languages as $lang) {
 			$check = (in_array($lang, $this->data['cat_languages'])) ? 1 : 0;
 			echo "<div class='display-inline-block text-left m-r-10'>\n";
-			echo form_checkbox($lang, 'cat_languages[]', 'lang-'.$lang, $check, array('value'=>$lang));
+			echo form_checkbox($lang, 'cat_languages[]', 'lang-'.$lang, $check, array('value' => $lang));
 			echo "</div>\n";
 		}
-
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_select($locale['ESHPCATS105'], 'image', 'image', self::getImageOpts(), $this->data['image'], array('inline'=>1));
-		echo form_select($locale['ESHPCATS101'], 'status', 'status', self::getSizeOpts(), $this->data['status'], array('inline'=>1, 'placeholder'=>$locale['ESHPCATS102']));
-		echo form_select($locale['ESHPCATS109'], 'access', 'access', self::getVisibilityOpts(), $this->data['access'], array('inline'=>1));
-		echo form_text('Order', 'cat_order', 'cat_order', $this->data['cat_order'], array('inline'=>1, 'number'=>1, 'width'=>'100px'));
-		echo form_hidden('', 'cid', 'cid', $this->data['cid']);
-		echo form_button($locale['ESHPCATS112'], 'save_cat', 'save_cat', $locale['ESHPCATS112'], array('class'=>'btn-primary'));
+		echo form_text($locale['ESHPCATS136'], 'cat_order', 'cat_orders', $this->data['cat_order'], array('inline' => 1,
+			'number' => 1,
+			'width' => '100px'));
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
+		openside('');
+		echo form_select($locale['ESHPCATS101'], 'status', 'statuses', self::getSizeOpts(), $this->data['status'], array('width' => '100%',
+			'placeholder' => $locale['ESHPCATS102']));
+		echo form_select($locale['ESHPCATS109'], 'access', 'accesses', self::getVisibilityOpts(), $this->data['access'], array('width' => '100%'));
+		closeside();
+		echo form_hidden('', 'cid', 'cids', $this->data['cid']);
+		echo "</div>\n</div>\n";
+		echo form_button($locale['save'], 'save_cat', 'save_cats', $locale['save'], array('class' => 'btn-primary'));
 		echo closeform();
 	}
 
-	// the listing -- WIP (COFFEE BREAK !)
+	/**
+	 * render data table with quick access
+	 */
 	public function category_listing() {
 		global $locale, $aidlink;
-
-		$cat_index = $this->eshop_cat_index;
+		add_to_jquery("
+		$('.actionbar').hide();
+		$('tr').hover(
+			function(e) { $('#shop-'+ $(this).data('id') +'-actions').show(); },
+			function(e) { $('#shop-'+ $(this).data('id') +'-actions').hide(); }
+		);
+		$('.qform').hide();
+		$('.qedit').bind('click', function(e) {
+			// ok now we need jquery, need some security at least.token for example. lets serialize.
+			$.ajax({
+				url: '".ADMIN."includes/eshop_cats.php',
+				dataType: 'json',
+				type: 'post',
+				data: { q: $(this).data('id'), token: '".$aidlink."' },
+				success: function(e) {
+					$('#cid').val(e.cid);
+					$('#title').val(e.title);
+					$('#image').select2('val', e.image);
+					$('#status').select2('val', e.status);
+					$('#access').select2('val', e.access);
+					var length = e.link_window;
+					if (e.link_window > 0) { $('#link_window').attr('checked', true);	} else { $('#link_window').attr('checked', false); }
+				},
+				error : function(e) {
+				console.log(e);
+				}
+			});
+			$('.qform').show();
+			$('.list-result').hide();
+		});
+		$('#cancel').bind('click', function(e) {
+			$('.qform').hide();
+			$('.list-result').show();
+		});
+		");
+		$cat_data = $this->eshop_data_tree;
+		$enabled_languages = fusion_get_enabled_languages();
 		echo "<div class='m-t-20'>\n";
-		if (!isset($_GET['enter_cat'])) {
-			$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='0' ORDER BY cat_order ASC");
-			$rows = dbrows($result);
-			if ($rows > 0) {
-				$type_icon = array(
-					'1' => 'entypo folder',
-					'2' => 'entypo chat',
-					'3' => 'entypo link',
-					'4' => 'entypo graduation-cap');
-				$i = 1;
-				while ($data = dbarray($result)) {
-					$up = $data['cat_order']-1;
-					$down = $data['cat_order']+1;
-					echo "<div class='panel panel-default'>\n";
-					echo "<div class='panel-body'>\n";
-					echo "<div class='pull-left m-r-10'>\n";
-					echo "<i class='entypo eye'></i>\n";
-					echo "</div>\n";
-					echo "<div class='overflow-hide'>\n";
-					echo "<div class='row'>\n";
-					echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-					$html2 = '';
-					if ($data['image'] && file_exists(CAT_DIR.$data['image'])) {
-						echo "<div class='pull-left m-r-10'>\n".thumbnail(CAT_DIR.$data['image'], '50px')."</div>\n";
-						echo "<div class='overflow-hide'>\n";
-						$html2 = "</div>\n";
-					}
-					echo "<span class='strong'><a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;enter_cat&amp;cid=".$data['cid']."'>".$data['title']."</a></span>".$html2."";
-					echo "</div>\n<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-					echo "<div class='pull-right'>\n";
-					echo ($i == 1) ? "" : "<a title='mup' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=moveup&amp;order=$up&amp;cid=".$data['cid']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-					echo ($i == $rows) ? "" : "<a title='mdown' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=movedown&amp;order=$down&amp;cid=".$data['cid']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-					echo "<a title='".$locale['ESHPCATS133']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;EditCurrentCategory&cid=".$data['cid']."'><i class='entypo cog m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-					echo "<a title='".$locale['ESHPCATS117']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;deletecat&amp;cid=".$data['cid']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\"><i class='entypo icancel m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-					echo "</div>\n";
-					$subcats = get_child($cat_index, $data['cid']);
-					$subcats = !empty($subcats) ? count($subcats) : 0;
-					echo "<span class='text-dark text-smaller strong'>".$locale['ESHPCATS132']." : ".number_format($subcats)."</span>\n<br/>";
-					echo "</div></div>\n";
-					echo "</div>\n";
-					echo "</div>\n</div>\n";
-					$i++;
-				}
-				echo "<div style='text-align:center;margin-top:5px'>[ <a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=refresh'> ".$locale['ESHPCATS130']." </a> ]</div>\n";
-			} else {
-				echo "<div class='well text-center'>".$locale['ESHPCATS115']."</div>\n";
-			}
-
-			echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink."&amp;a_page=categories", array('downtime' => 0,
-				'notice' => 0));
-			echo form_button($locale['ESHPCATS123'], 'add_main_cat', 'add_main_cat', 'add_main_cat', array('class' => 'btn btn-sm btn-primary'));
-			echo closeform();
-		}
-
-		if (isset($_GET['enter_cat'])) {
-			$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='".$_GET['cid']."' ORDER BY cat_order ASC");
-			$rows = dbrows($result);
-			if ($rows > 0) {
-				$type_icon = array('1' => 'entypo folder',
-					'2' => 'entypo chat',
-					'3' => 'entypo link',
-					'4' => 'entypo graduation-cap');
-				$i = 1;
-				while ($data = dbarray($result)) {
-					$up = $data['cat_order']-1;
-					$down = $data['cat_order']+1;
-					echo "<div class='panel panel-default'>\n";
-					echo "<div class='panel-body'>\n";
-					echo "<div class='pull-left m-r-10'>\n";
-					echo "<i class='entypo eye'></i>\n";
-					echo "</div>\n";
-					echo "<div class='overflow-hide'>\n";
-					echo "<div class='row'>\n";
-					echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-					$html2 = '';
-					if ($data['image'] && file_exists(CAT_DIR.$data['image'])) {
-						echo "<div class='pull-left m-r-10'>\n".thumbnail(CAT_DIR.$data['image'], '50px')."</div>\n";
-						echo "<div class='overflow-hide'>\n";
-						$html2 = "</div>\n";
-					}
-					echo "<span class='strong'><a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;enter_cat&amp;cid=".$data['cid']."'>".$data['title']."</a></span>".$html2."";
-					echo "</div>\n<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-					echo "<div class='pull-right'>\n";
-					echo ($i == 1) ? "" : "<a title='mup' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=moveupsub&amp;order=$up&amp;cid=".$data['cid']."&amp;mcid=".$_GET['cid']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-					echo ($i == $rows) ? "" : "<a title='mdown' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=movedownsub&amp;order=$down&amp;cid=".$data['cid']."&amp;mcid=".$_GET['cid']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-					echo "<a title='".$locale['ESHPCATS133']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;EditCurrentCategory&cid=".$data['cid']."'><i class='entypo cog m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-					echo "<a title='".$locale['ESHPCATS117']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;deletecat&amp;cid=".$data['cid']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\"><i class='entypo icancel m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-					echo "</div>\n";
-					$subcats = get_child($cat_index, $data['cid']);
-					$subcats = !empty($subcats) ? count($subcats) : 0;
-					echo "<span class='text-dark text-smaller strong'>".$locale['ESHPCATS132']." : ".number_format($subcats)."</span>\n<br/>";
-					echo "</div></div>\n";
-					echo "</div>\n";
-					echo "</div>\n</div>\n";
-					$i++;
-				}
-				echo "<div style='text-align:center;margin-top:5px'>[ <a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=refresh_sub_cats&amp;cid=".$_GET['cid']."'> ".$locale['ESHPCATS131']." </a> ]</div>\n";
-			} else {
-				echo "<div class='well text-center'>".$locale['ESHPCATS115']."</div>\n";
-			}
-			echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink."&amp;a_page=categories&amp;cid=".$_GET['cid']."", array('downtime' => 0,
-				'notice' => 0));
-			echo form_button($locale['ESHPCATS124'], 'add_sub_cat', 'add_sub_cat', 'add_sub_cat', array('class' => 'btn btn-sm btn-primary'));
-			echo closeform();
-
-
-	}
+		echo "<table class='table table-responsive'>\n";
+		echo "<tr>\n";
+		echo "<th></th>\n";
+		echo "<th>".$locale['ESHPCATS100']."</th>\n";
+		echo "<th>".$locale['ESHPCATS132']."</th>\n";
+		//echo "<th>Image</th>\n";
+		echo "<th>".$locale['ESHPCATS109']."</th>\n";
+		echo "<th>".$locale['ESHPCATS101']."</th>\n";
+		echo "<th>".$locale['ESHPCATS135']."</th>\n";
+		echo "<th>".$locale['ESHPCATS136']."</th>\n";
+		echo "<th>".$locale['ESHPPRO191']."</th>\n";
+		echo "</tr>\n";
+		echo "<tr class='qform'>\n";
+		echo "<td colspan='8'>\n";
+		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=categories", array('downtime' => 0,
+			'notice' => 0));
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
+		echo form_text($locale['ESHPCATS100'], 'title', 'title', '');
 		echo "</div>\n";
-	}
-
-}
-
-
-
-if (isset($_GET['action']) && $_GET['action'] == "") {
-
-}
-if ((isset($_GET['action']) && $_GET['action'] == "moveup") && (isset($_GET['cid']) && isnum($_GET['cid']))) {
-	$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid = '".$_GET['cid']."' AND cat_order='".intval($_GET['order'])."'"));
-	$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE cid='".$data['cid']."'");
-	$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE cid='".$_GET['cid']."'");
-	redirect(FUSION_SELF.$aidlink."&amp;a_page=categories");
-}
-if ((isset($_GET['action']) && $_GET['action'] == "movedown") && (isset($_GET['cid']) && isnum($_GET['cid']))) {
-	$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid = '".$_GET['cid']."' AND cat_order='".intval($_GET['order'])."'"));
-	$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE cid='".$data['cid']."'");
-	$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE cid='".$_GET['cid']."'");
-	redirect(FUSION_SELF.$aidlink."&amp;a_page=categories");
-}
-if ((isset($_GET['action']) && $_GET['action'] == "moveupsub") && (isset($_GET['cid']) && isnum($_GET['cid']))) {
-	$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid = '".$_GET['cid']."' AND cat_order='".intval($_GET['order'])."'"));
-	$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE cid='".$data['cid']."'");
-	$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE cid='".$_GET['cid']."'");
-	redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;enter_cat&amp;cid=".$_GET['mcid']."");
-}
-if ((isset($_GET['action']) && $_GET['action'] == "movedownsub") && (isset($_GET['cid']) && isnum($_GET['cid']))) {
-	$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid = '".$_GET['cid']."' AND cat_order='".intval($_GET['order'])."'"));
-	$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE cid='".$data['cid']."'");
-	$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE cid='".$_GET['cid']."'");
-	redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;enter_cat&amp;cid=".$_GET['mcid']."");
-}
-
-if (isset($_GET['deletecat'])) {
-	$result = dbquery("DELETE FROM ".DB_ESHOP_CATS." WHERE cid='".$_REQUEST['cid']."'");
-	$result2 = dbquery("UPDATE ".DB_ESHOP." SET cid='0' WHERE cid='".$_REQUEST['cid']."'");
-	redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&catdeleted");
-}
-
-if (isset($_GET['catdeleted'])) {
-	echo "<br /><div class='admin-message'>".$locale['ESHPCATS118']."</div><br />";
-}
-
-if (isset($_GET['catadded'])) {
-	echo "<br /><div class='admin-message'>".$locale['ESHPCATS119']."</div><br />";
-}
-if (isset($_GET['catupdated'])) {
-	echo "<br /><div class='admin-message'>".$locale['ESHPCATS120']."</div><br />";
-}
-if (isset($_POST['SaveCategoryChanges'])) {
-	$cid = stripinput($_REQUEST['cid']);
-	$title = stripinput($_POST['title']);
-	$image = stripinput($_POST['image']);
-	$parentid = stripinput($_POST['parentid']);
-	$status = stripinput($_POST['status']);
-	$order = "";
-	$languages = "";
-	for ($pl = 0; $pl < sizeof($_POST['languages']); $pl++) {
-		$languages .= $_POST['languages'][$pl].($pl < (sizeof($_POST['languages'])-1) ? "." : "");
-	}
-	dbquery("UPDATE ".DB_ESHOP_CATS." SET title = '$title', access= '$access',  image = '$image', parentid = '$parentid', status = '$status', cat_order='$order', cat_languages='$languages' WHERE cid ='$cid' LIMIT 1");
-	//redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&catupdated");
-}
-
-if (isset($_GET['EditCurrentCategory'])) {
-	$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." where cid='".$_GET['cid']."'");
-	$cat_data = dbarray($result);
-	$stitle = getparent($cat_data['parentid'], $cat_data['title']);
-	$title1 = "$stitle";
-	$image = $cat_data['image'];
-	$access = $cat_data['access'];
-	$order = $cat_data['cat_order'];
-	$languages = $cat_data['cat_languages'];
-	echo "<fieldset style='align:left;width:97%;display:block;float:left;margin-left:10px;margin-right:10px;margin-top:2px;margin-bottom:2px;'>
-<legend>&nbsp;<b> ".$locale['ESHPCATS121']." </b>&nbsp;</legend>";
-	echo "<form name='addcat' action='".FUSION_SELF.$aidlink."&amp;a_page=categories&SaveCategoryChanges' method='post'>";
-	echo '<table width="100%" cellspacing="1" cellpadding="1" border="0" align="center">
-<tr><td>'.$locale['ESHPCATS106'].'</td><td><input class="textbox" type="text" name="title" size="30" value="'.$cat_data['title'].'"/></td></tr>';
-	for ($x = 0; $x < sizeof($enabled_languages); $x++) {
-		$languages .= $enabled_languages[$x].(($x < sizeof($enabled_languages)-1) ? "." : "");
-	}
-	$langs = explode('.', $languages);
-	$locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
-	echo "<td>".$locale['ESHPPRO191']."</td>";
-	echo "<td colspan='2'>";
-	for ($i = 0; $i < sizeof($locale_files); $i++) {
-		if (in_array($locale_files[$i], $enabled_languages)) {
-			echo "<input type='checkbox' value='".$locale_files[$i]."' name='languages[]' class='textbox' ".(in_array($locale_files[$i], $langs) ? "checked='checked'" : "")."> ".str_replace('_', ' ', $locale_files[$i])." ";
+		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo form_select($locale['ESHPCATS105'], 'image', 'image', self::getImageOpts(), '', array('inline' => 1));
+		echo form_select($locale['ESHPCATS101'], 'status', 'status', self::getSizeOpts(), '', array('inline' => 1,
+			'placeholder' => $locale['ESHPCATS102']));
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>\n";
+		echo form_select($locale['ESHPCATS109'], 'access', 'access', self::getVisibilityOpts(), '', array('inline' => 1));
+		echo form_hidden('', 'cid', 'cid', '', array('writable' => 1));
+		echo "</div>\n";
+		echo "</div>\n";
+		echo "<div class='m-t-10 m-b-10'>\n";
+		echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class' => 'btn btn-default m-r-10',
+			'type' => 'button'));
+		echo form_button($locale['update'], 'cats_quicksave', 'cats_quicksave', 'save', array('class' => 'btn btn-primary'));
+		echo "</div>\n";
+		echo closeform();
+		echo "</div>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "<tbody id='eshopcat-links' class='connected'>\n";
+		if (!empty($cat_data[$_GET['parent_id']])) {
+			$i = 0;
+			$rows = count($cat_data[$_GET['parent_id']]);
+			$cat_data = sort_tree($cat_data[$_GET['parent_id']], 'cat_order');
+			foreach ($cat_data as $cid => $data) {
+				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
+				$subcats = get_child($this->eshop_cat_index, $data['cid']);
+				$subcats = !empty($subcats) ? count($subcats) : 0;
+				echo "<tr id='listItem_".$data['cid']."' data-id='".$data['cid']."' class='list-result ".$row_color."'>\n";
+				echo "<td></td>\n";
+				echo "<td class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
+				echo "<a class='text-dark' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$data['cid']."'>".$data['title']."</a>";
+				echo "<div class='actionbar text-smaller' id='shop-".$data['cid']."-actions'>
+				<a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;section=catform&amp;action=edit&amp;cid=".$data['cid']."'>".$locale['edit']."</a> |
+				<a class='qedit pointer' data-id='".$data['cid']."'>".$locale['qedit']."</a> |
+				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=delete&amp;cid=".$data['cid']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
+				";
+				echo "</td>\n";
+				//echo "<td>\n".thumbnail(CAT_DIR.$data['image'], '30px')."</td>\n"; // will show no image thumbnail if no image
+				echo "<td>".number_format($subcats)."</td>\n";
+				echo "<td>".self::getVisibilityOpts()[$data['access']]."</td>\n";
+				echo "<td>".self::getSizeOpts()[$data['status']]."</td>\n";
+				echo "<td>\n";
+				echo ($i == 0) ? "" : "<a title='".$locale['ESHPCATS137']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=moveup&amp;cid=".$data['cid']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+				echo ($i == $rows) ? "" : "<a title='".$locale['ESHPCATS138']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=movedown&amp;cid=".$data['cid']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+				echo "</td>\n"; // move up and down.
+				echo "<td>".$data['cat_order']."</td>\n";
+				echo "<td>".str_replace('.', ', ', $data['cat_languages'])."</td>\n";
+				echo "</tr>\n";
+				$i++;
+			}
+			$html2 = "<div class='text-center m-t-10'>[ <a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=refresh&amp;pid=".$_GET['parent_id']."'> ".$locale['ESHPCATS130']." </a> ]</div>\n";
+		} else {
+			echo "<tr><td colspan='5' class='text-center'>".$locale['ESHPCATS115']."</td></tr>\n";
 		}
-		if ($i%2 == 0 && $i != 0) echo "<br  />";
+		echo "</tbody>\n";
+		echo "</table>\n";
+		echo "</div>\n";
+		if (isset($html2)) echo $html2;
 	}
-	echo "</td></tr>";
-	echo '<tr><td>'.$locale['ESHPCATS105'].'</td>';
-	echo "<td width='35%'><select name='image' class='textbox' style='width:200px;'><option value='".$image."' ".($image == "$image" ? " selected" : "").">".$image."</option>$cat_list</select>
-</td><td width='25%'><img style='height:50px;width:50px;' src='".CAT_DIR.($image != '' ? $image : "")."' name='image_preview' alt='' /></td>";
-	echo '<tr><td>'.$locale['ESHPCATS107'].'</td><td><select class="textbox" name="parentid">';
-	if ($cat_data['parentid']) {
-		echo '<option value="'.$cat_data['parentid'].'">'.$title1.'</option>';
-	}
-	echo '<option value="0">'.$locale['ESHPCATS108'].'</option>';
-	$result = dbquery("SELECT cid, title, parentid FROM ".DB_ESHOP_CATS." WHERE cid!='".$_REQUEST['cid']."' ORDER BY parentid,title");
-	while (list($cidp, $title, $parentid) = dbarraynum($result)) {
-		if ($parentid != 0) {
-			$title = getparent($parentid, $title);
-		}
-		echo '<option value="'.$cidp.'">'.$title.'</option>';
-	}
-	echo '</select></td></tr><tr><td>'.$locale['ESHPCATS101'].'</td>
-<td><select class="textbox" name="status" size="1">
-<option value="'.$cat_data['status'].'" selected>'.$locale['ESHPCATS102'].'</option>
-<option value="1">'.$locale['ESHPCATS103'].'</option>
-<option value="2">'.$locale['ESHPCATS104'].'</option>
-</select></td></tr>';
-	echo "<tr><td>".$locale['ESHPCATS109']."</td>
-<td><select name='access' class='textbox'>
-$visibility_opts</select></td>
-</tr>";
-	echo '<tr><td colspan="2" align="center">
-<input type="hidden" name="cid" value="'.$_REQUEST['cid'].'">
-<input type="hidden" name="SaveCategoryChanges" value="SaveCategoryChanges">
-<input class="button" type="submit" name="submit" value="'.$locale['ESHPCATS112'].'  &raquo; '.$cat_data['title'].'"><br /><br />';
-	echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&deletecat&cid=".$_REQUEST['cid']."'><b>".$locale['ESHPCATS117']."  &raquo;  ".$stitle."</b></a>";
-	echo '</td></tr></table></form></fieldset>';
 }
 
-if (isset($_POST['AddSubCategory'])) {
-	$cid = stripinput($_REQUEST['cid']);
-	$title = stripinput($_POST['title']);
-	$image = stripinput($_POST['image']);
-	$status = stripinput($_POST['status']);
-	$languages = "";
-	for ($pl = 0; $pl < sizeof($_POST['languages']); $pl++) {
-		$languages .= $_POST['languages'][$pl].($pl < (sizeof($_POST['languages'])-1) ? "." : "");
-	}
-	$order = "";
-	dbquery("INSERT INTO ".DB_ESHOP_CATS." (cid,title,access,image,parentid,status,cat_order,cat_languages)VALUES (NULL, '$title','$access', '$image', '$cid', '$status','$order','$languages');");
-	redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&catadded&amp;enter_cat&cid=".$_REQUEST['cid']."");
-}
-
-// Render Out.
 $category = new eShop_cats(); // load constructs
-$edit = $category->verify_cat_edit($_GET['cid']);
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $category->verify_cat_edit($_GET['cid']) : 0;
 // build a new interface
-$tab_title['title'][] = 'Current Categories';
+$tab_title['title'][] = $locale['ESHPCATS099'];
 $tab_title['id'][] = 'listcat';
 $tab_title['icon'][] = '';
-$tab_title['title'][] = $edit ? "Edit Category" : "Add Category";
+$tab_title['title'][] = $edit ? $locale['ESHPCATS139'] : $locale['ESHPCATS140'];
 $tab_title['id'][] = 'catform';
-$tab_title['icon'][] =  $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-$tab_active = tab_active($tab_title, $edit ?  1 : 0, 1, 1);
-global $aidlink;
+$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1, 1);
+$category->getMessage();
 echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=categories");
 echo opentabbody($tab_title['title'][0], 'listcat', $tab_active, 1);
 $category->category_listing();
-echo closetab();
-echo opentabbody($tab_title['title'][1], 'catform', $tab_active, 1);
-$category->add_cat_form();
-echo closetab();
+echo closetabbody();
+if (isset($_GET['section']) && $_GET['section'] == 'catform') {
+	echo opentabbody($tab_title['title'][1], 'catform', $tab_active, 1);
+	$category->add_cat_form();
+	echo closetabbody();
+}
+closetable();
 
 
 ?>

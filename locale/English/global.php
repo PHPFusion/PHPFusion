@@ -385,6 +385,7 @@ $locale['settings'] = 'Settings';
 $locale['posted'] = 'posted';
 $locale['profile'] = 'Profile';
 $locale['edit'] = 'Edit';
+$locale['qedit'] = 'Quick Edit';
 $locale['view'] = 'View';
 $locale['login'] = 'Log in';
 $locale['logout'] = 'Logout';

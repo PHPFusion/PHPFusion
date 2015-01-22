@@ -386,6 +386,7 @@ $locale['settings'] = "Параметры";
 $locale['posted'] = "размещено";
 $locale['profile'] = "Профиль";
 $locale['edit'] = "Изменить";
+$locale['qedit'] = 'Quick Edit';
 $locale['view'] = "Смотреть";
 $locale['login'] = "Вход";
 $locale['logout'] = "Выход";

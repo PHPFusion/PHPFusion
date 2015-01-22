@@ -456,6 +456,17 @@ $locale['ESHPCATS126'] = "Досягнуто обмеження кількост
 $locale['ESHPCATS127'] = ", нові розділи неможливо створити.";
 $locale['ESHPCATS128'] = "Редагування розхділу";
 $locale['ESHPCATS129'] = "Досягнуто обмеження кількості розділів";
+$locale['ESHPCATS130'] = "Refresh category ordering";
+$locale['ESHPCATS131'] = "Refresh Sub-category ordering";
+$locale['ESHPCATS132'] = "Sub-categories";
+$locale['ESHPCATS133'] = "Edit";
+$locale['ESHPCATS134'] = "Are you sure you want to delete this category?";
+$locale['ESHPCATS135'] = "Options";
+$locale['ESHPCATS136'] = "Order";
+$locale['ESHPCATS137'] = "Move Up";
+$locale['ESHPCATS138'] = "Move Down";
+$locale['ESHPCATS139'] = 'Edit Category';
+$locale['ESHPCATS140'] = 'Add Category';
 
 //Administration main
 $locale['ESHP201'] = "Центр керування інтернет магазином";  

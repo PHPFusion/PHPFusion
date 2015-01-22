@@ -427,16 +427,17 @@ $locale['ESHPPMTS117'] = "Delete";
 $locale['ESHPPMTS118'] = "No payment methods have been saved";
 
 //Administration categories
-$locale['ESHPCATS100'] = "Category name:";
+$locale['ESHPCATS099'] = "Current Categories";
+$locale['ESHPCATS100'] = "Category name";
 $locale['ESHPCATS101'] = "Status:";
 $locale['ESHPCATS102'] = "Select status";
 $locale['ESHPCATS103'] = "Active";
 $locale['ESHPCATS104'] = "Inactive";
-$locale['ESHPCATS105'] = "Image:";
-$locale['ESHPCATS106'] = "Category:";
-$locale['ESHPCATS107'] = "Parent:";
+$locale['ESHPCATS105'] = "Image";
+$locale['ESHPCATS106'] = "Category";
+$locale['ESHPCATS107'] = "Parent";
 $locale['ESHPCATS108'] = "None";
-$locale['ESHPCATS109'] = "Access:";
+$locale['ESHPCATS109'] = "Access";
 $locale['ESHPCATS110'] = "Category already exists";
 $locale['ESHPCATS111'] = "Title already exists";
 $locale['ESHPCATS112'] = " - Save - ";
@@ -461,6 +462,13 @@ $locale['ESHPCATS131'] = "Refresh Sub-category ordering";
 $locale['ESHPCATS132'] = "Sub-categories";
 $locale['ESHPCATS133'] = "Edit";
 $locale['ESHPCATS134'] = "Are you sure you want to delete this category?";
+$locale['ESHPCATS135'] = "Options";
+$locale['ESHPCATS136'] = "Order";
+$locale['ESHPCATS137'] = "Move Up";
+$locale['ESHPCATS138'] = "Move Down";
+$locale['ESHPCATS139'] = 'Edit Category';
+$locale['ESHPCATS140'] = 'Add Category';
+
 
 //Administration main
 $locale['ESHP201'] = "eShop Administration";  
