@@ -26,13 +26,11 @@ include INCLUDES."eshop_functions_include.php";
 
 require_once INCLUDES."photo_functions_include.php";
 
-echo "<SCRIPT LANGUAGE=\"JAVASCRIPT\" TYPE=\"TEXT/JAVASCRIPT\">
-<!--Hide script from old browsers
+add_to_jquery("
 function confirmdelete() {
 return confirm(\"".$locale['ESHP210']."\")
 }
-//Stop hiding script from old browsers -->
-</SCRIPT>";
+");
 
 opentable($locale['ESHP201']);
 if (!isset($_GET['a_page'])) { $_GET['a_page'] = "Main"; }
@@ -59,9 +57,11 @@ foreach($pages as $page_get => $page) {
 echo "</ul>\n";
 echo "</nav>\n";
 
-echo "<table class='table'><tr><td align='left' colspan='10'>\n";
+//echo "<table class='table'><tr><td align='left' colspan='10'>\n";
+
 include $pages[$_GET['a_page']]['file'];
-echo "</td></tr></table>";
+
+//echo "</td></tr></table>";
 closetable();
 
 require_once THEMES."templates/footer.php";
