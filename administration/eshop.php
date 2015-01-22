@@ -35,106 +35,34 @@ return confirm(\"".$locale['ESHP210']."\")
 </SCRIPT>";
 
 opentable($locale['ESHP201']);
-
 if (!isset($_GET['a_page'])) { $_GET['a_page'] = "Main"; }
-
-if ($_GET['a_page'] == "Main") {
-$tbl0 = "tbl1";
-} else {
-$tbl0 = "tbl2";
-}
-
-if ($_GET['a_page'] == "Categories") {
-$tbl1 = "tbl1";
-} else {
-$tbl1 = "tbl2";
-}
-
-if ($_GET['a_page'] == "photos") {
-$tbl3 = "tbl1";
-} else {
-$tbl3 = "tbl2";
-}
-
-if ($_GET['a_page'] == "payments") {
-$tbl4 = "tbl1";
-} else {
-$tbl4 = "tbl2";
-}
-
-if ($_GET['a_page'] == "shipping") {
-$tbl5 = "tbl1";
-} else {
-$tbl5 = "tbl2";
-}
-
-if ($_GET['a_page'] == "orders") {
-$tbl6 = "tbl1";
-} else {
-$tbl6 = "tbl2";
-}
-
-if ($_GET['a_page'] == "customers") {
-$tbl7 = "tbl1";
-} else {
-$tbl7 = "tbl2";
-}
-
-if ($_GET['a_page'] == "cupons") {
-$tbl8 = "tbl1";
-} else {
-$tbl8 = "tbl2";
-}
-
-if ($_GET['a_page'] == "featured") {
-$tbl9 = "tbl1";
-} else {
-$tbl9 = "tbl2";
-}
-
-
 $countorders = "".dbcount("(oid)", "".DB_ESHOP_ORDERS."", "opaid = '' || ocompleted = ''")."";
 
-echo "<table cellspacing='1' cellpadding='1' width='100%' ><tr>
-<td align='center' class='".$tbl0."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=Main'>".$locale['ESHP202']."</a></td>
-<td align='center' class='".$tbl3."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=photos'>".$locale['ESHP204']."</a></td>
-<td align='center' class='".$tbl1."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=Categories'>".$locale['ESHP203']."</a></td>
-<td align='center' class='".$tbl8."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=cupons'>".$locale['ESHP211']."</a></td>
-<td align='center' class='".$tbl9."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=featured'>".$locale['ESHP212']."</a></td></tr><tr>
-<td align='center' class='".$tbl4."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=payments'>".$locale['ESHP206']."</a></td>
-<td align='center' class='".$tbl5."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=shipping'>".$locale['ESHP207']."</a></td>
-<td align='center' class='".$tbl7."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=customers'>".$locale['ESHP208']."</a></td>
-<td align='center' colspan='2' class='".$tbl6."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders'>".$locale['ESHP209']."</a> <div class='countbox_bubble'>".$countorders."</div></td>
-</tr><tr><td align='left' colspan='10'><div class='spacer'></div>";
+$pages = array(
+	'main' => array('title'=>$locale['ESHP202'], 'file'=>ADMIN."eshop/products.php"),
+	'photos' => array('title'=>$locale['ESHP204'], 'file'=> ADMIN."eshop/photosadmin.php"),
+	'categories' => array('title'=>$locale['ESHP203'], 'file'=> ADMIN."eshop/categories.php"),
+	'coupons' => array('title'=>$locale['ESHP211'], 'file' => ADMIN."eshop/coupons.php"),
+	'featured' => array('title'=>$locale['ESHP212'], 'file'=> ADMIN."eshop/featured.php"),
+	'payments' => array('title'=>$locale['ESHP206'], 'file'=> ADMIN."eshop/payments.php"),
+	'shipping' => array('title'=>$locale['ESHP207'], 'file' => ADMIN."eshop/shipping.php"),
+	'customers' => array('title'=> $locale['ESHP208'], 'file' =>  ADMIN."eshop/customers.php"),
+	'orders' => array('title'=> $locale['ESHP209']."<span class='badge m-l-10'>".$countorders."</span>", 'file' => ADMIN."eshop/orders.php")
+);
 
-if ($_GET['a_page'] == "Main") {
-include ADMIN."eshop/products.php";
+// @todo : deprecate countbox_bubble
+echo "<nav class='navbar navbar-default'>\n";
+echo "<ul class='nav navbar-nav'>\n";
+foreach($pages as $page_get => $page) {
+	echo "<li ".($_GET['a_page'] == $page_get ? "class='active'" : '')." ><a href='".FUSION_SELF.$aidlink."&amp;a_page=".$page_get."'>".$page['title']."</a></li>\n";
 }
-elseif ($_GET['a_page'] == "Categories") {
-include ADMIN."eshop/categories.php";
-}
-elseif ($_GET['a_page'] == "photos") {
-include ADMIN."eshop/photosadmin.php";
-}
-elseif ($_GET['a_page'] == "payments") {
-include ADMIN."eshop/payments.php";
-}
-elseif ($_GET['a_page'] == "shipping") {
-include ADMIN."eshop/shipping.php";
-}
-elseif ($_GET['a_page'] == "orders") {
-include ADMIN."eshop/orders.php";
-}
-elseif ($_GET['a_page'] == "customers") {
-include ADMIN."eshop/customers.php";
-}
-elseif ($_GET['a_page'] == "cupons") {
-include ADMIN."eshop/coupons.php";
-}
-elseif ($_GET['a_page'] == "featured") {
-include ADMIN."eshop/featured.php";
-}
+echo "</ul>\n";
+echo "</nav>\n";
+
+echo "<table class='table'><tr><td align='left' colspan='10'>\n";
+include $pages[$_GET['a_page']]['file'];
 echo "</td></tr></table>";
 closetable();
+
 require_once THEMES."templates/footer.php";
 ?>

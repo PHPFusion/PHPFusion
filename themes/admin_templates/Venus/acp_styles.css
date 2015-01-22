@@ -528,7 +528,7 @@ nav ul > li {
 }
 nav > ul > li > a {
 	font-size: 13px;
-	padding:15px 15px;
+	padding:15px !important;
 	color: #444;
 	border-left: 1px solid transparent;
 	border-right: 1px solid transparent;
