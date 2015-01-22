@@ -472,16 +472,28 @@ function display_avatar($userdata, $size, $class = FALSE, $link = TRUE, $img_cla
 	}
 }
 
-function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE) {
+function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE) {
 	global $locale;
 	$src = file_exists($src) ? $src : '';
+	if (!$responsive) {
+		// get the size of the image and centrally aligned it
+		$image_info = @getimagesize($src);
+		$width = $image_info[0];
+		$height = $image_info[1];
+		$_size = explode('px', $size);
+		$_offset_w = 0;
+		$_offset_h = 0;
+		if ($width > $_size[0]) { $_offset_w = ($width - $_size[0])/2; } // get surplus and negative by half.
+		if ($height > $_size[0]) { $_offset_h = ($height - $_size[0])/2; } // get surplus and negative by half.
+	}
+
 	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-block image-wrap thumb text-center overflow-hide pull-left m-2'>\n";
 	$html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
 	if ($src) {
-		$html .= "<img class='img-responsive' src='$src'/>\n";
+		$html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." />\n";
 	} else {
 		$size = str_replace('px', '', $size);
-		$html .= "<img class='img-responsive' src='holder.js/".$size."x".$size."/text:".$locale['no_image']."'/>\n";
+		$html .= "<img src='holder.js/".$size."x".$size."/text:'/>\n";
 	}
 	$html .= $url || $colorbox ? "</a>" : '';
 	$html .= "</div>\n";
@@ -587,6 +599,7 @@ function collapse_footer_link($id, $title, $active, $class = FALSE) {
 function closecollapse() {
 	return "</div>\n";
 }
+
 function tab_active($tab_title, $default_active, $link_mode = FALSE) {
 	if ($link_mode) {
 		$section = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : $default_active;
@@ -622,24 +635,14 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		$v_link = str_replace("/", "-", $v_link);
 		$v_title = str_replace("-", " ", $v);
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-		$id = $tab_title['id'][$arr];
-		$request = isset($_GET['section']) ? str_replace("&amp;section=".$_GET['section']."", '', FUSION_REQUEST) : '';
-		if (defined('ADMIN_PANEL')) {
-			$link_url = $link_mode ? $request."&amp;section=".$id."" : "#";
-		} else {
-			if (strpos($link, "?")) {
-				$link_url = $link_mode ? $link.(isset($_GET['aid']) ? $aidlink."&amp;" : '&amp;')."section=".$id."" : "#";
-			} else {
-				$link_url = $link_mode ? $link.(isset($_GET['aid']) ? $aidlink."&amp;" : '?')."section=".$id."" : "#";
-			}
-
-		}
+		$inner_id = $tab_title['id'][$arr];
+		$link_url = $link ? clean_request('section='.$inner_id, array('aid', 'a_page')) : '#';
 		if ($link_mode) {
-			$html .= ($link_active_arrkey == $id) ? "<li class='active'>\n" : "<li>\n";
+			$html .= ($link_active_arrkey == $inner_id) ? "<li class='active'>\n" : "<li>\n";
 		} else {
-			$html .= ($link_active_arrkey == "".$id."$v_link") ? "<li class='active'>\n" : "<li>\n";
+			$html .= ($link_active_arrkey == "".$inner_id."$v_link") ? "<li class='active'>\n" : "<li>\n";
 		}
-		$html .= "<a class='pointer' ".(!$link_mode ? "id='tab-".$id.$v_link."' data-toggle='tab' data-target='#".$id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='$icon'></i>" : '')." ".$v_title." </a>\n";
+		$html .= "<a class='pointer' ".(!$link_mode ? "id='tab-".$id.$v_link."' data-toggle='tab' data-target='#".$id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
 		$html .= "</li>\n";
 	}
 	$html .= "</ul>\n";
