@@ -22,6 +22,7 @@ use PHPFusion\PermalinksDisplay;
 require_once INCLUDES."footer_includes.php";
 
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php
+
 // Cron Job (6 MIN)
 if ($settings['cronjob_hour'] < (time()-360)) {
 	dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < '".(time()-360)."'");
@@ -89,7 +90,7 @@ $footerError = (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0)
 if (!isset($fusion_jquery_tags)) {
 	$fusion_jquery_tags = '';
 }
-require_once __DIR__.'/layout.php';
+require_once __DIR__.(defined('ADMIN_PANEL') ? '/admin_layout.php' : '/layout.php');
 $output = ob_get_contents(); //ob_start() called in maincore
 if (ob_get_length() !== FALSE) {
 	ob_end_clean();

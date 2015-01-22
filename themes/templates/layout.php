@@ -5,8 +5,8 @@
 | Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: footer.php
-| Author: Nick Jones (Digitanium)
+| Filename: layout.php
+| Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -43,21 +43,20 @@
 </head>
 <body>
 	<?php
-	defined('ADMIN_PANEL') ? render_adminpanel() : render_page();
+	render_page();
 	
 	// Output lines added with add_to_footer()
 	echo $fusion_page_footer_tags;
-	
-	?>
+	if ($footerError) : ?>
 	<div class='admin-message'><?php echo $footerError ?></div>
-	<?php if (!empty($fusion_jquery_tags)) : ?>
+	<?php
+	endif;
+	if (!empty($fusion_jquery_tags)) : ?>
 	<script type="text/javascript">
 		$(function() {
 			<?php echo $fusion_jquery_tags; // Output lines added with add_to_jquery() ?>
 		});
 	</script>
-	<?php endif;
-	// End HTML document
-	?>
+	<?php endif; ?>
 </body>
 </html>
