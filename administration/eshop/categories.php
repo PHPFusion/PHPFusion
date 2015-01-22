@@ -38,9 +38,24 @@ private $data = array(
 		if (isset($_REQUEST['cid']) && !isnum($_REQUEST['cid'])) die("Denied");
 		if (isset($_POST['status']) && !isnum($_POST['status'])) die("Denied");
 		if (isset($_POST['access']) && !isnum($_POST['access'])) die("Denied");
-		$access = isset($_POST['access']) ? $_POST['access'] : 0;
+
+		$access = isset($_POST['access']) ? $_POST['access'] : 0; // not sure what is this for yet.
+
+		// sanitize all vars
 		$_GET['cid'] = isset($_GET['cid']) && isnum($_GET['cid']) ? $_GET['cid'] : 0;
 		$_GET['parent_id'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
+		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
+
+		switch($_GET['action']) {
+			case 'refresh' :
+				self::refresh_category();
+				break;
+			case 'refresh_sub_cats' :
+				self::refresh_subcats();
+				break;
+
+		}
+
 
 		if (isset($_POST['save_cat'])) { // the only post for saving category
 			self::set_categorydb();
@@ -86,6 +101,32 @@ private $data = array(
 		}
 		// hola!
 	}
+
+
+	// Actions
+	static function refresh_category() {
+		global $aidlink;
+		$i = 1;
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='0'");
+		while ($data = dbarray($result)) {
+			dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order='".$i."' WHERE cid='".$data['cid']."'");
+			$i++;
+		}
+		redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;cat_orderrefresh");
+	}
+
+
+	static function refresh_subcats() {
+		global $aidlink;
+		$i = 1;
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='".$_GET['cid']."' ORDER BY cat_order");
+		while ($data = dbarray($result)) {
+			dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order='".$i."' WHERE cid='".$data['cid']."'");
+			$i++;
+		}
+		redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;enter_cat&amp;cid=".$_GET['cid']."&amp;cat_orderrefresh");
+	}
+
 
 	// returns an array of $cat_files;
 	static function getImageOpts() {
@@ -306,30 +347,8 @@ private $data = array(
 
 
 
+if (isset($_GET['action']) && $_GET['action'] == "") {
 
-
-
-
-
-
-
-if (isset($_GET['action']) && $_GET['action'] == "refresh") {
-	$i = 1;
-	$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='0'");
-	while ($data = dbarray($result)) {
-		dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order='".$i."' WHERE cid='".$data['cid']."'");
-		$i++;
-	}
-	redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;cat_orderrefresh");
-}
-if (isset($_GET['action']) && $_GET['action'] == "refresh_sub_cats") {
-	$i = 1;
-	$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='".$_GET['cid']."' ORDER BY cat_order");
-	while ($data = dbarray($result)) {
-		dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order='".$i."' WHERE cid='".$data['cid']."'");
-		$i++;
-	}
-	redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;enter_cat&amp;cid=".$_GET['cid']."&amp;cat_orderrefresh");
 }
 if ((isset($_GET['action']) && $_GET['action'] == "moveup") && (isset($_GET['cid']) && isnum($_GET['cid']))) {
 	$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid = '".$_GET['cid']."' AND cat_order='".intval($_GET['order'])."'"));
