@@ -19,6 +19,7 @@
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 if (!checkrights("ESHP") || !defined("iAUTH") || $_GET['aid'] != iAUTH) { die("Denied"); }
+include LOCALE.LOCALESET."eshop.php";
 
 // your https shop works even better now.
 class eShop {
@@ -27,9 +28,9 @@ class eShop {
 	private $settings = array();
 
 	// these are the vars we will use only.
-	// @todo : deprecate countbox_bubble in eshopcss.
 	public function __construct() {
 		global $locale;
+		//$this->settings = fusion_get_settings();
 		$this->settings = fusion_get_settings();
 		// sanitized global vars
 		if (isset($_GET['category']) && !isnum($_GET['category'])) die("Denied");
@@ -38,16 +39,8 @@ class eShop {
 		if (!isset($_GET['errors'])){ $_GET['errors'] = ""; }
 		if (!isset($_GET['a_page'])) { $_GET['a_page'] = "main"; }
 
-	}
-
-	// Primary E-shop Admin
-	public function eshopAdmin() {
-		global $aidlink, $locale;
-		$settings = $this->settings;
-		include INCLUDES."eshop_functions_include.php";
-		require_once INCLUDES."photo_functions_include.php";
-
 		$countorders = "".dbcount("(oid)", "".DB_ESHOP_ORDERS."", "opaid = '' || ocompleted = ''")."";
+
 		$this->pages = array(
 			'main' => array('title'=>$locale['ESHP202'], 'file'=>ADMIN."eshop/products.php"),
 			'photos' => array('title'=>$locale['ESHP204'], 'file'=> ADMIN."eshop/photosadmin.php"),
@@ -60,6 +53,16 @@ class eShop {
 			'orders' => array('title'=> $locale['ESHP209']."<span class='badge m-l-10'>".$countorders."</span>", 'file' => ADMIN."eshop/orders.php")
 		);
 
+		add_to_jquery("
+		function confirmdelete() {
+		return confirm(\"".$locale['ESHP210']."\")
+		}
+		");
+	}
+
+	// Primary E-shop Admin
+	public function eshopAdmin() {
+		global $aidlink, $locale;
 		opentable($locale['ESHP201']);
 		echo "<nav class='navbar navbar-default'>\n";
 		echo "<ul class='nav navbar-nav'>\n";
@@ -68,24 +71,20 @@ class eShop {
 		}
 		echo "</ul>\n";
 		echo "</nav>\n";
-		self::loadPage();
+		self::loadPage($this->settings);
 		closetable();
-
-		add_to_jquery("
-		function confirmdelete() {
-		return confirm(\"".$locale['ESHP210']."\")
-		}
-		");
 	}
 
 	// Return the included file
-	private function loadPage() {
+	private function loadPage($settings) {
 		global $locale, $aidlink;
-		$settings = $this->settings;
+		include_once INCLUDES."eshop_functions_include.php";
+		require_once INCLUDES."photo_functions_include.php";
 		include $this->pages[$_GET['a_page']]['file'];
 	}
 }
 
+// Objective to secure against strings injections in any way.
 $eShop = new eShop();
 $eShop->eshopAdmin();
 require_once THEMES."templates/footer.php";

@@ -42,7 +42,6 @@ clear: both;
     padding: 33px;
 }
 
-//Menu panel
 navigeringv1.ul, li {
 	margin: 0;
 	padding: 0;
@@ -96,22 +95,14 @@ padding:0px !important;
 margin-top:5px !important;
 margin-bottom: 10px !important;
 
-/* -- CSS3 - define rounded corners -- */	
--webkit-border-radius: 10px; 
--moz-border-radius: 10px;  
-border-radius: 10px; 
-
+/* -- CSS3 - define rounded corners -- */
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 /* -- CSS3 - add a drop shadow -- */
-
--webkit-box-shadow: 0px 0px 8px rgba(0,0,0,0.3);
--moz-box-shadow:    0px 0px 8px rgba(0,0,0,0.3);
-box-shadow:         0px 0px 8px rgba(0,0,0,0.3);
-
-/* -- CSS3 - create a grey gradient to the background -- */
-//background: -webkit-gradient(linear, 0% 0%, 0% 85%, from(#FFF), to(#EEE)); 
-//background: -moz-linear-gradient(0% 85% 90deg,#EEE, #FFF); 
-//filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed'); /* ie7 */ 
-//-ms-filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed'); /* ie8 */
+	-webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 
 }
 
@@ -143,7 +134,7 @@ legend {
   border-top-right-radius: 5px;
 }
 
-//breadcrumb styles
+
 .crumbstart {
 float: left;
 display:inline;
@@ -258,12 +249,6 @@ z-index: 1000;
 }
 
 /* Ribbons start */
-
-//@font-face {
-//font-family: "Calligraffiti";
-//src: url(Calligraffiti.ttf) format("truetype");
-//}
-
 .rib-wrap {
   position: relative !important;
 }
@@ -473,7 +458,6 @@ z-index: 1000;
 
 #carousel-wrapper .caroufredsel_wrapper {
 	border-radius: 10px;
-	//box-shadow: 0 0 5px #899;
 }
 
 #carousel a, #carousel img,#thumbs a, #thumbs img  {
@@ -772,7 +756,7 @@ a:active, a:focus, input[type="image"] {
 }
 
 .small.eshpbutton,.small.eshpbutton:visited {
-	font-size:11px;padding:
+	font-size:11px;
 }
 
 .eshpbutton,.eshpbutton:visited,.medium.eshpbutton,.medium.eshpbutton:visited {
