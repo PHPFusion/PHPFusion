@@ -6,6 +6,7 @@
 +--------------------------------------------------------+
 | Filename: home.php
 | Author: Chubatyj Vitalij (Rizado)
+| Co-Author: Takács Ákos (Rimelek)
 | Web: http://chubatyj.ru/
 +--------------------------------------------------------+
 | This program is released as free software under the
