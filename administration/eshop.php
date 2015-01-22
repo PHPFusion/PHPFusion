@@ -15,126 +15,79 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 if (!checkrights("ESHP") || !defined("iAUTH") || $_GET['aid'] != iAUTH) { die("Denied"); }
-if (isset($_GET['category']) && !isnum($_GET['category'])) die("Denied");
-if (isset($_GET['id']) && !isnum($_GET['id'])) die("Denied");
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
-if (!isset($_GET['errors'])){ $_GET['errors'] = ""; }
-include INCLUDES."eshop_functions_include.php";
+include LOCALE.LOCALESET."eshop.php";
 
-require_once INCLUDES."photo_functions_include.php";
+// your https shop works even better now.
+class eShop {
 
-echo "<SCRIPT LANGUAGE=\"JAVASCRIPT\" TYPE=\"TEXT/JAVASCRIPT\">
-<!--Hide script from old browsers
-function confirmdelete() {
-return confirm(\"".$locale['ESHP210']."\")
-}
-//Stop hiding script from old browsers -->
-</SCRIPT>";
+	private $pages = array(); // secure this so no injection can occur.
+	private $settings = array();
 
-opentable($locale['ESHP201']);
+	// these are the vars we will use only.
+	public function __construct() {
+		global $locale;
+		//$this->settings = fusion_get_settings();
+		$this->settings = fusion_get_settings();
+		// sanitized global vars
+		if (isset($_GET['category']) && !isnum($_GET['category'])) die("Denied");
+		if (isset($_GET['id']) && !isnum($_GET['id'])) die("Denied");
+		if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
+		if (!isset($_GET['errors'])){ $_GET['errors'] = ""; }
+		if (!isset($_GET['a_page'])) { $_GET['a_page'] = "main"; }
 
-if (!isset($_GET['a_page'])) { $_GET['a_page'] = "Main"; }
+		$countorders = "".dbcount("(oid)", "".DB_ESHOP_ORDERS."", "opaid = '' || ocompleted = ''")."";
 
-if ($_GET['a_page'] == "Main") {
-$tbl0 = "tbl1";
-} else {
-$tbl0 = "tbl2";
-}
+		$this->pages = array(
+			'main' => array('title'=>$locale['ESHP202'], 'file'=>ADMIN."eshop/products.php"),
+			'photos' => array('title'=>$locale['ESHP204'], 'file'=> ADMIN."eshop/photosadmin.php"),
+			'categories' => array('title'=>$locale['ESHP203'], 'file'=> ADMIN."eshop/categories.php"),
+			'coupons' => array('title'=>$locale['ESHP211'], 'file' => ADMIN."eshop/coupons.php"),
+			'featured' => array('title'=>$locale['ESHP212'], 'file'=> ADMIN."eshop/featured.php"),
+			'payments' => array('title'=>$locale['ESHP206'], 'file'=> ADMIN."eshop/payments.php"),
+			'shipping' => array('title'=>$locale['ESHP207'], 'file' => ADMIN."eshop/shipping.php"),
+			'customers' => array('title'=> $locale['ESHP208'], 'file' =>  ADMIN."eshop/customers.php"),
+			'orders' => array('title'=> $locale['ESHP209']."<span class='badge m-l-10'>".$countorders."</span>", 'file' => ADMIN."eshop/orders.php")
+		);
 
-if ($_GET['a_page'] == "Categories") {
-$tbl1 = "tbl1";
-} else {
-$tbl1 = "tbl2";
-}
+		add_to_jquery("
+		function confirmdelete() {
+		return confirm(\"".$locale['ESHP210']."\")
+		}
+		");
+	}
 
-if ($_GET['a_page'] == "photos") {
-$tbl3 = "tbl1";
-} else {
-$tbl3 = "tbl2";
-}
+	// Primary E-shop Admin
+	public function eshopAdmin() {
+		global $aidlink, $locale;
+		opentable($locale['ESHP201']);
+		echo "<nav class='navbar navbar-default'>\n";
+		echo "<ul class='nav navbar-nav'>\n";
+		foreach($this->pages as $page_get => $page) {
+			echo "<li ".($_GET['a_page'] == $page_get ? "class='active'" : '')." ><a href='".FUSION_SELF.$aidlink."&amp;a_page=".$page_get."'>".$page['title']."</a></li>\n";
+		}
+		echo "</ul>\n";
+		echo "</nav>\n";
+		self::loadPage($this->settings);
+		closetable();
+	}
 
-if ($_GET['a_page'] == "payments") {
-$tbl4 = "tbl1";
-} else {
-$tbl4 = "tbl2";
-}
-
-if ($_GET['a_page'] == "shipping") {
-$tbl5 = "tbl1";
-} else {
-$tbl5 = "tbl2";
-}
-
-if ($_GET['a_page'] == "orders") {
-$tbl6 = "tbl1";
-} else {
-$tbl6 = "tbl2";
-}
-
-if ($_GET['a_page'] == "customers") {
-$tbl7 = "tbl1";
-} else {
-$tbl7 = "tbl2";
-}
-
-if ($_GET['a_page'] == "cupons") {
-$tbl8 = "tbl1";
-} else {
-$tbl8 = "tbl2";
+	// Return the included file
+	private function loadPage($settings) {
+		global $locale, $aidlink;
+		include_once INCLUDES."eshop_functions_include.php";
+		require_once INCLUDES."photo_functions_include.php";
+		include $this->pages[$_GET['a_page']]['file'];
+	}
 }
 
-if ($_GET['a_page'] == "featured") {
-$tbl9 = "tbl1";
-} else {
-$tbl9 = "tbl2";
-}
+// Objective to secure against strings injections in any way.
+$eShop = new eShop();
+$eShop->eshopAdmin();
 
-
-$countorders = "".dbcount("(oid)", "".DB_ESHOP_ORDERS."", "opaid = '' || ocompleted = ''")."";
-
-echo "<table cellspacing='1' cellpadding='1' width='100%' ><tr>
-<td align='center' class='".$tbl0."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=Main'>".$locale['ESHP202']."</a></td>
-<td align='center' class='".$tbl3."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=photos'>".$locale['ESHP204']."</a></td>
-<td align='center' class='".$tbl1."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=Categories'>".$locale['ESHP203']."</a></td>
-<td align='center' class='".$tbl8."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=cupons'>".$locale['ESHP211']."</a></td>
-<td align='center' class='".$tbl9."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=featured'>".$locale['ESHP212']."</a></td></tr><tr>
-<td align='center' class='".$tbl4."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=payments'>".$locale['ESHP206']."</a></td>
-<td align='center' class='".$tbl5."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=shipping'>".$locale['ESHP207']."</a></td>
-<td align='center' class='".$tbl7."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=customers'>".$locale['ESHP208']."</a></td>
-<td align='center' colspan='2' class='".$tbl6."' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders'>".$locale['ESHP209']."</a> <div class='countbox_bubble'>".$countorders."</div></td>
-</tr><tr><td align='left' colspan='10'><div class='spacer'></div>";
-
-if ($_GET['a_page'] == "Main") {
-include ADMIN."eshop/products.php";
-}
-elseif ($_GET['a_page'] == "Categories") {
-include ADMIN."eshop/categories.php";
-}
-elseif ($_GET['a_page'] == "photos") {
-include ADMIN."eshop/photosadmin.php";
-}
-elseif ($_GET['a_page'] == "payments") {
-include ADMIN."eshop/payments.php";
-}
-elseif ($_GET['a_page'] == "shipping") {
-include ADMIN."eshop/shipping.php";
-}
-elseif ($_GET['a_page'] == "orders") {
-include ADMIN."eshop/orders.php";
-}
-elseif ($_GET['a_page'] == "customers") {
-include ADMIN."eshop/customers.php";
-}
-elseif ($_GET['a_page'] == "cupons") {
-include ADMIN."eshop/coupons.php";
-}
-elseif ($_GET['a_page'] == "featured") {
-include ADMIN."eshop/featured.php";
-}
-echo "</td></tr></table>";
-closetable();
 require_once THEMES."templates/footer.php";
+
 ?>
