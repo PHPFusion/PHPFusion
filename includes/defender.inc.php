@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) 2002 - 2014 PHP-Fusion Inc.
@@ -27,30 +28,23 @@ class defender {
 	public $field_name = ''; // declared by form_sanitizer()
 	public $field_value = ''; // declared by form_sanitizer()
 	public $field_default = ''; // declared by form_sanitizer()
-	public $field_config = array(
-		'type' => '',
+	public $field_config = array('type' => '',
 		'value' => '',
 		'default' => '',
 		'name' => '',
 		'id' => '',
 		'safemode' => '',
 		// the file uploads
-		'path'	=> '',
+		'path' => '',
 		'thumbnail_1' => '',
-		'thumbnail_2' => '',
-	); // declared by form_sanitizer()
-
+		'thumbnail_2' => '',); // declared by form_sanitizer()
 	/**
 	 * Load locales for defender
-	 * 
 	 * This solution was needed to load the defender.inc.php before
 	 * defining LOCALESET
-	 * 
 	 * @staticvar array $locale
 	 * @return array
 	 */
-
-	
 	/* Sanitize Fields Automatically */
 	public function defender() {
 		global $locale;
@@ -61,7 +55,6 @@ class defender {
 		 * defining LOCALESET
 		 */
 		include LOCALE.LOCALESET."defender.php";
-		
 		require_once INCLUDES."notify/notify.inc.php";
 		if (!defined('SETUP')) $this->noAdminCookie();
 		// declare the validation rules and assign them
@@ -75,13 +68,12 @@ class defender {
 			'number' => 'number',
 			'email' => 'email',
 			'date' => 'date',
-			'timestamp'=>'date',
+			'timestamp' => 'date',
 			'color' => 'textbox',
 			'address' => 'address',
-			'url'	=> 'url',
+			'url' => 'url',
 			'image' => 'image',
-			'file'	=> 'file',
-		);
+			'file' => 'file',);
 		// execute sanitisation rules at point blank precision using switch
 		try {
 			if (!empty($this->field_config['type'])) {
@@ -153,7 +145,6 @@ class defender {
 						$this->addNotice($this->field_name);
 						$this->addNotice(var_dump($this->field_config));
 						$this->addNotice('Verification on unknown type of fields is prohibited.');
-
 				}
 			} else {
 				return $this->field_default;
@@ -166,7 +157,6 @@ class defender {
 			$this->stop();
 			$this->addNotice($error_message);
 		}
-
 	}
 
 	/* Adds the field sessions on document load */
@@ -306,7 +296,7 @@ class defender {
 			} else {
 				// check token.
 				if (isset($_POST['token_rings']) && !empty($_POST['token_rings'])) {
-					foreach($_POST['token_rings'] as $hash => $form_name) {
+					foreach ($_POST['token_rings'] as $hash => $form_name) {
 						$this->verify_tokens($form_name, 0);
 					}
 				} else {
@@ -369,13 +359,13 @@ class defender {
 	}
 
 	// Field Verifications Rules
-
 	/* validate and sanitize a text
  	 * accepts only 50 characters + @ + 4 characters
  	 */
 	private function verify_text() {
 		global $locale;
-		$return_value = ''; $value = '';
+		$return_value = '';
+		$value = '';
 		if (is_array($this->field_value)) {
 			$vars = array();
 			foreach ($this->field_value as $val) {
@@ -458,7 +448,6 @@ class defender {
 		} else {
 			$value = intval(stripinput($this->field_value));
 		}
-
 		if ($value) {
 			if (is_numeric($this->field_value)) {
 				return $this->field_value;
@@ -528,26 +517,7 @@ class defender {
 		global $locale;
 		require_once INCLUDES."infusions_include.php";
 		if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
-			$upload = upload_image(	$this->field_config['input_name'],
-									$_FILES[$this->field_config['input_name']]['name'],
-									$this->field_config['path'],
-									$this->field_config['max_width'],
-									$this->field_config['max_height'],
-									$this->field_config['max_byte'],
-									$this->field_config['delete_original'],
-									$this->field_config['thumbnail'],
-									$this->field_config['thumbnail2'],
-									1,
-									$this->field_config['path'].$this->field_config['thumbnail_folder']."/",
-									$this->field_config['thumbnail_suffix'],
-									$this->field_config['thumbnail_w'],
-									$this->	field_config['thumbnail_h'],
-									0,
-									$this->field_config['path'].'thumbs/',
-									$this->field_config['thumbnail2_suffix'],
-									$this->field_config['thumbnail2_w'],
-									$this->field_config['thumbnail2_h']
-						);
+			$upload = upload_image($this->field_config['input_name'], $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'], $this->field_config['max_width'], $this->field_config['max_height'], $this->field_config['max_byte'], $this->field_config['delete_original'], $this->field_config['thumbnail'], $this->field_config['thumbnail2'], 1, $this->field_config['path'].$this->field_config['thumbnail_folder']."/", $this->field_config['thumbnail_suffix'], $this->field_config['thumbnail_w'], $this->field_config['thumbnail_h'], 0, $this->field_config['path'].'thumbs/', $this->field_config['thumbnail2_suffix'], $this->field_config['thumbnail2_w'], $this->field_config['thumbnail2_h']);
 			if ($upload['error'] != 0) {
 				$this->stop();
 				$this->addError($this->field_config['id']);
@@ -556,7 +526,7 @@ class defender {
 						$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 						$this->addHelperText($$this->field_config['id'], $locale['df_416']);
 						break;
-					case 2:	// Unsupported image type
+					case 2: // Unsupported image type
 						$this->addNotice(sprintf($locale['df_417'], ".gif .jpg .png"));
 						$this->addHelperText($$this->field_config['id'], $locale['df_417']);
 						break;
@@ -585,14 +555,8 @@ class defender {
 		global $locale;
 		require_once INCLUDES."infusions_include.php";
 		if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
-			$upload = upload_file(
-				$this->field_config['input_name'],
-				$_FILES[$this->field_config['input_name']]['name'],
-				$this->field_config['path'],
-				$this->field_config['valid_ext'],
-				$this->field_config['max_byte']
-			);
-			if ($upload['error'] !=0) {
+			$upload = upload_file($this->field_config['input_name'], $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'], $this->field_config['valid_ext'], $this->field_config['max_byte']);
+			if ($upload['error'] != 0) {
 				$this->stop();
 				$this->addError($this->field_config['id']);
 				switch ($upload['error']) {
@@ -626,12 +590,12 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 	global $userdata, $defender, $locale;
 	if ($input_name) {
 		if ($multilang) {
-			foreach(fusion_get_enabled_languages() as $lang) {
+			foreach (fusion_get_enabled_languages() as $lang) {
 				//$field_name = ucfirst(strtolower(str_replace("_", " ", $input_name))).' ('.$lang.')';
 				$input_name = $input_name."[".$lang."]";
-		if (isset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name])) {
-			$defender->field_config = $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name];
-			$defender->field_name = $input_name;
+				if (isset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name])) {
+					$defender->field_config = $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name];
+					$defender->field_name = $input_name;
 					$defender->field_value = $value[$lang];
 					$defender->field_default = $default;
 					if ($defender->field_config['required'] == 1 && (!$value[$lang])) { // it is required field but does not contain any value.. do reject.
@@ -650,19 +614,18 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			if (isset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name])) {
 				$defender->field_config = $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name];
 				$defender->field_name = $input_name;
-                $defender->field_value = $value;
-                $defender->field_default = $default;
-                if ($defender->field_config['required'] == 1 && (!$value)) { // it is required field but does not contain any value.. do reject.
-                    $helper_text = $defender->field_config['error_text'] ? :  sprintf($locale['field_error_blank'], $defender->field_config['title']);
-                    $defender->stop();
-                    $defender->addError($defender->field_config['id']);
-                    $defender->addHelperText($defender->field_config['id'], $helper_text);
-                    $defender->addNotice($helper_text);
-                } else {
-                    $val = $defender->defender();
-                    return $val;
-                }
-		    }
+				$defender->field_value = $value;
+				$defender->field_default = $default;
+				if ($defender->field_config['required'] == 1 && (!$value)) { // it is required field but does not contain any value.. do reject.
+					$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['field_error_blank'], $defender->field_config['title']);
+					$defender->stop();
+					$defender->addError($defender->field_config['id']);
+					$defender->addHelperText($defender->field_config['id'], $helper_text);
+					$defender->addNotice($helper_text);
+				} else {
+					return $defender->defender();
+				}
+			}
 		}
 	} else {
 		// returns descript, sanitized value.
@@ -675,8 +638,17 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				}
 			} else {
 				// flatten array;
-				$merged = array_shift($value); // for one field which has a nested array;
-				return $merged;
+				$secured = array();
+				foreach($value as $arr=>$unsecured) {
+					if (intval($unsecured)) {
+						$secured[] = stripinput($unsecured); // numbers
+					} else {
+						$secured[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($unsecured))));
+					}
+				}
+				// might want to serialize output in the future if $_POST is an array
+				// return addslash(serialize($secured));
+				return implode('.', $secured); // this is very different than defender's output, which is based on '|' delimiter
 			}
 		} else {
 			return $default;
@@ -702,7 +674,7 @@ function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
 		}
 	}
 	// reuse a posted token if is valid instead of generating a new one - fixed: reuse on the form that is being posted only. Generate new on all others.
-	if (isset($_POST['fusion_token']) && $being_posted && $defender->verify_tokens($form, $max_tokens)) {  // will delete max token out. hence flush out previous token..
+	if (isset($_POST['fusion_token']) && $being_posted && $defender->verify_tokens($form, $max_tokens)) { // will delete max token out. hence flush out previous token..
 		$token = stripinput($_POST['fusion_token']);
 	} else {
 		$user_id = (isset($userdata['user_id']) ? $userdata['user_id'] : 0);
