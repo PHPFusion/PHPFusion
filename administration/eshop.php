@@ -87,6 +87,7 @@ class eShop {
 // Objective to secure against strings injections in any way.
 $eShop = new eShop();
 $eShop->eshopAdmin();
+
 require_once THEMES."templates/footer.php";
 
 ?>

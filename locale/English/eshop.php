@@ -465,8 +465,8 @@ $locale['ESHPCATS134'] = "Are you sure you want to delete this category?";
 //Administration main
 $locale['ESHP201'] = "eShop Administration";  
 $locale['ESHP202'] = "Products";  
-$locale['ESHP203'] = "Categorys";
-$locale['ESHP204'] = "Gallerys";
+$locale['ESHP203'] = "Categories";
+$locale['ESHP204'] = "Galleries";
 $locale['ESHP205'] = "Settings";
 $locale['ESHP206'] = "Payments";
 $locale['ESHP207'] = "Shipping";
