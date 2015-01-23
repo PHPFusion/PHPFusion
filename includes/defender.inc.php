@@ -162,6 +162,7 @@ class defender {
 	/* Adds the field sessions on document load */
 	public function add_field_session(array $array) {
 		global $userdata;
+		if (!iMEMBER) $userdata['user_id'] = '0';
 		$_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
 	}
 
