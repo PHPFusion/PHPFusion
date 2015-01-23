@@ -293,10 +293,10 @@ $locale['ESHPPRO145'] = "Product Available Now?";
 $locale['ESHPPRO146'] = "Setting buyable to No will make the ribbon Incoming appear and the cart options will not be available.";
 $locale['ESHPPRO147'] = "List the Product?";
 $locale['ESHPPRO148'] = "Setting this to Disabled will remove the product from your lists.";
-$locale['ESHPPRO149'] = "Add to cart";
+$locale['ESHPPRO149'] = "Use the Cart System?";
 $locale['ESHPPRO150'] = "Allow or disallow the Add to cart button. This can be useful for PayPal´s customized return scripts for single item purchases or similar solutions.";
 $locale['ESHPPRO151'] = "Allow or disallow purchase of multiple items of this product.";
-$locale['ESHPPRO152'] = "Default no.items";
+$locale['ESHPPRO152'] = "Default Item Quantity";
 $locale['ESHPPRO153'] = "How many items should be in the no of items box per default for this product. Nothing will be shown if Allow multiple items is off. ";
 $locale['ESHPPRO154'] = "Allow buy now button";
 $locale['ESHPPRO155'] = "Allow or disallow the Buy now button. It´s Useful for PayPal´s customized return scripts for single item purchases.";
@@ -337,6 +337,21 @@ $locale['ESHPPRO189'] = "Enable comments for this product";
 $locale['ESHPPRO190'] = "Enable line breaks in description tabs, ( need to be off for HTML ).";
 $locale['ESHPPRO191'] = "Language(s)";
 $locale['ESHPPRO192'] = "Keywords";
+$locale['ESHPPRO193'] = "Unrestricted Quanity Per Order?";
+$locale['ESHPPRO194'] = "Custom Attributes";
+$locale['ESHPPRO195'] = "Attributes";
+$locale['ESHPPRO196'] = "Value";
+$locale['ESHPPRO197'] = "Label";
+$locale['ESHPPRO198'] = "Section Title";
+
+// Admin Tabs
+$locale['ptabs_000'] = 'Product Info';
+$locale['ptabs_001'] = 'Stock Options';
+$locale['ptabs_002'] = 'Product Feature';
+$locale['ptabs_003'] = 'Catalog Feature';
+$locale['ptabs_004'] = 'Image File Upload';
+$locale['ptabs_005'] = 'Image File Path';
+
 
 //Administration coupons
 $locale['ESHPCUPNS101'] = "Code";
