@@ -276,7 +276,7 @@ class eShop_item {
 		'keywords' => '',
 	);
 	private $formaction = '';
-
+	private $filter_Sql = '';
 	public function __construct() {
 		global $aidlink, $settings;
 		$_GET['id'] = isset($_GET['id']) && isnum($_GET['id']) ? $_GET['id'] : 0;
@@ -822,29 +822,40 @@ class eShop_item {
 		echo "</div>\n";
 	}
 
-	static function product_filters() {
+	private function product_view_filters() {
 		global $locale, $aidlink;
-		echo "<div class='m-t-20'>\n";
-		echo openform('search_form', 'search_form', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array("downtime"=>10));
-		/*
-				 * [1/23/15, 3:12:27 PM] Domi -: Most basic ones
-		[1/23/15, 3:12:28 PM] Domi -:
-		//Product title *
-		//Your Art.no
-		//Supplier Art.no
-		//Product Language(s)
-		//Order
-		//Keywords
-		Price
-		Xprice
 
-		Short description
-		Full description
-		Enable line breaks in description tabs, ( need to be off for HTML ).
-				 */
-		echo closeform();
+		$category =  isset($_POST['category']) && isnum($_POST['category'])  ? form_sanitizer($_POST['category'], '', 'category') : 0;
+		$access = isset($_POST['access']) && isnum($_POST['access']) ? form_sanitizer($_POST['access'], '', 'access') : 0;
+		$item_status = isset($_GET['status']) && $_GET['status'] == 1 ? 1 : 0;
+		$this->filter_Sql = $item_status ? "AND i.status='1'" : "AND i.status='0'";
+
+		if (isset($_POST['filter'])) {
+			$this->filter_Sql .= $category ? "AND i.cid='".intval($category)."'" : '';
+			$this->filter_Sql .= $access ? "AND i.access='".intval($access)."'" : '';
+		}
+
+		echo "<div class='m-t-20'>\n";
+		echo "<div class='display-inline-block m-r-10'>\n";
+		echo "<a href='".FUSION_SELF.$aidlink."' ".(!$item_status ? "class='text-dark'" : '').">All (".number_format(dbcount("(id)", DB_ESHOP)).")</a>\n - ";
+		echo "<a href='".FUSION_SELF.$aidlink."&amp;status=0' ".($item_status ? "class='text-dark'" : '').">Unlisted (".number_format(dbcount("(id)", DB_ESHOP, "status='0'")).")</a>\n - ";
+		echo "</div>\n";
+		echo "<div class='display-inline-block'>\n";
+		// sql get article with date range
+		echo openform('get_filter', 'get_filters', 'post', clean_request('', array('aid', 'status', 'section')), array('notice'=>0));
+		echo "<div class='display-inline-block m-r-10'>\n";
+		echo form_select_tree('', 'category', 'category', $category, array('no_root'=>1, 'allowclear'=>1, 'placeholder'=>'Filter by Category', 'allowclear'=>1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo "</div>\n";
+		echo "<div class='display-inline-block m-r-10'>\n";
+		echo form_select('', 'access', 'access', self::getVisibilityOpts(), $access);
+		echo "</div>\n";
+		echo "<div class='display-inline-block'>\n";
+		echo form_button('Filter', 'filter', 'filter', 'go_filter', array('class'=>'btn-default'));
+		echo "</div>\n";
+		echo "</div>\n";
 		echo "</div>\n";
 	}
+
 
 	public function product_listing() {
 		global $locale, $aidlink, $settings;
@@ -887,6 +898,7 @@ class eShop_item {
 			$('.list-result').show();
 		});
 		");
+		self::product_view_filters();
 
 		echo "<div class='m-t-20'>\n";
 		echo "<table class='table table-responsive'>\n";
@@ -939,6 +951,7 @@ class eShop_item {
 			FROM ".DB_ESHOP." i
 			LEFT JOIN ".DB_ESHOP_CATS." cat on (cat.cid=i.cid)
 			WHERE cat.parentid = '".intval($_GET['parent_id'])."'
+			".$this->filter_Sql."
 			ORDER BY cat.cat_order ASC, i.iorder ASC LIMIT 0, 25
 		");
 		$rows = dbrows($result);
