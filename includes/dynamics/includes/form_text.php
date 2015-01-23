@@ -69,7 +69,7 @@ function form_text($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 	}
 
 	$html .= "<div id='$input_id-field' class='form-group ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
-	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
+	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
 	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "<div class='input-group'>\n" : '';
 	$html .= ($options['prepend_button']) ? "<span class='input-group-btn'>\n<button type='".$options['prepend_type']."' value='submit-".$input_name."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button></span>" : '';

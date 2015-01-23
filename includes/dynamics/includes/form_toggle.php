@@ -81,7 +81,7 @@ function form_checkbox($title, $input_name, $input_id, $input_value, array $opti
 	$html = "<div id='$input_id-field' class='form-group clearfix ".$options['class']."'>\n";
 	$html .= "<label class='control-label col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0' for='$input_id'>\n";
 	$html .= "<input id='$input_id' name='$input_name' value='".$options['value']."' type='checkbox' ".($options['deactivate'] ? 'readonly' : '')." ".($input_value == '1' ? 'checked' : '')." />\n";
-	$html .= "$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n";
+	$html .= "$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n";
 	$defender->add_field_session(array(
 		 'input_name' 	=> 	$input_name,
 		 'type'			=>	'number',

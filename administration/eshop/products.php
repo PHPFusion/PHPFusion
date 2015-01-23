@@ -406,13 +406,7 @@ $(document).on("change", ".cList-chk", function () {
  });
 });
 </script>';
-	$visibility_opts = "";
-	$sel = "";
-	$user_groups = getusergroups();
-	while (list($key, $user_group) = each($user_groups)) {
-		$sel = ($access == $user_group['0'] ? " selected" : "");
-		$visibility_opts .= "<option value='".$user_group['0']."'$sel>".$user_group['1']."</option>\n";
-	}
+
 
 	if ($settings['eshop_cats'] == "1" && !isset($_REQUEST['category']) && !isset($_GET['action'])) {
 		//check for main cats.
@@ -462,6 +456,14 @@ $(document).on("change", ".cList-chk", function () {
 			echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 			echo form_hidden('', 'dateadded', 'dateadded', '');
 			echo form_text($locale['ESHPPRO104'], 'title', 'title', '', array('inline'=>1));
+
+			echo form_text($locale['ESHPPRO107'], 'artno', 'artno', '', array('inline'=>1, 'placeholder'=>'Serial/ Reference No'));
+			echo form_text($locale['ESHPPRO108'], 'sartno', 'sartno', '', array('inline'=>1, 'placeholder'=>'Serial/ Reference No'));
+
+			echo form_select($locale['ESHPPRO192'], 'keywords', 'keywords', array(), '', array('width'=>'100%', 'tags'=>1, 'multiple'=>1, 'inline'=>1));
+
+			echo form_text($locale['ESHPPRO135'], 'demo', 'demo', '', array('inline'=>1, 'tip'=>$locale['ESHPPRO136'], 'url'=>1, 'placeholder'=>'http://'));
+
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 			echo "<label class='control-label'>".$locale['ESHPPRO191']."</label>";
@@ -476,6 +478,7 @@ $(document).on("change", ".cList-chk", function () {
 			echo "</div>\n";
 			echo "</div>\n";
 
+			openside('');
 
 			$tab_title['title'][] = 'Image File Upload';
 			$tab_title['id'][] = 'a1';
@@ -489,83 +492,121 @@ $(document).on("change", ".cList-chk", function () {
 			echo form_select($locale['ESHPPRO126'], 'gallery_on', 'gallery_on', array('0'=>$locale['off'], '1'=>$locale['on']), '', array('inline'=>1, 'tip'=>$locale['ESHPPRO129']));
 			echo opentab($tab_title, $tab_active, 'custom');
 			echo opentabbody($tab_title['title'][0], 'a1' , $tab_active);
+			echo "<div class='m-t-20'>\n";
 			echo form_fileinput($locale['ESHPPRO109'], 'imagefile', 'imagefile', CAT_DIR, '', array('width'=>'190px', 'inline'=>1, 'type'=>'image'));
 			echo "<span class='text-smaller'>".$locale['ESHPPRO110']."</span>\n";
+			echo "</div>\n";
 			echo closetabbody();
 			echo opentabbody($tab_title['title'][1], 'a2', $tab_active);
-			echo "aaaa";
+			echo "<div class='m-t-20'>\n";
+			echo form_text($locale['ESHPPRO130'], 'image', 'image', '', array('inline'=>1, 'url'=>1, 'placeholder'=>'http://'));
+			echo form_text($locale['ESHPPRO131'], 'thumb', 'thumb', '', array('inline'=>1, 'url'=>1, 'placeholder'=>'http://'));
+			echo form_text($locale['ESHPPRO132'], 'thumb2', 'thumb2', '', array('inline'=>1, 'url'=>1, 'placeholder'=>'http://'));
+			echo "</div>\n";
 			echo closetabbody();
 			echo closetab();
+			closeside();
+			echo "<hr>\n";
+
+
 
 
 			echo "<div class='row m-b-20'>\n";
 			echo "<div class='col-xs-12 col-sm-6'>\n";
-			echo form_text($locale['ESHPPRO107'], 'artno', 'artno', '', array('inline'=>1));
-			echo form_text($locale['ESHPPRO108'], 'sartno', 'sartno', '', array('inline'=>1));
 			echo form_text($locale['ESHPPRO111'], 'price', 'price', '', array('number'=>1, 'inline'=>1,  'placeholder'=>fusion_get_settings('eshop_currency')));
 			echo form_text($locale['ESHPPRO112'], 'xprice', 'xprice', '', array('number'=>1, 'inline'=>1, 'tip'=>$locale['ESHPPRO113'], 'placeholder'=>fusion_get_settings('eshop_currency')));
-			echo form_checkbox($locale['ESHPPRO184'], 'campaign', 'campaign', '', array('inline'=>1, 'tip'=>$locale['ESHPPRO185']));
-			echo form_checkbox($locale['ESHPPRO182'], 'cupons', 'cupons', '', array('inline'=>1, 'tip'=>$locale['ESHPPRO183']));
+			echo form_checkbox($locale['ESHPPRO184'], 'campaign', 'campaign', '', array('inline'=>1, 'tip'=>$locale['ESHPPRO185'], 'class'=>'col-sm-offset-3'));
+			echo form_checkbox($locale['ESHPPRO182'], 'cupons', 'cupons', '', array('inline'=>1, 'tip'=>$locale['ESHPPRO183'], 'class'=>'col-sm-offset-3'));
 			echo "</div>\n";
 
 			echo "<div class='col-xs-12 col-sm-6'>\n";
 			echo form_text($locale['ESHPPRO122'], 'iorder', 'iorder', '', array('inline'=>1, 'number'=>1, 'tip'=>$locale['ESHPPRO123']));
 			echo form_text($locale['ESHPPRO124'], 'sellcount', 'sellcount', '', array('deactivate'=>1, 'inline'=>1, 'tip'=>$locale['ESHPPRO125']));
+			echo form_text($locale['ESHPPRO143'], 'delivery', 'delivery', '', array('tip'=>$locale['ESHPPRO144'], 'inline'=>1, 'number'=>1, 'placeholder'=>'Days'));
+			echo form_text($locale['ESHPPRO152'], 'dmulti', 'dmulti', '', array('inline'=>1, 'tip'=>$locale['ESHPPRO153'], 'placeholder'=>'Items Quantity'));
+			echo "</div>\n";
 			echo "</div>\n";
 
 
-			echo "</div>\n";
+			if (fusion_get_settings('eshop_pretext')) {
+				//echo "<div class='text-smaller'>".$locale['ESHPPRO161']."</div>\n";
+				echo form_textarea($locale['ESHPPRO160'], 'introtext', 'introtext', '', array('html'=>1, 'preview'=>1, 'autosize'=>1));
+			} else {
+				//echo "<input type='hidden' name='introtext' value='$introtext'>";
+				echo form_hidden('', 'introtext', 'introtext', '');
+			}
 
-			echo "<div class='row'>\n";
-			echo "<div class='col-xs-12 col-sm-4'>\n";
+			echo form_textarea($locale['ESHPPRO162'], 'description', 'description', '', array('html'=>1, 'preview'=>1, 'autosize'=>1));
+			echo form_checkbox($locale['ESHPPRO190'], 'linebreaks', 'linebreaks', '');
+			//echo "<span class='text-smaller'>".$locale['ESHPPRO163']."</span>\n";
+			echo form_text('Additional Information 1', 'anything1n', 'anything1n', '', array('placeholder'=>'Section Title'));
+			echo form_textarea('', 'anything1', 'anything1', '', array('autosize'=>1));
 
-			echo "</div>\n";
-			echo "<div class='col-xs-12 col-sm-4'>\n";
+			echo form_text('Additional Information 2', 'anything2n', 'anything2n', '', array('placeholder'=>'Section Title'));
+			echo form_textarea('', 'anything2', 'anything2', '', array('autosize'=>1));
 
-			echo "</div>\n";
-			echo "<div class='col-xs-12 col-sm-4'>\n";
-
-			echo "</div>\n";
-
-			echo "</div>\n";
-
-
+			echo form_text('Additional Information 3', 'anything3n', 'anything3n', '', array('placeholder'=>'Section Title'));
+			echo form_textarea('', 'anything3', 'anything3', '', array('autosize'=>1));
 
 
 			echo "</div>\n";
 			echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 			openside('');
+			echo form_select($locale['ESHPPRO147'], 'active', 'active', array('1'=>$locale['ESHPPRO128'], '0'=>$locale['ESHPPRO127']), '', array('tip'=>$locale['ESHPPRO148'], 'inline'=>1, 'width'=>'100%'));
+			echo form_select($locale['ESHPPRO145'], 'status', 'status', array('1'=>$locale['ESHPPRO138'], '0'=>$locale['ESHPPRO139']), '', array('tip'=>$locale['ESHPPRO146'], 'inline'=>1, 'width'=>'100%'));
 			if (fusion_get_settings('eshop_cats')) {
 				echo form_select_tree($locale['ESHPPRO105'], 'cid', 'cid', '', array('no_root'=>1, 'placeholder'=>$locale['ESHP016'], 'inline'=>1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 			} else {
 				echo $locale['ESHPPRO105']." : ".$locale['ESHPPRO106'];
 				//echo "<tr><td align='left'>".$locale['ESHPPRO105']."</td><td align='left'><input type='hidden' name='cid' value='$category'>".$locale['ESHPPRO106']."</td></tr>";
 			}
+			echo form_checkbox($locale['ESHPPRO188'], 'ratings', 'ratings', '', array('tip'=>$locale['ESHPPRO188']));
+			echo form_checkbox($locale['ESHPPRO189'], 'comments', 'comments', '', array('tip'=>$locale['ESHPPRO189']));
 			closeside();
 
 			openside('');
-			echo form_select($locale['ESHPPRO192'], 'keywords', 'keywords', array(), '', array('inline'=>1, 'width'=>'100%', 'tags'=>1, 'multiple'=>1));
+
+			$callback_dir = makefilelist(BASEDIR."eshop/purchasescripts/", ".|..|index.php", TRUE, "files");
+			foreach($callback_dir as $page) {
+				$page_array[$page] = $page;
+			}
+			echo form_select($locale['ESHPPRO156'], 'rpage', 'rpage', $page_array, '', array('tip'=>$locale['ESHPPRO158'], 'width'=>'100%'));
+			closeside();
+			openside('');
+			echo form_select($locale['ESHPPRO137'], 'stock', 'stock', array('1'=>$locale['yes'],'2'=>$locale['no']), '', array('tip'=> $locale['ESHPPRO140'], 'inline'=>1, 'width'=>'100%'));
+			echo form_text($locale['ESHPPRO141'], 'instock', 'instock', '', array('tip'=>$locale['ESHPPRO142'], 'inline'=>1, 'number'=>1));
 			closeside();
 
 			openside('');
-			echo form_text($locale['ESHPPRO114'], 'weight', 'weight', '', array('number'=>1, 'width'=>'100px', 'placeholder'=> fusion_get_settings('eshop_weightscale'), 'inline'=>1));
-			echo "<span class='text-smaller'>".$locale['ESHPPRO115']."</span>\n";
+			$visibility_opts = array();
+			$user_groups = getusergroups();
+			while (list($key, $user_group) = each($user_groups)) {
+				$visibility_opts[$user_group[0]] = $user_group[1];
+			}
+			echo form_select($locale['ESHPCATS109'], 'access', 'access', $visibility_opts, '', array('tip'=>$locale['ESHPPRO159'], 'inline'=>1, 'width'=>'100%'));
+
+			echo form_select($locale['ESHPPRO149'], 'cart_on', 'cart_on', array('1'=>$locale['yes'], '0'=>$locale['no']), '', array('tip'=>$locale['ESHPPRO150'], 'inline'=>1, 'width'=>'100%'));
+			echo form_select($locale['ESHPPRO154'], 'buynow', 'buynow', array('1'=>$locale['yes'], '0'=>$locale['no']), '', array('tip'=>$locale['ESHPPRO155'], 'inline'=>1, 'width'=>'100%'));
+			echo form_select('Allow to buy multiple items', 'qty', 'qty', array('1'=>$locale['yes'], '0'=>$locale['no']), '', array('tip'=>$locale['ESHPPRO151'], 'inline'=>1, 'width'=>'100%'));
 			closeside();
 
+
 			openside('');
-			echo form_text('Custom Attributes', 'dynf', 'dynf', '', array('inline'=>1, 'placeholder'=>'Label'));
+			echo form_text($locale['ESHPPRO114'], 'weight', 'weight', '', array('number'=>1, 'tip'=>$locale['ESHPPRO115'], 'placeholder'=> fusion_get_settings('eshop_weightscale'), 'inline'=>1));
+			echo form_text($locale['ESHPPRO133'], 'version', 'version', '', array('inline'=>1, 'tip'=>$locale['ESHPPRO134']));
+			echo form_para('Custom Attributes', 'cst', 'cst', array('tip'=>$locale['ESHPPRO117']));
+			echo form_text('Attributes', 'dynf', 'dynf', '', array('inline'=>1, 'placeholder'=>'Label'));
 			echo form_text('Values', 'dyncList', 'dyncList', '', array('inline'=>1, 'placeholder'=>'Attributes'));
 			echo "<div><a href='javascript:;' id='adddync' class='btn button btn-sm btn-primary m-b-20'>".$locale['ESHPPRO116']."</a>\n</div>\n";
 			echo form_para($locale['ESHPPRO118'],'118', '118');
 			echo "<div id='sList'>\n";
 			echo "</div>\n";
-			echo "<div class='text-smaller'>".$locale['ESHPPRO117']."</div>\n";
 			closeside();
 
 			openside('');
 			global $ESHPCLRS;
 			for ($i=1; $i <= 135; $i++) { $colors_array[$i] = $ESHPCLRS[$i]; }
-			echo form_select('', 'colorList', 'colorList', $colors_array, '', array('inline'=>1, 'width'=>'100%'));
+			echo form_select('Colors', 'colorList', 'colorList', $colors_array, '', array('inline'=>1, 'width'=>'100%'));
 			echo "<span class='text-smaller'>".$locale['ESHPPRO121']."</span>\n";
 			echo "<div id='cList'></div>\n";
 			closeside();
@@ -573,171 +614,15 @@ $(document).on("change", ".cList-chk", function () {
 
 			echo "</div>\n";
 			echo "</div>\n";
+
+			echo form_button($locale['save'], 'save_cat', 'save_cat', $locale[''], array('class'=>'btn btn-primary'));
+
 			echo closeform();
 		}
 
 		product_form();
 
 
-
-		//echo "<form name='inputform' method='post' action='$formaction' enctype='multipart/form-data'>";
-		echo "<div style='float:left;width:50%;'>";
-		echo "</div><div style='float:right;width:50%;'>";
-		echo "<table width='100%' cellspacing='4' cellpadding='0' align='center'>";
-
-		echo "<tr><td align='left'>".$locale['ESHPPRO130']."</td><td align='left'><input type='text' name='image' value='$image_url' class='textbox' readonly style='width:200px;'></td></tr>
-<tr><td align='left'>".$locale['ESHPPRO131']."</td><td align='left'><input type='text' name='thumb' value='$thumb_url' class='textbox' readonly style='width:200px;'></td></tr>
-<tr><td align='left'>".$locale['ESHPPRO132']."</td><td align='left'><input type='text' name='thumb2' value='$thumb2_url' class='textbox' readonly style='width:200px;'></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO133']."</td><td align='left'><input type='text' name='version' value='$version' class='textbox' style='width:60px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO134']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO135']."</td><td align='left'><input type='text' name='demo' value='$demo' class='textbox' style='width:170px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO136']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO137']."</td><td align='left'><select name='stock' class='textbox'>
-      <option value='1'".($stock == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-	  <option value='0'".($stock == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-	  </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO140']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO141']."</td><td align='left'><input type='text' name='instock' value='$instock' class='textbox' style='width:40px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO142']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO143']."</td><td align='left'><input type='text' name='delivery' value='$delivery' class='textbox' style='width:170px;' />
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO144']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO145']."</td><td align='left'><select name='status' class='textbox'>
-      <option value='1'".($status == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      <option value='0'".($status == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO146']." 
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO147']."</td><td align='left'><select name='active' class='textbox'>
-      <option value='1'".($active == "1" ? " selected" : "").">".$locale['ESHPPRO128']."</option>
-      <option value='0'".($active == "0" ? " selected" : "").">".$locale['ESHPPRO127']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO148']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO149']."</td><td align='left'><select name='cart_on' class='textbox'>
-      <option value='1'".($cart_on == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      <option value='0'".($cart_on == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO150']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>Allow to buy multiple items</td><td align='left'><select name='qty' class='textbox'>
-      <option value='1'".($qty == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      <option value='0'".($qty == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO151']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO152']."</td><td align='left'><input type='text' name='dmulti' value='$dmulti' class='textbox' style='width:40px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO153']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO154']."</td><td align='left'><select name='buynow' class='textbox'>
-      <option value='0'".($buynow == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($buynow == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO155']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO188']."</td><td align='left'><select name='ratings' class='textbox'>
-      <option value='0'".($ratings == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($ratings == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO188']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO189']."</td><td align='left'><select name='comments' class='textbox'>
-      <option value='0'".($comments == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($comments == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO189']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO156']."</td><td>";
-		$callback_dir = makefilelist(BASEDIR."eshop/purchasescripts/", ".|..|index.php", TRUE, "files");
-		echo "<select name='rpage' class='textbox' style='width:180px;' >";
-		echo "<option value=''>".$locale['ESHPPRO157']."</option>";
-		foreach ($callback_dir as $callback) {
-			echo "<option value='$callback' ".($callback == "$rpage" ? " selected" : "").">$callback</option>";
-		}
-		echo "</select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO158']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO190']."</td><td align='left'><select name='linebreaks' class='textbox'>
-      <option value='0'".($linebreaks == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($linebreaks == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO190']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPCATS109']."</td>
-<td align='left'><select name='access' class='textbox'>
-$visibility_opts</select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO159']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "</table>";
-		echo "</div>";
-		echo "<div style='clear:both;'></div>";
-		echo "<table width='100%' cellspacing='4' cellpadding='0'>";
-		if ($settings['eshop_pretext'] == "1") {
-			echo "<tr><td align='left'>".$locale['ESHPPRO160']."</td><td align='left'><textarea name='introtext' cols='90' rows='3' class='textbox span6'>$introtext</textarea>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO161']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
-</td></tr>";
-		} else {
-			echo "<input type='hidden' name='introtext' value='$introtext'>";
-		}
-		echo "<tr><td align='left'>".$locale['ESHPPRO162']."</td><td align='left'><textarea name='description' cols='90' rows='6' class='textbox span6'>$description</textarea>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO163']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
-</td></tr>";
-		echo "</table>\n";
-		echo '<br /><center><a href="#" onClick="showexttabs(); return false;" class="button"><b>'.$locale['ESHPPRO164'].'</b></a></center><br />';
-		echo "<div id='exttabs'>";
-		echo "<table width='100%' cellspacing='4' cellpadding='0'>";
-		echo "<tr><td align='left'><input type='text' name='anything1n' value='$anything1n' class='textbox' style='width:90px;'></td><td align='left'><textarea name='anything1' cols='90' rows='6' class='textbox span6'>$anything1</textarea>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO165']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
-
-</td></tr>";
-		echo "<tr><td align='left'><input type='text' name='anything2n' value='$anything2n' class='textbox' style='width:90px;'></td><td align='left'><textarea name='anything2' cols='90' rows='6' class='textbox span6'>$anything2</textarea></td></tr>";
-		echo "<tr><td align='left'><input type='text' name='anything3n' value='$anything3n' class='textbox' style='width:90px;'></td><td align='left'><textarea name='anything3' cols='90' rows='6' class='textbox span6'>$anything3</textarea></td></tr>";
-		echo "</table></div>\n";
-		echo "<table width='100%' cellspacing='4' cellpadding='0'>";
-		echo "<tr><td align='center' colspan='3'><input type='submit' name='save_cat' value='".$locale['ESHPPRO166']."' class='button'></td></tr>";
-		echo "</table></div></form>\n";
 	}
 	echo "<hr />";
 	//Do this if cats are on
