@@ -239,7 +239,7 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	// Download details
 	if (isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 		$result = dbquery("SELECT td.*,
-				tc.download_cat_id, tc.download_cat_access, tc.download_cat_name,
+				tc.download_cat_id, tc.download_cat_name,
 				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_level
                 FROM ".DB_DOWNLOADS." td
                 LEFT JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
@@ -248,7 +248,7 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$info['data'] = $data;
-			if (!checkgroup($data['download_cat_access'])) {
+			if (!checkgroup($data['download_visibility'])) {
 				redirect(FUSION_SELF);
 			}
 		}
