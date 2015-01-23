@@ -126,9 +126,7 @@ foreach ($configs as $table => $config) {
 
 	$contents[$table]['colwidth'] = floor(12 / $items_count);
 
-	if (isset($items)) unset($items);
-
-//	$data = array();
+	$data = array();
 	while ($row = dbarray($result)) {
 		$keys = array_keys($row);
 		foreach ($keys as $i => $key) {
@@ -136,7 +134,7 @@ foreach ($configs as $table => $config) {
 		}
 		$pairs = array_combine($keys, array_values($row));
 		$cat = $row['cat_id'] ? "<a href='".strtr($config['categoryLinkPattern'], $pairs)."'>".$row['cat_name']."</a>" : $locale['home_0102'];
-		$items[] = array(
+		$data[] = array(
 			'cat' => $cat,
 			'url' => strtr($config['contentLinkPattern'], $pairs),
 			'title' => $row['title'],
@@ -145,7 +143,7 @@ foreach ($configs as $table => $config) {
 			'content' => stripslashes($row['content'])
 		);
 	}
-	$contents[$table]['data'] = $items;
+	$contents[$table]['data'] = $data;
 }
 
 foreach($contents as $content) :
