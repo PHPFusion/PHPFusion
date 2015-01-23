@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\UserFieldsInput;
+
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."user_fields.php";

@@ -55,7 +55,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 	}
 }
 elseif (isset($_POST['register'])) {
-	$userInput = new UserFieldsInput();
+	$userInput = new PHPFusion\UserFieldsInput();
 	$userInput->validation = $settings['display_validation'];
 	$userInput->emailVerification = $settings['email_verification'];
 	$userInput->adminActivation = $settings['admin_activation'];

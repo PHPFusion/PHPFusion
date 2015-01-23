@@ -4,7 +4,7 @@
 | Copyright (C) 2002 - 2011 Nick Jones
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: PermalinksDisplay.class.php
+| Filename: PermalinksDisplay.php
 | Author: Ankur Thakur
 | Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+

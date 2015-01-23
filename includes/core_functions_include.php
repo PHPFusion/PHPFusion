@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Authenticate;
+
 /**
  * Current microtime as float to calculate script start/end time
  * 

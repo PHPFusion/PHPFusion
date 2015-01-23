@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: LostPassword.class.php
+| Filename: PasswordAuth.class.php
 | Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,8 +17,8 @@
 +--------------------------------------------------------*/
 
 /**
- * LostPassword class for compatibility reason
+ * PasswordAuth class for compatibility reason
  */
-class LostPassword extends PHPFusion\LostPassword {
+class PasswordAuth extends PHPFusion\PasswordAuth {
 
 }

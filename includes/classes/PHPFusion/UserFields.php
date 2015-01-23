@@ -4,7 +4,7 @@
 | Copyright (C) 2002 - 2011 Nick Jones
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: UserFields.class.php
+| Filename: UserFields.php
 | Author: Hans Kristian Flaatten (Starefossen)
 | Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
@@ -16,6 +16,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+namespace PHPFusion;
+
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 require_once THEMES."templates/global/profile.php";
 
@@ -411,4 +414,3 @@ class UserFields extends QuantumFields {
 
 }
 
-?>

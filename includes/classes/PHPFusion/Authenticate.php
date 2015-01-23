@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Authenticate.class.php
+| Filename: Authenticate.php
 | Author: Hans Kristian Flaatten (Starefossen)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+namespace PHPFusion;
+
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
@@ -328,5 +331,3 @@ class Authenticate {
 		}
 	}
 }
-
-?>

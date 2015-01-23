@@ -23,7 +23,7 @@ if (iMEMBER) redirect("index.php");
 
 add_to_title($locale['global_200'].$locale['400']);
 opentable($locale['400']);
-$obj = new LostPassword();
+$obj = new PHPFusion\LostPassword();
 if (isset($_GET['user_email']) && isset($_GET['account'])) {
 	$obj->checkPasswordRequest($_GET['user_email'], $_GET['account']);
 	$obj->displayOutput();

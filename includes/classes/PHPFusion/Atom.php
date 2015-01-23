@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
  -------------------------------------------------------- 
-| Filename: atom.php
+| Filename: Atom.php
 | Author: Frederick MC Chan (Hien)
 | Co-Author: PHP-Fusion Development Team
  -------------------------------------------------------- 
@@ -16,6 +16,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
  --------------------------------------------------------*/
+
+namespace PHPFusion;
+
 require_once LOCALE.LOCALESET.'admin/atom.php';
 
 class Atom {
@@ -1840,5 +1843,3 @@ class Atom {
 
 
 }
-
-?>

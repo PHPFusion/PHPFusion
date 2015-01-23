@@ -56,7 +56,7 @@ function render_adminpanel() {
 		echo "</aside>\n";
 	} else {
 		if (isset($_GET['logout'])) {
-			Authenticate::expireAdminCookie();
+			PHPFusion\Authenticate::expireAdminCookie();
 		}
 		echo "<div id='admin-panel' ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? "class='in'" : '')." >\n";
 		include THEMES."admin_templates/Venus/includes/header.php";

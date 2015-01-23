@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: RemoteFileReader.class.php
+| Filename: RemoteFileReader.php
 | Author: Hans Kristian Flaatten (Starefossen)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+namespace PHPFusion;
 
 class RemoteFileReader {
 	private $_content = "";
@@ -139,5 +140,3 @@ class RemoteFileReader {
 		}
 	}
 }
-
-?>

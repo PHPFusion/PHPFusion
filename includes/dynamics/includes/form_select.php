@@ -362,7 +362,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 			//$hide = $disable_branch && $value == $self_id ? 1 : 0;
 			$html = &$html;
 			$name = $data[$value][$name_col];
-			$name = QuantumFields::parse_label($name);
+			$name = PHPFusion\QuantumFields::parse_label($name);
 			$select = ($input_value !== "" && ($input_value == $value)) ? 'selected' : '';
 			$disabled = $disable_opts && in_array($value, $disable_opts) ? 1 : 0;
 			$hide = $disabled && $options['hide_disabled'] ? 1 : 0;

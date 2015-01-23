@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) 2002 - 2011 Nick Jones
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: LostPassword.class.php
+| Filename: UserFields.class.php
 | Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,8 +17,8 @@
 +--------------------------------------------------------*/
 
 /**
- * LostPassword class for compatibility reason
+ * UserFields class for compatibility reason
  */
-class LostPassword extends PHPFusion\LostPassword {
+class UserFields extends PHPFusion\UserFields {
 
 }

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: PasswordAuth.class.php
+| Filename: PasswordAuth.php
 | Author: Hans Kristian Flaatten (Starefossen)
 | Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
@@ -16,7 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+namespace PHPFusion;
 
 class PasswordAuth {
 	public $currentAlgo = "";
@@ -126,5 +127,3 @@ class PasswordAuth {
 		return sha1(PasswordAuth::getNewPassword($length));
 	}
 }
-
-?>

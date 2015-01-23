@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: QuantumFields.class.php
+| Filename: QuantumFields.php
 | Author: PHP-Fusion Inc
 | Co-Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
@@ -16,6 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+namespace PHPFusion;
 
 class QuantumFields {
 	public $system_title = '';
@@ -1611,4 +1613,3 @@ class QuantumFields {
 	}
 
 }
-?>

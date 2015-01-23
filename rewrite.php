@@ -18,7 +18,7 @@
 define("IN_PERMALINK", TRUE);
 require_once dirname(__FILE__)."/maincore.php";
 // Starting Rewrite Object
-$seo_rewrite = new Rewrite();
+$seo_rewrite = new PHPFusion\Rewrite();
 $seo_rewrite->rewritePage();
 $filepath = $seo_rewrite->getFilePath();
 

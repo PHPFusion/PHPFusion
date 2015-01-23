@@ -4,7 +4,7 @@
 | Copyright (C) 2002 - 2011 Nick Jones
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Rewrite.class.php
+| Filename: Rewrite.php
 | Author: Ankur Thakur
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -26,7 +26,7 @@
 | requests.
 */
 
-use PHPFusion\PermalinksDisplay;
+namespace PHPFusion;
 
 class Rewrite {
 	/*
@@ -1167,5 +1167,3 @@ function rewritestoggledebugdiv() {
 		return $this->pathtofile;
 	}
 }
-
-?>

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: LostPassword.class.php
+| Filename: LostPassword.php
 | Author: gh0st2k
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+namespace PHPFusion;
 
 class LostPassword extends PasswordAuth {
 	private $_html = "";
@@ -125,5 +126,3 @@ class LostPassword extends PasswordAuth {
 		$this->_html .= "<div style='text-align:center'><br />\n".$locale['402']."<br /><br />\n<a href='../index.php'>".$locale['403']."</a><br /><br />\n</div>\n";
 	}
 }
-
-?>

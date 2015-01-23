@@ -18,6 +18,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\UserFieldsInput;
+
 require_once "../maincore.php";
 if (!checkrights("M") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
 	redirect("../index.php");
