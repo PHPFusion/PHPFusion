@@ -828,7 +828,7 @@ class eShop_item {
 		$category =  isset($_POST['category']) && isnum($_POST['category'])  ? form_sanitizer($_POST['category'], '', 'category') : 0;
 		$access = isset($_POST['access']) && isnum($_POST['access']) ? form_sanitizer($_POST['access'], '', 'access') : 0;
 		$item_status = isset($_GET['status']) && $_GET['status'] == 1 ? 1 : 0;
-		$this->filter_Sql = $item_status ? "AND i.status='1'" : "AND i.status='0'";
+		$this->filter_Sql = $item_status ? "AND (i.status='1' or i.status='0')" : "AND i.status='0'";
 
 		if (isset($_POST['filter'])) {
 			$this->filter_Sql .= $category ? "AND i.cid='".intval($category)."'" : '';
@@ -837,7 +837,7 @@ class eShop_item {
 
 		echo "<div class='m-t-20'>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
-		echo "<a href='".FUSION_SELF.$aidlink."' ".(!$item_status ? "class='text-dark'" : '').">All (".number_format(dbcount("(id)", DB_ESHOP)).")</a>\n - ";
+		echo "<a href='".FUSION_SELF.$aidlink."&amp;status=1' ".(!$item_status ? "class='text-dark'" : '').">All (".number_format(dbcount("(id)", DB_ESHOP)).")</a>\n - ";
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;status=0' ".($item_status ? "class='text-dark'" : '').">Unlisted (".number_format(dbcount("(id)", DB_ESHOP, "status='0'")).")</a>\n - ";
 		echo "</div>\n";
 		echo "<div class='display-inline-block'>\n";
