@@ -745,8 +745,8 @@ class eShop_item {
 		echo form_text($locale['ESHPPRO111'], 'price', 'price', $this->data['price'], array('number'=>1, 'required'=>1, 'width'=>'200px', 'inline'=>1, 'placeholder'=>fusion_get_settings('eshop_currency')));
 		closeside();
 		openside('');
-		echo form_text($locale['ESHPPRO107'], 'artno', 'artno', $this->data['artno'], array('inline'=>1, 'placeholder'=>'Serial/ Reference No'));
-		echo form_text($locale['ESHPPRO108'], 'sartno', 'sartno', $this->data['sartno'], array('inline'=>1, 'placeholder'=>'Serial/ Reference No'));
+		echo form_text($locale['ESHPPRO107'], 'artno', 'artno', $this->data['artno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
+		echo form_text($locale['ESHPPRO108'], 'sartno', 'sartno', $this->data['sartno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
 		closeside();
 		if (fusion_get_settings('eshop_pretext')) {
 			echo form_textarea($locale['ESHPPRO160'], 'introtext', 'introtext', $this->data['introtext'], array('html'=>1, 'preview'=>1, 'autosize'=>1));
@@ -771,8 +771,8 @@ class eShop_item {
 		echo opentabbody($subtab_title['title'][1], $subtab_title['id'][1], $tab_active);
 		echo "<div class='row m-t-20'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
-		echo form_text($locale['ESHPPRO143'], 'delivery', 'delivery', $this->data['delivery'], array('tip'=>$locale['ESHPPRO144'], 'inline'=>1, 'width'=>'200px', 'number'=>1, 'placeholder'=>'Days'));
-		echo form_text($locale['ESHPPRO152'], 'dmulti', 'dmulti', $this->data['dmulti'], array('inline'=>1, 'tip'=>$locale['ESHPPRO153'], 'width'=>'200px', 'placeholder'=>'Items Quantity'));
+		echo form_text($locale['ESHPPRO143'], 'delivery', 'delivery', $this->data['delivery'], array('tip'=>$locale['ESHPPRO144'], 'inline'=>1, 'width'=>'200px', 'number'=>1, 'placeholder'=>$locale['ESHPPRO200']));
+		echo form_text($locale['ESHPPRO152'], 'dmulti', 'dmulti', $this->data['dmulti'], array('inline'=>1, 'tip'=>$locale['ESHPPRO153'], 'width'=>'200px', 'placeholder'=>$locale['ESHP019']));
 		openside('');
 		echo form_text($locale['ESHPPRO112'], 'xprice', 'xprice', $this->data['xprice'], array('number'=>1, 'inline'=>1, 'width'=>'200px', 'tip'=>$locale['ESHPPRO113'], 'placeholder'=>fusion_get_settings('eshop_currency')));
 		echo form_checkbox($locale['ESHPPRO184'], 'campaign', 'campaign', $this->data['campaign'], array('inline'=>1, 'tip'=>$locale['ESHPPRO185'], 'class'=>'col-sm-offset-3'));

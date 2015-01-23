@@ -343,6 +343,8 @@ $locale['ESHPPRO195'] = "Attributes";
 $locale['ESHPPRO196'] = "Value";
 $locale['ESHPPRO197'] = "Label";
 $locale['ESHPPRO198'] = "Section Title";
+$locale['ESHPPRO199'] = "Serial/ Reference No";
+$locale['ESHPPRO200'] = "Days";
 
 // Admin Tabs
 $locale['ptabs_000'] = 'Product Info';
