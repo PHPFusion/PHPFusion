@@ -126,7 +126,9 @@ foreach ($configs as $table => $config) {
 
 	$contents[$table]['colwidth'] = floor(12 / $items_count);
 
-	$data = array();
+	if (isset($items)) unset($items);
+
+//	$data = array();
 	while ($row = dbarray($result)) {
 		$keys = array_keys($row);
 		foreach ($keys as $i => $key) {
@@ -143,7 +145,7 @@ foreach ($configs as $table => $config) {
 			'content' => stripslashes($row['content'])
 		);
 	}
-	$contents[DB_NEWS]['data'] = $items;
+	$contents[$table]['data'] = $items;
 }
 
 foreach($contents as $content) :
