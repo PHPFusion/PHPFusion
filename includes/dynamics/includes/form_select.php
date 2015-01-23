@@ -317,7 +317,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		'hide_disabled' => !empty($options['hide_disabled']) && $options['hide_disabled'] == 1 ? 1 : 0  // to hide any disabled opts. required $options['disabled_opts']
 	);
 
-	$allowclear = $options['placeholder'] && $options['multiple'] ? "allowClear:true" : '';
+	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
 	$multiple = $options['multiple'] ? 'multiple' : '';
 	$disable_opts = '';
 	if ($options['disable_opts']) {
@@ -341,7 +341,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		});
 		");
 		$html .= "<select name='$input_name' style='".($options['width'] && $title ? "width: ".$options['width']." " : 'min-width:250px;')."' id='$input_id' class='".$options['class']."' ".($options['deactivate'] == 1 ? "readonly" : '')." $multiple>";
-		$html .= $allowclear ? "<option value=''></option>" : '';
+		$html .= $options['allowclear'] ? "<option value=''></option>" : '';
 		if ($options['no_root'] !== 1) { // api options to remove root from selector. used in items creation.
 			$this_select = '';
 			if ($input_value !== NULL) {
