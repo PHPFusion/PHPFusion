@@ -413,20 +413,23 @@ $(document).on("change", ".cList-chk", function () {
 		$sel = ($access == $user_group['0'] ? " selected" : "");
 		$visibility_opts .= "<option value='".$user_group['0']."'$sel>".$user_group['1']."</option>\n";
 	}
+
 	if ($settings['eshop_cats'] == "1" && !isset($_REQUEST['category']) && !isset($_GET['action'])) {
 		//check for main cats.
-		echo "<br /><form name='catform' method='post' action='".FUSION_SELF.$aidlink."'>";
-		echo "<table width='100%' cellspacing='4' cellpadding='0' align='center' class='tbl-border'>";
-		echo "<tr><td align='left' style='width:290px;'>".$locale['ESHPPRO186']." </td>
-<td align='left'><select class='textbox' name='category' style='width:400px;' onchange=\"this.form.submit()\">";
-		echo "<option value='0'>".$locale['ESHP016']."</option>";
-		$result2 = dbquery("select * from ".DB_ESHOP_CATS." order by parentid, title");
-		while ($cat_data = dbarray($result2)) {
-			if ($cat_data['parentid'] != 0) $cat_data['title'] = getparent($cat_data['parentid'], $cat_data['title']);
-			echo "<option value='".$cat_data['cid']."'>".$cat_data['title']."</option>";
+		function cat_form() {
+			global $aidlink, $locale;
+			echo openform('catform', 'catform', 'post', FUSION_SELF.$aidlink."&amp;a_page=main");
+			echo form_select_tree($locale['ESHPPRO186'], 'category', 'category', '', array('parent_value'=>$locale['ESHP016'], 'placeholder'=>$locale['ESHP016'], 'allowclear'=>1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+			echo closeform();
+			add_to_jquery("
+				$('#category').bind('change', function(e) { this.form.submit();	});
+			");
 		}
-		echo "</select></td></tr></table></form>";
+
+		cat_form();
+
 	} else {
+
 		//check for subcats in a selected category section.
 		if (isset($_REQUEST['category'])) {
 			$resultc = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='".$_REQUEST['category']."'");
@@ -448,248 +451,140 @@ $(document).on("change", ".cList-chk", function () {
 </td></tr></table></form><hr />";
 			}
 		}
-		echo "<form name='inputform' method='post' action='$formaction' enctype='multipart/form-data'>";
-		echo "<div style='float:left;width:50%;'>";
-		echo "<input type='hidden' name='dateadded' value='$dateadded' />";
-		echo "<table width='100%' cellspacing='4' cellpadding='0' align='center'>
-<tr><td align='left'>".$locale['ESHPPRO104']."</td><td align='left'><input type='text' name='title' value='".$title."' class='textbox' style='width:190px;'></td></tr>";
-		if ($settings['eshop_cats'] == "1") {
-			echo "<tr><td align='left'>".$locale['ESHPPRO105']."</td>
-<td align='left'><select class='textbox' name='cid' style='width:190px;'>";
-			$catdata = dbarray(dbquery("select title,cid from ".DB_ESHOP_CATS." WHERE cid='".$data['cid']."'"));
-			echo "<option value=''>".$locale['ESHPPRO181']."</option>";
-			echo "<option value='".$data['cid']."'>".$catdata['title']."</option>";
-			$result2 = dbquery("select * from ".DB_ESHOP_CATS." order by parentid, title");
-			while ($cat_data = dbarray($result2)) {
-				if ($cat_data['parentid'] != 0) $cat_data['title'] = getparent($cat_data['parentid'], $cat_data['title']);
-				echo "<option value='".$cat_data['cid']."' ".($_REQUEST['category'] == $cat_data['cid'] ? " selected" : "").">".$cat_data['title']."</option>";
-			}
-			echo "</select></td></tr>";
-		} else {
-			echo "<tr><td align='left'>".$locale['ESHPPRO105']."</td><td align='left'><input type='hidden' name='cid' value='$category'>".$locale['ESHPPRO106']."</td></tr>";
-		}
-		for ($x = 0; $x < sizeof($enabled_languages); $x++) {
-			$languages .= $enabled_languages[$x].(($x < sizeof($enabled_languages)-1) ? "." : "");
-		}
-		$langs = explode('.', $languages);
-		$locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
-		echo "<td class='tbl'>".$locale['ESHPPRO191']."</td>";
-		echo "<td colspan='2' class='tbl'>";
-		for ($i = 0; $i < sizeof($locale_files); $i++) {
-			if (in_array($locale_files[$i], $enabled_languages)) {
-				echo "<input type='checkbox' value='".$locale_files[$i]."' name='languages[]' class='textbox' ".(in_array($locale_files[$i], $langs) ? "checked='checked'" : "")."> ".str_replace('_', ' ', $locale_files[$i])." ";
-			}
-			if ($i%2 == 0 && $i != 0) echo "<br  />";
-		}
-		echo "</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO192']."</td><td align='left'><input type='text' name='keywords' value='".$keywords."' class='textbox' style='width:190px;'></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO107']."</td><td align='left'><input type='text' name='artno' value='".$artno."' class='textbox' style='width:190px;'></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO108']."</td><td align='left'><input type='text' name='sartno' value='".$sartno."' class='textbox' style='width:190px;'></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO109']."</td><td align='left'><input type='file' name='imagefile' enctype='image/jpeg' value='$image_url' class='textbox' style='width:180px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO110']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO111']."</td><td align='left'><input type='text' name='price' value='$price' class='textbox'  style='width:60px;'>  ".$settings['eshop_currency']."</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO112']."</td><td align='left'><input type='text' name='xprice' value='$xprice' class='textbox' style='width:60px;'>  ".$settings['eshop_currency']."
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO113']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO114']."</td><td align='left'><input type='text' name='weight' value='$weight' class='textbox' style='width:60px;'>  ".$settings['eshop_weightscale']."
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO115']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a></td></tr>";
-		echo "<tr><td align='left'><input type='text' name='dynf' value='$dynf' class='textbox' style='width:100px;'></td>";
-		echo "<td align='left'><input type='text' name='dyncList' id='dyncList' class='textbox' style='width:70px;'><a href='javascript:;' id='adddync' class='button'>".$locale['ESHPPRO116']."</a>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO117']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a></td></tr>
 
-<tr><td align='left' valign='middle'>".$locale['ESHPPRO118']."</td><td align='left'>
-<div id ='sList' style='width:250px;margin-top:5px;margin-bottom:5px;height:150px;overflow: auto;position:relative;'></div></td>
-</tr>";
-		echo "<tr><td align='left' valign='middle'>".$locale['ESHPPRO119']."</td><td style='padding-top:10px;' align='left'>
-      <select name='colorList' id='colorList' class='textbox'>
-      <option value=''>".$locale['ESHPPRO120']."</option>";
-		echo "<option value='1' style='background-color:#F0F8FF;'>".$ESHPCLRS['1']."</option>";
-		echo "<option value='2' style='background-color:#FAEBD7;'>".$ESHPCLRS['2']."</option>";
-		echo "<option value='3' style='background-color:#00FFFF;'>".$ESHPCLRS['3']."</option>";
-		echo "<option value='4' style='background-color:#7FFFD4;'>".$ESHPCLRS['4']."</option>";
-		echo "<option value='5' style='background-color:#F0FFFF;'>".$ESHPCLRS['5']."</option>";
-		echo "<option value='6' style='background-color:#F5F5DC;'>".$ESHPCLRS['6']."</option>";
-		echo "<option value='7' style='background-color:#FFE4C4;'>".$ESHPCLRS['7']."</option>";
-		echo "<option value='8' style='background-color:#000000;'>".$ESHPCLRS['8']."</option>";
-		echo "<option value='9' style='background-color:#FFEBCD;'>".$ESHPCLRS['9']."</option>";
-		echo "<option value='10' style='background-color:#0000FF;'>".$ESHPCLRS['10']."</option>";
-		echo "<option value='11' style='background-color:#8A2BE2;'>".$ESHPCLRS['11']."</option>";
-		echo "<option value='12' style='background-color:#A52A2A;'>".$ESHPCLRS['12']."</option>";
-		echo "<option value='13' style='background-color:#DEB887;'>".$ESHPCLRS['13']."</option>";
-		echo "<option value='14' style='background-color:#5F9EA0;'>".$ESHPCLRS['14']."</option>";
-		echo "<option value='15' style='background-color:#7FFF00;'>".$ESHPCLRS['15']."</option>";
-		echo "<option value='16' style='background-color:#D2691E;'>".$ESHPCLRS['16']."</option>";
-		echo "<option value='17' style='background-color:#FF7F50;'>".$ESHPCLRS['17']."</option>";
-		echo "<option value='18' style='background-color:#6495ED;'>".$ESHPCLRS['18']."</option>";
-		echo "<option value='19' style='background-color:#FFF8DC;'>".$ESHPCLRS['19']."</option>";
-		echo "<option value='20' style='background-color:#DC143C;'>".$ESHPCLRS['20']."</option>";
-		echo "<option value='21' style='background-color:#00FFFF;'>".$ESHPCLRS['21']."</option>";
-		echo "<option value='22' style='background-color:#00008B;'>".$ESHPCLRS['22']."</option>";
-		echo "<option value='23' style='background-color:#008B8B;'>".$ESHPCLRS['23']."</option>";
-		echo "<option value='24' style='background-color:#B8860B;'>".$ESHPCLRS['24']."</option>";
-		echo "<option value='25' style='background-color:#A9A9A9;'>".$ESHPCLRS['25']."</option>";
-		echo "<option value='26' style='background-color:#BDB76B;'>".$ESHPCLRS['26']."</option>";
-		echo "<option value='27' style='background-color:#8B008B;'>".$ESHPCLRS['27']."</option>";
-		echo "<option value='28' style='background-color:#556B2F;'>".$ESHPCLRS['28']."</option>";
-		echo "<option value='29' style='background-color:#FF8C00;'>".$ESHPCLRS['29']."</option>";
-		echo "<option value='30' style='background-color:#9932CC;'>".$ESHPCLRS['30']."</option>";
-		echo "<option value='31' style='background-color:#8B0000;'>".$ESHPCLRS['31']."</option>";
-		echo "<option value='32' style='background-color:#E9967A;'>".$ESHPCLRS['32']."</option>";
-		echo "<option value='33' style='background-color:#8FBC8F;'>".$ESHPCLRS['33']."</option>";
-		echo "<option value='34' style='background-color:#483D8B;'>".$ESHPCLRS['34']."</option>";
-		echo "<option value='35' style='background-color:#2F4F4F;'>".$ESHPCLRS['35']."</option>";
-		echo "<option value='36' style='background-color:#00CED1;'>".$ESHPCLRS['36']."</option>";
-		echo "<option value='37' style='background-color:#9400D3;'>".$ESHPCLRS['37']."</option>";
-		echo "<option value='38' style='background-color:#FF1493;'>".$ESHPCLRS['38']."</option>";
-		echo "<option value='39' style='background-color:#00BFFF;'>".$ESHPCLRS['39']."</option>";
-		echo "<option value='40' style='background-color:#696969;'>".$ESHPCLRS['40']."</option>";
-		echo "<option value='41' style='background-color:#1E90FF;'>".$ESHPCLRS['41']."</option>";
-		echo "<option value='42' style='background-color:#B22222;'>".$ESHPCLRS['42']."</option>";
-		echo "<option value='43' style='background-color:#FFFAF0;'>".$ESHPCLRS['43']."</option>";
-		echo "<option value='44' style='background-color:#228B22;'>".$ESHPCLRS['44']."</option>";
-		echo "<option value='45' style='background-color:#FF00FF;'>".$ESHPCLRS['45']."</option>";
-		echo "<option value='46' style='background-color:#DCDCDC;'>".$ESHPCLRS['46']."</option>";
-		echo "<option value='47' style='background-color:#F8F8FF;'>".$ESHPCLRS['47']."</option>";
-		echo "<option value='48' style='background-color:#FFD700;'>".$ESHPCLRS['48']."</option>";
-		echo "<option value='49' style='background-color:#DAA520;'>".$ESHPCLRS['49']."</option>";
-		echo "<option value='50' style='background-color:#808080;'>".$ESHPCLRS['50']."</option>";
-		echo "<option value='51' style='background-color:#008000;'>".$ESHPCLRS['51']."</option>";
-		echo "<option value='52' style='background-color:#ADFF2F;'>".$ESHPCLRS['52']."</option>";
-		echo "<option value='53' style='background-color:#F0FFF0;'>".$ESHPCLRS['53']."</option>";
-		echo "<option value='54' style='background-color:#FF69B4;'>".$ESHPCLRS['54']."</option>";
-		echo "<option value='55' style='background-color:#CD5C5C;'>".$ESHPCLRS['55']."</option>";
-		echo "<option value='56' style='background-color:#4B0082;'>".$ESHPCLRS['56']."</option>";
-		echo "<option value='57' style='background-color:#F0E68C;'>".$ESHPCLRS['57']."</option>";
-		echo "<option value='58' style='background-color:#E6E6FA;'>".$ESHPCLRS['58']."</option>";
-		echo "<option value='59' style='background-color:#FFF0F5;'>".$ESHPCLRS['59']."</option>";
-		echo "<option value='60' style='background-color:#7CFC00;'>".$ESHPCLRS['60']."</option>";
-		echo "<option value='61' style='background-color:#FFFACD;'>".$ESHPCLRS['61']."</option>";
-		echo "<option value='62' style='background-color:#ADD8E6;'>".$ESHPCLRS['62']."</option>";
-		echo "<option value='63' style='background-color:#F08080;'>".$ESHPCLRS['63']."</option>";
-		echo "<option value='64' style='background-color:#E0FFFF;'>".$ESHPCLRS['64']."</option>";
-		echo "<option value='65' style='background-color:#FAFAD2;'>".$ESHPCLRS['65']."</option>";
-		echo "<option value='66' style='background-color:#D3D3D3;'>".$ESHPCLRS['66']."</option>";
-		echo "<option value='67' style='background-color:#90EE90;'>".$ESHPCLRS['67']."</option>";
-		echo "<option value='68' style='background-color:#FFB6C1;'>".$ESHPCLRS['68']."</option>";
-		echo "<option value='69' style='background-color:#FFA07A;'>".$ESHPCLRS['69']."</option>";
-		echo "<option value='70' style='background-color:#20B2AA;'>".$ESHPCLRS['70']."</option>";
-		echo "<option value='71' style='background-color:#87CEFA;'>".$ESHPCLRS['71']."</option>";
-		echo "<option value='72' style='background-color:#778899;'>".$ESHPCLRS['72']."</option>";
-		echo "<option value='73' style='background-color:#B0C4DE;'>".$ESHPCLRS['73']."</option>";
-		echo "<option value='74' style='background-color:#FFFFE0;'>".$ESHPCLRS['74']."</option>";
-		echo "<option value='75' style='background-color:#00FF00;'>".$ESHPCLRS['75']."</option>";
-		echo "<option value='76' style='background-color:#FF00FF;'>".$ESHPCLRS['76']."</option>";
-		echo "<option value='77' style='background-color:#800000;'>".$ESHPCLRS['77']."</option>";
-		echo "<option value='78' style='background-color:#66CDAA;'>".$ESHPCLRS['78']."</option>";
-		echo "<option value='79' style='background-color:#0000CD;'>".$ESHPCLRS['79']."</option>";
-		echo "<option value='80' style='background-color:#BA55D3;'>".$ESHPCLRS['80']."</option>";
-		echo "<option value='81' style='background-color:#9370DB;'>".$ESHPCLRS['81']."</option>";
-		echo "<option value='82' style='background-color:#3CB371;'>".$ESHPCLRS['82']."</option>";
-		echo "<option value='83' style='background-color:#7B68EE;'>".$ESHPCLRS['83']."</option>";
-		echo "<option value='84' style='background-color:#00FA9A;'>".$ESHPCLRS['84']."</option>";
-		echo "<option value='85' style='background-color:#48D1CC;'>".$ESHPCLRS['85']."</option>";
-		echo "<option value='86' style='background-color:#C71585;'>".$ESHPCLRS['86']."</option>";
-		echo "<option value='87' style='background-color:#191970;'>".$ESHPCLRS['87']."</option>";
-		echo "<option value='88' style='background-color:#F5FFFA;'>".$ESHPCLRS['88']."</option>";
-		echo "<option value='89' style='background-color:#FFE4E1;'>".$ESHPCLRS['89']."</option>";
-		echo "<option value='90' style='background-color:#FFE4B5;'>".$ESHPCLRS['90']."</option>";
-		echo "<option value='91' style='background-color:#FFDEAD;'>".$ESHPCLRS['91']."</option>";
-		echo "<option value='92' style='background-color:#000080;'>".$ESHPCLRS['92']."</option>";
-		echo "<option value='93' style='background-color:#FDF5E6;'>".$ESHPCLRS['93']."</option>";
-		echo "<option value='94' style='background-color:#808000;'>".$ESHPCLRS['94']."</option>";
-		echo "<option value='95' style='background-color:#6B8E23;'>".$ESHPCLRS['95']."</option>";
-		echo "<option value='96' style='background-color:#FFA500;'>".$ESHPCLRS['96']."</option>";
-		echo "<option value='97' style='background-color:#FF4500;'>".$ESHPCLRS['97']."</option>";
-		echo "<option value='98' style='background-color:#DA70D6;'>".$ESHPCLRS['98']."</option>";
-		echo "<option value='99' style='background-color:#EEE8AA;'>".$ESHPCLRS['99']."</option>";
-		echo "<option value='100' style='background-color:#98FB98;'>".$ESHPCLRS['100']."</option>";
-		echo "<option value='101' style='background-color:#AFEEEE;'>".$ESHPCLRS['101']."</option>";
-		echo "<option value='102' style='background-color:#DB7093;'>".$ESHPCLRS['102']."</option>";
-		echo "<option value='103' style='background-color:#FFEFD5;'>".$ESHPCLRS['103']."</option>";
-		echo "<option value='104' style='background-color:#FFDAB9;'>".$ESHPCLRS['104']."</option>";
-		echo "<option value='105' style='background-color:#CD853F;'>".$ESHPCLRS['105']."</option>";
-		echo "<option value='106' style='background-color:#FFC0CB;'>".$ESHPCLRS['106']."</option>";
-		echo "<option value='107' style='background-color:#DDA0DD;'>".$ESHPCLRS['107']."</option>";
-		echo "<option value='108' style='background-color:#B0E0E6;'>".$ESHPCLRS['108']."</option>";
-		echo "<option value='109' style='background-color:#800080;'>".$ESHPCLRS['109']."</option>";
-		echo "<option value='110' style='background-color:#FF0000;'>".$ESHPCLRS['110']."</option>";
-		echo "<option value='111' style='background-color:#BC8F8F;'>".$ESHPCLRS['111']."</option>";
-		echo "<option value='112' style='background-color:#8B4513;'>".$ESHPCLRS['112']."</option>";
-		echo "<option value='113' style='background-color:#FA8072;'>".$ESHPCLRS['113']."</option>";
-		echo "<option value='114' style='background-color:#F4A460;'>".$ESHPCLRS['114']."</option>";
-		echo "<option value='115' style='background-color:#2E8B57;'>".$ESHPCLRS['115']."</option>";
-		echo "<option value='116' style='background-color:#FFF5EE;'>".$ESHPCLRS['116']."</option>";
-		echo "<option value='117' style='background-color:#A0522D;'>".$ESHPCLRS['117']."</option>";
-		echo "<option value='118' style='background-color:#C0C0C0;'>".$ESHPCLRS['118']."</option>";
-		echo "<option value='119' style='background-color:#87CEEB;'>".$ESHPCLRS['119']."</option>";
-		echo "<option value='120' style='background-color:#6A5ACD;'>".$ESHPCLRS['120']."</option>";
-		echo "<option value='121' style='background-color:#708090;'>".$ESHPCLRS['121']."</option>";
-		echo "<option value='122' style='background-color:#FFFAFA;'>".$ESHPCLRS['122']."</option>";
-		echo "<option value='123' style='background-color:#00FF7F;'>".$ESHPCLRS['123']."</option>";
-		echo "<option value='124' style='background-color:#4682B4;'>".$ESHPCLRS['124']."</option>";
-		echo "<option value='125' style='background-color:#D2B48C;'>".$ESHPCLRS['125']."</option>";
-		echo "<option value='126' style='background-color:#008080;'>".$ESHPCLRS['126']."</option>";
-		echo "<option value='127' style='background-color:#D8BFD8;'>".$ESHPCLRS['127']."</option>";
-		echo "<option value='128' style='background-color:#FF6347;'>".$ESHPCLRS['128']."</option>";
-		echo "<option value='129' style='background-color:#40E0D0;'>".$ESHPCLRS['129']."</option>";
-		echo "<option value='130' style='background-color:#EE82EE;'>".$ESHPCLRS['130']."</option>";
-		echo "<option value='131' style='background-color:#F5DEB3;'>".$ESHPCLRS['131']."</option>";
-		echo "<option value='132' style='background-color:#FFFFFF;'>".$ESHPCLRS['132']."</option>";
-		echo "<option value='133' style='background-color:#F5F5F5;'>".$ESHPCLRS['133']."</option>";
-		echo "<option value='134' style='background-color:#FFFF00;'>".$ESHPCLRS['134']."</option>";
-		echo "<option value='135' style='background-color:#9ACD32;'>".$ESHPCLRS['135']."</option>";
-		echo "</select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO121']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-<br />
-<div id ='cList' style='width:250px;margin-top:5px;height:150px;overflow: auto;position:relative;'></div></td>
-</tr>";
-		echo "</table>";
+		// yay i found the product form
+		function product_form() {
+			global $aidlink, $locale;
+			$data['cat_languages'] = array();
+
+			echo openform('productform', 'productform', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array('enc_type'=>1));
+			echo "<div class='row'>\n";
+			echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
+			echo form_hidden('', 'dateadded', 'dateadded', '');
+			echo form_text($locale['ESHPPRO104'], 'title', 'title', '', array('inline'=>1));
+			echo "<div class='row'>\n";
+			echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+			echo "<label class='control-label'>".$locale['ESHPPRO191']."</label>";
+			echo "</div>\n";
+			echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
+			foreach (fusion_get_enabled_languages() as $lang) {
+				$check = (in_array($lang, $data['cat_languages'])) ? 1 : 0;
+				echo "<div class='display-inline-block text-left m-r-10'>\n";
+				echo form_checkbox($lang, 'languages[]', 'lang-'.$lang, $check, array('value' => $lang));
+				echo "</div>\n";
+			}
+			echo "</div>\n";
+			echo "</div>\n";
+
+
+			$tab_title['title'][] = 'Image File Upload';
+			$tab_title['id'][] = 'a1';
+			$tab_title['icon'][] = '';
+
+			$tab_title['title'][] = 'Custom URL';
+			$tab_title['id'][] = 'a2';
+			$tab_title['icon'][] = '';
+
+			$tab_active = tab_active($tab_title, 0);
+			echo form_select($locale['ESHPPRO126'], 'gallery_on', 'gallery_on', array('0'=>$locale['off'], '1'=>$locale['on']), '', array('inline'=>1, 'tip'=>$locale['ESHPPRO129']));
+			echo opentab($tab_title, $tab_active, 'custom');
+			echo opentabbody($tab_title['title'][0], 'a1' , $tab_active);
+			echo form_fileinput($locale['ESHPPRO109'], 'imagefile', 'imagefile', CAT_DIR, '', array('width'=>'190px', 'inline'=>1, 'type'=>'image'));
+			echo "<span class='text-smaller'>".$locale['ESHPPRO110']."</span>\n";
+			echo closetabbody();
+			echo opentabbody($tab_title['title'][1], 'a2', $tab_active);
+			echo "aaaa";
+			echo closetabbody();
+			echo closetab();
+
+
+			echo "<div class='row m-b-20'>\n";
+			echo "<div class='col-xs-12 col-sm-6'>\n";
+			echo form_text($locale['ESHPPRO107'], 'artno', 'artno', '', array('inline'=>1));
+			echo form_text($locale['ESHPPRO108'], 'sartno', 'sartno', '', array('inline'=>1));
+			echo form_text($locale['ESHPPRO111'], 'price', 'price', '', array('number'=>1, 'inline'=>1,  'placeholder'=>fusion_get_settings('eshop_currency')));
+			echo form_text($locale['ESHPPRO112'], 'xprice', 'xprice', '', array('number'=>1, 'inline'=>1, 'tip'=>$locale['ESHPPRO113'], 'placeholder'=>fusion_get_settings('eshop_currency')));
+			echo form_checkbox($locale['ESHPPRO184'], 'campaign', 'campaign', '', array('inline'=>1, 'tip'=>$locale['ESHPPRO185']));
+			echo form_checkbox($locale['ESHPPRO182'], 'cupons', 'cupons', '', array('inline'=>1, 'tip'=>$locale['ESHPPRO183']));
+			echo "</div>\n";
+
+			echo "<div class='col-xs-12 col-sm-6'>\n";
+			echo form_text($locale['ESHPPRO122'], 'iorder', 'iorder', '', array('inline'=>1, 'number'=>1, 'tip'=>$locale['ESHPPRO123']));
+			echo form_text($locale['ESHPPRO124'], 'sellcount', 'sellcount', '', array('deactivate'=>1, 'inline'=>1, 'tip'=>$locale['ESHPPRO125']));
+			echo "</div>\n";
+
+
+			echo "</div>\n";
+
+			echo "<div class='row'>\n";
+			echo "<div class='col-xs-12 col-sm-4'>\n";
+
+			echo "</div>\n";
+			echo "<div class='col-xs-12 col-sm-4'>\n";
+
+			echo "</div>\n";
+			echo "<div class='col-xs-12 col-sm-4'>\n";
+
+			echo "</div>\n";
+
+			echo "</div>\n";
+
+
+
+
+			echo "</div>\n";
+			echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
+			openside('');
+			if (fusion_get_settings('eshop_cats')) {
+				echo form_select_tree($locale['ESHPPRO105'], 'cid', 'cid', '', array('no_root'=>1, 'placeholder'=>$locale['ESHP016'], 'inline'=>1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+			} else {
+				echo $locale['ESHPPRO105']." : ".$locale['ESHPPRO106'];
+				//echo "<tr><td align='left'>".$locale['ESHPPRO105']."</td><td align='left'><input type='hidden' name='cid' value='$category'>".$locale['ESHPPRO106']."</td></tr>";
+			}
+			closeside();
+
+			openside('');
+			echo form_select($locale['ESHPPRO192'], 'keywords', 'keywords', array(), '', array('inline'=>1, 'width'=>'100%', 'tags'=>1, 'multiple'=>1));
+			closeside();
+
+			openside('');
+			echo form_text($locale['ESHPPRO114'], 'weight', 'weight', '', array('number'=>1, 'width'=>'100px', 'placeholder'=> fusion_get_settings('eshop_weightscale'), 'inline'=>1));
+			echo "<span class='text-smaller'>".$locale['ESHPPRO115']."</span>\n";
+			closeside();
+
+			openside('');
+			echo form_text('Custom Attributes', 'dynf', 'dynf', '', array('inline'=>1, 'placeholder'=>'Label'));
+			echo form_text('Values', 'dyncList', 'dyncList', '', array('inline'=>1, 'placeholder'=>'Attributes'));
+			echo "<div><a href='javascript:;' id='adddync' class='btn button btn-sm btn-primary m-b-20'>".$locale['ESHPPRO116']."</a>\n</div>\n";
+			echo form_para($locale['ESHPPRO118'],'118', '118');
+			echo "<div id='sList'>\n";
+			echo "</div>\n";
+			echo "<div class='text-smaller'>".$locale['ESHPPRO117']."</div>\n";
+			closeside();
+
+			openside('');
+			global $ESHPCLRS;
+			for ($i=1; $i <= 135; $i++) { $colors_array[$i] = $ESHPCLRS[$i]; }
+			echo form_select('', 'colorList', 'colorList', $colors_array, '', array('inline'=>1, 'width'=>'100%'));
+			echo "<span class='text-smaller'>".$locale['ESHPPRO121']."</span>\n";
+			echo "<div id='cList'></div>\n";
+			closeside();
+
+
+			echo "</div>\n";
+			echo "</div>\n";
+			echo closeform();
+		}
+
+		product_form();
+
+
+
+		//echo "<form name='inputform' method='post' action='$formaction' enctype='multipart/form-data'>";
+		echo "<div style='float:left;width:50%;'>";
 		echo "</div><div style='float:right;width:50%;'>";
 		echo "<table width='100%' cellspacing='4' cellpadding='0' align='center'>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO122']." </td><td align='left'><input type='text' name='iorder' value='$iorder' class='textbox' style='width:40px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO123']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO124']." </td><td align='left'><input type='text' name='sellcount' value='$sellcount' class='textbox' style='width:40px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO125']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO184']."</td><td align='left'><select name='campaign' class='textbox'>
-       <option value='0'".($campaign == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-	   <option value='1'".($campaign == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-	   </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO185']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO182']."</td><td align='left'><select name='cupons' class='textbox'>
-       <option value='1'".($cupons == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-	   <option value='0'".($cupons == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-	   </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO183']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO126']."</td><td align='left'><select name='gallery_on' class='textbox'>
-       <option value='0'".($gallery_on == "0" ? " selected" : "").">".$locale['ESHPPRO127']."</option>
-	   <option value='1'".($gallery_on == "1" ? " selected" : "").">".$locale['ESHPPRO128']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO129']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
+
 		echo "<tr><td align='left'>".$locale['ESHPPRO130']."</td><td align='left'><input type='text' name='image' value='$image_url' class='textbox' readonly style='width:200px;'></td></tr>
 <tr><td align='left'>".$locale['ESHPPRO131']."</td><td align='left'><input type='text' name='thumb' value='$thumb_url' class='textbox' readonly style='width:200px;'></td></tr>
 <tr><td align='left'>".$locale['ESHPPRO132']."</td><td align='left'><input type='text' name='thumb2' value='$thumb2_url' class='textbox' readonly style='width:200px;'></td></tr>";
@@ -980,11 +875,29 @@ if (isset($_POST['psrchtext'])) {
 	$searchtext = $locale['SRCH162'];
 }
 
+class eshop_products {
+
+	static function product_listing() {
+		global $locale, $aidlink;
+		echo "<div class='m-t-20'>\n";
+		echo openform('', 'search_form', 'search_form', 'post', FUSION_SELF.$aidlink."&amp;a_page=main");
+
+		echo closeform();
+		echo "</div>\n";
+	}
+
+}
+
+
+
 echo "<div style='float:right;margin-top:5px;'>\n";
 echo "<form id='search_form'  name='inputform' method='post' action='".FUSION_SELF.$aidlink."&amp;psearch'>
 <span style='vertical-align:middle;font-size:14px;'>".$locale['ESHPPRO178']."</span>";
 echo "<input type='text' name='psrchtext' class='textbox' style='margin-left:1px; margin-right:1px; margin-bottom:5px; width:160px;'  value='".$searchtext."' onblur=\"if(this.value=='') this.value='".$searchtext."';\" onfocus=\"if(this.value=='".$searchtext."') this.value='';\" />";
 echo "<input type='image' id='search_image' src='".SHOP."img/search_icon.png' alt='".$locale['SRCH162']."' />";
 echo "</form></div>";
+
+
+
 
 ?>
