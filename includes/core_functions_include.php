@@ -411,7 +411,7 @@ function clean_request($request_link, array $filter) {
 			$i++;
 		}
 	}
-	$return_value = strtr(FUSION_REQUEST, array_combine($find, $replace));
+	$return_value = (!empty($find)) ? strtr(FUSION_REQUEST, array_combine($find, $replace)) : FUSION_REQUEST;
 	if ($request_link) $return_value .= (stristr($return_value, '?') ? '&amp;' : '?').$request_link;
 	return $return_value;
 }

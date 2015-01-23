@@ -468,8 +468,10 @@ class eShop_cats {
 				echo "</td>\n";
 				//echo "<td>\n".thumbnail(CAT_DIR.$data['image'], '30px')."</td>\n"; // will show no image thumbnail if no image
 				echo "<td>".number_format($subcats)."</td>\n";
-				echo "<td>".self::getVisibilityOpts()[$data['access']]."</td>\n";
-				echo "<td>".self::getSizeOpts()[$data['status']]."</td>\n";
+				$visibility_opts = self::getVisibilityOpts();
+				echo "<td>".$visibility_opts[$data['access']]."</td>\n";
+				$status_opts = self::getSizeOpts();
+				echo "<td>".$status_opts[$data['status']]."</td>\n";
 				echo "<td>\n";
 				echo ($i == 0) ? "" : "<a title='".$locale['ESHPCATS137']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=moveup&amp;cid=".$data['cid']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 				echo ($i == $rows) ? "" : "<a title='".$locale['ESHPCATS138']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=movedown&amp;cid=".$data['cid']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
@@ -481,7 +483,7 @@ class eShop_cats {
 			}
 			$html2 = "<div class='text-center m-t-10'>[ <a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=refresh&amp;pid=".$_GET['parent_id']."'> ".$locale['ESHPCATS130']." </a> ]</div>\n";
 		} else {
-			echo "<tr><td colspan='5' class='text-center'>".$locale['ESHPCATS115']."</td></tr>\n";
+			echo "<tr><td colspan='8' class='text-center'>".$locale['ESHPCATS115']."</td></tr>\n";
 		}
 		echo "</tbody>\n";
 		echo "</table>\n";
