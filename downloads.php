@@ -25,7 +25,7 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 	$download_id = stripinput($_GET['file_id']);
 	$res = 0;
 	$data = dbarray(dbquery("SELECT download_url, download_file, download_cat, download_visibility FROM ".DB_DOWNLOADS." WHERE download_id='".$download_id."'"));
-	if (checkgroup($cdata['download_visibility'])) {
+	if (checkgroup($data['download_visibility'])) {
 		$result = dbquery("UPDATE ".DB_DOWNLOADS." SET download_count=download_count+1 WHERE download_id='".$download_id."'");
 		if (!empty($data['download_file']) && file_exists(DOWNLOADS.$data['download_file'])) {
 			$res = 1;
