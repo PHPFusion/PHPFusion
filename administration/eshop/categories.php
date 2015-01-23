@@ -59,9 +59,6 @@ class eShop_cats {
 			case 'refresh' :
 				self::refresh_category();
 				break;
-			case 'refresh_sub_cats' :
-				self::refresh_subcats();
-				break;
 			case 'moveup' :
 				self::cats_moveup();
 				break;

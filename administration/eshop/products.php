@@ -417,6 +417,7 @@ class eShop_item {
 	private $formaction = '';
 
 	public function __construct() {
+		global $aidlink, $settings;
 		$_GET['id'] = isset($_GET['id']) && isnum($_GET['id']) ? $_GET['id'] : 0;
 		/*
 		if (isset($_GET['action']) && $_GET['action'] == "edit") {
@@ -429,8 +430,10 @@ class eShop_item {
 	static function verify_product_edit($id) {
 		return dbcount("(id)", DB_ESHOP, "id='".$id."'");
 	}
+
 	// action refresh
 	static function product_refresh() {
+		global $aidlink, $settings;
 		$i = 1;
 		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' ORDER BY iorder");
 		while ($data = dbarray($result)) {
@@ -442,6 +445,7 @@ class eShop_item {
 
 	// action moveup
 	static function product_moveup() {
+		global $aidlink, $settings;
 		if (isset($_GET['id']) && isnum($_GET['id'])) {
 			$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' AND iorder='".intval($_GET['order'])."'"));
 			$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$_REQUEST['category']."' AND id='".$data['id']."'");
@@ -451,6 +455,7 @@ class eShop_item {
 	}
 	// action movedown
 	static function product_movedown() {
+		global $aidlink, $settings;
 		if (isset($_GET['id']) && isnum($_GET['id'])) {
 			$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' AND iorder='".intval($_GET['order'])."'"));
 		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$_REQUEST['category']."' AND id='".$data['id']."'");
@@ -480,6 +485,110 @@ class eShop_item {
 		}
 	}
 
+	static function set_productdb() {
+		global $settings;
+
+		if (isset($_POST['save_cat'])) {
+
+			$error = "";
+
+			$data['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
+			$data['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '', 'cid') : 0;
+
+
+			$data['picture'] = isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '';
+			$data['thumb'] = isset($_POST['thumb']) ? form_sanitizer($_POST['thumb'], '', 'thumb') : '';
+			$data['thumb2'] = isset($_POST['thumb2']) ? form_sanitizer($_POST['thumb2'], '', 'thumb2') : '';
+
+			$upload = form_sanitizer($_FILES['imagefile'], '', 'imagefile');
+			if ($upload) {
+				$data['picture'] = $upload['image_name'];
+				$data['thumb'] = $upload['thumb1_name'];
+				$data['thumb2'] = $upload['thumb2_name'];
+			}
+
+			$data['introtext'] = isset($_POST['introtext']) ? form_sanitizer($_POST['introtext'], '', 'introtext') : '';
+			$data['description'] = isset($_POST['description']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['description'])) : '';
+			$data['anything1'] = isset($_POST['anything1']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything1'])) : '';
+
+			$clist = "";
+			$slist = "";
+
+
+			$introtext = stripinput($_POST['introtext']);
+			$description = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['description']));
+			$anything1 = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything1']));
+			$anything1n = stripinput($_POST['anything1n']);
+			$anything2 = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything2']));
+			$anything2n = stripinput($_POST['anything2n']);
+			$anything3 = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything3']));
+			$anything3n = stripinput($_POST['anything3n']);
+			$weight = stripinput($_POST['weight']);
+			$weight = str_replace(",", ".", $weight);
+			$price = stripinput($_POST['price']);
+			$price = str_replace(",", ".", $price);
+			$xprice = stripinput($_POST['xprice']);
+			$xprice = str_replace(",", ".", $xprice);
+			$stock = stripinput($_POST['stock']);
+			$version = stripinput($_POST['version']);
+			$status = stripinput($_POST['status']);
+			$active = stripinput($_POST['active']);
+			$gallery_on = stripinput($_POST['gallery_on']);
+			$delivery = stripinput($_POST['delivery']);
+			$demo = stripinput($_POST['demo']);
+			$cart_on = stripinput($_POST['cart_on']);
+			$buynow = stripinput($_POST['buynow']);
+			$rpage = stripinput($_POST['rpage']);
+			$dynf = stripinput($_POST['dynf']);
+			$qty = stripinput($_POST['qty']);
+			$sellcount = stripinput($_POST['sellcount']);
+			$artno = stripinput($_POST['artno']);
+			$sartno = stripinput($_POST['sartno']);
+			$instock = stripinput($_POST['instock']);
+			$iorder = stripinput($_POST['iorder']);
+			$dmulti = stripinput($_POST['dmulti']);
+			$cupons = stripinput($_POST['cupons']);
+			$access = stripinput($_POST['access']);
+			$dateadded = stripinput($_POST['dateadded']);
+			$campaign = stripinput($_POST['campaign']);
+			$ratings = stripinput($_POST['ratings']);
+			$comments = stripinput($_POST['comments']);
+			$linebreaks = stripinput($_POST['linebreaks']);
+			$keywords = stripinput($_POST['keywords']);
+			$languages = "";
+			for ($pl = 0; $pl < sizeof($_POST['languages']); $pl++) {
+				$languages .= $_POST['languages'][$pl].($pl < (sizeof($_POST['languages'])-1) ? "." : "");
+			}
+			if (isset($_POST['cList'])) {
+				for ($i = 0, $l = count($_POST['cList']); $i < $l; $i++) {
+					$clist .= ".\"".$_POST['cList'][$i]."\"";
+				}
+			}
+			if (isset($_POST['sList'])) {
+				for ($i = 0, $l = count($_POST['sList']); $i < $l; $i++) {
+					$slist .= ".\"".$_POST['sList'][$i]."\"";
+				}
+			}
+			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['id']) && isnum($_GET['id']))) {
+				$old_iorder = dbresult(dbquery("SELECT iorder FROM ".DB_ESHOP." WHERE cid = '".$category."' AND id='".$_GET['id']."'"), 0);
+				if ($iorder > $old_iorder) {
+					$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$category."' AND iorder>'$old_iorder' AND iorder<='$iorder'");
+				} elseif ($iorder < $old_iorder) {
+					$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$category."' AND iorder<'$old_iorder' AND iorder>='$iorder'");
+				}
+				$result = dbquery("UPDATE ".DB_ESHOP." SET title='$title', cid='$category', picture='$photo_file', thumb='$photo_thumb1',thumb2='$photo_thumb2',introtext='$introtext',description='$description',anything1='$anything1',anything1n='$anything1n',anything2='$anything2',anything2n='$anything2n',anything3='$anything3',anything3n='$anything3n',weight='$weight',price='$price',xprice='$xprice',stock='$stock',version='$version',status='$status',active='$active',gallery_on='$gallery_on',delivery='$delivery', demo='$demo',cart_on='$cart_on',buynow='$buynow',rpage='$rpage',icolor='$clist',dynf='$dynf',dync='$slist',qty='$qty',sellcount='$sellcount',iorder='$iorder',artno='$artno',sartno='$sartno',instock='$instock',dmulti='$dmulti',cupons='$cupons',access='$access',campaign='$campaign',comments='$comments',ratings='$ratings',linebreaks='$linebreaks',keywords='$keywords',product_languages='$languages',dateadded='$dateadded' WHERE id='".$_GET['id']."'");
+			} else {
+				if (!$iorder) {
+					$iorder = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid = '".$category."'"), 0)+1;
+				}
+				$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$category."' AND iorder>='$iorder'");
+				$result = dbquery("INSERT INTO ".DB_ESHOP." VALUES('', '$title',  '$category', '$photo_file', '$photo_thumb1','$photo_thumb2', '$introtext','$description','$anything1','$anything1n','$anything2','$anything2n','$anything3','$anything3n','$weight','$price','$xprice','$stock','$version','$status','$active','$gallery_on','$delivery','$demo','$cart_on','$buynow','$rpage','$clist','$dynf','$slist','$qty','$sellcount','$iorder','$artno','$sartno','$instock','$dmulti','$cupons','$access','$campaign','$comments','$ratings','$linebreaks','$keywords','$languages','".time()."')");
+			}
+			redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+		}
+
+	}
+
 	static function products_data() {
 		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
 		$data = dbarray($result);
@@ -490,13 +599,13 @@ class eShop_item {
 		$data['cat_languages'] = array();
 
 		$itemcolors = str_replace(".", ",", $this->data['clist']);
-		$itemcolors = ltrim($this->data['itemcolors'], ',');
+		$itemcolors = ltrim($itemcolors, ',');
 		$itemdyncs = str_replace(".", ",", $this->data['slist']);
-		$itemdyncs = ltrim($this->data['itemdyncs'], ',');
+		$itemdyncs = ltrim($itemdyncs, ',');
 
 		// check function
 		add_to_jquery('
-	function doCheck(cid) {
+		function doCheck(cid) {
 		var cid = +cid;
 		var data = "cid="+ cid;
 		 $.ajax({
@@ -550,45 +659,38 @@ class eShop_item {
 	');
 
 		add_to_jquery('
-	var colorArray = [];
-	//populate items already saved for edit
-	var numbers = ['.$itemcolors.'];
-	for (i=0;i<numbers.length;i++){
-	var val = numbers[i];
-	colorArray.push(val);
-	document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+val+"\"> <div class=\"cListdiv\" id=\"colors"+val+"\"></div></label>";
-	doCheck(val);
-	}
-
-	//add item when selected in list
-	$("#colorList").change(function () {
-	//If value is empty nothing should happend
-		if(this.value !== "") {
-			if ($.inArray(this.value,colorArray) == -1) {
-			var citem = $("#colorList").find("option:selected").text();
-			colorArray.push($(this).val());
-			document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+this.value+"\"> "+citem+"</label>";
+		var colorArray = [];
+		//populate items already saved for edit
+		var numbers = ['.$itemcolors.'];
+		for (i=0;i<numbers.length;i++){
+		var val = numbers[i];
+		colorArray.push(val);
+		document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+val+"\"> <div class=\"cListdiv\" id=\"colors"+val+"\"></div></label>";
+		doCheck(val);
 		}
-	}
-	});
 
-	//remove color when clicked
-	$(document).on("change", ".cList-chk", function () {
-	  if ($(this).attr("checked")) {
-		return;
-	  } else {
-		$(this).parent(".cList").remove();
-	   }
-	 });
-	');
+		//add item when selected in list
+		$("#colorList").change(function () {
+		//If value is empty nothing should happend
+			if(this.value !== "") {
+				if ($.inArray(this.value,colorArray) == -1) {
+				var citem = $("#colorList").find("option:selected").text();
+				colorArray.push($(this).val());
+				document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+this.value+"\"> "+citem+"</label>";
+			}
+		}
+		});
 
-		$imagebytes = $settings['eshop_image_b'];
-		$imagewidth = $settings['eshop_image_w'];
-		$imageheight = $settings['eshop_image_h'];
-		$thumbwidth = $settings['eshop_image_tw'];
-		$thumbheight = $settings['eshop_image_th'];
-		$thumb2width = $settings['eshop_image_t2w'];
-		$thumb2height = $settings['eshop_image_t2h'];
+		//remove color when clicked
+		$(document).on("change", ".cList-chk", function () {
+		  if ($(this).attr("checked")) {
+			return;
+		  } else {
+			$(this).parent(".cList").remove();
+		   }
+		 });
+		');
+
 		echo "<div class='m-t-20'>\n";
 		echo openform('productform', 'productform', 'post', $this->formaction, array('enc_type'=>1));
 		echo "<div class='row'>\n";
@@ -629,7 +731,27 @@ class eShop_item {
 		echo opentab($tab_title, $tab_active, 'custom');
 		echo opentabbody($tab_title['title'][0], 'a1' , $tab_active);
 		echo "<div class='m-t-20'>\n";
-		echo form_fileinput($locale['ESHPPRO109'], 'imagefile', 'imagefile', CAT_DIR, '', array('width'=>'190px', 'inline'=>1, 'type'=>'image'));
+		$path = BASEDIR."eshop/pictures/";
+		$imagebytes = $settings['eshop_image_b'];
+		$imagewidth = $settings['eshop_image_w'];
+		$imageheight = $settings['eshop_image_h'];
+		$thumbwidth = $settings['eshop_image_tw'];
+		$thumbheight = $settings['eshop_image_th'];
+		$thumb2width = $settings['eshop_image_t2w'];
+		$thumb2height = $settings['eshop_image_t2h'];
+		echo form_fileinput($locale['ESHPPRO109'], 'imagefile', 'imagefile', $path, '', array('width'=>'190px', 'inline'=>1, 'type'=>'image',
+			'max_width' => $imagewidth,
+			'max_height' => $imageheight,
+			'max_byte'=> $imagebytes,
+			'thumbnail_folder' => 'thumb',
+			'thumbnail'=>1,
+			'thumbnail_w'=> $thumbwidth,
+			'thumbnail_h'=> $thumbheight,
+			'thumbnail2'=>1,
+			'thumbnail2_w'=> $thumb2width,
+			'thumbnail2_h'=> $thumb2height,
+		));
+
 		echo "<span class='text-smaller'>".$locale['ESHPPRO110']."</span>\n";
 		echo "</div>\n";
 		echo closetabbody();
@@ -691,8 +813,8 @@ class eShop_item {
 			echo $locale['ESHPPRO105']." : ".$locale['ESHPPRO106'];
 			//echo "<tr><td align='left'>".$locale['ESHPPRO105']."</td><td align='left'><input type='hidden' name='cid' value='$category'>".$locale['ESHPPRO106']."</td></tr>";
 		}
-		echo form_checkbox($locale['ESHPPRO188'], 'ratings', 'ratings', '', array('tip'=>$locale['ESHPPRO188']));
-		echo form_checkbox($locale['ESHPPRO189'], 'comments', 'comments', '', array('tip'=>$locale['ESHPPRO189']));
+		echo form_checkbox($locale['ESHPPRO188'], 'ratings', 'ratings', '', array('tip'=>$locale['ESHPPRO188'], 'class'=>'col-sm-offset-3'));
+		echo form_checkbox($locale['ESHPPRO189'], 'comments', 'comments', '', array('tip'=>$locale['ESHPPRO189'], 'class'=>'col-sm-offset-3'));
 		closeside();
 
 		openside('');
@@ -746,7 +868,7 @@ class eShop_item {
 		echo "</div>\n";
 		echo "</div>\n";
 
-		echo form_button($locale['save'], 'save_cat', 'save_cat', $locale[''], array('class'=>'btn btn-primary'));
+		echo form_button($locale['save'], 'save_cat', 'save_cat', $locale['save'], array('class'=>'btn btn-primary'));
 
 		echo closeform();
 		echo "</div>\n";
