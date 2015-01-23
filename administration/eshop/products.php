@@ -42,13 +42,6 @@ if (isset($_GET['psearch'])) {
 
 	// get message
 
-	if (isset($_GET['iorderrefresh'])) {
-		echo "<div class='admin-message'>".$locale['ESHPPRO100']."</div>\n";
-	}
-
-	if (isset($_GET['ideleted'])) {
-		echo "<div class='admin-message'>".$locale['ESHPPRO101']."</div>\n";
-	}
 
 	if (isset($_GET['complete'])) {
 		$message = "";
@@ -61,7 +54,7 @@ if (isset($_GET['psearch'])) {
 		} elseif ($_GET['error'] == 4) {
 			$message .= "".$locale['ESHP430']." ".$imagewidth."x".$imageheight."";
 		} elseif ($_GET['errors'] == "") {
-			$message = $locale['ESHP431'];
+			$message = $locale[''];
 		}
 		echo "<div class='admin-message'>".$message."</div>\n";
 	}
@@ -404,12 +397,11 @@ class eShop_item {
 		'dynf' => '',
 		'clist' => '',
 		'slist' => '',
-		'list' => '',
 		'qty' => 1,
 		'sellcount' => 0,
 		'dateadded' => '',
 		'campaign' => '',
-		'languages' => '',
+		'product_languages' => array(),
 		'ratings' => 1,
 		'comments' => 1,
 		'linebreaks' => 1,
@@ -420,15 +412,19 @@ class eShop_item {
 	public function __construct() {
 		global $aidlink, $settings;
 		$_GET['id'] = isset($_GET['id']) && isnum($_GET['id']) ? $_GET['id'] : 0;
-		$this->data['languages'] = fusion_get_enabled_languages();
+		$_GET['parent_id'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
+		$this->data['product_languages'] = fusion_get_enabled_languages();
 		$this->data['dateadded'] = time();
-		/*
+
 		if (isset($_GET['action']) && $_GET['action'] == "edit") {
-			$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&id=".$data['id']."".(fusion_get_settings('eshop_cats') == "1" ? "&amp;category=".$_REQUEST['category']."" : "");
+			$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&id=".$_GET['id']."".(fusion_get_settings('eshop_cats') == "1" ? "&amp;parent_id=".$_GET['parent_id']."" : "");
 		} else {
-			$this->formaction = FUSION_SELF.$aidlink."".(fusion_get_settings('eshop_cats') == "1" && isset($_REQUEST['category']) ? "&amp;category=".$_REQUEST['category']."" : "");
-		}*/
-		self::set_productdb();
+			$this->formaction = FUSION_SELF.$aidlink."".(fusion_get_settings('eshop_cats') == "1" && isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id']."" : "");
+		}
+		if (isset($_POST['save_cat'])) {
+			self::set_productdb();
+		}
+
 	}
 
 	static function verify_product_edit($id) {
@@ -503,17 +499,40 @@ class eShop_item {
 		}
 	}
 
+	/**
+	 * Shows Message based on $_GET['status']
+	 */
+	static function getMessage() {
+		global $locale;
+		$message = '';
+		if (isset($_GET['status'])) {
+			switch ($_GET['status']) {
+				case 'sn' :
+					$message = $locale['ESHP432'];
+					break;
+				case 'su' :
+					$message = $locale['ESHP431'];
+					break;
+				case 'del' :
+					$message = $locale['ESHPPRO101'];
+					break;
+				case 'refresh' :
+					$message = $locale['ESHPPRO100'];
+			}
+			if ($message) {
+				echo "<div class='admin-message'>$message</div>";
+			}
+		}
+	}
+
 	private function set_productdb() {
 		global $aidlink;
-
-		if (isset($_POST['save_cat'])) {
 			$this->data['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
 			$this->data['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '', 'cid') : 0;
 			$this->data['picture'] = isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '';
 			$this->data['thumb'] = isset($_POST['thumb']) ? form_sanitizer($_POST['thumb'], '', 'thumb') : '';
 			$this->data['thumb2'] = isset($_POST['thumb2']) ? form_sanitizer($_POST['thumb2'], '', 'thumb2') : '';
-
-			$upload = form_sanitizer($_FILES['imagefile'], '', 'imagefile');
+			$upload = isset($_FILES['imagefile']) ? form_sanitizer($_FILES['imagefile'], '', 'imagefile') : '';
 			if ($upload) {
 				$this->data['picture'] = $upload['image_name'];
 				$this->data['thumb'] = $upload['thumb1_name'];
@@ -559,22 +578,19 @@ class eShop_item {
 			$this->data['comments'] = isset($_POST['comments']) ? 1 : 0;
 			$this->data['linebreaks'] = isset($_POST['linebreaks']) ? 1 : 0;
 			$this->data['keywords'] = isset($_POST['keywords']) ? form_sanitizer($_POST['keywords'], '', 'keywords') : '';
-			$this->data['cat_languages'] = isset($_POST['cat_languages']) ? form_sanitizer($_POST['cat_languages'], '') : array();
-
+			$this->data['product_languages'] = isset($_POST['product_languages']) ? form_sanitizer($_POST['product_languages'], '') : array();
 			if (isset($_POST['cList'])) {
 				for ($i = 0, $l = count($_POST['cList']); $i < $l; $i++) {
 					$this->data['clist'] .= ".\"".$_POST['cList'][$i]."\"";
 				}
 			}
 			$this->data['icolor'] = form_sanitizer($this->data['clist'], '');
-
 			if (isset($_POST['sList'])) {
 				for ($i = 0, $l = count($_POST['sList']); $i < $l; $i++) {
 					$this->data['slist'] .= ".\"".$_POST['sList'][$i]."\"";
 				}
 			}
 			$this->data['dync'] = form_sanitizer($this->data['slist'], '');
-
 			if (self::verify_product_edit($_GET['id'])) {
 				/*
 				$old_iorder = dbresult(dbquery("SELECT iorder FROM ".DB_ESHOP." WHERE cid = '".$this->data['cid']."' AND id='".$this->data['id']."'"), 0);
@@ -586,15 +602,14 @@ class eShop_item {
 				dbquery_insert(DB_ESHOP, $this->data, 'update');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su"); */
 			} else {
-				/*
-				if (!$this->data['iorder']) $iorder = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid = '".$this->data['cid']."'"), 0)+1;
-				$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder>='".$this->data['iorder']."'");
-				dbquery_insert(DB_ESHOP, $this->data, 'save');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn"); */
+
+				//if (!$this->data['iorder']) $iorder = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid = '".$this->data['cid']."'"), 0)+1;
+				//$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder>='".$this->data['iorder']."'");
+				//dbquery_insert(DB_ESHOP, $this->data, 'save');
+				//if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 				print_p($this->data);
 			}
 			//redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
-		}
 	}
 
 	static function products_data() {
@@ -687,7 +702,7 @@ class eShop_item {
 		');
 
 		echo "<div class='m-t-20'>\n";
-		echo openform('productform', 'productform', 'post', $this->formaction, array('enc_type'=>1));
+		echo openform('productform', 'productform', 'post', $this->formaction, array('enctype'=>1));
 
 		$subtab_title['title'][] = $locale['ptabs_000'];
 		$subtab_title['id'][] = "pinfo";
@@ -717,9 +732,9 @@ class eShop_item {
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n<label class='control-label'>".$locale['ESHPPRO191']."</label></div>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
 		foreach (fusion_get_enabled_languages() as $lang) {
-			$check = (in_array($lang, $this->data['languages'])) ? 1 : 0;
+			$check = (in_array($lang, $this->data['product_languages'])) ? 1 : 0;
 			echo "<div class='display-inline-block text-left m-r-10'>\n";
-			echo form_checkbox($lang, 'languages[]', 'lang-'.$lang, $check, array('value' => $lang));
+			echo form_checkbox($lang, 'product_languages[]', 'lang-'.$lang, $check, array('value' => $lang));
 			echo "</div>\n";
 		}
 		echo "</div>\n";
@@ -794,17 +809,23 @@ class eShop_item {
 		echo "<div class='row m-t-20'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
 		openside('');
-		echo form_text($locale['ESHPPRO135'], 'demo', 'demo', $this->data['demo'], array('inline'=>1, 'tip'=>$locale['ESHPPRO136'], 'url'=>1, 'placeholder'=>'http://'));
+		echo form_text($locale['ESHPPRO135'], 'demo', 'demo', $this->data['demo'], array('inline'=>1, 'tip'=>$locale['ESHPPRO136'], 'placeholder'=>'http://'));
 		closeside();
 		openside('');
 		echo form_para($locale['ESHPPRO194'], 'cst', 'cst', array('tip'=>$locale['ESHPPRO117']));
+		echo form_text($locale['ESHPPRO195'], 'dynf', 'dynf', '', array('placeholder'=>$locale['ESHPPRO197'], 'inline'=>1));
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-		echo form_text($locale['ESHPPRO195'], 'dynf', 'dynf', '', array('placeholder'=>$locale['ESHPPRO197']));
-		echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-		echo form_text($locale['ESHPPRO196'], 'dyncList', 'dyncList', '');
+		echo "<div class='col-xs-12 col-sm-3'>\n";
+		echo "<label for='dyncList' class='label-control'>\n".$locale['ESHPPRO196']."</label>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-9' style='padding-left:6px;'>\n";
+			echo "<div class='row'>\n";
+			echo "<div class='col-xs-6 col-sm-6'>\n";
+			echo form_text('', 'dyncList', 'dyncList', '');
+			echo "</div>\n<div class='col-xs-6 col-sm-6'>\n";
+			echo "<div><a href='javascript:;' id='adddync' class='btn button btn-default m-b-20'><i class='fa fa-plus fa-lg'></i> ".$locale['ESHPPRO116']."</a>\n</div>\n";
+			echo "</div>\n</div>\n";
+
 		echo "</div></div>\n";
-		echo "<div><a href='javascript:;' id='adddync' class='btn button btn-sm btn-primary m-b-20'>".$locale['ESHPPRO116']."</a>\n</div>\n";
 		echo form_para($locale['ESHPPRO118'],'118', '118');
 		echo "<div id='sList'>\n";
 		echo "</div>\n";
@@ -858,20 +879,20 @@ class eShop_item {
 		echo closetabbody();
 		echo opentabbody($tab_title['title'][1], 'a2', $tab_active);
 		echo "<div class='m-t-20'>\n";
-		echo form_text($locale['ESHPPRO130'], 'image', 'image', '', array('inline'=>1, 'url'=>1, 'placeholder'=>'http://'));
-		echo form_text($locale['ESHPPRO131'], 'thumb', 'thumb', '', array('inline'=>1, 'url'=>1, 'placeholder'=>'http://'));
-		echo form_text($locale['ESHPPRO132'], 'thumb2', 'thumb2', '', array('inline'=>1, 'url'=>1, 'placeholder'=>'http://'));
+		echo form_text($locale['ESHPPRO130'], 'image', 'image', '', array('inline'=>1, 'placeholder'=>'http://'));
+		echo form_text($locale['ESHPPRO131'], 'thumb', 'thumb', '', array('inline'=>1, 'placeholder'=>'http://'));
+		echo form_text($locale['ESHPPRO132'], 'thumb2', 'thumb2', '', array('inline'=>1, 'placeholder'=>'http://'));
 		echo "</div>\n";
 		echo closetabbody();
 		echo closetab();
 		closeside();
 		echo form_checkbox($locale['ESHPPRO190'], 'linebreaks', 'linebreaks', $this->data['linebreaks']);
 		//echo "<span class='text-smaller'>".$locale['ESHPPRO163']."</span>\n";
-		echo form_text('Additional Information 1', 'anything1n', 'anything1n', $this->data['anything1n'], array('placeholder'=>$locale['ESHPPRO198']));
+		echo form_text($locale['ESHPPRO201']." 1", 'anything1n', 'anything1n', $this->data['anything1n'], array('placeholder'=>$locale['ESHPPRO198']));
 		echo form_textarea('', 'anything1', 'anything1', '', array('autosize'=>1));
-		echo form_text('Additional Information 2', 'anything2n', 'anything2n', $this->data['anything2n'], array('placeholder'=>$locale['ESHPPRO198']));
+		echo form_text($locale['ESHPPRO201']." 2", 'anything2n', 'anything2n', $this->data['anything2n'], array('placeholder'=>$locale['ESHPPRO198']));
 		echo form_textarea('', 'anything2', 'anything2', '', array('autosize'=>1));
-		echo form_text('Additional Information 3', 'anything3n', 'anything3n', $this->data['anything3n'], array('placeholder'=>$locale['ESHPPRO198']));
+		echo form_text($locale['ESHPPRO201']." 3", 'anything3n', 'anything3n', $this->data['anything3n'], array('placeholder'=>$locale['ESHPPRO198']));
 		echo form_textarea('', 'anything3', 'anything3', '', array('autosize'=>1));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
 		openside('');
@@ -934,16 +955,14 @@ echo "</form></div>";
 $item = new eShop_item();
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $item->verify_product_edit($_GET['id']) : 0;
 
-$tab_title['title'][] = 'Products';
+$tab_title['title'][] = $locale['ESHPPRO097'];
 $tab_title['id'][] = 'product';
 $tab_title['icon'][] = '';
-$tab_title['title'][] = $edit ? 'Edit Product' : 'Add Product';
+$tab_title['title'][] = $edit ? $locale['ESHPPRO098'] : $locale['ESHPPRO099'];
 $tab_title['id'][] = 'itemform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-
 $tab_active = tab_active($tab_title, $edit ? 1 : 0, 1, 1);
-// need to have a get message here
-
+$item->getMessage();
 echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=main");
 echo opentabbody($tab_title['title'][0], 'product', $tab_active, 1);
 $item->product_listing();

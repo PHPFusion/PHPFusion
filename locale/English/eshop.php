@@ -243,6 +243,9 @@ $locale['SRCH162'] = "Search for products";
 $locale['SRCH163'] = "eShop product finder";
 
 //Administration products
+$locale['ESHPPRO097'] = "Current Products";
+$locale['ESHPPRO098'] = "Edit Product";
+$locale['ESHPPRO099'] = "Add Product";
 $locale['ESHPPRO100'] = "Product ordering has been refreshed";
 $locale['ESHPPRO101'] = "Product deletion completed";
 $locale['ESHPPRO102'] = "You have enabled categories, please use the category tab and make some categories before adding your products.";
@@ -345,6 +348,7 @@ $locale['ESHPPRO197'] = "Label";
 $locale['ESHPPRO198'] = "Section Title";
 $locale['ESHPPRO199'] = "Serial/ Reference No";
 $locale['ESHPPRO200'] = "Days";
+$locale['ESHPPRO201'] = "Additional Information";
 
 // Admin Tabs
 $locale['ptabs_000'] = 'Product Info';
@@ -695,6 +699,7 @@ $locale['ESHP428'] = "Image must be less than : ";
 $locale['ESHP429'] = "Image must be a GIF, JPEG or PNG file.";
 $locale['ESHP430'] = "Image must be no bigger than : ";
 $locale['ESHP431'] = "Product updated";
+$locale['ESHP432'] = "Product Added";
 
 $ESHPALBUMS['400'] = "Add Album";
 $ESHPALBUMS['401'] = "Edit Album";
