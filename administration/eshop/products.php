@@ -592,7 +592,7 @@ class eShop_item {
 			}
 			$this->data['dync'] = form_sanitizer($this->data['slist'], '');
 			if (self::verify_product_edit($_GET['id'])) {
-				/*
+
 				$old_iorder = dbresult(dbquery("SELECT iorder FROM ".DB_ESHOP." WHERE cid = '".$this->data['cid']."' AND id='".$this->data['id']."'"), 0);
 				if ($this->data['iorder'] > $old_iorder) {
 					$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$this->data['cid']."' AND iorder>'$old_iorder' AND iorder<='".$this->data['iorder']."'");
@@ -600,14 +600,14 @@ class eShop_item {
 					$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder<'$old_iorder' AND iorder>='".$this->data['iorder']."'");
 				}
 				dbquery_insert(DB_ESHOP, $this->data, 'update');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su"); */
+				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su");
 			} else {
 
-				//if (!$this->data['iorder']) $iorder = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid = '".$this->data['cid']."'"), 0)+1;
-				//$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder>='".$this->data['iorder']."'");
-				//dbquery_insert(DB_ESHOP, $this->data, 'save');
-				//if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
-				print_p($this->data);
+				if (!$this->data['iorder']) $this->data['iorder'] = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid='".$this->data['cid']."'"), 0)+1;
+				$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder>='".$this->data['iorder']."'");
+				dbquery_insert(DB_ESHOP, $this->data, 'save');
+				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
+
 			}
 			//redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
 	}
