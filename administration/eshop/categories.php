@@ -208,7 +208,6 @@ class eShop_cats {
 		}
 	}
 
-
 	/**
 	 * Outputs Image Filename arrays
 	 * @return array
@@ -223,7 +222,6 @@ class eShop_cats {
 		return $cat_files;
 	}
 
-
 	/**
 	 * Return the status
 	 * @return array
@@ -233,7 +231,6 @@ class eShop_cats {
 		return array('1' => $locale['ESHPCATS103'],
 			'2' => $locale['ESHPCATS104'],);
 	}
-
 
 	/**
 	 * Return access levels
@@ -272,7 +269,6 @@ class eShop_cats {
 		}
 	}
 
-
 	/**
 	 * Validate whether an ID exist
 	 * @param $cid
@@ -281,7 +277,6 @@ class eShop_cats {
 	static function verify_cat_edit($cid) {
 		return dbcount("(cid)", DB_ESHOP_CATS, "cid='".$cid."'");
 	}
-
 
 	/**
 	 * MYSQL Actions - Save or Update
@@ -519,6 +514,4 @@ if (isset($_GET['section']) && $_GET['section'] == 'catform') {
 	echo closetabbody();
 }
 closetable();
-
-
 ?>
