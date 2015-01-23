@@ -15,76 +15,34 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+
+if (!defined("IN_FUSION")) die("Access Denied");
+/*
+
+	echo '<script type="text/javascript">
+	//<![CDATA[
+	function showexttabs(){
+		$("#exttabs").animate({"height": "toggle"}, { duration: 500 });
+	}
+	//]]>
+	</script>';
+*/
+
+/*
 if (isset($_POST['access'])) {
 	$access = isnum($_POST['access']) ? $_POST['access'] : "0";
 } else {
 	$access = "0";
 }
+
 if (isset($_GET['psearch'])) {
 	include ADMIN."eshop/productsearch.php";
 } else {
-	echo '<script type="text/javascript">
-//<![CDATA[
-function showexttabs(){
-	$("#exttabs").animate({"height": "toggle"}, { duration: 500 });
-}
-//]]>
-</script>';
-	if (isset($_GET['action']) && $_GET['action'] == "refresh") {
-		$i = 1;
-		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' ORDER BY iorder");
-		while ($data = dbarray($result)) {
-			$result2 = dbquery("UPDATE ".DB_ESHOP." SET iorder='$i' WHERE id='".$data['id']."'");
-			$i++;
-		}
-		redirect(FUSION_SELF.$aidlink."&amp;iorderrefresh".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
-	}
-	if ((isset($_GET['action']) && $_GET['action'] == "moveup") && (isset($_GET['id']) && isnum($_GET['id']))) {
-		$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' AND iorder='".intval($_GET['order'])."'"));
-		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$_REQUEST['category']."' AND id='".$data['id']."'");
-		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$_REQUEST['category']."' AND id='".$_GET['id']."'");
-		redirect(FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
-	}
-	if ((isset($_GET['action']) && $_GET['action'] == "movedown") && (isset($_GET['id']) && isnum($_GET['id']))) {
-		$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' AND iorder='".intval($_GET['order'])."'"));
-		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$_REQUEST['category']."' AND id='".$data['id']."'");
-		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$_REQUEST['category']."' AND id='".$_GET['id']."'");
-		redirect(FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
-	}
-	if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['id']) && isnum($_GET['id']))) {
-		$remove = dbarray(dbquery("SELECT picture,thumb,thumb2,iorder,cid FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'"));
-		$picture = BASEDIR."eshop/pictures/".$remove['picture'];
-		$thumb = BASEDIR."eshop/pictures/".$remove['thumb'];
-		$thumb2 = BASEDIR."eshop/pictures/".$remove['thumb2'];
-		if ($remove['picture']) {
-			@unlink($picture);
-		}
-		if ($remove['thumb']) {
-			@unlink($thumb);
-		}
-		if ($remove['thumb2']) {
-			@unlink($thumb2);
-		}
-		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE iorder>'".$remove['iorder']."' AND cid = '".$remove['cid']."'");
-		$result = dbquery("DELETE FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
-		redirect(FUSION_SELF.$aidlink."&amp;ideleted".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
-	}
-	$imagebytes = $settings['eshop_image_b'];
-	$imagewidth = $settings['eshop_image_w'];
-	$imageheight = $settings['eshop_image_h'];
-	$thumbwidth = $settings['eshop_image_tw'];
-	$thumbheight = $settings['eshop_image_th'];
-	$thumb2width = $settings['eshop_image_t2w'];
-	$thumb2height = $settings['eshop_image_t2h'];
-	if (isset($_GET['iorderrefresh'])) {
-		echo "<div class='admin-message'>".$locale['ESHPPRO100']."</div>\n";
-	}
-	if (isset($_GET['ideleted'])) {
-		echo "<div class='admin-message'>".$locale['ESHPPRO101']."</div>\n";
-	}
+
+
+	// get message
+
+
 	if (isset($_GET['complete'])) {
 		$message = "";
 		if ($_GET['error'] == 1) {
@@ -96,10 +54,11 @@ function showexttabs(){
 		} elseif ($_GET['error'] == 4) {
 			$message .= "".$locale['ESHP430']." ".$imagewidth."x".$imageheight."";
 		} elseif ($_GET['errors'] == "") {
-			$message = $locale['ESHP431'];
+			$message = $locale[''];
 		}
 		echo "<div class='admin-message'>".$message."</div>\n";
 	}
+
 	if (isset($_POST['save_cat'])) {
 		$error = "";
 		$photo_file = $_POST['image'];
@@ -218,215 +177,22 @@ function showexttabs(){
 		}
 		redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
 	}
-	if (isset($_GET['action']) && $_GET['action'] == "edit") {
-		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
-		$data = dbarray($result);
-		$title = $data['title'];
-		$description = stripslashes($data['description']);
-		$introtext = $data['introtext'];
-		$anything1 = stripslashes($data['anything1']);
-		$anything1n = $data['anything1n'];
-		$anything2 = stripslashes($data['anything2']);
-		$anything2n = $data['anything2n'];
-		$anything3 = stripslashes($data['anything3']);
-		$anything3n = $data['anything3n'];
-		$category = $data['cid'];
-		$image_url = $data['picture'];
-		$thumb_url = $data['thumb'];
-		$thumb2_url = $data['thumb2'];
-		$weight = $data['weight'];
-		$category = $data['cid'];
-		$price = $data['price'];
-		$xprice = $data['xprice'];
-		$stock = $data['stock'];
-		$version = $data['version'];
-		$status = $data['status'];
-		$active = $data['active'];
-		$gallery_on = $data['gallery_on'];
-		$delivery = $data['delivery'];
-		$demo = $data['demo'];
-		$cart_on = $data['cart_on'];
-		$buynow = $data['buynow'];
-		$rpage = $data['rpage'];
-		$iorder = $data['iorder'];
-		$artno = $data['artno'];
-		$sartno = $data['sartno'];
-		$instock = $data['instock'];
-		$dmulti = $data['dmulti'];
-		$cupons = $data['cupons'];
-		$access = $data['access'];
-		$clist = $data['icolor'];
-		$dynf = $data['dynf'];
-		$slist = $data['dync'];
-		$qty = $data['qty'];
-		$sellcount = $data['sellcount'];
-		$dateadded = $data['dateadded'];
-		$campaign = $data['campaign'];
-		$languages = $data['product_languages'];
-		$ratings = $data['ratings'];
-		$comments = $data['comments'];
-		$linebreaks = $data['linebreaks'];
-		$keywords = $data['keywords'];
-		$formaction = "".FUSION_SELF.$aidlink."&amp;action=edit&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."";
-	} else {
-		$title = "";
-		$description = "";
-		$anything1 = "";
-		$anything1n = "";
-		$anything2 = "";
-		$anything2n = "";
-		$anything3 = "";
-		$anything3n = "";
-		$introtext = "";
-		$category = "";
-		$image_url = "";
-		$thumb_url = "";
-		$thumb2_url = "";
-		$weight = "";
-		$category = "";
-		$price = "";
-		$xprice = "";
-		$stock = "";
-		$version = "";
-		$status = "";
-		$active = "";
-		$gallery_on = "";
-		$cart_on = "";
-		$buynow = "";
-		$delivery = "";
-		$demo = "";
-		$rpage = "";
-		$iorder = "";
-		$artno = "";
-		$sartno = "";
-		$instock = "";
-		$dmulti = "1";
-		$cupons = "1";
-		$access = "";
-		$dynf = "";
-		$clist = "";
-		$slist = "";
-		$list = "";
-		$qty = "";
-		$sellcount = "";
-		$dateadded = "";
-		$campaign = "";
-		$languages = "";
-		$ratings = "";
-		$comments = "";
-		$linebreaks = "";
-		$keywords = "";
-		$formaction = FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" && isset($_REQUEST['category']) ? "&amp;category=".$_REQUEST['category']."" : "")."";
-	}
-	$itemcolors = str_replace(".", ",", $clist);
-	$itemcolors = ltrim($itemcolors, ',');
-	$itemdyncs = str_replace(".", ",", $slist);
-	$itemdyncs = ltrim($itemdyncs, ',');
-	echo '<script type="text/javascript">
-function doCheck(cid) {
-    var cid = +cid;
-    var data = "cid="+ cid;
-     $.ajax({
-       type: "GET",
-       url: "getcolorname.php",
-       data: data,
-       beforeSend: function(result) { 
-       $("#colors"+cid).html("Loading color.."); },
-       success: function(result){ 
-       $("#colors"+cid).empty();
-       $("#colors"+cid).show();
-       $("#colors"+cid).append(result); },timeout: 235000,
-       error:function() {
-       $("#colors"+cid).html("Something went wrong!");
-     }
-  });
-}
 
-$(document).ready(function() {
-var dyncArray = [];
-//List items already saved
-	var dyncs = ['.$itemdyncs.'];
-	for (var i = 0, len = dyncs.length; i < len; i++) {
-	var sval = dyncs[i];
-	dyncArray.push(sval);
-	document.getElementById("sList").innerHTML += "<label class=\"sList\"><input checked =\"checked\" class=\"sList-chk\" name=\"sList[]\" type=\"checkbox\" value=\""+sval+"\"> "+sval+"</div></label>";
-}
-
-//add item when selected in list
-$("#adddync").click(function () {
-	var sitem = $("#dyncList").val();
-//If value is empty nothing should happend
-	if(sitem !== "") {
-		if ($.inArray(sitem,dyncArray) == -1) {
-		$("#dyncList").val();
-		dyncArray.push(sitem);
-    document.getElementById("sList").innerHTML += "<label class=\"sList\"><input checked =\"checked\" class=\"sList-chk\" name=\"sList[]\" type=\"checkbox\" value=\""+sitem+"\"> "+sitem+"</label>";
-  }
- }
-});
-
-//remove dync when clicked
-$(document).on("change", ".sList-chk", function () {
-  if ($(this).attr("checked")) {
-   return;
-   } else {
-   $(this).parent(".sList").remove();
-  }
-});
-
-var colorArray = [];
-//populate items already saved for edit
-var numbers = ['.$itemcolors.'];
-for (i=0;i<numbers.length;i++){
-var val = numbers[i];
-colorArray.push(val);
-document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+val+"\"> <div class=\"cListdiv\" id=\"colors"+val+"\"></div></label>";
-doCheck(val); 
-}
-
-//add item when selected in list
-$("#colorList").change(function () {
-//If value is empty nothing should happend
-	if(this.value !== "") {
-		if ($.inArray(this.value,colorArray) == -1) {
-		var citem = $("#colorList").find("option:selected").text();
-		colorArray.push($(this).val());
-		document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+this.value+"\"> "+citem+"</label>";
-	}
-}
-});
-
-//remove color when clicked
-$(document).on("change", ".cList-chk", function () {
-  if ($(this).attr("checked")) {
-    return;
-  } else {
-    $(this).parent(".cList").remove();
-   }
- });
-});
-</script>';
-	$visibility_opts = "";
-	$sel = "";
-	$user_groups = getusergroups();
-	while (list($key, $user_group) = each($user_groups)) {
-		$sel = ($access == $user_group['0'] ? " selected" : "");
-		$visibility_opts .= "<option value='".$user_group['0']."'$sel>".$user_group['1']."</option>\n";
-	}
 	if ($settings['eshop_cats'] == "1" && !isset($_REQUEST['category']) && !isset($_GET['action'])) {
 		//check for main cats.
-		echo "<br /><form name='catform' method='post' action='".FUSION_SELF.$aidlink."'>";
-		echo "<table width='100%' cellspacing='4' cellpadding='0' align='center' class='tbl-border'>";
-		echo "<tr><td align='left' style='width:290px;'>".$locale['ESHPPRO186']." </td>
-<td align='left'><select class='textbox' name='category' style='width:400px;' onchange=\"this.form.submit()\">";
-		echo "<option value='0'>".$locale['ESHP016']."</option>";
-		$result2 = dbquery("select * from ".DB_ESHOP_CATS." order by parentid, title");
-		while ($cat_data = dbarray($result2)) {
-			if ($cat_data['parentid'] != 0) $cat_data['title'] = getparent($cat_data['parentid'], $cat_data['title']);
-			echo "<option value='".$cat_data['cid']."'>".$cat_data['title']."</option>";
+		function cat_form() {
+			global $aidlink, $locale;
+			echo openform('catform', 'catform', 'post', FUSION_SELF.$aidlink."&amp;a_page=main");
+			echo form_select_tree($locale['ESHPPRO186'], 'category', 'category', '', array('parent_value'=>$locale['ESHP016'], 'placeholder'=>$locale['ESHP016'], 'allowclear'=>1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+			echo closeform();
+			add_to_jquery("
+				$('#category').bind('change', function(e) { this.form.submit();	});
+			");
 		}
-		echo "</select></td></tr></table></form>";
+		cat_form();
+
 	} else {
+
 		//check for subcats in a selected category section.
 		if (isset($_REQUEST['category'])) {
 			$resultc = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='".$_REQUEST['category']."'");
@@ -448,403 +214,11 @@ $(document).on("change", ".cList-chk", function () {
 </td></tr></table></form><hr />";
 			}
 		}
-		echo "<form name='inputform' method='post' action='$formaction' enctype='multipart/form-data'>";
-		echo "<div style='float:left;width:50%;'>";
-		echo "<input type='hidden' name='dateadded' value='$dateadded' />";
-		echo "<table width='100%' cellspacing='4' cellpadding='0' align='center'>
-<tr><td align='left'>".$locale['ESHPPRO104']."</td><td align='left'><input type='text' name='title' value='".$title."' class='textbox' style='width:190px;'></td></tr>";
-		if ($settings['eshop_cats'] == "1") {
-			echo "<tr><td align='left'>".$locale['ESHPPRO105']."</td>
-<td align='left'><select class='textbox' name='cid' style='width:190px;'>";
-			$catdata = dbarray(dbquery("select title,cid from ".DB_ESHOP_CATS." WHERE cid='".$data['cid']."'"));
-			echo "<option value=''>".$locale['ESHPPRO181']."</option>";
-			echo "<option value='".$data['cid']."'>".$catdata['title']."</option>";
-			$result2 = dbquery("select * from ".DB_ESHOP_CATS." order by parentid, title");
-			while ($cat_data = dbarray($result2)) {
-				if ($cat_data['parentid'] != 0) $cat_data['title'] = getparent($cat_data['parentid'], $cat_data['title']);
-				echo "<option value='".$cat_data['cid']."' ".($_REQUEST['category'] == $cat_data['cid'] ? " selected" : "").">".$cat_data['title']."</option>";
-			}
-			echo "</select></td></tr>";
-		} else {
-			echo "<tr><td align='left'>".$locale['ESHPPRO105']."</td><td align='left'><input type='hidden' name='cid' value='$category'>".$locale['ESHPPRO106']."</td></tr>";
-		}
-		for ($x = 0; $x < sizeof($enabled_languages); $x++) {
-			$languages .= $enabled_languages[$x].(($x < sizeof($enabled_languages)-1) ? "." : "");
-		}
-		$langs = explode('.', $languages);
-		$locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
-		echo "<td class='tbl'>".$locale['ESHPPRO191']."</td>";
-		echo "<td colspan='2' class='tbl'>";
-		for ($i = 0; $i < sizeof($locale_files); $i++) {
-			if (in_array($locale_files[$i], $enabled_languages)) {
-				echo "<input type='checkbox' value='".$locale_files[$i]."' name='languages[]' class='textbox' ".(in_array($locale_files[$i], $langs) ? "checked='checked'" : "")."> ".str_replace('_', ' ', $locale_files[$i])." ";
-			}
-			if ($i%2 == 0 && $i != 0) echo "<br  />";
-		}
-		echo "</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO192']."</td><td align='left'><input type='text' name='keywords' value='".$keywords."' class='textbox' style='width:190px;'></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO107']."</td><td align='left'><input type='text' name='artno' value='".$artno."' class='textbox' style='width:190px;'></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO108']."</td><td align='left'><input type='text' name='sartno' value='".$sartno."' class='textbox' style='width:190px;'></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO109']."</td><td align='left'><input type='file' name='imagefile' enctype='image/jpeg' value='$image_url' class='textbox' style='width:180px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO110']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO111']."</td><td align='left'><input type='text' name='price' value='$price' class='textbox'  style='width:60px;'>  ".$settings['eshop_currency']."</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO112']."</td><td align='left'><input type='text' name='xprice' value='$xprice' class='textbox' style='width:60px;'>  ".$settings['eshop_currency']."
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO113']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO114']."</td><td align='left'><input type='text' name='weight' value='$weight' class='textbox' style='width:60px;'>  ".$settings['eshop_weightscale']."
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO115']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a></td></tr>";
-		echo "<tr><td align='left'><input type='text' name='dynf' value='$dynf' class='textbox' style='width:100px;'></td>";
-		echo "<td align='left'><input type='text' name='dyncList' id='dyncList' class='textbox' style='width:70px;'><a href='javascript:;' id='adddync' class='button'>".$locale['ESHPPRO116']."</a>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO117']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a></td></tr>
 
-<tr><td align='left' valign='middle'>".$locale['ESHPPRO118']."</td><td align='left'>
-<div id ='sList' style='width:250px;margin-top:5px;margin-bottom:5px;height:150px;overflow: auto;position:relative;'></div></td>
-</tr>";
-		echo "<tr><td align='left' valign='middle'>".$locale['ESHPPRO119']."</td><td style='padding-top:10px;' align='left'>
-      <select name='colorList' id='colorList' class='textbox'>
-      <option value=''>".$locale['ESHPPRO120']."</option>";
-		echo "<option value='1' style='background-color:#F0F8FF;'>".$ESHPCLRS['1']."</option>";
-		echo "<option value='2' style='background-color:#FAEBD7;'>".$ESHPCLRS['2']."</option>";
-		echo "<option value='3' style='background-color:#00FFFF;'>".$ESHPCLRS['3']."</option>";
-		echo "<option value='4' style='background-color:#7FFFD4;'>".$ESHPCLRS['4']."</option>";
-		echo "<option value='5' style='background-color:#F0FFFF;'>".$ESHPCLRS['5']."</option>";
-		echo "<option value='6' style='background-color:#F5F5DC;'>".$ESHPCLRS['6']."</option>";
-		echo "<option value='7' style='background-color:#FFE4C4;'>".$ESHPCLRS['7']."</option>";
-		echo "<option value='8' style='background-color:#000000;'>".$ESHPCLRS['8']."</option>";
-		echo "<option value='9' style='background-color:#FFEBCD;'>".$ESHPCLRS['9']."</option>";
-		echo "<option value='10' style='background-color:#0000FF;'>".$ESHPCLRS['10']."</option>";
-		echo "<option value='11' style='background-color:#8A2BE2;'>".$ESHPCLRS['11']."</option>";
-		echo "<option value='12' style='background-color:#A52A2A;'>".$ESHPCLRS['12']."</option>";
-		echo "<option value='13' style='background-color:#DEB887;'>".$ESHPCLRS['13']."</option>";
-		echo "<option value='14' style='background-color:#5F9EA0;'>".$ESHPCLRS['14']."</option>";
-		echo "<option value='15' style='background-color:#7FFF00;'>".$ESHPCLRS['15']."</option>";
-		echo "<option value='16' style='background-color:#D2691E;'>".$ESHPCLRS['16']."</option>";
-		echo "<option value='17' style='background-color:#FF7F50;'>".$ESHPCLRS['17']."</option>";
-		echo "<option value='18' style='background-color:#6495ED;'>".$ESHPCLRS['18']."</option>";
-		echo "<option value='19' style='background-color:#FFF8DC;'>".$ESHPCLRS['19']."</option>";
-		echo "<option value='20' style='background-color:#DC143C;'>".$ESHPCLRS['20']."</option>";
-		echo "<option value='21' style='background-color:#00FFFF;'>".$ESHPCLRS['21']."</option>";
-		echo "<option value='22' style='background-color:#00008B;'>".$ESHPCLRS['22']."</option>";
-		echo "<option value='23' style='background-color:#008B8B;'>".$ESHPCLRS['23']."</option>";
-		echo "<option value='24' style='background-color:#B8860B;'>".$ESHPCLRS['24']."</option>";
-		echo "<option value='25' style='background-color:#A9A9A9;'>".$ESHPCLRS['25']."</option>";
-		echo "<option value='26' style='background-color:#BDB76B;'>".$ESHPCLRS['26']."</option>";
-		echo "<option value='27' style='background-color:#8B008B;'>".$ESHPCLRS['27']."</option>";
-		echo "<option value='28' style='background-color:#556B2F;'>".$ESHPCLRS['28']."</option>";
-		echo "<option value='29' style='background-color:#FF8C00;'>".$ESHPCLRS['29']."</option>";
-		echo "<option value='30' style='background-color:#9932CC;'>".$ESHPCLRS['30']."</option>";
-		echo "<option value='31' style='background-color:#8B0000;'>".$ESHPCLRS['31']."</option>";
-		echo "<option value='32' style='background-color:#E9967A;'>".$ESHPCLRS['32']."</option>";
-		echo "<option value='33' style='background-color:#8FBC8F;'>".$ESHPCLRS['33']."</option>";
-		echo "<option value='34' style='background-color:#483D8B;'>".$ESHPCLRS['34']."</option>";
-		echo "<option value='35' style='background-color:#2F4F4F;'>".$ESHPCLRS['35']."</option>";
-		echo "<option value='36' style='background-color:#00CED1;'>".$ESHPCLRS['36']."</option>";
-		echo "<option value='37' style='background-color:#9400D3;'>".$ESHPCLRS['37']."</option>";
-		echo "<option value='38' style='background-color:#FF1493;'>".$ESHPCLRS['38']."</option>";
-		echo "<option value='39' style='background-color:#00BFFF;'>".$ESHPCLRS['39']."</option>";
-		echo "<option value='40' style='background-color:#696969;'>".$ESHPCLRS['40']."</option>";
-		echo "<option value='41' style='background-color:#1E90FF;'>".$ESHPCLRS['41']."</option>";
-		echo "<option value='42' style='background-color:#B22222;'>".$ESHPCLRS['42']."</option>";
-		echo "<option value='43' style='background-color:#FFFAF0;'>".$ESHPCLRS['43']."</option>";
-		echo "<option value='44' style='background-color:#228B22;'>".$ESHPCLRS['44']."</option>";
-		echo "<option value='45' style='background-color:#FF00FF;'>".$ESHPCLRS['45']."</option>";
-		echo "<option value='46' style='background-color:#DCDCDC;'>".$ESHPCLRS['46']."</option>";
-		echo "<option value='47' style='background-color:#F8F8FF;'>".$ESHPCLRS['47']."</option>";
-		echo "<option value='48' style='background-color:#FFD700;'>".$ESHPCLRS['48']."</option>";
-		echo "<option value='49' style='background-color:#DAA520;'>".$ESHPCLRS['49']."</option>";
-		echo "<option value='50' style='background-color:#808080;'>".$ESHPCLRS['50']."</option>";
-		echo "<option value='51' style='background-color:#008000;'>".$ESHPCLRS['51']."</option>";
-		echo "<option value='52' style='background-color:#ADFF2F;'>".$ESHPCLRS['52']."</option>";
-		echo "<option value='53' style='background-color:#F0FFF0;'>".$ESHPCLRS['53']."</option>";
-		echo "<option value='54' style='background-color:#FF69B4;'>".$ESHPCLRS['54']."</option>";
-		echo "<option value='55' style='background-color:#CD5C5C;'>".$ESHPCLRS['55']."</option>";
-		echo "<option value='56' style='background-color:#4B0082;'>".$ESHPCLRS['56']."</option>";
-		echo "<option value='57' style='background-color:#F0E68C;'>".$ESHPCLRS['57']."</option>";
-		echo "<option value='58' style='background-color:#E6E6FA;'>".$ESHPCLRS['58']."</option>";
-		echo "<option value='59' style='background-color:#FFF0F5;'>".$ESHPCLRS['59']."</option>";
-		echo "<option value='60' style='background-color:#7CFC00;'>".$ESHPCLRS['60']."</option>";
-		echo "<option value='61' style='background-color:#FFFACD;'>".$ESHPCLRS['61']."</option>";
-		echo "<option value='62' style='background-color:#ADD8E6;'>".$ESHPCLRS['62']."</option>";
-		echo "<option value='63' style='background-color:#F08080;'>".$ESHPCLRS['63']."</option>";
-		echo "<option value='64' style='background-color:#E0FFFF;'>".$ESHPCLRS['64']."</option>";
-		echo "<option value='65' style='background-color:#FAFAD2;'>".$ESHPCLRS['65']."</option>";
-		echo "<option value='66' style='background-color:#D3D3D3;'>".$ESHPCLRS['66']."</option>";
-		echo "<option value='67' style='background-color:#90EE90;'>".$ESHPCLRS['67']."</option>";
-		echo "<option value='68' style='background-color:#FFB6C1;'>".$ESHPCLRS['68']."</option>";
-		echo "<option value='69' style='background-color:#FFA07A;'>".$ESHPCLRS['69']."</option>";
-		echo "<option value='70' style='background-color:#20B2AA;'>".$ESHPCLRS['70']."</option>";
-		echo "<option value='71' style='background-color:#87CEFA;'>".$ESHPCLRS['71']."</option>";
-		echo "<option value='72' style='background-color:#778899;'>".$ESHPCLRS['72']."</option>";
-		echo "<option value='73' style='background-color:#B0C4DE;'>".$ESHPCLRS['73']."</option>";
-		echo "<option value='74' style='background-color:#FFFFE0;'>".$ESHPCLRS['74']."</option>";
-		echo "<option value='75' style='background-color:#00FF00;'>".$ESHPCLRS['75']."</option>";
-		echo "<option value='76' style='background-color:#FF00FF;'>".$ESHPCLRS['76']."</option>";
-		echo "<option value='77' style='background-color:#800000;'>".$ESHPCLRS['77']."</option>";
-		echo "<option value='78' style='background-color:#66CDAA;'>".$ESHPCLRS['78']."</option>";
-		echo "<option value='79' style='background-color:#0000CD;'>".$ESHPCLRS['79']."</option>";
-		echo "<option value='80' style='background-color:#BA55D3;'>".$ESHPCLRS['80']."</option>";
-		echo "<option value='81' style='background-color:#9370DB;'>".$ESHPCLRS['81']."</option>";
-		echo "<option value='82' style='background-color:#3CB371;'>".$ESHPCLRS['82']."</option>";
-		echo "<option value='83' style='background-color:#7B68EE;'>".$ESHPCLRS['83']."</option>";
-		echo "<option value='84' style='background-color:#00FA9A;'>".$ESHPCLRS['84']."</option>";
-		echo "<option value='85' style='background-color:#48D1CC;'>".$ESHPCLRS['85']."</option>";
-		echo "<option value='86' style='background-color:#C71585;'>".$ESHPCLRS['86']."</option>";
-		echo "<option value='87' style='background-color:#191970;'>".$ESHPCLRS['87']."</option>";
-		echo "<option value='88' style='background-color:#F5FFFA;'>".$ESHPCLRS['88']."</option>";
-		echo "<option value='89' style='background-color:#FFE4E1;'>".$ESHPCLRS['89']."</option>";
-		echo "<option value='90' style='background-color:#FFE4B5;'>".$ESHPCLRS['90']."</option>";
-		echo "<option value='91' style='background-color:#FFDEAD;'>".$ESHPCLRS['91']."</option>";
-		echo "<option value='92' style='background-color:#000080;'>".$ESHPCLRS['92']."</option>";
-		echo "<option value='93' style='background-color:#FDF5E6;'>".$ESHPCLRS['93']."</option>";
-		echo "<option value='94' style='background-color:#808000;'>".$ESHPCLRS['94']."</option>";
-		echo "<option value='95' style='background-color:#6B8E23;'>".$ESHPCLRS['95']."</option>";
-		echo "<option value='96' style='background-color:#FFA500;'>".$ESHPCLRS['96']."</option>";
-		echo "<option value='97' style='background-color:#FF4500;'>".$ESHPCLRS['97']."</option>";
-		echo "<option value='98' style='background-color:#DA70D6;'>".$ESHPCLRS['98']."</option>";
-		echo "<option value='99' style='background-color:#EEE8AA;'>".$ESHPCLRS['99']."</option>";
-		echo "<option value='100' style='background-color:#98FB98;'>".$ESHPCLRS['100']."</option>";
-		echo "<option value='101' style='background-color:#AFEEEE;'>".$ESHPCLRS['101']."</option>";
-		echo "<option value='102' style='background-color:#DB7093;'>".$ESHPCLRS['102']."</option>";
-		echo "<option value='103' style='background-color:#FFEFD5;'>".$ESHPCLRS['103']."</option>";
-		echo "<option value='104' style='background-color:#FFDAB9;'>".$ESHPCLRS['104']."</option>";
-		echo "<option value='105' style='background-color:#CD853F;'>".$ESHPCLRS['105']."</option>";
-		echo "<option value='106' style='background-color:#FFC0CB;'>".$ESHPCLRS['106']."</option>";
-		echo "<option value='107' style='background-color:#DDA0DD;'>".$ESHPCLRS['107']."</option>";
-		echo "<option value='108' style='background-color:#B0E0E6;'>".$ESHPCLRS['108']."</option>";
-		echo "<option value='109' style='background-color:#800080;'>".$ESHPCLRS['109']."</option>";
-		echo "<option value='110' style='background-color:#FF0000;'>".$ESHPCLRS['110']."</option>";
-		echo "<option value='111' style='background-color:#BC8F8F;'>".$ESHPCLRS['111']."</option>";
-		echo "<option value='112' style='background-color:#8B4513;'>".$ESHPCLRS['112']."</option>";
-		echo "<option value='113' style='background-color:#FA8072;'>".$ESHPCLRS['113']."</option>";
-		echo "<option value='114' style='background-color:#F4A460;'>".$ESHPCLRS['114']."</option>";
-		echo "<option value='115' style='background-color:#2E8B57;'>".$ESHPCLRS['115']."</option>";
-		echo "<option value='116' style='background-color:#FFF5EE;'>".$ESHPCLRS['116']."</option>";
-		echo "<option value='117' style='background-color:#A0522D;'>".$ESHPCLRS['117']."</option>";
-		echo "<option value='118' style='background-color:#C0C0C0;'>".$ESHPCLRS['118']."</option>";
-		echo "<option value='119' style='background-color:#87CEEB;'>".$ESHPCLRS['119']."</option>";
-		echo "<option value='120' style='background-color:#6A5ACD;'>".$ESHPCLRS['120']."</option>";
-		echo "<option value='121' style='background-color:#708090;'>".$ESHPCLRS['121']."</option>";
-		echo "<option value='122' style='background-color:#FFFAFA;'>".$ESHPCLRS['122']."</option>";
-		echo "<option value='123' style='background-color:#00FF7F;'>".$ESHPCLRS['123']."</option>";
-		echo "<option value='124' style='background-color:#4682B4;'>".$ESHPCLRS['124']."</option>";
-		echo "<option value='125' style='background-color:#D2B48C;'>".$ESHPCLRS['125']."</option>";
-		echo "<option value='126' style='background-color:#008080;'>".$ESHPCLRS['126']."</option>";
-		echo "<option value='127' style='background-color:#D8BFD8;'>".$ESHPCLRS['127']."</option>";
-		echo "<option value='128' style='background-color:#FF6347;'>".$ESHPCLRS['128']."</option>";
-		echo "<option value='129' style='background-color:#40E0D0;'>".$ESHPCLRS['129']."</option>";
-		echo "<option value='130' style='background-color:#EE82EE;'>".$ESHPCLRS['130']."</option>";
-		echo "<option value='131' style='background-color:#F5DEB3;'>".$ESHPCLRS['131']."</option>";
-		echo "<option value='132' style='background-color:#FFFFFF;'>".$ESHPCLRS['132']."</option>";
-		echo "<option value='133' style='background-color:#F5F5F5;'>".$ESHPCLRS['133']."</option>";
-		echo "<option value='134' style='background-color:#FFFF00;'>".$ESHPCLRS['134']."</option>";
-		echo "<option value='135' style='background-color:#9ACD32;'>".$ESHPCLRS['135']."</option>";
-		echo "</select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO121']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-<br />
-<div id ='cList' style='width:250px;margin-top:5px;height:150px;overflow: auto;position:relative;'></div></td>
-</tr>";
-		echo "</table>";
-		echo "</div><div style='float:right;width:50%;'>";
-		echo "<table width='100%' cellspacing='4' cellpadding='0' align='center'>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO122']." </td><td align='left'><input type='text' name='iorder' value='$iorder' class='textbox' style='width:40px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO123']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO124']." </td><td align='left'><input type='text' name='sellcount' value='$sellcount' class='textbox' style='width:40px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO125']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO184']."</td><td align='left'><select name='campaign' class='textbox'>
-       <option value='0'".($campaign == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-	   <option value='1'".($campaign == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-	   </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO185']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO182']."</td><td align='left'><select name='cupons' class='textbox'>
-       <option value='1'".($cupons == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-	   <option value='0'".($cupons == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-	   </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO183']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO126']."</td><td align='left'><select name='gallery_on' class='textbox'>
-       <option value='0'".($gallery_on == "0" ? " selected" : "").">".$locale['ESHPPRO127']."</option>
-	   <option value='1'".($gallery_on == "1" ? " selected" : "").">".$locale['ESHPPRO128']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO129']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO130']."</td><td align='left'><input type='text' name='image' value='$image_url' class='textbox' readonly style='width:200px;'></td></tr>
-<tr><td align='left'>".$locale['ESHPPRO131']."</td><td align='left'><input type='text' name='thumb' value='$thumb_url' class='textbox' readonly style='width:200px;'></td></tr>
-<tr><td align='left'>".$locale['ESHPPRO132']."</td><td align='left'><input type='text' name='thumb2' value='$thumb2_url' class='textbox' readonly style='width:200px;'></td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO133']."</td><td align='left'><input type='text' name='version' value='$version' class='textbox' style='width:60px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO134']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO135']."</td><td align='left'><input type='text' name='demo' value='$demo' class='textbox' style='width:170px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO136']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO137']."</td><td align='left'><select name='stock' class='textbox'>
-      <option value='1'".($stock == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-	  <option value='0'".($stock == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-	  </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO140']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO141']."</td><td align='left'><input type='text' name='instock' value='$instock' class='textbox' style='width:40px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO142']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO143']."</td><td align='left'><input type='text' name='delivery' value='$delivery' class='textbox' style='width:170px;' />
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO144']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO145']."</td><td align='left'><select name='status' class='textbox'>
-      <option value='1'".($status == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      <option value='0'".($status == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO146']." 
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO147']."</td><td align='left'><select name='active' class='textbox'>
-      <option value='1'".($active == "1" ? " selected" : "").">".$locale['ESHPPRO128']."</option>
-      <option value='0'".($active == "0" ? " selected" : "").">".$locale['ESHPPRO127']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO148']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO149']."</td><td align='left'><select name='cart_on' class='textbox'>
-      <option value='1'".($cart_on == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      <option value='0'".($cart_on == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO150']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>Allow to buy multiple items</td><td align='left'><select name='qty' class='textbox'>
-      <option value='1'".($qty == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      <option value='0'".($qty == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO151']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO152']."</td><td align='left'><input type='text' name='dmulti' value='$dmulti' class='textbox' style='width:40px;'>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO153']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO154']."</td><td align='left'><select name='buynow' class='textbox'>
-      <option value='0'".($buynow == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($buynow == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO155']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO188']."</td><td align='left'><select name='ratings' class='textbox'>
-      <option value='0'".($ratings == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($ratings == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO188']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO189']."</td><td align='left'><select name='comments' class='textbox'>
-      <option value='0'".($comments == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($comments == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO189']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO156']."</td><td>";
-		$callback_dir = makefilelist(BASEDIR."eshop/purchasescripts/", ".|..|index.php", TRUE, "files");
-		echo "<select name='rpage' class='textbox' style='width:180px;' >";
-		echo "<option value=''>".$locale['ESHPPRO157']."</option>";
-		foreach ($callback_dir as $callback) {
-			echo "<option value='$callback' ".($callback == "$rpage" ? " selected" : "").">$callback</option>";
-		}
-		echo "</select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO158']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPPRO190']."</td><td align='left'><select name='linebreaks' class='textbox'>
-      <option value='0'".($linebreaks == "0" ? " selected" : "").">".$locale['ESHPPRO139']."</option>
-      <option value='1'".($linebreaks == "1" ? " selected" : "").">".$locale['ESHPPRO138']."</option>
-      </select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO190']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "<tr><td align='left'>".$locale['ESHPCATS109']."</td>
-<td align='left'><select name='access' class='textbox'>
-$visibility_opts</select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO159']."
-</span><img src='".SHOP."img/helper.png' alt='' style='height:25px;vertical-align:middle;' /></a>
-</td></tr>";
-		echo "</table>";
-		echo "</div>";
-		echo "<div style='clear:both;'></div>";
-		echo "<table width='100%' cellspacing='4' cellpadding='0'>";
-		if ($settings['eshop_pretext'] == "1") {
-			echo "<tr><td align='left'>".$locale['ESHPPRO160']."</td><td align='left'><textarea name='introtext' cols='90' rows='3' class='textbox span6'>$introtext</textarea>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO161']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
-</td></tr>";
-		} else {
-			echo "<input type='hidden' name='introtext' value='$introtext'>";
-		}
-		echo "<tr><td align='left'>".$locale['ESHPPRO162']."</td><td align='left'><textarea name='description' cols='90' rows='6' class='textbox span6'>$description</textarea>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO163']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
-</td></tr>";
-		echo "</table>\n";
-		echo '<br /><center><a href="#" onClick="showexttabs(); return false;" class="button"><b>'.$locale['ESHPPRO164'].'</b></a></center><br />';
-		echo "<div id='exttabs'>";
-		echo "<table width='100%' cellspacing='4' cellpadding='0'>";
-		echo "<tr><td align='left'><input type='text' name='anything1n' value='$anything1n' class='textbox' style='width:90px;'></td><td align='left'><textarea name='anything1' cols='90' rows='6' class='textbox span6'>$anything1</textarea>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO165']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
 
-</td></tr>";
-		echo "<tr><td align='left'><input type='text' name='anything2n' value='$anything2n' class='textbox' style='width:90px;'></td><td align='left'><textarea name='anything2' cols='90' rows='6' class='textbox span6'>$anything2</textarea></td></tr>";
-		echo "<tr><td align='left'><input type='text' name='anything3n' value='$anything3n' class='textbox' style='width:90px;'></td><td align='left'><textarea name='anything3' cols='90' rows='6' class='textbox span6'>$anything3</textarea></td></tr>";
-		echo "</table></div>\n";
-		echo "<table width='100%' cellspacing='4' cellpadding='0'>";
-		echo "<tr><td align='center' colspan='3'><input type='submit' name='save_cat' value='".$locale['ESHPPRO166']."' class='button'></td></tr>";
-		echo "</table></div></form>\n";
 	}
 	echo "<hr />";
+
 	//Do this if cats are on
 	if ($settings['eshop_cats'] == "1" && !isset($_REQUEST['category'])) {
 		//Search for orphan items before we select an category.
@@ -974,17 +348,629 @@ $visibility_opts</select>
 		}
 	}
 }
+
+
 if (isset($_POST['psrchtext'])) {
 	$searchtext = stripinput($_POST['psrchtext']);
 } else {
 	$searchtext = $locale['SRCH162'];
 }
+*/
+class eShop_item {
 
+	private $data = array(
+		'id' => 0,
+		'title' => '',
+		'description' => '',
+		'anything1' => '',
+		'anything1n' => '',
+		'anything2' => '',
+		'anything2n' => '',
+		'anything3' => '',
+		'anything3n' => '',
+		'introtext' => '',
+		'category' => 0,
+		'image_url' => '',
+		'thumb_url' => '',
+		'thumb2_url' => '',
+		'weight' => '',
+		'cid' => '',
+		'price' => '',
+		'xprice' => '',
+		'stock' => 0,
+		'version' => '',
+		'status' => 1,
+		'active' => 1,
+		'gallery_on' => 1,
+		'cart_on' => 1,
+		'buynow' => 1,
+		'delivery' => '',
+		'demo'=> '',
+		'rpage'=> 0,
+		'iorder'=> 0,
+		'artno' => '',
+		'sartno' => '',
+		'instock' => '',
+		'dmulti' => 1,
+		'cupons' => 1,
+		'access'=>0,
+		'dynf' => '',
+		'clist' => '',
+		'slist' => '',
+		'qty' => 1,
+		'sellcount' => 0,
+		'dateadded' => '',
+		'campaign' => '',
+		'product_languages' => array(),
+		'ratings' => 1,
+		'comments' => 1,
+		'linebreaks' => 1,
+		'keywords' => '',
+	);
+	private $formaction = '';
+
+	public function __construct() {
+		global $aidlink, $settings;
+		$_GET['id'] = isset($_GET['id']) && isnum($_GET['id']) ? $_GET['id'] : 0;
+		$_GET['parent_id'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
+		$this->data['product_languages'] = fusion_get_enabled_languages();
+		$this->data['dateadded'] = time();
+
+		if (isset($_GET['action']) && $_GET['action'] == "edit") {
+			$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&id=".$_GET['id']."".(fusion_get_settings('eshop_cats') == "1" ? "&amp;parent_id=".$_GET['parent_id']."" : "");
+		} else {
+			$this->formaction = FUSION_SELF.$aidlink."".(fusion_get_settings('eshop_cats') == "1" && isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id']."" : "");
+		}
+		if (isset($_POST['save_cat'])) {
+			self::set_productdb();
+		}
+
+	}
+
+	static function verify_product_edit($id) {
+		return dbcount("(id)", DB_ESHOP, "id='".$id."'");
+	}
+
+	/**
+	 * Return access levels
+	 * @return array
+	 */
+	static function getVisibilityOpts() {
+		$visibility_opts = array();
+		$user_groups = getusergroups();
+		while (list($key, $user_group) = each($user_groups)) {
+			$visibility_opts[$user_group[0]] = $user_group[1];
+		}
+		return $visibility_opts;
+	}
+
+	// action refresh
+	static function product_refresh() {
+		global $aidlink, $settings;
+		$i = 1;
+		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' ORDER BY iorder");
+		while ($data = dbarray($result)) {
+			$result2 = dbquery("UPDATE ".DB_ESHOP." SET iorder='$i' WHERE id='".$data['id']."'");
+			$i++;
+		}
+		redirect(FUSION_SELF.$aidlink."&amp;iorderrefresh".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+	}
+
+	// action moveup
+	static function product_moveup() {
+		global $aidlink, $settings;
+		if (isset($_GET['id']) && isnum($_GET['id'])) {
+			$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' AND iorder='".intval($_GET['order'])."'"));
+			$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$_REQUEST['category']."' AND id='".$data['id']."'");
+			$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$_REQUEST['category']."' AND id='".$_GET['id']."'");
+			redirect(FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+		}
+	}
+	// action movedown
+	static function product_movedown() {
+		global $aidlink, $settings;
+		if (isset($_GET['id']) && isnum($_GET['id'])) {
+			$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' AND iorder='".intval($_GET['order'])."'"));
+		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$_REQUEST['category']."' AND id='".$data['id']."'");
+		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$_REQUEST['category']."' AND id='".$_GET['id']."'");
+		redirect(FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+		}
+	}
+	// action delete
+	static function product_delete() {
+		global $aidlink;
+		if (isset($_GET['id']) && isnum($_GET['id'])) {
+			$remove = dbarray(dbquery("SELECT picture,thumb,thumb2,iorder,cid FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'"));
+			$picture = BASEDIR."eshop/pictures/".$remove['picture'];
+			$thumb = BASEDIR."eshop/pictures/".$remove['thumb'];
+			$thumb2 = BASEDIR."eshop/pictures/".$remove['thumb2'];
+			if ($remove['picture']) {
+				@unlink($picture);
+			}
+			if ($remove['thumb']) {
+				@unlink($thumb);
+			}
+			if ($remove['thumb2']) {
+				@unlink($thumb2);
+			}
+			$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE iorder>'".$remove['iorder']."' AND cid = '".$remove['cid']."'");
+			$result = dbquery("DELETE FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
+			redirect(FUSION_SELF.$aidlink."&amp;ideleted".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+		}
+	}
+
+	/**
+	 * Shows Message based on $_GET['status']
+	 */
+	static function getMessage() {
+		global $locale;
+		$message = '';
+		if (isset($_GET['status'])) {
+			switch ($_GET['status']) {
+				case 'sn' :
+					$message = $locale['ESHP432'];
+					break;
+				case 'su' :
+					$message = $locale['ESHP431'];
+					break;
+				case 'del' :
+					$message = $locale['ESHPPRO101'];
+					break;
+				case 'refresh' :
+					$message = $locale['ESHPPRO100'];
+			}
+			if ($message) {
+				echo "<div class='admin-message'>$message</div>";
+			}
+		}
+	}
+
+	private function set_productdb() {
+		global $aidlink;
+			$this->data['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
+			$this->data['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '', 'cid') : 0;
+			$this->data['picture'] = isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '';
+			$this->data['thumb'] = isset($_POST['thumb']) ? form_sanitizer($_POST['thumb'], '', 'thumb') : '';
+			$this->data['thumb2'] = isset($_POST['thumb2']) ? form_sanitizer($_POST['thumb2'], '', 'thumb2') : '';
+			$upload = isset($_FILES['imagefile']) ? form_sanitizer($_FILES['imagefile'], '', 'imagefile') : '';
+			if ($upload) {
+				$this->data['picture'] = $upload['image_name'];
+				$this->data['thumb'] = $upload['thumb1_name'];
+				$this->data['thumb2'] = $upload['thumb2_name'];
+			}
+			$this->data['introtext'] = isset($_POST['introtext']) ? form_sanitizer($_POST['introtext'], '', 'introtext') : '';
+			$this->data['description'] = isset($_POST['description']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['description'])) : '';
+			$this->data['anything1n'] = isset($_POST['anything1n']) ? form_sanitizer($_POST['anything1n'], '', 'anything1n') : '';
+			$this->data['anything1'] = isset($_POST['anything1']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything1'])) : '';
+			$this->data['anything2n'] = isset($_POST['anything2n']) ? form_sanitizer($_POST['anything1n'], '', 'anything2n') : '';
+			$this->data['anything2'] = isset($_POST['anything2']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything2'])) : '';
+			$this->data['anything2n'] = isset($_POST['anything2n']) ? form_sanitizer($_POST['anything1n'], '', 'anything2n') : '';
+			$this->data['anything2'] = isset($_POST['anything2']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything2'])) : '';
+			$this->data['anything3n'] = isset($_POST['anything3n']) ? form_sanitizer($_POST['anything3n'], '', 'anything3n') : '';
+			$this->data['anything3'] = isset($_POST['anything3']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything3'])) : '';
+			$this->data['weight'] = isset($_POST['weight']) ? str_replace(',', '.', form_sanitizer($_POST['weight'], '', 'weight')) : '';
+			$this->data['price'] = isset($_POST['price']) ? str_replace(',', '.', form_sanitizer($_POST['price'], '', 'price')) : '';
+			$this->data['xprice'] = isset($_POST['xprice']) ? str_replace(',', '.', form_sanitizer($_POST['xprice'], '', 'xprice')) : '';
+			$this->data['stock'] = isset($_POST['stock']) ? str_replace(',', '.', form_sanitizer($_POST['stock'], '', 'stock')) : '';
+			$this->data['version'] = isset($_POST['version']) ? str_replace(',', '.', form_sanitizer($_POST['version'], '', 'version')) : '';
+			$this->data['status'] = isset($_POST['status']) ? form_sanitizer($_POST['version'], '0', 'version') : 0;
+			$this->data['active'] = isset($_POST['active']) ? form_sanitizer($_POST['active'], '0', 'active') : 0;
+			$this->data['gallery_on'] = isset($_POST['gallery_on']) ? form_sanitizer($_POST['gallery_on'], '0', 'gallery_on') : 0;
+			$this->data['delivery'] = isset($_POST['delivery']) ? form_sanitizer($_POST['delivery'], '0', 'delivery') : 0;
+			$this->data['demo'] = isset($_POST['demo']) ? form_sanitizer($_POST['demo'], '', 'demo') : '';
+			$this->data['cart_on'] = isset($_POST['cart_on']) ? form_sanitizer($_POST['cart_on'], '0', 'cart_on') : 0;
+			$this->data['buynow'] = isset($_POST['buynow']) ? form_sanitizer($_POST['buynow'], '0', 'buynow') : 0;
+			$this->data['rpage'] = isset($_POST['rpage']) ? form_sanitizer($_POST['rpage'], '', 'rpage') : '';
+			$this->data['rpage'] = isset($_POST['rpage']) ? form_sanitizer($_POST['rpage'], '', 'rpage') : '';
+			$this->data['dynf'] = isset($_POST['dynf']) ? form_sanitizer($_POST['dynf'], '', 'dynf') : '';
+			$this->data['qty'] = isset($_POST['qty']) ? form_sanitizer($_POST['qty'], '0', 'qty') : 0;
+			$this->data['sellcount'] = isset($_POST['sellcount']) ? form_sanitizer($_POST['sellcount'], 0, 'sellcount') : 0;
+			$this->data['artno'] = isset($_POST['artno']) ? form_sanitizer($_POST['artno'], '', 'artno') : '';
+			$this->data['sartno'] = isset($_POST['sartno']) ? form_sanitizer($_POST['sartno'], '', 'sartno') : '';
+			$this->data['instock'] = isset($_POST['instock']) ? form_sanitizer($_POST['instock'], '', 'instock') : '';
+			$this->data['iorder'] = isset($_POST['iorder']) ? form_sanitizer($_POST['iorder'], '0', 'iorder') : 0;
+			$this->data['dmulti'] = isset($_POST['dmulti']) ? form_sanitizer($_POST['dmulti'], '1', 'dmulti') : 1;
+			$this->data['cupons'] = isset($_POST['cupons']) ? 1 : 0;
+			$this->data['access'] = isset($_POST['access']) ? form_sanitizer($_POST['access'], '0', 'access') : 0;
+			$this->data['dateadded'] = isset($_POST['dateadded']) ? form_sanitizer($_POST['dateadded'], time(), 'dateadded') : time();
+			$this->data['campaign'] = isset($_POST['campaign']) ? 1 : 0;
+			$this->data['ratings'] = isset($_POST['ratings']) ? 1 : 0;
+			$this->data['comments'] = isset($_POST['comments']) ? 1 : 0;
+			$this->data['linebreaks'] = isset($_POST['linebreaks']) ? 1 : 0;
+			$this->data['keywords'] = isset($_POST['keywords']) ? form_sanitizer($_POST['keywords'], '', 'keywords') : '';
+			$this->data['product_languages'] = isset($_POST['product_languages']) ? form_sanitizer($_POST['product_languages'], '') : array();
+			if (isset($_POST['cList'])) {
+				for ($i = 0, $l = count($_POST['cList']); $i < $l; $i++) {
+					$this->data['clist'] .= ".\"".$_POST['cList'][$i]."\"";
+				}
+			}
+			$this->data['icolor'] = form_sanitizer($this->data['clist'], '');
+			if (isset($_POST['sList'])) {
+				for ($i = 0, $l = count($_POST['sList']); $i < $l; $i++) {
+					$this->data['slist'] .= ".\"".$_POST['sList'][$i]."\"";
+				}
+			}
+			$this->data['dync'] = form_sanitizer($this->data['slist'], '');
+			if (self::verify_product_edit($_GET['id'])) {
+
+				$old_iorder = dbresult(dbquery("SELECT iorder FROM ".DB_ESHOP." WHERE cid = '".$this->data['cid']."' AND id='".$this->data['id']."'"), 0);
+				if ($this->data['iorder'] > $old_iorder) {
+					$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$this->data['cid']."' AND iorder>'$old_iorder' AND iorder<='".$this->data['iorder']."'");
+				} elseif ($this->data['iorder'] < $old_iorder) {
+					$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder<'$old_iorder' AND iorder>='".$this->data['iorder']."'");
+				}
+				dbquery_insert(DB_ESHOP, $this->data, 'update');
+				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su");
+			} else {
+
+				if (!$this->data['iorder']) $this->data['iorder'] = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid='".$this->data['cid']."'"), 0)+1;
+				$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder>='".$this->data['iorder']."'");
+				dbquery_insert(DB_ESHOP, $this->data, 'save');
+				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
+
+			}
+			//redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+	}
+
+	static function products_data() {
+		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
+		$data = dbarray($result);
+	}
+
+	public function product_form() {
+		global $aidlink, $locale, $settings;
+
+		$itemcolors = str_replace(".", ",", $this->data['clist']);
+		$itemcolors = ltrim($itemcolors, ',');
+		$itemdyncs = str_replace(".", ",", $this->data['slist']);
+		$itemdyncs = ltrim($itemdyncs, ',');
+
+		// check function
+		add_to_jquery('
+		function doCheck(cid) {
+			var cid = +cid;
+			var data = "cid="+ cid;
+			 $.ajax({
+			   type: "GET",
+			   url: "getcolorname.php",
+			   data: data,
+			   beforeSend: function(result) {
+			   $("#colors"+cid).html("Loading color.."); },
+			   success: function(result){
+				$("#colors"+cid).empty();
+				$("#colors"+cid).show();
+				$("#colors"+cid).append(result); },timeout: 235000,
+			   error:function() {
+				$("#colors"+cid).html("Something went wrong!");
+				}
+			 });
+		}
+		');
+
+		add_to_jquery('
+		var dyncArray = [];
+		//List items already saved
+			var dyncs = ['.$itemdyncs.'];
+			for (var i = 0, len = dyncs.length; i < len; i++) {
+			var sval = dyncs[i];
+			dyncArray.push(sval);
+			document.getElementById("sList").innerHTML += "<label class=\"sList\"><input checked =\"checked\" class=\"sList-chk\" name=\"sList[]\" type=\"checkbox\" value=\""+sval+"\"> "+sval+"</div></label>";
+		}
+
+		//add item when selected in list
+		$("#adddync").click(function () {
+			var sitem = $("#dyncList").val();
+		//If value is empty nothing should happend
+			if(sitem !== "") {
+				if ($.inArray(sitem,dyncArray) == -1) {
+				$("#dyncList").val();
+				dyncArray.push(sitem);
+			document.getElementById("sList").innerHTML += "<label class=\"sList\"><input checked =\"checked\" class=\"sList-chk\" name=\"sList[]\" type=\"checkbox\" value=\""+sitem+"\"> "+sitem+"</label>";
+		  }
+		 }
+		});
+
+		//remove dync when clicked
+		$(document).on("change", ".sList-chk", function () { if ($(this).attr("checked")) { return; } else {  $(this).parent(".sList").remove();  }	});
+	');
+
+		add_to_jquery('
+		var colorArray = [];
+		//populate items already saved for edit
+		var numbers = ['.$itemcolors.'];
+		for (i=0;i<numbers.length;i++){
+		var val = numbers[i];
+		colorArray.push(val);
+		document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+val+"\"> <div class=\"cListdiv\" id=\"colors"+val+"\"></div></label>";
+		doCheck(val);
+		}
+
+		//add item when selected in list
+		$("#colorList").change(function () {
+		//If value is empty nothing should happend
+			if(this.value !== "") {
+				if ($.inArray(this.value,colorArray) == -1) {
+				var citem = $("#colorList").find("option:selected").text();
+				colorArray.push($(this).val());
+				document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+this.value+"\"> "+citem+"</label>";
+			}
+		}
+		});
+
+		//remove color when clicked
+		$(document).on("change", ".cList-chk", function () { if ($(this).attr("checked")) { return;  } else { $(this).parent(".cList").remove(); } });
+		');
+
+		echo "<div class='m-t-20'>\n";
+		echo openform('productform', 'productform', 'post', $this->formaction, array('enctype'=>1));
+
+		$subtab_title['title'][] = $locale['ptabs_000'];
+		$subtab_title['id'][] = "pinfo";
+		$subtab_title['icon'][] = 'fa fa-gift fa-lg m-r-10';
+
+		$subtab_title['title'][] = $locale['ptabs_001'];
+		$subtab_title['id'][] = "pricing";
+		$subtab_title['icon'][] = 'fa fa-cube fa-lg m-r-10';
+
+		$subtab_title['title'][] = $locale['ptabs_002'];
+		$subtab_title['id'][] = "pfeature";
+		$subtab_title['icon'][] = 'fa fa-info-circle fa-lg m-r-10';
+
+		$subtab_title['title'][] = $locale['ptabs_003'];
+		$subtab_title['id'][] = "cfeature";
+		$subtab_title['icon'][] = 'fa fa-pencil-square fa-lg m-r-10';
+
+		$tab_active = tab_active($subtab_title, 0);
+		// primary information
+		echo "<div class='row m-t-20'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
+		echo form_text($locale['ESHPPRO104'], 'title', 'title', $this->data['title'], array('required'=>1, 'inline'=>1));
+		echo form_select($locale['ESHPPRO192'], 'keywords', 'keywords', array(), $this->data['keywords'], array('width'=>'100%', 'tags'=>1, 'multiple'=>1, 'inline'=>1));
+		echo form_text($locale['ESHPPRO122'], 'iorder', 'iorder', $this->data['iorder'], array('inline'=>1, 'number'=>1, 'width'=>'200px', 'tip'=>$locale['ESHPPRO123']));
+		// languages
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n<label class='control-label'>".$locale['ESHPPRO191']."</label></div>\n";
+		echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
+		foreach (fusion_get_enabled_languages() as $lang) {
+			$check = (in_array($lang, $this->data['product_languages'])) ? 1 : 0;
+			echo "<div class='display-inline-block text-left m-r-10'>\n";
+			echo form_checkbox($lang, 'product_languages[]', 'lang-'.$lang, $check, array('value' => $lang));
+			echo "</div>\n";
+		}
+		echo "</div>\n";
+		echo "</div>\n";
+		echo "</div><div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
+		openside('');
+		if (fusion_get_settings('eshop_cats')) {
+			echo form_select_tree($locale['ESHPPRO105'], 'cid', 'cid', $this->data['cid'], array('no_root'=>1, 'width'=>'100%', 'placeholder'=>$locale['ESHP016']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		} else {
+			echo $locale['ESHPPRO105']." : ".$locale['ESHPPRO106'];
+			echo form_hidden('', 'cid', 'cid', 0);
+		}
+		echo form_select($locale['ESHPCATS109'], 'access', 'access', self::getVisibilityOpts(), $this->data['access'], array('tip'=>$locale['ESHPPRO159'],'width'=>'100%'));
+		echo form_button($locale['save'], 'save_cat', 'save_cat2', $locale['save'], array('class'=>'btn-primary'));
+		closeside();
+		echo "</div></div>\n";
+		echo opentab($subtab_title, $tab_active, 'pformtab');
+		// general info
+		echo opentabbody($subtab_title['title'][0], $subtab_title['id'][0], $tab_active);
+		echo "<div class='row m-t-20'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
+		openside('');
+		echo form_text($locale['ESHPPRO111'], 'price', 'price', $this->data['price'], array('number'=>1, 'required'=>1, 'width'=>'200px', 'inline'=>1, 'placeholder'=>fusion_get_settings('eshop_currency')));
+		closeside();
+		openside('');
+		echo form_text($locale['ESHPPRO107'], 'artno', 'artno', $this->data['artno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
+		echo form_text($locale['ESHPPRO108'], 'sartno', 'sartno', $this->data['sartno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
+		closeside();
+		if (fusion_get_settings('eshop_pretext')) {
+			echo form_textarea($locale['ESHPPRO160'], 'introtext', 'introtext', $this->data['introtext'], array('html'=>1, 'preview'=>1, 'autosize'=>1));
+			echo "<div class='text-smaller'>".$locale['ESHPPRO161']."</div>\n";
+		} else {
+			echo form_hidden('', 'introtext', 'introtext', $this->data['introtext']);
+		}
+		echo form_textarea($locale['ESHPPRO162'], 'description', 'description', $this->data['description'], array('html'=>1, 'preview'=>1, 'autosize'=>1));
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
+		echo form_text($locale['ESHPPRO124'], 'sellcount', 'sellcount', $this->data['sellcount'], array('deactivate'=>1, 'tip'=>$locale['ESHPPRO125']));
+		openside('');
+		echo form_checkbox($locale['ESHPPRO149'], 'cart_on', 'cart_on', $this->data['cart_on'], array('tip'=>$locale['ESHPPRO150'], 'width'=>'100%'));
+		echo form_checkbox($locale['ESHPPRO193'], 'qty', 'qty', $this->data['qty'], array('tip'=>$locale['ESHPPRO151'], 'width'=>'100%'));
+		closeside();
+		openside('');
+		echo form_checkbox($locale['ESHPPRO188'], 'ratings', 'ratings', $this->data['ratings'], array('tip'=>$locale['ESHPPRO188']));
+		echo form_checkbox($locale['ESHPPRO189'], 'comments', 'comments', $this->data['comments'], array('tip'=>$locale['ESHPPRO189']));
+		closeside();
+		echo "</div>\n</div>\n";
+		echo closetabbody();
+		// pricing
+		echo opentabbody($subtab_title['title'][1], $subtab_title['id'][1], $tab_active);
+		echo "<div class='row m-t-20'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
+		echo form_text($locale['ESHPPRO143'], 'delivery', 'delivery', $this->data['delivery'], array('tip'=>$locale['ESHPPRO144'], 'inline'=>1, 'width'=>'200px', 'number'=>1, 'placeholder'=>$locale['ESHPPRO200']));
+		echo form_text($locale['ESHPPRO152'], 'dmulti', 'dmulti', $this->data['dmulti'], array('inline'=>1, 'tip'=>$locale['ESHPPRO153'], 'width'=>'200px', 'placeholder'=>$locale['ESHP019']));
+		openside('');
+		echo form_text($locale['ESHPPRO112'], 'xprice', 'xprice', $this->data['xprice'], array('number'=>1, 'inline'=>1, 'width'=>'200px', 'tip'=>$locale['ESHPPRO113'], 'placeholder'=>fusion_get_settings('eshop_currency')));
+		echo form_checkbox($locale['ESHPPRO184'], 'campaign', 'campaign', $this->data['campaign'], array('inline'=>1, 'tip'=>$locale['ESHPPRO185'], 'class'=>'col-sm-offset-3'));
+		echo form_checkbox($locale['ESHPPRO182'], 'cupons', 'cupons', $this->data['cupons'], array('inline'=>1, 'tip'=>$locale['ESHPPRO183'], 'class'=>'col-sm-offset-3'));
+		closeside();
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
+		openside('');
+		echo form_select($locale['ESHPPRO147'], 'active', 'active', array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['active'], array('tip'=>$locale['ESHPPRO148'], 'width'=>'100%'));
+		echo form_select($locale['ESHPPRO145'], 'status', 'status', array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['status'], array('tip'=>$locale['ESHPPRO146'], 'width'=>'100%'));
+		closeside();
+		openside('');
+		echo form_select($locale['ESHPPRO137'], 'stock', 'stock', array('1'=>$locale['yes'],'2'=>$locale['no']), $this->data['stock'], array('tip'=> $locale['ESHPPRO140'], 'width'=>'100%'));
+		echo form_text($locale['ESHPPRO141'], 'instock', 'instock', $this->data['instock'], array('tip'=>$locale['ESHPPRO142'], 'number'=>1));
+		closeside();
+		echo "</div>\n</div>\n";
+		echo closetabbody();
+		// product feature
+		echo opentabbody($subtab_title['title'][2], $subtab_title['id'][2], $tab_active);
+		echo "<div class='row m-t-20'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
+		openside('');
+		echo form_text($locale['ESHPPRO135'], 'demo', 'demo', $this->data['demo'], array('inline'=>1, 'tip'=>$locale['ESHPPRO136'], 'placeholder'=>'http://'));
+		closeside();
+		openside('');
+		echo form_para($locale['ESHPPRO194'], 'cst', 'cst', array('tip'=>$locale['ESHPPRO117']));
+		echo form_text($locale['ESHPPRO195'], 'dynf', 'dynf', '', array('placeholder'=>$locale['ESHPPRO197'], 'inline'=>1));
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-3'>\n";
+		echo "<label for='dyncList' class='label-control'>\n".$locale['ESHPPRO196']."</label>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-9' style='padding-left:6px;'>\n";
+			echo "<div class='row'>\n";
+			echo "<div class='col-xs-6 col-sm-6'>\n";
+			echo form_text('', 'dyncList', 'dyncList', '');
+			echo "</div>\n<div class='col-xs-6 col-sm-6'>\n";
+			echo "<div><a href='javascript:;' id='adddync' class='btn button btn-default m-b-20'><i class='fa fa-plus fa-lg'></i> ".$locale['ESHPPRO116']."</a>\n</div>\n";
+			echo "</div>\n</div>\n";
+
+		echo "</div></div>\n";
+		echo form_para($locale['ESHPPRO118'],'118', '118');
+		echo "<div id='sList'>\n";
+		echo "</div>\n";
+		closeside();
+		openside('');
+		global $ESHPCLRS;
+		for ($i=1; $i <= 135; $i++) { $colors_array[$i] = $ESHPCLRS[$i]; }
+		echo form_select($locale['ESHP017'], 'colorList', 'colorList', $colors_array, '', array('inline'=>1, 'tip'=>$locale['ESHPPRO121'], 'width'=>'100%'));
+		echo "<div id='cList'></div>\n";
+		closeside();
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
+		openside('');
+		echo form_text($locale['ESHPPRO133'], 'version', 'version', $this->data['version'], array('tip'=>$locale['ESHPPRO134']));
+		closeside();
+		openside('');
+		echo form_text($locale['ESHPPRO114'], 'weight', 'weight', $this->data['weight'], array('number'=>1, 'tip'=>$locale['ESHPPRO115'], 'placeholder'=> fusion_get_settings('eshop_weightscale')));
+		closeside();
+		echo "</div>\n";
+		echo "</div>\n";
+		echo closetabbody();
+		// custom info
+		echo opentabbody($subtab_title['title'][3], $subtab_title['id'][3], $tab_active);
+		echo "<div class='row m-t-20'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
+		$tab_title['title'][] = $locale['ptabs_004'];
+		$tab_title['id'][] = 'a1';
+		$tab_title['icon'][] = '';
+		$tab_title['title'][] = $locale['ptabs_005'];
+		$tab_title['id'][] = 'a2';
+		$tab_title['icon'][] = '';
+		$tab_active = tab_active($tab_title, 0);
+		openside('');
+		echo opentab($tab_title, $tab_active, 'custom');
+		echo opentabbody($tab_title['title'][0], 'a1' , $tab_active);
+		echo "<div class='m-t-20'>\n";
+		echo "<span class='text-smaller display-inline-block m-b-10'>".$locale['ESHPPRO110']."</span>\n";
+		echo form_fileinput($locale['ESHPPRO109'], 'imagefile', 'imagefile', BASEDIR."eshop/pictures/", '', array('width'=>'190px', 'inline'=>1, 'type'=>'image',
+			'max_width' => $settings['eshop_image_w'],
+			'max_height' => $settings['eshop_image_h'],
+			'max_byte'=> $settings['eshop_image_b'],
+			'thumbnail_folder' => 'thumb',
+			'thumbnail'=>1,
+			'thumbnail_w'=> $settings['eshop_image_tw'],
+			'thumbnail_h'=> $settings['eshop_image_th'],
+			'thumbnail2'=>1,
+			'thumbnail2_w'=> $settings['eshop_image_t2w'],
+			'thumbnail2_h'=> $settings['eshop_image_t2h'],
+		));
+		echo "</div>\n";
+		echo closetabbody();
+		echo opentabbody($tab_title['title'][1], 'a2', $tab_active);
+		echo "<div class='m-t-20'>\n";
+		echo form_text($locale['ESHPPRO130'], 'image', 'image', '', array('inline'=>1, 'placeholder'=>'http://'));
+		echo form_text($locale['ESHPPRO131'], 'thumb', 'thumb', '', array('inline'=>1, 'placeholder'=>'http://'));
+		echo form_text($locale['ESHPPRO132'], 'thumb2', 'thumb2', '', array('inline'=>1, 'placeholder'=>'http://'));
+		echo "</div>\n";
+		echo closetabbody();
+		echo closetab();
+		closeside();
+		echo form_checkbox($locale['ESHPPRO190'], 'linebreaks', 'linebreaks', $this->data['linebreaks']);
+		//echo "<span class='text-smaller'>".$locale['ESHPPRO163']."</span>\n";
+		echo form_text($locale['ESHPPRO201']." 1", 'anything1n', 'anything1n', $this->data['anything1n'], array('placeholder'=>$locale['ESHPPRO198']));
+		echo form_textarea('', 'anything1', 'anything1', '', array('autosize'=>1));
+		echo form_text($locale['ESHPPRO201']." 2", 'anything2n', 'anything2n', $this->data['anything2n'], array('placeholder'=>$locale['ESHPPRO198']));
+		echo form_textarea('', 'anything2', 'anything2', '', array('autosize'=>1));
+		echo form_text($locale['ESHPPRO201']." 3", 'anything3n', 'anything3n', $this->data['anything3n'], array('placeholder'=>$locale['ESHPPRO198']));
+		echo form_textarea('', 'anything3', 'anything3', '', array('autosize'=>1));
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
+		openside('');
+		echo form_select($locale['ESHPPRO126'], 'gallery_on', 'gallery_on', array('0'=>$locale['off'], '1'=>$locale['on']), $this->data['gallery_on'], array('width'=>'100%', 'tip'=>$locale['ESHPPRO129']));
+		closeside();
+		openside('');
+		echo form_select($locale['ESHPPRO154'], 'buynow', 'buynow', array('0'=>$locale['no'], '1'=> $locale['yes']), $this->data['buynow'], array('tip'=>$locale['ESHPPRO155'], 'width'=>'100%'));
+		$page_array = array();
+		$callback_dir = makefilelist(BASEDIR."eshop/purchasescripts/", ".|..|index.php", TRUE, "files");
+		foreach($callback_dir as $page) {
+			$page_array[$page] = $page;
+		}
+		echo form_select($locale['ESHPPRO156'], 'rpage', 'rpage', $page_array, $this->data['rpage'], array('tip'=>$locale['ESHPPRO158'], 'width'=>'100%'));
+		closeside();
+		echo "</div>\n";
+		echo "</div>\n";
+		echo closetabbody();
+		echo closetab();
+		echo form_hidden('', 'dateadded', 'dateadded', $this->data['dateadded']);
+		echo form_hidden('', 'id', 'id', $this->data['id']);
+		echo form_button($locale['save'], 'save_cat', 'save_cat', $locale['save'], array('class'=>'btn btn-primary'));
+		echo closeform();
+		echo "</div>\n";
+	}
+
+	static function product_listing() {
+		global $locale, $aidlink;
+		echo "<div class='m-t-20'>\n";
+		echo openform('search_form', 'search_form', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array("downtime"=>10));
+		/*
+				 * [1/23/15, 3:12:27 PM] Domi -: Most basic ones
+		[1/23/15, 3:12:28 PM] Domi -: Product title *
+		Your Art.no
+		Supplier Art.no
+		Product Language(s)
+		Order
+		Keywords
+		Price
+		Xprice
+
+		Short description
+		Full description
+		Enable line breaks in description tabs, ( need to be off for HTML ).
+				 */
+		echo closeform();
+		echo "</div>\n";
+	}
+
+}
+
+/*
 echo "<div style='float:right;margin-top:5px;'>\n";
 echo "<form id='search_form'  name='inputform' method='post' action='".FUSION_SELF.$aidlink."&amp;psearch'>
 <span style='vertical-align:middle;font-size:14px;'>".$locale['ESHPPRO178']."</span>";
 echo "<input type='text' name='psrchtext' class='textbox' style='margin-left:1px; margin-right:1px; margin-bottom:5px; width:160px;'  value='".$searchtext."' onblur=\"if(this.value=='') this.value='".$searchtext."';\" onfocus=\"if(this.value=='".$searchtext."') this.value='';\" />";
 echo "<input type='image' id='search_image' src='".SHOP."img/search_icon.png' alt='".$locale['SRCH162']."' />";
 echo "</form></div>";
+*/
 
+$item = new eShop_item();
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $item->verify_product_edit($_GET['id']) : 0;
+
+$tab_title['title'][] = $locale['ESHPPRO097'];
+$tab_title['id'][] = 'product';
+$tab_title['icon'][] = '';
+$tab_title['title'][] = $edit ? $locale['ESHPPRO098'] : $locale['ESHPPRO099'];
+$tab_title['id'][] = 'itemform';
+$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1, 1);
+$item->getMessage();
+echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=main");
+echo opentabbody($tab_title['title'][0], 'product', $tab_active, 1);
+$item->product_listing();
+echo closetabbody();
+if (isset($_GET['section']) && $_GET['section'] == 'itemform') {
+	echo opentabbody($tab_title['title'][1], 'itemform', $tab_active, 1);
+	$item->product_form();
+	echo closetabbody();
+}
+closetable();
 ?>

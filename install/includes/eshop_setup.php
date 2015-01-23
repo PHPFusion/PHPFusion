@@ -18,7 +18,7 @@
 if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cats");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cupons");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_coupons");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_photos");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cart");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_customers");
@@ -87,7 +87,7 @@ if (isset($_POST['uninstall'])) {
 	// Flush
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cats");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cupons");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_coupons");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_photos");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cart");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_featbanners");
@@ -297,7 +297,7 @@ if (isset($_POST['uninstall'])) {
 			$fail = TRUE;
 		}
 
-		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_cupons (
+		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_coupons (
 			cuid VARCHAR( 15 ) NOT NULL DEFAULT  '',
 			cuname varchar(50) NOT NULL default '',
 			cutype char(1) NOT NULL default '',

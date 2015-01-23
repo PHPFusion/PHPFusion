@@ -59,9 +59,6 @@ class eShop_cats {
 			case 'refresh' :
 				self::refresh_category();
 				break;
-			case 'refresh_sub_cats' :
-				self::refresh_subcats();
-				break;
 			case 'moveup' :
 				self::cats_moveup();
 				break;
@@ -208,7 +205,6 @@ class eShop_cats {
 		}
 	}
 
-
 	/**
 	 * Outputs Image Filename arrays
 	 * @return array
@@ -223,7 +219,6 @@ class eShop_cats {
 		return $cat_files;
 	}
 
-
 	/**
 	 * Return the status
 	 * @return array
@@ -233,7 +228,6 @@ class eShop_cats {
 		return array('1' => $locale['ESHPCATS103'],
 			'2' => $locale['ESHPCATS104'],);
 	}
-
 
 	/**
 	 * Return access levels
@@ -272,7 +266,6 @@ class eShop_cats {
 		}
 	}
 
-
 	/**
 	 * Validate whether an ID exist
 	 * @param $cid
@@ -281,7 +274,6 @@ class eShop_cats {
 	static function verify_cat_edit($cid) {
 		return dbcount("(cid)", DB_ESHOP_CATS, "cid='".$cid."'");
 	}
-
 
 	/**
 	 * MYSQL Actions - Save or Update
@@ -476,8 +468,10 @@ class eShop_cats {
 				echo "</td>\n";
 				//echo "<td>\n".thumbnail(CAT_DIR.$data['image'], '30px')."</td>\n"; // will show no image thumbnail if no image
 				echo "<td>".number_format($subcats)."</td>\n";
-				echo "<td>".self::getVisibilityOpts()[$data['access']]."</td>\n";
-				echo "<td>".self::getSizeOpts()[$data['status']]."</td>\n";
+				$visibility_opts = self::getVisibilityOpts();
+				echo "<td>".$visibility_opts[$data['access']]."</td>\n";
+				$status_opts = self::getSizeOpts();
+				echo "<td>".$status_opts[$data['status']]."</td>\n";
 				echo "<td>\n";
 				echo ($i == 0) ? "" : "<a title='".$locale['ESHPCATS137']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=moveup&amp;cid=".$data['cid']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 				echo ($i == $rows) ? "" : "<a title='".$locale['ESHPCATS138']."' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=movedown&amp;cid=".$data['cid']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
@@ -489,7 +483,7 @@ class eShop_cats {
 			}
 			$html2 = "<div class='text-center m-t-10'>[ <a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=refresh&amp;pid=".$_GET['parent_id']."'> ".$locale['ESHPCATS130']." </a> ]</div>\n";
 		} else {
-			echo "<tr><td colspan='5' class='text-center'>".$locale['ESHPCATS115']."</td></tr>\n";
+			echo "<tr><td colspan='8' class='text-center'>".$locale['ESHPCATS115']."</td></tr>\n";
 		}
 		echo "</tbody>\n";
 		echo "</table>\n";
@@ -519,6 +513,4 @@ if (isset($_GET['section']) && $_GET['section'] == 'catform') {
 	echo closetabbody();
 }
 closetable();
-
-
 ?>

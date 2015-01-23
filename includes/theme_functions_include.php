@@ -642,7 +642,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		} else {
 			$html .= ($link_active_arrkey == "".$inner_id."$v_link") ? "<li class='active'>\n" : "<li>\n";
 		}
-		$html .= "<a class='pointer' ".(!$link_mode ? "id='tab-".$id.$v_link."' data-toggle='tab' data-target='#".$id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
+		$html .= "<a class='pointer' ".(!$link_mode ? "id='tab-".$id.$v_link."' data-toggle='tab' data-target='#".$inner_id."$v_link'" : "href='$link_url'")." >\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
 		$html .= "</li>\n";
 	}
 	$html .= "</ul>\n";
