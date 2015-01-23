@@ -43,140 +43,8 @@ if (isset($_GET['psearch'])) {
 	// get message
 
 
-	if (isset($_GET['complete'])) {
-		$message = "";
-		if ($_GET['error'] == 1) {
-			$message .= $locale['ESHP427'];
-		} elseif ($_GET['error'] == 2) {
-			$message .= "".$locale['ESHP428']." parsebytesize($imagebytes)";
-		} elseif ($_GET['error'] == 3) {
-			$message .= $locale['ESHP429'];
-		} elseif ($_GET['error'] == 4) {
-			$message .= "".$locale['ESHP430']." ".$imagewidth."x".$imageheight."";
-		} elseif ($_GET['errors'] == "") {
-			$message = $locale[''];
-		}
-		echo "<div class='admin-message'>".$message."</div>\n";
-	}
 
-	if (isset($_POST['save_cat'])) {
-		$error = "";
-		$photo_file = $_POST['image'];
-		$photo_thumb1 = $_POST['thumb'];
-		$photo_thumb2 = $_POST['thumb2'];
-		$newimgfile = $_FILES['imagefile'];
-		if (!empty($newimgfile['name']) && is_uploaded_file($newimgfile['tmp_name'])) {
-			$error = "";
-			$photo_file = "";
-			$photo_thumb1 = "";
-			$photo_thumb2 = "";
-			if (is_uploaded_file($_FILES['imagefile']['tmp_name'])) {
-				$photo_types = array(".gif", ".jpg", ".jpeg", ".png");
-				$photo_pic = $_FILES['imagefile'];
-				$photo_name = strtolower(substr($photo_pic['name'], 0, strrpos($photo_pic['name'], ".")));
-				$photo_ext = strtolower(strrchr($photo_pic['name'], "."));
-				$photo_dest = BASEDIR."eshop/pictures/";
-				if (!preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $photo_pic['name'])) {
-					$error = 1;
-				} elseif ($photo_pic['size'] > $imagebytes) {
-					$error = 2;
-				} elseif (!in_array($photo_ext, $photo_types)) {
-					$error = 3;
-				} else {
-					$photo_file = image_exists($photo_dest, $photo_name.$photo_ext);
-					move_uploaded_file($photo_pic['tmp_name'], $photo_dest.$photo_file);
-					chmod($photo_dest.$photo_file, 0644);
-					$imagefile = @getimagesize($photo_dest.$photo_file);
-					if ($imagefile[0] > $imagewidth || $imagefile[1] > $imageheight) {
-						$error = 4;
-						unlink($photo_dest.$photo_file);
-					} else {
-						$photo_thumb1 = image_exists($photo_dest, $photo_name."_t1".$photo_ext);
-						createthumbnail($imagefile[2], $photo_dest.$photo_file, $photo_dest.$photo_thumb1, $thumbwidth, $thumbheight);
-						if ($imagefile[0] > $imagewidth || $imagefile[1] > $imageheight) {
-							$photo_thumb2 = image_exists($photo_dest, $photo_name."_t2".$photo_ext);
-							createthumbnail($imagefile[2], $photo_dest.$photo_file, $photo_dest.$photo_thumb2, $thumb2width, $thumb2height);
-						}
-					}
-				}
-			}
-			//end image upload function
-		}
-		$clist = "";
-		$slist = "";
-		$title = stripinput($_POST['title']);
-		$category = stripinput($_POST['cid']);
-		$introtext = stripinput($_POST['introtext']);
-		$description = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['description']));
-		$anything1 = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything1']));
-		$anything1n = stripinput($_POST['anything1n']);
-		$anything2 = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything2']));
-		$anything2n = stripinput($_POST['anything2n']);
-		$anything3 = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything3']));
-		$anything3n = stripinput($_POST['anything3n']);
-		$weight = stripinput($_POST['weight']);
-		$weight = str_replace(",", ".", $weight);
-		$price = stripinput($_POST['price']);
-		$price = str_replace(",", ".", $price);
-		$xprice = stripinput($_POST['xprice']);
-		$xprice = str_replace(",", ".", $xprice);
-		$stock = stripinput($_POST['stock']);
-		$version = stripinput($_POST['version']);
-		$status = stripinput($_POST['status']);
-		$active = stripinput($_POST['active']);
-		$gallery_on = stripinput($_POST['gallery_on']);
-		$delivery = stripinput($_POST['delivery']);
-		$demo = stripinput($_POST['demo']);
-		$cart_on = stripinput($_POST['cart_on']);
-		$buynow = stripinput($_POST['buynow']);
-		$rpage = stripinput($_POST['rpage']);
-		$dynf = stripinput($_POST['dynf']);
-		$qty = stripinput($_POST['qty']);
-		$sellcount = stripinput($_POST['sellcount']);
-		$artno = stripinput($_POST['artno']);
-		$sartno = stripinput($_POST['sartno']);
-		$instock = stripinput($_POST['instock']);
-		$iorder = stripinput($_POST['iorder']);
-		$dmulti = stripinput($_POST['dmulti']);
-		$cupons = stripinput($_POST['cupons']);
-		$access = stripinput($_POST['access']);
-		$dateadded = stripinput($_POST['dateadded']);
-		$campaign = stripinput($_POST['campaign']);
-		$ratings = stripinput($_POST['ratings']);
-		$comments = stripinput($_POST['comments']);
-		$linebreaks = stripinput($_POST['linebreaks']);
-		$keywords = stripinput($_POST['keywords']);
-		$languages = "";
-		for ($pl = 0; $pl < sizeof($_POST['languages']); $pl++) {
-			$languages .= $_POST['languages'][$pl].($pl < (sizeof($_POST['languages'])-1) ? "." : "");
-		}
-		if (isset($_POST['cList'])) {
-			for ($i = 0, $l = count($_POST['cList']); $i < $l; $i++) {
-				$clist .= ".\"".$_POST['cList'][$i]."\"";
-			}
-		}
-		if (isset($_POST['sList'])) {
-			for ($i = 0, $l = count($_POST['sList']); $i < $l; $i++) {
-				$slist .= ".\"".$_POST['sList'][$i]."\"";
-			}
-		}
-		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['id']) && isnum($_GET['id']))) {
-			$old_iorder = dbresult(dbquery("SELECT iorder FROM ".DB_ESHOP." WHERE cid = '".$category."' AND id='".$_GET['id']."'"), 0);
-			if ($iorder > $old_iorder) {
-				$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$category."' AND iorder>'$old_iorder' AND iorder<='$iorder'");
-			} elseif ($iorder < $old_iorder) {
-				$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$category."' AND iorder<'$old_iorder' AND iorder>='$iorder'");
-			}
-			$result = dbquery("UPDATE ".DB_ESHOP." SET title='$title', cid='$category', picture='$photo_file', thumb='$photo_thumb1',thumb2='$photo_thumb2',introtext='$introtext',description='$description',anything1='$anything1',anything1n='$anything1n',anything2='$anything2',anything2n='$anything2n',anything3='$anything3',anything3n='$anything3n',weight='$weight',price='$price',xprice='$xprice',stock='$stock',version='$version',status='$status',active='$active',gallery_on='$gallery_on',delivery='$delivery', demo='$demo',cart_on='$cart_on',buynow='$buynow',rpage='$rpage',icolor='$clist',dynf='$dynf',dync='$slist',qty='$qty',sellcount='$sellcount',iorder='$iorder',artno='$artno',sartno='$sartno',instock='$instock',dmulti='$dmulti',cupons='$cupons',access='$access',campaign='$campaign',comments='$comments',ratings='$ratings',linebreaks='$linebreaks',keywords='$keywords',product_languages='$languages',dateadded='$dateadded' WHERE id='".$_GET['id']."'");
-		} else {
-			if (!$iorder) {
-				$iorder = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid = '".$category."'"), 0)+1;
-			}
-			$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$category."' AND iorder>='$iorder'");
-			$result = dbquery("INSERT INTO ".DB_ESHOP." VALUES('', '$title',  '$category', '$photo_file', '$photo_thumb1','$photo_thumb2', '$introtext','$description','$anything1','$anything1n','$anything2','$anything2n','$anything3','$anything3n','$weight','$price','$xprice','$stock','$version','$status','$active','$gallery_on','$delivery','$demo','$cart_on','$buynow','$rpage','$clist','$dynf','$slist','$qty','$sellcount','$iorder','$artno','$sartno','$instock','$dmulti','$cupons','$access','$campaign','$comments','$ratings','$linebreaks','$keywords','$languages','".time()."')");
-		}
-		redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
-	}
+
 
 	if ($settings['eshop_cats'] == "1" && !isset($_REQUEST['category']) && !isset($_GET['action'])) {
 		//check for main cats.
@@ -413,18 +281,45 @@ class eShop_item {
 		global $aidlink, $settings;
 		$_GET['id'] = isset($_GET['id']) && isnum($_GET['id']) ? $_GET['id'] : 0;
 		$_GET['parent_id'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
+		$max_rowstart = dbcount("(i.id)", DB_ESHOP." i LEFT JOIN ".DB_ESHOP_CATS ." cat on (cat.cid=i.cid)", "cat.parentid='".intval($_GET['parent_id'])."'");
+		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rowstart ? $_GET['rowstart'] : 0;
+
 		$this->data['product_languages'] = fusion_get_enabled_languages();
 		$this->data['dateadded'] = time();
 
-		if (isset($_GET['action']) && $_GET['action'] == "edit") {
-			$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&id=".$_GET['id']."".(fusion_get_settings('eshop_cats') == "1" ? "&amp;parent_id=".$_GET['parent_id']."" : "");
+		if (isset($_GET['action']) && $_GET['action'] == "edit" && self::verify_product_edit($_GET['id'])) {
+			$this->data = self::products_data();
+			$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&id=".$_GET['id']."".($settings['eshop_cats'] == "1" ? "&amp;parent_id=".$_GET['parent_id']."" : "");
 		} else {
-			$this->formaction = FUSION_SELF.$aidlink."".(fusion_get_settings('eshop_cats') == "1" && isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id']."" : "");
+			$this->formaction = FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" && isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id']."" : "");
 		}
 		if (isset($_POST['save_cat'])) {
 			self::set_productdb();
 		}
+		self::quick_save();
+	}
 
+	static function quick_save() {
+		global $aidlink;
+		if (isset($_POST['cats_quicksave'])) {
+			$quick['id'] = isset($_POST['id']) ? form_sanitizer($_POST['id'], '0', 'id') : 0;
+			$quick['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
+			$quick['artno'] = isset($_POST['artno']) ? form_sanitizer($_POST['artno'], '', 'artno') : '';
+			$quick['sartno'] = isset($_POST['sartno']) ? form_sanitizer($_POST['sartno'], '', 'sartno') : '';
+			$quick['price'] = isset($_POST['price']) ? form_sanitizer($_POST['price'], '', 'price') : '';
+			$quick['xprice'] = isset($_POST['xprice']) ? form_sanitizer($_POST['xprice'], '0', 'xprice') : 0;
+			$quick['instock'] = isset($_POST['xprice']) ? form_sanitizer($_POST['instock'], '0', 'instock') : 0;
+			$quick['active'] = isset($_POST['active']) ? form_sanitizer($_POST['active'], '0', 'active') : 0;
+			$quick['status'] = isset($_POST['status']) ? form_sanitizer($_POST['status'], '0', 'status') : 0;
+			if ($quick['id']) {
+				$c_result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".intval($quick['cid'])."'");
+				if (dbrows($c_result) > 0) {
+					$quick += dbarray($c_result);
+					dbquery_insert(DB_ESHOP, $quick, 'update');
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=main");
+				}
+			}
+		}
 	}
 
 	static function verify_product_edit($id) {
@@ -614,17 +509,26 @@ class eShop_item {
 
 	static function products_data() {
 		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
-		$data = dbarray($result);
+		if (dbrows($result)>0) {
+			return dbarray($result);
+		}
+	}
+
+	static function getAvailability() {
+		global $locale;
+		return array(
+			'0' => $locale['ESHPPRO145a'],
+			'1' => $locale['ESHPPRO145b'],
+		);
 	}
 
 	public function product_form() {
 		global $aidlink, $locale, $settings;
 
-		$itemcolors = str_replace(".", ",", $this->data['clist']);
+		$itemcolors = str_replace(".", ",", html_entity_decode($this->data['icolor']));
 		$itemcolors = ltrim($itemcolors, ',');
-		$itemdyncs = str_replace(".", ",", $this->data['slist']);
+		$itemdyncs = str_replace(".", ",", html_entity_decode($this->data['dync']));
 		$itemdyncs = ltrim($itemdyncs, ',');
-
 		// check function
 		add_to_jquery('
 		function doCheck(cid) {
@@ -640,13 +544,12 @@ class eShop_item {
 				$("#colors"+cid).empty();
 				$("#colors"+cid).show();
 				$("#colors"+cid).append(result); },timeout: 235000,
-			   error:function() {
+			   error:function(e) {
 				$("#colors"+cid).html("Something went wrong!");
 				}
 			 });
 		}
 		');
-
 		add_to_jquery('
 		var dyncArray = [];
 		//List items already saved
@@ -660,7 +563,7 @@ class eShop_item {
 		//add item when selected in list
 		$("#adddync").click(function () {
 			var sitem = $("#dyncList").val();
-		//If value is empty nothing should happend
+			//If value is empty nothing should happend
 			if(sitem !== "") {
 				if ($.inArray(sitem,dyncArray) == -1) {
 				$("#dyncList").val();
@@ -669,7 +572,6 @@ class eShop_item {
 		  }
 		 }
 		});
-
 		//remove dync when clicked
 		$(document).on("change", ".sList-chk", function () { if ($(this).attr("checked")) { return; } else {  $(this).parent(".sList").remove();  }	});
 	');
@@ -729,8 +631,10 @@ class eShop_item {
 		echo form_text($locale['ESHPPRO122'], 'iorder', 'iorder', $this->data['iorder'], array('inline'=>1, 'number'=>1, 'width'=>'200px', 'tip'=>$locale['ESHPPRO123']));
 		// languages
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n<label class='control-label'>".$locale['ESHPPRO191']."</label></div>\n";
+		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<label class='control-label'>".$locale['ESHPPRO191']."</label></div>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
+		$this->data['product_languages'] = (!empty($this->data['product_languages'])) ? explode('.', $this->data['product_languages']) : array();
 		foreach (fusion_get_enabled_languages() as $lang) {
 			$check = (in_array($lang, $this->data['product_languages'])) ? 1 : 0;
 			echo "<div class='display-inline-block text-left m-r-10'>\n";
@@ -757,7 +661,7 @@ class eShop_item {
 		echo "<div class='row m-t-20'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
 		openside('');
-		echo form_text($locale['ESHPPRO111'], 'price', 'price', $this->data['price'], array('number'=>1, 'required'=>1, 'width'=>'200px', 'inline'=>1, 'placeholder'=>fusion_get_settings('eshop_currency')));
+		echo form_text($locale['ESHPPRO111'], 'price', 'price', $this->data['price'], array('number'=>1, 'required'=>1, 'width'=>'200px', 'inline'=>1, 'placeholder'=>$settings['eshop_currency']));
 		closeside();
 		openside('');
 		echo form_text($locale['ESHPPRO107'], 'artno', 'artno', $this->data['artno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
@@ -789,7 +693,7 @@ class eShop_item {
 		echo form_text($locale['ESHPPRO143'], 'delivery', 'delivery', $this->data['delivery'], array('tip'=>$locale['ESHPPRO144'], 'inline'=>1, 'width'=>'200px', 'number'=>1, 'placeholder'=>$locale['ESHPPRO200']));
 		echo form_text($locale['ESHPPRO152'], 'dmulti', 'dmulti', $this->data['dmulti'], array('inline'=>1, 'tip'=>$locale['ESHPPRO153'], 'width'=>'200px', 'placeholder'=>$locale['ESHP019']));
 		openside('');
-		echo form_text($locale['ESHPPRO112'], 'xprice', 'xprice', $this->data['xprice'], array('number'=>1, 'inline'=>1, 'width'=>'200px', 'tip'=>$locale['ESHPPRO113'], 'placeholder'=>fusion_get_settings('eshop_currency')));
+		echo form_text($locale['ESHPPRO112'], 'xprice', 'xprice', $this->data['xprice'], array('number'=>1, 'inline'=>1, 'width'=>'200px', 'tip'=>$locale['ESHPPRO113'], 'placeholder'=>$settings['eshop_currency']));
 		echo form_checkbox($locale['ESHPPRO184'], 'campaign', 'campaign', $this->data['campaign'], array('inline'=>1, 'tip'=>$locale['ESHPPRO185'], 'class'=>'col-sm-offset-3'));
 		echo form_checkbox($locale['ESHPPRO182'], 'cupons', 'cupons', $this->data['cupons'], array('inline'=>1, 'tip'=>$locale['ESHPPRO183'], 'class'=>'col-sm-offset-3'));
 		closeside();
@@ -918,18 +822,19 @@ class eShop_item {
 		echo "</div>\n";
 	}
 
-	static function product_listing() {
+	static function product_filters() {
 		global $locale, $aidlink;
 		echo "<div class='m-t-20'>\n";
 		echo openform('search_form', 'search_form', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array("downtime"=>10));
 		/*
 				 * [1/23/15, 3:12:27 PM] Domi -: Most basic ones
-		[1/23/15, 3:12:28 PM] Domi -: Product title *
-		Your Art.no
-		Supplier Art.no
-		Product Language(s)
-		Order
-		Keywords
+		[1/23/15, 3:12:28 PM] Domi -:
+		//Product title *
+		//Your Art.no
+		//Supplier Art.no
+		//Product Language(s)
+		//Order
+		//Keywords
 		Price
 		Xprice
 
@@ -940,6 +845,186 @@ class eShop_item {
 		echo closeform();
 		echo "</div>\n";
 	}
+
+	public function product_listing() {
+		global $locale, $aidlink, $settings;
+
+		add_to_jquery("
+		$('.actionbar').hide();
+		$('tr').hover(
+			function(e) { $('#product-'+ $(this).data('id') +'-actions').show(); },
+			function(e) { $('#product-'+ $(this).data('id') +'-actions').hide(); }
+		);
+
+		$('.qform').hide();
+		$('.qedit').bind('click', function(e) {
+			// ok now we need jquery, need some security at least.token for example. lets serialize.
+			$.ajax({
+				url: '".ADMIN."includes/eshop_products.php',
+				dataType: 'json',
+				type: 'post',
+				data: { q: $(this).data('id'), token: '".$aidlink."' },
+				success: function(e) {
+					$('#cids').val(e.id);
+					$('#titles').val(e.title);
+					$('#artnos').val(e.artno);
+					$('#sartnos').val(e.sartno);
+					$('#prices').val(e.price);
+					$('#xprices').val(e.xprice);
+					$('#instocks').val(e.instock);
+					$('#actives').select2('val', e.active);
+					$('#statuss').select2('val', e.status);
+				},
+				error : function(e) {
+				console.log(e);
+				}
+			});
+			$('.qform').show();
+			$('.list-result').hide();
+		});
+		$('#cancel').bind('click', function(e) {
+			$('.qform').hide();
+			$('.list-result').show();
+		});
+		");
+
+		echo "<div class='m-t-20'>\n";
+		echo "<table class='table table-responsive'>\n";
+		echo "<tr>\n";
+		echo "<th></th>\n";
+		echo "<th class='col-xs-3 col-sm-3'>".$locale['ESHPPRO172']."</th>\n";
+		echo "<th>".$locale['ESHFEAT125']."</th>\n";
+		echo "<th>".$locale['ESHP006']."</th>\n";
+		echo "<th>".$locale['ESHPF139']."</th>\n";
+		echo "<th>".$locale['ESHPPRO174']."</th>\n";
+		echo "<th>".$locale['ESHPCATS135']."</th>\n";
+		echo "<th>".$locale['ESHPPRO169']."</th>\n";
+		echo "<th>".$locale['ESHPCATS109']."</th>\n";
+		echo "<th>".$locale['ESHPPRO122']."</th>\n";
+		echo "<th>".$locale['ESHPPRO191']."</th>\n";
+		echo "</tr>\n";
+
+		echo "<tr class='qform'>\n";
+		echo "<td colspan='12'>\n";
+		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array('downtime' => 0, 'notice' => 0));
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-4'>\n";
+		echo form_text($locale['ESHPPRO172'], 'title', 'titles', '', array('required'=>1, 'inline'=>1));
+		echo form_text($locale['ESHPPRO107'], 'artno', 'artnos', '', array('inline'=>1));
+		echo form_text($locale['ESHPPRO174'], 'sartno', 'sartnos', '', array('inline'=>1));
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-4'>\n";
+		echo form_text($locale['ESHPPRO111'], 'price', 'prices', $this->data['price'], array('number'=>1, 'inline'=>1, 'required'=>1, 'width'=>'100%', 'placeholder'=>$settings['eshop_currency']));
+		echo form_text($locale['ESHPPRO112'], 'xprice', 'xprices', $this->data['xprice'], array('number'=>1, 'width'=>'100%', 'inline'=>1, 'placeholder'=>$settings['eshop_currency']));
+		echo form_text($locale['ESHPPRO141'], 'instock', 'instocks', $this->data['instock'], array('number'=>1, 'inline'=>1));
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-4'>\n";
+		echo form_select($locale['ESHPPRO147'], 'active', 'actives', array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['active'], array('width'=>'100%'));
+		echo form_select($locale['ESHPPRO145'], 'status', 'statuss', array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['status'], array('width'=>'100%'));
+		echo form_hidden('', 'id', 'ids', '', array('writable' => 1));
+		echo "</div>\n";
+		echo "</div>\n";
+		echo "<div class='m-t-10 m-b-10'>\n";
+		echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class' => 'btn btn-default m-r-10', 'type' => 'button'));
+		echo form_button($locale['update'], 'cats_quicksave', 'cats_quicksave', 'save', array('class' => 'btn btn-primary'));
+		echo "</div>\n";
+		echo closeform();
+		echo "</div>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+		$result = dbquery("SELECT
+			i.id, i.title, i.cid, i.price, i.artno, i.sartno, i.status, i.access, i.dateadded, i.iorder, i.product_languages, cat.title as cat_title
+			FROM ".DB_ESHOP." i
+			LEFT JOIN ".DB_ESHOP_CATS." cat on (cat.cid=i.cid)
+			WHERE cat.parentid = '".intval($_GET['parent_id'])."'
+			ORDER BY cat.cat_order ASC, i.iorder ASC LIMIT 0, 25
+		");
+		$rows = dbrows($result);
+		if ($rows>0) {
+			$i = 0;
+			echo "<tbody id='eshopitem-links' class='connected'>\n";
+			while ($data = dbarray($result)) {
+				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
+				echo "<tr id='listItem_".$data['id']."' data-id='".$data['id']."' class='list-result ".$row_color."'>\n";
+				echo "<td></td>\n";
+				echo "<td class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
+				echo "<a class='text-dark' title='".$locale['edit']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>".$data['title']."</a>";
+				echo "<div class='actionbar text-smaller' id='product-".$data['id']."-actions'>
+				<a href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>".$locale['edit']."</a> |
+				<a class='qedit pointer' data-id='".$data['id']."'>".$locale['qedit']."</a> |
+				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=delete&amp;id=".$data['id']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
+				";
+				echo "</td>\n";
+				//echo "<td>\n".thumbnail(CAT_DIR.$data['image'], '30px')."</td>\n"; // will show no image thumbnail if no image
+				echo "<td>".$data['cat_title']."</td>\n";
+				echo "<td>".$settings['eshop_currency']." ".number_format($data['price'], 2, '.', ',')."</td>\n";
+				echo "<td>".$data['artno']."</td>\n";
+				echo "<td>".$data['sartno']."</td>\n";
+				echo "<td>\n";
+				echo ($i == 0) ? "" : "<a title='".$locale['ESHPCATS137']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=moveup&amp;id=".$data['id']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+				echo ($i == $rows) ? "" : "<a title='".$locale['ESHPCATS138']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=movedown&amp;id=".$data['id']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+				echo "</td>\n"; // move up and down.
+				$availability = self::getAvailability();
+				echo "<td>".$availability[$data['status']]."</td>\n";
+				$access = self::getVisibilityOpts();
+				echo "<td>".$access[$data['access']]."</td>\n";
+				echo "<td>".$data['iorder']."</td>\n";
+				echo "<td>".str_replace('.', ', ', $data['product_languages'])."</td>\n";
+				echo "</tr>\n";
+				$i++;
+			}
+			echo "</tbody>\n";
+		} else {
+			echo "<tr>\n<td class='text-center' colspan='12'>".$locale['ESHPPRO177']."</td>\n</tr>\n";
+		}
+		echo "</table>\n";
+		echo "</div>\n";
+
+
+
+
+		/*
+			echo "<table align='center' cellspacing='4' cellpadding='0' width='99%' class='tbl-border'><tr>
+<td class='tbl2' width='1%' align='center'><b></b></td>
+<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO173']."</b></td>
+<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO174']."</b></td>
+<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO175']."</b></td>
+<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO176']."</b></td>
+</tr>\n";
+			$result = dbquery("SELECT * FROM ".DB_ESHOP." ORDER BY iorder, title LIMIT ".$_GET['rowstart'].",15");
+			while ($data = dbarray($result)) {
+				echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
+				echo "<td width='1%' align='left'><a href='".FUSION_SELF.$aidlink."&amp;a_page=Main&action=edit&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><b>".$data['title']."</b></a></td>\n";
+				echo "<td width='1%' align='center'> ".($data['artno'] !== '' ? "".$data['artno']."" : "".$data['id']."")." </td>";
+				echo "<td width='1%' align='center'> ".($data['sartno'] !== '' ? "".$data['sartno']."" : "N/A")." </td>";
+				echo "<td align='center' width='1%'>\n";
+				if (dbrows($result) != 1) {
+					$up = $data['iorder']-1;
+					$down = $data['iorder']+1;
+					if ($k == 1) {
+						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=movedown&amp;order=$down&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("down")."' alt='Move down' title='Move down' style='border:0px;' /></a>\n";
+					} elseif ($k < dbrows($result)) {
+						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=moveup&amp;order=$up&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("up")."' alt='Move up' title='Move up' style='border:0px;' /></a>\n";
+						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=movedown&amp;order=$down&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("down")."' alt='Move down' title='Move down'  style='border:0px;' /></a>\n";
+					} else {
+						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=moveup&amp;order=$up&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("up")."' alt='Move up' title='Move up' style='border:0px;' /></a>\n";
+					}
+				}
+				$k++;
+				echo " #".$data['iorder']."</td>\n";
+				echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;action=delete&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."' onClick='return confirmdelete();'><img src='".SHOP."img/remove.png' border='0' height='20' style='vertical-align:middle;'  alt='' /></a></td></tr>";
+				echo "</td>";
+			}
+			echo "</table>\n";
+			echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 15, $rows, 3, FUSION_SELF.$aidlink."&amp;sortby=".$_GET['sortby']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."&")."\n</div>\n";
+		} else {
+			echo "<center><br />\n <b></b> <br /><br />\n</center>\n";
+		} */
+
+	}
+
 
 }
 
