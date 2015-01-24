@@ -600,7 +600,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 					$defender->field_value = $value[$lang];
 					$defender->field_default = $default;
 					if ($defender->field_config['required'] == 1 && (!$value[$lang])) { // it is required field but does not contain any value.. do reject.
-						$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['field_error_blank'], $defender->field_config['title']);
+						$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['df_error_text'], $defender->field_config['title']);
 						$defender->stop();
 						$defender->addError($defender->field_config['id']);
 						$defender->addHelperText($defender->field_config['id'], $helper_text);
@@ -618,7 +618,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				$defender->field_value = $value;
 				$defender->field_default = $default;
 				if ($defender->field_config['required'] == 1 && (!$value)) { // it is required field but does not contain any value.. do reject.
-					$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['field_error_blank'], $defender->field_config['title']);
+					$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['df_error_text'], $defender->field_config['title']);
 					$defender->stop();
 					$defender->addError($defender->field_config['id']);
 					$defender->addHelperText($defender->field_config['id'], $helper_text);

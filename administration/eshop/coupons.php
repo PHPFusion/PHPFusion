@@ -17,140 +17,376 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-if (isset($_GET['step']) && $_GET['step'] == "delete") {
-	if (!preg_match("/^[-0-9A-ZÅÄÖ._@\s]+$/i", $_GET['cuid'])) { die("Denied"); exit; }
-	$result = dbquery("DELETE FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$_GET['cuid']."'");
-} 
 
-if (isset($_POST['save_item'])) {
+class eShop_coupons {
 
-if (!preg_match("/^[-0-9A-ZÅÄÖ._@\s]+$/i", $_POST['cuid'])) { die("Denied"); exit; }
-$cuid = stripinput($_POST['cuid']);
-$name = stripinput($_POST['cuname']);
-$type = stripinput($_POST['cutype']);
-$value = stripinput($_POST['cuvalue']);
-$active = stripinput($_POST['active']);
-$start = 0; 
-$end = 0;
+	private $data = array(
+		'cuid' => 0,
+		'cuname' => '',
+		'cutype' => '',
+		'cuvalue' => '',
+		'custart' => '',
+		'cuend' => '',
+		'active' => 1,
+	);
+	private $form_action = '';
+	private $max_rowstart = 0;
+	private $filter_Sql = '';
 
-	if ($_POST['custart']['mday']!="--" && $_POST['custart']['mon']!="--" && $_POST['custart']['year']!="----") {
-		$start = mktime($_POST['custart']['hours'],$_POST['custart']['minutes'],0,$_POST['custart']['mon'],$_POST['custart']['mday'],$_POST['custart']['year']);
+	public function __construct() {
+		global $aidlink;
+		$_GET['cuid'] = isset($_GET['cuid']) && isnum($_GET['cuid']) ? $_GET['cuid'] : 0;
+
+		$_rand = rand(1000000, 9999999);
+		$_hash = substr(md5($_rand), 0, 15);
+		$this->data['cuid'] = strtoupper($_hash);
+		$this->custart = time();
+		$this->max_rowstart = dbcount("(cuid)", DB_ESHOP_COUPONS);
+		$_GET['rowstart'] = (isset($_GET['cuid']) && isnum($_GET['cuid']) && $_GET['cuid'] <= $this->max_rowstart) ? $_GET['cuid'] : 0;
+
+		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
+		switch ($_GET['action']) {
+			case 'delete' :
+				self::remove_coupon();
+				break;
+			case 'edit' :
+				if (self::verify_coupon($_GET['cuid'])) {
+					$this->form_action = FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;action=edit&amp;cuid=".$_GET['cuid'];
+					$this->data = self::get_couponData($_GET['cuid']);
+				}
+				break;
+			default :
+				$this->form_action = FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;section=couponform";
+		}
+
+		if (isset($_POST['save_coupons'])) {
+			self::set_coupondb();
+		}
+		self::quick_save();
 	}
-	if ($_POST['cuend']['mday']!="--" && $_POST['cuend']['mon']!="--" && $_POST['cuend']['year']!="----") {
-		$end = mktime($_POST['cuend']['hours'],$_POST['cuend']['minutes'],0,$_POST['cuend']['mon'],$_POST['cuend']['mday'],$_POST['cuend']['year']);
+
+	static function getCouponType() {
+		global $locale, $settings;
+		return array(
+			'0'	=> $locale['ESHPCUPNS112'],
+			'1' => $locale['ESHPCUPNS113']." (".$settings['eshop_currency'].")",
+		);
 	}
 
-if (isset($_GET['step']) && $_GET['step'] == "edit") {
-	$result = dbquery("UPDATE ".DB_ESHOP_COUPONS." SET cuid = '$cuid', cuname = '$name', cutype = '$type' , cuvalue = '$value' , custart = '$start', cuend = '$end', active = '$active' WHERE cuid ='".$_GET['cuid']."'");
-} else {
-	$result = dbquery("INSERT INTO ".DB_ESHOP_COUPONS." (cuid,cuname,cutype,cuvalue,custart,cuend,active) VALUES('$cuid','$name','$type','$value','$start','$end','$active')");
+	static function getCouponStatus() {
+		global $locale;
+		return array(
+		 	'0' => $locale['no'],
+			'1' => $locale['yes']
+		);
+	}
+
+	static function verify_coupon($cuid) {
+		if (isnum($cuid)) {
+			return dbcount("(cuid)", DB_ESHOP_COUPONS, "cuid='".intval($cuid)."'");
+		}
+		return false;
+	}
+
+	static function quick_save() {
+		global $aidlink, $defender;
+		if (isset($_POST['coupon_quicksave'])) {
+			$quick['cuid'] = isset($_POST['cuid']) ? form_sanitizer($_POST['cuid'], 'void', 'cuid') : 'void';
+			$quick['cuname'] = isset($_POST['cuname']) ? form_sanitizer($_POST['cuname'], '', 'cuname') : '';
+			$quick['cutype'] = isset($_POST['cutype']) ? form_sanitizer($_POST['cutype'], '0', 'cutype') : 0;
+			$quick['cuvalue'] = isset($_POST['cuvalue']) ? form_sanitizer($_POST['cuvalue'], '0', 'cuvalue') : 0;
+			$quick['active'] = isset($_POST['active']) ? form_sanitizer($_POST['active'], '0', 'active') : 0;
+			if ($quick['cuid']) {
+				$c_result = dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$quick['cuid']."'");
+				if (dbrows($c_result) > 0) {
+					$quick += dbarray($c_result);
+					dbquery_insert(DB_ESHOP_COUPONS, $quick, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=coupons");
+				}
+			}
+		}
+	}
+
+	private function remove_coupon() {
+		global $aidlink;
+		if (!preg_match("/^[-0-9A-ZÅÄÖ._@\s]+$/i", $_GET['cuid']) && self::verify_coupon($_GET['cuid'])) {
+			dbquery("DELETE FROM ".DB_ESHOP_COUPONS." WHERE cuid='".intval($_GET['cuid'])."'");
+			redirect(FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;status=del");
+		}
+	}
+
+	private function set_coupondb() {
+		global $aidlink, $locale, $defender;
+
+		if (!preg_match("/^[-0-9A-ZÅÄÖ._@\s]+$/i", $_POST['cuid'])) {
+			$defender->stop();
+			$defender->addNotice($locale['ESHPCUPNS_ERROR2']);
+		}
+
+		$this->data['cuid'] = isset($_POST['cuid']) ? form_sanitizer($_POST['cuid'], 'void', 'cuid') : 'void';
+		$this->data['cuname'] = isset($_POST['cuname']) ? form_sanitizer($_POST['cuname'], '', 'cuname') : '';
+		$this->data['cutype'] = isset($_POST['cutype']) ? form_sanitizer($_POST['cutype'], '0', 'cutype') : 0;
+		$this->data['cuvalue'] = isset($_POST['cuvalue']) ? form_sanitizer($_POST['cuvalue'], '0', 'cuvalue') : 0;
+		$this->data['custart'] = isset($_POST['custart']) ? form_sanitizer($_POST['custart'], '', 'custart') : '';
+		$this->data['cuend'] = isset($_POST['cuend']) ? form_sanitizer($_POST['cuend'], '', 'cuend') : '';
+		$this->data['active'] = isset($_POST['active']) ? form_sanitizer($_POST['active'], '0', 'active') : 0;
+
+		if ($this->data['cuend'] < $this->data['custart']) {
+			$defender->stop();
+			$defender->addNotice($locale['ESHPCUPNS_ERROR1']);
+		}
+
+		if (self::verify_coupon($this->data['cuid']) && !defined('FUSION_NULL')) {
+			// update
+			dbquery_insert(DB_ESHOP_COUPONS, $this->data, 'update', array('primary_key'=>'cuid', 'no_unique'=>1));
+			redirect(FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;status=su");
+		} else {
+			//save
+			dbquery_insert(DB_ESHOP_COUPONS, $this->data, 'save', array('primary_key'=>'cuid', 'no_unique'=>1));
+			redirect(FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;status=sn");
+		}
+	}
+
+	private function get_couponData($cuid) {
+		$result = dbquery("SELECT * FORM ".DB_ESHOP_COUPONS." WHERE cuid='".intval($cuid)."'");
+		if (dbrows($result)>0) {
+			return dbarray($result);
+		}
+		return array();
+	}
+
+	public function add_coupon_form() {
+		global $locale, $defender;
+
+		echo "<div class='m-t-20 inline-block'>\n";
+		echo openform('coupon_form', 'coupon_form', 'post', $this->form_action, array('downtime'=>0));
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
+		openside('');
+		echo form_text($locale['ESHPCUPNS101'], 'cuid', 'cuid', $this->data['cuid'], array('inline'=>1, 'required'=>1));
+		echo form_text($locale['ESHPCUPNS102'], 'cuname', 'cuname', $this->data['cuname'], array('inline'=>1, 'required'=>1));
+		closeside();
+		openside();
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-3'>\n";
+		echo "<label class='control-label'>".$locale['ESHPCUPNS116']."</label>\n";
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-9'>\n";
+		echo "<div class='display-inline-block m-r-10'>\n";
+		echo form_datepicker($locale['ESHPCUPNS105'], 'custart', 'custart', $this->data['custart'], array('required'=>1));
+		echo "</div>\n";
+		echo "<div class='display-inline-block'>\n";
+		echo form_datepicker($locale['ESHPCUPNS106'], 'cuend', 'cuend', $this->data['cuend'], array('required'=>1));
+		echo "</div>\n";
+		echo "</div>\n</div>\n";
+		closeside();
+
+		openside('');
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-3'>\n";
+		echo "<label class='control-label'>".$locale['ESHPCUPNS117']."</label>\n";
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-9'>\n";
+
+		echo "<div class='display-inline-block m-r-10 col-xs-12 col-sm-6 p-l-0'>\n";
+		echo form_text($locale['ESHPCUPNS104'], 'cuvalue', 'cuvalue', $this->data['cuvalue'], array('number'=>1, 'required'=>1));
+		echo "<span class='text-smaller'>".$locale['ESHPCUPNS118']."</span>\n";
+		echo "</div>\n";
+
+		echo "<div class='display-inline-block'>\n";
+		echo form_select($locale['ESHPCUPNS103'], 'cutype', 'cutype', self::getCouponType(), $this->data['cutype']);
+		echo "</div>\n";
+
+		echo "</div>\n</div>\n";
+		closeside();
+
+		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
+		openside('');
+		echo form_select($locale['ESHPCUPNS107'], 'active', 'active', self::getCouponStatus(), $this->data['active'], array('inline'=>1));
+		echo form_button($locale['save'], 'save_coupons', 'save_coupon2', $locale['ESHPCUPNS111'], array('class'=>'btn-primary'));
+		closeside();
+
+		echo "</div>\n";
+		echo "</div>\n";
+		echo form_button($locale['save'], 'save_coupons', 'save_coupons', $locale['ESHPCUPNS111'], array('class'=>'btn-primary'));
+		echo closeform();
+		echo "</div>\n";
+	}
+
+	private function coupon_view_filters() {
+		global $locale, $aidlink;
+
+		$item_status = isset($_GET['status']) && $_GET['status'] == 1 ? 1 : 0;
+		$this->filter_Sql = !$item_status ? "(active='1' or active='0')" : "active='0'";
+		echo "<div class='m-t-20 m-b-20 display-block' style='height:40px;'>\n";
+
+		echo "<div class='display-inline-block search-align m-r-10'>\n";
+		echo form_text('', 'srch_text', 'srch_text', '', array('placeholder'=>$locale['SRCH158'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
+		echo form_button($locale['SRCH164'], 'search', 'search-btn', $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
+		echo "</div>\n";
+
+		echo "<div class='display-inline-block m-r-10'>\n";
+		echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;status=0' ".(!$item_status ? "class='text-dark'" : '').">All (".number_format(dbcount("(cuid)", DB_ESHOP_COUPONS)).")</a>\n - ";
+		echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;status=1' ".($item_status ? "class='text-dark'" : '').">Inactive (".number_format(dbcount("(cuid)", DB_ESHOP_COUPONS, "active='0'")).")</a>\n";
+		echo "</div>\n";
+
+		echo "</div>\n";
+		add_to_jquery("
+		$('#search-btn').bind('click', function(e) {
+			$.ajax({
+				url: '".ADMIN."includes/eshop_cpnsearch.php',
+				dataType: 'html',
+				type: 'post',
+				beforeSend: function(e) { $('#eshopitem-links').html('<tr><td class=\"text-center\"colspan=\'12\'><img src=\"".IMAGES."loader.gif\"/></td></tr>'); },
+				data: { q: $('#srch_text').val(), token: '".$aidlink."' },
+				success: function(e) {
+					// append html
+					$('#eshopitem-links').html(e);
+				},
+				error : function(e) {
+				console.log(e);
+				}
+			});
+		});
+		");
+	}
+
+	public function coupon_listing() {
+		global $locale, $aidlink;
+		$coupon_status = self::getCouponStatus();
+		self::coupon_view_filters();
+		add_to_jquery("
+		$('.actionbar').hide();
+		$('tr').hover(
+			function(e) { $('#coupon-'+ $(this).data('id') +'-actions').show(); },
+			function(e) { $('#coupon-'+ $(this).data('id') +'-actions').hide(); }
+		);
+		$('.qform').hide();
+		$('.qedit').bind('click', function(e) {
+			$.ajax({
+				url: '".ADMIN."includes/eshop_coupon.php',
+				dataType: 'json',
+				type: 'post',
+				data: { q: $(this).data('id'), token: '".$aidlink."' },
+				success: function(e) {
+					$('#cuids').val(e.cuid);
+					$('#cunames').val(e.cuname);
+					$('#cuvalues').val(e.cuvalue);
+					$('#actives').select2('val', e.active);
+					$('#cutypes').select2('val', e.cutype);
+				},
+				error : function(e) {
+					console.log(e);
+				}
+			});
+			$('.qform').show();
+			$('.list-result').hide();
+		});
+		$('#cancel').bind('click', function(e) {
+			$('.qform').hide();
+			$('.list-result').show();
+		});
+		");
+		echo "<div class='m-t-20'>\n";
+		echo "<table class='table table-responsive'>\n";
+		echo "<tr>\n";
+		echo "<th></th>\n";
+		echo "<th>".$locale['ESHPCHK170']."</th>\n";
+		echo "<th>".$locale['ESHPCUPNS102']."</th>\n";
+		echo "<th>".$locale['ESHPCUPNS107']."</th>\n";
+		echo "<th>".$locale['ESHPCUPNS105']."</th>\n";
+		echo "<th>".$locale['ESHPCUPNS106']."</th>\n";
+		echo "</tr>\n";
+		echo "<tr class='qform'>\n";
+		echo "<td colspan='6'>\n";
+		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=coupons", array('downtime' => 0, 'notice' => 0));
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-5'>\n";
+		echo form_text($locale['ESHPCUPNS102'], 'cuname', 'cunames', $this->data['cuname'], array('inline'=>1, 'required'=>1));
+		echo form_select($locale['ESHPCUPNS107'], 'active', 'actives', self::getCouponStatus(), $this->data['active'], array('inline'=>1));
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-7'>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-3'>\n";
+		echo "<label class='control-label'>".$locale['ESHPCUPNS117']."</label>\n";
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-9'>\n";
+		echo "<div class='display-inline-block m-r-10 col-xs-12 col-sm-6 p-l-0'>\n";
+		echo form_text($locale['ESHPCUPNS104'], 'cuvalue', 'cuvalues', $this->data['cuvalue'], array('number'=>1, 'required'=>1));
+		echo "<span class='text-smaller'>".$locale['ESHPCUPNS118']."</span>\n";
+		echo "</div>\n";
+		echo "<div class='display-inline-block'>\n";
+		echo form_select($locale['ESHPCUPNS103'], 'cutype', 'cutypes', self::getCouponType(), $this->data['cutype']);
+		echo "</div>\n";
+		echo "</div>\n</div>\n";
+		echo form_hidden('', 'cuid', 'cuids', '', array('writable' => 1));
+		echo "</div>\n";
+		echo "</div>\n";
+		echo "<div class='m-t-10 m-b-10'>\n";
+		echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class' => 'btn btn-default m-r-10',
+			'type' => 'button'));
+		echo form_button($locale['update'], 'coupon_quicksave', 'cats_quicksave', 'save', array('class' => 'btn btn-primary'));
+		echo "</div>\n";
+		echo closeform();
+		echo "</div>\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+
+
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE ".$this->filter_Sql." LIMIT ".$_GET['rowstart'].",15");
+		$rows = dbrows($result);
+		if ($rows) {
+			$i = 0;
+			while ($data = dbarray($result)) {
+				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
+				echo "<tr id='listItem_".$data['cuid']."' data-id='".$data['cuid']."' class='list-result ".$row_color."'>\n";
+				echo "<td></td>\n";
+				echo "<td>\n";
+				echo "<strong>".$data['cuid']."</strong>\n";
+				echo "<div class='actionbar text-smaller' id='coupon-".$data['cuid']."-actions'>
+				<a href='".FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;section=couponform&amp;action=edit&amp;cuid=".$data['cuid']."'>".$locale['edit']."</a> |
+				<a class='qedit pointer' data-id='".$data['cuid']."'>".$locale['qedit']."</a> |
+				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;action=delete&amp;cuid=".$data['cuid']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
+				</div>\n";
+				echo "</td>\n";
+				echo "<td>".$data['cuname']."</td>";
+				echo "<td>".$coupon_status[$data['active']]."</td>";
+				echo "<td>".showdate("forumdate", $data['custart'])."</td>";
+				echo "<td>".showdate("forumdate", $data['cuend'])."</td>";
+				echo "</tr>";
+				$i++;
+			}
+		} else {
+			echo "<tr><td colspan='5' class='text-center'><div class='alert alert-warning m-t-10'>".$locale['ESHPCUPNS110']."</div></td></tr>\n";
+		}
+
+		echo "</table>\n";
+
+		if ($this->max_rowstart > $rows) {
+			echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'],15,$rows,3,FUSION_SELF.$aidlink."&amp;cupons&amp;")."\n</div>\n";
+		}
+		echo "</div>\n";
+	}
 }
-	redirect(FUSION_SELF.$aidlink."&amp;a_page=cupons&amp;cuid=$cuid");
+
+$coupon = new eShop_coupons();
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $coupon->verify_coupon($_GET['cuid']) : 0;
+
+$tab_title['title'][] = $locale['ESHPCUPNS100'];
+$tab_title['id'][] = 'coupon';
+$tab_title['icon'][] = '';
+$tab_title['title'][] =  $edit ? $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
+$tab_title['id'][] = 'couponform';
+$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1, 1);
+echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=coupons");
+echo opentabbody($tab_title['title'][0], 'coupon', $tab_active, 1);
+$coupon->coupon_listing();
+echo closetabbody();
+if (isset($_GET['section']) && $_GET['section'] == 'couponform') {
+	echo opentabbody($tab_title['title'][1], 'couponform', $tab_active, 1);
+	$coupon->add_coupon_form();
+	echo closetabbody();
 }
-
-if (isset($_GET['step']) && $_GET['step'] == "edit") {
-	$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$_GET['cuid']."'"));
-	$cuid = $data['cuid'];
-	$name = $data['cuname'];
-	$type = $data['cutype'];
-	$value = $data['cuvalue'];
-	if ($data['custart']>0) $custart = getdate($data['custart']);
-	if ($data['cuend']>0) $cuend = getdate($data['cuend']);
-	$active = $data['active'];
-	$formaction = FUSION_SELF.$aidlink."&amp;a_page=cupons&amp;step=edit&amp;cuid=".$data['cuid'];
-	
-} else {
-
-$cupon_rand = rand(1000000, 9999999);
-$cupon_hash = substr(md5($cupon_rand), 0, 15); 
-
-	$cuid =  strtoupper($cupon_hash);
-	$name = "";
-	$type = "";
-	$value = "";
-	$custart = "";
-	$cuend = "";
-	$active = "";
-	$formaction = FUSION_SELF.$aidlink."&amp;a_page=cupons";
-}
-
-echo "<form name='addcupon' method='post' action='$formaction'>";
-echo "<table cellpadding='0' cellspacing='0' width='100%'>";
-echo "
-<tr><td class='tbl' align='left'>".$locale['ESHPCUPNS101']."</td>
-<td class='tbl' align='left'> <input type='text' name='cuid' value='$cuid' class='textbox'></td>
-</tr><tr><td class='tbl' align='left'>".$locale['ESHPCUPNS102']."</td>
-<td class='tbl' align='left'> <input type='text' name='cuname' value='$name' class='textbox'></td>
-</tr>";
-
-echo "<tr><td class='tbl' align='left'>".$locale['ESHPCUPNS103']."</td><td class='tbl' align='left'><select name='cutype' class='textbox'>
-    <option value='0'".($type == "0" ? " selected" : "").">".$locale['ESHPCUPNS112']."</option>
-    <option value='1'".($type == "1" ? " selected" : "").">".$locale['ESHPCUPNS113']."</option>
-    </select></td></tr>";
-
-echo "<tr><td class='tbl' align='left'>".$locale['ESHPCUPNS104']."</td>
-<td class='tbl' align='left'> <input type='text' class='textbox' name='cuvalue' value='$value' style='width:50px !important;'></td></tr>";
-
-echo "<tr><td class='tbl' align='left'>".$locale['ESHPCUPNS105']."</td>
-<td class='tbl' align='left'><select name='custart[mday]' class='textbox' style='width:50px !important;'>\n<option>--</option>\n";
-for ($i=1;$i<=31;$i++) echo "<option".(isset($custart['mday']) && $custart['mday'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> <select name='custart[mon]' class='textbox' style='width:50px !important;'>\n<option>--</option>\n";
-for ($i=1;$i<=12;$i++) echo "<option".(isset($custart['mon']) && $custart['mon'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> <select name='custart[year]' class='textbox' style='width:100px !important;'>\n<option>----</option>\n";
-for ($i=(isset($custart['year']) && $custart['year'] != "----" ? $custart['year'] : date('Y'));$i<=date("Y", strtotime('+10 years'));$i++) echo "<option".(isset($custart['year']) && $custart['year'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> / <select name='custart[hours]' class='textbox' style='width:50px !important;'>\n";
-for ($i=0;$i<=24;$i++) echo "<option".(isset($custart['hours']) && $custart['hours'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> : <select name='custart[minutes]' class='textbox' style='width:50px !important;'>\n";
-for ($i=0;$i<=60;$i++) echo "<option".(isset($custart['minutes']) && $custart['minutes'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> : 00 </td></tr>\n";
-
-echo "<tr><td class='tbl' align='left'>".$locale['ESHPCUPNS106']."</td>
-<td class='tbl' align='left'> <select name='cuend[mday]' class='textbox' style='width:50px !important;'>\n<option>--</option>\n";
-for ($i=1;$i<=31;$i++) echo "<option".(isset($cuend['mday']) && $cuend['mday'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> <select name='cuend[mon]' class='textbox' style='width:50px !important;'>\n<option>--</option>\n";
-for ($i=1;$i<=12;$i++) echo "<option".(isset($cuend['mon']) && $cuend['mon'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> <select name='cuend[year]' class='textbox' style='width:100px !important;'>\n<option>----</option>\n";
-for ($i=(isset($cuend['year']) && $cuend['year'] != "----" ? $cuend['year'] : date('Y'));$i<=date("Y", strtotime('+10 years'));$i++) echo "<option".(isset($cuend['year']) && $cuend['year'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> / <select name='cuend[hours]' class='textbox' style='width:50px !important;'>\n";
-for ($i=0;$i<=24;$i++) echo "<option".(isset($cuend['hours']) && $cuend['hours'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> : <select name='cuend[minutes]' class='textbox' style='width:50px !important;'>\n";
-for ($i=0;$i<=60;$i++) echo "<option".(isset($cuend['minutes']) && $cuend['minutes'] == $i ? " selected='selected'" : "").">$i</option>\n";
-echo "</select> : 00 </td></tr>\n";
-echo "<tr><td class='tbl' align='left'>".$locale['ESHPCUPNS107']."</td><td class='tbl' align='left'><select name='active' class='textbox' style='width:80px !important;'>
-    <option value='1'".($active == "1" ? " selected" : "").">".$locale['ESHPCUPNS108']."</option>
-    <option value='0'".($active == "0" ? " selected" : "").">".$locale['ESHPCUPNS109']."</option>
-    </select></td></tr>";
-echo "</table>";
-echo "<center><div style='padding:5px;'><input type='submit'name='save_item' value='".$locale['ESHPCUPNS111']."' class='button'></div></center>";
-echo "</form>\n";
-
-echo "<div class='clear'></div>";
-echo "<hr />";
-$result = dbquery("SELECT * FROM ".DB_ESHOP_COUPONS."");
-$rows = dbrows($result);
-if ($rows != 0) {
-echo "<br /><table align='center' cellspacing='4' cellpadding='0' class='tbl-border' width='99%'><tr>
-<td class='tbl2' align='center' width='1%'><b>".$locale['ESHPCUPNS101']."</b></td>
-<td class='tbl2' align='center' width='1%'><b>".$locale['ESHPCUPNS102']."</b></td>
-<td class='tbl2' align='center' width='1%'><b>".$locale['ESHPCUPNS105']."</b></td>
-<td class='tbl2' align='center' width='1%'><b>".$locale['ESHPCUPNS106']."</b></td>
-<td class='tbl2' align='center' width='1%'><b>Options</b></td>
-</tr>\n";
-
-$result = dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." LIMIT ".$_GET['rowstart'].",15");
-while ($data = dbarray($result)) {
-echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
-echo "<td align='center' width='1%'><a href='".FUSION_SELF.$aidlink."&amp;a_page=cupons&amp;step=edit&amp;cuid=".$data['cuid']."'><b>".$data['cuid']."</b></a></td>\n";
-echo "<td align='center' width='1%'><b>".$data['cuname']."</b></td>";
-echo "<td align='center' width='1%'><b>".showdate("forumdate", $data['custart'])."</b></td>";
-echo "<td align='center' width='1%'><b>".showdate("forumdate", $data['cuend'])."</b></td>";
-echo "<td align='center' width='1%'> ".($data['active'] =="1" ? "<img src='".BASEDIR."eshop/img/bullet_green.png' border='0' width='20' style='vertical-align:middle;' />" : "<img src='".BASEDIR."eshop/img/bullet_red.png' border='0' width='20' style='vertical-align:middle;' />")." &middot;<a href='".FUSION_SELF.$aidlink."&amp;a_page=cupons&amp;step=edit&amp;cuid=".$data['cuid']."'><img src='".BASEDIR."eshop/img/edit.png' alt='' border='0' width='20' style='vertical-align:middle;' /></a>&middot;<a href='".FUSION_SELF.$aidlink."&amp;a_page=cupons&amp;step=delete&amp;cuid=".$data['cuid']."' onClick='return confirmdelete();'><img src='".BASEDIR."eshop/img/remove.png' border='0' width='20' style='vertical-align:middle;'  alt='Remove' /></a></td></tr>";
-
-} 
-echo "</table>\n";
-echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'],15,$rows,3,FUSION_SELF.$aidlink."&amp;cupons&amp;")."\n</div>\n";
-} else {
-echo "<div class='admin-message'>".$locale['ESHPCUPNS110']."</div>\n";
-}
-
 ?>

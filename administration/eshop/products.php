@@ -96,7 +96,6 @@ class eShop_item {
 		$_GET['parent_id'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
 		$this->max_rowstart = dbcount("(i.id)", DB_ESHOP." i LEFT JOIN ".DB_ESHOP_CATS ." cat on (cat.cid=i.cid)", "cat.parentid='".intval($_GET['parent_id'])."'");
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->max_rowstart ? $_GET['rowstart'] : 0;
-
 		$this->data['product_languages'] = fusion_get_enabled_languages();
 		$this->data['dateadded'] = time();
 
@@ -126,6 +125,14 @@ class eShop_item {
 
 		if (isset($_POST['save_cat'])) self::set_productdb();
 		self::quick_save();
+	}
+
+	static function category_check() {
+		global $settings;
+		if ($settings['eshop_cats'] == 1) {
+			return dbcount("(cid)", DB_ESHOP_CATS);
+		}
+		return false;
 	}
 
 	/**
@@ -714,12 +721,10 @@ class eShop_item {
 		$access = isset($_POST['access']) && isnum($_POST['access']) ? form_sanitizer($_POST['access'], '', 'access') : 0;
 		$item_status = isset($_GET['status']) && $_GET['status'] == 1 ? 1 : 0;
 		$this->filter_Sql = !$item_status ? "AND (i.status='1' or i.status='0')" : "AND i.status='0'";
-
 		if (isset($_POST['filter'])) {
 			$this->filter_Sql .= $category ? "AND i.cid='".intval($category)."'" : '';
 			$this->filter_Sql .= $access ? "AND i.access='".intval($access)."'" : '';
 		}
-
 		echo "<div class='m-t-20 display-block'>\n";
 		echo "<div class='display-inline-block search-align m-r-10'>\n";
 		echo form_text('', 'srch_text', 'srch_text', '', array('placeholder'=>$locale['SRCH158'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
@@ -730,7 +735,7 @@ class eShop_item {
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;status=1' ".($item_status ? "class='text-dark'" : '').">Unlisted (".number_format(dbcount("(id)", DB_ESHOP, "status='0'")).")</a>\n - ";
 		echo "</div>\n";
 		echo "<div class='display-inline-block'>\n";
-		echo openform('get_filter', 'get_filters', 'post', clean_request('', array('aid', 'status', 'section')), array('notice'=>0));
+		echo openform('get_filter', 'get_filters', 'post', clean_request('', array('aid', 'status', 'section')), array('notice'=>0, 'downtime'=>10));
 		echo "</div>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
 		echo form_select_tree('', 'category', 'category', $category, array('no_root'=>1, 'width'=>'200px', 'allowclear'=>1, 'placeholder'=>$locale['ESHFEAT125']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
@@ -856,7 +861,7 @@ class eShop_item {
 		$result = dbquery("SELECT
 			i.id, i.title, i.cid, i.price, i.artno, i.sartno, i.status, i.access, i.dateadded, i.iorder, i.product_languages, cat.title as cat_title
 			FROM ".DB_ESHOP." i
-			".($settings['eshop_cats'] ? "LEFT JOIN ".DB_ESHOP_CATS." cat on (cat.cid=i.cid) WHERE cat.parentid = '".intval($_GET['parent_id'])."'" : '')."
+			".($settings['eshop_cats'] ? "INNER JOIN ".DB_ESHOP_CATS." cat on (cat.cid=i.cid)" : '')."
 			".$this->filter_Sql."
 			ORDER BY cat.cat_order ASC, i.iorder ASC LIMIT 0, 25
 		");
@@ -895,7 +900,11 @@ class eShop_item {
 			}
 			echo "</tbody>\n";
 		} else {
-			echo "<tr>\n<td class='text-center' colspan='12'><div class='alert alert-warning m-t-20'>".$locale['ESHPPRO177']."</div></td>\n</tr>\n";
+			if (!self::category_check()) {
+				echo "<tr>\n<td class='text-center' colspan='12'><div class='alert alert-warning m-t-20'>".$locale['ESHPPRO102']."</div></td>\n</tr>\n";
+			} else {
+				echo "<tr>\n<td class='text-center' colspan='12'><div class='alert alert-warning m-t-20'>".$locale['ESHPPRO177']."</div></td>\n</tr>\n";
+			}
 		}
 		echo "</table>\n";
 		if ($this->max_rowstart > $rows) {
@@ -906,13 +915,17 @@ class eShop_item {
 }
 
 $item = new eShop_item();
-$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $item->verify_product_edit($_GET['id']) : 0;
+$category_count = $item->category_check();
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && $category_count) ? $item->verify_product_edit($_GET['id']) : 0;
+
 $tab_title['title'][] = $locale['ESHPPRO097'];
 $tab_title['id'][] = 'product';
 $tab_title['icon'][] = '';
-$tab_title['title'][] = $edit ? $locale['ESHPPRO098'] : $locale['ESHPPRO099'];
-$tab_title['id'][] = 'itemform';
-$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+if ($category_count) {
+	$tab_title['title'][] = $edit ? $locale['ESHPPRO098'] : $locale['ESHPPRO099'];
+	$tab_title['id'][] = 'itemform';
+	$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+}
 $tab_active = tab_active($tab_title, ($edit ? 'itemform' : 'product'), 1);
 $item->getMessage();
 echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=main");

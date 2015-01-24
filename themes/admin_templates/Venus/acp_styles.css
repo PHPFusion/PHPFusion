@@ -46,12 +46,9 @@ label small {
 	padding: 0
 }
 .admin-message {
-	text-align: center;
 	margin-bottom: 10px;
-	color: rgb(0, 102, 153);
 	padding: 15px;
 	font-size: 100%;
-	background-color: rgb(232, 238, 241);
 }
 
 /* General table properties */

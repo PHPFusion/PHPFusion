@@ -6,15 +6,16 @@ if (!empty($aid)) {
 	$aid = $aid[1];
 }
 if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
-	$eshop_cats = fusion_get_settings('eshop_cats');
-	$eshop_currency = fusion_get_settings('currency');
-	$search_text = isset($_POST['q']) && strlen($_POST['q'])>1 ? form_sanitizer($_POST['q'], '') : 0;
-	$search_text=ltrim($search_text);
-	$search_text=rtrim($search_text);
-	$q = "";
-	$kt = "";
-	$val = "";
-	$kt = explode(" ",$search_text);
+	//$eshop_cats = fusion_get_settings('eshop_cats');
+	//$eshop_currency = fusion_get_settings('currency');
+	//$search_text = isset($_POST['q']) && strlen($_POST['q'])>1 ? form_sanitizer($_POST['q'], '') : 0;
+	//$search_text=ltrim($search_text);
+	//$search_text=rtrim($search_text);
+	//$q = "";
+	//$kt = "";
+	//$val = "";
+	//$kt = explode(" ",$search_text);
+
 	if ($eshop_cats) {
 		while(list($key,$val)=each($kt)){
 			if($val<>" " and strlen($val) > 0){ $q.= " i.title like '%$val%' or i.artno like '%$val%' or i.sartno like '%$val%' or i.id like '%$val%' or cat.title like '%$val%' or";}
