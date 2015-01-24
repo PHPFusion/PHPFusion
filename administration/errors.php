@@ -150,12 +150,13 @@ if ($error_id) {
 	if (!$data) {
 		redirect(FUSION_SELF.$aidlink);
 	}
-	$thisFileContent = file($data['error_file']);
+	$thisFileContent = is_file($data['error_file']) ? file($data['error_file']) : array();
 	$line_start = max($data['error_line']-10, 1);
 	$line_end = min($data['error_line']+10, count($thisFileContent));
 	opentable($locale['401']." ".getMaxFolders(stripslashes($data['error_file']), 3));
 	$output = implode("", array_slice($thisFileContent, $line_start-1, $line_end - $line_start + 1));
-	$pageContent = file_get_contents(BASEDIR.substr($data['error_page'], strlen(fusion_get_settings('site_path'))));
+	$pageFilePath = BASEDIR.substr($data['error_page'], strlen(fusion_get_settings('site_path')));
+	$pageContent = is_file($pageFilePath) ? file_get_contents($pageFilePath) : '';
 	?>
 	<table cellpadding='0' cellspacing='1' class='tbl-border center' style='border-collapse:collapse;width:90%;'>
 		<tr>
