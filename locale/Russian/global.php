@@ -108,6 +108,7 @@ $locale['global_060'] = "Прекратить отслеживать тему?";
 // Blog, News & Articles
 $locale['global_070']  = "Опубликовано ";
 $locale['global_071']  = "в ";
+$locale['global_071b'] = "Автор";
 $locale['global_072']  = "Продолжить чтение";
 $locale['global_073']  = " комментариев";
 $locale['global_073b'] = " комментарий";
