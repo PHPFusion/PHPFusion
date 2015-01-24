@@ -17,8 +17,13 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) die("Access Denied");
 
+/**
+ * Class eShop_item
+ */
 class eShop_item {
-
+	/**
+	 * @var array|bool
+	 */
 	private $data = array(
 		'id' => 0,
 		'title' => '',
@@ -70,15 +75,27 @@ class eShop_item {
 		'iColor'=>'',
 		'dync' => '',
 	);
+	/**
+	 * @var string
+	 */
 	private $formaction = '';
+	/**
+	 * @var string
+	 */
 	private $filter_Sql = '';
-
+	/**
+	 * @var bool|int|string
+	 */
+	private $max_rowstart = 0;
+	/**
+	 * Constructor and Sanitize Globals
+	 */
 	public function __construct() {
 		global $aidlink, $settings;
 		$_GET['id'] = isset($_GET['id']) && isnum($_GET['id']) ? $_GET['id'] : 0;
 		$_GET['parent_id'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
-		$max_rowstart = dbcount("(i.id)", DB_ESHOP." i LEFT JOIN ".DB_ESHOP_CATS ." cat on (cat.cid=i.cid)", "cat.parentid='".intval($_GET['parent_id'])."'");
-		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rowstart ? $_GET['rowstart'] : 0;
+		$this->max_rowstart = dbcount("(i.id)", DB_ESHOP." i LEFT JOIN ".DB_ESHOP_CATS ." cat on (cat.cid=i.cid)", "cat.parentid='".intval($_GET['parent_id'])."'");
+		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->max_rowstart ? $_GET['rowstart'] : 0;
 
 		$this->data['product_languages'] = fusion_get_enabled_languages();
 		$this->data['dateadded'] = time();
@@ -111,6 +128,9 @@ class eShop_item {
 		self::quick_save();
 	}
 
+	/**
+	 * Quick saving MYSQL update
+	 */
 	static function quick_save() {
 		global $aidlink;
 		if (isset($_POST['cats_quicksave'])) {
@@ -133,10 +153,19 @@ class eShop_item {
 		}
 	}
 
+	/**
+	 * Validate row exist for edit
+	 * @param $id
+	 * @return bool|string
+	 */
 	static function verify_product_edit($id) {
 		return dbcount("(id)", DB_ESHOP, "id='".$id."'");
 	}
 
+	/**
+	 * Get Availability Array
+	 * @return array
+	 */
 	static function getAvailability() {
 		global $locale;
 		return array(
@@ -158,7 +187,9 @@ class eShop_item {
 		return $visibility_opts;
 	}
 
-	// action refresh
+	/**
+	 * Refresh Order
+	 */
 	static function refresh_order() {
 		global $aidlink, $settings;
 
@@ -171,7 +202,9 @@ class eShop_item {
 		//redirect(FUSION_SELF.$aidlink."&amp;iorderrefresh".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
 	}
 
-	// action moveup
+	/**
+	 * Move Up function
+	 */
 	static function product_moveup() {
 		global $aidlink;
 		if (isset($_GET['id']) && isnum($_GET['id']) && isset($_GET['cat']) && isnum($_GET['cat'])) {
@@ -182,6 +215,9 @@ class eShop_item {
 		}
 	}
 	// action movedown
+	/**
+	 *
+	 */
 	static function product_movedown() {
 		global $aidlink;
 		if (isset($_GET['id']) && isnum($_GET['id']) && isset($_GET['cat']) && isnum($_GET['cat'])) {
@@ -192,6 +228,9 @@ class eShop_item {
 		}
 	}
 	// action delete
+	/**
+	 *
+	 */
 	static function product_delete() {
 		global $aidlink;
 		if (isset($_GET['id']) && isnum($_GET['id'])) {
@@ -240,6 +279,9 @@ class eShop_item {
 		}
 	}
 
+	/**
+	 * MYSQL insert or update
+	 */
 	private function set_productdb() {
 		global $aidlink;
 			$this->data['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
@@ -342,6 +384,10 @@ class eShop_item {
 			//redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
 	}
 
+	/**
+	 * Data callback
+	 * @return array|bool
+	 */
 	static function products_data() {
 		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
 		if (dbrows($result)>0) {
@@ -349,6 +395,9 @@ class eShop_item {
 		}
 	}
 
+	/**
+	 * The Form Template
+	 */
 	public function product_form() {
 		global $aidlink, $locale, $settings;
 
@@ -655,6 +704,9 @@ class eShop_item {
 		echo "</div>\n";
 	}
 
+	/**
+	 * The Filter Template
+	 */
 	private function product_view_filters() {
 		global $locale, $aidlink;
 
@@ -711,6 +763,9 @@ class eShop_item {
 		");
 	}
 
+	/**
+	 * The Listing Template
+	 */
 	public function product_listing() {
 		global $locale, $aidlink, $settings;
 
@@ -753,7 +808,6 @@ class eShop_item {
 		});
 		");
 		self::product_view_filters();
-
 		echo "<div class='m-t-20'>\n";
 		echo "<table class='table table-responsive'>\n";
 		echo "<tr>\n";
@@ -769,7 +823,6 @@ class eShop_item {
 		echo "<th>".$locale['ESHPPRO122']."</th>\n";
 		echo "<th>".$locale['ESHPPRO191']."</th>\n";
 		echo "</tr>\n";
-
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='12'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
@@ -842,52 +895,13 @@ class eShop_item {
 			}
 			echo "</tbody>\n";
 		} else {
-			echo "<tr>\n<td class='text-center' colspan='12'>".$locale['ESHPPRO177']."</td>\n</tr>\n";
+			echo "<tr>\n<td class='text-center' colspan='12'><div class='alert alert-warning m-t-20'>".$locale['ESHPPRO177']."</div></td>\n</tr>\n";
 		}
 		echo "</table>\n";
+		if ($this->max_rowstart > $rows) {
+			echo "<div class='text-center'>".makePageNav($_GET['rowstart'], 15, $this->max_rowstart, 3, FUSION_SELF.$aidlink."&amp;status=".$_GET['status'].($settings['eshop_cats'] ? "&amp;parent_id=".$_GET['parent_id'] : ''))."</div>\n";
+		}
 		echo "</div>\n";
-
-
-
-
-		/*
-			echo "<table align='center' cellspacing='4' cellpadding='0' width='99%' class='tbl-border'><tr>
-<td class='tbl2' width='1%' align='center'><b></b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO173']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO174']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO175']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO176']."</b></td>
-</tr>\n";
-			$result = dbquery("SELECT * FROM ".DB_ESHOP." ORDER BY iorder, title LIMIT ".$_GET['rowstart'].",15");
-			while ($data = dbarray($result)) {
-				echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
-				echo "<td width='1%' align='left'><a href='".FUSION_SELF.$aidlink."&amp;a_page=Main&action=edit&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><b>".$data['title']."</b></a></td>\n";
-				echo "<td width='1%' align='center'> ".($data['artno'] !== '' ? "".$data['artno']."" : "".$data['id']."")." </td>";
-				echo "<td width='1%' align='center'> ".($data['sartno'] !== '' ? "".$data['sartno']."" : "N/A")." </td>";
-				echo "<td align='center' width='1%'>\n";
-				if (dbrows($result) != 1) {
-					$up = $data['iorder']-1;
-					$down = $data['iorder']+1;
-					if ($k == 1) {
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=movedown&amp;order=$down&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("down")."' alt='Move down' title='Move down' style='border:0px;' /></a>\n";
-					} elseif ($k < dbrows($result)) {
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=moveup&amp;order=$up&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("up")."' alt='Move up' title='Move up' style='border:0px;' /></a>\n";
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=movedown&amp;order=$down&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("down")."' alt='Move down' title='Move down'  style='border:0px;' /></a>\n";
-					} else {
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=moveup&amp;order=$up&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("up")."' alt='Move up' title='Move up' style='border:0px;' /></a>\n";
-					}
-				}
-				$k++;
-				echo " #".$data['iorder']."</td>\n";
-				echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;action=delete&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."' onClick='return confirmdelete();'><img src='".SHOP."img/remove.png' border='0' height='20' style='vertical-align:middle;'  alt='' /></a></td></tr>";
-				echo "</td>";
-			}
-			echo "</table>\n";
-			echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 15, $rows, 3, FUSION_SELF.$aidlink."&amp;sortby=".$_GET['sortby']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."&")."\n</div>\n";
-		} else {
-			echo "<center><br />\n <b></b> <br /><br />\n</center>\n";
-		} */
-
 	}
 }
 
