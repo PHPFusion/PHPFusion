@@ -108,6 +108,7 @@ $locale['global_060'] = "Прекратить отслеживать тему?";
 // Blog, News & Articles
 $locale['global_070']  = "Опубликовано ";
 $locale['global_071']  = "в ";
+$locale['global_071b'] = "Автор";
 $locale['global_072']  = "Продолжить чтение";
 $locale['global_073']  = " комментариев";
 $locale['global_073b'] = " комментарий";
@@ -408,7 +409,7 @@ $locale['comments_ratings'] = "Комментарии и оценки";
 // Testimonials
 $locale['testimonial_rank'] = "На этом сайте я %s";
 $locale['testimonial_location'] = "и сейчас я живу в %s";
-$locale['testimonial_join'] = ". Я зарегитсрировался здесь %s.";
+$locale['testimonial_join'] = ". Я зарегистрировался здесь %s.";
 $locale['testimonial_join'] = "Также я запустил(-а) свой сайт по адресу %s.";
 $locale['testimonial_contact'] = "Если Вам нужно связаться со мной, вы можете связаться со мной по адресу %s.";
 $locale['testimonial_email'] = "Также Вы можете отправить мне сообщение по электропочте на %s.";
