@@ -49,8 +49,9 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 			echo "<td>".$data['artno']."</td>\n";
 			echo "<td>".$data['sartno']."</td>\n";
 			echo "<td>\n";
-			echo ($i == 0) ? "" : "<a title='".$locale['ESHPCATS137']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=moveup&amp;id=".$data['id']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-			echo ($i == $rows-1) ? "" : "<a title='".$locale['ESHPCATS138']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=movedown&amp;id=".$data['id']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+			echo "<td>\n";
+			echo ($i == 0) ? "" : "<a title='".$locale['ESHPCATS137']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=moveup&amp;cat=".$data['cid']."&amp;id=".$data['id']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+			echo ($i == $rows-1) ? "" : "<a title='".$locale['ESHPCATS138']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=movedown&amp;cat=".$data['cid']."&amp;id=".$data['id']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 			echo "</td>\n"; // move up and down.
 			echo "<td>".$availability[$data['status']]."</td>\n";
 			echo "<td>".$visibility_opts[$data['access']]."</td>\n";

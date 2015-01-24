@@ -269,8 +269,10 @@ class eShop_item {
 		'linebreaks' => 1,
 		'keywords' => '',
 	);
+
 	private $formaction = '';
 	private $filter_Sql = '';
+
 	public function __construct() {
 		global $aidlink, $settings;
 		$_GET['id'] = isset($_GET['id']) && isnum($_GET['id']) ? $_GET['id'] : 0;
@@ -281,16 +283,33 @@ class eShop_item {
 		$this->data['product_languages'] = fusion_get_enabled_languages();
 		$this->data['dateadded'] = time();
 
-		if (isset($_GET['action']) && $_GET['action'] == "edit" && self::verify_product_edit($_GET['id'])) {
-			$this->data = self::products_data();
-			$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&id=".$_GET['id']."".($settings['eshop_cats'] == "1" ? "&amp;parent_id=".$_GET['parent_id']."" : "");
-		} else {
-			$this->formaction = FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" && isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id']."" : "");
+		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
+		switch ($_GET['action']) {
+			case 'refresh' :
+				self::refresh_order();
+				break;
+			case 'moveup' :
+				self::product_moveup();
+				break;
+			case 'movedown':
+				self::product_movedown();
+				break;
+			case 'delete':
+				self::product_delete();
+				break;
+			case 'edit' :
+				if (self::verify_product_edit($_GET['id'])) {
+					$this->data = self::products_data();
+					$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&id=".$_GET['id']."".($settings['eshop_cats'] == "1" ? "&amp;parent_id=".$_GET['parent_id']."" : "");
+				}
+				break;
+			default :
+				$this->formaction = FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" && isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id']."" : "");
 		}
-		if (isset($_POST['save_cat'])) {
-			self::set_productdb();
-		}
+
+		if (isset($_POST['save_cat'])) self::set_productdb();
 		self::quick_save();
+
 	}
 
 	static function quick_save() {
@@ -306,11 +325,10 @@ class eShop_item {
 			$quick['active'] = isset($_POST['active']) ? form_sanitizer($_POST['active'], '0', 'active') : 0;
 			$quick['status'] = isset($_POST['status']) ? form_sanitizer($_POST['status'], '0', 'status') : 0;
 			if ($quick['id']) {
-				$c_result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".intval($quick['cid'])."'");
+				$c_result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".intval($quick['id'])."'");
 				if (dbrows($c_result) > 0) {
 					$quick += dbarray($c_result);
 					dbquery_insert(DB_ESHOP, $quick, 'update');
-					redirect(FUSION_SELF.$aidlink."&amp;a_page=main");
 				}
 			}
 		}
@@ -342,35 +360,36 @@ class eShop_item {
 	}
 
 	// action refresh
-	static function product_refresh() {
+	static function refresh_order() {
 		global $aidlink, $settings;
-		$i = 1;
-		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' ORDER BY iorder");
-		while ($data = dbarray($result)) {
-			$result2 = dbquery("UPDATE ".DB_ESHOP." SET iorder='$i' WHERE id='".$data['id']."'");
-			$i++;
-		}
-		redirect(FUSION_SELF.$aidlink."&amp;iorderrefresh".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+
+		//$i = 1;
+		//$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' ORDER BY iorder");
+		//while ($data = dbarray($result)) {
+		//	$result2 = dbquery("UPDATE ".DB_ESHOP." SET iorder='$i' WHERE id='".$data['id']."'");
+		//	$i++;
+		//}
+		//redirect(FUSION_SELF.$aidlink."&amp;iorderrefresh".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
 	}
 
 	// action moveup
 	static function product_moveup() {
-		global $aidlink, $settings;
-		if (isset($_GET['id']) && isnum($_GET['id'])) {
-			$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' AND iorder='".intval($_GET['order'])."'"));
-			$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$_REQUEST['category']."' AND id='".$data['id']."'");
-			$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$_REQUEST['category']."' AND id='".$_GET['id']."'");
-			redirect(FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+		global $aidlink;
+		if (isset($_GET['id']) && isnum($_GET['id']) && isset($_GET['cat']) && isnum($_GET['cat'])) {
+			$data = dbarray(dbquery("SELECT id, cid, iorder FROM ".DB_ESHOP." WHERE cid = '".$_GET['cat']."' AND id='".intval($_GET['id'])."'"));
+			dbquery("UPDATE ".DB_ESHOP." SET iorder = iorder+1 WHERE cid = '".$data['cid']."' AND iorder = '".($data['iorder']-1)."'");
+			dbquery("UPDATE ".DB_ESHOP." SET iorder = iorder-1 WHERE id = '".$data['id']."'");
+			redirect(FUSION_SELF.$aidlink."&amp;a_page=main");
 		}
 	}
 	// action movedown
 	static function product_movedown() {
-		global $aidlink, $settings;
-		if (isset($_GET['id']) && isnum($_GET['id'])) {
-			$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' AND iorder='".intval($_GET['order'])."'"));
-		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$_REQUEST['category']."' AND id='".$data['id']."'");
-		$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$_REQUEST['category']."' AND id='".$_GET['id']."'");
-		redirect(FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+		global $aidlink;
+		if (isset($_GET['id']) && isnum($_GET['id']) && isset($_GET['cat']) && isnum($_GET['cat'])) {
+			$data = dbarray(dbquery("SELECT id, cid, iorder FROM ".DB_ESHOP." WHERE cid = '".$_GET['cat']."' AND id='".intval($_GET['id'])."'"));
+			dbquery("UPDATE ".DB_ESHOP." SET iorder = iorder-1 WHERE cid = '".$data['cid']."' AND iorder = '".($data['iorder']+1)."'");
+			dbquery("UPDATE ".DB_ESHOP." SET iorder = iorder+1 WHERE id = '".$data['id']."'");
+			redirect(FUSION_SELF.$aidlink."&amp;a_page=main");
 		}
 	}
 	// action delete
@@ -390,9 +409,9 @@ class eShop_item {
 			if ($remove['thumb2']) {
 				@unlink($thumb2);
 			}
-			$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE iorder>'".$remove['iorder']."' AND cid = '".$remove['cid']."'");
-			$result = dbquery("DELETE FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
-			redirect(FUSION_SELF.$aidlink."&amp;ideleted".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+			dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE iorder>'".$remove['iorder']."' AND cid = '".$remove['cid']."'");
+			dbquery("DELETE FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
+			redirect(FUSION_SELF.$aidlink."&amp;a_page=main");
 		}
 	}
 
@@ -450,7 +469,7 @@ class eShop_item {
 			$this->data['xprice'] = isset($_POST['xprice']) ? str_replace(',', '.', form_sanitizer($_POST['xprice'], '', 'xprice')) : '';
 			$this->data['stock'] = isset($_POST['stock']) ? str_replace(',', '.', form_sanitizer($_POST['stock'], '', 'stock')) : '';
 			$this->data['version'] = isset($_POST['version']) ? str_replace(',', '.', form_sanitizer($_POST['version'], '', 'version')) : '';
-			$this->data['status'] = isset($_POST['status']) ? form_sanitizer($_POST['version'], '0', 'version') : 0;
+			$this->data['status'] = isset($_POST['status']) ? form_sanitizer($_POST['status'], '0', 'status') : 0;
 			$this->data['active'] = isset($_POST['active']) ? form_sanitizer($_POST['active'], '0', 'active') : 0;
 			$this->data['gallery_on'] = isset($_POST['gallery_on']) ? form_sanitizer($_POST['gallery_on'], '0', 'gallery_on') : 0;
 			$this->data['delivery'] = isset($_POST['delivery']) ? form_sanitizer($_POST['delivery'], '0', 'delivery') : 0;
@@ -475,36 +494,51 @@ class eShop_item {
 			$this->data['comments'] = isset($_POST['comments']) ? 1 : 0;
 			$this->data['linebreaks'] = isset($_POST['linebreaks']) ? 1 : 0;
 			$this->data['keywords'] = isset($_POST['keywords']) ? form_sanitizer($_POST['keywords'], '', 'keywords') : '';
-			$this->data['product_languages'] = isset($_POST['product_languages']) ? form_sanitizer($_POST['product_languages'], '') : array();
+			$this->data['product_languages'] = isset($_POST['product_languages']) ? form_sanitizer($_POST['product_languages'], '') : '';
+
 			if (isset($_POST['cList'])) {
+				$cList = '';
 				for ($i = 0, $l = count($_POST['cList']); $i < $l; $i++) {
-					$this->data['clist'] .= ".\"".$_POST['cList'][$i]."\"";
+					$cList .= ".\"".$_POST['cList'][$i]."\"";
 				}
 			}
-			$this->data['icolor'] = form_sanitizer($this->data['clist'], '');
+			$this->data['icolor'] = isset($cList) ? form_sanitizer($cList, '') : '';
+
 			if (isset($_POST['sList'])) {
+				$sList = '';
 				for ($i = 0, $l = count($_POST['sList']); $i < $l; $i++) {
-					$this->data['slist'] .= ".\"".$_POST['sList'][$i]."\"";
+					$sList .= ".\"".$_POST['sList'][$i]."\"";
 				}
 			}
-			$this->data['dync'] = form_sanitizer($this->data['slist'], '');
+			$this->data['dync'] = isset($sList) ? form_sanitizer($sList, '') : '';
 			if (self::verify_product_edit($_GET['id'])) {
 
-				$old_iorder = dbresult(dbquery("SELECT iorder FROM ".DB_ESHOP." WHERE cid = '".$this->data['cid']."' AND id='".$this->data['id']."'"), 0);
-				if ($this->data['iorder'] > $old_iorder) {
-					$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$this->data['cid']."' AND iorder>'$old_iorder' AND iorder<='".$this->data['iorder']."'");
-				} elseif ($this->data['iorder'] < $old_iorder) {
-					$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder<'$old_iorder' AND iorder>='".$this->data['iorder']."'");
+				$old_data = dbarray(dbquery("SELECT cid, iorder, dateadded FROM ".DB_ESHOP." WHERE id='".$this->data['id']."'"));
+				$this->data['dateadded'] = $old_data['dateadded']; // static time
+				// at anytime, if order is 0, new order means max order
+				if (!$this->data['iorder']) $this->data['iorder'] = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid='".$this->data['cid']."'"), 0)+1;
+				// refresh ordering
+				if ($old_data['cid'] !== $this->data['cid']) { // not the same category
+					// refresh ex-category ordering
+					dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid='".$old_data['cid']."' AND iorder > '".$old_data['iorder']."'"); // -1 to all previous category.
+				} else { // same category
+					// refresh current category
+					if ($this->data['iorder'] > $old_data['iorder']) {
+						//echo 'new order is more than old order';
+						dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$this->data['cid']."' AND (iorder > '".$old_data['iorder']."' AND iorder <= '".$this->data['iorder']."')");
+
+					} elseif ($this->data['iorder'] < $old_data['iorder']) {
+						//echo 'new order is less than old order';
+						dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND (iorder < '".$old_data['iorder']."' AND iorder >= '".$this->data['iorder']."')");
+					}
 				}
 				dbquery_insert(DB_ESHOP, $this->data, 'update');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su");
 			} else {
-
 				if (!$this->data['iorder']) $this->data['iorder'] = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid='".$this->data['cid']."'"), 0)+1;
 				$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder>='".$this->data['iorder']."'");
 				dbquery_insert(DB_ESHOP, $this->data, 'save');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
-
 			}
 			//redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
 	}
@@ -845,13 +879,13 @@ class eShop_item {
 		echo form_select_tree('', 'category', 'category', $category, array('no_root'=>1, 'width'=>'200px', 'allowclear'=>1, 'placeholder'=>$locale['ESHFEAT125']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo "</div>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
-		echo form_select('', 'access', 'access', self::getVisibilityOpts(), $access, array('width'=>'150px', 'allowclear'=>1, 'placeholder'=>$locale['ESHPCATS109']));
+		echo form_select('', 'access', 'access-filter', self::getVisibilityOpts(), $access, array('width'=>'150px', 'allowclear'=>1, 'placeholder'=>$locale['ESHPCATS109']));
 		echo "</div>\n";
 		echo "<div class='display-inline-block' >\n";
 		echo form_button('Filter', 'filter', 'filter', 'go_filter', array('class'=>'btn-default'));
 		echo "</div>\n";
+		echo closeform();
 		echo "</div>\n";
-
 		add_to_jquery("
 		$('#search-btn').bind('click', function(e) {
 			$.ajax({
@@ -891,7 +925,7 @@ class eShop_item {
 				type: 'post',
 				data: { q: $(this).data('id'), token: '".$aidlink."' },
 				success: function(e) {
-					$('#cids').val(e.id);
+					$('#ids').val(e.id);
 					$('#titles').val(e.title);
 					$('#artnos').val(e.artno);
 					$('#sartnos').val(e.sartno);
@@ -990,8 +1024,8 @@ class eShop_item {
 				echo "<td>".$data['artno']."</td>\n";
 				echo "<td>".$data['sartno']."</td>\n";
 				echo "<td>\n";
-				echo ($i == 0) ? "" : "<a title='".$locale['ESHPCATS137']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=moveup&amp;id=".$data['id']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
-				echo ($i == $rows-1) ? "" : "<a title='".$locale['ESHPCATS138']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=movedown&amp;id=".$data['id']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+				echo ($i == 0) ? "" : "<a title='".$locale['ESHPCATS137']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=moveup&amp;cat=".$data['cid']."&amp;id=".$data['id']."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
+				echo ($i == $rows-1) ? "" : "<a title='".$locale['ESHPCATS138']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=movedown&amp;cat=".$data['cid']."&amp;id=".$data['id']."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 				echo "</td>\n"; // move up and down.
 				$availability = self::getAvailability();
 				echo "<td>".$availability[$data['status']]."</td>\n";
@@ -1053,25 +1087,15 @@ class eShop_item {
 	}
 }
 
-/*
-echo "<div style='float:right;margin-top:5px;'>\n";
-echo "<form id='search_form'  name='inputform' method='post' action='".FUSION_SELF.$aidlink."&amp;psearch'>
-<span style='vertical-align:middle;font-size:14px;'>".$locale['ESHPPRO178']."</span>";
-echo "<input type='text' name='psrchtext' class='textbox' style='margin-left:1px; margin-right:1px; margin-bottom:5px; width:160px;'  value='".$searchtext."' onblur=\"if(this.value=='') this.value='".$searchtext."';\" onfocus=\"if(this.value=='".$searchtext."') this.value='';\" />";
-echo "<input type='image' id='search_image' src='".SHOP."img/search_icon.png' alt='".$locale['SRCH162']."' />";
-echo "</form></div>";
-*/
-
 $item = new eShop_item();
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $item->verify_product_edit($_GET['id']) : 0;
-
 $tab_title['title'][] = $locale['ESHPPRO097'];
 $tab_title['id'][] = 'product';
 $tab_title['icon'][] = '';
 $tab_title['title'][] = $edit ? $locale['ESHPPRO098'] : $locale['ESHPPRO099'];
 $tab_title['id'][] = 'itemform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1, 1);
+$tab_active = tab_active($tab_title, ($edit ? 'itemform' : 'product'), 1);
 $item->getMessage();
 echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=main");
 echo opentabbody($tab_title['title'][0], 'product', $tab_active, 1);
