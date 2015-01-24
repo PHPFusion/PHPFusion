@@ -938,4 +938,3 @@ if (isset($_GET['section']) && $_GET['section'] == 'itemform') {
 	echo closetabbody();
 }
 closetable();
-?>

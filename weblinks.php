@@ -35,7 +35,7 @@ add_to_title($locale['global_200'].$locale['400']);
 add_to_breadcrumbs(array('link'=>BASEDIR.'weblinks.php', 'title'=>$locale['400']));
 
 if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
-
+	$info['item'] = array();
 	$result = dbquery("SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_description 
 	FROM ".DB_WEBLINK_CATS." wc 
 	".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")."
@@ -57,6 +57,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 
 } elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$info = array();
+	$info['item'] = array();
 	$result = dbquery("SELECT weblink_cat_name, weblink_cat_sorting FROM
 	".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".$_GET['cat_id']."'");
 	if (dbrows($result) != 0) {

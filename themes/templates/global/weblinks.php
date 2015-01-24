@@ -49,22 +49,24 @@ if (!function_exists('render_weblinks')) {
 			$counter = 0;
 			$columns = 2;
 			echo "<div class='row m-0'>\n";
-			foreach($info['item'] as $weblink_cat_id => $data) {
-				if ($counter != 0 && ($counter%$columns == 0)) {
-					echo "</div>\n<div class='row m-0'>\n";
-				}
-				echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 p-t-20'>\n";
+			if (!empty($info['item'])) {
+				foreach($info['item'] as $weblink_cat_id => $data) {
+					if ($counter != 0 && ($counter%$columns == 0)) {
+						echo "</div>\n<div class='row m-0'>\n";
+					}
+					echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 p-t-20'>\n";
 
-				echo "<div class='media'>\n";
-				echo "<div class='pull-left'><i class='entypo folder mid-opacity icon-sm'></i></div>\n";
-				echo "<div class='media-body overflow-hide'>\n";
-				echo "<div class='media-heading strong'><a href='".$data['weblink_item']['link']."'>".$data['weblink_item']['name']."</a> <span class='small'>".$data['weblink_count']."</span></div>\n";
-				if ($data['weblink_cat_description'] != "") {
-					echo "<span>".$data['weblink_cat_description']."</span>";
+					echo "<div class='media'>\n";
+					echo "<div class='pull-left'><i class='entypo folder mid-opacity icon-sm'></i></div>\n";
+					echo "<div class='media-body overflow-hide'>\n";
+					echo "<div class='media-heading strong'><a href='".$data['weblink_item']['link']."'>".$data['weblink_item']['name']."</a> <span class='small'>".$data['weblink_count']."</span></div>\n";
+					if ($data['weblink_cat_description'] != "") {
+						echo "<span>".$data['weblink_cat_description']."</span>";
+					}
+					echo "</div>\n</div>\n";
+					echo "</div>\n";
+					$counter++;
 				}
-				echo "</div>\n</div>\n";
-				echo "</div>\n";
-				$counter++;
 			}
 			echo "</div>\n";
 		} else {
@@ -73,4 +75,3 @@ if (!function_exists('render_weblinks')) {
 		closetable();
 	}
 }
-?>
