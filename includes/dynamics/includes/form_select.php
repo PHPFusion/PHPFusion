@@ -61,7 +61,7 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 		$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' style='width: ".($options['width'] && $title ? $options['width'] : "250px")."'/>\n";
 	} else {
 		// normal mode
-		$html .= "<select name='$input_name' id='$input_id' style='width: ".($options['width'] && $title ? $options['width'] : "250px")."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+		$html .= "<select name='$input_name' id='$input_id' style='width: ".($options['width'] ? $options['width'] : "250px")."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
 		$html .= ($options['allowclear']) ? "<option value=''></option>" : '';
 		if (is_array($option_array)) {
 			foreach ($option_array as $arr => $v) { // outputs: key, value, class - in order
@@ -98,7 +98,6 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 
 	// Generate Defender Tag
 	$input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=dropdown],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
 	$defender->add_field_session(array(
 							 'input_name' 	=> 	$input_name,
 							 'type'			=>	'dropdown',
@@ -328,8 +327,8 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 	$opt_pattern = str_repeat("&#8212;", $level);
 	if (!$level) {
 		$level = 0;
-		$html = "<div id='$input_id-field' class='form-group m-b-10 ".$options['class']."' ".($options['inline'] && $options['width'] && !$title ? "style='width: ".$options['width']." !important;'" : '').">\n";
-		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+		$html = "<div id='$input_id-field' class='form-group ".$options['class']."' ".($options['inline'] && $options['width'] && !$title ? "style='width: ".$options['width']." !important;'" : '').">\n";
+		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
 		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")." p-l-0'>\n" : "";
 	}
 	if ($level == 0) {
@@ -340,7 +339,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$allowclear
 		});
 		");
-		$html .= "<select name='$input_name' style='".($options['width'] && $title ? "width: ".$options['width']." " : 'min-width:250px;')."' id='$input_id' class='".$options['class']."' ".($options['deactivate'] == 1 ? "readonly" : '')." $multiple>";
+		$html .= "<select name='$input_name' style='".($options['width'] ? "width: ".$options['width']." " : 'min-width:250px;')."' id='$input_id' class='".$options['class']."' ".($options['deactivate'] == 1 ? "readonly" : '')." $multiple>";
 		$html .= $options['allowclear'] ? "<option value=''></option>" : '';
 		if ($options['no_root'] !== 1) { // api options to remove root from selector. used in items creation.
 			$this_select = '';
@@ -377,9 +376,15 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 	if (!$level) {
 		$html = &$html;
 		$html .= "</select>";
-		$html .= "<br/><div id='$input_id-help'></div>";
-		$html .= ($options['inline'] && $title) ? "</div>\n" : '';
+		$html .= "<div id='$input_id-help'></div>";
+		$html .= ($options['inline']) ? "</div>\n" : '';
 		$html .= "</div>\n";
+		if ($options['required']) {
+			$html .= "<input class='req' id='dummy-$input_id' type='hidden'>\n"; // for jscheck
+		}
+//		$html .= ($options['inline'] && $title) ? "</div>\n" : '';
+		//$html .= "</div>\n";
+		//$html .= "</div>\n";
 		$defender->add_field_session(array(
 			 'input_name' 	=> 	$input_name,
 			 'type'			=>	'dropdown',

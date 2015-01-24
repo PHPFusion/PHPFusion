@@ -29,12 +29,6 @@ if (!defined("IN_FUSION")) die("Access Denied");
 */
 
 /*
-if (isset($_POST['access'])) {
-	$access = isnum($_POST['access']) ? $_POST['access'] : "0";
-} else {
-	$access = "0";
-}
-
 if (isset($_GET['psearch'])) {
 	include ADMIN."eshop/productsearch.php";
 } else {
@@ -326,6 +320,14 @@ class eShop_item {
 		return dbcount("(id)", DB_ESHOP, "id='".$id."'");
 	}
 
+	static function getAvailability() {
+		global $locale;
+		return array(
+			'0' => $locale['ESHPPRO145a'],
+			'1' => $locale['ESHPPRO145b'],
+		);
+	}
+
 	/**
 	 * Return access levels
 	 * @return array
@@ -512,14 +514,6 @@ class eShop_item {
 		if (dbrows($result)>0) {
 			return dbarray($result);
 		}
-	}
-
-	static function getAvailability() {
-		global $locale;
-		return array(
-			'0' => $locale['ESHPPRO145a'],
-			'1' => $locale['ESHPPRO145b'],
-		);
 	}
 
 	public function product_form() {
@@ -835,27 +829,48 @@ class eShop_item {
 			$this->filter_Sql .= $access ? "AND i.access='".intval($access)."'" : '';
 		}
 
-		echo "<div class='m-t-20'>\n";
+		echo "<div class='m-t-20 display-block'>\n";
+		echo "<div class='display-inline-block search-align m-r-10'>\n";
+		echo form_text('', 'srch_text', 'srch_text', '', array('placeholder'=>$locale['SRCH158'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
+		echo form_button($locale['SRCH164'], 'search', 'search-btn', $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
+		echo "</div>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;status=0' ".(!$item_status ? "class='text-dark'" : '').">All (".number_format(dbcount("(id)", DB_ESHOP)).")</a>\n - ";
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;status=1' ".($item_status ? "class='text-dark'" : '').">Unlisted (".number_format(dbcount("(id)", DB_ESHOP, "status='0'")).")</a>\n - ";
 		echo "</div>\n";
 		echo "<div class='display-inline-block'>\n";
-		// sql get article with date range
 		echo openform('get_filter', 'get_filters', 'post', clean_request('', array('aid', 'status', 'section')), array('notice'=>0));
-		echo "<div class='display-inline-block m-r-10'>\n";
-		echo form_select_tree('', 'category', 'category', $category, array('no_root'=>1, 'allowclear'=>1, 'placeholder'=>'Filter by Category', 'allowclear'=>1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo "</div>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
-		echo form_select('', 'access', 'access', self::getVisibilityOpts(), $access);
+		echo form_select_tree('', 'category', 'category', $category, array('no_root'=>1, 'width'=>'200px', 'allowclear'=>1, 'placeholder'=>$locale['ESHFEAT125']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo "</div>\n";
-		echo "<div class='display-inline-block'>\n";
+		echo "<div class='display-inline-block m-r-10'>\n";
+		echo form_select('', 'access', 'access', self::getVisibilityOpts(), $access, array('width'=>'150px', 'allowclear'=>1, 'placeholder'=>$locale['ESHPCATS109']));
+		echo "</div>\n";
+		echo "<div class='display-inline-block' >\n";
 		echo form_button('Filter', 'filter', 'filter', 'go_filter', array('class'=>'btn-default'));
 		echo "</div>\n";
 		echo "</div>\n";
-		echo "</div>\n";
-	}
 
+		add_to_jquery("
+		$('#search-btn').bind('click', function(e) {
+			$.ajax({
+				url: '".ADMIN."includes/eshop_search.php',
+				dataType: 'html',
+				type: 'post',
+				beforeSend: function(e) { $('#eshopitem-links').html('<tr><td class=\"text-center\"colspan=\'12\'><img src=\"".IMAGES."loader.gif\"/></td></tr>'); },
+				data: { q: $('#srch_text').val(), token: '".$aidlink."' },
+				success: function(e) {
+					// append html
+					$('#eshopitem-links').html(e);
+				},
+				error : function(e) {
+				console.log(e);
+				}
+			});
+		});
+		");
+	}
 
 	public function product_listing() {
 		global $locale, $aidlink, $settings;
@@ -1036,8 +1051,6 @@ class eShop_item {
 		} */
 
 	}
-
-
 }
 
 /*

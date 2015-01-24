@@ -241,6 +241,7 @@ $locale['SRCH160'] = "Search for customers";
 $locale['SRCH161'] = "Search for orders";
 $locale['SRCH162'] = "Search for products";
 $locale['SRCH163'] = "eShop product finder";
+$locale['SRCH164'] = "Search";
 
 //Administration products
 $locale['ESHPPRO097'] = "Current Products";

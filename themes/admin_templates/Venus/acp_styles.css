@@ -156,6 +156,14 @@ legend {
 
 /* off canvas */
 @media all and (min-width:0px) and (max-width: 768px) {
+
+	.search-align {
+		display: block;
+		width:100%;
+		float:left;
+		vertical-align:middle;
+	}
+
 	.venus-toggler {
 		float:	left;
 	}
@@ -223,6 +231,11 @@ legend {
 }
 
 @media all and (min-width: 769px) and (max-width:5000px) {
+
+	.search-align {
+		float:right;
+		vertical-align:middle;
+	}
 
 	.off-canvas {
 		left: 0px;

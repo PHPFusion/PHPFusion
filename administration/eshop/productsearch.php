@@ -26,7 +26,7 @@ echo "<br /><div class='admin-message'>".$locale['SRCH159']."</div><br />";
 echo "<br />";
 if($search != "" && strlen($search) < 1)
    {
-echo "<br /><div class='admin-message'><center><b>".$locale['SRCH156']."</b><br />".$locale['SRCH151']."</center></div><br />";
+		echo "<br /><div class='admin-message'><center><b>".$locale['SRCH156']."</b><br />".$locale['SRCH151']."</center></div><br />";
 
 } else {
 
@@ -40,12 +40,9 @@ while(list($key,$val)=each($kt)){
 if($val<>" " and strlen($val) > 0){ $q.= " title like '%$val%' or artno like '%$val%' or sartno like '%$val%' or id like '%$val%' or ";}
 }
 $q=substr($q,0,(strlen($q)-3));
-
 $result = dbquery("SELECT id,cid,title,artno,sartno FROM ".DB_ESHOP." WHERE ".$q ." ORDER BY title ASC LIMIT 50");
-
-
 }
-add_to_title(" Customer Search");
+add_to_title("Product Search");
 
 if (dbrows($result) != 0) {
 $numRecords = dbrows($result);
