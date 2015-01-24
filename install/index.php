@@ -661,7 +661,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		}
 		$userPassword = "";
 		$adminPassword = "";
-		$userPass = new PasswordAuth($password_algorithm);
+		$userPass = new \PHPFusion\PasswordAuth($password_algorithm);
 		$userPass->inputNewPassword = (isset($_POST['password1']) ? stripinput(trim($_POST['password1'])) : "");
 		$userPass->inputNewPassword2 = (isset($_POST['password2']) ? stripinput(trim($_POST['password2'])) : "");
 		$returnValue = $userPass->isValidNewPassword();
@@ -674,7 +674,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		} elseif ($returnValue == 3) {
 			$error .= $locale['setup_5013']."<br /><br />\n";
 		}
-		$adminPass = new PasswordAuth($password_algorithm);
+		$adminPass = new \PHPFusion\PasswordAuth($password_algorithm);
 		$adminPass->inputNewPassword = (isset($_POST['admin_password1']) ? stripinput(trim($_POST['admin_password1'])) : "");
 		$adminPass->inputNewPassword2 = (isset($_POST['admin_password2']) ? stripinput(trim($_POST['admin_password2'])) : "");
 		$returnValue = $adminPass->isValidNewPassword();
