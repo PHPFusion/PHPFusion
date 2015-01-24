@@ -1613,4 +1613,3 @@ class QuantumFields {
 	}
 
 }
-?>

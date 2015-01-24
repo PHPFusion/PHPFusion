@@ -683,4 +683,3 @@ class UserFieldsInput {
 		}
 	}
 }
-?>

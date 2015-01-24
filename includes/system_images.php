@@ -53,4 +53,3 @@ function set_image($name, $path) {
 function redirect_img_dir($source, $target) {
 	ImageRepo::replaceInAllPath($source, $target);
 }
-?>

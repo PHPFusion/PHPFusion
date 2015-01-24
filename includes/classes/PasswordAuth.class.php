@@ -22,4 +22,3 @@
 class PasswordAuth extends PHPFusion\PasswordAuth {
 
 }
-?>

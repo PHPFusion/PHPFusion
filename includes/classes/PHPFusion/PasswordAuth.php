@@ -127,4 +127,3 @@ class PasswordAuth {
 		return sha1(PasswordAuth::getNewPassword($length));
 	}
 }
-?>

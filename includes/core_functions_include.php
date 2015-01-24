@@ -1234,5 +1234,3 @@ function fusion_get_enabled_languages() {
 	}
 	return $enabled_languages;
 }
-
-?>

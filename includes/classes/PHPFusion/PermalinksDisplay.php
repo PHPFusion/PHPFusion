@@ -1378,4 +1378,3 @@ function normalize($string) {
 	return \strtr($string, $table);
 }
 
-?>

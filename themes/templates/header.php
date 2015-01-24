@@ -62,4 +62,3 @@ if ($settings['bootstrap']) {
 }
 require_once THEMES."templates/panels.php";
 ob_start();
-?>

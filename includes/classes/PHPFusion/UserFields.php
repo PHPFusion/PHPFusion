@@ -414,4 +414,3 @@ class UserFields extends QuantumFields {
 
 }
 
-?>

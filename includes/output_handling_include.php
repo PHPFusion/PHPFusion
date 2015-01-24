@@ -132,5 +132,3 @@ function add_to_jquery($tag = "") {
 function add_to_breadcrumbs(array $link=array()) {
 	OutputHandler::addToBreadCrumbs($link);
 }
-
-?>
