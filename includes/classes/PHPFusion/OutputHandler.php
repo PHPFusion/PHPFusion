@@ -253,3 +253,4 @@ class OutputHandler {
         return $output;
     }
 }
+?>

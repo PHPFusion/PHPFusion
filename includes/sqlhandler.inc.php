@@ -430,7 +430,7 @@ function sort_tree(&$result, $key) {
 }
 
 // New SQL Row Modifier.
-function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
+function dbquery_insert($db, $inputdata, $mode, array $options = array()) {
 	global $defender;
 	require_once INCLUDES."notify/notify.inc.php";
 	if (defined("ADMIN_PANEL")) {
@@ -438,19 +438,14 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 	} else {
 		$aidlink = '?';
 	}
-	if (is_array($options)) {
-		$url = (array_key_exists("url", $options)) ? $options['url'] : "";
-		$debug = (array_key_exists("debug", $options) && $options['debug'] == 1) ? 1 : 0;
-		$pkey = (array_key_exists("primary_key", $options)) ? $options['primary_key'] : 0;
-		$no_unique = (array_key_exists("no_unique", $options)) ? 1 : 0;
-		$keep_session = array_key_exists('keep_session', $options) ? 1 : 0;
-	} else {
-		$url = "";
-		$debug = 0;
-		$pkey = 0;
-		$no_unique = 0;
-		$keep_session = 0;
-	}
+
+	$options += array(
+		'url' => !empty($options['url']) ? : '',
+		'debug' => !empty($options['debug']) ? 1 : 0,
+		'primary_key' => !empty($options['primary_key']) ? $options['primary_key'] : 0,
+		'no_unique' => !empty($options['no_unique']) && $options['no_unique'] == 1 ? 1 : 0,
+		'keep_session' => !empty($options['keep_session']) && $options['keep_session'] == 1 ? 1 : 0
+	);
 
 	if (!defined("FUSION_NULL")) {
 		$columns = fieldgenerator($db);
@@ -463,7 +458,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 		//@todo: optimize code later. there are repeated sections.
 		// Prime Module
 		foreach ($columns as $arr => $v) {
-			if ($no_unique) {
+			if ($options['no_unique']) {
 				// no_unique  - that every single column have a value.
 				if ($mode == "save") { // if have AI column, just save in.
 					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
@@ -488,9 +483,9 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v=''" : "$v='',";
 					}
 				}
-			} elseif ($pkey) {
+			} elseif ($options['primary_key']) {
 				// using PKEY - when the UNIQUE Auto Increment Column is NOT in the first column. - not to save on AI.
-				if ($mode == "save" && $pkey !==$v) {
+				if ($mode == "save" && $options['primary_key'] !==$v) {
 				//if ($mode == "save") { // if have AI column, just save in.
 					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
 				} elseif ($mode == "update") {
@@ -508,7 +503,7 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v='$values'" : "$v='$values',";
 					}
 				} else {
-					if ($mode == "save" && $pkey !==$v) {
+					if ($mode == "save" && $options['primary_key'] !==$v) {
 						$sanitized_input[] = ($arr == ($col_rows-1)) ? "''" : "'',";
 					} elseif ($mode == "update") {
 						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v=''" : "$v='',";
@@ -525,9 +520,6 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					// check whether there is a value or not.
 					if (array_key_exists($v, $inputdata)) {
 						$values = $inputdata[$v]; // go through the super sanitizer first.
-						/* if (isset($error) && ($values == $error)) {
-							redirect(FUSION_SELF.$aidlink."&status=error".($error ? "&error=$error" : ""));
-						} */
 						if ($mode == "save") {
 							$sanitized_input[] = ($arr == ($col_rows-1)) ? "'$values'" : "'$values',";
 						} elseif ($mode == "update") {
@@ -544,9 +536,9 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 			}
 		}
 		$key = 0;
-		if ($pkey) {
+		if ($options['primary_key']) {
 			foreach($columns as $ckey => $col) {
-				if ($col == $pkey) {
+				if ($col == $options['primary_key']) {
 					$key = $ckey;
 					break;
 				}
@@ -562,19 +554,19 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 			foreach ($sanitized_input as $arr => $v) {
 				$the_value .= "$v";
 			}
-			if ($debug) {
+			if ($options['debug']) {
 				print_p($col_names);
 				print_p($sanitized_input);
 			}
 			if (count($col_names) !== count($sanitized_input)) {
 				die();
 			} else {
-				if ($debug) {
+				if ($options['debug']) {
 					$result = "INSERT INTO ".$db." ($the_column) VALUES ($the_value)";
 					print_p($result);
 				} else {
 					$result = dbquery("INSERT INTO ".$db." ($the_column) VALUES ($the_value)");
-					if (!$keep_session) $defender->unset_field_session();
+					if (!$options['keep_session']) $defender->unset_field_session();
 					return dblastid();
 				}
 			}
@@ -585,18 +577,18 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 			}
 			// settings to use which field as the core for update.
 			$update_core = "".$columns[$key]."='".$inputdata[$columns[$key]]."'";
-			if ($debug) {
+			if ($options['debug']) {
 				print_p($update_core);
 				print_p($the_value);
 			}
 			if (count($col_names) !== count($sanitized_input)) {
 				die();
 			} else {
-				if ($debug) {
+				if ($options['debug']) {
 					print_p("UPDATE ".$db." SET $the_value WHERE $update_core");
 				} else {
 					$result = dbquery("UPDATE ".$db." SET $the_value WHERE $update_core");
-					if (!$keep_session) $defender->unset_field_session();
+					if (!$options['keep_session']) $defender->unset_field_session();
 				}
 			}
 		} elseif ($mode == "delete") {
@@ -607,12 +599,15 @@ function dbquery_insert($db, $inputdata, $mode, $options = FALSE) {
 					print_p("DELETE FROM ".$db." WHERE $col='$values'");
 				} else {
 					$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
-					if (!$keep_session) $defender->unset_field_session();
+					if (!$options['keep_session']) $defender->unset_field_session();
 				}
 			}
 		} else {
 			die();
 		}
+	}
+	elseif ($options['debug']) {
+		print_p('Fusion Null Declared. Developer, check form tokens.');
 	}
 	//else {
 		//notify('Script stopped as an illegal operation is found.', 'Fusion Defender stopped SQL, auto exit before execution.');

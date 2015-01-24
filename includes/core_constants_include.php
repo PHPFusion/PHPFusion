@@ -43,3 +43,4 @@ define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
 define("USER_IP", $_SERVER['REMOTE_ADDR']);
 // Define script start time
 define("START_TIME", microtime(TRUE));
+?>

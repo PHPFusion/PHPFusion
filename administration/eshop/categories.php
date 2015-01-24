@@ -77,7 +77,7 @@ class eShop_cats {
 		$this->eshop_data_tree = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
 		self::make_breads($this->eshop_cat_index);
 		if (self::verify_cat_edit($_GET['cid']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
-			$this->data = self::get_data();
+			$this->data = self::get_categoryData();
 		}
 		self::quick_save();
 	}
@@ -310,14 +310,13 @@ class eShop_cats {
 	 * Fetch edit data
 	 * @return array|bool
 	 */
-	private function get_data() {
+	private function get_categoryData() {
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid='".intval($_GET['cid'])."'");
 		if (dbrows($result) > 0) {
 			return dbarray($result);
 		}
-		return FALSE;
+		return array();
 	}
-
 
 	/**
 	 * render form template
@@ -464,7 +463,7 @@ class eShop_cats {
 				<a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;section=catform&amp;action=edit&amp;cid=".$data['cid']."'>".$locale['edit']."</a> |
 				<a class='qedit pointer' data-id='".$data['cid']."'>".$locale['qedit']."</a> |
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=delete&amp;cid=".$data['cid']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
-				";
+				</div>\n";
 				echo "</td>\n";
 				//echo "<td>\n".thumbnail(CAT_DIR.$data['image'], '30px')."</td>\n"; // will show no image thumbnail if no image
 				echo "<td>".number_format($subcats)."</td>\n";
@@ -483,7 +482,7 @@ class eShop_cats {
 			}
 			$html2 = "<div class='text-center m-t-10'>[ <a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;action=refresh&amp;pid=".$_GET['parent_id']."'> ".$locale['ESHPCATS130']." </a> ]</div>\n";
 		} else {
-			echo "<tr><td colspan='8' class='text-center'>".$locale['ESHPCATS115']."</td></tr>\n";
+			echo "<tr><td colspan='8' class='text-center'><div class='alert alert-warning m-t-10'>".$locale['ESHPCATS115']."</div></td></tr>\n";
 		}
 		echo "</tbody>\n";
 		echo "</table>\n";

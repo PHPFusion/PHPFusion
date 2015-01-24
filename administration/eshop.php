@@ -79,6 +79,7 @@ class eShop {
 	public function eshopAdmin() {
 		global $aidlink, $locale;
 		opentable($locale['ESHP201']);
+		echo "<!--Start Eshop Admin-->\n";
 		echo "<nav class='navbar navbar-default'>\n";
 		echo "<ul class='nav navbar-nav'>\n";
 		foreach ($this->pages as $page_get => $page) {
@@ -87,6 +88,7 @@ class eShop {
 		echo "</ul>\n";
 		echo "</nav>\n";
 		self::loadPage($this->settings);
+		echo "<!--End Eshop Admin-->\n";
 		closetable();
 	}
 	// Return the included file
@@ -107,5 +109,7 @@ class eShop {
 // Objective to secure against strings injections in any way.
 $eShop = new eShop();
 $eShop->eshopAdmin();
+
 require_once THEMES."templates/footer.php";
+
 ?>

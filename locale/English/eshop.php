@@ -364,19 +364,28 @@ $locale['ptabs_005'] = 'Image File Path';
 
 
 //Administration coupons
+$locale['ESHPCUPNS100'] = "Current Coupons";
 $locale['ESHPCUPNS101'] = "Code";
-$locale['ESHPCUPNS102'] = "Title";
-$locale['ESHPCUPNS103'] = "Type";
+$locale['ESHPCUPNS102'] = "Coupon Name";
+$locale['ESHPCUPNS103'] = "Coupon Type";
 $locale['ESHPCUPNS104'] = "Value";
-$locale['ESHPCUPNS105'] = "Start";
-$locale['ESHPCUPNS106'] = "End";
+$locale['ESHPCUPNS105'] = "Valid From";
+$locale['ESHPCUPNS106'] = "Valid Until";
 $locale['ESHPCUPNS107'] = "Active";
 $locale['ESHPCUPNS108'] = "Yes";
 $locale['ESHPCUPNS109'] = "No";
-$locale['ESHPCUPNS110'] = "You have no active campaigns";
+$locale['ESHPCUPNS110'] = "There are no active coupons";
 $locale['ESHPCUPNS111'] = "- Save -";
-$locale['ESHPCUPNS112'] = "Percent";
+$locale['ESHPCUPNS112'] = "Percent %";
 $locale['ESHPCUPNS113'] = "Sum";
+$locale['ESHPCUPNS114'] = "Add Coupon";
+$locale['ESHPCUPNS115'] = "Edit Coupon";
+$locale['ESHPCUPNS116'] = "Coupon Validity Period";
+$locale['ESHPCUPNS117'] = "Coupon Value";
+$locale['ESHPCUPNS118'] = "Coupon values for % type cannot be more than 100";
+$locale['ESHPCUPNS_ERROR1'] = "The Coupon End Date cannot be earlier than the Start Date";
+$locale['ESHPCUPNS_ERROR2'] = "This Coupon ID is not valid";
+
 
 //Administration Featured
 $locale['ESHFEAT101'] = "- Select section -";
