@@ -67,6 +67,8 @@ class eShop_item {
 		'comments' => 1,
 		'linebreaks' => 1,
 		'keywords' => '',
+		'iColor'=>'',
+		'dync' => '',
 	);
 	private $formaction = '';
 	private $filter_Sql = '';
@@ -350,10 +352,17 @@ class eShop_item {
 	public function product_form() {
 		global $aidlink, $locale, $settings;
 
-		$itemcolors = str_replace(".", ",", html_entity_decode($this->data['icolor']));
-		$itemcolors = ltrim($itemcolors, ',');
-		$itemdyncs = str_replace(".", ",", html_entity_decode($this->data['dync']));
-		$itemdyncs = ltrim($itemdyncs, ',');
+		if (!is_array($this->data['product_languages']) && empty($this->data['product_languages'])) $this->data['product_languages'] = array();
+		$itemcolors = '';
+		if (isset($this->data['icolor'])) {
+			$itemcolors = str_replace(".", ",", html_entity_decode($this->data['icolor']));
+			$itemcolors = ltrim($itemcolors, ',');
+		}
+		$itemdyncs = '';
+		if (isset($this->data['dync'])) {
+			$itemdyncs = str_replace(".", ",", html_entity_decode($this->data['dync']));
+			$itemdyncs = ltrim($itemdyncs, ',');
+		}
 		// check function
 		add_to_jquery('
 		function doCheck(cid) {
@@ -459,7 +468,6 @@ class eShop_item {
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo "<label class='control-label'>".$locale['ESHPPRO191']."</label></div>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
-		$this->data['product_languages'] = (!empty($this->data['product_languages'])) ? explode('.', $this->data['product_languages']) : array();
 		foreach (fusion_get_enabled_languages() as $lang) {
 			$check = (in_array($lang, $this->data['product_languages'])) ? 1 : 0;
 			echo "<div class='display-inline-block text-left m-r-10'>\n";
