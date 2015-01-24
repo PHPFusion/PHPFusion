@@ -22,3 +22,4 @@
 class UserFields extends PHPFusion\UserFields {
 
 }
+?>

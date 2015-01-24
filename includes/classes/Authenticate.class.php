@@ -22,3 +22,4 @@
 class Authenticate extends PHPFusion\Authenticate {
 
 }
+?>

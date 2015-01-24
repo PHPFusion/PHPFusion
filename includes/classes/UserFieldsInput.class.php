@@ -22,3 +22,4 @@
 class UserFieldsInput extends PHPFusion\UserFieldsInput {
 
 }
+?>

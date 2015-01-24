@@ -1167,3 +1167,4 @@ function rewritestoggledebugdiv() {
 		return $this->pathtofile;
 	}
 }
+?>

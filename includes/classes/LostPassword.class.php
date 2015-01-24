@@ -22,3 +22,4 @@
 class LostPassword extends PHPFusion\LostPassword {
 
 }
+?>
