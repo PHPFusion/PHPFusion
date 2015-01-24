@@ -859,7 +859,7 @@ class eShop_item {
 			".($settings['eshop_cats'] ? "LEFT JOIN ".DB_ESHOP_CATS." cat on (cat.cid=i.cid) WHERE cat.parentid = '".intval($_GET['parent_id'])."'" : '')."
 			".$this->filter_Sql."
 			ORDER BY cat.cat_order ASC, i.iorder ASC LIMIT 0, 25
-		", 1);
+		");
 		$rows = dbrows($result);
 		if ($rows>0) {
 			$i = 0;
