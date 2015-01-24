@@ -6,6 +6,8 @@ if (!empty($aid)) {
 	$aid = $aid[1];
 }
 if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
+	$eshop_cats = fusion_get_settings('eshop_cats');
+	$eshop_currency = fusion_get_settings('currency');
 	$search_text = isset($_POST['q']) && strlen($_POST['q'])>1 ? form_sanitizer($_POST['q'], '') : 0;
 	$search_text=ltrim($search_text);
 	$search_text=rtrim($search_text);
@@ -13,15 +15,24 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 	$kt = "";
 	$val = "";
 	$kt = explode(" ",$search_text);
-	while(list($key,$val)=each($kt)){
-		if($val<>" " and strlen($val) > 0){ $q.= " i.title like '%$val%' or i.artno like '%$val%' or i.sartno like '%$val%' or i.id like '%$val%' or cat.title like '%$val%' or";}
-	}
-	$q=substr($q,0,(strlen($q)-3));
-	$result = dbquery("SELECT i.id, i.title, i.artno, i.sartno, i.status, i.access, i.iorder, i.product_languages, cat.title as cat_title
+	if ($eshop_cats) {
+		while(list($key,$val)=each($kt)){
+			if($val<>" " and strlen($val) > 0){ $q.= " i.title like '%$val%' or i.artno like '%$val%' or i.sartno like '%$val%' or i.id like '%$val%' or cat.title like '%$val%' or";}
+		}
+		$q=substr($q,0,(strlen($q)-3));
+		$result = dbquery("SELECT i.id, i.title, i.artno, i.sartno, i.status, i.access, i.iorder, i.product_languages, cat.title as cat_title
 						FROM ".DB_ESHOP." i LEFT JOIN ".DB_ESHOP_CATS." cat on (i.cid=cat.cid)
 	 					WHERE ".$q ." ORDER BY title ASC LIMIT 50");
-	if (dbrows($result)>0) {
+	} else {
+		while(list($key,$val)=each($kt)){
+			if($val<>" " and strlen($val) > 0){ $q.= " i.title like '%$val%' or i.artno like '%$val%' or i.sartno like '%$val%' or i.id like '%$val%' or";}
+		}
+		$result = dbquery("SELECT i.id, i.title, i.artno, i.sartno, i.status, i.access, i.iorder, i.product_languages
+						FROM ".DB_ESHOP." i
+	 					WHERE ".$q ." ORDER BY title ASC LIMIT 50");
+	}
 
+	if (dbrows($result)>0) {
 		$visibility_opts = array();
 		$user_groups = getusergroups();
 		while (list($key, $user_group) = each($user_groups)) {
@@ -44,8 +55,8 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=delete&amp;id=".$data['id']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
 				";
 			echo "</td>\n";
-			echo "<td>".$data['cat_title']."</td>\n";
-			echo "<td>".fusion_get_settings('eshop_currency')." ".number_format($data['price'], 2, '.', ',')."</td>\n";
+			echo "<td>".($eshop_cats ?$data['cat_title'] : $locale['global_080'])."</td>\n";
+			echo "<td>".$eshop_currency." ".number_format($data['price'], 2, '.', ',')."</td>\n";
 			echo "<td>".$data['artno']."</td>\n";
 			echo "<td>".$data['sartno']."</td>\n";
 			echo "<td>\n";

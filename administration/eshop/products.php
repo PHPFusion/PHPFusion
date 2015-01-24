@@ -803,11 +803,10 @@ class eShop_item {
 		$result = dbquery("SELECT
 			i.id, i.title, i.cid, i.price, i.artno, i.sartno, i.status, i.access, i.dateadded, i.iorder, i.product_languages, cat.title as cat_title
 			FROM ".DB_ESHOP." i
-			LEFT JOIN ".DB_ESHOP_CATS." cat on (cat.cid=i.cid)
-			WHERE cat.parentid = '".intval($_GET['parent_id'])."'
+			".($settings['eshop_cats'] ? "LEFT JOIN ".DB_ESHOP_CATS." cat on (cat.cid=i.cid) WHERE cat.parentid = '".intval($_GET['parent_id'])."'" : '')."
 			".$this->filter_Sql."
 			ORDER BY cat.cat_order ASC, i.iorder ASC LIMIT 0, 25
-		");
+		", 1);
 		$rows = dbrows($result);
 		if ($rows>0) {
 			$i = 0;
@@ -824,7 +823,7 @@ class eShop_item {
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=delete&amp;id=".$data['id']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
 				";
 				echo "</td>\n";
-				echo "<td>".$data['cat_title']."</td>\n";
+				echo "<td>".($settings['eshop_cats'] ? $data['cat_title'] : $locale['global_080'])."</td>\n";
 				echo "<td>".$settings['eshop_currency']." ".number_format($data['price'], 2, '.', ',')."</td>\n";
 				echo "<td>".$data['artno']."</td>\n";
 				echo "<td>".$data['sartno']."</td>\n";
