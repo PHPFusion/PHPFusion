@@ -15,11 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+define('iMEMBER', false);
 require_once __DIR__.'/../includes/autoloader.php';
 require_once __DIR__.'/../includes/core_functions_include.php';
 require_once __DIR__.'/../includes/core_constants_include.php';
-
+$fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
+$fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
+$fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
 // Start of template
 function opensetup() {
 	global $locale, $fusion_page_head_tags;
@@ -31,12 +33,12 @@ function opensetup() {
 	echo "<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />\n";
 	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
 	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
+	echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
 	echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>\n";
 	echo "<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n";
 	echo "<link href='".THEMES."templates/default.css' rel='stylesheet' />\n";
 	echo "<link href='".INCLUDES."bootstrap/bootstrap.min.css' rel='stylesheet' />\n";
 	echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' />";
-	echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
 	echo $fusion_page_head_tags;
 	echo "</head>\n<body>\n";
 	echo "<div class='block-container'>\n";
