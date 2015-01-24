@@ -15,209 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 if (!defined("IN_FUSION")) die("Access Denied");
-/*
 
-	echo '<script type="text/javascript">
-	//<![CDATA[
-	function showexttabs(){
-		$("#exttabs").animate({"height": "toggle"}, { duration: 500 });
-	}
-	//]]>
-	</script>';
-*/
-
-/*
-if (isset($_GET['psearch'])) {
-	include ADMIN."eshop/productsearch.php";
-} else {
-
-
-	// get message
-
-
-
-
-
-	if ($settings['eshop_cats'] == "1" && !isset($_REQUEST['category']) && !isset($_GET['action'])) {
-		//check for main cats.
-		function cat_form() {
-			global $aidlink, $locale;
-			echo openform('catform', 'catform', 'post', FUSION_SELF.$aidlink."&amp;a_page=main");
-			echo form_select_tree($locale['ESHPPRO186'], 'category', 'category', '', array('parent_value'=>$locale['ESHP016'], 'placeholder'=>$locale['ESHP016'], 'allowclear'=>1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
-			echo closeform();
-			add_to_jquery("
-				$('#category').bind('change', function(e) { this.form.submit();	});
-			");
-		}
-		cat_form();
-
-	} else {
-
-		//check for subcats in a selected category section.
-		if (isset($_REQUEST['category'])) {
-			$resultc = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid='".$_REQUEST['category']."'");
-			if (dbrows($resultc)) {
-				echo "<br /><form name='subcatform' method='post' action='".FUSION_SELF.$aidlink."'>";
-				echo "<table width='100%' cellspacing='4' cellpadding='0' align='center' class='tbl-border'>";
-				echo "<tr><td align='left'>".$locale['ESHPPRO187']." </td>
-<td align='left'><select class='textbox' name='category' style='width:350px;' onchange=\"this.form.submit()\">";
-				echo "<option value=''>".$locale['ESHP016']."</option>";
-				$result2 = dbquery("select * from ".DB_ESHOP_CATS." WHERE parentid='".$_REQUEST['category']."' order by parentid, title");
-				while ($cat_data = dbarray($result2)) {
-					if ($cat_data['parentid'] != 0) $cat_data['title'] = getparent($cat_data['parentid'], $cat_data['title']);
-					echo "<option value='".$cat_data['cid']."'>".$cat_data['title']."</option>";
-				}
-				echo "</select>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPRO103']."
-</span><img src='".SHOP."img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></div>
-</td></tr></table></form><hr />";
-			}
-		}
-
-
-	}
-	echo "<hr />";
-
-	//Do this if cats are on
-	if ($settings['eshop_cats'] == "1" && !isset($_REQUEST['category'])) {
-		//Search for orphan items before we select an category.
-		echo "<div class='admin-message'>".$locale['ESHPPRO167']."</div>";
-		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid=''");
-		$rows = dbrows($result);
-		if ($rows != 0) {
-			echo "<table align='center' cellspacing='4' cellpadding='0' width='99%'><tr>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO168']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO169']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO170']."</b></td>
-</tr>\n";
-			while ($data = dbarray($result)) {
-				echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
-				echo "<td width='1%' align='left'><a href='".FUSION_SELF.$aidlink."&amp;a_page=Main&action=edit&amp;category=0&amp;id=".$data['id']."'><b>".$data['title']."</b></a></td>\n";
-				echo "<td width='1%' align='center'>".$locale['ESHPPRO180']."</td>\n";
-				echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;action=delete&id=".$data['id']."' onClick='return confirmdelete();'><img src='".SHOP."img/remove.png' border='0' height='20' style='vertical-align:middle;'  alt='' /></a></td></tr>";
-				echo "</td>";
-			}
-			echo "</table>\n";
-		} else {
-			echo "<center><br />\n ".$locale['ESHPPRO171']." <br /><br />\n</center>\n";
-		}
-	} else {
-		if (!isset($_GET['sortby']) || !preg_match("/^[0-9A-Z]$/", $_GET['sortby'])) $_GET['sortby'] = "all";
-		if ($settings['eshop_cats'] == "1") {
-			$orderby = ($_GET['sortby'] == "all" ? "" : " WHERE title LIKE '".$_GET['sortby']."%' AND cid = '".$_REQUEST['category']."'");
-			if (isset($_GET['sortby']) && $_GET['sortby'] == "all") {
-				$srtmtd = "WHERE cid = '".$_REQUEST['category']."'";
-			} else {
-				$srtmtd = "";
-			}
-		} else {
-			$orderby = ($_GET['sortby'] == "all" ? "" : " WHERE title LIKE '".$_GET['sortby']."%' AND cid = ''");
-			if (isset($_GET['sortby']) && $_GET['sortby'] == "all") {
-				$srtmtd = "WHERE cid = ''";
-			} else {
-				$srtmtd = "";
-			}
-		}
-		$result = dbquery("SELECT * FROM ".DB_ESHOP." ".$srtmtd." ".$orderby." ORDER BY iorder, title");
-		$rows = dbrows($result);
-		if ($rows != 0) {
-			$i = 0;
-			$k = 1;
-			echo "<table align='center' cellspacing='4' cellpadding='0' width='99%' class='tbl-border'><tr>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO172']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO173']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO174']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO175']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPPRO176']."</b></td>
-</tr>\n";
-			$result = dbquery("SELECT * FROM ".DB_ESHOP." ".$srtmtd." ".$orderby." ORDER BY iorder, title LIMIT ".$_GET['rowstart'].",15");
-			while ($data = dbarray($result)) {
-				echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
-				echo "<td width='1%' align='left'><a href='".FUSION_SELF.$aidlink."&amp;a_page=Main&action=edit&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><b>".$data['title']."</b></a></td>\n";
-				echo "<td width='1%' align='center'> ".($data['artno'] !== '' ? "".$data['artno']."" : "".$data['id']."")." </td>";
-				echo "<td width='1%' align='center'> ".($data['sartno'] !== '' ? "".$data['sartno']."" : "N/A")." </td>";
-				echo "<td align='center' width='1%'>\n";
-				if (dbrows($result) != 1) {
-					$up = $data['iorder']-1;
-					$down = $data['iorder']+1;
-					if ($k == 1) {
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=movedown&amp;order=$down&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("down")."' alt='Move down' title='Move down' style='border:0px;' /></a>\n";
-					} elseif ($k < dbrows($result)) {
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=moveup&amp;order=$up&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("up")."' alt='Move up' title='Move up' style='border:0px;' /></a>\n";
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=movedown&amp;order=$down&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("down")."' alt='Move down' title='Move down'  style='border:0px;' /></a>\n";
-					} else {
-						echo "<a href='".FUSION_SELF.$aidlink."&amp;action=moveup&amp;order=$up&amp;id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'><img src='".get_image("up")."' alt='Move up' title='Move up' style='border:0px;' /></a>\n";
-					}
-				}
-				$k++;
-				echo " #".$data['iorder']."</td>\n";
-				echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;action=delete&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."' onClick='return confirmdelete();'><img src='".SHOP."img/remove.png' border='0' height='20' style='vertical-align:middle;'  alt='' /></a></td></tr>";
-				echo "</td>";
-			}
-			echo "</table>\n";
-			echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 15, $rows, 3, FUSION_SELF.$aidlink."&amp;sortby=".$_GET['sortby']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."&")."\n</div>\n";
-		} else {
-			echo "<center><br />\n <b>".$locale['ESHPPRO177']."</b> <br /><br />\n</center>\n";
-		}
-		$search = array("A",
-			"B",
-			"C",
-			"D",
-			"E",
-			"F",
-			"G",
-			"H",
-			"I",
-			"J",
-			"K",
-			"L",
-			"M",
-			"N",
-			"O",
-			"P",
-			"Q",
-			"R",
-			"S",
-			"T",
-			"U",
-			"V",
-			"W",
-			"X",
-			"Y",
-			"Z",
-			"0",
-			"1",
-			"2",
-			"3",
-			"4",
-			"5",
-			"6",
-			"7",
-			"8",
-			"9");
-		echo "<hr><table align='center' cellpadding='0' cellspacing='1' class='tbl-border'>\n<tr>\n";
-		echo "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF.$aidlink."&amp;sortby=all".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'>".$locale['ESHP425']."</a></td>";
-		for ($i = 0; $i < 36 != ""; $i++) {
-			echo "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF.$aidlink."&amp;sortby=".$search[$i]."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'>".$search[$i]."</a></div></td>";
-			echo($i == 17 ? "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF.$aidlink."&amp;sortby=all".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'>".$locale['ESHP426']."</a></td>\n</tr>\n<tr>\n" : "\n");
-		}
-		echo "</table>\n";
-		if (dbrows($result)) {
-			echo "<div style='text-align:center;margin-top:5px'>[ <a href='".FUSION_SELF.$aidlink."&amp;action=refresh".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."'> ".$locale['ESHPPRO179']." </a> ]</div>\n";
-		}
-	}
-}
-
-
-if (isset($_POST['psrchtext'])) {
-	$searchtext = stripinput($_POST['psrchtext']);
-} else {
-	$searchtext = $locale['SRCH162'];
-}
-*/
 class eShop_item {
 
 	private $data = array(
@@ -269,7 +68,6 @@ class eShop_item {
 		'linebreaks' => 1,
 		'keywords' => '',
 	);
-
 	private $formaction = '';
 	private $filter_Sql = '';
 
@@ -309,7 +107,6 @@ class eShop_item {
 
 		if (isset($_POST['save_cat'])) self::set_productdb();
 		self::quick_save();
-
 	}
 
 	static function quick_save() {
