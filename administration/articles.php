@@ -198,7 +198,7 @@ if (!empty($result)) {
 		echo "</tr>\n";
 		if ($settings['tinymce_enabled'] != 1) {
 			echo "<tr>\n<td class='tbl'></td><td class='tbl'>\n";
-			echo "<input type='button' value='".$locale['articles_0209']."' class='button' onclick=\"insertText('body2', '&lt;!--PAGEBREAK--&gt;');\" />\n";
+			echo "<input type='button' value='".$locale['articles_0209']."' class='button' onclick=\"insertText('body2', '&lt;!--PAGEBREAK--&gt;', 'input_form');\" />\n";
 			echo display_html("input_form", "body2", TRUE, TRUE, TRUE, IMAGES_A);
 			echo "</td>\n</tr>\n";
 		}
