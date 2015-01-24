@@ -37,7 +37,7 @@ spl_autoload_register(function ($className) {
  * It loads only classes from ClassName.class.php in global namespace
  */
 spl_autoload_register(function ($className) {
-	if (strpos($className, '\\') === FALSE) {
+	if (strpos($className, '\\') !== FALSE) {
 		return;
 	}
 
