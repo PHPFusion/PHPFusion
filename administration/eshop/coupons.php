@@ -17,9 +17,13 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-
+/**
+ * Class eShop_coupons
+ */
 class eShop_coupons {
-
+	/**
+	 * @var array|bool
+	 */
 	private $data = array(
 		'cuid' => 0,
 		'cuname' => '',
@@ -29,10 +33,22 @@ class eShop_coupons {
 		'cuend' => '',
 		'active' => 1,
 	);
+	/**
+	 * @var string
+	 */
 	private $form_action = '';
+	/**
+	 * @var bool|int|string
+	 */
 	private $max_rowstart = 0;
+	/**
+	 * @var string
+	 */
 	private $filter_Sql = '';
 
+	/**
+	 * Global variables sanitize and default values
+	 */
 	public function __construct() {
 		global $aidlink;
 		$_GET['cuid'] = isset($_GET['cuid']) && isnum($_GET['cuid']) ? $_GET['cuid'] : 0;
@@ -65,6 +81,10 @@ class eShop_coupons {
 		self::quick_save();
 	}
 
+	/**
+	 * Allowed Coupon Type
+	 * @return array
+	 */
 	static function getCouponType() {
 		global $locale, $settings;
 		return array(
@@ -73,6 +93,10 @@ class eShop_coupons {
 		);
 	}
 
+	/**
+	 * Allowed Coupon Status
+	 * @return array
+	 */
 	static function getCouponStatus() {
 		global $locale;
 		return array(
@@ -81,6 +105,11 @@ class eShop_coupons {
 		);
 	}
 
+	/**
+	 * Verify the coupon
+	 * @param $cuid
+	 * @return bool|string
+	 */
 	static function verify_coupon($cuid) {
 		if (isnum($cuid)) {
 			return dbcount("(cuid)", DB_ESHOP_COUPONS, "cuid='".intval($cuid)."'");
@@ -88,6 +117,9 @@ class eShop_coupons {
 		return false;
 	}
 
+	/**
+	 * Quick Save Mysql
+	 */
 	static function quick_save() {
 		global $aidlink, $defender;
 		if (isset($_POST['coupon_quicksave'])) {
@@ -107,6 +139,9 @@ class eShop_coupons {
 		}
 	}
 
+	/**
+	 * Delete Coupon
+	 */
 	private function remove_coupon() {
 		global $aidlink;
 		if (!preg_match("/^[-0-9A-ZÅÄÖ._@\s]+$/i", $_GET['cuid']) && self::verify_coupon($_GET['cuid'])) {
@@ -115,6 +150,9 @@ class eShop_coupons {
 		}
 	}
 
+	/**
+	 * Set Coupon Mysql
+	 */
 	private function set_coupondb() {
 		global $aidlink, $locale, $defender;
 
@@ -147,6 +185,11 @@ class eShop_coupons {
 		}
 	}
 
+	/**
+	 * Data callback
+	 * @param $cuid
+	 * @return array|bool
+	 */
 	private function get_couponData($cuid) {
 		$result = dbquery("SELECT * FORM ".DB_ESHOP_COUPONS." WHERE cuid='".intval($cuid)."'");
 		if (dbrows($result)>0) {
@@ -155,6 +198,9 @@ class eShop_coupons {
 		return array();
 	}
 
+	/**
+	 * Coupon Form Template
+	 */
 	public function add_coupon_form() {
 		global $locale, $defender;
 
@@ -213,16 +259,18 @@ class eShop_coupons {
 		echo "</div>\n";
 	}
 
+	/**
+	 * Filter
+	 */
 	private function coupon_view_filters() {
 		global $locale, $aidlink;
-
 		$item_status = isset($_GET['status']) && $_GET['status'] == 1 ? 1 : 0;
 		$this->filter_Sql = !$item_status ? "(active='1' or active='0')" : "active='0'";
 		echo "<div class='m-t-20 m-b-20 display-block' style='height:40px;'>\n";
 
 		echo "<div class='display-inline-block search-align m-r-10'>\n";
-		echo form_text('', 'srch_text', 'srch_text', '', array('placeholder'=>$locale['SRCH158'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
-		echo form_button($locale['SRCH164'], 'search', 'search-btn', $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
+		echo form_text('', 'srch_text', 'srch_cpntext', '', array('placeholder'=>$locale['ESHPCUPNS119'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
+		echo form_button($locale['SRCH164'], 'search', 'search-coupon', $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
 		echo "</div>\n";
 
 		echo "<div class='display-inline-block m-r-10'>\n";
@@ -232,13 +280,13 @@ class eShop_coupons {
 
 		echo "</div>\n";
 		add_to_jquery("
-		$('#search-btn').bind('click', function(e) {
+		$('#search-coupon').bind('click', function(e) {
 			$.ajax({
 				url: '".ADMIN."includes/eshop_cpnsearch.php',
 				dataType: 'html',
 				type: 'post',
 				beforeSend: function(e) { $('#eshopitem-links').html('<tr><td class=\"text-center\"colspan=\'12\'><img src=\"".IMAGES."loader.gif\"/></td></tr>'); },
-				data: { q: $('#srch_text').val(), token: '".$aidlink."' },
+				data: { q: $('#srch_cpntext').val(), token: '".$aidlink."' },
 				success: function(e) {
 					// append html
 					$('#eshopitem-links').html(e);
@@ -251,9 +299,13 @@ class eShop_coupons {
 		");
 	}
 
+	/**
+	 * Coupon Listing Table
+	 */
 	public function coupon_listing() {
 		global $locale, $aidlink;
 		$coupon_status = self::getCouponStatus();
+		$coupon_type = self::getCouponType();
 		self::coupon_view_filters();
 		add_to_jquery("
 		$('.actionbar').hide();
@@ -293,6 +345,7 @@ class eShop_coupons {
 		echo "<th></th>\n";
 		echo "<th>".$locale['ESHPCHK170']."</th>\n";
 		echo "<th>".$locale['ESHPCUPNS102']."</th>\n";
+		echo "<th>".$locale['ESHPCUPNS104']."</th>\n";
 		echo "<th>".$locale['ESHPCUPNS107']."</th>\n";
 		echo "<th>".$locale['ESHPCUPNS105']."</th>\n";
 		echo "<th>".$locale['ESHPCUPNS106']."</th>\n";
@@ -332,12 +385,11 @@ class eShop_coupons {
 		echo "</div>\n";
 		echo "</td>\n";
 		echo "</tr>\n";
-
-
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE ".$this->filter_Sql." LIMIT ".$_GET['rowstart'].",15");
 		$rows = dbrows($result);
 		if ($rows) {
 			$i = 0;
+			echo "<tbody id='eshopitem-links' class='connected'>\n";
 			while ($data = dbarray($result)) {
 				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
 				echo "<tr id='listItem_".$data['cuid']."' data-id='".$data['cuid']."' class='list-result ".$row_color."'>\n";
@@ -351,18 +403,18 @@ class eShop_coupons {
 				</div>\n";
 				echo "</td>\n";
 				echo "<td>".$data['cuname']."</td>";
+				echo "<td>".$data['cuvalue']." ".$coupon_type[$data['cutype']]."</td>";
 				echo "<td>".$coupon_status[$data['active']]."</td>";
 				echo "<td>".showdate("forumdate", $data['custart'])."</td>";
 				echo "<td>".showdate("forumdate", $data['cuend'])."</td>";
 				echo "</tr>";
 				$i++;
 			}
+			echo "</tbody>\n";
 		} else {
-			echo "<tr><td colspan='5' class='text-center'><div class='alert alert-warning m-t-10'>".$locale['ESHPCUPNS110']."</div></td></tr>\n";
+			echo "<tr><td colspan='7' class='text-center'><div class='alert alert-warning m-t-10'>".$locale['ESHPCUPNS110']."</div></td></tr>\n";
 		}
-
 		echo "</table>\n";
-
 		if ($this->max_rowstart > $rows) {
 			echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'],15,$rows,3,FUSION_SELF.$aidlink."&amp;cupons&amp;")."\n</div>\n";
 		}
@@ -389,4 +441,3 @@ if (isset($_GET['section']) && $_GET['section'] == 'couponform') {
 	$coupon->add_coupon_form();
 	echo closetabbody();
 }
-?>

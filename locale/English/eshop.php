@@ -383,6 +383,7 @@ $locale['ESHPCUPNS115'] = "Edit Coupon";
 $locale['ESHPCUPNS116'] = "Coupon Validity Period";
 $locale['ESHPCUPNS117'] = "Coupon Value";
 $locale['ESHPCUPNS118'] = "Coupon values for % type cannot be more than 100";
+$locale['ESHPCUPNS119'] = "Search Coupons ID";
 $locale['ESHPCUPNS_ERROR1'] = "The Coupon End Date cannot be earlier than the Start Date";
 $locale['ESHPCUPNS_ERROR2'] = "This Coupon ID is not valid";
 
