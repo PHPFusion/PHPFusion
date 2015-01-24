@@ -313,7 +313,8 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		'class' => !empty($options['class']) ? $options['class'] : '', // append a css class to the selector
 		'inline' => !empty($options['inline']) ? $options['inline'] : '', // make the label and field on the same row
 		'disable_opts' => !empty($options['disable_opts']) ? $options['disable_opts'] : '', // disable selection , accept either exploded array or imploded text
-		'hide_disabled' => !empty($options['hide_disabled']) && $options['hide_disabled'] == 1 ? 1 : 0  // to hide any disabled opts. required $options['disabled_opts']
+		'hide_disabled' => !empty($options['hide_disabled']) && $options['hide_disabled'] == 1 ? 1 : 0,  // to hide any disabled opts. required $options['disabled_opts']
+		'tip' => !empty($options['tip']) ? $options['tip'] : '',
 	);
 
 	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
