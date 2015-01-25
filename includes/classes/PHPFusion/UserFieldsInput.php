@@ -18,6 +18,7 @@
 
 namespace PHPFusion;
 
+//@todo: merge user fields into 1 single file.
 class UserFieldsInput {
 	public $adminActivation = 1;
 	public $emailVerification = 1;
