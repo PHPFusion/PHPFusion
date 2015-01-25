@@ -91,10 +91,10 @@ If you want to customize any part, include your functions into your theme to ove
 <strong>Stronger User Fields Model</strong>
 The User Fields now are dynamic and can be added without modules. Just add them via Admin Panel.
 
-<strong>Theme Engine</strong>
+<strong>Theme Engine</strong><br/>
 Added the capability to modify default css of themes.
 
-<strong>Multilanguage</strong>
+<strong>Multilanguage</strong><br/>
 We support multilang in Version 9.00, with core functions built to evolve around it. Due to compatibaility reason, we did not implore any new SDK, or API, but simply
 extend links requests to change user's viewing language via "?lang=English" / "?lang=Russian" to switch user preferred language model. Content administration including
 User Field creations, panel language switching will adapt to this method and will switch accordingly. However, if a content is made available to English, it will not appear
@@ -105,7 +105,7 @@ Implemented its first step into system-wide modular-base SEO permalinks. keyword
 
 New Core Systems
 =================
-- E-commerce System\n
+- E-commerce System
 - Blog System
 
 Highlighted changes New Change Core Systems
