@@ -37,8 +37,6 @@ class PasswordAuth {
 	// Checks if Current Password is valid
 	public function isValidCurrentPassword($createNewHash = FALSE) {
 		$inputPasswordHash = $this->_hashPassword($this->inputPassword, $this->currentAlgo, $this->currentSalt);
-		print_p($inputPasswordHash." is the generated hash");
-		print_p($this->currentPasswordHash." is the old hash");
 		if ($inputPasswordHash == $this->currentPasswordHash) {
 			if ($createNewHash == TRUE) {
 				$this->_setNewHash($this->inputPassword);
