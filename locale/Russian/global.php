@@ -37,6 +37,12 @@ $locale['city'] = "Город";
 $locale['postcode'] = "Почтовый индекс";
 $locale['sel_country'] = "Страна";
 $locale['sel_state'] = "Штат";
+// Name
+$locale['name'] = "Полное имя";
+$locale['username_pretext'] = "Ваше публичное имя пользователя, то же, что указанное в профиле адрес:<div class='alert alert-info m-t-10 p-10'>%s<strong>%s</strong></div>";
+$locale['first_name'] = "Имя";
+$locale['middle_name'] = "Отчество";
+$locale['last_name'] = "Фамилия";
 // Standard User Levels
 $locale['user0']  = "Гость";
 $locale['user1']  = "Участник";
@@ -151,14 +157,14 @@ $locale['global_100'] = "Вход на сайт";
 $locale['global_101'] = "ID входа";
 $locale['global_101a'] = "Пожалуйста, введите ваш ID входа";
 $locale['global_102'] = "Пароль";
-$locale['global_103'] = "Запомнить";
-$locale['global_104'] = "Войти";
+$locale['global_103'] = "Не выходить с сайта";
+$locale['global_104'] = $locale['global_100'];
 $locale['global_105'] = "Не зарегистрированы? <a href='".BASEDIR."register.php' class='side'>Нажмите</a> для регистрации.";
-$locale['global_106'] = "Забыли пароль?<br />Запросите новый <a href='".BASEDIR."lostpassword.php' class='side'>здесь</a>.";
+$locale['global_106'] = "<a href='".BASEDIR."lostpassword.php' class='side'>Забыли пароль?/a>.";
 $locale['global_107'] = "Регистрация";
 $locale['global_108'] = "Забыли пароль";
 // Member User Menu
-$locale['global_120'] = "Изменить профиль";
+$locale['global_120'] = "Настроить  профиль";
 $locale['global_121'] = "Личные сообщения";
 $locale['global_122'] = "Список участников";
 $locale['global_123'] = "Панель администратора";
@@ -252,7 +258,7 @@ $locale['global_204'] = $locale['global_200']."Форум";
 $locale['global_210'] = "Пропустить";
 // No themes found
 $locale['global_300'] = "Тема не найдена";
-$locale['global_301'] = "К сожалению, эта страница не может быть отображена. По каким-тоо причинам файлы темы оформления не были найдены. Если Вы администратор сайта, при помощи FTP-клиента загрузите тему оформелния, созданнуя для <em>PHP-Fusion v7</em>, в папку <em>themes/</em> на сайте. Порсле загрузки проверьте в <em>Основных параметрах</em>, что тема оформления корректно загружена на сайт. Пожалуйста, убедитесь, что папка с темой имеет такое же название (включая регистр символов, что важно на серверах под управлением Unix-систем), как и выбранная в <em>Основных параметрах</em>.<br /><br />Если Вы обычный пользователь сайте, пожалуйста, свяжитесь с администратором через электропочту ".hide_email(fusion_get_settings('siteemail'))." и сообщите о случившемся.";
+$locale['global_301'] = "К сожалению, эта страница не может быть отображена. По каким-тоо причинам файлы темы оформления не были найдены. Если Вы администратор сайта, при помощи FTP-клиента загрузите тему оформелния, созданнуя для <em>PHP-Fusion v7</em>, в папку <em>themes/</em> на сайте. Порсле загрузки проверьте в <em>Основных параметрах</em>, что тема оформления корректно загружена на сайт. Пожалуйста, убедитесь, что папка с темой имеет такое же название (включая регистр символов, что важно на серверах под управлением Unix-систем), как и выбранная в <em>Основных параметрах</em>.<br /><br />Если Вы обычный пользователь сайте, пожалуйста, свяжитесь с администратором через электропочту ".hide_email($settings['siteemail'])." и сообщите о случившемся.";
 $locale['global_302'] = "Тема, выбранная в настройках, не существует или повреждена!";
 // JavaScript Not Enabled
 $locale['global_303'] = "О, нет! Где <strong>JavaScript</strong>?<br />Ваш бразуер не поддерживает JavaScript или же JavaScript отключен в настройках. Пожалуйста, <strong>включите JavaScript</strong> в браузере для корректного отображения сайта<br />или <strong>обновите</strong> свой браузер на поддерживающий JavaScript: <a href='http://firefox.com' rel='nofollow' title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>, <a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome' rel='nofollow' title='Google Chrome'>Chrome</a> или же на <a href='http://www.microsoft.com/windows/internet-explorer/' rel='nofollow' title='Internet Explorer'>Internet Explorer</a> версии новее, чем 6.";
@@ -376,6 +382,7 @@ $locale['image'] = 'Изображение';
 $locale['choose'] = "Пожалуйста, выберите вариант...";
 $locale['root'] = 'Главный уровень';
 $locale['choose-user'] = 'Пожалуйста, выберите пользователя...';
+$locale['choose-location'] = 'Пожалуйста, выберите расположение';
 $locale['parent'] = "Создать как нового предка...";
 $locale['order'] = "Порядок элементов";
 $locale['status'] = "Статус";
