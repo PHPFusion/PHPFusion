@@ -85,21 +85,22 @@ if (!function_exists('render_userform')) {
 	function render_userform($info) {
 		// page navigation
 		if (isset($info['section'])) {
-			$nav = "<ul class='profile_link_nav m-t-20'>";
+			$i = 1;
+			$tab_title = array();
 			foreach ($info['section'] as $page_section) {
-				$nav .= "<li ".($page_section['active'] ? "class='active'" : '')."><a href='".$page_section['link']."'>".$page_section['name']."</a></li>\n";
+				$tab_title['title'][$i] = $page_section['name'];
+				$tab_title['id'][$i] = $i;
+				$tab_title['icon'][$i] = '';
+				$i++;
 			}
-			$nav .= "</ul>\n";
+			$tab_active = tab_active($tab_title, $_GET['profiles'], 1);
+			$nav = opentab($tab_title, $tab_active, 'profile', 1);
+			$nav .= opentabbody($tab_title['title'][$_GET['profiles']], $_GET['profiles'], $tab_active, 1);
 		}
-		echo "<div id='register_form'>\n";
-		echo "<div class='row'>\n";
-		if (!$info['register']) {
-			echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-2'>\n";
-			echo $nav;
-			echo "</div>\n<div class='col-xs-12 col-sm-9 col-md-9 col-lg-10 p-t-20 p-b-20'>\n";
-		} else {
-			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 p-t-20 p-b-20'>\n";
-		}
+
+		echo $nav;
+		echo "<div id='register_form' class='row m-t-20'>\n";
+		echo "<div class='col-xs-12 col-sm-12'>\n";
 		echo $info['openform'];
 		if (isset($info['basic_field'])) echo $info['basic_field'];
 		if (isset($info['user_field']))	echo $info['user_field'];
@@ -108,7 +109,9 @@ if (!function_exists('render_userform')) {
 		echo $info['button'];
 		echo $info['closeform'];
 		echo "</div>\n</div>\n";
-		echo "</div>\n";
+		echo closetabbody();
+		echo closetab();
+
 	}
 }
 ?>

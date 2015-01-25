@@ -2,7 +2,7 @@
 	color: rgb(0,0,0);
 }
 .profile_link_nav > li > a {
-	font-size:13px !important;
+	font-size:110%;
 	padding-bottom:5px;
 	display: inline-block;
 }
