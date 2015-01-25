@@ -34,6 +34,12 @@ $locale['city'] = "City";
 $locale['postcode'] = "Postcode";
 $locale['sel_country'] = "Select Country";
 $locale['sel_state'] = "Select State";
+// Name
+$locale['name'] = 'Full Name';
+$locale['username_pretext'] = 'Your public username is also the same as your user profile address located at:<div class="alert alert-info m-t-10 p-10">%s<strong>%s</strong></div>';
+$locale['first_name'] = 'First Name';
+$locale['middle_name'] = 'Middle Name';
+$locale['last_name'] = 'Last Name';
 // Standard User Levels
 $locale['user0'] = "Public";
 $locale['user1'] = "Member";
@@ -144,18 +150,18 @@ $locale['global_092'] = "Page ";
 $locale['global_093'] = " of ";
 $locale['global_094'] = " out of ";
 // Guest User Menu
-$locale['global_100'] = "Login";
+$locale['global_100'] = "Sign In";
 $locale['global_101'] = "Login ID";
 $locale['global_101a'] = "Please enter your Login ID";
 $locale['global_102'] = "Password";
-$locale['global_103'] = "Remember Me";
-$locale['global_104'] = "Log in";
+$locale['global_103'] = "Stay signed in";
+$locale['global_104'] = $locale['global_100'];
 $locale['global_105'] = "Not a member yet? <a href='".BASEDIR."register.php' class='side'>Click here</a> to register.";
-$locale['global_106'] = "Forgotten your password?<br />Request a new one <a href='".BASEDIR."lostpassword.php' class='side'>here</a>.";
+$locale['global_106'] = "<a href='".BASEDIR."lostpassword.php'>Forgot Password?</a>";
 $locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";
 // Member User Menu
-$locale['global_120'] = "Edit Profile";
+$locale['global_120'] = "Customize your Profile Page";
 $locale['global_121'] = "Private Messages";
 $locale['global_122'] = "Members List";
 $locale['global_123'] = "Admin Panel";
@@ -251,7 +257,7 @@ $locale['global_204'] = $locale['global_200']."Forum";
 $locale['global_210'] = "Skip to content";
 // No themes found
 $locale['global_300'] = "no theme found";
-$locale['global_301'] = "We are really sorry but this page cannot be displayed. Due to some circumstances no site theme can be found. If you are a Site Administrator, please use your FTP client to upload any theme designed for <em>PHP-Fusion v7</em> to the <em>themes/</em> folder. After upload check in <em>Main Settings</em> to see if the selected theme was correctly uploaded to your <em>themes/</em> directory. Please note that the uploaded theme folder has to have the exact same name (including character case, which is important on Unix based servers) as chosen in <em>Main Settings</em> page.<br /><br />If you are regular member of this site, please contact the site\'s administrator via ".hide_email(fusion_get_settings('siteemail'))." e-mail and report this issue.";
+$locale['global_301'] = "We are really sorry but this page cannot be displayed. Due to some circumstances no site theme can be found. If you are a Site Administrator, please use your FTP client to upload any theme designed for <em>PHP-Fusion v7</em> to the <em>themes/</em> folder. After upload check in <em>Main Settings</em> to see if the selected theme was correctly uploaded to your <em>themes/</em> directory. Please note that the uploaded theme folder has to have the exact same name (including character case, which is important on Unix based servers) as chosen in <em>Main Settings</em> page.<br /><br />If you are regular member of this site, please contact the site\'s administrator via ".hide_email($settings['siteemail'])." e-mail and report this issue.";
 $locale['global_302'] = "The Theme chosen in Main Settings does not exist or is incomplete!";
 // JavaScript Not Enabled
 $locale['global_303'] = "Oh no! Where's the <strong>JavaScript</strong>?<br />Your Web browser does not have JavaScript enabled or does not support JavaScript. Please <strong>enable JavaScript</strong> on your Web browser to properly view this Web site,<br /> or <strong>upgrade</strong> to a Web browser that does support JavaScript; <a href='http://firefox.com' rel='nofollow' title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>, <a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome' rel='nofollow' title='Google Chrome'>Chrome</a> or a version of <a href='http://www.microsoft.com/windows/internet-explorer/' rel='nofollow' title='Internet Explorer'>Internet Explorer</a> newer then version 6.";
@@ -375,6 +381,7 @@ $locale['image'] = 'Image';
 $locale['choose'] = 'Please Choose One...';
 $locale['root'] = 'As Parent';
 $locale['choose-user'] = 'Please Choose a User...';
+$locale['choose-location'] = 'Please Choose a Location';
 $locale['parent'] = 'Create as New Parent..';
 $locale['order'] = 'Item Ordering';
 $locale['status'] = 'Status';
