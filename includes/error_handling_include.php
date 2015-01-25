@@ -76,7 +76,7 @@ function getErrorLevel($level, $desc = FALSE) {
 function fusion_turbo_debugger() {
 	/* Hien's Primary WorkStation */
 	// show me the bug, and then give me the button to clean the error logs - FAST. i dont need details.
-	if (iSUPERADMIN) {
+	if (iADMIN && checkrights('ERRO') || iSUPERADMIN) {
 		$error_logs = new \PHPFusion\ErrorLogs();
 		echo openmodal('tb', 'Fusion Turbo Debugger', array('static'=>1, 'class'=>'modal-lg modal-center zindex-boost', 'button_id'=>'turbo_debugger'));
 		$error_logs->show_error_logs();
