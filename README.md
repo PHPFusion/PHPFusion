@@ -105,7 +105,7 @@ Implemented its first step into system-wide modular-base SEO permalinks. keyword
 
 New Core Systems
 =================
-- E-commerce System
+- E-commerce System\n
 - Blog System
 
 Highlighted changes New Change Core Systems
