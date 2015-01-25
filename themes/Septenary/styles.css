@@ -15,7 +15,10 @@ a, abbr, acronym, address, applet, article, aside, audio, b, blockquote, big, bo
 	vertical-align: top;
 }
 .profile_category_name {
-	font-size:20px;
+	font-size:18px;
+	font-weight: 400;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 15px;
 }
 
 .nav-pills > li > a {

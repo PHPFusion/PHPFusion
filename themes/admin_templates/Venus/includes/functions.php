@@ -343,28 +343,6 @@ function render_admin_icon() {
 	}
 
 	echo "</div>\n";
-
-
-
-
-
-/*
-	echo "<table class='table table-responsive tbl-border'>\n<tr>\n";
-	for ($i = 1; $i < 6; $i++) {
-		$_GET['pagenum'] = ($_GET['pagenum'] == 0) ? 0 : $_GET['pagenum'];
-		$class = ($_GET['pagenum'] == $i ? "tbl1" : "tbl2");
-		if ($pages[$i]) {
-			echo "<td align='center' width='20%' class='$class'>\n";
-			echo ($_GET['pagenum'] == $i ? "<strong>".$locale['ac0'.$i]."</strong>" : "<a href='index.php".$aidlink."&amp;pagenum=$i'>".$locale['ac0'.$i]."</a>")."</td>\n";
-		} else {
-			echo "<td align='center' width='20%' class='$class'><span style='text-decoration:line-through'>\n";
-			echo $locale['ac0'.$i]."</span></td>\n";
-		}
-	}
-	echo "</tr>\n<tr>\n<td colspan='5' class='tbl'>\n";
-
-
-	echo "</td></tr></table>\n"; */
 	closetable();
 }
 
