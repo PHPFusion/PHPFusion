@@ -195,11 +195,11 @@ class ErrorLogs {
 				</tr>
 				<tr>
 					<td class='tbl2' style='width:5%;white-space:nowrap;'><?php echo $locale['419'] ?></td>
-					<td class='tbl1'><strong><?php echo getMaxFolders(stripslashes($data['error_file']), 3) ?></strong></td>
+					<td class='tbl1'><strong><?php echo self::getMaxFolders(stripslashes($data['error_file']), 3) ?></strong></td>
 					<td class='tbl2' style='width:5%;white-space:nowrap;'><?php echo $locale['411'] ?>:</td>
 					<td class='tbl1'>
 						<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$rowstart."&amp;error_id=".$data['error_id'] ?>#page' title='<?php echo $data['error_page'] ?>'>
-							<?php echo getMaxFolders($data['error_page'], 3) ?></a>
+							<?php echo self::getMaxFolders($data['error_page'], 3) ?></a>
 					</td>
 				</tr>
 				<tr>
@@ -234,7 +234,7 @@ class ErrorLogs {
 					<td colspan='4' class='tbl2'><strong><?php echo $locale['421'] ?></strong> (<?php echo $locale['415']." ".$line_start." - ".$line_end ?>)</td>
 				</tr>
 				<tr>
-					<td colspan='4'><div style='max-height:600px;overflow:auto;'><?php echo printCode($output, $line_start, $data['error_line']) ?></div>
+					<td colspan='4'><div style='max-height:600px;overflow:auto;'><?php echo self::printCode($output, $line_start, $data['error_line']) ?></div>
 					</td>
 				</tr>
 				<tr>
@@ -245,10 +245,10 @@ class ErrorLogs {
 				</tr>
 				<tr>
 					<td colspan='4' class='tbl2'><a name='page'></a>
-						<strong><?php echo $locale['411'] ?>: <?php echo getMaxFolders($data['error_page'], 2) ?></strong></td>
+						<strong><?php echo $locale['411'] ?>: <?php echo self::getMaxFolders($data['error_page'], 2) ?></strong></td>
 				</tr>
 				<tr>
-					<td colspan='4'><div style='max-height:500px;overflow:auto;'><?php echo printCode($pageContent, "1") ?></div>
+					<td colspan='4'><div style='max-height:500px;overflow:auto;'><?php echo self::printCode($pageContent, "1") ?></div>
 					</td>
 				</tr>
 			</table>
