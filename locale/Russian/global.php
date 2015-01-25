@@ -160,7 +160,7 @@ $locale['global_102'] = "Пароль";
 $locale['global_103'] = "Не выходить с сайта";
 $locale['global_104'] = $locale['global_100'];
 $locale['global_105'] = "Не зарегистрированы? <a href='".BASEDIR."register.php' class='side'>Нажмите</a> для регистрации.";
-$locale['global_106'] = "<a href='".BASEDIR."lostpassword.php' class='side'>Забыли пароль?/a>.";
+$locale['global_106'] = "<a href='".BASEDIR."lostpassword.php' class='side'>Забыли пароль?</a>.";
 $locale['global_107'] = "Регистрация";
 $locale['global_108'] = "Забыли пароль";
 // Member User Menu
