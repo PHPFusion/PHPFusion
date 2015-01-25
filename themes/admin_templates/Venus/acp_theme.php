@@ -27,7 +27,7 @@ require_once ADMIN."navigation.php";
 
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
-function render_adminpanel() {
+function render_Openadminpanel() {
 	global $locale, $userdata, $defender, $pages, $aidlink, $settings;
 
 	// this is a constructor which can be autoloaded if defined(ADMIN_PANEL);
@@ -83,14 +83,11 @@ function render_adminpanel() {
 		echo "</div>\n";
 		echo CONTENT;
 		echo "</div>\n";
-		echo "<div class='m-l-20 display-block m-b-20'>\n";
+
+		echo "<footer class='m-l-20 display-block m-b-20'>\n";
 		echo "Venus Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
 		echo showcopyright();
-		echo "</div>\n";
-		echo "</div>\n";
-		echo "<!-- end main content -->\n";
-		echo "</div>\n";
-		echo "</div>\n";
+
 		add_to_jquery("
 		var init_hgt = $(window).height();
 		$('#acp-left').css('height', init_hgt);
@@ -101,7 +98,15 @@ function render_adminpanel() {
 		$('.admin-vertical-link').css('height', hgt-135);
 		});
 		");
-
 	}
+
+}
+
+function render_Closeadminpanel() {
+	echo "</div>\n";
+	echo "</div>\n";
+	echo "</footer>\n";
+	echo "<!-- end main content -->\n";
+	echo "</div>\n";
 }
 ?>

@@ -89,7 +89,6 @@
                 tinyMCE.execCommand('mceAddControl', false, id);
             } else {
                 tinyMCE.execCommand('mceRemoveControl', false, id);
-
             }
         }
     </script>
@@ -97,13 +96,14 @@
 </head>
 <body>
 <?php
-render_adminpanel();
+render_Openadminpanel();
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 if ($footerError) : ?>
-<div class='admin-message'><?php echo $footerError ?></div>
+<div class='alert alert-warning m-t-10 error-message'><?php echo $footerError ?></div>
 <?php
 endif;
+render_CloseAdminpanel();
 if (!empty($fusion_jquery_tags)) : ?>
     <script type="text/javascript">
         $(function() {
