@@ -16,12 +16,66 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>\n");
+
+if (!function_exists('render_userform')) {
+
+	function render_userform($info) {
+		// page navigation
+		$endnav = '';
+		if (isset($info['section'])) {
+			$i = 1;
+			$tab_title = array();
+			$tab_title['title'][0] = '';
+			$tab_title['id'][0] = '';
+			$tab_title['icon'][0] = '';
+
+			foreach ($info['section'] as $page_section) {
+				$tab_title['title'][$i] = $page_section['name'];
+				$tab_title['id'][$i] = $i;
+				$tab_title['icon'][$i] = '';
+				$i++;
+			}
+			$tab_active = tab_active($tab_title, $_GET['profiles'], 1);
+			echo opentab($tab_title, $tab_active, 'profile', 1);
+			echo opentabbody($tab_title['title'][$_GET['profiles']], $_GET['profiles'], $tab_active, 1);
+			$endnav 	= closetabbody();
+			$end_nav 	.= closetab();
+		}
+
+		echo "<div id='register_form' class='row m-t-20'>\n";
+
+		echo "<div class='col-xs-12 col-sm-12' style='padding:0 40px;'>\n";
+		echo $info['openform'];
+
+		echo $info['user_name'];
+
+		echo $info['user_email'];
+		echo $info['user_hide_email'];
+		echo $info['user_avatar'];
+
+		echo $info['user_password'];
+		if (iADMIN) echo $info['user_admin_password'];
+
+		if (isset($info['user_field']))	echo $info['user_field'];
+		echo isset($info['validate']) ? $info['validate'] : '';
+		echo isset($info['terms']) ? $info['terms'] : '';
+		echo $info['button'];
+		echo $info['closeform'];
+		echo "</div>\n</div>\n";
+		echo $endnav;
+
+	}
+}
+
+
 if (!function_exists('render_userprofile')) {
+
 	function render_userprofile($info) {
 		// Basic User Information
 		$basic_info = isset($info['core_field']) ? $info['core_field'] : array(); //$info['item']['core']; // Basic information.
 		//User Fields Module Information
 		$field_info = $info['user_field'];
+
 		$user_info = '';
 		$user_avatar = '';
 		$user_name = '';
@@ -81,37 +135,5 @@ if (!function_exists('render_userprofile')) {
 		echo "</section>\n";
 	}
 }
-if (!function_exists('render_userform')) {
-	function render_userform($info) {
-		// page navigation
-		if (isset($info['section'])) {
-			$i = 1;
-			$tab_title = array();
-			foreach ($info['section'] as $page_section) {
-				$tab_title['title'][$i] = $page_section['name'];
-				$tab_title['id'][$i] = $i;
-				$tab_title['icon'][$i] = '';
-				$i++;
-			}
-			$tab_active = tab_active($tab_title, $_GET['profiles'], 1);
-			$nav = opentab($tab_title, $tab_active, 'profile', 1);
-			$nav .= opentabbody($tab_title['title'][$_GET['profiles']], $_GET['profiles'], $tab_active, 1);
-		}
 
-		echo $nav;
-		echo "<div id='register_form' class='row m-t-20'>\n";
-		echo "<div class='col-xs-12 col-sm-12'>\n";
-		echo $info['openform'];
-		if (isset($info['basic_field'])) echo $info['basic_field'];
-		if (isset($info['user_field']))	echo $info['user_field'];
-		echo isset($info['validate']) ? $info['validate'] : '';
-		echo isset($info['terms']) ? $info['terms'] : '';
-		echo $info['button'];
-		echo $info['closeform'];
-		echo "</div>\n</div>\n";
-		echo closetabbody();
-		echo closetab();
-
-	}
-}
 ?>

@@ -15,21 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+// why the fuck is there a hashling algorighm here????
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."user_fields.php";
-define('RIGHT_OFF', true);
-if (!iMEMBER) {
-	redirect("index.php");
-}
+if (!iMEMBER) {	redirect("index.php"); }
+
+$_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
+
 add_to_title($locale['global_200'].$locale['u102']);
-$errors = array();
+
 if (isset($_POST['update_profile'])) {
 	$userInput = new PHPFusion\UserFieldsInput();
-	$userInput->setUserNameChange($settings['userNameChange']); // accept or not username change.
+	$userInput->setUserNameChange(fusion_get_settings('userNameChange')); // accept or not username change.
 	$userInput->verifyNewEmail = TRUE;
-	$userInput->userData = $userdata; // inject to override so whatever not in this page is not lost.. deprecate
+	$userInput->userData = $userdata;
 	$userInput->saveUpdate();
 	$userInput->displayMessages();
 	if (empty($errors) && $userInput->themeChanged()) redirect(BASEDIR.'index.php');
@@ -37,7 +37,7 @@ if (isset($_POST['update_profile'])) {
 	unset($userInput);
 }
 
-elseif (isset($_GET['code']) && $settings['email_verification'] == "1") {
+elseif (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
 	$userInput = new PHPFusion\UserFieldsInput();
 	$userInput->verifyCode($_GET['code']);
 	$userInput->displayMessages();
@@ -46,13 +46,15 @@ elseif (isset($_GET['code']) && $settings['email_verification'] == "1") {
 }
 
 opentable($locale['u102']);
-if ($settings['email_verification'] == "1") {
+
+if (fusion_get_settings('email_verification') == 1) {
 	$result = dbquery("SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$userdata['user_id']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		echo "<div class='tbl2' style='text-align:center; width:500px; margin: 5px auto 10px auto;'>".sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201']."\n</div>\n";
 	}
 }
+
 
 $userFields = new PHPFusion\UserFields();
 $userFields->postName = "update_profile";
@@ -62,7 +64,7 @@ $userFields->plugin_folder = INCLUDES."user_fields/";
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange($settings['userNameChange']);
 $userFields->method = 'input';
-$userFields->renderInput();
+$userFields->render_profile_input();
 closetable();
 require_once THEMES."templates/footer.php";
 ?>

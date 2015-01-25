@@ -1585,7 +1585,10 @@ class QuantumFields {
 				if ($temp_table !== $_dbname) { // if $temp_table is different. check if table exist. run once if pass
 					$merged_data += array($infinity_ref[$_dbname]['index'] => $infinity_ref[$_dbname]['value']); // Primary Key and Value.
 					// ensure nothing is missing. this might be overkill. I would shut it down if not neccessary to lighten the load by 1-2 uncessary query.
-					$merged_data += dbarray(dbquery("SELECT * FROM ".$_dbname." WHERE ".$infinity_ref[$_dbname]['index']." = '".$infinity_ref[$_dbname]['value']."' ")); // this has overriden the value.
+					$result = dbquery("SELECT * FROM ".$_dbname." WHERE ".$infinity_ref[$_dbname]['index']." = '".$infinity_ref[$_dbname]['value']."'");
+					if (dbrows($result)>0) {
+						$merged_data += dbarray($result);
+					}
 				}
 					dbquery_insert($_dbname, $merged_data, 'update');
 				}

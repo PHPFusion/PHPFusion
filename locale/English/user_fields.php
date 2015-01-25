@@ -34,7 +34,7 @@ $locale['u071'] = "Suspend";
 $locale['u072'] = "Delete";
 $locale['u073'] = "Delete this user?";
 // Profile and register
-$locale['u100'] = "In order to change your password or email address<br />you must enter your current password.";
+$locale['u100'] = "In order to change your password or email address, you must enter your current password.";
 $locale['u101'] = "Register";
 $locale['u102'] = "Edit Profile";
 $locale['u103'] = "Profile";
@@ -69,7 +69,7 @@ $locale['u125'] = "The email address is already registered by another user.";
 $locale['u126'] = "Email address can not be left empty.";
 $locale['u127'] = "User Name";
 $locale['u128'] = "Email Address";
-$locale['u129'] = "Account Info";
+$locale['u129'] = "Basic User Information";
 // Passwords
 $locale['u130'] = "Admin passwords";
 $locale['u131'] = "Admin password";

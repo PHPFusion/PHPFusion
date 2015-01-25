@@ -68,7 +68,7 @@ elseif (isset($_POST['register'])) {
 if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['register']) && defined('FUSION_NULL'))) {
 	// hide by default
 	opentable($locale['u101']);
-	$userFields = new UserFields();
+	$userFields = new PHPFusion\UserFields();
 	$userFields->postName = "register";
 	$userFields->postValue = $locale['u101'];
 	$userFields->displayValidation = $settings['display_validation'];
@@ -79,7 +79,7 @@ if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['regi
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->registration = TRUE;
 	$userFields->method = 'input';
-	$userFields->renderInput();
+	$userFields->render_profile_input();
 	closetable();
 }
 require_once THEMES."templates/footer.php";

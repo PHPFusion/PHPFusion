@@ -100,7 +100,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 }
 elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERADMIN)) {
 	$errors = array();
-
 	if (isset($_POST['add_user'])) {
 		$userInput = new \PHPFusion\UserFieldsInput();
 		$userInput->validation = 0;
@@ -116,7 +115,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && defined('FUSION_NULL'))) {
 		opentable($locale['480']);
 		add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['480']));
-
 		member_nav(member_url("add", "")."| ".$locale['480']);
 		$userFields = new \PHPFusion\UserFields();
 		$userFields->postName = "add_user";
@@ -128,7 +126,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		$userFields->skipCurrentPass = TRUE;
 		$userFields->registration = TRUE;
 		$userFields->method = 'input';
-		$userFields->renderInput();
+		$userFields->render_profile_input();
 		closetable();
 	}
 	// View User Profile
@@ -156,10 +154,9 @@ elseif (isset($_GET['step']) && $_GET['step'] == "view" && $user_id && (!$isAdmi
 	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 	$userFields->showAdminPass = FALSE;
 	$userFields->skipCurrentPass = TRUE;
-	$userFields->registration = TRUE;
+	$userFields->registration = FALSE;
 	$userFields->userData = $user_data;
 	$userFields->method = 'display';
-	//$userFields->renderInput();
 	$userFields->renderOutput();
 	closetable();
 	// Edit User Profile

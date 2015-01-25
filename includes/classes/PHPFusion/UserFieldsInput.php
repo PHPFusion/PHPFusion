@@ -36,6 +36,7 @@ class UserFieldsInput {
 	private $_userName;
 	// New for UF 2.00
 	private $data = array();
+
 	// Passwords
 	private $_isValidCurrentPassword = FALSE;
 	private $_isValidCurrentAdminPassword = FALSE;
@@ -60,19 +61,20 @@ class UserFieldsInput {
 
 	public function saveInsert() {
 		$this->_method = "validate_insert";
-		$this->data = array("user_password" => "",
-							"user_algo" => "",
-							"user_salt" => "",
-							"user_admin_password" => "",
-							"user_admin_algo" => "",
-							"user_admin_salt" => "",
-							"user_name" => "",
-							"user_email" => ""
+		$this->data = array(
+			"user_password" => "",
+			"user_algo" => "",
+			"user_salt" => "",
+			"user_admin_password" => "",
+			"user_admin_algo" => "",
+			"user_admin_salt" => "",
+			"user_name" => "",
+			"user_email" => ""
 		);
 		if ($this->_userNameChange) {
 			$this->_settUserName();
 		}
-		$this->_setNewUserPassword();
+		$this->_setPassword();
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setEmptyFields();
@@ -89,8 +91,8 @@ class UserFieldsInput {
 		$this->_method = "validate_update";
 		$this->data = $this->userData;
 		$this->_settUserName();
-		$this->_setNewUserPassword();
-		$this->_setNewAdminPassword();
+		$this->_setPassword();
+		$this->_setAdminPassword();
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setEmptyFields();
@@ -179,8 +181,8 @@ class UserFieldsInput {
 
 	private function _settUserName() {
 		global $locale, $defender;
-		$this->_userName = isset($_POST['user_name']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_name']))) : "";
-		if ($this->_userName && $this->_userName != $this->userData['user_name']) {
+		$this->_userName = isset($_POST['user_names']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_names']))) : "";
+		if ($this->_userName && $this->_userName != $this->userData['user_names']) {
 			// attempt to change user name
 			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
 				$defender->stop();
@@ -213,190 +215,205 @@ class UserFieldsInput {
 		}
 	}
 
-	/* Always to return FALSE unless you key in a valid password */
-	// Login pass means if this is a login password or not.
-	// skipCurrentPassword - False means to validate.
-	private function _isValidCurrentPassword($loginPass = TRUE, $skipCurrentPass = FALSE) {
-		if ($loginPass && !$skipCurrentPass) {
-			// used on register.
-			$this->_userHash = $this->_getPasswordInput("user_hash");
-			$this->_userPassword = $this->_getPasswordInput("user_password");
-			$password = $this->_userPassword;
-			$hash = $this->userData['user_password'];
-			$salt = $this->userData['user_salt'];
-			$algo = $this->userData['user_algo'];
-		}
-		elseif ($loginPass == FALSE && !$skipCurrentPass) {
-			$this->_userAdminPassword = $this->_getPasswordInput("user_admin_password");
-			$password = $this->_userAdminPassword;
-			$hash = $this->userData['user_admin_password'];
-			$salt = $this->userData['user_admin_salt'];
-			$algo = $this->userData['user_admin_algo'];
-		}
-		if ($skipCurrentPass == FALSE) {
-			// Check user auth
-			if ($loginPass && $this->_userHash != $hash) {
-				redirect(BASEDIR."index.php");
-			}
-			// Intialize password auth
-			$passAuth = new PasswordAuth();
-			$passAuth->inputPassword = $password;
-			$passAuth->currentAlgo = $algo;
-			$passAuth->currentSalt = $salt;
-			$passAuth->currentPasswordHash = $hash;
-			// Check if password is correct
-			if ($passAuth->isValidCurrentPassword(FALSE)) {
-				return TRUE;
-			} else {
-				return FALSE;
-			}
-		} else {
-			// force true if you $skip this function - set to 1
-			return TRUE;
-		}
-	}
-
-	// Set New User Password
-	private function _setNewUserPassword() {
+	// Get New Password Hash and Directly Set New Cookie if Authenticated
+	private function _setPassword() {
 		global $locale, $defender;
-		// this is used by many of the following functions - username and email. it will always be false unless you submit a password
-		$this->_isValidCurrentPassword = $this->_isValidCurrentPassword(TRUE, $this->skipCurrentPass); // $skipCurrentPass is FALSE on edit profile // false on register
-		$this->_newUserPassword = $this->_getPasswordInput("user_new_password");
-		$this->_newUserPassword2 = $this->_getPasswordInput("user_new_password2");
-		if ($this->_newUserPassword) {
-			// Set new password
-			if ($this->_isValidCurrentPassword) { // only if is true.
+		if ($this->registration) {
+			// register have 2 fields
+			$this->_newUserPassword = self::_getPasswordInput('user_password1');
+			$this->_newUserPassword2 = self::_getPasswordInput('user_password2');
+			if ($this->_newUserPassword) {
 				// Intialize password auth
 				$passAuth = new PasswordAuth();
-				$passAuth->inputPassword = $this->_userPassword;
 				$passAuth->inputNewPassword = $this->_newUserPassword;
 				$passAuth->inputNewPassword2 = $this->_newUserPassword2;
-				// Check new password
 				$_isValidNewPassword = $passAuth->isValidNewPassword();
-				if ($_isValidNewPassword === 0) {
-					// New password is valid
-					$this->_newUserPasswordHash = $passAuth->getNewHash();
-					$this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
-					$this->_newUserPasswordSalt = $passAuth->getNewSalt();
-					$this->data['user_algo'] = $this->_newUserPasswordAlgo;
-					$this->data['user_salt'] = $this->_newUserPasswordSalt;
-					$this->data['user_password'] = $this->_newUserPasswordHash;
-					if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
-						Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
-					}
-				} else {
-					if ($_isValidNewPassword === 1) {
+				switch($_isValidNewPassword) {
+					case '0':
+						// New password is valid
+						$this->_newUserPasswordHash = $passAuth->getNewHash();
+						$this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
+						$this->_newUserPasswordSalt = $passAuth->getNewSalt();
+						$this->data['user_algo'] = $this->_newUserPasswordAlgo;
+						$this->data['user_salt'] = $this->_newUserPasswordSalt;
+						$this->data['user_password'] = $this->_newUserPasswordHash;
+						$this->_isValidCurrentPassword  = 1;
+						if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
+							Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
+						}
+						break;
+					case '1':
 						// New Password equal old password
 						$defender->stop();
 						$defender->addError('user_password');
 						$defender->addError('user_new_password');
 						$defender->addNotice($locale['u134'].$locale['u146'].$locale['u133'].".");
-					} elseif ($_isValidNewPassword === 2) {
+						break;
+					case '2':
 						// The two new passwords are not identical
 						$defender->stop();
 						$defender->addError('user_new_password');
 						$defender->addError('user_new_password2');
 						$defender->addHelperText('user_password', $locale['u148']);
 						$defender->addNotice($locale['u148']);
-					} elseif ($_isValidNewPassword === 3) {
+						break;
+					case '3':
 						// New password contains invalid chars / symbols
 						$defender->stop();
 						$defender->addError('user_new_password');
 						$defender->addHelperText('user_password', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
 						$defender->addNotice($locale['u134'].$locale['u142']."<br />".$locale['u147']);
-					}
+						break;
 				}
 			} else {
-				// Current user password is invalid
-				$defender->stop();
-				$defender->addError('user_password');
-				$defender->addHelperText('user_password', $locale['u149']);
-				$defender->addNotice($locale['u149']);
-			}
-		} else {
-			// New user password is empty
-			if ($this->_method == 'validate_insert') {
 				$defender->stop();
 				$defender->addError('user_new_password');
 				$defender->addHelperText('user_new_password', $locale['u134'].$locale['u143a']);
 				$defender->addNotice($locale['u134'].$locale['u143a']);
 			}
+		} else {
+			// edit profile have 3 fields
+			$this->_userPassword = self::_getPasswordInput('user_password');
+			$this->_newUserPassword = self::_getPasswordInput('user_password1');
+			$this->_newUserPassword2 = self::_getPasswordInput('user_password2');
+			// check password integrity
+			if ($this->_userPassword) {
+				// Intialize password auth
+				$passAuth = new PasswordAuth();
+				$passAuth->inputPassword = $this->_userPassword;
+				$passAuth->inputNewPassword = $this->_newUserPassword;
+				$passAuth->inputNewPassword2 = $this->_newUserPassword2;
+				$passAuth->currentPasswordHash = $this->userData['user_password'];
+				$passAuth->currentAlgo = $this->userData['user_algo'];
+				$passAuth->currentSalt = $this->userData['user_salt'];
+				if ($passAuth->isValidCurrentPassword()) {
+					$this->_isValidCurrentPassword  = 1;
+					$_isValidNewPassword = $passAuth->isValidNewPassword();
+					switch($_isValidNewPassword) {
+					case '0':
+						// New password is valid
+						$this->_newUserPasswordHash = $passAuth->getNewHash();
+						$this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
+						$this->_newUserPasswordSalt = $passAuth->getNewSalt();
+						$this->data['user_algo'] = $this->_newUserPasswordAlgo;
+						$this->data['user_salt'] = $this->_newUserPasswordSalt;
+						$this->data['user_password'] = $this->_newUserPasswordHash;
+						if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
+							//Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
+						}
+						break;
+					case '1':
+						// New Password equal old password
+						$defender->stop();
+						$defender->addError('user_password');
+						$defender->addError('user_new_password');
+						$defender->addNotice($locale['u134'].$locale['u146'].$locale['u133'].".");
+						break;
+					case '2':
+						// The two new passwords are not identical
+						$defender->stop();
+						$defender->addError('user_new_password');
+						$defender->addError('user_new_password2');
+						$defender->addHelperText('user_password', $locale['u148']);
+						$defender->addNotice($locale['u148']);
+						break;
+					case '3':
+						// New password contains invalid chars / symbols
+						$defender->stop();
+						$defender->addError('user_new_password');
+						$defender->addHelperText('user_password', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
+						$defender->addNotice($locale['u134'].$locale['u142']."<br />".$locale['u147']);
+						break;
+				}
+				} else {
+					$defender->stop();
+					$defender->addError('user_password');
+					$defender->addHelperText('user_password', $locale['u149']);
+					$defender->addNotice($locale['u149']);
+				}
+			}
 		}
 	}
 
-	// Set New Admin Password
-	private function _setNewAdminPassword() {
+
+	private function _setAdminPassword() {
 		global $locale, $defender;
-		// - update on edit profile only and must be admin to have admin password fields.
-		// Only accept if user is admin, updating his profile (not admin panel)
-		if (iADMIN && $this->_method == "validate_update" && !defined('ADMIN_PANEL')) {
-			if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
-				$this->_isValidCurrentAdminPassword = $this->_isValidCurrentPassword(FALSE, FALSE); // authenticate
-			} else { // check password
-				$this->_isValidCurrentAdminPassword = $this->userData['user_admin_password'] ? TRUE : FALSE;
+		if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
+			$this->_userAdminPassword = $this->_getPasswordInput("user_admin_password");
+			$this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password");
+			$this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2");
+			// now this is where it is different
+			$passAuth = new PasswordAuth();
+			if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
+				// New Admin
+				$valid_current_password = 1;
+				$passAuth->inputPassword = 'fake';
+				$passAuth->inputNewPassword = $this->_userAdminPassword;
+				$passAuth->inputNewPassword2 = $this->_newUserAdminPassword2;
+			} else {
+				// Old Admin
+				// Intialize password auth
+				$passAuth->inputPassword = $this->_userAdminPassword;
+				$passAuth->inputNewPassword = $this->_newUserAdminPassword;
+				$passAuth->inputNewPassword2 = $this->_newUserAdminPassword2;
+				$passAuth->currentPasswordHash = $this->userData['user_admin_password'];
+				$passAuth->currentAlgo = $this->userData['user_admin_algo'];
+				$passAuth->currentSalt = $this->userData['user_admin_salt'];
+				$valid_current_password = $passAuth->isValidCurrentPassword();
 			}
-			$this->_newUserAdminPassword = $this->_getPasswordInput("user_new_admin_password");
-			$this->_newUserAdminPassword2 = $this->_getPasswordInput("user_new_admin_password2");
-			// Require current password
-			if ($this->_isValidCurrentAdminPassword) {
-				// Require current admin password
-				if ($this->_newUserAdminPassword) { // indicate you want to change a new admin password. - typed admin password
-					if ($this->_isValidCurrentAdminPassword) { // authenticated current admin password
-						// Intialize password auth
-						$passAuth = new PasswordAuth();
-						$passAuth->inputPassword = $this->_userAdminPassword;
-						$passAuth->inputNewPassword = $this->_newUserAdminPassword;
-						$passAuth->inputNewPassword2 = $this->_newUserAdminPassword2;
-						// Check admin new password
-						$_isValidNewPassword = $passAuth->isValidNewPassword();
-						if ($_isValidNewPassword === 0) {
-							$new_admin_password = $passAuth->getNewHash();
-							$new_admin_salt = $passAuth->getNewSalt();
-							$new_admin_algo = $passAuth->getNewAlgo();
-							if ($new_admin_password != $this->data['user_admin_password']) {
-								// New password is valid
-								$data['user_admin_algo'] = $new_admin_password;
-								$data['user_admin_salt'] = $new_admin_salt;
-								$data['user_admin_password'] = $new_admin_algo;
-							} else {
-								// new password
-								$defender->stop();
-								$defender->addError('user_password');
-								$defender->addError('user_admin_password');
-								$defender->addHelperText('user_password', $locale['u144'].$locale['u146'].$locale['u133']);
-								$defender->addHelperText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
-								$defender->addNotice($locale['u144'].$locale['u146'].$locale['u133']);
-							}
-						} elseif ($_isValidNewPassword === 1) {
-							// New Password equal old password
-							$defender->stop();
-							$defender->addError('user_admin_password');
-							$defender->addHelperText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u131']);
-							$defender->addNotice($locale['u144'].$locale['u146'].$locale['u131']);
-						} elseif ($_isValidNewPassword === 2) {
-							// The two new passwords are not identical
-							$defender->stop();
-							$defender->addError('user_new_admin_password');
-							$defender->addError('user_new_admin_password2');
-							$defender->addHelperText('user_new_admin_password', $locale['u148a']);
-							$defender->addHelperText('user_new_admin_password2', $locale['u148a']);
-							$defender->addNotice($locale['u144'].$locale['u148a']);
-						} elseif ($_isValidNewPassword === 3) {
-							// New password contains invalid chars / symbols
-							$defender->stop();
-							$defender->addError('user_new_admin_password');
-							$defender->addHelperText('user_new_admin_password', $locale['u144']);
-							$defender->addNotice($locale['u144'].$locale['u142']."<br />".$locale['u147']);
-						}
-					} else {
-						// Current Admin password is invalid.
+
+			if ($valid_current_password) {
+				$this->_isValidCurrentAdminPassword  = 1;
+				// authenticated. now do the integrity check
+				$_isValidNewPassword = $passAuth->isValidNewPassword();
+				switch($_isValidNewPassword) {
+					case '0':
+						echo 'i am here';
+						// New password is valid
+						$new_admin_password = $passAuth->getNewHash();
+						$new_admin_salt = $passAuth->getNewSalt();
+						$new_admin_algo = $passAuth->getNewAlgo();
+						$this->data['user_admin_algo'] = $new_admin_algo;
+						$this->data['user_admin_salt'] = $new_admin_salt;
+						$this->data['user_admin_password'] = $new_admin_password;
+						break;
+					case '1':
+						// new password is old password
 						$defender->stop();
 						$defender->addError('user_admin_password');
-						$defender->addHelperText('user_admin_password', $locale['u149b']);
-					}
+						$defender->addError('user_admin_password1');
+						$defender->addHelperText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
+						$defender->addHelperText('user_admin_password1', $locale['u144'].$locale['u146'].$locale['u133']);
+						$defender->addNotice($locale['u144'].$locale['u146'].$locale['u133']);
+						break;
+					case '2':
+						// The two new passwords are not identical
+						$defender->stop();
+						$defender->addError('user_new_admin_password');
+						$defender->addError('user_new_admin_password2');
+						$defender->addHelperText('user_new_admin_password', $locale['u148a']);
+						$defender->addHelperText('user_new_admin_password2', $locale['u148a']);
+						$defender->addNotice($locale['u144'].$locale['u148a']);
+						break;
+					case '3':
+						// New password contains invalid chars / symbols
+						$defender->stop();
+						$defender->addError('user_new_admin_password');
+						$defender->addHelperText('user_new_admin_password', $locale['u144']);
+						$defender->addNotice($locale['u144'].$locale['u142']."<br />".$locale['u147']);
+						break;
 				}
 			} else {
-				// not a valid user admin password
+				// 149 for admin
+				$defender->stop();
+				$defender->addError('user_admin_password');
+				$defender->addHelperText('user_admin_password', $locale['u149a']);
+				$defender->addNotice($locale['u149a']);
+			}
+		} else { // check db only - admin cannot save profile page without password
+			$valid = $this->userData['user_admin_password'] ? TRUE : FALSE;
+			if (!$valid) {
+				// 149 for admin
 				$defender->stop();
 				$defender->addError('user_admin_password');
 				$defender->addHelperText('user_admin_password', $locale['u149a']);
@@ -623,7 +640,6 @@ class UserFieldsInput {
 
 	private function _setUserDataInput() {
 		global $locale, $settings, $userdata, $aidlink;
-
 		$quantum = new QuantumFields();
 		$quantum->category_db = DB_USER_FIELD_CATS;
 		$quantum->field_db = DB_USER_FIELDS;
@@ -662,6 +678,10 @@ class UserFieldsInput {
 		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 		$quantum->input_page = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 		$quantum->load_data();
+		if ($quantum->input_page == 1) {
+			dbquery_insert(DB_USERS, $this->data, 'update', array('keep_session'=>1));
+		}
+		// only will save on UFs.
 		$quantum->quantum_insert($this->data); // update database
 		$this->_completeMessage = $locale['u163'];
 	}
