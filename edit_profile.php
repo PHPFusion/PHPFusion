@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\UserFieldsInput;
-
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."user_fields.php";
@@ -48,7 +46,6 @@ elseif (isset($_GET['code']) && $settings['email_verification'] == "1") {
 }
 
 opentable($locale['u102']);
-
 if ($settings['email_verification'] == "1") {
 	$result = dbquery("SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$userdata['user_id']."'");
 	if (dbrows($result)) {

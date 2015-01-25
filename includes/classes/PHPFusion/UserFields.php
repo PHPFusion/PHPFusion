@@ -96,6 +96,7 @@ class UserFields extends QuantumFields {
 	+ ---------------------------------------------*/
 	/* Main user fields form */
 	public function renderInput() {
+		$_GET['profiles'] = isset($_GET['profiles']) ? $_GET['profiles'] : 1;
 		$this->UserForm();
 		include THEMES."templates/global/profile.php";
 		render_userform($this->info);

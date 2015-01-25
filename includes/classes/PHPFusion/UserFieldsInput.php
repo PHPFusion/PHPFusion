@@ -557,7 +557,6 @@ class UserFieldsInput {
 	}
 
 	private function _setEmptyFields() {
-		global $settings;
 		$this->_userHideEmail = isset($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
 		$userStatus = $this->adminActivation == 1 ? 2 : 0;
 		if ($this->_method == "validate_insert") {
@@ -573,10 +572,12 @@ class UserFieldsInput {
 			$this->data['user_groups'] = '';
 			$this->data['user_level'] = 101;
 			$this->data['user_status'] = $userStatus;
-			$this->data['user_timezone'] = $settings['timeoffset'];
+			$this->data['user_timezone'] = fusion_get_settings('timeoffset');
 			$this->data['user_theme'] = 'Default';
 			$this->data['user_language'] = LANGUAGE;
 		} else {
+			$this->data['user_theme'] = (isset($_POST['user_theme'])) ? $_POST['user_theme'] : 'Default';
+			$this->data['user_timezone'] = (isset($_POST['user_timezone'])) ? $_POST['user_timezone'] : fusion_get_settings('timeoffset');
 			$this->data['user_hide_email'] = $this->_userHideEmail;
 		}
 	}
