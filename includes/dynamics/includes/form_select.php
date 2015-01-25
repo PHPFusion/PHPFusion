@@ -230,10 +230,7 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
                     if(!item.id) {return item.text;}
                     var avatar = item.avatar;
                     var level = item.level;
-                    if (item.realname) { var dev_name = '('+item.realname +','; } else { var dev_name = ''; }
-                    if (item.co) { var co_name = item.co + ')'; } else { var co_name = ''; }
-                    if (item.realname) { var status = ' (PHP-Fusion Accredited Developer)'; } else { var status = ''; }
-                    return '<table><tr><td style=\"\"><img style=\"height:30px;\" class=\"img-rounded\" src=\"".IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:10px\"><div><strong>' + item.text + ' ' + dev_name + ' ' + co_name + '</strong></div>' + level + ' '+status+'</div></td></tr></table>';
+                    return '<table><tr><td style=\"\"><img style=\"height:30px;\" class=\"img-rounded\" src=\"".IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:10px\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
                 }
 
                 $('#".$input_id."').select2({
@@ -248,6 +245,7 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
                         return {q: term};
                       },
                       results: function (data, page) {
+                      	console.log(page);
                         return {results: data};
                       }
                 },
@@ -268,7 +266,6 @@ function user_search($user_id) {
 	if (dbrows($result) > 0) {
 		while ($udata = dbarray($result)) {
 			$user_id = $udata['user_id'];
-			$user_text = $udata['user_name'];
 			$user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar50.png";
 			$user_name = $udata['user_name'];
 			$user_level = getuserlevel($udata['user_level']);

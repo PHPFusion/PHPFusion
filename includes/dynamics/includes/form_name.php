@@ -15,89 +15,62 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE, $array = FALSE) {
-	if (isset($title) && ($title !== "")) {
-		$title = stripinput($title);
-	} else {
-		$title = "";
-	}
-	if (isset($input_name) && ($input_name !== "")) {
-		$input_name = stripinput($input_name);
-	} else {
-		$input_name = "";
-	}
-	if (isset($input_id) && ($input_id !== "")) {
-		$input_id = stripinput($input_id);
-	} else {
-		$input_id = "";
-	}
+function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE, array $options) {
+	global $defender, $locale;
+
+	$title = (isset($title) && (!empty($title))) ? $title : "";
+	$title2 = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
+	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
+
 	$html = '';
-	if (!is_array($array)) {
-		$array = array();
-		$state_validation = "";
-		$before = "";
-		$after = "";
-		$required = "";
-		$placeholder = "";
-		$deactivate = "";
-		$width = "";
-		$class = "input-sm";
-		$well = '';
-		$inline = '';
-		$error_text = '';
-	} else {
-		$before = (array_key_exists('before', $array)) ? $array['before'] : "";
-		$after = (array_key_exists('after', $array)) ? $array['after'] : "";
-		$placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "";
-		$deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-		$class = (array_key_exists('class', $array)) ? $array['class'] : "input-sm";
-		$required = (array_key_exists('required', $array)) ? $array['required'] : "";
-		$safemode = (array_key_exists('safemode', $array) && ($array['safemode'] == 1)) ? '1' : '0';
-		$width = (array_key_exists('width', $array)) ? "style='width: ".$array['width']."'" : "";
-		$well = (array_key_exists('well', $array)) ? "style='margin-top:-10px;'" : "";
-		$type = (array_key_exists('password', $array) && ($array['password'] == "1")) ? "password" : "text";
-		$error_text = (array_key_exists("error_text", $array)) ? $array['error_text'] : "";
-		$inline = (array_key_exists("rowstart", $array)) ? 1 : 0;
-	}
-	// readback value
+	// NOTE (remember to parse readback value as of '|' seperator)
 	if (isset($input_value) && (!empty($input_value))) {
 		if (!is_array($input_value)) {
-			$input_value = construct_array($input_value, '', '|');
+			$input_value = construct_array($input_value, "", "|");
 		}
 	} else {
 		$input_value['0'] = "";
 		$input_value['1'] = "";
 		$input_value['2'] = "";
 	}
-	$html .= (!$inline) ? "<div id='$input_id-field' class='three fields'/>\n" : '';
-	$html .= "<div id='$input_id-0-field' class='field'>\n";
-	$html .= ($title) ? "<label for='$input_id-0'/><h3>First Name ".($required == 1 ? "<span class='required'>*</span>" : '')."</h3></label>\n" : '';
-	$html .= "<div class='ui left labeled input'/>\n";
-	$html .= "<input type='text' id='".$input_id."-0' name='".$input_name."[]' class='$class' value='".$input_value['0']."' placeholder='First Name' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
-	$html .= ($required) ? "<div class='ui corner label'/><i class='icon asterisk'/></i></div>\n" : '';
-	$html .= "<div id='$input_id-0-help'></div>";
+
+	$options += array(
+		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
+		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
+		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+		'width' => !empty($options['width']) ?  $options['width']  : '100%',
+		'class' => !empty($options['class']) ?  $options['class']  : '',
+		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
+		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
+		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
+	);
+
+	$html .= "<div id='$input_id-field' class='form-group clearfix ".$options['class']."' >\n";
+	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")." p-l-0'>\n" : "";
+	$html .= "<div class='row p-l-15'>\n";
+	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10 p-l-0'>\n";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$input_id."-fName' value='".$input_value['0']."' placeholder='".$locale['first_name']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+	$html .= "<div id='$input_id-fName-help'></div>";
 	$html .= "</div>\n";
+
+	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$input_id."-lName' value='".$input_value['1']."' placeholder='".$locale['last_name']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+	$html .= "<div id='$input_id-lName-help'></div>";
 	$html .= "</div>\n";
-	$html .= "<div id='$input_id-1-field' class='field'>\n";
-	$html .= ($title) ? "<label for='$input_id-1'/><h3>Middle Name</h3></label>\n" : '';
-	$html .= "<div class='ui left labeled input'/>\n";
-	$html .= "<input type='text' id='".$input_id."-1' name='".$input_name."[]' class='$class' value='".$input_value['1']."' placeholder='Middle Name' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
-	$html .= "<div id='$input_id-1-help'></div>";
+
+	$html .= "</div>\n"; // close inner row
+	$html .= ($options['inline']) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	$html .= "</div>\n";
-	$html .= "<div id='$input_id-2-field'  class='field'>\n";
-	$html .= ($title) ? "<label for='$input_id-2'/><h3>Last Name ".($required == 1 ? "<span class='required'>*</span>" : '')."</h3></label>\n" : '';
-	$html .= "<div class='ui left labeled input'/>\n";
-	$html .= "<input type='text' id='".$input_id."-2' name='".$input_name."[]' class='form-control $class' value='".$input_value['2']."' placeholder='Last Name' ".($deactivate == "1" && (isnum($deactivate)) ? "readonly" : "").">";
-	$html .= ($required) ? "<div class='ui corner label'/><i class='icon asterisk'/></i></div>\n" : '';
-	$html .= "<div id='$input_id-2-help'></div>";
-	$html .= "</div>\n";
-	$html .= "</div>\n";
-	$html .= "</div>\n";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=First Name],[id=".$input_id."-0],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=Middle Name],[id=".$input_id."-1],[required=0],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
-	$html .= "<input type='hidden' name='def[$input_name][]' value='[type=textbox],[title=Last Name],[id=".$input_id."-2],[required=$required],[safemode=$safemode]".($error_text ? ",[error_text=$error_text]" : '')."' />";
+	$defender->add_field_session(array(
+									 'input_name' 	=> 	$input_name,
+									 'type'			=>	'name',
+									 'title'		=>	$title2,
+									 'id' 			=>	$input_id,
+									 'required'		=>	$options['required'],
+									 'safemode'		=> 	$options['safemode'],
+									 'error_text'	=> 	$options['error_text']
+								 ));
 	return $html;
 }
-
-?>
