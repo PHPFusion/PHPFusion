@@ -28,7 +28,7 @@ if (!iMEMBER) {
 add_to_title($locale['global_200'].$locale['u102']);
 $errors = array();
 if (isset($_POST['update_profile'])) {
-	$userInput = new UserFieldsInput();
+	$userInput = new PHPFusion\UserFieldsInput();
 	$userInput->setUserNameChange($settings['userNameChange']); // accept or not username change.
 	$userInput->verifyNewEmail = TRUE;
 	$userInput->userData = $userdata; // inject to override so whatever not in this page is not lost.. deprecate
@@ -40,7 +40,7 @@ if (isset($_POST['update_profile'])) {
 }
 
 elseif (isset($_GET['code']) && $settings['email_verification'] == "1") {
-	$userInput = new UserFieldsInput();
+	$userInput = new PHPFusion\UserFieldsInput();
 	$userInput->verifyCode($_GET['code']);
 	$userInput->displayMessages();
 	$userdata = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."'"));
@@ -57,7 +57,7 @@ if ($settings['email_verification'] == "1") {
 	}
 }
 
-$userFields = new UserFields();
+$userFields = new PHPFusion\UserFields();
 $userFields->postName = "update_profile";
 $userFields->postValue = $locale['u105'];
 $userFields->userData = $userdata;
