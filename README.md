@@ -41,46 +41,45 @@ PHP-Fusion has the following major features:
 
 New Features 9.00
 ==================
-<strong>Pro-Developer Functions</strong>
-We understand that CMS are designed to adapt to developer's use primarily to service custom requirements. As such, at this new version, we worked forward to restructure the CMS to get more and more out of PHP-Fusion, with focus on:
-a) Maximum Development Productivity
-b) Maximum Development Speed
-c) Ease of Use.
+<strong>Pro-Developer Functions</strong><br/>
+<p>We understand that CMS are designed to adapt to developer's use primarily to service custom requirements. As such, at this new version, we worked forward to restructure the CMS to get more and more out of PHP-Fusion, with focus on:</p>
+- Maximum Development Productivity
+- Maximum Development Speed
+- Ease of Use.
 
-<strong>New Core</strong>
-PHP-Fusion 9.00 is powered by four subsidiary core extra after maincore.php, introduced in this version.
-a. The Dynamic Output handling Class.
-b. The PHP-Fusion Quantum-Dynamic Field Class.
-c. The PHP-Fusion Defender Class.
-d. The PHP-Fusion Atom theme Class.
+<strong>New Core</strong><br/>
+PHP-Fusion 9.00 is powered by four subsidiary core extra after maincore.php, introduced in this version.<br/>
+- The Dynamic Output handling Class.
+- The PHP-Fusion Quantum-Dynamic Field Class.
+- The PHP-Fusion Defender Class.
+- The PHP-Fusion Atom theme Class.
 
-<strong>New Installer</strong>
-A new installer have been designed and developed to cater for the specific needs:
-a) Installation/Uninstallation of Core System Modules.
-b) Transfer Ownership of Website to any other person without giving out the original password (Rewrite password method).
-c) Upgrade From previous versions - is decided to be moved here out of 2 primary reason
-   - 1, config.php will be renamed thus shutting down site and not interfering DB overwrite.
-   - 2, fast-in-fast-out. To ensure deletion of the installer tool after core modifications to the website.
-   to which at no times, no visitor of the site will be able to intervene with the progress, and that Users do not take lightly of these process out of security reason.
+<strong>New Installer</strong><br/>
+A new installer have been designed and developed to cater for the specific needs:<br/>
+- Installation/Uninstallation of Core System Modules.
+- Transfer Ownership of Website to any other person without giving out the original password (Rewrite password method).
+- Upgrade From previous versions - is decided to be moved here out of 2 primary reason
+  -- config.php will be renamed thus shutting down site and not interfering DB overwrite.
+  -- fast-in-fast-out. To ensure deletion of the installer tool after core modifications to the website to which at no times, no visitor of the site will be able to intervene with the progress, and that Users do not take lightly of these process out of security reason.
 
-Note that backup of Database will remain in Admin Panel as it does not intervene with the website running. Administrator can always give the site a maintanence shut down if preferred.
+<p>Note that backup of Database will remain in Admin Panel as it does not intervene with the website running. Administrator can always give the site a maintanence shut down if preferred.</p>
 
 <strong>New Themes SDK</strong>
-Now more robust and everything can be customized. From previous Version 7.00, extended render_news() and render_articles(), now added in Version 9.00:
+<p>Now more robust and everything can be customized. From previous Version 7.00, extended render_news() and render_articles(), now added in Version 9.00:</p>
 
-<strong>Articles:</strong>: render_article(), render_articles_main(), render_articles_category();
-<strong>Blog:</strong>: render_blog(), render_main_blog(), render_blog_item()
-<strong>Downloads:</strong>: render_downloads(), most_downloadded(), most_recent_downloaded(), filter_item_list()
-<strong>Forum (Part A:Forms)</strong>: post_preview(), postform()
-<strong>Forum (Part B: index)</strong>: render_forum(), searchbar(), render_forum_main(), render_forum_item_type(), forum_viewforum(), render_thread_item()
-<strong>Private Messages</strong>: render_inbox(), render_chatlist()
-<strong>News:</strong> render_news(), render_main_news(), render_news_item()
-<strong>User Profiles: </strong>  render_userprofile(), render_userform()
-<strong>Weblinks:</strong> render_weblinks(), render_weblinks_item()
-
+<strong>Articles:</strong>: render_article(), render_articles_main(), render_articles_category()<br/>
+<strong>Blog:</strong>: render_blog(), render_main_blog(), render_blog_item()<br/>
+<strong>Downloads:</strong>: render_downloads(), most_downloadded(), most_recent_downloaded(), filter_item_list()<br/>
+<strong>Forum (Part A:Forms)</strong>: post_preview(), postform()<br/>
+<strong>Forum (Part B: index)</strong>: render_forum(), searchbar(), render_forum_main(), render_forum_item_type(), forum_viewforum(), render_thread_item()<br/>
+<strong>Private Messages</strong>: render_inbox(), render_chatlist()<br/>
+<strong>News:</strong> render_news(), render_main_news(), render_news_item()<br/>
+<strong>User Profiles: </strong>  render_userprofile(), render_userform()<br/>
+<strong>Weblinks:</strong> render_weblinks(), render_weblinks_item()<br/>
+<br/>
 If you want to customize any part, include your functions into your theme to override the defaults.
 
-<strong>New Admin Panel</strong>
+<strong>New Admin Panel</strong><br/>
 <ul>
 <li><strong>Themed</strong> : The default paths to include your admin theme is /themes/admin_templates/</li>
 <li><strong>Responsive(ly) Designed</strong> : The new stock standard theme is Venus Admin Panel.</li>
@@ -88,7 +87,7 @@ If you want to customize any part, include your functions into your theme to ove
 <li><strong>Admin Login and Logout</strong>: Extended the security and removed the need to enter any admin password once login.</li>
 </ul>
 
-<strong>Stronger User Fields Model</strong>
+<strong>Stronger User Fields Model</strong><br/>
 The User Fields now are dynamic and can be added without modules. Just add them via Admin Panel.
 
 <strong>Theme Engine</strong><br/>
@@ -100,7 +99,7 @@ extend links requests to change user's viewing language via "?lang=English" / "?
 User Field creations, panel language switching will adapt to this method and will switch accordingly. However, if a content is made available to English, it will not appear
 in any other language, until another content is made available. We treat each language of articles/news/threads - seperately.
 
-<strong>SEO Integration</strong>
+<strong>SEO Integration</strong><br/>
 Implemented its first step into system-wide modular-base SEO permalinks. keywords and meta are added throughout the system.
 
 New Core Systems
