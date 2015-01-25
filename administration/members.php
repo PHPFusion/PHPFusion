@@ -102,7 +102,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	$errors = array();
 
 	if (isset($_POST['add_user'])) {
-		$userInput = new UserFieldsInput();
+		$userInput = new \PHPFusion\UserFieldsInput();
 		$userInput->validation = 0;
 		$userInput->emailVerification = 0;
 		$userInput->adminActivation = 0;
@@ -118,7 +118,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['480']));
 
 		member_nav(member_url("add", "")."| ".$locale['480']);
-		$userFields = new UserFields();
+		$userFields = new \PHPFusion\UserFields();
 		$userFields->postName = "add_user";
 		$userFields->postValue = $locale['480'];
 		$userFields->displayValidation = $settings['display_validation'];
@@ -147,7 +147,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "view" && $user_id && (!$isAdmi
 	}
 	opentable($locale['u104']." ".$user_data['user_name']);
 	member_nav(member_url("view", $user_id)."|".$user_data['user_name']);
-	$userFields = new UserFields();
+	$userFields = new \PHPFusion\UserFields();
 	$userFields->postName = "register";
 	$userFields->postValue = $locale['u101'];
 	$userFields->displayValidation = $settings['display_validation'];
