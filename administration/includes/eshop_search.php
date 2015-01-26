@@ -48,11 +48,11 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 			echo "<tr id='listItem_".$data['id']."' data-id='".$data['id']."' class='list-result ".$row_color."'>\n";
 			echo "<td></td>\n";
 			echo "<td class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
-			echo "<a class='text-dark' title='".$locale['edit']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>".$data['title']."</a>";
+			echo "<a class='text-dark' title='".$locale['edit']."' href='".FUSION_ROOT.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>".$data['title']."</a>";
 			echo "<div class='actionbar text-smaller' id='product-".$data['id']."-actions'>
-				<a href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>".$locale['edit']."</a> |
+				<a href='".FUSION_ROOT.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>".$locale['edit']."</a> |
 				<a class='qedit pointer' data-id='".$data['id']."'>".$locale['qedit']."</a> |
-				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=delete&amp;id=".$data['id']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
+				<a class='delete' href='".FUSION_ROOT.$aidlink."&amp;a_page=main&amp;action=delete&amp;id=".$data['id']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
 				";
 			echo "</td>\n";
 			echo "<td>".($eshop_cats ?$data['cat_title'] : $locale['global_080'])."</td>\n";
@@ -82,7 +82,7 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 		$('.qedit').bind('click', function(e) {
 			// ok now we need jquery, need some security at least.token for example. lets serialize.
 			$.ajax({
-				url: '".ADMIN."includes/eshop_products.php',
+				url: '".FUSION_ROOT."includes/eshop_products.php',
 				dataType: 'json',
 				type: 'post',
 				data: { q: $(this).data('id'), token: '".$aidlink."' },

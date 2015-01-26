@@ -26,9 +26,9 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 			echo "<td>\n";
 			echo "<strong>".$data['cuid']."</strong>\n";
 			echo "<div class='actionbar text-smaller' id='coupon-".$data['cuid']."-actions'>
-			<a href='".FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;section=couponform&amp;action=edit&amp;cuid=".$data['cuid']."'>".$locale['edit']."</a> |
+			<a href='".FUSION_ROOT."eshop.php".$aidlink."&amp;a_page=coupons&amp;section=couponform&amp;action=edit&amp;cuid=".$data['cuid']."'>".$locale['edit']."</a> |
 			<a class='qedit pointer' data-id='".$data['cuid']."'>".$locale['qedit']."</a> |
-			<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;action=delete&amp;cuid=".$data['cuid']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
+			<a class='delete' href='".FUSION_ROOT."eshop.php".$aidlink."&amp;a_page=coupons&amp;action=delete&amp;cuid=".$data['cuid']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
 			</div>\n";
 			echo "</td>\n";
 			echo "<td>".$data['cuname']."</td>";

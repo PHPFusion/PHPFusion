@@ -103,10 +103,11 @@ function render_Openadminpanel() {
 }
 
 function render_Closeadminpanel() {
-	echo "</div>\n";
-	echo "</div>\n";
 	echo "</footer>\n";
 	echo "<!-- end main content -->\n";
+	echo "</div>\n";
+	echo "</div>\n";
+	echo "</div>\n";
 	echo "</div>\n";
 }
 ?>

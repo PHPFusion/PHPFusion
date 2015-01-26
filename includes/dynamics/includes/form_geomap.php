@@ -64,12 +64,12 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
 	$html .= "<div class='row'>\n";
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
 	$html .= "<div id='$input_id-street-help'></div>";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]' class='form-control input-sm' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
@@ -89,11 +89,11 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 	$html .= "<div id='$input_id-state-help'></div>";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control input-sm' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
 	$html .= "<div id='$input_id-city-help'></div>";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control input-sm' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
 	$html .= "<div id='$input_id-postcode-help'></div>";
 	$html .= "</div>\n";
 	$html .= "</div>\n"; // close inner row

@@ -412,7 +412,7 @@ $locale['right'] = "Right";
 $locale['comments'] = "Comments";
 $locale['ratings'] = "Ratings";
 $locale['comments_ratings'] = "Comments and Ratings";
-
+$locale['user_account'] = "User Account";
 $locale['testimonial_rank'] = "I am the %s of this website";
 $locale['testimonial_location'] = "and I currently live in %s";
 $locale['testimonial_join'] = ". I joined this website on %s";

@@ -133,7 +133,7 @@ class defender {
 							$this->addNotice($locale['postcode_error']);
 						}
 						if (!defined('FUSION_NULL')) {
-							$return_value = $this->validate_text();
+							$return_value = $this->verify_text();
 							return $return_value;
 						}
 						break;

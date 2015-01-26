@@ -173,7 +173,7 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 }
 
 function form_user_select($title, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
-	global $userdata, $locale;
+	global $locale, $defender;
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
 		add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
@@ -225,6 +225,15 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
 		$encoded = json_encode(array());
 	}
 
+	$defender->add_field_session(array(
+									 'input_name' 	=> 	$input_name,
+									 'type'			=>	'dropdown',
+									 'title'		=>	$title2,
+									 'id' 			=>	$input_id,
+									 'required'		=>	$options['required'],
+									 'safemode' 	=> 	$options['safemode'],
+									 'error_text'	=> 	$options['error_text']
+								 ));
 	add_to_jquery("
                 function avatar(item) {
                     if(!item.id) {return item.text;}

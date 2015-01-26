@@ -519,6 +519,8 @@ $locale['ESHP209'] = "Orders";
 $locale['ESHP210'] = "This is a one way action, are you sure?";
 $locale['ESHP211'] = "Coupons";
 $locale['ESHP212'] = "Featured";
+$locale['ESHP213'] = "Delete this customer?";
+$locale['ESHP214'] = "Search Customer Name or ID";
 
 ///Administration orders, orderhistory , order search
 $locale['ESHP301'] = "Orders";
