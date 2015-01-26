@@ -91,6 +91,7 @@ if (!function_exists('render_userprofile')) {
 				$user_info .= "<div id='".$field_id."' class='p-b-5'><span class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>".$data['title']."</span><div class='profile_text overflow-hide'>".$data['value']."</div></div>\n";
 			}
 		}
+
 		$user_field = '';
 		foreach ($field_info as $field_cat_id => $category_data) {
 			$user_field .= $category_data['title'];
@@ -120,6 +121,7 @@ if (!function_exists('render_userprofile')) {
 		echo "<div class='overflow-hide'>\n";
 		echo $user_info;
 		echo $user_field;
+
 		/* if (!isset($_GET['profiles']) or isset($_GET['profiles']) && $_GET['profiles'] == 1) {
 			//echo opencollapse('uf_module');
 			//echo "<span class='display-inline-block' style='width:100%'><span class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>&nbsp;</span><a ".collapse_header_link('uf_module', '0', '0', '').">Show Full Information</a></span>\n";

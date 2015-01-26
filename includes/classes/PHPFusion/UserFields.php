@@ -242,8 +242,8 @@ class UserFields extends QuantumFields {
 
 		$this->info['section'] = $this->renderPageLink();
 
-		// Module Items
-		$this->get_userFields();
+		// Module Items -- got $user_info['field'];
+		self::get_userFields();
 		// Dynamics core UF fields
 		$this->info['item'][3] = '';
 		// buttons.. 2 of them.
@@ -260,7 +260,7 @@ class UserFields extends QuantumFields {
 	// reacts with $method var ('input', 'display');
 	private function get_userFields() {
 		$this->callback_data = $this->userData;
-		$this->info['user_field'] = '';
+
 		$index_page_id = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 		$result = dbquery("SELECT field.*,
 				cat.field_cat_id, cat.field_cat_name, cat.field_parent,
@@ -272,6 +272,7 @@ class UserFields extends QuantumFields {
 				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
 		if (dbrows($result)>0) {
 			// loop
+
 			while ($data = dbarray($result)) {
 				if ($data['field_cat_id']) $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
 				if ($data['field_cat']) $item[$data['field_cat']][] = $data;
@@ -281,15 +282,19 @@ class UserFields extends QuantumFields {
 				}
 			}
 			// require to inject id when id not present in other pages to make reference as Quantum Fields $index_value
-			if ($index_page_id !=='1' && $this->method !=='display') {
+			if ($index_page_id !=='1' && $this->method =='input') {
+				$this->info['user_field'] = '';
 				$this->info['user_field'] .= form_hidden('', 'user_id', 'user_id', $this->userData['user_id']);
 				$this->info['user_field'] .= form_hidden('', 'user_name', 'user_name', $this->userData['user_name']);
+			} else {
+				$this->info['user_field'] = array();
 			}
 			// filter display - input and display method.
 			if (isset($category[$index_page_id])) {
+
 				foreach($category[$index_page_id] as $cat_id => $cat) {
-					switch($this->registration) {
-						case 1:
+					switch($this->method) {
+						case 'input':
 							if (isset($item[$cat_id])) {
 								$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
 								foreach($item[$cat_id] as $field_id => $field) {
@@ -299,13 +304,12 @@ class UserFields extends QuantumFields {
 								}
 							}
 							break;
-						case 0 :
+						case 'display' :
 							if (isset($item[$cat_id])) {
 								$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
 								foreach($item[$cat_id] as $field_id => $field) {
 									if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->phpfusion_field_DOM($field)) {
 										$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->phpfusion_field_DOM($field);
-
 									}
 								}
 							}

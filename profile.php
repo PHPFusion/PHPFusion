@@ -49,20 +49,13 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 		}
 	}
 	opentable($locale['u104']." ".$user_data['user_name']);
-	$userFields = new UserFields();
+	$userFields = new PHPFusion\UserFields();
 	$userFields->userData = $user_data;
 	$userFields->showAdminOptions = TRUE;
 	$userFields->method = 'display';
 	$userFields->plugin_folder = INCLUDES."user_fields/";
 	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 	$userFields->renderOutput();
-
-	/* require_once CLASSES."User.class.php";
-	$userFields = new UserClass();
-	$userFields->userData = $user_data;
-	$userFields->showAdminOptions = TRUE;
-	$userFields->render_UserPage(); */
-
 
 } elseif (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	$result = dbquery("SELECT group_id, group_name FROM ".DB_USER_GROUPS." WHERE group_id='".$_GET['group_id']."'");
