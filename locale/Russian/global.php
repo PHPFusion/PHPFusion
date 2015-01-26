@@ -413,6 +413,7 @@ $locale['right'] = "Вправо";
 $locale['comments'] = "Комментарии";
 $locale['ratings'] = "Оценки";
 $locale['comments_ratings'] = "Комментарии и оценки";
+$locale['user_account'] = "Учётная запись пользователя";
 // Testimonials
 $locale['testimonial_rank'] = "На этом сайте я %s";
 $locale['testimonial_location'] = "и сейчас я живу в %s";
