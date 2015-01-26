@@ -172,7 +172,7 @@ if (isset($_POST['uninstall'])) {
 			  cfirstname varchar(50) NOT NULL default '',
 			  clastname varchar(50) NOT NULL default '',
 			  cdob varchar(20) NOT NULL default '',
-			  ccountry_code varchar(5) NOT NULL default '',
+			  ccountry varchar(100) NOT NULL default '',
 			  cregion varchar(50) NOT NULL default '',
 			  ccity varchar(50) NOT NULL default '',
 			  caddress varchar(55) NOT NULL default '',

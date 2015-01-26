@@ -38,6 +38,10 @@ class eShop_payment {
 
 
 	private function payment_form() {
+
+		echo "<div class='m-t-20'>\n";
+
+		echo "</div>\n";
 		/*
 		 * echo "<form name='inputform' method='post' action='$formaction'>
 <div style='float:left;width:50%'>
