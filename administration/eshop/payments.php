@@ -16,12 +16,107 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 if (isset($_GET['payid']) && !isnum($_GET['payid'])) die("Denied");
 
-define("PAYMENT_DIR", BASEDIR."eshop/paymentimgs/");
-$payment_files = makefilelist(PAYMENT_DIR, ".|..|index.php", true);
-$payment_list = makefileopts($payment_files);
+
+class eShop_payment {
+	private $data = array();
+
+	public function __construct() {
+		define("PAYMENT_DIR", BASEDIR."eshop/paymentimgs/");
+
+	}
+
+	static function get_paymentOpts() {
+		$payment_files = makefilelist(PAYMENT_DIR, ".|..|index.php", true);
+		$payment_list = array();
+		foreach($payment_files as $file) {
+			$payment_list[$file] = $file;
+		}
+		return $payment_list;
+	}
+
+
+	private function payment_form() {
+		/*
+		 * echo "<form name='inputform' method='post' action='$formaction'>
+<div style='float:left;width:50%'>
+<table align='left' cellspacing='0' width='100%' cellpadding='0' class='tbl'>
+<tr><td width='1%' align='left'><img src='".PAYMENT_DIR.($payment_image!=''?$payment_image:"")."' width='70' name='payment_image_preview' alt='' valign='middle' /></td>
+<td width='1%' align='left'><select name='payment_image' class='textbox' style='width:200px;' onChange=\"document.payment_image_preview.src = '".PAYMENT_DIR."' + document.inputform.payment_image.options[document.inputform.payment_image.selectedIndex].value;\">
+<option value='".$payment_image."' ".($payment_image == "$payment_image" ? " selected" : "").">".$payment_image."</option>
+$payment_list</select></td></tr>
+<tr><td width='1%' align='left'>".$locale['ESHPPMTS100']."</td><td width='1%' align='left'><input type='text' name='method' value='$method' class='textbox' style='width:190px;'>
+	<a href='javascript:;' class='info'><span>
+	".$locale['ESHPPMTS101']."
+	</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</td></tr>";
+
+echo "<tr><td width='1%' align='left'>".$locale['ESHPPMTS102']."</td><td width='1%' align='left'><input type='text' name='surcharge' value='$surcharge' class='textbox' style='width:50px;'> ".$settings['eshop_currency']."
+	<a href='javascript:;' class='info'><span>
+	".$locale['ESHPPMTS103']."
+	</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</td></tr>";
+
+echo "<tr><td align='left'>".$locale['ESHPPMTS104']."</td><td>";
+    $payment_dir = makefilelist("../paymentscripts/",  ".|..|index.php", true, "files");
+  echo "<select name='cfile' class='textbox' style='width:180px;' >";
+  echo "<option value=''>".$locale['ESHPPMTS105']."</option>";
+     foreach($payment_dir as $paymentfile){
+  echo "<option value='$paymentfile' ".($paymentfile == "$cfile" ? " selected" : "").">$paymentfile</option>";
+ }
+echo "</select>
+
+<a href='javascript:;' class='info'><span>
+".$locale['ESHPPMTS106']."
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+</td></tr>";
+
+echo "<tr><td align='left' valign='top'>".$locale['ESHPPMTS107']."</td><td align='left'><textarea name='description' cols='30' rows='4' class='textbox'>$description</textarea>
+<a href='javascript:;' class='info'><span>
+".$locale['ESHPPMTS108']."
+</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
+</td></tr>";
+
+echo "<tr><td align='left'>".$locale['ESHPPMTS109']."</td><td align='left'><select name='active' class='textbox'>
+    <option value='1'".($active == "1" ? " selected" : "").">".$locale['ESHPPMTS110']."</option>
+    <option value='0'".($active == "0" ? " selected" : "").">".$locale['ESHPPMTS111']."</option>
+    </select>
+	<a href='javascript:;' class='info'><span>
+	".$locale['ESHPPMTS112']."
+	</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+	</td></tr>";
+echo "</table></div>";
+
+    require_once INCLUDES."html_buttons_include.php";
+    echo "<div style='float:right;width:50%;'><table align='left' cellspacing='0' width='100%' cellpadding='0' class='tbl'>";
+	echo "<tr><td width='100%' class='tbl'>".$locale['ESHPPMTS113']."
+	<a href='javascript:;' class='info'><span>
+	".$locale['ESHPPMTS114']."
+	</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
+	<br /><textarea name='code' cols='45' rows='15' class='textbox' style='width:98%'>".$code."</textarea></td>\n";
+	echo "</tr>\n<tr>\n";
+	echo "<td class='tbl'>\n";
+	echo "<input type='button' value='&lt;?php?&gt;' class='button' onclick=\"addText('code', '&lt;?php\\n', '\\n?&gt;');\" />\n";
+	echo "<input type='button' value='&lt;p&gt;' class='button' onclick=\"addText('code', '&lt;p&gt;', '&lt;/p&gt;');\" />\n";
+	echo "<input type='button' value='&lt;br /&gt;' class='button' onclick=\"insertText('code', '&lt;br /&gt;');\" />\n";
+	    echo display_html("inputform", "code", true)."</td>\n";
+	echo "</tr>\n";
+echo "</table></div>";
+echo "<div class='clear'></div>";
+echo "<center><input type='submit'name='save_payment' value='".$locale['ESHPPMTS115']."' class='button'></center></form>\n";
+		 */
+	}
+
+}
+
+
+$payment = new eShop_payment();
+
+
+
+
+
 
 if (isset($_GET['step']) && $_GET['step'] == "delete") {
 $result = dbquery("DELETE FROM ".DB_ESHOP_PAYMENTS." WHERE pid='".$_GET['payid']."'");
@@ -67,72 +162,7 @@ if (isset($_GET['step']) && $_GET['step'] == "edit") {
 	$formaction = FUSION_SELF.$aidlink."&amp;a_page=payments";
 }
 
-echo "<form name='inputform' method='post' action='$formaction'>
-<div style='float:left;width:50%'>
-<table align='left' cellspacing='0' width='100%' cellpadding='0' class='tbl'>
-<tr><td width='1%' align='left'><img src='".PAYMENT_DIR.($payment_image!=''?$payment_image:"")."' width='70' name='payment_image_preview' alt='' valign='middle' /></td>
-<td width='1%' align='left'><select name='payment_image' class='textbox' style='width:200px;' onChange=\"document.payment_image_preview.src = '".PAYMENT_DIR."' + document.inputform.payment_image.options[document.inputform.payment_image.selectedIndex].value;\">
-<option value='".$payment_image."' ".($payment_image == "$payment_image" ? " selected" : "").">".$payment_image."</option>
-$payment_list</select></td></tr>
-<tr><td width='1%' align='left'>".$locale['ESHPPMTS100']."</td><td width='1%' align='left'><input type='text' name='method' value='$method' class='textbox' style='width:190px;'>
-	<a href='javascript:;' class='info'><span>
-	".$locale['ESHPPMTS101']."
-	</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
-</td></tr>";
 
-echo "<tr><td width='1%' align='left'>".$locale['ESHPPMTS102']."</td><td width='1%' align='left'><input type='text' name='surcharge' value='$surcharge' class='textbox' style='width:50px;'> ".$settings['eshop_currency']." 
-	<a href='javascript:;' class='info'><span>
-	".$locale['ESHPPMTS103']."
-	</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
-</td></tr>";
-
-echo "<tr><td align='left'>".$locale['ESHPPMTS104']."</td><td>";
-    $payment_dir = makefilelist("../paymentscripts/",  ".|..|index.php", true, "files");
-  echo "<select name='cfile' class='textbox' style='width:180px;' >";
-  echo "<option value=''>".$locale['ESHPPMTS105']."</option>";
-     foreach($payment_dir as $paymentfile){
-  echo "<option value='$paymentfile' ".($paymentfile == "$cfile" ? " selected" : "").">$paymentfile</option>";
- }
-echo "</select>
-
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPMTS106']."
-</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
-</td></tr>";
-
-echo "<tr><td align='left' valign='top'>".$locale['ESHPPMTS107']."</td><td align='left'><textarea name='description' cols='30' rows='4' class='textbox'>$description</textarea>
-<a href='javascript:;' class='info'><span>
-".$locale['ESHPPMTS108']."
-</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:top;' /></a>
-</td></tr>";
-
-echo "<tr><td align='left'>".$locale['ESHPPMTS109']."</td><td align='left'><select name='active' class='textbox'>
-    <option value='1'".($active == "1" ? " selected" : "").">".$locale['ESHPPMTS110']."</option>
-    <option value='0'".($active == "0" ? " selected" : "").">".$locale['ESHPPMTS111']."</option>
-    </select>
-	<a href='javascript:;' class='info'><span>
-	".$locale['ESHPPMTS112']."
-	</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
-	</td></tr>";
-echo "</table></div>";
-	
-    require_once INCLUDES."html_buttons_include.php";
-    echo "<div style='float:right;width:50%;'><table align='left' cellspacing='0' width='100%' cellpadding='0' class='tbl'>";
-	echo "<tr><td width='100%' class='tbl'>".$locale['ESHPPMTS113']."
-	<a href='javascript:;' class='info'><span>
-	".$locale['ESHPPMTS114']."
-	</span><img src='".BASEDIR."eshop/img/helper.png' height='25' border='0' alt='' style='vertical-align:middle;' /></a>
-	<br /><textarea name='code' cols='45' rows='15' class='textbox' style='width:98%'>".$code."</textarea></td>\n";
-	echo "</tr>\n<tr>\n";
-	echo "<td class='tbl'>\n";
-	echo "<input type='button' value='&lt;?php?&gt;' class='button' onclick=\"addText('code', '&lt;?php\\n', '\\n?&gt;');\" />\n";
-	echo "<input type='button' value='&lt;p&gt;' class='button' onclick=\"addText('code', '&lt;p&gt;', '&lt;/p&gt;');\" />\n";
-	echo "<input type='button' value='&lt;br /&gt;' class='button' onclick=\"insertText('code', '&lt;br /&gt;');\" />\n";
-	    echo display_html("inputform", "code", true)."</td>\n";
-	echo "</tr>\n";
-echo "</table></div>";
-echo "<div class='clear'></div>";
-echo "<center><input type='submit'name='save_payment' value='".$locale['ESHPPMTS115']."' class='button'></center></form>\n";
 echo "<div class='clear'></div>";
 echo "<hr />";
 
@@ -145,6 +175,9 @@ echo "<br /><table align='center' cellspacing='4' cellpadding='0' class='tbl-bor
 <td class='tbl2' align='center' width='1%'><b>".$locale['ESHPPMTS117']."</b></td>
 </tr>\n";
 
+
+
+
 $result = dbquery("SELECT * FROM ".DB_ESHOP_PAYMENTS." ORDER BY method ASC, method LIMIT ".$_GET['rowstart'].",25");
 while ($data = dbarray($result)) {
 echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
@@ -156,4 +189,3 @@ echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'
 } else {
 echo "<div class='admin-message'>".$locale['ESHPPMTS118']."</div>\n";
 }
-?>
