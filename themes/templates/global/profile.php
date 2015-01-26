@@ -22,6 +22,7 @@ if (!function_exists('render_userform')) {
 	function render_userform($info) {
 		// page navigation
 		$endnav = '';
+
 		if (isset($info['section'])) {
 			$i = 1;
 			$tab_title = array();
@@ -39,7 +40,7 @@ if (!function_exists('render_userform')) {
 			echo opentab($tab_title, $tab_active, 'profile', 1);
 			echo opentabbody($tab_title['title'][$_GET['profiles']], $_GET['profiles'], $tab_active, 1);
 			$endnav 	= closetabbody();
-			$end_nav 	.= closetab();
+			$endnav 	.= closetab();
 		}
 
 		echo "<div id='register_form' class='row m-t-20'>\n";

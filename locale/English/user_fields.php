@@ -38,7 +38,7 @@ $locale['u100'] = "In order to change your password or email address, you must e
 $locale['u101'] = "Register";
 $locale['u102'] = "Edit Profile";
 $locale['u103'] = "Profile";
-$locale['u104'] = "Member Profile for";
+$locale['u104'] = "Member Profile";
 $locale['u105'] = "Update Profile";
 
 // New UF 1.20
