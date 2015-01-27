@@ -20,10 +20,8 @@ require_once THEMES."templates/admin_header.php";
 if (!checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) die("Acces Denied");
 
 use PHPFusion\ErrorLogs;
-
 $fusion_errors = new ErrorLogs();
 $fusion_errors->add_breadcrumb();
-//$fusion_errors->show_error_logs();
 opentable($locale['400']);
 $fusion_errors->show_error_notice();
 closetable();

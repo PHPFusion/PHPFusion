@@ -291,10 +291,11 @@ legend {
 #acp-header {
 	background-color: rgb(255,255,255);
 	border-bottom: 1px solid rgb(170, 183, 205);
+
 }
 #acp-header.affix {
 	width: 100%;
-	z-index: 3001;
+	z-index: 10;
 }
 #acp-left {
 	padding: 0px;
@@ -302,7 +303,7 @@ legend {
 	background-color: rgb(34, 43, 45);
 	transition: left 0.20s ease-in;
 	border-right: 1px solid rgb(170, 183, 205);
-	z-index: 3000;
+	z-index: 9;
 	min-height: 1124px;
 	width:251px;
 }

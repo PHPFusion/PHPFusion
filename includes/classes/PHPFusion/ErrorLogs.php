@@ -13,7 +13,7 @@ class ErrorLogs {
 	private $errors = array();
 	private $locale = array();
 	public $no_notice = 0;
-
+	public $compressed = 0;
 	public function __construct() {
 		global $locale;
 
@@ -30,6 +30,10 @@ class ErrorLogs {
 		}
 		if (isset($_POST['delete_entries']) && isnum($this->delete_status)) {
 			dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status='".$_POST['delete_status']."'");
+		}
+
+		if (isset($_POST['delete_all_logs'])) {
+			dbquery("DELETE FROM ".DB_ERRORS);
 		}
 
 		$result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT ".$this->rowstart.",20");
@@ -234,10 +238,9 @@ class ErrorLogs {
 							</div>
 						</td>
 					</tr>
-			<?php
-			} ?>
-			</table>
-			<?php else : ?>
+				<?php } ?>
+				</table>
+				<?php else : ?>
 				<div style='text-align:center'><br />
 					<?php echo $locale['418'] ?><br /><br />
 				</div>
@@ -250,8 +253,8 @@ class ErrorLogs {
 				<?php
 				echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>0));
 				openside('');
-				echo form_select($locale['440'], 'delete_status', 'delete_status', self::get_logTypes(), '', array('allowclear'=>1, 'class'=>'m-b-0'));
-				echo form_button($locale['453'], 'delete_entries', 'delete_entries', $locale['453'], array('class'=>'btn-primary m-t-10'));
+				echo form_select($locale['440'], 'delete_status', 'delete_status', self::get_logTypes(), '', array('allowclear'=>1, 'width'=>'100%'));
+				echo form_button($locale['453'], 'delete_entries', 'delete_entries', $locale['453'], array('class'=>'btn-primary'));
 				closeside();
 				echo closeform();
 				?>
@@ -259,6 +262,52 @@ class ErrorLogs {
 		</div>
 		<?php
 	}
+
+	public function show_footer_logs() {
+		global $aidlink;
+		$locale = $this->locale;
+		if ($this->errors) {
+			echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>0, 'class'=>'text-right'));
+			echo form_button($locale['delete'], 'delete_all_logs', 'delete_all_logs', $locale['453'], array('class'=>'btn-block btn-primary', 'icon'=>'fa fa-bitbucket fa-lg m-r-10'));
+			echo closeform();
+			?>
+			<table class='table table-responsive'>
+			<?php foreach ($this->errors as $i => $data) {
+				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
+				?>
+				<tr <?php echo "id='rmd-".$data['error_id']."'" ?>>
+					<td class='col-xs-6 <?php echo $row_color ?>'>
+						<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id'] ?>#file' title='<?php echo stripslashes($data['error_file']) ?>'>
+							<?php echo self::getMaxFolders(stripslashes($data['error_file']), 2) ?></a><br />
+						<span><?php echo $data['error_message'] ?></span><br/>
+						<span class='strong'><?php echo $locale['415']." ".$data['error_line'] ?></span><br/>
+						<span class='text-smaller'><?php echo timer($data['error_timestamp']) ?></span><br/>
+					</td>
+					<td class='<?php echo $row_color ?>'>
+						<div class='btn-group'>
+							<?php echo self::getGitsrc($data['error_file'], $data['error_line']); ?>
+						</div>
+					</td>
+					<td class='<?php echo $row_color ?>'><?php echo self::get_errorTypes($data['error_level']); ?></td>
+					<td class='<?php echo $row_color ?>' style='white-space:nowrap;'>
+						<div <?php echo "id='errgrp-".$data['error_id']."'"; ?>' class='btn-group'>
+						<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='0' class='btn <?php echo $data['error_status'] == 0 ? 'active' : '';  ?> e_status_0 button btn-default move_error_log'><?php echo $locale['450'] ?></a>
+						<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='1' class='btn <?php echo $data['error_status'] == 1 ? 'active' : '';  ?> e_status_1 button btn-default move_error_log'><?php echo $locale['451'] ?></a>
+						<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='2' class='btn <?php echo $data['error_status'] == 2 ? 'active' : '';  ?> e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
+						<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='999' class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
+						</div>
+					</td>
+				</tr>
+			<?php } ?>
+			</table>
+		<?php } else { ?>
+			<div style='text-align:center'><br />
+				<?php echo $locale['418'] ?><br /><br />
+			</div>
+		<?php }
+	}
+
+
 
 	// @todo: need some love on the html.
 	public function show_error_notice() {

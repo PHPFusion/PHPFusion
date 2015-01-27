@@ -531,6 +531,13 @@ dl, dt, dd {
 .user-tooltip { width: 250px; padding-bottom:10px; }
 
 /* Modal */
+.modal-body table {
+	font-size: 14px;
+}
+.modal-lg {
+	width: 70%;
+	z-index:999;
+}
 .modal-center {
 	top:25%;
 }
