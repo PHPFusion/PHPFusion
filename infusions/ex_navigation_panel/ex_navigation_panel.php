@@ -30,12 +30,8 @@ if (file_exists(INFUSIONS."ex_navigation_panel/locale/".LANGUAGE.".php")) {
 	// Load the default locale file.
 	include INFUSIONS."ex_navigation_panel/locale/English.php";
 }
-$exnav_settings = get_settings("ex_navigation_panel");
 $link = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
 $link = preg_replace("^(&amp;|\?)s_action=(edit|delete)&amp;exlink_id=\d*^", "", $link);
-$sep = stristr($link, "?") ? "&amp;" : "?";
-$shout_link = "";
-$shout_message = "";
 openside($locale['ENP_title']);
 
 $result = dbquery("SELECT tl.exlink_name, tl.exlink_url, tl.exlink_position, tl.exlink_window 
