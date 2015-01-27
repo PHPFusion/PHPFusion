@@ -56,16 +56,21 @@ function setError($error_level, $error_message, $error_file, $error_line, $error
 // Error Levels Desciption
 function getErrorLevel($level, $desc = FALSE) {
 	global $locale;
-	$errorLevels = array(1 => array("E_ERROR", $locale['E_ERROR']), 2 => array("E_WARNING", $locale['E_WARNING']),
-						 4 => array("E_PARSE", $locale['E_PARSE']), 8 => array("E_NOTICE", $locale['E_NOTICE']),
-						 16 => array("E_CORE_ERROR", $locale['E_CORE_ERROR']),
-						 32 => array("E_CORE_WARNING", $locale['E_CORE_WARNING']),
-						 64 => array("E_COMPILE_ERROR", $locale['E_COMPILE_ERROR']),
-						 128 => array("E_COMPILE_WARNING", $locale['E_COMPILE_WARNING']),
-						 256 => array("E_USER_ERROR", $locale['E_USER_ERROR']),
-						 512 => array("E_USER_WARNING", $locale['E_USER_WARNING']),
-						 1024 => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
-						 2047 => array("E_ALL", $locale['E_ALL']), 2048 => array("E_STRICT", $locale['E_STRICT']));
+	$errorLevels = array(
+		1 => array("E_ERROR", $locale['E_ERROR']),
+		2 => array("E_WARNING", $locale['E_WARNING']),
+		4 => array("E_PARSE", $locale['E_PARSE']),
+		8 => array("E_NOTICE", $locale['E_NOTICE']),
+		16 => array("E_CORE_ERROR", $locale['E_CORE_ERROR']),
+		32 => array("E_CORE_WARNING", $locale['E_CORE_WARNING']),
+		64 => array("E_COMPILE_ERROR", $locale['E_COMPILE_ERROR']),
+		128 => array("E_COMPILE_WARNING", $locale['E_COMPILE_WARNING']),
+		256 => array("E_USER_ERROR", $locale['E_USER_ERROR']),
+		512 => array("E_USER_WARNING", $locale['E_USER_WARNING']),
+		1024 => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
+		2047 => array("E_ALL", $locale['E_ALL']),
+		2048 => array("E_STRICT", $locale['E_STRICT'])
+	);
 	if (isset($errorLevels[$level])) {
 		return $errorLevels[0].($desc ? " - ".$errorLevels[1] : "");
 	} else {

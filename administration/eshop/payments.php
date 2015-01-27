@@ -148,7 +148,7 @@ class eShop_payment {
 		}
 		echo "</table>\n";
 		echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'],25,$this->max_rowstart,3,FUSION_SELF.$aidlink."&amp;a_page=payments&amp;")."\n</div>\n";
-		echo "</div>n";
+		echo "</div>\n";
 	}
 
 	public function add_payment_form() {
@@ -196,7 +196,7 @@ class eShop_payment {
 
 
 $payment = new eShop_payment();
-$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $customer->verify_payment($_GET['cuid']) : 0;
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $payment->verify_payment($_GET['cuid']) : 0;
 $tab_title['title'][] = 'Current Payment Method'; //$locale['ESHPCUPNS100'];
 $tab_title['id'][] = 'payment';
 $tab_title['icon'][] = '';

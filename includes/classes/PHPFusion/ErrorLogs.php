@@ -15,7 +15,7 @@ class ErrorLogs {
 
 	public function __construct() {
 		global $locale;
-		add_to_head("<link rel='stylesheet' href='".THEMES."templates/errors.css' type='text/css' media='all' />");
+		//add_to_head("<link rel='stylesheet' href='".THEMES."templates/errors.css' type='text/css' media='all' />");
 		include LOCALE.LOCALESET."admin/errors.php";
 		$this->locale += $locale;
 		$this->error_status = filter_input(INPUT_POST, 'error_status', FILTER_VALIDATE_INT, array('min_range' => 0, 'max_range' => 2));
@@ -89,6 +89,8 @@ class ErrorLogs {
 	}
 
 	static function errorjs() {
+		global $aidlink;
+		if (checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] == iAUTH) {
 		// Show the "Apply"-button only when javascript is disabled"
 		add_to_jquery("
 		$('.change_status').hide();
@@ -96,7 +98,37 @@ class ErrorLogs {
 			jQuery('html, body').animate({scrollTop:0}, 'slow');
 			return false;
 		});
+		$('.move_error_log').bind('click', function() {
+			var ctoken = '".$aidlink."';
+			var error_id = $(this).data('id');
+			var error_type = $(this).data('type');
+			$.ajax({
+				url: '".ADMIN."includes/error_logs_updater.php',
+				dataType: 'json',
+				method : 'post',
+				type: 'json',
+				data: { i: error_id, t: error_type, token: ctoken },
+				success: function(e) {
+				console.log(e);
+					if (e.status == 'OK') {
+						var target_group_add  = $('div#errgrp-'+e.fusion_error_id+' > a.e_status_'+ e.to);
+						var target_group_remove = $('div#errgrp-'+e.fusion_error_id+' > .e_status_'+ e.from)
+						target_group_add.addClass('active');
+						target_group_remove.removeClass('active');
+					}
+					else if (e.status == 'RMD') {
+						console.log(e);
+						 $('tr#rmd-'+e.fusion_error_id).html('');
+					}
+				},
+				error : function(e) {
+					console.log('fail');
+				}
+			});
+		});
 		");
+		}
+
 	}
 
 	public function add_breadcrumb() {
@@ -104,52 +136,96 @@ class ErrorLogs {
 		add_to_breadcrumbs(array('link'=>ADMIN."errors.php".$aidlink, 'title'=>$this->locale['400']));;
 	}
 
+	static function get_logTypes() {
+		global $locale;
+		return array(
+			'0' => $locale['450'],
+			'1' => $locale['451'],
+			'2' => $locale['452']
+		);
+	}
+
+	static function get_errorTypes($type) {
+		$locale = '';
+		include LOCALE.LOCALESET."errors.php";
+		$error_types = array(
+		1 => array("E_ERROR", $locale['E_ERROR']),
+		2 => array("E_WARNING", $locale['E_WARNING']),
+		4 => array("E_PARSE", $locale['E_PARSE']),
+		8 => array("E_NOTICE", $locale['E_NOTICE']),
+		16 => array("E_CORE_ERROR", $locale['E_CORE_ERROR']),
+		32 => array("E_CORE_WARNING", $locale['E_CORE_WARNING']),
+		64 => array("E_COMPILE_ERROR", $locale['E_COMPILE_ERROR']),
+		128 => array("E_COMPILE_WARNING", $locale['E_COMPILE_WARNING']),
+		256 => array("E_USER_ERROR", $locale['E_USER_ERROR']),
+		512 => array("E_USER_WARNING", $locale['E_USER_WARNING']),
+		1024 => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
+		2047 => array("E_ALL", $locale['E_ALL']),
+		2048 => array("E_STRICT", $locale['E_STRICT'])
+		);
+		if (isset($error_types[$type])) return $error_types[$type][1];
+		return false;
+	}
+
+	static function getGitsrc($file, $line_number, $version = '9.00') {
+		$repository_address = "https://github.com/php-fusion/PHP-Fusion/blob/";
+		$version = "9.00";
+		$file_path = stristr($file, "\\") ? array_filter(explode("\\", $file)) : array_filter(explode("/", $file));
+		$i = 1;
+		foreach($file_path as $str) {
+			if ($str == str_replace("/", '', fusion_get_settings('site_path'))) {
+				break;
+			}
+			$i++;
+		}
+		$file_path = implode('/', array_slice($file_path, $i));
+		return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."/#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
+	}
+
+
 	// @todo: need some love on the html.
 	public function show_error_logs() {
 		global $aidlink;
 		$locale = $this->locale;
 		opentable($locale['400']);
+		echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>0)); ?>
+		<?php openside(''); ?>
+			<?php echo form_select($locale['440'], 'delete_status', 'delete_status', self::get_logTypes(), '', array('allowclear'=>1, 'inline'=>1, 'class'=>'m-b-0')); ?>
+			<?php echo form_button($locale['453'], 'delete_entries', 'delete_entries', $locale['453'], array('class'=>'btn-primary col-sm-offset-3 m-t-10')) ?>
+		<?php closeside(''); ?>
+		<?php echo closeform();
 		if ($this->errors) : ?>
 			<a name='top'></a>
-			<table cellpadding='0' cellspacing='1' class='tbl-border center' style='width:90%;'>
+			<table class='table table-responsive center'>
 				<tr>
-					<td class='tbl1' colspan='3' style='text-align:center;'>
-						<form name='delete_form' action='<?php echo FUSION_SELF.$aidlink ?>' method='post'>
-							<?php echo $locale['440'] ?>
-							<select name='delete_status' class='textbox'>
-								<option>---</option>
-								<option value='0'><?php echo $locale['450'] ?></option>
-								<option value='1'><?php echo $locale['451'] ?></option>
-								<option value='2'><?php echo $locale['452'] ?></option>
-							</select>
-							<input type='submit' class='button' name='delete_entries' value='<?php echo $locale['453'] ?>' style='margin-left:5px;' />
-						</form>
-					</td>
-				</tr>
-				<tr>
-					<td class='tbl2' style='font-weight:bold;'><?php echo $locale['410'] ?></td>
-					<td class='tbl2' style='font-weight:bold;width:5%;'><?php echo $locale['413'] ?></td>
-					<td class='tbl2' style='text-align:center;width:5%;font-weight:bold;'><?php echo $locale['414'] ?></td>
+					<th class='col-xs-6'><?php echo $locale['410'] ?></th>
+					<th>Options</th>
+					<th><?php echo $locale['413'] ?></th>
+					<th><?php echo $locale['454'] ?></th>
+					<th class='col-xs-3'><?php echo $locale['414'] ?></th>
 				</tr>
 				<?php foreach ($this->errors as $i => $data) {
 					$row_color = ($i%2 == 0 ? "tbl1" : "tbl2"); ?>
-					<tr>
+					<tr <?php echo "id='rmd-".$data['error_id']."'" ?>>
 						<td class='<?php echo $row_color ?>'>
 							<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id'] ?>#file' title='<?php echo stripslashes($data['error_file']) ?>'>
 								<?php echo self::getMaxFolders(stripslashes($data['error_file']), 2) ?></a><br />
-							<span class='small2'><?php echo $data['error_message']." ".$locale['415']." ".$data['error_line'] ?></span>
+							<span><?php echo $data['error_message']." <kbd> ".$locale['415']." ".$data['error_line'] ?></kbd></span>
+						</td>
+						<td class='<?php echo $row_color ?>'>
+							<div class='btn-group'>
+							<?php echo self::getGitsrc($data['error_file'], $data['error_line']); ?>
+							</div>
 						</td>
 						<td class='<?php echo $row_color ?>' style='white-space:nowrap;'><?php echo showdate("longdate", $data['error_timestamp']) ?></td>
+						<td class='<?php echo $row_color ?>'><?php echo self::get_errorTypes($data['error_level']); ?></td>
 						<td class='<?php echo $row_color ?>' style='white-space:nowrap;'>
-							<form action='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart ?>' method='post'>
-								<input type='hidden' name='error_id' value='<?php echo $data['error_id'] ?>' />
-								<select name='error_status' class='textbox' onchange='this.form.submit();'>
-									<option value='0' <?php echo ($data['error_status'] == 0 ? "selected='selected'" : "") ?>><?php echo $locale['450'] ?></option>
-									<option value='1' <?php echo ($data['error_status'] == 1 ? "selected='selected'" : "") ?>><?php echo $locale['451'] ?></option>
-									<option value='2' <?php echo ($data['error_status'] == 2 ? "selected='selected'" : "") ?>><?php echo $locale['452'] ?></option>
-								</select>
-								<input type='submit' class='button change_status' value='<?php echo $locale['453'] ?>' style='margin-left:5px;' />
-							</form>
+							<div <?php echo "id='errgrp-".$data['error_id']."'"; ?>' class='btn-group'>
+							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='0' class='btn <?php echo $data['error_status'] == 0 ? 'active' : '';  ?> e_status_0 button btn-default move_error_log'><?php echo $locale['450'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='1' class='btn <?php echo $data['error_status'] == 1 ? 'active' : '';  ?> e_status_1 button btn-default move_error_log'><?php echo $locale['451'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='2' class='btn <?php echo $data['error_status'] == 2 ? 'active' : '';  ?> e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='999' class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
+							</div>
 						</td>
 					</tr>
 				<?php
