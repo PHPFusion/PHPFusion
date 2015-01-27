@@ -224,7 +224,6 @@ class ErrorLogs {
 								<?php echo self::getGitsrc($data['error_file'], $data['error_line']); ?>
 							</div>
 						</td>
-
 						<td class='<?php echo $row_color ?>'><?php echo self::get_errorTypes($data['error_level']); ?></td>
 						<td class='<?php echo $row_color ?>' style='white-space:nowrap;'>
 							<div <?php echo "id='errgrp-".$data['error_id']."'"; ?>' class='btn-group'>
@@ -279,7 +278,7 @@ class ErrorLogs {
 			$tab_title['icon'][2] = 'fa fa-stethoscope m-r-10';
 		}
 
-		$tab_active = tab_active($tab_title, 0);
+		$tab_active = tab_active($tab_title, $this->error_id ? 1 : 0);
 
 		echo opentab($tab_title, $tab_active, 'error_tab');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
