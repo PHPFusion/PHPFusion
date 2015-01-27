@@ -12,10 +12,11 @@ class ErrorLogs {
 	private $error_id = '';
 	private $errors = array();
 	private $locale = array();
+	public $no_notice = 0;
 
 	public function __construct() {
 		global $locale;
-		//add_to_head("<link rel='stylesheet' href='".THEMES."templates/errors.css' type='text/css' media='all' />");
+
 		include LOCALE.LOCALESET."admin/errors.php";
 		$this->locale += $locale;
 		$this->error_status = filter_input(INPUT_POST, 'error_status', FILTER_VALIDATE_INT, array('min_range' => 0, 'max_range' => 2));
@@ -37,7 +38,9 @@ class ErrorLogs {
 		}
 
 		$this->rows = $this->errors ? dbcount('(error_id)', DB_ERRORS) : 0;
+
 		static::errorjs();
+
 	}
 
 	// Setting maximum number of folders for an URL
@@ -67,23 +70,30 @@ class ErrorLogs {
 	}
 
 	// Print code
-	static function printCode($source_code, $starting_line, $error_line = "") {
+	static function printCode($source_code, $starting_line, $error_line = "", array $error_message = array()) {
 		if (is_array($source_code)) {
 			return FALSE;
 		}
 		$source_code = explode("\n", str_replace(array("\r\n", "\r"), "\n", $source_code));
 		$line_count = $starting_line;
 		$formatted_code = "";
+		$error_message ="<div class='panel panel-default m-10'><div class='panel-heading'><i class='fa fa-bug'></i> Line ".$error_line." -- ".timer($error_message['time'])."</div><div class='panel-body strong required'>".$error_message['text']."</div>\n";
+
 		foreach ($source_code as $code_line) {
 			$code_line = self::codeWrap($code_line, 145);
 			$line_class = ($line_count == $error_line ? "err_tbl-error-line" : "err_tbl1");
 			$formatted_code .= "<tr>\n<td class='err_tbl2' style='text-align:right;width:1%;'>".$line_count."</td>\n";
-			$line_count++;
+
 			if (preg_match('#<\?(php)?[^[:graph:]]#', $code_line)) {
 				$formatted_code .= "<td class='".$line_class."'>".str_replace(array('<code>', '</code>'), '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
 			} else {
-				$formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(array('<code>', '</code>'), '', highlight_string('<?php '.$code_line, TRUE)))."</td>\n</tr>\n";
+				$formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(array('<code>', '</code>'), '', highlight_string('<?php '.$code_line, TRUE)))."
+				</td>\n</tr>\n";
+				if ($line_count == $error_line) {
+					$formatted_code .= "<tr>\n<td colspan='2'>".$error_message."</td></tr>\n";
+				}
 			}
+			$line_count++;
 		}
 		return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
 	}
@@ -187,37 +197,34 @@ class ErrorLogs {
 	public function show_error_logs() {
 		global $aidlink;
 		$locale = $this->locale;
-		opentable($locale['400']);
-		echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>0)); ?>
-		<?php openside(''); ?>
-			<?php echo form_select($locale['440'], 'delete_status', 'delete_status', self::get_logTypes(), '', array('allowclear'=>1, 'inline'=>1, 'class'=>'m-b-0')); ?>
-			<?php echo form_button($locale['453'], 'delete_entries', 'delete_entries', $locale['453'], array('class'=>'btn-primary col-sm-offset-3 m-t-10')) ?>
-		<?php closeside(''); ?>
-		<?php echo closeform();
-		if ($this->errors) : ?>
-			<a name='top'></a>
-			<table class='table table-responsive center'>
-				<tr>
-					<th class='col-xs-6'><?php echo $locale['410'] ?></th>
-					<th>Options</th>
-					<th><?php echo $locale['413'] ?></th>
-					<th><?php echo $locale['454'] ?></th>
-					<th class='col-xs-3'><?php echo $locale['414'] ?></th>
-				</tr>
-				<?php foreach ($this->errors as $i => $data) {
+		?>
+		<div class='row'>
+			<div class='col-xs-12 col-sm-12 col-md-9'>
+				<?php if ($this->errors) : ?>
+				<a name='top'></a>
+				<table class='table table-responsive center'>
+					<tr>
+						<th class='col-xs-5'><?php echo $locale['410'] ?></th>
+						<th>Options</th>
+						<th><?php echo $locale['454'] ?></th>
+						<th class='col-xs-4'><?php echo $locale['414'] ?></th>
+					</tr>
+					<?php foreach ($this->errors as $i => $data) {
 					$row_color = ($i%2 == 0 ? "tbl1" : "tbl2"); ?>
 					<tr <?php echo "id='rmd-".$data['error_id']."'" ?>>
 						<td class='<?php echo $row_color ?>'>
 							<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id'] ?>#file' title='<?php echo stripslashes($data['error_file']) ?>'>
 								<?php echo self::getMaxFolders(stripslashes($data['error_file']), 2) ?></a><br />
-							<span><?php echo $data['error_message']." <kbd> ".$locale['415']." ".$data['error_line'] ?></kbd></span>
+							<span><?php echo $data['error_message'] ?></span><br/>
+							<span class='strong'><?php echo $locale['415']." ".$data['error_line'] ?></span><br/>
+							<span class='text-smaller'><?php echo timer($data['error_timestamp']) ?></span><br/>
 						</td>
 						<td class='<?php echo $row_color ?>'>
 							<div class='btn-group'>
-							<?php echo self::getGitsrc($data['error_file'], $data['error_line']); ?>
+								<?php echo self::getGitsrc($data['error_file'], $data['error_line']); ?>
 							</div>
 						</td>
-						<td class='<?php echo $row_color ?>' style='white-space:nowrap;'><?php echo showdate("longdate", $data['error_timestamp']) ?></td>
+
 						<td class='<?php echo $row_color ?>'><?php echo self::get_errorTypes($data['error_level']); ?></td>
 						<td class='<?php echo $row_color ?>' style='white-space:nowrap;'>
 							<div <?php echo "id='errgrp-".$data['error_id']."'"; ?>' class='btn-group'>
@@ -228,114 +235,143 @@ class ErrorLogs {
 							</div>
 						</td>
 					</tr>
-				<?php
-				} ?>
+			<?php
+			} ?>
 			</table>
-		<?php else : ?>
-			<div style='text-align:center'><br />
-				<?php echo $locale['418'] ?><br /><br />
+			<?php else : ?>
+				<div style='text-align:center'><br />
+					<?php echo $locale['418'] ?><br /><br />
+				</div>
+			<?php endif;
+			if ($this->rows > 20) : ?>
+				<div style='margin-top:5px;text-align:center;'><?php echo makepagenav($this->rowstart, 20, $this->rows, 3, FUSION_SELF.$aidlink."&amp;") ?></div>
+			<?php endif; ?>
 			</div>
-		<?php endif;
-		if ($this->rows > 20) : ?>
-			<div style='margin-top:5px;text-align:center;'><?php echo makepagenav($this->rowstart, 20, $this->rows, 3, FUSION_SELF.$aidlink."&amp;") ?></div>
-		<?php endif;
-		closetable();
+			<div class='col-xs-12 col-sm-12 col-md-3'>
+				<?php
+				echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>0));
+				openside('');
+				echo form_select($locale['440'], 'delete_status', 'delete_status', self::get_logTypes(), '', array('allowclear'=>1, 'class'=>'m-b-0'));
+				echo form_button($locale['453'], 'delete_entries', 'delete_entries', $locale['453'], array('class'=>'btn-primary m-t-10'));
+				closeside();
+				echo closeform();
+				?>
+			</div>
+		</div>
+		<?php
 	}
 
 	// @todo: need some love on the html.
 	public function show_error_notice() {
 		global $aidlink;
 		$locale = $this->locale;
+
+		$tab_title['title'][0] = 'Errors';
+		$tab_title['id'][0] = 'errors-list';
+		$tab_title['icon'][0] = 'fa fa-bug m-r-10';
+
 		if ($this->error_id) {
+			$tab_title['title'][1] = 'Error File';
+			$tab_title['id'][1] = 'error-file';
+			$tab_title['icon'][1] = 'fa fa-medkit m-r-10';
+			$tab_title['title'][2] = 'Source File';
+			$tab_title['id'][2] = 'src-file';
+			$tab_title['icon'][2] = 'fa fa-stethoscope m-r-10';
+		}
+
+		$tab_active = tab_active($tab_title, 0);
+
+		echo opentab($tab_title, $tab_active, 'error_tab');
+		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
+		?>
+		<div class='m-t-20'>
+		<?php self::show_error_logs(); ?>
+		</div>
+		<?php echo closetabbody();
+		if ($this->error_id) {
+			// dump 1 and 2
+			add_to_head("<link rel='stylesheet' href='".THEMES."templates/errors.css' type='text/css' media='all' />");
+			define('no_debugger', 1);
 			$data = dbarray(dbquery("SELECT * FROM ".DB_ERRORS." WHERE error_id='".$this->error_id."' LIMIT 1"));
-			if (!$data) {
-				redirect(FUSION_SELF.$aidlink);
-			}
+			if (!$data) redirect(FUSION_SELF.$aidlink);
 			$thisFileContent = is_file($data['error_file']) ? file($data['error_file']) : array();
 			$line_start = max($data['error_line']-10, 1);
 			$line_end = min($data['error_line']+10, count($thisFileContent));
-			opentable($locale['401']." ".self::getMaxFolders(stripslashes($data['error_file']), 3));
 			$output = implode("", array_slice($thisFileContent, $line_start-1, $line_end - $line_start + 1));
 			$pageFilePath = BASEDIR.substr($data['error_page'], strlen(fusion_get_settings('site_path')));
 			$pageContent = is_file($pageFilePath) ? file_get_contents($pageFilePath) : '';
+			//echo "<a class='btn btn-default m-b-20 pull-right' href='#top' title='".$locale['422']."'>".$locale['422']."</a>\n";
+			add_to_jquery("
+			$('#error_status_sel').bind('change', function(e) { this.form.submit();	});
+			");
+
+			echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
 			?>
-			<table cellpadding='0' cellspacing='1' class='tbl-border center' style='border-collapse:collapse;width:90%;'>
+
+			<div class='m-t-20'>
+				<h2><?php echo $data['error_message'] ?></h2>
+				<h3 style='border-bottom:0;' class='display-inline'><label class='label label-success'><?php echo $locale['415']." ".number_format($data['error_line']); ?></label></h3>
+				<div class='display-inline text-lighter'><strong><?php echo $locale['419'] ?></strong> -- <?php echo self::getMaxFolders(stripslashes($data['error_file']), 3); ?></div>
+
+				<div class='m-t-10'>
+					<div class='display-inline-block m-r-20'><i class='fa fa-file-code-o m-r-10'></i><strong class='m-r-10'><?php echo $locale['411'] ?></strong> -- <a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id'] ?>#page' title='<?php echo $data['error_page'] ?>'>
+							<?php echo self::getMaxFolders($data['error_page'], 3); ?></a>
+					</div>
+					<span class='text-lighter'>generated by</span>
+					<div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'><strong><?php echo $locale['412']."-".$locale['416'] ?>
+							<?php echo $data['error_user_level'] ?> -- <?php echo $locale['417']." ".$data['error_user_ip'] ?></strong>
+					</div>
+					<span class='text-lighter'><?php echo lcfirst($locale['on']) ?></span>
+					<div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'><strong class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong></div>
+				</div>
+				<div class='m-t-10 display-inline-block' style='width:300px'>
+					<?php
+					echo openform('logform', 'logform', 'post', FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file", array('downtime'=>5));
+					echo form_hidden('', 'error_id', 'error_id', $data['error_id']);
+					echo form_select('Mark As', 'error_status', 'error_status_sel', self::get_logTypes(), $data['error_status'], array("inline"=>1));
+					echo closeform();
+					?>
+				</div>
+			</div>
+
+			<div class='m-t-10'>
+				<?php openside('') ?>
+				<table class='table table-responsive'>
+					<tr>
+						<td colspan='4' class='tbl2'><strong><?php echo $locale['421'] ?></strong> (<?php echo $locale['415']." ".$line_start." - ".$line_end ?>)</td>
+					</tr>
+					<tr>
+						<td colspan='4'><?php echo self::printCode($output, $line_start, $data['error_line'], array('time'=>$data['error_timestamp'], 'text'=>$data['error_message'])) ?></td>
+					</tr>
+				</table>
+				<?php closeside() ?>
+			</div>
+
+			<?php
+			echo closetabbody();
+			echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
+			?>
+			<div class='m-t-10'>
+			<?php openside('') ?>
+			<table class='table table-responsive'>
 				<tr>
-					<td colspan='4' class='tbl2'><a name='file'></a><strong><?php echo $locale['420'] ?></strong></td>
+				<td class='tbl2'><a name='page'></a>
+					<strong><?php echo $locale['411'] ?>: <?php echo self::getMaxFolders($data['error_page'], 2) ?></strong>
+				</td>
 				</tr>
 				<tr>
-					<td class='tbl2 err_tbl-error' style='width:5%;white-space:nowrap;'><?php echo $locale['410'] ?></td>
-					<td class='tbl1 err_tbl-error'><?php echo $data['error_message'] ?></td>
-					<td class='tbl2 err_tbl-error' style='width:5%;white-space:nowrap;'><?php echo $locale['415'] ?></td>
-					<td class='tbl1 err_tbl-error'><?php echo $data['error_line'] ?></td>
-				</tr>
-				<tr>
-					<td class='tbl2' style='width:5%;white-space:nowrap;'><?php echo $locale['419'] ?></td>
-					<td class='tbl1'><strong><?php echo self::getMaxFolders(stripslashes($data['error_file']), 3) ?></strong></td>
-					<td class='tbl2' style='width:5%;white-space:nowrap;'><?php echo $locale['411'] ?>:</td>
-					<td class='tbl1'>
-						<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$rowstart."&amp;error_id=".$data['error_id'] ?>#page' title='<?php echo $data['error_page'] ?>'>
-							<?php echo self::getMaxFolders($data['error_page'], 3) ?></a>
-					</td>
-				</tr>
-				<tr>
-					<td class='tbl2' style='width:5%;white-space:nowrap;'><?php echo $locale['412']."-".$locale['416'] ?></td>
-					<td class='tbl1'><?php echo $data['error_user_level'] ?></td>
-					<td class='tbl2' style='width:5%;white-space:nowrap;'><?php echo $locale['417'] ?></td>
-					<td class='tbl1'><?php echo $data['error_user_ip'] ?></td>
-				</tr>
-				<tr>
-					<td class='tbl2' style='width:5%;white-space:nowrap;'><?php echo $locale['413'] ?>:</td>
-					<td class='tbl1'><?php echo showdate("longdate", $data['error_timestamp']) ?></td>
-					<td class='tbl2' style='width:5%;white-space:nowrap;'><?php echo $locale['414'] ?>:</td>
-					<td class='tbl1'>
-						<form action='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$rowstart."&amp;error_id=".$data['error_id'] ?>#file' method='post'>
-							<input type='hidden' name='error_id' value='<?php echo $data['error_id'] ?>' />
-							<select name='error_status' class='textbox' onchange='this.form.submit();'>
-								<option value='0' <?php echo ($data['error_status'] == 0 ? "selected='selected'" : "") ?>><?php echo $locale['450'] ?></option>
-								<option value='1' <?php echo ($data['error_status'] == 1 ? "selected='selected'" : "") ?>><?php echo $locale['451'] ?></option>
-								<option value='2' <?php echo ($data['error_status'] == 2 ? "selected='selected'" : "") ?>><?php echo $locale['452'] ?></option>
-							</select>
-							<input type='submit' class='button change_status' value='<?php echo $locale['453'] ?>' style='margin-left:5px;' />
-						</form>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='4' class='tbl1' style='text-align:center;font-weight:bold;'>
-						<hr />
-						<a href='#top' title='<?php echo $locale['422'] ?>'><?php echo $locale['422'] ?></a>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='4' class='tbl2'><strong><?php echo $locale['421'] ?></strong> (<?php echo $locale['415']." ".$line_start." - ".$line_end ?>)</td>
-				</tr>
-				<tr>
-					<td colspan='4'><div style='max-height:600px;overflow:auto;'><?php echo self::printCode($output, $line_start, $data['error_line']) ?></div>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='4' class='tbl1' style='text-align:center;font-weight:bold;'>
-						<hr />
-						<a href='#top' title='<?php echo $locale['422'] ?>'><?php echo $locale['422'] ?></a>
-					</td>
-				</tr>
-				<tr>
-					<td colspan='4' class='tbl2'><a name='page'></a>
-						<strong><?php echo $locale['411'] ?>: <?php echo self::getMaxFolders($data['error_page'], 2) ?></strong></td>
-				</tr>
-				<tr>
-					<td colspan='4'><div style='max-height:500px;overflow:auto;'><?php echo self::printCode($pageContent, "1") ?></div>
-					</td>
+					<td><?php echo self::printCode($pageContent, "1") ?></td>
 				</tr>
 			</table>
-			<div style='margin-top:5px;text-align:center;font-weight:bold;'>
-				<a href='#top' title='<?php echo $locale['422'] ?>'><?php echo $locale['422'] ?></a>
+			<?php closeside() ?>
 			</div>
 			<?php
-			closetable();
+			echo closetabbody();
+			echo closetab();
 		}
 	}
 }
 
+//<a class='btn btn-default m-b-20' href='#top' title='<?php echo $locale['422']'><?php echo $locale['422']</a>
 
 ?>
