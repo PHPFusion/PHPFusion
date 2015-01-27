@@ -53,13 +53,10 @@ if (!isset($_GET['page']) || $_GET['page'] != "new") {
 	} else {
 		if (isset($_POST['saveexlink']) && (isset($_GET['exlink_id']) && isnum($_GET['exlink_id']))) {
 			$exlink_name = form_sanitizer($_POST['exlink_name'], '', 'exlink_name');
-			//echo $_GET['exlink_id']." ".$exlink_name." ".$_POST['exlink_url']." ".$_POST['exlink_page']." ".$_POST['exlink_position']." ".$_POST['exlink_window']." ".$_POST['exlink_language'];exit(1);
 			if (!defined('FUSION_NULL')) {
 				$result = dbquery("UPDATE ".DB_EXNAVPANEL." SET 
 				exlink_name='".$exlink_name."', exlink_url='".$_POST['exlink_url']."', exlink_page='".$_POST['exlink_page']."', exlink_position='".$_POST['exlink_position']."', exlink_window='".$_POST['exlink_window']."', exlink_language='".$_POST['exlink_language']."'   
 				WHERE exlink_id='".$_GET['exlink_id']."'");
-				//$result = dbquery("UPDATE ".DB_EXNAVPANEL." SET exlink_name='".$exlink_name."' WHERE exlink_id='".$_POST['exlink_id']."'");
-				//echo $result;exit(1);
 				redirect(FUSION_SELF.$aidlink."&status=su");
 			}
 		}
@@ -105,7 +102,6 @@ if (!isset($_GET['page']) || $_GET['page'] != "new") {
 		if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 			$_GET['rowstart'] = 0;
 		}
-//echo "test";exit(1);
 		if ($rows != 0) {
 			$i = 0;
 			// exnavpanel
@@ -145,7 +141,6 @@ if (!isset($_GET['page']) || $_GET['page'] != "new") {
 	if (isset($message) && $message != "") {
 		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
 	}
-	//$inf_settings = get_settings("shoutbox_panel");
 	opentable($locale['ENP_new_link']);
 	echo $nav;
 	$cp_result = dbquery("SELECT page_id, page_title FROM ".DB_CUSTOM_PAGES." ORDER BY page_id");
