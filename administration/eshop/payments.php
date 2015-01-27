@@ -23,7 +23,7 @@ class eShop_payment {
 	private $data = array(
 		'pid' => 0,
 		'method'=>'',
-		'payment_image' => '',
+		'image' => '',
 		'active' => 1,
 		'surcharge'=>'',
 		'cfile'=>'',
@@ -51,6 +51,8 @@ class eShop_payment {
 			default:
 				$this->formaction = FUSION_SELF.$aidlink."&amp;a_page=payments&amp;section=paymentform";
 		}
+		self::set_paymentdb();
+
 	}
 
 	static function get_paymentOpts() {
@@ -111,7 +113,7 @@ class eShop_payment {
 		if (isset($_POST['save_payment'])) {
 			$this->data['pid'] = isset($_POST['pid']) ? form_sanitizer($_POST['pid'], '0', 'pid') : 0;
 			$this->data['method'] = isset($_POST['method']) ? form_sanitizer($_POST['method'], '', 'method') : '';
-			$this->data['payment_image'] = isset($_POST['payment_image']) ? form_sanitizer($_POST['payment_image'], '', 'payment_image') : '';
+			$this->data['image'] = isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '';
 			$this->data['active'] = isset($_POST['active']) ? form_sanitizer($_POST['active'], '0', 'active') : 0;
 			$this->data['surcharge'] = isset($_POST['surcharge']) ? form_sanitizer($_POST['surcharge'], '', 'surcharge') : '';
 			$this->data['cfile'] = isset($_POST['cfile']) ? form_sanitizer($_POST['cfile'], '', 'cfile') : '';
@@ -160,7 +162,7 @@ class eShop_payment {
 		openside('');
 		echo thumbnail(PAYMENT_DIR.$this->payment_image, '70px');
 		echo "<div class='overflow-hide p-l-15'>\n";
-		echo form_select('Payment Type', 'payment_image', 'payment_image',  self::get_paymentOpts(), $this->data['payment_image']);
+		echo form_select('Payment Type', 'image', 'image',  self::get_paymentOpts(), $this->data['image']);
 		add_to_jquery("
 		$('#payment_image').bind('change', function(e) {
 			$('.thumb > img').prop('src', '".PAYMENT_DIR."'+ $(this).val());
@@ -196,18 +198,20 @@ class eShop_payment {
 
 
 $payment = new eShop_payment();
-$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $payment->verify_payment($_GET['cuid']) : 0;
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $payment->verify_payment($_GET['pid']) : 0;
 $tab_title['title'][] = 'Current Payment Method'; //$locale['ESHPCUPNS100'];
 $tab_title['id'][] = 'payment';
 $tab_title['icon'][] = '';
 $tab_title['title'][] =  $edit ? 'Edit Payment Method' : 'Add Payment Method'; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
 $tab_title['id'][] = 'paymentform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1, 1);
+$tab_active = tab_active($tab_title, $edit ? 1 : 0 , 1);
+
 echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=payments");
 echo opentabbody($tab_title['title'][0], 'payment', $tab_active, 1);
 $payment->payment_listing();
 echo closetabbody();
+
 if (isset($_GET['section']) && $_GET['section'] == 'paymentform') {
 	echo opentabbody($tab_title['title'][1], 'paymentform', $tab_active, 1);
 	$payment->add_payment_form();

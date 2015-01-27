@@ -277,7 +277,7 @@ class ErrorLogs {
 				?>
 				<tr <?php echo "id='rmd-".$data['error_id']."'" ?>>
 					<td class='col-xs-6 <?php echo $row_color ?>'>
-						<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id'] ?>#file' title='<?php echo stripslashes($data['error_file']) ?>'>
+						<a href='<?php echo ADMIN."errors.php".$aidlink."&amp;error_id=".$data['error_id'] ?>#file' title='<?php echo stripslashes($data['error_file']) ?>'>
 							<?php echo self::getMaxFolders(stripslashes($data['error_file']), 2) ?></a><br />
 						<span><?php echo $data['error_message'] ?></span><br/>
 						<span class='strong'><?php echo $locale['415']." ".$data['error_line'] ?></span><br/>
