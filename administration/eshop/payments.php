@@ -73,14 +73,14 @@ class eShop_payment {
 	}
 
 	static function get_paymentFile() {
-		$payment_cfile = array();
-		if (file_exists('../paymentscripts')) {
-			$payment_dir = makefilelist("../paymentscripts/",  ".|..|index.php", true, "files");
+		$payment_file = array();
+		if (file_exists(BASEDIR.'eshop/paymentscripts')) {
+			$payment_dir = makefilelist(BASEDIR."eshop/paymentscripts/",  ".|..|index.php", true, "files");
 			foreach($payment_dir as $paymentfile) {
-				$payment_cfile[$paymentfile] = $paymentfile;
+				$payment_file[$paymentfile] = $paymentfile;
 			}
 		}
-		return $payment_cfile;
+		return $payment_file;
 	}
 
 	private function payment_data() {
@@ -141,8 +141,8 @@ class eShop_payment {
 		if (dbrows($result)>0) {
 			while ($data = dbarray($result)) {
 				echo "<tr>";
-				echo "<td><a href='".FUSION_SELF.$aidlink."&amp;a_page=payments&amp;action=edit&amp;pid=".$data['pid']."'><b>".$data['method']."</b></a></td>\n";
-				echo "<td><a href='".FUSION_SELF.$aidlink."&amp;a_page=payments&amp;action=delete&amp;pid=".$data['pid']."' onClick='return confirmdelete();'>".$locale['delete']."</a></td>\n";
+				echo "<td><a href='".FUSION_SELF.$aidlink."&amp;a_page=payments&amp;section=paymentform&amp;action=edit&amp;pid=".$data['pid']."'><b>".$data['method']."</b></a></td>\n";
+				echo "<td><a href='".FUSION_SELF.$aidlink."&amp;a_page=payments&amp;section=paymentform&amp;action=delete&amp;pid=".$data['pid']."' onClick='return confirmdelete();'>".$locale['delete']."</a></td>\n";
 				echo "</tr>";
 			}
 		} else {
@@ -160,11 +160,11 @@ class eShop_payment {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
-		echo thumbnail(PAYMENT_DIR.$this->payment_image, '70px');
+		echo thumbnail(PAYMENT_DIR.$this->data['image'], '70px');
 		echo "<div class='overflow-hide p-l-15'>\n";
 		echo form_select('Payment Type', 'image', 'image',  self::get_paymentOpts(), $this->data['image']);
 		add_to_jquery("
-		$('#payment_image').bind('change', function(e) {
+		$('#image').bind('change', function(e) {
 			$('.thumb > img').prop('src', '".PAYMENT_DIR."'+ $(this).val());
 		});
 		");
@@ -196,7 +196,6 @@ class eShop_payment {
 	}
 }
 
-
 $payment = new eShop_payment();
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $payment->verify_payment($_GET['pid']) : 0;
 $tab_title['title'][] = 'Current Payment Method'; //$locale['ESHPCUPNS100'];
@@ -206,12 +205,10 @@ $tab_title['title'][] =  $edit ? 'Edit Payment Method' : 'Add Payment Method'; /
 $tab_title['id'][] = 'paymentform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 $tab_active = tab_active($tab_title, $edit ? 1 : 0 , 1);
-
 echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=payments");
 echo opentabbody($tab_title['title'][0], 'payment', $tab_active, 1);
 $payment->payment_listing();
 echo closetabbody();
-
 if (isset($_GET['section']) && $_GET['section'] == 'paymentform') {
 	echo opentabbody($tab_title['title'][1], 'paymentform', $tab_active, 1);
 	$payment->add_payment_form();
