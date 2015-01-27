@@ -28,7 +28,6 @@ if (isset($_GET['step']) && $_GET['step'] == "delete") {
 } 
 
 if (isset($_POST['save_cat'])) {
-
 	$title = stripinput($_POST['title']);
 	$cat_image = stripinput($_POST['cat_image']);
 

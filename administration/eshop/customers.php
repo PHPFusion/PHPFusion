@@ -43,7 +43,6 @@ class eShop_customer {
 		$_GET['cuid'] = isset($_GET['cuid']) && isnum($_GET['cuid']) ? $_GET['cuid'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 		$this->max_rowstart = dbcount("(cuid)", DB_ESHOP_CUSTOMERS);
-
 		switch($_GET['action']) {
 			case 'edit':
 				$this->formaction = FUSION_SELF.$aidlink."&amp;a_page=customers&amp;action=edit&amp;section=customerform&amp;cuid=".$_GET['cuid'];

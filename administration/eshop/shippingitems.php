@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+/*
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (isset($_GET['sid']) && !isnum($_GET['sid'])) die("Denied");
 if (isset($_GET['id']) && !isnum($_GET['id'])) die("Denied");
@@ -94,7 +95,7 @@ echo "<table cellpadding='2' cellspacing='1' width='100%'><tr>
 </tr>\n";
 echo "<input type='hidden' name='cid' value='".$_GET['cid']."'>";
 
-$result = dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGITEMS." WHERE cid = '".$_GET['cid']."'");
+
 $rows = dbrows($result);
 if ($rows != 0) {
 $result = dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGITEMS." WHERE cid = '".$_GET['cid']."' ORDER BY sid ASC LIMIT ".$_GET['rowstart'].",25");
@@ -170,6 +171,8 @@ if ($rows > $shippingthumbs_per_page) echo "<div align='center' style='margin-to
 echo "<div class='admin-message'>".$locale['ESHPSHPMTS106']."</div>\n";
 }
 }
+*/
+
 
 
 ?>
