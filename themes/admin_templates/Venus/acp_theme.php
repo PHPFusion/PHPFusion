@@ -73,7 +73,7 @@ function render_Openadminpanel() {
 		echo "<!-- begin main content -->\n";
 		echo "<div id='acp-main' class='display-block acp ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' style='margin-top:50px; width:100%; vertical-align:top;'>\n";
 
-		echo "<div id='acp-toolkit' data-offset-top='0' data-spy='affix' class='hidden-xs hidden-sm col-md-12 col-lg-12 m-r-0' style='width:100%; z-index:333;' role='toolkits'>\n";
+		echo "<div id='acp-toolkit' data-offset-top='0' data-spy='affix' class='hidden-xs hidden-sm col-md-12 col-lg-12 m-r-0' style='width:100%; z-index:1;' role='toolkits'>\n";
 		echo "<nav>".$admin->horiziontal_admin_nav()."</nav>";
 		echo "</div>\n";
 
