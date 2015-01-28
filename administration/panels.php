@@ -8,6 +8,7 @@
 | Author: Nick Jones (Digitanium)
 | Author: Robert Gaudyn (Wooya)
 | Author: Joakim Falk (Domi)
+| Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
