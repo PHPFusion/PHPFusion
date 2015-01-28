@@ -115,9 +115,9 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 
 function admin_message($text, $class = FALSE) {
 	$class = $class ? $class : 'alert-info';
-	return "<div class='alert $class text-center alert-dismissable' style='color:#222'>
+	return "<div class='alert $class alert-dismissable'>
 	<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
-	<strong>$text</strong></div>\n";
+	<strong><i class='fa fa-check-square-o m-r-10 fa-lg'></i> $text</strong></div>\n";
 }
 
 function check_panel_status($side) {

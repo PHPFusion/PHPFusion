@@ -35,9 +35,13 @@ if (iADMIN && !defined("ADMIN_PANEL")) {
 }
 $admin_mess .= "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
 // Declare panels side
-$p_name = array(array('name' => 'LEFT', 'side' => 'left'), array('name' => 'U_CENTER', 'side' => 'upper'),
-				array('name' => 'L_CENTER', 'side' => 'lower'), array('name' => 'RIGHT', 'side' => 'right'),
-				array('name' => 'AU_CENTER', 'side' => 'aupper'), array('name' => 'BL_CENTER', 'side' => 'blower'));
+$p_name = array(array('name' => 'LEFT', 'side' => 'left'),
+				array('name' => 'U_CENTER', 'side' => 'upper'),
+				array('name' => 'L_CENTER', 'side' => 'lower'),
+				array('name' => 'RIGHT', 'side' => 'right'),
+				array('name' => 'AU_CENTER', 'side' => 'aupper'),
+				array('name' => 'BL_CENTER', 'side' => 'blower')
+			);
 // Get panels data to array
 $panels_cache = array();
 $p_result = dbquery("SELECT panel_name, panel_filename, panel_content, panel_side, panel_type, panel_access, panel_display, panel_url_list, panel_restriction, panel_languages FROM ".DB_PANELS." WHERE panel_status='1' ORDER BY panel_side, panel_order");
@@ -63,6 +67,16 @@ foreach ($p_name as $p_key => $p_side) {
 			if (check_panel_status($p_side['side'])) {
 				foreach ($panels_cache[$p_key+1] as $p_data) {
 					$url_arr = explode("\r\n", $p_data['panel_url_list']);
+					/*
+					 * show only if the following conditions are met:
+					 * 1. url_list is blank
+					 * 2. url_list is set, and panel_restriction set to 1 (Exclude) and current page does not match url_list.
+					 * 3. url_list is set, and panel_restriction set to 0 (Include) and current page matches url_list.
+					 * -- if conditions met
+					 * 4. panel_side must not be 2, 3, 5, 6.
+					 * 5. panel_display must be set to 1.
+					 * 6. current page is start page.
+					 */
 					if ($p_data['panel_url_list'] == "" || ($p_data['panel_restriction'] == 1 && (!in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url_arr) && !in_array(TRUE_PHP_SELF, $url_arr))) || ($p_data['panel_restriction'] == 0 && (in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url_arr) || in_array(TRUE_PHP_SELF, $url_arr)))) {
 						if (($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE) {
 							if ($p_data['panel_type'] == "file") {
@@ -90,6 +104,8 @@ foreach ($p_name as $p_key => $p_side) {
 	}
 }
 unset($panels_cache);
+
+//@todo: this can be absorbed into theme engine's settings
 if (defined("ADMIN_PANEL") || LEFT && !RIGHT) {
 	$main_style = "side-left";
 } elseif (LEFT && RIGHT) {
@@ -99,4 +115,5 @@ if (defined("ADMIN_PANEL") || LEFT && !RIGHT) {
 } elseif (!LEFT && !RIGHT) {
 	$main_style = "";
 }
+
 ?>

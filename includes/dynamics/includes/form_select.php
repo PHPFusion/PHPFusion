@@ -15,6 +15,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+/**
+ * Note on Tags Support
+ * $options['tags'] = default $input_value must not be multidimensional array but only as $value = array('1','2','3');
+ * For tagging - set tags and multiple to 1
+ *
+ * @param       $title
+ * @param       $input_name
+ * @param       $input_id
+ * @param array $option_array
+ * @param bool  $input_value
+ * @param array $options
+ * @return string
+ */
 function form_select($title, $input_name, $input_id, array $option_array = array(), $input_value = FALSE, array $options = array()) {
 	global $defender;
 	if (!defined("SELECT2")) {
