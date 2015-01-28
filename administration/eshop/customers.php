@@ -60,7 +60,7 @@ class eShop_customer {
 	}
 
 	// quick save
-	static function quick_save() {
+	private function quick_save() {
 		global $aidlink, $defender;
 		if (isset($_POST['customer_quicksave'])) {
 			$quick['cuid'] = isset($_POST['cuid']) ? form_sanitizer($_POST['cuid'], '0', 'cuid') : 0;
@@ -88,7 +88,7 @@ class eShop_customer {
 		}
 	}
 
-	static function delete_customer($cuid) {
+	private function delete_customer($cuid) {
 		global $aidlink;
 		if (isnum($cuid)) {
 			if (self::verify_customer($cuid)) {

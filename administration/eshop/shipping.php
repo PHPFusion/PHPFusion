@@ -38,12 +38,15 @@ class eShop_shipping {
 	private $cformaction = '';
 	private $sformaction = '';
 	private $max_rowstart = 0;
+	private $max_srowstart = 0;
 
 	public function __construct() {
 		global $aidlink;
 		define("SHIP_DIR", BASEDIR."eshop/shippingimgs/");
 		$this->max_rowstart = dbcount("(cid)", DB_ESHOP_SHIPPINGCATS);
-		$this->max_crowstart = dbcount("(sid)", DB_ESHOP_SHIPPINGITEMS);
+		$this->max_srowstart = dbcount("(sid)", DB_ESHOP_SHIPPINGITEMS);
+		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] < $this->max_rowstart ? $_GET['rowstart'] : 0;
+		$_GET['srowstart'] = isset($_GET['srowstart']) && isnum($_GET['srowstart']) && $_GET['srowstart'] < $this->max_srowstart ? $_GET['srowstart'] : 0;
 		$_GET['cid'] = isset($_GET['cid']) && isnum($_GET['cid']) ? $_GET['cid'] : 0;
 		$_GET['sid'] = isset($_GET['sid']) && isnum($_GET['sid']) ? $_GET['sid'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
@@ -51,14 +54,16 @@ class eShop_shipping {
 		switch($_GET['action']) {
 			case 'edit':
 				$this->cdata = self::load_shippingco($_GET['cid']);
+				$this->cformaction = FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shippingcat&action=edit&amp;cid=".$_GET['cid'];
 				break;
 			case 'view':
 				$this->data = self::load_itenary($_GET['cid']);
 				break;
 			case 'delete':
+				self::delete_shippingco($_GET['cid']);
 				break;
 			default :
-				$this->cformaction = FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;s_page=shippingcats";
+				$this->cformaction = FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shippingcat";
 		}
 		switch($_GET['ref']) {
 			case 'add_details':
@@ -71,12 +76,34 @@ class eShop_shipping {
 					$this->sformaction = FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$_GET['cid']."&amp;sid=".$_GET['sid']."&amp;ref=edit_details";
 					$this->sdata = self::load_itenary($_GET['sid']);
 				}
+			case 'delete_details':
+				self::delete_itenary($_GET['sid']);
+				break;
 		}
-
 		self::set_shippingco();
 		self::set_itenary();
-
 	}
+
+	private function delete_shippingco($cid) {
+		global $aidlink;
+		if (isnum($cid)) {
+			if (self::verify_shippingCats($cid)) {
+				dbquery("DELETE FROM ".DB_ESHOP_SHIPPINGCATS." WHERE cid='".intval($cid)."'");
+				redirect(FUSION_SELF.$aidlink."&amp;a_page=shipping");
+			}
+		}
+	}
+
+	private function delete_itenary($sid) {
+		global $aidlink;
+		if (isnum($sid)) {
+			if (self::verify_itenary($sid)) {
+				dbquery("DELETE FROM ".DB_ESHOP_SHIPPINGITEMS." WHERE sid='".intval($sid)."'");
+				redirect(FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$_GET['cid']);
+			}
+		}
+	}
+
 
 	private function set_shippingco() {
 		global $aidlink;
@@ -93,6 +120,7 @@ class eShop_shipping {
 			}
 		}
 	}
+
 	private function set_itenary() {
 		global $aidlink;
 		if (isset($_POST['save_item'])) {
@@ -105,15 +133,12 @@ class eShop_shipping {
 			$this->sdata['weightmax'] = isset($_POST['weightmax']) ? form_sanitizer($_POST['weightmax'], '', 'weightmax') : '';
 			$this->sdata['initialcost'] = isset($_POST['initialcost']) ? form_sanitizer($_POST['initialcost'], '', 'initialcost') : '';
 			if (self::verify_itenary($this->sdata['sid'])) {
-				print_p(FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;action=view&amp;section=shipping&amp;cid=".$this->sdata['cid']."&amp;status=su");
 				dbquery_insert(DB_ESHOP_SHIPPINGITEMS, $this->sdata, 'update');
-				//aid=2c84bceac7c2d539&a_page=shipping&action=view&cid=2&status=su
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;action=view&amp;section=shipping&amp;cid=".$this->sdata['cid']."&amp;status=su");
 			} else {
-				//dbquery_insert(DB_ESHOP_SHIPPINGITEMS, $this->sdata, 'save');
-				//if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;action=view&amp;cid=".$this->sdata['cid']."&amp;status=sn");
+				dbquery_insert(DB_ESHOP_SHIPPINGITEMS, $this->sdata, 'save');
+				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;action=view&amp;section=shipping&amp;cid=".$this->sdata['cid']."&amp;status=sn");
 			}
-			print_p($this->sdata);
 		}
 	}
 
@@ -160,13 +185,15 @@ class eShop_shipping {
 	static function get_dTimeOpts() {
 		global $locale;
 		return array(
-			'0' => 'N/A',
+			'0' => 'N/A', // required for null item
 			'1' => '1-2 Days',
-			'2' => '2-7 Days',
-			'3' => '2 Weeks',
-			'4' => '1 Month',
-			'5' => '2 Months',
-			'6' => '3 Months',
+			'2' => '3-7 Days',
+			'3' => '1-2 Weeks',
+			'4' => '2-4 Weeks',
+			'5' => '1-2 Months',
+			'6' => '2-3 Months',
+			'7' => '3-6 Months',
+			'8' => 'Please enquire',
 		);
 	}
 
@@ -191,13 +218,14 @@ class eShop_shipping {
 	}
 
 	public function add_shippingco_form() {
-		global $aidlink, $locale;
+		global $locale;
 		echo "<div class='m-t-10'>\n";
 		echo openform('addcat', 'addcat', 'post', $this->cformaction);
 		openside('');
 		echo thumbnail(SHIP_DIR.$this->cdata['image'], '70px');
 		echo "<div class='overflow-hide p-l-15'>\n";
 		echo form_select('Shipping Type', 'image', 'image',  self::get_ImageOpts(), $this->cdata['image']);
+		echo form_hidden('', 'cid', 'cid', $_GET['cid']);
 		echo "</div>\n";
 		add_to_jquery("
 		$('#image').bind('change', function(e) {
@@ -206,18 +234,14 @@ class eShop_shipping {
 		");
 		closeside();
 		echo form_text($locale['ESHPSHPMTS102'], 'title', 'title', $this->cdata['title']);
-		echo form_button($locale['ESHPSHPMTS103'], 'save_shipping', 'save_shipping', $locale['save'], array('class'=>'btn-primary'));
+		echo form_button($locale['save'], 'save_shipping', 'save_shipping', $locale['save'], array('class'=>'btn-primary'));
 		echo closeform();
 		echo "</div>\n";
 	}
 
-	static function shipping_view_filters() {
-		return '';
-	}
 	public function shipping_listing() {
 		global $locale, $aidlink;
 		$delivery_opts = self::get_dTimeOpts();
-		self::shipping_view_filters();
 		add_to_jquery("
 			$('.actionbar').hide();
 			$('tr').hover(
@@ -264,8 +288,7 @@ class eShop_shipping {
 				echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$data['cid']."' class='text-dark'>".$data['title']."</a>\n";
 				echo "<div class='actionbar text-smaller' id='shipping-".$data['cid']."-actions'>
 					<a href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shippingcat&amp;action=edit&amp;cid=".$data['cid']."'>".$locale['edit']."</a> |
-					<a class='qedit pointer' data-id='".$data['cid']."'>".$locale['qedit']."</a> |
-					<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;action=delete&amp;cuid=".$data['cid']."' onclick=\"return confirm('".$locale['ESHP213']."');\">".$locale['delete']."</a>
+					<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;action=delete&amp;cid=".$data['cid']."' onclick=\"return confirm('".$locale['ESHP213']."');\">".$locale['delete']."</a>
 					</div>\n";
 				echo "</td>\n";
 				echo "<td>".number_format($data['methods'])."</td>\n";
@@ -284,7 +307,7 @@ class eShop_shipping {
 		}
 		echo "</table>\n";
 		if ($this->max_rowstart > $rows) {
-			echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'],25,$this->max_rowstart,3,FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;")."\n</div>\n";
+			echo "<div class='m-t-20 text-center'>".makePageNav($_GET['rowstart'],25,$this->max_rowstart,3,FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;")."\n</div>\n";
 		}
 		echo "</div>\n";
 	}
@@ -372,7 +395,7 @@ class eShop_shipping {
 				echo "<td><a href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$data['cid']."&amp;sid=".$data['sid']."&amp;ref=edit_details'>".$data['method']."</a>\n";
 				echo "<div class='actionbar text-smaller' id='shipping-".$data['sid']."-actions'>
 					<a href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$data['cid']."&amp;sid=".$data['sid']."&amp;ref=edit_details'>".$locale['edit']."</a> |
-					<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$data['cid']."&amp;sid=".$data['sid']."&amp;ref=delete' onclick=\"return confirm('".$locale['ESHP213']."');\">".$locale['delete']."</a>
+					<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$data['cid']."&amp;sid=".$data['sid']."&amp;ref=delete_details' onclick=\"return confirm('".$locale['ESHP213']."');\">".$locale['delete']."</a>
 					</div>\n";
 				echo "</td>\n";
 				echo "<td>".$dtime_opts[$data['dtime']]."</td>\n";
@@ -391,6 +414,10 @@ class eShop_shipping {
 		}
 		echo "<tr><td></td><td colspan='9'><a href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$_GET['cid']."&amp;ref=add_details'>+ Add New Itenary</a></td></tr>\n";
 		echo "</table>\n";
+		// rowstarts
+		if ($this->max_srowstart > $rows) {
+			echo "<div class='m-t-20 text-center'>".makePageNav($_GET['srowstart'], 25, $this->max_srowstart, 3, FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$_GET['cid']."&amp;")."\n</div>\n";
+		}
 		echo "</div>\n";
 	}
 }
