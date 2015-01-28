@@ -67,6 +67,11 @@ $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
 require_once INCLUDES."output_handling_include.php";
 include_once INCLUDES."dynamics/dynamics.inc.php";
 require_once INCLUDES."sqlhandler.inc.php";
+//New database handler functions
+//require_once INCLUDES."db_handlers/all_functions_include.php";
+//DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+
+//Old database handler functions
 require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
 require_once LOCALE.LOCALESET.'global.php';
 $dynamics = new dynamics();

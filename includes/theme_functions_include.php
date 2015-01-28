@@ -16,6 +16,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Database\DatabaseFactory;
+
 if (!defined("IN_FUSION")) {die("Access Denied");}
 
 function dynamic_block($title, $description, $form_input) {
@@ -367,8 +370,12 @@ function itemoptions($item_type, $item_id) {
 }
 
 function showrendertime($queries = TRUE) {
-	global $locale, $mysql_queries_count, $settings;
-	if ($settings['rendertime_enabled'] == 1 || ($settings['rendertime_enabled'] == 2 && iADMIN)) {
+	global $locale, $mysql_queries_count;
+	$db = DatabaseFactory::getInstance()->getConnection();
+	if($db) {
+		$mysql_queries_count = $db->getGlobalQueryCount();
+	}
+	if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
 		$res = sprintf($locale['global_172'], substr((microtime(TRUE)-START_TIME), 0, 4));
 		$res .= ($queries ? " - $mysql_queries_count ".$locale['global_173'] : "");
 		return $res;
