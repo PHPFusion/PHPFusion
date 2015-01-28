@@ -160,6 +160,7 @@ class eShop_shipping {
 	static function get_dTimeOpts() {
 		global $locale;
 		return array(
+			'0' => 'N/A',
 			'1' => '1-2 Days',
 			'2' => '2-7 Days',
 			'3' => '2 Weeks',
@@ -215,6 +216,7 @@ class eShop_shipping {
 	}
 	public function shipping_listing() {
 		global $locale, $aidlink;
+		$delivery_opts = self::get_dTimeOpts();
 		self::shipping_view_filters();
 		add_to_jquery("
 			$('.actionbar').hide();
@@ -228,8 +230,9 @@ class eShop_shipping {
 		echo "<tr>\n";
 		echo "<th></th>\n";
 		echo "<th class='col-xs-3 col-sm-3'>".$locale['ESHPCHK149']."</th>\n";
-		echo "<th>Shipping Itenary</th>\n";
+		echo "<th>Shipping Co. Itenary</th>\n";
 		echo "<th>Fastest Delivery Time</th>\n";
+		echo "<th>Longest Delivery Time</th>\n";
 		echo "<th>Min. Weight ".fusion_get_settings('eshop_weightscale')."</th>\n";
 		echo "<th>Max. Weight ".fusion_get_settings('eshop_weightscale')."</th>\n";
 		echo "<th>Min. Cost</th>\n";
@@ -237,7 +240,8 @@ class eShop_shipping {
 		echo "</tr>\n";
 
 		$result = dbquery("SELECT s.*, count(si.cid) methods,
-					IF(si.dtime, min(si.dtime), '--') as min_delivery_time,
+					IF(si.dtime, min(si.dtime), '0') as min_delivery_time,
+					IF(si.dtime, max(si.dtime), '0') as max_delivery_time,
 					IF(si.weightmin, min(si.weightmin), 0.00) as min_weight,
 					IF (si.weightmax, max(si.weightmax), 0.00) as max_weight,
 					IF (si.initialcost, min(si.initialcost), 0.00) as min_cost,
@@ -265,7 +269,8 @@ class eShop_shipping {
 					</div>\n";
 				echo "</td>\n";
 				echo "<td>".number_format($data['methods'])."</td>\n";
-				echo "<td>".$data['min_delivery_time']."</td>\n";
+				echo "<td>".$delivery_opts[$data['min_delivery_time']]."</td>\n";
+				echo "<td>".$delivery_opts[$data['max_delivery_time']]."</td>\n";
 				echo "<td>".number_format($data['min_weight'], 2)."</td>\n";
 				echo "<td>".number_format($data['max_weight'], 2)."</td>\n";
 				echo "<td>".number_format($data['min_cost'], 2)." ".fusion_get_settings('eshop_currency')."</td>\n";

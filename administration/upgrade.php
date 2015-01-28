@@ -470,8 +470,8 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		sid mediumint(8) NOT NULL auto_increment,
 		cid mediumint(8) NOT NULL default '0',
 		method varchar(100) NOT NULL default '',
-		dtime varchar(100) NOT NULL default '',
-		destination char(1) NOT NULL default '',
+		dtime tinyint(1) NOT NULL default '0',
+		destination tinyint(1) NOT NULL default '0',
 		weightmin varchar(100) NOT NULL default '',
 		weightmax varchar(100) NOT NULL default '',
 		weightcost smallint(5) NOT NULL default '0',
@@ -615,10 +615,10 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 	//Populate shipping items with some defaults
 		$result = dbquery("INSERT INTO ".DB_PREFIX."eshop_shippingitems (sid, cid, method, dtime, destination, weightmin, weightmax, weightcost, initialcost, active) VALUES
 				(1, 1, 'No Shipping - Visit store', '0', '0', '0.00', '0', 0, 0, '1'),
-				(2, 4, 'UPS Express', '1 Day', '2', '0.00', '150', 0, 250, '1'),
-				(3, 4, 'UPS Express', '1 Day', '2', '0.00', '150', 0, 250, '1'),
-				(4, 2, 'DHL Worldwide Priority Express', '1 - 2 Days', '3', '0.00', '150', 6, 69, '1'),
-				(5, 2, 'DHL National Priority Express', '1 - 2 Days', '2', '0.00', '150', 0, 150, '1')");
+				(2, 4, 'UPS Express', '1', '2', '0.00', '150', 0, 250, '1'),
+				(3, 4, 'UPS Express', '1', '2', '0.00', '150', 0, 250, '1'),
+				(4, 2, 'DHL Worldwide Priority Express', '2', '3', '0.00', '150', 6, 69, '1'),
+				(5, 2, 'DHL National Priority Express', '2', '2', '0.00', '150', 0, 150, '1')");
 		
 	//Add some default payment method examples
 		$result = dbquery("INSERT INTO ".DB_PREFIX."eshop_payments (pid, method, description, image, surcharge, code, cfile, active) VALUES

@@ -245,8 +245,8 @@ if (isset($_POST['uninstall'])) {
 			sid mediumint(8) NOT NULL auto_increment,
 			cid mediumint(8) NOT NULL default '0',
 			method varchar(100) NOT NULL default '',
-			dtime varchar(100) NOT NULL default '',
-			destination char(1) NOT NULL default '',
+			dtime tinyint(1) NOT NULL default '0',
+			destination tiny(1) NOT NULL default '0',
 			weightmin varchar(100) NOT NULL default '',
 			weightmax varchar(100) NOT NULL default '',
 			weightcost smallint(5) NOT NULL default '0',
@@ -471,10 +471,10 @@ if (isset($_POST['uninstall'])) {
 
 	$result = dbquery("INSERT INTO ".$db_prefix."eshop_shippingitems (sid, cid, method, dtime, destination, weightmin, weightmax, weightcost, initialcost, active) VALUES
 				(1, 1, 'No Shipping - Visit store', '0', '0', '0.00', '0', 0, 0, '1'),
-				(2, 4, 'UPS Express', '1 Day', '2', '0.00', '150', 0, 250, '1'),
-				(3, 4, 'UPS Express', '1 Day', '2', '0.00', '150', 0, 250, '1'),
-				(4, 2, 'DHL Worldwide Priority Express', '1 - 2 Days', '3', '0.00', '150', 6, 69, '1'),
-				(5, 2, 'DHL National Priority Express', '1 - 2 Days', '2', '0.00', '150', 0, 150, '1')");
+				(2, 4, 'UPS Express', '1', '2', '0.00', '150', 0, 250, '1'),
+				(3, 4, 'UPS Express', '1', '2', '0.00', '150', 0, 250, '1'),
+				(4, 2, 'DHL Worldwide Priority Express', '2', '3', '0.00', '150', 6, 69, '1'),
+				(5, 2, 'DHL National Priority Express', '2', '2', '0.00', '150', 0, 150, '1')");
 	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."eshop_payments (pid, method, description, image, surcharge, code, cfile, active) VALUES
 				(1, 'Invoice', 'We will send an Invoice to your adress. \r\nA credit check will be run.\r\nIn order to make a credit check we need your complete date of birth.', 'invoice.png', 2, '', 'invoice.php', '1'),
