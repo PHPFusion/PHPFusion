@@ -24,8 +24,13 @@ if (!checkrights("P") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/panels.php";
 
+/**
+ * Class fusion_panels
+ */
 class fusion_panels {
-
+	/**
+	 * @var array|bool
+	 */
 	private $data = array(
 		'panel_id' => 0,
 		'panel_name' => '',
@@ -41,10 +46,18 @@ class fusion_panels {
 		'panel_restriction' => 2,
 		'panel_languages' => '',
 	);
-
+	/**
+	 * @var string
+	 */
 	private $formaction = '';
+	/**
+	 * @var array
+	 */
 	private $panel_data = array();
 
+	/**
+	 * Sanitization Globals Vars
+	 */
 	public function __construct() {
 		global $aidlink, $locale;
 		$this->data['panel_languages'] = LANGUAGE;
@@ -75,6 +88,9 @@ class fusion_panels {
 		self::set_paneldb();
 	}
 
+	/**
+	 * Message Relay
+	 */
 	static function getMessage() {
 		global $locale;
 		$message = '';
@@ -96,6 +112,9 @@ class fusion_panels {
 		}
 	}
 
+	/**
+	 * MYSQL save/update panels
+	 */
 	private function set_paneldb() {
 		global $aidlink, $locale, $defender;
 
@@ -167,6 +186,10 @@ class fusion_panels {
 		}
 	}
 
+	/**
+	 * Return list of panels
+	 * @return array
+	 */
 	static function get_panelOpts() {
 		$panel_list = array();
 		$temp = opendir(INFUSIONS);
@@ -181,6 +204,10 @@ class fusion_panels {
 		return $panel_list;
 	}
 
+	/**
+	 * Return user groups array
+	 * @return array
+	 */
 	static function get_accessOpts() {
 		$ref = array();
 		$user_groups = getusergroups();
@@ -190,6 +217,10 @@ class fusion_panels {
 		return $ref;
 	}
 
+	/**
+	 * Return panel positions array
+	 * @return array
+	 */
 	static function get_panel_grid() {
 		global $locale;
 		return array(
@@ -202,6 +233,10 @@ class fusion_panels {
 		);
 	}
 
+	/**
+	 * Return page urls array
+	 * @return array
+	 */
 	static function get_panel_url_list() {
 		$list = array();
 		$file_list = makefilelist(BASEDIR, ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php");
@@ -211,6 +246,10 @@ class fusion_panels {
 		return $list;
 	}
 
+	/**
+	 * Return restrictions type array
+	 * @return array
+	 */
 	static function get_includeOpts() {
 		global $locale;
 		return array(
@@ -220,6 +259,11 @@ class fusion_panels {
 		);
 	}
 
+	/**
+	 * Checks if a panel id is valid
+	 * @param $id
+	 * @return bool|string
+	 */
 	static function verify_panel($id) {
 		if (isnum($id)) {
 			return dbcount("(panel_id)", DB_PANELS, "panel_id='".intval($id)."'");
@@ -227,6 +271,11 @@ class fusion_panels {
 		return false;
 	}
 
+	/**
+	 * Fetch data for one panel
+	 * @param $id
+	 * @return array|bool
+	 */
 	static function load_panel($id) {
 		if (isnum($id)) {
 			$result = dbquery("SELECT * FROM ".DB_PANELS." WHERE panel_id='".intval($id)."'");
@@ -237,17 +286,23 @@ class fusion_panels {
 		return array();
 	}
 
-
+	/**
+	 * MYSQL actions delete panel
+	 * @param $id
+	 */
 	static function delete_panel($id) {
 		global $aidlink;
 		if (self::verify_panel($id)) {
 			$data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"));
 			$result = dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'");
 			$result = dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".$data['panel_side']."' AND panel_order>='".$data['panel_order']."'");
-			redirect(FUSION_SELF.$aidlink);
+			redirect(FUSION_SELF.$aidlink."status=del");
 		}
 	}
 
+	/**
+	 * MYSQL actions set active or inactive
+	 */
 	static function set_panel_status() {
 		global $aidlink;
 		$id = $_GET['panel_id'];
@@ -257,6 +312,9 @@ class fusion_panels {
 		}
 	}
 
+	/**
+	 * The Panel Editor Form
+	 */
 	public function add_panel_form() {
 		global $locale;
 		echo "<div class='m-t-20'>\n";
@@ -317,6 +375,11 @@ class fusion_panels {
 		echo "</div>\n";
 	}
 
+	/**
+	 * Panel array
+	 * @param null $panel_id
+	 * @return array|string
+	 */
 	private function panels_list($panel_id = NULL) {
 		$panel_list = "";
 		$result = dbquery("SELECT panel_id, panel_filename FROM ".DB_PANELS." ORDER BY panel_id");
@@ -345,6 +408,10 @@ class fusion_panels {
 		}
 	}
 
+	/**
+	 * Load entire DB_PANELS table
+	 * @return array
+	 */
 	private function load_all_panels() {
 		$list = array();
 		$result = dbquery("SELECT * FROM ".DB_PANELS." ORDER BY panel_side ASC, panel_order ASC");
@@ -356,7 +423,11 @@ class fusion_panels {
 		return $list;
 	}
 
-
+	/**
+	 * The container for each grid positions
+	 * @param $side
+	 * @return string
+	 */
 	private function panel_reactor($side) {
 		global $locale, $aidlink;
 
@@ -409,6 +480,9 @@ class fusion_panels {
 		return $html;
 	}
 
+	/**
+	 * Current Panel Template
+	 */
 	public function panel_listing() {
 		global $locale, $aidlink;
 
