@@ -225,7 +225,8 @@ class eShop_cats {
 	 */
 	static function getSizeOpts() {
 		global $locale;
-		return array('1' => $locale['ESHPCATS103'],
+		return array(
+			'1' => $locale['ESHPCATS103'],
 			'2' => $locale['ESHPCATS104'],);
 	}
 

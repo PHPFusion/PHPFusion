@@ -358,7 +358,7 @@ $tab_title['icon'][] = '';
 $tab_title['title'][] =  $edit ? 'Edit Customer' : 'Add Customer'; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
 $tab_title['id'][] = 'customerform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1, 1);
+$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1);
 echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=customers");
 echo opentabbody($tab_title['title'][0], 'customer', $tab_active, 1);
 $customer->customer_listing();

@@ -17,6 +17,55 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
+class eShop_banners {
+
+	public function __construct() {
+
+	}
+
+	static function verify_banner() {
+		return 0;
+	}
+
+	public function banner_listing() {
+		echo "<div class='m-t-10'>\n";
+
+		echo "</div>\n";
+	}
+	public function add_banner_form() {
+
+	}
+}
+
+
+$banner = new eShop_banners();
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $banner->verify_banner($_GET['featbanner_aid']) : 0;
+$tab_title['title'][] = 'Current Banners'; //$locale['ESHPCUPNS100'];
+$tab_title['id'][] = 'banner';
+$tab_title['icon'][] = '';
+$tab_title['title'][] =  $edit ? 'Edit Banners' : 'Add Banners'; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
+$tab_title['id'][] = 'bannerform';
+$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1);
+echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=customers");
+echo opentabbody($tab_title['title'][0], 'banner', $tab_active, 1);
+$banner->banner_listing();
+echo closetabbody();
+if (isset($_GET['section']) && $_GET['section'] == 'bannerform') {
+	echo opentabbody($tab_title['title'][1], 'bannerform', $tab_active, 1);
+	$banner->add_banner_form();
+	echo closetabbody();
+}
+
+
+
+
+
+
+
+
+
+
 $fthumbs_per_row = "3";
 
 if (isset($_GET['action']) && $_GET['action'] == "refresh") {
@@ -54,7 +103,6 @@ if (isset($_GET['action']) && $_GET['action'] == "mdownb") {
 	$result = dbquery("UPDATE ".DB_ESHOP_FEATBANNERS." SET featbanner_order=featbanner_order+1 WHERE featbanner_aid='".$_GET['id']."'");
 	redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;category=".$_REQUEST['category']."&amp;rowstart=".$_GET['rowstart']."");
 } 
-
 
 if (isset($_GET['action']) && $_GET['action'] == "mup") {
 	if (!isnum($_GET['order'])) { die("Denied"); }
