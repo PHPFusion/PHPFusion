@@ -55,3 +55,4 @@ if ($settings['tinymce_enabled'] == 1) {
 }
 require_once THEMES."templates/panels.php";
 ob_start();
+add_to_breadcrumbs(array('link'=>ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title'=>'Admin Dashboard'));
