@@ -122,11 +122,9 @@ class fusion_panels {
 		if (isset($_POST['panel_save'])) {
 			$this->data['panel_id'] = isset($_POST['panel_id']) ? form_sanitizer($_POST['panel_id'], '0', 'panel_id') : 0;
 			$this->data['panel_name'] = isset($_POST['panel_name']) ? form_sanitizer($_POST['panel_name'], '', 'panel_name') : '';
-
 			$this->data['panel_access'] = isset($_POST['panel_access']) ? form_sanitizer($_POST['panel_access'], '0', 'panel_access') : 0;
-
 			// panel name is unique
-			$result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$this->data['panel_name']."'");
+			$result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$this->data['panel_name']."' AND panel_id !='".$this->data['panel_id']."'");
 			if ($result) {
 				$defender->stop();
 				$defender->addNotice($locale['471']);
@@ -168,7 +166,6 @@ class fusion_panels {
 			if (!empty($panel_languages)) {
 				$this->data['panel_languages'] = implode('.', $panel_languages);
 			}
-
 			// panel order .. add to last or sort - no need since we already have drag and drop... but if they dont have jquery this would be a good idea.
 			/* $result = dbquery("SELECT panel_order FROM ".DB_PANELS." WHERE panel_side='".$panel_side."' ORDER BY panel_order DESC LIMIT 1");
 			if (dbrows($result) != 0) {
@@ -178,10 +175,10 @@ class fusion_panels {
 				$neworder = 1;
 			} */
 			if ($this->data['panel_id'] && self::verify_panel($this->data['panel_id'])) {
-				dbquery_insert(DB_PANELS, $data, 'update');
+				dbquery_insert(DB_PANELS, $this->data, 'update');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=su");
 			} else {
-				dbquery_insert(DB_PANELS, $data, 'save');
+				dbquery_insert(DB_PANELS, $this->data, 'save');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=sn");
 			}
 		}
@@ -191,17 +188,23 @@ class fusion_panels {
 	 * Return list of panels
 	 * @return array
 	 */
-	static function get_panelOpts() {
+	private function get_panelOpts() {
 		$panel_list = array();
+		$current_panels = array();
+		foreach($this->panel_data as $side => $panels) {
+			foreach($panels as $data) {
+				$current_panels[] = $data['panel_filename'];
+			}
+		}
+		// find current installed panels.
 		$temp = opendir(INFUSIONS);
+		$panel_list['none'] = "None";
 		while ($folder = readdir($temp)) {
-			if (!in_array($folder, array(".", "..")) && strstr($folder, "_panel")) {
-				if (is_dir(INFUSIONS.$folder)) $panel_list[] = $folder;
+			if (!in_array($folder, array(".", "..")) && !in_array($folder, $current_panels) && strstr($folder, "_panel")) {
+				if (is_dir(INFUSIONS.$folder)) $panel_list[$folder] = $folder;
 			}
 		}
 		closedir($temp);
-		sort($panel_list);
-		array_unshift($panel_list, "none");
 		return $panel_list;
 	}
 
@@ -347,7 +350,7 @@ class fusion_panels {
 			if ($(this).val() == '2') { $('#panel_url_list-grp').hide(); } else { $('#panel_url_list-grp').show(); }
 		});
 		");
-		echo form_select('Filter Type', 'panel_restriction[]', 'panel_restriction', self::get_includeOpts(), $this->data['panel_restriction'], array('inline'=>1));
+		echo form_select('Filter Type', 'panel_restriction', 'panel_restriction', self::get_includeOpts(), $this->data['panel_restriction'], array('inline'=>1));
 		echo "<div id='panel_url_list-grp'>\n";
 		echo "<div class='text-smaller'></div>\n";
 		echo form_select($locale['462'], 'panel_url_list', 'panel_url_list', self::get_panel_url_list(), $this->data['panel_url_list'], array('inline'=>1, 'tags'=>1, 'multiple'=>1, 'width'=>'100%'));

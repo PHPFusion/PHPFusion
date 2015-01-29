@@ -216,8 +216,8 @@
 }
 
 .pdisabled {
-	background-color: rgb(252, 248, 227);
-	border-color: rgb(250, 235, 204);
+	background-color: rgb(252, 248, 227) !important;
+	border-color: rgb(250, 235, 204) !important;
 }
 .pdisabled > .handle > a {
 	color: rgb(138, 109, 59) !important;
