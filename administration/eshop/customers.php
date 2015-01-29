@@ -277,7 +277,7 @@ class eShop_customer {
 			});
 		");
 			echo "<div class='m-t-20'>\n";
-			echo "<table class='table table-responsive'>\n";
+			echo "<table class='table table-striped table-responsive'>\n";
 			echo "<tr>\n";
 			echo "<th></th>\n";
 			echo "<th class='col-xs-3 col-sm-3'>".$locale['ESHPCHK149']."</th>\n";
@@ -309,7 +309,6 @@ class eShop_customer {
 			echo "</div>\n";
 			echo "</td>\n";
 			echo "</tr>\n";
-
 			$result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status FROM ".DB_ESHOP_CUSTOMERS." c
 			 INNER JOIN ".DB_USERS." u on c.cuid = u.user_id
 			 ORDER BY cfirstname ASC LIMIT ".$_GET['rowstart'].",15");
@@ -318,11 +317,10 @@ class eShop_customer {
 				$i = 0;
 				echo "<tbody id='eshopitem-links' class='connected'>\n";
 				while ($data = dbarray($result)) {
-					$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
-					echo "<tr id='listItem_".$data['cuid']."' data-id='".$data['cuid']."' class='list-result ".$row_color."'>\n";
+					echo "<tr id='listItem_".$data['cuid']."' data-id='".$data['cuid']."' class='list-result'>\n";
 					echo "<td></td>\n";
 					echo "<td>\n";
-					echo "<strong>".$data['cfirstname']." ".$data['clastname']."</strong>\n";
+					echo "".$data['cfirstname']." ".$data['clastname']."\n";
 					echo "<div class='actionbar text-smaller' id='customer-".$data['cuid']."-actions'>
 					<a href='".FUSION_SELF.$aidlink."&amp;a_page=customers&amp;section=customerform&amp;action=edit&amp;cuid=".$data['cuid']."'>".$locale['edit']."</a> |
 					<a class='qedit pointer' data-id='".$data['cuid']."'>".$locale['qedit']."</a> |

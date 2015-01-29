@@ -389,6 +389,14 @@ $locale['ESHPCUPNS_ERROR2'] = "This Coupon ID is not valid";
 
 
 //Administration Featured
+$locale['ESHFEAT90'] = "Banner Title";
+$locale['ESHFEAT91'] = "Banner Image";
+$locale['ESHFEAT92'] = "Banner Display Page";
+$locale['ESHFEAT93'] = "Banner Showcase On";
+$locale['ESHFEAT94'] = "Banner Link";
+$locale['ESHFEAT95'] = "Order";
+$locale['ESHFEAT96'] = "Showcase Type (Fill in either one)";
+$locale['ESHFEAT96a'] = "If you do not select a product, this banner will link to the category page.";
 $locale['ESHFEAT101'] = "- Select section -";
 $locale['ESHFEAT102'] = "Front Page";
 $locale['ESHFEAT103'] = "Add Item";
@@ -400,11 +408,14 @@ $locale['ESHFEAT108'] = "Current Banners";
 $locale['ESHFEAT108a'] = "Custom Link";
 $locale['ESHFEAT109'] = "Add banner";
 $locale['ESHFEAT110'] = "A new banner was added to this featured page";
+$locale['ESHFEAT110a'] = "Featured banner has been updated";
 $locale['ESHFEAT111'] = "Featured banner order refreshed";
 $locale['ESHFEAT112'] = "Featured banner has been removed";
 $locale['ESHFEAT113'] = "Product Showcase";
+$locale['ESHFEAT113a'] = "Category Showcase";
 $locale['ESHFEAT114'] = "Attach to this product";
-$locale['ESHFEAT115'] = "Banner";
+$locale['ESHFEAT115'] = "Upload Image File";
+$locale['ESHFEAT115a'] = "Max. Image size: 3,000 px x 3,000 px. Max. Filesize: 5mb";
 $locale['ESHFEAT116'] = "banner";
 $locale['ESHFEAT117'] = "No featured banners have been added";
 $locale['ESHFEAT118'] = "Refresh Product Order";
@@ -414,10 +425,13 @@ $locale['ESHFEAT121'] = "Remove item";
 $locale['ESHFEAT122'] = "Banner Order";
 $locale['ESHFEAT123'] = "Select Section ";
 $locale['ESHFEAT124'] = "Item";
-$locale['ESHFEAT125'] = "Category Showcase";
+$locale['ESHFEAT125'] = "Showcase Page";
 $locale['ESHFEAT126'] = "or attach to this category";
 $locale['ESHFEAT127'] = "URL Showcase";
 $locale['ESHFEAT128'] = "Front Page";
+$locale['ESHFEAT129'] = "Confirm Delete Banner?";
+$locale['ESHFEAT130'] = "No banner found. Please upload an image.";
+$locale['ESHFEAT131'] = "You can only set 1 type of banner. Please leave the others empty.";
 
 //Administration shipping/shippingcat/shippingitems
 $locale['ESHPSHPMTS100'] = "Shipping";

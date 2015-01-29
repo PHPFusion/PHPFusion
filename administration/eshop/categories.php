@@ -262,7 +262,7 @@ class eShop_cats {
 					break;
 			}
 			if ($message) {
-				echo "<div class='admin-message'>$message</div>";
+				echo admin_message($message);
 			}
 		}
 	}

@@ -388,7 +388,6 @@ class eShop_item {
 				dbquery_insert(DB_ESHOP, $this->data, 'save');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 			}
-			//redirect("".FUSION_SELF.$aidlink."&amp;complete&amp;error=".$error."".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
 	}
 
 	/**
