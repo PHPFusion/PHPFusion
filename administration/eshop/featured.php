@@ -246,7 +246,7 @@ class eShop_banners {
 		echo "<table class='table table-responsive table-striped'>\n";
 		echo "<tr>\n";
 		echo "<th></th>\n";
-		echo "<th>".$locale['ESHFEAT90']."</th>\n";
+		echo "<th class='col-xs-3 col-sm-3'>".$locale['ESHFEAT90']."</th>\n";
 		echo "<th>".$locale['ESHFEAT91']."</th>\n";
 		echo "<th>".$locale['ESHFEAT92']."</th>\n";
 		echo "<th>".$locale['ESHFEAT93']."</th>\n";
