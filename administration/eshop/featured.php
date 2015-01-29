@@ -93,12 +93,14 @@ class eShop_banners {
 	}
 
 	static function delete_banner($id) {
+		global $aidlink;
 		if (isnum($id)) {
-			$data = self::load_banner($_GET['b_id']);
+			$data = self::get_bannerData($_GET['b_id']);
 			if (!empty($data)) {
 				dbquery("UPDATE ".DB_ESHOP_FEATBANNERS." SET featbanner_order=featbanner_order-1 WHERE featbanner_order>'".$data['featbanner_order']."' AND featbanner_cid = '".$data['featbanner_cid']."'");
 				if ($data['featbanner_banner']) @unlink(FPHOTOROOT.$data['featbanner_banner']);
 				dbquery("DELETE FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_aid = '".intval($id)."'");
+				redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner&amp;status=del");
 			}
 		}
 	}
@@ -311,7 +313,7 @@ class eShop_banners {
 				echo "<div class='actionbar text-smaller' id='banner-".$data['featbanner_aid']."-actions'>
 					<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=bannerform&amp;action=edit&amp;b_id=".$data['featbanner_aid']."'>".$locale['edit']."</a> |
 					<a class='qedit pointer' data-id='".$data['featbanner_aid']."'>".$locale['qedit']."</a> |
-					<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=banner&amp;action=delete&amp;b_id=".$data['featbanner_aid']."' onclick=\"return confirm('".$locale['ESHFEAT129']."');\">".$locale['delete']."</a>
+					<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner&amp;action=delete&amp;b_id=".$data['featbanner_aid']."' onclick=\"return confirm('".$locale['ESHFEAT129']."');\">".$locale['delete']."</a>
 					</div>\n";
 				echo "</td>\n";
 				echo "<td><a title='".$data['featbanner_title']."' href='".FPHOTOROOT.$data['featbanner_banner']."' class='colorbox'><i class='text-dark fa fa-image fa-lg'></i></a></td>\n"; // load image via ajax
