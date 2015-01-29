@@ -22,6 +22,7 @@ class eShop_banners {
 	private $data = array(
 		'featbanner_aid' => 0,
 		'featbanner_id' => 0,
+		'featbanner_cid' => 0,
 		'featbanner_cat' => 0,
 		'featbanner_title' => '',
 		'featbanner_url' => '',
