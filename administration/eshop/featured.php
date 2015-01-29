@@ -33,6 +33,7 @@ class eShop_banners {
 
 	public function __construct() {
 		global $aidlink;
+		// decided it will be too complex to save banners to many hundreds of folders.. it's okay to get banners just in 1 location for automated upload.
 		define("FPHOTOROOT", BASEDIR."eshop/pictures/banners/");
 		$this->banner_max_rows = dbcount("('featbanner_aid')", DB_ESHOP_FEATBANNERS);
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->banner_max_rows ? $_GET['rowstart'] : 0;
