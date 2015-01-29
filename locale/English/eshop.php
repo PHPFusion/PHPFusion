@@ -401,7 +401,7 @@ $locale['ESHFEAT109'] = "Add banner";
 $locale['ESHFEAT110'] = "A new banner was added to this featured page";
 $locale['ESHFEAT111'] = "Featured banner order refreshed";
 $locale['ESHFEAT112'] = "Featured banner has been removed";
-$locale['ESHFEAT113'] = "Product";
+$locale['ESHFEAT113'] = "Product Showcase";
 $locale['ESHFEAT114'] = "Attach to this product";
 $locale['ESHFEAT115'] = "Banner";
 $locale['ESHFEAT116'] = "banner";
@@ -410,12 +410,13 @@ $locale['ESHFEAT118'] = "Refresh Product Order";
 $locale['ESHFEAT119'] = "Refresh Banner Order";
 $locale['ESHFEAT120'] = "Edit product";
 $locale['ESHFEAT121'] = "Remove item";
-$locale['ESHFEAT122'] = "Order";
+$locale['ESHFEAT122'] = "Banner Order";
 $locale['ESHFEAT123'] = "Select Section ";
 $locale['ESHFEAT124'] = "Item";
-$locale['ESHFEAT125'] = "Category";
+$locale['ESHFEAT125'] = "Category Showcase";
 $locale['ESHFEAT126'] = "or attach to this category";
-$locale['ESHFEAT127'] = "or type URL";
+$locale['ESHFEAT127'] = "URL Showcase";
+$locale['ESHFEAT128'] = "Front Page";
 
 //Administration shipping/shippingcat/shippingitems
 $locale['ESHPSHPMTS100'] = "Shipping";

@@ -19,21 +19,153 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class eShop_banners {
 
+	private $data = array(
+		'featbanner_aid' => 0,
+		'featbanner_id' => 0,
+		'featbanner_cat' => 0,
+		'featbanner_title' => '',
+		'featbanner_url' => '',
+		'featbanner_banner' => '',
+		'featbanner_order' => 0
+	);
+
+	private $banner_max_rows = 0;
+
 	public function __construct() {
+		$banner_max_rows = dbcount("('featbanner_aid')", DB_ESHOP_FEATBANNERS);
+		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $banner_max_rows ? $_GET['rowstart'] : 0;
+		$_GET['status'] = isset($_GET['status']) ? $_GET['status'] : '';
+		$_GET['b_id'] = isset($_GET['bid']) && isnum($_GET['bid']) ? $_GET['bid'] : 0;
 
 	}
+
+	static function getMessage() {
+		global $locale;
+
+		switch($_GET['status']) {
+			case 'sn':
+				return $locale['ESHFEAT110'];
+				break;
+			case 'refresh':
+				return $locale['ESHFEAT111'];
+				break;
+			case 'del':
+				return $locale['ESHFEAT112'];
+				break;
+		}
+	}
+
+
 
 	static function verify_banner() {
 		return 0;
 	}
+	static function get_bannerType($type, $id) {
+		if (isnum($type)) {
+			switch($type) {
+				case '1':
+					return "<a href='".BASEDIR."eshop.php?category=".$id."'>Link</a>\n";
+					break;
+				case '2':
+					return "<a href='".BASEDIR."eshop.php?product=".$id."'>Link</a>\n";
+					break;
+				case '3':
+					return "<a href='".BASEDIR.$id."'>Link</a>\n";
+					break;
+			}
+		}
+		return false;
+	}
 
 	public function banner_listing() {
+		global $locale;
 		echo "<div class='m-t-10'>\n";
+		echo "<table class='table table-responsive table-striped'>\n";
+		echo "<tr>\n";
+		echo "<th>Featured Banner Title</th>\n";
+		echo "<th>Banner Image</th>\n";
+		echo "<th>Banner Display Page</th>\n";
+		echo "<th>Banner Showcase On</th>\n";
+		echo "<th>Banner Link</th>\n";
+		echo "<th>Order</th>\n";
+		echo "</tr>\n";
 
+		// create virtual add the column in by performing analysis
+		// featbanner_aid = auto increment
+		// featbanner_id = product id
+		// featbanner_cat = product category
+		// featbanner_cid = banner category
+		// get banner max rows
+		$result = dbquery("SELECT b.*,
+					IF(b.featbanner_cid > 0, display.title, 0) as featbanner_display_title,
+		 			IF(b.featbanner_cat > 0, category.title, IF(b.featbanner_id > 0, item.title, 'Custom Link')) as featbanner_showcase_title,
+		 			IF(b.featbanner_cat > 0, 1, IF(b.featbanner_id > 0, 2, 3)) as featbanner_type,
+		 			IF(b.featbanner_cat > 0, b.featbanner_cat, IF(b.featbanner_id > 0, b.featbanner_id, b.featbanner_url)) as featbanner_item_id
+					FROM ".DB_ESHOP_FEATBANNERS." b
+					LEFT JOIN ".DB_ESHOP_CATS." display on (b.featbanner_cid=display.cid)
+					LEFT JOIN ".DB_ESHOP_CATS." category on (b.featbanner_cat=category.cid)
+					LEFT JOIN ".DB_ESHOP." item on (b.featbanner_id=item.id)
+					ORDER BY featbanner_order ASC
+					LIMIT 0, 25
+					");
+		$rows = dbrows($result);
+		if ($rows > 0) {
+			while ($data = dbarray($result)) {
+				echo "<tr>\n";
+				echo "<td>".($data['featbanner_title'] > 0 ? $data['featbanner_title'] : $locale['ESHFEAT128'])."</td>\n";
+				echo "<td><i class='fa fa-image fa-lg'></i></td>\n"; // load image via ajax
+				echo "<td>".$data['featbanner_display_title']."</td>\n";
+				echo "<td>".$data['featbanner_showcase_title']."</td>\n";
+				echo "<td>".self::get_bannerType($data['featbanner_type'], $data['featbanner_item_id'])."</td>\n";
+				echo "<td>".$data['featbanner_order']."</td>\n";
+				echo "</tr>\n";
+			}
+		}
+		echo "</table>\n";
 		echo "</div>\n";
 	}
-	public function add_banner_form() {
 
+	static function get_productOpts() {
+		$list = array();
+		$result = dbquery("SELECT id, title FROM ".DB_ESHOP."");
+		if (dbrows($result)>0) {
+			while ($data = dbarray($result)) {
+				$list[$data['id']] = $data['title'];
+			}
+		}
+		return $list;
+	}
+
+	public function add_banner_form() {
+		global $locale;
+		echo "<div class='m-t-10'>\n";
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-8'>\n";
+		openside('');
+		echo form_text('Banner Title', 'featbanner_title', 'featbanner_title', $this->data['featbanner_title'], array('required'=>1, 'inline'=>1));
+		closeside();
+		openside('');
+		echo "<strong>Showcase Type <span class='required'>*</span></strong>\n";
+		echo "<hr/>\n";
+		echo form_select_tree($locale['ESHFEAT125'], 'featbanner_cat', 'featbanner_cat', $this->data['featbanner_cat'], array('inline'=>1, 'parent_value'=>'None'), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		$product_opts[0] = "None";
+		$product_opts += self::get_productOpts();
+		echo form_select($locale['ESHFEAT113'], 'featbanner_id', 'featbanner_id', $product_opts, $this->data['featbanner_id'], array('inline'=>1));
+		echo form_text($locale['ESHFEAT127'], 'featbanner_url', 'featbanner_url', $this->data['featbanner_url'], array('inline'=>1));
+		closeside();
+		openside('');
+		echo form_fileinput($locale['ESHFEAT115'], 'featbanner_banner', 'featbanner_banner', IMAGES, $this->data['featbanner_banner'], array('type'=>'image', 'inline'=>1));
+		closeside();
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-4'>\n";
+		openside('');
+		echo form_text($locale['ESHFEAT122'], 'featbanner_order', 'featbanner_order', $this->data['featbanner_order'], array('number'=>1));
+		echo form_button($locale['save'], 'save_banner', 'save_banner1', $locale['save'], array('class'=>'btn-primary'));
+		closeside();
+		echo "</div>\n";
+		echo "</div>\n";
+		echo form_button($locale['save'], 'save_banner', 'save_banner', $locale['save'], array('class'=>'btn-primary'));
+		echo "</div>\n";
 	}
 }
 
@@ -43,7 +175,7 @@ $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $banner->verify_
 $tab_title['title'][] = 'Current Banners'; //$locale['ESHPCUPNS100'];
 $tab_title['id'][] = 'banner';
 $tab_title['icon'][] = '';
-$tab_title['title'][] =  $edit ? 'Edit Banners' : 'Add Banners'; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
+$tab_title['title'][] =  $edit ? 'Edit Banners' : $locale['ESHFEAT109']; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
 $tab_title['id'][] = 'bannerform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 $tab_active = tab_active($tab_title, $edit ? 1 : 0, 1);
@@ -212,6 +344,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delbanner") {
 }
 
 if (!isset($_REQUEST['category']) && !isset($_GET['action'])) {
+
 echo "<br /><form name='sectionform' method='post' action='".FUSION_SELF.$aidlink."&amp;a_page=featured'>";
 echo "<table width='100%' cellspacing='4' cellpadding='0' align='center' class='tbl-border'>";
 echo "<tr><td align='left' style='width:100px;'>".$locale['ESHFEAT123']." </td><td align='left'><select class='textbox' name='category' style='width:400px;' onchange=\"this.form.submit()\">";
@@ -220,214 +353,71 @@ echo "<option value='0'>".$locale['ESHFEAT102']."</option>";
 $result=dbquery("SELECT * FROM ".DB_ESHOP_CATS." ORDER BY parentid, title");
 while($cat_data = dbarray($result)) {
 if ($cat_data['parentid']!=0) $cat_data['title']=getparent($cat_data['parentid'],$cat_data['title']);
-echo "<option value='".$cat_data['cid']."'>".$cat_data['title']."</option>";
+echo "<option value='".$cat_data['cid']."'>".$cat_data['cid']." -- ".$cat_data['title']."</option>";
 }
 echo "</select></td></tr></table></form><br />";
 }
 
 if (isset($_REQUEST['category']) && !isset($_GET['action'])) {
-echo "<div style='float:left;width:49%;'>";
-echo"<fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp;<b> ".$locale['ESHFEAT103']." </b>&nbsp;</legend>";
+	echo "<div style='float:left;width:49%;'>";
+	echo"<fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp;<b> ".$locale['ESHFEAT103']." </b>&nbsp;</legend>";
 
-if (isset($_GET['itemadded'])) {
-	echo "<div class='admin-message' style='width:350px;'> ".$locale['ESHFEAT104']." </div>";
-}
-
-if (isset($_GET['iremoved'])) {
-	echo "<div class='admin-message' style='width:350px;'> ".$locale['ESHFEAT105']." </div>";
-}
-
-if (isset($_GET['refreshed'])) {
-	echo "<div class='admin-message' style='width:350px;'> ".$locale['ESHFEAT106']." </div>";
-}
-
-
-//save items
-echo "<form enctype='multipart/form-data' name='subsectionform' method='post' action='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;category=".$_REQUEST['category']."&amp;action=additem'>";
-echo "<br /><br /><table width='100%' cellspacing='4' cellpadding='0' align='center'>";
-echo "<tr><td align='left' style='width:100px;'>".$locale['ESHFEAT107']." </td><td align='left' style='width:180px;'><select class='textbox' name='id' style='width:220px !important;'>";
-echo "<option value=''>".$locale['ESHFEAT108']."</option>";
-
-if (isset($_REQUEST['category']) && $_REQUEST['category'] ==! 0) {
-//let´s make a construct of all sub cats here.
-$cats = "";
-$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid = '".$_REQUEST['category']."' OR parentid = '".$_REQUEST['category']."'");
-while($data = dbarray($result)) {
-$cats.="".$data['cid']." ";
-}
-$categorys=ltrim($cats);
-$categorys=rtrim($categorys);
-$q = "";
-$kt = "";
-$val = "";
-$kt = explode(" ",$categorys);
-while(list($key,$val)=each($kt)){
-if($val<>" " and strlen($val) > 0){ $q.= " cid = '".$val."' OR"; }
-}
-$q=substr($q,0,(strlen($q)-3));
-$result=dbquery("SELECT * FROM ".DB_ESHOP." WHERE ".$q." ORDER BY title ASC");
-} else {
-$result=dbquery("SELECT * FROM ".DB_ESHOP." ORDER BY title ASC");
-}
-
-while($data = dbarray($result)) {
-$checkdupe = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_FEATITEMS." WHERE featitem_cid = '".$_REQUEST['category']."' AND featitem_item='".$data['id']."'"));
-if (!$checkdupe['featitem_item']) {
-echo "<option value='".$data['id']."'>".$data['title']."</option>";
- }
-}
-echo "</select></td></tr>";
-echo "<tr><td align='left'>".$locale['ESHFEAT122']."</td><td align='left'><input type='text' name='order' value='' class='textbox' style='width:40px;' /></td></tr>";
-echo"<tr><td align='center' colspan='2'><div style='margin-top:10px;'></div><input type='submit' name='save' value='".$locale['ESHPPRO166']." ".$locale['ESHFEAT124']."' class='button'></td></tr>";
-echo "</table><div style='padding-top:24px;'></div></form><br /></fieldset></div>";
-
-echo "<div style='float:right;width:49%;'>";
-echo"<fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp;<b> ".$locale['ESHFEAT109']." </b>&nbsp;</legend>";
-if (isset($_GET['banneradded'])) {
-	echo "<div class='admin-message' style='width:350px;'> ".$locale['ESHFEAT110']." </div>";
-}
-
-if (isset($_GET['refreshedb'])) {
-	echo "<div class='admin-message' style='width:350px;'> ".$locale['ESHFEAT111']." </div>";
-}
-
-if (isset($_GET['bremoved'])) {
-	echo "<div class='admin-message' style='width:350px;'> ".$locale['ESHFEAT112']." </div>";
-}
-
-//banner form
-echo "<form enctype='multipart/form-data' name='bannerform' method='post' action='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;category=".$_REQUEST['category']."&amp;action=addbanners'>";
-echo "<table width='100%' cellspacing='4' cellpadding='0' align='center'>";
-echo "<tr><td align='left' style='width:80px;'>".$locale['ESHFEAT113']." </td><td align='left' style='width:180px;'><select class='textbox' name='id' style='width:220px !important;'>";
-echo "<option value=''>".$locale['ESHFEAT114']."</option>";
-//$result=dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' ORDER BY title ASC");
-
-if (isset($_REQUEST['category']) && $_REQUEST['category'] ==! 0) {
-//let´s make a construct of all sub cats here.
-$cats = "";
-$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid = '".$_REQUEST['category']."' OR parentid = '".$_REQUEST['category']."'");
-while($data = dbarray($result)) {
-$cats.="".$data['cid']." ";
-}
-$categorys=ltrim($cats);
-$categorys=rtrim($categorys);
-$q = "";
-$kt = "";
-$val = "";
-$kt = explode(" ",$categorys);
-while(list($key,$val)=each($kt)){
-if($val<>" " and strlen($val) > 0){ $q.= " cid = '".$val."' OR"; }
-}
-$q=substr($q,0,(strlen($q)-3));
-$result=dbquery("SELECT * FROM ".DB_ESHOP." WHERE ".$q." ORDER BY title ASC");
-} else {
-$result=dbquery("SELECT * FROM ".DB_ESHOP." ORDER BY title ASC");
-}
-
-while($data = dbarray($result)) {
-$checkdupe = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_cid = '".$_REQUEST['category']."' AND featbanner_id='".$data['id']."'"));
-if (!$checkdupe['featbanner_id']) {
-echo "<option value='".$data['id']."'>".$data['title']."</option>";
- }
-}
-echo "</select></td></tr>";
-
-echo "<tr><td align='left' style='width:80px;'>".$locale['ESHFEAT125']." </td><td align='left'><select class='textbox' name='cat' style='width:220px !important;'>";
-echo "<option value=''>".$locale['ESHFEAT126']."</option>";
-$result=dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE parentid = '".$_REQUEST['category']."' ORDER BY parentid, title");
-while($cat_data = dbarray($result)) {
-if ($cat_data['parentid']!=0) $cat_data['title']=getparent($cat_data['parentid'],$cat_data['title']);
-echo "<option value='".$cat_data['cid']."'>".$cat_data['title']."</option>";
-}
-echo "</select></td></tr>";
-
-echo "<tr><td align='left' style='width:80px;'>".$locale['ESHFEAT127']."</td><td align='left' style='width:80px;'><input type='text' name='url' value='' class='textbox' style='width:180px !important;' /></td></tr>\n";
-
-echo "<tr><td align='left' style='width:80px;'>".$locale['ESHFEAT115']."</td><td align='left'><input type='file' name='files' class='textbox' style='width:160px;' />".$locale['ESHFEAT122']."<input type='text' name='order' value='' class='textbox' style='width:20px;' /><br /></td></tr>\n";
-echo"<tr><td align='center' colspan='2'><input type='submit' name='save' value='".$locale['ESHPPRO166']." ".$locale['ESHFEAT116']."' class='button'></td></tr>";
-echo "</table></form><br /></fieldset></div>";
-echo "<div class='clear'></div>";
-echo "<hr />";
-//List Banners
-
-//Front view start
-$result = dbquery("select * FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_cid = '".$_REQUEST['category']."' ORDER BY featbanner_order ASC");
-$rows = dbrows($result);
-if ($rows) {
-$result = dbquery("select * FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_cid = '".$_REQUEST['category']."' ORDER BY featbanner_order LIMIT ".$_GET['rowstart'].",1");
-	$counter = 0; $k = ($_GET['rowstart'] == 0 ? 1 : $_GET['rowstart'] + 1);
-	echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'><tr>\n";
-	while ($data = dbarray($result)) {
-	$itemdatab = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id = '".$data['featbanner_id']."'"));
-	$upb = ""; $downb = "";
-		if ($rows != 1){
-			$orderub = $data['featbanner_order'] - 1;
-			$orderdb = $data['featbanner_order'] + 1;
-			if ($k == 1) {
-				$downb = " &middot;\n<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;id=".$data['featbanner_aid']."&amp;category=".$_REQUEST['category']."&amp;action=mdownb&amp;order=$orderdb&amp;rowstart=".$_GET['rowstart']."'><img src='".THEME."images/right.gif' alt='".$ESHPHOTOSL['467']."' title='".$ESHPHOTOSL['467']."' border='0' style='vertical-align:middle'></a>\n";
-			} elseif ($k < $rows){
-				$upb = "<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;id=".$data['featbanner_aid']."&amp;category=".$_REQUEST['category']."&amp;action=mupb&amp;order=$orderub&amp;rowstart=".$_GET['rowstart']."'><img src='".THEME."images/left.gif' alt='".$ESHPHOTOSL['468']."' title='".$ESHPHOTOSL['468']."' border='0' style='vertical-align:middle'></a> &middot;\n";
-				$downb = " &middot;\n<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;id=".$data['featbanner_aid']."&amp;category=".$_REQUEST['category']."&amp;action=mdownb&amp;order=$orderdb&amp;rowstart=".$_GET['rowstart']."'><img src='".THEME."images/right.gif' alt='".$ESHPHOTOSL['467']."' title='".$ESHPHOTOSL['467']."' border='0' style='vertical-align:middle'></a>\n";
-			} else {
-				$upb = "<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;id=".$data['featbanner_aid']."&amp;category=".$_REQUEST['category']."&amp;action=mupb&amp;order=$orderub&amp;rowstart=".$_GET['rowstart']."'><img src='".THEME."images/left.gif' alt='".$ESHPHOTOSL['468']."' title='".$ESHPHOTOSL['468']."' border='0' style='vertical-align:middle'></a> &middot;\n";
-			}
-		}
-		if ($counter != 0 && ($counter % 1	== 0)) echo "</tr>\n<tr>\n";
-    echo "<td align='center' class='tbl'>\n";
-		echo "<b>".$data['featbanner_order']." - ".$itemdatab['title']." - ".$data['featbanner_banner']."</b><br /><br />\n";
-		echo "<a href='".BASEDIR."eshop/eshop.php?product=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/banners/category_".$_REQUEST['category']."/".$data['featbanner_banner'])."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' border='0' style='padding:4px;' /></a>";
-		echo "<br /><br />\n ".$upb;
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;action=delbanner&amp;category=".$_REQUEST['category']."&amp;id=".$data['featbanner_id']."'>".$locale['ESHFEAT121']."</a> ".$downb;
-	echo "</td>\n";
-		$counter++; $k++;
-}
-	echo "</tr>\n</table>\n";
-	if ($rows > 1) echo "<div align='center' style='margin-top:5px;'>\n".makeeshoppagenav($_GET['rowstart'],1,$rows,3,FUSION_SELF.$aidlink."&amp;a_page=featured&amp;category=".$_REQUEST['category']."&amp;")."\n</div>\n";
-} else {
-	echo "<div class='admin-message'> ".$locale['ESHFEAT117']." </div>";
-}
-
-//List items
-echo "<hr />";
-$result= dbquery("SELECT * FROM ".DB_ESHOP_FEATITEMS." 	WHERE featitem_cid = '".$_REQUEST['category']."' ORDER BY featitem_order ASC");
-$rows = dbrows($result);
-if ($rows != 0) {
-
-$counter = 0; $k = 1;
-	echo "<table cellpadding='0' cellspacing='1' width='100%'>\n<tr>\n";
-	while ($data = dbarray($result)) {
-	$itemdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id = '".$data['featitem_item']."'"));
-		$up = ""; $down = "";
-		if ($rows != 1){
-			$orderu = $data['featitem_order'] - 1;
-			$orderd = $data['featitem_order'] + 1;
-			if ($k == 1) {
-				$down = " &middot;\n<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;id=".$itemdata['id']."&amp;category=".$_REQUEST['category']."&amp;action=mdown&amp;order=$orderd'><img src='".THEME."images/right.gif' alt='".$ESHPHOTOSL['467']."' title='".$ESHPHOTOSL['467']."' border='0' style='vertical-align:middle'></a>\n";
-			} elseif ($k < $rows){
-				$up = "<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;id=".$itemdata['id']."&amp;category=".$_REQUEST['category']."&amp;action=mup&amp;order=$orderu'><img src='".THEME."images/left.gif' alt='".$ESHPHOTOSL['468']."' title='".$ESHPHOTOSL['468']."' border='0' style='vertical-align:middle'></a> &middot;\n";
-				$down = " &middot;\n<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;id=".$itemdata['id']."&amp;category=".$_REQUEST['category']."&amp;action=mdown&amp;order=$orderd'><img src='".THEME."images/right.gif' alt='".$ESHPHOTOSL['467']."' title='".$ESHPHOTOSL['467']."' border='0' style='vertical-align:middle'></a>\n";
-			} else {
-				$up = "<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;id=".$itemdata['id']."&amp;category=".$_REQUEST['category']."&amp;action=mup&amp;order=$orderu'><img src='".THEME."images/left.gif' alt='".$ESHPHOTOSL['468']."' title='".$ESHPHOTOSL['468']."' border='0' style='vertical-align:middle'></a> &middot;\n";
-			}
-		}
-		if ($counter != 0 && ($counter % $fthumbs_per_row == 0)) echo "</tr>\n<tr>\n";
-		echo "<td align='center' valign='top' class='tbl'>\n";
-		echo "<b>".$data['featitem_order']." ".$itemdata['title']."</b><br /><br />\n";
-		if ($settings['eshop_ratios'] == "1") {
-		echo "<a href='".BASEDIR."eshop/eshop.php?product=".$itemdata['id']."'><img src='".($itemdata['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$itemdata['thumb']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' height='100%' border='0' style='padding:4px;' /></a>";
-} else {
-	echo "<a href='".BASEDIR."eshop/eshop.php?product=".$itemdata['id']."'><img src='".($itemdata['thumb'] ? "".checkeShpImageExists(BASEDIR."eshop/pictures/".$itemdata['thumb']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' width='".$settings['eshop_idisp_w']."' height='".$settings['eshop_idisp_h']."' border='0' style='padding:4px;' /></a>";
-}
-		echo "<br /><br />\n ".$up;
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=Main&amp;action=edit&amp;id=".$itemdata['id']."&amp;category=".$_REQUEST['category']."'>".$locale['ESHFEAT120']."</a> &middot;\n";
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;action=delitem&amp;category=".$_REQUEST['category']."&amp;id=".$itemdata['id']."'>".$locale['ESHFEAT121']."</a> ".$down;
-		echo "</td>\n";
-		$counter++; $k++;
+	if (isset($_GET['itemadded'])) {
+		echo "<div class='admin-message' style='width:350px;'> ".$locale['ESHFEAT104']." </div>";
 	}
-	echo "</tr>\n<tr>\n<td align='center' colspan='".$fthumbs_per_row."' class='tbl2'><a class='button' href='".FUSION_SELF.$aidlink."&amp;a_page=featured'>Close Section</a>";
-    echo "</td>\n</tr>\n</table>\n";
-echo "<div style='text-align:center;margin-top:5px'>[ <a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;action=refresh&amp;category=".$_REQUEST['category']."'> ".$locale['ESHFEAT118']." </a> ] || [ <a href='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;action=refreshb&amp;category=".$_REQUEST['category']."'> ".$locale['ESHFEAT119']." </a> ]</div>\n"; 
- }
+
+	if (isset($_GET['iremoved'])) {
+		echo "<div class='admin-message' style='width:350px;'> ".$locale['ESHFEAT105']." </div>";
+	}
+
+	if (isset($_GET['refreshed'])) {
+		echo "<div class='admin-message' style='width:350px;'> ".$locale['ESHFEAT106']." </div>";
+	}
+
+
+	//save items
+	echo "<form enctype='multipart/form-data' name='subsectionform' method='post' action='".FUSION_SELF.$aidlink."&amp;a_page=featured&amp;category=".$_REQUEST['category']."&amp;action=additem'>";
+	echo "<br /><br /><table width='100%' cellspacing='4' cellpadding='0' align='center'>";
+	echo "<tr><td align='left' style='width:100px;'>".$locale['ESHFEAT107']." </td><td align='left' style='width:180px;'><select class='textbox' name='id' style='width:220px !important;'>";
+	echo "<option value=''>".$locale['ESHFEAT108']."</option>";
+
+	if (isset($_REQUEST['category']) && $_REQUEST['category'] ==! 0) {
+		//let´s make a construct of all sub cats here.
+		$cats = "";
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid = '".$_REQUEST['category']."' OR parentid = '".$_REQUEST['category']."'");
+		while($data = dbarray($result)) {
+			$cats.="".$data['cid']." ";
+		}
+		$categorys=ltrim($cats);
+		$categorys=rtrim($categorys);
+		$q = "";
+		$kt = "";
+		$val = "";
+		$kt = explode(" ",$categorys);
+		while(list($key,$val)=each($kt)){
+			if($val<>" " and strlen($val) > 0){ $q.= " cid = '".$val."' OR"; }
+		}
+		$q=substr($q,0,(strlen($q)-3));
+		$result=dbquery("SELECT * FROM ".DB_ESHOP." WHERE ".$q." ORDER BY title ASC");
+	} else {
+		$result=dbquery("SELECT * FROM ".DB_ESHOP." ORDER BY title ASC");
+	}
+
+	while($data = dbarray($result)) {
+		$checkdupe = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_FEATITEMS." WHERE featitem_cid = '".$_REQUEST['category']."' AND featitem_item='".$data['id']."'"));
+		if (!$checkdupe['featitem_item']) {
+			echo "<option value='".$data['id']."'>".$data['title']."</option>";
+		}
+	}
+	echo "</select></td></tr>";
+	echo "<tr><td align='left'>".$locale['ESHFEAT122']."</td><td align='left'><input type='text' name='order' value='' class='textbox' style='width:40px;' /></td></tr>";
+	echo"<tr><td align='center' colspan='2'><div style='margin-top:10px;'></div><input type='submit' name='save' value='".$locale['ESHPPRO166']." ".$locale['ESHFEAT124']."' class='button'></td></tr>";
+	echo "</table><div style='padding-top:24px;'></div></form><br /></fieldset></div>";
+
+
+
+
 }
+
 
 ?>
