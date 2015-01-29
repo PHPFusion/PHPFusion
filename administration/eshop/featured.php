@@ -98,7 +98,7 @@ class eShop_banners {
 		// get banner max rows
 		$result = dbquery("SELECT b.*,
 					IF(b.featbanner_cid > 0, display.title, 0) as featbanner_display_title,
-		 			IF(b.featbanner_cat > 0, category.title, IF(b.featbanner_id > 0, item.title, 'Custom Link')) as featbanner_showcase_title,
+		 			IF(b.featbanner_cat > 0, category.title, IF(b.featbanner_id > 0, item.title, 0)) as featbanner_showcase_title,
 		 			IF(b.featbanner_cat > 0, 1, IF(b.featbanner_id > 0, 2, 3)) as featbanner_type,
 		 			IF(b.featbanner_cat > 0, b.featbanner_cat, IF(b.featbanner_id > 0, b.featbanner_id, b.featbanner_url)) as featbanner_item_id
 					FROM ".DB_ESHOP_FEATBANNERS." b
@@ -112,10 +112,10 @@ class eShop_banners {
 		if ($rows > 0) {
 			while ($data = dbarray($result)) {
 				echo "<tr>\n";
-				echo "<td>".($data['featbanner_title'] > 0 ? $data['featbanner_title'] : $locale['ESHFEAT128'])."</td>\n";
+				echo "<td>".$data['featbanner_title']."</td>\n";
 				echo "<td><i class='fa fa-image fa-lg'></i></td>\n"; // load image via ajax
-				echo "<td>".$data['featbanner_display_title']."</td>\n";
-				echo "<td>".$data['featbanner_showcase_title']."</td>\n";
+				echo "<td>".($data['featbanner_display_title'] == '0' ? $locale['ESHFEAT128'] : $data['featbanner_display_title'])."</td>\n"; //
+				echo "<td>".($data['featbanner_showcase_title'] == '0' ? $locale['ESHFEAT108a'] : $data['featbanner_showcase_title'])."</td>\n";
 				echo "<td>".self::get_bannerType($data['featbanner_type'], $data['featbanner_item_id'])."</td>\n";
 				echo "<td>".$data['featbanner_order']."</td>\n";
 				echo "</tr>\n";
@@ -172,7 +172,7 @@ class eShop_banners {
 
 $banner = new eShop_banners();
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $banner->verify_banner($_GET['featbanner_aid']) : 0;
-$tab_title['title'][] = 'Current Banners'; //$locale['ESHPCUPNS100'];
+$tab_title['title'][] = $locale['ESHFEAT108']; //$locale['ESHPCUPNS100'];
 $tab_title['id'][] = 'banner';
 $tab_title['icon'][] = '';
 $tab_title['title'][] =  $edit ? 'Edit Banners' : $locale['ESHFEAT109']; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
