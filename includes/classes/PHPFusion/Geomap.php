@@ -49,7 +49,7 @@ class Geomap {
 	/* @param $country_code  ISO 3166-2-alpha 2 country code
 	/* @param $language_code ISO 639-1-alpha 2 language code
 	/* @returns  a locale, formatted like en_US, or null if not found
-	/**/
+	/*
 	// country code is map->object->cca2
 	static function country_code_to_locale($country_code, $language_code = '')
 	{
@@ -286,6 +286,7 @@ class Geomap {
 		}
 		return null;
 	}
+	 */
 
 
 }

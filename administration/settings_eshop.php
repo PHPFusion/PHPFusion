@@ -222,7 +222,7 @@ if (dbrows($result) != 0) {
 	echo form_select($locale['ESHP590'], 'eshop_info_color', 'eshop_info_color', $color_options, $settings2['eshop_info_color'], array('inline'=>1));
 	echo form_select($locale['ESHP591'], 'eshop_return_color', 'eshop_return_color', $color_options, $settings2['eshop_return_color'], array('inline'=>1));
 
-
+	openside('');
 echo "<fieldset style='align:left;width:99%;display:block;float:left;margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;'>
 <legend>&nbsp; <b> ".$locale['ESHP503']." </b> &nbsp;</legend>
 <table border='0' cellpadding='0' cellspacing='0' width='100%' class='tbl'>
