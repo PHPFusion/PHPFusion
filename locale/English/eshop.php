@@ -412,6 +412,8 @@ $locale['ESHPCUPNS_ERROR2'] = "This Coupon ID is not valid";
 
 //Administration Featured
 $locale['ESHFEAT90'] = "Banner Title";
+$locale['ESHFEAT90a'] = "Featured Item Title";
+$locale['ESHFEAT90b'] = "Featured Item Description";
 $locale['ESHFEAT91'] = "Banner Image";
 $locale['ESHFEAT92'] = "Banner Display Page";
 $locale['ESHFEAT93'] = "Banner Showcase On";
@@ -427,8 +429,12 @@ $locale['ESHFEAT105'] = "Featured item removed";
 $locale['ESHFEAT106'] = "Featured item order refreshed";
 $locale['ESHFEAT107'] = "Add product";
 $locale['ESHFEAT108'] = "Current Banners";
+$locale['ESHFEAT108b'] = "Current Featured Item";
+$locale['ESHFEAT108c'] = "Add Featured Item";
+$locale['ESHFEAT108d'] = "Edit Featured Item";
 $locale['ESHFEAT108a'] = "Custom Link";
 $locale['ESHFEAT109'] = "Add banner";
+$locale['ESHFEAT109a'] = "Edit banner";
 $locale['ESHFEAT110'] = "A new banner was added to this featured page";
 $locale['ESHFEAT110a'] = "Featured banner has been updated";
 $locale['ESHFEAT111'] = "Featured banner order refreshed";

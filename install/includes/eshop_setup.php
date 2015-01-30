@@ -313,6 +313,8 @@ if (isset($_POST['uninstall'])) {
 		
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_featitems (
 			featitem_id mediumint(8) unsigned NOT NULL auto_increment,
+			featitem_title varchar(100) NOT NUL default '',
+			featitem_description text NOT NULL,
 			featitem_item mediumint(8) unsigned NOT NULL default '0',
 			featitem_cid mediumint(8) unsigned NOT NULL default '0',
 			featitem_order smallint(5) unsigned NOT NULL default '0',
