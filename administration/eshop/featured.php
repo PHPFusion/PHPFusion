@@ -77,6 +77,7 @@ class eShop_banners {
 		$_GET['b_id'] = isset($_GET['b_id']) && isnum($_GET['b_id']) ? $_GET['b_id'] : 0;
 		$_GET['i_id'] = isset($_GET['i_id']) && isnum($_GET['i_id']) ? $_GET['i_id'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
+		$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 'items';
 		switch($_GET['action']) {
 			case 'edit':
 				$this->data = self::get_bannerData($_GET['b_id']);
@@ -104,7 +105,7 @@ class eShop_banners {
 	}
 
 	/**
-	 *
+	 * Shows message
 	 */
 	static function getMessage() {
 		global $locale;
@@ -112,7 +113,7 @@ class eShop_banners {
 			$message = '';
 			switch($_GET['status']) {
 				case 'su':
-					$message = $locale['ESHFEAT110a'];
+					$message = $locale['ESHFEAT110b'];
 					break;
 				case 'sn':
 					$message = $locale['ESHFEAT110'];
@@ -122,6 +123,15 @@ class eShop_banners {
 					break;
 				case 'del':
 					$message = $locale['ESHFEAT112'];
+					break;
+				case 'isn':
+					$message = $locale['ESHFEAT110a'];
+					break;
+				case 'isu':
+					$message = $locale['ESHFEAT110c'];
+					break;
+				case 'idel':
+					$message = $locale['ESHFEAT110d'];
 					break;
 			}
 			if ($message) {
