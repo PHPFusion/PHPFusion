@@ -813,7 +813,7 @@ class eShop_item {
 		");
 		self::product_view_filters();
 		echo "<div class='m-t-20'>\n";
-		echo "<table class='table table-responsive'>\n";
+		echo "<table class='table table-responsive table-striped'>\n";
 		echo "<tr>\n";
 		echo "<th></th>\n";
 		echo "<th class='col-xs-3 col-sm-3'>".$locale['ESHPPRO172']."</th>\n";
@@ -866,11 +866,10 @@ class eShop_item {
 		");
 		$rows = dbrows($result);
 		if ($rows>0) {
-			$i = 0;
 			echo "<tbody id='eshopitem-links' class='connected'>\n";
+			$i = 0;
 			while ($data = dbarray($result)) {
-				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
-				echo "<tr id='listItem_".$data['id']."' data-id='".$data['id']."' class='list-result ".$row_color."'>\n";
+				echo "<tr id='listItem_".$data['id']."' data-id='".$data['id']."' class='list-result'>\n";
 				echo "<td></td>\n";
 				echo "<td class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
 				echo "<a class='text-dark' title='".$locale['edit']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>".$data['title']."</a>";

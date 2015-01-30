@@ -32,6 +32,10 @@ class eShop_banners {
 	private $banner_max_rows = 0;
 	private $formaction = '';
 
+	private $idata = array(
+
+	);
+
 	public function __construct() {
 		global $aidlink;
 		// decided it will be too complex to save banners to many hundreds of folders.. it's okay to get banners just in 1 location for automated upload.
@@ -64,6 +68,7 @@ class eShop_banners {
 			switch($_GET['status']) {
 				case 'su':
 					$message = $locale['ESHFEAT110a'];
+					break;
 				case 'sn':
 					$message = $locale['ESHFEAT110'];
 					break;
@@ -327,7 +332,7 @@ class eShop_banners {
 			}
 			echo "</tbody>\n";
 		} else {
-			echo "<tr><td colspan='6' class='text-center'><div class='alert alert-warning m-t-10'>".$locale['ESHFEAT117']."</div></td></tr>\n";
+			echo "<tr><td colspan='7' class='text-center'><div class='alert alert-warning m-t-10'>".$locale['ESHFEAT117']."</div></td></tr>\n";
 		}
 		echo "</table>\n";
 		if ($this->banner_max_rows > $rows) {
@@ -430,7 +435,6 @@ closetable();
 /*
 
 $fthumbs_per_row = "3";
-
 if (isset($_GET['action']) && $_GET['action'] == "refresh") {
 	$i = 1;
 	$result = dbquery("SELECT * FROM ".DB_ESHOP_FEATITEMS." WHERE featitem_cid = '".$_REQUEST['category']."' ORDER BY featitem_order");

@@ -134,6 +134,28 @@ $locale['ESHPF145'] = "New";
 $locale['ESHPF146'] = "Campaign";
 $locale['ESHPF147'] = "Incoming";
 
+// Shipping administrations
+$locale['ESHPSS100'] = 'Itenaries';
+$locale['ESHPSS101'] = 'Fastest Delivery Time';
+$locale['ESHPSS102'] = 'Longest Delivery Time';
+$locale['ESHPSS103'] = 'Min Weight';
+$locale['ESHPSS104'] = 'Max Weight';
+$locale['ESHPSS105'] = 'Min Cost';
+$locale['ESHPSS106'] = 'Max Cost';
+$locale['ESHPSS107'] = 'Edit Shipping Company Itenary';
+$locale['ESHPSS108'] = 'Current Shipping Lists';
+$locale['ESHPSS109'] = 'Edit Shipping';
+$locale['ESHPSS110'] = 'Add Shipping';
+$locale['ESHPSS111'] = 'Non Available';
+$locale['ESHPSS112'] = '1-2 Days';
+$locale['ESHPSS113'] = '3-7 Days';
+$locale['ESHPSS114'] = '1-2 Weeks';
+$locale['ESHPSS115'] = '2-4 Weeks';
+$locale['ESHPSS116'] = '1-2 Months';
+$locale['ESHPSS117'] = '2-3 Months';
+$locale['ESHPSS118'] = '3-6 Months';
+$locale['ESHPSS119'] = 'Please Enquire';
+
 //Filters
 $locale['ESHPF200'] = "Default";
 $locale['ESHPF201'] = "Popularity";

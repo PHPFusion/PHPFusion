@@ -407,7 +407,7 @@ class eShop_cats {
 		$cat_data = $this->eshop_data_tree;
 		$enabled_languages = fusion_get_enabled_languages();
 		echo "<div class='m-t-20'>\n";
-		echo "<table class='table table-responsive'>\n";
+		echo "<table class='table table-striped table-responsive'>\n";
 		echo "<tr>\n";
 		echo "<th></th>\n";
 		echo "<th>".$locale['ESHPCATS100']."</th>\n";
@@ -453,10 +453,9 @@ class eShop_cats {
 			$rows = count($cat_data[$_GET['parent_id']]);
 			$cat_data = sort_tree($cat_data[$_GET['parent_id']], 'cat_order');
 			foreach ($cat_data as $cid => $data) {
-				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
 				$subcats = get_child($this->eshop_cat_index, $data['cid']);
 				$subcats = !empty($subcats) ? count($subcats) : 0;
-				echo "<tr id='listItem_".$data['cid']."' data-id='".$data['cid']."' class='list-result ".$row_color."'>\n";
+				echo "<tr id='listItem_".$data['cid']."' data-id='".$data['cid']."' class='list-result'>\n";
 				echo "<td></td>\n";
 				echo "<td class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
 				echo "<a class='text-dark' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$data['cid']."'>".$data['title']."</a>";

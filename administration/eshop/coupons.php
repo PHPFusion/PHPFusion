@@ -340,7 +340,7 @@ class eShop_coupons {
 		});
 		");
 		echo "<div class='m-t-20'>\n";
-		echo "<table class='table table-responsive'>\n";
+		echo "<table class='table table-striped table-responsive'>\n";
 		echo "<tr>\n";
 		echo "<th></th>\n";
 		echo "<th>".$locale['ESHPCHK170']."</th>\n";
@@ -391,8 +391,7 @@ class eShop_coupons {
 			$i = 0;
 			echo "<tbody id='eshopitem-links' class='connected'>\n";
 			while ($data = dbarray($result)) {
-				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
-				echo "<tr id='listItem_".$data['cuid']."' data-id='".$data['cuid']."' class='list-result ".$row_color."'>\n";
+				echo "<tr id='listItem_".$data['cuid']."' data-id='".$data['cuid']."' class='list-result'>\n";
 				echo "<td></td>\n";
 				echo "<td>\n";
 				echo "<strong>".$data['cuid']."</strong>\n";

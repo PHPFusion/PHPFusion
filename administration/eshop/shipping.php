@@ -17,12 +17,21 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
+/**
+ * Class eShop_shipping
+ */
 class eShop_shipping {
+	/**
+	 * @var array|bool
+	 */
 	public $cdata = array(
 		'cid'=>0,
 		'title'=>'',
 		'image'=>'generic.png',
 	);
+	/**
+	 * @var array|bool
+	 */
 	public $sdata = array(
 		'sid' =>0,
 		'cid' =>0,
@@ -35,11 +44,26 @@ class eShop_shipping {
 		'initialcost' => 0,
 		'active' => 1
 	);
+	/**
+	 * @var string
+	 */
 	private $cformaction = '';
+	/**
+	 * @var string
+	 */
 	private $sformaction = '';
+	/**
+	 * @var bool|int|string
+	 */
 	private $max_rowstart = 0;
+	/**
+	 * @var bool|int|string
+	 */
 	private $max_srowstart = 0;
 
+	/**
+	 * the constructor
+	 */
 	public function __construct() {
 		global $aidlink;
 		define("SHIP_DIR", BASEDIR."eshop/shippingimgs/");
@@ -53,11 +77,11 @@ class eShop_shipping {
 		$_GET['ref'] = isset($_GET['ref']) ? $_GET['ref'] : '';
 		switch($_GET['action']) {
 			case 'edit':
-				$this->cdata = self::load_shippingco($_GET['cid']);
+				$this->cdata = self::get_shippingco($_GET['cid']);
 				$this->cformaction = FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shippingcat&action=edit&amp;cid=".$_GET['cid'];
 				break;
 			case 'view':
-				$this->data = self::load_itenary($_GET['cid']);
+				$this->data = self::get_itenary($_GET['cid']);
 				break;
 			case 'delete':
 				self::delete_shippingco($_GET['cid']);
@@ -76,14 +100,68 @@ class eShop_shipping {
 					$this->sformaction = FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$_GET['cid']."&amp;sid=".$_GET['sid']."&amp;ref=edit_details";
 					$this->sdata = self::load_itenary($_GET['sid']);
 				}
+				break;
 			case 'delete_details':
 				self::delete_itenary($_GET['sid']);
 				break;
 		}
-		self::set_shippingco();
-		self::set_itenary();
+		self::set_shippingcodb();
+		self::set_itenarydb();
 	}
 
+	/**
+	 * @return array|bool
+	 */
+	public function getCdata() {
+		return $this->cdata;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCformaction() {
+		return $this->cformaction;
+	}
+
+	/**
+	 * @return array|bool
+	 */
+	public function getData() {
+		return $this->data;
+	}
+
+	/**
+	 * @return bool|int|string
+	 */
+	public function getMaxRowstart() {
+		return $this->max_rowstart;
+	}
+
+	/**
+	 * @return bool|int|string
+	 */
+	public function getMaxSrowstart() {
+		return $this->max_srowstart;
+	}
+
+	/**
+	 * @return array|bool
+	 */
+	public function getSdata() {
+		return $this->sdata;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSformaction() {
+		return $this->sformaction;
+	}
+
+	/**
+	 * MYSQL delete shipping co
+	 * @param $cid
+	 */
 	private function delete_shippingco($cid) {
 		global $aidlink;
 		if (isnum($cid)) {
@@ -94,6 +172,10 @@ class eShop_shipping {
 		}
 	}
 
+	/**
+	 * MySQL delete itenary details off shipping co
+	 * @param $sid
+	 */
 	private function delete_itenary($sid) {
 		global $aidlink;
 		if (isnum($sid)) {
@@ -104,8 +186,10 @@ class eShop_shipping {
 		}
 	}
 
-
-	private function set_shippingco() {
+	/**
+	 * MYSQL actions on shipping co - update or insert
+	 */
+	private function set_shippingcodb() {
 		global $aidlink;
 		if (isset($_POST['save_shipping'])) {
 			$this->cdata['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], 0, 'cid') : 0;
@@ -121,7 +205,10 @@ class eShop_shipping {
 		}
 	}
 
-	private function set_itenary() {
+	/**
+	 * MYSQL actions on itenary - update or insert
+	 */
+	private function set_itenarydb() {
 		global $aidlink;
 		if (isset($_POST['save_item'])) {
 			$this->sdata['sid'] = isset($_POST['sid']) ? form_sanitizer($_POST['sid'], 0, 'sid') : 0;
@@ -143,6 +230,10 @@ class eShop_shipping {
 	}
 
 	// Verification Functions
+	/**
+	 * @param $id
+	 * @return bool|string
+	 */
 	static function verify_itenary($id) {
 		if (isnum($id)) {
 			return dbcount("(sid)", DB_ESHOP_SHIPPINGITEMS, "sid='".intval($id)."' AND cid='".intval($_GET['cid'])."'");
@@ -150,6 +241,10 @@ class eShop_shipping {
 		return false;
 	}
 
+	/**
+	 * @param $id
+	 * @return bool|string
+	 */
 	static function verify_shippingCats($id) {
 		if (isnum($id)) {
 			return dbcount("(cid)", DB_ESHOP_SHIPPINGCATS, "cid='".intval($id)."'");
@@ -158,6 +253,9 @@ class eShop_shipping {
 	}
 
 	// Opts Functions
+	/**
+	 * @return array
+	 */
 	static function get_ImageOpts() {
 		$image_list = array();
 		$cat_files = makefilelist(SHIP_DIR, ".|..|index.php", true);
@@ -166,6 +264,10 @@ class eShop_shipping {
 		}
 		return $image_list;
 	}
+
+	/**
+	 * @return array
+	 */
 	static function get_destOpts() {
 		global $locale;
 		return array(
@@ -174,6 +276,10 @@ class eShop_shipping {
 			'3' => $locale['D103']
 		);
 	}
+
+	/**
+	 * @return array
+	 */
 	static function get_activeOpts() {
 		global $locale;
 		return array(
@@ -182,23 +288,30 @@ class eShop_shipping {
 		);
 	}
 
+	/**
+	 * @return array
+	 */
 	static function get_dTimeOpts() {
 		global $locale;
 		return array(
-			'0' => 'N/A', // required for null item
-			'1' => '1-2 Days',
-			'2' => '3-7 Days',
-			'3' => '1-2 Weeks',
-			'4' => '2-4 Weeks',
-			'5' => '1-2 Months',
-			'6' => '2-3 Months',
-			'7' => '3-6 Months',
-			'8' => 'Please enquire',
+			'0' => $locale['ESHPSS111'],
+			'1' => $locale['ESHPSS112'],
+			'2' => $locale['ESHPSS113'],
+			'3' => $locale['ESHPSS114'],
+			'4' => $locale['ESHPSS115'],
+			'5' => $locale['ESHPSS116'],
+			'6' => $locale['ESHPSS117'],
+			'7' => $locale['ESHPSS118'],
+			'8' => $locale['ESHPSS119']
 		);
 	}
 
 	// Data loaders
-	static function load_shippingco($id) {
+	/**
+	 * @param $id
+	 * @return array|bool
+	 */
+	static function get_shippingco($id) {
 		if (isnum($id)) {
 			$result = dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGCATS." WHERE cid='".intval($id)."'");
 			if (dbrows($result)>0) {
@@ -207,7 +320,12 @@ class eShop_shipping {
 			return array();
 		}
 	}
-	static function load_itenary($id) {
+
+	/**
+	 * @param $id
+	 * @return array|bool
+	 */
+	static function get_itenary($id) {
 		if (isnum($id)) {
 			$result = dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGITEMS." WHERE sid='".intval($id)."'");
 			if (dbrows($result)>0) {
@@ -217,6 +335,9 @@ class eShop_shipping {
 		}
 	}
 
+	/**
+	 * The shipping form
+	 */
 	public function add_shippingco_form() {
 		global $locale;
 		echo "<div class='m-t-10'>\n";
@@ -239,6 +360,9 @@ class eShop_shipping {
 		echo "</div>\n";
 	}
 
+	/**
+	 * The listing for shipping co
+	 */
 	public function shipping_listing() {
 		global $locale, $aidlink;
 		$delivery_opts = self::get_dTimeOpts();
@@ -250,17 +374,17 @@ class eShop_shipping {
 			);
 		");
 		echo "<div class='m-t-20'>\n";
-		echo "<table class='table table-responsive'>\n";
+		echo "<table class='table table-striped table-responsive'>\n";
 		echo "<tr>\n";
 		echo "<th></th>\n";
 		echo "<th class='col-xs-3 col-sm-3'>".$locale['ESHPCHK149']."</th>\n";
-		echo "<th>Shipping Co. Itenary</th>\n";
-		echo "<th>Fastest Delivery Time</th>\n";
-		echo "<th>Longest Delivery Time</th>\n";
-		echo "<th>Min. Weight ".fusion_get_settings('eshop_weightscale')."</th>\n";
-		echo "<th>Max. Weight ".fusion_get_settings('eshop_weightscale')."</th>\n";
-		echo "<th>Min. Cost</th>\n";
-		echo "<th>Max. Cost</th>\n";
+		echo "<th>".$locale['ESHPSS100']."</th>\n";
+		echo "<th>".$locale['ESHPSS101']."</th>\n";
+		echo "<th>".$locale['ESHPSS102']."</th>\n";
+		echo "<th>".$locale['ESHPSS103']." ".fusion_get_settings('eshop_weightscale')."</th>\n";
+		echo "<th>".$locale['ESHPSS104']." ".fusion_get_settings('eshop_weightscale')."</th>\n";
+		echo "<th>".$locale['ESHPSS105']."</th>\n";
+		echo "<th>".$locale['ESHPSS106']."</th>\n";
 		echo "</tr>\n";
 
 		$result = dbquery("SELECT s.*, count(si.cid) methods,
@@ -280,9 +404,7 @@ class eShop_shipping {
 			$i = 0;
 			echo "<tbody id='eshopitem-links' class='connected'>\n";
 			while ($data = dbarray($result)) {
-				//print_p($data);
-				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
-				echo "<tr id='listItem_".$data['cid']."' data-id='".$data['cid']."' class='list-result ".$row_color."'>\n";
+				echo "<tr id='listItem_".$data['cid']."' data-id='".$data['cid']."' class='list-result'>\n";
 				echo "<td></td>\n";
 				echo "<td>\n";
 				echo "<a href='".FUSION_SELF.$aidlink."&amp;a_page=shipping&amp;section=shipping&amp;action=view&amp;cid=".$data['cid']."' class='text-dark'>".$data['title']."</a>\n";
@@ -312,6 +434,9 @@ class eShop_shipping {
 		echo "</div>\n";
 	}
 
+	/**
+	 * The listing for itenary
+	 */
 	public function itenary_list() {
 		global $locale, $aidlink;
 		$dest_opts = self::get_destOpts();
@@ -425,10 +550,10 @@ class eShop_shipping {
 $shipping = new eShop_shipping();
 $cview = (isset($_GET['action']) && $_GET['action'] == 'view') ? $shipping->verify_shippingCats($_GET['cid']) : 0;
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $shipping->verify_shippingCats($_GET['cid']) : 0;
-$tab_title['title'][] = $cview ? 'Edit Shipping Company Itenary' : 'Current Shipping Lists'; //$locale['ESHPCUPNS100'];
+$tab_title['title'][] = $cview ? $locale['ESHPSS107'] : $locale['ESHPSS108'];
 $tab_title['id'][] = 'shipping';
 $tab_title['icon'][] = $cview ? 'fa fa-pencil m-r-10' : '';
-$tab_title['title'][] =  $edit ? 'Edit Shipping' : 'Add Shipping'; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
+$tab_title['title'][] =  $edit ? $locale['ESHPSS109'] : $locale['ESHPSS110'];
 $tab_title['id'][] = 'shippingcat';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 $tab_active = tab_active($tab_title, $edit ? 1 : 0, 1, 1);

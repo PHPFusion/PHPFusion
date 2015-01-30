@@ -133,7 +133,7 @@ class eShop_payment {
 	public function payment_listing() {
 		global $locale, $aidlink;
 		echo "<div class='m-t-20'>\n";
-		echo "<table class='table table-responsive'><tr>
+		echo "<table class='table table-striped table-responsive'><tr>
 		<th>".$locale['ESHPPMTS116']."</th>\n
 		<th>".$locale['ESHPPMTS117']."</th>\n
 		</tr>\n";
