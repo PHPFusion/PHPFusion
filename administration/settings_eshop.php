@@ -19,7 +19,7 @@ require_once "../maincore.php";
 if (!checkrights("ESHP") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { die("Acces Denied"); }
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."eshop.php";
-add_to_head("<link rel='stylesheet' type='text/css' href='".THEMES."templates/global/css/eshop.css' />");
+//add_to_head("<link rel='stylesheet' type='text/css' href='".THEMES."templates/global/css/eshop.css' />");
 
 echo '<script type="text/javascript">
 
@@ -151,433 +151,77 @@ while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 if (dbrows($result) != 0) {
-echo "<form name='optionsform' method='post' action='".FUSION_SELF.$aidlink."&amp;a_page=settings'>
 
-<fieldset style='align:left;width:99%;display:block;float:left;margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;'>
-<legend>&nbsp; <b> ".$locale['ESHP502']." </b> &nbsp;</legend>
-<table border='0' cellpadding='0' cellspacing='0' width='100%' class='tbl'>
+	openform('optionsform', 'optionsform', 'post', FUSION_SELF.$aidlink."&amp;a_page=settings");
+	echo "<div class='row'>\n";
+	echo "<div class='col-xs-12 col-sm-8'>\n";
 
-		<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP551']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='ppmail' value='".$settings2['eshop_ppmail']."' class='textbox' style='width:150px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP552']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP553']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	    <input type='text' name='returnpage' value='".$settings2['eshop_returnpage']."' class='textbox' style='width:150px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP554']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP850']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='ipn' class='textbox'>
-                <option value='1'".($settings2['eshop_ipn'] == "1" ? " selected" : "").">".$locale['ESHP564']."</option>
-                <option value='0'".($settings2['eshop_ipn'] == "0" ? " selected" : "").">".$locale['ESHP565']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP851']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP555']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	    <input type='text' name='vat' value='".$settings2['eshop_vat']."' class='textbox' style='width:40px;'>%</td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP556']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP557']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='vat_default' class='textbox'>
-                <option value='1'".($settings2['eshop_vat_default'] == "1" ? " selected" : "").">".$locale['ESHP564']."</option>
-                <option value='0'".($settings2['eshop_vat_default'] == "0" ? " selected" : "").">".$locale['ESHP565']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP558']."</span></td>
-	</tr>
-	
-		<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP559']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='currency' class='textbox' style='width:150px;'>
-    <option value='EUR' ".($settings2['eshop_currency'] == "EUR" ? " selected" : "").">Euro (€)</option>
-	<option value='USD' ".($settings2['eshop_currency'] == "USD" ? " selected" : "").">U.S. Dollar ($)</option>
-	<option value='GBP' ".($settings2['eshop_currency'] == "GBP" ? " selected" : "").">British Pound (£)</option>
-	<option value='CAD' ".($settings2['eshop_currency'] == "CAD" ? " selected" : "").">Canadian Dollar (C $)</option>
-	<option value='AUD' ".($settings2['eshop_currency'] == "AUD" ? " selected" : "").">Australian Dollar (A $)</option>
-	<option value='JPY' ".($settings2['eshop_currency'] == "JPY" ? " selected" : "").">Japanese Yen (¥)</option>
-	<option value='NZD' ".($settings2['eshop_currency'] == "NZD" ? " selected" : "").">New Zealand Dollar ($)</option>
-	<option value='CHF' ".($settings2['eshop_currency'] == "CHF" ? " selected" : "").">Swiss Franc</option>
-	<option value='HKD' ".($settings2['eshop_currency'] == "HKD" ? " selected" : "").">Hong Kong Dollar ($)</option>
-	<option value='SGD' ".($settings2['eshop_currency'] == "SGD" ? " selected" : "").">Singapore Dollar ($)</option>
-	<option value='SEK' ".($settings2['eshop_currency'] == "SEK" ? " selected" : "").">Swedish Krona</option>
-	<option value='DKK' ".($settings2['eshop_currency'] == "DKK" ? " selected" : "").">Danish Krone</option>
-	<option value='PLN' ".($settings2['eshop_currency'] == "PLN" ? " selected" : "").">Polish Zloty</option>
-	<option value='NOK' ".($settings2['eshop_currency'] == "NOK" ? " selected" : "").">Norwegian Krone</option>
-	<option value='HUF' ".($settings2['eshop_currency'] == "HUF" ? " selected" : "").">Hungarian Forint</option>
-	<option value='CZK' ".($settings2['eshop_currency'] == "CZK" ? " selected" : "").">Czech Koruna</option>
-	<option value='ILS' ".($settings2['eshop_currency'] == "ILS" ? " selected" : "").">Israeli New Shekel</option>
-	<option value='MXN' ".($settings2['eshop_currency'] == "MXN" ? " selected" : "").">Mexican Peso</option>
-	<option value='BRL' ".($settings2['eshop_currency'] == "BRL" ? " selected" : "").">Brazilian Real</option>
-	<option value='MYR' ".($settings2['eshop_currency'] == "MYR" ? " selected" : "").">Malaysian Ringgit </option>
-	<option value='PHP' ".($settings2['eshop_currency'] == "PHP" ? " selected" : "").">Philippine Peso</option>
-	<option value='TWD' ".($settings2['eshop_currency'] == "TWD" ? " selected" : "").">New Taiwan Dollar</option>
-	<option value='THB' ".($settings2['eshop_currency'] == "THB" ? " selected" : "").">Thai Baht</option>
-	<option value='TRY' ".($settings2['eshop_currency'] == "TRY" ? " selected" : "").">Turkish Lira</option>
-	</select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP560']."</span></td>
-	</tr>
-	
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP837']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='newtime' class='textbox'>
-                <option value='0'".($settings2['eshop_newtime'] == "0" ? " selected" : "").">".$locale['ESHP839']."</option>
-				<option value='86400'".($settings2['eshop_newtime'] == "86400" ? " selected" : "").">".$locale['ESHP840']."</option>
-                <option value='259200'".($settings2['eshop_newtime'] == "259200" ? " selected" : "").">".$locale['ESHP841']."</option>
-				<option value='432000'".($settings2['eshop_newtime'] == "432000" ? " selected" : "").">".$locale['ESHP842']."</option>
-				<option value='604800'".($settings2['eshop_newtime'] == "604800" ? " selected" : "").">".$locale['ESHP843']."</option>
-				<option value='1209600'".($settings2['eshop_newtime'] == "1209600" ? " selected" : "").">".$locale['ESHP844']."</option>
-				<option value='2419200'".($settings2['eshop_newtime'] == "2419200" ? " selected" : "").">".$locale['ESHP845']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP838']."</span></td>
-	</tr>
-	
-		<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP848']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='coupons' class='textbox'>
-                <option value='1'".($settings2['eshop_coupons'] == "1" ? " selected" : "").">".$locale['ESHP564']."</option>
-                <option value='0'".($settings2['eshop_coupons'] == "0" ? " selected" : "").">".$locale['ESHP565']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP849']."</span></td>
-	</tr>
-	
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP846']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-			<input type='text' name='freeshipsum' value='".$settings2['eshop_freeshipsum']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP847']."</span></td>
-	</tr>
-	
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP561']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='weightscale' class='textbox'>
-                <option value='KG'".($settings2['eshop_weightscale'] == "KG" ? " selected" : "").">".$locale['ESHP566']."</option>
-                <option value='LBS'".($settings2['eshop_weightscale'] == "LBS" ? " selected" : "").">".$locale['ESHP567']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP562']."</span></td>
-	</tr>
-		
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP563']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='shareing' class='textbox'>
-                <option value='1'".($settings2['eshop_shareing'] == "1" ? " selected" : "").">".$locale['ESHP504']."</option>
-                <option value='0'".($settings2['eshop_shareing'] == "0" ? " selected" : "").">".$locale['ESHP505']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP568']."</span></td>
-	</tr>
-	
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP569']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='shopmode' class='textbox'>
-                <option value='1'".($settings2['eshop_shopmode'] == "1" ? " selected" : "").">".$locale['ESHP504']."</option>
-                <option value='0'".($settings2['eshop_shopmode'] == "0" ? " selected" : "").">".$locale['ESHP505']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP570']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP598']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-			<input type='text' name='itembox_w' value='".$settings2['eshop_itembox_w']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP599']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP600']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-			<input type='text' name='itembox_h' value='".$settings2['eshop_itembox_h']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP601']."</span></td>
-	</tr>
-
-	
-    <tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP571']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='pretext' class='textbox'>
-                <option value='1'".($settings2['eshop_pretext'] == "1" ? " selected" : "").">".$locale['ESHP504']."</option>
-                <option value='0'".($settings2['eshop_pretext'] == "0" ? " selected" : "").">".$locale['ESHP505']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP572']."</span></td>
-	</tr>
-	
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP573']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='pretext_w' value='".$settings2['eshop_pretext_w']."' class='textbox' style='width:60px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP574']."</span></td>
-	</tr>
-
-<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP575']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='listprice' class='textbox'>
-                <option value='1'".($settings2['eshop_listprice'] == "1" ? " selected" : "").">".$locale['ESHP504']."</option>
-                <option value='0'".($settings2['eshop_listprice'] == "0" ? " selected" : "").">".$locale['ESHP505']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP576']."</span></td>
-	</tr>
-	
-	
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP577']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='noppf' value='".$settings2['eshop_noppf']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP578']."</span></td>
-	</tr>
-
-	
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP592']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='ipr' value='".$settings2['eshop_ipr']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP593']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP515']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-            <select name='ratios' class='textbox'>
-                <option value='1'".($settings2['eshop_ratios'] == "1" ? " selected" : "").">".$locale['ESHP504']."</option>
-                <option value='0'".($settings2['eshop_ratios'] == "0" ? " selected" : "").">".$locale['ESHP505']."</option>
-            </select></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP516']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP519']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='idisp_w' value='".$settings2['eshop_idisp_w']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP520']."</span></td>
-	</tr>
-
-	<tr>
-	    <td class='tbl1' width='30%' align='left'>".$locale['ESHP517']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='idisp_h' value='".$settings2['eshop_idisp_h']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP518']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP594']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='idisp_w2' value='".$settings2['eshop_idisp_w2']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP595']."</span></td>
-	</tr>
-
-	<tr>
-	    <td class='tbl1' width='30%' align='left'>".$locale['ESHP596']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='idisp_h2' value='".$settings2['eshop_idisp_h2']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP597'].")</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP537']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='image_w' value='".$settings2['eshop_image_w']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP538']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP539']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='image_h' value='".$settings2['eshop_image_h']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP540']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP541']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='image_b' value='".$settings2['eshop_image_b']."' class='textbox' style='width:50px;'> [".parseByteSize($settings2['eshop_image_b'])."]</td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP542']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP543']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='image_tw' value='".$settings2['eshop_image_tw']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP544']."</span></td>
-	</tr>
-
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP545']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='image_th' value='".$settings2['eshop_image_th']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP546']."</span></td>
-	</tr>
+	echo "</div>\n";
+	echo "<div class='col-xs-12 col-sm-4'>\n";
+	echo "</div>\n";
+	echo "</div>\n";
+	closeform();
 
 
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP547']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='image_t2w' value='".$settings2['eshop_image_t2w']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP548']."</span></td>
-	</tr>
+	echo form_text($locale['ESHP551'], 'eshop_ppmail', 'eshop_ppmail', $settings2['eshop_ppmail'], array('tip'=>$locale['ESHP552'], 'inline'=>1));
+	echo form_text($locale['ESHP553'], 'eshop_returnpage', 'eshop_returnpage', $settings2['eshop_returnpage'], array('tip'=>$locale['ESHP554'], 'inline'=>1));
+	echo form_select($locale['ESHP850'], 'eshop_ipn', 'eshop_ipn',array('0'=>$locale['no'], '1'=>$locale['yes']), $settings2['eshop_ipn'], array('tip'=>$locale['ESHP851'], 'inline'=>1));
+	echo form_text($locale['ESHP555'], 'eshop_vat', 'eshop_vat', $settings2['eshop_vat'], array('tip'=>$locale['ESHP556'], 'inline'=>1, 'placeholder'=>'%'));
+	echo form_select($locale['ESHP557'], 'eshop_vat_default', 'eshop_vat_default',array('0'=>$locale['no'], '1'=>$locale['yes']), $settings2['eshop_vat_default'], array('tip'=>$locale['ESHP558'], 'inline'=>1));
+	echo form_select($locale['ESHP559'], 'eshop_currency', 'eshop_currency', \PHPFusion\Geomap::get_Currency(), $settings2['eshop_currency'], array('tip'=>$locale['ESHP560'], 'width'=>'350px', 'inline'=>1));
 
-	<tr>
-            <td class='tbl1' width='30%' align='left'>".$locale['ESHP549']."</td>
-            <td class='tbl1' width='20%'  align='left'>
-	   <input type='text' name='image_t2h' value='".$settings2['eshop_image_t2h']."' class='textbox' style='width:40px;'></td>
-            <td class='tbl1' width='50%' align='left'><span style='small'>".$locale['ESHP550']."</span></td>
-	</tr>
-	
-	<tr>
-        <td class='tbl1' width='30%' align='left'>".$locale['ESHP579']."</td>
-        <td class='tbl1' width='20%'  align='left'>
-	    <select name='buynow_color' id='colorselector' class='textbox'>
-	    <option value='default'".($settings2['eshop_buynow_color'] == "default" ? " selected" : "").">".$locale['ESHP580']."</option> 
-		<option value='blue'".($settings2['eshop_buynow_color'] == "blue" ? " selected" : "").">".$locale['ESHP581']."</option> 
-	    <option value='green'".($settings2['eshop_buynow_color'] == "green" ? " selected" : "").">".$locale['ESHP582']."</option> 
-	    <option value='red'".($settings2['eshop_buynow_color'] == "red" ? " selected" : "").">".$locale['ESHP583']."</option> 
-	    <option value='magenta'".($settings2['eshop_buynow_color'] == "magenta" ? " selected" : "").">".$locale['ESHP584']."</option> 
-	    <option value='orange'".($settings2['eshop_buynow_color'] == "orange" ? " selected" : "").">".$locale['ESHP585']."</option> 
-	    <option value='yellow'".($settings2['eshop_buynow_color'] == "yellow" ? " selected" : "").">".$locale['ESHP586']."</option> 
-	    </select>
-	    </td>
-        <td class='tbl1' width='50%' align='left'>
-   	    <div id='default' class='colors hide'><a class='button' href='javascript:;'>".$locale['ESHP580']."</a></div>
-		<div id='blue' class='colors hide'><a class='eshpbutton blue' href='javascript:;'>".$locale['ESHP581']."</a></div>
-  	    <div id='green' class='colors hide'><a class='eshpbutton green' href='javascript:;'>".$locale['ESHP582']."</a></div>
- 	    <div id='red' class='colors hide'><a class='eshpbutton red' href='javascript:;'>".$locale['ESHP583']."</a></p></div>
- 	    <div id='magenta' class='colors hide'><a class='eshpbutton magenta' href='javascript:;'>".$locale['ESHP584']."</a></div>
- 	    <div id='orange' class='colors hide'><a class='eshpbutton orange' href='javascript:;'>".$locale['ESHP585']."</a></div>
- 	    <div id='yellow' class='colors hide'><a class='eshpbutton yellow' href='javascript:;'>".$locale['ESHP586']."</a></div>
-	    </td></tr>
+	// ribbon timers
+	$timer_opts = array(
+		'0' => $locale['ESHP839'],
+		'86400' => $locale['ESHP840'],
+		'259200' => $locale['ESHP841'],
+		'432000' => $locale['ESHP842'],
+		'604800' => $locale['ESHP843'],
+		'1209600' => $locale['ESHP844'],
+		'2419200' => $locale['ESHP845'],
+	);
+	echo form_select($locale['ESHP837'], 'eshop_newtime', 'eshop_newtime', $timer_opts, $settings2['eshop_newtime'], array('tip'=>$locale['ESHP838'], 'width'=>'350px', 'inline'=>1));
+	echo form_select($locale['ESHP848'], 'eshop_coupons', 'eshop_coupons', array('0'=>$locale['no'], '1'=>$locale['yes']), $settings2['eshop_coupons'], array('tip'=>$locale['ESHP849'], 'width'=>'350px', 'inline'=>1));
+	// is this in dollar or in kg?
+	echo form_text($locale['ESHP846'], 'eshop_freeshipsum', 'eshop_freeshipsum', $settings2['eshop_freeshipsum'], array('tip'=>$locale['ESHP847'], 'width'=>'350px', 'inline'=>1));
+	echo form_select($locale['ESHP561'], 'eshop_weightscale', 'eshop_weightscale', array('KG'=>$locale['ESHP566'], 'LBS'=>$locale['ESHP567']), $settings2['eshop_weightscale'], array('tip'=>$locale['ESHP562'], 'inline'=>1));
+	echo form_select($locale['ESHP563'], 'eshop_shareing', 'eshop_shareing', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_shareing'], array('tip'=>$locale['ESHP568'], 'inline'=>1));
+	echo form_select($locale['ESHP569'], 'eshop_shopmode', 'eshop_shopmode', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_shopmode'], array('tip'=>$locale['ESHP570'], 'inline'=>1));
+	echo form_text($locale['ESHP598'], 'eshop_itembox_w', 'eshop_itembox_w', $settings2['eshop_itembox_w'], array('tip'=>$locale['ESHP599'], 'inline'=>1));
+	echo form_text($locale['ESHP600'], 'eshop_itembox_h', 'eshop_itembox_h', $settings2['eshop_itembox_h'], array('tip'=>$locale['ESHP601'], 'inline'=>1));
+	echo form_select($locale['ESHP571'], 'eshop_pretext', 'eshop_pretext', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_pretext'], array('tip'=>$locale['ESHP572'], 'inline'=>1));
+	echo form_text($locale['ESHP573'], 'eshop_pretext_w', 'eshop_pretext_w', $settings2['eshop_pretext_w'], array('tip'=>$locale['ESHP574'], 'inline'=>1));
+	echo form_select($locale['ESHP575'], 'eshop_listprice', 'eshop_listprice', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_listprice'], array('tip'=>$locale['ESHP576'], 'inline'=>1));
+	echo form_text($locale['ESHP577'], 'eshop_noppf', 'eshop_noppf', $settings2['eshop_noppf'], array('tip'=>$locale['ESHP578'], 'inline'=>1));
+	echo form_text($locale['ESHP592'], 'eshop_ipr', 'eshop_ipr', $settings2['eshop_ipr'], array('tip'=>$locale['ESHP593'], 'inline'=>1));
+	echo form_select($locale['ESHP515'], 'eshop_ratios', 'eshop_ratios', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_ratios'], array('tip'=>$locale['ESHP516'], 'inline'=>1));
+	echo form_text($locale['ESHP519'], 'eshop_idisp_w', 'eshop_idisp_w', $settings2['eshop_idisp_w'], array('tip'=>$locale['ESHP520'], 'inline'=>1));
+	echo form_text($locale['ESHP517'], 'eshop_idisp_h', 'eshop_idisp_h', $settings2['eshop_idisp_h'], array('tip'=>$locale['ESHP518'], 'inline'=>1));
+	echo form_text($locale['ESHP594'], 'eshop_idisp_w2', 'eshop_idisp_w2', $settings2['eshop_idisp_w2'], array('tip'=>$locale['ESHP595'], 'inline'=>1));
+	echo form_text($locale['ESHP596'], 'eshop_idisp_h2', 'eshop_idisp_h2', $settings2['eshop_idisp_h2'], array('tip'=>$locale['ESHP597'], 'inline'=>1));
+	echo form_text($locale['ESHP537'], 'eshop_image_w', 'eshop_image_w', $settings2['eshop_image_w'], array('tip'=>$locale['ESHP538'], 'inline'=>1));
+	echo form_text($locale['ESHP539'], 'eshop_image_h', 'eshop_image_h', $settings2['eshop_image_h'], array('tip'=>$locale['ESHP540'], 'inline'=>1));
+	echo form_text($locale['ESHP541'], 'eshop_image_b', 'eshop_image_b', $settings2['eshop_image_b'], array('placeholder'=>parseByteSize($settings2['eshop_image_b']), 'tip'=>$locale['ESHP542'], 'inline'=>1));
+	echo form_text($locale['ESHP543'], 'eshop_image_tw', 'eshop_image_tw', $settings2['eshop_image_tw'], array('tip'=>$locale['ESHP544'], 'inline'=>1));
+	echo form_text($locale['ESHP545'], 'eshop_image_th', 'eshop_image_th', $settings2['eshop_image_th'], array('tip'=>$locale['ESHP546'], 'inline'=>1));
+	echo form_text($locale['ESHP547'], 'eshop_image_t2w', 'eshop_image_t2w', $settings2['eshop_image_t2w'], array('tip'=>$locale['ESHP548'], 'inline'=>1));
+	echo form_text($locale['ESHP549'], 'eshop_image_t2h', 'eshop_image_t2h', $settings2['eshop_image_t2h'], array('tip'=>$locale['ESHP550'], 'inline'=>1));
+	$color_options = array(
+		'default' => $locale['ESHP580'],
+		'blue' => $locale['ESHP581'],
+		'green' => $locale['ESHP582'],
+		'red' => $locale['ESHP583'],
+		'magenta' => $locale['ESHP584'],
+		'orange' => $locale['ESHP585'],
+		'yellow' => $locale['ESHP586'],
+	);
+	echo form_select($locale['ESHP579'], 'eshop_buynow_color', 'eshop_buynow_color', $color_options, $settings2['eshop_buynow_color'], array('inline'=>1));
+	echo form_select($locale['ESHP587'], 'eshop_checkout_color', 'eshop_checkout_color', $color_options, $settings2['eshop_checkout_color'], array('inline'=>1));
+	echo form_select($locale['ESHP588'], 'eshop_cart_color', 'eshop_cart_color', $color_options, $settings2['eshop_cart_color'], array('inline'=>1));
+	echo form_select($locale['ESHP589'], 'eshop_addtocart_color', 'eshop_addtocart_color', $color_options, $settings2['eshop_addtocart_color'], array('inline'=>1));
+	echo form_select($locale['ESHP590'], 'eshop_info_color', 'eshop_info_color', $color_options, $settings2['eshop_info_color'], array('inline'=>1));
+	echo form_select($locale['ESHP591'], 'eshop_return_color', 'eshop_return_color', $color_options, $settings2['eshop_return_color'], array('inline'=>1));
 
-	<tr>
-        <td class='tbl1' width='30%' align='left'>".$locale['ESHP587']."</td>
-        <td class='tbl1' width='20%'  align='left'>
-	    <select name='checkout_color' id='colorselector2' class='textbox'>
-		<option value='default'".($settings2['eshop_checkout_color'] == "default" ? " selected" : "").">".$locale['ESHP580']."</option> 
-	    <option value='blue'".($settings2['eshop_checkout_color'] == "blue" ? " selected" : "").">".$locale['ESHP581']."</option> 
-	    <option value='green'".($settings2['eshop_checkout_color'] == "green" ? " selected" : "").">".$locale['ESHP582']."</option> 
-	    <option value='red'".($settings2['eshop_checkout_color'] == "red" ? " selected" : "").">".$locale['ESHP583']."</option> 
-	    <option value='magenta'".($settings2['eshop_checkout_color'] == "magenta" ? " selected" : "").">".$locale['ESHP584']."</option> 
-	    <option value='orange'".($settings2['eshop_checkout_color'] == "orange" ? " selected" : "").">".$locale['ESHP585']."</option> 
-	    <option value='yellow'".($settings2['eshop_checkout_color'] == "yellow" ? " selected" : "").">".$locale['ESHP586']."</option> 
-	    </select>
-	    </td>
-        <td class='tbl1' width='50%' align='left'>
-		<div id='2default' class='colors2 hide'><a class='button' href='javascript:;'>".$locale['ESHP580']."</a></div>
-   	    <div id='2blue' class='colors2 hide'><a class='eshpbutton blue' href='javascript:;'>".$locale['ESHP581']."</a></div>
-  	    <div id='2green' class='colors2 hide'><a class='eshpbutton green' href='javascript:;'>".$locale['ESHP582']."</a></div>
- 	    <div id='2red' class='colors2 hide'><a class='eshpbutton red' href='javascript:;'>".$locale['ESHP583']."</a></p></div>
- 	    <div id='2magenta' class='colors2 hide'><a class='eshpbutton magenta' href='javascript:;'>".$locale['ESHP584']."</a></div>
- 	    <div id='2orange' class='colors2 hide'><a class='eshpbutton orange' href='javascript:;'>".$locale['ESHP585']."</a></div>
- 	    <div id='2yellow' class='colors2 hide'><a class='eshpbutton yellow' href='javascript:;'>".$locale['ESHP586']."</a></div>
-	</td></tr>
-
-	<tr>
-        <td class='tbl1' width='30%' align='left'>".$locale['ESHP588']."</td>
-        <td class='tbl1' width='20%'  align='left'>
-	    <select name='cart_color' id='colorselector3' class='textbox'>
-	    <option value='default'".($settings2['eshop_cart_color'] == "default" ? " selected" : "").">".$locale['ESHP580']."</option> 
-		<option value='blue'".($settings2['eshop_cart_color'] == "blue" ? " selected" : "").">".$locale['ESHP581']."</option> 
-	    <option value='green'".($settings2['eshop_cart_color'] == "green" ? " selected" : "").">".$locale['ESHP582']."</option> 
-	    <option value='red'".($settings2['eshop_cart_color'] == "red" ? " selected" : "").">".$locale['ESHP583']."</option> 
-	    <option value='magenta'".($settings2['eshop_cart_color'] == "magenta" ? " selected" : "").">".$locale['ESHP584']."</option> 
-	    <option value='orange'".($settings2['eshop_cart_color'] == "orange" ? " selected" : "").">".$locale['ESHP585']."</option> 
-	    <option value='yellow'".($settings2['eshop_cart_color'] == "yellow" ? " selected" : "").">".$locale['ESHP586']."</option> 
-	    </select>
-	    </td>
-        <td class='tbl1' width='50%' align='left'>
-		<div id='3default' class='colors3 hide'><a class='button' href='javascript:;'>".$locale['ESHP580']."</a></div>
-	    <div id='3blue' class='colors3 hide'><a class='eshpbutton blue' href='javascript:;'>".$locale['ESHP581']."</a></div>
-  	    <div id='3green' class='colors3 hide'><a class='eshpbutton green' href='javascript:;'>".$locale['ESHP582']."</a></div>
- 	    <div id='3red' class='colors3 hide'><a class='eshpbutton red' href='javascript:;'>".$locale['ESHP583']."</a></p></div>
- 	    <div id='3magenta' class='colors3 hide'><a class='eshpbutton magenta' href='javascript:;'>".$locale['ESHP584']."</a></div>
- 	    <div id='3orange' class='colors3 hide'><a class='eshpbutton orange' href='javascript:;'>".$locale['ESHP585']."</a></div>
- 	    <div id='3yellow' class='colors3 hide'><a class='eshpbutton yellow' href='javascript:;'>".$locale['ESHP586']."</a></div>
-	</td></tr>
-
-	<tr>
-        <td class='tbl1' width='30%' align='left'>".$locale['ESHP589']."</td>
-        <td class='tbl1' width='20%'  align='left'>
-		<select name='addtocart_color' id='colorselector4' class='textbox'>
-		<option value='default'".($settings2['eshop_addtocart_color'] == "default" ? " selected" : "").">".$locale['ESHP580']."</option> 
-	    <option value='blue'".($settings2['eshop_addtocart_color'] == "blue" ? " selected" : "").">".$locale['ESHP581']."</option> 
-	    <option value='green'".($settings2['eshop_addtocart_color'] == "green" ? " selected" : "").">".$locale['ESHP582']."</option> 
-	    <option value='red'".($settings2['eshop_addtocart_color'] == "red" ? " selected" : "").">".$locale['ESHP583']."</option> 
-	    <option value='magenta'".($settings2['eshop_addtocart_color'] == "magenta" ? " selected" : "").">".$locale['ESHP584']."</option> 
-	    <option value='orange'".($settings2['eshop_addtocart_color'] == "orange" ? " selected" : "").">".$locale['ESHP585']."</option> 
-	    <option value='yellow'".($settings2['eshop_addtocart_color'] == "yellow" ? " selected" : "").">".$locale['ESHP586']."</option> 
-	    </select>
-	    </td>
-        <td class='tbl1' width='50%' align='left'>
-		<div id='4default' class='colors4 hide'><a class='button' href='javascript:;'>".$locale['ESHP580']."</a></div>
-	    <div id='4blue' class='colors4 hide'><a class='eshpbutton blue' href='javascript:;'>".$locale['ESHP581']."</a></div>
-  	    <div id='4green' class='colors4 hide'><a class='eshpbutton green' href='javascript:;'>".$locale['ESHP582']."</a></div>
- 	    <div id='4red' class='colors4 hide'><a class='eshpbutton red' href='javascript:;'>".$locale['ESHP583']."</a></p></div>
- 	    <div id='4magenta' class='colors4 hide'><a class='eshpbutton magenta' href='javascript:;'>".$locale['ESHP584']."</a></div>
- 	    <div id='4orange' class='colors4 hide'><a class='eshpbutton orange' href='javascript:;'>".$locale['ESHP585']."</a></div>
- 	    <div id='4yellow' class='colors4 hide'><a class='eshpbutton yellow' href='javascript:;'>".$locale['ESHP586']."</a></div>
-	</td></tr>
-
-
-	<tr>
-        <td class='tbl1' width='30%' align='left'>".$locale['ESHP590']."</td>
-        <td class='tbl1' width='20%'  align='left'>
-	    <select name='info_color' id='colorselector5' class='textbox'>
-		<option value='default'".($settings2['eshop_info_color'] == "default" ? " selected" : "").">".$locale['ESHP580']."</option> 
-	    <option value='blue'".($settings2['eshop_info_color'] == "blue" ? " selected" : "").">".$locale['ESHP581']."</option> 
-	    <option value='green'".($settings2['eshop_info_color'] == "green" ? " selected" : "").">".$locale['ESHP582']."</option> 
-	    <option value='red'".($settings2['eshop_info_color'] == "red" ? " selected" : "").">".$locale['ESHP583']."</option> 
-	    <option value='magenta'".($settings2['eshop_info_color'] == "magenta" ? " selected" : "").">".$locale['ESHP584']."</option> 
-	    <option value='orange'".($settings2['eshop_info_color'] == "orange" ? " selected" : "").">".$locale['ESHP585']."</option> 
-	    <option value='yellow'".($settings2['eshop_info_color'] == "yellow" ? " selected" : "").">".$locale['ESHP586']."</option> 
-	    </select>
-	    </td>
-        <td class='tbl1' width='50%' align='left'>   	    
-		<div id='5default' class='colors5 hide'><a class='button' href='javascript:;'>".$locale['ESHP580']."</a></div>
-	    <div id='5blue' class='colors5 hide'><a class='eshpbutton blue' href='javascript:;'>".$locale['ESHP581']."</a></div>
-  	    <div id='5green' class='colors5 hide'><a class='eshpbutton green' href='javascript:;'>".$locale['ESHP582']."</a></div>
- 	    <div id='5red' class='colors5 hide'><a class='eshpbutton red' href='javascript:;'>".$locale['ESHP583']."</a></p></div>
- 	    <div id='5magenta' class='colors5 hide'><a class='eshpbutton magenta' href='javascript:;'>".$locale['ESHP584']."</a></div>
- 	    <div id='5orange' class='colors5 hide'><a class='eshpbutton orange' href='javascript:;'>".$locale['ESHP585']."</a></div>
- 	    <div id='5yellow' class='colors5 hide'><a class='eshpbutton yellow' href='javascript:;'>".$locale['ESHP586']."</a></div>
-	</td></tr>
-
-<tr>
-        <td class='tbl1' width='30%' align='left'>".$locale['ESHP591']."</td>
-        <td class='tbl1' width='20%'  align='left'>
-	    <select name='return_color' id='colorselector6' class='textbox'>
-		<option value='default'".($settings2['eshop_return_color'] == "default" ? " selected" : "").">".$locale['ESHP580']."</option> 
-	    <option value='blue'".($settings2['eshop_return_color'] == "blue" ? " selected" : "").">".$locale['ESHP581']."</option> 
-	    <option value='green'".($settings2['eshop_return_color'] == "green" ? " selected" : "").">".$locale['ESHP582']."</option> 
-	    <option value='red'".($settings2['eshop_return_color'] == "red" ? " selected" : "").">".$locale['ESHP583']."</option> 
-	    <option value='magenta'".($settings2['eshop_return_color'] == "magenta" ? " selected" : "").">".$locale['ESHP584']."</option> 
-	    <option value='orange'".($settings2['eshop_return_color'] == "orange" ? " selected" : "").">".$locale['ESHP585']."</option> 
-	    <option value='yellow'".($settings2['eshop_return_color'] == "yellow" ? " selected" : "").">".$locale['ESHP586']."</option> 
-	    </select>
-	    </td>
-        <td class='tbl1' width='50%' align='left'>   	    
-		<div id='6default' class='colors6 hide'><a class='button' href='javascript:;'>".$locale['ESHP580']."</a></div>
-	    <div id='6blue' class='colors6 hide'><a class='eshpbutton blue' href='javascript:;'>".$locale['ESHP581']."</a></div>
-  	    <div id='6green' class='colors6 hide'><a class='eshpbutton green' href='javascript:;'>".$locale['ESHP582']."</a></div>
- 	    <div id='6red' class='colors6 hide'><a class='eshpbutton red' href='javascript:;'>".$locale['ESHP583']."</a></p></div>
- 	    <div id='6magenta' class='colors6 hide'><a class='eshpbutton magenta' href='javascript:;'>".$locale['ESHP584']."</a></div>
- 	    <div id='6orange' class='colors6 hide'><a class='eshpbutton orange' href='javascript:;'>".$locale['ESHP585']."</a></div>
- 	    <div id='6yellow' class='colors6 hide'><a class='eshpbutton yellow' href='javascript:;'>".$locale['ESHP586']."</a></div>
-	</td></tr>";
-
-echo "</table></fieldset>";
 
 echo "<fieldset style='align:left;width:99%;display:block;float:left;margin-left:2px;margin-right:2px;margin-top:2px;margin-bottom:2px;'>
 <legend>&nbsp; <b> ".$locale['ESHP503']." </b> &nbsp;</legend>
