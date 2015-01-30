@@ -1,8 +1,8 @@
 <?php
 /*
 Lithuanian Language Fileset
-Ready for: Php-Fusion V7.02
-Language version: v2.0
+Ready for: PHP-Fusion V9.00
+Language version: v1.0
 Vertė:
 	Edmundas Jankauskas (Creatium)[V7.01, V7.02, V7.02.01, v7.02.02, v9]
 	Gintautas Brainys (ozzWANTED) [V7.00, V7.01, V7.02]
@@ -125,8 +125,8 @@ $locale['global_071'] = "&middot; ";
 $locale['global_072'] = "Toliau...";
 $locale['global_073'] = " komentarai";
 $locale['global_073b'] = " komentaras";
-$locale['global_074'] = " Peržiūros";
-$locale['global_074b'] = " Peržiūros"; // please, sync this value with English locale
+$locale['global_074'] = " perskaitymai";
+$locale['global_074b'] = " perskaitymas";
 $locale['global_075'] = "Spausdinti";
 $locale['global_076'] = "Redaguoti";
 $locale['global_077'] = "Naujienos";
@@ -341,92 +341,92 @@ $locale['go_profile'] = 'Eiti į %s profilį';
 // ex. oneword.locale.php file
 // translate next lines by yourself
 // Greetings
-$locale['hello'] = 'Hello!';
-$locale['goodbye'] = 'Goodbye!';
-$locale['welcome'] = 'Welcome back';
-$locale['home'] = 'Home';
+$locale['hello'] = 'Sveiki!';
+$locale['goodbye'] = 'Iki susitikimo!';
+$locale['welcome'] = 'Sveiki sugrįžę';
+$locale['home'] = 'Namai';
 // Status
-$locale['error'] = 'Error!';
-$locale['success'] = 'Success!';
-$locale['enable'] = 'Enable';
-$locale['disable'] = 'Disable';
-$locale['no'] = 'No';
-$locale['yes'] = 'Yes';
-$locale['off'] = 'Off';
-$locale['on'] = 'On';
-$locale['or'] = 'or';
-$locale['by'] = 'by';
-$locale['in'] = 'in';
-$locale['of'] = 'of';
+$locale['error'] = 'Klaida!';
+$locale['success'] = 'Sėkmė!';
+$locale['enable'] = 'Įjungti';
+$locale['disable'] = 'Išjungti';
+$locale['no'] = 'Ne';
+$locale['yes'] = 'Taip';
+$locale['off'] = 'Išjungta';
+$locale['on'] = 'Įjungta';
+$locale['or'] = 'arba';
+$locale['by'] = '';
+$locale['in'] = '';
+$locale['of'] = 'iš';
 // Navigation
-$locale['next'] = 'Next';
-$locale['pevious'] = 'Previous';
-$locale['back'] = 'Back';
-$locale['forward'] = 'Forward';
-$locale['go'] = 'Go';
-$locale['cancel'] = 'Cancel';
-$locale['move_up'] = "Move up";
-$locale['move_down'] = "Move down";
+$locale['next'] = 'Kitas';
+$locale['pevious'] = 'Ankstesnis';
+$locale['back'] = 'Atgal';
+$locale['forward'] = 'Pirmyn';
+$locale['go'] = 'Eiti';
+$locale['cancel'] = 'Atšaukti';
+$locale['move_up'] = "Perkelti aukštyn";
+$locale['move_down'] = "Perkelti žemyn";
 // Action
-$locale['add'] = 'Add';
-$locale['save'] = 'Save';
-$locale['update'] = 'Update';
-$locale['updated'] = 'Updated';
-$locale['remove'] = 'Remove';
-$locale['delete'] = 'Delete';
-$locale['search'] = 'Search';
-$locale['help'] = 'Help';
-$locale['register'] = 'Register';
-$locale['ban'] = 'Ban';
-$locale['reactivate'] = 'Reactivate';
-$locale['user'] = 'User';
-$locale['promote'] = 'Promote';
-$locale['show'] = 'Show';
+$locale['add'] = 'Pridėti';
+$locale['save'] = 'Išsaugoti';
+$locale['update'] = 'Atnaujinti';
+$locale['updated'] = 'Atnaujinta';
+$locale['remove'] = 'Pašalinti';
+$locale['delete'] = 'Ištrinti';
+$locale['search'] = 'Ieškoti';
+$locale['help'] = 'Pagalba';
+$locale['register'] = 'Registruotis';
+$locale['ban'] = 'Blokuoti';
+$locale['reactivate'] = 'Aktyvuoti iš naujo';
+$locale['user'] = 'Narys';
+$locale['promote'] = 'Reklamuoti';
+$locale['show'] = 'Rodyti';
 //Tables
-$locale['status'] = 'Status';
-$locale['order'] = 'Order';
-$locale['sort'] = 'Sort';
+$locale['status'] = 'Statusas';
+$locale['order'] = 'Tvarka';
+$locale['sort'] = 'Rikiavimas';
 $locale['id'] = 'ID';
-$locale['title'] = 'Title';
-$locale['rights'] = 'Rights';
-$locale['info'] = 'Info';
-$locale['image'] = 'Image';
+$locale['title'] = 'Pavadinimas';
+$locale['rights'] = 'Teisės';
+$locale['info'] = 'Informacija';
+$locale['image'] = 'Paveiksliukas';
 // Forms
-$locale['choose'] = 'Please Choose One...';
-$locale['root'] = 'As Parent';
-$locale['choose-user'] = 'Please Choose a User...';
-$locale['parent'] = 'Create as New Parent..';
-$locale['order'] = 'Item Ordering';
-$locale['status'] = 'Status';
-$locale['note'] = 'Make a note of this item';
-$locale['publish'] = 'Published';
-$locale['unpublish'] = 'Unpublished';
-$locale['draft'] = 'Draft';
-$locale['settings'] = 'Settings';
-$locale['posted'] = 'posted';
-$locale['profile'] = 'Profile';
-$locale['edit'] = 'Edit';
+$locale['choose'] = 'Pasirinkti...';
+$locale['root'] = 'Kaip pagrindinį';
+$locale['choose-user'] = 'Pasirinkti narį...';
+$locale['parent'] = 'Sukurti kaip pagrindinį..';
+$locale['order'] = 'Rodymo tvarka';
+$locale['status'] = 'Statusas';
+$locale['note'] = 'Pasižymėti šį daiktą';
+$locale['publish'] = 'Publikuota';
+$locale['unpublish'] = 'Nepublikuota';
+$locale['draft'] = 'Juodraštis';
+$locale['settings'] = 'Nustatymai';
+$locale['posted'] = 'parašyta';
+$locale['profile'] = 'Profilis';
+$locale['edit'] = 'Redaguoti';
 $locale['qedit'] = 'Quick Edit';
-$locale['view'] = 'View';
-$locale['login'] = 'Log in';
-$locale['logout'] = 'Logout';
-$locale['admin-logout'] = 'Admin Logout';
-$locale['message'] = 'Private Messages';
-$locale['logged'] = 'Logged in as ';
-$locale['version'] = 'Version ';
-$locale['browse'] = 'Browse ...';
-$locale['close'] = 'Close';
-$locale['nopreview'] = 'There is nothing to Preview';
+$locale['view'] = 'Rodyti';
+$locale['login'] = 'Prisijungti';
+$locale['logout'] = 'Atsijungti';
+$locale['admin-logout'] = 'Admin atsijungimas';
+$locale['message'] = 'Asmeninės žinutės';
+$locale['logged'] = 'Prisijungęs kaip ';
+$locale['version'] = 'Versija ';
+$locale['browse'] = 'Ieškoti ...';
+$locale['close'] = 'Uždaryti';
+$locale['nopreview'] = 'Nėra ką rodyti';
 //Alignment
-$locale['left'] = "Left";
-$locale['center'] = "Center";
-$locale['right'] = "Right";
+$locale['left'] = "Kairė";
+$locale['center'] = "Centras";
+$locale['right'] = "Dešinė";
 // Comments and ratings
-$locale['comments'] = "Comments";
-$locale['ratings'] = "Ratings";
-$locale['comments_ratings'] = "Comments and Ratings";
+$locale['comments'] = "Komentarai";
+$locale['ratings'] = "Reitingai";
+$locale['comments_ratings'] = "Komentarai ir reitingai";
 
-// Testimonials // translate following lines
+// Testimonials
 $locale['testimonial_rank'] = "Aš esu šio tinklapio %s";
 $locale['testimonial_location'] = "ir šiuo metu gyvenu %s";
 $locale['testimonial_join'] = ". Prie šio tinklapio prisiregistravau %s.";

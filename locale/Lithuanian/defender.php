@@ -11,7 +11,7 @@ $locale['country_error'] = "Patikrinkite šalies laukelį.";
 $locale['state_error'] = "Patikrinkite valstijos laukelį.";
 $locale['city_error'] = "Patikrinkite miesto laukelį.";
 $locale['postcode_error'] = "Patikrinkite pašto kodo laukelį.";
-$locale['field_error_blank'] = "%s cannot be left empty."; // translate this
+$locale['field_error_blank'] = "%s negali būti tuščias.";
 
 // Tokens
 $locale['token_error_title'] = "Žymės klaida";

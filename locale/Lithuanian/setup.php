@@ -43,6 +43,12 @@ $locale['setup_1013'] = 'Keisti Vyr. administratoriaus detales';
 $locale['setup_1014'] = 'Atkurti .htaccess';
 $locale['setup_1015'] = 'Išmesti dabartinį failą ir jį pakeisti standartine .htaccess failo versija';
 $locale['setup_1016'] = 'Kurti failą';
+
+$locale['setup_1017'] = 'Atšaukti ir išeiti iš instaliavimo';
+$locale['setup_1018'] = 'Galite atšaukti instaliavimo procedūrą tuojau pat, paspaudę mygtuką apačioje. Failas config_temp.php bus pervadintas atgal į config.php.';
+$locale['setup_1019'] = 'Išeiti';
+
+
 // Step 2
 $locale['setup_1100'] = 'Praėjo';
 $locale['setup_1101'] = 'Nepraėjo';
