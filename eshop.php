@@ -52,7 +52,7 @@ function render_eshop_main(array $info) {
 		echo "<div class='row eshop-rows'>\n";
 		$i = 1;
 		foreach($info['item'] as $product_id => $item_data) {
-			$class = 'eshop-column';
+			/*$class = 'eshop-column';
 			if ($i == fusion_get_settings('eshop_ipr')) {
 				$class = 'eshop-column-br-0';
 				$i = 0;
@@ -87,9 +87,9 @@ function render_eshop_main(array $info) {
 				</div>
 			</div>
 			<?php
-			$i++;
+			$i++;*/
 		}
-		echo "</div>\n";
+		echo "</div>\n"; 
 	}
 
 }
