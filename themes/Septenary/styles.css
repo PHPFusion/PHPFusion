@@ -581,18 +581,54 @@ nav {
 .main-content .eshop-nav {
 	margin-left: -15px;
 	margin-right: -15px;
-	margin-top: -105px !important;
-	background: rgba(34, 34, 34, 0.55) !important;
+	margin-top: -40px !important;
 }
-.eshop-nav > ul {
-	padding-top: 5px;
+.eshop-nav > ul > li > a {
+	margin-bottom:10px;
+	display: block;
+	font-size:14px;
 }
 .eshop-nav .fa {
 	margin-top:5px;
 	margin-left:3px;
 }
-.eshop-nav .dropdown-menu {
-	margin-top:23px !important;
+.eshop-rows {
+	border-bottom:1px solid #ddd;
+}
+.eshop-column {
+	display: inline-block;
+	border-right:1px solid #ddd;
+	border-top:1px solid #ddd;
+	padding: 28px 20px 0;
+}
+.eshop-column-br-0 {
+	display: inline-block;
+	border-right : 0 !important;
+	border-top:1px solid #ddd;
+	padding: 28px 20px 0;
+}
+
+.eshop-price {
+	font-weight: 600;
+	font-size:25px;
+}
+.eshop-discount {
+	font-size:12px !important;
+}
+.eshop-price small {
+	font-size:14px;
+}
+.eshop-product-title {
+	font-size:90%;
+	color: #444;
+}
+.eshop-xprice {
+	text-decoration: line-through;
+	font-size: 90%;
+	color: rgba(0,0,0,0.4);
+}
+.eshop-link-img:hover {
+	opacity: 0.8;
 }
 
 

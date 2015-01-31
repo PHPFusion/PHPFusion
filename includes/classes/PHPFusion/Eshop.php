@@ -28,7 +28,7 @@ class Eshop {
 	}
 
 	/**
-	 * Select the current Category hierarchy array
+	 * Get current category in relation to $_GET['category']
 	 * @return array
 	 */
 	public function get_current_category() {
@@ -40,7 +40,7 @@ class Eshop {
 	}
 
 	/**
-	 * Get Previous Category in Relation to Current $_GET['category']
+	 * Get Previous category in relation to current $_GET['category']
 	 * @return array
 	 */
 	public function get_previous_category() {
@@ -212,7 +212,7 @@ class Eshop {
 		$result = NULL;
 		$info = array();
 		// set max rows
-		$max_result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')."");
+		$max_result = dbquery("SELECT id FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')."");
 		$this->max_rows = dbrows($max_result);
 		$info['max_rows'] = $this->max_rows;
 		if ($_GET['product']) {
@@ -221,14 +221,18 @@ class Eshop {
 				redirect(BASEDIR."eshop.php");
 			}
 		} else {
-			$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
+			$result = dbquery("SELECT id, title, thumb, price, picture, xprice, keywords, product_languages FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
 		}
 		if (dbrows($result)>0) {
 			if (multilang_table("ES")) {
 				while ($data = dbarray($result)) {
 					$es_langs = explode('.', $data['product_languages']);
 					if (in_array(LANGUAGE, $es_langs)) {
+						$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
+						if ($data['thumb']) $data['thumb'] = BASEDIR."eshop/pictures/thumb/".$data['thumb'];
+						if ($data['picture']) $data['picture'] = BASEDIR."eshop/pictures/".$data['picture'];
 						$info['item'][$data['id']] = $data;
+
 					}
 				}
 			} else {

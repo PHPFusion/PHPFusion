@@ -43,6 +43,54 @@ if ($_GET['category']) {
 }
 
 function render_eshop_main(array $info) {
+	global $locale;
+	if (!empty($info['item'])) {
+		// bootstrap option
+		//$calculated = floor(12/fusion_get_settings('eshop_ipr')); // // calculate item per row setting by bootstrap 12 grid system.
+		// lets ditch bootstrap's params. we go with %, so
+		$calculated_width = floor(100/(fusion_get_settings('eshop_ipr') > 0 || fusion_get_settings('eshop_ipr') <= 6 ? fusion_get_settings('eshop_ipr') : 1)); // not to allow 0 and more than 6.
+		echo "<div class='row eshop-rows'>\n";
+		$i = 1;
+		foreach($info['item'] as $product_id => $item_data) {
+			$class = 'eshop-column';
+			if ($i == fusion_get_settings('eshop_ipr')) {
+				$class = 'eshop-column-br-0';
+				$i = 0;
+			}
+			?>
+			<div class='col-xs-12 <?php echo $class ?> text-center' style='min-height:330px; width: <?php echo $calculated_width ?>%'>
+				<a class='eshop-link-img' href='<?php echo $item_data['link'] ?>'>
+					<div class='display-block' style='height:200px;'>
+						<img class='img-responsive' style='margin:10px auto; max-height: <?php echo fusion_get_settings('eshop_image_th') ?>px;' src='<?php echo $item_data['picture'] ?>'>
+					</div>
+				</a>
+				<div class='text-left'>
+				<a href='<?php echo $item_data['link'] ?>'>
+					<span class='eshop-product-title'><?php echo $item_data['title'] ?></span>
+				</a>
+				<br/>
+					<?php if ($item_data['xprice']) { ?>
+
+						<span class='eshop-price'>
+							<small><?php echo fusion_get_settings('eshop_currency')?></small><?php echo number_format($item_data['xprice'])?>
+						</span>
+						<span class='eshop-discount label label-danger'><?php echo number_format(100-($item_data['xprice']/$item_data['price']*100))?>% <?php echo $locale['off'] ?></span>
+						<br/>
+						<span class='eshop-xprice'>
+							<small><?php echo fusion_get_settings('eshop_currency')?></small><?php echo number_format($item_data['price'])?>
+						</span>
+					<?php } else { ?>
+						<span class='eshop-price'>
+							<small><?php echo fusion_get_settings('eshop_currency')?></small><?php echo number_format($item_data['price']) ?></span>
+					<?php } ?>
+
+				</div>
+			</div>
+			<?php
+			$i++;
+		}
+		echo "</div>\n";
+	}
 
 }
 
