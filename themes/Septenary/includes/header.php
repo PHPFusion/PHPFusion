@@ -27,16 +27,16 @@ echo "<div class='row hidden-xs'>\n";
 echo "<div id='logo' class='col-xs-12 col-md-3 col-lg-3 p-t-5 text-smaller'>\n";
 echo "</div>\n";
 echo "<div class='col-xs-9 col-md-9 col-lg-9 text-right text-smaller p-t-5'>\n";
-echo "<ul class='display-inline-block text-right'>\n";
+echo "<ul id='head_nav' class='display-inline-block text-right'>\n";
 if (!iMEMBER) {
-	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."login.php'>".$locale['sept_001']."</a></li>\n";
+	echo "<li class='pull-left m-r-10'><a href='".BASEDIR."login.php'>".$locale['sept_001']."</a></li>\n";
 	echo "<li class='pull-left m-r-10 m-l-10'><a href='".BASEDIR."register.php'>".$locale['sept_002']."</a></li>\n";
 } else {
 	if (iADMIN) {
-		echo "<li class='pull-left m-r-20'><a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['sept_003']."</a></li>\n";
+		echo "<li class='pull-left m-r-10'><a href='".ADMIN.$aidlink."&amp;pagenum=0'>".$locale['sept_003']."</a></li>\n";
 	}
-	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a></li>\n";
-	echo "<li class='pull-left m-r-20'><a href='".BASEDIR."index.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
+	echo "<li class='pull-left m-r-10'><a href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>".$locale['sept_004']."</a></li>\n";
+	echo "<li class='pull-left'><a href='".BASEDIR."index.php?logout=yes'>".$locale['sept_005']."</a></li>\n";
 }
 echo "</ul>\n";
 echo "</div>\n";

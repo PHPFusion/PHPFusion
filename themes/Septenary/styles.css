@@ -114,7 +114,7 @@ body {
 	background: -ms-linear-gradient(top, #DBDBDB 0%, #DDD 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #DBDBDB 0%, #DDD 100%); /* W3C */
 	color: #000;
-	font: 13px/20px 'Lucida Grande', 'Helvetica Neue', Arial, Tahoma, Century gothic, sans-serif !important;
+	font: 14px/20px "Helvetica Neue",Arial,Tahoma,Century gothic,sans-serif !important;
 }
 
 .main-content a {
@@ -217,7 +217,7 @@ header #search-form {
 .section-1 {
 	color: rgb(104, 104, 104);
 	background-color: #FFF;
-	padding: 10px 0;
+	padding: 0;
 }
 .section-1 > .container {
 	padding-top: 10px;
@@ -307,8 +307,13 @@ input[type=text]:focus {
 	padding: 0px 10px;
 	background: rgba(55, 73, 94, 1);
 }
-#navigation-user > h5 {
-	padding-bottom: 20px;
+
+#navigation-user > h5, .leftbar h5, .leftbar h4 {
+	color: #FFF !important;
+	padding-bottom: 10px;
+}
+.leftbar small {
+	font-size: 90%;
 }
 nav {
 	margin-top: 0px !important;
@@ -318,33 +323,44 @@ nav {
 	list-style: none;
 	margin: 0 auto;
 	padding-top: 15px;
-	padding-bottom: 20px;
 	margin-top: 0px !important;
 }
 
-.nav ul li {
-	position: relative;
-	float: left;
-	padding: 0;
-}
 .navbar-default {
-	background: none;
-	border: none;
+	background: none !important;
+	border: none !important;
 }
 .navbar-nav > li {
 	margin-right:10px;
 }
-.navbar-nav > li a {
+.navbar-nav > li > a {
 	font-size: 15px;
 	font-weight: 400;
-	line-height: 14px;
 	color: #DDD !important;
-	display: block;
 	padding: 8px !important;
 	margin-bottom: 5px;
 	z-index: 6;
 	position: relative;
 	text-decoration: none;
+	border: 1px solid transparent;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-transition: 0.2s ease-in-out;
+	-moz-transition: 0.2s ease-in-out;
+	-ms-transition: 0.2s ease-in-out;
+	-o-transition: 0.2s ease-in-out;
+	transition: 0.2s ease-in-out;
+	outline: none;
+}
+#head_nav {
+	padding : 0;
+}
+#head_nav > li > a {
+	padding: 5px 10px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 	border: 1px solid transparent;
 	-webkit-transition: 0.2s ease-in-out;
 	-moz-transition: 0.2s ease-in-out;
@@ -352,6 +368,10 @@ nav {
 	-o-transition: 0.2s ease-in-out;
 	transition: 0.2s ease-in-out;
 	outline: none;
+	text-decoration: none;
+}
+#head_nav > li > a:hover {
+	border-color: #777;
 }
 
 .navbar-nav > li > a:hover, .navbar-nav > li > a:focus {
@@ -364,9 +384,6 @@ nav {
 	text-decoration: none;
 }
 
-.nav > ul li > a:hover {
-	background: transparent !important;
-}
 .navbar-nav > li.active > a {
 	background: transparent !important;
 	border: 1px solid rgb(255,255,255);
@@ -437,7 +454,6 @@ nav {
 
 .leftbar .content {
 	background-color: rgb(58, 68, 75);
-	/* background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.5); */
 	padding: 20px 20px 20px;
 	margin: 0px -15px 0px;
 }
@@ -468,6 +484,7 @@ nav {
 	display: block;
 	color: #FFF;
 	padding: 8px;
+	font-size: 13px;
 	text-decoration: none;
 	-webkit-transition: 0.1s ease-in-out;
 	-moz-transition: 0.1s ease-in-out;
@@ -556,7 +573,27 @@ nav {
 .main-content {
 	background: #FFF;
 	padding-top: 10px;
+	display: block;
+	width: 100%;
+	margin: 30px 0px;
 }
+/* Eshop */
+.main-content .eshop-nav {
+	margin-left: -15px;
+	margin-right: -15px;
+	margin-top: -105px !important;
+}
+.eshop-nav > ul {
+	padding-top: 5px;
+}
+.eshop-nav .fa {
+	margin-top:5px;
+	margin-left:3px;
+}
+.eshop-nav .dropdown-menu {
+	margin-top:23px !important;
+}
+
 
 .main-content h2 {
 	font-size: 25px;
@@ -638,7 +675,7 @@ nav {
 
 ol, ul {
 	margin: 0;
-	padding: 0px 0 2px 38px;
+	padding: 0px 0px 0px 15px;
 	line-height: 20px;
 }
 
@@ -746,12 +783,6 @@ ul.list li a:hover {
 	border-bottom: 2px solid #C54343;
 	padding: 15px 0 15px 50px;
 	margin-bottom: 10px;
-}
-
-.comment-main {
-	display: block;
-	width: 100%;
-	margin: 30px 0px;
 }
 
 .comment-header {

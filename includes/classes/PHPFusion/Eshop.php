@@ -158,7 +158,16 @@ class Eshop {
 
 
 	static function get_category() {
+		$info['category'] = array();
 		$info['category'] = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
+		// inject link to all items
+		if (!empty($info['category'])) {
+			foreach($info['category'] as $branch_id => $branch) {
+				foreach($branch as $id => $node) {
+					$info['category'][$branch_id][$id]['link'] = BASEDIR."eshop.php?category=".$node['cid'];
+				}
+			}
+		}
 		return $info;
 	}
 

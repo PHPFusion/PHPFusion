@@ -1,5 +1,5 @@
 
-navigeringv1.ul, li {
+navigeringv1.ul, navigeringv1.ul > li {
 	margin: 0;
 	padding: 0;
 	list-style:none;
