@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
-include LOCALE.LOCALESET."eshop.php";
+
 if (!defined("ADMIN_PANEL")) add_to_head("<link rel='stylesheet' type='text/css' href='".THEMES."templates/global/css/eshop.css' />");
 add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
@@ -328,97 +328,55 @@ function buildeshopbanners() {
 	}
 }
 
-function buildfilters() {
-	global $data, $locale, $settings, $rowstart, $filter, $category;
-	$filter = "";
-	echo '<script type="text/javascript">
-<!--
-
-var saveclass = null;
-function saveFilter(cookieValue) {
-    var sel = document.getElementById("FilterSelect");
-    saveclass = saveclass ? saveclass : document.body.className;
-    document.body.className = saveclass + " " + sel.value;
-    setCookie("Filter", cookieValue, 365);
+function eshopitems() {
+	global $data, $locale, $settings, $aidlink;
+	echo "<fieldset class='rib-wrap' style='width:".$settings['eshop_itembox_w']." !important; height:".$settings['eshop_itembox_h']." !important;'>";
+	if (!$data['status'] == "1") {
+		echo "<div class='ribbon-wrapper-green'><div class='ribbon-green'>".$locale['ESHPF147']."</div></div>";
+	} else if ($data['campaign'] == "1") {
+		echo "<div class='ribbon-wrapper-red'><div class='ribbon-red'>".$locale['ESHPF146']."</div></div>";
+	} else {
+		if ($data['dateadded']+$settings['eshop_newtime'] >= time()) {
+			echo "<div class='ribbon-wrapper-blue'><div class='ribbon-blue'>".$locale['ESHPF145']."</div></div>";
+		}
+	}
+	echo "<legend style='width:85% !important;text-align:center;word-break:normal;'>";
+	if (checkrights("ESHP")) {
+		echo "<a href='".ADMIN."eshop.php".$aidlink."&amp;a_page=Main&action=edit&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$data['cid']."" : "")."'><img style='float:left;width:10px;height:10px;margin-top:3px;' src='".IMAGES."edit.png' border='0' /></a>";
+	}
+	echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><b> ".$data['title']." </b></a></legend>";
+	echo "<table width='100%' cellspacing='0' cellpadding='0' border='0' class='product_slot_".$data['id']."'>";
+	echo "<tr><td ".($settings['eshop_pretext'] == "1" ? "align='left' style='width:100%;padding-top:6px;'" : "align='center' style='width:100%;padding-top:6px;'").">";
+	if ($settings['eshop_ratios'] == "1") {
+		echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:100%;padding:4px;' /></a>";
+	} else {
+		echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:".$settings['eshop_idisp_h']."px;width:".$settings['eshop_idisp_w']."px;padding:4px;' /></a>";
+	}
+	echo "</td>";
+	if ($settings['eshop_pretext'] == "1") {
+		echo "<td valign='top' align='left' width='100%'><div style='margin-top:15px;padding:4px;word-wrap: break-word;vertical-align:middle;width:".$settings['eshop_pretext_w'].";'>".parseubb(nl2br($data['introtext']))."</div></td>";
+	}
+	if ($settings['eshop_listprice'] == "1") {
+		if ($settings['eshop_pretext'] == "1") {
+			echo "</tr><tr><td colspan='2' valign='top' align='center' width='100%'><div style='display:block;margin-top:4px;margin-bottom:4px;'> ".$locale['ESHPF107']." ".($data['xprice'] ? "<s> ".$data['price']." </s> <b><font color='red'>".$data['xprice']."</font> </b>" : "".$data['price']."")." ".$settings['eshop_currency']."</div></td>";
+		} else {
+			echo "</tr><tr><td valign='top' align='center' width='100%'><div style='display:block;margin-top:4px;margin-bottom:4px;'> ".$locale['ESHPF107']." ".($data['xprice'] ? "<s> ".$data['price']." </s> <b><font color='red'>".$data['xprice']."</font> </b>" : "".$data['price']."")." ".$settings['eshop_currency']."</div></td>";
+		}
+	}
+	echo "</tr>";
+	if ($data['status'] == "1") {
+		ppform();
+	} else {
+		if ($settings['eshop_shopmode'] == "1") {
+			echo "<tr><td ".($settings['eshop_pretext'] == "1" ? "colspan='2' style='height:50px;padding:6px;'" : "")." align='center' style='height:77px;padding:6px;'>";
+			echo "&nbsp;&nbsp;<a class='".($settings['eshop_info_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?product=".$data['id']."'>".$locale['ESHPF108']."</a>";
+			echo "</td></tr>";
+		}
+	}
+	echo "</table></fieldset>";
 }
 
-function setCookie(cookieName, cookieValue, nDays) {
-    var today = new Date();
-    var expire = new Date();
-    if (nDays==null || nDays==0)
-        nDays=1;
-    expire.setTime(today.getTime() + 3600000*24*nDays);
-    document.cookie = cookieName+"="+escape(cookieValue) + ";expires="+expire.toGMTString();
-	$("#filters").submit();
-}
 
-function readCookie(name) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(";");
-  for(var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-}
-
-function readCookie(name) {
-  var nameEQ = name + "=";
-  var ca = document.cookie.split(";");
-  for(var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    var FilterSelect = document.getElementById("FilterSelect");
-    var selectedFilter = readCookie("Filter");
-    FilterSelect.value = selectedFilter;
-    saveclass = saveclass ? saveclass : document.body.className;
-    document.body.className = saveclass + " " + selectedFilter;
-});
--->
-</script>';
-	echo "<div style='float:right;margin-top:5px;margin-left:5px;'>";
-	echo "<form name='filters' id='filters' action='".FUSION_SELF."".(isset($_GET['rowstart']) ? "?rowstart=".$_GET['rowstart']."" : "")."".(isset($_GET['category']) ? "&amp;category=".$_GET['category']."" : "")."".(isset($_REQUEST['esrchtext']) ? "&amp;esrchtext=".$_REQUEST['esrchtext']."" : "")."' method='post'>
-<div style='font-size:16px;display:inline;vertical-align:middle;'> ".$locale['ESHPF207']." </div> <select class='eshptextbox' style='height:23px !important;width:140px !important;' name='FilterSelect' id='FilterSelect' onchange='saveFilter(this.value);'>
-<option value='1'>".$locale['ESHPF200']."</option>
-<option value='2'>".$locale['ESHPF201']."</option>
-<option value='3'>".$locale['ESHPF202']."</option>
-<option value='4'>".$locale['ESHPF203']."</option>
-<option value='5'>".$locale['ESHPF204']."</option>
-<option value='6'>".$locale['ESHPF205']."</option>
-<option value='7'>".$locale['ESHPF206']."</option>
-</select></form></div>";
-	if (!isset($_COOKIE['Filter'])) {
-		$filter = "iorder ASC";
-	}
-	if (isset($_COOKIE['Filter']) && $_COOKIE['Filter'] == "1") {
-		$filter = "iorder ASC";
-	}
-	if (isset($_COOKIE['Filter']) && $_COOKIE['Filter'] == "2") {
-		$filter = "sellcount DESC";
-	}
-	if (isset($_COOKIE['Filter']) && $_COOKIE['Filter'] == "3") {
-		$filter = "id DESC";
-	}
-	if (isset($_COOKIE['Filter']) && $_COOKIE['Filter'] == "4") {
-		$filter = "price ASC";
-	}
-	if (isset($_COOKIE['Filter']) && $_COOKIE['Filter'] == "5") {
-		$filter = "price DESC";
-	}
-	if (isset($_COOKIE['Filter']) && $_COOKIE['Filter'] == "6") {
-		$filter = "title ASC";
-	}
-	if (isset($_COOKIE['Filter']) && $_COOKIE['Filter'] == "7") {
-		$filter = "title DESC";
-	}
-}
 
 function buildeshopheader() {
 	global $data, $locale, $settings, $username, $items, $sum, $vat, $price, $totalincvat, $rowstart, $filter, $searchtext, $category;
@@ -471,54 +429,6 @@ function buildeshopheader() {
 	echo "</div>"; //threecol end
 	echo "</td></tr></table>";
 	echo "<div class='clear'></div>";
-}
-
-function eshopitems() {
-	global $data, $locale, $settings, $aidlink;
-	echo "<fieldset class='rib-wrap' style='width:".$settings['eshop_itembox_w']." !important; height:".$settings['eshop_itembox_h']." !important;'>";
-	if (!$data['status'] == "1") {
-		echo "<div class='ribbon-wrapper-green'><div class='ribbon-green'>".$locale['ESHPF147']."</div></div>";
-	} else if ($data['campaign'] == "1") {
-		echo "<div class='ribbon-wrapper-red'><div class='ribbon-red'>".$locale['ESHPF146']."</div></div>";
-	} else {
-		if ($data['dateadded']+$settings['eshop_newtime'] >= time()) {
-			echo "<div class='ribbon-wrapper-blue'><div class='ribbon-blue'>".$locale['ESHPF145']."</div></div>";
-		}
-	}
-	echo "<legend style='width:85% !important;text-align:center;word-break:normal;'>";
-	if (checkrights("ESHP")) {
-		echo "<a href='".ADMIN."eshop.php".$aidlink."&amp;a_page=Main&action=edit&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$data['cid']."" : "")."'><img style='float:left;width:10px;height:10px;margin-top:3px;' src='".IMAGES."edit.png' border='0' /></a>";
-	}
-	echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><b> ".$data['title']." </b></a></legend>";
-	echo "<table width='100%' cellspacing='0' cellpadding='0' border='0' class='product_slot_".$data['id']."'>";
-	echo "<tr><td ".($settings['eshop_pretext'] == "1" ? "align='left' style='width:100%;padding-top:6px;'" : "align='center' style='width:100%;padding-top:6px;'").">";
-	if ($settings['eshop_ratios'] == "1") {
-		echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:100%;padding:4px;' /></a>";
-	} else {
-		echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:".$settings['eshop_idisp_h']."px;width:".$settings['eshop_idisp_w']."px;padding:4px;' /></a>";
-	}
-	echo "</td>";
-	if ($settings['eshop_pretext'] == "1") {
-		echo "<td valign='top' align='left' width='100%'><div style='margin-top:15px;padding:4px;word-wrap: break-word;vertical-align:middle;width:".$settings['eshop_pretext_w'].";'>".parseubb(nl2br($data['introtext']))."</div></td>";
-	}
-	if ($settings['eshop_listprice'] == "1") {
-		if ($settings['eshop_pretext'] == "1") {
-			echo "</tr><tr><td colspan='2' valign='top' align='center' width='100%'><div style='display:block;margin-top:4px;margin-bottom:4px;'> ".$locale['ESHPF107']." ".($data['xprice'] ? "<s> ".$data['price']." </s> <b><font color='red'>".$data['xprice']."</font> </b>" : "".$data['price']."")." ".$settings['eshop_currency']."</div></td>";
-		} else {
-			echo "</tr><tr><td valign='top' align='center' width='100%'><div style='display:block;margin-top:4px;margin-bottom:4px;'> ".$locale['ESHPF107']." ".($data['xprice'] ? "<s> ".$data['price']." </s> <b><font color='red'>".$data['xprice']."</font> </b>" : "".$data['price']."")." ".$settings['eshop_currency']."</div></td>";
-		}
-	}
-	echo "</tr>";
-	if ($data['status'] == "1") {
-		ppform();
-	} else {
-		if ($settings['eshop_shopmode'] == "1") {
-			echo "<tr><td ".($settings['eshop_pretext'] == "1" ? "colspan='2' style='height:50px;padding:6px;'" : "")." align='center' style='height:77px;padding:6px;'>";
-			echo "&nbsp;&nbsp;<a class='".($settings['eshop_info_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?product=".$data['id']."'>".$locale['ESHPF108']."</a>";
-			echo "</td></tr>";
-		}
-	}
-	echo "</table></fieldset>";
 }
 
 function ppform() {
@@ -1001,34 +911,6 @@ function checkeShpImageExists($image_file) {
 	}
 }
 
-function makeeshoppagenav($start, $count, $total, $range = 0, $link = "") {
-	global $locale;
-	if ($link == "") $link = FUSION_SELF."?";
-	$res = "";
-	$pg_cnt = ceil($total/$count);
-	if ($pg_cnt > 1) {
-		$idx_back = $start-$count;
-		$idx_next = $start+$count;
-		$cur_page = ceil(($start+1)/$count);
-		$res .= "<table align='center' cellpadding='0' cellspacing='1' width='500' class='tbl-border'><tr>\n";
-		if ($idx_back >= 0) {
-			$res .= "<td width='20%' align='center' class='tbl2'><span class='small'><a href='$link"."rowstart=$idx_back'>".$locale['ESHP002']."</a></span></td>\n";
-		}
-		$idx_fst = max($cur_page-$range, 1);
-		$idx_lst = min($cur_page+$range, $pg_cnt);
-		if ($range == 0) {
-			$idx_fst = 1;
-			$idx_lst = $pg_cnt;
-		} else {
-			$res .= "<td width='20%' align='center' class='tbl1'><span class='small'>".$locale['ESHP003']." $cur_page/$pg_cnt</span></td>\n";
-		}
-		if ($idx_next < $total) {
-			$res .= "<td width='20%' align='center' class='tbl2'><span class='small'><a href='$link"."rowstart=$idx_next'>".$locale['ESHP004']."</a></span></td>\n";
-		}
-		$res .= "</tr>\n</table>\n";
-	}
-	return $res;
-}
 
 function breadcrumb($cid) {
 	global $locale;

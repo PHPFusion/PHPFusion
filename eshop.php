@@ -17,88 +17,49 @@
 +--------------------------------------------------------*/
 require_once dirname(__FILE__)."/maincore.php";
 require_once THEMES."templates/header.php";
-if (isset($_GET['category']) && !isnum($_GET['category'])) die("Denied");
-if (isset($_GET['product']) && !isnum($_GET['product'])) die("Denied");
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) { $_GET['rowstart'] = 0; }
-if (isset($_POST['FilterSelect']) && !isnum($_POST['FilterSelect'])) die("Denied");
+include LOCALE.LOCALESET."eshop.php";
 
-include INCLUDES."eshop_functions_include.php";
-
-
-if (iMEMBER) { $username=$userdata['user_id']; } else { $username=$_SERVER['REMOTE_ADDR']; }
+//include INCLUDES."eshop_functions_include.php";
 
 //Close the tree when eShop home have been clicked.
+/*
 if ($settings['eshop_cats'] == "1") {
 echo '<script type="text/javascript"> 
 	d.closeAll();
 </script>';
 }
-
-opentable($locale['ESHP001']);
-if (isset($_GET['clearcart'])) {
-$result = dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE puid ='".$username."'");
-echo "<div id='close-message'><div class='admin-message'>".$locale['ESHPC100']."</div></div>\n";
-echo "<div class='clear'></div>";
+*/
+$eShop = new PHPFusion\Eshop();
+if ($_GET['category']) {
+	// view category page
+} elseif ($_GET['product']) {
+	// view product page
+} else {
+	$info = $eShop->get_title();
+	$info += $eShop->get_category();
+	$info += $eShop->get_product();
+	render_eshop_main($info);
 }
 
-buildeshopheader();
+function render_eshop_main(array $info) {
+	print_p($info);
+}
 
+//////////////--------- <3><  ------------------ ///////////////
+
+
+
+
+// mvc functions
+//buildeshopheader();
+/*
 if (!isset($_GET['category']) && (!isset($_GET['product']))) {
-add_to_title($locale['ESHP031']);
+
 
 //Front view start
 
 buildeshopbanners();
 
-//Check featured section first
-$result= dbquery("SELECT ter.* FROM ".DB_ESHOP." ter
-		LEFT JOIN ".DB_ESHOP_FEATITEMS." titm ON ter.id=titm.featitem_item
-		WHERE featitem_cid = '".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."' ORDER BY featitem_order");
-$rows = dbrows($result);
-if ($rows) {
-$counter = 0; 
-	echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'><tr>\n";
-	while ($data = dbarray($result)) {
-	if ($counter != 0 && ($counter % $settings['eshop_ipr'] == 0)) echo "</tr>\n<tr>\n";
-    echo "<td align='center' class='tbl'>\n";
-	eshopitems();
-	echo "</td>\n";
-	$counter++;
-}
-	echo "</tr>\n</table>\n";
-echo "<hr />";
-} else {
-//add filters
-buildfilters();
-
-$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY ".$filter."");
-$rows = dbrows($result);
-$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY ".$filter." LIMIT ".$_GET['rowstart'].",".$settings['eshop_noppf']."");
-$counter = 0; 
-	echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'><tr>\n";
-if (multilang_table("ES")) {
-		while ($data = dbarray($result)) {
-			$es_langs = explode('.', $data['product_languages']);
-			if (in_array(LANGUAGE, $es_langs)) {
-				if ($counter != 0 && ($counter % $settings['eshop_ipr'] == 0)) echo "</tr>\n<tr>\n";
-				echo "<td align='center' class='tbl'>\n";
-				eshopitems();
-				echo "</td>\n";
-				$counter++;
-			}
-		}
-} else {
-	while ($data = dbarray($result)) {
-	if ($counter != 0 && ($counter % $settings['eshop_ipr'] == 0)) echo "</tr>\n<tr>\n";
-    echo "<td align='center' class='tbl'>\n";
-	eshopitems();
-	echo "</td>\n";
-	$counter++;
-	}
-}
-	echo "</tr>\n</table>\n";
-	if ($rows > $settings['eshop_noppf']) echo "<div align='center' style='margin-top:5px;'>\n".makeeshoppagenav($_GET['rowstart'],$settings['eshop_noppf'],$rows,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;" : "" )."")."\n</div>\n";
- }
 }
 
 //item details start
@@ -269,7 +230,7 @@ if ($data['demo']) {
 if ($data['gallery_on'] == "1") {
 echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP014']." &nbsp;</legend> <a id='openGallery' href='".BASEDIR."eshop/pictures/".$data['picture']."' title='".$data['title']."'><img src='".BASEDIR."eshop/img/gallery.png' width='60' align='middle'  alt='' /></a> </fieldset></td></tr>";
 }
-*/
+
 
 if ($data['status'] == "1") {
 if ($data['dync']) {
@@ -616,7 +577,8 @@ echo "<tr><td align='left'><a class='".($settings['eshop_return_color'] =="defau
 } else {
 	echo "<div class='admin-message'>".$locale['ESHP024']."</div>";
  }
-} elseif (isset($_GET['category'])) {
+}
+elseif (isset($_GET['category'])) {
 
 //Expand selected category if we have folderlinks on.
 if ($settings['eshop_folderlink'] == "1") {
@@ -736,5 +698,6 @@ dbquery("UPDATE ".DB_ESHOP_CART." SET puid = '".$userdata['user_id']."' WHERE pu
 
 //Sanitize the cart from 1 month old orders.
 dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE cadded < ".time()."-2592180");
+*/
 require_once THEMES."templates/footer.php";
 ?>
