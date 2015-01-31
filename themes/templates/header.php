@@ -57,9 +57,13 @@ if ($settings['bootstrap']) {
 	define('BOOTSTRAPPED', TRUE);
 	// ok now there is a theme at play here.
 	// at maincore, lets load atom.
-	$theme_name = isset($userdata['user_theme']) && $userdata['user_theme'] !== 'Default' ? $userdata['user_theme'] : $settings['theme'];
-	$result = dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'");
-	$bootstrap_theme_css_src = dbrows($result)>0 ? THEMES.$theme_data['theme_file'] : INCLUDES.'bootstrap/bootstrap.min.css';
+	$theme_name = isset($userdata['user_theme']) && $userdata['user_theme'] !== 'Default' ? $userdata['user_theme'] : fusion_get_settings('theme');
+	$theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
+	$theme_css = INCLUDES.'bootstrap/bootstrap.min.css';
+	if (!empty($theme_data)) {
+		$theme_css = THEMES.$theme_data['theme_file'];
+	}
+	add_to_head("<link rel='stylesheet' href='".$theme_css."' type='text/css' />");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
 }
