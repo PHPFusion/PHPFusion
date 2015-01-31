@@ -19,10 +19,18 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-// Primary used here
-/*	Hierarchy Index - returns $id array */
+// Hierarchy Type 1 - key to index method
+
+/**
+ * Hierarchy Id to Category Output
+ * Returns cat-id relationships
+ * @param      $db
+ * @param      $id_col
+ * @param      $cat_col
+ * @param bool $filter
+ * @return array
+ */
 function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE) {
-	$data = array();
 	$index = array();
 	$query = dbquery("SELECT $id_col, $cat_col FROM ".$db." $filter");
 	while ($row = dbarray($query)) {
@@ -30,51 +38,63 @@ function dbquery_tree($db, $id_col, $cat_col, $filter = FALSE) {
 		$parent_id = $row[$cat_col] === NULL ? "NULL" : $row[$cat_col];
 		$index[$parent_id][] = $id;
 	}
-	return $index;
+	return (array) $index;
 }
-/* old model of Hierarchy Data with ['children'] nesting. */
-function dbquery_tree_full($db, $id_col, $cat_col, $sql_cond = FALSE, $array = FALSE) {
+
+/**
+ * Hierarchy Full Data Output
+ * Returns cat-id relationships with full data
+ * @param      $db
+ * @param      $id_col
+ * @param      $cat_col
+ * @param bool $sql_cond
+ * @return array
+ */
+function dbquery_tree_full($db, $id_col, $cat_col, $filter = FALSE) {
 	$data = array();
 	$index = array();
-	if (!is_array($array)) {
-		$query = "SELECT * FROM ".$db." $sql_cond";
-	} else {
-		$query = array_key_exists("query", $array) && $array['query'] ? $array['query'] : '';
-	}
-	$query = dbquery($query); // mysql_query("SELECT id, parent_id, name FROM categories ORDER BY name");
+	$query = dbquery("SELECT * FROM ".$db." ".$filter."");
 	while ($row = dbarray($query)) {
 		$id = $row[$id_col];
 		$parent_id = $row[$cat_col] === NULL ? "0" : $row[$cat_col];
 		$data[$id] = $row;
 		$index[$parent_id][$id] = $row;
 	}
-	return $index;
+	return (array) $index;
 }
-// To get the 1st ancestor
-/* Get the branch ID or the first parent from dbquery_tree() */
+
+/**
+ * Get Tree Root ID of a Child
+ * @param array $index
+ * @param       $child_id
+ * @return int
+ */
 function get_root(array $index, $child_id) {
-	/*
-	* Display tree root
-	*/
 	foreach ($index as $key => $array) {
 		if (in_array($child_id, $array)) {
 			if ($key == 0) {
 				return $child_id;
 			} else {
-				return get_root($index, $key);
+				return (int) get_root($index, $key);
 			}
 		}
 	}
 }
-/* Use sql to get a root of a specific row when dbtree is not available. */
+
+/**
+ * Get Tree Root ID of a child via SQL
+ * Alternative function to get a root of a specific item when dbtree is not available
+ * @param $db
+ * @param $id_col
+ * @param $cat_col
+ * @param $parent_id
+ * @return int
+ */
 function get_hkey($db, $id_col, $cat_col, $parent_id) {
 	$hkey = & $hkey;
-	$query = "SELECT $id_col, $cat_col FROM ".$db." WHERE $id_col = '$parent_id' LIMIT 1";
-	//echo $query;
-	$result = dbquery($query);
+	$result = dbquery("SELECT $id_col, $cat_col FROM ".$db." WHERE $id_col = '$parent_id' LIMIT 1");
 	if (dbrows($result) > 0) {
 		$data = dbarray($result);
-		//print_p($data);
 		if ($data[$cat_col] > 0) {
 			$hkey = get_hkey($db, $id_col, $cat_col, $data[$cat_col]);
 		} else {
@@ -86,40 +106,52 @@ function get_hkey($db, $id_col, $cat_col, $parent_id) {
 		$rows = $rows['row'];
 		$hkey = $rows+1;
 	}
-	return $hkey;
+	return (int) $hkey;
 }
 
-/* Get immediate Parent ID from dbquery_tree() result */
+/**
+ * Get immediate Parent ID from dbquery_tree() result
+ * @param array $index
+ * @param       $child_id
+ * @return int
+ */
 function get_parent(array $index, $child_id) {
 	foreach ($index as $key => $value) {
 		if (in_array($child_id, $value)) {
-			return $key;
+			return (int) $key;
 		}
 	}
 }
 
-/* Get all parent ID from dbquery_tree() */
-function get_all_parent(array $index, $child_id, array $list = array()) {
-	$list = &$list;
+/**
+ * Get all parent ID from dbquery_tree()
+ * @param array $index
+ * @param       $child_id
+ * @param array $list
+ * @return array
+ */
+function get_all_parent(array $index, $child_id, array &$list = array()) {
 	foreach ($index as $key => $value) {
 		if (in_array($child_id, $value)) {
 			if ($key == 0) {
 				return $list;
 			} else {
 				$list[] = $key;
-				return get_all_parent($index, $key, $list);
+				return (array) get_all_parent($index, $key, $list);
 			}
 		}
 	}
 }
 
-/* Get Child IDs from dbquery_tree() result */
-function get_child($index, $parent_id, &$children = array()) {
-	/*
-	* Retrieving nodes using variables passed as reference:
-	* Get ids of child nodes
-	*/
-	$parent_id = $parent_id === NULL ? "NULL" : $parent_id;
+/**
+ * Get Child IDs from dbquery_tree() result
+ * @param       $index
+ * @param       $parent_id
+ * @param array $children
+ * @return array
+ */
+function get_child($index, $parent_id, array &$children = array()) {
+	$parent_id = $parent_id === NULL ? null : $parent_id;
 	if (isset($index[$parent_id])) {
 		foreach ($index[$parent_id] as $id) {
 			$children[] = $id;
@@ -129,7 +161,13 @@ function get_child($index, $parent_id, &$children = array()) {
 	return $children;
 }
 
-/* Get current depth from dbquery_tree() result */
+/**
+ * Get current depth from dbquery_tree() result
+ * @param      $index
+ * @param      $child_id
+ * @param bool $depth
+ * @return bool|int
+ */
 function get_depth($index, $child_id, $depth = FALSE) {
 	if (!$depth) {
 		$depth = 1;
@@ -137,15 +175,19 @@ function get_depth($index, $child_id, $depth = FALSE) {
 	foreach ($index as $key => $value) {
 		if (in_array($child_id, $value)) {
 			if ($key == 0) {
-				return $depth;
+				return (int) $depth;
 			} else {
-				return get_depth($index, $key, $depth+1);
+				return (int) get_depth($index, $key, $depth+1);
 			}
 		}
 	}
 }
 
-/* Check for max depth of a tree */
+/**
+ * Get maximum depth of a hierarchy tree
+ * @param $array
+ * @return int
+ */
 function array_depth($array) {
 	$max_depth = 1;
 	foreach ($array as $value) {
@@ -156,31 +198,26 @@ function array_depth($array) {
 			}
 		}
 	}
-	return $max_depth;
+	return (int) $max_depth;
 }
 
-/*
- *  End of part 1
- *
+// Hierarchy Type 2 - child key method
+
+/**
+ * Get Hierarchy Array with injected child key
+ * @param      $db
+ * @param      $id_col
+ * @param      $cat_col
+ * @param bool $cat_value
+ * @param bool $filter
+ * @return array
  */
-
-
-/* Using the Children method */
-// hierarchy model: get nested child indicator key in array
-function dbtree($db, $id_col, $cat_col, $cat_value=FALSE, $ordering = FALSE, $filter = '', $filter_order = '', $filter_show = '') {
-	## V8 Universal Hierarchy Tree Coded by Hien.
+function dbtree($db, $id_col, $cat_col, $cat_value=FALSE, $filter = FALSE) {
 	$refs = array();
 	$list = array();
 	$col_names = fieldgenerator($db);
-	if ($filter || $filter_order || $filter_show) {
-		$result = dbquery("SELECT * FROM ".$db." $filter $filter_order $filter_show");
-	} else {
-		$ordering = (isset($ordering) && (!empty($ordering))) ? "order by $ordering" : "";
-		$result = dbquery("SELECT * FROM ".$db." $ordering");
-	}
-
+	$result = dbquery("SELECT * FROM ".$db." ".$filter." ");
 	while ($data = dbarray($result)) {
-
 		foreach ($col_names as $arr => $v) {
 			if ($v == $id_col) {
 				$thisref = &$refs[$data[$id_col]];
@@ -196,11 +233,19 @@ function dbtree($db, $id_col, $cat_col, $cat_value=FALSE, $ordering = FALSE, $fi
 		} else {
 			$refs[$data[$cat_col]]['children'][$data[$id_col]] = &$thisref;
 		}
-	} // end while
-	return $list;
+	}
+	return (array)$list;
 }
-function tree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
-	## Basic Tree node. No filtration. Use dbquery_tree() instead for a more powerful query.
+
+/**
+ * Lighter version of dbtree() with only id and child key
+ * @param bool $db
+ * @param      $id_col
+ * @param      $cat_col
+ * @param bool $cat_value
+ * @return array
+ */
+function dbtree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
 	$refs = array();
 	$list = array();
 	$result = dbquery("SELECT * FROM ".$db."");
@@ -219,10 +264,16 @@ function tree_index($db = FALSE, $id_col, $cat_col, $cat_value = FALSE) {
 			$refs[$data[$cat_col]]['child'][$data[$id_col]] = & $thisref;
 		}
 		$i++;
-	} // end while
-	return $list;
+	}
+	return (array)$list;
 }
-// To sort key on tree_index results
+
+/**
+ * To sort key on tree_index results
+ * @param $result
+ * @param $key
+ * @return array
+ */
 function sort_tree(&$result, $key) {
 	$master_sort = sorter($result, $key);
 	foreach ($master_sort as $data) {
@@ -231,14 +282,20 @@ function sort_tree(&$result, $key) {
 		$newdata = $data;
 		unset($data['children']);
 		$current_array[$id] = $data; // fielded parents
-		if (array_key_exists("children", $newdata)) {
+		if (array_key_exists("children", $newdata)) { // or isset($newdata['children'], whichever.
 			$result = $newdata['children'];
 			$current_array[$id]['children'] = sort_tree($result, $key);
 		}
 	}
-	return $current_array;
+	return (array) $current_array;
 }
-## Internal to sort_tree - Very useful
+
+/**
+ * Internal to sort_tree - Very useful
+ * @param $array
+ * @param $key
+ * @return array
+ */
 function sorter(&$array, $key) {
 	$sorter = array();
 	$ret = array();
@@ -251,8 +308,17 @@ function sorter(&$array, $key) {
 		$ret[$ii] = $array[$ii];
 	}
 	$array = $ret;
-	return $array;
+	return (array)$array;
 }
+
+/**
+ * Get the total max depths of dbtree()
+ * @param        $data
+ * @param        $field
+ * @param        $match
+ * @param string $depth
+ * @return int
+ */
 function tree_depth($data, $field, $match, $depth = '1') {
 	if (!$depth) {
 		$depth = '1';
@@ -261,45 +327,60 @@ function tree_depth($data, $field, $match, $depth = '1') {
 	}
 	foreach ($data as $arr) {
 		if ($arr[$field] == $match) {
-			return $depth;
+			return (int)$depth;
 		} else {
 			if (array_key_exists('children', $arr)) {
 				$deep = tree_depth($arr['children'], $field, $match, $depth+1);
 				if ($deep) {
-					return $deep;
+					return (int) $deep;
 				}
 			}
 		}
 	}
 }
-function tree_count($data, $field = FALSE, $match = FALSE) {
+
+/**
+ * Get the occurences of a column name matching value
+ * $unpublish_count = tree_count($dbtree_result, "wiki_cat_status", "0")-1;
+ * @param      $data
+ * @param bool $field
+ * @param bool $match
+ * @return int
+ */
+function tree_count($data, $column_name = FALSE, $value_to_match = FALSE) {
 	// Find Occurence of match in a tree.
-	//$unpublish_count = tree_count($dbresult, "wiki_cat_status", "0")-1;
+	//
 	if (!isset($counter)) {
 		$counter = 0;
 	} else {
-		$counter = & $counter;
+		$counter = &$counter;
 	}
 	foreach ($data as $arr) {
-		if (!empty($field)) {
-			if ($arr[$field] == "$match") {
+		if (!empty($column_name)) {
+			if ($arr[$column_name] == $value_to_match) {
 				$counter++;
 			}
 		} else {
 			$counter++;
 		}
 		if (array_key_exists("children", $arr)) {
-			$counter = tree_count($arr['children'], $field, $match)+$counter;
+			$counter = tree_count($arr['children'], $column_name, $value_to_match)+$counter;
 		}
 	}
-	return $counter;
+	return (int)$counter;
 }
 
-
-
-
-/* The oldest trick in the book by joining SQL over infinite number of columns in cats to make a tree - The output traverse model sucks */
-/* But it can tell you the depth directly -- sql stress model */
+/**
+ * This model will create a up to "HUNDREDS" of self joins to get a relational hierarchy
+ * @param      $db
+ * @param      $id_col
+ * @param      $cat_col
+ * @param bool $filter
+ * @param bool $filter_order
+ * @param bool $filter_show
+ * @param bool $depth
+ * @return bool|mixed|PDOStatement|resource
+ */
 function tree_join_method_sql_deprecated($db, $id_col, $cat_col, $filter = FALSE, $filter_order = FALSE, $filter_show = FALSE, $depth = FALSE) {
 	$selector = '';
 	$column = '';
@@ -352,16 +433,29 @@ function display_parent_nodes($data, $id_col, $cat_col, $id) {
 	return $parents;
 }
 
-/* MYSQL Show Columns Shorthand */
+/**
+ * MYSQL Show Columns Shorthand
+ * Returns available columns in a table
+ * @param $db
+ * @return array
+ */
 function fieldgenerator($db) {
 	$cresult = dbquery("SHOW COLUMNS FROM $db");
 	$col_names = array();
 	while ($cdata = dbarray($cresult)) {
 		$col_names[] = $cdata['Field'];
 	}
-	return $col_names;
+	return (array) $col_names;
 }
-// New SQL Row Modifier.
+
+/**
+ * MYSQL Row modifiers. Insert/Update/Delete
+ * @param       $db
+ * @param       $inputdata
+ * @param       $mode
+ * @param array $options
+ * @return int
+ */
 function dbquery_insert($db, $inputdata, $mode, array $options = array()) {
 	global $defender;
 	require_once INCLUDES."notify/notify.inc.php";
@@ -567,36 +661,6 @@ function getcategory($cat) {
 	return $md;
 }
 
-// to deprecate this is not really useful any more sinse we used serialize(); //
-function dbcompress($data, $mode, $delimiter = FALSE, $sdelimiter = FALSE) {
-	/* New Compressor to compress $data into a single imploded statement */
-	$delimiter = (!empty($delimiter)) ? $delimiter : '//';
-	$sdelimiter = (!empty($sdelimiter)) ? $sdelimiter : '=';
-	/* Sanitize $data before this */
-	if ($mode == 'compress') {
-		// method = x=y|a=b|
-		$i = 1;
-		$_data = '';
-		foreach ($data as $comp_arr => $comp_value) {
-			$comp_arr = stripinput($comp_arr);
-			$comp_value = stripinput($comp_value);
-			$_data .= ((count($data) == $i)) ? $comp_arr.$sdelimiter.$comp_value : $comp_arr.$sdelimiter.$comp_value.$delimiter;
-			$i++;
-		}
-		return $_data; // returns as imploded text
-	} elseif ($mode == 'decompress') {
-		$_data = explode("$delimiter", $data);
-		foreach ($_data as $_newdata) {
-			$_temp = explode("$sdelimiter", $_newdata);
-			if ($_temp) {
-				$_sdata[$_temp['0']] = isset($_temp['1']) ? $_temp['1'] : '';
-			}
-		}
-		unset($_data);
-		return $_sdata;
-	}
-}
-
 /**
  * Check if a PHPFusion table exists
  *
@@ -694,10 +758,25 @@ function sql_manage_order($db, $id = FALSE, $id_col = FALSE, $cat = FALSE, $cat_
 	}
 }
 
-/* Array constructor or deconstructor shorthand */
-// To flatten ANY multidimensional array.
+// Array Makers
+/**
+ * To flatten ANY multidimensional array
+ * Best used to flatten any hierarchy array data
+ * @param $result
+ * @return mixed
+ */
 function flatten_array($result) { return call_user_func_array('array_merge', $result); }
-// To explode a string to array
+
+/**
+ * Short hand to explode strings to array by using commas
+ * $array = construct_array("a,b,c,d,e,f,g");
+ * $str_to_array = construct_array($str_with_commas); // See Geomap.inc.php
+ *
+ * @param      $string
+ * @param bool $string2
+ * @param bool $delimiter (symbol of delimiter)
+ * @return array
+ */
 function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
 	// in event string is array. skips this.
 	if (!is_array($string)) {
@@ -720,7 +799,14 @@ function construct_array($string, $string2 = FALSE, $delimiter = FALSE) {
 		notify("Debug notice: There is a string injected in construct_array() function!", "Please recheck source codes in this page.");
 	}
 }
-// To implode an array to string
+
+/**
+ * To implode an array to string
+ * Opposite of construct_array()
+ * @param $string
+ * @param $delimiter
+ * @return string
+ */
 function deconstruct_array($string, $delimiter) {
 	$value = implode("$delimiter", $string);
 	return $value;
