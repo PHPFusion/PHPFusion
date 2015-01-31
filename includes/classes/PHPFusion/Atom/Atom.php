@@ -20,7 +20,6 @@
 namespace PHPFusion\Atom;
 require_once LOCALE.LOCALESET.'admin/atom.php';
 
-
 class Atom {
 	public $target_folder = '';
 	public $theme_name = '';
@@ -256,7 +255,7 @@ class Atom {
 	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
 	protected function buildCss() {
 		global $defender;
-		$inputFile = INCLUDES."atom/less/atom.less";
+		$inputFile = CLASSES."PHPFusion/Atom/less/atom.less";
 		$outputFolder = THEMES.$this->target_folder."/";
 		$outputFile = THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
 		$returnFile = str_replace(THEMES, '', $outputFile);
