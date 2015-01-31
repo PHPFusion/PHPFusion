@@ -47,15 +47,6 @@ function render_eshop_main(array $info) {
 	render_eshop_cats($info['category']);
 }
 
-$result = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid');
-print_p($result);
-print_p(get_all_parent($result, '6'));
-$nodes = display_parent_nodes($result, 'cid', 'parentid', 4);
-print_p($nodes);
-
-
-
-
 function render_eshop_cats(array $info, $id = '0') {
 	if (!empty($info[$id])) {
 		if (!$id) {
@@ -84,42 +75,6 @@ function render_eshop_cats(array $info, $id = '0') {
 	}
 }
 
-?>
-<nav class="eshop-nav navbar-inverse nav">
-	<ul class="navbar navbar-nav">
-		<!--- begin dropdown-->
-		<li class="dropdown">
-			<a data-toggle="dropdown" class="dropdown-toggle pointer" role="button">Brands <span class="fa fa-caret-down"></span></a>
-			<ul class="dropdown-menu">
-				<!--- begin dropdown-->
-				<li class="dropdown">
-					<a data-toggle="dropdown" class="dropdown-toggle pointer" role="button">Panasonic <span class="fa fa-caret-down"></span></a>
-					<ul class="dropdown-menu">
-						<!--- begin dropdown-->
-						<li class="dropdown">
-							<a data-toggle="dropdown" class="dropdown-toggle pointer" role="button">Sub Panasonic <span class="fa fa-caret-down"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="./eshop.php?category=6">Sub Sub Panasonic</a></li>
-							</ul>
-						</li>
-						<!--- end dropdown-->
-					</ul>
-				</li>
-				<!--- end dropdown-->
-			</ul>
-		</li>
-		<!--- end dropdown-->
-		<!--- begin dropdown-->
-		<li class="dropdown">
-			<a data-toggle="dropdown" class="dropdown-toggle pointer" role="button">Applicances <span class="fa fa-caret-down"></span></a>
-			<ul class="dropdown-menu">
-				<li><a href="./eshop.php?category=4">Refrigerator</a></li>
-			</ul>
-		</li>
-		<!--- end dropdown-->
-	</ul>
-</nav>
-?>
 //////////////--------- <3><  ------------------ ///////////////
 
 
