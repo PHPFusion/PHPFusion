@@ -6,10 +6,10 @@ namespace PHPFusion;
 class Eshop {
 	private $max_rows = 0;
 	public function __construct() {
-		$_GET['category'] = isset($_GET['category']) && isnum($_GET['category']) ? : 0;
-		$_GET['product'] = isset($_GET['product']) && isnum($_GET['product']) ? : 0;
+		$_GET['category'] = isset($_GET['category']) && isnum($_GET['category']) ?  $_GET['category'] : 0;
+		$_GET['product'] = isset($_GET['product']) && isnum($_GET['product']) ? $_GET['product'] : 0;
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->max_rows ? : 0;
-		$_GET['FilterSelect'] = isset($_POST['FilterSelect']) && isnum($_POST['FilterSelect']) ? : 0;
+		$_GET['FilterSelect'] = isset($_POST['FilterSelect']) && isnum($_POST['FilterSelect']) ? $_POST['FilterSelect'] : 0;
 
 		// include files
 	}
@@ -159,6 +159,7 @@ class Eshop {
 
 	static function get_category() {
 		$info['category'] = array();
+		$info['category_index'] = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid');
 		$info['category'] = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
 		// inject link to all items
 		if (!empty($info['category'])) {

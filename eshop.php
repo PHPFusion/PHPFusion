@@ -33,7 +33,7 @@ $eShop = new PHPFusion\Eshop();
 $info = $eShop->get_title();
 $info += $eShop->get_category();
 $info += $eShop->get_product();
-render_eshop_cats($info['category']);
+render_eshop_cats($info);
 if ($_GET['category']) {
 	// view category page
 } elseif ($_GET['product']) {
@@ -47,19 +47,29 @@ function render_eshop_main(array $info) {
 }
 
 function render_eshop_cats(array $info) {
-	$_GET['cid'] = isset($info[$_GET['category']]) ? $_GET['category'] : 0;
-	if (!empty($info[$_GET['cid']])) {
-		echo "<nav class='eshop-nav navbar-inverse nav'>\n";
-		echo "<ul class='navbar navbar-nav'>\n";
-		if ($_GET['cid']) {
-			echo "<li><a href='".FUSION_SELF."'>Back</a></li>\n";
+	echo "<nav class='eshop-nav navbar-inverse nav'>\n";
+	echo "<ul class='navbar navbar-nav'>\n";
+	if ($_GET['category']) {
+		// to get the current
+		$parent_id = get_parent($info['category_index'], $_GET['category']);
+		$cdata = $info['category'][$parent_id][$_GET['category']];
+		// to get the previous
+		$rparent_id = get_parent($info['category_index'], $parent_id);
+		$rdata = isset($info['category'][$rparent_id][$parent_id]) ? $info['category'][$rparent_id][$parent_id] : array();
+		if (!empty($rdata)) {
+			echo "<li><a href='".$rdata['link']."'>Back to ".$rdata['title']."</a></li>\n";
+		} else {
+			echo "<li><a href='".BASEDIR."eshop.php'>Store Front</a></li>\n";
 		}
-		foreach($info[$_GET['cid']] as $data) {
+		echo "<li class='active'><a href='".BASEDIR."eshop.php?category=".$cdata['cid']."'>".$cdata['title']."</a></li>\n";
+	}
+	if (!empty($info['category'][$_GET['category']])) {
+		foreach($info['category'][$_GET['category']] as $data) {
 			echo "<li><a href='".$data['link']."'>".$data['title']."</a></li>\n";
 		}
-		echo "</ul>\n";
-		echo "</nav>\n";
 	}
+	echo "</ul>\n";
+	echo "</nav>\n";
 }
 
 function render_eshop_featured(array $info) {
