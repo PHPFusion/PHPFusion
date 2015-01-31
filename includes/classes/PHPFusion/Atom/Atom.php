@@ -17,9 +17,9 @@
 | written permission from the original author(s).
  --------------------------------------------------------*/
 
-namespace PHPFusion;
-
+namespace PHPFusion\Atom;
 require_once LOCALE.LOCALESET.'admin/atom.php';
+
 
 class Atom {
 	public $target_folder = '';
@@ -180,7 +180,7 @@ class Atom {
 
 	public function load_theme_actions() {
 		global $defender, $aidlink;
-
+		$result = null;
 		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
 		// when we click delete preset
 		if (isset($_POST['delete_preset']) && isnum($_POST['delete_preset'])) {
@@ -254,7 +254,7 @@ class Atom {
 	}
 
 	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
-	private function buildCss() {
+	protected function buildCss() {
 		global $defender;
 		$inputFile = INCLUDES."atom/less/atom.less";
 		$outputFolder = THEMES.$this->target_folder."/";
@@ -264,13 +264,15 @@ class Atom {
 		$options = array('output' => $outputFile, 'compress' => $this->compress,);
 		$this->set_less_variables();
 		if (!empty($this->less_var) && !defined('FUSION_NULL') && $this->Compiler) {
-			if ($this->debug) print_p("current less var");
-			print_p($this->less_var);
-			if ($this->debug) print_p($inputFile);
-			if ($this->debug) print_p($outputFile);
-			require_once INCLUDES."atom/lessc.inc.php";
+			if ($this->debug) {
+				print_p("current less var");
+				print_p($this->less_var);
+				print_p($inputFile);
+				print_p($outputFile);
+			}
 			try {
-				$parser = new Less_Parser($options);
+				require_once "lessc.inc.php";
+				$parser = new \Less_Parser($options);
 				//$parser->SetImportDirs($directories);
 				$parser->parseFile($inputFile, $outputFolder);
 				$parser->ModifyVars($this->less_var);
@@ -286,7 +288,7 @@ class Atom {
 				} else {
 					print_p($css); // this is your css
 				}
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$error_message = $e->getMessage();
 				$defender->stop();
 				$defender->addNotice($error_message);
@@ -532,7 +534,7 @@ class Atom {
 			if (!$this->debug && $data['theme_file']) {
 				@unlink(THEMES.$old_file);
 				dbquery_insert(DB_THEME, $data, 'update');
-				redirect(FUSION_SELF.$aidlink."&amp;status=updated");
+				redirect(FUSION_SELF.$aidlink."&amp;status=su");
 			} else {
 				print_p('Update Mode');
 				print_p($data);
@@ -543,7 +545,7 @@ class Atom {
 				$data['theme_active'] = $rows < 1 ? 1 : 0;
 				$data['theme_config'] = addslashes(serialize($this->data));
 				dbquery_insert(DB_THEME, $data, 'save');
-				redirect(FUSION_SELF.$aidlink."&amp;status=success");
+				redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 			} else {
 				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
 				$data['theme_active'] = $rows < 1 ? 1 : 0;
@@ -558,16 +560,16 @@ class Atom {
 		global $aidlink, $locale;
 		$tab_title['title'][] = 'Base Fonts';
 		$tab_title['id'][] = 'font';
-		$tab_title['icon'][] = '';
+		$tab_title['icon'][] = 'fa fa-text-width m-r-10';
 		$tab_title['title'][] = 'Theme Components';
 		$tab_title['id'][] = 'grid';
-		$tab_title['icon'][] = '';
+		$tab_title['icon'][] = 'fa fa-magic m-r-10';
 		$tab_title['title'][] = 'Navigation';
 		$tab_title['id'][] = 'nav';
-		$tab_title['icon'][] = '';
+		$tab_title['icon'][] = 'fa fa-navicon m-r-10';
 		$tab_active = tab_active($tab_title, 0);
 		if ($this->debug) {
-			//print_p($_POST);
+			print_p($_POST);
 		}
 		// do a pop up notice. important. pressing save twice will create a massive stress on server resource.
 		echo openmodal('dbi', 'Rebuilding New '.$this->theme_name.' Theme', array('class' => 'zindex-boost modal-center',
@@ -622,8 +624,8 @@ class Atom {
 			'1' => 'Monospace Font Family',
 			'2' => 'Serif Font Family');
 		echo form_hidden('', 'theme', 'theme', $_POST['theme']);
-		echo form_para("Base Font Settings", 'font_settings');
-		echo "<hr>\n";
+
+		openside('');
 		echo form_select("Sans-Serif Collection", "sans_serif_fonts", "sans_serif_fonts", $font_list, $this->data['sans_serif_fonts'], $font_options);
 		echo form_select("Serif Collection", "serif_fonts", "serif_fonts", $font_list, $this->data['serif_fonts'], $font_options);
 		echo form_select("Monospace Collection", "monospace_fonts", "monospace_fonts", $font_list, $this->data['monospace_fonts'], $font_options);
@@ -640,9 +642,9 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Base Font Size Small", "base_font_size_s", "base_font_size_s", $this->data['base_font_size_s'], $font_size_options);
 		echo "</div>\n</div>\n";
-		echo form_para("Header Font Settings", 'font_settings');
-		echo "<hr>\n";
+		closeside();
 		// h1
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 1', 'h1');
@@ -654,7 +656,9 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h1", "font_decoration_h1", $this->font_decoration_options, $this->data['font_decoration_h1'], $color_options);
 		echo "</div>\n</div>\n";
+		closeside();
 		// h2
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 2', 'h2');
@@ -666,7 +670,9 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h2", "font_decoration_h2", $this->font_decoration_options, $this->data['font_decoration_h2'], $color_options);
 		echo "</div>\n</div>\n";
+		closeside();
 		// h3
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 3', 'h3');
@@ -678,7 +684,9 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h3", "font_decoration_h3", $this->font_decoration_options, $this->data['font_decoration_h3'], $color_options);
 		echo "</div>\n</div>\n";
+		closeside();
 		// h4
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 4', 'h4');
@@ -690,7 +698,9 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h4", "font_decoration_h4", $this->font_decoration_options, $this->data['font_decoration_h4'], $color_options);
 		echo "</div>\n</div>\n";
+		closeside();
 		// h5
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 5', 'h5');
@@ -702,7 +712,9 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h5", "font_decoration_h5", $this->font_decoration_options, $this->data['font_decoration_h5'], $color_options);
 		echo "</div>\n</div>\n";
+		closeside();
 		// h6
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 6', 'h6');
@@ -714,9 +726,9 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "font_decoration_h6", "font_decoration_h6", $this->font_decoration_options, $this->data['font_decoration_h6'], $color_options);
 		echo "</div>\n</div>\n";
-		echo form_para("Link Color Settings", 'link_settings');
-		echo "<hr>\n";
+		closeside();
 		// link
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Link Settings', 'link');
@@ -728,9 +740,9 @@ class Atom {
 		echo form_select('Hover Font Styling', "link_hover_decoration", "link_hover_decoration", $this->font_decoration_options, $this->data['link_hover_decoration'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
-		echo form_para("Code Font", 'code_settings');
-		echo "<hr>\n";
+		closeside();
 		// code
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Code Font Settings', 'link');
@@ -740,9 +752,9 @@ class Atom {
 		echo form_colorpicker('Background Color', "code_bgcolor", "code_bgcolor", $this->data['code_bgcolor'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
+		closeside();
 		// blockquote
-		echo form_para("Blockquote Font", 'quote_settings');
-		echo "<hr>\n";
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Blockquote', 'blockquote');
@@ -754,6 +766,7 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select('Font Styling', "quote_decoration", "quote_decoration", $this->font_decoration_options, $this->data['quote_decoration'], $color_options);
 		echo "</div>\n</div>\n";
+		closeside();
 	}
 	/* Administration Menus - Part II - Components & Layout Settings */
 	private function layout_admin() {
@@ -761,6 +774,7 @@ class Atom {
 		$color_options = array("placeholder" => "Choose Color", "width" => "100%", "format" => "hex");
 		$fill_options = array("placeholder" => "Select Background Color Fill Type", "width" => "280px");
 		// max widths
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Max Theme Width Settings', 'max_width');
@@ -771,8 +785,9 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Large Screens", "container_lg", "container_lg", $this->data['container_lg'], $width_options);
 		echo "</div>\n</div>\n";
+		closeside();
 		// primary color themes
-		echo form_para('Labelling and Info Colors', 'infotxt');
+		openside('');
 		echo "<hr>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -786,10 +801,10 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Info Color', "info_color", "info_color", $this->data['info_color'], $color_options);
 		echo "</div>\n</div>\n";
-		echo "<hr>\n";
+		closeside();
 
 		//buttons
-		echo form_para('Button Settings', 'btns');
+		openside('');
 		echo "<hr>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -832,8 +847,10 @@ class Atom {
 		echo form_colorpicker("Font Color", "btn_primary_color_active", "btn_primary_color_active", $this->data['btn_primary_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
-		echo "<hr>\n";
+		closeside();
+
 		// button info
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Info Type', 'btn-p');
@@ -863,8 +880,9 @@ class Atom {
 		echo form_colorpicker("Font Color", "btn_info_color_active", "btn_info_color_active", $this->data['btn_info_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
-		echo "<hr>\n";
+		closeside();
 		// success
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Success Type', 'btn-scs');
@@ -894,8 +912,9 @@ class Atom {
 		echo form_colorpicker("Font Color", "btn_success_color_active", "btn_success_color_active", $this->data['btn_success_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
-		echo "<hr>\n";
+		closeside();
 		// warning
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Warning Type', 'btn-warning');
@@ -925,8 +944,9 @@ class Atom {
 		echo form_colorpicker("Font Color", "btn_warning_color_active", "btn_warning_color_active", $this->data['btn_warning_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
-		echo "<hr>\n";
+		closeside();
 		// danger
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Danger Type', 'btn-danger');
@@ -956,7 +976,7 @@ class Atom {
 		echo form_colorpicker("Font Color", "btn_danger_color_active", "btn_danger_color_active", $this->data['btn_danger_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
-		echo "<hr>\n";
+		closeside();
 
 	}
 	/* Administration Menus - Part III - Navigation Settings */
@@ -965,6 +985,7 @@ class Atom {
 		$width_options = array("width" => "100%", 'placeholder'=>'px');
 		$color_options = array("placeholder" => "Choose Color", "width" => "100%", "format" => "hex");
 		$fill_options = array("placeholder" => "Select Background Color Fill Type", "width" => "280px");
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Horizontal Navbar Settings', 'navbar-h');
@@ -975,8 +996,8 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("Navbar Border Radius", "navbar_radius", "navbar_radius", $this->data['navbar_radius'], $width_options);
 		echo "</div>\n</div>\n";
-		echo "<hr>\n";
-		echo form_para('Horizontal Navbar Settings Set 1', 'navbar-first');
+		closeside();
+		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Navbar Background', 'navbar-h2a');
@@ -1026,16 +1047,12 @@ class Atom {
 		echo form_colorpicker('Link Active Color', "navbar_link_color_active", "navbar_link_color_active", $this->data['navbar_link_color_active'], $color_options);
 		echo form_select('Link Active Styling', "navbar_link_decoration_active", "navbar_link_decoration_active", $this->font_decoration_options, $this->data['navbar_link_decoration_active'], $color_options);
 		echo "</div>\n</div>\n";
+		closeside();
 
-
-	}
-
-
-	public function add_panel() {
 	}
 
 	/* Returns list of google_fonts */
-	function google_font() {
+	static function google_font() {
 		$google_font = array(
 			"ABeeZee" => "ABeeZee",
 			"Abel" => "Abel",
@@ -1687,7 +1704,7 @@ class Atom {
 	}
 
 	/* Returns list of common base fonts */
-	function base_font() {
+	static function base_font() {
 		// OS Font Defaults
 		return array("Arial" => "Arial",
 			"Avant Garde" => "Avant+Garde",
@@ -1710,7 +1727,7 @@ class Atom {
 	}
 
 	/* add quotes for font name with whitespace */
-	private function parse_fonts($font) {
+	static function parse_fonts($font) {
 		$_parsedFonts = array();
 		if ($font) {
 			$font = explode(',', $font);
@@ -1724,7 +1741,7 @@ class Atom {
 	}
 
 	/* return the font sets */
-	private function parse_font_set($font) {
+	static function parse_font_set($font) {
 		$fonts_family_opts = array('0' => '@font-family-sans-serif',
 			'1' => '@font-family-monospace',
 			'2' => '@font-family-serif');
@@ -1732,7 +1749,7 @@ class Atom {
 	}
 
 	/* parse the font size metrics - can be edited to use 'px', 'em', 'rem' */
-	private function parse_size($font) {
+	static function parse_size($font) {
 		return $font > 0 ? $font.'px' : 0;
 	}
 

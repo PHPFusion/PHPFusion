@@ -8,15 +8,17 @@
  *
  */
 
+namespace PHPFusion\Atom;
+
 // Register autoloader for non-composer installations
 if (!class_exists('Less_Parser')) {
 	require_once dirname(__FILE__).'/lib/Less/Autoloader.php';
-	Less_Autoloader::register();
+	\Less_Autoloader::register();
 }
 
-class lessc{
+class Lessc{
 
-	static public $VERSION = Less_Version::less_version;
+	static public $VERSION = \Less_Version::less_version;
 
 	public $importDir = '';
 	protected $allParsedFiles = array();
@@ -71,8 +73,8 @@ class lessc{
 				$options['compress'] = true;
 				break;
 		}
-
-		$parser = new Less_Parser($options);
+		/*
+		$parser = Less_Parser($options);
 		$parser->setImportDirs($this->getImportDirs());
 		if( count( $this->registeredVars ) ) $parser->ModifyVars( $this->registeredVars );
 		foreach ($this->libFunctions as $name => $func) {
@@ -81,6 +83,7 @@ class lessc{
 		$parser->parse($buffer);
 
 		return $parser->getCss();
+		*/
 	}
 
 	protected function getImportDirs(){

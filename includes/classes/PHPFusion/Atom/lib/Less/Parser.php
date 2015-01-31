@@ -1,7 +1,6 @@
 <?php
 
-require_once( dirname(__FILE__).'/Cache.php');
-
+require_once(dirname(__FILE__).'/Cache.php');
 /**
  * Class for parsing and compiling less files into css
  *
@@ -76,7 +75,7 @@ class Less_Parser{
 
 		// Top parser on an import tree must be sure there is one "env"
 		// which will then be passed around by reference.
-		if( $env instanceof Less_Environment ){
+		if( $env instanceof \Less_Environment ){
 			$this->env = $env;
 		}else{
 			$this->SetOptions(Less_Parser::$default_options);
@@ -97,7 +96,7 @@ class Less_Parser{
 		self::$imports = array();
 		self::$contentsMap = array();
 
-		$this->env = new Less_Environment($options);
+		$this->env = new \Less_Environment($options);
 		$this->env->Init();
 
 		//set new options
@@ -132,8 +131,8 @@ class Less_Parser{
 
 			case 'cache_dir':
 				if( is_string($value) ){
-					Less_Cache::SetCacheDir($value);
-					Less_Cache::CheckCacheDir();
+					\Less_Cache::SetCacheDir($value);
+					\Less_Cache::CheckCacheDir();
 				}
 			return;
 		}
@@ -174,7 +173,7 @@ class Less_Parser{
 		$locale = setlocale(LC_NUMERIC, 0);
 		setlocale(LC_NUMERIC, "C");
 
- 		$root = new Less_Tree_Ruleset(array(), $this->rules );
+ 		$root = new \Less_Tree_Ruleset(array(), $this->rules );
 		$root->root = true;
 		$root->firstRoot = true;
 
@@ -189,7 +188,7 @@ class Less_Parser{
 		$this->PostVisitors($evaldRoot);
 
 		if( Less_Parser::$options['sourceMap'] ){
-			$generator = new Less_SourceMap_Generator($evaldRoot, Less_Parser::$contentsMap, Less_Parser::$options );
+			$generator = new \Less_SourceMap_Generator($evaldRoot, Less_Parser::$contentsMap, Less_Parser::$options );
 			// will also save file
 			// FIXME: should happen somewhere else?
 			$css = $generator->generateCSS();
@@ -231,11 +230,11 @@ class Less_Parser{
 	private function PostVisitors($evaldRoot){
 
 		$visitors = array();
-		$visitors[] = new Less_Visitor_joinSelector();
+		$visitors[] = new \Less_Visitor_joinSelector();
 		if( self::$has_extends ){
-			$visitors[] = new Less_Visitor_processExtends();
+			$visitors[] = new \Less_Visitor_processExtends();
 		}
-		$visitors[] = new Less_Visitor_toCSS();
+		$visitors[] = new \Less_Visitor_toCSS();
 
 
 		if( Less_Parser::$options['plugins'] ){
@@ -325,7 +324,7 @@ class Less_Parser{
 
 		if( $returnRoot ){
 			$rules = $this->GetRules( $filename );
-			$return = new Less_Tree_Ruleset(array(), $rules );
+			$return = new \Less_Tree_Ruleset(array(), $rules );
 		}else{
 			$this->_parse( $filename );
 			$return = $this;
@@ -358,7 +357,7 @@ class Less_Parser{
 	 */
 	public function SetFileInfo( $filename, $uri_root = ''){
 
-		$filename = Less_Environment::normalizePath($filename);
+		$filename = \Less_Environment::normalizePath($filename);
 		$dirname = preg_replace('/[^\/\\\\]*$/','',$filename);
 
 		if( !empty($uri_root) ){
@@ -404,17 +403,17 @@ class Less_Parser{
 			if( mkdir($dir) ){
 				return true;
 			}
-			throw new Less_Exception_Parser('Less.php cache directory couldn\'t be created: '.$dir);
+			throw new \Less_Exception_Parser('Less.php cache directory couldn\'t be created: '.$dir);
 
 		}elseif( !is_dir($dir) ){
-			throw new Less_Exception_Parser('Less.php cache directory doesn\'t exist: '.$dir);
+			throw new \Less_Exception_Parser('Less.php cache directory doesn\'t exist: '.$dir);
 
 		}elseif( !is_writable($dir) ){
-			throw new Less_Exception_Parser('Less.php cache directory isn\'t writable: '.$dir);
+			throw new \Less_Exception_Parser('Less.php cache directory isn\'t writable: '.$dir);
 
 		}else{
 			$dir = self::WinPath($dir);
-			Less_Cache::$cache_dir = rtrim($dir,'/').'/';
+			\Less_Cache::$cache_dir = rtrim($dir,'/').'/';
 			return true;
 		}
 	}
@@ -547,7 +546,7 @@ class Less_Parser{
 					break;
 				}
 
-				Less_Cache::CleanCache();
+				\Less_Cache::CleanCache();
 			}
 		}
 
@@ -602,9 +601,9 @@ class Less_Parser{
 			$parts[] = filesize( $file_path );
 			$parts[] = filemtime( $file_path );
 			$parts[] = $env;
-			$parts[] = Less_Version::cache_version;
+			$parts[] = \Less_Version::cache_version;
 			$parts[] = Less_Parser::$options['cache_method'];
-			return Less_Cache::$cache_dir.'lessphp_'.base_convert( sha1(json_encode($parts) ), 16, 36).'.lesscache';
+			return \Less_Cache::$cache_dir.'lessphp_'.base_convert( sha1(json_encode($parts) ), 16, 36).'.lesscache';
 		}
 	}
 
@@ -1081,7 +1080,7 @@ class Less_Parser{
 		$this->expectChar(')');
 
 
-		if( isset($value->value) || $value instanceof Less_Tree_Variable ){
+		if( isset($value->value) || $value instanceof \Less_Tree_Variable ){
 			return $this->NewObj2('Less_Tree_Url',array($value, $this->env->currentFileInfo));
 		}
 
@@ -1376,7 +1375,7 @@ class Less_Parser{
 			}
 
 
-			if( $val instanceof Less_Tree_Variable ){
+			if( $val instanceof \Less_Tree_Variable ){
 
 				if( $this->MatchChar(':') ){
 					if( $expressions ){
@@ -2587,7 +2586,7 @@ class Less_Parser{
 	}
 
 	public function Error($msg){
-		throw new Less_Exception_Parser($msg, null, $this->furthest, $this->env->currentFileInfo);
+		throw new \Less_Exception_Parser($msg, null, $this->furthest, $this->env->currentFileInfo);
 	}
 
 	public static function WinPath($path){
@@ -2595,7 +2594,7 @@ class Less_Parser{
 	}
 
 	public function CacheEnabled(){
-		return (Less_Parser::$options['cache_method'] && (Less_Cache::$cache_dir || (Less_Parser::$options['cache_method'] == 'callback')));
+		return (Less_Parser::$options['cache_method'] && (\Less_Cache::$cache_dir || (Less_Parser::$options['cache_method'] == 'callback')));
 	}
 
 }
