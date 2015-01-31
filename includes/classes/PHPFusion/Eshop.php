@@ -5,12 +5,15 @@ namespace PHPFusion;
 
 class Eshop {
 	private $max_rows = 0;
+	private $info = array();
 	public function __construct() {
 		$_GET['category'] = isset($_GET['category']) && isnum($_GET['category']) ?  $_GET['category'] : 0;
 		$_GET['product'] = isset($_GET['product']) && isnum($_GET['product']) ? $_GET['product'] : 0;
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->max_rows ? : 0;
 		$_GET['FilterSelect'] = isset($_POST['FilterSelect']) && isnum($_POST['FilterSelect']) ? $_POST['FilterSelect'] : 0;
 
+		$this->info['category_index'] = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid');
+		$this->info['category'] = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
 		// include files
 	}
 
@@ -24,18 +27,25 @@ class Eshop {
 		}
 	}
 
-	static function get_title() {
+	public function get_current_category() {
+		$folder = get_parent($this->info['category_index'], $_GET['category']);
+		$this->info['current_category'] = $this->info['category'][$folder][$_GET['category']];
+		return (array) $this->info['current_category'];
+	}
+
+	public function get_title() {
 		global $locale;
 		$info = array();
+		add_to_title($locale['ESHP031']);
 		if ($_GET['category']) {
-
+			$current_category = self::get_current_category();
+			$info['title'] = $this->info['current_category']['title'];
+			add_to_title($locale['global_201'].$info['title']);
 		} elseif ($_GET['product']) {
-
 		} else {
 			$info['title'] = $locale['ESHP001'];
-			add_to_title($locale['ESHP031']);
 		}
-		return $info;
+		return (array) $info;
 	}
 
 	// special components ??
@@ -157,11 +167,9 @@ class Eshop {
 	}
 
 
-	static function get_category() {
-		$info['category'] = array();
-		$info['category_index'] = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid');
-		$info['category'] = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
-		// inject link to all items
+	public function get_category() {
+		$info['category_index'] = $this->info['category_index'];
+		$info['category'] = $this->info['category'];
 		if (!empty($info['category'])) {
 			foreach($info['category'] as $branch_id => $branch) {
 				foreach($branch as $id => $node) {
