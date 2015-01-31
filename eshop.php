@@ -30,51 +30,41 @@ echo '<script type="text/javascript">
 }
 */
 $eShop = new PHPFusion\Eshop();
+$info = $eShop->get_title();
+$info += $eShop->get_category();
+$info += $eShop->get_product();
+render_eshop_cats($info['category']);
 if ($_GET['category']) {
 	// view category page
 } elseif ($_GET['product']) {
 	// view product page
 } else {
-	$info = $eShop->get_title();
-	$info += $eShop->get_category();
-	$info += $eShop->get_product();
 	render_eshop_main($info);
 }
 
 function render_eshop_main(array $info) {
-	//print_p($info);
-	// build a navigational menu
-	render_eshop_cats($info['category']);
+
 }
 
-function render_eshop_cats(array $info, $id = '0') {
-	if (!empty($info[$id])) {
-		if (!$id) {
-			echo "<nav class='eshop-nav navbar-inverse nav'>\n";
-			echo "<ul class='navbar navbar-nav'>\n";
+function render_eshop_cats(array $info) {
+	$_GET['cid'] = isset($info[$_GET['category']]) ? $_GET['category'] : 0;
+	if (!empty($info[$_GET['cid']])) {
+		echo "<nav class='eshop-nav navbar-inverse nav'>\n";
+		echo "<ul class='navbar navbar-nav'>\n";
+		if ($_GET['cid']) {
+			echo "<li><a href='".FUSION_SELF."'>Back</a></li>\n";
 		}
-		foreach($info[$id] as $data) {
-			if (isset($info[$data['cid']])) { // have child.
-				echo "<!--- begin dropdown-->\n";
-				echo "<li class='dropdown'>\n";
-				echo "<a data-toggle='dropdown' class='dropdown-toggle pointer' role='button'>".$data['title']." <span class='fa fa-caret-down'></span></a>\n";
-				echo "<ul class='dropdown-menu'>\n";
-				render_eshop_cats($info, $data['cid']);
-				echo "</ul>\n";
-				echo "</li>\n";
-				echo "<!--- end dropdown-->\n";
-			} else { // single
-				echo "<li><a href='".$data['link']."'>".$data['title']."</a></li>\n";
-			}
+		foreach($info[$_GET['cid']] as $data) {
+			echo "<li><a href='".$data['link']."'>".$data['title']."</a></li>\n";
 		}
-
-		if (!$id) {
-			echo "</ul>\n";
-			echo "</nav>\n";
-		}
+		echo "</ul>\n";
+		echo "</nav>\n";
 	}
 }
 
+function render_eshop_featured(array $info) {
+
+}
 //////////////--------- <3><  ------------------ ///////////////
 
 
