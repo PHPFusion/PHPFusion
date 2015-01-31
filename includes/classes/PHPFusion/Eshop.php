@@ -27,10 +27,33 @@ class Eshop {
 		}
 	}
 
+	/**
+	 * Select the current Category hierarchy array
+	 * @return array
+	 */
 	public function get_current_category() {
 		$folder = get_parent($this->info['category_index'], $_GET['category']);
-		$this->info['current_category'] = $this->info['category'][$folder][$_GET['category']];
-		return (array) $this->info['current_category'];
+		if ($_GET['category']) {
+			return (array) isset($this->info['category'][$folder][$_GET['category']]) ? $this->info['category'][$folder][$_GET['category']] : array();
+		}
+		return array();
+	}
+
+	/**
+	 * Get Previous Category in Relation to Current $_GET['category']
+	 * @return array
+	 */
+	public function get_previous_category() {
+		if ($_GET['category']) {
+			$parent_id = get_parent($this->info['category_index'], $_GET['category']);
+			$folder = get_parent($this->info['category_index'], $parent_id) ? get_parent($this->info['category_index'], $parent_id) : '0';
+			if (isset($this->info['category'][$folder][$parent_id])) {
+				return (array) $this->info['category'][$folder][$parent_id];
+			} else {
+				return array();
+			}
+		}
+		return array();
 	}
 
 	public function get_title() {
@@ -39,8 +62,8 @@ class Eshop {
 		add_to_title($locale['ESHP031']);
 		if ($_GET['category']) {
 			$current_category = self::get_current_category();
-			$info['title'] = $this->info['current_category']['title'];
-			add_to_title($locale['global_201'].$info['title']);
+			$info['title'] = $current_category['title'];
+			add_to_title($locale['global_201'].$current_category['title']);
 		} elseif ($_GET['product']) {
 		} else {
 			$info['title'] = $locale['ESHP001'];
@@ -166,18 +189,23 @@ class Eshop {
 		}
 	}
 
-
+	/**
+	 * Get Category Information Array
+	 * @return array
+	 */
 	public function get_category() {
-		$info['category_index'] = $this->info['category_index'];
-		$info['category'] = $this->info['category'];
-		if (!empty($info['category'])) {
-			foreach($info['category'] as $branch_id => $branch) {
+		if (!empty($this->info['category'])) {
+			foreach($this->info['category'] as $branch_id => $branch) {
 				foreach($branch as $id => $node) {
-					$info['category'][$branch_id][$id]['link'] = BASEDIR."eshop.php?category=".$node['cid'];
+					$this->info['category'][$branch_id][$id]['link'] = BASEDIR."eshop.php?category=".$node['cid'];
 				}
 			}
 		}
-		return $info;
+		$info['category_index'] = $this->info['category_index'];
+		$info['current_category'] = self::get_current_category();
+		$info['previous_category'] = self::get_previous_category();
+		$info['category'] = $this->info['category'];
+		return (array) $info;
 	}
 
 	public function get_product() {

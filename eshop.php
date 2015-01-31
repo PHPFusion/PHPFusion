@@ -50,18 +50,14 @@ function render_eshop_cats(array $info) {
 	echo "<nav class='eshop-nav navbar-inverse nav'>\n";
 	echo "<ul class='navbar navbar-nav'>\n";
 	if ($_GET['category']) {
-		// to get the current
-		$parent_id = get_parent($info['category_index'], $_GET['category']);
-		$cdata = $info['category'][$parent_id][$_GET['category']];
-		// to get the previous
-		$rparent_id = get_parent($info['category_index'], $parent_id);
-		$rdata = isset($info['category'][$rparent_id][$parent_id]) ? $info['category'][$rparent_id][$parent_id] : array();
-		if (!empty($rdata)) {
-			echo "<li><a href='".$rdata['link']."'>Back to ".$rdata['title']."</a></li>\n";
+		if (!empty($info['previous_category'])) {
+			echo "<li><a href='".$info['previous_category']['link']."'>Back to ".$info['previous_category']['title']."</a></li>\n";
 		} else {
 			echo "<li><a href='".BASEDIR."eshop.php'>Store Front</a></li>\n";
 		}
-		echo "<li class='active'><a href='".BASEDIR."eshop.php?category=".$cdata['cid']."'>".$cdata['title']."</a></li>\n";
+		if (!empty($info['current_category'])) {
+			echo "<li class='active'><a href='".BASEDIR."eshop.php?category=".$info['current_category']['cid']."'>".$info['current_category']['title']."</a></li>\n";
+		}
 	}
 	if (!empty($info['category'][$_GET['category']])) {
 		foreach($info['category'][$_GET['category']] as $data) {
