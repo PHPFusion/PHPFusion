@@ -19,6 +19,7 @@ class Eshop {
 		// include files
 	}
 
+
 	public function get_featured() {
 		$info = array();
 		$result = dbquery("select * FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_cid = '".$_GET['category']."' ORDER BY featbanner_order");
@@ -88,7 +89,7 @@ class Eshop {
 	}
 
 
-	static function checkeShpImageExists($image_file) {
+	static function picExists($image_file) {
 		if (file_exists($image_file)) {
 			return $image_file;
 		} else {
@@ -125,8 +126,6 @@ class Eshop {
 		}
 		return $res;
 	}
-
-
 
 	static function buildfilters() {
 		global $data, $locale, $settings, $rowstart, $filter, $category;
@@ -235,8 +234,14 @@ class Eshop {
 		return (array) $info;
 	}
 
+	/**
+	 * Get Product Data from Database
+	 * If ($_GET['category']) is available, will return info on the category and its child only
+	 * If ($_GET['product']) is available, will return full product info
+	 * @return array
+	 */
 	public function get_product() {
-		$result = NULL;
+		$result = null;
 		$info = array();
 		// set max rows
 		$max_result = dbquery("SELECT id FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')."");
@@ -247,19 +252,36 @@ class Eshop {
 			if (!dbrows($result)) {
 				redirect(BASEDIR."eshop.php");
 			}
+		} elseif ($_GET['category']) {
+			// on category page
+			$sql = "i.cid='".intval($_GET['category'])."'";
+			if (isset($this->info['category'][$_GET['category']])) {
+				// extract the keys of child from hierarchy tree
+				$child_id = array_keys($this->info['category'][$_GET['category']]);
+				$sql = "i.cid in (".intval($_GET['category']).implode(',',$child_id).")";
+			}
+			$result = dbquery("SELECT i.id, i.cid, i.title, i.thumb, i.price, i.picture, i.xprice, i.keywords, i.product_languages, cat.title as category_title
+			FROM ".DB_ESHOP." i
+			INNER JOIN ".DB_ESHOP_CATS." cat on i.cid = cat.cid
+			WHERE ".$sql." AND active = '1' AND ".groupaccess('access')."
+			ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."
+			");
 		} else {
-			$result = dbquery("SELECT id, title, thumb, price, picture, xprice, keywords, product_languages FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
+			// on main page
+			$result = dbquery("SELECT id, cid, title, thumb, price, picture, xprice, keywords, product_languages, if(cid=0, 0, 1) FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
 		}
 		if (dbrows($result)>0) {
 			if (multilang_table("ES")) {
+
 				while ($data = dbarray($result)) {
 					$es_langs = explode('.', $data['product_languages']);
 					if (in_array(LANGUAGE, $es_langs)) {
+						$data['category_title'] = isnum($data['category_title']) ? "Front Page" : $data['category_title'];
+						$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
 						$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
 						if ($data['thumb']) $data['thumb'] = BASEDIR."eshop/pictures/thumb/".$data['thumb'];
 						if ($data['picture']) $data['picture'] = BASEDIR."eshop/pictures/".$data['picture'];
 						$info['item'][$data['id']] = $data;
-
 					}
 				}
 			} else {
