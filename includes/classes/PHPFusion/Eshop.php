@@ -268,7 +268,7 @@ class Eshop {
 			");
 		} else {
 			// on main page
-			$result = dbquery("SELECT id, cid, title, thumb, price, picture, xprice, keywords, product_languages, if(cid=0, 0, 1) FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
+			$result = dbquery("SELECT id, cid, title, thumb, price, picture, xprice, keywords, product_languages, if(cid=0, 0, 1) as category_title FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
 		}
 		if (dbrows($result)>0) {
 			if (multilang_table("ES")) {
