@@ -90,7 +90,7 @@ foreach ($mime as $m => $Mime) {
 	$ext = ".$m";
 	$mime_opts[$ext] = $ext;
 }
-echo form_select('', 'download_types[]', 'download_types', $mime_opts, $settings2['download_types'], array('error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%'));
+echo form_select('', 'download_types[]', 'download_types', $mime_opts, $settings2['download_types'], array('error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%', 'delimiter' => '|'));
 echo "</div>\n";
 echo "<div class='clearfix'>\n";
 echo "<label for='download_screen_max_w'>".$locale['934']."</label> <span class='required'>*</span><br /><span class='small2'>".$locale['935']."</span><br/>\n";
