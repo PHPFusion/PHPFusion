@@ -138,7 +138,7 @@ foreach ($mime as $m => $Mime) {
 	$ext = ".$m";
 	$mime_opts[$ext] = $ext;
 }
-echo form_select('', 'attachtypes[]', 'attachtypes', $mime_opts, $settings2['attachtypes'], array('error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%'));
+echo form_select('', 'attachtypes[]', 'attachtypes', $mime_opts, $settings2['attachtypes'], array('error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%' , 'delimiter' => '|'));
 echo "</div>\n";
 echo "</div>\n</div>\n"; // end panel
 echo "<div class='panel panel-default'><div class='panel-body'>\n";
