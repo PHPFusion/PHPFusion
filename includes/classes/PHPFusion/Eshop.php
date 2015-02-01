@@ -82,6 +82,9 @@ class Eshop {
 			$info['title'] = $current_category['title'];
 			add_to_title($locale['global_201'].$current_category['title']);
 		} elseif ($_GET['product']) {
+			add_to_head("<link rel='canonical' href='".fusion_get_settings('siteurl')."eshop.php?product=".$_GET['product']."'/>");
+			add_to_title($locale['global_201'].$this->info['title']);
+			add_to_title($locale['global_201'].$this->info['category_title']);
 		} else {
 			$info['title'] = $locale['ESHP001'];
 		}
@@ -248,9 +251,26 @@ class Eshop {
 		$this->max_rows = dbrows($max_result);
 		$info['max_rows'] = $this->max_rows;
 		if ($_GET['product']) {
-			$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE active = '1' AND id='".intval($_GET['product'])."' AND ".groupaccess('access')." LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
+			$result = dbquery("SELECT i.*, if(i.cid >0, cat.title, 0) as category_title
+			FROM ".DB_ESHOP." i
+			LEFT JOIN ".DB_ESHOP_CATS." cat on (i.cid=cat.cid)
+			WHERE active = '1' AND id='".intval($_GET['product'])."' AND ".groupaccess('access')." LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
 			if (!dbrows($result)) {
 				redirect(BASEDIR."eshop.php");
+			} else {
+				$data = dbarray($result);
+				$es_langs = explode('.', $data['product_languages']);
+				if (in_array(LANGUAGE, $es_langs)) {
+					$data['category_title'] = isnum($data['category_title']) ? "Front Page" : $data['category_title'];
+					$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
+					$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
+					if ($data['thumb']) $data['thumb'] = BASEDIR."eshop/pictures/thumb/".$data['thumb'];
+					if ($data['picture']) $data['picture'] = BASEDIR."eshop/pictures/".$data['picture'];
+					$info['item'][$data['id']] = $data;
+					$this->info['title'] = $data['title'];
+					$this->info['category_title'] = $data['category_title'];
+					return $info;
+				}
 			}
 		} elseif ($_GET['category']) {
 			// on category page
@@ -272,7 +292,6 @@ class Eshop {
 		}
 		if (dbrows($result)>0) {
 			if (multilang_table("ES")) {
-
 				while ($data = dbarray($result)) {
 					$es_langs = explode('.', $data['product_languages']);
 					if (in_array(LANGUAGE, $es_langs)) {

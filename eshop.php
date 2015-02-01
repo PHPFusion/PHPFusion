@@ -30,10 +30,10 @@ echo '<script type="text/javascript">
 }
 */
 $eShop = new PHPFusion\Eshop();
-$info = $eShop->get_title();
-$info += $eShop->get_category();
+$info = $eShop->get_category();
 $info += $eShop->get_product();
 $info += $eShop->get_featured();
+$info += $eShop->get_title();
 render_eshop_nav($info);
 if ($_GET['category']) {
 	// view category page
@@ -120,22 +120,13 @@ function buildeshopbanners() {
 // mvc functions
 //buildeshopheader();
 /*
-if (!isset($_GET['category']) && (!isset($_GET['product']))) {
-
-
-//Front view start
-
-buildeshopbanners();
-
-}
-
 //item details start
 else if (isset($_GET['product'])) {
 
 $data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['product']."' AND ".groupaccess('access')." AND active = '1' LIMIT 0,1"));
 if ($data) {
-add_to_head("<link rel='canonical' href='".$settings['siteurl']."eshop.php?product=".$data['id']."' />");
-add_to_title(" - ".$data['title']."");
+
+
 if ($data['keywords'] !=="") { set_meta("keywords", $data['keywords']); }
 if ($settings['eshop_cats'] == "1" && $settings['eshop_folderlink'] == "1") {
 	echo '<div class="tbl-border" style="float:left;padding-left: 7px;padding-top: 5px;padding-bottom: 5px;background-color:#f8f8f8;width:99%;line-height:15px !important;height:15px !important;display:inline;"> '.breadcrumb($data['cid']).'  <div class="crumbarrow" style="padding-top:0px;"></div><h1 style="margin:0px !important;line-height:15px !important;height:15px !important;padding:0px !important;font-size:14px;display:inline;"> '.$data['title'].' </h1></div>';
