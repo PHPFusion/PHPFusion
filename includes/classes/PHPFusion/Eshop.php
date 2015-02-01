@@ -6,7 +6,9 @@ namespace PHPFusion;
 class Eshop {
 	private $max_rows = 0;
 	private $info = array();
+	private $banner_path = '';
 	public function __construct() {
+		$this->banner_path = BASEDIR."eshop/pictures/banners/";
 		$_GET['category'] = isset($_GET['category']) && isnum($_GET['category']) ?  $_GET['category'] : 0;
 		$_GET['product'] = isset($_GET['product']) && isnum($_GET['product']) ? $_GET['product'] : 0;
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->max_rows ? : 0;
@@ -16,6 +18,20 @@ class Eshop {
 		$this->info['category'] = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
 		// include files
 	}
+
+	public function get_featured() {
+		$info = array();
+		$result = dbquery("select * FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_cid = '".$_GET['category']."' ORDER BY featbanner_order");
+		if (dbrows($result)>0) {
+			while ($data = dbarray($result)) {
+				$data['featbanner_banner'] = file_exists($this->banner_path.$data['featbanner_banner']) ? $this->banner_path.$data['featbanner_banner'] : '';
+				$info['featured'][$data['featbanner_aid']] = $data;
+			}
+		}
+		return (array) $info;
+	}
+
+
 
 	// clear cart actions
 	static function clear_cart() {
@@ -71,6 +87,15 @@ class Eshop {
 		return (array) $info;
 	}
 
+
+	static function checkeShpImageExists($image_file) {
+		if (file_exists($image_file)) {
+			return $image_file;
+		} else {
+			return SHOP."img/nopic_thumb.gif";
+		}
+	}
+
 	// special components ??
 	static function makeeshoppagenav($start, $count, $total, $range = 0, $link = "") {
 		global $locale;
@@ -100,6 +125,8 @@ class Eshop {
 		}
 		return $res;
 	}
+
+
 
 	static function buildfilters() {
 		global $data, $locale, $settings, $rowstart, $filter, $category;
@@ -248,9 +275,10 @@ class Eshop {
 		return $info;
 	}
 
-	static function get_featured() {
+	static function get_featureds() {
 
-		$result= dbquery("SELECT ter.* FROM ".DB_ESHOP." ter
+		$result= dbquery("SELECT ter.* FROM
+		".DB_ESHOP." ter
 		LEFT JOIN ".DB_ESHOP_FEATITEMS." titm ON ter.id=titm.featitem_item
 		WHERE featitem_cid = '".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."' ORDER BY featitem_order");
 		$rows = dbrows($result);

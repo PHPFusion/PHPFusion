@@ -189,50 +189,6 @@ width: 2880px;
 position: relative; 
 }
 
-.slide { 
-margin-top:20px; 
-padding: 20px 1px; 
-width: 728px; 
-float: left; 
-position: relative; 
-}
-
-.slide h2 { 
-font-family: Helvetica, Sans-Serif !important; 
-font-size: 24px !important; 
-letter-spacing: -1px !important; 
-color: #0088cc !important; 
- }
- 
-.slide p	{ 
-color: #999; 
-font-size: 12px; 
-line-height: 22px; 
-width: 300px; 
-}
-
-.slide img { 
-position: absolute;  
-}
-
-#slider-stopper	{ 
-position: absolute; 
-top: 1px; 
-right: 20px; 
-background: #ac0000; 
-color: white;
-padding: 3px 8px; 
-font-size: 10px; 
-text-transform: uppercase; 
-z-index: 1000; 
- }
-
-.slider-title { 
-position: absolute; 
-top: -30px; 
-left: 25px;  
-z-index: 1000; 
-}
 
 /* Featured banners end */
 

@@ -117,10 +117,6 @@ body {
 	font: 14px/20px "Helvetica Neue",Arial,Tahoma,Century gothic,sans-serif !important;
 }
 
-.main-content a {
-	color: rgb(59, 89, 152);
-	text-decoration: none;
-}
 a:hover {
 	color: #7D828E;
 	text-decoration: none;
@@ -582,32 +578,31 @@ nav {
 	margin-left: -15px;
 	margin-right: -15px;
 	margin-top: -40px !important;
+	background: #f7f7f7 !important;
 }
 .eshop-nav > ul > li > a {
 	margin-bottom:10px;
 	display: block;
 	font-size:14px;
+	color: #444 !important;
+	border: 0;
+}
+.eshop-nav > ul > li > a:hover, .eshop-nav > ul > li > a:focus {
+	color: rgb(255, 102, 0) !important;
+	border: 0;
+	text-decoration: underline;
 }
 .eshop-nav .fa {
 	margin-top:5px;
 	margin-left:3px;
 }
-.eshop-rows {
-	border-bottom:1px solid #ddd;
-}
+
 .eshop-column {
 	display: inline-block;
-	border-right:1px solid #ddd;
-	border-top:1px solid #ddd;
-	padding: 28px 20px 0;
 }
 .eshop-column-br-0 {
-	display: inline-block;
-	border-right : 0 !important;
-	border-top:1px solid #ddd;
-	padding: 28px 20px 0;
+	height: inherit !important;
 }
-
 .eshop-price {
 	font-weight: 600;
 	font-size:25px;
@@ -620,7 +615,11 @@ nav {
 }
 .eshop-product-title {
 	font-size:90%;
-	color: #444;
+	color: rgb(60, 156, 205);
+	font-weight: 600;
+}
+.eshop-product-title:hover, .eshop-product-title:focus {
+	color: rgb(255, 102, 0) !important;
 }
 .eshop-xprice {
 	text-decoration: line-through;

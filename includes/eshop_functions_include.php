@@ -270,63 +270,7 @@ $(".terms").colorbox({inline:true, width:"640px",maxWidth:"1280px",transition:"e
 });
 -->
 </script>';
-function buildeshopbanners() {
-	global $category;
-	$result = dbquery("select * FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_cid = '".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."' ORDER BY featbanner_order");
-	$rows = dbrows($result);
-	if ($rows) {
-		if ($rows > "1") {
-			echo "<script type='text/javascript' src='".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."startstop-slider.js'></script>";
-			echo "<div id='page-wrap'><div id='slider'><div id='mover'>";
-			$slide = "id='slide-1'";
-			while ($data = dbarray($result)) {
-				echo "<div ".$slide." class='slide'>";
-				echo "<div class='slider-title'><h2>";
-				if ($data['featbanner_id']) {
-					$itemtitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP." WHERE id = '".$data['featbanner_id']."'"));
-					echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'>".$itemtitle['title']."</a>";
-					echo "</h2></div>";
-					echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
-				} else if ($data['featbanner_cat']) {
-					$cattitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP_CATS." WHERE cid = '".$data['featbanner_cat']."'"));
-					echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'>".$cattitle['title']."</a>";
-					echo "</h2></div>";
-					echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
-				} else if ($data['featbanner_url']) {
-					echo "<a href='".$data['featbanner_url']."'></a>";
-					echo "</h2></div>";
-					echo "<a href='".$data['featbanner_url']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
-				}
-				//echo "<p> text can be added here, but banner need to be boxy for that..</p>";
-				echo "</div>";
-				$slide = "";
-			}
-			echo "</div></div></div>";
-		} else {
-			echo "<div id='page-wrap'><div id='slider'>";
-			while ($data = dbarray($result)) {
-				echo "<div class='slide'>";
-				echo "<div class='slider-title'><h2>";
-				if ($data['featbanner_id']) {
-					$itemtitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP." WHERE id = '".$data['featbanner_id']."'"));
-					echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'>".$itemtitle['title']."</a>";
-					echo "</h2></div>";
-					echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
-				} else if ($data['featbanner_cat']) {
-					$cattitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP_CATS." WHERE cid = '".$data['featbanner_cat']."'"));
-					echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'>".$cattitle['title']."</a>";
-					echo "</h2></div>";
-					echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
-				} else if ($data['featbanner_url']) {
-					echo "<a href='".$data['featbanner_url']."'></a>";
-					echo "</h2></div>";
-					echo "<a href='".$data['featbanner_url']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
-				}
-				echo "</div></div></div>";
-			}
-		}
-	}
-}
+
 
 function eshopitems() {
 	global $data, $locale, $settings, $aidlink;
@@ -903,13 +847,6 @@ function ppform() {
 	}
 }
 
-function checkeShpImageExists($image_file) {
-	if (file_exists($image_file)) {
-		return $image_file;
-	} else {
-		return SHOP."img/nopic_thumb.gif";
-	}
-}
 
 
 function breadcrumb($cid) {

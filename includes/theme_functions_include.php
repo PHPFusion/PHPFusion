@@ -36,6 +36,22 @@ function dynamic_block($title, $description, $form_input) {
 		</div>";
 }
 
+/**
+ * Calculate width for column units in % or in bootstrap grid unit
+ * @param      $items_per_row
+ * @param bool $bootstrap_units
+ * @return int
+ */
+function col_span($items_per_row, $bootstrap_units = FALSE) {
+	$unit = $bootstrap_units ? 12 : '100';
+	if ($items_per_row > 0) {
+		$unit = $bootstrap_units ? floor(12/$items_per_row) : floor(100/$items_per_row);
+	}
+	return (int) $unit;
+}
+
+
+
 function openmodal($id, $title, $options=array()) {
 	global $locale;
 	$options += array(
@@ -67,9 +83,7 @@ function openmodal($id, $title, $options=array()) {
 }
 
 function closemodal() {
-	$html = '';
-	$html .= "</div>\n</div>\n</div>\n</div>\n";
-	return $html;
+	return "</div>\n</div>\n</div>\n</div>\n";
 }
 
 function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $reverse = FALSE, $as_percent = TRUE) {
@@ -494,7 +508,7 @@ function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = T
 		if ($height > $_size[0]) { $_offset_h = ($height - $_size[0])/2; } // get surplus and negative by half.
 	}
 
-	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-block image-wrap thumb text-center overflow-hide pull-left m-2'>\n";
+	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide  m-2'>\n";
 	$html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
 	if ($src) {
 		$html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." />\n";

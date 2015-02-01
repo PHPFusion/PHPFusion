@@ -33,69 +33,67 @@ $eShop = new PHPFusion\Eshop();
 $info = $eShop->get_title();
 $info += $eShop->get_category();
 $info += $eShop->get_product();
+$info += $eShop->get_featured();
 render_eshop_cats($info);
 if ($_GET['category']) {
 	// view category page
 } elseif ($_GET['product']) {
 	// view product page
 } else {
-	render_eshop_main($info);
+	render_eshop_slideshow($info);
+	render_eshop_main_product($info);
+	render_eshop_cat_showcase($info);
 }
 
-function render_eshop_main(array $info) {
+
+function render_eshop_main_product(array $info) {
 	global $locale;
+	echo "<h3>New Arrivals</h3>\n";
 	if (!empty($info['item'])) {
-		// bootstrap option
-		//$calculated = floor(12/fusion_get_settings('eshop_ipr')); // // calculate item per row setting by bootstrap 12 grid system.
-		// lets ditch bootstrap's params. we go with %, so
-		$calculated_width = floor(100/(fusion_get_settings('eshop_ipr') > 0 || fusion_get_settings('eshop_ipr') <= 6 ? fusion_get_settings('eshop_ipr') : 1)); // not to allow 0 and more than 6.
+		$calculated_bs = col_span(fusion_get_settings('eshop_ipr'), 1);
 		echo "<div class='row eshop-rows'>\n";
 		$i = 1;
 		foreach($info['item'] as $product_id => $item_data) {
-			/*$class = 'eshop-column';
-			if ($i == fusion_get_settings('eshop_ipr')) {
-				$class = 'eshop-column-br-0';
-				$i = 0;
+			echo "<div class='col-xs-12 eshop-column col-sm-".$calculated_bs." text-center m-t-20 m-b-20'>\n
+					<a class='display-inline-block' style='margin:0px auto; min-height:".(fusion_get_settings('eshop_image_th')*1.1)."px;' href='".$item_data['link']."'>\n
+						<img class='img-responsive' src='".$item_data['picture']."' style='width:".fusion_get_settings('eshop_image_tw')."px; max-height:".fusion_get_settings('eshop_image_th')."px;'/>
+					</a>
+					<div class='panel-body' style='min-height:100px;'>
+
+							<div class='text-left'>
+							<a href='".$item_data['link']."'><span class='eshop-product-title'>".$item_data['title']."</span></a><br/>";
+			if ($item_data['xprice']) {
+							echo "
+							<span class='eshop-price'>
+							<small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['xprice'])."</span>
+							<span class='eshop-discount label label-danger'>".number_format(100-($item_data['xprice']/$item_data['price']*100))."% ".$locale['off']."</span>
+							<br/>
+							<span class='eshop-xprice'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</span>\n";
+			} else {
+							echo "
+							<span class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</span>\n";
 			}
-			?>
-			<div class='col-xs-12 <?php echo $class ?> text-center' style='min-height:330px; width: <?php echo $calculated_width ?>%'>
-				<a class='eshop-link-img' href='<?php echo $item_data['link'] ?>'>
-					<div class='display-block' style='height:200px;'>
-						<img class='img-responsive' style='margin:10px auto; max-height: <?php echo fusion_get_settings('eshop_image_th') ?>px;' src='<?php echo $item_data['picture'] ?>'>
-					</div>
-				</a>
-				<div class='text-left'>
-				<a href='<?php echo $item_data['link'] ?>'>
-					<span class='eshop-product-title'><?php echo $item_data['title'] ?></span>
-				</a>
-				<br/>
-					<?php if ($item_data['xprice']) { ?>
+					echo "<div>\n";
+				echo "</div>\n";
+				echo "</div>\n";
+				echo "</div>\n";
 
-						<span class='eshop-price'>
-							<small><?php echo fusion_get_settings('eshop_currency')?></small><?php echo number_format($item_data['xprice'])?>
-						</span>
-						<span class='eshop-discount label label-danger'><?php echo number_format(100-($item_data['xprice']/$item_data['price']*100))?>% <?php echo $locale['off'] ?></span>
-						<br/>
-						<span class='eshop-xprice'>
-							<small><?php echo fusion_get_settings('eshop_currency')?></small><?php echo number_format($item_data['price'])?>
-						</span>
-					<?php } else { ?>
-						<span class='eshop-price'>
-							<small><?php echo fusion_get_settings('eshop_currency')?></small><?php echo number_format($item_data['price']) ?></span>
-					<?php } ?>
+			echo "<div class='panel-footer text-smaller text-left'>\n";
+			echo "<a class='text-lighter text-dark strong' href=''><i class='fa fa-shopping-cart m-r-10 m-t-5'></i>BUY NOW</a>";
+			echo "<a class='text-lighter text-dark strong pull-right' href=''><i class='m-t-5 fa fa-heart m-r-10'></i></a>";
+			echo "</div>\n";
 
-				</div>
-			</div>
-			<?php
-			$i++;*/
+			echo "</div>\n";
+			$i++;
 		}
-		echo "</div>\n"; 
+		echo "</div>\n";
 	}
 
 }
 
 function render_eshop_cats(array $info) {
-	echo "<nav class='eshop-nav navbar-inverse nav'>\n";
+
+	echo "<nav class='eshop-nav navbar-default nav'>\n";
 	echo "<ul class='navbar navbar-nav'>\n";
 	if ($_GET['category']) {
 		if (!empty($info['previous_category'])) {
@@ -116,8 +114,136 @@ function render_eshop_cats(array $info) {
 	echo "</nav>\n";
 }
 
-function render_eshop_featured(array $info) {
+function buildeshopbanners() {
+	$rows = 0;
+	if ($rows) {
+		if ($rows > "1") {
+			// this is a carousel.
 
+			echo "<script type='text/javascript' src='".(fusion_get_settings('site_seo') ? FUSION_ROOT : '').SHOP."startstop-slider.js'></script>";
+			echo "<div id='page-wrap'><div id='slider'><div id='mover'>";
+			$slide = "id='slide-1'";
+			while ($data = dbarray($result)) {
+				echo "<div ".$slide." class='slide'>";
+				echo "<div class='slider-title'><h2>";
+				if ($data['featbanner_id']) {
+					$itemtitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP." WHERE id = '".$data['featbanner_id']."'"));
+					echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'>".$itemtitle['title']."</a>";
+					echo "</h2></div>";
+					echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
+				} else if ($data['featbanner_cat']) {
+					$cattitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP_CATS." WHERE cid = '".$data['featbanner_cat']."'"));
+					echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'>".$cattitle['title']."</a>";
+					echo "</h2></div>";
+					echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
+				} else if ($data['featbanner_url']) {
+					echo "<a href='".$data['featbanner_url']."'></a>";
+					echo "</h2></div>";
+					echo "<a href='".$data['featbanner_url']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
+				}
+				//echo "<p> text can be added here, but banner need to be boxy for that..</p>";
+				echo "</div>";
+				$slide = "";
+			}
+			echo "</div></div></div>";
+		} else {
+
+			echo "<div id='page-wrap'><div id='slider'>";
+			while ($data = dbarray($result)) {
+				echo "<div class='slide'>";
+				echo "<div class='slider-title'><h2>";
+				if ($data['featbanner_id']) {
+					$itemtitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP." WHERE id = '".$data['featbanner_id']."'"));
+					echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'>".$itemtitle['title']."</a>";
+					echo "</h2></div>";
+					echo "<a href='".FUSION_SELF."?product=".$data['featbanner_id']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/".$data['featbanner_banner'])."" : "".(fusion_get_settings('site_seo') ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
+				} else if ($data['featbanner_cat']) {
+					$cattitle = dbarray(dbquery("SELECT title FROM ".DB_ESHOP_CATS." WHERE cid = '".$data['featbanner_cat']."'"));
+					echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'>".$cattitle['title']."</a>";
+					echo "</h2></div>";
+					echo "<a href='".FUSION_SELF."?category=".$data['featbanner_cat']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
+				} else if ($data['featbanner_url']) {
+					echo "<a href='".$data['featbanner_url']."'></a>";
+					echo "</h2></div>";
+					echo "<a href='".$data['featbanner_url']."'><img style='width:728px;height:90px;' src='".($data['featbanner_banner'] ? "".self::checkeShpImageExists(SHOP."pictures/banners/category_".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."/".$data['featbanner_banner'])."" : "".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."img/nopic_thumb.gif")."' alt=''  border='0' /></a>";
+				}
+				echo "</div></div></div>";
+			}
+		}
+	}
+}
+
+function render_eshop_cat_showcase($info) {
+	$cat = '';
+	if (!empty($info['featured'])) {
+		foreach($info['featured'] as $id => $banner) {
+			if ($banner['featbanner_cat']) {
+				$cat .= "<a href='".BASEDIR."eshop.php?category=".$banner['featbanner_cat']."'>";
+				$cat .= thumbnail($banner['featbanner_banner'], "23%");
+				$cat .= "</a>\n";
+			}
+		}
+	}
+
+	if ($cat) {
+	?>
+	<h3>Featured Category</h3>
+	<div class='list-group-item p-0'>
+		<?php echo $cat; ?>
+	</div>
+	<?php
+	}
+}
+
+function render_eshop_slideshow(array $info) {
+	//go for carousel
+	$i = 0;
+	$indicator = '';
+	$slides = '';
+	if (!empty($info['featured'])) {
+		foreach($info['featured'] as $id => $banner) {
+			if ($banner['featbanner_id']) {
+				$indicator .= "<li data-target='#carousel-example-generic' ".($i == 0 ? "class='active'" : '')." data-slide-to='".$i."'></li>\n";
+				$slides .= "
+			<div style='max-height:280px; overflow:hidden;' class='item ".($i == 0 ? "active" : '')."'>
+			<a href='".BASEDIR."eshop.php?product=".$banner['featbanner_id']."'>
+			<img class='img-responsive' style='width:100%' src='".$banner['featbanner_banner']."' />
+			<div class='carousel-caption'>".$banner['featbanner_title']."</div>
+			</a>
+			</div>
+			";
+				$i++;
+			}
+		}
+	}
+	if ($indicator) {
+	?>
+	<div class='panel panel-default m-t-20'>
+		<div class='panel-body'>
+			<div id="carousel-example-generic" class="carousel slide" style='max-height:400px;' data-ride="carousel">
+				<!-- Indicators -->
+				<ol class="carousel-indicators">
+					<?php echo $indicator ?>
+				</ol>
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner" role="listbox">
+					<?php echo $slides ?>
+				</div>
+
+				<!-- Controls -->
+				<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				</a>
+				<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<?php
+	}
 }
 //////////////--------- <3><  ------------------ ///////////////
 
@@ -139,58 +265,7 @@ buildeshopbanners();
 //item details start
 else if (isset($_GET['product'])) {
 
-echo '<script type="text/javascript">
-<!--
-$(document).ready(function() {
-
-			$(function() {
-				//Enable for a fancy overlay effect
-				//$("#carousel a").append("<img src=\"img/gui/carousel_glare.png\" class=\"glare\" />"); 
-				//$("#thumbs a").append("<img src=\"img/gui/carousel_glare_small.png\" class=\"glare\" />");
-
-				$("#carousel").carouFredSel({
-					responsive: true,
-					circular: false,
-					auto: false,
-					items: {
-						visible: 1,
-						width:"400",
-						height: (500/800*100) + "%"
-					},
-					scroll: {
-						fx: "directscroll"
-					}
-				});
-
-				$("#thumbs").carouFredSel({
-					responsive: true,
-					circular: false,
-					infinite: false,
-					auto: false,
-					prev: "#prev",
-					next: "#next",
-					items: {
-						visible: {
-							min: 2,
-							max: 4
-						},
-						width: 150,
-						height: "66%"
-					}
-				});
-
-				$("#thumbs a").click(function() {
-					$("#carousel").trigger("slideTo", "#" + this.href.split("#").pop() );
-					$("#thumbs a").removeClass("SELECTed");
-					$(this).addClass("SELECTed");
-					return false;
-				});
-		});
-});
--->
-</script>';
 $data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['product']."' AND ".groupaccess('access')." AND active = '1' LIMIT 0,1"));
-
 if ($data) {
 add_to_head("<link rel='canonical' href='".$settings['siteurl']."eshop.php?product=".$data['id']."' />");
 add_to_title(" - ".$data['title']."");
@@ -716,7 +791,7 @@ echo '<div style="margin-top:10px;"></div><div class="tbl-border" style="width:6
 echo breadseo($_GET['category']);
 echo "<div class='clear'></div>";
 //check featured banners
-buildeshopbanners();
+
 
 //Check featured section first
 	$resultfeat= dbquery("SELECT ter.* FROM ".DB_ESHOP." ter
@@ -740,7 +815,6 @@ if ($rows) {
 
 $rows = dbrows($result);
 $result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid='".$_GET['category']."' AND active = '1' AND ".groupaccess('access')." ORDER BY ".$filter." LIMIT ".$_GET['rowstart'].",".$settings['eshop_nopp']."");
-
 	$counter = 0; 
 	echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'><tr>\n";
 	while ($data = dbarray($result)) {
