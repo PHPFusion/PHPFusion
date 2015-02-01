@@ -54,7 +54,7 @@ if (isset($_POST['savesettings'])) {
 		$attachmax_count = form_sanitizer($_POST['attachmax_count'], 5, 'attachmax_count');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$attachmax_count' WHERE settings_name='attachmax_count'") : '';
 		$attachtypes = form_sanitizer($_POST['attachtypes'], '', 'attachtypes');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['attachtypes'])."' WHERE settings_name='attachtypes'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$attachtypes' WHERE settings_name='attachtypes'") : '';
 		$thread_notify = form_sanitizer($_POST['thread_notify'], '', 'thread_notify');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$thread_notify' WHERE settings_name='thread_notify'") : '';
 		$forum_ranks = form_sanitizer($_POST['forum_ranks'], '0', 'forum_ranks');
