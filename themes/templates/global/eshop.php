@@ -150,7 +150,7 @@ if (!function_exists('render_eshop_page_content')) {
 			$i = 1;
 			$calculated_bs = col_span(fusion_get_settings('eshop_ipr'), 1);
 			// Main Products Lineup
-			if (tree_count($info['item'], 'cid', $_GET['category'])) {
+			if (!$_GET['category'] || tree_count($info['item'], 'cid', $_GET['category'])) {
 				echo "<div class='row eshop-rows'>\n";
 				foreach ($info['item'] as $product_id => $item_data) {
 					if ($_GET['category'] && $item_data['cid'] == $_GET['category'] || !$_GET['category']) {
@@ -187,7 +187,6 @@ if (!function_exists('render_eshop_page_content')) {
 				<span>There are no products found</span><br/>
 				</div>\n";
 			}
-
 			// Related Products Lineup
 			if ($_GET['category']) {
 				$i = 1;
