@@ -85,6 +85,7 @@ class Eshop {
 			add_to_head("<link rel='canonical' href='".fusion_get_settings('siteurl')."eshop.php?product=".$_GET['product']."'/>");
 			add_to_title($locale['global_201'].$this->info['title']);
 			add_to_title($locale['global_201'].$this->info['category_title']);
+			if ($this->info['keywords']) { set_meta("keywords", $this->info['keywords']); }
 		} else {
 			$info['title'] = $locale['ESHP001'];
 		}
@@ -92,7 +93,7 @@ class Eshop {
 	}
 
 
-	static function picExists($image_file) {
+	static function picExist($image_file) {
 		if (file_exists($image_file)) {
 			return $image_file;
 		} else {
@@ -269,6 +270,7 @@ class Eshop {
 					$info['item'][$data['id']] = $data;
 					$this->info['title'] = $data['title'];
 					$this->info['category_title'] = $data['category_title'];
+					$this->info['keywords'] = $data['keywords'];
 					return $info;
 				}
 			}
