@@ -215,26 +215,29 @@ function render_eshop_product($info) {
 	echo opentab($tab_title, $tab_active, 'product-tabs');
 	echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 	echo "<div class='m-t-10'>\n";
-	if ($data['demo']) {
-		$urlprefix = !strstr($data['demo'], "http://") ? "http://" : "";
-		echo "<span class='display-block'>".$locale['ESHP013']." <a href='".$urlprefix.$data['demo']."' target='_blank'>".$locale['ESHP015']."</a></span>";
-	}
-	echo stripslashes($data['description']);
-	if ($data['anything']) {
+	echo "<h4>".$locale['ESHP023']."</h4>";
+	echo "<span class='display-block'>".stripslashes($data['description'])."</span>";
+
+	if ($data['anything1']) {
 		echo "<h4>".stripslashes($data['anything1n'])."</h4>";
-		echo stripslashes($data['anything']);
+		echo "<span class='display-block'>".stripslashes($data['anything1'])."</span>";
 	}
 	if ($data['anything2']) {
 		echo "<h4>".stripslashes($data['anything2n'])."</h4>";
-		echo stripslashes($data['anything2']);
+		echo "<span class='display-block'>".stripslashes($data['anything2'])."</span>";
 	}
 	if ($data['anything3']) {
-		echo "<h4>".stripslashes($data['anything3n'])."</h4>";
-		echo stripslashes($data['anything3']);
+		echo "<span class='display-block'>".stripslashes($data['anything3'])."</span>";
 	}
 	echo "</div>\n";
 	echo closetabbody();
 	echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
+	echo "<div class='m-t-10'>\n";
+	if ($data['demo']) {
+		$urlprefix = !strstr($data['demo'], "http://") ? "http://" : "";
+		echo "<span class='list-group-item display-block'>".$locale['ESHP013']." <a href='".$urlprefix.$data['demo']."' target='_blank'>".$locale['ESHP015']."</a></span>";
+	}
+	echo "</div>\n";
 	echo closetabbody();
 	echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
 	echo closetabbody();

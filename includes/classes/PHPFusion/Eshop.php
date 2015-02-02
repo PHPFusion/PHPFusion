@@ -119,7 +119,7 @@ class Eshop {
 			<script type='text/javascript' src='https://apis.google.com/js/plusone.js'>{ lang: 'en-GB' } </script>
 			");
 
-			$html = "<div class='clearfix m-b-20'>";
+			$html = "<div class='display-block clearfix m-b-20'>";
 			//FB Like button
 			$html .="<div class='pull-left m-r-10'>";
 			$html .="<div id='FbCont".$product_id."'>
@@ -141,7 +141,7 @@ class Eshop {
 					margin-top:-14px;
 					display: inline-block;
 					'>";
-			$html .="<div class='g-plusone' id='gplusone".$product_id."'></div>
+			$html .="<div class='g-plusone pull-left' id='gplusone".$product_id."'></div>
 			<script type='text/javascript'>
 			var Validplus=document.getElementById('gplusone".$product_id."');
 			Validplus.setAttribute('data-size','medium');
