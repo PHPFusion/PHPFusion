@@ -57,6 +57,7 @@ function render_eshop_product($info) {
         (
             [16] => Array
                 (
+	[qty] - unrestricted quantity buy at a go
                     [id] => 16
                     [title] => Mobile 99
                     [cid] => 16
@@ -73,9 +74,9 @@ function render_eshop_product($info) {
                     [anything3n] =>
                     [weight] =>
 
-                    [stock] => 1
+                    [stock] => 1 // show stock?
                     [version] =>
-                    [status] => 1
+                    [status] => 1 // in stock?
                     [active] => 1
                     [gallery_on] => 1
                     [delivery] => 0
@@ -104,21 +105,27 @@ function render_eshop_product($info) {
 
         )
 	 */
+	global $locale;
 	$data = $info['item'][$_GET['product']];
-	echo "<div class='row'>\n<div class='col-xs-12 col-sm-5'>\n";
+	echo "<div class='m-t-10'>\n";
+	echo render_breadcrumbs();
+	echo "</div>\n";
+
+	echo "<div class='row product_slot_".$data['id']."'>\n<div class='col-xs-12 col-sm-5'>\n";
 
 	echo "</div>\n<div class='col-xs-12 col-sm-7'>\n";
 	echo "<h2 class='product-title m-b-0'>".$data['title']."</h2>";
+	global $eShop;
+	echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']);
 	// product basic information
-
-	global $locale;
 	echo "<div class='text-smaller'>\n";
-	echo "<span>Product-Serial: ".$data['artno']."</span><br/>\n";
-	if ($data['in_stock']) {
-		echo "<span>Stock Availability: ".($data['qty'] > 0 ? number_format($data['qty']) : 0)."</span><br/>\n";
+	echo "<span class='display-block'>Product-Serial: ".$data['artno']."</span>\n";
+	if ($data['stock']) {
+		echo "<span class='display-block'>Stock Availability: ".($data['instock'] > 0 ? number_format($data['instock']) : 0)."</span>\n";
 	} else {
-		echo "<span>Stock Availability: ".($data['qty'] > 0 ? 'Stock Available' : 'Out of Stock')."</span><br/>\n";
+		echo "<span class='display-block'>Stock Availability: ".($data['in_stock'] > 0 ? 'Stock Available' : 'Out of Stock')."</span>\n";
 	}
+	echo "<span class='display-block'>".$data['shipping']."</span>";
 	echo "</div>\n";
 	// keywords
 	$keywords = $data['keywords'] ? explode(',', $data['keywords']) : '';
@@ -135,12 +142,12 @@ function render_eshop_product($info) {
 	if ($data['xprice']) {
 		echo "
 		<div class='eshop-price'>
-			<span><small>".fusion_get_settings('eshop_currency')."</small> ".number_format($data['xprice'])."</span>
+			<span><small>".fusion_get_settings('eshop_currency')."</small> ".number_format($data['xprice'],2)."</span>
 			<span class='eshop-discount label label-danger'>".number_format(100-($data['xprice']/$data['price']*100))."% ".$locale['off']."</span>
 		</div>
-		<span class='eshop-xprice'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'])."</span>\n";
+		<span class='eshop-xprice'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</span>\n";
 	} else {
-		echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'])."</div>\n";
+		echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</div>\n";
 	}
 	echo "</div>\n";
 
@@ -148,30 +155,15 @@ function render_eshop_product($info) {
 	echo "</div>\n</div>\n";
 
 
-
-
-	// deprecate $settings
-	// folderlink - auto add breadcrumb
-
 	global $eShop, $locale;
 	$eshop = $eShop;
 	$settings = fusion_get_settings();
 	if (isset($_GET['product'])) {
 		$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['product']."' AND ".groupaccess('access')." AND active = '1' LIMIT 0,1"));
 		if ($data) {
-			if ($settings['eshop_cats'] == "1" && $settings['eshop_folderlink'] == "1") {
-				echo '<div class="tbl-border" style="float:left;padding-left: 7px;padding-top: 5px;padding-bottom: 5px;background-color:#f8f8f8;width:99%;line-height:15px !important;height:15px !important;display:inline;"> breadcrumb
-				 <div class="crumbarrow" style="padding-top:0px;"></div><h1 style="margin:0px !important;line-height:15px !important;height:15px !important;padding:0px !important;font-size:14px;display:inline;"> '.$data['title'].' huh</h1></div>';
-				echo '<script type="text/javascript">
-						d.openTo('.$data['cid'].', true);
-						</script>';
-			} else {
-				echo "<div style='text-align:center;padding:10px;'>&nbsp;<h1 style='font-size:20px;display:inline;'> ".$data['title']." </h1> &nbsp;</div>";
-			}
 
-			echo "<div style='clear:both;'></div>";
 			echo "<div style='width:80%; float:left;'>";
-			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%' class='product_slot_".$data['id']."'>";
+			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%' class=''>";
 			echo "<tr><td class='tbl' align='center'><div class='rib-wrap itembox'>";
 			if (!$data['status'] == "1") {
 				echo "<div class='ribbon-wrapper-green'><div class='ribbon-green'>".$locale['ESHPF147']."</div></div>";
@@ -219,15 +211,10 @@ function render_eshop_product($info) {
 				echo "<img src='".BASEDIR."eshop/img/nopic.gif' width='".$settings['eshop_idisp_w2']."' height='".$settings['eshop_idisp_h2']."' align='middle' alt='' />";
 			}
 			echo "</div></td></tr></table></div>";
+
 			echo "<div style='width:19%; float:right;'>";
 			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%'>";
-			if ($settings['eshop_freeshipsum'] > 0) {
-				if ($totalincvat >= $settings['eshop_freeshipsum']) {
-					echo "<tr><td class='tbl' align='center'>&nbsp; <div style='padding:1px;border:1px solid;'><font color='green'><b>".$locale['ESHP027']." ".$locale['ESHP028']." </b></font></div><br /></td></tr>";
-				} else {
-					echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP025']." &nbsp;</legend><div style='padding:3px;'><b> ".$locale['ESHP026']." </b><br /><font color='green'>".$settings['eshop_freeshipsum']."</font> ".$settings['eshop_currency']."</div></fieldset></td></tr>";
-				}
-			}
+
 			if ($data['xprice']) {
 				echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP006']." &nbsp;</legend><div style='padding:3px;'><s>".$data['price']." ".$settings['eshop_currency']."</s><br /><b><font color='red'>".$data['xprice']."</font> ".$settings['eshop_currency']."</b> </div></fieldset></td></tr>";
 			} else {
@@ -719,66 +706,7 @@ function render_eshop_product($info) {
 			echo "</table>";
 			echo "</div>";
 			echo "<div style='clear:both;'></div>";
-			//Disable the shareing during SEO, it crash with SEO atm for some reason.
-			if ($settings['site_seo'] == "0" && $settings['eshop_shareing'] == "1") {
-				//Load scripts to enable share buttons
-				echo "<script type='text/javascript' src='https://connect.facebook.net/en_US/all.js#xfbml=1'></script>\n";
-				echo "<script type='text/javascript' src='https://platform.twitter.com/widgets.js'></script>\n";
-				add_to_head("<script type='text/javascript' src='https://apis.google.com/js/plusone.js'>{ lang: 'en-GB' } </script>");
-				echo "<div style='margin-left:170px;margin-top:5px;padding-bottom:5px;'>";
-				//Share Buttons
-				if (file_exists(BASEDIR."eshop/pictures/".$data['picture'])) {
-					$metaproperty = "<meta property='og:image' content='".$settings['siteurl']."eshop/pictures/".$data['picture']."' />";
-				} else {
-					$metaproperty = "<meta property='og:image' content='".$settings['siteurl']."eshop/img/nopic.gif' />";
-				}
-				add_to_head("
-".$metaproperty."
-<meta property='og:title' content='".$data['title']."' />
-");
-				//FB Like button
-				echo "<div style='float:left;'>";
-				echo "<div id='FbCont".$data['id']."'>
-<script type='text/javascript'>
-<!--//--><![CDATA[//><!--
-var fb = document.createElement('fb:like');
-fb.setAttribute('href','".$settings['siteurl']."eshop.php?product=".$data['id']."');
-fb.setAttribute('layout','button_count');
-fb.setAttribute('show_faces','true');
-fb.setAttribute('width','1');
-document.getElementById('FbCont".$data['id']."').appendChild(fb);
-//--><!]]>
-</script>
-</div>";
-				echo "</div>";
-				//Twitter
-				echo "<div style='float:left;margin-left:35px;'>";
-				echo "<script type='text/javascript'>
-//<![CDATA[
-(function() {
-    document.write('<a href=\"http://twitter.com/share\" class=\"twitter-share-button\" data-count=\"horizontal\" data-url=\"".$settings['siteurl']."eshop.php?product=".$data['id']."\" data-text=\"".$current['title']."\" data-via=\"eShop\">Tweet</a>');
-    var s = document.createElement('SCRIPT'), s1 = document.getElementsByTagName('SCRIPT')[0];
-    s.type = 'text/javascript';
-    s.async = true;
-    s1.parentNode.insertBefore(s, s1);
-})();
-//]]>
-</script>";
-				echo "</div>";
-				//Google+
-				echo "<div style='float:left;'>";
-				echo "<div class='g-plusone' id='gplusone".$data['id']."'></div>
-<script type='text/javascript'>
-var Validplus=document.getElementById('gplusone".$data['id']."');
-Validplus.setAttribute('data-size','medium');
-Validplus.setAttribute('data-count','true');
-Validplus.setAttribute('data-href','".$settings['siteurl']."eshop.php?product=".$data['id']."');
-</script>";
-				echo "</div>";
-				//End share buttons
-				echo "</div>";
-				echo "<div class='clear spacer'></div>";
-			}
+
 			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%'>";
 			if ($data['description']) {
 				echo "<tr><td align='left'><fieldset><legend align='top' style='padding:4px;'>&nbsp; <b>".$locale['ESHP022']."</b> &nbsp;</legend>";

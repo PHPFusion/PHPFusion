@@ -81,17 +81,93 @@ class Eshop {
 			$current_category = self::get_current_category();
 			$info['title'] = $current_category['title'];
 			add_to_title($locale['global_201'].$current_category['title']);
+			add_to_breadcrumbs(array('link'=>BASEDIR."eshop.php?category=".$current_category['cid']."", 'title'=>$info['title']));
 		} elseif ($_GET['product']) {
 			add_to_head("<link rel='canonical' href='".fusion_get_settings('siteurl')."eshop.php?product=".$_GET['product']."'/>");
 			add_to_title($locale['global_201'].$this->info['title']);
 			add_to_title($locale['global_201'].$this->info['category_title']);
 			if ($this->info['keywords']) { set_meta("keywords", $this->info['keywords']); }
+			if (fusion_get_settings('eshop_folderlink') == 1 && fusion_get_settings('eshop_cats') == 1) {
+				add_to_breadcrumbs(array('link'=>$this->info['category_link'], 'title'=>$this->info['category_title']));
+				add_to_breadcrumbs(array('link'=>$this->info['product_link'], 'title'=>$this->info['product_title']));
+			}
 		} else {
 			$info['title'] = $locale['ESHP001'];
 		}
 		return (array) $info;
 	}
 
+	/**
+	 * Display Social Buttons
+	 * Disable the shareing during SEO, it crash with SEO atm for some reason.
+	 * wierd height behavior on g+1 button
+	 * @param $product_id
+	 * @param $product_picture
+	 * @param $product_title
+	 */
+	static function display_social_buttons($product_id, $product_picture, $product_title) {
+		if (!fusion_get_settings('site_seo') && fusion_get_settings('eshop_shareing') == 1) {
+			//Load scripts to enable share buttons
+			$meta = "<meta property='og:image' content='".fusion_get_settings('siteurl')."eshop/img/nopic.gif' />\n";
+			if (file_exists(BASEDIR."eshop/pictures/".$product_picture)) {
+				$meta = "<meta property='og:image' content='".fusion_get_settings('siteurl')."eshop/pictures/".$product_picture."' />\n";
+			}
+			add_to_head("".$meta."<meta property='og:title' content='".$product_title."' />");
+			add_to_footer("
+			<script type='text/javascript' src='https://connect.facebook.net/en_US/all.js#xfbml=1'></script>\n
+			<script type='text/javascript' src='https://platform.twitter.com/widgets.js'></script>\n
+			<script type='text/javascript' src='https://apis.google.com/js/plusone.js'>{ lang: 'en-GB' } </script>
+			");
+
+			$html = "<div class='clearfix m-b-20'>";
+			//FB Like button
+			$html .="<div class='pull-left m-r-10'>";
+			$html .="<div id='FbCont".$product_id."'>
+			<script type='text/javascript'>
+				<!--//--><![CDATA[//><!--
+				var fb = document.createElement('fb:like');
+				fb.setAttribute('href','".fusion_get_settings('siteurl')."eshop.php?product=".$product_id."');
+				fb.setAttribute('layout','button_count');
+				fb.setAttribute('show_faces','true');
+				fb.setAttribute('width','1');
+				document.getElementById('FbCont".$product_id."').appendChild(fb);
+				//--><!]]>
+				</script>
+			</div>";
+			$html .="</div>";
+			//Google+
+			$html .="<div class='pull-left' style='width:70px; overflow:hidden; overflow: hidden;
+					height: 40px;
+					margin-top:-14px;
+					display: inline-block;
+					'>";
+			$html .="<div class='g-plusone' id='gplusone".$product_id."'></div>
+			<script type='text/javascript'>
+			var Validplus=document.getElementById('gplusone".$product_id."');
+			Validplus.setAttribute('data-size','medium');
+			Validplus.setAttribute('data-count','true');
+			Validplus.setAttribute('data-href','".fusion_get_settings('siteurl')."eshop.php?product=".$product_id."');
+			</script>";
+			$html .="</div>";
+			//Twitter
+			$html .="<div class='pull-left'>";
+			$html .="<script type='text/javascript'>
+			//<![CDATA[
+			(function() {
+    		document.write('<a href=\"http://twitter.com/share\" class=\"twitter-share-button\" data-count=\"horizontal\" data-url=\"".fusion_get_settings('siteurl')."eshop.php?product=".$product_id."\" data-text=\"".$product_title."\" data-via=\"eShop\">Tweet</a>');
+    		var s = document.createElement('SCRIPT'), s1 = document.getElementsByTagName('SCRIPT')[0];
+    		s.type = 'text/javascript';
+    		s.async = true;
+    		s1.parentNode.insertBefore(s, s1);
+			})();
+			//]]>
+			</script>";
+			$html .="</div>";
+			//End share buttons
+			$html .="</div>";
+			return $html;
+		}
+	}
 
 	static function picExist($image_file) {
 		if (file_exists($image_file)) {
@@ -238,6 +314,24 @@ class Eshop {
 		return (array) $info;
 	}
 
+	// Temporary Store this here for panels while I delete old codes
+	protected function total_basket() {
+		$username  ='';
+		$settings = '';
+		$items = "";
+		$sum = "";
+		$items = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' ORDER BY tid ASC"));
+		$sum = dbarray(dbquery("SELECT sum(cprice*cqty) as totals FROM ".DB_ESHOP_CART." WHERE puid = '".$username."'"));
+		$vat = $settings['eshop_vat'];
+		$price = $sum['totals'];
+		$vat = ($price/100)*$vat;
+		if ($settings['eshop_vat_default'] == "0") {
+			$totalincvat = $price+$vat;
+		} else {
+			$totalincvat = $price;
+		}
+	}
+
 	/**
 	 * Get Product Data from Database
 	 * If ($_GET['category']) is available, will return info on the category and its child only
@@ -245,6 +339,7 @@ class Eshop {
 	 * @return array
 	 */
 	public function get_product() {
+		global $locale;
 		$result = null;
 		$info = array();
 		// set max rows
@@ -262,6 +357,11 @@ class Eshop {
 				$data = dbarray($result);
 				$es_langs = explode('.', $data['product_languages']);
 				if (in_array(LANGUAGE, $es_langs)) {
+					$data['net_price'] = $data['price'] * ((fusion_get_settings('eshop_vat')/100)+1); // 40% increase is 1.(40/100) = 1.4 * price = total
+					$data['shipping'] = '';
+					if (fusion_get_settings('eshop_freeshipsum')>0) {
+						$data['shipping'] = ($data['net_price'] > fusion_get_settings('eshop_freeshipsum')) ? $locale['ESHP027']." ".$locale['ESHP028'] : $locale['ESHP025']."  ".$locale['ESHP026']." ".fusion_get_settings('eshop_freeshipsum')." ".fusion_get_settings('eshop_currency');
+					}
 					$data['category_title'] = isnum($data['category_title']) ? "Front Page" : $data['category_title'];
 					$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
 					$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
@@ -269,8 +369,13 @@ class Eshop {
 					if ($data['picture']) $data['picture'] = BASEDIR."eshop/pictures/".$data['picture'];
 					$info['item'][$data['id']] = $data;
 					$this->info['title'] = $data['title'];
+					// push for title and meta
 					$this->info['category_title'] = $data['category_title'];
+					$this->info['category_link'] = BASEDIR."eshop.php?category=".$data['cid'];
+					$this->info['product_title'] = $data['title'];
+					$this->info['product_link'] = BASEDIR."eshop.php?product=".$data['id'];
 					$this->info['keywords'] = $data['keywords'];
+
 					return $info;
 				}
 			}
