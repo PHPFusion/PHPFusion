@@ -333,6 +333,26 @@ class Eshop {
 	}
 
 	/**
+	 * Fetches Product Photos when $_GET['product'] is available
+	 * @return array
+	 */
+	static function get_product_photos() {
+		$info = array();
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".intval($_GET['product'])."' ORDER BY photo_order");
+		if (dbrows($result)>0) {
+			while ($data = dbarray($result)) {
+
+
+				$data['photo_filename'] = self::picExist(SHOP."pictures/album_".$data['album_id']."/".$data['photo_filename']);
+				$data['photo_thumb1'] = self::picExist(SHOP."pictures/album_".$data['album_id']."/".$data['photo_filename']);
+				$info['photos'][] = $data;
+			}
+		}
+		return (array)$info;
+	}
+
+
+	/**
 	 * Get Product Data from Database
 	 * If ($_GET['category']) is available, will return info on the category and its child only
 	 * If ($_GET['product']) is available, will return full product info
@@ -362,11 +382,25 @@ class Eshop {
 					if (fusion_get_settings('eshop_freeshipsum')>0) {
 						$data['shipping'] = ($data['net_price'] > fusion_get_settings('eshop_freeshipsum')) ? $locale['ESHP027']." ".$locale['ESHP028'] : $locale['ESHP025']."  ".$locale['ESHP026']." ".fusion_get_settings('eshop_freeshipsum')." ".fusion_get_settings('eshop_currency');
 					}
+					$data['version'] = $data['version'] ? $locale['ESHP007']." ".$data['version'] : '';
+					$data['delivery'] = $data['delivery'] && $data['instock'] <=0 ?  $locale['ESHP012']." ".nl2br($data['delivery']) : '';
+					$data['stock_status'] = '';
+					if ($data['stock'] == 1) {
+						$data['stock_status'] .= $locale['ESHP008'].": ";
+						if ($data['instock'] >= 1) {
+							$data['stock_status'] .= ($data['instock'] >= 10) ? $locale['ESHP009'] : $locale['ESHP010'];
+							$data['stock_status'] .= " ".number_format($data['instock']);
+						} else {
+							$data['stock_status'] .= $locale['ESHP011'];
+						}
+					}
+
 					$data['category_title'] = isnum($data['category_title']) ? "Front Page" : $data['category_title'];
 					$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
 					$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
-					if ($data['thumb']) $data['thumb'] = BASEDIR."eshop/pictures/thumb/".$data['thumb'];
-					if ($data['picture']) $data['picture'] = BASEDIR."eshop/pictures/".$data['picture'];
+					if ($data['thumb']) $data['thumb'] = self::picExist(BASEDIR."eshop/pictures/thumb/".$data['thumb']);
+					if ($data['picture']) $data['picture'] = self::picExist(BASEDIR."eshop/pictures/".$data['picture']);
+
 					$info['item'][$data['id']] = $data;
 					$this->info['title'] = $data['title'];
 					// push for title and meta

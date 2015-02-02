@@ -1,7 +1,7 @@
 <?php
 /*--------------------------------------------------------------+
 | PHP-Fusion Content Management System 				|
-| Copyright © 2002 - 2008 Nick Jones 				|
+| Copyright ï¿½ 2002 - 2008 Nick Jones 				|
 | http://www.php-fusion.co.uk/ 					|
 +---------------------------------------------------------------+
 | Filename:photosadmin.php                                      |
@@ -15,7 +15,8 @@ if (isset($_GET['ealbum_id']) && !isnum($_GET['ealbum_id'])) die("Denied");
 
 define("ESHPHOTOS", BASEDIR."eshop/pictures/");
 define("SAFEMODE", @ini_get("safe_mode") ? true : false);
-
+global $userdata;
+$settings = fusion_get_settings();
 $error = "";
 $photo_thumb = "";
 $photo_dest = "";

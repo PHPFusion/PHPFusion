@@ -34,6 +34,7 @@ $info = $eShop->get_category();
 $info += $eShop->get_product();
 $info += $eShop->get_featured();
 $info += $eShop->get_title();
+$info += $eShop->get_product_photos();
 render_eshop_nav($info);
 if ($_GET['category']) {
 	// view category page
@@ -106,6 +107,7 @@ function render_eshop_product($info) {
         )
 	 */
 	global $locale;
+	global $eShop;
 	$data = $info['item'][$_GET['product']];
 	echo "<div class='m-t-10'>\n";
 	echo render_breadcrumbs();
@@ -113,18 +115,71 @@ function render_eshop_product($info) {
 
 	echo "<div class='row product_slot_".$data['id']."'>\n<div class='col-xs-12 col-sm-5'>\n";
 
+	// design an image carousel.
+
+
+	// Images
+	echo "<div class='rib-wrap itembox'>";
+	if (!$data['status'] == "1") {
+		echo "<div class='ribbon-wrapper-green'><div class='ribbon-green'>".$locale['ESHPF147']."</div></div>";
+	} else if ($data['campaign'] == "1") {
+		echo "<div class='ribbon-wrapper-red'><div class='ribbon-red'>".$locale['ESHPF146']."</div></div>";
+	} else {
+		if ($data['dateadded']+fusion_get_settings('eshop_newtime') >= time()) {
+			echo "<div class='ribbon-wrapper-blue'><div class='ribbon-blue'>".$locale['ESHPF145']."</div></div>";
+		}
+	}
+	// picture container
+	echo "<img title='".$data['title']."' id='photo_container' ".(fusion_get_settings('eshop_ratios') ? "class='img-responsive'" : "style='width:".fusion_get_settings('eshop_idisp_w2')."px; height: ".fusion_get_settings('eshop_idisp_h2')."px;' ")." src='".$data['picture']."'>\n";
+	echo "</div>\n";
+
+	if ($data['gallery_on'] == "1") { // multiple images
+		if (!empty($info['photos'])) {
+			foreach($info['photos'] as $photos) {
+				echo "<div class='display-inline-block m-t-20 m-r-10' style='width:20%' data-url=''>\n";
+				echo thumbnail($photos['photo_thumb1'], '100%');
+				echo "</div>\n";
+			}
+
+			// then we do the thumbnail here.
+			// now lets add.
+		}
+		//print_p($info['photos']);
+	}
+
+			// first is the image picture
+			// we do not need carousel. just need to se tthe settings.
+			//echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_filename']."' id='".$pdata['photo_id']."' title='".$pdata['photo_title']."'><img class='imageclass' src='".($pdata['photo_filename'] ? "".$eShop->picExist(BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_filename']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' alt='".$data['title']."'	/></a>";
+
+
+	//		if (fusion_get_settings('eshop_ratios') == "1") {
+	//			echo "<a href='#".$_GET['product']."' class='selected'><img class='imageclass' src='".($data['thumb'] ? "".$eShop->picExist(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' align='middle'  alt='".$data['title']."' /></a>";
+	//		} else {
+	//			echo "<a href='#".$_GET['product']."' class='selected'><img src='".($data['thumb'] ? "".$eShop->picExist(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' width='".fusion_get_settings('eshop_image_tw')."' height='".fusion_get_settings('eshop_image_th')."' align='middle'  alt='".$data['title']."' /></a>";
+	//		}
+	//		$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".$_GET['product']."' ORDER BY photo_order");
+	//		while ($pdata = dbarray($result)) {
+	//			echo "<a href='#".$pdata['photo_id']."'><img class='imageclass' src='".($pdata['photo_thumb1'] ? "".$eShop->picExist(BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_thumb1']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' alt='".$data['title']."' /></a>";
+	//		}
+	//		echo "</div>
+	//		<a id='prev' href='#'></a>
+	//		<a id='next' href='#'></a>
+	//		</div>";
+
+
+
+
+
 	echo "</div>\n<div class='col-xs-12 col-sm-7'>\n";
 	echo "<h2 class='product-title m-b-0'>".$data['title']."</h2>";
-	global $eShop;
-	echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']);
+	// there is a wierd behavior in social buttons
+
+	//echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']);
 	// product basic information
 	echo "<div class='text-smaller'>\n";
 	echo "<span class='display-block'>Product-Serial: ".$data['artno']."</span>\n";
-	if ($data['stock']) {
-		echo "<span class='display-block'>Stock Availability: ".($data['instock'] > 0 ? number_format($data['instock']) : 0)."</span>\n";
-	} else {
-		echo "<span class='display-block'>Stock Availability: ".($data['in_stock'] > 0 ? 'Stock Available' : 'Out of Stock')."</span>\n";
-	}
+	echo "<span class='display-block'>".$data['stock_status']."</span>\n";
+	echo "<span class='display-block'>".$data['version']."</span>";
 	echo "<span class='display-block'>".$data['shipping']."</span>";
 	echo "</div>\n";
 	// keywords
@@ -150,10 +205,7 @@ function render_eshop_product($info) {
 		echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</div>\n";
 	}
 	echo "</div>\n";
-
-
 	echo "</div>\n</div>\n";
-
 
 	global $eShop, $locale;
 	$eshop = $eShop;
@@ -164,80 +216,13 @@ function render_eshop_product($info) {
 
 			echo "<div style='width:80%; float:left;'>";
 			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%' class=''>";
-			echo "<tr><td class='tbl' align='center'><div class='rib-wrap itembox'>";
-			if (!$data['status'] == "1") {
-				echo "<div class='ribbon-wrapper-green'><div class='ribbon-green'>".$locale['ESHPF147']."</div></div>";
-			} else if ($data['campaign'] == "1") {
-				echo "<div class='ribbon-wrapper-red'><div class='ribbon-red'>".$locale['ESHPF146']."</div></div>";
-			} else {
-				if ($data['dateadded']+$settings['eshop_newtime'] >= time()) {
-					echo "<div class='ribbon-wrapper-blue'><div class='ribbon-blue'>".$locale['ESHPF145']."</div></div>";
-				}
-			}
-			if ($data['picture'] != "") {
-				if ($data['gallery_on'] == "1") {
-					echo "<div id='carousel-wrapper'><div id='carousel'>";
-					if ($settings['eshop_ratios'] == "1") {
-						echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/".$data['picture']."' id='".$_GET['product']."' title='".$data['title']."'><img class='imageclass' src='".($data['picture'] ? "".$eshop->picExist(BASEDIR."eshop/pictures/".$data['picture']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' align='center' alt='".$data['title']."' /></a>";
-					} else {
-						echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/".$data['picture']."' id='".$_GET['product']."' title='".$data['title']."'><img src='".($data['picture'] ? "".$eshop->picExist(BASEDIR."eshop/pictures/".$data['picture']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' width='".$settings['eshop_idisp_w2']."' height='".$settings['eshop_idisp_h2']."' align='middle'  alt='".$data['title']."' /></a>";
-					}
-					$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".$_GET['product']."' ORDER BY photo_order");
-					while ($pdata = dbarray($result)) {
-						echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_filename']."' id='".$pdata['photo_id']."' title='".$pdata['photo_title']."'><img class='imageclass' src='".($pdata['photo_filename'] ? "".$eshop->picExist(BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_filename']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' alt='".$data['title']."'	/></a>";
-					}
-					echo "</div></div><div id='thumbs-wrapper'><div id='thumbs'>";
-					if ($settings['eshop_ratios'] == "1") {
-						echo "<a href='#".$_GET['product']."' class='selected'><img class='imageclass' src='".($data['thumb'] ? "".$eshop->picExist(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' align='middle'  alt='".$data['title']."' /></a>";
-					} else {
-						echo "<a href='#".$_GET['product']."' class='selected'><img src='".($data['thumb'] ? "".$eshop->picExist(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' width='".$settings['eshop_image_tw']."' height='".$settings['eshop_image_th']."' align='middle'  alt='".$data['title']."' /></a>";
-					}
-					$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".$_GET['product']."' ORDER BY photo_order");
-					while ($pdata = dbarray($result)) {
-						echo "<a href='#".$pdata['photo_id']."'><img class='imageclass' src='".($pdata['photo_thumb1'] ? "".$eshop->picExist(BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_thumb1']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' alt='".$data['title']."' /></a>";
-					}
-					echo "</div>
-	<a id='prev' href='#'></a>
-	<a id='next' href='#'></a>
-</div>";
-				} else {
-					if ($settings['eshop_ratios'] == "1") {
-						echo "<a class='eshopphotooverlaysingle' href='".BASEDIR."eshop/pictures/".$data['picture']."'><img class='imageclass' style='padding:8px;' src='".($data['picture'] ? "".$eshop->picExist(BASEDIR."eshop/pictures/".$data['picture']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' align='middle' alt='".$data['title']."' /></a>";
-					} else {
-						echo "<a class='eshopphotooverlaysingle' href='".BASEDIR."eshop/pictures/".$data['picture']."'><img style='padding:8px;' src='".($data['picture'] ? "".$eshop->picExist(BASEDIR."eshop/pictures/".$data['picture']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' width='".$settings['eshop_idisp_w2']."' height='".$settings['eshop_idisp_h2']."' align='middle' alt='".$data['title']."' /></a>";
-					}
-				}
-			} else {
-				echo "<img src='".BASEDIR."eshop/img/nopic.gif' width='".$settings['eshop_idisp_w2']."' height='".$settings['eshop_idisp_h2']."' align='middle' alt='' />";
-			}
-			echo "</div></td></tr></table></div>";
+			echo "<tr><td class='tbl' align='center'>\n";
+			echo "</td></tr></table></div>";
 
 			echo "<div style='width:19%; float:right;'>";
 			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%'>";
 
-			if ($data['xprice']) {
-				echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP006']." &nbsp;</legend><div style='padding:3px;'><s>".$data['price']." ".$settings['eshop_currency']."</s><br /><b><font color='red'>".$data['xprice']."</font> ".$settings['eshop_currency']."</b> </div></fieldset></td></tr>";
-			} else {
-				echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP006']." &nbsp;</legend><div style='padding:3px;'>".$data['price']." ".$settings['eshop_currency']."</div></fieldset></td></tr>";
-			}
-			if ($data['version']) {
-				echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP007']." &nbsp;</legend><div style='padding:3px;'> ".$data['version']." </div></fieldset></td></tr>";
-			}
-			if ($data['stock'] == "1") {
-				echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP008']." &nbsp;</legend>";
-				echo "<div style='padding:3px;'>";
-				if ($data['instock'] >= 1) {
-					echo "".($data['instock'] >= "10" ? "<img src='".BASEDIR."eshop/img/stock1.png' border='0' alt='".$locale['ESHP009']."' />" : "<img src='".BASEDIR."eshop/img/stock2.png' border='0' alt='".$locale['ESHP010']."' />")."";
-				} else {
-					echo "<img src='".BASEDIR."eshop/img/stock3.png' border='0' alt='".$locale['ESHP011']."' />";
-				}
-				echo "</div></fieldset></td></tr>";
-			}
-			if ($data['instock'] <= 0) {
-				if ($data['delivery']) {
-					echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP012']." &nbsp;</legend><div style='padding:3px;'> ".nl2br($data['delivery'])." </div></fieldset></td></tr>";
-				}
-			}
+
 			if ($data['demo']) {
 				$urlprefix = !strstr($data['demo'], "http://") ? "http://" : "";
 				echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP013']." &nbsp;</legend><div style='padding:3px;'> <a href='".$urlprefix.$data['demo']."' target='_blank'>".$locale['ESHP015']."</a> </div></fieldset></td></tr>";

@@ -198,16 +198,13 @@ position: relative;
   max-width:480px !important; 
   max-height:330px !important; 
 }
-
+/* Ribbons start */
 .itembox {
 	border: solid 1px #eee;
 	border-radius: 5px;
 }
 
-/* Ribbons start */
-.rib-wrap {
-  position: relative !important;
-}
+.rib-wrap {  position: relative !important; }
 
 .ribbon-wrapper-blue {
   width: 85px;
@@ -219,7 +216,6 @@ position: relative;
 }
 
 .ribbon-blue {
-  //font-family: "Calligraffiti";
   font-size: 12px; 
   font-weight: bold;
   color: #333;
@@ -273,7 +269,6 @@ position: relative;
 }
 
 .ribbon-green {
-  //font-family: "Calligraffiti";
   font-size: 12px; 
   font-weight: bold;
   color: #333;
@@ -327,12 +322,11 @@ position: relative;
 }
 
 .ribbon-red {
-  //font-family: "Calligraffiti";
   font-size: 12px; 
   font-weight: bold;
   color: #fff;
   text-align: center;
-  //text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
+  text-shadow: rgba(255,255,255,0.5) 0px 1px 0px;
   -webkit-transform: rotate(45deg);
   -moz-transform:    rotate(45deg);
   -ms-transform:     rotate(45deg);
@@ -396,6 +390,10 @@ position: relative;
 }
 
 /* Details carousel start */
+
+
+
+
 
 .myTrans { 
 	border: 2px dotted gray; 
