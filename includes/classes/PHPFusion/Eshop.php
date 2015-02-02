@@ -341,10 +341,8 @@ class Eshop {
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".intval($_GET['product'])."' ORDER BY photo_order");
 		if (dbrows($result)>0) {
 			while ($data = dbarray($result)) {
-
-
 				$data['photo_filename'] = self::picExist(SHOP."pictures/album_".$data['album_id']."/".$data['photo_filename']);
-				$data['photo_thumb1'] = self::picExist(SHOP."pictures/album_".$data['album_id']."/".$data['photo_filename']);
+				$data['photo_thumb1'] = self::picExist(SHOP."pictures/album_".$data['album_id']."/".$data['photo_thumb1']);
 				$info['photos'][] = $data;
 			}
 		}

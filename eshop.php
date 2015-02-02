@@ -133,48 +133,24 @@ function render_eshop_product($info) {
 	echo "<img title='".$data['title']."' id='photo_container' ".(fusion_get_settings('eshop_ratios') ? "class='img-responsive'" : "style='width:".fusion_get_settings('eshop_idisp_w2')."px; height: ".fusion_get_settings('eshop_idisp_h2')."px;' ")." src='".$data['picture']."'>\n";
 	echo "</div>\n";
 
-	if ($data['gallery_on'] == "1") { // multiple images
+	if ($data['gallery_on'] == "1") {
+		// add a change source of photo_container is sufficient for default template.
+		add_to_jquery("
+		$('.imgclass').bind('click', function(e) {
+			$('#photo_container').prop('src', $(this).data('url'));
+		});
+		");
 		if (!empty($info['photos'])) {
 			foreach($info['photos'] as $photos) {
-				echo "<div class='display-inline-block m-t-20 m-r-10' style='width:20%' data-url=''>\n";
+				echo "<div class='pointer display-inline-block m-t-20 m-r-10 imgclass' style='width:20%' data-url='".$photos['photo_filename']."'>\n";
 				echo thumbnail($photos['photo_thumb1'], '100%');
 				echo "</div>\n";
 			}
-
-			// then we do the thumbnail here.
-			// now lets add.
 		}
-		//print_p($info['photos']);
 	}
-
-			// first is the image picture
-			// we do not need carousel. just need to se tthe settings.
-			//echo "<a class='eshopphotooverlay' href='".BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_filename']."' id='".$pdata['photo_id']."' title='".$pdata['photo_title']."'><img class='imageclass' src='".($pdata['photo_filename'] ? "".$eShop->picExist(BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_filename']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' alt='".$data['title']."'	/></a>";
-
-
-	//		if (fusion_get_settings('eshop_ratios') == "1") {
-	//			echo "<a href='#".$_GET['product']."' class='selected'><img class='imageclass' src='".($data['thumb'] ? "".$eShop->picExist(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' align='middle'  alt='".$data['title']."' /></a>";
-	//		} else {
-	//			echo "<a href='#".$_GET['product']."' class='selected'><img src='".($data['thumb'] ? "".$eShop->picExist(BASEDIR."eshop/pictures/".$data['thumb']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' width='".fusion_get_settings('eshop_image_tw')."' height='".fusion_get_settings('eshop_image_th')."' align='middle'  alt='".$data['title']."' /></a>";
-	//		}
-	//		$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".$_GET['product']."' ORDER BY photo_order");
-	//		while ($pdata = dbarray($result)) {
-	//			echo "<a href='#".$pdata['photo_id']."'><img class='imageclass' src='".($pdata['photo_thumb1'] ? "".$eShop->picExist(BASEDIR."eshop/pictures/album_".$pdata['album_id']."/".$pdata['photo_thumb1']."")."" : "".BASEDIR."eshop/img/nopic.gif")."' alt='".$data['title']."' /></a>";
-	//		}
-	//		echo "</div>
-	//		<a id='prev' href='#'></a>
-	//		<a id='next' href='#'></a>
-	//		</div>";
-
-
-
-
-
 	echo "</div>\n<div class='col-xs-12 col-sm-7'>\n";
 	echo "<h2 class='product-title m-b-0'>".$data['title']."</h2>";
-	// there is a wierd behavior in social buttons
-
-	//echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']);
+	echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info.
 	// product basic information
 	echo "<div class='text-smaller'>\n";
 	echo "<span class='display-block'>Product-Serial: ".$data['artno']."</span>\n";
@@ -186,26 +162,87 @@ function render_eshop_product($info) {
 	$keywords = $data['keywords'] ? explode(',', $data['keywords']) : '';
 	if (!empty($keywords)) {
 		echo "<div class='text-smaller'>\n";
-		echo "<span>Keywords</span> \n";
+		echo "<span>Tags:</span> \n";
 		foreach($keywords as $tag) {
 			echo "<a class='display-inline m-r-10' href=''>".$tag."</a>";
 		}
 		echo "</div>\n";
 	}
 	// price
-	echo "<div class='m-t-20'>\n";
 	if ($data['xprice']) {
+		echo "<div class='m-t-20'>\n";
 		echo "
 		<div class='eshop-price'>
 			<span><small>".fusion_get_settings('eshop_currency')."</small> ".number_format($data['xprice'],2)."</span>
 			<span class='eshop-discount label label-danger'>".number_format(100-($data['xprice']/$data['price']*100))."% ".$locale['off']."</span>
 		</div>
 		<span class='eshop-xprice'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</span>\n";
+		echo "</div>\n";
 	} else {
+		echo "<div class='m-t-20'>\n";
 		echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</div>\n";
+		echo "</div>\n";
+	}
+	// change buynow color.
+	if ($data['status'] == "1") {
+		echo "<div class='m-t-20'>\n";
+		if ($data['buynow'] == "1") {
+			echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_buynow_color')."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
+		}
+		if ($data['cart_on'] == "1") {
+			echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'>".$locale['ESHP021']."</a>";
+		}
+		echo "</div>\n";
+	}
+
+
+
+	echo "</div>\n</div>\n";
+
+	// Do the descriptions and etc.
+	// how many tabs?
+	$tab_title['title'][] = $locale['ESHP023'];
+	$tab_title['id'][] = 'pdesc';
+	$tab_title['icon'][] = '';
+	$tab_title['title'][] = $locale['ESHP022'];
+	$tab_title['id'][] = 'pspecs';
+	$tab_title['icon'][] = '';
+	$tab_title['title'][] = 'What else?';
+	$tab_title['id'][] = 'pspecs';
+	$tab_title['icon'][] = '';
+
+	$tab_active = tab_active($tab_title, 0);
+	echo opentab($tab_title, $tab_active, 'product-tabs');
+	echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
+	echo "<div class='m-t-10'>\n";
+	if ($data['demo']) {
+		$urlprefix = !strstr($data['demo'], "http://") ? "http://" : "";
+		echo "<span class='display-block'>".$locale['ESHP013']." <a href='".$urlprefix.$data['demo']."' target='_blank'>".$locale['ESHP015']."</a></span>";
+	}
+	echo stripslashes($data['description']);
+	if ($data['anything']) {
+		echo "<h4>".stripslashes($data['anything1n'])."</h4>";
+		echo stripslashes($data['anything']);
+	}
+	if ($data['anything2']) {
+		echo "<h4>".stripslashes($data['anything2n'])."</h4>";
+		echo stripslashes($data['anything2']);
+	}
+	if ($data['anything3']) {
+		echo "<h4>".stripslashes($data['anything3n'])."</h4>";
+		echo stripslashes($data['anything3']);
 	}
 	echo "</div>\n";
-	echo "</div>\n</div>\n";
+	echo closetabbody();
+	echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
+	echo closetabbody();
+	echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
+	echo closetabbody();
+	echo closetab();
+
+	echo "<a class='btn ".fusion_get_settings('eshop_return_color')."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>".$locale['ESHP030']."</a>";
+
+	///// ----
 
 	global $eShop, $locale;
 	$eshop = $eShop;
@@ -213,30 +250,16 @@ function render_eshop_product($info) {
 	if (isset($_GET['product'])) {
 		$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['product']."' AND ".groupaccess('access')." AND active = '1' LIMIT 0,1"));
 		if ($data) {
-
-			echo "<div style='width:80%; float:left;'>";
-			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%' class=''>";
-			echo "<tr><td class='tbl' align='center'>\n";
-			echo "</td></tr></table></div>";
-
 			echo "<div style='width:19%; float:right;'>";
 			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%'>";
 
-
-			if ($data['demo']) {
-				$urlprefix = !strstr($data['demo'], "http://") ? "http://" : "";
-				echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP013']." &nbsp;</legend><div style='padding:3px;'> <a href='".$urlprefix.$data['demo']."' target='_blank'>".$locale['ESHP015']."</a> </div></fieldset></td></tr>";
-			}
-			/*  Need to make this button to work for overlay gallery */
-			if ($data['gallery_on'] == "1") {
-				echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP014']." &nbsp;</legend> <a id='openGallery' href='".BASEDIR."eshop/pictures/".$data['picture']."' title='".$data['title']."'><img src='".BASEDIR."eshop/img/gallery.png' width='60' align='middle'  alt='' /></a> </fieldset></td></tr>";
-			}
+			// dync stuff
 			if ($data['status'] == "1") {
 				if ($data['dync']) {
 					$dync = str_replace('"', '', $data['dync']);
 					echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$data['dynf']." &nbsp;</legend><div style='padding:3px;'>";
 					echo "<select name='dyncs_".$data['id']."' id='dyncs_".$data['id']."' class='textbox' style='width:135px !important;'>
-     <option value=''>".$locale['ESHP016']."</option>";
+    				 <option value=''>".$locale['ESHP016']."</option>";
 					$dync = explode(".", substr($dync, 1));
 					for ($i = 0; $i < count($dync); $i++) {
 						echo "<option value='$dync[$i]'>$dync[$i]</option>";
@@ -252,7 +275,7 @@ function render_eshop_product($info) {
 					$colors = str_replace('"', '', $data['icolor']);
 					echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp;".$locale['ESHP017']."&nbsp;</legend><div style='padding:3px;'>";
 					echo "<select name='color_".$data['id']."' id='color_".$data['id']."' class='textbox' style='width:135px !important;'>
-     <option value=''>".$locale['ESHP018']."</option>";
+     				<option value=''>".$locale['ESHP018']."</option>";
 					$colors = explode(".", substr($colors, 1));
 					for ($i = 0; $i < count($colors); $i++) {
 						if ($colors[$i] == "1") {
@@ -680,90 +703,11 @@ function render_eshop_product($info) {
 				echo "<input name='cprice_".$data['id']."' id='cprice_".$data['id']."' value='".($data['xprice'] ? $data['xprice'] : $data['price'])."' type='hidden' />";
 				echo "<input name='cupon_".$data['id']."' id='cupon_".$data['id']."' value='".$data['cupons']."' type='hidden' />";
 			}
-			if ($data['status'] == "1") {
-				if ($data['buynow'] == "1") {
-					echo "<tr><td class='tbl' align='center'><a class='".($settings['eshop_buynow_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_buynow_color']."")."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a></td></tr>";
-				}
-				if ($data['cart_on'] == "1") {
-					echo "<tr><td class='tbl' align='center'><a class='".($settings['eshop_addtocart_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_addtocart_color']."")."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'>".$locale['ESHP021']."</a></td></tr>";
-				}
-			}
+
 			echo "</table>";
 			echo "</div>";
 			echo "<div style='clear:both;'></div>";
 
-			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%'>";
-			if ($data['description']) {
-				echo "<tr><td align='left'><fieldset><legend align='top' style='padding:4px;'>&nbsp; <b>".$locale['ESHP022']."</b> &nbsp;</legend>";
-				echo "<div style='padding-left:10px;padding-right:10px;padding-bottom:10px;'>";
-				if ($data['anything1'] || $data['anything2'] || $data['anything3']) {
-					echo '<script type="text/javascript" charset="utf-8">
-$(function () {
-var tabContainers = $("div.eshp-tabs > div");
-tabContainers.hide().filter(":first").show();
-$("div.eshp-tabs ul.eshp-tabs a").click(function () {
-tabContainers.hide();
-tabContainers.filter(this.hash).show();
-$("div.eshp-tabs ul.eshp-tabs a").removeClass("current");
-$(this).addClass("current");
-return false;
-}).filter(":first").click();
-if(window.location.hash){
-    $("a[href="+window.location.hash+"]").click();
-  }
-});
-</script>';
-					echo '<div class="eshp-tabs" style="height:auto;"><ul class="eshp-tabs">';
-					echo '<li><a href="#first">'.$locale['ESHP023'].'</a></li>';
-					if ($data['anything1']) {
-						echo '<li><a href="#second">'.parseubb(nl2br($data['anything1n'])).'</a></li>';
-					}
-					if ($data['anything2']) {
-						echo '<li><a href="#third">'.parseubb(nl2br($data['anything2n'])).'</a></li>';
-					}
-					if ($data['anything3']) {
-						echo '<li><a href="#forth">'.parseubb(nl2br($data['anything3n'])).'</a></li>';
-					}
-					echo '</ul>';
-					echo '<div id="first">';
-					$item_info_1 = "";
-					$item_info_1 .= "<div style='padding:10px;'>";
-					$item_info_1 .= stripslashes($data['description']);
-					$item_info_1 .= "</div>\n";
-					echo $item_info_1;
-					echo '</div>';
-					echo '<div id="second">';
-					$item_info_2 = "";
-					$item_info_2 .= "<div style='padding:10px;'>";
-					$item_info_2 .= stripslashes($data['anything1']);
-					$item_info_2 .= "</div>\n";
-					echo $item_info_2;
-					echo '</div>';
-					echo '<div id="third">';
-					$item_info_3 = "";
-					$item_info_3 .= "<div style='padding:10px;'>";
-					$item_info_3 .= stripslashes($data['anything2']);
-					$item_info_3 .= "</div>\n";
-					echo $item_info_3;
-					echo '</div>';
-					echo '<div id="forth">';
-					$item_info_4 = "";
-					$item_info_4 .= "<div style='padding:10px;'>";
-					$item_info_4 .= stripslashes($data['anything3']);
-					$item_info_4 .= "</div>\n";
-					echo $item_info_4;
-					echo '</div></div></div>';
-					echo "</fieldset></td></tr>";
-				} else {
-					$item_info = "";
-					$item_info .= "<div style='padding:10px;'>";
-					$item_info .= stripslashes($data['description']);
-					$item_info .= "</div>\n";
-					echo $item_info;
-					echo "</fieldset></td></tr>";
-				}
-			}
-			echo "<tr><td align='left'><a class='".($settings['eshop_return_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_return_color']."")."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>&laquo; ".$locale['ESHP030']."</a> &nbsp;&nbsp; </td></tr></table>";
 			//End item lookup
 		} else {
 			echo "<div class='admin-message'>".$locale['ESHP024']."</div>";

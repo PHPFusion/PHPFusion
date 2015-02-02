@@ -364,8 +364,12 @@ position: relative;
 .ribbon-red:after {
   right: 0;
 }
-
 /* Ribbons end */
+
+.imgclass:hover {
+	opacity: 0.8;
+}
+
 
 .countbox_bubble {
     background-color:red; 
