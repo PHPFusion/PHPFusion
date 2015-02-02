@@ -170,10 +170,10 @@ if (!function_exists('render_blog_item')) {
 		echo "<div class='overflow-hide'>\n";
 		echo "<span class='blog_author_info'>".$locale['global_070']." ".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span><br/>\n";
 		if ($data['user_level']) echo sprintf($locale['testimonial_rank'], $data['user_level']);
-		if ($data['user_location']) echo sprintf($locale['testimonial_location'], $data['user_location']);
+		if (isset($data['user_location']) && $data['user_location']) echo sprintf($locale['testimonial_location'], $data['user_location']);
 		if ($data['user_joined']) echo sprintf($locale['testimonial_location'], showdate('newsdate', $data['user_joined']));
-		if ($data['user_web']) echo sprintf($locale['testimonial_web'], $data['user_web']);
-		if ($data['user_contact']) echo sprintf($locale['testimonial_contact'], $data['user_contact']);
+		if (isset($data['user_web']) && $data['user_web']) echo sprintf($locale['testimonial_web'], $data['user_web']);
+		if (isset($data['user_contact']) && $data['user_contact']) echo sprintf($locale['testimonial_contact'], $data['user_contact']);
 		if ($data['user_email']) echo sprintf($locale['testimonial_email'], $data['user_email']);
 		echo "<div><a class='view_author_blog' href='".$data['blog_author_link']['link']."'>".$data['blog_author_link']['name']." <i class='entypo right-thin'></i></a></div>";
 		echo "</div>\n";
