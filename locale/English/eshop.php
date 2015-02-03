@@ -272,7 +272,7 @@ $locale['ESHPPRO099'] = "Add Product";
 $locale['ESHPPRO100'] = "Product ordering has been refreshed";
 $locale['ESHPPRO101'] = "Product deletion completed";
 $locale['ESHPPRO102'] = "You have enabled categories, please use the category tab and make some categories before adding your products.";
-$locale['ESHPPRO103'] = "Please note that you have a sub category here! <br />You need to have the setting Folder links: true for any product´s to be listed in a middle category. <br /> It´s also recommended that you have this set to true if you plan to use featured products here.";
+$locale['ESHPPRO103'] = "Please note that you have a sub category here! You need to have the setting Folder links: true for any product´s to be listed in a middle category. It´s also recommended that you have this set to true if you plan to use featured products here.";
 $locale['ESHPPRO104'] = "Product title";
 $locale['ESHPPRO105'] = "Category";
 $locale['ESHPPRO106'] = "Disabled by your settings";
@@ -336,7 +336,7 @@ $locale['ESHPPRO159'] = "Select the user group that will be allowed to view this
 $locale['ESHPPRO160'] = "Short description";
 $locale['ESHPPRO161'] = "Show a short product intoduction text. This can be disabled from the Settings section \"Use and display product intro text\".";
 $locale['ESHPPRO162'] = "Full description";
-$locale['ESHPPRO163'] = "Complete product description text. Embed codes and even html codes work here. You can display videos or even have nice HTML table layouts. To make a new row you need to insert a <textarea cols='5' rows='1' class='span1'><br /> </textarea> if you do not use HTML.";
+$locale['ESHPPRO163'] = "Complete product description text. Embed codes and even html codes work here. You can display videos or even have nice HTML table layouts. To make a new row you need to insert a <br/> if you do not use HTML.";
 $locale['ESHPPRO164'] = "Click here to toggle the advanced tabs feature";
 $locale['ESHPPRO165'] = "These are the customizeable tabs. If you have a lot of info you can add it to these tabs, one could be Features next could be License and third could be changelog etc. Embedded codes and even html codes work here as well. You can display videos or have nice HTML table  layouts. To make a new row you need to insert a <textarea cols='5' rows='1' class='span1'><br /></textarea> if you do not use HTML.";
 $locale['ESHPPRO166'] = "- Save -";
@@ -380,7 +380,7 @@ $locale['ESHPPRO201'] = "Additional Information";
 $locale['ptabs_000'] = 'Product Info';
 $locale['ptabs_001'] = 'Stock Options';
 $locale['ptabs_002'] = 'Product Feature';
-$locale['ptabs_003'] = 'Catalog Feature';
+$locale['ptabs_003'] = 'Product Images';
 $locale['ptabs_004'] = 'Image File Upload';
 $locale['ptabs_005'] = 'Image File Path';
 
