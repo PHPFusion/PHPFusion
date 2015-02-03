@@ -190,6 +190,22 @@ class Eshop {
 	}
 
 	/**
+	 * Get Product Data by using an product ID
+	 * @param $id - product ID
+	 * @return array
+	 */
+	static function get_productData($id) {
+		$result = array();
+		if (isnum($id)) {
+			$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".intval($id)."'");
+			if (dbrows($result)) {
+				return (array) dbarray($result);
+			}
+		}
+		return (array) $result;
+	}
+
+	/**
 	 * Get current category in relation to $_GET['category']
 	 * @return array
 	 */

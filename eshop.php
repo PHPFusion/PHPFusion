@@ -150,7 +150,7 @@ function render_eshop_product($info) {
 	}
 	echo "</div>\n<div class='col-xs-12 col-sm-7'>\n";
 	echo "<h2 class='product-title m-b-0'>".$data['title']."</h2>";
-	echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info.
+	//echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info.
 	// product basic information
 	echo "<div class='text-smaller'>\n";
 	echo "<span class='display-block'>Product-Serial: ".$data['artno']."</span>\n";
@@ -221,46 +221,55 @@ function render_eshop_product($info) {
 		echo "</div>\n";
 	}
 	// qty
-	echo form_hidden('', 'id', 'id', $data['id']);
-	echo "</div>\n";
-	echo closeform();
+	if ($data['qty']) {
+		echo form_text($locale['ESHP019'], 'product_quantity', 'product_quantity', '1', array('number'=>1, 'inline'=>1, 'class'=>'product-quantity input-sm', 'width'=>'50px',
+			'append_button'=>1,
+			'append_value'=> "<i class='fa fa-plus m-t-5'></i>",
+			'append_type'=>'button',
+			'prepend_button'=>1,
+			'prepend_value'=> "<i class='fa fa-minus m-t-5'></i>",
+			'prepend_type'=>'button',
+		));
+		// now add some simple js
+		add_to_jquery("
+		$('#product_quantity-prepend-btn').bind('click', function(e) {
+			var order_qty = $('#product_quantity').val();
+			var new_val = --order_qty;
+			if (order_qty >=1) { $('#product_quantity').val(new_val); }
+		 });
+		 $('#product_quantity-append-btn').bind('click', function(e) {
+			var order_qty = $('#product_quantity').val();
+			var new_val = ++order_qty;
+			$('#product_quantity').val(new_val);
+		 });
+		");
+	} else {
+		echo form_hidden('', 'product_quantity', 'product_quantity', 1);
+	}
 
-
-	/*
-				if ($data['qty'] == "1") {
-					echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$locale['ESHP019']." &nbsp;</legend>";
-					echo "<div style='padding:3px;'><a href='javascript:;' onclick='javascript:qtyminus(".$data['id']."); return false;'><img src='".BASEDIR."eshop/img/minus.png' border='0' alt='' style='vertical-align:middle;' /></a><input type='text' name='quantity_".$data['id']."' id='quantity_".$data['id']."' value='".($data['dmulti'] >= "1" ? "".$data['dmulti']."" : "1")."' class='textbox' style='width:70px !important;' /><a href='javascript:;' onclick='javascript:qtyplus(".$data['id']."); return false;'><img src='".BASEDIR."eshop/img/plus.png' border='0' alt='' style='vertical-align:middle;' /></a></div>";
-					echo "</fieldset></td></tr>";
-				} else {
-					echo "<input name='quantity_".$data['id']."' id='quantity_".$data['id']."' type='hidden' value='1' />";
-				}
-				echo "<input name='prod_".$data['id']."' id='prod_".$data['id']."' value='".$data['title']."' type='hidden' />";
-				echo "<input name='artno_".$data['id']."' id='artno_".$data['id']."' value='".($data['artno'] ? $data['artno'] : $data['id'])."' type='hidden' />";
-				echo "<input name='image_".$data['id']."' id='image_".$data['id']."' value='".($data['thumb'] ? $data['thumb'] : "0")."' type='hidden' />";
-				echo "<input name='weight_".$data['id']."' id='weight_".$data['id']."' value='".($data['weight'] ? $data['weight'] : "0")."' type='hidden' />";
-				echo "<input name='cprice_".$data['id']."' id='cprice_".$data['id']."' value='".($data['xprice'] ? $data['xprice'] : $data['price'])."' type='hidden' />";
-				echo "<input name='cupon_".$data['id']."' id='cupon_".$data['id']."' value='".$data['cupons']."' type='hidden' />";
-			}
-	 */
-
-
-
-
-	// change buynow color.
 	if ($data['status'] == "1") {
 		echo "<div class='m-t-20'>\n";
-		if ($data['buynow'] == "1") {
-			echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_buynow_color')."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
+		if ($data['buynow'] == "1") { // use post action instead
+			echo form_button($locale['ESHP020'], 'buy_now', 'buy_now', $locale['ESHP020'], array('class'=>'m-r-10 '.fusion_get_settings('eshop_buynow_color')));
+			//echo "<a class='btn m-r-10 ".."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
 		}
 
 		if ($data['cart_on'] == "1") {
-			echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
+			echo form_button($locale['ESHP021'], 'buy_now', 'buy_now', $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
+			//echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
 		}
 		echo "</div>\n";
 	}
 
-	echo "</div>\n</div>\n";
+	echo form_hidden('', 'id', 'id', $data['id']);
+	// the rest of the fields can load data from class... like this.
+	//$product_data = PHPFusion\Eshop::get_productData($_POST['id']);
 
+	echo "</div>\n";
+	echo closeform();
+	// change buynow color.
+	echo "</div>\n</div>\n";
+	echo "<hr/>\n";
 	$tab_title['title'][] = $locale['ESHP022'];
 	$tab_title['id'][] = 'pdesc';
 	$tab_title['icon'][] = '';

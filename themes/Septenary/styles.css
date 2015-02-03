@@ -573,8 +573,14 @@ nav {
 	width: 100%;
 }
 /* Eshop */
-.product-selector label, .product-selector {
+.product-selector label, .product-selector, .product-quantity {
 	font-size:12px;
+}
+#product_quantity {
+	font-size:12px !important;
+}
+.product-quantity > div > .input-group {
+	width:50px;
 }
 .main-content .eshop-nav {
 	margin-left: -15px;
