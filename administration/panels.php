@@ -44,7 +44,7 @@ class fusion_panels {
 		'panel_display' => 0,
 		'panel_status' => 0,
 		'panel_url_list' => '',
-		'panel_restriction' => 2,
+		'panel_restriction' => 3,
 		'panel_languages' => '',
 	);
 	/**
@@ -122,6 +122,8 @@ class fusion_panels {
 		if (isset($_POST['panel_save'])) {
 			$this->data['panel_id'] = isset($_POST['panel_id']) ? form_sanitizer($_POST['panel_id'], '0', 'panel_id') : 0;
 			$this->data['panel_name'] = isset($_POST['panel_name']) ? form_sanitizer($_POST['panel_name'], '', 'panel_name') : '';
+			$this->data['panel_side'] = isset($_POST['panel_side']) ? form_sanitizer($_POST['panel_side'], 1, 'panel_side') : 1;
+
 			$this->data['panel_access'] = isset($_POST['panel_access']) ? form_sanitizer($_POST['panel_access'], '0', 'panel_access') : 0;
 			// panel name is unique
 			$result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$this->data['panel_name']."' AND panel_id !='".$this->data['panel_id']."'");
@@ -145,17 +147,31 @@ class fusion_panels {
 				$this->data['panel_content'] = '';
 				$this->data['panel_type'] = "file";
 			}
-
+            // need to add fourth option. only show in front page.
 			$this->data['panel_restriction'] = isset($_POST['panel_restriction']) ? form_sanitizer($_POST['panel_restriction'], '', 'panel_restriction') : 0;
-			if ($this->data['panel_restriction'] == '2') {
-				$this->data['panel_display'] = 1;
+			// 3, show on all, 2 = show on home page. 1 = exclude , 0 = include
+			//  post 0 to include all , 1 to exclude all, show all.
+            if ($this->data['panel_restriction'] == '3') { // show on all
+				$this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
 				$this->data['panel_url_list'] = '';
+            } elseif ($this->data['panel_restriction'] == '2') {
+                // show on homepage only
+                $this->data['panel_display'] = 0;
+                $this->data['panel_url_list'] = '';
+                if ($this->data['panel_side'] == 1 || $this->data['panel_side'] == 4) {
+                    $this->data['panel_url_list'] = fusion_get_settings('opening_page'); // because 1 and 4 directly overide panel_display.
+                }
 			} else {
-				// require panel_url_list
+				// require panel_url_list in this case
 				$this->data['panel_url_list'] = isset($_POST['panel_url_list']) ? form_sanitizer($_POST['panel_url_list'], '', 'panel_url_list') : '';
 				if ($this->data['panel_url_list']) {
 					$this->data['panel_url_list'] = str_replace("|", "\r\n", $this->data['panel_url_list']);
-				} else {
+                    if ($this->data['panel_restriction'] == 1) { // exclude mode
+                        $this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
+                    } else { // include mode
+                        $this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
+                    }
+                } else {
 					$defender->stop();
 					$defender->addNotice($locale['475']);
 					$defender->addError('panel_url_list');
@@ -178,6 +194,7 @@ class fusion_panels {
 				dbquery_insert(DB_PANELS, $this->data, 'update');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=su");
 			} else {
+				//print_p($this->data);
 				dbquery_insert(DB_PANELS, $this->data, 'save');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=sn");
 			}
@@ -191,11 +208,15 @@ class fusion_panels {
 	private function get_panelOpts() {
 		$panel_list = array();
 		$current_panels = array();
-		foreach($this->panel_data as $side => $panels) {
+        foreach($this->panel_data as $side => $panels) {
 			foreach($panels as $data) {
-				$current_panels[] = $data['panel_filename'];
+				$current_panels[$data['panel_filename']] = $data['panel_filename'];
 			}
 		}
+        // unset this panel if edit mode.
+        if (isset($_GET['panel_id']) && isnum($_GET['panel_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
+            unset($current_panels[$this->data['panel_filename']]);
+        }
 		// find current installed panels.
 		$temp = opendir(INFUSIONS);
 		$panel_list['none'] = "None";
@@ -245,7 +266,7 @@ class fusion_panels {
 		$list = array();
 		$file_list = makefilelist(BASEDIR, ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php");
 		foreach($file_list as $files) {
-			$list[] = $files;
+			$list[] = fusion_get_settings('site_path').$files;
 		}
 		return $list;
 	}
@@ -257,7 +278,8 @@ class fusion_panels {
 	static function get_includeOpts() {
 		global $locale;
 		return array(
-			'2' => $locale['459'],
+			'3' => $locale['459'],
+			'2' => $locale['467'],
 			'1' => $locale['464'],
 			'0' => $locale['465'],
 		);
@@ -300,7 +322,7 @@ class fusion_panels {
 			$data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"));
 			$result = dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'");
 			$result = dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".$data['panel_side']."' AND panel_order>='".$data['panel_order']."'");
-			redirect(FUSION_SELF.$aidlink."status=del");
+			redirect(FUSION_SELF.$aidlink."&amp;status=del");
 		}
 	}
 
@@ -321,6 +343,7 @@ class fusion_panels {
 	 */
 	public function add_panel_form() {
 		global $locale;
+        fusion_confirm_exit();
 		echo "<div class='m-t-20'>\n";
 		echo openform('panel_form', 'panel_form', 'post', $this->formaction, array('downtime'=>0));
 		echo "<div class='row'>\n";
@@ -329,7 +352,8 @@ class fusion_panels {
 		echo form_hidden('', 'panel_id', 'panel_id', $this->data['panel_id']);
 		echo form_text($locale['452'], 'panel_name', 'panel_name', $this->data['panel_name'], array('inline'=>1, 'required'=>1, )); //'error_text'=>$locale['470']
 		echo form_select($locale['453'], 'panel_filename', 'panel_filename', self::get_panelOpts(), $this->data['panel_filename'], array('inline'=>1));
-		echo form_select($locale['453'], 'panel_side', 'panel_side', self::get_panel_grid(), $this->data['panel_side'], array('inline'=>1));
+        $grid_opts = self::get_panel_grid();
+		echo form_select($locale['453'], 'panel_side', 'panel_side', $grid_opts, $this->data['panel_side'], array('inline'=>1));
 		closeside();
 
 		add_to_jquery("
@@ -345,9 +369,9 @@ class fusion_panels {
 
 		openside('');
 		add_to_jquery("
-		".($this->data['panel_restriction'] == 2 ? "$('#panel_url_list-grp').hide();" : '')."
+		".(($this->data['panel_restriction'] == 3 || $this->data['panel_restriction'] == 2) ? "$('#panel_url_list-grp').hide();" : '')."
 		$('#panel_restriction').bind('change', function(e) {
-			if ($(this).val() == '2') { $('#panel_url_list-grp').hide(); } else { $('#panel_url_list-grp').show(); }
+			if ($(this).val() == '3' || $(this).val() == '2') { $('#panel_url_list-grp').hide(); } else { $('#panel_url_list-grp').show(); }
 		});
 		");
 		echo form_select('Filter Type', 'panel_restriction', 'panel_restriction', self::get_includeOpts(), $this->data['panel_restriction'], array('inline'=>1));

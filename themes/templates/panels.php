@@ -73,12 +73,17 @@ foreach ($p_name as $p_key => $p_side) {
 					 * 2. url_list is set, and panel_restriction set to 1 (Exclude) and current page does not match url_list.
 					 * 3. url_list is set, and panel_restriction set to 0 (Include) and current page matches url_list.
 					 * -- if conditions met
-					 * 4. panel_side must not be 2, 3, 5, 6.
+					 * 4. panel_side must not be 2, 3, 5, 6. (if position except LEFT and RIGHT, must have panel_display as 1)
 					 * 5. panel_display must be set to 1.
-					 * 6. current page is start page.
+					 * 6. current page is start page. will show all panels.
+					 * Also note: TRUE_PHP_SELF contains /9/ site path!
+					 * Include only - panel_side is 5. panel_display set to 1. panel_restrict = 0, and list is not empty
 					 */
-					if ($p_data['panel_url_list'] == "" || ($p_data['panel_restriction'] == 1 && (!in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url_arr) && !in_array(TRUE_PHP_SELF, $url_arr))) || ($p_data['panel_restriction'] == 0 && (in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url_arr) || in_array(TRUE_PHP_SELF, $url_arr)))) {
-						if (($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE) {
+
+                    if ($p_data['panel_url_list'] == "" ||
+                        ($p_data['panel_restriction'] == 1 && (!in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url_arr) && !in_array(TRUE_PHP_SELF, $url_arr))) ||
+                        ($p_data['panel_restriction'] == 0 && (in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url_arr) || in_array(TRUE_PHP_SELF, $url_arr)))) {
+                        if (($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE) {
 							if ($p_data['panel_type'] == "file") {
 								if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
 									include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
