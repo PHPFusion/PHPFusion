@@ -175,11 +175,11 @@ if (!function_exists('render_eshop_page_content')) {
 				foreach ($info['item'] as $product_id => $item_data) {
 					if ($_GET['category'] && $item_data['cid'] == $_GET['category'] || !$_GET['category']) {
 						echo "
-					<div class='col-xs-12 eshop-column col-sm-$calculated_bs text-center m-t-20 m-b-20'>\n
+						<div class='col-xs-12 eshop-column col-sm-$calculated_bs text-center m-t-20 m-b-20'>\n
 						<a class='display-inline-block' style='margin:0px auto; min-height: ".(fusion_get_settings('eshop_image_th')*1.1)."px;' href='".$item_data['link']."'>
 							<img class='img-responsive' src='".$item_data['picture']."' style='width: ".fusion_get_settings('eshop_image_tw')."px; max-height: ".fusion_get_settings('eshop_image_th')."px;'>\n
 						</a>
-						<div class='text-left p-l-20 m-b-20'>
+						<div class='text-left p-l-20 m-b-20' style='min-height: ".(fusion_get_settings('eshop_image_th')*0.5)."px;'>
 							<a href='".$item_data['link']."'><span class='eshop-product-title'>".$item_data['title']."</span></a>
 						";
 						if ($item_data['xprice']) {
@@ -219,7 +219,7 @@ if (!function_exists('render_eshop_page_content')) {
 							<a class='display-inline-block' style='margin:0px auto; min-height: ".(fusion_get_settings('eshop_image_th')*1.1)."px;' href='".$item_data['link']."'>
 							<img class='img-responsive' src='".$item_data['picture']."' style='width: ".fusion_get_settings('eshop_image_tw')."px; max-height: ".fusion_get_settings('eshop_image_th')."px;'>\n
 							</a>
-						<div class='text-left p-l-20 m-b-20'>
+						<div class='text-left p-l-20 m-b-20' style='min-height: ".(fusion_get_settings('eshop_image_th')*0.5)."px;'>
 						<a href='".$item_data['link']."'><span class='eshop-product-title'>".$item_data['title']."</span></a>
 					";
 						if ($item_data['xprice']) {
