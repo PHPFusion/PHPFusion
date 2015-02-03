@@ -446,13 +446,14 @@ class eShop_item {
 			var data = "cid="+ cid;
 			 $.ajax({
 			   type: "GET",
-			   url: "getcolorname.php",
+			   url: "'.ADMIN.'eshop/getcolorname.php",
 			   data: data,
 			   beforeSend: function(result) {
 			   $("#colors"+cid).html("Loading color.."); },
 			   success: function(result){
 				$("#colors"+cid).empty();
 				$("#colors"+cid).show();
+				$("#cp-"+cid).remove();
 				$("#colors"+cid).append(result); },timeout: 235000,
 			   error:function(e) {
 				$("#colors"+cid).html("Something went wrong!");
@@ -467,7 +468,7 @@ class eShop_item {
 			for (var i = 0, len = dyncs.length; i < len; i++) {
 			var sval = dyncs[i];
 			dyncArray.push(sval);
-			document.getElementById("sList").innerHTML += "<label class=\"sList\"><input checked =\"checked\" class=\"sList-chk\" name=\"sList[]\" type=\"checkbox\" value=\""+sval+"\"> "+sval+"</div></label>";
+			document.getElementById("sList").innerHTML += "<div class=\"list-group-item display-inline-block m-2\"><label class=\"sList\"><input checked =\"checked\" class=\"sList-chk\" name=\"sList[]\" type=\"checkbox\" value=\""+sval+"\"> "+sval+"</div></label></div>";
 		}
 
 		//add item when selected in list
@@ -476,9 +477,9 @@ class eShop_item {
 			//If value is empty nothing should happend
 			if(sitem !== "") {
 				if ($.inArray(sitem,dyncArray) == -1) {
-				$("#dyncList").val();
+				$("#dyncList").val("");
 				dyncArray.push(sitem);
-			document.getElementById("sList").innerHTML += "<label class=\"sList\"><input checked =\"checked\" class=\"sList-chk\" name=\"sList[]\" type=\"checkbox\" value=\""+sitem+"\"> "+sitem+"</label>";
+				document.getElementById("sList").innerHTML += "<div class=\"list-group-item display-inline-block m-2\"><label class=\"sList\"><input checked =\"checked\" class=\"sList-chk\" name=\"sList[]\" type=\"checkbox\" value=\""+sitem+"\"> "+sitem+"</label></div>";
 		  }
 		 }
 		});
@@ -492,23 +493,10 @@ class eShop_item {
 		for (i=0;i<numbers.length;i++){
 		var val = numbers[i];
 		colorArray.push(val);
-		document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+val+"\"> <div class=\"cListdiv\" id=\"colors"+val+"\"></div></label>";
+		document.getElementById("cList").innerHTML += "<div class=\"list-group-item display-inline-block m-2\"><label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+ val +"\"> <span class=\"cListdiv\" id=\"colors"+val+"\"></span></label></div>";
 		doCheck(val);
 		}
-
-		//add item when selected in list
-		$("#colorList").change(function () {
-		//If value is empty nothing should happend
-			if(this.value !== "") {
-				if ($.inArray(this.value,colorArray) == -1) {
-				var citem = $("#colorList").find("option:selected").text();
-				colorArray.push($(this).val());
-				document.getElementById("cList").innerHTML += "<label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+this.value+"\"> "+citem+"</label>";
-			}
-		}
-		});
-
-		//remove color when clicked
+		//remove color when clicked. hmm..
 		$(document).on("change", ".cList-chk", function () { if ($(this).attr("checked")) { return;  } else { $(this).parent(".cList").remove(); } });
 		');
 
@@ -618,7 +606,7 @@ class eShop_item {
 		closeside();
 		openside('');
 		echo form_para($locale['ESHPPRO194'], 'cst', 'cst', array('tip'=>$locale['ESHPPRO117']));
-		echo form_text($locale['ESHPPRO195'], 'dynf', 'dynf', '', array('placeholder'=>$locale['ESHPPRO197'], 'inline'=>1));
+		echo form_text($locale['ESHPPRO195'], 'dynf', 'dynf', $this->data['dynf'], array('placeholder'=>$locale['ESHPPRO197'], 'inline'=>1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3'>\n";
 		echo "<label for='dyncList' class='label-control'>\n".$locale['ESHPPRO196']."</label>\n";
@@ -629,17 +617,46 @@ class eShop_item {
 			echo "</div>\n<div class='col-xs-6 col-sm-6'>\n";
 			echo "<div><a href='javascript:;' id='adddync' class='btn button btn-default m-b-20'><i class='fa fa-plus fa-lg'></i> ".$locale['ESHPPRO116']."</a>\n</div>\n";
 			echo "</div>\n</div>\n";
-
-		echo "</div></div>\n";
 		echo form_para($locale['ESHPPRO118'],'118', '118');
 		echo "<div id='sList'>\n";
 		echo "</div>\n";
+		echo "</div></div>\n";
+
 		closeside();
 		openside('');
-		global $ESHPCLRS;
-		for ($i=1; $i <= 135; $i++) { $colors_array[$i] = $ESHPCLRS[$i]; }
-		echo form_select($locale['ESHP017'], 'colorList', 'colorList', $colors_array, '', array('inline'=>1, 'tip'=>$locale['ESHPPRO121'], 'width'=>'100%'));
-		echo "<div id='cList'></div>\n";
+		// i will need to change how the colorList selects data
+		add_to_jquery("
+		$('.colorpick').tooltip();
+		$('.colorpick').bind('click', function(e) {
+			var hex = $(this).data('hex');
+			var val = $(this).data('value');
+			var title = $(this).data('title');
+			if ($.inArray(val,colorArray) == -1) {
+				colorArray.push(val);
+				$(this).remove();
+				$('#cList').append('<div class=\'list-group-item display-inline-block m-2\'><label class=\'cList\'><input checked =\'checked\' class=\'cList-chk\' name=\'cList[]\' type=\'checkbox\' value=\''+val+'\'> '+ title +'</label></div>');
+			}
+		});
+
+		");
+		echo "<div class='form-group'>\n";
+		echo "<label class='col-xs-12 col-sm-3'>Choose Product Colors</label>\n";
+		echo "<div class='col-xs-12 col-sm-9'>\n";
+		echo "<div class='btn-group'>\n";
+		echo "<button title='Color' class='dropdown-toggle btn btn-default m-b-10 button' data-toggle='dropdown'><i class='fa fa-eyedropper m-r-10'></i> Add Color <span class='caret'></span></button>\n";
+		echo "<ul class='dropdown-menu' role='text-color' style='width:300px;'>\n";
+		echo "<li>\n";
+		echo "<div class='display-block p-l-10 p-r-5 p-t-5 p-b-0' style='width:100%'>\n";
+		$color_list = PHPFusion\Eshop::get_iColor();
+		foreach($color_list as $value => $attributes) {
+			echo "<a id='cp-".$value."' class='pointer display-inline-block colorpick' title='".$attributes['title']."' data-hex='".$attributes['hex']."' data-value='".$value."' data-title='".$attributes['title']."' style='width:23px; height:23px; background-color:".$attributes['hex']."; margin:2px; text-decoration:none;'>&nbsp;</a>\n";
+		}
+		echo "</div>\n";
+		echo "</li>\n";
+		echo "</ul>\n";
+		echo "</div>\n";
+		echo "<div id='cList' style='display: block; margin: 10px -2px; padding: 0;'></div>\n";
+		echo "</div>\n</div>\n";
 		closeside();
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";

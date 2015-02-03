@@ -157,6 +157,15 @@ function render_eshop_product($info) {
 	echo "<span class='display-block'>".$data['stock_status']."</span>\n";
 	echo "<span class='display-block'>".$data['version']."</span>";
 	echo "<span class='display-block'>".$data['shipping']."</span>";
+
+	if ($data['demo']) {
+		echo "<span class='display-block'>";
+		$urlprefix = !strstr($data['demo'], "http://") ? "http://" : "";
+		echo $locale['ESHP013'].": <a href='".$urlprefix.$data['demo']."' target='_blank'>".$locale['ESHP015']."</a>";
+		echo "</span>\n";
+	}
+
+
 	echo "</div>\n";
 	// keywords
 	$keywords = $data['keywords'] ? explode(',', $data['keywords']) : '';
@@ -183,102 +192,35 @@ function render_eshop_product($info) {
 		echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</div>\n";
 		echo "</div>\n";
 	}
-	// change buynow color.
-	if ($data['status'] == "1") {
-		echo "<div class='m-t-20'>\n";
-		if ($data['buynow'] == "1") {
-			echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_buynow_color')."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
-		}
-		if ($data['cart_on'] == "1") {
-			echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'>".$locale['ESHP021']."</a>";
-		}
-		echo "</div>\n";
+
+	// ok now do the add cart thing. we need a form to push to cart or buynow.
+	echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product']);
+	echo "<div class='list-group-item m-t-20'>\n";
+	if (!empty($data['dync'])) {
+		$title = $data['dynf'] ? $data['dynf'] : 'Category';
+		$dync = str_replace('&quot;', '', $data['dync']);
+		$dync_opts = explode('.', $dync);
+		echo form_select($title, 'product_type', 'product_type', $dync_opts, '', array('placeholder'=>$locale['ESHP016'], 'inline'=>1, 'class'=>'product-selector m-b-0'));
 	}
-
-
-
-	echo "</div>\n</div>\n";
-
-	// Do the descriptions and etc.
-	// how many tabs?
-	$tab_title['title'][] = $locale['ESHP023'];
-	$tab_title['id'][] = 'pdesc';
-	$tab_title['icon'][] = '';
-	$tab_title['title'][] = $locale['ESHP022'];
-	$tab_title['id'][] = 'pspecs';
-	$tab_title['icon'][] = '';
-	$tab_title['title'][] = 'What else?';
-	$tab_title['id'][] = 'pspecs';
-	$tab_title['icon'][] = '';
-
-	$tab_active = tab_active($tab_title, 0);
-	echo opentab($tab_title, $tab_active, 'product-tabs');
-	echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
-	echo "<div class='m-t-10'>\n";
-	echo "<h4>".$locale['ESHP023']."</h4>";
-	echo "<span class='display-block'>".stripslashes($data['description'])."</span>";
-
-	if ($data['anything1']) {
-		echo "<h4>".stripslashes($data['anything1n'])."</h4>";
-		echo "<span class='display-block'>".stripslashes($data['anything1'])."</span>";
+	if ($data['icolor']) {
+		$color = str_replace('&quot;', '', $data['icolor']);
+		$color_opts = explode('.', $color);
+		echo form_select($locale['ESHP017'], 'product_color', 'product_color', $color_opts, '', array('placeholder'=>$locale['ESHP018'], 'inline'=>1, 'class'=>'product-selector  m-b-0'));
 	}
-	if ($data['anything2']) {
-		echo "<h4>".stripslashes($data['anything2n'])."</h4>";
-		echo "<span class='display-block'>".stripslashes($data['anything2'])."</span>";
-	}
-	if ($data['anything3']) {
-		echo "<span class='display-block'>".stripslashes($data['anything3'])."</span>";
-	}
+	// qty
+	//echo form_text($locale['']);
 	echo "</div>\n";
-	echo closetabbody();
-	echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
-	echo "<div class='m-t-10'>\n";
-	if ($data['demo']) {
-		$urlprefix = !strstr($data['demo'], "http://") ? "http://" : "";
-		echo "<span class='list-group-item display-block'>".$locale['ESHP013']." <a href='".$urlprefix.$data['demo']."' target='_blank'>".$locale['ESHP015']."</a></span>";
-	}
-	echo "</div>\n";
-	echo closetabbody();
-	echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
-	echo closetabbody();
-	echo closetab();
+	echo closeform();
 
-	echo "<a class='btn ".fusion_get_settings('eshop_return_color')."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>".$locale['ESHP030']."</a>";
 
-	///// ----
+	/*
+	 *
 
-	global $eShop, $locale;
-	$eshop = $eShop;
-	$settings = fusion_get_settings();
-	if (isset($_GET['product'])) {
-		$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['product']."' AND ".groupaccess('access')." AND active = '1' LIMIT 0,1"));
-		if ($data) {
-			echo "<div style='width:19%; float:right;'>";
-			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%'>";
-
-			// dync stuff
-			if ($data['status'] == "1") {
-				if ($data['dync']) {
-					$dync = str_replace('"', '', $data['dync']);
-					echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp; ".$data['dynf']." &nbsp;</legend><div style='padding:3px;'>";
-					echo "<select name='dyncs_".$data['id']."' id='dyncs_".$data['id']."' class='textbox' style='width:135px !important;'>
-    				 <option value=''>".$locale['ESHP016']."</option>";
-					$dync = explode(".", substr($dync, 1));
-					for ($i = 0; $i < count($dync); $i++) {
-						echo "<option value='$dync[$i]'>$dync[$i]</option>";
-					}
-					echo "</select>";
-					echo "<input name='dynct' id='dynct_".$data['id']."' value='".$data['dynf']."' type='hidden' />";
-					echo "</div></fieldset></td></tr>";
-				} else {
-					echo "<input name='dyncs_".$data['id']."' id='dyncs_".$data['id']."' value='0' type='hidden' />";
-					echo "<input name='dynct_".$data['id']."' id='dynct_".$data['id']."' value='0' type='hidden' />";
-				}
 				if ($data['icolor']) {
 					$colors = str_replace('"', '', $data['icolor']);
 					echo "<tr><td class='tbl' align='center'><fieldset><legend align='center' style='margin-left:2px !important; width:85% !important;'>&nbsp;".$locale['ESHP017']."&nbsp;</legend><div style='padding:3px;'>";
 					echo "<select name='color_".$data['id']."' id='color_".$data['id']."' class='textbox' style='width:135px !important;'>
-     				<option value=''>".$locale['ESHP018']."</option>";
+     				<option value=''>".$locale['']."</option>";
 					$colors = explode(".", substr($colors, 1));
 					for ($i = 0; $i < count($colors); $i++) {
 						if ($colors[$i] == "1") {
@@ -706,14 +648,79 @@ function render_eshop_product($info) {
 				echo "<input name='cprice_".$data['id']."' id='cprice_".$data['id']."' value='".($data['xprice'] ? $data['xprice'] : $data['price'])."' type='hidden' />";
 				echo "<input name='cupon_".$data['id']."' id='cupon_".$data['id']."' value='".$data['cupons']."' type='hidden' />";
 			}
+	 */
 
+
+
+
+	// change buynow color.
+	if ($data['status'] == "1") {
+		echo "<div class='m-t-20'>\n";
+		if ($data['buynow'] == "1") {
+			echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_buynow_color')."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
+		}
+		if ($data['cart_on'] == "1") {
+			echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'>".$locale['ESHP021']."</a>";
+		}
+		echo "</div>\n";
+	}
+
+	echo "</div>\n</div>\n";
+
+	$tab_title['title'][] = $locale['ESHP022'];
+	$tab_title['id'][] = 'pdesc';
+	$tab_title['icon'][] = '';
+	$any = array();
+	if ($data['anything1'] && $data['anything1n']) {
+		$any['a1'] = array('title'=>'anything1n', 'data'=>'anything1');
+		$tab_title['title'][] = $data['anything1n'];
+		$tab_title['id'][] = 'a1';
+		$tab_title['icon'][] = '';
+	}
+	if ($data['anything2'] && $data['anything2n']) {
+		$any['a2'] = array('title'=>'anything2n', 'data'=>'anything2');
+		$tab_title['title'][] = $data['anything2n'];
+		$tab_title['id'][] = 'a2';
+		$tab_title['icon'][] = '';
+	}
+	if ($data['anything3'] && $data['anything3n']) {
+		$any['a3'] = array('title'=>'anything3n', 'data'=>'anything3');
+		$tab_title['title'][] = $data['anything3n'];
+		$tab_title['id'][] = 'a3';
+		$tab_title['icon'][] = '';
+	}
+
+	$tab_active = tab_active($tab_title, 0);
+	echo opentab($tab_title, $tab_active, 'product-tabs');
+	echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
+	echo "<span class='display-block m-t-10'>".stripslashes(nl2br($data['description']))."</span>";
+	echo closetabbody();
+	if (!empty($any)) {
+		foreach($any as $id => $tab_data) {
+			echo opentabbody($data[$tab_data['title']], $id, $tab_active);
+			echo "<span class='display-block m-t-10'>".stripslashes(nl2br($data[$tab_data['data']]))."</span>";
+			echo closetabbody();
+		}
+	}
+	echo closetab();
+
+	echo "<a class='btn ".fusion_get_settings('eshop_return_color')."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>".$locale['ESHP030']."</a>";
+
+	///// ----
+
+	global $eShop, $locale;
+	$eshop = $eShop;
+	$settings = fusion_get_settings();
+	if (isset($_GET['product'])) {
+		$data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['product']."' AND ".groupaccess('access')." AND active = '1' LIMIT 0,1"));
+		if ($data) {
+			echo "<div style='width:19%; float:right;'>";
+			echo "<table align='center' border='0' cellpadding='0' cellspacing='0' width='100%'>";
 			echo "</table>";
 			echo "</div>";
-			echo "<div style='clear:both;'></div>";
-
 			//End item lookup
 		} else {
-			echo "<div class='admin-message'>".$locale['ESHP024']."</div>";
+			//echo "<div class='admin-message'>".$locale['ESHP024']."</div>";
 		}
 	}
 }
