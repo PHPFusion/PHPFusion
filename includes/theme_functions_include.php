@@ -452,6 +452,7 @@ function tablebreak() {
 	return TRUE;
 }
 
+// this one set for removal... we only need 1 set of breadcrumbs.
 function make_breadcrumb($title, $db, $id_col, $cat_col, $name_col, $id, $class = FALSE) {
 	global $aidlink;
 	echo "<ol class='breadcrumb $class'><i class='entypo location'></i>\n";
@@ -459,7 +460,7 @@ function make_breadcrumb($title, $db, $id_col, $cat_col, $name_col, $id, $class 
 	breadcrumb_items($db, $id_col, $cat_col, $name_col, $id);
 	echo "</ol>\n";
 }
-
+// this one set for removal... we only need 1 set of breadcrumbs.
 function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
 	global $aidlink;
 	$result = dbquery("SELECT $id_col, $cat_col, $name_col FROM $db WHERE $id_col='$id' LIMIT 1");
@@ -734,4 +735,15 @@ function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode =
 		return $start_link."<i title='".sprintf($locale['global_089'], $locale['global_077'])."' class='entypo icomment high-opacity m-l-0'></i> ".$str.$end_link;
 	}
 }
+
+/* JS form exit on link except for buttons */
+function fusion_confirm_exit() {
+	add_to_jquery("
+	$(window).bind('beforeunload',function(event) {	return true; });
+	$(':button').bind('click', function() {
+		window.onbeforeunload = null;
+	});
+	");
+}
+
 ?>
