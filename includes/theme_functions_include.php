@@ -739,7 +739,9 @@ function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode =
 /* JS form exit on link except for buttons */
 function fusion_confirm_exit() {
 	add_to_jquery("
-	$(window).bind('beforeunload',function(event) {	return true; });
+	window.onbeforeunload = function() {
+    	return true;
+	}
 	$(':button').bind('click', function() {
 		window.onbeforeunload = null;
 	});
