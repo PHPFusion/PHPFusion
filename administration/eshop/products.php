@@ -281,7 +281,7 @@ class eShop_item {
 					$message = $locale['ESHPPRO100'];
 			}
 			if ($message) {
-				echo "<div class='admin-message'>$message</div>";
+				echo admin_message($message);
 			}
 		}
 	}
@@ -525,11 +525,11 @@ class eShop_item {
 
 		$subtab_title['title'][] = $locale['ptabs_002'];
 		$subtab_title['id'][] = "pfeature";
-		$subtab_title['icon'][] = 'fa fa-info-circle fa-lg m-r-10';
+		$subtab_title['icon'][] = 'fa fa-pencil-square fa-lg m-r-10';
 
 		$subtab_title['title'][] = $locale['ptabs_003'];
 		$subtab_title['id'][] = "cfeature";
-		$subtab_title['icon'][] = 'fa fa-pencil-square fa-lg m-r-10';
+		$subtab_title['icon'][] = 'fa fa-camera-retro fa-lg m-r-10';
 
 		$tab_active = tab_active($subtab_title, 0);
 		// primary information
@@ -575,13 +575,6 @@ class eShop_item {
 		echo form_text($locale['ESHPPRO107'], 'artno', 'artno', $this->data['artno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
 		echo form_text($locale['ESHPPRO108'], 'sartno', 'sartno', $this->data['sartno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
 		closeside();
-		if (fusion_get_settings('eshop_pretext')) {
-			echo form_textarea($locale['ESHPPRO160'], 'introtext', 'introtext', $this->data['introtext'], array('html'=>1, 'preview'=>1, 'autosize'=>1));
-			echo "<div class='text-smaller'>".$locale['ESHPPRO161']."</div>\n";
-		} else {
-			echo form_hidden('', 'introtext', 'introtext', $this->data['introtext']);
-		}
-		echo form_textarea($locale['ESHPPRO162'], 'description', 'description', $this->data['description'], array('html'=>1, 'preview'=>1, 'autosize'=>1));
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
 		echo form_text($locale['ESHPPRO124'], 'sellcount', 'sellcount', $this->data['sellcount'], array('deactivate'=>1, 'tip'=>$locale['ESHPPRO125']));
 		openside('');
@@ -710,14 +703,6 @@ class eShop_item {
 		echo closetabbody();
 		echo closetab();
 		closeside();
-		echo form_checkbox($locale['ESHPPRO190'], 'linebreaks', 'linebreaks', $this->data['linebreaks']);
-		//echo "<span class='text-smaller'>".$locale['ESHPPRO163']."</span>\n";
-		echo form_text($locale['ESHPPRO201']." 1", 'anything1n', 'anything1n', $this->data['anything1n'], array('placeholder'=>$locale['ESHPPRO198']));
-		echo form_textarea('', 'anything1', 'anything1', $this->data['anything1'], array('resize'=>0, 'autosize'=>1));
-		echo form_text($locale['ESHPPRO201']." 2", 'anything2n', 'anything2n', $this->data['anything2n'], array('placeholder'=>$locale['ESHPPRO198']));
-		echo form_textarea('', 'anything2', 'anything2', $this->data['anything2'], array());
-		echo form_text($locale['ESHPPRO201']." 3", 'anything3n', 'anything3n', $this->data['anything3n'], array('placeholder'=>$locale['ESHPPRO198']));
-		echo form_textarea('', 'anything3', 'anything3', $this->data['anything3'], array());
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
 		openside('');
 		echo form_select($locale['ESHPPRO126'], 'gallery_on', 'gallery_on', array('0'=>$locale['off'], '1'=>$locale['on']), $this->data['gallery_on'], array('width'=>'100%', 'tip'=>$locale['ESHPPRO129']));
@@ -735,6 +720,23 @@ class eShop_item {
 		echo "</div>\n";
 		echo closetabbody();
 		echo closetab();
+
+		openside('');
+		echo form_checkbox($locale['ESHPPRO190'], 'linebreaks', 'linebreaks', $this->data['linebreaks']);
+		if (fusion_get_settings('eshop_pretext')) {
+			echo form_textarea($locale['ESHPPRO160'], 'introtext', 'introtext', $this->data['introtext'], array('tip'=>$locale['ESHPPRO161'], 'html'=>1, 'preview'=>1, 'form_name'=>'productform', 'autosize'=>1));
+		} else {
+			echo form_hidden('', 'introtext', 'introtext', $this->data['introtext']);
+		}
+		echo form_textarea($locale['ESHPPRO162'], 'description', 'description', $this->data['description'], array('html'=>1, 'preview'=>1, 'form_name'=>'productoform', 'autosize'=>1));
+		echo form_text($locale['ESHPPRO201']." 1", 'anything1n', 'anything1n', $this->data['anything1n'], array('tip'=>$locale['ESHPPRO163'], 'placeholder'=>$locale['ESHPPRO198']));
+		echo form_textarea('', 'anything1', 'anything1', $this->data['anything1'], array('autosize'=>1));
+		echo form_text($locale['ESHPPRO201']." 2", 'anything2n', 'anything2n', $this->data['anything2n'], array('placeholder'=>$locale['ESHPPRO198']));
+		echo form_textarea('', 'anything2', 'anything2', $this->data['anything2'], array('autosize'=>1));
+		echo form_text($locale['ESHPPRO201']." 3", 'anything3n', 'anything3n', $this->data['anything3n'], array('placeholder'=>$locale['ESHPPRO198']));
+		echo form_textarea('', 'anything3', 'anything3', $this->data['anything3'], array('autosize'=>1));
+		closeside();
+
 		echo form_hidden('', 'dateadded', 'dateadded', $this->data['dateadded']);
 		echo form_hidden('', 'id', 'id', $this->data['id']);
 		echo form_button($locale['save'], 'save_cat', 'save_cat', $locale['save'], array('class'=>'btn btn-primary'));
