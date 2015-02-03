@@ -123,7 +123,7 @@ class eShop_item {
 				$this->formaction = FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" && isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id']."" : "");
 		}
 
-		if (isset($_POST['save_cat'])) self::set_productdb();
+		self::set_productdb();
 		self::quick_save();
 	}
 
@@ -166,7 +166,7 @@ class eShop_item {
 	 * @return bool|string
 	 */
 	static function verify_product_edit($id) {
-		return dbcount("(id)", DB_ESHOP, "id='".$id."'");
+		return dbcount("(id)", DB_ESHOP, "id='".intval($id)."'");
 	}
 
 	/**
@@ -291,16 +291,34 @@ class eShop_item {
 	 */
 	private function set_productdb() {
 		global $aidlink;
+		if (isset($_POST['delete_image']) && isnum($_POST['delete_image'])) {
+			if (self::verify_product_edit($_POST['delete_image'])) {
+				@unlink(BASEDIR."eshop/pictures/".$this->data['picture']);
+				@unlink(BASEDIR."eshop/pictures/thumbs/".$this->data['thumb']);
+				@unlink(BASEDIR."eshop/pictures/thumbs/".$this->data['thumb2']);
+				$this->data['picture'] = '';
+				$this->data['thumb'] = '';
+				$this->data['thumb2'] = '';
+				dbquery_insert(DB_ESHOP, $this->data, 'update');
+				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$this->data['id']);
+			}
+		}
+
+		if (isset($_POST['save_cat'])) {
 			$this->data['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
 			$this->data['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '', 'cid') : 0;
 			$this->data['picture'] = isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '';
 			$this->data['thumb'] = isset($_POST['thumb']) ? form_sanitizer($_POST['thumb'], '', 'thumb') : '';
 			$this->data['thumb2'] = isset($_POST['thumb2']) ? form_sanitizer($_POST['thumb2'], '', 'thumb2') : '';
 			$upload = isset($_FILES['imagefile']) ? form_sanitizer($_FILES['imagefile'], '', 'imagefile') : '';
-			if ($upload) {
+			if ($upload['error'] !=0) {
 				$this->data['picture'] = $upload['image_name'];
 				$this->data['thumb'] = $upload['thumb1_name'];
 				$this->data['thumb2'] = $upload['thumb2_name'];
+			} else {
+				$this->data['picture'] = isset($_POST['picture']) ? form_sanitizer($_POST['picture'], '', 'picture') : '';
+				$this->data['thumb'] = isset($_POST['thumb']) ? form_sanitizer($_POST['thumb'], '', 'thumb') : '';
+				$this->data['thumb2'] = isset($_POST['thumb2']) ? form_sanitizer($_POST['thumb2'], '', 'thumb2') : '';
 			}
 			$this->data['introtext'] = isset($_POST['introtext']) ? form_sanitizer($_POST['introtext'], '', 'introtext') : '';
 			$this->data['description'] = isset($_POST['description']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['description'])) : '';
@@ -388,6 +406,7 @@ class eShop_item {
 				dbquery_insert(DB_ESHOP, $this->data, 'save');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 			}
+		}
 	}
 
 	/**
@@ -405,9 +424,9 @@ class eShop_item {
 	 * The Form Template
 	 */
 	public function product_form() {
-		global $aidlink, $locale, $settings;
-
-		if (!is_array($this->data['product_languages']) && empty($this->data['product_languages'])) $this->data['product_languages'] = array();
+		global $locale, $settings;
+		$enabled_languages = fusion_get_enabled_languages();
+		$this->data['product_languages'] = is_array($this->data['product_languages']) ? $this->data['product_languages'] : $enabled_languages;
 		$itemcolors = '';
 		if (isset($this->data['icolor'])) {
 			$itemcolors = str_replace(".", ",", html_entity_decode($this->data['icolor']));
@@ -418,6 +437,8 @@ class eShop_item {
 			$itemdyncs = str_replace(".", ",", html_entity_decode($this->data['dync']));
 			$itemdyncs = ltrim($itemdyncs, ',');
 		}
+		// confirmation dialog
+		fusion_confirm_exit();
 		// check function
 		add_to_jquery('
 		function doCheck(cid) {
@@ -464,7 +485,6 @@ class eShop_item {
 		//remove dync when clicked
 		$(document).on("change", ".sList-chk", function () { if ($(this).attr("checked")) { return; } else {  $(this).parent(".sList").remove();  }	});
 	');
-
 		add_to_jquery('
 		var colorArray = [];
 		//populate items already saved for edit
@@ -667,8 +687,20 @@ class eShop_item {
 			'thumbnail2_w'=> $settings['eshop_image_t2w'],
 			'thumbnail2_h'=> $settings['eshop_image_t2h'],
 		));
+		echo form_hidden('', 'picture', 'picture', $this->data['picture']);
+		echo form_hidden('', 'thumb', 'thumb', $this->data['thumb']);
+		echo form_hidden('', 'thumb2', 'thumb2', $this->data['thumb2']);
+
+		if ($this->data['picture'] && file_exists(SHOP."pictures/".$this->data['picture'])) {
+			echo "<div class='display-inline-block list-group-item'>\n";
+			echo "<img class='img-responsive' src=' ".BASEDIR."eshop/pictures/".$this->data['picture']."' />";
+			echo form_button('Delete Image', 'delete_image', 'delete_image', $this->data['id'], array('class'=>'btn-danger m-t-10', 'icon'=>'fa fa-trash m-r-10'));
+			echo "</div>\n";
+		}
+
 		echo "</div>\n";
 		echo closetabbody();
+
 		echo opentabbody($tab_title['title'][1], 'a2', $tab_active);
 		echo "<div class='m-t-20'>\n";
 		echo form_text($locale['ESHPPRO130'], 'image', 'image', '', array('inline'=>1, 'placeholder'=>'http://'));
@@ -681,11 +713,11 @@ class eShop_item {
 		echo form_checkbox($locale['ESHPPRO190'], 'linebreaks', 'linebreaks', $this->data['linebreaks']);
 		//echo "<span class='text-smaller'>".$locale['ESHPPRO163']."</span>\n";
 		echo form_text($locale['ESHPPRO201']." 1", 'anything1n', 'anything1n', $this->data['anything1n'], array('placeholder'=>$locale['ESHPPRO198']));
-		echo form_textarea('', 'anything1', 'anything1', '', array('autosize'=>1));
+		echo form_textarea('', 'anything1', 'anything1', $this->data['anything1'], array('resize'=>0, 'autosize'=>1));
 		echo form_text($locale['ESHPPRO201']." 2", 'anything2n', 'anything2n', $this->data['anything2n'], array('placeholder'=>$locale['ESHPPRO198']));
-		echo form_textarea('', 'anything2', 'anything2', '', array('autosize'=>1));
+		echo form_textarea('', 'anything2', 'anything2', $this->data['anything2'], array());
 		echo form_text($locale['ESHPPRO201']." 3", 'anything3n', 'anything3n', $this->data['anything3n'], array('placeholder'=>$locale['ESHPPRO198']));
-		echo form_textarea('', 'anything3', 'anything3', '', array('autosize'=>1));
+		echo form_textarea('', 'anything3', 'anything3', $this->data['anything3'], array());
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
 		openside('');
 		echo form_select($locale['ESHPPRO126'], 'gallery_on', 'gallery_on', array('0'=>$locale['off'], '1'=>$locale['on']), $this->data['gallery_on'], array('width'=>'100%', 'tip'=>$locale['ESHPPRO129']));

@@ -325,7 +325,7 @@ class eShop_cats {
 	public function add_cat_form() {
 		global $locale, $aidlink;
 		$enabled_languages = fusion_get_enabled_languages();
-		$this->data['cat_languages'] = (is_array($this->data['cat_languages'])) ? $this->data['cat_languages'] : array();
+		$this->data['cat_languages'] = (is_array($this->data['cat_languages'])) ? $this->data['cat_languages'] : $enabled_languages;
 		$form_action = FUSION_SELF.$aidlink."&amp;a_page=categories";
 		echo openform('addcat', 'add_cat', 'post', $form_action, array('class' => 'm-t-20', 'downtime' => 10));
 		echo "<div class='row'>\n";
