@@ -19,7 +19,10 @@ class Eshop {
 		// include files
 	}
 
-
+	/**
+	 * Get Featured Items
+	 * @return array
+	 */
 	public function get_featured() {
 		$info = array();
 		$result = dbquery("select * FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_cid = '".$_GET['category']."' ORDER BY featbanner_order");
@@ -32,7 +35,10 @@ class Eshop {
 		return (array) $info;
 	}
 
-
+	/**
+	 * Hardcoded Chart Array for Products
+	 * @return array
+	 */
 	static function get_iColor() {
 		global $ESHPCLRS;
 		$ESHOPCOLOURS[1] = array('hex'=>'#F0F8FF', 'title'=>$ESHPCLRS['1']);
@@ -170,7 +176,7 @@ class Eshop {
 		$ESHOPCOLOURS[133] = array('hex'=>'#F5F5F5', 'title'=>$ESHPCLRS['133']);
 		$ESHOPCOLOURS[134] = array('hex'=>'#FFFF00', 'title'=>$ESHPCLRS['134']);
 		$ESHOPCOLOURS[135] = array('hex'=>'#9ACD32', 'title'=>$ESHPCLRS['135']);
-		return $ESHOPCOLOURS;
+		return (array) $ESHOPCOLOURS;
 	}
 
 	// clear cart actions
@@ -212,6 +218,10 @@ class Eshop {
 		return array();
 	}
 
+	/**
+	 * Dynamically Automatic Set Breadcrumbs, Meta, Title on Eshop Pages
+	 * @return array
+	 */
 	public function get_title() {
 		global $locale;
 		$info = array();
@@ -308,6 +318,11 @@ class Eshop {
 		}
 	}
 
+	/**
+	 * Return the image source path
+	 * @param $image_file
+	 * @return string
+	 */
 	static function picExist($image_file) {
 		if (file_exists($image_file)) {
 			return $image_file;
