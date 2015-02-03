@@ -573,7 +573,7 @@ nav {
 	width: 100%;
 }
 /* Eshop */
-.product-selector label {
+.product-selector label, .product-selector {
 	font-size:12px;
 }
 .main-content .eshop-nav {
