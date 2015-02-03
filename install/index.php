@@ -334,6 +334,10 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 	// Step 4 - Config / Database Setup
 	case 4:
 		// Generate All Core Tables - this includes settings and all its injections
+		$db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
+		$db_pass = (isset($_POST['db_pass']) ? stripinput(trim($_POST['db_pass'])) : "");
+		$db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
+		$db_prefix = (isset($_POST['db_prefix']) ? stripinput(trim($_POST['db_prefix'])) : "fusion_");
 		$cookie_prefix = (isset($_POST['cookie_prefix']) ? stripinput(trim($_POST['cookie_prefix'])) : "fusion_");
 		$email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
 		$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
