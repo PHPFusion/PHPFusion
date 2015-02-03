@@ -324,6 +324,7 @@ class eShop_cats {
 	 */
 	public function add_cat_form() {
 		global $locale, $aidlink;
+		fusion_confirm_exit();
 		$enabled_languages = fusion_get_enabled_languages();
 		$this->data['cat_languages'] = (is_array($this->data['cat_languages'])) ? $this->data['cat_languages'] : $enabled_languages;
 		$form_action = FUSION_SELF.$aidlink."&amp;a_page=categories";
