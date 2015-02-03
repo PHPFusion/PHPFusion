@@ -50,18 +50,18 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 		'autosize' => !empty($options['autosize']) && $options['autosize'] == 1 ? '1' : '0',
 		'preview' => !empty($options['preview']) && $options['preview'] == 1 ? '1' : '0',
 		'path' => !empty($options['path']) && $options['path'] ? $options['path'] : IMAGES,
-		'maxlength' => !empty($options['maxlength']) && isnum($options['maxlength']) ? $options['maxlength'] : ''
+		'maxlength' => !empty($options['maxlength']) && isnum($options['maxlength']) ? $options['maxlength'] : '',
+		'tip' => !empty($options['tip']) ? $options['tip'] : '',
 	);
 	if (!defined('autogrow') && $options['autosize']) {
 		define('autogrow', true);
 		add_to_footer("<script src='".DYNAMICS."assets/autosize/jquery.autosize.min.js'></script>");
 	}
-
 	$input_value = html_entity_decode(stripslashes($input_value));
 	$input_value = str_replace("<br />", "", $input_value);
 
-	$html = "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
-	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html = "<div id='$input_id-field' class='form-group ".$options['class']."' ".($options['inline'] && $options['width'] && !$title ? "style='width: ".$options['width']." !important;'" : '').">\n";
+	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
 	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 
 	if ($options['preview'] && $options['bbcode'] || $options['html']) {
@@ -102,13 +102,14 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	if ($options['preview'] && $options['bbcode'] || $options['html']) {
 		$html .= closetabbody();
 		$html .= opentabbody($tab_title['title'][0], "prw-".$input_id."", $tab_active);
+		$html .= "No Result";
 		$html .= closetabbody();
 		$html .= closetab($tab_title, $tab_active, "".$input_id."-link");
 
 		add_to_jquery("
 		// preview syntax
 		var form = $('#".$options['form_name']."');
-		$('#tab-prw-".$input_id."Preview').bind('click',function(){
+		$('#tab-".$input_id."-linkPreview').bind('click',function(){
 		var text = $('#".$input_id."').val();
 		var format = '".($options['bbcode'] ? 'bbcode' : 'html')."';
 		var data = {
@@ -123,7 +124,7 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 			dataType: 'html',
 			data : sendData,
 			success: function(result){
-			//console.log(result);
+			console.log(result);
 			$('#prw-".$input_id."Preview').html(result);
 			},
 			error: function(result) {
@@ -148,8 +149,6 @@ function form_textarea($title = FALSE, $input_name, $input_id, $input_value = FA
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= $options['inline'] ? "</div>\n" : '';
 	$html .= "</div>\n";
-	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=textarea],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]".($options['error_text'] ? ",[error_text=".$options['error_text']."]" : '')."' />";
-
 	$defender->add_field_session(array(
 			 'input_name' 	=> 	$input_name,
 			 'type'			=>	'textarea',
