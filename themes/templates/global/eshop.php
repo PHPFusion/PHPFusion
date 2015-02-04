@@ -259,13 +259,13 @@ if (!function_exists('render_eshop_product')) {
 	 * @param $info
 	 */
 	function render_eshop_product($info) {
-	//print_p($info);
+
 	/*
 	 * [item] => Array
         (
             [16] => Array
                 (
-	[qty] - unrestricted quantity buy at a go
+					[qty] - unrestricted quantity buy at a go
                     [id] => 16
                     [title] => Mobile 99
                     [cid] => 16
@@ -302,13 +302,16 @@ if (!function_exists('render_eshop_product')) {
                     [cupons] => 1
                     [access] => 0
                     [campaign] => 0
-                    [comments] => 1
-                    [ratings] => 1
-                    [linebreaks] => 1
+
 
                     [category_title] => Game
                     [category_link] => ./category=16
                     [link] => ./eshop.php?product=16
+
+
+	 [comments] => 1
+                    [ratings] => 1
+                    [linebreaks] => 1
                 )
 
         )
@@ -401,7 +404,7 @@ if (!function_exists('render_eshop_product')) {
 		$title = $data['dynf'] ? $data['dynf'] : 'Category';
 		$dync = str_replace('&quot;', '', $data['dync']);
 		$dync_opts = array_filter(explode('.', $dync));
-		echo form_select($title, 'product_type', 'product_type', $dync_opts, '', array('inline'=>1, 'width'=>'150px', 'class'=>'product-selector m-b-0'));
+		echo form_select($title, 'product_type', 'product_type', $dync_opts, 1, array('inline'=>1, 'width'=>'200px', 'class'=>'product-selector m-b-0'));
 	}
 	if ($data['icolor']) {
 		echo "<div class='form-group m-t-10'>\n";
@@ -410,14 +413,24 @@ if (!function_exists('render_eshop_product')) {
 		$color = str_replace('&quot;', '', $data['icolor']);
 		$full_colors = PHPFusion\Eshop::get_iColor();
 		$current_colors = array_filter(explode('.', $color));
+		$i = 0;
 		foreach($current_colors as $val) {
 			$color = $full_colors[$val]['hex'];
 			$title = $full_colors[$val]['title'];
-			echo "<div><input id='".$color."' type='radio' name='icolor' value='".$val."'>
+			echo "<div><input id='".$color."' type='radio' name='product_color' value='".$val."' ".($i == 0 ? 'checked' : '')." />
 			<span class='display-inline-block' style='background: $color; width:15px; height:15px; border-radius:50%; margin-left:5px;'>&nbsp;</span>
 			<small class='p-l-10'><label for='".$color."'>$title</label></small>
 			</div>";
+			$i++;
 		}
+		defender::add_field_session(array(
+					 'input_name' 	=> 	'product_color',
+					 'type'			=>	'number',
+					 'title'		=>	$locale['ESHP017'],
+					 'id' 			=>	'',
+					 'required'		=>	1,
+					 'safemode' 	=> 	0,
+				 ));
 		echo "</div>\n";
 		echo "</div>\n";
 	}
