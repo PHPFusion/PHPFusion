@@ -1,5 +1,7 @@
 <?php
 // News titles
+$locale['SL_0001'] = 'Site Links';
+
 $locale['400'] = "Add Site Link";
 $locale['401'] = "Edit Site Link";
 $locale['402'] = "Current Site Links";

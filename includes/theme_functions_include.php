@@ -208,6 +208,7 @@ function showbanners($display = "") {
 	ob_end_clean();
 	return $output;
 }
+
 // cant change the parameter or else risk destruct all older themes
 function showsublinks($sep = "&middot;", $class = "", array $options = array()) {
 	global $settings;
