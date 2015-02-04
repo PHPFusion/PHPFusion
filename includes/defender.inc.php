@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) 2002 - 2014 PHP-Fusion Inc.
@@ -7,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: defender.inc.php
 | Author : Frederick MC Chan (Hien)
-| Version : 9.0.3 (please update every commit)
+| Version : 9.0.5 (please update every commit)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -20,7 +19,6 @@
 
 class defender {
 	public $debug = FALSE;
-	public $debug_notice = FALSE;
 	public $ref = array();
 	public $error_content = array();
 	public $error_title = '';
@@ -38,6 +36,7 @@ class defender {
 		'path' => '',
 		'thumbnail_1' => '',
 		'thumbnail_2' => '',); // declared by form_sanitizer()
+
 	/**
 	 * Load locales for defender
 	 * This solution was needed to load the defender.inc.php before
@@ -45,6 +44,7 @@ class defender {
 	 * @staticvar array $locale
 	 * @return array
 	 */
+
 	/* Sanitize Fields Automatically */
 	public function defender() {
 		global $locale;
@@ -159,29 +159,37 @@ class defender {
 		}
 	}
 
+	/**
+	 * The UserID
+	 * No $userName because it can be changed and tampered via Edit Profile.
+	 * Using IP address extends for guest
+	 * @return mixed
+	 */
+	static function set_sessionUserID() {
+		global $userdata;
+		// using . will yield invalid token format.
+		return isset($userdata['user_id']) && !isset($_POST['login']) ? (int) $userdata['user_id'] : str_replace('.', '-', USER_IP);
+	}
+
 	/* Adds the field sessions on document load */
-	public function add_field_session(array $array) {
-		global $userdata;
-		if (!iMEMBER) $userdata['user_id'] = '0';
-		$_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
+	static function add_field_session(array $array) {
+		$_SESSION['form_fields'][self::set_sessionUserID()][$_SERVER['REQUEST_URI']][$array['input_name']] = $array;
 	}
 
-	/* Fetches your users field sessions so you can do anything with it */
-	static function my_field_session() {
-		global $userdata;
-		return $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']];
+	/**
+	 * See specific User Form Field Traces.
+	 * $user_id as false to see yourself
+	 * $user_id as integer to see specific user
+	 * @return array
+	 */
+	static function display_user_field_session($user_id = FALSE) {
+		$user_id = $user_id && isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."'") ? $user_id : self::set_sessionUserID();
+		return (array) $_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']];
 	}
 
-	/* Destroys a users field session. use carefully */
+	/* Destroys the user field session */
 	public function unset_field_session() {
-		global $userdata;
-		unset($_SESSION['form_fields'][$userdata['user_id']]);
-	}
-
-	/* Jquery Error Class Injector */
-	public function addError($id) {
-		// add class to id.
-		add_to_jquery("$('#$id-field').addClass('has-error');");
+		unset($_SESSION['form_fields'][self::set_sessionUserID()]);
 	}
 
 	public function noAdminCookie() {
@@ -203,77 +211,22 @@ class defender {
 		}
 	}
 
-	public function verify_tokens($form, $post_time = 10, $preserve_token = FALSE) {
-		global $locale, $userdata;
-		$error = array();
-		$user_id = isset($userdata['user_id']) && !isset($_POST['login']) ? $userdata['user_id'] : 0;
-		$algo = fusion_get_settings('password_algorithm');
-		$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-		if ($this->debug) {
-			print_p($_POST);
-		}
-		// check if a session is started
-		if (!isset($_SESSION['csrf_tokens'])) {
-			$error = $locale['token_error_1'];
-			$this->stop($locale['token_error_1']);
-			// check if a token is posted
-		} elseif (!isset($_POST['fusion_token'])) {
-			$error = $locale['token_error_2'];
-			$this->stop($locale['token_error_2']);
-			// check if the posted token exists
-		} elseif (!in_array($_POST['fusion_token'], isset($_SESSION['csrf_tokens'][$form]) ? $_SESSION['csrf_tokens'][$form] : array())) {
-			$error = $locale['token_error_3'];
-			$this->stop($locale['token_error_3']);
-			// invalid token - will not accept double posting.
-		} else {
-			$token_data = explode(".", stripinput($_POST['fusion_token']));
-			// check if the token has the correct format
-			if (count($token_data) == 3) {
-				list($tuser_id, $token_time, $hash) = $token_data;
-				if ($tuser_id != $user_id) { // check if the logged user has the same ID as the one in token
-					$error = $locale['token_error_4'];
-					$this->stop($locale['token_error_4']);
-				} elseif (!isnum($token_time)) { // make sure the token datestamp is a number before performing calculations
-					$error = $locale['token_error_5'];
-					$this->stop($locale['token_error_5']);
-					// token is not a number.
-				} elseif (time()-$token_time < $post_time) { // post made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-					$error = $locale['token_error_6'];
-					$this->stop($locale['token_error_6']);
-					// check if the hash in token is valid
-				} elseif ($hash != hash_hmac($algo, $user_id.$token_time.$form.SECRET_KEY, $salt)) {
-					$error = $locale['token_error_7'];
-					$this->stop($locale['token_error_7']);
-				}
-			} else {
-				// token incorrect format.
-				$error = $locale['token_error_8'];
-				$this->stop($locale['token_error_8']);
-			}
-		}
-		// remove the token from the array as it has been used
-		if ($post_time > 0) { // token with $post_time 0 are reusable
-			foreach ($_SESSION['csrf_tokens'][$form] as $key => $val) {
-				if (isset($_POST['fusion_token']) && $val == $_POST['fusion_token']) {
-					unset($_SESSION['csrf_tokens'][$form][$key]);
-				}
-			}
-		}
-		if ($error) {
-			if ($this->debug) {
-				print_p($error);
-			}
-			return FALSE;
-		}
-		if ($this->debug) {
-			print_p('Validate success');
-			notify("Token Verification Success!", "The token on token ring has been passed and validated successfully.", array('icon' => 'notify_icon n-magic'));
-		}
-		return TRUE;
+	// Field Validation Output
+
+	/**
+	 * Jquery add has-error CSS class to field input container on error
+	 * @param $id - field id
+	 */
+	static function addError($id) {
+		add_to_jquery("$('#$id-field').addClass('has-error');");
 	}
 
-	/* Append The Helper Text */
-	public function addHelperText($id, $content) {
+	/**
+	 * Jquery append helper text
+	 * @param $id
+	 * @param $content
+	 */
+	static function addHelperText($id, $content) {
 		// add prevention of double entry should the fields are the same id.
 		if (!defined(".$id-help")) {
 			define(".$id-help", TRUE);
@@ -281,34 +234,6 @@ class defender {
                 $('#$id-help').addClass('label label-danger m-t-5 p-5 display-inline-block');
                 $('#$id-help').append('$content');
 			");
-		}
-	}
-
-	/* Except for blank $_POST, every single form in must have token - added to maincore */
-	public function sniff_token() {
-		global $locale;
-		if (!empty($_POST)) {
-			if (!isset($_POST['fusion_token'])) {
-				$this->stop();
-				$this->addNotice($locale['token_error_2']);
-				if ($this->debug_notice) {
-					print_p($locale['token_error_2']);
-				}
-			} else {
-				// check token.
-				if (isset($_POST['token_rings']) && !empty($_POST['token_rings'])) {
-					foreach ($_POST['token_rings'] as $hash => $form_name) {
-						$this->verify_tokens($form_name, 0);
-					}
-				} else {
-					// token tampered
-					$this->stop();
-					$this->addNotice($locale['token_error_2']);
-					if ($this->debug_notice) {
-						print_p($locale['token_error_2']." Tampered.");
-					}
-				}
-			}
 		}
 	}
 
@@ -349,9 +274,36 @@ class defender {
 		return $html;
 	}
 
+	/**
+	 * Checks whether $_POST contains token.
+	 * @param bool $debug
+	 */
+	public function sniff_token($debug=FALSE) {
+		global $locale;
+		if (!empty($_POST)) {
+			if (!isset($_POST['fusion_token'])) {
+				$this->stop();
+				$this->addNotice($locale['token_error_2']);
+				if ($debug) print_p($locale['token_error_2']);
+			} else {
+				// check token.
+				if (isset($_POST['token_rings']) && !empty($_POST['token_rings'])) {
+					foreach ($_POST['token_rings'] as $hash => $form_name) {
+						self::verify_tokens($form_name, 0);
+					}
+				} else {
+					// token tampered
+					$this->stop();
+					$this->addNotice($locale['token_error_2']);
+					if ($debug) print_p($locale['token_error_2']." Tampered.");
+				}
+			}
+		}
+	}
+
 	/* Inject FUSION_NULL */
-	public function stop($ref = FALSE) {
-		if ($ref && $this->debug_notice) {
+	static function stop($ref = FALSE) {
+		if ($ref) {
 			notify('There was an error processing your request.', $ref);
 		}
 		if (!defined('FUSION_NULL')) {
@@ -360,10 +312,11 @@ class defender {
 	}
 
 	// Field Verifications Rules
+
 	/* validate and sanitize a text
  	 * accepts only 50 characters + @ + 4 characters
  	 */
-	private function verify_text() {
+	protected function verify_text() {
 		global $locale;
 		$return_value = '';
 		$value = '';
@@ -398,7 +351,7 @@ class defender {
 	/* validate an email address
 	 * accepts only 50 characters + @ + 4 characters
 	 */
-	private function verify_email() {
+	protected function verify_email() {
 		global $locale;
 		if ($this->field_value) {
 			$value = stripinput(trim(preg_replace("/ +/i", " ", $this->field_value)));
@@ -419,7 +372,7 @@ class defender {
 	 * accepts minimum of 8 and maximum of 64 due to encrypt limit
 	 * returns a default if blank
 	 */
-	private function verify_password() {
+	protected function verify_password() {
 		global $locale;
 		// add min length, add max length, add strong password into roadmaps.
 		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
@@ -437,7 +390,7 @@ class defender {
 	 * accepts only integer and decimal .
 	 * returns a default if blank
 	 */
-	private function verify_number() {
+	protected function verify_number() {
 		global $locale;
 		$value = '';
 		if (is_array($this->field_value)) {
@@ -467,7 +420,7 @@ class defender {
 	* require path.
 	* returns a default if blank
 	*/
-	private function verify_url() {
+	protected function verify_url() {
 		if ($this->field_value) {
 			return filter_var($this->field_value, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
 			//return cleanurl($this->field_value);
@@ -480,7 +433,7 @@ class defender {
 	 * accepts date format in - , / and . delimiters
 	 * returns a default if blank
 	 */
-	private function verify_date() {
+	protected function verify_date() {
 		global $locale;
 		// pair each other to determine which is month.
 		// the standard value for dynamics is day-month-year.
@@ -514,7 +467,7 @@ class defender {
 
 	/* Verify and upload image on success. Returns array on file, thumb and thumb2 file names */
 	/* You can use this function anywhere whether bottom or top most of your codes - order unaffected */
-	private function verify_image_upload() {
+	protected function verify_image_upload() {
 		global $locale;
 		require_once INCLUDES."infusions_include.php";
 		if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
@@ -552,7 +505,7 @@ class defender {
 		}
 	}
 
-	private function verify_file_upload() {
+	protected function verify_file_upload() {
 		global $locale;
 		require_once INCLUDES."infusions_include.php";
 		if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
@@ -585,6 +538,81 @@ class defender {
 			return array();
 		}
 	}
+
+	/**
+	 * Token Validation
+	 * @param     $form - formname
+	 * @param int $post_time - 10 for 10 tokens
+	 * @param int $debug - 1 for debug notices
+	 * @return bool
+	 */
+	static function verify_tokens($form, $post_time = 10, $debug = 0) {
+		global $locale, $userdata;
+		$error = array();
+		//$user_id = isset($userdata['user_id']) && !isset($_POST['login']) ? $userdata['user_id'] : 0;
+		$user_id = self::set_sessionUserID();
+		$algo = fusion_get_settings('password_algorithm');
+		$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+		if ($debug) {
+			print_p($_POST);
+		}
+		// check if a session is started
+		if (!isset($_SESSION['csrf_tokens'])) {
+			$error = $locale['token_error_1'];
+			self::stop($locale['token_error_1']);
+			// check if a token is posted
+		} elseif (!isset($_POST['fusion_token'])) {
+			$error = $locale['token_error_2'];
+			self::stop($locale['token_error_2']);
+			// check if the posted token exists
+		} elseif (!in_array($_POST['fusion_token'], isset($_SESSION['csrf_tokens'][$form]) ? $_SESSION['csrf_tokens'][$form] : array())) {
+			$error = $locale['token_error_3'];
+			self::stop($locale['token_error_3']);
+			// invalid token - will not accept double posting.
+		} else {
+			$token_data = explode(".", stripinput($_POST['fusion_token']));
+			// check if the token has the correct format
+			if (count($token_data) == 3) {
+				list($tuser_id, $token_time, $hash) = $token_data;
+				if ($tuser_id != $user_id) { // check if the logged user has the same ID as the one in token
+					$error = $locale['token_error_4'];
+					self::stop($locale['token_error_4']);
+				} elseif (!isnum($token_time)) { // make sure the token datestamp is a number before performing calculations
+					$error = $locale['token_error_5'];
+					self::stop($locale['token_error_5']);
+					// token is not a number.
+				} elseif (time()-$token_time < $post_time) { // post made too fast. Set $post_time to 0 for instant. Go for System Settings later.
+					$error = $locale['token_error_6'];
+					self::stop($locale['token_error_6']);
+					// check if the hash in token is valid
+				} elseif ($hash != hash_hmac($algo, $user_id.$token_time.$form.SECRET_KEY, $salt)) {
+					$error = $locale['token_error_7'];
+					self::stop($locale['token_error_7']);
+				}
+			} else {
+				// token incorrect format.
+				$error = $locale['token_error_8'];
+				self::stop($locale['token_error_8']);
+			}
+		}
+		// remove the token from the array as it has been used
+		if ($post_time > 0) { // token with $post_time 0 are reusable
+			foreach ($_SESSION['csrf_tokens'][$form] as $key => $val) {
+				if (isset($_POST['fusion_token']) && $val == $_POST['fusion_token']) {
+					unset($_SESSION['csrf_tokens'][$form][$key]);
+				}
+			}
+		}
+		if ($error) {
+			if ($debug) print_p($error);
+			return FALSE;
+		}
+		if ($debug) {
+			print_p('Validate success');
+			notify("Token Verification Success!", "The token on token ring has been passed and validated successfully.", array('icon' => 'notify_icon n-magic'));
+		}
+		return TRUE;
+	}
 }
 
 function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang = FALSE) {
@@ -594,8 +622,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			foreach (fusion_get_enabled_languages() as $lang) {
 				//$field_name = ucfirst(strtolower(str_replace("_", " ", $input_name))).' ('.$lang.')';
 				$input_name = $input_name."[".$lang."]";
-				if (isset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name])) {
-					$defender->field_config = $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name];
+				if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name])) {
+					$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name];
 					$defender->field_name = $input_name;
 					$defender->field_value = $value[$lang];
 					$defender->field_default = $default;
@@ -612,8 +640,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				}
 			}
 		} else {
-			if (isset($_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name])) {
-				$defender->field_config = $_SESSION['form_fields'][$userdata['user_id']][$_SERVER['PHP_SELF']][$input_name];
+			if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name])) {
+				$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name];
 				$defender->field_name = $input_name;
 				$defender->field_value = $value;
 				$defender->field_default = $default;
@@ -675,10 +703,10 @@ function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
 		}
 	}
 	// reuse a posted token if is valid instead of generating a new one - fixed: reuse on the form that is being posted only. Generate new on all others.
-	if (isset($_POST['fusion_token']) && $being_posted && $defender->verify_tokens($form, $max_tokens)) { // will delete max token out. hence flush out previous token..
+	if (isset($_POST['fusion_token']) && $being_posted && $defender::verify_tokens($form, $max_tokens)) { // will delete max token out. hence flush out previous token..
 		$token = stripinput($_POST['fusion_token']);
 	} else {
-		$user_id = (isset($userdata['user_id']) ? $userdata['user_id'] : 0);
+		$user_id = defender::set_sessionUserID();
 		$token_time = time();
 		$algo = fusion_get_settings('password_algorithm');
 		$key = $user_id.$token_time.$form.SECRET_KEY;
