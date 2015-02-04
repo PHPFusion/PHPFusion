@@ -45,6 +45,36 @@ add_to_jquery("
     });
 ");
 
+/* add to cart form actions */
+add_to_jquery("
+	$('#add_cart').bind('click', function() {
+		var sendData = $('#productfrm').serialize();
+		//console.log(sendData);
+		$.ajax({
+			url: '".INFUSIONS."eshop_cart_panel/cart.ajax.php',
+			type: 'POST',
+			dataType: 'html',
+			data : sendData,
+			success: function(result){
+				console.log(result);
+
+				//$('#prw-".$input_id."Preview').html(result);
+			},
+			error: function(result) {
+				new PNotify({
+					title: 'Error File',
+					text: 'There are error in processing your request. Please contact the Site Admin.',
+					icon: 'notify_icon n-attention',
+					animation: 'fade',
+					width: 'auto',
+					delay: '3000'
+				});
+			}
+		});
+	});
+
+");
+
 function render_cart() {
 	echo "<div id='cart' class='cart-bar open'>
 	<a class='cart-tab pointer' title='Your cart is current empty' class='display-inline-block'>

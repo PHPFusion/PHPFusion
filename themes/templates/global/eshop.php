@@ -123,9 +123,7 @@ if (!function_exists('render_eshop_featured_category')) {
 		if ($cat) {
 			?>
 			<h3>Featured Category</h3>
-			<div class='list-group-item p-0'>
-				<?php echo $cat; ?>
-			</div>
+			<?php echo $cat; ?>
 		<?php
 		}
 	}
@@ -150,9 +148,7 @@ if (!function_exists('render_eshop_featured_url')) {
 		if ($cat) {
 			?>
 			<h3>Featured Sections</h3>
-			<div class='list-group-item p-0'>
-				<?php echo $cat; ?>
-			</div>
+			<?php echo $cat; ?>
 		<?php
 		}
 	}
@@ -322,7 +318,6 @@ if (!function_exists('render_eshop_product')) {
 	echo "<div class='m-t-10'>\n";
 	echo render_breadcrumbs();
 	echo "</div>\n";
-
 	echo "<div class='row product_slot_".$data['id']."'>\n<div class='col-xs-12 col-sm-5'>\n";
 	// Images
 	echo "<div class='rib-wrap itembox'>";
@@ -356,7 +351,7 @@ if (!function_exists('render_eshop_product')) {
 	}
 	echo "</div>\n<div class='col-xs-12 col-sm-7'>\n";
 	echo "<h2 class='product-title m-b-0'>".$data['title']."</h2>";
-	echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info.
+	//echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info.
 	// product basic information
 	echo "<div class='text-smaller'>\n";
 	echo "<span class='display-block'>Product-Serial: ".$data['artno']."</span>\n";
@@ -406,7 +401,7 @@ if (!function_exists('render_eshop_product')) {
 		$title = $data['dynf'] ? $data['dynf'] : 'Category';
 		$dync = str_replace('&quot;', '', $data['dync']);
 		$dync_opts = array_filter(explode('.', $dync));
-		echo form_select($title, 'product_type', 'product_type', $dync_opts, '', array('inline'=>1, 'class'=>'product-selector m-b-0'));
+		echo form_select($title, 'product_type', 'product_type', $dync_opts, '', array('inline'=>1, 'width'=>'150px', 'class'=>'product-selector m-b-0'));
 	}
 	if ($data['icolor']) {
 		echo "<div class='form-group m-t-10'>\n";
@@ -460,12 +455,11 @@ if (!function_exists('render_eshop_product')) {
 			//echo "<a class='btn m-r-10 ".."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
 		}
 		if ($data['cart_on'] == "1") {
-			echo form_button($locale['ESHP021'], 'buy_now', 'buy_now', $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
+			echo form_button($locale['ESHP021'], 'add_cart', 'add_cart', $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
 			//echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
 		}
 		echo "</div>\n";
 	}
-
 	echo form_hidden('', 'id', 'id', $data['id']);
 	// the rest of the fields can load data from class... like this.
 	//$product_data = PHPFusion\Eshop::get_productData($_POST['id']);

@@ -538,7 +538,7 @@ class Eshop {
 			$result = dbquery("SELECT i.*, if(i.cid >0, cat.title, 0) as category_title
 			FROM ".DB_ESHOP." i
 			LEFT JOIN ".DB_ESHOP_CATS." cat on (i.cid=cat.cid)
-			WHERE active = '1' AND id='".intval($_GET['product'])."' AND ".groupaccess('access')." LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
+			WHERE active = '1' AND id='".intval($_GET['product'])."' AND ".groupaccess('i.access')." LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
 			if (!dbrows($result)) {
 				redirect(BASEDIR."eshop.php");
 			} else {
@@ -592,7 +592,7 @@ class Eshop {
 			$result = dbquery("SELECT i.id, i.cid, i.title, i.thumb, i.price, i.picture, i.xprice, i.keywords, i.product_languages, cat.title as category_title
 			FROM ".DB_ESHOP." i
 			INNER JOIN ".DB_ESHOP_CATS." cat on i.cid = cat.cid
-			WHERE ".$sql." AND active = '1' AND ".groupaccess('access')."
+			WHERE ".$sql." AND active = '1' AND ".groupaccess('i.access')."
 			ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."
 			");
 		} else {
