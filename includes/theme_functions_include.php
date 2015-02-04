@@ -209,10 +209,29 @@ function showbanners($display = "") {
 	return $output;
 }
 
+function showsublinks_new($sep = "&middot;", $class = "", array $options = array()) {
+	global $settings, $userdata;
+
+	$acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
+
+	$menu_items = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND link_visibility <= '$acclevel' ORDER BY link_cat, link_order");
+
+	$res = "<div class='navbar navbar-default' role='navigation'>\n";
+	$res .= "<div class='navbar-collapse collapse'>\n";
+
+	print_p($menu_items);
+
+	$res .= "</div>\n</div>\n";
+
+	return $res;
+}
+
+
+
 // cant change the parameter or else risk destruct all older themes
 function showsublinks($sep = "&middot;", $class = "", array $options = array()) {
-	global $settings;
-	require_once INCLUDES."mobile.menu.inc.php";
+	global $locale;
+	$settings = fusion_get_settings();
 
 	$options += array(
 		'logo' => '',
