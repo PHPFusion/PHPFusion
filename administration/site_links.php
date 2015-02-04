@@ -168,7 +168,7 @@ class SiteLinks_Admin {
 				} elseif ($old_order < $data['link_order']) { // current order is shifting down. 3 to 6. 1,2,(3),3<-4,5,5<-(6),7. where orders which is more than old order, and less than current equals.
 					$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."' AND link_order>'".$old_order['link_order']."' AND link_order<='".$data['link_order']."'");
 				} // else no change.
-				dbquery_insert(DB_FORUMS, $data, 'update');
+				dbquery_insert(DB_SITE_LINKS, $data, 'update');
 				if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=su");
 			} else {
 				// save
