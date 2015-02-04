@@ -1,41 +1,44 @@
 <?php
 // News titles
-$locale['400'] = "Pridėti tinklapio nuorodą";
-$locale['401'] = "Redaguoti tinklapio nuorodą";
-$locale['402'] = "Esamos tinklapio nuorodos";
+$locale['SL_0001'] = 'Site Links';
+
+$locale['SL_0010'] = "Pridėti tinklapio nuorodą";
+$locale['SL_0011'] = "Redaguoti tinklapio nuorodą";
+$locale['SL_0012'] = "Esamos tinklapio nuorodos";
 // News messages
-$locale['410'] = "Tinklapio nuoroda pridėta";
-$locale['411'] = "Tinklapio nuoroda atnaujinta";
-$locale['412'] = "Tinklapio nuoroda ištrinta";
+$locale['SL_0015'] = "Tinklapio nuoroda pridėta";
+$locale['SL_0016'] = "Tinklapio nuoroda atnaujinta";
+$locale['SL_0017'] = "Tinklapio nuoroda ištrinta";
 // Site Links form
-$locale['420'] = "Nuorodos pavadinimas:";
-$locale['421'] = "Nuorodos adresas:";
-$locale['422'] = "Gali matyti:";
-$locale['423'] = "Eilė:";
-$locale['424'] = "Vieta:";
-$locale['425'] = "Tiktai navigacijos meniu";
-$locale['426'] = "Navigacijos meniu ir poantraštėje";
-$locale['427'] = "Tiktai poantraštėje";
-$locale['428'] = "Atidaryti nuorodą naujame lange";
-$locale['429'] = "Išsaugoti nuorodą";
+$locale['SL_0020'] = "Nuorodos pavadinimas:";
+$locale['SL_0021'] = "Nuorodos adresas:";
+$locale['SL_0022'] = "Gali matyti:";
+$locale['SL_0023'] = "Eilė:";
+$locale['SL_0024'] = "Vieta:";
+$locale['SL_0025'] = "Tiktai navigacijos meniu";
+$locale['SL_0026'] = "Navigacijos meniu ir poantraštėje";
+$locale['SL_0027'] = "Tiktai poantraštėje";
+$locale['SL_0028'] = "Atidaryti nuorodą naujame lange";
+$locale['SL_0029'] = "Link Category";
+$locale['SL_0030'] = "Link Icon";
+$locale['SL_0040'] = "Išsaugoti nuorodą";
 // Site Links list
-$locale['440'] = "Nuorodos pavadinimas";
-$locale['441'] = "Gali matyti";
-$locale['442'] = "Eilė";
-$locale['443'] = "Pasirinkimai";
-$locale['444'] = "Redaguoti";
-$locale['445'] = "Trinti";
-$locale['446'] = "Nėra sukurtų tinklapio nuorodų.";
-// Link Ordering
-$locale['450'] = "Aukštyn";
-$locale['451'] = "Žemyn";
-$locale['452'] = "Perkelti aukštyn";
-$locale['453'] = "Perkelti žemyn";
-$locale['454'] = "Atnaujinti nuorodų eiliškumą";
-$locale['455'] = "Nuorodų tvarka atnaujinta.";
+$locale['SL_0050'] = "Nuorodos pavadinimas";
+$locale['SL_0051'] = "Gali matyti";
+$locale['SL_0052'] = "Eilė";
+$locale['SL_0053'] = "Pasirinkimai";
+$locale['SL_0060'] = "Redaguoti";
+$locale['SL_0061'] = "Trinti";
+$locale['SL_0062'] = "Nėra sukurtų tinklapio nuorodų.";
+
+$locale['SL_0070'] = "Icon";
+$locale['SL_0071'] = "New Window?";
+$locale['SL_0072'] = "Menu";
+$locale['SL_0073'] = "Reorder";
+
 // Delete Site Link category
-$locale['460'] = "Trinti šią nuorodą?";
+$locale['SL_0080'] = "Trinti šią nuorodą?";
 // Error
-$locale['461'] = "Prašom įvesti nuorodos pavadinimą";
-$locale['462'] = "Prašom įvesti nuorodos adresą";
+$locale['SL_0085'] = "Prašom įvesti nuorodos pavadinimą";
+$locale['SL_0086'] = "Prašom įvesti nuorodos adresą";
 ?>

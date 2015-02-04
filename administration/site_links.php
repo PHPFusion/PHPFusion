@@ -85,9 +85,9 @@ class SiteLinks_Admin {
 		$this->language_opts = fusion_get_enabled_languages();
 
 		$this->position_opts = array(
-			'1' => $locale['425'],
-			'2' => $locale['426'],
-			'3' => $locale['427']
+			'1' => $locale['SL_0025'],
+			'2' => $locale['SL_0026'],
+			'3' => $locale['SL_0027']
 		);
 
 		$this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
@@ -212,11 +212,11 @@ class SiteLinks_Admin {
 		global $locale;
 		if (isset($_GET['status']) && !isset($message)) {
 			if ($_GET['status'] == "sn") {
-				$message = $locale['410'];
+				$message = $locale['SL_0015'];
 			} elseif ($_GET['status'] == "su") {
-				$message = $locale['411'];
+				$message = $locale['SL_0016'];
 			} elseif ($_GET['status'] == "del") {
-				$message = $locale['412'];
+				$message = $locale['SL_0017'];
 			}
 			if ($message) {
 				echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
@@ -274,13 +274,13 @@ class SiteLinks_Admin {
 		echo "<table class='table table-responsive'>\n";
 		echo "<tr>\n";
 		echo "<th>\n</th>\n";
-		echo "<th class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>".$locale['440']."</th>\n";
-		echo "<th>Icon</th>";
-		echo "<th>New Window?</th>";
-		echo "<th>Menu</th>";
-		echo "<th>".$locale['441']."</th>";
-		echo "<th>".$locale['442']."</th>";
-		echo "<th>Reorder</th>";
+		echo "<th class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>".$locale['SL_0050']."</th>\n";
+		echo "<th>".$locale['SL_0070']."</th>";
+		echo "<th>".$locale['SL_0071']."</th>";
+		echo "<th>".$locale['SL_0072']."</th>";
+		echo "<th>".$locale['SL_0051']."</th>";
+		echo "<th>".$locale['SL_0052']."</th>";
+		echo "<th>".$locale['SL_0073']."</th>";
 		echo "</tr>\n";
 
 		// Load form data. Then, if have data, show form.. when post, we use back this page's script.
@@ -290,22 +290,22 @@ class SiteLinks_Admin {
 		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink, array('downtime'=>5, 'notice'=>0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
-		echo form_text('Link Name', 'link_name', 'link_name', '', array('placeholder'=>'Link Title'));
-		echo form_text('Link Icon', 'link_icon', 'link_icon', $this->data['link_icon'], array('max_length' => 100));
+		echo form_text($locale['SL_0020'], 'link_name', 'link_name', '', array('placeholder'=>'Link Title'));
+		echo form_text($locale['SL_0030'], 'link_icon', 'link_icon', $this->data['link_icon'], array('max_length' => 100));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_select($locale['global_ML100'], 'link_language', 'link_language', $this->language_opts, $this->data['link_language'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
-		echo form_select($locale['424'], 'link_position', 'link_position', $this->position_opts, $this->data['link_position'], array('width'=>'100%'));
+		echo form_select($locale['SL_0024'], 'link_position', 'link_position', $this->position_opts, $this->data['link_position'], array('width'=>'100%'));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>\n";
-		echo form_select($locale['422'], 'link_visibility', 'link_visibility', self::getVisibility(), $this->data['link_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
-		echo form_checkbox($locale['428'], 'link_window', 'link_window', $this->data['link_window']);
+		echo form_select($locale['SL_0022'], 'link_visibility', 'link_visibility', self::getVisibility(), $this->data['link_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
+		echo form_checkbox($locale['SL_0028'], 'link_window', 'link_window', $this->data['link_window']);
 		echo form_hidden('', 'link_id', 'link_id', '', array('writable'=>1));
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";
-		echo form_button('Cancel', 'cancel', 'cancel', 'cancel', array('class'=>'btn btn-default m-r-10', 'type'=>'button'));
-		echo form_button('Save', 'link_quicksave', 'link_quicksave', 'save', array('class'=>'btn btn-primary'));
+		echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class'=>'btn btn-default m-r-10', 'type'=>'button'));
+		echo form_button($locale['save'], 'link_quicksave', 'link_quicksave', 'save', array('class'=>'btn btn-primary'));
 		echo "</div>\n";
 		echo closeform();
 		echo "</div>\n";
@@ -324,7 +324,7 @@ class SiteLinks_Admin {
 				echo "<div class='actionbar text-smaller' id='blog-".$data['link_id']."-actions'>
 				<a href='".FUSION_SELF.$aidlink."&amp;section=nform&amp;action=edit&amp;link_id=".$data['link_id']."'>".$locale['edit']."</a> |
 				<a class='qedit pointer' data-id='".$data['link_id']."'>".$locale['qedit']."</a> |
-				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;link_id=".$data['link_id']."' onclick=\"return confirm('".$locale['460']."');\">".$locale['delete']."</a> |
+				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;link_id=".$data['link_id']."' onclick=\"return confirm('".$locale['SL_0080']."');\">".$locale['delete']."</a> |
 				";
 				if (strstr($data['link_url'], "http://") || strstr($data['link_url'], "https://")) {
 					echo "<a href='".$data['link_url']."'>".$locale['view']."</a>\n";
@@ -345,7 +345,7 @@ class SiteLinks_Admin {
 			}
 		} else {
 			echo "<tr>\n";
-			echo "<td colspan='7' class='text-center'>".$locale['446']."</td>\n";
+			echo "<td colspan='7' class='text-center'>".$locale['SL_0062']."</td>\n";
 			echo "</tr>\n";
 		}
 		echo "</tbody>\n";
@@ -359,22 +359,22 @@ class SiteLinks_Admin {
 		echo openform('layoutform', 'layoutform', 'post', $this->form_action, array('downtime' => 10));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
-		echo form_text($locale['420'], 'link_name', 'link_names', $this->data['link_name'], array('max_length' => 100, 'required' => 1, 'error_text' => $locale['461'], 'inline'=>1));
+		echo form_text($locale['SL_0020'], 'link_name', 'link_names', $this->data['link_name'], array('max_length' => 100, 'required' => 1, 'error_text' => $locale['SL_0085'], 'inline'=>1));
 		echo form_text('Link Icon', 'link_icon', 'link_icons', $this->data['link_icon'], array('max_length' => 100, 'inline'=>1));
-		echo form_text($locale['421'], 'link_url', 'link_urls', $this->data['link_url'], array('required' => 1, 'error_text' => $locale['462'], 'inline'=>1));
-		echo form_text($locale['423'], 'link_order', 'link_orders', $this->data['link_order'],  array('number' => 1, 'class' => 'pull-left', 'inline' => 1));
-		echo form_select($locale['424'], 'link_position', 'link_positions', $this->position_opts, $this->data['link_position'], array('inline'=>1));
+		echo form_text($locale['SL_0021'], 'link_url', 'link_urls', $this->data['link_url'], array('required' => 1, 'error_text' => $locale['SL_0086'], 'inline'=>1));
+		echo form_text($locale['SL_0023'], 'link_order', 'link_orders', $this->data['link_order'],  array('number' => 1, 'class' => 'pull-left', 'inline' => 1));
+		echo form_select($locale['SL_0024'], 'link_position', 'link_positions', $this->position_opts, $this->data['link_position'], array('inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
 		openside('');
-		echo form_select_tree('Link Category', "link_cat", "link_categorys", $this->data['link_cat'], array("parent_value" => $locale['parent'], 'width'=>'100%', 'query'=>"WHERE link_language='".LANGUAGE."'"), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
+		echo form_select_tree($locale['SL_0029'], "link_cat", "link_categorys", $this->data['link_cat'], array("parent_value" => $locale['parent'], 'width'=>'100%', 'query'=>"WHERE link_language='".LANGUAGE."'"), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
 		echo form_select($locale['global_ML100'], 'link_language', 'link_languages', $this->language_opts, $this->data['link_language'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
-		echo form_select($locale['422'], 'link_visibility', 'link_visibilitys', self::getVisibility(), $this->data['link_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
-		echo form_checkbox($locale['428'], 'link_window', 'link_windows', $this->data['link_window']);
+		echo form_select($locale['SL_0022'], 'link_visibility', 'link_visibilitys', self::getVisibility(), $this->data['link_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
+		echo form_checkbox($locale['SL_0028'], 'link_window', 'link_windows', $this->data['link_window']);
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['429'], 'savelink', 'savelink', $locale['429'], array('class'=>'btn-primary'));
+		echo form_button($locale['SL_0040'], 'savelink', 'savelink', $locale['SL_0040'], array('class'=>'btn-primary'));
 		echo closeform();
 		echo "</div>\n";
 	}
@@ -385,11 +385,11 @@ $edit = $site_links->verify_edit();
 $master_title['title'][] = $locale['SL_0001'];
 $master_title['id'][] = 'links';
 $master_title['icon'][] = '';
-$master_title['title'][] = $edit ? $locale['401'] : $locale['400'];
+$master_title['title'][] = $edit ? $locale['SL_0011'] : $locale['SL_0010'];
 $master_title['id'][] = 'nform';
 $master_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 $tab_active = tab_active($master_title, $edit ?  1 : 0, 1);
-opentable($locale['402']);
+opentable($locale['SL_0012']);
 echo "<div id='info'></div>\n";
 echo opentab($master_title, $tab_active, 'link', FUSION_SELF);
 echo opentabbody($master_title['title'][0], 'links', $tab_active, 1);
