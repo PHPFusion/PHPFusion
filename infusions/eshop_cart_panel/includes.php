@@ -97,7 +97,7 @@ class Cart {
 		echo "</div>\n";
 		echo "<div class='overflow-hide'>\n";
 		echo "<button title='".$locale['delete']."' value='".$cart_data['tid']."' type='button' class='remove pull-right'><i class='fa fa-remove'></i></button>\n";
-		echo "<a class='display-block product-title' href='".BASEDIR."eshop.php?product=".$cart_data['tid']."'>".$cart_data['citem']."</a>";
+		echo "<a class='display-block product-title' href='".BASEDIR."eshop.php?product=".$cart_data['prid']."'>".$cart_data['citem']."</a>";
 		echo "<div class='display-block text-smaller'><span id='qty'>".$cart_data['cqty']."</span> x ".fusion_get_settings('eshop_currency')." <span id='unit-price'>".number_format($cart_data['cprice'], 2)."</span></div>\n";
 		echo "</div>\n";
 		echo "</li>\n";
