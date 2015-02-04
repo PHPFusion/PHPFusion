@@ -209,20 +209,47 @@ function showbanners($display = "") {
 	return $output;
 }
 
-function showsublinks_new($sep = "&middot;", $class = "", array $options = array()) {
-	global $settings, $userdata;
-
+// New codes in showsublinks -- Work in Progress
+function showsublinks_new($sep = "&middot;", $class = "", array $options = array(), $id = 0) { // add a id parameter
+	global $userdata;
+	static $data = array();
+	$settings = fusion_get_settings();
 	$acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
+	$res = &$res;
+	// this loads data once ? Follow the method used on fusion_get_settings();
+	if (empty($data)) {
+		$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND link_visibility <= '$acclevel' ORDER BY link_cat, link_order");
+		print_p($data);
+	}
 
-	$menu_items = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND link_visibility <= '$acclevel' ORDER BY link_cat, link_order");
+	// POINT 1
+	// IF OR ELSE base on ID. --- SEE POINT 2 for why "ELSE"
+	if ($id == 0) {
+		$res = "<div class='navbar navbar-default' role='navigation'>\n";
+		$res .= "<div class='navbar-collapse collapse'>\n";
+		$res .= "<ul class=''>\n";
+	} else { // <---- POINT 3.
+		// this is child opening because same function is used but $data[$link_id] form POINT 2 is $data[$id = 4] so this is here.
+		$res .= "<li class='dropdown-menu'>"; // <--- adjust the second layer
+	}
 
-	$res = "<div class='navbar navbar-default' role='navigation'>\n";
-	$res .= "<div class='navbar-collapse collapse'>\n";
-
-	print_p($menu_items);
-
-	$res .= "</div>\n</div>\n";
-
+	foreach($data[$id] as $link_id => $link_data) { // if $id is 0 when call function, $data[0] is used.
+		print_p($link_id);
+		print_p($link_data);
+		$res .= "<li>".$link_data['link_name']."</li>";
+		// now before foreach ends on each we use another time same function
+		if (isset($data[$link_id])) {
+			print_p($data[$link_id]); // this will get the child of $link_id.
+			$res .= showsublinks_new($sep, $class, $options, $data[$link_id]); // <---- POINT 2 ($data[4]); for example. so we loop (SEE POINT 3)
+		}
+	}
+	if ($id == 0) {
+		$res .= "</ul>\n";
+		$res .= "</div>\n</div>\n";
+	} else {
+		// this is for child closing.
+		$res .= "</li>"; // <--- adjust second layer.
+	}
 	return $res;
 }
 
