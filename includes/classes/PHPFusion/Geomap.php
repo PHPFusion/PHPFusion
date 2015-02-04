@@ -30,13 +30,21 @@ class Geomap {
 
 	static function get_Currency($country_code = '') {
 		$current_list = array();
-		$fmt = new \NumberFormatter(\Locale::ACTUAL_LOCALE, \NumberFormatter::CURRENCY);
-		// we have country code...
-		foreach(self::getMap() as $object) {
-			if ($object->name->common !== 'Antarctica') {
-				$num = "1234.56";
-				$currency = numfmt_format_currency($fmt , $num , $object->currency[0]);
-				$current_list[$object->currency[0]] = $currency." (".$object->name->common.")";
+		if (phpversion()>=5.4) {
+			$fmt = new \NumberFormatter(\Locale::ACTUAL_LOCALE, \NumberFormatter::CURRENCY);
+			// we have country code...
+			foreach(self::getMap() as $object) {
+				if ($object->name->common !== 'Antarctica') {
+					$num = "1234.56";
+					$currency = numfmt_format_currency($fmt , $num , $object->currency[0]);
+					$current_list[$object->currency[0]] = $currency." (".$object->name->common.")";
+				}
+			}
+		} else {
+			foreach(self::getMap() as $object) {
+				if ($object->name->common !== 'Antartica') {
+					$current_list[$object->currency[0]] = $object->currency[0]." (".$object->name->common.")";
+				}
 			}
 		}
 		return array_filter($current_list);
