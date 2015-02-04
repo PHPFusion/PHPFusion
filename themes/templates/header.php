@@ -66,6 +66,9 @@ if ($settings['bootstrap']) {
 	add_to_head("<link rel='stylesheet' href='".$theme_css."' type='text/css' />");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
+	add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.min.js'></script>");
+	add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.min.js'></script>");
+	add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.css' type='text/css' />");
 }
 require_once THEMES."templates/panels.php";
 ob_start();

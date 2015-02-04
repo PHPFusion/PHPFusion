@@ -38,7 +38,7 @@ function render_page($license = FALSE) {
 
 	// Render Theme
 	echo "<div class='container p-t-20 p-b-20'>\n";
-	echo showsublinks_new('', '', array('logo'=>$brand))."\n";
+	echo showsublinks('', '', array('logo'=>$brand))."\n";
 	// row 1 - go for max width
 	if (defined('AU_CENTER') && AU_CENTER) echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>".AU_CENTER."</div>\n</div>";
 	// row 2 - fluid setitngs depending on panel appearances

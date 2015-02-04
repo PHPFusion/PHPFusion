@@ -210,127 +210,35 @@ function showbanners($display = "") {
 }
 
 // New codes in showsublinks -- Work in Progress
-function showsublinks_new($sep = "&middot;", $class = "", array $options = array(), $id = 0) { // add a id parameter
+function showsublinks($sep = "&middot;", $class = "", array $options = array(), $id = 0) {
 	global $userdata;
 	static $data = array();
 	$settings = fusion_get_settings();
 	$acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 	$res = &$res;
-	// this loads data once ? Follow the method used on fusion_get_settings();
+
 	if (empty($data)) {
 		$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND link_visibility <= '$acclevel' ORDER BY link_cat, link_order");
-		print_p($data);
 	}
 
-	// POINT 1
-	// IF OR ELSE base on ID. --- SEE POINT 2 for why "ELSE"
 	if ($id == 0) {
 		$res = "<div class='navbar navbar-default' role='navigation'>\n";
 		$res .= "<div class='navbar-collapse collapse'>\n";
-		$res .= "<ul class=''>\n";
-	} else { // <---- POINT 3.
-		// this is child opening because same function is used but $data[$link_id] form POINT 2 is $data[$id = 4] so this is here.
-		$res .= "<li class='dropdown-menu'>"; // <--- adjust the second layer
+		$res .= "<ul class='nav navbar-nav'>\n";
+	} else {
+		$res .= "<ul class='dropdown-menu'>\n";
 	}
 
-	foreach($data[$id] as $link_id => $link_data) { // if $id is 0 when call function, $data[0] is used.
-		print_p($link_id);
-		print_p($link_data);
-		$res .= "<li>".$link_data['link_name']."</li>";
-		// now before foreach ends on each we use another time same function
+	foreach($data[$id] as $link_id => $link_data) {
+		$res .= "<li><a href='".$link_data['link_url']."'>".$link_data['link_name']."</a>";
 		if (isset($data[$link_id])) {
-			print_p($data[$link_id]); // this will get the child of $link_id.
-			$res .= showsublinks_new($sep, $class, $options, $data[$link_id]); // <---- POINT 2 ($data[4]); for example. so we loop (SEE POINT 3)
+			$res .= showsublinks($sep, $class, $options, $link_data['link_id']);
 		}
+		$res .= "</li>\n";
 	}
 	if ($id == 0) {
 		$res .= "</ul>\n";
 		$res .= "</div>\n</div>\n";
-	} else {
-		// this is for child closing.
-		$res .= "</li>"; // <--- adjust second layer.
-	}
-	return $res;
-}
-
-
-
-// cant change the parameter or else risk destruct all older themes
-function showsublinks($sep = "&middot;", $class = "", array $options = array()) {
-	global $locale;
-	$settings = fusion_get_settings();
-
-	$options += array(
-		'logo' => '',
-		'container' => FALSE,
-	);
-	$mobile_icon = isset($default_mobile_icon) ? $default_mobile_icon : '';
-	$sres = dbquery("SELECT link_name, link_url, link_window, link_visibility FROM ".DB_SITE_LINKS."
-	".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_position>='2' ORDER BY link_order");
-	$mobile_link = array();
-	$res = '';
-
-	if ($settings['bootstrap']) {
-		$res .= "<nav class='navbar navbar-default' role='navigation'>\n";
-			if ($options['container']) $res .= "<div class='container fluid'>\n";
-			$res .= "<div class='mobile-menu'>\n";
-			$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#fusion-menu'><i class='entypo menu'></i></button>\n";
-			$res .= "<a class='navbar-brand' href='".BASEDIR."index.php'>".$options['logo']."</a>";
-			$res .= "</div>\n";
-			$res .= "<div class='navbar-collapse collapse col-xs-hidden'>\n";
-			$res .= "<ul class='nav navbar-nav'>\n";
-	} else {
-		$res .= "<ul>\n";
-	}
-
-	if (dbrows($sres)>0) {
-		$i = 0;
-		while ($sdata = dbarray($sres)) {
-			$mobile_link[$sdata['link_name']] = $sdata['link_url']; // order, visibility, language - complied.
-			$li_class = $class;
-			$i++;
-			if ($sdata['link_url'] != "---" && checkgroup($sdata['link_visibility'])) {
-				$link_target = ($sdata['link_window'] == "1" ? " target='_blank'" : "");
-				if ($i == 1) {
-					$li_class .= ($li_class ? " " : "")."first-link ".(START_PAGE == $sdata['link_url'] || START_PAGE == $settings['opening_page'] ? 'active' : '')."";
-				}
-				if (START_PAGE == $sdata['link_url']) {
-					$li_class .= ($li_class ? " " : "")."current-link active";
-				}
-				if (preg_match("!^(ht|f)tp(s)?://!i", $sdata['link_url'])) {
-					$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."<a href='".$sdata['link_url']."'".$link_target.">\n";
-					$res .= "<span>".parseubb($sdata['link_name'], "b|i|u|color|img")."</span></a></li>\n";
-				} else {
-					$res .= "<li".($li_class ? " class='".$li_class."'" : "").">".$sep."<a href='".BASEDIR.$sdata['link_url']."'".$link_target.">\n";
-					$res .= "<span>".parseubb($sdata['link_name'], "b|i|u|color|img")."</span></a></li>\n";
-				}
-			}
-		}
-	}
-
-
-	if ($settings['bootstrap']) {
-		$res .= "</ul>\n";
-		$res .= "<!--start of mobile menu -->\n";
-		$res .= "<div id='fusion-menu' class='navbar-collase collapse hidden-sm hidden-md hidden-lg mobile-panel m-0'>\n";
-		$res .= "<div class='mobile-pane'>\n";
-		$res .= "<div class='mobile-header'>\n";
-		$res .= "<button class='btn mobile-btn-close' data-toggle='collapse' data-target='#mp'>Close</button>\n";
-		$res .= "<div class='mobile-header-text text-center'>Navigation</div>";
-		$res .= "</div>\n";
-		if (count($mobile_link) > 0) {
-			$res .= "<div class='row m-0 mobile-body'>\n";
-			foreach ($mobile_link as $link_name => $link_url) {
-				$icon = array_key_exists($link_url, $mobile_icon) ? $mobile_icon[$link_url] : 'entypo layout';
-				$res .= "<div class='col-xs-3 mobile-grid text-center'><a href='$link_url' class='btn btn-menu btn-block btn-default m-b-10'><i class='".$icon."'></i><br/><span class='mobile-text'>".trimlink($link_name, 10)."</span></a></div>\n";
-			}
-			$res .= "</div>\n";
-		}
-		$res .= "</div>\n";
-		$res .= "</div>\n";
-		$res .= "<!--end of mobile menu -->\n";
-		if ($options['container']) $res .= "</div>\n";
-		$res .= "</nav>\n";
 	} else {
 		$res .= "</ul>\n";
 	}
