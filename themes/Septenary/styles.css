@@ -568,9 +568,9 @@ nav {
 }
 .main-content {
 	background: #FFF;
-	padding-top: 10px;
 	display: block;
 	width: 100%;
+	padding-bottom:30px;
 }
 /* Eshop */
 .product-selector label, .product-selector, .product-quantity {
