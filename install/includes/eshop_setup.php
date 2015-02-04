@@ -83,6 +83,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_newtime'");
 	$result = dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_freeshipsum'");
 	$result = dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_coupons'");
+	$result = dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_ipn'");
 } else {
 	// Flush
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop");
@@ -246,7 +247,7 @@ if (isset($_POST['uninstall'])) {
 			cid mediumint(8) NOT NULL default '0',
 			method varchar(100) NOT NULL default '',
 			dtime tinyint(1) NOT NULL default '0',
-			destination tiny(1) NOT NULL default '0',
+			destination tinyint(1) NOT NULL default '0',
 			weightmin varchar(100) NOT NULL default '',
 			weightmax varchar(100) NOT NULL default '',
 			weightcost smallint(5) NOT NULL default '0',
@@ -313,7 +314,7 @@ if (isset($_POST['uninstall'])) {
 		
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_featitems (
 			featitem_id mediumint(8) unsigned NOT NULL auto_increment,
-			featitem_title varchar(100) NOT NUL default '',
+			featitem_title varchar(100) NOT NULL default '',
 			featitem_description text NOT NULL,
 			featitem_item mediumint(8) unsigned NOT NULL default '0',
 			featitem_cid mediumint(8) unsigned NOT NULL default '0',
