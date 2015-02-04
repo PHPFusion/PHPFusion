@@ -9,7 +9,6 @@ header("Pragma: no-cache");        // HTTP/1.0
 require_once dirname(__FILE__)."../../../maincore.php";
 
 if ($defender->verify_tokens('productfrm', 0)) {
-
 	// remotely refer form_sanitizer from the referer script treating this form executed from eshop form
 	$_SERVER['REQUEST_URI'] = fusion_get_settings('site_path').str_replace(fusion_get_settings('siteurl'), '', $_SERVER['HTTP_REFERER']);
 	$data['tid'] = 0; // let it auto increment
@@ -19,7 +18,6 @@ if ($defender->verify_tokens('productfrm', 0)) {
 	$data['cclr'] = form_sanitizer($_POST['product_color'], '', 'product_color'); // order color
 	$data['cdyn'] = form_sanitizer($_POST['product_type'], '', 'product_type'); // this stores user selection
 	$data['cadded'] = time(); // time
-
 	$product = \PHPFusion\Eshop::get_productData($data['prid']);
 	if (!empty($product)) { // loaded $data
 		$data['artno'] = $product['artno']; // artno
@@ -36,20 +34,5 @@ if ($defender->verify_tokens('productfrm', 0)) {
 		$defender->stop();
 		echo json_encode(array('error_id'=>1, 'code'=>'Product Not Found (Response-1)'));
 	}
-
-
 }
-
-/* [fusion_token] =&gt; 0.1422984164.7bd43fbdda29da8614114200e4d0af9fe74e9b4486aff4805a0bdc9f50fe058e
-    [token_rings] =&gt; Array
-(
-
-        )
-
-    [product_type] =&gt; 1
-    [icolor] =&gt; 6
-    [product_quantity] =&gt; 1
-    [id] =&gt; 17
-*/
-
 

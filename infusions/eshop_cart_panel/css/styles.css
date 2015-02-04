@@ -68,7 +68,7 @@
 	color: rgb(72,160,190) !important;
 	font-weight: bold;
 }
-#cart-list .remove {
+#cart-list .remove-cart-item {
 	background: none;
 	border: 0;
 	color: rgb(165, 46, 10);
