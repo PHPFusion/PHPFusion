@@ -169,7 +169,7 @@ if (!function_exists('render_blog_item')) {
 		echo "<div class='pull-right m-t-20 m-l-20'>".display_avatar($data, '70px', '', '', 'img-circle')."</div>\n";
 		echo "<div class='overflow-hide'>\n";
 		echo "<span class='blog_author_info'>".$locale['global_070']." ".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span><br/>\n";
-		if ($data['user_level']) echo sprintf($locale['testimonial_rank'], $data['user_level']);
+		if ($data['user_level']) echo sprintf($locale['testimonial_rank'], getgroupname($data['user_level']));
 		if (isset($data['user_location']) && $data['user_location']) echo sprintf($locale['testimonial_location'], $data['user_location']);
 		if ($data['user_joined']) echo sprintf($locale['testimonial_location'], showdate('newsdate', $data['user_joined']));
 		if (isset($data['user_web']) && $data['user_web']) echo sprintf($locale['testimonial_web'], $data['user_web']);
