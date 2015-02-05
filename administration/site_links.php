@@ -237,11 +237,11 @@ class SiteLinks_Admin {
 	 * MYSQL Update Site Links Quick Edit
 	 */
 	private function link_quicksave() {
-		global $aidlink;
+		global $aidlink, $defender;
+		defender::display_user_field_session();
 		if (isset($_POST['link_quicksave'])) {
 			$quick['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '0', 'link_id') : 0;
 			$quick['link_icon'] = isset($_POST['link_icon']) ? form_sanitizer($_POST['link_icon'], '', 'link_icon') : '';
-			$quick['link_cat'] = isset($_POST['link_cat']) ? form_sanitizer($_POST['link_cat'], '0', 'link_cat') : '';
 			$quick['link_position'] = isset($_POST['link_position']) ? form_sanitizer($_POST['link_position'], '1', 'link_position') : 1;
 			$quick['link_language'] = isset($_POST['link_language']) ? form_sanitizer($_POST['link_language'], LANGUAGE, 'link_language') : LANGUAGE;
 			$quick['link_visibility'] = isset($_POST['link_visibility']) ? form_sanitizer($_POST['link_visibility'], '0', 'link_visibility') : 0;
@@ -251,7 +251,7 @@ class SiteLinks_Admin {
 				if (dbrows($c_result)) {
 					$quick += dbarray($c_result);
 					dbquery_insert(DB_SITE_LINKS, $quick,'update');
-					redirect(FUSION_SELF.$aidlink);
+					if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat']);
 				}
 			}
 		}
@@ -373,7 +373,7 @@ class SiteLinks_Admin {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='8'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink, array('downtime'=>5, 'notice'=>0));
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat'], array('downtime'=>0, 'notice'=>0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
 		echo form_text($locale['SL_0020'], 'link_name', 'link_name', '', array('placeholder'=>'Link Title'));

@@ -209,18 +209,17 @@ function showbanners($display = "") {
 	return $output;
 }
 
-// New codes in showsublinks -- Work in Progress
+
 function showsublinks($sep = "&middot;", $class = "", array $options = array(), $id = 0) {
 	global $userdata;
 	static $data = array();
 	$settings = fusion_get_settings();
 	$acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 	$res = &$res;
-
 	if (empty($data)) {
 		$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND link_visibility <= '$acclevel' ORDER BY link_cat, link_order");
+		print_p($data);
 	}
-
 	if ($id == 0) {
 		$res = "<div class='navbar navbar-default' role='navigation'>\n";
 		$res .= "<div class='navbar-collapse collapse'>\n";

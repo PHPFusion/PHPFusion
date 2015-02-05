@@ -183,8 +183,12 @@ class defender {
 	 * @return array
 	 */
 	static function display_user_field_session($user_id = FALSE) {
+		$array = array();
 		$user_id = $user_id && isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."'") ? $user_id : self::set_sessionUserID();
-		return (array) $_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']];
+		if (isset($_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']])) {
+			return (array) $_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']];
+		}
+		return $array;
 	}
 
 	/* Destroys the user field session */
