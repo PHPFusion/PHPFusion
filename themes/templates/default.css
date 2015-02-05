@@ -546,3 +546,51 @@ table {
 .zindex-boost {
 	z-index: 999;
 }
+
+/* New CSS Navigation panel, with menu subitems */
+
+.sidecssmenu a:focus {
+	outline: none;
+}
+
+.sidecssmenu {
+    float: left;
+	width: 100%;
+    background-color: none;
+}
+
+.sidecssmenu ul, .sidecssmenu li{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidecssmenu ul li {
+	position: relative;	
+	width: 100%;
+	min-width: 160px;
+	z-index: 1000;
+}
+
+.sidecssmenu ul li a{
+	display: block;
+	padding: 5px 5px 5px 8px;
+	background: #ffffff;
+	color: #601117;
+	text-decoration: none;	
+	border: 1px solid #666;
+	margin: 1px;
+}
+
+.sidecssmenu ul li a:hover{
+	color: #ffffff;	
+    background-color: #601117;
+}
+
+.sidecssmenu ul li ul {
+    display: none;
+    position: relative;
+    top: 0px;
+    left: 0px;
+	margin-left: 12px;
+}
