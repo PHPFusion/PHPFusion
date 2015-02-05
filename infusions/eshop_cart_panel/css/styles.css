@@ -33,6 +33,9 @@
 .cart-bar.open {
 	right:0;
 }
+.cart-bar h4, .cart-bar .heading, #cart-list > li {
+	color: #fff !important;
+}
 .cart-tab {
 	display: inline-block;
 	background: rgba(0,0,0,0.85);
@@ -41,6 +44,7 @@
 	padding: 15px 20px;
 	top: 25%;
 	left: -69px;
+	color: #fff !important;
 	position: absolute;
 }
 #cart .heading {

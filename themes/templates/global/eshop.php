@@ -22,25 +22,27 @@ if (!function_exists('render_eshop_nav')) {
 	 * @param array $info
 	 */
 	function render_eshop_nav(array $info) {
-		echo "<nav class='eshop-nav navbar-default nav'>\n";
-		echo "<ul class='navbar navbar-nav'>\n";
+		$res = "<div class='navbar navbar-default' role='navigation'>\n";
+		$res .= "<div class='navbar-collapse collapse'>\n";
+		$res .= "<ul class='nav navbar-nav'>\n";
 		if ($_GET['category']) {
 			if (!empty($info['previous_category'])) {
-				echo "<li><a href='".$info['previous_category']['link']."'>Back to ".$info['previous_category']['title']."</a></li>\n";
+				$res .= "<li><a href='".$info['previous_category']['link']."'>Back to ".$info['previous_category']['title']."</a></li>\n";
 			} else {
-				echo "<li><a href='".BASEDIR."eshop.php'>Store Front</a></li>\n";
+				$res .= "<li><a href='".BASEDIR."eshop.php'>Store Front</a></li>\n";
 			}
 			if (!empty($info['current_category'])) {
-				echo "<li class='active'><a href='".BASEDIR."eshop.php?category=".$info['current_category']['cid']."'>".$info['current_category']['title']."</a></li>\n";
+				$res .= "<li class='active'><a href='".BASEDIR."eshop.php?category=".$info['current_category']['cid']."'>".$info['current_category']['title']."</a></li>\n";
 			}
 		}
 		if (!empty($info['category'][$_GET['category']])) {
 			foreach ($info['category'][$_GET['category']] as $data) {
-				echo "<li><a href='".$data['link']."'>".$data['title']."</a></li>\n";
+				$res .= "<li><a href='".$data['link']."'>".$data['title']."</a></li>\n";
 			}
 		}
-		echo "</ul>\n";
-		echo "</nav>\n";
+		$res .= "</ul>\n";
+		$res .= "</div>\n</div>\n";
+		echo $res;
 	}
 }
 
@@ -189,10 +191,6 @@ if (!function_exists('render_eshop_page_content')) {
 							echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</div>\n";
 						}
 						echo "</div>\n";
-						echo "<div class='panel-footer text-smaller text-left'>\n";
-						echo "<a class='text-lighter text-dark strong' href=''><i class='fa fa-shopping-cart m-r-10 m-t-5'></i>BUY NOW</a>";
-						echo "<a class='text-lighter text-dark strong pull-right' href=''><i class='m-t-5 fa fa-heart m-r-10'></i></a>";
-						echo "</div>\n";
 						echo "</div>\n";
 						$i++;
 					}
@@ -228,10 +226,6 @@ if (!function_exists('render_eshop_page_content')) {
 						} else {
 							$html .= "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</div>\n";
 						}
-						$html .= "</div>\n";
-						$html .= "<div class='panel-footer text-smaller text-left'>\n";
-						$html .= "<a class='text-lighter text-dark strong' href=''><i class='fa fa-shopping-cart m-r-10 m-t-5'></i>BUY NOW</a>";
-						$html .= "<a class='text-lighter text-dark strong pull-right' href=''><i class='m-t-5 fa fa-heart m-r-10'></i></a>";
 						$html .= "</div>\n";
 						$html .= "</div>\n";
 						$i++;
