@@ -78,15 +78,19 @@ function get_checkoutData() {
 	// ok column should be enough.
 	if (dbrows($result)>0) {
 		$info['total_weight'] = 0;
+		$info['gross_total'] = 0;
 		while ($data = dbarray($result)) {
 			// also need poll total weight to compare to shipping options later.
 			$info['total_weight'] = $info['total_weight']+$data['cweight'];
+			$info['gross_total'] = $info['gross_total']+$data['totalprice'];
 			$data['cimage'] = $data['cimage'] ? \PHPFusion\Eshop::picExist(SHOP."pictures/".$data['cimage']) : \PHPFusion\Eshop::picExist('fake.png');
 			$info['item'][$data['tid']] = $data;
-			print_p($data);
+			//print_p($data);
 		}
 	}
-
+	$vat = fusion_get_settings('eshop_vat') ? fusion_get_settings('eshop_vat') : fusion_get_settings('eshop_vat_default');
+	$info['vat'] = ($vat/100)*$info['gross_total'];
+	$info['vat_gross'] = (($vat/100)+1)*$info['gross_total'];
 	// also need to load customer information
 	$info['customer'] = null;
 	if (isnum(defender::set_sessionUserID())) {
@@ -111,7 +115,6 @@ function get_productSpecs($serial_value, $key_num) {
 	}
 	return (string) $_str;
 }
-
 function get_productColor($key_num) {
 	$color = '';
 	if (\PHPFusion\Eshop::get_iColor($key_num)) {
@@ -120,6 +123,7 @@ function get_productColor($key_num) {
 	}
 	return (string) $color;
 }
+
 
 function render_checkout(array $info) {
 	echo "<h4>Checkout - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
@@ -177,11 +181,13 @@ function render_checkout(array $info) {
 
 	echo "<div class='col-xs-12 col-sm-6 p-r-0 pull-right'>\n";
 		echo "<div class='list-group-item'>\n";
-		echo "<span class='display-inline-block strong m-r-10'>Sub-Total:</span> ".number_format(30,2);
+		echo "<span class='display-inline-block strong m-r-10'>Sub-Total: </span><span class='pull-right'>".fusion_get_settings('eshop_currency').number_format($info['gross_total'],2)."</span>\n";
 		echo "</div>\n";
 		echo "<div class='list-group-item'>\n";
-		echo "<span class='display-inline-block strong m-r-10'>Sub-Total:</span> ".number_format(30,2);
+		echo "<span class='display-inline-block strong m-r-10'>VAT (".fusion_get_settings('eshop_vat').")%:</span><span class='pull-right'>".fusion_get_settings('eshop_currency').$info['vat']."</span>\n";
 		echo "</div>\n";
+		echo "<div class='list-group-item'>\n";
+		echo "<span class='display-inline-block strong m-r-10'>Sub-Total:</span><span class='pull-right'>".fusion_get_settings('eshop_currency').number_format($info['vat_gross'],2)."</div>\n";
 	echo "</div>\n";
 
 	echo "<div class='display-block  p-l-0 p-r-0 m-t-20 col-xs-12'>\n";
