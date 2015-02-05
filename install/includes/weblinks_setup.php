@@ -58,11 +58,11 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('W', 'wl.gif', '".$locale['setup_3029']."', 'weblinks.php', '1')");
 
 	// links
-	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
+	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
-		return "('".$locale['setup_3307']."', 'weblinks.php', '0', '2', '0', '6', '".$language."'),
-				('".$locale['setup_3310']."', 'submit.php?stype=l', '101', '1', '0', '12', '".$language."')";
+		return "('".$locale['setup_3307']."', '0', '', 'weblinks.php', '0', '2', '0', '6', '".$language."'),
+				('".$locale['setup_3310']."', '4', '', 'submit.php?stype=l', '101', '1', '0', '12', '".$language."')";
 	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
