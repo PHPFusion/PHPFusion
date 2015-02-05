@@ -228,8 +228,18 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 	}
 
 	foreach($data[$id] as $link_id => $link_data) {
+		$li_class = $class;
 		if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-			$res .= "<li><a href='".$link_data['link_url']."'>".$link_data['link_name']."</a>";
+			$link_target = ($data['link_window'] == "1" ? " target='_blank'" : "");
+			if (START_PAGE == $link_data['link_url']) {
+				$li_class .= ($li_class ? " " : "")."current-link";
+			}
+			if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
+				$itemlink = $link_data['link_url'];
+			} else {
+				$itemlink = BASEDIR.$link_data['link_url'];
+			}
+			$res .= "<li".($li_class ? " class='".$li_class."'" : "")."><a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>";
 			if (isset($data[$link_id])) {
 				$res .= showsublinks($sep, $class, $options, $link_data['link_id']);
 			}
