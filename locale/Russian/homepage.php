@@ -5,6 +5,12 @@ $locale['home_0001'] = "Последние статьи";
 $locale['home_0002'] = "Последние записи блогов";
 $locale['home_0003'] = "Последние загрузки";
 
+$locale['submit_0000'] = "%s новостей";
+$locale['submit_0001'] = "%s статей";
+$locale['submit_0002'] = "%s загрузок";
+$locale['submit_0003'] = "%s фото";
+$locale['submit_0004'] = "%s ссылок";
+
 // no content messages
 $locale['home_0050'] = "Нет новостей для отображения";
 $locale['home_0051'] = "Нет статей для отображения";
