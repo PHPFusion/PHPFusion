@@ -32,7 +32,7 @@ function showsidelinks(array $options = array(), $id = 0) {
 	$res .= "<ul>\n";
 
 	foreach($data[$id] as $link_id => $link_data) {
-		$li_class = $class;
+		$li_class = "";
 		if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 			$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
 			if (START_PAGE == $link_data['link_url']) {
