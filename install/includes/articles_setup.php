@@ -70,11 +70,11 @@ if (isset($_POST['uninstall'])) {
 	// panel
 	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['setup_3403']."', 'latest_articles_panel', '', '1', '5', 'file', '0', '0', '1', '')");
 	// links
-	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
+	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
-		return "('".$locale['setup_3301']."', 'articles.php', '0', '2', '0', '2', '".$language."'),
-				('".$locale['setup_3312']."', 'submit.php?stype=a', '101', '1', '0', '12', '".$language."')";
+		return "('".$locale['setup_3301']."', '0', '', 'articles.php', '0', '2', '0', '2', '".$language."'),
+				('".$locale['setup_3312']."', '4', '', 'submit.php?stype=a', '101', '1', '0', '12', '".$language."')";
 	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;

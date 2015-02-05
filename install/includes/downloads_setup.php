@@ -72,11 +72,11 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('D', 'dl.gif', '".$locale['setup_3010']."', 'downloads.php', '1')");
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S11', 'settings_dl.gif', '".$locale['setup_3042']."', 'settings_dl.php', '4')");
 
-	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
+	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
-		return "('".$locale['setup_3302']."', 'downloads.php', '0', '2', '0', '3', '".$language."'),
-				('".$locale['setup_3314']."', 'submit.php?stype=d', '101', '1', '0', '16', '".$language."')";
+		return "('".$locale['setup_3302']."', '0', '', 'downloads.php', '0', '2', '0', '3', '".$language."'),
+				('".$locale['setup_3314']."', '4', '', 'submit.php?stype=d', '101', '1', '0', '16', '".$language."')";
 	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;

@@ -346,10 +346,10 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['setup_3053']."', 'eshop.php', '1')");
 	if (!$result) $fail = TRUE;
 	// go for settings.
-	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
+	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
-		return "('".$locale['setup_3053']."', 'eshop.php', '0', '2', '0', '3', '".$language."')";
+		return "('".$locale['setup_3053']."', '0', '', 'eshop.php', '0', '2', '0', '3', '".$language."')";
 	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
