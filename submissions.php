@@ -23,11 +23,11 @@ $acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 $configs = array();
 
 $submission_types = array(
-	DB_NEWS => array('link'=>"submit.php?type=n", 'title'=>$locale['submit_0000']),
-	DB_ARTICLES => array('link'=>"submit.php?type=n", 'title'=>$locale['submit_0001']),
-	DB_DOWNLOADS => array('link'=>"submit.php?type=n", 'title'=>$locale['submit_0002']),
-	DB_PHOTOS => array('link'=>"submit.php?type=n", 'title'=>$locale['submit_0003']),
-	DB_WEBLINKS => array('link'=>"submit.php?type=n", 'title'=>$locale['submit_0004']),
+	DB_NEWS => array('link'=>"submit.php?stype=n", 'title'=>$locale['submit_0000']),
+	DB_ARTICLES => array('link'=>"submit.php?stype=n", 'title'=>$locale['submit_0001']),
+	DB_DOWNLOADS => array('link'=>"submit.php?stype=n", 'title'=>$locale['submit_0002']),
+	DB_PHOTOS => array('link'=>"submit.php?stype=n", 'title'=>$locale['submit_0003']),
+	DB_WEBLINKS => array('link'=>"submit.php?stype=n", 'title'=>$locale['submit_0004']),
 );
 
 foreach($submission_types as $db => $submit) {
