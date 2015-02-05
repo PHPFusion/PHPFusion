@@ -71,11 +71,18 @@ if (isset($_POST['uninstall'])) {
 	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
-		return "('".$locale['setup_3306']."', '0', '', 'news_cats.php', '0', '2', '0', '7', '".$language."'),
+		return "('".$locale['setup_3205']."', '0', '', 'news.php', '0', '2', '0', '7', '".$language."'),
 				('".$locale['setup_3311']."', '4', '', 'submit.php?stype=n', '101', '1', '0', '13', '".$language."')";
 	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
+	} else {
+		$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
+		$links_sql .= implode(",\n", array_map(function ($language, $id) {
+			include LOCALE.$language."/setup.php";
+			return "('".$locale['setup_3205']."', '".$id."', '', 'news.php', '0', '2', '0', '1', '".$language."'),
+				('".$locale['setup_3306']."', '".$id."', '', 'news_cats.php', '0', '2', '0', '1', '".$language."')";
+		}, explode('.', fusion_get_settings('enabled_languages'), dblastid())));
 	}
 	
 	$news_cats_sql = "INSERT INTO ".$db_prefix."news_cats (news_cat_name, news_cat_image, news_cat_language) VALUES \n";
