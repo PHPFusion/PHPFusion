@@ -21,10 +21,15 @@ if (!checkrights("SL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['ai
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/sitelinks.php";
 
-
+/**
+ * Class SiteLinks_Admin
+ */
 class SiteLinks_Admin {
-
+	/**
+	 * @var array
+	 */
 	private $data = array(
+		'link_id' => 0,
 		'link_name' => '',
 		'link_url' => '',
 		'link_icon' => '',
@@ -35,12 +40,26 @@ class SiteLinks_Admin {
 		'link_position' => 1,
 		'link_window' => 0,
 	);
-
+	/**
+	 * @var array
+	 */
 	private $position_opts = array();
+	/**
+	 * @var array|string[]
+	 */
 	private $language_opts = array();
+	/**
+	 * @var array
+	 */
 	private $link_index = array();
+	/**
+	 * @var string
+	 */
 	private $form_action = '';
 
+	/**
+	 * @param $link_index
+	 */
 	static function link_breadcrumbs($link_index) {
 		global $aidlink;
 		/* Make an infinity traverse */
@@ -77,22 +96,23 @@ class SiteLinks_Admin {
 		// hola!
 	}
 
+	/**
+	 * Sanitization
+	 */
 	public function __construct() {
 		global $locale, $aidlink;
 		$_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
 		$_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
-		$this->form_action = FUSION_SELF.$aidlink;
-		$this->language_opts = fusion_get_enabled_languages();
+		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 
+		$this->language_opts = fusion_get_enabled_languages();
 		$this->position_opts = array(
 			'1' => $locale['SL_0025'],
 			'2' => $locale['SL_0026'],
 			'3' => $locale['SL_0027']
 		);
-
 		$this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
 		self::link_breadcrumbs($this->link_index);
-
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
 		add_to_jquery("
 		$('#site-links').sortable({
@@ -118,37 +138,64 @@ class SiteLinks_Admin {
 		});
 		");
 
-		// post of quick form
-		if (isset($_POST['link_quicksave'])) {
-			$quick['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '0', 'link_id') : 0;
-			$quick['link_icon'] = isset($_POST['link_icon']) ? form_sanitizer($_POST['link_icon'], '', 'link_icon') : '';
-			$quick['link_cat'] = isset($_POST['link_cat']) ? form_sanitizer($_POST['link_cat'], '0', 'link_cat') : '';
-			$quick['link_position'] = isset($_POST['link_position']) ? form_sanitizer($_POST['link_position'], '1', 'link_position') : 1;
-			$quick['link_language'] = isset($_POST['link_language']) ? form_sanitizer($_POST['link_language'], LANGUAGE, 'link_language') : LANGUAGE;
-			$quick['link_visibility'] = isset($_POST['link_visibility']) ? form_sanitizer($_POST['link_visibility'], '0', 'link_visibility') : 0;
-			$quick['link_window'] = isset($_POST['link_window']) ? 1 : 0;
-			if ($quick['link_id']) {
-				$c_result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_id='".intval($quick['link_id'])."'");
-				if (dbrows($c_result)) {
-					$quick += dbarray($c_result);
-					// update
-					dbquery_insert(DB_SITE_LINKS, $quick,'update');
-					redirect(FUSION_SELF.$aidlink);
-				}
-			}
+		switch($_GET['action']) {
+			case 'edit':
+				$this->data = self::load_sitelinks($_GET['link_id']);
+				if (!$this->data['link_id']) redirect(FUSION_SELF.$aidlink);
+				$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id'];
+				break;
+			case 'delete':
+				$result = self::delete_sitelinks($_GET['link_id']);
+				if ($result) redirect(FUSION_SELF.$aidlink."&status=del");
+				break;
+			default:
+				$this->form_action = FUSION_SELF.$aidlink."&amp;section=nform";
+				break;
 		}
 
+		self::link_quicksave();
+		self::set_sitelinkdb();
+	}
 
-		// Delete Rows
-		if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['link_id']) && isnum($_GET['link_id']))) {
+	/**
+	 * SQL Delete Site Link Action
+	 * @param $link_id
+	 * @return bool|mixed|null|PDOStatement|resource
+	 */
+	static function delete_sitelinks($link_id) {
+		$result = null;
+		if (isnum($link_id) && self::verify_edit($link_id)) {
 			$data = dbarray(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='".$_GET['link_id']."'"));
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order>'".$data['link_order']."'");
-			$result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_id='".$_GET['link_id']."'");
-			redirect(FUSION_SELF.$aidlink."&status=del");
+			if ($result) $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_id='".$_GET['link_id']."'");
+			return $result;
 		}
+		return $result;
+	}
 
-		// Update or Insert Rows
-		elseif (isset($_POST['savelink'])) {
+	/**
+	 * Site Link Loader
+	 * @param $link_id
+	 * @return array
+	 */
+	static function load_sitelinks($link_id) {
+		$array = array();
+		if (isnum($link_id) && self::verify_edit($link_id)) {
+			$result = dbquery("SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='".$_GET['link_id']."'");
+			if (dbrows($result)) {
+				return (array) dbarray($result);
+			}
+			return $array;
+		}
+	}
+
+	/**
+	 * MYSQL Save or Update Site Links
+	 */
+	private function set_sitelinkdb() {
+		global $aidlink, $defender;
+		if (isset($_POST['savelink'])) {
+			$data['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '', 'link_id') : 0;
 			$data['link_name'] = isset($_POST['link_name']) ? form_sanitizer($_POST['link_name'], '', 'link_name') : '';
 			$data['link_url'] = isset($_POST['link_url']) ? form_sanitizer($_POST['link_url'], '', 'link_url') : '';
 			$data['link_icon'] = isset($_POST['link_icon']) ? form_sanitizer($_POST['link_icon'], '', 'link_icon') : '';
@@ -158,38 +205,62 @@ class SiteLinks_Admin {
 			$data['link_position'] = isset($_POST['link_position']) ? form_sanitizer($_POST['link_position'], '', 'link_position') : '0';
 			$data['link_window'] = isset($_POST['link_window']) ? 1 : 0;
 			$data['link_order'] = isset($_POST['link_order']) ? form_sanitizer($_POST['link_order'], '', 'link_order') : '0';
-
+			if (!$this->data['link_order']) $this->data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$this->data['link_cat']."'"), 0)+1;
 			if (self::verify_edit($data['link_id'])) {
-				// edit
-				// check old order.
-				$old_order = dbarray(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." WHERE link_id='".$data['link_id']."'"));
-				if ($old_order > $data['link_order']) { // current order is shifting up. 6 to 3., 1,2,(3),3->4,4->5,5->6. where orders which is less than 6 but is more or equals current.
-					$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."' AND link_order<'".$old_order['link_order']."' AND link_order>='".$data['link_order']."'");
-				} elseif ($old_order < $data['link_order']) { // current order is shifting down. 3 to 6. 1,2,(3),3<-4,5,5<-(6),7. where orders which is more than old order, and less than current equals.
-					$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."' AND link_order>'".$old_order['link_order']."' AND link_order<='".$data['link_order']."'");
-				} // else no change.
+				$old_data = dbarray(dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_id='".$this->data['link_id']."'"));
+				// refresh ordering
+				if ($old_data['link_cat'] !== $this->data['link_cat']) { // not the same category
+					// refresh ex-category ordering
+					dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$old_data['link_cat']."' AND link_order > '".$old_data['link_order']."'"); // -1 to all previous category.
+				} else { // same category
+					// refresh current category
+					if ($this->data['link_order'] > $old_data['link_order']) {
+						//echo 'new order is more than old order';
+						dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat = '".$this->data['link_cat']."' AND (link_order > '".$old_data['link_order']."' AND link_order <= '".$this->data['link_order']."')");
+					} elseif ($this->data['link_order'] < $old_data['link_order']) {
+						//echo 'new order is less than old order';
+						dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat = '".$this->data['link_cat']."' AND (link_order < '".$old_data['link_order']."' AND link_order >= '".$this->data['link_order']."')");
+					}
+				}
 				dbquery_insert(DB_SITE_LINKS, $data, 'update');
 				if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=su");
 			} else {
 				// save
-				if (!$data['link_order']) $data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."'"), 0)+1;
-				$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."' AND forum_order>='".$data['link_order']."'");
+				$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."' AND link_order>='".$data['link_order']."'");
 				dbquery_insert(DB_SITE_LINKS, $data, 'save');
-				if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
-			}
-		}
-
-		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['link_id']) && isnum($_GET['link_id']))) {
-			$result = dbquery("SELECT link_name, link_url, link_visibility, link_order, link_position, link_window, link_language FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='".$_GET['link_id']."'");
-			if (dbrows($result)) {
-				$this->data = dbarray($result);
-				$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;link_id=".$_GET['link_id'];
-			} else {
-				redirect(FUSION_SELF.$aidlink);
+				//if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 			}
 		}
 	}
 
+	/**
+	 * MYSQL Update Site Links Quick Edit
+	 */
+	private function link_quicksave() {
+		global $aidlink;
+		if (isset($_POST['link_quicksave'])) {
+			$quick['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '0', 'link_id') : 0;
+			$quick['link_icon'] = isset($_POST['link_icon']) ? form_sanitizer($_POST['link_icon'], '', 'link_icon') : '';
+			$quick['link_cat'] = isset($_POST['link_cat']) ? form_sanitizer($_POST['link_cat'], '0', 'link_cat') : '';
+			$quick['link_position'] = isset($_POST['link_position']) ? form_sanitizer($_POST['link_position'], '1', 'link_position') : 1;
+			$quick['link_language'] = isset($_POST['link_language']) ? form_sanitizer($_POST['link_language'], LANGUAGE, 'link_language') : LANGUAGE;
+			$quick['link_visibility'] = isset($_POST['link_visibility']) ? form_sanitizer($_POST['link_visibility'], '0', 'link_visibility') : 0;
+			$quick['link_window'] = isset($_POST['link_window']) ? 1 : 0;
+			if (self::verify_edit($quick['link_id'])) {
+				$c_result = dbquery("SELECT * FROM ".DB_SITE_LINKS." WHERE link_id='".intval($quick['link_id'])."'");
+				if (dbrows($c_result)) {
+					$quick += dbarray($c_result);
+					dbquery_insert(DB_SITE_LINKS, $quick,'update');
+					redirect(FUSION_SELF.$aidlink);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get Group Array
+	 * @return array
+	 */
 	static function getVisibility() {
 		$visibility_opts = array();
 		$user_groups = getusergroups();
@@ -199,31 +270,46 @@ class SiteLinks_Admin {
 		return $visibility_opts;
 	}
 
-	public function verify_edit($id = false) {
-		if ($_GET['link_id'] && isset($_GET['action']) && $_GET['action'] == 'edit') {
-			$id = ($id) ? $id : $_GET['link_id'];
-			$verify = dbcount("(link_id)", DB_SITE_LINKS, "link_id='".intval($id)."'");
-			if ($verify) return true;
+	/**
+	 * Link ID validation
+	 * @param $link_id
+	 * @return bool|string
+	 */
+	static function verify_edit($link_id) {
+		if (isnum($link_id)) {
+			return dbcount("(link_id)", DB_SITE_LINKS, "link_id='".intval($link_id)."'");
 		}
 		return false;
 	}
 
+	/**
+	 * Message Display
+	 */
 	static function getMessage() {
 		global $locale;
 		if (isset($_GET['status']) && !isset($message)) {
-			if ($_GET['status'] == "sn") {
-				$message = $locale['SL_0015'];
-			} elseif ($_GET['status'] == "su") {
-				$message = $locale['SL_0016'];
-			} elseif ($_GET['status'] == "del") {
-				$message = $locale['SL_0017'];
+			switch($_GET['status']) {
+				case 'sn':
+					$message = $locale['SL_0015'];
+					break;
+				case 'su':
+					$message = $locale['SL_0016'];
+					break;
+				case 'del':
+					$message = $locale['SL_0017'];
+					break;
+				default:
+					$message = '';
 			}
 			if ($message) {
-				echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+				echo admin_message($message);
 			}
 		}
 	}
 
+	/**
+	 * Form for Listing Menu
+	 */
 	public function menu_listing() {
 		global $locale, $aidlink;
 
@@ -353,12 +439,17 @@ class SiteLinks_Admin {
 		echo "</div>\n";
 	}
 
+	/**
+	 * Site Links Form
+	 */
 	public function menu_form() {
-		global $locale, $aidlink;
+		global $locale;
+		fusion_confirm_exit();
 		echo "<div class='m-t-20'>\n";
-		echo openform('layoutform', 'layoutform', 'post', $this->form_action, array('downtime' => 10));
+		echo openform('linkform', 'linkform', 'post', $this->form_action, array('downtime' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
+		echo form_hidden('', 'link_id', 'linkid', $this->data['link_id']);
 		echo form_text($locale['SL_0020'], 'link_name', 'link_names', $this->data['link_name'], array('max_length' => 100, 'required' => 1, 'error_text' => $locale['SL_0085'], 'inline'=>1));
 		echo form_text('Link Icon', 'link_icon', 'link_icons', $this->data['link_icon'], array('max_length' => 100, 'inline'=>1));
 		echo form_text($locale['SL_0021'], 'link_url', 'link_urls', $this->data['link_url'], array('required' => 1, 'error_text' => $locale['SL_0086'], 'inline'=>1));
@@ -381,7 +472,7 @@ class SiteLinks_Admin {
 }
 
 $site_links = new SiteLinks_Admin();
-$edit = $site_links->verify_edit();
+$edit = isset($_GET['link_id']) ? $site_links->verify_edit($_GET['link_id']) : 0;
 $master_title['title'][] = $locale['SL_0001'];
 $master_title['id'][] = 'links';
 $master_title['icon'][] = '';
@@ -395,11 +486,12 @@ echo opentab($master_title, $tab_active, 'link', FUSION_SELF);
 echo opentabbody($master_title['title'][0], 'links', $tab_active, 1);
 $site_links->menu_listing();
 echo closetabbody();
-echo opentabbody($master_title['title'][1], 'nform', $tab_active, 1);
-$site_links->menu_form();
-echo closetabbody();
+if (isset($_GET['section']) && $_GET['section'] == 'nform') {
+	echo opentabbody($master_title['title'][1], 'nform', $tab_active, 1);
+	$site_links->menu_form();
+	echo closetabbody();
+}
 echo closetab();
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>
