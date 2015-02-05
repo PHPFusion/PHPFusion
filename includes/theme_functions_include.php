@@ -228,12 +228,17 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 	}
 
 	foreach($data[$id] as $link_id => $link_data) {
-		$res .= "<li><a href='".$link_data['link_url']."'>".$link_data['link_name']."</a>";
-		if (isset($data[$link_id])) {
-			$res .= showsublinks($sep, $class, $options, $link_data['link_id']);
+		if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
+			$res .= "<li><a href='".$link_data['link_url']."'>".$link_data['link_name']."</a>";
+			if (isset($data[$link_id])) {
+				$res .= showsublinks($sep, $class, $options, $link_data['link_id']);
+			}
+			$res .= "</li>\n";
+		} elseif ($link_data['link_cat'] > 0) {
+			echo "<li class='divider'></li>";
 		}
-		$res .= "</li>\n";
 	}
+
 	if ($id == 0) {
 		$res .= "</ul>\n";
 		$res .= "</div>\n</div>\n";
