@@ -391,55 +391,54 @@ if (!function_exists('render_eshop_product')) {
 		echo "</div>\n";
 	}
 
-	// ok now do the add cart thing. we need a form to push to cart or buynow.
-	echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product']);
-	echo "<div class='m-t-20'>\n";
-	if (!empty($data['dync'])) {
-		$title = $data['dynf'] ? $data['dynf'] : 'Category';
-		$dync = str_replace('&quot;', '', $data['dync']);
-		$dync_opts = array_filter(explode('.', $dync));
-		echo form_select($title, 'product_type', 'product_type', $dync_opts, 1, array('inline'=>1, 'width'=>'200px', 'class'=>'product-selector m-b-0'));
-	}
-	if ($data['icolor']) {
-		echo "<div class='form-group m-t-10'>\n";
-		echo "<label class='col-xs-12 col-sm-3 text-smaller p-l-0'>".$locale['ESHP017']."</label>\n";
-		echo "<div class='col-xs-12 col-sm-9'>\n";
-		$color = str_replace('&quot;', '', $data['icolor']);
-		$full_colors = PHPFusion\Eshop::get_iColor();
-		$current_colors = array_filter(explode('.', $color));
-		$i = 0;
-		foreach($current_colors as $val) {
-			$color = $full_colors[$val]['hex'];
-			$title = $full_colors[$val]['title'];
-			echo "<div><input id='".$color."' type='radio' name='product_color' value='".$val."' ".($i == 0 ? 'checked' : '')." />
+	if (fusion_get_settings('eshop_shopmode')) {
+		echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product']);
+		echo "<div class='m-t-20'>\n";
+		if (!empty($data['dync'])) {
+			$title = $data['dynf'] ? $data['dynf'] : 'Category';
+			$dync = str_replace('&quot;', '', $data['dync']);
+			$dync_opts = array_filter(explode('.', $dync));
+			echo form_select($title, 'product_type', 'product_type', $dync_opts, 1, array('inline'=>1, 'width'=>'200px', 'class'=>'product-selector m-b-0'));
+		}
+		if ($data['icolor']) {
+			echo "<div class='form-group m-t-10'>\n";
+			echo "<label class='col-xs-12 col-sm-3 text-smaller p-l-0'>".$locale['ESHP017']."</label>\n";
+			echo "<div class='col-xs-12 col-sm-9'>\n";
+			$color = str_replace('&quot;', '', $data['icolor']);
+			$full_colors = PHPFusion\Eshop::get_iColor();
+			$current_colors = array_filter(explode('.', $color));
+			$i = 0;
+			foreach($current_colors as $val) {
+				$color = $full_colors[$val]['hex'];
+				$title = $full_colors[$val]['title'];
+				echo "<div><input id='".$color."' type='radio' name='product_color' value='".$val."' ".($i == 0 ? 'checked' : '')." />
 			<span class='display-inline-block' style='background: $color; width:15px; height:15px; border-radius:50%; margin-left:5px;'>&nbsp;</span>
 			<small class='p-l-10'><label for='".$color."'>$title</label></small>
 			</div>";
-			$i++;
+				$i++;
+			}
+			defender::add_field_session(array(
+											'input_name' 	=> 	'product_color',
+											'type'			=>	'number',
+											'title'		=>	$locale['ESHP017'],
+											'id' 			=>	'',
+											'required'		=>	1,
+											'safemode' 	=> 	0,
+										));
+			echo "</div>\n";
+			echo "</div>\n";
 		}
-		defender::add_field_session(array(
-					 'input_name' 	=> 	'product_color',
-					 'type'			=>	'number',
-					 'title'		=>	$locale['ESHP017'],
-					 'id' 			=>	'',
-					 'required'		=>	1,
-					 'safemode' 	=> 	0,
-				 ));
-		echo "</div>\n";
-		echo "</div>\n";
-	}
-	// qty
-	if ($data['qty']) {
-		echo form_text($locale['ESHP019'], 'product_quantity', 'product_quantity', '1', array('number'=>1, 'inline'=>1, 'class'=>'product-quantity input-sm', 'width'=>'50px',
-			'append_button'=>1,
-			'append_value'=> "<i class='fa fa-plus m-t-5'></i>",
-			'append_type'=>'button',
-			'prepend_button'=>1,
-			'prepend_value'=> "<i class='fa fa-minus m-t-5'></i>",
-			'prepend_type'=>'button',
-		));
-		// now add some simple js
-		add_to_jquery("
+		if ($data['qty']) {
+			echo form_text($locale['ESHP019'], 'product_quantity', 'product_quantity', '1', array('number'=>1, 'inline'=>1, 'class'=>'product-quantity input-sm', 'width'=>'50px',
+				'append_button'=>1,
+				'append_value'=> "<i class='fa fa-plus m-t-5'></i>",
+				'append_type'=>'button',
+				'prepend_button'=>1,
+				'prepend_value'=> "<i class='fa fa-minus m-t-5'></i>",
+				'prepend_type'=>'button',
+			));
+			// now add some simple js
+			add_to_jquery("
 		$('#product_quantity-prepend-btn').bind('click', function(e) {
 			var order_qty = $('#product_quantity').val();
 			var new_val = --order_qty;
@@ -451,28 +450,25 @@ if (!function_exists('render_eshop_product')) {
 			$('#product_quantity').val(new_val);
 		 });
 		");
-	} else {
-		echo form_hidden('', 'product_quantity', 'product_quantity', 1);
-	}
-
-	if ($data['status'] == "1") {
-		echo "<div class='m-t-20'>\n";
-		if ($data['buynow'] == "1") { // use post action instead
-			echo form_button($locale['ESHP020'], 'buy_now', 'buy_now', $locale['ESHP020'], array('class'=>'m-r-10 '.fusion_get_settings('eshop_buynow_color')));
-			//echo "<a class='btn m-r-10 ".."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
+		} else {
+			echo form_hidden('', 'product_quantity', 'product_quantity', 1);
 		}
-		if ($data['cart_on'] == "1") {
-			echo form_button($locale['ESHP021'], 'add_cart', 'add_cart', $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
-			//echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
+		if ($data['status'] == "1") {
+			echo "<div class='m-t-20'>\n";
+			if ($data['buynow'] == "1") { // use post action instead
+				echo form_button($locale['ESHP020'], 'buy_now', 'buy_now', $locale['ESHP020'], array('class'=>'m-r-10 '.fusion_get_settings('eshop_buynow_color')));
+				//echo "<a class='btn m-r-10 ".."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
+			}
+			if ($data['cart_on'] == "1") {
+				echo form_button($locale['ESHP021'], 'add_cart', 'add_cart', $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
+				//echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
+			}
+			echo "</div>\n";
 		}
+		echo form_hidden('', 'id', 'id', $data['id']);
 		echo "</div>\n";
+		echo closeform();
 	}
-	echo form_hidden('', 'id', 'id', $data['id']);
-	// the rest of the fields can load data from class... like this.
-	//$product_data = PHPFusion\Eshop::get_productData($_POST['id']);
-	echo "</div>\n";
-	echo closeform();
-	// change buynow color.
 	echo "</div>\n</div>\n";
 	echo "<hr/>\n";
 	$tab_title['title'][] = $locale['ESHP022'];

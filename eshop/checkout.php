@@ -19,12 +19,14 @@ require_once dirname(__FILE__)."../../maincore.php";
 require_once THEMES."templates/header.php";
 include INCLUDES."eshop_functions_include.php";
 
+include LOCALE.LOCALESET."eshop.php";
+
 add_to_title($locale['ESHPCHK100']);
 opentable($locale['ESHPCHK100']);
 
 if (iMEMBER) { $username = $userdata['user_id']; } else { $username = $_SERVER['REMOTE_ADDR']; }
 
-buildeshopheader();
+//buildeshopheader();
 
 //convert guest shopping to member if they login.
 if (iMEMBER) {
@@ -57,11 +59,13 @@ if (dbrows($result) != 0) {
 } else {
 	redirect(SHOP."eshop.php");
  }
+
+
 } else {
 
 $weight = dbarray(dbquery("SELECT sum(cweight*cqty) as weight FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' ORDER BY tid ASC"));
 
-if ($items['count']) {
+
 
 if (iMEMBER) {
 $cdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid = '".$userdata['user_id']."'"));
@@ -520,7 +524,7 @@ echo "<table align='center' width='100%' cellpadding='2' cellspacing='0' class='
 
 while ($data = dbarray($result)) {
 if ($counter != 0 && ($counter % 1 == 0)) echo "</tr>\n<tr>\n";
-	echo "<td class='tbl' align='center' valign='middle' width='1%'>&nbsp;&nbsp;<a href='".SHOP."eshop.php?product=".$data['prid']."'><img src='".($data['cimage'] ? "".checkeShpImageExists(SHOP."pictures/".$data['cimage']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' width='40' border='0' /></a></td>";
+	echo "<td class='tbl' align='center' valign='middle' width='1%'>&nbsp;&nbsp;<a href='".SHOP."eshop.php?product=".$data['prid']."'><img src='".($data['cimage'] ? SHOP."pictures/".$data['cimage'] : '')."' alt='' width='40' border='0' /></a></td>";
 	echo "<td class='tbl' align='center' valign='middle' width='1%'>".$data['citem']."</td>";
 	echo "<td class='tbl' align='center' valign='middle' width='1%'>".getcolorname($data['cclr'])."</td>";
 	echo "<td class='tbl' align='center' valign='middle' width='1%'>"; if ($data['cdynt'] || $data['cdyn']) { echo "".$data['cdynt']." : ".$data['cdyn'].""; } echo "</td>";
@@ -653,9 +657,9 @@ var shipcheck = scheck.filter(':checked').val();
 
 </script>";
 
-} else {
-echo "<br /><div class='admin-message'>".$locale['ESHPCHK147']."</div>";
-}
+//} else {
+//echo "<br /><div class='admin-message'>".$locale['ESHPCHK147']."</div>";
+//}
 
 echo "<div class='clear'></div>";
 echo "<div style='float:left;margin-top:15px;padding:10px;'><a class='".($settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_return_color']."")."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>&laquo; ".$locale['ESHP030']."</a> &nbsp;&nbsp; </div>";

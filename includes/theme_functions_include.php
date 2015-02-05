@@ -564,6 +564,24 @@ function countdown($time) {
 function opencollapse($id) {
 	return "<div class='panel-group' id='".$id."' role='tablist' aria-multiselectable='true'>\n";
 }
+
+function opencollapsebody($title, $unique_id, $grouping_id, $active = 0, $class = false) {
+	$html = "<div class='panel panel-default'>\n";
+	$html .= "<div class='panel-heading clearfix'>\n";
+	$html .= "<div class='overflow-hide'>\n";
+	$html .= "<span class='display-inline-block strong'><a ".collapse_header_link($grouping_id, $unique_id, $active, $class).">".$title."</a></span>\n";
+	$html .= "</div>\n";
+	$html .= "</div>\n";
+	$html .= "<div ".collapse_footer_link($grouping_id,$unique_id, $active).">\n"; // body.
+	return $html;
+}
+
+function closecollapsebody() {
+	$html = "</div>\n"; // panel container
+	$html .= "</div>\n"; // panel default
+	return $html;
+}
+
 function collapse_header_link($id, $title, $active, $class = FALSE) {
 	$active = ($active) ? '' : 'collapsed';
 	$title =  str_replace('/[^A-Z]+$/i', " ",$title);
@@ -579,6 +597,8 @@ function collapse_footer_link($id, $title, $active, $class = FALSE) {
 function closecollapse() {
 	return "</div>\n";
 }
+
+
 
 function tab_active($tab_title, $default_active, $link_mode = FALSE) {
 	if ($link_mode) {

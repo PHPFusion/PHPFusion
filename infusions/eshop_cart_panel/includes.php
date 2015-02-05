@@ -174,7 +174,7 @@ class Cart {
 		echo "<h4><i class='fa fa-shopping-cart m-r-10'></i> My Cart</h4>";
 		echo "<div class='m-b-20'>\n";
 		echo "<div class='heading'><span>Cart Subtotal:</span> ".fusion_get_settings('eshop_currency')." <span id='subtotal_price'>".$cart_total."</span></span>\n</div>\n";
-		echo form_button('Checkout', 'checkout', 'checkout', 'checkout', array('class'=>fusion_get_settings('eshop_cart_color').' btn-sm m-t-10'));
+		echo "<a class='btn btn-sm m-t-10 ".fusion_get_settings('eshop_cart_color')."' href='".BASEDIR."eshop.php?checkout'>Checkout</a>\n";
 		echo "</div>\n";
 		echo "<h4>Recently added item</h4>\n";
 		// ok now load the cart as final step. and show rows.

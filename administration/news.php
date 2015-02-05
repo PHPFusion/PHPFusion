@@ -60,6 +60,7 @@ function news_listing() {
 	echo "<span class='text-smaller strong'>".LANGUAGE."</span>";
 	echo "</div>\n";
 	echo "</div>\n"; // end panel heading
+
 	echo "<div ".collapse_footer_link('news-list','0', '0').">\n";
 	echo "<ul class='list-group p-15'>\n";
 	$result2 = dbquery("SELECT news_id, news_subject, news_image_t1, news_news, news_draft FROM ".DB_NEWS." WHERE ".(multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "")."news_cat='0' ORDER BY news_draft DESC, news_sticky DESC, news_datestamp DESC");
