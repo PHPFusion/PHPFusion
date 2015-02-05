@@ -46,8 +46,8 @@ if ($_GET['category']) {
 	render_eshop_product($info);
 } elseif (isset($_GET['checkout'])) {
 	// checkout page
-	render_checkout();
-
+	$data = get_checkoutData();
+	render_checkout($data);
 } else {
 	render_eshop_featured_url($info);
 	render_eshop_featured_product($info);
@@ -55,10 +55,74 @@ if ($_GET['category']) {
 	render_eshop_featured_category($info);
 }
 
-function render_checkout() {
+// update cart quantity
+if (isset($_POST['utid']) && isnum($_POST['utid'])) {
+	$quantity = form_sanitizer($_POST['qty'], '', 'qty');
+	$tid = intval($_POST['utid']);
+	if (dbcount('(tid)', DB_ESHOP_CART, "tid = '".$tid."'")) {
+		dbquery("UPDATE ".DB_ESHOP_CART." SET cqty='".intval($quantity)."' WHERE tid='".$tid."'");
+		redirect(BASEDIR."eshop.php?checkout");
+	}
+}
 
+// port to E-shop function when done.
+function get_checkoutData() {
+	// lets see what i need in the invoice...
+	// load the cart data first, need also qtyxprice
+	$info = array();
+	$result = dbquery("SELECT c.*, e.dync, e.icolor, (c.cprice*c.cqty) as totalprice
+	FROM ".DB_ESHOP_CART." c
+	INNER JOIN ".DB_ESHOP." e on c.prid=e.id
+	WHERE puid='".defender::set_sessionUserID()."' ORDER BY cadded asc");
 
-	echo "<h4>Checkout (Total Weight)</h4>\n";
+	// ok column should be enough.
+	if (dbrows($result)>0) {
+		$info['total_weight'] = 0;
+		while ($data = dbarray($result)) {
+			// also need poll total weight to compare to shipping options later.
+			$info['total_weight'] = $info['total_weight']+$data['cweight'];
+			$data['cimage'] = $data['cimage'] ? \PHPFusion\Eshop::picExist(SHOP."pictures/".$data['cimage']) : \PHPFusion\Eshop::picExist('fake.png');
+			$info['item'][$data['tid']] = $data;
+			print_p($data);
+		}
+	}
+
+	// also need to load customer information
+	$info['customer'] = null;
+	if (isnum(defender::set_sessionUserID())) {
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid='".defender::set_sessionUserID()."'");
+		if (dbrows($result)>0) {
+			$info['customer'] = dbarray($result);
+		}
+	}
+
+	// also need ot load shipping options based on location
+	return $info;
+}
+
+function get_productSpecs($serial_value, $key_num) {
+	$_str = '';
+	if (!empty($serial_value)) {
+		$var = str_replace("&quot;", "", $serial_value);
+		$_array = array_filter(explode('.', $var));
+		if (isset($_array[$key_num])) {
+			$_str = $_array[$key_num];
+		}
+	}
+	return (string) $_str;
+}
+
+function get_productColor($key_num) {
+	$color = '';
+	if (\PHPFusion\Eshop::get_iColor($key_num)) {
+		$color = PHPFusion\Eshop::get_iColor($key_num);
+		$color = $color['title'];
+	}
+	return (string) $color;
+}
+
+function render_checkout(array $info) {
+	echo "<h4>Checkout - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
 	echo "<table class='table table-responsive'>";
 	echo "<tr>\n";
 	echo "<th class='col-xs-5 col-sm-5'>Product</th>\n";
@@ -67,42 +131,33 @@ function render_checkout() {
 	echo "<th>Total</th>\n";
 	echo "<th>Options</th>\n";
 	echo "</tr>\n";
+	foreach($info['item'] as $tid => $data) {
+		$specs = get_productSpecs($data['dync'], $data['cdyn']);
+		$color = get_productColor($data['cclr']);
+		echo openform('updateqty', "updateqty-".$data['tid'], 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0));
+		echo "<tr>\n";
+		echo "<td class='col-xs-5 col-sm-5'>\n";
+		echo "<div class='pull-left m-r-10' style='width:70px'>\n";
+		echo "<img class='img-responsive' src='".$data['cimage']."' />";
+		echo "</div>\n";
+		echo "<div class='overflow-hide'>\n";
+		echo "<a href='".BASEDIR."eshop.php?product=".$data['prid']."'>".$data['citem']."</a>\n";
+		if ($specs) echo "<div class='display-block text-smaller'><span class='strong'>".$data['cdynt']."</span> - $specs</div>\n";
+		if ($color) echo "<div class='display-block text-smaller'><span class='strong'>Color</span> - $color</span>\n";
+		echo "</div>\n";
+		echo "</td>\n";
+		echo "<td>\n";
+		echo form_text('', 'qty', 'qty', $data['cqty'], array('append_button'=>1, 'append_value'=>"<i class='fa fa-repeat m-t-5 m-b-0'></i>", 'append_type'=>'submit'));
+		echo form_hidden('', 'utid', 'utid', $data['tid']);
+		echo "</td>\n";
+		echo "<td>".fusion_get_settings('eshop_currency').number_format($data['cprice'], 2)."</td>\n";
+		echo "<td>".fusion_get_settings('eshop_currency').number_format($data['totalprice'], 2)."</td>\n";
+		echo "<td>".form_button('Remove', 'remove', 'remove', 'remove', array('class'=>'btn-danger btn-sm'))."</td>\n";
+		echo "</tr>\n";
+		echo closeform();
+	}
 
-	echo "<tr>\n";
-
-	echo "<td>\n";
-	echo "<div class='pull-left m-r-10'>\n";
-	echo thumbnail('fake.png', '70px');
-	echo "</div>\n";
-	echo "<div class='overflow-hide'>\n";
-	echo "<a href=''>Product Name</a>\n";
-	echo "<span class='display-block'>Product Specifications</span>\n";
-	echo "<span class='display-block'>Product Color</span>\n";
-	echo "</div>\n";
-	echo "</td>\n";
-
-	echo "<td>\n";
-	echo form_text('', 'qty', 'qty', 1, array('append_button'=>1, 'append_value'=>"<i class='fa fa-repeat m-t-5 m-b-0'></i>", 'append_type'=>'button'));
-	echo "</td>\n";
-
-	echo "<td>\n";
-	echo number_format('30', 2);
-	echo "</td>\n";
-
-	echo "<td>\n";
-	echo number_format('130', 2);
-	echo "</td>\n";
-
-	echo "<td>\n";
-	echo form_button('Remove', 'remove', 'remove', 'remove', array('class'=>'btn-danger btn-sm'));
-	echo "</td>\n";
-
-
-	echo "</tr>\n";
 	echo "</table>\n";
-
-
-
 
 	// list accordion item
 	echo opencollapse('cart-list');

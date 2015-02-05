@@ -41,7 +41,7 @@ class Eshop {
 	 * Hardcoded Chart Array for Products
 	 * @return array
 	 */
-	static function get_iColor() {
+	static function get_iColor($key= 0) {
 		global $ESHPCLRS;
 		$ESHOPCOLOURS[1] = array('hex'=>'#F0F8FF', 'title'=>$ESHPCLRS['1']);
 		$ESHOPCOLOURS[2] = array('hex'=>'#FAEBD7', 'title'=>$ESHPCLRS['2']);
@@ -178,7 +178,11 @@ class Eshop {
 		$ESHOPCOLOURS[133] = array('hex'=>'#F5F5F5', 'title'=>$ESHPCLRS['133']);
 		$ESHOPCOLOURS[134] = array('hex'=>'#FFFF00', 'title'=>$ESHPCLRS['134']);
 		$ESHOPCOLOURS[135] = array('hex'=>'#9ACD32', 'title'=>$ESHPCLRS['135']);
-		return (array) $ESHOPCOLOURS;
+		if ($key && isset($ESHOPCOLOURS[$key])) {
+			return (array) $ESHOPCOLOURS[$key];
+		} else {
+			return (array) $ESHOPCOLOURS;
+		}
 	}
 
 	// clear cart actions
