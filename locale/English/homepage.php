@@ -5,6 +5,12 @@ $locale['home_0001'] = "Latest Articles";
 $locale['home_0002'] = "Latest Blogs";
 $locale['home_0003'] = "Latest Downloads";
 
+$locale['submit_0000'] = '%s News';
+$locale['submit_0001'] = '%s Articles';
+$locale['submit_0002'] = '%s Downloads';
+$locale['submit_0003'] = '%s Photos';
+$locale['submit_0004'] = '%s Weblinks';
+
 // no content messages
 $locale['home_0050'] = "No News to display";
 $locale['home_0051'] = "No Articles to display";

@@ -710,7 +710,7 @@ if (isset($_POST['uninstall'])) {
 		return "('".$locale['setup_3300']."', '0', '', 'index.php', '0', '2', '0', '1', '".$language."'),
 				('".$locale['setup_3305']."', '0', '', 'contact.php', '0', '1', '0', '8', '".$language."'),
 				('".$locale['setup_3309']."', '0', '', 'search.php', '0', '1', '0', '10', '".$language."'),
-				('".$locale['setup_3315']."', '0', '', '---', '101', '1', '0', '10', '".$language."'),
+				('".$locale['setup_3315']."', '0', '', 'submissions.php', '101', '1', '0', '10', '".$language."'),
 				('---', '0', '', '---', '101', '1', '0', '11', '".$language."')";
 	}, explode('.', $enabled_languages)));
 	if(!dbquery($sl_sql)) {
