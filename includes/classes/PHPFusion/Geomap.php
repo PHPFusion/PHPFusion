@@ -30,7 +30,7 @@ class Geomap {
 
 	static function get_Currency($country_code = '') {
 		$current_list = array();
-		if (phpversion()>=5.4) {
+		if (class_exists('NumberFormatter')) {
 			$fmt = new \NumberFormatter(\Locale::ACTUAL_LOCALE, \NumberFormatter::CURRENCY);
 			// we have country code...
 			foreach(self::getMap() as $object) {

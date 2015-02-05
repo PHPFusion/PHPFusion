@@ -1,7 +1,9 @@
 .clear { 
 clear: both;
 }
-
+#product_quantity-field .input-group {
+	width:30px;
+}
 .notify-bar {
     position:absolute;
 	top:0;

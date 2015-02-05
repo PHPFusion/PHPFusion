@@ -59,12 +59,6 @@ if ($_GET['category']) {
 //item details start
 /*
 //convert guest shopping to member when they visit eshop, this check is also made in the checkout.
-if (iMEMBER) {
-$usercartchk = dbarray(dbquery("SELECT puid FROM ".DB_ESHOP_CART." WHERE puid = '".$_SERVER['REMOTE_ADDR']."' LIMIT 0,1"));
-if ($usercartchk['puid']) {
-dbquery("UPDATE ".DB_ESHOP_CART." SET puid = '".$userdata['user_id']."' WHERE puid = '".$_SERVER['REMOTE_ADDR']."'");
- }
-}
 
 //Sanitize the cart from 1 month old orders.
 dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE cadded < ".time()."-2592180");
