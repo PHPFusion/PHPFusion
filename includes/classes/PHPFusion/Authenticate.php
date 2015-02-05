@@ -103,6 +103,33 @@ class Authenticate {
 		return $this->_userData;
 	}
 
+	/* Admin Login Authentication */
+	public static function setAdminLogin() {
+		global $locale;
+		if (isset($_GET['logout'])) {
+			self::expireAdminCookie();
+			redirect(BASEDIR."index.php");
+		}
+
+		if (isset($_POST['admin_password'])) {
+			$admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
+			if (!defined("FUSION_NULL")) {
+				if (\PHPFusion\Authenticate::validateAuthAdmin($admin_password)) {
+					if (Authenticate::setAdminCookie($admin_password)) {
+						redirect(FUSION_REQUEST);
+					} else {
+						notify('Cookie Error', 'You need to enable browser cookie to enter administration.');
+					}
+				} else {
+					notify('Wrong or Invalid Password', 'The password input was incorrect. Please try again.');
+				}
+			}
+		}
+		if (defined('ADMIN_PANEL') && !isset($_COOKIE[COOKIE_PREFIX."admin"])) {
+			notify($locale['cookie_title'], $locale['cookie_description']);
+		}
+	}
+
 	// Set User Cookie
 	public static function setUserCookie($userID, $salt, $algo, $remember = FALSE, $userCookie = TRUE) {
 		global $_COOKIE;
@@ -186,8 +213,6 @@ class Authenticate {
 							$key = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $user['user_admin_salt']);
 							$hash = hash_hmac($user['user_admin_algo'], $userID.$cookieExpiration, $key);
 							if ($cookieHash == $hash) {
-								// Set admin cookie again, renewing it's life time
-								Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
 								return TRUE;
 							}
 						}
@@ -265,8 +290,7 @@ class Authenticate {
 	}
 
 	public static function expireAdminCookie() {
-		setcookie(COOKIE_ADMIN, "", time()-3600*30);
-		redirect(BASEDIR."index.php");
+		Authenticate::_setCookie(COOKIE_ADMIN, '', time()-1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
 	}
 
 	// Checks and sets the admin last visit cookie
@@ -288,8 +312,10 @@ class Authenticate {
 					SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
 					WHERE user_id='".$userdata['user_id']."'");
 				Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	// Get Loging Redirect Url

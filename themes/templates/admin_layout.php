@@ -96,14 +96,14 @@
 </head>
 <body>
 <?php
-render_Openadminpanel();
+open_ap();
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
 if ($footerError) : ?>
 <div class='alert alert-warning m-t-10 error-message'><?php echo $footerError ?></div>
 <?php
 endif;
-render_CloseAdminpanel();
+close_ap();
 if (!empty($fusion_jquery_tags)) : ?>
     <script type="text/javascript">
         $(function() {

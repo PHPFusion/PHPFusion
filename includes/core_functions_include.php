@@ -180,7 +180,7 @@ function lang_switcher() {
  * @param string $password
  */
 function set_admin_pass($password) {
-	Authenticate::setAdminCookie($password);
+	return Authenticate::setAdminCookie($password);
 }
 
 /**

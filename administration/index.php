@@ -20,6 +20,7 @@ if (!iADMIN || $userdata['user_rights'] == "" || !defined("iAUTH") || !isset($_G
 	redirect("../index.php");
 }
 require_once THEMES."templates/admin_header.php";
+
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) $_GET['pagenum'] = 1;
 $admin_images = TRUE;
 // Work out which tab is the active default (redirect if no tab available)
@@ -31,15 +32,13 @@ for ($i = 5; $i > 0; $i--) {
 	}
 }
 if (!$default) {
-	//	redirect("../index.php");
+	//redirect("../index.php");
 }
-
-
 // Dashboard vars
 // Ensure the admin is allowed to access the selected page
 $pages['0'] = 'AcpHome';
 if (!$pages[$_GET['pagenum']]) {
-	redirect("index.php".$aidlink."&pagenum=$default");
+	//redirect("index.php".$aidlink."&pagenum=$default");
 }
 // members stats
 $members_registered = dbcount("(user_id)", DB_USERS, "user_status<='1' OR user_status='3' OR user_status='5'");
@@ -173,9 +172,6 @@ if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
 	}
 }
 
-/* Deprecated hardcoded design to Admin Theme */
-// new function name.
 render_admin_dashboard();
-
 require_once THEMES."templates/footer.php";
 ?>

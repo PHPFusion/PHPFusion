@@ -16,24 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
 $settings['bootstrap'] = 1;
-
 require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."admin_templates/Venus/includes/functions.php";
-
-// alter object parameters on your theme.
 require_once ADMIN."navigation.php";
-
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 
-function render_Openadminpanel() {
+function open_ap() {
 	global $locale, $userdata, $defender, $pages, $aidlink, $settings;
-
-	// this is a constructor which can be autoloaded if defined(ADMIN_PANEL);
 	require_once ADMIN."admin.php";
 	$admin = new Admin();
-
 	$language_opts = fusion_get_enabled_languages();
 	$enabled_languages = array_keys($language_opts); //remove it if it is not needed
 	$cookie_not_available = '';
@@ -55,9 +47,6 @@ function render_Openadminpanel() {
 		echo "</div>\n";
 		echo "</aside>\n";
 	} else {
-		if (isset($_GET['logout'])) {
-			PHPFusion\Authenticate::expireAdminCookie();
-		}
 		echo "<div id='admin-panel' ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? "class='in'" : '')." >\n";
 		include THEMES."admin_templates/Venus/includes/header.php";
 		echo "<div class='display-table' style='height:100%; width:100%;'>\n";
@@ -99,10 +88,9 @@ function render_Openadminpanel() {
 		});
 		");
 	}
-
 }
 
-function render_Closeadminpanel() {
+function close_ap() {
 	echo "</footer>\n";
 	echo "<!-- end main content -->\n";
 	echo "</div>\n";
@@ -110,4 +98,4 @@ function render_Closeadminpanel() {
 	echo "</div>\n";
 	echo "</div>\n";
 }
-?>
+

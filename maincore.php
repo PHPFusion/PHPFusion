@@ -258,7 +258,6 @@ $defender = new defender;
 $defender->debug_notice = false; // turn this off after beta.
 $defender->sniff_token();
 $defender->debug_notice = false; // turn this off after beta.
-
 $dynamic = new dynamics();
 $dynamic->boot();
 
@@ -266,4 +265,7 @@ $dynamic->boot();
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
+
+// set admin login procedures
+Authenticate::setAdminLogin();
 ?>

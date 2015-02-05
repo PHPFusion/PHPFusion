@@ -37,14 +37,6 @@ class defender {
 		'thumbnail_1' => '',
 		'thumbnail_2' => '',); // declared by form_sanitizer()
 
-	/**
-	 * Load locales for defender
-	 * This solution was needed to load the defender.inc.php before
-	 * defining LOCALESET
-	 * @staticvar array $locale
-	 * @return array
-	 */
-
 	/* Sanitize Fields Automatically */
 	public function defender() {
 		global $locale;
@@ -56,7 +48,6 @@ class defender {
 		 */
 		include LOCALE.LOCALESET."defender.php";
 		require_once INCLUDES."notify/notify.inc.php";
-		if (!defined('SETUP')) $this->noAdminCookie();
 		// declare the validation rules and assign them
 		// type of fields vs type of validator
 		$validation_rules_assigned = array(
@@ -194,28 +185,6 @@ class defender {
 	/* Destroys the user field session */
 	public function unset_field_session() {
 		unset($_SESSION['form_fields'][self::set_sessionUserID()]);
-	}
-
-	public function noAdminCookie() {
-		global $locale;
-		$admin_cookie = COOKIE_PREFIX."admin";
-		$input_password = '';
-		if (isset($_GET['logout'])) {
-			unset($_COOKIE[$admin_cookie]);
-		}
-		if (defined('ADMIN_PANEL') && !isset($_COOKIE[$admin_cookie])) {
-			if (isset($_POST['admin_login'])) {
-				check_admin_pass($input_password);
-			} else {
-				redirect(FUSION_REQUEST."&amp;cookie_expired");
-			}
-		} elseif (isset($_GET['cookie_expired'])) {
-			if (!isset($_COOKIE[$admin_cookie])) {
-				notify($locale['cookie_title'], $locale['cookie_description']);
-			} else {
-				redirect(str_replace("&amp;cookie_expired", "", FUSION_REQUEST));
-			}
-		}
 	}
 
 	// Field Validation Output
@@ -367,8 +336,8 @@ class defender {
 			} else {
 				$this->stop();
 				$this->addError($this->field_config['id']);
-				$this->addHelperText($this->field_config['id'], sprintf($locale['df_401'], $this->field_config['name']));
-				$this->addNotice(sprintf($locale['df_401'], $this->field_config['name']));
+				$this->addHelperText($this->field_config['id'], sprintf($locale['df_401'], $this->field_config['title']));
+				$this->addNotice(sprintf($locale['df_401'], $this->field_config['title']));
 			}
 		} else {
 			return $this->field_default;
@@ -388,8 +357,8 @@ class defender {
 			// invalid password
 			$this->stop();
 			$this->addError($this->field_config['id']);
-			$this->addHelperText($this->field_config['id'], sprintf($locale['df_402'], $this->field_config['name']));
-			$this->addNotice(sprintf($locale['df_402'], $this->field_config['name']));
+			$this->addHelperText($this->field_config['id'], sprintf($locale['df_402'], $this->field_config['title']));
+			$this->addNotice(sprintf($locale['df_402'], $this->field_config['title']));
 		}
 	}
 
@@ -415,8 +384,8 @@ class defender {
 			} else {
 				$this->stop();
 				$this->addError($this->field_config['id']);
-				$this->addHelperText($this->field_config['id'], sprintf($locale['df_403'], $this->field_config['name']));
-				$this->addNotice(sprintf($locale['df_403'], $this->field_config['name']));
+				$this->addHelperText($this->field_config['id'], sprintf($locale['df_403'], $this->field_config['title']));
+				$this->addNotice(sprintf($locale['df_403'], $this->field_config['title']));
 			}
 		} else {
 			return $this->field_default;
