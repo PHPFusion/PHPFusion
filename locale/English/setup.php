@@ -213,6 +213,7 @@ $locale['setup_3311'] = "Submit News";
 $locale['setup_3312'] = "Submit Article";
 $locale['setup_3313'] = "Submit Photo";
 $locale['setup_3314'] = "Submit Download";
+$locale['setup_3315'] = "Submissions";
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";
 $locale['setup_3401'] = "Online Users";
