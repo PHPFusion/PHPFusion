@@ -118,10 +118,10 @@ class Authenticate {
 					if (Authenticate::setAdminCookie($admin_password)) {
 						redirect(FUSION_REQUEST);
 					} else {
-						notify('Cookie Error', 'You need to enable browser cookie to enter administration.');
+						notify($locale['cookie_error'], $locale['cookie_error_description']);
 					}
 				} else {
-					notify('Wrong or Invalid Password', 'The password input was incorrect. Please try again.');
+					notify($locale['password_invalid'], $locale['password_invalid_description']);
 				}
 			}
 		}

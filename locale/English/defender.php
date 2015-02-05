@@ -1,8 +1,14 @@
 <?php
 $locale['validate'] = "Please check and revalidate the field.";
-$locale['cookie_expired'] = "The site admin cookie has expired. Please login again.";
+
+// Admin Login
 $locale['cookie_title'] = "Session Timed Out";
-$locale['cookie_description'] = "There are no valid authentication or your session has timed out. Please login again to continue.";
+$locale['cookie_description'] = "There are no valid authentication / or your session has probably timed out. Please login again.";
+$locale['cookie_expired'] = "The site admin cookie has expired. Please login again.";
+$locale['password_invalid'] = "Wrong or Invalid Password";
+$locale['password_invalid_description'] = "The password input was incorrect. Please try again.";
+$locale['cookie_error'] = "Cookie Error";
+$locale['cookie_error_description'] = "You need to enable browser cookie to enter administration.";
 $locale['validate_title'] = "Could you check something!";
 
 // Address errors
