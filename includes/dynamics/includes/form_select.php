@@ -335,6 +335,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		'disable_opts' => !empty($options['disable_opts']) ? $options['disable_opts'] : '', // disable selection , accept either exploded array or imploded text
 		'hide_disabled' => !empty($options['hide_disabled']) && $options['hide_disabled'] == 1 ? 1 : 0,  // to hide any disabled opts. required $options['disabled_opts']
 		'tip' => !empty($options['tip']) ? $options['tip'] : '',
+		'query' => !empty($options['query']) ? $options['query'] : 0 // adds additional query
 	);
 
 	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
@@ -371,8 +372,8 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 			}
 			$html .= ($options['add_parent_opts'] == 1) ? "<option value='0' ".$this_select.">$opt_pattern ".$locale['parent']."</option>\n" : "<option value='0' ".$this_select." >$opt_pattern ".$options['parent_value']."</option>\n";
 		}
-		$index = dbquery_tree($db, $id_col, $cat_col);
-		$data = dbquery_tree_data($db, $id_col, $cat_col);
+		$index = dbquery_tree($db, $id_col, $cat_col, $options['query']);
+		$data = dbquery_tree_data($db, $id_col, $cat_col, $options['query']);
 	}
 	if (!$id) {
 		$id = 0;
@@ -403,9 +404,6 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		if ($options['required']) {
 			$html .= "<input class='req' id='dummy-$input_id' type='hidden'>\n"; // for jscheck
 		}
-//		$html .= ($options['inline'] && $title) ? "</div>\n" : '';
-		//$html .= "</div>\n";
-		//$html .= "</div>\n";
 		$defender->add_field_session(array(
 			 'input_name' 	=> 	$input_name,
 			 'type'			=>	'dropdown',

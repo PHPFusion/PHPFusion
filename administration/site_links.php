@@ -142,7 +142,7 @@ class SiteLinks_Admin {
 			case 'edit':
 				$this->data = self::load_sitelinks($_GET['link_id']);
 				if (!$this->data['link_id']) redirect(FUSION_SELF.$aidlink);
-				$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id'];
+				$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;link_id=".$_GET['link_id']."&amp;link_cat=".$_GET['link_cat'];
 				break;
 			case 'delete':
 				$result = self::delete_sitelinks($_GET['link_id']);
@@ -223,7 +223,7 @@ class SiteLinks_Admin {
 					}
 				}
 				dbquery_insert(DB_SITE_LINKS, $data, 'update');
-				if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=su");
+				if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=su&amp;link_cat=".$_GET['link_cat']);
 			} else {
 				// save
 				$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."' AND link_order>='".$data['link_order']."'");
@@ -357,7 +357,7 @@ class SiteLinks_Admin {
 		$result = dbquery("SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".intval($_GET['link_cat'])."' ORDER BY link_order");
 
 		echo "<div class='m-t-20'>\n";
-		echo "<table class='table table-responsive'>\n";
+		echo "<table class='table table-striped table-responsive'>\n";
 		echo "<tr>\n";
 		echo "<th>\n</th>\n";
 		echo "<th class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>".$locale['SL_0050']."</th>\n";
@@ -402,13 +402,14 @@ class SiteLinks_Admin {
 		if (dbrows($result)>0) {
 			$i= 0;
 			while ($data = dbarray($result)) {
-				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
-				echo "<tr id='listItem_".$data['link_id']."' data-id='".$data['link_id']."' class='list-result ".$row_color."'>\n";
-				echo "<td><input type='checkbox' value='".$data['link_id']."'></td>\n";
+				//$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
+				echo "<tr id='listItem_".$data['link_id']."' data-id='".$data['link_id']."' class='list-result '>\n"; //".$row_color."
+				//echo "<td><input type='checkbox' value='".$data['link_id']."'></td>\n";
+				echo "<td></td>\n";
 				echo "<td>\n";
 				echo "<a class='text-dark' href='".FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$data['link_id']."'>".$data['link_name']."</a>\n";
 				echo "<div class='actionbar text-smaller' id='blog-".$data['link_id']."-actions'>
-				<a href='".FUSION_SELF.$aidlink."&amp;section=nform&amp;action=edit&amp;link_id=".$data['link_id']."'>".$locale['edit']."</a> |
+				<a href='".FUSION_SELF.$aidlink."&amp;section=nform&amp;action=edit&amp;link_id=".$data['link_id']."&amp;link_cat=".$data['link_cat']."'>".$locale['edit']."</a> |
 				<a class='qedit pointer' data-id='".$data['link_id']."'>".$locale['qedit']."</a> |
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;link_id=".$data['link_id']."' onclick=\"return confirm('".$locale['SL_0080']."');\">".$locale['delete']."</a> |
 				";
@@ -458,7 +459,14 @@ class SiteLinks_Admin {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
 		openside('');
-		echo form_select_tree($locale['SL_0029'], "link_cat", "link_categorys", $this->data['link_cat'], array("parent_value" => $locale['parent'], 'width'=>'100%', 'query'=>"WHERE link_language='".LANGUAGE."'"), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
+		echo form_select_tree($locale['SL_0029'], "link_cat", "link_categorys", $this->data['link_cat'],
+							  array(
+								  "parent_value" => $locale['parent'],
+								  'width'=>'100%',
+								  'query'=>(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : ''),
+								  'disable_opts' => $this->data['link_id']
+							  ),
+			DB_SITE_LINKS, "link_name", "link_id", "link_cat");
 		echo form_select($locale['global_ML100'], 'link_language', 'link_languages', $this->language_opts, $this->data['link_language'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
 		echo form_select($locale['SL_0022'], 'link_visibility', 'link_visibilitys', self::getVisibility(), $this->data['link_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
 		echo form_checkbox($locale['SL_0028'], 'link_window', 'link_windows', $this->data['link_window']);
