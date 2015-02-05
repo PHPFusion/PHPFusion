@@ -16,7 +16,9 @@ class Eshop {
 
 		$this->info['category_index'] = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid');
 		$this->info['category'] = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
-		// include files
+
+		// filter the rubbish each run
+		dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE cadded < ".time()."-2592180");
 	}
 
 	/**

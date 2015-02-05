@@ -51,17 +51,4 @@ if ($_GET['category']) {
 	render_eshop_featured_category($info);
 }
 
-
-//////////////--------- <3><  ------------------ ///////////////
-// mvc functions
-//buildeshopheader();
-
-//item details start
-/*
-//convert guest shopping to member when they visit eshop, this check is also made in the checkout.
-
-//Sanitize the cart from 1 month old orders.
-dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE cadded < ".time()."-2592180");
-*/
 require_once THEMES."templates/footer.php";
-?>
