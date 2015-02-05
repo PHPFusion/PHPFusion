@@ -200,6 +200,9 @@ class defender {
 		global $locale;
 		$admin_cookie = COOKIE_PREFIX."admin";
 		$input_password = '';
+		if (isset($_GET['logout'])) {
+			unset($_COOKIE[$admin_cookie]);
+		}
 		if (defined('ADMIN_PANEL') && !isset($_COOKIE[$admin_cookie])) {
 			if (isset($_POST['admin_login'])) {
 				check_admin_pass($input_password);
