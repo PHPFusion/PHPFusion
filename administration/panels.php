@@ -266,7 +266,7 @@ class fusion_panels {
 		$list = array();
 		$file_list = makefilelist(BASEDIR, ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php");
 		foreach($file_list as $files) {
-			$list[] = fusion_get_settings('site_path').$files;
+			$list[] = $files;
 		}
 		return $list;
 	}
