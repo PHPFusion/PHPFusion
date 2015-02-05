@@ -230,7 +230,7 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 	foreach($data[$id] as $link_id => $link_data) {
 		$li_class = $class;
 		if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-			$link_target = ($data['link_window'] == "1" ? " target='_blank'" : "");
+			$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
 			if (START_PAGE == $link_data['link_url']) {
 				$li_class .= ($li_class ? " " : "")."current-link";
 			}
