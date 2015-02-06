@@ -59,10 +59,11 @@ if (isset($_POST['uninstall'])) {
 
 	// links
 	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
-	$links_sql .= implode(",\n", array_map(function ($language) {
+	$links_sql .= implode(",\n", array_map(function ($language) use($db_prefix) {
 		include LOCALE.$language."/setup.php";
+		$id_sql = "(SELECT link_id FROM (SELECT link_id FROM ".$db_prefix."site_links WHERE link_url = 'submissions.php' AND link_language = '".$language."' ORDER BY link_id DESC limit 1) AS t)";
 		return "('".$locale['setup_3307']."', '0', '', 'weblinks.php', '0', '2', '0', '6', '".$language."'),
-				('".$locale['setup_3310']."', '4', '', 'submit.php?stype=l', '101', '1', '0', '12', '".$language."')";
+				('".$locale['setup_3310']."', $id_sql, '', 'submit.php?stype=l', '101', '1', '0', '12', '".$language."')";
 	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
