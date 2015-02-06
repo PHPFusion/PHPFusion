@@ -73,13 +73,25 @@ class Coupons {
 	}
 
 	/**
-	 * Verify the coupon
+	 * Verify the authenticity of the coupon
 	 * @param $cuid
 	 * @return bool|string
 	 */
 	static function verify_coupon($cuid) {
+		if ($cuid) {
+			$cuid = form_sanitizer($cuid, '');
+			return dbcount("(cuid)", DB_ESHOP_COUPONS, "cuid='$cuid'");
+		}
+		return false;
+	}
+
+	/* Verify if the customer id has already used the coupon - returns true if used */
+	static function verify_coupon_usage($cuid, $coupon_code) {
 		if (isnum($cuid)) {
-			return dbcount("(cuid)", DB_ESHOP_COUPONS, "cuid='".intval($cuid)."'");
+			$verify_result = dbrows(dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid = '".intval($cuid)."' AND ccupons LIKE '%.".$coupon_code."' LIMIT 0,1"));
+			if ($verify_result) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -157,8 +169,9 @@ class Coupons {
 	 * @param $cuid
 	 * @return array|bool
 	 */
-	private function get_couponData($cuid) {
-		$result = dbquery("SELECT * FORM ".DB_ESHOP_COUPONS." WHERE cuid='".intval($cuid)."'");
+	public static function get_couponData($cuid) {
+		$cuid = form_sanitizer($cuid, '');
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$cuid."'");
 		if (dbrows($result)>0) {
 			return dbarray($result);
 		}

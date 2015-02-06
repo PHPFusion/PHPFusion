@@ -30,6 +30,8 @@ echo '<script type="text/javascript">
 }
 */
 $eShop = new PHPFusion\Eshop\Eshop();
+$eShop->__construct_checkout();
+
 $info = $eShop->get_category();
 $info += $eShop->get_product();
 $info += $eShop->get_featured();
@@ -45,11 +47,8 @@ if ($_GET['category']) {
 	// view product page
 	render_eshop_product($info);
 } elseif (isset($_GET['checkout'])) {
-	// checkout page
-	$data = $eShop->get_checkoutData();
-	$data += $eShop->display_customer_form();
-	$data += $eShop->display_coupon_form();
-	render_checkout($data);
+	$info = $eShop->get_checkout_info();
+	render_checkout($info);
 } else {
 	render_eshop_featured_url($info);
 	render_eshop_featured_product($info);
@@ -63,6 +62,7 @@ if ($_GET['category']) {
 
 
 function render_checkout(array $info) {
+	//print_p($info);
 	echo "<h4>Checkout - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
 	echo "<table class='table table-responsive'>";
 	echo "<tr>\n";
@@ -97,7 +97,12 @@ function render_checkout(array $info) {
 		echo "</tr>\n";
 		echo closeform();
 	}
+
 	echo "</table>\n";
+
+	if ($info['coupon_code'] && $info['coupon_value']) {
+		echo "<div class='alert alert-info'>You have applied coupon code <strong>".$info['coupon_code']."</strong> with a value of ".$info['coupon_value']." rebate on this order.</div>\n";
+	}
 	// list accordion item
 	echo opencollapse('cart-list');
 	// customer info
@@ -107,26 +112,28 @@ function render_checkout(array $info) {
 	echo "</div>\n";
 	echo closecollapsebody();
 	// Coupon code
-	echo opencollapsebody('Use Coupon Codes', 'cpn', 'cart-list', 0);
-	echo "<div class='p-15'>\n";
-	echo $info['coupon_form'];
-	echo "</div>\n";
-	echo closecollapsebody();
+	if (!$info['coupon_code'] && !$info['coupon_value']) {
+		echo opencollapsebody('Use Coupon Codes', 'cpn', 'cart-list', 0);
+		echo "<div class='p-15'>\n";
+		echo $info['coupon_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+	}
 	// Estimate shipping rates
-	echo opencollapsebody('Shipping Rates', 'ship', 'cart-list', 0);
+	echo opencollapsebody('Select Shipping Options', 'ship', 'cart-list', 0);
 	echo "html";
 	echo closecollapsebody();
 	echo closecollapse();
 
 	echo "<div class='col-xs-12 col-sm-6 p-r-0 pull-right'>\n";
 		echo "<div class='list-group-item'>\n";
-		echo "<span class='display-inline-block strong m-r-10'>Sub-Total: </span><span class='pull-right'>".fusion_get_settings('eshop_currency').number_format($info['gross_total'],2)."</span>\n";
+		echo "<span class='display-inline-block strong m-r-10'>Sub-Total ".($info['coupon_code'] && $info['coupon_value'] ? "(with rebate)" : '')." : </span><span class='strong pull-right ".($info['coupon_code'] && $info['coupon_value'] ? 'required' : '')."'>".fusion_get_settings('eshop_currency').number_format($info['total_gross'],2)."</span>\n";
 		echo "</div>\n";
 		echo "<div class='list-group-item'>\n";
-		echo "<span class='display-inline-block strong m-r-10'>VAT (".fusion_get_settings('eshop_vat').")%:</span><span class='pull-right'>".fusion_get_settings('eshop_currency').$info['vat']."</span>\n";
+		echo "<span class='display-inline-block strong m-r-10'>+ VAT (".fusion_get_settings('eshop_vat').")%:</span><span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($info['total_vat'],2)."</span>\n";
 		echo "</div>\n";
 		echo "<div class='list-group-item'>\n";
-		echo "<span class='display-inline-block strong m-r-10'>Sub-Total:</span><span class='pull-right'>".fusion_get_settings('eshop_currency').number_format($info['vat_gross'],2)."</div>\n";
+		echo "<span class='display-inline-block strong m-r-10'>Sub-Total with VAT:</span><span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($info['net_price'],2)."</div>\n";
 	echo "</div>\n";
 
 	echo "<div class='display-block  p-l-0 p-r-0 m-t-20 col-xs-12'>\n";

@@ -210,7 +210,7 @@ class Cart {
 				$data['tid'] = dblastid();
 				$json_response['tid'] = $data['tid'];
 			}
-			$subtotal = self::get_cart_total($data['puid']);
+			$subtotal = \PHPFusion\Eshop\Eshop::get_cart_total($data['puid']);
 			$json_response['html'] = self::cart_list_item($data);
 			$json_response['subtotal'] = $subtotal;
 			return $json_response;
@@ -233,27 +233,13 @@ class Cart {
 		return $html;
 	}
 
-	// calculate the cart total sum
-	public static function get_cart_total($puid) {
-		if ($puid && dbcount("(puid)", DB_ESHOP_CART, "puid='".$puid."'")) {
-			$result = dbquery("SELECT cprice, cqty FROM ".DB_ESHOP_CART." WHERE puid='".$puid."'");
-			if (dbrows($result)>0) {
-				$subtotal = 0;
-				while ($data = dbarray($result)) {
-					$subtotal = ($data['cprice'] * $data['cqty']) + $subtotal;
-				}
-				return number_format($subtotal, 2);
-			}
-		}
-	}
-
 	static function render_cart() {
 		global $locale;
 		$puid = defender::set_sessionUserID();
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_CART." WHERE puid='$puid'");
 		$cart_total = number_format(0, 2);
 		if (dbrows($result)>0) {
-			$cart_total = self::get_cart_total($puid);
+			$cart_total = \PHPFusion\Eshop\Eshop::get_cart_total($puid);
 		}
 		echo "<div id='cart' class='cart-bar'>\n";
 		echo "<a class='cart-tab pointer' title='Your cart is current empty' class='display-inline-block'><i class='fa fa-shopping-cart fa-lg m-r-10 m-t-5'></i></a>\n";

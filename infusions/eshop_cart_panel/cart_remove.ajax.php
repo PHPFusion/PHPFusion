@@ -19,7 +19,7 @@ if ($check) {
 	require_once 'includes.php';
 	dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE tid='".$data['value']."'");
 	$data['response'] = 1;
-	$data['subtotal'] = Cart::get_cart_total(defender::set_sessionUserID());
+	$data['subtotal'] = \PHPFusion\Eshop\Eshop::get_cart_total(defender::set_sessionUserID());
 	if ($data['subtotal'] == 0 ) {
 		$data['subtotal'] = intval(0);
 	}

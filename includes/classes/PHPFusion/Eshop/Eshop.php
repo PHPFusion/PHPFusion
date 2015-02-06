@@ -27,8 +27,20 @@ class Eshop {
 		'coupon_code' => ''
 		);
 
+	// pricing calculation
+	private $total_gross = 0;
+	private $max_discount = 0; // also self::get_cart_discountable_total(\defender::set_sessionUserID());
+
+	private $total_shipping = 0;
+	private $total_surcharge = 0;
+	private $total_weight = 0;
+	private $total_vat = 0;
+	private $coupon_value = 0;
+	private $coupon_code = '';
+	private $grand_total = 0;
+
 	private $max_rows = 0;
-	private $info = array();
+	private $item = array();
 	private $banner_path = '';
 
 	public function __construct() {
@@ -47,62 +59,114 @@ class Eshop {
 	}
 
 	// checkout data
-	function get_checkoutData() {
+	public function __construct_Checkout() {
 		// lets see what i need in the invoice...
 		// load the cart data first, need also qtyxprice
-		$info = array();
+		$item = array();
 		$result = dbquery("SELECT c.*, e.dync, e.icolor, (c.cprice*c.cqty) as totalprice
 		FROM ".DB_ESHOP_CART." c
 		INNER JOIN ".DB_ESHOP." e on c.prid=e.id
 		WHERE puid='".\defender::set_sessionUserID()."' ORDER BY cadded asc");
-		// ok column should be enough.
 		if (dbrows($result)>0) {
-			$info['total_weight'] = 0;
-			$info['gross_total'] = 0;
-			$info['coupon_total'] = 0;
-			// loop through the products in the cart
+
 			while ($data = dbarray($result)) {
 				// also need poll total weight to compare to shipping options later.
-				$info['total_weight'] = $info['total_weight']+$data['cweight'];
-				$info['gross_total'] = $info['gross_total']+$data['totalprice'];
-				if ($data['ccupons'] == 1) { // now i have not enabled this.
-					$info['coupon_total'] = $info['coupon_total']+$data['totalprice'];
-				}
 				$data['cimage'] = $data['cimage'] ? self::picExist(SHOP."pictures/".$data['cimage']) : self::picExist('fake.png');
-				$info['item'][$data['tid']] = $data;
+				$item[$data['tid']] = $data;
 				//print_p($data);
+				// aggregate
+				$this->total_weight = $this->total_weight+$data['cweight'];
+				$this->total_gross = $this->total_gross+$data['totalprice'];
+				if ($data['ccupons'] == 1) $this->max_discount = $this->max_discount+$data['totalprice'];
 			}
+			$this->item = $item;
 		}
-		$vat = fusion_get_settings('eshop_vat') ? fusion_get_settings('eshop_vat') : fusion_get_settings('eshop_vat_default');
-		$info['vat'] = ($vat/100)*$info['gross_total'];
-		$info['vat_gross'] = (($vat/100)+1)*$info['gross_total'];
-		// also need to load customer information
-		$info['customer'] = null;
-		if (isnum( \defender::set_sessionUserID())) {
-			$result = dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid='".\defender::set_sessionUserID()."'");
-			if (dbrows($result)>0) {
-				$info['customer'] = dbarray($result);
-			}
-		}
-		// also need ot load shipping options based on location
+
+		$vat_rate = fusion_get_settings('eshop_vat') ? fusion_get_settings('eshop_vat') : fusion_get_settings('eshop_vat_default');
+		$this->total_vat = $this->total_gross*($vat_rate/100)+1;
+
+		// do customer
+		// load the customer data
+		$this->customer_info['cuid'] = \defender::set_sessionUserID();
+		$this->customer_info = Customers::get_customerData($this->customer_info['cuid']); // binds the above
+		// and append data if exist.
+		//if (!empty($customer_info)) {
+		//	$this->customer_info = $customer_info;
+		//}
+		self::set_customerDB();
+		self::set_couponDB();
+	}
+
+	public function get_checkout_info() {
+		$info = array(
+			'item' => $this->item,
+			'customer' => $this->customer_info, // also //$this->customer_info = Customers::get_customerData(\defender::set_sessionUserID());
+			'total_gross' => $this->total_gross,
+			'total_shipping' => $this->total_shipping,
+			'total_weight' => $this->total_weight,
+			'total_surcharge' => $this->total_surcharge,
+			'coupon_value' => $this->coupon_value,
+			'coupon_code' => $this->coupon_code,
+			'total_vat' => $this->total_vat,
+			'net_price' => $this->total_gross+$this->total_vat,
+			'customer_form' => self::display_customer_form(),
+			'coupon_form' => self::display_coupon_form(),
+			'cart_checkout' => self::display_cart_checkout(),
+		);
 		return $info;
 	}
 
+	public function set_couponDB() {
+		global $defender;
+		if (isset($_POST['apply_coupon'])) {
+			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
+			if ($coupon_code && Coupons::verify_coupon($coupon_code)) {
+				if (Coupons::verify_coupon_usage(\defender::set_sessionUserID(), $coupon_code)) {
+					$defender->stop();
+					$defender->addNotice('You have already used this coupon.');
+				} else {
+					// get coupon value
+					$coupon = Coupons::get_couponData($coupon_code);
+					$coupon_type = Coupons::getCouponType();
 
-
-
-	/* Customer form fields */
-	public function display_customer_form($cuid = '') {
-		global $locale;
-		// load the customer data
-		$this->customer_info['cuid'] = (isnum($cuid)) ? $cuid : \defender::set_sessionUserID(); // override default 0
-		$customer_info = Customers::get_customerData($this->customer_info['cuid']); // binds the above
-		// and append data if exist.
-		if (!empty($customer_info)) {
-			$this->customer_info = $customer_info;
+					// calculate net_price
+					$coupon_value = $coupon['cuvalue']/100*$this->max_discount; // percent by default.
+					if ($coupon['cutype'] == 1) $coupon_value = $coupon['cuvalue']; // override to sum.
+					$this->total_gross = number_format($this->max_discount-$coupon_value, 2);
+					if ($coupon_value > $this->max_discount) {
+						$this->total_gross = number_format(0,2);
+					}
+					// set coupon value just for display
+					$this->coupon_value = $coupon['cuvalue']." ".$coupon_type[$coupon['cutype']];
+					$this->coupon_code = $coupon_code;
+					// record coupon usage.
+					//$_coupons_codes = $this->customer_info['ccupons'].".".$coupon_code; // set the coupon
+					//dbquery("UPDATE ".DB_ESHOP_CUSTOMERS." SET ccupons='".$_coupons_codes."' WHERE cuid='".$this->customer_info['cuid']."'"); // act of consume
+				}
+			} else {
+				$defender->stop();
+				$defender->addNotice('The coupon code is not valid.');
+			}
 		}
+	}
 
-		// Post Action
+	/* Coupon form fields */
+	public function display_coupon_form() {
+		global $locale, $defender;
+		if (fusion_get_settings('eshop_coupons')) {
+			$html = "<div class='m-t-20'>\n";
+			$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+			$html .= form_text($locale['ESHPCHK171'], 'coupon_code', 'coupon_code', $this->coupon_info['coupon_code'], array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1));
+			$html .= form_button($locale['ESHPCHK172'], 'apply_coupon', 'apply_coupon', $locale['ESHPCHK172'], array('class'=>'btn-primary'));
+			$html .= closeform();
+			$html .= "</div>\n";
+		} else {
+			$html = "<div class='alert alert-warning'>Coupon discounts are not available</div>\n";
+		}
+		return $html;
+	}
+
+	public function set_customerDB() {
 		if (isset($_POST['save_customer'])) {
 			$this->customer_info['cuid'] = isset($_POST['cuid']) ? form_sanitizer($_POST['cuid'], '0', 'cuid') : 0; // user select
 			$this->customer_info['cemail'] = isset($_POST['cemail']) ? form_sanitizer($_POST['cemail'], '', 'cemail') : '';
@@ -138,7 +202,11 @@ class Eshop {
 				if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout");
 			}
 		}
+	}
 
+	/* Customer form fields */
+	public function display_customer_form() {
+		global $locale;
 		$html = "<div class='m-t-20'>\n";
 		$html .= openform('customerform', 'customerform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
 		$customer_name[] = $this->customer_info['cfirstname'];
@@ -161,36 +229,51 @@ class Eshop {
 		$html .= form_button($locale['save'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-primary'));
 		$html .= closeform();
 		$html .= "</div>\n";
-		$info['customer_form'] = $html;
-		return $info;
+		return $html;
 	}
 
-	/* Coupon form fields */
-	public function display_coupon_form() {
-		global $locale;
-		// no need to load data. because coupon codes are not given on cart.
-		// its like a secret key..
-		if (isset($_POST['apply_coupon'])) {
-			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
-			if ($coupon_code && Coupons::verify_coupon($coupon_code)) {
-				// save to where? - i need the product info.
+	/* Calculated Checkout */
+	public function display_cart_checkout() {
+
+
+
+
+
+		$html = form_hidden('', 'coupon_code', 'coupon_code', $this->coupon_code);
+		$html .= form_hidden('', 'customer_id', 'customer_id', \defender::set_sessionUserID());
+		$html .= form_hidden('', 'total_gross', 'total_gross', $this->total_gross);
+		$html .= form_hidden('', 'total_vat', 'total_vat', $this->total_vat);
+		return $html;
+
+	}
+
+	// calculate the cart total sum
+	public static function get_cart_total($puid) {
+		if ($puid && dbcount("(puid)", DB_ESHOP_CART, "puid='".$puid."'")) {
+			$result = dbquery("SELECT cprice, cqty FROM ".DB_ESHOP_CART." WHERE puid='".$puid."'");
+			if (dbrows($result)>0) {
+				$subtotal = 0;
+				while ($data = dbarray($result)) {
+					$subtotal = ($data['cprice'] * $data['cqty']) + $subtotal;
+				}
+				return number_format($subtotal, 2);
 			}
 		}
-
-		if (fusion_get_settings('eshop_coupons')) {
-			$html = "<div class='m-t-20'>\n";
-			$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
-			$html .= form_text($locale['ESHPCHK171'], 'coupon_code', 'coupon_code', $this->coupon_info['coupon_code'], array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1, 'required'=>1, 'email'=>1));
-			$html .= form_button($locale['ESHPCHK172'], 'apply_coupon', 'apply_coupon', $locale['ESHPCHK172'], array('class'=>'btn-primary'));
-			$html .= closeform();
-			$html .= "</div>\n";
-		} else {
-			$html = "<div class='alert alert-warning'>Coupon discounts are not available</div>\n";
-		}
-		$info['coupon_form'] = $html;
-		return $info;
 	}
 
+	// calculate the cart total sum
+	public static function get_cart_discountable_total($puid) {
+		if ($puid && dbcount("(puid)", DB_ESHOP_CART, "puid='".$puid."'")) {
+			$result = dbquery("SELECT cprice, cqty FROM ".DB_ESHOP_CART." WHERE puid='".$puid."' AND cupons='1'");
+			if (dbrows($result)>0) {
+				$subtotal = 0;
+				while ($data = dbarray($result)) {
+					$subtotal = ($data['cprice'] * $data['cqty']) + $subtotal;
+				}
+				return number_format($subtotal, 2);
+			}
+		}
+	}
 
 	public static function get_productSpecs($serial_value, $key_num) {
 		$_str = '';
