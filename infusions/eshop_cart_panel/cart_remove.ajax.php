@@ -16,9 +16,14 @@ $data['time'] = isset($_POST['time']) && isnum($_POST['time']) ? $_POST['time'] 
 
 $check = dbcount("(tid)", DB_ESHOP_CART, "tid='".$data['value']."' AND puid='".$data['usr']."' AND prid='".$data['prid']."' AND cdyn='".$data['cdyn']."' AND cclr='".$data['color']."'");
 if ($check) {
-	echo json_encode(array('response'=>1));
+	require_once 'includes.php';
 	dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE tid='".$data['value']."'");
+	$data['response'] = 1;
+	$data['subtotal'] = Cart::get_cart_total(defender::set_sessionUserID());
+	if ($data['subtotal'] == 0 ) {
+		$data['subtotal'] = intval(0);
+	}
+	echo json_encode($data);
 } else {
-	$data['check'] = $check; // this is feeding back at least 3 times on the third one.
 	echo json_encode(array('response'=>2, 'data'=>$data));
 }

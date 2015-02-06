@@ -31,6 +31,7 @@ class Cart {
 						$('#cart').addClass('open');
 						if (result.response == 1) {
 							$('#product-'+Data['prid']+'-'+Data['cdyn']+'-'+Data['clr']+'-'+Data['time']).remove();
+							$('#subtotal_price').text(parseFloat(result.subtotal));
 							new PNotify({
 							title: 'Item Removed',
 							text: 'You have removed item to your cart.',
@@ -77,7 +78,11 @@ class Cart {
 					$('.cart-blank').remove();
 					$('#cart-list').append(result.html);
 					$(result.remove).remove();
+					if (result.subtotal > 0) {
 					$('#subtotal_price').text(parseFloat(result.subtotal));
+					} else {
+					$('#subtotal_price').text(parseFloat('0'));
+					}
 					deleteItem(result.tid);
 					new PNotify({
 						title: result.title,
@@ -130,6 +135,12 @@ class Cart {
 						$('#cart').addClass('open');
 						if (result.response == 1) {
 							$('#product-'+Data['prid']+'-'+Data['cdyn']+'-'+Data['clr']+'-'+Data['time']).remove();
+							if (result.subtotal > 0) {
+							$('#subtotal_price').text(parseFloat(result.subtotal));
+							} else {
+							$('#subtotal_price').text(parseFloat('0'));
+							}
+
 							new PNotify({
 							title: 'Item Removed',
 							text: 'You have removed item to your cart.',
@@ -192,8 +203,6 @@ class Cart {
 				dbquery_insert(DB_ESHOP_CART, $_sdata, 'update', array('keep_session'=>1));
 				$data = $_sdata; // override entire data str.
 				$data['tid'] = $_sdata['tid'];
-				// delete the older one, and replace with a new
-				//echo  "<script>$('#product-".$data['prid']."-".$data['cdyn']."-".$data['cclr']."-".$old_time."').remove(); </script>\n";
 				$json_response['remove'] = "#product-".$data['prid']."-".$data['cdyn']."-".$data['cclr']."-".$old_time."";
 				$json_response['tid'] = $_sdata['tid'];
 			} else {
@@ -205,10 +214,6 @@ class Cart {
 			$json_response['html'] = self::cart_list_item($data);
 			$json_response['subtotal'] = $subtotal;
 			return $json_response;
-			//echo "<script>
-			//$('#subtotal_price').text(parseFloat('".$subtotal."'));
-			//$('.cart-blank').remove();
-			//</script>\n";
 		}
 	}
 
