@@ -106,14 +106,14 @@ class defender {
 							$this->addHelperText($this->field_config['id'].'-lastname', $locale['lastname_error']);
 							$this->addNotice($locale['lastname_error']);
 						}
-						if (isset($_POST[$name][0]) && isset($_POST[$name][1]) && $_POST[$name][0] == $_POST[$name][1]) {
+/*						if (isset($_POST[$name][0]) && isset($_POST[$name][1]) && $_POST[$name][0] == $_POST[$name][1]) {
 							$this->stop();
 							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-firstname', $locale['name_error']);
 							$this->addNotice($locale['name_error']);
 							$this->addHelperText($this->field_config['id'].'-lastname', $locale['name_error']);
 							$this->addNotice($locale['name_error']);
-						}
+						}*/
 						if (!defined('FUSION_NULL')) {
 							$return_value = $this->verify_text();
 							return $return_value;
