@@ -4,6 +4,30 @@ clear: both;
 #product_quantity-field .input-group {
 	width:30px;
 }
+
+
+.eshop-column {
+	display: inline-block;
+}
+.eshop-column-br-0 {
+	height: inherit !important;
+}
+.eshop-price {
+	font-weight: 600;
+	font-size:25px;
+}
+.eshop-discount {
+	font-size:12px !important;
+}
+.eshop-price small {
+	font-size:14px;
+}
+
+
+
+
+
+
 .notify-bar {
     position:absolute;
 	top:0;

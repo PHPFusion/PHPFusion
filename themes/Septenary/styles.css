@@ -599,27 +599,12 @@ nav {
 	border: 0;
 	text-decoration: underline;
 }
+
 .eshop-nav .fa {
 	margin-top:5px;
 	margin-left:3px;
 }
 
-.eshop-column {
-	display: inline-block;
-}
-.eshop-column-br-0 {
-	height: inherit !important;
-}
-.eshop-price {
-	font-weight: 600;
-	font-size:25px;
-}
-.eshop-discount {
-	font-size:12px !important;
-}
-.eshop-price small {
-	font-size:14px;
-}
 .eshop-product-title {
 	font-size:90%;
 	color: rgb(60, 156, 205);

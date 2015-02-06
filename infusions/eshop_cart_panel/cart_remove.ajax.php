@@ -14,10 +14,11 @@ $data['color'] = isset($_POST['clr']) && isnum($_POST['clr']) ? $_POST['clr'] : 
 $data['cdyn'] = isset($_POST['cdyn']) && isnum($_POST['cdyn']) ? $_POST['cdyn'] : '';
 $data['time'] = isset($_POST['time']) && isnum($_POST['time']) ? $_POST['time'] : 0;
 
-$check = dbcount("(tid)", DB_ESHOP_CART, "tid='".$data['value']."' AND puid='".$data['usr']."' AND prid='".$data['prid']."' AND cdyn='".$data['cdyn']."' AND cclr='".$data['color']."' AND cadded='".$data['time']."'");
+$check = dbcount("(tid)", DB_ESHOP_CART, "tid='".$data['value']."' AND puid='".$data['usr']."' AND prid='".$data['prid']."' AND cdyn='".$data['cdyn']."' AND cclr='".$data['color']."'");
 if ($check) {
 	echo json_encode(array('response'=>1));
 	dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE tid='".$data['value']."'");
 } else {
-	echo json_encode(array('response'=>2));
+	$data['check'] = $check; // this is feeding back at least 3 times on the third one.
+	echo json_encode(array('response'=>2, 'data'=>$data));
 }

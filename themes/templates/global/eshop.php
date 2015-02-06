@@ -347,7 +347,7 @@ if (!function_exists('render_eshop_product')) {
 		}
 	}
 	echo "</div>\n<div class='col-xs-12 col-sm-7'>\n";
-	echo "<h2 class='product-title m-b-0'>".$data['title']."</h2>";
+	echo "<h2 class='product-title'>".$data['title']."</h2>";
 	//echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info.
 	// product basic information
 	echo "<div class='text-smaller'>\n";
@@ -355,6 +355,7 @@ if (!function_exists('render_eshop_product')) {
 	echo "<span class='display-block'>".$data['stock_status']."</span>\n";
 	echo "<span class='display-block'>".$data['version']."</span>";
 	echo "<span class='display-block'>".$data['shipping']."</span>";
+	echo "<span class='display-block'>".$data['coupon_status']."</span>";
 
 	if ($data['demo']) {
 		echo "<span class='display-block'>";
@@ -391,8 +392,10 @@ if (!function_exists('render_eshop_product')) {
 		echo "</div>\n";
 	}
 
+	/* This part need to be MVC - its going to be too hard for theme developers to go through everything */
+
 	if (fusion_get_settings('eshop_shopmode')) {
-		echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product']);
+		echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product']); // sends data to ajax
 		echo "<div class='m-t-20'>\n";
 		if (!empty($data['dync'])) {
 			$title = $data['dynf'] ? $data['dynf'] : 'Category';
@@ -405,18 +408,19 @@ if (!function_exists('render_eshop_product')) {
 			echo "<label class='col-xs-12 col-sm-3 text-smaller p-l-0'>".$locale['ESHP017']."</label>\n";
 			echo "<div class='col-xs-12 col-sm-9'>\n";
 			$color = str_replace('&quot;', '', $data['icolor']);
-			$full_colors = PHPFusion\Eshop::get_iColor();
+			$full_colors = PHPFusion\Eshop\Eshop::get_iColor();
 			$current_colors = array_filter(explode('.', $color));
 			$i = 0;
 			foreach($current_colors as $val) {
 				$color = $full_colors[$val]['hex'];
 				$title = $full_colors[$val]['title'];
 				echo "<div><input id='".$color."' type='radio' name='product_color' value='".$val."' ".($i == 0 ? 'checked' : '')." />
-			<span class='display-inline-block' style='background: $color; width:15px; height:15px; border-radius:50%; margin-left:5px;'>&nbsp;</span>
-			<small class='p-l-10'><label for='".$color."'>$title</label></small>
-			</div>";
+				<span class='display-inline-block' style='background: $color; width:15px; height:15px; border-radius:50%; margin-left:5px;'>&nbsp;</span>
+				<small class='p-l-10'><label for='".$color."'>$title</label></small>
+				</div>";
 				$i++;
 			}
+
 			defender::add_field_session(array(
 											'input_name' 	=> 	'product_color',
 											'type'			=>	'number',
@@ -439,17 +443,17 @@ if (!function_exists('render_eshop_product')) {
 			));
 			// now add some simple js
 			add_to_jquery("
-		$('#product_quantity-prepend-btn').bind('click', function(e) {
-			var order_qty = $('#product_quantity').val();
-			var new_val = --order_qty;
-			if (order_qty >=1) { $('#product_quantity').val(new_val); }
-		 });
-		 $('#product_quantity-append-btn').bind('click', function(e) {
-			var order_qty = $('#product_quantity').val();
-			var new_val = ++order_qty;
-			$('#product_quantity').val(new_val);
-		 });
-		");
+			$('#product_quantity-prepend-btn').bind('click', function(e) {
+				var order_qty = $('#product_quantity').val();
+				var new_val = --order_qty;
+				if (order_qty >=1) { $('#product_quantity').val(new_val); }
+			 });
+			 $('#product_quantity-append-btn').bind('click', function(e) {
+				var order_qty = $('#product_quantity').val();
+				var new_val = ++order_qty;
+				$('#product_quantity').val(new_val);
+			 });
+			");
 		} else {
 			echo form_hidden('', 'product_quantity', 'product_quantity', 1);
 		}
