@@ -7,6 +7,7 @@ use PHPFusion\Eshop\Admin\Customers;
 class Eshop {
 
 	public $customer_info = array(
+		'cuid'=> '',
 		'cfirstname' => '',
 		'clastname' => '',
 		'cdob' => '',
@@ -80,12 +81,12 @@ class Eshop {
 			$this->customer_info['cfax'] = isset($_POST['cfax']) ? form_sanitizer($_POST['cfax'], '', 'cfax') : '';
 			$this->customer_info['ccupons'] = isset($_POST['ccupons']) ? form_sanitizer($_POST['ccupons'], '', 'ccupons') : ''; // why is cupons available in customer db????
 			if (Customers::verify_customer($this->customer_info['cuid'])) {
-				dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
-				if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout&amp;status=csu");
+				//dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
+				//if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout&amp;status=csu");
 			} else {
 				print_p($this->customer_info);
-				dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
-				if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout&amp;status=csn");
+				//dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
+				//if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout&amp;status=csn");
 			}
 		}
 
@@ -107,6 +108,7 @@ class Eshop {
 		$html .= form_address($locale['ESHPCHK106'], 'caddress', 'caddress', $customer_address, array('required'=>1, 'inline'=>1));
 		$html .= form_text($locale['ESHPCHK113'], 'cphone', 'cphone', $this->customer_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
 		$html .= form_text($locale['ESHPCHK114'], 'cfax', 'cfax', $this->customer_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
+		$html .= form_hidden('', 'cuid', 'cuid', $this->customer_info['cuid']);
 		$html .= form_button($locale['save'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-primary'));
 		$html .= closeform();
 		$html .= "</div>\n";
