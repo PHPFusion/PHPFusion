@@ -45,9 +45,9 @@ class Eshop {
 	public function display_customer_form($cuid = '') {
 		global $locale;
 		// load the customer data
-		$cuid = (isnum($cuid)) ? $cuid : \defender::set_sessionUserID();
-		$customer_info = Customers::get_customerData($cuid);
-		// append data if exist.
+		$this->customer_info['cuid'] = (isnum($cuid)) ? $cuid : \defender::set_sessionUserID(); // override default 0
+		$customer_info = Customers::get_customerData($this->customer_info['cuid']); // binds the above
+		// and append data if exist.
 		if (!empty($customer_info)) {
 			$this->customer_info = $customer_info;
 		}
@@ -81,12 +81,11 @@ class Eshop {
 			$this->customer_info['cfax'] = isset($_POST['cfax']) ? form_sanitizer($_POST['cfax'], '', 'cfax') : '';
 			$this->customer_info['ccupons'] = isset($_POST['ccupons']) ? form_sanitizer($_POST['ccupons'], '', 'ccupons') : ''; // why is cupons available in customer db????
 			if (Customers::verify_customer($this->customer_info['cuid'])) {
-				//dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
-				//if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout&amp;status=csu");
+				dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
+				if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout");
 			} else {
-				print_p($this->customer_info);
-				//dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
-				//if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout&amp;status=csn");
+				dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
+				if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout");
 			}
 		}
 
