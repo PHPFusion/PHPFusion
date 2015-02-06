@@ -19,6 +19,11 @@ $locale['city_error'] = "Требуется указание города.";
 $locale['postcode_error'] = "Требуется указание почтового индекса.";
 $locale['field_error_blank'] = "%s не может быть пустым.";
 
+// Name errors
+$locale['firstname_error'] = "Обратите внимание на имя.";
+$locale['lastname_error'] = "Обратите внимание на фамилию.";
+$locale['name_error'] = "Имя и фамилия не могут совпадать.";
+
 // Tokens
 $locale['token_error_title'] = "Ошибка токена";
 $locale['token_error'] = "Извините, произошла ошбика. Вернитесь обратно, обновите страницу и попробуйте снова.";
