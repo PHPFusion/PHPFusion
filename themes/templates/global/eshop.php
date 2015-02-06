@@ -15,14 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+add_to_head("<link href='".THEMES."templates/global/css/eshop.css' rel='stylesheet'/>\n");
 if (!function_exists('render_eshop_nav')) {
 	/**
 	 * Shop Navigation
 	 * @param array $info
 	 */
 	function render_eshop_nav(array $info) {
-		$res = "<div class='navbar navbar-default' role='navigation'>\n";
+		$res = "<div class='navbar navbar-default eshop-nav' role='navigation'>\n";
 		$res .= "<div class='navbar-collapse collapse'>\n";
 		$res .= "<ul class='nav navbar-nav'>\n";
 		if ($_GET['category']) {

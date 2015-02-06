@@ -10,13 +10,12 @@ require_once dirname(__FILE__)."../../../maincore.php";
 
 if ($defender->verify_tokens('productfrm', 0)) {
 	// remotely refer form_sanitizer from the referer script treating this form executed from eshop form
-	$_SERVER['REQUEST_URI'] = fusion_get_settings('site_path').str_replace(fusion_get_settings('siteurl'), '', $_SERVER['HTTP_REFERER']);
 	$data['tid'] = 0; // let it auto increment
-	$data['prid'] = form_sanitizer($_POST['id'], '', 'id'); // product id
+	$data['prid'] = form_sanitizer($_POST['id'], ''); // product id
 	$data['puid'] = defender::set_sessionUserID(); // this is the username --- change to user_id and USER_IP? how to get user_name?
-	$data['cqty'] = form_sanitizer($_POST['product_quantity'], '', 'product_quantity'); // order quantity
-	$data['cclr'] = form_sanitizer($_POST['product_color'], '', 'product_color'); // order color
-	$data['cdyn'] = form_sanitizer($_POST['product_type'], '', 'product_type'); // this stores user selection
+	$data['cqty'] = form_sanitizer($_POST['product_quantity'], ''); // order quantity
+	$data['cclr'] = form_sanitizer($_POST['product_color'], ''); // order color
+	$data['cdyn'] = form_sanitizer($_POST['product_type'], ''); // this stores user selection
 	$data['cadded'] = time(); // time
 	$product = \PHPFusion\Eshop\Eshop::get_productData($data['prid']);
 	if (!empty($product)) { // loaded $data

@@ -587,14 +587,15 @@ nav {
 	margin-right: -15px;
 	background: #f7f7f7 !important;
 }
-.eshop-nav > ul > li > a {
+
+.eshop-nav > .navbar-collapse > ul > li > a {
 	margin-bottom:10px;
 	display: block;
 	font-size:14px;
 	color: #444 !important;
 	border: 0;
 }
-.eshop-nav > ul > li > a:hover, .eshop-nav > ul > li > a:focus {
+.eshop-nav > .navbar-collapse > ul > li > a:hover, .eshop-nav > ul > li > a:focus {
 	color: rgb(255, 102, 0) !important;
 	border: 0;
 	text-decoration: underline;
@@ -621,7 +622,6 @@ nav {
 .eshop-link-img:hover {
 	opacity: 0.8;
 }
-
 
 .main-content h2 {
 	font-size: 25px;
