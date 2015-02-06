@@ -114,6 +114,10 @@ class defender {
 							$this->addHelperText($this->field_config['id'].'-lastname', $locale['name_error']);
 							$this->addNotice($locale['name_error']);
 						}
+						if (!defined('FUSION_NULL')) {
+							$return_value = $this->verify_text();
+							return $return_value;
+						}
 						break;
 					case 'address':
 						$name = $this->field_name;
@@ -193,18 +197,18 @@ class defender {
 	}
 
 	/**
-	 * See specific User Form Field Traces.
+	 * Prints specific User Form Field Traces.
 	 * $user_id as false to see yourself
 	 * $user_id as integer to see specific user
-	 * @return array
+	 * @return string
 	 */
 	static function display_user_field_session($user_id = FALSE) {
-		$array = array();
 		$user_id = $user_id && isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."'") ? $user_id : self::set_sessionUserID();
 		if (isset($_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']])) {
-			return (array) $_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']];
+			print_p($_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']]);
+		} else {
+			print_p(" $user_id on ".$_SERVER['REQUEST_URI']." not found ");
 		}
-		return $array;
 	}
 
 	/* Destroys the user field session */
