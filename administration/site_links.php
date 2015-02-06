@@ -463,7 +463,8 @@ class SiteLinks_Admin {
 								  "parent_value" => $locale['parent'],
 								  'width'=>'100%',
 								  'query'=>(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : ''),
-								  'disable_opts' => $this->data['link_id']
+								  'disable_opts' => $this->data['link_id'],
+								  'hide_disabled' => 1
 							  ),
 			DB_SITE_LINKS, "link_name", "link_id", "link_cat");
 		echo form_select($locale['global_ML100'], 'link_language', 'link_languages', $this->language_opts, $this->data['link_language'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
