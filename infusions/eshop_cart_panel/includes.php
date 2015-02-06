@@ -63,7 +63,6 @@ class Cart {
 					});
 				});
 			}
-
     	// add action
     	$('#add_cart').bind('click', function() {
 		var sendData = $('#productfrm').serialize();
