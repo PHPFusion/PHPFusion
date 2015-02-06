@@ -57,10 +57,6 @@ if ($_GET['category']) {
 }
 
 
-// port to E-shop function when done.
-
-
-
 function render_checkout(array $info) {
 	//print_p($info);
 	echo "<h4>Checkout - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
@@ -121,6 +117,7 @@ function render_checkout(array $info) {
 	}
 	// Estimate shipping rates
 	echo opencollapsebody('Select Shipping Options', 'ship', 'cart-list', 0);
+	// get shipping stuff now.
 	echo "html";
 	echo closecollapsebody();
 	echo closecollapse();
@@ -135,13 +132,10 @@ function render_checkout(array $info) {
 		echo "<div class='list-group-item'>\n";
 		echo "<span class='display-inline-block strong m-r-10'>Sub-Total with VAT:</span><span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($info['net_price'],2)."</div>\n";
 	echo "</div>\n";
-
 	echo "<div class='display-block  p-l-0 p-r-0 m-t-20 col-xs-12'>\n";
 	echo "<a class='btn btn-primary pull-right' href=''>Checkout</a>\n";
 	echo "<a class='btn btn-default pull-left' href=''>Continue Shopping</a>\n";
-
 	echo "</div>\n";
-
 }
 
 
