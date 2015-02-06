@@ -28,8 +28,12 @@ function showsidelinks(array $options = array(), $id = 0) {
 	if (empty($data)) {
 		$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND link_visibility <= '$acclevel' ORDER BY link_cat, link_order");
 	}
+	if (!$id) {
+		$res .= "<ul class='main-nav'>\n";
+	} else {
+		$res .= "<ul class='sub-nav p-l-10' style='display: none;'>\n";
+	}
 
-	$res .= "<ul>\n";
 
 	foreach($data[$id] as $link_id => $link_data) {
 		$li_class = "";
@@ -43,7 +47,7 @@ function showsidelinks(array $options = array(), $id = 0) {
 			} else {
 				$itemlink = BASEDIR.$link_data['link_url'];
 			}
-			$res .= "<li".($li_class ? " class='".$li_class."'" : "")."><a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>";
+			$res .= "<li".($li_class ? " class='".$li_class."'" : "")."><a class='display-block p-5 p-l-0 p-r-0' href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>";
 			if (isset($data[$link_id])) {
 				$res .= showsidelinks($options, $link_data['link_id']);
 			}
@@ -58,27 +62,21 @@ function showsidelinks(array $options = array(), $id = 0) {
 	return $res;
 }
 
-echo "<table width='100%' cellpadding='0' cellspacing='0'>\n<tr>\n<td>\n";
-echo "<div class='sidecssmenu'>\n";
 
+echo "<div class='fusion_css_navigation_panel'>\n";
 echo showsidelinks();
-
 echo "</div>\n";
-echo "</td>\n</tr>\n</table>\n";
 
-echo "<script type='text/javascript'>
-	$(document).ready(function(){
-    $('.sidecssmenu ul li').hover(
+add_to_jquery("
+$('.fusion_css_navigation_panel ul li').hover(
         function() {
             $(this).find('ul:first').slideDown();
         },
-        function() {            
-            $(this).find('ul:first').slideUp('fast'); 
+        function() {
+            $(this).find('ul:first').slideUp('fast');
         }
     );
-    $('.sidecssmenu li:has(ul)').find('a:first').append(' »');
-	});
-	</script>\n";
-
+$('.fusion_css_navigation_panel li:has(ul)').find('a:first').append(' »');
+");
 closeside();
 ?>

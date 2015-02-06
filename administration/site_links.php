@@ -228,7 +228,7 @@ class SiteLinks_Admin {
 				// save
 				$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."' AND link_order>='".$data['link_order']."'");
 				dbquery_insert(DB_SITE_LINKS, $data, 'save');
-				//if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
+				if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 			}
 		}
 	}
@@ -238,7 +238,6 @@ class SiteLinks_Admin {
 	 */
 	private function link_quicksave() {
 		global $aidlink, $defender;
-		defender::display_user_field_session();
 		if (isset($_POST['link_quicksave'])) {
 			$quick['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '0', 'link_id') : 0;
 			$quick['link_icon'] = isset($_POST['link_icon']) ? form_sanitizer($_POST['link_icon'], '', 'link_icon') : '';

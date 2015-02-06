@@ -1328,3 +1328,23 @@ body .mceToolbar div {
 .center, *[align="center"] {
 	margin: 0 auto;
 }
+
+/* side css menu */
+.fusion_css_navigation_panel {
+	margin: -20px;
+	background: none repeat scroll 0% 0% rgba(255, 255, 255, 0.5);
+	padding-top: 20px;
+	padding-bottom: 21px;
+}
+.fusion_css_navigation_panel ul li a {
+	display: block;
+	color: rgb(255, 255, 255);
+	padding: 8px !important;
+	font-size: 13px;
+	text-decoration: none;
+	transition: all 0.1s ease-in-out 0s;
+}
+.fusion_css_navigation_panel ul li a:hover, .fusion_css_navigation_panel ul li a:focus {
+	color: rgb(255, 255, 255);
+	background-color: rgb(90, 119, 160);
+}
