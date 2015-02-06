@@ -2,6 +2,7 @@
 
 namespace PHPFusion\Eshop;
 
+use PHPFusion\Eshop\Admin\Coupons;
 use PHPFusion\Eshop\Admin\Customers;
 
 class Eshop {
@@ -22,6 +23,10 @@ class Eshop {
 		'cpostcode' => '',
 	);
 
+	public $coupon_info = array(
+		'coupon_code' => ''
+		);
+
 	private $max_rows = 0;
 	private $info = array();
 	private $banner_path = '';
@@ -40,6 +45,51 @@ class Eshop {
 		// filter the rubbish each run
 		dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE cadded < ".time()."-2592180");
 	}
+
+	// checkout data
+	function get_checkoutData() {
+		// lets see what i need in the invoice...
+		// load the cart data first, need also qtyxprice
+		$info = array();
+		$result = dbquery("SELECT c.*, e.dync, e.icolor, (c.cprice*c.cqty) as totalprice
+		FROM ".DB_ESHOP_CART." c
+		INNER JOIN ".DB_ESHOP." e on c.prid=e.id
+		WHERE puid='".\defender::set_sessionUserID()."' ORDER BY cadded asc");
+		// ok column should be enough.
+		if (dbrows($result)>0) {
+			$info['total_weight'] = 0;
+			$info['gross_total'] = 0;
+			$info['coupon_total'] = 0;
+			// loop through the products in the cart
+			while ($data = dbarray($result)) {
+				// also need poll total weight to compare to shipping options later.
+				$info['total_weight'] = $info['total_weight']+$data['cweight'];
+				$info['gross_total'] = $info['gross_total']+$data['totalprice'];
+				if ($data['ccupons'] == 1) { // now i have not enabled this.
+					$info['coupon_total'] = $info['coupon_total']+$data['totalprice'];
+				}
+				$data['cimage'] = $data['cimage'] ? self::picExist(SHOP."pictures/".$data['cimage']) : self::picExist('fake.png');
+				$info['item'][$data['tid']] = $data;
+				//print_p($data);
+			}
+		}
+		$vat = fusion_get_settings('eshop_vat') ? fusion_get_settings('eshop_vat') : fusion_get_settings('eshop_vat_default');
+		$info['vat'] = ($vat/100)*$info['gross_total'];
+		$info['vat_gross'] = (($vat/100)+1)*$info['gross_total'];
+		// also need to load customer information
+		$info['customer'] = null;
+		if (isnum( \defender::set_sessionUserID())) {
+			$result = dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid='".\defender::set_sessionUserID()."'");
+			if (dbrows($result)>0) {
+				$info['customer'] = dbarray($result);
+			}
+		}
+		// also need ot load shipping options based on location
+		return $info;
+	}
+
+
+
 
 	/* Customer form fields */
 	public function display_customer_form($cuid = '') {
@@ -114,6 +164,33 @@ class Eshop {
 		$info['customer_form'] = $html;
 		return $info;
 	}
+
+	/* Coupon form fields */
+	public function display_coupon_form() {
+		global $locale;
+		// no need to load data. because coupon codes are not given on cart.
+		// its like a secret key..
+		if (isset($_POST['apply_coupon'])) {
+			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
+			if ($coupon_code && Coupons::verify_coupon($coupon_code)) {
+				// save to where? - i need the product info.
+			}
+		}
+
+		if (fusion_get_settings('eshop_coupons')) {
+			$html = "<div class='m-t-20'>\n";
+			$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+			$html .= form_text($locale['ESHPCHK171'], 'coupon_code', 'coupon_code', $this->coupon_info['coupon_code'], array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1, 'required'=>1, 'email'=>1));
+			$html .= form_button($locale['ESHPCHK172'], 'apply_coupon', 'apply_coupon', $locale['ESHPCHK172'], array('class'=>'btn-primary'));
+			$html .= closeform();
+			$html .= "</div>\n";
+		} else {
+			$html = "<div class='alert alert-warning'>Coupon discounts are not available</div>\n";
+		}
+		$info['coupon_form'] = $html;
+		return $info;
+	}
+
 
 	public static function get_productSpecs($serial_value, $key_num) {
 		$_str = '';
@@ -671,6 +748,7 @@ class Eshop {
 		$this->max_rows = dbrows($max_result);
 		$info['max_rows'] = $this->max_rows;
 		if ($_GET['product']) {
+			// in product page
 			$result = dbquery("SELECT i.*, if(i.cid >0, cat.title, 0) as category_title
 			FROM ".DB_ESHOP." i
 			LEFT JOIN ".DB_ESHOP_CATS." cat on (i.cid=cat.cid)
@@ -688,6 +766,9 @@ class Eshop {
 					}
 					$data['version'] = $data['version'] ? $locale['ESHP007']." ".$data['version'] : '';
 					$data['delivery'] = $data['delivery'] && $data['instock'] <=0 ?  $locale['ESHP012']." ".nl2br($data['delivery']) : '';
+					// set cupons enabled locale.
+					$data['coupon_status'] = $data['cupons'] == 1 ? "Allow Coupons: Yes" : '';
+					// set stock status locale.
 					$data['stock_status'] = '';
 					if ($data['stock'] == 1) {
 						$data['stock_status'] .= $locale['ESHP008'].": ";
