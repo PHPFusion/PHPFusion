@@ -193,7 +193,7 @@ class defender {
 
 	/* Adds the field sessions on document load */
 	static function add_field_session(array $array) {
-		$_SESSION['form_fields'][self::set_sessionUserID()][$_SERVER['REQUEST_URI']][$array['input_name']] = $array;
+		$_SESSION['form_fields'][self::set_sessionUserID()][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
 	}
 
 	/**
@@ -212,7 +212,7 @@ class defender {
 	}
 
 	/* Destroys the user field session */
-	public function unset_field_session() {
+	public static function unset_field_session() {
 		unset($_SESSION['form_fields'][self::set_sessionUserID()]);
 	}
 
@@ -627,8 +627,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			foreach (fusion_get_enabled_languages() as $lang) {
 				//$field_name = ucfirst(strtolower(str_replace("_", " ", $input_name))).' ('.$lang.')';
 				$input_name = $input_name."[".$lang."]";
-				if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name])) {
-					$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name];
+				if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name])) {
+					$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name];
 					$defender->field_name = $input_name;
 					$defender->field_value = $value[$lang];
 					$defender->field_default = $default;
@@ -645,8 +645,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				}
 			}
 		} else {
-			if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name])) {
-				$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name];
+			if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name])) {
+				$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name];
 				$defender->field_name = $input_name;
 				$defender->field_value = $value;
 				$defender->field_default = $default;
