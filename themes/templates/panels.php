@@ -69,7 +69,7 @@ foreach ($p_name as $p_key => $p_side) {
 					$url_arr = explode("\r\n", $p_data['panel_url_list']);
 					$url = array();
 					foreach($url_arr as $urldata) {
-						$url[] = '/'.$urldata;
+						$url[] = strpos($urldata, '/', 0) ? $urldata : '/'.$urldata;
 					}
 					/*
 					 * show only if the following conditions are met:
