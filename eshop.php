@@ -29,7 +29,7 @@ echo '<script type="text/javascript">
 </script>';
 }
 */
-$eShop = new PHPFusion\Eshop();
+$eShop = new PHPFusion\Eshop\Eshop();
 $info = $eShop->get_category();
 $info += $eShop->get_product();
 $info += $eShop->get_featured();
@@ -47,6 +47,7 @@ if ($_GET['category']) {
 } elseif (isset($_GET['checkout'])) {
 	// checkout page
 	$data = get_checkoutData();
+	$data += $eShop->display_customer_form();
 	render_checkout($data);
 } else {
 	render_eshop_featured_url($info);
@@ -55,15 +56,6 @@ if ($_GET['category']) {
 	render_eshop_featured_category($info);
 }
 
-// update cart quantity
-if (isset($_POST['utid']) && isnum($_POST['utid'])) {
-	$quantity = form_sanitizer($_POST['qty'], '', 'qty');
-	$tid = intval($_POST['utid']);
-	if (dbcount('(tid)', DB_ESHOP_CART, "tid = '".$tid."'")) {
-		dbquery("UPDATE ".DB_ESHOP_CART." SET cqty='".intval($quantity)."' WHERE tid='".$tid."'");
-		redirect(BASEDIR."eshop.php?checkout");
-	}
-}
 
 // port to E-shop function when done.
 function get_checkoutData() {
@@ -74,7 +66,6 @@ function get_checkoutData() {
 	FROM ".DB_ESHOP_CART." c
 	INNER JOIN ".DB_ESHOP." e on c.prid=e.id
 	WHERE puid='".defender::set_sessionUserID()."' ORDER BY cadded asc");
-
 	// ok column should be enough.
 	if (dbrows($result)>0) {
 		$info['total_weight'] = 0;
@@ -83,7 +74,7 @@ function get_checkoutData() {
 			// also need poll total weight to compare to shipping options later.
 			$info['total_weight'] = $info['total_weight']+$data['cweight'];
 			$info['gross_total'] = $info['gross_total']+$data['totalprice'];
-			$data['cimage'] = $data['cimage'] ? \PHPFusion\Eshop::picExist(SHOP."pictures/".$data['cimage']) : \PHPFusion\Eshop::picExist('fake.png');
+			$data['cimage'] = $data['cimage'] ? \PHPFusion\Eshop\Eshop::picExist(SHOP."pictures/".$data['cimage']) : \PHPFusion\Eshop\Eshop::picExist('fake.png');
 			$info['item'][$data['tid']] = $data;
 			//print_p($data);
 		}
@@ -104,26 +95,6 @@ function get_checkoutData() {
 	return $info;
 }
 
-function get_productSpecs($serial_value, $key_num) {
-	$_str = '';
-	if (!empty($serial_value)) {
-		$var = str_replace("&quot;", "", $serial_value);
-		$_array = array_filter(explode('.', $var));
-		if (isset($_array[$key_num])) {
-			$_str = $_array[$key_num];
-		}
-	}
-	return (string) $_str;
-}
-function get_productColor($key_num) {
-	$color = '';
-	if (\PHPFusion\Eshop::get_iColor($key_num)) {
-		$color = PHPFusion\Eshop::get_iColor($key_num);
-		$color = $color['title'];
-	}
-	return (string) $color;
-}
-
 
 function render_checkout(array $info) {
 	echo "<h4>Checkout - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
@@ -136,9 +107,9 @@ function render_checkout(array $info) {
 	echo "<th>Options</th>\n";
 	echo "</tr>\n";
 	foreach($info['item'] as $tid => $data) {
-		$specs = get_productSpecs($data['dync'], $data['cdyn']);
-		$color = get_productColor($data['cclr']);
-		echo openform('updateqty', "updateqty-".$data['tid'], 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0));
+		$specs = \PHPFusion\Eshop\Eshop::get_productSpecs($data['dync'], $data['cdyn']);
+		$color = \PHPFusion\Eshop\Eshop::get_productColor($data['cclr']);
+		echo openform('updateqty', "updateqty-".$data['tid'], 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
 		echo "<tr>\n";
 		echo "<td class='col-xs-5 col-sm-5'>\n";
 		echo "<div class='pull-left m-r-10' style='width:70px'>\n";
@@ -160,14 +131,14 @@ function render_checkout(array $info) {
 		echo "</tr>\n";
 		echo closeform();
 	}
-
 	echo "</table>\n";
-
 	// list accordion item
 	echo opencollapse('cart-list');
 	// customer info
 	echo opencollapsebody('Customer Info', 'cif', 'cart-list', 0);
-	echo "html";
+	echo "<div class='p-15'>\n";
+	echo $info['customer_form'];
+	echo "</div>\n";
 	echo closecollapsebody();
 	// Coupon code
 	echo opencollapsebody('Coupon Codes', 'cpn', 'cart-list', 0);

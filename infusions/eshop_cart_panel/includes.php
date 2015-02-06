@@ -148,7 +148,7 @@ class Cart {
 	}
 
 	// calculate the cart total sum
-	private function get_cart_total($puid) {
+	public static function get_cart_total($puid) {
 		if ($puid && dbcount("(puid)", DB_ESHOP_CART, "puid='".$puid."'")) {
 			$result = dbquery("SELECT cprice, cqty FROM ".DB_ESHOP_CART." WHERE puid='".$puid."'");
 			if (dbrows($result)>0) {

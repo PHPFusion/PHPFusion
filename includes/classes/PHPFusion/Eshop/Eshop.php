@@ -1,12 +1,30 @@
 <?php
 
-namespace PHPFusion;
+namespace PHPFusion\Eshop;
 
+use PHPFusion\Eshop\Admin\Customers;
 
 class Eshop {
+
+	public $customer_info = array(
+		'cfirstname' => '',
+		'clastname' => '',
+		'cdob' => '',
+		'ccountry' => '',
+		'cregion' => '',
+		'ccity' => '',
+		'caddress' => '',
+		'caddress2' => '',
+		'cphone' => '',
+		'cfax' => '',
+		'cemail' => '',
+		'cpostcode' => '',
+	);
+
 	private $max_rows = 0;
 	private $info = array();
 	private $banner_path = '';
+
 	public function __construct() {
 		$this->banner_path = BASEDIR."eshop/pictures/banners/";
 		$_GET['category'] = isset($_GET['category']) && isnum($_GET['category']) ?  $_GET['category'] : 0;
@@ -17,8 +35,119 @@ class Eshop {
 		$this->info['category_index'] = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid');
 		$this->info['category'] = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
 
+		self::update_cart();
 		// filter the rubbish each run
 		dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE cadded < ".time()."-2592180");
+	}
+
+	/* Customer form fields */
+	public function display_customer_form($cuid = '') {
+		global $locale;
+		// load the customer data
+		$cuid = (isnum($cuid)) ? $cuid : \defender::set_sessionUserID();
+		$customer_info = Customers::get_customerData($cuid);
+		// append data if exist.
+		if (!empty($customer_info)) {
+			$this->customer_info = $customer_info;
+		}
+
+		// Post Action
+		if (isset($_POST['save_customer'])) {
+			$this->customer_info['cuid'] = isset($_POST['cuid']) ? form_sanitizer($_POST['cuid'], '0', 'cuid') : 0; // user select
+			$this->customer_info['cemail'] = isset($_POST['cemail']) ? form_sanitizer($_POST['cemail'], '', 'cemail') : '';
+			$this->customer_info['cdob'] = isset($_POST['cdob']) ? form_sanitizer($_POST['cdob'], '', 'cdob') : '';
+			$this->customer_info['cname'] = implode('|', $_POST['cname']); // backdoor to traverse back to dynamic
+			$name = isset($_POST['cname']) ? form_sanitizer($_POST['cname'], '', 'cname') : '';
+			if (!empty($name)) {
+				$name = explode('|', $name);
+				$this->customer_info['cfirstname'] = $name[0];
+				$this->customer_info['clastname'] = $name[1];
+			}
+			// this goes back to form.
+			$this->customer_info['caddress'] = implode('|', $_POST['caddress']);
+			$address = isset($_POST['caddress']) ? form_sanitizer($_POST['caddress'], '', 'caddress') : '';
+			if (!empty($address)) {
+				$address = explode('|', $address);
+				// this go into sql only
+				$this->customer_info['caddress'] = $address[0];
+				$this->customer_info['caddress2'] = $address[1];
+				$this->customer_info['ccountry'] = $address[2];
+				$this->customer_info['cregion'] = $address[3];
+				$this->customer_info['ccity'] = $address[4];
+				$this->customer_info['cpostcode'] = $address[5];
+			}
+			$this->customer_info['cphone'] = isset($_POST['cphone']) ? form_sanitizer($_POST['cphone'], '', 'cphone') : '';
+			$this->customer_info['cfax'] = isset($_POST['cfax']) ? form_sanitizer($_POST['cfax'], '', 'cfax') : '';
+			$this->customer_info['ccupons'] = isset($_POST['ccupons']) ? form_sanitizer($_POST['ccupons'], '', 'ccupons') : ''; // why is cupons available in customer db????
+			if (Customers::verify_customer($this->customer_info['cuid'])) {
+				dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
+				if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout&amp;status=csu");
+			} else {
+				print_p($this->customer_info);
+				dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
+				if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout&amp;status=csn");
+			}
+		}
+
+		$html = "<div class='m-t-20'>\n";
+		$html .= openform('customerform', 'customerform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+		$customer_name[] = $this->customer_info['cfirstname'];
+		$customer_name[] = $this->customer_info['clastname'];
+		$customer_name = implode('|', $customer_name);
+		$html .= form_name('Customer Name', 'cname', 'cname', $customer_name, array('required'=>1, 'inline'=>1));
+		$html .= form_text($locale['ESHPCHK115'], 'cemail', 'cemail', $this->customer_info['cemail'], array('inline'=>1, 'required'=>1, 'email'=>1));
+		$html .= form_datepicker($locale['ESHPCHK105'], 'cdob', 'cdob', $this->customer_info['cdob'], array('inline'=>1, 'required'=>1));
+		$customer_address[] = $this->customer_info['caddress']; // use this as backdoor.
+		$customer_address[] = $this->customer_info['caddress2'];
+		$customer_address[] = $this->customer_info['ccountry'];
+		$customer_address[] = $this->customer_info['cregion'];
+		$customer_address[] = $this->customer_info['ccity'];
+		$customer_address[] = $this->customer_info['cpostcode'];
+		$customer_address = implode('|', $customer_address);
+		$html .= form_address($locale['ESHPCHK106'], 'caddress', 'caddress', $customer_address, array('required'=>1, 'inline'=>1));
+		$html .= form_text($locale['ESHPCHK113'], 'cphone', 'cphone', $this->customer_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
+		$html .= form_text($locale['ESHPCHK114'], 'cfax', 'cfax', $this->customer_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
+		$html .= form_button($locale['save'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-primary'));
+		$html .= closeform();
+		$html .= "</div>\n";
+		$info['customer_form'] = $html;
+		return $info;
+	}
+
+	public static function get_productSpecs($serial_value, $key_num) {
+		$_str = '';
+		if (!empty($serial_value)) {
+			$var = str_replace("&quot;", "", $serial_value);
+			$_array = array_filter(explode('.', $var));
+			if (isset($_array[$key_num])) {
+				$_str = $_array[$key_num];
+			}
+		}
+		return (string) $_str;
+	}
+
+	public static  function get_productColor($key_num) {
+		$color = '';
+		if (self::get_iColor($key_num)) {
+			$color = self::get_iColor($key_num);
+			if (isset($color['title'])) {
+				return (string) $color['title'];
+			} else {
+				return '';
+			}
+		}
+		return (string) $color;
+	}
+
+	protected function update_cart() {
+		if (isset($_POST['utid']) && isnum($_POST['utid'])) {
+			$quantity = form_sanitizer($_POST['qty'], '', 'qty');
+			$tid = intval($_POST['utid']);
+			if (dbcount('(tid)', DB_ESHOP_CART, "tid = '".$tid."'")) {
+				dbquery("UPDATE ".DB_ESHOP_CART." SET cqty='".intval($quantity)."' WHERE tid='".$tid."'");
+				redirect(BASEDIR."eshop.php?checkout");
+			}
+		}
 	}
 
 	/**

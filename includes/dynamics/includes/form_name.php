@@ -48,7 +48,7 @@ function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 
 	$html .= "<div id='$input_id-field' class='form-group clearfix ".$options['class']."' >\n";
 	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")." p-l-0'>\n" : "";
+	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12  p-l-0")."'>\n" : "";
 	$html .= "<div class='row p-l-15'>\n";
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10 p-l-0'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$input_id."-fName' value='".$input_value['0']."' placeholder='".$locale['first_name']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";

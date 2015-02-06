@@ -70,18 +70,18 @@ $weight = dbarray(dbquery("SELECT sum(cweight*cqty) as weight FROM ".DB_ESHOP_CA
 if (iMEMBER) {
 $cdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid = '".$userdata['user_id']."'"));
 if ($cdata) {
-$firstname = $cdata['cfirstname'];
-$lastname = $cdata['clastname'];
-$dob = $cdata['cdob'];
-$country_code = $cdata['ccountry_code'];
-$region = $cdata['cregion'];
-$city = $cdata['ccity'];
-$address = $cdata['caddress'];
-$address2 = $cdata['caddress2'];
-$postcode = $cdata['cpostcode'];
-$phone = $cdata['cphone'];
-$fax = $cdata['cfax'];
-$email = $cdata['cemail'];
+	$firstname = $cdata['cfirstname'];
+	$lastname = $cdata['clastname'];
+	$dob = $cdata['cdob'];
+	$country_code = $cdata['ccountry_code'];
+	$region = $cdata['cregion'];
+	$city = $cdata['ccity'];
+	$address = $cdata['caddress'];
+	$address2 = $cdata['caddress2'];
+	$postcode = $cdata['cpostcode'];
+	$phone = $cdata['cphone'];
+	$fax = $cdata['cfax'];
+	$email = $cdata['cemail'];
  }
 } else { 
 echo "<table width='100%' align='center' cellspacing='0' cellpadding='0' border='0'><tr>
