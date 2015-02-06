@@ -89,11 +89,11 @@ function form_address($title = FALSE, $input_name, $input_id, $input_value = FAL
 	$html .= "<div id='$input_id-state-help'></div>";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control textbox' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
 	$html .= "<div id='$input_id-city-help'></div>";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control textbox' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
 	$html .= "<div id='$input_id-postcode-help'></div>";
 	$html .= "</div>\n";
 	$html .= "</div>\n"; // close inner row
@@ -236,8 +236,6 @@ function form_location($title, $input_name, $input_id, $input_value = FALSE, arr
 	} else {
 		$encoded = json_encode(array());
 	}
-
-
 
 	add_to_jquery("
                 $('#".$input_id."').select2({

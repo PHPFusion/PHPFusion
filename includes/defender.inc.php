@@ -53,7 +53,6 @@ class defender {
 		$validation_rules_assigned = array(
 			'textbox' => 'textbox',
 			'dropdown' => 'textbox',
-			'name' => 'textbox',
 			'password' => 'password',
 			'textarea' => 'textbox',
 			'number' => 'number',
@@ -62,9 +61,11 @@ class defender {
 			'timestamp' => 'date',
 			'color' => 'textbox',
 			'address' => 'address',
+			'name' => 'name',
 			'url' => 'url',
 			'image' => 'image',
-			'file' => 'file',);
+			'file' => 'file',
+		);
 		// execute sanitisation rules at point blank precision using switch
 		try {
 			if (!empty($this->field_config['type'])) {
@@ -90,36 +91,60 @@ class defender {
 					case 'url' :
 						return $this->verify_url();
 						break;
+					case 'name':
+						$name = $this->field_name;
+
+						if ($this->field_config['required'] && !$_POST[$name][0]) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-firstname', $locale['firstname_error']);
+							$this->addNotice($locale['firstname_error']);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][1]) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-lastname', $locale['lastname_error']);
+							$this->addNotice($locale['lastname_error']);
+						}
+						if (isset($_POST[$name][0]) && isset($_POST[$name][1]) && $_POST[$name][0] == $_POST[$name][1]) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-firstname', $locale['name_error']);
+							$this->addNotice($locale['name_error']);
+							$this->addHelperText($this->field_config['id'].'-lastname', $locale['name_error']);
+							$this->addNotice($locale['name_error']);
+						}
+						break;
 					case 'address':
 						$name = $this->field_name;
 						//$def = $this->get_full_options($this->field_config);
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-street');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-street', $locale['street_error']);
 							$this->addNotice($locale['street_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][2]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-country');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-country', $locale['country_error']);
 							$this->addNotice($locale['country_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][3]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-state');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-state', $locale['state_error']);
 							$this->addNotice($locale['state_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][4]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-city');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-city', $locale['city_error']);
 							$this->addNotice($locale['city_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][5]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-postcode');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-postcode', $locale['postcode_error']);
 							$this->addNotice($locale['postcode_error']);
 						}

@@ -18,6 +18,12 @@ $locale['state_error'] = "State requires attention.";
 $locale['city_error'] = "City requires attention.";
 $locale['postcode_error'] = "Postcode requires attention.";
 $locale['field_error_blank'] = "%s cannot be left empty.";
+
+// Name errors
+$locale['firstname_error'] = "Firstname requires attention.";
+$locale['lastname_error'] = "Lastname requires attention.";
+$locale['name_error'] = "Firstname and Lastname cannot be same.";
+
 // Tokens
 $locale['token_error_title'] = "Token Error";
 $locale['token_error'] = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";
