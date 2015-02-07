@@ -82,6 +82,7 @@ class Eshop {
 			$this->item = $item;
 		}
 		print_p(self::get());
+		self::set_session('max_discount', $this->max_discount);
 		self::set_checkout_items(); // build checkout items into session
 		self::set_vat_rate(); // set VAT into session
 		self::set_shipping_rate();
@@ -229,10 +230,11 @@ class Eshop {
 					// get coupon value
 					$coupon = Coupons::get_couponData($coupon_code);
 					// calculate net_price
-					$coupon_value = $coupon['cuvalue']/100*$this->max_discount; // percent by default.
+					$max_discount = self::get('max_discount');
+					$coupon_value = $coupon['cuvalue']/100*$max_discount; // percent by default.
 					if ($coupon['cutype'] == 1) $coupon_value = $coupon['cuvalue']; // override to sum.
-					$new_gross = number_format($this->max_discount-$coupon_value, 2);
-					if ($coupon_value > $this->max_discount) {
+					$new_gross = number_format($max_discount-$coupon_value, 2);
+					if ($coupon_value > $max_discount) {
 						$new_gross = number_format(0,2);
 					}
 					$coupon_message = "You have applied coupon code <strong>".$coupon_code."</strong> with a value of ".$coupon_value." rebate on this order.";
@@ -356,7 +358,7 @@ class Eshop {
 			if (Shipping::verify_itenary($_POST['product_delivery'])) {
 				$si = Shipping::get_itenary($_POST['product_delivery']);
 				$ci = Shipping::get_shippingco($si['cid']);
-				$ship_cost = intval($si['initialcost']) + ($si['weightcost'] * $this->total_weight);
+				$ship_cost = intval($si['initialcost']) + ($si['weightcost'] * self::get('total_weight'));
 				$s_message = "You have added ".$ci['title']." - ".$si['method']." into this order.";
 				self::set_session('shipping_method', $_POST['product_delivery']);
 				self::set_session('total_shipping', $ship_cost);
