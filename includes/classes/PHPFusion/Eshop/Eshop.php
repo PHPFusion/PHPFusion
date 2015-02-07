@@ -120,7 +120,7 @@ class Eshop {
 	}
 
 	// set system update when things change.
-	static function set_update() {
+	protected static function set_update() {
 		self::set_session('datestamp', time());
 		$info = self::get_checkout_info();
 		$excluded_field = array(
@@ -139,7 +139,7 @@ class Eshop {
 	}
 
 	/* Returns the current Session Value */
-	protected function get($field_name = false, $admin = FALSE) {
+	protected static function get($field_name = false, $admin = FALSE) {
 		$value =  null;
 		$token = self::get_token();
 		if ($admin && isset($_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name])) {
@@ -168,7 +168,7 @@ class Eshop {
 		return $value;
 	}
 
-	protected function unset_session($field_name) {
+	protected static function unset_session($field_name) {
 		$token = self::get_token();
 		unset($_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name]);
 	}
@@ -216,7 +216,7 @@ class Eshop {
 		return $info;
 	}
 
-	public function set_coupon_rate() { // will affect gross, and vat.
+	protected static function set_coupon_rate() { // will affect gross, and vat.
 		global $defender;
 		if (isset($_POST['apply_coupon'])) {
 			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
@@ -252,7 +252,7 @@ class Eshop {
 	}
 
 	/* Coupon form fields */
-	public function display_coupon_form() {
+	public static function display_coupon_form() {
 		global $locale;
 		$html = '';
 		if (fusion_get_settings('eshop_coupons')) {
@@ -281,7 +281,7 @@ class Eshop {
 		return $html;
 	}
 
-	public function set_customerDB() {
+	protected static function set_customerDB() {
 		if (isset($_POST['save_customer'])) {
 			$customer_info['cuid'] = isset($_POST['cuid']) ? form_sanitizer($_POST['cuid'], '0', 'cuid') : 0; // user select
 			$customer_info['cemail'] = isset($_POST['cemail']) ? form_sanitizer($_POST['cemail'], '', 'cemail') : '';
@@ -323,7 +323,7 @@ class Eshop {
 	}
 
 	/* Customer form fields */
-	public function display_customer_form() {
+	public static function display_customer_form() {
 		global $locale;
 		$customer_info = self::get('customer');
 		$html = "<div class='m-t-20'>\n";
@@ -351,7 +351,7 @@ class Eshop {
 		return $html;
 	}
 
-	public function set_shipping_rate() {
+	protected static function set_shipping_rate() {
 		if (isset($_POST['save_shipping']) && isset($_POST['product_delivery']) && isnum($_POST['product_delivery'])) {
 			if (Shipping::verify_itenary($_POST['product_delivery'])) {
 				$si = Shipping::get_itenary($_POST['product_delivery']);
@@ -366,7 +366,7 @@ class Eshop {
 		}
 	}
 
-	public function display_shipping_form() {
+	public static function display_shipping_form() {
 		global $locale;
 		$html = "<div class='display-inline-block text-smaller m-b-10'><span class='required'>**</span> ".$locale['ESHPCHK126']."</div>\n";
 		$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
