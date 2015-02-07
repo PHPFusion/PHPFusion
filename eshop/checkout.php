@@ -149,36 +149,6 @@ echo "<tr><td><div style='margin-top:5px;'></div></td></tr>";
 }
 echo "</table></fieldset></div>";
 
-//Each shipping option
-echo "<div style='float:right;margin-top:5px;padding:3px;'>";
-echo"<fieldset style='width:100%;padding:2px;'><legend style='width:90% !important;'>&nbsp; ".$locale['ESHPCHK123']." &nbsp;</legend>";
-echo "<table width='350' height='100%' align='center' cellspacing='0' cellpadding='2' border='0'>";
-
-$result = dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGITEMS."");
-$rows = dbrows($result);
-
-if ($rows != 0) {
-$result = dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGITEMS." WHERE active='1' ORDER BY cid,sid ASC");
-
-while ($data = dbarray($result)) {
-	$destlocale = "";
-    if ($data['destination'] == "1") { $destlocale = $locale['D101']; }
-	if ($data['destination'] == "2") { $destlocale = $locale['D102']; }
-	if ($data['destination'] == "3") { $destlocale = $locale['D103']; }
-    echo "<tr><td class='tbl' align='left' valign='middle' width='5%'><input type='radio' name='shipping' id='shipping_".$data['sid']."' value='".$data['sid']."' onclick='javascript:shipment(".$data['sid'].");' /></td>
-    <td class='tbl' align='left' width='55%'>".$data['method']."<br />".$data['dtime']." - ".$destlocale."</td>
-	<td class='tbl' align='left' width='20%'>".$locale['ESHPCHK124']."<br /> ".$data['initialcost']." ".$settings['eshop_currency']."</td>
-	<td class='tbl' align='left' width='20%'>".$locale['ESHPCHK121']."/".$settings['eshop_weightscale']."<br />".$data['weightcost']." ".$settings['eshop_currency']."</td>
-	</tr>";
-    echo "<tr><td><div style='margin-top:5px;'></div></td></tr>";
- }
- echo "<tr><td class='tbl2' align='center' width='100%' colspan='4'>".$locale['ESHPCHK126']."</td></tr>";
-
- } else { 
-	echo $locale['ESHPCHK125']; 
-}
-
-echo "</table></fieldset></div>";
 
 echo "<div style='float:right;margin-top:5px;padding:3px;'>";
 echo"<fieldset style='width:100%;padding:2px;'><legend style='width:90% !important;'>&nbsp; ".$locale['ESHPCHK127']." &nbsp;</legend>";

@@ -546,7 +546,6 @@ class defender {
 	static function verify_tokens($form, $post_time = 10, $debug = 0) {
 		global $locale, $userdata;
 		$error = array();
-		//$user_id = isset($userdata['user_id']) && !isset($_POST['login']) ? $userdata['user_id'] : 0;
 		$user_id = self::set_sessionUserID();
 		$algo = fusion_get_settings('password_algorithm');
 		$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);

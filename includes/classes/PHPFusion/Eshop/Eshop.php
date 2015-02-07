@@ -4,6 +4,7 @@ namespace PHPFusion\Eshop;
 
 use PHPFusion\Eshop\Admin\Coupons;
 use PHPFusion\Eshop\Admin\Customers;
+use PHPFusion\Eshop\Admin\Shipping;
 
 class Eshop {
 
@@ -28,19 +29,23 @@ class Eshop {
 		);
 
 	// pricing calculation
+	private $session_id = 0;
+
 	private $total_gross = 0;
+	private $net_gross = 0;
 	private $max_discount = 0; // also self::get_cart_discountable_total(\defender::set_sessionUserID());
 
-	private $total_shipping = 0;
+	private $item = array();
+	private $item_count = 0;
+
 	private $total_surcharge = 0;
 	private $total_weight = 0;
 	private $total_vat = 0;
-	private $coupon_value = 0;
-	private $coupon_code = '';
+
 	private $grand_total = 0;
 
 	private $max_rows = 0;
-	private $item = array();
+
 	private $banner_path = '';
 
 	public function __construct() {
@@ -49,10 +54,8 @@ class Eshop {
 		$_GET['product'] = isset($_GET['product']) && isnum($_GET['product']) ? $_GET['product'] : 0;
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->max_rows ? : 0;
 		$_GET['FilterSelect'] = isset($_POST['FilterSelect']) && isnum($_POST['FilterSelect']) ? $_POST['FilterSelect'] : 0;
-
 		$this->info['category_index'] = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid');
 		$this->info['category'] = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
-
 		self::update_cart();
 		// filter the rubbish each run
 		dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE cadded < ".time()."-2592180");
@@ -60,63 +63,142 @@ class Eshop {
 
 	// checkout data
 	public function __construct_Checkout() {
-		// lets see what i need in the invoice...
-		// load the cart data first, need also qtyxprice
+
 		$item = array();
 		$result = dbquery("SELECT c.*, e.dync, e.icolor, (c.cprice*c.cqty) as totalprice
-		FROM ".DB_ESHOP_CART." c
-		INNER JOIN ".DB_ESHOP." e on c.prid=e.id
-		WHERE puid='".\defender::set_sessionUserID()."' ORDER BY cadded asc");
+				FROM ".DB_ESHOP_CART." c
+				INNER JOIN ".DB_ESHOP." e on c.prid=e.id
+				WHERE puid='".\defender::set_sessionUserID()."' ORDER BY cadded asc");
 		if (dbrows($result)>0) {
-
 			while ($data = dbarray($result)) {
 				// also need poll total weight to compare to shipping options later.
 				$data['cimage'] = $data['cimage'] ? self::picExist(SHOP."pictures/".$data['cimage']) : self::picExist('fake.png');
 				$item[$data['tid']] = $data;
-				//print_p($data);
-				// aggregate
+				$this->item_count = $this->item_count+$data['cqty'];
 				$this->total_weight = $this->total_weight+$data['cweight'];
 				$this->total_gross = $this->total_gross+$data['totalprice'];
 				if ($data['ccupons'] == 1) $this->max_discount = $this->max_discount+$data['totalprice'];
 			}
 			$this->item = $item;
 		}
-
-		$vat_rate = fusion_get_settings('eshop_vat') ? fusion_get_settings('eshop_vat') : fusion_get_settings('eshop_vat_default');
-		$this->total_vat = $this->total_gross*($vat_rate/100)+1;
-
-		// do customer
-		// load the customer data
-		$this->customer_info['cuid'] = \defender::set_sessionUserID();
-		$this->customer_info = Customers::get_customerData($this->customer_info['cuid']); // binds the above
-		// and append data if exist.
-		//if (!empty($customer_info)) {
-		//	$this->customer_info = $customer_info;
-		//}
+		print_p(self::get());
+		self::set_checkout_items(); // build checkout items into session
+		self::set_coupon_rate(); // build coupon into session
+		self::set_vat_rate(); // set VAT into session
+		self::set_shipping_rate();
+		self::set_customer();
 		self::set_customerDB();
-		self::set_couponDB();
 	}
 
+	// we start here.
+	protected function set_customer() {
+		$user_id = \defender::set_sessionUserID();
+		$customer = Customers::get_customerData($user_id); // binds the above
+		self::set_session('customer', $customer);
+	}
+
+	/* static Session ID generator */
+	protected static function get_token() {
+		global $userdata; // use phpfusion token.
+		$user_id = \defender::set_sessionUserID();
+		$identifier = 'eshop';
+		$algo = fusion_get_settings('password_algorithm');
+		$url = fusion_get_settings('siteurl');
+		$key = $user_id.$identifier.$url.SECRET_KEY;
+		$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+		// generate a new token and store it
+		$token = $user_id.".".$identifier.".".hash_hmac($algo, $key, $salt);
+		return $token;
+	}
+
+	/* Sets eShop Session */
+	protected static function set_session($field_name, $value) {
+		// id only. why need itme to hash.
+		$token = self::get_token();
+		$_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name] = $value;
+	}
+
+	/* Returns the current Session Value */
+	protected function get($field_name = false, $admin = FALSE) {
+		$value =  null;
+		$token = self::get_token();
+		if ($admin && isset($_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name])) {
+			return (string) $_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name];
+		}
+		if (!isset($_COOKIE[COOKIE_PREFIX.'eshop'])) {
+			$settings = fusion_get_settings();
+			$fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
+			$cookie_domain = $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE;
+			$cookie_path = $settings['site_path'];
+			$time_expiry = time()+1209600;
+			\Authenticate::_setCookie(COOKIE_PREFIX.'eshop', $token, $time_expiry, $cookie_path, $cookie_domain, FALSE, TRUE);
+		}
+		$token_data = explode(".", stripinput($token));
+		$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+		$identifier = 'eshop';
+		$algo = fusion_get_settings('password_algorithm');
+		list($user_id, $token_time, $hash) = $token_data;
+		if ($hash = hash_hmac($algo, $user_id.$identifier.SECRET_KEY, $salt)) {
+			if ($field_name && isset($_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name])) {
+				$value = $_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name];
+			} elseif (!$field_name) {
+				$value = $_SESSION[fusion_get_settings('siteurl')][$token]['eshop'];
+			}
+		}
+		return $value;
+	}
+
+	protected function unset_session($field_name) {
+		$token = self::get_token();
+		unset($_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name]);
+	}
+
+	protected function set_checkout_items() {
+		if (!self::get('coupon_code')) { //if there is a session for coupon code, do not override!
+			// exception : change of item count or change of items or change of weight
+			self::set_session('total_gross', $this->total_gross);
+			self::set_session('item_count', $this->item_count);
+			self::set_session('items', $this->item);
+			self::set_session('total_weight', $this->total_weight);
+		}
+
+	}
+
+	/* calculate VAT */
+	protected function set_vat_rate() {
+		$vat_rate = fusion_get_settings('eshop_vat') ? fusion_get_settings('eshop_vat') : fusion_get_settings('eshop_vat_default');
+		$total_gross = self::get('total_gross');
+		$total_vat = $total_gross*($vat_rate/100)+1;
+		self::set_session('total_vat', $total_vat);
+		self::set_session('net_gross', $total_vat + $total_gross);
+	}
+
+	/* Persistent now since construct function will fill in session values if blank */
 	public function get_checkout_info() {
 		$info = array(
-			'item' => $this->item,
-			'customer' => $this->customer_info, // also //$this->customer_info = Customers::get_customerData(\defender::set_sessionUserID());
-			'total_gross' => $this->total_gross,
-			'total_shipping' => $this->total_shipping,
-			'total_weight' => $this->total_weight,
+			'items' => self::get('items'),
+			'total_gross' => self::get('total_gross'),
+			'coupon_code' => self::get('coupon_code'),
+			'coupon_value' => self::get('coupon_value'),
+			'coupon_message' => self::get('coupon_message'),
+			'total_vat' => self::get('total_vat'),
+			'net_gross' => self::get('net_gross'),
+			'total_weight' => self::get('total_weight'),
+			'total_shipping' => self::get('total_shipping'),
+			'shipping_method' => self::get('shipping_method'),
+			'shipping_message' => self::get('shipping_message'),
+			'customer' => self::get('customer'),
+
 			'total_surcharge' => $this->total_surcharge,
-			'coupon_value' => $this->coupon_value,
-			'coupon_code' => $this->coupon_code,
-			'total_vat' => $this->total_vat,
-			'net_price' => $this->total_gross+$this->total_vat,
 			'customer_form' => self::display_customer_form(),
 			'coupon_form' => self::display_coupon_form(),
-			'cart_checkout' => self::display_cart_checkout(),
+			'shipping_form' => self::display_shipping_form(),
 		);
 		return $info;
 	}
 
-	public function set_couponDB() {
+
+	public function set_coupon_rate() {
 		global $defender;
 		if (isset($_POST['apply_coupon'])) {
 			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
@@ -127,21 +209,19 @@ class Eshop {
 				} else {
 					// get coupon value
 					$coupon = Coupons::get_couponData($coupon_code);
-					$coupon_type = Coupons::getCouponType();
-
 					// calculate net_price
 					$coupon_value = $coupon['cuvalue']/100*$this->max_discount; // percent by default.
 					if ($coupon['cutype'] == 1) $coupon_value = $coupon['cuvalue']; // override to sum.
-					$this->total_gross = number_format($this->max_discount-$coupon_value, 2);
+					$new_gross = number_format($this->max_discount-$coupon_value, 2);
 					if ($coupon_value > $this->max_discount) {
-						$this->total_gross = number_format(0,2);
+						$new_gross = number_format(0,2);
 					}
-					// set coupon value just for display
-					$this->coupon_value = $coupon['cuvalue']." ".$coupon_type[$coupon['cutype']];
-					$this->coupon_code = $coupon_code;
-					// record coupon usage.
-					//$_coupons_codes = $this->customer_info['ccupons'].".".$coupon_code; // set the coupon
-					//dbquery("UPDATE ".DB_ESHOP_CUSTOMERS." SET ccupons='".$_coupons_codes."' WHERE cuid='".$this->customer_info['cuid']."'"); // act of consume
+					$coupon_message = "You have applied coupon code <strong>".$coupon_code."</strong> with a value of ".$coupon_value." rebate on this order.";
+					// set coupon message
+					self::set_session('coupon_message', $coupon_message);
+					self::set_session('coupon_code', $coupon_code);
+					self::set_session('coupon_value', $coupon_value);
+					self::set_session('total_gross', $new_gross);
 				}
 			} else {
 				$defender->stop();
@@ -152,14 +232,18 @@ class Eshop {
 
 	/* Coupon form fields */
 	public function display_coupon_form() {
-		global $locale, $defender;
+		global $locale;
 		if (fusion_get_settings('eshop_coupons')) {
-			$html = "<div class='m-t-20'>\n";
-			$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
-			$html .= form_text($locale['ESHPCHK171'], 'coupon_code', 'coupon_code', $this->coupon_info['coupon_code'], array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1));
-			$html .= form_button($locale['ESHPCHK172'], 'apply_coupon', 'apply_coupon', $locale['ESHPCHK172'], array('class'=>'btn-primary'));
-			$html .= closeform();
-			$html .= "</div>\n";
+			if (self::get('coupon_message')) {
+				$html = "You have applied a coupon on this order.";
+			} else {
+				$html = "<div class='m-t-20'>\n";
+				$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+				$html .= form_text($locale['ESHPCHK171'], 'coupon_code', 'coupon_code', $this->coupon_info['coupon_code'], array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1));
+				$html .= form_button($locale['ESHPCHK172'], 'apply_coupon', 'apply_coupon', $locale['ESHPCHK172'], array('class'=>'btn-primary'));
+				$html .= closeform();
+				$html .= "</div>\n";
+			}
 		} else {
 			$html = "<div class='alert alert-warning'>Coupon discounts are not available</div>\n";
 		}
@@ -168,82 +252,134 @@ class Eshop {
 
 	public function set_customerDB() {
 		if (isset($_POST['save_customer'])) {
-			$this->customer_info['cuid'] = isset($_POST['cuid']) ? form_sanitizer($_POST['cuid'], '0', 'cuid') : 0; // user select
-			$this->customer_info['cemail'] = isset($_POST['cemail']) ? form_sanitizer($_POST['cemail'], '', 'cemail') : '';
-			$this->customer_info['cdob'] = isset($_POST['cdob']) ? form_sanitizer($_POST['cdob'], '', 'cdob') : '';
-			$this->customer_info['cname'] = implode('|', $_POST['cname']); // backdoor to traverse back to dynamic
+			$customer_info['cuid'] = isset($_POST['cuid']) ? form_sanitizer($_POST['cuid'], '0', 'cuid') : 0; // user select
+			$customer_info['cemail'] = isset($_POST['cemail']) ? form_sanitizer($_POST['cemail'], '', 'cemail') : '';
+			$customer_info['cdob'] = isset($_POST['cdob']) ? form_sanitizer($_POST['cdob'], '', 'cdob') : '';
+			$customer_info['cname'] = implode('|', $_POST['cname']); // backdoor to traverse back to dynamic
 			$name = isset($_POST['cname']) ? form_sanitizer($_POST['cname'], '', 'cname') : '';
 			if (!empty($name)) {
 				$name = explode('|', $name);
-				$this->customer_info['cfirstname'] = $name[0];
-				$this->customer_info['clastname'] = $name[1];
+				$customer_info['cfirstname'] = $name[0];
+				$customer_info['clastname'] = $name[1];
 			}
 			// this goes back to form.
-			$this->customer_info['caddress'] = implode('|', $_POST['caddress']);
+			$customer_info['caddress'] = implode('|', $_POST['caddress']);
 			$address = isset($_POST['caddress']) ? form_sanitizer($_POST['caddress'], '', 'caddress') : '';
 			if (!empty($address)) {
 				$address = explode('|', $address);
 				// this go into sql only
-				$this->customer_info['caddress'] = $address[0];
-				$this->customer_info['caddress2'] = $address[1];
-				$this->customer_info['ccountry'] = $address[2];
-				$this->customer_info['cregion'] = $address[3];
-				$this->customer_info['ccity'] = $address[4];
-				$this->customer_info['cpostcode'] = $address[5];
+				$customer_info['caddress'] = $address[0];
+				$customer_info['caddress2'] = $address[1];
+				$customer_info['ccountry'] = $address[2];
+				$customer_info['cregion'] = $address[3];
+				$customer_info['ccity'] = $address[4];
+				$customer_info['cpostcode'] = $address[5];
 			}
-			$this->customer_info['cphone'] = isset($_POST['cphone']) ? form_sanitizer($_POST['cphone'], '', 'cphone') : '';
-			$this->customer_info['cfax'] = isset($_POST['cfax']) ? form_sanitizer($_POST['cfax'], '', 'cfax') : '';
-			$this->customer_info['ccupons'] = isset($_POST['ccupons']) ? form_sanitizer($_POST['ccupons'], '', 'ccupons') : ''; // why is cupons available in customer db????
-			if (Customers::verify_customer($this->customer_info['cuid'])) {
-				dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
+			$customer_info['cphone'] = isset($_POST['cphone']) ? form_sanitizer($_POST['cphone'], '', 'cphone') : '';
+			$customer_info['cfax'] = isset($_POST['cfax']) ? form_sanitizer($_POST['cfax'], '', 'cfax') : '';
+			$customer_info['ccupons'] = isset($_POST['ccupons']) ? form_sanitizer($_POST['ccupons'], '', 'ccupons') : ''; // why is cupons available in customer db????
+			if (Customers::verify_customer($customer_info['cuid'])) {
+				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
+				self::set_session('customer', $customer_info);
 				if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout");
 			} else {
-				dbquery_insert(DB_ESHOP_CUSTOMERS, $this->customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
+				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
+				self::set_session('customer', $customer_info);
 				if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout");
 			}
+
 		}
 	}
 
 	/* Customer form fields */
 	public function display_customer_form() {
 		global $locale;
+		$customer_info = self::get('customer');
 		$html = "<div class='m-t-20'>\n";
 		$html .= openform('customerform', 'customerform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
-		$customer_name[] = $this->customer_info['cfirstname'];
-		$customer_name[] = $this->customer_info['clastname'];
+		$customer_name[] = $customer_info['cfirstname'];
+		$customer_name[] = $customer_info['clastname'];
 		$customer_name = implode('|', $customer_name);
 		$html .= form_name('Customer Name', 'cname', 'cname', $customer_name, array('required'=>1, 'inline'=>1));
-		$html .= form_text($locale['ESHPCHK115'], 'cemail', 'cemail', $this->customer_info['cemail'], array('inline'=>1, 'required'=>1, 'email'=>1));
-		$html .= form_datepicker($locale['ESHPCHK105'], 'cdob', 'cdob', $this->customer_info['cdob'], array('inline'=>1, 'required'=>1));
-		$customer_address[] = $this->customer_info['caddress']; // use this as backdoor.
-		$customer_address[] = $this->customer_info['caddress2'];
-		$customer_address[] = $this->customer_info['ccountry'];
-		$customer_address[] = $this->customer_info['cregion'];
-		$customer_address[] = $this->customer_info['ccity'];
-		$customer_address[] = $this->customer_info['cpostcode'];
+		$html .= form_text($locale['ESHPCHK115'], 'cemail', 'cemail', $customer_info['cemail'], array('inline'=>1, 'required'=>1, 'email'=>1));
+		$html .= form_datepicker($locale['ESHPCHK105'], 'cdob', 'cdob', $customer_info['cdob'], array('inline'=>1, 'required'=>1));
+		$customer_address[] = $customer_info['caddress']; // use this as backdoor.
+		$customer_address[] = $customer_info['caddress2'];
+		$customer_address[] = $customer_info['ccountry'];
+		$customer_address[] = $customer_info['cregion'];
+		$customer_address[] = $customer_info['ccity'];
+		$customer_address[] = $customer_info['cpostcode'];
 		$customer_address = implode('|', $customer_address);
 		$html .= form_address($locale['ESHPCHK106'], 'caddress', 'caddress', $customer_address, array('required'=>1, 'inline'=>1));
-		$html .= form_text($locale['ESHPCHK113'], 'cphone', 'cphone', $this->customer_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
-		$html .= form_text($locale['ESHPCHK114'], 'cfax', 'cfax', $this->customer_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
-		$html .= form_hidden('', 'cuid', 'cuid', $this->customer_info['cuid']);
+		$html .= form_text($locale['ESHPCHK113'], 'cphone', 'cphone', $customer_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
+		$html .= form_text($locale['ESHPCHK114'], 'cfax', 'cfax', $customer_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
+		$html .= form_hidden('', 'cuid', 'cuid', $customer_info['cuid']);
 		$html .= form_button($locale['save'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-primary'));
 		$html .= closeform();
 		$html .= "</div>\n";
 		return $html;
 	}
 
-	/* Calculated Checkout */
-	public function display_cart_checkout() {
+	public function set_shipping_rate() {
+		if (isset($_POST['save_shipping']) && isset($_POST['product_delivery']) && isnum($_POST['product_delivery'])) {
+			if (Shipping::verify_itenary($_POST['product_delivery'])) {
+				$si = Shipping::get_itenary($_POST['product_delivery']);
+				$ci = Shipping::get_shippingco($si['cid']);
+				$ship_cost = intval($si['initialcost']) + ($si['weightcost'] * $this->total_weight);
+				$s_message = "You have added ".$ci['title']." - ".$si['method']." into this order.";
+				self::set_session('shipping_method', $_POST['product_delivery']);
+				self::set_session('total_shipping', $ship_cost);
+				self::set_session('shipping_message', $s_message);
+				redirect(BASEDIR."eshop.php?checkout");
+			}
+		}
+	}
 
+	public function display_shipping_form() {
+		global $locale;
+		$html = "<div class='display-inline-block text-smaller m-b-10'><span class='required'>**</span> ".$locale['ESHPCHK126']."</div>\n";
+		$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+		$total_weight = number_format($this->total_weight,1);
+		$result = dbquery("SELECT s.*, cat.title, (s.initialcost + (s.weightcost * '".intval($total_weight)."')) as delivery_cost
+		FROM ".DB_ESHOP_SHIPPINGITEMS." s
+		LEFT JOIN ".DB_ESHOP_SHIPPINGCATS." cat on (s.cid=cat.cid)
+		WHERE (weightmin <='".intval($total_weight)."' and weightmax >= '".intval($total_weight)."')
+		and active='1' ORDER BY dtime ASC, destination ASC, cat.title ASC");
+		if (dbrows($result)>0) {
+			$list = array();
+			while ($data = dbarray($result)) {
+				$list[$data['destination']][$data['sid']] = $data;
+			}
+		}
+		if (!empty($list)) {
+			$dest_opts = Shipping::get_destOpts();
+			foreach($list as $destination => $data) {
+				$html .= "<ul class='list-group'>\n";
+				$html .= "<li class='strong m-b-10'>".$dest_opts[$destination]."</li>\n";
+				foreach($data as $sid => $_data) {
 
-
-
-
-		$html = form_hidden('', 'coupon_code', 'coupon_code', $this->coupon_code);
-		$html .= form_hidden('', 'customer_id', 'customer_id', \defender::set_sessionUserID());
-		$html .= form_hidden('', 'total_gross', 'total_gross', $this->total_gross);
-		$html .= form_hidden('', 'total_vat', 'total_vat', $this->total_vat);
+					$html .= "<li class='list-group-item'>
+					<div class='m-r-10 pull-left' style='width:3%;'>
+					<input id='".$_data['sid']."-choice' type='radio' name='product_delivery' value='".$_data['sid']."'  ".(self::get('shipping_method') == $sid ? 'checked' : '')." />
+					</div>
+					<label style='width:97%' class='overflow-hide row text-normal text-smaller' for='".$_data['sid']."-choice'>
+					<span class='col-xs-2'>+".fusion_get_settings('eshop_currency')." ".$_data['delivery_cost']."</span>
+					<span class='m-r-10 text-bigger strong'>".$_data['method']."</span>
+					<span class='text-bigger'>Est. Delivery Time - ".$_data['dtime']." days</span>
+					</label>
+					</li>";
+				}
+				$html .= "</ul>\n";
+			}
+		} else {
+			$html .= "<div class='well'>".$locale['ESHPCHK125']."</div>\n";
+		}
+		$html .= form_button($locale['save'], 'save_shipping', 'save_shipping', $locale['save'], array('class'=>'btn-primary'));
+		$html .= closeform();
 		return $html;
+	}
+
+	public function display_payment_form() {
 
 	}
 

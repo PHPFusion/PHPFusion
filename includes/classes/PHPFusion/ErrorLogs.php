@@ -267,7 +267,7 @@ class ErrorLogs {
 		global $aidlink;
 		$locale = $this->locale;
 		if ($this->errors) {
-			echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>0, 'class'=>'text-right'));
+			echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>10, 'class'=>'text-right'));
 			echo form_button($locale['delete'], 'delete_all_logs', 'delete_all_logs', $locale['453'], array('class'=>'btn-block btn-primary', 'icon'=>'fa fa-bitbucket fa-lg m-r-10'));
 			echo closeform();
 			?>

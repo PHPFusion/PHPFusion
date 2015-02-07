@@ -26,21 +26,9 @@ class Shipping {
 		'initialcost' => 0,
 		'active' => 1
 	);
-	/**
-	 * @var string
-	 */
 	private $cformaction = '';
-	/**
-	 * @var string
-	 */
 	private $sformaction = '';
-	/**
-	 * @var bool|int|string
-	 */
 	private $max_rowstart = 0;
-	/**
-	 * @var bool|int|string
-	 */
 	private $max_srowstart = 0;
 
 	/**
@@ -89,55 +77,6 @@ class Shipping {
 		}
 		self::set_shippingcodb();
 		self::set_itenarydb();
-	}
-
-	/**
-	 * @return array|bool
-	 */
-	public function getCdata() {
-		return $this->cdata;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getCformaction() {
-		return $this->cformaction;
-	}
-
-	/**
-	 * @return array|bool
-	 */
-	public function getData() {
-		return $this->data;
-	}
-
-	/**
-	 * @return bool|int|string
-	 */
-	public function getMaxRowstart() {
-		return $this->max_rowstart;
-	}
-
-	/**
-	 * @return bool|int|string
-	 */
-	public function getMaxSrowstart() {
-		return $this->max_srowstart;
-	}
-
-	/**
-	 * @return array|bool
-	 */
-	public function getSdata() {
-		return $this->sdata;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getSformaction() {
-		return $this->sformaction;
 	}
 
 	/**
@@ -216,9 +155,9 @@ class Shipping {
 	 * @param $id
 	 * @return bool|string
 	 */
-	static function verify_itenary($id) {
+	public static function verify_itenary($id) {
 		if (isnum($id)) {
-			return dbcount("(sid)", DB_ESHOP_SHIPPINGITEMS, "sid='".intval($id)."' AND cid='".intval($_GET['cid'])."'");
+			return dbcount("(sid)", DB_ESHOP_SHIPPINGITEMS, "sid='".intval($id)."'");
 		}
 		return false;
 	}
@@ -227,7 +166,7 @@ class Shipping {
 	 * @param $id
 	 * @return bool|string
 	 */
-	static function verify_shippingCats($id) {
+	public static function verify_shippingCats($id) {
 		if (isnum($id)) {
 			return dbcount("(cid)", DB_ESHOP_SHIPPINGCATS, "cid='".intval($id)."'");
 		}
@@ -301,6 +240,19 @@ class Shipping {
 			}
 			return array();
 		}
+	}
+
+	/* Returns shipping cats */
+	public static function get_shipCats() {
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGCATS);
+		if (dbrows($result)>0) {
+			$array = array();
+			while ($data = dbarray($result)) {
+				$array[$data['cid']] = $data['title'];
+			}
+			return (array) $array;
+		}
+		return array();
 	}
 
 	/**
