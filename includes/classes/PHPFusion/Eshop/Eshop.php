@@ -83,11 +83,12 @@ class Eshop {
 		}
 		print_p(self::get());
 		self::set_checkout_items(); // build checkout items into session
-		self::set_coupon_rate(); // build coupon into session
 		self::set_vat_rate(); // set VAT into session
 		self::set_shipping_rate();
 		self::set_customer();
 		self::set_customerDB();
+		self::set_coupon_rate();
+		//self::restart();
 	}
 
 	// we start here.
@@ -116,6 +117,25 @@ class Eshop {
 		// id only. why need itme to hash.
 		$token = self::get_token();
 		$_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name] = $value;
+	}
+
+	// set system update when things change.
+	static function set_update() {
+		self::set_session('datestamp', time());
+		$info = self::get_checkout_info();
+		$excluded_field = array(
+			'customer',
+		);
+		foreach($info as $field_name => $value) {
+			if (!in_array($field_name, $excluded_field)) {
+				self::unset_session($field_name);
+			}
+		}
+	}
+
+	protected static function restart() {
+		$token = self::get_token();
+		unset($_SESSION[fusion_get_settings('siteurl')][$token]['eshop']);
 	}
 
 	/* Returns the current Session Value */
@@ -155,11 +175,11 @@ class Eshop {
 
 	protected function set_checkout_items() {
 		if (!self::get('coupon_code')) { //if there is a session for coupon code, do not override!
-			// exception : change of item count or change of items or change of weight
-			self::set_session('total_gross', $this->total_gross);
-			self::set_session('item_count', $this->item_count);
+			self::set_update();
 			self::set_session('items', $this->item);
+			self::set_session('item_count', $this->item_count);
 			self::set_session('total_weight', $this->total_weight);
+			self::set_session('total_gross', $this->total_gross);
 		}
 
 	}
@@ -168,13 +188,13 @@ class Eshop {
 	protected function set_vat_rate() {
 		$vat_rate = fusion_get_settings('eshop_vat') ? fusion_get_settings('eshop_vat') : fusion_get_settings('eshop_vat_default');
 		$total_gross = self::get('total_gross');
-		$total_vat = $total_gross*($vat_rate/100)+1;
+		$total_vat = $total_gross*($vat_rate/100) + $total_gross;
 		self::set_session('total_vat', $total_vat);
 		self::set_session('net_gross', $total_vat + $total_gross);
 	}
 
 	/* Persistent now since construct function will fill in session values if blank */
-	public function get_checkout_info() {
+	public static function get_checkout_info() {
 		$info = array(
 			'items' => self::get('items'),
 			'total_gross' => self::get('total_gross'),
@@ -188,8 +208,7 @@ class Eshop {
 			'shipping_method' => self::get('shipping_method'),
 			'shipping_message' => self::get('shipping_message'),
 			'customer' => self::get('customer'),
-
-			'total_surcharge' => $this->total_surcharge,
+			'total_surcharge' => '',
 			'customer_form' => self::display_customer_form(),
 			'coupon_form' => self::display_coupon_form(),
 			'shipping_form' => self::display_shipping_form(),
@@ -197,11 +216,11 @@ class Eshop {
 		return $info;
 	}
 
-
-	public function set_coupon_rate() {
+	public function set_coupon_rate() { // will affect gross, and vat.
 		global $defender;
 		if (isset($_POST['apply_coupon'])) {
 			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
+
 			if ($coupon_code && Coupons::verify_coupon($coupon_code)) {
 				if (Coupons::verify_coupon_usage(\defender::set_sessionUserID(), $coupon_code)) {
 					$defender->stop();
@@ -222,8 +241,10 @@ class Eshop {
 					self::set_session('coupon_code', $coupon_code);
 					self::set_session('coupon_value', $coupon_value);
 					self::set_session('total_gross', $new_gross);
+					self::set_vat_rate();
 				}
 			} else {
+				print_p('THe Coupon Code is not valid');
 				$defender->stop();
 				$defender->addNotice('The coupon code is not valid.');
 			}
@@ -233,17 +254,27 @@ class Eshop {
 	/* Coupon form fields */
 	public function display_coupon_form() {
 		global $locale;
+		$html = '';
 		if (fusion_get_settings('eshop_coupons')) {
+
 			if (self::get('coupon_message')) {
-				$html = "You have applied a coupon on this order.";
-			} else {
-				$html = "<div class='m-t-20'>\n";
-				$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
-				$html .= form_text($locale['ESHPCHK171'], 'coupon_code', 'coupon_code', $this->coupon_info['coupon_code'], array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1));
-				$html .= form_button($locale['ESHPCHK172'], 'apply_coupon', 'apply_coupon', $locale['ESHPCHK172'], array('class'=>'btn-primary'));
-				$html .= closeform();
+				$html .= "<div id='coupon-text' class='text-center'>\n";
+				$html .= form_button('Use Another Coupon', 'use_coupon', 'use_coupon', '', array('class'=>'btn-sm btn-info pull-right m-b-10'));
+				$html .= "<span>You have applied a coupon on this order.</span>\n";
 				$html .= "</div>\n";
+				add_to_jquery("
+				$('#use_coupon').bind('click', function(e) {
+					$('#coupon_container').show();
+					$('coupon-text').hide();
+				});
+				");
 			}
+			$html .= "<div id='coupon_container' class='m-t-20' ".(self::get('coupon_message') ? 'style="display:none;"' : "")." >\n";
+			$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+			$html .= form_text($locale['ESHPCHK171'], 'coupon_code', 'coupon_code', '', array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1));
+			$html .= form_button($locale['ESHPCHK172'], 'apply_coupon', 'apply_coupon', $locale['ESHPCHK172'], array('class'=>'btn-primary'));
+			$html .= closeform();
+			$html .= "</div>\n";
 		} else {
 			$html = "<div class='alert alert-warning'>Coupon discounts are not available</div>\n";
 		}
@@ -339,7 +370,7 @@ class Eshop {
 		global $locale;
 		$html = "<div class='display-inline-block text-smaller m-b-10'><span class='required'>**</span> ".$locale['ESHPCHK126']."</div>\n";
 		$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
-		$total_weight = number_format($this->total_weight,1);
+		$total_weight = self::get('total_weight');
 		$result = dbquery("SELECT s.*, cat.title, (s.initialcost + (s.weightcost * '".intval($total_weight)."')) as delivery_cost
 		FROM ".DB_ESHOP_SHIPPINGITEMS." s
 		LEFT JOIN ".DB_ESHOP_SHIPPINGCATS." cat on (s.cid=cat.cid)
