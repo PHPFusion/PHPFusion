@@ -29,23 +29,16 @@ class Eshop {
 		);
 
 	// pricing calculation
-	private $session_id = 0;
-
 	private $total_gross = 0;
-	private $net_gross = 0;
 	private $max_discount = 0; // also self::get_cart_discountable_total(\defender::set_sessionUserID());
-
 	private $item = array();
 	private $item_count = 0;
-
-	private $total_surcharge = 0;
 	private $total_weight = 0;
-	private $total_vat = 0;
+
 
 	private $grand_total = 0;
 
 	private $max_rows = 0;
-
 	private $banner_path = '';
 
 	public function __construct() {
@@ -81,6 +74,7 @@ class Eshop {
 			}
 			$this->item = $item;
 		}
+		echo "This is your session:";
 		print_p(self::get());
 		self::set_session('max_discount', $this->max_discount);
 		self::set_checkout_items(); // build checkout items into session
