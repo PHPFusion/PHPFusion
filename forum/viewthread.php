@@ -61,7 +61,7 @@ $result = dbquery("SELECT t.*, f.*, f2.forum_name AS forum_cat_name
 	FROM ".DB_THREADS." t
 	LEFT JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
 	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." t.thread_id='".$_GET['thread_id']."' AND t.thread_hidden='0'");
+	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." t.thread_id='".intval($_GET['thread_id'])."' AND t.thread_hidden='0'");
 if (dbrows($result) > 0) {
 	$info += dbarray($result);
 	ksort($info);
