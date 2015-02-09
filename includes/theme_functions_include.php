@@ -646,7 +646,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		$v_title = str_replace("-", " ", $v);
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
 		$inner_id = $tab_title['id'][$arr];
-		$link_url = $link ? clean_request('section='.$inner_id, array('aid', 'a_page', 'thread_id', 'forum_id')) : '#';
+		$link_url = $link ? clean_request('section='.$inner_id, array('aid', 'a_page', 'thread_id')) : '#';
 		if ($link_mode) {
 			$html .= ($link_active_arrkey == $inner_id) ? "<li class='active'>\n" : "<li>\n";
 		} else {

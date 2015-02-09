@@ -214,6 +214,7 @@ $locale['setup_3311'] = "Penyerahan Berita";
 $locale['setup_3312'] = "Penyerahan Artikel";
 $locale['setup_3313'] = "Penyerahan Gambar";
 $locale['setup_3314'] = "Penyerahan Muat Turun";
+$locale['setup_3315'] = "Penyerahan";
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigasi";
 $locale['setup_3401'] = "User Online";

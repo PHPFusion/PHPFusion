@@ -736,7 +736,7 @@ ul.list li a:hover {
 	padding: 0 !important;
 }
 .nav-tabs > li > a {
-	color: rgb(51, 153, 255);
+	/* color: rgb(51, 153, 255); */
 	outline: none;
 	margin-bottom: 0 !important;
 	padding: 10px 15px !important;
