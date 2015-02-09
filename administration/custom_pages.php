@@ -52,10 +52,12 @@ if (isset($_POST['save'])) {
 	$page_title = stripinput($_POST['page_title']);
 	$page_access = isnum($_POST['page_access']) ? $_POST['page_access'] : "0";
 	$page_content = addslash($_POST['page_content']);
-	$page_keywords = stripinput($_POST['page_keywords']);
-	$page_language = stripinput($_POST['page_language']);
+	$page_keywords = form_sanitizer($$_POST['page_keywords'], '', 'page_keywords');
+	$page_language = form_sanitizer($$_POST['page_language'], '', 'page_language');
 	$comments = isset($_POST['page_comments']) ? "1" : "0";
 	$ratings = isset($_POST['page_ratings']) ? "1" : "0";
+	$link_cat = form_sanitizer($$_POST['link_cat'], 0, 'link_cat');
+
 	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 		if (isset($_POST['page_id']) && isnum($_POST['page_id'])) {
 			$result = dbquery("UPDATE ".DB_CUSTOM_PAGES." SET
@@ -74,13 +76,15 @@ if (isset($_POST['save'])) {
 					'".$page_title."', '".$page_access."', '".$page_content."', '".$page_keywords."', '".$comments."', '".$ratings."', '".$page_language."'
 				)");
 			$page_id = dblastid();
+
 			if (isset($_POST['add_link'])) {
+
 				$data = dbarray(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : "")." ORDER BY link_order DESC LIMIT 1"));
 				$link_order = $data['link_order']+1;
 				$result = dbquery("INSERT INTO ".DB_SITE_LINKS." (
-						link_name, link_url, link_visibility, link_position, link_window, link_order, link_language
+						link_name, link_cat, link_url, link_visibility, link_position, link_window, link_order, link_language
 					) VALUES (
-						'".$page_title."', 'viewpage.php?page_id=".$page_id."', '".$page_access."', '1', '0', '".$link_order."', '".$page_language."'
+						'".$page_title."', '".$link_cat."', 'viewpage.php?page_id=".$page_id."', '".$page_access."', '1', '0', '".$link_order."', '".$page_language."'
 					)");
 			}
 		}
@@ -207,6 +211,27 @@ if (isset($_POST['save'])) {
 	}
 
 	openside();
+
+	// add 1
+
+	$link_cat = ''; // to get link_cat without core edit we need a constant dbquery.
+	$link_id = '';
+	include LOCALE.LOCALESET."admin/sitelinks.php";
+	echo form_select_tree($locale['SL_0029'], "link_cat", "link_categorys", $link_cat,
+						  array(
+							  "parent_value" => $locale['parent'],
+							  'width'=>'100%',
+							  'query'=>(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : ''),
+							  'disable_opts' => $link_id,
+							  'hide_disabled' => 1
+						  ),
+						  DB_SITE_LINKS, "link_name", "link_id", "link_cat");
+	if (!isset($_POST['page_id']) || !isnum($_POST['page_id'])) { // we need to get rid of this if we want to constant pairing.
+		echo "<label><input type='checkbox' name='add_link' value='1'".$addlink." />  ".$locale['426']."</label><br />\n";
+	}
+	closeside();
+
+	openside();
 	if (multilang_table("CP")) {
 		echo form_select($locale['global_ML100'], 'page_language', 'page_language', $language_opts, $page_language);
 	} else {
@@ -215,9 +240,7 @@ if (isset($_POST['save'])) {
 	echo form_select($locale['423'], 'page_access', 'page_access', $access_opts, $page_access);
 	closeside();
 	openside();
-	if (!isset($_POST['page_id']) || !isnum($_POST['page_id'])) {
-		echo "<label><input type='checkbox' name='add_link' value='1'".$addlink." />  ".$locale['426']."</label><br />\n";
-	}
+
 	echo "<label><input type='checkbox' name='page_comments' value='1'".$comments." /> ".$locale['427']."</label>";
 	if ($settings['comments_enabled'] == "0") {
 		echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";

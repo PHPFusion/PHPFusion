@@ -25,9 +25,7 @@ include LOCALE.LOCALESET."admin/sitelinks.php";
  * Class SiteLinks_Admin
  */
 class SiteLinks_Admin {
-	/**
-	 * @var array
-	 */
+
 	private $data = array(
 		'link_id' => 0,
 		'link_name' => '',
@@ -40,21 +38,9 @@ class SiteLinks_Admin {
 		'link_position' => 1,
 		'link_window' => 0,
 	);
-	/**
-	 * @var array
-	 */
 	private $position_opts = array();
-	/**
-	 * @var array|string[]
-	 */
 	private $language_opts = array();
-	/**
-	 * @var array
-	 */
 	private $link_index = array();
-	/**
-	 * @var string
-	 */
 	private $form_action = '';
 
 	/**
@@ -104,7 +90,6 @@ class SiteLinks_Admin {
 		$_GET['link_id'] = isset($_GET['link_id']) && isnum($_GET['link_id']) ? $_GET['link_id'] : 0;
 		$_GET['link_cat'] = isset($_GET['link_cat']) && isnum($_GET['link_cat']) ? $_GET['link_cat'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
-
 		$this->language_opts = fusion_get_enabled_languages();
 		$this->position_opts = array(
 			'1' => $locale['SL_0025'],
@@ -138,7 +123,7 @@ class SiteLinks_Admin {
 		});
 		");
 		self::link_quicksave();
-		$this->data = self::set_sitelinkdb();
+		$this->data = self::set_sitelinkdb($this->data);
 		switch($_GET['action']) {
 			case 'edit':
 				$this->data = self::load_sitelinks($_GET['link_id']);
@@ -160,7 +145,7 @@ class SiteLinks_Admin {
 	 * @param $link_id
 	 * @return bool|mixed|null|PDOStatement|resource
 	 */
-	static function delete_sitelinks($link_id) {
+	public static function delete_sitelinks($link_id) {
 		$result = null;
 		if (isnum($link_id) && self::verify_edit($link_id)) {
 			$data = dbarray(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='".$_GET['link_id']."'"));
@@ -176,7 +161,7 @@ class SiteLinks_Admin {
 	 * @param $link_id
 	 * @return array
 	 */
-	static function load_sitelinks($link_id) {
+	public static function load_sitelinks($link_id) {
 		$array = array();
 		if (isnum($link_id) && self::verify_edit($link_id)) {
 			$result = dbquery("SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='".$_GET['link_id']."'");
@@ -190,9 +175,8 @@ class SiteLinks_Admin {
 	/**
 	 * MYSQL Save or Update Site Links
 	 */
-	protected function set_sitelinkdb() {
+	public static function set_sitelinkdb($data) {
 		global $aidlink, $defender;
-		$data = $this->data;
 		if (isset($_POST['savelink'])) {
 			$data['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '', 'link_id') : 0;
 			$data['link_name'] = isset($_POST['link_name']) ? form_sanitizer($_POST['link_name'], '', 'link_name') : '';
@@ -206,9 +190,9 @@ class SiteLinks_Admin {
 			$data['link_order'] = isset($_POST['link_order']) ? form_sanitizer($_POST['link_order'], '', 'link_order') : '0';
 			if (!$data['link_order']) $data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."'"), 0)+1;
 			if (self::verify_edit($data['link_id'])) {
-				$old_data = dbarray(dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_id='".$this->data['link_id']."'"));
+				$old_data = dbarray(dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_id='".$data['link_id']."'"));
 				// refresh ordering
-				if ($old_data['link_cat'] !== $this->data['link_cat']) { // not the same category
+				if ($old_data['link_cat'] !== $data['link_cat']) { // not the same category
 					// refresh ex-category ordering
 					dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$old_data['link_cat']."' AND link_order > '".$old_data['link_order']."'"); // -1 to all previous category.
 				} else { // same category
