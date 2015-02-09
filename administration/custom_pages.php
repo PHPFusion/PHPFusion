@@ -269,7 +269,7 @@ class CustomPage {
 			"parent_value" => $locale['parent'],
 			'width' => '100%',
 			'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : ''),
-			//'disable_opts' => $data['page_link_cat'],
+			'disable_opts' => $data['link_id'],
 			'hide_disabled' => 1), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
 		if (!$data['page_id']) { // we need to get rid of this if we want to constant pairing.
 			echo form_checkbox($locale['426'], 'add_link', 'add_link', 1);
