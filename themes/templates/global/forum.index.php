@@ -422,7 +422,7 @@ if (!function_exists('render_thread_item')) {
 			echo "</div>\n";
 		echo "</div>\n"; // end grid
 
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
+		echo "<div class='hidden-xs col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
 		echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
 		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['thread_views'])."</h4>\n";
 		echo "<span>".$locale['forum_0370']."</span>";
@@ -440,7 +440,7 @@ if (!function_exists('render_thread_item')) {
 		}
 		echo "</div>\n"; // end grid
 
-		echo "<div class='col-xs-12 hidden-sm col-md-3 p-l-0'>\n";
+		echo "<div class='hidden-xs hidden-sm col-md-3 p-l-0'>\n";
 		// this is the last replied
 		$lastuser = array(
 			'user_id' => $data['thread_lastuser'],
