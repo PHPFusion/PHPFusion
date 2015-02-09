@@ -243,7 +243,7 @@ class CustomPage {
 			'multiple' => 1
             )
         );
-		echo form_textarea($locale['424'], 'page_content', 'page_content', $data['page_content'], (!fusion_get_settings('tinymce_enabled') ? array('autosize'=>1) : array()));
+		echo form_textarea($locale['424'], 'page_content', 'page_content', $data['page_content'], (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && fusion_get_settings('tinymce_enabled') ? array() : array('autosize'=>1)));
 		if (!isset($_COOKIE['custom_pages_tinymce']) || !$_COOKIE['custom_pages_tinymce'] || !fusion_get_settings('tinymce_enabled')) {
 			openside();
 			echo "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['431']."' onclick=\"insertText('page_content', '&lt;!--PAGEBREAK--&gt;');\">".$locale['431']."</button>\n";
