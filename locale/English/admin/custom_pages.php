@@ -21,7 +21,7 @@ $locale['428'] = "Enable Ratings";
 $locale['429'] = "Preview Page";
 $locale['430'] = "Save Page";
 $locale['431'] = "Pagebreak";
-$locale['432'] = "Keywords (separate each keyword with a ,)";
+$locale['432'] = "Keywords (you need to hit enter for each keyword)";
 // Popup errors / warning messages
 $locale['450'] = "Delete this custom page?";
 $locale['451'] = "Please specify a page title";
