@@ -33,6 +33,7 @@ if ($defender->verify_tokens('productfrm', 0)) {
 		$response['title'] = 'Product Updated';
 		$response['message'] = 'Your cart have been successfully updated.';
 		echo json_encode($response);
+		\PHPFusion\Eshop\Eshop::refresh_session();
 	} else {
 		$defender->stop();
 		echo json_encode(array('error_id'=>1, 'title'=>'Product Not Updated', 'message'=>'Product Not Found (Response-1)'));

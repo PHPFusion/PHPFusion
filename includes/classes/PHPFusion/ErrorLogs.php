@@ -27,13 +27,16 @@ class ErrorLogs {
 
 		if (isnum($this->error_status) && $this->posted_error_id) {
 			dbquery("UPDATE ".DB_ERRORS." SET error_status='".$this->error_status."' WHERE error_id='".$this->posted_error_id."'");
+			redirect(FUSION_REQUEST);
 		}
 		if (isset($_POST['delete_entries']) && isnum($this->delete_status)) {
 			dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status='".$_POST['delete_status']."'");
+			redirect(FUSION_REQUEST);
 		}
 
 		if (isset($_POST['delete_all_logs'])) {
 			dbquery("DELETE FROM ".DB_ERRORS);
+			redirect(FUSION_REQUEST);
 		}
 
 		$result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT ".$this->rowstart.",20");

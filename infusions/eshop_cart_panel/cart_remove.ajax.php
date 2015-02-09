@@ -24,6 +24,7 @@ if ($check) {
 		$data['subtotal'] = intval(0);
 	}
 	echo json_encode($data);
+	\PHPFusion\Eshop\Eshop::refresh_session();
 } else {
 	echo json_encode(array('response'=>2, 'data'=>$data));
 }

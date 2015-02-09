@@ -511,8 +511,73 @@ if (!function_exists('render_eshop_product')) {
 		}
 	}
 	echo closetab();
-
 	echo "<a class='m-t-20 btn ".fusion_get_settings('eshop_return_color')."' href='javascript:;' onclick='javascript:history.back(-1); return false;'><i class='fa fa-reply m-t-5 m-r-5'></i> ".$locale['ESHP030']."</a>";
-
+	}
 }
+
+if (!function_exists('render_checkout')) {
+	function render_checkout(array $info) {
+		global $locale;
+		echo "<h4>Checkout - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
+		echo $info['item_form'];
+		if ($info['customer_message']) echo "<div class='alert alert-warning'><span class='strong'>Customer Message:</span><div class='m-t-10'>".$info['customer_message']."</div></div>\n";
+		echo "<div class='text-smaller m-b-20'><span class='required'>*</span>".$locale['ESHPCHK118']."</div>\n";
+		// list accordion item
+		echo opencollapse('cart-list');
+		// customer info
+		echo opencollapsebody('Your Information', 'cif', 'cart-list', $info['customer'] ? 0 : 1);
+		echo "<div class='p-15'>\n";
+		echo $info['customer_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		// Coupon code
+		echo opencollapsebody('Use Coupon Codes', 'cpn', 'cart-list', $info['coupon_code'] ? 0 : 1);
+		echo "<div class='p-15'>\n";
+		echo $info['coupon_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		// Estimate shipping rates
+		echo opencollapsebody('Select Shipping Options', 'ship', 'cart-list', $info['shipping_method'] ? 0 : 1);
+		echo "<div class='p-15'>\n";
+		echo $info['shipping_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		// Estimate Payment Surcharge
+		echo opencollapsebody('Payment Options', 'payment', 'cart-list', $info['payment_method'] ? 0 : 1);
+		echo "<div class='p-15'>\n";
+		echo $info['payment_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		// customer message
+		echo opencollapsebody('Your Message', 'message', 'cart-list', 0);
+		echo "<div class='p-15'>\n";
+		echo $info['message_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		echo closecollapse();
+		if ($info['coupon_message']) echo "<div class='alert alert-info'>".$info['coupon_message']."</div>\n";
+		if ($info['shipping_message']) echo "<div class='alert alert-info'>".$info['shipping_message']."</div>\n";
+		if ($info['payment_message']) echo "<div class='alert alert-info'>".$info['payment_message']."</div>\n";
+		echo "<div class='pull-left'>\n";
+		echo $info['agreement'];
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-6 p-r-0 pull-right'>\n";
+		echo "<div class='panel panel-default'>\n";
+		echo "<div class='panel-heading'><span class='strong'>".$locale['ESHPCHK127']."</span></div>\n";
+		echo "<div class='panel-body'>\n";
+		echo "<div class='display-block m-r-10'>".$info['subtotal']."</div>\n";
+		echo "<div class='display-block m-r-10'>".$info['vat']."</div>\n";
+		echo "<div class='display-block m-r-10'>".$info['nett']."</div>\n";
+		echo "<hr/>\n";
+		echo "<div class='display-block m-r-10'><span class='strong'>".$info['shipping']."</div>\n";
+		echo "<div class='display-block m-r-10'>".$info['payment']."</div>\n";
+		echo "</div>\n<div class='panel-footer'>\n";
+		echo "<div class='display-block m-r-10'>".$info['grandtotal']."</div>\n";
+		echo "</div></div>\n";
+		echo "</div>\n"; // end pull-right
+		echo "<div class='display-block  p-l-0 p-r-0 m-t-20 col-xs-12'>\n";
+		echo "<a class='btn btn-primary pull-right' href='".BASEDIR."eshop.php?order'>".$locale['ESHPCHK135']."</a>\n";
+		echo "<a class='btn btn-default pull-left' href='".BASEDIR."eshop.php'>Continue Shopping</a>\n";
+		echo "</div>\n";
+	}
 }
