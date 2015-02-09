@@ -71,6 +71,7 @@ $core_tables = array(
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"custom_pages" => " (
 		page_id MEDIUMINT(8) NOT NULL AUTO_INCREMENT,
+		page_link_cat MEDIUMINT(9) UNSIGEND NOT NULL DEFAULT '0',
 		page_title VARCHAR(200) NOT NULL DEFAULT '',
 		page_access TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
 		page_content TEXT NOT NULL,
