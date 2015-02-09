@@ -153,9 +153,6 @@ class SiteLinks_Admin {
 				$this->form_action = FUSION_SELF.$aidlink."&amp;section=nform";
 				break;
 		}
-
-
-
 	}
 
 	/**

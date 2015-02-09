@@ -175,53 +175,46 @@ if (isset($_POST['save'])) {
 		$access_opts[$user_group['0']] = $user_group['1'];
 	}
 	echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
-	echo "<table cellpadding='0' cellspacing='0' class='center table table-responsive'>\n<tr>\n";
-	if ($settings['tinymce_enabled']) {
-		echo "<td width='100' class='tbl'>".$locale['460']."</td>\n";
-		echo "<td width='80%' class='tbl'><input type='button' id='tinymce_switch' name='tinymce_switch' value='".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? $locale['461'] : $locale['462'])."' class='button' style='width:75px;' onclick=\"SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");\"/>\n</td>\n";
-		echo "</tr>\n<tr>\n";
-	}
-	echo "<td class='tbl'><label for='page_title'>".$locale['422']."</label> <span class='required'>*</span></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('', 'page_title', 'page_title', $page_title, array('width' => '300px', 'class' => 'pull-left m-r-10'));
-	echo "</td></tr><tr><td class='tbl'><label for='page_access' class='pull-left m-t-5'>".$locale['423']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_select('', 'page_access', 'page_access', $access_opts, $page_access, array('placeholder' => $locale['choose'], 'width' => '150px', 'inline' => 1, 'class' => 'pull-left'));
-	echo "</td></tr>\n";
-	if (multilang_table("CP")) {
-		echo "<tr>\n";
-		echo "<td class='tbl'><label for='page_language'>".$locale['global_ML100']."</label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_select('', 'page_language', 'page_language', $language_opts, $page_language, array('placeholder' => $locale['choose']));
-		echo "</td>\n</tr>\n";
-	} else {
-		echo form_hidden('', 'page_language', 'page_language', $page_language);
-	}
-	echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='page_content'>".$locale['424']."</label></td>\n";
-	echo "<td width='80%' class='tbl'>\n";
-	echo form_textarea('', 'page_content', 'page_content', $page_content);
-	echo "</td>\n</tr>\n<tr>\n";
-	echo "<td class='tbl'><label for='page_keywords'>".$locale['432']."</label></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_select('', 'page_keywords', 'page_keywords', array(), $page_keywords, array('max_length' => 320, 'width'=>'100%', 'tags'=>1, 'multiple' => 1));
-	echo "</td>\n</tr>\n<tr>\n";
+	// port to dynamics now.
+	echo "<div class='row m-t-20' >\n";
+	echo "<div class='col-xs-12 col-sm-8'>\n";
+	echo form_text($locale['422'], 'page_title', 'page_title', $page_title, array('required'=>1));
+	echo form_select($locale['432'], 'page_keywords', 'page_keywords', array(), $page_keywords, array('max_length' => 320, 'width'=>'100%', 'tags'=>1, 'multiple' => 1));
+	echo form_textarea($locale['424'], 'page_content', 'page_content', $page_content, array('autosize'=>1));
 	if (!isset($_COOKIE['custom_pages_tinymce']) || !$_COOKIE['custom_pages_tinymce'] || !$settings['tinymce_enabled']) {
-		echo "<td class='tbl'></td><td class='tbl'>\n";
+		openside();
 		echo "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['431']."' onclick=\"insertText('page_content', '&lt;!--PAGEBREAK--&gt;');\">".$locale['431']."</button>\n";
 		echo "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' onclick=\"addText('page_content', '&lt;?php\\n', '\\n?&gt;');\">&lt;?php?&gt;</button>\n";
 		echo "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;p&gt;' onclick=\"addText('page_content', '&lt;p&gt;', '&lt;/p&gt;');\">&lt;p&gt;</button>\n";
 		echo "<button type='button' class='btn btn-default btn-sm button m-b-10' value='&lt;br /&gt;' onclick=\"insertText('page_content', '&lt;br /&gt;');\">&lt;br /&gt;</button>\n";
 		echo display_html("inputform", "page_content", TRUE)."</td>\n";
-		echo "</tr>\n<tr>\n";
+		closeside();
 	}
-	if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-		echo "<td class='tbl'><label for='admin_password'>".$locale['425']." <span class='required'>*</span></label></td>\n";
-		echo "<td class='tbl'>\n";
-		echo form_text('', 'admin_password', 'admin_password', isset($_POST['admin_password']) ? $_POST['admin_password'] : '', array('password' => 1, 'width' => '250px'));
-		echo "</td>\n";
-		echo "</tr>\n<tr>\n";
+
+	echo "</div>\n";
+	echo "<div class='col-xs-12 col-sm-4'>\n";
+	if (fusion_get_settings('tinymce_enabled')) {
+		openside('');
+		echo "<div class='strong m-b-10'>".$locale['460']."</div>\n";
+		$val = !isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? $locale['461'] : $locale['462'];
+		echo form_button($val, 'tinymce_switch', 'tinymce_switch', $val, array('class'=>'btn-default', 'type'=>'button'));
+		add_to_jquery("
+		$('#tinymce_switch').bind('click', function() {
+			SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");
+		});
+		");
+		closeside();
 	}
-	echo "<td class='tbl'></td><td class='tbl'>\n";
+
+	openside();
+	if (multilang_table("CP")) {
+		echo form_select($locale['global_ML100'], 'page_language', 'page_language', $language_opts, $page_language);
+	} else {
+		echo form_hidden('', 'page_language', 'page_language', $page_language);
+	}
+	echo form_select($locale['423'], 'page_access', 'page_access', $access_opts, $page_access);
+	closeside();
+	openside();
 	if (!isset($_POST['page_id']) || !isnum($_POST['page_id'])) {
 		echo "<label><input type='checkbox' name='add_link' value='1'".$addlink." />  ".$locale['426']."</label><br />\n";
 	}
@@ -229,12 +222,13 @@ if (isset($_POST['save'])) {
 	if ($settings['comments_enabled'] == "0") {
 		echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
 	}
-	echo "<br />\n";
+	echo "<br/>\n";
 	echo "<label><input type='checkbox' name='page_ratings' value='1'".$ratings." /> ".$locale['428']."</label>\n";
 	if ($settings['ratings_enabled'] == "0") {
 		echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
 	}
-	echo "</td>\n</tr>\n";
+	closeside();
+
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 		$sys = "";
 		if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
@@ -244,19 +238,20 @@ if (isset($_POST['save'])) {
 		} else {
 			$sys = $locale['456'];
 		}
-		echo "<tr>\n<td colspan='2' class='tbl1' style='font-weight:bold;text-align:left; color:black !important; background-color:#FFDBDB;'>";
-		echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['454'], $sys);
-		echo "</td>\n</tr>";
+		echo "<div style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['454'], $sys)."</div>\n";
 	}
-	echo "<tr>\n";
-	echo "<td align='center' colspan='2' class='tbl'><br />\n";
+
+
+	echo "</div>\n</div>\n";
+
 	if (isset($_POST['page_id']) && isnum($_POST['page_id'])) {
 		echo form_hidden('', 'page_id', 'page_id', $_POST['page_id']);
 	}
 	echo form_button($locale['429'], 'preview', 'preview', $locale['429'], array('class' => 'btn-primary m-r-10'));
 	echo form_button($locale['430'], 'save', 'save', $locale['430'], array('class' => 'btn-primary m-r-10'));
-	echo "</tr>\n</table>\n</form>\n";
+	echo closeform();
 	closetable();
+
 	add_to_jquery("
     $('#delete').bind('click', function() { confirm('".$locale['450']."'); });
     $('#save, #preview').bind('click', function() {
