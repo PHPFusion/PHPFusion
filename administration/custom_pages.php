@@ -223,7 +223,9 @@ class CustomPage {
 	public static function customPage_form($data) {
 		global $aidlink, $locale;
 		if (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && fusion_get_settings('tinymce_enabled')) {
-			add_to_jquery("advanced();");
+			echo "<script>\n";
+			echo "advanced();";
+			echo "</script>\n";
 		} else {
 			require_once INCLUDES."html_buttons_include.php";
 		}
@@ -258,7 +260,7 @@ class CustomPage {
 			echo form_button($val, 'tinymce_switch', 'tinymce_switch', $val, array('class' => 'btn-default', 'type' => 'button'));
 			add_to_jquery("
 			$('#tinymce_switch').bind('click', function() {
-			SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");
+				SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");
 			});
 			");
 			closeside();
@@ -321,7 +323,6 @@ class CustomPage {
 			$('#delete').bind('click', function() { confirm('".$locale['450']."'); });
 			$('#save, #preview').bind('click', function() {
 			var page_title = $('#page_title').val();
-			var admin_password = $('#admin_password').val();
 			if (page_title =='') { alert('".$locale['451']."'); return false; }
 			});
 		");
