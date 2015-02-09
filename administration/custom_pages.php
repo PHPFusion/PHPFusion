@@ -240,8 +240,10 @@ class CustomPage {
 		echo form_select($locale['432'], 'page_keywords', 'page_keywords', array(), $data['page_keywords'], array('max_length' => 320,
 			'width' => '100%',
 			'tags' => 1,
-			'multiple' => 1));
-		echo form_textarea($locale['424'], 'page_content', 'page_content', $data['page_content'], array('autosize' => 1));
+			'multiple' => 1
+            )
+        );
+		echo form_textarea($locale['424'], 'page_content', 'page_content', $data['page_content'], (!fusion_get_settings('tinymce_enabled') ? array('autosize'=>1) : array()));
 		if (!isset($_COOKIE['custom_pages_tinymce']) || !$_COOKIE['custom_pages_tinymce'] || !fusion_get_settings('tinymce_enabled')) {
 			openside();
 			echo "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['431']."' onclick=\"insertText('page_content', '&lt;!--PAGEBREAK--&gt;');\">".$locale['431']."</button>\n";
@@ -251,6 +253,7 @@ class CustomPage {
 			echo display_html("inputform", "page_content", TRUE);
 			closeside();
 		}
+
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		if (fusion_get_settings('tinymce_enabled')) {
@@ -334,7 +337,7 @@ class CustomPage {
 			expire=(now.toGMTString());\n"."document.cookie=\"custom_pages_tinymce=\"+escape(val)+\";expires=\"+expire;
 			location.href='".FUSION_SELF.$aidlink."';
 			}
-		");
+		    ");
 		}
 	}
 }
