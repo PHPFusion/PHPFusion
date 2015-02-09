@@ -68,6 +68,7 @@ $locale['467'] = 'Tiada Topik Dipilih';
 $locale['468'] = 'Bermula perbualan baru dengan %s';
 $locale['469'] = 'Balas kepada %s';
 $locale['470'] = 'Penapis (Belum berfungsi)';
+$locale['471'] = "There are no messages"; // translate this line
 // Error Messages
 $locale['480'] = "Kesalahan";
 $locale['481'] = "ID Pesan Salah";

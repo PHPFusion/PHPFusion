@@ -69,6 +69,9 @@ $locale['467'] = 'Nepasirinktas nei vienas pokalbis';
 $locale['468'] = 'Pradėti naują pokalbį su %s';
 $locale['469'] = 'Atsakyti %s';
 $locale['470'] = 'Paieškos filtras (dar neveikia)';
+
+$locale['471'] = "There are no messages"; // translate this line
+
 // Error Messages
 $locale['480'] = "Klaida";
 $locale['481'] = "Neteisingas žinutės ID";
