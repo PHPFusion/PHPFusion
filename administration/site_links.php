@@ -137,7 +137,8 @@ class SiteLinks_Admin {
 			}
 		});
 		");
-
+		self::link_quicksave();
+		$this->data = self::set_sitelinkdb();
 		switch($_GET['action']) {
 			case 'edit':
 				$this->data = self::load_sitelinks($_GET['link_id']);
@@ -153,8 +154,8 @@ class SiteLinks_Admin {
 				break;
 		}
 
-		self::link_quicksave();
-		self::set_sitelinkdb();
+
+
 	}
 
 	/**
@@ -192,8 +193,9 @@ class SiteLinks_Admin {
 	/**
 	 * MYSQL Save or Update Site Links
 	 */
-	private function set_sitelinkdb() {
+	protected function set_sitelinkdb() {
 		global $aidlink, $defender;
+		$data = $this->data;
 		if (isset($_POST['savelink'])) {
 			$data['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '', 'link_id') : 0;
 			$data['link_name'] = isset($_POST['link_name']) ? form_sanitizer($_POST['link_name'], '', 'link_name') : '';
@@ -205,7 +207,7 @@ class SiteLinks_Admin {
 			$data['link_position'] = isset($_POST['link_position']) ? form_sanitizer($_POST['link_position'], '', 'link_position') : '0';
 			$data['link_window'] = isset($_POST['link_window']) ? 1 : 0;
 			$data['link_order'] = isset($_POST['link_order']) ? form_sanitizer($_POST['link_order'], '', 'link_order') : '0';
-			if (!$this->data['link_order']) $this->data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$this->data['link_cat']."'"), 0)+1;
+			if (!$data['link_order']) $data['link_order'] = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."'"), 0)+1;
 			if (self::verify_edit($data['link_id'])) {
 				$old_data = dbarray(dbquery("SELECT link_id, link_order FROM ".DB_SITE_LINKS." WHERE link_id='".$this->data['link_id']."'"));
 				// refresh ordering
@@ -214,12 +216,12 @@ class SiteLinks_Admin {
 					dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$old_data['link_cat']."' AND link_order > '".$old_data['link_order']."'"); // -1 to all previous category.
 				} else { // same category
 					// refresh current category
-					if ($this->data['link_order'] > $old_data['link_order']) {
+					if ($data['link_order'] > $old_data['link_order']) {
 						//echo 'new order is more than old order';
-						dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat = '".$this->data['link_cat']."' AND (link_order > '".$old_data['link_order']."' AND link_order <= '".$this->data['link_order']."')");
-					} elseif ($this->data['link_order'] < $old_data['link_order']) {
+						dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat = '".$data['link_cat']."' AND (link_order > '".$old_data['link_order']."' AND link_order <= '".$data['link_order']."')");
+					} elseif ($data['link_order'] < $old_data['link_order']) {
 						//echo 'new order is less than old order';
-						dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat = '".$this->data['link_cat']."' AND (link_order < '".$old_data['link_order']."' AND link_order >= '".$this->data['link_order']."')");
+						dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat = '".$data['link_cat']."' AND (link_order < '".$old_data['link_order']."' AND link_order >= '".$data['link_order']."')");
 					}
 				}
 				dbquery_insert(DB_SITE_LINKS, $data, 'update');
@@ -230,6 +232,7 @@ class SiteLinks_Admin {
 				dbquery_insert(DB_SITE_LINKS, $data, 'save');
 				if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 			}
+			return $data;
 		}
 	}
 
