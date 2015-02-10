@@ -51,6 +51,7 @@ if (iMEMBER) {
 		WHERE user_id='".$userdata['user_id']."'");
 } 
 
+add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.min.js'></script>");
 $bootstrap_theme_css_src = '';
 // Load bootstrap
 if ($settings['bootstrap']) {
@@ -66,9 +67,19 @@ if ($settings['bootstrap']) {
 	add_to_head("<link rel='stylesheet' href='".$theme_css."' type='text/css' />");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
-	add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.min.js'></script>");
 	add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.min.js'></script>");
 	add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.css' type='text/css' />");
+} else {
+	add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/sm-core-css.css' type='text/css' />");
+	add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/sm-simple.css' type='text/css' />");
+	add_to_footer("<script type='text/javascript'>
+		$(function() {
+			$('#main-menu').smartmenus({
+				subMenusSubOffsetX: 1,
+				subMenusSubOffsetY: -8
+			});
+		});
+		</script>");
 }
 require_once THEMES."templates/panels.php";
 ob_start();

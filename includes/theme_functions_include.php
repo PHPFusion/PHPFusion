@@ -211,9 +211,9 @@ function showbanners($display = "") {
 
 
 function showsublinks($sep = "&middot;", $class = "", array $options = array(), $id = 0) {
-	global $userdata;
+	global $userdata, $settings;
 	static $data = array();
-	$settings = fusion_get_settings();
+
 	$acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 	$res = &$res;
 	if (empty($data)) {
@@ -222,9 +222,9 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 	if ($id == 0) {
 		$res = "<div class='navbar navbar-default' role='navigation'>\n";
 		$res .= "<div class='navbar-collapse collapse'>\n";
-		$res .= "<ul class='nav navbar-nav'>\n";
+		$res .= "<ul ".($settings['bootstrap'] ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
 	} else {
-		$res .= "<ul class='dropdown-menu'>\n";
+		$res .= "<ul".($settings['bootstrap'] ? " class='dropdown-menu'" : "").">\n";
 	}
 
 	foreach($data[$id] as $link_id => $link_data) {
