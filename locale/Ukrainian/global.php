@@ -38,14 +38,14 @@ $locale['street1'] = "Адреса 1";
 $locale['street2'] = "Адреса 2";
 $locale['city'] = "Місто";
 $locale['postcode'] = "Поштовий індекс";
-$locale['sel_country'] = "Вибір країни";
-$locale['sel_state'] = "Вибір регіону";
+$locale['sel_country'] = "Країна";
+$locale['sel_state'] = "Регіон";
 
 // Standard User Levels
 $locale['user0'] = "Загальний";
 $locale['user1'] = "Користувач";
 $locale['user2'] = "Адміністратор";
-$locale['user3'] = "Супер адміністратор";
+$locale['user3'] = "Головний адміністратор";
 $locale['user_na'] = "не визначено";
 $locale['user_anonymous'] = "Анонім";
 
@@ -114,11 +114,11 @@ $locale['global_052'] = "Переміщено";
 $locale['global_053'] = "Ви не створювали тем на форумі";
 $locale['global_054'] = "Ви не залишали повідомлень на форумі";
 $locale['global_055'] = "З часу Вашого останнього візиту є %u нове(их) повідомлення(нь) в %u темі(ах).";
-$locale['global_056'] = "Мої підписки на теми";
+$locale['global_056'] = "Мої теми для стеження";
 $locale['global_057'] = "Параметри";
 $locale['global_058'] = "Скасувати";
-$locale['global_059'] = "Ви не підписані на жодну тему";
-$locale['global_060'] = "Скасувати підписку на цю тему?";
+$locale['global_059'] = "Ви не стежите за жодною з тем";
+$locale['global_060'] = "Припинити стеження за цією темою?";
 
 // Blog, News & Articles
 $locale['global_070'] = "Опубліковано: ";
@@ -163,11 +163,11 @@ $locale['global_094'] = " з ";
 
 // Guest User Menu
 $locale['global_100'] = "Авторизація";
-$locale['global_101'] = "ID авторизації";
+$locale['global_101'] = "Ім&lsquo;я";
 $locale['global_102'] = "Пароль";
-$locale['global_103'] = "входити автоматично";
+$locale['global_103'] = "зберігати";
 $locale['global_104'] = "Вхід";
-$locale['global_105'] = "Ще не зареєстровані? <a href='".BASEDIR."register.php' class='side'>Зареєструватися</a>";
+$locale['global_105'] = "Ще не зареєстровані? <br /><a href='".BASEDIR."register.php' class='side'>Зареєструватися</a>";
 $locale['global_106'] = "Не пам`ятаєте пароль? <br /><a href='".BASEDIR."lostpassword.php' class='side'>Відновити</a>";
 $locale['global_107'] = "Реєстрація на сайті";
 $locale['global_108'] = "Відновлення паролю";
@@ -187,14 +187,14 @@ $locale['global_129'] = "ухвалень";
 // User Menu
 $locale['global_123'] = "Центр керування";
 $locale['UM060'] = "Авторизація";
-$locale['UM061'] = "Ім'я";
-$locale['UM061a'] = "Адреса E-mail";
-$locale['UM061b'] = "Ім'я або адреса E-mail";
+$locale['UM061'] = "Ім&lsquo;я";
+$locale['UM061a'] = "Електронна адреса";
+$locale['UM061b'] = "Ім&lsquo;я або електронна адреса";
 $locale['UM062'] = "Пароль";
-$locale['UM063'] = "Запам'ятати мене";
+$locale['UM063'] = "Запам&lsquo;ятати мене";
 $locale['UM064'] = "Авторизація";
 $locale['UM065'] = "Ще не зареєстровані?<br /><a href='".BASEDIR."register.php' class='side'>Зареєструватися</a>.";
-$locale['UM066'] = "Не пам'ятаєте пароль?<br /><a href='".BASEDIR."lostpassword.php' class='side'>Відновити</a>.";
+$locale['UM066'] = "Не пам&lsquo;ятаєте пароль?<br /><a href='".BASEDIR."lostpassword.php' class='side'>Відновити</a>.";
 $locale['UM080'] = "Профіль";
 $locale['UM081'] = "Приватні повідомлення";
 $locale['UM082'] = "Користувачі";
@@ -280,8 +280,8 @@ $locale['global_210'] = "Перейти до змісту";
 
 // No themes found
 $locale['global_300'] = "Тему сайту не визначено";
-$locale['global_301'] = "Вибачте, неможливо відобразити сторінку. Через певні обставини, неможливо знайти жодну тему сайту. Якщо Ви адміністратор сайту, використайте менеджер FTP для завантаження теми оформлення, яка сумісна з <em>PHP-Fusion v7</em> в каталог <em>themes/</em>. Після завантаження теми, перевірте у розділі <em>Налаштування - Головне</em> Центру керування, що завантажена тема в каталог <em>themes/</em> активована. Майте на увазі, що завантажена тема повинна мати ту ж назву (враховуючи регістр символів; важливо для Unix-серверів), що й вибрана тема в розділі <em>Налаштування - Головне</em> Центру керування.<br /><br />Якщо Ви користувач, будь ласка, зв'яжіться з адміністратором сайту за адресою Е-mail: ".hide_email(fusion_get_settings('siteemail'))." та повідомте про цю проблему.";
-$locale['global_302'] = "Вибрана тема в розділі <em>Налаштування - Головне</em>, відсутня або пошкоджена!";
+$locale['global_301'] = "Вибачте, неможливо відобразити сторінку. Через певні обставини, неможливо знайти жодну тему сайту. Якщо Ви адміністратор сайту, використайте менеджер FTP для завантаження теми оформлення, яка сумісна з <em>PHP-Fusion v7</em> в каталог <em>themes/</em>. Після завантаження теми, перевірте у розділі <em>Налаштування - Головне</em> Центру керування, що завантажена тема в каталог <em>themes/</em> активована. Майте на увазі, що завантажена тема повинна мати ту ж назву (враховуючи регістр символів; важливо для Unix-серверів), що й вибрана тема в розділі <em>Налаштування - Головне</em> Центру керування.<br /><br />Якщо Ви користувач, будь ласка, зв`яжіться з адміністратором сайту за електронною адресою: ".hide_email($settings['siteemail'])." та повідомте про цю проблему.";
+$locale['global_302'] = "Вибрану тема в розділі <em>Налаштування - Головне</em>, не вдається знайти або її пошкоджено!";
 
 // JavaScript Not Enabled
 $locale['global_303'] = "Ой, сталась помилка! А де ж <strong>JavaScript</strong>?<br />Схоже, що Ваш веб браузер не підтримує технологію JavaScript, або її наразі вимкнено. Будь ласка, <strong>увімкніть JavaScript</strong> для коректного відображення цього вебсайту,<br /> або <strong>використайте для перегляду інший веб браузер</strong>, який має підтримку JavaScript; <a href='http://firefox.com' rel='nofollow' title='Mozilla Firefox'>Firefox</a>, <a href='http://apple.com/safari/' rel='nofollow' title='Safari'>Safari</a>, <a href='http://opera.com' rel='nofollow' title='Opera Web Browser'>Opera</a>, <a href='http://www.google.com/chrome' rel='nofollow' title='Google Chrome'>Chrome</a> або версію <a href='http://www.microsoft.com/windows/internet-explorer/' rel='nofollow' title='Internet Explorer'>Internet Explorer</a> не нижче 7.";
@@ -295,7 +295,7 @@ $locale['global_402'] = "деактивовано";
 $locale['global_403'] = "обліковий запис знищено";
 $locale['global_404'] = "обліковий запис анонімний";
 $locale['global_405'] = "анонімний користувач";
-$locale['global_406'] = "Цей обліковий запис заблоковано (бан) з наступних причин:";
+$locale['global_406'] = "Цей обліковий запис заблоковано (бан) за такою підставою:";
 $locale['global_407'] = "Цей обліковий запис призупинено до ";
 $locale['global_408'] = " з наступних причин:";
 $locale['global_409'] = "Цей обліковий запис заблоковано (бан) з міркувань безпеки.";
@@ -308,7 +308,7 @@ $locale['global_440'] = "Автоматичний бан через поруше
 $locale['global_441'] = "Ваш обліковий запис заблоковано";
 $locale['global_442'] = "Вітаємо, [USER_NAME],\n
 З вашого облікового запису на сайті <<".fusion_get_settings('sitename').">> зафіксовано надсилання надто великої кількості повідомлень за короткий проміжок часу через адресу IP ".USER_IP.", що призвело до його блокування. Це було зроблено з метою попередження поширення спаму через бот-системи.\n
-Будь-ласка, зв'яжіться із адмінстрацією сайту через адресу E-mail ".fusion_get_settings('siteemail')." , щоб розблокувати свій обліковий запис або повідомити про свою непричетність до зафіксованих потенційно шкідливих дій.\n
+Будь-ласка, зв&lsquo;яжіться із адміністрацією сайту за електронною адресою ".fusion_get_settings('siteemail')." , щоб розблокувати свій обліковий запис або повідомити про свою непричетність до зафіксованих потенційно шкідливих дій.\n
 ".fusion_get_settings('siteusername');
 
 // Lifting of suspension
@@ -356,14 +356,14 @@ $locale['global_ML102'] = "Мова сайту";
 $locale['flood'] = "Нові публікації заблоковані до завершення встановленого часу контролю за флудом. Будь ласка, зачекайте %s";
 $locale['no_image'] = "Зображення відсутнє";
 // ex. oneword.locale.php
-$locale['send_message'] = 'Надіслати повідомлення';
-$locale['go_profile'] = 'Перейти у профіль %s';
+$locale['send_message'] = "Надіслати повідомлення";
+$locale['go_profile'] = "Перейти у профіль %s";
 
 // Greetings
 $locale['hello'] = "Вітаємо!";
 $locale['goodbye'] = "На все добре!";
-$locale['welcome'] = "До наступної зустрічі";
-$locale['home'] = 'Головна';
+$locale['welcome'] = "З поверненням";
+$locale['home'] = "Головна";
 
 // Status
 $locale['error'] = "Помилка!";
@@ -374,26 +374,26 @@ $locale['no'] = "Ні";
 $locale['yes'] = "Так";
 $locale['off'] = "Вимкнути";
 $locale['on'] = "Ввімкнути";
-$locale['or'] = 'або';
-$locale['by'] = 'за';
-$locale['in'] = 'в';
-$locale['of'] = 'з';
+$locale['or'] = "або";
+$locale['by'] = "за";
+$locale['in'] = "в";
+$locale['of'] = "з";
 
 // Navigation
 $locale['next'] = "Настпуний";
 $locale['pevious'] = "Попередній";
 $locale['back'] = "Назад";
 $locale['forward'] = "Далі";
-$locale['go'] = 'Перейти';
-$locale['cancel'] = 'Скасувати';
+$locale['go'] = "Перейти";
+$locale['cancel'] = "Скасувати";
 
 // Action
 $locale['add'] = "Додати";
 $locale['save'] = "Зберегти";
 $locale['update'] = "Оновити";
-$locale['updated'] = 'Оновлено';
+$locale['updated'] = "Оновлено";
 $locale['remove'] = "Видалити";
-$locale['delete'] = 'Видалити';
+$locale['delete'] = "Видалити";
 $locale['search'] = "Знайти";
 $locale['help'] = "Допомога";
 $locale['register'] = "Реєстрація";
@@ -401,12 +401,12 @@ $locale['ban'] = "Бан";
 $locale['reactivate'] = "Відновлення";
 $locale['user'] = "Користувач";
 $locale['promote'] = "Поширення";
-$locale['show'] = 'Показати';
+$locale['show'] = "Показати";
 
 //Tables
 $locale['status'] = "Стан";
 $locale['order'] = "Порядок";
-$locale['sort'] = 'Сортування';
+$locale['sort'] = "Сортування";
 $locale['id'] = "ID";
 $locale['title'] = "Назва";
 $locale['rights'] = "Права";
@@ -415,8 +415,8 @@ $locale['info'] = "Додатково";
 
 // Forms
 $locale['choose'] = "Будь ласка, виберіть...";
-$locale['root'] = 'Як кореневий';
-$locale['choose-user'] = 'Будь ласка, виберіть користувача...';
+$locale['root'] = "як кореневий";
+$locale['choose-user'] = "Будь ласка, виберіть користувача...";
 $locale['parent'] = "Створити як кореневий..";
 $locale['order'] = "Порядок розташування";
 $locale['status'] = "Стан";
@@ -429,17 +429,17 @@ $locale['posted'] = "опубліковано";
 $locale['in'] = "в";
 $locale['profile'] = "Профіль";
 $locale['edit'] = "Редагування";
-$locale['qedit'] = 'Quick Edit';
+$locale['qedit'] = "Швидке редагування";
 $locale['view'] = "Перегляд";
-$locale['login'] = "Авторизація";
+$locale['login'] = "Вхід";
 $locale['logout'] = "Вихід";
 $locale['admin-logout'] = "Вихід адміністратора";
 $locale['message'] = "Приватні повідомлення";
 $locale['logged'] = "Авторизовано як ";
 $locale['version'] = "Версія ";
 $locale['browse'] = "Перегляд ...";
-$locale['close'] = 'Закрити';
-$locale['nopreview'] = 'Дані для перегляду відсутні';
+$locale['close'] = "Закрити";
+$locale['nopreview'] = "Дані для перегляду відсутні";
 $locale['left'] = "Зліва";
 $locale['center'] = "Центр";
 $locale['right'] = "Справа";
