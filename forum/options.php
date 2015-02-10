@@ -101,13 +101,12 @@ class moderator {
 	 * @param $forum_id
 	 */
 	static function refresh_forum($forum_id) {
-		// will rebatch only if thread exist.
 		if (self::verify_forum($forum_id)) {
-			$remaining_threads_count = dbcount("(forum_id)", DB_THREADS, "forum_id='$forum_id'")-1;
+			$remaining_threads_count = dbcount("(forum_id)", DB_THREADS, "forum_id='$forum_id'");
 			if ($remaining_threads_count) {
 				$result = dbquery("SELECT p.forum_id, p.post_author, p.post_datestamp, COUNT(p.post_id) AS post_count FROM ".DB_POSTS." p
 							INNER JOIN ".DB_THREADS." t ON p.thread_id=t.thread_id
-							WHERE p.forum_id='".$data['forum_id']."' AND t.thread_hidden='0' AND p.post_hidden='0'
+							WHERE p.forum_id='".$forum_id."' AND t.thread_hidden='0' AND p.post_hidden='0'
 							ORDER BY p.post_datestamp DESC LIMIT 1");
 				if (dbrows($result)>0) {
 					$pdata = dbarray($result); // yielded LAST post
@@ -117,7 +116,7 @@ class moderator {
 							forum_postcount = '".$pdata['post_count']."',
 							forum_threadcount = forum_threadcount-1,
 							forum_lastuser = '".$pdata['post_author']."'
-							WHERE forum_id = '".$_GET['forum_id']."'
+							WHERE forum_id = '".$forum_id."'
 							");
 				}
 			} else {
