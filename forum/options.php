@@ -81,17 +81,18 @@ class moderator {
 	 * @return int - number of posts that user have made in this thread
 	 */
 	static function unset_userpost($thread_id) {
-		$rows = 0;
+		$post_count = 0;
 		if (self::verify_thread($thread_id)) {
 			$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_POSTS." WHERE thread_id='".$thread_id."' GROUP BY post_author");
 			$rows = dbrows($result);
 			if ($rows >0) {
 				while ($pdata = dbarray($result)) {
 					dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-".$pdata['num_posts']." WHERE user_id='".$pdata['post_author']."'");
+					$post_count = $pdata['num_posts']+$post_count;
 				}
 			}
 		}
-		return (int) $rows;
+		return (int) $post_count;
 	}
 
 	/**
