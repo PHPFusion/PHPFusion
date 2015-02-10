@@ -27,13 +27,16 @@ class ErrorLogs {
 
 		if (isnum($this->error_status) && $this->posted_error_id) {
 			dbquery("UPDATE ".DB_ERRORS." SET error_status='".$this->error_status."' WHERE error_id='".$this->posted_error_id."'");
+			redirect(FUSION_REQUEST);
 		}
 		if (isset($_POST['delete_entries']) && isnum($this->delete_status)) {
 			dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status='".$_POST['delete_status']."'");
+			redirect(FUSION_REQUEST);
 		}
 
 		if (isset($_POST['delete_all_logs'])) {
 			dbquery("DELETE FROM ".DB_ERRORS);
+			redirect(FUSION_REQUEST);
 		}
 
 		$result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT ".$this->rowstart.",20");
@@ -267,7 +270,7 @@ class ErrorLogs {
 		global $aidlink;
 		$locale = $this->locale;
 		if ($this->errors) {
-			echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>0, 'class'=>'text-right'));
+			echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>10, 'class'=>'text-right'));
 			echo form_button($locale['delete'], 'delete_all_logs', 'delete_all_logs', $locale['453'], array('class'=>'btn-block btn-primary', 'icon'=>'fa fa-bitbucket fa-lg m-r-10'));
 			echo closeform();
 			?>

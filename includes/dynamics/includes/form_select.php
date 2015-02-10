@@ -56,11 +56,12 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 		'class' => !empty($options['class']) ? $options['class'] : '',
 		'inline' => !empty($options['inline']) ? $options['inline'] : '',
 		'tip' => !empty($options['tip']) ? $options['tip'] : '',
+		'delimiter' => !empty($options['delimiter']) ? $options['delimiter'] : ',',
 	);
 
 	if ($options['multiple']) {
 		if ($input_value) {
-			$input_value = construct_array($input_value);
+			$input_value = construct_array($input_value,FALSE,$options['delimiter']);
 		} else {
 			$input_value = array();
 		}

@@ -67,6 +67,10 @@ foreach ($p_name as $p_key => $p_side) {
 			if (check_panel_status($p_side['side'])) {
 				foreach ($panels_cache[$p_key+1] as $p_data) {
 					$url_arr = explode("\r\n", $p_data['panel_url_list']);
+					$url = array();
+					foreach($url_arr as $urldata) {
+						$url[] = strpos($urldata, '/', 0) ? $urldata : '/'.$urldata;
+					}
 					/*
 					 * show only if the following conditions are met:
 					 * 1. url_list is blank
@@ -79,10 +83,9 @@ foreach ($p_name as $p_key => $p_side) {
 					 * Also note: TRUE_PHP_SELF contains /9/ site path!
 					 * Include only - panel_side is 5. panel_display set to 1. panel_restrict = 0, and list is not empty
 					 */
-
                     if ($p_data['panel_url_list'] == "" ||
-                        ($p_data['panel_restriction'] == 1 && (!in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url_arr) && !in_array(TRUE_PHP_SELF, $url_arr))) ||
-                        ($p_data['panel_restriction'] == 0 && (in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url_arr) || in_array(TRUE_PHP_SELF, $url_arr)))) {
+                        ($p_data['panel_restriction'] == 1 && (!in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url) && !in_array(TRUE_PHP_SELF, $url))) ||
+                        ($p_data['panel_restriction'] == 0 && (in_array(TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $url) || in_array(TRUE_PHP_SELF, $url)))) {
                         if (($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE) {
 							if ($p_data['panel_type'] == "file") {
 								if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {

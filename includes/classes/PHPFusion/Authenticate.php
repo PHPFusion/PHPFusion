@@ -349,7 +349,7 @@ class Authenticate {
 		}
 	}
 
-	private static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = FALSE, $httpOnly = FALSE) {
+	public static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = FALSE, $httpOnly = FALSE) {
 		if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
 			setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure, $httpOnly);
 		} else {

@@ -10,15 +10,14 @@ require_once dirname(__FILE__)."../../../maincore.php";
 
 if ($defender->verify_tokens('productfrm', 0)) {
 	// remotely refer form_sanitizer from the referer script treating this form executed from eshop form
-	$_SERVER['REQUEST_URI'] = fusion_get_settings('site_path').str_replace(fusion_get_settings('siteurl'), '', $_SERVER['HTTP_REFERER']);
 	$data['tid'] = 0; // let it auto increment
-	$data['prid'] = form_sanitizer($_POST['id'], '', 'id'); // product id
+	$data['prid'] = form_sanitizer($_POST['id'], ''); // product id
 	$data['puid'] = defender::set_sessionUserID(); // this is the username --- change to user_id and USER_IP? how to get user_name?
-	$data['cqty'] = form_sanitizer($_POST['product_quantity'], '', 'product_quantity'); // order quantity
-	$data['cclr'] = form_sanitizer($_POST['product_color'], '', 'product_color'); // order color
-	$data['cdyn'] = form_sanitizer($_POST['product_type'], '', 'product_type'); // this stores user selection
+	$data['cqty'] = form_sanitizer($_POST['product_quantity'], ''); // order quantity
+	$data['cclr'] = form_sanitizer($_POST['product_color'], ''); // order color
+	$data['cdyn'] = form_sanitizer($_POST['product_type'], ''); // this stores user selection
 	$data['cadded'] = time(); // time
-	$product = \PHPFusion\Eshop::get_productData($data['prid']);
+	$product = \PHPFusion\Eshop\Eshop::get_productData($data['prid']);
 	if (!empty($product)) { // loaded $data
 		$data['artno'] = $product['artno']; // artno
 		$data['citem'] = $product['title']; // item name
@@ -26,13 +25,18 @@ if ($defender->verify_tokens('productfrm', 0)) {
 		$data['cdynt'] = $product['dynf']; // this stores dynf
 		$data['cprice'] = $product['xprice'] ? $product['xprice'] : $product['price']; // this is the 1 unit price
 		$data['cweight'] = $product['cweight']; // 1 unit weigh t
-		$data['ccupons'] = $product['ccupons']; // acept coupons or not
+		$data['ccupons'] = $product['cupons']; // accept coupons or not
 		// now check if order exist.
 		include "includes.php";
-		Cart::add_to_cart($data);
+		$response = Cart::add_to_cart($data); // returns json responses
+		$response['error_id'] = 0;
+		$response['title'] = 'Product Updated';
+		$response['message'] = 'Your cart have been successfully updated.';
+		echo json_encode($response);
+		\PHPFusion\Eshop\Eshop::refresh_session();
 	} else {
 		$defender->stop();
-		echo json_encode(array('error_id'=>1, 'code'=>'Product Not Found (Response-1)'));
+		echo json_encode(array('error_id'=>1, 'title'=>'Product Not Updated', 'message'=>'Product Not Found (Response-1)'));
 	}
 }
 

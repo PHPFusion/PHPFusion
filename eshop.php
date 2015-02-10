@@ -20,8 +20,7 @@ require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."eshop.php";
 require_once THEMES."templates/global/eshop.php";
 //include INCLUDES."eshop_functions_include.php";
-
-//Close the tree when eShop home have been clicked.
+//Close the tree when eShop home have been clicked... where is the tree?
 /*
 if ($settings['eshop_cats'] == "1") {
 echo '<script type="text/javascript"> 
@@ -29,7 +28,8 @@ echo '<script type="text/javascript">
 </script>';
 }
 */
-$eShop = new PHPFusion\Eshop();
+$eShop = new PHPFusion\Eshop\Eshop();
+$eShop->__construct_checkout();
 $info = $eShop->get_category();
 $info += $eShop->get_product();
 $info += $eShop->get_featured();
@@ -44,6 +44,9 @@ if ($_GET['category']) {
 } elseif ($_GET['product']) {
 	// view product page
 	render_eshop_product($info);
+} elseif (isset($_GET['checkout'])) {
+	$info = $eShop->get_checkout_info();
+	render_checkout($info);
 } else {
 	render_eshop_featured_url($info);
 	render_eshop_featured_product($info);

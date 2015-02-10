@@ -53,7 +53,6 @@ class defender {
 		$validation_rules_assigned = array(
 			'textbox' => 'textbox',
 			'dropdown' => 'textbox',
-			'name' => 'textbox',
 			'password' => 'password',
 			'textarea' => 'textbox',
 			'number' => 'number',
@@ -62,9 +61,11 @@ class defender {
 			'timestamp' => 'date',
 			'color' => 'textbox',
 			'address' => 'address',
+			'name' => 'name',
 			'url' => 'url',
 			'image' => 'image',
-			'file' => 'file',);
+			'file' => 'file',
+		);
 		// execute sanitisation rules at point blank precision using switch
 		try {
 			if (!empty($this->field_config['type'])) {
@@ -90,36 +91,56 @@ class defender {
 					case 'url' :
 						return $this->verify_url();
 						break;
+					case 'name':
+						$name = $this->field_name;
+
+						if ($this->field_config['required'] && !$_POST[$name][0]) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-firstname', $locale['firstname_error']);
+							$this->addNotice($locale['firstname_error']);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][1]) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-lastname', $locale['lastname_error']);
+							$this->addNotice($locale['lastname_error']);
+						}
+						if (!defined('FUSION_NULL')) {
+							$return_value = $this->verify_text();
+							return $return_value;
+						}
+						break;
 					case 'address':
 						$name = $this->field_name;
 						//$def = $this->get_full_options($this->field_config);
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-street');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-street', $locale['street_error']);
 							$this->addNotice($locale['street_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][2]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-country');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-country', $locale['country_error']);
 							$this->addNotice($locale['country_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][3]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-state');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-state', $locale['state_error']);
 							$this->addNotice($locale['state_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][4]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-city');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-city', $locale['city_error']);
 							$this->addNotice($locale['city_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][5]) {
 							$this->stop();
-							$this->addError($this->field_config['id'].'-postcode');
+							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-postcode', $locale['postcode_error']);
 							$this->addNotice($locale['postcode_error']);
 						}
@@ -164,26 +185,26 @@ class defender {
 
 	/* Adds the field sessions on document load */
 	static function add_field_session(array $array) {
-		$_SESSION['form_fields'][self::set_sessionUserID()][$_SERVER['REQUEST_URI']][$array['input_name']] = $array;
+		$_SESSION['form_fields'][self::set_sessionUserID()][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
 	}
 
 	/**
-	 * See specific User Form Field Traces.
+	 * Prints specific User Form Field Traces.
 	 * $user_id as false to see yourself
 	 * $user_id as integer to see specific user
-	 * @return array
+	 * @return string
 	 */
 	static function display_user_field_session($user_id = FALSE) {
-		$array = array();
 		$user_id = $user_id && isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."'") ? $user_id : self::set_sessionUserID();
 		if (isset($_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']])) {
-			return (array) $_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']];
+			print_p($_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']]);
+		} else {
+			print_p(" $user_id on ".$_SERVER['REQUEST_URI']." not found ");
 		}
-		return $array;
 	}
 
 	/* Destroys the user field session */
-	public function unset_field_session() {
+	public static function unset_field_session() {
 		unset($_SESSION['form_fields'][self::set_sessionUserID()]);
 	}
 
@@ -525,7 +546,6 @@ class defender {
 	static function verify_tokens($form, $post_time = 10, $debug = 0) {
 		global $locale, $userdata;
 		$error = array();
-		//$user_id = isset($userdata['user_id']) && !isset($_POST['login']) ? $userdata['user_id'] : 0;
 		$user_id = self::set_sessionUserID();
 		$algo = fusion_get_settings('password_algorithm');
 		$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
@@ -598,8 +618,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			foreach (fusion_get_enabled_languages() as $lang) {
 				//$field_name = ucfirst(strtolower(str_replace("_", " ", $input_name))).' ('.$lang.')';
 				$input_name = $input_name."[".$lang."]";
-				if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name])) {
-					$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name];
+				if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name])) {
+					$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name];
 					$defender->field_name = $input_name;
 					$defender->field_value = $value[$lang];
 					$defender->field_default = $default;
@@ -616,8 +636,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				}
 			}
 		} else {
-			if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name])) {
-				$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['REQUEST_URI']][$input_name];
+			if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name])) {
+				$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name];
 				$defender->field_name = $input_name;
 				$defender->field_value = $value;
 				$defender->field_default = $default;

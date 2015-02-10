@@ -211,9 +211,9 @@ function showbanners($display = "") {
 
 
 function showsublinks($sep = "&middot;", $class = "", array $options = array(), $id = 0) {
-	global $userdata;
+	global $userdata, $settings;
 	static $data = array();
-	$settings = fusion_get_settings();
+
 	$acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 	$res = &$res;
 	if (empty($data)) {
@@ -222,14 +222,24 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 	if ($id == 0) {
 		$res = "<div class='navbar navbar-default' role='navigation'>\n";
 		$res .= "<div class='navbar-collapse collapse'>\n";
-		$res .= "<ul class='nav navbar-nav'>\n";
+		$res .= "<ul ".($settings['bootstrap'] ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
 	} else {
-		$res .= "<ul class='dropdown-menu'>\n";
+		$res .= "<ul".($settings['bootstrap'] ? " class='dropdown-menu'" : "").">\n";
 	}
 
 	foreach($data[$id] as $link_id => $link_data) {
+		$li_class = $class;
 		if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
-			$res .= "<li><a href='".$link_data['link_url']."'>".$link_data['link_name']."</a>";
+			$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
+			if (START_PAGE == $link_data['link_url']) {
+				$li_class .= ($li_class ? " " : "")."current-link";
+			}
+			if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])) {
+				$itemlink = $link_data['link_url'];
+			} else {
+				$itemlink = BASEDIR.$link_data['link_url'];
+			}
+			$res .= "<li".($li_class ? " class='".$li_class."'" : "")."><a href='".$itemlink."'".$link_target.">".$link_data['link_name']."</a>";
 			if (isset($data[$link_id])) {
 				$res .= showsublinks($sep, $class, $options, $link_data['link_id']);
 			}
@@ -564,6 +574,24 @@ function countdown($time) {
 function opencollapse($id) {
 	return "<div class='panel-group' id='".$id."' role='tablist' aria-multiselectable='true'>\n";
 }
+
+function opencollapsebody($title, $unique_id, $grouping_id, $active = 0, $class = false) {
+	$html = "<div class='panel panel-default'>\n";
+	$html .= "<div class='panel-heading clearfix'>\n";
+	$html .= "<div class='overflow-hide'>\n";
+	$html .= "<span class='display-inline-block strong'><a ".collapse_header_link($grouping_id, $unique_id, $active, $class).">".$title."</a></span>\n";
+	$html .= "</div>\n";
+	$html .= "</div>\n";
+	$html .= "<div ".collapse_footer_link($grouping_id,$unique_id, $active).">\n"; // body.
+	return $html;
+}
+
+function closecollapsebody() {
+	$html = "</div>\n"; // panel container
+	$html .= "</div>\n"; // panel default
+	return $html;
+}
+
 function collapse_header_link($id, $title, $active, $class = FALSE) {
 	$active = ($active) ? '' : 'collapsed';
 	$title =  str_replace('/[^A-Z]+$/i', " ",$title);
@@ -579,6 +607,8 @@ function collapse_footer_link($id, $title, $active, $class = FALSE) {
 function closecollapse() {
 	return "</div>\n";
 }
+
+
 
 function tab_active($tab_title, $default_active, $link_mode = FALSE) {
 	if ($link_mode) {
@@ -616,7 +646,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		$v_title = str_replace("-", " ", $v);
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
 		$inner_id = $tab_title['id'][$arr];
-		$link_url = $link ? clean_request('section='.$inner_id, array('aid', 'a_page')) : '#';
+		$link_url = $link ? clean_request('section='.$inner_id, array('aid', 'a_page', 'thread_id')) : '#';
 		if ($link_mode) {
 			$html .= ($link_active_arrkey == $inner_id) ? "<li class='active'>\n" : "<li>\n";
 		} else {

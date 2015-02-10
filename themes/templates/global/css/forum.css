@@ -10,12 +10,10 @@
 }
 #forum_tabs > li > a, #post_tabs > li > a {
 	padding: 10px 10px !important;
-	font-size:13px;
-	font-weight: 600;
-	color: rgb(59, 89, 152);
+	font-size:100%;
 }
 .post_title, .thread_title {
-	font-size:14px;
+	font-size:120%;
 	font-weight: 600;
 }
 
@@ -51,7 +49,6 @@
 .thread-header {
 	font-weight: 600;
 	color: rgb(0,0,0);
-	font-size:25px;
 	margin-bottom:20px;
 }
 .forum-subject {
@@ -63,29 +60,44 @@
 }
 .forum-description {
 	padding:0;
-	font-size:12px;
 }
 .thread_subheader {
-	border-bottom: 1px solid rgb(204, 204, 204);
 	padding:10px 0;
 }
-.thread_date {
-	font-weight:400;
-	font-size:11px !important;
-	color: rgba(0,0,0,0.45);
+.fa {
+	margin-top:5px;
 }
+.forum_thread_ip {
+	color: #aaa;
+}
+.thread_date {
+	font-size:90% !important;
+	color: rgba(0,0,0,0.8);
+	display:block;
+	margin-bottom:20px;
+}
+
 .thread_pagenav {
 	color: rgb(0,0,0);
-	font-size:12px;
+	font-size:100%;
+	font-weight: 600;
+
 }
+
 .thread-footer {
-	font-size:12px;
-	padding:3px 0px;
-	background-color: rgba(242, 242, 242, 0.3);
-	border-top: 1px solid rgb(204, 204, 204);
+	font-size:100%;
+	text-align:right;
+	padding:5px 10px;
+	border-top: 1px solid #ddd;
+	display: block;
+	bottom:0;
 }
 
 /* Posts */
+.forum-user {
+	min-width: 100px;
+	border-right:1px solid #ddd;
+}
 .forum_cat {
 	font-weight:600;
 	margin-bottom:15px;
@@ -95,27 +107,29 @@
 	font-size:11px;
 }
 .forum_profile_link a {
-	font-size:12px !important;
 	font-weight: 600;
 }
 .profile-link  {
-	font-size: 14px !important;
+	font-size: 15px !important;
+	display: inline-block;
+	margin-bottom:5px;
 }
 .forum_date, .forum_user_post_count {
-	font-size:11px;
+	font-size:90%;
 	color: rgba(0,0,0,0.55);
 }
 .forum_user_actions {
-	font-size:11px;
-	font-weight: 600;
-	margin-right:10px;
+	font-size: 90%;
+	margin-right:3px;
+	padding:5px;
 }
 .forum_sig {
 	font-size:11px;
 }
 .forum_thread_user_post {
-	font-size:13px;
+	font-size: 100%;
 	margin:15px 0;
+	min-height:50px;
 	color: rgb(0,0,0);
 }
 .edit_reason > a, .reason_div {

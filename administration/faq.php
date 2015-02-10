@@ -92,7 +92,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq
 } elseif (isset($_POST['save_faq'])) {
 	$faq_cat = intval($_POST['faq_cat']);
 	$faq_question = form_sanitizer($_POST['faq_question'], '', 'faq_question'); //stripinput($_POST['faq_question']);
-	$faq_answer = form_sanitizer($_POST['faq_answer'], '', 'faq_answer'); //addslashes($_POST['faq_answer']);
+	$faq_answer = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['faq_answer']));
 	if (!defined('FUSION_NULL')) {
 		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['faq_id']) && isnum($_GET['faq_id'])) && (isset($_GET['t']) && $_GET['t'] == "faq")) {
 			$result = dbquery("UPDATE ".DB_FAQS." SET faq_cat_id='$faq_cat', faq_question='$faq_question', faq_answer='$faq_answer' WHERE faq_id='".$_GET['faq_id']."'");

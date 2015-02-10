@@ -1006,6 +1006,23 @@ function makefileopts(array $files, $selected = "") {
  */
 function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart") {
 	global $locale;
+
+	if (fusion_get_settings('bootstrap')) {
+		$tpl_global    = "<nav>%s<ul class='pagination'>\n%s</ul></nav>\n";
+		$tpl_currpage  = "<li><a href=''><strong>%d</strong></a></li>\n";
+		$tpl_page      = "<li><a data-value='%d' href='%s=%d'>%s</a></li>\n";
+		$tpl_divider   = "</ul>\n<ul class='pagination'>";
+		$tpl_firstpage = "<li><a data-value='0' href='%s=0'>1</a></li>\n";
+		$tpl_lastpage  = "<li><a data-value='%d' href='%s=%d'>%s</a></li>\n";
+	} else {
+		$tpl_global    = "<div class='pagenav'>%s\n%s\n</div>\n";
+		$tpl_currpage  = "<span><strong>%d</strong></span>";
+		$tpl_page      = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>";
+		$tpl_divider   = "...";
+		$tpl_firstpage = "<a class='pagenavlink' data-value='0' href='%s=0'>1</a>";
+		$tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
+	}
+
 	if ($link == "") {
 		$link = FUSION_SELF."?";
 	}
@@ -1017,12 +1034,12 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	$idx_back = $start-$count;
 	$idx_next = $start+$count;
 	$cur_page = ceil(($start+1)/$count);
-	$res = $locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt.": ";
+	$res = "";
 	if ($idx_back >= 0) {
 		if ($cur_page > ($range+1)) {
-			$res .= "<a class='pagenavlink' data-value='0' href='".$link.$getname."=0'>1</a>";
+			$res .= sprintf($tpl_firstpage, $link.$getname);
 			if ($cur_page != ($range+2)) {
-				$res .= "...";
+				$res .= $tpl_divider;
 			}
 		}
 	}
@@ -1035,20 +1052,20 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 	for ($i = $idx_fst; $i <= $idx_lst; $i++) {
 		$offset_page = ($i-1)*$count;
 		if ($i == $cur_page) {
-			$res .= "<span><strong>".$i."</strong></span>";
+			$res .= sprintf($tpl_currpage, $i);
 		} else {
-			$res .= "<a class='pagenavlink' data-value='$offset_page' href='".$link.$getname."=".$offset_page."'>".$i."</a>";
+			$res .= sprintf($tpl_page, $offset_page, $link.$getname, $offset_page, $i);
 		}
 	}
 	if ($idx_next < $total) {
 		if ($cur_page < ($pg_cnt-$range)) {
 			if ($cur_page != ($pg_cnt-$range-1)) {
-				$res .= "...";
+				$res .= $tpl_divider;
 			}
-			$res .= "<a class='pagenavlink' data-value='".($pg_cnt-1)*$count."' href='".$link.$getname."=".($pg_cnt-1)*$count."'>".$pg_cnt."</a>\n";
+			$res .= sprintf($tpl_lastpage, ($pg_cnt-1)*$count, $link.$getname, ($pg_cnt-1)*$count, $pg_cnt);
 		}
 	}
-	return "<div class='pagenav'>\n".$res."</div>\n";
+	return sprintf($tpl_global, $locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt.": ", $res);
 }
 
 /**

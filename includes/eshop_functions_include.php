@@ -375,7 +375,13 @@ function buildeshopheader() {
 	echo "<div class='clear'></div>";
 }
 
-function ppform() {
+
+
+
+
+
+
+function ppform() { // shop/buynow.php -- is this the checkout?
 	global $locale, $data, $settings, $settings, $ESHPCLRS;
 	if ($settings['eshop_shopmode'] == "1") {
 		//options
@@ -846,8 +852,6 @@ function ppform() {
 		echo "</td></tr>";
 	}
 }
-
-
 
 function breadcrumb($cid) {
 	global $locale;

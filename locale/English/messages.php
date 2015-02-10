@@ -64,12 +64,13 @@ $locale['463'] = "Message";
 $locale['464'] = "Sender";
 $locale['465'] = "Date/Time received";
 
-
 $locale['466'] = 'Not Selected';
 $locale['467'] = 'No Conversation Selected';
 $locale['468'] = 'Start a new conversation with %s';
 $locale['469'] = 'Reply to %s';
 $locale['470'] = 'Search Filter (Not functional yet)';
+
+$locale['471'] = "There are no messages";
 
 // Error Messages
 $locale['480'] = "Error";

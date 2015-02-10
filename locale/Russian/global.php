@@ -416,7 +416,7 @@ $locale['comments_ratings'] = "Комментарии и оценки";
 $locale['user_account'] = "Учётная запись пользователя";
 // Testimonials
 $locale['testimonial_rank'] = "На этом сайте я %s";
-$locale['testimonial_location'] = "и сейчас я живу в %s";
+$locale['testimonial_location'] = " и сейчас я живу в %s";
 $locale['testimonial_join'] = ". Я зарегистрировался здесь %s.";
 $locale['testimonial_join'] = "Также я запустил(-а) свой сайт по адресу %s.";
 $locale['testimonial_contact'] = "Если Вам нужно связаться со мной, вы можете связаться со мной по адресу %s.";

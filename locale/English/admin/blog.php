@@ -37,7 +37,7 @@ $locale['439'] = "Blog Image";
 $locale['440'] = "Max. filesize %s / Allowed filetypes GIF, JPEG or PNG.";
 $locale['441'] = "Pagebreak";
 $locale['442'] = "Select the Blog image alignment";
-$locale['443'] = "Keywords (separate each keyword with a ,)";
+$locale['443'] = "Keywords (you need to hit enter for each keyword)";
 // Popup Error/Warning Messages
 $locale['450'] = "Please specify a subject";
 $locale['451'] = "Delete this Blog?";

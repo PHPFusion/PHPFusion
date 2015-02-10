@@ -15,14 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+add_to_head("<link href='".THEMES."templates/global/css/eshop.css' rel='stylesheet'/>\n");
 if (!function_exists('render_eshop_nav')) {
 	/**
 	 * Shop Navigation
 	 * @param array $info
 	 */
 	function render_eshop_nav(array $info) {
-		$res = "<div class='navbar navbar-default' role='navigation'>\n";
+		$res = "<div class='navbar navbar-default eshop-nav' role='navigation'>\n";
 		$res .= "<div class='navbar-collapse collapse'>\n";
 		$res .= "<ul class='nav navbar-nav'>\n";
 		if ($_GET['category']) {
@@ -347,7 +347,7 @@ if (!function_exists('render_eshop_product')) {
 		}
 	}
 	echo "</div>\n<div class='col-xs-12 col-sm-7'>\n";
-	echo "<h2 class='product-title m-b-0'>".$data['title']."</h2>";
+	echo "<h2 class='product-title'>".$data['title']."</h2>";
 	//echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info.
 	// product basic information
 	echo "<div class='text-smaller'>\n";
@@ -355,6 +355,7 @@ if (!function_exists('render_eshop_product')) {
 	echo "<span class='display-block'>".$data['stock_status']."</span>\n";
 	echo "<span class='display-block'>".$data['version']."</span>";
 	echo "<span class='display-block'>".$data['shipping']."</span>";
+	echo "<span class='display-block'>".$data['coupon_status']."</span>";
 
 	if ($data['demo']) {
 		echo "<span class='display-block'>";
@@ -391,88 +392,87 @@ if (!function_exists('render_eshop_product')) {
 		echo "</div>\n";
 	}
 
-	// ok now do the add cart thing. we need a form to push to cart or buynow.
-	echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product']);
-	echo "<div class='m-t-20'>\n";
-	if (!empty($data['dync'])) {
-		$title = $data['dynf'] ? $data['dynf'] : 'Category';
-		$dync = str_replace('&quot;', '', $data['dync']);
-		$dync_opts = array_filter(explode('.', $dync));
-		echo form_select($title, 'product_type', 'product_type', $dync_opts, 1, array('inline'=>1, 'width'=>'200px', 'class'=>'product-selector m-b-0'));
-	}
-	if ($data['icolor']) {
-		echo "<div class='form-group m-t-10'>\n";
-		echo "<label class='col-xs-12 col-sm-3 text-smaller p-l-0'>".$locale['ESHP017']."</label>\n";
-		echo "<div class='col-xs-12 col-sm-9'>\n";
-		$color = str_replace('&quot;', '', $data['icolor']);
-		$full_colors = PHPFusion\Eshop::get_iColor();
-		$current_colors = array_filter(explode('.', $color));
-		$i = 0;
-		foreach($current_colors as $val) {
-			$color = $full_colors[$val]['hex'];
-			$title = $full_colors[$val]['title'];
-			echo "<div><input id='".$color."' type='radio' name='product_color' value='".$val."' ".($i == 0 ? 'checked' : '')." />
-			<span class='display-inline-block' style='background: $color; width:15px; height:15px; border-radius:50%; margin-left:5px;'>&nbsp;</span>
-			<small class='p-l-10'><label for='".$color."'>$title</label></small>
-			</div>";
-			$i++;
-		}
-		defender::add_field_session(array(
-					 'input_name' 	=> 	'product_color',
-					 'type'			=>	'number',
-					 'title'		=>	$locale['ESHP017'],
-					 'id' 			=>	'',
-					 'required'		=>	1,
-					 'safemode' 	=> 	0,
-				 ));
-		echo "</div>\n";
-		echo "</div>\n";
-	}
-	// qty
-	if ($data['qty']) {
-		echo form_text($locale['ESHP019'], 'product_quantity', 'product_quantity', '1', array('number'=>1, 'inline'=>1, 'class'=>'product-quantity input-sm', 'width'=>'50px',
-			'append_button'=>1,
-			'append_value'=> "<i class='fa fa-plus m-t-5'></i>",
-			'append_type'=>'button',
-			'prepend_button'=>1,
-			'prepend_value'=> "<i class='fa fa-minus m-t-5'></i>",
-			'prepend_type'=>'button',
-		));
-		// now add some simple js
-		add_to_jquery("
-		$('#product_quantity-prepend-btn').bind('click', function(e) {
-			var order_qty = $('#product_quantity').val();
-			var new_val = --order_qty;
-			if (order_qty >=1) { $('#product_quantity').val(new_val); }
-		 });
-		 $('#product_quantity-append-btn').bind('click', function(e) {
-			var order_qty = $('#product_quantity').val();
-			var new_val = ++order_qty;
-			$('#product_quantity').val(new_val);
-		 });
-		");
-	} else {
-		echo form_hidden('', 'product_quantity', 'product_quantity', 1);
-	}
+	/* This part need to be MVC - its going to be too hard for theme developers to go through everything */
 
-	if ($data['status'] == "1") {
+	if (fusion_get_settings('eshop_shopmode')) {
+		echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product']); // sends data to ajax
 		echo "<div class='m-t-20'>\n";
-		if ($data['buynow'] == "1") { // use post action instead
-			echo form_button($locale['ESHP020'], 'buy_now', 'buy_now', $locale['ESHP020'], array('class'=>'m-r-10 '.fusion_get_settings('eshop_buynow_color')));
-			//echo "<a class='btn m-r-10 ".."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
+		if (!empty($data['dync'])) {
+			$title = $data['dynf'] ? $data['dynf'] : 'Category';
+			$dync = str_replace('&quot;', '', $data['dync']);
+			$dync_opts = array_filter(explode('.', $dync));
+			echo form_select($title, 'product_type', 'product_type', $dync_opts, 1, array('inline'=>1, 'width'=>'200px', 'class'=>'product-selector m-b-0'));
 		}
-		if ($data['cart_on'] == "1") {
-			echo form_button($locale['ESHP021'], 'add_cart', 'add_cart', $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
-			//echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
+		if ($data['icolor']) {
+			echo "<div class='form-group m-t-10'>\n";
+			echo "<label class='col-xs-12 col-sm-3 text-smaller p-l-0'>".$locale['ESHP017']."</label>\n";
+			echo "<div class='col-xs-12 col-sm-9'>\n";
+			$color = str_replace('&quot;', '', $data['icolor']);
+			$full_colors = PHPFusion\Eshop\Eshop::get_iColor();
+			$current_colors = array_filter(explode('.', $color));
+			$i = 0;
+			foreach($current_colors as $val) {
+				$color = $full_colors[$val]['hex'];
+				$title = $full_colors[$val]['title'];
+				echo "<div><input id='".$color."' type='radio' name='product_color' value='".$val."' ".($i == 0 ? 'checked' : '')." />
+				<span class='display-inline-block' style='background: $color; width:15px; height:15px; border-radius:50%; margin-left:5px;'>&nbsp;</span>
+				<small class='p-l-10'><label for='".$color."'>$title</label></small>
+				</div>";
+				$i++;
+			}
+
+			defender::add_field_session(array(
+											'input_name' 	=> 	'product_color',
+											'type'			=>	'number',
+											'title'		=>	$locale['ESHP017'],
+											'id' 			=>	'',
+											'required'		=>	1,
+											'safemode' 	=> 	0,
+										));
+			echo "</div>\n";
+			echo "</div>\n";
 		}
+		if ($data['qty']) {
+			echo form_text($locale['ESHP019'], 'product_quantity', 'product_quantity', '1', array('number'=>1, 'inline'=>1, 'class'=>'product-quantity input-sm', 'width'=>'50px',
+				'append_button'=>1,
+				'append_value'=> "<i class='fa fa-plus m-t-5'></i>",
+				'append_type'=>'button',
+				'prepend_button'=>1,
+				'prepend_value'=> "<i class='fa fa-minus m-t-5'></i>",
+				'prepend_type'=>'button',
+			));
+			// now add some simple js
+			add_to_jquery("
+			$('#product_quantity-prepend-btn').bind('click', function(e) {
+				var order_qty = $('#product_quantity').val();
+				var new_val = --order_qty;
+				if (order_qty >=1) { $('#product_quantity').val(new_val); }
+			 });
+			 $('#product_quantity-append-btn').bind('click', function(e) {
+				var order_qty = $('#product_quantity').val();
+				var new_val = ++order_qty;
+				$('#product_quantity').val(new_val);
+			 });
+			");
+		} else {
+			echo form_hidden('', 'product_quantity', 'product_quantity', 1);
+		}
+		if ($data['status'] == "1") {
+			echo "<div class='m-t-20'>\n";
+			if ($data['buynow'] == "1") { // use post action instead
+				echo form_button($locale['ESHP020'], 'buy_now', 'buy_now', $locale['ESHP020'], array('class'=>'m-r-10 '.fusion_get_settings('eshop_buynow_color')));
+				//echo "<a class='btn m-r-10 ".."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
+			}
+			if ($data['cart_on'] == "1") {
+				echo form_button($locale['ESHP021'], 'add_cart', 'add_cart', $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
+				//echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
+			}
+			echo "</div>\n";
+		}
+		echo form_hidden('', 'id', 'id', $data['id']);
 		echo "</div>\n";
+		echo closeform();
 	}
-	echo form_hidden('', 'id', 'id', $data['id']);
-	// the rest of the fields can load data from class... like this.
-	//$product_data = PHPFusion\Eshop::get_productData($_POST['id']);
-	echo "</div>\n";
-	echo closeform();
-	// change buynow color.
 	echo "</div>\n</div>\n";
 	echo "<hr/>\n";
 	$tab_title['title'][] = $locale['ESHP022'];
@@ -511,8 +511,73 @@ if (!function_exists('render_eshop_product')) {
 		}
 	}
 	echo closetab();
-
 	echo "<a class='m-t-20 btn ".fusion_get_settings('eshop_return_color')."' href='javascript:;' onclick='javascript:history.back(-1); return false;'><i class='fa fa-reply m-t-5 m-r-5'></i> ".$locale['ESHP030']."</a>";
-
+	}
 }
+
+if (!function_exists('render_checkout')) {
+	function render_checkout(array $info) {
+		global $locale;
+		echo "<h4>Checkout - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
+		echo $info['item_form'];
+		if ($info['customer_message']) echo "<div class='alert alert-warning'><span class='strong'>Customer Message:</span><div class='m-t-10'>".$info['customer_message']."</div></div>\n";
+		echo "<div class='text-smaller m-b-20'><span class='required'>*</span>".$locale['ESHPCHK118']."</div>\n";
+		// list accordion item
+		echo opencollapse('cart-list');
+		// customer info
+		echo opencollapsebody('Your Information', 'cif', 'cart-list', $info['customer'] ? 0 : 1);
+		echo "<div class='p-15'>\n";
+		echo $info['customer_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		// Coupon code
+		echo opencollapsebody('Use Coupon Codes', 'cpn', 'cart-list', $info['coupon_code'] ? 0 : 1);
+		echo "<div class='p-15'>\n";
+		echo $info['coupon_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		// Estimate shipping rates
+		echo opencollapsebody('Select Shipping Options', 'ship', 'cart-list', $info['shipping_method'] ? 0 : 1);
+		echo "<div class='p-15'>\n";
+		echo $info['shipping_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		// Estimate Payment Surcharge
+		echo opencollapsebody('Payment Options', 'payment', 'cart-list', $info['payment_method'] ? 0 : 1);
+		echo "<div class='p-15'>\n";
+		echo $info['payment_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		// customer message
+		echo opencollapsebody('Your Message', 'message', 'cart-list', 0);
+		echo "<div class='p-15'>\n";
+		echo $info['message_form'];
+		echo "</div>\n";
+		echo closecollapsebody();
+		echo closecollapse();
+		if ($info['coupon_message']) echo "<div class='alert alert-info'>".$info['coupon_message']."</div>\n";
+		if ($info['shipping_message']) echo "<div class='alert alert-info'>".$info['shipping_message']."</div>\n";
+		if ($info['payment_message']) echo "<div class='alert alert-info'>".$info['payment_message']."</div>\n";
+		echo "<div class='pull-left'>\n";
+		echo $info['agreement'];
+		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-6 p-r-0 pull-right'>\n";
+		echo "<div class='panel panel-default'>\n";
+		echo "<div class='panel-heading'><span class='strong'>".$locale['ESHPCHK127']."</span></div>\n";
+		echo "<div class='panel-body'>\n";
+		echo "<div class='display-block m-r-10'>".$info['subtotal']."</div>\n";
+		echo "<div class='display-block m-r-10'>".$info['vat']."</div>\n";
+		echo "<div class='display-block m-r-10'>".$info['nett']."</div>\n";
+		echo "<hr/>\n";
+		echo "<div class='display-block m-r-10'><span class='strong'>".$info['shipping']."</div>\n";
+		echo "<div class='display-block m-r-10'>".$info['payment']."</div>\n";
+		echo "</div>\n<div class='panel-footer'>\n";
+		echo "<div class='display-block m-r-10'>".$info['grandtotal']."</div>\n";
+		echo "</div></div>\n";
+		echo "</div>\n"; // end pull-right
+		echo "<div class='display-block  p-l-0 p-r-0 m-t-20 col-xs-12'>\n";
+		echo "<a class='btn btn-primary pull-right' href='".BASEDIR."eshop.php?order'>".$locale['ESHPCHK135']."</a>\n";
+		echo "<a class='btn btn-default pull-left' href='".BASEDIR."eshop.php'>Continue Shopping</a>\n";
+		echo "</div>\n";
+	}
 }

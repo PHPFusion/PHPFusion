@@ -53,6 +53,7 @@ PHP-Fusion 9.00 is powered by four subsidiary core extra after maincore.php, int
 - The PHP-Fusion Quantum-Dynamic Field Class.
 - The PHP-Fusion Defender Class.
 - The PHP-Fusion Atom theme Class.
+- The PHP-Fusion Autoloader Class.
 
 <strong>New Installer</strong><br/>
 A new installer have been designed and developed to cater for the specific needs:<br/>
@@ -102,14 +103,24 @@ in any other language, until another content is made available. We treat each la
 <strong>SEO Integration</strong><br/>
 Implemented its first step into system-wide modular-base SEO permalinks. keywords and meta are added throughout the system.
 
+<strong>New Submenu System</strong>
+During Beta 4, Developer Team pushed a new hierarchy menu navigation system into Version 9.00.
+
 New Core Systems
 =================
-- E-commerce System
+- E-commerce System - New Version, with Ajax and written in OOP implementations. The E-shop delivers MVC templatable.
+ -- Templatable Core
+ -- Unlimited Hierarchy
+ -- New Ajax Cart Panels
+ -- New Administration Interface
+
 - Blog System
+- Navigational Sub-Menu System
 
 Highlighted changes New Change Core Systems
 ============================================
 - Forum - added unlimited nesting of forums. unlimited forum hierarchy levels, and added 2 new types of forum - Answer & Support and Links.
+- Parse User will now parse User with just using @username in forum, shoutbox, or any applications that uses parseSmileys();
 
 Future
 ======

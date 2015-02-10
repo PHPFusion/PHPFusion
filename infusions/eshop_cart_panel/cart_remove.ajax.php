@@ -14,10 +14,17 @@ $data['color'] = isset($_POST['clr']) && isnum($_POST['clr']) ? $_POST['clr'] : 
 $data['cdyn'] = isset($_POST['cdyn']) && isnum($_POST['cdyn']) ? $_POST['cdyn'] : '';
 $data['time'] = isset($_POST['time']) && isnum($_POST['time']) ? $_POST['time'] : 0;
 
-$check = dbcount("(tid)", DB_ESHOP_CART, "tid='".$data['value']."' AND puid='".$data['usr']."' AND prid='".$data['prid']."' AND cdyn='".$data['cdyn']."' AND cclr='".$data['color']."' AND cadded='".$data['time']."'");
+$check = dbcount("(tid)", DB_ESHOP_CART, "tid='".$data['value']."' AND puid='".$data['usr']."' AND prid='".$data['prid']."' AND cdyn='".$data['cdyn']."' AND cclr='".$data['color']."'");
 if ($check) {
-	echo json_encode(array('response'=>1));
+	require_once 'includes.php';
 	dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE tid='".$data['value']."'");
+	$data['response'] = 1;
+	$data['subtotal'] = \PHPFusion\Eshop\Eshop::get_cart_total(defender::set_sessionUserID());
+	if ($data['subtotal'] == 0 ) {
+		$data['subtotal'] = intval(0);
+	}
+	echo json_encode($data);
+	\PHPFusion\Eshop\Eshop::refresh_session();
 } else {
-	echo json_encode(array('response'=>2));
+	echo json_encode(array('response'=>2, 'data'=>$data));
 }

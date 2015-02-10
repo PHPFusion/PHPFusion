@@ -23,6 +23,7 @@ include LOCALE.LOCALESET."forum.php";
 include THEMES."templates/global/forum.index.php";
 
 // Sanitize Globals
+if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) 	redirect("index.php");
 $_GET['forum_id'] = (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
 $_GET['pid'] = (isset($_GET['pid']) && isnum($_GET['pid'])) ? $_GET['pid'] : 0;
 $_GET['forum_cat'] = (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? $_GET['forum_cat'] : 0;
@@ -61,7 +62,7 @@ $result = dbquery("SELECT t.*, f.*, f2.forum_name AS forum_cat_name
 	FROM ".DB_THREADS." t
 	LEFT JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
 	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." t.thread_id='".$_GET['thread_id']."' AND t.thread_hidden='0'");
+	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." t.thread_id='".intval($_GET['thread_id'])."' AND t.thread_hidden='0'");
 if (dbrows($result) > 0) {
 	$info += dbarray($result);
 	ksort($info);
@@ -71,11 +72,9 @@ if (dbrows($result) > 0) {
 	define_forum_mods($info);
 
 	if (iMOD) {
-
-		if ((isset($_POST['delete_posts']) || isset($_POST['move_posts'])) or isset($_GET['error'])) {
-		require_once FORUM."viewthread_options.php";
-	}
-
+		require_once FORUM."options.php";
+		// forum action class - group them up.
+		$moderator = new moderator();
 		$info['mod_options'] = array(
 			'renew' => $locale['forum_0207'],
 			'delete' => $locale['forum_0201'],
@@ -84,6 +83,7 @@ if (dbrows($result) > 0) {
 			'move' => $locale['forum_0206']
 		);
 		$info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'];
+
 	}
 
 	// Forum Permissions - Polls (can view and vote)
@@ -509,4 +509,4 @@ add_to_footer($viewthread_js); //unset($viewthread_js);
 render_post($info);
 
 require_once THEMES."templates/footer.php";
-?>
+

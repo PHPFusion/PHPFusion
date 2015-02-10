@@ -42,8 +42,8 @@ if (!function_exists('render_forum')) {
 		// Unused locale 414, 400
 		$tab_active = isset($_GET['section']) ? $_GET['section'] : 'thread';
 		searchbar();
-		echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM.'index.php');
-		echo opentabbody($tab_title['title'], $tab_active, $tab_active, FORUM.'index.php');
+		echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM);
+		echo opentabbody($tab_title['title'], $tab_active, $tab_active, 'viewforum');
 		if (isset($_GET['viewforum'])) {
 			forum_viewforum($info);
 		} else {
@@ -168,9 +168,9 @@ if (!function_exists('render_forum_item_type')) {
 		echo "<div class='row'>\n";
 
 		if ($data['forum_type'] !=='3') {
-			echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-6'>\n";
+			echo "<div class='col-xs-12 col-sm-5'>\n";
 		} else {
-			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
+			echo "<div class='col-xs-12 col-sm-12'>\n";
 		}
 		echo "<!--forum_name-->\n";
 		echo "<a class='display-inline-block forum-subject' href='".FORUM."index.php?viewforum&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch']."'>".$data['forum_name']."</a>\n";
@@ -251,16 +251,16 @@ if (!function_exists('forum_viewforum')) {
 	function forum_viewforum($info) {
 		global $locale, $settings;
 		$data = $info['item'][$_GET['forum_id']];
-		echo "<div class='forum-subject m-t-20 strong text-bigger'>".$data['forum_name']."</div>\n";
-		echo "<div class='forum-description m-t-10 m-b-20'>\n";
-		echo $data['forum_description'] ? "<span class='display-inline-block text-dark'>".$data['forum_description']."</span>\n" : '';
+		echo "<h2 class='m-t-20'>".$data['forum_name']."</h2>\n";
+		echo "<div class='forum-description m-b-20'>\n";
+		echo $data['forum_description'] ? "<span class='display-inline-block'>".$data['forum_description']."</span>\n" : '';
 		echo "</div>\n";
-		echo $data['forum_rules'] ? "<div class='alert alert-info m-b-10'><div class='strong m-b-10'><i class='entypo megaphone'></i>".$locale['forum_0350']."</div>\n ".$data['forum_rules']."</div>" : '';
+		echo $data['forum_rules'] ? "<div class='alert alert-info m-b-20'><span class='strong m-b-10'><i class='entypo megaphone'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>" : '';
 		if ($data['forum_type'] > 1) {
 			// post button & forum filter
 			echo "<div class='clearfix m-b-20'>\n";
 			if (iMEMBER && $info['permissions']['can_post'] or iMOD or iSUPERADMIN) {
-				echo "<a title='".$locale['forum_0264']."' alt='".$locale['forum_0264']."' class='btn button btn-sm btn-primary text-white' href='".FORUM."post.php?action=newthread&amp;forum_id=".$_GET['forum_id']."'><i class='entypo plus-circled'></i> ".$locale['forum_0264']."</a>";
+				echo "<a title='".$locale['forum_0264']."' alt='".$locale['forum_0264']."' class='btn button btn-primary text-white' href='".FORUM."post.php?action=newthread&amp;forum_id=".$_GET['forum_id']."'><i class='entypo plus-circled'></i> ".$locale['forum_0264']."</a>";
 			}
 			echo "<div class='pull-right'>\n";
 			forum_filter($info);
@@ -270,7 +270,7 @@ if (!function_exists('forum_viewforum')) {
 		// subforums
 		if (isset($info['item'][$_GET['forum_id']]['child'])) {
 			echo "<div class='panel panel-default'>\n";
-			echo "<div class='panel-heading' style='border-bottom:0;'>".$locale['forum_0351']."</div>\n";
+			echo "<div class='panel-heading strong'>".$locale['forum_0351']."</div>\n";
 			$i = 1;
 			foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
 				render_forum_item_type($subforum_data, $i);
@@ -291,9 +291,8 @@ if (!function_exists('forum_viewforum')) {
 				}
 				echo "</div>\n";
 			}
-
 			echo "<div class='panel panel-default m-t-15'>\n";
-			echo "<div class='panel-heading' style='border-bottom:0;'>".$locale['forum_0341']."</div>\n";
+			echo "<div class='panel-heading strong' style='border-bottom:0;'>".$locale['forum_0341']."</div>\n";
 			$i = 1;
 			foreach($info['threads']['item'] as $cdata) {
 				render_thread_item($cdata, $i);
@@ -311,7 +310,8 @@ if (!function_exists('forum_viewforum')) {
 /* display threads -- need to simplify */
 if (!function_exists('render_thread_item')) {
 	function render_thread_item($data, $i) {
-		global $locale, $info, $userdata, $settings;
+		global $locale, $info, $userdata;
+		$settings = fusion_get_settings();
 		$type_icon = array('1'=>'entypo folder', '2'=>'entypo chat', '3'=>'entypo link', '4'=>'entypo graduation-cap');
 		/* Forum matching */
 		$thread_match = $data['thread_id']."\|".$data['thread_lastpost']."\|".$data['forum_id'];
@@ -393,6 +393,12 @@ if (!function_exists('render_thread_item')) {
 		}
 		// mods
 		$moderators = !empty($data['moderators']) ? $data['moderators'] : '';
+		$author = array(
+			'user_id' => $data['thread_author'],
+			'user_name' => $data['author_name'],
+			'user_status'=> $data['author_status'],
+			'user_avatar' => $data['author_avatar']
+		);
 		/* new status */
 		$fim = '';
 		if ($data['thread_lastpost'] > $info['lastvisited']) {
@@ -402,40 +408,39 @@ if (!function_exists('render_thread_item')) {
 				$fim = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='entypo ialert'></i></span>";
 			}
 		}
-		echo "<div id='forum_".$data['forum_id']."' class='list-group-item p-0' style='border:0; border-top:1px solid #ddd;'>\n";
+
+		echo "<div id='forum_".$data['forum_id']."' class='list-group-item p-t-20' style='border:0; border-top:1px solid #ddd;'>\n";
+
 		echo "<div class='row m-0'>\n";
-		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 p-t-10 p-b-10'>\n";
-		echo "<div class='pull-left'>\n".$xicon."</div>\n";
-		echo "<div class='overflow-hide'>\n";
-		echo $threadsubject.$fim;
-		$author = array(
-			'user_id' => $data['thread_author'],
-			'user_name' => $data['author_name'],
-			'user_status'=> $data['author_status'],
-			'user_avatar' => $data['author_avatar']
-		);
-		echo "<div class='m-t-10 m-b-10'>".$locale['forum_0006'].display_avatar($author, '20px', '', '', 'img-rounded')." <span class='forum_profile_link'>".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span> ".$locale['on']." ".showdate('forumdate', $data['post_datestamp'])."</div>\n";
-		echo $moderators ? "<div class='forum_moderators'>".$moderators."</div>\n" : '';
-		echo isset($data['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$data['track_button']['link']."'>".$data['track_button']['name']."</a>\n</div>\n" : '';
-		echo "</div>\n";
+		echo "<div class='col-xs-12 col-sm-9 col-md-6 p-l-0'>\n";
+			echo "<div class='pull-left m-r-10'>\n".$xicon."</div>\n";
+			echo "<div class='overflow-hide'>\n";
+			echo $threadsubject.$fim;
+			echo "<div class='m-t-10 m-b-10'>".$locale['forum_0006'].display_avatar($author, '20px', '', '', 'img-rounded')." <span class='forum_profile_link'>".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span> ".$locale['on']." ".showdate('forumdate', $data['post_datestamp'])."</div>\n";
+			echo $moderators ? "<div class='forum_moderators'>".$moderators."</div>\n" : '';
+			echo isset($data['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$data['track_button']['link']."'>".$data['track_button']['name']."</a>\n</div>\n" : '';
+			echo "</div>\n";
 		echo "</div>\n"; // end grid
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 p-t-10 p-b-10 p-l-0 p-r-0 text-center'>\n";
+
+		echo "<div class='hidden-xs col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
 		echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
-		echo "<span class='text-bigger strong text-dark m-0'>".number_format($data['thread_views'])."</span><br/>\n";
-		echo "<span class='text-smaller'>".$locale['forum_0370']."</span><br/>\n";
+		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['thread_views'])."</h4>\n";
+		echo "<span>".$locale['forum_0370']."</span>";
 		echo "</div>\n";
 		echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
-		echo "<span class='text-bigger strong text-dark m-0'>".number_format($data['thread_postcount'])."</span><br/>\n";
-		echo "<span class='text-smaller'>".$locale['forum_0371']."</span><br/>\n";
+		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['thread_postcount'])."</h4>\n";
+		echo "<span>".$locale['forum_0371']."</span>";
 		echo "</div>\n";
+
 		if ($data['forum_type'] == '4') {
 			echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
-			echo "<span class='text-bigger strong text-dark m-0'>".number_format($data['vote_count'])."</span><br/>\n";
-			echo "<span class='text-smaller'>Votes</span><br/>\n";
+			echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['vote_count'])."</h4>\n";
+			echo "<span>Votes</span>";
 			echo "</div>\n";
 		}
 		echo "</div>\n"; // end grid
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0 p-t-10 p-b-10'>\n";
+
+		echo "<div class='hidden-xs hidden-sm col-md-3 p-l-0'>\n";
 		// this is the last replied
 		$lastuser = array(
 			'user_id' => $data['thread_lastuser'],
@@ -464,24 +469,24 @@ if (!function_exists('render_post')) {
 		echo render_breadcrumbs();
 		//opentable($locale['forum_0150']);
 		if (isset($info['post_items']) && !empty($info['post_items'])) {
-
 			echo "<!--forum_thread_title-->\n";
-			echo "<div class='m-b-5 thread-header'>".$info['thread_subject']."</div>\n";
-			echo "<a class='forum_cat' href='".$info['forum_cat_link']."'>".$info['forum_name']."</a>\n";
-			echo $info['forum_type'] == 4 ? "<br/>\n".(number_format($info['thread_postcount']-1)).$locale['forum_0365']."" : '';
 			echo "<div class='thread-header clearfix m-t-20 m-b-20'>\n"; // start headerbar
 			// notify and print
 			echo "<div class='pull-right'>\n";
-			echo isset($info['notify']) ? "<a class='btn button btn-sm btn-default text-dark' href='".$info['notify']['link']."'><i class='entypo twitter'></i> ".$info['notify']['name']."</a>\n" : '';
-			echo "<a class='btn button btn-sm btn-default m-l-10 text-dark' href='".$info['print']['link']."'><i class='entypo print'></i> ".$info['print']['name']."</a>\n";
+			echo isset($info['notify']) ? "<a class='btn button btn-default' href='".$info['notify']['link']."'><i class='entypo twitter'></i> ".$info['notify']['name']."</a>\n" : '';
+			echo "<a class='btn button btn-default m-l-10' href='".$info['print']['link']."'><i class='entypo print'></i> ".$info['print']['name']."</a>\n";
 			echo "</div>\n";
-
 			// thread buttons
 			echo "<div class='thread-buttons'>\n";
-			echo (isset($info['newthread'])) ? "<a class='btn btn-default text-dark pull-left btn-sm m-r-10' href='".$info['newthread']['link']."'><i class='entypo plus-circled'></i>".$info['newthread']['name']."</a>\n" : '';
-			echo (isset($info['reply'])) ? "<a class='btn btn-default text-dark pull-left btn-sm m-r-10' href='".$info['reply']['link']."'><i class='entypo plus-circled'></i>".$info['reply']['name']."</a>\n" : '';
+			echo (isset($info['newthread'])) ? "<a class='btn btn-default text-dark pull-left m-r-10' href='".$info['newthread']['link']."'><i class='entypo plus-circled'></i>".$info['newthread']['name']."</a>\n" : '';
+			echo (isset($info['reply'])) ? "<a class='btn btn-default text-dark pull-left m-r-10' href='".$info['reply']['link']."'><i class='entypo plus-circled'></i>".$info['reply']['name']."</a>\n" : '';
 			echo "</div>\n";
 			echo "</div>\n"; // end headerbar
+
+			echo "<h2 class='m-b-5 thread-header'>".$info['thread_subject']."</h2>\n";
+			echo "<a class='forum_cat' href='".$info['forum_cat_link']."'>".$info['forum_name']."</a>\n";
+			echo $info['forum_type'] == 4 ? "<br/>\n".(number_format($info['thread_postcount']-1)).$locale['forum_0365']."" : '';
+			echo "<span class='thread_date'><i class='fa fa-calendar'></i> ".$locale['forum_0363'].showdate('forumdate', $info['thread_lastpost'])." - ".timer($info['thread_lastpost'])."</span>\n";
 
 			// poll.
 			if (isset($info['poll'])) {
@@ -512,7 +517,7 @@ if (!function_exists('render_post')) {
 				echo "</div>\n";
 				echo "</div>\n";
 			}
-			$i = 0;
+
 			// filter UI vars
 			$p_title = array();
 			if (isset($info['post-filters'])) {
@@ -522,15 +527,12 @@ if (!function_exists('render_post')) {
 					$p_title['icon'][] = '';
 				}
 			}
+
 			$tab_active = tab_active($p_title, 0, '1');
+
 			echo opentab($p_title, $tab_active, 'post_tabs', FORUM."viewthread.php?thread_id=".$_GET['thread_id']);
 			echo opentabbody('', isset($_GET['section']) ? $_GET['section'] : 'oldest', $tab_active, 'oldest');
-			// show the page
-			echo "<div class='clearfix thread_subheader'>\n";
-			echo "<span class='thread_date'>".$locale['forum_0363'].showdate('forumdate', $info['thread_lastpost'])." - ".timer($info['thread_lastpost'])."</span>\n";
-			echo "<div id='top' class='thread_pagenav pull-right'>\n".$info['page_nav']."</div>\n";
-			echo "</div>\n";
-
+			echo "<div id='top' class='thread_pagenav m-t-5'>\n".$info['page_nav']."</div>\n";
 			echo "<!--pre_forum_thread-->\n";
 			echo iMOD ? openform('mod_form', 'mod_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('downtime' => 0,'notice' => 0)) : '';
 			$i = 0;
@@ -546,43 +548,40 @@ if (!function_exists('render_post')) {
 				$mod_options = array(
 					'renew' => $locale['forum_0207'],
 					'delete' => $locale['forum_0201'],
-					'renew' => $locale['forum_0207'],
 					$info['thread_locked'] ? "unlock" : "lock" => $info['thread_locked'] ? $locale['forum_0203'] : $locale['forum_0202'],
 					$info['thread_sticky'] ? "nonsticky" : "sticky" => $info['thread_sticky'] ? $locale['forum_0205'] : $locale['forum_0204'],
 					'move' => $locale['forum_0206']
 				);
 				echo "<hr>\n";
+				echo "<div class='list-group-item'>\n";
 				echo "<div class='btn-group m-r-10'>\n";
 				echo "<a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n";
 				echo "<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n";
 				echo "</div>\n";
-
 				echo form_button($locale['forum_0176'], 'move_posts', 'move_posts', $locale['forum_0176'], array('class' => 'btn-default btn-sm m-r-10'));
 				echo form_button($locale['forum_0177'], 'delete_posts', 'delete_posts', $locale['forum_0177'], array('class' => 'btn-default btn-sm'));
-
 				echo "<div class='pull-right'>\n";
-				echo form_select('', 'step', 'step', $mod_options, '', array('placeholder' => $locale['forum_0200'], 'width'=>'250px', 'allowclear'=>1, 'class'=>'m-b-0', 'inline'=>1));
-				echo form_button($locale['forum_0208'], 'go', 'go', $locale['forum_0208'], array('class' => 'btn-default btn-sm m-l-10'));
+				echo form_button($locale['forum_0208'], 'go', 'go', $locale['forum_0208'], array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'));
+				echo form_select('', 'step', 'step', $mod_options, '', array('placeholder' => $locale['forum_0200'], 'width'=>'250px', 'allowclear'=>1, 'class'=>'m-b-0 m-t-5', 'inline'=>1));
+				echo "</div>\n";
 				echo "</div>\n";
 			}
 
 			// buttons
-			echo "<div class='clearfix m-t-20'>\n";
-			echo "<div class='overflow-hide'>\n";
-			echo (isset($info['newthread'])) ? "<a class='btn btn-default text-dark pull-left btn-sm m-r-10' href='".$info['newthread']['link']."'><i class='entypo plus-circled'></i>".$info['newthread']['name']."</a>\n" : '';
-			echo (isset($info['reply'])) ? "<a class='btn btn-default text-dark pull-left btn-sm m-r-10' href='".$info['reply']['link']."'><i class='entypo plus-circled'></i>".$info['reply']['name']."</a>\n" : '';
-			echo "</div></div>\n";
 
+			echo "<div class='overflow-hide m-t-20'>\n";
+			echo (isset($info['newthread'])) ? "<a class='btn btn-default pull-left m-r-10' href='".$info['newthread']['link']."'><i class='entypo plus-circled'></i>".$info['newthread']['name']."</a>\n" : '';
+			echo (isset($info['reply'])) ? "<a class='btn btn-default pull-left  m-r-10' href='".$info['reply']['link']."'><i class='entypo plus-circled'></i>".$info['reply']['name']."</a>\n" : '';
+			echo "</div>\n";
 			if (iMOD) {
 				echo closeform();
 			}
 
 			// Quick reply
-			echo "<hr>";
 			if ($info['permissions']['can_reply'] && $info['forum_quick_edit'] && !$info['thread_locked']) {
 				$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'];
-				echo "<h4 class='m-t-20'>".$locale['forum_0168']."</h4>\n";
-				echo openform('qr_form', 'qr_form', 'post', $form_action, array('class'=>'m-b-20'));
+				echo openform('qr_form', 'qr_form', 'post', $form_action, array('class'=>'m-b-20 m-t-20 list-group-item'));
+				echo "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
 				echo form_textarea('', 'post_message', 'post_message', '', array('bbcode' => 1, 'required' => 1, 'autosize'=>1, 'preview'=>1, 'form_name'=>'qr_form'));
 				echo "<div class='m-t-10 pull-right'>\n";
 				echo $settings['site_seo'] ? '' : form_button($locale['forum_0173'], 'previewreply', 'previewreply', $locale['forum_0173'], array('class' => 'btn-default btn-sm m-r-10')); // post lost.
@@ -600,7 +599,6 @@ if (!function_exists('render_post')) {
 				echo closeform();
 				//echo "<!--sub_forum_thread-->\n";
 			}
-
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "</div>\n";
@@ -643,7 +641,7 @@ if (!function_exists('render_post_item')) {
 			$vote .= "</div>\n";
 		}
 		// date
-		$date = "Posted ".timer($data['post_datestamp'])." ".$locale['at']." ".showdate('forumdate', $data['post_datestamp']);
+		$date = "Posted ".timer($data['post_datestamp'])." - ".showdate('forumdate', $data['post_datestamp']);
 		// attachment
 		$attach = '';
 		if (!empty($data['attach-files'])) {
@@ -658,18 +656,17 @@ if (!function_exists('render_post_item')) {
 			$attach .= "<div class='attachments-list'>".$data['attach-image']."</div>\n";
 			$attach .= "</div>\n";
 		}
-		echo "<!--forum_thread_prepost_".$data['post_id']."-->\n";
-		echo "<div class='clearfix m-t-20'>\n";
-		echo "<div class='pull-left m-r-10'>\n";
-		echo "<div class='text-center m-t-5'>\n";
-		echo "<div class='m-b-10'>\n";
-		echo display_avatar($data, '65px', '', '', '');
-		echo "</div>\n";
-		echo ($data['user_lastvisit'] >= time()-3600 ? "<span class='btn text-white label label-success' style='padding:2px 5px 3px;'>Online</span>" : "<span class='label text-white label-danger' style='padding:3px 5px;'>Offline</span>")."\n";
-		echo "<br/>\n<span class='forum_rank display-inline-block m-t-10'>\n".$data['rank_img']."</span>\n";
 
-		echo "</div>\n";
-		echo "</div>\n";
+		echo "<!--forum_thread_prepost_".$data['post_id']."-->\n";
+		echo "<div class='clearfix m-t-20 list-group-item'>\n";
+
+			echo "<div class='pull-left text-center forum-user m-t-5 m-r-20'>\n";
+			echo "<div class='m-b-10'>\n";
+			echo display_avatar($data, '50px', '', '', '');
+			echo "</div>\n";
+			echo ($data['user_lastvisit'] >= time()-3600 ? "<span class='btn text-white label label-success'>Online</span>" : "<span class='label text-white label-danger'>Offline</span>")."\n";
+			echo "<br/>\n<span class='forum_rank display-inline-block m-t-10'>\n".$data['rank_img']."</span>\n";
+			echo "</div>\n";
 
 		echo $vote ? "<div class='display-inline-block pull-left m-r-10'>\n$vote</div>\n" : '';
 
@@ -677,28 +674,29 @@ if (!function_exists('render_post_item')) {
 		echo "<!--forum_thread_user_name-->\n";
 		echo "<span class='forum-profile-link strong m-r-10'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>";
 		echo "<span class='forum_user_post_count'>".$data['user_posts']." ".$locale['forum_0151']."</span>\n";
-
-		echo "<br/><span class='forum_date m-r-10'>$date</span>";
-
-		if (iMOD) {
-			echo "<div class='pull-right'><input type='checkbox' name='delete_post[]' value='".$data['post_id']."'/></div>\n";
-		}
-
-		echo "<span class='pull-right'>$marker</span>\n";
-		echo "<a title='".$locale['forum_0241']."' class='pull-right icon-sm' href='#top'><i class='entypo up-open'></i></a>\n";
-
+		echo "<span class='forum_date pull-right'> <i class='fa fa-clock-o'></i> $date - $marker";
+		echo "<a title='".$locale['forum_0241']."' role='button' class='pull-right icon-xs' href='#top'><i class='entypo up-open'></i></a>\n";
+		echo "</span>\n";
 		echo "<div class='overflow-hide m-b-20'>\n";
 		echo "<div class='forum_thread_user_post'>".$data['post_message']."</div>\n";
 		echo "</div>\n";
 		echo $attach;
-
 		echo "<!--sub_forum_post_message-->";
 		echo $edit_reason ? $edit_reason : '';
 		echo "<div class='user_signature'>".$user_sig."</div>\n";
 		echo "<!--sub_forum_post-->";
-		echo "<div class='thread-footer'>".$user_web.$user_msg.$post_reply.$print.$user_ip;
+		echo "<div class='thread-footer'>\n";
+		if (iMOD) {
+			echo "<div class='pull-right'>\n";
+			echo "<input type='checkbox' name='delete_post[]' value='".$data['post_id']."'/>\n";
+			echo "</div>\n";
+		}
+		echo "".$user_web.$user_msg.$post_reply.$print.$user_ip;
 		echo "</div>\n";
-		echo "</div></div>\n";
+
+		echo "</div>\n";
+		echo "</div>\n";
+
 	}
 }
 
