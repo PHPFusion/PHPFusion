@@ -293,6 +293,9 @@ $locale['1013'] = "видалення";
 $locale['1014'] = "Можливість авторизації одночасно з різних пристроїв";
 $locale['1014a'] = "рекомендується заборонити для вищого рівня безпеки";
 
+// Social integration
+$locale['1030'] = "Create OpenGraph meta tags for Social networks"; // translate this line!
+
 // Date format options (you can add/delete lines)
 // More info at: http://php.net/manual/en/function.strftime.php
 $locale['dateformats'][] = "%м/%д/%р";

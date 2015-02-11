@@ -561,6 +561,7 @@ if (isset($_POST['uninstall'])) {
 		"('normalize_seo', '0')",
 		"('debug_seo', '0')",
 		"('privacy_policy', '')",
+		"('create_og_tags', '1')",
 		empty($_POST['enabled_languages']) 
 			? "('enabled_languages', '".stripinput($_POST['localeset'])."')" 
 			: "('enabled_languages', '".stripinput($enabled_languages)."')"
