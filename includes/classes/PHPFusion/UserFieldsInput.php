@@ -181,8 +181,8 @@ class UserFieldsInput {
 
 	private function _settUserName() {
 		global $locale, $defender;
-		$this->_userName = isset($_POST['user_names']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_names']))) : "";
-		if ($this->_userName && $this->_userName != $this->userData['user_names']) {
+		$this->_userName = isset($_POST['user_name']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_name']))) : "";
+		if ($this->_userName && $this->_userName != $this->userData['user_name']) {
 			// attempt to change user name
 			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
 				$defender->stop();
@@ -339,10 +339,10 @@ class UserFieldsInput {
 	private function _setAdminPassword() {
 		global $locale, $defender;
 		if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
-			$this->_userAdminPassword = $this->_getPasswordInput("user_admin_password");
-			$this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password");
-			$this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2");
-			// now this is where it is different
+			$this->_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
+			$this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
+			$this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2"); // var3
+			//print_p($_POST);
 			$passAuth = new PasswordAuth();
 			if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
 				// New Admin
@@ -353,22 +353,24 @@ class UserFieldsInput {
 			} else {
 				// Old Admin
 				// Intialize password auth
-				$passAuth->inputPassword = $this->_userAdminPassword;
-				$passAuth->inputNewPassword = $this->_newUserAdminPassword;
-				$passAuth->inputNewPassword2 = $this->_newUserAdminPassword2;
+				$passAuth->inputPassword = $this->_userAdminPassword; // var1
+				$passAuth->inputNewPassword = $this->_newUserAdminPassword; // var2
+				$passAuth->inputNewPassword2 = $this->_newUserAdminPassword2; // var3
 				$passAuth->currentPasswordHash = $this->userData['user_admin_password'];
+				//print_p($passAuth);
 				$passAuth->currentAlgo = $this->userData['user_admin_algo'];
 				$passAuth->currentSalt = $this->userData['user_admin_salt'];
 				$valid_current_password = $passAuth->isValidCurrentPassword();
+				//print_p($valid_current_password);
 			}
 
 			if ($valid_current_password) {
 				$this->_isValidCurrentAdminPassword  = 1;
 				// authenticated. now do the integrity check
 				$_isValidNewPassword = $passAuth->isValidNewPassword();
+				//print_p($_isValidNewPassword);
 				switch($_isValidNewPassword) {
 					case '0':
-						echo 'i am here';
 						// New password is valid
 						$new_admin_password = $passAuth->getNewHash();
 						$new_admin_salt = $passAuth->getNewSalt();

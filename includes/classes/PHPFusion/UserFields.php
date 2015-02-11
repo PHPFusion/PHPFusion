@@ -99,15 +99,15 @@ class UserFields extends QuantumFields {
 		global $locale;
 		include THEMES."templates/global/profile.php";
 
-		$_GET['profiles'] = isset($_GET['profiles']) ? $_GET['profiles'] : 1;
+		$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
 
 		/* Fields that are ONLY AVAILABLE with REQUEST_URL = ?profiles=1 */
 		if ($_GET['profiles'] == '1') {
 
 			// User Name
-			$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : '';
-			$user_email = isset($_POST['user_email']) ? $_POST['user_email'] : '';
-			$user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : '';
+			$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->userData['user_name'];
+			$user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
+			$user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
 
 			$this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
 			if (iADMIN || $this->_userNameChange) {
