@@ -111,7 +111,7 @@ class UserFields extends QuantumFields {
 
 			$this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
 			if (iADMIN || $this->_userNameChange) {
-				$this->info['user_name'] .= form_text($locale['u127'], 'user_names', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1));
+				$this->info['user_name'] .= form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1));
 			}
 			// User Password
 			$this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');

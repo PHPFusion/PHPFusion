@@ -204,7 +204,7 @@ class UserFieldsInput {
 			}
 		} else {
 			// User Name Cannot Be Left Empty on Register mode
-			if ($this->_method != 'validate_update') {
+			if ($this->_method == 'validate_insert') {
 				$defender->stop();
 				$defender->addError('user_name');
 				$defender->addHelperText('user_name', $locale['u122']);
@@ -218,7 +218,7 @@ class UserFieldsInput {
 	// Get New Password Hash and Directly Set New Cookie if Authenticated
 	private function _setPassword() {
 		global $locale, $defender;
-		if ($this->registration) {
+		if ($this->_method == 'validate_insert') {
 			// register have 2 fields
 			$this->_newUserPassword = self::_getPasswordInput('user_password1');
 			$this->_newUserPassword2 = self::_getPasswordInput('user_password2');
