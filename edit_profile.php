@@ -62,6 +62,7 @@ $userFields->userData = $userdata;
 $userFields->plugin_folder = INCLUDES."user_fields/";
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange($settings['userNameChange']);
+$userFields->registration = FALSE;
 $userFields->method = 'input';
 $userFields->render_profile_input();
 closetable();

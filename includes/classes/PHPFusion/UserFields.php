@@ -286,12 +286,13 @@ class UserFields extends QuantumFields {
 				$this->info['user_field'] .= form_hidden('', 'user_id', 'user_id', $this->userData['user_id']);
 				$this->info['user_field'] .= form_hidden('', 'user_name', 'user_name', $this->userData['user_name']);
 			} else {
+				//print_p($this->registration);
 				$this->info['user_field'] = ($this->registration) ? '' : array();
 			}
 			// filter display - input and display method.
 			if (isset($category[$index_page_id])) {
 				foreach($category[$index_page_id] as $cat_id => $cat) {
-					if ($this->registration) {
+					if ($this->registration || $this->method=='input') {
 						$this->method = 'input';
 						if (isset($item[$cat_id])) {
 							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
@@ -301,6 +302,7 @@ class UserFields extends QuantumFields {
 						}
 					} else {
 						$this->method = 'display';
+
 						if (isset($item[$cat_id])) {
 							$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
 							foreach($item[$cat_id] as $field_id => $field) {
