@@ -21,7 +21,7 @@ include LOCALE.LOCALESET."user_fields.php";
 if (iMEMBER || !$settings['enable_registration']) {
 	redirect("index.php");
 }
-
+$_GET['profiles'] = 1;
 $errors = array();
 if (isset($_GET['email']) && isset($_GET['code'])) {
 
