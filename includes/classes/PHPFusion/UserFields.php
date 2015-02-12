@@ -36,7 +36,7 @@ class UserFields extends QuantumFields {
 	public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
 	public $skipCurrentPass = FALSE;
 	public $registration = FALSE;
-	public $userData = array("user_id"=>'', 'user_realname'=>'', "user_name"=>'', "user_password"=>'', "user_admin_password"=>'', "user_email"=>'', "user_language"=>LANGUAGE, 'user_timezone'=>'Europe/London');
+	public $userData = array("user_id"=>'', "user_name"=>'', "user_password"=>'', "user_admin_password"=>'', "user_email"=>'', "user_language"=>LANGUAGE, 'user_timezone'=>'Europe/London');
 
 	/* Quantum Fields Extensions */
 	public $system_title = '';
@@ -272,7 +272,6 @@ class UserFields extends QuantumFields {
 				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
 		if (dbrows($result)>0) {
 			// loop
-
 			while ($data = dbarray($result)) {
 				if ($data['field_cat_id']) $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
 				if ($data['field_cat']) $item[$data['field_cat']][] = $data;
@@ -282,38 +281,34 @@ class UserFields extends QuantumFields {
 				}
 			}
 			// require to inject id when id not present in other pages to make reference as Quantum Fields $index_value
-			if ($index_page_id !=='1' && $this->method =='input') {
+			if ($index_page_id !=='1' && (!$this->registration)) {
 				$this->info['user_field'] = '';
 				$this->info['user_field'] .= form_hidden('', 'user_id', 'user_id', $this->userData['user_id']);
 				$this->info['user_field'] .= form_hidden('', 'user_name', 'user_name', $this->userData['user_name']);
 			} else {
-				$this->info['user_field'] = array();
+				$this->info['user_field'] = ($this->registration) ? '' : array();
 			}
 			// filter display - input and display method.
 			if (isset($category[$index_page_id])) {
-
 				foreach($category[$index_page_id] as $cat_id => $cat) {
-					switch($this->method) {
-						case 'input':
-							if (isset($item[$cat_id])) {
-								$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
-								foreach($item[$cat_id] as $field_id => $field) {
-									if (!is_array($this->phpfusion_field_DOM($field))) {
-										$this->info['user_field'] .= $this->phpfusion_field_DOM($field);
-									}
+					if ($this->registration) {
+						$this->method = 'input';
+						if (isset($item[$cat_id])) {
+							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
+							foreach($item[$cat_id] as $field_id => $field) {
+								$this->info['user_field'] .= $this->phpfusion_field_DOM($field);
+							}
+						}
+					} else {
+						$this->method = 'display';
+						if (isset($item[$cat_id])) {
+							$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
+							foreach($item[$cat_id] as $field_id => $field) {
+								if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->phpfusion_field_DOM($field)) {
+									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->phpfusion_field_DOM($field);
 								}
 							}
-							break;
-						case 'display' :
-							if (isset($item[$cat_id])) {
-								$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
-								foreach($item[$cat_id] as $field_id => $field) {
-									if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->phpfusion_field_DOM($field)) {
-										$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->phpfusion_field_DOM($field);
-									}
-								}
-							}
-							break;
+						}
 					}
 				} // end foreach
 			}

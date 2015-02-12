@@ -430,7 +430,7 @@ class UserFieldsInput {
 		$this->_userEmail = (isset($_POST['user_email']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_email']))) : "");
 		if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
 			// Require user password for email change
-			if ($this->_isValidCurrentPassword) {
+			if ($this->_isValidCurrentPassword || $this->registration) {
 				// Require a valid email account
 				if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
 					$email_domain = substr(strrchr($this->_userEmail, "@"), 1);
