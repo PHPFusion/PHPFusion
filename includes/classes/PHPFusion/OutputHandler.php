@@ -93,7 +93,7 @@ class OutputHandler {
      * @param type $addition
      */
     public static function addToTitle($addition = "") {
-        self::$pageTitle .= preg_replace("/".$GLOBALS['locale']['global_200']."/", '', $addition, 1);
+        self::$pageTitle .= preg_replace("/".$GLOBALS['locale']['global_200']."/", ' ', $addition, 1);
     }
 
     /**
