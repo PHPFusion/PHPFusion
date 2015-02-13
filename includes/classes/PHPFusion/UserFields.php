@@ -116,13 +116,13 @@ class UserFields extends QuantumFields {
 			// User Password
 			$this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');
 			if ($this->registration) {
-				$this->info['user_password'] .= form_text('Set Password', 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
-				$this->info['user_password'] .= form_text('Repeat Password', 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
+				$this->info['user_password'] .= form_text($locale['u134a'], 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
+				$this->info['user_password'] .= form_text($locale['u134b'], 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
 			} else {
 				$this->info['user_password'] .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id']: 0);
-				$this->info['user_password'] .= form_text('Current Password', 'user_password', 'user_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
-				$this->info['user_password'] .= form_text('Set New Password', 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
-				$this->info['user_password'] .= form_text('Repeat New Password', 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
+				$this->info['user_password'] .= form_text($locale['u135a'], 'user_password', 'user_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
+				$this->info['user_password'] .= form_text($locale['u135b'], 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
+				$this->info['user_password'] .= form_text($locale['u135c'], 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
 				$this->info['user_password'] .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
 			}
 			$this->info['user_password'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
@@ -131,12 +131,12 @@ class UserFields extends QuantumFields {
 			$this->info['user_admin_password'] = '';
 			if (!$this->registration && iADMIN) {
 				if ($this->userData['user_admin_password']) {
-					$this->info['user_admin_password'] =  form_text('Current Admin Password', 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
-					$this->info['user_admin_password'] .=  form_text('New Admin Password', 'user_admin_password1', 'user_admin_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+					$this->info['user_admin_password'] =  form_text($locale['u144a'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+					$this->info['user_admin_password'] .=  form_text($locale['u144'], 'user_admin_password1', 'user_admin_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 				} else {
-					$this->info['user_admin_password'] =  form_text('New Admin Password', 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+					$this->info['user_admin_password'] =  form_text($locale['u144'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 				}
-				$this->info['user_admin_password'] .=  form_text('Confirm Admin Password', 'user_admin_password2', 'user_admin_password2', '', array('class'=>'m-b-0', 'password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+				$this->info['user_admin_password'] .=  form_text($locale['u145'], 'user_admin_password2', 'user_admin_password2', '', array('class'=>'m-b-0', 'password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 				$this->info['user_admin_password'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
 			}
 			// Avatar Field
