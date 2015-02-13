@@ -75,6 +75,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			"blog_image" => $data['blog_image'],
 			"cat_image" => $data['blog_cat_image'],
 			"blog_subject" => $data['blog_subject'],
+			"blog_descr" => $data['blog_blog'],
 			'blog_blog' => $blog_blog[$_GET['rowstart']],
 			"blog_ext" => "n",
 			"blog_keywords" => $data['blog_keywords'],

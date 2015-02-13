@@ -130,6 +130,9 @@ echo form_toggle($locale['679'], 'visitorcounter_enabled', 'visitorcounter_enabl
 $opts = array('0' => $locale['519'], '1' => $locale['689'], '2' => $locale['690']);
 echo form_select($locale['688'], 'rendertime_enabled', 'rendertime_enabled', $opts, $settings['rendertime_enabled'], array('placeholder' => $locale['choose']));
 echo "</div>\n</div>\n";
+echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
+echo form_toggle($locale['1030'], 'create_og_tags', 'create_og_tags', $choice_arr, $settings['create_og_tags']);
+echo "</div>\n</div>\n";
 
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
 

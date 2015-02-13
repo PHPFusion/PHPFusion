@@ -71,6 +71,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			"news_image" => $data['news_image'],
 			"cat_image" => $data['news_cat_image'],
 			"news_subject" => $data['news_subject'],
+			"news_descr" => $data['news_news'],
 			'news_news' => $news_news[$_GET['rowstart']],
 			"news_ext" => "n",
 			"news_keywords" => $data['news_keywords'],

@@ -21,7 +21,7 @@ include LOCALE.LOCALESET."user_fields.php";
 if (iMEMBER || !$settings['enable_registration']) {
 	redirect("index.php");
 }
-
+$_GET['profiles'] = 1;
 $errors = array();
 if (isset($_GET['email']) && isset($_GET['code'])) {
 
@@ -44,7 +44,7 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 		dbquery_insert(DB_USERS, $user_info, 'save');
 		$result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code='".$_GET['code']."' LIMIT 1");
 		opentable($locale['u155']);
-		if ($settings['admin_activation'] == "1") {
+		if (fusion_get_settings('admin_activation') == "1") {
 			echo "<div style='text-align:center'><br />\n".$locale['u171']."<br /><br />\n".$locale['u162']."<br /><br />\n</div>\n";
 		} else {
 			echo "<div style='text-align:center'><br />\n".$locale['u171']."<br /><br />\n".$locale['u161']."<br /><br />\n</div>\n";
@@ -56,29 +56,28 @@ if (isset($_GET['email']) && isset($_GET['code'])) {
 }
 elseif (isset($_POST['register'])) {
 	$userInput = new PHPFusion\UserFieldsInput();
-	$userInput->validation = $settings['display_validation'];
-	$userInput->emailVerification = $settings['email_verification'];
-	$userInput->adminActivation = $settings['admin_activation'];
+	$userInput->validation = fusion_get_settings('display_validation'); //$settings['display_validation'];
+	$userInput->emailVerification = fusion_get_settings('email_verification'); //$settings['email_verification'];
+	$userInput->adminActivation = fusion_get_settings('admin_activation'); //$settings['admin_activation'];
 	$userInput->skipCurrentPass = TRUE;
 	$userInput->registration = TRUE;
 	$userInput->saveInsert();
 	$userInput->displayMessages();
 	unset($userInput);
 }
-if ((!isset($_POST['register']) && !isset($_GET['code'])) || (isset($_POST['register']) && defined('FUSION_NULL'))) {
+if (!isset($_POST['register']) && !isset($_GET['code']) || (isset($_POST['register']))) {
 	// hide by default
 	opentable($locale['u101']);
 	$userFields = new PHPFusion\UserFields();
 	$userFields->postName = "register";
 	$userFields->postValue = $locale['u101'];
-	$userFields->displayValidation = $settings['display_validation'];
-	$userFields->displayTerms = $settings['enable_terms'];
+	$userFields->displayValidation = fusion_get_settings('display_validation'); // $settings['display_validation'];
+	$userFields->displayTerms = fusion_get_settings('enable_terms'); // $settings['enable_terms'];
 	$userFields->plugin_folder = INCLUDES."user_fields/";
 	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 	$userFields->showAdminPass = FALSE;
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->registration = TRUE;
-	$userFields->method = 'input';
 	$userFields->render_profile_input();
 	closetable();
 }

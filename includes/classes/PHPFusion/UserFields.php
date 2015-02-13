@@ -36,7 +36,7 @@ class UserFields extends QuantumFields {
 	public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
 	public $skipCurrentPass = FALSE;
 	public $registration = FALSE;
-	public $userData = array("user_id"=>'', 'user_realname'=>'', "user_name"=>'', "user_password"=>'', "user_admin_password"=>'', "user_email"=>'', "user_language"=>LANGUAGE, 'user_timezone'=>'Europe/London');
+	public $userData = array("user_id"=>'', "user_name"=>'', "user_password"=>'', "user_admin_password"=>'', "user_email"=>'', "user_language"=>LANGUAGE, 'user_timezone'=>'Europe/London');
 
 	/* Quantum Fields Extensions */
 	public $system_title = '';
@@ -99,30 +99,30 @@ class UserFields extends QuantumFields {
 		global $locale;
 		include THEMES."templates/global/profile.php";
 
-		$_GET['profiles'] = isset($_GET['profiles']) ? $_GET['profiles'] : 1;
+		$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
 
 		/* Fields that are ONLY AVAILABLE with REQUEST_URL = ?profiles=1 */
 		if ($_GET['profiles'] == '1') {
 
 			// User Name
-			$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : '';
-			$user_email = isset($_POST['user_email']) ? $_POST['user_email'] : '';
-			$user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : '';
+			$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->userData['user_name'];
+			$user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
+			$user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
 
 			$this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
 			if (iADMIN || $this->_userNameChange) {
-				$this->info['user_name'] .= form_text($locale['u127'], 'user_names', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1));
+				$this->info['user_name'] .= form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1));
 			}
 			// User Password
 			$this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');
 			if ($this->registration) {
-				$this->info['user_password'] .= form_text('Set Password', 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
-				$this->info['user_password'] .= form_text('Repeat Password', 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
+				$this->info['user_password'] .= form_text($locale['u134a'], 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
+				$this->info['user_password'] .= form_text($locale['u134b'], 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
 			} else {
 				$this->info['user_password'] .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id']: 0);
-				$this->info['user_password'] .= form_text('Current Password', 'user_password', 'user_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
-				$this->info['user_password'] .= form_text('Set New Password', 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
-				$this->info['user_password'] .= form_text('Repeat New Password', 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
+				$this->info['user_password'] .= form_text($locale['u135a'], 'user_password', 'user_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
+				$this->info['user_password'] .= form_text($locale['u135b'], 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
+				$this->info['user_password'] .= form_text($locale['u135c'], 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
 				$this->info['user_password'] .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
 			}
 			$this->info['user_password'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
@@ -131,12 +131,12 @@ class UserFields extends QuantumFields {
 			$this->info['user_admin_password'] = '';
 			if (!$this->registration && iADMIN) {
 				if ($this->userData['user_admin_password']) {
-					$this->info['user_admin_password'] =  form_text('Current Admin Password', 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
-					$this->info['user_admin_password'] .=  form_text('New Admin Password', 'user_admin_password1', 'user_admin_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+					$this->info['user_admin_password'] =  form_text($locale['u144a'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+					$this->info['user_admin_password'] .=  form_text($locale['u144'], 'user_admin_password1', 'user_admin_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 				} else {
-					$this->info['user_admin_password'] =  form_text('New Admin Password', 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+					$this->info['user_admin_password'] =  form_text($locale['u144'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 				}
-				$this->info['user_admin_password'] .=  form_text('Confirm Admin Password', 'user_admin_password2', 'user_admin_password2', '', array('class'=>'m-b-0', 'password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+				$this->info['user_admin_password'] .=  form_text($locale['u145'], 'user_admin_password2', 'user_admin_password2', '', array('class'=>'m-b-0', 'password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 				$this->info['user_admin_password'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
 			}
 			// Avatar Field
@@ -272,7 +272,6 @@ class UserFields extends QuantumFields {
 				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
 		if (dbrows($result)>0) {
 			// loop
-
 			while ($data = dbarray($result)) {
 				if ($data['field_cat_id']) $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
 				if ($data['field_cat']) $item[$data['field_cat']][] = $data;
@@ -282,38 +281,36 @@ class UserFields extends QuantumFields {
 				}
 			}
 			// require to inject id when id not present in other pages to make reference as Quantum Fields $index_value
-			if ($index_page_id !=='1' && $this->method =='input') {
+			if ($index_page_id !=='1' && (!$this->registration)) {
 				$this->info['user_field'] = '';
 				$this->info['user_field'] .= form_hidden('', 'user_id', 'user_id', $this->userData['user_id']);
 				$this->info['user_field'] .= form_hidden('', 'user_name', 'user_name', $this->userData['user_name']);
 			} else {
-				$this->info['user_field'] = array();
+				//print_p($this->registration);
+				$this->info['user_field'] = ($this->registration) ? '' : array();
 			}
 			// filter display - input and display method.
 			if (isset($category[$index_page_id])) {
-
 				foreach($category[$index_page_id] as $cat_id => $cat) {
-					switch($this->method) {
-						case 'input':
-							if (isset($item[$cat_id])) {
-								$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
-								foreach($item[$cat_id] as $field_id => $field) {
-									if (!is_array($this->phpfusion_field_DOM($field))) {
-										$this->info['user_field'] .= $this->phpfusion_field_DOM($field);
-									}
+					if ($this->registration || $this->method=='input') {
+						$this->method = 'input';
+						if (isset($item[$cat_id])) {
+							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
+							foreach($item[$cat_id] as $field_id => $field) {
+								$this->info['user_field'] .= $this->phpfusion_field_DOM($field);
+							}
+						}
+					} else {
+						$this->method = 'display';
+
+						if (isset($item[$cat_id])) {
+							$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
+							foreach($item[$cat_id] as $field_id => $field) {
+								if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->phpfusion_field_DOM($field)) {
+									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->phpfusion_field_DOM($field);
 								}
 							}
-							break;
-						case 'display' :
-							if (isset($item[$cat_id])) {
-								$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
-								foreach($item[$cat_id] as $field_id => $field) {
-									if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->phpfusion_field_DOM($field)) {
-										$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->phpfusion_field_DOM($field);
-									}
-								}
-							}
-							break;
+						}
 					}
 				} // end foreach
 			}

@@ -181,8 +181,8 @@ class UserFieldsInput {
 
 	private function _settUserName() {
 		global $locale, $defender;
-		$this->_userName = isset($_POST['user_names']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_names']))) : "";
-		if ($this->_userName && $this->_userName != $this->userData['user_names']) {
+		$this->_userName = isset($_POST['user_name']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_name']))) : "";
+		if ($this->_userName && $this->_userName != $this->userData['user_name']) {
 			// attempt to change user name
 			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
 				$defender->stop();
@@ -204,7 +204,7 @@ class UserFieldsInput {
 			}
 		} else {
 			// User Name Cannot Be Left Empty on Register mode
-			if ($this->_method != 'validate_update') {
+			if ($this->_method == 'validate_insert') {
 				$defender->stop();
 				$defender->addError('user_name');
 				$defender->addHelperText('user_name', $locale['u122']);
@@ -218,7 +218,7 @@ class UserFieldsInput {
 	// Get New Password Hash and Directly Set New Cookie if Authenticated
 	private function _setPassword() {
 		global $locale, $defender;
-		if ($this->registration) {
+		if ($this->_method == 'validate_insert') {
 			// register have 2 fields
 			$this->_newUserPassword = self::_getPasswordInput('user_password1');
 			$this->_newUserPassword2 = self::_getPasswordInput('user_password2');
@@ -339,10 +339,10 @@ class UserFieldsInput {
 	private function _setAdminPassword() {
 		global $locale, $defender;
 		if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
-			$this->_userAdminPassword = $this->_getPasswordInput("user_admin_password");
-			$this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password");
-			$this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2");
-			// now this is where it is different
+			$this->_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
+			$this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
+			$this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2"); // var3
+			//print_p($_POST);
 			$passAuth = new PasswordAuth();
 			if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
 				// New Admin
@@ -353,22 +353,24 @@ class UserFieldsInput {
 			} else {
 				// Old Admin
 				// Intialize password auth
-				$passAuth->inputPassword = $this->_userAdminPassword;
-				$passAuth->inputNewPassword = $this->_newUserAdminPassword;
-				$passAuth->inputNewPassword2 = $this->_newUserAdminPassword2;
+				$passAuth->inputPassword = $this->_userAdminPassword; // var1
+				$passAuth->inputNewPassword = $this->_newUserAdminPassword; // var2
+				$passAuth->inputNewPassword2 = $this->_newUserAdminPassword2; // var3
 				$passAuth->currentPasswordHash = $this->userData['user_admin_password'];
+				//print_p($passAuth);
 				$passAuth->currentAlgo = $this->userData['user_admin_algo'];
 				$passAuth->currentSalt = $this->userData['user_admin_salt'];
 				$valid_current_password = $passAuth->isValidCurrentPassword();
+				//print_p($valid_current_password);
 			}
 
 			if ($valid_current_password) {
 				$this->_isValidCurrentAdminPassword  = 1;
 				// authenticated. now do the integrity check
 				$_isValidNewPassword = $passAuth->isValidNewPassword();
+				//print_p($_isValidNewPassword);
 				switch($_isValidNewPassword) {
 					case '0':
-						echo 'i am here';
 						// New password is valid
 						$new_admin_password = $passAuth->getNewHash();
 						$new_admin_salt = $passAuth->getNewSalt();
@@ -428,7 +430,7 @@ class UserFieldsInput {
 		$this->_userEmail = (isset($_POST['user_email']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_email']))) : "");
 		if ($this->_userEmail != "" && $this->_userEmail != $this->userData['user_email']) {
 			// Require user password for email change
-			if ($this->_isValidCurrentPassword) {
+			if ($this->_isValidCurrentPassword || $this->registration) {
 				// Require a valid email account
 				if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
 					$email_domain = substr(strrchr($this->_userEmail, "@"), 1);

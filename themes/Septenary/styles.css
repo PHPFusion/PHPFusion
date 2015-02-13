@@ -64,6 +64,7 @@ embed {
 
 article, aside, audio, canvas, command, datalist, details, embed, figcaption, figure, footer, header, hgroup, keygen, meter, nav, output, progress, section, source, video {
 	display: block;
+	image-rendering: optimizespeed;
 }
 article {
 	margin-bottom:25px;

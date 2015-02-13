@@ -277,6 +277,8 @@ $locale['1012'] = "Анонимизация пользователя";
 $locale['1013'] = "Удаление пользователя";
 $locale['1014'] = "Разрешить пользователям одновременный вход с нескольких устройств?";
 $locale['1014a'] = "отключите для лучшей безопасности";
+// Social integration
+$locale['1030'] = "Создать тэги OpenGraph для соцсетей";
 // Date format options (you can add/delete lines)
 // More info at: http://php.net/manual/en/function.strftime.php
 $locale['dateformats'][] = "%m/%d/%Y";

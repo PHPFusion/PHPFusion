@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-// why the fuck is there a hashling algorighm here????
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."user_fields.php";
@@ -63,6 +62,7 @@ $userFields->userData = $userdata;
 $userFields->plugin_folder = INCLUDES."user_fields/";
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange($settings['userNameChange']);
+$userFields->registration = FALSE;
 $userFields->method = 'input';
 $userFields->render_profile_input();
 closetable();

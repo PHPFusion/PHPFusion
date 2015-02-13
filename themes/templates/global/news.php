@@ -273,6 +273,20 @@ if (!function_exists('render_news_item')) {
 
 		$data = $info['news_item'];
 		if ($data['news_keywords'] !=="") { set_meta("keywords", $data['news_keywords']); }
+		if ($settings['create_og_tags']) {
+			add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
+			add_to_head("<meta property='og:description' content='".strip_tags($data['news_descr'])."' />");
+			add_to_head("<meta property='og:site_name' content='".$settings['sitename']."' />");
+			add_to_head("<meta property='og:type' content='article' />");
+			add_to_head("<meta property='og:url' content='".$settings['siteurl']."news.php?readmore=".$_GET['readmore']."' />");
+			if ($data['news_image']) {
+				$og_image = IMAGES_N.$data['news_image'];
+			} else {
+				$og_image = IMAGES_NC.$data['cat_image'];
+			}
+			$og_image = str_replace(BASEDIR, $settings['siteurl'], $og_image);
+			add_to_head("<meta property='og:image' content='".$og_image."' />");
+		}
 		echo "<!--news_pre_readmore-->";
 		echo "<article class='news-item'>\n";
 		echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";

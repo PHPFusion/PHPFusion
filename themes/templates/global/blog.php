@@ -144,7 +144,20 @@ if (!function_exists('render_blog_item')) {
 
 		$data = $info['blog_item'];
 		if ($data['blog_keywords'] !=="") { set_meta("keywords", $data['blog_keywords']); }
-		
+		if ($settings['create_og_tags']) {
+			add_to_head("<meta property='og:title' content='".$data['blog_subject']."' />");
+			add_to_head("<meta property='og:description' content='".strip_tags($data['blog_descr'])."' />");
+			add_to_head("<meta property='og:site_name' content='".$settings['sitename']."' />");
+			add_to_head("<meta property='og:type' content='article' />");
+			add_to_head("<meta property='og:url' content='".$settings['siteurl']."blog.php?readmore=".$_GET['readmore']."' />");
+			if ($data['blog_image']) {
+				$og_image = IMAGES_B.$data['blog_image'];
+			} else {
+				$og_image = IMAGES_BC.$data['cat_image'];
+			}
+			$og_image = str_replace(BASEDIR, $settings['siteurl'], $og_image);
+			add_to_head("<meta property='og:image' content='".$og_image."' />");
+		}
 		echo "<!--blog_pre_readmore-->";
 		echo "<article class='blog-item'>\n";
 		echo "<h2 class='text-center'>".$data['blog_subject']."</h2>\n";
