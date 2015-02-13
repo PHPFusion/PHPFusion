@@ -24,7 +24,7 @@ function openform($form_name, $form_id, $method, $action, array $options = array
 		'downtime' => !empty($options['downtime']) && isnum($options['downtime']) ? $options['downtime'] : 1,
 	);
 	$html = "<form name='".$form_name."' id='".$form_id."' method='".$method."' action='".$action."' class='".(defined('FUSION_NULL') ? 'warning' : '')." ".$options['class']." ' ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
-	$html .= generate_token($form_name, $options['downtime']);
+	$html .= defender::generate_token($form_name, $options['downtime']);
 	if (defined('FUSION_NULL') && $options['notice']) {
 		echo $defender->showNotice();
 	}
@@ -36,4 +36,3 @@ function closeform() {
 	$html .= "</form>\n";
 	return $html;
 }
-?>
