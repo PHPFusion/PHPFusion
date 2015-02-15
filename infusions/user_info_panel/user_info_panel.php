@@ -59,7 +59,9 @@ echo "<hr class='side-hr'>\n";
 echo "<ul>\n";
 echo "<li><a class='side' href='".BASEDIR."edit_profile.php'>".$locale['UM080']." <i class='pull-right entypo suitcase'></i></a></li>\n";
 echo "<li><a class='side' href='".BASEDIR."messages.php'>".$locale['UM081']." <i class='pull-right entypo mail'></i></a></li>\n";
-echo "<li><a class='side' href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['UM088']." <i class='pull-right entypo eye'></i></a></li>\n";
+if (db_exists(DB_THREADS)) {
+	echo "<li><a class='side' href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['UM088']." <i class='pull-right entypo eye'></i></a></li>\n";
+}
 echo "<li><a class='side' href='".BASEDIR."members.php'>".$locale['UM082']." <i class='pull-right entypo users'></i></a></li>\n";
 echo (iADMIN) ? "<li><a class='side' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['UM083']." <i class='pull-right entypo cog'></i></a></li>\n" : '';
 echo "<li><a class='side' href=\"javascript:show_hide('ShowHide001')\">".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a></li>\n";

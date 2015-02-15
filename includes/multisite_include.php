@@ -53,9 +53,6 @@ define("DB_FORUM_POLL_VOTERS", DB_PREFIX."forum_poll_voters");
 define("DB_FORUM_POLLS", DB_PREFIX."forum_polls");
 define("DB_FORUM_RANKS", DB_PREFIX."forum_ranks");
 define("DB_FORUM_VOTES", DB_PREFIX."forum_votes");
-
-
-
 define("DB_FORUMS", DB_PREFIX."forums");
 define("DB_INFUSIONS", DB_PREFIX."infusions");
 define("DB_INFUSIONS_CAT", DB_PREFIX."infusions_cat");
