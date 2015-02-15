@@ -38,14 +38,14 @@ $locale['443'] = "Останні додані";
 $locale['444'] = "Найвищі оцінки";
 
 // Side nav bar
-$locale['445'] = 'Перегляд за розділом';
-$locale['446'] = 'Перегляд за оцінками';
+$locale['445'] = "Перегляд за розділом";
+$locale['446'] = "Перегляд за оцінками";
 
 // Filter titles
-$locale['comments'] = 'Найбільш популярні';
-$locale['recent'] = 'Останні додані';
-$locale['download'] = 'Найбільш популярні';
-$locale['ratings'] = 'Найвища оцінка';
+$locale['comments'] = "Найбільш популярні";
+$locale['recent'] = "Останні додані";
+$locale['download'] = "Найбільш популярні";
+$locale['ratings'] = "Найвища оцінка";
 
 // Search and filters
 $locale['450'] = "Сортування за";
