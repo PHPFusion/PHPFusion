@@ -96,6 +96,12 @@ $locale['setup_1400'] = "Prašome sukonfigūruoti sistemos branduolį.";
 $locale['setup_1401'] = "DĖMESIO: Prieš tęsiant prašome pasidaryti duomenų (jeigu tokie egzistuoja) kopiją. Sistemos pašalinimas visiškai ištrins visus įrašus";
 $locale['setup_1402'] = "Sistemos branduolis paruoštas.";
 $locale['setup_1403'] = "Jūsų tinklapis baigtas konfigūruoti.<br /><br />Jeigu dar nesukūrėt Vyr. administratoriaus vartotojo, prašome eiti į kitą žingsnį. Kitu atveju galite ištrinti įdiegimo įrankį.";
+$locale['setup_1404'] = 'Įdiegti';
+$locale['setup_1405'] = 'Išdiegti';
+$locale['setup_1406'] = '% sistema buvo sėkmingai įdiegta.';
+$locale['setup_1407'] = '% sistemos įdiegimas nepavyko.';
+$locale['setup_1408'] = '% sistema buvo sėkmingai pašalinta.';
+$locale['setup_1409'] = '% sistema negali būti pašalinta arba įvyko kažkokia klaida.';
 // Step 6 - Super Admin login
 $locale['setup_1500'] = "Pirminis Vyr. administratoriaus vartotojas";
 $locale['setup_1501'] = "Konfigūruokite savo Vyr. administratoriaus vartotojo detales.";

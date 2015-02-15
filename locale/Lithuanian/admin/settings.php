@@ -281,7 +281,7 @@ $locale['1013'] = "Ištrinti vartotoją";
 $locale['1014'] = "Leisti nariams prisijungti iš skirtingų prietaisų vienu metu?";
 $locale['1014a'] = "Dėl saugumo patariama išjungti";
 // Social integration
-$locale['1030'] = "Create OpenGraph meta tags for Social networks"; // translate this line!
+$locale['1030'] = "Sukurti OpenGraph meta žymes socialiniams tinklams";
 // Date format options (you can add/delete lines)
 // More info at: http://php.net/manual/en/function.strftime.php
 $locale['dateformats'][] = "%m/%d/%Y";

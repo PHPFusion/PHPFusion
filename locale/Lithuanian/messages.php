@@ -70,7 +70,7 @@ $locale['468'] = 'Pradėti naują pokalbį su %s';
 $locale['469'] = 'Atsakyti %s';
 $locale['470'] = 'Paieškos filtras (dar neveikia)';
 
-$locale['471'] = "There are no messages"; // translate this line
+$locale['471'] = "Nėra jokių žinučių";
 
 // Error Messages
 $locale['480'] = "Klaida";
