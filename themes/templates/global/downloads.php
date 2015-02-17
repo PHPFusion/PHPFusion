@@ -140,7 +140,7 @@ if (!function_exists('render_downloads')) {
 
 		echo "</div><div class='download-right col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
 
-		echo openform('searchform', 'searchform', 'post', BASEDIR."search.php", array('downtime' => 0,));
+		echo openform('searchform', 'searchform', 'post', BASEDIR."search.php", array('downtime' => 1));
 		echo form_text('', 'stext', 'search_downloads', '', array('placeholder' => rtrim($locale['460'], ':'), 'append_button' => 1));
 		echo form_hidden('stype', 'stype', 'stype', 'downloads');
 		echo closeform();

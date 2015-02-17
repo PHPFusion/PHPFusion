@@ -133,7 +133,7 @@ $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
 echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings2['site_seo'], array('inline' => 1));
@@ -176,7 +176,7 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
 		$result = dbquery("SELECT p.* FROM ".DB_PERMALINK_REWRITE." r INNER JOIN ".DB_PERMALINK_METHOD." p ON r.rewrite_id=p.pattern_type WHERE r.rewrite_name='".$rewrite_name."'");
 		if (dbrows($result)) {
 			opentable(sprintf($locale['405'], $permalink_name));
-			echo openform('editpatterns', 'editpatterns', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+			echo openform('editpatterns', 'editpatterns', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 			echo "<table cellpadding='0' cellspacing='1' width='100%' class='table table-responsive tbl-border center'>\n";
 			if (isset($permalink_tags_desc) && is_array($permalink_tags_desc)) {
 				echo "<tr>\n";

@@ -98,7 +98,7 @@ echo "<h5 class='m-b-10'><strong>".$locale['UM101']."</strong></h5>";
 echo lang_switcher();
 }
 echo "<div class='m-t-10'>\n";
-echo openform('loginform', 'loginform', 'post', $action_url, array('downtime' => 10, 'notice'=>0));
+echo openform('loginform', 'loginform', 'post', $action_url, array('downtime' => 1, 'notice'=>0));
 echo form_text($locale['global_101'], 'user_name', 'user_name_uip', '', array('placeholder' => $locale['global_101'],'required' => 1));
 echo form_text($locale['global_102'], 'user_pass', 'user_pass_uip', '', array('placeholder' => $locale['global_102'],'password' => 1,'required' => 1));
 echo "<label><input type='checkbox' name='remember_me' value='y' title='".$locale['global_103']."'/> ".$locale['global_103']."</label>\n";

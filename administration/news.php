@@ -315,7 +315,7 @@ function news_form() {
 
 	echo "<div class='m-t-20'>\n";
 	// remove downtime after beta.
-	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 10));
+	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 	echo form_text($locale['news_0200'], 'news_subject', 'news_subject', $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['news_0250']));

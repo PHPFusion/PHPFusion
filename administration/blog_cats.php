@@ -99,7 +99,7 @@ foreach ($image_files as $image) {
 }
 
 opentable($openTable);
-echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0));
+echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 echo "<td width='130' class='tbl'><label for='cat_name'>".$locale['430']."</label></td>\n";
 echo "<td class='tbl'>\n";

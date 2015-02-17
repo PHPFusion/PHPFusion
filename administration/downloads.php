@@ -241,7 +241,7 @@ function download_form() {
 		$visibility_opts[$user_group['0']] = $user_group['1'];
 	}
 
-	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 0, 'enctype' => 1));
+	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 1, 'enctype' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8 col-md-7 col-lg-8'>\n";
 	echo form_text($locale['download_0200'], 'download_title', 'download_title', $data['download_title'], array('required' => 1, 'error_text'=>$locale['download_0110']));

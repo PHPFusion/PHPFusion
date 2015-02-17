@@ -395,7 +395,7 @@ if (!function_exists('render_eshop_product')) {
 	/* This part need to be MVC - its going to be too hard for theme developers to go through everything */
 
 	if (fusion_get_settings('eshop_shopmode')) {
-		echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product']); // sends data to ajax
+		echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product'], array('downtime' => 1)); // sends data to ajax
 		echo "<div class='m-t-20'>\n";
 		if (!empty($data['dync'])) {
 			$title = $data['dynf'] ? $data['dynf'] : 'Category';

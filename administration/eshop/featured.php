@@ -446,7 +446,7 @@ class eShop_banners {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='7'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner", array('downtime' => 0, 'notice' => 0));
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner", array('downtime' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		echo form_text($locale['ESHFEAT90'], 'featbanner_title', 'featbanner_titles', '', array('required'=>1, 'inline'=>1));
@@ -575,7 +575,7 @@ class eShop_banners {
 		echo "<tr class='qform2'>\n";
 		echo "<td colspan='7'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit2', 'quick_edit2', 'post', FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items", array('downtime' => 0, 'notice' => 0));
+		echo openform('quick_edit2', 'quick_edit2', 'post', FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items", array('downtime' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		echo form_text($locale['ESHFEAT90a'], 'featitem_title', 'featitem_titles', '', array('required'=>1, 'inline'=>1));
@@ -656,7 +656,7 @@ class eShop_banners {
 	public function add_banner_form() {
 		global $locale;
 		echo "<div class='m-t-10'>\n";
-		echo openform('banner_form', 'banner_form', 'post', $this->formaction, array('enctype'=>1));
+		echo openform('banner_form', 'banner_form', 'post', $this->formaction, array('enctype'=>1, 'downtime' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
@@ -715,7 +715,7 @@ class eShop_banners {
 	public function add_item_form() {
 		global $locale;
 		echo "<div class='m-t-10'>\n";
-		echo openform('item_form', 'item_form', 'post', $this->formaction);
+		echo openform('item_form', 'item_form', 'post', $this->formaction, array('downtime' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');

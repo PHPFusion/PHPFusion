@@ -66,7 +66,7 @@ if (isset($_POST['preview_banners'])) {
 	$sitebanner2 = stripslashes($settings['sitebanner2']);
 }
 opentable($locale['850']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody><tr>\n";
 echo "<td class='tbl'>\n";
 echo form_textarea($locale['851'], 'sitebanner1', 'sitebanner1', $sitebanner1);

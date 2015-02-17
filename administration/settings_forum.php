@@ -93,7 +93,7 @@ function calculate_byte($download_max_b) {
 $yes_no_array = array('1' => $locale['yes'], '0' => $locale['no']);
 
 opentable($locale['400']);
-echo openform('settingsform', 'settingsfrom', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsfrom', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 echo "<div class='panel panel-default'><div class='panel-body'>\n";
 echo "<div class='clearfix'>\n";

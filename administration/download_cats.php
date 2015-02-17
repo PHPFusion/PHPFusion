@@ -140,7 +140,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo closetabbody();
 
 	echo opentabbody($tab_title['title'][1], 'dadd', $tab_active);
-	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0, 'class'=>'m-t-20'));
+	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 1, 'class'=>'m-t-20'));
 	echo form_text($locale['download_0300'], 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['download_0351']));
 	echo form_textarea($locale['download_0301'], 'cat_description', 'cat_description', $cat_description, array('resize'=>0));
 	echo form_select_tree($locale['download_0308'], "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");

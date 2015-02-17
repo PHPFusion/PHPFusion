@@ -106,7 +106,7 @@ function userFieldOptions() {
 
 opentable($locale['100']);
 // change to post.
-echo openform('userlog_search', 'userlog_search', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('userlog_search', 'userlog_search', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo form_hidden('', 'aid', 'aid', iAUTH);
 echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<tbody>\n";
 echo "<tr>\n";

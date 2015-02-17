@@ -172,7 +172,7 @@ class UserFields extends QuantumFields {
 		$this->info += array(
 			'register' =>  $this->registration,
 			'pages' =>  ($this->paginate && !$this->registration) ?  $this->info['section'] = $this->renderPageLink() : '',
-			'openform' => openform($this->formname, $this->formname, 'post', FUSION_REQUEST, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."", 'downtime' => 0)),
+			'openform' => openform($this->formname, $this->formname, 'post', FUSION_REQUEST, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."", 'downtime' => 1)),
 			'closeform' => closeform(),
 			'button' => $this->renderButton(),
 		);

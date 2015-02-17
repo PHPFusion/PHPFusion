@@ -66,7 +66,7 @@ if (isset($_POST['sendmessage'])) {
 }
 opentable($locale['400']);
 echo $locale['401']."<br /><br />\n";
-echo openform('userform', 'userform', 'post', FUSION_SELF);
+echo openform('userform', 'userform', 'post', FUSION_SELF, array('downtime' => 1));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
 echo form_text($locale['402'], 'mailname', 'mailname', '', array('required' => 1, 'error_text' => $locale['420'], 'max_length' => 50));

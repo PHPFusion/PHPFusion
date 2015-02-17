@@ -72,7 +72,7 @@ if (function_exists('gd_info')) {
 			if (!isset($_POST['confirm_password'])) {
 				opentable($locale['430']);
 				echo "<div style='text-align:center'>\n";
-				echo openform('aform', 'aform', 'post', FUSION_SELF.$aidlink."&amp;action=delete&amp;album_id=".$_GET['album_id'], array('downtime' => 0, 'notice' => 0));
+				echo openform('aform', 'aform', 'post', FUSION_SELF.$aidlink."&amp;action=delete&amp;album_id=".$_GET['album_id'], array('downtime' => 1, 'notice' => 0));
 				echo form_text($locale['431'], 'admin_passwd', 'admin_passwd', '', array('password' => 1, 'class' => 'm-b-10'));
 				echo form_button($locale['432'], 'confirm_password', 'confirm_password', $locale['432'], array('class' => 'btn-primary m-r-10'));
 				echo form_button($locale['433'], 'cancel', 'cancel', $locale['433'], array('class' => 'btn-primary m-r-10'));
@@ -254,7 +254,7 @@ if (function_exists('gd_info')) {
 		$access_opts[$user_group['0']] = $user_group['1'];
 	}
 	echo "<div class='panel panel-default'><div class='panel-body'>\n";
-	echo openform('input_form', 'input_form', 'post', $formaction, array('downtime' => 0, 'enctype' => '1'));
+	echo openform('input_form', 'input_form', 'post', $formaction, array('downtime' => 1, 'enctype' => '1'));
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && ($album_thumb && file_exists(PHOTOS.$album_thumb))) {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";

@@ -227,7 +227,7 @@ if ($_GET['page'] == 1) {
 	include LOCALE.LOCALESET."comments.php";
 	opentable($locale['401']);
 	echo $navigation;
-	echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink."&amp;page=2", array('downtime' => 0));
+	echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink."&amp;page=2", array('downtime' => 1));
 	echo "<table cellspacing='0' cellpadding='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td class='tbl'>\n";
 	echo form_textarea($locale['418a'], 'test_message', 'test_message', $test_message, array('required' => 1, 'error_text' => $locale['418b'], 'bbcode' => 1));

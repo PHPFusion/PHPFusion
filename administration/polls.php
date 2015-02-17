@@ -114,7 +114,7 @@ if (dbrows($result)) {
 		$editlist[$data['poll_id']] = $data['poll_title'];
 	}
 	opentable($locale['402']);
-	echo openform('editform', 'editform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+	echo openform('editform', 'editform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 	echo form_select('', 'poll_id', 'poll_id', $editlist, '', array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
 	echo form_button($locale['421'], 'edit', 'edit', $locale['421'], array('class' => 'btn-primary m-r-10 pull-left'));
 	echo form_button($locale['422'], 'delete', 'delete', $locale['422'], array('class' => 'btn-primary pull-left'));
@@ -156,7 +156,7 @@ $opt_count = isset($opt_count) ? $opt_count : 2;
 if (isset($poll_id)) $poll_ended = isset($poll_ended) ? $poll_ended : 0;
 opentable((isset($_GET['poll_id']) ? $locale['401'] : $locale['400']));
 $formaction = "".FUSION_SELF.$aidlink.(isset($_GET['poll_id']) ? "&amp;poll_id=".$_GET['poll_id']."&amp;poll_ended=".$_GET['poll_ended'] : "")."";
-echo openform('pollform', 'pollform', 'post', $formaction, array('downtime' => 0, 'notice' => 0));
+echo openform('pollform', 'pollform', 'post', $formaction, array('downtime' => 1, 'notice' => 0));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tr>\n";
 echo "<td width='80' class='tbl'><label for='poll_title'>".$locale['431']."</label></td>\n";
 echo "<td class='tbl'>\n";

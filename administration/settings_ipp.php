@@ -57,7 +57,7 @@ while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 opentable($locale['400']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink);
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 echo form_text($locale['669b'], 'blogperpage', 'blogperpage', $settings2['blogperpage'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
 echo form_text($locale['669'], 'newsperpage', 'newsperpage', $settings2['newsperpage'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));

@@ -78,7 +78,7 @@ if (!function_exists('render_inbox')) {
 		echo "</div>\n</div>\n";
 		// action buttons
 		if ($info['chat_rows'] && isset($_GET['msg_user']) or isset($_GET['msg_read'])) {
-			echo openform('inputform', 'inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''), array('notice' => 0));
+			echo openform('inputform', 'inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''), array('notice' => 0, 'downtime' => 1));
 				echo "<div class='msg_buttons_bar clearfix p-10'>\n";
 				if (isset($_GET['msg_user']) && $_GET['folder'] == 'inbox' &&  !isset($_GET['msg_read'])) {
 					echo "<div class='btn-group pull-right'>\n";
@@ -106,7 +106,7 @@ if (!function_exists('render_inbox')) {
 		if (isset($_GET['msg_send']) && $_GET['msg_send'] == 0) {
 				// New Form
 				echo "<div class='msg-form m-t-20 p-l-10 p-r-10'>\n";
-				echo openform('inputform', 'inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send']."");
+				echo openform('inputform', 'inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send']."", array('downtime' => 1));
 				if (iADMIN && !isset($_GET['msg_id'])) {
 					echo "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
 					echo form_user_select('', 'msg_send', 'msg_send', isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array('placeholder' => $locale['421']));
@@ -204,7 +204,7 @@ if (!function_exists('render_inbox')) {
 		elseif (isset($_GET['folder']) && $_GET['folder'] == 'options') {
 
 			echo "<div class='list-group-item' style='margin:15px;'>\n";
-			echo openform('pm_form', 'pm_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']);
+			echo openform('pm_form', 'pm_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'], array('downtime' => 1));
 			echo form_checkbox($locale['621'], 'pm_email_notify', 'pm_email_notify', $info['pm_email_notify']);
 			echo form_checkbox($locale['622'], 'pm_save_sent', 'pm_save_sent', $info['pm_save_sent']);
 			echo form_button($locale['623'], 'save_options', 'save_options', $locale['623'], array('class' => 'btn btn-sm btn-default'));
@@ -225,7 +225,7 @@ if (!function_exists('render_inbox')) {
 				if (!isset($_GET['msg_read']) && $_GET['folder'] !== 'outbox' && $_GET['folder'] !== 'archive') {
 					echo "<hr class='m-t-0'/>";
 					echo "</form>\n";
-					if ($info['chat_rows']) echo openform('qform', 'qform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."".(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : ''));
+					if ($info['chat_rows']) echo openform('qform', 'qform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."".(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : ''), array('downtime' => 1));
 					echo "<div class='p-10'>\n";
 					echo "<div class='m-b-10 strong'>".sprintf($locale['468'], $info['channel'])."</div>\n";
 					echo form_text('', 'subject', 'subject', '', array('placeholder' => $locale['405'], 'resize' => 0, 'autosize' => 1));
@@ -240,7 +240,7 @@ if (!function_exists('render_inbox')) {
 
 					echo "<hr class='m-t-0'/>";
 					echo "</form>\n";
-					if ($info['chat_rows']) echo openform('qform', 'qform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''));
+					if ($info['chat_rows']) echo openform('qform', 'qform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''), array('downtime' => 1));
 					echo "<div class='p-10'>\n";
 					echo "<div class='m-b-10 strong'>".sprintf($locale['469'], $info['channel'])."</div>\n";
 					$message_subject = '';

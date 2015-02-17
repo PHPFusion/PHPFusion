@@ -404,7 +404,7 @@ class moderator {
 		} else {
 			if ($forum_id) {
 				echo "<div>";
-				echo openform('moveform', 'moveform', 'post', FUSION_SELF."?step=move&forum_id=".$forum_id."&amp;thread_id=".$data['thread_id']);
+				echo openform('moveform', 'moveform', 'post', FUSION_SELF."?step=move&forum_id=".$forum_id."&amp;thread_id=".$data['thread_id'], array('downtime' => 1));
 				echo form_select_tree($locale['forum_0751'], 'new_forum_id', 'new_forum_id2', '',
 									  array(
 										  'inline'=>1,
@@ -545,7 +545,7 @@ class moderator {
 								}
 							}
 
-							echo openform('modopts', 'modopts', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']);
+							echo openform('modopts', 'modopts', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('downtime' => 1));
 							echo form_select_tree($locale['forum_0301'], 'new_forum_id', 'new_forum_id', '', array('disable_opts'=>$category_excluded, 'no_root'=>1, 'inline'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 							foreach ($array_post as $value) {
 								echo form_hidden('', "delete_post[]", "delete_post[$value]", $value);
@@ -577,7 +577,7 @@ class moderator {
 							while ($tl_data = dbarray($tl_result)) {
 								$forum_list[$tl_data['thread_id']] = $tl_data['thread_subject'];
 							}
-							echo openform('modopts', 'modopts', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;sv");
+							echo openform('modopts', 'modopts', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;sv", array('downtime' => 1));
 							echo form_hidden('', 'new_forum_id', 'new_forum_id', $_POST['new_forum_id']);
 							echo form_select($locale['forum_0303'], 'new_thread_id', 'new_thread_id', $forum_list, '', array('inline'=>1));
 							foreach ($array_post as $value) {

@@ -111,7 +111,7 @@ if (!empty($result)) {
 				$editlist[$data['article_id']] = "".($data['article_draft'] ? $locale['articles_0210']." " : "").$data['article_subject']."";
 			}
 			opentable($locale['articles_0000']);
-			echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 0));
+			echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 1));
 			echo "<div class='text-center'>\n";
 			echo form_select('', 'article_id', 'article_id', $editlist, '', array('placeholder' => $locale['choose'], 'inline' => 1, 'class' => 'pull-left'));
 			echo form_button($locale['edit'], 'edit', 'edit', $locale['edit'], array('class' => 'pull-left btn-primary m-l-10 m-r-10'));
@@ -171,7 +171,7 @@ if (!empty($result)) {
 			$visibility_opts[$user_group['0']] = $user_group['1'];
 		}
 
-		echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+		echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='article_cat'>".$locale['articles_0201']."</label></td>\n";
 		echo "<td class='tbl'>\n";

@@ -98,7 +98,7 @@ if (iMEMBER) {
 	echo "<div>".showbanners()."</div>\n";
 	$_POST['user_name'] = isset($_POST['user_name']) ? $_POST['user_name'] : '';
 	$_POST['user_pass'] = isset($_POST['user_pass']) ? $_POST['user_pass'] : '';
-	echo openform('loginpageform', 'loginpageform', 'POST', $action_url);
+	echo openform('loginpageform', 'loginpageform', 'POST', $action_url, array('downtime' => 1));
 	echo form_text('', 'user_name', 'user_name', $_POST['user_name'], array('placeholder' => $locale['global_101']));
 	echo form_text('', 'user_pass', 'user_pass', $_POST['user_pass'], array('placeholder' => $locale['global_102'],'password' => 1));
 	echo "<label><input type='checkbox' name='remember_me' value='y' /> ".$locale['global_103']."</label><br /><br />\n";

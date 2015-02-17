@@ -147,7 +147,7 @@ class Customers {
 	public function add_customer_form() {
 		global $locale, $aidlink;
 		echo "<div class='m-t-20'>\n";
-		echo openform('customerform', 'customerform', 'post', $this->formaction);
+		echo openform('customerform', 'customerform', 'post', $this->formaction, array('downtime' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
 		$customer_name[] = $this->data['cfirstname'];
@@ -275,7 +275,7 @@ class Customers {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='6'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=customers", array('downtime' => 0, 'notice' => 0));
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=customers", array('downtime' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		echo form_address($locale['ESHPCHK106'], 'caddress', 'qaddress','', array('required'=>1, 'inline'=>1));

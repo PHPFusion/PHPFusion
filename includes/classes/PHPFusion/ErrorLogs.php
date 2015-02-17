@@ -254,7 +254,7 @@ class ErrorLogs {
 			</div>
 			<div class='col-xs-12 col-sm-12 col-md-3'>
 				<?php
-				echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>0));
+				echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>1));
 				openside('');
 				echo form_select($locale['440'], 'delete_status', 'delete_status', self::get_logTypes(), '', array('allowclear'=>1, 'width'=>'100%'));
 				echo form_button($locale['453'], 'delete_entries', 'delete_entries', $locale['453'], array('class'=>'btn-primary'));
@@ -270,7 +270,7 @@ class ErrorLogs {
 		global $aidlink;
 		$locale = $this->locale;
 		if ($this->errors) {
-			echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>10, 'class'=>'text-right'));
+			echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>1, 'class'=>'text-right'));
 			echo form_button($locale['delete'], 'delete_all_logs', 'delete_all_logs', $locale['453'], array('class'=>'btn-block btn-primary', 'icon'=>'fa fa-bitbucket fa-lg m-r-10'));
 			echo closeform();
 			?>
@@ -377,7 +377,7 @@ class ErrorLogs {
 				</div>
 				<div class='m-t-10 display-inline-block' style='width:300px'>
 					<?php
-					echo openform('logform', 'logform', 'post', FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file", array('downtime'=>5));
+					echo openform('logform', 'logform', 'post', FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file", array('downtime'=>1));
 					echo form_hidden('', 'error_id', 'error_id', $data['error_id']);
 					echo form_select('Mark As', 'error_status', 'error_status_sel', self::get_logTypes(), $data['error_status'], array("inline"=>1));
 					echo closeform();

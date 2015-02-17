@@ -562,7 +562,7 @@ if (function_exists('gd_info')) {
 	}
 	require_once BASEDIR.'includes/mimetypes_include.php';
 	echo "<div class='panel panel-default image_upload' id='single_upload'>\n<div class='panel-body'>\n";
-	echo openform('input_form', 'input_form', 'post', $formaction, array('enctype' => 1, 'downtime' => 0));
+	echo openform('input_form', 'input_form', 'post', $formaction, array('enctype' => 1, 'downtime' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 	echo form_text($locale['432'], 'photo_title', 'photo_title', $photo_title, array('max_length' => 100, 'required' => 1, 'error_text' => ''));
@@ -638,7 +638,7 @@ if (function_exists('gd_info')) {
 		$gallery_dir = makefilelist($upload_dir, ".|..|index.php", TRUE, "folders");
 		$folder_opts = makefileopts($gallery_dir);
 		if ($can_upload == TRUE) {
-			echo openform('folderuploadform', 'folderuploadform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('enctype' => 1, 'downtime' => 0));
+			echo openform('folderuploadform', 'folderuploadform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('enctype' => 1, 'downtime' => 1));
 			echo "<table class='table table-responsive tbl-border center' cellpadding='2' cellspacing='0'>\n";
 			echo($folder_opts != "" ? "<tr>\n<td class='tbl1' colspan='2' style='text-align:center;'>".$locale['496']."</td>\n</tr>\n" : "");
 			echo "<tr>\n<td class='tbl1' colspan='2' style='text-align:left;'>";
@@ -686,7 +686,7 @@ if (function_exists('gd_info')) {
 		} else {
 			echo "<div class='admin-message'>\n";
 
-			echo openform('why_no_formname', 'why_no_formname', 'post', $formaction, array('downtime' => 0));
+			echo openform('why_no_formname', 'why_no_formname', 'post', $formaction, array('downtime' => 1));
 			echo "<span style='color:red;font-weight:bold;'>".sprintf($locale['502'], $upload_dir)."</span><br />".$locale['503']."<br />";
 			echo form_button($locale['504'], 'refresh2', 'refresh2', $locale['504'], array('class' => 'btn-primary btn-block'));
 
@@ -700,7 +700,7 @@ if (function_exists('gd_info')) {
 		$multi_opts = makefileopts($multi_files);
 		if ($can_upload == TRUE) {
 			//echo "<form name='multiform' method='post' action='".."' enctype='multipart/form-data'>\n";
-			echo openform('multiform', 'multiform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('downtime' => 0, 'enctype' => 1));
+			echo openform('multiform', 'multiform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('downtime' => 1, 'enctype' => 1));
 			echo "<table class='table table-responsive tbl-border center' cellpadding='2' cellspacing='0'>\n";
 			echo($multi_opts != "" ? "<tr>\n<td class='tbl1' colspan='2' style='text-align:center;'>".$locale['496']."</td>\n</tr>\n" : "");
 			echo "<tr>\n<td class='tbl1' colspan='2' style='text-align:left;'>";
@@ -751,7 +751,7 @@ if (function_exists('gd_info')) {
 		} else {
 			echo "<div class='admin-message'>\n";
 			//echo "<form action='".$formaction."' method='post'>\n";
-			echo openform('multi', 'multi', 'post', $formaction, array('downtime' => 0));
+			echo openform('multi', 'multi', 'post', $formaction, array('downtime' => 1));
 			echo "<span style='color:red;font-weight:bold;'>".sprintf($locale['502'], $upload_dir)."</span><br />".$locale['503']."<br />";
 			echo "<input type='submit' class='button' value='".$locale['504']."' />";
 			echo form_button($locale['509'], 'btn_multi_upload', 'btn_multi_upload', $locale['509'], array('class' => 'btn-primary btn-block'));
@@ -797,7 +797,7 @@ if (function_exists('gd_info')) {
 				LIMIT ".$_GET['rowstart'].",".$settings['thumbs_per_page']);
 		$counter = 0;
 		$k = ($_GET['rowstart'] == 0 ? 1 : $_GET['rowstart']+1);
-		echo openform('move_form', 'move_form', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('notice' => 0, 'downtime' => 0));
+		echo openform('move_form', 'move_form', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('notice' => 0, 'downtime' => 1));
 		echo "<div class='row'>\n";
 		if ($rows > $settings['thumbs_per_page']) {
 			echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id']."&amp;")."\n</div>\n";

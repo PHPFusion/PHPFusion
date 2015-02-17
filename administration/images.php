@@ -77,7 +77,7 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 	}
 } else {
 	opentable($locale['420']);
-	echo openform('uploadform', 'uploadform', 'post', "".FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."", array('enctype' => 1, 'downtime' => 0));
+	echo openform('uploadform', 'uploadform', 'post', "".FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."", array('enctype' => 1, 'downtime' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='myfile'>".$locale['421']."</label></td>\n";
 	echo "<td class='tbl'><input type='file' id='myfile' name='myfile' class='textbox' style='width:250px;' /></td>\n";

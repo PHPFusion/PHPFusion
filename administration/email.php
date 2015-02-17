@@ -134,7 +134,7 @@ if (dbrows($result)) {
 add_to_breadcrumbs(array('link'=>ADMIN.$aidlink, 'title'=>$locale['400']));
 opentable($locale['400']);
 require_once INCLUDES."html_buttons_include.php";
-echo openform('emailtemplateform', 'emailtemplateform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('emailtemplateform', 'emailtemplateform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<h4>".$locale['420'].$template_name."</h4>\n";
 echo "<table class='table table-responsive'>\n<tbody>\n";
 echo "<td class='tbl1'><label for='template_active'>".$locale['421']."</label></td>\n";

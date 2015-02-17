@@ -146,7 +146,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq
 }
 if (!isset($_GET['t']) || $_GET['t'] != "faq") {
 	opentable($faq_cat_title);
-	echo openform('add_faq_cat', 'add_faq_cat', 'post', $faq_cat_action, array('downtime' => 0));
+	echo openform('add_faq_cat', 'add_faq_cat', 'post', $faq_cat_action, array('downtime' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td class='tbl'><label for='faq_cat_name'>".$locale['420']."</label></td>\n";
 	echo "<td class='tbl'>\n";
@@ -183,7 +183,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 			$cat_opts[$data2['faq_cat_id']] = $data2['faq_cat_name'];
 		}
 		opentable($faq_title);
-		echo openform('inputform', 'inputform', 'post', $faq_action, array('downtime' => 0, 'notice' => 0));
+		echo openform('inputform', 'inputform', 'post', $faq_action, array('downtime' => 1, 'notice' => 0));
 		echo "<table cellpadding='0' cellspacing='0' class='center table table-responsive'>\n<tr>\n";
 		echo "<td class='tbl'><label for='faq_cat'>".$locale['520']."</label></td>\n";
 		echo "<td class='tbl'>\n";

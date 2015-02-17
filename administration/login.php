@@ -21,7 +21,7 @@ if (!defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) redirect
 if (iADMIN && !$userdata['user_admin_password']) echo "<div class='alert alert-danger text-center'>".$locale['global_199']."</div>\n";
 $form_action = FUSION_SELF.$aidlink == ADMIN."index.php".$aidlink ? FUSION_SELF.$aidlink."&amp;pagenum=0" : FUSION_SELF."?".FUSION_QUERY;
 // we can now MVC this.
-echo openform('admin-login-form', 'admin-login-form', 'post', $form_action, array('downtime' => 0));
+echo openform('admin-login-form', 'admin-login-form', 'post', $form_action, array('downtime' => 1));
 openside('');
 echo "<div class='m-t-10 clearfix row'>\n";
 echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";

@@ -143,7 +143,7 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 		$shout_message = "";
 	}
 	echo "<a id='edit_shout' name='edit_shout'></a>\n";
-	echo openform('shout_form', 'shout_form', 'post', $shout_link, array('notice' => 0, 'downtime'=>10));
+	echo openform('shout_form', 'shout_form', 'post', $shout_link, array('notice' => 0, 'downtime'=>1));
 	if (iGUEST) {
 		echo $locale['SB_name']."<br />\n";
 		echo "<input type='text' name='shout_name' value='' class='textbox' maxlength='30' style='width:140px' /><br />\n";

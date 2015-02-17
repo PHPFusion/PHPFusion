@@ -252,7 +252,7 @@ if (isset($_POST['btn_do_restore'])) {
 	echo "function populateSelectAll(){for(i=0;i<document.restoreform.elements['list_ins[]'].length;i++){document.restoreform.elements['list_ins[]'].options[i].selected=true;}}\n";
 	echo "function populateSelectNone(){for(i=0;i<document.restoreform.elements['list_ins[]'].length;i++){document.restoreform.elements['list_ins[]'].options[i].selected=false;}}\n";
 	echo "//-->\n</script>\n";
-	echo openform('restoreform', 'restoreform', 'post', FUSION_SELF.$aidlink);
+	echo openform('restoreform', 'restoreform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 	echo "<table align='center' cellspacing='0' cellpadding='0' class='table table-responsive'>\n<tbody>\n<tr>\n";
 	echo "<td colspan='2' class='tbl2'><strong>".$locale['430']."</strong></td>\n";
 	echo "</tr>\n<tr>\n";
@@ -301,7 +301,7 @@ if (isset($_POST['btn_do_restore'])) {
 	echo "function backupSelectAll(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=true;}}\n";
 	echo "function backupSelectNone(){for(i=0;i<document.backupform.elements['db_tables[]'].length;i++){document.backupform.elements['db_tables[]'].options[i].selected=false;}}\n";
 	echo "//-->\n</script>\n";
-	echo openform('backupform', 'backupform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+	echo openform('backupform', 'backupform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 	echo "<table align='center' cellspacing='0' cellpadding='0' class='table table-responsive'>\n<tbody>\n<tr>\n";
 	echo "<td valign='top'>\n";
 	echo "<table cellspacing='0' cellpadding='0' class='table table-responsive'>\n<tbody>\n<tr>\n";

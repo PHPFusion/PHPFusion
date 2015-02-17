@@ -185,7 +185,7 @@ class Coupons {
 		global $locale, $defender;
 
 		echo "<div class='m-t-20 inline-block'>\n";
-		echo openform('coupon_form', 'coupon_form', 'post', $this->form_action, array('downtime'=>0));
+		echo openform('coupon_form', 'coupon_form', 'post', $this->form_action, array('downtime'=>1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
 		openside('');
@@ -333,7 +333,7 @@ class Coupons {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='6'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=coupons", array('downtime' => 0, 'notice' => 0));
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=coupons", array('downtime' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-5'>\n";
 		echo form_text($locale['ESHPCUPNS102'], 'cuname', 'cunames', $this->data['cuname'], array('inline'=>1, 'required'=>1));

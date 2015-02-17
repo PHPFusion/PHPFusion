@@ -421,7 +421,7 @@ class QuantumFields {
 					}
 					if (isset($this->page[$data['field_parent']]) or $field_list[$_GET['cat_id']] > 0) {
 						echo openmodal("delete", $locale['fields_0313'], array('class'=>'modal-lg modal-center zindex-boost', 'static'=>1));
-						echo openform('delete_cat_form', 'delete_cat_form', 'post', $form_action, array('downtime'=>0));
+						echo openform('delete_cat_form', 'delete_cat_form', 'post', $form_action, array('downtime'=>1));
 						if (isset($this->page[$_GET['cat_id']])) {
 							echo "<div class='row'>\n";
 							echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n<span class='strong'>".sprintf($locale['fields_0600'], count($this->page[$_GET['cat_id']]) )."</span><br/>\n";
@@ -804,7 +804,7 @@ class QuantumFields {
 			$this->synthesize_fields($data, 'dynamics');
 		}
 		echo "<div class='m-t-20'>\n";
-		echo openform('fieldform', 'fieldform', 'post', $form_action, array('downtime' => 0));
+		echo openform('fieldform', 'fieldform', 'post', $form_action, array('downtime' => 1));
 		foreach ($this->page_list as $index => $v) {
 			$disable_opts[] = $index;
 		}
@@ -1033,7 +1033,7 @@ class QuantumFields {
 		}
 
 		echo "<div class='m-t-20'>\n";
-		echo openform('fieldform', 'fieldform', 'post', $form_action, array('downtime' => 0));
+		echo openform('fieldform', 'fieldform', 'post', $form_action, array('downtime' => 1));
 		echo "<p class='strong text-dark'>".$user_field_name."</p>\n";
 		echo "<div class='well'>\n";
 		echo "<p class='strong'>".$locale['fields_0400']."</p>\n";
@@ -1240,7 +1240,7 @@ class QuantumFields {
 			}
 		}
 
-		echo openform('cat_form', 'cat_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+		echo openform('cat_form', 'cat_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 		echo self::quantum_multilocale_fields($locale['fields_0430'], 'field_cat_name', 'field_cat_name', $data, array('required'=>1));
 		echo form_select_tree($locale['fields_0431'], 'field_parent', 'field_parent', $data['field_parent'], array('parent_value' => $locale['fields_0432'], 'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 		echo form_text($locale['fields_0433'], 'field_cat_order', 'field_cat_order', $data['field_cat_order'], array('number' => 1));
@@ -1360,7 +1360,7 @@ class QuantumFields {
 		}
 		echo opentab($tab_title, $tab_active, 'amd');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
-		echo openform('addfield', 'addfield', 'post', FUSION_SELF.$aidlink, array('notice' => 0, 'downtime' => 0));
+		echo openform('addfield', 'addfield', 'post', FUSION_SELF.$aidlink, array('notice' => 0, 'downtime' => 1));
 		echo form_button($locale['fields_0311'], 'add_cat', 'add_cat', 'add_cat', array('class' => 'm-t-20 m-b-20 btn-sm btn-primary btn-block',
 			'icon' => 'entypo plus-circled'));
 		if (!empty($this->cat_list)) {
@@ -1377,7 +1377,7 @@ class QuantumFields {
 		if (!empty($this->cat_list)) {
 			echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
 			// list down modules.
-			echo openform('addfield', 'addfield', 'post', FUSION_SELF.$aidlink, array('notice' => 0, 'downtime' => 0));
+			echo openform('addfield', 'addfield', 'post', FUSION_SELF.$aidlink, array('notice' => 0, 'downtime' => 1));
 			echo "<div class='m-t-20'>\n";
 			foreach ($this->available_field_info as $title => $module_data) {
 				echo "<div class='list-group-item'>";

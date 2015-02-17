@@ -94,7 +94,7 @@ if (count($image_files) > 0) {
 		$smiley_opts[$smileys] = $smileys;
 	}
 }
-echo openform('smiley_form', 'smiley_form', 'post', $form_action, array('downtime' => 0));
+echo openform('smiley_form', 'smiley_form', 'post', $form_action, array('downtime' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n<tr>\n";
 echo "<td class='tbl'><label for='smiley_code'>".$locale['420']."</label></td>\n";
 echo "<td class='tbl'>\n";

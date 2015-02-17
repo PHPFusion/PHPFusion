@@ -275,7 +275,7 @@ class Shipping {
 	public function add_shippingco_form() {
 		global $locale;
 		echo "<div class='m-t-10'>\n";
-		echo openform('addcat', 'addcat', 'post', $this->cformaction);
+		echo openform('addcat', 'addcat', 'post', $this->cformaction, array('downtime' => 1));
 		openside('');
 		echo thumbnail(SHIP_DIR.$this->cdata['image'], '70px');
 		echo "<div class='overflow-hide p-l-15'>\n";
@@ -407,7 +407,7 @@ class Shipping {
 			echo "<tr class='qform'>\n";
 			echo "<td colspan='9'>\n";
 			echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-			echo openform('add_detail', 'add_detail', 'post', $this->sformaction, array('downtime' => 0, 'notice' => 0));
+			echo openform('add_detail', 'add_detail', 'post', $this->sformaction, array('downtime' => 1, 'notice' => 0));
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 			echo form_text($locale['ESHPSHPMTS107'], 'method', 'method',$this->sdata['method'], array('required'=>1, 'inline'=>1));

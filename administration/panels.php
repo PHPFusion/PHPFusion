@@ -345,7 +345,7 @@ class fusion_panels {
 		global $locale;
         fusion_confirm_exit();
 		echo "<div class='m-t-20'>\n";
-		echo openform('panel_form', 'panel_form', 'post', $this->formaction, array('downtime'=>0));
+		echo openform('panel_form', 'panel_form', 'post', $this->formaction, array('downtime'=>1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');

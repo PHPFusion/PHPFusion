@@ -96,7 +96,7 @@ if ($settings['forum_ranks']) {
 		$form_action = FUSION_SELF.$aidlink;
 		opentable($locale['400']);
 	}
-	echo openform('rank_form', 'rank_form', 'post', $form_action, array('downtime' => 0));
+	echo openform('rank_form', 'rank_form', 'post', $form_action, array('downtime' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n<tr>\n";
 	echo "<td class='tbl'><label for='rank_title'>".$locale['420']."</label><span class='required'>*</span></td>\n";
 	echo "<td class='tbl'>\n";

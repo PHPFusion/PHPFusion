@@ -85,7 +85,7 @@ if (!empty($result)) {
 		$visibility_opts[$user_group['0']] = $user_group['1'];
 	}
 
-	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 0));
+	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 1));
 	echo "<table cellspacing='0' cellpadding='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='weblink_name'>".$locale['520']."</label></td>\n";
 	echo "<td class='tbl'>\n";

@@ -230,7 +230,7 @@ class Atom {
 		if (dbrows($result) > 0) {
 			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
 			echo openform('preset-form', 'preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0,
-				'downtime' => 0));
+				'downtime' => 1));
 			echo form_button('Create New', 'new_preset', 'new_preset', 'new_preset', array('class' => 'btn-sm btn-primary pull-right', 'icon' => 'entypo plus'));
 			echo form_para('Theme Presets', 'theme_presets');
 			while ($preset = dbarray($result)) {
@@ -577,7 +577,7 @@ class Atom {
 		echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
 		echo "<div class='overflow-hide text-smaller'>\n<strong>The Atom Theme Engine is currently rebuilding your theme and may take up to 15 to 30 seconds depending of network status.</strong><br/>Please do not close or refresh the window.</div>\n";
 		echo closemodal();
-		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 0));
+		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 1));
 		echo form_hidden('', 'theme_id', 'theme_id', $this->data['theme_id']);
 		echo form_text('Style Title', 'theme_title', 'theme_title', $this->data['theme_title'], array('inline' => 1, 'required' => 1));
 		echo form_text('Template', 'theme_name', 'theme_name', $this->theme_name, array('inline' => 1, 'deactivate' => 1));

@@ -72,7 +72,7 @@ function calculate_byte($download_max_b) {
 
 $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 opentable($locale['400']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 $calc_c = calculate_byte($settings2['download_max_b']);
 $calc_b = $settings2['download_max_b']/$calc_c;
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";

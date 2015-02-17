@@ -328,7 +328,7 @@ class eShop_cats {
 		$enabled_languages = fusion_get_enabled_languages();
 		$this->data['cat_languages'] = (is_array($this->data['cat_languages'])) ? $this->data['cat_languages'] : $enabled_languages;
 		$form_action = FUSION_SELF.$aidlink."&amp;a_page=categories";
-		echo openform('addcat', 'add_cat', 'post', $form_action, array('class' => 'm-t-20', 'downtime' => 10));
+		echo openform('addcat', 'add_cat', 'post', $form_action, array('class' => 'm-t-20', 'downtime' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 		echo form_text($locale['ESHPCATS100'], 'title', 'titles', $this->data['title'], array('max_length' => 100,
@@ -423,7 +423,7 @@ class eShop_cats {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='8'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=categories", array('downtime' => 0,
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=categories", array('downtime' => 1,
 			'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";

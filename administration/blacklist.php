@@ -83,7 +83,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['bla
 	echo "<div class='well'>\n";
 	echo $locale['440'];
 	echo "</div>\n";
-	echo openform('blacklist_form', 'blacklist_form', 'post', $form_action, array('downtime' => 0));
+	echo openform('blacklist_form', 'blacklist_form', 'post', $form_action, array('downtime' => 1));
 	echo "<table align='center' width='450' cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tbody>\n<tr>\n";
 	echo "<th class='tbl'><label for='blacklist_ip'>".$locale['441']."</label> <span class='required'>*</span> </td>\n";
 	echo "<th class='tbl'>\n";

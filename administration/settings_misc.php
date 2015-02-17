@@ -102,7 +102,7 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 }
 
 opentable($locale['400']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 $choice_arr = array('1' => $locale['518'], '0' => $locale['519']);
 echo "<div class='pull-right'><span class='small2'>".$locale['663']."</span></div>\n";

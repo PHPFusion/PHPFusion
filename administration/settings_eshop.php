@@ -141,7 +141,7 @@ while ($data = dbarray($result)) {
 }
 if (dbrows($result) != 0) {
 
-	echo openform('optionsform', 'optionsform', 'post', FUSION_SELF.$aidlink."&amp;a_page=settings");
+	echo openform('optionsform', 'optionsform', 'post', FUSION_SELF.$aidlink."&amp;a_page=settings", array('downtime' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8'>\n";
 	openside('');

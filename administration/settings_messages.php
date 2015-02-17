@@ -60,7 +60,7 @@ $pm_sentbox = $options['pm_sentbox'];
 $pm_savebox = $options['pm_savebox'];
 
 opentable($locale['400']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-heading'>\n<strong>".$locale['707']."</strong></div>\n";

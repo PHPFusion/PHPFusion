@@ -99,7 +99,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 
 opentable($locale['400']);
 //echo "<form name='settingsform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 
 echo "<table class='table table-responsive center'>\n<tbody>\n<tr>\n";
 echo "<td width='40%' class='tbl'>\n<label for='enable_deactivation'>".$locale['1002']."</label>\n</td>\n";

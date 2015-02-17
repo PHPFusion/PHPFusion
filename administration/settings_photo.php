@@ -170,7 +170,7 @@ while ($data = dbarray($result)) {
 
 opentable($locale['400']);
 
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 echo "<div class='clearfix'>\n";

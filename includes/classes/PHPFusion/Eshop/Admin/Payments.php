@@ -137,7 +137,7 @@ class Payments {
 	public function add_payment_form() {
 		global $locale;
 		echo "<div class='m-t-20'>\n";
-		echo openform('paymentform', 'ipaymentform', 'post', $this->formaction);
+		echo openform('paymentform', 'ipaymentform', 'post', $this->formaction, array('downtime' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');

@@ -197,7 +197,7 @@ class CustomPage {
 			}
 			opentable($locale['402']);
 			openside('');
-			echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+			echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 			echo "<div class='pull-left m-t-5 m-r-10'>\n";
 			echo form_select('', 'page_id', 'page_id', $edit_opts, isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '');
 			echo "</div>\n";
@@ -229,7 +229,7 @@ class CustomPage {
 		} else {
 			require_once INCLUDES."html_buttons_include.php";
 		}
-		echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+		echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 		if (isset($_POST['edit']) && isset($_POST['page_id'])) {
 			echo form_hidden('', 'edit', 'edit', 'edit');
 		}

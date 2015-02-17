@@ -398,7 +398,7 @@ function forum_form(array $data = array()) {
 	$type_opts = array('1'=>$locale['forum_opts_001'], '2'=>$locale['forum_opts_002'], '3'=>$locale['forum_opts_003'], '4'=>$locale['forum_opts_004']);
 	opentable($locale['forum_001']);
 	$ext = isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'] : '';
-	echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink.$ext, array('enctype'=>1, 'downtime'=>0));
+	echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink.$ext, array('enctype'=>1, 'downtime'=>1));
 	echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 	echo form_text($locale['forum_006'], 'forum_name', 'forum_name', $data['forum_name'], array('required'=>1, 'error_text'=>$locale['forum_error_1']));
 	echo form_textarea($locale['forum_007'], 'forum_description', 'forum_description', $data['forum_description'], array('autosize'=>1, 'bbcode'=>1));
@@ -491,7 +491,7 @@ function forum_permissions_form(array $data = array()) {
 	while (list($key, $option) = each($_access)) {
 		$access_opts[$option['0']] = $option['1'];
 	}
-	echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink.$ext, array('enctype'=>1, 'downtime'=>0));
+	echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink.$ext, array('enctype'=>1, 'downtime'=>1));
 	echo "<span class='strong display-inline-block m-b-20'>".$locale['forum_006']." : ".$data['forum_name']."</span>\n";
 
 	openside();
@@ -597,7 +597,7 @@ function forum_permissions_form(array $data = array()) {
 function quick_create_forum() {
 	global $aidlink, $locale, $ext;
 	opentable($locale['forum_000']);
-	echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink.$ext, array('downtime'=>0, 'notice'=>0));
+	echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink.$ext, array('downtime'=>1, 'notice'=>0));
 	echo form_text($locale['forum_006'], 'forum_name', 'forum_name', '', array('required'=>1, 'inline'=>1));
 	echo form_button($locale['forum_001'], 'init_forum', 'init_forum', 'init_forum', array('class'=>'btn btn-sm btn-primary'));
 	echo closeform();
@@ -667,7 +667,7 @@ function view_forums() {
 function move_form() {
 	global $aidlink, $locale, $ext;
 	echo openmodal('move', 'Forum Removal Options', array('static'=>1, 'class'=>'modal-md'));
-	echo openform('moveform', 'moveform', 'post', FUSION_SELF.$aidlink.$ext);
+	echo openform('moveform', 'moveform', 'post', FUSION_SELF.$aidlink.$ext, array('downtime' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
 	echo "<span class='text-dark strong'>".$locale['forum_052']."</span><br/>\n";

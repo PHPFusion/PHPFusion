@@ -105,7 +105,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	}
 }
 opentable($locale['683']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<table class='table table-responsive center'>\n<tbody>\n<tr>\n";
 echo "<td class='tbl2' align='center' colspan='2'><strong>".$locale['692']."</strong></td>\n";
 echo "</tr>\n<tr>\n";

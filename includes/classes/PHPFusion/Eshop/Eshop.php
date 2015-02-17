@@ -410,7 +410,7 @@ class Eshop {
 				");
 			}
 			$html .= "<div id='coupon_container' class='m-t-20' ".(self::get('coupon_message') ? 'style="display:none;"' : "")." >\n";
-			$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+			$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
 			$html .= form_text($locale['ESHPCHK171'], 'coupon_code', 'coupon_code', '', array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1));
 			$html .= form_button($locale['ESHPCHK172'], 'apply_coupon', 'apply_coupon', $locale['ESHPCHK172'], array('class'=>'btn-primary'));
 			$html .= closeform();
@@ -465,7 +465,7 @@ class Eshop {
 		global $locale;
 		$customer_info = self::get('customer');
 		$html = "<div class='m-t-20'>\n";
-		$html .= openform('customerform', 'customerform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+		$html .= openform('customerform', 'customerform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
 		$customer_name[] = $customer_info['cfirstname'];
 		$customer_name[] = $customer_info['clastname'];
 		$customer_name = implode('|', $customer_name);
@@ -528,7 +528,7 @@ class Eshop {
 		}
 		if (!empty($list)) {
 			$dest_opts = Shipping::get_destOpts();
-			$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+			$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
 			foreach($list as $destination => $data) {
 				$html .= "<ul class='list-group'>\n";
 				$html .= "<li class='strong m-b-10'>".$dest_opts[$destination]."</li>\n";
@@ -586,7 +586,7 @@ class Eshop {
 		$html = '';
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_PAYMENTS." WHERE active='1' ORDER BY pid ASC");
 		if (dbrows($result)>0) {
-			$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+			$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
 			$html .= "<ul class='list-group'>";
 			$html .= "<li class='strong m-b-10'>".$locale['ESHPCHK120']."</li>\n";
 			while ($data = dbarray($result)) {
@@ -622,7 +622,7 @@ class Eshop {
 
 	public static function display_message_form() {
 		global $locale;
-		$html = openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>0, 'notice'=>0));
+		$html = openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
 		$html .= form_textarea($locale['ESHPCHK116'], 'message', 'message', self::get('customer_message'));
 		$html .= form_button($locale['save'], 'save_message', 'save_message', $locale['save'], array('class'=>'btn-primary'));
 		$html .= closeform();

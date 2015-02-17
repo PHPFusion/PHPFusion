@@ -104,7 +104,7 @@ while ($data = dbarray($result)) {
 }
 
 opentable($locale['400']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 $opts = array('0' => $locale['952'], '1' => $locale['953b']);
 echo form_select($locale['951'], 'blog_image_link', 'blog_image_link', $opts, $settings2['blog_image_link']);

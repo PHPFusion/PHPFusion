@@ -99,7 +99,7 @@ if (!function_exists('render_main_news')) {
 		if (!isset($_GET['readmore'])) {
 			echo "<div class='row m-b-20 m-t-20'>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
-			echo openform('viewform', 'viewform', 'post', FUSION_REQUEST, array('downtime' => 0,
+			echo openform('viewform', 'viewform', 'post', FUSION_REQUEST, array('downtime' => 1,
 				'class' => 'pull-right display-inline-block m-l-10'));
 			echo "<div class='btn-group'>\n";
 			$active = isset($_COOKIE['fusion_news_view']) ? $_COOKIE['fusion_news_view'] : '';

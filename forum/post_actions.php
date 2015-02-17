@@ -473,7 +473,7 @@ if ($executable && iMEMBER) {
 
 		echo "<div class='well'>\n";
 		echo "<p class='strong'><i class='entypo attention'></i> Wipe records for Developer Use </p>";
-		echo openform('flushform', 'flushform', 'post', FUSION_REQUEST, array('downtime'=>0));
+		echo openform('flushform', 'flushform', 'post', FUSION_REQUEST, array('downtime'=>1));
 		echo form_button('Flush Post', 'flush_post', 'flush_post', 'flush_post', array('class'=>'btn-sm btn-default m-r-10'));
 		echo form_button('Flush Threads', 'flush_thread', 'flush_thread', 'flush_thread', array('class'=>'btn-sm btn-default m-r-10'));
 		echo form_button('Flush Attachments', 'flush_attach', 'flush_attach', 'flush_attach', array('class'=>'btn-sm btn-default m-r-10'));

@@ -486,7 +486,7 @@ class Products {
 		');
 
 		echo "<div class='m-t-20'>\n";
-		echo openform('productform', 'productform', 'post', $this->formaction, array('enctype'=>1));
+		echo openform('productform', 'productform', 'post', $this->formaction, array('enctype'=>1, 'downtime' => 1));
 
 		$subtab_title['title'][] = $locale['ptabs_000'];
 		$subtab_title['id'][] = "pinfo";
@@ -770,7 +770,7 @@ class Products {
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;status=1' ".($item_status ? "class='text-dark'" : '').">Unlisted (".number_format(dbcount("(id)", DB_ESHOP, "status='0'")).")</a>\n - ";
 		echo "</div>\n";
 		echo "<div class='display-inline-block'>\n";
-		echo openform('get_filter', 'get_filters', 'post', clean_request('', array('aid', 'status', 'section')), array('notice'=>0, 'downtime'=>10));
+		echo openform('get_filter', 'get_filters', 'post', clean_request('', array('aid', 'status', 'section')), array('notice'=>0, 'downtime'=>1));
 		echo "</div>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
 		echo form_select_tree('', 'category', 'category', $category, array('no_root'=>1, 'width'=>'200px', 'allowclear'=>1, 'placeholder'=>$locale['ESHFEAT125']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
@@ -866,7 +866,7 @@ class Products {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='12'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array('downtime' => 0, 'notice' => 0));
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array('downtime' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-4'>\n";
 		echo form_text($locale['ESHPPRO172'], 'title', 'titles', '', array('required'=>1, 'inline'=>1));

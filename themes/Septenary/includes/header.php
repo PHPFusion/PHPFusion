@@ -27,7 +27,7 @@ echo "<div class='row hidden-xs'>\n";
 echo "<div id='logo' class='col-xs-12 col-md-3 col-lg-3 p-t-5 text-smaller'>\n";
 echo "</div>\n";
 echo "<div class='col-xs-9 col-md-9 col-lg-9 text-right text-smaller p-t-5'>\n";
-echo openform('searchform', 'search_form', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.BASEDIR.'search.php?stype=all', array('downtime'=>5, 'class'=>'pull-right m-r-10', 'notice'=>0));
+echo openform('searchform', 'search_form', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.BASEDIR.'search.php?stype=all', array('downtime'=>1, 'class'=>'pull-right m-r-10', 'notice'=>0));
 echo form_text('', 'stext', 'stext', '', array('append_button' => 1, 'placeholder' => $locale['sept_006'], 'class' => 'no-border'));
 echo closeform();
 echo "<ul id='head_nav' class='display-inline-block m-t-5 m-r-10 pull-right'>\n";

@@ -112,7 +112,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$openTable = $locale['articles_0021'];
 	}
 	opentable($openTable);
-	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 0));
+	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_name'>".$locale['articles_0300']." <span class='required'>*</span></label></td>\n";
 	echo "<td class='tbl'>\n";

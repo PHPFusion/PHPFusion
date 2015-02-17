@@ -72,7 +72,7 @@ if (isset($_GET['remove']) && (isset($_GET['remove']) && isnum($_GET['remove']) 
 			echo "<div id='close-message'><div class='admin-message'>".$locale['global_182']."</div></div>\n";
 		}
 		opentable($locale['470']);
-		echo openform('remove', 'remove', 'post', FUSION_SELF.$aidlink."&amp;remove=".$_GET['remove'], array('downtime' => 0));
+		echo openform('remove', 'remove', 'post', FUSION_SELF.$aidlink."&amp;remove=".$_GET['remove'], array('downtime' => 1));
 		echo form_text($locale['471'], 'admin_password', 'admin_password', '', array('password' => 1, 'class' => 'pull-left'));
 		echo form_button($locale['472'], 'confirm', 'confirm', $locale['472'], array('class' => 'btn-primary m-r-10'));
 		echo form_button($locale['473'], 'cancel', 'cancel', $locale['473'], array('class' => 'btn-primary m-r-10'));
@@ -110,7 +110,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 		$page = 1;
 		$admin_page = array($locale['441'], $locale['442'], $locale['443'], $locale['449'], $locale['444']);
 		$risky_rights = array("CP", "AD", "SB", "DB", "IP", "P", "S11", "S3", "ERRO");
-		echo openform('rightsform', 'rightsform', 'post', FUSION_SELF.$aidlink."&amp;user_id=".$_GET['edit'], array('downtime' => 0));
+		echo openform('rightsform', 'rightsform', 'post', FUSION_SELF.$aidlink."&amp;user_id=".$_GET['edit'], array('downtime' => 1));
 		echo "<div class='alert alert-warning'><strong>".$locale['462']."</strong></div>\n";
 		echo "<table cellpadding='0' cellspacing='1' class='tbl-border center table table-responsive'>\n";
 		echo "<thead><tr>\n<th colspan='2' class='tbl2'><strong>".$admin_page['0']."</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n";
@@ -161,7 +161,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 } else {
 	opentable($locale['410']);
 	if (!isset($_POST['search_users']) || !isset($_POST['search_criteria'])) {
-		echo openform('searchform', 'searchform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+		echo openform('searchform', 'searchform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 		echo "<table cellpadding='0' cellspacing='0' width='450' class='center table table-responsive'>\n";
 		echo "<tr>\n<td align='center' class='tbl'><strong>".$locale['411']."</strong><br /><br />\n";
 		echo form_text('', 'search_criteria', 'search_criteria', '', array('width' => '300px'));
@@ -182,7 +182,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 			$result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE ".$mysql_search." AND user_level='101' ORDER BY user_name");
 		}
 		if (isset($result) && dbrows($result)) {
-			echo openform('add_users_form', 'add_users_form', 'post', FUSION_SELF.$aidlink);
+			echo openform('add_users_form', 'add_users_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 			echo "<table cellpadding='0' cellspacing='1' class='tbl-border center table table-responsive'>\n";
 			$i = 0;
 			$users = "";

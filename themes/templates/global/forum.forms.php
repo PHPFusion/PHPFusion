@@ -41,7 +41,7 @@ function postform($data, $info) {
 		$formaction .= FORUM."post.php?action=newthread&amp;forum_id=".$_GET['forum_id'];
 	}
 
-	echo openform('input_form', 'input_form', 'post', $formaction, array('enctype' => 1, 'downtime' => 0));
+	echo openform('input_form', 'input_form', 'post', $formaction, array('enctype' => 1, 'downtime' => 1));
 	if ($data['edit'] or $data['reply']) {
 		if ($data['reply']) {
 			echo "<h4 class='m-b-20'>".$locale['forum_2000'].$data['thread_subject']."</h4>\n ".form_hidden('', 'thread_subject', 'thread_subject', $data['thread_subject']);

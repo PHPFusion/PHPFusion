@@ -334,7 +334,7 @@ class SiteLinks {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='8'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat'], array('downtime'=>0, 'notice'=>0));
+		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat'], array('downtime'=>1, 'notice'=>0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
 		echo form_text($locale['SL_0020'], 'link_name', 'link_name', '', array('placeholder'=>'Link Title'));
@@ -408,7 +408,7 @@ class SiteLinks {
 		global $locale;
 		fusion_confirm_exit();
 		echo "<div class='m-t-20'>\n";
-		echo openform('linkform', 'linkform', 'post', $this->form_action, array('downtime' => 0));
+		echo openform('linkform', 'linkform', 'post', $this->form_action, array('downtime' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
 		echo form_hidden('', 'link_id', 'linkid', $this->data['link_id']);

@@ -131,7 +131,7 @@ $search_js .= "document.getElementById('order2').disabled = false;\n";
 $search_js .= "document.getElementById('chars').disabled = false;\n";
 $search_js .= "break;\n}\n}\n/*]]>*/\n</script>";
 add_to_footer($search_js);
-echo openform('searchform', 'searchform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : BASEDIR)."search.php", array('downtime'=>0));
+echo openform('searchform', 'searchform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : BASEDIR)."search.php", array('downtime'=>1));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
 

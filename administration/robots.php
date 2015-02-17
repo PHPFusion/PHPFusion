@@ -92,7 +92,7 @@ if (!file_exists($file)) {
 	$defender->stop();
 	$defender->addNotice($locale['411']);
 }
-echo openform('robotsform', 'robotsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0));
+echo openform('robotsform', 'robotsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<table class='table table-responsive tbl-border center'>\n<tbody>\n";
 echo "<tr>\n";
 echo "<td class='tbl2' style='text-align:center;font-weight:bold;'>".$locale['420']."</td>\n";

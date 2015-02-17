@@ -68,7 +68,7 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 			if (dbrows($result)) {
 				$data = dbarray($result);
 				opentable($locale['SB_edit_shout']);
-				echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink."&amp;shout_id=".$data['shout_id']."", array('downtime' => 0, 'notice' => 0));
+				echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink."&amp;shout_id=".$data['shout_id']."", array('downtime' => 1, 'notice' => 0));
 				echo form_textarea($locale['SB_message'], 'shout_message', 'shout_message', $data['shout_message'], array('required' => 1, 'bbcode' => 1));
 				echo form_button($locale['SB_save_shout'], 'saveshout', 'saveshout', $locale['SB_save_shout'], array('class' => 'btn-primary'));
 				echo closeform();
@@ -143,7 +143,7 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 	$inf_settings = get_settings("shoutbox_panel");
 	opentable($locale['SB_settings']);
 	echo $nav;
-	echo openform('shoutbox', 'shoutbox', 'post', FUSION_SELF.$aidlink."&amp;page=settings", array('downtime' => 0));
+	echo openform('shoutbox', 'shoutbox', 'post', FUSION_SELF.$aidlink."&amp;page=settings", array('downtime' => 1));
 	echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 	$array = array('90' => "90 ".$locale['SB_days'], '60' => "60 ".$locale['SB_days'], '30' => "30 ".$locale['SB_days'], '20' => "20 ".$locale['SB_days'], '10' => "10 ".$locale['SB_days'],);
 	echo form_select($locale['SB_delete_old'], 'num_days', 'num_days', $array, '', array('inline' => 1));
@@ -154,7 +154,7 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 	add_to_jquery("
         $('sb_delete_old').bind('click', function() { confirm('".$locale['SB_warning_shouts']."'); return false; });
     ");
-	echo openform('shoutbox2', 'shoutbox2', 'post', FUSION_SELF.$aidlink."&amp;page=settings", array('downtime' => 0, 'notice' => 0));
+	echo openform('shoutbox2', 'shoutbox2', 'post', FUSION_SELF.$aidlink."&amp;page=settings", array('downtime' => 1, 'notice' => 0));
 	echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 	echo form_text($locale['SB_visible_shouts'], 'visible_shouts', 'visible_shouts', $inf_settings['visible_shouts'], array('required' => 1, 'inline' => 1));
 	$opts = array('1' => $locale['SB_yes'], '0' => $locale['SB_no'],);

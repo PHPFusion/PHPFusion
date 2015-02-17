@@ -135,7 +135,7 @@ if (isset($_POST['save_group'])) {
 $result = dbquery("SELECT group_id, group_name FROM ".DB_USER_GROUPS." ORDER BY group_name");
 if (dbrows($result)) {
 	opentable($locale['420']);
-	echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink, array('downtime' => 0, 'notice' => 0));
+	echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1, 'notice' => 0));
 	$sel_opts = array();
 	while ($data = dbarray($result)) {
 		$sel_opts[$data['group_id']] = "ID: ".$data['group_id']." - ".$data['group_name'];
@@ -163,7 +163,7 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	$form_action = FUSION_SELF.$aidlink;
 	opentable($locale['431']);
 }
-echo openform('editform', 'editform', 'post', $form_action, array('downtime' => 0));
+echo openform('editform', 'editform', 'post', $form_action, array('downtime' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n";
 echo "<tr>\n<td class='tbl' width='1%' style='white-space:nowrap;'><label for='group_name'>".$locale['432']."</label></td>\n";
 echo "<td class='tbl'>\n";
