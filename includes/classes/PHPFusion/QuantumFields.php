@@ -1115,9 +1115,10 @@ class QuantumFields {
 	 * Updated: you can pass any $options variable in such as required, safemode, etc.
 	 * $input_value must be the whole $data because this is a super dynamic field and callback is auto.
 	*/
-	static function quantum_multilocale_fields($title, $input_name, $input_id, array $input_value, array $options = array()) {
+	static function quantum_multilocale_fields($title, $input_name, $input_id, $input_value, array $options = array()) {
 		$html = '';
 		$language_opts = fusion_get_enabled_languages();
+		$input_value = self::is_serialized($input_value) ? unserialize($input_value) : $input_value;
 		$options += array(
 			'function' => !empty($options['textarea']) && $options['textarea'] == 1 ? 'form_textarea' : 'form_text', // only 2 fields type need a multiple locale logically
 			'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
@@ -1136,7 +1137,7 @@ class QuantumFields {
 		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 well" : "col-sm-12 col-md-12 col-lg-12 well")."'>\n" : "<div class='well p-b-5 p-t-5'>";
 		foreach($language_opts as $lang) {
 			$options['field_title'] = $title." (".$lang.")";
-			$html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, (isset($input_value[$input_name][$lang]) ? $input_value[$input_name][$lang] : $input_value[$input_name]), $options);
+			$html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
 		}
 		$html .= "</div>\n";
 		$html .= "</div>\n";

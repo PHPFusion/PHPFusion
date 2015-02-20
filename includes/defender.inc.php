@@ -733,7 +733,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 					}
 				}
 			}
-			return $val;
+			return serialize($val);
 		} else {
 			if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name])) {
 				$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name];

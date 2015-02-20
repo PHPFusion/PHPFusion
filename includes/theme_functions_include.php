@@ -479,7 +479,7 @@ function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = T
 
 	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide  m-2'>\n";
 	$html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
-	if ($src) {
+	if ($src && file_exists($src) && !is_dir($src)) {
 		$html .= "<img ".($responsive ? "class='img-responsive'" : '')." src='$src'/ ".(!$responsive && ($_offset_w || $_offset_h) ? "style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." />\n";
 	} else {
 		$size = str_replace('px', '', $size);
