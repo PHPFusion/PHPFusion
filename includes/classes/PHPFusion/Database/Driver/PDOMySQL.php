@@ -35,16 +35,20 @@ class PDOMySQL extends AbstractDatabaseDriver {
 	/**
 	 * Connect to the database
 	 *
-	 * @param string $host
+	 * @param string $host Server domain or IP followed by an optional port definition
 	 * @param string $user
-	 * @param string $pass
-	 * @param string $db
-	 * @throws SelectionException
-	 * @throws ConnectionException
+	 * @param string $pass Password
+	 * @param string $db The name of the database
+	 * @param array $options Currently only one option exists: charset
+	 * @throws SelectionException When the selection of the database was unsuccessful
+	 * @throws ConnectionException When the connection could not be established
 	 */
-	public function __construct($host, $user, $pass, $db) {
+	protected function connect($host, $user, $pass, $db, array $options = array()) {
+		$options += array(
+			'charset' => 'utf8',
+		);
 		try {
-			$pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";charset=utf8", $user, $pass);
+			$pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";charset=".$options['charset'], $user, $pass);
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, FALSE);
 		} catch (PDOException $error) {

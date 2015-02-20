@@ -17,7 +17,9 @@
  --------------------------------------------------------*/
 namespace PHPFusion\Database;
 
-
+/**
+ * Abstract class for new database handler classes
+ */
 abstract class AbstractDatabaseDriver
 {
 	/**
@@ -28,6 +30,8 @@ abstract class AbstractDatabaseDriver
 	const ERROR_UNKNOWN_DATABASE = 1049;
 
 	/**
+	 * It stores the SQL queries and execution times sent by every instance
+	 *
 	 * @var array
 	 */
 	private static $queries = array();
@@ -36,6 +40,24 @@ abstract class AbstractDatabaseDriver
 	 * @var bool
 	 */
 	private $debug = FALSE;
+
+	/**
+	 * @var string
+	 */
+	private $connectionid;
+
+	/**
+	 * Connect to the database
+	 *
+	 * @param string $host Server domain or IP followed by an optional port definition
+	 * @param string $user
+	 * @param string $pass Password
+	 * @param string $db The name of the database
+	 * @param array $options Currently only one option exists: charset
+	 * @throws SelectionException When the selection of the database was unsuccessful
+	 * @throws ConnectionException When the connection could not be established
+	 */
+	abstract protected function connect($host, $user, $pass, $db, array $options = array());
 
 	/**
 	 * @param bool $debug
@@ -59,11 +81,11 @@ abstract class AbstractDatabaseDriver
 	 * @return mixed The result of the query or FALSE on error
 	 */
 	public function query($query, array $parameters = array()) {
-
+		self::$queries[$this->connectionid][] = array(0, $query, $parameters);
 		$query_time = microtime(TRUE);
 		$result = $this->_query($query, $parameters);
 		$query_time = round((microtime(TRUE)-$query_time), 7);
-		self::$queries[spl_object_hash($this)][] = array($query_time, $query);
+		self::$queries[$this->connectionid][count(self::$queries[$this->connectionid]) - 1][0] = $query_time;
 		return $result ? : FALSE;
 	}
 
@@ -187,14 +209,22 @@ abstract class AbstractDatabaseDriver
 	/**
 	 * Connect to the database
 	 *
-	 * @param string $host
+	 * @param string $host Server domain or IP followed by an optional port definition
 	 * @param string $user
-	 * @param string $pass
-	 * @param string $db
-	 * @throws Exception\SelectionException
-	 * @throws Exception\ConnectionException
+	 * @param string $pass Password
+	 * @param string $db The name of the database
+	 * @param array $options Currently only one option exists: charset
+	 * @throws SelectionException When the selection of the database was unsuccessful
+	 * @throws ConnectionException When the connection could not be established
 	 */
-	abstract public function __construct($host, $user, $pass, $db);
+	public function __construct($host, $user, $pass, $db, array $options = array()) {
+		$options += array(
+			'charset' => 'utf8',
+			'connectionid' => ''
+		);
+		$this->connectionid = $options['connectionid'];
+		$this->connect($host, $user, $pass, $db, $options);
+	}
 
 
 	/**

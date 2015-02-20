@@ -25,13 +25,22 @@ require_once fusion_detect_installation();
 require_once __DIR__.'/core_constants_include.php';
 require_once __DIR__.'/multisite_include.php';
 
-//New database handler functions based on enhanced OO solution
-//DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
-//require_once DB_HANDLERS."all_functions_include.php";
-
-//old database handler functions
-require_once DB_HANDLERS.(intval($pdo_enabled) === 1 ? 'pdo' : 'mysql')."_functions_include.php";
-
+// TODO: Remove this check and keep only the new version
+if (isset($OOPDBLayer) and $OOPDBLayer === TRUE) {
+	//New database handler functions based on enhanced OO solution
+	DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+	DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
+		'host' => $db_host,
+		'user' => $db_user,
+		'password' => $db_pass,
+		'database' => $db_name
+	));
+	DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.altdbs.php');
+	require_once DB_HANDLERS."all_functions_include.php";
+} else {
+	//old database handler functions
+	require_once DB_HANDLERS.(intval($pdo_enabled) === 1 ? 'pdo' : 'mysql')."_functions_include.php";
+}
 require_once __DIR__."/system_images.php";
 
 require_once __DIR__."/output_handling_include.php";

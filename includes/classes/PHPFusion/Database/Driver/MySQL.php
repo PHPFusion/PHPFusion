@@ -25,26 +25,30 @@ use PHPFusion\Database\AbstractDatabaseDriver;
 
 class MySQL extends AbstractDatabaseDriver {
 	/**
-	 * @var resource
+	 * @var resource|NULL
 	 */
 	private $connection = NULL;
 
 	/**
 	 * Connect to the database
 	 *
-	 * @param string $host
+	 * @param string $host Server domain or IP followed by an optional port definition
 	 * @param string $user
-	 * @param string $pass
-	 * @param string $db
-	 * @throws SelectionException
-	 * @throws ConnectionException
+	 * @param string $pass Password
+	 * @param string $db The name of the database
+	 * @param array $options Currently only one option exists: charset
+	 * @throws SelectionException When the selection of the database was unsuccessful
+	 * @throws ConnectionException When the connection could not be established
 	 */
-	public function __construct($host, $user, $pass, $db) {
+	protected function connect($host, $user, $pass, $db, array $options = array()) {
+		$options += array(
+			'charset' => 'utf8',
+		);
 		$this->connection = @mysql_connect($host, $user, $pass);
 		if (!$this->connection) {
 			throw new ConnectionException(mysql_error(), mysql_errno());
 		}
-		mysql_set_charset('utf8', $this->connection);
+		mysql_set_charset($options['charset'], $this->connection);
 
 		if(!@mysql_select_db($db, $this->connection)) {
 			throw new SelectionException(mysql_error($this->connection), mysql_errno($this->connection));
@@ -69,7 +73,7 @@ class MySQL extends AbstractDatabaseDriver {
 			}
 			$query = strtr($query, $parameters);
 		}
-		$result = mysql_query($query, $this->connection); echo mysql_error($this->connection);
+		$result = mysql_query($query, $this->connection);
 		return $result ? : FALSE;
 	}
 

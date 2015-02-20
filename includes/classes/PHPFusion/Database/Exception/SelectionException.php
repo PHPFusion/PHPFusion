@@ -19,6 +19,12 @@
 namespace PHPFusion\Database\Exception;
 
 
+/**
+ * Exception class for unsuccessful DB selection
+ *
+ * Throw it when the connection is OK but the given database
+ * cannot be selected.
+ */
 class SelectionException extends \RuntimeException {
 
 }

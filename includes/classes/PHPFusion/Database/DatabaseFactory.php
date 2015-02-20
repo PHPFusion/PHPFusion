@@ -23,22 +23,17 @@ class DatabaseFactory {
 	/**
 	 * use mysql_* functions
 	 */
-	const DRIVER_MYSQL = 'MySQL';
+	const DRIVER_MYSQL = 'mysql';
 
 	/**
 	 * use \PDO class
 	 */
-	const DRIVER_PDO_MYSQL = 'PDOMySQL';
+	const DRIVER_PDO_MYSQL = 'pdo_mysql';
 
 	/**
-	 * Use the default driver (PDOMySQL)
+	 * Use the default driver (pdo_mysql)
 	 */
 	const DRIVER_DEFAULT = self::DRIVER_PDO_MYSQL;
-
-	/**
-	 * @var DatabaseFactory[]
-	 */
-	private static $instances = array();
 
 	/**
 	 * MySQL or PDOMySQL
@@ -48,86 +43,181 @@ class DatabaseFactory {
 	private static $defaultDriver = self::DRIVER_DEFAULT;
 
 	/**
-	 * @var bool
+	 * @var bool|array Array of connection IDs or TRUE to debug all connections
 	 */
-	private static $debug = FALSE;
+	private static $debug = array();
+
+	/**
+	 * @var string[]
+	 */
+	private static $driverClasses = array(
+		self::DRIVER_MYSQL => '\PHPFusion\Database\Driver\MySQL',
+		self::DRIVER_PDO_MYSQL => '\PHPFusion\Database\Driver\PDOMySQL'
+	);
+
+	/**
+	 * @var Configuration[]
+	 */
+	private static $configurations = array();
 
 	/**
 	 * @var string
 	 */
-	private $driver;
+	private static $defaultConnectionID = 'default';
 
 	/**
-	 * @var AbstractDatabaseDriver
+	 * @var AbstractDatabaseDriver[]
 	 */
-	private $connection = NULL;
+	private static $connections = array();
 
 	/**
-	 * @param $driver
+	 * @return string
 	 */
-	private function __construct($driver) {
-		$this->driver = $driver;
+	public static function getDefaultConnectionID() {
+		return self::$defaultConnectionID;
 	}
 
 	/**
-	 * @param string $mode
-	 * @return DatabaseFactory
+	 * @param string $id
+	 * @param string $fullClassName
 	 */
-	public static function getInstance($mode = NULL) {
-		if (!$mode) {
-			$mode = self::$defaultDriver;
+	public static function registerDriverClass($id, $fullClassName) {
+		if (is_subclass_of($fullClassName, __NAMESPACE__.'\AbstractDatabaseDriver')
+			and !isset(self::$driverClasses[$id])) {
+			self::$driverClasses[$id] = $fullClassName;
 		}
-		if (!isset(self::$instances[$mode])) {
-			self::$instances[$mode] = new static($mode);
-		}
-		return self::$instances[$mode];
 	}
 
+	/**
+	 * @param int $id
+	 * @param array $configuration
+	 */
+	public static function registerConfiguration($id, array $configuration) {
+		$lowerCaseID = strtolower($id);
+		if (!isset(self::$configurations[$lowerCaseID])) {
+			self::$configurations[$lowerCaseID] = new Configuration($configuration);
+		}
+	}
+
+	/**
+	 * @param array $configurations
+	 */
+	public static function registerConfigurations($configurations) {
+		foreach ($configurations as $id => $configuration) {
+			self::registerConfiguration($id, $configuration);
+		}
+	}
+
+	/**
+	 * @param string $file
+	 */
+	public static function registerConfigurationFromFile($file) {
+		if (is_file($file)) {
+			$configurations = require $file;
+			if (is_array($configurations)) {
+				DatabaseFactory::registerConfigurations($configurations);
+			}
+			// TODO Exception otherwise
+		}
+		// TODO Exception otherwise
+	}
+
+	/**
+	 * @param string $id
+	 * @return null|string
+	 */
+	public static function getDriverClass($id = NULL) {
+		if ($id === NULL) {
+			$id = self::getDefaultDriver();
+		}
+		return isset(self::$driverClasses[$id]) ? self::$driverClasses[$id] : NULL;
+	}
+
+	/**
+	 * @param string $defaultDriver
+	 */
 	public static function setDefaultDriver($defaultDriver) {
 		self::$defaultDriver = $defaultDriver;
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function getDefaultDriver() {
 		return self::$defaultDriver;
 	}
 
+	/**
+	 * @param bool|array $debug
+	 */
 	public static function setDebug($debug = TRUE) {
 		self::$debug = $debug;
 	}
 
-	public static function isDebug() {
-		return self::$debug;
-	}
-
-	public function getDriver() {
-		return $this->driver;
+	/**
+	 * @return bool
+	 */
+	public static function isDebug($connectionid = NULL) {
+		return ((!$connectionid and self::$debug)
+				or ($connectionid and is_array(self::$debug)
+				and in_array($connectionid, self::$debug)));
 	}
 
 	/**
-	 * Connect to the database and store the connection object
+	 * Connect to the database using the default driver
 	 *
 	 * @param string $host
 	 * @param string $user
 	 * @param string $password
 	 * @param string $db
+	 * @param array $options
 	 * @return AbstractDatabaseDriver
 	 * @throws Exception\SelectionException
 	 * @throws Exception\ConnectionException
 	 */
-	public function connect($host, $user, $password, $db) {
-		$className = __NAMESPACE__.'\Driver\\'.$this->getDriver();
-		$this->connection = new $className($host, $user, $password, $db);
-		$this->connection->setDebug(self::isDebug());
-		return $this->connection;
+	public static function connect($host, $user, $password, $db, array $options = array()) {
+		$configuration = new Configuration();
+		$options += array(
+			'charset' => $configuration->getCharset(),
+			'driver' => $configuration->getDriver(),
+			'connectionid' => self::getDefaultConnectionID(),
+			'debug' => $configuration->isDebug()
+		);
+		$id = strtolower($options['connectionid']);
+		if (!isset(self::$connections[$id])) {
+			$class = self::getDriverClass(strtolower($options['driver']));
+			/**@var AbstractDatabaseDriver*/
+			$connection = new $class($host, $user, $password, $db, $options);
+			if ($options['debug'] and !self::isDebug($id)) {
+				self::$debug[] = $id;
+			}
+			$connection->setDebug(self::isDebug($id));
+			self::$connections[$id] = $connection;
+		}
+		return self::$connections[$id];
 	}
 
 	/**
 	 * Get the database connection object
 	 *
+	 * @param string $id
 	 * @return AbstractDatabaseDriver
 	 */
-	public function getConnection() {
-		return $this->connection;
+	public static function getConnection($id = NULL) {
+		$id = strtolower($id ? : self::getDefaultConnectionID());
+		if (!isset(self::$configurations[$id])) {
+			// TODO Exception
+			return NULL;
+		}
+		if (!isset(self::$connections[$id])) {
+			$conf = self::$configurations[$id];
+			self::connect($conf->getHost(), $conf->getUser(), $conf->getPassword(), $conf->getDatabase(), array(
+				'driver' => $conf->getDriver(),
+				'connectionid' => $id,
+				'debug' => $conf->isDebug()
+			));
+		}
+		return self::$connections[$id];
 	}
 
 }

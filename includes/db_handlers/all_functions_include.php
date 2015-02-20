@@ -20,9 +20,21 @@ use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Database\AbstractDatabaseDriver;
 use PHPFusion\Database\Exception\SelectionException;
 
+/*
+ * It will be called after everything else even if the script is
+ * halted by exit(), die(), fatal error or exception.
+ *
+ * It shows all executed
+ */
 register_shutdown_function(function() {
 	if (DatabaseFactory::isDebug()) {
-		print_p(AbstractDatabaseDriver::getGlobalQueryLog());
+		$log = AbstractDatabaseDriver::getGlobalQueryLog();
+		foreach ($log as $connectionid => $value) {
+			if (!DatabaseFactory::isDebug($connectionid)) {
+				unset($log[$connectionid]);
+			}
+		}
+		print_p($log);
 	}
 });
 
@@ -104,7 +116,7 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
 	$connection_success = TRUE;
 	$dbselection_success = TRUE;
 	try {
-		DatabaseFactory::getInstance()->connect($db_host, $db_user, $db_pass, $db_name);
+		DatabaseFactory::connect($db_host, $db_user, $db_pass, $db_name);
 	} catch (\Exception $e) {
 		$connection_success = $e instanceof SelectionException;
 		$dbselection_success = FALSE;
@@ -136,5 +148,5 @@ function dblastid() {
  * @return AbstractDatabaseDriver
  */
 function dbconnection() {
-	return DatabaseFactory::getInstance()->getConnection();
+	return DatabaseFactory::getConnection();
 }

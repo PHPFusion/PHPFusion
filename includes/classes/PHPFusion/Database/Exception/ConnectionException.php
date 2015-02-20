@@ -18,7 +18,11 @@
 
 namespace PHPFusion\Database\Exception;
 
-
+/**
+ * Exception class for failed DB connection
+ *
+ * Throw it when the connection cannot be established
+ */
 class ConnectionException extends \RuntimeException {
 
 }

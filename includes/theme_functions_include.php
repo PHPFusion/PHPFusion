@@ -353,7 +353,7 @@ function itemoptions($item_type, $item_id) {
 
 function showrendertime($queries = TRUE) {
 	global $locale, $mysql_queries_count;
-	$db = DatabaseFactory::getInstance()->getConnection();
+	$db = DatabaseFactory::getConnection();
 	if($db) {
 		$mysql_queries_count = $db->getGlobalQueryCount();
 	}
