@@ -711,15 +711,15 @@ class defender {
 	}
 
 function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang = FALSE) {
-	global $userdata, $defender, $locale;
+	global $defender, $locale;
 	if ($input_name) {
+		$val = array();
 		if ($multilang) {
-			foreach (fusion_get_enabled_languages() as $lang) {
-				//$field_name = ucfirst(strtolower(str_replace("_", " ", $input_name))).' ('.$lang.')';
-				$input_name = $input_name."[".$lang."]";
-				if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name])) {
-					$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name];
-					$defender->field_name = $input_name;
+			foreach (fusion_get_enabled_languages() as $lang => $language) {
+				$iname = $input_name."[".$lang."]";
+				if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$iname])) {
+					$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$iname];
+					$defender->field_name = $iname;
 					$defender->field_value = $value[$lang];
 					$defender->field_default = $default;
 					if ($defender->field_config['required'] == 1 && (!$value[$lang])) { // it is required field but does not contain any value.. do reject.
@@ -729,11 +729,11 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 						$defender->addHelperText($defender->field_config['id'], $helper_text);
 						$defender->addNotice($helper_text);
 					} else {
-						$val = $defender->defender();
-						return $val;
+						$val[$lang] = $defender->defender();
 					}
 				}
 			}
+			return $val;
 		} else {
 			if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name])) {
 				$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name];
