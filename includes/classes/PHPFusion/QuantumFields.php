@@ -184,7 +184,7 @@ class QuantumFields {
 	static function parse_label($value) {
 		if (self::is_serialized($value)) {
 			$value = unserialize($value); // if anyone can give me a @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
-			return (isset($value[LANGUAGE])) ? $value[LANGUAGE] : $value['English'];
+			return (isset($value[LANGUAGE])) ? $value[LANGUAGE] : '';
 		} else {
 			return $value;
 		}
