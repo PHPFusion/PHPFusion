@@ -334,6 +334,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 	// Step 4 - Config / Database Setup
 	case 4:
 		// Generate All Core Tables - this includes settings and all its injections
+		$db_host = (isset($_POST['db_host']) ? stripinput(trim($_POST['db_host'])) : "");
 		$db_user = (isset($_POST['db_user']) ? stripinput(trim($_POST['db_user'])) : "");
 		$db_pass = (isset($_POST['db_pass']) ? stripinput(trim($_POST['db_pass'])) : "");
 		$db_name = (isset($_POST['db_name']) ? stripinput(trim($_POST['db_name'])) : "");
