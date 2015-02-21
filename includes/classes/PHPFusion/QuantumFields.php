@@ -181,15 +181,21 @@ class QuantumFields {
 		return TRUE;
 	}
 
+	/**
+	 * Parse the correct label language. Requires serialized $value.
+	 * @param $value - Serialized
+	 * @return string
+	 */
 	static function parse_label($value) {
 		if (self::is_serialized($value)) {
 			$value = unserialize($value); // if anyone can give me a @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
-			return (isset($value[LANGUAGE])) ? $value[LANGUAGE] : '';
+			return (string) (isset($value[LANGUAGE])) ? $value[LANGUAGE] : '';
 		} else {
-			return $value;
+			return (string) $value;
 		}
 	}
 
+	/* The template for field rendering */
 	public function render_fields() {
 		global $aidlink;
 		$locale = $this->locale;
@@ -198,6 +204,7 @@ class QuantumFields {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 		if (!empty($this->page[0])) {
+			$tab_title = array();
 			foreach ($this->page[0] as $page_id => $page_data) {
 				$tab_title['title'][$page_id] = self::parse_label($page_data['field_cat_name']);
 				$tab_title['id'][$page_id] = $page_id;
@@ -243,7 +250,6 @@ class QuantumFields {
 							$item_counter = count($this->fields[$cat_id])-1;
 							foreach ($this->fields[$cat_id] as $arr => $field_data) {
 								if ($this->debug) print_p($field_data);
-								//print_p($field_data);
 								echo "<div class='text-left'>\n";
 								if ($k != 0) echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmu&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order']-1)."'>".$locale['move_up']."</a> - ";
 								if ($k !== $item_counter) echo "<a class='text-smaller' href='".FUSION_SELF.$aidlink."&amp;action=fmd&amp;parent_id=".$field_data['field_cat']."&amp;field_id=".$field_data['field_id']."&amp;order=".($field_data['field_order']+1)."'>".$locale['move_down']."</a> - ";
@@ -277,6 +283,7 @@ class QuantumFields {
 		closetable();
 	}
 
+	/* Move Fields */
 	private function move_fields() {
 		global $aidlink;
 		if (isset($_GET['action']) && isset($_GET['order']) && isnum($_GET['order']) && isset($_GET['parent_id']) && isnum($_GET['parent_id'])) {
