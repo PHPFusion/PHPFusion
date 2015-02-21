@@ -20,6 +20,9 @@
 namespace PHPFusion;
 
 class QuantumFields {
+	/**
+	 * Initialization Requirements.
+	 */
 	public $system_title = '';
 	public $admin_rights = '';
 	public $locale_file = '';
@@ -27,10 +30,16 @@ class QuantumFields {
 	public $field_db = '';
 	public $plugin_folder = '';
 	public $plugin_locale_folder = '';
-	public $debug = false;
+	public $method = 'input';
+	public $callback_data = array(); // $data of a $result;
+
+	private $input_page = 1;
+
+	// debug mode
+	private $debug = false;
 	private $module_debug = false;
-	public $dom_debug = FALSE;
-	public $input_page = 1;
+	private $dom_debug = false;
+
 	// System Internals
 	private $max_rows = 0;
 	private $locale = array();
@@ -42,8 +51,7 @@ class QuantumFields {
 	private $available_fields = array();
 	private $available_field_info = array();
 	private $user_field_dbinfo = '';
-	public $method = 'input';
-	public $callback_data = array(); // $data of a $result;
+
 
 	/* Constructor */
 	public function boot() {
@@ -51,23 +59,112 @@ class QuantumFields {
 		define('IN_QUANTUM', true);
 		require_once LOCALE.LOCALESET.'admin/fields.php';
 		$this->locale = $locale;
-		add_to_breadcrumbs(array('link' => '', 'title' => $this->system_title));
-		add_to_title(': '.$this->system_title);
-		$this->verify_field_tables();
-		$this->load_data();
+
+		if ($this->system_title) {
+			add_to_breadcrumbs(array('link' => FUSION_REQUEST, 'title' => $this->system_title));
+			add_to_title($this->system_title);
+		}
+
+		$this->install_quantum();
+		$this->read_structureData();
 		$this->load_field_cats();
+		if ($this->method == 'input') {
 		$this->move_fields();
 		$this->delete_category();
 		$this->delete_fields();
 		$this->available_fields();
+		}
 		$this->render_fields();
 	}
 
-	/* System integrity check and repairs */
-	private function verify_field_tables() {
+	// Setters
+
+	/**
+	 * `input` renders field.
+	 * `display` renders data
+	 * @param string $method ('input' or 'display')
+	 */
+	public function setMethod($method) {
+		$this->method = $method;
+	}
+
+	/**
+	 * If modules are used, specify fields module path
+	 * API follows Version 7.00's User Fields module.
+	 * @param string $plugin_folder_path
+	 */
+	public function setPluginFolder($plugin_folder_path) {
+		$this->plugin_folder = $plugin_folder_path;
+	}
+
+	/**
+	 * If modules are used, specify fields module locale libs folder path
+	 * API follows Version 7.00's User Fields Module.
+	 * @param string $plugin_locale_folder
+	 */
+	public function setPluginLocaleFolder($locale_folder_path) {
+		$this->plugin_locale_folder = $locale_folder_path;
+	}
+
+	/**
+	 * Give your Quantum based system a name. Will add to breadcrumbs if available.
+	 * @param string $system_title
+	 */
+	public function setSystemTitle($system_title) {
+		$this->system_title = $system_title;
+	}
+
+	/**
+	 * Quantum System Custom Locale File.
+	 * Default path are LOCALE.LOCALESET.user_fields.php
+	 * @param string $locale_file
+	 */
+	public function setLocaleFile($locale_file) {
+		$this->locale_file = $locale_file;
+	}
+
+	/**
+	 * Database Handler for Category Structuring
+	 * If it does not exist, quantum will automatically build a template onload.
+	 * @param string $category_db
+	 */
+	public function setCategoryDb($category_db) {
+		$this->category_db = $category_db;
+	}
+
+	/**
+	 * Database Handler for Field Structuring
+	 * If it does not exist, quantum will automatically build a template onload.
+	 * @param string $field_db
+	 */
+	public function setFieldDb($field_db) {
+		$this->field_db = $field_db;
+	}
+
+	/**
+	 * Additional data-id referencing.
+	 * $userdata for instance.
+	 * @param array $callback_data
+	 */
+	public function setCallbackData($callback_data) {
+		$this->callback_data = $callback_data;
+	}
+
+	/**
+	 * The internal admin rights by a user to use this system.
+	 * if specified, to lock down to certain user rights.
+	 * @param string $admin_rights
+	 */
+	public function setAdminRights($admin_rights) {
+		$this->admin_rights = $admin_rights;
+	}
+
+	/**
+	 * DB Installers for integrity/verification checks.
+	 */
+	private function install_quantum() {
 		if (!db_exists($this->category_db)) {
-			// build the table if not exist.
-			$result = dbquery("CREATE TABLE ".$this->category_db." (
+			dbquery("CREATE TABLE ".$this->category_db." (
 				field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
 				field_cat_name VARCHAR(200) NOT NULL ,
 				field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -78,9 +175,8 @@ class QuantumFields {
 				PRIMARY KEY (field_cat_id)
 				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 		}
-		// build the table if not exist.
 		if (!db_exists($this->field_db)) {
-			$result = dbquery("CREATE TABLE ".$this->field_db." (
+			dbquery("CREATE TABLE ".$this->field_db." (
 				field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 				field_title VARCHAR(50) NOT NULL,
 				field_name VARCHAR(50) NOT NULL,
@@ -101,7 +197,7 @@ class QuantumFields {
 	}
 
 	/* Returns array structure for render */
-	public function load_data() {
+	private function read_structureData() {
 		// get the page first.
 		$this->page = dbquery_tree_full($this->category_db, 'field_cat_id', 'field_parent', "ORDER BY field_cat_order ASC");
 		$result = dbquery("SELECT field.*, cat.field_cat_id, cat.field_cat_name,  cat.field_parent, cat.field_cat_class,
@@ -121,7 +217,7 @@ class QuantumFields {
 
 	/* Read into serialized field label and returns the value */
 	/* This is the more pro edition by Chris Smith <code+php@chris.cs278.org>, Frank Bültge <frank@bueltge.de> */
-	static function is_serialized( $value, &$result = null ) {
+	public static function is_serialized( $value, &$result = null ) {
 		// Bit of a give away this one
 		if ( ! is_string( $value ) ) {
 			return FALSE;
