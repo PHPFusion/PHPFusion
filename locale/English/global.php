@@ -47,6 +47,7 @@ $locale['user2'] = "Administrator";
 $locale['user3'] = "Super Administrator";
 $locale['user_na'] = "N/A";
 $locale['user_anonymous'] = "Anonymous User";
+$locale['genitive'] = "%s's %s";
 // Standard User Status
 $locale['status0'] = "Active";
 $locale['status1'] = "Banned";
@@ -155,9 +156,9 @@ $locale['global_101'] = "Login ID";
 $locale['global_101a'] = "Please enter your Login ID";
 $locale['global_102'] = "Password";
 $locale['global_103'] = "Stay signed in";
-$locale['global_104'] = $locale['global_100'];
+$locale['global_104'] = "Sign In";
 $locale['global_105'] = "Not a member yet? <a href='".BASEDIR."register.php' class='side'>Click here</a> to register.";
-$locale['global_106'] = "<a href='".BASEDIR."lostpassword.php'>Forgot Password?</a>";
+$locale['global_106'] = "<i class='fa fa-question-circle m-r-10'></i><a href='".BASEDIR."lostpassword.php'>Forgot Password?</a>";
 $locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";
 // Member User Menu
@@ -344,6 +345,7 @@ $locale['or'] = 'or';
 $locale['by'] = 'by';
 $locale['in'] = 'in';
 $locale['of'] = 'of';
+$locale['na'] = 'Not available';
 // Navigation
 $locale['next'] = 'Next';
 $locale['pevious'] = 'Previous';
@@ -356,6 +358,7 @@ $locale['move_down'] = "Move down";
 // Action
 $locale['add'] = 'Add';
 $locale['save'] = 'Save';
+$locale['save_changes'] = 'Save Changes';
 $locale['update'] = 'Update';
 $locale['updated'] = 'Updated';
 $locale['remove'] = 'Remove';
