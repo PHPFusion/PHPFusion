@@ -443,4 +443,29 @@ $locale['nopreview'] = "Дані для перегляду відсутні";
 $locale['left'] = "Зліва";
 $locale['center'] = "Центр";
 $locale['right'] = "Справа";
+
+// select correct single and plural form for Slavic languages
+// this function is compatible with English
+function format_word($count, $words) {
+	$count = $count % 100;
+	$a = $count % 10;
+	$b = floor($count / 10);
+
+	$form = 2; // second plural form
+
+	if ($b != 1) { // count is not between 10 and 19
+		if ($a == 1) {
+			$form = 0; // single form
+		} elseif ($a >= 2 && $a <= 4) {
+			$form = 1; // first plural form
+		}
+	}
+
+	$words_array = explode("|", $words);
+ 
+	$result = $words_array[$form];
+
+	return $result;
+}
+
 ?>
