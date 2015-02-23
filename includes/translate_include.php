@@ -53,7 +53,7 @@ function translate_lang_names($language) {
 
 function translate_country_names($country) {
 	$translated_countries = array("Hungary" => "Magyarország", "Poland" => "Polska", "Italy" => "Italia",
-								  "Germany" => "Deutchland");
+								  "Germany" => "Deutchland", "Russia" => "Россия", "Ukraine" => "Україна");
 	if ($translated_countries[$country] != '') {
 		return $translated_countries[$country];
 	} else {
@@ -61,25 +61,31 @@ function translate_country_names($country) {
 	}
 }
 
-// select correct single and plural form for Slavic languages
-// this function is compatible with English
+// select correct single and plural form for languages
 function format_word($count, $words) {
-	if (LANGUAGE == "Russian" || LANGUAGE == "Ukrainian") {
-		$count = $count % 100;
-		$a = $count % 10;
-		$b = floor($count / 10);
- 
-		$form = 2; // second plural form
+	switch(LANG) {
+		case 'Russian':
+			format_word_Russian($count, $words);
+			Break;
+		case 'Ukrainian':
+			format_word_Ukrainian($count, $words);
+			Break;
+	}
+}
 
-		if ($b != 1) { // count is not between 10 and 19
-			if ($a == 1) {
-				$form = 0; // single form
-			} elseif ($a >= 2 && $a <= 4) {
-				$form = 1; // first plural form
-			}
+function format_word_Russian($count, $words) {
+	$count = $count % 100;
+	$a = $count % 10;
+	$b = floor($count / 10);
+
+	$form = 2; // second plural form
+
+	if ($b != 1) { // count is not between 10 and 19
+		if ($a == 1) {
+			$form = 0; // single form
+		} elseif ($a >= 2 && $a <= 4) {
+			$form = 1; // first plural form
 		}
-	} else {
-		$form = ($count == 1 ? 0 : 1);
 	}
 
 	$words_array = explode("|", $words);
@@ -88,4 +94,27 @@ function format_word($count, $words) {
 
 	return $result;
 }
+
+function format_word_Ukrainian($count, $words) {
+	$count = $count % 100;
+	$a = $count % 10;
+	$b = floor($count / 10);
+
+	$form = 2; // second plural form
+
+	if ($b != 1) { // count is not between 10 and 19
+		if ($a == 1) {
+			$form = 0; // single form
+		} elseif ($a >= 2 && $a <= 4) {
+			$form = 1; // first plural form
+		}
+	}
+
+	$words_array = explode("|", $words);
+ 
+	$result = $words_array[$form];
+
+	return $result;
+}
+
 ?>
