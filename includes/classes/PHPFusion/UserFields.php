@@ -128,7 +128,7 @@ class UserFields extends QuantumFields {
 
 			// Admin Password - not available for everyone except edit profile.
 			$this->info['user_admin_password'] = '';
-			if (!$this->registration && iADMIN) {
+			if (!$this->registration && iADMIN && !defined('ADMIN_PANEL')) {
 				if ($this->userData['user_admin_password']) {
 					$this->info['user_admin_password'] =  form_text($locale['u144a'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
 					$this->info['user_admin_password'] .=  form_text($locale['u144'], 'user_admin_password1', 'user_admin_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
@@ -167,7 +167,6 @@ class UserFields extends QuantumFields {
 			// Website terms
 			if ($this->displayTerms == 1) $this->info['terms'] = $this->renderTerms();
 		}
-
 		$this->info += array(
 			'register' =>  $this->registration,
 			'pages' =>  ($this->paginate && !$this->registration) ?  $this->info['section'] = $this->renderPageLink() : '',
@@ -280,9 +279,7 @@ class UserFields extends QuantumFields {
 			//print_p($this->method, 1);
 			//if ($index_page_id !=='1' && (!$this->registration)) {
 			if ($this->method == 'input') {
-
-				$this->info['user_field'] = '';
-				$this->info['user_field'] .= $_GET['profiles'] !==1 ? form_hidden('', 'user_id', 'user_id', $this->userData['user_id']) : '';
+				$this->info['user_field'] = $_GET['profiles'] !==1 ? form_hidden('', 'user_id', 'user_id', $this->userData['user_id']) : '';
 				$this->info['user_field'] .= $_GET['profiles'] !==1 ? form_hidden('', 'user_name', 'user_name', $this->userData['user_name']) : '';
 			} elseif ($this->method == 'display') {
 				//print_p($this->registration);
@@ -297,7 +294,7 @@ class UserFields extends QuantumFields {
 							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
 							foreach($item[$cat_id] as $field_id => $field) {
 								//@todo: switch field type
-								$this->info['user_field'] .= $this->display_fields($field, array('inline'=>1, 'required'=>$field['field_required'] ? 1 : 0));
+								$this->info['user_field'] .= $this->display_fields($field, array('show_title'=>1, 'inline'=>1, 'required'=>$field['field_required'] ? 1 : 0));
 							}
 						}
 					} else {

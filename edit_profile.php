@@ -30,7 +30,7 @@ if (isset($_POST['update_profile'])) {
 	$userInput->verifyNewEmail = TRUE;
 	$userInput->userData = $userdata;
 	$userInput->saveUpdate();
-	$userInput->displayMessages();
+	//$userInput->displayMessages();
 	if (empty($errors) && $userInput->themeChanged()) redirect(BASEDIR.'index.php');
 	$userdata = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."'"));
 	unset($userInput);

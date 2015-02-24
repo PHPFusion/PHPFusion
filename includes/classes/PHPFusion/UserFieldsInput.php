@@ -63,6 +63,7 @@ class UserFieldsInput {
 	public function saveInsert() {
 		$this->_method = "validate_insert";
 		$this->data = array(
+			'user_id' => 0,
 			"user_password" => "",
 			"user_algo" => "",
 			"user_salt" => "",
@@ -109,14 +110,18 @@ class UserFieldsInput {
 		if (!defined('FUSION_NULL')) {
 			if ($this->_method == "validate_insert") {
 				$title = $locale['u170'];
-				$message = "<br />\n".$this->_completeMessage."<br /><br />\n";
+				$message = $this->_completeMessage;
 			} else {
 				$title = $locale['u169'];
-				$message = "<br />\n".$this->_completeMessage."<br /><br />\n";
+				$message = $this->_completeMessage;
 			}
+			echo "<div class='m-t-20'>\n";
 			opentable($title);
-			echo $message;
+			echo admin_message("$message");
 			closetable();
+			echo "</div>\n";
+		} else {
+			redirect(FUSION_REQUEST);
 		}
 	}
 
@@ -154,33 +159,6 @@ class UserFieldsInput {
 		return $this->_themeChanged;
 	}
 
-	private function _setFields($field_name, $unique = '0', $db_name = FALSE) {
-		global $defender;
-		$db_name = $db_name ? $db_name : DB_USERS;
-		$input_var = isset($_POST[$field_name]) ? form_sanitizer($_POST[$field_name], 0, $field_name) : $this->data[$field_name];
-		if ($unique && !defined("FUSION_NULL")) {
-			if ($input_var && $input_var != $this->userData[$field_name]) {
-				// check for the field name where this field value does not exist.
-				$rows = dbcount("(".$field_name.")", $db_name, "".$field_name."='".$input_var."'");
-				if (!$rows) {
-					$this->data[$field_name] = $input_var;
-				} else {
-					$defender->stop();
-					$defender->addError($field_name);
-					$defender->addNotice($field_name." is already taken.");
-				}
-			} else {
-				// set back the old value.
-				$this->data[$field_name] = $this->userData[$field_name];
-			}
-		} else {
-			if (!defined("FUSION_NULL")) {
-				$this->data[$field_name] = $input_var;
-			} else {
-				$this->data[$field_name] = $this->userData[$field_name];
-			}
-		}
-	}
 
 	private function _settUserName() {
 		global $locale, $defender;
@@ -416,13 +394,16 @@ class UserFieldsInput {
 				$defender->addNotice($locale['u149a']);
 			}
 		} else { // check db only - admin cannot save profile page without password
-			$valid = $this->userData['user_admin_password'] ? TRUE : FALSE;
-			if (!$valid) {
-				// 149 for admin
-				$defender->stop();
-				$defender->addError('user_admin_password');
-				$defender->addHelperText('user_admin_password', $locale['u149a']);
-				$defender->addNotice($locale['u149a']);
+			//print_p($this->userData['user_level']);
+			if (iADMIN) {
+				$require_valid_password = $this->userData['user_admin_password'] ? TRUE : FALSE;
+				if (!$require_valid_password) {
+					// 149 for admin
+					$defender->stop();
+					$defender->addError('user_admin_password');
+					$defender->addHelperText('user_admin_password', $locale['u149a']);
+					$defender->addNotice($locale['u149a']);
+				}
 			}
 		}
 	}
@@ -602,6 +583,7 @@ class UserFieldsInput {
 			$this->data['user_theme'] = (isset($_POST['user_theme'])) ? $_POST['user_theme'] : 'Default';
 			$this->data['user_timezone'] = (isset($_POST['user_timezone'])) ? $_POST['user_timezone'] : fusion_get_settings('timeoffset');
 			$this->data['user_hide_email'] = $this->_userHideEmail;
+			$this->data['user_language'] = LANGUAGE;
 		}
 	}
 
@@ -612,6 +594,7 @@ class UserFieldsInput {
 
 	private function _setEmailVerification() {
 		global $settings, $locale, $defender;
+
 		require_once INCLUDES."sendmail_include.php";
 		$userCode = hash_hmac("sha1", PasswordAuth::getNewPassword(), $this->_userEmail);
 		$activationUrl = $settings['siteurl']."register.php?email=".$this->_userEmail."&code=".$userCode;
@@ -619,6 +602,7 @@ class UserFieldsInput {
 		$message = str_replace("USER_PASSWORD", $this->_newUserPassword, $message);
 		$message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
 		if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u151'], $message)) {
+			$user_info = array();
 			$quantum = new QuantumFields();
 			$quantum->setCategoryDb(DB_USER_FIELD_CATS);
 			$quantum->setFieldDb(DB_USER_FIELDS);
@@ -626,8 +610,7 @@ class UserFieldsInput {
 			$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
 			$quantum->get_structureData();
 			$quantum->load_field_cats();
-			$quantum->setCallbackData($this->userData);
-			$user_info = $this->data;
+			$quantum->setCallbackData($this->data);
 			// how to update all the field tables without override its value?
 			if (!empty($fields_input)) {
 				foreach($fields_input as $table_name => $fields_array) {
@@ -651,6 +634,7 @@ class UserFieldsInput {
 
 	private function _setUserDataInput() {
 		global $locale, $settings, $aidlink;
+		$user_info = array();
 		$quantum = new QuantumFields();
 		$quantum->setCategoryDb(DB_USER_FIELD_CATS);
 		$quantum->setFieldDb(DB_USER_FIELDS);
@@ -658,16 +642,17 @@ class UserFieldsInput {
 		$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
 		$quantum->get_structureData();
 		$quantum->load_field_cats();
-		$quantum->setCallbackData($this->userData);
+		$quantum->setCallbackData($this->data);
 		$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
-		$user_info = $this->data;
 		// how to update all the field tables without override its value?
 		if (!empty($fields_input)) {
 			foreach($fields_input as $table_name => $fields_array) {
 				$user_info += $fields_array;
 			}
 		}
-
+		if (!defined('FUSION_NULL')) {
+			$user_info['user_level'] = 101;
+		}
 		dbquery_insert(DB_USERS, $user_info, 'save', array('keep_session'=>1));
 
 		if ($this->adminActivation) {
@@ -693,17 +678,22 @@ class UserFieldsInput {
 	private function _setUserDataUpdate() {
 		global $locale;
 		$this->_saveUserLog();
+		$user_info = array();
 		$quantum = new QuantumFields();
 		$quantum->setCategoryDb(DB_USER_FIELD_CATS);
 		$quantum->setFieldDb(DB_USER_FIELDS);
 		$quantum->setPluginFolder(INCLUDES."user_fields/");
 		$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-
-		//$quantum->read_structure();
-		//dbquery_insert(DB_USERS, $this->data, 'update', array('keep_session'=>1));
-
-		// only will save on UFs.
-		$quantum->quantum_insert($this->data); // update database
+		$quantum->get_structureData();
+		$quantum->load_field_cats();
+		$quantum->setCallbackData($this->userData);
+		$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+		if (!empty($fields_input)) {
+			foreach($fields_input as $table_name => $fields_array) {
+				$user_info += $fields_array;
+			}
+		}
+		dbquery_insert(DB_USERS, $user_info, 'update');
 		$this->_completeMessage = $locale['u163'];
 	}
 

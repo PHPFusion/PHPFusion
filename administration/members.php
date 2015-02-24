@@ -116,7 +116,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 	if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && defined('FUSION_NULL'))) {
 		opentable($locale['480']);
 		add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['480']));
-		member_nav(member_url("add", "")."| ".$locale['480']);
+		//member_nav(member_url("add", "")."| ".$locale['480']);
 		$userFields = new \PHPFusion\UserFields();
 		$userFields->postName = "add_user";
 		$userFields->postValue = $locale['480'];
@@ -181,20 +181,22 @@ elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmi
 		unset($userInput);
 	}
 	opentable($locale['430']);
-	member_nav(member_url("edit", $user_id)."| ".$locale['430']);
+	add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['430']));
+	//member_nav(member_url("edit", $user_id)."| ".$locale['430']);
+
 	$userFields = new UserFields();
 	$userFields->postName = "savechanges";
 	$userFields->postValue = $locale['430'];
-	$userFields->formaction = FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$user_id;
+	//$userFields->formaction = FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$user_id;
 	$userFields->displayValidation = $settings['display_validation'];
-	$userFields->displayTerms = $settings['enable_terms'];
+	//$userFields->displayTerms = $settings['enable_terms'];
 	$userFields->plugin_folder = INCLUDES."user_fields/";
 	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 	$userFields->showAdminPass = FALSE;
 	$userFields->skipCurrentPass = TRUE;
 	$userFields->userData = $user_data;
 	$userFields->method = 'input';
-	$userFields->renderInput();
+	$userFields->render_profile_input();
 	closetable();
 	// Delete User
 }
@@ -559,7 +561,7 @@ else {
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
 
-	echo openform('viewstatus', 'viewstatus', 'get', FUSION_REQUEST, array('downtime'=>1, 'class'=>'clearfix'));
+	echo openform('viewstatus', 'viewstatus', 'get', FUSION_SELF.$aidlink, array('downtime'=>1, 'class'=>'clearfix'));
 	echo "<div class='btn-group'>\n";
 	echo "<a class='button btn btn-sm btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
 	if ($settings['enable_deactivation'] == 1) {
@@ -656,8 +658,7 @@ else {
 
 	echo "<hr />\n";
 
-	echo openform('searchform', 'searchform', 'post', FUSION_SELF, array('downtime' => 1, 'notice' => 0));
-
+	echo openform('searchform', 'searchform', 'get', FUSION_SELF.$aidlink, array('downtime' => 1, 'notice' => 0));
 	echo form_hidden('', 'aid', 'aid', iAUTH);
 	echo form_hidden('', 'status', 'status', $status);
 	echo form_text($locale['415'], 'search_text', 'search_text', '', array('inline'=>1));

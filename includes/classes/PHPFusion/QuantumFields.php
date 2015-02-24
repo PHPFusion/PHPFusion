@@ -1602,7 +1602,7 @@ class QuantumFields {
 		$field_value = $options['hide_value'] ? '' : isset($field_data[$data['field_name']]) ? $field_data[$data['field_name']] : '';
 		switch($data['field_type']) {
 			case 'file':
-				$profile_method = $this->method == 'input' ? 'input' : 'display';
+				$profile_method = $this->method;
 				// can access options vars
 				if (file_exists($this->plugin_locale_folder.$data['field_name'].".php")) include $this->plugin_locale_folder.$data['field_name'].".php";
 				if (file_exists($this->plugin_folder.$data['field_name']."_include.php")) include $this->plugin_folder.$data['field_name']."_include.php";
@@ -1774,13 +1774,17 @@ class QuantumFields {
 	public function return_fields_input($db, $primary_key) {
 		$output_fields = array();
 		$field = flatten_array($this->fields);
+		$output_fields[$db] = $this->callback_data;
 		foreach($field as $arr => $field_data) {
 			$target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
-			$target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
-			$index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index], 0) : '';
+			$col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
+			$index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
 			// set once
-			if (!isset($quantum_fields[$target_database][$target_index])) $quantum_fields[$target_database][$target_index] = $index_value;
-			$output_fields[$target_database][$field_data['field_name']] = isset($_POST[$field_data['field_name']]) ? form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']) : '';
+			if (!isset($quantum_fields[$target_database][$col_name])) $quantum_fields[$target_database][$col_name] = $index_value;
+			$output_fields[$target_database][$field_data['field_name']] = '';
+			if (isset($_POST[$field_data['field_name']])) {
+				$output_fields[$target_database][$field_data['field_name']] = form_sanitizer($_POST[$field_data['field_name']], $field_data['field_default'], $field_data['field_name']);
+			}
 		}
 		return $output_fields;
 	}
