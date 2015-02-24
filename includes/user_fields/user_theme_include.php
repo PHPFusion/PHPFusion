@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
-	if ($settings['userthemes'] == 1 || iADMIN) {
+	if (fusion_get_settings('userthemes') == 1 || iADMIN) {
 		$user_theme = isset($user_data['user_theme']) ? $user_data['user_theme'] : "";
 		//if ($this->isError()) {
 			$user_theme = isset($_POST['user_theme']) ? stripinput($_POST['user_theme']) : $user_theme;

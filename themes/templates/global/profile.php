@@ -73,55 +73,93 @@ if (!function_exists('render_userprofile')) {
 
 	function render_userprofile($info) {
 		// Basic User Information
-		$basic_info = isset($info['core_field']) ? $info['core_field'] : array(); //$info['item']['core']; // Basic information.
+		$basic_info = isset($info['core_field']) ? $info['core_field'] : array();
 		//User Fields Module Information
 		$field_info = $info['user_field'];
-
 		$user_info = '';
 		$user_avatar = '';
 		$user_name = '';
+		$user_level = '';
 		foreach ($basic_info as $field_id => $data) {
 			if ($field_id == 'profile_user_avatar') {
-				$xxx['user_avatar'] = $data['value'];
-				$xxx['user_status'] = $data['status'];
-				$user_avatar = display_avatar($xxx, '50px', '', FALSE, '');
+				$avatar['user_avatar'] = $data['value'];
+				$avatar['user_status'] = $data['status'];
+				$user_avatar = display_avatar($avatar, '50px', '', FALSE, '');
 			} elseif ($field_id == 'profile_user_name') {
-				//$user_name = "<div id='".$field_id."' style='padding-top:10px; padding-bottom:10px; border-bottom:1px solid #ccc;'>".$data['value']."</div>\n";
-				$user_name = $data['value'];
+				$user_name = "<h4>".$data['value']."</h4>\n";
+				$user_name .= "<hr/>\n";
+			} elseif ($field_id == 'profile_user_level') {
+				$user_info .= "
+				<div id='".$field_id."' class='m-b-5 row'>
+					<span class='col-xs-12 col-sm-3'>".$data['title']."</span>
+					<div class='col-xs-12 col-sm-9 profile_text overflow-hide'>".$data['value']."</div>
+				</div>\n";
 			} else {
-				$user_info .= "<div id='".$field_id."' class='p-b-5'><span class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>".$data['title']."</span><div class='profile_text overflow-hide'>".$data['value']."</div></div>\n";
+				$user_info .= $data['value'] ? "
+					<div id='".$field_id."' class='m-b-5 row'>
+					<span class='col-xs-12 col-sm-3'>".$data['title']."</span>
+					<div class='col-xs-12 col-sm-9 profile_text'>".$data['value']."</div>
+					</div>\n" : '';
 			}
 		}
 
 		$user_field = '';
 		foreach ($field_info as $field_cat_id => $category_data) {
+
 			$user_field .= $category_data['title'];
+			$user_field .= "<div class='list-group-item'>";
 			if (isset($category_data['fields'])) {
 				foreach ($category_data['fields'] as $field_id => $field_data) {
-					$user_field .= "<div id='".$field_id."' class='p-b-5'><span class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>".$field_data['title']."</span><div class='profile_text overflow-hide'>".$field_data['value']."</div></div>\n";
+					$user_field .= "<div id='".$field_id."' class='m-b-5 row'>
+					<span class='col-xs-12 col-sm-3'>".$field_data['title']."</span>
+					<div class='col-xs-12 col-sm-9 profile_text'>".$field_data['value']."</div>
+					</div>\n";
 				}
 			}
+			$user_field .= "</div>\n";
 		}
 
-		echo "<section id='user-profile' class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-2'>\n";
-		// page navigation
-		echo "<ul class='profile_link_nav m-t-20'>";
-		foreach ($info['section'] as $page_section) {
-			echo "<li ".($page_section['active'] ? "class='active'" : '')."><a href='".$page_section['link']."'>".$page_section['name']."</a></li>\n";
+		// buttons
+		$user_buttons = '';
+		if (!empty($info['buttons'])) {
+			$user_buttons = "<div class='btn-group m-t-10 m-b-10 col-sm-offset-3'>";
+			foreach($info['buttons'] as $buttons) {
+				$user_buttons .= "<a class='btn btn-sm button btn-default' href='".$buttons['link']."'>".$buttons['name']."</a>";
+			}
+			$user_buttons .= "</div>\n";
 		}
-		echo "</ul>\n";
-		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-10'>\n";
-		// basic information
-		echo $user_name;
-		echo "<div class='clearfix m-t-10'>\n";
-		echo "<div class='pull-left m-r-10'>\n";
-		echo $user_avatar;
-		echo "</div>\n";
-		echo "<div class='overflow-hide'>\n";
-		echo $user_info;
-		echo $user_field;
+
+		?>
+		<section id='user-profile' class='row'>
+			<div class='col-xs-12 col-sm-3 col-lg-2'>
+				<ul class='profile_link_nav m-t-20'>
+					<?php foreach ($info['section'] as $page_section) {	?>
+						<li <?php echo $page_section['active'] ? "class='active'" : '' ?> >
+							<a href='<?php echo $page_section['link'] ?>'><?php echo $page_section['name'] ?></a>
+						</li>
+					<?php } ?>
+				</ul>
+			</div>
+			<div class='col-xs-12 col-sm-9 col-lg-10'>
+				<?php echo $user_name; ?>
+				<div class='clearfix m-t-10'>
+					<div class='pull-left m-r-20'><?php echo $user_avatar ?></div>
+					<div class='overflow-hide'>
+						<?php
+						echo $user_level;
+						echo $user_info;
+						echo $user_buttons;
+						echo $user_field;
+						?>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+
+
+		<?php
 
 		/* if (!isset($_GET['profiles']) or isset($_GET['profiles']) && $_GET['profiles'] == 1) {
 			//echo opencollapse('uf_module');
@@ -133,9 +171,6 @@ if (!function_exists('render_userprofile')) {
 		} */
 		//echo $ext_info;
 		// photo gallery
-		echo "</div>\n</div>\n";
-		echo "</div>\n";
-		echo "</section>\n";
 	}
 }
 

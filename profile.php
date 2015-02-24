@@ -90,4 +90,3 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
 }
 closetable();
 require_once THEMES."templates/footer.php";
-?>

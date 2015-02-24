@@ -22,9 +22,6 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
 
-	$user_timezone = isset($user_data['user_timezone']) ? $user_data['user_timezone'] : "Europe/London";
-	$user_timezone = isset($_POST['user_timezone']) && is_numeric($_POST['user_timezone']) ? $_POST['user_timezone'] : $user_timezone;
-
 	$timezones = timezone_abbreviations_list();
 	$timezoneArray = array();
 	foreach ($timezones as $zones) {
@@ -39,20 +36,11 @@ if ($profile_method == "input") {
 
 	unset($timezones);
 	$options +=array('inline'=>1, 'width' => '300px');
-	$user_fields =  form_select($locale['uf_timezone'], 'user_timezone', 'user_timezone', $timezoneArray, $user_timezone, $options);
+	$user_fields =  form_select($locale['uf_timezone'], 'user_timezone', 'user_timezone', $timezoneArray, $field_value, $options);
 
 	// Display in profile
 } elseif ($profile_method == "display") {
 	// Insert and update
-	$user_fields = array('title'=>$locale['uf_timezone'], 'value'=>$user_data['user_timezone']);
+	$user_fields = array('title'=>$locale['uf_timezone'], 'value'=>$field_value);
 
-} elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
-	// Get input data
-	if (isset($_POST['user_timezone']) && $_POST['user_timezone'] != "") {
-		// Set update or insert user data
-		$this->_setDBValue("user_timezone", $_POST['user_timezone']);
-	} else {
-		$this->_setError("user_timezone", $locale['uf_timezone_error'], TRUE);
-	}
 }
-?>

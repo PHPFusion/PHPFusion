@@ -21,23 +21,12 @@ if (!defined("IN_FUSION")) {
 
 // Display user field input
 if ($profile_method == "input") {
-	$user_yahoo = isset($user_data['user_yahoo']) ? $user_data['user_yahoo'] : "";
-	$user_yahoo = isset($_POST['user_yahoo']) ? stripinput($_POST['user_yahoo']) : $user_yahoo;
 	$options +=array('inline'=>1, 'max_length'=>100, 'width'=>'200px');
-	$user_fields = form_text($locale['uf_yahoo'], 'user_yahoo', 'user_yahoo', $user_yahoo, $options);
+	$user_fields = form_text($locale['uf_yahoo'], 'user_yahoo', 'user_yahoo', $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
-	if ($user_data['user_yahoo']) {
-		$user_fields = array('title'=>$locale['uf_yahoo'], 'value'=>$user_data['user_yahoo']);
+	if ($field_value) {
+		$user_fields = array('title'=>$locale['uf_yahoo'], 'value'=>$field_value);
 	}
 	// Insert and update
-} elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
-	// Get input data
-	if (isset($_POST['user_yahoo']) && ($_POST['user_yahoo'] != "" || $this->_isNotRequired("user_yahoo"))) {
-		// Set update or insert user data
-		$this->_setDBValue("user_yahoo", stripinput($_POST['user_yahoo']));
-	} else {
-		$this->_setError("user_yahoo", $locale['uf_yahoo_error'], TRUE);
-	}
 }
-?>

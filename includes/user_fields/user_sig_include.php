@@ -15,29 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) die("Access Denied");
 // Display user field input
 if ($profile_method == "input") {
 	require_once INCLUDES."bbcode_include.php";
-	$user_sig = isset($user_data['user_sig']) ? $user_data['user_sig'] : "";
-	$user_sig = isset($_POST['user_sig']) ? stripinput($_POST['user_sig']) : $user_sig;
 	$options +=array('bbcode'=>1, 'inline'=>1, 'form'=>'inputform');
-	$user_fields = form_textarea($locale['uf_sig'], 'user_sig', 'user_sig', $user_sig, $options);
+	$user_fields = form_textarea($options['show_title'] ? $locale['uf_sig'] : '', 'user_sig', 'user_sig', $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
-	// Insert and update
-	if ($user_data['user_sig']) {
-		$user_fields = array('title'=>$locale['uf_sig'], 'value'=>$user_data['user_sig']);
-	}
-} elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
-	// Get input data
-	if (isset($_POST['user_sig']) && ($_POST['user_sig'] != "" || $this->_isNotRequired("user_sig"))) {
-		// Set update or insert user data
-		$this->_setDBValue("user_sig", stripinput(trim($_POST['user_sig'])));
-	} else {
-		$this->_setError("user_sig", $locale['uf_sig_error'], TRUE);
-	}
+	$user_fields = array('title'=>$locale['uf_sig'], 'value'=>$field_value ? $field_value : $locale['na']);
 }
-?>

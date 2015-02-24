@@ -100,6 +100,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 }
 elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERADMIN)) {
 	$errors = array();
+
 	if (isset($_POST['add_user'])) {
 		$userInput = new \PHPFusion\UserFieldsInput();
 		$userInput->validation = 0;
@@ -534,6 +535,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 7 && $user_id && (!$isAdmin
 }
 else {
 	opentable($locale['400']);
+	$rowstart = 0;
 	if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
 		$user_name = " user_name LIKE '".stripinput($_GET['search_text'])."%' AND";
 		$list_link = "search_text=".stripinput($_GET['search_text']);
@@ -557,8 +559,7 @@ else {
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
 
-	echo "<form name='viewstatus' method='get' class='clearfix' action='".FUSION_SELF."'>\n";
-
+	echo openform('viewstatus', 'viewstatus', 'get', FUSION_REQUEST, array('downtime'=>1, 'class'=>'clearfix'));
 	echo "<div class='btn-group'>\n";
 	echo "<a class='button btn btn-sm btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
 	if ($settings['enable_deactivation'] == 1) {
@@ -568,7 +569,6 @@ else {
 	}
 	echo "</div>\n";
 
-
 	echo form_hidden('', 'aid', 'aid', iAUTH);
 	echo form_hidden('', 'sortby', 'sortby', $sortby);
 	echo form_hidden('', 'rowstart', 'rowstart', $rowstart);
@@ -577,8 +577,9 @@ else {
 			$opts[$i] = getsuspension($i);
 		}
 	}
+
 	echo "<div class='display-inline-block pull-right'>\n";
-	echo form_select($locale['405'], 'status', 'status', $opts, isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array('placeholder' => $locale['choose'], 'class'=>'col-sm-3 col-md-3 col-lg-3', 'allowclear' => 1));
+	echo form_select($locale['405'], 'status', 'status', $opts, isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array('placeholder' => $locale['choose'], 'class'=>'col-sm-3 col-md-3 col-lg-3', 'inline'=>1, 'allowclear' => 1));
 	echo "</div>\n";
 	add_to_jquery("$('#status').on('change', function() { this.form.submit(); });");
 	echo form_hidden('', 'rowstart', 'rowstart', $rowstart);
@@ -586,11 +587,10 @@ else {
 
 	if ($rows) {
 		$i = 0;
-		echo "<div class='list-group'>\n";
+		echo "<div class='list-group clearfix'>\n";
 		while ($data = dbarray($result)) {
 		echo "<div class='list-group-item clearfix'>\n";
 		echo "<div class='pull-left m-r-10'>\n".display_avatar($data, '50px', '', '', 'img-rounded')."</div>\n";
-
 			echo "<div class='pull-right m-l-15'>\n";
 			$ban_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=1";
 			$suspend_link = FUSION_SELF.$aidlink."&amp;sortby=$sortby&amp;status=$status&amp;rowstart=$rowstart&amp;user_id=".$data['user_id']."&amp;action=3";
@@ -643,9 +643,10 @@ else {
 			echo "<div style='text-align:center'><br />".sprintf($locale['411'], ($status == 0 ? "" : getsuspension($status))).($_GET['sortby'] == "all" ? "" : $locale['412'].$_GET['sortby']).".<br /><br />\n</div>\n";
 		}
 	}
+
 	echo "<hr/>\n";
 	$alphanum = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
-	echo "<table cellpadding='0' cellspacing='1' width='450' class='table table-responsive tbl-border center'>\n<tr>\n";
+	echo "<table class='table table-responsive table-striped center'>\n<tr>\n";
 	echo "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF.$aidlink."&amp;status=".$status."'>".$locale['414']."</a></td>";
 	for ($i = 0; $i < 36; $i++) {
 		echo "<td align='center' class='tbl1'><div class='small'><a href='".FUSION_SELF.$aidlink."&amp;sortby=".$alphanum[$i]."&amp;status=$status'>".$alphanum[$i]."</a></div></td>";
@@ -662,14 +663,12 @@ else {
 	echo form_text($locale['415'], 'search_text', 'search_text', '', array('inline'=>1));
 	echo form_button($locale['416'], 'search', 'search', $locale['416'], array('class' => 'col-sm-offset-3 btn-sm btn-primary'));
 	echo closeform();
+
 	closetable();
 	if ($rows > 20) {
 		echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($rowstart, 20, $rows, 3, FUSION_SELF.$aidlink."&amp;sortby=".$sortby."&amp;status=".$status."&amp;")."\n</div>\n";
 	}
-    echo "</div>\n";
-    echo "</div>\n";
 	echo "<script type='text/javascript'>"."\n"."function DeleteMember(username) {\n";
 	echo "return confirm('".$locale['423']."');\n}\n</script>\n";
 }
 require_once THEMES."templates/footer.php";
-?>

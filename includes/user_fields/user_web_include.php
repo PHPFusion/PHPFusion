@@ -18,27 +18,11 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
-	$user_web = isset($user_data['user_web']) ? $user_data['user_web'] : "";
-	$user_web = isset($_POST['user_web']) ? stripinput($_POST['user_web']) : $user_web;
 	$options +=array('inline'=>1, 'max_width'=>'200px');
-	$user_fields = form_text($locale['uf_web'], 'user_web', 'user_web', $user_web, $options);
+	//$field_value = str_replace('http://', '', $field_value);
+	//$field_value = str_replace('https://', '', $field_value);
+	$user_fields = form_text($options['show_title'] ? $locale['uf_web'] : '', 'user_web', 'user_web', $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
-	if ($user_data['user_web']) {
-		$user_fields = array('title'=>$locale['uf_web'], 'value'=>"<a href='".$user_data['user_web']."' title='".$user_data['user_web']."' target='_blank'>".$locale['uf_web_001']."</a>");
-	}
-	// Insert and update
-} elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
-	// Get input data
-	if (isset($_POST['user_web']) && ($_POST['user_web'] != "" || $this->_isNotRequired("user_web"))) {
-		// Set update or insert user data
-		$user_web = stripinput($_POST['user_web']);
-		if (!preg_match("#^http(s)?://#i", $user_web) && $user_web != "") {
-			$user_web = "http://".$user_web;
-		}
-		$this->_setDBValue("user_web", $user_web);
-	} else {
-		$this->_setError("user_web", $locale['uf_web_error'], TRUE);
-	}
+	$user_fields = array('title'=>$locale['uf_web'], 'value'=>"<a href='".$field_value."' title='".$field_value."' target='_blank'>".$locale['uf_web_001']."</a>");
 }
-?>

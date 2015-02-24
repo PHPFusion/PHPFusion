@@ -36,7 +36,7 @@ class UserFields extends QuantumFields {
 	public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
 	public $skipCurrentPass = FALSE;
 	public $registration = FALSE;
-	public $userData = array("user_id"=>'', "user_name"=>'', "user_password"=>'', "user_admin_password"=>'', "user_email"=>'', "user_language"=>LANGUAGE, 'user_timezone'=>'Europe/London');
+	public $userData = array("user_id"=>'', "user_name"=>'', "user_password"=>'', "user_admin_password"=>'', "user_email"=>'', 'user_hide_email'=>0, "user_language"=>LANGUAGE, 'user_timezone'=>'Europe/London');
 
 	/* Quantum Fields Extensions */
 	public $system_title = '';
@@ -100,10 +100,9 @@ class UserFields extends QuantumFields {
 		include THEMES."templates/global/profile.php";
 
 		$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
-
+		$_GET['profiles'] = isset($_GET['profiles']) ? $_GET['profiles'] : 1;
 		/* Fields that are ONLY AVAILABLE with REQUEST_URL = ?profiles=1 */
 		if ($_GET['profiles'] == '1') {
-
 			// User Name
 			$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->userData['user_name'];
 			$user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
@@ -207,7 +206,7 @@ class UserFields extends QuantumFields {
 			// user name
 			$this->info['core_field']['profile_user_name'] = array('title'=>$locale['u068'], 'value'=>ucwords($this->userData['user_name']));
 			// user level
-			$this->info['core_field']['profile_user_level'] = array('title'=>$locale['u063'], 'value'=>getuserlevel($this->userData['user_level']));
+			$this->info['core_field']['profile_user_level'] = array('title'=>$locale['u063'], 'value'=>getgroupname($this->userData['user_level']));
 			// user email
 			if (iADMIN || $this->userData['user_hide_email'] == 0) $this->info['core_field']['profile_user_email'] = array('title'=>$locale['u064'], 'value'=>hide_email($this->userData['user_email']));
 			// user joined
@@ -237,21 +236,18 @@ class UserFields extends QuantumFields {
 				$this->info['core_field']['profile_user_group']['value'] = $locale['user_na'];
 			}
 		}
-
-
-
+		// @todo: bugfix the href src in Admin
 		$this->info['section'] = $this->renderPageLink();
 
 		// Module Items -- got $user_info['field'];
 		self::get_userFields();
-		// Dynamics core UF fields
-		$this->info['item'][3] = '';
 		// buttons.. 2 of them.
 		if (iMEMBER && $userdata['user_id'] != $this->userData['user_id']) {
 			$this->info['buttons'][] = array('link'=>BASEDIR."messages.php?msg_send=".$this->userData['user_id'], 'name'=>$locale['u043']);
-			if (iADMIN && checkrights("M") && $this->userData['user_level'] != "103" && $this->userData['user_id'] != "1") {
+			if (iADMIN && checkrights("M") && $this->userData['user_level'] > "103" && $this->userData['user_id'] != "1") {
 				$this->info['buttons'][] = array('link'=>ADMIN."members.php".$aidlink."&amp;step=log&amp;user_id=".$this->userData['user_id'], 'name'=>$locale['u054']);
-			}
+				$this->info['buttons'][] = self::renderAdminOptions();
+ 			}
 		}
 	}
 
@@ -281,13 +277,16 @@ class UserFields extends QuantumFields {
 				}
 			}
 			// require to inject id when id not present in other pages to make reference as Quantum Fields $index_value
-			if ($index_page_id !=='1' && (!$this->registration)) {
+			//print_p($this->method, 1);
+			//if ($index_page_id !=='1' && (!$this->registration)) {
+			if ($this->method == 'input') {
+
 				$this->info['user_field'] = '';
-				$this->info['user_field'] .= form_hidden('', 'user_id', 'user_id', $this->userData['user_id']);
-				$this->info['user_field'] .= form_hidden('', 'user_name', 'user_name', $this->userData['user_name']);
-			} else {
+				$this->info['user_field'] .= $_GET['profiles'] !==1 ? form_hidden('', 'user_id', 'user_id', $this->userData['user_id']) : '';
+				$this->info['user_field'] .= $_GET['profiles'] !==1 ? form_hidden('', 'user_name', 'user_name', $this->userData['user_name']) : '';
+			} elseif ($this->method == 'display') {
 				//print_p($this->registration);
-				$this->info['user_field'] = ($this->registration) ? '' : array();
+				$this->info['user_field'] = array();
 			}
 			// filter display - input and display method.
 			if (isset($category[$index_page_id])) {
@@ -297,17 +296,17 @@ class UserFields extends QuantumFields {
 						if (isset($item[$cat_id])) {
 							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
 							foreach($item[$cat_id] as $field_id => $field) {
-								$this->info['user_field'] .= $this->phpfusion_field_DOM($field);
+								//@todo: switch field type
+								$this->info['user_field'] .= $this->display_fields($field, array('inline'=>1, 'required'=>$field['field_required'] ? 1 : 0));
 							}
 						}
 					} else {
 						$this->method = 'display';
-
 						if (isset($item[$cat_id])) {
 							$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
 							foreach($item[$cat_id] as $field_id => $field) {
-								if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->phpfusion_field_DOM($field)) {
-									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->phpfusion_field_DOM($field);
+								if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->display_fields($field)) {
+									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->display_fields($field);
 								}
 							}
 						}

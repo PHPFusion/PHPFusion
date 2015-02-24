@@ -18,32 +18,21 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
-
-	$user_address = isset($user_data['user_address']) ? $user_data['user_address'] : "";
-	$user_address = isset($_POST['user_address']) ? form_sanitizer($_POST['user_address'], '', 'user_address') : $user_address;
-	$options += array('inline'=>1, 'flag'=>1);
-
-	$user_fields = form_address($locale['uf_address'], 'user_address', 'user_address', $user_address, $options);
-
+	$options += array('inline'=>1);
+	$user_fields = form_address($options['show_title'] ? $locale['uf_address'] : '', 'user_address', 'user_address', $field_value, $options);
 }
-
 elseif ($profile_method == "display") {
-	if ($user_data['user_address']) {
-		$address = explode('|', $user_data['user_address']);
-		$add = '';
-		foreach($address as $value) {
-			$add .= "$value<br/>\n";
-		}
-		$user_fields = array('title'=>$locale['uf_address'], 'value'=>$add);
-	}
-}
 
-elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
-	// Insert and update
-	// Get input data
-	if (isset($_POST['user_address']) && ($_POST['user_address'] != "" || $this->_isNotRequired("user_address"))) {
-		// Set update or insert user data
-		$this->_setDBValue("user_address", form_sanitizer($_POST['user_address'], '', 'user_address'));
+	if ($field_value) {
+		$address = explode('|', $field_value);
+		$field_value = '';
+		foreach($address as $value) {
+			$field_value .= "$value<br/>\n";
+		}
+	} else {
+		$field_value = $locale['na'];
 	}
+
+	$user_fields = array('title'=>$locale['uf_address'], 'value'=>$field_value);
+
 }
-?>

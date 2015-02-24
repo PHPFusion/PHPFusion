@@ -21,33 +21,12 @@ if (!defined("IN_FUSION")) {
 // Display user field input
 if ($profile_method == "input") {
 	$user_location = isset($user_data['user_location']) ? stripinput($user_data['user_location']) : "";
-	//if ($this->isError()) {
-		$user_location = isset($_POST['user_location']) ? stripinput($_POST['user_location']) : $user_location;
-	//}
-	/*echo "<tr>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_location")."'><label for='user_location'>".$locale['uf_location'].$required."</label></td>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_location")."'>";
-	echo "<input type='text' id='user_location' name='user_location' value='".$user_location."' maxlength='50' class='textbox form-control' style='width:200px;' />";
-	echo "</td>\n</tr>\n";
-	if ($required) {
-		$this->setRequiredJavaScript("user_location", $locale['uf_location_error']);
-	} */
+	$user_location = isset($_POST['user_location']) ? stripinput($_POST['user_location']) : $user_location;
 	$options +=array('inline'=>1, 'max_length'=>50);
 	$user_fields = form_text($locale['uf_location'], 'user_location', 'user_location', $user_location, $options);
-
 	// Display in profile
 } elseif ($profile_method == "display") {
-	if ($user_data['user_location']) {
-		$user_fields = array('title'=>$locale['uf_location'], 'value'=>$user_data['user_location']);
-	}
-	// Insert and update
-} elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
-	// Get input data
-	if (isset($_POST['user_location']) && ($_POST['user_location'] != "" || $this->_isNotRequired("user_location"))) {
-		// Set update or insert user data
-		$this->_setDBValue("user_location", stripinput(trim($_POST['user_location'])));
-	} else {
-		$this->_setError("user_location", $locale['uf_location_error'], TRUE);
+	if ($field_value) {
+		$user_fields = array('title'=>$locale['uf_location'], 'value'=>$field_value);
 	}
 }
-?>

@@ -19,6 +19,7 @@
 namespace PHPFusion;
 
 //@todo: merge user fields into 1 single file.
+
 class UserFieldsInput {
 	public $adminActivation = 1;
 	public $emailVerification = 1;
@@ -69,7 +70,9 @@ class UserFieldsInput {
 			"user_admin_algo" => "",
 			"user_admin_salt" => "",
 			"user_name" => "",
-			"user_email" => ""
+			"user_email" => "",
+			"user_hide_email" => 0,
+			'user_language' => LANGUAGE,
 		);
 		if ($this->_userNameChange) {
 			$this->_settUserName();
@@ -77,7 +80,7 @@ class UserFieldsInput {
 		$this->_setPassword();
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
-		$this->_setEmptyFields();
+		//$this->_setEmptyFields();
 		if (!defined('FUSION_NULL')) {
 			if ($this->emailVerification) {
 				$this->_setEmailVerification();
@@ -617,15 +620,21 @@ class UserFieldsInput {
 		$message = str_replace("ACTIVATION_LINK", $activationUrl, $message);
 		if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u151'], $message)) {
 			$quantum = new QuantumFields();
-			$quantum->category_db = DB_USER_FIELD_CATS;
-			$quantum->field_db = DB_USER_FIELDS;
-			$quantum->plugin_folder = INCLUDES."user_fields/";
-			$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-			$quantum->load_data();
-			$userInfo = $this->data;
-			if ($quantum->output_fields(DB_USERS)) $userInfo += $quantum->output_fields(DB_USERS);
-			$userInfo += $quantum->output_fields(DB_USERS);
-			$userInfo = serialize($userInfo);
+			$quantum->setCategoryDb(DB_USER_FIELD_CATS);
+			$quantum->setFieldDb(DB_USER_FIELDS);
+			$quantum->setPluginFolder(INCLUDES."user_fields/");
+			$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
+			$quantum->get_structureData();
+			$quantum->load_field_cats();
+			$quantum->setCallbackData($this->userData);
+			$user_info = $this->data;
+			// how to update all the field tables without override its value?
+			if (!empty($fields_input)) {
+				foreach($fields_input as $table_name => $fields_array) {
+					$user_info += $fields_array;
+				}
+			}
+			$userInfo = serialize($user_info);
 			$userInfo = addslash($userInfo);
 			$result = dbquery("INSERT INTO ".DB_NEW_USERS."
 					(user_code, user_name, user_email, user_datestamp, user_info)
@@ -641,22 +650,33 @@ class UserFieldsInput {
 	}
 
 	private function _setUserDataInput() {
-		global $locale, $settings, $userdata, $aidlink;
+		global $locale, $settings, $aidlink;
 		$quantum = new QuantumFields();
-		$quantum->category_db = DB_USER_FIELD_CATS;
-		$quantum->field_db = DB_USER_FIELDS;
-		$quantum->plugin_folder = INCLUDES."user_fields/";
-		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-		$quantum->load_data();
-		dbquery_insert(DB_USERS, $this->data, 'save', array('keep_session'=>1));
-		$this->data['user_id'] = dblastid();
-		$quantum->quantum_insert($this->data);
+		$quantum->setCategoryDb(DB_USER_FIELD_CATS);
+		$quantum->setFieldDb(DB_USER_FIELDS);
+		$quantum->setPluginFolder(INCLUDES."user_fields/");
+		$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
+		$quantum->get_structureData();
+		$quantum->load_field_cats();
+		$quantum->setCallbackData($this->userData);
+		$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+		$user_info = $this->data;
+		// how to update all the field tables without override its value?
+		if (!empty($fields_input)) {
+			foreach($fields_input as $table_name => $fields_array) {
+				$user_info += $fields_array;
+			}
+		}
+
+		dbquery_insert(DB_USERS, $user_info, 'save', array('keep_session'=>1));
+
 		if ($this->adminActivation) {
 			$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u162'];
 		} else {
 			if (!defined('ADMIN_PANEL')) {
 				$this->_completeMessage = $locale['u160']."<br /><br />\n".$locale['u161'];
 			} else {
+				global $userdata;
 				require_once LOCALE.LOCALESET."admin/members_email.php";
 				require_once INCLUDES."sendmail_include.php";
 				$subject = $locale['email_create_subject'].$settings['sitename'];
@@ -674,15 +694,14 @@ class UserFieldsInput {
 		global $locale;
 		$this->_saveUserLog();
 		$quantum = new QuantumFields();
-		$quantum->category_db = DB_USER_FIELD_CATS;
-		$quantum->field_db = DB_USER_FIELDS;
-		$quantum->plugin_folder = INCLUDES."user_fields/";
-		$quantum->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-		$quantum->input_page = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
-		$quantum->load_data();
-		if ($quantum->input_page == 1) {
-			dbquery_insert(DB_USERS, $this->data, 'update', array('keep_session'=>1));
-		}
+		$quantum->setCategoryDb(DB_USER_FIELD_CATS);
+		$quantum->setFieldDb(DB_USER_FIELDS);
+		$quantum->setPluginFolder(INCLUDES."user_fields/");
+		$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
+
+		//$quantum->read_structure();
+		//dbquery_insert(DB_USERS, $this->data, 'update', array('keep_session'=>1));
+
 		// only will save on UFs.
 		$quantum->quantum_insert($this->data); // update database
 		$this->_completeMessage = $locale['u163'];
