@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+ini_set('display_errors',1);
+define('BASEDIR', '../');
 require_once 'setup_includes.php';
 
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
@@ -30,9 +32,8 @@ if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_di
 	include LOCALE.LOCALESET."setup.php";
 }
 
-define('SETUP', true);
-include "../includes/defender.inc.php";
-include "../includes/output_handling_include.php";
+require_once INCLUDES."defender.inc.php";
+include INCLUDES."output_handling_include.php";
 $defender = new defender();
 
 
@@ -64,7 +65,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 
 
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
-require_once INCLUDES."output_handling_include.php";
+//require_once INCLUDES."output_handling_include.php";
 include_once INCLUDES."dynamics/dynamics.inc.php";
 require_once INCLUDES."sqlhandler.inc.php";
 //New database handler functions

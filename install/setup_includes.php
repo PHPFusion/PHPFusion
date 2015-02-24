@@ -200,4 +200,3 @@ function fusion_file_put_contents($file, $data, $flags = null) {
 	}
 	return $bytes;
 }
-?>
