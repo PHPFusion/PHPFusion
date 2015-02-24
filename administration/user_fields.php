@@ -14,20 +14,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once "../maincore.php";
-if (!checkrights('UFC') || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
 require_once THEMES."templates/admin_header.php";
-
 $user_field = new PHPFusion\QuantumFields();
-$user_field->system_title = 'User Profile Configuration';
-$user_field->basic_fields_title = 'Registration Fields';
-$user_field->category_db = DB_USER_FIELD_CATS;
-$user_field->field_db = DB_USER_FIELDS;
-$user_field->plugin_folder = INCLUDES."user_fields/";
-$user_field->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-//$user_field->debug = TRUE;
+$user_field->setSystemTitle('User Profile Configuration');
+$user_field->setAdminRights('UFC');
+$user_field->setCategoryDb(DB_USER_FIELD_CATS);
+$user_field->setFieldDb(DB_USER_FIELDS);
+$user_field->setMethod('input');
+$user_field->setPluginFolder(INCLUDES."user_fields/");
+$user_field->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
 $user_field->boot();
-
 require_once THEMES."templates/footer.php";
-?>
