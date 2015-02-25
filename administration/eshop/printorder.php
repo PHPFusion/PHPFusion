@@ -19,13 +19,12 @@ require_once "../../maincore.php";
 if (!checkrights("ESHP") || !defined("iAUTH") || $_GET['aid'] != iAUTH) { die("Denied"); }
 if (isset($_GET['orderid']) && !isnum($_GET['orderid'])) die("Denied");
 require_once THEMES."templates/admin_header.php";
-
-echo "<link rel='stylesheet' href='".THEMES."templates/global/eshop.css' type='text/css' />";
+echo "<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>";
+echo "<link href='".INCLUDES."bootstrap/bootstrap.css' rel='stylesheet' media='screen' />";
 
 echo "<style>
 /* Fieldset & Legend styles */	
-
-fieldset { 
+fieldset {
 border: 1px solid #d9deeb !important; 
 width:99% !important;
 margin: 0 auto !important;
@@ -72,7 +71,7 @@ include LOCALE.LOCALESET."eshop.php";
 $odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE oid='".$_GET['orderid']."' LIMIT 0,1"));
 if ($odata) {
 	opentable("".$locale['ESHP306']." ".$odata['oid']." ".$locale['ESHP307']." ".$odata['oname']."");
-	echo $odata['oorder'];
+	echo stripslashes($odata['oorder']);
 	closetable();
 	} else {
 	echo "<div class='admin-message' align='center' style='margin-top:5px;'>".$locale['ESHP315']."</div>\n";

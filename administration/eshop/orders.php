@@ -60,89 +60,128 @@ class Orders {
 		redirect(FUSION_SELF.$aidlink."&amp;a_page=orders");
 	}
 
-	public function view_order() {
+	public static function view_order($orderid) {
 		global $aidlink, $locale;
-		if (isset($_GET['vieworder'])) {
+		$order_query = dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE oid='".intval($orderid)."'");
+		if (dbrows($order_query) > 0) {
+			$odata = dbarray($order_query);
+			$tab_title['title'][] = 'Administration';
+			$tab_title['id'][] = 'oadmin';
+			$tab_title['icon'][] = '';
 
-		}
-		$odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE oid='".$_GET['orderid']."' LIMIT 0,1"));
-		if ($odata) {
-			echo "<fieldset><legend align='left'>&nbsp; ".$locale['ESHP306']." : ".$odata['oid']." ".$locale['ESHP307']." ".$odata['oname']." - ".showdate("longdate", $odata['odate'])." &nbsp;</legend>";
-			echo "<br /><form name='inputform' method='post' action='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=orders&amp;updateorder&amp;orderid=".$_GET['orderid']."'>
-<table align='center' cellspacing='2' cellpadding='2' width='99%'><tr>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP308']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP309']."</b></td>
-<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP310']."</b></td>
-<td class='tbl2' width='1%' align='center'></td>
-</tr><tr>\n";
-			echo "<td width='1%' align='center'><textarea name='oamessage' cols='2' rows='1' style='width:150px;' class='textbox'>".nl2br($odata['oamessage'])."</textarea></td>";
-			echo "<td width='1%' align='center'><select name='opaid' class='textbox'>
-      <option value='1'".($odata['opaid'] == "1" ? " selected" : "").">".$locale['ESHP311']."</option>
-      <option value=''".($odata['opaid'] == "" ? " selected" : "").">".$locale['ESHP312']."</option>
-      </select> </td>\n";
-			echo "<td width='1%' align='center'><select name='ocompleted' class='textbox'>
-      <option value='1'".($odata['ocompleted'] == "1" ? " selected" : "").">".$locale['ESHP311']."</option>
-      <option value=''".($odata['ocompleted'] == "" ? " selected" : "").">".$locale['ESHP312']."</option>
-      </select></td>";
-			echo "<td width='1%' align='center'><input name='items'  value='".$odata['oitems']."' type='hidden' /><input type='submit' value='".$locale['ESHP313']."' /></td>";
-			echo "</tr></table></form><br /></fieldset><br />";
-			echo $odata['oorder'];
-			echo "<br />";
-			echo "<div style='clear:both;'></div>";
-			echo "<div style='float:right;margin-top 15px;padding:10px;'><a class='printorder button' href='".ADMIN."eshop/printorder.php".$aidlink."&amp;orderid=".$_GET['orderid']."'>".$locale['ESHP314']."</a></div>";
-			echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='".($settings['eshop_return_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_return_color']."")."' href='javascript:history.back(-1)'>&laquo; ".$locale['ESHP030']."</a></div>";
+			$tab_title['title'][] = 'Invoice Details';
+			$tab_title['id'][] = 'oadmins';
+			$tab_title['icon'][] = '';
+
+			$tab_active = tab_active($tab_title, '0');
+			echo opentab($tab_title, $tab_active, 'orders_admin');
+			echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
+			echo "<div class='m-t-20'>";
+			openside($locale['ESHP306']." : ".$odata['oid']." - ".$locale['ESHP307']." ".$odata['oname']." - ".showdate("longdate", $odata['odate']));
+			echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;updateorder", array('downtime'=>1));
+			echo form_select($locale['ESHP309'], 'opaid', 'opaid', array($locale['no'], $locale['yes']), $odata['opaid'], array('inline'=>1));
+			echo form_select($locale['ESHP310'], 'ocompleted', 'ocompleted', array($locale['no'], $locale['yes']), $odata['ocompleted'], array('inline'=>1));
+			echo form_textarea($locale['ESHP308'], 'oamessage', 'oamessage', $odata['oamessage']);
+			echo form_hidden('', 'oid', 'oid', $odata['oid']);
+			echo form_button($locale['save_changes'], 'save', 'save', $locale['save_changes'], array('class'=>'btn btn-sm btn-primary'));
+			echo closeform();
+			closeside();
+			echo "</div>\n";
+			echo closetabbody();
+			echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
+			?>
+			<a class='btn button printorder btn-sm pull-right btn-success' href='<?php echo ADMIN."eshop/printorder.php".$aidlink."&amp;orderid=".$_GET['orderid'] ?>'><?php echo $locale['ESHP314'] ?></a>
+			<?php echo stripslashes($odata['oorder']);
+			echo closetabbody();
+			echo closetab();
 		} else {
-			echo "<div class='admin-message' align='center' style='margin-top:5px;'>".$locale['ESHP315']."</div><br />\n";
+			?>
+			<div class='text-center alert alert-warning'><?php echo $locale['ESHP315'] ?></div>
+			<?php
 		}
 	}
 
+	/**
+	 * List down all paid but not delivered. and unpaid and not delivered.
+	 */
 	public	function list_order() {
 		global $locale, $aidlink;
 		$orderby = ($_GET['sortby'] == "all" ? "" : " AND oname LIKE '".$_GET['sortby']."%'");
-		$rows = dbcount("('oid')", DB_ESHOP_ORDERS, "opaid='1' AND ocompleted ='' $orderby");
+		$rows = dbcount("('oid')", DB_ESHOP_ORDERS, "ocompleted='0' $orderby");
+
+		if (isset($_GET['action']) && $_GET['action'] == 'vieworder' && isset($_GET['orderid']) && isnum($_GET['orderid'])) {
+			echo openmodal('bill', "Invoice ".$_GET['orderid']."");
+			self::view_order($_GET['orderid']);
+			echo closemodal();
+		}
+
 		?>
 		<table class='table table-responsive table-striped m-t-20'>
 			<tr>
 				<th><?php echo $locale['ESHP317'] ?></th>
 				<th><?php echo $locale['ESHP318'] ?></th>
 				<th><?php echo $locale['ESHP319'] ?></th>
-				<th><?php echo $locale['ESHP320'] ?></th>
+				<th><?php echo $locale['ESHPF126'] ?></th>
+				<th><?php echo $locale['ESHPSS100'] ?></th>
+				<th><?php echo $locale['ESHPPRO196'] ?></th>
+				<th><?php echo $locale['ESHP309'] ?></th>
 				<th><?php echo $locale['ESHP321'] ?></th>
-				<th><?php echo $locale['ESHP322'] ?></th>
-				<th><?php echo $locale['ESHP323'] ?></th>
-				<th><?php echo $locale['ESHP324'] ?></th>
+				<th><?php echo $locale['ESHPCATS135'] ?></th>
 			</tr>
 		<?php
 		if ($rows >0) {
-			$result = dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE opaid = '1' AND ocompleted = '' ".$orderby." ORDER BY oid ASC  LIMIT ".$_GET['rowstart'].",15");
+			$result = dbquery("
+							SELECT orders.*, payment.method as payment_method, delivery.method as delivery_method
+							FROM ".DB_ESHOP_ORDERS." orders
+							INNER JOIN ".DB_ESHOP_PAYMENTS." payment on orders.opaymethod = payment.pid
+							INNER JOIN ".DB_ESHOP_SHIPPINGITEMS." delivery on orders.oshipmethod = delivery.sid
+							WHERE orders.ocompleted = '0' ".$orderby." ORDER BY orders.oid ASC  LIMIT ".$_GET['rowstart']." , 15");
+			?>
+			<tbody>
+			<?php
 			while ($data = dbarray($result)) {
-
-				echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
-				echo "<td width='1%' align='center'> <a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=orders&amp;vieworder&amp;orderid=".$data['oid']."'><b>".$data['oid']."</b></a></td>\n";
 				$usercheck = dbquery("SELECT user_id FROM  ".DB_USERS." WHERE user_id = '".$data['ouid']."'");
 				$urows = dbrows($usercheck);
 				if ($urows != 0) {
-					echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;a_page=customers&amp;step=edit&amp;cuid=".$data['ouid']."'>".$data['oname']."</a></td>";
+					$customer = "<a href='".FUSION_SELF.$aidlink."&amp;a_page=customers&amp;section=customerform&amp;action=edit&amp;cuid=".$data['ouid']."'>".$data['oname']."</a>";
 				} else {
-					echo "<td width='1%' align='center'>".$data['oname']."</td>";
+					$customer = $data['oname'];
 				}
-				echo "<td width='1%' align='center'>".$data['ototal']." ".fusion_get_settings('eshop_currency')."</a></td>";
-				echo "<td width='1%' align='center'>".($data['opaid'] == "1" ? "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_green.png' alt'' />" : "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_red.png' alt'' />")."</td>";
-				echo "<td width='1%' align='center'>".($data['ocompleted'] == "1" ? "<img style='width:20px; height:20px;vertical-align:middle;'  src='".BASEDIR."eshop/img/bullet_green.png' alt'' />" : "<img style='width:20px; height:20px;vertical-align:middle;'  src='".BASEDIR."eshop/img/bullet_red.png' alt'' />")."</td>";
-				echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=orders&amp;vieworder&amp;orderid=".$data['oid']."'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/orderlist.png' alt='' border='0' /></a></td>";
-				echo "<td width='1%' align='center'><a class='printorder' href='".ADMIN."eshop/printorder.php".$aidlink."&amp;orderid=".$data['oid']."'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/print.png' alt='' border='0' /></a></td>";
-				echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=orders&amp;step=delete&amp;orderid=".$data['oid']."'  onClick='return confirmdelete();'><img style='width:20px; height:20px;vertical-align:middle;'  src='".BASEDIR."eshop/img/remove.png' border='0'  alt='Remove' /></a></td>";
+				?>
+				<tr>
+					<td><?php echo $data['oid'] ?></td>
+					<td><?php echo $customer ?></td>
+					<td><?php echo $data['oemail'] ?></td>
+					<td><?php echo $data['payment_method'] ?></td>
+					<td><?php echo $data['delivery_method'] ?></td>
+					<td><?php echo number_format($data['ototal'],2)." ".fusion_get_settings('eshop_currency') ?></td>
+					<td><?php echo $data['opaid'] ? $locale['ESHP309'] : $locale['ESHP320'] ?></td>
+					<td><?php echo $data['ocompleted'] ? $locale['ESHP321b'] : $locale['ESHP321'] ?></td>
+					<td>
+						<div class='btn-group'>
+							<a class='btn button btn-sm btn-default' href='<?php echo ADMIN."eshop.php".$aidlink."&amp;a_page=orders&amp;section=orders&amp;action=vieworder&amp;orderid=".$data['oid'] ?>'><?php echo $locale['ESHP322'] ?></a>
+							<a class='btn button btn-sm btn-default' href='<?php echo ADMIN."eshop/printorder.php".$aidlink."&amp;orderid=".$data['oid'] // we can execute modal here ?>'><?php echo $locale['ESHP314'] ?></a>
+							<a class='btn button btn-sm btn-danger' onClick='confirmdelete();' href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;step=delete&amp;orderid=".$data['oid'] ?>'><?php echo $locale['delete'] ?></a>
+						</div>
+					</td>
+				</tr>
+				<?php
 			}
-			echo "</tr></table>\n";
-			echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 15, $rows, 3, FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=orders&amp;sortby=".$_GET['sortby']."&amp;")."\n</div>\n";
+			?>
+			</tbody>
+			</table>
+			<div class='text-right m-t-5'>
+			<?php echo makePageNav($_GET['rowstart'], 15, $rows, 3, FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;sortby=".$_GET['sortby']."&amp;") ?>
+			</div>
+			<?php
 		} else {
 			?>
-			<tr>
-				<td colspan='8' class='text-center'><?php echo $locale['ESHP325'] ?></td>
-			</tr>
+			<tr><td colspan='8' class='text-center'><?php echo $locale['ESHP325'] ?></td></tr>
 			<?php
 		}
-		?></table> <?php
+		?>
+		</table>
+		<?php
 	}
 
 	public function searchbox() {
@@ -206,7 +245,7 @@ echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active, 1);
 $orders->list_order();
 echo closetabbody();
 echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active, 1);
-include "orderhistory.php";
+//include "orderhistory.php";
 echo closetabbody();
 echo closetab();
 
@@ -225,4 +264,3 @@ echo "<input type='image' id='search_image' src='".BASEDIR."eshop/img/search_ico
 echo "</form></div>";
 echo "</td></tr></table>";
 */
-?>
