@@ -23,7 +23,6 @@ require_once INCLUDES."theme_functions_include.php";
 include "functions.php";
 
 function render_page($license = FALSE) {
-	global $settings;
 	//add_handler("theme_output");
 	global $settings, $main_style, $locale, $userdata, $aidlink, $mysql_queries_time;
 	// set variables
