@@ -247,7 +247,6 @@ class Coupons {
 		$item_status = isset($_GET['status']) && $_GET['status'] == 1 ? 1 : 0;
 		$this->filter_Sql = !$item_status ? "(active='1' or active='0')" : "active='0'";
 		echo "<div class='m-t-20 m-b-20 display-block' style='height:40px;'>\n";
-
 		echo "<div class='display-inline-block search-align m-r-10'>\n";
 		echo form_text('', 'srch_text', 'srch_cpntext', '', array('placeholder'=>$locale['ESHPCUPNS119'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
 		echo form_button($locale['SRCH164'], 'search', 'search-coupon', $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
