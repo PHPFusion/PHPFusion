@@ -47,6 +47,8 @@ if ($_GET['category']) {
 } elseif (isset($_GET['checkout'])) {
 	$info = $eShop->get_checkout_info();
 	render_checkout($info);
+} elseif (isset($_GET['order'])) {
+	$eShop->saveorder();
 } else {
 	render_eshop_featured_url($info);
 	render_eshop_featured_product($info);

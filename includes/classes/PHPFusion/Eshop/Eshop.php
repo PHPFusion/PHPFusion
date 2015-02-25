@@ -54,6 +54,8 @@ class Eshop {
 	/* static Session ID generator */
 	protected static function get_token() {
 		global $userdata; // use phpfusion token.
+		//$url = fusion_get_settings('siteurl');
+		//return \defender::token($url.'-eshop');
 		$user_id = \defender::set_sessionUserID();
 		$identifier = 'eshop';
 		$algo = fusion_get_settings('password_algorithm');
@@ -63,6 +65,7 @@ class Eshop {
 		// generate a new token and store it
 		$token = $user_id.".".$identifier.".".hash_hmac($algo, $key, $salt);
 		return $token;
+		//*/
 	}
 	/* Sets eShop Session */
 	protected static function set_session($field_name, $value) {
@@ -113,6 +116,7 @@ class Eshop {
 			$time_expiry = time()+1209600;
 			\Authenticate::_setCookie(COOKIE_PREFIX.'eshop', $token, $time_expiry, $cookie_path, $cookie_domain, FALSE, TRUE);
 		}
+
 		$token_data = explode(".", stripinput($token));
 		$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
 		$identifier = 'eshop';
@@ -217,7 +221,7 @@ class Eshop {
 	}
 
 	// Item Form
-	public static function display_item_form() {
+	public static function display_item_form($display=false) {
 		$item = self::get('items');
 		// secure form. update the whole thing as MVC.
 		$html = "<table class='table table-responsive'>";
@@ -226,7 +230,7 @@ class Eshop {
 		$html .= "<th class='col-xs-2 col-sm-2'>Quantity</th>\n";
 		$html .= "<th>Unit Price</th>\n";
 		$html .= "<th>Total</th>\n";
-		$html .= "<th>Options</th>\n";
+		$html .= $display ? '' : "<th>Options</th>\n";
 		$html .= "</tr>\n";
 		if (!empty($item)) {
 			foreach($item as $prid => $data) {
@@ -245,12 +249,12 @@ class Eshop {
 				$html .= "</div>\n";
 				$html .= "</td>\n";
 				$html .= "<td>\n";
-				$html .= form_text('', 'qty', 'qty', $data['cqty'], array('append_button'=>1, 'append_form_value'=>$data['tid'], 'append_value'=>"<i class='fa fa-repeat m-t-5 m-b-0'></i>", 'append_type'=>'submit'));
+				$html .= $display ? $data['cqty'] : form_text('', 'qty', 'qty', $data['cqty'], array('append_button'=>1, 'append_form_value'=>$data['tid'], 'append_value'=>"<i class='fa fa-repeat m-t-5 m-b-0'></i>", 'append_type'=>'submit'));
 				$html .= form_hidden('', 'utid', 'utid', $data['tid']);
 				$html .= "</td>\n";
 				$html .= "<td>".fusion_get_settings('eshop_currency').number_format($data['item_price'], 2)."</td>\n";
 				$html .= "<td>".fusion_get_settings('eshop_currency').number_format($data['item_subtotal'], 2)."</td>\n";
-				$html .= "<td>".form_button('Remove', 'remove', 'remove', 'remove', array('class'=>'btn-danger btn-sm'))."</td>\n";
+				$html .= $display ? '' : "<td>".form_button('Remove', 'remove', 'remove', 'remove', array('class'=>'btn-danger btn-sm'))."</td>\n";
 				$html .= "</tr>\n";
 				$html .= closeform();
 			}
@@ -262,7 +266,7 @@ class Eshop {
 	}
 
 	/* Calculates Grand Total */
-	protected function set_net_price() {
+	private function set_net_price() {
 		$net_price = self::get('nett_gross') + self::get('total_shipping') + self::get('total_surcharge');
 		self::set_session('net_price', $net_price);
 		$gt = "<span class='strong'>Grand Total:</span><span class='strong pull-right'>+ ".fusion_get_settings('eshop_currency').number_format($net_price,2)."</span>\n";
@@ -271,7 +275,7 @@ class Eshop {
 	}
 
 	/* VAT */
-	protected function set_vat_rate() {
+	private function set_vat_rate() {
 		global $locale;
 		$price_include_vat = fusion_get_settings('eshop_vat_default');
 		$total_subtotal = self::get('current_subtotal');
@@ -291,6 +295,301 @@ class Eshop {
 		self::set_session('vat', $vat_output);
 		self::set_session('nett', $nett_gross_output);
 	}
+
+	/* Checkout check */
+	public function saveorder() {
+	global $locale, $settings;
+		if ($settings['site_seo'] == "1") $settings['siteurl'] = str_replace("../", "", $settings['siteurl']);
+		/**
+		 * Required fields errors
+		 * Sets validation here and push back a step if error happens
+		 */
+		$item_count = self::get('item_count');
+		$item_form = self::display_item_form(true);
+		$customerData = self::get('customer'); // customer information array
+		$items = self::get('items'); // customer ordered items
+		$payment_method = self::get('payment_method'); // payment method
+		$shipping_method = self::get('shipping_method'); // shipping method
+		$coupon_value = self::get('coupon_value'); // get the coupon values
+		$total_gross = self::get('total_gross');
+		$total_vat = self::get('total_vat');
+		$total_price = self::get('net_price');
+		$customer_message = self::get('customer_message');
+
+		$destination = $locale['na'];
+		$initial_shipping_cost = 0;
+		$weight_cost = 0;
+		$bt_payment_info = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_PAYMENTS." WHERE active='1' AND pid='".$payment_method."' ORDER BY pid ASC"));
+		if ($shipping_method) {
+			$bt_ship_info = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGITEMS." WHERE active='1' AND sid='".$shipping_method."' ORDER BY cid,sid ASC"));
+			$destination_locale = Shipping::get_destOpts();
+			$destination_locale = $destination_locale[$bt_ship_info['destination']];
+			$destination = $bt_ship_info['method']."<br />".$bt_ship_info['dtime']." - ".$destination_locale;
+			$initial_shipping_cost = $bt_ship_info['initialcost'];
+			$weight_cost = $bt_ship_info['weightcost'];
+		}
+
+		$total_weight = self::get('total_weight');
+		$total_shipping = self::get('total_shipping');
+		$total_surcharge = self::get('total_surcharge');
+
+		$error = array(
+			'customer_id_error' => empty($customerData['cuid']) ? 1 : 0, // no id.
+			'customer_name_error' => empty($customerData['cfirstname']) || empty($customerData['clastname']) ? 1 : 0, // no name
+			'customer_email_error' => empty($customerData['cemail']) ? 1 : 0, // no email
+			'customer_dob_error' => empty($customerData['cdob']) ? 1 : 0, // no dob
+			'customer_country_error' => empty($customerData['ccountry']) ? 1 : 0, // no country
+			'customer_region_error' => empty($customerData['cregion']) ? 1 : 0, // no region
+			'customer_city_error' => empty($customerData['ccity']) ? 1 : 0, // no city
+			'customer_street_error' => empty($customerData['caddress']) ? 1 : 0, // no customer address
+			'customer_postcode_error' => empty($customerData['cpostcode']) ? 1 : 0, // no postcode
+			'customer_contact_error' => empty($customerData['cphone']) ? 1 : 0, // no contact number
+			'items_error' => empty($items) ? 1 : 0, // no items or cart empty
+			'payment_error' => dbcount("('pid')", DB_ESHOP_PAYMENTS) && empty($payment_method) ? 1 : 0, // have payment options but ommitted
+			'shipping_error' => dbcount("('sid')", DB_ESHOP_SHIPPINGITEMS) && empty($shipping_method) ? 1 : 0, // have ship items options but omitted
+		);
+		foreach($error as $key => $value) {
+			if ($value == 1) redirect(BASEDIR."eshop.php?checkout&amp;error=$key");
+		}
+
+
+
+
+		$responsive_bill_template = "
+		<h2>INVOICE</h2>
+			<div class='row'>
+				<div class='col-xs-12 col-sm-6'>
+					<div class='well'>
+						<p class='strong'>".$locale['ESHPF112']."</p>
+						<table class='table table-responsive'>
+							<tr><td>".$locale['ESHPF113']."</td><td>".$customerData['cfirstname']."</td></tr>
+							<tr><td>".$locale['ESHPF114']."</td><td>".$customerData['clastname']."</td></tr>
+							<tr><td>".$locale['ESHPF115']."</td><td>".date('%d-%M-%Y', $customerData['cdob'])."</td></tr>
+							<tr><td>".$locale['ESHPF116']."</td><td>".$customerData['ccountry']."</td></tr>
+							<tr><td>".$locale['ESHPF117']."</td><td>".$customerData['cregion']."</td></tr>
+							<tr><td>".$locale['ESHPF118']."</td><td>".$customerData['ccity']."</td></tr>
+							<tr><td>".$locale['ESHPF119']."</td><td>".$customerData['caddress']."<br/>".$customerData['caddress2']."</td></tr>
+							<tr><td>".$locale['ESHPF121']."</td><td>".$customerData['cpostcode']."</td></tr>
+							<tr><td>".$locale['ESHPF122']."</td><td>".$customerData['cphone']."</td></tr>
+							<tr><td>".$locale['ESHPF123']."</td><td>".$customerData['cfax']."</td></tr>
+							<tr><td>".$locale['ESHPF124']."</td><td>".$customerData['cemail']."</td></tr>
+						</table>
+						<p class='strong'>".$locale['ESHPF125']."</p>
+						<span>".nl2br($customer_message)."</span>
+					</div>
+				</div>
+				<div class='col-xs-12 col-sm-6'>
+					<div class='well'>
+					<p class='strong'>".$locale['ESHPF126']."</p>
+					<table class='table table-responsive table-striped'>
+						<tr>
+							<td><img style='width:40px; height:40px;' src='".$settings['siteurl']."eshop/paymentimgs/".$bt_payment_info['image']."' border='0' alt='' /></td>
+							<td align='left' width='55%'>".$bt_payment_info['method']."</td>
+							<td align='left' width='25%'>".$locale['ESHPF127']." <br /> ".$bt_payment_info['surcharge']." ".$settings['eshop_currency']."</td>
+						</tr>
+					</table>
+					<p class='strong'>".$locale['ESHPF128']."</p>
+					<table class='table table-responsive table-striped'>
+						<tr>
+							<td width='60%'>".$destination."</td>
+							<td width='20%'>".$locale['ESHPF129']."<br /> ".number_format($initial_shipping_cost,2)." ".$settings['eshop_currency']."</td>
+							<td width='20%'>".$locale['ESHPF127']."/".$settings['eshop_weightscale']."<br />".number_format($weight_cost,2)." ".$settings['eshop_currency']."</td>
+						</tr>
+					</table>
+
+					<p class='strong'>".$locale['ESHPF130']."</p>
+					<table class='table table-responsive table-striped'>
+						<tr>
+							<td>
+							".$locale['ESHPF131']." ".$item_count." ".$locale['ESHPF132']."".number_format($total_gross, 2)." ".$settings['eshop_currency']."<br />
+							".$locale['ESHPF133']." ".$settings['eshop_vat']."% : ".number_format($total_vat, 2)." ".$settings['eshop_currency']."<br />
+							".$locale['ESHPCHK176']." ".$coupon_value." <br />
+							".$locale['ESHPF134']." ".number_format($total_weight, 2)." ".$settings['eshop_weightscale']." <br />
+							".$locale['ESHPF135']." ".$bt_payment_info['surcharge']." (".$total_surcharge." in total) ".$settings['eshop_currency']." <br />
+							".$locale['ESHPCHK133']." ".$total_shipping." ".$settings['eshop_currency']." <br />
+							".$locale['ESHPF137']." ".number_format($total_price, 2)." ".$settings['eshop_currency']."<br />
+							</td>
+						</tr>
+					</table>
+					</div>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-xs-12 col-sm-12'>
+					$item_form
+				</div>
+			</div>
+		";
+
+		echo $responsive_bill_template;
+
+		//dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount+".$data['cqty']." WHERE id = '".$data['prid']."'");
+		//dbquery("UPDATE ".DB_ESHOP." SET instock=instock-".$data['cqty']." WHERE id = '".$data['prid']."'");
+
+
+
+		// Product Description and Particulars will change overtime, so it is best to store full product information.
+		$odata = array(
+			'oid' => 0,
+			'ouid' => $customerData['cuid'],
+			'oname' => $customerData['cfirstname'].' '.$customerData['clastname'],
+			'oemail' => $customerData['cemail'],
+			'oitems' => serialize($items),
+			'oorder' => '', // hmm can neglect
+			'opaymethod' => $payment_method,
+			'oshipmethod' => $shipping_method,
+			'odiscount' => $coupon_value,
+			'ovat' => $total_vat,
+			'ototal' => $total_price,
+			'omessage' => $customer_message,
+			'oamessage' => '',
+			'ocompleted' => 0,
+			'opaid' => 0,
+			'odate'=> time()
+		);
+
+		// ok. ordering snapshot. lets just do this.
+	/* Calculation Codes
+	$vat = $settings['eshop_vat'];
+	if (isset($_POST['buynow'])) {
+		$itemdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_POST['id']."'"));
+		$price = ($itemdata['xprice'] ? $itemdata['xprice'] : $itemdata['price']);
+	} else {
+		$price = $sum['totals'];
+	}
+	$vat = ($price/100)*$vat;
+	if ($settings['eshop_vat_default'] == "0") {
+		$totalincvat = $price+$vat;
+	} else {
+		$totalincvat = $price;
+	}
+	$shippingsurcharge = $shipping['weightcost'];
+	$shippinginitial = $shipping['initialcost'];
+	$shippingsurcharge = $shippingsurcharge*$weight['weight'];
+	$shippingtotal = $shippingsurcharge+$shippinginitial;
+	$paymentsurcharge = $payment['surcharge'];
+	if (isset($_POST['cupon']) && $_POST['cupon'] !== $locale['ESHPCHK171']) {
+		$cupons = stripinput($_POST['cupon']);
+		if (iMEMBER) {
+			$verifycupon = dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE ccupons LIKE '%.".$cupons."' LIMIT 0,1");
+			if (!dbrows($verifycupon) != 0) {
+				$cupon = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$cupons."' AND active = '1' AND (custart='0'||custart<=".time().") AND (cuend='0'||cuend>=".time().") LIMIT 0,1"));
+				$cuponsum = dbarray(dbquery("SELECT sum(cprice*cqty) as totals FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='1'"));
+				$cuponexcluded = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='0'"));
+				$cupons = ".".$cupon['cuid']."";
+				if ($cupon['cutype'] == "1") {
+					if ($cupon['cuvalue'] > $cuponsum['totals']) {
+						$discount = $locale['ESHPCHK177'];
+						$cupons = "";
+					} else {
+						$discvalue = $cupon['cuvalue'];
+						$discalc = $discvalue;
+						$discount = "".number_format($discvalue)." ".$settings['eshop_currency']."";
+					}
+				} else if ($cupon['cutype'] == "0") {
+					$discount = $cupon['cuvalue'];
+					$dvat = $settings['eshop_vat'];
+					$itemstocalc = $cuponsum['totals'];
+					if ($settings['eshop_vat_default'] == "0") {
+						$dvat = ($itemstocalc/100)*$dvat;
+						$discalc = $itemstocalc+$dvat;
+					} else {
+						$discalc = $itemstocalc;
+					}
+					$discalc = ($discalc/100)*$discount;
+					$discount = "".number_format($discalc)." ".$settings['eshop_currency']."";
+				} else {
+					$discount = $locale['ESHPCHK179'];
+					$cupons = "";
+				}
+			}
+		}
+	}
+
+
+	$order .= "<fieldset style='width:100%;padding:2px;'><legend style='width:90% !important;'>&nbsp; ".$locale['ESHPF138']." &nbsp;</legend>";
+	if (isset($_POST['buynow'])) {
+		$itemdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_POST['id']."'"));
+		$order .= "<table align='center' width='100%' cellpadding='0' cellspacing='0' class='eshptable' ><tr>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF139']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF140']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF141']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF142']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF143']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF144']."</b></td>
+					</tr><tr>";
+		$order .= "<td class='tbl' align='center' valign='middle' width='1%'>".($itemdata['artno'] !== '' ? "".$itemdata['artno']."" : "".$itemdata['id']."")."</td>
+					<td class='tbl' align='center' valign='middle' width='1%'><a href='".$settings['siteurl']."eshop.php?product=".$itemdata['id']."'>".$itemdata['title']."</a></td>
+					<td class='tbl' align='center' valign='middle' width='1%'></td>
+					<td class='tbl' align='center' valign='middle' width='1%'>";
+		if ($itemdata['dynf'] || $itemdata['dync']) {
+			$order .= "".$itemdata['dynf']." : ".$itemdata['dync']."";
+		}
+		$order .= "</td><td class='tbl' align='center' valign='middle' width='1%'>".$itemdata['qty']."</td><td class='tbl' align='center' valign='middle' width='1%'>".$price."</td>";
+		$order .= "</tr>\n</table>";
+		dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount+1 WHERE id = '".$_POST['id']."'");
+	} else {
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' ORDER BY tid ASC");
+		$counter = 0;
+		$order .= "<table align='center' width='100%' cellpadding='0' cellspacing='0' class='eshptable' ><tr>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF139']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF140']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF141']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF142']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF143']."</b></td>
+					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF144']."</b></td>
+					</tr><tr>";
+		while ($data = dbarray($result)) {
+			if ($counter != 0 && ($counter%1 == 0)) $order .= "</tr>\n<tr>";
+			$order .= "<td class='tbl' align='center' valign='middle' width='1%'>".($data['artno'] !== '' ? "".$data['artno']."" : "".$data['prid']."")."</td>
+						<td class='tbl' align='center' valign='middle' width='1%'><a href='".$settings['siteurl']."eshop.php?product=".$data['prid']."'>".$data['citem']."</a></td>
+						<td class='tbl' align='center' valign='middle' width='1%'>".getcolorname($data['cclr'])."</td>
+						<td class='tbl' align='center' valign='middle' width='1%'>";
+			if ($data['cdynt'] || $data['cdyn']) {
+				$order .= "".$data['cdynt']." : ".$data['cdyn']."";
+			}
+			$order .= "</td><td class='tbl' align='center' valign='middle' width='1%'>".$data['cqty']."</td><td class='tbl' align='center' valign='middle' width='1%'>".$data['cprice']."</td>";
+			//Let´s make a loop to add an item array for each quantity so we can adjust stock and sellcount accordingly when deleting orders.
+			for ($q = 0; $q < $data['cqty']; $q++) {
+				$itemlist .= ".".$data['prid']."";
+			}
+
+			$counter++;
+		}
+		$order .= "</tr>\n</table>";
+	}
+	$order .= "</fieldset></div>";
+
+	//save the order in the orders database
+	dbquery("INSERT INTO ".DB_ESHOP_ORDERS." VALUES('', '".$username."','".$firstname." ".$lastname."','".$itemlist."' ,'".addslash($order)."','".$email."','".$paymethod."','".$shipmethod."','".$discount."','".$vat."','".$totalcost."','".$message."','','','','".time()."')");
+	//".($pdo_enabled == "1" ? "".$order."" : "".mysql_real_escape_string($order)."")."
+	//We only store customer data from registred members.
+	//Save and update the customer
+	if (iMEMBER) {
+		$ccheck = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid = '".$username."' "));
+		//check if the user exist and update with new form values if they do
+		if ($ccheck['cuid']) {
+			$result = dbquery("UPDATE ".DB_ESHOP_CUSTOMERS." SET
+cfirstname = '".$firstname."',
+clastname = '".$lastname."',
+cdob = '".$dob."',
+ccountry_code = '".$country_code."',
+cregion = '".$region."',
+ccity = '".$city."',
+caddress = '".$address."',
+caddress2 = '".$address2."',
+cpostcode = '".$postcode."',
+cphone = '".$phone."',
+cfax = '".$fax."',
+cemail = '".$email."',
+ccupons = '".$ccheck['ccupons']."".$cupons."'
+WHERE cuid = '".$username."'");
+		} else {
+			$result = dbquery("INSERT INTO ".DB_ESHOP_CUSTOMERS." VALUES('".$username."', '".$firstname."', '".$lastname."' ,'".$dob."', '".$country_code."' , '".$region."', '".$city."' , '".$address."' , '".$address2."','".$postcode."','".$phone."','".$fax."','".$email."','.".$cupons."')");
+		}
+	} */
+
+}
 
 	/* Persistent now since construct function will fill in session values if blank */
 	public static function get_checkout_info() {
@@ -424,7 +723,8 @@ class Eshop {
 	/* Customer form fields */
 	protected static function set_customerDB() {
 		if (isset($_POST['save_customer'])) {
-			$customer_info['cuid'] = isset($_POST['cuid']) ? form_sanitizer($_POST['cuid'], '0', 'cuid') : 0; // user select
+			global $userdata;
+			$customer_info['cuid'] = intval($userdata['user_id']);
 			$customer_info['cemail'] = isset($_POST['cemail']) ? form_sanitizer($_POST['cemail'], '', 'cemail') : '';
 			$customer_info['cdob'] = isset($_POST['cdob']) ? form_sanitizer($_POST['cdob'], '', 'cdob') : '';
 			$customer_info['cname'] = implode('|', $_POST['cname']); // backdoor to traverse back to dynamic
@@ -449,7 +749,9 @@ class Eshop {
 			}
 			$customer_info['cphone'] = isset($_POST['cphone']) ? form_sanitizer($_POST['cphone'], '', 'cphone') : '';
 			$customer_info['cfax'] = isset($_POST['cfax']) ? form_sanitizer($_POST['cfax'], '', 'cfax') : '';
-			$customer_info['ccupons'] = isset($_POST['ccupons']) ? form_sanitizer($_POST['ccupons'], '', 'ccupons') : ''; // why is cupons available in customer db????
+			// check this part
+			$customer_info['ccupons'] = isset($_POST['ccupons']) ? form_sanitizer($_POST['ccupons'], '', 'ccupons') : '';
+
 			if (Customers::verify_customer($customer_info['cuid'])) {
 				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
 				self::set_session('customer', $customer_info);

@@ -172,34 +172,41 @@ if (!function_exists('render_eshop_page_content')) {
 				echo "<div class='row eshop-rows'>\n";
 				foreach ($info['item'] as $product_id => $item_data) {
 					if ($_GET['category'] && $item_data['cid'] == $_GET['category'] || !$_GET['category']) {
-						echo "
-						<div class='col-xs-12 eshop-column col-sm-$calculated_bs text-center m-t-20 m-b-20'>\n
-						<a class='display-inline-block' style='margin:0px auto; min-height: ".(fusion_get_settings('eshop_image_th')*1.1)."px;' href='".$item_data['link']."'>
-							<img class='img-responsive' src='".$item_data['picture']."' style='width: ".fusion_get_settings('eshop_image_tw')."px; max-height: ".fusion_get_settings('eshop_image_th')."px;'>\n
-						</a>
-						<div class='text-left p-l-20 m-b-20' style='min-height: ".(fusion_get_settings('eshop_image_th')*0.5)."px;'>
-							<a href='".$item_data['link']."'><span class='eshop-product-title'>".$item_data['title']."</span></a>
-						";
-						if ($item_data['xprice']) {
-							echo "
-								<div class='eshop-price'>
-									<span><small>".fusion_get_settings('eshop_currency')."</small> ".number_format($item_data['xprice'])."</span>
-									<span class='eshop-discount label label-danger'>".number_format(100-($item_data['xprice']/$item_data['price']*100))."% ".$locale['off']."</span>
-								</div>
-								<span class='eshop-xprice'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</span>\n";
-						} else {
-							echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</div>\n";
-						}
-						echo "</div>\n";
-						echo "</div>\n";
+						?>
+						<div class='col-xs-12 eshop-column col-sm-<?php echo $calculated_bs ?> text-center m-t-20 m-b-20'>
+							<a class='display-inline-block' style='margin:0 auto; min-height: <?php echo fusion_get_settings('eshop_image_th')*1.1 ?>px;' href='<?php echo $item_data['link'] ?>'>
+								<?php echo thumbnail($item_data['picture'], fusion_get_settings('eshop_image_tw'))
+								//<img class='img-responsive' src='".$item_data['picture']."' style='width: ".fusion_get_settings('eshop_image_tw')."px; max-height: ".fusion_get_settings('eshop_image_th')."px;'>\n
+								?>
+							</a>
+							<div class='text-left p-l-20 m-b-20' style='min-height: <?php echo (fusion_get_settings('eshop_image_th')*0.5) ?>px; '>
+								<a href='<?php echo $item_data['link'] ?>'><span class='eshop-product-title'><?php echo $item_data['title'] ?></span></a>
+								<?php
+									if ($item_data['xprice']) { ?>
+										<div class='eshop-price'>
+											<span><small><?php echo fusion_get_settings('eshop_currency')?></small><?php echo number_format($item_data['xprice']) ?></span>
+											<span class='eshop-discount label label-danger'><?php echo number_format(100-($item_data['xprice']/$item_data['price']*100))?>% <?php echo $locale['off'] ?></span>
+										</div>
+										<span class='eshop-xprice'><small><?php echo fusion_get_settings('eshop_currency') ?></small><?php echo number_format($item_data['price'])?></span>
+									<?php } else { ?>
+										<div class='eshop-price'><small><?php echo fusion_get_settings('eshop_currency') ?></small><?php echo number_format($item_data['price']) ?></div>
+									<?php }
+								?>
+							</div>
+						</div>
+						<?php
 						$i++;
 					}
 				}
-				echo "</div>\n";
+				?>
+				</div>
+				<?php
 			} else {
-				echo "<div class='text-center m-t-20'>
-				<span>There are no products found</span><br/>
-				</div>\n";
+				?>
+				<div class='text-center m-t-20'>
+					<span>There are no products found</span><br/>
+				</div>\n
+				<?php
 			}
 			// Related Products Lineup
 			if ($_GET['category']) {
@@ -576,8 +583,19 @@ if (!function_exists('render_checkout')) {
 		echo "</div></div>\n";
 		echo "</div>\n"; // end pull-right
 		echo "<div class='display-block  p-l-0 p-r-0 m-t-20 col-xs-12'>\n";
-		echo "<a class='btn btn-primary pull-right' href='".BASEDIR."eshop.php?order'>".$locale['ESHPCHK135']."</a>\n";
+		echo "<a id='agreement_checked' class='btn btn-primary pull-right' href='".BASEDIR."eshop.php?order'>".$locale['ESHPCHK135']."</a>\n";
 		echo "<a class='btn btn-default pull-left' href='".BASEDIR."eshop.php'>Continue Shopping</a>\n";
 		echo "</div>\n";
+		add_to_jquery("
+		function validate_check(id) {
+			if ($('#'+id).prop('checked')) {
+				$('#agreement_checked').attr('disabled', false);
+			} else {
+				$('#agreement_checked').attr('disabled', true);
+			}
+		}
+		validate_check('agreement');
+		$('#agreement').bind('click', function() { validate_check('agreement');	});
+		");
 	}
 }
