@@ -43,17 +43,18 @@ if ($mode == 'd') {
 }
 
 switch ($mode) {
-	case 'm': {
-		add_to_title(" - ".$months[$get_month]." ".$get_year);
-		echo "<div align='center'><br />\n";
+	case 'm':
+		add_to_title(" - ".$months[$_GET['month']]." ".$_GET['year']);
 		$m_stats = array();
 		$m_days = cal_days_in_month(CAL_GREGORIAN, $get_month, $get_year);
 		if ($get_year == date("Y", time()) && $get_month == date("m", time())) $m_days = date("d", time());
 		$m_min = mktime(0, 0, 0, $get_month, 1, $get_year) - 1;
 		$m_max = $m_min + ($m_days * 24 * 60 * 60);
-		$dates = dbquery("SELECT odate FROM ".DB_ESHOP_ORDERS." WHERE odate > '".$m_min."' && odate < '".$m_max."' ORDER BY oid ASC");
+		$dates = dbquery("SELECT odate, count(oid) as orders, sum(ototal) as total_sales, DAY(from_unixtime(odate)) as day FROM ".DB_ESHOP_ORDERS." WHERE odate > '".$m_min."' && odate < '".$m_max."' GROUP BY day ASC ORDER BY oid ASC");
 		if (dbrows($dates)) {
+			// @todo: discard the unnecessary days.
 			while ($id = dbarray($dates)) {
+				print_p($id);
 				$m_day = date("j", $id['odate']);
 				if (!isset($m_stats[$m_day])) {
 					$m_stats[$m_day] = 1;
@@ -61,32 +62,44 @@ switch ($mode) {
 					$m_stats[$m_day]++;
 				}
 			}
+			?>
 
-			echo "<p>[<a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=history'>".$locale['ESHP329']."</a>]</p><br />";
-			echo "<table width='200' class='tbl-border' cellspacing='1' cellpadding='0'>\n";
-			echo "  <tr>\n    <td class='scapmain' style='font-weight: bold'>$months[$get_month] $get_year</td>
-							  <td class='scapmain' align='center' style='font-weight: bold'>#</td>\n  </tr>\n";
-						  
+			<p class='m-t-20'><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history" ?>'><?php echo $locale['ESHP329'] ?></a></p>
+			<table class='table table-responsive table-striped'>
+				<tr>
+					<th>Month of <?php echo $months[$_GET['month']]." ".$_GET['year'] ?></th>
+					<th>Day</th>
+					<th>Orders</th>
+					<th>Total Sales</th>
+				</tr>
+				<?php
+				for ($i = 1; $i < $m_days + 1; $i++) {
+					?>
+					<tr>
+						<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=d&amp;year=".$_GET['year']."&amp;month=".$_GET['month']."&amp;day=$i" ?>'>
+								<?php echo $locale['ESHP334'][date("w", mktime(1, 1, 1, $get_month, $i, $get_year))] ?>
+							</a>
+						</td>
+						<td><?php echo $i ?></td>
+						<td><?php isset($m_stats[$i]) ? $m_stats[$i] : $locale['na'] ?></td>
+					</tr>
+					<?php
+				} ?>
+			</table>
 
-			for ($i = 1; $i < $m_days + 1; $i++) {
-				echo "  <tr>\n";
-				echo "    <td align='left' class='tbl" . ($i % 2 ? "1" : "2") . "'>" . $i . ", <a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=history&amp;mode=d&amp;year=$get_year&amp;month=$get_month&amp;day=$i'>".$locale['ESHP334'][date("w", mktime(1, 1, 1, $get_month, $i, $get_year))]."</a></td>\n";
-				echo "    <td align='center' class='tbl" . ($i % 2 ? "1" : "2") . "'>". (isset($m_stats[$i]) ? $m_stats[$i] : "-") . "</td>\n";
-					
-			echo "  </tr>\n";
-			}
-			echo "</table>\n</div>\n";
+			<?php
 		} else {
 			echo "<p>".$locale['ESHP331']."</p>\n";
 		}
+
 		unset($m_stats, $m_days, $m_min, $m_max, $dates, $id, $get_year, $get_month, $i);
 		break;
-	}
+
 
 	case 'd': {
 		add_to_title(" - ".$get_day." ".$months[$get_month]." ".$get_year);
 		echo "<div align='center'><br />\n";
-		echo "<p>[<a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=history'>".$locale['ESHP330']."</a>] [<a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=history&amp;mode=m&amp;year=$get_year&amp;month=$get_month'> $months[$get_month] $get_year </a>]</p><br />";
+		echo "<p>[<a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history'>".$locale['ESHP330']."</a>] [<a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=$get_year&amp;month=$get_month'> $months[$get_month] $get_year </a>]</p><br />";
 		$d_min = mktime(23, 59, 59, $get_month, $get_day-1, $get_year);
 		$d_max = $d_min + (24 * 60 * 60);
 		$orders = dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE odate > '".$d_min."' && odate < '".$d_max."' ORDER BY oid ASC");
@@ -106,7 +119,7 @@ switch ($mode) {
 		</tr>\n";
 		while ($order = dbarray($orders)) {
 		echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
-		echo "<td width='1%' align='center'> <a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=orders&amp;vieworder&amp;orderid=".$order['oid']."'><b>".$order['oid']."</b></a></td>\n";
+		echo "<td width='1%' align='center'> <a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;vieworder&amp;orderid=".$order['oid']."'><b>".$order['oid']."</b></a></td>\n";
 $usercheck= dbquery("SELECT user_id FROM  ".DB_USERS." WHERE user_id = '".$order['ouid']."'");
 $urows = dbrows($usercheck);
 if ($urows != 0) {
@@ -117,10 +130,10 @@ if ($urows != 0) {
 		echo "<td width='1%' align='center'>".$order['ototal']." ".$settings['eshop_currency']."</a></td>";
 		echo "<td width='1%' align='center'>".($order['opaid'] =="1" ? "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_green.png' alt'' />" : "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_red.png' height='20' alt'' />")."</td>";
 		echo "<td width='1%' align='center'>".($order['ocompleted'] =="1" ? "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_green.png' alt'' />" : "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_red.png' height='20' alt'' />")."</td>";
-		echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=orders&amp;vieworder&amp;orderid=".$order['oid']."'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/orderlist.png' alt='' border='0' /></a></td>";
+		echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;vieworder&amp;orderid=".$order['oid']."'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/orderlist.png' alt='' border='0' /></a></td>";
 		echo "<td width='1%' align='center'><a class='printorder' href='".ADMIN."eshop/printorder.php".$aidlink."&amp;orderid=".$order['oid']."'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/print.png' alt='' border='0' /></a></td>";
 		echo "<td width='1%' align='center'>". date("H:i:s", $order['odate']) . "</td>";
-		echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=orders&amp;step=delete&amp;orderid=".$order['oid']."'  onClick='return confirmdelete();'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/remove.png' border='0'  alt='' /></a></td>";
+		echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;step=delete&amp;orderid=".$order['oid']."'  onClick='return confirmdelete();'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/remove.png' border='0'  alt='' /></a></td>";
 				echo "  </tr>\n";
 			}
 		} else {
@@ -152,8 +165,8 @@ if ($urows != 0) {
 			foreach($stats as $sales) {
 				?>
 				<tr>
-					<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=history&amp;mode=m&amp;year=".$sales['year']."&amp;month=".$sales['month'] ?>'><?php echo $months[$sales['month']] ?></a></td>
-					<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=history&amp;mode=y&amp;year=".$sales['year'] ?>'><?php echo $sales['year'] ?></td>
+					<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=".$sales['year']."&amp;month=".$sales['month'] ?>'><?php echo $months[$sales['month']] ?></a></td>
+					<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=y&amp;year=".$sales['year'] ?>'><?php echo $sales['year'] ?></td>
 					<td><?php echo $sales['orders'] ?></td>
 					<td><?php echo $sales['total_sales']." ".fusion_get_settings('eshop_currency') ?></td>
 				</tr>
