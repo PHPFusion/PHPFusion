@@ -82,6 +82,7 @@ switch ($mode) {
 		unset($m_stats, $m_days, $m_min, $m_max, $dates, $id, $get_year, $get_month, $i);
 		break;
 	}
+
 	case 'd': {
 		add_to_title(" - ".$get_day." ".$months[$get_month]." ".$get_year);
 		echo "<div align='center'><br />\n";
@@ -132,46 +133,36 @@ if ($urows != 0) {
 	}
 	default: {
 		$stats = array(); 
-		$dates = dbquery("SELECT odate FROM ".DB_ESHOP_ORDERS." ORDER BY oid DESC");
+		$dates = dbquery("SELECT YEAR(from_unixtime(odate)) as year, MONTH(from_unixtime(odate)) as month, SUM(ototal) as total_sales, count(oid) as orders
+		 FROM ".DB_ESHOP_ORDERS."
+		 GROUP BY YEAR(from_unixtime(odate)) DESC, MONTH(from_unixtime(odate)) DESC
+		 ORDER BY year DESC, month DESC");
 		while ($id = dbarray($dates)) {
-			$year = date("Y", $id['odate']);
-			$month = date("n", $id['odate']);
-			$date = $year."_".$month;
-			if (!isset($stats[$date])) {
-				$stats[$date] = 1;
-			} else {
-				$stats[$date]++;
-			}
+			$stats[] = $id;
 		}
-
-		$curr_year = 0;
-		$last_year = 0;
-		$cnt = 0;
-		$year_cnt = 0;
-
-		echo "<div align='center'>\n";
-		echo "<table cellspacing='10'>\n<tr><td style='vertical-align: top'>\n";
-		foreach ($stats as $key => $value) {
-			$curr_year_mon = explode("_", $key);
-			$last_year = $curr_year;
-			$curr_year = $curr_year_mon[0];
-			if ($curr_year != $last_year && $curr_year != 0) {
-				if ($last_year != 0) echo "</table></td>".($year_cnt % $years_per_row == 0 ? "</tr><tr>" : "")."<td style='vertical-align: top'>\n";
-				echo "<table width='100%' class='tbl-border' cellspacing='1' cellpadding='0'>\n  <tr>\n    
-				<td class='scapmain' align='left' style='font-weight: bold'>$curr_year</td>
-				<td class='scapmain' align='center' style='font-weight: bold'>#</td>\n  </tr>\n";
-				$cnt = 0;
-				$year_cnt++;
+		?>
+		<table class='table table-responsive table-striped m-t-20'>
+			<tr>
+				<th>Month</th>
+				<th>Year</th>
+				<th>Number of Orders</th>
+				<th>Total Sales</th>
+			</tr>
+			<?php
+			foreach($stats as $sales) {
+				?>
+				<tr>
+					<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=history&amp;mode=m&amp;year=".$sales['year']."&amp;month=".$sales['month'] ?>'><?php echo $months[$sales['month']] ?></a></td>
+					<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=history&amp;mode=y&amp;year=".$sales['year'] ?>'><?php echo $sales['year'] ?></td>
+					<td><?php echo $sales['orders'] ?></td>
+					<td><?php echo $sales['total_sales']." ".fusion_get_settings('eshop_currency') ?></td>
+				</tr>
+				<?php
 			}
-			echo "  <tr>\n    <td class='tbl".($cnt % 2 == 0 ? "1" : "2")."' align='left'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;o_page=history&amp;mode=m&amp;year=".$curr_year."&amp;month=".$curr_year_mon[1]."'>".$months[$curr_year_mon[1]]."</a></td><td align='center' class='tbl".($cnt % 2 == 0 ? "1" : "2")."'>" . $value . "</td>\n  </tr>\n";
-			$cnt++;
-		}
-		echo "</table>\n";
-		echo "</td>\n</tr>\n</table>\n";
-		echo "</div>";
-		unset($stats, $dates, $id, $year, $month, $date, $curr_year, $cnt, $key, $value);
+			?>
+		</table>
+		<?php
 	}
 }
 
 unset($months, $mode);
-?>
