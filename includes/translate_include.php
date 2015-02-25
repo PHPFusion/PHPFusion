@@ -63,14 +63,16 @@ function translate_country_names($country) {
 
 // select correct single and plural form for languages
 function format_word($count, $words) {
-	switch(LANG) {
+	$result = "";
+	switch(LANGUAGE) {
 		case 'Russian':
-			format_word_Russian($count, $words);
+			$result = format_word_Russian($count, $words);
 			Break;
 		case 'Ukrainian':
-			format_word_Ukrainian($count, $words);
+			$result = format_word_Ukrainian($count, $words);
 			Break;
 	}
+	return $result;
 }
 
 function format_word_Russian($count, $words) {
