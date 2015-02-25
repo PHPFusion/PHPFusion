@@ -74,6 +74,20 @@ function format_word($count, $words) {
 	return $result;
 }
 
+function format_word_English($count, $words) {
+	$form = 1; // plural form
+
+	if ($count == 1 || $count == 0) { // count is not between 10 and 19
+		$form = 0; // single form
+	}
+
+	$words_array = explode("|", $words);
+ 
+	$result = $words_array[$form];
+
+	return $result;
+}
+
 function format_word_Russian($count, $words) {
 	$count = $count % 100;
 	$a = $count % 10;
