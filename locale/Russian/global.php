@@ -50,6 +50,7 @@ $locale['user2']  = "Администратор";
 $locale['user3']  = "Суперадмин";
 $locale['user_na']= "N/A";
 $locale['user_anonymous'] = "Анонимный";
+$locale['genitive'] = "%s %s";
 // Standard User Status
 $locale['status0'] = "Активный";
 $locale['status1'] = "Заблокированный";
@@ -151,16 +152,15 @@ $locale['global_091'] = "След.";
 $locale['global_092'] = "Страница ";
 $locale['global_093'] = " из ";
 $locale['global_094'] = " выйти из ";
-
 // Guest User Menu
 $locale['global_100'] = "Вход на сайт";
 $locale['global_101'] = "ID входа";
 $locale['global_101a'] = "Пожалуйста, введите ваш ID входа";
 $locale['global_102'] = "Пароль";
 $locale['global_103'] = "Не выходить с сайта";
-$locale['global_104'] = $locale['global_100'];
+$locale['global_104'] = "Войти";
 $locale['global_105'] = "Не зарегистрированы? <a href='".BASEDIR."register.php' class='side'>Нажмите</a> для регистрации.";
-$locale['global_106'] = "<a href='".BASEDIR."lostpassword.php' class='side'>Забыли пароль?</a>.";
+$locale['global_106'] = "<i class='fa fa-question-circle m-r-10'></i><a href='".BASEDIR."lostpassword.php' class='side'>Забыли пароль?</a>";
 $locale['global_107'] = "Регистрация";
 $locale['global_108'] = "Забыли пароль";
 // Member User Menu
@@ -345,6 +345,7 @@ $locale['or'] = "или";
 $locale['by'] = "на";
 $locale['in'] = "в";
 $locale['of'] = "из";
+$locale['na'] = "Информация недоступна";
 // Navigation
 $locale['next'] = "След.";
 $locale['pevious'] = "Пред.";
@@ -357,6 +358,7 @@ $locale['move_down'] = "Переместить вниз";
 // Action
 $locale['add'] = "Добавить";
 $locale['save'] = "Сохранить";
+$locale['save_changes'] = "Сохранить изменения";
 $locale['update'] = "Обновить";
 $locale['updated'] = "Обновлено";
 $locale['remove'] = "Убрать";
