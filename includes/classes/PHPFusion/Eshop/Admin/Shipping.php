@@ -192,6 +192,7 @@ class Shipping {
 	static function get_destOpts() {
 		global $locale;
 		return array(
+			'0' => 'No Delivery',
 			'1' => $locale['D101'],
 			'2' => $locale['D102'],
 			'3' => $locale['D103']

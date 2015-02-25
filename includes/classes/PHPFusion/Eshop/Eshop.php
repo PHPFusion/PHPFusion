@@ -668,7 +668,7 @@ WHERE cuid = '".$username."'");
 		}
 	}
 
-	protected static function set_coupon_rate() {
+	private static function set_coupon_rate() {
 		global $defender;
 		if (isset($_POST['apply_coupon'])) {
 			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
@@ -715,7 +715,7 @@ WHERE cuid = '".$username."'");
 			$html .= closeform();
 			$html .= "</div>\n";
 		} else {
-			$html = "<div class='alert alert-warning'>Coupon discounts are not available</div>\n";
+			$html = "<div class='alert alert-warning'>Coupon discounts disabled</div>\n";
 		}
 		return $html;
 	}
@@ -817,13 +817,13 @@ WHERE cuid = '".$username."'");
 		$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
 		$html = "<div class='display-inline-block text-smaller m-b-10'><span class='required'>**</span> ".$locale['ESHPCHK126']."</div>\n";
 		$total_weight = self::get('total_weight');
-		$result = dbquery("SELECT s.*, cat.title, (s.initialcost + (s.weightcost * '".intval($total_weight)."')) as delivery_cost
+		$list = array();
+		$result = dbquery("SELECT s.*, cat.title, (s.initialcost + (s.weightcost * ".intval($total_weight).")) as delivery_cost
 		FROM ".DB_ESHOP_SHIPPINGITEMS." s
 		LEFT JOIN ".DB_ESHOP_SHIPPINGCATS." cat on (s.cid=cat.cid)
-		WHERE (weightmin <='".intval($total_weight)."' and weightmax >= '".intval($total_weight)."')
-		and active='1' ORDER BY dtime ASC, destination ASC, cat.title ASC");
+		WHERE weightmin <='".$total_weight."' AND weightmax >= '".$total_weight."'
+		and s.active='1' ORDER BY s.dtime ASC, s.destination ASC, cat.title ASC");
 		if (dbrows($result)>0) {
-			$list = array();
 			while ($data = dbarray($result)) {
 				$list[$data['destination']][$data['sid']] = $data;
 			}
