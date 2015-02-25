@@ -62,19 +62,22 @@ function translate_country_names($country) {
 }
 
 // select correct single and plural form for languages
-function format_word($count, $words) {
+function format_word($count, $words, $add_count = 1) {
 	$lang_func_name = "format_word_".LANGUAGE;
 	$result = "";
 	if (function_exists($lang_func_name)) {
-		$result = $lang_func_name($count, $words);
+		$result = $lang_func_name($count, $words, $add_count);
 	} else {
 		$words_array = explode("|", $words);
 		$result = $words_array[0];
+		if ($add_count) {
+			$result = $count." ".$result;
+		}
 	}
 	return $result;
 }
 
-function format_word_English($count, $words) {
+function format_word_English($count, $words, $add_count = 1) {
 	$form = 1; // plural form
 
 	if ($count == 1 || $count == 0) { // count is not between 10 and 19
@@ -82,13 +85,15 @@ function format_word_English($count, $words) {
 	}
 
 	$words_array = explode("|", $words);
- 
 	$result = $words_array[$form];
+	if ($add_count) {
+		$result = $count." ".$result;
+	}
 
 	return $result;
 }
 
-function format_word_Russian($count, $words) {
+function format_word_Russian($count, $words, $add_count = 1) {
 	$count = $count % 100;
 	$a = $count % 10;
 	$b = floor($count / 10);
@@ -104,13 +109,15 @@ function format_word_Russian($count, $words) {
 	}
 
 	$words_array = explode("|", $words);
- 
 	$result = $words_array[$form];
+	if ($add_count) {
+		$result = $count." ".$result;
+	}
 
 	return $result;
 }
 
-function format_word_Ukrainian($count, $words) {
+function format_word_Ukrainian($count, $words, $add_count = 1) {
 	$count = $count % 100;
 	$a = $count % 10;
 	$b = floor($count / 10);
@@ -126,8 +133,10 @@ function format_word_Ukrainian($count, $words) {
 	}
 
 	$words_array = explode("|", $words);
- 
 	$result = $words_array[$form];
+	if ($add_count) {
+		$result = $count." ".$result;
+	}
 
 	return $result;
 }
