@@ -23,7 +23,7 @@ add_to_title($locale['ESHPCHK159']);
 opentable($locale['ESHPCHK159']);
 
 if (iMEMBER) { $username = $userdata['user_id']; } else { $username = $_SERVER['REMOTE_ADDR']; }
-buildeshopheader();
+//buildeshopheader();
 
 $odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid='".$username."' ORDER BY oid DESC LIMIT 0,1"));
 

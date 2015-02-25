@@ -49,6 +49,8 @@ if ($_GET['category']) {
 	render_checkout($info);
 } elseif (isset($_GET['order'])) {
 	$eShop->saveorder();
+} elseif (isset($_GET['payment'])) {
+	$eShop->handle_payments();
 } else {
 	render_eshop_featured_url($info);
 	render_eshop_featured_product($info);

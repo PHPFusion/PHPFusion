@@ -352,9 +352,6 @@ class Eshop {
 			if ($value == 1) redirect(BASEDIR."eshop.php?checkout&amp;error=$key");
 		}
 
-
-
-
 		$responsive_bill_template = "
 		<h2>INVOICE</h2>
 			<div class='row'>
@@ -364,7 +361,7 @@ class Eshop {
 						<table class='table table-responsive'>
 							<tr><td>".$locale['ESHPF113']."</td><td>".$customerData['cfirstname']."</td></tr>
 							<tr><td>".$locale['ESHPF114']."</td><td>".$customerData['clastname']."</td></tr>
-							<tr><td>".$locale['ESHPF115']."</td><td>".date('%d-%M-%Y', $customerData['cdob'])."</td></tr>
+							<tr><td>".$locale['ESHPF115']."</td><td>".date('d-M-Y', $customerData['cdob'])."</td></tr>
 							<tr><td>".$locale['ESHPF116']."</td><td>".$customerData['ccountry']."</td></tr>
 							<tr><td>".$locale['ESHPF117']."</td><td>".$customerData['cregion']."</td></tr>
 							<tr><td>".$locale['ESHPF118']."</td><td>".$customerData['ccity']."</td></tr>
@@ -396,21 +393,6 @@ class Eshop {
 							<td width='20%'>".$locale['ESHPF127']."/".$settings['eshop_weightscale']."<br />".number_format($weight_cost,2)." ".$settings['eshop_currency']."</td>
 						</tr>
 					</table>
-
-					<p class='strong'>".$locale['ESHPF130']."</p>
-					<table class='table table-responsive table-striped'>
-						<tr>
-							<td>
-							".$locale['ESHPF131']." ".$item_count." ".$locale['ESHPF132']."".number_format($total_gross, 2)." ".$settings['eshop_currency']."<br />
-							".$locale['ESHPF133']." ".$settings['eshop_vat']."% : ".number_format($total_vat, 2)." ".$settings['eshop_currency']."<br />
-							".$locale['ESHPCHK176']." ".$coupon_value." <br />
-							".$locale['ESHPF134']." ".number_format($total_weight, 2)." ".$settings['eshop_weightscale']." <br />
-							".$locale['ESHPF135']." ".$bt_payment_info['surcharge']." (".$total_surcharge." in total) ".$settings['eshop_currency']." <br />
-							".$locale['ESHPCHK133']." ".$total_shipping." ".$settings['eshop_currency']." <br />
-							".$locale['ESHPF137']." ".number_format($total_price, 2)." ".$settings['eshop_currency']."<br />
-							</td>
-						</tr>
-					</table>
 					</div>
 				</div>
 			</div>
@@ -419,14 +401,21 @@ class Eshop {
 					$item_form
 				</div>
 			</div>
+			<div class='row'>
+			<div class='col-xs-12 col-sm-offset-6 col-sm-6'>
+			<p class='strong'>".$locale['ESHPF130']."</p>
+					<table class='table table-responsive table-striped'>
+						<tr><td>".$locale['ESHPF131']." ".$item_count." ".$locale['ESHPF132']."</td><td>".number_format($total_gross, 2)." ".$settings['eshop_currency']."</td></tr>
+						<tr><td>".$locale['ESHPF133']." ".$settings['eshop_vat']."%</td><td>".number_format($total_vat, 2)." ".$settings['eshop_currency']."</td></tr>
+						<tr><td>".$locale['ESHPCHK176']."</td><td> ".$coupon_value."</td></tr>
+						<tr><td>".$locale['ESHPF134']."</td><td>".number_format($total_weight, 2)." ".$settings['eshop_weightscale']."</td></tr>
+						<tr><td>".$locale['ESHPF135']."</td><td>".$bt_payment_info['surcharge']." (".$total_surcharge." in total) ".$settings['eshop_currency']."</td></tr>
+						<tr><td>".$locale['ESHPCHK133']."</td><td>".$total_shipping." ".$settings['eshop_currency']."</td></tr>
+						<tr><td>".$locale['ESHPF137']."</td><td>".number_format($total_price, 2)." ".$settings['eshop_currency']."</td></tr>
+					</table>
+			</div>
+			</div>
 		";
-
-		echo $responsive_bill_template;
-
-		//dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount+".$data['cqty']." WHERE id = '".$data['prid']."'");
-		//dbquery("UPDATE ".DB_ESHOP." SET instock=instock-".$data['cqty']." WHERE id = '".$data['prid']."'");
-
-
 
 		// Product Description and Particulars will change overtime, so it is best to store full product information.
 		$odata = array(
@@ -435,7 +424,7 @@ class Eshop {
 			'oname' => $customerData['cfirstname'].' '.$customerData['clastname'],
 			'oemail' => $customerData['cemail'],
 			'oitems' => serialize($items),
-			'oorder' => '', // hmm can neglect
+			'oorder' => addslash($responsive_bill_template), // hmm can neglect
 			'opaymethod' => $payment_method,
 			'oshipmethod' => $shipping_method,
 			'odiscount' => $coupon_value,
@@ -448,148 +437,51 @@ class Eshop {
 			'odate'=> time()
 		);
 
-		// ok. ordering snapshot. lets just do this.
-	/* Calculation Codes
-	$vat = $settings['eshop_vat'];
-	if (isset($_POST['buynow'])) {
-		$itemdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_POST['id']."'"));
-		$price = ($itemdata['xprice'] ? $itemdata['xprice'] : $itemdata['price']);
-	} else {
-		$price = $sum['totals'];
-	}
-	$vat = ($price/100)*$vat;
-	if ($settings['eshop_vat_default'] == "0") {
-		$totalincvat = $price+$vat;
-	} else {
-		$totalincvat = $price;
-	}
-	$shippingsurcharge = $shipping['weightcost'];
-	$shippinginitial = $shipping['initialcost'];
-	$shippingsurcharge = $shippingsurcharge*$weight['weight'];
-	$shippingtotal = $shippingsurcharge+$shippinginitial;
-	$paymentsurcharge = $payment['surcharge'];
-	if (isset($_POST['cupon']) && $_POST['cupon'] !== $locale['ESHPCHK171']) {
-		$cupons = stripinput($_POST['cupon']);
-		if (iMEMBER) {
-			$verifycupon = dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE ccupons LIKE '%.".$cupons."' LIMIT 0,1");
-			if (!dbrows($verifycupon) != 0) {
-				$cupon = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$cupons."' AND active = '1' AND (custart='0'||custart<=".time().") AND (cuend='0'||cuend>=".time().") LIMIT 0,1"));
-				$cuponsum = dbarray(dbquery("SELECT sum(cprice*cqty) as totals FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='1'"));
-				$cuponexcluded = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='0'"));
-				$cupons = ".".$cupon['cuid']."";
-				if ($cupon['cutype'] == "1") {
-					if ($cupon['cuvalue'] > $cuponsum['totals']) {
-						$discount = $locale['ESHPCHK177'];
-						$cupons = "";
-					} else {
-						$discvalue = $cupon['cuvalue'];
-						$discalc = $discvalue;
-						$discount = "".number_format($discvalue)." ".$settings['eshop_currency']."";
-					}
-				} else if ($cupon['cutype'] == "0") {
-					$discount = $cupon['cuvalue'];
-					$dvat = $settings['eshop_vat'];
-					$itemstocalc = $cuponsum['totals'];
-					if ($settings['eshop_vat_default'] == "0") {
-						$dvat = ($itemstocalc/100)*$dvat;
-						$discalc = $itemstocalc+$dvat;
-					} else {
-						$discalc = $itemstocalc;
-					}
-					$discalc = ($discalc/100)*$discount;
-					$discount = "".number_format($discalc)." ".$settings['eshop_currency']."";
-				} else {
-					$discount = $locale['ESHPCHK179'];
-					$cupons = "";
-				}
+		foreach($items as $itemData) {
+			if ($itemData['cqty']>0) {
+				dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount+".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
+				dbquery("UPDATE ".DB_ESHOP." SET instock=instock-".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
 			}
 		}
+		dbquery_insert(DB_ESHOP_ORDERS, $odata, 'save'); // what next after save order?
+		if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?payment");
 	}
 
-
-	$order .= "<fieldset style='width:100%;padding:2px;'><legend style='width:90% !important;'>&nbsp; ".$locale['ESHPF138']." &nbsp;</legend>";
-	if (isset($_POST['buynow'])) {
-		$itemdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_POST['id']."'"));
-		$order .= "<table align='center' width='100%' cellpadding='0' cellspacing='0' class='eshptable' ><tr>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF139']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF140']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF141']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF142']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF143']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF144']."</b></td>
-					</tr><tr>";
-		$order .= "<td class='tbl' align='center' valign='middle' width='1%'>".($itemdata['artno'] !== '' ? "".$itemdata['artno']."" : "".$itemdata['id']."")."</td>
-					<td class='tbl' align='center' valign='middle' width='1%'><a href='".$settings['siteurl']."eshop.php?product=".$itemdata['id']."'>".$itemdata['title']."</a></td>
-					<td class='tbl' align='center' valign='middle' width='1%'></td>
-					<td class='tbl' align='center' valign='middle' width='1%'>";
-		if ($itemdata['dynf'] || $itemdata['dync']) {
-			$order .= "".$itemdata['dynf']." : ".$itemdata['dync']."";
-		}
-		$order .= "</td><td class='tbl' align='center' valign='middle' width='1%'>".$itemdata['qty']."</td><td class='tbl' align='center' valign='middle' width='1%'>".$price."</td>";
-		$order .= "</tr>\n</table>";
-		dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount+1 WHERE id = '".$_POST['id']."'");
-	} else {
-		$result = dbquery("SELECT * FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' ORDER BY tid ASC");
-		$counter = 0;
-		$order .= "<table align='center' width='100%' cellpadding='0' cellspacing='0' class='eshptable' ><tr>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF139']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF140']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF141']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF142']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF143']."</b></td>
-					<td class='tbl2' width='1%' align='center'><b>".$locale['ESHPF144']."</b></td>
-					</tr><tr>";
-		while ($data = dbarray($result)) {
-			if ($counter != 0 && ($counter%1 == 0)) $order .= "</tr>\n<tr>";
-			$order .= "<td class='tbl' align='center' valign='middle' width='1%'>".($data['artno'] !== '' ? "".$data['artno']."" : "".$data['prid']."")."</td>
-						<td class='tbl' align='center' valign='middle' width='1%'><a href='".$settings['siteurl']."eshop.php?product=".$data['prid']."'>".$data['citem']."</a></td>
-						<td class='tbl' align='center' valign='middle' width='1%'>".getcolorname($data['cclr'])."</td>
-						<td class='tbl' align='center' valign='middle' width='1%'>";
-			if ($data['cdynt'] || $data['cdyn']) {
-				$order .= "".$data['cdynt']." : ".$data['cdyn']."";
+	public function handle_payments() {
+		global $locale, $settings, $userdata;
+		include INCLUDES."eshop_functions_include.php";
+		add_to_title($locale['ESHPCHK159']);
+		opentable($locale['ESHPCHK159']);
+		$odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid='".\defender::set_sessionUserID()."' ORDER BY oid DESC LIMIT 0,1"));
+		if ($odata) {
+			//handle payments
+			$pdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_PAYMENTS." WHERE pid='".$odata['opaymethod']."'"));
+			if ($pdata['code']) {
+				ob_start();
+				eval("?>".stripslashes($pdata['code'])."<?php ");
+				$custompage = ob_get_contents();
+				ob_end_clean();
+				echo $custompage;
+			} else if ($pdata['cfile']) {
+				include SHOP."paymentscripts/".$pdata['cfile'];
+			} else {
+				echo "<div class='admin-message' align='center' style='margin-top:5px;'>".$locale['ESHPCHK149']."</div>\n";
 			}
-			$order .= "</td><td class='tbl' align='center' valign='middle' width='1%'>".$data['cqty']."</td><td class='tbl' align='center' valign='middle' width='1%'>".$data['cprice']."</td>";
-			//Let´s make a loop to add an item array for each quantity so we can adjust stock and sellcount accordingly when deleting orders.
-			for ($q = 0; $q < $data['cqty']; $q++) {
-				$itemlist .= ".".$data['prid']."";
-			}
-
-			$counter++;
-		}
-		$order .= "</tr>\n</table>";
-	}
-	$order .= "</fieldset></div>";
-
-	//save the order in the orders database
-	dbquery("INSERT INTO ".DB_ESHOP_ORDERS." VALUES('', '".$username."','".$firstname." ".$lastname."','".$itemlist."' ,'".addslash($order)."','".$email."','".$paymethod."','".$shipmethod."','".$discount."','".$vat."','".$totalcost."','".$message."','','','','".time()."')");
-	//".($pdo_enabled == "1" ? "".$order."" : "".mysql_real_escape_string($order)."")."
-	//We only store customer data from registred members.
-	//Save and update the customer
-	if (iMEMBER) {
-		$ccheck = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid = '".$username."' "));
-		//check if the user exist and update with new form values if they do
-		if ($ccheck['cuid']) {
-			$result = dbquery("UPDATE ".DB_ESHOP_CUSTOMERS." SET
-cfirstname = '".$firstname."',
-clastname = '".$lastname."',
-cdob = '".$dob."',
-ccountry_code = '".$country_code."',
-cregion = '".$region."',
-ccity = '".$city."',
-caddress = '".$address."',
-caddress2 = '".$address2."',
-cpostcode = '".$postcode."',
-cphone = '".$phone."',
-cfax = '".$fax."',
-cemail = '".$email."',
-ccupons = '".$ccheck['ccupons']."".$cupons."'
-WHERE cuid = '".$username."'");
+			echo $odata['oorder'];
 		} else {
-			$result = dbquery("INSERT INTO ".DB_ESHOP_CUSTOMERS." VALUES('".$username."', '".$firstname."', '".$lastname."' ,'".$dob."', '".$country_code."' , '".$region."', '".$city."' , '".$address."' , '".$address2."','".$postcode."','".$phone."','".$fax."','".$email."','.".$cupons."')");
+			echo "<div class='admin-message' align='center' style='margin-top:5px;'>".$locale['ESHPCHK150']."</div>\n";
 		}
-	} */
-
-}
+		$omessage = "[url=".$settings['siteurl']."administration/eshop/msghandler.php?id=".$odata['oid']."]".$locale['ESHP306']." : ".$odata['oid']." [/url] \n\n [url=".$settings['siteurl']."eshop/administration/msghandler.php]".$locale['ESHP209']."[/url] \n\n ".$locale['ESHP307']." ".$odata['oname']."\n\n";
+		dbquery("INSERT INTO ".DB_MESSAGES." ( message_id , message_to , message_user, message_from , message_subject , message_message , message_smileys , message_read , message_datestamp , message_folder )VALUES ('', '1', '".(iMEMBER ? $userdata['user_id'] : 1)."', '".(iMEMBER ? $userdata['user_id'] : 1)."', '".$locale['ESHP306']." : ".$odata['oid']."', '".$omessage."', 'y', '0', '".time()."' , '0');");
+		require_once INCLUDES."sendmail_include.php";
+		//send a mail confirmation to site email
+		$subject = "".$locale['ESHP306']." : ".$odata['oid']."";
+		$message = "\n<a href='".$settings['siteurl']."administration/eshop/msghandler.php?id=".$odata['oid']."'>".$locale['ESHP306']." : ".$odata['oid']." </a> <br /> <a href='".$settings['siteurl']."administration/eshop/msghandler.php'>".$locale['ESHP209']."</a> <br /> ".$locale['ESHP307']." ".$odata['oname']."\n\n";
+		sendemail($settings['sitename'],$settings['siteemail'],$settings['sitename'],$odata['oemail'],$subject,$message,$type="html");
+		//send a mail confirmation of the whole order to the customer
+		sendemail($odata['oname'],$odata['oemail'],$settings['sitename'],$settings['siteemail'],$locale['ESHPI103'],$odata['oorder'],$type="html");
+		closetable();
+	}
 
 	/* Persistent now since construct function will fill in session values if blank */
 	public static function get_checkout_info() {

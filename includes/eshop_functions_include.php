@@ -929,258 +929,69 @@ function getcolorname($id) {
 	return $id;
 }
 
-//Country array courtesy Hobbyman @ www.hobbysites.net
-$country = array("AF" => $locale['ccode_af'],
-	"AL" => $locale['ccode_al'],
-	"DZ" => $locale['ccode_dz'],
-	"AS" => $locale['ccode_as'],
-	"AD" => $locale['ccode_ad'],
-	"AO" => $locale['ccode_ao'],
-	"AI" => $locale['ccode_ai'],
-	"AQ" => $locale['ccode_aq'],
-	"AG" => $locale['ccode_ag'],
-	"AR" => $locale['ccode_ar'],
-	"AM" => $locale['ccode_am'],
-	"AW" => $locale['ccode_aw'],
-	"AU" => $locale['ccode_au'],
-	"AT" => $locale['ccode_at'],
-	"AZ" => $locale['ccode_az'],
-	"BS" => $locale['ccode_bs'],
-	"BH" => $locale['ccode_bh'],
-	"BD" => $locale['ccode_bd'],
-	"BB" => $locale['ccode_bb'],
-	"BY" => $locale['ccode_by'],
-	"BE" => $locale['ccode_be'],
-	"BZ" => $locale['ccode_bz'],
-	"BJ" => $locale['ccode_bj'],
-	"BM" => $locale['ccode_bm'],
-	"BT" => $locale['ccode_bt'],
-	"BO" => $locale['ccode_bo'],
-	"BA" => $locale['ccode_ba'],
-	"BW" => $locale['ccode_bw'],
-	"BV" => $locale['ccode_bv'],
-	"BR" => $locale['ccode_br'],
-	"IO" => $locale['ccode_io'],
-	"BN" => $locale['ccode_bn'],
-	"BG" => $locale['ccode_bg'],
-	"BF" => $locale['ccode_bf'],
-	"BI" => $locale['ccode_bi'],
-	"KH" => $locale['ccode_kh'],
-	"CM" => $locale['ccode_cm'],
-	"CA" => $locale['ccode_ca'],
-	"CV" => $locale['ccode_cv'],
-	"KY" => $locale['ccode_ky'],
-	"CF" => $locale['ccode_cf'],
-	"TD" => $locale['ccode_td'],
-	"CD" => $locale['ccode_cd'],
-	"CL" => $locale['ccode_cl'],
-	"CN" => $locale['ccode_cn'],
-	"CX" => $locale['ccode_cx'],
-	"CS" => $locale['ccode_cs'],
-	"CO" => $locale['ccode_co'],
-	"CC" => $locale['ccode_cc'],
-	"KM" => $locale['ccode_km'],
-	"CG" => $locale['ccode_cg'],
-	"CK" => $locale['ccode_ck'],
-	"CR" => $locale['ccode_cr'],
-	"CI" => $locale['ccode_ci'],
-	"HR" => $locale['ccode_hr'],
-	"CU" => $locale['ccode_cu'],
-	"CB" => $locale['ccode_cb'],
-	"CY" => $locale['ccode_cy'],
-	"CZ" => $locale['ccode_cz'],
-	"DK" => $locale['ccode_dk'],
-	"DJ" => $locale['ccode_dj'],
-	"DM" => $locale['ccode_dm'],
-	"DO" => $locale['ccode_do'],
-	"TM" => $locale['ccode_tm'],
-	"EC" => $locale['ccode_ec'],
-	"EG" => $locale['ccode_eg'],
-	"SV" => $locale['ccode_sv'],
-	"GQ" => $locale['ccode_gq'],
-	"ER" => $locale['ccode_er'],
-	"EE" => $locale['ccode_ee'],
-	"ET" => $locale['ccode_et'],
-	"FK" => $locale['ccode_fk'],
-	"FO" => $locale['ccode_fo'],
-	"FJ" => $locale['ccode_fj'],
-	"FI" => $locale['ccode_fi'],
-	"FR" => $locale['ccode_fr'],
-	"GF" => $locale['ccode_gf'],
-	"PF" => $locale['ccode_pf'],
-	"TF" => $locale['ccode_tf'],
-	"GA" => $locale['ccode_ga'],
-	"GM" => $locale['ccode_gm'],
-	"GE" => $locale['ccode_ge'],
-	"DE" => $locale['ccode_de'],
-	"GH" => $locale['ccode_gh'],
-	"GI" => $locale['ccode_gi'],
-	"GR" => $locale['ccode_gr'],
-	"GL" => $locale['ccode_gl'],
-	"GD" => $locale['ccode_gd'],
-	"GP" => $locale['ccode_gp'],
-	"GU" => $locale['ccode_gu'],
-	"GT" => $locale['ccode_gt'],
-	"GN" => $locale['ccode_gn'],
-	"GW" => $locale['ccode_gw'],
-	"GY" => $locale['ccode_gy'],
-	"HT" => $locale['ccode_ht'],
-	"HM" => $locale['ccode_hm'],
-	"HN" => $locale['ccode_hn'],
-	"HK" => $locale['ccode_hk'],
-	"HU" => $locale['ccode_hu'],
-	"IS" => $locale['ccode_is'],
-	"IN" => $locale['ccode_in'],
-	"ID" => $locale['ccode_id'],
-	"IR" => $locale['ccode_ir'],
-	"IQ" => $locale['ccode_iq'],
-	"IE" => $locale['ccode_ie'],
-	"IL" => $locale['ccode_il'],
-	"IT" => $locale['ccode_it'],
-	"JM" => $locale['ccode_jm'],
-	"JP" => $locale['ccode_jp'],
-	"JO" => $locale['ccode_jo'],
-	"KZ" => $locale['ccode_kz'],
-	"KE" => $locale['ccode_ke'],
-	"KI" => $locale['ccode_ki'],
-	"KP" => $locale['ccode_kp'],
-	"KR" => $locale['ccode_kr'],
-	"KW" => $locale['ccode_kw'],
-	"KG" => $locale['ccode_kg'],
-	"LA" => $locale['ccode_la'],
-	"LV" => $locale['ccode_lv'],
-	"LB" => $locale['ccode_lb'],
-	"LS" => $locale['ccode_ls'],
-	"LR" => $locale['ccode_lr'],
-	"LY" => $locale['ccode_ly'],
-	"LI" => $locale['ccode_li'],
-	"LT" => $locale['ccode_lt'],
-	"LU" => $locale['ccode_lu'],
-	"MO" => $locale['ccode_mo'],
-	"MK" => $locale['ccode_mk'],
-	"MG" => $locale['ccode_mg'],
-	"MY" => $locale['ccode_my'],
-	"MW" => $locale['ccode_mw'],
-	"MV" => $locale['ccode_mv'],
-	"ML" => $locale['ccode_ml'],
-	"MT" => $locale['ccode_mt'],
-	"MH" => $locale['ccode_mh'],
-	"MQ" => $locale['ccode_mq'],
-	"MR" => $locale['ccode_mr'],
-	"MU" => $locale['ccode_mu'],
-	"YT" => $locale['ccode_yt'],
-	"MX" => $locale['ccode_mx'],
-	"FM" => $locale['ccode_fm'],
-	"MD" => $locale['ccode_md'],
-	"MC" => $locale['ccode_mc'],
-	"MN" => $locale['ccode_mn'],
-	"ME" => $locale['ccode_me'],
-	"MS" => $locale['ccode_ms'],
-	"MA" => $locale['ccode_ma'],
-	"MZ" => $locale['ccode_mz'],
-	"MM" => $locale['ccode_mm'],
-	"NA" => $locale['ccode_na'],
-	"NR" => $locale['ccode_nr'],
-	"NP" => $locale['ccode_np'],
-	"AN" => $locale['ccode_an'],
-	"NL" => $locale['ccode_nl'],
-	"NC" => $locale['ccode_nc'],
-	"NZ" => $locale['ccode_nz'],
-	"NI" => $locale['ccode_ni'],
-	"NE" => $locale['ccode_ne'],
-	"NG" => $locale['ccode_ng'],
-	"NU" => $locale['ccode_nu'],
-	"NF" => $locale['ccode_nf'],
-	"NO" => $locale['ccode_no'],
-	"MP" => $locale['ccode_mp'],
-	"OM" => $locale['ccode_om'],
-	"PK" => $locale['ccode_pk'],
-	"PW" => $locale['ccode_pw'],
-	"PS" => $locale['ccode_ps'],
-	"PA" => $locale['ccode_pa'],
-	"PG" => $locale['ccode_pg'],
-	"PY" => $locale['ccode_py'],
-	"PE" => $locale['ccode_pe'],
-	"PH" => $locale['ccode_ph'],
-	"PN" => $locale['ccode_pn'],
-	"PL" => $locale['ccode_pl'],
-	"PT" => $locale['ccode_pt'],
-	"PR" => $locale['ccode_pr'],
-	"QA" => $locale['ccode_qa'],
-	"RE" => $locale['ccode_re'],
-	"RO" => $locale['ccode_ro'],
-	"RU" => $locale['ccode_ru'],
-	"RW" => $locale['ccode_rw'],
-	"SH" => $locale['ccode_sh'],
-	"KN" => $locale['ccode_kn'],
-	"LC" => $locale['ccode_lc'],
-	"PM" => $locale['ccode_pm'],
-	"VC" => $locale['ccode_vc'],
-	"WS" => $locale['ccode_ws'],
-	"SM" => $locale['ccode_sm'],
-	"ST" => $locale['ccode_st'],
-	"SA" => $locale['ccode_sa'],
-	"SN" => $locale['ccode_sn'],
-	"SC" => $locale['ccode_sc'],
-	"XS" => $locale['ccode_xs'],
-	"SL" => $locale['ccode_sl'],
-	"SG" => $locale['ccode_sg'],
-	"SK" => $locale['ccode_sk'],
-	"SI" => $locale['ccode_si'],
-	"SB" => $locale['ccode_sb'],
-	"OI" => $locale['ccode_oi'],
-	"ZA" => $locale['ccode_za'],
-	"GS" => $locale['ccode_gs'],
-	"ES" => $locale['ccode_es'],
-	"LK" => $locale['ccode_lk'],
-	"SD" => $locale['ccode_sd'],
-	"SR" => $locale['ccode_sr'],
-	"SJ" => $locale['ccode_sj'],
-	"SZ" => $locale['ccode_sz'],
-	"SE" => $locale['ccode_se'],
-	"CH" => $locale['ccode_ch'],
-	"SY" => $locale['ccode_sy'],
-	"TA" => $locale['ccode_ta'],
-	"TW" => $locale['ccode_tw'],
-	"TJ" => $locale['ccode_tj'],
-	"TZ" => $locale['ccode_tz'],
-	"TH" => $locale['ccode_th'],
-	"TG" => $locale['ccode_tg'],
-	"TK" => $locale['ccode_tk'],
-	"TO" => $locale['ccode_to'],
-	"TT" => $locale['ccode_tt'],
-	"TN" => $locale['ccode_tn'],
-	"TR" => $locale['ccode_tr'],
-	"TM" => $locale['ccode_tm'],
-	"TC" => $locale['ccode_tc'],
-	"TV" => $locale['ccode_tv'],
-	"UG" => $locale['ccode_ug'],
-	"UA" => $locale['ccode_ua'],
-	"AE" => $locale['ccode_ae'],
-	"GB" => $locale['ccode_gb'],
-	"UM" => $locale['ccode_um'],
-	"US" => $locale['ccode_us'],
-	"UY" => $locale['ccode_uy'],
-	"UZ" => $locale['ccode_uz'],
-	"VU" => $locale['ccode_vu'],
-	"VA" => $locale['ccode_va'],
-	"VE" => $locale['ccode_ve'],
-	"VN" => $locale['ccode_vn'],
-	"VG" => $locale['ccode_vg'],
-	"VI" => $locale['ccode_vi'],
-	"WF" => $locale['ccode_wf'],
-	"EH" => $locale['ccode_eh'],
-	"YE" => $locale['ccode_ye'],
-	"YU" => $locale['ccode_yu'],
-	"ZR" => $locale['ccode_zr'],
-	"ZM" => $locale['ccode_zm'],
-	"ZW" => $locale['ccode_zw']);
-
-
-
 //$itemlist = dupedel($itemlist); //I made this to swap and sort array to delete all duplicated numbers in the array but we need them all to be in the array for the +sellcount and the -stock count. Let´s save it for popular products queries etc..
 function dupedel($itemlist) {
 	return implode('.', array_keys(array_flip(explode('.', $itemlist))));
 }
+
+/** Domi's original code calculations for vat/subtotal/grandtotal/
+/* Domi's Calculation Codes
+$vat = $settings['eshop_vat'];
+if (isset($_POST['buynow'])) {
+$itemdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_POST['id']."'"));
+$price = ($itemdata['xprice'] ? $itemdata['xprice'] : $itemdata['price']);
+} else {
+$price = $sum['totals'];
+}
+$vat = ($price/100)*$vat;
+if ($settings['eshop_vat_default'] == "0") {
+$totalincvat = $price+$vat;
+} else {
+$totalincvat = $price;
+}
+$shippingsurcharge = $shipping['weightcost'];
+$shippinginitial = $shipping['initialcost'];
+$shippingsurcharge = $shippingsurcharge*$weight['weight'];
+$shippingtotal = $shippingsurcharge+$shippinginitial;
+$paymentsurcharge = $payment['surcharge'];
+if (isset($_POST['cupon']) && $_POST['cupon'] !== $locale['ESHPCHK171']) {
+$cupons = stripinput($_POST['cupon']);
+if (iMEMBER) {
+$verifycupon = dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE ccupons LIKE '%.".$cupons."' LIMIT 0,1");
+if (!dbrows($verifycupon) != 0) {
+$cupon = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_COUPONS." WHERE cuid='".$cupons."' AND active = '1' AND (custart='0'||custart<=".time().") AND (cuend='0'||cuend>=".time().") LIMIT 0,1"));
+$cuponsum = dbarray(dbquery("SELECT sum(cprice*cqty) as totals FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='1'"));
+$cuponexcluded = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='0'"));
+$cupons = ".".$cupon['cuid']."";
+if ($cupon['cutype'] == "1") {
+if ($cupon['cuvalue'] > $cuponsum['totals']) {
+$discount = $locale['ESHPCHK177'];
+$cupons = "";
+} else {
+$discvalue = $cupon['cuvalue'];
+$discalc = $discvalue;
+$discount = "".number_format($discvalue)." ".$settings['eshop_currency']."";
+}
+} else if ($cupon['cutype'] == "0") {
+$discount = $cupon['cuvalue'];
+$dvat = $settings['eshop_vat'];
+$itemstocalc = $cuponsum['totals'];
+if ($settings['eshop_vat_default'] == "0") {
+$dvat = ($itemstocalc/100)*$dvat;
+$discalc = $itemstocalc+$dvat;
+} else {
+$discalc = $itemstocalc;
+}
+$discalc = ($discalc/100)*$discount;
+$discount = "".number_format($discalc)." ".$settings['eshop_currency']."";
+} else {
+$discount = $locale['ESHPCHK179'];
+$cupons = "";
+}
+}
+}
+}
+ */
+
 
 ?>
