@@ -1,40 +1,68 @@
 <?php
-/*--------------------------------------------------------------+
-| PHP-Fusion Content Management System 				|
-| Copyright � 2002 - 2008 Nick Jones 				|
-| http://www.php-fusion.co.uk/ 					|
-+---------------------------------------------------------------+
-| Filename:photosadmin.php                                      |
-| Author:Joakim Falk (Domi) Based on PHP-Fusion V6 Admin Gallery|
-+--------------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
-if (isset($_GET['ephoto_id']) && !isnum($_GET['ephoto_id'])) die("Denied");
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
-	$_GET['rowstart'] = 0;
-}
-if (!isset($_GET['action'])) $_GET['action'] = "";
-if (isset($_GET['ealbum_id']) && !isnum($_GET['ealbum_id'])) die("Denied");
-define("ESHPHOTOS", BASEDIR."eshop/pictures/");
-define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+
+// Creating a Working Photo Admin Gallery in under 30 seconds.
+
+/**
+ * Step 1 - Initialize the Class
+ * The below statement binds the whole AdminUI engine into 1 single string, in this example (the `$eshop_gallery`)
+ */
+$eshop_gallery = new PHPFusion\Gallery\AdminUI();
+
+/**
+ * Step 2 - Set your upload rules settings.
+ */
+$eshop_gallery->setUploadSettings(
+	array(
+		'thumbnail_folder'=>'thumbs',
+		'thumbnail' => 1,
+		'thumbnail_w' =>  fusion_get_settings('eshop_image_tw'),
+		'thumbnail_h' =>  fusion_get_settings('eshop_image_th'),
+		'thumbnail_suffix' =>'_t1',
+		'thumbnail2'=>1,
+		'thumbnail2_w' 	=>  fusion_get_settings('eshop_image_t2w'),
+		'thumbnail2_h' 	=>  fusion_get_settings('eshop_image_t2h'),
+		'thumbnail2_suffix' => '_t2',
+		'delete_original' => 1,
+		'max_width'		=>	fusion_get_settings('eshop_image_w'),
+		'max_height'	=>	fusion_get_settings('eshop_image_h'),
+		'max_byte'		=>	fusion_get_settings('eshop_image_b'),
+		'multiple' => 0,
+	)
+);
+
+/**
+ * Step 3 - Setup System Variables
+ * a. Set up your Image Upload Path in the System (Relative to BASEDIR)
+ * b. Set up your PHOTO_ALBUM database table
+ * c. Set up your PHOTO database table
+ * d. set up photo comments - true or false
+ * e. set up photo ratings - true or false
+ */
+$eshop_gallery->setImageUploadDir(BASEDIR."eshop/pictures/");
+$eshop_gallery->setPhotoCatDb(DB_ESHOP_ALBUMS);
+$eshop_gallery->setPhotoDb(DB_ESHOP_PHOTOS);
+
+$eshop_gallery->setEnableComments(true);
+$eshop_gallery->setAllowComments(true);
+
+$eshop_gallery->setEnableRatings(false);
+$eshop_gallery->setAllowRatings(false);
+
+
+$eshop_gallery->boot();
+
+/*
 global $userdata;
 $settings = fusion_get_settings();
 $error = "";
 $photo_thumb = "";
 $photo_dest = "";
-$imagebytes = $settings['eshop_image_b'];
-$imagewidth = $settings['eshop_image_w'];
-$imageheight = $settings['eshop_image_h'];
-$thumbwidth = $settings['eshop_image_tw'];
-$thumbheight = $settings['eshop_image_th'];
-$thumb2width = $settings['eshop_image_t2w'];
-$thumb2height = $settings['eshop_image_t2h'];
-$albumthumbs_per_page = "16";
-$albumthumbs_per_row = "4";
+
+
 if (isset($_GET['psearch'])) {
 	include ADMIN."eshop/photosearch.php";
 } else {
+
 	if (!isset($_GET['ealbum_id'])) {
 		echo "<div style='width:40%;' class='scapmain'> &raquo; ".$ESHPALBUMS['460']."</div>";
 		$rows = dbcount("(id)", "".DB_ESHOP."");
@@ -62,13 +90,14 @@ if (isset($_GET['psearch'])) {
 				$k++;
 			}
 			echo "</tr>\n</table>\n";
-			if ($rows > $albumthumbs_per_page) echo "<div align='center' style='margin-top:5px;'>\n".makeeshoppagenav($_GET['rowstart'], $albumthumbs_per_page, $rows, 3, FUSION_SELF.$aidlink."&amp;adminalbums&a_page=photos&amp;")."\n</div>\n";
+			//if ($rows > $albumthumbs_per_page) echo "<div align='center' style='margin-top:5px;'>\n".makeeshoppagenav($_GET['rowstart'], $albumthumbs_per_page, $rows, 3, FUSION_SELF.$aidlink."&amp;adminalbums&a_page=photos&amp;")."\n</div>\n";
 		} else {
 			echo "<center>".$ESHPALBUMS['481']."</center>\n";
 			echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='eshpbutton ".$settings['eshop_return_color']."' href='javascript:history.back(-1)'>&laquo; ".$locale['ESHP030']."</a></div>";
 			echo '<div style="clear:both"></div>';
 		}
 	} else {
+
 		if (isset($_GET['status'])) {
 			if ($_GET['status'] == "savepn") {
 				$title = $locale['ESHPHOTOS110'];
@@ -100,10 +129,12 @@ if (isset($_GET['psearch'])) {
 			echo "<div class='admin-message'>".$message."</div>\n";
 			echo "<br />";
 		}
+
 		if (isset($_POST['cancel'])) {
 			redirect(FUSION_SELF.$aidlink."&amp;a_page=photos&ealbum_id=".$_GET['ealbum_id']."");
 		}
-		define("PHOTODIR", ESHPHOTOS.(!SAFEMODE ? "album_".$_GET['ealbum_id']."/" : ""));
+
+
 		if ($_GET['action'] == "deletepic") {
 			$data = dbarray(dbquery("SELECT photo_filename,photo_thumb1,photo_thumb2 FROM ".DB_ESHOP_PHOTOS." WHERE photo_id='".$_GET['ephoto_id']."' AND photo_user='".$userdata['user_id']."'"));
 			$result = dbquery("UPDATE ".DB_ESHOP_PHOTOS." SET photo_filename='', photo_thumb1='', photo_thumb2='' WHERE photo_id='".$_GET['ephoto_id']."' AND photo_user='".$userdata['user_id']."'");
@@ -111,7 +142,8 @@ if (isset($_GET['psearch'])) {
 			@unlink(PHOTODIR.$data['photo_thumb1']);
 			if ($data['photo_thumb2']) @unlink(PHOTODIR.$data['photo_thumb2']);
 			redirect(FUSION_SELF.$aidlink."&amp;a_page=photos&status=delp&ealbum_id=".$_GET['ealbum_id']."");
-		} elseif ($_GET['action'] == "delete") {
+		}
+		elseif ($_GET['action'] == "delete") {
 			$data = dbarray(dbquery("SELECT album_id,photo_filename,photo_thumb1,photo_thumb2,photo_order FROM ".DB_ESHOP_PHOTOS." WHERE photo_id='".$_GET['ephoto_id']."' AND photo_user='".$userdata['user_id']."'"));
 			$result = dbquery("UPDATE ".DB_ESHOP_PHOTOS." SET photo_order=(photo_order-1) WHERE photo_order>'".$data['photo_order']."' AND album_id='".$_GET['ealbum_id']."' AND photo_user='".$userdata['user_id']."'");
 			$result = dbquery("DELETE FROM ".DB_ESHOP_PHOTOS." WHERE photo_id='".$_GET['ephoto_id']."'");
@@ -120,14 +152,16 @@ if (isset($_GET['psearch'])) {
 			if ($data['photo_thumb1']) @unlink(PHOTODIR.$data['photo_thumb1']);
 			if ($data['photo_thumb2']) @unlink(PHOTODIR.$data['photo_thumb2']);
 			redirect(FUSION_SELF.$aidlink."&amp;a_page=photos&status=delpd&ealbum_id=".$_GET['ealbum_id']."");
-		} elseif ($_GET['action'] == "mup") {
+		}
+		elseif ($_GET['action'] == "mup") {
 			if (!isnum($_GET['order'])) redirect(FUSION_SELF.$aidlink."&amp;a_page=photos&ealbum_id=".$_GET['ealbum_id']."");
 			$data = dbarray(dbquery("SELECT photo_id FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".$_GET['ealbum_id']."' AND photo_order='".$_GET['order']."' AND photo_user='".$userdata['user_id']."'"));
 			$result = dbquery("UPDATE ".DB_ESHOP_PHOTOS." SET photo_order=photo_order+1 WHERE photo_id='".$data['photo_id']."' AND photo_user='".$userdata['user_id']."'");
 			$result = dbquery("UPDATE ".DB_ESHOP_PHOTOS." SET photo_order=photo_order-1 WHERE photo_id='".$_GET['ephoto_id']."' AND photo_user='".$userdata['user_id']."'");
 			$rowstart = $_GET['order'] > $albumthumbs_per_page ? ((ceil($_GET['order']/$albumthumbs_per_page)-1)*$albumthumbs_per_page) : "0";
 			redirect(FUSION_SELF.$aidlink."&amp;a_page=photos&ealbum_id=".$_GET['ealbum_id']."&rowstart=$rowstart");
-		} elseif ($_GET['action'] == "mdown") {
+		}
+		elseif ($_GET['action'] == "mdown") {
 			if (!isnum($_GET['order'])) {
 				die("Denied");
 			}
@@ -136,7 +170,8 @@ if (isset($_GET['psearch'])) {
 			$result = dbquery("UPDATE ".DB_ESHOP_PHOTOS." SET photo_order=photo_order+1 WHERE photo_id='".$_GET['ephoto_id']."' AND photo_user='".$userdata['user_id']."'");
 			$rowstart = $_GET['order'] > $albumthumbs_per_page ? ((ceil($_GET['order']/$albumthumbs_per_page)-1)*$albumthumbs_per_page) : "0";
 			redirect(FUSION_SELF.$aidlink."&amp;a_page=photos&ealbum_id=".$_GET['ealbum_id']."&rowstart=$rowstart");
-		} elseif (isset($_POST['save_photo'])) {
+		}
+		elseif (isset($_POST['save_photo'])) {
 			if (!SAFEMODE && $_GET['action'] != "edit") {
 				@mkdir(ESHPHOTOS."album_".$_GET['ealbum_id'], 0755);
 				@copy(IMAGES."index.php", ESHPHOTOS."album_".$_GET['ealbum_id']."/index.php");
@@ -212,7 +247,8 @@ if (isset($_GET['psearch'])) {
 			if ($_GET['error']) {
 				redirect(FUSION_SELF.$aidlink."&amp;a_page=photos&status=savepe&error=$error&ealbum_id=".$_GET['ealbum_id']."");
 			}
-		} else {
+		}
+		else {
 			if ($_GET['action'] == "edit") {
 				$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE photo_id='".$_GET['ephoto_id']."' AND photo_user='".$userdata['user_id']."'");
 				$data = dbarray($result);
@@ -265,7 +301,8 @@ if (isset($_GET['psearch'])) {
 					echo "<input type='submit' name='cancel' value='".$ESHPHOTOSL['448']."' class='button'>\n";
 				}
 				echo "</td></tr>\n</table></form>\n";
-			} else {
+			}
+			else {
 				$getalbumname = dbarray(dbquery("SELECT title,id FROM ".DB_ESHOP." WHERE id='".$_GET['ealbum_id']."'"));
 				echo "<div style='width:40%;'> &raquo; ".$ESHPHOTOSL['400']." &raquo; ".$getalbumname['title']."</div>";
 				$photo_title = "";
@@ -319,7 +356,8 @@ if (isset($_GET['psearch'])) {
 				echo "</td></tr>\n</table></form>\n";
 			}
 		}
-		tablebreak();
+		tablebreak(); // !! Wow... tablebreak(); long time no see!!!
+
 		echo "<div style='width:30%;' class='scapmain'> &raquo; ".$ESHPHOTOSL['460']." </div>";
 		$rows = dbcount("(photo_id)", "".DB_ESHOP_PHOTOS."", "album_id='".$_GET['ealbum_id']."' AND photo_user='".$userdata['user_id']."'");
 		if ($rows) {
@@ -376,10 +414,11 @@ if (isset($_GET['psearch'])) {
 		$searchtext = $locale['SRCH162'];
 	}
 }
+
 echo "<div style='float:right;margin-top:5px;'><form id='search_form'  name='inputform' method='post' action='".FUSION_SELF.$aidlink."&amp;a_page=photos&amp;psearch'>
 <span style='vertical-align:middle;font-size:14px;'>".$locale['ESHPHOTOS111']."</span>";
 echo "<input type='text' name='psrchtext' class='textbox' style='margin-left:1px; margin-right:1px; margin-bottom:5px; width:160px;'  value='".$searchtext."' onblur=\"if(this.value=='') this.value='".$searchtext."';\" onfocus=\"if(this.value=='".$searchtext."') this.value='';\" />";
 echo "<input type='image' id='search_image' src='".BASEDIR."eshop/img/search_icon.png' alt='".$locale['SRCH162']."' />";
 echo "</form></div>";
 
-?>
+*/

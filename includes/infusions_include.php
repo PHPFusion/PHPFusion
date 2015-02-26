@@ -296,7 +296,7 @@ if (!function_exists('upload_image')) {
 								$image_info['thumb1'] = TRUE;
 							} else {
 								if (!file_exists($thumb1_folder)) {
-									mkdir($thumb1_folder, 0755);
+									mkdir($thumb1_folder, 0755, true);
 								}
 								$image_name_t1 = filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext);
 								$image_info['thumb1_name'] = $image_name_t1;
@@ -315,7 +315,7 @@ if (!function_exists('upload_image')) {
 								$image_info['thumb2'] = TRUE;
 							} else {
 								if (!file_exists($thumb2_folder)) {
-									mkdir($thumb1_folder, 0755);
+									mkdir($thumb2_folder, 0755, true);
 								}
 								$image_name_t2 = filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext);
 								$image_info['thumb2_name'] = $image_name_t2;

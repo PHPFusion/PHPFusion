@@ -692,69 +692,81 @@ function db_exists($table) {
 	return isset($tables[$table]);
 }
 
-/* Automated Ordering (Unoptimized implementation) */
-function sql_manage_order($db, $id = FALSE, $id_col = FALSE, $cat = FALSE, $cat_col = FALSE, $order, $order_col, $opts = FALSE) {
-	/* Revision : save, update, delete */
-	//sql_manage_order($db, $dmdata['field_id'], "field_id", "", "", $dmdata['field_order'], "field_order",  array("mode"=>"update"));
-	if (is_array($opts)) {
-		if (array_key_exists("mode", $opts)) {
-			if ($opts['mode'] == "save") {
-				$mode = 1;
-			} elseif ($opts['mode'] == "update") {
-				$mode = 2;
-			} elseif ($opts['mode'] == "delete") {
-				$mode = 3;
-			}
-		}
-	} else {
-		$mode = 2; // mode is always on update by default. so $id_col and $id is REQUIRED.
-	}
-	if ($mode == "1") {
-		// save mode
-		if (!empty($cat) && (!empty($cat_col))) {
-			// nested category
-			// there is a neet for $cat and $cat_col but id, and id_col not necessary for save.
-			$result = dbquery("UPDATE ".$db." SET $order_col=$order_col+1 WHERE $cat_col='$cat' AND $order_col>='$order'");
-		} else {
-			//no category - single line type
-			// see that there is no need for [ id, id_col, cat, cat_col ] for straight ordering.
-			$result = dbquery("UPDATE ".$db." SET $order_col=$order_col+1 WHERE $order_col>='$order'");
-		}
-	} elseif ($mode == "2") {
-		// update mode
-		// in update mode, id and id col is REQUIRED.
-		$old_order = dbresult(dbquery("SELECT $order_col FROM ".$db." WHERE $id_col='$id'"), 0);
-		//print_p(" dbresult(dbquery('SELECT $order_col FROM ".$db." WHERE $id_col='$id''), 0);");
-		//print_p($old_order);
-		if (!empty($cat) && (!empty($cat_col))) {
-			if ($old_order !== "0") {
-				if ($order > $old_order) {
-					$result = dbquery("UPDATE ".$db." SET $order_col=$order_col-1 WHERE $cat_col='$cat' AND $order_col>'$old_order' AND $order_col<='$order'");
-					//echo "Current Order Dropped";
-				} elseif ($order < $old_order) {
-					$result = dbquery("UPDATE ".$db." SET $order_col=$order_col+1 WHERE $cat_col='$cat' AND $order_col<'$old_order' AND $order_col>='$order'");
-					//echo "Current Order Escalated";
+/**
+ * ID is required only for update mode.
+ * @param        $dbname
+ * @param int    $current_order
+ * @param        $order_col
+ * @param int    $current_id
+ * @param bool   $id_col
+ * @param int    $current_category
+ * @param bool   $cat_col
+ * @param string $multilang_prefix
+ * @param string $multilang_col
+ * @param string $mode
+ * @return bool|mixed|PDOStatement|resource
+ */
+function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id_col = FALSE, $current_category = 0, $cat_col = FALSE, $multilang = false, $multilang_col = '', $mode = 'update') {
+
+	$multilang_sql_1 = $multilang && $multilang_col ? "WHERE $multilang_col='".LANGUAGE."'" : '';
+	$multilang_sql_2 = $multilang && $multilang_col ? "AND $multilang_col='".LANGUAGE."'" : '';
+
+	if (!$current_order) $current_order = dbresult(dbquery("SELECT MAX($order_col) FROM ".$dbname." ".$multilang_sql_1), 0)+1;
+
+	switch($mode) {
+		case 'save':
+			if ($order_col && $current_order && $dbname) {
+				if (!empty($current_category) && (!empty($cat_col))) {
+					$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $cat_col='".intval($current_category)."' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
+					return $result;
+				} else {
+					$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $order_col>='".intval($current_order)."' $multilang_sql_2");
+					return $result;
 				}
+			} else {
+				defender::stop();
 			}
-		} else {
-			//no category - single line type
-			if ($order > $old_order) {
-				$result = dbquery("UPDATE ".$db." SET $order_col=$order_col-1 WHERE $order_col>'$old_order' AND $order_col<='$order'");
-				//echo "Current Order Dropped - $order_col=$order_col-1 from 1 to 5, so all field order that is more than 1 goes 0 and negative, and field order that is less than 5 all less down ";
-			} elseif ($order < $old_order) {
-				$result = dbquery("UPDATE ".$db." SET $order_col=$order_col+1 WHERE $order_col<'$old_order' AND $order_col>='$order'");
-				//echo "Current Order Escalated";
+			break;
+		case 'update':
+			if ($id_col && $current_id && $order_col && $current_order && $dbname) {
+				$old_order = dbresult(dbquery("SELECT $order_col FROM ".$dbname." WHERE $id_col='".intval($current_id)."' $multilang_sql_2"), 0);
+				if (!empty($current_category) && (!empty($cat_col))) {
+					if ($current_order > $old_order) {
+						$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $cat_col='".intval($current_category)."' AND $order_col>'$old_order' AND $order_col<='".intval($current_order)."' $multilang_sql_2");
+						return $result;
+					} elseif ($current_order < $old_order) {
+						$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $cat_col='".intval($current_category)."' AND $order_col<'$old_order' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
+						return $result;
+					}
+				} else {
+					if ($current_order > $old_order) {
+						$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $order_col>'$old_order' AND $order_col<='".intval($current_order)."' $multilang_sql_2");
+						return $result;
+					} elseif ($current_order < $old_order) {
+						$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $order_col<'$old_order' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
+						return $result;
+					}
+				}
+			} else {
+				defender::stop();
 			}
-		}
-	} elseif ($mode == "3") {
-		// delete mode
-		// $id and $id_col is not necessary in delete mode.
-		if (!empty($cat) && (!empty($cat_col))) {
-			// in nested mode, $cat and $cat_col is REQUIRED.
-			$result = dbquery("UPDATE ".$db." SET $order_col=$order_col-1 WHERE $cat_col='$cat' AND $order_col>'$order'");
-		} else {
-			$result = dbquery("UPDATE ".$db." SET $order_col=$order_col-1 WHERE $order_col>'$order'");
-		}
+			break;
+		case 'delete':
+			if ($order_col && $current_order && $dbname) {
+				if (!empty($current_category) && (!empty($cat_col))) {
+					// in nested mode, $cat and $cat_col is REQUIRED.
+					$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $cat_col='".intval($current_category)."' AND $order_col>'".intval($current_order)."' $multilang_sql_2");
+					return $result;
+				} else {
+					$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col-1 WHERE $order_col>'".intval($current_order)."' $multilang_sql_2");
+					return $result;
+				}
+			} else {
+				defender::stop();
+			}
+			break;
+		default:
+			defender::stop();
 	}
 }
 

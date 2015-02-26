@@ -35,7 +35,10 @@ define("DB_ERRORS", DB_PREFIX."errors");
 define("DB_ESHOP", DB_PREFIX."eshop");
 define("DB_ESHOP_CATS", DB_PREFIX."eshop_cats");
 define("DB_ESHOP_CART", DB_PREFIX."eshop_cart");
+
 define("DB_ESHOP_PHOTOS", DB_PREFIX."eshop_photos");
+define("DB_ESHOP_ALBUMS", DB_PREFIX."eshop_photo_albums");
+
 define("DB_ESHOP_SHIPPINGCATS", DB_PREFIX."eshop_shippingcats");
 define("DB_ESHOP_SHIPPINGITEMS", DB_PREFIX."eshop_shippingitems");
 define("DB_ESHOP_PAYMENTS", DB_PREFIX."eshop_payments");
