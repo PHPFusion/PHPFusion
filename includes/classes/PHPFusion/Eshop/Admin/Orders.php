@@ -4,13 +4,19 @@ namespace PHPFusion\Eshop\Admin;
 class Orders {
 
 	private $filter_Sql = '';
+	private $months = array();
 
 	public function __construct() {
+		global $locale;
 		$_GET['orderid'] = isset($_GET['orderid']) && isnum($_GET['orderid']) ? $_GET['orderid'] : 0;
-		$_GET['o_page'] = isset($_GET['o_page']) ? $_GET['o_page'] : 'orders';
+		$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 'orders';
 		$_GET['sortby'] = !isset($_GET['sortby']) || !preg_match("/^[0-9A-Z]$/", $_GET['sortby']) ? "all" : $_GET['sortby'];
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 		$_GET['orderid'] = isset($_GET['orderid']) && isnum($_GET['orderid']) ? $_GET['orderid'] : 0;
+
+
+
+
 		switch($_GET['action']) {
 			case 'updateorder':
 				self::update_order();
@@ -190,7 +196,6 @@ class Orders {
 		self::orders_view_filters();
 		?>
 
-
 		<table class='table table-responsive table-striped m-t-20'>
 		<tr>
 			<th><?php echo $locale['ESHP317'] ?></th>
@@ -258,6 +263,203 @@ class Orders {
 		</table>
 	<?php
 	}
+
+	public function list_history() {
+		global $aidlink, $locale;
+
+		$allowed_modes = array('m','d','y');
+		$_GET['mode'] = isset($_GET['mode']) && in_array($_GET['mode'], $allowed_modes) ? $_GET['mode'] : '';
+		$_GET['month'] = isset($_GET['month']) && isnum($_GET['month']) && $_GET['month'] >= 1 && $_GET['month'] <= 12 ? $_GET['month'] : '';
+		$_GET['year'] = isset($_GET['year']) && isnum($_GET['year']) && strlen($_GET['year']) == 4 ? $_GET['year'] : '';
+		$this->months = $months = explode("|", $locale['months']);
+
+		switch ($_GET['mode']) {
+
+			case 'y':
+				add_to_title(" - ".$_GET['year']); ?>
+				<p class='m-t-20'><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history" ?>'><?php echo $locale['ESHP329'] ?></a></p>
+				<table class='table table-responsive table-striped'>
+					<tr>
+						<th>Year <?php echo $_GET['year'] ?></th>
+						<th>Orders</th>
+						<th>Total Sales</th>
+					</tr>
+					<?php
+					$m_min = mktime(0, 0, 0, 1, 1, $_GET['year']);
+					$m_max = mktime(0, 0, 0, 12, 31, $_GET['year']);
+					$dates = dbquery("SELECT odate, count(oid) as orders,
+						sum(ototal) as total_sales,
+						MONTH(from_unixtime(odate)) as month
+						FROM ".DB_ESHOP_ORDERS." WHERE odate > '".$m_min."' && odate < '".$m_max."' GROUP BY month ASC ORDER BY oid ASC");
+					if (dbrows($dates)) {
+						while ($id = dbarray($dates)) {
+							?>
+							<tr>
+								<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=".$_GET['year']."&amp;month=".$id['month'] ?>'>
+										<?php echo $months[$id['month']] ?>
+									</a>
+								</td>
+								<td><?php echo $id['orders'] ?></td>
+								<td><?php echo $id['total_sales'].' '.fusion_get_settings('eshop_currency') ?></td>
+							</tr>
+						<?php
+						}
+					} else {
+						?>
+						<tr><td class='text-center' colspan='4'><?php echo $locale['ESHP331'] ?></td></tr>
+					<?php
+					}
+					?>
+				</table>
+				<?php
+				break;
+
+			case 'm':
+				add_to_title(" - ".$months[$_GET['month']]." ".$_GET['year']); ?>
+				<p class='m-t-20'><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history" ?>'><?php echo $locale['ESHP329'] ?></a></p>
+				<table class='table table-responsive table-striped'>
+					<tr>
+						<th>Month of <?php echo $months[$_GET['month']]." ".$_GET['year'] ?></th>
+						<th>Day</th>
+						<th>Orders</th>
+						<th>Total Sales</th>
+					</tr>
+					<?php
+					$m_stats = array();
+					$m_days = cal_days_in_month(CAL_GREGORIAN, $_GET['month'], $_GET['year']);
+					if ($_GET['year'] == date("Y", time()) && $_GET['month'] == date("m", time())) $m_days = date("d", time());
+					$m_min = mktime(0, 0, 0, $_GET['month'], 1, $_GET['year']) - 1;
+					$m_max = $m_min + ($m_days * 24 * 60 * 60);
+					$dates = dbquery("SELECT odate, count(oid) as orders,
+						sum(ototal) as total_sales,
+						DAY(from_unixtime(odate)) as day
+						FROM ".DB_ESHOP_ORDERS." WHERE odate > '".$m_min."' && odate < '".$m_max."' GROUP BY day ASC ORDER BY oid ASC");
+					if (dbrows($dates)) {
+						while ($id = dbarray($dates)) {
+							?>
+							<tr>
+								<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=d&amp;year=".$_GET['year']."&amp;month=".$_GET['month']."&amp;day=".$id['day'] ?>'>
+										<?php echo $locale['ESHP334'][date("w", mktime(1, 1, 1, $_GET['month'], $id['day'], $_GET['year']))] ?>
+									</a>
+								</td>
+								<td><?php echo $id['day'] ?></td>
+								<td><?php echo $id['orders'] ?></td>
+								<td><?php echo $id['total_sales'].' '.fusion_get_settings('eshop_currency') ?></td>
+							</tr>
+						<?php
+						}
+						?>
+					<?php
+					} else {
+						?>
+						<tr><td class='text-center' colspan='4'><?php echo $locale['ESHP331'] ?></td></tr>
+					<?php
+					}
+					?>
+				</table>
+				<?php
+				break;
+
+			case 'd':
+
+				add_to_title(" - ".$get_day." ".$months[$_GET['month']]." ".$_GET['year']);
+				?>
+				<p class='m-t-20'>
+					<a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history" ?>'><?php echo $locale['ESHP329'] ?></a> -
+					<a href='<?Php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=".$_GET['year']."&amp;month=".$_GET['month'] ?>'> <?php echo $months[$_GET['month']]." ".$_GET['year'] ?> </a>
+				</p>
+
+				<table class='table table-responsive table-striped'>
+				<tr>
+					<th>Day of <?php echo $_GET['day']." ".$months[$_GET['month']]." ".$_GET['year'] ?></th>
+					<th>Orders</th>
+					<th>Total Sales</th>
+				</tr>
+
+
+
+				<?php
+
+				echo "<tr>
+		<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP317']."</b></td>
+		<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP318']."</b></td>
+		<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP319']."</b></td>
+		<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP320']."</b></td>
+		<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP321']."</b></td>
+		<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP322']."</b></td>
+		<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP323']."</b></td>
+		<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP335']."</b></td>
+		<td class='tbl2' width='1%' align='center'><b>".$locale['ESHP324']."</b></td>
+	</tr>\n";
+
+				$d_min = mktime(23, 59, 59, $_GET['month'], $get_day-1, $_GET['year']);
+				$d_max = $d_min + (24 * 60 * 60);
+
+				$orders = dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE odate > '".$d_min."' && odate < '".$d_max."' ORDER BY oid ASC");
+
+				if (dbrows($orders) > 0) {
+
+					while ($order = dbarray($orders)) {
+						echo "<tr style='height:20px;' onMouseOver=\"this.className='tbl2'\" onMouseOut=\"this.className='tbl1'\">";
+						echo "<td width='1%' align='center'> <a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;vieworder&amp;orderid=".$order['oid']."'><b>".$order['oid']."</b></a></td>\n";
+						$usercheck= dbquery("SELECT user_id FROM  ".DB_USERS." WHERE user_id = '".$order['ouid']."'");
+						$urows = dbrows($usercheck);
+						if ($urows != 0) {
+							echo "<td width='1%' align='center'> <a href='".FUSION_SELF.$aidlink."&amp;a_page=customers&amp;step=edit&amp;cuid=".$order['ouid']."'>".$order['oname']."</a></td>";
+						} else {
+							echo "<td width='1%' align='center'> ".$order['oname']."</td>";
+						}
+						echo "<td width='1%' align='center'>".$order['ototal']." ".$settings['eshop_currency']."</a></td>";
+						echo "<td width='1%' align='center'>".($order['opaid'] =="1" ? "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_green.png' alt'' />" : "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_red.png' height='20' alt'' />")."</td>";
+						echo "<td width='1%' align='center'>".($order['ocompleted'] =="1" ? "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_green.png' alt'' />" : "<img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/bullet_red.png' height='20' alt'' />")."</td>";
+						echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;vieworder&amp;orderid=".$order['oid']."'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/orderlist.png' alt='' border='0' /></a></td>";
+						echo "<td width='1%' align='center'><a class='printorder' href='".ADMIN."eshop/printorder.php".$aidlink."&amp;orderid=".$order['oid']."'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/print.png' alt='' border='0' /></a></td>";
+						echo "<td width='1%' align='center'>". date("H:i:s", $order['odate']) . "</td>";
+						echo "<td width='1%' align='center'><a href='".FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;step=delete&amp;orderid=".$order['oid']."'  onClick='return confirmdelete();'><img style='width:20px; height:20px;vertical-align:middle;' src='".BASEDIR."eshop/img/remove.png' border='0'  alt='' /></a></td>";
+						echo "  </tr>\n";
+					}
+				} else {
+					echo "  <tr>\n";
+					echo "    <td colspan='2' class='tbl1 alt' align='center'>".$locale['ESHP333']."</td>\n";
+					echo "  </tr>\n";
+				}
+				echo "</table>\n</div>\n";
+				break;
+
+			default:
+				$stats = array();
+				$dates = dbquery("SELECT YEAR(from_unixtime(odate)) as year, MONTH(from_unixtime(odate)) as month, SUM(ototal) as total_sales, count(oid) as orders
+		 FROM ".DB_ESHOP_ORDERS."
+		 GROUP BY YEAR(from_unixtime(odate)) DESC, MONTH(from_unixtime(odate)) DESC
+		 ORDER BY year DESC, month DESC");
+				while ($id = dbarray($dates)) {
+					$stats[] = $id;
+				}
+				?>
+					<table class='table table-responsive table-striped m-t-20'>
+						<tr>
+							<th>Month</th>
+							<th>Year</th>
+							<th>Number of Orders</th>
+							<th>Total Sales</th>
+						</tr>
+						<?php
+						foreach($stats as $sales) {
+							?>
+							<tr>
+								<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=".$sales['year']."&amp;month=".$sales['month'] ?>'><?php echo $months[$sales['month']] ?></a></td>
+								<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=y&amp;year=".$sales['year'] ?>'><?php echo $sales['year'] ?></td>
+								<td><?php echo $sales['orders'] ?></td>
+								<td><?php echo $sales['total_sales']." ".fusion_get_settings('eshop_currency') ?></td>
+							</tr>
+						<?php
+						}
+						?>
+					</table>
+				<?php
+		}
+	}
+
 
 	public function searchbox() {
 		$search = array("A",

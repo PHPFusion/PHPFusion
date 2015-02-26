@@ -24,14 +24,14 @@ $tab_title['icon'][] = '';
 $tab_title['title'][] = $locale['ESHP302'];
 $tab_title['id'][] = 'history';
 $tab_title['icon'][] = '';
-$tab_active = tab_active($tab_title, $_GET['o_page'], 1);
+$tab_active = tab_active($tab_title, $_GET['section'], 1);
 echo opentab($tab_title, $tab_active, 'pageorders', 1);
 echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active, 1);
 $orders->list_order();
 echo closetabbody();
 if ($_GET['section'] == 'history') {
 	echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active, 1);
-	include "orderhistory.php";
+	$orders->list_history();
 	echo closetabbody();
 }
 
