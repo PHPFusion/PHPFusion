@@ -15,9 +15,6 @@ class Orders {
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 		$_GET['orderid'] = isset($_GET['orderid']) && isnum($_GET['orderid']) ? $_GET['orderid'] : 0;
 
-
-
-
 		switch($_GET['action']) {
 			case 'updateorder':
 				self::update_order();
