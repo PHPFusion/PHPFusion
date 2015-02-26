@@ -1,83 +1,112 @@
 <?php
-// Forum Category titles
-$locale['400'] = "Добавить раздел форума";
-$locale['401'] = "Изменить раздел";
-// Forum Category messages
-$locale['410'] = "Раздел форума добавлен";
-$locale['411'] = "Раздел форума обновлён";
-$locale['412'] = "Невозможно удалить раздел форума";
-$locale['413'] = "В этом разделе есть форума";
-$locale['414'] = "Раздел форума удалён";
-// Forum Category form
-$locale['420'] = "Название раздела";
-$locale['420b'] = "Описание раздела";
-$locale['421'] = "Порядок";
-$locale['422'] = "Сохранить раздел";
-// Delete Forum Category
-$locale['440'] = "Удалить раздел форума?";
-// Forum titles
-$locale['500'] = "Добавить форум";
-$locale['501'] = "Изменить форум";
-// Forum Category messages
-$locale['510'] = "Форум добавлен";
-$locale['511'] = "Форум изменён";
-$locale['512'] = "Невозможно удалить форум";
-$locale['513'] = "В этом форуме есть темы";
-$locale['514'] = "Форум удалён";
-$locale['515'] = "Модераторы форума обновлены";
-$locale['516'] = "Пожалуйста, укажите название раздела.";
-$locale['517'] = "Пожалуйста, укажите уникальное название форума.";
-// Add/Edit Forum Form
-$locale['520'] = "Название форума:";
-$locale['521'] = "Описание:";
-$locale['522'] = "Раздел:";
-$locale['523'] = "Порядок:";
-$locale['524'] = "Права в форуме";
-$locale['525'] = "Доступ:";
-$locale['526'] = "Создание тем:";
-$locale['527'] = "Публикация ответов:";
-$locale['528'] = "Добавление вложений:";
-$locale['529'] = "Создание опросов:";
-$locale['530'] = "Голосование:";
-$locale['531'] = "Отключить";
-$locale['532'] = "Сохранить форум";
-$locale['533'] = "Модераторы";
-$locale['534'] = "Сохранить модераторов";
-$locale['535'] = "Скачивание вложений:";
-// Forum Settings
-$locale['540'] = "Настройки форума:";
-$locale['541'] = "Объединение сообщений:";
-$locale['542'] = "Включено";
-$locale['543'] = "Отключено";
-// Current Forums
-$locale['550'] = "Созданые форумы";
-$locale['551'] = "Раздел форум";
-$locale['552'] = "Порядок";
-$locale['553'] = "Действия";
-$locale['554'] = "Изменить";
-$locale['555'] = "Удалить";
-$locale['556'] = "Вверх";
-$locale['557'] = "Вниз";
-$locale['558'] = "Переместить вверх";
-$locale['559'] = "Переместить вниз";
-$locale['560'] = "Разделы форума не созданы";
-$locale['561'] = "Форумы не созданы";
-$locale['562'] = "Обновить порядок форумов";
-$locale['563'] = "Очистка";
-// Delete Forum
-$locale['570'] = "Удалить форум?";
-// Pruning
-$locale['600'] = "Очистить форум";
-$locale['601'] = "Это действие удалит темы и сообщения,";
-$locale['602'] = "которые старше указанного периода времени.";
-$locale['603'] = "Период очистки: ";
-$locale['604'] = "неделя";
-$locale['605'] = "недель(-и)";
-$locale['606'] = "месяц";
-$locale['607'] = "месяца(-ев)";
-$locale['608'] = "Очистка завершена.";
-$locale['609'] = "Удалено сообщений: ";
-$locale['610'] = "Удалено вложений: ";
-$locale['611'] = "Удалено тем: ";
-$locale['612'] = "При очистке темы, сообщения и вложения будут утеряны. Действительно очистить форум?";
+/* Common Forum Locales */
+$locale['forum_000'] = "Создать форум";
+$locale['forum_000a'] = "Обновить форум";
+$locale['forum_000b'] = "Созданные форумы";
+$locale['forum_001'] = "Создать новый форум";
+$locale['forum_002'] = "Изменить форум";
+$locale['forum_003'] = "Удалить форум";
+$locale['forum_004'] = "переместить форум";
+$locale['forum_005'] = "Модерировать форум";
+$locale['forum_006'] = "Название";
+$locale['forum_007'] = "Описание";
+$locale['forum_008'] = "Предок";
+$locale['forum_009'] = "Тип форума";
+$locale['forum_010'] = "Язык";
+$locale['forum_011'] = "Псевдоним";
+$locale['forum_012'] = "Forum Page Meta";
+$locale['forum_013'] = "Загрузка изображений";
+$locale['forum_014'] = "Ссылки на картинки";
+$locale['forum_015'] = "Max. filesize: %s and must be image types";
+$locale['forum_016'] = "If image file is uploaded, the url will not be used.";
+$locale['forum_017'] = "Forum Rules or Notices";
+//$locale['forum_018'] = "Use Forum Image";
+$locale['forum_019'] = "Разрешить объединение сообщений";
+$locale['forum_020'] = "Разрешить вложения в сообщениях";
+$locale['forum_021'] = "Разрешить быстрые сообщения";
+$locale['forum_022'] = "Разрешить опросы";
+$locale['forum_023'] = "Разрешить голосование в опросах";
+$locale['forum_024'] = "Показать участвующих пользователей";
+$locale['forum_025'] = "Копировать настройки доступа";
+$locale['forum_026'] = "Зафиксировать форум";
+$locale['forum_027'] = "Width: %s px x Height: %s px";
+$locale['forum_028'] = "Удалить изображение форума";
+$locale['forum_029'] = "Изменить разрешения";
+$locale['forum_030'] = "Настройка разрешений форума";
+$locale['forum_031'] = "Доступ к форуму";
+$locale['forum_032'] = "Создание тем";
+$locale['forum_033'] = "Ответ на сообщения";
+$locale['forum_034'] = "Добавление вложений";
+$locale['forum_035'] = "С качивание вложений";
+$locale['forum_036'] = "Создание опросов";
+$locale['forum_037'] = "Участие в опросах";
+$locale['forum_038'] = "Разрешить оценку сообщений";
+$locale['forum_039'] = "Rate on Posts";
+$locale['forum_040'] = "Thread Lock Treshold";
+$locale['forum_041'] = "Always Unlock";
+$locale['forum_042'] = "Save Permissions";
+$locale['forum_043'] = "Forum Order";
+$locale['forum_044'] = "Выберите форум:";
+$locale['forum_045'] = "Переместить вниз";
+$locale['forum_046'] = "Переместить вверх";
+$locale['forum_047'] = "Edit Permissions";
+$locale['forum_048'] = "Edit Forum";
+$locale['forum_049'] = "Remove Forum";
+$locale['forum_050'] = "Subforum";
+$locale['forum_051'] = "Alias";
+$locale['forum_052'] = "Move Forum Threads and Posts";
+$locale['forum_053'] = "No, Delete Forum Threads and Posts";
+$locale['forum_054'] = "Move Subforums";
+$locale['forum_055'] = "No, Delete Subforums";
+$locale['forum_056'] = "Base Directory";
+
+/* Needed in forum_functions_include.php */
+$locale['forum_070'] = "Сообщений удалено: ";
+$locale['forum_071'] = "Вложений удалено: ";
+$locale['forum_072'] = "Тем удалено: ";
+
+
+/* Permissions */
+$locale['forum_desc_000'] = "Post Permissions";
+$locale['forum_desc_001'] = "Polls Permissions";
+$locale['forum_desc_002'] = "Attachments Permissions";
+$locale['forum_desc_003'] = "Forum Moderators Selection";
+$locale['forum_desc_004'] = "Forum Answers";
+/* Navs */
+$locale['forum_root'] = "Board Index";
+$locale['forum_points'] = "Forum Points";
+/* Type */
+$locale['forum_opts_001'] = "Категория";
+$locale['forum_opts_002'] = "Форум";
+$locale['forum_opts_003'] = "Ссылка";
+$locale['forum_opts_004'] = "Поддержка и ответы";
+/* Error Notices */
+$locale['forum_error_1'] = "Forum Name is required field.";
+$locale['forum_error_2'] = "Image must be less than %s.";
+$locale['forum_error_3'] = "Image must be smaller than %s.";
+$locale['forum_error_4'] = "Image must be one of the following file types: %s.";
+$locale['forum_error_5'] = "Unknown Error";
+$locale['forum_error_6'] = "The Alias URL is already being used. Please use another unique address.";
+$locale['forum_error_7'] = "Please enter a unique forum name.";
+$locale['forum_error_8'] = "Please remove the current forum image before assigning a new one.";
+$locale['forum_error_9'] = "Image URL specified does not exist. Please verify your path again.";
+/* Notices */
+$locale['forum_notice_1'] = "A new forum category have been successfully created.";
+$locale['forum_notice_2'] = "A new forum have been successfully created.";
+$locale['forum_notice_3'] = "A new forum link have been successfully created.";
+$locale['forum_notice_4'] = "A support forum have been successfully created.";
+$locale['forum_notice_5'] = "Forum is successfully removed.";
+$locale['forum_notice_6'] = "Forum moved up.";
+$locale['forum_notice_7'] = "Forum moved down.";
+$locale['forum_notice_8'] = "Forum Image is successfully removed.";
+$locale['forum_notice_9'] = "Forum details are successfully updated.";
+$locale['forum_notice_10'] = "Forum permissions are successfully updated.";
+$locale['forum_notice_11'] = "Forum pruning complete.";
+
+/* Etc */
+$locale['delete_notice'] = "Удалить форум? Внимание: эта операция необратима.";
+$locale['531'] = "Off";
+$locale['560'] = "No Forum Categories defined";
+$locale['561'] = "No Forums defined";
+$locale['562'] = "Refresh Forum Ordering";
 ?>
