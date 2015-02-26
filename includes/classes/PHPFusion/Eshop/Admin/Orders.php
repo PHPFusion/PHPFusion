@@ -365,9 +365,8 @@ class Orders {
 				add_to_title(" - ".$_GET['day']." ".$months[$_GET['month']]." ".$_GET['year']);
 				$d_min = mktime(23, 59, 59, $_GET['month'], $_GET['day']-1, $_GET['year']);
 				$d_max = $d_min + (24 * 60 * 60);
-				$this->filter_Sql = "odate > '".$d_min."' AND odate < '".$d_max."' ";
+				$this->filter_Sql = "odate > '".$d_min."' AND odate < '".$d_max."' "; // just set another variety of listing filter and use list_order() function.
 				$this->showfilter = false;
-				//$orders = dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE odate > '".$d_min."' && odate < '".$d_max."' ORDER BY oid ASC");
 				?>
 				<p class='m-t-20'>
 					<a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history" ?>'><?php echo $locale['ESHP329'] ?></a> -
@@ -376,10 +375,7 @@ class Orders {
 				<?php
 				self::list_order();
 				break;
-
 			default:
-
-				$stats = array();
 				$dates = dbquery("SELECT YEAR(from_unixtime(odate)) as year, MONTH(from_unixtime(odate)) as month, SUM(ototal) as total_sales, count(oid) as orders
 						 FROM ".DB_ESHOP_ORDERS."
 						 GROUP BY YEAR(from_unixtime(odate)) DESC, MONTH(from_unixtime(odate)) DESC
