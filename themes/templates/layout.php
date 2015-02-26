@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -16,47 +15,50 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-?>
+header("Content-Type: text/html; charset=".$locale['charset']."");
+echo "
 <!DOCTYPE html>
 <head>
-	<title><?php echo $settings['sitename'] ?></title>
-	<meta charset='<?php echo $locale['charset'] ?>' />
-	<meta name='description' content='<?php echo $settings['description'] ?>' />
-	<meta name='keywords' content='<?php echo $settings['keywords'] ?>' />
-	<?php if ($bootstrap_theme_css_src) : ?>
-	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
-	<meta name='viewport' content='width=device-width, initial-scale=1.0' />
-	<link href='<?php echo $bootstrap_theme_css_src ?>' rel='stylesheet' media='screen' />
-	<?php endif; ?>
+	<title>".$settings['sitename']."</title>
+	<meta charset='".$locale['charset']."' />
+	<meta name='description' content='".$settings['description']."' />
+	<meta name='keywords' content='".$settings['keywords']."' />";
+	if ($bootstrap_theme_css_src) {
+	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	  	  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		  <link href='".$bootstrap_theme_css_src."' rel='stylesheet' media='screen' />";
+	 }
+	echo "
 	<!-- Entypo icons -->
-	<link href='<?php echo INCLUDES.'font/entypo/entypo.css' ?>' rel='stylesheet' media='screen' />
+	<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />
 	<!-- Default CSS styling which applies to all themes but can be overriden -->
-	<link href='<?php echo THEMES.'templates/default.css' ?>' rel='stylesheet' type='text/css' media='screen' />
+	<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />
 	<!-- Theme CSS -->
-	<link href='<?php echo THEME.'styles.css' ?>' rel='stylesheet' type='text/css' media='screen' />
-	<?php echo render_favicons(IMAGES);
+	<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />";
+	echo render_favicons(IMAGES);
 	if (function_exists("get_head_tags")) {
 		echo get_head_tags();
-	} ?>
-	<script type='text/javascript' src='<?php echo INCLUDES.'jquery/jquery.js' ?>'></script>
-	<script type='text/javascript' src='<?php echo INCLUDES.'jscript.js' ?>'></script>
+	}
+	echo "
+	<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>
+	<script type='text/javascript' src='".INCLUDES."jscript.js'></script>
 </head>
-<body>
-	<?php
-	render_page();
+<body>";
 	
+	render_page();
 	// Output lines added with add_to_footer()
 	echo $fusion_page_footer_tags;
-	if ($footerError) : ?>
-	<div class='admin-message'><?php echo $footerError ?></div>
-	<?php
-	endif;
-	if (!empty($fusion_jquery_tags)) : ?>
-	<script type="text/javascript">
-		$(function() {
-			<?php echo $fusion_jquery_tags; // Output lines added with add_to_jquery() ?>
-		});
-	</script>
-	<?php endif; ?>
-</body>
-</html>
+
+	if ($footerError) {
+		echo "<div class='admin-message'>".$footerError."</div>";
+	}
+
+	if (!empty($fusion_jquery_tags)) {
+		echo "<script type='text/javascript'>
+			$(function() {
+				$fusion_jquery_tags; // Output lines added with add_to_jquery()
+			});
+			</script>";
+}
+echo "</body></html>";
+?>
