@@ -126,12 +126,12 @@ $locale['forum_0314'] = "Poll";
 $locale['forum_0320'] = "lang fail";
 
 $locale['forum_0325'] = 'Trophies';
-$locale['forum_0326'] = 'or Start a Topic';
+$locale['forum_0326'] = 'or Start a Thread';
 $locale['forum_0327'] = 'There are no forums defined under this category';
 $locale['forum_0328'] = 'There are no forums defined.';
 
 $locale['forum_0340'] = 'Questions';
-$locale['forum_0341'] = 'Topics';
+$locale['forum_0341'] = 'Threads';
 
 $locale['forum_0350'] = " Forum Rules:";
 $locale['forum_0351'] = "Subforums";

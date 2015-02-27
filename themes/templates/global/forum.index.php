@@ -205,7 +205,8 @@ if (!function_exists('render_forum_item_type')) {
 
 			echo "<div class='display-inline-block forum-stats well p-5 m-r-10 m-b-0'>\n";
 			echo "<span class='text-bigger strong m-0 text-dark'>".number_format($data['forum_threadcount'])."</span><br/>\n";
-			echo "<span class='text-smaller'>".($data['forum_type'] == '4' ? $locale['forum_0340'] : $locale['forum_0341'])."</span><br/>\n";
+//			echo "<span class='text-smaller'>".($data['forum_type'] == '4' ? $locale['forum_0340'] : $locale['forum_0341'])."</span><br/>\n";
+			echo "<span class='text-smaller'>".($data['forum_type'] == '4' ? format_word($data['forum_threadcount'], $locale['fmt_question'], 0) : format_word($data['forum_threadcount'], $locale['fmt_thread'], 0))."</span><br/>\n";
 			echo "</div>\n";
 
 			echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-3 p-l-0'>\n";

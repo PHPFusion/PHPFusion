@@ -439,6 +439,7 @@ $locale['fmt_month'] = "month|months";
 $locale['fmt_news'] = "news|news";
 $locale['fmt_photo'] = "photo|photos";
 $locale['fmt_post'] = "post|posts";
+$locale['fmt_question'] = "question|questions";
 $locale['fmt_rating'] = "rating|ratings";
 $locale['fmt_reads'] = "read|reads";
 $locale['fmt_second'] = "second|seconds";
