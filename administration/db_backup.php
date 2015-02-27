@@ -276,7 +276,7 @@ if (isset($_POST['btn_do_restore'])) {
 	echo "<a class='btn btn-primary' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectNone()\">".$locale['437']."</a></div></td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td colspan='2' class='tbl'>\n";
-	echo form_text($locale['460'], 'user_admin_password', 'user_admin_password', '', array('required' => 1, 'error_text' => $locale['460b'], 'inline' => 1));
+	echo form_text($locale['460'], 'user_admin_password', 'user_admin_password', '', array('password' => 1, 'required' => 1, 'error_text' => $locale['460b'], 'inline' => 1));
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";
 	echo "<input type='hidden' name='file' value='$file' />\n";
