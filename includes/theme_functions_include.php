@@ -705,7 +705,7 @@ function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE
 	$start_link = $link ? "<a class='comments-item m-r-10 ".$class."' href='".$link."'>" : '';
 	$end_link = $link ? "</a>\n" : '';
 	$average = $total_votes > 0 ? number_format($total_sum/$total_votes, 2) : 0;
-	$str = $mode == 1 ? $average.$locale['global_094'].$total_votes." ".($total_votes > 1 ? $locale['global_134'] : $locale['global_133']) : "$average/$total_votes";
+	$str = $mode == 1 ? $average.$locale['global_094'].format_word($total_votes, $locale['fmt_rating']) : "$average/$total_votes";
 	if ($total_votes > 0) {
 		$answer = $start_link."<i title='".$locale['global_143']."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
 	} else {
@@ -719,7 +719,7 @@ function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode =
 	global $locale;
 	$start_link = $link ? "<a class='comments-item m-r-10 ".$class."' href='".$link."'>" : '';
 	$end_link = $link ? "</a>\n" : '';
-	$str = $mode == 1 ? $news_comments." ".($news_comments > 1 ? $locale['global_073'] : $locale['global_073b']) : $news_comments;
+	$str = $mode == 1 ? format_word($news_comments, $locale['fmt_comment']) : $news_comments;
 	if ($news_comments > 0) {
 		return $start_link."<i title='".$locale['global_073']."' class='entypo icomment high-opacity m-l-0'></i>".$str.$end_link;
 	} else {
