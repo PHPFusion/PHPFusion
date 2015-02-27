@@ -526,14 +526,17 @@ function timer($updated = FALSE) {
 	if ($calculated < 1) {
 		return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$locale['just_now']."</abbr>\n";
 	}
-	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
-	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
+//	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
+//	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
+
+	$timer = array($year => $locale['fmt_year'], $month => $locale['fmt_month'], $day => $locale['fmt_day'], $hour => $locale['fmt_hour'], $minute => $locale['fmt_minute'], $second => $locale['fmt_second']);
 
 	foreach ($timer as $arr => $unit) {
 		$calc = $calculated/$arr;
 		if ($calc >= 1) {
 			$answer = round($calc);
-			$string = ($answer > 1) ? $timer_b[$arr] : $unit;
+//			$string = ($answer > 1) ? $timer_b[$arr] : $unit;
+			$string = format_word($answer, $unit, 0);
 			return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
 		}
 	}

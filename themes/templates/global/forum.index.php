@@ -199,7 +199,8 @@ if (!function_exists('render_forum_item_type')) {
 
 			echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
 			echo "<span class='text-bigger strong text-dark m-0'>".number_format($data['forum_postcount'])."</span><br/>\n";
-			echo "<span class='text-smaller'>".$locale['forum_0003']."</span><br/>\n";
+//			echo "<span class='text-smaller'>".$locale['forum_0003']."</span><br/>\n";
+			echo "<span class='text-smaller'>".format_word($data['forum_postcount'], $locale['fmt_post'], 0)."</span><br/>\n";
 			echo "</div>\n";
 
 			echo "<div class='display-inline-block forum-stats well p-5 m-r-10 m-b-0'>\n";
@@ -425,11 +426,13 @@ if (!function_exists('render_thread_item')) {
 		echo "<div class='hidden-xs col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
 		echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
 		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['thread_views'])."</h4>\n";
-		echo "<span>".$locale['forum_0370']."</span>";
+//		echo "<span>".$locale['forum_0370']."</span>";
+		echo "<span>".format_word($data['thread_views'], $locale['fmt_views'], 0)."</span>";
 		echo "</div>\n";
 		echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
 		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['thread_postcount'])."</h4>\n";
-		echo "<span>".$locale['forum_0371']."</span>";
+//		echo "<span>".$locale['forum_0371']."</span>";
+		echo "<span>".format_word($data['thread_postcount'], $locale['fmt_post'], 0)."</span>";
 		echo "</div>\n";
 
 		if ($data['forum_type'] == '4') {
