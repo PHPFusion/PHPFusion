@@ -681,7 +681,7 @@ if (!function_exists('render_post_item')) {
 		echo "<a title='".$locale['forum_0241']."' role='button' class='pull-right icon-xs' href='#top'><i class='entypo up-open'></i></a>\n";
 		echo "</span>\n";
 		echo "<div class='overflow-hide m-b-20'>\n";
-		echo "<div class='forum_thread_user_post'>".$data['post_message']."</div>\n";
+		echo "<div class='forum_thread_user_post'>".($data['post_smileys'] ? parsesmileys($data['post_message']) : $data['post_message'])."</div>\n";
 		echo "</div>\n";
 		echo $attach;
 		echo "<!--sub_forum_post_message-->";
