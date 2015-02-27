@@ -387,35 +387,44 @@ function preg_check($expression, $value) {
 }
 
 /**
+ * @param       $request_addition - `page=1&amp;ref=2`
+ * @param array $filter_array - array('aid','page', ref')
+ * @param bool  $keep_filtered - true to keep filter, false to remove filter from FUSION_REQUEST
+ * If remove is true, to remove everything and keep $requests_array and $request addition.
+ * If remove is false, to keep everything else except $requests_array
  * @return string
- * @param string $request_link
- * @param array $filter
- * // Document like this Rimelek?
- * // But how about Explanations?
- * explanation: currently in your URL is.. http://www.php-fusion.co.uk/file.php?one=1&two=2&three=3.
- * url as FUSION_REQUEST always return all. But if you just want 1 request, it will append resulting double request var in your url link.
- * This function eliminates it - href='".clean_request('three=3', array('one')."' will return file.php?one=1&three=3 in your url link.
- * This will not clean hardcoded $_GETs, and remains unaffected.
  */
-function clean_request($request_link, array $filter) {
-	global $aidlink;
-	$find = array(); $replace = array();
-	if (FUSION_QUERY) {
-		$_query = explode("&amp;", str_replace("?", "&amp;", FUSION_REQUEST));
-		array_shift($_query);
-		$i = 0;
-		foreach($_query as $query) {
-			$query_part = explode("=", $query);
-			if (!in_array($query_part[0], $filter)) {
-				$find[] = ($i == 0 ? '?' : '&amp;').$query;
-				$replace[] = '';
+function clean_request($request_addition, array $filter_array = array(), $keep_filtered = true) {
+	$path = pathinfo(htmlspecialchars_decode(FUSION_REQUEST));
+	$url = parse_url(htmlspecialchars_decode(FUSION_REQUEST));
+	$_basename = explode('?', $path['basename']);
+	$basename = $_basename[0];
+	parse_str($url['query'], $fusion_query); // this is original.
+	switch($keep_filtered) {
+		case true: // to remove everything except specified in $filter_array
+			if (!empty($fusion_query)) {
+				$filter_array += array('aid'); // never remove $aidlink if exist
+				foreach($fusion_query as $key => $trim) {
+					if (!in_array($key, $filter_array)) {
+						unset($fusion_query[$key]);
+					}
+				}
 			}
-			$i++;
-		}
+			break;
+		case false: // to keep everything except specified in $filter_array
+			if (!empty($fusion_query)) {
+				foreach($fusion_query as $key => $trim) {
+					if (in_array($key, $filter_array)) {
+						unset($fusion_query[$key]);
+					}
+				}
+			}
+			break;
 	}
-	$return_value = (!empty($find)) ? strtr(FUSION_REQUEST, array_combine($find, $replace)) : FUSION_REQUEST;
-	if ($request_link) $return_value .= (stristr($return_value, '?') ? '&amp;' : '?').$request_link;
-	return $return_value;
+	$url['query'] = http_build_query($fusion_query).'&'.ltrim($request_addition, "&");
+	$prefix = $url['query'] ? '?' : '';
+	$new_url = $path['dirname'].'/'.$basename.$prefix.$url['query'];
+	return $new_url;
 }
 
 /**

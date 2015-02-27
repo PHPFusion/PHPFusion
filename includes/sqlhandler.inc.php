@@ -737,6 +737,8 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
 					} elseif ($current_order < $old_order) {
 						$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $cat_col='".intval($current_category)."' AND $order_col<'$old_order' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
 						return $result;
+					} else {
+						return true;
 					}
 				} else {
 					if ($current_order > $old_order) {
@@ -745,6 +747,8 @@ function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id
 					} elseif ($current_order < $old_order) {
 						$result = dbquery("UPDATE ".$dbname." SET $order_col=$order_col+1 WHERE $order_col<'$old_order' AND $order_col>='".intval($current_order)."' $multilang_sql_2");
 						return $result;
+					} else {
+						return true;
 					}
 				}
 			} else {

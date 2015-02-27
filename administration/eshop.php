@@ -18,8 +18,10 @@
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 if (!checkrights("ESHP") || !defined("iAUTH") || $_GET['aid'] != iAUTH) {
-	redirect(BASEDIR."index.php");
+	print_p('redirecting');
+	//redirect(BASEDIR."index.php");
 }
+
 include LOCALE.LOCALESET."eshop.php";
 // your https shop works even better now.
 /**
