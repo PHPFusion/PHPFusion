@@ -239,7 +239,7 @@ class AdminUI {
 		define("GALLERY_PHOTO_DIR", $this->image_upload_dir.(!SAFEMODE ? "album_".$this->album_id."/" : ""));
 		// set album max order
 		$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
-		self::delete_album_thumb();
+		self::delete_gallery();
 		self::set_albumDB();
 		self::set_photoDB();
 		self::display_gallery_filters();
@@ -258,6 +258,47 @@ class AdminUI {
 			return dbcount("('photo_id')", $this->photo_db, "photo_id='".intval($photo_id)."'");
 		}
 		return false;
+	}
+
+	private function delete_gallery() {
+		if (isset($_GET['gallery_delete']) && isnum($_GET['gallery_delete']) && isset($_GET['gallery_type']) && isnum($_GET['gallery_type'])) {
+			switch($_GET['gallery_type']) {
+				case '1': // album
+					$album_id = $_GET['gallery_delete'];
+					if (self::validate_album($album_id)) {
+						$album_data = self::get_album($album_id);
+
+						$count_check = dbcount('photo_id', $this->photo_db, "album_id = '".intval($album_id)."' ");
+						if ($count_check) {
+							openmodal('confirm_steps', 'Confirm Actions');
+							echo openform('inputform', 'inputform', 'post', FUSION_REQUEST."&amp;confirm_delete", array('downtime'=>0, 'notice'=>0));
+							echo "<div>There are pictures in this album. Please select one of the following:</div>";
+								
+							echo closeform();
+							closemodal();
+						}
+
+						$result = dbquery("SELECT photo_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".$this->photo_db." WHERE album_id = '".$album_id."'");
+						if (dbrows($result)>0) {
+							// get actions to move out elsewhere or to delete all.
+
+							$photo_data = dbarray($result);
+							@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb']);
+							@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb2']);
+							@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_filename']);
+							dbquery_insert($this->photo_db, $photo_data, 'delete');
+						}
+						dbquery_insert($this->photo_cat_db, $album_data, 'delete');
+					}
+					if (!defined('FUSION_NULL')) redirect(clean_request('status=adel', array('gallery_delete', 'status', 'gallery_type'), false));
+					break;
+				case '2': // picture
+					if (self::validate_photo($_GET['gallery_delete'])) {
+
+					}
+					break;
+			}
+		}
 	}
 
 	private function set_albumDB() {
@@ -577,13 +618,14 @@ class AdminUI {
 			}
 		}
 		$albums = $list;
-		$container_span = 12/$this->gallery_rows;
+		$container_span_sm = 24/$this->gallery_rows;
+		$container_span_md = 12/$this->gallery_rows;
 		if (!empty($albums)) {
 		?>
 
 		<div class='row'>
 			<?php for ($i=1; $i<=$this->gallery_rows; $i++) { // construct columns ?>
-				<div class='col-xs-12 col-sm-<?php echo $container_span ?>'>
+				<div class='col-xs-12 col-sm-<?php echo $container_span_sm ?> col-md-<?php echo $container_span_md ?>'>
 					<?php
 					if (!empty($albums[$i])) {
 						foreach($albums[$i] as $albumData) {
@@ -609,7 +651,7 @@ class AdminUI {
 			border-radius: 6px;
 		}
 		.gallery_album > .gallery_actions > .image_container > img {
-			width: 100%;
+			width: 100% !important;
 		}
 		.gallery_album > .gallery_actions > .gallery_overlay {
 			background-color: rgb(0, 0, 0);
@@ -661,7 +703,7 @@ class AdminUI {
 	}
 
 	private function gallery_album(array $data = array(), $type = 1) {
-		global $userdata;
+		global $userdata, $locale;
 		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery'), false) : clean_request('photo='.$data['photo_id'], array('photo'), false);
 		?>
 
@@ -676,11 +718,17 @@ class AdminUI {
 				<?php } ?>
 				<div class='gallery_writer pull-right'>
 					<a class='btn button btn-sm btn-default' href='<?php echo clean_request("&amp;gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_edit', 'gallery_type'), false) ?>'>
-						<i class='fa fa-pencil'></i></a>
+						<i class='fa fa-pencil fa-lg'></i>
+					</a>
+					<a class='btn button btn-sm btn-danger' href='<?php echo clean_request("&amp;gallery_delete=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_delete', 'gallery_type'), false) ?>'>
+						<i class='fa fa-trash fa-lg'></i>
+					</a>
 				</div>
 				<div class='image_container'>
 					<?php if ($type == 1) {
-						echo "<img src='".$this->image_upload_dir.$this->upload_settings['thumbnail_folder']."/".$data['album_thumb']."' alt=''/>";
+						$img_path = $this->image_upload_dir.$this->upload_settings['thumbnail_folder']."/".$data['album_thumb'];
+						$img_src = file_exists($img_path) && !is_dir($img_path) ? $img_path : 'holder.js/170x170/grey/text:'.$locale['na'];
+						echo "<img class='img-responsive' src='".$img_src."' alt=''/>";
 					} elseif ($type == 2) {
 						echo "<img src='".$this->image_upload_dir.$this->upload_settings['thumbnail_folder']."/".$data['photo_thumb1']."' alt=''/>";
 					} ?>
