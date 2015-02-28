@@ -300,7 +300,7 @@ class AdminUI {
 										while ($photo_data = dbarray($result)) {
 											@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb']);
 											@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb2']);
-											@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_filename']);
+											@unlink(rtrim($this->image_upload_dir, '/').'/'.$photo_data['photo_filename']);
 											dbquery_insert($this->photo_db, $photo_data, 'delete');
 										}
 									}
@@ -316,8 +316,8 @@ class AdminUI {
 									$options[$album_id] = 'Move to .. Gallery Album '.$album_title;
 								}
 								echo form_select('Please select one of the following:', 'delete_action', 'delete_action', $options, '', array('inline'=>1, 'width'=>'300px'));
-								echo form_button($locale['save'], 'confirm_delete', 'confirm_delete', $album_id, array('class'=>'btn-sm btn-warning col-sm-offset-3'));
-								echo form_button($locale['cancel'], 'cancel_delete', 'cancel_delete', $album_id, array('class'=>'btn-sm btn-warning col-sm-offset-3'));
+								echo form_button($locale['confirm'], 'confirm_delete', 'confirm_delete', $album_id, array('class'=>'btn-sm btn-danger col-sm-offset-3', 'icon'=>'fa fa-trash'));
+								echo form_button($locale['cancel'], 'cancel_delete', 'cancel_delete', $album_id, array('class'=>'btn-sm btn-default m-l-10'));
 								echo closeform();
 								echo closemodal();
 							}
@@ -328,8 +328,13 @@ class AdminUI {
 					}
 					break;
 				case '2': // picture
+					$photo_id = $_GET['gallery_delete'];
 					if (self::validate_photo($_GET['gallery_delete'])) {
-
+						$photo_data = self::get_photo($photo_id);
+						@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb']);
+						@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb2']);
+						@unlink(rtrim($this->image_upload_dir, '/').'/'.$photo_data['photo_filename']);
+						dbquery_insert($this->photo_db, $photo_data, 'delete');
 					}
 					break;
 			}
@@ -494,6 +499,20 @@ class AdminUI {
 		}
 	}
 
+	private function refresh_album_thumb($album_id, $current_thumb) {
+		$result = dbquery("SELECT photo_thumb1 FROM ".$this->photo_db." WHERE album_id='".intval($album_id)."' ORDER BY photo_order DESC");
+		if (dbrows($result)>0) {
+			while ($photo_data = dbarray($result)) {
+				if ($current_thumb !== $photo_data['photo_thumb1']) {
+					$thumbnail = rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb1'];
+					if (file_exists($thumbnail) && !is_dir($thumbnail)) {
+						$result = dbquery("UPDATE ".$this->photo_cat_db." SET album_thumb='".$photo_data['photo_thumb1']."' WHERE album_id='".intval($album_id)."'");
+						if ($result) break;
+					}
+				}
+			}
+		}
+	}
 
 	/* This is way too unfriendly approach - Not going to be used */
 	private function delete_album_thumb() {
@@ -525,7 +544,7 @@ class AdminUI {
 		foreach(getusergroups() as $groups) {
 			$list[$groups[0]] = $groups[1];
 		}
-		$album_list = array();
+		$album_list = self::get_albumlist();
 		$album_edit = 0;
 		$photo_edit = 0;
 		if (isset($_GET['gallery_edit']) && isnum($_GET['gallery_edit']) && isset($_GET['gallery_type']) && isnum($_GET['gallery_type'])) {
@@ -542,13 +561,6 @@ class AdminUI {
 					if (self::validate_photo($_GET['gallery_edit'])) {
 						$this->photo_data = self::get_photo($_GET['gallery_edit']);
 						$photo_edit = 1;
-						// poll album list
-						$result = dbquery("SELECT album_id, album_title FROM ".$this->photo_cat_db." ORDER BY album_order ASC");
-						if (dbrows($result)>0) {
-							while ($data = dbarray($result)) {
-								$album_list[$data['album_id']] = $data['album_title'];
-							}
-						}
 						add_to_jquery("$('#add_photo-Modal').modal('show');");
 					}
 			}
@@ -593,7 +605,8 @@ class AdminUI {
 			echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
 		}
 		echo form_text('Photo Title', 'photo_title', 'photo_title', $this->photo_data['photo_title'], array('placeholder'=>'Name of Gallery', 'inline'=>1));
-		echo form_select('Photo Album', 'album_id', 'album_ids', $album_list, $this->photo_data['album_id'], array('inline'=>1));
+		$sel = (isset($_GET['gallery']) && isnum($_GET['gallery'])) ? $_GET['gallery'] : $this->photo_data['album_id'];
+		echo form_select('Photo Album', 'album_id', 'album_ids', $album_list, $sel, array('inline'=>1));
 		echo form_hidden('', 'photo_id', 'photo_id', $this->photo_data['photo_id']);
 		echo form_fileinput('Upload Picture', 'photo_file', 'photo_file', $this->image_upload_dir, '', $this->upload_settings);
 		echo form_hidden('', 'photo_hfile', 'photo_hfile', $this->photo_data['photo_filename']);
@@ -619,20 +632,19 @@ class AdminUI {
 	private function display_gallery() {
 		global $locale;
 		self::gallery_css();
-
 		$list = array();
 		$rows = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : dbcount("('album_id')", $this->photo_cat_db);
 		$multiplier = $rows > $this->albums_per_page ? $this->albums_per_page : $rows;
 		$max_items_per_col = $multiplier/$this->gallery_rows;
 		if ($rows) {
-			if (isset($_GET['gallery']) && isnum($_GET['gallery'])) {
-				$result = dbquery("SELECT photos.*, photos.photo_user as user_id, album.*, album.album_id as gallery_id, u.user_name, u.user_status, u.user_avatar
+			if (isset($_GET['gallery']) && isnum($_GET['gallery'])) { // view photos
+				$result = dbquery("SELECT photos.*, photos.photo_user as user_id, album.*, album.album_id as gallery_id, album.album_thumb, u.user_name, u.user_status, u.user_avatar
 				FROM ".$this->photo_db." photos
 				INNER JOIN ".$this->photo_cat_db." album on photos.album_id = album.album_id
 				INNER JOIN ".DB_USERS." u on u.user_id = photos.photo_user
 				WHERE ".groupaccess('album.album_access')." AND album_language='".LANGUAGE."' AND photos.album_id = '".intval($_GET['gallery'])."'
 				ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".$this->rowstart.", $this->albums_per_page");
-			} else {
+			} else { // view album
 				$result = dbquery("SELECT album.*, album.album_user as user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".$this->photo_cat_db." album
 				INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
@@ -643,6 +655,7 @@ class AdminUI {
 				$i = 1; $count = 1;
 				$list = array();
 				while($data = dbarray($result)) {
+					self::refresh_album_thumb($data['album_id'], $data['album_thumb']);
 					$list[$i][$data['album_id']] = $data;
 					if ($count >= $max_items_per_col) {
 						$i++;
@@ -739,7 +752,7 @@ class AdminUI {
 
 	private function gallery_album(array $data = array(), $type = 1) {
 		global $userdata, $locale;
-		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery'), false) : clean_request('photo='.$data['photo_id'], array('photo'), false);
+		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery'), false) : clean_request('photo='.$data['photo_id'], array('photo', 'status'), false);
 		?>
 
 		<div class='gallery_album panel panel-default'>

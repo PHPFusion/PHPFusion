@@ -359,6 +359,7 @@ $locale['move_down'] = "Move down";
 $locale['add'] = 'Add';
 $locale['save'] = 'Save';
 $locale['save_changes'] = 'Save Changes';
+$locale['confirm'] = 'Confirm';
 $locale['update'] = 'Update';
 $locale['updated'] = 'Updated';
 $locale['remove'] = 'Remove';
