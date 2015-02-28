@@ -22,9 +22,9 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_poll_voters");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_polls");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forums");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."posts");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."threads");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."thread_notify");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_posts");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_threads");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_thread_notify");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_votes");
 	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='F'");
 	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='S3'");
@@ -39,9 +39,9 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_poll_voters");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_polls");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forums");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."posts");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."threads");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."thread_notify");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_posts");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_threads");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_thread_notify");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."forum_votes");
 	$result = dbquery("CREATE TABLE ".$db_prefix."forum_attachments (
 			attach_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -153,7 +153,7 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) {
 		$fail = TRUE;
 	}
-	$result = dbquery("CREATE TABLE ".$db_prefix."posts (
+	$result = dbquery("CREATE TABLE ".$db_prefix."forum_posts (
 			forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			post_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -176,7 +176,7 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) {
 		$fail = TRUE;
 	}
-	$result = dbquery("CREATE TABLE ".$db_prefix."threads (
+	$result = dbquery("CREATE TABLE ".$db_prefix."forum_threads (
 			forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			thread_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 			thread_subject VARCHAR(100) NOT NULL DEFAULT '',
@@ -198,7 +198,7 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) {
 		$fail = TRUE;
 	}
-	$result = dbquery("CREATE TABLE ".$db_prefix."thread_notify (
+	$result = dbquery("CREATE TABLE ".$db_prefix."forum_thread_notify (
 			thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
