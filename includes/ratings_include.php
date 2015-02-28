@@ -18,26 +18,34 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."ratings.php";
 function showratings($rating_type, $rating_item_id, $rating_link) {
-	global $settings, $locale, $userdata;
-	$rating_link = BASEDIR.$rating_link;
+	global $locale, $userdata;
+	$settings = fusion_get_settings();
+	//$rating_link = $rating_link;
 	if ($settings['ratings_enabled'] == "1") {
 		if (iMEMBER) {
-			$d_rating = dbarray(dbquery("SELECT rating_vote,rating_datestamp FROM ".DB_RATINGS." WHERE rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_user='".$userdata['user_id']."'"));
+			$d_rating = dbarray(dbquery("SELECT rating_vote,rating_datestamp FROM ".DB_RATINGS." WHERE rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_user='".$userdata['user_id']."'", 1));
+
 			if (isset($_POST['post_rating'])) {
 				if (isnum($_POST['rating']) && $_POST['rating'] > 0 && $_POST['rating'] < 6 && !isset($d_rating['rating_vote'])) {
 					$result = dbquery("INSERT INTO ".DB_RATINGS." (rating_item_id, rating_type, rating_user, rating_vote, rating_datestamp, rating_ip, rating_ip_type) VALUES ('$rating_item_id', '$rating_type', '".$userdata['user_id']."', '".$_POST['rating']."', '".time()."', '".USER_IP."', '".USER_IP_TYPE."')");
+					if ($result) defender::unset_field_session();
 				}
-				if (!$settings['site_seo']) {
-					redirect($rating_link);
-				}
-			} elseif (isset($_POST['remove_rating'])) {
-				$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$rating_item_id' AND rating_type='$rating_type' AND rating_user='".$userdata['user_id']."'");
-				//redirect($rating_link);
+				if (!$settings['site_seo']) redirect($rating_link);
 			}
+
+			elseif (isset($_POST['remove_rating'])) {
+				$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$rating_item_id' AND rating_type='$rating_type' AND rating_user='".$userdata['user_id']."'");
+				if ($result) defender::unset_field_session();
+				if (!$settings['site_seo']) redirect($rating_link);
+			}
+
 		}
+
+		print_p($d_rating);
+
 		$ratings = array(5 => $locale['r120'], 4 => $locale['r121'], 3 => $locale['r122'], 2 => $locale['r123'],
 						 1 => $locale['r124']);
-		opentable($locale['r100']);
+		//opentable($locale['r100']);
 		if (!iMEMBER) {
 			echo "<div style='text-align:center'>".$locale['r104']."</div>\n";
 		} elseif (isset($d_rating['rating_vote'])) {
@@ -47,16 +55,12 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			echo "<input type='submit' name='remove_rating' value='".$locale['r102']."' class='button' />\n";
 			echo "</form>\n</div>\n";
 		} else {
-			echo "<div style='text-align:center'>\n";
-			echo "<form name='postrating' method='post' action='".($settings['site_seo'] ? FUSION_ROOT : '').$rating_link."'>\n";
-			echo $locale['r106'].": <select name='rating' class='textbox'>\n";
-			echo "<option value='0'>".$locale['r107']."</option>\n";
-			foreach ($ratings as $rating => $rating_info) {
-				echo "<option value='".$rating."'>$rating_info</option>\n";
-			}
-			echo "</select>\n";
-			echo "<input type='submit' name='post_rating' value='".$locale['r103']."' class='button' />\n";
-			echo "</form>\n</div>";
+			echo "<div class='text-center'>\n";
+			echo openform('postrating', 'postrating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('downtime'=>1, 'notice'=>0));
+			echo form_select($locale['r106'], 'rating', 'rating', $ratings, '', array('width'=>'100%'));
+			echo form_button($locale['r103'], 'post_rating', 'post_rating', $locale['r103'], array('class'=>'btn-primary btn-sm'));
+			echo closeform();
+			echo "</div>\n";
 		}
 		echo "<hr />";
 		$tot_votes = dbcount("(rating_item_id)", DB_RATINGS, "rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."'");
@@ -82,9 +86,9 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			}
 			echo "</table>\n";
 		} else {
-			echo "<div style='text-align:center'>".$locale['r101']."</div>\n";
+			echo "<div class='text-center'>".$locale['r101']."</div>\n";
 		}
-		closetable();
+		//closetable();
 	}
 }
 

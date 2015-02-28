@@ -176,7 +176,7 @@ $core_tables = array(
 	"ratings" => " (
 		rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 		rating_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-		rating_type CHAR(1) NOT NULL DEFAULT '',
+		rating_type CHAR(4) NOT NULL DEFAULT '',
 		rating_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 		rating_vote TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		rating_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
