@@ -164,7 +164,7 @@ You do not need to use apostrophes in the SQL.
 ***Long version***
 
 	$users = array();
-	while ($user = $conn->fetchRows($result1)) {
+	while ($user = $conn->fetchRow($result1)) {
 		$users[] = $user;
 	}
 
