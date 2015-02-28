@@ -1,0 +1,2 @@
+#side-border-right, #side-border-left {display: none;}
+.side-both #main-bg, .side-left #main-bg, .side-right #main-bg{margin: 0 0.5em;}

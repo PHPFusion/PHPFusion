@@ -1,0 +1,24 @@
+<?php
+/**
+ * PHPMailer language file.  
+ * Slovak Version
+ */
+
+$PHPMAILER_LANG = array();
+
+$PHPMAILER_LANG["provide_address"] = 'Musíte zada aspoò jednu ' .
+                                     'emailovú adresu príjemcu.';
+$PHPMAILER_LANG["mailer_not_supported"] = ' mailový klient nie je podporovaný.';
+$PHPMAILER_LANG["execute"] = 'Nedá sa vykona: ';
+$PHPMAILER_LANG["instantiate"] = 'Nedá sa vykona instancia emailovej funkcie.';
+$PHPMAILER_LANG["authenticate"] = 'SMTP Chyba: Chyba autentikácie.';
+$PHPMAILER_LANG["from_failed"] = 'Nasledujúca adresa je nesprávna: ';
+$PHPMAILER_LANG["recipients_failed"] = 'SMTP Chyba: Adresy príjemcov ' .
+                                       'sú nesprávné ' .
+$PHPMAILER_LANG["data_not_accepted"] = 'SMTP Chyba: Dáta neboli prijaté';
+$PHPMAILER_LANG["connect_host"] = 'SMTP Chyba: Nedá sa nadviaza spojenie s ' .
+                                  ' SMTP serverom.';
+$PHPMAILER_LANG["file_access"] = 'Súbor nenájdený: ';
+$PHPMAILER_LANG["file_open"] = 'Chyba súboru: Nedá sa otvori súbor pre èítanie: ';
+$PHPMAILER_LANG["encoding"] = 'Neznáme kódovanie: ';
+?>

@@ -1,0 +1,309 @@
+/*Pastel Theme for PHP-Fusion 7 by Max "Matonor" Toball*/
+
+/*General*/
+html {font-size: 75%;}
+body {
+	background: #828282;
+	color: #3d3d3d;
+}
+* {
+	font-family: Verdana, Arial, Sans, sans-serif;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 1em;
+}
+ul, ol, dl {margin: 0.5em 1em}
+li {margin-left: 1.5em; line-height: 1.5em;}
+option {padding-left: 0.75em}
+#subheader ul, #subheader li, #userbar ul, #userbar li, #navigation ul, #navigation li {margin: 0; line-height: inherit;}
+
+/*Links*/
+a {text-decoration: none;}
+#subheader a, #links a{
+	text-transform: uppercase;
+	font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
+	display: block;
+	float: left;
+	border: 0pt solid #ede9e4;
+	border-width: 0.2em 0 0 0;
+	font-size: 1.1em;
+	text-decoration: none;
+	padding: 0 0.5em;
+}
+#subheader a{
+	line-height: 1.6em;
+	height: 1.6em;
+}
+#links a{
+	line-height: 1.6em;
+	height: 1.6em;
+	border-width: 0 0 0.2em 0;
+	font-size: 1em;
+}
+#anchors a {
+	line-height: 1.6em;
+	font-size: 1em;
+	color: #666;
+	margin-left: 0.5em;
+}
+#subheader a:hover, #links a:hover{background: #f7f5ef;}
+
+/*Structure*/
+#header{margin-bottom: 1em;}
+#subheader{
+	height: 2em;
+	overflow: hidden;
+	background: #ede9e4;
+}
+#mainheader{padding: 0.5em;}
+#userbar{
+	height: 1.8em;
+	position: relative;
+	text-transform: uppercase;
+	font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
+	background: #ede9e4;
+}
+#userbar ul li, #subheader ul li {display: inline;}
+#links{
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+#footer {
+	margin: 1.5em 0em;
+	padding: 1em;
+	font-size: 0.8em;
+}
+#subfooter{
+	color: #ddd;
+	font-weight: 700;
+}
+#main {
+	left: 0;
+	position: absolute;
+	top: 0em;
+}
+#main-bg, #side-border-left, #side-border-right, #header, #footer{
+	background: #f5f2eb;
+	border: 1pt solid #999;
+	border-width: 1pt 4pt 4pt 1pt;
+}
+#main-bg {
+	line-height: 1.45em;
+	padding: 0.5em;
+	z-index: 1;
+}
+* html #main-bg, * html #cont{
+	height: 1%;
+	width: auto;
+}
+#side-border-left {
+	width: 15em;
+	max-width: 15em;
+	padding: 0.5em;
+	z-index: 2;
+	float: left;
+	display: inline;
+}
+#side-border-right {
+	width: 15em;
+	max-width: 15em;
+	padding: 0.5em;
+	z-index: 3;
+	float: right;
+	display: inline;
+}
+.side-both #main-bg {margin: 0 17.5em;}
+.side-left #main-bg {margin-left: 17.5em;}
+.side-right #main-bg {margin-right: 17.5em;}
+.side-left #side-border-right {display:none;}
+.side-right #side-border-left {display:none;}
+
+
+/*Navigation Panel*/
+#navigation{margin: 0 -0.75em;}
+#navigation h2, .side-label {
+	font-variant: small-caps;
+	color: #6d6964;
+	background-color: #ede9e4;
+	font-size: 1.1em;
+	padding: 0.25em;
+	margin-bottom: 1px;
+	font-weight: 700;
+}
+#navigation ul {
+	display: block;
+	list-style-type: none;
+	line-height: 1.2em;
+}
+#navigation .bullet {display: none;}
+* html #navigation ul li, #navigation a {height: 1%;}
+#navigation a {
+	background-color: #ede9e4;
+	display: block;
+	padding: 0.25em 0.5em;
+	text-decoration : none;
+	margin-bottom: 1px;
+}
+#navigation a:hover {color: #fff;}
+
+
+/*Misc Styles*/
+.comment-avatar {
+	padding-right: 6px;
+	float: left;
+}
+.pagenav {padding: 0.4em;}
+.pagenav span, .pagenav a, .pagenav a:hover {
+	color: #776;
+	background-color: #b8b2a1;
+	border: 1px solid #d8d2c1;
+	padding: 0.2em 0.4em 0.2em 0.4em;
+	margin: 0.2em;
+	text-decoration: none;
+}
+.pagenav a {
+	color: #b8b2a1;
+	background-color: #d8d2c1;
+}
+.switcherbutton{
+	height: 2em;
+	width: 2em;
+}
+.textbox, .button {
+	border: 2px solid #999;
+	font-size: 1em;
+	margin-top: 0.1em;
+	padding: 0.25em;
+}
+.button{
+	color: #fff;
+	background: #aaa;
+	border: 1px solid #999;
+	font-weight: bold;
+}
+.bbcode{
+	color: #fff;
+	background: #aaa;
+	border: 1px solid #999;
+	font-weight: bold;
+	margin-top: 0.2em;
+}
+textarea.textbox {border-width: 3pt 1pt 1pt 3pt;}
+.center {margin: 0 auto;}
+.news-category {
+	float: left;
+	margin: 0.2em 0.5em 0 0;
+}
+.news-footer-img {vertical-align: middle;}
+.panelcap {
+	font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
+	text-transform: uppercase;
+	font-size: 1.2em;
+	line-height: 1em;
+	font-weight: 500;
+	margin: 0;
+}
+.panelbody {
+	padding: 0.5em 0.25em;
+	margin-bottom: 0.5em;
+}
+.quote,.admin-message {
+	border: 1pt solid #999;
+	border-width: 1pt 1pt 1pt 3pt;
+	margin: 0 2em;
+	padding: 3pt;
+}
+.admin-message{
+	color: #fff;
+	padding: 0.5em;
+	margin: 1em auto;
+	width: 80%;
+}
+code, pre {
+	font-family: monospace;
+	font-size: 1.1em;
+}
+.poll {height: 1em;}
+.comment-name {font-weight: 700;}
+.small,.small2,.side-small {font-size: 0.9em;}
+.tbl-border{
+	background: #f5f2eb;
+	border: 1px solid #f5f2eb;
+}
+.tbl,.tbl1,.tbl2,.forum-caption {padding: 3pt;}
+.forum-caption {
+	color: #6d6964;
+	font-variant: small-caps;
+	font-weight: 700;
+	background: #dddad3;
+}
+.tbl1 {background: #e6e3dc;}
+.tbl2 {background: #e1ded7;}
+
+div.emulated-fieldset {
+	position: relative;
+	margin: 20px 0px 10px 0px;
+	border: 1px solid #ccc;
+	width: 320px;
+	background: inherit;
+}
+div.emulated-fieldset span.emulated-legend {
+	display: inline;
+	position: absolute;
+	top: -12px;
+	margin: 0 5px;
+	padding: 4px;
+	background: inherit;
+}
+div.emulated-fieldset div.attachments-list {
+	padding: 10px 3px 3px 3px;
+	width: 320px;
+}
+hr {
+	border: solid #999 1pt;
+	height: 1pt;
+}
+.news-footer {padding: 0.5em;}
+.panelbutton{float: right;}
+h1,h2,h3,h4,h5,h6 {font-size: inherit;}
+
+
+/*Helpers*/
+.center {margin: 0 auto;}
+.content_center {text-align: center;}
+.flleft {float: left !important;}
+.flright {float: right !important;}
+.clear {clear: both;}
+
+#container{
+	width: 100%;
+	overflow-x: auto;
+	overflow-y: visible;
+}
+
+/*IE Fixes*/
+* html #main-bg {
+	height: 1%;
+	width: auto;
+}
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+/* Hide from IE Mac \*/
+.clearfix {display:block;}
+/* End hide from IE Mac */
+.floatfix {overflow:hidden;}
+* html .floatfix {width:100%;}
+.center, *[align="center"] {margin: 0 auto;}
+
+/* TinyMCE specific rules */
+body.mceContentBody {
+	background: #FFFFFF;
+	color: #000000;
+}

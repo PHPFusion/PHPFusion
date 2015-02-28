@@ -1,0 +1,18 @@
+#panel-side1, #panel-side2, #panel-side3, #panel-side4 {
+	list-style: none;
+	 min-height:20px;
+	 height: auto !important;
+	 height: 20px;
+}
+
+#panel-side1 li, #panel-side2 li, #panel-side3 li, #panel-side4 li {
+	display: block;
+	margin: 30;
+	padding: 10;
+}
+
+#panel-side1 li img.handle, #panel-side2 li img.handle, #panel-side3 li img.handle, #panel-side4 li img.handle {
+	cursor: ns-resize;
+}
+.state-highlight { background:#FFC; height:20px;}
+.floatfix { overflow:hidden; }

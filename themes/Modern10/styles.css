@@ -1,0 +1,710 @@
+/*  PHP-Fusion 7.02.00 Style Sheet
+    --------------------------------------------------------------
+	Style name:		Modern10
+	Style author:	Hans Kristian Flaatten {Starefossen}
+
+	Copyright 2010 PHP-Fusion Development Team
+    --------------------------------------------------------------
+*/
+
+/* HTML Tags
+---------------------------------------- */
+body {
+	background: rgb(101, 101, 101);
+	color: #515151
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 12px;
+	margin: 0pt;
+}
+
+form {
+	margin: 0px;
+}
+
+a {
+	color: #04688d;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #04688d;
+	text-decoration: underline;
+}
+
+div.emulated-fieldset {
+	position: relative;
+	margin: 20px 0px 10px 0px;
+	border: 1px solid #ccc;
+	width: 320px;
+	background: inherit;
+}
+div.emulated-fieldset span.emulated-legend {
+	display: inline;
+	position: absolute;
+	top: -12px;
+	margin: 0 5px;
+	padding: 4px;
+	background: inherit;
+}
+div.emulated-fieldset div.attachments-list {
+	padding: 10px 3px 3px 3px;
+	width: 320px;
+}
+
+hr {
+	height: 1px;
+	border: 0;
+	border: 1px solid #eee;
+}
+
+hr.side-hr {
+	height: 1px;
+	border: 0;
+	border-bottom: 2px dotted #555;
+}
+
+table {
+	padding: 0;
+	margin: 0;
+	border-collapse: collapse;
+}
+
+td {
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 12px;
+}
+
+pre {
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 12px;
+}
+
+/* PHP-Fusion Site Construction
+---------------------------------------- */
+#container {
+	background: rgb(255, 255, 255);
+	overflow: hidden;
+	position: relative;
+	word-wrap: break-word;
+	text-align: left;
+	margin: 10px auto;
+	padding: 7px;
+	width: 900px;
+}
+
+#top-nav, #top-nav ul li a {
+	color: #656565;
+	font-family: 'Helvetica Neue', Arial, sans-serif;
+	font-weight: bold;
+	font-size: 15px;
+}
+
+#top-nav ul li a:hover {
+	color: #999;
+	text-decoration: none;
+}
+
+#top-nav ul li.current-link a, #top-nav ul li.current-link a:hover {
+	color: #66ABC5;
+	text-decoration: none;
+}
+
+#top-nav {
+	border-bottom: 3px solid #CCC;
+	line-height: 30px;
+	text-align: right;
+	padding: 0 15px;
+	overflow: visible;
+	display: block;
+}
+
+#top-nav ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#top-nav ul li {
+	display: inline;
+	list-style-type: none;
+	padding-left: 15px;
+}
+
+#header {
+	color: #797979;
+	font-family: HelveticaNeue-Light, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 36px;
+	font-weight: 300;
+	text-transform: uppercase;
+	margin: 10px 0 0 0;
+	padding: 0;
+}
+
+#header a {
+	color: #797979;
+}
+
+#header a:hover {
+	color: #797979;
+	font-style: normal;
+	text-decoration: none;
+}
+
+#search {
+	float: right;
+	margin-bottom: 5px;
+}
+
+#search input.submit {
+	border: 0;
+	background: transparent;
+	background-image: url(images/search.png);
+	background-position: bottom;
+	background-repeat: no-repeat;
+	width: 20px;
+	height: 20px;
+	padding: 1 1 3 1;
+	margin: 0;
+	cursor: pointer;
+}
+
+#search input.search {
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 12px;
+	color: #515151;
+	width: 150px;
+	padding: 1;
+	margin: 0 5px 0 0;
+	border: solid 1px #515151;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+
+#content {
+	width: 100%;
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+}
+
+#side-left {
+	float: left;
+	width: 180px;
+}
+
+#side-right {
+	float: right;
+	width: 180px;
+}
+
+#side-center {
+}
+
+div.side-both {
+	margin-right: 183px;
+	margin-left: 183px;
+}
+
+div.side-left {
+	margin-left: 183px;
+}
+
+div.side-right {
+	margin-right: 183px;
+}
+
+#footer {
+	text-align: center;
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	color: #515151;
+	font-size: 12px;
+	margin-top: 50px;
+}
+
+#copyright-site {
+	margin-bottom: 10px;
+}
+
+/* PHP-Fusion Panels
+---------------------------------------- */
+.ui-sortable { margin: 0;padding: 0;}
+
+a.side {
+	color: #555;
+	text-decoration: none;
+}
+
+a:hover.side {
+	text-decoration: underline;
+}
+
+div.side-panel, .admin-message {
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 12px;
+	color: #515151;
+	overflow: visible;
+	display: block;
+	margin-bottom: 3px;
+	padding: 5px;
+}
+
+#side-left div.side-panel, #side-right div.side-panel, #side-center div.upper div.side-panel, #side-center div.lower div.side-panel, .admin-message {
+	color: #424242;
+	background: #cccccc;
+}
+
+div.side-panel div.title {
+	font-family: HelveticaNeue-Bold, 'Helvetica Neue', Arial, sans-serif;
+	color: #515151;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: 0px;
+	line-height: 17px;
+	padding-bottom: 5px;
+}
+
+#side-center div.upper div.side-panel {
+	margin-bottom: 20px;
+}
+
+.admin-message {
+	background-color: #ff9999;
+}
+
+/* PHP-Fusion News
+---------------------------------------- */
+div.news-item {
+	padding: 0 5px;
+	border: 1px strong #000000;
+}
+
+div.news-item span.title {
+	color: #B7614E;
+	font-family: HelveticaNeue-Light, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 17px;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+div.news-item span.title a {
+	color: #B7614E;
+	text-decoration: none;
+}
+
+div.news-item span.title a:hover {
+	color: #E08566;
+	text-decoration: none;
+}
+
+div.news-item span.poster {
+	color: #797979;
+	font-family: HelveticaNeue-Bold, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 15px;
+	margin: 0 0 0 15px;
+}
+
+div.news-item div.image {
+	float: right;
+}
+
+div.news-item div.content {
+	float: left;
+	margin: 0;
+}
+
+div.news-item div.info {
+	margin-bottom: 15px;
+}
+
+div.news-item div.content div.subject, div.news-item div.content {
+	color: #515151;
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 12px;
+	font-weight: 400;
+	text-align: justify;
+	line-height: 17px;
+}
+
+div.news-item div.content {
+	margin-bottom: 20px;
+}
+
+div.news-item .news-category {
+	border: 10px solid #cccccc;;
+	margin: 0 0 0 15px;
+}
+
+div.news-item div.footer {
+	margin-top: 15px;
+}
+
+/* PHP-Fusion Spesific
+---------------------------------------- */
+.alt {
+	color: #04688d;
+}
+
+.spacer {
+	margin-bottom: 5px;
+}
+
+.button {
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	background-color: #cccccc;
+	border: 2px solid #666666;
+	font-size: 13px;
+	line-height: 17px;
+	color: #666666;
+	height: 25px;
+	padding: 3px;
+	margin: 3px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.button:hover {
+	color: #333333;
+	background-color: #999999;
+}
+
+.bbcode {
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 12px;
+	color: #000;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	margin-top: 2px;
+}
+
+.bbcode-popup {
+	font-size: 12px;
+	color: #555;
+	background-color: #fff;
+	padding: 4px;
+}
+
+.textbox {
+	font-family: HelveticaNeue, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 13px;
+	color: #555;
+	background-color: #f8f8f8;
+	border: 2px solid #6699cc;
+	padding: 3px;
+	margin: 3px;
+	overflow: inherit;
+	word-wrap: normal;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.textbox:focus {
+	color: #000;
+	background-color: #E1E1E1;
+}
+
+
+
+
+
+/* General table properties */
+
+.comment-avatar {
+	padding-right: 6px;
+	float: left;
+}
+
+.center {
+	margin: 0 auto;
+}
+
+.tbl-border {
+	border: 1px solid #999999;
+}
+
+.tbl {
+	font-size: 12px;
+	color: #555;
+	background-color: #fff;
+	padding: 4px;
+}
+
+.tbl1 {
+	font-size: 12px;
+	color: #555;
+	background-color: #fff;
+	padding: 4px;
+}
+
+.tbl2  {
+	font-size: 12px;
+	color: #555;
+	background-color: #cccccc;
+	padding: 4px;
+}
+
+.tbl-error  {
+	color: #AC260F;
+	font-weight: bold;
+	background-color: #FCCAC2;
+	border:2px solid #EB5339;
+}
+
+/* Profile spesific classes */
+.profile, .profile_category {
+	width: 500px;
+}
+
+.edit-profile {
+	width: 500px;
+}
+
+/*.user_password .textbox:focus, .user_admin_password .textbox:focus {
+	background-color: #ff6666;
+}*/
+
+.profile_user_reason {
+	color: #ff6666;
+	font-weight: bold;
+}
+
+/*.user_name td, .user_name .textbox {
+	font-size: 13px;
+	padding: 4px;
+}*/
+
+.poll {
+	height: 12px;
+	border: 1px solid #bbb;
+}
+
+.comment-name {
+	font-weight: bold;
+	color: #04688d;
+}
+
+.small {
+	font-size: 12px;
+	font-weight: normal;
+}
+
+.small2 {
+	font-size: 12px;
+	font-weight: normal;
+	color: #555;
+}
+
+.side-small {
+	font-size: 12px;
+	font-weight: normal;
+	color: #555;
+}
+
+.side-label {
+	color: #555;
+	background-color: #f1f1f1;
+	margin: 2px 0 2px 0;
+	padding: 2px 2px 3px 2px;
+}
+
+/* PHP-Fusion Forum Classes
+---------------------------------------- */
+.forum_idx_table, .forum_table, .forum_thread_table {
+	border: 0px;
+	background-color: transparent;
+}
+
+.forum {
+	border-bottom: 5px solid #CCC;
+}
+
+.forum_breadcrumbs {
+	border-left: 5px solid #CCC;
+	background-color: #f1f1f1;
+}
+
+.forum_idx_table .tbl2, .forum_idx_table .tbl1, .forum_table .tbl2, .forum_table .tbl1 {
+	background-color: transparent;
+}
+
+.forum-caption {
+	font-size: 13px;
+	font-weight: bold;
+	color: #515151;
+	background-color: transparent;
+	border-bottom: 5px solid #CCC;
+	padding: 15px 6px 0 0;
+	margin-top: 15px;
+}
+
+.forum_thread_table .forum-caption {
+	border: 0px;
+}
+.forum_cat_name {
+}
+
+.forum_name {
+	font-weight: bold;
+}
+
+.forum_name .small {
+	font-size: 12px;
+	font-weight: normal;
+}
+
+.forum_thread_post_date, forum_thread_user_post, .forum_thread_userbar {
+	background-color: transparent;
+}
+
+.forum_thread_user_name, .forum_thread_post_date {
+	border-top: 5px solid #CCC;
+}
+
+.forum_thread_user_name, .forum_thread_user_info, .forum_thread_ip {
+	background-color: #f1f1f1;
+	border-right: 5px solid #CCC;
+}
+
+.forum_thread_ip, .forum_thread_userbar {
+	border-bottom: 5px solid #CCC;
+	/* border-top: 5px solid #CCC; */
+}
+
+.quote {
+	font-size: 12px;
+	color: #555;
+	background-color: #f8f8f8;
+	padding: 4px;
+	margin: 0px 20px 0px 20px;
+	border: 1px solid #bbb;
+}
+
+/* PHP-Fusion Vertical Navigation
+---------------------------------------- */
+#navigation h2 {
+	font-size: 12px;
+	font-weight: normal;
+	background-color: #f1f1f1;
+	margin: 0;
+	padding: 4px;
+}
+
+#navigation ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+* html #navigation ul li {
+   height: 1%;
+}
+
+#navigation a {
+	display: block;
+	color: #555;
+	padding: 2px;
+	text-decoration: none;
+}
+
+#navigation a:hover {
+	color: #fff;
+	background-color: #6699cc;
+}
+
+#navigation ul li.current-link a, #navigation ul li.current-link a:hover {
+	background-color: #66ABC5;
+	color: #fff;
+}
+
+/* PHP-Fusion Page Navigation
+---------------------------------------- */
+.pagenav {
+	padding: 4px;
+}
+
+.pagenav span {
+	color: #fff;
+	background-color: #f6a504;
+	border: 1px solid #ddd;
+	padding: 2px 4px 2px 4px;
+	margin: 2px;
+}
+
+.pagenav a {
+	color: #555;
+	background-color: #f1f1f1;
+	border: 1px solid #ddd;
+	padding: 2px 4px 2px 4px;
+	margin: 2px;
+	text-decoration: none;
+}
+
+.pagenav a:hover {
+	color: #fff;
+	background-color: #69C;
+	margin: 2px;
+	text-decoration: none;
+}
+
+/* PHP-Fusion Helpers
+---------------------------------------- */
+.clear {
+	clear: both;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+
+/* Helpers
+---------------------------------------- */
+.center {margin: 0 auto;}
+.content_center {text-align: center;}
+.flleft {float: left !important;}
+.flright {float: right !important;}
+.clear {clear: both;}
+
+
+/* IE Fixes
+---------------------------------------- */
+* html #main-bg {
+	height: 1%;
+	width: auto;
+}
+
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+
+/* Hide from IE Mac
+---------------------------------------- */
+.clearfix {
+	display:block;
+}
+
+/* End hide from IE Mac
+---------------------------------------- */
+.floatfix {
+	overflow:hidden;
+}
+
+* html .floatfix {
+	width:100%;
+}
+
+.center, *[align="center"] {
+	margin: 0 auto;
+}

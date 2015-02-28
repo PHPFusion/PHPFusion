@@ -1,0 +1,339 @@
+/*Atlantis Theme for PHP-Fusion 7 by Max "Matonor" Toball*/
+
+/*General*/
+html {font-size: 0.75em;}
+body {
+	background-color: #006699;
+	color: #253946;
+}
+* {
+	font-family: Verdana, Arial, Sans, sans-serif;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 1em;
+}
+ul, ol, dl {margin: 0.5em 1em}
+li {margin-left: 1.5em; line-height: 1.5em;}
+option {padding-left: 0.75em}
+#subheader ul, #subheader li, #userbar ul, #userbar li, #navigation ul, #navigation li {margin: 0; line-height: inherit;}
+
+/*Links*/
+a {
+	color: #3d667a;
+	text-decoration: none;
+}
+a:hover {color: #0370a7;}
+a#content {visibility: hidden;}
+#subheader a, #links a {
+	color: #006699;
+	text-transform: uppercase;
+	font-family: "Trebuchet MS", Verdana, Arial, Sans, sans-serif;
+	font-size: 1.05em;
+	height: 2em;
+	padding: 0em 0.5em;
+}
+#anchors a{
+	color: #ccc;
+	margin-left: 0.25em;
+}
+#links a{
+	padding-left: 0;
+	font-size: 1em;
+}
+#subheader a:hover, #links a:hover{color: #004d73;}
+#footer a{color: #4f8faf;}
+#footer a:hover{text-decoration: underline;}
+#subheader li.current-link a {color: #004d73;}
+#subheader li.current-link a:hover {color: #006699;}
+
+/*Structure*/
+#main {
+	left: 0;
+	position: absolute;
+	top: 0;
+}
+#mainheader {
+	padding: 0.5em 1em;
+	background: #fff url(images/mainheader_bg.jpg) repeat-x bottom;
+}
+#subheader, #userbar {
+	background: #fff;
+	height: 2em;
+	line-height: 2em;
+	overflow: hidden;
+}
+#subheader {
+	font-weight: bold;
+	text-align: center;
+	height: 33px;
+	background: #fff url(images/subheader_bg.jpg) repeat-x bottom;
+}
+#userbar ul li, #subheader ul li {display: inline;}
+#userbar img {
+	vertical-align: middle;
+	margin-top: -3px;
+}
+#userbar_shadow {
+	margin: -0.5em 10% 0 10%;
+	width: 80%;
+}
+#userbar, #mainheader, #cont {
+	border: 4px solid #00466a;
+	border-width: 0 4px;
+}
+#cont{
+	position: relative;
+	top: 0;
+	left: 0;
+	background: #fff;
+}
+#side_tl{
+	position: absolute;
+	left: -4px;
+	top: 0;
+}
+#side_tr{
+	position: absolute;
+	right: -4px;
+	top: 0;
+}
+#cont_b {
+	height: 20px;
+	background: url(images/cont_b.jpg) repeat-x top;
+}
+#main-bg {
+	line-height: 1.4em;
+	background: url(images/cont_t.jpg) repeat-x top;
+	padding: 2em 1em;
+}
+#side-border-right, #side-border-left {
+	padding: 2em 0.75em;
+	width: 15em;
+	max-width: 15em;
+	background: url(images/side_bg.jpg) repeat-x top;
+	display: inline;
+}
+#side-border-left {
+	padding-right: 0.5em;
+	float: left;
+}
+#side-border-right {
+	padding-left: 0.5em;
+	float: right;
+}
+* html #side-border-right {margin-left: -3px;}
+* html #side-border-left {margin-right: -3px;}
+.side-both #main-bg {margin: 0 16em;}
+.side-left #main-bg {margin-left: 16em;}
+.side-right #main-bg {margin-right: 16em;}
+.side-left #side-border-right {display:none;}
+.side-right #side-border-left {display:none;}
+
+
+/*Navigation Panel*/
+#navigation h2, .side-label {
+	color: #0077aa;
+	font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
+	text-transform: uppercase;
+	font-size: 1.0em;
+	padding: 0.15em;
+	font-weight: 500;
+}
+#navigation ul {
+	margin-left: -0.25em;
+	list-style-type: none;
+	line-height: 1.2em;
+}
+* html #navigation ul li {height: 1%;}
+#navigation a {
+	display: block;
+	color: #3d667a;
+	padding: 0.2em 0.2em 0.2em 0.2em;
+	text-decoration : none;
+}
+#navigation a:hover {
+	color: #006699;
+	background-color: #accad9;
+}
+
+#navigation li.first-link a {
+	font-weight:bold;
+}
+
+#navigation li.current-link a {
+	background-color: #eee;
+}
+
+
+/*Misc Styles*/
+.comment-avatar {
+	padding-right: 6px;
+	float: left;
+}
+.pagenav {padding: 0.4em;}
+.pagenav span, .pagenav a, .pagenav a:hover {
+	color: #006699;
+	background-color: #accad9;
+	border: 1px solid #dde5eb;
+	padding: 0.2em 0.4em 0.2em 0.4em;
+	margin: 0.2em;
+}
+.pagenav a {
+	color: #3d667a;
+	background-color: #edf3f6;
+}
+#footer, #subfooter {
+	width: 90%;
+	color: #72a7c2;
+	background: #006090;
+	border: 1px solid #1070aa;
+	margin: 1.5em auto;
+	padding: 1em;
+	font-size: 0.8em;
+}
+.textbox, .button, .quote {
+	border-bottom: 1px solid #6f8c99;
+	border-right: 1px solid #6f8c99;
+	border-top: 1px solid #c1d9e4;
+	border-left: 1px solid #c1d9e4;
+	background: #fff url(images/mainheader_bg.jpg) repeat-x bottom;
+	font-size: 1em;
+	margin-top: 0.1em;
+	padding: 0.25em;
+}
+.textbox:focus{
+	border-bottom: 1px solid #c1d9e4;
+	border-right: 1px solid #c1d9e4;
+	border-top: 1px solid #6f8c99;
+	border-left: 1px solid #6f8c99;
+}
+.button{color: #006699;}
+.bbcode {
+	border-bottom: 1px solid #6f8c99;
+	border-right: 1px solid #6f8c99;
+	border-top: 1px solid #c1d9e4;
+	border-left: 1px solid #c1d9e4;
+	background: #fff url(images/mainheader_bg.jpg) repeat-x bottom;
+	font-size: 1em;
+	margin-top: 0.1em;
+}
+.news-category {
+	float: left;
+	margin: 0.2em 0.5em 0 0;
+}
+.news-footer-img {vertical-align: middle;}
+.news-footer {padding: 0.5em;}
+.panelcap {
+	color: #006699;
+	font-family: "Trebuchet MS", "Lucida Grande", sans-serif;
+	text-transform: uppercase;
+	font-size: 1.15em;
+	line-height: 1em;
+	font-weight: 500;
+	margin: 0;
+}
+.panelbody {
+	padding: 0.15em 0.3em;
+	margin-bottom: 0.8em;
+	border-top: 2px solid #f0f0f0;
+}
+.quote, .admin-message {
+	color: inherit;
+	margin: 0.25em;
+}
+.admin-message{
+	color: #006699;
+	background: #e8eef1 url(forum/stickythread.gif) 0.4em 0.4em no-repeat;
+	border: 1px solid #6f8c99;
+	padding: 0.4em 0.4em 0.6em 2.8em;
+	margin: 1em auto;
+	width: 80%;
+}
+.poll {
+	height: 1.3em;
+	background: #006698 url(images/pollbar.jpg) bottom repeat-x;
+}
+.comment-name {
+	color: #777;
+	font-weight: 700;
+}
+
+.small,.small2,.side-small {font-size: 0.9em;}
+.tbl,.tbl1,.tbl2,.forum-caption {padding: 0.3em;}
+.tbl-border{background: #bdc5cb; border: 1px solid #bdc5cb;}
+.tbl1{background: #e8eef1;}
+.tbl2 {background: #edf3f6;}
+.forum-caption {
+	font-weight: 700;
+	background: #e8eef1 url(images/mainheader_bg.jpg) repeat-x;
+}
+code, pre {
+	font-family: monospace;
+	font-size: 1.1em;
+}
+
+div.emulated-fieldset {
+	position: relative;
+	margin: 20px 0px 10px 0px;
+	border: 1px solid #ccc;
+	width: 320px;
+	background: inherit;
+}
+div.emulated-fieldset span.emulated-legend {
+	display: inline;
+	position: absolute;
+	top: -12px;
+	margin: 0 5px;
+	padding: 4px;
+	background: inherit;
+}
+div.emulated-fieldset div.attachments-list {
+	padding: 10px 3px 3px 3px;
+	width: 320px;
+}
+hr {
+	border: solid #c1d9e4 1pt;
+	height: 1pt;
+}
+.panelbutton{float: right;}
+h1,h2,h3,h4,h5,h6 {font-size: inherit;}
+
+
+/*Helpers*/
+.center {margin: 0 auto;}
+.content_center {text-align: center;}
+.flleft {float: left !important;}
+.flright {float: right !important;}
+.clear {clear: both;}
+
+#container{
+	width: 100%;
+	overflow-x: auto;
+	overflow-y: visible;
+}
+
+/*IE Fixes*/
+* html #main-bg {
+	height: 1%;
+	width: auto;
+}
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+/* Hide from IE Mac \*/
+.clearfix {display:block;}
+/* End hide from IE Mac */
+.floatfix {overflow:hidden;}
+* html .floatfix {width:100%;}
+.center, *[align="center"] {margin: 0 auto;}
+
+/* TinyMCE specific rules */
+body.mceContentBody {
+	background: #FFFFFF;
+	color: #000000;
+}

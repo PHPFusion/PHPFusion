@@ -1,0 +1,122 @@
+/* Comment element properties */
+
+a {
+	color : #04688d;
+	text-decoration : none;
+}
+
+a:hover {
+	color : #04688d;
+	text-decoration : underline;
+}
+
+body {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 11px;
+	color : #000;
+	background : #fff;
+	margin : 5px;
+}
+
+hr {
+	height : 1px;
+	border : 1px solid #eee;
+}
+
+td {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 11px;
+}
+
+/* Form element properties */
+
+form {
+	margin : 0px;
+}
+
+.passed {
+	font-weight: bold;
+	color: green;
+}
+
+.failed {
+	font-weight: bold;
+	color: red;
+}
+
+.button {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	color : #fff;
+	background-color : #04688d;
+	height : 20px;
+	border : 1px solid #000;
+	margin-top : 2px;
+}
+
+.textbox {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	color : #555;
+	background-color : #f8f8f8;
+	border : 1px solid #ccc;
+}
+
+.center {
+	margin : 0 auto;
+}
+
+.sub-header {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	color : #fff;
+	background-color : #555;
+	border-bottom : 1px solid #fff;
+	padding : 5px;
+}
+
+.full-header {
+	font-family : Verdana, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	color : #000;
+	background-color : #fff;
+	padding : 5px 0 10px 0;
+}
+
+.tbl-border {
+	border : 1px solid #000;
+}
+
+.tbl {
+	font-size : 11px;
+	color : #555;
+	background-color : #fff;
+	padding : 4px;
+}
+
+.tbl1 {
+	font-size : 11px;
+	color : #555;
+	background-color : #fff;
+	padding : 4px;
+	text-align: left;
+}
+
+.tbl2 {
+	font-size : 11px;
+	color : #555;
+	background-color : #f1f1f1;
+	padding : 4px;
+}
+
+.tbl-error {
+	color : #AC260F;
+	font-weight: bold;
+	background-color : #FCCAC2;
+	border:2px solid #EB5339;
+}
+
+.small {
+	font-size : 10px;
+	font-weight : normal;
+}

@@ -1,0 +1,74 @@
+a {
+	color: #931d6a;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #931d6a;
+	text-decoration: underline;
+}
+
+a:hover.side {
+	color: #931d6a;
+	text-decoration: underline;
+}
+
+.button:focus, .button:hover {
+	background-position: 0 -361px;
+	background-color: #D84743;
+	border-color: #931d6a;
+}
+
+.button:active, .button.active {
+	background-position: 0 -401px;
+	background-color: #A5211E;
+	border-color: #931d6a;
+}
+
+.sub-header {
+	border-bottom: 2px solid #931d6a;
+}
+
+.sub-header ul li.current-link a {
+	background-color: #931d6a;
+	background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#a33b7f),color-stop(100%,#931d6a));
+    background-image: -webkit-linear-gradient(#a33b7f,#931d6a);
+    background-image: -moz-linear-gradient(#a33b7f,#931d6a);
+    background-image: -o-linear-gradient(#a33b7f,#931d6a);
+    background-image: linear-gradient(#a33b7f,#931d6a);
+}
+
+.sub-footer-top {
+	background-color: #931d6a;
+}
+
+.scapmain {
+	background-color: #931d6a;
+	background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#a33b7f),color-stop(100%,#931d6a));
+    background-image: -webkit-linear-gradient(#a33b7f,#931d6a);
+    background-image: -moz-linear-gradient(#a33b7f,#931d6a);
+    background-image: -o-linear-gradient(#a33b7f,#931d6a);
+    background-image: linear-gradient(#a33b7f,#931d6a);
+}
+
+.capmain {
+	background-color: #931d6a;
+	background-image: -webkit-gradient(linear,50% 0,50% 100%,color-stop(0%,#a33b7f),color-stop(100%,#931d6a));
+    background-image: -webkit-linear-gradient(#a33b7f,#931d6a);
+    background-image: -moz-linear-gradient(#a33b7f,#931d6a);
+    background-image: -o-linear-gradient(#a33b7f,#931d6a);
+    background-image: linear-gradient(#a33b7f,#931d6a);
+}
+
+::selection { color: #fff; background: #931d6a; }
+::-moz-selection { color: #fff; background: #931d6a; }
+div.highlightBlue::selection { color: #fff; background: #931d6a; }
+div.highlightBlue::-moz-selection { color: #fff; background: #931d6a; }
+
+.news_info ul li.date { background: url(../images/icons/date.png) 0 -72px no-repeat; }
+.news_info ul li.author { background: url(../images/icons/author.png) 0 -72px no-repeat; }
+.news_info ul li.comments { background: url(../images/icons/comments.png) 0 -72px no-repeat; }
+
+#navigation li.current-link a {
+	background-color: #931d6a;
+}

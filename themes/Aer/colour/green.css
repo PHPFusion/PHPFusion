@@ -1,0 +1,5 @@
+#header {background: url(../images/green/headbg.jpg) repeat-x bottom;}
+#header {background-color: #4d6c09;}
+a {color: #648b0d;}
+.panelcap, #subheader a, #navigation a:hover, #links {color:#4d6c09;}
+.panelbody, .admin-message {border-color: #a2b676 !important;}

@@ -1,0 +1,8 @@
+a, #anchor a {color: #993b08;}
+#anchors a:active, #anchors a:focus, #anchors a:hover {color: #fff;}
+.panelcap, #subheader, #userbar {border-color: #993b08;}
+.panelcap, .admin-message, #subheader, #userbar, #navigation a:hover, .forum-caption, .poll, .textbox, .button {background: #ae3e09 url(../images/red_bg.gif) center center repeat-x;}
+#subheader a:hover, #subheader .active a, #subheader .current-link a, #navigation a, .textbox:focus, .button {background: #993b08 url(../images/red_bgh.gif) center center repeat-x;}
+#navigation .current-link a {background: #ae3e09 url(../images/red_bg.gif) center center repeat-x;}
+#navigation .current-link a:hover {background: #993b08 url(../images/red_bgh.gif) center center repeat-x;}
+#subheader .current-link a:hover {background: #ae3e09 url(../images/red_bg.gif) center center repeat-x;}

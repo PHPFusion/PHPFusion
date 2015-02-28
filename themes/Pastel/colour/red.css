@@ -1,0 +1,14 @@
+#subheader a, #userbar li a, .panelcap, a {color: #8a3620;}
+a:hover {color: #9e695a;}
+#subheader a:hover, #links a:hover {color: #7f312b;}
+.textbox, .button, .bbcode, #subheader a:hover, #subheader .active a, #subheader .current-link a, #links a:hover {border-color:#9e695a;}
+.quote, .admin-message, .textbox:focus {border-color: #ae604a;}
+body, .poll {background: #9e695a;}
+.admin-message, .button, .bbcode {background: #8e594a;}
+hr, #main-bg, #side-border-left, #side-border-right, #header, #footer {border-color: #7f342b;}
+#navigation a:hover {background: #7f312b url(../images/navcorner_red.gif) right top repeat-y;}
+#navigation li.current-link a {background: #7f312b url(../images/navcorner_red.gif) right top repeat-y;color:#bbb;}
+#anchors li a, #anchors li a:hover {
+	color: #bbb;
+	background: transparent;
+}

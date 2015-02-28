@@ -1,0 +1,10 @@
+#subheader {background: url(../images/colours/red/lhcorner.gif) right bottom no-repeat;}
+#main-bg {background: url(../images/colours/red/mcorner.gif) right top no-repeat;}
+#side-border-left{background: url(../images/colours/red/lscorner.gif) right top no-repeat;}
+#side-border-right{background: url(../images/colours/red/rscorner.gif) left top no-repeat;}
+#side-border-left, #side-border-right, .admin-message{background-color: #5d383a;}
+.textbox, .button, .bbcode, #main-bg, .tbl-border, .pagenav a:hover{background-color: #922c28;}
+.tbl-border{border-color: #922c28;}
+#main-bg .textbox, #main-bg .button, .tbl1, #mainheader, #subheader a:hover, #subheader .active a, #subheader .current-link a, #userbar a:hover, .pagenav span{background-color : #790804;}
+.tbl2, .poll {background: #800905;}
+.forum-caption, .quote, #subheader, #userbar, #navigation a:hover, #navigation li.current-link a, .pagenav a{background-color: #550503;}

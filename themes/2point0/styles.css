@@ -1,0 +1,331 @@
+/*2point0 Theme for PHP-Fusion 7 by Max "Matonor" Toball*/
+
+/*General*/
+html {font-size: 75%;}
+body {
+	background: #f8f2e1;
+	color: #222;
+}
+* {
+	font-family: Verdana, Arial, Sans, sans-serif;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 1em;
+}
+ul, ol, dl {margin: 0.5em 1em}
+li {margin-left: 1.5em; line-height: 1.5em;}
+option {padding-left: 0.75em}
+#subheader ul, #subheader li, #userbar ul, #userbar li, #navigation ul, #navigation li {margin: 0; line-height: inherit;}
+
+
+/*Links*/
+a {text-decoration: none;}
+a:hover{text-decoration: underline;}
+#subheader a, #links a {
+	color: #fff;
+	display: block;
+	float: left;
+	font-weight: 700;
+	height: 2em;
+	padding: 0 0.75em;
+	text-decoration: none;
+}
+#links a{font-weight: 500;}
+#links a:hover{text-decoration: underline;}
+#anchors a {
+	font-size: 1em;
+	margin-left: 0.5em;
+}
+
+/*Structure */
+#subheader {
+	border-top: 1px solid;
+	height: 2em;
+	overflow: hidden;
+	line-height: 2em;
+	margin-bottom: 1em;
+}
+#userbar{
+	border-bottom: 1px solid;
+	height: 1.8em;
+	line-height: 1.8em;
+	position: relative;
+	background: #ede9e4;
+}
+#userbar ul li, #subheader ul li {display: inline;}
+#links{
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+#borderl {
+	background: url(images/borderl.gif) repeat-y;
+	padding-left: 24px;
+}
+#borderr {
+	background: url(images/borderr.gif) right repeat-y;
+	padding-right: 24px;
+	right: 0;
+	top: 0;
+}
+#uborder {
+	background: url(images/uborder.gif) repeat-x;
+	height: 24px;
+	width: 100%;
+}
+#lborder {
+	background: url(images/lborder.gif) repeat-x;
+	height: 24px;
+	width: 100%;
+}
+#ucornerl,#ucornerr,#lcornerl,#lcornerr {
+	height: 24px;
+	width: 24px;
+}
+#ucornerl {background: url(images/uborderl.gif);}
+#ucornerr {background: url(images/uborderr.gif);}
+#lcornerl {background: url(images/lborderl.gif);}
+#lcornerr {
+	background: url(images/lborderr.gif);
+	height: 24px;
+	width: 24px;
+}
+#main {
+	left: 0;
+	position: absolute;
+	top: 0;
+}
+#cont {background: #838077;}
+.border {border: 1px solid #444;}
+#main-bg{z-index: 1;}
+* html #main-bg {
+	height: 1%;
+	width: auto;
+}
+#side-border-left {
+	width: 15em;
+	max-width: 15em;
+	z-index: 2;
+	background: #f8f2e1;
+	float: left;
+	padding: 0.5em;
+	display: inline;
+}
+#side-border-right {
+	width: 15em;
+	max-width: 15em;
+	z-index: 3;
+	background: #f8f2e1;
+	float: right;
+	padding: 0.5em;
+	display: inline;
+}
+.side-both #main-bg {margin: 0 17em;}
+.side-left #main-bg {margin-left: 17em;}
+.side-right #main-bg {margin-right: 17em;}
+.side-left #side-border-right {display:none;}
+.side-right #side-border-left {display:none;}
+
+
+/*Navigation Panel*/
+#navigation{margin: 0 -1em;}
+#navigation h2, .side-label {
+	font-variant: small-caps;
+	color: #6d6964;
+	background-color: #ede9e4;
+	font-size: 1.1em;
+	padding: 0.25em;
+	margin-bottom: 1px;
+	font-weight: 700;
+}
+#navigation ul {
+	display: block;
+	list-style-type: none;
+	line-height: 1.2em;
+}
+#navigation img.bullet {display: none;}
+* html #navigation ul li, #navigation a {height: 1%;}
+#navigation a {
+	display: block;
+	color: #f8f2e1;
+	font-weight: 700;
+	padding: 0.3em;
+	text-decoration : none;
+	margin-bottom: 1px;
+}
+#navigation a:hover {color: #fff;}
+
+
+/*Misc Styles*/
+.comment-avatar {
+	padding-right: 6px;
+	float: left;
+}
+.pagenav {padding: 0.4em;}
+.pagenav span, .pagenav a, .pagenav a:hover {
+	color: #776;
+	background-color: #b8b2a1;
+	border: 1px solid #d8d2c1;
+	padding: 0.2em 0.4em 0.2em 0.4em;
+	margin: 0.2em;
+	text-decoration: none;
+}
+.pagenav a {
+	color: #b8b2a1;
+	background-color: #d8d2c1;
+}
+.switcherbutton{
+	height: 2em;
+	width: 2em;
+}
+.news-category {
+	border: 0;
+	float: left;
+	margin: 0.2em 0.5em 0 0;
+}
+.news-footer-img {vertical-align: middle;}
+#footer, #subfooter{
+	width: 90%;
+	margin: 1.5em auto;
+	padding: 1em;
+	font-size: 0.8em;
+	border: 1px solid #b8b2a1;
+	background: #d8d2c1;
+	color: #666;
+}
+.barmain {
+	color: #aaa;
+	padding: 0.3em;
+}
+.panelcap {
+	border: 1px solid;
+	color: #fff;
+	font-size: 1.1em;
+	font-weight: 700;
+	height: 2em;
+	line-height: 2em;
+	margin: 0;
+	padding: 0 0.5em;
+}
+.panelbody {padding: 0.5em 1em;}
+.tbl,.tbl1,.tbl2,.forum-caption {padding: 0.3em;}
+.tbl-border{
+	background: #f8f2e1;
+	border: 1px solid #f8f2e1;
+}
+.tbl1 {background: #e3ddcc;}
+.tbl2 {background: #dad4c3;}
+.forum-caption {
+	color: #fff;
+	font-weight: 700;
+}
+.textbox,.button {
+	border: 0.05em solid #838077;
+	color: #fff;
+	font-size: 1em;
+	margin-top: 0.1em;
+	padding: 0.3em;
+}
+.bbcode {
+	color: #fff;
+	font-size: 1em;
+	margin-top: 0.1em;
+	border: 0.05em solid #b3b0a7;
+	background: #dad4c3;
+}
+.textbox {background-image: none !important;}
+.textbox:focus {border-color: #333;}
+.admin-message {
+	width: 80%;
+	padding: 0.5em;
+	margin: 0 auto 0.5em auto;
+	color: #fff;
+	border: 1px solid #fff;
+	background-image: none !important;
+}
+.quote {
+	padding: 0.4em;
+	margin: 0.2em;
+	border: 1px solid #b6b09f;
+	border-left: 3px solid #838077;
+	background: #b8b2a1;
+}
+.poll {height: 1em; border: 1px solid #666;}
+.forum-caption, .poll {background-position: bottom left !important;}
+.comment-name {font-weight: 700;}
+
+.small,.small2,.side-small {font-size: 0.9em;}
+code, pre {
+	font-family: monospace;
+	font-size: 1.1em;
+}
+.alt {color: #444;}
+
+div.emulated-fieldset {
+	position: relative;
+	margin: 20px 0px 10px 0px;
+	border: 1px solid #ccc;
+	width: 320px;
+	background: inherit;
+}
+div.emulated-fieldset span.emulated-legend {
+	display: inline;
+	position: absolute;
+	top: -12px;
+	margin: 0 5px;
+	padding: 4px;
+	background: inherit;
+}
+div.emulated-fieldset div.attachments-list {
+	padding: 10px 3px 3px 3px;
+	width: 320px;
+}
+hr {
+	background: #777;
+	border: solid #777 1pt;
+	height: 1pt;
+}
+#mainheader,#main-bg {
+	background: #f8f2e1;
+	padding: 0.5em;
+}
+.news-footer {padding: 0.5em;}
+.panelbutton{
+	float: right;
+	margin: 0.5em;
+}
+h1,h2,h3,h4,h5,h6 {font-size: inherit;}
+
+
+/*Helpers*/
+.center {margin: 0 auto;}
+.content_center {text-align: center;}
+.flleft {float: left !important;}
+.flright {float: right !important;}
+.clear {clear: both;}
+
+#container{
+	width: 100%;
+	overflow-x: auto;
+	overflow-y: visible;
+}
+
+/*IE Fixes*/
+* html #main-bg {
+	height: 1%;
+	width: auto;
+}
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+/* Hide from IE Mac \*/
+.clearfix {display:block;}
+/* End hide from IE Mac */
+.floatfix {overflow:hidden;}
+* html .floatfix {width:100%;}
+.center, *[align="center"] {margin: 0 auto;}

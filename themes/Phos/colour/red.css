@@ -1,0 +1,34 @@
+body {background: #982507 url(../images/red/body_bg.jpg) repeat-x top;}
+* html body{background: #b56e05 none;}
+#body2 {background: transparent url(../images/red/body_bg2.jpg) no-repeat bottom center;}
+a, #subheader a:hover{color: #a64906;}
+#navigation a{background: #474747 url(../images/red/navitem_l.jpg) no-repeat left;}
+#navigation a span{background: transparent url(../images/red/navitem_r.jpg) no-repeat right;}
+#navigation a:hover{background: #9f3807 url(../images/red/navitem_hl.jpg) no-repeat left;}
+#navigation a:hover span{background: transparent url(../images/red/navitem_hr.jpg) no-repeat right;}
+#navigation li.current-link a{background: #9f3807 url(../images/red/navitem_hl.jpg) no-repeat left;}
+#navigation li.current-link a span{background: transparent url(../images/red/navitem_hr.jpg) no-repeat right;}
+.textbox, .button, .admin-message, .pagenav span, .pagenav a, .pagenav a:hover, #navigation h2, .side-label {
+	background: #d76b01;
+	border-color: #a34006;
+}
+#footer{
+	background: #9f3807;
+	border-color: #a34006;
+}
+#header_t{background: #242424 url(../images/red/header_bt.jpg) repeat-x top;}
+#header_r{background: transparent url(../images/red/header_br.jpg) repeat-y right;}
+#header_l{background: transparent url(../images/red/header_bl.jpg) repeat-y left;}
+#corner_tr{background: transparent url(../images/red/corner_tr.jpg) no-repeat top right;}
+#corner_tl{background: transparent url(../images/red/corner_tl.jpg) no-repeat top left;}
+#cont_b{background: transparent url(../images/red/cont_bb.png) repeat-x bottom;}
+* html #cont_b{background: #d1d1d1 url(../images/red/cont_bb.jpg) repeat-x bottom;}
+#cont_r{background: transparent url(../images/red/cont_br.png) repeat-y right;}
+* html #cont_r{background-image: url(../images/red/cont_br.jpg);}
+#cont_l{background: transparent url(../images/red/cont_bl.png) repeat-y left;}
+* html #cont_l{background-image: url(../images/red/cont_bl.jpg);}
+#corner_br{background: transparent url(../images/red/corner_br.png) no-repeat bottom right;}
+* html #corner_br{background-image: url(../images/red/corner_br.jpg);}
+#corner_bl{background: transparent url(../images/red/corner_bl.png) no-repeat bottom left;}
+* html #corner_bl{background-image: url(../images/red/corner_bl.jpg);}
+#tab_r{background: transparent url(../images/red/tab_r.jpg) no-repeat right;}
