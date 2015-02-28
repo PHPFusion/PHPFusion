@@ -23,8 +23,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 	//$rating_link = $rating_link;
 	if ($settings['ratings_enabled'] == "1") {
 		if (iMEMBER) {
-			$d_rating = dbarray(dbquery("SELECT rating_vote,rating_datestamp FROM ".DB_RATINGS." WHERE rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_user='".$userdata['user_id']."'", 1));
-
+			$d_rating = dbarray(dbquery("SELECT rating_vote,rating_datestamp FROM ".DB_RATINGS." WHERE rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_user='".$userdata['user_id']."'"));
 			if (isset($_POST['post_rating'])) {
 				if (isnum($_POST['rating']) && $_POST['rating'] > 0 && $_POST['rating'] < 6 && !isset($d_rating['rating_vote'])) {
 					$result = dbquery("INSERT INTO ".DB_RATINGS." (rating_item_id, rating_type, rating_user, rating_vote, rating_datestamp, rating_ip, rating_ip_type) VALUES ('$rating_item_id', '$rating_type', '".$userdata['user_id']."', '".$_POST['rating']."', '".time()."', '".USER_IP."', '".USER_IP_TYPE."')");
@@ -32,64 +31,51 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 				}
 				if (!$settings['site_seo']) redirect($rating_link);
 			}
-
 			elseif (isset($_POST['remove_rating'])) {
 				$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$rating_item_id' AND rating_type='$rating_type' AND rating_user='".$userdata['user_id']."'");
 				if ($result) defender::unset_field_session();
 				if (!$settings['site_seo']) redirect($rating_link);
 			}
-
 		}
 
-		print_p($d_rating);
+		$ratings = array(
+			5 => $locale['r120'],
+			4 => $locale['r121'],
+			3 => $locale['r122'],
+			2 => $locale['r123'],
+			1 => $locale['r124']
+		);
 
-		$ratings = array(5 => $locale['r120'], 4 => $locale['r121'], 3 => $locale['r122'], 2 => $locale['r123'],
-						 1 => $locale['r124']);
-		//opentable($locale['r100']);
 		if (!iMEMBER) {
-			echo "<div style='text-align:center'>".$locale['r104']."</div>\n";
+			echo "<div class='well text-center'>".$locale['r104']."</div>\n";
 		} elseif (isset($d_rating['rating_vote'])) {
-			echo "<div style='text-align:center'>\n";
-			echo "<form name='removerating' method='post' action='".($settings['site_seo'] ? FUSION_ROOT : '').$rating_link."'>\n";
+			echo openform('removerating', 'removerating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('downtime'=>1, 'notice'=>0, 'class'=>'text-center'));
 			echo sprintf($locale['r105'], $ratings[$d_rating['rating_vote']], showdate("longdate", $d_rating['rating_datestamp']))."<br /><br />\n";
-			echo "<input type='submit' name='remove_rating' value='".$locale['r102']."' class='button' />\n";
-			echo "</form>\n</div>\n";
-		} else {
-			echo "<div class='text-center'>\n";
-			echo openform('postrating', 'postrating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('downtime'=>1, 'notice'=>0));
-			echo form_select($locale['r106'], 'rating', 'rating', $ratings, '', array('width'=>'100%'));
-			echo form_button($locale['r103'], 'post_rating', 'post_rating', $locale['r103'], array('class'=>'btn-primary btn-sm'));
+			echo form_button($locale['r102'], 'remove_rating', 'remove_rating', $locale['r102'], array('class'=>'btn-default btn-sm', 'icon' =>'fa fa-thumbs-down m-r-10'));
 			echo closeform();
-			echo "</div>\n";
+		} else {
+			echo openform('postrating', 'postrating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('downtime'=>1, 'notice'=>0, 'class'=>'text-center'));
+			echo form_select($locale['r106'], 'rating', 'rating', $ratings, '', array('width'=>'100%'));
+			echo form_button($locale['r103'], 'post_rating', 'post_rating', $locale['r103'], array('class'=>'btn-primary btn-sm', 'icon'=>'fa fa-thumbs-up m-r-10'));
+			echo closeform();
 		}
 		echo "<hr />";
-		$tot_votes = dbcount("(rating_item_id)", DB_RATINGS, "rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."'");
-		if ($tot_votes) {
-			echo "<table cellpadding='0' cellspacing='1' class='tbl-border center'>\n";
-			foreach ($ratings as $rating => $rating_info) {
-				$num_votes = dbcount("(rating_item_id)", DB_RATINGS, "rating_item_id='".$rating_item_id."' AND rating_type='".$rating_type."' AND rating_vote='".$rating."'");
-				$pct_rating = number_format(100/$tot_votes*$num_votes);
-				if ($num_votes == 0) {
-					$votecount = "[".$locale['r108']."]";
-				} elseif ($num_votes == 1) {
-					$votecount = "[1 ".$locale['r109']."]";
-				} else {
-					$votecount = "[".$num_votes." ".$locale['r110']."]";
-				}
-				$class = ($rating%2 == 0 ? "tbl1" : "tbl2");
-				echo "<tr>\n";
-				echo "<td class='$class'>".$rating_info."</td>\n";
-				echo "<td width='250' class='$class'><img src='".get_image("pollbar")."' alt='".$rating_info."' height='12' width='".$pct_rating."%' class='poll' /></td>\n";
-				echo "<td class='$class'>".$pct_rating."%</td>\n";
-				echo "<td class='$class'>".$votecount."</td>\n";
-				echo "</tr>\n";
+		$rating_votes = dbarray(dbquery("
+		SELECT
+		SUM(IF(rating_vote='5', 1, 0)) as r120,
+		SUM(IF(rating_vote='4', 1, 0)) as r121,
+		SUM(IF(rating_vote='3', 1, 0)) as r122,
+		SUM(IF(rating_vote='2', 1, 0)) as r123,
+		SUM(IF(rating_vote='1', 1, 0)) as r124
+		FROM ".DB_RATINGS." WHERE rating_type='".$rating_type."' and rating_item_id='".intval($rating_item_id)."'
+		"));
+		if (!empty($rating_votes)) {
+			foreach($rating_votes as $key => $num) {
+				$value = format_word($num, $locale['fmt_rating']);
+				echo progress_bar($value, $locale[$key], false, '10px', true , false);
 			}
-			echo "</table>\n";
 		} else {
 			echo "<div class='text-center'>".$locale['r101']."</div>\n";
 		}
-		//closetable();
 	}
 }
-
-?>
