@@ -669,17 +669,20 @@ class AdminUI {
 
 			$img_path = $this->image_upload_dir.$data['photo_filename'];
 			$img_src = file_exists($img_path) && !is_dir($img_path) ? $img_path : 'holder.js/170x170/grey/text:'.$locale['na'];
-			echo openmodal('photo_show', '');
+			echo openmodal('photo_show', '', array('class'=>'modal-lg'));
 			?>
 			<div class='row'>
-				<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 display-inline-block' style='border-right:1px solid #ddd'>
+				<div class='col-xs-12 col-sm-8 col-md-8 col-lg-9 display-inline-block' style='border-right:1px solid #ddd'>
 					<h2 class='m-t-0'><?php echo $data['photo_title'] ?></h2>
 					<div class='text-smaller m-b-20'><span class='text-uppercase strong'>Gallery Album :</span> <?php echo $data['album_title'] ?></div>
 					<div class='display-inline' style='overflow: hidden;'>
 						<img style='max-width:100%; display:block;' src='<?php echo $img_src ?>'>
 					</div>
+					<?php
+					// comments
+					?>
 				</div>
-				<div class='col-xs-12 col-sm-3'>
+				<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>
 					<div class='text-uppercase text-smaller strong'>Uploaded by:</div>
 					<div class='pull-left m-r-10'>
 						<?php echo display_avatar($data, '50px', '', '', 'img-rounded m-t-10'); ?>
@@ -693,6 +696,12 @@ class AdminUI {
 					echo form_button('Rate', 'rate', 'rate', 1, array('class'=>'btn-primary btn-sm btn-block', 'icon'=>'fa fa-star'));
 					echo form_button('Comment', 'comment', 'comment', 1, array('class'=>'btn-success btn-sm btn-block', 'icon'=>'fa fa-comments-o'));
 					?>
+					<div class='well m-t-20'>
+						<?php
+						require_once INCLUDES."ratings_include.php";
+						showratings($this->gallery_rights, $data['photo_id'], FUSION_REQUEST);
+						?>
+					</div>
 					<hr>
 					<div class='text-uppercase text-smaller strong'>Photo Description:</div>
 					<?php echo $data['photo_description'] ?>
