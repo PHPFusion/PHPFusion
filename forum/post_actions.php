@@ -92,20 +92,20 @@ if ($executable && iMEMBER) {
 			$post_edit_time = 0;
 			$reason = "";
 		} else {
-			$thread_lastpost = dbarray(dbquery("SELECT post_id FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
+			$thread_lastpost = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
 			if ($thread_lastpost['post_id'] == $_GET['post_id'] && time()-$data['post_datestamp'] < 5*60) {
 				$data['post_edittime'] = 0;
 				$data['post_editreason'] = '';
 			} elseif ($settings['forum_editpost_to_lastpost']) {
 				$data['post_edittime'] = time();
 				$data['post_editreason'] = form_sanitizer($_POST['post_editreason'], '', 'post_editreason');
-				$lastPost = dbcount("(thread_id)", DB_THREADS, "thread_lastpostid='".$_GET['post_id']."'");
+				$lastPost = dbcount("(thread_id)", DB_FORUM_THREADS, "thread_lastpostid='".$_GET['post_id']."'");
 				// update thread_laspost time
 				if ($lastPost > 0) {
-					$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".$data['post_edittime']."' WHERE thread_id='".$_GET['thread_id']."'");
+					$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".$data['post_edittime']."' WHERE thread_id='".$_GET['thread_id']."'");
 				}
 				// update forum_laspost time.
-				$forum_lastpost = dbarray(dbquery("SELECT post_id FROM ".DB_POSTS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY post_id DESC LIMIT 1"));
+				$forum_lastpost = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY post_id DESC LIMIT 1"));
 				if ($forum_lastpost['post_id'] == $_GET['post_id']) {
 					$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['post_edittime']."' WHERE forum_id='".$_GET['forum_id']."'");
 				}
@@ -138,7 +138,7 @@ if ($executable && iMEMBER) {
 				$result = dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".$_GET['thread_id']."'");
 				$result = dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."'");
 				$result = dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".$_GET['thread_id']."'");
-				$result = dbquery("UPDATE ".DB_THREADS." SET thread_poll='0' WHERE thread_id='".$_GET['thread_id']."'");
+				$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='0' WHERE thread_id='".$_GET['thread_id']."'");
 				$data['forum_poll'] = 0;
 				$data['thread_poll'] = 0;
 			}
@@ -188,9 +188,9 @@ if ($executable && iMEMBER) {
 	// On New Thread Post Execution
 	if (isset($_POST['postnewthread']) && checkgroup($info['forum_post'])) {
 		require_once INCLUDES."flood_include.php";
-		if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'") && !defined('FUSION_NULL')) {
-			$data['thread_id'] = dbquery_insert(DB_THREADS, $data, 'save', array('primary_key'=>'thread_id')); // forum id is missing.
-			$data['post_id'] = dbquery_insert(DB_POSTS, $data, 'save', array('primary_key'=>'post_id'));
+		if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'") && !defined('FUSION_NULL')) {
+			$data['thread_id'] = dbquery_insert(DB_FORUM_THREADS, $data, 'save', array('primary_key'=>'thread_id')); // forum id is missing.
+			$data['post_id'] = dbquery_insert(DB_FORUM_POSTS, $data, 'save', array('primary_key'=>'post_id'));
 			$forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 			$list_of_forums = get_all_parent($forum_index, $_GET['forum_id']);
 			// update every parent node as well
@@ -198,10 +198,10 @@ if ($executable && iMEMBER) {
 				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$data['post_id']."', forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$forum_id."'");
 			}
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$data['post_id']."', forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$_GET['forum_id']."'");
-			$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpostid='".$data['post_id']."' WHERE thread_id='".$data['thread_id']."'");
+			$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpostid='".$data['post_id']."' WHERE thread_id='".$data['thread_id']."'");
 			$result = dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$userdata['user_id']."'");
 			if ($data['notify_me']) {
-				$result = dbquery("INSERT INTO ".DB_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$data['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
+				$result = dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$data['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
 			}
 			if ($can_poll && $data['thread_poll']) {
 				if ($data['forum_poll_title'] && !empty($data['poll_opts'])) {
@@ -229,13 +229,13 @@ if ($executable && iMEMBER) {
 		// Delete Action - maybe can change to a stand alone button
 		if (!$data['edit']) redirect(FORUM."index.php");
 		if (isset($_POST['delete']) && !defined('FUSION_NULL')) { // added token protection.
-			$result = dbquery("SELECT post_author FROM ".DB_POSTS." WHERE post_id='".$_GET['post_id']."' AND thread_id='".$_GET['thread_id']."'");
+			$result = dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE post_id='".$_GET['post_id']."' AND thread_id='".$_GET['thread_id']."'");
 			if (dbrows($result)) {
 				$pdata = dbarray($result);
 				// update postcount
 				$result = dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-1 WHERE user_id='".$pdata['post_author']."'");
 				// delete the post
-				$result = dbquery("DELETE FROM ".DB_POSTS." WHERE post_id='".$_GET['post_id']."' AND thread_id='".$_GET['thread_id']."'");
+				$result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_id='".$_GET['post_id']."' AND thread_id='".$_GET['thread_id']."'");
 				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_postcount=forum_postcount-1 WHERE forum_id = '".$_GET['forum_id']."'");
 				// remove all attachments
 				$result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$_GET['post_id']."'");
@@ -246,18 +246,18 @@ if ($executable && iMEMBER) {
 					}
 				}
 				// if thread is blank, remove threads, remove all thread notify
-				$posts = dbcount("(post_id)", DB_POSTS, "thread_id='".$_GET['thread_id']."'");
+				$posts = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$_GET['thread_id']."'");
 				if (!$posts) {
-					$result = dbquery("DELETE FROM ".DB_THREADS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$_GET['forum_id']."'");
-					$result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."'");
+					$result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$_GET['forum_id']."'");
+					$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."'");
 					$result = dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount=forum_threadcount-1 WHERE forum_id = '".$_GET['forum_id']."'");
 				}
 				// set last post.
 				$result = dbquery("SELECT * FROM ".DB_FORUMS." WHERE forum_id='".$_GET['forum_id']."' AND forum_lastuser='".$pdata['post_author']."' AND forum_lastpost='".$pdata['post_datestamp']."'");
 				if (dbrows($result)>0) {
 					$result = dbquery("	SELECT p.forum_id, p.post_id, p.post_author, p.post_datestamp
-									FROM ".DB_POSTS." p
-									LEFT JOIN ".DB_THREADS." t ON p.thread_id=t.thread_id
+									FROM ".DB_FORUM_POSTS." p
+									LEFT JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
 									WHERE p.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' AND post_hidden='0'
 									ORDER BY post_datestamp DESC LIMIT 1");
 					if (dbrows($result)>0) {
@@ -268,11 +268,11 @@ if ($executable && iMEMBER) {
 					}
 				}
 				if ($posts) {
-					$result = dbcount("(thread_id)", DB_THREADS, "thread_id='".$_GET['thread_id']."' AND thread_lastpostid='".$_GET['post_id']."' AND thread_lastuser='".$pdata['post_author']."'");
+					$result = dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id='".$_GET['thread_id']."' AND thread_lastpostid='".$_GET['post_id']."' AND thread_lastuser='".$pdata['post_author']."'");
 					if (!empty($result)) {
-						$result = dbquery("SELECT thread_id, post_id, post_author, post_datestamp FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND post_hidden='0' ORDER BY post_datestamp DESC LIMIT 1");
+						$result = dbquery("SELECT thread_id, post_id, post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND post_hidden='0' ORDER BY post_datestamp DESC LIMIT 1");
 						$pdata2 = dbarray($result);
-						$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".$pdata2['post_datestamp']."', thread_lastpostid='".$pdata2['post_id']."', thread_postcount=thread_postcount-1, thread_lastuser='".$pdata2['post_author']."' WHERE thread_id='".$_GET['thread_id']."'");
+						$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".$pdata2['post_datestamp']."', thread_lastpostid='".$pdata2['post_id']."', thread_postcount=thread_postcount-1, thread_lastuser='".$pdata2['post_author']."' WHERE thread_id='".$_GET['thread_id']."'");
 					}
 				}
 				add_to_title($locale['global_201'].$locale['forum_0506']);
@@ -287,9 +287,9 @@ if ($executable && iMEMBER) {
 				closetable();
 			}
 		} else {
-			dbquery_insert(DB_POSTS, $data, 'update', array('noredirect'=>1, 'primary_key'=>'post_id'));
+			dbquery_insert(DB_FORUM_POSTS, $data, 'update', array('noredirect'=>1, 'primary_key'=>'post_id'));
 			if ($data['first_post'] == $_GET['post_id'] && $data['thread_subject'] != "") {
-				$result = dbquery("UPDATE ".DB_THREADS." SET thread_subject='".$data['thread_subject']."' WHERE thread_id='".$_GET['thread_id']."'");
+				$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_subject='".$data['thread_subject']."' WHERE thread_id='".$_GET['thread_id']."'");
 			}
 		}
 	}
@@ -298,18 +298,18 @@ if ($executable && iMEMBER) {
 	if (isset($_POST['postreply']) && checkgroup($info['forum_reply'])) {
 		if (!defined("FUSION_NULL") && $data['post_message']) {
 			require_once INCLUDES."flood_include.php";
-			if (!flood_control("post_datestamp", DB_POSTS, "post_author='".$userdata['user_id']."'")) {
+			if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
 				if ($info['forum_merge'] && $data['thread_lastuser'] == $userdata['user_id']) {
-					$mergeData = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
+					$mergeData = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
 					$data['post_message'] = $mergeData['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$data['post_message'];
 					$data['post_edittime'] = time();
 					$data['post_id'] = $mergeData['post_id'];
 					$data['post_edituser'] = $userdata['user_id'];
-					dbquery_insert(DB_POSTS, $data, 'update', array('primary_key'=>'post_id'));
+					dbquery_insert(DB_FORUM_POSTS, $data, 'update', array('primary_key'=>'post_id'));
 					$threadCount = "";
 					$postCount = "";
 				} else {
-					$data['post_id'] = dbquery_insert(DB_POSTS, $data, 'save', array('primary_key'=>'post_id'));
+					$data['post_id'] = dbquery_insert(DB_FORUM_POSTS, $data, 'save', array('primary_key'=>'post_id'));
 					//$data['post_id'] = $pdo_enabled ? $pdo->lastInsertId() : mysql_insert_id(); // not sure why it did not work.
 					$result = (!defined("FUSION_NULL")) ? dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$userdata['user_id']."'") : '';
 					$threadCount = "thread_postcount=thread_postcount+1,";
@@ -322,10 +322,10 @@ if ($executable && iMEMBER) {
 					$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', ".$postCount." forum_lastpostid='".$data['post_id']."', forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$forum_id."'");
 				}
 				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', ".$postCount." forum_lastpostid='".$data['post_id']."', forum_lastuser='".$userdata['user_id']."' WHERE forum_id='".$_GET['forum_id']."'");
-				$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', ".$threadCount." thread_lastuser='".$userdata['user_id']."' WHERE thread_id='".$_GET['thread_id']."'");
+				$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', ".$threadCount." thread_lastuser='".$userdata['user_id']."' WHERE thread_id='".$_GET['thread_id']."'");
 				if ($settings['thread_notify'] && isset($_POST['notify_me']) && !defined('FUSION_NULL')) {
-					if (!dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
-						$result = dbquery("INSERT INTO ".DB_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
+					if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
+						$result = dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
 					}
 				}
 			} else {
@@ -442,13 +442,13 @@ if ($executable && iMEMBER) {
 	+ ---------------------*/
 	if ($debug2 or $debug) {
 		if (isset($_POST['flush_post'])) {
-			$result = dbquery("DELETE FROM ".DB_POSTS."");
+			$result = dbquery("DELETE FROM ".DB_FORUM_POSTS."");
 			$a1 = mysql_affected_rows()-1;
 			echo "<div class='alert alert-info'>".$a1." Posts deleted</div>\n";
 		}
 
 		if (isset($_POST['flush_thread'])) {
-			$result = dbquery("DELETE FROM ".DB_THREADS."");
+			$result = dbquery("DELETE FROM ".DB_FORUM_THREADS."");
 			$a2 = mysql_affected_rows()-1;
 			echo "<div class='alert alert-info'>".$a2." Threads deleted</div>\n";
 		}

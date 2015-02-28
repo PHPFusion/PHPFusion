@@ -145,8 +145,8 @@ if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) &
 	$result = dbquery("SELECT fp.post_message, fp.post_datestamp, fp.post_edittime, fp.post_author, fp.post_edituser,
 		fu.user_name AS user_name, fu.user_status AS user_status, fe.user_name AS edit_name, fe.user_status AS edit_status,
 		ft.thread_subject, ff.forum_access
-		FROM ".DB_THREADS." ft
-		INNER JOIN ".DB_POSTS." fp ON ft.thread_id = fp.thread_id
+		FROM ".DB_FORUM_THREADS." ft
+		INNER JOIN ".DB_FORUM_POSTS." fp ON ft.thread_id = fp.thread_id
 		INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
 		INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
 		LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser
@@ -181,8 +181,8 @@ if ((isset($_GET['type']) && $_GET['type'] == "A") && (isset($_GET['item_id']) &
 	$result = dbquery("SELECT fp.post_message, fp.post_datestamp, fp.post_edittime, fp.post_author as post_author, fp.post_edituser,
 		fu.user_name AS user_name, fu.user_status AS user_status, fe.user_name AS edit_name, fe.user_status AS edit_status,
 		ft.thread_subject, ff.forum_access
-		FROM ".DB_THREADS." ft
-		INNER JOIN ".DB_POSTS." fp ON ft.thread_id = fp.thread_id
+		FROM ".DB_FORUM_THREADS." ft
+		INNER JOIN ".DB_FORUM_POSTS." fp ON ft.thread_id = fp.thread_id
 		INNER JOIN ".DB_FORUMS." ff ON ff.forum_id = ft.forum_id
 		INNER JOIN ".DB_USERS." fu ON fu.user_id = fp.post_author
 		LEFT JOIN ".DB_USERS." fe ON fe.user_id = fp.post_edituser

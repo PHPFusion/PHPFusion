@@ -201,7 +201,7 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 				u.user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".DB_FORUMS." f
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-				LEFT JOIN ".DB_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
+				LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".$_GET['forum_id']."' OR f.forum_cat='".$_GET['forum_id']."' OR f.forum_branch='".$_GET['forum_branch']."'
@@ -230,10 +230,10 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 				define_forum_mods($data);
 				// get thread and apply filter
 				$info['thread_item_rows'] = dbcount("('t.thread_id')",
-													DB_THREADS." t
+													DB_FORUM_THREADS." t
 												LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
 												LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
-												LEFT JOIN ".DB_POSTS." p1 ON p1.thread_id = t.thread_id
+												LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id
 												LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
 												LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id",
 													"t.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' $sql_condition
@@ -246,10 +246,10 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
                 p1.post_datestamp,
                 a.attach_name, p.forum_poll_title,
                 count(v.post_id) AS vote_count
-                FROM ".DB_THREADS." t
+                FROM ".DB_FORUM_THREADS." t
                 LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
                 LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
-                LEFT JOIN ".DB_POSTS." p1 ON p1.thread_id = t.thread_id
+                LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
@@ -282,7 +282,7 @@ else {
 			t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
         	u.user_id, u.user_name, u.user_status, u.user_avatar
 			FROM ".DB_FORUMS." tf
-			LEFT JOIN ".DB_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
+			LEFT JOIN ".DB_FORUM_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
         	LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
 	 		".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
 	 		GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC

@@ -5,9 +5,9 @@
 				u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
 				uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
 				count(v.post_id) AS vote_count
-				FROM ".DB_THREADS." tt
+				FROM ".DB_FORUM_THREADS." tt
 				INNER JOIN ".DB_FORUMS." tf ON (tt.forum_id=tf.forum_id)
-				LEFT JOIN ".DB_POSTS." tp on (tt.thread_lastpostid = tp.post_id)
+				LEFT JOIN ".DB_FORUM_POSTS." tp on (tt.thread_lastpostid = tp.post_id)
 				LEFT JOIN ".DB_USERS." u ON u.user_id=tt.thread_lastuser
             	LEFT JOIN ".DB_USERS." uc ON uc.user_id=tt.thread_author
             	LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = tt.thread_id AND tp.post_id = v.post_id

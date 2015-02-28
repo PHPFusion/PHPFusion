@@ -48,7 +48,7 @@ if (isset($_GET['error'])) {
 
 /* Jumps to last links -- there is another with pid in Line 264 */
 if (isset($_GET['pid']) && isnum($_GET['pid'])) {
-	$result = dbquery("SELECT thread_id FROM ".DB_POSTS." WHERE post_id='".$_GET['pid']."'");
+	$result = dbquery("SELECT thread_id FROM ".DB_FORUM_POSTS." WHERE post_id='".$_GET['pid']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
 	//	redirect("viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$_GET['pid']."#post_".$_GET['pid']);
@@ -59,7 +59,7 @@ if (isset($_GET['pid']) && isnum($_GET['pid'])) {
 
 /* Get Thread and Forum data */
 $result = dbquery("SELECT t.*, f.*, f2.forum_name AS forum_cat_name
-	FROM ".DB_THREADS." t
+	FROM ".DB_FORUM_THREADS." t
 	LEFT JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
 	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
 	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." t.thread_id='".intval($_GET['thread_id'])."' AND t.thread_hidden='0'");
@@ -138,14 +138,14 @@ if (dbrows($result) > 0) {
 	}
 
 	// Thread Global Information - XSS prevention rowstart
-	list($rows, $last_post, $first_post) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND post_hidden='0' GROUP BY thread_id"));
+	list($rows, $last_post, $first_post) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND post_hidden='0' GROUP BY thread_id"));
 	$info['post_item_rows'] = $rows;
 	$info['post_firstpost'] = $first_post;
 	$info['post_lastpost'] = $last_post;
 	$info['posts_per_page'] = $settings['posts_per_page'];
 
 	// Update View Thread
-	dbquery("UPDATE ".DB_THREADS." SET thread_postcount='$rows', thread_lastpostid='$last_post', thread_views=thread_views+1 WHERE thread_id='".$_GET['thread_id']."'");
+	dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount='$rows', thread_lastpostid='$last_post', thread_views=thread_views+1 WHERE thread_id='".$_GET['thread_id']."'");
 
 	// User Fields
 	$user_field = array("user_sig" => FALSE, "user_web" => FALSE);
@@ -165,7 +165,7 @@ if (dbrows($result) > 0) {
 	}
 
 	// Whether user is tracking thread
-	$info['tracked_threads'] = dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'") ? TRUE : FALSE;
+	$info['tracked_threads'] = dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'") ? TRUE : FALSE;
 
 	// Forum Permissions
 	$info['permissions']['can_post'] = $info['forum_post'] && checkgroup($info['forum_post']) ? 1 : 0;
@@ -178,8 +178,8 @@ if (dbrows($result) > 0) {
 
 	// Notification Link
 	if (iMEMBER && $settings['thread_notify']) {
-		if (dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
-			$result2 = dbquery("UPDATE ".DB_THREAD_NOTIFY." SET notify_datestamp='".time()."', notify_status='1' WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
+		if (dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
+			$result2 = dbquery("UPDATE ".DB_FORUM_THREAD_NOTIFY." SET notify_datestamp='".time()."', notify_status='1' WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
 			$info['notify'] = array('link'=>FORUM."postify.php?post=off&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['forum_0174']);
 		} else {
 			$info['notify'] = array('link'=>FORUM."postify.php?post=on&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], 'name'=>$locale['forum_0175']);
@@ -222,8 +222,8 @@ if (dbrows($result) > 0) {
 		".($user_field['user_sig'] ? " u.user_sig," : "").($user_field['user_web'] ? " u.user_web," : "")."
 		u2.user_name AS edit_name, u2.user_status AS edit_status,
 		a.attach_name, SUM(v.vote_points) as vote_points
-		FROM ".DB_POSTS." p
-		INNER JOIN ".DB_THREADS." t ON t.thread_id = p.thread_id
+		FROM ".DB_FORUM_POSTS." p
+		INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
 		LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id = p.post_id
 		LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 		LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
@@ -417,7 +417,7 @@ add_to_breadcrumbs(array('link' => FORUM.'viewthread.php?thread_id='.$_GET['thre
 
 /* Get Post data */
 if (isset($_GET['pid']) && isnum($_GET['pid'])) {
-	$reply_count = dbcount("(post_id)", DB_POSTS, "thread_id='".$info['thread_id']."' AND post_id<='".$_GET['pid']."' AND post_hidden='0'");
+	$reply_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$info['thread_id']."' AND post_id<='".$_GET['pid']."' AND post_hidden='0'");
 	$info['reply_rows'] = $reply_count;
 	if ($reply_count > $info['posts_per_page']) {
 		// force set it to max?

@@ -48,7 +48,7 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
 		echo "<div style='text-align:center'>\n<strong>".$locale['608']."</strong></br /></br />\n";
 		$prune_time = (time()-(86400*$_POST['prune_time']));
 		// delete attachments.
-		$result = dbquery("SELECT post_id, post_datestamp FROM ".DB_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
+		$result = dbquery("SELECT post_id, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
 		$delattach = 0;
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
@@ -64,22 +64,22 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
 		}
 
 		// delete posts.
-		$result = dbquery("DELETE FROM ".DB_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
+		$result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
 		echo $locale['609'].mysql_affected_rows()."<br />";
 		echo $locale['610'].$delattach."<br />";
 
 		// delete follows on threads
-		$result = dbquery("SELECT thread_id,thread_lastpost FROM ".DB_THREADS." WHERE  forum_id='".$_GET['forum_id']."' AND thread_lastpost < '".$prune_time."'");
+		$result = dbquery("SELECT thread_id,thread_lastpost FROM ".DB_FORUM_THREADS." WHERE  forum_id='".$_GET['forum_id']."' AND thread_lastpost < '".$prune_time."'");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
-				$result2 = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
+				$result2 = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
 			}
 		}
 		// delete threads
-		$result = dbquery("DELETE FROM ".DB_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND  thread_lastpost < '".$prune_time."'");
+		$result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND  thread_lastpost < '".$prune_time."'");
 
 		// update last post on forum
-		$result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_THREADS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
+		$result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$_GET['forum_id']."'");
@@ -89,14 +89,14 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
 		echo $locale['611'].mysql_affected_rows()."\n</div>";
 
 		// calculate and update postcount on each specific threads -  this is the remaining.
-		$result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_POSTS." WHERE forum_id='".$_GET['forum_id']."' GROUP BY thread_id");
+		$result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' GROUP BY thread_id");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
-				dbquery("UPDATE ".DB_THREADS." SET thread_postcount='".$data['postcount']."' WHERE thread_id='".$data['thread_id']."'");
+				dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount='".$data['postcount']."' WHERE thread_id='".$data['thread_id']."'");
 			}
 		}
 		// calculate and update total combined postcount on all threads to forum
-		$result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_THREADS."
+		$result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
 			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
@@ -104,7 +104,7 @@ if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'
 			}
 		}
 		// calculate and update total threads to forum
-		$result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_THREADS."
+		$result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_FORUM_THREADS."
 			WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {

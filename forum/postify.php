@@ -47,7 +47,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
 		redirect("index.php");
 	}
-	$result = dbquery("SELECT tt.*, tf.forum_access FROM ".DB_THREADS." tt
+	$result = dbquery("SELECT tt.*, tf.forum_access FROM ".DB_FORUM_THREADS." tt
 		INNER JOIN ".DB_FORUMS." tf ON tt.forum_id=tf.forum_id
 		WHERE tt.thread_id='".$_GET['thread_id']."'");
 	if (dbrows($result)) {
@@ -57,11 +57,11 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 			$output = TRUE;
 			opentable($locale['forum_0552']);
 			echo "<div class='alert alert-info' style='text-align:center'><br />\n";
-			if ($_GET['post'] == "on" && !dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
-				$result = dbquery("INSERT INTO ".DB_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
+			if ($_GET['post'] == "on" && !dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
+				$result = dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
 				echo $locale['forum_0553']."<br /><br />\n";
 			} elseif (isset($_GET['post']) && $_GET['post'] == 'off') {
-				$result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
+				$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
 				echo $locale['forum_0554']."<br /><br />\n";
 			}
 			echo "<a href='".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
@@ -109,14 +109,14 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 		add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 		if ($settings['thread_notify']) {
 			$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
-				FROM ".DB_THREAD_NOTIFY." tn
+				FROM ".DB_FORUM_THREAD_NOTIFY." tn
 				LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id
 				WHERE thread_id='".$_GET['thread_id']."' AND notify_user!='".$userdata['user_id']."' AND notify_status='1'
 			");
 			if (dbrows($result)) {
 				require_once INCLUDES."sendmail_include.php";
 				$data2 = dbarray(dbquery("SELECT tf.forum_access, tt.thread_subject
-					FROM ".DB_THREADS." tt
+					FROM ".DB_FORUM_THREADS." tt
 					INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=tt.forum_id
 					WHERE thread_id='".$_GET['thread_id']."'"));
 				$link = $settings['siteurl']."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&pid=".$_GET['post_id']."#post_".$_GET['post_id'];
@@ -151,7 +151,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 						}
 					}
 				}
-				$result = dbquery("UPDATE ".DB_THREAD_NOTIFY." SET notify_status='0' WHERE thread_id='".$_GET['thread_id']."' AND notify_user!='".$userdata['user_id']."'");
+				$result = dbquery("UPDATE ".DB_FORUM_THREAD_NOTIFY." SET notify_status='0' WHERE thread_id='".$_GET['thread_id']."' AND notify_user!='".$userdata['user_id']."'");
 			}
 		}
 		echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
@@ -159,7 +159,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
 			redirect("index.php");
 		}
-		$data = dbarray(dbquery("SELECT post_id FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
+		$data = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
 		add_to_head("<meta http-equiv='refresh' content='4; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
 		echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$locale['forum_0548']."</a> ::\n";
 	}

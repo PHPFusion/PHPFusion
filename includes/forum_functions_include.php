@@ -24,7 +24,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 function prune_attachment($forum_id, $time=false) {
 	global $locale;
 	// delete attachments.
-	$result = dbquery("SELECT post_id, post_datestamp FROM ".DB_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
+	$result = dbquery("SELECT post_id, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
 	$delattach = 0;
 	if (dbrows($result)>0) {
 		while ($data = dbarray($result)) {
@@ -45,20 +45,20 @@ function prune_attachment($forum_id, $time=false) {
 function prune_posts($forum_id, $time=false) {
 	global $locale;
 	// delete posts.
-	$result = dbquery("DELETE FROM ".DB_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
+	$result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
 	return $locale['609'].mysql_affected_rows();
 }
 
 function prune_threads($forum_id, $time=false) {
 	// delete follows on threads
-	$result = dbquery("SELECT thread_id, thread_lastpost FROM ".DB_THREADS." WHERE forum_id='".$forum_id."' ".($time ? "AND thread_lastpost < '".$time."'" : '')." ");
+	$result = dbquery("SELECT thread_id, thread_lastpost FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ".($time ? "AND thread_lastpost < '".$time."'" : '')." ");
 	if (dbrows($result)) {
 		while ($data = dbarray($result)) {
-			$result2 = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
+			$result2 = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$data['thread_id']."'");
 		}
 	}
 	// delete threads
-	$result = dbquery("DELETE FROM ".DB_THREADS." WHERE forum_id='$forum_id' ".($time ? "AND thread_lastpost < '".$time."'" : '')." ");
+	$result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE forum_id='$forum_id' ".($time ? "AND thread_lastpost < '".$time."'" : '')." ");
 }
 
 function prune_forums($branch_data = FALSE,  $index = FALSE, $time = FALSE) {
@@ -107,7 +107,7 @@ function prune_forums($branch_data = FALSE,  $index = FALSE, $time = FALSE) {
 function recalculate_post($forum_id) {
 	global $locale;
 	// update last post
-	$result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_THREADS." WHERE forum_id='".$forum_id."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
+	$result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$forum_id."'");
@@ -115,14 +115,14 @@ function recalculate_post($forum_id) {
 		$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$forum_id."'");
 	}
 	// update postcount on each threads -  this is the remaining.
-	$result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_POSTS." WHERE forum_id='".$forum_id."' GROUP BY thread_id");
+	$result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' GROUP BY thread_id");
 	if (dbrows($result)) {
 		while ($data = dbarray($result)) {
-			dbquery("UPDATE ".DB_THREADS." SET thread_postcount='".$data['postcount']."' WHERE thread_id='".$data['thread_id']."'");
+			dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_postcount='".$data['postcount']."' WHERE thread_id='".$data['thread_id']."'");
 		}
 	}
 	// calculate and update total combined postcount on all threads to forum
-	$result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_THREADS."
+	$result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
 			WHERE forum_id='".$forum_id."' GROUP BY forum_id");
 	if (dbrows($result)) {
 		while ($data = dbarray($result)) {
@@ -130,7 +130,7 @@ function recalculate_post($forum_id) {
 		}
 	}
 	// calculate and update total threads to forum
-	$result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_THREADS." WHERE forum_id='".$forum_id."' GROUP BY forum_id");
+	$result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' GROUP BY forum_id");
 	if (dbrows($result)) {
 		while ($data = dbarray($result)) {
 			dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount='".$data['threadcount']."' WHERE forum_id='".$data['forum_id']."'");
@@ -141,7 +141,7 @@ function recalculate_post($forum_id) {
 
 function prune_users_posts($forum_id) {
 	// after clean up.
-	$result = dbquery("SELECT post_user FROM ".DB_POSTS." WHERE forum_id='".$forum_id."'");
+	$result = dbquery("SELECT post_user FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."'");
 	$user_data = array();
 	if (dbrows($result)>0) {
 		while ($data = dbarray($result)) {

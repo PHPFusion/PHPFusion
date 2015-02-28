@@ -46,9 +46,9 @@ class moderator {
 	static function remove_thread($thread_id) {
 		$data = array();
 		if (self::verify_thread($thread_id)) {
-			dbquery("DELETE FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."'");
+			dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."'");
 			$data['post_deleted'] = mysql_affected_rows();
-			dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."'");
+			dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."'");
 			$data['track_deleted'] = mysql_affected_rows();
 			$result = dbquery("SELECT attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".$_GET['thread_id']."'");
 			if (dbrows($result) != 0) {
@@ -68,7 +68,7 @@ class moderator {
 			dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".$_GET['thread_id']."'");
 			$data['polls_deleted'] = mysql_affected_rows();
 
-			dbquery("DELETE FROM ".DB_THREADS." WHERE thread_id='".$_GET['thread_id']."'");
+			dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".$_GET['thread_id']."'");
 			$data['thread_deleted'] = mysql_affected_rows();
 		}
 		return $data;
@@ -83,7 +83,7 @@ class moderator {
 	static function unset_userpost($thread_id) {
 		$post_count = 0;
 		if (self::verify_thread($thread_id)) {
-			$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_POSTS." WHERE thread_id='".$thread_id."' GROUP BY post_author");
+			$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_id."' GROUP BY post_author");
 			$rows = dbrows($result);
 			if ($rows >0) {
 				while ($pdata = dbarray($result)) {
@@ -102,10 +102,10 @@ class moderator {
 	 */
 	static function refresh_forum($forum_id) {
 		if (self::verify_forum($forum_id)) {
-			$remaining_threads_count = dbcount("(forum_id)", DB_THREADS, "forum_id='$forum_id'");
+			$remaining_threads_count = dbcount("(forum_id)", DB_FORUM_THREADS, "forum_id='$forum_id'");
 			if ($remaining_threads_count) {
-				$result = dbquery("SELECT p.forum_id, p.post_author, p.post_datestamp, COUNT(p.post_id) AS post_count FROM ".DB_POSTS." p
-							INNER JOIN ".DB_THREADS." t ON p.thread_id=t.thread_id
+				$result = dbquery("SELECT p.forum_id, p.post_author, p.post_datestamp, COUNT(p.post_id) AS post_count FROM ".DB_FORUM_POSTS." p
+							INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
 							WHERE p.forum_id='".$forum_id."' AND t.thread_hidden='0' AND p.post_hidden='0'
 							ORDER BY p.post_datestamp DESC LIMIT 1");
 				if (dbrows($result)>0) {
@@ -132,7 +132,7 @@ class moderator {
 	static function get_forum_id($thread_id) {
 		$id = 0;
 		if (isnum($thread_id) && self::verify_thread($thread_id)) {
-			$res = dbarray(dbquery("SELECT forum_id FROM ".DB_THREADS." WHERE thread_id='".intval($thread_id)."'"));
+			$res = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($thread_id)."'"));
 			$id = $res['forum_id'];
 		}
 		return (int) $id;
@@ -220,7 +220,7 @@ class moderator {
 	/* Authenticate thread exist */
 	public static function verify_thread($thread_id) {
 		if (isnum($thread_id)) {
-			return dbcount("('thread_id')", DB_THREADS, "thread_id = '".intval($thread_id)."'");
+			return dbcount("('thread_id')", DB_FORUM_THREADS, "thread_id = '".intval($thread_id)."'");
 		}
 		return false;
 	}
@@ -240,15 +240,15 @@ class moderator {
 	protected function mod_renew_thread() {
 		global $locale;
 		$result = dbquery("SELECT p.post_id, p.post_author, p.post_datestamp, f.forum_id
-		 FROM ".DB_POSTS." p
-		INNER JOIN ".DB_THREADS." t ON p.thread_id=t.thread_id
+		 FROM ".DB_FORUM_POSTS." p
+		INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
 		INNER JOIN ".DB_FORUMS." f on f.forum_id = t.forum_id
 		WHERE p.thread_id='".$_GET['thread_id']."' AND t.thread_hidden='0' AND p.post_hidden='0'
 		ORDER BY p.post_datestamp DESC LIMIT 1");
 		if (dbrows($result)) {
 			$data = dbarray($result);
-			$result = dbquery("UPDATE ".DB_POSTS." SET post_datestamp='".time()."' WHERE post_id='".$data['post_id']."'");
-			$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".$_GET['thread_id']."'");
+			$result = dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp='".time()."' WHERE post_id='".$data['post_id']."'");
+			$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$data['post_id']."', thread_lastuser='".$data['post_author']."' WHERE thread_id='".$_GET['thread_id']."'");
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastuser='".$data['post_author']."' WHERE forum_id='".$this->forum_id."'");
 			echo openmodal('renew', $locale['forum_0758'], array('class'=>'modal-center', 'static'=>1));
 			echo "<div style='text-align:center'><br />\n".$locale['forum_0759']."<br /><br />\n";
@@ -316,7 +316,7 @@ class moderator {
 	 */
 	protected function mod_lock_thread() {
 		global $locale;
-		dbquery("UPDATE ".DB_THREADS." SET thread_locked='1' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
+		dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='1' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
 		echo openmodal('lockthread',$locale['forum_0710'], array('class'=>'modal-center'));
 		echo "<div style='text-align:center'><br />\n";
 		echo "<strong>".$locale['forum_0711']."</strong><br /><br />\n";
@@ -331,7 +331,7 @@ class moderator {
 	 */
 	protected function mod_unlock_thread() {
 		global $locale;
-		dbquery("UPDATE ".DB_THREADS." SET thread_locked='0' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
+		dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_locked='0' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
 		echo openmodal('lockthread',$locale['forum_0720'], array('class'=>'modal-center'));
 		echo "<div style='text-align:center'><br />\n";
 		echo "<strong>".$locale['forum_0721']."</strong><br /><br />\n";
@@ -347,7 +347,7 @@ class moderator {
 	 */
 	protected function mod_nonsticky_thread() {
 		global $locale;
-		dbquery("UPDATE ".DB_THREADS." SET thread_sticky='0' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
+		dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='0' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
 		echo openmodal('lockthread',$locale['forum_0740'], array('class'=>'modal-center'));
 		echo "<div style='text-align:center'><br />\n";
 		echo "<strong>".$locale['forum_0741']."</strong><br /><br />\n";
@@ -363,7 +363,7 @@ class moderator {
 	 */
 	protected function mod_sticky_thread() {
 		global $locale;
-		$result = dbquery("UPDATE ".DB_THREADS." SET thread_sticky='1' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
+		$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_sticky='1' WHERE thread_id='".$_GET['thread_id']."' AND thread_hidden='0'");
 		echo openmodal('lockthread',$locale['forum_0730'], array('class'=>'modal-center'));
 		echo "<div style='text-align:center'><br />\n";
 		echo "<strong>".$locale['forum_0731']."</strong><br /><br />\n";
@@ -381,18 +381,18 @@ class moderator {
 			echo "<div style='text-align:center'><br />\n";
 			if (!isset($_POST['new_forum_id']) || !isnum($_POST['new_forum_id'])) redirect("index.php");
 			if (!dbcount("(forum_id)", DB_FORUMS, "forum_id='".$_POST['new_forum_id']."' AND ".groupaccess('forum_access'))) redirect("../index.php");
-			if (!dbcount("(thread_id)", DB_THREADS, "thread_id='".$_GET['thread_id']."' AND thread_hidden='0'")) redirect("../index.php");
-			$result = dbquery("UPDATE ".DB_THREADS." SET forum_id='".$_POST['new_forum_id']."' WHERE thread_id='".$_GET['thread_id']."'");
-			$result = dbquery("UPDATE ".DB_POSTS." SET forum_id='".$_POST['new_forum_id']."' WHERE thread_id='".$_GET['thread_id']."'");
-			$post_count = dbcount("(post_id)", DB_POSTS, "thread_id='".$_GET['thread_id']."'");
-			$result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND thread_hidden='0' ORDER BY thread_lastpost DESC LIMIT 1");
+			if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id='".$_GET['thread_id']."' AND thread_hidden='0'")) redirect("../index.php");
+			$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET forum_id='".$_POST['new_forum_id']."' WHERE thread_id='".$_GET['thread_id']."'");
+			$result = dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id='".$_POST['new_forum_id']."' WHERE thread_id='".$_GET['thread_id']."'");
+			$post_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$_GET['thread_id']."'");
+			$result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' AND thread_hidden='0' ORDER BY thread_lastpost DESC LIMIT 1");
 			if (dbrows($result)) {
 				$pdata2 = dbarray($result);
 				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$pdata2['thread_lastpost']."', forum_postcount=forum_postcount-".$post_count.", forum_threadcount=forum_threadcount-1, forum_lastuser='".$pdata2['thread_lastuser']."' WHERE forum_id='".$_GET['forum_id']."'");
 			} else {
 				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_postcount=forum_postcount-".$post_count.", forum_threadcount=forum_threadcount-1, forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
 			}
-			$result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_THREADS." WHERE forum_id='".$_POST['new_forum_id']."' AND thread_hidden='0' ORDER BY thread_lastpost DESC LIMIT 1");
+			$result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_POST['new_forum_id']."' AND thread_hidden='0' ORDER BY thread_lastpost DESC LIMIT 1");
 			if (dbrows($result)) {
 				$pdata2 = dbarray($result);
 				$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$pdata2['thread_lastpost']."', forum_postcount=forum_postcount+".$post_count.", forum_threadcount=forum_threadcount+1, forum_lastuser='".$pdata2['thread_lastuser']."' WHERE forum_id='".$_POST['new_forum_id']."'");
@@ -441,7 +441,7 @@ class moderator {
 				}
 			}
 			if (!empty($del_posts)) {
-				$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_POSTS." WHERE post_id IN (".$del_posts.") GROUP BY post_author");
+				$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." WHERE post_id IN (".$del_posts.") GROUP BY post_author");
 				if (dbrows($result)) {
 					while ($pdata = dbarray($result)) {
 						dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts-".$pdata['num_posts']." WHERE user_id='".$pdata['post_author']."'");
@@ -455,17 +455,17 @@ class moderator {
 				}
 				dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".$_GET['thread_id']."' AND post_id IN(".$del_posts.")");
 				$attachment_count = mysql_affected_rows();
-				dbquery("DELETE FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND post_id IN(".$del_posts.")");
+				dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND post_id IN(".$del_posts.")");
 				$post_count = mysql_affected_rows();
 			}
 
 			// check remaining post count
-			if (!dbcount("(post_id)", DB_POSTS, "thread_id='".$_GET['thread_id']."'")) {
+			if (!dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$_GET['thread_id']."'")) {
 				self::remove_thread($_GET['thread_id']);
 				$thread_count = FALSE;
 			} else {
-				$pdata = dbarray(dbquery("SELECT post_datestamp, post_author, post_id FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_datestamp DESC LIMIT 1"));
-				dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".$pdata['post_datestamp']."', thread_lastpostid='".$pdata['post_id']."', thread_postcount=thread_postcount-1, thread_lastuser='".$pdata['post_author']."' WHERE thread_id='".$_GET['thread_id']."'");
+				$pdata = dbarray(dbquery("SELECT post_datestamp, post_author, post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_datestamp DESC LIMIT 1"));
+				dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".$pdata['post_datestamp']."', thread_lastpostid='".$pdata['post_id']."', thread_postcount=thread_postcount-1, thread_lastuser='".$pdata['post_author']."' WHERE thread_id='".$_GET['thread_id']."'");
 				$thread_count = TRUE;
 			}
 			self::refresh_forum($this->forum_id);
@@ -483,7 +483,7 @@ class moderator {
 			$f_post = FALSE;
 			$dell_f_post = FALSE;
 			$f_post_blo = FALSE;
-			$first_post = dbarray(dbquery("SELECT post_id FROM ".DB_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_datestamp ASC LIMIT 1"));
+			$first_post = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_datestamp ASC LIMIT 1"));
 			// negotiate a first post
 			foreach ($_POST['delete_post'] as $move_post_id) {
 				if (isnum($move_post_id)) {
@@ -498,7 +498,7 @@ class moderator {
 			if ($move_posts) {
 				// validate whether post exists
 				$move_result = dbquery("SELECT forum_id, thread_id, COUNT(post_id) as num_posts
-				FROM ".DB_POSTS."
+				FROM ".DB_FORUM_POSTS."
 				WHERE post_id IN (".$move_posts.") AND forum_id='".$this->forum_id."'
 				AND thread_id='".$_GET['thread_id']."'
 				GROUP BY thread_id");
@@ -508,7 +508,7 @@ class moderator {
 					echo openmodal('forum0300', $locale['forum_0300'], array('class'=>'modal-md top-30p', 'static'=>1));
 					if ($f_post) { // there is a first post.
 						echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>";
-						if ($num_posts != dbcount("(post_id)", DB_POSTS, "thread_id='".$pdata['thread_id']."'")) {
+						if ($num_posts != dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$pdata['thread_id']."'")) {
 							$dell_f_post = TRUE;
 							echo $locale['forum_0305']."<br />\n"; // trying to remove first post with other post in the thread
 						} else {
@@ -525,7 +525,7 @@ class moderator {
 						$fl_result = dbquery("
 							SELECT f.forum_id, f.forum_name, f2.forum_name AS forum_cat_name,
 							(SELECT COUNT(thread_id)
-							FROM ".DB_THREADS." th
+							FROM ".DB_FORUM_THREADS." th
 							WHERE f.forum_id=th.forum_id AND th.thread_id!='".$pdata['thread_id']."'
 							GROUP BY th.forum_id) AS threadcount
 							FROM ".DB_FORUMS." f
@@ -567,7 +567,7 @@ class moderator {
 						// build the list.
 						$tl_result = dbquery("
 							SELECT thread_id, thread_subject
-							FROM ".DB_THREADS."
+							FROM ".DB_FORUM_THREADS."
 							WHERE forum_id='".$_POST['new_forum_id']."' AND thread_id!='".$info['thread_id']."' AND thread_hidden='0'
 							ORDER BY thread_subject ASC
 						");
@@ -597,7 +597,7 @@ class moderator {
 					elseif (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id'])) {
 						// Execute move and redirect after
 						$move_posts_add = "";
-						if (!dbcount("(thread_id)", DB_THREADS, "thread_id='".$_POST['new_thread_id']."' AND forum_id='".$_POST['new_forum_id']."'")) {
+						if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id='".$_POST['new_thread_id']."' AND forum_id='".$_POST['new_forum_id']."'")) {
 							redirect(FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;error=1");
 						}
 						foreach ($array_post as $move_post_id) {
@@ -613,36 +613,36 @@ class moderator {
 							}
 						}
 						if ($move_posts_add) {
-							$posts_ex = dbcount("(post_id)", DB_POSTS, "thread_id='".$pdata['thread_id']."' AND post_id IN (".$move_posts_add.")");
+							$posts_ex = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$pdata['thread_id']."' AND post_id IN (".$move_posts_add.")");
 							if ($posts_ex) {
-								$result = dbquery("UPDATE ".DB_POSTS." SET forum_id='".$_POST['new_forum_id']."', thread_id='".$_POST['new_thread_id']."' WHERE post_id IN (".$move_posts_add.")");
+								$result = dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id='".$_POST['new_forum_id']."', thread_id='".$_POST['new_thread_id']."' WHERE post_id IN (".$move_posts_add.")");
 								$result = dbquery("UPDATE ".DB_FORUM_ATTACHMENTS." SET thread_id='".$_POST['new_thread_id']."' WHERE post_id IN(".$move_posts_add.")");
 								$new_thread = dbarray(dbquery("
 									SELECT forum_id, thread_id, post_id, post_author, post_datestamp
-									FROM ".DB_POSTS."
+									FROM ".DB_FORUM_POSTS."
 									WHERE thread_id='".$_POST['new_thread_id']."'
 									ORDER BY post_datestamp DESC
 									LIMIT 1
 								"));
-								$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".$new_thread['post_datestamp']."', thread_lastpostid='".$new_thread['post_id']."', thread_postcount=thread_postcount+".$num_posts.", thread_lastuser='".$new_thread['post_author']."' WHERE thread_id='".$_POST['new_thread_id']."'");
+								$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".$new_thread['post_datestamp']."', thread_lastpostid='".$new_thread['post_id']."', thread_postcount=thread_postcount+".$num_posts.", thread_lastuser='".$new_thread['post_author']."' WHERE thread_id='".$_POST['new_thread_id']."'");
 								$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$new_thread['post_datestamp']."', forum_postcount=forum_postcount+".$num_posts.", forum_lastuser='".$new_thread['post_author']."' WHERE forum_id='".$_POST['new_forum_id']."'");
 								$old_thread = dbarray(dbquery("
 									SELECT forum_id, thread_id, post_id, post_author, post_datestamp
-									FROM ".DB_POSTS."
+									FROM ".DB_FORUM_POSTS."
 									WHERE thread_id='".$pdata['thread_id']."'
 									ORDER BY post_datestamp DESC
 									LIMIT 1
 								"));
-								if (!dbcount("(post_id)", DB_POSTS, "thread_id='".$pdata['thread_id']."'")) {
-									$new_last_post = dbarray(dbquery("SELECT post_author, post_datestamp FROM ".DB_POSTS." WHERE forum_id='".$pdata['forum_id']."' ORDER BY post_datestamp DESC LIMIT 1 "));
+								if (!dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".$pdata['thread_id']."'")) {
+									$new_last_post = dbarray(dbquery("SELECT post_author, post_datestamp FROM ".DB_FORUM_POSTS." WHERE forum_id='".$pdata['forum_id']."' ORDER BY post_datestamp DESC LIMIT 1 "));
 									$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$new_last_post['post_datestamp']."', forum_postcount=forum_postcount-".$num_posts.", forum_threadcount=forum_threadcount-1, forum_lastuser='".$new_last_post['post_author']."' WHERE forum_id='".$pdata['forum_id']."'");
-									$result = dbquery("DELETE FROM ".DB_THREADS." WHERE thread_id='".$pdata['thread_id']."'");
-									$result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id='".$pdata['thread_id']."'");
+									$result = dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_id='".$pdata['thread_id']."'");
+									$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$pdata['thread_id']."'");
 									$result = dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".$pdata['thread_id']."'");
 									$result = dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$pdata['thread_id']."'");
 									$result = dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".$pdata['thread_id']."'");
 								} else {
-									$result = dbquery("UPDATE ".DB_THREADS." SET thread_lastpost='".$old_thread['post_datestamp']."', thread_lastpostid='".$old_thread['post_id']."', thread_postcount=thread_postcount-".$num_posts.", thread_lastuser='".$old_thread['post_author']."' WHERE thread_id='".$pdata['thread_id']."'");
+									$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".$old_thread['post_datestamp']."', thread_lastpostid='".$old_thread['post_id']."', thread_postcount=thread_postcount-".$num_posts.", thread_lastuser='".$old_thread['post_author']."' WHERE thread_id='".$pdata['thread_id']."'");
 									$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$old_thread['post_datestamp']."', forum_postcount=forum_postcount-".$num_posts.", forum_lastuser='".$old_thread['post_author']."' WHERE forum_id='".$pdata['forum_id']."'");
 								}
 								$pid = count($array_post)-1;

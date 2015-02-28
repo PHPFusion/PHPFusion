@@ -27,7 +27,7 @@ function unstripinput($text) {
 }
 
 if ((isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && (isset($_GET['post_id']) && isnum($_GET['post_id'])) && (isset($_GET['code_id']) && isnum($_GET['code_id']))) {
-	$result = dbquery("SELECT fp.*, ff.* FROM ".DB_POSTS." AS fp
+	$result = dbquery("SELECT fp.*, ff.* FROM ".DB_FORUM_POSTS." AS fp
 		INNER JOIN ".DB_FORUMS." AS ff ON ff.forum_id=fp.forum_id
 		WHERE fp.thread_id='".$_GET['thread_id']."' AND fp.post_id='".$_GET['post_id']."'");
 	if (dbrows($result)) {

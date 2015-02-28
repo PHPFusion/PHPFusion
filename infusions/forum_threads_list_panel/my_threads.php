@@ -25,7 +25,7 @@ global $lastvisited;
 if (!isset($lastvisited) || !isnum($lastvisited)) {
 	$lastvisited = time();
 }
-$rows = dbrows(dbquery("SELECT tt.thread_id FROM ".DB_THREADS." tt INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
+$rows = dbrows(dbquery("SELECT tt.thread_id FROM ".DB_FORUM_THREADS." tt INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
 	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'"));
 if ($rows) {
 	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
@@ -34,7 +34,7 @@ if ($rows) {
 	$result = dbquery("SELECT tt.forum_id, tt.thread_id, tt.thread_subject, tt.thread_views, tt.thread_lastuser,
 		tt.thread_lastpost, tt.thread_postcount, tf.forum_name, tf.forum_access, tu.user_id, tu.user_name,
 		tu.user_status
-		FROM ".DB_THREADS." tt
+		FROM ".DB_FORUM_THREADS." tt
 		INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
 		INNER JOIN ".DB_USERS." tu ON tt.thread_lastuser = tu.user_id
 		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'

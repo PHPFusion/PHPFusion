@@ -1,14 +1,14 @@
 <?php
 if (!iMEMBER) {	redirect(FORUM.'index.php'); }
 
-if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_THREAD_NOTIFY, "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")) {
-	$result = dbquery("DELETE FROM ".DB_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);
+if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")) {
+	$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);
 	redirect(FUSION_SELF);
 }
 
 // xss injection
-$result = dbquery("SELECT tn.thread_id FROM ".DB_THREAD_NOTIFY." tn
-            INNER JOIN ".DB_THREADS." tt ON tn.thread_id = tt.thread_id
+$result = dbquery("SELECT tn.thread_id FROM ".DB_FORUM_THREAD_NOTIFY." tn
+            INNER JOIN ".DB_FORUM_THREADS." tt ON tn.thread_id = tt.thread_id
             INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
             WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'");
 $rows = dbrows($result);
@@ -27,13 +27,13 @@ if ($rows) {
                 uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
                 u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
                 count(v.post_id) AS vote_count
-                FROM ".DB_THREAD_NOTIFY." tn
-                INNER JOIN ".DB_THREADS." tt ON tn.thread_id = tt.thread_id
+                FROM ".DB_FORUM_THREAD_NOTIFY." tn
+                INNER JOIN ".DB_FORUM_THREADS." tt ON tn.thread_id = tt.thread_id
                 INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
                 LEFT JOIN ".DB_FORUMS." ttc ON ttc.forum_id = tf.forum_cat
                 LEFT JOIN ".DB_USERS." uc ON tt.thread_author = uc.user_id
                 LEFT JOIN ".DB_USERS." u ON tt.thread_lastuser = u.user_id
-                LEFT JOIN ".DB_POSTS." tp ON tt.thread_id = tp.thread_id
+                LEFT JOIN ".DB_FORUM_POSTS." tp ON tt.thread_id = tp.thread_id
                 LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = tt.thread_id AND tp.post_id = v.post_id
                 WHERE tn.notify_user=".$userdata['user_id']." AND ".groupaccess('forum_access')." AND tt.thread_hidden='0'
                 GROUP BY tn.thread_id

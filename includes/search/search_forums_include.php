@@ -40,9 +40,9 @@ if ($_GET['stype'] == "forums" || $_GET['stype'] == "all") {
 	}
 	if ($fieldsvar) {
 		$result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_message, tt.thread_subject,
-			tf.forum_access FROM ".DB_POSTS." tp
+			tf.forum_access FROM ".DB_FORUM_POSTS." tp
 			LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = tp.forum_id
-			LEFT JOIN ".DB_THREADS." tt ON tt.thread_id = tp.thread_id			
+			LEFT JOIN ".DB_FORUM_THREADS." tt ON tt.thread_id = tp.thread_id			
 			WHERE ".groupaccess('forum_access').($_POST['forum_id'] != 0 ? " AND tf.forum_id=".$_POST['forum_id'] : "")."
 			AND ".$fieldsvar.($_POST['datelimit'] != 0 ? " AND post_datestamp>=".(time()-$_POST['datelimit']) : ""));
 		$rows = dbrows($result);
@@ -52,8 +52,8 @@ if ($_GET['stype'] == "forums" || $_GET['stype'] == "all") {
 	if ($rows) {
 		$items_count .= THEME_BULLET."&nbsp;<a href='".FUSION_SELF."?stype=forums&amp;stext=".$_POST['stext']."&amp;".$composevars."'>".$rows." ".($rows == 1 ? $locale['f402'] : $locale['f403'])." ".$locale['522']."</a><br  />\n";
 		$result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_message, tp.post_datestamp, tt.thread_subject,
-			tt.thread_sticky, tf.forum_access, tu.user_id, tu.user_name, tu.user_status FROM ".DB_POSTS." tp
-			LEFT JOIN ".DB_THREADS." tt ON tp.thread_id = tt.thread_id
+			tt.thread_sticky, tf.forum_access, tu.user_id, tu.user_name, tu.user_status FROM ".DB_FORUM_POSTS." tp
+			LEFT JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
 			LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
 			LEFT JOIN ".DB_USERS." tu ON tp.post_author=tu.user_id
 			WHERE ".groupaccess('forum_access').($_POST['forum_id'] != 0 ? " AND tf.forum_id=".$_POST['forum_id'] : "")."

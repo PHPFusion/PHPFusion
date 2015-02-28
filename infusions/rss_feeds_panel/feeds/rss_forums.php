@@ -27,10 +27,10 @@ if (file_exists(INFUSIONS."rss_feeds_panel/locale/".LANGUAGE.".php")) {
 	include INFUSIONS."rss_feeds_panel/locale/English.php";
 }
 
-if (db_exists(DB_POSTS) && db_exists(DB_FORUMS)) {
+if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
 
 	$result = dbquery("SELECT tf.*, tt.* FROM ".DB_FORUMS." tf
-	INNER JOIN ".DB_POSTS." tt USING(forum_id)
+	INNER JOIN ".DB_FORUM_POSTS." tt USING(forum_id)
 	WHERE ".groupaccess('forum_access').(multilang_table("FO") ? " AND tf.forum_language='".LANGUAGE."'" : "")."
 	ORDER BY post_datestamp DESC LIMIT 0,10");
 

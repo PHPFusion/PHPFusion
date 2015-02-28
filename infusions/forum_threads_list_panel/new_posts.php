@@ -23,9 +23,9 @@ if (!iMEMBER) {
 if (!isset($lastvisited) || !isnum($lastvisited)) $lastvisited = time();
 add_to_title($locale['global_200'].$locale['global_043']);
 opentable($locale['global_043']);
-$result = dbquery("SELECT tp.post_id FROM ".DB_POSTS." tp
+$result = dbquery("SELECT tp.post_id FROM ".DB_FORUM_POSTS." tp
 	LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
-	LEFT JOIN ".DB_THREADS." tt ON tp.thread_id = tt.thread_id
+	LEFT JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
 	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tp.post_hidden='0' AND tt.thread_hidden='0' AND (tp.post_datestamp > ".$lastvisited." OR tp.post_edittime > ".$lastvisited.")");
 $rows = dbrows($result);
 $threads = 0;
@@ -35,9 +35,9 @@ if ($rows) {
 	}
 	$result = dbquery("SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_author, IF(tp.post_datestamp>tp.post_edittime, tp.post_datestamp, tp.post_edittime) AS post_timestamp,
 		tf.forum_name, tf.forum_access, tt.thread_subject, tu.user_id, tu.user_name, tu.user_status
-		FROM ".DB_POSTS." tp
+		FROM ".DB_FORUM_POSTS." tp
 		LEFT JOIN ".DB_FORUMS." tf ON tp.forum_id = tf.forum_id
-		LEFT JOIN ".DB_THREADS." tt ON tp.thread_id = tt.thread_id
+		LEFT JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
 		LEFT JOIN ".DB_USERS." tu ON tp.post_author = tu.user_id
 		".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tp.post_hidden='0' AND tt.thread_hidden='0' AND (tp.post_datestamp > '".$lastvisited."' OR tp.post_edittime > '".$lastvisited."')
 		GROUP BY tp.thread_id

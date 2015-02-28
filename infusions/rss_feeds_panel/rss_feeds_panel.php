@@ -42,7 +42,7 @@ if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
 if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
 	echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_weblinks.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_weblinks.gif' alt='".$locale['rss006']."'></a>\n";
 }
-if (db_exists(DB_POSTS) && db_exists(DB_FORUMS)) {
+if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
 	echo "<a href='".INFUSIONS."rss_feeds_panel/feeds/rss_forums.php'><img class='img-responsive' src='".INFUSIONS."rss_feeds_panel/images/rss_forums.gif' alt='".$locale['rss001']."'></a>\n";
 }
 echo "</p>\n";

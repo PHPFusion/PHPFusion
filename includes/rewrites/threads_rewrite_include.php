@@ -45,7 +45,7 @@ $pattern = array(
 					   "thread/%alias%/post/%post_id%#post_%post_id%" => "forum/%alias_target%&amp;pid=%post_id%#post_%post_id%",
 					   "thread/%alias%/post/%post_id%" => "forum/%alias_target%&amp;pid=%post_id%"); */
 $dir = FORUM;
-$dbname = DB_THREADS;
+$dbname = DB_FORUM_THREADS;
 $dbid = array("%thread_id%" => "thread_id");
 $dbinfo = array("%thread_name%" => "thread_subject");
 

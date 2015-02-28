@@ -65,8 +65,8 @@ elseif (isset($_POST['jp_forum'])) {
 elseif ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) && isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) {
 	// check if there are subforums, threads or posts.
 	$forum_count = dbcount("('forum_id')", DB_FORUMS, "forum_cat='".$_GET['forum_id']."'");
-	$thread_count = dbcount("('forum_id')", DB_THREADS, "forum_id='".$_GET['forum_id']."'");
-	$post_count = dbcount("('post_id')", DB_THREADS, "forum_id='".$_GET['forum_id']."'");
+	$thread_count = dbcount("('forum_id')", DB_FORUM_THREADS, "forum_id='".$_GET['forum_id']."'");
+	$post_count = dbcount("('post_id')", DB_FORUM_THREADS, "forum_id='".$_GET['forum_id']."'");
 	if (($forum_count+$thread_count+$post_count) >= 1) {
 		move_form();
 	} else {
@@ -708,8 +708,8 @@ function remove_forum() {
 	// move whole forum to another location
 	if (!$delete_threads && $threads_to_forum) {
 		// simple move
-		dbquery("UPDATE ".DB_THREADS." SET forum_id='".$threads_to_forum."' WHERE forum_id='".$forum_id."'");
-		dbquery("UPDATE ".DB_POSTS." SET forum_id='".$threads_to_forum."' WHERE forum_id='".$forum_id."'");
+		dbquery("UPDATE ".DB_FORUM_THREADS." SET forum_id='".$threads_to_forum."' WHERE forum_id='".$forum_id."'");
+		dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id='".$threads_to_forum."' WHERE forum_id='".$forum_id."'");
 		prune_forums($forum_index, $forum_id);
 	}
 	// wipe everything

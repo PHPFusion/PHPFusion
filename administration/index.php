@@ -56,8 +56,8 @@ if ($settings['enable_deactivation'] == "1") {
 if (db_exists(DB_FORUMS)) {
 	// forums stats
 	$forum['count'] = dbcount("('forum_id')", DB_FORUMS);
-	$forum['thread'] = dbcount("('post_id')", DB_THREADS);
-	$forum['post'] = dbcount("('post_id')", DB_POSTS);
+	$forum['thread'] = dbcount("('post_id')", DB_FORUM_THREADS);
+	$forum['post'] = dbcount("('post_id')", DB_FORUM_POSTS);
 	$forum['users'] = dbcount("('user_id')", DB_USERS, "user_posts > '0'");
 }
 if (db_exists(DB_DOWNLOADS)) {

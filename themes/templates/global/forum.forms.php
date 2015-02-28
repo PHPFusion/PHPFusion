@@ -208,7 +208,7 @@ function postform($data, $info) {
 		if ($settings['forum_last_posts_reply'] != "0") {
 			$result = dbquery("SELECT p.thread_id, p.post_message, p.post_smileys, p.post_author, p.post_datestamp, p.post_hidden,
 u.user_id, u.user_name, u.user_status, u.user_avatar
-FROM ".DB_POSTS." p
+FROM ".DB_FORUM_POSTS." p
 LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 WHERE p.thread_id='".$_GET['thread_id']."' AND p.post_hidden='0'
 ORDER BY p.post_datestamp DESC LIMIT 0,".$settings['forum_last_posts_reply']);

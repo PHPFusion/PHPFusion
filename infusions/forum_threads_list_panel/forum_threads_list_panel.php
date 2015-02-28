@@ -28,7 +28,7 @@ $data = dbarray(dbquery("SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_d
 	u.user_id, u.user_name, u.user_status, u.user_avatar
 	FROM ".DB_FORUMS." f
 	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-	LEFT JOIN ".DB_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid AND f.forum_id = t.forum_id
+	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid AND f.forum_id = t.forum_id
 	LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3'
 	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads'].""));
@@ -41,7 +41,7 @@ $result = dbquery("SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_descrip
 	u.user_id, u.user_name, u.user_status, u.user_avatar
 	FROM ".DB_FORUMS." f
 	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-	LEFT JOIN ".DB_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid AND f.forum_id = t.forum_id
+	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid AND f.forum_id = t.forum_id
 	LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_lastpost >= ".$timeframe." AND t.thread_hidden='0'
 	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads']."");

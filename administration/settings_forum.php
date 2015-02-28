@@ -34,7 +34,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
-	$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_POSTS." GROUP BY post_author");
+	$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
 	if (dbrows($result)) {
 		while ($data = dbarray($result)) {
 			$result2 = dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
