@@ -669,6 +669,8 @@ class AdminUI {
 
 			$img_path = $this->image_upload_dir.$data['photo_filename'];
 			$img_src = file_exists($img_path) && !is_dir($img_path) ? $img_path : 'holder.js/170x170/grey/text:'.$locale['na'];
+			$file_exif = exif($img_src);
+
 			echo openmodal('photo_show', '', array('class'=>'modal-lg'));
 			?>
 			<div class='row'>
@@ -680,6 +682,9 @@ class AdminUI {
 					</div>
 					<?php
 					// comments
+					require_once INCLUDES."comments_include.php";
+					showcomments($this->gallery_rights, );
+					//$ctype, $cdb, $ccol, $cid, $clink
 					?>
 				</div>
 				<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>
@@ -709,32 +714,43 @@ class AdminUI {
 					");
 					require_once INCLUDES."ratings_include.php";
 					showratings($this->gallery_rights, $data['photo_id'], FUSION_REQUEST);
-					?>
 
+					if ($data['photo_description']) {
+					?>
 					<hr>
 					<div class='text-uppercase text-smaller strong'>Photo Description:</div>
-					<?php echo $data['photo_description'] ?>
+					<?php
+						echo $data['photo_description'];
+					}
+					?>
 					<hr>
 					<div>
-						<span class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i> Number of Views <span class='pull-right text-bigger strong'><?php echo number_format($data['photo_views'], 0) ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i> Ratings <span class='pull-right  text-bigger strong'>90</span></span>
-						<span class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i> Comments <span class='pull-right text-bigger strong'>90</span></span>
-						<span class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i> Dimensions <span class='pull-right text-bigger strong'>90</span></span>
-						<span class='display-block m-b-5'><i class='fa fa-file-archive-o m-r-10'></i> Filesize <span class='pull-right text-bigger strong'>90</span></span>
+						<span class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i> Number of Views <span class='pull-right text-bigger strong'><?php echo number_format($data['photo_views']) ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i> Ratings <span class='pull-right  text-bigger strong'><?php echo number_format(($data['rating_count']/$data['total_votes'] * 100))?>/100</span></span>
+						<span class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i> Comments <span class='pull-right text-bigger strong'><?php echo number_format($data['comment_count']) ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i> Dimensions <span class='pull-right text-bigger strong'><?php echo $file_exif['width'].'x'.$file_exif['height'] ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i> Image Type <span class='pull-right text-bigger strong'><?php echo $file_exif['mime'] ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i> Channels <span class='pull-right text-bigger strong'><?php echo $file_exif['channels'] ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-file-o m-r-10'></i> Bits <span class='pull-right text-bigger strong'><?php echo $file_exif['bits'] ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-instagram m-r-10'></i> ISO <span class='pull-right text-bigger strong'><?php echo $file_exif['iso'] ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-sun-o m-r-10'></i> Exposure <span class='pull-right text-bigger strong'><?php echo $file_exif['exposure'] ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-eyedropper m-r-10'></i> Aperture <span class='pull-right text-bigger strong'><?php echo $file_exif['aperture'] ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i> Camera <span class='pull-right text-bigger strong'><?php echo $file_exif['make'] ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i> Camera Model <span class='pull-right text-bigger strong'><?php echo $file_exif['model'] ?></span></span>
 					</div>
 					<hr>
-					<div class='text-uppercase text-smaller strong m-b-10'>Keywords:</div>
-					<div>
-						<?php
-						for($i = 1; $i<=5; $i++) {
-							echo form_button('Keywords', 'tags', 'tags', 'keyword', array('class'=>'btn-sm btn-default m-r-10 m-b-10'));
+					<?php
+					if (!empty($data['keywords'])) {
+						$keywords = explode(',', $data['keywords']);
+						echo "<div class='text-uppercase text-smaller strong m-b-10'>Keywords:</div>";
+						foreach($keywords as $key) {
+							echo "<span class='strong btn btn-sm btn-default'>$key</span>\n";
 						}
-						?>
-					</div>
-
+						echo "</div>\n";
+					}
+					?>
 				</div>
 			</div>
-
 			<?php
 			echo closemodal();
 		}

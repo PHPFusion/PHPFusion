@@ -17,9 +17,10 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."comments.php";
-function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
+
+function showcomments($comment_type, $comments_db, $ccol, $cid, $clink) {
 	global $settings, $locale, $userdata, $aidlink;
-	$clink = BASEDIR.$clink;
+	//$clink = BASEDIR.$clink;
 	$link = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
 	$link = preg_replace("^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $link);
 	$cpp = $settings['comments_per_page'];
@@ -54,7 +55,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 			if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
 				$comment_updated = FALSE;
 				if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$_GET['comment_id']."' AND comment_item_id='".$cid."'
-						AND comment_type='".$ctype."' AND comment_name='".$userdata['user_id']."'
+						AND comment_type='".$comment_type."' AND comment_name='".$userdata['user_id']."'
 						AND comment_hidden='0'"))
 				) {
 					if ($comment_message) {
@@ -72,12 +73,12 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 					}
 					$c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_id".$c_operator."'".$_GET['comment_id']."'
 								AND comment_item_id='".$cid."'
-								AND comment_type='".$ctype."'");
+								AND comment_type='".$comment_type."'");
 					$c_start = (ceil($c_count/$cpp)-1)*$cpp;
 				}
 				redirect($clink."&amp;c_start=".(isset($c_start) && isnum($c_start) ? $c_start : ""));
 			} else {
-				if (!dbcount("(".$ccol.")", $cdb, $ccol."='".$cid."'")) {
+				if (!dbcount("(".$ccol.")", $comments_db, $ccol."='".$cid."'")) {
 					redirect(BASEDIR."index.php");
 				}
 				if ($comment_name && $comment_message) {
@@ -87,13 +88,13 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 								comment_item_id, comment_type, comment_name, comment_message, comment_datestamp,
 								comment_ip, comment_ip_type, comment_hidden
 							) VALUES (
-								'".$cid."', '".$ctype."', '".$comment_name."', '".$comment_message."', '".time()."',
+								'".$cid."', '".$comment_type."', '".$comment_name."', '".$comment_message."', '".time()."',
 								'".USER_IP."', '".USER_IP_TYPE."', '0'
 							)");
 					}
 				}
 				if ($settings['comments_sorting'] == "ASC") {
-					$c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$cid."' AND comment_type='".$ctype."'");
+					$c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$cid."' AND comment_type='".$comment_type."'");
 					$c_start = (ceil($c_count/$cpp)-1)*$cpp;
 				} else {
 					$c_start = 0;
@@ -104,7 +105,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 		}
 		$c_arr = array("c_con" => array(), "c_info" => array("c_makepagenav" => FALSE, "admin_link" => FALSE));
 		$c_rows = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$cid."'
-							AND comment_type='".$ctype."' AND comment_hidden='0'");
+							AND comment_type='".$comment_type."' AND comment_hidden='0'");
 		if (!isset($_GET['c_start']) && $c_rows > $cpp) {
 			$_GET['c_start'] = (ceil($c_rows/$cpp)-1)*$cpp;
 		}
@@ -115,7 +116,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 					tcu.user_id, tcu.user_name, tcu.user_avatar, tcu.user_status
 			FROM ".DB_COMMENTS." tcm
 			LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-			WHERE comment_item_id='".$cid."' AND comment_type='".$ctype."' AND comment_hidden='0'
+			WHERE comment_item_id='".$cid."' AND comment_type='".$comment_type."' AND comment_hidden='0'
 			ORDER BY comment_datestamp ".$settings['comments_sorting']." LIMIT ".$_GET['c_start'].",".$cpp);
 		if (dbrows($result)) {
 			$i = ($settings['comments_sorting'] == "ASC" ? $_GET['c_start']+1 : $c_rows-$_GET['c_start']);
@@ -146,7 +147,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 			}
 			if (iADMIN && checkrights("C")) {
 				$c_arr['c_info']['admin_link'] = "<!--comment_admin-->\n";
-				$c_arr['c_info']['admin_link'] .= "<a href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$ctype."&amp;cid=".$cid."'>".$locale['c106']."</a>";
+				$c_arr['c_info']['admin_link'] .= "<a href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_type."&amp;cid=".$cid."'>".$locale['c106']."</a>";
 			}
 		}
 		// Render comments
@@ -159,7 +160,7 @@ function showcomments($ctype, $cdb, $ccol, $cid, $clink) {
 				FROM ".DB_COMMENTS." tcm
 				LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
 				WHERE comment_id='".$_GET['comment_id']."' AND comment_item_id='".$cid."'
-					AND comment_type='".$ctype."' AND comment_hidden='0'");
+					AND comment_type='".$comment_type."' AND comment_hidden='0'");
 			if (dbrows($eresult)) {
 				$edata = dbarray($eresult);
 				if ((iADMIN && checkrights("C")) || (iMEMBER && $edata['comment_name'] == $userdata['user_id'] && isset($edata['user_name']))) {

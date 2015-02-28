@@ -110,4 +110,63 @@ function image_exists($dir, $image) {
 	return $image;
 }
 
-?>
+
+/* Courtesy of : drpain.webster.org.za @ php.net */
+function exif($imagePath) {
+	global $locale;
+	// Check if the variable is set and if the file itself exists before continuing
+	if ((isset($imagePath)) and (file_exists($imagePath)) and !is_dir($imagePath)) {
+		// There are 2 arrays which contains the information we are after, so it's easier to state them both
+		$exif_base = @getimagesize($imagePath);
+		$exif_ifd0 = read_exif_data($imagePath ,'IFD0' ,0);
+		$exif_exif = read_exif_data($imagePath ,'EXIF' ,0);
+		//error control
+		$notFound = $locale['na'];
+		// Make
+		if (@array_key_exists('Make', $exif_ifd0)) {
+			$camMake = $exif_ifd0['Make'];
+		} else { $camMake = $notFound; }
+
+		// Model
+		if (@array_key_exists('Model', $exif_ifd0)) {
+			$camModel = $exif_ifd0['Model'];
+		} else { $camModel = $notFound; }
+
+		// Exposure
+		if (@array_key_exists('ExposureTime', $exif_ifd0)) {
+			$camExposure = $exif_ifd0['ExposureTime'];
+		} else { $camExposure = $notFound; }
+
+		// Aperture
+		if (@array_key_exists('ApertureFNumber', $exif_ifd0['COMPUTED'])) {
+			$camAperture = $exif_ifd0['COMPUTED']['ApertureFNumber'];
+		} else { $camAperture = $notFound; }
+
+		// Date
+		if (@array_key_exists('DateTime', $exif_ifd0)) {
+			$camDate = $exif_ifd0['DateTime'];
+		} else { $camDate = $notFound; }
+
+		// ISO
+		if (@array_key_exists('ISOSpeedRatings',$exif_exif)) {
+			$camIso = $exif_exif['ISOSpeedRatings'];
+		} else { $camIso = $notFound; }
+
+		$return = array();
+		$return['width'] = $exif_base[0];
+		$return['height'] = $exif_base[1];
+		$return['mime'] = $exif_base['mime'];
+		$return['channels'] = $exif_base['channels'];
+		$return['bits'] = $exif_base['bits'];
+		$return['make'] = $camMake;
+		$return['model'] = $camModel;
+		$return['exposure'] = $camExposure;
+		$return['aperture'] = $camAperture;
+		$return['date'] = $camDate;
+		$return['iso'] = $camIso;
+		return $return;
+	} else {
+		return false;
+	}
+}
+
