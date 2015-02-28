@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (!function_exists("render_comments")) {
 	function render_comments($c_data, $c_info) {
 		global $locale;
-		opentable($locale['c100']);
+		opentable($locale['c100'].' : ('.format_word(number_format(count($c_data)), $locale['fmt_comment']).')');
 		if (!empty($c_data)) {
 			echo "<div class='comments floatfix'>\n";
 			$c_makepagenav = '';
@@ -28,14 +28,24 @@ if (!function_exists("render_comments")) {
 				echo $c_makepagenav = "<div style='text-align:center;margin-bottom:5px;'>".$c_info['c_makepagenav']."</div>\n";
 			}
 			foreach ($c_data as $data) {
-				echo "<div class='tbl2'>\n";
+				echo "<div class='comments_container m-b-15'><div class='pull-left m-r-10'>";
+				echo $data['user_avatar'];
+				echo "</div>\n";
+				echo "<div class='overflow-hide'>\n";
 				if ($data['edit_dell'] !== FALSE) {
-					echo "<div style='float:right' class='comment_actions'>".$data['edit_dell']."\n</div>\n";
+					echo "
+					<div class='pull-right text-smaller comment_actions'>
+					".$data['edit_dell']."
+					- <a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a>
+					</div>\n";
 				}
-				echo "<a href='".FUSION_REQUEST."#c".$data['comment_id']."' id='c".$data['comment_id']."' name='c".$data['comment_id']."'>#".$data['i']."</a> |\n";
-				echo "<span class='comment-name'>".$data['comment_name']."</span>\n";
-				echo "<span class='small'>".$data['comment_datestamp']."</span>\n";
-				echo "</div>\n<div class='tbl1 comment_message'>".$data['comment_message']."</div>\n";
+				echo "<div class='comment_name'>\n";
+				echo $data['comment_name'];
+				echo "<span class='text-smaller mid-opacity m-l-10'>".$data['comment_datestamp']."</span>\n";
+				echo "</div>\n";
+				echo "<div class='comment_message'>".$data['comment_message']."</div>\n";
+				echo "</div>\n</div>\n";
+
 			}
 			echo $c_makepagenav;
 			if ($c_info['admin_link'] !== FALSE) {

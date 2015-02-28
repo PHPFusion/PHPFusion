@@ -533,6 +533,12 @@ table {
 	font-size:100%;
 }
 /* Modal */
+.modal {
+	cursor: zoom-out;
+}
+.modal-dialog {
+	cursor: default;
+}
 .modal-body table {
 	font-size: 13px;
 }

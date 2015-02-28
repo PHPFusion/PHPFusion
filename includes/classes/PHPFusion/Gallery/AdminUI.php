@@ -100,7 +100,7 @@ class AdminUI {
 
 		if (!db_exists($this->photo_cat_db) && $this->enable_album) {
 			$result = dbquery("CREATE TABLE ".$this->photo_cat_db." (
-				album_id mediumint(11) unsigned not null auto_increment,
+				album_id mediumint(8) unsigned not null auto_increment,
 				album_title varchar(100) not null default '',
 				album_description text not null,
 				album_thumb varchar(100) not null default '',
@@ -149,6 +149,7 @@ class AdminUI {
 		$this->action = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		$this->album_data['album_language'] = LANGUAGE;
 		$this->album_data['album_datestamp'] = time();
+
 
 	}
 
@@ -250,7 +251,6 @@ class AdminUI {
 		}
 		return array();
 	}
-
 
 	public function boot() {
 		//self::Install_Gallery();
@@ -683,8 +683,7 @@ class AdminUI {
 					<?php
 					// comments
 					require_once INCLUDES."comments_include.php";
-					showcomments($this->gallery_rights, );
-					//$ctype, $cdb, $ccol, $cid, $clink
+					showcomments($this->gallery_rights, $this->photo_db, 'photo_id', $data['photo_id'], FUSION_REQUEST);
 					?>
 				</div>
 				<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>
@@ -725,18 +724,18 @@ class AdminUI {
 					?>
 					<hr>
 					<div>
-						<span class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i> Number of Views <span class='pull-right text-bigger strong'><?php echo number_format($data['photo_views']) ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i> Ratings <span class='pull-right  text-bigger strong'><?php echo number_format(($data['rating_count']/$data['total_votes'] * 100))?>/100</span></span>
-						<span class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i> Comments <span class='pull-right text-bigger strong'><?php echo number_format($data['comment_count']) ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i> Dimensions <span class='pull-right text-bigger strong'><?php echo $file_exif['width'].'x'.$file_exif['height'] ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i> Image Type <span class='pull-right text-bigger strong'><?php echo $file_exif['mime'] ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i> Channels <span class='pull-right text-bigger strong'><?php echo $file_exif['channels'] ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-file-o m-r-10'></i> Bits <span class='pull-right text-bigger strong'><?php echo $file_exif['bits'] ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-instagram m-r-10'></i> ISO <span class='pull-right text-bigger strong'><?php echo $file_exif['iso'] ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-sun-o m-r-10'></i> Exposure <span class='pull-right text-bigger strong'><?php echo $file_exif['exposure'] ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-eyedropper m-r-10'></i> Aperture <span class='pull-right text-bigger strong'><?php echo $file_exif['aperture'] ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i> Camera <span class='pull-right text-bigger strong'><?php echo $file_exif['make'] ?></span></span>
-						<span class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i> Camera Model <span class='pull-right text-bigger strong'><?php echo $file_exif['model'] ?></span></span>
+						<div class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i><span class='text-smaller'>Number of Views</span><span class='pull-right text-bigger strong'><?php echo number_format($data['photo_views']) ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i><span class='text-smaller'>Ratings</span><span class='pull-right  text-bigger strong'><?php echo $data['rating_count'] ? number_format(($data['rating_count']/$data['total_votes'] * 100)) : '0' ?>/100</span></div>
+						<div class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i><span class='text-smaller'>Comments</span><span class='pull-right text-bigger strong'><?php echo number_format($data['comment_count']) ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span class='text-smaller'>Dimensions</span><span class='pull-right text-bigger strong'><?php echo $file_exif['width'].'x'.$file_exif['height'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span class='text-smaller'>Image Type</span><span class='pull-right text-bigger strong'><?php echo $file_exif['mime'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span class='text-smaller'>Channels</span><span class='pull-right text-bigger strong'><?php echo $file_exif['channels'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-file-o m-r-10'></i><span class='text-smaller'>Bits</span><span class='pull-right text-bigger strong'><?php echo $file_exif['bits'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-instagram m-r-10'></i><span class='text-smaller'>ISO</span><span class='pull-right text-bigger strong'><?php echo $file_exif['iso'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-sun-o m-r-10'></i><span class='text-smaller'>Exposure</span><span class='pull-right text-bigger strong'><?php echo $file_exif['exposure'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-eyedropper m-r-10'></i><span class='text-smaller'>Aperture</span><span class='pull-right text-bigger strong'><?php echo $file_exif['aperture'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i><span class='text-smaller'>Camera</span><span class='pull-right text-bigger strong'><?php echo $file_exif['make'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i><span class='text-smaller'>Camera Model</span><span class='pull-right text-bigger strong'><?php echo $file_exif['model'] ?></span></div>
 					</div>
 					<hr>
 					<?php
@@ -930,7 +929,6 @@ class AdminUI {
 		</div>
 		<?php
 	}
-
 
 }
 

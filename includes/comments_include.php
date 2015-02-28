@@ -18,11 +18,16 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."comments.php";
 
-function showcomments($comment_type, $comments_db, $ccol, $cid, $clink) {
+function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
 	global $settings, $locale, $userdata, $aidlink;
 	//$clink = BASEDIR.$clink;
 	$link = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
 	$link = preg_replace("^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $link);
+
+	// sanitize the GET comment
+	$_GET['comment'] = isset($_GET['comment']) && isnum($_GET['comment']) ? $_GET['comment'] : 0;
+
+
 	$cpp = $settings['comments_per_page'];
 	if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
 		if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$_GET['comment_id']."' AND comment_name='".$userdata['user_id']."'"))) {
@@ -32,18 +37,17 @@ function showcomments($comment_type, $comments_db, $ccol, $cid, $clink) {
 		}
 		redirect($clink.($settings['comments_sorting'] == "ASC" ? "" : "&amp;c_start=0"));
 	}
+
 	if ($settings['comments_enabled'] == "1") {
+
 		if ((iMEMBER || $settings['guestposts'] == "1") && isset($_POST['post_comment'])) {
-			if (iMEMBER) {
-				$comment_name = $userdata['user_id'];
-			} elseif ($settings['guestposts'] == "1") {
+
+			if (!iMEMBER && $settings['guestpost'] == 1) {
 				if (!isset($_POST['comment_name'])) {
 					redirect($link);
 				}
-				$comment_name = trim(stripinput($_POST['comment_name']));
-				$comment_name = preg_replace("(^[+0-9\s]*)", "", $comment_name);
-				if (isnum($comment_name)) {
-					$comment_name = "";
+				if (isnum($_POST['comment_name'])) {
+					$_POST['comment_name'] = '';
 				}
 				$_CAPTCHA_IS_VALID = FALSE;
 				include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
@@ -51,74 +55,102 @@ function showcomments($comment_type, $comments_db, $ccol, $cid, $clink) {
 					redirect($link);
 				}
 			}
-			$comment_message = trim(stripinput(censorwords($_POST['comment_message'])));
-			if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
+
+			$comment_data = array(
+				'comment_id' => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : 0,
+				'comment_name' => iMEMBER ? $userdata['user_id'] : form_sanitizer($_POST['comment_name'], '', 'comment_name'), // set required
+				'comment_message' => form_sanitizer($_POST['comment_message'], '', 'comment_message'), // set required
+				'comment_item_id' => $comment_item_id,
+				'comment_type' => $comment_type,
+				'comment_cat' => 0,
+				'comment_ip' => USER_IP,
+				'comment_ip_type' => USER_IP_TYPE,
+				'comment_hidden' => 0,
+			);
+
+			if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && $comment_data['comment_id']) {
 				$comment_updated = FALSE;
-				if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$_GET['comment_id']."' AND comment_item_id='".$cid."'
-						AND comment_type='".$comment_type."' AND comment_name='".$userdata['user_id']."'
-						AND comment_hidden='0'"))
-				) {
-					if ($comment_message) {
-						$result = dbquery("UPDATE ".DB_COMMENTS." SET comment_message='".$comment_message."'
-											WHERE comment_id='".$_GET['comment_id']."'".(iADMIN ? "" : "
-											AND comment_name='".$userdata['user_id']."'"));
-						$comment_updated = TRUE;
+				if ((iADMIN && checkrights("C")) || (iMEMBER &&
+													 dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."' AND comment_item_id='".$comment_item_id."'
+															AND comment_type='".$comment_type."' AND comment_name='".$userdata['user_id']."' AND comment_hidden='0'")))
+				{
+					dbquery_insert(DB_COMMENTS, $comment_data, 'update');
+					if ($comment_data['comment_message']) {
+						$result = dbquery("UPDATE ".DB_COMMENTS." SET comment_message='".$comment_data['comment_message']."'
+											WHERE comment_id='".$_GET['comment_id']."' ".(iADMIN ? "" : "AND comment_name='".$userdata['user_id']."'")
+								);
+						if ($result) $comment_updated = TRUE;
 					}
 				}
+
 				if ($comment_updated) {
 					if ($settings['comments_sorting'] == "ASC") {
 						$c_operator = "<=";
 					} else {
 						$c_operator = ">=";
 					}
-					$c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_id".$c_operator."'".$_GET['comment_id']."'
-								AND comment_item_id='".$cid."'
+					$c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_id".$c_operator."'".$comment_data['comment_id']."'
+								AND comment_item_id='".$comment_item_id."'
 								AND comment_type='".$comment_type."'");
 					$c_start = (ceil($c_count/$cpp)-1)*$cpp;
 				}
+
 				redirect($clink."&amp;c_start=".(isset($c_start) && isnum($c_start) ? $c_start : ""));
+
 			} else {
-				if (!dbcount("(".$ccol.")", $comments_db, $ccol."='".$cid."'")) {
-					redirect(BASEDIR."index.php");
-				}
-				if ($comment_name && $comment_message) {
+
+				if (!dbcount("(".$comment_col.")", $comment_db, $comment_col."='".$comment_item_id."'")) redirect(BASEDIR."index.php");
+
+				if ($comment_data['comment_name'] && $comment_data['comment_message']) {
 					require_once INCLUDES."flood_include.php";
 					if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
-						$result = dbquery("INSERT INTO ".DB_COMMENTS." (
+						dbquery_insert(DB_COMMENTS, $comment_data, 'save');
+
+						/*$result = dbquery("INSERT INTO ".DB_COMMENTS." (
 								comment_item_id, comment_type, comment_name, comment_message, comment_datestamp,
 								comment_ip, comment_ip_type, comment_hidden
 							) VALUES (
-								'".$cid."', '".$comment_type."', '".$comment_name."', '".$comment_message."', '".time()."',
+								'".$comment_item_id."', '".$comment_type."', '".$comment_data['comment_name']."', '".$comment_data['comment_message']."', '".time()."',
 								'".USER_IP."', '".USER_IP_TYPE."', '0'
-							)");
+							)
+						"); */
+
 					}
 				}
+
 				if ($settings['comments_sorting'] == "ASC") {
-					$c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$cid."' AND comment_type='".$comment_type."'");
+					$c_count = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."'");
 					$c_start = (ceil($c_count/$cpp)-1)*$cpp;
 				} else {
 					$c_start = 0;
 				}
-
 				if (!$settings['site_seo']) { redirect($clink."&amp;c_start=".$c_start); }
 			}
 		}
-		$c_arr = array("c_con" => array(), "c_info" => array("c_makepagenav" => FALSE, "admin_link" => FALSE));
-		$c_rows = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$cid."'
-							AND comment_type='".$comment_type."' AND comment_hidden='0'");
+
+		$c_arr = array(
+			"c_con" => array(),
+			"c_info" => array("c_makepagenav" => FALSE, "admin_link" => FALSE)
+		);
+
+		$c_rows = dbcount("(comment_id)", DB_COMMENTS, "comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."' AND comment_hidden='0'");
+
 		if (!isset($_GET['c_start']) && $c_rows > $cpp) {
 			$_GET['c_start'] = (ceil($c_rows/$cpp)-1)*$cpp;
 		}
+
 		if (!isset($_GET['c_start']) || !isnum($_GET['c_start'])) {
 			$_GET['c_start'] = 0;
 		}
+
 		$result = dbquery("SELECT tcm.comment_id, tcm.comment_name, tcm.comment_message, tcm.comment_datestamp,
 					tcu.user_id, tcu.user_name, tcu.user_avatar, tcu.user_status
-			FROM ".DB_COMMENTS." tcm
-			LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-			WHERE comment_item_id='".$cid."' AND comment_type='".$comment_type."' AND comment_hidden='0'
-			ORDER BY comment_datestamp ".$settings['comments_sorting']." LIMIT ".$_GET['c_start'].",".$cpp);
-		if (dbrows($result)) {
+					FROM ".DB_COMMENTS." tcm
+					LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
+					WHERE comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."' AND comment_hidden='0'
+					ORDER BY comment_datestamp ".$settings['comments_sorting']." LIMIT ".$_GET['c_start'].",".$cpp);
+
+		if (dbrows($result)>0) {
 			$i = ($settings['comments_sorting'] == "ASC" ? $_GET['c_start']+1 : $c_rows-$_GET['c_start']);
 			if ($c_rows > $cpp) {
 				$c_arr['c_info']['c_makepagenav'] = makepagenav($_GET['c_start'], $cpp, $c_rows, 3, $clink."&amp;", "c_start");
@@ -128,40 +160,43 @@ function showcomments($comment_type, $comments_db, $ccol, $cid, $clink) {
 				$c_arr['c_con'][$i]['edit_dell'] = FALSE;
 				$c_arr['c_con'][$i]['i'] = $i;
 				if ($data['user_name']) {
-					$c_arr['c_con'][$i]['comment_name'] = profile_link($data['comment_name'], $data['user_name'], $data['user_status']);
+					$c_arr['c_con'][$i]['comment_name'] = profile_link($data['comment_name'], $data['user_name'], $data['user_status'], 'strong text-dark');
 				} else {
 					$c_arr['c_con'][$i]['comment_name'] = $data['comment_name'];
 				}
 				//Add user avatar in comments new feature in v7.02.04
-				$c_arr['c_con'][$i]['user_avatar'] = display_avatar($data, '80px');
-				$c_arr['c_con'][$i]['comment_datestamp'] = $locale['global_071'].showdate("longdate", $data['comment_datestamp']);
+				$c_arr['c_con'][$i]['user_avatar'] = display_avatar($data, '35px', '', true, 'img-rounded');
+				$c_arr['c_con'][$i]['comment_datestamp'] = $locale['global_071'].timer($data['comment_datestamp']);
 				$c_arr['c_con'][$i]['comment_message'] = "<!--comment_message-->\n".nl2br(parseubb(parsesmileys($data['comment_message'])));
 				if ((iADMIN && checkrights("C")) || (iMEMBER && $data['comment_name'] == $userdata['user_id'] && isset($data['user_name']))) {
+
 					$c_arr['c_con'][$i]['edit_dell'] = "<!--comment_actions-->\n";
-					$c_arr['c_con'][$i]['edit_dell'] .= "<a href='".FUSION_REQUEST."&amp;c_action=edit&amp;comment_id=".$data['comment_id']."#edit_comment'>";
-					$c_arr['c_con'][$i]['edit_dell'] .= $locale['c108']."</a> |\n";
-					$c_arr['c_con'][$i]['edit_dell'] .= "<a href='".FUSION_REQUEST."&amp;c_action=delete&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$locale['c110']."');\">";
-					$c_arr['c_con'][$i]['edit_dell'] .= $locale['c109']."</a>";
+					$c_arr['c_con'][$i]['edit_dell'] .= "<div class='btn-group'>";
+					$c_arr['c_con'][$i]['edit_dell'] .= "<a class='btn btn-xs btn-default' href='".clean_request('c_action=edit&comment_id='.$data['comment_id'], array('c_action', 'comment_id'), false)."#edit_comment'>";
+					$c_arr['c_con'][$i]['edit_dell'] .= $locale['c108']."</a>\n";
+					$c_arr['c_con'][$i]['edit_dell'] .= "<a class='btn btn-xs btn-default' href='".clean_request('c_action=delete&comment_id='.$data['comment_id'], array('c_action', 'comment_id'), false)."' onclick=\"return confirm('".$locale['c110']."');\">";
+					$c_arr['c_con'][$i]['edit_dell'] .= "<i class='fa fa-trash'></i> ".$locale['c109']."</a>";
+					$c_arr['c_con'][$i]['edit_dell'] .= "</div>\n";
 				}
 				$settings['comments_sorting'] == "ASC" ? $i++ : $i--;
 			}
 			if (iADMIN && checkrights("C")) {
 				$c_arr['c_info']['admin_link'] = "<!--comment_admin-->\n";
-				$c_arr['c_info']['admin_link'] .= "<a href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_type."&amp;cid=".$cid."'>".$locale['c106']."</a>";
+				$c_arr['c_info']['admin_link'] .= "<a href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_type."&amp;comment_item_id=".$comment_item_id."'>".$locale['c106']."</a>";
 			}
 		}
-		// Render comments
-		echo "<a id='comments' name='comments'></a>";
-		render_comments($c_arr['c_con'], $c_arr['c_info']);
+
 		// Add / edit comment
 		opentable($locale['c102']);
+
+		$comment_message = "";
 		if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
 			$eresult = dbquery("SELECT tcm.comment_id, tcm.comment_name, tcm.comment_message, tcu.user_name
 				FROM ".DB_COMMENTS." tcm
 				LEFT JOIN ".DB_USERS." tcu ON tcm.comment_name=tcu.user_id
-				WHERE comment_id='".$_GET['comment_id']."' AND comment_item_id='".$cid."'
-					AND comment_type='".$comment_type."' AND comment_hidden='0'");
-			if (dbrows($eresult)) {
+				WHERE comment_id='".$_GET['comment_id']."' AND comment_item_id='".$comment_item_id."'
+				AND comment_type='".$comment_type."' AND comment_hidden='0'");
+			if (dbrows($eresult)>0) {
 				$edata = dbarray($eresult);
 				if ((iADMIN && checkrights("C")) || (iMEMBER && $edata['comment_name'] == $userdata['user_id'] && isset($edata['user_name']))) {
 					$clink .= "&amp;c_action=edit&amp;comment_id=".$edata['comment_id'];
@@ -170,20 +205,15 @@ function showcomments($comment_type, $comments_db, $ccol, $cid, $clink) {
 			} else {
 				$comment_message = "";
 			}
-		} else {
-			$comment_message = "";
 		}
 		if (iMEMBER || $settings['guestposts'] == "1") {
 			require_once INCLUDES."bbcode_include.php";
 			echo "<a id='edit_comment' name='edit_comment'></a>\n";
 			echo openform('inputform', 'inputform', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').$clink, array('class'=>'m-b-20', 'downtime' => 1));
-			echo "<div class='row'>\n";
-			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
 			if (iGUEST) {
 				echo form_text($locale['c104'], 'comment_name', 'comment_name', '', array('max_length'=>30));
 			}
-			echo form_textarea('', 'comment_message', 'comment_message', $comment_message, array('required' => 1));
-			echo display_bbcodes("100%", "comment_message");
+			echo form_textarea('', 'comment_message', 'comment_message', $comment_message, array('required' => 1, 'autosize'=>1, 'form_name'=>'inputform', 'bbcode'=>1));
 			if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
 				$_CAPTCHA_HIDE_INPUT = FALSE;
 				echo "<div style='width:360px; margin:10px auto;'>";
@@ -195,8 +225,7 @@ function showcomments($comment_type, $comments_db, $ccol, $cid, $clink) {
 				}
 				echo "</div>\n";
 			}
-			echo form_button($comment_message ? $locale['c103'] : $locale['c102'], 'post_comment', 'post_comment', $comment_message ? $locale['c103'] : $locale['c102'], array('class' => 'btn btn-primary m-t-10'));
-			echo "</div>\n</div>\n";
+			echo form_button($comment_message ? $locale['c103'] : $locale['c102'], 'post_comment', 'post_comment', $comment_message ? $locale['c103'] : $locale['c102'], array('class' => 'btn-sm btn-success m-t-10'));
 			echo closeform();
 		} else {
 			echo "<div class='well'>\n";
@@ -204,6 +233,11 @@ function showcomments($comment_type, $comments_db, $ccol, $cid, $clink) {
 			echo "</div>\n";
 		}
 		closetable();
+
+		// Render comments
+		echo "<a id='comments' name='comments'></a>";
+		render_comments($c_arr['c_con'], $c_arr['c_info']);
+
 	}
 }
 
