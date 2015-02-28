@@ -617,23 +617,23 @@ class AdminUI {
 		$this->upload_settings += array('inline'=>1, 'type'=>'image', 'required'=> !$album_edit ? 1 : 0);
 
 		echo "<div class='m-t-10 m-b-20'>\n";
-		echo form_button('Create Albums', 'add_album', 'add_album', 'add_album', array('class'=>'btn-primary btn-sm m-r-10', 'icon'=>'fa fa-image'));
-		echo form_button('Add Photos', 'add_photo', 'add_photo', 'add_photo', array('class'=>'btn-sm btn-default', 'icon'=>'fa fa-camera'));
+		echo form_button($locale['600'], 'add_album', 'add_album', 'add_album', array('class'=>'btn-primary btn-sm m-r-10', 'icon'=>'fa fa-image'));
+		echo form_button($locale['601'], 'add_photo', 'add_photo', 'add_photo', array('class'=>'btn-sm btn-default', 'icon'=>'fa fa-camera'));
 		echo "</div>\n";
 
-		echo openmodal('add_album', $album_edit ? 'Edit Gallery Album' : 'Create Gallery Album', array('button_id'=>'add_album'));
+		echo openmodal('add_album', $album_edit ? $locale['606'] : $locale['605'], array('button_id'=>'add_album'));
 		echo openform('albumform', 'albumform', 'post', FUSION_REQUEST, array('downtime'=>1, 'enctype'=>1));
 		if ($album_edit) {
 			echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
 		}
-		echo form_text('Title', 'album_title', 'album_title', $this->album_data['album_title'], array('placeholder'=>'Name of Gallery', 'inline'=>1, 'required'=>1));
-		echo form_textarea('Description', 'album_description', 'album_description', $this->album_data['album_description'], array('placeholder'=>'What is your Gallery about?', 'inline'=>1));
+		echo form_text($locale['607'], 'album_title', 'album_title', $this->album_data['album_title'], array('placeholder'=>$locale['608'], 'inline'=>1, 'required'=>1));
+		echo form_textarea($locale['609'], 'album_description', 'album_description', $this->album_data['album_description'], array('placeholder'=>$locale['610'], 'inline'=>1));
 		echo form_fileinput('Upload Picture', 'album_file', 'album_file', $this->image_upload_dir, '', $this->upload_settings);
 		echo form_hidden('', 'album_hfile', 'album_hfile', $this->album_data['album_thumb']);
-		echo form_select('Access', 'album_access', 'album_access', $list, $this->album_data['album_access'], array('inline'=>1));
+		echo form_select($locale['611'], 'album_access', 'album_access', $list, $this->album_data['album_access'], array('inline'=>1));
 		echo form_hidden('', 'album_id', 'album_id', $this->album_data['album_id']);
-		echo form_select('Language', 'album_language', 'album_language', fusion_get_enabled_languages(), $this->album_data['album_language'], array('inline'=>1));
-		echo form_select('Album Order', 'album_order', 'album_order', range(0,$this->album_max_order), $this->album_data['album_order'], array('inline'=>1, 'width'=>'150px')); // 0 picture, 1. ok.
+		echo form_select($locale['612'], 'album_language', 'album_language', fusion_get_enabled_languages(), $this->album_data['album_language'], array('inline'=>1));
+		echo form_select($locale['613'], 'album_order', 'album_order', range(0,$this->album_max_order), $this->album_data['album_order'], array('inline'=>1, 'width'=>'150px')); // 0 picture, 1. ok.
 		echo form_button($locale['save_changes'], 'upload_album', 'upload_album', 'upload_album', array('class'=>'btn-success'));
 		if ($album_edit) {
 			echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
@@ -646,24 +646,24 @@ class AdminUI {
 		echo closeform();
 		echo closemodal();
 
-		echo openmodal('add_photo', $photo_edit ? 'Edit a Photo' : 'Upload A Photo', array('button_id'=>'add_photo'));
+		echo openmodal('add_photo', $photo_edit ? $locale['621'] : $locale['620'], array('button_id'=>'add_photo'));
 		echo openform('photoform', 'photoform', 'post', FUSION_REQUEST, array('downtime'=>1, 'enctype'=>1));
 		if ($photo_edit) {
 			echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
 		}
-		echo form_text('Photo Title', 'photo_title', 'photo_title', $this->photo_data['photo_title'], array('placeholder'=>'Name of Gallery', 'inline'=>1));
+		echo form_text($locale['622'], 'photo_title', 'photo_title', $this->photo_data['photo_title'], array('placeholder'=>$locale['623'], 'inline'=>1));
 		$sel = (isset($_GET['gallery']) && isnum($_GET['gallery'])) ? $_GET['gallery'] : $this->photo_data['album_id'];
-		echo form_select('Photo Album', 'album_id', 'album_ids', $album_list, $sel, array('inline'=>1));
+		echo form_select($locale['624'], 'album_id', 'album_ids', $album_list, $sel, array('inline'=>1));
 		echo form_hidden('', 'photo_id', 'photo_id', $this->photo_data['photo_id']);
 		echo form_fileinput('Upload Picture', 'photo_file', 'photo_file', $this->image_upload_dir, '', $this->upload_settings);
 		echo form_hidden('', 'photo_hfile', 'photo_hfile', $this->photo_data['photo_filename']);
 		echo form_hidden('', 'photo_hthumb1', 'photo_hthumb1', $this->photo_data['photo_thumb1']);
 		echo form_hidden('', 'photo_hthumb2', 'photo_hthumb2', $this->photo_data['photo_thumb2']);
-		echo form_select('Photo Keywords', 'photo_keywords', 'photo_keywords', array(), $this->photo_data['photo_keywords'], array('placeholder'=>'Keywords', 'inline'=>1, 'multiple'=>1, 'width'=>'100%', 'tags'=>1));
-		echo form_textarea('Photo Description', 'photo_description', 'photo_description', $this->photo_data['photo_description'], array('placeholder'=>'What is your Gallery about?', 'inline'=>1));
-		echo form_select('Allow Comments', 'photo_allow_comments', 'photo_allow_comments', array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_comments'], array('inline'=>1));
-		echo form_select('Allow Ratings', 'photo_allow_ratings', 'photo_allow_ratings', array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_ratings'], array('inline'=>1));
-		echo form_button('Upload Photo', 'upload_photo', 'upload_photo', 'upload_photo', array('class'=>'btn-primary'));
+		echo form_select($locale['625'], 'photo_keywords', 'photo_keywords', array(), $this->photo_data['photo_keywords'], array('placeholder'=>$locale['626'], 'inline'=>1, 'multiple'=>1, 'width'=>'100%', 'tags'=>1));
+		echo form_textarea($locale['627'], 'photo_description', 'photo_description', $this->photo_data['photo_description'], array('placeholder'=>$locale['628'], 'inline'=>1));
+		echo form_select($locale['629'], 'photo_allow_comments', 'photo_allow_comments', array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_comments'], array('inline'=>1));
+		echo form_select($locale['630'], 'photo_allow_ratings', 'photo_allow_ratings', array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_ratings'], array('inline'=>1));
+		echo form_button($locale['631'], 'upload_photo', 'upload_photo', 'upload_photo', array('class'=>'btn-primary'));
 		if ($photo_edit) {
 			echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
 			echo "<div class='well'>\n";
@@ -704,7 +704,7 @@ class AdminUI {
 			<div class='row'>
 				<div class='col-xs-12 col-sm-8 col-md-8 col-lg-9 display-inline-block' style='border-right:1px solid #ddd'>
 					<h2 class='m-t-0'><?php echo $data['photo_title'] ?></h2>
-					<div class='text-smaller m-b-20'><span class='text-uppercase strong'>Gallery Album :</span> <?php echo $data['album_title'] ?></div>
+					<div class='text-smaller m-b-20'><span class='text-uppercase strong'><?php echo $locale['635']; ?></span> <?php echo $data['album_title'] ?></div>
 					<div class='display-inline' style='overflow: hidden;'>
 						<img style='max-width:100%; display:block;' src='<?php echo $img_src ?>'>
 					</div>
@@ -715,18 +715,18 @@ class AdminUI {
 					?>
 				</div>
 				<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>
-					<div class='text-uppercase text-smaller strong'>Uploaded by:</div>
+					<div class='text-uppercase text-smaller strong'><?php echo $locale['636']; ?></div>
 					<div class='pull-left m-r-10'>
 						<?php echo display_avatar($data, '50px', '', '', 'img-rounded m-t-10'); ?>
 					</div>
 					<div class='overflow-hide'>
 						<h4><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_id'], 'text-dark') ?></h4>
-						<div><i class='fa fa-calendar m-r-10'></i> Date Added: <?php echo showdate('shortdate', $data['photo_datestamp']) ?></div>
+						<div><i class='fa fa-calendar m-r-10'></i> <?php echo $locale['637'].showdate('shortdate', $data['photo_datestamp']) ?></div>
 					</div>
 					<hr>
 					<?php
-					echo form_button('Rate', 'rate', 'rate', 1, array('class'=>'btn-primary btn-sm btn-block', 'icon'=>'fa fa-star'));
-					echo form_button('Comment', 'comment', 'comment', 1, array('class'=>'btn-success btn-sm btn-block m-b-20', 'icon'=>'fa fa-comments-o'));
+					echo form_button($locale['638'], 'rate', 'rate', 1, array('class'=>'btn-primary btn-sm btn-block', 'icon'=>'fa fa-star'));
+					echo form_button($locale['639'], 'comment', 'comment', 1, array('class'=>'btn-success btn-sm btn-block m-b-20', 'icon'=>'fa fa-comments-o'));
 					?>
 
 					<?php
@@ -745,31 +745,31 @@ class AdminUI {
 					if ($data['photo_description']) {
 					?>
 					<hr>
-					<div class='text-uppercase text-smaller strong'>Photo Description:</div>
+					<div class='text-uppercase text-smaller strong'><?php echo $locale['640']; ?></div>
 					<?php
 						echo $data['photo_description'];
 					}
 					?>
 					<hr>
 					<div>
-						<div class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i><span class='text-smaller'>Number of Views</span><span class='pull-right text-bigger strong'><?php echo number_format($data['photo_views']) ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i><span class='text-smaller'>Ratings</span><span class='pull-right  text-bigger strong'><?php echo $data['rating_count'] ? number_format(($data['rating_count']/$data['total_votes'] * 100)) : '0' ?>/100</span></div>
-						<div class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i><span class='text-smaller'>Comments</span><span class='pull-right text-bigger strong'><?php echo number_format($data['comment_count']) ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span class='text-smaller'>Dimensions</span><span class='pull-right text-bigger strong'><?php echo $file_exif['width'].'x'.$file_exif['height'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span class='text-smaller'>Image Type</span><span class='pull-right text-bigger strong'><?php echo $file_exif['mime'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span class='text-smaller'>Channels</span><span class='pull-right text-bigger strong'><?php echo $file_exif['channels'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-file-o m-r-10'></i><span class='text-smaller'>Bits</span><span class='pull-right text-bigger strong'><?php echo $file_exif['bits'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-instagram m-r-10'></i><span class='text-smaller'>ISO</span><span class='pull-right text-bigger strong'><?php echo $file_exif['iso'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-sun-o m-r-10'></i><span class='text-smaller'>Exposure</span><span class='pull-right text-bigger strong'><?php echo $file_exif['exposure'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-eyedropper m-r-10'></i><span class='text-smaller'>Aperture</span><span class='pull-right text-bigger strong'><?php echo $file_exif['aperture'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i><span class='text-smaller'>Camera</span><span class='pull-right text-bigger strong'><?php echo $file_exif['make'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i><span class='text-smaller'>Camera Model</span><span class='pull-right text-bigger strong'><?php echo $file_exif['model'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i><span class='text-smaller'><?php echo $locale['641']; ?></span><span class='pull-right text-bigger strong'><?php echo number_format($data['photo_views']) ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i><span class='text-smaller'><?php echo $locale['642']; ?></span><span class='pull-right  text-bigger strong'><?php echo $data['rating_count'] ? number_format(($data['rating_count']/$data['total_votes'] * 100)) : '0' ?>/100</span></div>
+						<div class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i><span class='text-smaller'><?php echo $locale['643']; ?></span><span class='pull-right text-bigger strong'><?php echo number_format($data['comment_count']) ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span class='text-smaller'><?php echo $locale['644']; ?></span><span class='pull-right text-bigger strong'><?php echo $file_exif['width'].'x'.$file_exif['height'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span class='text-smaller'><?php echo $locale['645']; ?></span><span class='pull-right text-bigger strong'><?php echo $file_exif['mime'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span class='text-smaller'><?php echo $locale['646']; ?></span><span class='pull-right text-bigger strong'><?php echo $file_exif['channels'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-file-o m-r-10'></i><span class='text-smaller'><?php echo $locale['647']; ?></span><span class='pull-right text-bigger strong'><?php echo $file_exif['bits'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-instagram m-r-10'></i><span class='text-smaller'><?php echo $locale['648']; ?></span><span class='pull-right text-bigger strong'><?php echo $file_exif['iso'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-sun-o m-r-10'></i><span class='text-smaller'><?php echo $locale['649']; ?></span><span class='pull-right text-bigger strong'><?php echo $file_exif['exposure'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-eyedropper m-r-10'></i><span class='text-smaller'><?php echo $locale['650']; ?></span><span class='pull-right text-bigger strong'><?php echo $file_exif['aperture'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i><span class='text-smaller'><?php echo $locale['651']; ?></span><span class='pull-right text-bigger strong'><?php echo $file_exif['make'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i><span class='text-smaller'><?php echo $locale['652']; ?></span><span class='pull-right text-bigger strong'><?php echo $file_exif['model'] ?></span></div>
 					</div>
 					<hr>
 					<?php
 					if (!empty($data['keywords'])) {
 						$keywords = explode(',', $data['keywords']);
-						echo "<div class='text-uppercase text-smaller strong m-b-10'>Keywords:</div>";
+						echo "<div class='text-uppercase text-smaller strong m-b-10'>".$locale['655']."</div>";
 						foreach($keywords as $key) {
 							echo "<span class='strong btn btn-sm btn-default'>$key</span>\n";
 						}
@@ -841,7 +841,7 @@ class AdminUI {
 		</div>
 		<?php
 		} else {
-			echo "<div class='well text-center'>There are no photos in this album</div>";
+			echo "<div class='well text-center'>".$locale['660']."</div>";
 		}
 	}
 
