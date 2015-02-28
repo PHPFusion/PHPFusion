@@ -47,6 +47,7 @@ class AdminUI {
 	private $enable_ratings = false;
 	private $allow_comments = false;
 	private $allow_ratings = false;
+	private $gallery_rights = '';
 
 	private $enable_album = true;
 
@@ -152,6 +153,14 @@ class AdminUI {
 	}
 
 	/**
+	 * @param string $gallery_rights
+	 */
+	public function setGalleryRights($gallery_rights) {
+		$this->gallery_rights = $gallery_rights;
+	}
+
+
+	/**
 	 * @param boolean $allow_comments
 	 */
 	public function setAllowComments($allow_comments) {
@@ -227,7 +236,17 @@ class AdminUI {
 
 	public function get_photo($photo_id = 0) {
 		if (isnum($photo_id)) {
-			return dbarray(dbquery("SELECT * FROM ".$this->photo_db." WHERE photo_id='".intval($photo_id)."'"));
+			return dbarray(
+				dbquery("SELECT photo.*, photo.photo_user as user_id, album.album_title, album.album_description, u.user_name, u.user_status, u.user_avatar,
+				count(comment.comment_id) as comment_count, count(rating.rating_id) as rating_count, sum(rating_vote) as total_votes
+				FROM ".$this->photo_db." photo
+				INNER JOIN ".$this->photo_cat_db." album on photo.album_id = album.album_id
+				INNER JOIN ".DB_USERS." u on photo.photo_user=u.user_id
+				LEFT JOIN ".DB_COMMENTS." comment on comment.comment_item_id=photo.photo_id AND comment.comment_type='".$this->gallery_rights."'
+				LEFT JOIN ".DB_RATINGS." rating on rating.rating_item_id=photo.photo_id  AND rating.rating_type='".$this->gallery_rights."'
+				WHERE photo_id='".intval($photo_id)."'
+				")
+			);
 		}
 		return array();
 	}
@@ -629,9 +648,84 @@ class AdminUI {
 		echo closemodal();
 	}
 
+	private function display_photo($modal=false) {
+		if (isset($_GET['photo']) && isnum($_GET['photo'])) {
+			global $userdata, $locale;
+
+			$data = self::get_photo($_GET['photo']);
+
+			/**
+			 * Increment Views based on Session.
+			 */
+			$session_id = \defender::set_sessionUserID();
+			if (!isset($_SESSION['gallery'][$data['photo_id']][$session_id])) {
+				$_SESSION['gallery'][$data['photo_id']][$session_id] = time();
+				dbquery("UPDATE ".$this->photo_db." SET photo_views=photo_views+1 WHERE photo_id='".$data['photo_id']."'");
+			} else {
+				$days_to_keep_session = 30;
+				$time = $_SESSION['gallery'][$data['photo_id']][$session_id];
+				if ($time <= time()-($days_to_keep_session*3600*24)) unset($_SESSION['gallery'][$data['photo_id']][$session_id]);
+			}
+
+			$img_path = $this->image_upload_dir.$data['photo_filename'];
+			$img_src = file_exists($img_path) && !is_dir($img_path) ? $img_path : 'holder.js/170x170/grey/text:'.$locale['na'];
+			echo openmodal('photo_show', '');
+			?>
+			<div class='row'>
+				<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 display-inline-block' style='border-right:1px solid #ddd'>
+					<h2 class='m-t-0'><?php echo $data['photo_title'] ?></h2>
+					<div class='text-smaller m-b-20'><span class='text-uppercase strong'>Gallery Album :</span> <?php echo $data['album_title'] ?></div>
+					<div class='display-inline' style='overflow: hidden;'>
+						<img style='max-width:100%; display:block;' src='<?php echo $img_src ?>'>
+					</div>
+				</div>
+				<div class='col-xs-12 col-sm-3'>
+					<div class='text-uppercase text-smaller strong'>Uploaded by:</div>
+					<div class='pull-left m-r-10'>
+						<?php echo display_avatar($data, '50px', '', '', 'img-rounded m-t-10'); ?>
+					</div>
+					<div class='overflow-hide'>
+						<h4><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_id'], 'text-dark') ?></h4>
+						<div><i class='fa fa-calendar m-r-10'></i> Date Added: <?php echo showdate('shortdate', $data['photo_datestamp']) ?></div>
+					</div>
+					<hr>
+					<?php
+					echo form_button('Rate', 'rate', 'rate', 1, array('class'=>'btn-primary btn-sm btn-block', 'icon'=>'fa fa-star'));
+					echo form_button('Comment', 'comment', 'comment', 1, array('class'=>'btn-success btn-sm btn-block', 'icon'=>'fa fa-comments-o'));
+					?>
+					<hr>
+					<div class='text-uppercase text-smaller strong'>Photo Description:</div>
+					<?php echo $data['photo_description'] ?>
+					<hr>
+					<div>
+						<span class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i> Number of Views <span class='pull-right text-bigger strong'><?php echo number_format($data['photo_views'], 0) ?></span></span>
+						<span class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i> Ratings <span class='pull-right  text-bigger strong'>90</span></span>
+						<span class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i> Comments <span class='pull-right text-bigger strong'>90</span></span>
+						<span class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i> Dimensions <span class='pull-right text-bigger strong'>90</span></span>
+						<span class='display-block m-b-5'><i class='fa fa-file-archive-o m-r-10'></i> Filesize <span class='pull-right text-bigger strong'>90</span></span>
+					</div>
+					<hr>
+					<div class='text-uppercase text-smaller strong m-b-10'>Keywords:</div>
+					<div>
+						<?php
+						for($i = 1; $i<=5; $i++) {
+							echo form_button('Keywords', 'tags', 'tags', 'keyword', array('class'=>'btn-sm btn-default m-r-10 m-b-10'));
+						}
+						?>
+					</div>
+
+				</div>
+			</div>
+
+			<?php
+			echo closemodal();
+		}
+	}
+
 	private function display_gallery() {
 		global $locale;
 		self::gallery_css();
+		self::display_photo(false);
 		$list = array();
 		$rows = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : dbcount("('album_id')", $this->photo_cat_db);
 		$multiplier = $rows > $this->albums_per_page ? $this->albums_per_page : $rows;

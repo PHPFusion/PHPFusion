@@ -74,10 +74,13 @@ function openmodal($id, $title, $options=array()) {
 	$html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
 	$html .= "<div class='modal-dialog ".$options['class']."'>\n";
 	$html .= "<div class='modal-content'>\n";
-	$html .= "<div class='modal-header'>";
-	$html .= (empty($options['static'])) ? "<button type='button' class='btn btn-sm pull-right btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n" : '';
-	$html .= "<h4 class='modal-title text-dark' id='$id-title'>$title</h4>\n";
-	$html .= "</div>\n";
+	if ($title) {
+		$html .= "<div class='modal-header'>";
+		$html .= (empty($options['static'])) ? "<button type='button' class='btn btn-sm pull-right btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n" : '';
+		$html .= "<h4 class='modal-title text-dark' id='$id-title'>$title</h4>\n";
+		$html .= "</div>\n";
+	}
+
 	$html .= "<div class='modal-body'>\n";
 	return $html;
 }

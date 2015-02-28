@@ -41,7 +41,7 @@ $eshop_gallery->setUploadSettings(
 $eshop_gallery->setImageUploadDir(BASEDIR."eshop/pictures/");
 $eshop_gallery->setPhotoCatDb(DB_ESHOP_ALBUMS);
 $eshop_gallery->setPhotoDb(DB_ESHOP_PHOTOS);
-
+$eshop_gallery->setGalleryRights('ESHP');
 $eshop_gallery->setEnableComments(true);
 $eshop_gallery->setAllowComments(true);
 
