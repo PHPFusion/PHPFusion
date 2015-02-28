@@ -260,37 +260,72 @@ class AdminUI {
 		return false;
 	}
 
+	private function get_albumlist() {
+		$list = array();
+		$result = dbquery("SELECT * FROM ".$this->photo_cat_db." ORDER BY album_order ASC");
+		if (dbrows($result)>0) {
+			while ($data = dbarray($result)) {
+				$list[$data['album_id']] = $data['album_title'];
+			}
+		}
+		return $list;
+	}
+
 	private function delete_gallery() {
+		global $locale;
+
+		if (isset($_POST['cancel_delete'])) {
+			redirect(clean_request('', array('gallery_delete', 'gallery_type', 'status'), false));
+		}
+
 		if (isset($_GET['gallery_delete']) && isnum($_GET['gallery_delete']) && isset($_GET['gallery_type']) && isnum($_GET['gallery_type'])) {
 			switch($_GET['gallery_type']) {
 				case '1': // album
 					$album_id = $_GET['gallery_delete'];
 					if (self::validate_album($album_id)) {
 						$album_data = self::get_album($album_id);
-
-						$count_check = dbcount('photo_id', $this->photo_db, "album_id = '".intval($album_id)."' ");
-						if ($count_check) {
-							openmodal('confirm_steps', 'Confirm Actions');
-							echo openform('inputform', 'inputform', 'post', FUSION_REQUEST."&amp;confirm_delete", array('downtime'=>0, 'notice'=>0));
-							echo "<div>There are pictures in this album. Please select one of the following:</div>";
-								
-							echo closeform();
-							closemodal();
+						$photo_exists = dbcount("('photo_id')", $this->photo_db, "album_id = '".intval($album_id)."' ");
+						if ($photo_exists) {
+							if (isset($_POST['confirm_delete'])) {
+								$move_album = form_sanitizer($_POST['delete_action'], '0', 'delete_action');
+								$result = dbquery("SELECT * FROM ".$this->photo_db." WHERE album_id = '".$album_id."'");
+								if (dbrows($result)>0) {
+									if ($move_album) {
+										// move picture to $move_album
+										while ($photo_data = dbarray($result)) {
+											dbquery("UPDATE ".$this->photo_db." SET album_id='".intval($move_album)."' WHERE photo_id='".$photo_data['photo_id']."'");
+										}
+									} else {
+										// delete all
+										while ($photo_data = dbarray($result)) {
+											@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb']);
+											@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb2']);
+											@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_filename']);
+											dbquery_insert($this->photo_db, $photo_data, 'delete');
+										}
+									}
+									dbquery_insert($this->photo_cat_db, $album_data, 'delete');
+									if (!defined('FUSION_NULL')) redirect(clean_request('status=adel', array('gallery_delete', 'status', 'gallery_type'), false));
+								}
+							} else {
+								echo openmodal('confirm_steps', 'There are Pictures found in Gallery Album - '.$album_data['album_title']);
+								echo openform('inputform', 'inputform', 'post', FUSION_REQUEST, array('downtime'=>0, 'notice'=>0));
+								$list = self::get_albumlist();
+								$options[0] = 'Delete the Entire Gallery Album';
+								foreach($list as $album_id => $album_title) {
+									$options[$album_id] = 'Move to .. Gallery Album '.$album_title;
+								}
+								echo form_select('Please select one of the following:', 'delete_action', 'delete_action', $options, '', array('inline'=>1, 'width'=>'300px'));
+								echo form_button($locale['save'], 'confirm_delete', 'confirm_delete', $album_id, array('class'=>'btn-sm btn-warning col-sm-offset-3'));
+								echo form_button($locale['cancel'], 'cancel_delete', 'cancel_delete', $album_id, array('class'=>'btn-sm btn-warning col-sm-offset-3'));
+								echo closeform();
+								echo closemodal();
+							}
+						} else {
+							dbquery_insert($this->photo_cat_db, $album_data, 'delete');
+							if (!defined('FUSION_NULL')) redirect(clean_request('status=adel', array('gallery_delete', 'status', 'gallery_type'), false));
 						}
-
-						$result = dbquery("SELECT photo_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".$this->photo_db." WHERE album_id = '".$album_id."'");
-						if (dbrows($result)>0) {
-							// get actions to move out elsewhere or to delete all.
-
-							$photo_data = dbarray($result);
-							@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb']);
-							@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb2']);
-							@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_filename']);
-							dbquery_insert($this->photo_db, $photo_data, 'delete');
-						}
-						dbquery_insert($this->photo_cat_db, $album_data, 'delete');
 					}
-					if (!defined('FUSION_NULL')) redirect(clean_request('status=adel', array('gallery_delete', 'status', 'gallery_type'), false));
 					break;
 				case '2': // picture
 					if (self::validate_photo($_GET['gallery_delete'])) {
