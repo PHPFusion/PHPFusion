@@ -144,7 +144,7 @@ echo form_select('', 'serveroffset', 'serveroffset', $timezoneArray, $settings2[
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'>\n<label for='timeoffset'>".$locale['456']."</label>\n</td>\n";
 echo "<td class='tbl'>\n";
-echo form_select('', 'timeoffset', 'timeoffset', $timezoneArray, $settings2['timeoffset'], array('width' => '100%'));
+echo form_select('', 'timeoffset', 'timeoffset', $timezoneArray, $settings2['timeoffset']);
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl'>\n<label for='default_timezone'>".$locale['464']."</label>\n</td>\n";
 echo "<td class='tbl'>\n";
