@@ -66,7 +66,7 @@ if (isset($_POST['savesettings'])) {
 		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT\r\n";
 		$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n";
 		$htc .= "#Disable directory listing\r\n";
-		$htc .= "Options All -Indexes\r\n";
+		$htc .= "Options -Indexes\r\n";
 		$htc .= "Options +SymLinksIfOwnerMatch\r\n";
 		$htc .= "RewriteEngine On\r\n";
 		$htc .= "RewriteBase ".$settings['site_path']."\r\n";
