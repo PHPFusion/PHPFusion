@@ -60,6 +60,23 @@ abstract class AbstractDatabaseDriver
 	abstract protected function connect($host, $user, $pass, $db, array $options = array());
 
 	/**
+	 * Close the connection
+	 */
+	abstract public function close();
+
+	/**
+	 * @return bool TRUE if the connection is alive
+	 */
+	abstract public function isConnected();
+
+	/**
+	 * @return bool TRUE if the connection is closed
+	 */
+	public function isClosed() {
+		return !$this->isConnected();
+	}
+
+	/**
 	 * @param bool $debug
 	 */
 	public function setDebug($debug = TRUE)  {
@@ -93,8 +110,8 @@ abstract class AbstractDatabaseDriver
 	 * Get all queries of all connections
 	 *
 	 * @return array structure: array(
-	 * 		$connection_hash => array(
-	 *			array($time, $sql),
+	 * 		$connectionid => array(
+	 *			array($time, $sql, $parameters),
 	 * 			//...
 	 * 		),
 	 * 		//...
@@ -140,7 +157,7 @@ abstract class AbstractDatabaseDriver
 	 * )
 	 */
 	public function getQueryLog() {
-		return self::$queries[spl_object_hash($this)];
+		return self::$queries[$this->connectionid];
 	}
 
 	/**
@@ -149,17 +166,17 @@ abstract class AbstractDatabaseDriver
 	 * @return int
 	 */
 	public function getQueryCount() {
-		return count(self::$queries[spl_object_hash($this)]);
+		return count(self::$queries[$this->connectionid]);
 	}
 
 	/**
-	 * Get the summarized execution time of all queries of this connections
+	 * Get the summarized execution time of all queries of this connection
 	 *
 	 * @return float
 	 */
 	public function getQueryTimeSum() {
 		$sum = 0;
-		foreach (self::$queries[spl_object_hash($this)] as $query) {
+		foreach (self::$queries[$this->connectionid] as $query) {
 			$sum += $query[0];
 		}
 		return $sum;
@@ -233,9 +250,10 @@ abstract class AbstractDatabaseDriver
 	 * @param string $field Parenthesized field name
 	 * @param string $table Table name
 	 * @param string $conditions conditions after "where"
+	 * @param array $parameters
 	 * @return int
 	 */
-	abstract public function count($field, $table, $conditions = "");
+	abstract public function count($field, $table, $conditions = "", array $parameters = array());
 
 	/**
 	 * Fetch the first column of a specific row

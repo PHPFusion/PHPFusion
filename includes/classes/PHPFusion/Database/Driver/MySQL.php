@@ -56,6 +56,23 @@ class MySQL extends AbstractDatabaseDriver {
 	}
 
 	/**
+	 * Close the connection
+	 */
+	public function close() {
+		if ($this->isConnected()) {
+			mysql_close($this->connection);
+		}
+	}
+
+	/**
+	 * @return bool TRUE if the connection is alive
+	 */
+	public function isConnected() {
+		return is_resource($this->connection);
+	}
+
+
+	/**
 	 * Send a database query
 	 *
 	 * This method will be called from AbstractDatabase::query()
@@ -102,12 +119,13 @@ class MySQL extends AbstractDatabaseDriver {
 	 * @param string $field Parenthesized field name
 	 * @param string $table Table name
 	 * @param string $conditions conditions after "where"
+	 * @param array $parameters
 	 * @return int
 	 */
-	public function count($field, $table, $conditions = "") {
+	public function count($field, $table, $conditions = "", array $parameters = array()) {
 		$cond = ($conditions ? " WHERE ".$conditions : "");
 		$sql = "SELECT COUNT".$field." FROM ".$table.$cond;
-		$result = $this->query($sql);
+		$result = $this->query($sql, $parameters);
 		return $result ? $this->fetchFirstColumn($result) : FALSE;
 	}
 

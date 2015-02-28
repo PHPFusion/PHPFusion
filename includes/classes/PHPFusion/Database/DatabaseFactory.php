@@ -95,6 +95,7 @@ class DatabaseFactory {
 	public static function registerConfiguration($id, array $configuration) {
 		$lowerCaseID = strtolower($id);
 		if (!isset(self::$configurations[$lowerCaseID])) {
+			$configuration += ['debug' => self::isDebug($id)];
 			self::$configurations[$lowerCaseID] = new Configuration($configuration);
 		}
 	}
@@ -151,16 +152,30 @@ class DatabaseFactory {
 	 * @param bool|array $debug
 	 */
 	public static function setDebug($debug = TRUE) {
-		self::$debug = $debug;
+		self::$debug = is_array($debug) ? $debug : (bool) $debug;
 	}
 
 	/**
 	 * @return bool
 	 */
 	public static function isDebug($connectionid = NULL) {
-		return ((!$connectionid and self::$debug)
-				or ($connectionid and is_array(self::$debug)
-				and in_array($connectionid, self::$debug)));
+		if ($connectionid) {
+			return (isset(self::$connections[$connectionid])
+				? self::$connections[$connectionid]->isDebug()
+				: (self::$debug === TRUE
+					or (is_array(self::$debug) and in_array($connectionid, self::$debug))));
+		}
+		$connectionids = array_unique(array_merge(
+			is_array(self::$debug)
+				? self::$debug : [], array_keys(self::$connections)));
+
+		/**@var $connections AbstractDatabaseDriver */
+		foreach ($connectionids as $k => $id) {
+			if (isset(self::$connections[$id]) and !self::$connections[$id]->isDebug()) {
+				unset($connectionids[$k]);
+			}
+		}
+		return (bool) $connectionids;
 	}
 
 	/**
@@ -184,14 +199,11 @@ class DatabaseFactory {
 			'debug' => $configuration->isDebug()
 		);
 		$id = strtolower($options['connectionid']);
-		if (!isset(self::$connections[$id])) {
+		if (!isset(self::$connections[$id]) or self::$connections[$id]->isClosed()) {
 			$class = self::getDriverClass(strtolower($options['driver']));
-			/**@var AbstractDatabaseDriver*/
+			/**@var $connection AbstractDatabaseDriver*/
 			$connection = new $class($host, $user, $password, $db, $options);
-			if ($options['debug'] and !self::isDebug($id)) {
-				self::$debug[] = $id;
-			}
-			$connection->setDebug(self::isDebug($id));
+			$connection->setDebug($options['debug']);
 			self::$connections[$id] = $connection;
 		}
 		return self::$connections[$id];
@@ -209,7 +221,7 @@ class DatabaseFactory {
 			// TODO Exception
 			return NULL;
 		}
-		if (!isset(self::$connections[$id])) {
+		if (!isset(self::$connections[$id]) or self::$connections[$id]->isClosed()) {
 			$conf = self::$configurations[$id];
 			self::connect($conf->getHost(), $conf->getUser(), $conf->getPassword(), $conf->getDatabase(), array(
 				'driver' => $conf->getDriver(),

@@ -24,7 +24,7 @@ use PHPFusion\Database\Exception\SelectionException;
  * It will be called after everything else even if the script is
  * halted by exit(), die(), fatal error or exception.
  *
- * It shows all executed
+ * It shows all sent query per connection
  */
 register_shutdown_function(function() {
 	if (DatabaseFactory::isDebug()) {
@@ -55,10 +55,11 @@ function dbquery($query, array $parameters = array()) {
  * @param string $field Parenthesized field name
  * @param string $table Table name
  * @param string $conditions conditions after "where"
+ * @param array $parameters
  * @return boolean
  */
-function dbcount($field, $table, $conditions = "") {
-	return dbconnection()->count($field, $table, $conditions);
+function dbcount($field, $table, $conditions = "", array $parameters = array()) {
+	return dbconnection()->count($field, $table, $conditions, $parameters);
 }
 
 /**

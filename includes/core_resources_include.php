@@ -35,7 +35,7 @@ if (isset($OOPDBLayer) and $OOPDBLayer === TRUE) {
 		'password' => $db_pass,
 		'database' => $db_name
 	));
-	DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.altdbs.php');
+	DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
 	require_once DB_HANDLERS."all_functions_include.php";
 } else {
 	//old database handler functions

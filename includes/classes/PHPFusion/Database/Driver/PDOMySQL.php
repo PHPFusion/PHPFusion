@@ -59,6 +59,21 @@ class PDOMySQL extends AbstractDatabaseDriver {
 	}
 
 	/**
+	 * Close the connection
+	 */
+	public function close() {
+		$this->connection = NULL;
+	}
+
+	/**
+	 * @return bool TRUE if the connection is alive
+	 */
+	public function isConnected() {
+		return $this->connection instanceof PDO;
+	}
+
+
+	/**
 	 * Send a database query
 	 *
 	 * @param string $query SQL
@@ -82,12 +97,13 @@ class PDOMySQL extends AbstractDatabaseDriver {
 	 * @param string $field Parenthesized field name
 	 * @param string $table Table name
 	 * @param string $conditions conditions after "where"
+	 * @param array $parameters
 	 * @return int
 	 */
-	public function count($field, $table, $conditions = "") {
+	public function count($field, $table, $conditions = "", array $parameters = array()) {
 		$cond = ($conditions ? " WHERE ".$conditions : "");
 		$sql = "SELECT COUNT".$field." FROM ".$table.$cond;
-		$statement = $this->query($sql);
+		$statement = $this->query($sql, $parameters);
 		return $statement ? $statement->fetchColumn() : FALSE;
 	}
 
@@ -146,13 +162,6 @@ class PDOMySQL extends AbstractDatabaseDriver {
 	 */
 	public function getLastId() {
 		return (int)$this->connection->lastInsertId();
-	}
-
-	/**
-	 * @return PDO
-	 */
-	public function getConnection() {
-		return $this->connection;
 	}
 
 	/**
