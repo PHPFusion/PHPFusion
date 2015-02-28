@@ -359,6 +359,7 @@ $locale['move_down'] = "Переместить вниз";
 $locale['add'] = "Добавить";
 $locale['save'] = "Сохранить";
 $locale['save_changes'] = "Сохранить изменения";
+$locale['confirm'] = "Подтвердить";
 $locale['update'] = "Обновить";
 $locale['updated'] = "Обновлено";
 $locale['remove'] = "Убрать";
@@ -424,6 +425,10 @@ $locale['testimonial_join'] = "Также я запустил(-а) свой са
 $locale['testimonial_contact'] = "Если Вам нужно связаться со мной, вы можете связаться со мной по адресу %s.";
 $locale['testimonial_email'] = "Также Вы можете отправить мне сообщение по электропочте на %s.";
 // Words for formatting to single and plural forms. Count of forms is language-dependent
+// Here must be three forms of word with | as separtator:
+// First form for 1, 21, 31, etc.
+// Second form for 2-4, 22-24, 32-34, etc.
+// third form for 0, 5-20, 25-30, 35-40, etc.
 $locale['fmt_article'] = "статья|статьи|статей";
 $locale['fmt_blog'] = "блог|блога|блогов";
 $locale['fmt_comment'] = "комментарий|комментария|комментариев";

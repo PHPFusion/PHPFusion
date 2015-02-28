@@ -393,6 +393,7 @@ $locale['cancel'] = "Скасувати";
 $locale['add'] = "Додати";
 $locale['save'] = "Зберегти";
 $locale['save_changes'] = "Зберегти зміни";
+$locale['confirm'] = "Confirm"; // please translate
 $locale['update'] = "Оновити";
 $locale['updated'] = "Оновлено";
 $locale['remove'] = "Видалити";
@@ -462,6 +463,10 @@ $locale['testimonial_contact'] = ". Зв&lsquo;язатися зі мною мо
 $locale['testimonial_email'] = ". Також можете надіслати мені електронного листа за адресою %s";
 
 // Words for formatting to single and plural forms. Count of forms is language-dependent
+// Here must be three forms of word with | as separtator:
+// First form for 1, 21, 31, etc.
+// Second form for 2-4, 22-24, 32-34, etc.
+// third form for 0, 5-20, 25-30, 35-40, etc.
 $locale['fmt_article'] = "стаття|статті|статей";
 $locale['fmt_blog'] = "блог|блоги|блогу";
 $locale['fmt_comment'] = "коментар|коментаря|коментарів";
