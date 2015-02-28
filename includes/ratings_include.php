@@ -59,7 +59,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			echo form_button($locale['r103'], 'post_rating', 'post_rating', $locale['r103'], array('class'=>'btn-primary btn-sm', 'icon'=>'fa fa-thumbs-up m-r-10'));
 			echo closeform();
 		}
-		echo "<hr />";
+
 		$rating_votes = dbarray(dbquery("
 		SELECT
 		SUM(IF(rating_vote='5', 1, 0)) as r120,
