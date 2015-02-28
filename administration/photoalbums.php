@@ -5,8 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: photoalbums.php
-| Author: Nick Jones (Digitanium)
-| Co-Author: Robert Gaudyn (Wooya)
+| Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -24,7 +23,59 @@ require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."bbcode_include.php";
 include LOCALE.LOCALESET."admin/photoalbums.php";
+/**
+ * New Fusion Gallery
+ */
 
+
+/**
+ * Step 1 - Initialize the Class
+ * The below statement binds the whole AdminUI engine into 1 single string, in this example (the `$eshop_gallery`)
+ */
+$eshop_gallery = new PHPFusion\Gallery\AdminUI();
+
+/**
+ * Step 2 - Set your upload rules settings.
+ */
+$eshop_gallery->setUploadSettings(
+	array(
+		'thumbnail_folder'=>'thumbs',
+		'thumbnail' => 1,
+		'thumbnail_w' =>  fusion_get_settings('thumb_w'),
+		'thumbnail_h' =>  fusion_get_settings('thumb_h'),
+		'thumbnail_suffix' =>'_t1',
+		'thumbnail2'=>1,
+		'thumbnail2_w' 	=>  fusion_get_settings('photo_w'),
+		'thumbnail2_h' 	=>  fusion_get_settings('photo_h'),
+		'thumbnail2_suffix' => '_t2',
+		'delete_original' => 1,
+		'max_width'		=>	fusion_get_settings('photo_max_w'),
+		'max_height'	=>	fusion_get_settings('photo_max_h'),
+		'max_byte'		=>	fusion_get_settings('photo_max_b'),
+		'multiple' => 0,
+	)
+);
+
+/**
+ * Step 3 - Setup System Variables
+ * a. Set up your Image Upload Path in the System (Relative to BASEDIR)
+ * b. Set up your PHOTO_ALBUM database table
+ * c. Set up your PHOTO database table
+ * d. set up photo comments - true or false
+ * e. set up photo ratings - true or false
+ */
+$eshop_gallery->setImageUploadDir(IMAGES."photoalbum");
+$eshop_gallery->setPhotoCatDb(DB_PHOTO_ALBUMS);
+$eshop_gallery->setPhotoDb(DB_PHOTOS);
+$eshop_gallery->setGalleryRights('PH');
+$eshop_gallery->setEnableComments(true);
+$eshop_gallery->setEnableRatings(true);
+$eshop_gallery->setAllowComments('comments_enabled');
+$eshop_gallery->setAllowRatings('ratings_enabled');
+
+$eshop_gallery->boot();
+
+/*
 if (function_exists('gd_info')) {
 	define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 	if (isset($_GET['action']) && $_GET['action'] == "refresh") {
@@ -364,6 +415,5 @@ if (function_exists('gd_info')) {
 	echo "<div id='close-message'><div class='admin-message alert alert-warning m-t-20'>".$locale['420']."</div></div>\n";
 	closetable();
 }
-
+*/
 require_once THEMES."templates/footer.php";
-?>

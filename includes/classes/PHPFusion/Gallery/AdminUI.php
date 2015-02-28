@@ -153,6 +153,47 @@ class AdminUI {
 
 	}
 
+	private function check_api() {
+		$error = array();
+		if (!$this->image_upload_dir) {
+			$error[] = 'Image Upload Directory is not defined';
+		}
+		if (!$this->photo_cat_db) {
+			$error[] = 'Photo Album DB Table is not defined';
+		}
+		if (!$this->photo_db) {
+			$error[] = 'Photo DB Table is not defined';
+		}
+		if (!$this->gallery_rights) {
+			$error[] = 'Photo Rights is not defined';
+		}
+		if (!empty($error)) {
+			foreach($error as $errors) {
+				notify('Gallery Boot Error', $errors, array('sticky'=>1));
+			}
+		}
+		return $error;
+	}
+
+	public function boot() {
+		//self::Install_Gallery();
+		define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+		define("GALLERY_PHOTO_DIR", $this->image_upload_dir.(!SAFEMODE ? "album_".$this->album_id."/" : ""));
+		// set album max order
+		$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
+		/**
+		 * Display the requirements of booting
+		 */
+		$error = self::check_api();
+		if (empty($error)) {
+			self::delete_gallery();
+			self::set_albumDB();
+			self::set_photoDB();
+			self::display_gallery_filters();
+			self::display_gallery();
+		}
+	}
+
 	/**
 	 * @param string $gallery_rights
 	 */
@@ -250,19 +291,6 @@ class AdminUI {
 			);
 		}
 		return array();
-	}
-
-	public function boot() {
-		//self::Install_Gallery();
-		define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
-		define("GALLERY_PHOTO_DIR", $this->image_upload_dir.(!SAFEMODE ? "album_".$this->album_id."/" : ""));
-		// set album max order
-		$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
-		self::delete_gallery();
-		self::set_albumDB();
-		self::set_photoDB();
-		self::display_gallery_filters();
-		self::display_gallery();
 	}
 
 	private function validate_album($album_id) {
