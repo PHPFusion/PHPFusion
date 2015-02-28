@@ -694,14 +694,23 @@ class AdminUI {
 					<hr>
 					<?php
 					echo form_button('Rate', 'rate', 'rate', 1, array('class'=>'btn-primary btn-sm btn-block', 'icon'=>'fa fa-star'));
-					echo form_button('Comment', 'comment', 'comment', 1, array('class'=>'btn-success btn-sm btn-block', 'icon'=>'fa fa-comments-o'));
+					echo form_button('Comment', 'comment', 'comment', 1, array('class'=>'btn-success btn-sm btn-block m-b-20', 'icon'=>'fa fa-comments-o'));
 					?>
-					<div class='well m-t-20'>
-						<?php
-						require_once INCLUDES."ratings_include.php";
-						showratings($this->gallery_rights, $data['photo_id'], FUSION_REQUEST);
-						?>
-					</div>
+
+					<?php
+					add_to_jquery("
+					$('#postrating').hide();
+					$('#removerating').hide();
+					$('#rate').bind('click', function() {
+					$('#postrating').show();
+					$('#removerating').show();
+					});
+
+					");
+					require_once INCLUDES."ratings_include.php";
+					showratings($this->gallery_rights, $data['photo_id'], FUSION_REQUEST);
+					?>
+
 					<hr>
 					<div class='text-uppercase text-smaller strong'>Photo Description:</div>
 					<?php echo $data['photo_description'] ?>
