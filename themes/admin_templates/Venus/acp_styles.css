@@ -39,12 +39,13 @@ html, body {
 }
 .breadcrumb > li:after {
 	content: "";
+	visibility:	visible;
 	display: block;
 	position: absolute;
 	top: -3px;
 	right: -5px;
-	width: 26px;
-	height: 26px;
+	width: 23px;
+	height: 23px;
 	border-right: 1px solid rgb(221, 221, 221);
 	border-bottom: 1px solid rgb(221, 221, 221);
 	transform: rotate(-45deg);
