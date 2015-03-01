@@ -783,6 +783,36 @@ function checkrights($right) {
 }
 
 /**
+ * Function to redirect on invalid page access.
+ * @param      $rights
+ * @param bool $debug
+ */
+function pageAccess($rights, $debug = false) {
+	$error = array();
+	if (defined('ADMIN_PANEL')) {
+		if (!defined('iAUTH')) {
+			$error[] = 'iAuth error';
+		}
+		if (!isset($_GET['aid'])) {
+			$error[] = 'Aid link error';
+		}
+		if (isset($_GET['aid']) && $_GET['aid'] != iAUTH) {
+			$error[] = 'Aidlink mismatch';
+		}
+	}
+	if (!checkrights($rights)) {
+		$error[] = 'Checkrights Error';
+	}
+	if (!empty($error)) {
+		if ($debug) {
+			print_p($error);
+		} else {
+			redirect(BASEDIR);
+		}
+	}
+}
+
+/**
  * Check the right like checkrights() with checking aid
  * 
  * @param string $right The code of the right
