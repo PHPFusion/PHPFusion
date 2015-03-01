@@ -330,7 +330,7 @@ function news_form() {
 
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
-	echo form_select_tree($locale['news_0201'], "news_cat", "news_cat", $data['news_cat'], array("parent_value" => $locale['news_0202']), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
+	echo form_select_tree($locale['news_0201'], "news_cat", "news_cat", $data['news_cat'], array("parent_value" => $locale['news_0202'], "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
 	echo form_button($locale['news_0241'], 'save', 'save-1', $locale['news_0241'], array('class' => 'btn-primary btn-sm'));
 	closeside();
