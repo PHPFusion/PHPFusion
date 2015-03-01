@@ -110,8 +110,13 @@ function image_exists($dir, $image) {
 	return $image;
 }
 
+/**
+ * Retrieve Information about a specific Image
+ * @param $imagePath
+ * @return array|bool
+ * Courtesy of : drpain.webster.org.za @ php.net
+ */
 
-/* Courtesy of : drpain.webster.org.za @ php.net */
 function exif($imagePath) {
 	global $locale;
 	// Check if the variable is set and if the file itself exists before continuing
@@ -170,3 +175,30 @@ function exif($imagePath) {
 	}
 }
 
+/**
+ * Copy a file from any source to any destination
+ * @param $source
+ * @param $destination
+ */
+function copy_file($source, $destination) {
+	$filename['name'] = '';
+	$filename['error'] = 1;
+	if (phpversion()>=5) {
+		copy($source, $destination);
+		$file = pathinfo($source);
+		$filename['name'] = $file['filename'];
+		unset($filename['error']);
+	} else {
+		if (function_exists('fopen')) {
+			$content = file_get_contents($source);
+			//Store in the filesystem.
+			$fp = fopen($destination, "w");
+			fwrite($fp, $content);
+			fclose($fp);
+			$file = pathinfo($source);
+			$filename['name'] = $file['filename'];
+			unset($filename['error']);
+		}
+	}
+	return $filename;
+}
