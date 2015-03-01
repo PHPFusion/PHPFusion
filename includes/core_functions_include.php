@@ -790,6 +790,9 @@ function checkrights($right) {
 function pageAccess($rights, $debug = false) {
 	$error = array();
 	if (defined('ADMIN_PANEL')) {
+		if ($debug) {
+			print_p('Admin Panel mode');
+		}
 		if (!defined('iAUTH')) {
 			$error[] = 'iAuth error';
 		}
