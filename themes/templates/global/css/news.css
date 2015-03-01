@@ -89,6 +89,6 @@ margin-left: auto;
 margin-right: auto; 
 }
 .panel-footer {
-	position:absolute;
-	top: 350px;
+	position:relative;
+	bottom: 0px;
 }
