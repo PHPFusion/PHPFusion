@@ -175,7 +175,7 @@ if (!empty($result)) {
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='article_cat'>".$locale['articles_0201']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select_tree("", "article_cat", "article_cat", $article_cat, array("no_root" => 1, "placeholder" => $locale['choose']), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
+		echo form_select_tree("", "article_cat", "article_cat", $article_cat, array("no_root" => 1, "placeholder" => $locale['choose'], "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 		echo "</td>\n</tr>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='subject'>".$locale['articles_0200']." <span class='required'>*</span></label></td>\n";
 		echo "<td class='tbl'>\n";

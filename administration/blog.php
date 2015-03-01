@@ -48,7 +48,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_i
 
 function blog_listing() {
 	global $aidlink, $locale;
-	$result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_image, blog_cat_language FROM ".DB_BLOG_CATS." ".(multilang_table("NS") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
+	$result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_image, blog_cat_language FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
 	echo "<div class='m-t-20'>\n";
 	echo opencollapse('blog-list');
 	// uncategorized listing
@@ -428,7 +428,7 @@ function blog_form() {
 	
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
-	echo form_select_tree($locale['423'], "blog_cat", "blog_cat", $data['blog_cat'], array("parent_value" => $locale['424']), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
+	echo form_select_tree($locale['423'], "blog_cat", "blog_cat", $data['blog_cat'], array("parent_value" => $locale['424'], "query" => (multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
 	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
 	echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-primary btn-sm'));
 	closeside();

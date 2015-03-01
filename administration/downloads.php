@@ -249,7 +249,7 @@ function download_form() {
 	echo "<hr/>\n";
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-5 col-lg-4'>\n";
 	openside();
-	echo form_select_tree($locale['download_0207'], "download_cat", "download_cat", $data['download_cat'], array("no_root" => 1, "placeholder" => $locale['choose']), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
+	echo form_select_tree($locale['download_0207'], "download_cat", "download_cat", $data['download_cat'], array("no_root" => 1, "placeholder" => $locale['choose'], "query" => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 	echo form_hidden('', 'download_id', 'download_id', $data['download_id']);
 	echo form_button($locale['download_0212'], 'save_download', 'save_download', $locale['download_0212'], array('class' => 'btn-primary m-r-10'));
 	closeside();

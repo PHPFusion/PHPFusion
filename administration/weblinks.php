@@ -105,7 +105,7 @@ if (!empty($result)) {
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='weblink_cat'>".$locale['523']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_select_tree("", "weblink_cat", "weblink_cat", $weblink_cat, array("no_root" => 1, "placeholder" => $locale['choose']), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
+	echo form_select_tree("", "weblink_cat", "weblink_cat", $weblink_cat, array("no_root" => 1, "placeholder" => $locale['choose'], "query" => (multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."'" : "")), DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='weblink_visibility'>".$locale['428a']."</label></td>\n";
 	echo "<td class='tbl'>\n";
