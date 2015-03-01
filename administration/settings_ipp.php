@@ -16,19 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkRights("S10") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('S10');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
+add_to_breadcrumbs(array('link'=>ADMIN.'settings_ipp.php'.$aidlink, 'title'=>$locale['ipp_settings']));
 if (isset($_POST['savesettings'])) {
 	// why no check admin pass?
 	$newsperpage = form_sanitizer($_POST['newsperpage'], 12, 'newsperpage');
@@ -56,19 +47,34 @@ $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
-opentable($locale['400']);
+opentable($locale['ipp_settings']);
+if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
+	if ($_GET['error'] == 0) {
+		$message = $locale['900'];
+	}
+	if (isset($message)) {
+		echo admin_message($message);
+	}
+}
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-echo form_text($locale['669b'], 'blogperpage', 'blogperpage', $settings2['blogperpage'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['669'], 'newsperpage', 'newsperpage', $settings2['newsperpage'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['910'], 'articles_per_page', 'articles_per_page', $settings2['articles_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['911'], 'downloads_per_page', 'downloads_per_page', $settings2['downloads_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['912'], 'links_per_page', 'links_per_page', $settings2['links_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['913'], 'comments_per_page', 'comments_per_page', $settings2['comments_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['914'], 'threads_per_page', 'threads_per_page', $settings2['threads_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['915'], 'posts_per_page', 'posts_per_page', $settings2['posts_per_page'], array('required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo "<div class='well'>".$locale['ipp_description']."</div>";
+echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>";
+openside('');
+echo form_text($locale['669b'], 'blogperpage', 'blogperpage', $settings2['blogperpage'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['669'], 'newsperpage', 'newsperpage', $settings2['newsperpage'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['910'], 'articles_per_page', 'articles_per_page', $settings2['articles_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['911'], 'downloads_per_page', 'downloads_per_page', $settings2['downloads_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+closeside();
+echo "</div><div class='col-xs-12 col-sm-12 col-md-6'>\n";
+openside('');
+echo form_text($locale['912'], 'links_per_page', 'links_per_page', $settings2['links_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['913'], 'comments_per_page', 'comments_per_page', $settings2['comments_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['914'], 'threads_per_page', 'threads_per_page', $settings2['threads_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text($locale['915'], 'posts_per_page', 'posts_per_page', $settings2['posts_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+closeside('');
 echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";

@@ -76,6 +76,7 @@ $yes_no_array = array('1' => $locale['yes'], '0' => $locale['no']);
 $num_opts = range(1,30);
 
 opentable($locale['forum_settings']);
+echo "<div class='well'>".$locale['forum_description']."</div>";
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	if ($_GET['error'] == 0) {
 		$message = $locale['900'];
@@ -154,7 +155,7 @@ echo "</div>\n";
 echo "</div>\n";
 
 
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
 
 echo closeform();
 closetable();

@@ -17,9 +17,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+pageAccess('S5');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-pageAccess('S5');
 add_to_breadcrumbs(array('link'=>ADMIN.'settings_photo.php'.$aidlink, 'title'=>$locale['photo_settings']));
 
 if (isset($_POST['delete_watermarks'])) {
@@ -133,7 +133,7 @@ while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 
-opentable($locale['400']);
+opentable($locale['photo_settings']);
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	if ($_GET['error'] == 0) {
@@ -145,7 +145,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 		echo admin_message($message);
 	}
 }
-
+echo "<div class='well'>".$locale['photo_description']."</div>";
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 $gd_opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
 $choice_opts = array('1' => $locale['518'], '0' => $locale['519']);

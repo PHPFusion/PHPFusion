@@ -16,21 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("LANG") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('LANG');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
+
+add_to_breadcrumbs(array('link'=>ADMIN."settings_languages.php".$aidlink, 'title'=>$locale['682ML']));
 $locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (isset($_POST['savesettings'])) {
 	$error = 0;
@@ -535,8 +525,19 @@ while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 opentable($locale['682ML']);
+if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
+	if ($_GET['error'] == 0) {
+		$message = $locale['900'];
+	} elseif ($_GET['error'] == 1) {
+		$message = $locale['901'];
+	}
+	if (isset($message)) {
+		echo admin_message($message);
+	}
+}
+echo "<div class='well'>".$locale['language_description']."</div>";
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-echo "<table class='table table-responsive center'>\n<tbody>\n<tr>\n";
+echo "<table class='table table-responsive'>\n<tbody>\n<tr>\n";
 echo "<td width='50%' class='tbl'><label for='localeset'>".$locale['417']."<label> <span class='required'>*</span></td>\n";
 echo "<td width='50%' class='tbl'>\n";
 echo form_select('', 'localeset', 'localeset', $language_opts, $settings2['locale'], array('required' => 1, 'error_text' => $locale['error_value']));
@@ -552,12 +553,11 @@ $result = dbquery("SELECT * FROM ".DB_LANGUAGE_TABLES."");
 while ($data = dbarray($result)) {
 	echo "<input type='checkbox' value='".$data['mlt_rights']."' name='multilang_tables[]'  ".($data['mlt_status'] == '1' ? "checked='checked'" : "")." /> ".$data['mlt_title']." <br />";
 }
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td align='center' colspan='2' class='tbl'><br />";
 echo form_hidden('', 'old_localeset', 'old_localeset', $settings2['locale']);
 echo form_hidden('', 'old_enabled_languages', 'old_enabled_languages', $settings['enabled_languages']);
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
-echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
+echo "</td>\n</tr>\n</tbody></table>";
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";
 ?>

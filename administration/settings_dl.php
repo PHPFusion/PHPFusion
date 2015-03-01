@@ -17,10 +17,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+pageAccess('S11');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 require_once INCLUDES."mimetypes_include.php";
-pageAccess('S11');
 add_to_breadcrumbs(array('link'=>ADMIN.'settings_dl.php'.$aidlink, 'title'=>$locale['download_settings']));
 if (isset($_POST['savesettings'])) {
 	$admin_password = (isset($_POST['admin_password'])) ? form_sanitizer($_POST['admin_password'], '', 'admin_password') : '';
@@ -70,7 +70,7 @@ foreach ($mime as $m => $Mime) {
 }
 
 opentable($locale['download_settings']);
-
+echo "<div class='well'>".$locale['download_description']."</div>";
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	if ($_GET['error'] == 0) {
 		$message = $locale['900'];

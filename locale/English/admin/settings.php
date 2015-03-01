@@ -2,11 +2,11 @@
 $locale['400'] = "Settings";
 // Site Settings
 $locale['401'] = "Main";
-$locale['402'] = "Site name:";
-$locale['403'] = "Site URL:";
-$locale['404'] = "Site banner:";
-$locale['405'] = "Site e-mail address:";
-$locale['406'] = "Your name or nickname:";
+$locale['402'] = "Site name";
+$locale['403'] = "Site URL";
+$locale['404'] = "Site Logo";
+$locale['405'] = "Site e-mail address";
+$locale['406'] = "Your name";
 $locale['407'] = "Site introduction:";
 $locale['408'] = "Leave empty if not required";
 $locale['409'] = "Site description:";
@@ -38,7 +38,7 @@ $locale['433'] = "mysite.com";
 $locale['434'] = "myfolder";
 $locale['435'] = "Exclude Above Upper Panels:";
 $locale['436'] = "Exclude Below Lower Panels:";
-$locale['437'] = "Bootstrap Framework:";
+$locale['437'] = "Enable Bootstrap Responsive Framework";
 $locale['438'] = "Search Engine Friendly URL (SEF):";
 $locale['439'] = "Normalize Friendly URLs:";
 $locale['440'] = "Enable SEO Debug Mode:";
@@ -161,8 +161,8 @@ $locale['682ML'] = "Language Settings";
 $locale['683ML'] = "Enable Multilingal System";
 $locale['684ML'] = "Enabled Languages";
 $locale['685ML'] = "Select allowed languages. <br /><b>Please note</b>: By removing a language you also remove all customized site links, categories and any other multilangual content for the specific language from the system.";
-$locale['669'] = "News per page";
-$locale['669b'] = "Blogs per page";
+$locale['669'] = "News";
+$locale['669b'] = "Blogs";
 $locale['670'] = "Should be an uneven number";
 $locale['671'] = "Enable comment system?";
 $locale['672'] = "Enable ratings system?";
@@ -232,12 +232,12 @@ $locale['900'] = "Settings Updated";
 $locale['901'] = "Database update error occurs: Settings were not Updated!";
 $locale['902'] = "Site host can not be left empty!";
 // Item per Page
-$locale['910'] = "Articles per page";
-$locale['911'] = "Downloads per page";
-$locale['912'] = "Links per page";
-$locale['913'] = "Comments per page";
-$locale['914'] = "Threads per page";
-$locale['915'] = "Posts per page";
+$locale['910'] = "Articles";
+$locale['911'] = "Downloads";
+$locale['912'] = "Links";
+$locale['913'] = "Comments";
+$locale['914'] = "Threads";
+$locale['915'] = "Posts";
 // Downloads Settings
 $locale['930'] = "Maximum size uploads:";
 $locale['931'] = "Maximum file size in bytes";
@@ -308,11 +308,21 @@ $locale['error_width'] = 'Please enter Width.';
 $locale['error_height'] = 'Please enter Height.';
 $locale['error_value'] = 'Please enter a value.';
 
+$locale['blog_description'] = "The configuration settings for Blog system.";
+$locale['ipp_description'] = "The configuration settings for default numbers of results items to be listed.";
+$locale['forum_description'] = "The configuration settings for Forum system.";
+$locale['download_description'] = "The configuration settings for Download system.";
+$locale['eshop_description'] = "The configuration settings for Eshop system.";
+$locale['language_description'] = "The configuration settings for default multi-language system.";
+$locale['photo_description'] = "The configuration settings for default Photo Gallery system.";
+$locale['main_description'] = "The configuration settings for the main system.";
 
 $locale['blog_settings'] = 'Blog Settings';
 $locale['download_settings'] = 'Download Settings';
 $locale['eshop_settings'] = 'Eshop Settings';
 $locale['forum_settings'] = 'Forum Settings';
+$locale['ipp_settings'] = 'Items Per Page Settings';
 $locale['photo_settings'] = 'Photo Settings';
+$locale['main_settings'] = 'Main Settings';
 
 ?>

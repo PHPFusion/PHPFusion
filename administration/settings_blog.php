@@ -16,9 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+pageAccess('S13', false);
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-pageAccess('S13', false);
 add_to_breadcrumbs(array('link'=>ADMIN."settings_blog.php".$aidlink, 'title'=>$locale['blog_settings']));
 if (isset($_POST['savesettings'])) {
 	$error = 0;
@@ -102,6 +102,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 }
 
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo "<div class='well'>".$locale['blog_description']."</div>";
 $opts = array('0' => $locale['952'], '1' => $locale['953b']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
 $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
