@@ -18,9 +18,8 @@
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-pageAccess('S13', true);
-
-
+pageAccess('S13', false);
+add_to_breadcrumbs(array('link'=>ADMIN."settings_blog.php".$aidlink, 'title'=>$locale['blog_settings']));
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	$blog_image_link = form_sanitizer($_POST['blog_image_link'], '0', 'blog_image_link');
@@ -89,7 +88,7 @@ while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 
-opentable($locale['400']);
+opentable($locale['blog_settings']);
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	if ($_GET['error'] == 0) {
@@ -106,51 +105,77 @@ echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, arra
 $opts = array('0' => $locale['952'], '1' => $locale['953b']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
 $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
+$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+$calc_c = calculate_byte($settings2['blog_photo_max_b']);
+$calc_b = $settings2['blog_photo_max_b']/$calc_c;
 
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
+openside('');
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='blog_thumb_w'>".$locale['601']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'blog_thumb_w', 'blog_thumb_w', $settings2['blog_thumb_w'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('', 'blog_thumb_h', 'blog_thumb_h', $settings2['blog_thumb_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='blog_thumb_w'>".$locale['602']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'blog_photo_w', 'blog_photo_w', $settings2['blog_photo_w'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('', 'blog_photo_h', 'blog_photo_h', $settings2['blog_photo_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='blog_thumb_w'>".$locale['603']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'blog_photo_max_w', 'blog_photo_max_w', $settings2['blog_photo_max_w'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('', 'blog_photo_max_h', 'blog_photo_max_h', $settings2['blog_photo_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='calc_b'>".$locale['605']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	</div>
+</div>
+";
+closeside();
+echo "</div>\n";
+echo "<div class='col-xs-12 col-sm-4'>\n";
+openside('');
 echo form_select($locale['951'], 'blog_image_link', 'blog_image_link', $opts, $settings2['blog_image_link']);
 echo form_select($locale['957'], 'blog_image_frontpage', 'blog_image_frontpage', $cat_opts, $settings2['blog_image_frontpage']);
 echo form_select($locale['958'], 'blog_image_readmore', 'blog_image_readmore', $cat_opts, $settings2['blog_image_readmore']);
 echo form_select($locale['954'], 'blog_thumb_ratio', 'blog_thumb_ratio', $thumb_opts, $settings2['blog_thumb_ratio']);
-echo "</div>\n";
-echo "<div class='col-xs-12 col-sm-4'>\n";
-
+closeside();
 echo "</div></div>\n";
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
 
+echo closeform();
+closetable();
 
+require_once THEMES."templates/footer.php";
 
-
-
-
-
-
-
-echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-
-
-
-
-echo "<div class='clearfix'>\n";
-echo "<label for='blog_thumb_w'>".$locale['601']."</label> <span class='required'>*</span>\n<br /><span class='small2'>".$locale['604']."</span><br/>\n";
-echo form_text('', 'blog_thumb_w', 'blog_thumb_w', $settings2['blog_thumb_w'], array('class' => 'pull-left', 'max_length' => 3));
-echo "<i class='entypo icancel pull-left m-r-10 m-l-10 m-t-10'></i>\n";
-echo form_text('', 'blog_thumb_h', 'blog_thumb_h', $settings2['blog_thumb_h'], array('class' => 'pull-left', 'max_length' => 3));
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='blog_photo_w'>".$locale['602']."</label> <span class='required'>*</span>\n<br /><span class='small2'>".$locale['604']."</span>\n<br/>\n";
-echo form_text('', 'blog_photo_w', 'blog_photo_w', $settings2['blog_photo_w'], array('class' => 'pull-left', 'max_length' => 3));
-echo "<i class='entypo icancel pull-left m-r-10 m-l-10 m-t-10'></i>\n";
-echo form_text('', 'blog_photo_h', 'blog_photo_h', $settings2['blog_photo_h'], array('class' => 'pull-left', 'max_length' => 3));
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='blog_photo_max_w'>".$locale['603']."</label> <span class='required'>*</span>\n<br /><span class='small2'>".$locale['604']."</span>\n<br/>\n";
-echo form_text('', 'blog_photo_max_w', 'blog_photo_max_w', $settings2['blog_photo_max_w'], array('class' => 'pull-left', 'max_length' => 4));
-echo "<i class='entypo icancel pull-left m-r-10 m-l-10 m-t-10'></i>\n";
-echo form_text('', 'blog_photo_max_h', 'blog_photo_max_h', $settings2['blog_photo_max_h'], array('class' => 'pull-left', 'max_length' => 4));
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='calc_c'>".$locale['605']."</label> <span class='required'>*</span>\n<br/>\n";
 function calculate_byte($download_max_b) {
 	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 	foreach ($calc_opts as $byte => $val) {
@@ -161,16 +186,4 @@ function calculate_byte($download_max_b) {
 	return 1000000;
 }
 
-$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
-$calc_c = calculate_byte($settings2['blog_photo_max_b']);
-$calc_b = $settings2['blog_photo_max_b']/$calc_c;
-echo form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => '3', 'class' => 'pull-left m-r-10'));
-echo form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'));
-echo "</div>\n";
-echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
-echo closeform();
-closetable();
-
-require_once THEMES."templates/footer.php";
 ?>

@@ -800,7 +800,7 @@ function pageAccess($rights, $debug = false) {
 			$error[] = 'Aid link error';
 		}
 		if (isset($_GET['aid']) && $_GET['aid'] != iAUTH) {
-			$error[] = 'Aidlink mismatch';
+			$error[] = 'Aidlink mismatch. '.iAUTH.' != '.$_GET['aid'];
 		}
 	}
 	if (!checkrights($rights)) {

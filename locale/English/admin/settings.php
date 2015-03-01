@@ -307,4 +307,8 @@ $locale['error_type'] = 'Please enter Extension Type.';
 $locale['error_width'] = 'Please enter Width.';
 $locale['error_height'] = 'Please enter Height.';
 $locale['error_value'] = 'Please enter a value.';
+
+
+$locale['blog_settings'] = 'Blog Settings';
+
 ?>
