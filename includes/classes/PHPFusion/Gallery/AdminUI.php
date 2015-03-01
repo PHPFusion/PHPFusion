@@ -370,7 +370,7 @@ class AdminUI {
 								}
 								echo form_select('Please select one of the following:', 'delete_action', 'delete_action', $options, '', array('inline'=>1, 'width'=>'300px'));
 								echo form_button($locale['confirm'], 'confirm_delete', 'confirm_delete', $album_id, array('class'=>'btn-sm btn-danger col-sm-offset-3', 'icon'=>'fa fa-trash'));
-								echo form_button($locale['cancel'], 'cancel_delete', 'cancel_delete', $album_id, array('class'=>'btn-sm btn-default m-l-10'));
+								echo form_button($locale['cancel'], 'cancel', 'cancel', $album_id, array('class'=>'btn-sm btn-default m-l-10'));
 								echo closeform();
 								echo closemodal();
 							}
@@ -397,6 +397,9 @@ class AdminUI {
 	private function set_albumDB() {
 		global $userdata;
 		if (isset($_POST['upload_album'])) {
+			// keep the modal open to listen to error messages
+			add_to_jquery("$('#add_album-Modal').modal('show');");
+
 			$this->album_data =	array(
 				'album_id' => isset($_POST['album_id']) ? form_sanitizer($_POST['album_id'], '', 'album_id') : 0,
 				'album_title' => isset($_POST['album_title']) ? form_sanitizer($_POST['album_title'], '', 'album_title') : $this->album_data['album_title'],
@@ -627,7 +630,7 @@ class AdminUI {
 		echo form_button($locale['601'], 'add_photo', 'add_photo', 'add_photo', array('class'=>'btn-sm btn-default', 'icon'=>'fa fa-camera'));
 		echo "</div>\n";
 
-		echo openmodal('add_album', $album_edit ? $locale['606'] : $locale['605'], array('button_id'=>'add_album'));
+		echo openmodal('add_album', $album_edit ? $locale['606'] : $locale['605'], array('button_id'=>'add_album', 'static'=>1));
 		echo openform('albumform', 'albumform', 'post', FUSION_REQUEST, array('downtime'=>1, 'enctype'=>1));
 		if ($album_edit) {
 			echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
@@ -640,7 +643,8 @@ class AdminUI {
 		echo form_hidden('', 'album_id', 'album_id', $this->album_data['album_id']);
 		echo form_select($locale['612'], 'album_language', 'album_language', fusion_get_enabled_languages(), $this->album_data['album_language'], array('inline'=>1));
 		echo form_select($locale['613'], 'album_order', 'album_order', range(0,$this->album_max_order), $this->album_data['album_order'], array('inline'=>1, 'width'=>'150px')); // 0 picture, 1. ok.
-		echo form_button($locale['save_changes'], 'upload_album', 'upload_album', 'upload_album', array('class'=>'btn-success'));
+		echo form_button($locale['save_changes'], 'upload_album', 'upload_album', 'upload_album', array('class'=>'btn-success btn-sm m-r-10'));
+		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
 		if ($album_edit) {
 			echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
 			echo "<div class='well'>\n";
@@ -669,7 +673,8 @@ class AdminUI {
 		echo form_textarea($locale['627'], 'photo_description', 'photo_description', $this->photo_data['photo_description'], array('placeholder'=>$locale['628'], 'inline'=>1));
 		echo form_select($locale['629'], 'photo_allow_comments', 'photo_allow_comments', array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_comments'], array('inline'=>1));
 		echo form_select($locale['630'], 'photo_allow_ratings', 'photo_allow_ratings', array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_ratings'], array('inline'=>1));
-		echo form_button($locale['631'], 'upload_photo', 'upload_photo', 'upload_photo', array('class'=>'btn-primary'));
+		echo form_button($locale['631'], 'upload_photo', 'upload_photo', 'upload_photo', array('class'=>'btn-success btn-sm m-r-10'));
+		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
 		if ($photo_edit) {
 			echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
 			echo "<div class='well'>\n";

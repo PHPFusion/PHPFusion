@@ -489,15 +489,15 @@ class defender {
 				switch ($upload['error']) {
 					case 1: // Invalid file size
 						$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-						$this->addHelperText($this->field_config['id'], $locale['df_416']);
+						$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 						break;
 					case 2: // Unsupported image type
 						$this->addNotice(sprintf($locale['df_417'], ".gif .jpg .png"));
-						$this->addHelperText($this->field_config['id'], $locale['df_417']);
+						$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
 						break;
 					case 3: // Invalid image resolution
 						$this->addNotice(sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
-						$this->addHelperText($this->field_config['id'], $locale['df_421']);
+						$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
 						break;
 					case 4: // Invalid query string
 						$this->addNotice($locale['df_422']);
