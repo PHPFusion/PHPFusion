@@ -78,9 +78,14 @@ class ErrorLogs {
 
 	// Print code
 	static function printCode($source_code, $starting_line, $error_line = "", array $error_message = array()) {
+		global $locale;
 		if (is_array($source_code)) {
 			return FALSE;
 		}
+		$error_message = array(
+			'time' => !empty($error_message['time']) ? $error_message['time'] : time(),
+			'text'=> !empty($error_message['text']) ? $error_message['text'] : $locale['na'],
+		);
 		$source_code = explode("\n", str_replace(array("\r\n", "\r"), "\n", $source_code));
 		$line_count = $starting_line;
 		$formatted_code = "";
@@ -270,7 +275,7 @@ class ErrorLogs {
 		global $aidlink;
 		$locale = $this->locale;
 		if ($this->errors) {
-			echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>1, 'class'=>'text-right'));
+			echo openform('error_logform', 'error_logform', 'post', FUSION_REQUEST, array('downtime'=>1, 'notice'=>0, 'class'=>'text-right'));
 			echo form_button($locale['delete'], 'delete_all_logs', 'delete_all_logs', $locale['453'], array('class'=>'btn-block btn-primary', 'icon'=>'fa fa-bitbucket fa-lg m-r-10'));
 			echo closeform();
 			?>
@@ -316,6 +321,7 @@ class ErrorLogs {
 	public function show_error_notice() {
 		global $aidlink;
 		$locale = $this->locale;
+		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 
 		$tab_title['title'][0] = 'Errors';
 		$tab_title['id'][0] = 'errors-list';
@@ -422,7 +428,3 @@ class ErrorLogs {
 		}
 	}
 }
-
-//<a class='btn btn-default m-b-20' href='#top' title='<?php echo $locale['422']'><?php echo $locale['422']</a>
-
-?>

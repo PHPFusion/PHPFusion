@@ -1,8 +1,6 @@
 <?php
 require_once "../../maincore.php";
 
-$this_response = array('fusion_error_id'=>$id, 'from'=>'0', 'status'=>'Pending');
-
 $aid = isset($_POST['token']) ? explode('=', $_POST['token']) : '';
 if (!empty($aid)) {
 	$aid = $aid[1];
@@ -16,7 +14,7 @@ $debug_ajax = array(
 	'token' => $_POST['token'],
 	'aid' => $aid == iAUTH ? 1 : 0,
 );
-//print_p($debug_ajax);
+
 
 if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH) {
 	$this_response = array('fusion_error_id'=>$id, 'from'=>0, 'status'=>'Not Updated');

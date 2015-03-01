@@ -79,13 +79,11 @@ function getErrorLevel($level, $desc = FALSE) {
 }
 
 function fusion_turbo_debugger() {
-	/* Hien's Primary WorkStation */
-	// show me the bug, and then give me the button to clean the error logs - FAST. i dont need details.
 	if (iADMIN && checkrights('ERRO') || iSUPERADMIN) {
 		$error_logs = new \PHPFusion\ErrorLogs();
 		$error_logs->compressed = 1;
 		if (!defined('no_debugger')) {
-			echo openmodal('tbody', 'Fusion Turbo Debugger', array('class'=>'modal-lg modal-center zindex-boost', 'button_id'=>'turbo_debugger'));
+			echo openmodal('tbody', 'Fusion Debugger', array('class'=>'modal-lg modal-center zindex-boost', 'button_id'=>'turbo_debugger'));
 			$error_logs->show_footer_logs();
 			echo closemodal();
 		}

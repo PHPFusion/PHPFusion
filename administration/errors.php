@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
-if (!checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) die("Acces Denied");
+if (!checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) redirect(BASEDIR);
 
 use PHPFusion\ErrorLogs;
 $fusion_errors = new ErrorLogs();
