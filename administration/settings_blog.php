@@ -16,24 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkRights("S13") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
+pageAccess('S13', true);
 
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
 
 if (isset($_POST['savesettings'])) {
 	$error = 0;
@@ -104,15 +90,47 @@ while ($data = dbarray($result)) {
 }
 
 opentable($locale['400']);
+
+if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
+	if ($_GET['error'] == 0) {
+		$message = $locale['900'];
+	} elseif ($_GET['error'] == 1) {
+		$message = $locale['901'];
+	}
+	if (isset($message)) {
+		echo admin_message($message);
+	}
+}
+
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 $opts = array('0' => $locale['952'], '1' => $locale['953b']);
-echo form_select($locale['951'], 'blog_image_link', 'blog_image_link', $opts, $settings2['blog_image_link']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
+$thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
+
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-8'>\n";
+echo form_select($locale['951'], 'blog_image_link', 'blog_image_link', $opts, $settings2['blog_image_link']);
 echo form_select($locale['957'], 'blog_image_frontpage', 'blog_image_frontpage', $cat_opts, $settings2['blog_image_frontpage']);
 echo form_select($locale['958'], 'blog_image_readmore', 'blog_image_readmore', $cat_opts, $settings2['blog_image_readmore']);
-$opts = array('0' => $locale['955'], '1' => $locale['956']);
-echo form_select($locale['954'], 'blog_thumb_ratio', 'blog_thumb_ratio', $opts, $settings2['blog_thumb_ratio']);
+echo form_select($locale['954'], 'blog_thumb_ratio', 'blog_thumb_ratio', $thumb_opts, $settings2['blog_thumb_ratio']);
+echo "</div>\n";
+echo "<div class='col-xs-12 col-sm-4'>\n";
+
+echo "</div></div>\n";
+
+
+
+
+
+
+
+
+
+echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
+
+
+
+
 echo "<div class='clearfix'>\n";
 echo "<label for='blog_thumb_w'>".$locale['601']."</label> <span class='required'>*</span>\n<br /><span class='small2'>".$locale['604']."</span><br/>\n";
 echo form_text('', 'blog_thumb_w', 'blog_thumb_w', $settings2['blog_thumb_w'], array('class' => 'pull-left', 'max_length' => 3));
