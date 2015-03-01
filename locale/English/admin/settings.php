@@ -309,6 +309,7 @@ $locale['error_height'] = 'Please enter Height.';
 $locale['error_value'] = 'Please enter a value.';
 
 $locale['blog_description'] = "The configuration settings for Blog system.";
+$locale['news_description'] = "The configuration settings for News system.";
 $locale['ipp_description'] = "The configuration settings for default numbers of results items to be listed.";
 $locale['forum_description'] = "The configuration settings for Forum system.";
 $locale['download_description'] = "The configuration settings for Download system.";
@@ -326,5 +327,6 @@ $locale['ipp_settings'] = 'Items Per Page Settings';
 $locale['photo_settings'] = 'Photo Settings';
 $locale['main_settings'] = 'Main Settings';
 $locale['misc_settings'] = 'Miscellaneous Settings';
+$locale['news_settings'] = 'News Settings';
 
 ?>

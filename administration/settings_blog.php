@@ -100,9 +100,9 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 		echo admin_message($message);
 	}
 }
+echo "<div class='well'>".$locale['blog_description']."</div>";
 
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-echo "<div class='well'>".$locale['blog_description']."</div>";
 $opts = array('0' => $locale['952'], '1' => $locale['953b']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
 $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);

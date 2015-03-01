@@ -87,7 +87,6 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 }
 
 opentable($locale['misc_settings']);
-
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	if ($_GET['error'] == 0) {
 		$message = $locale['900'];
