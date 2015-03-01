@@ -20,14 +20,19 @@ html, body {
 	font: 14px/150% "Helvetica Neue",Arial !important;
 	overflow-x: hidden;
 }
+.breadcrumb {
+	margin-bottom:0;
+}
+
 /* Globals */
 h3 {
 	font: 20px 'Lucida Grande', 'Helvetica', 'Arial' !important;
 	font-weight: 600 !important;
 	color: rgb(48, 81, 132);
-	padding-bottom:20px;
-	margin-bottom:40px;
-	border-bottom: 1px solid #ccc;
+	padding-bottom:10px;
+	margin-bottom:10px;
+	margin-top:0;
+	/*border-bottom: 1px solid #ccc; */
 }
 
 .panel {

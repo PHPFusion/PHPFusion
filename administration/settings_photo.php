@@ -24,16 +24,6 @@ require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
 
 function color_mapper($field, $value) {
 	global $settings2;
@@ -79,7 +69,8 @@ if (isset($_POST['delete_watermarks'])) {
 	} else {
 		redirect(FUSION_SELF.$aidlink);
 	}
-} else if (isset($_POST['savesettings'])) {
+}
+else if (isset($_POST['savesettings'])) {
 	$_POST['photo_watermark_save'] = isset($_POST['photo_watermark_save']) ? $_POST['photo_watermark_save'] : 0;
 	$_POST['photo_watermark_image'] = isset($_POST['photo_watermark_image']) ? $_POST['photo_watermark_image'] : $settings['photo_watermark_image'];
 	$_POST['photo_watermark_text'] = isset($_POST['photo_watermark_text']) ? $_POST['photo_watermark_text'] : 0;
@@ -168,6 +159,18 @@ while ($data = dbarray($result)) {
 }
 
 opentable($locale['400']);
+
+if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
+	if ($_GET['error'] == 0) {
+		$message = $locale['900'];
+	} elseif ($_GET['error'] == 1) {
+		$message = $locale['901'];
+	}
+	if (isset($message)) {
+		echo admin_message($message);
+	}
+}
+
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 $gd_opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
 $choice_opts = array('1' => $locale['518'], '0' => $locale['519']);
@@ -231,9 +234,13 @@ echo form_select($locale['606'], 'thumb_compression', 'thumb_compression', $gd_o
 echo form_text($locale['609'], 'thumbs_per_row', 'thumbs_per_row', $settings2['thumbs_per_row'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 echo form_text($locale['610'], 'thumbs_per_page', 'thumbs_per_page', $settings2['thumbs_per_page'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 closeside();
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
+openside('');
+echo form_colorpicker($locale['614'], 'photo_watermark_text_color1', 'photo_watermark_text_color1', $settings2['photo_watermark_text_color1'], array('inline'=>1, 'deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_colorpicker($locale['615'], 'photo_watermark_text_color2', 'photo_watermark_text_color2', $settings2['photo_watermark_text_color2'], array('inline'=>1, 'deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_colorpicker($locale['616'], 'photo_watermark_text_color3', 'photo_watermark_text_color3', $settings2['photo_watermark_text_color3'], array('inline'=>1, 'deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+closeside();
 echo "</div><div class='col-xs-12 col-sm-3'>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings2', $locale['750'], array('class' => 'btn-primary m-b-10'));
+echo form_button($locale['750'], 'savesettings', 'savesettings2', $locale['750'], array('class' => 'btn-success m-b-10'));
 openside('');
 echo form_select($locale['611'], 'photo_watermark', 'photo_watermark', $choice_opts, $settings2['photo_watermark'], array('width'=>'100%'));
 echo form_select($locale['617'], 'photo_watermark_save', 'photo_watermark_save', $choice_opts, $settings2['photo_watermark_save']);
@@ -242,13 +249,10 @@ closeside();
 openside('');
 echo form_text($locale['612'], 'photo_watermark_image', 'photo_watermark_image', $settings2['photo_watermark_image'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
 echo form_select($locale['613'], 'photo_watermark_text', 'photo_watermark_text', $choice_opts, $settings2['photo_watermark_text'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo form_colorpicker($locale['614'], 'photo_watermark_text_color1', 'photo_watermark_text_color1', $settings2['photo_watermark_text_color1'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo form_colorpicker($locale['615'], 'photo_watermark_text_color2', 'photo_watermark_text_color2', $settings2['photo_watermark_text_color2'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo form_colorpicker($locale['616'], 'photo_watermark_text_color3', 'photo_watermark_text_color3', $settings2['photo_watermark_text_color3'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
 closeside();
 echo "</div></div>
 ";
-
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
 
 echo closeform();
 
