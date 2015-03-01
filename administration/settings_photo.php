@@ -19,7 +19,8 @@
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-if (!checkrights("S5") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) redirect(BASEDIR);
+pageAccess('S5');
+add_to_breadcrumbs(array('link'=>ADMIN.'settings_photo.php'.$aidlink, 'title'=>$locale['photo_settings']));
 
 if (isset($_POST['delete_watermarks'])) {
 	define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);

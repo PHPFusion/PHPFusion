@@ -310,5 +310,6 @@ $locale['error_value'] = 'Please enter a value.';
 
 
 $locale['blog_settings'] = 'Blog Settings';
+$locale['photo_settings'] = 'Photo Settings';
 
 ?>
