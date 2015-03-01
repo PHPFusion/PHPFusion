@@ -621,7 +621,7 @@ function dbquery_insert($db, $inputdata, $mode, array $options = array()) {
 			if ($aidlink !== "") { // since only admin can launch deletion?
 				$col = $columns[$key];
 				$values = $inputdata[$col];
-				if ($debug) {
+				if ($options['debug']) {
 					print_p("DELETE FROM ".$db." WHERE $col='$values'");
 				} else {
 					$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
@@ -635,9 +635,6 @@ function dbquery_insert($db, $inputdata, $mode, array $options = array()) {
 	elseif ($options['debug']) {
 		print_p('Fusion Null Declared. Developer, check form tokens.');
 	}
-	//else {
-		//notify('Script stopped as an illegal operation is found.', 'Fusion Defender stopped SQL, auto exit before execution.');
-	//}
 }
 
 // for sitelinks - not hierarchy
