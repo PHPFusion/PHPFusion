@@ -177,7 +177,7 @@ class AdminUI {
 
 	public function boot() {
 		global $locale;
-		if (!function_exists('gd_info')) {
+		if (function_exists('gd_info')) {
 			//self::Install_Gallery();
 			define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 			define("GALLERY_PHOTO_DIR", $this->image_upload_dir.(!SAFEMODE ? "album_".$this->album_id."/" : ""));
