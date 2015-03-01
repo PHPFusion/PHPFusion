@@ -136,8 +136,8 @@ $locale['658'] = "Maintenance mode message:";
 $locale['659'] = "Bad words filter enabled?";
 $locale['660'] = "Flood interval (seconds):";
 $locale['661'] = "Leave empty for immediate upload/download of backups.";
-$locale['662'] = "Use TinyMCE HTML editor?";
-$locale['663'] = "For article and news admin only.";
+$locale['662'] = "TinyMCE Editor";
+$locale['663'] = "For Article, Blog and News Administration only.";
 $locale['664'] = "SMTP Host";
 $locale['665'] = "Leave empty if sendmail is enabled.";
 $locale['666'] = "SMTP Username";
@@ -181,7 +181,7 @@ $locale['684'] = "Comments Sorting";
 $locale['685'] = "Ascending";
 $locale['686'] = "Descending";
 $locale['687'] = "Bad Words";
-$locale['688'] = "Display render time (in footer)?";
+$locale['688'] = "Display render time";
 $locale['689'] = "Yes (all visitors)";
 $locale['690'] = "Yes (only admins)";
 $locale['691'] = "Allow users to change user name";
@@ -316,6 +316,7 @@ $locale['eshop_description'] = "The configuration settings for Eshop system.";
 $locale['language_description'] = "The configuration settings for default multi-language system.";
 $locale['photo_description'] = "The configuration settings for default Photo Gallery system.";
 $locale['main_description'] = "The configuration settings for the main system.";
+$locale['misc_description'] = "The configuration settings for Email, Authentication method, Comments, Ratings, Avatars, Social Graphs and other Administraiton options.";
 
 $locale['blog_settings'] = 'Blog Settings';
 $locale['download_settings'] = 'Download Settings';
@@ -324,5 +325,6 @@ $locale['forum_settings'] = 'Forum Settings';
 $locale['ipp_settings'] = 'Items Per Page Settings';
 $locale['photo_settings'] = 'Photo Settings';
 $locale['main_settings'] = 'Main Settings';
+$locale['misc_settings'] = 'Miscellaneous Settings';
 
 ?>
