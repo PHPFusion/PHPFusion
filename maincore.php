@@ -153,12 +153,7 @@ if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 	if (iMEMBER) {
 		dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
 	} else {
-		$cookieName = "guest_language";
-		$cookieContent = $lang;
-		$cookieExpiration = time()+86400*60; 
-		$cookiePath = COOKIE_PATH;
-		$cookieDomain = COOKIE_DOMAIN;
-		setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, FALSE, FALSE);
+		setcookie(COOKIE_PREFIX."guest_language", $lang, time()+86400*60, COOKIE_PATH, COOKIE_DOMAIN, FALSE, FALSE);
 	}
 	// Redirect handler to keep position upon lang switch
 	if (FUSION_QUERY != "") {
