@@ -16,27 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkRights("S7") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('S7');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
 $count = 0;
-
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
-
 if (isset($_POST['saveoptions'])) {
 	$error = 0;
 	if (!defined('FUSION_NULL')) {
@@ -53,36 +36,40 @@ if (isset($_POST['saveoptions'])) {
 		redirect(FUSION_SELF.$aidlink."&error=".$error);
 	}
 }
-
 $options = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0'"), 0);
 $pm_inbox = $options['pm_inbox'];
 $pm_sentbox = $options['pm_sentbox'];
 $pm_savebox = $options['pm_savebox'];
-
-opentable($locale['400']);
+opentable($locale['message_settings']);
+if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
+	if ($_GET['error'] == 0) {
+		$message = $locale['900'];
+	} elseif ($_GET['error'] == 1) {
+		$message = $locale['901'];
+	}
+	if (isset($message)) {
+		echo admin_message($message);
+	}
+}
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-
-echo "<div class='panel panel-default tbl-border'>\n";
-echo "<div class='panel-heading'>\n<strong>".$locale['707']."</strong></div>\n";
-echo "<div class='panel-body'>\n";
-echo "<div class='pull-right'><span class='small2'>".$locale['704']."</span></div>\n";
-echo form_text($locale['701'], 'pm_inbox', 'pm_inbox', $pm_inbox, array('max_length' => 4, 'width' => '100px'));
-echo "<div class='pull-right'><span class='small2'>".$locale['704']."</span></div>\n";
-echo form_text($locale['702'], 'pm_sentbox', 'pm_sentbox', $pm_sentbox, array('max_length' => 4, 'width' => '100px'));
-echo "<div class='pull-right'><span class='small2'>".$locale['704']."</span></div>\n";
-echo form_text($locale['703'], 'pm_savebox', 'pm_savebox', $pm_savebox, array('max_length' => 4, 'width' => '100px'));
-echo "</div>\n</div>\n";
-echo "<div class='panel panel-default tbl-border'>\n";
-echo "<div class='panel-heading'>\n<strong>".$locale['708']."</strong></div>\n";
-echo "<div class='panel-body'>\n";
+echo "<div class='well'>".$locale['message_description']."</div>\n";
+echo "<div class='row'>";
+echo "<div class='col-xs-12 col-sm-6'>\n";
+openside('');
+echo "<span class='pull-right m-b-10 text-smaller'>".$locale['704']."</span>\n";
+echo form_text($locale['701'], 'pm_inbox', 'pm_inbox', $pm_inbox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
+echo form_text($locale['702'], 'pm_sentbox', 'pm_sentbox', $pm_sentbox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
+echo form_text($locale['703'], 'pm_savebox', 'pm_savebox', $pm_savebox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
+closeside();
+echo "</div>\n";
+echo "<div class='col-xs-12 col-sm-6'>\n";
+openside('');
 $opts = array('0' => $locale['519'], '1' => $locale['518'],);
-echo form_toggle($locale['709'], 'pm_email_notify', 'pm_email_notify', $opts, $options['pm_email_notify']);
-echo form_toggle($locale['710'], 'pm_save_sent', 'pm_save_sent', $opts, $options['pm_save_sent']);
+echo form_select($locale['709'], 'pm_email_notify', 'pm_email_notify', $opts, $options['pm_email_notify'], array('inline'=>1, 'width'=>'100%'));
+echo form_select($locale['710'], 'pm_save_sent', 'pm_save_sent', $opts, $options['pm_save_sent'],  array('inline'=>1, 'width'=>'100%'));
+closeside();
 echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'saveoptions', 'saveoptions', $locale['750'], array('class' => 'btn-primary'));
-
+echo form_button($locale['750'], 'saveoptions', 'saveoptions', $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
-
 require_once THEMES."templates/footer.php";
-?>

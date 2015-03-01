@@ -202,9 +202,9 @@ $locale['699e'] = "Email";
 $locale['699f'] = "Check uploaded files for MIME type?";
 // Private Message Settings
 $locale['700'] = "Private Messages";
-$locale['701'] = "Inbox message limit:";
-$locale['702'] = "Outbox message limit:";
-$locale['703'] = "Archive message limit:";
+$locale['701'] = "Inbox limit:";
+$locale['702'] = "Outbox limit:";
+$locale['703'] = "Archive limit:";
 $locale['704'] = "Set to 0 for unlimited";
 $locale['707'] = "Private Message Limits";
 $locale['708'] = "Default values for user options";
@@ -318,6 +318,7 @@ $locale['language_description'] = "The configuration settings for default multi-
 $locale['photo_description'] = "The configuration settings for default Photo Gallery system.";
 $locale['main_description'] = "The configuration settings for the main system.";
 $locale['misc_description'] = "The configuration settings for Email, Authentication method, Comments, Ratings, Avatars, Social Graphs and other Administraiton options.";
+$locale['message_description'] = "The configuration settings for private messaging system.";
 
 $locale['blog_settings'] = 'Blog Settings';
 $locale['download_settings'] = 'Download Settings';
@@ -328,5 +329,6 @@ $locale['photo_settings'] = 'Photo Settings';
 $locale['main_settings'] = 'Main Settings';
 $locale['misc_settings'] = 'Miscellaneous Settings';
 $locale['news_settings'] = 'News Settings';
+$locale['message_settings'] = 'Private Messages Settings';
 
 ?>
