@@ -64,7 +64,7 @@ $eshop_gallery->setUploadSettings(
  * d. set up photo comments - true or false
  * e. set up photo ratings - true or false
  */
-$eshop_gallery->setImageUploadDir(IMAGES."photoalbum");
+$eshop_gallery->setImageUploadDir(IMAGES."photoalbum/");
 $eshop_gallery->setPhotoCatDb(DB_PHOTO_ALBUMS);
 $eshop_gallery->setPhotoDb(DB_PHOTOS);
 $eshop_gallery->setGalleryRights('PH');
