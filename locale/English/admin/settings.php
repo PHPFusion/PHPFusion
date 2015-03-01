@@ -308,20 +308,21 @@ $locale['error_width'] = 'Please enter Width.';
 $locale['error_height'] = 'Please enter Height.';
 $locale['error_value'] = 'Please enter a value.';
 
-$locale['blog_description'] = "The configuration settings for Blog system.";
-$locale['news_description'] = "The configuration settings for News system.";
-$locale['ipp_description'] = "The configuration settings for default numbers of results items to be listed.";
-$locale['forum_description'] = "The configuration settings for Forum system.";
-$locale['download_description'] = "The configuration settings for Download system.";
-$locale['eshop_description'] = "The configuration settings for Eshop system.";
-$locale['language_description'] = "The configuration settings for default multi-language system.";
-$locale['photo_description'] = "The configuration settings for default Photo Gallery system.";
-$locale['main_description'] = "The configuration settings for the main system.";
-$locale['misc_description'] = "The configuration settings for Email, Authentication method, Comments, Ratings, Avatars, Social Graphs and other Administraiton options.";
-$locale['message_description'] = "The configuration settings for Private Messaging system.";
-$locale['register_description'] = "The configuration settings for User Registration system.";
-$locale['security_description'] = "The configuration settings for Security system.";
-$locale['time_description'] = "The configuration settings for server Time and Date system.";
+$locale['blog_description'] = "The configuration settings for Blog system";
+$locale['news_description'] = "The configuration settings for News system";
+$locale['ipp_description'] = "The configuration settings for default numbers of results items to be listed";
+$locale['forum_description'] = "The configuration settings for Forum system";
+$locale['download_description'] = "The configuration settings for Download system";
+$locale['eshop_description'] = "The configuration settings for Eshop system";
+$locale['language_description'] = "The configuration settings for default multi-language system";
+$locale['photo_description'] = "The configuration settings for default Photo Gallery system";
+$locale['main_description'] = "The configuration settings for the main system";
+$locale['misc_description'] = "The configuration settings for Email, Authentication method, Comments, Ratings, Avatars, Social Graphs and other Administraiton options";
+$locale['message_description'] = "The configuration settings for Private Messaging system";
+$locale['register_description'] = "The configuration settings for User Registration system";
+$locale['security_description'] = "The configuration settings for Security system";
+$locale['time_description'] = "The configuration settings for server Time and Date system";
+$locale['user_description'] = "The configuration settings for Users Management system";
 
 $locale['blog_settings'] = 'Blog Settings';
 $locale['download_settings'] = 'Download Settings';
@@ -336,5 +337,6 @@ $locale['message_settings'] = 'Private Messages Settings';
 $locale['register_settings'] = 'Registration Settings';
 $locale['security_settings'] = 'Security Settings';
 $locale['time_settings'] = 'Time Date Settings';
+$locale['user_settings'] = 'User Management Settings';
 
 ?>

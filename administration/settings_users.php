@@ -16,14 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("S9") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('S9');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
+add_to_breadcrumbs(array('link'=>ADMIN."settings_user.php".$aidlink, 'title'=>$locale['user_settings']));
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	if (!defined('FUSION_NULL')) {
@@ -86,6 +82,13 @@ if (isset($_POST['savesettings'])) {
 	}
 }
 
+$settings2 = array();
+$result = dbquery("SELECT * FROM ".DB_SETTINGS);
+while ($data = dbarray($result)) {
+	$settings2[$data['settings_name']] = $data['settings_value'];
+}
+
+opentable($locale['user_settings']);
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	if ($_GET['error'] == 0) {
 		$message = $locale['900'];
@@ -93,53 +96,71 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 		$message = $locale['901'];
 	}
 	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+		echo admin_message($message);
 	}
 }
-
-opentable($locale['400']);
-//echo "<form name='settingsform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
+echo "<div class='well'>".$locale['user_description']."</div>";
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-8'>\n";
+openside('');
+$choice_opts = array('0' => $locale['519'], '1' => $locale['518']);
+echo form_select($locale['1002'], 'enable_deactivation', 'enable_deactivation', $choice_opts, $settings2['enable_deactivation']);
+echo form_text($locale['1003'], 'deactivation_period', 'deactivation_period', $settings2['deactivation_period'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
+echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1004'].")</span>";
+echo form_text($locale['1005'], 'deactivation_response', 'deactivation_response', $settings2['deactivation_response'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
+echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1006'].")</span>";
+echo form_select($locale['1011'], 'deactivation_action', 'deactivation_action', $choice_opts, $settings2['deactivation_action']);
+closeside();
+openside('');
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='photo_max_w'>".$locale['1008']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'avatar_width', 'avatar_width', $settings2['avatar_width'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('', 'avatar_height', 'avatar_height', $settings2['avatar_height'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
 
-echo "<table class='table table-responsive center'>\n<tbody>\n<tr>\n";
-echo "<td width='40%' class='tbl'>\n<label for='enable_deactivation'>".$locale['1002']."</label>\n</td>\n";
-echo "<td class='tbl' width='60%'>\n";
-$yes_no_array = array('0' => $locale['519'], '1' => $locale['518']);
-echo form_select('', 'enable_deactivation', 'enable_deactivation', $yes_no_array, $settings['enable_deactivation']);
-//<select name='enable_deactivation' class='textbox'>\n";
-//echo "<option value='0'".($settings['enable_deactivation'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
-//echo "<option value='1'".($settings['enable_deactivation'] == "1" ? " selected='selected'" : "").">".$locale['518']."</option>\n";
-//echo "</select></td>\n";
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl'>\n<label for='deactivation_period'>".$locale['1003']."</label>\n<br /><span class='small2'>(".$locale['1004'].")</span></td>\n";
-echo "<td class='tbl'>\n";
-echo form_text('', 'deactivation_period', 'deactivation_period', $settings['deactivation_period'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
-//<input type='text' name='deactivation_period' value='".$settings['deactivation_period']."' maxlength='3' class='textbox' style='width:30px;' /></td>\n";
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl'>\n<label for='deactivation_response'>".$locale['1005']."</label>\n<br /><span class='small2'>(".$locale['1006'].")</span></td>\n";
-echo "<td class='tbl'>\n";
-echo form_text('', 'deactivation_response', 'deactivation_response', $settings['deactivation_response'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
-//<input type='text' name='deactivation_response' value='".$settings['deactivation_response']."' maxlength='3' class='textbox' style='width:30px;' /></td>\n";
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td  class='tbl'>\n<label for='deactivation_action'>".$locale['1011']."</label>\n</td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'deactivation_action', 'deactivation_action', $yes_no_array, $settings['deactivation_action']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl2' align='center' colspan='2'><strong>".$locale['1007']."</strong></td>\n";
-echo "</tr>\n<tr>\n";
-echo "<td  class='tbl'>\n<label for='hide_userprofiles'>".$locale['673']."</label>\n</td>\n";
-echo "<td  class='tbl'>\n";
-echo form_select('', 'hide_userprofiles', 'hide_userprofiles', $yes_no_array, $settings['hide_userprofiles']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td  class='tbl'>\n<label for='avatar_width'>".$locale['1008']."</label>\n<br /><span class='small2'>(".$locale['1009'].")</span></td>\n";
-echo "<td  class='tbl'>\n";
+$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+$calc_c = calculate_byte($settings2['avatar_filesize']);
+$calc_b = $settings2['avatar_filesize']/$calc_c;
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='calc_b'>".$locale['605']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	</div>
+</div>
+";
+$ratio_opts = array('0' => $locale['955'], '1' => $locale['956']);
+echo form_select($locale['1001'], 'avatar_ratio', 'avatar_ratio', $ratio_opts, $settings2['avatar_ratio'],  array('inline'=>1, 'width'=>'100%'));
+closeside();
+echo "</div>\n";
+echo "<div class='col-xs-12 col-sm-4'>\n";
+openside('');
+echo form_select($locale['673'], 'hide_userprofiles', 'hide_userprofiles', $choice_opts, $settings2['hide_userprofiles']);
+closeside();
+openside('');
+echo form_select($locale['691'], 'userNameChange', 'userNameChange', $choice_opts, $settings2['userNameChange']);
+echo form_select($locale['668'], 'userthemes', 'userthemes', $choice_opts, $settings2['userthemes']);
+echo form_select($locale['1014'], 'multiple_logins', 'multiple_logins', $choice_opts, $settings2['multiple_logins']);
+echo "<span class='text-smaller mid-opacity display-block m-b-10'>".$locale['1014a']."</span>\n";
+closeside();
+echo "</div>\n</div>\n";
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo closeform();
+closetable();
 
-echo form_text('', 'avatar_width', 'avatar_width', $settings['avatar_width'], array('class' => 'pull-left', 'max_length' => 3, 'number' => 1));
-echo "<i class='entypo icancel pull-left m-r-10 m-l-10 m-t-10'></i>\n";
-echo form_text('', 'avatar_height', 'avatar_height', $settings['avatar_height'], array('class' => 'pull-left', 'max_length' => 3, 'number' => 1));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td  class='tbl'><label for='calc_b'>".$locale['1010']."</label></td>\n";
-echo "<td  class='tbl'>\n";
+require_once THEMES."templates/footer.php";
+
 function calculate_byte($download_max_b) {
 	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 	foreach ($calc_opts as $byte => $val) {
@@ -149,35 +170,3 @@ function calculate_byte($download_max_b) {
 	}
 	return 1000000;
 }
-
-$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
-$calc_c = calculate_byte($settings['avatar_filesize']);
-$calc_b = $settings['avatar_filesize']/$calc_c;
-echo form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => '3', 'class' => 'pull-left m-r-10'));
-echo form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td  class='tbl'>\n<label for='avatar_ratio'>".$locale['1001']."</label></td>\n";
-echo "<td  class='tbl'>\n";
-$ratio_opts = array('0' => $locale['955'], '1' => $locale['956']);
-echo form_select('', 'avatar_ratio', 'avatar_ratio', $ratio_opts, $settings['avatar_ratio']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td  class='tbl'>\n<label for='userNameChange'>".$locale['691']."?</label></td>\n";
-echo "<td  class='tbl'>\n";
-echo form_select('', 'userNameChange', 'userNameChange', $yes_no_array, $settings['userNameChange']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td  class='tbl'>\n<label for='userthemes'>".$locale['668']."?</label></td>\n";
-echo "<td  class='tbl'>\n";
-echo form_select('', 'userthemes', 'userthemes', $yes_no_array, $settings['userthemes']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td  class='tbl'>\n<label for='multiple_logins'>".$locale['1014']."</label>\n<br /><span class='small2'>(".$locale['1014a'].")</span></td>\n";
-echo "<td  class='tbl'>\n";
-echo form_select('', 'multiple_logins', 'multiple_logins', $yes_no_array, $settings['multiple_logins']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td align='center' colspan='2' class='tbl'><br />\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
-echo "</td>\n</tr>\n</tbody>\n</table>\n";
-echo closeform();
-closetable();
-
-require_once THEMES."templates/footer.php";
-?>
