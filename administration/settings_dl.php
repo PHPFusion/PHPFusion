@@ -17,19 +17,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("S11") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-		if (isset($message)) {
-			echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>$message</div></div>\n";
-		}
-	}
-}
+require_once INCLUDES."mimetypes_include.php";
+pageAccess('S11');
+add_to_breadcrumbs(array('link'=>ADMIN.'settings_dl.php'.$aidlink, 'title'=>$locale['download_settings']));
 if (isset($_POST['savesettings'])) {
 	$admin_password = (isset($_POST['admin_password'])) ? form_sanitizer($_POST['admin_password'], '', 'admin_password') : '';
 	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "") && !defined('FUSION_NULL')) {
@@ -60,6 +52,100 @@ $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
+/**
+ * Options for dropdown field
+ */
+$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+$calc_c = calculate_byte($settings2['download_max_b']);
+$calc_b = $settings2['download_max_b']/$calc_c;
+$calc_cc = calculate_byte($settings2['download_screen_max_b']);
+$calc_bb = $settings2['download_screen_max_b']/$calc_cc;
+
+$choice_opts = array('1' => $locale['yes'], '0' => $locale['no']);
+$mime = mimeTypes();
+$mime_opts = array();
+foreach ($mime as $m => $Mime) {
+	$ext = ".$m";
+	$mime_opts[$ext] = $ext;
+}
+
+opentable($locale['download_settings']);
+
+if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
+	if ($_GET['error'] == 0) {
+		$message = $locale['900'];
+		if (isset($message)) {
+			echo admin_message($message);
+		}
+	}
+}
+
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-8'>";
+openside('');
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='photo_w'>".$locale['934']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'download_screen_max_w', 'download_screen_max_w', $settings2['download_screen_max_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('', 'download_screen_max_h', 'download_screen_max_h', $settings2['download_screen_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
+
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='photo_w'>".$locale['937']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'download_thumb_max_w', 'download_thumb_max_w', $settings2['download_thumb_max_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('', 'download_thumb_max_h', 'download_thumb_max_h', $settings2['download_thumb_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='calc_b'>".$locale['930']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	</div>
+</div>
+";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='calc_bb'>".$locale['936']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'calc_bb', 'calc_bb', $calc_bb, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_select('', 'calc_cc', 'calc_cc', $calc_opts, $calc_cc, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	</div>
+</div>
+";
+closeside();
+openside();
+echo form_select($locale['932'], 'download_types[]', 'download_types', $mime_opts, $settings2['download_types'], array('error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%', 'delimiter' => '|'));
+closeside();
+echo "</div><div class='col-xs-12 col-sm-4'>\n";
+openside('');
+echo form_select($locale['938'], 'download_screenshot', 'download_screenshot', $choice_opts, $settings2['download_screenshot']);
+closeside();
+echo "</div>\n</div>\n";
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo closeform();
+closetable();
+require_once THEMES."templates/footer.php";
+
+
 function calculate_byte($download_max_b) {
 	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 	foreach ($calc_opts as $byte => $val) {
@@ -69,64 +155,3 @@ function calculate_byte($download_max_b) {
 	}
 	return 1000000;
 }
-
-$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
-opentable($locale['400']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-$calc_c = calculate_byte($settings2['download_max_b']);
-$calc_b = $settings2['download_max_b']/$calc_c;
-echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='calc_b'>".$locale['930']."</label> <span class='required'>*</span><br />\n";
-echo form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => '3', 'class' => 'pull-left m-r-10'));
-echo form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'));
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='download_types'>".$locale['932']."</label> <span class='required'>*</span>\n<br/>\n";
-require_once INCLUDES."mimetypes_include.php";
-$mime = mimeTypes();
-$mime_opts = array();
-foreach ($mime as $m => $Mime) {
-	$ext = ".$m";
-	$mime_opts[$ext] = $ext;
-}
-echo form_select('', 'download_types[]', 'download_types', $mime_opts, $settings2['download_types'], array('error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%', 'delimiter' => '|'));
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='download_screen_max_w'>".$locale['934']."</label> <span class='required'>*</span><br /><span class='small2'>".$locale['935']."</span><br/>\n";
-echo form_text('', 'download_screen_max_w', 'download_screen_max_w', $settings2['download_screen_max_w'], array('max_length' => 3, 'number' => 1, 'required' => 1, 'error_text' => $locale['error_width'], 'width' => '140px', 'class' => 'pull-left m-r-10'));
-echo "<i class='entypo icancel pull-left m-r-10 m-t-10'></i>\n";
-echo form_text('', 'download_screen_max_h', 'download_screen_max_h', $settings2['download_screen_max_h'], array('max_length' => 3, 'number' => 1, 'required' => 1, 'error_text' => $locale['error_height'], 'width' => '140px', 'class' => 'pull-left'));
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='calc_bb'>".$locale['936']."</label> <span class='required'>*</span><br/>\n";
-$calc_cc = calculate_byte($settings2['download_screen_max_b']);
-$calc_bb = $settings2['download_screen_max_b']/$calc_cc;
-echo form_text('', 'calc_bb', 'calc_bb', $calc_bb, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => '3', 'class' => 'pull-left m-r-10'));
-echo form_select('', 'calc_cc', 'calc_cc', $calc_opts, $calc_cc);
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='download_thumb_max_w'>".$locale['937']."</label> <span class='required'>*</span><br /><span class='small2'>".$locale['935']."</span>\n<br/>\n";
-echo form_text('', 'download_thumb_max_w', 'download_thumb_max_w', $settings2['download_thumb_max_w'], array('max_length' => 4, 'number' => 1, 'required' => 1, 'error_text' => $locale['error_width'], 'width' => '140px', 'class' => 'pull-left m-r-10'));
-echo "<i class='entypo icancel pull-left m-r-10 m-t-10'></i>\n";
-echo form_text('', 'download_thumb_max_h', 'download_thumb_max_h', $settings2['download_thumb_max_h'], array('max_length' => 4, 'number' => 1, 'required' => 1, 'error_text' => $locale['error_height'], 'width' => '140px', 'class' => 'pull-left'));
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='download_screenshot'>".$locale['938']."</label> <span class='required'>*</span>\n<br/>\n";
-$array = array('1' => $locale['yes'], '0' => $locale['no'],);
-echo form_select('', 'download_screenshot', 'download_screenshot', $array, $settings2['download_screenshot']);
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "";
-if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-	echo "<td class='tbl'><label for='admin_password'>".$locale['853']."</label> <span class='required'>*</span></td>\n";
-	echo "<td class='tbl'>\n";
-	echo form_text('', 'admin_password', 'admin_password', isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "", array('password' => 1, 'required' => 1, 'error_text' => $locale['global_182']));
-}
-echo "</div>\n";
-echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
-echo closeform();
-closetable();
-require_once THEMES."templates/footer.php";
-?>

@@ -16,13 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("ESHP") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { die("Acces Denied"); }
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."eshop.php";
-opentable("Eshop Settings");
-
+include LOCALE.LOCALESET."admin/settings.php";
+pageAccess('ESHP');
+add_to_breadcrumbs(array('link'=>ADMIN.'settings_eshop.php'.$aidlink, 'title'=>$locale['eshop_settings']));
+opentable($locale['eshop_settings']);
 $data = array(
-'eshop_ipn'=>1,
+	'eshop_ipn'=>1,
 	'esho_cats'=>1,
 	'eshop_cat_disp'=>1,
 	'eshop_nopp'=>6,
@@ -103,7 +104,7 @@ if (isset($_POST['update_settings'])) {
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_ipr'])."' WHERE settings_name='eshop_ipr'");
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_ppmail'])."' WHERE settings_name='eshop_ppmail'");
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_catimg_w'])."' WHERE settings_name='eshop_catimg_w'");
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_eshop_catimg_h'])."' WHERE settings_name='eshop_catimg_h'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_catimg_h'])."' WHERE settings_name='eshop_catimg_h'");
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_image_w'])."' WHERE settings_name='eshop_image_w'");
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_image_h'])."' WHERE settings_name='eshop_image_h'");
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_image_b'])."' WHERE settings_name='eshop_image_b'");
@@ -132,7 +133,7 @@ if (isset($_POST['update_settings'])) {
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_coupons'])."' WHERE settings_name='eshop_coupons'");
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_freeshipsum'])."' WHERE settings_name='eshop_freeshipsum'");
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['eshop_terms']))."' WHERE settings_name='eshop_terms'");
-	echo "<div class='admin-message'>".$locale['ESHP500']."</div>";
+	echo admin_message($locale['ESHP500']);
 }
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
@@ -140,20 +141,19 @@ while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 if (dbrows($result) != 0) {
-
 	echo openform('optionsform', 'optionsform', 'post', FUSION_SELF.$aidlink."&amp;a_page=settings", array('downtime' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8'>\n";
 	openside('');
-	echo form_text($locale['ESHP551'], 'eshop_ppmail', 'eshop_ppmail', $settings2['eshop_ppmail'], array('tip'=>$locale['ESHP552'], 'inline'=>1));
-	echo form_text($locale['ESHP553'], 'eshop_returnpage', 'eshop_returnpage', $settings2['eshop_returnpage'], array('tip'=>$locale['ESHP554'], 'inline'=>1));
-	echo form_select($locale['ESHP850'], 'eshop_ipn', 'eshop_ipn',array('0'=>$locale['no'], '1'=>$locale['yes']), $settings2['eshop_ipn'], array('tip'=>$locale['ESHP851'], 'inline'=>1));
-	echo form_text($locale['ESHP555'], 'eshop_vat', 'eshop_vat', $settings2['eshop_vat'], array('tip'=>$locale['ESHP556'], 'inline'=>1, 'placeholder'=>'%'));
-	echo form_select($locale['ESHP557'], 'eshop_vat_default', 'eshop_vat_default',array('0'=>$locale['no'], '1'=>$locale['yes']), $settings2['eshop_vat_default'], array('tip'=>$locale['ESHP558'], 'inline'=>1));
-	echo form_select($locale['ESHP559'], 'eshop_currency', 'eshop_currency', \PHPFusion\Geomap::get_Currency(), $settings2['eshop_currency'], array('tip'=>$locale['ESHP560'], 'width'=>'350px', 'inline'=>1));
+	echo form_text($locale['ESHP551'], 'eshop_ppmail', 'eshop_ppmail', $settings2['eshop_ppmail'], array('placeholder'=>$locale['ESHP552'], 'inline'=>1));
+	echo form_text($locale['ESHP553'], 'eshop_returnpage', 'eshop_returnpage', $settings2['eshop_returnpage'], array('placeholder'=>$locale['ESHP554'], 'inline'=>1));
+	echo form_select($locale['ESHP850'], 'eshop_ipn', 'eshop_ipn',array('0'=>$locale['no'], '1'=>$locale['yes']), $settings2['eshop_ipn'], array('placeholder'=>$locale['ESHP851'], 'inline'=>1));
+	echo form_text($locale['ESHP555'], 'eshop_vat', 'eshop_vat', $settings2['eshop_vat'], array('placeholder'=>$locale['ESHP556'], 'inline'=>1, 'placeholder'=>'%'));
+	echo form_select($locale['ESHP557'], 'eshop_vat_default', 'eshop_vat_default',array('0'=>$locale['no'], '1'=>$locale['yes']), $settings2['eshop_vat_default'], array('placeholder'=>$locale['ESHP558'], 'inline'=>1));
+	echo form_select($locale['ESHP559'], 'eshop_currency', 'eshop_currency', \PHPFusion\Geomap::get_Currency(), $settings2['eshop_currency'], array('placeholder'=>$locale['ESHP560'], 'width'=>'350px', 'inline'=>1));
 	closeside();
 	openside('');
-	echo form_select($locale['ESHP575'], 'eshop_listprice', 'eshop_listprice', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_listprice'], array('tip'=>$locale['ESHP576'], 'inline'=>1));
+	echo form_select($locale['ESHP575'], 'eshop_listprice', 'eshop_listprice', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_listprice'], array('placeholder'=>$locale['ESHP576'], 'inline'=>1));
 	// ribbon timers
 	$timer_opts = array(
 		'0' => $locale['ESHP839'],
@@ -164,68 +164,64 @@ if (dbrows($result) != 0) {
 		'1209600' => $locale['ESHP844'],
 		'2419200' => $locale['ESHP845'],
 	);
-	echo form_select($locale['ESHP837'], 'eshop_newtime', 'eshop_newtime', $timer_opts, $settings2['eshop_newtime'], array('tip'=>$locale['ESHP838'], 'width'=>'350px', 'inline'=>1));
-	echo form_select($locale['ESHP848'], 'eshop_coupons', 'eshop_coupons', array('0'=>$locale['no'], '1'=>$locale['yes']), $settings2['eshop_coupons'], array('tip'=>$locale['ESHP849'], 'width'=>'350px', 'inline'=>1));
-	echo form_text($locale['ESHP846'], 'eshop_freeshipsum', 'eshop_freeshipsum', $settings2['eshop_freeshipsum'], array('tip'=>$locale['ESHP847'], 'width'=>'350px', 'inline'=>1));
-	echo form_select($locale['ESHP561'], 'eshop_weightscale', 'eshop_weightscale', array('KG'=>$locale['ESHP566'], 'LBS'=>$locale['ESHP567']), $settings2['eshop_weightscale'], array('tip'=>$locale['ESHP562'], 'inline'=>1));
+	echo form_select($locale['ESHP837'], 'eshop_newtime', 'eshop_newtime', $timer_opts, $settings2['eshop_newtime'], array('placeholder'=>$locale['ESHP838'], 'width'=>'350px', 'inline'=>1));
+	echo form_select($locale['ESHP848'], 'eshop_coupons', 'eshop_coupons', array('0'=>$locale['no'], '1'=>$locale['yes']), $settings2['eshop_coupons'], array('placeholder'=>$locale['ESHP849'], 'width'=>'350px', 'inline'=>1));
+	echo form_text($locale['ESHP846'], 'eshop_freeshipsum', 'eshop_freeshipsum', $settings2['eshop_freeshipsum'], array('placeholder'=>$locale['ESHP847'], 'width'=>'350px', 'inline'=>1));
+	echo form_select($locale['ESHP561'], 'eshop_weightscale', 'eshop_weightscale', array('KG'=>$locale['ESHP566'], 'LBS'=>$locale['ESHP567']), $settings2['eshop_weightscale'], array('placeholder'=>$locale['ESHP562'], 'inline'=>1));
 	closeside();
-
 	openside('');
-	echo form_select($locale['ESHP515'], 'eshop_ratios', 'eshop_ratios', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_ratios'], array('tip'=>$locale['ESHP516'], 'inline'=>1));
-	echo form_text($locale['ESHP519'], 'eshop_idisp_w', 'eshop_idisp_w', $settings2['eshop_idisp_w'], array('tip'=>$locale['ESHP520'], 'inline'=>1));
-	echo form_text($locale['ESHP517'], 'eshop_idisp_h', 'eshop_idisp_h', $settings2['eshop_idisp_h'], array('tip'=>$locale['ESHP518'], 'inline'=>1));
-	echo form_text($locale['ESHP594'], 'eshop_idisp_w2', 'eshop_idisp_w2', $settings2['eshop_idisp_w2'], array('tip'=>$locale['ESHP595'], 'inline'=>1));
-	echo form_text($locale['ESHP596'], 'eshop_idisp_h2', 'eshop_idisp_h2', $settings2['eshop_idisp_h2'], array('tip'=>$locale['ESHP597'], 'inline'=>1));
-	echo form_text($locale['ESHP537'], 'eshop_image_w', 'eshop_image_w', $settings2['eshop_image_w'], array('tip'=>$locale['ESHP538'], 'inline'=>1));
-	echo form_text($locale['ESHP539'], 'eshop_image_h', 'eshop_image_h', $settings2['eshop_image_h'], array('tip'=>$locale['ESHP540'], 'inline'=>1));
-	echo form_text($locale['ESHP541'], 'eshop_image_b', 'eshop_image_b', $settings2['eshop_image_b'], array('placeholder'=>parseByteSize($settings2['eshop_image_b']), 'tip'=>$locale['ESHP542'], 'inline'=>1));
-	echo form_text($locale['ESHP543'], 'eshop_image_tw', 'eshop_image_tw', $settings2['eshop_image_tw'], array('tip'=>$locale['ESHP544'], 'inline'=>1));
-	echo form_text($locale['ESHP545'], 'eshop_image_th', 'eshop_image_th', $settings2['eshop_image_th'], array('tip'=>$locale['ESHP546'], 'inline'=>1));
-	echo form_text($locale['ESHP547'], 'eshop_image_t2w', 'eshop_image_t2w', $settings2['eshop_image_t2w'], array('tip'=>$locale['ESHP548'], 'inline'=>1));
-	echo form_text($locale['ESHP549'], 'eshop_image_t2h', 'eshop_image_t2h', $settings2['eshop_image_t2h'], array('tip'=>$locale['ESHP550'], 'inline'=>1));
+	echo form_select($locale['ESHP515'], 'eshop_ratios', 'eshop_ratios', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_ratios'], array('placeholder'=>$locale['ESHP516'], 'inline'=>1));
+	echo form_text($locale['ESHP519'], 'eshop_idisp_w', 'eshop_idisp_w', $settings2['eshop_idisp_w'], array('placeholder'=>$locale['ESHP520'], 'inline'=>1));
+	echo form_text($locale['ESHP517'], 'eshop_idisp_h', 'eshop_idisp_h', $settings2['eshop_idisp_h'], array('placeholder'=>$locale['ESHP518'], 'inline'=>1));
+	echo form_text($locale['ESHP594'], 'eshop_idisp_w2', 'eshop_idisp_w2', $settings2['eshop_idisp_w2'], array('placeholder'=>$locale['ESHP595'], 'inline'=>1));
+	echo form_text($locale['ESHP596'], 'eshop_idisp_h2', 'eshop_idisp_h2', $settings2['eshop_idisp_h2'], array('placeholder'=>$locale['ESHP597'], 'inline'=>1));
+	echo form_text($locale['ESHP537'], 'eshop_image_w', 'eshop_image_w', $settings2['eshop_image_w'], array('placeholder'=>$locale['ESHP538'], 'inline'=>1));
+	echo form_text($locale['ESHP539'], 'eshop_image_h', 'eshop_image_h', $settings2['eshop_image_h'], array('placeholder'=>$locale['ESHP540'], 'inline'=>1));
+	echo form_text($locale['ESHP541'], 'eshop_image_b', 'eshop_image_b', $settings2['eshop_image_b'], array('placeholder'=>parseByteSize($settings2['eshop_image_b']), 'placeholder'=>$locale['ESHP542'], 'inline'=>1));
+	echo form_text($locale['ESHP543'], 'eshop_image_tw', 'eshop_image_tw', $settings2['eshop_image_tw'], array('placeholder'=>$locale['ESHP544'], 'inline'=>1));
+	echo form_text($locale['ESHP545'], 'eshop_image_th', 'eshop_image_th', $settings2['eshop_image_th'], array('placeholder'=>$locale['ESHP546'], 'inline'=>1));
+	echo form_text($locale['ESHP547'], 'eshop_image_t2w', 'eshop_image_t2w', $settings2['eshop_image_t2w'], array('placeholder'=>$locale['ESHP548'], 'inline'=>1));
+	echo form_text($locale['ESHP549'], 'eshop_image_t2h', 'eshop_image_t2h', $settings2['eshop_image_t2h'], array('placeholder'=>$locale['ESHP550'], 'inline'=>1));
 	closeside();
-
-
 	openside('');
-	echo form_select($locale['ESHP503'], 'eshop_cats', 'eshop_cats', array('0'=>$locale['off'], '1'=>$locale['on']), $settings2['eshop_cats'], array('tip'=>$locale['ESHP506'], 'inline'=>1));
-	echo form_select($locale['ESHP823'], 'eshop_cat_disp', 'eshop_cat_disp', array('0'=>$locale['off'], '1'=>$locale['on']), $settings2['eshop_cat_disp'], array('tip'=>$locale['ESHP824'], 'inline'=>1));
-	echo form_text($locale['ESHP513'], 'eshop_nopp', 'eshop_nopp', $settings2['eshop_nopp'], array('tip'=>$locale['ESHP514'], 'inline'=>1));
-	echo form_text($locale['ESHP834'], 'eshop_cipr', 'eshop_cipr', $settings2['eshop_cipr'], array('tip'=>$locale['ESHP835'], 'inline'=>1));
-	echo form_text($locale['ESHP834'], 'eshop_cipr', 'eshop_cipr', $settings2['eshop_cipr'], array('tip'=>$locale['ESHP835'], 'inline'=>1));
-	echo form_text($locale['ESHP509'], 'eshop_catimg_h', 'eshop_catimg_h', $settings2['eshop_catimg_h'], array('tip'=>$locale['ESHP510'], 'inline'=>1));
-	echo form_text($locale['ESHP511'], 'eshop_catimg_w', 'eshop_catimg_w', $settings2['eshop_catimg_w'], array('tip'=>$locale['ESHP512'], 'inline'=>1));
-	echo form_text($locale['ESHP805'], 'eshop_target', 'eshop_target', $settings2['eshop_target'], array('tip'=>$locale['ESHP806'], 'inline'=>1));
-	echo form_select($locale['ESHP807'], 'eshop_folderlink', 'eshop_folderlink', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_folderlink'], array('tip'=>$locale['ESHP808'], 'inline'=>1));
-	echo form_select($locale['ESHP809'], 'eshop_selection', 'eshop_selection', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_selection'], array('tip'=>$locale['ESHP810'], 'inline'=>1));
-	echo form_select($locale['ESHP811'], 'eshop_cookies', 'eshop_cookies', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_cookies'], array('tip'=>$locale['ESHP812'], 'inline'=>1));
-	echo form_select($locale['ESHP813'], 'eshop_bclines', 'eshop_bclines', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_bclines'], array('tip'=>$locale['ESHP814'], 'inline'=>1));
-	echo form_select($locale['ESHP815'], 'eshop_icons', 'eshop_icons', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_icons'], array('tip'=>$locale['ESHP816'], 'inline'=>1));
-	echo form_select($locale['ESHP817'], 'eshop_statustext', 'eshop_statustext', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_statustext'], array('tip'=>$locale['ESHP818'], 'inline'=>1));
-	echo form_select($locale['ESHP819'], 'eshop_closesamelevel', 'eshop_closesamelevel', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_closesamelevel'], array('tip'=>$locale['ESHP820'], 'inline'=>1));
-	echo form_select($locale['ESHP821'], 'eshop_inorder', 'eshop_inorder', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_inorder'], array('tip'=>$locale['ESHP822'], 'inline'=>1));
+	echo form_select($locale['ESHP503'], 'eshop_cats', 'eshop_cats', array('0'=>$locale['off'], '1'=>$locale['on']), $settings2['eshop_cats'], array('placeholder'=>$locale['ESHP506'], 'inline'=>1));
+	echo form_select($locale['ESHP823'], 'eshop_cat_disp', 'eshop_cat_disp', array('0'=>$locale['off'], '1'=>$locale['on']), $settings2['eshop_cat_disp'], array('placeholder'=>$locale['ESHP824'], 'inline'=>1));
+	echo form_text($locale['ESHP513'], 'eshop_nopp', 'eshop_nopp', $settings2['eshop_nopp'], array('placeholder'=>$locale['ESHP514'], 'inline'=>1));
+	echo form_text($locale['ESHP834'], 'eshop_cipr', 'eshop_cipr', $settings2['eshop_cipr'], array('placeholder'=>$locale['ESHP835'], 'inline'=>1));
+	echo form_text($locale['ESHP834'], 'eshop_cipr', 'eshop_cipr', $settings2['eshop_cipr'], array('placeholder'=>$locale['ESHP835'], 'inline'=>1));
+	echo form_text($locale['ESHP509'], 'eshop_catimg_h', 'eshop_catimg_h', $settings2['eshop_catimg_h'], array('placeholder'=>$locale['ESHP510'], 'inline'=>1));
+	echo form_text($locale['ESHP511'], 'eshop_catimg_w', 'eshop_catimg_w', $settings2['eshop_catimg_w'], array('placeholder'=>$locale['ESHP512'], 'inline'=>1));
+	echo form_text($locale['ESHP805'], 'eshop_target', 'eshop_target', $settings2['eshop_target'], array('placeholder'=>$locale['ESHP806'], 'inline'=>1));
+	echo form_select($locale['ESHP807'], 'eshop_folderlink', 'eshop_folderlink', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_folderlink'], array('placeholder'=>$locale['ESHP808'], 'inline'=>1));
+	echo form_select($locale['ESHP809'], 'eshop_selection', 'eshop_selection', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_selection'], array('placeholder'=>$locale['ESHP810'], 'inline'=>1));
+	echo form_select($locale['ESHP811'], 'eshop_cookies', 'eshop_cookies', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_cookies'], array('placeholder'=>$locale['ESHP812'], 'inline'=>1));
+	echo form_select($locale['ESHP813'], 'eshop_bclines', 'eshop_bclines', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_bclines'], array('placeholder'=>$locale['ESHP814'], 'inline'=>1));
+	echo form_select($locale['ESHP815'], 'eshop_icons', 'eshop_icons', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_icons'], array('placeholder'=>$locale['ESHP816'], 'inline'=>1));
+	echo form_select($locale['ESHP817'], 'eshop_statustext', 'eshop_statustext', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_statustext'], array('placeholder'=>$locale['ESHP818'], 'inline'=>1));
+	echo form_select($locale['ESHP819'], 'eshop_closesamelevel', 'eshop_closesamelevel', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_closesamelevel'], array('placeholder'=>$locale['ESHP820'], 'inline'=>1));
+	echo form_select($locale['ESHP821'], 'eshop_inorder', 'eshop_inorder', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_inorder'], array('placeholder'=>$locale['ESHP822'], 'inline'=>1));
 	closeside();
-
-
+	openside('');
 	echo form_textarea($locale['ESHP831'], 'eshop_terms', 'eshop_terms', $data['eshop_terms'], array('autosize'=>1));
+	closeside();
 	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-4'>\n";
-	echo form_button($locale['ESHP700'], 'update_settings', 'update_settings1', $locale['ESHP700'], array('class'=>'btn-primary m-b-10'));
-
+	echo form_button($locale['ESHP700'], 'update_settings', 'update_settings1', $locale['ESHP700'], array('class'=>'btn-success m-b-10'));
 	openside('');
-	echo form_text($locale['ESHP577'], 'eshop_noppf', 'eshop_noppf', $settings2['eshop_noppf'], array('tip'=>$locale['ESHP578']));
-	echo form_text($locale['ESHP592'], 'eshop_ipr', 'eshop_ipr', $settings2['eshop_ipr'], array('tip'=>$locale['ESHP593']));
+	echo form_text($locale['ESHP577'], 'eshop_noppf', 'eshop_noppf', $settings2['eshop_noppf'], array('placeholder'=>$locale['ESHP578']));
+	echo form_text($locale['ESHP592'], 'eshop_ipr', 'eshop_ipr', $settings2['eshop_ipr'], array('placeholder'=>$locale['ESHP593']));
 	closeside();
 	openside('');
-	echo form_select($locale['ESHP563'], 'eshop_shareing', 'eshop_shareing', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_shareing'], array('tip'=>$locale['ESHP568']));
-	echo form_select($locale['ESHP569'], 'eshop_shopmode', 'eshop_shopmode', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_shopmode'], array('tip'=>$locale['ESHP570']));
+	echo form_select($locale['ESHP563'], 'eshop_shareing', 'eshop_shareing', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_shareing'], array('placeholder'=>$locale['ESHP568']));
+	echo form_select($locale['ESHP569'], 'eshop_shopmode', 'eshop_shopmode', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_shopmode'], array('placeholder'=>$locale['ESHP570']));
 	closeside();
 	openside('');
-	echo form_text($locale['ESHP598'], 'eshop_itembox_w', 'eshop_itembox_w', $settings2['eshop_itembox_w'], array('tip'=>$locale['ESHP599']));
-	echo form_text($locale['ESHP600'], 'eshop_itembox_h', 'eshop_itembox_h', $settings2['eshop_itembox_h'], array('tip'=>$locale['ESHP601']));
+	echo form_text($locale['ESHP598'], 'eshop_itembox_w', 'eshop_itembox_w', $settings2['eshop_itembox_w'], array('placeholder'=>$locale['ESHP599']));
+	echo form_text($locale['ESHP600'], 'eshop_itembox_h', 'eshop_itembox_h', $settings2['eshop_itembox_h'], array('placeholder'=>$locale['ESHP601']));
 	closeside();
 	openside('');
-	echo form_select($locale['ESHP571'], 'eshop_pretext', 'eshop_pretext', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_pretext'], array('tip'=>$locale['ESHP572']));
-	echo form_text($locale['ESHP573'], 'eshop_pretext_w', 'eshop_pretext_w', $settings2['eshop_pretext_w'], array('tip'=>$locale['ESHP574']));
+	echo form_select($locale['ESHP571'], 'eshop_pretext', 'eshop_pretext', array('1'=>$locale['on'], '0'=>$locale['off']), $settings2['eshop_pretext'], array('placeholder'=>$locale['ESHP572']));
+	echo form_text($locale['ESHP573'], 'eshop_pretext_w', 'eshop_pretext_w', $settings2['eshop_pretext_w'], array('placeholder'=>$locale['ESHP574']));
 	closeside();
 
 	openside('');
@@ -246,10 +242,10 @@ if (dbrows($result) != 0) {
 	closeside();
 	echo "</div>\n";
 	echo "</div>\n";
-	echo form_button($locale['ESHP700'], 'update_settings', 'update_settings', $locale['ESHP700'], array('class'=>'btn-primary'));
+	echo form_button($locale['ESHP700'], 'update_settings', 'update_settings', $locale['ESHP700'], array('class'=>'btn-success'));
 	echo closeform();
 } else {
-echo admin_message($locale['ESHP501']);
+notify($locale['ESHP501'], '');
 }
 closetable();
 
