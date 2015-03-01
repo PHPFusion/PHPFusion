@@ -50,6 +50,9 @@ html, body {
 	border-bottom: 1px solid rgb(221, 221, 221);
 	transform: rotate(-45deg);
 }
+.btn {
+	font-size: 12px;
+}
 /* Globals */
 h3 {
 	font: 16px 'Lucida Grande', 'Helvetica', 'Arial' !important;
