@@ -176,22 +176,28 @@ class AdminUI {
 	}
 
 	public function boot() {
-		//self::Install_Gallery();
-		define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
-		define("GALLERY_PHOTO_DIR", $this->image_upload_dir.(!SAFEMODE ? "album_".$this->album_id."/" : ""));
-		// set album max order
-		$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
-		/**
-		 * Display the requirements of booting
-		 */
-		$error = self::check_api();
-		if (empty($error)) {
-			self::delete_gallery();
-			self::set_albumDB();
-			self::set_photoDB();
-			self::display_gallery_filters();
-			self::display_gallery();
+		global $locale;
+		if (!function_exists('gd_info')) {
+			//self::Install_Gallery();
+			define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+			define("GALLERY_PHOTO_DIR", $this->image_upload_dir.(!SAFEMODE ? "album_".$this->album_id."/" : ""));
+			// set album max order
+			$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
+			/**
+			 * Display the requirements of booting
+			 */
+			$error = self::check_api();
+			if (empty($error)) {
+				self::delete_gallery();
+				self::set_albumDB();
+				self::set_photoDB();
+				self::display_gallery_filters();
+				self::display_gallery();
+			}
+		} else {
+			notify("gd_info() ".$locale['na'], '');
 		}
+
 	}
 
 	/**
