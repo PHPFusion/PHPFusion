@@ -16,25 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("S2") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('S2');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
-
+add_to_breadcrumbs(array('link'=>ADMIN."settings_time.php".$aidlink, 'title'=>$locale['time_settings']));
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	if (!defined('FUSION_NULL')) {
@@ -73,13 +58,11 @@ if (isset($_POST['savesettings'])) {
 		redirect(FUSION_SELF.$aidlink."&error=".$error);
 	}
 }
-
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
-
 $timezones = timezone_abbreviations_list();
 $timezoneArray = array();
 foreach ($timezones as $zones) {
@@ -91,22 +74,28 @@ foreach ($timezones as $zones) {
 		}
 	}
 }
-
 unset($dummy);
 unset($timezones);
-
 $timestamp = time()+($settings2['timeoffset']*3600);
-
 $date_opts = array();
 foreach ($locale['dateformats'] as $dateformat) {
 	$date_opts[$dateformat] = strftime($dateformat, $timestamp);
 }
 unset($dateformat);
-
-opentable($locale['400']);
-
+opentable($locale['time_settings']);
+if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
+	if ($_GET['error'] == 0) {
+		$message = $locale['900'];
+	} elseif ($_GET['error'] == 1) {
+		$message = $locale['901'];
+	}
+	if (isset($message)) {
+		echo admin_message($message);
+	}
+}
+echo "<div class='well'>".$locale['time_description']."</div>\n";
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-echo "<table class='table table-responsive center'>\n<tbody>\n<tr>\n";
+echo "<table class='table table-condensed table-hover table-responsive'>\n<tbody>\n<tr>\n";
 echo "<td valign='top' width='40%' class='tbl'><strong>".$locale['458']." (".$locale['459']."):</strong></td>\n";
 echo "<td width='60%' class='tbl'>".strftime($settings2['longdate'], (time())+($settings2['serveroffset']*3600))."</td>\n";
 echo "</tr>\n<tr>\n";
@@ -115,45 +104,27 @@ echo "<td class='tbl'>".showdate("longdate", time())."</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td valign='top' class='tbl'><strong>".$locale['458']." (".$locale['461']."):</strong></td>\n";
 echo "<td class='tbl'>".strftime($settings2['longdate'], time()+(($settings2['serveroffset']+$settings2['timeoffset'])*3600))."</td>\n";
-echo "</tr>\n<tr>\n";
-echo "<td class='tbl2' colspan='2'>\n<strong>".$locale['400']." - ".$locale['450']."</strong>\n</td>\n";
-echo "</tr>\n<tr>\n";
-echo "<td valign='top' class='tbl'>\n<label for='shortdate'>".$locale['451']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'shortdate', 'shortdate', $date_opts, $settings2['shortdate'], array('placeholder' => $locale['455']));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td valign='top' class='tbl'>\n<label for='longdate'>".$locale['452']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'longdate', 'longdate', $date_opts, $settings2['longdate'], array('placeholder' => $locale['455']));
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td valign='top' class='tbl'>\n<label for='forumdatetext'>".$locale['453']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'forumdate', 'forumdate', $date_opts, $settings2['forumdate'], array('placeholder' => $locale['455']));
-echo "</tr>\n<tr>\n";
-echo "<td valign='top' class='tbl'>\n<label for='newsdate'>".$locale['457']."</label></td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'newsdate', 'newsdate', $date_opts, $settings2['newsdate'], array('placeholder' => $locale['455']));
-echo "</tr>\n<tr>\n";
-echo "<td valign='top' class='tbl'>\n<label for='subheaderdate'>".$locale['454']."</label>\n</td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'subheaderdate', 'subheaderdate', $date_opts, $settings2['subheaderdate'], array('placeholder' => $locale['455']));
-echo "</tr>\n<tr>\n";
-echo "<td class='tbl'>\n<label for='serveroffset'>".$locale['462']."</label>\n<br /><span class='small'>(".$locale['463'].")</span></td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'serveroffset', 'serveroffset', $timezoneArray, $settings2['serveroffset']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl'>\n<label for='timeoffset'>".$locale['456']."</label>\n</td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'timeoffset', 'timeoffset', $timezoneArray, $settings2['timeoffset']);
-echo "</tr>\n<tr>\n";
-echo "<td class='tbl'>\n<label for='default_timezone'>".$locale['464']."</label>\n</td>\n";
-echo "<td class='tbl'>\n";
-echo form_select('', 'default_timezone', 'default_timezone', $timezoneArray, $settings2['default_timezone']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td align='center' colspan='2' class='tbl'><br />\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
-echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
-closetable();
+echo "</tr>\n</tbody>";
+echo "</table>\n";
 
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
+openside('');
+echo form_select($locale['451'], 'shortdate', 'shortdate', $date_opts, $settings2['shortdate'], array('placeholder' => $locale['455']));
+echo form_select($locale['452'], 'longdate', 'longdate', $date_opts, $settings2['longdate'], array('placeholder' => $locale['455']));
+echo form_select($locale['453'], 'forumdate', 'forumdate', $date_opts, $settings2['forumdate'], array('placeholder' => $locale['455']));
+echo form_select($locale['457'], 'newsdate', 'newsdate', $date_opts, $settings2['newsdate'], array('placeholder' => $locale['455']));
+echo form_select($locale['454'], 'subheaderdate', 'subheaderdate', $date_opts, $settings2['subheaderdate'], array('placeholder' => $locale['455']));
+closeside();
+echo "</div>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
+openside('');
+echo form_select($locale['463'], 'serveroffset', 'serveroffset', $timezoneArray, $settings2['serveroffset']);
+echo form_select($locale['456'], 'timeoffset', 'timeoffset', $timezoneArray, $settings2['timeoffset']);
+echo form_select($locale['464'], 'default_timezone', 'default_timezone', $timezoneArray, $settings2['default_timezone']);
+closeside();
+echo "</div>\n</div>\n";
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo closeform();
+closetable();
 require_once THEMES."templates/footer.php";
-?>

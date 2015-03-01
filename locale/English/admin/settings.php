@@ -321,6 +321,7 @@ $locale['misc_description'] = "The configuration settings for Email, Authenticat
 $locale['message_description'] = "The configuration settings for Private Messaging system.";
 $locale['register_description'] = "The configuration settings for User Registration system.";
 $locale['security_description'] = "The configuration settings for Security system.";
+$locale['time_description'] = "The configuration settings for server Time and Date system.";
 
 $locale['blog_settings'] = 'Blog Settings';
 $locale['download_settings'] = 'Download Settings';
@@ -334,5 +335,6 @@ $locale['news_settings'] = 'News Settings';
 $locale['message_settings'] = 'Private Messages Settings';
 $locale['register_settings'] = 'Registration Settings';
 $locale['security_settings'] = 'Security Settings';
+$locale['time_settings'] = 'Time Date Settings';
 
 ?>
