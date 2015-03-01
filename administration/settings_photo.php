@@ -18,9 +18,8 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 
-if (!checkrights("S5") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+//if (!checkrights("S5") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) redirect(BASEDIR);
+
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
@@ -169,105 +168,88 @@ while ($data = dbarray($result)) {
 }
 
 opentable($locale['400']);
-
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-
-echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='thumb_w'>".$locale['601']."</label>\n<span class='small2'>".$locale['604']."</span>\n<br/>\n";
-echo form_text('', 'thumb_w', 'thumb_w', $settings2['thumb_w'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1));
-echo "<i class='entypo icancel pull-left m-r-10 m-l-10 m-t-10'></i>\n";
-echo form_text('', 'thumb_h', 'thumb_h', $settings2['thumb_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1));
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='photo_w'>".$locale['602']."</label>\n<span class='small2'>".$locale['604']."</span>\n<br/>\n";
-echo form_text('', 'photo_w', 'photo_w', $settings2['photo_w'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1));
-echo "<i class='entypo icancel pull-left m-r-10 m-l-10 m-t-10'></i>\n";
-echo form_text('', 'photo_h', 'photo_h', $settings2['photo_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1));
-echo "</div>\n";
-echo "<div class='clearfix'>\n";
-echo "<label for='photo_max_w'>".$locale['603']."</label>\n<span class='small2'>".$locale['604']."</span>\n<br/>\n";
-echo form_text('', 'photo_max_w', 'photo_max_w', $settings2['photo_max_w'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1));
-echo "<i class='entypo icancel pull-left m-r-10 m-l-10 m-t-10'></i>\n";
-echo form_text('', 'photo_max_h', 'photo_max_h', $settings2['photo_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1));
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='calc_b'>".$locale['605']."</label><br/>\n";
-
-function calculate_byte($download_max_b) {
-	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
-	foreach ($calc_opts as $byte => $val) {
-		if ($download_max_b/$byte <= 999) {
-			return $byte;
-		}
-	}
-	return 1000000;
-}
-
+$gd_opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
+$choice_opts = array('1' => $locale['518'], '0' => $locale['519']);
 $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 $calc_c = calculate_byte($settings2['photo_max_b']);
 $calc_b = $settings2['photo_max_b']/$calc_c;
 
-echo form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => '4', 'class' => 'pull-left m-r-10'));
-echo form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'));
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='thumb_compression'>".$locale['606']."</label>\n<br/>\n";
-$opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
-echo form_select('', 'thumb_compression', 'thumb_compression', $opts, $settings2['thumb_compression']);
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='thumbs_per_row'>".$locale['609']."</label>\n<br/>\n";
-echo form_text('', 'thumbs_per_row', 'thumbs_per_row', $settings2['thumbs_per_row'], array('max_length' => 2));
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='thumbs_per_page'>".$locale['610']."</label><br/>\n";
-echo form_text('', 'thumbs_per_page', 'thumbs_per_page', $settings2['thumbs_per_page'], array('max_length' => 2));
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-$yes_no_array = array('1' => $locale['518'], '0' => $locale['519']);
-echo "<label for='photo_watermark'>".$locale['611']."</label>\n<br/>\n";
-echo form_select('', 'photo_watermark', 'photo_watermark', $yes_no_array, $settings2['photo_watermark']);
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='photo_watermark_save'>".$locale['617']."</label>\n<span class='small2'>".$locale['618']."</span>\n<br/>\n";
-echo form_select('', 'photo_watermark_save', 'photo_watermark_save', $yes_no_array, $settings2['photo_watermark_save']);
-echo form_button($locale['619'], 'delete_watermarks', 'delete_watermarks', $locale['619'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0, 'class' => 'm-t-10 m-b-10 btn-primary'));
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='photo_watermark_image'>".$locale['612']."</label><br/>\n";
-echo form_text('', 'photo_watermark_image', 'photo_watermark_image', $settings2['photo_watermark_image'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='photo_watermark_text'>".$locale['613']."</label><br/>\n";
-echo form_select('', 'photo_watermark_text', 'photo_watermark_text', $yes_no_array, $settings2['photo_watermark_text'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='photo_watermark_text_color1'>".$locale['614']."</label><br/>\n";
-echo form_colorpicker('', 'photo_watermark_text_color1', 'photo_watermark_text_color1', $settings2['photo_watermark_text_color1'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='photo_watermark_text_color2'>".$locale['615']."</label><br/>\n";
-echo form_colorpicker('', 'photo_watermark_text_color2', 'photo_watermark_text_color2', $settings2['photo_watermark_text_color2'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo "</div>\n";
-
-echo "<div class='clearfix'>\n";
-echo "<label for='photo_watermark_text_color3'>".$locale['616']."</label><br/>\n";
-echo form_colorpicker('', 'photo_watermark_text_color3', 'photo_watermark_text_color3', $settings2['photo_watermark_text_color3'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo "</div>\n";
-echo "</div></div>\n";
-
+echo "<div class='row'><div class='col-xs-12 col-sm-9'>\n";
+openside('');
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='thumb_w'>".$locale['601']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'thumb_w', 'thumb_w', $settings2['thumb_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('', 'thumb_h', 'thumb_h', $settings2['thumb_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>
+";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='photo_max_w'>".$locale['602']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'photo_w', 'photo_w', $settings2['photo_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('', 'photo_h', 'photo_h', $settings2['photo_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='photo_w'>".$locale['603']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'photo_max_w', 'photo_max_w', $settings2['photo_max_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('', 'photo_max_h', 'photo_max_h', $settings2['photo_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='calc_b'>".$locale['605']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	</div>
+</div>
+";
+closeside();
+openside('');
+echo form_select($locale['606'], 'thumb_compression', 'thumb_compression', $gd_opts, $settings2['thumb_compression'], array('inline'=>1, 'width'=>'250px'));
+echo form_text($locale['609'], 'thumbs_per_row', 'thumbs_per_row', $settings2['thumbs_per_row'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
+echo form_text($locale['610'], 'thumbs_per_page', 'thumbs_per_page', $settings2['thumbs_per_page'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
+closeside();
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
+echo "</div><div class='col-xs-12 col-sm-3'>\n";
+echo form_button($locale['750'], 'savesettings', 'savesettings2', $locale['750'], array('class' => 'btn-primary m-b-10'));
+openside('');
+echo form_select($locale['611'], 'photo_watermark', 'photo_watermark', $choice_opts, $settings2['photo_watermark'], array('width'=>'100%'));
+echo form_select($locale['617'], 'photo_watermark_save', 'photo_watermark_save', $choice_opts, $settings2['photo_watermark_save']);
+echo form_button($locale['619'], 'delete_watermarks', 'delete_watermarks', $locale['619'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0, 'class' => 'btn-sm btn-danger', 'icon'=>'fa fa-trash'));
+closeside();
+openside('');
+echo form_text($locale['612'], 'photo_watermark_image', 'photo_watermark_image', $settings2['photo_watermark_image'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_select($locale['613'], 'photo_watermark_text', 'photo_watermark_text', $choice_opts, $settings2['photo_watermark_text'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_colorpicker($locale['614'], 'photo_watermark_text_color1', 'photo_watermark_text_color1', $settings2['photo_watermark_text_color1'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_colorpicker($locale['615'], 'photo_watermark_text_color2', 'photo_watermark_text_color2', $settings2['photo_watermark_text_color2'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_colorpicker($locale['616'], 'photo_watermark_text_color3', 'photo_watermark_text_color3', $settings2['photo_watermark_text_color3'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+closeside();
+echo "</div></div>
+";
+
+
 echo closeform();
 
 closetable();
@@ -294,4 +276,14 @@ add_to_jquery("
         });
     ");
 require_once THEMES."templates/footer.php";
-?>
+
+function calculate_byte($download_max_b) {
+	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+	foreach ($calc_opts as $byte => $val) {
+		if ($download_max_b/$byte <= 999) {
+			return $byte;
+		}
+	}
+	return 1000000;
+}
+
