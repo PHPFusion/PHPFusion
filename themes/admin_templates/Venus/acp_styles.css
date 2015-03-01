@@ -17,7 +17,7 @@
 html, body {
 	background: rgb(255,255,255);
 	background-position: 0px -80%;
-	font: 14px/150% "Helvetica Neue",Arial !important;
+	font: 12px/16px Arial;
 	overflow-x: hidden;
 }
 .breadcrumb {
@@ -26,7 +26,7 @@ html, body {
 
 /* Globals */
 h3 {
-	font: 20px 'Lucida Grande', 'Helvetica', 'Arial' !important;
+	font: 16px 'Lucida Grande', 'Helvetica', 'Arial' !important;
 	font-weight: 600 !important;
 	color: rgb(48, 81, 132);
 	padding-bottom:10px;
@@ -97,7 +97,7 @@ table {
 	outline: 0;
 }
 .icon-container .icon-title  {
-	font-size:16px;
+	font-size:14px;
 	display: inline-block;
 	color: rgb(51,51,51);
 }
@@ -253,7 +253,7 @@ legend {
 		transition: left 0.20s ease-in;
 	}
 	.acp {
-		padding-left: 250px;
+		padding-left: 220px;
 		position: relative;
 		-webkit-transition: all 0.2s ease-in;
 		-moz-transition: all 0.2s ease-in;
@@ -266,7 +266,7 @@ legend {
 	}
 
 	.brand {
-		width:250px;
+		width:220px;
 		padding: 11px;
 		overflow:hidden;
 		border-right: 1px solid rgb(170, 183, 205);
@@ -275,7 +275,7 @@ legend {
 		padding-left: 80px;
 		font-weight: 600;
 		color: rgb(0, 0, 0);
-		font-size: 19px;
+		font-size: 16px;
 		margin-top: -15px;
 		margin-bottom: 4px;
 	}
@@ -313,7 +313,7 @@ legend {
 	width:251px;
 }
 #acp-left.affix {
-	top: 50px;
+	top: 45px;
 }
 
 #acp-content {
@@ -494,7 +494,7 @@ legend {
 	background-color: rgb(255,255,255);
 	color: rgb(117, 127, 140);
 	text-shadow: 0px 1px rgb(255, 255, 255);
-	border-bottom: 1px solid rgb(235, 235, 235);
+	border-bottom: 1px solid rgb(170, 183, 205);
 }
 .admin-horizontal-link > li {
 	margin-right:30px;
@@ -530,7 +530,7 @@ nav ul > li {
 	transition: color 0.1s ease-in-out;
 }
 nav > ul > li > a {
-	padding:15px !important;
+	padding:13px !important;
 	color: #444;
 	border-left: 1px solid transparent;
 	border-right: 1px solid transparent;
@@ -621,8 +621,8 @@ nav > ul > li > a:hover {
 
 #panel-side1 li, #panel-side2 li, #panel-side3 li, #panel-side4 li, #panel-side5 li, #panel-side6 li {
     display: block;
-    margin: 30;
-    padding: 10;
+    margin: 30px;
+    padding: 10px;
 }
 
 #panel-side1 li img.handle, #panel-side2 li img.handle, #panel-side3 li img.handle, #panel-side4 li img.handle, #panel-side5 li img.handle, #panel-side6 li img.handle {
@@ -630,5 +630,5 @@ nav > ul > li > a:hover {
 }
 
 .profile_category_name {
-	font-size:18px;
+	font-size:14px;
 }

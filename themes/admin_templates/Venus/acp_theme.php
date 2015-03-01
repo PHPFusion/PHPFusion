@@ -33,7 +33,7 @@ function open_ap() {
 		add_to_head("<link rel='stylesheet' href='".THEMES."templates/setup_styles.css' type='text/css' />");
 		echo "<aside class='block-container'>\n";
 		echo "<div class='block'>\n";
-		echo "<div class='block-content clearfix' style='font-size:14px;'>\n";
+		echo "<div class='block-content clearfix' style='font-size:13px;'>\n";
 		echo "<h6><strong>".$locale['280']."</strong></h6>\n";
 		echo "<img class='pf-logo' src='".IMAGES."php-fusion-icon.png' class='position-absolute'/>";
 		echo "<p class='text-right mid-opacity text-smaller'>".$locale['version'].$settings['version']."</p>";
@@ -51,7 +51,7 @@ function open_ap() {
 		include THEMES."admin_templates/Venus/includes/header.php";
 		echo "<div class='display-table' style='height:100%; width:100%;'>\n";
 		echo "<!-- begin leftnav -->\n";
-		echo "<div id='acp-left' class='pull-left off-canvas ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' data-spy='affix' data-offset-top='0' data-offset-bottom='0' style='width:250px; height:100%;'>\n"; // collapse to top menu on sm and xs
+		echo "<div id='acp-left' class='pull-left off-canvas ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' data-spy='affix' data-offset-top='0' data-offset-bottom='0' style='width:220px; height:100%;'>\n"; // collapse to top menu on sm and xs
 		echo "<div class='panel panel-default admin' style='border:0px; box-shadow: none;'><div class='panel-body clearfix'>\n";
 		echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '50px', '', '', '')."</div>\n";
 		echo "<span class='display-block m-t-5'><strong>\n".ucfirst($userdata['user_name'])."</strong>\n<br/>".getuserlevel($userdata['user_level'])."</span></div>\n";
@@ -60,7 +60,7 @@ function open_ap() {
 		echo "</div>\n";
 		echo "<!--end leftnav -->\n";
 		echo "<!-- begin main content -->\n";
-		echo "<div id='acp-main' class='display-block acp ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' style='margin-top:50px; width:100%; vertical-align:top;'>\n";
+		echo "<div id='acp-main' class='display-block acp ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' style='margin-top:45px; width:100%; vertical-align:top;'>\n";
 
 		echo "<div id='acp-toolkit' data-offset-top='0' data-spy='affix' class='hidden-xs hidden-sm col-md-12 col-lg-12 m-r-0' style='width:100%; z-index:1;' role='toolkits'>\n";
 		echo "<nav>".$admin->horiziontal_admin_nav()."</nav>";

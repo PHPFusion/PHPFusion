@@ -16,23 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("S3") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
-
+pageAccess('S3');
+add_to_breadcrumbs(array('link'=>ADMIN.'settings_forum.php'.$aidlink, 'title'=>$locale['forum_settings']));
 if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
 	$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
 	if (dbrows($result)) {
@@ -81,38 +68,59 @@ $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
-function calculate_byte($download_max_b) {
-	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
-	foreach ($calc_opts as $byte => $val) {
-		if ($download_max_b/$byte <= 999) {
-			return $byte;
-		}
-	}
-	return 1000000;
-}
-$yes_no_array = array('1' => $locale['yes'], '0' => $locale['no']);
 
-opentable($locale['400']);
+/**
+ * Options for dropdown field
+ */
+$yes_no_array = array('1' => $locale['yes'], '0' => $locale['no']);
+$num_opts = range(1,30);
+
+opentable($locale['forum_settings']);
+if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
+	if ($_GET['error'] == 0) {
+		$message = $locale['900'];
+	}
+	if (isset($message)) {
+		echo admin_message($message);
+	}
+}
 echo openform('settingsform', 'settingsfrom', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-echo "<div class='panel panel-default'><div class='panel-body'>\n";
-echo "<div class='clearfix'>\n";
+echo "<div class='col-xs-12 col-sm-8'>\n";
+openside('');
 echo "<span class='small pull-right'>* ".$locale['506']."</span><br/>\n";
-$num_opts = array('5' => '5', '10' => '10', '15' => '15', '20' => '20',);
 echo form_select($locale['505'], 'numofthreads', 'numofthreads', $num_opts, $settings2['numofthreads'], array('error_text' => $locale['error_value'], 'inline' => 1));
-echo "</div>\n";
-echo form_select($locale['507'], 'forum_ips', 'forum_ips', $yes_no_array, $settings2['forum_ips'], array('error_text' => $locale['error_value'], 'inline' => 1));
+closeside();
+
+openside('');
 echo form_select($locale['512'], 'thread_notify', 'thread_notify', $yes_no_array, $settings2['thread_notify'], array('error_text' => $locale['error_value'], 'inline' => 1));
+closeside();
+
+openside('');
+echo "<span class='pull-right position-absolute small' style='right:30px;'>".$locale['537']."</span>\n";
+echo form_select($locale['536'], 'forum_edit_timelimit', 'forum_edit_timelimit', array('0','10','30','45','60'), $settings2['forum_edit_timelimit'], array('max_length' => 2, 'width' => '100px', 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select($locale['507'], 'forum_ips', 'forum_ips', $yes_no_array, $settings2['forum_ips'], array('error_text' => $locale['error_value'], 'inline' => 1));
 echo form_select($locale['520'], 'forum_ranks', 'forum_ranks', $yes_no_array, $settings2['forum_ranks'], array('error_text' => $locale['error_value'], 'inline' => 1));
 echo form_select($locale['539'], 'forum_last_post_avatar', 'forum_last_post_avatar', $yes_no_array, $settings2['forum_last_post_avatar'], array('error_text' => $locale['error_value'], 'inline' => 1));
 echo form_select($locale['521'], 'forum_edit_lock', 'forum_edit_lock', $yes_no_array, $settings2['forum_edit_lock'], array('error_text' => $locale['error_value'], 'inline' => 1));
+closeside();
+
+
+
+echo "<div class='panel panel-default'><div class='panel-body'>\n";
+
+
+
+
 echo "<div class='clearfix'>\n";
-echo "<span class='pull-right position-absolute small' style='right:30px;'>".$locale['537']."</span>\n";
-echo form_text($locale['536'], 'forum_edit_timelimit', 'forum_edit_timelimit', $settings2['forum_edit_timelimit'], array('max_length' => 2, 'width' => '100px', 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'inline' => 1));
+
 echo "</div>\n";
+
+
 echo form_select($locale['538'], 'forum_editpost_to_lastpost', 'forum_editpost_to_lastpost', $yes_no_array, $settings2['forum_editpost_to_lastpost'], array('error_text' => $locale['error_value'], 'inline' => 1));
+
 echo "</div>\n</div>\n"; // end panel
 echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
+
 echo "<div class='panel panel-default'><div class='panel-body'>\n";
 echo "<div class='clearfix'>\n";
 echo "<span class='pull-right small'>".$locale['509']."</span>";
@@ -164,4 +172,13 @@ echo closeform();
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>
+
+function calculate_byte($download_max_b) {
+	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+	foreach ($calc_opts as $byte => $val) {
+		if ($download_max_b/$byte <= 999) {
+			return $byte;
+		}
+	}
+	return 1000000;
+}
