@@ -17,36 +17,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-//if (!checkrights("S5") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) redirect(BASEDIR);
-
-
+if (!checkrights("S5") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) redirect(BASEDIR);
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
-
-function color_mapper($field, $value) {
-	global $settings2;
-	$cvalue[] = "00";
-	$cvalue[] = "33";
-	$cvalue[] = "66";
-	$cvalue[] = "99";
-	$cvalue[] = "CC";
-	$cvalue[] = "FF";
-	$select = "";
-	$select = "<select name='".$field."' class='textbox' onchange=\"document.getElementById('preview_".$field."').style.background = '#' + this.options[this.selectedIndex].value;\" ".(!$settings2['photo_watermark'] ? "disabled='disabled'" : "").">\n";
-	for ($ca = 0; $ca < count($cvalue); $ca++) {
-		for ($cb = 0; $cb < count($cvalue); $cb++) {
-			for ($cc = 0; $cc < count($cvalue); $cc++) {
-				$hcolor = $cvalue[$ca].$cvalue[$cb].$cvalue[$cc];
-				$select .= "<option value='".$hcolor."'".($value == $hcolor ? " selected='selected' " : " ")."style='background-color:#".$hcolor.";'>#".$hcolor."</option>\n";
-			}
-		}
-	}
-	$select .= "</select>\n";
-	return $select;
-}
-
 if (isset($_POST['delete_watermarks'])) {
 	define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 	$result = dbquery("SELECT album_id,photo_filename FROM ".DB_PHOTOS." ORDER BY album_id, photo_id");
@@ -290,4 +263,25 @@ function calculate_byte($download_max_b) {
 	}
 	return 1000000;
 }
-
+function color_mapper($field, $value) {
+	global $settings2;
+	$cvalue[] = "00";
+	$cvalue[] = "33";
+	$cvalue[] = "66";
+	$cvalue[] = "99";
+	$cvalue[] = "CC";
+	$cvalue[] = "FF";
+	$select = "";
+	$select = "<select name='".$field."' class='textbox' onchange=\"document.getElementById('preview_".$field."').style.background = '#' + this.options[this.selectedIndex].value;\" ".(!$settings2['photo_watermark'] ? "disabled='disabled'" : "").">\n";
+	for ($ca = 0; $ca < count($cvalue); $ca++) {
+		for ($cb = 0; $cb < count($cvalue); $cb++) {
+			for ($cc = 0; $cc < count($cvalue); $cc++) {
+				$hcolor = $cvalue[$ca].$cvalue[$cb].$cvalue[$cc];
+				$select .= "<option value='".$hcolor."'".($value == $hcolor ? " selected='selected' " : " ")."style='background-color:#".$hcolor.";'>#".$hcolor."</option>\n";
+			}
+		}
+	}
+	$select .= "</select>\n";
+	return $select;
+}
+?>
