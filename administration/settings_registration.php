@@ -16,37 +16,20 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("S4") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('S4');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
+add_to_breadcrumbs(array('link'=>ADMIN."settings_register.php".$aidlink, 'title'=>$locale['register_settings']));
 if ($settings['tinymce_enabled']) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 } else {
 	require_once INCLUDES."html_buttons_include.php";
 }
-
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
-
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
-
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	if (addslash($_POST['license_agreement']) != $settings2['license_agreement']) {
@@ -86,45 +69,36 @@ if (isset($_POST['savesettings'])) {
 	redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
-opentable($locale['400']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
-echo "<table class='table table-responsive center'>\n<tbody>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='enable_registration'>".$locale['551']."</label>\n</td>\n";
-echo "<td width='50%' class='tbl'>\n";
-$opts = array('1' => $locale['518'], '0' => $locale['519']);
-echo form_select('', 'enable_registration', 'enable_registration', $opts, $settings2['enable_registration']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='email_verification'>".$locale['552']."</label></td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_select('', 'email_verification', 'email_verification', $opts, $settings2['email_verification']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='admin_activation'>".$locale['557']."</td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_select('', 'admin_activation', 'admin_activation', $opts, $settings2['admin_activation']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='display_validation'>".$locale['553']."</td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_select('', 'display_validation', 'display_validation', $opts, $settings2['display_validation']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'><label for='enable_terms'>".$locale['558']."</td>\n";
-echo "<td width='50%' class='tbl'>\n";
-echo form_select('', 'enable_terms', 'enable_terms', $opts, $settings2['enable_terms']);
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl' colspan='2'><label for='email_license_agreement'>".$locale['559']."</td>\n";
-echo "</td>\n</tr>\n<tr>\n";
-echo "<td class='tbl' colspan='2'>\n";
-echo form_textarea('', 'license_agreement', 'enable_license_agreement', $settings2['license_agreement']);
-echo "</td>\n</tr>\n";
-if (!$settings['tinymce_enabled']) {
-	echo "<tr>\n<td class='tbl' colspan='2'>\n";
-	echo display_html("settingsform", "license_agreement", TRUE, TRUE, TRUE);
-	echo "</td>\n</tr>\n";
-}
-echo "<tr>\n";
-echo "<td align='center' colspan='2' class='tbl'><br />\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
-echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
-closetable();
+opentable($locale['register_settings']);
 
+if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
+	if ($_GET['error'] == 0) {
+		$message = $locale['900'];
+	} elseif ($_GET['error'] == 1) {
+		$message = $locale['901'];
+	}
+	if (isset($message)) {
+		echo admin_message($message);
+	}
+}
+echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+$opts = array('1' => $locale['518'], '0' => $locale['519']);
+echo "<div class='well'>".$locale['register_description']."</div>\n";
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-8'>\n";
+openside('');
+echo form_select($locale['558'], 'enable_terms', 'enable_terms', $opts, $settings2['enable_terms']);
+echo form_textarea($locale['559'], 'license_agreement', 'enable_license_agreement', $settings2['license_agreement'], array('form_name'=>'settingsform', 'autosize'=>1, 'html'=>!$settings['tinymce_enabled'] ? 1 : 0));
+closeside();
+echo "</div><div class='col-xs-12 col-sm-4'>\n";
+openside('');
+echo form_select($locale['551'], 'enable_registration', 'enable_registration', $opts, $settings2['enable_registration']);
+echo form_select($locale['552'], 'email_verification', 'email_verification', $opts, $settings2['email_verification']);
+echo form_select($locale['557'], 'admin_activation', 'admin_activation', $opts, $settings2['admin_activation']);
+echo form_select($locale['553'], 'display_validation', 'display_validation', $opts, $settings2['display_validation']);
+closeside();
+echo "</div>\n</div>\n";
+echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo closeform();
+closetable();
 require_once THEMES."templates/footer.php";
-?>
