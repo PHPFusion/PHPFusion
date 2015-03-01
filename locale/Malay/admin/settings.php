@@ -307,4 +307,14 @@ $locale['error_type'] = 'Please enter Extension Type.';
 $locale['error_width'] = 'Please enter Width.';
 $locale['error_height'] = 'Please enter Height.';
 $locale['error_value'] = 'Please enter a value.';
+
+// Please translate following lines
+$locale['blog_settings'] = 'Blog Settings';
+$locale['download_settings'] = 'Download Settings';
+$locale['eshop_settings'] = 'Eshop Settings';
+$locale['forum_settings'] = 'Forum Settings';
+$locale['ipp_settings'] = 'Items Per Page Settings';
+$locale['photo_settings'] = 'Photo Settings';
+$locale['main_settings'] = 'Main Settings';
+$locale['misc_settings'] = 'Miscellaneous Settings';
 ?>

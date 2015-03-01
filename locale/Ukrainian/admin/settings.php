@@ -324,4 +324,15 @@ $locale['error_type'] = 'Будь ласка, введіть тип файлу (
 $locale['error_width'] = 'Будь ласка, введіть ширину.';
 $locale['error_height'] = 'Будь ласка, введіть висоту.';
 $locale['error_value'] = 'Будь ласка, введіть значення.';
+
+// Please translate following lines
+$locale['blog_settings'] = 'Blog Settings';
+$locale['download_settings'] = 'Download Settings';
+$locale['eshop_settings'] = 'Eshop Settings';
+$locale['forum_settings'] = 'Forum Settings';
+$locale['ipp_settings'] = 'Items Per Page Settings';
+$locale['photo_settings'] = 'Photo Settings';
+$locale['main_settings'] = 'Main Settings';
+$locale['misc_settings'] = 'Miscellaneous Settings';
+
 ?>

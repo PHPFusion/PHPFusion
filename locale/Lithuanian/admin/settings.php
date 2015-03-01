@@ -310,4 +310,14 @@ $locale['error_type'] = 'Prašom nurodyti papildinio tipą.';
 $locale['error_width'] = 'Prašom įvesti plotį.';
 $locale['error_height'] = 'Prašom įvesti aukštį.';
 $locale['error_value'] = 'Prašom įvesti reikšmę.';
+
+// Please translate following lines
+$locale['blog_settings'] = 'Blog Settings';
+$locale['download_settings'] = 'Download Settings';
+$locale['eshop_settings'] = 'Eshop Settings';
+$locale['forum_settings'] = 'Forum Settings';
+$locale['ipp_settings'] = 'Items Per Page Settings';
+$locale['photo_settings'] = 'Photo Settings';
+$locale['main_settings'] = 'Main Settings';
+$locale['misc_settings'] = 'Miscellaneous Settings';
 ?>
