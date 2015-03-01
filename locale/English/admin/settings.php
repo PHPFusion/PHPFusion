@@ -320,6 +320,7 @@ $locale['main_description'] = "The configuration settings for the main system.";
 $locale['misc_description'] = "The configuration settings for Email, Authentication method, Comments, Ratings, Avatars, Social Graphs and other Administraiton options.";
 $locale['message_description'] = "The configuration settings for Private Messaging system.";
 $locale['register_description'] = "The configuration settings for User Registration system.";
+$locale['security_description'] = "The configuration settings for Security system.";
 
 $locale['blog_settings'] = 'Blog Settings';
 $locale['download_settings'] = 'Download Settings';
@@ -332,5 +333,6 @@ $locale['misc_settings'] = 'Miscellaneous Settings';
 $locale['news_settings'] = 'News Settings';
 $locale['message_settings'] = 'Private Messages Settings';
 $locale['register_settings'] = 'Registration Settings';
+$locale['security_settings'] = 'Security Settings';
 
 ?>
