@@ -21,11 +21,9 @@
  * */
 
 require_once "../maincore.php";
+pageAccess('F');
 require_once INCLUDES."bbcode_include.php";
 require_once THEMES."templates/render_functions.php";
-if (!checkrights("F") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	//redirect("../index.php");
-}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/forums.php";
@@ -318,7 +316,7 @@ if ((isset($_GET['action']) && ($_GET['action'] == "edit" || $_GET['action'] == 
 }
 
 /* Start Render */
-forum_status_message();
+
 $res = 0;
 if (isset($_POST['init_forum'])) {
 	$data['forum_name'] = form_sanitizer($_POST['forum_name'], '', 'forum_name');
@@ -343,6 +341,7 @@ if ($res == 1 or (isset($_POST['save_forum']) && defined('FUSION_NULL')) or isse
 		echo $defender->showNotice();
 	}
 	forum_jumper();
+	forum_status_message();
 	view_forums();
 	quick_create_forum();
 }
@@ -799,7 +798,7 @@ function forum_status_message() {
 			$message = $locale['forum_notice_10'];
 		}
 		if (isset($message)) {
-			echo "<div id='close-message'><div class='alert alert-info m-t-10 admin-message'>".$message."</div></div>\n";
+			echo admin_message($message);
 		}
 	}
 }

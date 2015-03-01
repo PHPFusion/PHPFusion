@@ -69,7 +69,7 @@ elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
 
 // view forum.
 elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['parent_id']) && isnum($_GET['parent_id']) && isset($_GET['viewforum'])) {
-
+	
 	//add_to_title($locale['global_201'].$fdata['forum_name']);
 	// Filter core
 	$sort = isset($_GET['sort']) ? $_GET['sort'] : '';
@@ -203,7 +203,7 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
 				LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
-				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
+				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND ".groupaccess('f2.forum_access')."
 				AND f.forum_id='".$_GET['forum_id']."' OR f.forum_cat='".$_GET['forum_id']."' OR f.forum_branch='".$_GET['forum_branch']."'
 				ORDER BY forum_cat ASC
 				");
@@ -230,7 +230,7 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 				define_forum_mods($data);
 				// get thread and apply filter
 				$info['thread_item_rows'] = dbcount("('t.thread_id')",
-													DB_FORUM_THREADS." t
+												DB_FORUM_THREADS." t
 												LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
 												LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
 												LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id
@@ -247,13 +247,14 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
                 a.attach_name, p.forum_poll_title,
                 count(v.post_id) AS vote_count
                 FROM ".DB_FORUM_THREADS." t
+                INNER JOIN ".DB_FORUMS." forum on t.forum_id = t.forum_id
                 LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
                 LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
                 LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
-                WHERE t.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' $sql_condition
+                WHERE t.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' AND ".groupaccess('fourm.forum_access')." $sql_condition
                 GROUP BY t.thread_id $sql_order LIMIT ".$_GET['rowstart'].", ".$info['threads_per_page']."
                 ");
 
