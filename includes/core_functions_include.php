@@ -399,7 +399,8 @@ function clean_request($request_addition, array $filter_array = array(), $keep_f
 	$url = parse_url(htmlspecialchars_decode(FUSION_REQUEST));
 	$_basename = explode('?', $path['basename']);
 	$basename = $_basename[0];
-	parse_str($url['query'], $fusion_query); // this is original.
+	$fusion_query = '';
+	if (isset($url['query'])) parse_str($url['query'], $fusion_query); // this is original.
 	switch($keep_filtered) {
 		case true: // to remove everything except specified in $filter_array
 			if (!empty($fusion_query)) {
