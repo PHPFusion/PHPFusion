@@ -3,6 +3,7 @@
 $locale['forum_000'] = 'Create Forum';
 $locale['forum_000a'] = 'Update Forum';
 $locale['forum_000b'] = 'Current Forums';
+$locale['forum_000c'] = 'Forum Board Index';
 $locale['forum_001'] = 'Create New Forum';
 $locale['forum_002'] = 'Edit Forum';
 $locale['forum_003'] = 'Delete Forum';
@@ -20,7 +21,7 @@ $locale['forum_014'] = 'Image URL';
 $locale['forum_015'] = 'Max. filesize: %s and must be image types';
 $locale['forum_016'] = 'If image file is uploaded, the url will not be used.';
 $locale['forum_017'] = 'Forum Rules or Notices';
-//$locale['forum_018'] = 'Use Forum Image';
+
 $locale['forum_019'] = 'Enable Post Merging';
 $locale['forum_020'] = 'Allow Attachment in Posts';
 $locale['forum_021'] = 'Enable Quick Post';
@@ -102,6 +103,7 @@ $locale['forum_notice_8'] = 'Forum Image is successfully removed.';
 $locale['forum_notice_9'] = 'Forum details are successfully updated.';
 $locale['forum_notice_10'] = 'Forum permissions are successfully updated.';
 $locale['forum_notice_11'] = "Forum pruning complete.";
+$locale['forum_notice_13'] = 'Forum ID %d has been sorted and now bears the order %d';
 
 /* Etc */
 $locale['delete_notice'] = 'Delete Forum? Note: This action is irreversible.';
