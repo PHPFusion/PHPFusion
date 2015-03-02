@@ -200,11 +200,12 @@ class ForumAdmin {
 	 * Move forum order up a number
 	 */
 	private function move_up() {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
-			$data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
+			$data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
+			notify($locale['forum_notice_6'], sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
 			redirect(FUSION_SELF.$aidlink.$this->ext."&status=mup");
 		}
 	}
@@ -216,18 +217,10 @@ class ForumAdmin {
 		global $aidlink, $locale;
 		if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
 			// fetches the id of the last forum.
-			print_P($_GET['parent_id']);// must have a cat.
-			$data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
+			$data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
-			//redirect(FUSION_SELF.$aidlink.$this->ext."&status=md");
 			notify($locale['forum_notice_7'], sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
-				//			case 'mup':
-				//$message = $locale['forum_notice_6'];
-				//break;
-			//case 'md':
-				//$message = $locale['forum_notice_7'];
-				//break;
 		}
 	}
 
