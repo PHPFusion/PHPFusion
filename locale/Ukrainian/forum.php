@@ -133,18 +133,18 @@ $locale['forum_0312'] = "Файли";
 $locale['forum_0313'] = "Зображення";
 $locale['forum_0314'] = "Опитування";
 $locale['forum_0320'] = "помилка мови";
-$locale['forum_0325'] = 'Нагороди';
-$locale['forum_0326'] = 'або розпочніть тему';
-$locale['forum_0327'] = 'У цьому розділі теми відсутні';
-$locale['forum_0328'] = 'Розділи відсутні.';
-$locale['forum_0340'] = 'Запитання';
-$locale['forum_0341'] = 'Теми';
+$locale['forum_0325'] = "Нагороди";
+$locale['forum_0326'] = "або розпочніть тему";
+$locale['forum_0327'] = "Теми відсутні";
+$locale['forum_0328'] = "Розділи відсутні";
+$locale['forum_0340'] = "Запитання";
+$locale['forum_0341'] = "Теми";
 $locale['forum_0350'] = " Правила:";
 $locale['forum_0351'] = "Розділи";
 $locale['forum_0352'] = "Оголошення";
 $locale['forum_0360'] = " Відповісти";
 $locale['forum_0361'] = "&middot; сторінка ";
-$locale['forum_0362'] = ' повідомлень ';
+$locale['forum_0362'] = " повідомлень ";
 $locale['forum_0363'] = "Останнє оновлення ";
 $locale['forum_0364'] = " Сайт";
 $locale['forum_0365'] = " Повідомлення";
@@ -152,27 +152,27 @@ $locale['forum_0370'] = "Перегляди";
 $locale['forum_0371'] = "Повідомлення";
 $locale['forum_0372'] = "Оцінки";
 $locale['forum_0373'] = "Останнє повідомлення: ";
-$locale['forum_0374'] = 'Усі теми';
-$locale['forum_0375'] = 'Обговорення';
-$locale['forum_0376'] = 'Приєднання';
-$locale['forum_0377'] = 'Опитування';
-$locale['forum_0378'] = 'Вирішено';
-$locale['forum_0379'] = 'Не вирішено';
-$locale['forum_0380'] = 'Автор';
-$locale['forum_0381'] = 'Опубліковано';
-$locale['forum_0382'] = 'Тема';
-$locale['forum_0383'] = 'Повідомлення';
-$locale['forum_0384'] = 'Перегляди';
-$locale['forum_0385'] = 'за зростанням';
-$locale['forum_0386'] = 'за спаданням';
+$locale['forum_0374'] = "Усі теми";
+$locale['forum_0375'] = "Обговорення";
+$locale['forum_0376'] = "Приєднання";
+$locale['forum_0377'] = "Опитування";
+$locale['forum_0378'] = "Вирішено";
+$locale['forum_0379'] = "Не вирішено";
+$locale['forum_0380'] = "Автор";
+$locale['forum_0381'] = "Опубліковано";
+$locale['forum_0382'] = "Тема";
+$locale['forum_0383'] = "Повідомлення";
+$locale['forum_0384'] = "Перегляди";
+$locale['forum_0385'] = "за зростанням";
+$locale['forum_0386'] = "за спаданням";
 $locale['forum_0387'] = "Весь час";
 $locale['forum_0388'] = "Показати теми з";
 $locale['forum_0389'] = "за ознакою";
-$locale['forum_0390'] = 'Всі теми';
-$locale['forum_0391'] = 'Опубліковано';
-$locale['forum_0395'] = 'Вибір розділуe';
-$locale['forum_0396'] = 'Підтвердження вибору';
-$locale['forum_0397'] = "розділи відсутні.";
+$locale['forum_0390'] = "Всі теми";
+$locale['forum_0391'] = "Опубліковано";
+$locale['forum_0395'] = "Вибір розділу";
+$locale['forum_0396'] = "Підтвердження вибору";
+$locale['forum_0397'] = "Розділи відсутні";
 
 // Post Titles
 $locale['forum_0500'] = "Попередній перегляд теми";
@@ -186,7 +186,7 @@ $locale['forum_0507'] = "Редагувати";
 $locale['forum_0508'] = "Зберегти";
 
 // Post Preview
-$locale['forum_0520'] = "Відсутній текст. Відповідь не буде опублікована, якщо Ви не напишете що-небудь";
+$locale['forum_0520'] = "Відсутній текст. Відповідь не буде опублікована, якщо Ви не напишете що-небудь.";
 $locale['forum_0521'] = "Повідомлення:";
 $locale['forum_0522'] = "Місцезнаходження:";
 $locale['forum_0523'] = "Зареєстровано:";
@@ -263,7 +263,7 @@ $locale['forum_0640'] = "Об&lsquo;єднано ";
 
 // Search Forum Form
 
-$locale['forum_0650'] = 'Попередження про флуд.';
+$locale['forum_0650'] = "Попередження про флуд";
 
 // Forum Notification Email
 $locale['forum_0660'] = "Сповіщення про нове повідомлення у темі - {THREAD_SUBJECT}";
@@ -309,20 +309,20 @@ $locale['forum_0759'] = "Тему оновлено успішно.";
 
 // forum.forms.php
 $locale['forum_2000'] = "Тема: ";
-$locale['forum_2001'] = 'Що у Вас на думці?';
+$locale['forum_2001'] = "Що у Вас на думці?";
 $locale['forum_2002'] = "Re: ";
-$locale['forum_2010'] = 'Голосувати';
+$locale['forum_2010'] = "Голосувати";
 
 // Period for search & filter
-$locale['forum_p000'] = 'Сьогодні';
+$locale['forum_p000'] = "Сьогодні";
 $locale['forum_p001'] = "1 день";
-$locale['forum_p002'] = '2 дні';
-$locale['forum_p007'] = '1 тиждень';
-$locale['forum_p014'] = '2 тижні';
-$locale['forum_p030'] = '1 місяць';
-$locale['forum_p060'] = '2 місяці';
-$locale['forum_p090'] = '3 місяці';
-$locale['forum_p180'] = '6 місяців';
-$locale['forum_p365'] = '1 рік';
+$locale['forum_p002'] = "2 дні";
+$locale['forum_p007'] = "1 тиждень";
+$locale['forum_p014'] = "2 тижні";
+$locale['forum_p030'] = "1 місяць";
+$locale['forum_p060'] = "2 місяці";
+$locale['forum_p090'] = "3 місяці";
+$locale['forum_p180'] = "6 місяців";
+$locale['forum_p365'] = "1 рік";
 $locale['forum_p999'] = "Всі";
 ?>
