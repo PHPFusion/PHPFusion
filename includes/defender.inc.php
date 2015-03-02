@@ -240,10 +240,10 @@ class defender {
 	 */
 	static function display_user_field_session($user_id = FALSE) {
 		$user_id = $user_id && isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."'") ? $user_id : self::set_sessionUserID();
-		if (isset($_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']])) {
-			print_p($_SESSION['form_fields'][$user_id][$_SERVER['REQUEST_URI']]);
+		if (isset($_SESSION['form_fields'][$user_id][$_SERVER['PHP_SELF']])) {
+			print_p($_SESSION['form_fields'][$user_id][$_SERVER['PHP_SELF']]);
 		} else {
-			print_p(" $user_id on ".$_SERVER['REQUEST_URI']." not found ");
+			print_p(" $user_id on ".$_SERVER['PHP_SELF']." not found ");
 		}
 	}
 

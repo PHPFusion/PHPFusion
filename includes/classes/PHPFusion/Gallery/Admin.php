@@ -26,7 +26,6 @@ class Admin {
 	private $photo_db = '';
 	private $photo_cat_db = '';
 
-
 	private $upload_settings = array(
 		'thumbnail_folder'=>'thumbs',
 		'thumbnail' => 1,
@@ -53,13 +52,13 @@ class Admin {
 
 	private $albums_per_page = 30;
 	private $gallery_rows = 6;
-	private $photos_per_page = 30;
 
 	private $album_id = 0;
 	private $photo_id = 0;
 	private $rowstart = 0;
 	private $action = '';
 	private $album_max_order = 0;
+
 	/**
 	 * For best view: to recommend thumbnail_1 size set at 260px min.
 	 * @var array
@@ -151,8 +150,12 @@ class Admin {
 		$this->album_data['album_datestamp'] = time();
 
 
+
 	}
 
+	/**
+	 * @return array
+	 */
 	private function check_api() {
 		$error = array();
 		if (!$this->image_upload_dir) {
@@ -175,13 +178,16 @@ class Admin {
 		return $error;
 	}
 
+	/**
+	 *
+	 */
 	public function boot() {
 		global $locale;
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		if (function_exists('gd_info')) {
 			//self::Install_Gallery();
+			// @todo: add an album_$id kind of folder if safemode is false.
 			define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
-			define("GALLERY_PHOTO_DIR", $this->image_upload_dir.(!SAFEMODE ? "album_".$this->album_id."/" : ""));
 			// set album max order
 			$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
 			/**
@@ -211,7 +217,6 @@ class Admin {
 	public function setGalleryRights($gallery_rights) {
 		$this->gallery_rights = $gallery_rights;
 	}
-
 
 	/**
 	 * @param boolean $allow_comments
@@ -287,6 +292,11 @@ class Admin {
 		return array();
 	}
 
+	/**
+	 * Get Photo Data
+	 * @param int $photo_id
+	 * @return array|bool
+	 */
 	public function get_photo($photo_id = 0) {
 		if (isnum($photo_id)) {
 			return dbarray(
@@ -304,6 +314,11 @@ class Admin {
 		return array();
 	}
 
+	/**
+	 * Check whether a album id is valid
+	 * @param $album_id
+	 * @return bool|string
+	 */
 	private function validate_album($album_id) {
 		if (isnum($album_id)) {
 			return dbcount("('album_id')", $this->photo_cat_db, "album_id='".intval($album_id)."'");
@@ -311,6 +326,11 @@ class Admin {
 		return false;
 	}
 
+	/**
+	 * Check whether a photo id is valid
+	 * @param $photo_id
+	 * @return bool|string
+	 */
 	private function validate_photo($photo_id) {
 		if (isnum($photo_id)) {
 			return dbcount("('photo_id')", $this->photo_db, "photo_id='".intval($photo_id)."'");
@@ -318,6 +338,10 @@ class Admin {
 		return false;
 	}
 
+	/**
+	 * Returns an array of all rows of album records
+	 * @return array
+	 */
 	private function get_albumlist() {
 		$list = array();
 		$result = dbquery("SELECT * FROM ".$this->photo_cat_db." ORDER BY album_order ASC");
@@ -329,6 +353,9 @@ class Admin {
 		return $list;
 	}
 
+	/**
+	 * SQL delete album
+	 */
 	private function delete_gallery() {
 		global $locale;
 
@@ -399,6 +426,9 @@ class Admin {
 		}
 	}
 
+	/**
+	 * SQL save or update album
+	 */
 	private function set_albumDB() {
 		global $userdata;
 		if (isset($_POST['upload_album'])) {
@@ -418,8 +448,11 @@ class Admin {
 
 			if (!$this->album_data['album_order']) $this->album_data['album_order'] = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
 
-			$upload_result = form_sanitizer($_FILES['album_file'], '', 'album_file');
+			// point of injection of altered if you know the album_id -- possible bug: high volume sites will not be able to book the id unless record is made?
+			$next_album_id = dbnextid($this->photo_cat_db);
+			self::set_modified_upload_path($next_album_id);
 
+			$upload_result = form_sanitizer($_FILES['album_file'], '', 'album_file');
 			/** Note: Ensure your hidden field return does not bear the same input name as the fileinput name else form sanitizer will not sanitize properely as both bears same identifier */
 			$this->album_data['album_thumb'] = form_sanitizer($_POST['album_hfile'], '', 'album_hfile');
 
@@ -474,8 +507,6 @@ class Admin {
 				'photo_allow_ratings' => $this->photo_data['photo_allow_ratings'],
 			);
 
-			//if (!$this->album_data['album_thumb']) redirect(clean_request('file_error', array('gallery_edit', 'gallery_type'), false));
-
 			if ($this->album_data['album_id'] && self::validate_album($this->album_data['album_id'])) {
 				$result = dbquery_order($this->photo_cat_db, $this->album_data['album_order'], 'album_order', $this->album_data['album_id'], 'album_id',  false, false, 1, 'album_language', 'update');
 				if ($result) {
@@ -491,7 +522,7 @@ class Admin {
 				if ($result) {
 					dbquery_insert($this->photo_cat_db, $this->album_data, 'save');
 					$this->album_data['album_id'] = dblastid();
-					if (!empty($photo_data) && $this->album_data['album_id']) {
+					if (!empty($this->photo_data) && $this->album_data['album_id']) {
 						if (!$this->photo_data['photo_order']) $this->photo_data['photo_order'] = $this->photo_data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".$this->photo_db." WHERE album_id='".intval($this->album_data['album_id'])."'"), 0)+1;
 						$this->photo_data['album_id'] = $this->album_data['album_id'];
 						$result = dbquery_order($this->photo_db, $this->photo_data['photo_order'], 'photo_order', false, false, $this->photo_data['album_id'], 'album_id', false, false, 'save');
@@ -505,6 +536,32 @@ class Admin {
 		}
 	}
 
+	/**
+	 * Returns a modified path based on php ini safe mode
+	 * This is for making a album_$id for better file organization
+	 * @param $album_id
+	 * @return string
+	 */
+	function set_modified_upload_path($album_id) {
+		if (isnum($album_id) && $album_id) {
+			$upload_dir = !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
+			$_SESSION['form_fields'][\defender::set_sessionUserID()][$_SERVER['PHP_SELF']]['album_file']['path'] = $upload_dir;
+		}
+	}
+
+	/**
+	 * Get a Virtual Path
+	 * @param $album_id
+	 * @return string
+	 */
+	function get_virtual_path($album_id){
+		return !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
+	}
+
+
+	/**
+	 * SQL save or update photo
+	 */
 	private function set_photoDB() {
 		global $userdata;
 		if (isset($_POST['upload_photo'])) {
@@ -520,6 +577,9 @@ class Admin {
 				'photo_order' => isset($_POST['photo_order']) ? form_sanitizer($_POST['photo_order'], 0, 'photo_order') : $this->photo_data['photo_order'],
 				'photo_datestamp'=> time(),
 			);
+
+			// Push a new path value to defender for upload
+			self::set_modified_upload_path($this->photo_data['album_id']);
 
 			$upload_result = form_sanitizer($_FILES['photo_file'], '', 'photo_file');
 			$this->photo_data['photo_filename'] = form_sanitizer($_POST['photo_hfile'], '', 'photo_hfile');
@@ -560,6 +620,11 @@ class Admin {
 		}
 	}
 
+	/**
+	 * Automatic get last order photo in a album and update album cover
+	 * @param $album_id
+	 * @param $current_thumb
+	 */
 	private function refresh_album_thumb($album_id, $current_thumb) {
 		$result = dbquery("SELECT photo_thumb1 FROM ".$this->photo_db." WHERE album_id='".intval($album_id)."' ORDER BY photo_order DESC");
 		if (dbrows($result)>0) {
@@ -575,7 +640,9 @@ class Admin {
 		}
 	}
 
-	/* This is way too unfriendly approach - Not going to be used */
+	/**
+	 * Deletion of thumb - not useful and very unfriendly
+	 */
 	private function delete_album_thumb() {
 		if (isset($_POST['delete_album_thumb'])) {
 			$album_id = form_sanitizer($_POST['album_id'], '', 'album_id');
@@ -693,12 +760,14 @@ class Admin {
 		echo closemodal();
 	}
 
+	/**
+	 * HTML
+	 * @param bool $modal
+	 */
 	private function display_photo($modal=false) {
 		if (isset($_GET['photo']) && isnum($_GET['photo'])) {
 			global $userdata, $locale;
-
 			$data = self::get_photo($_GET['photo']);
-
 			/**
 			 * Increment Views based on Session.
 			 */
@@ -712,7 +781,7 @@ class Admin {
 				if ($time <= time()-($days_to_keep_session*3600*24)) unset($_SESSION['gallery'][$data['photo_id']][$session_id]);
 			}
 
-			$img_path = $this->image_upload_dir.$data['photo_filename'];
+			$img_path = self::get_virtual_path($data['album_id']).$data['photo_filename'];
 			$img_src = file_exists($img_path) && !is_dir($img_path) ? $img_path : 'holder.js/170x170/grey/text:'.$locale['na'];
 			$file_exif = exif($img_src);
 
@@ -747,14 +816,18 @@ class Admin {
 					?>
 
 					<?php
+					if (isset($_GET['ratings'])) {
+						add_to_jquery("
+
+						");
+					}
 					add_to_jquery("
-					$('#postrating').hide();
-					$('#removerating').hide();
+					".(isset($_GET['ratings']) && $_GET['ratings'] == $data['photo_id'] ? "$('#postrating').show();" : 	"$('#postrating').hide();")."
+					".(isset($_GET['ratings']) && $_GET['ratings'] == $data['photo_id'] ? "$('#removerating').show();" : 	"$('#removerating').hide();")."
 					$('#rate').bind('click', function() {
 					$('#postrating').show();
 					$('#removerating').show();
 					});
-
 					");
 					require_once INCLUDES."ratings_include.php";
 					showratings($this->gallery_rights, $data['photo_id'], FUSION_REQUEST);
@@ -898,9 +971,15 @@ class Admin {
 		}
 	}
 
+	/**
+	 * CSS injection - will port to css file.
+	 */
 	private function gallery_css() {
 		add_to_head("
 		<style>
+		#postrating, #removerating {
+			margin-bottom:25px;
+		}
 		.gallery_album {
 			-webkit-border-radius: 6px;
 			-moz-border-radius: 6px;
@@ -958,9 +1037,13 @@ class Admin {
 		");
 	}
 
+	/**
+	 * @param array $data
+	 * @param int   $type
+	 */
 	private function gallery_album(array $data = array(), $type = 1) {
 		global $userdata, $locale;
-		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery', 'action'), false) : clean_request('photo='.$data['photo_id'], array('photo', 'status', 'action'), false);
+		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery', 'action', 'ratings'), false) : clean_request('photo='.$data['photo_id'], array('photo', 'status', 'action', 'ratings'), false);
 		?>
 
 		<div class='gallery_album panel panel-default'>
@@ -968,10 +1051,17 @@ class Admin {
 				<a href='<?php echo $request ?>' class='gallery_overlay'></a>
 				<?php if (($this->enable_comments || $this->enable_ratings) && $type == 2) {?>
 				<div class='gallery_buttons'>
-					<a class='btn button btn-sm btn-primary' href='<?php  ?>'><i class='fa fa-star-o'></i></a>
-					<a class='btn button btn-sm btn-success' href='<?php ?>'><i class='fa fa-comment'></i></a>
-				</div>
-				<?php } ?>
+					<?php
+					if ($data['photo_allow_ratings']) {
+						$rating_link = clean_request("gallery=".$data['album_id']."&amp;photo=".$data['photo_id']."&amp;ratings=".$data['photo_id'], array('photo', 'status', 'action','gallery', 'ratings'), false);
+						echo "<a class='btn button btn-sm btn-default' href='".$rating_link."'>
+						<i class='fa fa-star-o'></i>
+						</a>";
+					}
+				echo "</div>\n";
+				}
+				  ?>
+
 				<div class='gallery_writer pull-right'>
 					<a class='btn button btn-sm btn-default' href='<?php echo clean_request("&amp;gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_edit', 'gallery_type'), false) ?>'>
 						<i class='fa fa-pencil fa-lg'></i>
@@ -982,11 +1072,12 @@ class Admin {
 				</div>
 				<div class='image_container'>
 					<?php if ($type == 1) {
-						$img_path = $this->image_upload_dir.$this->upload_settings['thumbnail_folder']."/".$data['album_thumb'];
+						$img_path = self::get_virtual_path($data['album_id']).$this->upload_settings['thumbnail_folder']."/".$data['album_thumb'];
+						print_p($img_path);
 						$img_src = file_exists($img_path) && !is_dir($img_path) ? $img_path : 'holder.js/170x170/grey/text:'.$locale['na'];
 						echo "<img class='img-responsive' src='".$img_src."' alt=''/>";
 					} elseif ($type == 2) {
-						echo "<img src='".$this->image_upload_dir.$this->upload_settings['thumbnail_folder']."/".$data['photo_thumb1']."' alt=''/>";
+						echo "<img src='".self::get_virtual_path($data['album_id']).$this->upload_settings['thumbnail_folder']."/".$data['photo_thumb1']."' alt=''/>";
 					} ?>
 				</div>
 			</div>
@@ -1003,13 +1094,248 @@ class Admin {
 					echo display_avatar($data, '30px', '', '', 'img-rounded') ?>
 				</div>
 				<div class='gallery_profile_link overflow-hide text-lighter'>
-					<?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']) ?>
-					<span class='text-lighter display-block'><i class='fa fa-clock-o m-r-10'></i><?php echo showdate('shortdate', $type == 1 ? $data['album_datestamp'] : $data['photo_datestamp']) ?></span>
+					<?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong') ?>
+					<span class='text-lighter display-block'><?php echo timer($type == 1 ? $data['album_datestamp'] : $data['photo_datestamp']) ?></span>
 				</div>
 			</div>
 		</div>
 		<?php
 	}
-
 }
 
+/*
+if (function_exists('gd_info')) {
+
+	elseif ((isset($_GET['action']) && $_GET['action'] == "mup") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
+		$data = dbarray(dbquery("SELECT album_id FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_order='".intval($_GET['order'])."'"));
+		$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=album_order+1 ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$data['album_id']."'");
+		$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=album_order-1 ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$_GET['album_id']."'");
+		$rowstart = $_GET['order'] > $settings['thumbs_per_page'] ? ((ceil($_GET['order']/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
+		redirect(FUSION_SELF.$aidlink."&rowstart=$rowstart");
+	}
+	elseif ((isset($_GET['action']) && $_GET['action'] == "mdown") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
+		$data = dbarray(dbquery("SELECT album_id FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_order='".intval($_GET['order'])."'"));
+		$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=album_order-1 ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$data['album_id']."'");
+		$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=album_order+1 ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$_GET['album_id']."'");
+		$rowstart = $_GET['order'] > $settings['thumbs_per_page'] ? ((ceil($_GET['order']/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
+		redirect(FUSION_SELF.$aidlink."&rowstart=$rowstart");
+	}
+
+	elseif (isset($_POST['save_album'])) {
+		$error = "";
+		$album_title = form_sanitizer($_POST['album_title'], '', 'album_title');
+		$album_description = form_sanitizer($_POST['album_description'], '', 'album_description');
+		$album_language = form_sanitizer($_POST['album_language'], '', 'album_language');
+		$album_access = isnum($_POST['album_access']) ? $_POST['album_access'] : "0";
+		$album_order = isnum($_POST['album_order']) ? $_POST['album_order'] : "";
+		if (!SAFEMODE && (!isset($_GET['action']) || $_GET['action'] != "edit")) {
+			$result = dbarray(dbquery("SHOW TABLE STATUS LIKE '".DB_PHOTO_ALBUMS."'"));
+			$album_id = $result['Auto_increment'];
+			@mkdir(PHOTOS."album_".$album_id, 0777);
+			@copy(IMAGES."index.php", PHOTOS."album_".$album_id."/index.php");
+		}
+		if (isset($_FILES) && count($_FILES) && is_uploaded_file($_FILES['album_pic_file']['tmp_name'])) {
+			$album_types = array(".gif", ".jpg", ".jpeg", ".png");
+			$album_pic = $_FILES['album_pic_file'];
+			$album_name = stripfilename($album_pic['name']);
+			$album_name = stripfilename(str_replace(" ", "_", strtolower(substr($album_pic['name'], 0, strrpos($album_pic['name'], ".")))));
+			$album_ext = strtolower(strrchr($album_pic['name'], "."));
+			if (!preg_match("/^[-0-9A-Z_\.\[\]\s]+$/i", $album_name)) {
+				$error = 1;
+			} elseif ($album_pic['size'] > $settings['photo_max_b']) {
+				$error = 2;
+			} elseif (!in_array($album_ext, $album_types)) {
+				$error = 3;
+			} else {
+				// @unlink(PHOTOS."temp".$album_ext);
+				move_uploaded_file($album_pic['tmp_name'], PHOTOS."temp".$album_ext);
+				chmod(PHOTOS."temp".$album_ext, 0644);
+				$imagefile = @getimagesize(PHOTOS."temp".$album_ext);
+				if ($imagefile[0] > $settings['photo_max_w'] || $imagefile[1] > $settings['photo_max_h']) {
+					$error = 4;
+					@unlink(PHOTOS."temp".$album_ext);
+				} else {
+					$album_thumb = image_exists(PHOTOS, $album_name.$album_ext);
+					createthumbnail($imagefile[2], PHOTOS."temp".$album_ext, PHOTOS.$album_thumb, $settings['thumb_w'], $settings['thumb_h']);
+					@unlink(PHOTOS."temp".$album_ext);
+				}
+			}
+		}
+
+		if (!$error && !defined('FUSION_NULL')) {
+			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
+				$old_album_order = dbresult(dbquery("SELECT album_order FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$_GET['album_id']."'"), 0);
+				if ($album_order > $old_album_order) {
+					$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=(album_order-1) ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_order>'$old_album_order' AND album_order<='$album_order'");
+				} elseif ($album_order < $old_album_order) {
+					$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=(album_order+1) ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_order<'$old_album_order' AND album_order>='$album_order'");
+				}
+				$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_title='$album_title', album_description='$album_description',".(isset($album_thumb) ? " album_thumb='$album_thumb'," : "")." album_user='".$userdata['user_id']."', album_access='$album_access', album_order='$album_order', album_language='$album_language' WHERE album_id='".$_GET['album_id']."'");
+				$rowstart = $album_order > $settings['thumbs_per_page'] ? ((ceil($album_order/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
+				redirect(FUSION_SELF.$aidlink."&status=su&rowstart=$rowstart");
+			} else {
+				if (!$album_order) {
+					$album_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."'" : "").""), 0)+1;
+				}
+				$result = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order=(album_order+1) ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_order>='$album_order'");
+				$result = dbquery("INSERT INTO ".DB_PHOTO_ALBUMS." (album_title, album_description, album_thumb, album_user, album_access, album_order, album_datestamp, album_language) VALUES ('$album_title', '$album_description', '".(isset($album_thumb) ? $album_thumb : "")."', '".$userdata['user_id']."', '$album_access', '$album_order', '".time()."', '$album_language')");
+				$rowstart = $album_order > $settings['thumbs_per_page'] ? ((ceil($album_order/$settings['thumbs_per_page'])-1)*$settings['thumbs_per_page']) : "0";
+				redirect(FUSION_SELF.$aidlink."&status=sn&rowstart=$rowstart");
+			}
+		} else {
+			if ($error == 1) {
+				$message = $locale['415']."</span>";
+			} elseif ($error == 2) {
+				$message = sprintf($locale['416'], parsebytesize($settings['photo_max_b']))."</span>";
+			} elseif ($error == 3) {
+				$message = $locale['417']."</span>";
+			} elseif ($error == 4) {
+				$message = sprintf($locale['418'], $settings['photo_max_w'], $settings['photo_max_h'])."</span>";
+			}
+			$defender->stop();
+			$defender->addNotice($message);
+		}
+	}
+	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['album_id']) && isnum($_GET['album_id']))) {
+		$result = dbquery("SELECT album_title, album_description, album_thumb, album_access, album_order, album_language FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$_GET['album_id']."'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
+			$album_title = $data['album_title'];
+			$album_description = $data['album_description'];
+			$album_language = $data['album_language'];
+			$album_thumb = $data['album_thumb'];
+			$album_access = $data['album_access'];
+			$album_order = $data['album_order'];
+			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;album_id=".$_GET['album_id'];
+			opentable($locale['401']);
+		} else {
+			redirect(FUSION_SELF.$aidlink);
+		}
+	} else {
+		$album_id = "";
+		$album_title = "";
+		$album_description = "";
+		$album_language = LANGUAGE;
+		$album_thumb = "";
+		$album_access = "";
+		$album_order = "";
+		$formaction = FUSION_SELF.$aidlink;
+		opentable($locale['400']);
+	}
+	$access_opts = array();
+	$user_groups = getusergroups();
+	while (list($key, $user_group) = each($user_groups)) {
+		$access_opts[$user_group['0']] = $user_group['1'];
+	}
+	echo "<div class='panel panel-default'><div class='panel-body'>\n";
+	echo openform('input_form', 'input_form', 'post', $formaction, array('downtime' => 1, 'enctype' => '1'));
+	if ((isset($_GET['action']) && $_GET['action'] == "edit") && ($album_thumb && file_exists(PHOTOS.$album_thumb))) {
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+		echo "<div class='panel panel-default'>\n";
+		echo "<img class='img-responsive' src='".PHOTOS.$album_thumb."' alt='album_thumb' />";
+		echo "<div class='panel-body'>\n";
+		echo "<a class='btn btn-block btn-primary button' href='".FUSION_SELF.$aidlink."&amp;action=deletethumb&amp;album_id=".$_GET['album_id']."'>".$locale['469']."</a>\n";
+		echo "</div>\n</div>\n";
+		echo "</div>\n<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
+	} else {
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
+	}
+	echo form_text($locale['440'], 'album_title', 'album_title', $album_title, array('max_length' => 100, 'required' => 1, 'error_text' => $locale['409']));
+	if (multilang_table("PG")) {
+		echo form_select($locale['global_ML100'], 'album_language', 'album_language', $language_opts, $album_language, array('placeholder' => 1));
+	} else {
+		echo form_hidden('', 'album_language', 'album_language', $album_language);
+	}
+	echo form_textarea($locale['441'], 'album_description', 'album_description', $album_description, array('bbcodes' => 1));
+	echo form_select($locale['442'], 'album_access', 'album_access', $access_opts, $album_access, array('placeholder' => 1, 'class' => 'pull-left m-r-10'));
+	echo form_text($locale['443'], 'album_order', 'album_order', $album_order, array('number' => 1, 'width' => '100px'));
+	if (!isset($_GET['action'])) {
+		echo form_fileinput($locale['444'], 'album_pic_file', 'album_pic_file', IMAGES."photoalbum/", '', array('image'=>1, 'thumbnail_path'=>1, 'thumbnail_db'=>DB_PHOTO_ALBUMS));
+	}
+	echo form_button($locale['445'], 'save_album', 'save_album', $locale['445'], array('class' => 'btn-primary m-t-10'));
+	if (isset($_GET['action']) && $_GET['action'] == "edit") {
+		echo form_button($locale['433'], 'cancel', 'cancel', $locale['433'], array('class' => 'm-l-10 btn-primary m-t-10'));
+	}
+	echo "</div>\n</div>\n";
+	echo closeform();
+	echo "</div>\n</div>\n";
+	closetable();
+
+	opentable($locale['402']);
+	$rows = dbcount("(album_id)", "".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."'" : "")."");
+	if ($rows) {
+		if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
+			$_GET['rowstart'] = 0;
+		}
+		$result = dbquery("SELECT ta.album_id, ta.album_title, ta.album_thumb, ta.album_access, ta.album_order, ta.album_datestamp, tu.user_id, tu.user_name, tu.user_status
+			FROM ".DB_PHOTO_ALBUMS." ta
+			LEFT JOIN ".DB_USERS." tu ON ta.album_user=tu.user_id
+			".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."'" : "")."
+			ORDER BY album_order LIMIT ".$_GET['rowstart'].",".$settings['thumbs_per_page']);
+		$counter = 0;
+		$k = ($_GET['rowstart'] == 0 ? 1 : $_GET['rowstart']+1);
+		echo "<div class='row'>\n";
+		if ($rows > $settings['thumbs_per_page']) {
+			echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, FUSION_SELF.$aidlink."&amp;")."\n</div>\n";
+		}
+		while ($data = dbarray($result)) {
+			$up = "";
+			$down = "";
+			if ($rows != 1) {
+				$orderu = $data['album_order']-1;
+				$orderd = $data['album_order']+1;
+				if ($k == 1) {
+					$down = " &middot;\n<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;action=mdown&amp;order=$orderd&amp;album_id=".$data['album_id']."'><img src='".get_image("right")."' alt='".$locale['467']."' title='".$locale['468']."' style='border:0px;vertical-align:middle' /></a>\n";
+				} elseif ($k < $rows) {
+					$up = "<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;action=mup&amp;order=$orderu&amp;album_id=".$data['album_id']."'><img src='".get_image("left")."' alt='".$locale['467']."' title='".$locale['466']."' style='border:0px;vertical-align:middle' /></a> &middot;\n";
+					$down = " &middot;\n<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;action=mdown&amp;order=$orderd&amp;album_id=".$data['album_id']."'><img src='".get_image("right")."' alt='".$locale['467']."' title='".$locale['468']."' style='border:0px;vertical-align:middle' /></a>\n";
+				} else {
+					$up = "<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;action=mup&amp;order=$orderu&amp;album_id=".$data['album_id']."'><img src='".get_image("left")."' alt='".$locale['467']."' title='".$locale['466']."' style='border:0px;vertical-align:middle' /></a> &middot;\n";
+				}
+			}
+			if ($counter != 0 && ($counter%$settings['thumbs_per_row'] == 0)) {
+				echo "</div>\n<div class='row'>\n";
+			}
+			echo "<div class='col-xs-12 col-sm-".floor(12/$settings['thumbs_per_row'])." col-md-".floor(12/$settings['thumbs_per_row'])." col-lg-".floor(12/$settings['thumbs_per_row'])."'>\n";
+			echo "<div class='panel panel-default'>\n";
+			echo "<div class='img-container text-center' style='overflow:hidden; max-height:100px;'>\n";
+			if ($data['album_thumb'] && file_exists(PHOTOS.$data['album_thumb'])) {
+				echo "<img class='img-center img-responsive' src='".PHOTOS.rawurlencode($data['album_thumb'])."' alt='".$locale['460']."' style='width:200px; border:0px' />";
+			} else {
+				echo "<img class='img-responsive' src='holder.js/200x100/text:".$locale['460']."/grey' alt='".$locale['460']."' style='border:0px' />";
+			}
+			echo "</div>\n";
+			echo "<div class='panel-body'>\n";
+			echo "<a href='photos.php".$aidlink."&amp;album_id=".$data['album_id']."'><strong>".$data['album_title']."</strong></a>\n";
+			echo "<br /><br />\n".$locale['462'].showdate("shortdate", $data['album_datestamp'])."<br />\n";
+			echo $locale['463'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br />\n";
+			echo $locale['464'].getgroupname($data['album_access'])."<br />\n";
+			echo $locale['465'].dbcount("(photo_id)", DB_PHOTOS, "album_id='".$data['album_id']."'")."</span><br />\n";
+			echo "</div>\n<div class='panel-footer'>\n";
+			echo $up;
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;album_id=".$data['album_id']."'>".$locale['468']."</a> &middot;\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;album_id=".$data['album_id']."' onclick=\"return PhotosWarning('".dbcount("(album_id)", DB_PHOTOS, "album_id='".$data['album_id']."'")."');\">".$locale['469']."</a> ".$down;
+			echo "</div></div>\n";
+			echo "</div>\n"; // end col
+			$counter++;
+			$k++;
+		}
+		echo "</div>\n<div>\n";
+		echo "<a class='m-t-20 btn btn-block btn-primary' href='".FUSION_SELF.$aidlink."&amp;action=refresh'>".$locale['470']."</a>\n";
+		if ($rows > $settings['thumbs_per_page']) {
+			echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, FUSION_SELF.$aidlink."&amp;")."\n</div>\n";
+		}
+	} else {
+		echo "<div style='text-align:center'>".$locale['471']."</div>\n";
+	}
+	echo "<script type='text/javascript'>\n"."function PhotosWarning(value) {\n";
+	echo "return confirm ('".$locale['500']."');\n}\n</script>";
+	closetable();
+} else {
+	opentable($locale['403']);
+	echo "<div id='close-message'><div class='admin-message alert alert-warning m-t-20'>".$locale['420']."</div></div>\n";
+	closetable();
+}
+*/

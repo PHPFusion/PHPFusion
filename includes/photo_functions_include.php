@@ -128,32 +128,32 @@ function exif($imagePath) {
 		//error control
 		$notFound = $locale['na'];
 		// Make
-		if (@array_key_exists('Make', $exif_ifd0)) {
+		if (isset($exif_ifd0['Make'])) {
 			$camMake = $exif_ifd0['Make'];
 		} else { $camMake = $notFound; }
 
 		// Model
-		if (@array_key_exists('Model', $exif_ifd0)) {
+		if (isset($exif_ifd0['Model'])) {
 			$camModel = $exif_ifd0['Model'];
 		} else { $camModel = $notFound; }
 
 		// Exposure
-		if (@array_key_exists('ExposureTime', $exif_ifd0)) {
+		if (isset($exif_ifd0['ExposureTime'])) {
 			$camExposure = $exif_ifd0['ExposureTime'];
 		} else { $camExposure = $notFound; }
 
 		// Aperture
-		if (@array_key_exists('ApertureFNumber', $exif_ifd0['COMPUTED'])) {
+		if (isset($exif_ifd0['COMPUTEED']) && @array_key_exists('ApertureFNumber', $exif_ifd0['COMPUTED'])) {
 			$camAperture = $exif_ifd0['COMPUTED']['ApertureFNumber'];
 		} else { $camAperture = $notFound; }
 
 		// Date
-		if (@array_key_exists('DateTime', $exif_ifd0)) {
+		if (isset($exif_ifd0['DateTime'])) {
 			$camDate = $exif_ifd0['DateTime'];
 		} else { $camDate = $notFound; }
 
 		// ISO
-		if (@array_key_exists('ISOSpeedRatings',$exif_exif)) {
+		if (isset($exif_exif['ISOSpeedRatings'])) {
 			$camIso = $exif_exif['ISOSpeedRatings'];
 		} else { $camIso = $notFound; }
 

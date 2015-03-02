@@ -120,6 +120,20 @@ function dblastid() {
 }
 
 /**
+ * Get the next to be inserted auto increment id
+ * @param $table_name
+ * @return bool|int
+ */
+function dbnextid($table_name) {
+	$result = mysql_fetch_array(mysql_query("SHOW TABLE STATUS LIKE '".$table_name."'"));
+	if (!empty($result)) {
+		return (int) $result['Auto_increment'];
+	}
+	return false;
+}
+
+
+/**
  * Get and set the database connection resource
  * 
  * @sttaic resource $resource
