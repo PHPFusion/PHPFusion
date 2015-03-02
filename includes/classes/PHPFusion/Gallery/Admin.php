@@ -19,7 +19,7 @@
 
 namespace PHPFusion\Gallery;
 
-class AdminUI {
+class Admin {
 
 	private $image_upload_dir = '';
 

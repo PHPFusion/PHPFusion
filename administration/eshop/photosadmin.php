@@ -6,7 +6,7 @@
  * Step 1 - Initialize the Class
  * The below statement binds the whole AdminUI engine into 1 single string, in this example (the `$eshop_gallery`)
  */
-$eshop_gallery = new PHPFusion\Gallery\AdminUI();
+$eshop_gallery = new PHPFusion\Gallery\Admin();
 
 /**
  * Step 2 - Set your upload rules settings.

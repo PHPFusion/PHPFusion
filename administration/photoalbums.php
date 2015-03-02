@@ -16,27 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
 if (!checkrights("PH") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
-
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."bbcode_include.php";
 include LOCALE.LOCALESET."admin/photoalbums.php";
-/**
- * New Fusion Gallery
- */
-
-
-/**
- * Step 1 - Initialize the Class
- * The below statement binds the whole AdminUI engine into 1 single string, in this example (the `$eshop_gallery`)
- */
-$eshop_gallery = new PHPFusion\Gallery\AdminUI();
-
-/**
- * Step 2 - Set your upload rules settings.
- */
+$eshop_gallery = new PHPFusion\Gallery\Admin();
 $eshop_gallery->setUploadSettings(
 	array(
 		'thumbnail_folder'=>'thumbs',
@@ -55,15 +40,6 @@ $eshop_gallery->setUploadSettings(
 		'multiple' => 0,
 	)
 );
-
-/**
- * Step 3 - Setup System Variables
- * a. Set up your Image Upload Path in the System (Relative to BASEDIR)
- * b. Set up your PHOTO_ALBUM database table
- * c. Set up your PHOTO database table
- * d. set up photo comments - true or false
- * e. set up photo ratings - true or false
- */
 $eshop_gallery->setImageUploadDir(IMAGES."photoalbum/");
 $eshop_gallery->setPhotoCatDb(DB_PHOTO_ALBUMS);
 $eshop_gallery->setPhotoDb(DB_PHOTOS);
@@ -72,7 +48,6 @@ $eshop_gallery->setEnableComments(true);
 $eshop_gallery->setEnableRatings(true);
 $eshop_gallery->setAllowComments('comments_enabled');
 $eshop_gallery->setAllowRatings('ratings_enabled');
-
 $eshop_gallery->boot();
 
 /*
