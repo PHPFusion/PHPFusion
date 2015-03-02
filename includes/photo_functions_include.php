@@ -20,6 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
 	global $settings;
+	$origimage = '';
 	if ($filetype == 1) {
 		$origimage = imagecreatefromgif($origfile);
 	} elseif ($filetype == 2) {
@@ -40,14 +41,14 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
 	};
 	if ($settings['thumb_compression'] == "gd1") {
 		$thumbimage = imagecreate($thumb_w, $thumb_h);
-		$result = imagecopyresized($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
+		imagecopyresized($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
 	} else {
 		$thumbimage = imagecreatetruecolor($thumb_w, $thumb_h);
 		if ($filetype == 3) {
 			imagealphablending($thumbimage, FALSE);
 			imagesavealpha($thumbimage, TRUE);
 		}
-		$result = imagecopyresampled($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
+		imagecopyresampled($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
 	}
 	touch($thumbfile);
 	if ($filetype == 1) {
@@ -63,6 +64,7 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
 
 function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
 	global $settings;
+	$origimage = '';
 	if ($filetype == 1) {
 		$origimage = imagecreatefromgif($origfile);
 	} elseif ($filetype == 2) {
@@ -116,47 +118,52 @@ function image_exists($dir, $image) {
  * @return array|bool
  * Courtesy of : drpain.webster.org.za @ php.net
  */
-
 function exif($imagePath) {
 	global $locale;
 	// Check if the variable is set and if the file itself exists before continuing
 	if ((isset($imagePath)) and (file_exists($imagePath)) and !is_dir($imagePath)) {
 		// There are 2 arrays which contains the information we are after, so it's easier to state them both
 		$exif_base = @getimagesize($imagePath);
-		$exif_ifd0 = read_exif_data($imagePath ,'IFD0' ,0);
-		$exif_exif = read_exif_data($imagePath ,'EXIF' ,0);
+		$exif_ifd0 = read_exif_data($imagePath, 'IFD0', 0);
+		$exif_exif = read_exif_data($imagePath, 'EXIF', 0);
 		//error control
 		$notFound = $locale['na'];
 		// Make
 		if (isset($exif_ifd0['Make'])) {
 			$camMake = $exif_ifd0['Make'];
-		} else { $camMake = $notFound; }
-
+		} else {
+			$camMake = $notFound;
+		}
 		// Model
 		if (isset($exif_ifd0['Model'])) {
 			$camModel = $exif_ifd0['Model'];
-		} else { $camModel = $notFound; }
-
+		} else {
+			$camModel = $notFound;
+		}
 		// Exposure
 		if (isset($exif_ifd0['ExposureTime'])) {
 			$camExposure = $exif_ifd0['ExposureTime'];
-		} else { $camExposure = $notFound; }
-
+		} else {
+			$camExposure = $notFound;
+		}
 		// Aperture
 		if (isset($exif_ifd0['COMPUTEED']) && @array_key_exists('ApertureFNumber', $exif_ifd0['COMPUTED'])) {
 			$camAperture = $exif_ifd0['COMPUTED']['ApertureFNumber'];
-		} else { $camAperture = $notFound; }
-
+		} else {
+			$camAperture = $notFound;
+		}
 		// Date
 		if (isset($exif_ifd0['DateTime'])) {
 			$camDate = $exif_ifd0['DateTime'];
-		} else { $camDate = $notFound; }
-
+		} else {
+			$camDate = $notFound;
+		}
 		// ISO
 		if (isset($exif_exif['ISOSpeedRatings'])) {
 			$camIso = $exif_exif['ISOSpeedRatings'];
-		} else { $camIso = $notFound; }
-
+		} else {
+			$camIso = $notFound;
+		}
 		$return = array();
 		$return['width'] = $exif_base[0];
 		$return['height'] = $exif_base[1];
@@ -171,7 +178,7 @@ function exif($imagePath) {
 		$return['iso'] = $camIso;
 		return $return;
 	} else {
-		return false;
+		return FALSE;
 	}
 }
 
@@ -183,7 +190,7 @@ function exif($imagePath) {
 function copy_file($source, $destination) {
 	$filename['name'] = '';
 	$filename['error'] = 1;
-	if (phpversion()>=5) {
+	if (phpversion() >= 5) {
 		copy($source, $destination);
 		$file = pathinfo($source);
 		$filename['name'] = $file['filename'];

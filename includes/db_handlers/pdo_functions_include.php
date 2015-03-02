@@ -16,19 +16,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 // MySQL database functions
-
 /**
  * Send a database query
- * 
- * @global int $mysql_queries_count
+ * @global int   $mysql_queries_count
  * @global array $mysql_queries_time
- * @param string $query SQL 
+ * @param string $query SQL
  * @return \PDOStatement or FALSE on error
  */
-function dbquery($query, $print = false) {
+function dbquery($query, $print = FALSE) {
 	global $mysql_queries_count, $mysql_queries_time;
 	$start_time = microtime(TRUE);
 	try {
@@ -48,17 +47,15 @@ function dbquery($query, $print = false) {
 
 /**
  * Count the number of rows in a table filtered by conditions
- * 
- * @global int $mysql_queries_count
+ * @global int   $mysql_queries_count
  * @global array $mysql_queries_time
- * @param string $field Parenthesized field name
- * @param string $table Table name
+ * @param string $field      Parenthesized field name
+ * @param string $table      Table name
  * @param string $conditions conditions after "where"
  * @return boolean
  */
 function dbcount($field, $table, $conditions = "") {
 	global $mysql_queries_count, $mysql_queries_time;
-	
 	$cond = ($conditions ? " WHERE ".$conditions : "");
 	$start_time = microtime(TRUE);
 	$sql = "SELECT COUNT".$field." FROM ".$table.$cond;
@@ -77,14 +74,13 @@ function dbcount($field, $table, $conditions = "") {
 
 /**
  * Fetch the first column of a specific row
- * 
  * @param \PDOStatement $statement
- * @param int $row
+ * @param int           $row
  * @return mixed
  */
 function dbresult($statement, $row) {
 	//seek
-	for ($i=0; $i<$row; $i++) {
+	for ($i = 0; $i < $row; $i++) {
 		$statement->fetchColumn();
 	}
 	//returns false when an error occurs
@@ -92,8 +88,7 @@ function dbresult($statement, $row) {
 }
 
 /**
- * Count the number of affected rows by the given query 
- * 
+ * Count the number of affected rows by the given query
  * @param \PDOStatement $statement
  * @return int
  */
@@ -103,7 +98,6 @@ function dbrows($statement) {
 
 /**
  * Fetch one row as an associative array
- * 
  * @param \PDOStatement $statement
  * @return array Associative array
  */
@@ -114,7 +108,6 @@ function dbarray($statement) {
 
 /**
  * Fetch one row as a numeric array
- * 
  * @param \PDOStatement $statement
  * @return array Numeric array
  */
@@ -125,11 +118,10 @@ function dbarraynum($statement) {
 
 /**
  * Connect to the database
- * 
- * @param string $db_host
- * @param string $db_user
- * @param string $db_pass
- * @param string $db_name
+ * @param string  $db_host
+ * @param string  $db_user
+ * @param string  $db_pass
+ * @param string  $db_name
  * @param boolean $halt_on_error If it is TRUE, the script will halt in case of error
  */
 function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE) {
@@ -147,26 +139,36 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
 		} elseif ($halt_on_error) {
 			die("<strong>Unable to select MySQL database</strong><br />".$error->getCode()." : ".$error->getMessage());
 		}
-
 	}
-	return array(
-		'connection_success' => $db_connect,
-		'dbselection_success' => $db_select
-	);
+	return array('connection_success' => $db_connect,
+		'dbselection_success' => $db_select);
 }
 
 /**
  * Get the last inserted auto increment id
- * 
- * @return int 
+ * @global resource $db_connect
+ * @return int
+ */
+function dbnextid($table_name) {
+	$query = dbconnection()->prepare($table_name);
+	$query->execute();
+	$result = $query->fetch(PDO::FETCH_ASSOC);
+	if (!empty($result)) {
+		return $result['Auto_increment'];
+	}
+	return FALSE;
+}
+
+/**
+ * Get the last inserted auto increment id
+ * @return int
  */
 function dblastid() {
-	return (int) dbconnection()->lastInsertId();
+	return (int)dbconnection()->lastInsertId();
 }
 
 /**
  * Get and set the \PDO instance
- * 
  * @static \PDO|NULL $_pdo
  * @param \PDO $pdo
  * @return \PDO|NULL
