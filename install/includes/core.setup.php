@@ -348,7 +348,7 @@ $core_tables = array("admin" => " (
 		user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 		user_rights TEXT NOT NULL,
 		user_groups TEXT NOT NULL,
-		user_level CHAR(4) UNSIGNED NOT NULL DEFAULT '-101',
+		user_level CHAR(4) NOT NULL DEFAULT '-101',
 		user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
