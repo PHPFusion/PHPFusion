@@ -95,7 +95,7 @@ class DatabaseFactory {
 	public static function registerConfiguration($id, array $configuration) {
 		$lowerCaseID = strtolower($id);
 		if (!isset(self::$configurations[$lowerCaseID])) {
-			$configuration += ['debug' => self::isDebug($id)];
+			$configuration += array('debug' => self::isDebug($id));
 			self::$configurations[$lowerCaseID] = new Configuration($configuration);
 		}
 	}
@@ -167,7 +167,7 @@ class DatabaseFactory {
 		}
 		$connectionids = array_unique(array_merge(
 			is_array(self::$debug)
-				? self::$debug : [], array_keys(self::$connections)));
+				? self::$debug : array(), array_keys(self::$connections)));
 
 		/**@var $connections AbstractDatabaseDriver */
 		foreach ($connectionids as $k => $id) {
