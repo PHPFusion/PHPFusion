@@ -2,7 +2,7 @@
 /* Common Forum Locales */
 $locale['forum_000'] = 'Create Forum';
 $locale['forum_000a'] = 'Update Forum';
-$locale['forum_000b'] = 'Current Forums';
+$locale['forum_000b'] = 'Forum %s';
 $locale['forum_000c'] = 'Forum Board Index';
 $locale['forum_001'] = 'Create New Forum';
 $locale['forum_002'] = 'Edit Forum';

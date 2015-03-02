@@ -31,7 +31,7 @@ class ForumAdmin {
 
 	private $ext = '';
 	private $forum_index = array();
-
+	private $level = array();
 	private $data = array(
 		'forum_id' => 0,
 		'forum_cat' => 0,
@@ -78,7 +78,7 @@ class ForumAdmin {
 
 		$this->forum_index = self::get_forum_index();
 		if (!empty($this->forum_index)) {
-			self::make_forum_breadcrumbs();
+			$this->level = self::make_forum_breadcrumbs();
 		}
 
 		/**
@@ -134,7 +134,8 @@ class ForumAdmin {
 	}
 
 	/**
-	 * Breadcrumb Output Handler
+	 * Breadcrumb and Directory Output Handler
+	 * @return array
 	 */
 	private function make_forum_breadcrumbs() {
 		global $aidlink, $locale;
@@ -156,12 +157,10 @@ class ForumAdmin {
 			}
 			return $crumb;
 		}
-
 		// then we make a infinity recursive function to loop/break it out.
 		$crumb = breadcrumb_arrays($this->forum_index, $_GET['parent_id']);
 		// then we sort in reverse.
 		if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
-		// then we loop it out using Dan's breadcrumb.
 		add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['forum_000c']));
 		if (count($crumb['title']) > 1) {
 			foreach($crumb['title'] as $i => $value) {
@@ -170,6 +169,7 @@ class ForumAdmin {
 		} elseif (isset($crumb['title'])) {
 			add_to_breadcrumbs(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
 		}
+		return $crumb;
 	}
 
 	/**
@@ -827,15 +827,17 @@ class ForumAdmin {
 	 * Forum Listing
 	 */
 	private function display_forum_list() {
-		global $locale, $aidlink, $settings, $forum_index, $ext;
-		opentable($locale['forum_000b']);
+		global $locale, $aidlink, $settings;
+		$title = !empty($this->level) ? sprintf($locale['forum_000b'], $this->level['title']) : $locale['forum_000c'];
+		add_to_title($title.$locale['global_201']);
+		opentable($title);
 		$threads_per_page = $settings['threads_per_page'];
 		$max_rows = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$_GET['parent_id']."'"); // need max rows
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows) ? $_GET['rowstart'] : '0';
 		$result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name, forum_description, forum_image, forum_alias, forum_type, forum_threadcount, forum_postcount, forum_order FROM
-	".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."'
-	 ORDER BY forum_order ASC LIMIT ".$_GET['rowstart'].", $threads_per_page
-	 ");
+				".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."'
+				 ORDER BY forum_order ASC LIMIT ".$_GET['rowstart'].", $threads_per_page
+				 ");
 		$rows = dbrows($result);
 		if ($rows > 0) {
 			$type_icon = array('1'=>'entypo folder', '2'=>'entypo chat', '3'=>'entypo link', '4'=>'entypo graduation-cap');
@@ -862,16 +864,14 @@ class ForumAdmin {
 				echo "<div class='pull-right'>\n";
 				$upLink = FUSION_SELF.$aidlink.$this->ext."&amp;action=mu&amp;order=$up&amp;forum_id=".$data['forum_id'];
 				$downLink = FUSION_SELF.$aidlink.$this->ext."&amp;action=md&amp;order=$down&amp;forum_id=".$data['forum_id'];
-				//$upLink = clean_request($this->ext."action=mu&amp;order=$up&amp;forum_id=".$data['forum_id'], array('action','order','forum_id','parent_id','branch'));
-				// $downLink = clean_request($this->ext."action=md&amp;order=$up&amp;forum_id=".$data['forum_id'], array('action','order','forum_id','parent_id','branch'));
 				echo ($i == 1) ? '' : "<a title='".$locale['forum_045']."' href='".$upLink."'><i class='entypo up-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 				echo ($i == $rows) ? '' : "<a title='".$locale['forum_046']."' href='".$downLink."'><i class='entypo down-bold m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>";
 				echo "<a title='".$locale['forum_047']."' href='".FUSION_SELF.$aidlink."&amp;action=p_edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'><i class='entypo key m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; // edit
 				echo "<a title='".$locale['forum_048']."' href='".FUSION_SELF.$aidlink."&amp;action=edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'><i class='entypo cog m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; // edit
-				echo "<a title='".$locale['forum_049']."' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$data['forum_id']."&amp;forum_cat=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch'].$ext."' onclick=\"return confirm('".$locale['delete_notice']."');\"><i class='entypo icancel m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; // delete
+				echo "<a title='".$locale['forum_049']."' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$data['forum_id']."&amp;forum_cat=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch'].$this->ext."' onclick=\"return confirm('".$locale['delete_notice']."');\"><i class='entypo icancel m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; // delete
 				echo "</div>\n";
 				echo "<span class='text-dark text-smaller strong'>Topics: ".number_format($data['forum_threadcount'])." / Posts: ".number_format($data['forum_postcount'])." </span>\n<br/>";
-				$subforums = get_child($forum_index, $data['forum_id']);
+				$subforums = get_child($this->forum_index, $data['forum_id']);
 				$subforums = !empty($subforums) ? count($subforums) : 0;
 				echo "<span class='text-dark text-smaller strong'>".$locale['forum_050'].": ".number_format($subforums)."</span>\n<br/>";
 				echo "<span class='text-smaller text-dark strong'>".$locale['forum_051'].":</span> <span class='text-smaller'>".$data['forum_alias']." </span>\n";
@@ -949,7 +949,6 @@ class ForumAdmin {
 		}
 		return $locale['610'].$delattach;
 	}
-
 
 	/**
 	 * Delete all forum posts
