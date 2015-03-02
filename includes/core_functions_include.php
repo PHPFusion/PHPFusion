@@ -394,7 +394,7 @@ function preg_check($expression, $value) {
  * If remove is false, to keep everything else except $requests_array
  * @return string
  */
-function clean_request($request_addition, array $filter_array = array(), $keep_filtered = true) {
+function clean_request($request_addition = false, array $filter_array = array(), $keep_filtered = true) {
 	$path = pathinfo(htmlspecialchars_decode(FUSION_REQUEST));
 	$url = parse_url(htmlspecialchars_decode(FUSION_REQUEST));
 	$_basename = explode('?', $path['basename']);

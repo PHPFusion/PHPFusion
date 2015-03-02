@@ -16,11 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("PH") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+pageAccess('PH');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."bbcode_include.php";
 include LOCALE.LOCALESET."admin/photoalbums.php";
+add_to_breadcrumbs(array('link'=>ADMIN."photoalbums.php".$aidlink, 'title'=>$locale['photo_000']));
 $eshop_gallery = new PHPFusion\Gallery\Admin();
 $eshop_gallery->setUploadSettings(
 	array(
@@ -53,22 +54,7 @@ $eshop_gallery->boot();
 /*
 if (function_exists('gd_info')) {
 	define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
-	if (isset($_GET['action']) && $_GET['action'] == "refresh") {
-		$i = 1;
-		$k = 1;
-		$result = dbquery("SELECT album_id FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."'" : "")." ORDER BY album_order");
-		while ($data = dbarray($result)) {
-			$result2 = dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order='$i' ".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$data['album_id']."'");
-			$result2 = dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE album_id='".$data['album_id']."' ORDER BY photo_order");
-			while ($data2 = dbarray($result2)) {
-				$result3 = dbquery("UPDATE ".DB_PHOTOS." SET photo_order='$k' WHERE photo_id='".$data2['photo_id']."'");
-				$k++;
-			}
-			$i++;
-			$k = 1;
-		}
-		redirect(FUSION_SELF.$aidlink);
-	}
+
 	if (isset($_GET['status']) && !isset($message)) {
 		if ($_GET['status'] == "sn") {
 			$message = $locale['410'];

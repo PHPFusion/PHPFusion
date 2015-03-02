@@ -177,6 +177,7 @@ class Admin {
 
 	public function boot() {
 		global $locale;
+		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		if (function_exists('gd_info')) {
 			//self::Install_Gallery();
 			define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
@@ -197,7 +198,11 @@ class Admin {
 		} else {
 			notify("gd_info() ".$locale['na'], '');
 		}
-
+		switch($_GET['action']) {
+			case 'refresh':
+				self::refresh_album_order();
+				break;
+		}
 	}
 
 	/**
@@ -627,7 +632,8 @@ class Admin {
 
 		echo "<div class='m-t-10 m-b-20'>\n";
 		echo form_button($locale['600'], 'add_album', 'add_album', 'add_album', array('class'=>'btn-primary btn-sm m-r-10', 'icon'=>'fa fa-image'));
-		echo form_button($locale['601'], 'add_photo', 'add_photo', 'add_photo', array('class'=>'btn-sm btn-default', 'icon'=>'fa fa-camera'));
+		echo form_button($locale['601'], 'add_photo', 'add_photo', 'add_photo', array('class'=>'btn-sm btn-default m-r-10', 'icon'=>'fa fa-camera'));
+		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".clean_request('&amp;action=refresh', array('action'), false)."'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
 		echo "</div>\n";
 
 		echo openmodal('add_album', $album_edit ? $locale['606'] : $locale['605'], array('button_id'=>'add_album', 'static'=>1));
@@ -794,10 +800,47 @@ class Admin {
 		}
 	}
 
+	/**
+	 * Album Order Refresh
+	 * Copied from original photoalbums admin
+	 */
+	public function refresh_album_order() {
+		global $locale;
+		$i = 1;
+		$k = 1;
+		$result2 = null;
+		$result3 = null;
+		$result = dbquery("SELECT album_id FROM ".$this->photo_cat_db." ".(multilang_table("PH") ? "WHERE album_language='".LANGUAGE."'" : "")." ORDER BY album_order");
+		while ($data = dbarray($result)) {
+			$result2 = dbquery("UPDATE ".$this->photo_cat_db." SET album_order='$i' ".(multilang_table("PH") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." album_id='".$data['album_id']."'");
+			$result2 = dbquery("SELECT photo_id FROM ".$this->photo_db." WHERE album_id='".$data['album_id']."' ORDER BY photo_order");
+			while ($data2 = dbarray($result2)) {
+				$result3 = dbquery("UPDATE ".$this->photo_db." SET photo_order='$k' WHERE photo_id='".$data2['photo_id']."'");
+				$k++;
+			}
+			$i++;
+			$k = 1;
+		}
+		if ($result3 || $result2) notify($locale['470'],$locale['470a']);
+		//redirect(FUSION_SELF.$aidlink);
+	}
+
+	/**
+	 * Main Gallery HTML output
+	 */
 	private function display_gallery() {
 		global $locale;
 		self::gallery_css();
 		self::display_photo(false);
+
+		/**
+		 * Breadcrumb
+		 */
+		if (isset($_GET['gallery'])) {
+			$gallery_info = self::get_album($_GET['gallery']);
+			add_to_breadcrumbs(array('link'=>clean_request("&amp;gallery=".$_GET['gallery'], array('gallery', 'action'), false), 'title'=>$gallery_info['album_title']));
+		}
+
 		$list = array();
 		$rows = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : dbcount("('album_id')", $this->photo_cat_db);
 		$multiplier = $rows > $this->albums_per_page ? $this->albums_per_page : $rows;
@@ -836,7 +879,6 @@ class Admin {
 		$container_span_md = 12/$this->gallery_rows;
 		if (!empty($albums)) {
 		?>
-
 		<div class='row'>
 			<?php for ($i=1; $i<=$this->gallery_rows; $i++) { // construct columns ?>
 				<div class='col-xs-12 col-sm-<?php echo $container_span_sm ?> col-md-<?php echo $container_span_md ?>'>
@@ -918,7 +960,7 @@ class Admin {
 
 	private function gallery_album(array $data = array(), $type = 1) {
 		global $userdata, $locale;
-		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery'), false) : clean_request('photo='.$data['photo_id'], array('photo', 'status'), false);
+		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery', 'action'), false) : clean_request('photo='.$data['photo_id'], array('photo', 'status', 'action'), false);
 		?>
 
 		<div class='gallery_album panel panel-default'>

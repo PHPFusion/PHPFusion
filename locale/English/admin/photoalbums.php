@@ -1,5 +1,6 @@
 <?php
 // Album titles
+$locale['photo_000'] = 'Photo Albums';
 $locale['400'] = "Add Album";
 $locale['401'] = "Edit Album";
 $locale['402'] = "Current Albums";
@@ -40,7 +41,9 @@ $locale['466'] = "Move up";
 $locale['467'] = "Move down";
 $locale['468'] = "Edit";
 $locale['469'] = "Delete";
-$locale['470'] = "Refresh Album and Photo Ordering";
+$locale['470'] = "Refreshed Album and Photo Ordering";
+$locale['470a'] = "Gallery Album and Photo Ordering have been completely refreshed";
+$locale['470c'] = "Refresh Gallery";
 $locale['471'] = "No Photo Albums defined.";
 // Delete Album
 $locale['500'] = "Delete this Album?";
