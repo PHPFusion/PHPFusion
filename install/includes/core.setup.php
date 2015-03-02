@@ -17,8 +17,7 @@
 +--------------------------------------------------------*/
 // Installs 33 Core Tables and Inserts
 //<editor-fold desc="create table sql for core tables" >
-$core_tables = array(
-	"admin" => " (
+$core_tables = array("admin" => " (
 		admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 		admin_rights CHAR(4) NOT NULL DEFAULT '',
 		admin_image VARCHAR(50) NOT NULL DEFAULT '',
@@ -102,7 +101,7 @@ $core_tables = array(
 		error_file varchar(255) NOT NULL,
 		error_line smallint(5) NOT NULL,
 		error_page varchar(200) NOT NULL,
-		error_user_level smallint(3) NOT NULL,
+		error_user_level CHAR(4) NOT NULL,
 		error_user_ip varchar(45) NOT NULL default '',
 		error_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 		error_status tinyint(1) NOT NULL default '0',
@@ -349,7 +348,7 @@ $core_tables = array(
 		user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 		user_rights TEXT NOT NULL,
 		user_groups TEXT NOT NULL,
-		user_level TINYINT(3) UNSIGNED NOT NULL DEFAULT '101',
+		user_level CHAR(4) UNSIGNED NOT NULL DEFAULT '-101',
 		user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
@@ -377,14 +376,20 @@ $core_tables = array(
 		theme_active TINYINT(1) UNSIGNED NOT NULL,
 		theme_config TEXT NOT NULL,
 		PRIMARY KEY (theme_id)
-		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci"
-);
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 //</editor-fold>
 if (isset($_POST['uninstall'])) {
 	// drop all custom tables.
-	foreach (array(
-		'articles', 'blog', 'downloads', 'eshop', 'faqs', 
-		'forums', 'news', 'photos', 'polls', 'weblinks') as $table) {
+	foreach (array('articles',
+				 'blog',
+				 'downloads',
+				 'eshop',
+				 'faqs',
+				 'forums',
+				 'news',
+				 'photos',
+				 'polls',
+				 'weblinks') as $table) {
 		include __DIR__.'/'.$table.'_setup.php';
 	}
 	foreach (array_keys($core_tables) as $table) {
@@ -396,14 +401,12 @@ if (isset($_POST['uninstall'])) {
 			$fail = TRUE;
 		}
 	}
-
 	// System Inserts
 	$siteurl = rtrim(dirname(getCurrentURL()), '/').'/';
 	$siteurl = str_replace('install/', '', $siteurl);
 	$url = parse_url($siteurl);
 	$settings_sql = "INSERT INTO ".$db_prefix."settings (settings_name, settings_value) VALUES ";
-	$settings_sql .= implode(",\n", array(
-		"('sitename', 'PHP-Fusion Powered Website')",
+	$settings_sql .= implode(",\n", array("('sitename', 'PHP-Fusion Powered Website')",
 		"('siteurl', '".$siteurl."')",
 		"('site_protocol', '".$url['scheme']."')",
 		"('site_host', '".$url['host']."')",
@@ -562,17 +565,12 @@ if (isset($_POST['uninstall'])) {
 		"('debug_seo', '0')",
 		"('privacy_policy', '')",
 		"('create_og_tags', '1')",
-		empty($_POST['enabled_languages']) 
-			? "('enabled_languages', '".stripinput($_POST['localeset'])."')" 
-			: "('enabled_languages', '".stripinput($enabled_languages)."')"
-	));
+		empty($_POST['enabled_languages']) ? "('enabled_languages', '".stripinput($_POST['localeset'])."')" : "('enabled_languages', '".stripinput($enabled_languages)."')"));
 	if (!dbquery($settings_sql)) {
 		$fail = TRUE;
 	}
-	
 	$mlt_sql = "INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ";
-	$mlt_sql .= implode(",\n", array(
-		"('AR', '".$locale['setup_3200']."', '1')",
+	$mlt_sql .= implode(",\n", array("('AR', '".$locale['setup_3200']."', '1')",
 		"('BL', '".$locale['setup_3213']."', '1')",
 		"('CP', '".$locale['setup_3201']."', '1')",
 		"('DL', '".$locale['setup_3202']."', '1')",
@@ -587,11 +585,9 @@ if (isset($_POST['uninstall'])) {
 		"('WL', '".$locale['setup_3209']."', '1')",
 		"('SL', '".$locale['setup_3210']."', '1')",
 		"('PN', '".$locale['setup_3211']."', '1')"));
-	
 	if (!dbquery($mlt_sql)) {
 		$fail = TRUE;
 	}
-	
 	$admin_sql = "INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ";
 	$admin_sql .= implode(",\n", array("('AD', 'admins.gif', '".$locale['setup_3000']."', 'administrators.php', '2')",
 		"('APWR', 'admin_pass.gif', '".$locale['setup_3047']."', 'admin_reset.php', '2')",
@@ -628,7 +624,6 @@ if (isset($_POST['uninstall'])) {
 		"('ROB', 'robots.gif', '".$locale['setup_3050']."', 'robots.php', '3')",
 		"('MAIL', 'email.gif', '".$locale['setup_3800']."', 'email.php', '3')",
 		"('LANG', 'languages.gif', '".$locale['setup_3051']."', 'settings_languages.php', '4')"));
-	
 	if (!dbquery($admin_sql)) {
 		$fail = TRUE;
 	}
@@ -636,8 +631,7 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 	$bbcodes_sql = "INSERT INTO ".$db_prefix."bbcodes (bbcode_name, bbcode_order) VALUES ";
-	$bbcodes_sql .= implode(",\n", array(
-		"('smiley', '1')",
+	$bbcodes_sql .= implode(",\n", array("('smiley', '1')",
 		"('b', '2')",
 		"('i', '3')",
 		"('u', '4')",
@@ -647,14 +641,12 @@ if (isset($_POST['uninstall'])) {
 		"('center', '8')",
 		"('small', '9')",
 		"('code', '10')",
-		"('quote', '11')"
-	));
+		"('quote', '11')"));
 	if (!dbquery($bbcodes_sql)) {
 		$fail = TRUE;
 	}
 	$smileys_sql = "INSERT INTO ".$db_prefix."smileys (smiley_code, smiley_image, smiley_text) VALUES ";
-	$smileys_sql .= implode(",\n", array(
-		"(':)', 'smile.gif', '".$locale['setup_3620']."')",
+	$smileys_sql .= implode(",\n", array("(':)', 'smile.gif', '".$locale['setup_3620']."')",
 		"(';)', 'wink.gif', '".$locale['setup_3621']."')",
 		"(':(', 'sad.gif', '".$locale['setup_3622']."')",
 		"(':|', 'frown.gif', '".$locale['setup_3623']."')",
@@ -667,8 +659,7 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 	$panels_sql = "INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ";
-	$panels_sql .= implode(",\n", array(
-		"('".$locale['setup_3400']."', 'css_navigation_panel', '', '1', '1', 'file', '0', '0', '1', '')",
+	$panels_sql .= implode(",\n", array("('".$locale['setup_3400']."', 'css_navigation_panel', '', '1', '1', 'file', '0', '0', '1', '')",
 		"('RSS Feeds', 'rss_feeds_panel', '', '1', '2', 'file', '0', '0', '1', '')",
 		"('".$locale['setup_3401']."', 'online_users_panel', '', '1', '3', 'file', '0', '0', '1', '')",
 		"('".$locale['setup_3404']."', 'welcome_message_panel', '', '2', '1', 'file', '0', '0', '1', '')",
@@ -678,8 +669,7 @@ if (isset($_POST['uninstall'])) {
 	}
 	// UF 1.02
 	$ufc_sql = "INSERT INTO ".$db_prefix."user_field_cats (field_cat_id, field_cat_name, field_parent, field_cat_db, field_cat_index, field_cat_class, field_cat_order) VALUES ";
-	$ufc_sql .= implode(",\n", array(
-		"(1, '".$locale['setup_3640']."', 0, '', '', 'entypo user', 1)",
+	$ufc_sql .= implode(",\n", array("(1, '".$locale['setup_3640']."', 0, '', '', 'entypo user', 1)",
 		"(2, '".$locale['setup_3641']."', 1, '', '', 'entypo user', 1)",
 		"(3, '".$locale['setup_3642']."', 1, '', '', 'entypo user', 2)",
 		"(4, '".$locale['setup_3643']."', 1, '', '', 'entypo user', 3)",
@@ -690,8 +680,7 @@ if (isset($_POST['uninstall'])) {
 	}
 	// Install UF Modules
 	$uf_sql = "INSERT INTO ".$db_prefix."user_fields (field_name, field_cat, field_type, field_required, field_order) VALUES ";
-	$uf_sql .= implode(",\n", array(
-		"('user_location', '3', 'file', '0', '1')",
+	$uf_sql .= implode(",\n", array("('user_location', '3', 'file', '0', '1')",
 		"('user_birthdate', '3', 'file', '0', '2')",
 		"('user_skype', '2', 'file', '0', '1')",
 		"('user_aim', '2', 'file', '0', '2')",
@@ -705,7 +694,6 @@ if (isset($_POST['uninstall'])) {
 	if (!dbquery($uf_sql)) {
 		$fail = TRUE;
 	}
-	
 	$sl_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ";
 	$sl_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
@@ -715,7 +703,7 @@ if (isset($_POST['uninstall'])) {
 				('".$locale['setup_3315']."', '0', '', 'submissions.php', '101', '1', '0', '10', '".$language."'),
 				('---', '0', '', '---', '101', '1', '0', '11', '".$language."')";
 	}, explode('.', $enabled_languages)));
-	if(!dbquery($sl_sql)) {
+	if (!dbquery($sl_sql)) {
 		$fail = TRUE;
 	}
 	$et_sql = "INSERT INTO ".$db_prefix."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ";
@@ -725,7 +713,7 @@ if (isset($_POST['uninstall'])) {
 				('', 'POST', 'html', '0', '".$locale['setup_3804']."', '".$locale['setup_3805']."', '".$locale['setup_3806']."', '".$username."', '".$email."', '".$language."'),
 				('', 'CONTACT', 'html', '0', '".$locale['setup_3807']."', '".$locale['setup_3808']."', '".$locale['setup_3809']."', '".$username."', '".$email."', '".$language."')";
 	}, explode('.', $enabled_languages)));
-	if(!dbquery($et_sql)) {
+	if (!dbquery($et_sql)) {
 		$fail = TRUE;
 	}
 }

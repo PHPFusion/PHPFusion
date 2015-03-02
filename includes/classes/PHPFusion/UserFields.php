@@ -16,10 +16,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
-
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 require_once THEMES."templates/global/profile.php";
 
 class UserFields extends QuantumFields {
@@ -36,8 +36,14 @@ class UserFields extends QuantumFields {
 	public $baseRequest = FALSE; // new in API 1.02 - turn fusion_self to fusion_request - 3rd party pages. Turn this on if you have more than one $_GET pagination str.
 	public $skipCurrentPass = FALSE;
 	public $registration = FALSE;
-	public $userData = array("user_id"=>'', "user_name"=>'', "user_password"=>'', "user_admin_password"=>'', "user_email"=>'', 'user_hide_email'=>0, "user_language"=>LANGUAGE, 'user_timezone'=>'Europe/London');
-
+	public $userData = array("user_id" => '',
+		"user_name" => '',
+		"user_password" => '',
+		"user_admin_password" => '',
+		"user_email" => '',
+		'user_hide_email' => 0,
+		"user_language" => LANGUAGE,
+		'user_timezone' => 'Europe/London');
 	/* Quantum Fields Extensions */
 	public $system_title = '';
 	public $admin_rights = '';
@@ -47,7 +53,6 @@ class UserFields extends QuantumFields {
 	public $plugin_folder = '';
 	public $plugin_locale_folder = '';
 	public $debug = FALSE;
-
 	// API 1.02
 	private $html = "";
 	private $js = "";
@@ -55,11 +60,9 @@ class UserFields extends QuantumFields {
 	private $javaScriptRequired;
 	public $method;
 	private $_userNameChange = TRUE;
-
 	/* User Fields class 9.00 */
 	private $info = array(); // MVC var
 	public $paginate = TRUE; // new in API v2.00
-
 	public function setUserNameChange($value) {
 		$this->_userNameChange = $value;
 	}
@@ -71,15 +74,12 @@ class UserFields extends QuantumFields {
 		$section = array();
 		$result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent='0' ORDER BY field_cat_order");
 		if (dbrows($result) > 0) {
-			//$cur = ($this->method == 'input') ? 'edit_profile.php' : 'profile.php';
 			$aid = isset($_GET['aid']) ? $aidlink.'&amp;' : '';
 			$i = 0;
 			while ($data = dbarray($result)) {
-				$section[] = array(
-					'active'=>(isset($_GET['profiles']) && $_GET['profiles'] == $data['field_cat_id']) ? 1 : (!isset($_GET['profiles']) && $i == 0 ? 1 : 0),
-					'link'=>clean_request($aid.'profiles='.$data['field_cat_id'].'&amp;lookup='.$this->userData['user_id'], array()),
-					'name'=>ucwords(self::parse_label($data['field_cat_name']))
-				);
+				$section[] = array('active' => (isset($_GET['profiles']) && $_GET['profiles'] == $data['field_cat_id']) ? 1 : (!isset($_GET['profiles']) && $i == 0 ? 1 : 0),
+					'link' => clean_request($aid.'profiles='.$data['field_cat_id'].'&amp;lookup='.$this->userData['user_id'], array('profiles'), FALSE),
+					'name' => ucwords(self::parse_label($data['field_cat_name'])));
 				$i++;
 			}
 		}
@@ -98,7 +98,6 @@ class UserFields extends QuantumFields {
 	public function render_profile_input() {
 		global $locale;
 		include THEMES."templates/global/profile.php";
-
 		$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
 		$_GET['profiles'] = isset($_GET['profiles']) ? $_GET['profiles'] : 1;
 		/* Fields that are ONLY AVAILABLE with REQUEST_URL = ?profiles=1 */
@@ -107,35 +106,75 @@ class UserFields extends QuantumFields {
 			$user_name = isset($_POST['user_name']) ? $_POST['user_name'] : $this->userData['user_name'];
 			$user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
 			$user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
-
 			$this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
 			if (iADMIN || $this->_userNameChange) {
-				$this->info['user_name'] .= form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length'=>30, 'required'=>1, 'error_text'=>$locale['u122'], 'inline'=>1));
+				$this->info['user_name'] .= form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length' => 30,
+					'required' => 1,
+					'error_text' => $locale['u122'],
+					'inline' => 1));
 			}
 			// User Password
 			$this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');
 			if ($this->registration) {
-				$this->info['user_password'] .= form_text($locale['u134a'], 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
-				$this->info['user_password'] .= form_text($locale['u134b'], 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133'], 'required'=>1));
+				$this->info['user_password'] .= form_text($locale['u134a'], 'user_password1', ' user_password1', '', array('password' => 1,
+					'autocomplete_off' => 1,
+					'inline' => 1,
+					'max_length' => 64,
+					'error_text' => $locale['u133'],
+					'required' => 1));
+				$this->info['user_password'] .= form_text($locale['u134b'], 'user_password2', 'user_password2', '', array('password' => 1,
+					'autocomplete_off' => 1,
+					'inline' => 1,
+					'max_length' => 64,
+					'error_text' => $locale['u133'],
+					'required' => 1));
 			} else {
-				$this->info['user_password'] .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id']: 0);
-				$this->info['user_password'] .= form_text($locale['u135a'], 'user_password', 'user_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
-				$this->info['user_password'] .= form_text($locale['u135b'], 'user_password1',' user_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
-				$this->info['user_password'] .= form_text($locale['u135c'], 'user_password2', 'user_password2', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u133']));
+				$this->info['user_password'] .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0);
+				$this->info['user_password'] .= form_text($locale['u135a'], 'user_password', 'user_password', '', array('password' => 1,
+					'autocomplete_off' => 1,
+					'inline' => 1,
+					'max_length' => 64,
+					'error_text' => $locale['u133']));
+				$this->info['user_password'] .= form_text($locale['u135b'], 'user_password1', ' user_password1', '', array('password' => 1,
+					'autocomplete_off' => 1,
+					'inline' => 1,
+					'max_length' => 64,
+					'error_text' => $locale['u133']));
+				$this->info['user_password'] .= form_text($locale['u135c'], 'user_password2', 'user_password2', '', array('password' => 1,
+					'autocomplete_off' => 1,
+					'inline' => 1,
+					'max_length' => 64,
+					'error_text' => $locale['u133']));
 				$this->info['user_password'] .= "<input type='hidden' name='user_hash' value='".$this->userData['user_password']."' />\n";
 			}
 			$this->info['user_password'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
-
 			// Admin Password - not available for everyone except edit profile.
 			$this->info['user_admin_password'] = '';
 			if (!$this->registration && iADMIN && !defined('ADMIN_PANEL')) {
 				if ($this->userData['user_admin_password']) {
-					$this->info['user_admin_password'] =  form_text($locale['u144a'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
-					$this->info['user_admin_password'] .=  form_text($locale['u144'], 'user_admin_password1', 'user_admin_password1', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+					$this->info['user_admin_password'] = form_text($locale['u144a'], 'user_admin_password', 'user_admin_password', '', array('password' => 1,
+						'autocomplete_off' => 1,
+						'inline' => 1,
+						'max_length' => 64,
+						'error_text' => $locale['u136']));
+					$this->info['user_admin_password'] .= form_text($locale['u144'], 'user_admin_password1', 'user_admin_password1', '', array('password' => 1,
+						'autocomplete_off' => 1,
+						'inline' => 1,
+						'max_length' => 64,
+						'error_text' => $locale['u136']));
 				} else {
-					$this->info['user_admin_password'] =  form_text($locale['u144'], 'user_admin_password', 'user_admin_password', '', array('password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+					$this->info['user_admin_password'] = form_text($locale['u144'], 'user_admin_password', 'user_admin_password', '', array('password' => 1,
+						'autocomplete_off' => 1,
+						'inline' => 1,
+						'max_length' => 64,
+						'error_text' => $locale['u136']));
 				}
-				$this->info['user_admin_password'] .=  form_text($locale['u145'], 'user_admin_password2', 'user_admin_password2', '', array('class'=>'m-b-0', 'password'=>1, 'autocomplete_off'=>1, 'inline'=>1, 'max_length'=>64, 'error_text'=>$locale['u136']));
+				$this->info['user_admin_password'] .= form_text($locale['u145'], 'user_admin_password2', 'user_admin_password2', '', array('class' => 'm-b-0',
+					'password' => 1,
+					'autocomplete_off' => 1,
+					'inline' => 1,
+					'max_length' => 64,
+					'error_text' => $locale['u136']));
 				$this->info['user_admin_password'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
 			}
 			// Avatar Field
@@ -145,36 +184,38 @@ class UserFields extends QuantumFields {
 					$this->info['user_avatar'] = "<label for='user_avatar_upload'><img src='".IMAGES."avatars/".$this->userData['user_avatar']."' alt='".$locale['u185']."' />
 											</label>\n<br />\n<input type='checkbox' name='delAvatar' value='1' class='textbox' /> ".$locale['u187']."<br />\n<br />\n";
 				} else {
-					$this->info['user_avatar'] = form_fileinput($locale['u185'], 'user_avatar', 'user_avatar_upload', IMAGES."avatars/", '', array(
-						'type'=>'image',
-						'max_bytes'=> fusion_get_settings('avatar_filesize'),
-						'max_height'=> fusion_get_settings('avatar_width'),
-						'max_width'=> fusion_get_settings('avatar_height'),
-						'inline'=>1,
-						'thumbnail'=>0,
-						'width'=>'100%',
-						'class'=>'m-t-10 m-b-0'));
-					$this->info['user_avatar'] .=	"<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>
+					$this->info['user_avatar'] = form_fileinput($locale['u185'], 'user_avatar', 'user_avatar_upload', IMAGES."avatars/", '', array('type' => 'image',
+						'max_bytes' => fusion_get_settings('avatar_filesize'),
+						'max_height' => fusion_get_settings('avatar_width'),
+						'max_width' => fusion_get_settings('avatar_height'),
+						'inline' => 1,
+						'thumbnail' => 0,
+						'width' => '100%',
+						'class' => 'm-t-10 m-b-0'));
+					$this->info['user_avatar'] .= "<div class='col-xs-12 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>
 					".sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')), fusion_get_settings('avatar_width'), fusion_get_settings('avatar_height'))."</span></div>\n";
 				}
 			}
 			// Email
-			$this->info['user_email'] = form_text($locale['u128'], 'user_email', 'user_email', $user_email, array('tip'=>$locale['u100'], 'email'=>1, 'inline'=>1, 'max_length'=>'100', 'error_text'=>$locale['u126']));
+			$this->info['user_email'] = form_text($locale['u128'], 'user_email', 'user_email', $user_email, array('tip' => $locale['u100'],
+				'email' => 1,
+				'inline' => 1,
+				'max_length' => '100',
+				'error_text' => $locale['u126']));
 			// Hide email toggler
-			$this->info['user_hide_email'] = form_btngroup($locale['u051'], 'user_hide_email', 'user_hide_email', array($locale['u053'], $locale['u052']), $user_hide_email, array('inline'=>1));
+			$this->info['user_hide_email'] = form_btngroup($locale['u051'], 'user_hide_email', 'user_hide_email', array($locale['u053'],
+				$locale['u052']), $user_hide_email, array('inline' => 1));
 			// Captcha
 			if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) $this->info['validate'] = $this->renderValidation();
 			// Website terms
 			if ($this->displayTerms == 1) $this->info['terms'] = $this->renderTerms();
 		}
-		$this->info += array(
-			'register' =>  $this->registration,
-			'pages' =>  ($this->paginate && !$this->registration) ?  $this->info['section'] = $this->renderPageLink() : '',
-			'openform' => openform($this->formname, $this->formname, 'post', FUSION_REQUEST, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."", 'downtime' => 1)),
+		$this->info += array('register' => $this->registration,
+			'pages' => ($this->paginate && !$this->registration) ? $this->info['section'] = $this->renderPageLink() : '',
+			'openform' => openform($this->formname, $this->formname, 'post', FUSION_REQUEST, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."",
+				'downtime' => 1)),
 			'closeform' => closeform(),
-			'button' => $this->renderButton(),
-		);
-
+			'button' => $this->renderButton(),);
 		$this->get_userFields();
 		render_userform($this->info);
 	}
@@ -195,31 +236,39 @@ class UserFields extends QuantumFields {
 		render_userprofile($this->info);
 	}
 
-
 	/* New profile page output */
 	private function UserProfile() {
 		global $locale, $userdata, $aidlink;
 		if (!isset($_GET['profiles']) or isset($_GET['profiles']) && $_GET['profiles'] == 1) {
 			if (empty($this->userData['user_avatar']) or !file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) $this->userData['user_avatar'] = "noavatar100.png";
-			$this->info['core_field']['profile_user_avatar'] = array('title'=>$locale['u186'], 'value'=>$this->userData['user_avatar'], 'status'=>$this->userData['user_status']);
+			$this->info['core_field']['profile_user_avatar'] = array('title' => $locale['u186'],
+				'value' => $this->userData['user_avatar'],
+				'status' => $this->userData['user_status']);
 			// user name
-			$this->info['core_field']['profile_user_name'] = array('title'=>$locale['u068'], 'value'=>ucwords($this->userData['user_name']));
+			$this->info['core_field']['profile_user_name'] = array('title' => $locale['u068'],
+				'value' => ucwords($this->userData['user_name']));
 			// user level
-			$this->info['core_field']['profile_user_level'] = array('title'=>$locale['u063'], 'value'=>getgroupname($this->userData['user_level']));
+			$this->info['core_field']['profile_user_level'] = array('title' => $locale['u063'],
+				'value' => getgroupname($this->userData['user_level']));
 			// user email
-			if (iADMIN || $this->userData['user_hide_email'] == 0) $this->info['core_field']['profile_user_email'] = array('title'=>$locale['u064'], 'value'=>hide_email($this->userData['user_email']));
+			if (iADMIN || $this->userData['user_hide_email'] == 0) $this->info['core_field']['profile_user_email'] = array('title' => $locale['u064'],
+				'value' => hide_email($this->userData['user_email']));
 			// user joined
-			$this->info['core_field']['profile_user_joined'] = array('title'=>$locale['u066'], 'value'=>showdate("longdate", $this->userData['user_joined']));
+			$this->info['core_field']['profile_user_joined'] = array('title' => $locale['u066'],
+				'value' => showdate("longdate", $this->userData['user_joined']));
 			// user last visit
 			$lastVisit = $this->userData['user_lastvisit'] ? showdate("longdate", $this->userData['user_lastvisit']) : $locale['u042'];
-			$this->info['core_field']['profile_user_visit'] = array('title'=>$locale['u067'], 'value'=>$lastVisit);
+			$this->info['core_field']['profile_user_visit'] = array('title' => $locale['u067'], 'value' => $lastVisit);
 			// user status
 			if (iADMIN && $this->userData['user_status'] > 0) {
-				$this->info['core_field']['profile_user_status'] = array('title'=>$locale['u055'], 'value'=>getuserstatus($this->userData['user_status']));
-				$this->info['core_field']['profile_user_reason'] = array('title'=>$locale['u056'], 'value'=>$this->userData['suspend_reason']);
+				$this->info['core_field']['profile_user_status'] = array('title' => $locale['u055'],
+					'value' => getuserstatus($this->userData['user_status']));
+				$this->info['core_field']['profile_user_reason'] = array('title' => $locale['u056'],
+					'value' => $this->userData['suspend_reason']);
 			}
 			// IP
-			(iADMIN && checkrights("M")) ? $this->info['core_field']['profile_user_ip'] = array('title'=>$locale['u049'], 'value'=>$this->userData['user_ip']) : '';
+			(iADMIN && checkrights("M")) ? $this->info['core_field']['profile_user_ip'] = array('title' => $locale['u049'],
+				'value' => $this->userData['user_ip']) : '';
 			// Groups - need translating.
 			$this->info['core_field']['profile_user_group']['title'] = $locale['u057'];
 			$user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'], 1) : $this->userData['user_groups'];
@@ -237,16 +286,17 @@ class UserFields extends QuantumFields {
 		}
 		// @todo: bugfix the href src in Admin
 		$this->info['section'] = $this->renderPageLink();
-
 		// Module Items -- got $user_info['field'];
 		self::get_userFields();
 		// buttons.. 2 of them.
 		if (iMEMBER && $userdata['user_id'] != $this->userData['user_id']) {
-			$this->info['buttons'][] = array('link'=>BASEDIR."messages.php?msg_send=".$this->userData['user_id'], 'name'=>$locale['u043']);
-			if (iADMIN && checkrights("M") && $this->userData['user_level'] > "103" && $this->userData['user_id'] != "1") {
-				$this->info['buttons'][] = array('link'=>ADMIN."members.php".$aidlink."&amp;step=log&amp;user_id=".$this->userData['user_id'], 'name'=>$locale['u054']);
+			$this->info['buttons'][] = array('link' => BASEDIR."messages.php?msg_send=".$this->userData['user_id'],
+				'name' => $locale['u043']);
+			if (iADMIN && checkrights("M") && $this->userData['user_level'] < "-102" && $this->userData['user_id'] != "1") {
+				$this->info['buttons'][] = array('link' => ADMIN."members.php".$aidlink."&amp;step=log&amp;user_id=".$this->userData['user_id'],
+					'name' => $locale['u054']);
 				$this->info['buttons'][] = self::renderAdminOptions();
- 			}
+			}
 		}
 	}
 
@@ -255,7 +305,6 @@ class UserFields extends QuantumFields {
 	// reacts with $method var ('input', 'display');
 	private function get_userFields() {
 		$this->callback_data = $this->userData;
-
 		$index_page_id = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 		$result = dbquery("SELECT field.*,
 				cat.field_cat_id, cat.field_cat_name, cat.field_parent,
@@ -265,7 +314,7 @@ class UserFields extends QuantumFields {
 				INNER JOIN ".DB_USER_FIELD_CATS." root on (cat.field_parent = root.field_cat_id)
 				WHERE cat.field_cat_id='$index_page_id' OR root.field_cat_id='$index_page_id'
 				ORDER BY root.field_cat_order, cat.field_cat_order, field.field_order");
-		if (dbrows($result)>0) {
+		if (dbrows($result) > 0) {
 			// loop
 			while ($data = dbarray($result)) {
 				if ($data['field_cat_id']) $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
@@ -279,29 +328,31 @@ class UserFields extends QuantumFields {
 			//print_p($this->method, 1);
 			//if ($index_page_id !=='1' && (!$this->registration)) {
 			if ($this->method == 'input') {
-				$this->info['user_field'] = $_GET['profiles'] !==1 ? form_hidden('', 'user_id', 'user_id', $this->userData['user_id']) : '';
-				$this->info['user_field'] .= $_GET['profiles'] !==1 ? form_hidden('', 'user_name', 'user_name', $this->userData['user_name']) : '';
+				$this->info['user_field'] = $_GET['profiles'] !== 1 ? form_hidden('', 'user_id', 'user_id', $this->userData['user_id']) : '';
+				$this->info['user_field'] .= $_GET['profiles'] !== 1 ? form_hidden('', 'user_name', 'user_name', $this->userData['user_name']) : '';
 			} elseif ($this->method == 'display') {
 				//print_p($this->registration);
 				$this->info['user_field'] = array();
 			}
 			// filter display - input and display method.
 			if (isset($category[$index_page_id])) {
-				foreach($category[$index_page_id] as $cat_id => $cat) {
-					if ($this->registration || $this->method=='input') {
+				foreach ($category[$index_page_id] as $cat_id => $cat) {
+					if ($this->registration || $this->method == 'input') {
 						$this->method = 'input';
 						if (isset($item[$cat_id])) {
 							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
-							foreach($item[$cat_id] as $field_id => $field) {
+							foreach ($item[$cat_id] as $field_id => $field) {
 								//@todo: switch field type
-								$this->info['user_field'] .= $this->display_fields($field, array('show_title'=>1, 'inline'=>1, 'required'=>$field['field_required'] ? 1 : 0));
+								$this->info['user_field'] .= $this->display_fields($field, array('show_title' => 1,
+									'inline' => 1,
+									'required' => $field['field_required'] ? 1 : 0));
 							}
 						}
 					} else {
 						$this->method = 'display';
 						if (isset($item[$cat_id])) {
 							$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
-							foreach($item[$cat_id] as $field_id => $field) {
+							foreach ($item[$cat_id] as $field_id => $field) {
 								if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->display_fields($field)) {
 									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->display_fields($field);
 								}
@@ -345,7 +396,6 @@ class UserFields extends QuantumFields {
 		$this->html .= "</tr>\n</table>\n</form>\n";
 	}
 
-
 	private function renderTerms() {
 		global $locale;
 		$html = "<div class='form-group clearfix'>";
@@ -377,7 +427,12 @@ class UserFields extends QuantumFields {
 		$html .= ob_get_contents();
 		ob_end_clean();
 		if (!$_CAPTCHA_HIDE_INPUT) {
-			$html .= form_text('', 'captcha_code', 'captcha_code', '', array('inline'=>1, 'required'=>1, 'autocomplete_off'=>1, 'width'=>'200px', 'class'=>'m-t-15', 'placeholder'=>$locale['u191']));
+			$html .= form_text('', 'captcha_code', 'captcha_code', '', array('inline' => 1,
+				'required' => 1,
+				'autocomplete_off' => 1,
+				'width' => '200px',
+				'class' => 'm-t-15',
+				'placeholder' => $locale['u191']));
 		}
 		$html .= "</div>\n";
 		$html .= "</div>\n";
@@ -393,6 +448,5 @@ class UserFields extends QuantumFields {
 		$html .= "<button type='submit' name='".$this->postName."' value='".$this->postValue."' class='btn btn-primary'".$dissabled." />".$this->postValue."</button>\n";
 		return $html;
 	}
-
 }
 

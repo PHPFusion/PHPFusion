@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 include LOCALE.LOCALESET."errors.php";
 // PHP Error Reporting
 error_reporting(E_ALL ^ E_STRICT);
@@ -23,9 +25,8 @@ set_error_handler("setError");
 $_errorHandler = array();
 // PHP-Fusion Error Handler
 function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
-	global $userdata, $_errorHandler, $settings;
+	global $userdata, $_errorHandler;
 	$showError = TRUE;
-
 	$result = dbquery("SELECT error_id, error_status FROM ".DB_ERRORS."
 		WHERE error_level='".intval($error_level)."' AND error_file='".addslash($error_file)."'
 		AND error_line='".intval($error_line)."' AND error_status!='1'
@@ -49,15 +50,17 @@ function setError($error_level, $error_message, $error_file, $error_line, $error
 		}
 	}
 	if ($showError) {
-		$_errorHandler[] = array("id" => $errorId, "level" => $error_level, "file" => $error_file, "line" => $error_line);
+		$_errorHandler[] = array("id" => $errorId,
+			"level" => $error_level,
+			"file" => $error_file,
+			"line" => $error_line);
 	}
 }
 
 // Error Levels Desciption
 function getErrorLevel($level, $desc = FALSE) {
 	global $locale;
-	$errorLevels = array(
-		1 => array("E_ERROR", $locale['E_ERROR']),
+	$errorLevels = array(1 => array("E_ERROR", $locale['E_ERROR']),
 		2 => array("E_WARNING", $locale['E_WARNING']),
 		4 => array("E_PARSE", $locale['E_PARSE']),
 		8 => array("E_NOTICE", $locale['E_NOTICE']),
@@ -69,8 +72,7 @@ function getErrorLevel($level, $desc = FALSE) {
 		512 => array("E_USER_WARNING", $locale['E_USER_WARNING']),
 		1024 => array("E_USER_NOTICE", $locale['E_USER_NOTICE']),
 		2047 => array("E_ALL", $locale['E_ALL']),
-		2048 => array("E_STRICT", $locale['E_STRICT'])
-	);
+		2048 => array("E_STRICT", $locale['E_STRICT']));
 	if (isset($errorLevels[$level])) {
 		return $errorLevels[0].($desc ? " - ".$errorLevels[1] : "");
 	} else {
@@ -83,7 +85,8 @@ function fusion_turbo_debugger() {
 		$error_logs = new \PHPFusion\ErrorLogs();
 		$error_logs->compressed = 1;
 		if (!defined('no_debugger')) {
-			echo openmodal('tbody', 'Fusion Debugger', array('class'=>'modal-lg modal-center zindex-boost', 'button_id'=>'turbo_debugger'));
+			echo openmodal('tbody', 'Fusion Debugger', array('class' => 'modal-lg modal-center zindex-boost',
+				'button_id' => 'turbo_debugger'));
 			$error_logs->show_footer_logs();
 			echo closemodal();
 		}

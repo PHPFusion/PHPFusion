@@ -15,10 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
-
-if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 $settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
 define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
@@ -50,7 +50,6 @@ class Authenticate {
 		$result = dbquery("SELECT * FROM ".DB_USERS." WHERE ".$where."='".$inputUserName."' LIMIT 1");
 		if (dbrows($result) == 1) {
 			$user = dbarray($result);
-
 			// Initialize password auth
 			$passAuth = new PasswordAuth();
 			$passAuth->currentAlgo = $user["user_algo"];
@@ -110,7 +109,6 @@ class Authenticate {
 			self::expireAdminCookie();
 			redirect(BASEDIR."index.php");
 		}
-
 		if (isset($_POST['admin_password'])) {
 			$admin_password = form_sanitizer($_POST['admin_password'], '', 'admin_password');
 			if (!defined("FUSION_NULL")) {
@@ -206,7 +204,7 @@ class Authenticate {
 					list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
 					if ($cookieExpiration > time()) {
 						$result = dbquery("SELECT user_admin_algo, user_admin_salt FROM ".DB_USERS."
-							WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_level>101 AND  user_status='0' AND user_actiontime='0'
+							WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_level < -101 AND  user_status='0' AND user_actiontime='0'
 							LIMIT 1");
 						if (dbrows($result) == 1) {
 							$user = dbarray($result);
@@ -218,10 +216,10 @@ class Authenticate {
 						}
 					}
 				}
-			// Validate a provided password
+				// Validate a provided password
 			} elseif ($pass != "") {
 				$result = dbquery("SELECT user_admin_algo, user_admin_salt, user_admin_password FROM ".DB_USERS."
-					WHERE user_id='".$userdata['user_id']."' AND user_level>101 AND  user_status='0' AND user_actiontime='0'
+					WHERE user_id='".$userdata['user_id']."' AND user_level < -101 AND  user_status='0' AND user_actiontime='0'
 					LIMIT 1");
 				if (dbrows($result) == 1) {
 					$user = dbarray($result);
@@ -312,10 +310,10 @@ class Authenticate {
 					SET user_admin_algo='".$userdata['user_admin_algo']."', user_admin_salt='".$userdata['user_admin_salt']."', user_admin_password='".$userdata['user_admin_password']."'
 					WHERE user_id='".$userdata['user_id']."'");
 				Authenticate::setUserCookie($userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE);
-				return true;
+				return TRUE;
 			}
 		}
-		return false;
+		return FALSE;
 	}
 
 	// Get Loging Redirect Url
@@ -344,7 +342,7 @@ class Authenticate {
 	// Set user theme
 	private static function _setUserTheme(&$user) {
 		global $settings;
-		if ($settings['userthemes'] == 0 && $user['user_level'] < 102 && $user['user_theme'] != "Default") {
+		if ($settings['userthemes'] == 0 && $user['user_level'] < -102 && $user['user_theme'] != "Default") {
 			$user['user_theme'] = "Default";
 		}
 	}

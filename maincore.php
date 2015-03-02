@@ -19,7 +19,9 @@
 
 use PHPFusion\Authenticate;
 
-if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) { die(); }
+if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
+	die();
+}
 
 define("IN_FUSION", TRUE);
 
@@ -135,9 +137,9 @@ if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_p
 
 // User level, Admin Rights & User Group definitions
 define("iGUEST", $userdata['user_level'] == 0 ? 1 : 0);
-define("iMEMBER", $userdata['user_level'] >= 101 ? 1 : 0);
-define("iADMIN", $userdata['user_level'] >= 102 ? 1 : 0);
-define("iSUPERADMIN", $userdata['user_level'] == 103 ? 1 : 0);
+define("iMEMBER", $userdata['user_level'] <= -101 ? 1 : 0);
+define("iADMIN", $userdata['user_level'] <= -102 ? 1 : 0);
+define("iSUPERADMIN", $userdata['user_level'] == -103 ? 1 : 0);
 define("iUSER", $userdata['user_level']);
 define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
@@ -241,7 +243,7 @@ if ($settings['mime_check'] == "1") {
 							die('Prevented an unwanted file upload attempt!');
 						}
 					}
-				} 
+				}
 				unset($file_info, $extension);
 			}
 		}
@@ -250,16 +252,16 @@ if ($settings['mime_check'] == "1") {
 }
 
 $defender = new defender;
-$defender->debug_notice = false; // turn this off after beta.
+$defender->debug_notice = FALSE; // turn this off after beta.
 $defender->sniff_token();
-$defender->debug_notice = false; // turn this off after beta.
+$defender->debug_notice = FALSE; // turn this off after beta.
 $dynamic = new dynamics();
 $dynamic->boot();
 
 // & is important after equal sign!
-$fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
-$fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
-$fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;
+$fusion_page_head_tags = & \PHPFusion\OutputHandler::$pageHeadTags;
+$fusion_page_footer_tags = & \PHPFusion\OutputHandler::$pageFooterTags;
+$fusion_jquery_tags = & \PHPFusion\OutputHandler::$jqueryTags;
 
 // set admin login procedures
 Authenticate::setAdminLogin();

@@ -15,14 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-ini_set('display_errors',1);
+ini_set('display_errors', 1);
 define('BASEDIR', '../');
 require_once 'setup_includes.php';
-
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 define("IN_FUSION", TRUE);
-if (!defined('DYNAMICS')) { define('DYNAMICS', INCLUDES."dynamics/"); }
-
+if (!defined('DYNAMICS')) {
+	define('DYNAMICS', INCLUDES."dynamics/");
+}
 if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_dir(LOCALE.$_GET['localeset'])) {
 	include LOCALE.$_GET['localeset']."/setup.php";
 	define("LOCALESET", $_GET['localeset']."/");
@@ -31,12 +31,9 @@ if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_di
 	define("LOCALESET", "English/");
 	include LOCALE.LOCALESET."setup.php";
 }
-
 require_once INCLUDES."defender.inc.php";
 include INCLUDES."output_handling_include.php";
 $defender = new defender();
-
-
 if (isset($_POST['step']) && $_POST['step'] == "8") {
 	if (file_exists(BASEDIR.'config_temp.php')) {
 		@rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
@@ -44,7 +41,6 @@ if (isset($_POST['step']) && $_POST['step'] == "8") {
 	}
 	redirect(BASEDIR.'index.php');
 }
-
 //determine the chosen database functions
 $pdo_enabled = filter_input(INPUT_POST, 'pdo_enabled', FILTER_VALIDATE_BOOLEAN);
 $db_host = 'localhost';
@@ -52,18 +48,19 @@ $db_user = '';
 $db_pass = '';
 $db_name = '';
 $db_prefix = '';
-if (file_exists(BASEDIR.'config.php')) { include BASEDIR.'config.php'; }
-elseif (file_exists(BASEDIR.'config_temp.php')) { include BASEDIR.'config_temp.php'; }
+if (file_exists(BASEDIR.'config.php')) {
+	include BASEDIR.'config.php';
+} elseif (file_exists(BASEDIR.'config_temp.php')) {
+	include BASEDIR.'config_temp.php';
+}
 if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
-	$pdo_enabled = (bool) intval($pdo_enabled);
+	$pdo_enabled = (bool)intval($pdo_enabled);
 	$db_host = stripinput(trim(strval(filter_input(INPUT_POST, 'db_host')))) ? : $db_host;
 	$db_user = stripinput(trim(strval(filter_input(INPUT_POST, 'db_user')))) ? : $db_user;
 	$db_pass = stripinput(trim(strval(filter_input(INPUT_POST, 'db_pass')))) ? : $db_pass;
 	$db_name = stripinput(trim(strval(filter_input(INPUT_POST, 'db_name')))) ? : $db_name;
 	$db_prefix = stripinput(trim(strval(filter_input(INPUT_POST, 'db_prefix')))) ? : $db_prefix;
 }
-
-
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
 //require_once INCLUDES."output_handling_include.php";
 include_once INCLUDES."dynamics/dynamics.inc.php";
@@ -71,14 +68,12 @@ require_once INCLUDES."sqlhandler.inc.php";
 //New database handler functions
 //require_once INCLUDES."db_handlers/all_functions_include.php";
 //DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
-
 //Old database handler functions
 require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
 require_once LOCALE.LOCALESET.'global.php';
 $dynamics = new dynamics();
 $dynamics->boot();
-$system_apps = array(
-	// dbname to locale application title
+$system_apps = array(// dbname to locale application title
 	'articles' => $locale['articles']['title'],
 	'blog' => $locale['blog']['title'],
 	'downloads' => $locale['downloads']['title'],
@@ -88,26 +83,21 @@ $system_apps = array(
 	'news' => $locale['news']['title'],
 	'photos' => $locale['photos']['title'],
 	'polls' => $locale['polls']['title'],
-	'weblinks' => $locale['weblinks']['title']
-);
-
-$buttons = array(
-	'next' => array('next', $locale['setup_0121']),
+	'weblinks' => $locale['weblinks']['title']);
+$buttons = array('next' => array('next', $locale['setup_0121']),
 	'finish' => array('next', $locale['setup_0123']),
 	'done' => array('done', $locale['setup_0120']),
 	'refresh' => array('next', $locale['setup_1105']),
 	'tryagain' => array('next', $locale['setup_0122']),
-	'back' => array('back', $locale['setup_0122'])
-);
+	'back' => array('back', $locale['setup_0122']));
 $buttonMode = NULL;
 $nextStep = 1;
-
 $content = "";
 switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 	// Introduction
-	case 1: default:
+	case 1:
+	default:
 		// create htaccess file.
-		
 		if (isset($_POST['htaccess'])) {
 			dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
 			/*
@@ -121,13 +111,11 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			write_htaccess($site_path);
 			redirect(FUSION_SELF."?localeset=".$_GET['localeset']);
 		}
-
 		// ALWAYS reset config to config_temp.php
 		if (file_exists(BASEDIR.'config.php')) {
 			@rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
 			@chmod(BASEDIR.'config_temp.php', 0755);
 		}
-
 		// Must always include a temp file.
 		/* 1. To enter Recovery. CONFIG TEMP file must have dbprefix and have value in dbprefix. */
 		if (isset($db_prefix) && $db_prefix) {
@@ -140,12 +128,10 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			}
 			$content .= "<h4 class='strong'>".$locale['setup_1002']."</h4>\n";
 			$content .= "<span class='display-block m-t-20 m-b-10'>".$locale['setup_1003']."</span>\n";
-
 			$content .= "<div class='well'>\n";
 			$content .= "<span class='strong display-inline-block m-b-10'>".$locale['setup_1017']."</span><br/><p>".$locale['setup_1018']."</p>";
 			$content .= form_button($locale['setup_1019'], 'step', 'step-exit', '8', array('class' => 'btn-success btn-sm m-t-10'));
 			$content .= "</div>\n";
-
 			$content .= "<div class='well'>\n";
 			$content .= "<span class='strong display-inline-block m-b-10'>".$locale['setup_1004']."</span><br/><p>".$locale['setup_1005']." <span class='strong'>".$locale['setup_1006']."</span></p>";
 			$content .= form_button($locale['setup_1007'], 'uninstall', 'uninstall', 'uninstall', array('class' => 'btn-danger btn-sm m-t-10'));
@@ -165,10 +151,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				$content .= form_button($locale['setup_1016'], 'htaccess', 'htaccess', 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
 				$content .= "</div>\n";
 			}
-
-		}
-		/* Without click uninstall this is the opening page of installer - just for safety. if not, an else suffices */
-		elseif (!isset($_POST['uninstall'])) {
+		} /* Without click uninstall this is the opening page of installer - just for safety. if not, an else suffices */ elseif (!isset($_POST['uninstall'])) {
 			// no db_prefix
 			$locale_list = makefileopts($locale_files, $_GET['localeset']);
 			$content .= "<h4 class='strong'>".$locale['setup_0002']."</h4>\n";
@@ -192,11 +175,10 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$nextStep = 2;
 			$buttonMode = 'next';
 		}
-	break;
+		break;
 	// Step 2 - File and Folder Permissions
 	case 2:
 		if (!isset($_POST['license'])) redirect(FUSION_SELF."?error=license&localeset=".$_GET['localeset']);
-
 		// Create a blank config temp by now if not exist.
 		if (!file_exists(BASEDIR."config_temp.php")) {
 			if (file_exists(BASEDIR."_config.php") && function_exists("rename")) {
@@ -205,8 +187,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				touch(BASEDIR."config_temp.php");
 			}
 		}
-		$check_arr = array(
-			"administration/db_backups" => FALSE,
+		$check_arr = array("administration/db_backups" => FALSE,
 			"forum/attachments" => FALSE,
 			"downloads" => FALSE,
 			"downloads/images" => FALSE,
@@ -230,13 +211,10 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$write_check = TRUE;
 		$check_display = "";
 		foreach ($check_arr as $key => $value) {
-			$check_arr[$key] = (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key))
-							or (file_exists(BASEDIR.$key) && function_exists("chmod") 
-								&& @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key));
+			$check_arr[$key] = (file_exists(BASEDIR.$key) && is_writable(BASEDIR.$key)) or (file_exists(BASEDIR.$key) && function_exists("chmod") && @chmod(BASEDIR.$key, 0777) && is_writable(BASEDIR.$key));
 			if (!$check_arr[$key]) {
 				$write_check = FALSE;
 			}
-			
 			$check_display .= "<tr>\n<td class='tbl1'>".$key."</td>\n";
 			$check_display .= "<td class='tbl1' style='text-align:right'>".($check_arr[$key] == TRUE ? "<label class='label label-success'>".$locale['setup_1100']."</label>" : "<label class='label label-warning'>".$locale['setup_1101']."</label>")."</td>\n</tr>\n";
 		}
@@ -253,7 +231,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$buttonMode = 'refresh';
 			$nextStep = 2;
 		}
-	break;
+		break;
 	// Step 3 - Database Settings
 	case 3:
 		if (!$db_prefix) {
@@ -288,9 +266,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				}
 			}
 		}
-
 		$content .= "<div class='m-b-20'><h4>".$locale['setup_1200']."</h4> ".$locale['setup_1201']."</div>\n";
-
 		$content .= "<table class='table table-responsive'>\n<tr>\n";
 		$content .= "<td class='tbl1' style='text-align:left'>".$locale['setup_1202']."</td>\n";
 		$content .= "<td class='tbl1'><input type='text' value='".$db_host."' name='db_host' class='form-control input-sm textbox".$field_class[0]."' style='width:200px' /></td>\n</tr>\n";
@@ -330,8 +306,8 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$content .= "<td class='tbl1'><input type='text' value='".$cookie_prefix."' name='cookie_prefix' class='form-control input-sm textbox' style='width:200px' /></td>\n</tr>\n";
 		$content .= "</table>\n";
 		$nextStep = 4;
-		$buttonMode = 'next'; 
-	break;
+		$buttonMode = 'next';
+		break;
 	// Step 4 - Config / Database Setup
 	case 4:
 		// Generate All Core Tables - this includes settings and all its injections
@@ -344,7 +320,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$email = (isset($_POST['email']) ? stripinput(trim($_POST['email'])) : "");
 		$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
 		$enabled_languages = '';
-
 		if (!empty($_POST['enabled_languages'])) {
 			for ($i = 0; $i < sizeof($_POST['enabled_languages']); $i++) {
 				$enabled_languages .= $_POST['enabled_languages'][$i].".";
@@ -435,9 +410,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 								$success = FALSE;
 								$db_error = 5;
 							}
-
 							write_htaccess(fusion_get_settings('site_path'));
-
 						} else {
 							$content .= "<div class='alert alert-danger'>\n";
 							$content .= $locale['setup_1300']."<br /><br />\n";
@@ -492,7 +465,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$nextStep = 3;
 			$buttonMode = 'tryagain';
 		}
-	break;
+		break;
 	// Step 5 - Configure Core System - $settings accessible - Requires Config_temp.php (Shut down site when upgrading).
 	case 5:
 		if (!isset($_POST['done'])) {
@@ -514,7 +487,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			}
 			$fail = FALSE;
 			$message = '';
-
 			// Do installation
 			if (isset($_POST['install'])) {
 				$_apps = stripinput($_POST['install']);
@@ -526,7 +498,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 					}
 				}
 			}
-
 			// Do uninstallation
 			if (isset($_POST['uninstall'])) {
 				$_apps = stripinput($_POST['uninstall']);
@@ -541,7 +512,9 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			foreach ($system_apps as $_apps_key => $_apps) {
 				if (file_exists('includes/'.$_apps_key.'_setup.php')) {
 					$installed = db_exists($db_prefix.$_apps_key);
-					$apps_data = array('title' => $locale[$_apps_key]['title'], 'description' => $locale[$_apps_key]['description'], 'key' => $_apps_key);
+					$apps_data = array('title' => $locale[$_apps_key]['title'],
+						'description' => $locale[$_apps_key]['description'],
+						'key' => $_apps_key);
 					if ($installed) {
 						$apps['1'][] = $apps_data;
 					} else {
@@ -570,7 +543,8 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 					$content .= "<div class='row'>\n";
 					$content .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".ucwords($v['title']);
 					$content .= "<div class='pull-right'>\n";
-					$content .= form_button($locale['setup_1404'], 'install', 'install-'.$k, $v['key'], array('class' => 'btn-xs btn-default', 'icon' => 'entypo publish'));
+					$content .= form_button($locale['setup_1404'], 'install', 'install-'.$k, $v['key'], array('class' => 'btn-xs btn-default',
+						'icon' => 'entypo publish'));
 					$content .= "</div>\n";
 					$content .= "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>".$v['description']."";
 					$content .= "</div>\n</div>\n";
@@ -580,7 +554,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			// system ready
 			$content .= "<div class='m-b-20'><h4>".$locale['setup_1402']."</h4> ".$locale['setup_1403']."</div>\n";
 		}
-
 		if (isset($_POST['done'])) {
 			$nextStep = 6;
 			$buttonMode = 'next';
@@ -588,7 +561,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$nextStep = 5;
 			$buttonMode = 'done';
 		}
-	break;
+		break;
 	// Step 6 - Primary Admin Details
 	case 6:
 		$iOWNER = 0;
@@ -618,12 +591,9 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			require_once INCLUDES.'multisite_include.php';
 			dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
 			$iOWNER = dbcount("('user_id')", $db_prefix."users", "user_id='1'");
-
 		} else {
 			redirect(FUSION_SELF);
 		}
-
-
 		if ($iOWNER) {
 			$content .= "<div class='m-b-20'><h4>".$locale['setup_1502']."</h4> ".$locale['setup_1503']."</div>\n";
 			$content .= "<input type='hidden' name='transfer' value='1'>\n";
@@ -632,7 +602,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		} else {
 			$content .= "<div class='m-b-20'><h4>".$locale['setup_1500']."</h4> ".$locale['setup_1501']."</div>\n";
 		}
-
 		$content .= "<table class='table table-responsive'>\n<tr>\n";
 		$content .= "<td class='tbl1'>".$locale['setup_1504']."</td>\n";
 		$content .= "<td class='tbl1' style='text-align:right'><input type='text' name='username' value='".$username."' maxlength='30' class='form-control input-sm textbox".$field_class[0]."' style='width:200px' /></td></tr>\n";
@@ -650,7 +619,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$content .= "<input type='hidden' name='enabled_languages' value='".fusion_get_settings('enabled_languages')."' />\n";
 		$nextStep = 7;
 		$buttonMode = 'next';
-	break;
+		break;
 	// Step 7 - Final Settings
 	case 7:
 		if (!file_exists(BASEDIR.'config_temp.php')) {
@@ -727,7 +696,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 					'".$username."', 'sha256', '".$userSalt."', '".$userPassword."', 'sha256', '".$adminSalt."', '".$adminPassword."',
 					'".$email."', '1', 'Europe/London', '',  '0', '0', '".time()."', '0', '0.0.0.0',
 					'A.AC.AD.APWR.B.BB.BLOG.BLC.C.CP.DB.DC.D.ERRO.FQ.F.FR.IM.I.IP.M.MAIL.N.NC.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.SB.SM.SU.UF.UFC.UG.UL.U.TS.W.WC.MAIL.LANG.ESHP',
-					'', '103', '0', 'Default', '', '0000-00-00', '', '',  '', '', ''
+					'', '-103', '0', 'Default', '', '0000-00-00', '', '',  '', '', ''
 					)");
 				}
 			}
@@ -752,11 +721,9 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$nextStep = 8;
 			$buttonMode = 'finish';
 		}
-	break;
+		break;
 }
-
 $localeset = filter_input(INPUT_POST, 'localeset');
-
 ob_start();
 opensetup();
 echo $content;
