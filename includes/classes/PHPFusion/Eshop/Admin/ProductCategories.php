@@ -315,8 +315,7 @@ class ProductCategories {
 		echo openform('addcat', 'add_cat', 'post', $form_action, array('class' => 'm-t-20', 'downtime' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-		echo form_text($locale['ESHPCATS100'], 'title', 'titles', $this->data['title'], array('max_length' => 100,
-			'inline' => 1));
+		echo form_text($locale['ESHPCATS100'], 'title', 'titles', $this->data['title'], array('max_length' => 100, 'inline' => 1));
 		echo form_select_tree($locale['ESHPCATS106'], 'parentid', 'parentids', $this->data['parentid'], array('inline' => 1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo form_select($locale['ESHPCATS105'], 'image', 'images', self::getImageOpts(), $this->data['image'], array('inline' => 1));
 		// Languages in a row.
@@ -326,26 +325,29 @@ class ProductCategories {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
 		foreach ($enabled_languages as $lang) {
-			$check = (in_array($lang, $this->data['cat_languages'])) ? 1 : 0;
+
+			if (empty($this->data['cat_languages'])) {
+				$check = 1;
+			} else {
+				$check = (in_array($lang, $this->data['cat_languages'])) ? 1 : 0;
+			}
 			echo "<div class='display-inline-block text-left m-r-10'>\n";
 			echo form_checkbox($lang, 'cat_languages[]', 'lang-'.$lang, $check, array('value' => $lang));
 			echo "</div>\n";
 		}
+
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_text($locale['ESHPCATS136'], 'cat_order', 'cat_orders', $this->data['cat_order'], array('inline' => 1,
-			'number' => 1,
-			'width' => '100px'));
+		echo form_text($locale['ESHPCATS136'], 'cat_order', 'cat_orders', $this->data['cat_order'], array('inline' => 1, 'number' => 1, 'width' => '100px'));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 		openside('');
-		echo form_select($locale['ESHPCATS101'], 'status', 'statuses', self::getSizeOpts(), $this->data['status'], array('width' => '100%',
-			'placeholder' => $locale['ESHPCATS102']));
+		echo form_select($locale['ESHPCATS101'], 'status', 'statuses', self::getSizeOpts(), $this->data['status'], array('width' => '100%',	'placeholder' => $locale['ESHPCATS102']));
 		echo form_select($locale['ESHPCATS109'], 'access', 'accesses', self::getVisibilityOpts(), $this->data['access'], array('width' => '100%'));
 		closeside();
 		echo form_hidden('', 'cid', 'cids', $this->data['cid']);
 		echo "</div>\n</div>\n";
-		echo form_button($locale['save'], 'save_cat', 'save_cats', $locale['save'], array('class' => 'btn-primary'));
+		echo form_button($locale['save_changes'], 'save_cat', 'save_cats', $locale['save'], array('class' => 'btn-success', 'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 	}
 

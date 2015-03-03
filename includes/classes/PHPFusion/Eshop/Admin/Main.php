@@ -29,8 +29,8 @@ class Main {
 		$countorders = "".dbcount("(oid)", "".DB_ESHOP_ORDERS."", "opaid = '' || ocompleted = ''")."";
 		$this->pages = array(
 			'main' => array('title' => $locale['ESHP202'], 'file' => ADMIN."eshop/products.php"),
-			'photos' => array('title' => $locale['ESHP204'], 'file' => ADMIN."eshop/photosadmin.php"),
 			'categories' => array('title' => $locale['ESHP203'], 'file' => ADMIN."eshop/categories.php"),
+			'photos' => array('title' => $locale['ESHP204'], 'file' => ADMIN."eshop/photosadmin.php"),
 			'coupons' => array('title' => $locale['ESHP211'], 'file' => ADMIN."eshop/coupons.php"),
 			'featured' => array('title' => $locale['ESHP212'], 'file' => ADMIN."eshop/featured.php"),
 			'payments' => array('title' => $locale['ESHP206'], 'file' => ADMIN."eshop/payments.php"),

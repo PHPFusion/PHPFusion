@@ -23,7 +23,7 @@ $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && $item::category_
 $tab_title['title'][] = $locale['ESHPPRO097'];
 $tab_title['id'][] = 'product';
 $tab_title['icon'][] = '';
-if ($item::category_count() && $item::category_check()) {
+if ($item::category_count() && $item::category_check() || !$item::category_check()) {
 	$tab_title['title'][] = $edit ? $locale['ESHPPRO098'] : $locale['ESHPPRO099'];
 	$tab_title['id'][] = 'itemform';
 	$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';

@@ -17,8 +17,8 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) die("Access Denied");
 
-$category = new PHPFusion\Eshop\Admin\ProductCategories(); // load constructs
-// build a new interface
+$category = new PHPFusion\Eshop\Admin\ProductCategories();
+
 $tab_title['title'][] = $locale['ESHPCATS099'];
 $tab_title['id'][] = 'listcat';
 $tab_title['icon'][] = '';
