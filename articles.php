@@ -21,7 +21,7 @@ require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."articles.php";
 include THEMES."templates/global/articles.php";
 $info = array();
-
+pageAccess();
 add_to_title($locale['global_200'].$locale['400']);
 add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php', 'title'=>$locale['400']));
 /* Render Articles */

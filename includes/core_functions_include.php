@@ -778,19 +778,6 @@ function pageAccess($rights, $debug = FALSE) {
 }
 
 /**
- * Check the right like checkrights() with checking aid
- * @param string $right The code of the right
- * @return boolean
- */
-function checkAdminPageAccess($right) {
-	if (!checkrights($right) || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-		return FALSE;
-	} else {
-		return TRUE;
-	}
-}
-
-/**
  * Check if user is assigned to the specified user group
  * @param int $group
  * @return boolean
