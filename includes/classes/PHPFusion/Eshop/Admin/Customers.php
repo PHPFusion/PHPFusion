@@ -169,7 +169,7 @@ class Customers {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 		openside('');
-		echo form_user_select($locale['ESHPCHK156'], 'cuid', 'cuid', $this->data['cuid'], array('required'=>1));
+		echo form_user_select($locale['ESHPCHK156'], 'cuid', 'cuid', $this->data['cuid']);
 		// to do an import button here
 		echo form_button('Find Records', 'import', 'import', 'find', array('class'=>'btn-default m-r-10', 'type'=>'button'));
 		echo form_button($locale['save'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-primary'));
@@ -296,7 +296,7 @@ class Customers {
 		echo "</td>\n";
 		echo "</tr>\n";
 		$result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status FROM ".DB_ESHOP_CUSTOMERS." c
-			 INNER JOIN ".DB_USERS." u on c.cuid = u.user_id
+			 LEFT JOIN ".DB_USERS." u on c.cuid = u.user_id
 			 ORDER BY cfirstname ASC LIMIT ".$_GET['rowstart'].",15");
 		$rows = dbrows($result);
 		if ($rows) {
