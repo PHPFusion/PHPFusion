@@ -1,6 +1,7 @@
 <?php
 
 namespace PHPFusion\Eshop\Admin;
+
 class Orders {
 
 	private $filter_Sql = '';
@@ -166,7 +167,7 @@ class Orders {
 			echo form_select($locale['ESHP310'], 'ocompleted', 'ocompleted', array($locale['no'], $locale['yes']), $odata['ocompleted'], array('inline'=>1));
 			echo form_textarea($locale['ESHP308'], 'oamessage', 'oamessage', $odata['oamessage']);
 			echo form_hidden('', 'oid', 'oid', $odata['oid']);
-			echo form_button($locale['save_changes'], 'save', 'save', $locale['save_changes'], array('class'=>'btn btn-sm btn-primary'));
+			echo form_button($locale['save_changes'], 'save', 'save', $locale['save_changes'], array('class'=>'btn btn-success', 'icon'=>'fa fa-check-square-o'));
 			echo closeform();
 			closeside();
 			echo "</div>\n";

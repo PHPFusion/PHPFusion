@@ -1,5 +1,6 @@
 <?php
 namespace PHPFusion\Eshop\Admin;
+
 class Payments {
 	private $data = array(
 		'pid' => 0,
@@ -167,11 +168,11 @@ class Payments {
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
 		echo form_select($locale['ESHPPMTS109'], 'active', 'active', self::get_activeOpts(), $this->data['active'], array('tip'=>$locale['ESHPPMTS112']));
-		echo form_button($locale['save'], 'save_payment', 'save_payment2', $locale['save'], array('class'=>'btn-primary'));
+		echo form_button($locale['save'], 'save_payment', 'save_payment2', $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['save'], 'save_payment', 'save_payment', $locale['save'], array('class'=>'btn-primary'));
+		echo form_button($locale['save'], 'save_payment', 'save_payment', $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 		echo "</div>\n";
 	}

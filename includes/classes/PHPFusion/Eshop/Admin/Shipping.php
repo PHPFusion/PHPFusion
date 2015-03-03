@@ -290,7 +290,7 @@ class Shipping {
 		");
 		closeside();
 		echo form_text($locale['ESHPSHPMTS102'], 'title', 'title', $this->cdata['title']);
-		echo form_button($locale['save'], 'save_shipping', 'save_shipping', $locale['save'], array('class'=>'btn-primary'));
+		echo form_button($locale['save'], 'save_shipping', 'save_shipping', $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 		echo "</div>\n";
 	}
@@ -428,7 +428,7 @@ class Shipping {
 			echo "<div class='m-t-10 m-b-10'>\n";
 			echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class' => 'btn btn-default m-r-10',
 				'type' => 'button'));
-			echo form_button($locale['save'], 'save_item', 'save_item', 'save', array('class' => 'btn btn-primary'));
+			echo form_button($locale['save'], 'save_item', 'save_item', 'save', array('class' => 'btn btn-success', 'icon'=>'fa fa-check-square-o'));
 			echo "</div>\n";
 			echo closeform();
 			echo "</div>\n";
