@@ -19,6 +19,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cats");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_coupons");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_photos_albums");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_photos");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cart");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_customers");
@@ -89,6 +90,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cats");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_coupons");
+	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_photo_albums");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_photos");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cart");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_featbanners");
@@ -189,7 +191,24 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 
-		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_photos (
+	$result = dbquery("CREATE TABLE ".$db_prefix."eshop_photo_albums (
+				album_id mediumint(8) unsigned not null auto_increment,
+				album_title varchar(100) not null default '',
+				album_description text not null,
+				album_thumb varchar(100) not null default '',
+				album_user mediumint(11) unsigned not null default '0',
+				album_access smallint(3) unsigned not null default '100',
+				album_order smallint(5) unsigned not null default '0',
+				album_datestamp int(10) unsigned not null default '0',
+				album_language varchar(50) not null default '',
+				PRIMARY KEY (album_id)
+			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+	if (!$result) {
+		$fail = TRUE;
+	}
+
+	$result = dbquery("CREATE TABLE ".$db_prefix."eshop_photos (
 			photo_id mediumint(8) unsigned NOT NULL auto_increment,
 			album_id mediumint(8) unsigned NOT NULL default '0',
 			photo_title varchar(100) NOT NULL default '',

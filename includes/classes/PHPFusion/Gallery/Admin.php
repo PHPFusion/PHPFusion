@@ -161,6 +161,8 @@ class Admin {
 	 */
 	public function boot() {
 		global $locale;
+		require_once LOCALE.LOCALESET."admin/photoalbums.php";
+
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		if (function_exists('gd_info')) {
 			//self::Install_Gallery();

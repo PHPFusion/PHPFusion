@@ -16,14 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+pageAccess('ESHP');
 require_once THEMES."templates/admin_header.php";
-if (!checkrights("ESHP") || !defined("iAUTH") || $_GET['aid'] != iAUTH) {
-	print_p('redirecting');
-	//redirect(BASEDIR."index.php");
-}
-
 include LOCALE.LOCALESET."eshop.php";
-// your https shop works even better now.
+
 /**
  * Class eShop
  */
@@ -33,17 +29,10 @@ class eShop {
 	 */
 	private $pages = array(); // secure this so no injection can occur.
 	/**
-	 * @var array|string|string[]
-	 */
-	private $settings = array();
-
-	/**
 	 * these are the vars we will use only.
 	 */
 	public function __construct() {
 		global $locale;
-		//$this->settings = fusion_get_settings();
-		$this->settings = fusion_get_settings();
 		// sanitized global vars
 		if (isset($_GET['category']) && !isnum($_GET['category'])) die("Denied");
 		if (isset($_GET['id']) && !isnum($_GET['id'])) die("Denied");
@@ -89,7 +78,7 @@ class eShop {
 		}
 		echo "</ul>\n";
 		echo "</nav>\n";
-		self::loadPage($this->settings);
+		self::loadPage();
 		echo "<!--End Eshop Admin-->\n";
 		closetable();
 	}
@@ -97,13 +86,12 @@ class eShop {
 	/**
 	 * @param $settings
 	 */
-	private function loadPage($settings) {
-		global $locale, $aidlink;
+	private function loadPage() {
+		global $aidlink, $locale;
 		$enabled_languages = fusion_get_enabled_languages();
-		add_to_breadcrumbs(array('link' => FUSION_SELF.$aidlink."&amp;a_page=".$_GET['a_page'],
-							   'title' => $this->pages[$_GET['a_page']]['title']));
-		include_once INCLUDES."eshop_functions_include.php";
-		require_once INCLUDES."photo_functions_include.php";
+		add_to_breadcrumbs(array('link' => FUSION_SELF.$aidlink."&amp;a_page=".$_GET['a_page'], 'title' => $this->pages[$_GET['a_page']]['title']));
+		//include_once INCLUDES."eshop_functions_include.php";
+		//require_once INCLUDES."photo_functions_include.php";
 		include $this->pages[$_GET['a_page']]['file'];
 	}
 }
@@ -113,5 +101,3 @@ $eShop = new eShop();
 $eShop->eshopAdmin();
 
 require_once THEMES."templates/footer.php";
-
-?>
