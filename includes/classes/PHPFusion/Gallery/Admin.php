@@ -776,7 +776,7 @@ class Admin {
 	 * @param bool $modal
 	 */
 	private function display_photo($modal = FALSE) {
-		//error_reporting(0);
+		error_reporting(0);
 		if (isset($_GET['photo']) && isnum($_GET['photo'])) {
 			global $userdata, $locale;
 			require_once INCLUDES."photo_functions_include.php";
