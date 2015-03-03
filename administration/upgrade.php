@@ -658,12 +658,9 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop_cats ADD cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."' AFTER cat_order");
 		$result = dbquery("RENAME TABLE `".DB_PREFIX."eshop_cupons` TO `".DB_PREFIX."eshop_coupons`");		
 
-		//Adjust and apply structional changes
+		// Modify User Table
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_level user_level CHAR(4) NOT NULL DEFAULT ''");
-		$result = dbquery("RENAME TABLE `".DB_PREFIX."posts` TO `".DB_PREFIX."forum_posts`");		
-		$result = dbquery("RENAME TABLE `".DB_PREFIX."threads` TO `".DB_PREFIX."forum_threads`");		
-		$result = dbquery("RENAME TABLE `".DB_PREFIX."thread_notify` TO `".DB_PREFIX."forum_thread_notify`");		
-		
+
 		// Email templates admin section
 		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 		if ($result) {
