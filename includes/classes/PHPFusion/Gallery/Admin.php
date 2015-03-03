@@ -166,7 +166,6 @@ class Admin {
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		if (function_exists('gd_info')) {
 			//self::Install_Gallery();
-			// @todo: add an album_$id kind of folder if safemode is false.
 			define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 			// set album max order
 			$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;

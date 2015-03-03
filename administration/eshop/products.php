@@ -18,12 +18,12 @@
 if (!defined("IN_FUSION")) die("Access Denied");
 
 $item = new \PHPFusion\Eshop\Admin\Products();
-$category_count = $item->category_check();
-$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && $category_count) ? $item->verify_product_edit($_GET['id']) : 0;
+
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && $item::category_count()) ? $item->verify_product_edit($_GET['id']) : 0;
 $tab_title['title'][] = $locale['ESHPPRO097'];
 $tab_title['id'][] = 'product';
 $tab_title['icon'][] = '';
-if ($category_count) {
+if ($item::category_count() && $item::category_check()) {
 	$tab_title['title'][] = $edit ? $locale['ESHPPRO098'] : $locale['ESHPPRO099'];
 	$tab_title['id'][] = 'itemform';
 	$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';

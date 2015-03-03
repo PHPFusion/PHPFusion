@@ -110,9 +110,20 @@ class Products {
 		self::quick_save();
 	}
 
+	/**
+	 * Determine whether eshop category has been turned on
+	 * @return bool
+	 */
 	static function category_check() {
-		global $settings;
-		if ($settings['eshop_cats'] == 1) {
+		return (boolean) fusion_get_settings('eshop_cats');
+	}
+
+	/**
+	 * Checks whether category mode has been turned on
+	 * @return bool|string
+	 */
+	static function category_count() {
+		if (fusion_get_settings('eshop_cats') == 1) {
 			return dbcount("(cid)", DB_ESHOP_CATS);
 		}
 		return false;
@@ -896,7 +907,7 @@ class Products {
 		$result = dbquery("SELECT
 			i.id, i.title, i.cid, i.price, i.artno, i.sartno, i.status, i.access, i.dateadded, i.iorder, i.product_languages, cat.title as cat_title
 			FROM ".DB_ESHOP." i
-			".(fusion_get_settings('eshop_cats') ? "LEFT JOIN ".DB_ESHOP_CATS." cat on (cat.cid=i.cid)" : '')."
+			".(self::category_check() ? "LEFT JOIN ".DB_ESHOP_CATS." cat on (cat.cid=i.cid)" : '')."
 			".$this->filter_Sql."
 			ORDER BY cat.cat_order ASC, i.iorder ASC LIMIT 0, 25
 		");
@@ -934,10 +945,11 @@ class Products {
 			}
 			echo "</tbody>\n";
 		} else {
-			if (!self::category_check()) {
-				echo "<tr>\n<td class='text-center' colspan='12'><div class='alert alert-warning m-t-20'>".$locale['ESHPPRO102']."</div></td>\n</tr>\n";
+			if (self::category_check() && !self::category_count()) {
+				$cat_link = clean_request("&a_page=categories", array('a_page'), false);
+				echo "<tr>\n<td class='text-center' colspan='11'><div class='well'>".sprintf($locale['ESHPPRO102'], $cat_link)."</div></td>\n</tr>\n";
 			} else {
-				echo "<tr>\n<td class='text-center' colspan='12'><div class='alert alert-warning m-t-20'>".$locale['ESHPPRO177']."</div></td>\n</tr>\n";
+				echo "<tr>\n<td class='text-center' colspan='11'><div class='alert alert-warning m-t-20'>".$locale['ESHPPRO177']."</div></td>\n</tr>\n";
 			}
 		}
 		echo "</table>\n";
