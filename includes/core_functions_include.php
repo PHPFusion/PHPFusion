@@ -854,6 +854,19 @@ function getgroupname($group_id, $return_desc = FALSE) {
 	return $locale['user_na'];
 }
 
+
+/**
+ * Getting the real users_group access.
+ * Return true or false. (BOOLEAN)
+ */
+function users_groupaccess($field) {
+	global $userdata;
+	if (preg_match("(^\.{$field}$|\.{$field}\.|\.{$field}$)", $userdata['user_groups'])) {
+		return true;
+	}
+	return false;
+}
+
 /**
  * Getting the access levels used when asking the database for data
  * @param string $field

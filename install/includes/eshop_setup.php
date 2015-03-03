@@ -221,6 +221,7 @@ if (isset($_POST['uninstall'])) {
 			photo_views mediumint(8) unsigned NOT NULL default '0',
 			photo_order smallint(5) unsigned NOT NULL default '0',
 			photo_allow_comments tinyint(1) unsigned NOT NULL default '1',
+			photo_allow_ratings tinyint(1) unsigned NOT NULL default '1',
 			photo_last_viewed int(10) unsigned NOT NULL default '1',
 			PRIMARY KEY  (photo_id),
 			KEY photo_user (photo_user)

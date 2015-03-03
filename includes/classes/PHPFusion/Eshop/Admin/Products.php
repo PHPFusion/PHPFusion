@@ -29,7 +29,7 @@ class Products {
 		'version' => '',
 		'status' => 1,
 		'active' => 1,
-		'gallery_on' => 1,
+		'gallery' => 1,
 		'cart_on' => 1,
 		'buynow' => 1,
 		'delivery' => '',
@@ -109,9 +109,6 @@ class Products {
 				$this->formaction = FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" && isset($_GET['parent_id']) ? "&amp;section=itemform&amp;parent_id=".$_GET['parent_id']."" : "");
 		}
 
-		/**
-		 * Gallery - use the engine to upload the picture.
-		 */
 		$this->upload_settings = array(
 			'thumbnail_folder'=>'thumbs',
 			'thumbnail' => 1,
@@ -127,13 +124,9 @@ class Products {
 			'max_height'	=>	fusion_get_settings('eshop_image_h'),
 			'max_byte'		=>	fusion_get_settings('eshop_image_b'),
 			'multiple' => 0,
+			'type'=>'image',
 		);
-		$gallery = new \PHPFusion\Gallery\Admin();
-		$gallery->setUploadSettings($this->upload_settings);
-		$gallery->setImageUploadDir(BASEDIR."eshop/pictures/");
-		$gallery->setPhotoCatDb(DB_ESHOP_ALBUMS);
-		$gallery->setPhotoDb(DB_ESHOP_PHOTOS);
-		$gallery->setGalleryRights('ESHP');
+
 
 		self::set_productdb();
 		self::quick_save();
@@ -313,7 +306,8 @@ class Products {
 	 * MYSQL insert or update
 	 */
 	private function set_productdb() {
-		global $aidlink;
+		global $aidlink, $userdata;
+		define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 		if (isset($_POST['delete_image']) && isnum($_POST['delete_image'])) {
 			if (self::verify_product_edit($_POST['delete_image'])) {
 				@unlink(BASEDIR."eshop/pictures/".$this->data['picture']);
@@ -330,18 +324,6 @@ class Products {
 		if (isset($_POST['save_cat'])) {
 			$this->data['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
 			$this->data['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '', 'cid') : 0;
-
-			$this->data['picture'] = isset($_POST['image']) ? form_sanitizer($_POST['picture'], '', 'picture') : '';
-			$this->data['thumb'] = isset($_POST['thumb']) ? form_sanitizer($_POST['thumb'], '', 'thumb') : '';
-			$this->data['thumb2'] = isset($_POST['thumb2']) ? form_sanitizer($_POST['thumb2'], '', 'thumb2') : '';
-
-			$upload = isset($_FILES['imagefile']) ? form_sanitizer($_FILES['imagefile'], '', 'imagefile') : '';
-			if (isset($upload['error']) && !$upload['error']) {
-				$this->data['picture'] = $upload['image_name'];
-				$this->data['thumb'] = $upload['thumb1_name'];
-				$this->data['thumb2'] = $upload['thumb2_name'];
-			}
-
 			$this->data['introtext'] = isset($_POST['introtext']) ? form_sanitizer($_POST['introtext'], '', 'introtext') : '';
 			$this->data['description'] = isset($_POST['description']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['description'])) : '';
 			$this->data['anything1n'] = isset($_POST['anything1n']) ? form_sanitizer($_POST['anything1n'], '', 'anything1n') : '';
@@ -359,7 +341,6 @@ class Products {
 			$this->data['version'] = isset($_POST['version']) ? str_replace(',', '.', form_sanitizer($_POST['version'], '', 'version')) : '';
 			$this->data['status'] = isset($_POST['status']) ? form_sanitizer($_POST['status'], '0', 'status') : 0;
 			$this->data['active'] = isset($_POST['active']) ? form_sanitizer($_POST['active'], '0', 'active') : 0;
-			$this->data['gallery_on'] = isset($_POST['gallery_on']) ? form_sanitizer($_POST['gallery_on'], '0', 'gallery_on') : 0;
 			$this->data['delivery'] = isset($_POST['delivery']) ? form_sanitizer($_POST['delivery'], '0', 'delivery') : 0;
 			$this->data['demo'] = isset($_POST['demo']) ? form_sanitizer($_POST['demo'], '', 'demo') : '';
 			$this->data['cart_on'] = isset($_POST['cart_on']) ? form_sanitizer($_POST['cart_on'], '0', 'cart_on') : 0;
@@ -400,27 +381,158 @@ class Products {
 			}
 
 			$this->data['dync'] = isset($sList) ? form_sanitizer($sList, '') : '';
-			if (self::verify_product_edit($_GET['id'])) {
+
+			// retain old update records
+			$this->data['gallery'] = isset($_POST['gallery']) ? form_sanitizer($_POST['gallery'], '0', 'gallery') : 0;
+
+			$this->data['picture'] = isset($_POST['image']) ? form_sanitizer($_POST['picture'], '', 'picture') : '';
+			$this->data['thumb'] = isset($_POST['thumb']) ? form_sanitizer($_POST['thumb'], '', 'thumb') : '';
+			$this->data['thumb2'] = isset($_POST['thumb2']) ? form_sanitizer($_POST['thumb2'], '', 'thumb2') : '';
+
+			// conditions is that gallery is not off,
+			// image file is uploaded -- override gallery off --- will always increment new gallery.
+			if (is_uploaded_file($_FILES['imagefile']['tmp_name'])) {
+				/**
+				 * Galleries Uploading - used the class to reuse some of the functions only.
+				 * Uploading is still defined custom by the codes in this page.
+				 */
+				$gallery = new \PHPFusion\Gallery\Admin();
+				$gallery->setUploadSettings($this->upload_settings);
+				$gallery->setImageUploadDir(BASEDIR."eshop/pictures/");
+				$gallery->setPhotoCatDb(DB_ESHOP_ALBUMS);
+				$gallery->setPhotoDb(DB_ESHOP_PHOTOS);
+				$gallery->setGalleryRights('ESHP');
+
+				$album_data = array(
+					'album_id' => $this->data['gallery'],
+					'album_title' => $this->data['title'],
+					'album_description' => '',
+					'album_user' => $userdata['user_id'],
+					'album_access' => $this->data['access'],
+					'album_order' => 0,
+					'album_datestamp' => time(),
+					'album_language' => $this->data['product_languages'],
+				);
+
+				if (!$album_data['album_order']) $album_data['album_order'] = dbresult(dbquery("SELECT MAX(album_order) FROM ".DB_ESHOP_ALBUMS." WHERE album_language='".LANGUAGE."'"), 0)+1;
+				// point of injection of altered if you know the album_id -- possible bug: high volume sites will not be able to book the id unless record is made?
+				if (!$album_data['album_id']) {
+					$next_album_id = dbnextid(DB_ESHOP_ALBUMS);
+					$gallery->set_modified_upload_path($next_album_id, 'imagefile', 1);
+				} else {
+					$gallery->set_modified_upload_path($album_data['album_id'], 'imagefile', 1);
+				}
+
+				$upload_result = form_sanitizer($_FILES['imagefile'], '', 'imagefile');
+				/** Note: Ensure your hidden field return does not bear the same input name as the fileinput name else form sanitizer will not sanitize properely as both bears same identifier */
+				$album_data['album_thumb'] = $this->data['thumb'];
+
+				if (isset($upload_result['error']) && $upload_result['error'] !== '0') {
+					// upload success
+					$album_data['album_thumb'] = $upload_result['thumb1_name'];
+					// only exist in new upload
+					$image_name = $upload_result['image_name'];
+					$thumb1_name = $upload_result['thumb1_name'];
+					$thumb2_name = $upload_result['thumb2_name'];
+
+					// override with new data
+					$this->data['picture'] = $image_name;
+					$this->data['thumb'] = $thumb1_name;
+					$this->data['thumb2'] = $thumb2_name;
+				}
+
+				// replace photo if different
+				$album_history = $gallery->get_album($album_data['album_id']);
+				$photo_data = array(
+					'photo_id' => 0,
+					'album_id' => 0,
+					'photo_title' => $this->data['title'],
+					'photo_description'=> '',
+					'photo_keywords' => $this->data['keywords'],
+					'photo_datestamp' => time(),
+					'photo_views' => 0,
+					'photo_order' => 0,
+					'photo_filename' => '',
+					'photo_thumb1' => '',
+					'photo_thumb2' => '',
+					'photo_allow_comments' => $this->data['comments'],
+					'photo_allow_ratings' => $this->data['ratings']
+				);
+				if (!empty($album_history)) {
+					$thumb_photo = dbquery("SELECT photo_id, album_id, photo_filename, photo_thumb1, photo_thumb2, photo_views, photo_order, photo_allow_comments, photo_allow_ratings FROM ".DB_ESHOP_PHOTOS." WHERE photo_thumb1='".$album_history['album_thumb']."'");
+					if (dbrows($thumb_photo) > 0) {
+						$photo_data = dbarray($thumb_photo); // use back old records
+					}
+					// ok. now we need to delete the old picture set if changed
+					if ($album_data['album_thumb'] !== $album_history['album_thumb']) {
+						@unlink(BASEDIR.'eshop/pictures/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb1']);
+						@unlink(BASEDIR.'eshop/pictures/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb2']);
+						@unlink(BASEDIR.'eshop/pictures/'.$photo_data['photo_filename']);
+					}
+				}
+				// override new.
+				$photo_data = array(
+					'photo_id' => $photo_data['photo_id'],
+					'album_id' => $photo_data['album_id'],
+					'photo_title' => $album_data['album_title'],
+					'photo_description' => $album_data['album_description'],
+					'photo_keywords' => $album_data['album_title'],
+					'photo_filename' => isset($image_name) ? $image_name : $photo_data['photo_filename'],
+					'photo_thumb1' => isset($thumb1_name) ? $thumb1_name : $photo_data['photo_thumb1'],
+					'photo_thumb2' => isset($thumb2_name) ? $thumb2_name : $photo_data['photo_thumb2'],
+					'photo_datestamp' => $album_data['album_datestamp'],
+					'photo_user' => $userdata['user_id'],
+					'photo_views' => $photo_data['photo_views'],
+					'photo_order' => $photo_data['photo_order'],
+					'photo_allow_comments' => $photo_data['photo_allow_comments'],
+					'photo_allow_ratings' => $photo_data['photo_allow_ratings']
+				);
+
+				if ($album_data['album_id'] && $gallery->validate_album($album_data['album_id'])) {
+					$result = dbquery_order(DB_ESHOP_ALBUMS, $album_data['album_order'], 'album_order', $album_data['album_id'], 'album_id', FALSE, FALSE, 1, 'album_language', 'update');
+					if ($result) {
+						dbquery_insert(DB_ESHOP_ALBUMS, $album_data, 'update');
+						if (!empty($photo_data) && $gallery->validate_photo($photo_data['photo_id'])) {
+							dbquery_insert(DB_ESHOP_PHOTOS, $photo_data, 'update');
+						}
+					}
+				} else {
+					// new saves
+					$result = dbquery_order(DB_ESHOP_ALBUMS, $album_data['album_order'], 'album_order', FALSE, FALSE, FALSE, FALSE, 1, 'album_language', 'save');
+					if ($result) {
+						dbquery_insert(DB_ESHOP_ALBUMS, $album_data, 'save');
+						$album_data['album_id'] = dblastid();
+						if (!empty($photo_data) && $album_data['album_id']) {
+							if (!$photo_data['photo_order']) $photo_data['photo_order'] = $photo_data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".intval($album_data['album_id'])."'"), 0)+1;
+							$photo_data['album_id'] = $album_data['album_id'];
+							$result = dbquery_order(DB_ESHOP_PHOTOS, $photo_data['photo_order'], 'photo_order', FALSE, FALSE, $photo_data['album_id'], 'album_id', FALSE, FALSE, 'save');
+							if ($result) {
+								dbquery_insert(DB_ESHOP_PHOTOS, $photo_data, 'save');
+							}
+						}
+					}
+				}
+			}
+
+			if (self::verify_product_edit($this->data['id'])) {
 				$old_data = dbarray(dbquery("SELECT cid, iorder, dateadded FROM ".DB_ESHOP." WHERE id='".$this->data['id']."'"));
 				$this->data['dateadded'] = $old_data['dateadded']; // static time
 				// at anytime, if order is 0, new order means max order
 				if (!$this->data['iorder']) $this->data['iorder'] = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid='".$this->data['cid']."'"), 0)+1;
-				// refresh ordering
+				//	$result = dbquery_order(DB_ESHOP, $this->data['iorder'], 'iorder', $this->data['id'], 'id', $this->data['cid'], 'cid', $this->data['product_languages'], 'product_languages', 'update');
 				if ($old_data['cid'] !== $this->data['cid']) { // not the same category
 					// refresh ex-category ordering
-					dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid='".$old_data['cid']."' AND iorder > '".$old_data['iorder']."'"); // -1 to all previous category.
+					dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid='".$old_data['cid']."' AND iorder > '".$old_data['iorder']."' AND language='".$this->data['product_languages']."'"); // -1 to all previous category.
 				} else { // same category
 					// refresh current category
 					if ($this->data['iorder'] > $old_data['iorder']) {
 						//echo 'new order is more than old order';
 						dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE cid = '".$this->data['cid']."' AND (iorder > '".$old_data['iorder']."' AND iorder <= '".$this->data['iorder']."')");
-
 					} elseif ($this->data['iorder'] < $old_data['iorder']) {
 						//echo 'new order is less than old order';
 						dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND (iorder < '".$old_data['iorder']."' AND iorder >= '".$this->data['iorder']."')");
 					}
 				}
-
 				dbquery_insert(DB_ESHOP, $this->data, 'update');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;parent_id=".$_GET['parentid']."&amp;status=su");
 			} else {
@@ -436,7 +548,7 @@ class Products {
 	 * Data callback
 	 * @return array|bool
 	 */
-	static function products_data() {
+	public static function products_data() {
 		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
 		if (dbrows($result)>0) {
 			return dbarray($result);
@@ -531,9 +643,7 @@ class Products {
 		echo "<div class='col-xs-12 col-sm-12 col-md-9'>\n";
 		openside('');
 		// now defaulted - always use cart
-
 		echo form_hidden($locale['ESHPPRO149'], 'cart_on', 'cart_on', 1, array('placeholder'=>$locale['ESHPPRO150'], 'width'=>'100%'));
-
 		echo form_text($locale['ESHPPRO104'], 'title', 'title', $this->data['title'], array('required'=>1, 'inline'=>1));
 		echo form_select($locale['ESHPPRO192'], 'keywords', 'keywords', array(), $this->data['keywords'], array('width'=>'100%', 'tags'=>1, 'multiple'=>1, 'inline'=>1));
 		//'placeholder'=>$locale['ESHPPRO136']
@@ -546,19 +656,11 @@ class Products {
 		echo form_hidden('', 'picture', 'picture', $this->data['picture']);
 		echo form_hidden('', 'thumb', 'thumb', $this->data['thumb']);
 		echo form_hidden('', 'thumb2', 'thumb2', $this->data['thumb2']);
-		if ($this->data['picture'] && file_exists(SHOP."pictures/".$this->data['picture'])) {
-			echo "<div class='display-inline-block list-group-item'>\n";
-			echo "<img class='img-responsive' src=' ".BASEDIR."eshop/pictures/".$this->data['picture']."' />";
-			echo form_button('Delete Image', 'delete_image', 'delete_image', $this->data['id'], array('class'=>'btn-danger m-t-10', 'icon'=>'fa fa-trash m-r-10'));
-			echo "</div>\n";
-		}
 
 		echo form_text($locale['ESHPPRO107'], 'artno', 'artno', $this->data['artno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
 		echo form_text($locale['ESHPPRO108'], 'sartno', 'sartno', $this->data['sartno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
-
 		echo form_text($locale['ESHPPRO133'], 'version', 'version', $this->data['version'], array('inline'=>1, 'width'=>'250px', 'placeholder'=>$locale['ESHPPRO134']));
 		echo form_text($locale['ESHPPRO114'], 'weight', 'weight', $this->data['weight'], array('inline'=>1, 'number'=>1, 'width'=>'250px', 'placeholder'=> fusion_get_settings('eshop_weightscale')));
-
 		echo form_text($locale['ESHPPRO122'], 'iorder', 'iorder', $this->data['iorder'], array('inline'=>1, 'number'=>1, 'width'=>'100px', 'placeholder'=>$locale['ESHPPRO123']));
 		// languages
 		echo "<div class='row'>\n";
@@ -689,6 +791,14 @@ class Products {
 		// end of column 1
 		echo "</div><div class='col-xs-12 col-sm-12 col-md-3'>\n";
 		// column 2
+		if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+		$img_path = !SAFEMODE ? BASEDIR."eshop/pictures/album_".$this->data['gallery']."/thumbs/".$this->data['thumb'] : BASEDIR."eshop/pictures/thumbs/".$this->data['thumb'];
+		if ($this->data['thumb'] && file_exists($img_path)) {
+			echo "<div class='display-block text-center list-group-item m-b-10'>\n";
+			echo "<img class='img-responsive' src='".$img_path."' />";
+			echo "</div>\n";
+		}
+
 		echo form_hidden($locale['ESHPPRO124'], 'sellcount', 'sellcount', $this->data['sellcount'], array('deactivate'=>1, 'placeholder'=>$locale['ESHPPRO125']));
 		openside('');
 		if (self::category_check()) {
@@ -705,7 +815,16 @@ class Products {
 		echo form_button($locale['save_changes'], 'save_cat', 'save_cat2', $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 
-		echo form_select($locale['ESHPPRO126'], 'gallery_on', 'gallery_on', array('0'=>$locale['off'], '1'=>$locale['on']), $this->data['gallery_on'], array('width'=>'100%', 'placeholder'=>$locale['ESHPPRO129']));
+		// get albumList
+		$list[0] = $locale['off'];
+		$result = dbquery("SELECT * FROM ".DB_ESHOP_ALBUMS." ORDER BY album_order ASC");
+		if (dbrows($result) > 0) {
+			while ($data = dbarray($result)) {
+				$list[$data['album_id']] = $data['album_title'];
+			}
+		}
+		echo form_select($locale['ESHPPRO126'], 'gallery', 'gallery', $list, $this->data['gallery'], array('width'=>'100%', 'placeholder'=>$locale['ESHPPRO129']));
+
 		echo form_select($locale['ESHPPRO154'], 'buynow', 'buynow', array('0'=>$locale['no'], '1'=> $locale['yes']), $this->data['buynow'], array('placeholder'=>$locale['ESHPPRO155'], 'width'=>'100%'));
 		$page_array = array();
 		$callback_dir = makefilelist(BASEDIR."eshop/purchasescripts/", ".|..|index.php", TRUE, "files");

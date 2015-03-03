@@ -166,7 +166,6 @@ class Admin {
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		if (function_exists('gd_info')) {
 			//self::Install_Gallery();
-			define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 			// set album max order
 			$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
 			/**
@@ -296,7 +295,7 @@ class Admin {
 	 * @param $album_id
 	 * @return bool|string
 	 */
-	private function validate_album($album_id) {
+	public function validate_album($album_id) {
 		if (isnum($album_id)) {
 			return dbcount("('album_id')", $this->photo_cat_db, "album_id='".intval($album_id)."'");
 		}
@@ -304,11 +303,25 @@ class Admin {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getPhotoCatDb() {
+		return $this->photo_cat_db;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPhotoDb() {
+		return $this->photo_db;
+	}
+
+	/**
 	 * Check whether a photo id is valid
 	 * @param $photo_id
 	 * @return bool|string
 	 */
-	private function validate_photo($photo_id) {
+	public function validate_photo($photo_id) {
 		if (isnum($photo_id)) {
 			return dbcount("('photo_id')", $this->photo_db, "photo_id='".intval($photo_id)."'");
 		}
@@ -416,18 +429,25 @@ class Admin {
 		if (isset($_POST['upload_album'])) {
 			// keep the modal open to listen to error messages
 			add_to_jquery("$('#add_album-Modal').modal('show');");
-			$this->album_data = array('album_id' => isset($_POST['album_id']) ? form_sanitizer($_POST['album_id'], '', 'album_id') : 0,
+			$this->album_data = array(
+				'album_id' => isset($_POST['album_id']) ? form_sanitizer($_POST['album_id'], '', 'album_id') : 0,
 				'album_title' => isset($_POST['album_title']) ? form_sanitizer($_POST['album_title'], '', 'album_title') : $this->album_data['album_title'],
 				'album_description' => isset($_POST['album_description']) ? form_sanitizer($_POST['album_description'], '', 'album_description') : $this->album_data['album_description'],
 				'album_user' => $userdata['user_id'],
-				'album_access' => isset($_POST['album_title']) ? form_sanitizer($_POST['album_access'], 0, 'album_access') : $this->album_data['album_access'],
+				'album_access' => isset($_POST['album_access']) ? form_sanitizer($_POST['album_access'], 0, 'album_access') : $this->album_data['album_access'],
 				'album_order' => isset($_POST['album_order']) ? form_sanitizer($_POST['album_order'], 0, 'album_order') : $this->album_data['album_order'],
 				'album_datestamp' => time(),
-				'album_language' => isset($_POST['album_language']) ? form_sanitizer($_POST['album_language'], '', 'album_language') : $this->album_data['album_language'],);
+				'album_language' => isset($_POST['album_language']) ? form_sanitizer($_POST['album_language'], '', 'album_language') : $this->album_data['album_language']
+			);
 			if (!$this->album_data['album_order']) $this->album_data['album_order'] = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
 			// point of injection of altered if you know the album_id -- possible bug: high volume sites will not be able to book the id unless record is made?
-			$next_album_id = dbnextid($this->photo_cat_db);
-			self::set_modified_upload_path($next_album_id, 1);
+			if (!$this->album_data['album_id']) {
+				$next_album_id = dbnextid($this->photo_cat_db);
+				self::set_modified_upload_path($next_album_id, 'imagefile', 1);
+			} else {
+				self::set_modified_upload_path($this->album_data['album_id'], 'imagefile', 1);
+			}
+			self::set_modified_upload_path($next_album_id, 'album_file', 1);
 			$upload_result = form_sanitizer($_FILES['album_file'], '', 'album_file');
 			/** Note: Ensure your hidden field return does not bear the same input name as the fileinput name else form sanitizer will not sanitize properely as both bears same identifier */
 			$this->album_data['album_thumb'] = form_sanitizer($_POST['album_hfile'], '', 'album_hfile');
@@ -514,16 +534,18 @@ class Admin {
 	 * @param $album_id
 	 * @return string
 	 */
-	function set_modified_upload_path($album_id, $type = '1') {
+	public function set_modified_upload_path($album_id, $input_name, $type = '1') {
+		// define safemode here.
+		if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 		if (isnum($album_id) && $album_id) {
 			switch ($type) {
 				case '1':
 					$upload_dir = !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
-					$_SESSION['form_fields'][\defender::set_sessionUserID()][$_SERVER['PHP_SELF']]['album_file']['path'] = $upload_dir;
+					$_SESSION['form_fields'][\defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name]['path'] = $upload_dir;
 					break;
 				case '2':
 					$upload_dir = !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
-					$_SESSION['form_fields'][\defender::set_sessionUserID()][$_SERVER['PHP_SELF']]['photo_file']['path'] = $upload_dir;
+					$_SESSION['form_fields'][\defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name]['path'] = $upload_dir;
 					break;
 			}
 		}
@@ -534,7 +556,8 @@ class Admin {
 	 * @param $album_id
 	 * @return string
 	 */
-	function get_virtual_path($album_id) {
+	public function get_virtual_path($album_id) {
+		if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 		return !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
 	}
 
@@ -544,7 +567,8 @@ class Admin {
 	private function set_photoDB() {
 		global $userdata;
 		if (isset($_POST['upload_photo'])) {
-			$this->photo_data = array('photo_id' => isset($_POST['photo_id']) ? form_sanitizer($_POST['photo_id'], '', 'photo_id') : 0,
+			$this->photo_data = array(
+				'photo_id' => isset($_POST['photo_id']) ? form_sanitizer($_POST['photo_id'], '', 'photo_id') : 0,
 				'album_id' => isset($_POST['album_id']) ? form_sanitizer($_POST['album_id'], '', 'album_id') : 0,
 				'photo_title' => isset($_POST['photo_title']) ? form_sanitizer($_POST['photo_title'], '', 'photo_title') : $this->photo_data['photo_title'],
 				'photo_description' => isset($_POST['photo_description']) ? form_sanitizer($_POST['photo_description'], '', 'photo_description') : $this->photo_data['photo_description'],
@@ -555,7 +579,7 @@ class Admin {
 				'photo_order' => isset($_POST['photo_order']) ? form_sanitizer($_POST['photo_order'], 0, 'photo_order') : $this->photo_data['photo_order'],
 				'photo_datestamp' => time(),);
 			// Push a new path value to defender for upload
-			self::set_modified_upload_path($this->photo_data['album_id'], 2);
+			self::set_modified_upload_path($this->photo_data['album_id'], 'photo_file', 2);
 			$upload_result = form_sanitizer($_FILES['photo_file'], '', 'photo_file');
 			$this->photo_data['photo_filename'] = form_sanitizer($_POST['photo_hfile'], '', 'photo_hfile');
 			$this->photo_data['photo_thumb1'] = form_sanitizer($_POST['photo_hthumb1'], '', 'photo_hthumb1');
@@ -701,7 +725,7 @@ class Admin {
 		if ($album_edit) {
 			echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
 			echo "<div class='well'>\n";
-			$img_path = rtrim($this->image_upload_dir, '/')."/".rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->album_data['album_thumb'];
+			$img_path = self::get_virtual_path($this->album_data['album_id']).rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->album_data['album_thumb'];
 			echo "<img class='img-responsive' style='margin:0 auto;' src='$img_path' alt='".$this->album_data['album_title']."'/>\n";
 			echo "</div>\n";
 			echo "</div>\n</div>\n";
@@ -752,9 +776,10 @@ class Admin {
 	 * @param bool $modal
 	 */
 	private function display_photo($modal = FALSE) {
-		error_reporting(0);
+		//error_reporting(0);
 		if (isset($_GET['photo']) && isnum($_GET['photo'])) {
 			global $userdata, $locale;
+			require_once INCLUDES."photo_functions_include.php";
 			$data = self::get_photo($_GET['photo']);
 			/**
 			 * Increment Views based on Session.
@@ -936,19 +961,20 @@ class Admin {
 		$rows = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : dbcount("('album_id')", $this->photo_cat_db);
 		$multiplier = $rows > $this->albums_per_page ? $this->albums_per_page : $rows;
 		$max_items_per_col = $multiplier/$this->gallery_rows;
+		// get in current language.
 		if ($rows) {
 			if (isset($_GET['gallery']) && isnum($_GET['gallery'])) { // view photos
 				$result = dbquery("SELECT photos.*, photos.photo_user as user_id, album.*, album.album_id as gallery_id, album.album_thumb, u.user_name, u.user_status, u.user_avatar
 				FROM ".$this->photo_db." photos
 				INNER JOIN ".$this->photo_cat_db." album on photos.album_id = album.album_id
 				INNER JOIN ".DB_USERS." u on u.user_id = photos.photo_user
-				WHERE ".groupaccess('album.album_access')." AND album_language='".LANGUAGE."' AND photos.album_id = '".intval($_GET['gallery'])."'
+				WHERE ".groupaccess('album.album_access')." AND photos.album_id = '".intval($_GET['gallery'])."'
 				ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".$this->rowstart.", $this->albums_per_page");
 			} else { // view album
 				$result = dbquery("SELECT album.*, album.album_user as user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".$this->photo_cat_db." album
 				INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
-				WHERE ".groupaccess('album.album_access')." AND album_language='".LANGUAGE."'
+				WHERE ".groupaccess('album.album_access')."
 				ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".$this->rowstart.", $this->albums_per_page");
 			}
 			if (dbrows($result) > 0) {
@@ -978,7 +1004,10 @@ class Admin {
 						<?php
 						if (!empty($albums[$i])) {
 							foreach ($albums[$i] as $albumData) {
-								self::gallery_album($albumData, isset($_GET['gallery']) && isnum($_GET['gallery']) ? 2 : 1);
+								$lang = explode('.', $albumData['album_language']);
+								if (in_array(LANGUAGE, $lang)) {
+									self::gallery_album($albumData, isset($_GET['gallery']) && isnum($_GET['gallery']) ? 2 : 1);
+								}
 							}
 						}
 						?>
@@ -1064,8 +1093,12 @@ class Admin {
 	private function gallery_album(array $data = array(), $type = 1) {
 		global $userdata, $locale;
 		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery',
+			'gallery_edit',
+			'gallery_type',
 			'action',
 			'ratings'), FALSE) : clean_request('photo='.$data['photo_id'], array('photo',
+			'gallery_edit',
+			'gallery_type',
 			'status',
 			'action',
 			'ratings'), FALSE);
@@ -1082,6 +1115,8 @@ class Admin {
 						'status',
 						'action',
 						'gallery',
+						'gallery_edit',
+						'gallery_type',
 						'ratings'), FALSE);
 					echo "<a class='btn button btn-sm btn-default' href='".$rating_link."'>
 						<i class='fa fa-star-o'></i>
@@ -1093,12 +1128,12 @@ class Admin {
 
 				<div class='gallery_writer pull-right'>
 					<a class='btn button btn-sm btn-default'
-					   href='<?php echo clean_request("&amp;gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_edit',
+					   href='<?php echo clean_request("&amp;gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_edit', 'photo', 'gallery',
 						   'gallery_type'), FALSE) ?>'>
 					<i class='fa fa-pencil fa-lg'></i>
 					</a>
 					<a class='btn button btn-sm btn-danger'
-					   href='<?php echo clean_request("&amp;gallery_delete=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_delete',
+					   href='<?php echo clean_request("&amp;gallery_delete=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_delete', 'photo', 'gallery',
 						   'gallery_type'), FALSE) ?>'>
 					<i class='fa fa-trash fa-lg'></i>
 					</a>
