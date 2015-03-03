@@ -72,6 +72,8 @@ class Products {
 	 * @var bool|int|string
 	 */
 	private $max_rowstart = 0;
+
+	private $upload_settings = array();
 	/**
 	 * Constructor and Sanitize Globals
 	 */
@@ -106,6 +108,33 @@ class Products {
 			default :
 				$this->formaction = FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" && isset($_GET['parent_id']) ? "&amp;section=itemform&amp;parent_id=".$_GET['parent_id']."" : "");
 		}
+
+		/**
+		 * Gallery - use the engine to upload the picture.
+		 */
+		$this->upload_settings = array(
+			'thumbnail_folder'=>'thumbs',
+			'thumbnail' => 1,
+			'thumbnail_w' =>  fusion_get_settings('eshop_image_tw'),
+			'thumbnail_h' =>  fusion_get_settings('eshop_image_th'),
+			'thumbnail_suffix' =>'_t1',
+			'thumbnail2'=>1,
+			'thumbnail2_w' 	=>  fusion_get_settings('eshop_image_t2w'),
+			'thumbnail2_h' 	=>  fusion_get_settings('eshop_image_t2h'),
+			'thumbnail2_suffix' => '_t2',
+			'delete_original' => 1,
+			'max_width'		=>	fusion_get_settings('eshop_image_w'),
+			'max_height'	=>	fusion_get_settings('eshop_image_h'),
+			'max_byte'		=>	fusion_get_settings('eshop_image_b'),
+			'multiple' => 0,
+		);
+		$gallery = new \PHPFusion\Gallery\Admin();
+		$gallery->setUploadSettings($this->upload_settings);
+		$gallery->setImageUploadDir(BASEDIR."eshop/pictures/");
+		$gallery->setPhotoCatDb(DB_ESHOP_ALBUMS);
+		$gallery->setPhotoDb(DB_ESHOP_PHOTOS);
+		$gallery->setGalleryRights('ESHP');
+
 		self::set_productdb();
 		self::quick_save();
 	}
@@ -299,22 +328,20 @@ class Products {
 		}
 
 		if (isset($_POST['save_cat'])) {
-
 			$this->data['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
 			$this->data['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '', 'cid') : 0;
-			$this->data['picture'] = isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '';
+
+			$this->data['picture'] = isset($_POST['image']) ? form_sanitizer($_POST['picture'], '', 'picture') : '';
 			$this->data['thumb'] = isset($_POST['thumb']) ? form_sanitizer($_POST['thumb'], '', 'thumb') : '';
 			$this->data['thumb2'] = isset($_POST['thumb2']) ? form_sanitizer($_POST['thumb2'], '', 'thumb2') : '';
+
 			$upload = isset($_FILES['imagefile']) ? form_sanitizer($_FILES['imagefile'], '', 'imagefile') : '';
 			if (isset($upload['error']) && !$upload['error']) {
 				$this->data['picture'] = $upload['image_name'];
 				$this->data['thumb'] = $upload['thumb1_name'];
 				$this->data['thumb2'] = $upload['thumb2_name'];
-			} else {
-				$this->data['picture'] = isset($_POST['picture']) ? form_sanitizer($_POST['picture'], '', 'picture') : '';
-				$this->data['thumb'] = isset($_POST['thumb']) ? form_sanitizer($_POST['thumb'], '', 'thumb') : '';
-				$this->data['thumb2'] = isset($_POST['thumb2']) ? form_sanitizer($_POST['thumb2'], '', 'thumb2') : '';
 			}
+
 			$this->data['introtext'] = isset($_POST['introtext']) ? form_sanitizer($_POST['introtext'], '', 'introtext') : '';
 			$this->data['description'] = isset($_POST['description']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['description'])) : '';
 			$this->data['anything1n'] = isset($_POST['anything1n']) ? form_sanitizer($_POST['anything1n'], '', 'anything1n') : '';
@@ -511,6 +538,21 @@ class Products {
 		echo form_select($locale['ESHPPRO192'], 'keywords', 'keywords', array(), $this->data['keywords'], array('width'=>'100%', 'tags'=>1, 'multiple'=>1, 'inline'=>1));
 		//'placeholder'=>$locale['ESHPPRO136']
 		echo form_text($locale['ESHP013'], 'demo', 'demo', $this->data['demo'], array('inline'=>1, 'placeholder'=>'http://'));
+
+		$this->upload_settings += array('inline'=>1);
+		echo form_fileinput($locale['ESHPPRO109'], 'imagefile', 'imagefile', BASEDIR."eshop/pictures/", '', $this->upload_settings);
+
+		//echo "<span class='text-smaller display-inline-block m-b-10'>".$locale['ESHPPRO110']."</span>\n";
+		echo form_hidden('', 'picture', 'picture', $this->data['picture']);
+		echo form_hidden('', 'thumb', 'thumb', $this->data['thumb']);
+		echo form_hidden('', 'thumb2', 'thumb2', $this->data['thumb2']);
+		if ($this->data['picture'] && file_exists(SHOP."pictures/".$this->data['picture'])) {
+			echo "<div class='display-inline-block list-group-item'>\n";
+			echo "<img class='img-responsive' src=' ".BASEDIR."eshop/pictures/".$this->data['picture']."' />";
+			echo form_button('Delete Image', 'delete_image', 'delete_image', $this->data['id'], array('class'=>'btn-danger m-t-10', 'icon'=>'fa fa-trash m-r-10'));
+			echo "</div>\n";
+		}
+
 		echo form_text($locale['ESHPPRO107'], 'artno', 'artno', $this->data['artno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
 		echo form_text($locale['ESHPPRO108'], 'sartno', 'sartno', $this->data['sartno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
 
@@ -566,61 +608,6 @@ class Products {
 		echo form_select($locale['ESHPPRO182'], 'cupons', 'cupons', array($locale['no'], $locale['yes']), $this->data['cupons'], array('inline'=>1));
 		echo form_select($locale['ESHPPRO184'], 'campaign', 'campaign',  array($locale['no'], $locale['yes']), $this->data['campaign'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO185']));
 		echo form_text($locale['ESHPPRO112'], 'xprice', 'xprice', $this->data['xprice'], array('number'=>1, 'inline'=>1, 'width'=>'250px', 'placeholder'=>$settings['eshop_currency']));
-		closeside();
-		echo "</div>\n";
-		echo closetabbody();
-		echo closetab();
-
-		/**
-		 * Gallery Features
-		 */
-
-		$tab_title['title'][] = $locale['ptabs_004'];
-		$tab_title['id'][] = 'a1';
-		$tab_title['icon'][] = '';
-		$tab_title['title'][] = $locale['ptabs_005'];
-		$tab_title['id'][] = 'a2';
-		$tab_title['icon'][] = '';
-		$tab_active = tab_active($tab_title, 0);
-		echo opentab($tab_title, $tab_active, 'custom');
-		echo opentabbody($tab_title['title'][0], 'a1' , $tab_active);
-		echo "<div class='m-t-10'>\n";
-		openside('');
-		echo "<span class='text-smaller display-inline-block m-b-10'>".$locale['ESHPPRO110']."</span>\n";
-		echo form_fileinput($locale['ESHPPRO109'], 'imagefile', 'imagefile', BASEDIR."eshop/pictures/", '', array('width'=>'190px', 'inline'=>1, 'type'=>'image',
-			'max_width' => $settings['eshop_image_w'],
-			'max_height' => $settings['eshop_image_h'],
-			'max_byte'=> $settings['eshop_image_b'],
-			'thumbnail_folder' => 'thumb',
-			'thumbnail'=>1,
-			'thumbnail_w'=> $settings['eshop_image_tw'],
-			'thumbnail_h'=> $settings['eshop_image_th'],
-			'thumbnail2'=>1,
-			'thumbnail2_w'=> $settings['eshop_image_t2w'],
-			'thumbnail2_h'=> $settings['eshop_image_t2h'],
-		));
-		echo form_hidden('', 'picture', 'picture', $this->data['picture']);
-		echo form_hidden('', 'thumb', 'thumb', $this->data['thumb']);
-		echo form_hidden('', 'thumb2', 'thumb2', $this->data['thumb2']);
-		if ($this->data['picture'] && file_exists(SHOP."pictures/".$this->data['picture'])) {
-			echo "<div class='display-inline-block list-group-item'>\n";
-			echo "<img class='img-responsive' src=' ".BASEDIR."eshop/pictures/".$this->data['picture']."' />";
-			echo form_button('Delete Image', 'delete_image', 'delete_image', $this->data['id'], array('class'=>'btn-danger m-t-10', 'icon'=>'fa fa-trash m-r-10'));
-			echo "</div>\n";
-		}
-
-		closeside();
-		echo "</div>\n";
-		echo closetabbody();
-
-		echo opentabbody($tab_title['title'][1], 'a2', $tab_active);
-		echo "<div class='m-t-10'>\n";
-		openside('');
-
-		echo form_text($locale['ESHPPRO130'], 'image', 'image', '', array('inline'=>1, 'placeholder'=>'http://'));
-		echo form_text($locale['ESHPPRO131'], 'thumb', 'thumb', '', array('inline'=>1, 'placeholder'=>'http://'));
-		echo form_text($locale['ESHPPRO132'], 'thumb2', 'thumb2', '', array('inline'=>1, 'placeholder'=>'http://'));
-
 		closeside();
 		echo "</div>\n";
 		echo closetabbody();
