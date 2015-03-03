@@ -13,7 +13,7 @@ class Main {
 	 * these are the vars we will use only.
 	 */
 	public function __construct() {
-		global $locale;
+		global $locale, $aidlink;
 		// sanitized global vars
 		if (isset($_GET['category']) && !isnum($_GET['category'])) die("Denied");
 		if (isset($_GET['id']) && !isnum($_GET['id'])) die("Denied");
@@ -38,6 +38,7 @@ class Main {
 			'customers' => array('title' => $locale['ESHP208'], 'file' => ADMIN."eshop/customers.php"),
 			'orders' => array('title' => $locale['ESHP209']."<span class='badge m-l-10'>".$countorders."</span>", 'file' => ADMIN."eshop/orders.php")
 		);
+		add_to_breadcrumbs(array('link'=>ADMIN.'eshop.php'.$aidlink,'title'=>$locale['ESHP201']));
 		add_to_jquery("
 		function confirmdelete() {
 		return confirm(\"".$locale['ESHP210']."\")
