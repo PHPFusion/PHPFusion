@@ -16,14 +16,13 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("A") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('A');
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/articles.php";
 
+add_to_breadcrumbs(array('link'=>ADMIN.'articles.php'.$aidlink,'title'=>$locale['articles_0001']));
+$settings = fusion_get_settings();
 if ($settings['tinymce_enabled'] == 1) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 } else {
@@ -149,6 +148,7 @@ if (!empty($result)) {
 		}
 		if ((isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
 			opentable($locale['articles_0003']);
+
 		} else {
 			if (!isset($_POST['preview'])) {
 				$article_cat = '';
