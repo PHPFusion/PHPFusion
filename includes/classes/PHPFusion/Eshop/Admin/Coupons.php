@@ -18,8 +18,7 @@ class Coupons {
 
 	public function __construct() {
 		global $aidlink;
-		$_GET['cuid'] = isset($_GET['cuid']) && isnum($_GET['cuid']) ? $_GET['cuid'] : 0;
-
+		$_GET['cuid'] = isset($_GET['cuid']) && strlen($_GET['cuid']) == 15 ? stripinput($_GET['cuid']) : 0;
 		$_rand = rand(1000000, 9999999);
 		$_hash = substr(md5($_rand), 0, 15);
 		$this->data['cuid'] = strtoupper($_hash);
@@ -33,10 +32,8 @@ class Coupons {
 				self::remove_coupon();
 				break;
 			case 'edit' :
-				if (self::verify_coupon($_GET['cuid'])) {
-					$this->form_action = FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;action=edit&amp;cuid=".$_GET['cuid'];
-					$this->data = self::get_couponData($_GET['cuid']);
-				}
+				$this->form_action = FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;action=edit&amp;cuid=".$_GET['cuid'];
+				$this->data = self::get_couponData($_GET['cuid']);
 				break;
 			default :
 				$this->form_action = FUSION_SELF.$aidlink."&amp;a_page=coupons&amp;section=couponform";
@@ -79,7 +76,7 @@ class Coupons {
 	 */
 	static function verify_coupon($cuid) {
 		if ($cuid) {
-			$cuid = form_sanitizer($cuid, '');
+			$cuid = stripinput($cuid);
 			return dbcount("(cuid)", DB_ESHOP_COUPONS, "cuid='$cuid'");
 		}
 		return false;
@@ -229,12 +226,12 @@ class Coupons {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
 		openside('');
 		echo form_select($locale['ESHPCUPNS107'], 'active', 'active', self::getCouponStatus(), $this->data['active'], array('inline'=>1));
-		echo form_button($locale['save'], 'save_coupons', 'save_coupon2', $locale['ESHPCUPNS111'], array('class'=>'btn-primary'));
+		echo form_button($locale['save'], 'save_coupons', 'save_coupon2', $locale['ESHPCUPNS111'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['save'], 'save_coupons', 'save_coupons', $locale['ESHPCUPNS111'], array('class'=>'btn-primary'));
+		echo form_button($locale['save'], 'save_coupons', 'save_coupons', $locale['ESHPCUPNS111'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 		echo "</div>\n";
 	}
