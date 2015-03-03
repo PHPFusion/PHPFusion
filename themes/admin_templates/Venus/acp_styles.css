@@ -20,6 +20,15 @@ html, body {
 	font: 13px/16px Arial;
 	overflow-x: hidden;
 }
+label, .control-label, .label-control {
+	font-size:12px;
+}
+.form-control {
+	height: 31px;
+	padding: 6px 12px;
+	font-size: 13px;
+}
+
 .breadcrumb {
 
 	margin: 0px 0px 20px;
