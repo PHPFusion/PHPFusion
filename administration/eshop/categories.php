@@ -25,7 +25,7 @@ $tab_title['icon'][] = '';
 
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && $category->verify_cat_edit($_GET['cid']) ? $_GET['section'] : 'listcat';
 
-$tab_title['title'][] = $edit ? $locale['ESHPCATS139'] : $locale['ESHPCATS140'];
+$tab_title['title'][] = $edit ? $locale['ESHPCATS140'] : $locale['ESHPCATS139'];
 $tab_title['id'][] = 'catform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 
@@ -41,4 +41,3 @@ if (isset($_GET['section']) && $_GET['section'] == 'catform') {
 	echo closetabbody();
 }
 closetable();
-?>
