@@ -350,7 +350,7 @@ $locale['move_up'] = "Pindah Atas";
 $locale['move_down'] = "Pindah Bawah";
 // Action
 $locale['add'] = 'Tambah';
-$locale['save'] = 'Rekod';
+$locale['save'] = 'Terima';
 $locale['update'] = 'Kemaskini';
 $locale['updated'] = 'di kemaskinikan';
 $locale['remove'] = 'Padam';
