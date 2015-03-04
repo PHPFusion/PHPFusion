@@ -112,6 +112,7 @@ $locale['global_073b'] = " Komen";
 $locale['global_074'] = " Bacaan";
 $locale['global_074b'] = " Bacaan";
 $locale['global_075'] = "Cetak";
+$locale['print'] = 'Cetak';
 $locale['global_076'] = "Edit";
 $locale['global_077'] = "Berita";
 $locale['global_078'] = "Belum ada berita dipaparkan lagi.";
@@ -351,6 +352,7 @@ $locale['move_down'] = "Pindah Bawah";
 // Action
 $locale['add'] = 'Tambah';
 $locale['save'] = 'Terima';
+$locale['save_changes'] = 'Terima Perubahan';
 $locale['update'] = 'Kemaskini';
 $locale['updated'] = 'di kemaskinikan';
 $locale['remove'] = 'Padam';
@@ -406,7 +408,7 @@ $locale['right'] = "Kanan";
 $locale['comments'] = "Komen";
 $locale['ratings'] = "Penilaian";
 $locale['comments_ratings'] = "Komen dan Penilian";
-
+$locale['user_account'] = "Akaun Ahli";
 $locale['testimonial_rank'] = "Saya seorang %s daripada halaman web ini";
 $locale['testimonial_location'] = "dan saya tinggal di %s";
 $locale['testimonial_join'] = ". Saya meyertai web ini pada %s";

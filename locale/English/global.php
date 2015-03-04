@@ -120,6 +120,7 @@ $locale['global_073b'] = " Comment";
 $locale['global_074'] = " Reads";
 $locale['global_074b'] = " Read";
 $locale['global_075'] = "Print";
+$locale['print'] = 'Print';
 $locale['global_076'] = "Edit";
 $locale['global_077'] = "News";
 $locale['global_078'] = "No News has been posted yet";
