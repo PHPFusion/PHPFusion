@@ -1,12 +1,14 @@
 <?php
 // Admin Links
 $locale['200'] = "Центр керування - <<".fusion_get_settings('sitename').">>";
+
 $locale['ac00'] = "Центр керування";
 $locale['ac01'] = "Сайт";
 $locale['ac02'] = "Користувачі";
 $locale['ac03'] = "Система";
 $locale['ac04'] = "Налаштування";
 $locale['ac05'] = "Додатки";
+
 $locale['201'] = "Адміністратори";
 
 $locale['AC'] = "Розділи статей";
@@ -16,7 +18,7 @@ $locale['BLC'] = "Розділи блогу";
 $locale['CP'] = "Сторінки";
 $locale['DC'] = "Розділи завантажень";
 $locale['D'] = "Завантаження";
-$locale['ESHP'] = "eShop";
+$locale['ESHP'] = "Інтернет магазин";
 $locale['FQ'] = "ЧАП";
 $locale['F'] = "Форум";
 $locale['IM'] = "Зображення";
@@ -51,20 +53,20 @@ $locale['UF'] = "Поля користувача";
 $locale['FR'] = "Ранги на форумі";
 $locale['S8'] = "Новини";
 $locale['S9'] = "Користувачі";
-$locale['S11'] = "Вивантаження";
-$locale['S10'] = "Записів на сторінці";
-$locale['SB'] = "Банери";
+$locale['S11'] = "Завантаження";
+$locale['S10'] = "Наповнення сторінок";
+$locale['SB'] = "Баннери";
 $locale['S12'] = "Безпека";
 $locale['APWR'] = "Скидання паролю адміністрування";
 $locale['ERRO'] = "Журнал помилок";
-$locale['AD'] = "Administrator"; // translate these lines
-$locale['UL'] = "User log";
-$locale['MAIL'] = "Email templates";
-$locale['PL'] = "Permalinks";
+$locale['AD'] = "Адміністратори";
+$locale['UL'] = "Журнал користувачів";
+$locale['MAIL'] = "Шаблони електронних листів";
+$locale['PL'] = "Статичні посилання";
 $locale['ROB'] = "robots.txt";
-$locale['TS'] = "Theme";
-$locale['S13'] = "Settings Blog";
-$locale['LANG'] = "Language Settings";
+$locale['TS'] = "Теми";
+$locale['S13'] = "Блог";
+$locale['LANG'] = "Мови";
 
 // Site Information
 $locale['250'] = "Панель <small>Підсумок по сайту</small>";
