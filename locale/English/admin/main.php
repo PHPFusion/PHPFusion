@@ -17,21 +17,21 @@ $locale['CP'] = "Custom Pages";
 $locale['DC'] = "Download Categories";
 $locale['D'] = "Downloads";
 $locale['ESHP'] = "eShop";
+$locale['FQ'] = "FAQs";
+$locale['F'] = "Forums";
+$locale['IM'] = "Images";
+$locale['I'] = "Infusions";
+$locale['IP'] = "Infusion Panels";
+$locale['M'] = "Members";
+$locale['N'] = "News";
+$locale['P'] = "Panels";
+$locale['PH'] = "Photo Albums";
 
 $locale['204'] = "Blacklist";
 $locale['205'] = "Comments";
 
 $locale['207'] = "Database Backup";
 
-$locale['210'] = "FAQs";
-$locale['211'] = "Forums";
-$locale['212'] = "Images";
-$locale['213'] = "Infusions";
-$locale['214'] = "Infusion Panels";
-$locale['215'] = "Members";
-$locale['216'] = "News";
-$locale['217'] = "Panels";
-$locale['218'] = "Photo Albums";
 $locale['219'] = "PHP Info";
 $locale['220'] = "Polls";
 $locale['221'] = "";
