@@ -8,14 +8,21 @@ $locale['ac03'] = "Sistemos valdymas";
 $locale['ac04'] = "Nustatymai";
 $locale['ac05'] = "Įskiepiai";
 $locale['201'] = "Administratoriai";
-$locale['202'] = "Straipsnių kategorijos";
-$locale['203'] = "Straipsniai";
+
+$locale['AC'] = "Straipsnių kategorijos";
+$locale['A'] = "Straipsniai";
+$locale['BLOG'] = "Tinklaraštis";
+$locale['BLC'] = "Tinklaraščių kategorijos";
+$locale['CP'] = "Pridėtiniai puslapiai";
+$locale['DC'] = "Siuntinių kategorijos";
+$locale['D'] = "Siuntiniai";
+$locale['ESHP'] = "eShop";
+
+
 $locale['204'] = "Juodasis sąrašas";
 $locale['205'] = "Komentarai";
-$locale['206'] = "Pridėtiniai puslapiai";
+
 $locale['207'] = "Duomenų bazės kopija";
-$locale['208'] = "Siuntinių kategorijos";
-$locale['209'] = "Siuntiniai";
 $locale['210'] = "DUK";
 $locale['211'] = "Forumai";
 $locale['212'] = "Paveiksliukai";
@@ -56,8 +63,7 @@ $locale['246'] = "Saugumas";
 $locale['247'] = "Vartotojų valdymas";
 $locale['248'] = "Administratoriaus slaptažodžio atstatymas";
 $locale['249'] = "Klaidų logas";
-$locale['249a'] = "Tinklaraštis";
-$locale['249b'] = "Tinklaraščių kategorijos";
+
 // Site Information
 $locale['250'] = "Informacijos skydelis <small>Tinklalapio informacija</small>";
 $locale['251'] = "Registruoti nariai";
@@ -86,6 +92,7 @@ $locale['269b'] = "Tinklaraščiai";
 $locale['270'] = "Straipsniai";
 $locale['271'] = "Nuorodos";
 $locale['272'] = "Galerija";
+$locale['272a'] = "Custom Pages";
 $locale['273'] = "pakomentuota";
 $locale['273a'] = "reitinguota";
 $locale['273b'] = "pateikta į";

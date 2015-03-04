@@ -19,7 +19,7 @@ require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/custom_pages.php";
 include LOCALE.LOCALESET."admin/sitelinks.php";
-pageAccess('CP');
+pageAccess('CP', true);
 $customPage = new PHPFusion\CustomPage();
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? 1 : 0;
 $allowed_pages = array('cp1', 'cp2');

@@ -20,7 +20,7 @@ if (!iADMIN || $userdata['user_rights'] == "" || !defined("iAUTH") || !isset($_G
 	redirect("../index.php");
 }
 require_once THEMES."templates/admin_header.php";
-
+$settings = fusion_get_settings();
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) $_GET['pagenum'] = 1;
 $admin_images = TRUE;
 // Work out which tab is the active default (redirect if no tab available)
@@ -97,9 +97,30 @@ if (db_exists(DB_PHOTOS)) {
 	$photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
 }
 
-$comments_type = array('N' => $locale['269'], 'D' => $locale['268'], 'P' => $locale['272'], 'A' => $locale['270'],'B' => $locale['269b'],);
-$submit_type = array('n' => $locale['269'], 'd' => $locale['268'], 'p' => $locale['272'], 'a' => $locale['270'], 'l' => $locale['271'],'b' => $locale['269b'],);
-$link_type = array('N' => $settings['siteurl']."news.php?readmore=%s", 'D' => $settings['siteurl']."downloads.php?download_id=%s", 'P' => $settings['siteurl']."photogallery.php?photo_id=%s", 'A' => $settings['siteurl']."articles.php?article_id=%s",'B' => $settings['siteurl']."blog.php?readmore=%s",);
+$comments_type = array(
+	'N' => $locale['269'],
+	'D' => $locale['268'],
+	'P' => $locale['272'],
+	'A' => $locale['270'],
+	'B' => $locale['269b'],
+	'C' => $locale['272a'],
+);
+$submit_type = array(
+	'n' => $locale['269'],
+	'd' => $locale['268'],
+	'p' => $locale['272'],
+	'a' => $locale['270'],
+	'l' => $locale['271'],
+	'b' => $locale['269b']
+);
+$link_type = array(
+	'N' => $settings['siteurl']."news.php?readmore=%s",
+	'D' => $settings['siteurl']."downloads.php?download_id=%s",
+	'P' => $settings['siteurl']."photogallery.php?photo_id=%s",
+	'A' => $settings['siteurl']."articles.php?article_id=%s",
+	'B' => $settings['siteurl']."blog.php?readmore=%s",
+	'C' => $settings['siteurl']."viewpage.php?page_id=%s",
+);
 
 // Latest Comments
 $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);

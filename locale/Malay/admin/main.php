@@ -2,20 +2,26 @@
 // Admin Links
 $locale['200'] = fusion_get_settings('sitename')." Admin Panel";
 $locale['ac00'] = "Dashboard";
-$locale['ac01'] = "Pengurusan Kandungan";
-$locale['ac02'] = "Pengurusan Ahli";
-$locale['ac03'] = "Pengurusan Sistem";
+$locale['ac01'] = "Kandungan";
+$locale['ac02'] = "Keahlian";
+$locale['ac03'] = "Sistem";
 $locale['ac04'] = "Pengaturan";
 $locale['ac05'] = "Modul Infusi";
 $locale['201'] = "Pengurus";
-$locale['202'] = "Kategori Artikel";
-$locale['203'] = "Artikel";
+
+$locale['AC'] = "Kategori Artikel";
+$locale['A'] = "Artikel";
+$locale['BLOG'] = "Blog";
+$locale['BLC'] = "Kategori Blog";
+$locale['CP'] = "Laman Kustom";
+$locale['DC'] = "Kategori Muat Turun";
+$locale['D'] = "Muat Turun";
+$locale['ESHP'] = "eShop";
+
 $locale['204'] = "Senarai Hitam";
 $locale['205'] = "Komen";
-$locale['206'] = "Laman Kustom";
+
 $locale['207'] = "Penyandaran Database";
-$locale['208'] = "Kategori Muat Turun";
-$locale['209'] = "Muat Turun";
 $locale['210'] = "Soal Jawab";
 $locale['211'] = "Forum Perbincangan";
 $locale['212'] = "Gambar";
@@ -56,8 +62,7 @@ $locale['246'] = "Sekuriti";
 $locale['247'] = $locale['242'];
 $locale['248'] = "Pemulihan Kata Aluan Admin";
 $locale['249'] = "Log Kesalahan";
-$locale['249a'] = "Blog";
-$locale['249b'] = "Kategori Blog";
+
 // Site Information
 $locale['250'] = "Dashboard <small>Ringkasan Halaman Web Anda</small>";
 $locale['251'] = "Ahli didaftarkan";
@@ -86,6 +91,7 @@ $locale['269b'] = 'Blog';
 $locale['270'] = 'Artikel';
 $locale['271'] = 'Pautan Link';
 $locale['272'] = 'Galeri';
+$locale['272a'] = "Halaman Kustom";
 $locale['273'] = "dikomen pada ";
 $locale['273a'] = "dinilaikan pada";
 $locale['273b'] = "membuat serahan kepada";

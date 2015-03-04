@@ -8,14 +8,21 @@ $locale['ac03'] = "System Admin";
 $locale['ac04'] = "Settings";
 $locale['ac05'] = "Infusions";
 $locale['201'] = "Administrators";
-$locale['202'] = "Article Categories";
-$locale['203'] = "Articles";
+
+$locale['AC'] = "Article Categories";
+$locale['A'] = "Articles";
+$locale['BLOG'] = "Blog";
+$locale['BLC'] = "Blog Categories";
+$locale['CP'] = "Custom Pages";
+$locale['DC'] = "Download Categories";
+$locale['D'] = "Downloads";
+$locale['ESHP'] = "eShop";
+
 $locale['204'] = "Blacklist";
 $locale['205'] = "Comments";
-$locale['206'] = "Custom Pages";
+
 $locale['207'] = "Database Backup";
-$locale['208'] = "Download Categories";
-$locale['209'] = "Downloads";
+
 $locale['210'] = "FAQs";
 $locale['211'] = "Forums";
 $locale['212'] = "Images";
@@ -56,8 +63,7 @@ $locale['246'] = "Security";
 $locale['247'] = "User Management";
 $locale['248'] = "Admin Password Reset";
 $locale['249'] = "Error Log";
-$locale['249a'] = "Blog";
-$locale['249b'] = "Blog Categories";
+
 // Site Information
 $locale['250'] = "Dashboard <small>Site Overview</small>";
 $locale['251'] = "Registered Members";
@@ -86,6 +92,7 @@ $locale['269b'] = "Blog";
 $locale['270'] = "Articles";
 $locale['271'] = "Weblinks";
 $locale['272'] = "Gallery";
+$locale['272a'] = "Custom Pages";
 $locale['273'] = "commented on";
 $locale['273a'] = "rated on";
 $locale['273b'] = "made submissions to";

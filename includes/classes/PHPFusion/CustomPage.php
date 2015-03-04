@@ -2,7 +2,6 @@
 
 namespace PHPFusion;
 
-
 class CustomPage {
 	/**
 	 * @var array
@@ -32,7 +31,6 @@ class CustomPage {
 		$_POST['page_id'] = isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : 0;
 		$_GET['status'] = isset($_GET['status']) ? $_GET['status'] : '';
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
-
 		$title = '';
 		switch($_GET['action']) {
 			case 'edit':
@@ -219,7 +217,7 @@ class CustomPage {
 			echo "<div class='pull-left m-t-5 m-r-10'>\n";
 			echo form_select('', 'cpid', 'cpid', $edit_opts, isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '');
 			echo form_hidden('', 'section', 'section', 'cp2');
-			echo form_hidden('', 'aidlink', 'aidlink', iAUTH);
+			echo form_hidden('', 'aid', 'aid', iAUTH);
 			echo "</div>\n";
 			echo form_button($locale['420'], 'action', 'edit', 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
 			echo form_button($locale['421'], 'action', 'delete', 'delete', array('class' => 'btn-danger btn-sm pull-left', 'icon'=>'fa fa-trash'));
@@ -370,7 +368,7 @@ class CustomPage {
 							  array(
 								  "parent_value" => $locale['parent'],
 								  'width' => '100%',
-								  'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."'" : ''),
+								  'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : '')." link_position >= 2",
 								  'disable_opts' => $data['link_id'],
 								  'hide_disabled' => 1), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
 		if (!$data['page_id']) { // we need to get rid of this if we want to constant pairing.
@@ -380,6 +378,7 @@ class CustomPage {
 		echo form_checkbox($locale['428'], 'page_allow_ratings', 'page_allow_ratings', $data['page_allow_ratings'], array('class'=>'m-b-0'));
 		echo form_hidden('', 'link_id', 'link_id', $data['link_id']);
 		echo form_hidden('', 'link_order', 'link_order', $data['link_order']);
+		echo form_button($locale['430'], 'save', 'save2', $locale['430'], array('class' => 'btn-success m-r-10 m-t-10', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 
 		openside();
