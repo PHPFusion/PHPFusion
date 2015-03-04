@@ -245,7 +245,7 @@ $core_tables = array("admin" => " (
 		link_name VARCHAR(100) NOT NULL DEFAULT '',
 		link_url VARCHAR(200) NOT NULL DEFAULT '',
 		link_icon VARCHAR(100) NOT NULL DEFAULT '',
-		link_visibility TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+		link_visibility CHAR(4) NOT NULL DEFAULT '0',
 		link_position TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 		link_window TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		link_order SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',

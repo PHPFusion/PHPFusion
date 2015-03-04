@@ -164,6 +164,19 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		echo "define(\"SECRET_KEY_SALT\", \"".$secret_key_salt."\"); <br />\n";
 		echo "</div><br />";
 		echo "Please note that you need to change the \$pdo_enabled = \"0\" to \$pdo_enabled = \"1\" manually in order to enable PDO</div><br />\n";
+
+		// Modify All Users Level > 0
+		$result = dbquery("SELECT user_id, user_level FROM ".DB_USERS."");
+		if (dbrows($result)>0) {
+			while ($data = dbarray($result)) {
+				if ($data['user_level']) { // will omit 0
+					dbquery("UPDATE ".DB_USERS." SET user_level ='-".$data['user_level']."' WHERE user_id='".$data['user_id']."' ");
+				}
+			}
+		}
+		// change link_visibility
+		$result = dbquery("ALTER TABLE ".DB_SITE_LINKS." CHANGE link_visibility link_visibility CHAR(4) NOT NULL DEFAULT ''");
+
 		//Add language tables to infusions and main content
 		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_access");
 		$result = dbquery("ALTER TABLE ".DB_CUSTOM_PAGES." ADD page_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER page_allow_ratings");
@@ -202,7 +215,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		// Sub-categories for news
 		$result = dbquery("ALTER TABLE ".DB_NEWS_CATS." ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id");
 		// Moving access level from article categories to articles and create field for subcategories
-		$result = dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_visibility TINYINT(3) NOT NULL DEFAULT '0' AFTER article_datestamp");
+		$result = dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_datestamp");
 		$result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
 		if (dbrows($result)) {
 			while($data = dbarray($result)) {
@@ -212,7 +225,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." DROP COLUMN article_cat_access");
 		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER article_cat_id");
 		// Moving access level from downloads categories to downloads and create field for subcategories
-		$result = dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_visibility TINYINT(3) NOT NULL DEFAULT '0' AFTER download_datestamp");
+		$result = dbquery("ALTER TABLE ".DB_DOWNLOADS." ADD download_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER download_datestamp");
 		$result = dbquery("SELECT download_cat_id, download_cat_access FROM ".DB_DOWNLOAD_CATS);
 		if (dbrows($result)) {
 			while($data = dbarray($result)) {
@@ -222,7 +235,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." DROP COLUMN download_cat_access");
 		$result = dbquery("ALTER TABLE ".DB_DOWNLOAD_CATS." ADD download_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER download_cat_id");
 		// Moving access level from weblinks categories to weblinks and create field for subcategories
-		$result = dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_visibility TINYINT(3) NOT NULL DEFAULT '0' AFTER weblink_datestamp");
+		$result = dbquery("ALTER TABLE ".DB_WEBLINKS." ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER weblink_datestamp");
 		$result = dbquery("SELECT weblink_cat_id, weblink_cat_access FROM ".DB_WEBLINK_CATS);
 		if (dbrows($result)) {
 			while($data = dbarray($result)) {
@@ -256,7 +269,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		// Language settings admin section
 		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'languages.gif', '".$locale['129c']."', 'settings_languages.php', '4')");
 		if ($result) {
-			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
+			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
 			while ($data = dbarray($result)) {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".LANG' WHERE user_id='".$data['user_id']."'");
 			}
@@ -291,7 +304,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		// Blog link
 		$result = dbquery("INSERT INTO ".DB_PREFIX."site_links (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['130b']."', 'blog.php', '0', '2', '0', '3', '".$settings['locale']."')");
 		if ($result) {
-			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
+			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
 			while ($data = dbarray($result)) {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".BLOG.BLC.S13' WHERE user_id='".$data['user_id']."'");
 			}
@@ -312,7 +325,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		blog_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		blog_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		blog_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
-		blog_visibility TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+		blog_visibility CHAR(4) NOT NULL DEFAULT '0',
 		blog_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		blog_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		blog_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
@@ -642,7 +655,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'eshop.php', '1')");
 		$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'settings_eshop.php', '4')");
 		if ($result) {
-			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
+			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
 			while ($data = dbarray($result)) {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".ESHP' WHERE user_id='".$data['user_id']."'");
 			}
@@ -664,7 +677,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		// Email templates admin section
 		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 		if ($result) {
-			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
+			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
 			while ($data = dbarray($result)) {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".MAIL' WHERE user_id='".$data['user_id']."'");
 			}
@@ -717,7 +730,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('PL', 'permalink.gif', '".$locale['SEO']."', 'permalink.php', '3')");
 		// upgrade admin rights for permalink admin
 		if ($result) {
-			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
+			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
 			while ($data = dbarray($result)) {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".PL' WHERE user_id='".$data['user_id']."'");
 			}
@@ -737,7 +750,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')");
 		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 		if ($result) {
-			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
+			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
 			while ($data = dbarray($result)) {
 				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".TS' WHERE user_id='".$data['user_id']."'");
 			}
