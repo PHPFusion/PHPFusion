@@ -122,6 +122,7 @@ $locale['global_073b'] = " комментарий";
 $locale['global_074']  = " прочтений";
 $locale['global_074b']  = " прочтение";
 $locale['global_075']  = "Печать";
+$locale['print'] = 'Печать';
 $locale['global_076']  = "Правка";
 $locale['global_077']  = "Новости";
 $locale['global_078']  = "Новости не опубликованы";

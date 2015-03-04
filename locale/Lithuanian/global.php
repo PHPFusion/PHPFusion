@@ -128,6 +128,7 @@ $locale['global_073b'] = " komentaras";
 $locale['global_074'] = " perskaitymai";
 $locale['global_074b'] = " perskaitymas";
 $locale['global_075'] = "Spausdinti";
+$locale['print'] = 'Spausdinti';
 $locale['global_076'] = "Redaguoti";
 $locale['global_077'] = "Naujienos";
 $locale['global_078'] = "Naujienų kol kas nėra";
