@@ -753,19 +753,17 @@ function checkrights($right) {
  */
 function pageAccess($rights, $debug = FALSE) {
 	$error = array();
-	if (defined('ADMIN_PANEL')) {
-		if ($debug) {
-			print_p('Admin Panel mode');
-		}
-		if (!defined('iAUTH')) {
-			$error[] = 'iAuth error';
-		}
-		if (!isset($_GET['aid'])) {
-			$error[] = 'Aid link error';
-		}
-		if (isset($_GET['aid']) && $_GET['aid'] != iAUTH) {
-			$error[] = 'Aidlink mismatch. '.iAUTH.' != '.$_GET['aid'];
-		}
+	if ($debug) {
+		print_p('Admin Panel mode');
+	}
+	if (!defined('iAUTH')) {
+		$error[] = 'iAuth error';
+	}
+	if (!isset($_GET['aid'])) {
+		$error[] = 'Aid link error';
+	}
+	if (isset($_GET['aid']) && $_GET['aid'] != iAUTH) {
+		$error[] = 'Aidlink mismatch. '.iAUTH.' != '.$_GET['aid'];
 	}
 	if (!checkrights($rights)) {
 		$error[] = 'Checkrights Error';

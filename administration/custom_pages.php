@@ -16,10 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+pageAccess('CP');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/custom_pages.php";
 include LOCALE.LOCALESET."admin/sitelinks.php";
-pageAccess('CP');
 $customPage = new PHPFusion\CustomPage();
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? 1 : 0;
 $allowed_pages = array('cp1', 'cp2');

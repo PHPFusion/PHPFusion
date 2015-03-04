@@ -374,9 +374,9 @@ $locale['info'] = 'Info';
 $locale['image'] = 'Gambar';
 // Forms
 $locale['choose'] = 'Sila pilih antara satu..';
-$locale['root'] = 'Sebagai Punca Utama';
+$locale['root'] = 'Sebagai Dasar Pautan...';
 $locale['choose-user'] = 'Silah pilih Ahli..';
-$locale['parent'] = 'Cipta sebagai Punca Utama..';
+$locale['parent'] = 'Sebagai Dasar Pautan...';
 $locale['order'] = 'Susunan Item';
 $locale['status'] = 'Status';
 $locale['note'] = 'Buat nota item ini';
