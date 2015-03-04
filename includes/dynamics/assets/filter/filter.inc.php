@@ -68,7 +68,7 @@ function filter_show($row_start_key = FALSE, $items_per_page_key = FALSE) {
 }
 
 // Making Page Navigation
-function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $array = FALSE) {
+function makepagenav_filter($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $array = FALSE) {
 	global $locale, $aidlink;
 	if (!defined("PAGENAV")) {
 		define("PAGENAV", TRUE);

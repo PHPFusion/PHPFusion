@@ -472,7 +472,6 @@ function dbquery_insert($db, $inputdata, $mode, array $options = array()) {
 		'no_unique' => !empty($options['no_unique']) && $options['no_unique'] == 1 ? 1 : 0,
 		'keep_session' => !empty($options['keep_session']) && $options['keep_session'] == 1 ? 1 : 0
 	);
-
 	if (!defined("FUSION_NULL")) {
 		$columns = fieldgenerator($db);
 		$col_rows = count($columns);

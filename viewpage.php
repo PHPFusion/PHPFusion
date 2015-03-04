@@ -21,43 +21,73 @@ require_once INCLUDES."comments_include.php";
 require_once INCLUDES."ratings_include.php";
 include LOCALE.LOCALESET."custom_pages.php";
 
-if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) {
-	redirect("index.php");
-}
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
-	$_GET['rowstart'] = 0;
-}
+if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) redirect("index.php");
+$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."'");
+$custompage = array(
+	'title' => '',
+	'body' => '',
+	'error' => '',
+	'count' => '',
+);
+$cp_data = array(
+	'page_access' => -103,
+);
+$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
+$page_languages[] = 'klingon';
 
-$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."' ".(multilang_table("CP") ? "AND page_language='".LANGUAGE."'" : "")."");
 if (dbrows($cp_result)) {
 	$cp_data = dbarray($cp_result);
-	if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
-	add_to_title($locale['global_200'].$cp_data['page_title']);
-	echo "<!--custompages-pre-content-->\n";
-	opentable($cp_data['page_title']);
-	if (checkgroup($cp_data['page_access'])) {
+	$page_languages = explode('.', $cp_data['page_language']);
+	//print_p($page_languages);
+	if (multilang_table("CP") && in_array(LANGUAGE, $page_languages) && checkgroup($cp_data['page_access'])) {
+
+		$custompage['title'] = $cp_data['page_title'];
+		add_to_title($locale['global_200'].$cp_data['page_title']);
+		add_to_breadcrumbs(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
+		if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
+
 		ob_start();
 		eval("?>".stripslashes($cp_data['page_content'])."<?php ");
-		$custompage = ob_get_contents();
+		$eval = ob_get_contents();
 		ob_end_clean();
-		$custompage = preg_split("/<!?--\s*pagebreak\s*-->/i", $custompage);
-		$pagecount = count($custompage);
-		echo $custompage[$_GET['rowstart']];
+
+		$custompage['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $eval);
+		$custompage['count'] = count($eval);
+
 	} else {
-		echo "<div class='admin-message' style='text-align:center'><br /><img style='border:0px; vertical-align:middle;' src ='".BASEDIR."images/warn.png' alt=''/><br /> ".$locale['400']."<br /><a href='index.php' onclick='javascript:history.back();return false;'>".$locale['403']."</a>\n<br /><br /></div>\n";
+		add_to_title($locale['global_200'].$locale['401']);
+		$custompage['title'] = $locale['401'];
+		$custompage['error'] = "<img style='border:0px; vertical-align:middle;' src ='".BASEDIR."images/warn.png' alt=''/>
+						<br />".$locale['400']."<br /><a href='index.php' onclick='javascript:history.back();return false;'>".$locale['403']."</a>\n<br /><br />
+						";
 	}
 } else {
 	add_to_title($locale['global_200'].$locale['401']);
-	echo "<!--custompages-pre-content-->\n";
-	opentable($locale['401']);
-	echo "<div style='text-align:center'><br />\n".$locale['402']."\n<br /><br /></div>\n";
+	$custompage['title'] = $locale['401'];
+	$custompage['error'] = $locale['402'];
+}
+
+/**
+ * Render Custom Page
+ */
+opentable($custompage['title']);
+echo "<!--custompages-pre-content-->\n";
+if (!empty($custompage['error'])) {
+	echo "<div class='well text-center'>\n";
+	echo $custompage['error'];
+	echo "</div>\n";
+} else {
+	echo $custompage['body'][$_GET['rowstart']];
 }
 closetable();
-if (isset($pagecount) && $pagecount > 1) {
-	echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 1, $pagecount, 3, BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
+
+if ($custompage['count'] > 0) {
+	$custompage['count']++;
+	echo "<div class='display-block text-center m-t-5'>\n".makepagenav($_GET['rowstart'], 1, $custompage['count'], 3, BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
 }
 echo "<!--custompages-after-content-->\n";
-if (dbrows($cp_result) && checkgroup($cp_data['page_access'])) {
+
+if (dbrows($cp_result) && checkgroup($cp_data['page_access']) && in_array(LANGUAGE, $page_languages)) {
 	if ($cp_data['page_allow_comments']) {
 		showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
 	}

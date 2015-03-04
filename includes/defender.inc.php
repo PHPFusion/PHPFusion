@@ -156,7 +156,7 @@ class defender {
 					default:
 						$this->stop();
 						$this->addNotice($this->field_name);
-						$this->addNotice(var_dump($this->field_config));
+						//$this->addNotice(var_dump($this->field_config));
 						$this->addNotice('Verification on unknown type of fields is prohibited.');
 				}
 			} else {

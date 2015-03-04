@@ -1001,12 +1001,12 @@ function makefileopts(array $files, $selected = "") {
 function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart") {
 	global $locale;
 	if (fusion_get_settings('bootstrap')) {
-		$tpl_global = "<nav>%s<ul class='pagination'>\n%s</ul></nav>\n";
-		$tpl_currpage = "<li><a href=''><strong>%d</strong></a></li>\n";
-		$tpl_page = "<li><a data-value='%d' href='%s=%d'>%s</a></li>\n";
-		$tpl_divider = "</ul>\n<ul class='pagination'>";
-		$tpl_firstpage = "<li><a data-value='0' href='%s=0'>1</a></li>\n";
-		$tpl_lastpage = "<li><a data-value='%d' href='%s=%d'>%s</a></li>\n";
+		$tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
+		$tpl_currpage = "<a class='btn btn-sm btn-default active' href=''><strong>%d</strong></a>\n";
+		$tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
+		$tpl_divider = "</div>\n<div class='btn-group'>";
+		$tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
+		$tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
 	} else {
 		$tpl_global = "<div class='pagenav'>%s\n%s\n</div>\n";
 		$tpl_currpage = "<span><strong>%d</strong></span>";
@@ -1057,7 +1057,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 			$res .= sprintf($tpl_lastpage, ($pg_cnt-1)*$count, $link.$getname, ($pg_cnt-1)*$count, $pg_cnt);
 		}
 	}
-	return sprintf($tpl_global, $locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt.": ", $res);
+	return sprintf($tpl_global, "<small class='m-r-10'>".$locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
 }
 
 /**

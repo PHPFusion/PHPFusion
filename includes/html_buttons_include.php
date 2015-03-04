@@ -30,6 +30,14 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 		$res .= "<button type='button' value='blockquote' title='".$locale['html_004']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;blockquote&gt;', '&lt;/blockquote&gt;', '".$formname."');\"><i class='entypo iquote'></i></button>\n";
 		$res .= "<button type='button' value='hr' title='".$locale['html_005']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;hr/&gt;', '', '".$formname."');\"><i class='glyphicon glyphicon-resize-horizontal'></i></button>\n";
 		$res .= "</div>\n";
+
+		$res .= "<div class='btn-group'>\n";
+		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['431']."' onclick=\"insertText('".$textarea."', '&lt;!--PAGEBREAK--&gt;');\">".$locale['431']."</button>\n";
+		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;');\">&lt;?php?&gt;</button>\n";
+		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;p&gt;' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;');\">&lt;p&gt;</button>\n";
+		$res .= "<button type='button' class='btn btn-default btn-sm button m-b-10' value='&lt;br /&gt;' onclick=\"insertText('".$textarea."', '&lt;br /&gt;');\">&lt;br /&gt;</button>\n";
+		$res .= "</div>\n";
+
 		$res .= "<div class='btn-group'>\n";
 		$res .= "<button type='button' value='left' title='".$locale['html_006']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:left;\'/&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-left'></i></button>\n";
 		$res .= "<button type='button' value='center' title='".$locale['html_007']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:center;\'/&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-center'></i></button>\n";
@@ -44,6 +52,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 		$res .= "<button type='button' value='small2' title='".$locale['html_014']."' class='btn btn-sm  btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'small2\'&gt;', '&lt;/span&gt;', '".$formname."');\">small2</button>\n";
 		$res .= "<button type='button' value='alt' title='".$locale['html_015']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'alt\'&gt;', '&lt;/span&gt;', '".$formname."');\">alt</button>\n";
 		$res .= "<button type='button' value='".$locale['html_016']."' title='".$locale['html_016']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;!--PAGEBREAK--&gt;', '', '".$formname."');\"><i class='glyphicon glyphicon-minus'></i></button>\n";
+
 		if ($colors) {
 			$res .= "<div class='btn-group'>\n";
 			$res .= "<button title='".$locale['html_017']."' class='dropdown-toggle btn btn-sm btn-default m-b-10 button strong text-bigger' style='padding:2px 10px 3px;' data-toggle='dropdown'><i style='text-decoration: underline !important; font-weight:bold;'>A</i><span class='caret'></span></button>\n";

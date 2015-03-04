@@ -1,8 +1,16 @@
 <?php
+$locale['cp_100'] = 'Page';
+$locale['cp_101'] = 'Page Title';
+$locale['cp_102'] = 'Visibility';
+$locale['cp_103'] = 'Language';
+$locale['cp_104'] = 'Allow Comments';
+$locale['cp_105'] = 'Allow Ratings';
+$locale['cp_106'] = 'Sitelinks';
 // Custom Pages titles
 $locale['400'] = "Add Custom Page";
 $locale['401'] = "Edit Custom Page";
 $locale['402'] = "Current Custom Pages";
+$locale['403'] = "Custom Pages";
 // Custom Pages messages
 $locale['410'] = "Custom Page added";
 $locale['411'] = "Custom Page updated";
@@ -35,4 +43,8 @@ $locale['457'] = $locale['455']." and ".$locale['456'];
 $locale['460'] = "TinyMCE:";
 $locale['461'] = "Enable";
 $locale['462'] = "Disable";
+
+
+
+
 ?>

@@ -277,7 +277,7 @@ class ProductCategories {
 			// find the category
 			$old_order = dbarray(dbquery("SELECT cat_order FROM ".DB_ESHOP_CATS." WHERE cid='".$this->data['cid']."'"));
 			if ($old_order > $this->data['cat_order']) { // current order is shifting up. 6 to 3., 1,2,(3),3->4,4->5,5->6. where orders which is less than 6 but is more or equals current.
-				$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE parentid='".$data['parentid']."' AND cat_order<'".$old_order['cat_order']."' AND cat_order>='".$this->data['cat_order']."'");
+				$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE parentid='".$this->data['parentid']."' AND cat_order<'".$old_order['cat_order']."' AND cat_order>='".$this->data['cat_order']."'");
 			} elseif ($old_order < $this->data['cat_order']) { // current order is shifting down. 3 to 6. 1,2,(3),3<-4,5,5<-(6),7. where orders which is more than old order, and less than current equals.
 				$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE parentid='".$this->data['parentid']."' AND cat_order>'".$old_order['cat_order']."' AND cat_order<='".$this->data['cat_order']."'");
 			} // else no change.
