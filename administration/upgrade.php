@@ -176,6 +176,16 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		}
 		// change link_visibility
 		$result = dbquery("ALTER TABLE ".DB_SITE_LINKS." CHANGE link_visibility link_visibility CHAR(4) NOT NULL DEFAULT ''");
+		$link_result = dbquery("SELECT link_id, link_visibility FROM ".DB_SITE_LINKS."");
+		if (dbrows($result)>0) {
+			while ($data = dbarray($result)) {
+				if ($data['link_visibility']) { // will omit 0
+					dbquery("UPDATE ".DB_SITE_LINKS." SET user_visibility ='-".$data['link_visibility']."' WHERE link_id='".$data['link_id']."' ");
+				}
+			}
+		}
+
+
 
 		//Add language tables to infusions and main content
 		$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_access");
