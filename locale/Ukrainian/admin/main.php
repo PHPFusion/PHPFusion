@@ -57,7 +57,14 @@ $locale['SB'] = "Банери";
 $locale['S12'] = "Безпека";
 $locale['APWR'] = "Скидання паролю адміністрування";
 $locale['ERRO'] = "Журнал помилок";
-
+$locale['AD'] = "Administrator"; // translate these lines
+$locale['UL'] = "User log";
+$locale['MAIL'] = "Email templates";
+$locale['PL'] = "Permalinks";
+$locale['ROB'] = "robots.txt";
+$locale['TS'] = "Theme";
+$locale['S13'] = "Settings Blog";
+$locale['LANG'] = "Language Settings";
 
 // Site Information
 $locale['250'] = "Панель <small>Підсумок по сайту</small>";

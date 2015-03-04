@@ -57,6 +57,14 @@ $locale['SB'] = "Baneriai";
 $locale['S12'] = "Saugumas";
 $locale['APWR'] = "Administratoriaus slaptažodžio atstatymas";
 $locale['ERRO'] = "Klaidų logas";
+$locale['AD'] = "Administrator"; // translate these lines
+$locale['UL'] = "User log";
+$locale['MAIL'] = "Email templates";
+$locale['PL'] = "Permalinks";
+$locale['ROB'] = "robots.txt";
+$locale['TS'] = "Theme";
+$locale['S13'] = "Settings Blog";
+$locale['LANG'] = "Language Settings";
 
 // Site Information
 $locale['250'] = "Informacijos skydelis <small>Tinklalapio informacija</small>";

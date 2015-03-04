@@ -57,6 +57,14 @@ $locale['SB'] = "Banner";
 $locale['S12'] = "Sekuriti";
 $locale['APWR'] = "Pemulihan Kata Aluan Admin";
 $locale['ERRO'] = "Log Kesalahan";
+$locale['AD'] = "Administrator"; // translate these lines
+$locale['UL'] = "User log";
+$locale['MAIL'] = "Email templates";
+$locale['PL'] = "Permalinks";
+$locale['ROB'] = "robots.txt";
+$locale['TS'] = "Theme";
+$locale['S13'] = "Settings Blog";
+$locale['LANG'] = "Language Settings";
 
 // Site Information
 $locale['250'] = "Dashboard <small>Ringkasan Halaman Web Anda</small>";

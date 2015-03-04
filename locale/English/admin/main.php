@@ -57,6 +57,14 @@ $locale['SB'] = "Banners";
 $locale['S12'] = "Security";
 $locale['APWR'] = "Admin Password Reset";
 $locale['ERRO'] = "Error Log";
+$locale['AD'] = "Administrator";
+$locale['UL'] = "User log";
+$locale['MAIL'] = "Email templates";
+$locale['PL'] = "Permalinks";
+$locale['ROB'] = "robots.txt";
+$locale['TS'] = "Theme";
+$locale['S13'] = "Settings Blog";
+$locale['LANG'] = "Language Settings";
 
 // Site Information
 $locale['250'] = "Dashboard <small>Site Overview</small>";
