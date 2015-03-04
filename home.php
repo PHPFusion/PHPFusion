@@ -36,8 +36,7 @@ $configs[DB_NEWS] = array(
 				INNER JOIN ".DB_USERS." as us ON ne.news_name = us.user_id
 				WHERE (".time()." > ne.news_start OR ne.news_start = 0)
 					AND (".time()." < ne.news_end OR ne.news_end = 0)
-					AND ne.news_visibility <= ".$acclevel." ".
-					(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
+					AND ".groupaccess('ne.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
 				ORDER BY ne.news_datestamp DESC LIMIT 3",
 	'locale' => array(
 		'norecord' => $locale['home_0050'],
@@ -55,8 +54,7 @@ $configs[DB_ARTICLES] = array(
 				FROM ".DB_ARTICLES." as ar
 				INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat
 				INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name
-				WHERE ar.article_visibility <= ".$acclevel." ".
-					(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
+				WHERE ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
 				ORDER BY ar.article_datestamp DESC LIMIT 3",
 	'locale' => array(
 		'norecord' => $locale['home_0051'],
@@ -76,8 +74,7 @@ $configs[DB_BLOG] = array(
 				INNER JOIN ".DB_USERS." as us ON bl.blog_name = us.user_id
 				WHERE (".time()." > bl.blog_start OR bl.blog_start = 0)
 					AND (".time()." < bl.blog_end OR bl.blog_end = 0)
-					AND bl.blog_visibility <= ".$acclevel." ".
-						(multilang_table("BL") ? "AND blog_language='".LANGUAGE."'" : "")."
+					AND ".groupaccess('bl.blog_visibility')." ".(multilang_table("BL") ? "AND blog_language='".LANGUAGE."'" : "")."
 				ORDER BY bl.blog_datestamp DESC LIMIT 3",
 	'locale' => array(
 		'norecord' => $locale['home_0052'],
@@ -95,8 +92,7 @@ $configs[DB_DOWNLOADS] = array(
 				FROM ".DB_DOWNLOADS." dl
 				INNER JOIN ".DB_DOWNLOAD_CATS." dc ON dc.download_cat_id = dl.download_cat
 				INNER JOIN ".DB_USERS." us ON us.user_id = dl.download_user
-				WHERE dl.download_visibility <= ".$acclevel." ".
-					(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
+				WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
 				ORDER BY dl.download_datestamp DESC LIMIT 3",
 	'locale' => array(
 		'norecord' => $locale['home_0053'],
