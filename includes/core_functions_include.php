@@ -388,9 +388,11 @@ function clean_request($request_addition = FALSE, array $filter_array = array(),
 			}
 			break;
 	}
-	$url['query'] = http_build_query($fusion_query).'&'.ltrim($request_addition, "&");
-	$prefix = $url['query'] ? '?' : '';
-	$new_url = $path['dirname'].'/'.$basename.$prefix.$url['query'];
+
+	$prefix_1 = count($fusion_query)>0 ? '?' : '';
+	$prefix_2 = count($fusion_query)>0 ? '&' : '?';
+	$url['query'] = $prefix_1.http_build_query($fusion_query).$prefix_2.ltrim($request_addition, "&");
+	$new_url = $path['dirname'].'/'.$basename.$url['query'];
 	return $new_url;
 }
 
