@@ -272,7 +272,7 @@ if (!function_exists('upload_image')) {
 					$image_info['error'] = 3;
 				} else {
 					if (!file_exists($target_folder)) {
-						mkdir($target_folder, '0755');
+						mkdir($target_folder, 0755);
 					}
 					$image_name_full = filename_exists($target_folder, $image_name.$image_ext);
 					$image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
