@@ -25,14 +25,15 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");        // HTTP/1.0
 
 include LOCALE.LOCALESET."eshop.php";
+include LOCALE.LOCALESET."colors.php";
 if (isset($_GET['cid']) && !isnum($_GET['cid'])) die("Denied");
 
 $itemid = stripinput($_GET['cid']);
 
 function getcolorname($id) {
-global $ESHPCLRS;
+global $colornames;
 
-	$id = "{$ESHPCLRS[$id]}";
+	$id = "{$colornames[$id]}";
 	return $id;
 
 	}

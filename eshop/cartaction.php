@@ -32,6 +32,7 @@ if (isset($_GET['minusone']) && !isnum($_GET['minusone'])) die("Denied");
 $username = "";
 
 include LOCALE.LOCALESET."eshop.php";
+include LOCALE.LOCALESET."colors.php";
 
 if (iMEMBER) { $username = $userdata['user_id']; } else { $username = $_SERVER['REMOTE_ADDR']; }
 $product = "";
@@ -81,8 +82,8 @@ if(file_exists($image_file)) {
 }
 
 function getcolorname($id){
-global $ESHPCLRS;
-$id = "{$ESHPCLRS[$id]}";
+global $colornames;
+$id = "{$colornames[$id]}";
 return $id;
 }
 
