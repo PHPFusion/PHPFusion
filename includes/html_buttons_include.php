@@ -32,7 +32,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 		$res .= "</div>\n";
 
 		$res .= "<div class='btn-group'>\n";
-		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['431']."' onclick=\"insertText('".$textarea."', '&lt;!--PAGEBREAK--&gt;');\">".$locale['431']."</button>\n";
+		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['html_016']."' onclick=\"insertText('".$textarea."', '&lt;!--PAGEBREAK--&gt;');\">".$locale['html_016']."</button>\n";
 		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;');\">&lt;?php?&gt;</button>\n";
 		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;p&gt;' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;');\">&lt;p&gt;</button>\n";
 		$res .= "<button type='button' class='btn btn-default btn-sm button m-b-10' value='&lt;br /&gt;' onclick=\"insertText('".$textarea."', '&lt;br /&gt;');\">&lt;br /&gt;</button>\n";

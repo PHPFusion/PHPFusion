@@ -278,7 +278,7 @@ function download_form() {
 
 	closeside('');
 
-	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-5 col-lg-4'>\n";
+	echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
 	openside();
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 		$sys = "";
@@ -388,66 +388,73 @@ function download_form() {
 /* Download Listing */
 function download_listing() {
 	global $aidlink, $locale;
-
 	$result = dbcount("(download_cat_id)", DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
 	if (!empty($result)) {
-
-		$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ORDER BY download_cat_name");
+		$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name");
 		if (dbrows($result)) {
 			echo opencollapse('download-list');
 			while ($data = dbarray($result)) {
 				$result2 = dbquery("SELECT download_id, download_title, download_description_short, download_url, download_file, download_image FROM ".DB_DOWNLOADS." WHERE download_cat='".$data['download_cat_id']."' ORDER BY download_title");
 				$rows = dbrows($result2);
-				echo "<div class='panel panel-default'>\n";
-				/* Panel Heading */
-				echo "<div class='panel-heading'>\n";
-					echo "<div class='row'>\n";
-					echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-					echo "<span class='display-inline-block text-bigger strong'><a ".collapse_header_link('download-list', $data['download_cat_id'], '0', 'm-r-10').">".$data['download_cat_name']."</a></span>\n";
-					echo "<span class='badge'>".number_format($rows)."</span>\n";
-				echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
-				// edit link
-				echo "<div class='btn-group pull-right'>\n";
-				echo "<a class='btn btn-default btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=edit&cat_id=".$data['download_cat_id']."'>".$locale['edit']."</a>\n";
-				echo "<a class='btn btn-danger btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."'><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
-				echo "</div>\n";
-				echo "</div>\n</div>\n"; // end row
-				echo "</div>\n"; // end panel-heading
-				if (dbrows($result2) != 0) {
-					echo "<div ".collapse_footer_link('download-list', $data['download_cat_id'], '0').">\n";
-					echo "<div class='list-group p-15'>\n";
-					while($data2 = dbarray($result2)) {
-						if (!empty($data2['download_file']) && file_exists(DOWNLOADS.$data2['download_file'])) {
-							$download_url = DOWNLOADS.$data2['download_file'];
-						} elseif (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
-							$download_url = BASEDIR.$data2['download_url'];
-						} else {
-							$download_url = $data2['download_url'];
-						}
-						echo "<div class='list-group-item clearfix'>\n";
-							echo "<div class='pull-left m-r-10'>\n";
-							echo ($data2['download_image'] && file_exists(DOWNLAODS."images/".$data2['download_image'])) ? thumbnail(DOWNLOADS.'images'.$data2['download_image'], '50px') : thumbnail(IMAGES.'imagenotfound.jpg', '50px');
+				?>
+				<div class='panel panel-default'>
+					<div class='panel-heading'>
+						<div class='row'>
+							<div class='col-xs-12 col-sm-8'>
+								<?php
+								echo "<span class='display-inline-block text-bigger strong'><a ".collapse_header_link('download-list', $data['download_cat_id'], '0', 'm-r-10').">".$data['download_cat_name']."</a></span>\n";
+								echo "<span class='badge'>".number_format($rows)."</span>\n";
+								?>
+							</div>
+							<div class='col-xs-12 col-sm-4'>
+								<?php
+								echo "<div class='btn-group pull-right'>\n";
+								echo "<a class='btn btn-default btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=edit&cat_id=".$data['download_cat_id']."'>".$locale['edit']."</a>\n";
+								echo "<a class='btn btn-danger btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."'><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
+								echo "</div>\n";
+								?>
+							</div>
+						</div>
+					</div>
+
+					<?php
+					if (dbrows($result2) != 0) {
+						echo "<div ".collapse_footer_link('download-list', $data['download_cat_id'], '0').">\n";
+							echo "<div class='list-group p-15'>\n";
+								while($data2 = dbarray($result2)) {
+									$download_url = $data2['download_url'];
+									if (!empty($data2['download_file']) && file_exists(DOWNLOADS.$data2['download_file'])) {
+									$download_url = DOWNLOADS.$data2['download_file'];
+									} elseif (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
+									$download_url = BASEDIR.$data2['download_url'];
+									}
+									echo "<div class='list-group-item clearfix'>\n";
+										echo "<div class='pull-left m-r-10'>\n";
+										echo ($data2['download_image'] && file_exists(DOWNLAODS."images/".$data2['download_image'])) ? thumbnail(DOWNLOADS.'images'.$data2['download_image'], '50px') : thumbnail(IMAGES.'imagenotfound.jpg', '50px');
+										echo "</div>\n";
+
+										echo "<div class='overflow-hide'>\n";
+
+												echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";
+												echo nl2br(parseubb($data2['download_description_short']));
+
+												echo "<div class='pull-right'>\n";
+												echo "<a class='m-r-10' href='$download_url'>".$locale['download_0001']."</a>\n";
+												echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."'>".$locale['edit']."</a>\n";
+												echo "<a  class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."' onclick=\"return confirm('".$locale['download_0255']."');\">".$locale['delete']."</a>\n";
+												echo "</div>\n";
+
+										echo "</div>\n";
+									echo "</div>\n";
+								}
 							echo "</div>\n";
-						echo "<div class='overflow-hide'>\n";
-
-						echo "<div class='overflow-hide'>\n";
-						echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";
-						echo nl2br(parseubb($data2['download_description_short']));
-						echo "<div>\n";
-						echo "<a class='m-r-10' href='$download_url'>".$locale['download_0001']."</a>\n";
-						echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."'>".$locale['edit']."</a>\n";
-						echo "<a  class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."' onclick=\"return confirm('".$locale['download_0255']."');\">".$locale['delete']."</a>\n";
-						echo "</div>\n";
-
-						echo "</div>\n";
-						echo "</div>\n";
 						echo "</div>\n";
 					}
-					echo "</div>\n";
-					echo "</div>\n";
+					?>
+				</div>
+
+				<?php
 				}
-				echo "</div>\n";
-			}
 			echo closecollapse();
 		} else {
 			echo "<div class='well text-center'>".$locale['download_0250']."</div>\n";

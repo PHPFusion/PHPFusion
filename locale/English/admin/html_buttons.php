@@ -20,6 +20,7 @@ $locale['html_016'] = 'Pagebreak';
 $locale['html_017'] = 'Font Color';
 $locale['html_018'] = 'Paragraph';
 $locale['html_019'] = 'Headings';
+
 /* Colors */
 $locale['color_000'] = "Black";
 $locale['color_001'] = "Burnt Orange";
