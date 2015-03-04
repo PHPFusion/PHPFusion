@@ -228,7 +228,7 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 	$acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 	$res = &$res;
 	if (empty($data)) {
-		$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND link_visibility <= '$acclevel' ORDER BY link_cat, link_order");
+		$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_vibility')." ORDER BY link_cat, link_order");
 	}
 	if ($id == 0) {
 		$res = "<div class='navbar navbar-default' role='navigation'>\n";
