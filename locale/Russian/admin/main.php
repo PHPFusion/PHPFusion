@@ -1,6 +1,6 @@
 <?php
 // Admin Links
-$locale['200'] = fusion_get_settings('sitename')." Админпанель";
+$locale['200'] = fusion_get_settings('sitename').": админпанель";
 $locale['ac00'] = "Главная страница";
 $locale['ac01'] = "Содержимое";
 $locale['ac02'] = "Пользователи";
@@ -20,7 +20,6 @@ $locale['ESHP'] = "eShop";
 
 $locale['204'] = "Чёрный список";
 $locale['205'] = "Комментарии";
-
 $locale['207'] = "Резервная копия БД";
 $locale['210'] = "ЧаВо";
 $locale['211'] = "Форум";
@@ -91,7 +90,7 @@ $locale['269b'] = "Блог";
 $locale['270'] = "Статьи";
 $locale['271'] = "Ссылки";
 $locale['272'] = "Галерея";
-$locale['272a'] = "Custom Pages";
+$locale['272a'] = "Страницы";
 $locale['273'] = "прокомментировано в";
 $locale['273a'] = "оценено в";
 $locale['273b'] = "добавил(-а) материал в";
