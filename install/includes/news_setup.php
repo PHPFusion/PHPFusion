@@ -42,7 +42,7 @@ if (isset($_POST['uninstall'])) {
 			news_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			news_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			news_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			news_visibility TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+			news_visibility CHAR(4) NOT NULL DEFAULT '0',
 			news_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			news_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 			news_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
