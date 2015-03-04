@@ -23,8 +23,11 @@ function openform($form_name, $form_id, $method, $action, array $options = array
 		'notice' => !empty($options['notice']) && $options['notice'] == 0 ? 0 : 1,
 		'downtime' => !empty($options['downtime']) && isnum($options['downtime']) ? $options['downtime'] : 1,
 	);
+
 	$html = "<form name='".$form_name."' id='".$form_id."' method='".$method."' action='".$action."' class='".(defined('FUSION_NULL') ? 'warning' : '')." ".$options['class']." ' ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
-	$html .= defender::generate_token($form_name, $options['downtime']);
+	if ($method =='post' || $method == 'POST' || $method == 'Post') {
+		$html .= defender::generate_token($form_name, $options['downtime']);
+	}
 	if (defined('FUSION_NULL') && $options['notice']) {
 		echo $defender->showNotice();
 	}
