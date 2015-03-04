@@ -1249,6 +1249,7 @@ class Eshop {
 	static function buildfilters() {
 		global $data, $locale, $settings, $rowstart, $filter, $category;
 		$filter = "";
+		// TODO: Make us of jQuery.cookie plugin
 		echo '<script type="text/javascript">
 		<!--
 		var saveclass = null;
@@ -1266,16 +1267,6 @@ class Eshop {
 			expire.setTime(today.getTime() + 3600000*24*nDays);
 			document.cookie = cookieName+"="+escape(cookieValue) + ";expires="+expire.toGMTString();
 			$("#filters").submit();
-		}
-		function readCookie(name) {
-		  var nameEQ = name + "=";
-		  var ca = document.cookie.split(";");
-		  for(var i = 0; i < ca.length; i++) {
-			var c = ca[i];
-			while (c.charAt(0) == " ") c = c.substring(1, c.length);
-			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-		  }
-		  return null;
 		}
 		function readCookie(name) {
 		  var nameEQ = name + "=";
@@ -1308,6 +1299,10 @@ class Eshop {
 		<option value='6'>".$locale['ESHPF205']."</option>
 		<option value='7'>".$locale['ESHPF206']."</option>
 		</select></form></div>";
+		// TODO:
+		// - use IF/ELSE loop or SWITCH to avoid unnecessary checks
+		// - use actual words instead of numbers
+		// - add DESC/ASC as a separate argument
 		if (!isset($_COOKIE['Filter'])) {
 			$filter = "iorder ASC";
 		}
