@@ -224,8 +224,6 @@ function showbanners($display = "") {
 function showsublinks($sep = "&middot;", $class = "", array $options = array(), $id = 0) {
 	global $userdata, $settings;
 	static $data = array();
-
-	$acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
 	$res = &$res;
 	if (empty($data)) {
 		$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_vibility')." ORDER BY link_cat, link_order");
