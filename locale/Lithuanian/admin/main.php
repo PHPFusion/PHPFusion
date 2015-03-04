@@ -17,21 +17,21 @@ $locale['CP'] = "Pridėtiniai puslapiai";
 $locale['DC'] = "Siuntinių kategorijos";
 $locale['D'] = "Siuntiniai";
 $locale['ESHP'] = "eShop";
+$locale['FQ'] = "DUK";
+$locale['F'] = "Forumai";
+$locale['IM'] = "Paveiksliukai";
+$locale['I'] = "Įskiepiai";
+$locale['IP'] = "Įskiepių panelės";
+$locale['M'] = "Nariai";
+$locale['N'] = "Naujienos";
+$locale['P'] = "Panelės";
+$locale['PH'] = "Fotoalbumai";
 
 
 $locale['204'] = "Juodasis sąrašas";
 $locale['205'] = "Komentarai";
 
 $locale['207'] = "Duomenų bazės kopija";
-$locale['210'] = "DUK";
-$locale['211'] = "Forumai";
-$locale['212'] = "Paveiksliukai";
-$locale['213'] = "Įskiepiai";
-$locale['214'] = "Įskiepių panelės";
-$locale['215'] = "Nariai";
-$locale['216'] = "Naujienos";
-$locale['217'] = "Panelės";
-$locale['218'] = "Fotoalbumai";
 $locale['219'] = "PHP informacija";
 $locale['220'] = "Apklausos";
 $locale['221'] = "Šaukykla";
