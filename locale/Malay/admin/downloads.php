@@ -27,7 +27,7 @@ $locale['download_0113'] = "Unknown error";
 $locale['download_0150'] = "Kategori Muat Turun telah ditambahkan";
 $locale['download_0151'] = "Kategori Muat Turun telah dikemaskinikan";
 $locale['download_0152'] = "Kategori Muat Turun tidak dapan dipadamkan";
-$locale['download_0153'] = "Tiada Muat Turun atau sub-kategori di kategori ini.";
+$locale['download_0153'] = "Terdapat Muat Turun atau sub-kategori dalam Kategori ini.";
 $locale['download_0154'] = "Kategori Muat Turun telah dipadamkan";
 // Downloads form
 $locale['download_0200'] = "Tajuk Muat Turun";

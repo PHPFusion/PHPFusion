@@ -109,7 +109,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		} elseif ($_GET['status'] == "su") {
 			$message = $locale['download_0151'];
 		} elseif ($_GET['status'] == "deln") {
-			$message = $locale['download_0152']."<br />\n<span class='small'>".$locale['download_0153']."</span>";
+			$message = $locale['download_0152']." - ".$locale['download_0153'];
 		} elseif ($_GET['status'] == "dely") {
 			$message = $locale['download_0154'];
 		}
