@@ -23,8 +23,6 @@ include LOCALE.LOCALESET."homepage.php";
 
 add_to_title($locale['home']);
 
-$acclevel = isset($userdata['user_level']) ? $userdata['user_level'] : 0;
-
 $configs = array();
 $configs[DB_NEWS] = array(
 	'select' => "SELECT
