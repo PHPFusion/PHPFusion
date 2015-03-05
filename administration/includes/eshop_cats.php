@@ -11,6 +11,7 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 	 FROM ".DB_ESHOP_CATS." WHERE cid='".intval($_POST['q'])."'");
 	if (dbrows($result)>0) {
 		$data = dbarray($result);
+		$data['title'] = unserialize($data['title']);
 		echo json_encode($data);
 	}
 }

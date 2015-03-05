@@ -1,6 +1,8 @@
 <?php
 
 namespace PHPFusion\Eshop\Admin;
+use PHPFusion\QuantumFields;
+
 /**
  * Class eShop_cats
  */
@@ -25,7 +27,7 @@ class ProductCategories {
 	 * @var array
 	 */
 	private $eshop_data_tree = array();
-
+	private $ref = '';
 	/**
 	 *
 	 */
@@ -39,6 +41,7 @@ class ProductCategories {
 		$_GET['cid'] = isset($_GET['cid']) && isnum($_GET['cid']) ? $_GET['cid'] : 0;
 		$_GET['parent_id'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
+		$this->ref = $_GET['parent_id'] ? "&amp;parent_id=".$_GET['parent_id'] : '';
 		switch ($_GET['action']) {
 			case 'refresh' :
 				self::refresh_category();
@@ -57,8 +60,8 @@ class ProductCategories {
 			self::set_categorydb();
 		}
 		// do breadcrumbs
-		$this->eshop_cat_index = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid');
-		$this->eshop_data_tree = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid');
+		$this->eshop_cat_index = dbquery_tree(DB_ESHOP_CATS, 'cid', 'parentid', "ORDER BY cat_order ASC");
+		$this->eshop_data_tree = dbquery_tree_full(DB_ESHOP_CATS, 'cid', 'parentid', "ORDER BY cat_order ASC");
 		self::make_breads($this->eshop_cat_index);
 		if (self::verify_cat_edit($_GET['cid']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
 			$this->data = self::get_categoryData();
@@ -73,12 +76,15 @@ class ProductCategories {
 	static function quick_save() {
 		global $aidlink;
 		if (isset($_POST['cats_quicksave'])) {
-			//self::quick_save();
-			$quick['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '0', 'cid') : 0;
-			$quick['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
-			$quick['image'] = isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '';
-			$quick['status'] = isset($_POST['status']) ? form_sanitizer($_POST['status'], '', 'status') : '';
-			$quick['access'] = isset($_POST['access']) ? form_sanitizer($_POST['access'], '0', 'access') : 0;
+
+			$quick = array(
+				'cid' => 	isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '0', 'cid') : 0,
+				'title' =>isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title', 1) : '',
+				'image' => isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '',
+				'status' => isset($_POST['status']) ? form_sanitizer($_POST['status'], '', 'status') : '',
+				'access' => isset($_POST['access']) ? form_sanitizer($_POST['access'], '0', 'access') : 0
+			);
+
 			if ($quick['cid']) {
 				$c_result = dbquery("SELECT * FROM ".DB_ESHOP_CATS." WHERE cid='".intval($quick['cid'])."'");
 				if (dbrows($c_result) > 0) {
@@ -90,7 +96,6 @@ class ProductCategories {
 		}
 	}
 
-	// return breadcrumbs output
 	/**
 	 * @param $eshop_cat_index
 	 */
@@ -104,7 +109,7 @@ class ProductCategories {
 			if (isset($index[get_parent($index, $id)])) {
 				$_name = dbarray(dbquery("SELECT cid, title FROM ".DB_ESHOP_CATS." WHERE cid='".$id."'"));
 				$crumb = array('link' => FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$_name['cid'],
-					'title' => $_name['title']);
+					'title' => QuantumFields::parse_label($_name['title']));
 				if (isset($index[get_parent($index, $id)])) {
 					if (get_parent($index, $id) == 0) {
 						return $crumb;
@@ -133,7 +138,6 @@ class ProductCategories {
 		}
 		// hola!
 	}
-
 
 	/**
 	 * SQL Action Refresh Category
@@ -252,6 +256,14 @@ class ProductCategories {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getRef() {
+		return $this->ref;
+	}
+
+
+	/**
 	 * Validate whether an ID exist
 	 * @param $cid
 	 * @return bool|string
@@ -265,14 +277,19 @@ class ProductCategories {
 	 */
 	private function set_categorydb() {
 		global $aidlink;
-		$this->data['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '0', 'cid') : 0;
-		$this->data['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
-		$this->data['parentid'] = isset($_POST['parentid']) ? form_sanitizer($_POST['parentid'], '', 'parentid') : '';
-		$this->data['image'] = isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '';
-		$this->data['status'] = isset($_POST['status']) ? form_sanitizer($_POST['status'], '', 'status') : '';
-		$this->data['cat_languages'] = isset($_POST['cat_languages']) ? form_sanitizer($_POST['cat_languages'], '') : array();
-		$this->data['cat_order'] = isset($_POST['cat_order']) ? form_sanitizer($_POST['cat_order'], '0', 'cat_order') : 0;
-		$this->data['access'] = isset($_POST['access']) ? form_sanitizer($_POST['access'], '0', 'access') : 0;
+
+		$this->data = array(
+			'cid' => 	isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '0', 'cid') : 0,
+			'title' =>isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title', 1) : '',
+			'parentid' => isset($_POST['parentid']) ? form_sanitizer($_POST['parentid'], '', 'parentid') : '',
+			'image' => isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '',
+			'status' => isset($_POST['status']) ? form_sanitizer($_POST['status'], '', 'status') : '',
+			'cat_languages' => isset($_POST['cat_languages']) ? form_sanitizer($_POST['cat_languages'], '') : array(),
+			'cat_order' => isset($_POST['cat_order']) ? form_sanitizer($_POST['cat_order'], '0', 'cat_order') : 0,
+			'access' => isset($_POST['access']) ? form_sanitizer($_POST['access'], '0', 'access') : 0
+		);
+		if (!$this->data['cat_order']) $this->data['cat_order'] = dbresult(dbquery("SELECT MAX(cat_order) FROM ".DB_ESHOP_CATS." WHERE parentid='".$this->data['parentid']."'"), 0)+1;
+
 		if (self::verify_cat_edit($this->data['cid'])) { // this is update
 			// find the category
 			$old_order = dbarray(dbquery("SELECT cat_order FROM ".DB_ESHOP_CATS." WHERE cid='".$this->data['cid']."'"));
@@ -282,12 +299,11 @@ class ProductCategories {
 				$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE parentid='".$this->data['parentid']."' AND cat_order>'".$old_order['cat_order']."' AND cat_order<='".$this->data['cat_order']."'");
 			} // else no change.
 			dbquery_insert(DB_ESHOP_CATS, $this->data, 'update');
-			if (!defined("FUSION_NULL")) redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&status=su");
+			if (!defined("FUSION_NULL")) redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$this->data['parentid']."&amp;status=su");
 		} else { // this is save
-			if (!$this->data['cat_order']) $this->data['cat_order'] = dbresult(dbquery("SELECT MAX(cat_order) FROM ".DB_ESHOP_CATS." WHERE parentid='".$this->data['parentid']."'"), 0)+1;
 			$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE parentid='".$this->data['parentid']."' AND cat_order>='".$this->data['cat_order']."'");
 			dbquery_insert(DB_ESHOP_CATS, $this->data, 'save');
-			if (!defined("FUSION_NULL")) redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&status=sn");
+			if (!defined("FUSION_NULL")) redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$this->data['parentid']."&amp;status=sn");
 		}
 	}
 
@@ -311,11 +327,12 @@ class ProductCategories {
 		fusion_confirm_exit();
 		$enabled_languages = fusion_get_enabled_languages();
 		$this->data['cat_languages'] = (is_array($this->data['cat_languages'])) ? $this->data['cat_languages'] : $enabled_languages;
+		$this->data['parentid'] = $_GET['parent_id'] ? $_GET['parent_id'] : $this->data['parentid'];
 		$form_action = FUSION_SELF.$aidlink."&amp;a_page=categories";
 		echo openform('addcat', 'add_cat', 'post', $form_action, array('class' => 'm-t-20', 'downtime' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-		echo form_text($locale['ESHPCATS100'], 'title', 'titles', $this->data['title'], array('max_length' => 100, 'inline' => 1));
+		echo QuantumFields::quantum_multilocale_fields($locale['ESHPCATS100'], 'title', 'title', $this->data['title'], array('max_length'=>100, 'inline'=>1));
 		echo form_select_tree($locale['ESHPCATS106'], 'parentid', 'parentids', $this->data['parentid'], array('inline' => 1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo form_select($locale['ESHPCATS105'], 'image', 'images', self::getImageOpts(), $this->data['image'], array('inline' => 1));
 		// Languages in a row.
@@ -325,7 +342,6 @@ class ProductCategories {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
 		foreach ($enabled_languages as $lang) {
-
 			if (empty($this->data['cat_languages'])) {
 				$check = 1;
 			} else {
@@ -371,6 +387,9 @@ class ProductCategories {
 				type: 'post',
 				data: { q: $(this).data('id'), token: '".$aidlink."' },
 				success: function(e) {
+					$.each(e.title, function(index, value) {
+    					$('#title-'+index).val(value);
+					});
 					$('#cid').val(e.cid);
 					$('#title').val(e.title);
 					$('#image').select2('val', e.image);
@@ -392,6 +411,7 @@ class ProductCategories {
 		});
 		");
 		$cat_data = $this->eshop_data_tree;
+
 		$enabled_languages = fusion_get_enabled_languages();
 		echo "<div class='m-t-20'>\n";
 		echo "<table class='table table-striped table-responsive'>\n";
@@ -399,7 +419,6 @@ class ProductCategories {
 		echo "<th></th>\n";
 		echo "<th>".$locale['ESHPCATS100']."</th>\n";
 		echo "<th>".$locale['ESHPCATS132']."</th>\n";
-		//echo "<th>Image</th>\n";
 		echo "<th>".$locale['ESHPCATS109']."</th>\n";
 		echo "<th>".$locale['ESHPCATS101']."</th>\n";
 		echo "<th>".$locale['ESHPCATS135']."</th>\n";
@@ -412,16 +431,15 @@ class ProductCategories {
 		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=categories", array('downtime' => 1,
 			'notice' => 0));
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
-		echo form_text($locale['ESHPCATS100'], 'title', 'title', '');
+		echo "<div class='col-xs-12 col-sm-6'>\n";
+		echo QuantumFields::quantum_multilocale_fields($locale['ESHPCATS100'], 'title', 'title', '', array('max_length'=>100, 'inline'=>1));
 		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-		echo form_select($locale['ESHPCATS105'], 'image', 'image', self::getImageOpts(), '', array('inline' => 1));
-		echo form_select($locale['ESHPCATS101'], 'status', 'status', self::getSizeOpts(), '', array('inline' => 1,
-			'placeholder' => $locale['ESHPCATS102']));
+		echo "<div class='col-xs-12 col-sm-3'>\n";
+		echo form_select($locale['ESHPCATS105'], 'image', 'image', self::getImageOpts(), '', array('width'=>'100%'));
+		echo form_select($locale['ESHPCATS101'], 'status', 'status', self::getSizeOpts(), '', array('placeholder' => $locale['ESHPCATS102'], 'width'=>'100%'));
 		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>\n";
-		echo form_select($locale['ESHPCATS109'], 'access', 'access', self::getVisibilityOpts(), '', array('inline' => 1));
+		echo "<div class='col-xs-12 col-sm-3'>\n";
+		echo form_select($locale['ESHPCATS109'], 'access', 'access', self::getVisibilityOpts(), '', array('width'=>'100%'));
 		echo form_hidden('', 'cid', 'cid', '', array('writable' => 1));
 		echo "</div>\n";
 		echo "</div>\n";
@@ -435,17 +453,20 @@ class ProductCategories {
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "<tbody id='eshopcat-links' class='connected'>\n";
-		if (!empty($cat_data[$_GET['parent_id']])) {
+		$rows = count($cat_data[$_GET['parent_id']]);
+		if ($rows) {
 			$i = 0;
-			$rows = count($cat_data[$_GET['parent_id']]);
-			$cat_data = sort_tree($cat_data[$_GET['parent_id']], 'cat_order');
-			foreach ($cat_data as $cid => $data) {
+
+			foreach ($cat_data[$_GET['parent_id']] as $cid => $data) {
+
 				$subcats = get_child($this->eshop_cat_index, $data['cid']);
 				$subcats = !empty($subcats) ? count($subcats) : 0;
 				echo "<tr id='listItem_".$data['cid']."' data-id='".$data['cid']."' class='list-result'>\n";
 				echo "<td></td>\n";
 				echo "<td class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
-				echo "<a class='text-dark' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$data['cid']."'>".$data['title']."</a>";
+				echo "<a class='text-dark' href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$data['cid']."'>
+				".QuantumFields::parse_label($data['title'])."
+				</a>";
 				echo "<div class='actionbar text-smaller' id='shop-".$data['cid']."-actions'>
 				<a href='".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;section=catform&amp;action=edit&amp;cid=".$data['cid']."'>".$locale['edit']."</a> |
 				<a class='qedit pointer' data-id='".$data['cid']."'>".$locale['qedit']."</a> |

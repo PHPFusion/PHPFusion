@@ -28,10 +28,9 @@ $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && $category->veri
 $tab_title['title'][] = $edit ? $locale['ESHPCATS140'] : $locale['ESHPCATS139'];
 $tab_title['id'][] = 'catform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-
 $tab_active = tab_active($tab_title, $edit, 1);
 $category->getMessage();
-echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=categories");
+echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=categories", 1);
 echo opentabbody($tab_title['title'][0], 'listcat', $tab_active, 1);
 $category->category_listing();
 echo closetabbody();
