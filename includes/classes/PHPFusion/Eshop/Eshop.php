@@ -1041,6 +1041,30 @@ class Eshop {
 		$ESHOPCOLOURS[133] = array('hex'=>'#F5F5F5', 'title'=>$locale['color_133']);
 		$ESHOPCOLOURS[134] = array('hex'=>'#FFFF00', 'title'=>$locale['color_134']);
 		$ESHOPCOLOURS[135] = array('hex'=>'#9ACD32', 'title'=>$locale['color_135']);
+		$ESHOPCOLOURS[136] = array('hex'=>'#993300', 'title'=>$locale['color_136']);
+		$ESHOPCOLOURS[137] = array('hex'=>'#333300', 'title'=>$locale['color_137']);
+		$ESHOPCOLOURS[138] = array('hex'=>'#003300', 'title'=>$locale['color_138']);
+		$ESHOPCOLOURS[139] = array('hex'=>'#003366', 'title'=>$locale['color_139']);
+		$ESHOPCOLOURS[140] = array('hex'=>'#333399', 'title'=>$locale['color_140']);
+		$ESHOPCOLOURS[141] = array('hex'=>'#333333', 'title'=>$locale['color_141']);
+		$ESHOPCOLOURS[142] = array('hex'=>'#FF6600', 'title'=>$locale['color_142']);
+		$ESHOPCOLOURS[143] = array('hex'=>'#666699', 'title'=>$locale['color_143']);
+		$ESHOPCOLOURS[144] = array('hex'=>'#FF9900', 'title'=>$locale['color_144']);
+		$ESHOPCOLOURS[145] = array('hex'=>'#99CC00', 'title'=>$locale['color_145']);
+		$ESHOPCOLOURS[146] = array('hex'=>'#339966', 'title'=>$locale['color_146']);
+		$ESHOPCOLOURS[147] = array('hex'=>'#33CCCC', 'title'=>$locale['color_147']);
+		$ESHOPCOLOURS[148] = array('hex'=>'#3366FF', 'title'=>$locale['color_148']);
+		$ESHOPCOLOURS[149] = array('hex'=>'#999999', 'title'=>$locale['color_149']);
+		$ESHOPCOLOURS[150] = array('hex'=>'#FFCC00', 'title'=>$locale['color_150']);
+		$ESHOPCOLOURS[151] = array('hex'=>'#00CCFF', 'title'=>$locale['color_151']);
+		$ESHOPCOLOURS[152] = array('hex'=>'#993366', 'title'=>$locale['color_152']);
+		$ESHOPCOLOURS[153] = array('hex'=>'#FF99CC', 'title'=>$locale['color_153']);
+		$ESHOPCOLOURS[154] = array('hex'=>'#FFCC99', 'title'=>$locale['color_154']);
+		$ESHOPCOLOURS[155] = array('hex'=>'#FFFF99', 'title'=>$locale['color_155']);
+		$ESHOPCOLOURS[156] = array('hex'=>'#CCFFCC', 'title'=>$locale['color_156']);
+		$ESHOPCOLOURS[157] = array('hex'=>'#CCFFFF', 'title'=>$locale['color_157']);
+		$ESHOPCOLOURS[158] = array('hex'=>'#99CCFF', 'title'=>$locale['color_158']);
+		$ESHOPCOLOURS[159] = array('hex'=>'#CC99FF', 'title'=>$locale['color_159']);
 		if ($key && isset($ESHOPCOLOURS[$key])) {
 			return (array) $ESHOPCOLOURS[$key];
 		} else {
