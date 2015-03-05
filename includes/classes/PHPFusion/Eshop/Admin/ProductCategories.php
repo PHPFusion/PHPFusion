@@ -453,10 +453,9 @@ class ProductCategories {
 		echo "</td>\n";
 		echo "</tr>\n";
 		echo "<tbody id='eshopcat-links' class='connected'>\n";
-		$rows = count($cat_data[$_GET['parent_id']]);
-		if ($rows) {
+		if (isset($cat_data[$_GET['parent_id']])) {
 			$i = 0;
-
+		    $rows = count($cat_data[$_GET['parent_id']]);
 			foreach ($cat_data[$_GET['parent_id']] as $cid => $data) {
 
 				$subcats = get_child($this->eshop_cat_index, $data['cid']);
