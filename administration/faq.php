@@ -16,32 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("FQ") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('FQ');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include LOCALE.LOCALESET."admin/faq.php";
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "scn") {
-		$message = $locale['410'];
-	} elseif ($_GET['status'] == "scu") {
-		$message = $locale['411'];
-	} elseif ($_GET['status'] == "delcn") {
-		$message = $locale['412']."<br />\n<span class='small'>".$locale['413']."</span>";
-	} elseif ($_GET['status'] == "delcy") {
-		$message = $locale['414'];
-	} elseif ($_GET['status'] == "sn") {
-		$message = $locale['510'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['511'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['512'];
-	}
-	if ($message) {
-		echo "<div id='close-message'><div class='alert alert-info m-t-10 admin-message'>".$message."</div></div>\n";
-	}
-}
+add_to_breadcrumbs(array('link'=>ADMIN."faq.php".$aidlink, 'title'=>$locale['502']));
 $faq_cat_name = "";
 $faq_cat_description = "";
 $cat_language = LANGUAGE;
@@ -144,6 +123,29 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq
 		}
 	}
 }
+
+
+if (isset($_GET['status']) && !isset($message)) {
+	if ($_GET['status'] == "scn") {
+		$message = $locale['410'];
+	} elseif ($_GET['status'] == "scu") {
+		$message = $locale['411'];
+	} elseif ($_GET['status'] == "delcn") {
+		$message = $locale['412']."<br />\n<span class='small'>".$locale['413']."</span>";
+	} elseif ($_GET['status'] == "delcy") {
+		$message = $locale['414'];
+	} elseif ($_GET['status'] == "sn") {
+		$message = $locale['510'];
+	} elseif ($_GET['status'] == "su") {
+		$message = $locale['511'];
+	} elseif ($_GET['status'] == "del") {
+		$message = $locale['512'];
+	}
+	if ($message) {
+		echo admin_message($message);
+	}
+}
+
 if (!isset($_GET['t']) || $_GET['t'] != "faq") {
 	opentable($faq_cat_title);
 	echo openform('add_faq_cat', 'add_faq_cat', 'post', $faq_cat_action, array('downtime' => 1));
