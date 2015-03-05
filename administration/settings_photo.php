@@ -218,12 +218,12 @@ echo "</div><div class='col-xs-12 col-sm-3'>\n";
 echo form_button($locale['750'], 'savesettings', 'savesettings2', $locale['750'], array('class' => 'btn-success m-b-10'));
 openside('');
 echo form_select($locale['611'], 'photo_watermark', 'photo_watermark', $choice_opts, $settings2['photo_watermark'], array('width'=>'100%'));
-echo form_select($locale['617'], 'photo_watermark_save', 'photo_watermark_save', $choice_opts, $settings2['photo_watermark_save']);
+echo form_select($locale['617'], 'photo_watermark_save', 'photo_watermark_save', $choice_opts, $settings2['photo_watermark_save'], array('width'=>'100%'));
 echo form_button($locale['619'], 'delete_watermarks', 'delete_watermarks', $locale['619'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0, 'class' => 'btn-sm btn-danger', 'icon'=>'fa fa-trash'));
 closeside();
 openside('');
 echo form_text($locale['612'], 'photo_watermark_image', 'photo_watermark_image', $settings2['photo_watermark_image'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo form_select($locale['613'], 'photo_watermark_text', 'photo_watermark_text', $choice_opts, $settings2['photo_watermark_text'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_select($locale['613'], 'photo_watermark_text', 'photo_watermark_text', $choice_opts, $settings2['photo_watermark_text'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0, 'width'=>'100%'));
 closeside();
 echo "</div></div>
 ";
