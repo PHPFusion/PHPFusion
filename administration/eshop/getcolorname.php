@@ -25,7 +25,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH
 	header("Pragma: no-cache");        // HTTP/1.0
 
 	include LOCALE.LOCALESET."eshop.php";
-	include LOCALE.LOCALESET."colors.php";
+	require_once INCLUDES."html_buttons_include.php";
 	if (isset($_GET['cid']) && !isnum($_GET['cid'])) die("Denied");
 	$itemid = stripinput($_GET['cid']);
 	function getcolorname($id) {
