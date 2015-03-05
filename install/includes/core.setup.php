@@ -175,12 +175,12 @@ $core_tables = array("admin" => " (
 	"ratings" => " (
 		rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 		rating_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-		rating_type TINYINT(1) NOT NULL DEFAULT '',
+		rating_type CHAR(4) NOT NULL DEFAULT '',
 		rating_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 		rating_vote TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		rating_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		rating_ip VARCHAR(45) NOT NULL DEFAULT '',
-		rating_ip_type CHAR(4) UNSIGNED NOT NULL DEFAULT '4',
+		rating_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 		PRIMARY KEY (rating_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"online" => " (
