@@ -382,7 +382,7 @@ function buildeshopheader() {
 
 
 function ppform() { // shop/buynow.php -- is this the checkout?
-	global $locale, $data, $settings, $settings, $colornames;
+	global $locale, $data, $settings, $settings;
 	if ($settings['eshop_shopmode'] == "1") {
 		//options
 		echo "<tr><td ".($settings['eshop_pretext'] == "1" ? "colspan='2' style='height:32px;padding:6px;'" : "")." align='center' style='height:32px;padding:6px;'>";
@@ -411,409 +411,481 @@ function ppform() { // shop/buynow.php -- is this the checkout?
 			$colors = explode(".", substr($colors, 1));
 			for ($i = 0; $i < count($colors); $i++) {
 				if ($colors[$i] == "1") {
-					echo "<option value='1' style='background-color:#F0F8FF;'>".$colornames['1']."</option>";
+					echo "<option value='1' style='background-color:#F0F8FF;'>".$locale['color_1']."</option>";
 				}
 				if ($colors[$i] == "2") {
-					echo "<option value='2' style='background-color:#FAEBD7;'>".$colornames['2']."</option>";
+					echo "<option value='2' style='background-color:#FAEBD7;'>".$locale['color_2']."</option>";
 				}
 				if ($colors[$i] == "3") {
-					echo "<option value='3' style='background-color:#00FFFF;'>".$colornames['3']."</option>";
+					echo "<option value='3' style='background-color:#00FFFF;'>".$locale['color_3']."</option>";
 				}
 				if ($colors[$i] == "4") {
-					echo "<option value='4' style='background-color:#7FFFD4;'>".$colornames['4']."</option>";
+					echo "<option value='4' style='background-color:#7FFFD4;'>".$locale['color_4']."</option>";
 				}
 				if ($colors[$i] == "5") {
-					echo "<option value='5' style='background-color:#F0FFFF;'>".$colornames['5']."</option>";
+					echo "<option value='5' style='background-color:#F0FFFF;'>".$locale['color_5']."</option>";
 				}
 				if ($colors[$i] == "6") {
-					echo "<option value='6' style='background-color:#F5F5DC;'>".$colornames['6']."</option>";
+					echo "<option value='6' style='background-color:#F5F5DC;'>".$locale['color_6']."</option>";
 				}
 				if ($colors[$i] == "7") {
-					echo "<option value='7' style='background-color:#FFE4C4;'>".$colornames['7']."</option>";
+					echo "<option value='7' style='background-color:#FFE4C4;'>".$locale['color_7']."</option>";
 				}
 				if ($colors[$i] == "8") {
-					echo "<option value='8' style='background-color:#000000;'>".$colornames['8']."</option>";
+					echo "<option value='8' style='background-color:#000000;'>".$locale['color_8']."</option>";
 				}
 				if ($colors[$i] == "9") {
-					echo "<option value='9' style='background-color:#FFEBCD;'>".$colornames['9']."</option>";
+					echo "<option value='9' style='background-color:#FFEBCD;'>".$locale['color_9']."</option>";
 				}
 				if ($colors[$i] == "10") {
-					echo "<option value='10' style='background-color:#0000FF;'>".$colornames['10']."</option>";
+					echo "<option value='10' style='background-color:#0000FF;'>".$locale['color_10']."</option>";
 				}
 				if ($colors[$i] == "11") {
-					echo "<option value='11' style='background-color:#8A2BE2;'>".$colornames['11']."</option>";
+					echo "<option value='11' style='background-color:#8A2BE2;'>".$locale['color_11']."</option>";
 				}
 				if ($colors[$i] == "12") {
-					echo "<option value='12' style='background-color:#A52A2A;'>".$colornames['12']."</option>";
+					echo "<option value='12' style='background-color:#A52A2A;'>".$locale['color_12']."</option>";
 				}
 				if ($colors[$i] == "13") {
-					echo "<option value='13' style='background-color:#DEB887;'>".$colornames['13']."</option>";
+					echo "<option value='13' style='background-color:#DEB887;'>".$locale['color_13']."</option>";
 				}
 				if ($colors[$i] == "14") {
-					echo "<option value='14' style='background-color:#5F9EA0;'>".$colornames['14']."</option>";
+					echo "<option value='14' style='background-color:#5F9EA0;'>".$locale['color_14']."</option>";
 				}
 				if ($colors[$i] == "15") {
-					echo "<option value='15' style='background-color:#7FFF00;'>".$colornames['15']."</option>";
+					echo "<option value='15' style='background-color:#7FFF00;'>".$locale['color_15']."</option>";
 				}
 				if ($colors[$i] == "16") {
-					echo "<option value='16' style='background-color:#D2691E;'>".$colornames['16']."</option>";
+					echo "<option value='16' style='background-color:#D2691E;'>".$locale['color_16']."</option>";
 				}
 				if ($colors[$i] == "17") {
-					echo "<option value='17' style='background-color:#FF7F50;'>".$colornames['17']."</option>";
+					echo "<option value='17' style='background-color:#FF7F50;'>".$locale['color_17']."</option>";
 				}
 				if ($colors[$i] == "18") {
-					echo "<option value='18' style='background-color:#6495ED;'>".$colornames['18']."</option>";
+					echo "<option value='18' style='background-color:#6495ED;'>".$locale['color_18']."</option>";
 				}
 				if ($colors[$i] == "19") {
-					echo "<option value='19' style='background-color:#FFF8DC;'>".$colornames['19']."</option>";
+					echo "<option value='19' style='background-color:#FFF8DC;'>".$locale['color_19']."</option>";
 				}
 				if ($colors[$i] == "20") {
-					echo "<option value='20' style='background-color:#DC143C;'>".$colornames['20']."</option>";
+					echo "<option value='20' style='background-color:#DC143C;'>".$locale['color_20']."</option>";
 				}
 				if ($colors[$i] == "21") {
-					echo "<option value='21' style='background-color:#00FFFF;'>".$colornames['21']."</option>";
+					echo "<option value='21' style='background-color:#00FFFF;'>".$locale['color_21']."</option>";
 				}
 				if ($colors[$i] == "22") {
-					echo "<option value='22' style='background-color:#00008B;'>".$colornames['22']."</option>";
+					echo "<option value='22' style='background-color:#00008B;'>".$locale['color_22']."</option>";
 				}
 				if ($colors[$i] == "23") {
-					echo "<option value='23' style='background-color:#008B8B;'>".$colornames['23']."</option>";
+					echo "<option value='23' style='background-color:#008B8B;'>".$locale['color_23']."</option>";
 				}
 				if ($colors[$i] == "24") {
-					echo "<option value='24' style='background-color:#B8860B;'>".$colornames['24']."</option>";
+					echo "<option value='24' style='background-color:#B8860B;'>".$locale['color_24']."</option>";
 				}
 				if ($colors[$i] == "25") {
-					echo "<option value='25' style='background-color:#A9A9A9;'>".$colornames['25']."</option>";
+					echo "<option value='25' style='background-color:#A9A9A9;'>".$locale['color_25']."</option>";
 				}
 				if ($colors[$i] == "26") {
-					echo "<option value='26' style='background-color:#BDB76B;'>".$colornames['26']."</option>";
+					echo "<option value='26' style='background-color:#BDB76B;'>".$locale['color_26']."</option>";
 				}
 				if ($colors[$i] == "27") {
-					echo "<option value='27' style='background-color:#8B008B;'>".$colornames['27']."</option>";
+					echo "<option value='27' style='background-color:#8B008B;'>".$locale['color_27']."</option>";
 				}
 				if ($colors[$i] == "28") {
-					echo "<option value='28' style='background-color:#556B2F;'>".$colornames['28']."</option>";
+					echo "<option value='28' style='background-color:#556B2F;'>".$locale['color_28']."</option>";
 				}
 				if ($colors[$i] == "29") {
-					echo "<option value='29' style='background-color:#FF8C00;'>".$colornames['29']."</option>";
+					echo "<option value='29' style='background-color:#FF8C00;'>".$locale['color_29']."</option>";
 				}
 				if ($colors[$i] == "30") {
-					echo "<option value='30' style='background-color:#9932CC;'>".$colornames['30']."</option>";
+					echo "<option value='30' style='background-color:#9932CC;'>".$locale['color_30']."</option>";
 				}
 				if ($colors[$i] == "31") {
-					echo "<option value='31' style='background-color:#8B0000;'>".$colornames['31']."</option>";
+					echo "<option value='31' style='background-color:#8B0000;'>".$locale['color_31']."</option>";
 				}
 				if ($colors[$i] == "32") {
-					echo "<option value='32' style='background-color:#E9967A;'>".$colornames['32']."</option>";
+					echo "<option value='32' style='background-color:#E9967A;'>".$locale['color_32']."</option>";
 				}
 				if ($colors[$i] == "33") {
-					echo "<option value='33' style='background-color:#8FBC8F;'>".$colornames['33']."</option>";
+					echo "<option value='33' style='background-color:#8FBC8F;'>".$locale['color_33']."</option>";
 				}
 				if ($colors[$i] == "34") {
-					echo "<option value='34' style='background-color:#483D8B;'>".$colornames['34']."</option>";
+					echo "<option value='34' style='background-color:#483D8B;'>".$locale['color_34']."</option>";
 				}
 				if ($colors[$i] == "35") {
-					echo "<option value='35' style='background-color:#2F4F4F;'>".$colornames['35']."</option>";
+					echo "<option value='35' style='background-color:#2F4F4F;'>".$locale['color_35']."</option>";
 				}
 				if ($colors[$i] == "36") {
-					echo "<option value='36' style='background-color:#00CED1;'>".$colornames['36']."</option>";
+					echo "<option value='36' style='background-color:#00CED1;'>".$locale['color_36']."</option>";
 				}
 				if ($colors[$i] == "37") {
-					echo "<option value='37' style='background-color:#9400D3;'>".$colornames['37']."</option>";
+					echo "<option value='37' style='background-color:#9400D3;'>".$locale['color_37']."</option>";
 				}
 				if ($colors[$i] == "38") {
-					echo "<option value='38' style='background-color:#FF1493;'>".$colornames['38']."</option>";
+					echo "<option value='38' style='background-color:#FF1493;'>".$locale['color_38']."</option>";
 				}
 				if ($colors[$i] == "39") {
-					echo "<option value='39' style='background-color:#00BFFF;'>".$colornames['39']."</option>";
+					echo "<option value='39' style='background-color:#00BFFF;'>".$locale['color_39']."</option>";
 				}
 				if ($colors[$i] == "40") {
-					echo "<option value='40' style='background-color:#696969;'>".$colornames['40']."</option>";
+					echo "<option value='40' style='background-color:#696969;'>".$locale['color_40']."</option>";
 				}
 				if ($colors[$i] == "41") {
-					echo "<option value='41' style='background-color:#1E90FF;'>".$colornames['41']."</option>";
+					echo "<option value='41' style='background-color:#1E90FF;'>".$locale['color_41']."</option>";
 				}
 				if ($colors[$i] == "42") {
-					echo "<option value='42' style='background-color:#B22222;'>".$colornames['42']."</option>";
+					echo "<option value='42' style='background-color:#B22222;'>".$locale['color_42']."</option>";
 				}
 				if ($colors[$i] == "43") {
-					echo "<option value='43' style='background-color:#FFFAF0;'>".$colornames['43']."</option>";
+					echo "<option value='43' style='background-color:#FFFAF0;'>".$locale['color_43']."</option>";
 				}
 				if ($colors[$i] == "44") {
-					echo "<option value='44' style='background-color:#228B22;'>".$colornames['44']."</option>";
+					echo "<option value='44' style='background-color:#228B22;'>".$locale['color_44']."</option>";
 				}
 				if ($colors[$i] == "45") {
-					echo "<option value='45' style='background-color:#FF00FF;'>".$colornames['45']."</option>";
+					echo "<option value='45' style='background-color:#FF00FF;'>".$locale['color_45']."</option>";
 				}
 				if ($colors[$i] == "46") {
-					echo "<option value='46' style='background-color:#DCDCDC;'>".$colornames['46']."</option>";
+					echo "<option value='46' style='background-color:#DCDCDC;'>".$locale['color_46']."</option>";
 				}
 				if ($colors[$i] == "47") {
-					echo "<option value='47' style='background-color:#F8F8FF;'>".$colornames['47']."</option>";
+					echo "<option value='47' style='background-color:#F8F8FF;'>".$locale['color_47']."</option>";
 				}
 				if ($colors[$i] == "48") {
-					echo "<option value='48' style='background-color:#FFD700;'>".$colornames['48']."</option>";
+					echo "<option value='48' style='background-color:#FFD700;'>".$locale['color_48']."</option>";
 				}
 				if ($colors[$i] == "49") {
-					echo "<option value='49' style='background-color:#DAA520;'>".$colornames['49']."</option>";
+					echo "<option value='49' style='background-color:#DAA520;'>".$locale['color_49']."</option>";
 				}
 				if ($colors[$i] == "50") {
-					echo "<option value='50' style='background-color:#808080;'>".$colornames['50']."</option>";
+					echo "<option value='50' style='background-color:#808080;'>".$locale['color_50']."</option>";
 				}
 				if ($colors[$i] == "51") {
-					echo "<option value='51' style='background-color:#008000;'>".$colornames['51']."</option>";
+					echo "<option value='51' style='background-color:#008000;'>".$locale['color_51']."</option>";
 				}
 				if ($colors[$i] == "52") {
-					echo "<option value='52' style='background-color:#ADFF2F;'>".$colornames['52']."</option>";
+					echo "<option value='52' style='background-color:#ADFF2F;'>".$locale['color_52']."</option>";
 				}
 				if ($colors[$i] == "53") {
-					echo "<option value='53' style='background-color:#F0FFF0;'>".$colornames['53']."</option>";
+					echo "<option value='53' style='background-color:#F0FFF0;'>".$locale['color_53']."</option>";
 				}
 				if ($colors[$i] == "54") {
-					echo "<option value='54' style='background-color:#FF69B4;'>".$colornames['54']."</option>";
+					echo "<option value='54' style='background-color:#FF69B4;'>".$locale['color_54']."</option>";
 				}
 				if ($colors[$i] == "55") {
-					echo "<option value='55' style='background-color:#CD5C5C;'>".$colornames['55']."</option>";
+					echo "<option value='55' style='background-color:#CD5C5C;'>".$locale['color_55']."</option>";
 				}
 				if ($colors[$i] == "56") {
-					echo "<option value='56' style='background-color:#4B0082;'>".$colornames['56']."</option>";
+					echo "<option value='56' style='background-color:#4B0082;'>".$locale['color_56']."</option>";
 				}
 				if ($colors[$i] == "57") {
-					echo "<option value='57' style='background-color:#F0E68C;'>".$colornames['57']."</option>";
+					echo "<option value='57' style='background-color:#F0E68C;'>".$locale['color_57']."</option>";
 				}
 				if ($colors[$i] == "58") {
-					echo "<option value='58' style='background-color:#E6E6FA;'>".$colornames['58']."</option>";
+					echo "<option value='58' style='background-color:#E6E6FA;'>".$locale['color_58']."</option>";
 				}
 				if ($colors[$i] == "59") {
-					echo "<option value='59' style='background-color:#FFF0F5;'>".$colornames['59']."</option>";
+					echo "<option value='59' style='background-color:#FFF0F5;'>".$locale['color_59']."</option>";
 				}
 				if ($colors[$i] == "60") {
-					echo "<option value='60' style='background-color:#7CFC00;'>".$colornames['60']."</option>";
+					echo "<option value='60' style='background-color:#7CFC00;'>".$locale['color_60']."</option>";
 				}
 				if ($colors[$i] == "61") {
-					echo "<option value='61' style='background-color:#FFFACD;'>".$colornames['61']."</option>";
+					echo "<option value='61' style='background-color:#FFFACD;'>".$locale['color_61']."</option>";
 				}
 				if ($colors[$i] == "62") {
-					echo "<option value='62' style='background-color:#ADD8E6;'>".$colornames['62']."</option>";
+					echo "<option value='62' style='background-color:#ADD8E6;'>".$locale['color_62']."</option>";
 				}
 				if ($colors[$i] == "63") {
-					echo "<option value='63' style='background-color:#F08080;'>".$colornames['63']."</option>";
+					echo "<option value='63' style='background-color:#F08080;'>".$locale['color_63']."</option>";
 				}
 				if ($colors[$i] == "64") {
-					echo "<option value='64' style='background-color:#E0FFFF;'>".$colornames['64']."</option>";
+					echo "<option value='64' style='background-color:#E0FFFF;'>".$locale['color_64']."</option>";
 				}
 				if ($colors[$i] == "65") {
-					echo "<option value='65' style='background-color:#FAFAD2;'>".$colornames['65']."</option>";
+					echo "<option value='65' style='background-color:#FAFAD2;'>".$locale['color_65']."</option>";
 				}
 				if ($colors[$i] == "66") {
-					echo "<option value='66' style='background-color:#D3D3D3;'>".$colornames['66']."</option>";
+					echo "<option value='66' style='background-color:#D3D3D3;'>".$locale['color_66']."</option>";
 				}
 				if ($colors[$i] == "67") {
-					echo "<option value='67' style='background-color:#90EE90;'>".$colornames['67']."</option>";
+					echo "<option value='67' style='background-color:#90EE90;'>".$locale['color_67']."</option>";
 				}
 				if ($colors[$i] == "68") {
-					echo "<option value='68' style='background-color:#FFB6C1;'>".$colornames['68']."</option>";
+					echo "<option value='68' style='background-color:#FFB6C1;'>".$locale['color_68']."</option>";
 				}
 				if ($colors[$i] == "69") {
-					echo "<option value='69' style='background-color:#FFA07A;'>".$colornames['69']."</option>";
+					echo "<option value='69' style='background-color:#FFA07A;'>".$locale['color_69']."</option>";
 				}
 				if ($colors[$i] == "70") {
-					echo "<option value='70' style='background-color:#20B2AA;'>".$colornames['70']."</option>";
+					echo "<option value='70' style='background-color:#20B2AA;'>".$locale['color_70']."</option>";
 				}
 				if ($colors[$i] == "71") {
-					echo "<option value='71' style='background-color:#87CEFA;'>".$colornames['71']."</option>";
+					echo "<option value='71' style='background-color:#87CEFA;'>".$locale['color_71']."</option>";
 				}
 				if ($colors[$i] == "72") {
-					echo "<option value='72' style='background-color:#778899;'>".$colornames['72']."</option>";
+					echo "<option value='72' style='background-color:#778899;'>".$locale['color_72']."</option>";
 				}
 				if ($colors[$i] == "73") {
-					echo "<option value='73' style='background-color:#B0C4DE;'>".$colornames['73']."</option>";
+					echo "<option value='73' style='background-color:#B0C4DE;'>".$locale['color_73']."</option>";
 				}
 				if ($colors[$i] == "74") {
-					echo "<option value='74' style='background-color:#FFFFE0;'>".$colornames['74']."</option>";
+					echo "<option value='74' style='background-color:#FFFFE0;'>".$locale['color_74']."</option>";
 				}
 				if ($colors[$i] == "75") {
-					echo "<option value='75' style='background-color:#00FF00;'>".$colornames['75']."</option>";
+					echo "<option value='75' style='background-color:#00FF00;'>".$locale['color_75']."</option>";
 				}
 				if ($colors[$i] == "76") {
-					echo "<option value='76' style='background-color:#FF00FF;'>".$colornames['76']."</option>";
+					echo "<option value='76' style='background-color:#FF00FF;'>".$locale['color_76']."</option>";
 				}
 				if ($colors[$i] == "77") {
-					echo "<option value='77' style='background-color:#800000;'>".$colornames['77']."</option>";
+					echo "<option value='77' style='background-color:#800000;'>".$locale['color_77']."</option>";
 				}
 				if ($colors[$i] == "78") {
-					echo "<option value='78' style='background-color:#66CDAA;'>".$colornames['78']."</option>";
+					echo "<option value='78' style='background-color:#66CDAA;'>".$locale['color_78']."</option>";
 				}
 				if ($colors[$i] == "79") {
-					echo "<option value='79' style='background-color:#0000CD;'>".$colornames['79']."</option>";
+					echo "<option value='79' style='background-color:#0000CD;'>".$locale['color_79']."</option>";
 				}
 				if ($colors[$i] == "80") {
-					echo "<option value='80' style='background-color:#BA55D3;'>".$colornames['80']."</option>";
+					echo "<option value='80' style='background-color:#BA55D3;'>".$locale['color_80']."</option>";
 				}
 				if ($colors[$i] == "81") {
-					echo "<option value='81' style='background-color:#9370DB;'>".$colornames['81']."</option>";
+					echo "<option value='81' style='background-color:#9370DB;'>".$locale['color_81']."</option>";
 				}
 				if ($colors[$i] == "82") {
-					echo "<option value='82' style='background-color:#3CB371;'>".$colornames['82']."</option>";
+					echo "<option value='82' style='background-color:#3CB371;'>".$locale['color_82']."</option>";
 				}
 				if ($colors[$i] == "83") {
-					echo "<option value='83' style='background-color:#7B68EE;'>".$colornames['83']."</option>";
+					echo "<option value='83' style='background-color:#7B68EE;'>".$locale['color_83']."</option>";
 				}
 				if ($colors[$i] == "84") {
-					echo "<option value='84' style='background-color:#00FA9A;'>".$colornames['84']."</option>";
+					echo "<option value='84' style='background-color:#00FA9A;'>".$locale['color_84']."</option>";
 				}
 				if ($colors[$i] == "85") {
-					echo "<option value='85' style='background-color:#48D1CC;'>".$colornames['85']."</option>";
+					echo "<option value='85' style='background-color:#48D1CC;'>".$locale['color_85']."</option>";
 				}
 				if ($colors[$i] == "86") {
-					echo "<option value='86' style='background-color:#C71585;'>".$colornames['86']."</option>";
+					echo "<option value='86' style='background-color:#C71585;'>".$locale['color_86']."</option>";
 				}
 				if ($colors[$i] == "87") {
-					echo "<option value='87' style='background-color:#191970;'>".$colornames['87']."</option>";
+					echo "<option value='87' style='background-color:#191970;'>".$locale['color_87']."</option>";
 				}
 				if ($colors[$i] == "88") {
-					echo "<option value='88' style='background-color:#F5FFFA;'>".$colornames['88']."</option>";
+					echo "<option value='88' style='background-color:#F5FFFA;'>".$locale['color_88']."</option>";
 				}
 				if ($colors[$i] == "89") {
-					echo "<option value='89' style='background-color:#FFE4E1;'>".$colornames['89']."</option>";
+					echo "<option value='89' style='background-color:#FFE4E1;'>".$locale['color_89']."</option>";
 				}
 				if ($colors[$i] == "90") {
-					echo "<option value='90' style='background-color:#FFE4B5;'>".$colornames['90']."</option>";
+					echo "<option value='90' style='background-color:#FFE4B5;'>".$locale['color_90']."</option>";
 				}
 				if ($colors[$i] == "91") {
-					echo "<option value='91' style='background-color:#FFDEAD;'>".$colornames['91']."</option>";
+					echo "<option value='91' style='background-color:#FFDEAD;'>".$locale['color_91']."</option>";
 				}
 				if ($colors[$i] == "92") {
-					echo "<option value='92' style='background-color:#000080;'>".$colornames['92']."</option>";
+					echo "<option value='92' style='background-color:#000080;'>".$locale['color_92']."</option>";
 				}
 				if ($colors[$i] == "93") {
-					echo "<option value='93' style='background-color:#FDF5E6;'>".$colornames['93']."</option>";
+					echo "<option value='93' style='background-color:#FDF5E6;'>".$locale['color_93']."</option>";
 				}
 				if ($colors[$i] == "94") {
-					echo "<option value='94' style='background-color:#808000;'>".$colornames['94']."</option>";
+					echo "<option value='94' style='background-color:#808000;'>".$locale['color_94']."</option>";
 				}
 				if ($colors[$i] == "95") {
-					echo "<option value='95' style='background-color:#6B8E23;'>".$colornames['95']."</option>";
+					echo "<option value='95' style='background-color:#6B8E23;'>".$locale['color_95']."</option>";
 				}
 				if ($colors[$i] == "96") {
-					echo "<option value='96' style='background-color:#FFA500;'>".$colornames['96']."</option>";
+					echo "<option value='96' style='background-color:#FFA500;'>".$locale['color_96']."</option>";
 				}
 				if ($colors[$i] == "97") {
-					echo "<option value='97' style='background-color:#FF4500;'>".$colornames['97']."</option>";
+					echo "<option value='97' style='background-color:#FF4500;'>".$locale['color_97']."</option>";
 				}
 				if ($colors[$i] == "98") {
-					echo "<option value='98' style='background-color:#DA70D6;'>".$colornames['98']."</option>";
+					echo "<option value='98' style='background-color:#DA70D6;'>".$locale['color_98']."</option>";
 				}
 				if ($colors[$i] == "99") {
-					echo "<option value='99' style='background-color:#EEE8AA;'>".$colornames['99']."</option>";
+					echo "<option value='99' style='background-color:#EEE8AA;'>".$locale['color_99']."</option>";
 				}
 				if ($colors[$i] == "100") {
-					echo "<option value='100' style='background-color:#98FB98;'>".$colornames['100']."</option>";
+					echo "<option value='100' style='background-color:#98FB98;'>".$locale['color_100']."</option>";
 				}
 				if ($colors[$i] == "101") {
-					echo "<option value='101' style='background-color:#AFEEEE;'>".$colornames['101']."</option>";
+					echo "<option value='101' style='background-color:#AFEEEE;'>".$locale['color_101']."</option>";
 				}
 				if ($colors[$i] == "102") {
-					echo "<option value='102' style='background-color:#DB7093;'>".$colornames['102']."</option>";
+					echo "<option value='102' style='background-color:#DB7093;'>".$locale['color_102']."</option>";
 				}
 				if ($colors[$i] == "103") {
-					echo "<option value='103' style='background-color:#FFEFD5;'>".$colornames['103']."</option>";
+					echo "<option value='103' style='background-color:#FFEFD5;'>".$locale['color_103']."</option>";
 				}
 				if ($colors[$i] == "104") {
-					echo "<option value='104' style='background-color:#FFDAB9;'>".$colornames['104']."</option>";
+					echo "<option value='104' style='background-color:#FFDAB9;'>".$locale['color_104']."</option>";
 				}
 				if ($colors[$i] == "105") {
-					echo "<option value='105' style='background-color:#CD853F;'>".$colornames['105']."</option>";
+					echo "<option value='105' style='background-color:#CD853F;'>".$locale['color_105']."</option>";
 				}
 				if ($colors[$i] == "106") {
-					echo "<option value='106' style='background-color:#FFC0CB;'>".$colornames['106']."</option>";
+					echo "<option value='106' style='background-color:#FFC0CB;'>".$locale['color_106']."</option>";
 				}
 				if ($colors[$i] == "107") {
-					echo "<option value='107' style='background-color:#DDA0DD;'>".$colornames['107']."</option>";
+					echo "<option value='107' style='background-color:#DDA0DD;'>".$locale['color_107']."</option>";
 				}
 				if ($colors[$i] == "108") {
-					echo "<option value='108' style='background-color:#B0E0E6;'>".$colornames['108']."</option>";
+					echo "<option value='108' style='background-color:#B0E0E6;'>".$locale['color_108']."</option>";
 				}
 				if ($colors[$i] == "109") {
-					echo "<option value='109' style='background-color:#800080;'>".$colornames['109']."</option>";
+					echo "<option value='109' style='background-color:#800080;'>".$locale['color_109']."</option>";
 				}
 				if ($colors[$i] == "110") {
-					echo "<option value='110' style='background-color:#FF0000;'>".$colornames['110']."</option>";
+					echo "<option value='110' style='background-color:#FF0000;'>".$locale['color_110']."</option>";
 				}
 				if ($colors[$i] == "111") {
-					echo "<option value='111' style='background-color:#BC8F8F;'>".$colornames['111']."</option>";
+					echo "<option value='111' style='background-color:#BC8F8F;'>".$locale['color_111']."</option>";
 				}
 				if ($colors[$i] == "112") {
-					echo "<option value='112' style='background-color:#8B4513;'>".$colornames['112']."</option>";
+					echo "<option value='112' style='background-color:#8B4513;'>".$locale['color_112']."</option>";
 				}
 				if ($colors[$i] == "113") {
-					echo "<option value='113' style='background-color:#FA8072;'>".$colornames['113']."</option>";
+					echo "<option value='113' style='background-color:#FA8072;'>".$locale['color_113']."</option>";
 				}
 				if ($colors[$i] == "114") {
-					echo "<option value='114' style='background-color:#F4A460;'>".$colornames['114']."</option>";
+					echo "<option value='114' style='background-color:#F4A460;'>".$locale['color_114']."</option>";
 				}
 				if ($colors[$i] == "115") {
-					echo "<option value='115' style='background-color:#2E8B57;'>".$colornames['115']."</option>";
+					echo "<option value='115' style='background-color:#2E8B57;'>".$locale['color_115']."</option>";
 				}
 				if ($colors[$i] == "116") {
-					echo "<option value='116' style='background-color:#FFF5EE;'>".$colornames['116']."</option>";
+					echo "<option value='116' style='background-color:#FFF5EE;'>".$locale['color_116']."</option>";
 				}
 				if ($colors[$i] == "117") {
-					echo "<option value='117' style='background-color:#A0522D;'>".$colornames['117']."</option>";
+					echo "<option value='117' style='background-color:#A0522D;'>".$locale['color_117']."</option>";
 				}
 				if ($colors[$i] == "118") {
-					echo "<option value='118' style='background-color:#C0C0C0;'>".$colornames['118']."</option>";
+					echo "<option value='118' style='background-color:#C0C0C0;'>".$locale['color_118']."</option>";
 				}
 				if ($colors[$i] == "119") {
-					echo "<option value='119' style='background-color:#87CEEB;'>".$colornames['119']."</option>";
+					echo "<option value='119' style='background-color:#87CEEB;'>".$locale['color_119']."</option>";
 				}
 				if ($colors[$i] == "120") {
-					echo "<option value='120' style='background-color:#6A5ACD;'>".$colornames['120']."</option>";
+					echo "<option value='120' style='background-color:#6A5ACD;'>".$locale['color_120']."</option>";
 				}
 				if ($colors[$i] == "121") {
-					echo "<option value='121' style='background-color:#708090;'>".$colornames['121']."</option>";
+					echo "<option value='121' style='background-color:#708090;'>".$locale['color_121']."</option>";
 				}
 				if ($colors[$i] == "122") {
-					echo "<option value='122' style='background-color:#FFFAFA;'>".$colornames['122']."</option>";
+					echo "<option value='122' style='background-color:#FFFAFA;'>".$locale['color_122']."</option>";
 				}
 				if ($colors[$i] == "123") {
-					echo "<option value='123' style='background-color:#00FF7F;'>".$colornames['123']."</option>";
+					echo "<option value='123' style='background-color:#00FF7F;'>".$locale['color_123']."</option>";
 				}
 				if ($colors[$i] == "124") {
-					echo "<option value='124' style='background-color:#4682B4;'>".$colornames['124']."</option>";
+					echo "<option value='124' style='background-color:#4682B4;'>".$locale['color_124']."</option>";
 				}
 				if ($colors[$i] == "125") {
-					echo "<option value='125' style='background-color:#D2B48C;'>".$colornames['125']."</option>";
+					echo "<option value='125' style='background-color:#D2B48C;'>".$locale['color_125']."</option>";
 				}
 				if ($colors[$i] == "126") {
-					echo "<option value='126' style='background-color:#008080;'>".$colornames['126']."</option>";
+					echo "<option value='126' style='background-color:#008080;'>".$locale['color_126']."</option>";
 				}
 				if ($colors[$i] == "127") {
-					echo "<option value='127' style='background-color:#D8BFD8;'>".$colornames['127']."</option>";
+					echo "<option value='127' style='background-color:#D8BFD8;'>".$locale['color_127']."</option>";
 				}
 				if ($colors[$i] == "128") {
-					echo "<option value='128' style='background-color:#FF6347;'>".$colornames['128']."</option>";
+					echo "<option value='128' style='background-color:#FF6347;'>".$locale['color_128']."</option>";
 				}
 				if ($colors[$i] == "129") {
-					echo "<option value='129' style='background-color:#40E0D0;'>".$colornames['129']."</option>";
+					echo "<option value='129' style='background-color:#40E0D0;'>".$locale['color_129']."</option>";
 				}
 				if ($colors[$i] == "130") {
-					echo "<option value='130' style='background-color:#EE82EE;'>".$colornames['130']."</option>";
+					echo "<option value='130' style='background-color:#EE82EE;'>".$locale['color_130']."</option>";
 				}
 				if ($colors[$i] == "131") {
-					echo "<option value='131' style='background-color:#F5DEB3;'>".$colornames['131']."</option>";
+					echo "<option value='131' style='background-color:#F5DEB3;'>".$locale['color_131']."</option>";
 				}
 				if ($colors[$i] == "132") {
-					echo "<option value='132' style='background-color:#FFFFFF;'>".$colornames['132']."</option>";
+					echo "<option value='132' style='background-color:#FFFFFF;'>".$locale['color_132']."</option>";
 				}
 				if ($colors[$i] == "133") {
-					echo "<option value='133' style='background-color:#F5F5F5;'>".$colornames['133']."</option>";
+					echo "<option value='133' style='background-color:#F5F5F5;'>".$locale['color_133']."</option>";
 				}
 				if ($colors[$i] == "134") {
-					echo "<option value='134' style='background-color:#FFFF00;'>".$colornames['134']."</option>";
+					echo "<option value='134' style='background-color:#FFFF00;'>".$locale['color_134']."</option>";
 				}
 				if ($colors[$i] == "135") {
-					echo "<option value='135' style='background-color:#9ACD32;'>".$colornames['135']."</option>";
+					echo "<option value='135' style='background-color:#9ACD32;'>".$locale['color_135']."</option>";
+				}
+				if ($colors[$i] == "136") {
+					echo "<option value='136' style='background-color:#993300;'>".$locale['color_136']."</option>";
+				}
+				if ($colors[$i] == "137") {
+					echo "<option value='137' style='background-color:#333300;'>".$locale['color_137']."</option>";
+				}
+				if ($colors[$i] == "138") {
+					echo "<option value='138' style='background-color:#003300;'>".$locale['color_138']."</option>";
+				}
+				if ($colors[$i] == "139") {
+					echo "<option value='139' style='background-color:#003366;'>".$locale['color_139']."</option>";
+				}
+				if ($colors[$i] == "140") {
+					echo "<option value='140' style='background-color:#333399;'>".$locale['color_140']."</option>";
+				}
+				if ($colors[$i] == "141") {
+					echo "<option value='141' style='background-color:#333333;'>".$locale['color_141']."</option>";
+				}
+				if ($colors[$i] == "142") {
+					echo "<option value='142' style='background-color:#FF6600;'>".$locale['color_142']."</option>";
+				}
+				if ($colors[$i] == "143") {
+					echo "<option value='143' style='background-color:#666699;'>".$locale['color_143']."</option>";
+				}
+				if ($colors[$i] == "144") {
+					echo "<option value='144' style='background-color:#FF9900;'>".$locale['color_144']."</option>";
+				}
+				if ($colors[$i] == "145") {
+					echo "<option value='145' style='background-color:#99CC00;'>".$locale['color_145']."</option>";
+				}
+				if ($colors[$i] == "146") {
+					echo "<option value='146' style='background-color:#339966;'>".$locale['color_146']."</option>";
+				}
+				if ($colors[$i] == "147") {
+					echo "<option value='147' style='background-color:#33CCCC;'>".$locale['color_147']."</option>";
+				}
+				if ($colors[$i] == "148") {
+					echo "<option value='148' style='background-color:#3366FF;'>".$locale['color_148']."</option>";
+				}
+				if ($colors[$i] == "149") {
+					echo "<option value='149' style='background-color:#999999;'>".$locale['color_149']."</option>";
+				}
+				if ($colors[$i] == "150") {
+					echo "<option value='150' style='background-color:#FFCC00;'>".$locale['color_150']."</option>";
+				}
+				if ($colors[$i] == "151") {
+					echo "<option value='151' style='background-color:#00CCFF;'>".$locale['color_151']."</option>";
+				}
+				if ($colors[$i] == "152") {
+					echo "<option value='152' style='background-color:#993366;'>".$locale['color_152']."</option>";
+				}
+				if ($colors[$i] == "153") {
+					echo "<option value='153' style='background-color:#FF99CC;'>".$locale['color_153']."</option>";
+				}
+				if ($colors[$i] == "154") {
+					echo "<option value='154' style='background-color:#FFCC99;'>".$locale['color_154']."</option>";
+				}
+				if ($colors[$i] == "155") {
+					echo "<option value='155' style='background-color:#FFFF99;'>".$locale['color_155']."</option>";
+				}
+				if ($colors[$i] == "156") {
+					echo "<option value='156' style='background-color:#CCFFCC;'>".$locale['color_156']."</option>";
+				}
+				if ($colors[$i] == "157") {
+					echo "<option value='157' style='background-color:#CCFFFF;'>".$locale['color_157']."</option>";
+				}
+				if ($colors[$i] == "158") {
+					echo "<option value='158' style='background-color:#99CCFF;'>".$locale['color_158']."</option>";
+				}
+				if ($colors[$i] == "159") {
+					echo "<option value='159' style='background-color:#CC99FF;'>".$locale['color_159']."</option>";
 				}
 			}
 			echo "</select>";
@@ -924,8 +996,8 @@ function getparenttitle($parentid, $title, $cid) {
 }
 
 function getcolorname($id) {
-	global $colornames;
-	$id = "{$colornames[$id]}";
+	global $locale;
+	$id = "{$locale['color_'.$id]}";
 	return $id;
 }
 
