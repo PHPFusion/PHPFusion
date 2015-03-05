@@ -150,7 +150,8 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
  * @return int
  */
 function dbnextid($table_name) {
-	$query = dbconnection()->prepare($table_name);
+	$query = "SHOW TABLE STATUS LIKE ".$table_name;
+	$query = dbconnection()->prepare($query);
 	$query->execute();
 	$result = $query->fetch(PDO::FETCH_ASSOC);
 	if (!empty($result)) {
