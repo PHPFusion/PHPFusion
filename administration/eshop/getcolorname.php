@@ -31,9 +31,9 @@ if (isset($_GET['cid']) && !isnum($_GET['cid'])) die("Denied");
 $itemid = stripinput($_GET['cid']);
 
 function getcolorname($id) {
-global $colornames;
+global $locale;
 
-	$id = "{$colornames[$id]}";
+	$id = "{$locale['color_'.$id]}";
 	return $id;
 
 	}
