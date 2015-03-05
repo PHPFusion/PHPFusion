@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("N") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+pageAccess('N');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/news.php";
 add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['news_0000']));
@@ -331,8 +331,8 @@ function news_form() {
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	echo form_select_tree($locale['news_0201'], "news_cat", "news_cat", $data['news_cat'], array("parent_value" => $locale['news_0202'], "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
-	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
-	echo form_button($locale['news_0241'], 'save', 'save-1', $locale['news_0241'], array('class' => 'btn-primary btn-sm'));
+	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default m-r-10'));
+	echo form_button($locale['news_0241'], 'save', 'save-1', $locale['news_0241'], array('class' => 'btn-success', 'icon'=>'fa fa-square-check-o'));
 	closeside();
 	echo "</div>\n</div>\n";
 
@@ -413,8 +413,8 @@ function news_form() {
 		echo form_hidden('', 'news_id', 'news_id', $news_id);
 	}
 	echo "</div>\n</div>\n";
-	echo form_button($locale['news_0240'], 'preview', 'preview-1', $locale['news_0240'], array('class' => 'btn-primary m-r-10'));
-	echo form_button($locale['news_0241'], 'save', 'save-1', $locale['news_0241'], array('class' => 'btn-primary'));
+	echo form_button($locale['news_0240'], 'preview', 'preview-1', $locale['news_0240'], array('class' => 'btn-default m-r-10'));
+	echo form_button($locale['news_0241'], 'save', 'save-1', $locale['news_0241'], array('class' => 'btn-success', 'icon'=>'fa fa-square-check-o'));
 	echo closeform();
 	echo "</div>\n";
 }

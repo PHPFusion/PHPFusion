@@ -995,11 +995,6 @@ function getparenttitle($parentid, $title, $cid) {
 	return $title;
 }
 
-function getcolorname($id) {
-	global $locale;
-	$id = "{$locale['color_'.$id]}";
-	return $id;
-}
 
 //$itemlist = dupedel($itemlist); //I made this to swap and sort array to delete all duplicated numbers in the array but we need them all to be in the array for the +sellcount and the -stock count. Let´s save it for popular products queries etc..
 function dupedel($itemlist) {

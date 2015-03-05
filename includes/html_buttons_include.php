@@ -19,6 +19,26 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."admin/html_buttons.php";
 include LOCALE.LOCALESET."colors.php";
 
+/**
+ * Get the color name
+ * @param $id - color locale ID
+ * @return string
+ */
+function getcolorname($id) {
+	global $locale;
+	$id = "{$locale['color_'.$id]}";
+	return $id;
+}
+
+/**
+ * @param        $formname
+ * @param        $textarea
+ * @param bool   $html
+ * @param bool   $colors
+ * @param bool   $images
+ * @param string $folder
+ * @return string
+ */
 function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "") {
 	global $locale;
 	$res = "";
