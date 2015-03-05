@@ -924,8 +924,8 @@ function getparenttitle($parentid, $title, $cid) {
 }
 
 function getcolorname($id) {
-	global $colornames;
-	$id = "{$colornames[$id]}";
+	global $locale;
+	$id = "{$locale['color_'.$id]}";
 	return $id;
 }
 
