@@ -682,7 +682,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("RENAME TABLE `".DB_PREFIX."eshop_cupons` TO `".DB_PREFIX."eshop_coupons`");		
 
 		// Modify User Table
-		$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_level user_level CHAR(4) NOT NULL DEFAULT ''");
+		$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_level user_level TINYINT(1) NOT NULL DEFAULT ''");
 
 		// Email templates admin section
 		$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");

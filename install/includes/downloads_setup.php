@@ -59,7 +59,7 @@ if (isset($_POST['uninstall'])) {
 				download_version VARCHAR(20) NOT NULL DEFAULT '',
 				download_filesize VARCHAR(20) NOT NULL DEFAULT '',
 				download_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-				download_visibility CHAR(4) NOT NULL DEFAULT '0',
+				download_visibility TINYINT(1) NOT NULL DEFAULT '0',
 				download_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
 				download_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 				download_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',

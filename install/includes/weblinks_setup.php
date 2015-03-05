@@ -45,7 +45,7 @@ if (isset($_POST['uninstall'])) {
 			weblink_url VARCHAR(200) NOT NULL DEFAULT '',
 			weblink_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 			weblink_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-			weblink_visibility CHAR(4) NOT NULL DEFAULT '0',
+			weblink_visibility TINYINT(1) NOT NULL DEFAULT '0',
 			weblink_count SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
 			PRIMARY KEY(weblink_id),
 			KEY weblink_datestamp (weblink_datestamp),

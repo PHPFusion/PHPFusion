@@ -38,7 +38,7 @@ if (isset($_POST['uninstall'])) {
 		article_breaks CHAR(1) NOT NULL DEFAULT '',
 		article_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
 		article_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-		article_visibility CHAR(4) NOT NULL DEFAULT '0',
+		article_visibility TINYINT(1) NOT NULL DEFAULT '0',
 		article_reads MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
 		article_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 		article_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
