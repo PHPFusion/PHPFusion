@@ -16,9 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("IM") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('IM');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/image_uploads.php";
 if (isset($_GET['action']) && $_GET['action'] = "update") include INCLUDES."buildlist.php";
@@ -36,21 +34,6 @@ if ($image_list) {
 	$image_count = count($image_list);
 } else {
 	$image_count = 0;
-}
-if (isset($_GET['status'])) {
-	if ($_GET['status'] == "del") {
-		$title = $locale['400'];
-		$message = "<strong>".$locale['401']."</strong>";
-	} elseif ($_GET['status'] == "upn") {
-		$title = $locale['420'];
-		$message = "<strong>".$locale['425']."</strong>";
-	} elseif ($_GET['status'] == "upy") {
-		$title = $locale['420'];
-		$message = "<img src='".$afolder.stripinput($_GET['img'])."' alt='".stripinput($_GET['img'])."' /><br /><br />\n<strong>".$locale['426']."</strong>";
-	}
-	opentable($title);
-	echo "<div class='alert alert-info m-t-10'>".$message."</div>\n";
-	closetable();
 }
 if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 	unlink($afolder.stripinput($_GET['del']));
@@ -77,6 +60,21 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 	}
 } else {
 	opentable($locale['420']);
+	add_to_breadcrumbs(array('link'=>ADMIN."images.php".$aidlink, 'title'=>$locale['420']));
+	if (isset($_GET['status'])) {
+		if ($_GET['status'] == "del") {
+			$title = $locale['400'];
+			$message = "<strong>".$locale['401']."</strong>";
+		} elseif ($_GET['status'] == "upn") {
+			$title = $locale['420'];
+			$message = "<strong>".$locale['425']."</strong>";
+		} elseif ($_GET['status'] == "upy") {
+			$title = $locale['420'];
+			$message = "<img src='".$afolder.stripinput($_GET['img'])."' alt='".stripinput($_GET['img'])."' /><br /><br />\n<strong>".$locale['426']."</strong>";
+		}
+		echo admin_message($message);
+	}
+
 	echo openform('uploadform', 'uploadform', 'post', "".FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."", array('enctype' => 1, 'downtime' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='myfile'>".$locale['421']."</label></td>\n";
