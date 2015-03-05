@@ -103,7 +103,7 @@ if (isset($_POST['uninstall'])) {
 	// Create Tables
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop (
 				id mediumint(8) unsigned NOT NULL auto_increment,
-				title varchar(200) NOT NULL default '',
+				title TEXT NOT NULL default '',
 				cid mediumint(8) NOT NULL default '0',
 				picture varchar(200) NOT NULL default '',
 				thumb varchar(200) NOT NULL default '',
@@ -157,7 +157,7 @@ if (isset($_POST['uninstall'])) {
 
 		$result = dbquery("CREATE TABLE ".$db_prefix."eshop_cats (
 				cid mediumint(8) unsigned NOT NULL auto_increment,
-				title varchar(45) NOT NULL default '',
+				title TEXT NOT NULL default '',
 				access char(4) NOT NULL default '0',
 				image varchar(45) NOT NULL default '0',
 				parentid mediumint(8) NOT NULL default '0',

@@ -375,7 +375,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		//eShop section
 		$result = dbquery("CREATE TABLE ".DB_PREFIX."eshop (
 		id mediumint(8) unsigned NOT NULL auto_increment,
-		title varchar(200) NOT NULL default '',
+		title TEXT NOT NULL default '',
 		cid mediumint(8) NOT NULL default '0',
 		picture varchar(200) NOT NULL default '',
 		thumb varchar(200) NOT NULL default '',
@@ -426,7 +426,7 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 
 		$result = dbquery("CREATE TABLE ".DB_PREFIX."eshop_cats (
 		cid mediumint(8) unsigned NOT NULL auto_increment,
-		title varchar(45) NOT NULL default '',
+		title TEXT NOT NULL default '',
 		access tinyint(3) NOT NULL default '0',
 		image varchar(45) NOT NULL default '0',
 		parentid mediumint(8) NOT NULL default '0',
