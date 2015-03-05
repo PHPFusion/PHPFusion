@@ -31,7 +31,7 @@ if (isset($_POST['uninstall'])) {
 			album_description TEXT NOT NULL,
 			album_thumb VARCHAR(100) NOT NULL DEFAULT '',
 			album_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-			album_access TINYINT(1) NOT NULL DEFAULT '0',
+			album_access TINYINT(4) NOT NULL DEFAULT '0',
 			album_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
 			album_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 			album_language varchar(50) NOT NULL default '".$_POST['localeset']."',

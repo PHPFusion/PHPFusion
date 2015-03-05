@@ -19,7 +19,7 @@
 //<editor-fold desc="create table sql for core tables" >
 $core_tables = array("admin" => " (
 		admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-		admin_rights TINYINT(1) NOT NULL DEFAULT '',
+		admin_rights CHAR(4) NOT NULL DEFAULT '',
 		admin_image VARCHAR(50) NOT NULL DEFAULT '',
 		admin_title VARCHAR(50) NOT NULL DEFAULT '',
 		admin_link VARCHAR(100) NOT NULL DEFAULT 'reserved',
@@ -27,7 +27,7 @@ $core_tables = array("admin" => " (
 		PRIMARY KEY (admin_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"mlt_tables" => " (
-		mlt_rights TINYINT(1) NOT NULL DEFAULT '',
+		mlt_rights CHAR(4) NOT NULL DEFAULT '',
 		mlt_title VARCHAR(50) NOT NULL DEFAULT '',
 		mlt_status VARCHAR(50) NOT NULL DEFAULT '',
 		PRIMARY KEY (mlt_rights)
@@ -72,7 +72,7 @@ $core_tables = array("admin" => " (
 		page_id MEDIUMINT(8) NOT NULL AUTO_INCREMENT,
 		page_link_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',
 		page_title VARCHAR(200) NOT NULL DEFAULT '',
-		page_access TINYINT(1) NOT NULL DEFAULT '0',
+		page_access TINYINT(4) NOT NULL DEFAULT '0',
 		page_content TEXT NOT NULL,
 		page_keywords VARCHAR(250) NOT NULL DEFAULT '',
 		page_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
@@ -83,7 +83,7 @@ $core_tables = array("admin" => " (
 	"comments" => " (
 		comment_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 		comment_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-		comment_type CHAR(2) NOT NULL DEFAULT '',
+		comment_type CHAR(4) NOT NULL DEFAULT '',
 		comment_cat MEDIUMINT(8) NOT NULL DEFAULT '0',
 		comment_name VARCHAR(50) NOT NULL DEFAULT '',
 		comment_message TEXT NOT NULL,
@@ -101,7 +101,7 @@ $core_tables = array("admin" => " (
 		error_file varchar(255) NOT NULL,
 		error_line smallint(5) NOT NULL,
 		error_page varchar(200) NOT NULL,
-		error_user_level TINYINT(1) NOT NULL,
+		error_user_level TINYINT(4) NOT NULL,
 		error_user_ip varchar(45) NOT NULL default '',
 		error_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 		error_status tinyint(1) NOT NULL default '0',
@@ -180,7 +180,7 @@ $core_tables = array("admin" => " (
 		rating_vote TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		rating_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		rating_ip VARCHAR(45) NOT NULL DEFAULT '',
-		rating_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
+		rating_ip_type CHAR(4) UNSIGNED NOT NULL DEFAULT '4',
 		PRIMARY KEY (rating_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"online" => " (
@@ -197,7 +197,7 @@ $core_tables = array("admin" => " (
 		panel_side TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 		panel_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
 		panel_type VARCHAR(20) NOT NULL DEFAULT '',
-		panel_access TINYINT(1) NOT NULL DEFAULT '0',
+		panel_access TINYINT(4) NOT NULL DEFAULT '0',
 		panel_display TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		panel_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		panel_url_list TEXT NOT NULL,
@@ -245,7 +245,7 @@ $core_tables = array("admin" => " (
 		link_name VARCHAR(100) NOT NULL DEFAULT '',
 		link_url VARCHAR(200) NOT NULL DEFAULT '',
 		link_icon VARCHAR(100) NOT NULL DEFAULT '',
-		link_visibility TINYINT(1) NOT NULL DEFAULT '0',
+		link_visibility TINYINT(4) NOT NULL DEFAULT '0',
 		link_position TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
 		link_window TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		link_order SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0',
@@ -348,7 +348,7 @@ $core_tables = array("admin" => " (
 		user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
 		user_rights TEXT NOT NULL,
 		user_groups TEXT NOT NULL,
-		user_level TINYINT(1) NOT NULL DEFAULT '-101',
+		user_level TINYINT(4) NOT NULL DEFAULT '-101',
 		user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		user_actiontime INT(10) UNSIGNED NOT NULL DEFAULT '0',
 		user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',

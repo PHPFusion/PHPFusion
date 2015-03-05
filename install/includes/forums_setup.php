@@ -123,7 +123,7 @@ if (isset($_POST['uninstall'])) {
 			forum_description TEXT NOT NULL,
 			forum_rules TEXT NOT NULL,
 			forum_mods TEXT NOT NULL,
-			forum_access TINYINT(1) NOT NULL DEFAULT '0',
+			forum_access TINYINT(4) NOT NULL DEFAULT '0',
 			forum_post SMALLINT(3) UNSIGNED DEFAULT '101',
 			forum_reply SMALLINT(3) UNSIGNED DEFAULT '101',
 			forum_poll SMALLINT(3) UNSIGNED NOT NULL DEFAULT '0',
