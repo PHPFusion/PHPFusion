@@ -10,6 +10,7 @@ class CustomPage {
 		'page_id' => '',
 		'page_title' => '',
 		'link_id' => 0,
+		'link_order' => 0,
 		'page_link_cat' => 0,
 		'page_access' => 0,
 		'page_content' => '',

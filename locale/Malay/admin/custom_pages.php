@@ -7,7 +7,7 @@ $locale['cp_104'] = 'Kebenaran Komen';
 $locale['cp_105'] = 'Kebenaran Penilaian';
 $locale['cp_106'] = 'Pautan Halaman';
 // Custom Pages titles
-$locale['400'] = "Halaman Baru";
+$locale['400'] = "Halaman Kustom";
 $locale['401'] = "Sunting Halaman";
 $locale['402'] = "Halaman Sedia";
 $locale['403'] = "Halaman";
