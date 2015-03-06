@@ -107,4 +107,7 @@ $locale['279'] = "Latest Submissions";
 $locale['280'] = "Administration Control Panel";
 $locale['281'] = "Please Enter Your Admin Password";
 $locale['282'] = "Switch Language";
+$locale['283'] = "Infusions";
+$locale['284'] = "There are no infusions installed";
+$locale['285'] = "Manage Infusions";
 ?>

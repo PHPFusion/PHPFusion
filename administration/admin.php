@@ -169,7 +169,7 @@ class Admin {
 			if ($i == 0) {
 				$html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
 			} else {
-				$html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
+				$html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i'>".$this->get_admin_page_icons($i)." ".$locale['ac0'.$i].($i == 5 ? " (".dbrows($result).")" : "")." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
 				$html .= "<div id='adl-$i' class='collapse ".($active ? 'in' : '')."'>\n";
 				if (dbrows($result) > 0) {
 					$html .= "<ul class='admin-submenu'>\n";

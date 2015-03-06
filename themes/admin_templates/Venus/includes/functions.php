@@ -46,7 +46,7 @@ function render_admin_dashboard() {
 }
 
 function render_dashboard() {
-	global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $locale, $aidlink, $settings;
+	global $members, $forum, $download, $news, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $locale, $aidlink, $settings, $infusions_count;
 	$mobile = '12';
 	$tablet = '12';
 	$laptop = '6';
@@ -224,7 +224,17 @@ function render_dashboard() {
 	}
 	echo "</div>\n";
 	echo "<div class='row'>\n";
-	echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-4'>\n";
+	echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
+	openside("<span class='text-smaller text-uppercase'><strong>".$locale['283']."</strong></span><span class='pull-right label label-warning'>".number_format($infusions_count)."</span>");
+
+	if ($infusions_count > 0) {
+		closeside("".(checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='entypo right-open-mini'></i></div>\n" : '')."");	
+	} else {
+		echo "<div class='text-center'>".$locale['284']."</div>\n";
+		closeside();
+	}
+
+	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['277']."</strong></span><span class='pull-right label label-warning'>".number_format($global_comments['rows'])."</span>");
 	if (count($global_comments['data']) > 0) {
 		foreach ($global_comments['data'] as $i => $comment_data) {
@@ -251,7 +261,7 @@ function render_dashboard() {
 		echo "<div class='text-center'>".$global_comments['nodata']."</div>\n";
 	}
 	closeside();
-	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-4'>\n";
+	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
 	// Ratings
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['278']."</strong></span>");
 	if (count($global_ratings['data']) > 0) {
@@ -276,7 +286,7 @@ function render_dashboard() {
 		echo "<div class='text-center'>".$global_ratings['nodata']."</div>\n";
 	}
 	closeside();
-	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-4'>\n";
+	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['279']."</strong></span><span class='pull-right label label-warning'>".number_format($global_submissions['rows'])."</span>");
 	if (count($global_submissions['data']) > 0) {
 		foreach ($global_submissions['data'] as $i => $submit_data) {
