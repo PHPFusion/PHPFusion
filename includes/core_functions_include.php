@@ -861,9 +861,8 @@ function getgroupname($group_id, $return_desc = FALSE) {
  */
 function getgroupOpts() {
 	$visibility_opts = array();
-	$user_groups = getusergroups();
-	while (list($key, $user_group) = each($user_groups)) {
-		$visibility_opts[$user_group['0']] = $user_group['1'];
+	foreach (getusergroups() as $groups) {
+		$visibility_opts[$groups[0]] = $groups[1];
 	}
 	return $visibility_opts;
 }
