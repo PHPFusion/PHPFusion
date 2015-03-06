@@ -56,7 +56,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		'max_byte'		=>	!empty($options['max_byte']) && isnum($options['max_byte']) ? $options['max_byte'] : 1500000, // 1.5 million bytes is 1.5mb
 		'multiple' => !empty($options['multiple']) && $options['multiple'] == 1 ? 1 : 0,
 	);
-
+	print_p($options);
 	// default max file size
 	$format = '';
 	// file type if single filter, if not will accept as object if left empty.
@@ -95,7 +95,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$html = "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
 	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "";
-	$html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$input_id."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." />\n"; //class='file-preview-".$type."'
+	$html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$input_id."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n"; //class='file-preview-".$type."'
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($options['inline']) ? "</div>\n" : "";
 	$html .= "</div>\n";

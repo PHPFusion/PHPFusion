@@ -481,38 +481,205 @@ class defender {
 	protected function verify_image_upload() {
 		global $locale;
 		require_once INCLUDES."infusions_include.php";
-		if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
-			$upload = upload_image($this->field_config['input_name'], $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'], $this->field_config['max_width'], $this->field_config['max_height'], $this->field_config['max_byte'], $this->field_config['delete_original'], $this->field_config['thumbnail'], $this->field_config['thumbnail2'], 1, $this->field_config['path'].$this->field_config['thumbnail_folder']."/", $this->field_config['thumbnail_suffix'], $this->field_config['thumbnail_w'], $this->field_config['thumbnail_h'], 0, $this->field_config['path'].$this->field_config['thumbnail_folder']."/", $this->field_config['thumbnail2_suffix'], $this->field_config['thumbnail2_w'], $this->field_config['thumbnail2_h']);
-			if ($upload['error'] != 0) {
-				$this->stop();
-				$this->addError($this->field_config['id']);
-				switch ($upload['error']) {
-					case 1: // Invalid file size
-						$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-						$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-						break;
-					case 2: // Unsupported image type
-						$this->addNotice(sprintf($locale['df_417'], ".gif .jpg .png"));
-						$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
-						break;
-					case 3: // Invalid image resolution
-						$this->addNotice(sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
-						$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
-						break;
-					case 4: // Invalid query string
-						$this->addNotice($locale['df_422']);
-						$this->addHelperText($this->field_config['id'], $locale['df_422']);
-						break;
-					case 5: // Image not uploaded
-						$this->addNotice($locale['df_423']);
-						$this->addHelperText($this->field_config['id'], $locale['df_423']);
-						break;
-				}
+		if ($this->field_config['multiple']) {
+			$target_folder = $this->field_config['path'];
+			$target_width = $this->field_config['max_width'];
+			$target_height = $this->field_config['max_height'];
+			$max_size = $this->field_config['max_byte'];
+			$delete_original = $this->field_config['delete_original'];
+			$thumb1 = $this->field_config['thumbnail'];
+			$thumb2 = $this->field_config['thumbnail2'];
+			$thumb1_ratio = 1;
+			$thumb1_folder = $this->field_config['path'].$this->field_config['thumbnail_folder']."/";
+			$thumb1_suffix = $this->field_config['thumbnail_suffix'];
+			$thumb1_width = $this->field_config['thumbnail_w'];
+			$thumb1_height = $this->field_config['thumbnail_h'];
+			$thumb2_ratio = 0;
+			$thumb2_folder = $this->field_config['path'].$this->field_config['thumbnail_folder']."/";
+			$thumb2_suffix = $this->field_config['thumbnail2_suffix'];
+			$thumb2_width = $this->field_config['thumbnail2_w'];
+			$thumb2_height = $this->field_config['thumbnail2_h'];
+			$query = '';
+			if (!empty($_FILES[$this->field_config['input_name']]['name'])) {
+				$result = array();
+				for($i = 0; $i <= sizeof($_FILES[$this->field_config['input_name']]['name'])-1; $i++) {
+					if (is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name'][$i])) {
+						$image = $_FILES[$this->field_config['input_name']];
+						$target_name = $_FILES[$this->field_config['input_name']]['name'][$i];
+						if ($target_name != "" && !preg_match("/[^a-zA-Z0-9_-]/", $target_name)) {
+							$image_name = $target_name;
+						} else {
+							$image_name = stripfilename(substr($image['name'][$i], 0, strrpos($image['name'][$i], ".")));
+						}
+						$image_ext = strtolower(strrchr($image['name'][$i], "."));
+						$image_res = array();
+						if (filesize($image['tmp_name'][$i]) > 10 && @getimagesize($image['tmp_name'][$i])) {
+							$image_res = @getimagesize($image['tmp_name'][$i]);
+						}
+						$image_info = array(
+							"image" => FALSE,
+							"image_name" => $image_name.$image_ext,
+							"image_ext" => $image_ext,
+							"image_size" => $image['size'],
+							"image_width" => $image_res[0],
+							"image_height" => $image_res[1],
+							"thumb1" => FALSE,
+							"thumb1_name" => "",
+							"thumb2" => FALSE,
+							"thumb2_name" => "",
+							"error" => 0,
+							);
+						if ($image_ext == ".gif") {
+							$filetype = 1;
+						} elseif ($image_ext == ".jpg") {
+							$filetype = 2;
+						} elseif ($image_ext == ".png") {
+							$filetype = 3;
+						} else {
+							$filetype = FALSE;
+						}
+						if ($image['size'][$i] > $max_size) {
+							// Invalid file size
+							$image_info['error'] = 1;
+						} elseif (!$filetype || !verify_image($image['tmp_name'][$i])) {
+							// Unsupported image type
+							$image_info['error'] = 2;
+						} elseif ($image_res[0] > $target_width || $image_res[1] > $target_height) {
+							// Invalid image resolution
+							$image_info['error'] = 3;
+						} else {
+							if (!file_exists($target_folder)) {
+								mkdir($target_folder, 0755);
+							}
+							$image_name_full = filename_exists($target_folder, $image_name.$image_ext);
+							$image_name = substr($image_name_full, 0, strrpos($image_name_full, "."));
+							$image_info['image_name'] = $image_name_full;
+							$image_info['image'] = TRUE;
+							move_uploaded_file($image['tmp_name'][$i], $target_folder.$image_name_full);
+							if (function_exists("chmod")) {
+								chmod($target_folder.$image_name_full, 0755);
+							}
+							if ($query && !dbquery($query)) {
+								// Invalid query string
+								$image_info['error'] = 4;
+								unlink($target_folder.$image_name_full);
+							} elseif ($thumb1 || $thumb2) {
+								require_once INCLUDES."photo_functions_include.php";
+								$noThumb = FALSE;
+								if ($thumb1) {
+									if ($image_res[0] <= $thumb1_width && $image_res[1] <= $thumb1_height) {
+										$noThumb = TRUE;
+										$image_info['thumb1_name'] = $image_info['image_name'];
+										$image_info['thumb1'] = TRUE;
+									} else {
+										if (!file_exists($thumb1_folder)) {
+											mkdir($thumb1_folder, 0755, TRUE);
+										}
+										$image_name_t1 = filename_exists($thumb1_folder, $image_name.$thumb1_suffix.$image_ext);
+										$image_info['thumb1_name'] = $image_name_t1;
+										$image_info['thumb1'] = TRUE;
+										if ($thumb1_ratio == 0) {
+											createthumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width, $thumb1_height);
+										} else {
+											createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width);
+										}
+									}
+								}
+								if ($thumb2) {
+									if ($image_res[0] < $thumb2_width && $image_res[1] < $thumb2_height) {
+										$noThumb = TRUE;
+										$image_info['thumb2_name'] = $image_info['image_name'];
+										$image_info['thumb2'] = TRUE;
+									} else {
+										if (!file_exists($thumb2_folder)) {
+											mkdir($thumb2_folder, 0755, TRUE);
+										}
+										$image_name_t2 = filename_exists($thumb2_folder, $image_name.$thumb2_suffix.$image_ext);
+										$image_info['thumb2_name'] = $image_name_t2;
+										$image_info['thumb2'] = TRUE;
+										if ($thumb2_ratio == 0) {
+											createthumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width, $thumb2_height);
+										} else {
+											createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb2_folder.$image_name_t2, $thumb2_width);
+										}
+									}
+								}
+								if ($delete_original && !$noThumb) {
+									unlink($target_folder.$image_name_full);
+									$image_info['image'] = FALSE;
+								}
+							}
+						}
+					} else {
+						$image_info = array("error" => 5);
+					}
+					if ($image_info['error'] != 0) {
+						$this->stop();
+						$this->addError($this->field_config['id']);
+						switch ($image_info['error']) {
+							case 1: // Invalid file size
+								$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+								$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+								break;
+							case 2: // Unsupported image type
+								$this->addNotice(sprintf($locale['df_417'], ".gif .jpg .png"));
+								$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
+								break;
+							case 3: // Invalid image resolution
+								$this->addNotice(sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+								$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+								break;
+							case 4: // Invalid query string
+								$this->addNotice($locale['df_422']);
+								$this->addHelperText($this->field_config['id'], $locale['df_422']);
+								break;
+							case 5: // Image not uploaded
+								$this->addNotice($locale['df_423']);
+								$this->addHelperText($this->field_config['id'], $locale['df_423']);
+								break;
+						}
+					} else {
+						$result[$i] = $image_info;
+					}
+				} // end for
+				return $result;
 			} else {
-				return $upload;
+				return array();
 			}
 		} else {
-			return array();
+			if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
+				$upload = upload_image($this->field_config['input_name'], $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'], $this->field_config['max_width'], $this->field_config['max_height'], $this->field_config['max_byte'], $this->field_config['delete_original'], $this->field_config['thumbnail'], $this->field_config['thumbnail2'], 1, $this->field_config['path'].$this->field_config['thumbnail_folder']."/", $this->field_config['thumbnail_suffix'], $this->field_config['thumbnail_w'], $this->field_config['thumbnail_h'], 0, $this->field_config['path'].$this->field_config['thumbnail_folder']."/", $this->field_config['thumbnail2_suffix'], $this->field_config['thumbnail2_w'], $this->field_config['thumbnail2_h']);
+				if ($upload['error'] != 0) {
+					$this->stop();
+					$this->addError($this->field_config['id']);
+					switch ($upload['error']) {
+						case 1: // Invalid file size
+							$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+							$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+							break;
+						case 2: // Unsupported image type
+							$this->addNotice(sprintf($locale['df_417'], ".gif .jpg .png"));
+							$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
+							break;
+						case 3: // Invalid image resolution
+							$this->addNotice(sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+							$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+							break;
+						case 4: // Invalid query string
+							$this->addNotice($locale['df_422']);
+							$this->addHelperText($this->field_config['id'], $locale['df_422']);
+							break;
+						case 5: // Image not uploaded
+							$this->addNotice($locale['df_423']);
+							$this->addHelperText($this->field_config['id'], $locale['df_423']);
+							break;
+					}
+				} else {
+					return $upload;
+				}
+			} else {
+				return array();
+			}
 		}
 	}
 
