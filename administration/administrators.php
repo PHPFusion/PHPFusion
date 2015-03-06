@@ -179,7 +179,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 			$mysql_search .= "user_name LIKE '".$_POST['search_criteria']."%' ";
 		}
 		if ($mysql_search) {
-			$result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE ".$mysql_search." AND user_level='101' ORDER BY user_name");
+			$result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE ".$mysql_search." AND user_level='-101' ORDER BY user_name");
 		}
 		if (isset($result) && dbrows($result)) {
 			echo openform('add_users_form', 'add_users_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
@@ -227,7 +227,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 	closetable();
 	opentable($locale['420']);
 	$i = 0;
-	$result = dbquery("SELECT user_id, user_name, user_rights, user_level FROM ".DB_USERS." WHERE user_level>='102' ORDER BY user_level DESC, user_name");
+	$result = dbquery("SELECT user_id, user_name, user_rights, user_level FROM ".DB_USERS." WHERE user_level<='-102' ORDER BY user_level DESC, user_name");
 	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<thead>\n<tr>\n";
 	echo "<th class='tbl2'>".$locale['421']."</th>\n";
 	echo "<th align='center' width='1%' class='tbl2' style='white-space:nowrap'>".$locale['422']."</th>\n";
