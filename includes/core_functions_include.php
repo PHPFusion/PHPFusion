@@ -855,6 +855,19 @@ function getgroupname($group_id, $return_desc = FALSE) {
 	return $locale['user_na'];
 }
 
+/**
+ * Get All Groups Arrays
+ * @return array
+ */
+function getgroupOpts() {
+	$visibility_opts = array();
+	$user_groups = getusergroups();
+	while (list($key, $user_group) = each($user_groups)) {
+		$visibility_opts[$user_group['0']] = $user_group['1'];
+	}
+	return $visibility_opts;
+}
+
 
 /**
  * Getting the real users_group access.

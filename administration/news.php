@@ -21,7 +21,6 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/news.php";
 add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['news_0000']));
 if (isset($_POST['cancel'])) { redirect(FUSION_SELF.$aidlink); }
-
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
 	$del_data['news_id'] = $_GET['news_id'];
 	$result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS." WHERE news_id='".$del_data['news_id']."'");
@@ -45,11 +44,60 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_i
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
+$allowed_pages = array('news', 'nform');
+$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'news';
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id']) && isnum($_GET['news_id'])) ? 1 : 0;
 
+$master_title['title'][] = $locale['news_0000'];
+$master_title['id'][] = 'news';
+$master_title['icon'] = '';
+
+$master_title['title'][] = $edit ? $locale['news_0003'] : $locale['news_0002'];
+$master_title['id'][] = 'nform';
+$master_title['icon'] = '';
+
+$tab_active =  tab_active($master_title, $_GET['section'] , 1);
+
+if (isset($_GET['status'])) {
+	$message = '';
+	if ($_GET['status'] == "sn") {
+		$message = $locale['news_0100'];
+	} elseif ($_GET['status'] == "su") {
+		$message = $locale['news_0101'];
+	} elseif ($_GET['status'] == "del") {
+		$message = $locale['news_0102'];
+	}
+	if ($message) {
+		echo admin_message($message);
+	}
+}
+
+opentable($locale['news_0001']);
+echo opentab($master_title, $tab_active, 'news', 1);
+echo opentabbody($master_title['title'][0], 'news', $tab_active, 1);
+news_listing();
+echo closetabbody();
+if ($_GET['section'] == 'nform') {
+	add_to_breadcrumbs(array('link'=>'', 'title'=>$edit ? $locale['news_0003'] : $locale['news_0002']));
+	echo opentabbody($master_title['title'][1], 'nform', $tab_active, 1);
+	news_form();
+	echo closetabbody();
+}
+echo closetab();
+closetable();
+
+if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id'])) {
+	add_to_jquery("
+		// change the name of the second tab and activate it.
+		$('#tab-nformAdd-News').text('".$locale['news_0003']."');
+		$('#news a:last').tab('show');
+		");
+}
+
+require_once THEMES."templates/footer.php";
 
 function news_listing() {
 	global $aidlink, $locale;
-	$result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_image, news_cat_language FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 	echo "<div class='m-t-20'>\n";
 	echo opencollapse('news-list');
 	// uncategorized listing
@@ -57,10 +105,10 @@ function news_listing() {
 	echo "<div class='panel-heading clearfix'>\n";
 	echo "<div class='overflow-hide'>\n";
 	echo "<span class='display-inline-block strong'><a ".collapse_header_link('news-list', '0', '0', 'm-r-10').">".$locale['news_0202']."</a></span>\n";
-	echo "<span class='text-smaller strong'>".LANGUAGE."</span>";
+	echo "<span class='badge m-r-10'>".dbcount("(news_id)", DB_NEWS, "news_cat='0'")."</span>";
+	echo "<span class='text-smaller mid-opacity'>".LANGUAGE."</span>";
 	echo "</div>\n";
 	echo "</div>\n"; // end panel heading
-
 	echo "<div ".collapse_footer_link('news-list','0', '0').">\n";
 	echo "<ul class='list-group p-15'>\n";
 	$result2 = dbquery("SELECT news_id, news_subject, news_image_t1, news_news, news_draft FROM ".DB_NEWS." WHERE ".(multilang_table("NS") ? "news_language='".LANGUAGE."' AND " : "")."news_cat='0' ORDER BY news_draft DESC, news_sticky DESC, news_datestamp DESC");
@@ -73,7 +121,7 @@ function news_listing() {
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
 			echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words($data2['news_news'], '50')."</div>\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 			echo "</div>\n";
 			echo "</li>\n";
@@ -88,18 +136,23 @@ function news_listing() {
 	echo "</div>\n"; // panel container
 	echo "</div>\n"; // panel default
 
+	$result = dbquery("SELECT cat.news_cat_id, cat.news_cat_name, cat.news_cat_image, cat.news_cat_language, count(news.news_id) as news_count
+				FROM ".DB_NEWS_CATS." cat
+				LEFT JOIN ".DB_NEWS." news on news.news_id = cat.news_cat_id
+				".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." GROUP BY news_cat_id ORDER BY news_cat_name");
 	if (dbrows($result) > 0) {
 		while ($data = dbarray($result)) {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-heading clearfix'>\n";
-				echo "<div class='btn-group pull-right m-t-5'>\n";
-				echo "<a class='btn btn-xs btn-default' href='".ADMIN."news_cats.php".$aidlink."&amp;action=edit&amp;cat_id=".$data['news_cat_id']."'>".$locale['edit']."</a>";
-				echo "<a class='btn btn-xs btn-default' href='".ADMIN."news_cats.php".$aidlink."&amp;action=delete&amp;cat_id=".$data['news_cat_id']."' onclick=\"return confirm('".$locale['news_0252']."');\">".$locale['delete']."</a>\n";
-				echo "</div>\n";
-				echo "<div class='overflow-hide p-r-10'>\n";
-				echo "<span class='display-inline-block strong'><a ".collapse_header_link('news-list', $data['news_cat_id'], '0', 'm-r-10').">".$data['news_cat_name']."</a></span>\n";
-				echo "<span class='text-smaller strong'>".$data['news_cat_language']."</span>";
-				echo "</div>\n"; /// end overflow-hide
+			echo "<div class='btn-group pull-right m-t-5'>\n";
+			echo "<a class='btn btn btn-default' href='".ADMIN."news_cats.php".$aidlink."&amp;action=edit&amp;section=nform&amp;cat_id=".$data['news_cat_id']."'>".$locale['edit']."</a>";
+			echo "<a class='btn btn-danger' href='".ADMIN."news_cats.php".$aidlink."&amp;action=delete&amp;cat_id=".$data['news_cat_id']."' onclick=\"return confirm('".$locale['news_0252']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
+			echo "</div>\n";
+			echo "<div class='overflow-hide p-r-10'>\n";
+			echo "<span class='display-inline-block strong'><a ".collapse_header_link('news-list', $data['news_cat_id'], '0', 'm-r-10').">".$data['news_cat_name']."</a></span>\n";
+			echo "<span class='badge m-r-10'>".$data['news_count']."</span>";
+			echo "<span class='text-smaller mid-opacity'>".LANGUAGE."</span>";
+			echo "</div>\n"; /// end overflow-hide
 			echo "</div>\n"; // end panel heading
 			echo "<div ".collapse_footer_link('news-list', $data['news_cat_id'], '0').">\n";
 			echo "<ul class='list-group p-15'>\n";
@@ -137,8 +190,15 @@ function news_form() {
 	global $userdata, $locale, $settings, $aidlink, $defender;
 	$language_opts = fusion_get_enabled_languages();
 	$data = array();
-	if (isset($_POST['save'])) {
+	$formaction = '';
 
+	if ($settings['tinymce_enabled']) {
+		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
+	} else {
+		require_once INCLUDES."html_buttons_include.php";
+	}
+
+	if (isset($_POST['save'])) {
 		$data['news_id'] = isset($_POST['news_id']) ? form_sanitizer($_POST['news_id'], '', 'news_id') : 0;
 		$data['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 		$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
@@ -196,18 +256,14 @@ function news_form() {
 		if ($rows >0) {
 			// is edit
 			dbquery_insert(DB_NEWS, $data, 'update');
-			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=updated");
+			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su");
 		} else {
 			// is save
 			dbquery_insert(DB_NEWS, $data, 'save');
-			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=success");
+			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 		}
 	}
-	if ($settings['tinymce_enabled']) {
-		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-	} else {
-		require_once INCLUDES."html_buttons_include.php";
-	}
+
 	$result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 	$news_cat_opts = array();
 	$news_cat_opts['0'] = $locale['news_0202'];
@@ -216,12 +272,9 @@ function news_form() {
 			$news_cat_opts[$odata['news_cat_id']] = $odata['news_cat_name'];
 		}
 	}
-	$visibility_opts = array();
-	$user_groups = getusergroups();
-	while (list($key, $user_group) = each($user_groups)) {
-		$visibility_opts[$user_group['0']] = $user_group['1'];
-	}
+
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
+
 		$result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id='".(isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])."'");
 		if (dbrows($result)) {
 			$data2 = dbarray($result);
@@ -246,8 +299,9 @@ function news_form() {
 				'news_allow_ratings' => (!empty($_POST['news_allow_ratings'])) ? "1" : $data2['news_allow_ratings'] ? "1" : '',
 				'news_language' => (!empty($_POST['news_language'])) ? $_POST['news_language'] : $data2['news_language']
 			);
+			$formaction = FUSION_SELF.$aidlink."&amp;section=nform&amp;action=edit&amp;news_id=".$data['news_id'];
 		} else {
-			//			redirect(FUSION_SELF.$aidlink);
+			redirect(FUSION_SELF.$aidlink);
 		}
 	} else {
 		$data['news_draft'] = '0';
@@ -267,6 +321,7 @@ function news_form() {
 		$data['news_cat'] = '0';
 		$data['news_image'] = '';
 		$data['news_ialign'] = 'pull-left';
+		$formaction = FUSION_SELF.$aidlink."&amp;section=nform";
 	}
 
 	if (isset($_POST['preview'])) {
@@ -311,10 +366,8 @@ function news_form() {
 			echo closemodal();
 		}
 	}
-	$formaction = FUSION_SELF.$aidlink;
 
 	echo "<div class='m-t-20'>\n";
-	// remove downtime after beta.
 	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
@@ -386,7 +439,7 @@ function news_form() {
 		echo form_hidden('', 'news_language', 'news_langugage', $data['news_language']);
 	}
 	echo form_hidden('', 'news_datestamp', 'news_datestamp', $data['news_datestamp']);
-	echo form_select($locale['news_0209'], 'news_visibility', 'news_visibility', $visibility_opts, $data['news_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
+	echo form_select($locale['news_0209'], 'news_visibility', 'news_visibility', getgroupOpts(), $data['news_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	closeside();
 	openside('');
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
@@ -418,48 +471,3 @@ function news_form() {
 	echo closeform();
 	echo "</div>\n";
 }
-
-$master_title['title'][] = $locale['news_0000'];
-$master_title['id'][] = 'news';
-$master_title['icon'] = '';
-
-$master_title['title'][] = $locale['news_0002'];
-$master_title['id'][] = 'nform';
-$master_title['icon'] = '';
-
-$tab_active = isset($_GET['status']) ? tab_active($master_title, 0) : tab_active($master_title, 1);
-
-if (isset($_GET['status'])) {
-	if ($_GET['status'] == "success") {
-		$message = $locale['news_0100'];
-	} elseif ($_GET['status'] == "updated") {
-		$message = $locale['news_0101'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['news_0102'];
-	}
-	if ($message) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
-
-opentable($locale['news_0001']);
-echo opentab($master_title, $tab_active, 'news');
-echo opentabbody($master_title['title'][0], 'news', $tab_active);
-news_listing();
-echo closetabbody();
-echo opentabbody($master_title['title'][1], 'nform', $tab_active);
-news_form();
-echo closetabbody();
-echo closetab();
-closetable();
-
-if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id'])) {
-	add_to_jquery("
-		// change the name of the second tab and activate it.
-		$('#tab-nformAdd-News').text('".$locale['news_0003']."');
-		$('#news a:last').tab('show');
-		");
-}
-
-require_once THEMES."templates/footer.php";
-?>
