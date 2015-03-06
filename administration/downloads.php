@@ -434,7 +434,7 @@ function download_listing() {
 												echo nl2br(parseubb($data2['download_description_short']));
 
 												echo "<div class='pull-right'>\n";
-												echo "<a class='m-r-10' href='$download_url'>".$locale['download_0001']."</a>\n";
+												echo "<a class='m-r-10' href='$download_url'>".$locale['download_0214']."</a>\n";
 												echo "<a class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=dlopts&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."'>".$locale['edit']."</a>\n";
 												echo "<a  class='m-r-10' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=dlopts&amp;download_cat_id=".$data['download_cat_id']."&amp;download_id=".$data2['download_id']."' onclick=\"return confirm('".$locale['download_0255']."');\">".$locale['delete']."</a>\n";
 												echo "</div>\n";
