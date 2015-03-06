@@ -120,6 +120,7 @@ function image_exists($dir, $image) {
  */
 function exif($imagePath) {
 	global $locale;
+	error_reporting(0); // turn off everything. most of Photoshop images are unsupported.
 	// Check if the variable is set and if the file itself exists before continuing
 	if ((isset($imagePath)) and (file_exists($imagePath)) and !is_dir($imagePath)) {
 		// There are 2 arrays which contains the information we are after, so it's easier to state them both
