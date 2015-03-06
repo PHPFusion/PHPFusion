@@ -98,7 +98,7 @@ if (!function_exists('render_photo_item')) {
 		echo "</a></div>\n";
 		echo "<div class='panel-body' style='height:100px;'>\n";
 		echo "<a class='photo-item-title' title='".$locale['430']."' href='".$data['album_link']['link']."'>".$data['title']."</a><br/>\n";
-		echo $data['description'] ? "<span class='photo-item-description'>".$data['description']."</span><br/>\n" : '';
+		echo $data['description'] ? "<span class='photo-item-description'>".fusion_first_words($data['description'],10)."</span><br/>\n" : '';
 
 		if (isset($_GET['album_id'])) {
 			// show on viewalbum
