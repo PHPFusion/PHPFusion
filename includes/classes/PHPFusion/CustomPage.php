@@ -151,7 +151,7 @@ class CustomPage {
 		global $aidlink;
 		if (isnum($page_id) && self::verify_customPage($page_id)) {
 			$result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
-			$result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
+			if ($result) $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
 			if ($result) redirect(FUSION_SELF.$aidlink."&status=del");
 		}
 	}
@@ -387,13 +387,6 @@ class CustomPage {
 
 		openside();
 		if (multilang_table("CP")) {
-			/*echo "<div class='strong m-b-10'>".$locale['global_ML100']."</div>\n";
-			//echo form_para($locale['global_ML100'], 'cp');
-			foreach(fusion_get_enabled_languages() as $language) {
-				$enabled_language = ($data['page_language']) ? explode('.', $data['page_language']) :  array($language);
-				$check = (in_array($language, $enabled_language)) ? 1 : 0;
-				echo form_checkbox($language, 'page_language[]', 'page_language-'.$language, $check, array('class'=>'m-b-0', 'value'=>$language));
-			} */
 			echo form_select($locale['global_ML100'], 'page_language', 'page_language', fusion_get_enabled_languages(), $data['page_language'], array('width'=>'100%'));
 		} else {
 			echo form_hidden('', 'page_language', 'page_language', $data['page_language']);
