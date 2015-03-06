@@ -150,16 +150,14 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
  * @return int
  */
 function dbnextid($table_name) {
-	$query = "SHOW TABLE STATUS LIKE ".$table_name;
-	$query = dbconnection()->prepare($query);
-	$query->execute();
-	$result = $query->fetch(PDO::FETCH_ASSOC);
-	if (!empty($result)) {
-		return $result['Auto_increment'];
-	}
-	return FALSE;
+	$query = dbconnection()->prepare("SHOW TABLE STATUS LIKE '$table_name'");
+    $query->execute();
+    $result = $query->fetch(PDO::FETCH_ASSOC);
+      if (!empty($result)) {
+         return $result['Auto_increment'];
+      }
+      return false;
 }
-
 /**
  * Get the last inserted auto increment id
  * @return int
