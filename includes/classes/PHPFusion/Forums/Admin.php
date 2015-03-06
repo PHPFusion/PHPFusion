@@ -384,7 +384,7 @@ class Admin {
 				'forum_allow_attach' => isset($_POST['forum_allow_attach']) ? 1 : 0,
 				'forum_quick_edit' => isset($_POST['forum_quick_edit']) ? 1 : 0,
 				'forum_poll' => isset($_POST['forum_poll']) ? 1 : 0,
-				'forum_allow_ratings' => isset($_POST['forum_allow_ratings']) ? 1 : 0,
+				'forum_post_ratings' => isset($_POST['forum_post_ratings']) ? 1 : 0,
 				'forum_users' => isset($_POST['forum_users']) ? 1 : 0,
 				'forum_lock' => isset($_POST['forum_lock']) ? 1 : 0,
 				'forum_permissions' => isset($_POST['forum_permissions']) ? form_sanitizer($_POST['forum_permissions'], 0, 'forum_permissions') : 0,
@@ -671,7 +671,7 @@ class Admin {
 		echo form_checkbox($locale['forum_024'], 'forum_users', 'forum_users', $this->data['forum_users']);
 		echo form_checkbox($locale['forum_021'], 'forum_quick_edit', 'forum_quick_edit', $this->data['forum_quick_edit']);
 		echo form_checkbox($locale['forum_019'], 'forum_merge', 'forum_merge', $this->data['forum_merge']);
-		echo form_checkbox($locale['forum_020'], 'forum_allow_attach', 'forum_allow_attach', $this->data['forum_attach']);
+		echo form_checkbox($locale['forum_020'], 'forum_allow_attach', 'forum_allow_attach', $this->data['forum_allow_attach']);
 		echo form_checkbox($locale['forum_022'], 'forum_poll', 'forum_poll', $this->data['forum_poll']);
 		echo form_checkbox($locale['forum_023'], 'forum_post_ratings', 'forum_post_ratings', $this->data['forum_post_ratings']);
 		echo form_hidden('', 'forum_id', 'forum_id', $this->data['forum_id']);
