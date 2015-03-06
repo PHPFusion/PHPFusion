@@ -121,10 +121,12 @@ if (!function_exists('render_photo_item')) {
 			echo "</div>\n";
 			if ($data['photo_user']) {
 				echo "<div class='panel-body' style='border-top:1px solid #ddd;'>\n";
-				echo "<span class='photo_author'>".$locale['463']."</span>\n";
+				echo "<div class='photo_author text-smaller'>".format_word(count($data['photo_user']), $locale['463'])."</div>\n";
+				echo "<div class='display-block'>\n";
 				foreach($data['photo_user'] as $user_id => $user_data) {
 					echo display_avatar($user_data, '25px', '', TRUE, 'm-r-0');
 				}
+				echo "</div>\n";
 				echo "</div>\n";
 			}
 			echo "<div class='panel-footer'>\n";
