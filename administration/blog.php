@@ -16,13 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-pageAccess('BLOG', 1);
+pageAccess('BLOG');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/blog.php";
 $settings = fusion_get_settings();
 add_to_breadcrumbs(array('link'=>ADMIN.'blog.php'.$aidlink, 'title'=>$locale['405']));
 if (isset($_POST['cancel'])) { redirect(FUSION_SELF.$aidlink); }
-
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) {
 	$del_data['blog_id'] = $_GET['blog_id'];
 	$result = dbquery("SELECT blog_image, blog_image_t1, blog_image_t2 FROM ".DB_BLOG." WHERE blog_id='".$del_data['blog_id']."'");
@@ -45,7 +44,57 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_i
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
+$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 'blog';
 
+$master_title['title'][] = $locale['400'];
+$master_title['id'][] = 'blog';
+$master_title['icon'] = '';
+
+$master_title['title'][] = isset($_GET['blog_id']) ? $locale['402'] : $locale['401'];
+$master_title['id'][] = 'nform';
+$master_title['icon'] = '';
+
+$tab_active = tab_active($master_title, $_GET['section'], 1);
+
+opentable($locale['405']);
+$message = '';
+if (isset($_GET['status'])) {
+	if ($_GET['status'] == "sn") {
+		$message = $locale['410'];
+	} elseif ($_GET['status'] == "su") {
+		$message = $locale['411'];
+	} elseif ($_GET['status'] == "del") {
+		$message = $locale['412'];
+	}
+	if ($message) {
+		echo admin_message($message);
+	}
+}
+
+
+echo opentab($master_title, $tab_active, 'blog', 1);
+echo opentabbody($master_title['title'][0], 'blog', $tab_active, 1);
+blog_listing();
+echo closetabbody();
+if (isset($_GET['section']) && $_GET['section'] == 'nform') {
+	add_to_breadcrumbs(array('link'=>'', 'title'=>isset($_GET['blog_id']) ? $locale['402'] : $locale['401']));
+	echo opentabbody($master_title['title'][1], 'nform', $tab_active, 1);
+	blog_form();
+	echo closetabbody();
+}
+
+echo closetab();
+closetable();
+
+if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id'])) {
+	add_to_jquery("
+		// change the name of the second tab and activate it.
+		$('#tab-nformAdd-blog').text('".$locale['402']."');
+		$('#blog a:last').tab('show');
+		");
+}
+
+require_once THEMES."templates/footer.php";
 
 
 function blog_listing() {
@@ -337,7 +386,7 @@ function blog_form() {
 	echo form_datepicker($locale['428'], 'blog_end', 'blog_end', $data['blog_end'], array('placeholder' => $locale['429']));
 	echo "</div>\n";
 	echo "</div>\n";
-	
+
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	echo form_select_tree($locale['423'], "blog_cat", "blog_cat", $data['blog_cat'], array("parent_value" => $locale['424'], "query" => (multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
@@ -345,7 +394,7 @@ function blog_form() {
 	echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-success btn-sm', 'icon'=>'fa fa-check-square-o'));
 	closeside();
 	echo "</div>\n</div>\n";
-	
+
 	// second row
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
@@ -357,7 +406,7 @@ function blog_form() {
 		echo "<input type='hidden' name='blog_image_t2' value='".$data['blog_image_t2']."' />\n";
 		$options = array('pull-left'=>$locale['left'], 'blog-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
 		echo form_select($locale['442'], 'blog_ialign', 'blog_ialign', $options, $data['blog_ialign']);
-		} else {
+	} else {
 		echo form_fileinput($locale['439'], 'blog_image', 'blog_image', IMAGES_B, '',
 							array(
 								'thumbnail_folder'=> 'thumbs',
@@ -367,12 +416,12 @@ function blog_form() {
 								'max_byte'=> $settings['blog_photo_max_b'],
 								'thumbnail2' => 0,
 								'type' => 'image'
-								)
+							)
 		);
 		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['blog_photo_max_b']))."</div>\n";
 		$options = array('pull-left'=>$locale['left'], 'blog-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
 		echo form_select($locale['442'], 'blog_ialign', 'blog_ialign', $options, $data['blog_ialign']);
-}	
+	}
 	$fusion_mce = array();
 	if (!$settings['tinymce_enabled']) {
 		$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
@@ -419,56 +468,3 @@ function blog_form() {
 	echo closeform();
 	echo "</div>\n";
 }
-
-$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 'blog';
-
-$master_title['title'][] = $locale['400'];
-$master_title['id'][] = 'blog';
-$master_title['icon'] = '';
-
-$master_title['title'][] = isset($_GET['blog_id']) ? $locale['402'] : $locale['401'];
-$master_title['id'][] = 'nform';
-$master_title['icon'] = '';
-
-$tab_active = tab_active($master_title, $_GET['section'], 1);
-
-opentable($locale['405']);
-$message = '';
-if (isset($_GET['status'])) {
-	if ($_GET['status'] == "sn") {
-		$message = $locale['410'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['411'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['412'];
-	}
-	if ($message) {
-		echo admin_message($message);
-	}
-}
-
-
-echo opentab($master_title, $tab_active, 'blog', 1);
-echo opentabbody($master_title['title'][0], 'blog', $tab_active, 1);
-blog_listing();
-echo closetabbody();
-if (isset($_GET['section']) && $_GET['section'] == 'nform') {
-	add_to_breadcrumbs(array('link'=>'', 'title'=>isset($_GET['blog_id']) ? $locale['402'] : $locale['401']));
-	echo opentabbody($master_title['title'][1], 'nform', $tab_active, 1);
-	blog_form();
-	echo closetabbody();
-}
-
-echo closetab();
-closetable();
-
-if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id'])) {
-	add_to_jquery("
-		// change the name of the second tab and activate it.
-		$('#tab-nformAdd-blog').text('".$locale['402']."');
-		$('#blog a:last').tab('show');
-		");
-}
-
-require_once THEMES."templates/footer.php";
-?>
