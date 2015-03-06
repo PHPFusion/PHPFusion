@@ -56,7 +56,6 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		'max_byte'		=>	!empty($options['max_byte']) && isnum($options['max_byte']) ? $options['max_byte'] : 1500000, // 1.5 million bytes is 1.5mb
 		'multiple' => !empty($options['multiple']) && $options['multiple'] == 1 ? 1 : 0,
 	);
-	print_p($options);
 	// default max file size
 	$format = '';
 	// file type if single filter, if not will accept as object if left empty.
