@@ -109,4 +109,7 @@ $locale['279'] = "Останні ухвалення";
 $locale['280'] = "Центр керування";
 $locale['281'] = "Будь ласка, введіть свій пароль адміністрування";
 $locale['282'] = "Змінити мову";
+$locale['283'] = "Infusions"; // translate these three lines
+$locale['284'] = "There are no infusions installed";
+$locale['285'] = "Manage Infusions";
 ?>

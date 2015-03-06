@@ -107,4 +107,7 @@ $locale['279'] = "Serahan Terbaru";
 $locale['280'] = "Pusat Kontrol Administration";
 $locale['281'] = "Sila isikan kata aluan Admin anda";
 $locale['282'] = "Tukar Bahasa";
+$locale['283'] = "Infusions"; // translate these three lines
+$locale['284'] = "There are no infusions installed";
+$locale['285'] = "Manage Infusions";
 ?>

@@ -107,4 +107,7 @@ $locale['279'] = "Paskutiniai pateikimai";
 $locale['280'] = "Administracijos valdymo panelė";
 $locale['281'] = "Prašome įvesti Jūsų administratoriaus slaptažodį";
 $locale['282'] = "Keisti kalbą";
+$locale['283'] = "Infusions"; // translate these three lines
+$locale['284'] = "There are no infusions installed";
+$locale['285'] = "Manage Infusions";
 ?>

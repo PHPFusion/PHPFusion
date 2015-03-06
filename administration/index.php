@@ -122,6 +122,9 @@ $link_type = array(
 	'C' => $settings['siteurl']."viewpage.php?page_id=%s",
 );
 
+// Infusions count
+$infusions_count = dbcount("(inf_id)", DB_INFUSIONS);
+
 // Latest Comments
 $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
 $_GET['c_rowstart'] = isset($_GET['c_rowstart']) && $_GET['c_rowstart'] <= $global_comments['rows'] ? $_GET['c_rowstart'] : 0;
