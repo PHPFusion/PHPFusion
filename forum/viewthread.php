@@ -168,10 +168,19 @@ if (dbrows($result) > 0) {
 	$info['tracked_threads'] = dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'") ? TRUE : FALSE;
 
 	// Forum Permissions
-	$info['permissions']['can_post'] = $info['forum_post'] && checkgroup($info['forum_post']) ? 1 : 0;
-	$info['permissions']['can_reply'] = $info['forum_reply'] && checkgroup($info['forum_reply']) ? 1 : 0;
-	$info['permissions']['edit_lock'] = $settings['forum_edit_lock'] ? 1 : 0;
-	$info['permissions']['can_rate'] = $info['forum_type'] == 4 && $info['forum_allow_ratings'] ? 1 : 0;
+	if (iMOD || iSUPERADMIN) {
+		$info['permissions'] = array(
+			'can_post' => 1,
+			'can_reply' => 1,
+			'edit_lock' => 0,
+			'can_rate' => 1
+		);
+	} else {
+		$info['permissions']['can_post'] = $info['forum_post'] && !$info['forum_lock'] && checkgroup($info['forum_post']) ? 1 : 0;
+		$info['permissions']['can_reply'] = $info['forum_reply'] && !$info['forum_lock'] && checkgroup($info['forum_reply']) ? 1 : 0;
+		$info['permissions']['edit_lock'] = $settings['forum_edit_lock'] ? 1 : 0;
+		$info['permissions']['can_rate'] = $info['forum_type'] == 4 && $info['forum_allow_ratings'] && !$info['forum_lock'] ? 1 : 0;
+	}
 
 	// Buttons
 	$info['forum_cat_link'] = FORUM."index.php?viewforum&amp;forum_id=".$info['forum_id']."&amp;forum_cat=".$info['forum_cat']."&amp;forum_branch=".$info['forum_branch'];
@@ -252,9 +261,11 @@ if (dbrows($result) > 0) {
 			$data['rank_img'] =  $settings['forum_ranks'] ? show_forum_rank($data['user_posts'], $data['user_level'], $data['user_groups']) : getuserlevel($data['user_level']);
 		} else {
 			$is_mod = FALSE;
-			foreach ($info['mod_groups'] as $mod_group) {
-				if (!$is_mod && preg_match("(^\.{$mod_group}$|\.{$mod_group}\.|\.{$mod_group}$)", $data['user_groups'])) {
-					$is_mod = TRUE;
+			if (!empty($info['mod_groups'])) {
+				foreach ($info['mod_groups'] as $mod_group) {
+					if (!$is_mod && preg_match("(^\.{$mod_group}$|\.{$mod_group}\.|\.{$mod_group}$)", $data['user_groups'])) {
+						$is_mod = TRUE;
+					}
 				}
 			}
 			if ($settings['forum_ranks']) {

@@ -26,22 +26,8 @@ if (!function_exists('render_forum')) {
 		$tab_title['id'][] = "tracked";
 		$tab_title['icon'][] = "entypo twitter";
 
-		// @todo: push out at 9.1 - need to optimize type4 forum.
-		/* $tab_title['title'][] = 'Unanswered';
-		$tab_title['id'][] = "unanswered";
-		$tab_title['icon'][] = "entypo help";
-
-		$tab_title['title'][] = 'Resolved';
-		$tab_title['id'][] = "answered";
-		$tab_title['icon'][] = "entypo help"; */
-
-		// @todo: only push out at 9.1 - need trophy table.
-		/* $tab_title['title'][] = $locale['forum_0325'];
-		$tab_title['id'][] = "trophy";
-		$tab_title['icon'][] = "entypo trophy"; */
-		// Unused locale 414, 400
 		$tab_active = isset($_GET['section']) ? $_GET['section'] : 'thread';
-		searchbar();
+		searchbar($info);
 		echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM);
 		echo opentabbody($tab_title['title'], $tab_active, $tab_active, 'viewforum');
 		if (isset($_GET['viewforum'])) {
@@ -68,13 +54,13 @@ if (!function_exists('render_forum')) {
 /* Post search bar -- */
 // Search API Crashed, find out why....
 if (!function_exists('searchbar')) {
-	function searchbar() {
+	function searchbar($info) {
 		global $settings, $userdata, $locale;
 		echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 		echo "<div class='pull-left'>".display_avatar($userdata, '40px', '', '', 'm-r-10')."</div>\n";
 		echo "<div class='pull-right'>\n";
-		echo form_button($locale['forum_0326'], 'newtopic', 'newtopic', 'newtopic', array('class'=>'btn-primary m-l-10', 'type'=>'button'));
-		forum_newtopic();
+		echo form_button($locale['forum_0326'], 'newtopic', 'newtopic', 'newtopic', array('class'=>'btn-primary m-l-10', 'type'=>'button', 'deactivate'=>$info['permissions']['can_post'] ? 0 : 1));
+		if ($info['permissions']['can_post'])  forum_newtopic();
 		echo "</div>\n";
 		echo "<div class='overflow-hide'>\n";
 		echo openform('searchform', 'searchform', 'post'," ".($settings['site_seo'] == "1" ? FUSION_ROOT : '').$settings['siteurl']."search.php?stype=forums", array('downtime' => 1));
@@ -261,7 +247,7 @@ if (!function_exists('forum_viewforum')) {
 		if ($data['forum_type'] > 1) {
 			// post button & forum filter
 			echo "<div class='clearfix m-b-20'>\n";
-			if (iMEMBER && $info['permissions']['can_post'] or iMOD or iSUPERADMIN) {
+			if (iMEMBER && $info['permissions']['can_post']) {
 				echo "<a title='".$locale['forum_0264']."' alt='".$locale['forum_0264']."' class='btn button btn-primary text-white' href='".FORUM."post.php?action=newthread&amp;forum_id=".$_GET['forum_id']."'><i class='entypo plus-circled'></i> ".$locale['forum_0264']."</a>";
 			}
 			echo "<div class='pull-right'>\n";

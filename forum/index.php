@@ -223,8 +223,11 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 			// post permission of the current forum view.
 			if ($data['forum_id'] == $_GET['forum_id'] && $data['forum_type'] !=='1') {
 				add_to_title($locale['global_201'].$data['forum_name']);
-
-				$info['permissions']['can_post'] = ($data['forum_post']) ? checkgroup($data['forum_post']) : 0;
+				if (iMOD || iSUPERADMIN) {
+					$info['permissions']['can_post'] = 1;
+				} else {
+					$info['permissions']['can_post'] = $data['forum_post'] && checkgroup($data['forum_post']) && !$data['forum_lock'] ? 1 : 0;
+				}
 
 				// define mods
 				define_forum_mods($data);
