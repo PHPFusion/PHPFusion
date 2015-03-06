@@ -609,9 +609,9 @@ class Admin {
 							$count++;
 						}
 					}
+					if (!defined('FUSION_NULL')) redirect(FUSION_REQUEST);
 				}
 			}
-			if (!defined('FUSION_NULL')) redirect(FUSION_REQUEST);
 		}
 	}
 
@@ -1097,7 +1097,8 @@ class Admin {
 				WHERE ".groupaccess('album.album_access')."
 				GROUP BY album_id ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".$this->rowstart.", $this->albums_per_page");
 			}
-			if (dbrows($result) > 0) {
+			$current_rows = dbrows($result);
+			if ($current_rows > 0) {
 				$i = 1;
 				$count = 1;
 				$list = array();
@@ -1137,6 +1138,16 @@ class Admin {
 				<?php } ?>
 			</div>
 		<?php
+			// pagination
+			echo makepagenav($this->rowstart, $current_rows, $rows, 3, clean_request('', array(
+				'gallery_edit',
+				'gallery_item',
+				'action',
+				'order',
+				'gallery_edit',
+				'gallery_delete',
+				'gallery_type'
+			), false));
 		} else {
 			echo "<div class='well text-center'>".$locale['660']."</div>";
 		}

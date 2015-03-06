@@ -627,7 +627,7 @@ class defender {
 								break;
 							case 3: // Invalid image resolution
 								$this->addNotice(sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
-								$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+								$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width'], $this->field_config['max_height']));
 								break;
 							case 4: // Invalid query string
 								$this->addNotice($locale['df_422']);
