@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-pageAccess('PH',1);
+pageAccess('PH');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."bbcode_include.php";
