@@ -755,6 +755,7 @@ class Admin {
 		$sel = (isset($_GET['gallery']) && isnum($_GET['gallery'])) ? $_GET['gallery'] : $this->photo_data['album_id'];
 		echo form_select($locale['624'], 'album_id', 'album_ids', $album_list, $sel, array('inline' => 1));
 		echo form_hidden('', 'photo_id', 'photo_id', $this->photo_data['photo_id']);
+		echo form_hidden('', 'photo_order', 'photo_order', $this->photo_data['photo_order']);
 		echo form_fileinput('Upload Picture', 'photo_file', 'photo_file', $this->image_upload_dir, '', $this->upload_settings);
 		echo form_hidden('', 'photo_hfile', 'photo_hfile', $this->photo_data['photo_filename']);
 		echo form_hidden('', 'photo_hthumb1', 'photo_hthumb1', $this->photo_data['photo_thumb1']);
@@ -775,7 +776,7 @@ class Admin {
 		echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
 		if ($photo_edit) {
 			echo "<div id='photo_tmb' class='well'>\n";
-			$img_path = rtrim($this->image_upload_dir, '/')."/".rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->photo_data['photo_thumb1'];
+			$img_path = self::get_virtual_path($this->photo_data['album_id']).rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->photo_data['photo_thumb1'];
 			echo "<img class='img-responsive' style='margin:0 auto;' src='$img_path' alt='".$this->photo_data['photo_title']."'/>\n";
 			echo "</div>\n";
 		}
@@ -1228,12 +1229,12 @@ class Admin {
 			</div>
 				<div class='gallery_writer pull-right'>
 					<a class='btn button btn-sm btn-default'
-					   href='<?php echo clean_request("&amp;gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_edit', 'photo', 'gallery',
+					   href='<?php echo clean_request("gallery=".$_GET['gallery']."&amp;gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_edit', 'photo', 'gallery',
 						   'gallery_type'), FALSE) ?>'>
 					<i class='fa fa-pencil fa-lg'></i>
 					</a>
 					<a class='btn button btn-sm btn-danger'
-					   href='<?php echo clean_request("&amp;gallery_delete=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_delete', 'photo', 'gallery',
+					   href='<?php echo clean_request("gallery=".$_GET['gallery']."&amp;gallery_delete=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_delete', 'photo', 'gallery',
 						   'gallery_type'), FALSE) ?>'>
 					<i class='fa fa-trash fa-lg'></i>
 					</a>

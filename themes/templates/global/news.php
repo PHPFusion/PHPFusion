@@ -15,7 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 if (!function_exists('render_main_news')) {
+	/**
+	 * News Page Template
+	 * @param $info
+	 */
 	function render_main_news($info) {
 		global $userdata, $settings, $locale;
 		add_to_head("<link href='".THEMES."templates/global/css/news.css' rel='stylesheet'/>\n");
@@ -150,7 +155,13 @@ if (!function_exists('render_main_news')) {
 		closetable();
 	}
 }
+
 if (!function_exists('render_news')) {
+	/**
+	 * News Item Container
+	 * @param      $info
+	 * @param bool $list_view
+	 */
 	function render_news($info, $list_view = FALSE) {
 		global $locale, $settings, $aidlink;
 		$parameter = $settings['siteurl']."news.php?readmore=".$info['news_id'];
@@ -239,37 +250,41 @@ if (!function_exists('render_news')) {
 		}
 	}
 }
+
 if (!function_exists('render_news_item')) {
+	/**
+	 * News Item Page Template
+	 * @param $info
+	 */
 	function render_news_item($info) {
 		global $locale, $settings, $aidlink;
 
-    add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
-    add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
+		add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
+		add_to_footer('<script type="text/javascript">
+			$(document).ready(function() {
 
-      add_to_footer('<script type="text/javascript">
-        $(document).ready(function() {
-
-            $(".news-image-overlay").colorbox({
-                transition: "elasic",
-                height:"100%",
-                width:"100%",
-                maxWidth:"98%",
-                maxHeight:"98%",
-                scrolling:false,
-                overlayClose:true,
-                close:false,
-                photo:true,
-                onComplete: function(result) {
-                    $("#colorbox").live("click", function(){
-                    $(this).unbind("click");
-                    $.fn.colorbox.close();
-                    });
-                },
-                onLoad: function () {
-                }
-           });
-        });
-        </script>');
+				$(".news-image-overlay").colorbox({
+					transition: "elasic",
+					height:"100%",
+					width:"100%",
+					maxWidth:"98%",
+					maxHeight:"98%",
+					scrolling:false,
+					overlayClose:true,
+					close:false,
+					photo:true,
+					onComplete: function(result) {
+						$("#colorbox").live("click", function(){
+						$(this).unbind("click");
+						$.fn.colorbox.close();
+						});
+					},
+					onLoad: function () {
+					}
+			   });
+			});
+			</script>');
 
 		$data = $info['news_item'];
 		if ($data['news_keywords'] !=="") { set_meta("keywords", $data['news_keywords']); }
