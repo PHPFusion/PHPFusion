@@ -71,7 +71,8 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 		}
 	}
 	if (!$output) redirect("index.php");
-} elseif ($_GET['post'] == "new") {
+}
+elseif ($_GET['post'] == "new") {
 	add_to_title($locale['global_201'].$locale['forum_0501']);
 	opentable($locale['forum_0501']);
 	echo "<div class='alert ".($errorb ? "alert-warning" : "alert-info")."' style='text-align:center'><br />\n";
@@ -90,9 +91,10 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='index.php'>".$locale['forum_0550']."</a><br /><br /></div>\n";
 	closetable();
-} elseif ($_GET['post'] == "reply") {
+}
+elseif ($_GET['post'] == "reply") {
 	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-		redirect("index.php");
+		redirects("index.php"); // thread id will resutl postfy fail. will need to check if this happens. wait for people to report on line number.
 	}
 	add_to_title($locale['global_201'].$locale['forum_0503']);
 	opentable($locale['forum_0503']);
@@ -104,10 +106,10 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	}
 	if ($_GET['error'] < "2") {
 		if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) {
-			redirect("index.php");
+			redirects("index.php"); // i will crash this -- quick reply not working due here. if that's the case, see post_actions.php / bug when forum_merge allowed. post_id not assigned
 		}
 		add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
-		if ($settings['thread_notify']) {
+		if (fusion_get_settings('thread_notify')) {
 			$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
 				FROM ".DB_FORUM_THREAD_NOTIFY." tn
 				LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id
@@ -119,7 +121,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 					FROM ".DB_FORUM_THREADS." tt
 					INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=tt.forum_id
 					WHERE thread_id='".$_GET['thread_id']."'"));
-				$link = $settings['siteurl']."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&pid=".$_GET['post_id']."#post_".$_GET['post_id'];
+				$link = fusion_get_settings('siteurl')."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&pid=".$_GET['post_id']."#post_".$_GET['post_id'];
 				$template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='POST' LIMIT 1");
 				if (dbrows($template_result)) {
 					$template_data = dbarray($template_result);
@@ -157,7 +159,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 		echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
 	} else {
 		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-			redirect("index.php");
+			redirects("index.php");
 		}
 		$data = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
 		add_to_head("<meta http-equiv='refresh' content='4; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
@@ -166,6 +168,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
 	closetable();
+
 } elseif ($_GET['post'] == "edit") {
 	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
 		redirect("index.php");

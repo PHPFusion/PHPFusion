@@ -22,16 +22,16 @@ add_to_title($locale['global_201'].$locale['forum_0501']);
 // poll add option not adding option.
 $can_poll = $info['forum_poll'] && checkgroup($info['forum_poll']) ? 1  : 0;
 $can_attach = $info['forum_attach'] && checkgroup($info['forum_attach']) ? 1 : 0;
-
+$error = 0;
 // define mode.
 $data['edit'] = (isset($data['edit']) && $data['edit'] == 1) ? 1 : 0;
 $data['new'] = (isset($data['new']) && $data['new'] == 1) ? 1 : 0;
 $data['reply'] = (isset($data['reply']) && $data['reply'] == 1) ? 1 : 0;
 // Debug 1 will stop all scripts from execution of save/update/delete. Use it when fixing isset errors.
 // Debug 2 will stop just the redirection itself so you can compare to your tables.
-$debug = FALSE; // this will stop all scripts from execution save/update/delete.
-$debug2 = FALSE; // to stop just the redirection
-
+$debug = false; // this will stop all scripts from execution save/update/delete.
+$debug2 = false; // to stop just the redirection
+//print_p($_POST);
 /* -------------------
 | The Button Roullette
 + ---------------------*/
@@ -115,7 +115,6 @@ if ($executable && iMEMBER) {
 			}
 		}
 	}
-
 
 	/* -----------------
 	|  Poll Validation
@@ -296,9 +295,10 @@ if ($executable && iMEMBER) {
 
 	// On Reply Post Execution
 	if (isset($_POST['postreply']) && checkgroup($info['forum_reply'])) {
-		if (!defined("FUSION_NULL") && $data['post_message']) {
+		if ($data['post_message']) {
 			require_once INCLUDES."flood_include.php";
 			if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
+
 				if ($info['forum_merge'] && $data['thread_lastuser'] == $userdata['user_id']) {
 					$mergeData = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
 					$data['post_message'] = $mergeData['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$data['post_message'];
@@ -309,8 +309,8 @@ if ($executable && iMEMBER) {
 					$threadCount = "";
 					$postCount = "";
 				} else {
-					$data['post_id'] = dbquery_insert(DB_FORUM_POSTS, $data, 'save', array('primary_key'=>'post_id'));
-					//$data['post_id'] = $pdo_enabled ? $pdo->lastInsertId() : mysql_insert_id(); // not sure why it did not work.
+					dbquery_insert(DB_FORUM_POSTS, $data, 'save', array('primary_key'=>'post_id'));
+					$data['post_id'] = dblastid();
 					$result = (!defined("FUSION_NULL")) ? dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$userdata['user_id']."'") : '';
 					$threadCount = "thread_postcount=thread_postcount+1,";
 					$postCount = "forum_postcount=forum_postcount+1,";
@@ -335,6 +335,7 @@ if ($executable && iMEMBER) {
 			}
 		}
 	}
+
 
 	// this need to drop..
 	elseif (isset($_POST['add_poll_option'])) {
@@ -364,6 +365,7 @@ if ($executable && iMEMBER) {
 		post_preview($data);
 	}
 
+	//print_p($data);
 	/* -----------------
 	|  Attachments Validation
 	+ ------------------*/
@@ -514,7 +516,7 @@ if ($executable && iMEMBER) {
 		print_p($_attach);
 		echo "</div>\n";
 	}
-
+	//print_p("postify.php?post=reply&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$data['post_id']."");
 	/* -------------------
 	| Handle Redirection.
 	+ ---------------------*/
