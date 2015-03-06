@@ -23,6 +23,7 @@ if (!function_exists('render_photo_main')) {
 		} else {
 			echo "<div class='well m-t-20 m-b-20 text-center'>".$locale['406']."</div>\n";
 		}
+		echo $info['page_nav'];
 		closetable();
 	}
 }
