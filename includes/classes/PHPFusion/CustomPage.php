@@ -92,18 +92,22 @@ class CustomPage {
 				'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
 				'page_language' => form_sanitizer($_POST['page_language'], '', 'page_language'),
 				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
-				'page_allow_ratings' => isset($_POST['page_allow_comments']) ? 1 : 0,
+				'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0,
 			);
 			if (self::verify_customPage($data['page_id'])) {
 				// update
 				dbquery_insert(DB_CUSTOM_PAGES, $data, 'update');
-				self::set_customPageLinks($data);
+				if (isset($_POST['add_link'])) {
+					self::set_customPageLinks($data);
+				}
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su&amp;pid=".$data['page_id']);
 			} else {
 				// save
 				dbquery_insert(DB_CUSTOM_PAGES, $data, 'save');
 				$data['page_id'] = dblastid();
-				self::set_customPageLinks($data);
+				if (isset($_POST['add_link'])) {
+					self::set_customPageLinks($data);
+				}
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn&amp;pid=".$data['page_id']);
 			}
 		}
@@ -329,7 +333,6 @@ class CustomPage {
 										   'multiple' => 1,
 									   )
 		);
-
 		echo form_textarea('', 'page_content', 'page_content', $data['page_content'], (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && fusion_get_settings('tinymce_enabled') ? array() : array(
 			'autosize'=>1,
 			'form_name'=>'inputform',

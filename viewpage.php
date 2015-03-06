@@ -22,25 +22,22 @@ require_once INCLUDES."ratings_include.php";
 include LOCALE.LOCALESET."custom_pages.php";
 
 if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) redirect("index.php");
+$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 $cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."'");
 $custompage = array(
 	'title' => '',
 	'body' => '',
 	'error' => '',
-	'count' => '',
+	'count' => '0',
 );
 $cp_data = array(
 	'page_access' => -103,
 );
-$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 $page_languages[] = 'klingon';
-
 if (dbrows($cp_result)) {
 	$cp_data = dbarray($cp_result);
 	$page_languages = explode('.', $cp_data['page_language']);
-	//print_p($page_languages);
 	if (multilang_table("CP") && in_array(LANGUAGE, $page_languages) && checkgroup($cp_data['page_access'])) {
-
 		$custompage['title'] = $cp_data['page_title'];
 		add_to_title($locale['global_200'].$cp_data['page_title']);
 		add_to_breadcrumbs(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
@@ -52,7 +49,7 @@ if (dbrows($cp_result)) {
 		ob_end_clean();
 
 		$custompage['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $eval);
-		$custompage['count'] = count($eval);
+		$custompage['count'] = count($custompage['body']);
 
 	} else {
 		add_to_title($locale['global_200'].$locale['401']);
@@ -81,9 +78,9 @@ if (!empty($custompage['error'])) {
 }
 closetable();
 
-if ($custompage['count'] > 0) {
-	$custompage['count']++;
-	echo "<div class='display-block text-center m-t-5'>\n".makepagenav($_GET['rowstart'], 1, $custompage['count'], 3, BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
+if ($custompage['count']>0) {
+	if (isset($_GET['rowstart']) && $_GET['rowstart'] > $custompage['count']) redirect(BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
+	echo "<div class='display-block text-center m-t-5'>\n".makepagenav($_GET['rowstart'], 1, $custompage['count'], 1, BASEDIR."viewpage.php?page_id=".$_GET['page_id']."&amp;")."\n</div>\n";
 }
 echo "<!--custompages-after-content-->\n";
 
