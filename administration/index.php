@@ -104,6 +104,7 @@ $comments_type = array(
 	'A' => $locale['270'],
 	'B' => $locale['269b'],
 	'C' => $locale['272a'],
+	'PH' => $locale['261'],
 );
 $submit_type = array(
 	'n' => $locale['269'],
@@ -120,6 +121,7 @@ $link_type = array(
 	'A' => $settings['siteurl']."articles.php?article_id=%s",
 	'B' => $settings['siteurl']."blog.php?readmore=%s",
 	'C' => $settings['siteurl']."viewpage.php?page_id=%s",
+	'PH' => $settings['siteurl']."photogallery.php?photo_id=%s",
 );
 
 // Infusions count
