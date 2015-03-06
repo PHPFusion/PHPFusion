@@ -17,7 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-pageAccess('F', true);
+pageAccess('F');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/forums.php";
 $forum_admin = new PHPFusion\Forums\Admin();

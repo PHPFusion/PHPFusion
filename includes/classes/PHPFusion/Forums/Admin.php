@@ -420,8 +420,7 @@ class Admin {
 			} elseif (isset($_POST['forum_himage']) && $_POST['forum_himage'] != "") {
 				// if not uploaded, here on both save and update.
 				$type_opts = array('0'=>BASEDIR, '1'=>'http://', '2'=>'https://');
-				$this->data['forum_image'] = $type_opts[form_sanitizer($_POST['forum_image_header'], '0', 'forum_image_header')].form_sanitizer($_POST['forum_himage'], '', 'forum_himage');
-
+				$this->data['forum_image'] = $type_opts[form_sanitizer($_POST['forum_image_header'], '0', 'forum_image_header')].form_sanitizer($_POST['forum_image_url'], '', 'forum_image_url');
 				if ($this->data['forum_id']) {
 					$image_check = dbarray(dbquery("SELECT forum_image FROM ".DB_FORUMS." WHERE forum_id='".$this->data['forum_id']."'"));
 					$image_found =  ($image_check['forum_image'] && file_exists(IMAGES."forum/".$image_check['forum_image'])) ? 1 : 0;
@@ -643,7 +642,7 @@ class Admin {
 			$tab_active = tab_active($tab_title, 0);
 			echo opentab($tab_title, $tab_active, 'forum-image-tab');
 			echo opentabbody($tab_title['title'][0], 'fir', $tab_active);
-			echo "<span class='display-inline-block m-t-10 m-b-10'>".sprintf($locale['forum_015'], parsebytesize($settings['download_max_b']))."</span>\n";
+			echo "<span class='display-inline-block m-t-10 m-b-10'>".sprintf($locale['forum_015'], parsebytesize(fusion_get_settings('download_max_b')))."</span>\n";
 			echo form_fileinput('', 'forum_image', 'forum_image', IMAGES."forum", '', array('thumbnail'=>IMAGES."forum/thumbnail", 'type'=>'image'));
 			echo closetabbody();
 			echo opentabbody($tab_title['title'][1], 'ful', $tab_active);
@@ -654,7 +653,7 @@ class Admin {
 				'2' => 'https://'
 			);
 			echo form_select($locale['forum_056'], 'forum_image_header', 'forum_image_header', $header_opts, '', array('inline'=>1));
-			echo form_text($locale['forum_014'], 'forum_image', 'forum_image_url', '', array('placeholder'=>'images/forum/', 'inline'=>1));
+			echo form_text($locale['forum_014'], 'forum_image_url', 'forum_image_url', '', array('placeholder'=>'images/forum/', 'inline'=>1));
 			echo closetabbody();
 			echo closetab();
 		}
