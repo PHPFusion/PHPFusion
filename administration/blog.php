@@ -99,10 +99,6 @@ require_once THEMES."templates/footer.php";
 
 function blog_listing() {
 	global $aidlink, $locale;
-	$result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_image, blog_cat_language, count(blog_id) as blog_count
-			FROM ".DB_BLOG_CATS." cat
-			LEFT JOIN ".DB_BLOG." blog on (cat.blog_cat_id = blog.blog_cat)
-			".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
 	echo "<div class='m-t-20'>\n";
 	echo opencollapse('blog-list');
 	// uncategorized listing
@@ -116,7 +112,7 @@ function blog_listing() {
 	echo "<div ".collapse_footer_link('blog-list','0', '0').">\n";
 	echo "<ul class='list-group'>\n";
 	$result2 = dbquery("SELECT blog_id, blog_subject, blog_image_t1, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("NS") ? "WHERE blog_language='".LANGUAGE."'" : "")." AND blog_cat='0' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
-	if (dbrows($result) > 0) {
+	if (dbrows($result2) > 0) {
 		while ($data2 = dbarray($result2)) {
 			echo "<li class='list-group-item'>\n";
 			echo "<div class='pull-left m-r-10'>\n";
@@ -139,6 +135,12 @@ function blog_listing() {
 	echo "</ul>\n";
 	echo "</div>\n"; // panel container
 	echo "</div>\n"; // panel default
+
+	$result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_image, blog_cat_language
+			, count(blog_id) as blog_count
+			FROM ".DB_BLOG_CATS." cat
+			LEFT JOIN ".DB_BLOG." blog on (cat.blog_cat_id = blog.blog_cat)
+			".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." GROUP BY blog_cat_id ORDER BY blog_cat_name");
 
 	if (dbrows($result) > 0) {
 		while ($data = dbarray($result)) {
