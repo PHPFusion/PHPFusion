@@ -3,7 +3,7 @@
 $locale['forum_000'] = 'Create Forum';
 $locale['forum_000a'] = 'Update Forum';
 $locale['forum_000b'] = 'Forum %s';
-$locale['forum_000c'] = 'Forum Board Index';
+$locale['forum_000c'] = 'Forum Index';
 $locale['forum_001'] = 'Create New Forum';
 $locale['forum_002'] = 'Edit Forum';
 $locale['forum_003'] = 'Delete Forum';
@@ -76,7 +76,7 @@ $locale['forum_desc_002'] = 'Attachments Permissions';
 $locale['forum_desc_003'] = 'Forum Moderators Selection';
 $locale['forum_desc_004'] = 'Forum Answers';
 /* Navs */
-$locale['forum_root'] = 'Board Index';
+$locale['forum_root'] = 'Forum Index';
 $locale['forum_points'] = 'Forum Points';
 /* Type */
 $locale['forum_opts_001'] = 'Category';
