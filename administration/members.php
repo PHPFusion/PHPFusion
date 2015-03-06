@@ -556,7 +556,7 @@ else {
 		$usr_mysql_status = "0' AND user_lastvisit<'".$time_overdue."' AND user_actiontime='0";
 	}
 	$rows = dbcount("(user_id)", DB_USERS, "$user_name user_status='$usr_mysql_status' AND user_level<'103'");
-	$result = dbquery("SELECT user_id, user_name, user_level, user_avatar FROM ".DB_USERS."
+	$result = dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status FROM ".DB_USERS."
 		WHERE $user_name user_status='$usr_mysql_status' AND user_level<'103'
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
