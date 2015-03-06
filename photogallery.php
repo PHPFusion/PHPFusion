@@ -70,22 +70,21 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		add_to_breadcrumbs(array('link'=>BASEDIR."photogallery.php?album_id=".$data['album_id'], 'title'=>$data['album_title']));
 		add_to_breadcrumbs(array('link'=>BASEDIR."photogallery.php?photo_id=".$data['photo_id'], 'title'=>$data['photo_title']));
 
-
 		if ($settings['photo_watermark']) {
 			if ($settings['photo_watermark_save']) {
 				$parts = explode(".", $data['photo_filename']);
 				$wm_file1 = $parts[0]."_w1.".$parts[1];
 				$wm_file2 = $parts[0]."_w2.".$parts[1];
-				if (!file_exists(PHOTODIR.$wm_file1)) {
+				if (!file_exists(PHOTODIR."/thumbs/".$wm_file1)) {
 					if ($data['photo_thumb2']) {
 						$info['photo_thumb'] = "photo.php?photo_id=".$_GET['photo_id'];
 					}
 					$info['photo_file'] = "photo.php?photo_id=".$_GET['photo_id']."&amp;full";
 				} else {
 					if ($data['photo_thumb2']) {
-						$info['photo_thumb'] = PHOTODIR.$wm_file1;
+						$info['photo_thumb'] = PHOTODIR."/".$wm_file1;
 					}
-					$info['photo_file'] = PHOTODIR.$wm_file2;
+					$info['photo_file'] = PHOTODIR."/".$wm_file2;
 				}
 			} else {
 				if ($data['photo_thumb2']) {
@@ -95,11 +94,10 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			}
 			$info['photo_size'] = @getimagesize(PHOTODIR.$data['photo_filename']);
 		} else {
-			$info['photo_thumb'] = $data['photo_thumb2'] ? PHOTODIR.$data['photo_thumb2'] : "";
+			$info['photo_thumb'] = $data['photo_thumb2'] ? PHOTODIR."/thumbs/".$data['photo_thumb2'] : "";
 			$info['photo_file'] = PHOTODIR.$data['photo_filename'];
 			$info['photo_size'] = @getimagesize($photo_file);
 		}
-
 		$info['photo_byte'] = parsebytesize($settings['photo_watermark'] ? filesize(PHOTODIR.$info['photo_filename']) : filesize($info['photo_file']));
 		$info['photo_comment'] = $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0;
 		$info['photo_ratings'] = $data['photo_allow_ratings'] ? number_format(ceil($info['sum_rating']/$info['count_votes'])) : '0';
@@ -134,7 +132,7 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 		add_to_title($locale['global_201'].$info['album_title']);
 		add_to_breadcrumbs(array('link'=>BASEDIR.'photogallery.php?album_id='.$_GET['album_id'], 'title'=>$info['album_title']));
 		/* Category Info */
-		$info['album_thumb'] = ($info['album_thumb'] && file_exists(PHOTOS.$info['album_thumb'])) ? PHOTOS.$info['album_thumb'] : '';
+		$info['album_thumb'] = ($info['album_thumb'] && file_exists(PHOTOS."thumbs/".$info['album_thumb'])) ? PHOTOS."thumbs/".$info['album_thumb'] : '';
 		$info['album_link'] = array('link'=>BASEDIR.'photogallery.php?album_id='.$_GET['album_id'], 'name'=>$info['album_title']);
 		$info['max_rows'] = dbcount("(photo_id)", DB_PHOTOS, "album_id='".$_GET['album_id']."'");
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows'] ? $_GET['rowstart'] : 0;
@@ -160,7 +158,7 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 				while ($data = dbarray($result)) {
 					// data manipulation
 					$data['album_link'] = array('link'=>BASEDIR."photogallery.php?photo_id=".$data['photo_id'], 'name'=>$data['photo_title']);
-					$data['image'] = ($data['photo_thumb1'] && file_exists(PHOTODIR.$data['photo_thumb1'])) ? PHOTODIR.$data['photo_thumb1'] : '';
+					$data['image'] = ($data['photo_thumb1'] && file_exists(PHOTODIR."thumbs/".$data['photo_thumb1'])) ? PHOTODIR."thumbs/".$data['photo_thumb1'] : '';
 					$data['title'] = ($data['photo_title']) ? $data['photo_title'] : $data['image'];
 					$data['description'] = ($data['photo_description']) ? $data['photo_description'] : '';
 					if ($data['photo_allow_comments']) {
@@ -196,7 +194,7 @@ else {
 			LIMIT ".$_GET['rowstart'].",".$settings['thumbs_per_page']);
 		while ($data = dbarray($result)) {
 			$data['album_link'] = array('link'=>BASEDIR."photogallery.php?album_id=".$data['album_id'], 'name'=>$data['album_title']);
-			$data['image'] = ($data['album_thumb'] && file_exists(PHOTOS.$data['album_thumb'])) ? PHOTOS.$data['album_thumb'] : '';
+			$data['image'] = ($data['album_thumb'] && file_exists(PHOTOS."/thumbs/".$data['album_thumb'])) ? PHOTOS."/thumbs/".$data['album_thumb'] : '';
 			$data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
 			$data['description'] = $data['album_description'] ? $data['album_description'] : '';
 			$_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar
