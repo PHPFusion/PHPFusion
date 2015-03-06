@@ -129,8 +129,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	$tab_title['id'][] = "dadd";
 	$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 
-
-
 	$tab_active = tab_active($tab_title, $_GET['section'], 1);
 
 	echo opentab($tab_title, $tab_active, 'dcategory', 1);
@@ -195,7 +193,7 @@ function showcatlist($parent = 0, $level = 0) {
 			echo "<div class='list-group-item clearfix'>\n";
 
 			echo "<div class='btn-group pull-right m-t-5'>\n";
-			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'>".$locale['edit']."</a>";
+			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;section=dadd&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'>".$locale['edit']."</a>";
 			echo "<a class='btn btn-sm btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash m-r-10'></i> ".$locale['delete']."</a>\n";
 			echo "</div>\n";
 
