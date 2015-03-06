@@ -585,6 +585,7 @@ class Admin {
 	 * SQL batch upload
 	 */
 	private function set_batchPhotoDB() {
+		global $userdata;
 		if (isset($_POST['batch_upload'])) {
 			$album_id = form_sanitizer($_POST['album_id'], '0', 'album_id');
 			if (self::validate_album($album_id)) {
@@ -603,12 +604,14 @@ class Admin {
 							$data['photo_thumb2'] = $files['thumb2_name'];
 							$data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".$this->photo_db." WHERE album_id='".$data['album_id']."'"), 0)+1;
 							$data['photo_datestamp'] = time();
+							$data['photo_user'] = $userdata['user_id'];
 							dbquery_insert($this->photo_db, $data, 'save');
 							$count++;
 						}
 					}
 				}
 			}
+			if (!defined('FUSION_NULL')) redirect(FUSION_REQUEST);
 		}
 	}
 
