@@ -51,9 +51,9 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
 			while ($data = dbarray($result)) {
 				$admin_rights .= (isset($admin_rights) ? "." : "").$data['admin_right'];
 			}
-			$result = dbquery("UPDATE ".DB_USERS." SET user_level='".(isset($_POST['make_super']) ? "103" : "102")."', user_rights='$admin_rights' WHERE user_id='".$_POST['user_id']."'");
+			$result = dbquery("UPDATE ".DB_USERS." SET user_level='".(isset($_POST['make_super']) ? "-103" : "-102")."', user_rights='$admin_rights' WHERE user_id='".$_POST['user_id']."'");
 		} else {
-			$result = dbquery("UPDATE ".DB_USERS." SET user_level='102' WHERE user_id='".$_POST['user_id']."'");
+			$result = dbquery("UPDATE ".DB_USERS." SET user_level='-102' WHERE user_id='".$_POST['user_id']."'");
 		}
 		set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
 		redirect(FUSION_SELF.$aidlink."&status=sn", TRUE);
@@ -62,9 +62,9 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
 	}
 }
 
-if (isset($_GET['remove']) && (isset($_GET['remove']) && isnum($_GET['remove']) && $_GET['remove'] != 1)) {
+if (isset($_GET['remove']) &&  isnum($_GET['remove']) && $_GET['remove'] != 1)) {
 	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-		$result = dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_level='101', user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level>='102'");
+		$result = dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_level='-101', user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level<='-102'");
 		set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
 		redirect(FUSION_SELF.$aidlink."&status=del", TRUE);
 	} else {
@@ -87,9 +87,9 @@ if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['us
 			for ($i = 0; $i < count($_POST['rights']); $i++) {
 				$user_rights .= ($user_rights != "" ? "." : "").stripinput($_POST['rights'][$i]);
 			}
-			$result = dbquery("UPDATE ".DB_USERS." SET user_rights='$user_rights' WHERE user_id='".$_GET['user_id']."' AND user_level>='102'");
+			$result = dbquery("UPDATE ".DB_USERS." SET user_rights='$user_rights' WHERE user_id='".$_GET['user_id']."' AND user_level<='-102'");
 		} else {
-			$result = dbquery("UPDATE ".DB_USERS." SET user_rights='' WHERE user_id='".$_GET['user_id']."' AND user_level>='102'");
+			$result = dbquery("UPDATE ".DB_USERS." SET user_rights='' WHERE user_id='".$_GET['user_id']."' AND user_level<='-102'");
 		}
 		set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
 		redirect(FUSION_SELF.$aidlink."&status=su", TRUE);
@@ -99,7 +99,7 @@ if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['us
 }
 
 if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
-	$result = dbquery("SELECT user_name, user_rights FROM ".DB_USERS." WHERE user_id='".$_GET['edit']."' AND user_level>='102' ORDER BY user_id");
+	$result = dbquery("SELECT user_name, user_rights FROM ".DB_USERS." WHERE user_id='".$_GET['edit']."' AND user_level<='-102' ORDER BY user_id");
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		$user_rights = explode(".", $data['user_rights']);
@@ -199,7 +199,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 				echo "<div class='panel-body'>\n";
 				echo "<div class='alert alert-warning'><strong>".$locale['462']."</strong></div>\n";
 				echo "<label><input type='checkbox' name='all_rights' value='1' /> ".$locale['415']."</label> <span class='required m-l-5'>*</span><br />\n";
-				if ($userdata['user_level'] == 103) {
+				if ($userdata['user_level'] == -103) {
 					echo "<label><input type='checkbox' name='make_super' value='1' /> ".$locale['416']."</label> <span class='required m-l-5'>*</span><br />\n";
 				}
 				if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
@@ -238,9 +238,9 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 		echo "<tr>\n<td class='$row_color'><span title='".($data['user_rights'] ? str_replace(".", " ", $data['user_rights']) : "".$locale['425']."")."' style='cursor:hand;'>".$data['user_name']."</span></td>\n";
 		echo "<td align='center' width='1%' class='$row_color' style='white-space:nowrap'>".getuserlevel($data['user_level'])."</td>\n";
 		echo "<td align='center' width='1%' class='$row_color' style='white-space:nowrap'>\n";
-		if ($data['user_level'] == "103" && $userdata['user_id'] == "1") {
+		if ($data['user_level'] == "-103" && $userdata['user_id'] == "1") {
 			$can_edit = TRUE;
-		} elseif ($data['user_level'] != "103") {
+		} elseif ($data['user_level'] != "-103") {
 			$can_edit = TRUE;
 		} else {
 			$can_edit = FALSE;
