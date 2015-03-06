@@ -99,7 +99,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$html .= ($options['inline']) ? "</div>\n" : "";
 	$html .= "</div>\n";
 	$defender->add_field_session(array(
-		'input_name' 	=> 	$input_name,
+		'input_name' 	=> 	trim($input_name, '[]'),
 		'type'			=>	((array)$options['type']==array('image') ? 'image' : 'file'),
 		'title'			=>	$title2,
 		'id' 			=>	$input_id,
