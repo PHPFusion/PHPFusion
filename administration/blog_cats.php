@@ -16,9 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-pageAccess('BLC');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/blog-cats.php";
+
+pageAccess('BLC');
 
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'") || dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_parent='".$_GET['cat_id']."'");
@@ -99,7 +100,7 @@ if (isset($_GET['status']) && !isset($message)) {
 		$message = $locale['424'];
 	}
 	if ($message) {
-		echo admin_message($mesage);
+		echo admin_message($message);
 	}
 }
 echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 1));

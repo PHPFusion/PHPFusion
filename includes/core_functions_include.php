@@ -763,7 +763,8 @@ function pageAccess($rights, $debug = FALSE) {
 		$error[] = 'Aid link error';
 	}
 	if (isset($_GET['aid']) && $_GET['aid'] != iAUTH) {
-		$error[] = 'Aidlink mismatch. '.iAUTH.' != '.$_GET['aid'];
+		$error[] = 'Aidlink mismatch. '.iAUTH.' != '.$_GET['aid']."<br/>";
+		$error[] .= USER_IP;
 	}
 	if (!checkrights($rights)) {
 		$error[] = 'Checkrights Error';
