@@ -20,7 +20,7 @@ define("ADMIN_PANEL", TRUE);
 require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
 require_once THEMES."templates/render_functions.php";
-if ($settings['maintenance'] == "1" && !iADMIN) {
+if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || ($settings['maintenance_level'] < $userdata['user_level']))) {
 	redirect(BASEDIR."maintenance.php");
 } else {
 	if (file_exists(THEMES."admin_templates/".$settings['admin_theme']."/acp_theme.php") && preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme'])) {

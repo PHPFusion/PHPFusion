@@ -121,7 +121,7 @@ echo form_select($locale['697'], 'recaptcha_theme', 'recaptcha_theme', $theme_op
 echo "</div>\n";
 closeside();
 openside('');
-$level_array = array(USER_LEVEL_ADMIN => $locale['676'], USER_LEVEL_SUPER_ADMIN => $locale['677'], USER_LEVEL_PUBLIC => $locale['678']);
+$level_array = array(USER_LEVEL_ADMIN => $locale['676'], USER_LEVEL_SUPER_ADMIN => $locale['677'], USER_LEVEL_MEMBER => $locale['678']);
 echo form_select($locale['675'], 'maintenance_level', 'maintenance_level', $level_array, $settings['maintenance_level'], array('inline'=>1, 'width'=>'100%'));
 $opts = array('1' => $locale['502'], '0' => $locale['503']);
 echo form_select($locale['657'], 'maintenance', 'maintenance', $opts, $settings['maintenance'], array('inline'=>1, 'width'=>'100%'));
