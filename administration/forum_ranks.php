@@ -52,14 +52,14 @@ if ($settings['forum_ranks']) {
 		if (!defined('FUSION_NULL')) {
 			if (isset($_GET['rank_id']) && isnum($_GET['rank_id'])) {
 				$data = dbarray(dbquery("SELECT rank_apply FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['rank_id']."'"));
-				if (($rank_apply > 101 && $rank_apply != $data['rank_apply']) && (dbcount("(rank_id)", DB_FORUM_RANKS, "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_id!='".$_GET['rank_id']."' AND rank_apply='".$rank_apply."'"))) {
+				if (($rank_apply < USER_LEVEL_MEMBER && $rank_apply != $data['rank_apply']) && (dbcount("(rank_id)", DB_FORUM_RANKS, "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_id!='".$_GET['rank_id']."' AND rank_apply='".$rank_apply."'"))) {
 					redirect(FUSION_SELF.$aidlink."&status=se");
 				} else {
 					$result = dbquery("UPDATE ".DB_FORUM_RANKS." SET rank_title='".$rank_title."', rank_image='".$rank_image."', rank_posts='".$rank_posts."', rank_type='".$rank_type."', rank_apply='".$rank_apply."', rank_language='".$rank_language."' WHERE rank_id='".$_GET['rank_id']."'");
 					redirect(FUSION_SELF.$aidlink."&status=su");
 				}
 			} else {
-				if ($rank_apply > 101 && dbcount("(rank_id)", DB_FORUM_RANKS, "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_apply='".$rank_apply."'")) {
+				if ($rank_apply > USER_LEVEL_MEMBER && dbcount("(rank_id)", DB_FORUM_RANKS, "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_apply='".$rank_apply."'")) {
 					redirect(FUSION_SELF.$aidlink."&status=se");
 				} else {
 					$result = dbquery("INSERT INTO ".DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('$rank_title', '$rank_image', '$rank_posts', '$rank_type', '$rank_apply', '$rank_language')");
@@ -131,13 +131,13 @@ if ($settings['forum_ranks']) {
 	echo form_text('', 'rank_posts', 'rank_posts', $rank_posts, array('disabled' => $rank_type != 0));
 	echo "</tr>\n<tr>\n";
 	echo "<td class='tbl'><label for='rank_apply_normal'>".$locale['423']."</label></td>\n<td class='tbl'>\n";
-	$array = array('101' => $locale['424'], '104' => $locale['425'], '102' => $locale['426'], '103' => $locale['427']);
+	$array = array(USER_LEVEL_MEMBER => $locale['424'], '104' => $locale['425'], USER_LEVEL_ADMIN => $locale['426'], USER_LEVEL_SUPER_ADMIN => $locale['427']);
 	echo "<span id='select_normal' ".($rank_type == 2 ? "class='display-none'" : "")." >";
 	echo form_select('', 'rank_apply_normal', 'rank_apply_normal', $array, $rank_apply, array('placeholder' => $locale['choose']));
 	echo "</span>\n";
 	// Special Select
 	$groups_arr = getusergroups();
-	$groups_except = array(0, 101, 102, 103);
+	$groups_except = array(USER_LEVEL_PUBLIC, USER_LEVEL_MEMBER, USER_LEVEL_ADMIN, USER_LEVEL_SUPER_ADMIN);
 	$group_opts = array();
 	foreach ($groups_arr as $group) {
 		if (!in_array($group[0], $groups_except)) {

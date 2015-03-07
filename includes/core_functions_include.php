@@ -886,19 +886,19 @@ function users_groupaccess($field) {
  * @return string The part of WHERE clause. Always returns a condition
  */
 function groupaccess($field) {
+	$res = '';
 	if (iGUEST) {
-		return "$field = '0'";
+		$res = $field." = ".USER_LEVEL_PUBLIC;
 	} elseif (iSUPERADMIN) {
-		return "1 = 1";
+		$res = "1 = 1";
 	} elseif (iADMIN) {
-		$res = "($field='0' OR $field='-101' OR $field='-102'";
+		$res = $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.", ".USER_LEVEL_ADMIN.")";
 	} elseif (iMEMBER) {
-		$res = "($field='0' OR $field='-101'";
+		$res = $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.")";
 	}
 	if (iUSER_GROUPS != "" && !iSUPERADMIN) {
-		$res .= " OR $field='".str_replace(".", "' OR $field='", iUSER_GROUPS)."'";
+		$res = "(".$res." OR $field='".str_replace(".", "' OR $field='", iUSER_GROUPS)."')";
 	}
-	$res .= ")";
 	return $res;
 }
 

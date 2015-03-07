@@ -7,21 +7,28 @@ function filter_query($request_key, $field_name) {
 }
 
 function filter_access_query($group, $field) {
-	if (isset($_GET[$group]) && isnum($_GET[$group])) {
-		if ($_GET[$group] == 0) {
-			return "$field = '0'";
-		} elseif ($_GET[$group] == 103) {
-			return "1 = 1";
-		} elseif ($_GET[$group] == 102) {
-			$res = "($field='0' OR $field='101' OR $field='102'";
-		} elseif ($_GET[$group] == 101) {
-			$res = "($field='0' OR $field='101'";
-		} elseif (isnum($_GET[$group])) {
-			$res = "($field='$group' OR $field='101'";
+	$res = '';
+	$value = filter_input(INPUT_GET, $group, FILTER_VALIDATE_INT);
+	if (is_int($value)) {
+		switch ($value) {
+			case USER_LEVEL_PUBLIC:
+				$res = "$field = ".USER_LEVEL_PUBLIC;
+				break;
+			case USER_LEVEL_SUPER_ADMIN:
+				$res = "1 = 1";
+				break;
+			case USER_LEVEL_ADMIN:
+				"$field in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.", ".USER_LEVEL_ADMIN.")";
+				break;
+			case USER_LEVEL_MEMBER:
+				$res .= $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.")";
+				break;
+			default:
+				$res .= $field." in ('".$group."', ".USER_LEVEL_MEMBER.")";
+				break;
 		}
-		$res .= ")";
-		return $res;
 	}
+	return $res;
 }
 
 function combine_filter_query($array) {

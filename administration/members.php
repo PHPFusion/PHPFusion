@@ -51,7 +51,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "log" && $user_id && (!$isAdmin
 	// Deactivate Inactive Users
 }
 elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $settings['enable_deactivation'] == 1 && (!$isAdmin || iSUPERADMIN)) {
-	$inactive = dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level<'103' AND user_lastvisit<'$time_overdue' AND user_actiontime='0'");
+	$inactive = dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'$time_overdue' AND user_actiontime='0'");
 	$action = ($settings['deactivation_action'] == 0 ? $locale['616'] : $locale['615']);
 	$button = $locale['614'].($inactive == 1 ? " 1 ".$locale['612'] : " 50 ".$locale['613']);
 	if (!$inactive) {
@@ -82,7 +82,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 		require_once LOCALE.LOCALESET."admin/members_email.php";
 		require_once INCLUDES."sendmail_include.php";
 		$result = dbquery("SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
-			WHERE user_level<'103' AND user_lastvisit<'".$time_overdue."' AND user_actiontime='0' AND user_status='0'
+			WHERE user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".$time_overdue."' AND user_actiontime='0' AND user_status='0'
 			LIMIT 0,50");
 		while ($data = dbarray($result)) {
 			$code = md5($response_required.$data['user_password']);
@@ -202,7 +202,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmi
 }
 elseif (isset($_GET['step']) && $_GET['step'] == "delete" && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	if (isset($_POST['delete_user'])) {
-		$result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
+		$result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
 		if (dbrows($result)) {
 			// Delete avatar
 			$data = dbarray($result);
@@ -314,7 +314,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "delete" && $user_id && (!$isAd
 elseif (isset($_GET['action']) && $_GET['action'] == 1 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	require_once LOCALE.LOCALESET."admin/members_email.php";
 	require_once INCLUDES."sendmail_include.php";
-	$result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
+	$result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
 	if (dbrows($result)) {
 		$udata = dbarray($result);
 		if (isset($_POST['ban_user'])) {
@@ -378,7 +378,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 2 && $user_id && (!$isAdmin
 elseif (isset($_GET['action']) && $_GET['action'] == 3 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	include LOCALE.LOCALESET."admin/members_email.php";
 	require_once INCLUDES."sendmail_include.php";
-	$result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
+	$result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
 	if (dbrows($result)) {
 		$udata = dbarray($result);
 		if (isset($_POST['suspend_user'])) {
@@ -433,7 +433,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 3 && $user_id && (!$isAdmin
 elseif (isset($_GET['action']) && $_GET['action'] == 4 && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	require_once LOCALE.LOCALESET."admin/members_email.php";
 	require_once INCLUDES."sendmail_include.php";
-	$result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
+	$result = dbquery("SELECT user_name, user_email, user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
 	if (dbrows($result)) {
 		$udata = dbarray($result);
 		if (isset($_POST['sban_user'])) {
@@ -478,7 +478,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 4 && $user_id && (!$isAdmin
 	// Cancel User
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 5 && $user_id && (!$isAdmin || iSUPERADMIN)) {
-	$result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
+	$result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<".USER_LEVEL_SUPER_ADMIN);
 	if (dbrows($result)) {
 		$udata = dbarray($result);
 		if ($udata['user_status'] == 5) {
@@ -495,7 +495,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 5 && $user_id && (!$isAdmin
 	// Annonymise User
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 6 && $user_id && (!$isAdmin || iSUPERADMIN)) {
-	$result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
+	$result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
 	if (dbrows($result)) {
 		$udata = dbarray($result);
 		if ($udata['user_status'] == 6) {
@@ -512,7 +512,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 6 && $user_id && (!$isAdmin
 	// Deactivate User
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 7 && $user_id && (!$isAdmin || iSUPERADMIN)) {
-	$result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level<'103'");
+	$result = dbquery("SELECT user_status FROM ".DB_USERS." WHERE user_id='".$user_id."' AND user_level>".USER_LEVEL_SUPER_ADMIN);
 	if (dbrows($result)) {
 		$udata = dbarray($result);
 		if ($udata['user_status'] == 7) {
@@ -555,9 +555,9 @@ else {
 	} elseif ($status == 8 && $settings['enable_deactivation'] == 1) {
 		$usr_mysql_status = "0' AND user_lastvisit<'".$time_overdue."' AND user_actiontime='0";
 	}
-	$rows = dbcount("(user_id)", DB_USERS, "$user_name user_status='$usr_mysql_status' AND user_level<'103'");
+	$rows = dbcount("(user_id)", DB_USERS, "$user_name user_status='$usr_mysql_status' AND user_level>".USER_LEVEL_SUPER_ADMIN);
 	$result = dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status FROM ".DB_USERS."
-		WHERE $user_name user_status='$usr_mysql_status' AND user_level<'103'
+		WHERE $user_name user_status='$usr_mysql_status' AND user_level>".USER_LEVEL_SUPER_ADMIN."
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
 
@@ -565,7 +565,7 @@ else {
 	echo "<div class='btn-group'>\n";
 	echo "<a class='button btn btn-sm btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
 	if ($settings['enable_deactivation'] == 1) {
-		if (dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level<'103' AND user_lastvisit<'$time_overdue' AND user_actiontime='0'")) {
+		if (dbcount("(user_id)", DB_USERS, "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'$time_overdue' AND user_actiontime='0'")) {
 			echo "<a class='button btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;step=inactive'>".$locale['580']."</a>\n";
 		}
 	}
