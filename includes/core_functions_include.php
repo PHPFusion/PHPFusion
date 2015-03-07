@@ -333,6 +333,7 @@ function trim_text($str, $length = FALSE) {
 
 /**
  * Validate numeric input
+ * Note : Negative numbers are not numbers. Use is_numeric($value) instead.
  * @param string|number $value   The first character must not be + nor -
  * @return boolean
  */
