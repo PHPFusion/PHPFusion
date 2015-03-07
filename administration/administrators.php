@@ -62,7 +62,7 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
 	}
 }
 
-if (isset($_GET['remove']) &&  isnum($_GET['remove']) && $_GET['remove'] != 1)) {
+if (isset($_GET['remove']) &&  isnum($_GET['remove']) && $_GET['remove'] != 1) {
 	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 		$result = dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_level='-101', user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level<='-102'");
 		set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
