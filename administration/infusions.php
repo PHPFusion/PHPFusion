@@ -145,7 +145,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 					$inf_admin_image = ($inf_adminpanel[$i]['image'] ? $inf_adminpanel[$i]['image'] : "infusion_panel.gif");
 					if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$inf_adminpanel[$i]['rights']."'")) {
 						$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('".$inf_adminpanel[$i]['rights']."', '".$inf_admin_image."', '".$inf_adminpanel[$i]['title']."', '".INFUSIONS.$inf_folder."/".$inf_adminpanel[$i]['panel']."', '5')");
-						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='103'");
+						$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level=".USER_LEVEL_SUPER_ADMIN);
 						while ($data = dbarray($result)) {
 							$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$inf_adminpanel[$i]['rights']."' WHERE user_id='".$data['user_id']."'");
 						}
@@ -191,7 +191,7 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 	if (isset($inf_adminpanel) && is_array($inf_adminpanel) && count($inf_adminpanel)) {
 		for ($i = 1; $i < (count($inf_adminpanel)+1); $i++) {
 			$result = dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".($inf_adminpanel[$i]['rights'] ? $inf_adminpanel[$i]['rights'] : "IP")."' AND admin_link='".INFUSIONS.$inf_folder."/".$inf_adminpanel[$i]['panel']."' AND admin_page='5'");
-			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level>='102'");
+			$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level<=".USER_LEVEL_ADMIN);
 			while ($data = dbarray($result)) {
 				$user_rights = explode(".", $data['user_rights']);
 				if (in_array($inf_adminpanel[$i]['rights'], $user_rights)) {

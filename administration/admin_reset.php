@@ -40,11 +40,11 @@ if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_P
 		if (isnum($reset_admin)) {
 			$user_sql = "user_id='".$reset_admin."'";
 		} elseif ($reset_admin == "all") {
-			$user_sql = "user_level='102' OR user_level='103'";
+			$user_sql = "user_level=".USER_LEVEL_ADMIN." OR user_level=".USER_LEVEL_SUPER_ADMIN;
 		} elseif ($reset_admin == "sa") {
-			$user_sql = "user_level='103'";
+			$user_sql = "user_level=".USER_LEVEL_SUPER_ADMIN;
 		} elseif ($reset_admin == "a") {
-			$user_sql = "user_level='102'";
+			$user_sql = "user_level=".USER_LEVEL_ADMIN;
 		} else {
 			redirect(FUSION_SELF.$aidlink."&error=1");
 		}
@@ -123,7 +123,7 @@ if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_P
 	}
 }
 $reset_opts = array('all' => $locale['401'], 'sa' => $locale['402'], 'a' => $locale['403']);
-$result = dbquery("SELECT user_id, user_name, user_level FROM ".DB_USERS." WHERE user_level>='102' ORDER BY user_level DESC, user_name");
+$result = dbquery("SELECT user_id, user_name, user_level FROM ".DB_USERS." WHERE user_level<=".USER_LEVEL_ADMIN." ORDER BY user_level DESC, user_name");
 while ($data = dbarray($result)) {
 	$reset_opts[$data['user_id']] = $data['user_name'];
 }

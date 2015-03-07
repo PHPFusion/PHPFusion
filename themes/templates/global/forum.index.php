@@ -273,20 +273,23 @@ if (!function_exists('forum_viewforum')) {
 				echo "<div class='panel panel-default m-t-15'>\n";
 				echo "<div class='panel-heading' style='border-bottom:0;'>".$locale['forum_0352']."</div>\n";
 				$i = 1;
-				foreach($info['threads']['sticky'] as $cdata) {
+				foreach ($info['threads']['sticky'] as $cdata) {
 					render_thread_item($cdata, $i);
 					$i++;
 				}
 				echo "</div>\n";
 			}
-			echo "<div class='panel panel-default m-t-15'>\n";
-			echo "<div class='panel-heading strong' style='border-bottom:0;'>".$locale['forum_0341']."</div>\n";
-			$i = 1;
-			foreach($info['threads']['item'] as $cdata) {
-				render_thread_item($cdata, $i);
-				$i++;
+			if (!empty($info['threads']['item'])) {
+				echo "<div class='panel panel-default m-t-15'>\n";
+				echo "<div class='panel-heading strong' style='border-bottom:0;'>".$locale['forum_0341']."</div>\n";
+
+				$i = 1;
+				foreach ($info['threads']['item'] as $cdata) {
+					render_thread_item($cdata, $i);
+					$i++;
+				}
+				echo "</div>\n";
 			}
-			echo "</div>\n";
 		} else {
 			if ($info['item'][$_GET['forum_id']]['forum_type'] !=='1') {
 				echo "<div class='well text-center'>".$locale['forum_0269']."</div>\n";
@@ -865,7 +868,7 @@ if (!function_exists('forum_newtopic')) {
 		 FROM ".DB_FORUMS." a
 		 LEFT JOIN ".DB_FORUMS." b ON a.forum_cat=b.forum_id
 		 WHERE ".groupaccess('a.forum_access')." ".(multilang_table("FO") ? "AND a.forum_language='".LANGUAGE."' AND" : "AND")."
-		 (a.forum_type ='2' or a.forum_type='4') AND a.forum_post >'0' AND a.forum_lock !='1' ORDER BY a.forum_cat ASC, a.forum_branch ASC, a.forum_name ASC");
+		 (a.forum_type ='2' or a.forum_type='4') AND a.forum_post < ".USER_LEVEL_PUBLIC." AND a.forum_lock !='1' ORDER BY a.forum_cat ASC, a.forum_branch ASC, a.forum_name ASC");
 		$options = array();
 		if (dbrows($result)>0) {
 			while ($data = dbarray($result)) {
@@ -874,7 +877,7 @@ if (!function_exists('forum_newtopic')) {
 					$options[$data['forum_id']] = str_repeat("&#8212;", $depth).$data['forum_name']." ".($data['forum_cat_name'] ? "(".$data['forum_cat_name'].")" : '');
 				}
 			}
-			echo openform('qp_form', 'qp_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM.'index.php', array('notice'=>0, 'downtime'=>1));
+			echo openform('qp_form', 'qp_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').FORUM.'index.php', array('notice'=>0, 'downtime'=>1));
 			echo "<div class='well clearfix m-t-10'>\n";
 			echo form_select($locale['forum_0395'], 'forum_sel', 'forum_sel', $options, '', array('inline'=>1, 'width'=>'100%'));
 			echo "<div class='display-inline-block col-xs-12 col-sm-offset-3'>\n";

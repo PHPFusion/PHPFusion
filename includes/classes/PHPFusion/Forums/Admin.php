@@ -28,17 +28,17 @@ class Admin {
 		'forum_description' => '',
 		'forum_rules' => '',
 		'forum_mods' => '',
-		'forum_access' => '',
-		'forum_post' => 101,
-		'forum_reply' => 101,
-		'forum_poll' => 101,
-		'forum_vote' => 101,
+		'forum_access' => USER_LEVEL_PUBLIC,
+		'forum_post' => USER_LEVEL_MEMBER,
+		'forum_reply' => USER_LEVEL_MEMBER,
+		'forum_poll' => USER_LEVEL_MEMBER,
+		'forum_vote' => USER_LEVEL_MEMBER,
 		'forum_image' => '',
-		'forum_post_ratings' => 101,
+		'forum_post_ratings' => USER_LEVEL_MEMBER,
 		'forum_users' => 0,
-		'forum_allow_attach' => 101,
-		'forum_attach' => 101,
-		'forum_attach_download' => 101,
+		'forum_allow_attach' => USER_LEVEL_MEMBER,
+		'forum_attach' => USER_LEVEL_MEMBER,
+		'forum_attach_download' => USER_LEVEL_MEMBER,
 		'forum_quick_edit' => 1,
 		'forum_laspostid' => 0,
 		'forum_postcount' => 0,
@@ -323,15 +323,15 @@ class Admin {
 			$this->data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
 			$this->data = self::get_forum($this->data['forum_id']);
 			if (!empty($this->data)) {
-				$this->data['forum_access'] = form_sanitizer($_POST['forum_access'], 101, 'forum_access');
-				$this->data['forum_post'] = form_sanitizer($_POST['forum_post'], 101, 'forum_post');
-				$this->data['forum_reply'] = form_sanitizer($_POST['forum_reply'], 101, 'forum_reply');
-				$this->data['forum_post_ratings'] = form_sanitizer($_POST['forum_post_ratings'], 101, 'forum_post_ratings');
-				$this->data['forum_poll'] = form_sanitizer($_POST['forum_poll'], 101, 'forum_poll');
-				$this->data['forum_vote'] = form_sanitizer($_POST['forum_vote'], 101, 'forum_vote');
+				$this->data['forum_access'] = form_sanitizer($_POST['forum_access'], USER_LEVEL_MEMBER, 'forum_access');
+				$this->data['forum_post'] = form_sanitizer($_POST['forum_post'], USER_LEVEL_MEMBER, 'forum_post');
+				$this->data['forum_reply'] = form_sanitizer($_POST['forum_reply'], USER_LEVEL_MEMBER, 'forum_reply');
+				$this->data['forum_post_ratings'] = form_sanitizer($_POST['forum_post_ratings'], USER_LEVEL_MEMBER, 'forum_post_ratings');
+				$this->data['forum_poll'] = form_sanitizer($_POST['forum_poll'], USER_LEVEL_MEMBER, 'forum_poll');
+				$this->data['forum_vote'] = form_sanitizer($_POST['forum_vote'], USER_LEVEL_MEMBER, 'forum_vote');
 				$this->data['forum_answer_threshold'] = form_sanitizer($_POST['forum_answer_threshold'], 0, 'forum_answer_threshold');
-				$this->data['forum_attach'] = form_sanitizer($_POST['forum_attach'], 101, 'forum_attach');
-				$this->data['forum_attach_download'] = form_sanitizer($_POST['forum_attach_download'], 101, 'forum_attach_download');
+				$this->data['forum_attach'] = form_sanitizer($_POST['forum_attach'], USER_LEVEL_MEMBER, 'forum_attach');
+				$this->data['forum_attach_download'] = form_sanitizer($_POST['forum_attach_download'], USER_LEVEL_MEMBER, 'forum_attach_download');
 				$this->data['forum_mods'] = form_sanitizer($_POST['forum_mods'], '', 'forum_mods');
 				dbquery_insert(DB_FORUMS, $this->data, 'update');
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.$this->ext."&amp;status=psv");
@@ -452,12 +452,12 @@ class Admin {
 				$this->data += $p_fields;
 			} else {
 				$this->data += array(
-					'forum_access' => 0,
-					'forum_post' => 101,
-					'forum_reply' => 101,
-					'forum_post_ratings' => 101,
-					'forum_poll' => 101,
-					'forum_vote' => 101,
+					'forum_access' => USER_LEVEL_PUBLIC,
+					'forum_post' => USER_LEVEL_MEMBER,
+					'forum_reply' => USER_LEVEL_MEMBER,
+					'forum_post_ratings' => USER_LEVEL_MEMBER,
+					'forum_poll' => USER_LEVEL_MEMBER,
+					'forum_vote' => USER_LEVEL_MEMBER,
 				);
 			}
 			// Set last order
@@ -749,7 +749,7 @@ class Admin {
 		$mods1_user_id = array();
 		$mods1_user_name = array();
 		while (list($key, $mod_group) = each($mod_groups)) {
-			if ($mod_group['0'] != "0" && $mod_group['0'] != "101" && $mod_group['0'] != "103") {
+			if ($mod_group['0'] != USER_LEVEL_PUBLIC && $mod_group['0'] != USER_LEVEL_MEMBER && $mod_group['0'] != USER_LEVEL_SUPER_ADMIN) {
 				if (!preg_match("(^{$mod_group['0']}$|^{$mod_group['0']}\.|\.{$mod_group['0']}\.|\.{$mod_group['0']}$)", $data['forum_mods'])) {
 					$mods1_user_id[] = $mod_group['0'];
 					$mods1_user_name[] = $mod_group['1'];

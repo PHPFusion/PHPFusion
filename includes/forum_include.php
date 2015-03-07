@@ -80,7 +80,7 @@ function show_forum_rank($posts, $level, $groups) {
 	}
 	$forum_rank_cache = forum_rank_cache();
 	// Moderator ranks
-	if ($level > 101) {
+	if ($level < USER_LEVEL_MEMBER) {
 		foreach ($forum_rank_cache['mod'] as $rank) {
 			if ($level == $rank['rank_apply']) {
 				$ranks[] = $rank;

@@ -539,7 +539,7 @@ if (isset($_POST['uninstall'])) {
 		"('visitorcounter_enabled', '1')",
 		"('rendertime_enabled', '0')",
 		"('popular_threads_timeframe', '')",
-		"('maintenance_level', '102')",
+		"('maintenance_level', ".USER_LEVEL_ADMIN.")",
 		"('news_photo_w', '400')",
 		"('news_photo_h', '300')",
 		"('news_image_frontpage', '0')",

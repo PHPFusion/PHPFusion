@@ -319,7 +319,7 @@ if (isset($_POST['send_message'])) {
 			if (dbrows($result)) {
 				$data = dbarray($result);
 				if ($data['user_id'] != $userdata['user_id']) {
-					if ($data['user_id'] == 1 || $data['user_level'] > 101 || $data['pm_inbox'] == "0" || ($data['message_count']+1) <= $data['pm_inbox']) {
+					if ($data['user_id'] == 1 || $data['user_level'] < USER_LEVEL_MEMBER || $data['pm_inbox'] == "0" || ($data['message_count']+1) <= $data['pm_inbox']) {
 						$postdata['message_to'] = $data['user_id'];
 						$postdata['message_user'] = $data['user_id'];
 						dbquery_insert(DB_MESSAGES, $postdata, 'save', array('noredirect' => 1));
