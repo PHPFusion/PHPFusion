@@ -333,14 +333,12 @@ function trim_text($str, $length = FALSE) {
 
 /**
  * Validate numeric input
- * Decimal or not, will be checked by is_numeric().
  * @param string|number $value   The first character must not be + nor -
  * @return boolean
  */
-function isnum($value) {
-	return is_numeric($value);
-	//$float = $decimal ? '(\.{0,1})[0-9]*' : '';
-	//return !is_array($value) and preg_match("/^[0-9]+".$float."$/", $value);
+function isnum($value, $decimal = false) {
+	$float = $decimal ? '(\.{0,1})[0-9]*' : '';
+	return !is_array($value) and preg_match("/^[0-9]+".$float."$/", $value);
 }
 
 /**

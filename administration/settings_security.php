@@ -40,7 +40,7 @@ if (isset($_POST['savesettings'])) {
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['maintenance_level']) ? $_POST['maintenance_level'] : "102")."' WHERE settings_name='maintenance_level'");
+		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(is_numeric($_POST['maintenance_level']) ? $_POST['maintenance_level'] : "102")."' WHERE settings_name='maintenance_level'");
 		if (!$result) {
 			$error = 1;
 		}
