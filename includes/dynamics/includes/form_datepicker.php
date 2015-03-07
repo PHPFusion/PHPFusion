@@ -18,7 +18,7 @@
 //credits: eternicode @ http://bootstrap-datepicker.readthedocs.org/en/latest/
 //http://bootstrap-datepicker.readthedocs.org/en/release/options.html
 function form_datepicker($title, $input_name, $input_id, $input_value, array $options = array()) {
-	global $defender;
+	global $defender, $settings;
 	if (!defined('DATEPICKER')) {
 		define('DATEPICKER', TRUE);
 		add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datepicker3.css' rel='stylesheet' />");
@@ -47,6 +47,7 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
 		'date_format' => !empty($options['date_format']) ?  $options['date_format']  : 'dd-mm-yyyy',
 		'fieldicon_off' => !empty($options['fieldicon']) && $options['fieldicon'] == 1 ?  1  : 0,
 		'type' => !empty($options['type']) && $options['type'] == 'date' ? 'date' : 'timestamp',
+		'week_start' => !empty($options['week_start']) && isnum($options['week_start']) ? $options['week_start'] : isset($settings['week_start']) && isnum($settings['week_start']) ? $settings['week_start'] : 0
 	);
 
 	$html = "<div id='$input_id-field' class='form-group ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
@@ -77,6 +78,7 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
         format: '".$options['date_format']."',
         todayBtn: 'linked',
         autoclose: true,
+		weekStart: ".$options['week_start'].",
         todayHighlight: true
         });
         ");
