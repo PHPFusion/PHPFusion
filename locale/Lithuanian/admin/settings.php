@@ -59,6 +59,7 @@ $locale['461'] = "Svečių";
 $locale['462'] = "Laiko balansas<br /><em>(Serverio)</em>";
 $locale['463'] = "Nustatyk šį laiką taip, kad serverio laikas būtų GMT 0 zonos";
 $locale['464'] = "Numatyta laiko juosta";
+$locale['465'] = "First day of week"; // translate this
 // Forum Settings
 $locale['500'] = "Forumas";
 $locale['501'] = "Paskutinių aktyvių forumo pranešimų panelė:";

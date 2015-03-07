@@ -16,6 +16,7 @@ $locale['phpmailer'] = "ua";
 // Full & Short Months
 $locale['months'] = "&nbsp;|Січень|Лютий|Березень|Квітень|Травень|Червень|Липень|Серпень|Вересень|Жовтень|Листопад|Грудень";
 $locale['shortmonths'] = "&nbsp|Січ|Лют|Бер|Кві|Тра|Чер|Лип|Сер|Вер|Жов|Лис|Гру";
+$locale['weekdays'] = "Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday"; // translate this line
 
 // Timers
 $locale['year'] = "рік";

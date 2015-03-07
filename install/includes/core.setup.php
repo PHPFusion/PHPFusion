@@ -459,6 +459,7 @@ if (isset($_POST['uninstall'])) {
 		"('subheaderdate', '".$locale['setup_3704']."')",
 		"('timeoffset', 'Europe/London')",
 		"('serveroffset', 'Europe/London')",
+		"('week_start', '0')",
 		"('numofthreads', '15')",
 		"('forum_ips', '0')",
 		"('attachmax', '150000')",

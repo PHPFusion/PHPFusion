@@ -58,6 +58,7 @@ $locale['461'] = "Guests";
 $locale['462'] = "Server offset";
 $locale['463'] = "Set this so server time is GMT 0";
 $locale['464'] = "Default timezone";
+$locale['465'] = "First day of week"; // translate this
 // Forum Settings
 $locale['500'] = "Forum";
 $locale['501'] = "Latest active forum threads panel:";

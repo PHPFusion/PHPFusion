@@ -55,6 +55,10 @@ if (isset($_POST['savesettings'])) {
 		if (!$result) {
 			$error = 1;
 		}
+		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['week_start'])."' WHERE settings_name='week_start'");
+		if (!$result) {
+			$error = 1;
+		}
 		redirect(FUSION_SELF.$aidlink."&error=".$error);
 	}
 }
@@ -76,6 +80,7 @@ foreach ($timezones as $zones) {
 }
 unset($dummy);
 unset($timezones);
+$weekdayslist = explode("|", $locale['weekdays']);
 $timestamp = time()+($settings2['timeoffset']*3600);
 $date_opts = array();
 foreach ($locale['dateformats'] as $dateformat) {
@@ -122,6 +127,11 @@ openside('');
 echo form_select($locale['463'], 'serveroffset', 'serveroffset', $timezoneArray, $settings2['serveroffset']);
 echo form_select($locale['456'], 'timeoffset', 'timeoffset', $timezoneArray, $settings2['timeoffset']);
 echo form_select($locale['464'], 'default_timezone', 'default_timezone', $timezoneArray, $settings2['default_timezone']);
+closeside();
+echo "</div>\n";
+echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
+openside('');
+echo form_select($locale['465'], 'week_start', 'week_start', $weekdayslist, $settings2['week_start']);
 closeside();
 echo "</div>\n</div>\n";
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));

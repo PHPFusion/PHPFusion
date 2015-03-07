@@ -60,6 +60,7 @@ $locale['461'] = "для гостей";
 $locale['462'] = "Часовий зсув на сервері";
 $locale['463'] = "Налаштуйте серверний час на GMT 0";
 $locale['464'] = "Стандартна часова зона";
+$locale['465'] = "First day of week"; // translate this
 
 // Forum Settings
 $locale['500'] = "Параметри форуму";
