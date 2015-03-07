@@ -600,3 +600,13 @@ table {
     left: 0px;
 	margin-left: 12px;
 }
+
+/* Admin Panel Icon */
+.icon-wrapper img {
+	max-width: 48px;
+	margin: 15px auto 5px;
+}
+.icon-wrapper > .icon-container {
+	text-align: center;
+	margin-bottom : 20px;
+}
