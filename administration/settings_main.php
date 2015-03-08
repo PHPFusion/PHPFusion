@@ -97,7 +97,14 @@ if (isset($_POST['savesettings'])) {
 	$exclude_right = form_sanitizer($_POST['exclude_right'], '', 'exclude_right');
 	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_right' WHERE settings_name='exclude_right'") : '';
 	if (!defined('FUSION_NULL')) {
-		redirect(FUSION_SELF.$aidlink."&amp;error=0");
+		// We are adding and setting some notices here
+		addNotice("success", "Settings were successfully updated!");
+		addNotice("success", "Yet another success!");
+		addNotice("warning", "Oh noes, something went wrong :(");
+		//setNotice("info", "This notice will overwrite any other notice previously set.");
+
+		// this line can be commented out to prove form resubmision will not trigger further notices
+		redirect(FUSION_SELF.$aidlink); 
 	}
 }
 $settings2 = array();
@@ -109,18 +116,100 @@ $theme_files = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "fol
 $admin_theme_files = makefilelist(THEMES."admin_templates/", ".|..", TRUE, "folders");
 opentable($locale['main_settings']);
 
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	} elseif ($_GET['error'] == 2) {
-		$message = $locale['902'];
+// These are the notices before we start showing them
+if (!empty($_SESSION['notices'])) {
+	print_p($_SESSION['notices']);
+}
+
+// Get all notices
+$notices = getNotices();
+renderNotices($notices);
+
+/********************************************
+ Functions below are to be moved into another
+ file and replace and change the way notify()
+ function works mainly with the purpose of
+ stopping directly outputing HTML.
+
+ This is just a showcase, feel free to adapt
+ the code and largely implement it.
+*********************************************/
+/**
+* Renders notices
+* Formats and renders notices
+* @param array $notices the array contaning notices
+* @return string the notices formatted as HTML
+*/
+function renderNotices($notices) {
+	echo "<div id='close-message'>\n";
+		foreach ($notices as $status => $notice) {
+			echo "<div class='admin-message alert alert-".$status." m-t-10'>";
+			foreach ($notice as $id => $message) {
+				echo $message."<br />";
+			}
+			echo "</div>\n";
+		}
+	echo "</div>\n";
+}
+
+/**
+* Retrievs all notices
+* Retrievs all notices for the group identified by the key provided
+* @param string $key the key identifying a group holding notices, by default the page name in which the notice was set
+* @param boolean $delete whether to delete or keep a notice message after it was accessed. This only works if the notice
+* was set or added while having $removeAfterAccess set to FALSE
+* @return array the notices for the group identified by the provided key
+*/
+function getNotices($key = FUSION_SELF, $delete = TRUE) {
+	$notices = array();
+	if (!empty($_SESSION['notices'])) {
+		foreach ($_SESSION['notices'] as $type => $keys) {
+			if (isset($keys[$key])) {
+				$notices = array_merge_recursive($notices, $keys[$key]);
+				if ($delete) $_SESSION['notices'][$type][$key] = array();
+			}
+		}
 	}
-	if (isset($message)) {
-		echo admin_message($message);
+
+	// Cleanup the notices that are meant to be shown only once regardless if they have been accessed or not
+	// do redirects before this function is called to ensure these notifications are displayed at least once
+	unset($_SESSION['notices']['once']);
+
+	return $notices;
+}
+
+/**
+* Adds a notice message
+* Adds a notice message to the group identified by the key provided
+* @param string $status the status of the message
+* @param string $value the message
+* @param string $key the key identifying a group holding notices, by default the page name in which the notice was set
+* @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once,
+* if set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed
+*/
+function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
+	$type = $removeAfterAccess ? 'once' : 'persist';
+	if (isset($_SESSION['notices'][$type][$key][$status])) {
+		array_push($_SESSION['notices'][$type][$key][$status], $value);
+	} else {
+		$_SESSION['notices'][$type][$key][$status] = array($value);
 	}
 }
+
+/**
+* Sets a notice message
+* Sets a notice message for the whole group identified by the key provided, this will overwrite any other notices previously set
+* @param string $status the status of the message
+* @param string $value the message
+* @param string $key the key identifying a group holding notices, by default the page name in which the notice was set
+* @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once.
+* If set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed.
+*/
+function setNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
+	$type = $removeAfterAccess ? 'once' : 'persist';
+	$_SESSION['notices'][$type][$key] = array($status => array($value));
+}
+
 echo "<div class='well'>".$locale['main_description']."</div>";
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
