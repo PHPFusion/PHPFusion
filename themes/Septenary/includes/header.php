@@ -33,7 +33,7 @@ echo closeform();
 echo "<ul id='head_nav' class='display-inline-block m-t-5 m-r-10 pull-right'>\n";
 
 if (sizeof(fusion_get_enabled_languages()) > 1) {
-	$language_opts = "<li class='dropdown pull-left'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-flag fa-lg'></i><span class='caret'></span></a>\n";
+	$language_opts = "<li class='dropdown pull-left'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-flag fa-lg'></i><span class='caret'></span></a>\n";
 	$language_opts .= "<ul class='dropdown-menu' role='lang-menu'>\n";
 	foreach(fusion_get_enabled_languages() as $languages) {
 		$language_opts .= "<li class='display-block text-left'><a class='display-block' style='width:100%' href='".clean_request('lang='.$languages, array('lang'), false)."'><img class='m-r-5' src='".BASEDIR."locale/$languages/$languages-s.png'> $languages</a></li>\n";
