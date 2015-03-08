@@ -604,16 +604,14 @@ function closecollapsebody() {
 	return $html;
 }
 
-function collapse_header_link($id, $title, $active, $class = FALSE) {
+function collapse_header_link($id, $title, $active, $class = '') {
 	$active = ($active) ? '' : 'collapsed';
-	$title =  str_replace('/[^A-Z]+$/i', " ",$title);
-	$title_id_cc = str_replace(" ", "-", $title);
+	$title_id_cc =  preg_replace('/[^A-Z0-9-]+/i', "-", $title);
 	return "class='$class $active' data-toggle='collapse' data-parent='#".$id."' href='#".$title_id_cc."-".$id."' aria-expanded='true' aria-controls='".$title_id_cc."-".$id."'";
 }
-function collapse_footer_link($id, $title, $active, $class = FALSE) {
+function collapse_footer_link($id, $title, $active, $class = '') {
 	$active = ($active) ? 'in' : '';
-	$title =  str_replace('/[^A-Z]+$/i', " ", $title);
-	$title_id_cc = str_replace(" ", "-", $title);
+	$title_id_cc =  preg_replace('/[^A-Z0-9-]+/i', "-", $title);
 	return "id='".$title_id_cc."-".$id."' class='panel-collapse collapse ".$active." ".$class."' role='tabpanel' aria-labelledby='headingOne'";
 }
 function closecollapse() {
