@@ -1549,7 +1549,12 @@ class QuantumFields {
 				if (!in_array($file, array("..", ".", "index.php")) && !is_dir($this->plugin_folder.$file)) {
 					if (preg_match("/_var.php/i", $file)) {
 						$field_name = explode("_", $file);
-						$field_title = $field_name[0].'_'.$field_name[1];
+//						$field_title = $field_name[0].'_'.$field_name[1];
+						$field_title = "";
+						for ($i = 0; $i <= count($field_name) - 3; $i++) {
+							if ($field_title) { $field_title .= "_"; }
+							$field_title .= $field_name[$i];
+						}
 						if (!in_array($field_title, $this->enabled_fields)) {
 							if ($this->module_debug) print_p($field_title." set for load.");
 							if (file_exists($this->plugin_locale_folder.$field_title.".php")) {
