@@ -57,17 +57,7 @@ class UserFieldsInput {
 
 	public function saveInsert() {
 		$this->_method = "validate_insert";
-		$this->data = array('user_id' => 0,
-			"user_password" => "",
-			"user_algo" => "",
-			"user_salt" => "",
-			"user_admin_password" => "",
-			"user_admin_algo" => "",
-			"user_admin_salt" => "",
-			"user_name" => "",
-			"user_email" => "",
-			"user_hide_email" => 0,
-			'user_language' => LANGUAGE,);
+		self::_setEmptyFields();
 		if ($this->_userNameChange) {
 			$this->_settUserName();
 		}
@@ -87,12 +77,13 @@ class UserFieldsInput {
 	public function saveUpdate() {
 		$this->_method = "validate_update";
 		$this->data = $this->userData;
+		self::_setEmptyFields();
 		$this->_settUserName();
 		$this->_setPassword();
 		$this->_setAdminPassword();
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
-		$this->_setEmptyFields();
+
 		$this->_setUserAvatar();
 		if (!defined('FUSION_NULL')) $this->_setUserDataUpdate();
 	}
@@ -554,22 +545,24 @@ class UserFieldsInput {
 	private function _setEmptyFields() {
 		$this->_userHideEmail = isset($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
 		$userStatus = $this->adminActivation == 1 ? 2 : 0;
-		if ($this->_method == "validate_insert") {
-			$this->data['user_hide_email'] = $this->_userHideEmail;
-			$this->data['user_avatar'] = '';
-			$this->data['user_posts'] = 0;
-			$this->data['user_threads'] = 0;
-			$this->data['user_joined'] = time();
-			$this->data['user_lastvisit'] = 0;
-			$this->data['user_ip'] = USER_IP;
-			$this->data['user_ip_type'] = USER_IP_TYPE;
-			$this->data['user_rights'] = '';
-			$this->data['user_groups'] = '';
-			$this->data['user_level'] = -101;
-			$this->data['user_status'] = $userStatus;
-			$this->data['user_timezone'] = fusion_get_settings('timeoffset');
-			$this->data['user_theme'] = 'Default';
-			$this->data['user_language'] = LANGUAGE;
+		if ($this->_method == "validate_insert") { // register
+			$this->data = array(
+				'user_id' => 0,
+				'user_hide_email' => $this->_userHideEmail,
+				'user_avatar' => '',
+				'user_posts' => 0,
+				'user_threads' => 0,
+				'user_joined' => time(),
+				'user_lastvisit' => 0,
+				'user_ip' => USER_IP,
+				'user_ip_type' => USER_IP_TYPE,
+				'user_rights' => '',
+				'user_groups' => '',
+				'user_level' => USER_LEVEL_MEMBER,
+				'user_status' => $userStatus,
+				'user_theme' => 'Default',
+				'user_language' => LANGUAGE,
+			);
 		} else {
 			$this->data['user_theme'] = (isset($_POST['user_theme'])) ? $_POST['user_theme'] : 'Default';
 			$this->data['user_timezone'] = (isset($_POST['user_timezone'])) ? $_POST['user_timezone'] : fusion_get_settings('timeoffset');
