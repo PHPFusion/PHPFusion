@@ -167,8 +167,8 @@ function blog_listing() {
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
 					echo "<div><span class='strong text-dark'>".$data2['blog_subject']."</span><br/>".fusion_first_words($data2['blog_blog'], '50')."</div>\n";
-					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;blog_id=".$data2['blog_id']."'>".$locale['420']."</a> -\n";
-					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['451']."');\">".$locale['421']."</a>\n";
+					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;blog_id=".$data2['blog_id']."'>".$locale['420']."</a> -\n";
+					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=nform&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['451']."');\">".$locale['421']."</a>\n";
 					echo "</div>\n";
 					echo "</li>\n";
 				}
