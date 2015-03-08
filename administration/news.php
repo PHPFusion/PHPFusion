@@ -138,7 +138,7 @@ function news_listing() {
 
 	$result = dbquery("SELECT cat.news_cat_id, cat.news_cat_name, cat.news_cat_image, cat.news_cat_language, count(news.news_id) as news_count
 				FROM ".DB_NEWS_CATS." cat
-				LEFT JOIN ".DB_NEWS." news on news.news_id = cat.news_cat_id
+				LEFT JOIN ".DB_NEWS." news on news.news_cat = cat.news_cat_id
 				".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." GROUP BY news_cat_id ORDER BY news_cat_name");
 	if (dbrows($result) > 0) {
 		while ($data = dbarray($result)) {
