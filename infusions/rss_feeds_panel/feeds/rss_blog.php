@@ -34,16 +34,16 @@ if (db_exists(DB_BLOG)) {
 	WHERE ".groupaccess('blog_visibility').(multilang_table("BL")?" AND blog_language='".LANGUAGE."'":"")."
 	ORDER BY blog_datestamp DESC LIMIT 0,10");
 
+	$rssimage = $settings['siteurl'].$settings['sitebanner'];
+	echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
+	echo "<rss version=\"2.0\">\n
+		<image>
+		<url>$rssimage</url>
+		</image>
+		<channel>\n";
+
 	if (dbrows($result) != 0) {
 
-		$rssimage = $settings['siteurl'].$settings['sitebanner']; 
-		echo "<?xml version=\"1.0\" encoding=\"".$locale['charset']."\"?>\n\n";
-		echo "<rss version=\"2.0\">\n\n
-		<image>\n
-		<url>$rssimage</url>\n
-		</image>\n
-		<channel>\n";
-	
 		echo "<title>".$settings['sitename'].$locale['rss000'].(multilang_table("NS")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n";
 		echo "<link>".$settings['siteurl']."</link>\n<description>".$settings['description']."</description>\n";
 
