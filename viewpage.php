@@ -23,41 +23,22 @@ include LOCALE.LOCALESET."custom_pages.php";
 
 if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) redirect("index.php");
 $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
-$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."'");
-$custompage = array(
-	'title' => '',
-	'body' => '',
-	'error' => '',
-	'count' => '0',
-);
-$cp_data = array(
-	'page_access' => -103,
-);
-$page_languages[] = 'klingon';
+$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."' AND ".groupaccess('page_access').(multilang_table("NS") ? " AND news_language='".LANGUAGE."'" : ""));
 if (dbrows($cp_result)) {
 	$cp_data = dbarray($cp_result);
-	$page_languages = explode('.', $cp_data['page_language']);
-	if (multilang_table("CP") && in_array(LANGUAGE, $page_languages) && checkgroup($cp_data['page_access'])) {
-		$custompage['title'] = $cp_data['page_title'];
-		add_to_title($locale['global_200'].$cp_data['page_title']);
-		add_to_breadcrumbs(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
-		if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
+	$custompage['title'] = $cp_data['page_title'];
+	add_to_title($locale['global_200'].$cp_data['page_title']);
+	add_to_breadcrumbs(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
+	if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
 
-		ob_start();
-		eval("?>".stripslashes($cp_data['page_content'])."<?php ");
-		$eval = ob_get_contents();
-		ob_end_clean();
+	ob_start();
+	eval("?>".stripslashes($cp_data['page_content'])."<?php ");
+	$eval = ob_get_contents();
+	ob_end_clean();
 
-		$custompage['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $eval);
-		$custompage['count'] = count($custompage['body']);
+	$custompage['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $eval);
+	$custompage['count'] = count($custompage['body']);
 
-	} else {
-		add_to_title($locale['global_200'].$locale['401']);
-		$custompage['title'] = $locale['401'];
-		$custompage['error'] = "<img style='border:0px; vertical-align:middle;' src ='".BASEDIR."images/warn.png' alt=''/>
-						<br />".$locale['400']."<br /><a href='index.php' onclick='javascript:history.back();return false;'>".$locale['403']."</a>\n<br /><br />
-						";
-	}
 } else {
 	add_to_title($locale['global_200'].$locale['401']);
 	$custompage['title'] = $locale['401'];
