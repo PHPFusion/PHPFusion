@@ -23,7 +23,7 @@ include LOCALE.LOCALESET."custom_pages.php";
 
 if (!isset($_GET['page_id']) || !isnum($_GET['page_id'])) redirect("index.php");
 $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
-$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."' AND ".groupaccess('page_access').(multilang_table("NS") ? " AND news_language='".LANGUAGE."'" : ""));
+$cp_result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id='".$_GET['page_id']."' AND ".groupaccess('page_access').(multilang_table("CP") ? " AND news_language='".LANGUAGE."'" : ""));
 if (dbrows($cp_result)) {
 	$cp_data = dbarray($cp_result);
 	$custompage['title'] = $cp_data['page_title'];
