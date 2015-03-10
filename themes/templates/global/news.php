@@ -194,7 +194,7 @@ if (!function_exists('render_news')) {
 			echo $info['news_allow_comments'] ? display_comments($info['news_comments'], BASEDIR."news.php?readmore=".$info['news_id']."#comments") : '';
 			echo $info['news_allow_ratings'] ? display_ratings($info['news_sum_rating'], $info['news_count_votes'], BASEDIR."news.php?readmore=".$info['news_id']."#postrating") : '';
 			echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$info['news_id']."'><i class='entypo print'></i></a>";
-			echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".ADMIN."news.php".$aidlink."&amp;action=edit&amp;news_id=".$info['news_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
+			echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".ADMIN."news.php".$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$info['news_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
 			echo "</div>\n";
 			echo "</article>\n";
 		} else {
@@ -244,7 +244,7 @@ if (!function_exists('render_news')) {
 			echo $info['news_allow_comments'] ? display_comments($info['news_comments'], BASEDIR."news.php?readmore=".$info['news_id']."#comments", '', 2) : '';
 			echo $info['news_allow_ratings'] ? "".display_ratings($info['news_sum_rating'], $info['news_count_votes'], BASEDIR."news.php?readmore=".$info['news_id']."#postrating", '', 2)."" : '';
 			echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$info['news_id']."'><i class='entypo print'></i></a>";
-			echo iADMIN && checkrights("N") ? "<a class='pull-right' title='".$locale['global_076']."' href='".ADMIN."news.php".$aidlink."&amp;action=edit&amp;news_id=".$info['news_id']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : "";
+			echo iADMIN && checkrights("N") ? "<a class='pull-right' title='".$locale['global_076']."' href='".ADMIN."news.php".$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$info['news_id']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : "";
 			echo "</div>\n";
 			echo "</article>\n";
 		}
@@ -321,7 +321,7 @@ if (!function_exists('render_news_item')) {
 		echo $data['news_allow_comments'] ? display_comments($data['news_comments'], BASEDIR."news.php?readmore=".$data['news_id']."#comments") : '';
 		echo $data['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['news_sum_rating'], $data['news_count_votes'], BASEDIR."news.php?readmore=".$data['news_id']."#postrating")." </span>" : '';
 		echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='entypo print'></i></a>";
-		echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".ADMIN."news.php".$aidlink."&amp;action=edit&amp;news_id=".$data['news_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
+		echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".ADMIN."news.php".$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$data['news_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
 		echo "</div>";
 		echo "<!--news_sub_readmore-->";
 		echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".BASEDIR."news.php?readmore=".$data['news_id']."' class='button'>".$locale['global_072']."</a>\n</div>\n" : "";
