@@ -43,43 +43,9 @@ require_once INCLUDES."header_includes.php";
 require_once THEME."theme.php";
 require_once THEMES."templates/render_functions.php";
 
-// where did entypo go???
-add_to_head("<link rel='stylesheet' href='".INCLUDES."font/font-awesome/css/font-awesome.min.css' type='text/css' />");
-
 if (iMEMBER) {
-	dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."'
-		WHERE user_id='".$userdata['user_id']."'");
-} 
-
-add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.min.js'></script>");
-$bootstrap_theme_css_src = '';
-// Load bootstrap
-if ($settings['bootstrap']) {
-	define('BOOTSTRAPPED', TRUE);
-	// ok now there is a theme at play here.
-	// at maincore, lets load atom.
-	$theme_name = isset($userdata['user_theme']) && $userdata['user_theme'] !== 'Default' ? $userdata['user_theme'] : fusion_get_settings('theme');
-	$theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
-	$theme_css = INCLUDES.'bootstrap/bootstrap.min.css';
-	if (!empty($theme_data)) {
-		$theme_css = THEMES.$theme_data['theme_file'];
-	}
-	add_to_head("<link rel='stylesheet' href='".$theme_css."' type='text/css' />");
-	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/bootstrap.min.js'></script>");
-	add_to_footer("<script type='text/javascript' src='".INCLUDES."bootstrap/holder.js'></script>");
-	add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.min.js'></script>");
-	add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.css' type='text/css' />");
-} else {
-	add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/sm-core-css.css' type='text/css' />");
-	add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/sm-simple.css' type='text/css' />");
-	add_to_footer("<script type='text/javascript'>
-		$(function() {
-			$('#main-menu').smartmenus({
-				subMenusSubOffsetX: 1,
-				subMenusSubOffsetY: -8
-			});
-		});
-		</script>");
+	dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
+
 require_once THEMES."templates/panels.php";
 ob_start();
