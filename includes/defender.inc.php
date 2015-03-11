@@ -882,25 +882,36 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 	if ($input_name) {
 		$val = array();
 		if ($multilang) {
+			$main_field_name = ''; $main_field_id = '';
+			// copy the first available value to the next one.
 			foreach (fusion_get_enabled_languages() as $lang => $language) {
 				$iname = $input_name."[".$lang."]";
 				if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$iname])) {
 					$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$iname];
+					if ($lang == LANGUAGE) {
+						$main_field_name = $defender->field_config['title'];
+						$main_field_id = $defender->field_config['id'];
+					}
 					$defender->field_name = $iname;
 					$defender->field_value = $value[$lang];
 					$defender->field_default = $default;
-					if ($defender->field_config['required'] == 1 && (!$value[$lang])) { // it is required field but does not contain any value.. do reject.
-						$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['df_error_text'], $defender->field_config['title']);
-						$defender->stop();
-						$defender->addError($defender->field_config['id']);
-						$defender->addHelperText($defender->field_config['id'], $helper_text);
-						$defender->addNotice($helper_text);
-					} else {
-						$val[$lang] = $defender->defender();
-					}
+					$val[$lang] = $defender->defender();
 				}
 			}
-			return serialize($val);
+			if ($defender->field_config['required'] == 1 && (!$value[LANGUAGE])) {
+				$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['df_error_text'], $main_field_name);
+						$defender->stop();
+				$defender->addError($main_field_id);
+				$defender->addHelperText($main_field_id, $helper_text);
+						$defender->addNotice($helper_text);
+					} else {
+				foreach($val as $lang => $value) {
+					if (empty($value)) {
+						$val[$lang] = $val[LANGUAGE];
+					}
+				}
+				return serialize($val);
+			}
 		} else {
 			if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name])) {
 				$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name];

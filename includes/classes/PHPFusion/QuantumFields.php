@@ -588,11 +588,41 @@ class QuantumFields {
 		);
 		$html .= "<div id='$input_id-field' class='form-group p-r-15 ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
 		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 well" : "col-sm-12 col-md-12 col-lg-12 well")."'>\n" : "<div class='well p-b-5 p-t-5'>";
+		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")."'>\n" : "<div class='p-b-5 p-t-5'>";
+		$html .= "<div class='dropdown pull-right'>\n";
+		$html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>Add Language Translations <span class='caret'></span></button>\n";
+		$html .= "<ul class='dropdown-menu' style='margin-top:10px; !important;'>\n";
+		foreach($language_opts as $Lang) {
+			if ($Lang !== LANGUAGE) {
+				$html .= "<li><a data-add='".$Lang."' class='pointer data-add'>Add ".$Lang."</a></li>\n";
+				if ($Lang !== LANGUAGE) { add_to_jquery("$('#".$input_name."-".$Lang."-field').hide();");	}
+			}
+		}
+		$html .= "</ul>\n";
+		$html .= "</div>\n";
+		add_to_jquery("
+			$('.data-add').bind('click', function() {
+				var lang = $(this).data('add');
+				var dom = $('#".$input_name."-'+lang+'-field');
+				if ($('#".$input_name."-'+lang+'-field').is(':visible')) {
+					dom.hide();
+					$(this).text('Add '+lang);
+				} else {
+					dom.show();
+					$(this).text('Remove '+lang);
+				}
+			});
+		");
+		$main_html = ''; $sub_html = '';
 		foreach($language_opts as $lang) {
 			$options['field_title'] = $title." (".$lang.")";
-			$html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, isset($input_value[$input_name][$lang]) ? $input_value[$input_name][$lang] : '', $options);
+			if ($lang == LANGUAGE) {
+				$main_html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
+			} else {
+				$sub_html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
 		}
+		}
+		$html .= $main_html.$sub_html;
 		$html .= "</div>\n";
 		$html .= "</div>\n";
 		return $html;
