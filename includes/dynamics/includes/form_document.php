@@ -103,7 +103,7 @@ function form_document($title = FALSE, $input_name, $input_id, $input_value = FA
 	$html .= "</div>\n";
 	$defender->add_field_session(array(
 		 'input_name' 	=> 	$input_name,
-		 'type'			=>	'address',
+		 'type'			=>	'document',
 		 'title'		=>	$title2,
 		 'id' 			=>	$input_id,
 		 'required'		=>	$options['required'],
