@@ -181,7 +181,7 @@ class defender {
 							$this->addHelperText($this->field_config['id'].'-doc_authority', $locale['doc_authority_error']);
 							$this->addNotice($locale['doc_authority_error']);
 						}
-						if ($this->field_config['required'] && (!$_POST[$name][4] || !$this->verify_date())) {
+						if ($this->field_config['required'] && (!$_POST[$name][4])) {
 							$this->stop();
 							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-date_issue', $locale['date_issue_error']);

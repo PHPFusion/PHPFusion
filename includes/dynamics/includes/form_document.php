@@ -34,6 +34,16 @@ function form_document($title = FALSE, $input_name, $input_id, $input_value = FA
 	if (isset($input_value) && (!empty($input_value))) {
 		if (!is_array($input_value)) {
 			$input_value = construct_array($input_value, "", "|");
+			if ($input_value[4] != "0000-00-00") {
+				$input_value[4] = date('d-m-Y', strtotime($input_value[4]));
+			} else {
+				$input_value[4] = "";
+			}
+			if ($input_value[5] != "0000-00-00") {
+				$input_value[5] = date('d-m-Y', strtotime($input_value[5]));
+			} else {
+				$input_value[5] = "";
+			}
 		}
 	} else {
 		$input_value['0'] = "";
