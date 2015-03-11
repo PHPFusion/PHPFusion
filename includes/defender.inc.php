@@ -156,7 +156,6 @@ class defender {
 						break;
 					case 'document':
 						$name = $this->field_name;
-						//$def = $this->get_full_options($this->field_config);
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
 							$this->addError($this->field_config['id']);
@@ -181,17 +180,20 @@ class defender {
 							$this->addHelperText($this->field_config['id'].'-doc_authority', $locale['doc_authority_error']);
 							$this->addNotice($locale['doc_authority_error']);
 						}
-						if ($this->field_config['required'] && (!$_POST[$name][4])) {
+						if ($this->field_config['required'] && !$_POST[$name][4]) {
 							$this->stop();
 							$this->addError($this->field_config['id']);
 							$this->addHelperText($this->field_config['id'].'-date_issue', $locale['date_issue_error']);
 							$this->addNotice($locale['date_issue_error']);
 						}
+						if (!defined('FUSION_NULL')) {
+							$return_value = $this->verify_text();
+							return $return_value;
+						}
 						break;
 					default:
 						$this->stop();
 						$this->addNotice($this->field_name);
-						//$this->addNotice(var_dump($this->field_config));
 						$this->addNotice('Verification on unknown type of fields is prohibited.');
 				}
 			} else {
