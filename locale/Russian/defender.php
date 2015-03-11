@@ -24,9 +24,16 @@ $locale['firstname_error'] = "Обратите внимание на имя.";
 $locale['lastname_error'] = "Обратите внимание на фамилию.";
 $locale['name_error'] = "Имя и фамилия не могут совпадать.";
 
+// Document errors
+$locale['doc_type_error'] = "Обратите внимание на тип документа.";
+$locale['doc_series_error'] = "Обратите внимание на серию документа.";
+$locale['doc_number_error'] = "Обратите внимание на номер документа.";
+$locale['doc_authority_error'] = "Обратите внимание на орган, выдавший документ.";
+$locale['date_issue_error'] = "Обратите внимание на дату выдачи.";
+
 // Tokens
 $locale['token_error_title'] = "Ошибка токена";
-$locale['token_error'] = "Извините, произошла ошбика. Вернитесь обратно, обновите страницу и попробуйте снова.";
+$locale['token_error'] = "Извините, произошла ошибка. Вернитесь обратно, обновите страницу и попробуйте снова.";
 $locale['token_error_1'] = "Сессия не начата.";
 $locale['token_error_2'] = "Токен не опубликован.";
 $locale['token_error_3'] = "Ошибочный токен.";

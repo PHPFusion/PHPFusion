@@ -24,6 +24,13 @@ $locale['firstname_error'] = "Firstname requires attention.";
 $locale['lastname_error'] = "Lastname requires attention.";
 $locale['name_error'] = "Firstname and Lastname cannot be same.";
 
+// Document errors
+$locale['doc_type_error'] = "Document type requires attention.";
+$locale['doc_series_error'] = "Document series requires attention.";
+$locale['doc_number_error'] = "Document number requires attention.";
+$locale['doc_authority_error'] = "Document authority requires attention.";
+$locale['date_issue_error'] = "Document date of issue requires attention.";
+
 // Tokens
 $locale['token_error_title'] = "Token Error";
 $locale['token_error'] = "We are sorry, there was an error. Please go Back, Refresh the page and try again.";

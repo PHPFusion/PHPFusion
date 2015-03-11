@@ -41,6 +41,13 @@ $locale['username_pretext'] = 'Your public username is also the same as your use
 $locale['first_name'] = 'First Name';
 $locale['middle_name'] = 'Middle Name';
 $locale['last_name'] = 'Last Name';
+// Documents
+$locale['doc_type'] = "Document type";
+$locale['doc_series'] = "Series";
+$locale['doc_number'] = "Number";
+$locale['doc_authority'] = "Authority";
+$locale['doc_date_issue'] = "Date of issue";
+$locale['doc_date_expire'] = "Date of expiry";
 // Standard User Levels
 $locale['user0'] = "Public";
 $locale['user1'] = "Member";

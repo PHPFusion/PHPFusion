@@ -44,6 +44,13 @@ $locale['username_pretext'] = "Ваше публичное имя пользов
 $locale['first_name'] = "Имя";
 $locale['middle_name'] = "Отчество";
 $locale['last_name'] = "Фамилия";
+// Documents
+$locale['doc_type'] = "Тип документа";
+$locale['doc_series'] = "Серия";
+$locale['doc_number'] = "Номер";
+$locale['doc_authority'] = "Кем выдан";
+$locale['doc_date_issue'] = "Дата выдачи";
+$locale['doc_date_expire'] = "Срок действия";
 // Standard User Levels
 $locale['user0']  = "Гость";
 $locale['user1']  = "Участник";

@@ -49,6 +49,7 @@ class dynamics {
 		require_once DYNAMICS."includes/form_antibot.php";
 		require_once DYNAMICS."includes/form_toggle.php";
 		require_once DYNAMICS."includes/form_paragraph.php";
+		require_once DYNAMICS."includes/form_document.php";
 	}
 }
 

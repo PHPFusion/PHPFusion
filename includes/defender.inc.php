@@ -66,6 +66,7 @@ class defender {
 			'url' => 'url',
 			'image' => 'image',
 			'file' => 'file',
+			'document' => 'document',
 		);
 		// execute sanitisation rules at point blank precision using switch
 		try {
@@ -152,6 +153,40 @@ class defender {
 						break;
 					case 'image' :
 						return $this->verify_image_upload();
+						break;
+					case 'document':
+						$name = $this->field_name;
+						//$def = $this->get_full_options($this->field_config);
+						if ($this->field_config['required'] && !$_POST[$name][0]) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-doc_type', $locale['doc_type_error']);
+							$this->addNotice($locale['doc_type_error']);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][1]) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-doc_series', $locale['doc_series_error']);
+							$this->addNotice($locale['doc_series_error']);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][2]) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-doc_number', $locale['doc_number_error']);
+							$this->addNotice($locale['doc_number_error']);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][3]) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-doc_authority', $locale['doc_authority_error']);
+							$this->addNotice($locale['doc_authority_error']);
+						}
+						if ($this->field_config['required'] && (!$_POST[$name][4] || !$this->verify_date()) {
+							$this->stop();
+							$this->addError($this->field_config['id']);
+							$this->addHelperText($this->field_config['id'].'-date_issue', $locale['date_issue_error']);
+							$this->addNotice($locale['date_issue_error']);
+						}
 						break;
 					default:
 						$this->stop();
