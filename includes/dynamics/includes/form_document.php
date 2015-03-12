@@ -6,11 +6,9 @@
 +--------------------------------------------------------+
 | Project File: Form API - Address Input Based
 | Filename: form_document.php
-| Based on: form_geomap.php
-| Author: Chubatyj Vitalij (Rizado)
-| Co-author: Frederick MC Chan (Hien)
-| Co-author: Joakim Falke
-| Communities of PHP-Fusion at PHP-Fusion.co.uk
+| Author: Frederick MC Chan (Hien)
+| Co-author: Joakim Falk
+| Co-author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
