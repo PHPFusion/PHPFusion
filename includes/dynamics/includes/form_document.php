@@ -5,9 +5,11 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Project File: Form API - Address Input Based
-| Filename: form_geomap.php
-| Author: Frederick MC Chan (Hien)
-| Sub-Author: Joakim Falke
+| Filename: form_document.php
+| Based on: form_geomap.php
+| Author: Chubatyj Vitalij (Rizado)
+| Co-author: Frederick MC Chan (Hien)
+| Co-author: Joakim Falke
 | Communities of PHP-Fusion at PHP-Fusion.co.uk
 +--------------------------------------------------------+
 | This program is released as free software under the
