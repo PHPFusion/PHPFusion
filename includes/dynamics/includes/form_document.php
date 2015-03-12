@@ -8,7 +8,7 @@
 | Filename: form_document.php
 | Author: Frederick MC Chan (Hien)
 | Co-Author: Joakim Falk (Domi)
-| Co-author: Chubatyj Vitalij (Rizado)
+| Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
