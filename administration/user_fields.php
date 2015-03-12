@@ -16,6 +16,7 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
+include LOCALE.LOCALESET."admin/fields.php";
 $user_field = new PHPFusion\QuantumFields();
 $user_field->setSystemTitle('User Profile Configuration');
 $user_field->setAdminRights('UFC');

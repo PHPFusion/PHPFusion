@@ -586,9 +586,12 @@ class QuantumFields {
 			'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
 			'icon' => !empty($options['icon']) ?  $options['icon']  : '',
 		);
+		$required = $options['required'];
 		$html .= "<div id='$input_id-field' class='form-group p-r-15 ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
 		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")."'>\n" : "<div class='p-b-5 p-t-5'>";
+		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12 ")."'>\n" : "<div class='p-b-5 p-t-5 well'>";
+
+		if (count($language_opts)>1) {
 		$html .= "<div class='dropdown pull-right'>\n";
 		$html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>Add Language Translations <span class='caret'></span></button>\n";
 		$html .= "<ul class='dropdown-menu' style='margin-top:10px; !important;'>\n";
@@ -600,6 +603,7 @@ class QuantumFields {
 		}
 		$html .= "</ul>\n";
 		$html .= "</div>\n";
+
 		add_to_jquery("
 			$('.data-add').bind('click', function() {
 				var lang = $(this).data('add');
@@ -613,12 +617,16 @@ class QuantumFields {
 				}
 			});
 		");
+		}
+
 		$main_html = ''; $sub_html = '';
 		foreach($language_opts as $lang) {
 			$options['field_title'] = $title." (".$lang.")";
 			if ($lang == LANGUAGE) {
+				$options['required'] = $required;
 				$main_html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
 			} else {
+				$options['required'] = 0;
 				$sub_html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
 		}
 		}
