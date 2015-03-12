@@ -1,14 +1,12 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System Version 8
-| Copyright (C) 2002 - 2013 Nick Jones
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Project File: User Search Results for Form Select User V8
+| Project File: User Search Results for Form Select User
 | Filename: users.json.php
-| Author: PHP-Fusion Development Team
-| Coded by : Frederick MC Chan (Hien)
-| Version : 8.0.0 (please update every commit)
+| Author : Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
