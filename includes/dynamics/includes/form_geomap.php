@@ -7,8 +7,7 @@
 | Project File: Form API - Address Input Based
 | Filename: form_geomap.php
 | Author: Frederick MC Chan (Hien)
-| Sub-Author: Joakim Falke
-| Communities of PHP-Fusion at PHP-Fusion.co.uk
+| Co-author: Joakim Falk
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
