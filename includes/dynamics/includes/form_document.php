@@ -7,7 +7,6 @@
 | Project File: Form API - Address Input Based
 | Filename: form_document.php
 | Author: Frederick MC Chan (Hien)
-| Co-Author: Joakim Falk (Domi)
 | Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
