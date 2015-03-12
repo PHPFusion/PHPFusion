@@ -42,6 +42,21 @@ $locale['postcode'] = "Поштовий індекс";
 $locale['sel_country'] = "Країна";
 $locale['sel_state'] = "Регіон";
 
+// Name
+$locale['name'] = "Повне ім&lsquo;я";
+$locale['username_pretext'] = "Ваше загальнодоступне ім&lsquo;я користувача співпадає з адресою облікового запису в:<div class='alert alert-info m-t-10 p-10'>%s<strong>%s</strong></div>";
+$locale['first_name'] = "Ім&lsquo;я";
+$locale['middle_name'] = "По батькові";
+$locale['last_name'] = "Прізвище";
+
+// Documents
+$locale['doc_type'] = "Тип документу";
+$locale['doc_series'] = "Серія";
+$locale['doc_number'] = "Номер";
+$locale['doc_authority'] = "Видано (відповідальний орган)";
+$locale['doc_date_issue'] = "Дата видачі";
+$locale['doc_date_expire'] = "Дійсний до";
+
 // Standard User Levels
 $locale['user0'] = "Загальний";
 $locale['user1'] = "Користувач";
@@ -130,6 +145,7 @@ $locale['global_072'] = "Читати далі...";
 $locale['global_073'] = " коментарів";
 $locale['global_073b'] = " коментар";
 $locale['global_074'] = " переглядів";
+$locale['global_074b'] = " перегляд";
 $locale['global_075'] = "Друк";
 $locale['print'] = "Друк";
 $locale['global_076'] = "Редагувати";
@@ -167,6 +183,7 @@ $locale['global_094'] = " з ";
 // Guest User Menu
 $locale['global_100'] = "Авторизація";
 $locale['global_101'] = "Ім&lsquo;я";
+$locale['global_101a'] = "Будь ласка, вкажіть ім&lsquo;я";
 $locale['global_102'] = "Пароль";
 $locale['global_103'] = "зберігати";
 $locale['global_104'] = "Вхід";
@@ -356,11 +373,13 @@ $locale['global_900'] = "Неможливо конвертувати HEX в DEC"
 $locale['global_ML100'] = "Мова:";
 $locale['global_ML101'] = "- виберіть мову -";
 $locale['global_ML102'] = "Мова сайту";
+
 $locale['flood'] = "Нові публікації заблоковані до завершення встановленого часу контролю за флудом. Будь ласка, зачекайте %s";
 $locale['no_image'] = "Зображення відсутнє";
-// ex. oneword.locale.php
 $locale['send_message'] = "Надіслати повідомлення";
 $locale['go_profile'] = "Перейти у профіль %s";
+
+// ex. oneword.locale.php
 
 // Greetings
 $locale['hello'] = "Вітаємо!";
@@ -390,6 +409,8 @@ $locale['back'] = "Назад";
 $locale['forward'] = "Далі";
 $locale['go'] = "Перейти";
 $locale['cancel'] = "Скасувати";
+$locale['move_up'] = "Вище";
+$locale['move_down'] = "Нижче";
 
 // Action
 $locale['add'] = "Додати";
@@ -465,10 +486,6 @@ $locale['testimonial_contact'] = ". Зв&lsquo;язатися зі мною мо
 $locale['testimonial_email'] = ". Також можете надіслати мені електронного листа за адресою %s";
 
 // Words for formatting to single and plural forms. Count of forms is language-dependent
-// Here must be three forms of word with | as separtator:
-// First form for 1, 21, 31, etc.
-// Second form for 2-4, 22-24, 32-34, etc.
-// third form for 0, 5-20, 25-30, 35-40, etc.
 $locale['fmt_article'] = "стаття|статті|статей";
 $locale['fmt_blog'] = "блог|блоги|блогу";
 $locale['fmt_comment'] = "коментар|коментаря|коментарів";
