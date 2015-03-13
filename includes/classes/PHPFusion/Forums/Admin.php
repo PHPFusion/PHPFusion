@@ -323,7 +323,7 @@ class Admin {
 			$this->data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
 			$this->data = self::get_forum($this->data['forum_id']);
 			if (!empty($this->data)) {
-				$this->data['forum_access'] = form_sanitizer($_POST['forum_access'], USER_LEVEL_MEMBER, 'forum_access');
+				$this->data['forum_access'] = form_sanitizer($_POST['forum_access'], USER_LEVEL_PUBLIC, 'forum_access');
 				$this->data['forum_post'] = form_sanitizer($_POST['forum_post'], USER_LEVEL_MEMBER, 'forum_post');
 				$this->data['forum_reply'] = form_sanitizer($_POST['forum_reply'], USER_LEVEL_MEMBER, 'forum_reply');
 				$this->data['forum_post_ratings'] = form_sanitizer($_POST['forum_post_ratings'], USER_LEVEL_MEMBER, 'forum_post_ratings');
