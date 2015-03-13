@@ -18,14 +18,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-use PHPFusion\UserFieldsInput;
-
 require_once "../maincore.php";
-if (!checkrights("M") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+$settings = fusion_get_settings();
 require_once THEMES."templates/admin_header.php";
+pageAccess('M');
 require_once INCLUDES."suspend_include.php";
 include LOCALE.LOCALESET."admin/members.php";
 include LOCALE.LOCALESET."user_fields.php";
@@ -164,14 +160,15 @@ elseif (isset($_GET['step']) && $_GET['step'] == "view" && $user_id && (!$isAdmi
 }
 elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmin || iSUPERADMIN)) {
 	$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
-	if (!$user_data || $user_data['user_level'] == 103) {
+	if (!$user_data || $user_data['user_level'] == -103) {
 		redirect(FUSION_SELF.$aidlink);
 	}
 	$errors = array();
 	if (isset($_POST['savechanges'])) {
-		$userInput = new UserFieldsInput();
+		$userInput = new \PHPFusion\UserFieldsInput();
 		$userInput->userData = $user_data;
 		$userInput->adminActivation = 0;
+		$userInput->registration = FALSE;
 		$userInput->emailVerification = 0;
 		$userInput->isAdminPanel = TRUE;
 		$userInput->skipCurrentPass = TRUE;
@@ -180,16 +177,15 @@ elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmi
 		$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
 		unset($userInput);
 	}
+
 	opentable($locale['430']);
 	add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['430']));
-	//member_nav(member_url("edit", $user_id)."| ".$locale['430']);
-
 	$userFields = new UserFields();
 	$userFields->postName = "savechanges";
 	$userFields->postValue = $locale['430'];
 	//$userFields->formaction = FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$user_id;
-	$userFields->displayValidation = $settings['display_validation'];
-	//$userFields->displayTerms = $settings['enable_terms'];
+	$userFields->displayValidation = 0;
+	$userFields->displayTerms = false;
 	$userFields->plugin_folder = INCLUDES."user_fields/";
 	$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 	$userFields->showAdminPass = FALSE;

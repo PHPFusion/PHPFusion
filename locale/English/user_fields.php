@@ -75,6 +75,7 @@ $locale['u130'] = "Admin passwords";
 $locale['u131'] = "Admin password";
 $locale['u132'] = "Login passwords";
 $locale['u133'] = "Login password";
+$locale['u134'] = "New Password";
 $locale['u134a'] = "Set Password";
 $locale['u134b'] = "Repeat Password";
 $locale['u135a'] = "Current Password";

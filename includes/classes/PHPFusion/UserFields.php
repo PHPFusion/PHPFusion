@@ -17,9 +17,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+
+if (!defined("IN_FUSION")) die("Access Denied");
+
 require_once THEMES."templates/global/profile.php";
 
 class UserFields extends QuantumFields {
@@ -220,7 +220,6 @@ class UserFields extends QuantumFields {
 		render_userform($this->info);
 	}
 
-
 	/*-----------------------------------------
 	+ User Profile 2.0 for Version 9.00
 	+ Generates only array and calls up an external
@@ -324,14 +323,11 @@ class UserFields extends QuantumFields {
 					$this->callback_data += dbarray(dbquery("SELECT * FROM ".DB_PREFIX.$data['field_cat_db']." WHERE ".$data['field_cat_index']."='".$this->userData['user_id']."'"));
 				}
 			}
-			// require to inject id when id not present in other pages to make reference as Quantum Fields $index_value
-			//print_p($this->method, 1);
-			//if ($index_page_id !=='1' && (!$this->registration)) {
+
 			if ($this->method == 'input') {
 				$this->info['user_field'] = $_GET['profiles'] !== 1 ? form_hidden('', 'user_id', 'user_id', $this->userData['user_id']) : '';
 				$this->info['user_field'] .= $_GET['profiles'] !== 1 ? form_hidden('', 'user_name', 'user_name', $this->userData['user_name']) : '';
 			} elseif ($this->method == 'display') {
-				//print_p($this->registration);
 				$this->info['user_field'] = array();
 			}
 			// filter display - input and display method.
@@ -342,10 +338,18 @@ class UserFields extends QuantumFields {
 						if (isset($item[$cat_id])) {
 							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
 							foreach ($item[$cat_id] as $field_id => $field) {
-								//@todo: switch field type
-								$this->info['user_field'] .= $this->display_fields($field, array('show_title' => 1,
+								$options = array(
+									'show_title' => 1,
 									'inline' => 1,
-									'required' => $field['field_required'] ? 1 : 0));
+									'required' => $field['field_required'] ? 1 : 0
+								);
+								if ($field['field_type'] == 'file') {
+									$options += array(
+										'plugin_folder'=> $this->plugin_folder,
+										'plugin_locale_folder' => $this->plugin_locale_folder
+									);
+								}
+								$this->info['user_field'] .= $this->display_fields($field, $this->userData, $this->method, $options);
 							}
 						}
 					} else {
@@ -353,8 +357,9 @@ class UserFields extends QuantumFields {
 						if (isset($item[$cat_id])) {
 							$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
 							foreach ($item[$cat_id] as $field_id => $field) {
-								if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $this->display_fields($field)) {
-									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $this->display_fields($field);
+								$render = $this->display_fields($field, $this->userData, $this->method);
+								if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $render) {
+									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $render;
 								}
 							}
 						}

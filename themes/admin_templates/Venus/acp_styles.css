@@ -28,6 +28,9 @@ label, .control-label, .label-control {
 	padding: 6px 12px;
 	font-size: 13px;
 }
+.well {
+	padding:15px !important;
+}
 
 .breadcrumb {
 

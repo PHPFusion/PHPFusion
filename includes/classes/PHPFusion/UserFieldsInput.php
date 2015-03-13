@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
-//@todo: merge user fields into 1 single file.
+
 class UserFieldsInput {
 	public $adminActivation = 1;
 	public $emailVerification = 1;
@@ -64,28 +64,26 @@ class UserFieldsInput {
 		$this->_setPassword();
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
-		//$this->_setEmptyFields();
-		if (!defined('FUSION_NULL')) {
-			if ($this->emailVerification) {
-				$this->_setEmailVerification();
-			} else {
-				$this->_setUserDataInput();
-			}
+		if ($this->emailVerification) {
+			$this->_setEmailVerification();
+		} else {
+			$this->_setUserDataInput();
 		}
+
 	}
 
 	public function saveUpdate() {
+		global $defender;
 		$this->_method = "validate_update";
 		$this->data = $this->userData;
 		self::_setEmptyFields();
 		$this->_settUserName();
 		$this->_setPassword();
-		$this->_setAdminPassword();
+		if (!defined('ADMIN_PANEL')) $this->_setAdminPassword();
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
-
 		$this->_setUserAvatar();
-		if (!defined('FUSION_NULL')) $this->_setUserDataUpdate();
+		$this->_setUserDataUpdate();
 	}
 
 	public function displayMessages() {
@@ -105,8 +103,6 @@ class UserFieldsInput {
 			echo admin_message("$message");
 			closetable();
 			echo "</div>\n";
-		} else {
-			redirect(FUSION_REQUEST);
 		}
 	}
 
@@ -306,7 +302,6 @@ class UserFieldsInput {
 			$this->_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
 			$this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
 			$this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2"); // var3
-			//print_p($_POST);
 			$passAuth = new PasswordAuth();
 			if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
 				// New Admin
@@ -563,7 +558,7 @@ class UserFieldsInput {
 				'user_theme' => 'Default',
 				'user_language' => LANGUAGE,
 			);
-		} else {
+		} elseif ($this->_method == 'validate_update') {
 			$this->data['user_theme'] = (isset($_POST['user_theme'])) ? $_POST['user_theme'] : 'Default';
 			$this->data['user_timezone'] = (isset($_POST['user_timezone'])) ? $_POST['user_timezone'] : fusion_get_settings('timeoffset');
 			$this->data['user_hide_email'] = $this->_userHideEmail;
