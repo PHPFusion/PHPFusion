@@ -662,7 +662,6 @@ nav > ul > li > a:hover {
 
 #panel-side1 li, #panel-side2 li, #panel-side3 li, #panel-side4 li, #panel-side5 li, #panel-side6 li {
     display: block;
-    padding: 10px;
 }
 
 #panel-side1 li img.handle, #panel-side2 li img.handle, #panel-side3 li img.handle, #panel-side4 li img.handle, #panel-side5 li img.handle, #panel-side6 li img.handle {
