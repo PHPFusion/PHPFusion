@@ -662,7 +662,6 @@ nav > ul > li > a:hover {
 
 #panel-side1 li, #panel-side2 li, #panel-side3 li, #panel-side4 li, #panel-side5 li, #panel-side6 li {
     display: block;
-    margin: 30px;
     padding: 10px;
 }
 
