@@ -1,14 +1,13 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System Version 8
-| Copyright (C) 2002 - 2013 Nick Jones
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Project File: Form API - Address Input Based
-| Filename: form_geomap.php
+| Filename: form_document.php
 | Author: Frederick MC Chan (Hien)
-| Sub-Author: Joakim Falke
-| Communities of PHP-Fusion at PHP-Fusion.co.uk
+| Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

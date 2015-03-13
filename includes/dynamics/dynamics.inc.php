@@ -1,8 +1,8 @@
 <?php
 
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System Version 8
-| Copyright (C) 2002 - 2013 Nick Jones
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Project File: Dynamic Form Builder formstack() i/o

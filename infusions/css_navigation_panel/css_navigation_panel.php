@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: navigation_panel.php
 | Author: Nick Jones (Digitanium)
-| Co-author: Chubatyj Vitalij (Rizado)
+| Co-Author: Chubatyj Vitalij (Rizado)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
