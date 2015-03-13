@@ -106,7 +106,7 @@ function renderButton($name, $label, $mode = 'next') {
 		$icon = 'cw';
 	}
 	echo "<div class='text-right'>\n";
-	echo "<button type='submit' name='".$name."' value='$label' class='btn $btnType'><i class='entypo $icon'></i> $label</button>\n";
+	echo "<button type='submit' name='".$name."' value='$label' class='btn $btnType m-t-20'><i class='entypo $icon'></i> $label</button>\n";
 	echo "</div>\n";
 }
 
