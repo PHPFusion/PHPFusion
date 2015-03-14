@@ -33,7 +33,9 @@ if ($settings['cronjob_hour'] < (time()-360)) {
 // Cron Job (24 HOUR)
 if ($settings['cronjob_day'] < (time()-86400)) {
 	$new_time = time();
-	dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp < '".(time()-1209600)."'");
+	if (db_exists(DB_FORUM_THREAD_NOTIFY)) {
+		dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp < '".(time()-1209600)."'");
+	}
 	dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_datestamp < '".(time()-86400)."'");
 	dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_datestamp < '".(time()-86400)."'");
 	$usr_inactive = dbcount("(user_id)", DB_USERS, "user_status='3' AND user_actiontime!='0' AND user_actiontime < '".time()."'");
@@ -65,16 +67,28 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 		} else {
 			while ($data = dbarray($result)) {
 				dbquery("DELETE FROM ".DB_USERS." WHERE user_id='".$data['user_id']."'");
-				dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$data['user_id']."'");
+				if (db_exists(DB_ARTICLES)) {
+					dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$data['user_id']."'");
+				}
 				dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name='".$data['user_id']."'");
 				dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to='".$data['user_id']."' OR message_from='".$data['user_id']."'");
-				dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$data['user_id']."'");
-				dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$data['user_id']."'");
+				if (db_exists(DB_NEWS)) {
+					dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$data['user_id']."'");
+				}
+				if (db_exists(DB_POLL_VOTES)) {
+					dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user='".$data['user_id']."'");
+				}
 				dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_user='".$data['user_id']."'");
 				dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user='".$data['user_id']."'");
-				dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$data['user_id']."'");
-				dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$data['user_id']."'");
-				dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$data['user_id']."'");
+				if (db_exists(DB_FORUM_THREADS)) {
+					dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author='".$data['user_id']."'");
+				}
+				if (db_exists(DB_FORUM_POSTS)) {
+					dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author='".$data['user_id']."'");
+				}
+				if (db_exists(DB_FORUM_THREAD_NOTIFY)) {
+					dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user='".$data['user_id']."'");
+				}
 			}
 		}
 		if ($usr_deactivate > 10) {
