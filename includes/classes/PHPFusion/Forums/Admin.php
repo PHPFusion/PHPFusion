@@ -126,7 +126,10 @@ class Admin {
 		/* Make an infinity traverse */
 		function breadcrumb_arrays($index, $id) {
 			global $aidlink;
-			$crumb = array();
+			$crumb = array(
+				'link' => array(),
+				'title' => array()
+			);
 			if (isset($index[get_parent($index, $id)])) {
 				$_name = dbarray(dbquery("SELECT forum_id, forum_name FROM ".DB_FORUMS." WHERE forum_id='".intval($id)."'"));
 				$crumb = array('link'=>array(FUSION_SELF.$aidlink."&amp;parent_id=".$_name['forum_id']), 'title'=>array($_name['forum_name']));
@@ -142,15 +145,9 @@ class Admin {
 		}
 		// then we make a infinity recursive function to loop/break it out.
 		$crumb = breadcrumb_arrays($this->forum_index, $_GET['parent_id']);
-		// then we sort in reverse.
-		if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
 		add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['forum_000c']));
-		if (count($crumb['title']) > 1) {
-			foreach($crumb['title'] as $i => $value) {
-				add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$value));
-			}
-		} elseif (isset($crumb['title'])) {
-			add_to_breadcrumbs(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
+		for ($i = count($crumb['title'])-1; $i >= 0; $i--) {
+			add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$crumb['title'][$i]));
 		}
 		return $crumb;
 	}
