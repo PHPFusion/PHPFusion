@@ -126,11 +126,10 @@ class Admin {
 		/* Make an infinity traverse */
 		function breadcrumb_arrays($index, $id) {
 			global $aidlink;
-			$crumb = &$crumb;
-			//$crumb += $crumb;
+			$crumb = array();
 			if (isset($index[get_parent($index, $id)])) {
 				$_name = dbarray(dbquery("SELECT forum_id, forum_name FROM ".DB_FORUMS." WHERE forum_id='".intval($id)."'"));
-				$crumb = array('link'=>FUSION_SELF.$aidlink."&amp;parent_id=".$_name['forum_id'], 'title'=>$_name['forum_name']);
+				$crumb = array('link'=>array(FUSION_SELF.$aidlink."&amp;parent_id=".$_name['forum_id']), 'title'=>array($_name['forum_name']));
 				if (isset($index[get_parent($index, $id)])) {
 					if (get_parent($index, $id) == 0) {
 						return $crumb;
@@ -822,7 +821,7 @@ class Admin {
 	 */
 	private function display_forum_list() {
 		global $locale, $aidlink, $settings;
-		$title = !empty($this->level) ? sprintf($locale['forum_000b'], $this->level['title']) : $locale['forum_000c'];
+		$title = !empty($this->level) ? sprintf($locale['forum_000b'], $this->level['title'][0]) : $locale['forum_000c'];
 		add_to_title($title.$locale['global_201']);
 		opentable($title);
 		$threads_per_page = $settings['threads_per_page'];
