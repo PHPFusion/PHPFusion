@@ -993,6 +993,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			return $default;
 		}
 	}
+
+	throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
 }
 
 function sanitize_array($array) {
