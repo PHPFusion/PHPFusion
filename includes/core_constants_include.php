@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 
 // Path definitions
-if (!defined('BASEDIR')) define("BASEDIR", dirname(fusion_get_relative_path_to_config() ? : '../fake').'/');
+if (!defined('BASEDIR')) define("BASEDIR", strpos(fusion_get_relative_path_to_config(), '/') === FALSE ? '' : dirname(fusion_get_relative_path_to_config()).'/');
 define("ADMIN", BASEDIR."administration/");
 define("CLASSES", BASEDIR."includes/classes/");
 define("DOWNLOADS", BASEDIR."downloads/");

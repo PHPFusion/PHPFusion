@@ -1196,7 +1196,7 @@ function fusion_get_settings($key = NULL) {
 function fusion_get_relative_path_to_config($max_level = 7) {
 	static $config_path = NULL;
 	if ($config_path === NULL) {
-		$basedir = "./";
+		$basedir = "";
 		$i = 0;
 		while ($i <= $max_level and !file_exists($basedir."config.php")) {
 			$basedir .= "../";
