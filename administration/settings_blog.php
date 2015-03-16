@@ -5,7 +5,8 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: settings_blog.php
-| Author: Starefossen
+| Author: Hien (Frederick MC Chan),
+| Co-Author: Starefossen
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,71 +17,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-pageAccess('S13', false);
+pageAccess('S13');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 add_to_breadcrumbs(array('link'=>ADMIN."settings_blog.php".$aidlink, 'title'=>$locale['blog_settings']));
-if (isset($_POST['savesettings'])) {
-	$error = 0;
-	$blog_image_link = form_sanitizer($_POST['blog_image_link'], '0', 'blog_image_link');
-	$blog_image_frontpage = form_sanitizer($_POST['blog_image_frontpage'], '0', 'blog_image_frontpage');
-	$blog_image_readmore = form_sanitizer($_POST['blog_image_readmore'], '0', 'blog_image_readmore');
-	$blog_thumb_ratio = form_sanitizer($_POST['blog_thumb_ratio'], '0', 'blog_thumb_ratio');
-	$blog_thumb_w = form_sanitizer($_POST['blog_thumb_w'], '300', 'blog_thumb_w');
-	$blog_thumb_h = form_sanitizer($_POST['blog_thumb_h'], '150', 'blog_thumb_h');
-	$blog_photo_w = form_sanitizer($_POST['blog_photo_w'], '400', 'blog_photo_w');
-	$blog_photo_h = form_sanitizer($_POST['blog_photo_h'], '300', 'blog_photo_h');
-	$blog_photo_max_w = form_sanitizer($_POST['blog_photo_max_w'], '1800', 'blog_photo_max_w');
-	$blog_photo_max_h = form_sanitizer($_POST['blog_photo_max_h'], '1600', 'blog_photo_max_h');
-	$blog_photo_max_b = form_sanitizer($_POST['calc_b'], '150', 'calc_b')*form_sanitizer($_POST['calc_c'], '100000', 'calc_c');
-	if (!defined('FUSION_NULL')) {
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_image_link' WHERE settings_name='blog_image_link'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_image_frontpage' WHERE settings_name='blog_image_frontpage'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_image_readmore' WHERE settings_name='blog_image_readmore'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_thumb_ratio' WHERE settings_name='blog_thumb_ratio'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_thumb_w' WHERE settings_name='blog_thumb_w'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_thumb_h' WHERE settings_name='blog_thumb_h'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_photo_w' WHERE settings_name='blog_photo_w'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_photo_h' WHERE settings_name='blog_photo_h'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_photo_max_w' WHERE settings_name='blog_photo_max_w'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_photo_max_h' WHERE settings_name='blog_photo_max_h'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$blog_photo_max_b' WHERE settings_name='blog_photo_max_b'");
-		if (!$result) {
-			$error = 1;
-		}
-		redirect(FUSION_SELF.$aidlink."&error=".$error);
-	}
-}
 
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);
@@ -88,6 +28,34 @@ while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 
+if (isset($_POST['savesettings'])) {
+	$error = 0;
+	// noticed faster peformance in new method.
+	$settings2 = array(
+		'blog_image_link' =>  form_sanitizer($_POST['blog_image_link'], '0', 'blog_image_link'),
+		'blog_image_frontpage' => form_sanitizer($_POST['blog_image_frontpage'], '0', 'blog_image_frontpage'),
+		'blog_image_readmore' => form_sanitizer($_POST['blog_image_readmore'], '0', 'blog_image_readmore'),
+		'blog_thumb_ratio' => form_sanitizer($_POST['blog_thumb_ratio'], '0', 'blog_thumb_ratio'),
+		'blog_thumb_w' => form_sanitizer($_POST['blog_thumb_w'], '300', 'blog_thumb_w'),
+		'blog_thumb_h' => form_sanitizer($_POST['blog_thumb_h'], '150', 'blog_thumb_h'),
+		'blog_photo_w' => form_sanitizer($_POST['blog_photo_w'], '400', 'blog_photo_w'),
+		'blog_photo_h' => form_sanitizer($_POST['blog_photo_h'], '300', 'blog_photo_h'),
+		'blog_photo_max_w' => form_sanitizer($_POST['blog_photo_max_w'], '1800', 'blog_photo_max_w'),
+		'blog_photo_max_h' => form_sanitizer($_POST['blog_photo_max_h'], '1600', 'blog_photo_max_h'),
+		'blog_photo_max_b' => form_sanitizer($_POST['calc_b'], '150', 'calc_b')*form_sanitizer($_POST['calc_c'], '100000', 'calc_c'),
+	);
+	foreach($settings2 as $settings_key => $settings_value) {
+		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_value."' WHERE settings_name='".$settings_key."'");
+		if (!$result) {
+			$defender->stop();
+			$error = 1;
+			break;
+		}
+	}
+	if (!defined('FUSION_NULL')) {
+		redirect(FUSION_SELF.$aidlink."&error=".$error);
+	}
+}
 opentable($locale['blog_settings']);
 
 if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
@@ -186,5 +154,3 @@ function calculate_byte($download_max_b) {
 	}
 	return 1000000;
 }
-
-?>

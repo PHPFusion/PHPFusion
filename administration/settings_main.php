@@ -20,98 +20,91 @@ pageAccess('S1');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 add_to_breadcrumbs(array('link'=>ADMIN."settings_main.php".$aidlink, 'title'=>$locale['main_settings']));
+
+$settings2 = array();
+$result = dbquery("SELECT * FROM ".DB_SETTINGS);
+while ($data = dbarray($result)) {
+	$settings2[$data['settings_name']] = $data['settings_value'];
+}
+
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	$htc = "";
-	$siteintro = descript(stripslash($_POST['intro']));
-	$sitefooter = descript(stripslash($_POST['footer']));
-	$site_host = "";
-	$site_path = "/";
-	$site_protocol = "http";
-	$site_port = "";
-	if (in_array($_POST['site_protocol'], array("http", "https"))) {
-		$site_protocol = $_POST['site_protocol'];
-	}
+
+	$settings2 = array(
+		'siteintro' => addslashes(addslashes(descript(stripslash($_POST['intro'])))), //... oh my god, this was simplified by merging all commits thus so far.
+		'footer' => addslashes(addslashes(descript(stripslash($_POST['footer'])))),
+		'site_protocol' => (in_array($_POST['site_protocol'], array('http','https'))) ? stripinput($_POST['site_protocol']) : 'http',
+		'site_host' => '',
+		'site_path' => '/',
+		'siteurl' => '',
+		'site_port' => ((isnum($_POST['site_port']) || $_POST['site_port'] == "") && !in_array($_POST['site_port'], array(0, 80, 443))) ? $_POST['site_port'] : '',
+		'sitename' => form_sanitizer($_POST['sitename'], '', 'sitename'),
+		'sitebanner' => form_sanitizer($_POST['sitebanner'], '', 'sitebanner'),
+		'siteemail' => form_sanitizer($_POST['siteemail'], '', 'siteemail'),
+		'siteusername' => form_sanitizer($_POST['username'], '', 'username'),
+		'description' => form_sanitizer($_POST['description'], '', 'description'),
+		'keywords' => form_sanitizer($_POST['keywords'], '', 'keywords'),
+		'opening_page' => form_sanitizer($_POST['opening_page'], '', 'opening_page'),
+		'admin_theme' => form_sanitizer($_POST['admin_theme'], '', 'admin_theme'),
+		'theme' =>  form_sanitizer($_POST['theme'], '', 'theme'),
+		'bootstrap' => form_sanitizer($_POST['bootstrap'], 0, 'bootstrap'),
+		'default_search' => stripinput($_POST['default_search']),
+		'exclude_left' => form_sanitizer($_POST['exclude_left'], '', 'exclude_left'),
+		'exclude_upper' => form_sanitizer($_POST['exclude_upper'], '', 'exclude_upper'),
+		'exclude_aupper' =>  form_sanitizer($_POST['exclude_aupper'], '', 'exclude_aupper'),
+		'exclude_lower' => form_sanitizer($_POST['exclude_lower'], '', 'exclude_lower'),
+		'exclude_blower' => form_sanitizer($_POST['exclude_blower'], '', 'exclude_blower'),
+		'exclude_right' => form_sanitizer($_POST['exclude_right'], '', 'exclude_right'),
+	);
+
+	/** Site Host */
 	if ($_POST['site_host'] && $_POST['site_host'] != "/") {
-		$site_host = stripinput($_POST['site_host']);
-		if (strpos($site_host, "/") !== FALSE) {
-			$site_host = explode("/", $site_host, 2);
-			if ($site_host[1] != "") {
-				$site_path = "/".$site_host[1];
+		$settings2['site_host'] = stripinput($_POST['site_host']);
+		if (strpos($settings2['site_host'], "/") !== FALSE) {
+			$settings2['site_host'] = explode("/", $settings2['site_host'], 2);
+			if ($settings2['site_host'][1] != "") {
+				$settings2['site_path'] = "/".$settings2['site_host'][1];
 			}
-			$site_host = $site_host[0];
+			$settings2['site_host'] = $settings2['site_host'][0];
 		}
 	} else {
+		$error = 1;
 		$defender->stop();
 		$defender->addNotice($locale['902']);
 	}
-	if (($_POST['site_path'] && $_POST['site_path'] != "/") || $site_path != "/") {
-		if ($site_path == "/") {
-			$site_path = stripinput($_POST['site_path']);
+
+	/** Site Path  -- someone simplify this to 1 line.. this can obviously move into the top */
+	if (($_POST['site_path'] && $_POST['site_path'] != "/") || $settings2['site_path'] != "/") {
+		if ($settings2['site_path'] == "/") {
+			$settings2['site_path'] = stripinput($_POST['site_path']);
 		}
-		$site_path = (substr($site_path, 0, 1) != "/" ? "/" : "").$site_path.(strrchr($site_path, "/") != "/" ? "/" : "");
+		$settings2['site_path'] = (substr($settings2['site_path'], 0, 1) != "/" ? "/" : "").$settings2['site_path'].(strrchr($settings2['site_path'], "/") != "/" ? "/" : "");
 	}
-	if ((isnum($_POST['site_port']) || $_POST['site_port'] == "") && !in_array($_POST['site_port'], array(0, 80, 443))
-	) {
-		$site_port = $_POST['site_port'];
+
+	// Parse siteurl externally
+	$settings2['siteurl'] = $settings2['site_protocol']."://".$settings2['site_host'].($settings2['site_port'] ? ":".$settings2['site_port'] : "").$settings2['site_path'];
+
+	foreach($settings2 as $settings_key => $settings_value) {
+		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_value."' WHERE settings_name='".$settings_key."'");
+		if (!$result) {
+			$defender->stop();
+			$error = 1;
+			break;
+		}
 	}
-	$siteurl = $site_protocol."://".$site_host.($site_port ? ":".$site_port : "").$site_path;
-	$sitename = !defined('FUSION_NULL') ? form_sanitizer($_POST['sitename'], '', 'sitename') : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$sitename' WHERE settings_name='sitename'") : '';
-	$sitebanner = form_sanitizer($_POST['sitebanner'], '', 'sitebanner');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$sitebanner' WHERE settings_name='sitebanner'") : '';
-	$siteemail = form_sanitizer($_POST['siteemail'], '', 'siteemail');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$siteemail' WHERE settings_name='siteemail'") : '';
-	$username = form_sanitizer($_POST['username'], '', 'username');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$username' WHERE settings_name='siteusername'") : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_protocol."' WHERE settings_name='site_protocol'") : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_host."' WHERE settings_name='site_host'") : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_path."' WHERE settings_name='site_path'") : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$site_port."' WHERE settings_name='site_port'") : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$siteurl."' WHERE settings_name='siteurl'") : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslashes(addslashes($siteintro))."' WHERE settings_name='siteintro'") : '';
-	$description = form_sanitizer($_POST['description'], '', 'description');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$description' WHERE settings_name='description'") : '';
-	$keywords = form_sanitizer($_POST['keywords'], '', 'keywords');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$keywords' WHERE settings_name='keywords'") : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslashes(addslashes($sitefooter))."' WHERE settings_name='footer'") : '';
-	$opening_page = form_sanitizer($_POST['opening_page'], '', 'opening_page');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$opening_page' WHERE settings_name='opening_page'") : '';
-	$admin_theme = form_sanitizer($_POST['admin_theme'], '', 'admin_theme');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$admin_theme' WHERE settings_name='admin_theme'") : '';
-	$theme = form_sanitizer($_POST['theme'], '', 'theme');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$theme' WHERE settings_name='theme'") : '';
-	$bootstrap = form_sanitizer($_POST['bootstrap'], 0, 'bootstrap');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$bootstrap' WHERE settings_name='bootstrap'") : '';
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['default_search'])."' WHERE settings_name='default_search'") : '';
-	$exclude_left = form_sanitizer($_POST['exclude_left'], '', 'exclude_left');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_left' WHERE settings_name='exclude_left'") : '';
-	$exclude_upper = form_sanitizer($_POST['exclude_upper'], '', 'exclude_upper');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_upper' WHERE settings_name='exclude_upper'") : '';
-	$exclude_aupper = form_sanitizer($_POST['exclude_aupper'], '', 'exclude_aupper');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_aupper' WHERE settings_name='exclude_aupper'") : '';
-	$exclude_lower = form_sanitizer($_POST['exclude_lower'], '', 'exclude_lower');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_lower' WHERE settings_name='exclude_lower'") : '';
-	$exclude_blower = form_sanitizer($_POST['exclude_blower'], '', 'exclude_blower');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_blower' WHERE settings_name='exclude_blower'") : '';
-	$exclude_right = form_sanitizer($_POST['exclude_right'], '', 'exclude_right');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$exclude_right' WHERE settings_name='exclude_right'") : '';
+
 	if (!defined('FUSION_NULL')) {
 		// We are adding and setting some notices here
 		addNotice("success", "Settings were successfully updated!");
 		addNotice("success", "Yet another success!");
 		addNotice("warning", "Oh noes, something went wrong :(");
 		//setNotice("info", "This notice will overwrite any other notice previously set.");
-
 		// this line can be commented out to prove form resubmision will not trigger further notices
-		redirect(FUSION_SELF.$aidlink); 
+		redirect(FUSION_SELF.$aidlink);
 	}
 }
-$settings2 = array();
-$result = dbquery("SELECT * FROM ".DB_SETTINGS);
-while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
-}
+
 $theme_files = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
 $admin_theme_files = makefilelist(THEMES."admin_templates/", ".|..", TRUE, "folders");
 opentable($locale['main_settings']);
@@ -126,40 +119,40 @@ $notices = getNotices();
 renderNotices($notices);
 
 /********************************************
- Functions below are to be moved into another
- file and replace and change the way notify()
- function works mainly with the purpose of
- stopping directly outputing HTML.
+Functions below are to be moved into another
+file and replace and change the way notify()
+function works mainly with the purpose of
+stopping directly outputing HTML.
 
- This is just a showcase, feel free to adapt
- the code and largely implement it.
-*********************************************/
+This is just a showcase, feel free to adapt
+the code and largely implement it.
+ *********************************************/
 /**
-* Renders notices
-* Formats and renders notices
-* @param array $notices the array contaning notices
-* @return string the notices formatted as HTML
-*/
+ * Renders notices
+ * Formats and renders notices
+ * @param array $notices the array contaning notices
+ * @return string the notices formatted as HTML
+ */
 function renderNotices($notices) {
 	echo "<div id='close-message'>\n";
-		foreach ($notices as $status => $notice) {
-			echo "<div class='admin-message alert alert-".$status." m-t-10'>";
-			foreach ($notice as $id => $message) {
-				echo $message."<br />";
-			}
-			echo "</div>\n";
+	foreach ($notices as $status => $notice) {
+		echo "<div class='admin-message alert alert-".$status." m-t-10'>";
+		foreach ($notice as $id => $message) {
+			echo $message."<br />";
 		}
+		echo "</div>\n";
+	}
 	echo "</div>\n";
 }
 
 /**
-* Retrievs all notices
-* Retrievs all notices for the group identified by the key provided
-* @param string $key the key identifying a group holding notices, by default the page name in which the notice was set
-* @param boolean $delete whether to delete or keep a notice message after it was accessed. This only works if the notice
-* was set or added while having $removeAfterAccess set to FALSE
-* @return array the notices for the group identified by the provided key
-*/
+ * Retrievs all notices
+ * Retrievs all notices for the group identified by the key provided
+ * @param string $key the key identifying a group holding notices, by default the page name in which the notice was set
+ * @param boolean $delete whether to delete or keep a notice message after it was accessed. This only works if the notice
+ * was set or added while having $removeAfterAccess set to FALSE
+ * @return array the notices for the group identified by the provided key
+ */
 function getNotices($key = FUSION_SELF, $delete = TRUE) {
 	$notices = array();
 	if (!empty($_SESSION['notices'])) {
@@ -179,14 +172,14 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
 }
 
 /**
-* Adds a notice message
-* Adds a notice message to the group identified by the key provided
-* @param string $status the status of the message
-* @param string $value the message
-* @param string $key the key identifying a group holding notices, by default the page name in which the notice was set
-* @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once,
-* if set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed
-*/
+ * Adds a notice message
+ * Adds a notice message to the group identified by the key provided
+ * @param string $status the status of the message
+ * @param string $value the message
+ * @param string $key the key identifying a group holding notices, by default the page name in which the notice was set
+ * @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once,
+ * if set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed
+ */
 function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
 	$type = $removeAfterAccess ? 'once' : 'persist';
 	if (isset($_SESSION['notices'][$type][$key][$status])) {
@@ -197,18 +190,20 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
 }
 
 /**
-* Sets a notice message
-* Sets a notice message for the whole group identified by the key provided, this will overwrite any other notices previously set
-* @param string $status the status of the message
-* @param string $value the message
-* @param string $key the key identifying a group holding notices, by default the page name in which the notice was set
-* @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once.
-* If set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed.
-*/
+ * Sets a notice message
+ * Sets a notice message for the whole group identified by the key provided, this will overwrite any other notices previously set
+ * @param string $status the status of the message
+ * @param string $value the message
+ * @param string $key the key identifying a group holding notices, by default the page name in which the notice was set
+ * @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once.
+ * If set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed.
+ */
 function setNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
 	$type = $removeAfterAccess ? 'once' : 'persist';
 	$_SESSION['notices'][$type][$key] = array($status => array($value));
 }
+
+defender::display_user_field_session();
 
 echo "<div class='well'>".$locale['main_description']."</div>";
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
@@ -319,5 +314,4 @@ echo "/* ]]>*/\n";
 echo "</script>";
 require LOCALE.LOCALESET."global.php";
 require_once THEMES."templates/footer.php";
-
 ?>
