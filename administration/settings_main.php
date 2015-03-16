@@ -203,8 +203,6 @@ function setNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
 	$_SESSION['notices'][$type][$key] = array($status => array($value));
 }
 
-defender::display_user_field_session();
-
 echo "<div class='well'>".$locale['main_description']."</div>";
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
