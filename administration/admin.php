@@ -175,7 +175,7 @@ class Admin {
 					$html .= "<ul class='admin-submenu'>\n";
 					while ($data = dbarray($result)) {
 						$secondary_active = FUSION_SELF == $data['admin_link'] || $inf_page_request == $data['admin_link'] ? "class='active'" : '';
-						$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'> ".$this->get_admin_icons($data['admin_rights'])." ".$locale[$data['admin_rights']]."</a></li>\n" : '';
+						$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'> ".$this->get_admin_icons($data['admin_rights'])." ".($data['admin_page'] == 5 ? $data['admin_title'] : $locale[$data['admin_rights']])."</a></li>\n" : '';
 					}
 					$html .= "</ul>\n";
 				}
