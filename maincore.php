@@ -107,7 +107,7 @@ define("FUSION_ROOT", $fusion_root);
 // Calculate current true url
 $script_url = explode("/", $_SERVER['PHP_SELF']);
 $url_count = count($script_url);
-$base_url_count = substr_count(BASEDIR, "/");
+$base_url_count = substr_count(BASEDIR, "/")+1;
 $current_page = "";
 while ($base_url_count != 0) {
 	$current = $url_count-$base_url_count;
