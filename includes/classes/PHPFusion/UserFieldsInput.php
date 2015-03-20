@@ -589,6 +589,7 @@ class UserFieldsInput {
 			$quantum->get_structureData();
 			$quantum->load_field_cats();
 			$quantum->setCallbackData($this->data);
+			$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
 			// how to update all the field tables without override its value?
 			if (!empty($fields_input)) {
 				foreach ($fields_input as $table_name => $fields_array) {
