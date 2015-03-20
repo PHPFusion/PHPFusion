@@ -11,6 +11,7 @@ $locale['forum_0007'] = "Moderatorius: ";
 $locale['forum_0008'] = "Direktorija";
 $locale['forum_0009'] = "Rodyti pranešimus iš anksčiau";
 $locale['forum_0010'] = "Forumo pradžia";
+$locale['forum_0011'] = "My Posts"; // translate this line
 // View Forum
 $locale['forum_0050'] = "Peržiūrėti forumą";
 $locale['forum_0051'] = "Pavadinimas";

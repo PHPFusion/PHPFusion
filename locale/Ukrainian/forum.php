@@ -11,6 +11,7 @@ $locale['forum_0007'] = "Модератор: ";
 $locale['forum_0008'] = "Каталог";
 $locale['forum_0009'] = "Показати останні повідомлення";
 $locale['forum_0010'] = "Повернутись до початку";
+$locale['forum_0011'] = "My Posts"; // translate this line
 
 // View Forum
 $locale['forum_0050'] = "Перегляд форуму";

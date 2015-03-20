@@ -14,7 +14,7 @@ if (!function_exists('render_forum')) {
 		$tab_title['id'][] = "thread";
 		$tab_title['icon'][] = "entypo window";
 
-		$tab_title['title'][] = 'My Posts';
+		$tab_title['title'][] = $locale['forum_0011'];
 		$tab_title['id'][] = "mypost";
 		$tab_title['icon'][] = "entypo user";
 

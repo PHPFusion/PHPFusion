@@ -11,6 +11,7 @@ $locale['forum_0007'] = "Diuruskan oleh: ";
 $locale['forum_0008'] = "Direktori";
 $locale['forum_0009'] = "Paparkan Pos dari sebelumnya";
 $locale['forum_0010'] = "Halaman Utama Forum Perbincangan";
+$locale['forum_0011'] = "My Posts"; // translate this line
 // View Forum
 $locale['forum_0050'] = "Kunjungan Forum";
 $locale['forum_0051'] = "Tajuk";
