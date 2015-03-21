@@ -178,9 +178,9 @@ if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 if (iMEMBER && valid_language($userdata['user_language'])) {
 	define("LANGUAGE", $userdata['user_language']);
 	define("LOCALESET", $userdata['user_language']."/");
-} elseif (isset($_COOKIE['guest_language']) && valid_language($_COOKIE['guest_language'])) {
-	define("LANGUAGE", $_COOKIE['guest_language']);
-	define("LOCALESET", $_COOKIE['guest_language']."/");
+} elseif (isset($_COOKIE[COOKIE_PREFIX.'guest_language']) && valid_language($_COOKIE[COOKIE_PREFIX.'guest_language'])) {
+	define("LANGUAGE", $_COOKIE[COOKIE_PREFIX.'guest_language']);
+	define("LOCALESET", $_COOKIE[COOKIE_PREFIX.'guest_language']."/");
 } else {
 	define ("LANGUAGE", $settings['locale']);
 	define ("LOCALESET", $settings['locale']."/");
