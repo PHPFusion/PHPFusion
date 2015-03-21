@@ -233,6 +233,8 @@ $locale['global_140'] = "Просмотр";
 $locale['global_141'] = "Смотреть опрос";
 $locale['global_142'] = "Опросы не созданы.";
 $locale['global_143'] = "Оценки.";
+// Keywords and Meta
+$locale['tags'] = "Тэги";
 // Captcha
 $locale['global_150'] = "Код проверки:";
 $locale['global_151'] = "Введите код проверки:";
