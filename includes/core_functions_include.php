@@ -149,12 +149,12 @@ function lang_switcher() {
 	$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
 	foreach ($enabled_languages as $row => $language) {
 		$lang_text = translate_lang_names($language);
-		$icon = "<img class='display-block img-responsive' src='".LOCALE.$language."/".$language.".png' alt='' title='".$lang_text."' style='min-width:20px;'>";
+		$icon = "<img class='display-block img-responsive' alt='".$language."' src='".LOCALE.$language."/".$language.".png' alt='' title='".$lang_text."' style='min-width:20px;'>";
 		if ($language != LANGUAGE) {
 			$icon = "<a class='side pull-left display-block' href='".$link_prefix.$language."'>".$icon."</a>\n ";
 		}
 		echo(($row > 0 and $row%4 === 0) ? '<br />' : '');
-		echo "<div class='lang_selector display-inline-block clearfix'>\n".$icon."</div>\n";
+		echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
 	}
 }
 
