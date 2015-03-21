@@ -7,6 +7,9 @@ $locale['ac02'] = "Keahlian";
 $locale['ac03'] = "Sistem";
 $locale['ac04'] = "Pengaturan";
 $locale['ac05'] = "Modul Infusi";
+
+$locale['ac10'] = "Admin Dashboard"; // translate this line
+
 $locale['201'] = "Pengurus";
 
 $locale['AC'] = "Kategori Artikel";

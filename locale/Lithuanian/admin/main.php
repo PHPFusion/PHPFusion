@@ -7,6 +7,9 @@ $locale['ac02'] = "Vartotojų valdymas";
 $locale['ac03'] = "Sistemos valdymas";
 $locale['ac04'] = "Nustatymai";
 $locale['ac05'] = "Įskiepiai";
+
+$locale['ac10'] = "Admin Dashboard"; // translate this line
+
 $locale['201'] = "Administratoriai";
 
 $locale['AC'] = "Straipsnių kategorijos";

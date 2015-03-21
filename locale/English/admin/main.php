@@ -7,6 +7,9 @@ $locale['ac02'] = "User Admin";
 $locale['ac03'] = "System Admin";
 $locale['ac04'] = "Settings";
 $locale['ac05'] = "Infusions";
+
+$locale['ac10'] = "Admin Dashboard";
+
 $locale['201'] = "Administrators";
 
 $locale['AC'] = "Article Categories";
