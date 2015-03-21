@@ -213,6 +213,10 @@ div.emulated-fieldset div.attachments-list {
     background-color: #FFF;
     padding: 5px 0 10px 0;
 }
+.full-header > a > img {
+	max-width: 250px;
+	margin-bottom: -30px;
+}
 
 .main-footer {
     font-family: Verdana, Arial, Helvetica, sans-serif;
