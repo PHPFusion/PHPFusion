@@ -5,7 +5,9 @@ clear: both;
 	width:30px;
 }
 
-
+.product-title {
+	margin-top:0 !important;
+}
 .eshop-column {
 	display: inline-block;
 }

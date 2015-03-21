@@ -354,7 +354,12 @@ if (!function_exists('render_eshop_product')) {
 		}
 	}
 	echo "</div>\n<div class='col-xs-12 col-sm-7'>\n";
-	echo "<h2 class='product-title'>".$data['title']."</h2>";
+		if (iADMIN && checkrights('ESHP')) {
+			global $aidlink;
+			echo "<a class='btn button btn-default btn-sm pull-right' href='".ADMIN."eshop.php".$aidlink."&amp;a_page=main&amp;section=itemform&action=edit&id=".$data['id']."'>".$locale['edit']."</a>";
+		}
+		echo "<h2 class='product-title'>".$data['title']."</h2>";
+
 	//echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info.
 	// product basic information
 	echo "<div class='text-smaller'>\n";
