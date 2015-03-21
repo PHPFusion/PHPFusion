@@ -602,7 +602,9 @@ nav {
 	border: 0;
 	text-decoration: underline;
 }
-
+.fa {
+	margin: 2px;
+}
 .eshop-nav .fa {
 	margin-top:5px;
 	margin-left:3px;
@@ -819,13 +821,10 @@ ul.list li a:hover {
 	height: 30px;
 	width: auto;
 	border-bottom: 1px solid #CCC;
-	margin: 10px 10px 10px 95px;
+	margin-bottom:20px;
 }
 
 .comment-count a, .comment-count a:hover, .comment-count a:focus {
-	color: #FFF;
-	font-size: 13px;
-	padding: 5px 10px;
 	display: inline-block;
 }
 

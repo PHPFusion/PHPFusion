@@ -105,16 +105,6 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 					require_once INCLUDES."flood_include.php";
 					if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
 						dbquery_insert(DB_COMMENTS, $comment_data, 'save');
-
-						/*$result = dbquery("INSERT INTO ".DB_COMMENTS." (
-								comment_item_id, comment_type, comment_name, comment_message, comment_datestamp,
-								comment_ip, comment_ip_type, comment_hidden
-							) VALUES (
-								'".$comment_item_id."', '".$comment_type."', '".$comment_data['comment_name']."', '".$comment_data['comment_message']."', '".time()."',
-								'".USER_IP."', '".USER_IP_TYPE."', '0'
-							)
-						"); */
-
 					}
 				}
 
@@ -166,7 +156,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 				}
 				//Add user avatar in comments new feature in v7.02.04
 				$c_arr['c_con'][$i]['user_avatar'] = display_avatar($data, '35px', '', true, 'img-rounded');
-				$c_arr['c_con'][$i]['comment_datestamp'] = $locale['global_071'].timer($data['comment_datestamp']);
+				$c_arr['c_con'][$i]['comment_datestamp'] = timer($data['comment_datestamp']);
 				$c_arr['c_con'][$i]['comment_message'] = "<!--comment_message-->\n".nl2br(parseubb(parsesmileys($data['comment_message'])));
 				if ((iADMIN && checkrights("C")) || (iMEMBER && $data['comment_name'] == $userdata['user_id'] && isset($data['user_name']))) {
 
