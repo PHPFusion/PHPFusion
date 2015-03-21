@@ -23,11 +23,8 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 	//$clink = BASEDIR.$clink;
 	$link = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
 	$link = preg_replace("^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $link);
-
 	// sanitize the GET comment
 	$_GET['comment'] = isset($_GET['comment']) && isnum($_GET['comment']) ? $_GET['comment'] : 0;
-
-
 	$cpp = $settings['comments_per_page'];
 	if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
 		if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$_GET['comment_id']."' AND comment_name='".$userdata['user_id']."'"))) {
@@ -154,7 +151,6 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 				} else {
 					$c_arr['c_con'][$i]['comment_name'] = $data['comment_name'];
 				}
-				//Add user avatar in comments new feature in v7.02.04
 				$c_arr['c_con'][$i]['user_avatar'] = display_avatar($data, '35px', '', true, 'img-rounded');
 				$c_arr['c_con'][$i]['comment_datestamp'] = timer($data['comment_datestamp']);
 				$c_arr['c_con'][$i]['comment_message'] = "<!--comment_message-->\n".nl2br(parseubb(parsesmileys($data['comment_message'])));
