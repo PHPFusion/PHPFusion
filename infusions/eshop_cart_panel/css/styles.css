@@ -12,7 +12,7 @@
 	border: 0 !important;
 	text-shadow: none !important;
 }
-
+.cart-blank {}
 .cart-bar {
 	display: block;
 	min-height:50px;

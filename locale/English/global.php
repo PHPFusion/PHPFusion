@@ -234,6 +234,9 @@ $locale['global_141'] = "View Poll";
 $locale['global_142'] = "There are no polls defined.";
 $locale['global_143'] = "Ratings";
 
+// Keywords and Meta
+$locale['tags'] = "Tags";
+
 // Captcha
 $locale['global_150'] = "Validation Code:";
 $locale['global_151'] = "Enter Validation Code:";

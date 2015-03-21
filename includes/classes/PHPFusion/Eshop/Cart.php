@@ -244,12 +244,24 @@ class Cart {
 		if (dbrows($result)>0) {
 			$cart_total = Eshop::get_cart_total($puid);
 		}
+		$color = fusion_get_settings('eshop_cart_color');
+		switch($color) {
+			case 'red':
+				$color = 'btn-danger';
+				break;
+			case 'green':
+				$color = 'btn-success';
+				break;
+			default :
+				$color = 'btn-default';
+				break;
+		}
 		echo "<div id='cart' class='cart-bar'>\n";
 		echo "<a class='cart-tab pointer' title='".$locale['cart_purchases']."' class='display-inline-block'><i class='fa fa-shopping-cart fa-lg m-r-10 m-t-5'></i></a>\n";
 		echo "<h4><i class='fa fa-shopping-cart m-r-10'></i> ".$locale['cart_title']."</h4>";
 		echo "<div class='m-b-20'>\n";
-		echo "<div class='heading'><span>".$locale['ESHPF131'].":</span> ".fusion_get_settings('eshop_currency')." <span id='subtotal_price'>".$cart_total."</span></span>\n</div>\n";
-		echo "<a class='btn btn-sm m-t-10 ".fusion_get_settings('eshop_cart_color')."' href='".BASEDIR."eshop.php?checkout'>".$locale['check_out']."</a>\n";
+		echo "<div class='heading'><span class='display-inline m-r-5'>".$locale['ESHPF131'].":</span>".fusion_get_settings('eshop_currency')." <span id='subtotal_price'>".$cart_total."</span></span>\n</div>\n";
+		echo "<a class='btn btn-sm button m-t-10 ".($color ? $color : 'btn-success')."' href='".BASEDIR."eshop.php?checkout'>".$locale['check_out']."</a>\n";
 		echo "</div>\n";
 		echo "<h4></h4>\n";
 		// ok now load the cart as final step. and show rows.

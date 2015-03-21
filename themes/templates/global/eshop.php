@@ -317,7 +317,7 @@ if (!function_exists('render_eshop_product')) {
 
         )
 	 */
-	global $locale, $eShop;
+	global $locale;
 	$data = $info['item'][$_GET['product']];
 	echo "<div class='m-t-10'>\n";
 	echo render_breadcrumbs();
@@ -335,7 +335,7 @@ if (!function_exists('render_eshop_product')) {
 		}
 	}
 	// picture container
-	echo "<img title='".$data['title']."' id='photo_container' ".(fusion_get_settings('eshop_ratios') ? "class='img-responsive'" : "style='width:".fusion_get_settings('eshop_idisp_w2')."px; height: ".fusion_get_settings('eshop_idisp_h2')."px;' ")." src='".$data['picture']."'>\n";
+	echo "<img title='".$data['title']."' alt='".$data['title']."' id='photo_container' ".(fusion_get_settings('eshop_ratios') ? "class='img-responsive'" : "style='width:".fusion_get_settings('eshop_idisp_w2')."px; height: ".fusion_get_settings('eshop_idisp_h2')."px;' ")." src='".$data['picture']."'>\n";
 	echo "</div>\n";
 
 	if ($data['gallery_on'] == "1") {
@@ -363,23 +363,20 @@ if (!function_exists('render_eshop_product')) {
 	echo "<span class='display-block'>".$data['version']."</span>";
 	echo "<span class='display-block'>".$data['shipping']."</span>";
 	echo "<span class='display-block'>".$data['coupon_status']."</span>";
-
 	if ($data['demo']) {
 		echo "<span class='display-block'>";
 		$urlprefix = !strstr($data['demo'], "http://") ? "http://" : "";
 		echo $locale['ESHP013'].": <a href='".$urlprefix.$data['demo']."' target='_blank'>".$locale['ESHP015']."</a>";
 		echo "</span>\n";
 	}
-
-
 	echo "</div>\n";
 	// keywords
 	$keywords = $data['keywords'] ? explode(',', $data['keywords']) : '';
 	if (!empty($keywords)) {
 		echo "<div class='text-smaller'>\n";
-		echo "<span>Tags:</span> \n";
+		echo "<span id='tags-label' class='display-inline'>".$locale['tags'].":</span> \n";
 		foreach($keywords as $tag) {
-			echo "<a class='display-inline m-r-10' href=''>".$tag."</a>";
+			echo "<span class='m-r-5'>".$tag."</span>";
 		}
 		echo "</div>\n";
 	}
@@ -421,7 +418,7 @@ if (!function_exists('render_eshop_product')) {
 			foreach($current_colors as $val) {
 				$color = $full_colors[$val]['hex'];
 				$title = $full_colors[$val]['title'];
-				echo "<div><input id='".$color."' type='radio' name='product_color' value='".$val."' ".($i == 0 ? 'checked' : '')." />
+				echo "<div class='display-inline m-r-5'><input id='".$color."' type='radio' name='product_color' value='".$val."' ".($i == 0 ? 'checked' : '')." />
 				<span class='display-inline-block' style='background: $color; width:15px; height:15px; border-radius:50%; margin-left:5px;'>&nbsp;</span>
 				<small class='p-l-10'><label for='".$color."'>$title</label></small>
 				</div>";
