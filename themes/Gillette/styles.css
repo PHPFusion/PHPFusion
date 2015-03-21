@@ -155,7 +155,7 @@ div.emulated-fieldset div.attachments-list {
     color: #FFF;
     background-color: #555;
     background-image: url(images/subheader-mid.gif);
-    padding: 7px 5px 8px 5px;
+	padding: 5px;
 }
 
 .sub-header-left {
@@ -456,7 +456,24 @@ div.emulated-fieldset div.attachments-list {
     margin: 2px 0 2px 0;
     padding: 2px 2px 3px 2px;
 }
+/* Horizontal Navigation */
+#main-menu {
+	background: none !important;
+	border: 0 !important;
+}
+.sm-simple > li {
+	border: 0 !important;
+}
+.sm-simple > li:hover, .sm-simple > li:hover > a {
+	background: none !important;
+}
 
+.sm-simple > li > a {
+	padding: 0;
+	font-size:10px !important;
+	margin-right: 10px;
+	border: 0 !important;
+}
 /* Vertical Navigation */
 
 #navigation h2 {
