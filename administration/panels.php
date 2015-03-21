@@ -405,11 +405,11 @@ class fusion_panels {
 
 	/**
 	 * Panel array
-	 * @param null $panel_id
+	 * @param int|null $panel_id
 	 * @return array|string
 	 */
 	private function panels_list($panel_id = NULL) {
-		$panel_list = "";
+		$panel_list = array();
 		$result = dbquery("SELECT panel_id, panel_filename FROM ".DB_PANELS." ORDER BY panel_id");
 		while ($data = dbarray($result)) {
 			$panels[] = $data['panel_filename'];
@@ -425,15 +425,13 @@ class fusion_panels {
 			}
 		}
 		closedir($temp);
-		if ($panel_list > 0) {
-			if (count($panel_list)) sort($panel_list);
-			if ($panel_id != NULL) {
-				$panel_name = $panel_list[$panel_id];
-				return $panel_name;
-			} else {
-				return $panel_list;
-			}
+
+		if ($panel_id != NULL) {
+			return $panel_list[$panel_id];
 		}
+		sort($panel_list);
+
+		return $panel_list;
 	}
 
 	/**
@@ -577,13 +575,12 @@ class fusion_panels {
 		echo "<div class='panel-heading'>".$title."</div>\n";
 		echo "<div class='panel-body text-dark'>\n";
 		$k = 0;
-		for ($i = 0; $i < count($panel_list); $i++) {
-			echo "<div style='float:left;'>".$panel_list[$i]."</div>\n";
+		foreach ($panel_list as $panel) {
+			echo "<div style='float:left;'>".$panel."</div>\n";
 			echo "<div style='float:right; width:250px;'>";
 			echo "</div>\n";
 			echo "<div style='float:right; width:10%;'>File</div>\n";
 			echo "<div style='clear:both;'></div>\n";
-			$k++;
 		}
 		echo "</div>\n</div>\n";
 	}

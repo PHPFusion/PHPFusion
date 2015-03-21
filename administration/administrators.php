@@ -84,8 +84,8 @@ if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['us
 	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 		if (isset($_POST['rights'])) {
 			$user_rights = "";
-			for ($i = 0; $i < count($_POST['rights']); $i++) {
-				$user_rights .= ($user_rights != "" ? "." : "").stripinput($_POST['rights'][$i]);
+			foreach ($_POST['rights'] as $right) {
+				$user_rights .= ($user_rights != "" ? "." : "").stripinput($right);
 			}
 			$result = dbquery("UPDATE ".DB_USERS." SET user_rights='$user_rights' WHERE user_id='".$_GET['user_id']."' AND user_level<='-102'");
 		} else {

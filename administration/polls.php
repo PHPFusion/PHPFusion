@@ -49,26 +49,26 @@ if (isset($_POST['save'])) {
 		$poll_option[$key] = trim(stripinput($_POST['poll_option'][$key]));
 	}
 	if (isset($_GET['poll_id']) && isnum($_GET['poll_id']) && !defined('FUSION_NULL')) {
-		if ($poll_title && count($poll_option)) {
+		if ($poll_title && $poll_option) {
 			$ended = (isset($_POST['close']) ? time() : 0);
 			$values = "";
-			for ($i = 0; $i < count($poll_option); $i++) {
-				$values .= ", poll_opt_".$i."='".$poll_option[$i]."'";
+			foreach ($poll_option as $item) {
+				$values .= ", poll_opt_".$i."='".$item."'";
 			}
-			$result = dbquery("UPDATE ".DB_POLLS." SET poll_title='".$poll_title."' ".$values.", poll_ended='".$ended."' WHERE poll_id='".$_GET['poll_id']."'");
+			dbquery("UPDATE ".DB_POLLS." SET poll_title='".$poll_title."' ".$values.", poll_ended='".$ended."' WHERE poll_id='".$_GET['poll_id']."'");
 			redirect(FUSION_SELF.$aidlink."&amp;status=su");
 		} else {
 			$defender->stop();
 			$defender->addNotice($locale['439b']);
 		}
 	} elseif (!defined('FUSION_NULL')) {
-		if ($poll_title && count($poll_option)) {
+		if ($poll_title && $poll_option) {
 			$values = "";
 			for ($i = 0; $i < 10; $i++) {
 				$values .= ", '".(isset($poll_option[$i]) ? $poll_option[$i] : "")."'";
 			}
-			$result = dbquery("UPDATE ".DB_POLLS." SET poll_ended='".time()."' WHERE poll_ended='0'");
-			$result = dbquery("INSERT INTO ".DB_POLLS." (poll_title, poll_opt_0, poll_opt_1, poll_opt_2, poll_opt_3, poll_opt_4, poll_opt_5, poll_opt_6, poll_opt_7, poll_opt_8, poll_opt_9, poll_started, poll_ended, poll_language) VALUES ('".$poll_title."' ".$values.", '".time()."', '0', '".$poll_language."')");
+			dbquery("UPDATE ".DB_POLLS." SET poll_ended='".time()."' WHERE poll_ended='0'");
+			dbquery("INSERT INTO ".DB_POLLS." (poll_title, poll_opt_0, poll_opt_1, poll_opt_2, poll_opt_3, poll_opt_4, poll_opt_5, poll_opt_6, poll_opt_7, poll_opt_8, poll_opt_9, poll_started, poll_ended, poll_language) VALUES ('".$poll_title."' ".$values.", '".time()."', '0', '".$poll_language."')");
 			redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 		} else {
 			//redirect(FUSION_SELF.$aidlink); // Lazy!! :P
@@ -87,11 +87,8 @@ if (isset($_POST['preview'])) {
 	$i = 0;
 	$poll_title = stripinput($_POST['poll_title']);
 	$poll_language = stripinput($_POST['poll_language']);
-	while ($i < count($_POST['poll_option'])) {
-		$poll_option[$i] = trim(stripinput($_POST['poll_option'][$i]));
-		if (!$poll_option[$i]) {
-			$poll_option[$i] = $locale['439'];
-		}
+	foreach ($_POST['poll_option'] as $item) {
+		$poll_option[$i] = trim(stripinput($item)) ? : $locale['439'];
 		$poll .= "<label><input type='radio' name='option[]' /> ".$poll_option[$i]."</label><br /><br />\n";
 		$i++;
 	}

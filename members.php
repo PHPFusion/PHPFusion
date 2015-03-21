@@ -46,9 +46,10 @@ if (iMEMBER) {
 			$groups = "";
 			$user_groups = explode(".", $data['user_groups']);
 			$j = 0;
+			$lastIndex = count($user_groups)-1;
 			foreach ($user_groups as $key => $value) {
 				if ($value) {
-					$groups .= "<a href='profile.php?group_id=".$value."'>".getgroupname($value)."</a>".($j < count($user_groups)-1 ? ", " : "");
+					$groups .= "<a href='profile.php?group_id=".$value."'>".getgroupname($value)."</a>".($j < $lastIndex ? ", " : "");
 				}
 				$j++;
 			}

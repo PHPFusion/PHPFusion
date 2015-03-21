@@ -133,7 +133,7 @@ if (function_exists('gd_info')) {
 		}
 		$check_count = 0;
 		$photo_ids = "";
-		if (is_array($_POST['sel_photo']) && count($_POST['sel_photo']) > 0) {
+		if (is_array($_POST['sel_photo'])) {
 			foreach ($_POST['sel_photo'] as $this_photo) {
 				if (isnum($this_photo)) {
 					$photo_ids .= ($photo_ids ? "," : "").$this_photo;

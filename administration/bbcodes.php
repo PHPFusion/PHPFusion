@@ -169,31 +169,31 @@ if ($_GET['page'] == 1) {
 		echo "<td width='1%' class='tbl2' style='white-space:nowrap'></td>\n";
 		echo "</tr>\n</thead>\n<tbody>\n";
 		$xx = 0;
-		for ($lp = 0; $lp < count($available_bbcodes); $lp++) {
+		foreach ($available_bbcodes as $available_bbcode) {
 			$__BBCODE__ = "";
-			if (!in_array($available_bbcodes[$lp], $enabled_bbcodes)) {
-				if (file_exists(INCLUDES."bbcodes/images/".$available_bbcodes[$lp].".png")) {
-					$bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcodes[$lp].".png' alt='".$available_bbcodes[$lp]."' style='border:1px solid black' />\n";
-				} else if (file_exists(INCLUDES."bbcodes/images/".$available_bbcodes[$lp].".gif")) {
-					$bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcodes[$lp].".gif' alt='".$available_bbcodes[$lp]."' style='border:1px solid black' />\n";
-				} else if (file_exists(INCLUDES."bbcodes/images/".$available_bbcodes[$lp].".jpg")) {
-					$bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcodes[$lp].".jpg' alt='".$available_bbcodes[$lp]."' style='border:1px solid black' />\n";
+			if (!in_array($available_bbcode, $enabled_bbcodes)) {
+				if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".png")) {
+					$bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".png' alt='".$available_bbcode."' style='border:1px solid black' />\n";
+				} else if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".gif")) {
+					$bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".gif' alt='".$available_bbcode."' style='border:1px solid black' />\n";
+				} else if (file_exists(INCLUDES."bbcodes/images/".$available_bbcode.".jpg")) {
+					$bbcode_image = "<img src='".INCLUDES."bbcodes/images/".$available_bbcode.".jpg' alt='".$available_bbcode."' style='border:1px solid black' />\n";
 				} else {
 					$bbcode_image = "-";
 				}
-				if (file_exists(LOCALE.LOCALESET."bbcodes/".$available_bbcodes[$lp].".php")) {
-					include(LOCALE.LOCALESET."bbcodes/".$available_bbcodes[$lp].".php");
-				} elseif (file_exists(LOCALE."English/bbcodes/".$available_bbcodes[$lp].".php")) {
-					include(LOCALE."English/bbcodes/".$available_bbcodes[$lp].".php");
+				if (file_exists(LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php")) {
+					include(LOCALE.LOCALESET."bbcodes/".$available_bbcode.".php");
+				} elseif (file_exists(LOCALE."English/bbcodes/".$available_bbcode.".php")) {
+					include(LOCALE."English/bbcodes/".$available_bbcode.".php");
 				}
-				include INCLUDES."bbcodes/".$available_bbcodes[$lp]."_bbcode_include_var.php";
+				include INCLUDES."bbcodes/".$available_bbcode."_bbcode_include_var.php";
 				$cls = ($xx%2 == 0 ? "tbl2" : "tbl1");
 				echo "<tr>\n";
-				echo "<td width='1%' class='$cls' style='white-space:nowrap'>".ucwords($available_bbcodes[$lp])."</td>\n";
+				echo "<td width='1%' class='$cls' style='white-space:nowrap'>".ucwords($available_bbcode)."</td>\n";
 				echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'>".$bbcode_image."</td>\n";
 				echo "<td class='$cls'>".$__BBCODE__[0]['description']."</td>\n";
 				echo "<td class='$cls'>".$__BBCODE__[0]['usage']."</td>\n";
-				echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;enable=".$available_bbcodes[$lp]."'>".$locale['414']."</a></td>\n";
+				echo "<td align='center' width='1%' class='$cls' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;enable=".$available_bbcode."'>".$locale['414']."</a></td>\n";
 				echo "</tr>\n";
 				unset ($__BBCODE__);
 				$xx++;

@@ -123,9 +123,9 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/db-backup.php";
 if (!isset($_POST['btn_do_restore']) && (!isset($_GET['action']) || $_GET['action'] != "restore")) {
 	$backup_files = makefilelist(ADMIN."db_backups/", ".|..|index.php", TRUE);
-	if (is_array($backup_files) && count($backup_files) > 0) {
-		for ($i = 0; $i < count($backup_files); $i++) {
-			@unlink(ADMIN."db_backups/".$backup_files[$i]);
+	if (is_array($backup_files)) {
+		foreach ($backup_files as $file) {
+			@unlink(ADMIN."db_backups/".$files);
 		}
 	}
 }

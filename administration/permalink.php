@@ -338,15 +338,15 @@ if (count($available_rewrites) != count($enabled_rewrites)) {
 	echo "<td width='1%' class='tbl2' style='white-space:nowrap'><strong>".$locale['404']."</strong></td>\n";
 	echo "</tr>\n";
 	$k = 0;
-	for ($k = 0; $k < count($available_rewrites); $k++) {
-		if (!in_array($available_rewrites[$k], $enabled_rewrites)) {
-			if (file_exists(INCLUDES."rewrites/".$available_rewrites[$k]."_rewrite_info.php") && file_exists(LOCALE.LOCALESET."permalinks/".$available_rewrites[$k].".php")) {
-				include LOCALE.LOCALESET."permalinks/".$available_rewrites[$k].".php";
-				include INCLUDES."rewrites/".$available_rewrites[$k]."_rewrite_info.php";
+	foreach ($available_rewrites as $available_rewrite) {
+		if (!in_array($available_rewrite, $enabled_rewrites)) {
+			if (file_exists(INCLUDES."rewrites/".$available_rewrite."_rewrite_info.php") && file_exists(LOCALE.LOCALESET."permalinks/".$available_rewrite.".php")) {
+				include LOCALE.LOCALESET."permalinks/".$available_rewrite.".php";
+				include INCLUDES."rewrites/".$available_rewrite."_rewrite_info.php";
 				echo "<tr>\n";
 				echo "<td width='1%' class='tbl1' style='white-space:nowrap'>".$permalink_name."</td>\n";
 				echo "<td class='tbl1' style='white-space:nowrap'>".$permalink_desc."</td>\n";
-				echo "<td width='1%' class='tbl1' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;enable=".$available_rewrites[$k]."'>".$locale['404a']."</td>\n";
+				echo "<td width='1%' class='tbl1' style='white-space:nowrap'><a href='".FUSION_SELF.$aidlink."&amp;enable=".$available_rewrite."'>".$locale['404a']."</td>\n";
 				echo "</tr>\n";
 			}
 		}
