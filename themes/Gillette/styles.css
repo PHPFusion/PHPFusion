@@ -85,17 +85,26 @@ pre {
 form {
     margin: 0px;
 }
-
-.button {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 10px;
-    color: #FFF;
-    background-color: #F6A504;
-    background-image: url(images/button.gif);
-    height: auto;
-    border: 1px solid #000;
+.button .fa {
+	margin: 2px !important;
+	padding: 0 !important;
 }
-
+.button.active {
+	background: rgb(200, 33, 30) !important;
+	border: 0 !important;
+}
+.button, .button:hover, .button:focus, .button:active .button.active {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10px !important;
+    background: rgb(200, 33, 30);
+    background-image: url(images/button.gif);
+    border: 1px solid #000;
+	height: 21px !important;
+	color: #fff !important;
+	padding: 5px !important;
+	line-height: 10px;
+	border: 0 !important;
+}
 .bbcode {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 10px;
@@ -111,13 +120,14 @@ form {
     background-color: #FFF;
     padding: 4px;
 }
-
-.textbox {
+.textbox, .btn {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 12px;
     color: #555;
     background-color: #F8F8F8;
     border: 1px solid #CCC;
+	padding:2px 5px;
+	height: 26px;
 }
 
 .textbox:focus {
@@ -155,7 +165,7 @@ div.emulated-fieldset div.attachments-list {
     color: #FFF;
     background-color: #555;
     background-image: url(images/subheader-mid.gif);
-	padding: 5px;
+	padding: 0 5px;
 }
 
 .sub-header-left {
@@ -203,6 +213,10 @@ div.emulated-fieldset div.attachments-list {
     background-color: #FFF;
     padding: 5px 0 10px 0;
 }
+.full-header > a > img {
+	max-width: 250px;
+	margin-bottom: -30px;
+}
 
 .main-footer {
     font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -225,11 +239,10 @@ div.emulated-fieldset div.attachments-list {
     color: #555;
     background-color: #FFF;
     border: 1px solid #DDD;
-    padding: 4px;
+    padding: 4px 10px 20px;
 }
 
 /* Side-Panel properties */
-
 .ui-sortable {
     margin: 0;
     padding: 0;
@@ -457,21 +470,27 @@ div.emulated-fieldset div.attachments-list {
     padding: 2px 2px 3px 2px;
 }
 /* Horizontal Navigation */
-#main-menu {
+.navbar {
+	min-height:10px;
+}
+.navbar-default {
 	background: none !important;
 	border: 0 !important;
+	margin-bottom:0;
 }
-.sm-simple > li {
+.navbar-nav > li {
 	border: 0 !important;
+	margin-right: 10px;
 }
-.sm-simple > li:hover, .sm-simple > li:hover > a {
+.navbar-nav > li:hover, .navbar-nav > li:hover > a {
 	background: none !important;
 }
 
-.sm-simple > li > a {
+.navbar-nav > li > a {
+	color: rgb(255,255,255) !important;
 	padding: 0;
 	font-size:10px !important;
-	margin-right: 10px;
+
 	border: 0 !important;
 }
 /* Vertical Navigation */
@@ -610,4 +629,15 @@ div.emulated-fieldset div.attachments-list {
 
 .center, *[align="center"] {
     margin: 0 auto;
+}
+/* Universal */
+h3 {
+	font-size: 15px;
+	font-weight: 600;
+}
+/* Download Section */
+.download-left > span.text-uppercase {
+	font-size:13px;
+	font-weight: 600;
+	margin-left:10px;
 }
