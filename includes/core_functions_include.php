@@ -1223,15 +1223,15 @@ function fusion_run_installer() {
  * @return string
  */
 function fusion_detect_installation() {
-	$config_path = fusion_get_relative_path_to_config();
-	if ($config_path === NULL or !filesize($config_path)) {
+	$config_path = dirname(__DIR__).'/config.php';
+	if (!is_file($config_path) or !filesize($config_path)) {
 		fusion_run_installer();
 	}
 	return $config_path;
 }
 
 /**
- * Geth the array of enabled languages
+ * Get the array of enabled languages
  * @staticvar string[] $enabled_languages
  * @return string[]
  */
