@@ -618,7 +618,6 @@ class Eshop {
 
 	private static function set_coupon_rate() {
 		global $locale, $defender;
-
 		if (isset($_POST['apply_coupon'])) {
 			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
 			if ($coupon_code && Coupons::verify_coupon($coupon_code)) {
@@ -638,6 +637,12 @@ class Eshop {
 				$defender->stop();
 				$defender->addNotice($locale['coupon_invalid']);
 			}
+		} elseif (self::get('coupon_code')) {
+			self::set_session('coupon_code', self::get('coupon_cide'));
+			self::update_coupon();
+			// will affect gross, and vat and surcharge, grandtotal -  update all.
+			self::set_vat_rate();
+			self::update_payment();
 		}
 	}
 
@@ -1238,15 +1243,15 @@ class Eshop {
 			$current_category = self::get_current_category();
 			$info['title'] = $current_category['title'];
 			add_to_title($locale['global_201'].$current_category['title']);
-			add_to_breadcrumbs(array('link'=>BASEDIR."eshop.php?category=".$current_category['cid']."", 'title'=>$info['title']));
+			add_to_breadcrumbs(array('link'=>BASEDIR."eshop.php?category=".$current_category['cid']."", 'title'=>QuantumFields::parse_label($info['title'])));
 		} elseif ($_GET['product']) {
 			add_to_head("<link rel='canonical' href='".fusion_get_settings('siteurl')."eshop.php?product=".$_GET['product']."'/>");
-			add_to_title($locale['global_201'].$this->info['title']);
-			add_to_title($locale['global_201'].$this->info['category_title']);
+			add_to_title($locale['global_201'].QuantumFields::parse_label($this->info['title']));
+			add_to_title($locale['global_201'].QuantumFields::parse_label($this->info['category_title']));
 			if ($this->info['keywords']) { set_meta("keywords", $this->info['keywords']); }
 			if (fusion_get_settings('eshop_folderlink') == 1 && fusion_get_settings('eshop_cats') == 1) {
-				add_to_breadcrumbs(array('link'=>$this->info['category_link'], 'title'=>$this->info['category_title']));
-				add_to_breadcrumbs(array('link'=>$this->info['product_link'], 'title'=>$this->info['product_title']));
+				add_to_breadcrumbs(array('link'=>$this->info['category_link'], 'title'=>QuantumFields::parse_label($this->info['category_title'])));
+				add_to_breadcrumbs(array('link'=>$this->info['product_link'], 'title'=>QuantumFields::parse_label($this->info['product_title'])));
 			}
 		} else {
 			$info['title'] = $locale['ESHP001'];
