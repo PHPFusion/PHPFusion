@@ -6,6 +6,12 @@ class Cart {
 	public function __construct() {
 		global $locale;
 		add_to_head("<link href='".INFUSIONS."eshop_cart_panel/css/styles.css' media='all' rel='stylesheet' type='text/css' />\n");
+
+		$locale['cart_remove'] = 'Item Removed';
+		$locale['cart_remove_message'] = 'You have removed item to your cart';
+		$locale['cart_error_001'] = 'Product Cannot be Removed (Code 2)';
+		$locale['cart_error_002'] = 'There are error in processing your request. Please contact the Site Admin.';
+
 		add_to_jquery("
    		$('.cart-tab').bind('click', function(e) {
         $('#cart').toggleClass('open');
@@ -33,8 +39,8 @@ class Cart {
 							$('#product-'+Data['prid']+'-'+Data['cdyn']+'-'+Data['clr']+'-'+Data['time']).remove();
 							$('#subtotal_price').text(parseFloat(result.subtotal));
 							new PNotify({
-							title: 'Item Removed',
-							text: 'You have removed item to your cart.',
+							title: '".$locale['cart_remove']."',
+							text: '".$locale['cart_remove_message']."',
 							icon : 'notify_icon n-gift',
 							animation: 'fade',
 							width: 'auto',
@@ -42,8 +48,8 @@ class Cart {
 							});
 						} else {
 							new PNotify({
-							title: 'Product Cannot be Removed (Code 2)',
-							text: 'There are error in processing your request. Please contact the Site Admin.',
+							title: '".$locale['cart_error_001']."',
+							text: '".$locale['cart_error_002']."',
 							icon: 'notify_icon n-attention',
 							animation: 'fade',
 							width: 'auto',
@@ -53,8 +59,8 @@ class Cart {
 					},
 					error: function(result) {
 						new PNotify({
-							title: 'Error File',
-							text: 'There are error in processing your request. Please contact the Site Admin.',
+							title: '".$locale['cart_error_001']."',
+							text: '".$locale['cart_error_002']."',
 							icon: 'notify_icon n-attention',
 							animation: 'fade',
 							width: 'auto',
@@ -105,8 +111,8 @@ class Cart {
 			},
 			error: function(result) {
 				new PNotify({
-					title: 'Error File',
-					text: 'There are error in processing your request. Please contact the Site Admin.',
+					title: '".$locale['cart_error_001']."',
+					text: '".$locale['cart_error_002']."',
 					icon: 'notify_icon n-attention',
 					animation: 'fade',
 					width: 'auto',
@@ -140,10 +146,9 @@ class Cart {
 							} else {
 							$('#subtotal_price').text(parseFloat('0'));
 							}
-
 							new PNotify({
-							title: 'Item Removed',
-							text: 'You have removed item to your cart.',
+							title: '".$locale['cart_remove']."',
+							text: '".$locale['cart_remove_message']."',
 							icon : 'notify_icon n-gift',
 							animation: 'fade',
 							width: 'auto',
@@ -152,20 +157,19 @@ class Cart {
 						} else {
 							console.log(result.data);
 							new PNotify({
-							title: 'Product Cannot be Removed (Code 2)',
-							text: 'There are error in processing your request. Please contact the Site Admin.',
+							title: '".$locale['cart_error_001']."',
+							text: '".$locale['cart_error_002']."',
 							icon: 'notify_icon n-attention',
 							animation: 'fade',
 							width: 'auto',
 							delay: '3000'
 						});
 						}
-
 					},
 					error: function(result) {
 						new PNotify({
-							title: 'Error File',
-							text: 'There are error in processing your request. Please contact the Site Admin.',
+							title: '".$locale['cart_error_001']."',
+							text: '".$locale['cart_error_002']."',
 							icon: 'notify_icon n-attention',
 							animation: 'fade',
 							width: 'auto',
@@ -174,8 +178,6 @@ class Cart {
 					}
 					});
 				});
-
-
 		");
 	}
 
@@ -235,6 +237,11 @@ class Cart {
 
 	static function render_cart() {
 		global $locale;
+
+		$locale['cart_title'] = 'My Cart';
+		$locale['cart_empty'] = 'There are no items in your cart';
+		$locale['cart_purchases'] = 'Recently added item';
+
 		$puid = defender::set_sessionUserID();
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_CART." WHERE puid='$puid'");
 		$cart_total = number_format(0, 2);
@@ -242,13 +249,13 @@ class Cart {
 			$cart_total = \PHPFusion\Eshop\Eshop::get_cart_total($puid);
 		}
 		echo "<div id='cart' class='cart-bar'>\n";
-		echo "<a class='cart-tab pointer' title='Your cart is current empty' class='display-inline-block'><i class='fa fa-shopping-cart fa-lg m-r-10 m-t-5'></i></a>\n";
-		echo "<h4><i class='fa fa-shopping-cart m-r-10'></i> My Cart</h4>";
+		echo "<a class='cart-tab pointer' title='".$locale['cart_purchases']."' class='display-inline-block'><i class='fa fa-shopping-cart fa-lg m-r-10 m-t-5'></i></a>\n";
+		echo "<h4><i class='fa fa-shopping-cart m-r-10'></i> ".$locale['cart_title']."</h4>";
 		echo "<div class='m-b-20'>\n";
-		echo "<div class='heading'><span>Cart Subtotal:</span> ".fusion_get_settings('eshop_currency')." <span id='subtotal_price'>".$cart_total."</span></span>\n</div>\n";
+		echo "<div class='heading'><span>".$locale['ESHPF131'].":</span> ".fusion_get_settings('eshop_currency')." <span id='subtotal_price'>".$cart_total."</span></span>\n</div>\n";
 		echo "<a class='btn btn-sm m-t-10 ".fusion_get_settings('eshop_cart_color')."' href='".BASEDIR."eshop.php?checkout'>Checkout</a>\n";
 		echo "</div>\n";
-		echo "<h4>Recently added item</h4>\n";
+		echo "<h4></h4>\n";
 		// ok now load the cart as final step. and show rows.
 		echo "<ul id='cart-list'>\n";
 		if (dbrows($result)>0) {
@@ -256,7 +263,7 @@ class Cart {
 				echo self::cart_list_item($data);
 			}
 		} else {
-			echo "<li class='text-smaller cart-blank'>There are no items in your cart</li>\n";
+			echo "<li class='text-smaller cart-blank'>".$locale['cart_empty']."</li>\n";
 		}
 		echo "</ul>\n";
 		echo "</div>\n";

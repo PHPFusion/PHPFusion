@@ -19,6 +19,12 @@ if ($defender->verify_tokens('productfrm', 0)) {
 	$data['cadded'] = time(); // time
 	$product = \PHPFusion\Eshop\Eshop::get_productData($data['prid']);
 	if (!empty($product)) { // loaded $data
+
+		$locale['product_updated'] = 'Product Updated';
+		$locale['product_message'] = 'Your cart have been successfully updated';
+		$locale['product_error_001'] = 'Product Not Updated';
+		$locale['product_error_002'] = 'Product Not Found (Response-1)';
+
 		$data['artno'] = $product['artno']; // artno
 		$data['citem'] = $product['title']; // item name
 		$data['cimage'] = $product['picture']; // item image
@@ -30,13 +36,13 @@ if ($defender->verify_tokens('productfrm', 0)) {
 		include "includes.php";
 		$response = Cart::add_to_cart($data); // returns json responses
 		$response['error_id'] = 0;
-		$response['title'] = 'Product Updated';
-		$response['message'] = 'Your cart have been successfully updated.';
+		$response['title'] = $locale['product_updated'];
+		$response['message'] = $locale['product_message'];
 		echo json_encode($response);
 		\PHPFusion\Eshop\Eshop::refresh_session();
 	} else {
 		$defender->stop();
-		echo json_encode(array('error_id'=>1, 'title'=>'Product Not Updated', 'message'=>'Product Not Found (Response-1)'));
+		echo json_encode(array('error_id'=>1, 'title'=>$locale['product_error_001'], 'message'=>$locale['product_error_002']));
 	}
 }
 
