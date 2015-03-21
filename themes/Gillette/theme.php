@@ -1,6 +1,6 @@
 <?php
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-$settings['bootstrap'] = '0';
+//$settings['bootstrap'] = '0';
 define("THEME_BULLET", "<span class='bullet'>&middot;</span>");
 
 require_once INCLUDES."theme_functions_include.php";
