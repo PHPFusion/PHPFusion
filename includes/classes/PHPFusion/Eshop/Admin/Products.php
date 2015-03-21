@@ -3,6 +3,7 @@
 namespace PHPFusion\Eshop\Admin;
 
 use PHPFusion\Eshop\Eshop;
+use PHPFusion\QuantumFields;
 
 class Products {
 
@@ -968,7 +969,7 @@ class Products {
 		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array('downtime' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-4'>\n";
-		echo form_text($locale['ESHPPRO172'], 'title', 'titles', '', array('required'=>1, 'inline'=>1));
+		echo QuantumFields::quantum_multilocale_fields($locale['ESHPPRO172'], 'title', 'titles', '', array('required'=>1, 'inline'=>1));
 		echo form_text($locale['ESHPPRO107'], 'artno', 'artnos', '', array('inline'=>1));
 		echo form_text($locale['ESHPPRO174'], 'sartno', 'sartnos', '', array('inline'=>1));
 		echo "</div>\n";
@@ -1007,14 +1008,15 @@ class Products {
 				echo "<tr id='listItem_".$data['id']."' data-id='".$data['id']."' class='list-result'>\n";
 				echo "<td></td>\n";
 				echo "<td class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>\n";
-				echo "<a class='text-dark' title='".$locale['edit']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>".$data['title']."</a>";
+				echo "<a class='text-dark' title='".$locale['edit']."' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>
+				".QuantumFields::parse_label($data['title'])."</a>";
 				echo "<div class='actionbar text-smaller' id='product-".$data['id']."-actions'>
 				<a href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$data['id']."'>".$locale['edit']."</a> |
 				<a class='qedit pointer' data-id='".$data['id']."'>".$locale['qedit']."</a> |
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=delete&amp;id=".$data['id']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
 				";
 				echo "</td>\n";
-				echo "<td>".($settings['eshop_cats'] ? $data['cat_title'] : $locale['global_080'])."</td>\n";
+				echo "<td>".($settings['eshop_cats'] ? QuantumFields::parse_label($data['cat_title']) : $locale['global_080'])."</td>\n";
 				echo "<td>".$settings['eshop_currency']." ".number_format($data['price'], 2, '.', ',')."</td>\n";
 				echo "<td>".$data['artno']."</td>\n";
 				echo "<td>".$data['sartno']."</td>\n";
