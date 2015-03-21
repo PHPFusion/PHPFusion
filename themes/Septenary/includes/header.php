@@ -32,6 +32,7 @@ echo form_text('', 'stext', 'stext', '', array('append_button' => 1, 'placeholde
 echo closeform();
 echo "<ul id='head_nav' class='display-inline-block m-t-5 m-r-10 pull-right'>\n";
 
+$language_opts = '';
 if (sizeof(fusion_get_enabled_languages()) > 1) {
 	$language_opts = "<li class='dropdown pull-left'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-flag fa-lg'></i><span class='caret'></span></a>\n";
 	$language_opts .= "<ul class='dropdown-menu' role='lang-menu'>\n";
