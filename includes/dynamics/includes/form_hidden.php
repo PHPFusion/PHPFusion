@@ -37,7 +37,7 @@ function form_hidden($title, $input_name, $input_id, $input_value, array $option
 		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 		$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
 	}
-	$html .= "<input type='hidden' name='$input_name' id='$input_id' value='$input_value' ".$options['width']." ".($options['show_title'] ? "" : "readonly")." />\n";
+	$html .= "<input type='hidden' name='$input_name' id='$input_id' value='$input_value' ".($options['width'] ? "style='width:".$options['width']."'" : '')." ".($options['show_title'] ? "" : "readonly")." />\n";
 
 	if ($options['show_title']) {
 		$html .= "<div id='$input_id-help'></div>";
