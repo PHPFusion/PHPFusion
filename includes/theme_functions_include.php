@@ -116,7 +116,7 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 			$value = $value > 0 ? $value : '0';
 			$auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
 			$classes = (is_array($class)) ? $class[$i] : $auto_class;
-			$html .= "<div class='progress-bar ".$classes." bar' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $value%'>\n";
+			$html .= "<div class='progress-bar ".$classes."' role='progressbar' aria-valuenow='$value' aria-valuemin='0' aria-valuemax='100' style='width: $value%'>\n";
 			$html .= "</div>\n";
 			$i++;
 		}
@@ -127,7 +127,7 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 		$class = (!$class) ? $auto_class : $class;
 		$html .= "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num ".($as_percent ? '%' : '')."</span></div>\n";
 		$html .= "<div class='progress m-b-10' style='height: ".$height." !important;'>\n";
-		$html .= "<div class='progress-bar ".$class." bar' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $num%'>\n";
+		$html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $num%'>\n";
 		$html .= "</div></div>\n";
 	}
 	return $html;
