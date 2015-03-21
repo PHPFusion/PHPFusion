@@ -73,11 +73,14 @@ class Eshop {
 		$_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name] = $value;
 		return true;
 	}
+
 	// set system update when things change.
+	// deprecate this method. redeveloped method = refresh every change.
+	/*
 	public static function refresh_session($is_checkout = false) {
 		$info = self::get_checkout_info();
 		if (!$is_checkout) {
-			$excluded_field = array('customer', 'customer_message');
+			$excluded_field = array('customer', 'customer_message', 'shipping_method', 'total_shipping', 'shipping_message', 'shipping');
 		} else {
 			// if this is checkout bill adjustments only.
 			$excluded_field = array(
@@ -91,10 +94,11 @@ class Eshop {
 		}
 		foreach($info as $field_name => $value) {
 			if (!in_array($field_name, $excluded_field)) {
-				self::unset_session($field_name);
+				//self::unset_session($field_name);
 			}
 		}
 	}
+	*/
 
 	/* Reset the entire Eshop Session */
 	private static function restart() {
@@ -221,7 +225,7 @@ class Eshop {
 			if ($result) {
 				$result = dbquery("UPDATE ".DB_ESHOP_CART." SET cqty='".$qty."' WHERE tid='".$tid."'");
 				if ($result) {
-					self::refresh_session(); // clear everything.
+					//self::refresh_session(); // clear everything.
 					redirect(BASEDIR."eshop.php?checkout");
 				} else {
 					notify($locale['eshop_e1000'], $locale['eshop_e1002']);
@@ -263,6 +267,7 @@ class Eshop {
 		self::set_session('total_gross_taxed', $this->total_subtotal); // data
 		// this is for the cashier usage.
 		self::set_session('current_subtotal', $this->total_subtotal);
+		self::set_session('old_subtotal', $this->total_subtotal);
 		$subtotal = "<span class='strong'>".$locale['ESHPCHK128']."</span>
 		<span class='strong pull-right ".(self::get('coupon_code') ? 'required' : '')."'>".fusion_get_settings('eshop_currency').number_format($this->total_subtotal,2)."</span>";
 		self::set_session('subtotal', $subtotal);
@@ -635,6 +640,7 @@ class Eshop {
 			}
 		}
 	}
+
 	public static function display_coupon_form() {
 		global $locale;
 		$html = '';
@@ -706,9 +712,27 @@ class Eshop {
 			}
 		}
 	}
+
 	public static function display_customer_form() {
 		global $locale;
 		$customer_info = self::get('customer');
+		if (empty($customer_info)) {
+			$customer_info = array(
+				'cfirstname' => '',
+				'clastname' => '',
+				'cemail' => '',
+				'cdob' => '',
+				'caddress' => '',
+				'caddress2' => '',
+				'ccountry' => '',
+				'cregion' => '',
+				'ccity' => '',
+				'cpostcode' => '',
+				'cphone' => '',
+				'cfax' => '',
+				'cuid' => '',
+			);
+		}
 		$html = "<div class='m-t-20'>\n";
 		$html .= openform('customerform', 'customerform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
 		$customer_name[] = $customer_info['cfirstname'];
@@ -737,23 +761,44 @@ class Eshop {
 	/* Shipping form fields */
 	private static function set_shipping_rate() {
 		global $locale;
-		if (isset($_POST['save_shipping']) && isset($_POST['product_delivery']) && isnum($_POST['product_delivery'])) {
-			if (Shipping::verify_itenary($_POST['product_delivery'])) {
+		if (self::get('shipping_method') && !isset($_POST['save_shipping'])) {
+			if (Shipping::verify_itenary(self::get('shipping_method'))) {
 				$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
-				$si = Shipping::get_itenary($_POST['product_delivery']);
+				$si = Shipping::get_itenary(self::get('shipping_method'));
 				$ci = Shipping::get_shippingco($si['cid']);
 				$ship_cost = intval($si['initialcost']) + ($si['weightcost'] * self::get('total_weight'));
-				$s_message = sprintf($locale['shipping_applied'], $ci['title'], $si['method']);
-				$shipping = sprintf($locale['shipping_message'], ($free_shipping ? "- ".$locale['ESHPCHK188'] : ''), "+ ".fusion_get_settings('eshop_currency').number_format($ship_cost,2));
-				$result = self::set_session('shipping_method', $_POST['product_delivery']);
-				if ($result) $result = self::set_session('total_shipping', $ship_cost);
-				if ($result) $result = self::set_session('shipping_message', $s_message);
-				if ($result) $result = self::set_session('shipping', $shipping);
+				$ship_cost = $ship_cost > 0 ? $ship_cost : '0';
+				$s_message = sprintf($locale['shipping_message'], $ci['title'], $si['method']);
+				$shipping = "<span class='strong'>".$locale['ESHPCHK133']." ".($free_shipping ? "- ".$locale['ESHPCHK188'] : '')."</span>
+					<span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($ship_cost,2)."</span>";
+				self::set_session('total_shipping', $ship_cost);
+				self::set_session('shipping_message', $s_message);
+				self::set_session('shipping', $shipping);
 				self::update_payment();
-				if ($result) redirect(BASEDIR."eshop.php?checkout");
+			}
+		} else {
+			if (isset($_POST['save_shipping']) && isset($_POST['product_delivery']) && isnum($_POST['product_delivery'])) {
+				if (Shipping::verify_itenary($_POST['product_delivery'])) {
+					$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
+					$si = Shipping::get_itenary($_POST['product_delivery']);
+					$ci = Shipping::get_shippingco($si['cid']);
+					$ship_cost = intval($si['initialcost']) + ($si['weightcost'] * self::get('total_weight'));
+					$s_message = sprintf($locale['shipping_message'], $ci['title'], $si['method']);
+
+					$shipping = "<span class='strong'>".$locale['ESHPCHK133']." ".($free_shipping ? "- ".$locale['ESHPCHK188'] : '')."</span>
+					<span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($ship_cost,2)."</span>";
+
+					$result = self::set_session('shipping_method', $_POST['product_delivery']);
+					if ($result) $result = self::set_session('total_shipping', $ship_cost);
+					if ($result) $result = self::set_session('shipping_message', $s_message);
+					if ($result) $result = self::set_session('shipping', $shipping);
+					self::update_payment();
+					if ($result) redirect(BASEDIR."eshop.php?checkout");
+				}
 			}
 		}
 	}
+
 	public static function display_shipping_form() {
 		global $locale;
 		$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
@@ -785,7 +830,7 @@ class Eshop {
 					<label style='width:97%' class='overflow-hide row text-normal text-smaller' for='".$_data['sid']."-choice'>
 					<span class='col-xs-2'>".($free_shipping ? "<span class='required'>".$locale['ESHPCHK188']."</span>" : "+".fusion_get_settings('eshop_currency')." ".$_data['delivery_cost'])."</span>
 					<span class='m-r-10 text-bigger strong'>".$_data['method']."</span>
-					<span class='text-bigger'>".sprintf($locale['est_delivery_time'], $data['dtime'])."</span>
+					<span class='text-bigger'>".sprintf($locale['est_delivery_time'], $_data['dtime'])."</span>
 					</label>
 					</li>";
 				}
@@ -875,8 +920,11 @@ class Eshop {
 
 	public static function display_agreement() {
 		global $locale;
-		$html = "<span class='display-block m-b-10 strong'>".$locale['ESHPCHK117']."</span>";
-		$html .= form_checkbox($locale['ESHPCHK119'], 'agreement', 'agreement', '', array("required"=>1));
+		$html = "<span class='display-block m-b-10 strong'><a id='ag_read' class='pointer'>".$locale['ESHPCHK117']."</a></span>";
+		$html .= form_checkbox($locale['ESHPCHK119'], 'agreement', 'agreement', '', array("required"=>1, 'inline'=>1, 'class'=>'pull-left m-r-10'));
+		$html .= openmodal('agmodal', sprintf($locale['agreement_title'], fusion_get_settings('sitename')), array('button_id'=>'ag_read'));
+		$html .= fusion_get_settings('eshop_terms');
+		$html .= closemodal();
 		return $html;
 	}
 

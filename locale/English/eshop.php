@@ -51,6 +51,7 @@ $locale['ESHPB108'] = "No shipping is required for this item.";
 $locale['ESHPB109'] = "Included";
 $locale['ESHPB110'] = "Excluded";
 $locale['ESHPB111'] = "seconds";
+$locale['agreement_title'] = '%s Terms and Conditions';
 
 //invoice
 $locale['ESHPI100'] = "Thank you for your order. You have selected";
@@ -186,9 +187,9 @@ $locale['ESHPCHK113'] = "Contact Phone";
 $locale['ESHPCHK114'] = "Fax";
 $locale['ESHPCHK115'] = 'Email'; // dup at $locale['UM061a'];
 $locale['ESHPCHK116'] = "Customer notes";
-$locale['ESHPCHK117'] = "Terms";
+$locale['ESHPCHK117'] = "Terms and Conditions";
 $locale['ESHPCHK118'] = "Symbols that the fields are required ";
-$locale['ESHPCHK119'] = "I accept Terms & Conditions";
+$locale['ESHPCHK119'] = "I have read and accept Terms & Conditions";
 $locale['ESHPCHK120'] = "Payment method";
 $locale['ESHPCHK121'] = "Surcharge";
 $locale['ESHPCHK122'] = "No payment methods have been added";
@@ -870,8 +871,6 @@ $locale['coupon_invalid'] = 'The coupon code is not valid';
 $locale['coupon_applied'] = "You have applied a coupon on this order";
 $locale['coupon_another'] = "Use Another Coupon";
 $locale['coupon_disabled'] = "Coupon discounts disabled";
-$locale['shipping_applied'] = 'You have added %s - %s into this order';
-$locale['shipping_message'] = $locale['ESHPCHK133'].' - %s';
-
+$locale['shipping_message'] = 'You have added %s %s into this order';
 $locale['payment_message'] = "You have selected %s as payment method";
 ?>
