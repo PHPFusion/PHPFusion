@@ -54,6 +54,7 @@ $locale['user1'] = "Member";
 $locale['user2'] = "Administrator";
 $locale['user3'] = "Super Administrator";
 $locale['user_na'] = "N/A";
+$locale['user_guest'] = "Guest";
 $locale['user_anonymous'] = "Anonymous User";
 $locale['genitive'] = "%s's %s";
 // Standard User Status

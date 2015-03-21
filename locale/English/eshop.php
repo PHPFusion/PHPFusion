@@ -118,6 +118,7 @@ $locale['ESHPF128'] = "Shipping method";
 $locale['ESHPF129'] = "Cost";
 $locale['ESHPF130'] = "Order summary";
 $locale['ESHPF131'] = "Subtotal";
+
 $locale['ESHPF132'] = "item(s) : ";
 $locale['ESHPF133'] = "VAT :";
 $locale['ESHPF134'] = "Total weight : ";
@@ -320,6 +321,7 @@ $locale['ESHPPRO145'] = "Product Available Now?";
 $locale['ESHPPRO145a'] = "Not Available";
 $locale['ESHPPRO145b'] = "Available";
 
+
 $locale['ESHPPRO146'] = "Setting buyable to No will make the ribbon Incoming appear and the cart options will not be available.";
 $locale['ESHPPRO147'] = "List the Product?";
 $locale['ESHPPRO148'] = "Setting this to Disabled will remove the product from your lists.";
@@ -351,7 +353,7 @@ $locale['ESHPPRO173'] = "Art. No";
 $locale['ESHPPRO174'] = "Supplier Art. No";
 $locale['ESHPPRO175'] = "Order / #";
 $locale['ESHPPRO176'] = "Del";
-$locale['ESHPPRO177'] = "You have no products added to your eShop!";
+$locale['ESHPPRO177'] = "There are no products added";
 $locale['ESHPPRO178'] = "Item names, Art. No & Supplier Art. No works in this search. Search here : ";
 $locale['ESHPPRO179'] = "Refresh product order";
 $locale['ESHPPRO180'] = "Needs a category";
@@ -835,4 +837,41 @@ $ESHPHOTOSL['469'] = "Edit";
 $ESHPHOTOSL['470'] = "Delete";
 $ESHPHOTOSL['480'] = "No Photos added.";
 $ESHPHOTOSL['481'] = "Close Album";
+
+
+$locale['product_updated'] = 'Product Updated';
+$locale['product_message'] = 'Your cart have been successfully updated';
+$locale['product_error_001'] = 'Product Not Updated';
+$locale['product_error_002'] = 'Product Not Found (Response-1)';
+$locale['no_product'] = 'There are no products in your cart.';
+
+$locale['cart_title'] = 'My Cart';
+$locale['cart_empty'] = 'There are no items in your cart';
+$locale['cart_purchases'] = 'Recently added item';
+$locale['check_out'] = 'Checkout';
+
+$locale['cart_remove'] = 'Item Removed';
+$locale['cart_remove_message'] = 'You have removed item to your cart';
+$locale['cart_error_001'] = 'Product Cannot be Removed (Code 2)';
+$locale['cart_error_003'] = 'Product Cannot be Added (Code 1)';
+$locale['cart_error_002'] = 'There are error in processing your request. Please contact the Site Admin.';
+
+$locale['eshop_e1000'] = 'An error is found and the cart is not updated.';
+$locale['eshop_e1002'] = 'Cart Not Updated';
+$locale['eshop_e1003'] = 'Invalid Product Code. Cart Not Updated';
+$locale['eshop_e1004'] = 'An error is found in the product ID and the cart is not updated.';
+
+// Checkout form
+$locale['grand_total'] = "Grand Total";
+$locale['coupon_message'] = 'You have applied coupon code <strong>%s</strong> with a rebate value  of <strong>%s</strong>.';
+$locale['subtotal_message'] = $locale['ESHPCHK128'].' ('.$locale['ESHPCHK176'].') %s';
+$locale['coupon_used'] = 'You have already used this coupon';
+$locale['coupon_invalid'] = 'The coupon code is not valid';
+$locale['coupon_applied'] = "You have applied a coupon on this order";
+$locale['coupon_another'] = "Use Another Coupon";
+$locale['coupon_disabled'] = "Coupon discounts disabled";
+$locale['shipping_applied'] = 'You have added %s - %s into this order';
+$locale['shipping_message'] = $locale['ESHPCHK133'].' - %s';
+
+$locale['payment_message'] = "You have selected %s as payment method";
 ?>
