@@ -10,6 +10,7 @@ $locale['charset'] = "utf-8";
 $locale['xml_lang']  = "ru";
 $locale['tinymce']   = "ru";
 $locale['phpmailer'] = "ru";
+$locale['datepicker'] = "ru";
 // Full & Short Months
 $locale['months']  = "&nbsp;|Январь|Февраль|Март|Апрель|Май|Июнь|Июль|Август|Сентябрь|Октябрь|Ноябрь|Декабрь";
 $locale['shortmonths'] = "&nbsp;|Янв|Фев|Мар|Апр|Май|Июн|Июл|Авг|Сен|Окт|Ноя|Дек";

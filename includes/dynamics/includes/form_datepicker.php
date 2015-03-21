@@ -18,11 +18,12 @@
 //credits: eternicode @ http://bootstrap-datepicker.readthedocs.org/en/latest/
 //http://bootstrap-datepicker.readthedocs.org/en/release/options.html
 function form_datepicker($title, $input_name, $input_id, $input_value, array $options = array()) {
-	global $defender, $settings;
+	global $defender, $settings, $locale;
 	if (!defined('DATEPICKER')) {
 		define('DATEPICKER', TRUE);
 		add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datepicker3.css' rel='stylesheet' />");
 		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datepicker.js'></script>");
+		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/locales/bootstrap-datepicker.".$locale['datepicker'].".js'></script>");
 	}
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
@@ -79,6 +80,7 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
         todayBtn: 'linked',
         autoclose: true,
 		weekStart: ".$options['week_start'].",
+		language: '".$locale['datepicker']."',
         todayHighlight: true
         });
         ");

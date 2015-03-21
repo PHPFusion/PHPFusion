@@ -12,6 +12,7 @@ $locale['charset'] = "utf-8";
 $locale['xml_lang'] = "ua";
 $locale['tinymce'] = "en";
 $locale['phpmailer'] = "ua";
+$locale['datepicker'] = "ua";
 
 // Full & Short Months
 $locale['months'] = "&nbsp;|Січень|Лютий|Березень|Квітень|Травень|Червень|Липень|Серпень|Вересень|Жовтень|Листопад|Грудень";

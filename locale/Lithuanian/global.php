@@ -23,6 +23,7 @@ $locale['charset'] = "UTF-8";
 $locale['xml_lang'] = "lt";
 $locale['tinymce'] = "lt";
 $locale['phpmailer'] = "lt";
+$locale['datepicker'] = "lt";
 
 // Full & Short Months
 $locale['months'] = "&nbsp|Sausis|Vasaris|Kovas|Balandis|Gegužė|Birželis|Liepa|Rugpjūtis|Rugsėjis|Spalis|Lapkritis|Gruodis";
