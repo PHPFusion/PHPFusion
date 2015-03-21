@@ -25,17 +25,13 @@ add_to_title($locale['ESHPCHK100']);
 opentable($locale['ESHPCHK100']);
 
 if (iMEMBER) { $username = $userdata['user_id']; } else { $username = $_SERVER['REMOTE_ADDR']; }
-
-//buildeshopheader();
-
 //convert guest shopping to member if they login.
 if (iMEMBER) {
-$usercartchk = dbarray(dbquery("SELECT puid FROM ".DB_ESHOP_CART." WHERE puid = '".$_SERVER['REMOTE_ADDR']."' LIMIT 0,1"));
-if ($usercartchk['puid']) {
-dbquery("UPDATE ".DB_ESHOP_CART." SET puid = '".$userdata['user_id']."' WHERE puid = '".$_SERVER['REMOTE_ADDR']."'");
- }
+	$cart_check = dbarray(dbquery("SELECT puid FROM ".DB_ESHOP_CART." WHERE puid = '".$_SERVER['REMOTE_ADDR']."' LIMIT 0,1"));
+	if ($cart_check['puid']) {
+		dbquery("UPDATE ".DB_ESHOP_CART." SET puid = '".$userdata['user_id']."' WHERE puid = '".$_SERVER['REMOTE_ADDR']."'");
+ 	}
 }
-
 
 $firstname = "";
 $lastname = "";
@@ -52,7 +48,6 @@ $email = "";
 
 if (isset($_POST['checkout'])) {
 $result = dbquery("SELECT * FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' ORDER BY tid ASC");
-
 if (dbrows($result) != 0) {
 	saveorder();
 	redirect(SHOP."checkedout.php");

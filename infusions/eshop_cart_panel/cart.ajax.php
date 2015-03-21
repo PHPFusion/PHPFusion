@@ -7,7 +7,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate");  // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");        // HTTP/1.0
 require_once dirname(__FILE__)."../../../maincore.php";
-
+require_once LOCALE.LOCALESET."eshop.php";
 if ($defender->verify_tokens('productfrm', 0)) {
 	// remotely refer form_sanitizer from the referer script treating this form executed from eshop form
 	$data['tid'] = 0; // let it auto increment
@@ -19,22 +19,15 @@ if ($defender->verify_tokens('productfrm', 0)) {
 	$data['cadded'] = time(); // time
 	$product = \PHPFusion\Eshop\Eshop::get_productData($data['prid']);
 	if (!empty($product)) { // loaded $data
-
-		$locale['product_updated'] = 'Product Updated';
-		$locale['product_message'] = 'Your cart have been successfully updated';
-		$locale['product_error_001'] = 'Product Not Updated';
-		$locale['product_error_002'] = 'Product Not Found (Response-1)';
-
 		$data['artno'] = $product['artno']; // artno
 		$data['citem'] = $product['title']; // item name
-		$data['cimage'] = $product['picture']; // item image
+		$data['cimage'] = $product['thumb']; // item image
 		$data['cdynt'] = $product['dynf']; // this stores dynf
 		$data['cprice'] = $product['xprice'] ? $product['xprice'] : $product['price']; // this is the 1 unit price
 		$data['cweight'] = $product['cweight']; // 1 unit weigh t
 		$data['ccupons'] = $product['cupons']; // accept coupons or not
 		// now check if order exist.
-		include "includes.php";
-		$response = Cart::add_to_cart($data); // returns json responses
+		$response = \PHPFusion\Eshop\Cart::add_to_cart($data); // returns json responses
 		$response['error_id'] = 0;
 		$response['title'] = $locale['product_updated'];
 		$response['message'] = $locale['product_message'];

@@ -53,10 +53,8 @@ class Eshop {
 	}
 
 	/* static Session ID generator */
-	protected static function get_token() {
+	private static function get_token() {
 		global $userdata; // use phpfusion token.
-		//$url = fusion_get_settings('siteurl');
-		//return \defender::token($url.'-eshop');
 		$user_id = \defender::set_sessionUserID();
 		$identifier = 'eshop';
 		$algo = fusion_get_settings('password_algorithm');
@@ -69,7 +67,7 @@ class Eshop {
 		//*/
 	}
 	/* Sets eShop Session */
-	protected static function set_session($field_name, $value) {
+	private static function set_session($field_name, $value) {
 		// id only. why need itme to hash.
 		$token = self::get_token();
 		$_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name] = $value;
@@ -97,13 +95,15 @@ class Eshop {
 			}
 		}
 	}
-	protected static function restart() {
+
+	/* Reset the entire Eshop Session */
+	private static function restart() {
 		$token = self::get_token();
 		unset($_SESSION[fusion_get_settings('siteurl')][$token]['eshop']);
 	}
 
 	/* Returns the current Session Value */
-	protected static function get($field_name = false, $admin = FALSE) {
+	private static function get($field_name = false, $admin = FALSE) {
 		$value =  null;
 		$token = self::get_token();
 		if ($admin && isset($_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name])) {
@@ -117,7 +117,6 @@ class Eshop {
 			$time_expiry = time()+1209600;
 			\Authenticate::_setCookie(COOKIE_PREFIX.'eshop', $token, $time_expiry, $cookie_path, $cookie_domain, FALSE, TRUE);
 		}
-
 		$token_data = explode(".", stripinput($token));
 		$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
 		$identifier = 'eshop';
@@ -132,24 +131,59 @@ class Eshop {
 		}
 		return $value;
 	}
-	protected static function unset_session($field_name) {
+
+	private static function unset_session($field_name) {
 		$token = self::get_token();
 		unset($_SESSION[fusion_get_settings('siteurl')][$token]['eshop'][$field_name]);
 		return true;
 	}
 
+	/** Buy Now Function -- always listening */
+	private function _BuyNow() {
+		if (isset($_POST['buy_now'])) {
+			// what's the difference between buy now and checkout cart item?
+			// do you want to clear the cart when this button clicked?
+			// what if someone added A LOT of items in the cart  and accidentally clicked this button? we will have a very pissed off customer...
+			//self::clear_cart(); <--- uncomment this to clear the whole cart.
+			$data = array(
+				'tid' => 0,
+				'prid' => form_sanitizer($_POST['id'], ''),
+				'puid' => \defender::set_sessionUserID(),
+				'cqty' => form_sanitizer($_POST['product_quantity'], ''),
+				'cclr' => form_sanitizer($_POST['product_color'], ''),
+				'cdyn' => form_sanitizer($_POST['product_type'], ''),
+				'cadded' => time(),
+			);
+			$product = self::get_productData($data['prid']);
+			if (!empty($product)) { // loaded $data
+				$data += array(
+					'artno' => $product['artno'],
+					'citem' => $product['title'],
+					'cimage' => $product['thumb'],
+					'cdynt' => $product['dynf'],
+					'cprice' => $product['xprice'] ? $product['xprice'] : $product['price'],
+					'cweight' => $product['cweight'],
+					'ccupons' => $product['cupons'],
+				);
+				// now check if order exist.
+				$response = Cart::add_to_cart($data); // returns json responses
+				if ($response) redirect(BASEDIR."eshop.php?checkout");
+			}
+		}
+	}
+
 	// checkout data
 	public function __construct_Checkout() {
+		self::_BuyNow();
 		$item = array();
-		$result = dbquery("SELECT c.*, e.dync, e.icolor, (c.cprice*c.cqty) as total_price
+		$result = dbquery("SELECT c.*, e.dync, e.icolor, (c.cprice*c.cqty) as total_price, e.cid
 				FROM ".DB_ESHOP_CART." c
 				INNER JOIN ".DB_ESHOP." e on c.prid=e.id
 				WHERE puid='".\defender::set_sessionUserID()."' ORDER BY cadded asc");
 		if (dbrows($result)>0) {
 			$vat_rate = fusion_get_settings('eshop_vat') > 0 ? intval(fusion_get_settings('eshop_vat'))/100 : intval(0);
 			while ($data = dbarray($result)) {
-				$data['cimage'] = $data['cimage'] ? self::picExist(SHOP."pictures/".$data['cimage']) : self::picExist('fake.png');
-				// Commented Change ( SEE ABOVE )
+				$data['cimage'] = $data['cimage'] ? self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/thumbs/".$data['cimage']) : self::picExist('fake.png');
 				// this is price inclusive of tax or not for visual purposes only. It is not used against calculations of tax vs coupons.
 				$data['item_price'] = fusion_get_settings('eshop_vat_default') ? $data['cprice']+($data['cprice'] * ($vat_rate)) : $data['cprice']; // unit
 				$data['item_subtotal'] = $data['item_price'] * $data['cqty'];
@@ -174,11 +208,10 @@ class Eshop {
 		self::set_customer_message();
 		//self::restart();
 	}
-	protected static function adjust_cart() {
-		$locale['eshop_e1000'] = 'An error is found and the cart is not updated.';
-		$locale['eshop_e1002'] = 'Cart Not Updated';
-		$locale['eshop_e1003'] = 'Invalid Product Code. Cart Not Updated';
-		$locale['eshop_e1004'] = 'An error is found in the product ID and the cart is not updated.';
+
+	// Cart adjuster in Checkout Form.
+	private static function adjust_cart() {
+		global $locale;
 
 		if (isset($_POST['p-submit-qty']) && isset($_POST['utid']) && isnum($_POST['utid']) && isset($_POST['qty']) && isnum($_POST['qty'])) {
 			// ok now check product exist.
@@ -197,20 +230,32 @@ class Eshop {
 				notify($locale['eshop_e1003'], $locale['eshop_e1004']);
 			}
 		}
+
+		elseif (isset($_POST['remove'])) {
+			$data = array(
+				'usr' => \defender::set_sessionUserID(),
+				'tid' => form_sanitizer($_POST['utid'], ''),
+				'qty' => form_sanitizer($_POST['qty'], ''),
+			);
+			$check = dbcount("(tid)", DB_ESHOP_CART, "tid='".$data['tid']."' AND puid='".$data['usr']."' AND cqty='".$data['qty']."'");
+			if ($check) {
+				dbquery_insert(DB_ESHOP_CART, $data, 'delete');
+				redirect(BASEDIR."eshop.php?checkout");
+			}
+		}
 	}
 
 	// we start here.
-	protected function set_customer() {
+	private function set_customer() {
 		$user_id = \defender::set_sessionUserID();
 		$customer = Customers::get_customerData($user_id); // binds the above
 		self::set_session('customer', $customer);
 	}
 
 	// Cart Polling.
-	protected function set_checkout_items() {
+	private function set_checkout_items() {
 		global $locale;
 		// set to poll on each refresh unless a coupon code have been set.
-
 		self::set_session('items', $this->item);
 		self::set_session('item_count', $this->item_count);
 		self::set_session('total_weight', $this->total_weight);
@@ -218,7 +263,6 @@ class Eshop {
 		self::set_session('total_gross_taxed', $this->total_subtotal); // data
 		// this is for the cashier usage.
 		self::set_session('current_subtotal', $this->total_subtotal);
-
 		$subtotal = "<span class='strong'>".$locale['ESHPCHK128']."</span>
 		<span class='strong pull-right ".(self::get('coupon_code') ? 'required' : '')."'>".fusion_get_settings('eshop_currency').number_format($this->total_subtotal,2)."</span>";
 		self::set_session('subtotal', $subtotal);
@@ -228,9 +272,6 @@ class Eshop {
 	// Item Form
 	public static function display_item_form($display=false) {
 		global $locale;
-
-		$locale['no_product'] = 'There are no products in your cart.';
-
 		$item = self::get('items');
 		// secure form. update the whole thing as MVC.
 		$html = "<table class='table table-responsive'>";
@@ -276,9 +317,10 @@ class Eshop {
 
 	/* Calculates Grand Total */
 	private function set_net_price() {
+		global $locale;
 		$net_price = self::get('nett_gross') + self::get('total_shipping') + self::get('total_surcharge');
 		self::set_session('net_price', $net_price);
-		$gt = "<span class='strong'>Grand Total:</span><span class='strong pull-right'>+ ".fusion_get_settings('eshop_currency').number_format($net_price,2)."</span>\n";
+		$gt = "<span class='strong'>".$locale['grand_total'].":</span><span class='strong pull-right'>+ ".fusion_get_settings('eshop_currency').number_format($net_price,2)."</span>\n";
 		self::set_session('grandtotal', $gt);
 		self::set_session('datestamp', time()); // put here to refresh this value so we know when customer was last seen.
 	}
@@ -461,7 +503,7 @@ class Eshop {
 
 	public function handle_payments() {
 		global $locale, $settings, $userdata;
-		include INCLUDES."eshop_functions_include.php";
+		//include INCLUDES."eshop_functions_include.php";
 		add_to_title($locale['ESHPCHK159']);
 		opentable($locale['ESHPCHK159']);
 		$odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid='".\defender::set_sessionUserID()."' ORDER BY oid DESC LIMIT 0,1"));
@@ -497,7 +539,6 @@ class Eshop {
 
 	/* Persistent now since construct function will fill in session values if blank */
 	public static function get_checkout_info() {
-		global $locale;
 		$info = array(
 			'items' => self::get('items'), // mvc
 			'item_count' => self::get('item_count'), // mvc
@@ -537,13 +578,9 @@ class Eshop {
 	}
 
 	/* Coupon form fields */
-	protected static function update_coupon() {
+	private static function update_coupon() {
 		// get coupon value
 		global $locale;
-
-		$locale['coupon_message'] = 'You have applied coupon code <strong>%s</strong> with a rebate value  of <strong>%s</strong>.';
-		$locale['subtotal_message'] = $locale['ESHPCHK128'].' ('.$locale['ESHPCHK176'].') %s';
-
 		$coupon_code = self::get('coupon_code');
 		if ($coupon_code) {
 			$coupon = Coupons::get_couponData($coupon_code);
@@ -576,8 +613,7 @@ class Eshop {
 
 	private static function set_coupon_rate() {
 		global $locale, $defender;
-		$locale['coupon_used'] = 'You have already used this coupon';
-		$locale['coupon_invalid'] = 'The coupon code is not valid';
+
 		if (isset($_POST['apply_coupon'])) {
 			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
 			if ($coupon_code && Coupons::verify_coupon($coupon_code)) {
@@ -602,10 +638,6 @@ class Eshop {
 	public static function display_coupon_form() {
 		global $locale;
 		$html = '';
-		$locale['coupon_applied'] = "You have applied a coupon on this order";
-		$locale['coupon_another'] = "Use Another Coupon";
-		$locale['coupon_disabled'] = "Coupon discounts disabled";
-
 		if (fusion_get_settings('eshop_coupons')) {
 			if (self::get('coupon_message')) {
 				$html .= "<div id='coupon-text' class='text-center'>\n";
@@ -632,7 +664,7 @@ class Eshop {
 	}
 
 	/* Customer form fields */
-	protected static function set_customerDB() {
+	private static function set_customerDB() {
 		if (isset($_POST['save_customer'])) {
 			global $userdata;
 			$customer_info['cuid'] = intval($userdata['user_id']);
@@ -703,11 +735,8 @@ class Eshop {
 	}
 
 	/* Shipping form fields */
-	protected static function set_shipping_rate() {
+	private static function set_shipping_rate() {
 		global $locale;
-		$locale['shipping_applied'] = 'You have added %s - %s into this order';
-		$locale['shipping_message'] = $locale['ESHPCHK133'].' - %s';
-
 		if (isset($_POST['save_shipping']) && isset($_POST['product_delivery']) && isnum($_POST['product_delivery'])) {
 			if (Shipping::verify_itenary($_POST['product_delivery'])) {
 				$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
@@ -771,10 +800,8 @@ class Eshop {
 	}
 
 	/* Payment form fields */
-	protected static function update_payment() {
+	private static function update_payment() {
 		global $locale;
-		$locale['payment_message'] = "You have selected %s as payment method";
-
 		$payment_method = self::get('payment_method');
 		if ($payment_method) {
 			$pay = Payments::get_payment($payment_method);
@@ -789,7 +816,7 @@ class Eshop {
 		}
 	}
 
-	protected static function set_payment_rate() {
+	private static function set_payment_rate() {
 		if (isset($_POST['save_payment']) && isset($_POST['product_paymethod']) && isnum($_POST['product_paymethod'])) {
 			self::set_session('payment_method', $_POST['product_paymethod']);
 			if (Payments::verify_payment($_POST['product_paymethod'])) {
@@ -830,14 +857,13 @@ class Eshop {
 	}
 
 	/* Customer Message fields */
-	protected static function set_customer_message() {
+	private static function set_customer_message() {
 		if (isset($_POST['save_message'])) {
 			$message = form_sanitizer($_POST['message'], '', 'message');
 			self::set_session('customer_message', $message);
 			redirect(BASEDIR."eshop.php?checkout");
 		}
 	}
-
 	public static function display_message_form() {
 		global $locale;
 		$html = openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
@@ -1112,7 +1138,7 @@ class Eshop {
 	 * @param $id - product ID
 	 * @return array
 	 */
-	static function get_productData($id) {
+	public static function get_productData($id) {
 		$result = array();
 		if (isnum($id)) {
 			$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".intval($id)."'");
@@ -1398,29 +1424,11 @@ class Eshop {
 		return (array) $info;
 	}
 
-	// Temporary Store this here for panels while I delete old codes
-	protected function total_basket() {
-		$username  ='';
-		$settings = '';
-		$items = "";
-		$sum = "";
-		$items = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' ORDER BY tid ASC"));
-		$sum = dbarray(dbquery("SELECT sum(cprice*cqty) as totals FROM ".DB_ESHOP_CART." WHERE puid = '".$username."'"));
-		$vat = $settings['eshop_vat'];
-		$price = $sum['totals'];
-		$vat = ($price/100)*$vat;
-		if ($settings['eshop_vat_default'] == "0") {
-			$totalincvat = $price+$vat;
-		} else {
-			$totalincvat = $price;
-		}
-	}
-
 	/**
 	 * Fetches Product Photos when $_GET['product'] is available
 	 * @return array
 	 */
-	static function get_product_photos() {
+	public static function get_product_photos() {
 		$info = array();
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".intval($_GET['product'])."' ORDER BY photo_order");
 		if (dbrows($result)>0) {
@@ -1432,7 +1440,6 @@ class Eshop {
 		}
 		return (array)$info;
 	}
-
 
 	/**
 	 * Get Product Data from Database
@@ -1503,7 +1510,8 @@ class Eshop {
 					return $info;
 				}
 			}
-		} elseif ($_GET['category']) {
+		}
+		elseif ($_GET['category']) {
 			// on category page
 			$sql = "i.cid='".intval($_GET['category'])."'";
 			if (isset($this->info['category'][$_GET['category']])) {
@@ -1511,7 +1519,7 @@ class Eshop {
 				$child_id = array_keys($this->info['category'][$_GET['category']]);
 				$sql = "i.cid in (".intval($_GET['category']).implode(',',$child_id).")";
 			}
-			$result = dbquery("SELECT i.id, i.cid, i.title, i.thumb, i.price, i.picture, i.xprice, i.keywords, i.product_languages, cat.title as category_title
+			$result = dbquery("SELECT i.id, i.cid, i.title, i.thumb, i.thumb2, i.picture, i.price, i.picture, i.xprice, i.keywords, i.product_languages, cat.title as category_title
 			FROM ".DB_ESHOP." i
 			INNER JOIN ".DB_ESHOP_CATS." cat on i.cid = cat.cid
 			WHERE ".$sql." AND active = '1' AND ".groupaccess('i.access')."
@@ -1542,7 +1550,7 @@ class Eshop {
 				}
 			}
 		} else {
-			$info['error'] = 'No products added'; //$locale[''];
+			$info['error'] = $locale['ESHPPRO177'];
 		}
 		$info['pagenav'] = ($this->max_rows > fusion_get_settings('eshop_noppf')) ? self::makeeshoppagenav($_GET['rowstart'],fusion_get_settings('eshop_noppf'),$this->max_rows,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;" : "" )."") : '';
 		return $info;
@@ -1558,6 +1566,4 @@ class Eshop {
 			return dbarray($result);
 		}
 	}
-
 }
-

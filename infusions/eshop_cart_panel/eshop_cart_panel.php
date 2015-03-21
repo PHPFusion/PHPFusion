@@ -1,4 +1,3 @@
 <?php
-require_once "includes.php";
-$cart = new Cart();
-Cart::render_cart();
+include LOCALE.LOCALESET."eshop.php";
+\PHPFusion\Eshop\Cart::render_cart();

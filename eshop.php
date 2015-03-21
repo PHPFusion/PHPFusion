@@ -34,7 +34,9 @@ $info = $eShop->get_category();
 $info += $eShop->get_product();
 $info += $eShop->get_featured();
 $info += $eShop->get_title();
-$info += $eShop->get_product_photos();
+if ($_GET['product']) {
+	$info += $eShop->get_product_photos();
+}
 render_eshop_nav($info);
 if ($_GET['category']) {
 	// view category page
