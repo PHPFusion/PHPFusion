@@ -110,7 +110,8 @@ echo form_text($locale['1003'], 'deactivation_period', 'deactivation_period', $s
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1004'].")</span>";
 echo form_text($locale['1005'], 'deactivation_response', 'deactivation_response', $settings2['deactivation_response'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1006'].")</span>";
-echo form_select($locale['1011'], 'deactivation_action', 'deactivation_action', $choice_opts, $settings2['deactivation_action']);
+$action_opts = array('0'=>$locale['1012'], '1'=>$locale['1013']);
+echo form_select($locale['1011'], 'deactivation_action', 'deactivation_action', $action_opts, $settings2['deactivation_action']);
 closeside();
 openside('');
 echo "
