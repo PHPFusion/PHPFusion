@@ -75,7 +75,7 @@ class Cart {
 			dataType: 'html',
 			data : sendData,
 			success: function(result){
-				console.log(result);
+				//console.log(result);
 				if (result.error_id == 0) {
 					$('#cart').addClass('open');
 					$('.cart-blank').remove();
@@ -152,7 +152,7 @@ class Cart {
 							delay: '2500',
 							});
 						} else {
-							console.log(result.data);
+							//console.log(result.data);
 							new PNotify({
 							title: '".$locale['cart_error_001']."',
 							text: '".$locale['cart_error_002']."',
