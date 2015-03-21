@@ -75,8 +75,7 @@ class Eshop {
 	}
 
 	// set system update when things change.
-	// deprecate this method. redeveloped method = refresh every change.
-	/*
+
 	public static function refresh_session($is_checkout = false) {
 		$info = self::get_checkout_info();
 		if (!$is_checkout) {
@@ -94,11 +93,11 @@ class Eshop {
 		}
 		foreach($info as $field_name => $value) {
 			if (!in_array($field_name, $excluded_field)) {
-				//self::unset_session($field_name);
+				self::unset_session($field_name);
 			}
 		}
 	}
-	*/
+
 
 	/* Reset the entire Eshop Session */
 	private static function restart() {
@@ -925,6 +924,7 @@ class Eshop {
 
 	public static function display_agreement() {
 		global $locale;
+		include_once INCLUDES.'theme_functions_include.php';
 		$html = "<span class='display-block m-b-10 strong'><a id='ag_read' class='pointer'>".$locale['ESHPCHK117']."</a></span>";
 		$html .= form_checkbox($locale['ESHPCHK119'], 'agreement', 'agreement', '', array("required"=>1, 'inline'=>1, 'class'=>'pull-left m-r-10'));
 		$html .= openmodal('agmodal', sprintf($locale['agreement_title'], fusion_get_settings('sitename')), array('button_id'=>'ag_read'));
