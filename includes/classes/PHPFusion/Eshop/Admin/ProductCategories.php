@@ -280,7 +280,7 @@ class ProductCategories {
 
 		$this->data = array(
 			'cid' => 	isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '0', 'cid') : 0,
-			'title' =>isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title', 1) : '',
+			'title' =>isset($_POST['cattitle']) ? form_sanitizer($_POST['cattitle'], '', 'cattitle', 1) : '',
 			'parentid' => isset($_POST['parentid']) ? form_sanitizer($_POST['parentid'], '', 'parentid') : '',
 			'image' => isset($_POST['image']) ? form_sanitizer($_POST['image'], '', 'image') : '',
 			'status' => isset($_POST['status']) ? form_sanitizer($_POST['status'], '', 'status') : '',
@@ -325,14 +325,13 @@ class ProductCategories {
 	public function add_cat_form() {
 		global $locale, $aidlink;
 		fusion_confirm_exit();
-		$enabled_languages = fusion_get_enabled_languages();
-		$this->data['cat_languages'] = (is_array($this->data['cat_languages'])) ? $this->data['cat_languages'] : $enabled_languages;
+		$this->data['cat_languages'] = (is_array($this->data['cat_languages'])) ? $this->data['cat_languages'] : fusion_get_enabled_languages();
 		$this->data['parentid'] = $_GET['parent_id'] ? $_GET['parent_id'] : $this->data['parentid'];
 		$form_action = FUSION_SELF.$aidlink."&amp;a_page=categories";
 		echo openform('addcat', 'add_cat', 'post', $form_action, array('class' => 'm-t-20', 'downtime' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-		echo QuantumFields::quantum_multilocale_fields($locale['ESHPCATS100'], 'title', 'title', $this->data['title'], array('max_length'=>100, 'inline'=>1));
+		echo QuantumFields::quantum_multilocale_fields($locale['ESHPCATS100'], 'cattitle', 'cattitle', $this->data['title'], array('inline'=>1, 'required'=>1));
 		echo form_select_tree($locale['ESHPCATS106'], 'parentid', 'parentids', $this->data['parentid'], array('inline' => 1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo form_select($locale['ESHPCATS105'], 'image', 'images', self::getImageOpts(), $this->data['image'], array('inline' => 1));
 		// Languages in a row.
@@ -341,7 +340,7 @@ class ProductCategories {
 		echo "<label class='control-label'>".$locale['ESHPPRO191']."</label>";
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
-		foreach ($enabled_languages as $lang) {
+		foreach (fusion_get_enabled_languages() as $lang) {
 			if (empty($this->data['cat_languages'])) {
 				$check = 1;
 			} else {
