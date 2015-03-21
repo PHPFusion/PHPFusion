@@ -23,18 +23,10 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH
 	header("Cache-Control: no-store, no-cache, must-revalidate");  // HTTP/1.1
 	header("Cache-Control: post-check=0, pre-check=0", false);
 	header("Pragma: no-cache");        // HTTP/1.0
-
 	include LOCALE.LOCALESET."eshop.php";
-	require_once INCLUDES."html_buttons_include.php";
 	if (isset($_GET['cid']) && !isnum($_GET['cid'])) die("Denied");
-	$itemid = stripinput($_GET['cid']);
-	function getcolorname($id) {
-	global $locale;
-		$id = "{$locale['color_'.$id]}";
-		return $id;
-	}
-
-	echo getcolorname($itemid);
+	$color = \PHPFusion\Eshop\Eshop::get_iColor(stripinput($_GET['cid']));
+	echo $color['title'];
 }
 exit;
 ?>

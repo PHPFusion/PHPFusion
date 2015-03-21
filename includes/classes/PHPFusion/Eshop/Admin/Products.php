@@ -159,7 +159,7 @@ class Products {
 		global $aidlink;
 		if (isset($_POST['cats_quicksave'])) {
 			$quick['id'] = isset($_POST['id']) ? form_sanitizer($_POST['id'], '0', 'id') : 0;
-			$quick['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
+			$quick['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title', 1) : '';
 			$quick['artno'] = isset($_POST['artno']) ? form_sanitizer($_POST['artno'], '', 'artno') : '';
 			$quick['sartno'] = isset($_POST['sartno']) ? form_sanitizer($_POST['sartno'], '', 'sartno') : '';
 			$quick['price'] = isset($_POST['price']) ? form_sanitizer($_POST['price'], '', 'price') : '';
@@ -216,7 +216,6 @@ class Products {
 	 */
 	static function refresh_order() {
 		global $aidlink, $settings;
-
 		//$i = 1;
 		//$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' ORDER BY iorder");
 		//while ($data = dbarray($result)) {
@@ -308,6 +307,8 @@ class Products {
 	 */
 	private function set_productdb() {
 		global $aidlink, $userdata;
+
+		// Delete Product Image
 		define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 		if (isset($_POST['delete_image']) && isnum($_POST['delete_image'])) {
 			if (self::verify_product_edit($_POST['delete_image'])) {
@@ -322,49 +323,46 @@ class Products {
 			}
 		}
 
+		// Update / Save Product
 		if (isset($_POST['save_cat'])) {
-			$this->data['title'] = isset($_POST['title']) ? form_sanitizer($_POST['title'], '', 'title') : '';
-			$this->data['cid'] = isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '', 'cid') : 0;
-			$this->data['introtext'] = isset($_POST['introtext']) ? form_sanitizer($_POST['introtext'], '', 'introtext') : '';
-			$this->data['description'] = isset($_POST['description']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['description'])) : '';
-			$this->data['anything1n'] = isset($_POST['anything1n']) ? form_sanitizer($_POST['anything1n'], '', 'anything1n') : '';
-			$this->data['anything1'] = isset($_POST['anything1']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything1'])) : '';
-			$this->data['anything2n'] = isset($_POST['anything2n']) ? form_sanitizer($_POST['anything1n'], '', 'anything2n') : '';
-			$this->data['anything2'] = isset($_POST['anything2']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything2'])) : '';
-			$this->data['anything2n'] = isset($_POST['anything2n']) ? form_sanitizer($_POST['anything1n'], '', 'anything2n') : '';
-			$this->data['anything2'] = isset($_POST['anything2']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything2'])) : '';
-			$this->data['anything3n'] = isset($_POST['anything3n']) ? form_sanitizer($_POST['anything3n'], '', 'anything3n') : '';
-			$this->data['anything3'] = isset($_POST['anything3']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything3'])) : '';
-			$this->data['weight'] = isset($_POST['weight']) ? str_replace(',', '.', form_sanitizer($_POST['weight'], '', 'weight')) : '';
-			$this->data['price'] = isset($_POST['price']) ? str_replace(',', '.', form_sanitizer($_POST['price'], '', 'price')) : '';
-			$this->data['xprice'] = isset($_POST['xprice']) ? str_replace(',', '.', form_sanitizer($_POST['xprice'], '', 'xprice')) : '';
-			$this->data['stock'] = isset($_POST['stock']) ? str_replace(',', '.', form_sanitizer($_POST['stock'], '', 'stock')) : '';
-			$this->data['version'] = isset($_POST['version']) ? str_replace(',', '.', form_sanitizer($_POST['version'], '', 'version')) : '';
-			$this->data['status'] = isset($_POST['status']) ? form_sanitizer($_POST['status'], '0', 'status') : 0;
-			$this->data['active'] = isset($_POST['active']) ? form_sanitizer($_POST['active'], '0', 'active') : 0;
-			$this->data['delivery'] = isset($_POST['delivery']) ? form_sanitizer($_POST['delivery'], '0', 'delivery') : 0;
-			$this->data['demo'] = isset($_POST['demo']) ? form_sanitizer($_POST['demo'], '', 'demo') : '';
-			$this->data['cart_on'] = isset($_POST['cart_on']) ? form_sanitizer($_POST['cart_on'], '0', 'cart_on') : 0;
-			$this->data['buynow'] = isset($_POST['buynow']) ? form_sanitizer($_POST['buynow'], '0', 'buynow') : 0;
-			$this->data['rpage'] = isset($_POST['rpage']) ? form_sanitizer($_POST['rpage'], '', 'rpage') : '';
-			$this->data['rpage'] = isset($_POST['rpage']) ? form_sanitizer($_POST['rpage'], '', 'rpage') : '';
-			$this->data['dynf'] = isset($_POST['dynf']) ? form_sanitizer($_POST['dynf'], '', 'dynf') : '';
-			$this->data['qty'] = isset($_POST['qty']) ? form_sanitizer($_POST['qty'], '0', 'qty') : 0;
-			$this->data['sellcount'] = isset($_POST['sellcount']) ? form_sanitizer($_POST['sellcount'], 0, 'sellcount') : 0;
-			$this->data['artno'] = isset($_POST['artno']) ? form_sanitizer($_POST['artno'], '', 'artno') : '';
-			$this->data['sartno'] = isset($_POST['sartno']) ? form_sanitizer($_POST['sartno'], '', 'sartno') : '';
-			$this->data['instock'] = isset($_POST['instock']) ? form_sanitizer($_POST['instock'], '', 'instock') : '';
-			$this->data['iorder'] = isset($_POST['iorder']) ? form_sanitizer($_POST['iorder'], '0', 'iorder') : 0;
-			$this->data['dmulti'] = isset($_POST['dmulti']) ? form_sanitizer($_POST['dmulti'], '1', 'dmulti') : 1;
-			$this->data['cupons'] = isset($_POST['cupons']) ? 1 : 0;
-			$this->data['access'] = isset($_POST['access']) ? form_sanitizer($_POST['access'], '0', 'access') : 0;
-			$this->data['dateadded'] = isset($_POST['dateadded']) ? form_sanitizer($_POST['dateadded'], time(), 'dateadded') : time();
-			$this->data['campaign'] = isset($_POST['campaign']) ? 1 : 0;
-			$this->data['ratings'] = isset($_POST['ratings']) ? 1 : 0;
-			$this->data['comments'] = isset($_POST['comments']) ? 1 : 0;
-			$this->data['linebreaks'] = isset($_POST['linebreaks']) ? 1 : 0;
-			$this->data['keywords'] = isset($_POST['keywords']) ? form_sanitizer($_POST['keywords'], '', 'keywords') : '';
-			$this->data['product_languages'] = isset($_POST['product_languages']) ? form_sanitizer($_POST['product_languages'], '') : '';
+			$this->data = array(
+				'title' => 	form_sanitizer($_POST['title'], '', 'title'),
+				'cid' 	=>	form_sanitizer($_POST['cid'], '0', 'cid'),
+				'introtext' =>	form_sanitizer($_POST['introtext'], '', 'introtext'),
+				'description' =>	addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['description'])),
+				'anything1n' =>	addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything1n'])),
+				'anything2n' =>	addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything2n'])),
+				'anything3n' =>	addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['anything3n'])),
+				'weight' =>	str_replace(',', '.', form_sanitizer($_POST['weight'], '', 'weight')),
+				'price' =>	str_replace(',', '.', form_sanitizer($_POST['price'], '', 'price')),
+				'xprice' =>	str_replace(',', '.', form_sanitizer($_POST['xprice'], '', 'xprice')),
+				'stock' =>	str_replace(',', '.', form_sanitizer($_POST['stock'], '', 'stock')),
+				'version' =>	str_replace(',', '.', form_sanitizer($_POST['version'], '', 'version')),
+				'status' =>	form_sanitizer($_POST['status'], '', 'status'),
+				'active' =>	form_sanitizer($_POST['active'], '', 'active'),
+				'delivery' =>	form_sanitizer($_POST['delivery'], '0', 'delivery'),
+				'demo' =>	form_sanitizer($_POST['demo'], '', 'demo'),
+				'cart_on' =>	form_sanitizer($_POST['cart_on'], '0', 'cart_on'),
+				'buynow' =>	form_sanitizer($_POST['buynow'], '', 'buynow'),
+				'rpage' =>	form_sanitizer($_POST['rpage'], '', 'rpage'),
+				'dynf' =>	form_sanitizer($_POST['dynf'], '', 'dynf'),
+				'qty' =>	form_sanitizer($_POST['qty'], '0', 'dynf'),
+				'sellcount' =>	form_sanitizer($_POST['sellcount'], '0', 'sellcount'),
+				'artno' =>	form_sanitizer($_POST['artno'], '', 'artno'),
+				'sartno' =>	form_sanitizer($_POST['sartno'], '', 'sartno'),
+				'instock' =>	form_sanitizer($_POST['instock'], '', 'instock'),
+				'iorder' =>	form_sanitizer($_POST['iorder'], '0', 'iorder'),
+				'dmulti' =>	form_sanitizer($_POST['dmulti'], '1', 'dmulti'),
+				'access' =>	form_sanitizer($_POST['access'], '0', 'access'),
+				'keywords' =>	form_sanitizer($_POST['keywords'], '', 'keywords'),
+				'product_languages' =>	form_sanitizer($_POST['product_languages'], '', 'product_languages'),
+				'dateadded' =>	isset($_POST['dateadded']) ? form_sanitizer($_POST['dateadded'], time(), 'dateadded') : time(),
+				'cupons' => isset($_POST['cupons']) ? 1 : 0,
+				'campaign' => isset($_POST['campaign']) ? 1 : 0,
+				'ratings' => isset($_POST['ratings']) ? 1 : 0,
+				'comments' => isset($_POST['comments']) ? 1 : 0,
+				'linebreaks' => isset($_POST['linebreaks']) ? 1 : 0,
+			);
 
 			if (isset($_POST['cList'])) {
 				$cList = '';
@@ -587,12 +585,13 @@ class Products {
 			   beforeSend: function(result) {
 			   $("#colors"+cid).html("Loading color.."); },
 			   success: function(result){
-				$("#colors"+cid).empty();
-				$("#colors"+cid).show();
-				$("#cp-"+cid).remove();
-				$("#colors"+cid).append(result); },timeout: 235000,
+					$("#colors"+cid).empty();
+					$("#colors"+cid).show();
+					$("#cp-"+cid).remove();
+					$("#colors"+cid).append(result);
+				},timeout: 235000,
 			   error:function(e) {
-				$("#colors"+cid).html("Something went wrong!");
+					$("#colors"+cid).html("Something went wrong!");
 				}
 			 });
 		}
@@ -629,7 +628,7 @@ class Products {
 		for (i=0;i<numbers.length;i++){
 		var val = numbers[i];
 		colorArray.push(val);
-		document.getElementById("cList").innerHTML += "<div class=\"list-group-item display-inline-block m-2\"><label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+ val +"\"> <span class=\"cListdiv\" id=\"colors"+val+"\"></span></label></div>";
+		document.getElementById("cList").innerHTML += "<div class=\"display-block m-2\"><label class=\"cList\"><input checked =\"checked\" class=\"cList-chk\" name=\"cList[]\" type=\"checkbox\" value=\""+ val +"\"> <span class=\"cListdiv\" id=\"colors"+val+"\"></span></label></div>";
 		doCheck(val);
 		}
 		//remove color when clicked. hmm..
