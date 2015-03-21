@@ -84,6 +84,7 @@ $locale['ESHPC117'] = "has been added to your cart";
 $locale['ESHPC118'] = "Products, Total";
 $locale['ESHPC119'] = "Empty cart";
 
+
 //functions
 $locale['ESHPF100'] = "Something went wrong!";
 $locale['ESHPF101'] = "You must have at least one in quantity. To delete an item click trashcan.";

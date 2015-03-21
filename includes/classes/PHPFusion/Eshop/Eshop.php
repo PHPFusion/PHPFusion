@@ -6,6 +6,7 @@ use PHPFusion\Eshop\Admin\Coupons;
 use PHPFusion\Eshop\Admin\Customers;
 use PHPFusion\Eshop\Admin\Payments;
 use PHPFusion\Eshop\Admin\Shipping;
+use PHPFusion\QuantumFields;
 
 class Eshop {
 
@@ -137,7 +138,6 @@ class Eshop {
 		return true;
 	}
 
-
 	// checkout data
 	public function __construct_Checkout() {
 		$item = array();
@@ -175,6 +175,11 @@ class Eshop {
 		//self::restart();
 	}
 	protected static function adjust_cart() {
+		$locale['eshop_e1000'] = 'An error is found and the cart is not updated.';
+		$locale['eshop_e1002'] = 'Cart Not Updated';
+		$locale['eshop_e1003'] = 'Invalid Product Code. Cart Not Updated';
+		$locale['eshop_e1004'] = 'An error is found in the product ID and the cart is not updated.';
+
 		if (isset($_POST['p-submit-qty']) && isset($_POST['utid']) && isnum($_POST['utid']) && isset($_POST['qty']) && isnum($_POST['qty'])) {
 			// ok now check product exist.
 			$tid = intval($_POST['utid']);
@@ -186,10 +191,10 @@ class Eshop {
 					self::refresh_session(); // clear everything.
 					redirect(BASEDIR."eshop.php?checkout");
 				} else {
-					notify('Cart Not Updated', 'An error is found and the cart is not updated.');
+					notify($locale['eshop_e1000'], $locale['eshop_e1002']);
 				}
 			} else {
-				notify('Invalid Product Code. Cart Not Updated', 'An error is found in the product ID and the cart is not updated.');
+				notify($locale['eshop_e1003'], $locale['eshop_e1004']);
 			}
 		}
 	}
@@ -222,15 +227,19 @@ class Eshop {
 
 	// Item Form
 	public static function display_item_form($display=false) {
+		global $locale;
+
+		$locale['no_product'] = 'There are no products in your cart.';
+
 		$item = self::get('items');
 		// secure form. update the whole thing as MVC.
 		$html = "<table class='table table-responsive'>";
 		$html .= "<tr>\n";
-		$html .= "<th class='col-xs-5 col-sm-5'>Product</th>\n";
-		$html .= "<th class='col-xs-2 col-sm-2'>Quantity</th>\n";
-		$html .= "<th>Unit Price</th>\n";
-		$html .= "<th>Total</th>\n";
-		$html .= $display ? '' : "<th>Options</th>\n";
+		$html .= "<th class='col-xs-5 col-sm-5'>".$locale['ESHPC102']."</th>\n";
+		$html .= "<th class='col-xs-2 col-sm-2'>".$locale['ESHPC105']."</th>\n";
+		$html .= "<th>".$locale['ESHPPRO111']."</th>\n";
+		$html .= "<th>".$locale['ESHPCHK128']."</th>\n";
+		$html .= $display ? '' : "<th>".$locale['ESHPCATS135']."</th>\n";
 		$html .= "</tr>\n";
 		if (!empty($item)) {
 			foreach($item as $prid => $data) {
@@ -245,7 +254,7 @@ class Eshop {
 				$html .= "<div class='overflow-hide'>\n";
 				$html .= "<a href='".BASEDIR."eshop.php?product=".$data['prid']."'>".$data['citem']."</a>\n";
 				if ($specs) $html .= "<div class='display-block text-smaller'><span class='strong'>".$data['cdynt']."</span> - $specs</div>\n";
-				if ($color) $html .= "<div class='display-block text-smaller'><span class='strong'>Color</span> - $color</span>\n";
+				if ($color) $html .= "<div class='display-block text-smaller'><span class='strong'>".$locale['ESHPF141']."</span> - $color</span>\n";
 				$html .= "</div>\n";
 				$html .= "</td>\n";
 				$html .= "<td>\n";
@@ -254,12 +263,12 @@ class Eshop {
 				$html .= "</td>\n";
 				$html .= "<td>".fusion_get_settings('eshop_currency').number_format($data['item_price'], 2)."</td>\n";
 				$html .= "<td>".fusion_get_settings('eshop_currency').number_format($data['item_subtotal'], 2)."</td>\n";
-				$html .= $display ? '' : "<td>".form_button('Remove', 'remove', 'remove', 'remove', array('class'=>'btn-danger btn-sm'))."</td>\n";
+				$html .= $display ? '' : "<td>".form_button($locale['remove'], 'remove', 'remove', 'remove', array('class'=>'btn-danger btn-sm'))."</td>\n";
 				$html .= "</tr>\n";
 				$html .= closeform();
 			}
 		} else {
-			$html .= "<tr><td colspan='5'><div class='alert alert-info strong text-center m-t-20'>There are no products in your cart.</div></td></tr>\n";
+			$html .= "<tr><td colspan='5'><div class='alert alert-info strong text-center m-t-20'>".$locale['no_product']."</div></td></tr>\n";
 		}
 		$html .= "</table>\n";
 		return $html;
@@ -299,6 +308,9 @@ class Eshop {
 	/* Checkout check */
 	public function saveorder() {
 	global $locale, $settings;
+
+		$locale['invoice'] = "Invoice";
+
 		if ($settings['site_seo'] == "1") $settings['siteurl'] = str_replace("../", "", $settings['siteurl']);
 		/**
 		 * Required fields errors
@@ -353,7 +365,7 @@ class Eshop {
 		}
 
 		$responsive_bill_template = "
-		<h2>INVOICE</h2>
+		<h2>".strtoupper($locale['invoice'])."</h2>
 			<div class='row'>
 				<div class='col-xs-12 col-sm-6'>
 					<div class='well'>
@@ -528,6 +540,10 @@ class Eshop {
 	protected static function update_coupon() {
 		// get coupon value
 		global $locale;
+
+		$locale['coupon_message'] = 'You have applied coupon code <strong>%s</strong> with a rebate value  of <strong>%s</strong>.';
+		$locale['subtotal_message'] = $locale['ESHPCHK128'].' ('.$locale['ESHPCHK176'].') %s';
+
 		$coupon_code = self::get('coupon_code');
 		if ($coupon_code) {
 			$coupon = Coupons::get_couponData($coupon_code);
@@ -542,7 +558,7 @@ class Eshop {
 				$coupon_value = intval($coupon['cuvalue']/100*$total_gross); // percent by default.
 				$coupon_calculation = "$coupon_value (".$coupon['cuvalue']."% rebate)";
 			}
-			$coupon_message = "You have applied coupon code <strong>".$coupon_code."</strong> with a rebate value  of <strong>".fusion_get_settings('eshop_currency').$coupon_calculation."</strong>.";
+			$coupon_message = sprintf($locale['coupon_message'], $coupon_code, fusion_get_settings('eshop_currency').$coupon_calculation);
 			// calculation difference here
 			if ($coupon_value > $total_gross) {
 				$current_subtotal = intval(0)+$vat_difference; // there must be a minimum of tax incur here.
@@ -553,21 +569,21 @@ class Eshop {
 			self::set_session('coupon_message', $coupon_message);
 			self::set_session('coupon_value', $coupon_value);
 			self::set_session('current_subtotal', $current_subtotal);
-
-			$subtotal_message = "<span class='strong'>".$locale['ESHPCHK128']." (".$locale['ESHPCHK176'].")</span>
-			<span class='strong pull-right required'>".fusion_get_settings('eshop_currency').number_format($current_subtotal,2)."</span>";
+			$subtotal_message = sprintf($locale['subtotal_message'], fusion_get_settings('eshop_currency').number_format($current_subtotal,2));
 			self::set_session('subtotal', $subtotal_message);
 		}
 	}
 
 	private static function set_coupon_rate() {
-		global $defender;
+		global $locale, $defender;
+		$locale['coupon_used'] = 'You have already used this coupon';
+		$locale['coupon_invalid'] = 'The coupon code is not valid';
 		if (isset($_POST['apply_coupon'])) {
 			$coupon_code = isset($_POST['coupon_code']) ? form_sanitizer($_POST['coupon_code'], '', 'coupon_code') : '';
 			if ($coupon_code && Coupons::verify_coupon($coupon_code)) {
 				if (Coupons::verify_coupon_usage(\defender::set_sessionUserID(), $coupon_code)) {
 					$defender->stop();
-					$defender->addNotice('You have already used this coupon.');
+					$defender->addNotice($locale['coupon_used']);
 				} else {
 					self::set_session('coupon_code', $coupon_code);
 					self::update_coupon();
@@ -577,21 +593,24 @@ class Eshop {
 					redirect(BASEDIR."eshop.php?checkout");
 				}
 			} else {
-				print_p('THe Coupon Code is not valid');
+				//print_p('The Coupon Code is not valid');
 				$defender->stop();
-				$defender->addNotice('The coupon code is not valid.');
+				$defender->addNotice($locale['coupon_invalid']);
 			}
 		}
 	}
 	public static function display_coupon_form() {
 		global $locale;
 		$html = '';
-		if (fusion_get_settings('eshop_coupons')) {
+		$locale['coupon_applied'] = "You have applied a coupon on this order";
+		$locale['coupon_another'] = "Use Another Coupon";
+		$locale['coupon_disabled'] = "Coupon discounts disabled";
 
+		if (fusion_get_settings('eshop_coupons')) {
 			if (self::get('coupon_message')) {
 				$html .= "<div id='coupon-text' class='text-center'>\n";
-				$html .= form_button('Use Another Coupon', 'use_coupon', 'use_coupon', '', array('class'=>'btn-sm btn-info pull-right m-b-10'));
-				$html .= "<span>You have applied a coupon on this order.</span>\n";
+				$html .= form_button($locale['coupon_another'], 'use_coupon', 'use_coupon', '', array('class'=>'btn-sm btn-info pull-right m-b-10'));
+				$html .= "<span>".$locale['coupon_applied']."</span>\n";
 				$html .= "</div>\n";
 				add_to_jquery("
 				$('#use_coupon').bind('click', function(e) {
@@ -607,7 +626,7 @@ class Eshop {
 			$html .= closeform();
 			$html .= "</div>\n";
 		} else {
-			$html = "<div class='alert alert-warning'>Coupon discounts disabled</div>\n";
+			$html = "<div class='alert alert-warning'>".$locale['coupon_disabled']."</div>\n";
 		}
 		return $html;
 	}
@@ -677,7 +696,7 @@ class Eshop {
 		$html .= form_text($locale['ESHPCHK113'], 'cphone', 'cphone', $customer_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
 		$html .= form_text($locale['ESHPCHK114'], 'cfax', 'cfax', $customer_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
 		$html .= form_hidden('', 'cuid', 'cuid', $customer_info['cuid']);
-		$html .= form_button($locale['save'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-primary'));
+		$html .= form_button($locale['save_changes'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-success'));
 		$html .= closeform();
 		$html .= "</div>\n";
 		return $html;
@@ -686,15 +705,17 @@ class Eshop {
 	/* Shipping form fields */
 	protected static function set_shipping_rate() {
 		global $locale;
+		$locale['shipping_applied'] = 'You have added %s - %s into this order';
+		$locale['shipping_message'] = $locale['ESHPCHK133'].' - %s';
+
 		if (isset($_POST['save_shipping']) && isset($_POST['product_delivery']) && isnum($_POST['product_delivery'])) {
 			if (Shipping::verify_itenary($_POST['product_delivery'])) {
 				$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
 				$si = Shipping::get_itenary($_POST['product_delivery']);
 				$ci = Shipping::get_shippingco($si['cid']);
 				$ship_cost = intval($si['initialcost']) + ($si['weightcost'] * self::get('total_weight'));
-				$s_message = "You have added ".$ci['title']." - ".$si['method']." into this order.";
-				$shipping = "<span class='strong'>".$locale['ESHPCHK133']." ".($free_shipping ? "- ".$locale['ESHPCHK188'] : '')."</span>
-					<span class='strong pull-right'>+ ".fusion_get_settings('eshop_currency').number_format($ship_cost,2)."</span>";
+				$s_message = sprintf($locale['shipping_applied'], $ci['title'], $si['method']);
+				$shipping = sprintf($locale['shipping_message'], ($free_shipping ? "- ".$locale['ESHPCHK188'] : ''), "+ ".fusion_get_settings('eshop_currency').number_format($ship_cost,2));
 				$result = self::set_session('shipping_method', $_POST['product_delivery']);
 				if ($result) $result = self::set_session('total_shipping', $ship_cost);
 				if ($result) $result = self::set_session('shipping_message', $s_message);
@@ -722,6 +743,7 @@ class Eshop {
 		}
 		if (!empty($list)) {
 			$dest_opts = Shipping::get_destOpts();
+			$locale['est_delivery_time'] = "Est. Delivery Time - %s days";
 			$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
 			foreach($list as $destination => $data) {
 				$html .= "<ul class='list-group'>\n";
@@ -734,13 +756,13 @@ class Eshop {
 					<label style='width:97%' class='overflow-hide row text-normal text-smaller' for='".$_data['sid']."-choice'>
 					<span class='col-xs-2'>".($free_shipping ? "<span class='required'>".$locale['ESHPCHK188']."</span>" : "+".fusion_get_settings('eshop_currency')." ".$_data['delivery_cost'])."</span>
 					<span class='m-r-10 text-bigger strong'>".$_data['method']."</span>
-					<span class='text-bigger'>Est. Delivery Time - ".$_data['dtime']." days</span>
+					<span class='text-bigger'>".sprintf($locale['est_delivery_time'], $data['dtime'])."</span>
 					</label>
 					</li>";
 				}
 			}
 			$html .= "</ul>\n";
-			$html .= form_button($locale['save'], 'save_shipping', 'save_shipping', $locale['save'], array('class'=>'btn-primary'));
+			$html .= form_button($locale['save_changes'], 'save_shipping', 'save_shipping', $locale['save'], array('class'=>'btn-primary'));
 			$html .= closeform();
 		} else {
 			$html .= "<div class='well'>".$locale['ESHPCHK125']."</div>\n";
@@ -751,12 +773,14 @@ class Eshop {
 	/* Payment form fields */
 	protected static function update_payment() {
 		global $locale;
+		$locale['payment_message'] = "You have selected %s as payment method";
+
 		$payment_method = self::get('payment_method');
 		if ($payment_method) {
 			$pay = Payments::get_payment($payment_method);
 			$base_cost = intval(self::get('nett_gross')+self::get('total_shipping'));
 			$total_surcharge = $base_cost * ($pay['surcharge']/100);
-			$s_message = "You have selected ".$pay['method']." as payment method.";
+			$s_message = sprintf($locale['payment_message'], $pay['method']);
 			$payment = "<span class='strong'>".$locale['ESHPPMTS102']."</span>
 					<span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($total_surcharge,2)."</span>";
 			self::set_session('total_surcharge', $total_surcharge);
@@ -818,7 +842,7 @@ class Eshop {
 		global $locale;
 		$html = openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
 		$html .= form_textarea($locale['ESHPCHK116'], 'message', 'message', self::get('customer_message'));
-		$html .= form_button($locale['save'], 'save_message', 'save_message', $locale['save'], array('class'=>'btn-primary'));
+		$html .= form_button($locale['save_changes'], 'save_message', 'save_message', $locale['save'], array('class'=>'btn-success'));
 		$html .= closeform();
 		return $html;
 	}
@@ -1363,6 +1387,7 @@ class Eshop {
 			foreach($this->info['category'] as $branch_id => $branch) {
 				foreach($branch as $id => $node) {
 					$this->info['category'][$branch_id][$id]['link'] = BASEDIR."eshop.php?category=".$node['cid'];
+					$this->info['category'][$branch_id][$id]['title'] = QuantumFields::parse_label($node['title']);
 				}
 			}
 		}
@@ -1459,9 +1484,13 @@ class Eshop {
 					$data['category_title'] = isnum($data['category_title']) ? "Front Page" : $data['category_title'];
 					$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
 					$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
-					if ($data['thumb']) $data['thumb'] = self::picExist(BASEDIR."eshop/pictures/thumb/".$data['thumb']);
-					if ($data['picture']) $data['picture'] = self::picExist(BASEDIR."eshop/pictures/".$data['picture']);
-
+					if ($data['thumb']) $data['thumb'] = self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/thumbs/".$data['thumb']);
+					if ($data['thumb2']) {
+						$data['picture'] = self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['thumb2']);
+					} else {
+						if ($data['picture']) $data['picture'] = self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['picture']);
+						echo "<img src='".$data['picture']."'>";
+					}
 					$info['item'][$data['id']] = $data;
 					$this->info['title'] = $data['title'];
 					// push for title and meta
@@ -1490,42 +1519,44 @@ class Eshop {
 			");
 		} else {
 			// on main page
-			$result = dbquery("SELECT id, cid, title, thumb, price, picture, xprice, keywords, product_languages, if(cid=0, 0, 1) as category_title FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
+			$result = dbquery("SELECT id, cid, title, thumb, thumb2, picture, price, picture, xprice, keywords, product_languages, if(cid=0, 0, 1) as category_title FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
 		}
 		if (dbrows($result)>0) {
-			if (multilang_table("ES")) {
-				while ($data = dbarray($result)) {
-					$es_langs = explode('.', $data['product_languages']);
-					if (in_array(LANGUAGE, $es_langs)) {
-						$data['category_title'] = isnum($data['category_title']) ? "Front Page" : $data['category_title'];
-						$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
-						$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
-						if ($data['thumb']) $data['thumb'] = BASEDIR."eshop/pictures/thumb/".$data['thumb'];
-						if ($data['picture']) $data['picture'] = BASEDIR."eshop/pictures/".$data['picture'];
-						$info['item'][$data['id']] = $data;
+			$locale['eshop_1001'] = 'Front page';
+			while ($data = dbarray($result)) {
+				$es_langs = explode('.', $data['product_languages']);
+				if (in_array(LANGUAGE, $es_langs)) {
+					$data['category_title'] = isnum($data['category_title']) ? $locale['eshop_1001'] : QuantumFields::parse_label($data['category_title']);
+					$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
+					$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
+					if ($data['thumb']) {
+						$data['thumb'] = BASEDIR."eshop/pictures/album_".$data['cid']."/thumbs/".$data['thumb'];
 					}
-				}
-			} else {
-				while ($data = dbarray($result)) {
+					if ($data['thumb2']) {
+						$data['picture'] = BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['thumb2'];
+					} else {
+						if ($data['picture']) $data['picture'] = BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['picture'];
+						echo "<img src='".$data['picture']."'>";
+					}
 					$info['item'][$data['id']] = $data;
 				}
 			}
 		} else {
 			$info['error'] = 'No products added'; //$locale[''];
 		}
-
 		$info['pagenav'] = ($this->max_rows > fusion_get_settings('eshop_noppf')) ? self::makeeshoppagenav($_GET['rowstart'],fusion_get_settings('eshop_noppf'),$this->max_rows,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;" : "" )."") : '';
 		return $info;
 	}
 
-	static function get_featureds() {
-
+	public static function get_featureds() {
 		$result= dbquery("SELECT ter.* FROM
 		".DB_ESHOP." ter
 		LEFT JOIN ".DB_ESHOP_FEATITEMS." titm ON ter.id=titm.featitem_item
 		WHERE featitem_cid = '".(isset($_REQUEST['category']) ? $_REQUEST['category'] : "0")."' ORDER BY featitem_order");
 		$rows = dbrows($result);
-
+		if (dbrows($result)>0) {
+			return dbarray($result);
+		}
 	}
 
 }
