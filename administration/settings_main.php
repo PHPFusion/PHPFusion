@@ -109,10 +109,12 @@ $theme_files = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "fol
 $admin_theme_files = makefilelist(THEMES."admin_templates/", ".|..", TRUE, "folders");
 opentable($locale['main_settings']);
 
+/* Remove this line or use a debugger like xdebug to debug notices
 // These are the notices before we start showing them
 if (!empty($_SESSION['notices'])) {
 	print_p($_SESSION['notices']);
 }
+/**/
 
 // Get all notices
 $notices = getNotices();
