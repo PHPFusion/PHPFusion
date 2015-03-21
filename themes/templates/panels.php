@@ -24,7 +24,7 @@ if (iADMIN && !defined("ADMIN_PANEL")) {
 	$admin_mess .= "<a id='content'></a>\n";
 	if (iSUPERADMIN && file_exists(BASEDIR."install/")) $ad_mess[] = $locale['global_198'];
 	if ($settings['maintenance']) $ad_mess[] = $locale['global_190'];
-	if (!$userdata['user_admin_password']) $ad_mess[] = $locale['global_199'];
+	if (!dbcount("('user_admin_password')", DB_USERS, "user_id='".$userdata['user_id']."'")) $ad_mess[] = $locale['global_199'];
 	if (!empty($ad_mess)) {
 		$admin_mess .= "<div class='alert alert-danger admin-message m-t-10'>";
 		foreach ($ad_mess as $message) {
