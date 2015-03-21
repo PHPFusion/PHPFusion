@@ -42,13 +42,10 @@ $eshop_gallery->setImageUploadDir(BASEDIR."eshop/pictures/");
 $eshop_gallery->setPhotoCatDb(DB_ESHOP_ALBUMS);
 $eshop_gallery->setPhotoDb(DB_ESHOP_PHOTOS);
 $eshop_gallery->setGalleryRights('ESHP');
-$eshop_gallery->setEnableComments(true);
-$eshop_gallery->setAllowComments(true);
-
+$eshop_gallery->setEnableComments(false);
+$eshop_gallery->setAllowComments(false);
 $eshop_gallery->setEnableRatings(false);
 $eshop_gallery->setAllowRatings(false);
-
-
 $eshop_gallery->boot();
 
 /*

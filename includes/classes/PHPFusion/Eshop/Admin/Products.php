@@ -61,20 +61,11 @@ class Products {
 		'thumb'=>'',
 		'thumb2' => '',
 	);
-	/**
-	 * @var string
-	 */
 	private $formaction = '';
-	/**
-	 * @var string
-	 */
 	private $filter_Sql = '';
-	/**
-	 * @var bool|int|string
-	 */
 	private $max_rowstart = 0;
-
 	private $upload_settings = array();
+
 	/**
 	 * Constructor and Sanitize Globals
 	 */
@@ -326,6 +317,7 @@ class Products {
 		// Update / Save Product
 		if (isset($_POST['save_cat'])) {
 			$this->data = array(
+				'id' => form_sanitizer($_POST['id'], '0', 'id'),
 				'title' => 	form_sanitizer($_POST['title'], '', 'title'),
 				'cid' 	=>	form_sanitizer($_POST['cid'], '0', 'cid'),
 				'introtext' =>	form_sanitizer($_POST['introtext'], '', 'introtext'),
@@ -355,7 +347,7 @@ class Products {
 				'dmulti' =>	form_sanitizer($_POST['dmulti'], '1', 'dmulti'),
 				'access' =>	form_sanitizer($_POST['access'], '0', 'access'),
 				'keywords' =>	form_sanitizer($_POST['keywords'], '', 'keywords'),
-				'product_languages' =>	form_sanitizer($_POST['product_languages'], '', 'product_languages'),
+				'product_languages' =>	form_sanitizer($_POST['product_languages'], ''),
 				'dateadded' =>	isset($_POST['dateadded']) ? form_sanitizer($_POST['dateadded'], time(), 'dateadded') : time(),
 				'cupons' => isset($_POST['cupons']) ? 1 : 0,
 				'campaign' => isset($_POST['campaign']) ? 1 : 0,
@@ -548,7 +540,9 @@ class Products {
 	 * @return array|bool
 	 */
 	public static function products_data() {
-		$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
+		$result = dbquery("SELECT eshop.*, alb.album_id as gallery FROM ".DB_ESHOP." eshop
+		LEFT JOIN ".DB_ESHOP_ALBUMS." alb on alb.album_id = eshop.gallery_on
+		WHERE id='".$_GET['id']."'");
 		if (dbrows($result)>0) {
 			return dbarray($result);
 		}
@@ -748,8 +742,8 @@ class Products {
 				$('#cList').append('<div class=\'display-block m-2\'><label class=\'cList\'><input checked =\'checked\' class=\'cList-chk\' name=\'cList[]\' type=\'checkbox\' value=\''+val+'\'> '+ title +'</label></div>');
 			}
 		});
-
 		");
+
 		echo "<div class='form-group'>\n";
 		echo "<label class='col-xs-12 col-sm-3'>Choose Product Colors</label>\n";
 		echo "<div class='col-xs-12 col-sm-9'>\n";
@@ -792,11 +786,13 @@ class Products {
 		echo "</div><div class='col-xs-12 col-sm-12 col-md-3'>\n";
 		// column 2
 		if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
-		$img_path = !SAFEMODE ? BASEDIR."eshop/pictures/album_".$this->data['gallery']."/thumbs/".$this->data['thumb'] : BASEDIR."eshop/pictures/thumbs/".$this->data['thumb'];
-		if ($this->data['thumb'] && file_exists($img_path)) {
-			echo "<div class='display-block text-center list-group-item m-b-10'>\n";
-			echo "<img class='img-responsive' src='".$img_path."' />";
-			echo "</div>\n";
+		if ($this->data['thumb']) {
+			$img_path = !SAFEMODE ? BASEDIR."eshop/pictures/album_".$this->data['gallery']."/thumbs/".$this->data['thumb'] : BASEDIR."eshop/pictures/thumbs/".$this->data['thumb'];
+			if (file_exists($img_path)) {
+				echo "<div class='display-block text-center list-group-item m-b-10'>\n";
+				echo "<img class='img-responsive' src='".$img_path."' />";
+				echo "</div>\n";
+			}
 		}
 
 		echo form_hidden($locale['ESHPPRO124'], 'sellcount', 'sellcount', $this->data['sellcount'], array('deactivate'=>1, 'placeholder'=>$locale['ESHPPRO125']));
@@ -822,6 +818,8 @@ class Products {
 			while ($data = dbarray($result)) {
 				$list[$data['album_id']] = $data['album_title'];
 			}
+		} else {
+			$list[1] = $locale['on'];
 		}
 		echo form_select($locale['ESHPPRO126'], 'gallery', 'gallery', $list, $this->data['gallery'], array('width'=>'100%', 'placeholder'=>$locale['ESHPPRO129']));
 

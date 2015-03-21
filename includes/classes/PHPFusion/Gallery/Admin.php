@@ -884,12 +884,14 @@ class Admin {
 							class='text-uppercase strong'><?php echo $locale['635']; ?></span> <?php echo $data['album_title'] ?>
 					</div>
 					<div class='display-inline' style='overflow: hidden;'>
-						<img style='max-width:100%; display:block;' src='<?php echo $img_src ?>'>
+						<img style='max-width:100%; display:block; margin:0 auto;' src='<?php echo $img_src ?>'>
 					</div>
 					<?php
 					// comments
-					require_once INCLUDES."comments_include.php";
-					showcomments($this->gallery_rights, $this->photo_db, 'photo_id', $data['photo_id'], FUSION_REQUEST);
+					if ($this->enable_comments && $this->allow_comments) {
+						require_once INCLUDES."comments_include.php";
+						showcomments($this->gallery_rights, $this->photo_db, 'photo_id', $data['photo_id'], FUSION_REQUEST);
+					}
 					?>
 				</div>
 				<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>
