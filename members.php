@@ -52,7 +52,7 @@ if (iMEMBER) {
 				}
 				$j++;
 			}
-			echo "<td class='$cell_color'>\n".($groups ? $groups : ($data['user_level'] == 103 ? $locale['407'] : $locale['406']))."</td>\n";
+			echo "<td class='$cell_color'>\n".($groups ? $groups : ($data['user_level'] == USER_LEVEL_SUPER_ADMIN ? $locale['407'] : $locale['406']))."</td>\n";
 			echo "<td align='center' width='1%' class='$cell_color' style='white-space:nowrap'>".getuserlevel($data['user_level'])."</td>\n</tr>";
 		}
 		echo "</table>\n";
