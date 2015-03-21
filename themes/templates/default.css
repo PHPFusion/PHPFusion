@@ -385,6 +385,16 @@ a .entypo, a .entypo-social {
 	color: #999 !Important;
 	border: none !important;
 }
+/** Fusion CSS navigational menu */
+.main-nav {
+
+}
+.sub-nav {
+
+}
+.profile-link {
+
+}
 
 /* BS collapse mobile menu */
 #mp {
