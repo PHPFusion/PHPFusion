@@ -83,6 +83,8 @@ class UserFieldsInput {
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setUserAvatar();
+
+		//print_p($this->data);
 		$this->_setUserDataUpdate();
 	}
 
@@ -303,8 +305,14 @@ class UserFieldsInput {
 			$this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
 			$this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2"); // var3
 			$passAuth = new PasswordAuth();
+
+			//print_p($this->_userAdminPassword); // this is not available if no password exist
+			//print_p($this->_newUserAdminPassword);
+			//print_p($this->_newUserAdminPassword2);
+
 			if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
 				// New Admin
+				//echo 'yes we are new admin';
 				$valid_current_password = 1;
 				$passAuth->inputPassword = 'fake';
 				$passAuth->inputNewPassword = $this->_userAdminPassword;
@@ -322,6 +330,7 @@ class UserFieldsInput {
 				$valid_current_password = $passAuth->isValidCurrentPassword();
 				//print_p($valid_current_password);
 			}
+
 			if ($valid_current_password) {
 				$this->_isValidCurrentAdminPassword = 1;
 				// authenticated. now do the integrity check
@@ -336,6 +345,7 @@ class UserFieldsInput {
 						$this->data['user_admin_algo'] = $new_admin_algo;
 						$this->data['user_admin_salt'] = $new_admin_salt;
 						$this->data['user_admin_password'] = $new_admin_password;
+						//print_p($this->data);
 						break;
 					case '1':
 						// new password is old password
@@ -670,6 +680,11 @@ class UserFieldsInput {
 			foreach ($fields_input as $table_name => $fields_array) {
 				$user_info += $fields_array;
 			}
+		}
+		if (iADMIN) {
+			$user_info['user_admin_algo'] = $this->data['user_admin_algo'];
+			$user_info['user_admin_salt'] = $this->data['user_admin_salt'];
+			$user_info['user_admin_password'] = $this->data['user_admin_password'];
 		}
 		dbquery_insert(DB_USERS, $user_info, 'update');
 		$this->_completeMessage = $locale['u163'];
