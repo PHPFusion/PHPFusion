@@ -41,7 +41,7 @@ if (isset($_POST['savesettings'])) {
 				if ($i != (count($_POST['multilang_tables'])-1)) $ml_tables .= ".";
 			}
 			$ml_tables = explode('.', $ml_tables);
-			for ($i = 0; $i < sizeof($ml_tables); $i++) {
+			for ($i = 0; $i < count($ml_tables); $i++) {
 				$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_status='1' WHERE mlt_rights='".$ml_tables[$i]."'");
 			}
 			if (!$result) {
@@ -67,42 +67,42 @@ if (isset($_POST['savesettings'])) {
 			$enabled_languages = explode('.', $settings['enabled_languages']);
 			$old_enabled_languages = explode('.', $old_enabled_languages);
 			//Sanitize users languages
-			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+			for ($i = 0; $i < count($enabled_languages); $i++) {
 				$result = dbquery("UPDATE ".DB_USERS." SET user_language = '".$settings['locale']."' WHERE user_language !='".$enabled_languages[$i]."'");
 			}
 			//Sanitize and update panel languages
 			$panel_langs = "";
-			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
-				$panel_langs .= $settings['enabled_languages'].($i < (sizeof($settings['enabled_languages'])-1) ? "." : "");
+			for ($i = 0; $i < count($enabled_languages); $i++) {
+				$panel_langs .= $settings['enabled_languages'].($i < (count($settings['enabled_languages'])-1) ? "." : "");
 			}
-			if (sizeof($enabled_languages) > 1) {
+			if (count($enabled_languages) > 1) {
 				$result = dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$panel_langs."'");
 			} else {
 				$result = dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$settings['locale']."'");
 			}
 			//Sanitize news_cat_languages
-			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+			for ($i = 0; $i < count($enabled_languages); $i++) {
 				$result = dbquery("DELETE FROM ".DB_NEWS_CATS." WHERE news_cat_language !='".$enabled_languages[$i]."' AND news_cat_language !='".$settings['locale']."'");
 			}
 			//Sanitize blog_cat_languages
-			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+			for ($i = 0; $i < count($enabled_languages); $i++) {
 				$result = dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_language !='".$enabled_languages[$i]."' AND blog_cat_language !='".$settings['locale']."'");
 			}
 			//Sanitize site links_languages
-			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+			for ($i = 0; $i < count($enabled_languages); $i++) {
 				$result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language !='".$enabled_languages[$i]."' AND link_language !='".$settings['locale']."'");
 			}
 			//Sanitize the email templates languages
-			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+			for ($i = 0; $i < count($enabled_languages); $i++) {
 				$result = dbquery("DELETE FROM ".DB_EMAIL_TEMPLATES." WHERE template_language !='".$enabled_languages[$i]."' AND template_language !='".$settings['locale']."'");
 			}
 			//Sanitize forum rank languages
-			for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+			for ($i = 0; $i < count($enabled_languages); $i++) {
 				$result = dbquery("DELETE FROM ".DB_FORUM_RANKS." WHERE rank_language !='".$enabled_languages[$i]."' AND rank_language !='".$settings['locale']."'");
 			}
 			//update news cats with a new language if we have it
 			if (!empty($settings['enabled_languages'])) {
-				for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+				for ($i = 0; $i < count($enabled_languages); $i++) {
 					$language_exist = dbarray(dbquery("SELECT news_cat_language FROM ".DB_NEWS_CATS." WHERE news_cat_language ='".$enabled_languages[$i]."'"));
 					if (is_null($language_exist['news_cat_language'])) {
 						include LOCALE."".$enabled_languages[$i]."/setup.php";
@@ -127,7 +127,7 @@ if (isset($_POST['savesettings'])) {
 			}
 			//update blog cats with a new language if we have it
 			if (!empty($settings['enabled_languages'])) {
-				for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+				for ($i = 0; $i < count($enabled_languages); $i++) {
 					$language_exist = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_BLOG_CATS." WHERE blog_cat_language ='".$enabled_languages[$i]."'"));
 					if (is_null($language_exist['blog_cat_language'])) {
 						include LOCALE."".$enabled_languages[$i]."/setup.php";
@@ -151,7 +151,7 @@ if (isset($_POST['savesettings'])) {
 			}
 			//update site links with a new language if we have it
 			if (!empty($settings['enabled_languages'])) {
-				for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+				for ($i = 0; $i < count($enabled_languages); $i++) {
 					$language_exist = dbarray(dbquery("SELECT link_language FROM ".DB_SITE_LINKS." WHERE link_language ='".$enabled_languages[$i]."'"));
 					if (is_null($language_exist['link_language'])) {
 						include LOCALE."".$enabled_languages[$i]."/setup.php";
@@ -176,7 +176,7 @@ if (isset($_POST['savesettings'])) {
 			}
 			//Update the email template system locales
 			if (!empty($settings['enabled_languages'])) {
-				for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+				for ($i = 0; $i < count($enabled_languages); $i++) {
 					$language_exist = dbarray(dbquery("SELECT template_language FROM ".DB_EMAIL_TEMPLATES." WHERE template_language ='".$enabled_languages[$i]."'"));
 					if (is_null($language_exist['template_language'])) {
 						include LOCALE."".$enabled_languages[$i]."/setup.php";
@@ -188,7 +188,7 @@ if (isset($_POST['savesettings'])) {
 			}
 			//Update the forum ranks locales
 			if (!empty($settings['enabled_languages'])) {
-				for ($i = 0; $i < sizeof($enabled_languages); $i++) {
+				for ($i = 0; $i < count($enabled_languages); $i++) {
 					$language_exist = dbarray(dbquery("SELECT rank_language FROM ".DB_FORUM_RANKS." WHERE rank_language ='".$enabled_languages[$i]."'"));
 					if (is_null($language_exist['rank_language'])) {
 						include LOCALE."".$enabled_languages[$i]."/setup.php";

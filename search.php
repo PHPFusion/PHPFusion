@@ -221,7 +221,7 @@ function search_textfrag($text) {
 function search_stringscount($text) {
 	global $swords;
 	$count = 0;
-	$c_swords = count($swords); //sizeof($swords)
+	$c_swords = count($swords); //count($swords)
 	for ($i = 0; $i < $c_swords; $i++) {
 		$count += substr_count(strtolower($text), strtolower($swords[$i]));
 	}
@@ -231,7 +231,7 @@ function search_stringscount($text) {
 function search_querylike($field) {
 	global $swords;
 	$querylike = "";
-	$c_swords = count($swords); //sizeof($swords)
+	$c_swords = count($swords); //count($swords)
 	for ($i = 0; $i < $c_swords; $i++) {
 		$querylike .= $field." LIKE '%".$swords[$i]."%'".($i < $c_swords-1 ? " ".$_POST['method']." " : "");
 	}
@@ -283,7 +283,7 @@ if ($_POST['stext'] != "" && strlen($_POST['stext']) >= 3) {
 	$fswords = explode(" ", $_POST['stext']);
 	$swords = array();
 	$iwords = array();
-	$c_fswords = count($fswords); //sizeof($fswords)
+	$c_fswords = count($fswords); //count($fswords)
 	for ($i = 0; $i < $c_fswords; $i++) {
 		if (strlen($fswords[$i]) >= 3) {
 			$swords[] = $fswords[$i];
@@ -295,7 +295,7 @@ if ($_POST['stext'] != "" && strlen($_POST['stext']) >= 3) {
 	$c_swords = count($swords);
 	if ($c_swords == 0) {
 		redirect(FUSION_SELF);
-	} //sizeof($swords)
+	} //count($swords)
 	$higlight = "";
 	$i = 1;
 	foreach ($swords as $hlight) {

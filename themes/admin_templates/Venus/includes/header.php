@@ -26,7 +26,7 @@ echo "<ul class='venus-toggler'>\n";
 echo "<li><a id='toggle-canvas' class='pointer' style='border-left:none;'><i class='fa fa-ellipsis-v fa-lg'></i></a></li>\n";
 echo "</ul>\n";
 echo "<ul class='hidden-xs pull-right m-r-15'>\n";
-if (sizeof($enabled_languages) > 1) {
+if (count($enabled_languages) > 1) {
 	echo "<li class='dropdown'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['282']."'><i class='fa fa-flag fa-lg'></i><span class='caret'></span></a>\n";
 	echo "<ul class='dropdown-menu' role='lang-menu'>\n";
 	foreach($language_opts as $languages) {

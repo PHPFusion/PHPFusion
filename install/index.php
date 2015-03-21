@@ -294,7 +294,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$content .= "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
 		$content .= "<tr><td class='tbl1'>".$locale['setup_1212']."</td>\n";
 		$content .= "<td class='tbl1'>\n";
-		for ($i = 0; $i < sizeof($locale_files); $i++) {
+		for ($i = 0; $i < count($locale_files); $i++) {
 			if (file_exists(BASEDIR.'locale/'.$locale_files[$i].'/setup.php')) {
 				$content .= "<input type='checkbox' value='".$locale_files[$i]."' name='enabled_languages[]' class='m-r-10 textbox' ".($locale_files[$i] == $_POST['localeset'] ? "checked='checked'" : "")."> ".$locale_files[$i]."<br />\n";
 			}
@@ -321,7 +321,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");
 		$enabled_languages = '';
 		if (!empty($_POST['enabled_languages'])) {
-			for ($i = 0; $i < sizeof($_POST['enabled_languages']); $i++) {
+			for ($i = 0; $i < count($_POST['enabled_languages']); $i++) {
 				$enabled_languages .= $_POST['enabled_languages'][$i].".";
 			}
 			$enabled_languages = substr($enabled_languages, 0, (strlen($enabled_languages)-1));

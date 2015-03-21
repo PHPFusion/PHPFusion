@@ -49,7 +49,7 @@ echo progress_bar($outbox_percent, $locale['UM099']);
 $archive_cfg = ($data['pm_savebox'] != 0 ? $data['pm_savebox'] : 1);
 $archive_percent = $archive_cfg !== 1 ? number_format(($archive_count/$archive_cfg)*99, 0) : number_format(0*99,0);
 echo progress_bar($archive_percent, $locale['UM100']);
-if (sizeof($enabled_languages) > 1) {
+if (count($enabled_languages) > 1) {
 echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
 echo lang_switcher();
 }
@@ -93,7 +93,7 @@ if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 		}
 
 openside($locale['global_100']);
-if (sizeof($enabled_languages) > 1) {
+if (count($enabled_languages) > 1) {
 echo "<h5 class='m-b-10'><strong>".$locale['UM101']."</strong></h5>";
 echo lang_switcher();
 }

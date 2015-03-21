@@ -539,7 +539,7 @@ class defender {
 			$query = '';
 			if (!empty($_FILES[$this->field_config['input_name']]['name'])) {
 				$result = array();
-				for($i = 0; $i <= sizeof($_FILES[$this->field_config['input_name']]['name'])-1; $i++) {
+				for($i = 0; $i <= count($_FILES[$this->field_config['input_name']]['name'])-1; $i++) {
 					if (is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name'][$i])) {
 						$image = $_FILES[$this->field_config['input_name']];
 						$target_name = $_FILES[$this->field_config['input_name']]['name'][$i];

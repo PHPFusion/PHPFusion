@@ -17,7 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-if (sizeof($enabled_languages) > 1) {
+if (count($enabled_languages) > 1) {
 	openside($locale['global_ML102']);
 	include_once INCLUDES."translate_include.php";
 	echo openform('lang_menu_form', 'lang_menu_form', 'post', FUSION_SELF, array('downtime' => 1));
