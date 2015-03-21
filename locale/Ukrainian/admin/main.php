@@ -9,6 +9,8 @@ $locale['ac03'] = "Система";
 $locale['ac04'] = "Налаштування";
 $locale['ac05'] = "Додатки";
 
+$locale['ac10'] = "Admin Dashboard"; // translate this line
+
 $locale['201'] = "Адміністратори";
 
 $locale['AC'] = "Розділи статей";
