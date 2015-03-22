@@ -77,12 +77,20 @@ function format_word($count, $words, $add_count = 1) {
 	return $result;
 }
 
-function format_word_English($count, $words, $add_count = 1) {
-	$form = 1; // plural form
+function format_word_Danish($count, $words, $add_count = 1) {
+	$form = $count == 1 ? 0 : 1;
 
-	if ($count == 1 || $count == 0) { // count is not between 10 and 19
-		$form = 0; // single form
+	$words_array = explode("|", $words);
+	$result = $words_array[$form];
+	if ($add_count) {
+		$result = $count." ".$result;
 	}
+
+	return $result;
+}
+
+function format_word_English($count, $words, $add_count = 1) {
+	$form = $count == 1 ? 0 : 1;
 
 	$words_array = explode("|", $words);
 	$result = $words_array[$form];
