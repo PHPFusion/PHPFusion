@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: blog.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -20,8 +20,11 @@ pageAccess('BLOG');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/blog.php";
 $settings = fusion_get_settings();
+
 add_to_breadcrumbs(array('link'=>ADMIN.'blog.php'.$aidlink, 'title'=>$locale['405']));
+
 if (isset($_POST['cancel'])) { redirect(FUSION_SELF.$aidlink); }
+
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) {
 	$del_data['blog_id'] = $_GET['blog_id'];
 	$result = dbquery("SELECT blog_image, blog_image_t1, blog_image_t2 FROM ".DB_BLOG." WHERE blog_id='".$del_data['blog_id']."'");
@@ -44,6 +47,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_i
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
+
 $_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 'blog';
 
 $master_title['title'][] = $locale['400'];
@@ -59,18 +63,21 @@ $tab_active = tab_active($master_title, $_GET['section'], 1);
 opentable($locale['405']);
 $message = '';
 if (isset($_GET['status'])) {
-	if ($_GET['status'] == "sn") {
-		$message = $locale['410'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['411'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['412'];
+	switch($_GET['status']) {
+		case 'sn':
+			$message = $locale['410'];
+			break;
+		case 'su':
+			$message = $locale['411'];
+			break;
+		case 'del':
+			$message = $locale['412'];
+			break;
 	}
 	if ($message) {
 		echo admin_message($message);
 	}
 }
-
 
 echo opentab($master_title, $tab_active, 'blog', 1);
 echo opentabbody($master_title['title'][0], 'blog', $tab_active, 1);
@@ -82,7 +89,6 @@ if (isset($_GET['section']) && $_GET['section'] == 'nform') {
 	blog_form();
 	echo closetabbody();
 }
-
 echo closetab();
 closetable();
 
@@ -96,7 +102,25 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id'
 
 require_once THEMES."templates/footer.php";
 
+/**
+ * Function to progressively return closest full image_path
+ * @param $blog_image
+ * @param $blog_image_t1
+ * @param $blog_image_t2
+ * @return string
+ */
+function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2) {
+	if ($blog_image_t1 && file_exists(IMAGES_B_T.$blog_image_t1)) return IMAGES_B_T.$blog_image_t1;
+	if ($blog_image_t1 && file_exists(IMAGES_B.$blog_image_t1)) return IMAGES_B.$blog_image_t1;
+	if ($blog_image_t2 && file_exists(IMAGES_B_T.$blog_image_t2)) return IMAGES_B_T.$blog_image_t2;
+	if ($blog_image_t2 && file_exists(IMAGES_B.$blog_image_t2)) return IMAGES_B.$blog_image_t2;
+	if ($blog_image && file_exists(IMAGES_B.$blog_image)) return IMAGES_B.$blog_image;
+	return 'fake.png';
+}
 
+/**
+ * Blog Listing HTML
+ */
 function blog_listing() {
 	global $aidlink, $locale;
 	echo "<div class='m-t-20'>\n";
@@ -105,24 +129,26 @@ function blog_listing() {
 	echo "<div class='panel panel-default'>\n";
 	echo "<div class='panel-heading clearfix'>\n";
 	echo "<div class='overflow-hide'>\n";
-	echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('blog-list', '0', '0', 'm-r-10').">".$locale['424']."</a> <span class='badge'>".dbcount("(blog_id)", DB_BLOG, "blog_cat='0'")."</span></h4>\n";
-	echo "<br/><span class='text-smaller text-uppercase strong'>".LANGUAGE."</span>";
+	echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('blog-list', '0', '0', 'm-r-10 text-bigger strong').">".$locale['424']."</a> <span class='badge'>".dbcount("(blog_id)", DB_BLOG, "blog_cat='0'")."</span></h4>\n";
+	echo "<br/><span class='text-smaller text-uppercase'>".LANGUAGE."</span>";
 	echo "</div>\n";
 	echo "</div>\n"; // end panel heading
 	echo "<div ".collapse_footer_link('blog-list','0', '0').">\n";
-	echo "<ul class='list-group'>\n";
-	$result2 = dbquery("SELECT blog_id, blog_subject, blog_image_t1, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("NS") ? "WHERE blog_language='".LANGUAGE."'" : "")." AND blog_cat='0' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
+	echo "<ul class='list-group m-10'>\n";
+	$result2 = dbquery("SELECT blog_id, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("NS") ? "WHERE blog_language='".LANGUAGE."'" : "")." AND blog_cat='0' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
 	if (dbrows($result2) > 0) {
 		while ($data2 = dbarray($result2)) {
 			echo "<li class='list-group-item'>\n";
 			echo "<div class='pull-left m-r-10'>\n";
-			$img_thumb = ($data2['blog_image_t1']) ? IMAGES_B_T.$data2['blog_image_t1'] : IMAGES."imagenotfound70.jpg";
-			echo thumbnail($img_thumb, '50px');
+			$image_thumb = get_blog_image_path($data2['blog_image'], $data2['blog_image_t1'], $data2['blog_image_t2']);
+			echo thumbnail($image_thumb, '50px');
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
-			echo "<div><span class='strong text-dark'>".$data2['blog_subject']."</span><br/>".fusion_first_words($data2['blog_blog'], '50')." </div>\n";
+			echo "<div class='strong text-dark'>".$data2['blog_subject']."</div>".fusion_first_words($data2['blog_blog'], '50')."\n";
+			echo "<div class='pull-right'>\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;blog_id=".$data2['blog_id']."'>".$locale['420']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=nform&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['451']."');\">".$locale['421']."</a>\n";
+			echo "</div>\n";
 			echo "</div>\n";
 			echo "</li>\n";
 		}
@@ -131,7 +157,6 @@ function blog_listing() {
 		echo $locale['456'];
 		echo "</div>\n";
 	}
-	// blog listing.
 	echo "</ul>\n";
 	echo "</div>\n"; // panel container
 	echo "</div>\n"; // panel default
@@ -147,26 +172,27 @@ function blog_listing() {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-heading clearfix'>\n";
 			echo "<div class='btn-group pull-right m-t-5'>\n";
-			echo "<a class='btn btn-default' href='".ADMIN."blog_cats.php".$aidlink."&amp;action=edit&amp;cat_id=".$data['blog_cat_id']."'>".$locale['420']."</a>";
-			echo "<a class='btn btn-danger btn-default' href='".ADMIN."blog_cats.php".$aidlink."&amp;action=delete&amp;cat_id=".$data['blog_cat_id']."' onclick=\"return confirm('".$locale['451b']."');\"><i class='fa fa-trash'></i> ".$locale['421']."</a>\n";
+			echo "<a class='btn btn-default' href='".ADMIN."blog_cats.php".$aidlink."&amp;action=edit&amp;cat_id=".$data['blog_cat_id']."'><i class='fa fa-pencil m-r-5'></i>".$locale['420']."</a>";
+			echo "<a class='btn btn-default' href='".ADMIN."blog_cats.php".$aidlink."&amp;action=delete&amp;cat_id=".$data['blog_cat_id']."' onclick=\"return confirm('".$locale['451b']."');\"><i class='fa fa-trash m-r-5'></i> ".$locale['421']."</a>\n";
 			echo "</div>\n";
 			echo "<div class='overflow-hide p-r-10'>\n";
-			echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('blog-list', $data['blog_cat_id'], '0', 'm-r-10').">".$data['blog_cat_name']."</a> <span class='badge'>".$data['blog_count']."</h4>\n";
+			echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('blog-list', $data['blog_cat_id'], '0', 'm-r-10 text-bigger strong').">".$data['blog_cat_name']."</a> <span class='badge'>".$data['blog_count']."</h4>\n";
 			echo "<br/><span class='text-smaller text-uppercase'>".$data['blog_cat_language']."</span>";
 			echo "</div>\n"; /// end overflow-hide
 			echo "</div>\n"; // end panel heading
 			echo "<div ".collapse_footer_link('blog-list', $data['blog_cat_id'], '0').">\n";
 			echo "<ul class='list-group'>\n";
-			$result2 = dbquery("SELECT blog_id, blog_subject, blog_image_t1, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("NS") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." blog_cat='".$data['blog_cat_id']."' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
+			$result2 = dbquery("SELECT blog_id, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("NS") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." blog_cat='".$data['blog_cat_id']."' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
 			if (dbrows($result2) > 0) {
 				while ($data2 = dbarray($result2)) {
 					echo "<li class='list-group-item'>\n";
 					echo "<div class='pull-left m-r-10'>\n";
-					$img_thumb = ($data2['blog_image_t1']) ? IMAGES_B_T.$data2['blog_image_t1'] : IMAGES."imagenotfound70.jpg";
-					echo thumbnail($img_thumb, '50px');
+					$image_thumb = get_blog_image_path($data2['blog_image'], $data2['blog_image_t1'], $data2['blog_image_t2']);
+					echo thumbnail($image_thumb, '50px');
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
-					echo "<div><span class='strong text-dark'>".$data2['blog_subject']."</span><br/>".fusion_first_words($data2['blog_blog'], '50')."</div>\n";
+					echo "<div class='strong text-dark'>".$data2['blog_subject']."</div>".fusion_first_words($data2['blog_blog'], '50')."\n";
+					echo "<div class='pull-right'>\n";
 					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;blog_id=".$data2['blog_id']."'>".$locale['420']."</a> -\n";
 					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=nform&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['451']."');\">".$locale['421']."</a>\n";
 					echo "</div>\n";
@@ -187,20 +213,53 @@ function blog_listing() {
 	echo "</div>\n";
 }
 
+/**
+ * Blog Input Form HTML
+ */
 function blog_form() {
 	fusion_confirm_exit();
-	global $userdata, $locale, $settings, $aidlink, $defender;
+	global $userdata, $locale, $settings, $aidlink;
+	$tinyMce = $settings['tinymce_enabled'] ? true : false;
+	$fusion_mce = array();
+	if ($tinyMce) {
+		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
+	} else {
+		$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
+		require_once INCLUDES."html_buttons_include.php";
+	}
+
 	$language_opts = fusion_get_enabled_languages();
-	$data = array();
+
+	$data = array(
+		'blog_draft' => 0,
+		'blog_sticky' => 0,
+		'blog_blog' => '',
+		'blog_datestamp' => time(),
+		'blog_extended' => '',
+		'blog_keywords' => '',
+		'blog_breaks' => !$tinyMce ? 1 : 0,
+		'blog_allow_comments' => 1,
+		'blog_allow_ratings' => 1,
+		'blog_language' => LANGUAGE,
+		'blog_visibility' => 0,
+		'blog_subject' => '',
+		'blog_start' => '',
+		'blog_end' => '',
+		'blog_cat' => 0,
+		'blog_image' => '',
+		'blog_ialign' => 'pull-left',
+		'blog_id' => 0,
+	);
+
 	if (isset($_POST['save'])) {
 		$data = array(
 			'blog_id' => isset($_POST['blog_id']) ? form_sanitizer($_POST['blog_id'], '', 'blog_id') : '',
 			'blog_subject' => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
 			'blog_cat' => form_sanitizer($_POST['blog_cat'], 0, 'blog_cat'),
 			'blog_name' => $userdata['user_id'],
-			'blog_himage' => isset($_POST['blog_image']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['blog_image']) ? $_POST['blog_image'] : "") : "",
-			'blog_image_t1' => isset($_POST['blog_image_t1']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['blog_image_t1']) ? $_POST['blog_image_t1'] : "") : "",
-			'blog_image_t2' => isset($_POST['blog_image_t2']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['blog_image_t2']) ? $_POST['blog_image_t2'] : "") : "",
+			'blog_image' => isset($_POST['blog_hidden_image']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['blog_hidden_image']) ? $_POST['blog_hidden_image'] : "") : "",
+			'blog_image_t1' => isset($_POST['blog_hidden_image_t1']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['blog_hidden_image_t1']) ? $_POST['blog_hidden_image_t1'] : "") : "",
+			'blog_image_t2' => isset($_POST['blog_hidden_image_t2']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['blog_hidden_image_t2']) ? $_POST['blog_hidden_image_t2'] : "") : "",
 			'blog_ialign' => isset($_POST['blog_ialign']) ? $_POST['blog_ialign'] : "pull-left",
 			'blog_blog' =>  addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_blog'])), // Needed for HTML to work
 			'blog_extended' => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_extended'])),
@@ -209,25 +268,24 @@ function blog_form() {
 			'blog_start' => form_sanitizer($_POST['blog_start'], 0, 'blog_start'),
 			'blog_end' => form_sanitizer($_POST['blog_end'], 0, 'blog_end'),
 			'blog_visibility' => form_sanitizer($_POST['blog_visibility'], '0', 'blog_visibility'),
-			'blog_draft' => isset($_POST['blog_draft']) ? "1" : "0",
-			'blog_sticky' => isset($_POST['blog_sticky']) ? "1" : "0",
-			'blog_allow_comments' =>  isset($_POST['blog_allow_comments']) ? "1" : "0",
-			'blog_allow_ratings' => isset($_POST['blog_allow_ratings']) ? "1" : "0",
+			'blog_draft' => isset($_POST['blog_draft']) ? 1 : 0,
+			'blog_sticky' => isset($_POST['blog_sticky']) ? 1 : 0,
+			'blog_allow_comments' =>  isset($_POST['blog_allow_comments']) ? 1 : 0,
+			'blog_allow_ratings' => isset($_POST['blog_allow_ratings']) ? 1  : 0,
+			'blog_breaks' => isset($_POST['blog_breaks']) && !$tinyMce ? 1 : 0,
 			'blog_language' => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
-			'blog_breaks' => 'n',
 		);
+
 		$upload = form_sanitizer($_FILES['blog_image'], '', 'blog_image');
+
 		if (isset($upload['error']) && $upload['error'] == 0) {
 			$data['blog_image'] = $upload['image_name'];
 			$data['blog_image_t1'] = $upload['thumb1_name'];
 			$data['blog_image_t2'] = $upload['thumb2_name'];
 			$data['blog_ialign'] = (isset($_POST['blog_ialign']) ? $_POST['blog_ialign'] : "pull-left");
 		}
-		if ($settings['tinymce_enabled'] != 1) {
-			$data['blog_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
-		}
 
-		if (isset($_POST['blog_id']) && isnum($_POST['blog_id']) && !defined('FUSION_NULL')) {
+		if (isset($_POST['blog_id']) && isnum($_POST['blog_id'])) {
 			$result = dbquery("SELECT blog_image, blog_image_t1, blog_image_t2, blog_sticky, blog_datestamp FROM ".DB_BLOG." WHERE blog_id='".$_POST['blog_id']."'");
 			if (dbrows($result)) {
 				$data2 = dbarray($result);
@@ -262,11 +320,6 @@ function blog_form() {
 			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 		}
 	}
-	if ($settings['tinymce_enabled']) {
-		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-	} else {
-		require_once INCLUDES."html_buttons_include.php";
-	}
 
 	$result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("NS") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
 	$blog_cat_opts = array();
@@ -276,57 +329,23 @@ function blog_form() {
 			$blog_cat_opts[$odata['blog_cat_id']] = $odata['blog_cat_name'];
 		}
 	}
+
 	$visibility_opts = array();
 	$user_groups = getusergroups();
 	while (list($key, $user_group) = each($user_groups)) {
 		$visibility_opts[$user_group['0']] = $user_group['1'];
 	}
+
+	$formaction = FUSION_SELF.$aidlink."&amp;section=nform";
+
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['blog_id']) && isnum($_POST['blog_id'])) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {
 		$result = dbquery("SELECT * FROM ".DB_BLOG." WHERE blog_id='".(isset($_POST['blog_id']) ? $_POST['blog_id'] : $_GET['blog_id'])."'");
 		if (dbrows($result)) {
-			$data2 = dbarray($result);
-			$data += array(
-				'blog_subject' => (!empty($_POST['blog_subject'])) ? $_POST['blog_subject'] : $data2['blog_subject'],
-				'blog_cat' => (!empty($_POST['blog_cat'])) ? $_POST['blog_cat'] : $data2['blog_cat'],
-				'blog_blog' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['blog_blog'], // phpentities(stripslashes($data['blog_blog'])),
-				'blog_extended' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['blog_extended'], // phpentities(stripslashes($data['blog_extended']));
-				'blog_keywords' => (!empty($_POST['blog_keywords'])) ? $_POST['blog_keywords'] : $data2['blog_keywords'],
-				'blog_datestamp' => $data2['blog_datestamp'],
-				'blog_start' => (!empty($_POST['blog_start'])) ? $_POST['blog_start'] : $data2['blog_start'],
-				'blog_end' => (!empty($_POST['blog_end'])) ? $_POST['blog_end'] : $data2['blog_end'],
-				'blog_image' => (!empty($_POST['blog_image'])) ? $_POST['blog_image'] : $data2['blog_image'],
-				'blog_image_t1' => (!empty($_POST['blog_image_t1'])) ? $_POST['blog_image_t1'] : $data2['blog_image_t1'],
-				'blog_image_t2' => (!empty($_POST['blog_image_t2'])) ? $_POST['blog_image_t2'] : $data2['blog_image_t2'],
-				'blog_ialign' => (!empty($_POST['blog_ialign'])) ? $_POST['blog_ialign'] : $data2['blog_ialign'],
-				'blog_visibility' => (!empty($_POST['blog_visibility'])) ? $_POST['blog_visibility'] : $data2['blog_visibility'],
-				'blog_draft' => (!empty($_POST['blog_draft'])) ? "1" : $data2['blog_draft'] ? "1" : '',
-				'blog_sticky' => (!empty($_POST['blog_sticky'])) ? "1" : $data2['blog_sticky'] ? "1" : '',
-				'blog_breaks' => (!empty($_POST['blog_breaks'])) ? "1" : $data2['blog_breaks'] ? "1" : '',
-				'blog_allow_comments' => (!empty($_POST['blog_allow_comments'])) ? "1" : $data2['blog_allow_comments'] ? "1" : '',
-				'blog_allow_ratings' => (!empty($_POST['blog_allow_ratings'])) ? "1" : $data2['blog_allow_ratings'] ? "1" : '',
-				'blog_language' => (!empty($_POST['blog_language'])) ? $_POST['blog_language'] : $data2['blog_language']
-			);
+			$formaction = FUSION_SELF.$aidlink."&amp;section=nform&amp;action=edit&blog_id=".$_GET['blog_id'];
+			$data = dbarray($result);
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
-	} else {
-		$data['blog_draft'] = '0';
-		$data['blog_sticky'] = '0';
-		$data['blog_blog'] = '';
-		$data['blog_datestamp'] = time();
-		$data['blog_extended'] = '';
-		$data['blog_keywords'] = '';
-		$data['blog_breaks'] = " 1";
-		$data['blog_allow_comments'] = " 1";
-		$data['blog_allow_ratings'] = " 1";
-		$data['blog_language'] = LANGUAGE;
-		$data['blog_visibility'] = '0';
-		$data['blog_subject'] = '';
-		$data['blog_start'] = '';
-		$data['blog_end'] = '';
-		$data['blog_cat'] = '0';
-		$data['blog_image'] = '';
-		$data['blog_ialign'] = 'pull-left';
 	}
 
 	if (isset($_POST['preview'])) {
@@ -371,66 +390,68 @@ function blog_form() {
 			echo closemodal();
 		}
 	}
-	$formaction = FUSION_SELF.$aidlink."&amp;section=nform";
-	if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) {
-		$formaction = FUSION_SELF.$aidlink."&amp;section=nform&amp;action=edit&blog_id=".$_GET['blog_id'];
-	}
 
 	echo "<div class='m-t-20'>\n";
 	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 	echo form_text($locale['422'], 'blog_subject', 'blog_subject', $data['blog_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['450']));
-	echo form_select($locale['443'], 'blog_keywords', 'blog_keywords', array(), $data['blog_keywords'], array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1, 'multiple' => 1));
-	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker($locale['427'], 'blog_start', 'blog_start', $data['blog_start'], array('placeholder' => $locale['429']));
-	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker($locale['428'], 'blog_end', 'blog_end', $data['blog_end'], array('placeholder' => $locale['429']));
-	echo "</div>\n";
-	echo "</div>\n";
 
+	openside('');
+	$align_options = array('pull-left'=>$locale['left'], 'blog-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
+
+	if ($data['blog_image']) {
+		echo "<div class='clearfix display-block' style='width:100%'>\n";
+		echo "<div class='pull-left'>\n";
+		$image_thumb = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2']);
+		echo thumbnail($image_thumb, '100px');
+		echo form_checkbox($locale['421'], 'del_image', 'del_image', 'y');
+		echo "</div><div class='overflow-hide'>\n";
+		echo form_hidden('', 'blog_hidden_image', 'blog_hidden_image', $data['blog_image']);
+		echo form_hidden('', 'blog_hidden_image_t1', 'blog_hidden_image_t1', $data['blog_image_t1']);
+		echo form_hidden('', 'blog_hidden_image_t1', 'blog_hidden_image_t1', $data['blog_image_t2']);
+		echo form_select($locale['442'], 'blog_ialign', 'blog_ialign', $align_options, $data['blog_ialign']);
+		echo "</div></div>\n";
+	} else {
+		echo form_fileinput($locale['439'], 'blog_image', 'blog_image', IMAGES_B, '', array(
+											  'thumbnail_folder'=> 'thumbs',
+											  'thumbnail'=>1,
+											  'max_width'=> $settings['blog_photo_max_w'],
+											  'max_height' => $settings['blog_photo_max_w'],
+											  'max_byte'=> $settings['blog_photo_max_b'],
+											  'thumbnail2' => 1,
+											  'type' => 'image'
+										  )
+		);
+		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['blog_photo_max_b']))."</div>\n";
+		echo form_select($locale['442'], 'blog_ialign', 'blog_ialign', $align_options, $data['blog_ialign'], array('inline'=>1));
+	}
+	closeside();
+
+	echo form_textarea($locale['425'], 'blog_blog', 'blog_blog', $data['blog_blog'], $fusion_mce);
+
+	echo form_textarea($locale['426'], 'blog_extended', 'blog_extended', $data['blog_extended'], $fusion_mce);
+
+	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	echo form_select_tree($locale['423'], "blog_cat", "blog_cat", $data['blog_cat'], array("parent_value" => $locale['424'], "query" => (multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
 	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
 	echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-success btn-sm', 'icon'=>'fa fa-check-square-o'));
 	closeside();
-	echo "</div>\n</div>\n";
 
-	// second row
-	echo "<div class='row'>\n";
-	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
-	if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
-		echo "<label><img src='".IMAGES_B_T.$data['blog_image_t1']."' alt='".$locale['439']."' /><br />\n";
-		echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['421']."</label>\n";
-		echo "<input type='hidden' name='blog_image' value='".$data['blog_image']."' />\n";
-		echo "<input type='hidden' name='blog_image_t1' value='".$data['blog_image_t1']."' />\n";
-		echo "<input type='hidden' name='blog_image_t2' value='".$data['blog_image_t2']."' />\n";
-		$options = array('pull-left'=>$locale['left'], 'blog-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select($locale['442'], 'blog_ialign', 'blog_ialign', $options, $data['blog_ialign']);
-	} else {
-		echo form_fileinput($locale['439'], 'blog_image', 'blog_image', IMAGES_B, '',
-							array(
-								'thumbnail_folder'=> 'thumbs',
-								'thumbnail'=>1,
-								'max_width'=> $settings['blog_photo_max_w'],
-								'max_height' => $settings['blog_photo_max_w'],
-								'max_byte'=> $settings['blog_photo_max_b'],
-								'thumbnail2' => 0,
-								'type' => 'image'
-							)
-		);
-		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['blog_photo_max_b']))."</div>\n";
-		$options = array('pull-left'=>$locale['left'], 'blog-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select($locale['442'], 'blog_ialign', 'blog_ialign', $options, $data['blog_ialign']);
-	}
-	$fusion_mce = array();
-	if (!$settings['tinymce_enabled']) {
-		$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
-	}
-	echo form_textarea($locale['425'], 'blog_blog', 'blog_blog', $data['blog_blog'], $fusion_mce);
-	echo form_textarea($locale['426'], 'blog_extended', 'blog_extended', $data['blog_extended'], $fusion_mce);
-	echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
+	openside('');
+	echo form_select($locale['443'], 'blog_keywords', 'blog_keywords', array(), $data['blog_keywords'], array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1, 'multiple' => 1));
+	closeside();
+
+	openside('');
+	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
+	echo form_datepicker($locale['427'], 'blog_start', 'blog_start', $data['blog_start'], array('placeholder' => $locale['429']));
+	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
+	echo form_datepicker($locale['428'], 'blog_end', 'blog_end', $data['blog_end'], array('placeholder' => $locale['429']));
+	echo "</div>\n";
+	closeside();
+
 	openside('');
 	if (multilang_table("NS")) {
 		echo form_select($locale['global_ML100'], 'blog_language', 'blog_language', $language_opts, $data['blog_language'], array('placeholder' => $locale['choose'], 'width' => '100%'));
@@ -450,15 +471,15 @@ function blog_form() {
 		} else {
 			$sys = $locale['454'];
 		}
-		echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['452'], $sys)."</span><br/>\n";
+		echo "<span class='required m-r-5'>*</span>".sprintf($locale['452'], $sys)."</span><br/>\n";
 	}
-	echo "<label><input type='checkbox' name='blog_draft' value='yes'".($data['blog_draft'] ? "checked='checked'" : "")." /> ".$locale['431']."</label><br />\n";
-	echo "<label><input type='checkbox' name='blog_sticky' value='yes'".($data['blog_sticky'] ? "checked='checked'" : "")."  /> ".$locale['432']."</label><br />\n";
-	if ($settings['tinymce_enabled'] != 1) {
-		echo "<label><input type='checkbox' name='line_breaks' value='yes'".($data['blog_breaks'] ? "checked='checked'" : "")." /> ".$locale['433']."</label><br />\n";
+	echo form_checkbox($locale['431'], 'blog_draft', 'blog_draft', $data['blog_draft'], array('class'=>'m-b-0'));
+	echo form_checkbox($locale['432'], 'blog_sticky', 'blog_sticky', $data['blog_sticky'], array('class'=>'m-b-0'));
+	if (!$tinyMce) {
+		echo form_checkbox($locale['433'], 'blog_breaks', 'blog_breaks', $data['blog_breaks'], array('class'=>'m-b-0'));
 	}
-	echo "<label><input type='checkbox' name='blog_allow_comments' value='yes' onclick='SetRatings();'".($data['blog_allow_comments'] ? "checked='checked'" : "")." /> ".$locale['434']."</label><br/>";
-	echo "<label><input type='checkbox' name='blog_allow_ratings' value='yes'".($data['blog_allow_ratings'] ? "checked='checked'" : "")." /> ".$locale['435']."</label>";
+	echo form_checkbox($locale['434'], 'blog_allow_comments', 'blog_allow_comments', $data['blog_allow_comments'], array('class'=>'m-b-0'));
+	echo form_checkbox($locale['435'], 'blog_allow_ratings', 'blog_allow_ratings', $data['blog_allow_ratings'], array('class'=>'m-b-0'));
 	closeside();
 	if (isset($_GET['action']) && isset($_GET['blog_id']) && isnum($_GET['blog_id']) || (isset($_POST['preview']) && (isset($_POST['blog_id']) && isnum($_POST['blog_id']))) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {
 		$blog_id = isset($_GET['blog_id']) && isnum($_GET['blog_id']) ? $_GET['blog_id'] : '';
