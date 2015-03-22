@@ -61,6 +61,9 @@ $locale['forum_0176'] = "Flyt indlæg";
 $locale['forum_0177'] = "Skal de valgte indlæg slettes?";
 $locale['forum_0178'] = "Udskriv debat";
 $locale['forum_0179'] = "Udskriv dette indlæg";
+$locale['forum_0180'] = "Oldest"; // translate these 3 lines
+$locale['forum_0181'] = "Latest";
+$locale['forum_0182'] = "Highest Ratings";
 // Moderator Options
 $locale['forum_0200'] = "Ordstyrer valgmuligheder";
 $locale['forum_0201'] = "Slet debat";
