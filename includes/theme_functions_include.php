@@ -734,14 +734,16 @@ function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode =
 	}
 }
 
-/* JS form exit on link except for buttons */
+/* JS form exit confirmation if form has changed */
 function fusion_confirm_exit() {
 	add_to_jquery("
-	window.onbeforeunload = function() {
-    	return true;
-	}
-	$(':button').bind('click', function() {
-		window.onbeforeunload = null;
+	$('form').change(function() {
+		window.onbeforeunload = function() {
+    		return true;
+		}
+		$(':button').bind('click', function() {
+			window.onbeforeunload = null;
+		});
 	});
 	");
 }
