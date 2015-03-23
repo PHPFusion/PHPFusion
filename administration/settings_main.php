@@ -49,6 +49,20 @@ $settings_main = array(
 		'exclude_right' => fusion_get_settings('exclude_right')
 	);
 
+// Default Search options
+$dir = LOCALE.LOCALESET."search/";
+$temp = opendir($dir);
+$search_opts = array();
+if (file_exists($dir)) {
+	include LOCALE.LOCALESET."search/converter.php";
+	while ($folder = readdir($temp)) {
+		if (!in_array($folder, array("..", ".", 'users.json.php', 'converter.php', '.DS_Store', 'index.php'))) {
+			$val = $filename_locale[$folder];
+			$search_opts[$val] = ucwords($val);
+		}
+	}
+}
+
 if (isset($_POST['savesettings'])) {
 	/**
 	 * Steps we take to prepare the posted data:
@@ -68,6 +82,7 @@ if (isset($_POST['savesettings'])) {
 	// Bootstrap checkbox (checkboxes don't post anything if unchecked)
 	$_POST['bootstrap'] = (isset($_POST['bootstrap']) ? 1 : 0);
 
+	// TODO: Check if Admin Panel theme is valid
 	foreach ($_POST as $key => $value) {
 		if (isset($settings_main[$key]) && $settings_main[$key] != $_POST[$key]) {
 			// Site intro
@@ -82,7 +97,7 @@ if (isset($_POST['savesettings'])) {
 				$site_protocol = $_POST['site_protocol'];
 			// Site host
 			} elseif ($key == 'site_host') {
-				$_POST['site_host'] = stripinput($_POST['site_host']);
+				$_POST['site_host'] = (empty($_POST['site_host']) ? $settings_main['site_host'] : stripinput($_POST['site_host']));
 				if (strpos($_POST['site_host'], "/") !== FALSE) {
 					$_POST['site_host'] = explode("/", $_POST['site_host'], 2);
 					if ($_POST['site_host'][1] != "") {
@@ -104,6 +119,12 @@ if (isset($_POST['savesettings'])) {
 					$_POST['site_path'] = (substr($_POST['site_path'], 0, 1) != "/" ? "/" : "").$_POST['site_path'].(strrchr($_POST['site_path'], "/") != "/" ? "/" : "");
 					$site_path = $_POST['site_path'];
 				}
+			// Theme
+			} elseif ($key == 'theme') {
+				$_POST['theme'] = (theme_exists(stripinput($_POST['theme'])) ? stripinput($_POST['theme']) : $settings_main['theme']);
+			// Default search
+			} elseif ($key == 'default_search') {
+				$_POST['default_search'] = (in_array(stripinput($_POST['default_search']), $search_opts) ? stripinput($_POST['default_search']) : $settings_main['default_search']);
 			// Others
 			} else {
 				// form_sanitizer needs patching, doesn't accept int|str 0 as default value
@@ -192,19 +213,7 @@ echo form_text($locale['430'], 'site_port', 'site_port', $settings_main['site_po
 closeside();
 
 openside('');
-$dir = LOCALE.LOCALESET."search/";
-$temp = opendir($dir);
-$opts = array();
-if (file_exists($dir)) {
-	include LOCALE.LOCALESET."search/converter.php";
-	while ($folder = readdir($temp)) {
-		if (!in_array($folder, array("..", ".", 'users.json.php', 'converter.php', '.DS_Store', 'index.php'))) {
-			$val = $filename_locale[$folder];
-			$opts[$val] = ucwords($val);
-		}
-	}
-}
-echo form_select($locale['419'], 'default_search', 'default_search', $opts, $settings_main['default_search'], array('width' => '100%'));
+echo form_select($locale['419'], 'default_search', 'default_search', $search_opts, $settings_main['default_search'], array('width' => '100%'));
 closeside();
 
 openside('');
