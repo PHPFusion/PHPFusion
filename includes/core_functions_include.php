@@ -353,46 +353,41 @@ function preg_check($expression, $value) {
 }
 
 /**
- * @param       $request_addition - `page=1&amp;ref=2`
- * @param array $filter_array     - array('aid','page', ref')
- * @param bool  $keep_filtered    - true to keep filter, false to remove filter from FUSION_REQUEST
+ * @param string|array $request_addition - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
+ * @param array $filter_array - array('aid','page', ref')
+ * @param bool $keep_filtered - true to keep filter, false to remove filter from FUSION_REQUEST
  *                                If remove is true, to remove everything and keep $requests_array and $request addition.
  *                                If remove is false, to keep everything else except $requests_array
+ * @param string $separator
  * @return string
  */
-function clean_request($request_addition = FALSE, array $filter_array = array(), $keep_filtered = TRUE) {
-	$path = pathinfo(htmlspecialchars_decode(FUSION_REQUEST));
-	$url = parse_url(htmlspecialchars_decode(FUSION_REQUEST));
-	$_basename = explode('?', $path['basename']);
-	$basename = $_basename[0];
+function clean_request($request_addition = '', array $filter_array = array(), $keep_filtered = TRUE, $separator = '&') {
+	$url = ((array) parse_url(htmlspecialchars_decode(FUSION_REQUEST))) + array(
+			'path' => '',
+			'query' => ''
+		);
 	$fusion_query = array();
-	if (isset($url['query'])) parse_str($url['query'], $fusion_query); // this is original.
-	switch ($keep_filtered) {
-		case TRUE: // to remove everything except specified in $filter_array
-			if (!empty($fusion_query)) {
-				$filter_array += array('aid'); // never remove $aidlink if exist
-				foreach ($fusion_query as $key => $trim) {
-					if (!in_array($key, $filter_array)) {
-						unset($fusion_query[$key]);
-					}
-				}
-			}
-			break;
-		case FALSE: // to keep everything except specified in $filter_array
-			if (!empty($fusion_query)) {
-				foreach ($fusion_query as $key => $trim) {
-					if (in_array($key, $filter_array)) {
-						unset($fusion_query[$key]);
-					}
-				}
-			}
-			break;
+	if ($url['query']) {
+		parse_str($url['query'], $fusion_query); // this is original.
+	}
+	$fusion_query = $keep_filtered
+		? // to remove everything except specified in $filter_array
+		array_intersect_key($fusion_query, array_flip($filter_array))
+		: // to keep everything except specified in $filter_array
+		array_diff_key($fusion_query, array_flip($filter_array));
+
+	if ($request_addition) {
+		$request_addition_array = array();
+		if (is_array($request_addition)) {
+			$fusion_query = $request_addition + $fusion_query;
+		} else {
+			parse_str($request_addition, $request_addition_array);
+			$fusion_query = $request_addition_array + $fusion_query;
+		}
 	}
 
-	$prefix_1 = count($fusion_query)>0 ? '?' : '';
-	$prefix_2 = count($fusion_query)>0 ? '&' : '?';
-	$url['query'] = $prefix_1.http_build_query($fusion_query).$prefix_2.ltrim($request_addition, "&");
-	$new_url = $path['dirname'].'/'.$basename.$url['query'];
+	$prefix = $fusion_query ? '?' : '';
+	$new_url = $url['path'].$prefix.http_build_query($fusion_query, null, $separator);
 	return $new_url;
 }
 
