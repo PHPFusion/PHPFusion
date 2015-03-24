@@ -64,6 +64,7 @@ $locale['user1'] = "Користувач";
 $locale['user2'] = "Адміністратор";
 $locale['user3'] = "Головний адміністратор";
 $locale['user_na'] = "не визначено";
+$locale['user_guest'] = "Гість";
 $locale['user_anonymous'] = "Анонім";
 $locale['genitive'] = "%s %s";
 
@@ -260,6 +261,9 @@ $locale['global_140'] = "Перегляд";
 $locale['global_141'] = "Перегляд опитування";
 $locale['global_142'] = "Опитування відсутні.";
 $locale['global_143'] = "Оцінки";
+
+// Keywords and Meta
+$locale['tags'] = "Теґи";
 
 // Captcha
 $locale['global_150'] = "Код підтвердження:";

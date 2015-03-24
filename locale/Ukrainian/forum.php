@@ -65,9 +65,9 @@ $locale['forum_0176'] = "Перемістити повідомлення";
 $locale['forum_0177'] = "Видалити вибрані повідомлення?";
 $locale['forum_0178'] = "Друк теми";
 $locale['forum_0179'] = "Друк повідомлення";
-$locale['forum_0180'] = "Oldest"; // translate these 3 lines
-$locale['forum_0181'] = "Latest";
-$locale['forum_0182'] = "Highest Ratings";
+$locale['forum_0180'] = "Найдавніші";
+$locale['forum_0181'] = "Найновіші";
+$locale['forum_0182'] = "Найвище оцінені";
 
 // Moderator Options
 $locale['forum_0200'] = "Опції модератора";
