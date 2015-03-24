@@ -135,25 +135,16 @@ $locale['print'] = 'Печать';
 $locale['global_076']  = "Правка";
 $locale['global_077']  = "Новости";
 $locale['global_078']  = "Новости не опубликованы";
-$locale['global_077b'] = "Блог";
-$locale['global_078b'] = "Блоги не имеют записей";
 $locale['global_079']  = "В ";
 $locale['global_080']  = "Без категории";
 $locale['global_081'] = "В начало новостей";
-$locale['global_082'] = "Центр новостей";
-$locale['global_081b'] = "В начало блогов";
-$locale['global_082b'] = "Блог";
-$locale['global_082c'] = "Панель архива блогов";
+$locale['global_082'] = "Новости";
 $locale['global_083'] = "Последнее обновлённое";
 $locale['global_084'] = "Категория новостей";
-$locale['global_084b'] = "Категория блогов";
 $locale['global_085'] = "Все другие категории";
 $locale['global_086'] = "Последние новости";
 $locale['global_087'] = "Наиболее комментируемые новости";
 $locale['global_088'] = "Новости с наивысшими оценками";
-$locale['global_086b'] = "Последние записи блогов";
-$locale['global_087b'] = "Наиболее комментируемые блоги";
-$locale['global_088b'] = "Блоги с наивысшими оценками";
 $locale['global_089'] = "Будьте первым, кто прокомментирует %s";
 $locale['global_089a'] = "Будьте первым, кто оценит %s";
 // Page Navigation
@@ -429,23 +420,21 @@ $locale['comments'] = "Комментарии";
 $locale['ratings'] = "Оценки";
 $locale['comments_ratings'] = "Комментарии и оценки";
 $locale['user_account'] = "Учётная запись пользователя";
-// Testimonials
-$locale['testimonial_rank'] = "На этом сайте я %s";
-$locale['testimonial_location'] = " и сейчас я живу в %s";
-$locale['testimonial_join'] = ". Я зарегистрировался здесь %s.";
-$locale['testimonial_join'] = "Также я запустил(-а) свой сайт по адресу %s.";
-$locale['testimonial_contact'] = "Если Вам нужно связаться со мной, вы можете связаться со мной по адресу %s.";
-$locale['testimonial_email'] = "Также Вы можете отправить мне сообщение по электропочте на %s.";
+$locale['about'] = "О...";
 // Words for formatting to single and plural forms. Count of forms is language-dependent
-// Here must be three forms of word with | as separtator:
+// Here must be three forms of word with | as separator:
 // First form for 1, 21, 31, etc.
 // Second form for 2-4, 22-24, 32-34, etc.
 // third form for 0, 5-20, 25-30, 35-40, etc.
 $locale['fmt_article'] = "статья|статьи|статей";
 $locale['fmt_blog'] = "блог|блога|блогов";
 $locale['fmt_comment'] = "комментарий|комментария|комментариев";
+$locale['fmt_vote'] = "голос|голоса|голосов";
+$locale['fmt_rating'] = "оценка|оценки|оценок";
+
 $locale['fmt_day'] = "день|дня|дней";
 $locale['fmt_download'] = "загрузка|загрузки|загрузок";
+$locale['fmt_follower'] = "читатель|читателя|читателей";
 $locale['fmt_forum'] = "форум|форума|форумов";
 $locale['fmt_guest'] = "гость|гостя|гостей";
 $locale['fmt_hour'] = "час|часа|часов";
@@ -458,8 +447,8 @@ $locale['fmt_news'] = "новость|новости|новостей";
 $locale['fmt_photo'] = "фотография|фотографии|фотографий";
 $locale['fmt_post'] = "сообщение|сообщения|сообщений";
 $locale['fmt_question'] = "вопрос|вопроса|вопросов";
-$locale['fmt_rating'] = "оценка|оценки|оценок";
-$locale['fmt_reads'] = "прочтение|прочтения|прочтений";
+
+$locale['fmt_read'] = "прочтение|прочтения|прочтений";
 $locale['fmt_second'] = "секунда|секунды|секунд";
 $locale['fmt_shouts'] = "сообщение чата|сообщения чата|сообщений чата";
 $locale['fmt_thread'] = "тема|темы|тем";
