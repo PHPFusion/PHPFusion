@@ -134,25 +134,20 @@ $locale['print'] = 'Print';
 $locale['global_076'] = "Edit";
 $locale['global_077'] = "News";
 $locale['global_078'] = "No News has been posted yet";
-$locale['global_077b'] = "Blog";
-$locale['global_078b'] = "No Blogs has been posted yet";
 $locale['global_079'] = "In ";
 $locale['global_080'] = "Uncategorised";
 $locale['global_081'] = "News Home";
-$locale['global_082'] = "News Center";
-$locale['global_081b'] = "Blog Home";
-$locale['global_082b'] = "Blog";
-$locale['global_082c'] = "Blog Archive Panel";
+$locale['global_082'] = "News";
+
+
 $locale['global_083'] = "Last Updated";
 $locale['global_084'] = "News Category";
-$locale['global_084b'] = "Blog Category";
+
 $locale['global_085'] = "All Other Categories";
 $locale['global_086'] = "Most Recent News";
 $locale['global_087'] = "Most Commented News";
 $locale['global_088'] = "Highest Rating News";
-$locale['global_086b'] = "Most Recent Blogs";
-$locale['global_087b'] = "Most Commented Blog";
-$locale['global_088b'] = "Highest Rating Blog";
+
 $locale['global_089'] = "Be the first to comment on %s";
 $locale['global_089a'] = "Be the first to rate on this %s";
 // Page Navigation
@@ -431,18 +426,18 @@ $locale['comments'] = "Comments";
 $locale['ratings'] = "Ratings";
 $locale['comments_ratings'] = "Comments and Ratings";
 $locale['user_account'] = "User Account";
-$locale['testimonial_rank'] = "I am the %s of this website";
-$locale['testimonial_location'] = "and I currently live in %s";
-$locale['testimonial_join'] = ". I joined this website on %s";
-$locale['testimonial_web'] = ". I also run another website at %s";
-$locale['testimonial_contact'] = ". If you need to contact me, you can reach me at %s";
-$locale['testimonial_email'] = ". You can also reach me at my e-mail address at %s";
+$locale['about'] = "About";
+
 // Words for formatting to single and plural forms. Count of forms is language-dependent
 $locale['fmt_article'] = "article|articles";
 $locale['fmt_blog'] = "blog|blogs";
 $locale['fmt_comment'] = "comment|comments";
+$locale['fmt_vote'] = "vote|votes";
+$locale['fmt_rating'] = "rating|ratings";
+
 $locale['fmt_day'] = "day|days";
 $locale['fmt_download'] = "download|downloads";
+$locale['fmt_follower'] = "follower|followers";
 $locale['fmt_forum'] = "forum|forums";
 $locale['fmt_guest'] = "guest|guests";
 $locale['fmt_hour'] = "hour|hours";
@@ -455,8 +450,8 @@ $locale['fmt_news'] = "news|news";
 $locale['fmt_photo'] = "photo|photos";
 $locale['fmt_post'] = "post|posts";
 $locale['fmt_question'] = "question|questions";
-$locale['fmt_rating'] = "vote|votes";
-$locale['fmt_reads'] = "read|reads";
+
+$locale['fmt_read'] = "read|reads";
 $locale['fmt_second'] = "second|seconds";
 $locale['fmt_shouts'] = "shout|shouts";
 $locale['fmt_thread'] = "thread|threads";

@@ -2,10 +2,11 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: blog.php
 | Author: Frederick MC Chan (Hien)
+| Version : 9.00
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,195 +16,179 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!function_exists('render_main_blog')) {
-	function render_main_blog($info) {
-		global $userdata, $settings, $locale;
-		add_to_head("<link href='".THEMES."templates/global/css/blog.css' rel='stylesheet'/>\n");
-		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
-		if (isset($_POST['switchview'])) {
-			add_to_jquery("$.cookie('fusion_blog_view', '".$_POST['switchview']."', {expires: 7});");
-			$_COOKIE['fusion_blog_view'] = $_POST['switchview'];
+
+function render_main_blog($info) {
+	echo render_breadcrumbs();
+	echo "<div class='row'>\n";
+	echo "<div class='col-xs-12 col-sm-9'>\n";
+	if (isset($_GET['readmore'])) {
+		echo display_blog_item($info);
+	} else {
+		echo display_blog_index($info);
+	}
+	echo "</div><div class='col-xs-12 col-sm-3'>\n";
+	echo display_blog_menu($info);
+	echo "</div>\n";
+	echo "</div>\n";
+}
+
+function display_blog_item($info) {
+	global $locale;
+	ob_start();
+	$data = $info['blog_item'];
+	if ($data['admin_link']) {
+		$admin_actions = $data['admin_link'];
+		echo "<div class='btn-group pull-right'>\n";
+		echo "<a class='btn btn-default btn-sm' href='".$admin_actions['edit']."'>".$locale['edit']."</a>\n";
+		echo "<a class='btn btn-default btn-sm' href='".$admin_actions['delete']."'>".$locale['delete']."</a>\n";
+		echo "</div>\n";
+	}
+	echo "<h2 class='strong m-t-0 m-b-20'>".$data['blog_subject']."</h2>";
+	echo "<div class='m-b-20'>".$data['blog_post_author']." ".$data['blog_post_time']." ".$data['blog_post_cat']."</div>\n";
+	echo "<div class='clearfix m-b-20'>\n";
+	echo "<div class='m-b-10'>".$data['blog_blog']."</div>";
+	if ($data['blog_image']) {
+		echo "<div class='display-block m-10 ".$data['blog_ialign']."'>".$data['blog_image']."</div>";
+	}
+	echo "<div class='display-block m-b-20'>".$data['blog_extended']."</div>";
+	echo "</div>\n";
+	if ($info['blog_nav']) {
+		echo "<div class='clearfix m-b-20'><div class='pull-right'>";
+		echo $info['blog_nav'];
+		echo "</div>\n</div>\n";
+	}
+	echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
+	if ($data['blog_allow_comments']) {
+		showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
+	}
+
+	if ($data['blog_allow_ratings']) {
+		showratings("B", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
+	}
+	$str = ob_get_contents();
+	ob_end_clean();
+	return $str;
+}
+
+function display_blog_index($info) {
+	global $locale;
+	ob_start();
+	?>
+	<?php
+	if (!empty($info['blog_item'])) {
+		foreach($info['blog_item'] as $blog_id => $data) {
+			echo "
+				<div class='clearfix m-b-20'>
+					<div class='row'>
+						<div class='col-xs-12 col-sm-4'>
+							<div class='pull-left m-r-5'>".$data['blog_user_avatar']."</div>
+							<div class='overflow-hide'>
+								".$data['blog_user_link']." <br/>
+								<span class='m-r-10 text-lighter'><i class='fa fa-comment-o fa-fw'></i> ".$data['blog_comments']."</span><br/>
+								<span class='m-r-10 text-lighter'><i class='fa fa-star-o fa-fw'></i> ".$data['blog_count_votes']."</span><br/>
+								<span class='m-r-10 text-lighter'><i class='fa fa-eye fa-fw'></i> ".$data['blog_reads']."</span><br/>
+							</div>
+						</div>
+						<div class='col-xs-12 col-sm-8'>
+							<h2 class='strong m-b-20 m-t-0'><a class='text-dark' href='".$data['blog_link']."'>".$data['blog_subject']."</a></h2>
+							<i class='fa fa-clock-o m-r-5'></i> ".$locale['global_049']." ".timer($data['blog_datestamp'])." ".$locale['in']." ".$data['blog_category_link']."
+							<div class='blog-image m-10 ".$data['blog_ialign']."'>
+								".$data['blog_cat_image']."
+							</div>
+							<div class='m-t-20'>".$data['blog_blog']."<br/>".$data['blog_readmore_link']."</div>
+						</div>
+					</div>
+					<hr>
+				</div>
+			";
 		}
-		opentable($locale['global_077b']);
-		echo render_breadcrumbs();
+	} else {
+		echo "<div class='well text-center'>".$locale['blog_3000']."</div>\n";
+	}
+	?>
+	<?php
+	$str = ob_get_contents();
+	ob_end_clean();
+	return $str;
+}
 
-		/* Title Panel */
-		if (!isset($_GET['readmore'])) {
-
-			echo "<div class='display-inline-block'>\n";
-			echo "<span class='text-dark strong m-r-10'>".$locale['show']." :</span>";
-			$i = 0;
-			foreach ($info['blog_filter'] as $link => $title) {
-				$filter_active = (!isset($_GET['type']) && $i == '0') || isset($_GET['type']) && stristr($link, $_GET['type']) ? 'text-dark strong' : '';
-				echo "<a href='".$link."' class='display-inline $filter_active m-r-10'>".$title."</a>";
-				$i++;
-			}
-			echo "</div>\n"; // end filter.
-
-			if (isset($info['blog_items'])) {
-				$i = 1;
-				foreach($info['blog_items'] as $blog) {
-					echo "<!--blog_prepost_".$i."-->\n";
-					$subject_blog = $blog['blog_subject'];
-					$blog_text = $blog['blog_blog'];
-					render_blog($subject_blog, $blog_text, $blog);
-					echo "<!--sub_blog_idx-->\n";
-					$i++;
+/**
+ * Recursive Menu Generator
+ * @param     $info
+ * @param int $cat_id
+ * @param int $level
+ * @return string
+ */
+function blog_cat_menu($info, $cat_id = 0, $level = 0) {
+	$html = '';
+	if (!empty($info[$cat_id])) {
+		foreach($info[$cat_id] as $blog_cat_id => $cdata) {
+			$active = ($blog_cat_id == $_GET['cat_id'] && $_GET['cat_id'] !=='') ? 1 : 0;
+			$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nsbp;', $level)." ".$cdata['blog_cat_link']."</li>\n";
+			if ($active && $blog_cat_id !=0) {
+				if (!empty($info[$blog_cat_id])) {
+					$html .= blog_cat_menu($info, $blog_cat_id, $level++);
 				}
-				if ($info['blog_item_rows'] > $settings['blogperpage']) {
-					$type_start = isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : '';
-					$cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '';
-					echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'], $settings['blogperpage'], $info['blog_item_rows'], 3, BASEDIR."blog.php".$cat_start.$type_start)."</div>\n";
+			}
+		}
+	}
+	return $html;
+}
+
+function display_blog_menu($info) {
+	global $locale;
+	ob_start();
+	echo "<ul class='m-b-40'>\n";
+	foreach($info['blog_filter'] as $filter_key => $filter) {
+		echo "<li ".(isset($_GET['type']) && $_GET['type'] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</li>\n";
+	}
+	echo "</ul>\n";
+
+	echo "<div class='text-bigger strong text-dark m-b-20 m-t-20'><i class='fa fa-list m-r-10'></i> ".$locale['blog_1003']."</div>\n";
+	echo "<ul class='m-b-40'>\n";
+	$blog_cat_menu = blog_cat_menu($info['blog_categories']);
+	if (!empty($blog_cat_menu)) {
+		echo $blog_cat_menu;
+	} else {
+		echo "<li>".$locale['blog_3001']."</li>\n";
+	}
+	echo "</ul>\n";
+
+	echo "<div class='text-bigger strong text-dark m-t-20 m-b-20'><i class='fa fa-calendar m-r-10'></i> ".$locale['blog_1004']."</div>\n";
+	echo "<ul class='m-b-40'>\n";
+	if (!empty($info['blog_archive'])) {
+		$current_year = 0;
+		foreach($info['blog_archive'] as $year => $archive_data) {
+			if ($current_year !== $year) {
+				echo "<li class='text-dark strong'>".$year."</li>\n";
+			}
+			if (!empty($archive_data)) {
+				foreach($archive_data as $month => $a_data) {
+					echo "<li ".($a_data['active'] ? "class='active strong'" : '').">
+					<a href='".$a_data['link']."'>".$a_data['title']."</a> <span class='badge m-l-10'>".$a_data['count']."</span>
+					</li>\n";
 				}
 			}
-			else {
-				echo "<div class='well text-center'>".$locale['global_078b']."</div>\n";
-			}
-		} else {
-			render_blog_item($info);
+			$current_year = $year;
 		}
-
-
-		closetable();
+	} else {
+		echo "<li>".$locale['blog_3002']."</li>\n";
 	}
-}
+	echo "</ul>\n";
 
-if (!function_exists('render_blog')) {
-	function render_blog($subject, $blog, $info, $list_view = FALSE) {
-		global $locale, $settings, $aidlink;
-
-		$parameter = $settings['siteurl']."blog.php?readmore=".$info['blog_id'];
-		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['blog_subject']."".$locale['global_200'];
-		echo "<article class='blog_item'>\n";
-		echo "<div class='blog_author pull-left m-t-10'>\n";
-		echo display_avatar($info, '70px', '', '', 'img-circle');
-		echo "<div class='blog_author_name'><i>".profile_link($info['user_id'], $info['user_name'], $info['user_status'], 'strong')."</i></div>\n";
-		echo "</div>\n";
-		echo "<div class='overflow-hide'>\n";
-		echo "<h1 class='blog_title'><a class='text-dark' href='".BASEDIR."blog.php?readmore=".$info['blog_id']."'>".$subject."</a></h1>\n";
-		echo "<div class='blog_info'>\n";
-		$category = $info['cat_name'] ? " <a href='".BASEDIR."blog.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : " <a href='".BASEDIR."blog.php?cat_id=0'>".$locale['global_080']."</a>";
-		echo "<span class='blog_info_item'>".showdate($settings['newsdate'], $info['blog_date'])." ".$locale['in'].$category."</span>\n";
-		echo "<span class='blog_info_item'>".number_format($info['blog_reads'])." ".($info['blog_reads'] > 1 ? $locale['global_074'] : $locale['global_074b'])."</span>\n";
-		echo $info['blog_allow_comments'] ? "<span class='blog_info_item'>".display_comments($info['blog_comments'], BASEDIR."blog.php?readmore=".$info['blog_id']."#comments")."</span>" : '';
-		echo $info['blog_allow_ratings'] ? "<span class='blog_info_item'>".display_ratings($info['blog_sum_rating'], $info['blog_count_votes'], BASEDIR."blog.php?readmore=".$info['blog_id']."#postrating")."</span>" : '';
-		echo "<span class='blog_info_item'><a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=B&amp;item_id=".$info['blog_id']."'><i class='entypo print'></i></a></span>";
-		echo iADMIN && checkrights("B") ? "<a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$info['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
-		echo "</div>\n";
-
-		echo "<span class='blog_snippet m-t-10'>\n";
-		if ($info['blog_image']) {
-			echo "<div class='pull-left m-r-10' style='width:100px;'>\n";
-			echo $info['blog_image'];
-			echo "</div>\n";
-			echo "<div class='overflow-hide'>\n".$blog."</div>\n";
-		} else {
-			echo $blog;
+	echo "<div class='text-bigger strong text-dark m-t-20 m-b-20'><i class='fa fa-users m-r-10'></i> ".$locale['blog_1005']."</div>\n";
+	echo "<ul class='m-b-40'>\n";
+	if (!empty($info['blog_author'])) {
+		foreach($info['blog_author'] as $author_id => $author_info) {
+			echo "<li ".($author_info['active'] ? "class='active strong'" : '').">
+				<a href='".$author_info['link']."'>".$author_info['title']."</a> <span class='badge m-l-10'>".$author_info['count']."</span>
+				</li>\n";
 		}
-		echo "</span>\n";
-
-		// readmore
-		if ($info['blog_ext']) {
-			echo "<span class='blog_readmore_link'><a class='text-dark' href='".BASEDIR."blog.php?readmore=".$info['blog_id']."' >".$locale['global_072']." <i class='entypo right-circled'></i> </a></span>\n";
-		}
-		echo "</div>\n";
-		echo "</article>\n";
-
+	} else {
+		echo "<li>".$locale['blog_3003']."</li>\n";
 	}
+	echo "</ul>\n";
+	$str = ob_get_contents();
+	ob_end_clean();
+	return $str;
 }
-
-if (!function_exists('render_blog_item')) {
-	function render_blog_item($info) {
-		global $locale, $settings, $aidlink;
-
-		add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
-		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-		add_to_footer('<script type="text/javascript">
-			$(document).ready(function() {
-				$(".blog-image-overlay").colorbox({
-					transition: "elasic",
-					height:"100%",
-					width:"100%",
-					maxWidth:"98%",
-					maxHeight:"98%",
-					scrolling:false,
-					overlayClose:true,
-					close:false,
-					photo:true,
-					onComplete: function(result) {
-						$("#colorbox").live("click", function(){
-						$(this).unbind("click");
-						$.fn.colorbox.close();
-						});
-					},
-					onLoad: function () {
-					}
-			   });
-			});
-			</script>');
-
-		$data = $info['blog_item'];
-		if ($data['blog_keywords'] !=="") { set_meta("keywords", $data['blog_keywords']); }
-		if ($settings['create_og_tags']) {
-			add_to_head("<meta property='og:title' content='".$data['blog_subject']."' />");
-			add_to_head("<meta property='og:description' content='".strip_tags($data['blog_descr'])."' />");
-			add_to_head("<meta property='og:site_name' content='".$settings['sitename']."' />");
-			add_to_head("<meta property='og:type' content='article' />");
-			add_to_head("<meta property='og:url' content='".$settings['siteurl']."blog.php?readmore=".$_GET['readmore']."' />");
-			if ($data['blog_image']) {
-				$og_image = IMAGES_B.$data['blog_image'];
-			} else {
-				$og_image = IMAGES_BC.$data['cat_image'];
-			}
-			$og_image = str_replace(BASEDIR, $settings['siteurl'], $og_image);
-			add_to_head("<meta property='og:image' content='".$og_image."' />");
-		}
-		echo "<!--blog_pre_readmore-->";
-		echo "<article class='blog-item'>\n";
-		echo "<h2 class='text-center'>".$data['blog_subject']."</h2>\n";
-		echo "<div class='text-center'>\n";
-		echo "<span class='blog_info_item'>".showdate($settings['newsdate'], $data['blog_date'])." ".$locale['in']." ".$data['cat_link']." </span>";
-		echo "<span class='blog_info_item'>".number_format($data['blog_reads'])." ".($data['blog_reads'] >1 ? $locale['global_074'] : $locale['global_074b'])."</span>";
-		echo "<span class='blog_info_item'><a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=B&amp;item_id=".$data['blog_id']."'><i class='entypo print'></i> ".$locale['global_075']."</a></span>";
-		if (iADMIN && checkrights("B")) echo  "<span class='blog_info_item'><a title='".$locale['global_076']."' href='".ADMIN."blog.php".$aidlink."&amp;action=edit&amp;blog_id=".$data['blog_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n</span>";
-		echo "</div>\n";
-		echo "<hr>\n";
-		echo "<div class='blog_blog text-dark m-t-20 m-b-20 clearfix'>\n";
-		if ($data['blog_image']) {
-		echo "<a class='".$data['blog_ialign']." m-r-20 m-b-20 blog-image-overlay' href='".IMAGES_B.$data['blog_image']."'><img class='img-responsive' src='".IMAGES_B.$data['blog_image']."' alt='".$data['blog_subject']."' style='padding:5px; max-height:".$settings['blog_photo_h']."; overflow:hidden;' /></a>";
-		} elseif ($data['cat_name'] && $data['cat_image']) {
-		echo "<a class='".$data['blog_ialign']." m-r-20 m-b-20' href='blog.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_BC.$data['cat_image']."' style='padding:5px; max-height:".$settings['blog_photo_h']."; alt='".$data['cat_name']."' /></a>";
-		}
-		echo "<div class='overflow-hide'>".$data['blog_blog']."</div>\n";
-		echo "</div>\n";
-
-		// this part need some love.
-		echo "<div class='blog_author_section clearfix'>\n";
-		echo "<div class='pull-right m-t-20 m-l-20'>".display_avatar($data, '70px', '', '', 'img-circle')."</div>\n";
-		echo "<div class='overflow-hide'>\n";
-		echo "<span class='blog_author_info'>".$locale['global_070']." ".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span><br/>\n";
-		if ($data['user_level']) echo sprintf($locale['testimonial_rank'], getgroupname($data['user_level']));
-		if (isset($data['user_location']) && $data['user_location']) echo sprintf($locale['testimonial_location'], $data['user_location']);
-		if ($data['user_joined']) echo sprintf($locale['testimonial_location'], showdate('newsdate', $data['user_joined']));
-		if (isset($data['user_web']) && $data['user_web']) echo sprintf($locale['testimonial_web'], $data['user_web']);
-		if (isset($data['user_contact']) && $data['user_contact']) echo sprintf($locale['testimonial_contact'], $data['user_contact']);
-		if ($data['user_email']) echo sprintf($locale['testimonial_email'], $data['user_email']);
-		echo "<div><a class='view_author_blog' href='".$data['blog_author_link']['link']."'>".$data['blog_author_link']['name']." <i class='entypo right-thin'></i></a></div>";
-		echo "</div>\n";
-		echo "</div>\n";
-		// sub
-		echo "<!--blog_sub_readmore-->";
-		echo !isset($_GET['readmore']) && $data['blog_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".BASEDIR."blog.php?readmore=".$data['blog_id']."' class='button'>".$locale['global_072']."</a>\n</div>\n" : "";
-		if ($data['page_count'] > 0) {
-			echo "<div class='text-center m-t-10'>\n".makepagenav($_GET['rowstart'], 1, $data['page_count'], 3, BASEDIR."blog.php?readmore=".$_GET['readmore']."&amp;")."\n</div>\n";
-		}
-		if ($data['blog_allow_comments']) {
-			showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
-		}
-		if ($data['blog_allow_ratings']) {
-			showratings("B", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
-		}
-		echo "</article>\n";
-	}
-}
-?>

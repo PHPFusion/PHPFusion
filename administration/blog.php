@@ -109,13 +109,8 @@ require_once THEMES."templates/footer.php";
  * @param $blog_image_t2
  * @return string
  */
-function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2) {
-	if ($blog_image_t1 && file_exists(IMAGES_B_T.$blog_image_t1)) return IMAGES_B_T.$blog_image_t1;
-	if ($blog_image_t1 && file_exists(IMAGES_B.$blog_image_t1)) return IMAGES_B.$blog_image_t1;
-	if ($blog_image_t2 && file_exists(IMAGES_B_T.$blog_image_t2)) return IMAGES_B_T.$blog_image_t2;
-	if ($blog_image_t2 && file_exists(IMAGES_B.$blog_image_t2)) return IMAGES_B.$blog_image_t2;
-	if ($blog_image && file_exists(IMAGES_B.$blog_image)) return IMAGES_B.$blog_image;
-	return 'fake.png';
+function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes = false) {
+	return PHPFusion\Blog\Functions::get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes);
 }
 
 /**
@@ -275,15 +270,16 @@ function blog_form() {
 			'blog_breaks' => isset($_POST['blog_breaks']) && !$tinyMce ? 1 : 0,
 			'blog_language' => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
 		);
-
-		$upload = form_sanitizer($_FILES['blog_image'], '', 'blog_image');
-
-		if (isset($upload['error']) && $upload['error'] == 0) {
-			$data['blog_image'] = $upload['image_name'];
-			$data['blog_image_t1'] = $upload['thumb1_name'];
-			$data['blog_image_t2'] = $upload['thumb2_name'];
-			$data['blog_ialign'] = (isset($_POST['blog_ialign']) ? $_POST['blog_ialign'] : "pull-left");
+		if (isset($_FILES['blog_image'])) {
+			$upload = form_sanitizer($_FILES['blog_image'], '', 'blog_image');
+			if (isset($upload['error']) && $upload['error'] == 0) {
+				$data['blog_image'] = $upload['image_name'];
+				$data['blog_image_t1'] = $upload['thumb1_name'];
+				$data['blog_image_t2'] = $upload['thumb2_name'];
+				$data['blog_ialign'] = (isset($_POST['blog_ialign']) ? $_POST['blog_ialign'] : "pull-left");
+			}
 		}
+
 
 		if (isset($_POST['blog_id']) && isnum($_POST['blog_id'])) {
 			$result = dbquery("SELECT blog_image, blog_image_t1, blog_image_t2, blog_sticky, blog_datestamp FROM ".DB_BLOG." WHERE blog_id='".$_POST['blog_id']."'");
@@ -421,7 +417,7 @@ function blog_form() {
 											  'max_byte'=> $settings['blog_photo_max_b'],
 											  'thumbnail2' => 1,
 											  'type' => 'image'
-										  )
+											)
 		);
 		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['blog_photo_max_b']))."</div>\n";
 		echo form_select($locale['442'], 'blog_ialign', 'blog_ialign', $align_options, $data['blog_ialign'], array('inline'=>1));
