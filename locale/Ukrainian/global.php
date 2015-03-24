@@ -10,7 +10,7 @@ v.9.00.00 beta
 setlocale(LC_TIME, 'uk_UA.utf8'); // Linux Server (Windows may differ)
 $locale['charset'] = "utf-8";
 $locale['xml_lang'] = "ua";
-$locale['tinymce'] = "en";
+$locale['tinymce'] = "uk";
 $locale['phpmailer'] = "ua";
 $locale['datepicker'] = "ua";
 
