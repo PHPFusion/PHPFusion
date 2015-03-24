@@ -205,12 +205,12 @@ if (dbrows($result) > 0) {
     }
 	// Filters -- Locale.
 	$info['allowed-post-filters'] = array('oldest', 'latest');
-	$info['post-filters'][0] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=oldest', 'locale' => 'Oldest');
-	$info['post-filters'][1] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=latest', 'locale' => 'Latest');
+	$info['post-filters'][0] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=oldest', 'locale' => $locale['forum_0180']);
+	$info['post-filters'][1] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=latest', 'locale' => $locale['forum_0181']);
 	if ($info['permissions']['can_rate']) {
 		$info['allowed-post-filters'][2] = 'high';
 		$info['post-filters'][2] = array('value' => FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].'&amp;section=high',
-			'locale' => 'Highest Ratings');
+			'locale' => $locale['forum_0181']);
 	}
 	// Internal SQL conditions filters
 	$sortCol = 'post_datestamp ASC';

@@ -95,3 +95,64 @@ function form_checkbox($title, $input_name, $input_id, $input_value, array $opti
 	$html .= "</div>\n";
 	return $html;
 }
+
+// still testing
+function form_checklistbox($title = FALSE, $input_name, $input_id, array $option_array = array(), array $input_values = array(), array $options = array()) {
+	global $locale, $defender;
+
+	$title = (isset($title) && (!empty($title))) ? $title : "";
+	$title2 = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
+	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
+	$options += array(
+		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
+		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
+		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+		'width' => !empty($options['width']) ?  $options['width']  : '100%',
+		'class' => !empty($options['class']) ?  $options['class']  : '',
+		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
+		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
+		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
+		'tip' => !empty($options['tip']) ? "title='".$options['tip']."'" : '',
+		'two_cols' => !empty($options['two_cols']) && $options['two_cols'] == 1 ? '1' : '0',
+		'value' => !empty($options['value']) && $options['value'] ? $options['value'] : 1,
+	);
+
+	$html = "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$options['class']."' >\n";
+	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title".($options['required'] ? "<span class='required'> *</span>" : '')."</label>\n" : '';
+	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
+
+	$html .= "<div class='row'>\n";
+
+	$checkbox_type = isnum($options['value']) ? 'number' : 'textbox';
+//	$html = "<div id='$input_id-field' class='form-group clearfix ".$options['class']."'>\n";
+
+	$colwidth = $options['two_cols'] ? 6 : 12;
+
+	foreach($option_array as $key => $value) {
+
+		$html .= "<label class='control-label col-xs-$colwidth col-sm-$colwidth col-md-$colwidth col-lg-$colwidth p-l-0' for='$input_id-$key'>\n";
+		$html .= "<input id='$input_id-$key' name='".$input_name."[]' value='".$options['value']."' type='checkbox' ".($options['deactivate'] ? 'readonly' : '')." ".(in_array($key, $input_values) ? 'checked' : '')." />\n";
+		$html .= $value." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n";
+	}
+
+//	$html .= "</div>\n";
+
+	$html .= "<div id='$input_id-help' class='display-inline-block'></div>";
+
+	$html .= "</div>\n";
+	$html .= ($options['inline']) ? "</div>\n" : "";	
+	$html .= "</div>\n";
+
+	$defender->add_field_session(array(
+		 'input_name' 	=> 	$input_name,
+		 'type'			=>	'checklistbox',
+		 'title'		=>	$title2,
+		 'id' 			=>	$input_id,
+		 'required'		=>	$options['required'],
+		 'safemode'		=> 	$options['safemode'],
+		 'error_text'	=> 	$options['error_text']
+	 ));
+
+	return $html;
+}

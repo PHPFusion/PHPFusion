@@ -61,6 +61,9 @@ $locale['forum_0176'] = "Pindah Pos";
 $locale['forum_0177'] = "Padam Pos yang dipilih?";
 $locale['forum_0178'] = "Cetak Utusan Perbincangan";
 $locale['forum_0179'] = "Cetak Pos Balasan";
+$locale['forum_0180'] = "Oldest"; // translate these 3 lines
+$locale['forum_0181'] = "Latest";
+$locale['forum_0182'] = "Highest Ratings";
 // Moderator Options
 $locale['forum_0200'] = "Pengaturan Pengurus Utusan";
 $locale['forum_0201'] = "Padam Utusan";

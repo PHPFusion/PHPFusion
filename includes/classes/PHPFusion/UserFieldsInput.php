@@ -674,7 +674,7 @@ class UserFieldsInput {
 		$quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
 		$quantum->get_structureData();
 		$quantum->load_field_cats();
-		$quantum->setCallbackData($this->userData);
+		$quantum->setCallbackData($this->data);
 		$fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
 		if (!empty($fields_input)) {
 			foreach ($fields_input as $table_name => $fields_array) {

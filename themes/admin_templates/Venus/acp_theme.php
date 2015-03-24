@@ -70,6 +70,11 @@ function open_ap() {
 		echo "<div style='margin-top:40px;'>\n";
 		echo render_breadcrumbs();
 		echo "</div>\n";
+
+		// Get all notices
+		$notices = getNotices();
+		echo renderNotices($notices);
+
 		echo CONTENT;
 		echo "</div>\n";
 

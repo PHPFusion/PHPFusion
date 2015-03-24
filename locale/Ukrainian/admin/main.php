@@ -8,8 +8,7 @@ $locale['ac02'] = "Користувачі";
 $locale['ac03'] = "Система";
 $locale['ac04'] = "Налаштування";
 $locale['ac05'] = "Додатки";
-
-$locale['ac10'] = "Admin Dashboard"; // translate this line
+$locale['ac10'] = "Центр адміністрування";
 
 $locale['201'] = "Адміністратори";
 

@@ -21,17 +21,17 @@ $ad_mess = array();
 $admin_mess = '';
 
 if (iADMIN && !defined("ADMIN_PANEL")) {
-	$admin_mess .= "<a id='content'></a>\n";
-	if (iSUPERADMIN && file_exists(BASEDIR."install/")) $ad_mess[] = $locale['global_198'];
-	if ($settings['maintenance']) $ad_mess[] = $locale['global_190'];
-	if (!dbcount("('user_admin_password')", DB_USERS, "user_id='".$userdata['user_id']."'")) $ad_mess[] = $locale['global_199'];
-	if (!empty($ad_mess)) {
+	//$admin_mess .= "<a id='content'></a>\n";
+	if (iSUPERADMIN && file_exists(BASEDIR."install/")) addNotice("danger", $locale['global_198'], 'all');
+	if ($settings['maintenance']) addNotice("danger", $locale['global_190'], 'all');
+	if (!$userdata['user_admin_password']) addNotice("danger", $locale['global_199'], 'all');
+	/*if (!empty($ad_mess)) {
 		$admin_mess .= "<div class='alert alert-danger admin-message m-t-10'>";
 		foreach ($ad_mess as $message) {
 			$admin_mess .= $message."<br />\n";
 		}
 		$admin_mess .= "</div>\n";
-	}
+	}*/
 }
 $admin_mess .= "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
 // Declare panels side

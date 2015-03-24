@@ -61,6 +61,9 @@ $locale['forum_0176'] = "Perkelti pranešimus";
 $locale['forum_0177'] = "Ištrinti pažymėtus pranešimus?";
 $locale['forum_0178'] = "Spausdinti temą";
 $locale['forum_0179'] = "Spausdinti pranešimą";
+$locale['forum_0180'] = "Oldest"; // translate these 3 lines
+$locale['forum_0181'] = "Latest";
+$locale['forum_0182'] = "Highest Ratings";
 // Moderator Options
 $locale['forum_0200'] = "Moderatoriaus veiksmai";
 $locale['forum_0201'] = "Trinti temą";

@@ -750,7 +750,7 @@ class Admin {
 		echo form_button($locale['600'], 'add_album', 'add_album', 'add_album', array('class' => 'btn-primary btn-sm m-r-10', 'icon' => 'fa fa-image'));
 		echo form_button($locale['601'], 'add_photo', 'add_photo', 'add_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-camera'));
 		if ($_GET['gallery']) echo form_button($locale['photo_002'], 'batch_photo', 'batch_photo', 'batch_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-cloud-upload'));
-		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".clean_request('&amp;action=refresh', array('action'), FALSE)."'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
+		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".clean_request('action=refresh', array('action'), FALSE, '&amp;')."'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
 		echo "</div>\n";
 		if ($_GET['gallery']) {
 			echo openmodal('batch_album', $locale['photo_002'], array('button_id'=>'batch_photo', 'static'=>1));
@@ -1072,7 +1072,7 @@ class Admin {
 		if ($_GET['gallery']>0) {
 
 			$gallery_info = self::get_album($_GET['gallery']);
-			add_to_breadcrumbs(array('link' => clean_request("&amp;gallery=".$_GET['gallery'], array('gallery',	'action'), FALSE), 'title' => $gallery_info['album_title']));
+			add_to_breadcrumbs(array('link' => clean_request("gallery=".$_GET['gallery'], array('gallery',	'action'), FALSE, '&amp;'), 'title' => $gallery_info['album_title']));
 		}
 		$list = array();
 		$rows = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : dbcount("('album_id')", $this->photo_cat_db);
@@ -1177,8 +1177,8 @@ class Admin {
 		$order_btns = '';
 		if ($type == 1 && count($this->gallery_data)>1) {
 			// move up and down
-			$move_up = clean_request("gallery_item=".$data['album_id']."&amp;action=mu&amp;order=".($data['album_order']-1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE);
-			$move_down = clean_request("gallery_item=".$data['album_id']."&amp;action=md&amp;order=".($data['album_order']+1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE);
+			$move_up = clean_request("gallery_item=".$data['album_id']."&action=mu&order=".($data['album_order']-1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
+			$move_down = clean_request("gallery_item=".$data['album_id']."&action=md&order=".($data['album_order']+1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
 			if ($data['album_order'] == 1) {
 				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_down."'><i class='fa fa-arrow-down'></i></a>";
 			} elseif ($data['album_order'] == count($this->gallery_data)) {
@@ -1189,8 +1189,8 @@ class Admin {
 			}
 		} elseif ($type == 2 && count($this->gallery_data)>1) {
 			// move up and down
-			$move_up = clean_request("gallery=".$_GET['gallery']."&amp;gallery_item=".$data['photo_id']."&amp;action=mup&amp;order=".($data['photo_order']-1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE);
-			$move_down = clean_request("gallery=".$_GET['gallery']."&amp;gallery_item=".$data['photo_id']."&amp;action=mdp&amp;order=".($data['photo_order']+1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE);
+			$move_up = clean_request("gallery=".$_GET['gallery']."&gallery_item=".$data['photo_id']."&action=mup&order=".($data['photo_order']-1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
+			$move_down = clean_request("gallery=".$_GET['gallery']."&gallery_item=".$data['photo_id']."&action=mdp&order=".($data['photo_order']+1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
 			if ($data['photo_order'] == 1) {
 				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_down."'><i class='fa fa-arrow-down'></i></a>";
 			} elseif ($data['photo_order'] == count($this->gallery_data)) {
@@ -1211,13 +1211,13 @@ class Admin {
 			echo $order_btns;
 			if (($this->enable_comments || $this->enable_ratings) && $type == 2) {
 				if ($data['photo_allow_ratings']) {
-					$rating_link = clean_request("gallery=".$data['album_id']."&amp;photo=".$data['photo_id']."&amp;ratings=".$data['photo_id'], array('photo',
+					$rating_link = clean_request("gallery=".$data['album_id']."&photo=".$data['photo_id']."&ratings=".$data['photo_id'], array('photo',
 						'status',
 						'action',
 						'gallery',
 						'gallery_edit',
 						'gallery_type',
-						'ratings'), FALSE);
+						'ratings'), FALSE, '&amp;');
 					echo "<a class='btn button btn-sm btn-default' href='".$rating_link."'>
 						<i class='fa fa-star-o'></i>
 						</a>";
@@ -1227,13 +1227,13 @@ class Admin {
 			</div>
 				<div class='gallery_writer pull-right'>
 					<a class='btn button btn-sm btn-default'
-					   href='<?php echo clean_request("".(isset($_GET['gallery']) ? "gallery=".$_GET['gallery']."&amp;" : '')."gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_edit', 'photo', 'gallery',
-						   'gallery_type'), FALSE) ?>'>
+					   href='<?php echo clean_request((isset($_GET['gallery']) ? "gallery=".$_GET['gallery']."&" : '')."gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&gallery_type=$type", array('gallery_edit', 'photo', 'gallery',
+						   'gallery_type'), FALSE, '&amp;') ?>'>
 					<i class='fa fa-pencil fa-lg'></i>
 					</a>
 					<a class='btn button btn-sm btn-danger'
-					   href='<?php echo clean_request("".(isset($_GET['gallery']) ? "gallery=".$_GET['gallery']."&amp;" : '')."gallery_delete=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&amp;gallery_type=$type", array('gallery_delete', 'photo', 'gallery',
-						   'gallery_type'), FALSE) ?>'>
+					   href='<?php echo clean_request((isset($_GET['gallery']) ? "gallery=".$_GET['gallery']."&" : '')."gallery_delete=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&gallery_type=$type", array('gallery_delete', 'photo', 'gallery',
+						   'gallery_type'), FALSE, '&amp;') ?>'>
 					<i class='fa fa-trash fa-lg'></i>
 					</a>
 				</div>

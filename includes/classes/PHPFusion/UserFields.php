@@ -74,11 +74,11 @@ class UserFields extends QuantumFields {
 		$section = array();
 		$result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent='0' ORDER BY field_cat_order");
 		if (dbrows($result) > 0) {
-			$aid = isset($_GET['aid']) ? $aidlink.'&amp;' : '';
+			$aid = isset($_GET['aid']) ? $aidlink.'&' : '';
 			$i = 0;
 			while ($data = dbarray($result)) {
 				$section[] = array('active' => (isset($_GET['profiles']) && $_GET['profiles'] == $data['field_cat_id']) ? 1 : (!isset($_GET['profiles']) && $i == 0 ? 1 : 0),
-					'link' => clean_request($aid.'profiles='.$data['field_cat_id'].'&amp;lookup='.$this->userData['user_id'], array('profiles'), FALSE),
+					'link' => clean_request($aid.'profiles='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], array('profiles'), FALSE, '&amp;'),
 					'name' => ucwords(self::parse_label($data['field_cat_name'])));
 				$i++;
 			}

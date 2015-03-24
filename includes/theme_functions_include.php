@@ -452,23 +452,39 @@ function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
 	}
 }
 
-function display_avatar($userdata, $size, $class = FALSE, $link = TRUE, $img_class='img-thumbnail') {
-	$class = ($class) ? "class='$class'" : '';
-	if (array_key_exists('user_avatar', $userdata) && $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6') {
-		$userdata['user_id'] = array_key_exists('user_id', $userdata) && $userdata['user_id'] ? $userdata['user_id'] : 1;
-		if ($link) {
-			return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive $img_class m-r-10' alt='".$userdata['user_name']."' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/".$userdata['user_avatar']."'></a>\n";
-		} else {
-			return "<img class='img-responsive $img_class' style='display:inline; max-width:$size; max-height:$size;' alt='".$userdata['user_name']."' src='".IMAGES."avatars/".$userdata['user_avatar']."'>\n";
-		}
-	} else {
-		$userdata['user_id'] = array_key_exists('user_id', $userdata) && $userdata['user_id'] ? $userdata['user_id'] : 1;
-		if ($link) {
-			return "<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'><img class='img-responsive $img_class m-r-10'  alt='".$userdata['user_name']."' style='display:inline; max-width:$size; max-height:$size;' src='".IMAGES."avatars/noavatar100.png'></a>\n";
-		} else {
-			return "<img class='img-responsive $img_class m-r-10' style='display:inline; max-width:$size; max-height:$size;' alt='".$userdata['user_name']."' src='".IMAGES."avatars/noavatar100.png'>\n";
-		}
+/**
+ * @param array $userdata
+ * 	Indexes:
+ * 		- user_id
+ * 		- user_name
+ * 		- user_avatar
+ * 		- user_status
+ * @param string $size A valid size for CSS max-width and max-height.
+ * @param string $class Classes for the link
+ * @param bool $link FALSE if you want to display the avatar without link. TRUE by default.
+ * @param string $img_class Classes for the image
+ * @return string
+ */
+function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class='img-thumbnail') {
+	$userdata += array(
+		'user_id' => 0,
+		'user_name' => '',
+		'user_avatar' => '',
+		'user_status' => ''
+	);
+	if (!$userdata['user_id']) {
+		$userdata['user_id'] = 1;
 	}
+	$class = ($class) ? "class='$class'" : '';
+	$hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
+	$imgTpl = "<img class='img-responsive $img_class %s' alt='".$userdata['user_name']."' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
+	$img = sprintf($imgTpl,
+		$hasAvatar ? '' : 'm-r-10',
+		$hasAvatar ? IMAGES."avatars/".$userdata['user_avatar'] : IMAGES.'avatars/noavatar100.png'
+	);
+	return $link
+		? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img)
+		: $img;
 }
 
 function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE) {
