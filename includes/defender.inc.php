@@ -994,7 +994,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 		}
 	}
 	// Amend the only broken element to be found.
-	throw new \Exception('<p style="font-weight:bold">There is something wrong with INPUT NAME ---> '.$input_name.' If this is Fileinput Field, please wrap with if (isset($_FILES['.$input_name.'])) {</p>');
+	throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
 }
 
 function sanitize_array($array) {
