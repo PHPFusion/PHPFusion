@@ -539,106 +539,15 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 		}
 	}
 }
-if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && $_GET['t'] == "p")) {
-	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
-		define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
-		require_once INCLUDES."photo_functions_include.php";
-		$photo_file = "";
-		$photo_thumb1 = "";
-		$photo_thumb2 = "";
-		$result = dbquery("SELECT ts.submit_user, ts.submit_criteria
-			FROM ".DB_SUBMISSIONS." ts
-			WHERE submit_id='".$_GET['submit_id']."'");
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			$submit_criteria = unserialize($data['submit_criteria']);
-			$photo_title = stripinput($_POST['photo_title']);
-			$photo_description = stripinput($_POST['photo_description']);
-			$album_id = isnum($_POST['album_id']) ? $_POST['album_id'] : "0";
-			$photo_name = strtolower(substr($submit_criteria['photo_file'], 0, strrpos($submit_criteria['photo_file'], ".")));
-			$photo_ext = strtolower(strrchr($submit_criteria['photo_file'], "."));
-			$photo_dest = PHOTOS.(!SAFEMODE ? "album_".$album_id."/" : "");
-			$photo_file = image_exists($photo_dest, $photo_name.$photo_ext);
-			copy(PHOTOS."submissions/".$submit_criteria['photo_file'], $photo_dest.$photo_file);
-			chmod($photo_dest.$photo_file, 0644);
-			unlink(PHOTOS."submissions/".$submit_criteria['photo_file']);
-			$imagefile = @getimagesize($photo_dest.$photo_file);
-			$photo_thumb1 = image_exists($photo_dest, $photo_name."_t1".$photo_ext);
-			createthumbnail($imagefile[2], $photo_dest.$photo_file, $photo_dest.$photo_thumb1, $settings['thumb_w'], $settings['thumb_h']);
-			if ($imagefile[0] > $settings['photo_w'] || $imagefile[1] > $settings['photo_h']) {
-				$photo_thumb2 = image_exists($photo_dest, $photo_name."_t2".$photo_ext);
-				createthumbnail($imagefile[2], $photo_dest.$photo_file, $photo_dest.$photo_thumb2, $settings['photo_w'], $settings['photo_h']);
-			}
-			$photo_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='$album_id'"), 0)+1;
-			$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('$album_id', '$photo_title', '$photo_description', '$photo_file', '$photo_thumb1', '$photo_thumb2', '".time()."', '".$data['submit_user']."', '0', '$photo_order', '1', '1')");
-			$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
-			opentable($locale['580']);
-			echo "<br /><div style='text-align:center'>".$locale['581']."<br /><br />\n";
-			echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['402']."</a><br /><br />\n";
-			echo "<a href='index.php".$aidlink."'>".$locale['403']."</a></div><br />\n";
-			closetable();
-		} else {
-			redirect(FUSION_SELF.$aidlink);
-		}
-	} else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
-		opentable($locale['582']);
-		$data = dbarray(dbquery("SELECT submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'"));
-		$submit_criteria = unserialize($data['submit_criteria']);
-		@unlink(PHOTOS."submissions/".$submit_criteria['photo_file']);
-		$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
-		echo "<br /><div style='text-align:center'>".$locale['583']."<br /><br />\n";
-		echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['402']."</a><br /><br />\n";
-		echo "<a href='index.php".$aidlink."'>".$locale['403']."</a></div><br />\n";
-		closetable();
-	} else {
-		$result = dbquery("SELECT ts.submit_criteria, tu.user_id, tu.user_name, tu.user_status
-			FROM ".DB_SUBMISSIONS." ts
-			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
-			WHERE submit_id='".$_GET['submit_id']."'");
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			$submit_criteria = unserialize($data['submit_criteria']);
-			$photo_title = $submit_criteria['photo_title'];
-			$photo_description = $submit_criteria['photo_description'];
-			$photo_file = $submit_criteria['photo_file'];
-			$album_id = $submit_criteria['album_id'];
-			$photo_albums = "";
-			$sel = "";
-			$result2 = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." ORDER BY album_title");
-			if (dbrows($result2)) {
-				while ($data2 = dbarray($result2)) {
-					if (isset($album_id)) $sel = ($album_id == $data2['album_id'] ? " selected='selected'" : "");
-					$photo_albums .= "<option value='".$data2['album_id']."'$sel>".$data2['album_title']."</option>\n";
-				}
-			}
-			add_to_title($locale['global_200'].$locale['594'].$locale['global_201'].$photo_title."?");
-			opentable($locale['580']);
-			echo "<form name='publish' method='post' action='".FUSION_SELF.$aidlink."&amp;sub=submissions&amp;action=2&amp;t=p&amp;submit_id=".$_GET['submit_id']."'>\n";
-			echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
-			echo "<td width='100' class='tbl'>".$locale['596']."</td>\n";
-			echo "<td width='80%' class='tbl'><input type='text' name='photo_title' value='".$photo_title."' class='textbox' style='width: 250px' /></td>\n";
-			echo "</tr>\n<tr>\n";
-			echo "<td width='100' class='tbl'>".$locale['597']."</td>\n";
-			echo "<td width='80%' class='tbl'><textarea name='photo_description' cols='60' rows='5' class='textbox' style='width:300px;'>".$photo_description."</textarea></td>\n";
-			echo "</tr>\n<tr>\n";
-			echo "<td width='100' class='tbl'>".$locale['598']."</td>\n";
-			echo "<td width='80%' class='tbl'><select name='album_id' class='textbox'>\n";
-			echo "<option value='0'>".$locale['507']."</option>\n".$photo_albums."</select></td>\n";
-			echo "</tr>\n<tr>\n";
-			echo "<td align='center' colspan='2' class='tbl1'><br />\n";
-			echo "<a href='".PHOTOS."submissions/".$photo_file."' target='_blank'>".$locale['591']."</a><br /><br />\n";
-			echo $locale['592'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br /><br />\n";
-			echo $locale['593']."<br />\n";
-			echo "<input type='submit' name='publish' value='".$locale['594']."' class='button' />\n";
-			echo "<input type='submit' name='delete' value='".$locale['595']."' class='button' />\n";
-			echo "</td>\n</tr>\n</table>\n</form>\n";
-			closetable();
-		} else {
-			redirect(FUSION_SELF.$aidlink);
-		}
-	}
-}
-if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && $_GET['t'] == "d")) {
+if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && $_GET['t'] == "p")) { photo_submissions_review(); }
+if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && $_GET['t'] == "d")) { download_submissions_review(); }
+require_once THEMES."templates/footer.php";
+
+/**
+ * The Download Submissions Review Form
+ */
+function download_submissions_review() {
+	global $locale, $aidlink;
 	// Publish
 	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		require_once INCLUDES."infusions_include.php";
@@ -755,22 +664,9 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$submit_criteria = unserialize($data['submit_criteria']);
-
-			$photo_albums = "";
-			$sel = "";
-			$editlist = "";
-			$sel = "";
-			$result2 = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ORDER BY download_cat_name");
-			if (dbrows($result2) != 0) {
-				while ($data2 = dbarray($result2)) {
-					$sel = ($data2['download_cat_id'] == $submit_criteria['download_cat'] ? " selected='selected'" : "");
-					$editlist .= "<option value='".$data2['download_cat_id']."'$sel>".$data2['download_cat_name']."</option>\n";
-				}
-			}
 			add_to_title($locale['global_200'].$locale['643'].$locale['global_201'].$submit_criteria['download_title']."?");
 			opentable($locale['640']);
 			echo openform('publish', 'publish', 'post', FUSION_SELF.$aidlink."&amp;sub=submissions&amp;action=2&amp;t=d&amp;submit_id=".$_GET['submit_id'], array('downtime'=>1));
-
 			echo "<div class='well'>\n";
 			echo "<div class='pull-right'>\n";
 			echo form_button($locale['643'], 'publish', 'publish', $locale['643'], array('class'=>'btn-primary m-r-10'));
@@ -784,8 +680,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-8'>\n";
-
-
 
 			echo form_text($locale['645'], 'download_title', 'download_title', $submit_criteria['download_title'], array('inline'=>1));
 			echo form_textarea($locale['645'], 'download_description_short', 'download_description_short', $submit_criteria['download_description_short'], array('inline'=>1, 'autosize'=>1));
@@ -802,7 +696,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 			echo "</div>\n";
 			echo "<div class='col-xs-12 col-sm-4'>\n";
 			$cat_hidden = array();
-			echo form_select_tree($locale['648'], "cat_parent", "cat_parent", $submit_criteria['download_cat'], array("disable_opts" => $cat_hidden, "hide_disabled" => 1, 'width'=>'100%'), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
+			echo form_select_tree($locale['648'], "download_cat", "download_cat", $submit_criteria['download_cat'], array("disable_opts" => $cat_hidden, "hide_disabled" => 1, 'width'=>'100%'), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 			if (!empty($submit_criteria['download_image']) && !empty($submit_criteria['download_image_thumb'])) {
 				echo "<div class='list-group-item clearfix'>\n";
 				echo "<div class='pull-left'>".thumbnail(DOWNLOADS."submissions/images/".$submit_criteria['download_image_thumb'], '80px')."</div>\n";
@@ -851,5 +745,109 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 		}
 	}
 }
-require_once THEMES."templates/footer.php";
-?>
+
+/**
+ * The Photo Submissions Review Form
+ */
+function photo_submissions_review() {
+	global $locale, $aidlink;
+
+	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+		define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+		require_once INCLUDES."photo_functions_include.php";
+		$photo_file = "";
+		$photo_thumb1 = "";
+		$photo_thumb2 = "";
+		$result = dbquery("SELECT ts.submit_user, ts.submit_criteria
+			FROM ".DB_SUBMISSIONS." ts
+			WHERE submit_id='".$_GET['submit_id']."'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
+			$submit_criteria = unserialize($data['submit_criteria']);
+			$photo_title = stripinput($_POST['photo_title']);
+			$photo_description = stripinput($_POST['photo_description']);
+			$album_id = isnum($_POST['album_id']) ? $_POST['album_id'] : "0";
+			$photo_name = strtolower(substr($submit_criteria['photo_file'], 0, strrpos($submit_criteria['photo_file'], ".")));
+			$photo_ext = strtolower(strrchr($submit_criteria['photo_file'], "."));
+			$photo_dest = PHOTOS.(!SAFEMODE ? "album_".$album_id."/" : "");
+			$photo_file = image_exists($photo_dest, $photo_name.$photo_ext);
+			copy(PHOTOS."submissions/".$submit_criteria['photo_file'], $photo_dest.$photo_file);
+			chmod($photo_dest.$photo_file, 0644);
+			unlink(PHOTOS."submissions/".$submit_criteria['photo_file']);
+			$imagefile = @getimagesize($photo_dest.$photo_file);
+			$photo_thumb1 = image_exists($photo_dest, $photo_name."_t1".$photo_ext);
+			createthumbnail($imagefile[2], $photo_dest.$photo_file, $photo_dest.$photo_thumb1, $settings['thumb_w'], $settings['thumb_h']);
+			if ($imagefile[0] > $settings['photo_w'] || $imagefile[1] > $settings['photo_h']) {
+				$photo_thumb2 = image_exists($photo_dest, $photo_name."_t2".$photo_ext);
+				createthumbnail($imagefile[2], $photo_dest.$photo_file, $photo_dest.$photo_thumb2, $settings['photo_w'], $settings['photo_h']);
+			}
+			$photo_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='$album_id'"), 0)+1;
+			$result = dbquery("INSERT INTO ".DB_PHOTOS." (album_id, photo_title, photo_description, photo_filename, photo_thumb1, photo_thumb2, photo_datestamp, photo_user, photo_views, photo_order, photo_allow_comments, photo_allow_ratings) VALUES ('$album_id', '$photo_title', '$photo_description', '$photo_file', '$photo_thumb1', '$photo_thumb2', '".time()."', '".$data['submit_user']."', '0', '$photo_order', '1', '1')");
+			$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
+			opentable($locale['580']);
+			echo "<br /><div style='text-align:center'>".$locale['581']."<br /><br />\n";
+			echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['402']."</a><br /><br />\n";
+			echo "<a href='index.php".$aidlink."'>".$locale['403']."</a></div><br />\n";
+			closetable();
+		} else {
+			redirect(FUSION_SELF.$aidlink);
+		}
+	} else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+		opentable($locale['582']);
+		$data = dbarray(dbquery("SELECT submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'"));
+		$submit_criteria = unserialize($data['submit_criteria']);
+		@unlink(PHOTOS."submissions/".$submit_criteria['photo_file']);
+		$result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
+		echo "<br /><div style='text-align:center'>".$locale['583']."<br /><br />\n";
+		echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['402']."</a><br /><br />\n";
+		echo "<a href='index.php".$aidlink."'>".$locale['403']."</a></div><br />\n";
+		closetable();
+	} else {
+		$result = dbquery("SELECT ts.submit_criteria, tu.user_id, tu.user_name, tu.user_status
+			FROM ".DB_SUBMISSIONS." ts
+			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
+			WHERE submit_id='".$_GET['submit_id']."'");
+		if (dbrows($result)) {
+			$data = dbarray($result);
+			$submit_criteria = unserialize($data['submit_criteria']);
+			$photo_title = $submit_criteria['photo_title'];
+			$photo_description = $submit_criteria['photo_description'];
+			$photo_file = $submit_criteria['photo_file'];
+			$album_id = $submit_criteria['album_id'];
+			$photo_albums = "";
+			$sel = "";
+			$result2 = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." ORDER BY album_title");
+			if (dbrows($result2)) {
+				while ($data2 = dbarray($result2)) {
+					if (isset($album_id)) $sel = ($album_id == $data2['album_id'] ? " selected='selected'" : "");
+					$photo_albums .= "<option value='".$data2['album_id']."'$sel>".$data2['album_title']."</option>\n";
+				}
+			}
+			add_to_title($locale['global_200'].$locale['594'].$locale['global_201'].$photo_title."?");
+			opentable($locale['580']);
+
+			echo "<form name='publish' method='post' action='".FUSION_SELF.$aidlink."&amp;sub=submissions&amp;action=2&amp;t=p&amp;submit_id=".$_GET['submit_id']."'>\n";
+			echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
+			echo "<td width='100' class='tbl'>".$locale['596']."</td>\n";
+			echo "<td width='80%' class='tbl'><input type='text' name='photo_title' value='".$photo_title."' class='textbox' style='width: 250px' /></td>\n";
+			echo "</tr>\n<tr>\n";
+			echo "<td width='100' class='tbl'>".$locale['597']."</td>\n";
+			echo "<td width='80%' class='tbl'><textarea name='photo_description' cols='60' rows='5' class='textbox' style='width:300px;'>".$photo_description."</textarea></td>\n";
+			echo "</tr>\n<tr>\n";
+			echo "<td width='100' class='tbl'>".$locale['598']."</td>\n";
+			echo "<td width='80%' class='tbl'><select name='album_id' class='textbox'>\n";
+			echo "<option value='0'>".$locale['507']."</option>\n".$photo_albums."</select></td>\n";
+			echo "</tr>\n<tr>\n";
+			echo "<td align='center' colspan='2' class='tbl1'><br />\n";
+			echo "<a href='".PHOTOS."submissions/".$photo_file."' target='_blank'>".$locale['591']."</a><br /><br />\n";
+			echo $locale['592'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br /><br />\n";
+			echo $locale['593']."<br />\n";
+			echo "<input type='submit' name='publish' value='".$locale['594']."' class='button' />\n";
+			echo "<input type='submit' name='delete' value='".$locale['595']."' class='button' />\n";
+			echo "</td>\n</tr>\n</table>\n</form>\n";
+			closetable();
+		} else {
+			redirect(FUSION_SELF.$aidlink);
+		}
+	}
+}
