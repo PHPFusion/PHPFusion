@@ -103,18 +103,32 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 
 	opentable($openTable);
 
-	if (isset($_GET['status']) && !isset($message)) {
-		if ($_GET['status'] == "sn") {
-			$message = $locale['download_0150'];
-		} elseif ($_GET['status'] == "su") {
-			$message = $locale['download_0151'];
-		} elseif ($_GET['status'] == "deln") {
-			$message = $locale['download_0152']." - ".$locale['download_0153'];
-		} elseif ($_GET['status'] == "dely") {
-			$message = $locale['download_0154'];
+	$message = '';
+	if (isset($_GET['status'])) {
+		switch($_GET['status']) {
+			case 'sn':
+				$message = $locale['download_0150'];
+				$status = 'success';
+				$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+				break;
+			case 'su':
+				$message = $locale['download_0151'];
+				$status = 'info';
+				$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+				break;
+			case 'deln':
+				$message = $locale['download_0152']." - ".$locale['download_0153'];
+				$status = 'danger';
+				$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+				break;
+			case 'dely':
+				$message = $locale['download_0154'];
+				$status = 'danger';
+				$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+				break;
 		}
 		if ($message) {
-			echo admin_message($message);
+			addNotice($status, $icon.$message);
 		}
 	}
 
@@ -157,7 +171,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		echo form_select($locale['download_0302'], 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10', 'width'=>'200px'));
 		echo form_select('', 'cat_sort_order', 'cat_sort_order', $array2, $cat_sort_order, array('placeholder' => $locale['choose'], 'class'=>'pull-left', 'width'=>'200px'));
 		echo "</div>\n";
-
 		closeside();
 		echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
@@ -173,16 +186,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		echo closeform();
 		echo closetabbody();
 	}
-
 	echo closetab();
 	closetable();
-}
-if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id'])) {
-	add_to_jquery("
-		// change the name of the second tab and activate it.
-		$('#tab-daddAdd-Category').text('Edit Category');
-		$('#dcategory a:last').tab('show');
-		");
 }
 
 function showcatlist($parent = 0, $level = 0) {
@@ -193,8 +198,8 @@ function showcatlist($parent = 0, $level = 0) {
 			echo "<div class='list-group-item clearfix'>\n";
 
 			echo "<div class='btn-group pull-right m-t-5'>\n";
-			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;section=dadd&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'>".$locale['edit']."</a>";
-			echo "<a class='btn btn-sm btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash m-r-10'></i> ".$locale['delete']."</a>\n";
+			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;section=dadd&amp;action=edit&amp;cat_id=".$data['download_cat_id']."'><i class='fa fa-pencil fa-fw'></i> ".$locale['edit']."</a>";
+			echo "<a class='btn btn-sm btn-default' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
 			echo "</div>\n";
 
 			echo "<div class='overflow-hide p-r-10'>\n";
