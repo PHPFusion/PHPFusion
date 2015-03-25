@@ -313,6 +313,10 @@ $locale['forum_0752'] = "Tema buvo sėkmingai perkelta.";
 // Renew Thread
 $locale['forum_0758'] = "Atnaujinti temą";
 $locale['forum_0759'] = "Tema buvo atnaujinta.";
+// Post vote errors
+$locale['forum_0800'] = "Vote rejected"; // please translate these three lines
+$locale['forum_0801'] = "You cannot vote for a second time per thread";
+$locale['forum_0802'] = "You cannot vote at your own post.";
 
 // forum.forms.php
 $locale['forum_2000'] = "Tema: ";

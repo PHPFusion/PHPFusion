@@ -40,9 +40,9 @@ $info['lastvisited'] = (isset($info['lastvisited']) && isnum($info['lastvisited'
 /* Errors */
 if (isset($_GET['error'])) {
 	if ($_GET['error'] == 'vote') {
-		notify('Vote rejected', 'You cannot vote for a second time per thread');
+		notify($locale['forum_0800'], $locale['forum_0801']);
 	} elseif ($_GET['error'] == 'vote_self') {
-		notify('Vote rejected', 'You cannot vote at your own post.');
+		notify($locale['forum_0800'], $locale['forum_0802']);
 	}
 }
 

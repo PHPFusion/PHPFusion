@@ -313,6 +313,10 @@ $locale['forum_0752'] = "Тема перенесена.";
 // Renew Thread
 $locale['forum_0758'] = "Обновить тему";
 $locale['forum_0759'] = "Тема обновлена.";
+// Post vote errors
+$locale['forum_0800'] = "Голос отклонён";
+$locale['forum_0801'] = "Вы не можете повторно голосовать за тему.";
+$locale['forum_0802'] = "Вы не можете голосовать за своё сообщение.";
 
 // forum.forms.php
 $locale['forum_2000'] = "Тема: ";

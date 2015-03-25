@@ -312,6 +312,11 @@ $locale['forum_0752'] = "Тему переміщено успішно.";
 $locale['forum_0758'] = "Оновити тему";
 $locale['forum_0759'] = "Тему оновлено успішно.";
 
+// Post vote errors
+$locale['forum_0800'] = "Vote rejected"; // please translate these three lines
+$locale['forum_0801'] = "You cannot vote for a second time per thread";
+$locale['forum_0802'] = "You cannot vote at your own post.";
+
 // forum.forms.php
 $locale['forum_2000'] = "Тема: ";
 $locale['forum_2001'] = "Що у Вас на думці?";

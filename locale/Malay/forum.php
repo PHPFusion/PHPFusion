@@ -282,6 +282,10 @@ $locale['forum_0752'] = "Pindahan Utusan berjaya.";
 // Renew Thread
 $locale['forum_0758'] = $locale['forum_0207'];
 $locale['forum_0759'] = 'Utusan ini telah diperbaharui';
+// Post vote errors
+$locale['forum_0800'] = "Vote rejected"; // please translate these three lines
+$locale['forum_0801'] = "You cannot vote for a second time per thread";
+$locale['forum_0802'] = "You cannot vote at your own post.";
 // forum.forms.php
 $locale['forum_2000'] = "Tajuk Topik: ";
 $locale['forum_2001'] = 'Apakah yang mahu disoalkan?';
