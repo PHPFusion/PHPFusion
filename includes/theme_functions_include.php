@@ -133,6 +133,10 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 	return $html;
 }
 
+function admin_message() {
+	echo "<h4>If you see this. This function has been deprecated. Please copy the Code in Blogs regarding the status message and replace locale. Thanks.</h4>";
+}
+
 function check_panel_status($side) {
 	global $settings;
 	$exclude_list = "";
