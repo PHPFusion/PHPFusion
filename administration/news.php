@@ -189,14 +189,32 @@ function news_listing() {
 function news_form() {
 	global $userdata, $locale, $settings, $aidlink, $defender;
 	$language_opts = fusion_get_enabled_languages();
-	$data = array();
-	$formaction = '';
+	$formaction = FUSION_SELF.$aidlink."&amp;section=nform";
 
 	if ($settings['tinymce_enabled']) {
 		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 	} else {
 		require_once INCLUDES."html_buttons_include.php";
 	}
+	$data = array(
+		'news_draft' => 0,
+		'news_sticky' => 0,
+		'news_news' => '',
+		'news_datestamp' => time(),
+		'news_extended' => '',
+		'news_keywords' => '',
+		'news_breaks' => 1,
+		'news_allow_comments' => 1,
+		'news_allow_ratings' => 1,
+		'news_language' => LANGUAGE,
+		'news_visibility' => 0,
+		'news_subject' => '',
+		'news_start' => '',
+		'news_end' => '',
+		'news_cat'	=> 0,
+		'news_image'	=> '',
+		'news_ialign' => 'pull-left',
+	);
 
 	if (isset($_POST['save'])) {
 		$data['news_id'] = isset($_POST['news_id']) ? form_sanitizer($_POST['news_id'], '', 'news_id') : 0;
@@ -204,18 +222,21 @@ function news_form() {
 		$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
 		$data['news_name'] = $userdata['user_id'];
 
-		$upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
-		if (!empty($upload)) {
-			$data['news_image'] = $upload['image_name'];
-			$data['news_image_t1'] = $upload['thumb1_name'];
-			$data['news_image_t2'] = $upload['thumb2_name'];
-			$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
-		} else {
-			$data['news_image'] = (isset($_POST['news_image']) ? $_POST['news_image'] : "");
-			$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "");
-			$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
-			$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
+		if (isset($_FILES['news_image'])) {
+			$upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
+			if (!empty($upload)) {
+				$data['news_image'] = $upload['image_name'];
+				$data['news_image_t1'] = $upload['thumb1_name'];
+				$data['news_image_t2'] = $upload['thumb2_name'];
+				$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
+			} else {
+				$data['news_image'] = (isset($_POST['news_image']) ? $_POST['news_image'] : "");
+				$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "");
+				$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
+				$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
+			}
 		}
+
 
 		$data['news_news'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])); // Needed for HTML to work
 		$data['news_extended'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])); // Needed for HTML to work
@@ -279,6 +300,7 @@ function news_form() {
 		if (dbrows($result)) {
 			$data2 = dbarray($result);
 			$data += array(
+				'news_id'	=> (!empty($_POST['news_id'])) ? $_POST['news_id'] : $data2['news_id'],
 				'news_subject' => (!empty($_POST['news_subject'])) ? $_POST['news_subject'] : $data2['news_subject'],
 				'news_cat' => (!empty($_POST['news_cat'])) ? $_POST['news_cat'] : $data2['news_cat'],
 				'news_news' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['news_news'], // phpentities(stripslashes($data['news_news'])),
@@ -303,27 +325,7 @@ function news_form() {
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
-	} else {
-		$data['news_draft'] = '0';
-		$data['news_sticky'] = '0';
-		$data['news_news'] = '';
-		$data['news_datestamp'] = time();
-		$data['news_extended'] = '';
-		$data['news_keywords'] = '';
-		$data['news_breaks'] = " 1";
-		$data['news_allow_comments'] = " 1";
-		$data['news_allow_ratings'] = " 1";
-		$data['news_language'] = LANGUAGE;
-		$data['news_visibility'] = '0';
-		$data['news_subject'] = '';
-		$data['news_start'] = '';
-		$data['news_end'] = '';
-		$data['news_cat'] = '0';
-		$data['news_image'] = '';
-		$data['news_ialign'] = 'pull-left';
-		$formaction = FUSION_SELF.$aidlink."&amp;section=nform";
 	}
-
 	if (isset($_POST['preview'])) {
 		$data['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 		$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
@@ -402,7 +404,6 @@ function news_form() {
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
 		echo form_select($locale['news_0218'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
 	} else {
-
 		$file_input_options = array(
 			'max_width' => $settings['news_photo_max_w'],
 			'max_height' => $settings['news_photo_max_h'],
