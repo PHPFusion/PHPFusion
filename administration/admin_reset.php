@@ -16,19 +16,22 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("APWR") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('APWR');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/admin_reset.php";
+
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "pw") {
 		$message = $locale['411'];
+		$status = 'info';
+		$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
 	}
 	if ($message) {
-		echo "<div id='close-message'><div class='m-t-10 alert alert-warning admin-message'>".$message."</div></div>\n";
+		addNotice($status, $icon.$message);
 	}
 }
+
+
 if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_POST['reset_admin'])) {
 	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 		require_once INCLUDES."sendmail_include.php";

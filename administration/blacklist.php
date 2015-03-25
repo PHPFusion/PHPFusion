@@ -16,20 +16,24 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("B") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('B');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/blacklist.php";
+
+$message = '';
 if (isset($_GET['status'])) {
-	if ($_GET['status'] == "del") {
-		$title = $locale['400'];
-		$message = "<strong>".$locale['401']."</strong>";
+	switch($_GET['status']) {
+		case 'del':
+			$message = $locale['401'];
+			$status = 'danger';
+			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+			break;
 	}
-	opentable($title);
-	echo "<div class='admin-close'><div class='alert alert-info m-t-10'>".$message."</div>\n</div>\n";
-	closetable();
+	if ($message) {
+		addNotice($status, $icon.$message);
+	}
 }
+
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['blacklist_id']) && isnum($_GET['blacklist_id']))) {
 	$result = dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".$_GET['blacklist_id']."'");
 	redirect(FUSION_SELF.$aidlink."&status=del");

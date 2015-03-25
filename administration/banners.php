@@ -16,39 +16,43 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("SB") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('SB');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include LOCALE.LOCALESET."admin/settings.php";
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
+
+
+$message = '';
+if (isset($_GET['error'])) {
+	switch($_GET['error']) {
+		case '1':
+			$message = $locale['901'];;
+			$status = 'danger';
+			$icon = "<i class='fa fa-alert fa-lg fa-fw'></i>";
+			break;
+		default:
+			$message = $locale['900'];;
+			$status = 'success';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
 	}
-	if (isset($message)) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+	if ($message) {
+		addNotice($status, $icon.$message);
 	}
 }
+
 if (isset($_POST['save_banners'])) {
 	$error = 0;
-	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash($_POST['sitebanner1'])."' WHERE settings_name='sitebanner1'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash($_POST['sitebanner2'])."' WHERE settings_name='sitebanner2'");
-		if (!$result) {
-			$error = 1;
-		}
-		set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
-		redirect(FUSION_SELF.$aidlink."&error=".$error, TRUE);
-	} else {
-		$defender->stop();
-		$defender->addNotice($locale['global_182']);
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash($_POST['sitebanner1'])."' WHERE settings_name='sitebanner1'");
+	if (!$result) {
+		$error = 1;
 	}
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash($_POST['sitebanner2'])."' WHERE settings_name='sitebanner2'");
+	if (!$result) {
+		$error = 1;
+	}
+		//set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
+	redirect(FUSION_SELF.$aidlink."&error=".$error, TRUE);
+
 }
 if (isset($_POST['preview_banners'])) {
 	$sitebanner1 = "";
@@ -70,8 +74,6 @@ echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, arra
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody><tr>\n";
 echo "<td class='tbl'>\n";
 echo form_textarea($locale['851'], 'sitebanner1', 'sitebanner1', $sitebanner1);
-//<label for='sitebanner1'>".$locale['851']."<br />\n";
-//echo "<textarea name='sitebanner1' cols='50' rows='5' class='textbox' style='width:450px'>".phpentities($sitebanner1)."</textarea></td>\n";
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'>\n";
 echo "<input type='button' value='<?php?>' class='button' style='width:60px;' onclick=\"addText('sitebanner1', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
@@ -85,8 +87,6 @@ if (isset($_POST['preview_banners']) && $sitebanner1) {
 }
 echo "<td class='tbl'>\n";
 echo form_textarea($locale['852'], 'sitebanner2', 'sitebanner2', $sitebanner2);
-//".$locale['852']."<br />\n";
-//echo "<textarea name='sitebanner2' cols='50' rows='5' class='textbox' style='width:450px'>".phpentities($sitebanner2)."</textarea></td>\n";
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'>\n";
 echo "<input type='button' value='<?php?>' class='button' style='width:60px;' onclick=\"addText('sitebanner2', '<?php\\n', '\\n?>', 'settingsform');\" />\n";

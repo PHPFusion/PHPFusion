@@ -54,6 +54,7 @@ $dir = LOCALE.LOCALESET."search/";
 $temp = opendir($dir);
 $search_opts = array();
 if (file_exists($dir)) {
+	$filename_locale = array();
 	include LOCALE.LOCALESET."search/converter.php";
 	while ($folder = readdir($temp)) {
 		if (!in_array($folder, array("..", ".", 'users.json.php', 'converter.php', '.DS_Store', 'index.php'))) {
@@ -151,15 +152,14 @@ if (isset($_POST['savesettings'])) {
 	if (!defined('FUSION_NULL')) {
 		// Everything went as expected
 		addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
-
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
 
 $theme_files = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
 $admin_theme_files = makefilelist(THEMES."admin_templates/", ".|..", TRUE, "folders");
-opentable($locale['main_settings']);
 
+opentable($locale['main_settings']);
 echo "<div class='well'>".$locale['main_description']."</div>";
 echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";

@@ -16,11 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("C") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('C');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/comments.php";
 
@@ -31,14 +27,23 @@ if (!isset($_GET['cid']) || !isnum($_GET['cid'])) {
 	redirect("../index.php");
 }
 
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "su") {
-		$message = $locale['410'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['411'];
+
+$message = '';
+if (isset($_GET['status'])) {
+	switch($_GET['status']) {
+		case 'su':
+			$message = $locale['421'];
+			$status = 'info';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+			break;
+		case 'del':
+			$message = $locale['411'];
+			$status = 'danger';
+			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+			break;
 	}
 	if ($message) {
-		echo "<div id='close-message'><div class='admin-message'>".$message."</div></div>\n";
+		addNotice($status, $icon.$message);
 	}
 }
 

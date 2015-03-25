@@ -16,10 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+pageAccess('BLC');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/blog-cats.php";
-
-pageAccess('BLC');
 
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'") || dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_parent='".$_GET['cat_id']."'");
@@ -88,21 +87,35 @@ foreach ($image_files as $image) {
 add_to_breadcrumbs(array('link'=>ADMIN.'blog_cats.php'.$aidlink, 'title'=>$openTable));
 opentable($openTable);
 
-if (isset($_GET['status']) && !isset($message)) {
-	$message = '';
-	if ($_GET['status'] == "sn") {
-		$message = $locale['420'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['421'];
-	} elseif ($_GET['status'] == "dn") {
-		$message = $locale['422']."<br />\n<span class='small'>".$locale['423']."</span>";
-	} elseif ($_GET['status'] == "dy") {
-		$message = $locale['424'];
+$message = '';
+if (isset($_GET['status'])) {
+	switch($_GET['status']) {
+		case 'sn':
+			$message = $locale['420'];
+			$status = 'success';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+			break;
+		case 'su':
+			$message = $locale['421'];
+			$status = 'info';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+			break;
+		case 'dn':
+			$message = $locale['422']."<br />\n<span class='small'>".$locale['423']."</span>";
+			$status = 'info';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+			break;
+		case 'dy':
+			$message = $locale['424'];
+			$status = 'danger';
+			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+			break;
 	}
 	if ($message) {
-		echo admin_message($message);
+		addNotice($status, $icon.$message);
 	}
 }
+
 echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 echo "<td width='130' class='tbl'><label for='cat_name'>".$locale['430']."</label></td>\n";

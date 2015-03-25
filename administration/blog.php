@@ -66,16 +66,22 @@ if (isset($_GET['status'])) {
 	switch($_GET['status']) {
 		case 'sn':
 			$message = $locale['410'];
+			$status = 'success';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
 			break;
 		case 'su':
 			$message = $locale['411'];
+			$status = 'info';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
 			break;
 		case 'del':
 			$message = $locale['412'];
+			$status = 'danger';
+			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
 			break;
 	}
 	if ($message) {
-		echo admin_message($message);
+		addNotice($status, $icon.$message);
 	}
 }
 

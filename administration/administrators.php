@@ -16,26 +16,36 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("AD") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('AD');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/admins.php";
 
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "sn") {
-		$message = $locale['400'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['401'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['402'];
-	} elseif ($_GET['status'] == "pw") {
-		$message = $locale['global_182'];
+$message = '';
+if (isset($_GET['status'])) {
+	switch($_GET['status']) {
+		case 'sn':
+			$message = $locale['400'];
+			$status = 'success';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+			break;
+		case 'su':
+			$message = $locale['401'];
+			$status = 'info';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+			break;
+		case 'del':
+			$message = $locale['402'];
+			$status = 'danger';
+			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+			break;
+		case 'pw':
+			$message = $locale['global_182'];
+			$status = 'success';
+			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+			break;
 	}
 	if ($message) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+		addNotice($status, $icon.$message);
 	}
 }
 

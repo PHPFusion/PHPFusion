@@ -19,20 +19,36 @@ require_once "../maincore.php";
 pageAccess('AC');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/articles.php";
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "sn") {
-		$message = $locale['articles_0150'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['articles_0151'];
-	} elseif ($_GET['status'] == "deln") {
-		$message = $locale['articles_0152']."<br />\n<span class='small'>".$locale['articles_0153']."</span>";
-	} elseif ($_GET['status'] == "dely") {
-		$message = $locale['articles_0154'];
+
+$message = '';
+if (isset($_GET['status'])) {
+	switch($_GET['status']) {
+		case 'sn':
+			$message = $locale['articles_0150'];
+			$status = 'success';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+			break;
+		case 'su':
+			$message = $locale['articles_0151'];
+			$status = 'info';
+			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
+			break;
+		case 'deln':
+			$message = $locale['articles_0152']."<br />\n<span class='small'>".$locale['articles_0153']."</span>";
+			$status = 'danger';
+			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+			break;
+		case 'dely':
+			$message = $locale['articles_0154'];
+			$status = 'danger';
+			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
+			break;
 	}
 	if ($message) {
-		echo "<div id='close-message'><div class='alert alert-info m-t-10 admin-message'>".$message."</div></div>\n";
+		addNotice($status, $icon.$message);
 	}
 }
+
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."'") || dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
