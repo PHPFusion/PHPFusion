@@ -276,7 +276,10 @@ $locale['1013'] = "Slet bruger(e)";
 $locale['1014'] = "Skal brugere kunne logge på fra forskellige enheder samtidig?";
 $locale['1014a'] = "Slå fra for at forbedre sikkeheden";
 // Social integration
-$locale['1030'] = "Skab OpenGraph meta tags til de sociale netv�rk";
+$locale['1030'] = "Skab OpenGraph meta tags til de sociale netv�rk";
+// translate next two lines and remove this comment after
+$locale['1031'] = "Allow index URLs in BB Codes";
+$locale['1032'] = "Allow index URLs in user profiles";
 // Date format options (you can add/delete lines)
 // More info at: http://php.net/manual/en/function.strftime.php
 $locale['dateformats'][] = "%m/%d/%Y";

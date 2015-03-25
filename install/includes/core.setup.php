@@ -566,6 +566,8 @@ if (isset($_POST['uninstall'])) {
 		"('debug_seo', '0')",
 		"('privacy_policy', '')",
 		"('create_og_tags', '1')",
+		"('index_url_bbcode', '1')",
+		"('index_url_userweb', '1')",
 		empty($_POST['enabled_languages']) ? "('enabled_languages', '".stripinput($_POST['localeset'])."')" : "('enabled_languages', '".stripinput($enabled_languages)."')"));
 	if (!dbquery($settings_sql)) {
 		$fail = TRUE;

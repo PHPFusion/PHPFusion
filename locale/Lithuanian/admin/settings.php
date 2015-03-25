@@ -283,6 +283,9 @@ $locale['1014'] = "Leisti nariams prisijungti iš skirtingų prietaisų vienu me
 $locale['1014a'] = "Dėl saugumo patariama išjungti";
 // Social integration
 $locale['1030'] = "Sukurti OpenGraph meta žymes socialiniams tinklams";
+// translate next two lines and remove this comment after
+$locale['1031'] = "Allow index URLs in BB Codes";
+$locale['1032'] = "Allow index URLs in user profiles";
 // Date format options (you can add/delete lines)
 // More info at: http://php.net/manual/en/function.strftime.php
 $locale['dateformats'][] = "%m/%d/%Y";

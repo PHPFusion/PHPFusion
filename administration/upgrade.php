@@ -633,6 +633,8 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 	$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['129f']."', 'settings_eshop.php', '4')");
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('privacy_policy', '')");
 	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('week_start', '0')");
+	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_bbcode', '1')");
+	$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('index_url_userweb', '1')");
 
 	//Populate shipping cats with some defaults
 		$result = dbquery("INSERT INTO ".DB_PREFIX."eshop_shippingcats (cid, title, image) VALUES 

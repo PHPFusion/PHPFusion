@@ -24,5 +24,5 @@ if ($profile_method == "input") {
 	$user_fields = form_text($options['show_title'] ? $locale['uf_web'] : '', 'user_web', 'user_web', $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
-	$user_fields = array('title'=>$locale['uf_web'], 'value'=>"<a href='".$field_value."' title='".$field_value."' target='_blank'>".$locale['uf_web_001']."</a>");
+	$user_fields = array('title'=>$locale['uf_web'], 'value'=>(fusion_get_settings('index_url_userweb') ? "" : "<noindex>")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_web_001']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "</noindex>"));
 }
