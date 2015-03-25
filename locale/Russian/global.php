@@ -420,7 +420,10 @@ $locale['comments'] = "Комментарии";
 $locale['ratings'] = "Оценки";
 $locale['comments_ratings'] = "Комментарии и оценки";
 $locale['user_account'] = "Учётная запись пользователя";
-$locale['about'] = "О...";
+$locale['about'] = "О ";
+// User status
+$locale['online'] = "В сети";
+$locale['offline'] = "Не в сети";
 // Words for formatting to single and plural forms. Count of forms is language-dependent
 // Here must be three forms of word with | as separator:
 // First form for 1, 21, 31, etc.

@@ -20,6 +20,7 @@ $locale['forum_0053'] = "Fremvisninger";
 $locale['forum_0054'] = "Svar";
 $locale['forum_0055'] = "Side: ";
 $locale['forum_0056'] = "Ingen debatter i dette debatområde";
+$locale['forum_0057'] = "Start a New Thread"; // translate this line please
 // View Forum Moderator options
 $locale['forum_0080'] = "Vælg alle";
 $locale['forum_0081'] = "Fjern markering fra alle";

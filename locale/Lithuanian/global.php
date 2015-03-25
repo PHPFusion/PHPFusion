@@ -427,6 +427,9 @@ $locale['right'] = "Dešinė";
 $locale['comments'] = "Komentarai";
 $locale['ratings'] = "Reitingai";
 $locale['comments_ratings'] = "Komentarai ir reitingai";
+// User status
+$locale['online'] = "Online"; // please translate these 2 lines
+$locale['offline'] = "Offline";
 
 // Testimonials
 $locale['testimonial_rank'] = "Aš esu šio tinklapio %s";

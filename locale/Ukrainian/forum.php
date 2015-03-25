@@ -21,6 +21,7 @@ $locale['forum_0053'] = "Перегляди";
 $locale['forum_0054'] = "Відповіді";
 $locale['forum_0055'] = "Сторінка: ";
 $locale['forum_0056'] = "Теми відсутні";
+$locale['forum_0057'] = "Start a New Thread"; // translate this line please
 
 // View Forum Moderator options
 $locale['forum_0080'] = "Відмітити все";

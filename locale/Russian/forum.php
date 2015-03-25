@@ -20,6 +20,7 @@ $locale['forum_0053'] = "Просмотров";
 $locale['forum_0054'] = "Ответов";
 $locale['forum_0055'] = "Страница: ";
 $locale['forum_0056'] = "Ни одной темы не начато";
+$locale['forum_0057'] = "Начать новую тему";
 // View Forum Moderator options
 $locale['forum_0080'] = "Отметить все";
 $locale['forum_0081'] = "Снять отметки";

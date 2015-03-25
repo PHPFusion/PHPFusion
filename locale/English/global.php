@@ -427,6 +427,9 @@ $locale['ratings'] = "Ratings";
 $locale['comments_ratings'] = "Comments and Ratings";
 $locale['user_account'] = "User Account";
 $locale['about'] = "About";
+// User status
+$locale['online'] = "Online";
+$locale['offline'] = "Offline";
 
 // Words for formatting to single and plural forms. Count of forms is language-dependent
 $locale['fmt_article'] = "article|articles";

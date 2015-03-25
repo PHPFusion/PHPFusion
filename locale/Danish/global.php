@@ -428,6 +428,10 @@ $locale['nopreview'] = 'Der er intet at vise';
 $locale['left'] = "Venstre";
 $locale['center'] = "Midt i";
 $locale['right'] = "Højre";
+// User status
+$locale['online'] = "Online"; // please translate these 2 lines
+$locale['offline'] = "Offline";
+
 // Comments and ratings
 $locale['comments'] = "Kommentarer";
 $locale['ratings'] = "Vurderinger";

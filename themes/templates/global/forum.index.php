@@ -428,7 +428,7 @@ if (!function_exists('render_thread_item')) {
 		if ($data['forum_type'] == '4') {
 			echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
 			echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['vote_count'])."</h4>\n";
-			echo "<span>Votes</span>";
+			echo "<span>".format_word($data['vote_count'], $locale['fmt_vote'], 0)."</span>";
 			echo "</div>\n";
 		}
 		echo "</div>\n"; // end grid
@@ -634,7 +634,7 @@ if (!function_exists('render_post_item')) {
 			$vote .= "</div>\n";
 		}
 		// date
-		$date = "Posted ".timer($data['post_datestamp'])." - ".showdate('forumdate', $data['post_datestamp']);
+		$date = ucfirst($locale['posted'])." ".timer($data['post_datestamp'])." - ".showdate('forumdate', $data['post_datestamp']);
 		// attachment
 		$attach = '';
 		if (!empty($data['attach-files'])) {
@@ -657,7 +657,7 @@ if (!function_exists('render_post_item')) {
 			echo "<div class='m-b-10'>\n";
 			echo display_avatar($data, '50px', '', '', '');
 			echo "</div>\n";
-			echo ($data['user_lastvisit'] >= time()-3600 ? "<span class='btn text-white label label-success'>Online</span>" : "<span class='label text-white label-danger'>Offline</span>")."\n";
+			echo ($data['user_lastvisit'] >= time()-3600 ? "<span class='btn text-white label label-success'>".$locale['online']."</span>" : "<span class='label text-white label-danger'>".$locale['offline']."</span>")."\n";
 			echo "<br/>\n<span class='forum_rank display-inline-block m-t-10'>\n".$data['rank_img']."</span>\n";
 			echo "</div>\n";
 
@@ -749,8 +749,8 @@ if (!function_exists('render_laft')) {
 			echo "<div class='well text-center'>".$locale['global_023']."</div>\n";
 		}
 		// filter --- this need to be translated to links.
-		$opts = array('0' => 'All Results', '1' => '1 Day', '7' => '7 Days', '14' => '2 Weeks', '30' => '1 Month',
-			'90' => '3 Months', '180' => '6 Months', '365' => '1 Year');
+		$opts = array('0' => $locale['forum_p999'], '1' => $locale['forum_p001'], '7' => $locale['forum_p007'], '14' => $locale['forum_p014'], '30' => $locale['forum_p030'],
+			'90' => $locale['forum_p090'], '180' => $locale['forum_p180'], '365' => $locale['forum_p365']);
 		echo "<hr/>\n";
 		echo openform('filter_form', 'filter_form', 'post', FORUM."index.php?section=latest", array('downtime' => 1));
 		echo form_select($locale['forum_0009'], 'filter', 'filter', $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '300px', 'class'=>'pull-left m-r-10'));
@@ -862,7 +862,7 @@ if (!function_exists('forum_newtopic')) {
 			redirect(FORUM.'post.php?action=newthread&forum_id='.$_POST['forum_sel']);
 		}
 
-		echo openmodal('newtopic', 'Start a New Topic', array('button_id'=>'newtopic', 'class'=>'modal-md'));
+		echo openmodal('newtopic', $locale['forum_0057'], array('button_id'=>'newtopic', 'class'=>'modal-md'));
 		$index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 		$result = dbquery("SELECT a.forum_id, a.forum_name, b.forum_name as forum_cat_name, a.forum_post
 		 FROM ".DB_FORUMS." a

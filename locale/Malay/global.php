@@ -406,6 +406,9 @@ $locale['nopreview'] = 'Tiada apa untuk previu';
 $locale['left'] = "Kiri";
 $locale['center'] = "Tengah";
 $locale['right'] = "Kanan";
+// User status
+$locale['online'] = "Online"; // please translate these 2 lines
+$locale['offline'] = "Offline";
 // Comments and ratings
 $locale['comments'] = "Komen";
 $locale['ratings'] = "Penilaian";

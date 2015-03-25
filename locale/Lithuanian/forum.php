@@ -20,6 +20,7 @@ $locale['forum_0053'] = "Peržiūros";
 $locale['forum_0054'] = "Atsakymai";
 $locale['forum_0055'] = "Puslapis: ";
 $locale['forum_0056'] = "Nėra sukurtų temų";
+$locale['forum_0057'] = "Start a New Thread"; // translate this line please
 // View Forum Moderator options
 $locale['forum_0080'] = "Pažymėti viską";
 $locale['forum_0081'] = "Atžymėti viską";

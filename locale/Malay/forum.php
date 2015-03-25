@@ -20,6 +20,7 @@ $locale['forum_0053'] = "Kunjungan";
 $locale['forum_0054'] = "Balasan";
 $locale['forum_0055'] = "Halaman: ";
 $locale['forum_0056'] = "Tiada Utusan Perbincangan dimulakan";
+$locale['forum_0057'] = "Start a New Thread"; // translate this line please
 // View Forum Moderator options
 $locale['forum_0080'] = "Pilih Semua Pilihan";
 $locale['forum_0081'] = "Gugur Semua Pilihan";

@@ -20,6 +20,7 @@ $locale['forum_0053'] = "Views";
 $locale['forum_0054'] = "Replies";
 $locale['forum_0055'] = "Page: ";
 $locale['forum_0056'] = "No Threads have been started";
+$locale['forum_0057'] = "Start a New Thread";
 // View Forum Moderator options
 $locale['forum_0080'] = "Check All";
 $locale['forum_0081'] = "Uncheck All";

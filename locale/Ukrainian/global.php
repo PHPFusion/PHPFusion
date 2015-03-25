@@ -478,6 +478,10 @@ $locale['left'] = "Зліва";
 $locale['center'] = "Центр";
 $locale['right'] = "Справа";
 
+// User status
+$locale['online'] = "Online"; // please translate these 2 lines
+$locale['offline'] = "Offline";
+
 // Comments and ratings
 $locale['comments'] = "Коментарі";
 $locale['ratings'] = "Оцінки";
