@@ -125,8 +125,8 @@ function exif($imagePath) {
 	if ((isset($imagePath)) and (file_exists($imagePath)) and !is_dir($imagePath)) {
 		// There are 2 arrays which contains the information we are after, so it's easier to state them both
 		$exif_base = @getimagesize($imagePath);
-		$exif_ifd0 = read_exif_data($imagePath, 'IFD0', 0);
-		$exif_exif = read_exif_data($imagePath, 'EXIF', 0);
+		$exif_ifd0 = @exif_read_data($imagePath, 'IFD0', 0);
+		$exif_exif = @exif_read_data($imagePath, 'EXIF', 0);
 		//error control
 		$notFound = $locale['na'];
 		// Make

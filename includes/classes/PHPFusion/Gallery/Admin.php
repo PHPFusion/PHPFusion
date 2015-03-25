@@ -21,7 +21,8 @@ class Admin {
 	private $image_upload_dir = '';
 	private $photo_db = '';
 	private $photo_cat_db = '';
-	private $upload_settings = array('thumbnail_folder' => 'thumbs',
+	private $upload_settings = array(
+		'thumbnail_folder' => 'thumbs',
 		'thumbnail' => 1,
 		'thumbnail_w' => 150,
 		'thumbnail_h' => 150,
@@ -582,6 +583,34 @@ class Admin {
 	}
 
 	/**
+	 * Returns Album Image
+	 * @param      $album_id
+	 * @param      $picture
+	 * @param      $thumb1
+	 * @param      $thumb2
+	 * @param bool $hiRes
+	 * @return bool|string
+	 */
+	public function get_album_image($album_id, $thumbnail_folder, $picture, $thumb1, $thumb2, $hiRes=false) {
+		$path = self::get_virtual_path($album_id);
+		if (!$hiRes) {
+			if ($thumb1 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb1)) return $path.rtrim($thumbnail_folder, '/')."/".$thumb1;
+			if ($thumb1 && file_exists($path.$thumb1)) return $path.$thumb1;
+			if ($thumb2 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb2)) return $path.rtrim($thumbnail_folder, '/')."/".$thumb2;
+			if ($thumb2 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb2)) return $path.$thumb2;
+			if ($picture && file_exists($path.$picture)) return $path.$picture;
+		} else {
+			if ($picture && file_exists($path.$picture)) return $path.$picture;
+			if ($thumb2 && file_exists($path.$thumb2)) return $path.$thumb2;
+			if ($thumb2 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb2)) return $path.rtrim($thumbnail_folder, '/')."/".$thumb2;
+			if ($thumb1 && file_exists($path.$thumb1)) return $path.$thumb1;
+			if ($thumb1 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb1)) return $path.rtrim($thumbnail_folder, '/')."/".$thumb1;
+		}
+		return false;
+	}
+
+
+	/**
 	 * SQL batch upload
 	 */
 	private function set_batchPhotoDB() {
@@ -750,7 +779,7 @@ class Admin {
 		echo form_button($locale['600'], 'add_album', 'add_album', 'add_album', array('class' => 'btn-primary btn-sm m-r-10', 'icon' => 'fa fa-image'));
 		echo form_button($locale['601'], 'add_photo', 'add_photo', 'add_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-camera'));
 		if ($_GET['gallery']) echo form_button($locale['photo_002'], 'batch_photo', 'batch_photo', 'batch_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-cloud-upload'));
-		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".clean_request('action=refresh', array('action'), FALSE, '&amp;')."'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
+		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".clean_request('action=refresh', array('action'), FALSE)."'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
 		echo "</div>\n";
 		if ($_GET['gallery']) {
 			echo openmodal('batch_album', $locale['photo_002'], array('button_id'=>'batch_photo', 'static'=>1));
@@ -870,7 +899,7 @@ class Admin {
 				$time = $_SESSION['gallery'][$data['photo_id']][$session_id];
 				if ($time <= time()-($days_to_keep_session*3600*24)) unset($_SESSION['gallery'][$data['photo_id']][$session_id]);
 			}
-			$img_path = self::get_virtual_path($data['album_id']).$data['photo_filename'];
+			$img_path = self::get_album_image($data['album_id'], $this->upload_settings['thumbnail_folder'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], true);
 			$img_src = file_exists($img_path) && !is_dir($img_path) ? $img_path : 'holder.js/170x170/grey/text:'.$locale['na'];
 			$file_exif = exif($img_src);
 			echo openmodal('photo_show', '', array('class' => 'modal-lg'));
@@ -879,12 +908,11 @@ class Admin {
 				<div class='col-xs-12 col-sm-8 col-md-8 col-lg-9 display-inline-block'
 					 style='border-right:1px solid #ddd'>
 					<h2 class='m-t-0'><?php echo $data['photo_title'] ?></h2>
-
 					<div class='text-smaller m-b-20'><span
 							class='text-uppercase strong'><?php echo $locale['635']; ?></span> <?php echo $data['album_title'] ?>
 					</div>
 					<div class='display-inline' style='overflow: hidden;'>
-						<img style='max-width:100%; display:block; margin:0 auto;' src='<?php echo $img_src ?>'>
+						<img style='max-width:100%; display:block;' src='<?php echo $img_src ?>'>
 					</div>
 					<?php
 					// comments
@@ -901,7 +929,6 @@ class Admin {
 					</div>
 					<div class='overflow-hide'>
 						<h4><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_id'], 'text-dark') ?></h4>
-
 						<div>
 							<i class='fa fa-calendar m-r-10'></i> <?php echo $locale['637'].showdate('shortdate', $data['photo_datestamp']) ?>
 						</div>
@@ -925,13 +952,11 @@ class Admin {
 					");
 					require_once INCLUDES."ratings_include.php";
 					showratings($this->gallery_rights, $data['photo_id'], FUSION_REQUEST);
-
 					if ($data['photo_description']) {
-						?>
+						echo "
 						<hr>
-						<div class='text-uppercase text-smaller strong'><?php echo $locale['640']; ?></div>
-						<?php
-						echo $data['photo_description'];
+						<div class='text-uppercase text-smaller strong'>".$locale['640']."</div>
+						".$data['photo_description'];
 					}
 					?>
 					<hr>
@@ -1239,11 +1264,11 @@ class Admin {
 				</div>
 				<div class='image_container'>
 					<?php if ($type == 1) {
-						$img_src = self::get_virtual_path($data['album_id']).$this->upload_settings['thumbnail_folder']."/".$data['album_thumb'];
+						$img_src = self::get_album_image($data['album_id'], $this->upload_settings['thumbnail_folder'], $data['album_thumb'], '', '');
 						$img_src = file_exists($img_src) && !is_dir($img_src) ? $img_src : 'holder.js/170x170/grey/text:'.$locale['na'];
 						echo "<img class='img-responsive' src='".$img_src."' alt='".$data['album_title']."'/>";
 					} elseif ($type == 2) {
-						$img_src = self::get_virtual_path($data['album_id']).$this->upload_settings['thumbnail_folder']."/".$data['photo_thumb1'];
+						$img_src = self::get_album_image($data['album_id'], $this->upload_settings['thumbnail_folder'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2']);
 						$img_src = file_exists($img_src) && !is_dir($img_src) ? $img_src : 'holder.js/170x170/grey/text:'.$locale['na'];
 						echo "<img src='".$img_src."' alt='".$data['photo_title']."'/>";
 					} ?>
