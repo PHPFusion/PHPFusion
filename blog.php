@@ -19,7 +19,7 @@
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 require_once THEMES."templates/global/blog.php";
-include LOCALE.LOCALESET."blog/blog.php";
+include LOCALE.LOCALESET."blog.php";
 
 add_to_title($locale['blog_1000']);
 add_to_breadcrumbs(array('link' => BASEDIR.'blog.php', 'title' => $locale['blog_1001'])); // blog needs to be localised
