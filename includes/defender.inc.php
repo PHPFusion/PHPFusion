@@ -993,8 +993,13 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			return $default;
 		}
 	}
+
 	// Amend the only broken element to be found.
-	throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
+	// This is left here to detect $_SESSION exist, not crash everything.
+	if ($value !=="" && $value !== NULL) {
+		throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
+	}
+
 }
 
 function sanitize_array($array) {
