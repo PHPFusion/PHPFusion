@@ -79,7 +79,11 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	if (!$result) {
 		$error = 1;
 	}
-	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['comments_avatar']) && isnum($_POST['comments_avatar']) ? $_POST['comments_avatar'] : "0")."' WHERE settings_name='comments_avatar'");
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['index_url_bbcode']) && isnum($_POST['index_url_bbcode']) ? $_POST['index_url_bbcode'] : "1")."' WHERE settings_name='index_url_bbcode'");
+	if (!$result) {
+		$error = 1;
+	}
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['index_url_userweb']) && isnum($_POST['index_url_userweb']) ? $_POST['index_url_userweb'] : "1")."' WHERE settings_name='index_url_userweb'");
 	if (!$result) {
 		$error = 1;
 	}
@@ -132,6 +136,10 @@ echo form_select($locale['656'], 'comments_avatar', 'comments_avatar', $choice_a
 echo form_select($locale['672'], 'ratings_enabled', 'ratings_enabled', $choice_arr, $settings['ratings_enabled'], array('width'=>'100%'));
 echo form_select($locale['679'], 'visitorcounter_enabled', 'visitorcounter_enabled', $choice_arr, $settings['visitorcounter_enabled'], array('width'=>'100%'));
 echo form_select($locale['1030'], 'create_og_tags', 'create_og_tags', $choice_arr, $settings['create_og_tags'], array('width'=>'100%'));
+closeside();
+openside('');
+echo form_select($locale['1031'], 'index_url_bbcode', 'index_url_bbcode', $choice_arr, $settings['index_url_bbcode'], array('width'=>'100%'));
+echo form_select($locale['1032'], 'index_url_userweb', 'index_url_userweb', $choice_arr, $settings['index_url_userweb'], array('width'=>'100%'));
 closeside();
 echo "</div>\n</div>";
 echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));

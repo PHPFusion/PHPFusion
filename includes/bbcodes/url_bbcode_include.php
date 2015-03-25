@@ -24,7 +24,7 @@ if (!function_exists('replace_url')) {
 		// Trim only the default url
 		$content = (empty($m['url']) ? trimlink($m['content'], 40).(strlen($m['content']) > 40 ? substr($m['content'], strlen($m['content'])-10, strlen($m['content'])) : '') : $m['content']);
 
-		return "<a href='$this_url' target='_blank' title='".urldecode($this_url)."'>".$content."</a>";
+		return (fusion_get_settings('index_url_bbcode') ? "" : "<noindex>")."<a href='$this_url' target='_blank' ".(fusion_get_settings('index_url_bbcode') ? "" : "rel='nofollow' ")."title='".urldecode($this_url)."'>".$content."</a>".(fusion_get_settings('index_url_bbcode') ? "" : "</noindex>");
 	}
 }
 $text = preg_replace_callback('#\[url(=(?P<url>((f|ht)tp(s)?://)(.*?)))?\](?P<content>.*?)\[/url\]#i', 'replace_url', $text);
