@@ -25,13 +25,13 @@ echo "<div class='overlay'>\n";
 open_grid('section-1', 1);
 echo "<div class='row hidden-xs'>\n";
 echo "<div id='logo' class='col-xs-12 col-md-3 col-lg-3 p-t-5 text-smaller'>\n";
+echo "&nsbp;";
 echo "</div>\n";
-echo "<div class='col-xs-9 col-md-9 col-lg-9 text-right text-smaller p-t-5'>\n";
-echo openform('searchform', 'search_form', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.BASEDIR.'search.php?stype=all', array('downtime'=>1, 'class'=>'pull-right m-r-10', 'notice'=>0));
-echo form_text('', 'stext', 'stext', '', array('append_button' => 1, 'placeholder' => $locale['sept_006'], 'class' => 'no-border'));
+echo "<div class='col-xs-9 col-md-9 col-lg-9 text-right clearfix p-t-5'>\n";
+echo openform('searchform', 'search_form', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.BASEDIR.'search.php?stype=all', array('downtime'=>1, 'class'=>'display-inline-block pull-right m-r-10', 'notice'=>0));
+echo form_text('', 'stext', 'stext', '', array('append_button' => 1, 'placeholder' => $locale['sept_006'], 'class' =>'no-border m-r-20', 'width'=>'250px'));
 echo closeform();
 echo "<ul id='head_nav' class='display-inline-block m-t-5 m-r-10 pull-right'>\n";
-
 $language_opts = '';
 if (count(fusion_get_enabled_languages()) > 1) {
 	$language_opts = "<li class='dropdown pull-left'><a class='dropdown-toggle pointer' data-toggle='dropdown' title='".$locale['UM101']."'><i class='fa fa-flag fa-lg'></i><span class='caret'></span></a>\n";
