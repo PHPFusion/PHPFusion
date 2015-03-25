@@ -150,6 +150,7 @@ function download_form() {
 			'download_description_short'	=>	form_sanitizer($_POST['download_description_short'], '', 'download_description_short'),
 			'download_description'	=>	form_sanitizer($_POST['download_description'], '', 'download_description'),
 			'download_keywords'	=>	form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
+			'download_image'	=> form_sanitizer($_POST['download_hidden_image'], '', 'download_hidden_image'),
 			'download_image_thumb'	=> form_sanitizer($_POST['download_hidden_image_thumb'], '', 'download_hidden_image_thumb'),
 			'download_url'	=>	form_sanitizer($_POST['download_url'], '', 'download_url'),
 			'download_file'	=>	form_sanitizer($_POST['download_hidden_file'], '', 'download_hidden_file'),
@@ -162,7 +163,10 @@ function download_form() {
 			'download_allow_comments' => isset($_POST['download_allow_comments']) ? 1 : 0,
 			'download_allow_ratings' => isset($_POST['download_allow_ratings']) ? 1 : 0,
 		);
-
+		print_p($data);
+		/**
+		 * File Section
+		 */
 		if (isset($_POST['del_upload']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 			$result2 = dbquery("SELECT download_file FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
 			if (dbrows($result2)) {
@@ -174,7 +178,6 @@ function download_form() {
 				$data['download_filesize'] = '';
 			}
 		}
-
 		if (isset($_FILES['download_file'])) {
 			$upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
 			if ($upload) {
@@ -188,18 +191,10 @@ function download_form() {
 			$data['download_file'] = '';
 		}
 
-		if (!$data['download_file'] && !$data['download_url']) {
-			$defender->stop();
-			$defender->addNotice($locale['download_0111']);
-		}
-
-		$upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
-		if ($upload) {
-			// new image
-			$data['download_image'] = $upload['image_name'];
-			$data['download_image_thumb'] = $upload['thumb1_name'];
-		} elseif (isset($_POST['del_image']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
-			// delete image
+		/**
+		 * Image Section
+		 */
+		if (isset($_POST['del_image']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
 			$result = dbquery("SELECT download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
 			if (dbrows($result)) {
 				$data += dbarray($result);
@@ -212,14 +207,21 @@ function download_form() {
 			}
 			$data['download_image'] = '';
 			$data['download_image_thumb'] = '';
-		} elseif (isset($_POST['download_image']) && $_POST['download_image'] != "") {
-			// posted image file name
-			$data['download_image'] = $_POST['download_image'];
-			$data['download_image_thumb'] = $_POST['download_image_thumb'];
+		} elseif (isset($_FILES['download_image'])) {
+			$upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
+			if ($upload) {
+				$data['download_image'] = $upload['image_name'];
+				$data['download_image_thumb'] = $upload['thumb1_name'];
+			}
 		}
 
-		$row_check = dbcount("(download_id)", DB_DOWNLOADS, "download_id='".$data['download_id']."'");
-		if ($row_check > 0) {
+		// Break form and return errors
+		if (!$data['download_file'] && !$data['download_url']) {
+			$defender->stop();
+			$defender->addNotice($locale['download_0111']);
+		}
+
+		if (dbcount("(download_id)", DB_DOWNLOADS, "download_id='".$data['download_id']."'")) {
 			$data['download_datestamp'] = isset($_POST['update_datestamp']) ? time() : '';
 			dbquery_insert(DB_DOWNLOADS, $data, 'update');
 			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&status=su");
@@ -234,7 +236,7 @@ function download_form() {
 		$result = dbquery("SELECT * FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
 		if (dbrows($result)) {
 			$data = dbarray($result);
-			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;download_cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id'];
+			$formaction = FUSION_SELF.$aidlink."&amp;action=edit&amp;download_cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']."&amp;section=dlopts";
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
@@ -250,14 +252,22 @@ function download_form() {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8'>\n";
 	openside('');
+	echo form_hidden('', 'download_id', 'download_id', $data['download_id']);
 	echo form_text($locale['download_0200'], 'download_title', 'download_title', $data['download_title'], array('required' => 1, 'error_text'=>$locale['download_0110']));
 	echo form_textarea($locale['download_0202'], 'download_description_short', 'download_description_short', $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['download_0112'], 'maxlength' => '255', 'autosize' => 1));
 	if ($settings['download_screenshot']) {
 		if (!empty($data['download_image']) && !empty($data['download_image_thumb'])) {
-			echo "<img src='".DOWNLOADS."images/".$data['download_image_thumb']."' /><br />\n";
-			echo "<label><input type='checkbox' name='del_image' value='1' /> ".$locale['download_0216']."</label>\n";
-			echo "<input type='hidden' name='download_hidden_image' value='".$data['download_image']."' />";
-			echo "<input type='hidden' name='download_hidden_image_thumb' value='".$data['download_image_thumb']."' />";
+			echo "<div class='clearfix list-group-item m-b-20'>\n";
+			echo "<div class='pull-left m-r-10'>\n";
+			echo thumbnail(DOWNLOADS."images/".$data['download_image_thumb'], '80px');
+			echo "</div>\n";
+			echo "<div class='overflow-hide'>\n";
+				echo "<span class='text-dark strong'>".$locale['download_0220']."</span>\n";
+				echo form_checkbox($locale['download_0216'], 'del_image', 'del_image', '');
+				echo form_hidden('', 'download_hidden_image', 'download_hidden_image', $data['download_image']);
+				echo form_hidden('', 'download_hidden_image_thumb', 'download_hidden_image_thumb', $data['download_image_thumb']);
+			echo "</div>\n";
+			echo "</div>\n";
 		} else {
 			$file_options = array(
 				'max_width' => $settings['download_screen_max_w'],
@@ -276,23 +286,19 @@ function download_form() {
 			echo "<small>".sprintf($locale['download_0219'], parsebytesize($settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $settings['download_screen_max_w'], $settings['download_screen_max_h'])."</small>\n";
 		}
 	}
-	closeside('');
 
 	/* Download file input */
 	$tab_title['title'][] = $locale['download_0214'];
 	$tab_title['id'][] = 'dlf';
-	$tab_title['icon'][] = '';
+	$tab_title['icon'][] = 'fa fa-file-zip-o fa-fw';
 	$tab_title['title'][] = $locale['download_0215'];
 	$tab_title['id'][] = 'dll';
-	$tab_title['icon'][] = '';
+	$tab_title['icon'][] = 'fa fa-plug fa-fw';
 	$tab_active = tab_active($tab_title, 0);
-
 	echo opentab($tab_title, $tab_active, 'downloadtab');
 	echo opentabbody($tab_title['title'][0], 'dlf', $tab_active);
-
 	if (!empty($data['download_file'])) {
 		echo "<div class='list-group-item m-t-10'>".$locale['download_0214']." - <a href='".DOWNLOADS.$data['download_file']."'>".DOWNLOADS.$data['download_file']."</a>\n";
-		echo "<hr/>\n";
 		echo form_checkbox($locale['download_0216'], 'del_upload', 'del_upload', '', array('class'=>'m-b-0'));
 		echo "</div>\n";
 		echo form_hidden('', 'download_hidden_file', 'download_hidden_file', $data['download_file']);
@@ -317,13 +323,14 @@ function download_form() {
 		echo form_text($locale['download_0206'], 'download_url', 'download_url', $data['download_url']);
 		echo "</div>\n</div>\n";
 	} else {
-		echo "<div class='alert alert-info m-t-10'>\n";
-		echo "There is a download file attached. Remove it to change to url type";
-		echo "</div>\n";
 		echo form_hidden('', 'download_url', 'download_url', $data['download_url']);
 	}
 	echo closetabbody();
 	echo closetab();
+
+	closeside('');
+
+
 
 	echo form_textarea($locale['download_0201'], 'download_description', 'download_description', $data['download_description'], array('no_resize' => '1', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
 
@@ -341,7 +348,6 @@ function download_form() {
 		echo "<div class='well'>".sprintf($locale['download_0256'], $sys)."</div>\n";
 	}
 	echo form_select_tree($locale['download_0207'], "download_cat", "download_cat", $data['download_cat'], array("no_root" => 1, "placeholder" => $locale['choose'],  'width'=>'100%', "query" => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
-	echo form_hidden('', 'download_id', 'download_id', $data['download_id']);
 	echo form_select($locale['download_0205'], 'download_visibility', 'download_visibility', $visibility_opts, $data['download_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
 	echo form_button($locale['download_0212'], 'save_download', 'save_download', $locale['download_0212'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
 	closeside();
@@ -362,6 +368,7 @@ function download_form() {
 	openside('');
 	echo form_checkbox($locale['download_0223'], 'download_allow_comments', 'download_allow_comments', $data['download_allow_comments'], array('class'=>'m-b-0'));
 	echo form_checkbox($locale['download_0224'], 'download_allow_ratings', 'download_allow_ratings', $data['download_allow_ratings'], array('class'=>'m-b-0'));
+
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
 		echo form_checkbox($locale['download_0213'], 'update_datestamp', 'update_datestamp', '', array('class'=>'m-b-0'));
 	}
@@ -404,7 +411,7 @@ function download_listing() {
 				echo "</div>\n"; // end panel heading
 
 				echo "<div ".collapse_footer_link('download-list', $data['download_cat_id'], '0').">\n";
-				echo "<ul class='list-group'>\n";
+				echo "<ul class='list-group m-10'>\n";
 				$result2 = dbquery("SELECT download_id, download_title, download_description_short, download_url, download_file, download_image FROM ".DB_DOWNLOADS." WHERE download_cat='".$data['download_cat_id']."' ORDER BY download_title");
 				if (dbrows($result2) > 0) {
 					while ($data2 = dbarray($result2)) {
