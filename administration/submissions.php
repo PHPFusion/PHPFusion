@@ -639,6 +639,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 	}
 }
 if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && $_GET['t'] == "d")) {
+	// Publish
 	if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		require_once INCLUDES."infusions_include.php";
 		$result = dbquery("SELECT submit_user, submit_criteria
@@ -647,6 +648,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$submit_criteria = unserialize($data['submit_criteria']);
+			// @todo: transfer form_sanitizer();
 			$download_title = stripinput($_POST['download_title']);
 			$download_description = stripinput($_POST['download_description']);
 			$download_description_short = stripinput($_POST['download_description_short']);
@@ -660,6 +662,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 			$download_homepage = stripinput($_POST['download_homepage']);
 			$download_version = stripinput($_POST['download_version']);
 			$download_filesize = stripinput($_POST['download_filesize']);
+
 			$download_file = ((isset($submit_criteria['download_file']) && file_exists(DOWNLOADS."submissions/".$submit_criteria['download_file'])) ? $submit_criteria['download_file'] : "");
 			$download_image = ((isset($submit_criteria['download_image']) && file_exists(DOWNLOADS."submissions/images/".$submit_criteria['download_image'])) ? $submit_criteria['download_image'] : "");
 			$download_image_thumb = ((isset($submit_criteria['download_image_thumb']) && file_exists(DOWNLOADS."submissions/images/".$submit_criteria['download_image_thumb'])) ? $submit_criteria['download_image_thumb'] : "");
@@ -727,7 +730,9 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
-	} else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
+	}
+	// Delete
+	else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		opentable($locale['582']);
 		$data = dbarray(dbquery("SELECT submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'"));
 		$submit_criteria = unserialize($data['submit_criteria']);
@@ -741,7 +746,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 		echo "<a href='".FUSION_SELF.$aidlink."'>".$locale['402']."</a><br /><br />\n";
 		echo "<a href='index.php".$aidlink."'>".$locale['403']."</a></div><br />\n";
 		closetable();
-	} else {
+	}
+	else {
 		$result = dbquery("SELECT ts.submit_criteria, tu.user_id, tu.user_name, tu.user_status
 			FROM ".DB_SUBMISSIONS." ts
 			LEFT JOIN ".DB_USERS." tu ON ts.submit_user=tu.user_id
@@ -749,17 +755,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 		if (dbrows($result)) {
 			$data = dbarray($result);
 			$submit_criteria = unserialize($data['submit_criteria']);
-			$editlist = "";
-			$sel = "";
-			$result2 = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ORDER BY download_cat_name");
-			if (dbrows($result2) != 0) {
-				while ($data2 = dbarray($result2)) {
-					if (isset($_GET['action']) && $_GET['action'] == "edit") {
-						$sel = ($data['download_cat'] == $data2['download_cat_id'] ? " selected='selected'" : "");
-					}
-					$editlist .= "<option value='".$data2['download_cat_id']."'$sel>".$data2['download_cat_name']."</option>\n";
-				}
-			}
+
 			$photo_albums = "";
 			$sel = "";
 			$editlist = "";
@@ -773,78 +769,69 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 			}
 			add_to_title($locale['global_200'].$locale['643'].$locale['global_201'].$submit_criteria['download_title']."?");
 			opentable($locale['640']);
-			require_once INCLUDES."bbcode_include.php";
-			echo "<form name='publish' method='post' action='".FUSION_SELF.$aidlink."&amp;sub=submissions&amp;action=2&amp;t=d&amp;submit_id=".$_GET['submit_id']."'>\n";
-			echo "<table cellpadding='0' cellspacing='0' class='center'>\n<tr>\n";
-			echo "<td class='tbl'>".$locale['645']."</td>\n";
-			echo "<td width='80%' class='tbl'><input type='text' name='download_title' value='".$submit_criteria['download_title']."' class='textbox' style='width: 250px' /></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px;vertical-align:top;'>".$locale['646b']."<br /><br />";
-			echo "<span id='shortdesc_display' style='padding: 1px 3px 1px 3px; border:1px solid; display:none;'>";
-			echo "<strong>".(500-mb_strlen($submit_criteria['download_description_short']))."</strong>";
-			echo "</span>";
-			echo "</td>\n";
-			echo "<td class='tbl1'><textarea name='download_description_short' cols='60' rows='4' class='textbox' style='width:380px;' onKeyDown=\"shortdesc_counter(this,'shortdesc_display',500);\" onKeyUp=\"shortdesc_counter(this,'shortdesc_display',500);\">".$submit_criteria['download_description_short']."</textarea></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px; vertical-align:top;'>".$locale['646']."</td>\n";
-			echo "<td class='tbl1'><textarea name='download_description' cols='60' rows='5' class='textbox' style='width:380px;'>".$submit_criteria['download_description']."</textarea></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1'></td><td class='tbl1'>\n";
-			echo display_bbcodes("100%", "download_description", "downloadform")."</td>\n";
-			echo "</tr>\n<tr>\n";
+			echo openform('publish', 'publish', 'post', FUSION_SELF.$aidlink."&amp;sub=submissions&amp;action=2&amp;t=d&amp;submit_id=".$_GET['submit_id'], array('downtime'=>1));
+
+			echo "<div class='well'>\n";
+			echo "<div class='pull-right'>\n";
+			echo form_button($locale['643'], 'publish', 'publish', $locale['643'], array('class'=>'btn-primary m-r-10'));
+			echo form_button($locale['644'], 'delete', 'delete', $locale['644'], array('class'=>'btn-default', 'icon'=>'fa fa-trash fa-fw'));
+			echo "</div>\n";
+			echo "<div class='overflow-hide'>\n";
+			echo $locale['641'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br /><br />\n";
+			echo $locale['642']."<br />\n";
+			echo "</div>\n";
+			echo "</div>\n";
+
+			echo "<div class='row'>\n";
+			echo "<div class='col-xs-12 col-sm-8'>\n";
+
+
+
+			echo form_text($locale['645'], 'download_title', 'download_title', $submit_criteria['download_title'], array('inline'=>1));
+			echo form_textarea($locale['645'], 'download_description_short', 'download_description_short', $submit_criteria['download_description_short'], array('inline'=>1, 'autosize'=>1));
+			echo form_textarea($locale['646'], 'download_description', 'download_description', $submit_criteria['download_description'], array('bbcode'=>1, 'form_name'=>'publish', 'inline'=>1));
+
 			if (!empty($submit_criteria['download_file'])) {
-				echo "<td class='tbl1' style='width:80px; vertical-align:top;'>".$locale['647b']."</td>\n<td class='tbl1' style='vertical-align:top;'>\n";
-				echo "<a href='".DOWNLOADS."submissions/".$submit_criteria['download_file']."'>".DOWNLOADS."submissions/".$submit_criteria['download_file']."</a><br />\n";
-				echo "</td>\n</tr>\n";
+				echo "<div class='col-sm-offset-3'>\n";
+				echo "<span class='strong'>".$locale['647b']."</span> <a href='".DOWNLOADS."submissions/".$submit_criteria['download_file']."'>".DOWNLOADS."submissions/".$submit_criteria['download_file']."</a><br />\n";
+				echo "</div>\n";
 			} else {
-				echo "<tr>\n<td class='tbl1' style='width:80px;'>".$locale['647']."</td>\n";
-				echo "<td class='tbl1'><input type='text' name='download_url' value='".$submit_criteria['download_url']."' class='textbox' style='width:380px;' /></td>\n";
-				echo "</tr>\n";
+				echo form_text($locale['647'], 'download_url', 'download_url', $submit_criteria['download_url'], array('inline'=>1));
 			}
+
+			echo "</div>\n";
+			echo "<div class='col-xs-12 col-sm-4'>\n";
+			$cat_hidden = array();
+			echo form_select_tree($locale['648'], "cat_parent", "cat_parent", $submit_criteria['download_cat'], array("disable_opts" => $cat_hidden, "hide_disabled" => 1, 'width'=>'100%'), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 			if (!empty($submit_criteria['download_image']) && !empty($submit_criteria['download_image_thumb'])) {
-				echo "<tr>\n";
-				echo "<td class='tbl1' style='width:80px; vertical-align:top;'>".$locale['653']."</td>\n<td class='tbl1' style='vertical-align:top;'>\n";
-				echo "<a href='".DOWNLOADS."submissions/images/".$submit_criteria['download_image']."' target='_blank'>";
-				echo "<img src='".DOWNLOADS."submissions/images/".$submit_criteria['download_image_thumb']."' alt='' /></a><br />\n";
-				echo "<label><input type='checkbox' name='del_image' value='1' /> ".$locale['658']."</label>\n";
-				echo "</td>\n</tr>\n";
+				echo "<div class='list-group-item clearfix'>\n";
+				echo "<div class='pull-left'>".thumbnail(DOWNLOADS."submissions/images/".$submit_criteria['download_image_thumb'], '80px')."</div>\n";
+				echo "<div class='overflow-hide'>\n";
+				echo "<span class='strong'>".$locale['653']."</span><br/>\n";
+				echo "<a href='".DOWNLOADS."submissions/images/".$submit_criteria['download_image']."' target='_blank'>File </a>";
+				echo form_checkbox($locale['658'], 'del_image', 'del_image', '');
+				echo "</div>\n";
 			}
-			echo "<tr>\n";
-			echo "<td width='100' class='tbl'>".$locale['648']."</td>\n";
-			echo "<td width='80%' class='tbl'><select name='download_cat' class='textbox'>\n".$editlist."</select></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px;'>".$locale['649']."</td>\n";
-			echo "<td class='tbl1'><input type='text' name='download_license' value='".$submit_criteria['download_license']."' class='textbox' style='width:150px;' /></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px;'>".$locale['650']."</td>\n";
-			echo "<td class='tbl1'><input type='text' name='download_os' value='".$submit_criteria['download_os']."' class='textbox' style='width:150px;' /></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px;'>".$locale['651']."</td>\n";
-			echo "<td class='tbl1'><input type='text' name='download_version' value='".$submit_criteria['download_version']."' class='textbox' style='width:150px;' /></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px;'>".$locale['654']."</td>\n";
-			echo "<td class='tbl1'><input type='text' name='download_homepage' value='".$submit_criteria['download_homepage']."' class='textbox' style='width:380px;' /></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px;'>".$locale['655']."</td>\n";
-			echo "<td class='tbl1'><input type='text' name='download_copyright' value='".$submit_criteria['download_copyright']."' class='textbox' style='width:380px;' /></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px;'>".$locale['652']."</td>\n";
-			echo "<td class='tbl1'><input type='text' name='download_filesize' id='download_filesize' value='".$submit_criteria['download_filesize']."' class='textbox' style='width:150px;' /></td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px;'>".$locale['656']."</td>\n";
-			echo "<td class='tbl1'><input type='checkbox' name='download_allow_comments' value='1' />";
-			if ($settings['comments_enabled'] == "0") {
-				echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
-			}
-			echo "</td>\n";
-			echo "</tr>\n";
-			echo "<tr>\n<td class='tbl1' style='width:80px;'>".$locale['657']."</td>\n";
-			echo "<td class='tbl1'><input type='checkbox' name='download_allow_ratings' value='1' />";
+			echo form_text($locale['649'], 'download_license', 'download_license', $submit_criteria['download_license'], array('inline'=>1));
+			echo form_text($locale['650'], 'download_os', 'download_os', $submit_criteria['download_os'], array('inline'=>1));
+			echo form_text($locale['651'], 'download_version', 'download_version', $submit_criteria['download_version'], array('inline'=>1));
+			echo form_text($locale['654'], 'download_homepage', 'download_homepage', $submit_criteria['download_homepage'], array('inline'=>1));
+			echo form_text($locale['645'], 'download_copyright', 'download_copyright', $submit_criteria['download_copyright'], array('inline'=>1));
+			echo form_text($locale['652'], 'download_filesize', 'download_filesize', $submit_criteria['download_filesize'], array('inline'=>1));
+			echo form_checkbox($locale['656'], 'download_allow_comments', 'download_allow_comments', '', array('inline'=>1));
+			echo form_checkbox($locale['657'], 'download_allow_ratings', 'download_allow_ratings', '', array('inline'=>1));
+			echo "</div>\n";
+			echo "</div>\n";
+			echo closeform();
+
+			/*
+			 * Change to add notice here.
 			if ($settings['ratings_enabled'] == "0") {
 				echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
 			}
-			echo "</td>\n";
-			echo "</tr>\n";
+			if ($settings['comments_enabled'] == "0") {
+				echo "<span style='color:red;font-weight:bold;margin-left:3px;'>*</span>";
+			}
 			if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
 				$sys = "";
 				if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
@@ -857,39 +844,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
 				echo "<tr>\n<td colspan='2' class='tbl1' style='font-weight:bold;text-align:left; color:black !important; background-color:#FFDBDB;'>";
 				echo "<span style='color:red;font-weight:bold;margin-right:5px;'>*</span>".sprintf($locale['660'], $sys);
 				echo "</td>\n</tr>";
-			}
-			echo "<tr>\n";
-			echo "<td align='center' colspan='2' class='tbl1'>\n";
-			echo $locale['641'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br /><br />\n";
-			echo $locale['642']."<br />\n";
-			echo "<input type='submit' name='publish' value='".$locale['643']."' class='button' />\n";
-			echo "<input type='submit' name='delete' value='".$locale['644']."' class='button' />\n";
-			echo "</td>\n</tr>\n</table>\n</form>\n";
-			echo "<script language='JavaScript' type='text/javascript'>\n";
-			echo "/* <![CDATA[ */\n";
-			echo "jQuery(document).ready(function() {\n";
-			echo "jQuery('#shortdesc_display').show();\n";
-			echo "jQuery('#calc_upload').click(\n";
-			echo "function() {\n";
-			echo "if (jQuery('#calc_upload').attr('checked')) {\n";
-			echo "jQuery('#download_filesize').attr('readonly', 'readonly');\n";
-			echo "jQuery('#download_filesize').val('');\n";
-			echo "jQuery('#calc_upload').attr('checked', 'checked');\n";
-			echo "} else {\n";
-			echo "jQuery('#download_filesize').removeAttr('readonly');\n";
-			echo "jQuery('#calc_upload').removeAttr('checked');\n";
-			echo "}\n";
-			echo "});\n";
-			echo "});\n";
-			echo "function shortdesc_counter(textarea, counterID, maxLen) {\n";
-			echo "cnt = document.getElementById(counterID);\n";
-			echo "if (textarea.value.length >= maxLen) {\n";
-			echo "textarea.value = textarea.value.substring(0,maxLen);\n";
-			echo "}\n";
-			echo "cnt.innerHTML = maxLen - textarea.value.length;\n";
-			echo "}";
-			echo "/* ]]>*/\n";
-			echo "</script>\n";
+			} */
 			closetable();
 		} else {
 			redirect(FUSION_SELF.$aidlink);
