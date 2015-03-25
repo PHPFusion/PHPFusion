@@ -20,7 +20,7 @@
 function render_main_blog($info) {
 	echo render_breadcrumbs();
 	echo "<div class='row'>\n";
-	echo "<div class='col-xs-12 col-sm-9'>\n";
+	echo "<div class='col-xs-12 col-sm-9 overflow-hide'>\n";
 	if (isset($_GET['readmore'])) {
 		echo display_blog_item($info);
 	} else {
