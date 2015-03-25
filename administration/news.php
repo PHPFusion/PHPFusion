@@ -191,11 +191,6 @@ function news_form() {
 	$language_opts = fusion_get_enabled_languages();
 	$formaction = FUSION_SELF.$aidlink."&amp;section=nform";
 
-	if ($settings['tinymce_enabled']) {
-		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-	} else {
-		require_once INCLUDES."html_buttons_include.php";
-	}
 	$data = array(
 		'news_draft' => 0,
 		'news_sticky' => 0,
@@ -203,7 +198,7 @@ function news_form() {
 		'news_datestamp' => time(),
 		'news_extended' => '',
 		'news_keywords' => '',
-		'news_breaks' => 1,
+		'news_breaks' => 'n',
 		'news_allow_comments' => 1,
 		'news_allow_ratings' => 1,
 		'news_language' => LANGUAGE,
@@ -216,11 +211,36 @@ function news_form() {
 		'news_ialign' => 'pull-left',
 	);
 
+
+	if ($settings['tinymce_enabled']) {
+		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
+		$data['news_breaks'] = 'n';
+	} else {
+		require_once INCLUDES."html_buttons_include.php";
+		$data['news_breaks'] = 'y';
+	}
+
+
 	if (isset($_POST['save'])) {
-		$data['news_id'] = isset($_POST['news_id']) ? form_sanitizer($_POST['news_id'], '', 'news_id') : 0;
-		$data['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
-		$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
-		$data['news_name'] = $userdata['user_id'];
+
+		$data = array(
+			'news_id' => form_sanitizer($_POST['news_id'], 0, 'news_id'),
+			'news_subject' => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
+			'news_cat' => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
+			'news_name' =>  $userdata['user_id'],
+			'news_news' =>	addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])),
+			'news_extended' =>	addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])),
+			'news_keywords'	=>	form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
+			'news_datestamp' => form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp'),
+			'news_start' => form_sanitizer($_POST['news_start'], 0, 'news_start'),
+			'news_end' => form_sanitizer($_POST['news_end'], 0, 'news_end'),
+			'news_visibility' => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
+			'news_draft' => isset($_POST['news_draft']) ? "1" : "0",
+			'news_sticky' => isset($_POST['news_sticky']) ? "1" : "0",
+			'news_allow_comments' => isset($_POST['news_allow_comments']) ? "1" : "0",
+			'news_allow_ratings' => isset($_POST['news_allow_ratings']) ? "1" : "0",
+			'news_language' => form_sanitizer($_POST['news_language'], '', 'news_language')
+		);
 
 		if (isset($_FILES['news_image'])) {
 			$upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
@@ -237,19 +257,6 @@ function news_form() {
 			}
 		}
 
-
-		$data['news_news'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])); // Needed for HTML to work
-		$data['news_extended'] = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])); // Needed for HTML to work
-		$data['news_keywords'] = form_sanitizer($_POST['news_keywords'], '', 'news_keywords');
-		$data['news_datestamp'] = form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp');
-		$data['news_start'] = form_sanitizer($_POST['news_start'], 0, 'news_start');
-		$data['news_end'] = form_sanitizer($_POST['news_end'], 0, 'news_end');
-		$data['news_visibility'] = form_sanitizer($_POST['news_visibility'], '0', 'news_visibility');
-		$data['news_draft'] = isset($_POST['news_draft']) ? "1" : "0";
-		$data['news_sticky'] = isset($_POST['news_sticky']) ? "1" : "0";
-		$data['news_allow_comments'] = isset($_POST['news_allow_comments']) ? "1" : "0";
-		$data['news_allow_ratings'] = isset($_POST['news_allow_ratings']) ? "1" : "0";
-		$data['news_language'] = form_sanitizer($_POST['news_language'], '', 'news_language');
 		if ($settings['tinymce_enabled'] != 1) {
 			$data['news_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
 		} else {
@@ -275,11 +282,9 @@ function news_form() {
 
 		$rows = dbcount("('news_id')", DB_NEWS, "news_id='".$data['news_id']."'");
 		if ($rows >0) {
-			// is edit
 			dbquery_insert(DB_NEWS, $data, 'update');
 			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su");
 		} else {
-			// is save
 			dbquery_insert(DB_NEWS, $data, 'save');
 			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 		}
@@ -295,37 +300,15 @@ function news_form() {
 	}
 
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
-
 		$result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id='".(isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])."'");
 		if (dbrows($result)) {
-			$data2 = dbarray($result);
-			$data += array(
-				'news_id'	=> (!empty($_POST['news_id'])) ? $_POST['news_id'] : $data2['news_id'],
-				'news_subject' => (!empty($_POST['news_subject'])) ? $_POST['news_subject'] : $data2['news_subject'],
-				'news_cat' => (!empty($_POST['news_cat'])) ? $_POST['news_cat'] : $data2['news_cat'],
-				'news_news' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['news_news'], // phpentities(stripslashes($data['news_news'])),
-				'news_extended' => (!empty($_POST['body'])) ? $_POST['body'] : $data2['news_extended'], // phpentities(stripslashes($data['news_extended']));
-				'news_keywords' => (!empty($_POST['news_keywords'])) ? $_POST['news_keywords'] : $data2['news_keywords'],
-				'news_datestamp' => $data2['news_datestamp'],
-				'news_start' => (!empty($_POST['news_start'])) ? $_POST['news_start'] : $data2['news_start'],
-				'news_end' => (!empty($_POST['news_end'])) ? $_POST['news_end'] : $data2['news_end'],
-				'news_image' => (!empty($_POST['news_image'])) ? $_POST['news_image'] : $data2['news_image'],
-				'news_image_t1' => (!empty($_POST['news_image_t1'])) ? $_POST['news_image_t1'] : $data2['news_image_t1'],
-				'news_image_t2' => (!empty($_POST['news_image_t2'])) ? $_POST['news_image_t2'] : $data2['news_image_t2'],
-				'news_ialign' => (!empty($_POST['news_ialign'])) ? $_POST['news_ialign'] : $data2['news_ialign'],
-				'news_visibility' => (!empty($_POST['news_visibility'])) ? $_POST['news_visibility'] : $data2['news_visibility'],
-				'news_draft' => (!empty($_POST['news_draft'])) ? "1" : $data2['news_draft'] ? "1" : '',
-				'news_sticky' => (!empty($_POST['news_sticky'])) ? "1" : $data2['news_sticky'] ? "1" : '',
-				'news_breaks' => (!empty($_POST['news_breaks'])) ? "1" : $data2['news_breaks'] ? "1" : '',
-				'news_allow_comments' => (!empty($_POST['news_allow_comments'])) ? "1" : $data2['news_allow_comments'] ? "1" : '',
-				'news_allow_ratings' => (!empty($_POST['news_allow_ratings'])) ? "1" : $data2['news_allow_ratings'] ? "1" : '',
-				'news_language' => (!empty($_POST['news_language'])) ? $_POST['news_language'] : $data2['news_language']
-			);
+			$data = dbarray($result);
 			$formaction = FUSION_SELF.$aidlink."&amp;section=nform&amp;action=edit&amp;news_id=".$data['news_id'];
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
 	}
+
 	if (isset($_POST['preview'])) {
 		$data['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 		$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
@@ -382,7 +365,6 @@ function news_form() {
 	echo form_datepicker($locale['news_0207'], 'news_end', 'news_end', $data['news_end'], array('placeholder' => $locale['news_0208']));
 	echo "</div>\n";
 	echo "</div>\n";
-
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	echo form_select_tree($locale['news_0201'], "news_cat", "news_cat", $data['news_cat'], array("parent_value" => $locale['news_0202'], "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
