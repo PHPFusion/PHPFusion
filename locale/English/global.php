@@ -354,7 +354,9 @@ $locale['or'] = 'or';
 $locale['by'] = 'by';
 $locale['in'] = 'in';
 $locale['of'] = 'of';
+$locale['and'] = "and";
 $locale['na'] = 'Not available';
+$locale['joined'] = "Joined since: ";
 // Navigation
 $locale['next'] = 'Next';
 $locale['pevious'] = 'Previous';

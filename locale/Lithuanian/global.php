@@ -360,6 +360,9 @@ $locale['or'] = 'arba';
 $locale['by'] = '';
 $locale['in'] = '';
 $locale['of'] = 'iš';
+$locale['and'] = "and"; // please translate
+$locale['joined'] = "Joined since: "; // please translate
+
 // Navigation
 $locale['next'] = 'Kitas';
 $locale['pevious'] = 'Ankstesnis';

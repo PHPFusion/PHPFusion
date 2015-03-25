@@ -342,6 +342,8 @@ $locale['or'] = 'atau';
 $locale['by'] = 'oleh';
 $locale['in'] = 'di';
 $locale['of'] = 'daripada';
+$locale['and'] = "and"; // please translate
+$locale['joined'] = "Joined since: "; // please translate
 // Navigation
 $locale['next'] = 'Seterusnya';
 $locale['pevious'] = 'Sebelumnya';

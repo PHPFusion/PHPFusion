@@ -363,7 +363,10 @@ $locale['or'] = 'eller';
 $locale['by'] = 'af';
 $locale['in'] = 'i';
 $locale['of'] = 'fra';
+$locale['and'] = "and"; // please translate
 $locale['na'] = 'Ikke tilgængelig';
+$locale['joined'] = "Joined since: "; // please translate
+
 // Navigation
 $locale['next'] = 'Næste';
 $locale['pevious'] = 'Foregående';

@@ -405,7 +405,9 @@ $locale['or'] = "або";
 $locale['by'] = "за";
 $locale['in'] = "в";
 $locale['of'] = "з";
+$locale['and'] = "and"; // please translate
 $locale['na'] = "не доступно";
+$locale['joined'] = "Joined since: "; // please translate
 
 // Navigation
 $locale['next'] = "Наступний";

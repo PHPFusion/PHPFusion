@@ -348,7 +348,10 @@ $locale['or'] = "или";
 $locale['by'] = "на";
 $locale['in'] = "в";
 $locale['of'] = "из";
+$locale['and'] = "и";
 $locale['na'] = "Информация недоступна";
+$locale['joined'] = "Зарегистрирован с: ";
+
 // Navigation
 $locale['next'] = "След.";
 $locale['pevious'] = "Пред.";
