@@ -355,7 +355,7 @@ function forum_breadcrumbs($forum_index) {
 	// then we sort in reverse.
 	if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
 	// then we loop it out using Dan's breadcrumb.
-	add_to_breadcrumbs(array('link'=>FORUM.'index.php', 'title'=>'Forum Board Index'));
+	add_to_breadcrumbs(array('link'=>FORUM.'index.php', 'title'=>$locale['forum_0010']));
 	if (count($crumb['title']) > 1) {
 		foreach($crumb['title'] as $i => $value) {
 			add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$value));
