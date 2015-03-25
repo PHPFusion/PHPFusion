@@ -165,8 +165,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$item['admin_link'] = '';
 			if (iADMIN && checkrights('BLOG')) {
 				$item['admin_link'] = array(
-					'edit' => ADMIN."blog.php?".$aidlink."&amp;action=edit&amp;section=nform&amp;blog_id=".$item['blog_id'],
-					'delete' => ADMIN."blog.php?".$aidlink."&amp;action=delete&amp;section=nform&amp;blog_id=".$item['blog_id'],
+					'edit' => ADMIN."blog.php".$aidlink."&amp;action=edit&amp;section=nform&amp;blog_id=".$item['blog_id'],
+					'delete' => ADMIN."blog.php".$aidlink."&amp;action=delete&amp;section=nform&amp;blog_id=".$item['blog_id'],
 				);
 			}
 			$info['blog_title'] = $item['blog_subject'];
