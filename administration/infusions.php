@@ -217,8 +217,8 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 			}
 		}
 	}
-	if (isset($inf_newtable) && is_array($inf_newtable)) {
-		foreach ($inf_newtable as $item) {
+	if (isset($inf_droptable) && is_array($inf_droptable)) {
+		foreach ($inf_droptable as $item) {
 			dbquery("DROP TABLE ".$item);
 		}
 	}
