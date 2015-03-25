@@ -117,6 +117,7 @@ function download_form() {
 		'download_visibility' => 0,
 		'download_allow_comments' => 0,
 		'download_allow_ratings' => 0,
+		'download_datestamp' => time()
 	);
 	$formaction = FUSION_SELF.$aidlink."&amp;section=dlopts";
 
@@ -162,8 +163,8 @@ function download_form() {
 			'download_visibility' => form_sanitizer($_POST['download_visibility'], '0', 'download_visibility'),
 			'download_allow_comments' => isset($_POST['download_allow_comments']) ? 1 : 0,
 			'download_allow_ratings' => isset($_POST['download_allow_ratings']) ? 1 : 0,
+			'download_datestamp' => isset($_POST['update_datestamp']) ? time() : $data['download_datestamp'],
 		);
-		print_p($data);
 		/**
 		 * File Section
 		 */
@@ -222,7 +223,6 @@ function download_form() {
 		}
 
 		if (dbcount("(download_id)", DB_DOWNLOADS, "download_id='".$data['download_id']."'")) {
-			$data['download_datestamp'] = isset($_POST['update_datestamp']) ? time() : '';
 			dbquery_insert(DB_DOWNLOADS, $data, 'update');
 			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&status=su");
 		} else {
@@ -253,6 +253,7 @@ function download_form() {
 	echo "<div class='col-xs-12 col-sm-8'>\n";
 	openside('');
 	echo form_hidden('', 'download_id', 'download_id', $data['download_id']);
+	echo form_hidden('', 'download_datestamp', 'download_datestamp', $data['download_datestamp']);
 	echo form_text($locale['download_0200'], 'download_title', 'download_title', $data['download_title'], array('required' => 1, 'error_text'=>$locale['download_0110']));
 	echo form_textarea($locale['download_0202'], 'download_description_short', 'download_description_short', $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['download_0112'], 'maxlength' => '255', 'autosize' => 1));
 	if ($settings['download_screenshot']) {
