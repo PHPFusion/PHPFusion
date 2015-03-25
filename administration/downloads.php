@@ -327,13 +327,8 @@ function download_form() {
 	}
 	echo closetabbody();
 	echo closetab();
-
 	closeside('');
-
-
-
 	echo form_textarea($locale['download_0201'], 'download_description', 'download_description', $data['download_description'], array('no_resize' => '1', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
-
 	echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
 	openside();
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
