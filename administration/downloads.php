@@ -393,7 +393,6 @@ function download_listing() {
 				ORDER BY download_cat_name");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
-
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-heading clearfix'>\n";
 					echo "<div class='btn-group pull-right m-t-5'>\n";
@@ -419,7 +418,7 @@ function download_listing() {
 						}
 						echo "<li class='list-group-item'>\n";
 						echo "<div class='pull-left m-r-10'>\n";
-						echo thumbnail(DOWNLOADS."images/".$data2['download_image'], '80px');
+						echo thumbnail(DOWNLOADS."images/".$data2['download_thumb'], '50px');
 						echo "</div>\n";
 						echo "<div class='overflow-hide'>\n";
 						echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";

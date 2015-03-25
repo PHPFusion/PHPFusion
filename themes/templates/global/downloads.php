@@ -13,7 +13,7 @@ if (!function_exists('filter_item_list')) {
 				echo "<div class='list-group-item clearfix'>\n";
 				echo "<span class='badge m-t-10'>Downloaded ".$data['download_count']." </span>\n";
 				echo "<div class='pull-left m-r-10'>\n";
-				$img_thumb = ($data['download_image_thumb']) ? DOWNLOADS."images/".$data['download_image_thumb'] : IMAGES."imagenotfound70.jpg";
+				$img_thumb = ($data['download_image_thumb']) ? DOWNLOADS."images/".$data['download_image_thumb'] : DOWNLOADS."images/no_image.jpg";
 				echo thumbnail($img_thumb, '70px');
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";
@@ -210,13 +210,8 @@ if (!function_exists('render_downloads')) {
 					echo "<div class='row'>\n";
 					echo "<div class='col-xs-6 col-sm-9 col-md-8 col-lg-7 p-r-0'>\n";
 						echo "<div class='pull-left m-r-10'>\n";
-						if ($download['download_image_thumb']) {
-							$img_thumb = DOWNLOADS."images/".$download['download_image_thumb'];
-							echo thumbnail($img_thumb, '70px');
-						} else {
-							$img_thumb = IMAGES."imagenotfound70.jpg";
-							echo thumbnail($img_thumb, '70px');
-						}
+						$img_thumb = ($download['download_image_thumb']) ? DOWNLOADS."images/".$download['download_image_thumb'] : DOWNLOADS."images/no_image.jpg";
+						echo thumbnail($img_thumb, '70px');
 						echo "</div>\n";
 						echo "<div class='overflow-hide'>\n";
 						echo "<h4 class='m-t-0 m-b-10 strong'><a class='text-dark' href='".BASEDIR."downloads.php?cat_id=".$download['download_cat']."&amp;download_id=".$download['download_id']."'>".$download['download_title']."</a> ".$new."</h4>";
@@ -329,7 +324,7 @@ if (!function_exists('render_downloads')) {
 			if ($settings['download_screenshot'] && $data['download_image']) {
 				echo "<h4>".$locale['419']."</h4>\n";
 				echo "<div class='display-inline-block m-b-20' style='width:100%;'>\n";
-				echo thumbnail(DOWNLOADS."images/".$data['download_image'],'100','100');
+				echo thumbnail(DOWNLOADS."images/".$data['download_image'],'150px');
 				echo "</div>\n";
 			}
 
@@ -343,7 +338,6 @@ if (!function_exists('render_downloads')) {
 				showratings("D", $_GET['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
 			}
 		}
-
 		echo "</div>\n</div>\n"; // left right grid.
 		closetable();
 	}
