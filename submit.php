@@ -285,39 +285,78 @@ if ($_GET['stype'] == "l") {
 	}
 	closetable();
 } elseif ($_GET['stype'] == "d") {
+
+	add_to_title($locale['global_200'].$locale['650']);
+
 	if (isset($_POST['submit_download'])) {
 		$error = 0;
-		$submit_info['download_title'] = form_sanitizer($_POST['download_title'], '', 'download_title');
-		$submit_info['download_description'] = form_sanitizer($_POST['download_description'], '', 'download_description');
-		$submit_info['download_description_short'] = form_sanitizer($_POST['download_description_short'], '', 'download_description_short');
-		$submit_info['download_cat'] = isnum($_POST['download_cat']) ? $_POST['download_cat'] : "0";
-		$submit_info['download_homepage'] = stripinput($_POST['download_homepage']);
-		$submit_info['download_license'] = stripinput($_POST['download_license']);
-		$submit_info['download_copyright'] = stripinput($_POST['download_copyright']);
-		$submit_info['download_os'] = stripinput($_POST['download_os']);
-		$submit_info['download_version'] = stripinput($_POST['download_version']);
-		$submit_info['download_filesize'] = stripinput($_POST['download_filesize']);
-		$submit_info['download_url'] = stripinput($_POST['download_url']);
-		$submit_info['download_file'] = form_sanitizer($_FILES['download_file'], '', 'download_file');
-		$submit_info['download_image'] = form_sanitizer($_FILES['download_image'], '', 'download_image');
-		if ($submit_info['download_file']) {
-			$submit_info['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
+
+		$submit_info = array(
+			'download_title' => form_sanitizer($_POST['download_title'], '', 'download_title'),
+			'download_description' => form_sanitizer($_POST['download_description'], '', 'download_description'),
+			'download_description_short' => form_sanitizer($_POST['download_description_short'], '', 'download_description_short'),
+			'download_cat' => form_sanitizer($_POST['download_cat'], '0', 'download_cat'),
+			'download_homepage' => form_sanitizer($_POST['download_homepage'], '', 'download_homepage'),
+			'download_license' => form_sanitizer($_POST['download_license'], '', 'download_license'),
+			'download_copyright' => form_sanitizer($_POST['download_copyright'], '', 'download_copyright'),
+			'download_os' => form_sanitizer($_POST['download_os'], '', 'download_os'),
+			'download_version' => form_sanitizer($_POST['download_version'], '', 'download_version'),
+			'download_file' => '',
+			'download_url' => '',
+		);
+		/**
+		 * Download File Section
+		 */
+		if (isset($_FILES['download_file'])) {
+			$upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
+			if ($upload) {
+				$submit_info['download_file'] = $upload['target_file'];
+				$submit_info['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
+
+			}
+			unset($upload);
+		} elseif (isset($_POST['download_url']) && $_POST['download_url'] != "") {
+			$submit_info['download_url'] = form_sanitizer($_POST['download_url'], '', 'download_url');
 		}
-		if ($submit_info['download_image']) {
-			$thumb = explode('.', $submit_info['download_image']);
-			$submit_info['download_image_thumb'] = $thumb['0']."_t1.".$thumb['1'];
+
+		if (isset($_FILES['download_image'])) {
+			$upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
+			if ($upload) {
+				$submit_info['download_image'] = $upload['image_name'];
+				$submit_info['download_image_thumb'] = $upload['thumb1_name'];
+				unset($upload);
+			}
 		}
-		add_to_title($locale['global_200'].$locale['650']);
-		opentable($locale['650']);
-		if (!$error) {
-			$result = dbquery("INSERT INTO ".DB_SUBMISSIONS." (submit_type, submit_user, submit_datestamp, submit_criteria) VALUES ('d', '".$userdata['user_id']."', '".time()."', '".addslashes(serialize($submit_info))."')");
-			echo "<div style='text-align:center'><br />\n".$locale['660']."<br /><br />\n";
-			echo "<a href='submit.php?stype=d'>".$locale['661']."</a><br /><br />\n";
-			echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
+
+		// Break form and return errors
+		if (!$submit_info['download_file'] && !$submit_info['download_url']) {
+			$defender->stop();
+			$defender->addNotice($locale['675']);
 		}
-		echo "<br /><br />\n<a href='submit.php?stype=d'>".$locale['661']."</a><br /><br />\n</div>\n";
-		closetable();
+
+
+		if (!defined("FUSION_NULL")) {
+			opentable($locale['650']);
+			// this is what goes into DB_SUBMISSIONS
+			$data = array(
+				'submit_type' => 'd',
+				'submit_user' => $userdata['user_id'],
+				'submit_datestamp' => time(),
+				'submit_criteria' => serialize($submit_info),
+			);
+			$result = dbquery_insert(DB_SUBMISSIONS, $data, 'save');
+			if ($result) {
+				echo "<div class='well'>\n";
+				echo "<p>".$locale['660']."</p>";
+				echo "<a href='submit.php?stype=d'>".$locale['661']."</a><br />";
+				echo "<a href='index.php'>".$locale['412']."</a>\n<br/>";
+				echo "<a href='submit.php?stype=d'>".$locale['661']."</a>\n";
+				echo "</div>\n";
+			}
+			closetable();
+		}
 	}
+
 	add_to_title($locale['global_200'].$locale['650']);
 	opentable($locale['650']);
 	$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name");
@@ -326,21 +365,39 @@ if ($_GET['stype'] == "l") {
 		while ($data = dbarray($result)) {
 			$opts[$data['download_cat_id']] = $data['download_cat_name'];
 		}
-		echo openform('submit_form', 'submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=d", array('enc_type' => 1, 'downtime' => 1));
+		echo openform('submit_form', 'submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=d", array('enctype' => 1, 'downtime' => 1));
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 		echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['680']."</div>\n";
 		echo form_text($locale['681'], 'download_title', 'download_title', '', array('required' => 1, 'error_text' => $locale['674']));
 		echo form_textarea($locale['682b'], 'download_description_short', 'download_description_short', '', array('bbcode' => 1, 'required' => 1, 'error_text' => $locale['676'],  'form_name' => 'submit_form'));
-		echo form_textarea($locale['682'], 'download_description', 'download_description', '', array('bbcode' => 1, 'required' => 1,  'form_name' => 'submit_form'));
-		echo form_text($locale['683'], 'download_url', 'download_url', '', array('required' => 1, 'error_text' => $locale['675']));
+		echo form_textarea($locale['682'], 'download_description', 'download_description', '', array('bbcode' =>1, 'form_name' => 'submit_form'));
+		echo form_text($locale['683'], 'download_url', 'download_url', '', array('error_text' => $locale['675']));
 		echo "<div class='pull-right'>\n<small>\n";
 		echo sprintf($locale['694'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
 		echo "</small>\n</div>\n";
-		echo form_fileinput($locale['684'], 'download_file', 'download_file', DOWNLOADS."submissions/", '', array('required' => 1, 'error_text' => $locale['675']));
+		$file_options = array(
+			'max_bytes' => $settings['download_max_b'],
+			'valid_ext' => $settings['download_types'],
+			'error_text' => $locale['675'],
+		);
+		echo form_fileinput($locale['684'], 'download_file', 'download_file', DOWNLOADS."submissions/", '', $file_options);
 		echo "<div class='pull-right'>\n<small>\n";
 		echo sprintf($locale['694b'], parsebytesize($settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $settings['download_screen_max_w'], $settings['download_screen_max_h'])."<br />\n";
 		echo "</small>\n</div>\n";
-		echo form_fileinput($locale['686'], 'download_image', 'download_image', DOWNLOADS."submissions/images/", '', array('image' => 1, 'thumbnail' => 1));
+		$file_options = array(
+			'max_width' => $settings['download_screen_max_w'],
+			'max_height' => $settings['download_screen_max_w'],
+			'max_byte' => $settings['download_screen_max_b'],
+			'type' => 'image',
+			'delete_original' => 0,
+			'thumbnail_folder' => '',
+			'thumbnail' => 1,
+			'thumbnail_suffix'=> '_thumb',
+			'thumbnail_w'=> $settings['download_thumb_max_w'],
+			'thumbnail_h' => $settings['download_thumb_max_h'],
+			'thumbnail2' => 0
+		);
+		echo form_fileinput($locale['686'], 'download_image', 'download_image', DOWNLOADS."submissions/images/", '', $file_options);
 		echo form_select($locale['687'], 'download_cat', 'download_cat', $opts, '');
 		echo form_text($locale['688'], 'download_license', 'download_license', '');
 		echo form_text($locale['689'], 'download_os', 'download_os', '');
