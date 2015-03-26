@@ -189,18 +189,17 @@ class ErrorLogs {
 		return false;
 	}
 
-	static function getGitsrc($file, $line_number, $version = '9.00') {
+	/**
+	 * Returns the HTML link pointing to the line of a file's latest version on github
+	 *
+	 * @param $file The absolute path from the server's root.
+	 * @param int $line_number
+	 * @return string
+	 */
+	public static function getGitsrc($file, $line_number) {
 		$repository_address = "https://github.com/php-fusion/PHP-Fusion/blob/";
 		$version = "9.00";
-		$file_path = stristr($file, "\\") ? array_filter(explode("\\", $file)) : array_filter(explode("/", $file));
-		$i = 1;
-		foreach($file_path as $str) {
-			if ($str == str_replace("/", '', fusion_get_settings('site_path'))) {
-				break;
-			}
-			$i++;
-		}
-		$file_path = implode('/', array_slice($file_path, $i));
+		$file_path = substr($file, strlen(FUSION_ROOT_DIR));
 		return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."/#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
 	}
 

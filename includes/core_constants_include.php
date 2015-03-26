@@ -43,6 +43,7 @@ define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
 define("USER_IP", $_SERVER['REMOTE_ADDR']);
 // Define script start time
 define("START_TIME", microtime(TRUE));
+define("FUSION_ROOT_DIR", dirname(__DIR__).'/');
 
 const USER_LEVEL_SUPER_ADMIN = -103;
 const USER_LEVEL_ADMIN = -102;
