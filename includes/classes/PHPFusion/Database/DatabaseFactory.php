@@ -156,6 +156,7 @@ class DatabaseFactory {
 	}
 
 	/**
+	 * @param string $connectionid
 	 * @return bool
 	 */
 	public static function isDebug($connectionid = NULL) {

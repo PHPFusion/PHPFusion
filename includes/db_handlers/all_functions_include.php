@@ -117,7 +117,9 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
 	$connection_success = TRUE;
 	$dbselection_success = TRUE;
 	try {
-		DatabaseFactory::connect($db_host, $db_user, $db_pass, $db_name);
+		DatabaseFactory::connect($db_host, $db_user, $db_pass, $db_name, array(
+			'debug' => DatabaseFactory::isDebug('default')
+		));
 	} catch (\Exception $e) {
 		$connection_success = $e instanceof SelectionException;
 		$dbselection_success = FALSE;

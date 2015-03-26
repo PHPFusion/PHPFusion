@@ -33,7 +33,8 @@ if (isset($OOPDBLayer) and $OOPDBLayer === TRUE) {
 		'host' => $db_host,
 		'user' => $db_user,
 		'password' => $db_pass,
-		'database' => $db_name
+		'database' => $db_name,
+		'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
 	));
 	DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
 	require_once DB_HANDLERS."all_functions_include.php";
