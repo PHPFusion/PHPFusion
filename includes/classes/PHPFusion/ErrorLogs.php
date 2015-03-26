@@ -192,7 +192,7 @@ class ErrorLogs {
 	/**
 	 * Returns the HTML link pointing to the line of a file's latest version on github
 	 *
-	 * @param $file The absolute path from the server's root.
+	 * @param string $file The absolute path from the server's root.
 	 * @param int $line_number
 	 * @return string
 	 */
