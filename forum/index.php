@@ -332,7 +332,7 @@ render_forum($info);
 */
 
 function forum_breadcrumbs($forum_index) {
-	global $aidlink;
+	global $aidlink, $locale;
 	/* Make an infinity traverse */
 	function breadcrumb_arrays($index, $id) {
 		global $aidlink;
