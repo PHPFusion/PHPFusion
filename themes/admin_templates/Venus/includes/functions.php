@@ -245,7 +245,7 @@ function render_dashboard() {
 				<a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."comments.php".$aidlink."&amp;ctype=".$comment_data['comment_type']."&amp;cid=".$comment_data['comment_item_id']."'><i class='entypo eye'></i></a>
 				<a class='btn btn-xs btn-default' title='".$locale['275']."' href='".ADMIN."comments.php".$aidlink."&amp;action=edit&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;cid=".$comment_data['comment_item_id']."'><i class='entypo pencil'></i></a>
 				<a class='btn btn-xs btn-default' title='".$locale['276']."' href='".ADMIN."comments.php".$aidlink."&amp;action=delete&amp;comment_id=".$comment_data['comment_id']."&amp;ctype=".$comment_data['comment_type']."&amp;cid=".$comment_data['comment_item_id']."'><i class='entypo trash'></i></a></div>\n";
-			echo "<strong>".profile_link($comment_data['user_id'], ucwords($comment_data['user_name']), $comment_data['user_status'])."</strong>\n";
+			echo "<strong>".profile_link($comment_data['user_id'], $comment_data['user_name'], $comment_data['user_status'])."</strong>\n";
 			echo "<span class='text-smaller text-lighter'>".$locale['273']."</span> <a class='text-smaller' href='".sprintf($link_type[$comment_data['comment_type']], $comment_data['comment_item_id'])."'><strong>".$comments_type[$comment_data['comment_type']]."</strong></a>";
 			echo "&nbsp;<span class='text-smaller'>".timer($comment_data['comment_datestamp'])."</span><br/>\n";
 			echo "<span class='text-smaller text-lighter'>".trimlink(parseubb($comment_data['comment_message']), 70)."</span>\n";
@@ -269,7 +269,7 @@ function render_dashboard() {
 			echo "<!--Start Rating Item-->\n";
 			echo "<div class='comment_content clearfix p-t-10 p-b-10' ".($i > 0 ? "style='border-top:1px solid #ddd;'" : '')." >\n";
 			echo "<div class='pull-left m-r-10 display-inline-block' style='margin-top:0px; margin-bottom:10px;'>".display_avatar($ratings_data, '40px')."</div>\n";
-			echo "<strong>".profile_link($ratings_data['user_id'], ucwords($ratings_data['user_name']), $ratings_data['user_status'])."</strong>\n";
+			echo "<strong>".profile_link($ratings_data['user_id'], $ratings_data['user_name'], $ratings_data['user_status'])."</strong>\n";
 			echo "<span class='text-smaller text-lighter'>".$locale['273a']."</span>\n";
 			echo "<a class='text-smaller' href='".sprintf($link_type[$ratings_data['rating_type']], $ratings_data['rating_item_id'])."'><strong>".$comments_type[$ratings_data['rating_type']]."</strong></a>";
 			echo "<span class='text-smaller text-lighter m-l-10'>".str_repeat("<i class='entypo star'></i>", $ratings_data['rating_vote'])."</span>\n";
@@ -296,7 +296,7 @@ function render_dashboard() {
 			echo "<div id='submission_action-$i' class='btn-group pull-right display-none' style='position:absolute; right: 30px; margin-top:10px;'>\n
 				<a class='btn btn-xs btn-default' title='".$locale['274']."' href='".ADMIN."submissions.php".$aidlink."&amp;action=2&amp;t=".$submit_data['submit_type']."&amp;submit_id=".$submit_data['submit_id']."'><i class='entypo eye'></i></a>
 				<a class='btn btn-xs btn-default' title='".$locale['276']."' href='".ADMIN."submissions.php".$aidlink."&amp;delete=".$submit_data['submit_id']."'><i class='entypo trash'></i></a></div>\n";
-			echo "<strong>".profile_link($submit_data['user_id'], ucwords($submit_data['user_name']), $submit_data['user_status'])."</strong>\n";
+			echo "<strong>".profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status'])."</strong>\n";
 			echo "<span class='text-smaller text-lighter'>".$locale['273b']." <strong>".$submit_type[$submit_data['submit_type']]."</strong></span>";
 			echo "&nbsp;<span class='text-smaller'>".timer($submit_data['submit_datestamp'])."</span><br/>\n";
 			echo "</div>\n";

@@ -17,7 +17,7 @@ if (dbrows($user_query) > 0) {
 		$result = dbquery("UPDATE ".DB_USERS." SET user_blacklist='".$data['user_blacklist']."' WHERE user_id='".$userdata['user_id']."'");
 		if ($result) {
 			$users = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".$user_id."' LIMIT 1"));
-			echo "<strong>".(sprintf($locale['uf_blacklist_004'], ucwords($users['user_name'])))."</strong>";
+			echo "<strong>".(sprintf($locale['uf_blacklist_004'], $users['user_name']))."</strong>";
 		}
 	} else {
 		echo $locale['uf_blacklist_005'];

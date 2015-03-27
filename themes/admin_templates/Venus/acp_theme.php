@@ -54,7 +54,7 @@ function open_ap() {
 		echo "<div id='acp-left' class='pull-left off-canvas ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' data-spy='affix' data-offset-top='0' data-offset-bottom='0' style='width:220px; height:100%;'>\n"; // collapse to top menu on sm and xs
 		echo "<div class='panel panel-default admin' style='border:0px; box-shadow: none;'><div class='panel-body clearfix'>\n";
 		echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '50px', '', '', '')."</div>\n";
-		echo "<span class='display-block m-t-5'><strong>\n".ucfirst($userdata['user_name'])."</strong>\n<br/>".getuserlevel($userdata['user_level'])."</span></div>\n";
+		echo "<span class='display-block m-t-5'><strong>\n".$userdata['user_name']."</strong>\n<br/>".getuserlevel($userdata['user_level'])."</span></div>\n";
 		echo "</div>\n";
 		echo $admin->vertical_admin_nav();
 		echo "</div>\n";

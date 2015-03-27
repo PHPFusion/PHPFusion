@@ -467,7 +467,7 @@ function parseUser($user_name) {
 				$title = '<div class="user-tooltip">
 				<div class="pull-left m-r-10"><img class="img-responsive" style="max-height:40px; max-width:40px;" src="'.$src.'"></div>
 				<div class="overflow-hide">
-				<a title="'.sprintf($locale['go_profile'], ucwords($data['user_name'])).'" " class="strong text-bigger" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.ucwords($data['user_name']).'</a><br/>
+				<a title="'.sprintf($locale['go_profile'], $data['user_name']).'" " class="strong text-bigger" href="'.BASEDIR.'profile.php?lookup='.$data['user_id'].'">'.$data['user_name'].'</a><br/>
 				<span class="text-smaller">'.getuserlevel($data['user_level']).'</span>
 				</div>';
 				$content = '<a class="btn btn-sm btn-block btn-primary" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'">'.$locale['send_message'].'</a>';
@@ -1142,7 +1142,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
 				3,
 				7)) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0")
 	) {
-		$link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".ucwords($user_name)."</a>";
+		$link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".$user_name."</a>";
 	} elseif ($user_status == "5" || $user_status == "6") {
 		$link = $locale['user_anonymous'];
 	} else {
