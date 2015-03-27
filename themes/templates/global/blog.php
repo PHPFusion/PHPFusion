@@ -95,9 +95,7 @@ if (!function_exists('display_blog_index')) {
 							<div class='col-xs-12 col-sm-8'>
 								<h2 class='strong m-b-20 m-t-0'><a class='text-dark' href='".$data['blog_link']."'>".$data['blog_subject']."</a></h2>
 								<i class='fa fa-clock-o m-r-5'></i> ".$locale['global_049']." ".timer($data['blog_datestamp'])." ".$locale['in']." ".$data['blog_category_link']."
-								<div class='blog-image m-10 ".$data['blog_ialign']."'>
-									".$data['blog_cat_image']."
-								</div>
+								".($data['blog_cat_image'] ? "<div class='blog-image m-10 ".$data['blog_ialign']."'>".$data['blog_cat_image']."</div>" : '')."
 								<div class='m-t-20'>".$data['blog_blog']."<br/>".$data['blog_readmore_link']."</div>
 							</div>
 						</div>

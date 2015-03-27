@@ -122,8 +122,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$hiRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], true);
 				$lowRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], false);
 				$item['blog_image'] = "<img class='img-responsive' src='".$hiRes_image_path."' alt='".$item['blog_subject']."' title='".$item['blog_subject']."'>";
-				$item['blog_thumb_1'] = thumbnail($lowRes_image_path, '80px', $hiRes_image_path, true);
-				$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '100px', $hiRes_image_path, true);
+				$item['blog_thumb_1'] = thumbnail($lowRes_image_path, '80px', $hiRes_image_path, false);
+				$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '100px', $hiRes_image_path, false);
 			} else {
 				$item['blog_blog'] = '';
 				$item['blog_image'] = '';
@@ -306,21 +306,26 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	if (!empty($info['blog_rows'])) {
 		while ($data = dbarray($result)) {
 			// Blog Image
-			$blog_image = thumbnail('fake', '500px');
+			$blog_image ='';
 			if ($data['blog_image'] && $settings['blog_image_frontpage'] == 0) {
 				$hiRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], true);
 				$lowRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], false);
-				$blog_image = thumbnail($lowRes_image_path, '150px', $hiRes_image_path, true);
+				$blog_image = "<a href='".BASEDIR."blog.php?readmore=".$data['blog_id']."'>".thumbnail($lowRes_image_path, '150px')."</a>";
 			}
 
 			// Category Image
-			$blog_cat_image = "<a href='".($settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : BASEDIR."blog.php?readmore=".$data['blog_id'])."'>";
+			$blog_cat_image = '';
 			if ($settings['blog_image_frontpage'] == 0) {  // do not use category image
-				$blog_cat_image .= $blog_image;
+				if ($blog_image) {
+					$blog_cat_image = "<a href='".($settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : BASEDIR."blog.php?readmore=".$data['blog_id'])."'>";
+					$blog_cat_image .= $blog_image;
+					$blog_cat_image .= "</a>";
+				}
 			} else { // use category image
+				$blog_cat_image = "<a href='".($settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : BASEDIR."blog.php?readmore=".$data['blog_id'])."'>";
 				$blog_cat_image .= "<img src='".get_image("bl_".$data['blog_cat_name'])."' alt='".$data['blog_cat_name']."' class='img-responsive blog-category' />";
+				$blog_cat_image .= "</a>";
 			}
-			$blog_cat_image .= "</a>";
 
 			$cdata = array(
 				'blog_ialign'			=> 		$data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
@@ -341,6 +346,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				'blog_user_avatar'		=>		display_avatar($data, '35px', '', true, 'img-rounded'),
 				'blog_user_link'		=>		profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
 			);
+
+
+
+
 			$data = array_merge($data, $cdata);
 			$info['blog_item'][$data['blog_id']] = $data;
 		}
