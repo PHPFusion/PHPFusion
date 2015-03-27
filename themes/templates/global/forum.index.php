@@ -613,7 +613,7 @@ if (!function_exists('render_post_item')) {
 		$user_web = !empty($data['user_web']) ? "&middot; <a class='forum_user_actions' href='".$data['user_web']['link']."' target='_blank'>".$data['user_web']['name']."</a>" : '';
 		$user_msg = !empty($data['user_message']) ? "<a class='forum_user_actions' href='".$data['user_message']['link']."' target='_blank'>".$data['user_message']['name']."</a>" : '';
 		$user_ip = !empty($data['user_ip']) ? "<span class='forum_thread_ip text-smaller'>".$data['user_ip']."</span>\n" : '';
-		$user_sig = !empty($data['user_ip']) ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : '';
+		$user_sig = !empty($data['user_ip']) ? "<div class='forum_sig text-smaller'>".parseubb($data['user_sig'])."</div>\n" : '';
 
 		$marker = !empty($data['marker']) ? "<a class='marker' href='".$data['marker']['link']."' id='".$data['marker']['id']."'>".$data['marker']['name']."</a>" : '';
 		$edit_reason = !empty($data['edit_reason']) ? $data['edit_reason'] : '';
@@ -671,7 +671,7 @@ if (!function_exists('render_post_item')) {
 		echo "<a title='".$locale['forum_0241']."' role='button' class='pull-right icon-xs' href='#top'><i class='entypo up-open'></i></a>\n";
 		echo "</span>\n";
 		echo "<div class='overflow-hide m-b-20'>\n";
-		echo "<div class='forum_thread_user_post'>".($data['post_smileys'] ? parsesmileys($data['post_message']) : $data['post_message'])."</div>\n";
+		echo "<div class='forum_thread_user_post'>".parseubb($data['post_smileys'] ? parsesmileys($data['post_message']) : $data['post_message'])."</div>\n";
 		echo "</div>\n";
 		echo $attach;
 		echo "<!--sub_forum_post_message-->";
