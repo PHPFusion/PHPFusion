@@ -49,11 +49,10 @@ if (!function_exists('display_blog_item')) {
 		echo "<h2 class='strong m-t-0 m-b-20'>".$data['blog_subject']."</h2>";
 		echo "<div class='m-b-20'>".$data['blog_post_author']." ".$data['blog_post_time']." ".$data['blog_post_cat']."</div>\n";
 		echo "<div class='clearfix m-b-20'>\n";
-		echo "<div class='m-b-10'>".$data['blog_blog']."</div>";
 		if ($data['blog_image']) {
-			echo "<div class='display-block m-10 ".$data['blog_ialign']."'>".$data['blog_image']."</div>";
+			echo "<div class='m-10 m-l-0 ".$data['blog_ialign']."'>".$data['blog_image']."</div>";
 		}
-		echo "<div class='display-block m-b-20'>".$data['blog_extended']."</div>";
+		echo $data['blog_extended'];
 		echo "</div>\n";
 		if ($info['blog_nav']) {
 			echo "<div class='clearfix m-b-20'><div class='pull-right'>";
