@@ -29,6 +29,11 @@ abstract class AbstractDatabaseDriver
 	 */
 	const ERROR_UNKNOWN_DATABASE = 1049;
 
+	const PARAM_NULL = 'null';
+	const PARAM_INT = 'int';
+	const PARAM_STR = 'string';
+	const PARAM_BOOL = 'bool';
+
 	/**
 	 * It stores the SQL queries and execution times sent by every instance
 	 *
@@ -226,6 +231,30 @@ abstract class AbstractDatabaseDriver
 				table_schema = database() AND
 				table_name = :table', array(':table' => $table)));
 		return empty($status) ? false : (int) $status['auto_increment'];
+	}
+
+	/**
+	 * Returns the type of the given parameter
+	 *
+	 * @param string $parameter
+	 * @return string
+	 * 	Possible values:
+	 * 	<ul>
+	 * 		<li>{@link AbstractDatabaseDriver::PARAM_INT}</li>
+	 * 		<li>{@link AbstractDatabaseDriver::PARAM_STR}</li>
+	 * 		<li>{@link AbstractDatabaseDriver::PARAM_BOOL}</li>
+	 * 		<li>{@link AbstractDatabaseDriver::PARAM_NULL}</li>
+	 * 	</ul>
+	 */
+	public static function getParameterType($parameter) {
+		if ($parameter === NULL) {
+			return self::PARAM_NULL;
+		} elseif (is_bool($parameter)) {
+			return self::PARAM_BOOL;
+		} elseif (is_int($parameter) or is_float($parameter)) {
+			return self::PARAM_INT;
+		}
+		return self::PARAM_STR;
 	}
 
 	/**

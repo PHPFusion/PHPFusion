@@ -32,6 +32,13 @@ class PDOMySQL extends AbstractDatabaseDriver {
 	 */
 	private $connection = NULL;
 
+	private static $paramTypeMap = array(
+		self::PARAM_INT => PDO::PARAM_INT,
+		self::PARAM_BOOL => PDO::PARAM_BOOL,
+		self::PARAM_STR => PDO::PARAM_STR,
+		self::PARAM_NULL => PDO::PARAM_NULL
+	);
+
 	/**
 	 * Connect to the database
 	 *
@@ -83,7 +90,10 @@ class PDOMySQL extends AbstractDatabaseDriver {
 	public function _query($query, array $parameters = array()) {
 		try {
 			$result = $this->connection->prepare($query);
-			$result->execute($parameters);
+			foreach ($parameters as $key => $parameter) {
+				$result->bindParam($key, $parameter, self::$paramTypeMap[self::getParameterType($parameter)]);
+			}
+			$result->execute();
 			return $result;
 		} catch (PDOException $e) {
 			trigger_error($e->getMessage(), E_USER_ERROR);

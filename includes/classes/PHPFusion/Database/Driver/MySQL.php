@@ -103,14 +103,15 @@ class MySQL extends AbstractDatabaseDriver {
 	 * @return string
 	 */
 	public function quote($value) {
-		if (is_string($value) or (is_object($value) and method_exists($value, '__tostring'))) {
-			$value = "'".mysql_real_escape_string(strval($value), $this->connection)."'";
-		} elseif ($value === NULL) {
-			$value = 'NULL';
-		} elseif (is_bool($value)) {
-			$value = $value ? 'TRUE' : 'FALSE';
+		$type = $this->getParameterType($value);
+		if (self::PARAM_NULL === $type) {
+			return 'NULL';
+		} elseif (self::PARAM_BOOL === $type) {
+			return $value ? 'TRUE' : 'FALSE';
+		} elseif (self::PARAM_INT === $type) {
+			return $value;
 		}
-		return $value;
+		return "'".mysql_real_escape_string(strval($value), $this->connection)."'";
 	}
 
 	/**
