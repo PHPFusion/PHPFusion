@@ -137,6 +137,20 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
 }
 
 /**
+ * Get the next auto_increment id of a table
+ *
+ * Try to avoid the use of it! {@link dblastid()} after insert
+ * is more secure way to get the id of an existing record than
+ * get just a potential id.
+ *
+ * @param string $table
+ * @return int|false
+ */
+function dbnextid($table) {
+	return dbconnection()->getNextId($table);
+}
+
+/**
  * Get the last inserted auto increment id
  *
  * @return int

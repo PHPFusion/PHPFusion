@@ -211,6 +211,24 @@ abstract class AbstractDatabaseDriver
 	}
 
 	/**
+	 * Get the next auto_increment id of a table
+	 *
+	 * Try to avoid the use of it! {@link getLastId()} after insert
+	 * is more secure way to get the id of an existing record than
+	 * get just a potential id.
+	 *
+	 * @param string $table
+	 * @return int|false
+	 */
+	public function getNextId($table) {
+		$status = $this->fetchAssoc($this->query(
+			'SELECT auto_increment FROM information_schema.tables WHERE
+				table_schema = database() AND
+				table_name = :table', array(':table' => $table)));
+		return empty($status) ? false : (int) $status['auto_increment'];
+	}
+
+	/**
 	 * Send a database query
 	 *
 	 * This method will be called from AbstractDatabase::query()
