@@ -636,6 +636,19 @@ function dbquery_insert($db, $inputdata, $mode, array $options = array()) {
 	}
 }
 
+/**
+ * SQL statement helper to find values in between dots
+ * @param $column_name
+ * @param $value
+ * @return string
+ * Example: language column contains '.BL.NS.NC.NG'
+ * 			SELECT * FROM ".DB." WHERE ".in_group(language, 'BL')."
+ */
+function in_group($column_name, $value) {
+	return "$column_name REGEXP('^\\\.{$value}$|\\\.{$value}\\\.|\\\.{$value}$')";
+}
+
+
 // for sitelinks - not hierarchy
 function getcategory($cat) {
 	$presult = dbquery("SELECT link_id, link_name, link_order FROM ".DB_SITE_LINKS." WHERE link_id='$cat'");
