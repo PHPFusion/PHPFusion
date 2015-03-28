@@ -136,7 +136,7 @@ function blog_listing() {
 	echo "</div>\n"; // end panel heading
 	echo "<div ".collapse_footer_link('blog-list','0', '0').">\n";
 	echo "<ul class='list-group m-10'>\n";
-	$result2 = dbquery("SELECT blog_id, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("NS") ? "WHERE blog_language='".LANGUAGE."'" : "")." AND blog_cat='0' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
+	$result2 = dbquery("SELECT blog_id, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."'" : "")." AND blog_cat='0' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
 	if (dbrows($result2) > 0) {
 		while ($data2 = dbarray($result2)) {
 			echo "<li class='list-group-item'>\n";
@@ -183,7 +183,7 @@ function blog_listing() {
 			echo "</div>\n"; // end panel heading
 			echo "<div ".collapse_footer_link('blog-list', $data['blog_cat_id'], '0').">\n";
 			echo "<ul class='list-group'>\n";
-			$result2 = dbquery("SELECT blog_id, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("NS") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." blog_cat='".$data['blog_cat_id']."' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
+			$result2 = dbquery("SELECT blog_id, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." blog_cat='".$data['blog_cat_id']."' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
 			if (dbrows($result2) > 0) {
 				while ($data2 = dbarray($result2)) {
 					echo "<li class='list-group-item'>\n";
@@ -285,8 +285,7 @@ function blog_form() {
 			}
 		}
 
-
-		if (isset($_POST['blog_id']) && isnum($_POST['blog_id'])) {
+		if (isset($data['blog_id']) && PHPFusion\Blog\Functions::validate_blog($_GET['blog_id'])) {
 			$result = dbquery("SELECT blog_image, blog_image_t1, blog_image_t2, blog_sticky, blog_datestamp FROM ".DB_BLOG." WHERE blog_id='".$_POST['blog_id']."'");
 			if (dbrows($result)) {
 				$data2 = dbarray($result);
@@ -321,7 +320,7 @@ function blog_form() {
 		}
 	}
 
-	$result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("NS") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
+	$result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
 	$blog_cat_opts = array();
 	$blog_cat_opts['0'] = $locale['424'];
 	if (dbrows($result)) {
@@ -453,7 +452,7 @@ function blog_form() {
 	closeside();
 
 	openside('');
-	if (multilang_table("NS")) {
+	if (multilang_table("BL")) {
 		echo form_select($locale['global_ML100'], 'blog_language', 'blog_language', $language_opts, $data['blog_language'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	} else {
 		echo form_hidden('', 'blog_language', 'blog_langugage', $data['blog_language']);
