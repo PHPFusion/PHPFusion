@@ -98,9 +98,15 @@ function set_theme($theme) {
 			return;
 		}
 	}
-	echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
-	echo $locale['global_301'];
-	die();
+	// Don't stop if we are in admin panel since we use different themes now
+	if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) { // need a better check
+		// Change the error message
+		addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$locale['global_301']);
+	} else {
+		echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
+		echo $locale['global_301'];
+		die();
+	}
 }
 
 /**
