@@ -29,7 +29,7 @@ echo "<div class='pull-right'>\n";
 echo display_avatar($userdata, '90px');
 echo "</div>\n";
 echo "</div>\n<div class='col-xs-9 col-sm-9 col-md-8 col-lg-7'>\n";
-echo "<h5><strong>".$locale['welcome'].", ".(ucwords($userdata['user_name']))."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
+echo "<h5><strong>".$locale['welcome'].", ".$userdata['user_name']."</strong><br/>".getuserlevel($userdata['user_level'])."</h5>";
 echo "<div class='clearfix'>\n";
 echo form_text('', 'admin_password', 'admin_password', '', array('placeholder' => $locale['281'], 'autocomplete_off' => 1, 'password' => 1, 'required' => 1));
 echo "</div>\n";

@@ -245,7 +245,7 @@ class UserFields extends QuantumFields {
 				'status' => $this->userData['user_status']);
 			// user name
 			$this->info['core_field']['profile_user_name'] = array('title' => $locale['u068'],
-				'value' => ucwords($this->userData['user_name']));
+				'value' => $this->userData['user_name']);
 			// user level
 			$this->info['core_field']['profile_user_level'] = array('title' => $locale['u063'],
 				'value' => getgroupname($this->userData['user_level']));

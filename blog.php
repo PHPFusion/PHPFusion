@@ -203,7 +203,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
 		if ($info['blog_max_rows'] > 0) {
 			$author_res = dbresult(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval($_GET['author'])."'"), 0);
-			add_to_breadcrumbs(array('link' => BASEDIR."blog.php?author=".$_GET['author'], 'title' =>$locale['global_070'].ucwords($author_res)));
+			add_to_breadcrumbs(array('link' => BASEDIR."blog.php?author=".$_GET['author'], 'title' =>$locale['global_070'].$author_res));
 			$result = dbquery("SELECT tn.*, tc.*,
 				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 				SUM(tr.rating_vote) AS sum_rating,
@@ -379,7 +379,7 @@ $author_result = dbquery("SELECT b.blog_name, count(b.blog_id) as blog_count, u.
 if (dbrows($author_result)) {
 	while ($at_data = dbarray($author_result)) {
 		$active = isset($_GET['author']) && $_GET['author'] == $at_data['blog_name'] ? 1 : 0;
-		$info['blog_author'][$at_data['blog_name']] =  array('title'=>ucfirst($at_data['user_name']), 'link'=>BASEDIR."blog.php?author=".$at_data['blog_name'], 'count' => $at_data['blog_count'], 'active'=>$active);
+		$info['blog_author'][$at_data['blog_name']] =  array('title'=>$at_data['user_name'], 'link'=>BASEDIR."blog.php?author=".$at_data['blog_name'], 'count' => $at_data['blog_count'], 'active'=>$active);
 	}
 }
 
