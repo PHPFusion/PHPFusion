@@ -172,8 +172,8 @@ function download_form() {
 			$result2 = dbquery("SELECT download_file FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
 			if (dbrows($result2)) {
 				$data2 = dbarray($result2);
-				if (!empty($data2['download_file']) && file_exists(DOWNLOADS.$data2['download_file'])) {
-					@unlink(DOWNLOADS.$data2['download_file']);
+				if (!empty($data2['download_file']) && file_exists(DOWNLOADS.'files/'.$data2['download_file'])) {
+					@unlink(DOWNLOADS.'files/'.$data2['download_file']);
 				}
 				$data['download_file'] = '';
 				$data['download_filesize'] = '';
