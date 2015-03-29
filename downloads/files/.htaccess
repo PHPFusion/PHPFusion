@@ -1,0 +1,8 @@
+## This is placed here to bar someone from directly access into this folder.
+## This only supports server that has mod_rewrite.
+## Maybe a better approach is to use the installer to write a permanent 301 to have request_uri get into downloads/index.php as index.php?request_uri=$1
+## I'm not very familiar with htaccess. someone help do it.
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteRule ^.+$ ../index.php [L]
+</IfModule>
