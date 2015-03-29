@@ -5,7 +5,8 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: downloads.php
-| Author: Nick Jones (Digitanium)
+| Author: Frederick MC Chan (Hien)
+| Version : 9.00
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,7 +20,9 @@ require_once "maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."downloads.php";
 include THEMES."templates/global/downloads.php";
-add_to_title($locale['global_200'].$locale['400']);
+add_to_title($locale['global_200'].$locale['download_1000']);
+add_to_breadcrumbs(array('link' => BASEDIR.'downloads.php', 'title' => $locale['download_1001'])); // blog needs to be localised
+$result = null;
 // download the file
 if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 	$download_id = stripinput($_GET['file_id']);
@@ -45,226 +48,277 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 		redirect("downloads.php");
 	}
 }
-$info = array();
-$filter = ''; // you can make static custom filter here
-$info['allowed_filters'] = array('comments', 'recent', 'download', 'title', 'ratings');
-$info['filters'] = array($locale['444'] => BASEDIR."downloads.php?filter=ratings", $locale['441'] => BASEDIR."downloads.php?filter=download", $locale['443'] => BASEDIR."downloads.php?filter=recent", $locale['452'] => BASEDIR."downloads.php?filter=comments");
-$info['global_item_rows'] = dbcount("(download_cat)", DB_DOWNLOADS);
-$info['global_download_count'] = dbresult(dbquery("SELECT SUM(download_count) FROM ".DB_DOWNLOADS), 0) ? : '0';
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart']) || $_GET['rowstart'] > $info['global_item_rows']) {
-	$_GET['rowstart'] = 0;
+
+$info = array(
+	'download_title' => $locale['download_1001'],
+	'download_language' => LANGUAGE,
+	'download_categories' => get_downloadCat(),
+	'allowed_filters' => array(
+							'download' => $locale['download_2003'],
+							'recent' => $locale['download_2002'],
+							'comments' => $locale['download_2001'],
+							'ratings' => $locale['download_2004'],
+						),
+	'download_last_updated' => 0,
+	'download_max_rows' => 0,
+	'download_rows' => 0,
+	'download_nav' => '',
+);
+
+/* Filter Construct */
+$filter = array_keys($info['allowed_filters']);
+$_GET['type'] = isset($_GET['type']) && in_array($_GET['type'], array_keys($info['allowed_filters'])) ? $_GET['type'] : '';
+foreach ($info['allowed_filters'] as $type => $filter_name) {
+	$filter_link = BASEDIR."downloads.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '').(isset($_GET['archive']) ? "archive=".$_GET['archive']."&amp;" : '')."type=".$type;
+	$active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
+	$info['download_filter'][$type] = array('title'=>$filter_name, 'link'=>$filter_link, 'active' => $active);
+	unset($filter_link);
 }
 
-if (!isset($_GET['cat_id'])) {
-	$columns = '
-		td.download_id, td.download_title, td.download_description_short, td.download_image_thumb, td.download_url,
-		td.download_count, td.download_cat, tc.download_cat_id, td.download_visibility
-		';
-	// No Pagenavigation.
-	if (!isset($_GET['filter'])) {
-		// Most Downloaded
-		$result = dbquery("SELECT ".$columns."
-            FROM ".DB_DOWNLOADS." td
-            LEFT JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
-            ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
-            ORDER BY download_count DESC LIMIT 0, ".$settings['downloads_per_page']."
-            ");
-		if (dbrows($result) > 0) {
-			while ($data = dbarray($result)) {
-				$info['most_downloaded'][] = $data;
-			}
-		}
-		// Most Recently Added
-		$result = dbquery("SELECT ".$columns."
-		FROM ".DB_DOWNLOADS." td
-		LEFT JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
-		".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
-		ORDER BY download_datestamp DESC LIMIT 0, ".$settings['downloads_per_page']." ");
-		if (dbrows($result) > 0) {
-			while ($data = dbarray($result)) {
-				$info['most_recent'][] = $data;
-			}
-		}
-	}
-
-	if (isset($_GET['filter']) && in_array($_GET['filter'], $info['allowed_filters'])) {
-		$current_filter = $_GET['filter'];
-		$info['filter-title'] = $locale[$_GET['filter']];
-		// supports pagination
-		$row_start = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
-
-		if ($current_filter == 'ratings') {
-			$result = dbquery("SELECT ".$columns.", SUM(tr.rating_vote) AS sum_rating,  COUNT(tr.rating_item_id) AS count_votes
-			FROM ".DB_DOWNLOADS." td
-			LEFT JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
-			LEFT JOIN ".DB_RATINGS." tr ON (tr.rating_item_id=td.download_id AND tr.rating_type='D')
-			".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")."
-			".groupaccess('download_visibility')."
-			GROUP BY td.download_id
-			ORDER BY sum_rating DESC LIMIT ".$_GET['rowstart'].", ".$settings['downloads_per_page']."
-			");
-		} elseif ($current_filter == 'download') {
-			$result = dbquery("SELECT ".$columns."
-			FROM ".DB_DOWNLOADS." td
-			LEFT JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
-			".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
-			ORDER BY download_count DESC LIMIT ".$_GET['rowstart'].", ".$settings['downloads_per_page']." ");
-		} elseif ($current_filter == 'recent') {
-			$result = dbquery("SELECT ".$columns."
-			FROM ".DB_DOWNLOADS." td
-			LEFT JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
-			".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
-			ORDER BY download_datestamp DESC LIMIT ".$_GET['rowstart'].", ".$settings['downloads_per_page']." ");
-		} elseif ($current_filter == 'comments') {
-			$result = dbquery("SELECT ".$columns.", COUNT(cc.comment_id) AS total_comments
-			FROM ".DB_DOWNLOADS." td
-			LEFT JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
-			LEFT JOIN ".DB_COMMENTS." cc ON (cc.comment_item_id=td.download_id AND comment_type='d')
-			".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")."
-			".groupaccess('download_visibility')."
-			GROUP BY td.download_id
-			ORDER BY total_comments DESC LIMIT ".$_GET['rowstart'].", ".$settings['downloads_per_page']." ");
-		}
-
-		if (dbrows($result)>0) {
-			while ($data = dbarray($result)) {
-				$info['filter-results'][] = $data;
-			}
-		}
-	}
+switch($_GET['type']) {
+	case 'recent':
+		$filter_condition = 'download_datestamp DESC';
+		break;
+	case 'comments':
+		$filter_condition = 'count_comment DESC';
+		break;
+	case 'ratings':
+		$filter_condition = 'sum_rating DESC';
+		break;
+	case 'download':
+		$filter_condition = 'download_count DESC';
+		break;
+	default:
+		$filter_condition = 'download_count DESC';
 }
 
-$info['download_category'] = array();
+/*
+ * Fix flaw 1: Seperated download_id and cat_id.
+*/
 
-// Category Listing for Browse by Category
-$result = dbquery("
-		SELECT download_cat_id, download_cat_name, download_cat_description, download_cat_sorting
-		FROM ".DB_DOWNLOAD_CATS."
-		".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "").$filter." 
-		ORDER BY download_cat_name
-		");
-
-if (dbrows($result) > 0) {
-	while ($data = dbarray($result)) {
-		$info['download_category'][$data['download_cat_id']] = $data;
-	}
-}
-
-// Category Callback Information
-if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-	$result = dbquery("
-		SELECT download_cat_id, download_cat_name, download_cat_description, download_cat_sorting
-		FROM ".DB_DOWNLOAD_CATS."
-		".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." download_cat_id='".$_GET['cat_id']."' ".$filter." 
-		ORDER BY download_cat_name
-		");
-	if (dbrows($result) > 0) {
-		$data = dbarray($result);
-		list($rows, $max_rows) = dbarraynum(dbquery("SELECT COUNT(b.download_id), MAX(b.download_id)
-													FROM ".DB_DOWNLOAD_CATS." a
-													LEFT JOIN ".DB_DOWNLOADS." b ON b.download_cat=a.download_cat_id
-													WHERE a.download_cat_id='".$data['download_cat_id']."'
-													"));
-		$info['download_category_id'] = $data['download_cat_id'];
-		$info['download_items'] = array();
-		$info['download_item_rows'] = $rows; // total possible rows in the whole category - use against rowstart.
-		$info['download_item_max_id'] = $max_rows; // last id of the download id inside the category.
-		// Prepare vars for incoming sqlquery
-		// Limit
-		if (!isset($_GET['rowstart'.$data['download_cat_id']]) || !isnum($_GET['rowstart'.$data['download_cat_id']]) || $_GET['rowstart'.$data['download_cat_id']] > $rows) {
-			$_GET['rowstart'.$data['download_cat_id']] = 0;
-		}
-		// filters
-		$order_by = '';
-		if ($rows > 0) {
-			// to filter in category listing result.
-			$info['filters-1'] = array(
-				$locale['451'] => BASEDIR."downloads.php?cat_id=".$_GET['cat_id'].(isset($_GET['show']) && isnum($_GET['show']) ? "&amp;show=".$_GET['show'] : '')."",
-				$locale['452'] => BASEDIR."downloads.php?cat_id=".$_GET['cat_id']."&amp;type=comments".(isset($_GET['show']) && isnum($_GET['show']) ? "&amp;show=".$_GET['show'] : ''),
-				$locale['453'] => BASEDIR."downloads.php?cat_id=".$_GET['cat_id']."&amp;type=recent".(isset($_GET['show']) && isnum($_GET['show']) ? "&amp;show=".$_GET['show'] : ''),
-				$locale['454'] => BASEDIR."downloads.php?cat_id=".$_GET['cat_id']."&amp;type=title".(isset($_GET['show']) && isnum($_GET['show']) ? "&amp;show=".$_GET['show'] : ''),
-				$locale['455'] => BASEDIR."downloads.php?cat_id=".$_GET['cat_id']."&amp;type=ratings".(isset($_GET['show']) && isnum($_GET['show']) ? "&amp;show=".$_GET['show'] : '')
-			);
-			// to extend number of downloads_per_page up to maximum 3 times the number of $settings['downloads_per_page'];
-			for ($i = 1; $i <= 3; $i++) {
-				$info['filters-2'][$settings['downloads_per_page']*$i] =
-					BASEDIR."downloads.php?cat_id=".$_GET['cat_id'].(isset($_GET['type']) && in_array($_GET['type'], $info['allowed_filters']) ?
-					"&amp;type=".$_GET['type'] : '')."&amp;show=".$settings['downloads_per_page']*$i;
-			}
-			// construct filter here
-			$columns = '';
-			if (isset($_GET['type']) && in_array($_GET['type'], $info['allowed_filters'])) {
-				$current_filter = $_GET['type'];
-				$cat_filter = '';
-				if ($current_filter == 'comments') {
-				// order by comment_count.
-					$cat_filter = 'count_comment DESC';
-				} elseif ($current_filter == 'recent') {
-				// order by datestamp
-					$cat_filter = 'download_datestamp DESC';
-				} elseif ($current_filter == 'title') {
-				// order by download_title
-					$cat_filter = 'download_title ASC';
-				} elseif ($current_filter == 'ratings') {
-				// order by rating_count.
-					$cat_filter = 'sum_rating DESC';
-				}
-			} else {
-				$cat_filter = $data['download_cat_sorting'];
-				// go default here.
-			}
-			$info['category_show'] = isset($_GET['show']) && isnum($_GET['show']) ? $_GET['show'] : $settings['downloads_per_page'];
-			$cresult = dbquery("SELECT td.download_id, td.download_user, td.download_datestamp, td.download_image_thumb, td.download_cat,
-								td.download_title, td.download_version, td.download_count, td.download_description_short, td.download_file,
-								td.download_url,
-								tu.user_id, tu.user_name, tu.user_status,
-								SUM(tr.rating_vote) AS sum_rating,
-								COUNT(tr.rating_item_id) AS count_votes,
-								COUNT(tc.comment_item_id) AS count_comment
-								FROM ".DB_DOWNLOADS." td
-								LEFT JOIN ".DB_USERS." tu ON td.download_user=tu.user_id
-								LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = td.download_id AND tr.rating_type='D'
-								LEFT JOIN ".DB_COMMENTS." tc ON tc.comment_item_id = td.download_id AND tc.comment_type='d'
-								WHERE download_cat='".$data['download_cat_id']."'
-								GROUP BY download_id
-								ORDER BY ".$cat_filter."
-								LIMIT ".$_GET['rowstart'.$data['download_cat_id']].",".$info['category_show']);
-			$numrows = dbrows($cresult);
-			while ($download_list = dbarray($cresult)) {
-				$info['download_items'][$download_list['download_id']] = $download_list; // results
-				$info['download_items'][$download_list['download_id']]['comments_count'] = dbcount("(comment_id)", DB_COMMENTS, "comment_type='D' AND comment_item_id='".$download_list['download_id']."'");
-			}
-		}
-	}
-	// Download details
-	if (isset($_GET['download_id']) && isnum($_GET['download_id'])) {
-		$result = dbquery("SELECT td.*,
-				tc.download_cat_id, tc.download_cat_name,
-				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar, tu.user_level
-                FROM ".DB_DOWNLOADS." td
-                LEFT JOIN ".DB_DOWNLOAD_CATS." tc ON td.download_cat=tc.download_cat_id
-                LEFT JOIN ".DB_USERS." tu ON td.download_user=tu.user_id
-                ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." download_id='".$_GET['download_id']."'");
-		if (dbrows($result)) {
+if (isset($_GET['download_id'])) {
+	if (validate_download($_GET['download_id'])) {
+		$result = dbquery("SELECT d.*, dc.*,
+					tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+	 				SUM(tr.rating_vote) AS sum_rating,
+					COUNT(tr.rating_item_id) AS count_votes,
+					COUNT(td.comment_item_id) AS count_comment,
+					d.download_datestamp as last_updated
+					FROM ".DB_DOWNLOADS." d
+					LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
+					LEFT JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
+					LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
+					LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'
+					".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')." AND
+					download_id='".$_GET['download_id']."'
+					GROUP BY download_id
+					");
+		$info['download_rows'] = dbrows($result);
+		if ($info['download_rows'] > 0) {
+			include INCLUDES."comments_include.php";
+			include INCLUDES."ratings_include.php";
 			$data = dbarray($result);
-			$info['data'] = $data;
-			if (!checkgroup($data['download_visibility'])) {
-				redirect(FUSION_SELF);
+			$data['download_description_short'] = nl2br(parseubb(parsesmileys($data['download_description_short'])));
+			$data['download_description'] = nl2br(parseubb(parsesmileys($data['download_description'])));
+			$data['download_file_link'] = BASEDIR."downloads.php?file_id=".$data['download_id'];
+			$data['download_post_author'] = display_avatar($data, '25px', '', true, 'img-rounded').profile_link($data['user_id'], $data['user_name'], $data['user_status']);
+			$data['download_post_cat'] = $locale['in']." <a href='".BASEDIR."downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>";
+			$data['download_post_time'] = $locale['global_049']." ".timer($data['download_datestamp']);
+			$data['download_count'] = format_word($data['download_count'], $locale['fmt_download']);
+			$data['download_version'] = $data['download_version'] ? $data['download_version'] : $locale['na'];
+			$data['download_license'] = $data['download_license'] ? $data['download_license'] : $locale['na'];
+			$data['download_os'] = $data['download_os'] ? $data['download_os'] : $locale['na'];
+			$data['download_copyright'] = $data['download_copyright'] ? $data['download_copyright'] : $locale['na'];
+			if ($data['download_homepage']) {
+				$urlprefix = (!strstr($data['download_homepage'], "http://") && !strstr($data['download_homepage'], "https://")) ? 'http://' : '';
+				$data['download_homepage'] = "<a href='".$urlprefix.$data['download_homepage']."' title='".$urlprefix.$data['download_homepage']."' target='_blank'>".$locale['download_1018']."</a>\n";
+			} else {
+				$data['download_homepage'] = $locale['na'];
 			}
+
+			/* Admin link */
+			$data['admin_link'] = '';
+			if (iADMIN && checkrights('BLOG')) {
+				$data['admin_link'] = array(
+					'edit' => ADMIN."download.php".$aidlink."&amp;action=edit&amp;section=nform&amp;download_id=".$data['download_id'],
+					'delete' => ADMIN."download.php".$aidlink."&amp;action=delete&amp;section=nform&amp;download_id=".$data['download_id'],
+				);
+			}
+			$info['download_title'] = $data['download_title'];
+			$info['download_updated'] = $locale['global_049']." ".timer($data['download_datestamp']);
+			add_to_breadcrumbs(array('link' => BASEDIR."downloads.php?download_id=".$_GET['download_id'], 'title' => $data['download_title']));
+			add_to_title($data['download_title']);
+			add_to_meta($data['download_title'].($data['download_keywords'] ? ",".$data['download_keywords'] : ''));
+			if ($data['download_keywords'] !=="") { set_meta("keywords", $data['download_keywords']); }
+			$data['download_title'] = "<a class='text-dark' href='".BASEDIR."downloads.php?readmore=".$data['download_id']."'>".$data['download_title']."</a>";
+			$info['download_item'] = $data;
+		}
+	} else {
+		redirect(BASEDIR."downloads.php");
+	}
+} else {
+
+	$condition = '';
+	if (isset($_GET['author']) && isnum($_GET['author'])) {
+		$condition = "AND download_user = '".intval($_GET['author'])."'";
+	}
+
+	if (isset($_GET['cat_id'])) {
+		/**
+		 * Download Category SQL
+		 */
+		/* given a datestamp, calculate min of the month and max of the month */
+		if ($_GET['cat_id'] > 0) {
+			$res = dbarray(dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id='".intval($_GET['cat_id'])."'"));
+			add_to_breadcrumbs(array('link' => BASEDIR."downloads.php?cat_id=".$_GET['cat_id'], 'title' => $res['download_cat_name']));
+			add_to_title($res['download_cat_name']);
+			add_to_meta($res['download_cat_name']);
+			$info['download_title'] = $res['download_cat_name'];
+		}
+		$info['download_max_rows'] = dbcount("('download_id')", DB_DOWNLOADS, "download_cat='".intval($_GET['cat_id'])."' AND ".groupaccess('download_visibility'));
+		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['download_max_rows']) ? $_GET['rowstart'] : 0;
+		if ($info['download_max_rows']) {
+			$result = dbquery("
+				SELECT d.*, dc.*,
+				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+				IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating,
+				COUNT(tr.rating_item_id) AS count_votes,
+				COUNT(td.comment_item_id) AS count_comment,
+				max(d.download_datestamp) as last_updated
+				FROM ".DB_DOWNLOADS." d
+				LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
+				LEFT JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
+				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
+				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'
+				".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
+				AND download_cat = '".intval($_GET['cat_id'])."'
+				GROUP BY d.download_id
+				ORDER BY ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($settings['downloads_per_page'])
+			);
+			$info['download_rows'] = dbrows($result);
+		}
+	} else {
+		/**
+		 * Everyone's Download Posts
+		 */
+		$info['download_max_rows'] = dbcount("('download_id')", DB_DOWNLOADS, groupaccess('download_visibility'));
+		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['download_max_rows']) ? $_GET['rowstart'] : 0;
+		if ($info['download_max_rows'] > 0) {
+			$result = dbquery("
+				SELECT d.*, dc.*,
+				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
+				IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating,
+				COUNT(tr.rating_item_id) AS count_votes,
+				COUNT(td.comment_item_id) AS count_comment,
+				max(d.download_datestamp) as last_updated
+				FROM ".DB_DOWNLOADS." d
+				LEFT JOIN ".DB_DOWNLOAD_CATS." dc ON d.download_cat=dc.download_cat_id
+				LEFT JOIN ".DB_USERS." tu ON d.download_user=tu.user_id
+				LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'
+				LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'
+				".(multilang_table("DL") ? "WHERE dc.download_cat_language = '".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')."
+				".$condition."
+				GROUP BY d.download_id
+				ORDER BY ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($settings['downloads_per_page'])
+			);
+			$info['download_rows'] = dbrows($result);
 		}
 	}
 }
 
-// Breadcrumbs
-add_to_breadcrumbs(array('link' => BASEDIR."downloads.php", 'title' => $locale['417']));
-if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-	add_to_breadcrumbs(array('link' => BASEDIR."downloads.php?cat_id=".$_GET['cat_id'], 'title' => $info['download_category'][$_GET['cat_id']]['download_cat_name']));
-	if (isset($_GET['download_id']) && isnum($_GET['download_id'])) {
-		add_to_breadcrumbs(array('link' => BASEDIR."downloads.php?cat_id=".$_GET['cat_id']."&amp;download_id=".$_GET['download_id'], 'title' => $info['data']['download_title']));
-		// download id name.
-	}
+// Set Rows
+// Make Page Navigation
+if (($info['download_max_rows'] > $settings['downloads_per_page']) && (!isset($_GET['download_id']) || !isnum($_GET['download_id']))) {
+	$info['download_nav'] = makepagenav($_GET['rowstart'], $settings['downloads_per_page'], $info['download_max_rows'], 3);
 }
 
+if (!empty($info['download_rows'])) {
+	while ($data = dbarray($result)) {
+		// Blog Image
+		$download_image ='';
+		if ($data['download_image'] && $settings['download_screenshot']) {
+			$hiRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], true);
+			$lowRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], false);
+			$download_image = "<a href='".BASEDIR."downloads.php?download_id=".$data['download_id']."'>".thumbnail($lowRes_image_path, '100px')."</a>";
+		}
+
+		$cdata = array(
+			'download_anchor'				=> 		"<a name='download_".$data['download_id']."' id='download_".$data['download_id']."'></a>",
+			'download_description_short'	=>		nl2br(stripslashes($data['download_description_short'])),
+			'download_description'			=> 		nl2br(stripslashes($data['download_description'])),
+			'download_link'					=>		BASEDIR."downloads.php?download_id=".$data['download_id'],
+			'download_category_link'		=>		"<a href='".BASEDIR."downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>\n",
+			'download_readmore_link'		=> 		"<a href='".BASEDIR."downloads.php?download_id=".$data['download_id']."'>".$locale['download_1006']."</a>\n",
+			'download_title' 				=>		stripslashes($data['download_title']),
+			'download_image'				=> 		$download_image,
+			'download_thumb'				=>		get_download_image_path($data['download_image'], $data['download_image_thumb'], false),
+			"download_count" 				=> 		format_word($data['download_count'], $locale['fmt_download']),
+			"download_comments" 			=> 		format_word($data['count_comment'], $locale['fmt_comment']) ,
+			'download_sum_rating'			=> 		format_word($data['sum_rating'], $locale['fmt_rating']),
+			'download_count_votes' 			=> 		format_word($data['count_votes'], $locale['fmt_vote']),
+			'download_user_avatar'			=>		display_avatar($data, '25px', '', true, 'img-rounded'),
+			'download_user_link'			=>		profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
+			'download_file_link'			=>		file_exists(DOWNLOADS.'/files/'.$data['download_file']) ? BASEDIR."downloads.php?file_id=".$data['download_id'] : '',
+		);
+		$data = array_merge($data, $cdata);
+		$info['download_item'][$data['download_id']] = $data;
+	}
+}
+$author_result = dbquery("SELECT b.download_title, b.download_user, count(b.download_id) as download_count, u.user_id, u.user_name, u.user_status
+				FROM ".DB_DOWNLOADS." b
+				INNER JOIN ".DB_USERS." u on (b.download_user = u.user_id)
+				GROUP BY b.download_user ORDER BY b.download_user ASC
+				");
+if (dbrows($author_result)) {
+	while ($at_data = dbarray($author_result)) {
+		$active = isset($_GET['author']) && $_GET['author'] == $at_data['download_user'] ? 1 : 0;
+		$info['download_author'][$at_data['download_user']] =  array('title'=>$at_data['user_name'], 'link'=>BASEDIR."downloads.php?author=".$at_data['download_user'], 'count' => $at_data['download_count'], 'active'=>$active);
+	}
+}
 render_downloads($info);
 require_once THEMES."templates/footer.php";
-?>
+
+/**
+ * Returns Downloads Category Hierarchy Tree Data
+ * @return array
+ */
+function get_downloadCat() {
+	return \PHPFusion\Downloads\Functions::get_downloadCatsData();
+}
+
+/**
+ * Get Downloads Hierarchy Index
+ * @return array
+ */
+function get_downloadCatsIndex() {
+	return PHPFusion\Downloads\Functions::get_downloadCatsIndex();
+}
+
+/**
+ * Validate Downloads ID
+ * @param $download_id
+ * @return int
+ */
+function validate_download($download_id) {
+	return PHPFusion\Downloads\Functions::validate_download($download_id);
+}
+
+/**
+ * Validate Downloads Cat Id
+ * @param $download_cat_id
+ * @return int
+ */
+function validate_downloadCats($download_cat_id) {
+	return PHPFusion\Downloads\Functions::validate_downloadCat($download_cat_id);
+}
+
+/**
+ * Get the closest image available
+ * @param      $image
+ * @param      $thumb1
+ * @param bool $hires - true for image, false for thumbnail
+ * @return bool|string
+ */
+function get_download_image_path($image, $thumb1, $hires=false) {
+	return \PHPFusion\Downloads\Functions::get_download_image_path($image, $thumb1, $hires);
+}

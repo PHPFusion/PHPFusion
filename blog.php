@@ -48,7 +48,6 @@ $info = array(
 /* Filter Construct */
 $filter = array_keys($info['allowed_filters']);
 $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'], array_keys($info['allowed_filters'])) ? $_GET['type'] : '';
-
 foreach ($info['allowed_filters'] as $type => $filter_name) {
 	$filter_link = BASEDIR."blog.php?".($_GET['cat_id'] !=='' ? "cat_id=".$_GET['cat_id']."&amp;" : '').(isset($_GET['archive']) ? "archive=".$_GET['archive']."&amp;" : '')."type=".$type;
 	$active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
@@ -268,7 +267,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		}
 	}
 	else {
-
 		/**
 		 * Everyone's Blog Posts
 		 */
@@ -346,9 +344,6 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				'blog_user_avatar'		=>		display_avatar($data, '35px', '', true, 'img-rounded'),
 				'blog_user_link'		=>		profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
 			);
-
-
-
 
 			$data = array_merge($data, $cdata);
 			$info['blog_item'][$data['blog_id']] = $data;
