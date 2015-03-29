@@ -1,5 +1,5 @@
 <?php
-$locale['400'] = "Downloads Center";
+$locale['400'] = "Downloads";
 // Download File Information
 $locale['410'] = "New"; // change case and removed brackets
 $locale['411'] = "License:";
