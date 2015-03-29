@@ -636,6 +636,7 @@ function dbquery_insert($db, $inputdata, $mode, array $options = array()) {
 	}
 }
 
+
 /**
  * SQL statement helper to find values in between dots
  * @param $column_name
@@ -644,8 +645,12 @@ function dbquery_insert($db, $inputdata, $mode, array $options = array()) {
  * Example: language column contains '.BL.NS.NC.NG'
  * 			SELECT * FROM ".DB." WHERE ".in_group(language, 'BL')."
  */
-function in_group($column_name, $value) {
-	return "$column_name REGEXP('^\\\.{$value}$|\\\.{$value}\\\.|\\\.{$value}$')";
+function in_group($column_name, $value, $delim = '.') {
+	if ($delim == '.') {
+		return "$column_name REGEXP('^\\{$value}$|\\\.{$value}\\\.|\\\.{$value}$')";
+	} else {
+		return "$column_name REGEXP('^\\{$value}$|\\,{$value}\\,|\\,{$value}$')";
+	}
 }
 
 
