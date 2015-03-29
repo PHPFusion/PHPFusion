@@ -151,10 +151,10 @@ function download_form() {
 			'download_description_short'	=>	form_sanitizer($_POST['download_description_short'], '', 'download_description_short'),
 			'download_description'	=>	form_sanitizer($_POST['download_description'], '', 'download_description'),
 			'download_keywords'	=>	form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
-			'download_image'	=> form_sanitizer($_POST['download_hidden_image'], '', 'download_hidden_image'),
-			'download_image_thumb'	=> form_sanitizer($_POST['download_hidden_image_thumb'], '', 'download_hidden_image_thumb'),
+			'download_image'	=> isset($_POST['download_hidden_image']) ? form_sanitizer($_POST['download_hidden_image'], '', 'download_hidden_image') : '',
+			'download_image_thumb'	=> isset($_POST['download_hidden_image']) ? form_sanitizer($_POST['download_hidden_image_thumb'], '', 'download_hidden_image_thumb') : '',
 			'download_url'	=>	form_sanitizer($_POST['download_url'], '', 'download_url'),
-			'download_file'	=>	form_sanitizer($_POST['download_hidden_file'], '', 'download_hidden_file'),
+			'download_file'	=>	isset($_POST['download_hidden_image']) ? form_sanitizer($_POST['download_hidden_file'], '', 'download_hidden_file') : '',
 			'download_license' => form_sanitizer($_POST['download_license'], '', 'download_license'),
 			'download_copyright' => form_sanitizer($_POST['download_copyright'], '', 'download_copyright'),
 			'download_os' => form_sanitizer($_POST['download_os'], '', 'download_os'),
@@ -407,7 +407,7 @@ function download_listing() {
 
 				echo "<div ".collapse_footer_link('download-list', $data['download_cat_id'], '0').">\n";
 				echo "<ul class='list-group m-10'>\n";
-				$result2 = dbquery("SELECT download_id, download_title, download_description_short, download_url, download_file, download_image FROM ".DB_DOWNLOADS." WHERE download_cat='".$data['download_cat_id']."' ORDER BY download_title");
+				$result2 = dbquery("SELECT download_id, download_title, download_description_short, download_url, download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_cat='".$data['download_cat_id']."' ORDER BY download_title");
 				if (dbrows($result2) > 0) {
 					while ($data2 = dbarray($result2)) {
 						$download_url = $data2['download_url'];
@@ -418,7 +418,7 @@ function download_listing() {
 						}
 						echo "<li class='list-group-item'>\n";
 						echo "<div class='pull-left m-r-10'>\n";
-						echo thumbnail(DOWNLOADS."images/".$data2['download_thumb'], '50px');
+						echo thumbnail(DOWNLOADS."images/".$data2['download_image_thumb'], '50px');
 						echo "</div>\n";
 						echo "<div class='overflow-hide'>\n";
 						echo "<span class='strong text-dark'>".$data2['download_title']."</span><br/>\n";
