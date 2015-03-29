@@ -55,9 +55,11 @@ $master_tab_title['title'][] = $locale['download_0000'];
 $master_tab_title['id'][] = "downloads";
 $master_tab_title['icon'][] = "";
 
-$master_tab_title['title'][] = isset($_GET['action']) ? $locale['download_0003'] : $locale['download_0002'];
-$master_tab_title['id'][] = "dlopts";
-$master_tab_title['icon'][] =  $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+if (dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "")) {
+	$master_tab_title['title'][] = isset($_GET['action']) ? $locale['download_0003'] : $locale['download_0002'];
+	$master_tab_title['id'][] = "dlopts";
+	$master_tab_title['icon'][] =  $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+}
 
 $master_tab_active = tab_active($master_tab_title, $_GET['section'], 1);
 
@@ -144,16 +146,16 @@ function download_form() {
 	if (isset($_POST['save_download'])) {
 		$data = array(
 			'download_id' 	=>	form_sanitizer($_POST['download_id'], '0', 'download_id'),
-			'download_user'	=> 	$userdata['user_id'],
-			'download_homepage'	=> form_sanitizer($_POST['download_homepage'], '', 'download_homepage'),
-			'download_title'	=>	form_sanitizer($_POST['download_title'], '', 'download_title'),
+			'download_user' => $userdata['user_id'],
+			'download_homepage' => form_sanitizer($_POST['download_homepage'], '', 'download_homepage'),
+			'download_title' => form_sanitizer($_POST['download_title'], '', 'download_title'),
 			'download_cat'		=>	form_sanitizer($_POST['download_cat'], '0', 'download_cat'),
-			'download_description_short'	=>	form_sanitizer($_POST['download_description_short'], '', 'download_description_short'),
-			'download_description'	=>	form_sanitizer($_POST['download_description'], '', 'download_description'),
-			'download_keywords'	=>	form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
+			'download_description_short' => form_sanitizer($_POST['download_description_short'], '', 'download_description_short'),
+			'download_description' => form_sanitizer($_POST['download_description'], '', 'download_description'),
+			'download_keywords' => form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
 			'download_image'	=> isset($_POST['download_hidden_image']) ? form_sanitizer($_POST['download_hidden_image'], '', 'download_hidden_image') : '',
 			'download_image_thumb'	=> isset($_POST['download_hidden_image']) ? form_sanitizer($_POST['download_hidden_image_thumb'], '', 'download_hidden_image_thumb') : '',
-			'download_url'	=>	form_sanitizer($_POST['download_url'], '', 'download_url'),
+			'download_url' => form_sanitizer($_POST['download_url'], '', 'download_url'),
 			'download_file'	=>	isset($_POST['download_hidden_image']) ? form_sanitizer($_POST['download_hidden_file'], '', 'download_hidden_file') : '',
 			'download_license' => form_sanitizer($_POST['download_license'], '', 'download_license'),
 			'download_copyright' => form_sanitizer($_POST['download_copyright'], '', 'download_copyright'),
@@ -263,10 +265,10 @@ function download_form() {
 			echo thumbnail(DOWNLOADS."images/".$data['download_image_thumb'], '80px');
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
-				echo "<span class='text-dark strong'>".$locale['download_0220']."</span>\n";
-				echo form_checkbox($locale['download_0216'], 'del_image', 'del_image', '');
-				echo form_hidden('', 'download_hidden_image', 'download_hidden_image', $data['download_image']);
-				echo form_hidden('', 'download_hidden_image_thumb', 'download_hidden_image_thumb', $data['download_image_thumb']);
+			echo "<span class='text-dark strong'>".$locale['download_0220']."</span>\n";
+			echo form_checkbox($locale['download_0216'], 'del_image', 'del_image', '');
+			echo form_hidden('', 'download_hidden_image', 'download_hidden_image', $data['download_image']);
+			echo form_hidden('', 'download_hidden_image_thumb', 'download_hidden_image_thumb', $data['download_image_thumb']);
 			echo "</div>\n";
 			echo "</div>\n";
 		} else {
@@ -395,10 +397,10 @@ function download_listing() {
 			while ($data = dbarray($result)) {
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-heading clearfix'>\n";
-					echo "<div class='btn-group pull-right m-t-5'>\n";
-						echo "<a class='btn btn-default btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=edit&amp;section=dadd&amp;cat_id=".$data['download_cat_id']."'><i class='fa fa-pencil fa-fw'></i> ".$locale['edit']."</a>\n";
-						echo "<a class='btn btn-default btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
-					echo "</div>\n";
+				echo "<div class='btn-group pull-right m-t-5'>\n";
+				echo "<a class='btn btn-default btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=edit&amp;section=dadd&amp;cat_id=".$data['download_cat_id']."'><i class='fa fa-pencil fa-fw'></i> ".$locale['edit']."</a>\n";
+				echo "<a class='btn btn-default btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
+				echo "</div>\n";
 				echo "<div class='overflow-hide p-r-10'>\n";
 				echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('download-list', $data['download_cat_id'], '0', 'm-r-10 text-bigger strong').">".$data['download_cat_name']."</a> <span class='badge'>".$data['download_count']."</h4>\n";
 				echo "<br/><span class='text-smaller text-uppercase'>".$data['download_cat_language']."</span>";
@@ -409,7 +411,7 @@ function download_listing() {
 				echo "<ul class='list-group m-10'>\n";
 				$result2 = dbquery("SELECT download_id, download_title, download_description_short, download_url, download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_cat='".$data['download_cat_id']."' ORDER BY download_title");
 				if (dbrows($result2) > 0) {
-					while ($data2 = dbarray($result2)) {
+					while($data2 = dbarray($result2)) {
 						$download_url = '';
 						if (!empty($data2['download_file']) && file_exists(DOWNLOADS."files/".$data2['download_file'])) {
 							$download_url = DOWNLOADS."files/".$data2['download_file'];

@@ -1,11 +1,26 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: global/downloads.php
+| Author: Frederick MC Chan (Hien)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
 if (!function_exists('filter_item_list')) {
 	function filter_item_list($info) {
 		global $locale, $settings;
 		$i = $_GET['rowstart']+1;
-		//print_p($info);
-		echo "<h3>".$locale[$_GET['filter']]."</h3>\n";
+		echo "<h3 class='m-t-0'>".$locale[$_GET['filter']]."</h3>\n";
 		echo "<div class='list-group m-t-20'>\n";
 		if (!empty($info['filter-results'])) {
 			foreach($info['filter-results'] as $data) {
@@ -13,7 +28,7 @@ if (!function_exists('filter_item_list')) {
 				echo "<div class='list-group-item clearfix'>\n";
 				echo "<span class='badge m-t-10'>Downloaded ".$data['download_count']." </span>\n";
 				echo "<div class='pull-left m-r-10'>\n";
-				$img_thumb = ($data['download_image_thumb']) ? DOWNLOADS."images/".$data['download_image_thumb'] : DOWNLOADS."images/no_image.jpg";
+				$img_thumb = ($data['download_image_thumb']) ? DOWNLOADS."images/".$data['download_image_thumb'] : IMAGES."imagenotfound70.jpg";
 				echo thumbnail($img_thumb, '70px');
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";
@@ -99,51 +114,12 @@ if (!function_exists('render_downloads')) {
 
 	function render_downloads($info) {
 		global $settings, $locale;
-		opentable($locale['400']);
 
-		// header
-		if (isset($_GET['download_id']) && isset($_GET['cat_id'])) {
-			echo "<h3>".$info['download_category'][$_GET['cat_id']]['download_cat_name']."</h3>";
-			echo "<p>".$info['download_category'][$_GET['cat_id']]['download_cat_description']."</p>\n";
-		}
-		elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id']) && !isset($_GET['download_id'])) {
-			echo "<h3>".$info['download_category'][$_GET['cat_id']]['download_cat_name']."</h3>";
-			echo "<p>".$info['download_category'][$_GET['cat_id']]['download_cat_description']."</p>\n";
-		}
+		//opentable($locale['400']);
 
 		echo render_breadcrumbs();
-
 		echo "<div class='row'>\n";
-		echo "<div class='download-left col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-
-		echo "<span class='text-lighter text-smaller text-uppercase'>".$locale['400']."</span>";
-		echo "<ul class='nav nav-stacked nav-pills m-t-10'>\n";
-		echo "<li><a title='".$locale['417']."' href='".BASEDIR."downloads.php'>".$locale['417']."</a></li>\n";
-		echo "</ul>\n";
-		echo "<hr>\n";
-		if (!empty($info['download_category'])) {
-			echo "<span class='text-lighter text-smaller text-uppercase'>".$locale['445']."</span>";
-			echo "<ul class='nav nav-stacked nav-pills m-t-10'>\n";
-			foreach($info['download_category'] as $cat_data) {
-				echo "<li><a ".($cat_data['download_cat_description'] ? "title='".$cat_data['download_cat_description']."'" : '')." href='".FUSION_SELF."?cat_id=".$cat_data['download_cat_id']."'>".$cat_data['download_cat_name']."</a></li>\n";
-			}
-			echo "</ul>\n";
-		}
-
-		echo "<hr>\n";
-		echo "<span class='text-lighter text-smaller text-uppercase'>".$locale['446']."</span>";
-		echo "<ul class='nav nav-pills nav-stacked m-t-10'>\n";
-		foreach($info['filters'] as $filter_locale => $filter_link) {
-			echo "<li><a title='".$filter_locale."' href='".$filter_link."'>".$filter_locale."</a></li>\n";
-		}
-		echo "</ul>\n";
-
-		echo "</div><div class='download-right col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
-
-		echo openform('searchform', 'searchform', 'post', BASEDIR."search.php", array('downtime' => 1));
-		echo form_text('', 'stext', 'search_downloads', '', array('placeholder' => rtrim($locale['460'], ':'), 'append_button' => 1));
-		echo form_hidden('stype', 'stype', 'stype', 'downloads');
-		echo closeform();
+		echo "<div class='col-xs-12 col-sm-9'>\n";
 
 		// Main View
 		if (isset($_GET['filter']) && in_array($_GET['filter'], $info['allowed_filters'])) {
@@ -166,7 +142,8 @@ if (!function_exists('render_downloads')) {
 			echo closetabbody();
 			echo closetab();
 
-		} elseif (isset($_GET['cat_id']) && !isset($_GET['download_id'])) {
+		}
+		elseif (isset($_GET['cat_id']) && !isset($_GET['download_id'])) {
 			// category page.
 			if (!empty($info['download_items'])) {
 				$selector = array(
@@ -209,23 +186,28 @@ if (!function_exists('render_downloads')) {
 					echo "<div class='list-group-item'>\n";
 					echo "<div class='row'>\n";
 					echo "<div class='col-xs-6 col-sm-9 col-md-8 col-lg-7 p-r-0'>\n";
-						echo "<div class='pull-left m-r-10'>\n";
-						$img_thumb = ($download['download_image_thumb']) ? DOWNLOADS."images/".$download['download_image_thumb'] : DOWNLOADS."images/no_image.jpg";
+					echo "<div class='pull-left m-r-10'>\n";
+					if ($download['download_image_thumb']) {
+						$img_thumb = DOWNLOADS."images/".$download['download_image_thumb'];
 						echo thumbnail($img_thumb, '70px');
-						echo "</div>\n";
-						echo "<div class='overflow-hide'>\n";
-						echo "<h4 class='m-t-0 m-b-10 strong'><a class='text-dark' href='".BASEDIR."downloads.php?cat_id=".$download['download_cat']."&amp;download_id=".$download['download_id']."'>".$download['download_title']."</a> ".$new."</h4>";
-						echo $download['download_description_short'] ? "<span>".$download['download_description_short']."</span><br/>\n" : '';
-						echo "<span class='text-smaller'>".$locale['423'].": ".($download['download_version'] ? $download['download_version']." | " : $locale['457'].' | ');
-						echo $locale['458'].": ".showdate('shortdate', $download['download_datestamp'])." | ";
-						echo $locale['459']."</span>";
-						if ($download['download_file']) {
-							echo "<a href='".BASEDIR."downloads.php?cat_id=".$download['download_cat']."&amp;file_id=".$download['download_id']."' class='btn btn-sm btn-success hidden-xs visible-sm visible-md hidden-lg m-t-10 text-white'>".$locale['461']."<i class='entypo down-circled m-l-10'></i></a>\n";
-						}
-						echo "</div>\n";
+					} else {
+						$img_thumb = IMAGES."imagenotfound70.jpg";
+						echo thumbnail($img_thumb, '70px');
+					}
+					echo "</div>\n";
+					echo "<div class='overflow-hide'>\n";
+					echo "<h4 class='m-t-0 m-b-10 strong'><a class='text-dark' href='".BASEDIR."downloads.php?cat_id=".$download['download_cat']."&amp;download_id=".$download['download_id']."'>".$download['download_title']."</a> ".$new."</h4>";
+					echo $download['download_description_short'] ? "<span>".$download['download_description_short']."</span><br/>\n" : '';
+					echo "<span class='text-smaller'>".$locale['423'].": ".($download['download_version'] ? $download['download_version']." | " : $locale['457'].' | ');
+					echo $locale['458'].": ".showdate('shortdate', $download['download_datestamp'])." | ";
+					echo $locale['459']."</span>";
+					if ($download['download_file']) {
+						echo "<a href='".BASEDIR."downloads.php?cat_id=".$download['download_cat']."&amp;file_id=".$download['download_id']."' class='btn btn-sm btn-success hidden-xs visible-sm visible-md hidden-lg m-t-10 text-white'>".$locale['461']."<i class='entypo down-circled m-l-10'></i></a>\n";
+					}
+					echo "</div>\n";
 					echo "</div>\n<div class='col-xs-2 col-sm-2 col-md-4 col-lg-2'>\n";
-						echo "<div class='text-smaller'><strong>".$locale['440']."</strong><br/>".number_format($download['download_count'])." </div>";
-						echo "<div class='text-smaller'><strong>".$locale['426']."</strong><br/>".($download['count_votes'] > 0 ? ceil($download['sum_rating']/$download['count_votes']) : $locale['429a'])."</div>";
+					echo "<div class='text-smaller'><strong>".$locale['440']."</strong><br/>".number_format($download['download_count'])." </div>";
+					echo "<div class='text-smaller'><strong>".$locale['426']."</strong><br/>".($download['count_votes'] > 0 ? ceil($download['sum_rating']/$download['count_votes']) : $locale['429a'])."</div>";
 					echo "</div>\n<div class='col-xs-4 hidden-sm hidden-md col-lg-2 p-l-0'>\n";
 					if ($download['download_file']) {
 						echo "<a href='".BASEDIR."downloads.php?cat_id=".$download['download_cat']."&amp;file_id=".$download['download_id']."' class='btn btn-sm btn-success text-white'>".$locale['461']."<i class='entypo down-circled m-l-10'></i></a>\n";
@@ -250,13 +232,15 @@ if (!function_exists('render_downloads')) {
 				echo "</div>\n";
 			}
 
-		} elseif (isset($_GET['download_id'])) {
+		}
+		elseif (isset($_GET['download_id'])) {
 
 			$data = $info['data'];
 
 			if ($data['download_keywords'] !=="") { set_meta("keywords", $data['download_keywords']); }
 
 			echo "<h3 class='m-t-0 m-b-0'>".$data['download_title']."</h3>\n";
+			echo "<p class='text-lighter'><strong>".$info['download_category'][$_GET['cat_id']]['download_cat_name']."</strong> - ".$info['download_category'][$_GET['cat_id']]['download_cat_description']."</p>";
 			echo "<div class='m-b-20'>\n";
 			echo nl2br(parseubb(parsesmileys($data['download_description'])));
 			echo "</div>\n";
@@ -266,67 +250,79 @@ if (!function_exists('render_downloads')) {
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-5 col-sm-5 col-md-5 col-lg-5' style='border-right: 1px solid #ddd;'>\n";
 			echo "<a href='".BASEDIR."downloads.php?cat_id=".$data['download_cat_id']."&amp;file_id=".$data['download_id']."' class='pull-left m-r-20 btn btn-success btn-xs m-t-5 text-white'>\n";
-			echo "<i class='entypo down-circled icon-sm'></i>\n";
+			echo "<i class='fa fa-download p-5 fa-2x'></i>\n";
 			echo "</a>\n";
-			echo "<div class='overflow-hide'><h3 class='m-t-5 m-b-0 strong'>".$locale['416']."</h3>\n ".$locale['420'].": ".$data['download_filesize']." </div>\n";
+			echo "<div class='overflow-hide'><h4 class='m-t-5 m-b-0 strong'>".$locale['416']."</h4>\n ".$locale['420'].": ".$data['download_filesize']." </div>\n";
 			echo "</div><div class='col-xs-7 col-sm-7 col-md-7 col-lg-7'>\n";
+			echo "<div class='pull-left m-b-20'>\n";
+			echo "<div class='pull-left'>".display_avatar($data, '25px', '', '', 'img-rounded')."</div>\n";
+			echo "<div class='overflow-hide'>\n";
+			echo profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/>";
+			echo "</div>\n";
+			echo "</div>\n";
+
 			if ($data['download_allow_ratings']) {
 				echo "<span class='strong'>".$locale['426a'].":</span><br/>\n";
 				echo "<a id='rateJump'>".$locale['463']."</a>\n";
 				add_to_jquery("	$('#rateJump').bind('click', function() { $('html,body').animate({scrollTop: $('#rate').offset().top}, 'slow');	});	");
 			}
 			echo "</div>\n</div>\n";
-			echo "</div><div class='panel-body'>\n";
-			echo "<h4 class='m-0'>".$locale['462']."</h4>\n";
 
+			echo "</div><div class='panel-body p-b-0'>\n";
+
+			if ($settings['download_screenshot'] && $data['download_image']) {
+				echo "<div class='pull-left m-l-0 m-10'>\n";
+				echo thumbnail(DOWNLOADS."images/".$data['download_image'],'120px');
+				echo "<p class='mid-opacity strong text-smaller m-t-0'>".$locale['419']."</h4>\n";
+				echo "</div>\n";
+			}
+
+			echo "<div class='overflow-hide m-10'>\n";
+
+			echo "<p class='strong m-0'>".$locale['462']."</p>\n";
 			echo "<div class='row m-t-5 m-b-5'>\n";
 			echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
-			echo "<span class='text-smaller text-lighter'>".$locale['423'].":</span><br/>";
+			echo "<span class='strong text-smaller text-lighter'>".$locale['423'].":</span><br/>";
 			echo $data['download_version'] ? $data['download_version'] : $locale['457'];
 			echo "</div>\n<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
-			echo "<span class='text-smaller text-lighter'>".$locale['456'].": </span><br/>";
+			echo "<span class='strong text-smaller text-lighter'>".$locale['456'].": </span><br/>";
 			echo number_format($data['download_count']);
 			echo "</div>\n<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
-			echo "<span class='text-smaller text-lighter'>".$locale['453'].":</span><br/>";
+			echo "<span class='strong text-smaller text-lighter'>".$locale['453'].":</span><br/>";
 			echo showdate("shortdate", $data['download_datestamp']);
 			echo "</div></div>\n";
 			echo "<hr class='m-t-5 m-b-0'>\n";
 			echo "<div class='row m-t-5'>\n";
 			echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
-			echo "<span class='text-smaller text-lighter'>".$locale['411'].":</span><br/>";
+			echo "<span class='strong text-smaller text-lighter'>".$locale['411'].":</span><br/>";
 			echo $data['download_license'] ? $data['download_license'] : $locale['457'];
 			echo "</div>\n<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
-			echo "<span class='text-smaller text-lighter'>".$locale['412'].":</span><br/>";
+			echo "<span class='strong text-smaller text-lighter'>".$locale['412'].":</span><br/>";
 			echo $data['download_os'] ? $data['download_os'] : $locale['457'];
 			echo "</div>\n<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
-			echo "<span class='text-smaller text-lighter'>".$locale['428'].":</span><br/>";
+			echo "<span class='strong text-smaller text-lighter'>".$locale['428'].":</span><br/>";
 			echo $data['download_copyright'] ? $data['download_copyright'] : $locale['457'];
 			echo "</div></div>\n";
+			echo "</div>\n";
 
 			echo "</div>\n";
-			echo "<div class='panel-footer'>\n";
+
 			if ($data['download_homepage']) {
-				$urlprefix = (!strstr($data['download_homepage'], "http://") && !strstr($data['download_homepage'], "https://")) ? 'http://' : '';
-				echo "<a href='".$urlprefix.$data['download_homepage']."' title='".$urlprefix.$data['download_homepage']."' target='_blank'>".$locale['418']."</a>\n";
+				echo "<div class='panel-footer'>\n";
+				if ($data['download_homepage']) {
+					$urlprefix = (!strstr($data['download_homepage'], "http://") && !strstr($data['download_homepage'], "https://")) ? 'http://' : '';
+					echo "<a href='".$urlprefix.$data['download_homepage']."' title='".$urlprefix.$data['download_homepage']."' target='_blank'>".$locale['418']."</a>\n";
+				}
+				echo "</div>\n";
 			}
-
-			echo "</div>\n";
 			echo "</div>\n";
 
 			if ($data['download_description']) {
-				echo "<h4>".$locale['427']."</h4>";
-				echo " ".$locale['by']." <strong>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</strong><br/>";
-				echo "<div class='m-t-10 m-b-20'>\n";
+				echo "<p class='strong'>".$locale['427']."</p>";
 				echo nl2br(stripslashes($data['download_description']));
-				echo "</div>\n";
 			}
 
-			if ($settings['download_screenshot'] && $data['download_image']) {
-				echo "<h4>".$locale['419']."</h4>\n";
-				echo "<div class='display-inline-block m-b-20' style='width:100%;'>\n";
-				echo thumbnail(DOWNLOADS."images/".$data['download_image'],'150px');
-				echo "</div>\n";
-			}
+
 
 			include INCLUDES."comments_include.php";
 			include INCLUDES."ratings_include.php";
@@ -338,8 +334,26 @@ if (!function_exists('render_downloads')) {
 				showratings("D", $_GET['download_id'], FUSION_SELF."?cat_id=".$data['download_cat']."&amp;download_id=".$_GET['download_id']);
 			}
 		}
+
+		echo "</div><div class='col-xs-12 col-sm-3'>\n";
+
+		echo "<div class='text-bigger strong text-dark font-lg m-b-20'>".$locale['400']."</div>";
+		echo "<ul class='m-b-20'>\n";
+		echo "<li><a title='".$locale['417']."' href='".BASEDIR."downloads.php'>".$locale['417']."</a></li>\n";
+		foreach($info['filters'] as $filter_locale => $filter_link) {
+			echo "<li><a title='".$filter_locale."' href='".$filter_link."'>".$filter_locale."</a></li>\n";
+		}
+		echo "</ul>\n";
+
+		if (!empty($info['download_category'])) {
+			echo "<div class='text-bigger strong text-dark m-b-20'><i class='fa fa-list fa-fw'></i>".$locale['445']."</div>";
+			echo "<ul class='m-b-20'>\n";
+			foreach($info['download_category'] as $cat_data) {
+				echo "<li><a ".($cat_data['download_cat_description'] ? "title='".$cat_data['download_cat_description']."'" : '')." href='".FUSION_SELF."?cat_id=".$cat_data['download_cat_id']."'>".$cat_data['download_cat_name']."</a></li>\n";
+			}
+			echo "</ul>\n";
+		}
 		echo "</div>\n</div>\n"; // left right grid.
-		closetable();
 	}
 }
 ?>

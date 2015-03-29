@@ -37,8 +37,8 @@ $locale['443'] = "Latest Additions"; // new
 $locale['444'] = "Highest Ratings"; // new
 
 // Side nav bar
-$locale['445'] = 'Browse by Category';
-$locale['446'] = 'Browse by Rates';
+$locale['445'] = 'Download Category';
+$locale['446'] = '--';
 
 // Filter titles
 $locale['comments'] = 'Most Popular Downloads';
