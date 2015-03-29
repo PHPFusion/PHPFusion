@@ -73,7 +73,6 @@ class Functions {
 			}
 		}
 		return $data;
-
 	}
 
 	/**
