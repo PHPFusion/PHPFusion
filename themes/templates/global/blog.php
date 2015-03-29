@@ -145,7 +145,7 @@ if (!function_exists('display_blog_menu')) {
 		ob_start();
 		echo "<ul class='m-b-40'>\n";
 		foreach($info['blog_filter'] as $filter_key => $filter) {
-			echo "<li ".(isset($_GET['type']) && $_GET['type'] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</li>\n";
+			echo "<li ".(isset($_GET['type']) && $_GET['type'] == $filter_key ? "class='active strong'" : '')." ><a href='".$filter['link']."'>".$filter['title']."</a></li>\n";
 		}
 		echo "</ul>\n";
 
