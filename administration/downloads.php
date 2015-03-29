@@ -411,7 +411,7 @@ function download_listing() {
 				if (dbrows($result2) > 0) {
 					while ($data2 = dbarray($result2)) {
 						$download_url = '';
-						if (!empty($data2['download_file']) && file_exists(DOWNLOADS."/files/".$data2['download_file'])) {
+						if (!empty($data2['download_file']) && file_exists(DOWNLOADS."files/".$data2['download_file'])) {
 							$download_url = DOWNLOADS."files/".$data2['download_file'];
 						} elseif (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
 							$download_url = BASEDIR.$data2['download_url'];
