@@ -1,13 +1,8 @@
-
 .idea/.name
-
 *.xml
-
 *.iml
 /nbproject/private/
-.htaccess
 config.php
 config-copy.php
 *.jpg
-
 *.png

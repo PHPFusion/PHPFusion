@@ -32,7 +32,7 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 			require_once INCLUDES."class.httpdownload.php";
 			ob_end_clean();
 			$object = new httpdownload;
-			$object->set_byfile(DOWNLOADS.$data['download_file']);
+			$object->set_byfile(DOWNLOADS.'files/'.$data['download_file']);
 			$object->use_resume = TRUE;
 			$object->download();
 			exit;

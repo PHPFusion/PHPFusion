@@ -96,7 +96,7 @@ require_once THEMES."templates/footer.php";
 /* Download Form */
 function download_form() {
 	global $locale, $settings, $userdata, $aidlink, $defender;
-
+	$upload_directory = DOWNLOADS."files/";
 	$data = array(
 		'download_id' => 0,
 		'download_user' => $userdata['user_id'],
@@ -309,7 +309,7 @@ function download_form() {
 			'valid_ext' => $settings['download_types'],
 		);
 		echo "<div class='list-group m-t-10'><div class='list-group-item'>\n";
-		echo form_fileinput($locale['download_0214'], 'download_file', 'download_file', DOWNLOADS, '', $file_options);
+		echo form_fileinput($locale['download_0214'], 'download_file', 'download_file', DOWNLOADS."files/", '', $file_options);
 		echo sprintf($locale['download_0218'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
 		echo "</div>\n";
 		echo "<div class='list-group-item'>\n";
@@ -410,9 +410,9 @@ function download_listing() {
 				$result2 = dbquery("SELECT download_id, download_title, download_description_short, download_url, download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_cat='".$data['download_cat_id']."' ORDER BY download_title");
 				if (dbrows($result2) > 0) {
 					while ($data2 = dbarray($result2)) {
-						$download_url = $data2['download_url'];
-						if (!empty($data2['download_file']) && file_exists(DOWNLOADS.$data2['download_file'])) {
-							$download_url = DOWNLOADS.$data2['download_file'];
+						$download_url = '';
+						if (!empty($data2['download_file']) && file_exists(DOWNLOADS."/files/".$data2['download_file'])) {
+							$download_url = DOWNLOADS."files/".$data2['download_file'];
 						} elseif (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
 							$download_url = BASEDIR.$data2['download_url'];
 						}
