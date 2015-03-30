@@ -50,7 +50,7 @@ if (!function_exists('display_blog_item')) {
 		echo "<div class='m-b-20'>".$data['blog_post_author']." ".$data['blog_post_time']." ".$data['blog_post_cat']."</div>\n";
 		echo "<div class='clearfix m-b-20'>\n";
 		if ($data['blog_image']) {
-			echo "<div class='m-10 m-l-0 ".$data['blog_ialign']."'>".$data['blog_image']."</div>";
+			echo "<div class='m-10 m-l-0 ".$data['blog_ialign']."'>".$data['blog_thumb_2']."</div>";
 		}
 		echo $data['blog_extended'];
 		echo "</div>\n";

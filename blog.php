@@ -121,8 +121,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$hiRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], true);
 				$lowRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], false);
 				$item['blog_image'] = "<img class='img-responsive' src='".$hiRes_image_path."' alt='".$item['blog_subject']."' title='".$item['blog_subject']."'>";
-				$item['blog_thumb_1'] = thumbnail($lowRes_image_path, '80px', $hiRes_image_path, false);
-				$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '100px', $hiRes_image_path, false);
+				$item['blog_image_link'] = $hiRes_image_path;
+				$item['blog_thumb_1_link'] = $lowRes_image_path;
+				$item['blog_thumb_1'] = thumbnail($lowRes_image_path, '80px', $hiRes_image_path, true);
+				$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '100px', $hiRes_image_path, true);
 			} else {
 				$item['blog_blog'] = '';
 				$item['blog_image'] = '';

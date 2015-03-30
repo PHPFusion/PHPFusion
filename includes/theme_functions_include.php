@@ -476,6 +476,15 @@ function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_
 		: $img;
 }
 
+/**
+ * Thumbnail function
+ * @param      $src
+ * @param      $size
+ * @param bool $url
+ * @param bool $colorbox
+ * @param bool $responsive
+ * @return string
+ */
 function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = TRUE) {
 	global $locale;
 	$src = file_exists($src) ? $src : '';
