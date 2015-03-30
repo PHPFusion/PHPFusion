@@ -285,7 +285,7 @@ function blog_form() {
 			}
 		}
 
-		if (isset($data['blog_id']) && PHPFusion\Blog\Functions::validate_blog($_GET['blog_id'])) {
+		if (isset($data['blog_id']) && PHPFusion\Blog\Functions::validate_blog($data['blog_id'])) {
 			$result = dbquery("SELECT blog_image, blog_image_t1, blog_image_t2, blog_sticky, blog_datestamp FROM ".DB_BLOG." WHERE blog_id='".$_POST['blog_id']."'");
 			if (dbrows($result)) {
 				$data2 = dbarray($result);
