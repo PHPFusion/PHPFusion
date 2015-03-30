@@ -308,7 +308,7 @@ class Eshop {
 				$html .= "</td>\n";
 				$html .= "<td>".fusion_get_settings('eshop_currency').number_format($data['item_price'], 2)."</td>\n";
 				$html .= "<td>".fusion_get_settings('eshop_currency').number_format($data['item_subtotal'], 2)."</td>\n";
-				$html .= $display ? '' : "<td>".form_button($locale['remove'], 'remove', 'remove', 'remove', array('class'=>'btn-danger btn-sm'))."</td>\n";
+				$html .= $display ? '' : "<td>".form_button('remove', $locale['remove'], 'remove', array('class'=>'btn-danger btn-sm'))."</td>\n";
 				$html .= "</tr>\n";
 				$html .= closeform();
 			}

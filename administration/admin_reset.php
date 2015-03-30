@@ -150,7 +150,7 @@ if (!check_admin_pass($admin_password)) {
 }
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' width='250' valign='top'></td>\n";
-echo "<td class='tbl1'>".form_button($locale['406'], 'reset_admins', 'reset_admins', $locale['406'], array('class' => 'button btn btn-primary'))."</td>\n";
+echo "<td class='tbl1'>".form_button('reset_admins', $locale['406'], $locale['406'], array('class' => 'button btn btn-primary'))."</td>\n";
 echo "</tr>\n</table>\n</form>\n";
 closetable();
 $titles = array("all" => $locale['401'], "sa" => $locale['402'], "a" => $locale['403']);
