@@ -46,8 +46,7 @@ if (!function_exists('render_main_news')) {
 					<div class='item ".$carousel_active."'>
 						<img src='".$news_item['news_image_src']."' alt='".$news_item['news_subject']."'>
 						<div class='carousel-caption clearfix'>
-							<div class='pull-left m-r-10'>".display_avatar($news_item, '50px', '', '', '')."</div>
-							<div class='overflow-hide'>".profile_link($news_item['user_id'], $news_item['user_name'], $news_item['user_status'])." - ".showdate('newsdate', $news_item['news_date'])."<br/>
+							<div class='overflow-hide'>
 							<a class='text-white' href='".BASEDIR."news.php?readmore=".$news_item['news_id']."'><h4 class='text-white m-t-10'>".$news_item['news_subject']."</h4></a>\n
 							<span class='news-carousel-action m-r-10'><i class='entypo eye'></i> ".$news_item['news_reads']."</span>
 							".($news_item['news_allow_comments'] ? "<span class='m-r-10'>".display_comments($news_item['news_comments'], BASEDIR."news.php?readmore=".$news_item['news_id']."#comments")."</span>" : '')."
@@ -73,7 +72,6 @@ if (!function_exists('render_main_news')) {
 		}
 		/* Title Panel */
 		if (!isset($_GET['readmore'])) {
-
 			echo "<div class='panel panel-default panel-news-header'>\n";
 			echo "<div class='panel-body'>\n";
 			echo "<div class='pull-right'>\n";
@@ -104,16 +102,11 @@ if (!function_exists('render_main_news')) {
 		if (!isset($_GET['readmore'])) {
 			echo "<div class='row m-b-20 m-t-20'>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
-			echo openform('viewform', 'viewform', 'post', FUSION_REQUEST, array('downtime' => 1,
-				'class' => 'pull-right display-inline-block m-l-10'));
+			echo openform('viewform', 'viewform', 'post', FUSION_REQUEST, array('downtime' => 1,'class' => 'pull-right display-inline-block m-l-10'));
 			echo "<div class='btn-group'>\n";
 			$active = isset($_COOKIE['fusion_news_view']) ? $_COOKIE['fusion_news_view'] : '';
-			echo form_button('', 'switchview', 'switch-vw1', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",
-				'icon' => 'entypo layout',
-				'alt' => 'Thumb View'));
-			echo form_button('', 'switchview', 'switch-vw2', '2', array('class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",
-				'icon' => 'entypo menu',
-				'alt' => 'List View'));
+			echo form_button('', 'switchview', 'switch-vw1', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",'icon' => 'entypo layout','alt' => 'Thumb View'));
+			echo form_button('', 'switchview', 'switch-vw2', '2', array('class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",'icon' => 'entypo menu','alt' => 'List View'));
 			echo "</div>\n";
 			echo closeform();
 			// Filters
@@ -138,7 +131,6 @@ if (!function_exists('render_main_news')) {
 					echo "</div>\n";
 				}
 				echo "</div>\n";
-
 				if ($info['news_item_rows'] > $settings['newsperpage']) {
 					$type_start = isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : '';
 					$cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '';
@@ -151,7 +143,6 @@ if (!function_exists('render_main_news')) {
 		} else {
 			render_news_item($info);
 		}
-
 		closetable();
 	}
 }
@@ -162,17 +153,13 @@ if (!function_exists('render_news')) {
 	 * @param      $info
 	 * @param bool $list_view
 	 */
+	 
 	function render_news($info, $list_view = FALSE) {
 		global $locale, $settings, $aidlink;
 		$parameter = $settings['siteurl']."news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
 		if ($list_view) {
 			echo "<article class='panel panel-default'>\n";
-			echo "<div class='pull-left m-r-10'>\n";
-			echo display_avatar($info, '70px', '', '', '');
-			echo "</div>\n";
-			echo "<div class='overflow-hide news-profile-link'>\n";
-			echo "<div class='m-t-10 m-b-10'>\n".profile_link($info['user_id'], $info['user_name'], $info['user_status'], 'strong')." ".getuserlevel($info['user_level'])." </div>\n";
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
 			if ($info['news_image']) {
 				echo "<div class='pull-left m-r-10' style='width:100px;'>\n";
@@ -198,7 +185,7 @@ if (!function_exists('render_news')) {
 			echo "</div>\n";
 			echo "</article>\n";
 		} else {
-			echo "<article class='panel panel-default' style='min-height:395px'>\n";
+			echo "<article class='panel panel-default' style='min-height:290px'>\n";
 			if ($info['news_image']) {
 				echo "<div class='overflow-hide news-img-header'>\n";
 				echo $info['news_image'];
@@ -210,25 +197,8 @@ if (!function_exists('render_news')) {
 				);
 				");
 				echo "</div>\n";
-				echo "<div class='m-b-10'>\n";
-				echo "<div class='pull-left m-r-10 news-avatar'>\n";
-				echo display_avatar($info, '50px', '', '', '');
-				echo "</div>\n";
-				echo "<div class='overflow-hide'>\n";
-				echo "<div class='m-t-5'>\n".profile_link($info['user_id'], $info['user_name'], $info['user_status'], 'strong')."</div>\n";
-				echo getuserlevel($info['user_level']);
-				echo "</div>\n";
-				echo "</div>\n";
 			} else {
-				echo "<div>\n";
-				echo "<div class='pull-left m-r-10'>\n";
-				echo display_avatar($info, '70px', '', '', '');
-				echo "</div>\n";
-				echo "<div class='overflow-hide news-profile-link'>\n";
-				echo "<div class='m-t-10'>\n".profile_link($info['user_id'], $info['user_name'], $info['user_status'], 'strong')."</div>\n";
-				echo getuserlevel($info['user_level']);
-				echo "</div>\n";
-				echo "</div>\n";
+//Display cats
 			}
 			echo "<div class='panel-body' ".(empty($info['news_image']) ? "style='min-height:221px;'" : "style='min-height:133px;'")." >\n";
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
