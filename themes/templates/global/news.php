@@ -142,7 +142,7 @@ if (!function_exists('render_main_news')) {
 				if ($info['news_item_rows'] > $settings['newsperpage']) {
 					$type_start = isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : '';
 					$cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '';
-					echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'], $settings['newsperpage'], $info['news_item_rows'], 3, BASEDIR."news.php".$cat_start.$type_start)."</div>\n";
+					echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'], $settings['newsperpage'], $info['news_item_rows'], 3, BASEDIR."news.php?".$cat_start.$type_start)."</div>\n";
 				}
 
 			} else {
