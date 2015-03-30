@@ -48,7 +48,7 @@ if (!function_exists('render_main_news')) {
 						<div class='carousel-caption clearfix'>
 							<div class='overflow-hide'>
 							<a class='text-white' href='".BASEDIR."news.php?readmore=".$news_item['news_id']."'><h4 class='text-white m-t-10'>".$news_item['news_subject']."</h4></a>\n
-							<span class='news-carousel-action m-r-10'><i class='entypo eye'></i> ".$news_item['news_reads']."</span>
+							<span class='news-carousel-action m-r-10'><i class='entypo eye'></i>".$news_item['news_reads']."</span>
 							".($news_item['news_allow_comments'] ? "<span class='m-r-10'>".display_comments($news_item['news_comments'], BASEDIR."news.php?readmore=".$news_item['news_id']."#comments")."</span>" : '')."
 							".($news_item['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($news_item['news_sum_rating'], $news_item['news_count_votes'], BASEDIR."news.php?readmore=".$news_item['news_id']."#postrating")." </span>" : '')."
 							</div>\n
@@ -75,8 +75,8 @@ if (!function_exists('render_main_news')) {
 			echo "<div class='panel panel-default panel-news-header'>\n";
 			echo "<div class='panel-body'>\n";
 			echo "<div class='pull-right'>\n";
-			echo "<a class='btn btn-sm btn-default text-dark' href='".BASEDIR."news.php'><i class='entypo newspaper'></i> ".$locale['global_082']."</a>\n";
-			echo "<button type='button' class='btn btn-sm btn-primary' data-toggle='collapse' data-target='#newscat' aria-expanded='true' aria-controls='newscat'><i class='entypo book open'></i> ".$locale['global_084']."</button>\n";
+			echo "<a class='btn btn-sm btn-default text-dark' href='".BASEDIR."news.php'><i class='entypo newspaper'></i>".$locale['global_082']."</a>\n";
+			echo "<button type='button' class='btn btn-sm btn-primary' data-toggle='collapse' data-target='#newscat' aria-expanded='true' aria-controls='newscat'><i class='entypo book open'></i>".$locale['global_084']."</button>\n";
 			echo "</div>\n";
 			echo "<div class='pull-left m-r-10' style='position:relative; margin-top:-30px;'>\n";
 			echo "<div style='max-width:80px;'>\n";
@@ -105,8 +105,8 @@ if (!function_exists('render_main_news')) {
 			echo openform('viewform', 'viewform', 'post', FUSION_REQUEST, array('downtime' => 1,'class' => 'pull-right display-inline-block m-l-10'));
 			echo "<div class='btn-group'>\n";
 			$active = isset($_COOKIE['fusion_news_view']) ? $_COOKIE['fusion_news_view'] : '';
-			echo form_button('', 'switchview', 'switch-vw1', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",'icon' => 'entypo layout','alt' => 'Thumb View'));
-			echo form_button('', 'switchview', 'switch-vw2', '2', array('class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",'icon' => 'entypo menu','alt' => 'List View'));
+			echo form_button('', 'switchview', 'switch-vw1', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",'icon' => 'entypo layout','alt' =>'Thumb View'));
+			echo form_button('', 'switchview', 'switch-vw2', '2', array('class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",'icon' => 'entypo menu','alt' =>'List View'));
 			echo "</div>\n";
 			echo closeform();
 			// Filters
@@ -168,8 +168,9 @@ if (!function_exists('render_news')) {
 				echo "<div class='overflow-hide'>\n";
 			}
 			echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".BASEDIR."news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
-			echo "<div class='m-t-10'><span class='news-date'>".showdate($settings['newsdate'], $info['news_date'])." -- </span>\n";
-			echo "<span class='news-text m-t-10'>".$info['news_news']."</span>\n</div>";
+			echo "<div class='m-t-10'>\n";
+			echo "<span class='news-text m-t-10'>".$info['news_news']."</span>\n";
+			echo "<div class='m-t-10'><span class='news-date'>".showdate($settings['newsdate'], $info['news_date'])." -- </span></div>\n";
 			echo "<div class='news-category m-t-10'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
 			echo $info['cat_name'] ? "<a href='".BASEDIR."news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
 			echo "</div>\n";
@@ -203,8 +204,8 @@ if (!function_exists('render_news')) {
 			echo "<div class='panel-body' ".(empty($info['news_image']) ? "style='min-height:221px;'" : "style='min-height:133px;'")." >\n";
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
 			echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".BASEDIR."news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
-			echo "<div class='news-date m-t-5'>".showdate($settings['newsdate'], $info['news_date'])."</div>\n";
 			echo "<div class='news-text m-t-5'>".fusion_first_words($info['news_news'], 10)."</div>\n";
+			echo "<div class='news-date m-t-5'>".showdate($settings['newsdate'], $info['news_date'])."</div>\n";
 			echo "<div class='news-category m-t-5'><span class='text-dark strong'>\n".ucwords($locale['in'])."</span> : ";
 			echo $info['cat_name'] ? "<a href='".BASEDIR."news.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>" : "<a href='".BASEDIR."news.php?cat_id=0'>".$locale['global_080']."</a>&nbsp;";
 			echo "</div>\n";
@@ -233,7 +234,6 @@ if (!function_exists('render_news_item')) {
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 		add_to_footer('<script type="text/javascript">
 			$(document).ready(function() {
-
 				$(".news-image-overlay").colorbox({
 					transition: "elasic",
 					height:"100%",
