@@ -54,11 +54,11 @@ $info = array(
 	'download_language' => LANGUAGE,
 	'download_categories' => get_downloadCat(),
 	'allowed_filters' => array(
-							'download' => $locale['download_2003'],
-							'recent' => $locale['download_2002'],
-							'comments' => $locale['download_2001'],
-							'ratings' => $locale['download_2004'],
-						),
+		'download' => $locale['download_2003'],
+		'recent' => $locale['download_2002'],
+		'comments' => $locale['download_2001'],
+		'ratings' => $locale['download_2004'],
+	),
 	'download_last_updated' => 0,
 	'download_max_rows' => 0,
 	'download_rows' => 0,
@@ -123,7 +123,8 @@ if (isset($_GET['download_id'])) {
 			$data['download_file_link'] = BASEDIR."downloads.php?file_id=".$data['download_id'];
 			$data['download_post_author'] = display_avatar($data, '25px', '', true, 'img-rounded').profile_link($data['user_id'], $data['user_name'], $data['user_status']);
 			$data['download_post_cat'] = $locale['in']." <a href='".BASEDIR."downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>";
-			$data['download_post_time'] = $locale['global_049']." ".timer($data['download_datestamp']);
+			$data['download_post_time'] = showdate('shortdate', $data['download_datestamp']);
+			$data['download_post_time2'] = $locale['global_049']." ".timer($data['download_datestamp']);
 			$data['download_count'] = format_word($data['download_count'], $locale['fmt_download']);
 			$data['download_version'] = $data['download_version'] ? $data['download_version'] : $locale['na'];
 			$data['download_license'] = $data['download_license'] ? $data['download_license'] : $locale['na'];
@@ -258,6 +259,8 @@ if (!empty($info['download_rows'])) {
 			'download_count_votes' 			=> 		format_word($data['count_votes'], $locale['fmt_vote']),
 			'download_user_avatar'			=>		display_avatar($data, '25px', '', true, 'img-rounded'),
 			'download_user_link'			=>		profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
+			'download_post_time'			=>		showdate('shortdate', $data['download_datestamp']),
+			'download_post_time2'			=>		$locale['global_049']." ".timer($data['download_datestamp']),
 			'download_file_link'			=>		file_exists(DOWNLOADS.'/files/'.$data['download_file']) ? BASEDIR."downloads.php?file_id=".$data['download_id'] : '',
 		);
 		$data = array_merge($data, $cdata);

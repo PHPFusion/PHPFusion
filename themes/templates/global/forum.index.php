@@ -1,7 +1,6 @@
 <?php
 
 // !IMPORTANT - Please do not clean up commented section. It will be nightmare to figure what is missing.
-
 add_to_head("<link href='".THEMES."templates/global/css/forum.css' rel='stylesheet'/>\n");
 
 /* Forum index master template */
@@ -27,23 +26,24 @@ if (!function_exists('render_forum')) {
 		$tab_title['icon'][] = "entypo twitter";
 
 		$tab_active = isset($_GET['section']) ? $_GET['section'] : 'thread';
-		searchbar($info);
-		echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM);
-		echo opentabbody($tab_title['title'], $tab_active, $tab_active, 'viewforum');
+
+		echo opentab($tab_title, $tab_active, 'forum_tabs', 1);
+		echo opentabbody($tab_title['title'], $tab_active, $tab_active, 'viewforum', 1);
 		if (isset($_GET['viewforum'])) {
 			forum_viewforum($info);
 		} else {
-			if (isset($_GET['section']) && $_GET['section'] == 'mypost') {
-				render_mypost($info);
-			}
-			elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
-				render_laft($info);
-			}
-			elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
-				render_tracked($info);
-			}
-			elseif (!isset($_GET['section']) || isset($_GET['section']) && $_GET['section'] == 'thread') {
-				render_forum_main($info);
+			switch($_GET['section']) {
+				case 'mypost':
+					render_mypost($info);
+					break;
+				case 'latest':
+					render_laft($info);
+					break;
+				case 'tracked':
+					render_tracked($info);
+					break;
+				default:
+					render_forum_main($info);
 			}
 		}
 		echo closetabbody();
@@ -51,31 +51,10 @@ if (!function_exists('render_forum')) {
 	}
 }
 
-/* Post search bar -- */
-// Search API Crashed, find out why....
-if (!function_exists('searchbar')) {
-	function searchbar($info) {
-		global $settings, $userdata, $locale;
-		echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
-		echo "<div class='pull-left'>".display_avatar($userdata, '40px', '', '', 'm-r-10')."</div>\n";
-		echo "<div class='pull-right'>\n";
-		echo form_button($locale['forum_0326'], 'newtopic', 'newtopic', 'newtopic', array('class'=>'btn-primary m-l-10', 'type'=>'button', 'deactivate'=>$info['permissions']['can_post'] ? 0 : 1));
-		if ($info['permissions']['can_post'])  forum_newtopic();
-		echo "</div>\n";
-		echo "<div class='overflow-hide'>\n";
-		echo openform('searchform', 'searchform', 'post'," ".($settings['site_seo'] == "1" ? FUSION_ROOT : '').$settings['siteurl']."search.php?stype=forums", array('downtime' => 1));
-		echo form_hidden('stype', 'stype', 'stype', 'forums');
-		echo form_text('', 'stext', 'stext', '', array('placeholder' => $locale['forum_0250'], 'class'=>'m-0', 'append_button' => 1));
-		echo closeform();
-		echo "</div>\n";
-		echo "</div>\n</div>\n";
-	}
-}
-
 /* Render Forum Board Index */
 if (!function_exists('render_forum_main')) {
 	function render_forum_main($info) {
-		global $userdata, $settings, $locale;
+		global $locale;
 		$type_icon = array('1'=>'entypo folder', '2'=>'entypo chat', '3'=>'entypo link', '4'=>'entypo graduation-cap');
 		echo "<div class='m-t-10'>\n";
 		if (!empty($info['item'])) {

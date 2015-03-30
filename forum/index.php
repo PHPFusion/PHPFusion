@@ -21,32 +21,27 @@ require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum.php";
 require_once INCLUDES."forum_include.php";
 include THEMES."templates/global/forum.index.php";
-$info = array();
-$info['lastvisited'] = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
-
-$_GET['forum_id'] =  (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
-$_GET['forum_cat'] =  (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? $_GET['forum_cat'] : 0;
-$_GET['forum_branch'] =  (isset($_GET['forum_branch']) && isnum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0;
-$_GET['parent_id'] =  (isset($_GET['parent_id']) && isnum($_GET['parent_id'])) ? $_GET['parent_id'] : 0;
-$ext = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '';
-
-$forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-
 add_to_title($locale['global_200'].$locale['forum_0000']);
 
+
+
+$forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 /* Sanitize Globals */
 $_GET['forum_id'] =  (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
 $_GET['forum_cat'] =  (isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) ? $_GET['forum_cat'] : 0;
 $_GET['forum_branch'] =  (isset($_GET['forum_branch']) && isnum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0;
 $_GET['parent_id'] =  (isset($_GET['parent_id']) && isnum($_GET['parent_id'])) ? $_GET['parent_id'] : 0;
 $ext = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '';
-/* Page navigation */
-$info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$_GET['parent_id']."'"); // need max rows
+
+$info = array(
+	'lastvisited' => (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time(),
+	'max_rows' => dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$_GET['parent_id']."'"),
+	'posts_per_page' => $settings['posts_per_page'],
+	'threads_per_page' => $settings['threads_per_page']
+);
+
 $_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows']) ? $_GET['rowstart'] : '0';
-
-$info['posts_per_page'] = $settings['posts_per_page'];
-$info['threads_per_page'] = $settings['threads_per_page'];
-
+$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 'thread';
 $forum_list = "";
 $current_cat = "";
 $forumCollapsed = FALSE;
@@ -55,21 +50,22 @@ $forumCollapse = TRUE;
  * 	add_to_title($locale['global_201'].$data['forum_name']);
 	set_meta("description", $data['forum_name']);
  */
-
-if (isset($_GET['section']) && $_GET['section'] == 'mypost') {
-	include FORUM."sections/my_posts.php";
-}
-elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
-	include FORUM."sections/laft.php";
-}
-
-elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
-	include FORUM."sections/tracked.php";
-}
-
-// view forum.
-elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['parent_id']) && isnum($_GET['parent_id']) && isset($_GET['viewforum'])) {
-	
+if (isset($_GET['section'])) {
+	switch($_GET['section']) {
+		case 'mypost':
+			include FORUM."sections/my_posts.php";
+			break;
+		case 'latest':
+			include FORUM."sections/laft.php";
+			break;
+		case 'tracked':
+			include FORUM."sections/tracked.php";
+			break;
+	}
+} elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['parent_id']) && isnum($_GET['parent_id']) && isset($_GET['viewforum'])) {
+	/**
+	 * View Forum
+	 */
 	//add_to_title($locale['global_201'].$fdata['forum_name']);
 	// Filter core
 	$sort = isset($_GET['sort']) ? $_GET['sort'] : '';
@@ -99,17 +95,12 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 				break;
 			}
 		}
-		// Debug
-		//print_p($time_array);
-		//print_p($time_array[$time]);
-		//print_p($time_stop);
 
 		if ($time !=='today') {
 			$timeCol = "AND ((post_datestamp >= '".$time_array[$time]."' OR t.thread_lastpost >= '".$time_array[$time]."') AND (post_datestamp <= '".$time_stop."' OR t.thread_lastpost <= '".$time_stop."')) ";
 		} else {
 			$timeCol = "AND (post_datestamp >= '".$time_array[$time]."' OR t.thread_lastpost >= '".$time_array[$time]."') ";
 		}
-
 	}
 	if ($type) {
 		$type_array = array(
@@ -195,7 +186,6 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 		'Ascending' => $orderLink.'&amp;order=ascending'
 	);
 
-	// fix lastpostid = t.thread_id on viewforum.
 	$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
 				u.user_id, u.user_name, u.user_status, u.user_avatar
@@ -207,9 +197,7 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 				AND f.forum_id='".$_GET['forum_id']."' OR f.forum_cat='".$_GET['forum_id']."' OR f.forum_branch='".$_GET['forum_branch']."'
 				ORDER BY forum_cat ASC
 				");
-
 	$refs = array();
-
 	if (dbrows($result)>0) {
 		while ($data = dbarray($result)) {
 			$thisref = &$refs[$data['forum_id']];
@@ -225,16 +213,14 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 				add_to_title($locale['global_201'].$data['forum_name']);
 				// define mods
 				define_forum_mods($data);
-
 				if (iMOD || iSUPERADMIN) {
 					$info['permissions']['can_post'] = 1;
 				} else {
 					$info['permissions']['can_post'] = $data['forum_post'] && checkgroup($data['forum_post']) && !$data['forum_lock'] ? 1 : 0;
 				}
-
 				// get thread and apply filter
 				$info['thread_item_rows'] = dbcount("('t.thread_id')",
-												DB_FORUM_THREADS." t
+													DB_FORUM_THREADS." t
 												LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
 												LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
 												LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id
@@ -258,7 +244,7 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
                 LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
-                WHERE t.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' AND ".groupaccess('forum.forum_access')." $sql_condition
+                WHERE t.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' AND ".groupaccess('fourm.forum_access')." $sql_condition
                 GROUP BY t.thread_id $sql_order LIMIT ".$_GET['rowstart'].", ".$info['threads_per_page']."
                 ");
 
@@ -282,7 +268,7 @@ elseif (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['par
 // Forum Board Index
 else {
 
-	 $result = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
+	$result = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
 			tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
 			t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
         	u.user_id, u.user_name, u.user_status, u.user_avatar
@@ -323,6 +309,7 @@ else {
 
 forum_breadcrumbs($forum_index);
 render_forum($info);
+require_once THEMES."templates/footer.php";
 
 /* 	Autopush Breadcrumb (better to Core)
 | 	Note that this function is not the same as the admin one
@@ -330,9 +317,8 @@ render_forum($info);
 |	Hence, the parent_id was actual forum_id in admin,
 |	but here the parent_id is forum_cat
 */
-
 function forum_breadcrumbs($forum_index) {
-	global $aidlink, $locale;
+	global $aidlink;
 	/* Make an infinity traverse */
 	function breadcrumb_arrays($index, $id) {
 		global $aidlink;
@@ -355,7 +341,7 @@ function forum_breadcrumbs($forum_index) {
 	// then we sort in reverse.
 	if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
 	// then we loop it out using Dan's breadcrumb.
-	add_to_breadcrumbs(array('link'=>FORUM.'index.php', 'title'=>$locale['forum_0010']));
+	add_to_breadcrumbs(array('link'=>FORUM.'index.php', 'title'=>'Forum Board Index'));
 	if (count($crumb['title']) > 1) {
 		foreach($crumb['title'] as $i => $value) {
 			add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$value));
@@ -364,7 +350,3 @@ function forum_breadcrumbs($forum_index) {
 		add_to_breadcrumbs(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
 	}
 }
-
-require_once THEMES."templates/footer.php";
-
-?>
