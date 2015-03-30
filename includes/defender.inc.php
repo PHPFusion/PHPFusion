@@ -730,12 +730,13 @@ class defender {
 				$this->addError($this->field_config['id']);
 				switch ($upload['error']) {
 					case 1: // Maximum file size exceeded
-						$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-						$this->addHelperText($this->field_config['id'], $locale['df_416']);
+						$parsedMaxSizeText = sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte']));
+						$this->addNotice($parsedMaxSizeText);
+						$this->addHelperText($this->field_config['id'], $parsedMaxSizeText);
 						break;
 					case 2: // Invalid File extensions
 						$this->addNotice(sprintf($locale['df_417'], $this->field_config['valid_ext']));
-						$this->addHelperText($this->field_config['id'], $locale['df_417']);
+						$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], $this->field_config['valid_ext']));
 						break;
 					case 3: // Invalid Query String
 						$this->addNotice($locale['df_422']);
