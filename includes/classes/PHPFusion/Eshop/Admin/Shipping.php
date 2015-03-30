@@ -276,7 +276,7 @@ class Shipping {
 	public function add_shippingco_form() {
 		global $locale;
 		echo "<div class='m-t-10'>\n";
-		echo openform('addcat', 'addcat', 'post', $this->cformaction, array('downtime' => 1));
+		echo openform('addcat', 'post', $this->cformaction, array('max_tokens' => 1));
 		openside('');
 		echo thumbnail(SHIP_DIR.$this->cdata['image'], '70px');
 		echo "<div class='overflow-hide p-l-15'>\n";
@@ -289,8 +289,8 @@ class Shipping {
 		});
 		");
 		closeside();
-		echo form_text($locale['ESHPSHPMTS102'], 'title', 'title', $this->cdata['title']);
-		echo form_button($locale['save'], 'save_shipping', 'save_shipping', $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
+		echo form_text('title', $locale['ESHPSHPMTS102'], $this->cdata['title']);
+		echo form_button('save_shipping', $locale['save'], $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 		echo "</div>\n";
 	}
@@ -408,27 +408,27 @@ class Shipping {
 			echo "<tr class='qform'>\n";
 			echo "<td colspan='9'>\n";
 			echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-			echo openform('add_detail', 'add_detail', 'post', $this->sformaction, array('downtime' => 1, 'notice' => 0));
+			echo openform('add_detail', 'post', $this->sformaction, array('max_tokens' => 1, 'notice' => 0));
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
-			echo form_text($locale['ESHPSHPMTS107'], 'method', 'method',$this->sdata['method'], array('required'=>1, 'inline'=>1));
+			echo form_text('method', $locale['ESHPSHPMTS107'],$this->sdata['method'], array('required'=>1, 'inline'=>1));
 			echo form_select($locale['ESHPSHPMTS108'], 'dtime', 'dtime', self::get_dTimeOpts(), $this->sdata['dtime'], array('required'=>1, 'inline'=>1));
 			echo form_select($locale['ESHPSHPMTS109'], 'destination', 'destination', self::get_destOpts(), $this->sdata['destination'], array('inline'=>1));
 			echo form_select($locale['ESHPSHPMTS114'], 'active', 'active', self::get_activeOpts(), $this->sdata['active'], array('inline'=>1));
 			echo "</div>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
-			echo form_text($locale['ESHPSHPMTS110']." (".fusion_get_settings('eshop_weightscale').")", 'weightmin', 'weightmin', $this->sdata['weightmin'], array('number'=>1, 'inline'=>1));
-			echo form_text($locale['ESHPSHPMTS111']." (".fusion_get_settings('eshop_weightscale').")", 'weightmax', 'weightmax', $this->sdata['weightmax'], array('number'=>1, 'inline'=>1));
-			echo form_text($locale['ESHPSHPMTS112']." (".fusion_get_settings('eshop_currency').")", 'initialcost', 'initialcost', $this->sdata['initialcost'], array('number'=>1, 'inline'=>1));
-			echo form_text($locale['ESHPSHPMTS113']." (".fusion_get_settings('eshop_weightscale').")", 'weightcost', 'weightcost', $this->sdata['weightcost'], array('number'=>1, 'inline'=>1));
+			echo form_text('weightmin', $locale['ESHPSHPMTS110']." (".fusion_get_settings('eshop_weightscale').")", $this->sdata['weightmin'], array('number'=>1, 'inline'=>1));
+			echo form_text('weightmax', $locale['ESHPSHPMTS111']." (".fusion_get_settings('eshop_weightscale').")", $this->sdata['weightmax'], array('number'=>1, 'inline'=>1));
+			echo form_text('initialcost', $locale['ESHPSHPMTS112']." (".fusion_get_settings('eshop_currency').")", $this->sdata['initialcost'], array('number'=>1, 'inline'=>1));
+			echo form_text('weightcost', $locale['ESHPSHPMTS113']." (".fusion_get_settings('eshop_weightscale').")", $this->sdata['weightcost'], array('number'=>1, 'inline'=>1));
 			echo form_hidden('', 'sid', 'sid', $this->sdata['sid'], array('writable' => 1));
 			echo form_hidden('', 'cid', 'cid', $_GET['cid'], array('writable' => 1));
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div class='m-t-10 m-b-10'>\n";
-			echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class' => 'btn btn-default m-r-10',
+			echo form_button('cancel', $locale['cancel'], 'cancel', array('class' => 'btn btn-default m-r-10',
 				'type' => 'button'));
-			echo form_button($locale['save'], 'save_item', 'save_item', 'save', array('class' => 'btn btn-success', 'icon'=>'fa fa-check-square-o'));
+			echo form_button('save_item', $locale['save'], 'save', array('class' => 'btn btn-success', 'icon'=>'fa fa-check-square-o'));
 			echo "</div>\n";
 			echo closeform();
 			echo "</div>\n";

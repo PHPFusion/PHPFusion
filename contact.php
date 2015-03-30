@@ -66,12 +66,12 @@ if (isset($_POST['sendmessage'])) {
 }
 opentable($locale['400']);
 echo $locale['401']."<br /><br />\n";
-echo openform('userform', 'userform', 'post', FUSION_SELF, array('downtime' => 1));
+echo openform('userform', 'post', FUSION_SELF, array('max_tokens' => 1));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
-echo form_text($locale['402'], 'mailname', 'mailname', '', array('required' => 1, 'error_text' => $locale['420'], 'max_length' => 50));
-echo form_text($locale['403'], 'email', 'email', '', array('required' => 1, 'error_text' => $locale['421'], 'email' => 1, 'max_length' => 50));
-echo form_text($locale['404'], 'subject', 'subject', '', array('required' => 1, 'error_text' => $locale['422']));
+echo form_text('mailname', $locale['402'], '', array('required' => 1, 'error_text' => $locale['420'], 'max_length' => 50));
+echo form_text('email', $locale['403'], '', array('required' => 1, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 50));
+echo form_text('subject', $locale['404'], '', array('required' => 1, 'error_text' => $locale['422']));
 echo form_textarea($locale['405'], 'message', 'message', '', array('required' => 1, 'error_text' => $locale['423']));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body clearfix'>\n";
@@ -79,11 +79,11 @@ echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6 p
 include INCLUDES."captchas/".$settings['captcha']."/captcha_display.php";
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>\n";
 if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
-	echo form_text($locale['408'], 'captcha_code', 'captcha_code', '', array('required' => 1, 'autocomplete_off' => 1));
+	echo form_text('captcha_code', $locale['408'], '', array('required' => 1, 'autocomplete_off' => 1));
 }
 echo "</div>\n</div>\n";
 echo "</div>\n</div>\n";
-echo form_button($locale['406'], 'sendmessage', 'sendmessage', $locale['406'], array('class' => 'btn-primary m-t-10'));
+echo form_button('sendmessage', $locale['406'], $locale['406'], array('class' => 'btn-primary m-t-10'));
 echo "</div>\n</div>\n";
 echo closeform();
 closetable();

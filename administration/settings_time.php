@@ -99,7 +99,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	}
 }
 echo "<div class='well'>".$locale['time_description']."</div>\n";
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table class='table table-condensed table-hover table-responsive'>\n<tbody>\n<tr>\n";
 echo "<td valign='top' width='40%' class='tbl'><strong>".$locale['458']." (".$locale['459']."):</strong></td>\n";
 echo "<td width='60%' class='tbl'>".strftime($settings2['longdate'], (time())+($settings2['serveroffset']*3600))."</td>\n";
@@ -134,7 +134,7 @@ openside('');
 echo form_select($locale['465'], 'week_start', 'week_start', $weekdayslist, $settings2['week_start']);
 closeside();
 echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";

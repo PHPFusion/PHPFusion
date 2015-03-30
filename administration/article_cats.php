@@ -127,16 +127,16 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	}
 	add_to_breadcrumbs(array('link'=>ADMIN.'article_cats.php'.$aidlink,'title'=>$openTable));
 	opentable($openTable);
-	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 1));
+	echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_name'>".$locale['articles_0300']." <span class='required'>*</span></label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['articles_0351']));
+	echo form_text('cat_name', '', $cat_name, array('required' => 1, 'error_text' => $locale['articles_0351']));
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_description'>".$locale['articles_0301']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'cat_description', 'cat_description', $cat_description);
+	echo form_text('cat_description', '', $cat_description);
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_parent'>".$locale['articles_0308']."</label></td>\n";
@@ -161,7 +161,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";
-	echo form_button($locale['articles_0309'], 'save_cat', 'save_cat', $locale['articles_0309'], array('class' => 'btn-primary', 'inline' => 1));
+	echo form_button('save_cat', $locale['articles_0309'], $locale['articles_0309'], array('class' => 'btn-primary', 'inline' => 1));
 	echo "</tr>\n</table>\n";
 	echo closeform();
 	closetable();

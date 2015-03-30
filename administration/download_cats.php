@@ -159,13 +159,13 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		add_to_breadcrumbs(array('link'=>'', 'title'=>$edit ? $locale['download_0021'] : $locale['download_0022']));
 		fusion_confirm_exit();
 		echo opentabbody($tab_title['title'][1], 'dadd', $tab_active, 1);
-		echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 1, 'class'=>'m-t-20'));
+		echo openform('addcat', 'post', $formaction, array('max_tokens' => 1, 'class'=>'m-t-20'));
 		$array = array('1' => $locale['download_0303'], '2' => $locale['download_0304'], '3' => $locale['download_0305']);
 		$array2 = array('ASC' => $locale['download_0306'], 'DESC' => $locale['download_0307']);
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
-		echo form_text($locale['download_0300'], 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['download_0351']));
+		echo form_text('cat_name', $locale['download_0300'], $cat_name, array('required' => 1, 'error_text' => $locale['download_0351']));
 		echo form_textarea($locale['download_0301'], 'cat_description', 'cat_description', $cat_description, array('resize'=>0, 'autosize'=>1));
 		echo "<div class='clearfix'>\n";
 		echo form_select($locale['download_0302'], 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10', 'width'=>'200px'));
@@ -182,7 +182,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		}
 		closeside();
 		echo "</div>\n</div>\n";
-		echo form_button($locale['download_0309'], 'save_cat', 'save_cat', $locale['download_0309'], array('class' => 'btn-success btn-sm m-t-10', 'icon'=>'fa fa-check-square-o'));
+		echo form_button('save_cat', $locale['download_0309'], $locale['download_0309'], array('class' => 'btn-success btn-sm m-t-10', 'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 		echo closetabbody();
 	}

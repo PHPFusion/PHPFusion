@@ -107,8 +107,8 @@ class Orders {
 
 		echo "<div class='m-t-20 m-b-20 display-block' style='height:40px;'>\n";
 		echo "<div class='display-inline-block search-align m-r-10'>\n";
-		echo form_text('', 'srch_text', 'srch_ortext', '', array('placeholder'=>$locale['ESHP328'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'350px'));
-		echo form_button($locale['SRCH164'], 'search', 'search-order', $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
+		echo form_text('srch_text', '', '', array('placeholder'=>$locale['ESHP328'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'350px'));
+		echo form_button('search', $locale['SRCH164'], $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
 		echo "</div>\n";
 
 		echo "<div class='display-inline-block m-r-10'>\n";
@@ -162,12 +162,12 @@ class Orders {
 			echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 			echo "<div class='m-t-20'>";
 			openside($locale['ESHP306']." : ".$odata['oid']." - ".$locale['ESHP307']." ".$odata['oname']." - ".showdate("longdate", $odata['odate']));
-			echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;action=updateorder", array('downtime'=>1));
+			echo openform('inputform', 'post', FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;action=updateorder", array('max_tokens' => 1));
 			echo form_select($locale['ESHP309'], 'opaid', 'opaid', array($locale['no'], $locale['yes']), $odata['opaid'], array('inline'=>1));
 			echo form_select($locale['ESHP310'], 'ocompleted', 'ocompleted', array($locale['no'], $locale['yes']), $odata['ocompleted'], array('inline'=>1));
 			echo form_textarea($locale['ESHP308'], 'oamessage', 'oamessage', $odata['oamessage']);
 			echo form_hidden('', 'oid', 'oid', $odata['oid']);
-			echo form_button($locale['save_changes'], 'save', 'save', $locale['save_changes'], array('class'=>'btn btn-success', 'icon'=>'fa fa-check-square-o'));
+			echo form_button('save', $locale['save_changes'], $locale['save_changes'], array('class'=>'btn btn-success', 'icon'=>'fa fa-check-square-o'));
 			echo closeform();
 			closeside();
 			echo "</div>\n";

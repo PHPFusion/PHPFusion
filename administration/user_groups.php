@@ -135,14 +135,14 @@ if (isset($_POST['save_group'])) {
 $result = dbquery("SELECT group_id, group_name FROM ".DB_USER_GROUPS." ORDER BY group_name");
 if (dbrows($result)) {
 	opentable($locale['420']);
-	echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1, 'notice' => 0));
+	echo openform('selectform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1, 'notice' => 0));
 	$sel_opts = array();
 	while ($data = dbarray($result)) {
 		$sel_opts[$data['group_id']] = "ID: ".$data['group_id']." - ".$data['group_name'];
 	}
 	echo form_select('', 'group_id', 'group_id', $sel_opts, '', array('placeholder' => $locale['choose'], 'class' => 'pull-left'));
-	echo form_button($locale['421'], 'edit', 'edit', $locale['421'], array('class' => 'btn-primary m-l-10 pull-left'));
-	echo form_button($locale['422'], 'delete', 'delete', $locale['422'], array('class' => 'btn-primary m-l-10 pull-left'));
+	echo form_button('edit', $locale['421'], $locale['421'], array('class' => 'btn-primary m-l-10 pull-left'));
+	echo form_button('delete', $locale['422'], $locale['422'], array('class' => 'btn-primary m-l-10 pull-left'));
 	echo closeform();
 	closetable();
 }
@@ -163,16 +163,16 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	$form_action = FUSION_SELF.$aidlink;
 	opentable($locale['431']);
 }
-echo openform('editform', 'editform', 'post', $form_action, array('downtime' => 1));
+echo openform('editform', 'post', $form_action, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n";
 echo "<tr>\n<td class='tbl' width='1%' style='white-space:nowrap;'><label for='group_name'>".$locale['432']."</label></td>\n";
 echo "<td class='tbl'>\n";
-echo form_text('', 'group_name', 'group_name', $group_name, array('required' => 1, 'error_text' => $locale['464']));
+echo form_text('group_name', '', $group_name, array('required' => 1, 'error_text' => $locale['464']));
 echo "</td>\n</tr>\n<tr>\n<td class='tbl' width='1%' style='white-space:nowrap;'><label for='group_description'>".$locale['433']."</label></td>\n";
 echo "<td class='tbl'>\n";
 echo form_textarea('', 'group_description', 'group_description', $group_description, array());
 echo "</td>\n</tr>\n<tr>\n<td align='center' colspan='2' class='tbl'><br />\n";
-echo form_button($locale['434'], 'save_group', 'save_group', $locale['434'], array('class' => 'btn-primary'));
+echo form_button('save_group', $locale['434'], $locale['434'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</tbody>\n</table>\n</form>";
 closetable();
 if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
@@ -182,12 +182,12 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 		echo "<form name='searchform' method='post' action='".FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id']."'>\n";
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n";
 		echo "<tr>\n<td align='center' class='tbl'><div class='well'>".$locale['441']."<br />".$locale['442']."</div>\n";
-		echo form_text('', 'search_criteria', 'search_criteria', '');
+		echo form_text('search_criteria', '', '');
 		echo "</td>\n</tr>\n<tr>\n<td align='center' class='tbl'>\n";
 		echo "<label class='m-r-10'><input type='radio' name='search_type' value='user_name' checked='checked' />&nbsp;".$locale['444']."</label>\n";
 		echo "<label><input type='radio' name='search_type' value='user_id' />&nbsp;".$locale['443']."</label></td>\n";
 		echo "</tr>\n<tr>\n<td align='center' class='tbl'>\n";
-		echo form_button($locale['445'], 'search_users', 'search_users', $locale['445'], array('class' => 'btn-primary'));
+		echo form_button('search_users', $locale['445'], $locale['445'], array('class' => 'btn-primary'));
 		echo "</td>\n</tr>\n</table>\n</form>\n";
 	}
 	if (isset($_POST['search_users']) && isset($_POST['search_criteria'])) {
@@ -231,7 +231,7 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 				echo "<a class='btn btn-primary' href='#' onclick=\"javascript:setChecked('add_users_form','add_check_mark[]',0);return false;\">".$locale['449']."</a>\n";
 				echo "</div>\n";
 				echo "</td>\n</tr>\n<tr>\n<td align='center' colspan='2' class='tbl'>\n";
-				echo form_button($locale['450'], 'add_sel', 'add_sel', $locale['450'], array('class' => 'btn-primary'));
+				echo form_button('add_sel', $locale['450'], $locale['450'], array('class' => 'btn-primary'));
 				echo "</td>\n</tr>\n";
 			} else {
 				echo "<tr>\n<td align='center' colspan='2' class='tbl'>".$locale['451']."<br /><br />\n";
@@ -267,8 +267,8 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 		echo "<a class='btn btn-primary' href='#' onclick=\"javascript:setChecked('rem_users_form','rem_check_mark[]',0);return false;\">".$locale['449']."</a>\n";
 		echo "</div>\n";
 		echo "</td>\n</tr>\n<tr>\n<td align='center' colspan='3' class='tbl'>\n";
-		echo form_button($locale['461'], 'remove_sel', 'remove_sel', $locale['461'], array('class' => 'btn-primary m-r-10'));
-		echo form_button($locale['462'], 'remove_all', 'remove_all', $locale['462'], array('class' => 'btn-primary'));
+		echo form_button('remove_sel', $locale['461'], $locale['461'], array('class' => 'btn-primary m-r-10'));
+		echo form_button('remove_all', $locale['462'], $locale['462'], array('class' => 'btn-primary'));
 		echo "</td>\n</tr>\n";
 	} else {
 		echo "<tr>\n<td align='center' colspan='2' class='tbl1'>".$locale['463']."</td>\n</tr>\n";

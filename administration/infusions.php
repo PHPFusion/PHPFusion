@@ -89,19 +89,19 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 			echo "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
 			echo "</div>\n</div>\n";
 			foreach ($inf as $i => $item) {
-				echo openform('infuseform', 'infuseform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+				echo openform('infuseform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 				echo "<div class='list-group-item'>\n";
 				echo "<div class='row'>\n";
 				echo "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>\n";
 				echo form_hidden('', 'infusion', 'infusion', $item['inf_folder']);
 				if ($item['inf_status'] > 0) {
 					if ($item['inf_status'] > 1) {
-						echo form_button('', 'infuse', "infuse-$i", $locale['401'], array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet'));
+						echo form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet'));
 					} else {
-						echo form_button('', 'defuse', "defuse-$i", $locale['401'], array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash'));
+						echo form_button('defuse', $locale['401'], "defuse-$i", array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash'));
 					}
 				} else {
-					echo form_button('', 'infuse', "infuse-$i", $locale['401'], array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
+					echo form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
 				}
 				echo "</div>\n";
 				echo "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-5'><strong>".$item['inf_name']."</strong><br/>".trimlink($item['inf_description'], 30)."</div>\n";

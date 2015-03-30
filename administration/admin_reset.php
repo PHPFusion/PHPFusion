@@ -131,7 +131,7 @@ while ($data = dbarray($result)) {
 	$reset_opts[$data['user_id']] = $data['user_name'];
 }
 opentable($locale['apw_title']);
-echo openform('admin_reset', 'admin_reset', 'POST', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('admin_reset', 'POST', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive admin-reset tbl-border center'>\n<tr>\n";
 echo "<td class='tbl1' width='250'><label for='reset_admin'>".$locale['400']."</label></td>\n";
 echo "<td class='tbl1'>".form_select('', 'reset_admin', 'reset_admin', $reset_opts, '', array('placeholder' => $locale['choose'], 'allowclear' => 1));

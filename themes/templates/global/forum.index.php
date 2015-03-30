@@ -465,7 +465,7 @@ if (!function_exists('render_post')) {
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-body'>\n";
 				if ($info['permissions']['can_vote_poll']) {
-					echo openform('voteform', 'voteform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."viewthread.php?forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('notice'=>0, 'downtime'=>1));
+					echo openform('voteform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."viewthread.php?forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'], array('notice'=>0, 'max_tokens' => 1));
 				}
 				echo "<span class='text-bigger strong display-inline-block m-b-10'><i class='entypo chart-pie'></i>".$info['poll']['forum_poll_title']."</span>\n";
 				echo "<hr class='m-t-0 m-b-10'/>\n";
@@ -483,7 +483,7 @@ if (!function_exists('render_post')) {
 				echo "</ul>\n";
 				if ($info['permissions']['can_vote_poll']) {
 					echo "<hr class='m-t-10 m-b-10'/>\n";
-					echo form_button('Cast Vote', 'vote', 'vote', 'vote', array('class'=>'btn btn-sm btn-primary m-l-20 '));
+					echo form_button('vote', 'Cast Vote', 'vote', array('class'=>'btn btn-sm btn-primary m-l-20 '));
 					echo closeform();
 				}
 				echo "</div>\n";
@@ -506,7 +506,7 @@ if (!function_exists('render_post')) {
 			echo opentabbody('', isset($_GET['section']) ? $_GET['section'] : 'oldest', $tab_active, 'oldest');
 			echo "<div id='top' class='thread_pagenav m-t-5'>\n".$info['page_nav']."</div>\n";
 			echo "<!--pre_forum_thread-->\n";
-			echo iMOD ? openform('mod_form', 'mod_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('downtime' => 1,'notice' => 0)) : '';
+			echo iMOD ? openform('mod_form', 'mod_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('max_tokens' => 1,'notice' => 0)) : '';
 			$i = 0;
 			// items
 			foreach($info['post_items'] as $post_id => $post_data) {
@@ -530,10 +530,10 @@ if (!function_exists('render_post')) {
 				echo "<a id='check' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',1);return false;\">".$locale['forum_0080']."</a>\n";
 				echo "<a id='uncheck' class='btn button btn-sm btn-default text-dark' href='#' onclick=\"javascript:setChecked('mod_form','delete_post[]',0);return false;\">".$locale['forum_0081']."</a>\n";
 				echo "</div>\n";
-				echo form_button($locale['forum_0176'], 'move_posts', 'move_posts', $locale['forum_0176'], array('class' => 'btn-default btn-sm m-r-10'));
-				echo form_button($locale['forum_0177'], 'delete_posts', 'delete_posts', $locale['forum_0177'], array('class' => 'btn-default btn-sm'));
+				echo form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], array('class' => 'btn-default btn-sm m-r-10'));
+				echo form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default btn-sm'));
 				echo "<div class='pull-right'>\n";
-				echo form_button($locale['forum_0208'], 'go', 'go', $locale['forum_0208'], array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'));
+				echo form_button('go', $locale['forum_0208'], $locale['forum_0208'], array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'));
 				echo form_select('', 'step', 'step', $mod_options, '', array('placeholder' => $locale['forum_0200'], 'width'=>'250px', 'allowclear'=>1, 'class'=>'m-b-0 m-t-5', 'inline'=>1));
 				echo "</div>\n";
 				echo "</div>\n";
@@ -552,12 +552,12 @@ if (!function_exists('render_post')) {
 			// Quick reply
 			if ($info['permissions']['can_reply'] && $info['forum_quick_edit'] && !$info['thread_locked']) {
 				$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').FORUM."post.php?action=reply&amp;forum_id=".$info['forum_id']."&amp;thread_id=".$_GET['thread_id'];
-				echo openform('qr_form', 'qr_form', 'post', $form_action, array('class'=>'m-b-20 m-t-20 list-group-item', 'downtime' => 1));
+				echo openform('qr_form', 'post', $form_action, array('class'=>'m-b-20 m-t-20 list-group-item', 'max_tokens' => 1));
 				echo "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
 				echo form_textarea('', 'post_message', 'post_message', '', array('bbcode' => 1, 'required' => 1, 'autosize'=>1, 'preview'=>1, 'form_name'=>'qr_form'));
 				echo "<div class='m-t-10 pull-right'>\n";
-				echo $settings['site_seo'] ? '' : form_button($locale['forum_0173'], 'previewreply', 'previewreply', $locale['forum_0173'], array('class' => 'btn-default btn-sm m-r-10')); // post lost.
-				echo form_button($locale['forum_0172'], 'postreply', 'postreply', $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
+				echo $settings['site_seo'] ? '' : form_button('previewreply', $locale['forum_0173'], 'previewreply', $locale['forum_0173'], array('class' => 'btn-default btn-sm m-r-10')); // post lost.
+				echo form_button('postreply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";
 				echo form_checkbox($locale['forum_0169'], 'post_smileys', 'post_smileys', '', array('class'=>'m-b-0'));
@@ -731,9 +731,9 @@ if (!function_exists('render_laft')) {
 		$opts = array('0' => $locale['forum_p999'], '1' => $locale['forum_p001'], '7' => $locale['forum_p007'], '14' => $locale['forum_p014'], '30' => $locale['forum_p030'],
 			'90' => $locale['forum_p090'], '180' => $locale['forum_p180'], '365' => $locale['forum_p365']);
 		echo "<hr/>\n";
-		echo openform('filter_form', 'filter_form', 'post', FORUM."index.php?section=latest", array('downtime' => 1));
+		echo openform('filter_form', 'post', FORUM."index.php?section=latest", array('max_tokens' => 1));
 		echo form_select($locale['forum_0009'], 'filter', 'filter', $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '300px', 'class'=>'pull-left m-r-10'));
-		echo form_button($locale['go'], 'go', 'go', $locale['go'], array('class' => 'btn-default btn-sm m-b-20'));
+		echo form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default btn-sm m-b-20'));
 		echo closeform();
 	}
 }
@@ -856,11 +856,11 @@ if (!function_exists('forum_newtopic')) {
 					$options[$data['forum_id']] = str_repeat("&#8212;", $depth).$data['forum_name']." ".($data['forum_cat_name'] ? "(".$data['forum_cat_name'].")" : '');
 				}
 			}
-			echo openform('qp_form', 'qp_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').FORUM.'index.php', array('notice'=>0, 'downtime'=>1));
+			echo openform('qp_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').FORUM.'index.php', array('notice'=>0, 'max_tokens' => 1));
 			echo "<div class='well clearfix m-t-10'>\n";
 			echo form_select($locale['forum_0395'], 'forum_sel', 'forum_sel', $options, '', array('inline'=>1, 'width'=>'100%'));
 			echo "<div class='display-inline-block col-xs-12 col-sm-offset-3'>\n";
-			echo form_button($locale['forum_0396'], 'select_forum', 'select_forum', 'select_forum', array('class'=>'btn-primary btn-sm'));
+			echo form_button('select_forum', $locale['forum_0396'], 'select_forum', array('class'=>'btn-primary btn-sm'));
 			echo "</div>\n";
 			echo "</div>\n";
 			echo closeform();

@@ -92,7 +92,7 @@ if (!file_exists($file)) {
 	$defender->stop();
 	$defender->addNotice($locale['411']);
 }
-echo openform('robotsform', 'robotsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('robotsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table class='table table-responsive tbl-border center'>\n<tbody>\n";
 echo "<tr>\n";
 echo "<td class='tbl2' style='text-align:center;font-weight:bold;'>".$locale['420']."</td>\n";
@@ -104,8 +104,8 @@ echo form_textarea('', 'robots_content', 'robots_content', openFile($file, 'READ
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' style='text-align:center;'>";
-echo form_button($locale['422'], 'save_robots', 'save_robots', $locale['422'], array('class' => 'btn-primary m-r-10'));
-echo form_button($locale['423'], 'set_default', 'set_default', $locale['423'], array('class' => 'btn-primary'));
+echo form_button('save_robots', $locale['422'], $locale['422'], array('class' => 'btn-primary m-r-10'));
+echo form_button('set_default', $locale['423'], $locale['423'], array('class' => 'btn-primary'));
 add_to_jquery("
     $('#set_default').bind('click', function() { confirm('".$locale['410']."'); });
     ");

@@ -82,10 +82,10 @@ if (isset($_GET['remove']) &&  isnum($_GET['remove']) && $_GET['remove'] != 1) {
 			echo "<div id='close-message'><div class='admin-message'>".$locale['global_182']."</div></div>\n";
 		}
 		opentable($locale['470']);
-		echo openform('remove', 'remove', 'post', FUSION_SELF.$aidlink."&amp;remove=".$_GET['remove'], array('downtime' => 1));
-		echo form_text($locale['471'], 'admin_password', 'admin_password', '', array('password' => 1, 'class' => 'pull-left'));
-		echo form_button($locale['472'], 'confirm', 'confirm', $locale['472'], array('class' => 'btn-primary m-r-10'));
-		echo form_button($locale['473'], 'cancel', 'cancel', $locale['473'], array('class' => 'btn-primary m-r-10'));
+		echo openform('remove', 'post', FUSION_SELF.$aidlink."&amp;remove=".$_GET['remove'], array('max_tokens' => 1));
+		echo form_text('admin_password', $locale['471'], '', array('type' => 'password', 'class' => 'pull-left'));
+		echo form_button('confirm', $locale['472'], $locale['472'], array('class' => 'btn-primary m-r-10'));
+		echo form_button('cancel', $locale['473'], $locale['473'], array('class' => 'btn-primary m-r-10'));
 		closetable();
 	}
 }
@@ -120,7 +120,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 		$page = 1;
 		$admin_page = array($locale['441'], $locale['442'], $locale['443'], $locale['449'], $locale['444']);
 		$risky_rights = array("CP", "AD", "SB", "DB", "IP", "P", "S11", "S3", "ERRO");
-		echo openform('rightsform', 'rightsform', 'post', FUSION_SELF.$aidlink."&amp;user_id=".$_GET['edit'], array('downtime' => 1));
+		echo openform('rightsform', 'post', FUSION_SELF.$aidlink."&amp;user_id=".$_GET['edit'], array('max_tokens' => 1));
 		echo "<div class='alert alert-warning'><strong>".$locale['462']."</strong></div>\n";
 		echo "<table cellpadding='0' cellspacing='1' class='tbl-border center table table-responsive'>\n";
 		echo "<thead><tr>\n<th colspan='2' class='tbl2'><strong>".$admin_page['0']."</strong></th>\n</tr>\n</thead>\n<tbody>\n<tr>\n";
@@ -147,10 +147,10 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 		echo "</div>\n";
 		if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 			echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
-			echo form_text($locale['447'], 'admin_password', 'admin_password', $locale['447']);
+			echo form_text('admin_password', $locale['447'], $locale['447']);
 			echo "</div>\n</div>\n";
 		}
-		echo form_button($locale['448'], 'update_admin', 'update_admin', $locale['448'], array('class' => 'btn-primary'));
+		echo form_button('update_admin', $locale['448'], $locale['448'], array('class' => 'btn-primary'));
 		echo "</div>\n";
 		echo closeform();
 		closetable();
@@ -171,15 +171,15 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 } else {
 	opentable($locale['410']);
 	if (!isset($_POST['search_users']) || !isset($_POST['search_criteria'])) {
-		echo openform('searchform', 'searchform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+		echo openform('searchform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 		echo "<table cellpadding='0' cellspacing='0' width='450' class='center table table-responsive'>\n";
 		echo "<tr>\n<td align='center' class='tbl'><strong>".$locale['411']."</strong><br /><br />\n";
-		echo form_text('', 'search_criteria', 'search_criteria', '', array('width' => '300px'));
+		echo form_text('search_criteria', '', '', array('width' => '300px'));
 		echo "</td>\n</tr>\n<tr>\n<td align='center' class='tbl'>\n";
 		echo "<label><input type='radio' name='search_type' value='user_name' class='m-r-10' checked='checked' />&nbsp;".$locale['413']."</label>\n";
 		echo "<label><input type='radio' name='search_type' value='user_id' class='m-r-10' />&nbsp;".$locale['412']."</label></td>\n";
 		echo "</tr>\n<tr>\n<td align='center' class='tbl'>\n";
-		echo form_button($locale['414'], 'search_users', 'search_users', $locale['414']);
+		echo form_button('search_users', $locale['414'], $locale['414']);
 		echo "</td>\n</tr>\n</table>\n</form>\n";
 	} elseif (isset($_POST['search_users']) && isset($_POST['search_criteria'])) {
 		$mysql_search = "";
@@ -192,7 +192,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 			$result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE ".$mysql_search." AND user_level='-101' ORDER BY user_name");
 		}
 		if (isset($result) && dbrows($result)) {
-			echo openform('add_users_form', 'add_users_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+			echo openform('add_users_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 			echo "<table cellpadding='0' cellspacing='1' class='tbl-border center table table-responsive'>\n";
 			$i = 0;
 			$users = "";
@@ -213,9 +213,9 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
 					echo "<label><input type='checkbox' name='make_super' value='1' /> ".$locale['416']."</label> <span class='required m-l-5'>*</span><br />\n";
 				}
 				if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
-					echo form_text($locale['447'], 'admin_password', 'admin_password', '', array('required' => 1, 'inline' => 1));
+					echo form_text('admin_password', $locale['447'], '', array('required' => 1, 'inline' => 1));
 				}
-				echo form_button($locale['461'], 'add_admin', 'add_admin', $locale['461'], array('class' => 'btn-primary m-t-10'));
+				echo form_button('add_admin', $locale['461'], $locale['461'], array('class' => 'btn-primary m-t-10'));
 				add_to_jquery("
                 $('#add_admin').bind('click', function() { confirm('".$locale['461']."'); });
                 ");

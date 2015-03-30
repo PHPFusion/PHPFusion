@@ -56,24 +56,24 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 		echo admin_message($message);
 	}
 }
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='well'>".$locale['ipp_description']."</div>";
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>";
 openside('');
-echo form_text($locale['669b'], 'blogperpage', 'blogperpage', $settings2['blogperpage'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['669'], 'newsperpage', 'newsperpage', $settings2['newsperpage'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['910'], 'articles_per_page', 'articles_per_page', $settings2['articles_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['911'], 'downloads_per_page', 'downloads_per_page', $settings2['downloads_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text('blogperpage', $locale['669b'], $settings2['blogperpage'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text('newsperpage', $locale['669'], $settings2['newsperpage'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text('articles_per_page', $locale['910'], $settings2['articles_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text('downloads_per_page', $locale['911'], $settings2['downloads_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
 closeside();
 echo "</div><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_text($locale['912'], 'links_per_page', 'links_per_page', $settings2['links_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['913'], 'comments_per_page', 'comments_per_page', $settings2['comments_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['914'], 'threads_per_page', 'threads_per_page', $settings2['threads_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text($locale['915'], 'posts_per_page', 'posts_per_page', $settings2['posts_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text('links_per_page', $locale['912'], $settings2['links_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text('comments_per_page', $locale['913'], $settings2['comments_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text('threads_per_page', $locale['914'], $settings2['threads_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
+echo form_text('posts_per_page', $locale['915'], $settings2['posts_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
 closeside('');
 echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 
 echo closeform();
 closetable();

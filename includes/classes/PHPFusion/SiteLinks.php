@@ -334,11 +334,11 @@ class SiteLinks {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='8'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat'], array('downtime'=>1, 'notice'=>0));
+		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;section=links&amp;link_cat=".$_GET['link_cat'], array('max_tokens' => 1, 'notice'=>0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-5 col-md-12 col-lg-6'>\n";
-		echo form_text($locale['SL_0020'], 'link_name', 'link_name', '', array('placeholder'=>'Link Title'));
-		echo form_text($locale['SL_0030'], 'link_icon', 'link_icon', $this->data['link_icon'], array('max_length' => 100));
+		echo form_text('link_name', $locale['SL_0020'], '', array('placeholder'=>'Link Title'));
+		echo form_text('link_icon', $locale['SL_0030'], $this->data['link_icon'], array('max_length' => 100));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_select($locale['global_ML100'], 'link_language', 'link_language', $this->language_opts, $this->data['link_language'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
@@ -351,8 +351,8 @@ class SiteLinks {
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";
-		echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class'=>'btn btn-default m-r-10', 'type'=>'button'));
-		echo form_button($locale['save'], 'link_quicksave', 'link_quicksave', 'save', array('class'=>'btn btn-primary'));
+		echo form_button('cancel', $locale['cancel'], 'cancel', array('class'=>'btn btn-default m-r-10', 'type'=>'button'));
+		echo form_button('link_quicksave', $locale['save'], 'save', array('class'=>'btn btn-primary'));
 		echo "</div>\n";
 		echo closeform();
 		echo "</div>\n";
@@ -408,14 +408,14 @@ class SiteLinks {
 		global $locale;
 		fusion_confirm_exit();
 		echo "<div class='m-t-20'>\n";
-		echo openform('linkform', 'linkform', 'post', $this->form_action, array('downtime' => 1));
+		echo openform('linkform', 'post', $this->form_action, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
 		echo form_hidden('', 'link_id', 'linkid', $this->data['link_id']);
-		echo form_text($locale['SL_0020'], 'link_name', 'link_names', $this->data['link_name'], array('max_length' => 100, 'required' => 1, 'error_text' => $locale['SL_0085'], 'inline'=>1));
-		echo form_text('Link Icon', 'link_icon', 'link_icons', $this->data['link_icon'], array('max_length' => 100, 'inline'=>1));
-		echo form_text($locale['SL_0021'], 'link_url', 'link_urls', $this->data['link_url'], array('required' => 1, 'error_text' => $locale['SL_0086'], 'inline'=>1));
-		echo form_text($locale['SL_0023'], 'link_order', 'link_orders', $this->data['link_order'],  array('number' => 1, 'class' => 'pull-left', 'inline' => 1));
+		echo form_text('link_name', $locale['SL_0020'], $this->data['link_name'], array('max_length' => 100, 'required' => 1, 'error_text' => $locale['SL_0085'], 'inline'=>1));
+		echo form_text('link_icon', 'Link Icon', $this->data['link_icon'], array('max_length' => 100, 'inline'=>1));
+		echo form_text('link_url', $locale['SL_0021'], $this->data['link_url'], array('required' => 1, 'error_text' => $locale['SL_0086'], 'inline'=>1));
+		echo form_text('link_order', $locale['SL_0023'], $this->data['link_order'],  array('number' => 1, 'class' => 'pull-left', 'inline' => 1));
 		echo form_select($locale['SL_0024'], 'link_position', 'link_positions', $this->position_opts, $this->data['link_position'], array('inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
@@ -435,7 +435,7 @@ class SiteLinks {
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['SL_0040'], 'savelink', 'savelink', $locale['SL_0040'], array('class'=>'btn-primary'));
+		echo form_button('savelink', $locale['SL_0040'], $locale['SL_0040'], array('class'=>'btn-primary'));
 		echo closeform();
 		echo "</div>\n";
 	}

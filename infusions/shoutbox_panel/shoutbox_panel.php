@@ -143,7 +143,7 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 		$shout_message = "";
 	}
 	echo "<a id='edit_shout' name='edit_shout'></a>\n";
-	echo openform('shout_form', 'shout_form', 'post', $shout_link, array('notice' => 0, 'downtime'=>1));
+	echo openform('shout_form', 'post', $shout_link, array('notice' => 0, 'max_tokens' => 1));
 	if (iGUEST) {
 		echo $locale['SB_name']."<br />\n";
 		echo "<input type='text' name='shout_name' value='' class='textbox' maxlength='30' style='width:140px' /><br />\n";
@@ -158,7 +158,7 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 		echo "<a href='#' onclick=\"document.getElementById('sb_captcha').src = '".INCLUDES."captchas/securimage/securimage_show.php?sid=' + Math.random(); return false\"><img src='".INCLUDES."captchas/securimage/images/refresh.gif' alt='' class='tbl-border' /></a><br />\n";
 		echo $locale['SB_enter_validation_code']."<br />\n<input type='text' name='sb_captcha_code' class='textbox' style='width:100px' /><br />\n";
 	}
-	echo form_button($locale['SB_shout'], 'post_shout', 'post_shout', $locale['SB_shout'], array('class' => 'btn-block btn-primary button',
+	echo form_button('post_shout', $locale['SB_shout'], $locale['SB_shout'], array('class' => 'btn-block btn-primary button',
 																								 'icon' => "entypo icomment"));
 	echo closeform();
 } else {

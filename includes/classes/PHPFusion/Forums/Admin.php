@@ -598,9 +598,9 @@ class Admin {
 		}
 		$type_opts = array('1'=>$locale['forum_opts_001'], '2'=>$locale['forum_opts_002'], '3'=>$locale['forum_opts_003'], '4'=>$locale['forum_opts_004']);
 		opentable($locale['forum_001']);
-		echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink.$this->ext, array('enctype'=>1, 'downtime'=>1));
+		echo openform('inputform', 'post', FUSION_SELF.$aidlink.$this->ext, array('enctype'=>1, 'max_tokens' => 1));
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-		echo form_text($locale['forum_006'], 'forum_name', 'forum_name', $this->data['forum_name'], array('required'=>1, 'error_text'=>$locale['forum_error_1']));
+		echo form_text('forum_name', $locale['forum_006'], $this->data['forum_name'], array('required'=>1, 'error_text'=>$locale['forum_error_1']));
 		echo form_textarea($locale['forum_007'], 'forum_description', 'forum_description', $this->data['forum_description'], array('autosize'=>1, 'bbcode'=>1));
 		echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 		openside('');
@@ -608,12 +608,12 @@ class Admin {
 		echo form_select_tree($locale['forum_008'], 'forum_cat', 'forum_cat', $this->data['forum_cat'], array('add_parent_opts'=>1, 'disable_opts'=>$self_id, 'hide_disabled'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id);
 		echo form_select($locale['forum_009'], 'forum_type', 'forum_type', $type_opts, $this->data['forum_type']);
 		echo form_select($locale['forum_010'], 'forum_language', 'forum_lang', $language_opts, $this->data['forum_language']);
-		echo form_text($locale['forum_043'], 'forum_order', 'forum_order', $this->data['forum_order'], array('number'=>1));
-		echo form_button($this->data['forum_id'] ? $locale['forum_000a'] : $locale['forum_000'], 'save_forum', 'save_forum', $locale['forum_000'], array('class'=>'btn btn-sm btn-success'));
+		echo form_text('forum_order', $locale['forum_043'], $this->data['forum_order'], array('number'=>1));
+		echo form_button('save_forum', $this->data['forum_id'] ? $locale['forum_000a'] : $locale['forum_000'], $locale['forum_000'], array('class'=>'btn btn-sm btn-success'));
 		closeside();
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-		echo form_text($locale['forum_011'], 'forum_alias', 'forum_alias', $this->data['forum_alias']); // need ajax check
+		echo form_text('forum_alias', $locale['forum_011'], $this->data['forum_alias']); // need ajax check
 		echo form_select($locale['forum_012'], 'forum_meta', 'forum_meta', array(), $this->data['forum_meta'], array('tags'=>1, 'multiple'=>1, 'width'=>'100%'));
 		// possible bug? - if image is tied to a url. we can remove it after assigning to other's people page? what if i split to image_url ?
 		if ($this->data['forum_image'] && file_exists(IMAGES."forum/".$this->data['forum_image'])) {
@@ -624,7 +624,7 @@ class Admin {
 			echo "</div>\n<div class='overflow-hide'>\n";
 			echo "<span class='strong'>".$locale['forum_013']."</span><br/>\n";
 			echo "<span class='text-smaller'>".sprintf($locale['forum_027'], $image_size[0], $image_size[1])."</span><br/>";
-			echo form_button($locale['forum_028'], 'remove_image', 'remove_image', $locale['forum_028'], array('class'=>'btn-danger btn-xs m-t-10', 'icon'=>'fa fa-trash'));
+			echo form_button('remove_image', $locale['forum_028'], $locale['forum_028'], array('class'=>'btn-danger btn-xs m-t-10', 'icon'=>'fa fa-trash'));
 			// this form has forum_id - onclick of button - will also post forum_id @ L475
 			echo "</div>\n";
 			closeside();
@@ -649,7 +649,7 @@ class Admin {
 				'2' => 'https://'
 			);
 			echo form_select($locale['forum_056'], 'forum_image_header', 'forum_image_header', $header_opts, '', array('inline'=>1));
-			echo form_text($locale['forum_014'], 'forum_image_url', 'forum_image_url', '', array('placeholder'=>'images/forum/', 'inline'=>1));
+			echo form_text('forum_image_url', $locale['forum_014'], '', array('placeholder'=>'images/forum/', 'inline'=>1));
 			echo closetabbody();
 			echo closetab();
 		}
@@ -659,7 +659,7 @@ class Admin {
 		openside('');
 		echo form_select_tree($locale['forum_025'], 'forum_permissions', 'forum_permissions', '', array('no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 		if ($this->data['forum_id']) {
-			echo form_button($locale['forum_029'], 'jp_forum', 'jp_forum', $locale['forum_029'], array('class'=>'btn-sm btn-default m-r-10'));
+			echo form_button('jp_forum', $locale['forum_029'], $locale['forum_029'], array('class'=>'btn-sm btn-default m-r-10'));
 		}
 		closeside();
 		openside('');
@@ -674,7 +674,7 @@ class Admin {
 		echo form_hidden('', 'forum_branch', 'forum_branch', $this->data['forum_branch']);
 		closeside();
 		echo "</div>\n</div>\n";
-		echo form_button($this->data['forum_id'] ? $locale['forum_000a'] : $locale['forum_000'], 'save_forum', 'save_forum_1', $locale['forum_000'], array('class'=>'btn-sm btn-success'));
+		echo form_button('save_forum', $this->data['forum_id'] ? $locale['forum_000a'] : $locale['forum_000'], $locale['forum_000'], array('class'=>'btn-sm btn-success'));
 		echo closeform();
 		closetable();
 	}
@@ -698,7 +698,7 @@ class Admin {
 			$access_opts[$option['0']] = $option['1'];
 		}
 
-		echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink.$this->ext."&amp;action=p_edit&amp;forum_id=".$_GET['forum_id'], array('enctype'=>1, 'downtime'=>1));
+		echo openform('inputform', 'post', FUSION_SELF.$aidlink.$this->ext."&amp;action=p_edit&amp;forum_id=".$_GET['forum_id'], array('enctype'=>1, 'max_tokens' => 1));
 		echo "<span class='strong display-inline-block m-b-20'>".$locale['forum_006']." : ".$data['forum_name']."</span>\n";
 		openside();
 		echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_000']."</span><br/>\n";
@@ -774,7 +774,7 @@ class Admin {
 		echo "</div>\n</div>\n";
 		closeside();
 
-		echo form_button($locale['forum_042'], 'save_permission', 'save_permission', $locale['forum_042'], array('class' =>'btn-primary btn-sm'));
+		echo form_button('save_permission', $locale['forum_042'], $locale['forum_042'], array('class' =>'btn-primary btn-sm'));
 
 		add_to_jquery(" $('#save').bind('click', function() { saveMods(); }); ");
 		echo "<script type='text/javascript'>\n"."function addUser(toGroup,fromGroup) {\n";
@@ -806,9 +806,9 @@ class Admin {
 	private function quick_create_forum() {
 		global $aidlink, $locale;
 		opentable($locale['forum_001']);
-		echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink.$this->ext, array('downtime'=>1, 'notice'=>0));
-		echo form_text($locale['forum_006'], 'forum_name', 'forum_name', '', array('required'=>1, 'inline'=>1, 'placeholder'=>$locale['forum_018']));
-		echo form_button($locale['forum_001'], 'init_forum', 'init_forum', 'init_forum', array('class'=>'btn btn-sm btn-primary'));
+		echo openform('inputform', 'post', FUSION_SELF.$aidlink.$this->ext, array('max_tokens' => 1, 'notice'=>0));
+		echo form_text('forum_name', $locale['forum_006'], '', array('required'=>1, 'inline'=>1, 'placeholder'=>$locale['forum_018']));
+		echo form_button('init_forum', $locale['forum_001'], 'init_forum', array('class'=>'btn btn-sm btn-primary'));
 		echo closeform();
 		closetable();
 	}
@@ -886,7 +886,7 @@ class Admin {
 	private	function display_forum_move_form() {
 		global $aidlink, $locale;
 		echo openmodal('move', $locale['forum_060'], array('static'=>1, 'class'=>'modal-md'));
-		echo openform('moveform', 'moveform', 'post', FUSION_SELF.$aidlink.$this->ext, array('downtime' => 1));
+		echo openform('moveform', 'post', FUSION_SELF.$aidlink.$this->ext, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
 		echo "<span class='text-dark strong'>".$locale['forum_052']."</span><br/>\n";
@@ -905,7 +905,7 @@ class Admin {
 		echo form_hidden('', 'forum_remove', 'forum_remove', 1); // key to launch next sequence
 		echo form_hidden('', 'forum_id', 'forum_id', $_GET['forum_id']);
 		echo form_hidden('', 'forum_branch', 'forum_branch', $_GET['forum_branch']);
-		echo form_button($locale['forum_049'], 'submit_move', 'submit_move', 'submit_move', array('class'=>'btn-sm btn-danger m-r-10', 'icon'=>'fa fa-trash'));
+		echo form_button('submit_move', $locale['forum_049'], 'submit_move', array('class'=>'btn-sm btn-danger m-r-10', 'icon'=>'fa fa-trash'));
 		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
 		echo "</div>\n";
 		echo closeform();

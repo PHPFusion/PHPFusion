@@ -290,7 +290,7 @@ class Eshop {
 			foreach($item as $prid => $data) {
 				$specs = \PHPFusion\Eshop\Eshop::get_productSpecs($data['dync'], $data['cdyn']);
 				$color = \PHPFusion\Eshop\Eshop::get_productColor($data['cclr']);
-				$html .= openform('updateqty', "updateqty-".$data['tid'], 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
+				$html .= openform('updateqty', "updateqty-".$data['tid'], 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0));
 				$html .= "<tr>\n";
 				$html .= "<td class='col-xs-5 col-sm-5'>\n";
 				$html .= "<div class='pull-left m-r-10' style='width:70px'>\n";
@@ -303,7 +303,7 @@ class Eshop {
 				$html .= "</div>\n";
 				$html .= "</td>\n";
 				$html .= "<td>\n";
-				$html .= $display ? $data['cqty'] : form_text('', 'qty', 'qty', $data['cqty'], array('append_button'=>1, 'append_form_value'=>$data['tid'], 'append_value'=>"<i class='fa fa-repeat m-t-5 m-b-0'></i>", 'append_type'=>'submit'));
+				$html .= $display ? $data['cqty'] : form_text('qty', '', $data['cqty'], array('append_button'=>1, 'append_form_value'=>$data['tid'], 'append_value'=>"<i class='fa fa-repeat m-t-5 m-b-0'></i>", 'append_type'=>'submit'));
 				$html .= form_hidden('', 'utid', 'utid', $data['tid']);
 				$html .= "</td>\n";
 				$html .= "<td>".fusion_get_settings('eshop_currency').number_format($data['item_price'], 2)."</td>\n";
@@ -651,7 +651,7 @@ class Eshop {
 		if (fusion_get_settings('eshop_coupons')) {
 			if (self::get('coupon_message')) {
 				$html .= "<div id='coupon-text' class='text-center'>\n";
-				$html .= form_button($locale['coupon_another'], 'use_coupon', 'use_coupon', '', array('class'=>'btn-sm btn-info pull-right m-b-10'));
+				$html .= form_button('use_coupon', $locale['coupon_another'], '', array('class'=>'btn-sm btn-info pull-right m-b-10'));
 				$html .= "<span>".$locale['coupon_applied']."</span>\n";
 				$html .= "</div>\n";
 				add_to_jquery("
@@ -662,9 +662,9 @@ class Eshop {
 				");
 			}
 			$html .= "<div id='coupon_container' class='m-t-20' ".(self::get('coupon_message') ? 'style="display:none;"' : "")." >\n";
-			$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
-			$html .= form_text($locale['ESHPCHK171'], 'coupon_code', 'coupon_code', '', array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1));
-			$html .= form_button($locale['ESHPCHK172'], 'apply_coupon', 'apply_coupon', $locale['ESHPCHK172'], array('class'=>'btn-primary'));
+			$html .= openform('coupon_form', 'coupon_form', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0));
+			$html .= form_text('coupon_code', $locale['ESHPCHK171'], '', array('placeholder'=>$locale['ESHPCHK171'], 'inline'=>1));
+			$html .= form_button('apply_coupon', $locale['ESHPCHK172'], $locale['ESHPCHK172'], array('class'=>'btn-primary'));
 			$html .= closeform();
 			$html .= "</div>\n";
 		} else {
@@ -738,12 +738,12 @@ class Eshop {
 			);
 		}
 		$html = "<div class='m-t-20'>\n";
-		$html .= openform('customerform', 'customerform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
+		$html .= openform('customerform', 'customerform', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0));
 		$customer_name[] = $customer_info['cfirstname'];
 		$customer_name[] = $customer_info['clastname'];
 		$customer_name = implode('|', $customer_name);
 		$html .= form_name('Customer Name', 'cname', 'cname', $customer_name, array('required'=>1, 'inline'=>1));
-		$html .= form_text($locale['ESHPCHK115'], 'cemail', 'cemail', $customer_info['cemail'], array('inline'=>1, 'required'=>1, 'email'=>1));
+		$html .= form_text('cemail', $locale['ESHPCHK115'], $customer_info['cemail'], array('inline'=>1, 'required'=>1, 'type' => 'email'));
 		$html .= form_datepicker($locale['ESHPCHK105'], 'cdob', 'cdob', $customer_info['cdob'], array('inline'=>1, 'required'=>1));
 		$customer_address[] = $customer_info['caddress']; // use this as backdoor.
 		$customer_address[] = $customer_info['caddress2'];
@@ -753,10 +753,10 @@ class Eshop {
 		$customer_address[] = $customer_info['cpostcode'];
 		$customer_address = implode('|', $customer_address);
 		$html .= form_address($locale['ESHPCHK106'], 'caddress', 'caddress', $customer_address, array('required'=>1, 'inline'=>1));
-		$html .= form_text($locale['ESHPCHK113'], 'cphone', 'cphone', $customer_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
-		$html .= form_text($locale['ESHPCHK114'], 'cfax', 'cfax', $customer_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
+		$html .= form_text('cphone', $locale['ESHPCHK113'], $customer_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
+		$html .= form_text('cfax', $locale['ESHPCHK114'], $customer_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
 		$html .= form_hidden('', 'cuid', 'cuid', $customer_info['cuid']);
-		$html .= form_button($locale['save_changes'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-success'));
+		$html .= form_button('save_customer', $locale['save_changes'], $locale['save'], array('class'=>'btn-success'));
 		$html .= closeform();
 		$html .= "</div>\n";
 		return $html;
@@ -822,7 +822,7 @@ class Eshop {
 		if (!empty($list)) {
 			$dest_opts = Shipping::get_destOpts();
 			$locale['est_delivery_time'] = "Est. Delivery Time - %s days";
-			$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
+			$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0));
 			foreach($list as $destination => $data) {
 				$html .= "<ul class='list-group'>\n";
 				$html .= "<li class='strong m-b-10'>".$dest_opts[$destination]."</li>\n";
@@ -840,7 +840,7 @@ class Eshop {
 				}
 			}
 			$html .= "</ul>\n";
-			$html .= form_button($locale['save_changes'], 'save_shipping', 'save_shipping', $locale['save'], array('class'=>'btn-primary'));
+			$html .= form_button('save_shipping', $locale['save_changes'], $locale['save'], array('class'=>'btn-primary'));
 			$html .= closeform();
 		} else {
 			$html .= "<div class='well'>".$locale['ESHPCHK125']."</div>\n";
@@ -880,7 +880,7 @@ class Eshop {
 		$html = '';
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_PAYMENTS." WHERE active='1' ORDER BY pid ASC");
 		if (dbrows($result)>0) {
-			$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
+			$html .= openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0));
 			$html .= "<ul class='list-group'>";
 			$html .= "<li class='strong m-b-10'>".$locale['ESHPCHK120']."</li>\n";
 			while ($data = dbarray($result)) {
@@ -896,7 +896,7 @@ class Eshop {
 					</li>";
 			}
 			$html .= "</ul>\n";
-			$html .= form_button($locale['save'], 'save_payment', 'save_payment', $locale['save'], array('class'=>'btn-primary'));
+			$html .= form_button('save_payment', $locale['save'], $locale['save'], array('class'=>'btn-primary'));
 			$html .= closeform();
 		} else {
 			$html .= "<div class='well'>".$locale['ESHPCHK122']."</div>\n";
@@ -915,9 +915,9 @@ class Eshop {
 	}
 	public static function display_message_form() {
 		global $locale;
-		$html = openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('downtime'=>1, 'notice'=>0));
+		$html = openform('shippingform', 'shippingform', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0));
 		$html .= form_textarea($locale['ESHPCHK116'], 'message', 'message', self::get('customer_message'));
-		$html .= form_button($locale['save_changes'], 'save_message', 'save_message', $locale['save'], array('class'=>'btn-success'));
+		$html .= form_button('save_message', $locale['save_changes'], $locale['save'], array('class'=>'btn-success'));
 		$html .= closeform();
 		return $html;
 	}

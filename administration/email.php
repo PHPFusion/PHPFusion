@@ -134,7 +134,7 @@ if (dbrows($result)) {
 add_to_breadcrumbs(array('link'=>ADMIN.$aidlink, 'title'=>$locale['400']));
 opentable($locale['400']);
 require_once INCLUDES."html_buttons_include.php";
-echo openform('emailtemplateform', 'emailtemplateform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('emailtemplateform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<h4>".$locale['420'].$template_name."</h4>\n";
 echo "<table class='table table-responsive'>\n<tbody>\n";
 echo "<td class='tbl1'><label for='template_active'>".$locale['421']."</label></td>\n";
@@ -164,7 +164,7 @@ if ($template_key == "CONTACT") {
 }
 echo "</label>\n <span class='required'>*</span></td>\n";
 echo "<td class='tbl1'>\n";
-echo form_text('', 'template_sender_name', 'template_sender_name', $template_sender_name, array('required' => 1, 'error_text' => $locale['472']));
+echo form_text('template_sender_name', '', $template_sender_name, array('required' => 1, 'error_text' => $locale['472']));
 if ($template_key == "CONTACT") {
 	echo "&nbsp;<span class='small'>(".$locale['430'].")</span>\n";
 }
@@ -178,7 +178,7 @@ if ($template_key == "CONTACT") {
 }
 echo "</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl1'>\n";
-echo form_text('', 'template_sender_email', 'template_sender_email', $template_sender_email, array('required' => 1, 'error_text' => $locale['473']));
+echo form_text('template_sender_email', '', $template_sender_email, array('required' => 1, 'error_text' => $locale['473']));
 if ($template_key == "CONTACT") {
 	echo "&nbsp;<span class='small'>(".$locale['433'].")</span>\n";
 }
@@ -238,9 +238,9 @@ echo "</tr>\n<tr>\n";
 echo "<td colspan='2' style='text-align:center;'>\n";
 echo form_hidden('', 'template_id', 'template_id', $template_id);
 echo form_hidden('', 'template_key', 'template_key', $template_key);
-echo form_button($locale['437'], 'test_template', 'test_template', $locale['437'], array('class' => 'btn-primary m-r-10'));
-echo form_button($locale['439'], 'save_template', 'save_template', $locale['439'], array('class' => 'btn-primary m-r-10'));
-echo form_button($locale['440'], 'reset', 'reset', $locale['440'], array('class' => 'btn-primary'));
+echo form_button('test_template', $locale['437'], $locale['437'], array('class' => 'btn-primary m-r-10'));
+echo form_button('save_template', $locale['439'], $locale['439'], array('class' => 'btn-primary m-r-10'));
+echo form_button('reset', $locale['440'], $locale['440'], array('class' => 'btn-primary'));
 echo "</td>\n";
 echo "</tr>\n";
 echo "</table>\n";

@@ -16,25 +16,29 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_button($title, $input_name, $input_id, $input_value, array $options = array()) {
-	$input_value = stripinput($input_value);
+
+function form_button($input_name, $title, $input_value, array $options = array()) {
 	$html = "";
 
+	$input_value = stripinput($input_value);
+
 	$options += array(
-		'class' => !empty($options['class']) ? $options['class'] : 'btn-default',
-		'icon' => !empty($options['icon']) ? $options['icon'] : '',
-		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
-		'type' => !empty($options['type']) ? $options['type']  : 'submit',
-		'block' => !empty($options['block']) && $options['block'] == 1 ? 'btn-block' : '',
-		'alt' => !empty($options['alt']) && $options['alt'] && !empty($title) ? $options['alt'] : $title
+		'input_id'		=> !empty($options['input_id']) ? $options['input_id'] : $input_name,
+		'input_value'	=> !empty($options['input_value']) ? $options['input_value'] : $input_name,
+		'class'			=> !empty($options['class']) ? $options['class'] : 'btn-default',
+		'icon'			=> !empty($options['icon']) ? $options['icon'] : '',
+		'deactivate'	=> !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+		'type'			=> !empty($options['type']) ? $options['type'] : 'submit',
+		'block'			=> !empty($options['block']) && $options['block'] == 1 ? 'btn-block' : '',
+		'alt'			=> !empty($options['alt']) && $options['alt'] && !empty($title) ? $options['alt'] : $title
 	);
 
 	if ($options['type'] == 'link') {
-		$html .= "<a id='".$input_id."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</a>";
+		$html .= "<a id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' href='".$input_name."' data-value='".$input_value."' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</a>";
 	} elseif ($options['type'] == 'button') {
-		$html .= "<button id='".$input_id."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</button>";
+		$html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='button' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</button>";
 	} else {
-		$html .= "<button id='".$input_id."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</button>";
+		$html .= "<button id='".$options['input_id']."' title='".$options['alt']."' class='".($options['deactivate'] ? 'disabled' : '')." btn ".$options['class']." button' name='".$input_name."' value='".$input_value."' type='submit' ".($options['deactivate'] ? "disabled='disabled'" : '')." >".($options['icon'] ? "<i class='".$options['icon']."'></i>" : '')." ".$title."</button>";
 	}
 	return $html;
 }
@@ -52,7 +56,7 @@ function form_btngroup($title, $input_name, $input_id, $opts, $input_value, arra
 		'error_text' => !empty($options['error_text']) ? $options['error_text']  : '',
 		'inline' => !empty($options['inline']) ? $options['inline']  : 0,
 		'safemode' => !empty($options['safemode']) ? $options['safemode']  : 0,
-		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : 0,
+		'required' => !empty($options['required']) && $options['required'] == 1 ? 1 : 0,
 	);
 
 	$html = '';

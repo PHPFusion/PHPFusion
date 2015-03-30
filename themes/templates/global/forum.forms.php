@@ -41,7 +41,7 @@ function postform($data, $info) {
 		$formaction .= FORUM."post.php?action=newthread&amp;forum_id=".$_GET['forum_id'];
 	}
 
-	echo openform('input_form', 'input_form', 'post', $formaction, array('enctype' => 1, 'downtime' => 1));
+	echo openform('input_form', 'post', $formaction, array('enctype' => 1, 'max_tokens' => 1));
 	if ($data['edit'] or $data['reply']) {
 		if ($data['reply']) {
 			echo "<h4 class='m-b-20'>".$locale['forum_2000'].$data['thread_subject']."</h4>\n ".form_hidden('', 'thread_subject', 'thread_subject', $data['thread_subject']);
@@ -52,7 +52,7 @@ function postform($data, $info) {
 				'class' => 'm-t-20 m-b-20')) : "<h4 class='m-b-20'>".$locale['forum_2002'].$data['thread_subject']."</h4>\n ".form_hidden('', 'thread_subject', 'thread_subject', $data['thread_subject']);
 		}
 	} else {
-		echo form_text($locale['forum_0600'], 'thread_subject', 'thread_subject', $data['thread_subject'], array('required' => 1,
+		echo form_text('thread_subject', $locale['forum_0600'], $data['thread_subject'], array('required' => 1,
 			'placeholder' => $locale['forum_2001'],
 			'error_text' => '',
 			'class' => 'm-t-20 m-b-20'));
@@ -133,7 +133,7 @@ function postform($data, $info) {
 	if ($info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new'])) {
 		echo opentabbody($tab_title['title'][2], 'pollopts', $tab_active);
 		echo "<div class='clearfix'>\n";
-		echo form_text($locale['forum_0604'], 'forum_poll_title', 'forum_poll_title', $data['forum_poll_title'], array('max_length' => 255,
+		echo form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255,
 			'placeholder' => 'Enter a Poll Title',
 			'inline' => 1));
 		echo form_hidden('', 'thread_poll', 'thread_poll', $data['thread_poll']);
@@ -160,11 +160,11 @@ function postform($data, $info) {
 							'class' => 'm-b-0'));
 					}
 					echo "<div class='col-xs-12 col-sm-offset-3 m-b-10'>\n";
-					echo form_button($locale['forum_0608'], 'add_poll_option', 'add_poll_option', $locale['forum_0608'], array('class' => 'btn-default btn-sm m-r-10',
+					echo form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-default btn-sm m-r-10',
 						'icon' => 'entypo plus-circled'));
 					if ($data['edit']) {
-						echo form_button($locale['forum_0609'], 'update_poll_title', 'update_poll_title', $locale['forum_0609'], array('class' => 'btn-default btn-sm m-r-10'));
-						echo form_button($locale['forum_0610'], 'delete_poll', 'delete_poll', $locale['forum_0610'], array('class' => 'btn-default btn-sm m-r-10'));
+						echo form_button('update_poll_title', $locale['forum_0609'], $locale['forum_0609'], array('class' => 'btn-default btn-sm m-r-10'));
+						echo form_button('delete_poll', $locale['forum_0610'], $locale['forum_0610'], array('class' => 'btn-default btn-sm m-r-10'));
 					}
 					echo "</div>\n";
 				}
@@ -178,7 +178,7 @@ function postform($data, $info) {
 				'placeholder' => 'Poll Options',
 				'inline' => 1));
 			echo "<div class='col-xs-12 col-sm-offset-3'>\n";
-			echo form_button($locale['forum_0608'], 'add_poll_option', 'add_poll_option', $locale['forum_0608'], array('class' => 'btn-default btn-sm'));
+			echo form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-default btn-sm'));
 			echo "</div>\n";
 		}
 		echo "</div>\n";
@@ -189,14 +189,14 @@ function postform($data, $info) {
 	echo "<hr/>\n";
 	echo "<div class='m-b-20'>\n";
 	echo form_hidden('', 'forum_id', 'forum_id', $data['forum_id']);
-	echo form_button($data['edit'] ? $locale['forum_0505'] : $locale['forum_0500'], 'previewpost', 'previewpost', $data['edit'] ? $locale['forum_0505'] : $locale['forum_0500'], array('class' => 'btn-default btn-sm m-r-10'));
-	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default pull-right btn-sm m-l-10'));
+	echo form_button('previewpost', $data['edit'] ? $locale['forum_0505'] : $locale['forum_0500'], $data['edit'] ? $locale['forum_0505'] : $locale['forum_0500'], array('class' => 'btn-default btn-sm m-r-10'));
+	echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default pull-right btn-sm m-l-10'));
 	if ($data['edit']) {
 		echo form_button($locale['forum_0508'], "savechanges", "savechanges", $locale['forum_0508'], array('class' => 'btn-primary pull-right btn-sm'));
 	} elseif ($data['reply']) {
-		echo form_button($locale['forum_0504'], 'postreply', 'postreply', $locale['forum_0504'], array('class' => 'btn-primary pull-right btn-sm'));
+		echo form_button('postreply', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary pull-right btn-sm'));
 	} else {
-		echo form_button($locale['forum_0501'], 'postnewthread', 'postnewthread', $locale['forum_0501'], array('class' => 'btn-primary pull-right btn-sm'));
+		echo form_button('postnewthread', $locale['forum_0501'], $locale['forum_0501'], array('class' => 'btn-primary pull-right btn-sm'));
 	}
 	echo "</div>\n";
 	echo closeform();
@@ -278,7 +278,7 @@ if (!function_exists('post_preview')) {
 			}
 			echo "</ul>\n";
 			echo "<hr class='m-t-10 m-b-10'/>\n";
-			echo form_button($locale['forum_2010'], 'vote', 'vote', 'vote', array('class' => 'btn btn-sm btn-primary m-l-20 ',
+			echo form_button('vote', $locale['forum_2010'], 'vote', array('class' => 'btn btn-sm btn-primary m-l-20 ',
 				'deactivate' => 1));
 			echo "</div>\n";
 			echo "</div>\n";

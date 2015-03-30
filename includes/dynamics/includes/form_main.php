@@ -15,27 +15,31 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function openform($form_name, $form_id, $method, $action, array $options = array()) {
-	global $defender;
+function openform($form_name, $method, $action_url, array $options = array()) {
+	//global $defender;
+
+	$method = ($method == strtolower('post')) ? 'post' : 'get';
+
 	$options += array(
-		'class' => !empty($options['class']) ? $options['class'] : '',
-		'enctype' => !empty($options['enctype']) && $options['enctype'] == 1 ? 1 : 0,
-		'notice' => !empty($options['notice']) && $options['notice'] == 0 ? 0 : 1,
-		'downtime' => !empty($options['downtime']) && isnum($options['downtime']) ? $options['downtime'] : 1,
+		'form_id'	=> !empty($options['form_id']) ? $options['form_id'] : $form_name,
+		'class'		=> !empty($options['class']) ? $options['class'] : '',
+		'enctype'	=> !empty($options['enctype']) && $options['enctype'] == 1 ? 1 : 0,
+		//'notice'	=> !empty($options['notice']) && $options['notice'] == 1 ? 1 : 0, // unused
+		'max_tokens'=> !empty($options['max_tokens']) && isnum($options['max_tokens']) ? $options['max_tokens'] : 10,
 	);
 
-	$html = "<form name='".$form_name."' id='".$form_id."' method='".$method."' action='".$action."' class='".(defined('FUSION_NULL') ? 'warning' : '')." ".$options['class']." ' ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
-	if ($method =='post' || $method == 'POST' || $method == 'Post') {
-		$html .= defender::generate_token($form_name, $options['downtime']);
+	$html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' class='".(defined('FUSION_NULL') ? 'warning ' : '').$options['class']."' ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
+	if ($method == 'post') {
+		$token = defender::generate_token($options['form_id'], $options['max_tokens']);
+
+		$html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
+		$html .= "<input type='hidden' name='form_id' value='".$options['form_id']."' />\n";
 	}
-	if (defined('FUSION_NULL') && $options['notice']) {
-		echo $defender->showNotice();
-	}
+
 	return $html;
 }
 
 function closeform() {
-	$html = '';
-	$html .= "</form>\n";
+	$html = "</form>\n";
 	return $html;
 }

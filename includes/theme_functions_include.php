@@ -134,7 +134,7 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 }
 
 function admin_message() {
-	echo "<h4>If you see this. This function has been deprecated. Please copy the Code in Blogs regarding the status message and replace locale. Thanks.</h4>";
+	addNotice('warning', "<b>admin_message()</b>: this function has been deprecated. Please use <b>addNotice('succes|info|warning|danger', 'The notice message')</b> instead.");
 }
 
 function check_panel_status($side) {

@@ -353,10 +353,10 @@ function news_form() {
 	}
 
 	echo "<div class='m-t-20'>\n";
-	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 1));
+	echo openform('inputform', 'post', $formaction, array('enctype' => 1, 'max_tokens' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
-	echo form_text($locale['news_0200'], 'news_subject', 'news_subject', $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['news_0250']));
+	echo form_text('news_subject', $locale['news_0200'], $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['news_0250']));
 	// move keywords here because it's required
 	echo form_select($locale['news_0205'], 'news_keywords', 'news_keywords', array(), $data['news_keywords'], array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['news_0255'], 'tags'=>1, 'multiple' => 1));
 	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
@@ -368,8 +368,8 @@ function news_form() {
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	echo form_select_tree($locale['news_0201'], "news_cat", "news_cat", $data['news_cat'], array("parent_value" => $locale['news_0202'], "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
-	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default m-r-10'));
-	echo form_button($locale['news_0241'], 'save', 'save-1', $locale['news_0241'], array('class' => 'btn-success', 'icon'=>'fa fa-square-check-o'));
+	echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
+	echo form_button('save', $locale['news_0241'], $locale['news_0241'], array('class' => 'btn-success', 'icon'=>'fa fa-square-check-o'));
 	closeside();
 	echo "</div>\n</div>\n";
 
@@ -449,8 +449,8 @@ function news_form() {
 		echo form_hidden('', 'news_id', 'news_id', $news_id);
 	}
 	echo "</div>\n</div>\n";
-	echo form_button($locale['news_0240'], 'preview', 'preview-1', $locale['news_0240'], array('class' => 'btn-default m-r-10'));
-	echo form_button($locale['news_0241'], 'save', 'save-1', $locale['news_0241'], array('class' => 'btn-success', 'icon'=>'fa fa-square-check-o'));
+	echo form_button('preview', $locale['news_0240'], $locale['news_0240'], array('class' => 'btn-default m-r-10'));
+	echo form_button('save', $locale['news_0241'], $locale['news_0241'], array('class' => 'btn-success', 'icon'=>'fa fa-square-check-o'));
 	echo closeform();
 	echo "</div>\n";
 }

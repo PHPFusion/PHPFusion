@@ -195,9 +195,9 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 		if (iMEMBER || $settings['guestposts'] == "1") {
 			require_once INCLUDES."bbcode_include.php";
 			echo "<a id='edit_comment' name='edit_comment'></a>\n";
-			echo openform('inputform', 'inputform', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').$clink, array('class'=>'m-b-20', 'downtime' => 1));
+			echo openform('inputform', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').$clink, array('class'=>'m-b-20', 'max_tokens' => 1));
 			if (iGUEST) {
-				echo form_text($locale['c104'], 'comment_name', 'comment_name', '', array('max_length'=>30));
+				echo form_text('comment_name', $locale['c104'], '', array('max_length'=>30));
 			}
 			echo form_textarea('', 'comment_message', 'comment_message', $comment_message, array('required' => 1, 'autosize'=>1, 'form_name'=>'inputform', 'bbcode'=>1));
 			if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
@@ -211,7 +211,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 				}
 				echo "</div>\n";
 			}
-			echo form_button($comment_message ? $locale['c103'] : $locale['c102'], 'post_comment', 'post_comment', $comment_message ? $locale['c103'] : $locale['c102'], array('class' => 'btn-sm btn-success m-t-10'));
+			echo form_button('post_comment', $comment_message ? $locale['c103'] : $locale['c102'], $comment_message ? $locale['c103'] : $locale['c102'], array('class' => 'btn-sm btn-success m-t-10'));
 			echo closeform();
 		} else {
 			echo "<div class='well'>\n";

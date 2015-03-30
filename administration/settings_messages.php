@@ -52,15 +52,15 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 		echo admin_message($message);
 	}
 }
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='well'>".$locale['message_description']."</div>\n";
 echo "<div class='row'>";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 openside('');
 echo "<span class='pull-right m-b-10 text-smaller'>".$locale['704']."</span>\n";
-echo form_text($locale['701'], 'pm_inbox', 'pm_inbox', $pm_inbox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
-echo form_text($locale['702'], 'pm_sentbox', 'pm_sentbox', $pm_sentbox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
-echo form_text($locale['703'], 'pm_savebox', 'pm_savebox', $pm_savebox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
+echo form_text('pm_inbox', $locale['701'], $pm_inbox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
+echo form_text('pm_sentbox', $locale['702'], $pm_sentbox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
+echo form_text('pm_savebox', $locale['703'], $pm_savebox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
@@ -70,7 +70,7 @@ echo form_select($locale['709'], 'pm_email_notify', 'pm_email_notify', $opts, $o
 echo form_select($locale['710'], 'pm_save_sent', 'pm_save_sent', $opts, $options['pm_save_sent'],  array('inline'=>1, 'width'=>'100%'));
 closeside();
 echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'saveoptions', 'saveoptions', $locale['750'], array('class' => 'btn-success'));
+echo form_button('saveoptions', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";

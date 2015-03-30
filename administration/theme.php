@@ -127,8 +127,8 @@ class ThemeAdmin {
 			echo "<div class='panel-body'>\n";
 			echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
 			echo "<div class='btn-group pull-right m-t-20'>\n";
-			echo openform('editfrm', 'editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'downtime'=>1));
-			echo form_button('Configure Theme', 'theme', 'theme', $theme_name, array('class'=>'btn-default'));
+			echo openform('editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'max_tokens' => 1));
+			echo form_button('theme', 'Configure Theme', $theme_name, array('class'=>'btn-default'));
 			echo closeform();
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
@@ -151,8 +151,8 @@ class ThemeAdmin {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-body'>\n";
 			echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
-			echo openform('editfrm', 'editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('class'=>'pull-right', 'notice'=>0, 'downtime'=>1));
-			echo form_button('Set Active', 'activate', 'activate', $theme_name, array('class'=>'btn-primary'));
+			echo openform('editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('class'=>'pull-right', 'notice'=>0, 'max_tokens' => 1));
+			echo form_button('activate', 'Set Active', $theme_name, array('class'=>'btn-primary'));
 			echo closeform();
 			echo "<div class='overflow-hide'>\n";
 			echo "<h4 class='strong text-dark m-b-20'>".$theme_data['title']."</h4>";
@@ -225,9 +225,9 @@ class ThemeAdmin {
 				}
 			}
 		}
-		echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink, array('enctype'=>1, 'downtime' => 1));
+		echo openform('inputform', 'post', FUSION_SELF.$aidlink, array('enctype'=>1, 'max_tokens' => 1));
 		echo form_fileinput('Upload Theme Package', 'theme_files', 'theme_files', '', '', array());
-		echo form_button('Upload Theme', 'upload', 'upload', 'upload theme', array('class'=>'btn btn-primary'));
+		echo form_button('upload', 'Upload Theme', 'upload theme', array('class'=>'btn btn-primary'));
 		echo closeform();
 	}
 }

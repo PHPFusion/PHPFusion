@@ -404,7 +404,7 @@ if (!function_exists('render_eshop_product')) {
 	/* This part need to be MVC - its going to be too hard for theme developers to go through everything */
 
 	if (fusion_get_settings('eshop_shopmode')) {
-		echo openform('productfrm', 'productfrm','post', BASEDIR."eshop.php?product=".$_GET['product'], array('downtime' => 1)); // sends data to ajax
+		echo openform('productfrm', 'post', BASEDIR."eshop.php?product=".$_GET['product'], array('max_tokens' => 1)); // sends data to ajax
 		echo "<div class='m-t-20'>\n";
 		if (!empty($data['dync'])) {
 			$title = $data['dynf'] ? $data['dynf'] : 'Category';
@@ -442,7 +442,7 @@ if (!function_exists('render_eshop_product')) {
 			echo "</div>\n";
 		}
 		if ($data['qty']) {
-			echo form_text($locale['ESHP019'], 'product_quantity', 'product_quantity', '1', array('number'=>1, 'inline'=>1, 'class'=>'product-quantity input-sm', 'width'=>'50px',
+			echo form_text('product_quantity', $locale['ESHP019'], '1', array('number'=>1, 'inline'=>1, 'class'=>'product-quantity input-sm', 'width'=>'50px',
 				'append_button'=>1,
 				'append_value'=> "<i class='fa fa-plus m-t-5'></i>",
 				'append_type'=>'button',
@@ -469,11 +469,11 @@ if (!function_exists('render_eshop_product')) {
 		if ($data['status'] == "1") {
 			echo "<div class='m-t-20'>\n";
 			if ($data['buynow'] == "1") { // use post action instead
-				echo form_button($locale['ESHP020'], 'buy_now', 'buy_now', $locale['ESHP020'], array('class'=>'m-r-10 '.fusion_get_settings('eshop_buynow_color')));
+				echo form_button('buy_now', $locale['ESHP020'], $locale['ESHP020'], array('class'=>'m-r-10 '.fusion_get_settings('eshop_buynow_color')));
 				//echo "<a class='btn m-r-10 ".."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
 			}
 			if ($data['cart_on'] == "1") {
-				echo form_button($locale['ESHP021'], 'add_cart', 'add_cart', $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
+				echo form_button('add_cart', $locale['ESHP021'], $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
 				//echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
 			}
 			echo "</div>\n";

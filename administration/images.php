@@ -75,13 +75,13 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 		echo admin_message($message);
 	}
 
-	echo openform('uploadform', 'uploadform', 'post', "".FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."", array('enctype' => 1, 'downtime' => 1));
+	echo openform('uploadform', 'post', "".FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."", array('enctype' => 1, 'max_tokens' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='myfile'>".$locale['421']."</label></td>\n";
 	echo "<td class='tbl'><input type='file' id='myfile' name='myfile' class='textbox' style='width:250px;' /></td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";
-	echo form_button($locale['420'], 'uploadimage', 'uploadimage', $locale['420'], array('class' => 'btn-primary'));
+	echo form_button('uploadimage', $locale['420'], $locale['420'], array('class' => 'btn-primary'));
 	echo "</td>\n</tr>\n</table>\n</form>\n";
 	closetable();
 	echo "<hr>\n";

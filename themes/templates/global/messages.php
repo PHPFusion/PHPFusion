@@ -78,25 +78,25 @@ if (!function_exists('render_inbox')) {
 		echo "</div>\n</div>\n";
 		// action buttons
 		if ($info['chat_rows'] && isset($_GET['msg_user']) or isset($_GET['msg_read'])) {
-			echo openform('inputform', 'inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''), array('notice' => 0, 'downtime' => 1));
+			echo openform('inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''), array('notice' => 0, 'max_tokens' => 1));
 				echo "<div class='msg_buttons_bar clearfix p-10'>\n";
 				if (isset($_GET['msg_user']) && $_GET['folder'] == 'inbox' &&  !isset($_GET['msg_read'])) {
 					echo "<div class='btn-group pull-right'>\n";
-					if ($_GET['folder'] == "inbox") echo form_button($locale['412'], 'save_msg', 'save_msg', $locale['412'], array('class' => 'btn btn-sm btn-default'));
-					echo form_button($locale['414'], 'read_msg', 'read_msg', $locale['414'], array('class' => 'btn-sm btn-default'));
-					echo form_button($locale['415'], 'unread_msg', 'unread_msg', $locale['415'], array('class' => 'btn-sm btn-default'));
-					echo form_button($locale['416'], 'delete_msg', 'delete_msg', $locale['416'], array('class' => 'btn-sm btn-default'));
+					if ($_GET['folder'] == "inbox") echo form_button('save_msg', $locale['412'], $locale['412'], array('class' => 'btn btn-sm btn-default'));
+					echo form_button('read_msg', $locale['414'], $locale['414'], array('class' => 'btn-sm btn-default'));
+					echo form_button('unread_msg', $locale['415'], $locale['415'], array('class' => 'btn-sm btn-default'));
+					echo form_button('delete_msg', $locale['416'], $locale['416'], array('class' => 'btn-sm btn-default'));
 					echo "</div>\n";
 					echo "<div class='btn-group'>\n";
-					echo form_button($locale['410'], 'setcheck_all', 'setcheck_all', $locale['410'], array('class'=>'btn-sm btn-default', 'type'=>'button'));
-					echo form_button($locale['411'], 'setcheck_none', 'setcheck_none', $locale['410'], array('class'=>'btn-sm btn-default', 'type'=>'button'));
+					echo form_button('setcheck_all', $locale['410'], $locale['410'], array('class'=>'btn-sm btn-default', 'type'=>'button'));
+					echo form_button('setcheck_none', $locale['411'], $locale['410'], array('class'=>'btn-sm btn-default', 'type'=>'button'));
 					echo "</div>\n";
 				} elseif (isset($_GET['msg_read'])) {
 					echo "<div class='btn-group'>\n";
 					if ($_GET['folder'] == "inbox") {
-						echo form_button($locale['412'], 'save', 'save', $locale['412'], array('class' => 'btn btn-sm btn-default'));
+						echo form_button('save', $locale['412'], $locale['412'], array('class' => 'btn btn-sm btn-default'));
 					}
-					echo form_button($locale['416'], 'delete', 'delete', $locale['416'], array('class' => 'btn btn-sm btn-default'));
+					echo form_button('delete', $locale['416'], $locale['416'], array('class' => 'btn btn-sm btn-default'));
 					echo "</div>\n";
 				}
 				echo "</div>\n";
@@ -106,7 +106,7 @@ if (!function_exists('render_inbox')) {
 		if (isset($_GET['msg_send']) && $_GET['msg_send'] == 0) {
 				// New Form
 				echo "<div class='msg-form m-t-20 p-l-10 p-r-10'>\n";
-				echo openform('inputform', 'inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send']."", array('downtime' => 1));
+				echo openform('inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send']."", array('max_tokens' => 1));
 				if (iADMIN && !isset($_GET['msg_id'])) {
 					echo "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
 					echo form_user_select('', 'msg_send', 'msg_send', isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array('placeholder' => $locale['421']));
@@ -136,12 +136,12 @@ if (!function_exists('render_inbox')) {
 				} elseif (!isset($_GET['msg_id'])) {
 					echo form_user_select('', 'msg_send', 'msg_send', isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array('inline' => 1, 'placeholder' => $locale['421']));
 				}
-				echo form_text('', 'subject', 'subject', '', array('max_length' => 32, 'placeholder' => $locale['405']));
+				echo form_text('subject', '', '', array('max_length' => 32, 'placeholder' => $locale['405']));
 				echo "<hr class='m-t-0'/><br/>";
 				echo form_textarea('', 'message', 'message', '', array('class' => 'm-t-20', 'autosize' => 1, 'bbcode' => 1, 'preview' => 1, 'resize' => 0, 'form_name' => 'inputform', 'placeholder' => $locale['422']));
 				echo "<div class='text-right'>\n";
-				echo form_button($locale['435'], 'cancel', 'cancel', $locale['435'], array('class' => 'btn btn-sm btn-default m-r-10'));
-				echo form_button($locale['430'], 'send_message', 'send_message', $locale['430'], array('class' => 'btn btn-sm btn-primary'));
+				echo form_button('cancel', $locale['435'], $locale['435'], array('class' => 'btn btn-sm btn-default m-r-10'));
+				echo form_button('send_message', $locale['430'], $locale['430'], array('class' => 'btn btn-sm btn-primary'));
 				echo "</div>\n";
 				echo "</div>\n";
 				echo closeform();
@@ -204,10 +204,10 @@ if (!function_exists('render_inbox')) {
 		elseif (isset($_GET['folder']) && $_GET['folder'] == 'options') {
 
 			echo "<div class='list-group-item' style='margin:15px;'>\n";
-			echo openform('pm_form', 'pm_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'], array('downtime' => 1));
+			echo openform('pm_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'], array('max_tokens' => 1));
 			echo form_checkbox($locale['621'], 'pm_email_notify', 'pm_email_notify', $info['pm_email_notify']);
 			echo form_checkbox($locale['622'], 'pm_save_sent', 'pm_save_sent', $info['pm_save_sent']);
-			echo form_button($locale['623'], 'save_options', 'save_options', $locale['623'], array('class' => 'btn btn-sm btn-default'));
+			echo form_button('save_options', $locale['623'], $locale['623'], array('class' => 'btn btn-sm btn-default'));
 			echo closeform();
 			echo "</div>\n";
 
@@ -225,14 +225,14 @@ if (!function_exists('render_inbox')) {
 				if (!isset($_GET['msg_read']) && $_GET['folder'] !== 'outbox' && $_GET['folder'] !== 'archive') {
 					echo "<hr class='m-t-0'/>";
 					echo "</form>\n";
-					if ($info['chat_rows']) echo openform('qform', 'qform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."".(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : ''), array('downtime' => 1));
+					if ($info['chat_rows']) echo openform('qform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."".(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : ''), array('max_tokens' => 1));
 					echo "<div class='p-10'>\n";
 					echo "<div class='m-b-10 strong'>".sprintf($locale['468'], $info['channel'])."</div>\n";
-					echo form_text('', 'subject', 'subject', '', array('placeholder' => $locale['405'], 'resize' => 0, 'autosize' => 1));
+					echo form_text('subject', '', '', array('placeholder' => $locale['405'], 'resize' => 0, 'autosize' => 1));
 					echo "<hr class='m-t-0'/><br/>\n";
 					echo form_textarea('', 'message', 'message', '', array('placeholder' => $locale['422'], 'resize' => 0, 'autosize' => 1, 'bbcode' => 1, 'form_name' => 'qform', 'preview' => 1));
 					echo form_hidden('', 'msg_send', 'msg_send', $_GET['msg_user']);
-					echo form_button($locale['430'], 'send_message', 'send_message', $locale['430'], array('class' => 'btn btn-primary btn-sm'));
+					echo form_button('send_message', $locale['430'], $locale['430'], array('class' => 'btn btn-primary btn-sm'));
 					echo "</div>\n";
 					echo closeform();
 
@@ -240,7 +240,7 @@ if (!function_exists('render_inbox')) {
 
 					echo "<hr class='m-t-0'/>";
 					echo "</form>\n";
-					if ($info['chat_rows']) echo openform('qform', 'qform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''), array('downtime' => 1));
+					if ($info['chat_rows']) echo openform('qform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?folder=".$_GET['folder'].(isset($_GET['msg_user']) ? "&msg_user=".$_GET['msg_user']."" : '').(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''), array('max_tokens' => 1));
 					echo "<div class='p-10'>\n";
 					echo "<div class='m-b-10 strong'>".sprintf($locale['469'], $info['channel'])."</div>\n";
 					$message_subject = '';
@@ -255,7 +255,7 @@ if (!function_exists('render_inbox')) {
 					echo form_textarea('', 'message', 'message', '', array('placeholder' => $locale['422'], 'resize' => 0, 'autosize' => 1, 'bbcode' => 1, 'form_name' => 'qform', 'preview' => 1));
 					echo form_hidden('', 'subject', 'subject', $message_subject);
 					echo form_hidden('', 'msg_send', 'msg_send', $_GET['msg_user']);
-					echo form_button($locale['430'], 'send_message', 'send_message', $locale['430'], array('class' => 'btn btn-primary btn-sm'));
+					echo form_button('send_message', $locale['430'], $locale['430'], array('class' => 'btn btn-primary btn-sm'));
 					echo "</div>\n";
 					echo closeform();
 				}

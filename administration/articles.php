@@ -120,11 +120,11 @@ if (!empty($result)) {
 				$editlist[$data['article_id']] = "".($data['article_draft'] ? $locale['articles_0210']." " : "").$data['article_subject']."";
 			}
 			opentable($locale['articles_0000']);
-			echo openform('selectform', 'selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 1));
+			echo openform('selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('max_tokens' => 1));
 			echo "<div class='text-center'>\n";
 			echo form_select('', 'article_id', 'article_id', $editlist, '', array('placeholder' => $locale['choose'], 'inline' => 1, 'class' => 'pull-left'));
-			echo form_button($locale['edit'], 'edit', 'edit', $locale['edit'], array('class' => 'pull-left btn-primary m-l-10 m-r-10'));
-			echo form_button($locale['delete'], 'delete', 'delete', $locale['delete'], array('class' => 'pull-left btn-primary'));
+			echo form_button('edit', $locale['edit'], $locale['edit'], array('class' => 'pull-left btn-primary m-l-10 m-r-10'));
+			echo form_button('delete', $locale['delete'], $locale['delete'], array('class' => 'pull-left btn-primary'));
 			add_to_jquery("
                 $('#delete').bind('click',function(e){ DeleteArticle(); });
                 ");
@@ -181,7 +181,7 @@ if (!empty($result)) {
 			$visibility_opts[$user_group['0']] = $user_group['1'];
 		}
 
-		echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+		echo openform('input_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='article_cat'>".$locale['articles_0201']."</label></td>\n";
 		echo "<td class='tbl'>\n";
@@ -189,7 +189,7 @@ if (!empty($result)) {
 		echo "</td>\n</tr>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='subject'>".$locale['articles_0200']." <span class='required'>*</span></label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_text('', 'subject', 'subject', $subject, array('required' => 1));
+		echo form_text('subject', '', $subject, array('required' => 1));
 		echo "</td>\n";
 		echo "</tr>\n<tr>\n";
 		echo "<td valign='top' width='100' class='tbl'><label for='body'>".$locale['articles_0202']."</label></td>\n";
@@ -259,8 +259,8 @@ if (!empty($result)) {
 			echo form_hidden('', 'article_id', 'article_id', isset($_POST['article_id']) ? $_POST['article_id'] : $_GET['article_id']);
 			//echo "<input type='hidden' name='article_id' value='".(isset($_POST['article_id']) ? $_POST['article_id'] : $_GET['article_id'])."' />\n";
 		}
-		echo form_button($locale['articles_0240'], 'preview', 'preview', $locale['articles_0240'], array('class' => 'btn-primary m-r-10'));
-		echo form_button($locale['articles_0241'], 'save', 'save', $locale['articles_0241'], array('class' => 'btn-primary'));
+		echo form_button('preview', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-primary m-r-10'));
+		echo form_button('save', $locale['articles_0241'], $locale['articles_0241'], array('class' => 'btn-primary'));
 		echo "</tr>\n</table>\n</form>\n";
 		closetable();
 		add_to_jquery("

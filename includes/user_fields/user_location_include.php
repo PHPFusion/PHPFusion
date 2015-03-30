@@ -23,7 +23,7 @@ if ($profile_method == "input") {
 	$user_location = isset($user_data['user_location']) ? stripinput($user_data['user_location']) : "";
 	$user_location = isset($_POST['user_location']) ? stripinput($_POST['user_location']) : $user_location;
 	$options +=array('inline'=>1, 'max_length'=>50);
-	$user_fields = form_text($locale['uf_location'], 'user_location', 'user_location', $user_location, $options);
+	$user_fields = form_text('user_location', $locale['uf_location'], $user_location, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
 	if ($field_value) {

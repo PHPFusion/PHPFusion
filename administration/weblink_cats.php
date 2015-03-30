@@ -108,15 +108,15 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	}
 
 	opentable($openTable);
-	echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 1));
+	echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive'>\n<tr>\n";
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_name'>".$locale['420']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
+	echo form_text('cat_name', '', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_description'>".$locale['421']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'cat_description', 'cat_description', $cat_description);
+	echo form_text('cat_description', '', $cat_description);
 	echo "</tr>\n";
 	echo "<tr>\n<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_parent'>".$locale['428']."</label></td>\n";
 	echo "<td class='tbl'>\n";
@@ -138,7 +138,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo form_select('', 'cat_sort_order', 'cat_sort_order', $array, $cat_sort_order, array('placeholder' => $locale['choose'], 'class' => 'pull-left'));
 	echo "</td>\n</tr>\n";
 	echo "<tr>\n<td align='center' colspan='2' class='tbl'>\n";
-	echo form_button($locale['429'], 'save_cat', 'save_cat', $locale['429'], array('class' => 'btn-primary m-t-10'));
+	echo form_button('save_cat', $locale['429'], $locale['429'], array('class' => 'btn-primary m-t-10'));
 	echo "</td>\n</tr>\n</table>\n";
 	echo closeform();
 	closetable();

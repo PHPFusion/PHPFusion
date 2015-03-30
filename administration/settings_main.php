@@ -20,20 +20,20 @@ pageAccess('S1');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
-add_to_breadcrumbs(array('link'=>ADMIN."settings_main.php".$aidlink, 'title'=>$locale['main_settings']));
+add_to_breadcrumbs(array('link' => ADMIN."settings_main.php".$aidlink, 'title' => $locale['main_settings']));
 
 // These are the default settings and the only settings we expect to be posted
 $settings_main = array(
 		'siteintro' => fusion_get_settings('siteintro'),
+		'sitename' => fusion_get_settings('sitename'),
+		'sitebanner' => fusion_get_settings('sitebanner'),
+		'siteemail' => fusion_get_settings('siteemail'),
+		'siteusername' => fusion_get_settings('siteusername'),
 		'footer' => fusion_get_settings('footer'),
 		'site_protocol' => fusion_get_settings('site_protocol'),
 		'site_host' => fusion_get_settings('site_host'),
 		'site_path' => fusion_get_settings('site_path'),
 		'site_port' => fusion_get_settings('site_port'),
-		'sitename' => fusion_get_settings('sitename'),
-		'sitebanner' => fusion_get_settings('sitebanner'),
-		'siteemail' => fusion_get_settings('siteemail'),
-		'siteusername' => fusion_get_settings('siteusername'),
 		'description' => fusion_get_settings('description'),
 		'keywords' => fusion_get_settings('keywords'),
 		'opening_page' => fusion_get_settings('opening_page'),
@@ -54,7 +54,6 @@ $dir = LOCALE.LOCALESET."search/";
 $temp = opendir($dir);
 $search_opts = array();
 if (file_exists($dir)) {
-	$filename_locale = array();
 	include LOCALE.LOCALESET."search/converter.php";
 	while ($folder = readdir($temp)) {
 		if (!in_array($folder, array("..", ".", 'users.json.php', 'converter.php', '.DS_Store', 'index.php'))) {
@@ -64,124 +63,101 @@ if (file_exists($dir)) {
 	}
 }
 
+// Saving settings
 if (isset($_POST['savesettings'])) {
-	/**
-	 * Steps we take to prepare the posted data:
-	 * - check every input if is expected to be posted
-	 * - check every input if is different from the data in DB,
-	 *   skip those that aren't to avoid unnecessary queries
-	 * - sanitize and prepare data to be inserted in the DB
-	 * - insert data in the DB
-	 */
-
-	// In preparation for siteurl
-	$site_protocol = fusion_get_settings('site_protocol');
-	$site_host = fusion_get_settings('site_host');
-	$site_port = fusion_get_settings('site_port');
-	$site_path = fusion_get_settings('site_path');
-
-	// Bootstrap checkbox (checkboxes don't post anything if unchecked)
-	$_POST['bootstrap'] = (isset($_POST['bootstrap']) ? 1 : 0);
-
 	// TODO: Check if Admin Panel theme is valid
-	foreach ($_POST as $key => $value) {
-		if (isset($settings_main[$key]) && $settings_main[$key] != $_POST[$key]) {
+	foreach ($settings_main as $key => $value) {
+		if (isset($_POST[$key])) {
 			// Site intro
 			if ($key == 'siteintro') {
-				$_POST['siteintro'] = addslashes(descript($_POST['siteintro']));
+				$settings_main['siteintro'] = addslashes(descript($_POST['siteintro'])); // should defender be able to do this? textbox with type 'html' maybe
 			// Footer
 			} elseif ($key == 'footer') {
-				$_POST['footer'] = addslashes(descript($_POST['footer']));
-			// Site protocol
-			} elseif ($key == 'site_protocol') {
-				$_POST['site_protocol'] = (in_array($_POST['site_protocol'], array('http', 'https'))) ? stripinput($_POST['site_protocol']) : 'http';
-				$site_protocol = $_POST['site_protocol'];
+				$settings_main['footer'] = addslashes(descript($_POST['footer'])); // should defender be able to do this? textbox with type 'html' maybe
 			// Site host
 			} elseif ($key == 'site_host') {
-				$_POST['site_host'] = (empty($_POST['site_host']) ? $settings_main['site_host'] : stripinput($_POST['site_host']));
-				if (strpos($_POST['site_host'], "/") !== FALSE) {
-					$_POST['site_host'] = explode("/", $_POST['site_host'], 2);
-					if ($_POST['site_host'][1] != "") {
-						$_POST['site_path'] = "/".$_POST['site_host'][1];
+				$settings_main['site_host'] = (empty($_POST['site_host']) ? $settings_main['site_host'] : stripinput($_POST['site_host']));
+				if (strpos($settings_main['site_host'], "/") !== FALSE) {
+					$settings_main['site_host'] = explode("/", $settings_main['site_host'], 2);
+					if ($settings_main['site_host'][1] != "") {
+						$_POST['site_path'] = "/".$settings_main['site_host'][1];
 					}
-					$_POST['site_host'] = $_POST['site_host'][0];
-					$site_host = $_POST['site_host'];
+					$settings_main['site_host'] = $settings_main['site_host'][0];
 				}
 			// Site port
 			} elseif ($key == 'site_port') {
-				$_POST['site_port'] = ((isnum($_POST['site_port']) || $_POST['site_port'] == "") && !in_array($_POST['site_port'], array(0, 80, 443))) ? $_POST['site_port'] : '';
-				$site_port = $_POST['site_port'];
-			// Site path
-			} elseif ($key == 'site_path') {
-				if ($_POST['site_path'] != "/" || $settings_main['site_path'] != "/") {
-					if ($_POST['site_path'] == "/") {
-						$_POST['site_path'] = stripinput($_POST['site_path']);
-					}
-					$_POST['site_path'] = (substr($_POST['site_path'], 0, 1) != "/" ? "/" : "").$_POST['site_path'].(strrchr($_POST['site_path'], "/") != "/" ? "/" : "");
-					$site_path = $_POST['site_path'];
-				}
-			// Theme
-			} elseif ($key == 'theme') {
-				$_POST['theme'] = (theme_exists(stripinput($_POST['theme'])) ? stripinput($_POST['theme']) : $settings_main['theme']);
+				$settings_main['site_port'] = ((isnum($_POST['site_port']) || $_POST['site_port'] == "") && !in_array($_POST['site_port'], array(0, 80, 443)) && $_POST['site_port'] < 65001) ? $_POST['site_port'] : '';
 			// Default search
 			} elseif ($key == 'default_search') {
-				$_POST['default_search'] = (in_array(stripinput($_POST['default_search']), $search_opts) ? stripinput($_POST['default_search']) : $settings_main['default_search']);
+				$settings_main['default_search'] = (in_array(stripinput($_POST['default_search']), $search_opts) ? stripinput($_POST['default_search']) : $settings_main['default_search']);
 			// Others
 			} else {
 				// form_sanitizer needs patching, doesn't accept int|str 0 as default value
-				$_POST[$key] = (isnum($value) ? $value : form_sanitizer($value, '', $key));
+				$settings_main[$key] = form_sanitizer($_POST[$key], '', $key);
 			}
 
 			// Changes info
 			//addNotice("info", "<b>".$key."</b>: ".htmlspecialchars($settings_main[$key])." -> ".htmlspecialchars($_POST[$key]));
-			
-			// Update data
-			$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$_POST[$key]."' WHERE settings_name='".$key."'");
-			if (!$result) { // is this needed?
-				$defender->stop();
-				$error = 1;
-				break;
-			}
+		} else {
+			$settings_main[$key] = form_sanitizer($settings_main[$key], '', $key);
+			//addNotice('info', $key." was NOT posted, the default value was used");
+		}
+
+		if (!defined('FUSION_NULL')) {
+			dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_main[$key]."' WHERE settings_name='".$key."'");
 		}
 	}
-
-	// Parse siteurl externally
-	$_POST['siteurl'] = $site_protocol."://".$site_host.($site_port ? ":".$site_port : "").$site_path;
-	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$_POST['siteurl']."' WHERE settings_name='siteurl'");
 
 	if (!defined('FUSION_NULL')) {
 		// Everything went as expected
 		addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
+
+		// Parse siteurl externally
+		$settings_main['siteurl'] = $settings_main['site_protocol']."://".$settings_main['site_host'].($settings_main['site_port'] ? ":".$settings_main['site_port'] : "").$settings_main['site_path'];
+		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_main['siteurl']."' WHERE settings_name='siteurl'");
+
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
 
 $theme_files = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
 $admin_theme_files = makefilelist(THEMES."admin_templates/", ".|..", TRUE, "folders");
-
 opentable($locale['main_settings']);
+
 echo "<div class='well'>".$locale['main_description']."</div>";
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 2));
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
+
 openside('');
-echo form_text($locale['402'], 'sitename', 'sitename', $settings_main['sitename'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
-echo form_text($locale['405'], 'siteemail', 'siteemail', $settings_main['siteemail'], array('max_length' => 128, 'required' => 1, 'error_text' => $locale['error_value'], 'email' => 1, 'inline' => 1));
-echo form_text($locale['406'], 'siteusername', 'siteusername', $settings_main['siteusername'], array('max_length' => 32, 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
-echo form_text($locale['404'], 'sitebanner', 'sitebanner', $settings_main['sitebanner'], array('required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
+echo form_text('sitename', $locale['402'], $settings_main['sitename'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
+echo form_text('siteemail', $locale['405'], $settings_main['siteemail'], array('max_length' => 128, 'required' => 1, 'type' => 'email', 'inline' => 1));
+echo form_text('siteusername', $locale['406'], $settings_main['siteusername'], array('max_length' => 32, 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
+echo form_text('sitebanner', $locale['404'], $settings_main['sitebanner'], array('required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
 closeside();
 
 openside('');
-if ($userdata['user_theme'] == "Default") {
-	if ($settings_main['theme'] != str_replace(THEMES, "", substr(THEME, 0, strlen(THEME)-1))) {
-		echo "<div id='close-message'><div class='admin-message alert alert-warning m-t-10'>".$locale['global_302']."</div></div>\n";
-	}
-}
+//if ($userdata['user_theme'] == "Default") {
+	//if ($settings_main['theme'] != str_replace(THEMES, "", substr(THEME, 0, strlen(THEME)-1))) {
+		// Why allow saving an invalid theme in 1st place?...
+		//echo "<div id='close-message'><div class='admin-message alert alert-warning m-t-10'>".$locale['global_302']."</div></div>\n";
+	//}
+//}
+
+// We could pass a file_exists() check to defender
+echo form_text('opening_page', $locale['413'], $settings_main['opening_page'], array('inline'=>1, 'max_length' => 100, 'required' => 1, 'error_text' => $locale['error_value']));
 $opts = array();
 foreach ($theme_files as $file) {
+	// To be safe we could do theme_exists($file) before adding the value in the array
+	// Thinking further, we could build a function that would return an array of valid themes
 	$opts[$file] = $file;
 }
-echo form_text($locale['413'], 'opening_page', 'opening_page', $settings_main['opening_page'], array('inline'=>1, 'max_length' => 100, 'required' => 1, 'error_text' => $locale['error_value']));
-echo form_select($locale['418'], 'theme', 'theme', $opts, $settings_main['theme'], array('inline'=>1, 'error_text' => $locale['error_value'], 'width' => '100%'));
+$opts['invalid_theme'] = 'None (test purposes)'; // just for test purposes during development
+// We are using a callback function to check the validity of the theme, it's simpler
+// but we could instead do extra processing upon post using an in_array(posted_theme, available_themes) check
+$locale['error_invalid_theme'] = 'Please select a valid theme'; // to be moved
+echo form_select($locale['418'], 'theme', 'theme', $opts, $settings_main['theme'], array('callback_check' => 'theme_exists', 'inline'=>1, 'error_text' => $locale['error_invalid_theme'], 'width' => '100%'));
+
+// Admin Panel theme requires extra checks
 $opts = array();
 foreach ($admin_theme_files as $file) {
 	$opts[$file] = $file;
@@ -198,7 +174,6 @@ echo form_textarea($locale['412'], 'footer', 'footer', stripslashes($settings_ma
 closeside();
 echo "</div><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-$opts = array('http' => 'http://', 'https' => 'https://');
 echo "<div class='alert alert-success'>\n";
 echo "<i class='fa fa-external-link m-r-10'></i>";
 echo "<span id='display_protocol'>".$settings_main['site_protocol']."</span>://";
@@ -206,10 +181,12 @@ echo "<span id='display_host'>".$settings_main['site_host']."</span>";
 echo "<span id='display_port'>".($settings_main['site_port'] ? ":".$settings_main['site_port'] : "")."</span>";
 echo "<span id='display_path'>".$settings_main['site_path']."</span>";
 echo "</div>\n";
-echo form_select($locale['426'], 'site_protocol', 'site_protocol', $opts, $settings_main['site_protocol'], array('width' => '100%', 'required' => 1, 'error_text' => $locale['error_value']));
-echo form_text($locale['427'], 'site_host', 'site_host', $settings_main['site_host'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
-echo form_text($locale['429'], 'site_path', 'site_path', $settings_main['site_path'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
-echo form_text($locale['430'], 'site_port', 'site_port', $settings_main['site_port'], array('max_length' => 4));
+$opts = array('http' => 'http://', 'https' => 'https://');
+$opts['invalid_protocol'] = 'Invalid (test purposes)';
+echo form_select($locale['426'], 'site_protocol', 'site_protocol', $opts, $settings_main['site_protocol'], array('regex' => 'http(s)?', 'width' => '100%', 'error_text' => $locale['error_value']));
+echo form_text('site_host', $locale['427'], $settings_main['site_host'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
+echo form_text('site_path', $locale['429'], $settings_main['site_path'], array('regex' => '\/([a-z0-9-_]+\/)?+', 'max_length' => 255, 'required' => 1));
+echo form_text('site_port', $locale['430'], $settings_main['site_port'], array('max_length' => 5));
 closeside();
 
 openside('');
@@ -228,10 +205,11 @@ closeside();
 
 echo "</div>\n</div>\n";
 
-
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
+
+// TODO: Add these with add_to_jquery()
 echo "<script type='text/javascript'>\n";
 echo "/* <![CDATA[ */\n";
 echo "jQuery('#site_protocol').change(function () {\n";
@@ -255,6 +233,7 @@ echo "jQuery('#display_path').text(value_path);\n";
 echo "}).keyup();\n";
 echo "/* ]]>*/\n";
 echo "</script>";
+
 require LOCALE.LOCALESET."global.php";
 require_once THEMES."templates/footer.php";
 ?>

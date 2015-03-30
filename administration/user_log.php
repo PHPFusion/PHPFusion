@@ -106,7 +106,7 @@ function userFieldOptions() {
 
 opentable($locale['100']);
 // change to post.
-echo openform('userlog_search', 'userlog_search', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('userlog_search', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo form_hidden('', 'aid', 'aid', iAUTH);
 echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<tbody>\n";
 echo "<tr>\n";
@@ -117,14 +117,14 @@ echo form_select('', 'expr', 'expr', exprOptions(), $orderby, array('placholder'
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl1' align='left'><label for='user'>".$locale['108']."</label></td>\n";
 echo "<td class='tbl1' align='right'>\n";
-echo form_text('', 'user', 'user', $user);
+echo form_text('user', '', $user);
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl1'><label for='userField'>".$locale['115']."</label></td>";
 echo "<td class='tbl1'>\n";
 echo form_select('', 'userField', 'userField', userFieldOptions(), $userField, array('placeholder' => $locale['choose'], 'allowclear' => 1));
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl' align='left'></td>\n<td class='tbl' align='right'>\n";
-echo form_button($locale['109'], 'submit', 'submit', $locale['109'], array('class' => 'btn-primary'));
+echo form_button('submit', $locale['109'], $locale['109'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
 echo "<br />";
 // at least validate token.
@@ -172,8 +172,8 @@ echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-b
 echo "<tr>\n";
 echo "<td class='tbl' width='50%'><label for='delete'>".$locale['110'].":</label></td>\n";
 echo "<td class='tbl1' align='right'>\n";
-echo form_text('', 'delete', 'delete', '', array('max_length' => 3, 'number' => 1, 'placeholder' => $locale['111'], 'inline' => 1, 'width' => '100px'));
-echo form_button($locale['109'], 'submit', 'submit', $locale['109'], array('class' => 'btn-primary'));
+echo form_text('delete', '', '', array('max_length' => 3, 'number' => 1, 'placeholder' => $locale['111'], 'inline' => 1, 'width' => '100px'));
+echo form_button('submit', $locale['109'], $locale['109'], array('class' => 'btn-primary'));
 echo "</td>\n";
 echo "</tr>\n";
 echo "</tbody>\n</table>\n";

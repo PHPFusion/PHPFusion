@@ -223,13 +223,13 @@ if ($_GET['page'] == 1) {
 	include LOCALE.LOCALESET."comments.php";
 	opentable($locale['401']);
 	echo $navigation;
-	echo openform('input_form', 'input_form', 'post', FUSION_SELF.$aidlink."&amp;page=2", array('downtime' => 1));
+	echo openform('input_form', 'post', FUSION_SELF.$aidlink."&amp;page=2", array('max_tokens' => 1));
 	echo "<table cellspacing='0' cellpadding='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td class='tbl'>\n";
 	echo form_textarea($locale['418a'], 'test_message', 'test_message', $test_message, array('required' => 1, 'error_text' => $locale['418b'], 'bbcode' => 1));
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td align='center' class='tbl'><label><input type='checkbox' name='test_smileys' value='1' ".$smileys_checked." />&nbsp;".$locale['418']."</label><br /><br />\n";
-	echo form_button($locale['401'], 'post_test', 'post_test', $locale['401'], array('class' => 'btn-primary'));
+	echo form_button('post_test', $locale['401'], $locale['401'], array('class' => 'btn-primary'));
 	echo "</td>\n</tr>\n</table>\n</form>\n";
 	closetable();
 }

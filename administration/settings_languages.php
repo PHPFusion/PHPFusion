@@ -536,7 +536,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	}
 }
 echo "<div class='well'>".$locale['language_description']."</div>";
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table class='table table-responsive'>\n<tbody>\n<tr>\n";
 echo "<td width='50%' class='tbl'><label for='localeset'>".$locale['417']."<label> <span class='required'>*</span></td>\n";
 echo "<td width='50%' class='tbl'>\n";
@@ -556,7 +556,7 @@ while ($data = dbarray($result)) {
 echo form_hidden('', 'old_localeset', 'old_localeset', $settings2['locale']);
 echo form_hidden('', 'old_enabled_languages', 'old_enabled_languages', $settings['enabled_languages']);
 echo "</td>\n</tr>\n</tbody></table>";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";

@@ -250,13 +250,13 @@ function download_form() {
 		$visibility_opts[$user_group['0']] = $user_group['1'];
 	}
 
-	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 1, 'enctype' => 1));
+	echo openform('inputform', 'post', $formaction, array('max_tokens' => 1, 'enctype' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8'>\n";
 	openside('');
 	echo form_hidden('', 'download_id', 'download_id', $data['download_id']);
 	echo form_hidden('', 'download_datestamp', 'download_datestamp', $data['download_datestamp']);
-	echo form_text($locale['download_0200'], 'download_title', 'download_title', $data['download_title'], array('required' => 1, 'error_text'=>$locale['download_0110']));
+	echo form_text('download_title', $locale['download_0200'], $data['download_title'], array('required' => 1, 'error_text'=>$locale['download_0110']));
 	echo form_textarea($locale['download_0202'], 'download_description_short', 'download_description_short', $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['download_0112'], 'maxlength' => '255', 'autosize' => 1));
 	if ($settings['download_screenshot']) {
 		if (!empty($data['download_image']) && !empty($data['download_image_thumb'])) {
@@ -323,7 +323,7 @@ function download_form() {
 	echo opentabbody($tab_title['title'][1], 'dll', $tab_active);
 	if (empty($data['download_file'])) {
 		echo "<div class='list-group m-t-10'><div class='list-group-item'>\n";
-		echo form_text($locale['download_0206'], 'download_url', 'download_url', $data['download_url']);
+		echo form_text('download_url', $locale['download_0206'], $data['download_url']);
 		echo "</div>\n</div>\n";
 	} else {
 		echo form_hidden('', 'download_url', 'download_url', $data['download_url']);
@@ -347,7 +347,7 @@ function download_form() {
 	}
 	echo form_select_tree($locale['download_0207'], "download_cat", "download_cat", $data['download_cat'], array("no_root" => 1, "placeholder" => $locale['choose'],  'width'=>'100%', "query" => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 	echo form_select($locale['download_0205'], 'download_visibility', 'download_visibility', $visibility_opts, $data['download_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
-	echo form_button($locale['download_0212'], 'save_download', 'save_download', $locale['download_0212'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
+	echo form_button('save_download', $locale['download_0212'], $locale['download_0212'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
 	closeside();
 
 	openside('');
@@ -355,12 +355,12 @@ function download_form() {
 	closeside();
 
 	openside();
-	echo form_text($locale['download_0208'], 'download_license', 'download_license', $data['download_license'], array('inline' => 1));
-	echo form_text($locale['download_0222'], 'download_copyright', 'download_copyright', $data['download_copyright'], array('inline' => 1));
-	echo form_text($locale['download_0209'], 'download_os', 'download_os', $data['download_os'], array('inline' => 1));
-	echo form_text($locale['download_0210'], 'download_version', 'download_version', $data['download_version'], array('inline' => 1));
-	echo form_text($locale['download_0221'], 'download_homepage', 'download_homepage', $data['download_homepage'], array('inline' => 1));
-	echo form_text($locale['download_0211'], 'download_filesize', 'download_filesize', $data['download_filesize'], array('inline' => 1));
+	echo form_text('download_license', $locale['download_0208'], $data['download_license'], array('inline' => 1));
+	echo form_text('download_copyright', $locale['download_0222'], $data['download_copyright'], array('inline' => 1));
+	echo form_text('download_os', $locale['download_0209'], $data['download_os'], array('inline' => 1));
+	echo form_text('download_version', $locale['download_0210'], $data['download_version'], array('inline' => 1));
+	echo form_text('download_homepage', $locale['download_0221'], $data['download_homepage'], array('inline' => 1));
+	echo form_text('download_filesize', $locale['download_0211'], $data['download_filesize'], array('inline' => 1));
 	closeside();
 
 	openside('');
@@ -373,7 +373,7 @@ function download_form() {
 	closeside();
 	echo "</div>\n</div>\n"; // end row.
 	echo "<div class='m-t-20'>\n";
-	echo form_button($locale['download_0212'], 'save_download', 'save_download2', $locale['download_0212'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
+	echo form_button('save_download', $locale['download_0212'], $locale['download_0212'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
 		echo "<button type='reset' name='reset' value='".$locale['download_0225']."' class='button btn btn-default' onclick=\"location.href='".FUSION_SELF.$aidlink."';\"/>".$locale['download_0225']."</button>";
 	}

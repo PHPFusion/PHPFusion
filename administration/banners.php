@@ -70,7 +70,7 @@ if (isset($_POST['preview_banners'])) {
 	$sitebanner2 = stripslashes($settings['sitebanner2']);
 }
 opentable($locale['850']);
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody><tr>\n";
 echo "<td class='tbl'>\n";
 echo form_textarea($locale['851'], 'sitebanner1', 'sitebanner1', $sitebanner1);
@@ -100,13 +100,13 @@ if (isset($_POST['preview_banners']) && $sitebanner2) {
 }
 if (!check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 	echo "<td class='tbl'>\n";
-	echo form_text($locale['853'], 'admin_password', 'admin_password', (isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : ""), array('password' => 1, 'inline' => 1, 'width' => '250px'));
+	echo form_text('admin_password', $locale['853'], (isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : ""), array('type' => 'password', 'inline' => 1, 'width' => '250px'));
 	//".$locale['853']." <input type='password' name='admin_password' value='".(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")."' class='textbox' style='width:150px;' autocomplete='off' /></td>\n";
 	echo "</td>\n</tr>\n<tr>\n";
 }
 echo "<td align='center' class='tbl'><br />";
-echo form_button($locale['855'], 'preview_banners', 'preview_banners', $locale['855'], array('class' => 'btn-primary m-r-10'));
-echo form_button($locale['854'], 'save_banners', 'save_banners', $locale['854'], array('class' => 'btn-primary m-r-10'));
+echo form_button('preview_banners', $locale['855'], $locale['855'], array('class' => 'btn-primary m-r-10'));
+echo form_button('save_banners', $locale['854'], $locale['854'], array('class' => 'btn-primary m-r-10'));
 //echo "<input type='submit' name='save_banners' value='".$locale['854']."' class='button' />\n";
 //echo "<input type='submit' name='preview_banners' value='".$locale['855']."' class='button' /></td>\n";
 echo "</td>\n</tr>\n</table>\n</form>\n";

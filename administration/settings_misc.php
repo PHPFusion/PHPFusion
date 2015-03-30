@@ -102,7 +102,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	}
 }
 echo "<div class='well'>".$locale['misc_description']."</div>";
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
 openside('');
@@ -111,12 +111,12 @@ $choice_arr = array('1' => $locale['518'], '0' => $locale['519']);
 echo form_select($locale['662'], 'tinymce_enabled', 'tinymce_enabled', $choice_arr, $settings['tinymce_enabled'], array('inline'=>1, 'width'=>'100%'));
 closeside();
 openside('');
-echo form_text($locale['664']."<br/>", 'smtp_host', 'smtp_host', $settings['smtp_host'], array('max_length' => 200, 'inline'=>1));
-echo form_text($locale['674'], 'smtp_port', 'smtp_port', $settings['smtp_port'], array('max_length' => 10, 'inline'=>1));
+echo form_text('smtp_host', $locale['664']."<br/>", $settings['smtp_host'], array('max_length' => 200, 'inline'=>1));
+echo form_text('smtp_port', $locale['674'], $settings['smtp_port'], array('max_length' => 10, 'inline'=>1));
 echo "<div class='pull-right m-b-10'><span class='small2'>".$locale['665']."</span></div>\n";
 echo form_select($locale['698'], 'smtp_auth', 'smtp_auth', $choice_arr, $settings['smtp_auth'], array('inline'=>1, 'width'=>'100%'));
-echo form_text($locale['666'], 'smtp_username', 'smtp_username', $settings['smtp_username'], array('max_length' => 100, 'inline'=>1));
-echo form_text($locale['667'], 'smtp_password', 'smtp_password', $settings['smtp_password'], array('max_length' => 100, 'inline'=>1));
+echo form_text('smtp_username', $locale['666'], $settings['smtp_username'], array('max_length' => 100, 'inline'=>1));
+echo form_text('smtp_password', $locale['667'], $settings['smtp_password'], array('max_length' => 100, 'inline'=>1));
 closeside();
 openside('');
 $opts = array('0' => $locale['519'], '1' => $locale['689'], '2' => $locale['690']);
@@ -142,7 +142,7 @@ echo form_select($locale['1031'], 'index_url_bbcode', 'index_url_bbcode', $choic
 echo form_select($locale['1032'], 'index_url_userweb', 'index_url_userweb', $choice_arr, $settings['index_url_userweb'], array('width'=>'100%'));
 closeside();
 echo "</div>\n</div>";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";

@@ -197,13 +197,13 @@ class Admin {
 
 	public function display_blogcat_form() {
 		global $locale;
-		echo openform('addcat', 'addcat', 'post', $this->formaction, array('downtime' => 1, 'class'=>'m-t-20'));
+		echo openform('addcat', 'post', $this->formaction, array('max_tokens' => 1, 'class'=>'m-t-20'));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		if (multilang_table("BL")) {
 			echo QuantumFields::quantum_multilocale_fields($locale['430'], 'blog_cat_name', 'blog_cat_name', $this->blogCatData['blog_cat_name'], array('required' => 1, 'class'=>'m-b-5', 'error_text' => $locale['460']));
 		} else {
-			echo form_text($locale['430'], 'blog_cat_name', 'blog_cat_name', $this->blogCatData['blog_cat_name'], array('required' => 1, 'error_text' => $locale['460']));
+			echo form_text('blog_cat_name', $locale['430'], $this->blogCatData['blog_cat_name'], array('required' => 1, 'error_text' => $locale['460']));
 		}
 
 		echo "</div><div class='col-xs-12 col-sm-4'>\n";
@@ -213,7 +213,7 @@ class Admin {
 		echo form_select($locale['431'], 'blog_cat_image', 'blog_cat_image', ImageRepo::getFileList(IMAGES_BC), $this->blogCatData['blog_cat_image']);
 		echo form_hidden('', 'blog_cat_id', 'blog_cat_id', $this->blogCatData['blog_cat_id']);
 		closeside();
-		echo form_button($locale['432'], 'save_cat', 'save_cat2', $locale['432'], array('class' => 'btn-primary m-b-20'));
+		echo form_button('save_cat', $locale['432'], $locale['432'], array('class' => 'btn-primary m-b-20'));
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12'>\n";
@@ -234,7 +234,7 @@ class Admin {
 
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['432'], 'save_cat', 'save_cat', $locale['432'], array('class' => 'btn-primary'));
+		echo form_button('save_cat', $locale['432'], $locale['432'], array('class' => 'btn-primary'));
 	}
 
 	/**

@@ -430,10 +430,10 @@ class Banners {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='7'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner", array('downtime' => 1, 'notice' => 0));
+		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner", array('max_tokens' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
-		echo form_text($locale['ESHFEAT90'], 'featbanner_title', 'featbanner_titles', '', array('required'=>1, 'inline'=>1));
+		echo form_text('featbanner_title', $locale['ESHFEAT90'], '', array('required'=>1, 'inline'=>1));
 		echo form_select_tree($locale['ESHFEAT125'], 'featbanner_cid', 'featbanner_cids', '', array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
@@ -444,15 +444,15 @@ class Banners {
 		$product_opts[0] = '--';
 		$product_opts += self::get_productOpts();
 		echo form_select($locale['ESHFEAT113'], 'featbanner_id', 'featbanner_ids', $product_opts, $this->data['featbanner_id'], array('inline'=>1));
-		echo form_text($locale['ESHFEAT127'], 'featbanner_url', 'featbanner_urls', $this->data['featbanner_url'], array('inline'=>1, 'placeholder'=>fusion_get_settings('siteurl')));
+		echo form_text('featbanner_url', $locale['ESHFEAT127'], $this->data['featbanner_url'], array('inline'=>1, 'placeholder'=>fusion_get_settings('siteurl')));
 		closeside();
 		echo form_hidden('', 'featbanner_aid', 'featbanner_aids', '', array('writable' => 1));
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";
-		echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class' => 'btn btn-default m-r-10',
+		echo form_button('cancel', $locale['cancel'], 'cancel', array('class' => 'btn btn-default m-r-10',
 			'type' => 'button'));
-		echo form_button($locale['update'], 'banner_quicksave', 'banner_quicksave', 'save', array('class' => 'btn btn-success', 'icon'=>'fa fa-check-square-o'));
+		echo form_button('banner_quicksave', $locale['update'], 'save', array('class' => 'btn btn-success', 'icon'=>'fa fa-check-square-o'));
 		echo "</div>\n";
 		echo closeform();
 		echo "</div>\n";
@@ -559,10 +559,10 @@ class Banners {
 		echo "<tr class='qform2'>\n";
 		echo "<td colspan='7'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit2', 'quick_edit2', 'post', FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items", array('downtime' => 1, 'notice' => 0));
+		echo openform('quick_edit2', 'post', FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items", array('max_tokens' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
-		echo form_text($locale['ESHFEAT90a'], 'featitem_title', 'featitem_titles', '', array('required'=>1, 'inline'=>1));
+		echo form_text('featitem_title', $locale['ESHFEAT90a'], '', array('required'=>1, 'inline'=>1));
 		echo form_textarea($locale['ESHFEAT90b'], 'featitem_description', 'featitem_descriptions', '', array('required'=>1, 'autosize'=>1, 'inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
@@ -573,9 +573,9 @@ class Banners {
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";
-		echo form_button($locale['cancel'], 'cancel', 'cancel2', 'cancel', array('class' => 'btn btn-default m-r-10',
+		echo form_button('cancel', $locale['cancel'], 'cancel', array('class' => 'btn btn-default m-r-10',
 			'type' => 'button'));
-		echo form_button($locale['update'], 'item_quicksave', 'item_quicksave', 'save', array('class' => 'btn btn-success',  'icon'=>'fa fa-check-square-o'));
+		echo form_button('item_quicksave', $locale['update'], 'save', array('class' => 'btn btn-success',  'icon'=>'fa fa-check-square-o'));
 		echo "</div>\n";
 		echo closeform();
 		echo "</div>\n";
@@ -640,12 +640,12 @@ class Banners {
 	public function add_banner_form() {
 		global $locale;
 		echo "<div class='m-t-10'>\n";
-		echo openform('banner_form', 'banner_form', 'post', $this->formaction, array('enctype'=>1, 'downtime' => 1));
+		echo openform('banner_form', 'post', $this->formaction, array('enctype'=>1, 'max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
 		echo form_hidden('', 'featbanner_aid', 'featbanner_aid', $this->data['featbanner_aid']);
-		echo form_text($locale['ESHFEAT90'], 'featbanner_title', 'featbanner_title', $this->data['featbanner_title'], array('required'=>1, 'inline'=>1));
+		echo form_text('featbanner_title', $locale['ESHFEAT90'], $this->data['featbanner_title'], array('required'=>1, 'inline'=>1));
 		echo form_select_tree($locale['ESHFEAT125'], 'featbanner_cid', 'featbanner_cid', $this->data['featbanner_cid'], array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		closeside();
 		openside('');
@@ -669,14 +669,14 @@ class Banners {
 		$product_opts[0] = '--';
 		$product_opts += self::get_productOpts();
 		echo form_select($locale['ESHFEAT113'], 'featbanner_id', 'featbanner_id', $product_opts, $this->data['featbanner_id'], array('inline'=>1));
-		echo form_text($locale['ESHFEAT127'], 'featbanner_url', 'featbanner_url', $this->data['featbanner_url'], array('inline'=>1, 'placeholder'=>fusion_get_settings('siteurl')));
+		echo form_text('featbanner_url', $locale['ESHFEAT127'], $this->data['featbanner_url'], array('inline'=>1, 'placeholder'=>fusion_get_settings('siteurl')));
 		closeside();
 
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
-		echo form_text($locale['ESHFEAT122'], 'featbanner_order', 'featbanner_order', $this->data['featbanner_order'], array('number'=>1));
-		echo form_button($locale['save'], 'save_banner', 'save_banner1', $locale['save'], array('class'=>'btn-success',  'icon'=>'fa fa-check-square-o'));
+		echo form_text('featbanner_order', $locale['ESHFEAT122'], $this->data['featbanner_order'], array('number'=>1));
+		echo form_button('save_banner', $locale['save'], $locale['save'], array('class'=>'btn-success',  'icon'=>'fa fa-check-square-o'));
 		closeside();
 
 		if ($this->data['featbanner_banner']) {
@@ -688,7 +688,7 @@ class Banners {
 
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['save'], 'save_banner', 'save_banner', $locale['save'], array('class'=>'btn-success',  'icon'=>'fa fa-check-square-o'));
+		echo form_button('save_banner', $locale['save'], $locale['save'], array('class'=>'btn-success',  'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 		echo "</div>\n";
 	}
@@ -699,25 +699,25 @@ class Banners {
 	public function add_item_form() {
 		global $locale;
 		echo "<div class='m-t-10'>\n";
-		echo openform('item_form', 'item_form', 'post', $this->formaction, array('downtime' => 1));
+		echo openform('item_form', 'post', $this->formaction, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
 		echo form_hidden('', 'featitem_id', 'featitem_id', $this->idata['featitem_id']);
 		echo form_select($locale['ESHFEAT113'], 'featitem_item', 'featitem_item',  self::get_productOpts(), $this->idata['featitem_item'], array('inline'=>1));
-		echo form_text($locale['ESHFEAT90a'], 'featitem_title', 'featitem_title', $this->idata['featitem_title'], array('required'=>1, 'inline'=>1));
+		echo form_text('featitem_title', $locale['ESHFEAT90a'], $this->idata['featitem_title'], array('required'=>1, 'inline'=>1));
 		echo form_textarea($locale['ESHFEAT90b'], 'featitem_description', 'featitem_description', $this->idata['featitem_description'], array('required'=>1, 'autosize'=>1, 'inline'=>1));
 		echo form_select_tree($locale['ESHFEAT125'], 'featitem_cid', 'featitem_cid', $this->idata['featitem_cid'], array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		closeside();
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
-		echo form_text($locale['ESHFEAT122'], 'featitem_order', 'featitem_order', $this->idata['featitem_order'], array('number'=>1));
-		echo form_button($locale['save'], 'save_item', 'save_item1', $locale['save'], array('class'=>'btn-success',  'icon'=>'fa fa-check-square-o'));
+		echo form_text('featitem_order', $locale['ESHFEAT122'], $this->idata['featitem_order'], array('number'=>1));
+		echo form_button('save_item', $locale['save'], $locale['save'], array('class'=>'btn-success',  'icon'=>'fa fa-check-square-o'));
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['save'], 'save_item', 'save_item', $locale['save'], array('class'=>'btn-success',  'icon'=>'fa fa-check-square-o'));
+		echo form_button('save_item', $locale['save'], $locale['save'], array('class'=>'btn-success',  'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 		echo "</div>\n";
 	}

@@ -80,7 +80,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	}
 }
 
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>";
 openside('');
@@ -90,9 +90,9 @@ echo "
 	<label for='photo_w'>".$locale['934']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'download_screen_max_w', 'download_screen_max_w', $settings2['download_screen_max_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	".form_text('download_screen_max_w', '', $settings2['download_screen_max_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('', 'download_screen_max_h', 'download_screen_max_h', $settings2['download_screen_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	".form_text('download_screen_max_h', '', $settings2['download_screen_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
@@ -103,9 +103,9 @@ echo "
 	<label for='photo_w'>".$locale['937']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'download_thumb_max_w', 'download_thumb_max_w', $settings2['download_thumb_max_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	".form_text('download_thumb_max_w', '', $settings2['download_thumb_max_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('', 'download_thumb_max_h', 'download_thumb_max_h', $settings2['download_thumb_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	".form_text('download_thumb_max_h', '', $settings2['download_thumb_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
@@ -115,7 +115,7 @@ echo "
 	<label for='calc_b'>".$locale['930']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
 	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
 	</div>
 </div>
@@ -126,7 +126,7 @@ echo "
 	<label for='calc_bb'>".$locale['936']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'calc_bb', 'calc_bb', $calc_bb, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_text('calc_bb', '', $calc_bb, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
 	".form_select('', 'calc_cc', 'calc_cc', $calc_opts, $calc_cc, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
 	</div>
 </div>
@@ -140,7 +140,7 @@ openside('');
 echo form_select($locale['938'], 'download_screenshot', 'download_screenshot', $choice_opts, $settings2['download_screenshot']);
 closeside();
 echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";

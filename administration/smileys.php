@@ -94,11 +94,11 @@ if (count($image_files) > 0) {
 		$smiley_opts[$smileys] = $smileys;
 	}
 }
-echo openform('smiley_form', 'smiley_form', 'post', $form_action, array('downtime' => 1));
+echo openform('smiley_form', 'post', $form_action, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n<tr>\n";
 echo "<td class='tbl'><label for='smiley_code'>".$locale['420']."</label></td>\n";
 echo "<td class='tbl'>\n";
-echo form_text('', 'smiley_code', 'smiley_code', $smiley_code, array('required' => 1, 'error_text' => $locale['438']));
+echo form_text('smiley_code', '', $smiley_code, array('required' => 1, 'error_text' => $locale['438']));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'><label for='smiley_image'>".$locale['421']."</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl'>\n";
@@ -109,9 +109,9 @@ echo "<td class='tbl'><img class='img-thumbnail' src='".($smiley_image ? IMAGES.
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl'><label for='smiley_text'>".$locale['422']."</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl'>\n";
-echo form_text('', 'smiley_text', 'smiley_text', $smiley_text, array('required' => 1, 'error_text' => $locale['439']));
+echo form_text('smiley_text', '', $smiley_text, array('required' => 1, 'error_text' => $locale['439']));
 echo "</td>\n<tr>\n<td align='center' colspan='2' class='tbl'><br />\n";
-echo form_button($locale['423'], 'save_smiley', 'save_smiley', $locale['423'], array('class' => 'btn-primary'));
+echo form_button('save_smiley', $locale['423'], $locale['423'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</tbody>\n</table>\n";
 echo closeform();
 echo "<script type='text/javascript'>\n";

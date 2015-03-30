@@ -285,7 +285,7 @@ function blog_form() {
 			}
 		}
 
-		if (isset($data['blog_id']) && PHPFusion\Blog\Functions::validate_blog($data['blog_id'])) {
+		if (isset($data['blog_id']) && PHPFusion\Blog\Functions::validate_blog($_GET['blog_id'])) {
 			$result = dbquery("SELECT blog_image, blog_image_t1, blog_image_t2, blog_sticky, blog_datestamp FROM ".DB_BLOG." WHERE blog_id='".$_POST['blog_id']."'");
 			if (dbrows($result)) {
 				$data2 = dbarray($result);
@@ -391,10 +391,10 @@ function blog_form() {
 	}
 
 	echo "<div class='m-t-20'>\n";
-	echo openform('inputform', 'inputform', 'post', $formaction, array('enctype' => 1, 'downtime' => 1));
+	echo openform('inputform', 'post', $formaction, array('enctype' => 1, 'max_tokens' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
-	echo form_text($locale['422'], 'blog_subject', 'blog_subject', $data['blog_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['450']));
+	echo form_text('blog_subject', $locale['422'], $data['blog_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['450']));
 
 	openside('');
 	$align_options = array('pull-left'=>$locale['left'], 'blog-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
@@ -435,8 +435,8 @@ function blog_form() {
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	echo form_select_tree($locale['423'], "blog_cat", "blog_cat", $data['blog_cat'], array("parent_value" => $locale['424'], "query" => (multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
-	echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
-	echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-success btn-sm', 'icon'=>'fa fa-check-square-o'));
+	echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
+	echo form_button('save', $locale['437'], $locale['437'], array('class' => 'btn-success btn-sm', 'icon'=>'fa fa-check-square-o'));
 	closeside();
 
 	openside('');
@@ -485,8 +485,8 @@ function blog_form() {
 		echo form_hidden('', 'blog_id', 'blog_id', $blog_id);
 	}
 	echo "</div>\n</div>\n";
-	echo form_button($locale['436'], 'preview', 'preview-1', $locale['436'], array('class' => 'btn-default m-r-10'));
-	echo form_button($locale['437'], 'save', 'save-1', $locale['437'], array('class' => 'btn-success', 'icon'=>'fa fa-check-square-o'));
+	echo form_button('preview', $locale['436'], $locale['436'], array('class' => 'btn-default m-r-10'));
+	echo form_button('save', $locale['437'], $locale['437'], array('class' => 'btn-success', 'icon'=>'fa fa-check-square-o'));
 	echo closeform();
 	echo "</div>\n";
 }

@@ -218,14 +218,14 @@ class CustomPage {
 				$edit_opts[$data['page_id']] = $data['page_title'];
 			}
 			echo "<div class='pull-right'>\n";
-			echo openform('selectform', 'selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('downtime' => 1));
+			echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('max_tokens' => 1));
 			echo "<div class='pull-left m-t-5 m-r-10'>\n";
 			echo form_select('', 'cpid', 'cpid', $edit_opts, isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '');
 			echo form_hidden('', 'section', 'section', 'cp2');
 			echo form_hidden('', 'aid', 'aid', iAUTH);
 			echo "</div>\n";
-			echo form_button($locale['420'], 'action', 'edit', 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
-			echo form_button($locale['421'], 'action', 'delete', 'delete', array('class' => 'btn-danger btn-sm pull-left', 'icon'=>'fa fa-trash'));
+			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
+			echo form_button('action', $locale['421'], 'delete', array('class' => 'btn-danger btn-sm pull-left', 'icon'=>'fa fa-trash'));
 			echo closeform();
 			echo "</div>\n";
 		}
@@ -319,14 +319,14 @@ class CustomPage {
 		} else {
 			require_once INCLUDES."html_buttons_include.php";
 		}
-		echo openform('inputform', 'inputform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+		echo openform('inputform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 		if (isset($_POST['edit']) && isset($_POST['page_id'])) {
 			echo form_hidden('', 'edit', 'edit', 'edit');
 		}
 		// port to dynamics now.
 		echo "<div class='row m-t-20' >\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
-		echo form_text($locale['422'], 'page_title', 'page_title', $data['page_title'], array('required' => 1));
+		echo form_text('page_title', $locale['422'], $data['page_title'], array('required' => 1));
 		echo form_select($locale['432'], 'page_keywords', 'page_keywords', array(), $data['page_keywords'], array('max_length' => 320,
 										   'width' => '100%',
 										   'tags' => 1,
@@ -345,7 +345,7 @@ class CustomPage {
 			openside('');
 			echo "<div class='strong m-b-10'>".$locale['460']."</div>\n";
 			$val = !isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? $locale['461'] : $locale['462'];
-			echo form_button($val, 'tinymce_switch', 'tinymce_switch', $val, array('class' => 'btn-default', 'type' => 'button'));
+			echo form_button('tinymce_switch', $val, $val, array('class' => 'btn-default', 'type' => 'button'));
 			add_to_jquery("
 			$('#tinymce_switch').bind('click', function() {
 				SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");
@@ -382,7 +382,7 @@ class CustomPage {
 		echo form_checkbox($locale['428'], 'page_allow_ratings', 'page_allow_ratings', $data['page_allow_ratings'], array('class'=>'m-b-0'));
 		echo form_hidden('', 'link_id', 'link_id', $data['link_id']);
 		echo form_hidden('', 'link_order', 'link_order', $data['link_order']);
-		echo form_button($locale['430'], 'save', 'save2', $locale['430'], array('class' => 'btn-success m-r-10 m-t-10', 'icon'=>'fa fa-check-square-o'));
+		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-success m-r-10 m-t-10', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 
 		openside();
@@ -400,9 +400,9 @@ class CustomPage {
 		echo "</div></div>\n";
 
 		echo form_hidden('', 'page_id', 'page_id', $data['page_id']);
-		echo form_button($locale['429'], 'preview', 'preview', $locale['429'], array('class' => 'btn-default m-r-10'));
-		echo form_button($locale['430'], 'save', 'save', $locale['430'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
-		if (isset($_POST['edit'])) echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class' => 'btn-default m-r-10'));
+		echo form_button('preview', $locale['429'], $locale['429'], array('class' => 'btn-default m-r-10'));
+		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
+		if (isset($_POST['edit'])) echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
 		echo closeform();
 		closetable();
 

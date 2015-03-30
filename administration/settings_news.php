@@ -102,7 +102,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 }
 
 echo "<div class='well'>".$locale['news_description']."</div>";
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 $opts = array('0' => $locale['952'], '1' => $locale['953']);
 $cat_opts = array('0' => $locale['959'], '1' => $locale['960']);
 $thumb_opts = array('0' => $locale['955'], '1' => $locale['956']);
@@ -119,9 +119,9 @@ echo "
 	<label for='blog_thumb_w'>".$locale['601']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'news_thumb_w', 'news_thumb_w', $settings2['news_thumb_w'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
+	".form_text('news_thumb_w', '', $settings2['news_thumb_w'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('', 'news_thumb_h', 'news_thumb_h', $settings2['news_thumb_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	".form_text('news_thumb_h', '', $settings2['news_thumb_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
@@ -131,9 +131,9 @@ echo "
 	<label for='news_photo_w'>".$locale['602']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'news_photo_w', 'news_photo_w', $settings2['news_photo_w'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
+	".form_text('news_photo_w', '', $settings2['news_photo_w'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('', 'news_photo_h', 'news_photo_h', $settings2['news_photo_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	".form_text('news_photo_h', '', $settings2['news_photo_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
@@ -143,9 +143,9 @@ echo "
 	<label for='blog_thumb_w'>".$locale['603']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'news_photo_max_w', 'news_photo_max_w', $settings2['news_photo_max_w'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
+	".form_text('news_photo_max_w', '', $settings2['news_photo_max_w'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('', 'news_photo_max_h', 'news_photo_max_h', $settings2['news_photo_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	".form_text('news_photo_max_h', '', $settings2['news_photo_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
@@ -155,7 +155,7 @@ echo "
 	<label for='calc_b'>".$locale['605']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
 	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
 	</div>
 </div>
@@ -170,7 +170,7 @@ echo form_select($locale['958'], 'news_image_readmore', 'news_image_readmore', $
 echo form_select($locale['954'], 'news_thumb_ratio', 'news_thumb_ratio', $thumb_opts, $settings2['news_thumb_ratio']);
 closeside();
 echo "</div></div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary'));
 
 echo closeform();
 closetable();

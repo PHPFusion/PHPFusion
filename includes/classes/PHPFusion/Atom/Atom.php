@@ -229,20 +229,20 @@ class Atom {
 		$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' ORDER BY theme_datestamp DESC");
 		if (dbrows($result) > 0) {
 			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
-			echo openform('preset-form', 'preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0,
-				'downtime' => 1));
-			echo form_button('Create New', 'new_preset', 'new_preset', 'new_preset', array('class' => 'btn-sm btn-primary pull-right', 'icon' => 'entypo plus'));
+			echo openform('preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0,
+				'max_tokens' => 1));
+			echo form_button('new_preset', 'Create New', 'new_preset', array('class' => 'btn-sm btn-primary pull-right', 'icon' => 'entypo plus'));
 			echo form_para('Theme Presets', 'theme_presets');
 			while ($preset = dbarray($result)) {
 				echo "<div class='list-group-item m-t-10' style='display:inline-block; clear:both; text-align:center;'>\n".thumbnail($screenshot, '150px')."<div class='display-block panel-title text-smaller strong m-t-10'>".trimlink($preset['theme_title'], 30)."</div>";
 				echo "<div class='btn-group m-t-10 m-b-10'>\n";
 				if ($this->data['theme_id'] == $preset['theme_id']) {
-					echo form_button('Loaded', 'active', 'active', 'active', array('class' => 'btn-sm btn-default active',
+					echo form_button('active', 'Loaded', 'active', array('class' => 'btn-sm btn-default active',
 						'deactivate' => 1));
 				} else {
-					echo form_button('Load', 'load_preset', 'load_preset', $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo upload'));
+					echo form_button('load_preset', 'Load', $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo upload'));
 				}
-				echo form_button('Delete', 'delete_preset', 'delete_preset', $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo trash'));
+				echo form_button('delete_preset', 'Delete', $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo trash'));
 				echo form_hidden('', 'theme', 'theme', $preset['theme_name']);
 				echo "</div>\n";
 				echo "</div>\n";
@@ -577,12 +577,12 @@ class Atom {
 		echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
 		echo "<div class='overflow-hide text-smaller'>\n<strong>The Atom Theme Engine is currently rebuilding your theme and may take up to 15 to 30 seconds depending of network status.</strong><br/>Please do not close or refresh the window.</div>\n";
 		echo closemodal();
-		echo openform('theme_edit', 'theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('downtime' => 1));
+		echo openform('theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('max_tokens' => 1));
 		echo form_hidden('', 'theme_id', 'theme_id', $this->data['theme_id']);
-		echo form_text('Style Title', 'theme_title', 'theme_title', $this->data['theme_title'], array('inline' => 1, 'required' => 1));
-		echo form_text('Template', 'theme_name', 'theme_name', $this->theme_name, array('inline' => 1, 'deactivate' => 1));
-		echo form_button('Close', 'close_theme', 'close_theme', 'close_theme', array('class' => 'btn-default m-l-10 pull-right'));
-		echo form_button('Save Theme', 'save_theme', 'save_theme', 'save_theme', array('class' => 'btn-primary pull-right'));
+		echo form_text('theme_title', 'Style Title', $this->data['theme_title'], array('inline' => 1, 'required' => 1));
+		echo form_text('theme_name', 'Template', $this->theme_name, array('inline' => 1, 'deactivate' => 1));
+		echo form_button('close_theme', 'Close', 'close_theme', array('class' => 'btn-default m-l-10 pull-right'));
+		echo form_button('save_theme', 'Save Theme', 'save_theme', array('class' => 'btn-primary pull-right'));
 		echo opentab($tab_title, $tab_active, 'atom');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 		echo "<div class='m-t-20'>\n";

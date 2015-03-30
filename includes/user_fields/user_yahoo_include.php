@@ -22,7 +22,7 @@ if (!defined("IN_FUSION")) {
 // Display user field input
 if ($profile_method == "input") {
 	$options +=array('inline'=>1, 'max_length'=>100, 'width'=>'200px');
-	$user_fields = form_text($locale['uf_yahoo'], 'user_yahoo', 'user_yahoo', $field_value, $options);
+	$user_fields = form_text('user_yahoo', $locale['uf_yahoo'], $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
 	if ($field_value) {

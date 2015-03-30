@@ -148,16 +148,16 @@ if (isset($_GET['status']) && !isset($message)) {
 
 if (!isset($_GET['t']) || $_GET['t'] != "faq") {
 	opentable($faq_cat_title);
-	echo openform('add_faq_cat', 'add_faq_cat', 'post', $faq_cat_action, array('downtime' => 1));
+	echo openform('add_faq_cat', 'post', $faq_cat_action, array('max_tokens' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td class='tbl'><label for='faq_cat_name'>".$locale['420']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'faq_cat_name', 'faq_cat_name', $faq_cat_name, array('error_text' => $locale['460'], 'required' => 1));
+	echo form_text('faq_cat_name', '', $faq_cat_name, array('error_text' => $locale['460'], 'required' => 1));
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td width='130' class='tbl'><label for='faq_cat_description'>".$locale['421']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'faq_cat_description', 'faq_cat_description', $faq_cat_description);
+	echo form_text('faq_cat_description', '', $faq_cat_description);
 	echo "</td>\n";
 	echo "</tr>\n";
 	if (multilang_table("FQ")) {
@@ -170,7 +170,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "faq") {
 		echo form_hidden('', 'cat_language', 'cat_language', $cat_language);
 	}
 	echo "<tr><td align='center' colspan='2' class='tbl'>\n";
-	echo form_button($locale['422'], 'save_cat', 'save_cat', $locale['422'], array('class' => 'btn-primary m-t-10'));
+	echo form_button('save_cat', $locale['422'], $locale['422'], array('class' => 'btn-primary m-t-10'));
 	echo "</td>\n";
 	echo "</tr>\n</table>\n";
 	echo closeform();
@@ -185,7 +185,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 			$cat_opts[$data2['faq_cat_id']] = $data2['faq_cat_name'];
 		}
 		opentable($faq_title);
-		echo openform('inputform', 'inputform', 'post', $faq_action, array('downtime' => 1, 'notice' => 0));
+		echo openform('inputform', 'post', $faq_action, array('max_tokens' => 1, 'notice' => 0));
 		echo "<table cellpadding='0' cellspacing='0' class='center table table-responsive'>\n<tr>\n";
 		echo "<td class='tbl'><label for='faq_cat'>".$locale['520']."</label></td>\n";
 		echo "<td class='tbl'>\n";
@@ -194,7 +194,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 		echo "</tr>\n<tr>\n";
 		echo "<td class='tbl'><label for='faq_question'>".$locale['521']."</label> <span class='required'>*</span></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_text('', 'faq_question', 'faq_question', $faq_question, array('required' => 1));
+		echo form_text('faq_question', '', $faq_question, array('required' => 1));
 		echo "</td>\n";
 		echo "</tr>\n<tr>\n";
 		echo "<td valign='top' class='tbl'><label for='faq_answer'>".$locale['522']."</label> <span class='required'>*</span></td>\n";
@@ -206,7 +206,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 		echo display_html("inputform", "faq_answer")."</td>\n";
 		echo "</tr>\n<tr>\n";
 		echo "<td align='center' colspan='2' class='tbl'><br />\n";
-		echo form_button($locale['523'], 'save_faq', 'save_faq', $locale['523'], array('class' => 'btn-primary m-t-10'));
+		echo form_button('save_faq', $locale['523'], $locale['523'], array('class' => 'btn-primary m-t-10'));
 		echo "</td>\n";
 		echo "</tr>\n</table>\n</form>\n";
 		closetable();

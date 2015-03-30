@@ -328,7 +328,7 @@ class ProductCategories {
 		$this->data['cat_languages'] = (is_array($this->data['cat_languages'])) ? $this->data['cat_languages'] : fusion_get_enabled_languages();
 		$this->data['parentid'] = $_GET['parent_id'] ? $_GET['parent_id'] : $this->data['parentid'];
 		$form_action = FUSION_SELF.$aidlink."&amp;a_page=categories";
-		echo openform('addcat', 'add_cat', 'post', $form_action, array('class' => 'm-t-20', 'downtime' => 1));
+		echo openform('addcat', 'post', $form_action, array('class' => 'm-t-20', 'max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 		echo QuantumFields::quantum_multilocale_fields($locale['ESHPCATS100'], 'cattitle', 'cattitle', $this->data['title'], array('inline'=>1, 'required'=>1));
@@ -353,7 +353,7 @@ class ProductCategories {
 
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_text($locale['ESHPCATS136'], 'cat_order', 'cat_orders', $this->data['cat_order'], array('inline' => 1, 'number' => 1, 'width' => '100px'));
+		echo form_text('cat_order', $locale['ESHPCATS136'], $this->data['cat_order'], array('inline' => 1, 'number' => 1, 'width' => '100px'));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 		openside('');
@@ -362,7 +362,7 @@ class ProductCategories {
 		closeside();
 		echo form_hidden('', 'cid', 'cids', $this->data['cid']);
 		echo "</div>\n</div>\n";
-		echo form_button($locale['save_changes'], 'save_cat', 'save_cats', $locale['save'], array('class' => 'btn-success', 'icon'=>'fa fa-check-square-o'));
+		echo form_button('save_cat', $locale['save_changes'], $locale['save'], array('class' => 'btn-success', 'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 	}
 
@@ -427,7 +427,7 @@ class ProductCategories {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='8'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=categories", array('downtime' => 1,
+		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=categories", array('max_tokens' => 1,
 			'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-6'>\n";
@@ -443,9 +443,9 @@ class ProductCategories {
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";
-		echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class' => 'btn btn-default m-r-10',
+		echo form_button('cancel', $locale['cancel'], 'cancel', array('class' => 'btn btn-default m-r-10',
 			'type' => 'button'));
-		echo form_button($locale['update'], 'cats_quicksave', 'cats_quicksave', 'save', array('class' => 'btn btn-primary'));
+		echo form_button('cats_quicksave', $locale['update'], 'save', array('class' => 'btn btn-primary'));
 		echo "</div>\n";
 		echo closeform();
 		echo "</div>\n";

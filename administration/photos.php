@@ -562,15 +562,15 @@ if (function_exists('gd_info')) {
 	}
 	require_once BASEDIR.'includes/mimetypes_include.php';
 	echo "<div class='panel panel-default image_upload' id='single_upload'>\n<div class='panel-body'>\n";
-	echo openform('input_form', 'input_form', 'post', $formaction, array('enctype' => 1, 'downtime' => 1));
+	echo openform('input_form', 'post', $formaction, array('enctype' => 1, 'max_tokens' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-	echo form_text($locale['432'], 'photo_title', 'photo_title', $photo_title, array('max_length' => 100, 'required' => 1, 'error_text' => ''));
+	echo form_text('photo_title', $locale['432'], $photo_title, array('max_length' => 100, 'required' => 1, 'error_text' => ''));
 	echo form_textarea($locale['433'], 'photo_description', 'photo_description', $photo_description, array('bbcode' => 1, 'autosize'=>1, 'resize'=>0));
 	if (!isset($_GET['action'])) {
 		echo form_fileinput($locale['436'], 'photo_pic_file', 'photo_pic_file', PHOTODIR, '', array('type' => 'image', 'thumbnail_path'=>PHOTODIR, 'required' => 1, 'error_text' => $locale['421']));
 	}
-	echo form_text($locale['434'], 'photo_order', 'photo_order', $photo_order, array('number' => 1, 'width' => '100px'));
+	echo form_text('photo_order', $locale['434'], $photo_order, array('number' => 1, 'width' => '100px'));
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 	echo "<div class='panel panel-default'>\n<div class='panel-heading'>\n".$locale['511']."</div>\n";
 	echo "<div class='panel-body'>\n";
@@ -587,9 +587,9 @@ if (function_exists('gd_info')) {
 	}
 	echo (!isset($_GET['action'])) ? "<div class='m-b-10'><label><input type='checkbox' name='photo_comments' value='yes'".$photo_comments." /> ".$locale['437']."</label></div>" : '';
 	echo "<div class='m-b-10'><label><input type='checkbox' name='photo_ratings' value='yes'".$photo_ratings." /> ".$locale['438']."</label>\n</div>";
-	echo form_button($locale['439'], 'save_photo', 'save_photo', $locale['439'], array('class' => 'btn-primary btn-sm'));
+	echo form_button('save_photo', $locale['439'], $locale['439'], array('class' => 'btn-primary btn-sm'));
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
-		echo form_button($locale['440'], 'cancel', 'cancel', $locale['440'], array('class' => 'btn-default btn-sm m-l-10'));
+		echo form_button('cancel', $locale['440'], $locale['440'], array('class' => 'btn-default btn-sm m-l-10'));
 	}
 	echo "</div>\n</div>\n";
 
@@ -603,7 +603,7 @@ if (function_exists('gd_info')) {
 				$array[$data2['album_id']] = $data2['album_title'];
 			}
 			echo "<label for='move_photo'>".$locale['430']."</label>\n<br/>\n";
-			echo form_button($locale['431'], 'move_photo', 'move_photo', $locale['431'], array('class' => 'btn-primary'));
+			echo form_button('move_photo', $locale['431'], $locale['431'], array('class' => 'btn-primary'));
 			echo form_select('', 'move_album_id', 'move_album_id', $array, '', array('placeholder' => $locale['473'], 'class' => 'pull-left m-r-10'));
 			echo "</div></div>\n";
 		}
@@ -638,7 +638,7 @@ if (function_exists('gd_info')) {
 		$gallery_dir = makefilelist($upload_dir, ".|..|index.php", TRUE, "folders");
 		$folder_opts = makefileopts($gallery_dir);
 		if ($can_upload == TRUE) {
-			echo openform('folderuploadform', 'folderuploadform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('enctype' => 1, 'downtime' => 1));
+			echo openform('folderuploadform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('enctype' => 1, 'max_tokens' => 1));
 			echo "<table class='table table-responsive tbl-border center' cellpadding='2' cellspacing='0'>\n";
 			echo($folder_opts != "" ? "<tr>\n<td class='tbl1' colspan='2' style='text-align:center;'>".$locale['496']."</td>\n</tr>\n" : "");
 			echo "<tr>\n<td class='tbl1' colspan='2' style='text-align:left;'>";
@@ -675,20 +675,20 @@ if (function_exists('gd_info')) {
 					echo "</td>\n</tr>";
 				}
 				echo "<tr><td class='tbl1' colspan='2' style='text-align:center;'><br />";
-				echo form_button($locale['500'], 'btn_upload_dir', 'btn_upload_dir', $locale['500'], array('class' => 'btn-primary btn-block'));
+				echo form_button('btn_upload_dir', $locale['500'], $locale['500'], array('class' => 'btn-primary btn-block'));
 				echo "</td>\n</tr>\n";
 			} else {
 				echo "<tr>\n<td class='tbl1' colspan='2' style='text-align:center;'>".$locale['501']."<br /><br />\n";
-				echo form_button($locale['504'], 'refresh', 'refresh', $locale['504'], array('class' => 'btn-primary btn-block'));
+				echo form_button('refresh', $locale['504'], $locale['504'], array('class' => 'btn-primary btn-block'));
 				echo "</td>\n</tr>\n";
 			}
 			echo "</table></form>\n";
 		} else {
 			echo "<div class='admin-message'>\n";
 
-			echo openform('why_no_formname', 'why_no_formname', 'post', $formaction, array('downtime' => 1));
+			echo openform('why_no_formname', 'post', $formaction, array('max_tokens' => 1));
 			echo "<span style='color:red;font-weight:bold;'>".sprintf($locale['502'], $upload_dir)."</span><br />".$locale['503']."<br />";
-			echo form_button($locale['504'], 'refresh2', 'refresh2', $locale['504'], array('class' => 'btn-primary btn-block'));
+			echo form_button('refresh2', $locale['504'], $locale['504'], array('class' => 'btn-primary btn-block'));
 
 			echo "</form>\n";
 			echo "</div>\n";
@@ -700,7 +700,7 @@ if (function_exists('gd_info')) {
 		$multi_opts = makefileopts($multi_files);
 		if ($can_upload == TRUE) {
 			//echo "<form name='multiform' method='post' action='".."' enctype='multipart/form-data'>\n";
-			echo openform('multiform', 'multiform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('downtime' => 1, 'enctype' => 1));
+			echo openform('multiform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('max_tokens' => 1, 'enctype' => 1));
 			echo "<table class='table table-responsive tbl-border center' cellpadding='2' cellspacing='0'>\n";
 			echo($multi_opts != "" ? "<tr>\n<td class='tbl1' colspan='2' style='text-align:center;'>".$locale['496']."</td>\n</tr>\n" : "");
 			echo "<tr>\n<td class='tbl1' colspan='2' style='text-align:left;'>";
@@ -739,22 +739,22 @@ if (function_exists('gd_info')) {
 					echo "</td>\n</tr>";
 				}
 				echo "<tr>\n<td class='tbl1' colspan='2' style='text-align:center;'><br />\n";
-				echo form_button($locale['509'], 'btn_multi_upload', 'btn_multi_upload', $locale['509'], array('class' => 'btn-primary btn-block'));
+				echo form_button('btn_multi_upload', $locale['509'], $locale['509'], array('class' => 'btn-primary btn-block'));
 				echo "</td>\n</tr>\n";
 			} else {
 				echo "<tr>\n<td class='tbl1' colspan='2' style='text-align:center;'>".$locale['510']."<br /><br />\n";
 				//echo "<input type='submit' class='button' value='".$locale['504']."' /></td>\n</tr>\n";
-				echo form_button($locale['504'], 'btn_multi_noname', 'btn_multi_noname', $locale['504'], array('class' => 'btn-primary btn-block'));
+				echo form_button('btn_multi_noname', $locale['504'], $locale['504'], array('class' => 'btn-primary btn-block'));
 			}
 			echo "</table>";
 			echo "</form>\n";
 		} else {
 			echo "<div class='admin-message'>\n";
 			//echo "<form action='".$formaction."' method='post'>\n";
-			echo openform('multi', 'multi', 'post', $formaction, array('downtime' => 1));
+			echo openform('multi', 'post', $formaction, array('max_tokens' => 1));
 			echo "<span style='color:red;font-weight:bold;'>".sprintf($locale['502'], $upload_dir)."</span><br />".$locale['503']."<br />";
 			echo "<input type='submit' class='button' value='".$locale['504']."' />";
-			echo form_button($locale['509'], 'btn_multi_upload', 'btn_multi_upload', $locale['509'], array('class' => 'btn-primary btn-block'));
+			echo form_button('btn_multi_upload', $locale['509'], $locale['509'], array('class' => 'btn-primary btn-block'));
 			echo "</form>\n";
 			echo "</div>\n";
 		}
@@ -797,7 +797,7 @@ if (function_exists('gd_info')) {
 				LIMIT ".$_GET['rowstart'].",".$settings['thumbs_per_page']);
 		$counter = 0;
 		$k = ($_GET['rowstart'] == 0 ? 1 : $_GET['rowstart']+1);
-		echo openform('move_form', 'move_form', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('notice' => 0, 'downtime' => 1));
+		echo openform('move_form', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('notice' => 0, 'max_tokens' => 1));
 		echo "<div class='row'>\n";
 		if ($rows > $settings['thumbs_per_page']) {
 			echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $rows, 3, FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id']."&amp;")."\n</div>\n";
@@ -862,8 +862,8 @@ if (function_exists('gd_info')) {
 			echo "<a class='btn btn-default button' href='#' onclick=\"javascript:setChecked('move_form','sel_photo[]',0);return false;\">".$locale['471']."</a>\n";
 			echo "</div>\n";
 			echo "<div class='m-b-10 pull-left btn-group m-r-10'>\n";
-			echo form_button($locale['474'], 'move_sel_photos', 'move_sel_photos', $locale['474'], array('class' => 'btn-default'));
-			echo form_button($locale['475'], 'move_all_photos', 'move_all_photos', $locale['475'], array('class' => 'btn-default'));
+			echo form_button('move_sel_photos', $locale['474'], $locale['474'], array('class' => 'btn-default'));
+			echo form_button('move_all_photos', $locale['475'], $locale['475'], array('class' => 'btn-default'));
 			add_to_jquery("
 					$('#move_sel_photos').bind('click', function() { ConfirmMove(0); });
 					$('#move_all_photos').bind('click', function() { ConfirmMove(1); });

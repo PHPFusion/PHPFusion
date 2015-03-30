@@ -138,7 +138,7 @@ class Payments {
 	public function add_payment_form() {
 		global $locale;
 		echo "<div class='m-t-20'>\n";
-		echo openform('paymentform', 'ipaymentform', 'post', $this->formaction, array('downtime' => 1));
+		echo openform('paymentform', 'post', $this->formaction, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
@@ -154,8 +154,8 @@ class Payments {
 		closeside();
 		openside('');
 		echo form_hidden('', 'pid', 'pid', $this->data['pid']);
-		echo form_text($locale['ESHPPMTS100'], 'method', 'method', $this->data['method'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS101']));
-		echo form_text($locale['ESHPPMTS102'], 'surcharge', 'surcharge', $this->data['surcharge'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS103']));
+		echo form_text('method', $locale['ESHPPMTS100'], $this->data['method'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS101']));
+		echo form_text('surcharge', $locale['ESHPPMTS102'], $this->data['surcharge'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS103']));
 		echo form_select($locale['ESHPPMTS104'], 'cfile', 'cfile', self::get_paymentFile(), $this->data['cfile'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS106']));
 		closeside();
 		openside('');
@@ -168,11 +168,11 @@ class Payments {
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
 		echo form_select($locale['ESHPPMTS109'], 'active', 'active', self::get_activeOpts(), $this->data['active'], array('tip'=>$locale['ESHPPMTS112']));
-		echo form_button($locale['save'], 'save_payment', 'save_payment2', $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
+		echo form_button('save_payment', $locale['save'], $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['save'], 'save_payment', 'save_payment', $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
+		echo form_button('save_payment', $locale['save'], $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 		echo "</div>\n";
 	}

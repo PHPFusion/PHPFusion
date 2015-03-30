@@ -345,12 +345,12 @@ class fusion_panels {
 		global $locale;
         fusion_confirm_exit();
 		echo "<div class='m-t-20'>\n";
-		echo openform('panel_form', 'panel_form', 'post', $this->formaction, array('downtime'=>1));
+		echo openform('panel_form', 'post', $this->formaction, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
 		echo form_hidden('', 'panel_id', 'panel_id', $this->data['panel_id']);
-		echo form_text($locale['452'], 'panel_name', 'panel_name', $this->data['panel_name'], array('inline'=>1, 'required'=>1, )); //'error_text'=>$locale['470']
+		echo form_text('panel_name', $locale['452'], $this->data['panel_name'], array('inline'=>1, 'required'=>1, )); //'error_text'=>$locale['470']
 		echo form_select($locale['453'], 'panel_filename', 'panel_filename', self::get_panelOpts(), $this->data['panel_filename'], array('inline'=>1));
         $grid_opts = self::get_panel_grid();
 		echo form_select($locale['453'], 'panel_side', 'panel_side', $grid_opts, $this->data['panel_side'], array('inline'=>1));
@@ -386,7 +386,7 @@ class fusion_panels {
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
 		echo form_select($locale['458'], 'panel_access', 'panel_access', self::get_accessOpts(), $this->data['panel_access']);
-		echo form_button($locale['461'], 'panel_save', 'panel_save2', $locale['461'], array('class'=>'btn-primary'));
+		echo form_button('panel_save', $locale['461'], $locale['461'], array('class'=>'btn-primary'));
 		closeside();
 
 		openside('');
@@ -398,7 +398,7 @@ class fusion_panels {
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['461'], 'panel_save', 'panel_save', $locale['460'], array('class'=>'btn-primary'));
+		echo form_button('panel_save', $locale['461'], $locale['460'], array('class'=>'btn-primary'));
 		echo closeform();
 		echo "</div>\n";
 	}

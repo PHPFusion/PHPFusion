@@ -272,8 +272,8 @@ class moderator {
 		if (!isset($_POST['deletethread'])) {
 			echo "<form name='delform' method='post' action='".FUSION_SELF."?step=delete&amp;forum_id=".$forum_id."&amp;thread_id=".$_GET['thread_id']."'>\n";
 			echo $locale['forum_0704']."<br /><br />\n";
-			echo form_button($locale['yes'], 'deletethread', 'deletethread', $locale['yes'], array('class'=>'m-r-10 btn-danger'));
-			echo form_button($locale['no'], 'canceldelete', 'canceldelete', $locale['no'], array('class'=>'m-r-10 btn-default'));
+			echo form_button('deletethread', $locale['yes'], $locale['yes'], array('class'=>'m-r-10 btn-danger'));
+			echo form_button('canceldelete', $locale['no'], $locale['no'], array('class'=>'m-r-10 btn-default'));
 			echo "</form>\n";
 			echo closeform();
 		} else {
@@ -404,7 +404,7 @@ class moderator {
 		} else {
 			if ($forum_id) {
 				echo "<div>";
-				echo openform('moveform', 'moveform', 'post', FUSION_SELF."?step=move&forum_id=".$forum_id."&amp;thread_id=".$data['thread_id'], array('downtime' => 1));
+				echo openform('moveform', 'post', FUSION_SELF."?step=move&forum_id=".$forum_id."&amp;thread_id=".$data['thread_id'], array('max_tokens' => 1));
 				echo form_select_tree($locale['forum_0751'], 'new_forum_id', 'new_forum_id2', '',
 									  array(
 										  'inline'=>1,
@@ -412,7 +412,7 @@ class moderator {
 										  'no_root'=>1,
 									  ),
 									  DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
-				echo form_button($locale['forum_0750'], 'move_thread', 'move_thread', $locale['forum_0750'], array('class'=>'btn-primary'));
+				echo form_button('move_thread', $locale['forum_0750'], $locale['forum_0750'], array('class'=>'btn-primary'));
 				echo closeform();
 			} else {
 				echo "Cannot move forum because thread_id and forum_id is corrupted.";
@@ -545,14 +545,14 @@ class moderator {
 								}
 							}
 
-							echo openform('modopts', 'modopts', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('downtime' => 1));
+							echo openform('modopts', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('max_tokens' => 1));
 							echo form_select_tree($locale['forum_0301'], 'new_forum_id', 'new_forum_id', '', array('disable_opts'=>$category_excluded, 'no_root'=>1, 'inline'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 							foreach ($array_post as $value) {
 								echo form_hidden('', "delete_post[]", "delete_post[$value]", $value);
 							}
 							echo form_hidden('', 'move_posts', 'move_posts', 1);
 							echo "<div class='clearfix'>\n<div class='col-xs-12 col-md-offset-3 col-lg-offset-3'>\n";
-							echo form_button($locale['forum_0302'], 'go', 'go', $locale['forum_0302'], array('class'=>'btn-primary'));
+							echo form_button('go', $locale['forum_0302'], $locale['forum_0302'], array('class'=>'btn-primary'));
 							echo "</div>\n</div>\n";
 							echo closeform();
 						} else {
@@ -577,7 +577,7 @@ class moderator {
 							while ($tl_data = dbarray($tl_result)) {
 								$forum_list[$tl_data['thread_id']] = $tl_data['thread_subject'];
 							}
-							echo openform('modopts', 'modopts', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;sv", array('downtime' => 1));
+							echo openform('modopts', 'post', FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart']."&amp;sv", array('max_tokens' => 1));
 							echo form_hidden('', 'new_forum_id', 'new_forum_id', $_POST['new_forum_id']);
 							echo form_select($locale['forum_0303'], 'new_thread_id', 'new_thread_id', $forum_list, '', array('inline'=>1));
 							foreach ($array_post as $value) {
@@ -585,7 +585,7 @@ class moderator {
 							}
 							echo form_hidden('', 'move_posts', 'move_posts', 1);
 							echo "<div class='clearfix'>\n<div class='col-xs-12 col-md-offset-3 col-lg-offset-3'>\n";
-							echo form_button($locale['forum_0304'], 'go', 'go', $locale['forum_0302'], array('class'=>'btn-primary btn-sm'));
+							echo form_button('go', $locale['forum_0304'], $locale['forum_0302'], array('class'=>'btn-primary btn-sm'));
 							echo "</div>\n</div>\n";
 						} else {
 							echo "<div id='close-message'><div class='admin-message'>".$locale['forum_0308']."<br /><br />\n";

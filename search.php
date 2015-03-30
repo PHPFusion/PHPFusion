@@ -131,14 +131,14 @@ $search_js .= "document.getElementById('order2').disabled = false;\n";
 $search_js .= "document.getElementById('chars').disabled = false;\n";
 $search_js .= "break;\n}\n}\n/*]]>*/\n</script>";
 add_to_footer($search_js);
-echo openform('searchform', 'searchform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : BASEDIR)."search.php", array('downtime'=>1));
+echo openform('searchform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : BASEDIR)."search.php", array('max_tokens' => 1));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
 
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
 echo "<label class='label-control'>".$locale['401']."</label>\n<br/>";
-echo form_text('', 'stext', 'stext', urldecode($_POST['stext']), array('class'=>'p-l-0 p-r-0 col-xs-12 col-sm-9 col-md-9 col-lg-9'));
-echo form_button($locale['402'], 'search', 'search', $locale['402'], array('class'=>'btn-primary flright pull-right'));
+echo form_text('stext', '', urldecode($_POST['stext']), array('class'=>'p-l-0 p-r-0 col-xs-12 col-sm-9 col-md-9 col-lg-9'));
+echo form_button('search', $locale['402'], $locale['402'], array('class'=>'btn-primary flright pull-right'));
 echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
 echo "<label><input type='radio' name='method' value='OR'".($_POST['method'] == "OR" ? " checked='checked'" : "")." /> ".$locale['403']."</label><br />\n";
 echo "<label><input type='radio' name='method' value='AND'".($_POST['method'] == "AND" ? " checked='checked'" : "")." /> ".$locale['404']."</label>\n";

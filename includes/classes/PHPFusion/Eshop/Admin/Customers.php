@@ -147,14 +147,14 @@ class Customers {
 	public function add_customer_form() {
 		global $locale, $aidlink;
 		echo "<div class='m-t-20'>\n";
-		echo openform('customerform', 'customerform', 'post', $this->formaction, array('downtime' => 1));
+		echo openform('customerform', 'post', $this->formaction, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
 		$customer_name[] = $this->data['cfirstname'];
 		$customer_name[] = $this->data['clastname'];
 		$customer_name = implode('|', $customer_name);
 		echo form_name('Customer Name', 'cname', 'cname', $customer_name, array('required'=>1, 'inline'=>1));
-		echo form_text($locale['ESHPCHK115'], 'cemail', 'cemail', $this->data['cemail'], array('inline'=>1, 'email'=>1));
+		echo form_text('cemail', $locale['ESHPCHK115'], $this->data['cemail'], array('inline'=>1, 'type' => 'email'));
 		echo form_datepicker($locale['ESHPCHK105'], 'cdob', 'cdob', $this->data['cdob'], array('inline'=>1));
 		$customer_address[] = $this->data['caddress']; // use this as backdoor.
 		$customer_address[] = $this->data['caddress2'];
@@ -164,15 +164,15 @@ class Customers {
 		$customer_address[] = $this->data['cpostcode'];
 		$customer_address = implode('|', $customer_address);
 		echo form_address($locale['ESHPCHK106'], 'caddress', 'caddress', $customer_address, array('required'=>1, 'inline'=>1));
-		echo form_text($locale['ESHPCHK113'], 'cphone', 'cphone', $this->data['cphone'], array('inline'=>1, 'number'=>1));
-		echo form_text($locale['ESHPCHK114'], 'cfax', 'cfax', $this->data['cfax'], array('inline'=>1, 'number'=>1));
+		echo form_text('cphone', $locale['ESHPCHK113'], $this->data['cphone'], array('inline'=>1, 'number'=>1));
+		echo form_text('cfax', $locale['ESHPCHK114'], $this->data['cfax'], array('inline'=>1, 'number'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 		openside('');
 		echo form_user_select($locale['ESHPCHK156'], 'cuid', 'cuid', $this->data['cuid']);
 		// to do an import button here
-		echo form_button('Find Records', 'import', 'import', 'find', array('class'=>'btn-default m-r-10', 'type'=>'button'));
-		echo form_button($locale['save'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-primary'));
+		echo form_button('import', 'Find Records', 'find', array('class'=>'btn-default m-r-10', 'type'=>'button'));
+		echo form_button('save_customer', $locale['save'], $locale['save'], array('class'=>'btn-primary'));
 		echo form_hidden('', 'ccupons', 'ccupons', $this->data['ccupons']);
 		closeside();
 		openside();
@@ -188,7 +188,7 @@ class Customers {
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['save'], 'save_customer', 'save_customer', $locale['save'], array('class'=>'btn-primary'));
+		echo form_button('save_customer', $locale['save'], $locale['save'], array('class'=>'btn-primary'));
 		echo closeform();
 		echo "</div>\n";
 		echo "</div>\n";
@@ -198,8 +198,8 @@ class Customers {
 		global $locale, $aidlink;
 		echo "<div class='m-t-20 m-b-20 display-block' style='height:40px;'>\n";
 		echo "<div class='display-inline-block search-align m-r-10'>\n";
-		echo form_text('', 'srch_text', 'srch_cpntext', '', array('placeholder'=>$locale['ESHP214'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
-		echo form_button($locale['SRCH164'], 'search', 'search-customer', $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
+		echo form_text('srch_text', '', '', array('placeholder'=>$locale['ESHP214'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
+		echo form_button('search', $locale['SRCH164'], $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
 		echo "</div>\n";
 		echo "</div>\n";
 		add_to_jquery("
@@ -275,21 +275,21 @@ class Customers {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='6'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=customers", array('downtime' => 1, 'notice' => 0));
+		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=customers", array('max_tokens' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		echo form_address($locale['ESHPCHK106'], 'caddress', 'qaddress','', array('required'=>1, 'inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
-		echo form_text($locale['ESHPCHK113'], 'cphone', 'cphone', '', array('inline'=>1, 'required'=>1));
-		echo form_text($locale['ESHPCHK114'], 'cfax', 'cfax', '', array('inline'=>1));
+		echo form_text('cphone', $locale['ESHPCHK113'], '', array('inline'=>1, 'required'=>1));
+		echo form_text('cfax', $locale['ESHPCHK114'], '', array('inline'=>1));
 		echo form_hidden('', 'cuid', 'cuids', '', array('writable' => 1));
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";
-		echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class' => 'btn btn-default m-r-10',
+		echo form_button('cancel', $locale['cancel'], 'cancel', array('class' => 'btn btn-default m-r-10',
 			'type' => 'button'));
-		echo form_button($locale['update'], 'customer_quicksave', 'customer_quicksave', 'save', array('class' => 'btn btn-primary'));
+		echo form_button('customer_quicksave', $locale['update'], 'save', array('class' => 'btn btn-primary'));
 		echo "</div>\n";
 		echo closeform();
 		echo "</div>\n";

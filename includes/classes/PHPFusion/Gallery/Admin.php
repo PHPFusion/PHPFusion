@@ -405,7 +405,7 @@ class Admin {
 								}
 							} else {
 								echo openmodal('confirm_steps', 'There are Pictures found in Gallery Album - '.$album_data['album_title']);
-								echo openform('inputform', 'inputform', 'post', FUSION_REQUEST, array('downtime' => 0,
+								echo openform('inputform', 'post', FUSION_REQUEST, array('max_tokens' => 0,
 									'notice' => 0));
 								$list = self::get_albumlist();
 								$options[0] = 'Delete the Entire Gallery Album';
@@ -414,9 +414,9 @@ class Admin {
 								}
 								echo form_select('Please select one of the following:', 'delete_action', 'delete_action', $options, '', array('inline' => 1,
 									'width' => '300px'));
-								echo form_button($locale['confirm'], 'confirm_delete', 'confirm_delete', $album_id, array('class' => 'btn-sm btn-danger col-sm-offset-3',
+								echo form_button('confirm_delete', $locale['confirm'], $album_id, array('class' => 'btn-sm btn-danger col-sm-offset-3',
 									'icon' => 'fa fa-trash'));
-								echo form_button($locale['cancel'], 'cancel', 'cancel', $album_id, array('class' => 'btn-sm btn-default m-l-10'));
+								echo form_button('cancel', $locale['cancel'], $album_id, array('class' => 'btn-sm btn-default m-l-10'));
 								echo closeform();
 								echo closemodal();
 							}
@@ -776,30 +776,30 @@ class Admin {
 		$this->upload_settings += array('inline' => 1, 'type' => 'image', 'required' => !$album_edit ? 1 : 0);
 
 		echo "<div class='m-t-10 m-b-20'>\n";
-		echo form_button($locale['600'], 'add_album', 'add_album', 'add_album', array('class' => 'btn-primary btn-sm m-r-10', 'icon' => 'fa fa-image'));
-		echo form_button($locale['601'], 'add_photo', 'add_photo', 'add_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-camera'));
-		if ($_GET['gallery']) echo form_button($locale['photo_002'], 'batch_photo', 'batch_photo', 'batch_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-cloud-upload'));
+		echo form_button('add_album', $locale['600'], 'add_album', array('class' => 'btn-primary btn-sm m-r-10', 'icon' => 'fa fa-image'));
+		echo form_button('add_photo', $locale['601'], 'add_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-camera'));
+		if ($_GET['gallery']) echo form_button('batch_photo', $locale['photo_002'], 'batch_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-cloud-upload'));
 		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".clean_request('action=refresh', array('action'), FALSE)."'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
 		echo "</div>\n";
 		if ($_GET['gallery']) {
 			echo openmodal('batch_album', $locale['photo_002'], array('button_id'=>'batch_photo', 'static'=>1));
-			echo openform('batchform', 'batchform', 'post', FUSION_REQUEST, array('downtime'=>1, 'enctype'=>1));
+			echo openform('batchform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype'=>1));
 			echo "<div class='alert alert-info'>You can select more than 1 photos and submit them as a series into this album. Photo Title will be indexed in numbers.</div>";
-			echo form_text($locale['622'], 'photo_title', 'photo_title', $this->photo_data['photo_title'], array('placeholder' => $locale['622'], 'inline' => 1));
+			echo form_text('photo_title', $locale['622'], $this->photo_data['photo_title'], array('placeholder' => $locale['622'], 'inline' => 1));
 			$up_settings = $this->upload_settings;
 			unset($up_settings['multiple']);
 			$up_settings += array('multiple'=>1);
 			echo form_fileinput($locale['631'], 'batch_file[]', 'batch_file', $this->image_upload_dir, '', $up_settings);
 			echo form_hidden('', 'album_id', 'album_id_batch', $_GET['gallery']);
-			echo form_button($locale['631'], 'batch_upload', 'batch_upload', $locale['631'], array('class'=>'btn btn-success'));
+			echo form_button('batch_upload', $locale['631'], $locale['631'], array('class'=>'btn btn-success'));
 			echo closeform();
 			echo closemodal();
 		}
 
 		echo openmodal('add_album', $album_edit ? $locale['606'] : $locale['605'], array('button_id' => 'add_album','static' => 1));
-		echo openform('albumform', 'albumform', 'post', FUSION_REQUEST, array('downtime' => 1, 'enctype' => 1));
+		echo openform('albumform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype' => 1));
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
-		echo form_text($locale['607'], 'album_title', 'album_title', $this->album_data['album_title'], array('placeholder' => $locale['608'], 'inline' => 1, 'required' => 1));
+		echo form_text('album_title', $locale['607'], $this->album_data['album_title'], array('placeholder' => $locale['608'], 'inline' => 1, 'required' => 1));
 		echo form_textarea($locale['609'], 'album_description', 'album_description', $this->album_data['album_description'], array('placeholder' => $locale['610'],
 			'inline' => 1));
 		echo form_fileinput('Upload Picture', 'album_file', 'album_file', $this->image_upload_dir, '', $this->upload_settings);
@@ -809,7 +809,7 @@ class Admin {
 		echo form_select($locale['612'], 'album_language', 'album_language', fusion_get_enabled_languages(), $this->album_data['album_language'], array('inline' => 1));
 		echo form_select($locale['613'], 'album_order', 'album_order', range(0, $this->album_max_order), $this->album_data['album_order'], array('inline' => 1,
 			'width' => '150px')); // 0 picture, 1. ok.
-		echo form_button($locale['save_changes'], 'upload_album', 'upload_album', 'upload_album', array('class' => 'btn-success btn-sm m-r-10'));
+		echo form_button('upload_album', $locale['save_changes'], 'upload_album', array('class' => 'btn-success btn-sm m-r-10'));
 		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
 		echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
 		if ($album_edit) {
@@ -823,9 +823,9 @@ class Admin {
 		echo closemodal();
 
 		echo openmodal('add_photo', $photo_edit ? $locale['621'] : $locale['620'], array('button_id' => 'add_photo'));
-		echo openform('photoform', 'photoform', 'post', FUSION_REQUEST, array('downtime' => 1, 'enctype' => 1));
+		echo openform('photoform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype' => 1));
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
-		echo form_text($locale['622'], 'photo_title', 'photo_title', $this->photo_data['photo_title'], array('placeholder' => $locale['623'], 'inline' => 1));
+		echo form_text('photo_title', $locale['622'], $this->photo_data['photo_title'], array('placeholder' => $locale['623'], 'inline' => 1));
 		$sel = (isset($_GET['gallery']) && isnum($_GET['gallery'])) ? $_GET['gallery'] : $this->photo_data['album_id'];
 		echo form_select($locale['624'], 'album_id', 'album_ids', $album_list, $sel, array('inline' => 1));
 		echo form_hidden('', 'photo_id', 'photo_id', $this->photo_data['photo_id']);
@@ -845,7 +845,7 @@ class Admin {
 			$locale['no']), $this->photo_data['photo_allow_comments'], array('inline' => 1));
 		echo form_select($locale['630'], 'photo_allow_ratings', 'photo_allow_ratings', array($locale['yes'],
 			$locale['no']), $this->photo_data['photo_allow_ratings'], array('inline' => 1));
-		echo form_button($locale['631'], 'upload_photo', 'upload_photo', 'upload_photo', array('class' => 'btn-success btn-sm m-r-10'));
+		echo form_button('upload_photo', $locale['631'], 'upload_photo', array('class' => 'btn-success btn-sm m-r-10'));
 		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
 		echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
 		if ($photo_edit) {
@@ -935,9 +935,9 @@ class Admin {
 					</div>
 					<hr>
 					<?php
-					echo form_button($locale['638'], 'rate', 'rate', 1, array('class' => 'btn-primary btn-sm btn-block',
+					echo form_button('rate', $locale['638'], 1, array('class' => 'btn-primary btn-sm btn-block',
 						'icon' => 'fa fa-star'));
-					echo form_button($locale['639'], 'comment', 'comment', 1, array('class' => 'btn-success btn-sm btn-block m-b-20',
+					echo form_button('comment', $locale['639'], 1, array('class' => 'btn-success btn-sm btn-block m-b-20',
 						'icon' => 'fa fa-comments-o'));
 					?>
 

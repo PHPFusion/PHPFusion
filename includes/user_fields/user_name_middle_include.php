@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 if ($profile_method == "input") {
 	$options += array('inline'=>1, 'max_length'=>20, 'max_width'=>'200px');
-	$user_fields = form_text($locale['uf_name_middle'], 'user_name_middle', 'user_name_middle', $field_value, $options);
+	$user_fields = form_text('user_name_middle', $locale['uf_name_middle'], $field_value, $options);
 } elseif ($profile_method == "display") {
 	if ($field_value) {
 		$user_fields = array('title'=>$locale['uf_name_middle'], 'value'=>$field_value);

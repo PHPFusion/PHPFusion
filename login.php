@@ -98,11 +98,11 @@ if (iMEMBER) {
 	echo "<div>".showbanners()."</div>\n";
 	$_POST['user_name'] = isset($_POST['user_name']) ? $_POST['user_name'] : '';
 	$_POST['user_pass'] = isset($_POST['user_pass']) ? $_POST['user_pass'] : '';
-	echo openform('loginpageform', 'loginpageform', 'POST', $action_url, array('downtime' => 1));
-	echo form_text('', 'user_name', 'user_name', $_POST['user_name'], array('placeholder' => $locale['global_101']));
-	echo form_text('', 'user_pass', 'user_pass', $_POST['user_pass'], array('placeholder' => $locale['global_102'],'password' => 1));
+	echo openform('loginpageform', 'POST', $action_url, array('max_tokens' => 1));
+	echo form_text('user_name', '', $_POST['user_name'], array('placeholder' => $locale['global_101']));
+	echo form_text('user_pass', '', $_POST['user_pass'], array('placeholder' => $locale['global_102'],'type' => 'password'));
 	echo "<label><input type='checkbox' name='remember_me' value='y' /> ".$locale['global_103']."</label><br /><br />\n";
-	echo form_button($locale['global_104'], 'login', 'login', $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20'));
+	echo form_button('login', $locale['global_104'], $locale['global_104'], array('class' => 'btn-primary btn-block m-b-20'));
 	echo closeform();
 	if ($settings['enable_registration']) {
 		echo "<p>".$locale['global_105']."</p>\n";

@@ -116,11 +116,11 @@ if (isset($_GET['status'])) {
 	}
 }
 
-echo openform('addcat', 'addcat', 'post', $formaction, array('downtime' => 1));
+echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 echo "<td width='130' class='tbl'><label for='cat_name'>".$locale['430']."</label></td>\n";
 echo "<td class='tbl'>\n";
-echo form_text('', 'cat_name', 'cat_name', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
+echo form_text('cat_name', '', $cat_name, array('required' => 1, 'error_text' => $locale['460']));
 echo "</td>\n</tr>\n";
 echo "<tr><td width='130' class='tbl'><label for='cat_image'>".$locale['437']."</label></td>\n";
 echo "<td class='tbl'>\n";
@@ -140,7 +140,7 @@ echo "<td class='tbl'>\n";
 echo form_select('', 'cat_image', 'cat_image', $image_list, $cat_image, array('placeholder' => $locale['choose']));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td align='center' colspan='2' class='tbl'><br />\n";
-echo form_button($locale['432'], 'save_cat', 'save_cat', $locale['432'], array('class' => 'btn-primary'));
+echo form_button('save_cat', $locale['432'], $locale['432'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</table>\n</form>\n";
 closetable();
 

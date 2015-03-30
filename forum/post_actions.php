@@ -475,11 +475,11 @@ if ($executable && iMEMBER) {
 
 		echo "<div class='well'>\n";
 		echo "<p class='strong'><i class='entypo attention'></i> Wipe records for Developer Use </p>";
-		echo openform('flushform', 'flushform', 'post', FUSION_REQUEST, array('downtime'=>1));
-		echo form_button('Flush Post', 'flush_post', 'flush_post', 'flush_post', array('class'=>'btn-sm btn-default m-r-10'));
-		echo form_button('Flush Threads', 'flush_thread', 'flush_thread', 'flush_thread', array('class'=>'btn-sm btn-default m-r-10'));
-		echo form_button('Flush Attachments', 'flush_attach', 'flush_attach', 'flush_attach', array('class'=>'btn-sm btn-default m-r-10'));
-		echo form_button('Flush Poll', 'flush_poll', 'flush_poll', 'flush_poll', array('class'=>'btn-sm btn-default m-r-10'));
+		echo openform('flushform', 'post', FUSION_REQUEST, array('max_tokens' => 1));
+		echo form_button('flush_post', 'Flush Post', 'flush_post', array('class'=>'btn-sm btn-default m-r-10'));
+		echo form_button('flush_thread', 'Flush Threads', 'flush_thread', array('class'=>'btn-sm btn-default m-r-10'));
+		echo form_button('flush_attach', 'Flush Attachments', 'flush_attach', array('class'=>'btn-sm btn-default m-r-10'));
+		echo form_button('flush_poll', 'Flush Poll', 'flush_poll', array('class'=>'btn-sm btn-default m-r-10'));
 		echo form_hidden('', $executable, $executable, '1'); // mimic executable.
 		echo closeform();
 		echo "</div>\n";

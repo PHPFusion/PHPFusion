@@ -182,12 +182,12 @@ class Coupons {
 		global $locale, $defender;
 
 		echo "<div class='m-t-20 inline-block'>\n";
-		echo openform('coupon_form', 'coupon_form', 'post', $this->form_action, array('downtime'=>1));
+		echo openform('coupon_form', 'post', $this->form_action, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
 		openside('');
-		echo form_text($locale['ESHPCUPNS101'], 'cuid', 'cuid', $this->data['cuid'], array('inline'=>1, 'required'=>1));
-		echo form_text($locale['ESHPCUPNS102'], 'cuname', 'cuname', $this->data['cuname'], array('inline'=>1, 'required'=>1));
+		echo form_text('cuid', $locale['ESHPCUPNS101'], $this->data['cuid'], array('inline'=>1, 'required'=>1));
+		echo form_text('cuname', $locale['ESHPCUPNS102'], $this->data['cuname'], array('inline'=>1, 'required'=>1));
 		closeside();
 		openside();
 		echo "<div class='row'>\n";
@@ -212,7 +212,7 @@ class Coupons {
 		echo "<div class='col-xs-12 col-sm-9'>\n";
 
 		echo "<div class='display-inline-block m-r-10 col-xs-12 col-sm-6 p-l-0'>\n";
-		echo form_text($locale['ESHPCUPNS104'], 'cuvalue', 'cuvalue', $this->data['cuvalue'], array('number'=>1, 'required'=>1));
+		echo form_text('cuvalue', $locale['ESHPCUPNS104'], $this->data['cuvalue'], array('number'=>1, 'required'=>1));
 		echo "<span class='text-smaller'>".$locale['ESHPCUPNS118']."</span>\n";
 		echo "</div>\n";
 
@@ -226,12 +226,12 @@ class Coupons {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
 		openside('');
 		echo form_select($locale['ESHPCUPNS107'], 'active', 'active', self::getCouponStatus(), $this->data['active'], array('inline'=>1));
-		echo form_button($locale['save'], 'save_coupons', 'save_coupon2', $locale['ESHPCUPNS111'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
+		echo form_button('save_coupons', $locale['save'], $locale['ESHPCUPNS111'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button($locale['save'], 'save_coupons', 'save_coupons', $locale['ESHPCUPNS111'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
+		echo form_button('save_coupons', $locale['save'], $locale['ESHPCUPNS111'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		echo closeform();
 		echo "</div>\n";
 	}
@@ -245,8 +245,8 @@ class Coupons {
 		$this->filter_Sql = !$item_status ? "(active='1' or active='0')" : "active='0'";
 		echo "<div class='m-t-20 m-b-20 display-block' style='height:40px;'>\n";
 		echo "<div class='display-inline-block search-align m-r-10'>\n";
-		echo form_text('', 'srch_text', 'srch_cpntext', '', array('placeholder'=>$locale['ESHPCUPNS119'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
-		echo form_button($locale['SRCH164'], 'search', 'search-coupon', $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
+		echo form_text('srch_text', '', '', array('placeholder'=>$locale['ESHPCUPNS119'], 'inline'=>1, 'class'=>'m-b-0 m-r-10', 'width'=>'250px'));
+		echo form_button('search', $locale['SRCH164'], $locale['SRCH158'], array('class'=>'btn-primary m-b-20 m-t-0'));
 		echo "</div>\n";
 
 		echo "<div class='display-inline-block m-r-10'>\n";
@@ -329,10 +329,10 @@ class Coupons {
 		echo "<tr class='qform'>\n";
 		echo "<td colspan='6'>\n";
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
-		echo openform('quick_edit', 'quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=coupons", array('downtime' => 1, 'notice' => 0));
+		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=coupons", array('max_tokens' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-5'>\n";
-		echo form_text($locale['ESHPCUPNS102'], 'cuname', 'cunames', $this->data['cuname'], array('inline'=>1, 'required'=>1));
+		echo form_text('cuname', $locale['ESHPCUPNS102'], $this->data['cuname'], array('inline'=>1, 'required'=>1));
 		echo form_select($locale['ESHPCUPNS107'], 'active', 'actives', self::getCouponStatus(), $this->data['active'], array('inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-7'>\n";
@@ -342,7 +342,7 @@ class Coupons {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-9'>\n";
 		echo "<div class='display-inline-block m-r-10 col-xs-12 col-sm-6 p-l-0'>\n";
-		echo form_text($locale['ESHPCUPNS104'], 'cuvalue', 'cuvalues', $this->data['cuvalue'], array('number'=>1, 'required'=>1));
+		echo form_text('cuvalue', $locale['ESHPCUPNS104'], $this->data['cuvalue'], array('number'=>1, 'required'=>1));
 		echo "<span class='text-smaller'>".$locale['ESHPCUPNS118']."</span>\n";
 		echo "</div>\n";
 		echo "<div class='display-inline-block'>\n";
@@ -353,9 +353,9 @@ class Coupons {
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";
-		echo form_button($locale['cancel'], 'cancel', 'cancel', 'cancel', array('class' => 'btn btn-default m-r-10',
+		echo form_button('cancel', $locale['cancel'], 'cancel', array('class' => 'btn btn-default m-r-10',
 			'type' => 'button'));
-		echo form_button($locale['update'], 'coupon_quicksave', 'cats_quicksave', 'save', array('class' => 'btn btn-primary'));
+		echo form_button('coupon_quicksave', $locale['update'], 'save', array('class' => 'btn btn-primary'));
 		echo "</div>\n";
 		echo closeform();
 		echo "</div>\n";

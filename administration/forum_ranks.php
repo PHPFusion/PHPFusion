@@ -96,11 +96,11 @@ if ($settings['forum_ranks']) {
 		$form_action = FUSION_SELF.$aidlink;
 		opentable($locale['400']);
 	}
-	echo openform('rank_form', 'rank_form', 'post', $form_action, array('downtime' => 1));
+	echo openform('rank_form', 'post', $form_action, array('max_tokens' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n<tr>\n";
 	echo "<td class='tbl'><label for='rank_title'>".$locale['420']."</label><span class='required'>*</span></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'rank_title', 'rank_title', $rank_title, array('required' => 1, 'error_text' => $locale['414']));
+	echo form_text('rank_title', '', $rank_title, array('required' => 1, 'error_text' => $locale['414']));
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td class='tbl'><label for='rank_image'>".$locale['421']."</label></td>\n";
 	echo "<td class='tbl'>\n";
@@ -128,7 +128,7 @@ if ($settings['forum_ranks']) {
 	echo "</tr>\n<tr>\n";
 	echo "<td class='tbl'><label for='rank_posts'>".$locale['422']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'rank_posts', 'rank_posts', $rank_posts, array('disabled' => $rank_type != 0));
+	echo form_text('rank_posts', '', $rank_posts, array('disabled' => $rank_type != 0));
 	echo "</tr>\n<tr>\n";
 	echo "<td class='tbl'><label for='rank_apply_normal'>".$locale['423']."</label></td>\n<td class='tbl'>\n";
 	$array = array(USER_LEVEL_MEMBER => $locale['424'], '104' => $locale['425'], USER_LEVEL_ADMIN => $locale['426'], USER_LEVEL_SUPER_ADMIN => $locale['427']);
@@ -149,7 +149,7 @@ if ($settings['forum_ranks']) {
 	echo "</span>\n";
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";
-	echo form_button($locale['428'], 'save_rank', 'save_rank', $locale['428'], array('class' => 'btn-primary'));
+	echo form_button('save_rank', $locale['428'], $locale['428'], array('class' => 'btn-primary'));
 	echo "</td>\n</tr>\n</table>\n</form>\n";
 	closetable();
 	opentable($locale['402']);

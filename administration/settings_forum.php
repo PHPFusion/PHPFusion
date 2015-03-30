@@ -85,7 +85,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 		echo admin_message($message);
 	}
 }
-echo openform('settingsform', 'settingsfrom', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
@@ -121,7 +121,7 @@ foreach ($mime as $m => $Mime) {
 echo "<div class='clearfix'>\n";
 	echo "<span class='pull-right small'>".$locale['509']."</span>";
 	echo "<label for='calc_c'>".$locale['508']."</label><br />\n";
-	echo form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => '3', 'class' => 'm-r-10 pull-left'));
+	echo form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => '3', 'class' => 'm-r-10 pull-left'));
 	echo form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '100%'));
 echo "</div>\n";
 echo "<div class='clearfix'>\n";
@@ -155,7 +155,7 @@ echo "</div>\n";
 echo "</div>\n";
 
 
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 
 echo closeform();
 closetable();

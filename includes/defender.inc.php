@@ -18,55 +18,66 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+// Notes regarding further development:
+// - The check functions should return the value being passed
+// to as is or pre-processed(sanitized) or TRUE upon success
+// and should not make direct calls to stop() on a failure
+// but rather return FALSE, form sanitizer will do the rest
+// - Don't traslate/localise debug notices, is unnecessary
+
 class defender {
-	public $debug = false;
+	public $debug = TRUE;
 	public $ref = array();
-	public $error_content = array();
+	//public $error_content = array();
 	public $error_title = '';
-	/** Declared by Form Sanitizer */
+	public $input_errors = array();
+	// Declared by Form Sanitizer
 	public $field = array();
 	public $field_name = '';
 	public $field_value = '';
 	public $field_default = '';
-	public $field_config = array('type' => '',
+	public $field_config = array(
+		'type' => '',
 		'value' => '',
-		'default' => '',
+		//'default' => '',
 		'name' => '',
-		'id' => '',
+		//'id' => '',
 		'safemode' => '',
 		'path' => '',
 		'thumbnail_1' => '',
 		'thumbnail_2' => '',
 	);
 
-	/* Sanitize Fields Automatically */
-	public function defender() {
+	// Sanitize Fields Automatically
+	public function validate() {
 		global $locale;
-		/*
+		/**
 		 * Keep this include in the constructor
 		 * This solution was needed to load the defender.inc.php before
 		 * defining LOCALESET
 		 */
 		include LOCALE.LOCALESET."defender.php";
-		require_once INCLUDES.'notify/notify.inc.php';
+
 		// declare the validation rules and assign them
 		// type of fields vs type of validator
 		$validation_rules_assigned = array(
-			'textbox' => 'textbox',
-			'dropdown' => 'textbox',
-			'password' => 'password',
-			'textarea' => 'textbox',
-			'number' => 'number',
-			'email' => 'email',
-			'date' => 'date',
-			'timestamp' => 'date',
-			'color' => 'textbox',
-			'address' => 'address',
-			'name' => 'name',
-			'url' => 'url',
-			'image' => 'image',
-			'file' => 'file',
-			'document' => 'document',
+			'color'		=> 'textbox',
+			'dropdown'	=> 'textbox',
+			'text'		=> 'textbox',
+			'textarea'	=> 'textbox',
+			'textbox'	=> 'textbox',
+			'checkbox'	=> 'checkbox',
+			'password'	=> 'password',
+			'date'		=> 'date',
+			'timestamp'	=> 'date',
+			'number'	=> 'number',
+			'email'		=> 'email',
+			'address'	=> 'address',
+			'name'		=> 'name',
+			'url'		=> 'url',
+			'image'		=> 'image',
+			'file'		=> 'file',
+			'document'	=> 'document',
 		);
 		// execute sanitisation rules at point blank precision using switch
 		try {
@@ -75,6 +86,7 @@ class defender {
 					case 'textbox':
 						return $this->verify_text();
 						break;
+					// DEV: To be reviewed
 					case 'date':
 						return $this->verify_date();
 						break;
@@ -87,104 +99,114 @@ class defender {
 					case 'number' :
 						return $this->verify_number();
 						break;
+					// DEV: To be reviewed
 					case 'file' :
 						return $this->verify_file_upload();
 						break;
 					case 'url' :
 						return $this->verify_url();
 						break;
+					case 'checkbox' :
+						// Should it be able to actually process the values of checkboxes?
+						if (isset($_POST[$this->field_name])) {
+							return 1;
+							/*if ($this->field_config['subtype'] == 'number') {
+								return $this->verify_number();
+							}
+							return $this->verify_text();*/
+						} else {
+							// If a checkbox is not posted we assume that is unchecked
+							// and return 0 instead of using the default value from DB
+							return 0;
+						}
+						break;
+					// DEV: To be reviewed
 					case 'name':
 						$name = $this->field_name;
 
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-firstname', $locale['firstname_error']);
-							$this->addNotice($locale['firstname_error']);
+							//$this->addHelperText($this->field_config['id'].'-firstname', $locale['firstname_error']);
+							//addNotice('info', $locale['firstname_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][1]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-lastname', $locale['lastname_error']);
-							$this->addNotice($locale['lastname_error']);
+							//$this->addHelperText($this->field_config['id'].'-lastname', $locale['lastname_error']);
+							//addNotice('info', $locale['lastname_error']);
 						}
 						if (!defined('FUSION_NULL')) {
 							$return_value = $this->verify_text();
 							return $return_value;
 						}
 						break;
+					// DEV: To be reviewed
 					case 'address':
 						$name = $this->field_name;
 						//$def = $this->get_full_options($this->field_config);
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-street', $locale['street_error']);
-							$this->addNotice($locale['street_error']);
+							//$this->addHelperText($this->field_config['id'].'-street', $locale['street_error']);
+							//addNotice('info', $locale['street_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][2]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-country', $locale['country_error']);
-							$this->addNotice($locale['country_error']);
+							//$this->addHelperText($this->field_config['id'].'-country', $locale['country_error']);
+							//addNotice('info', $locale['country_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][3]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-state', $locale['state_error']);
-							$this->addNotice($locale['state_error']);
+							//$this->addHelperText($this->field_config['id'].'-state', $locale['state_error']);
+							//addNotice('info', $locale['state_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][4]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-city', $locale['city_error']);
-							$this->addNotice($locale['city_error']);
+							//$this->addHelperText($this->field_config['id'].'-city', $locale['city_error']);
+							//addNotice('info', $locale['city_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][5]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-postcode', $locale['postcode_error']);
-							$this->addNotice($locale['postcode_error']);
+							//$this->addHelperText($this->field_config['id'].'-postcode', $locale['postcode_error']);
+							//addNotice('info', $locale['postcode_error']);
 						}
+
 						if (!defined('FUSION_NULL')) {
+
 							$return_value = $this->verify_text();
+							var_dump($return_value);
 							return $return_value;
 						}
 						break;
+					// DEV: To be reviewed
 					case 'image' :
 						return $this->verify_image_upload();
 						break;
+					// DEV: To be reviewed
 					case 'document':
 						$name = $this->field_name;
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-doc_type', $locale['doc_type_error']);
-							$this->addNotice($locale['doc_type_error']);
+							//$this->addHelperText($this->field_config['id'].'-doc_type', $locale['doc_type_error']);
+							//addNotice('info', $locale['doc_type_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][1]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-doc_series', $locale['doc_series_error']);
-							$this->addNotice($locale['doc_series_error']);
+							//$this->addHelperText($this->field_config['id'].'-doc_series', $locale['doc_series_error']);
+							//addNotice('info', $locale['doc_series_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][2]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-doc_number', $locale['doc_number_error']);
-							$this->addNotice($locale['doc_number_error']);
+							//$this->addHelperText($this->field_config['id'].'-doc_number', $locale['doc_number_error']);
+							//addNotice('info', $locale['doc_number_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][3]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-doc_authority', $locale['doc_authority_error']);
-							$this->addNotice($locale['doc_authority_error']);
+							//$this->addHelperText($this->field_config['id'].'-doc_authority', $locale['doc_authority_error']);
+							//addNotice('info', $locale['doc_authority_error']);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][4]) {
 							$this->stop();
-							$this->addError($this->field_config['id']);
-							$this->addHelperText($this->field_config['id'].'-date_issue', $locale['date_issue_error']);
-							$this->addNotice($locale['date_issue_error']);
+							//$this->addHelperText($this->field_config['id'].'-date_issue', $locale['date_issue_error']);
+							//addNotice('info', $locale['date_issue_error']);
 						}
 						if (!defined('FUSION_NULL')) {
 							$return_value = $this->verify_text();
@@ -193,291 +215,148 @@ class defender {
 						break;
 					default:
 						$this->stop();
-						$this->addNotice($this->field_name);
-						$this->addNotice('Verification on unknown type of fields is prohibited.');
+						$locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
+						addNotice('danger',  $this->field_name.$locale['type_unknown']);
 				}
 			} else {
-				return $this->field_default;
-				//$this->stop();
-				//$message = $this->field_name.' has no value.'; // this has no value and must pushed out.
-				//$this->addNotice($message);
+				$this->stop();
+				$locale['type_unset'] = '%s: has no type set'; // to be moved
+				addNotice('danger', $this->field_name.$locale['type_unset']);
 			}
 		} catch (Exception $e) {
-			$error_message = $e->getMessage();
 			$this->stop();
-			$this->addNotice($error_message);
+			addNotice('danger', $e->getMessage());
 		}
 	}
 
-
-	static function set_storage($key, $value, $object_type = 'sessionStorage') { // you can change to sessionStorage
-		//$object_type = $permanent ? 'localStorage' : 'sessionStorage';
-		add_to_jquery("if (typeof(Storage) != 'undefined') { $object_type.setItem('$key', '$value'); } else { console.log('Sorry, your browser does not support Web Storage...');	}");
-	}
-	static function get_storage($key, $object_type = 'sessionStorage') {
-
-	}
-
-	/**
-	 * PHP-Fusion 10 Prototype
-	 * Returns a hashed token to a static rule
-	 * @param $key
-	 * @return string
-	 */
-	static function token($key) {
-		global $userdata;
-		$user_id = defender::set_sessionUserID();
-		$algo = fusion_get_settings('password_algorithm');
-		$authkey = $user_id.str_replace(' ', '',$key).SECRET_KEY;
-		$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-		return hash_hmac($algo, $authkey, $salt); // this is the hash by the id.
-	}
-
-	/**
-	 * PHP-Fusion 10 Prototype
-	 * Returns a genuine hashed token provided a valid hash is given
-	 * @param $key
-	 * @param $hash
-	 * @return bool|string
-	 */
-	static function return_token($key, $hash) {
-		global $userdata;
-		$user_id = defender::set_sessionUserID();
-		$algo = fusion_get_settings('password_algorithm');
-		$authkey = $user_id.str_replace(' ', '',$key).SECRET_KEY;
-		$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-		if ($hash == hash_hmac($algo, $authkey, $salt)) {
-			return hash_hmac($algo, $authkey, $salt); // this is the hash by the id.;
-		}
-		return false;
-	}
-
-	/**
-	 * The UserID
-	 * No $userName because it can be changed and tampered via Edit Profile.
-	 * Using IP address extends for guest
-	 * @return mixed
-	 */
-	static function set_sessionUserID() {
-		global $userdata;
-		// using . will yield invalid token format.
-		return isset($userdata['user_id']) && !isset($_POST['login']) ? (int) $userdata['user_id'] : str_replace('.', '-', USER_IP);
-	}
-
-	/* Adds the field sessions on document load */
-	static function add_field_session(array $array) {
-		$_SESSION['form_fields'][self::set_sessionUserID()][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
-	}
-
-	/**
-	 * Prints specific User Form Field Traces.
-	 * $user_id as false to see yourself
-	 * $user_id as integer to see specific user
-	 * @return string
-	 */
-	static function display_user_field_session($user_id = FALSE) {
-		$user_id = $user_id && isnum($user_id) && dbcount("(user_id)", DB_USERS, "user_id='".intval($user_id)."'") ? $user_id : self::set_sessionUserID();
-		if (isset($_SESSION['form_fields'][$user_id][$_SERVER['PHP_SELF']])) {
-			print_p($_SESSION['form_fields'][$user_id][$_SERVER['PHP_SELF']]);
-		} else {
-			print_p(" $user_id on ".$_SERVER['PHP_SELF']." not found ");
-		}
-	}
-
-	/* Destroys the user field session */
-	public static function unset_field_session() {
-		unset($_SESSION['form_fields'][self::set_sessionUserID()]);
-	}
-
-	// Field Validation Output
-
-	/**
-	 * Jquery add has-error CSS class to field input container on error
-	 * @param $id - field id
-	 */
-	static function addError($id) {
-		add_to_jquery("$('#$id-field').addClass('has-error');");
-	}
-
-	/**
-	 * Jquery append helper text
-	 * @param $id
-	 * @param $content
-	 */
-	static function addHelperText($id, $content) {
-		// add prevention of double entry should the fields are the same id.
-		if (!defined(".$id-help")) {
-			define(".$id-help", TRUE);
-			add_to_jquery("
-                $('#$id-help').addClass('label label-danger m-t-5 p-5 display-inline-block');
-                $('#$id-help').append('$content');
-			");
-		}
-	}
-
-	/* Inject form notice */
-	public function addNotice($content) {
-		// add prevention of double entry should the fields are the same id.
-		$this->error_content[] = $content;
-		return $this->error_content;
-	}
-
-	public function setNoticeTitle($title) {
-		$this->error_title = $title;
-	}
-
-	/* Aggregate notices */
-	public function Notice() {
-		if (isset($this->error_content)) {
-			return $this->error_content;
-		}
+	// Checks whether an input was marked as invalid
+	public function inputHasError($input_name) {
+		if (isset($this->input_errors[$input_name])) return TRUE;
 		return FALSE;
 	}
 
-	public function showNotice() {
-		global $locale;
-		$html = '';
-		$title = $this->error_title ? $this->error_title : $locale['validate_title'];
-		if (!empty($this->error_content)) {
-			$html .= "<div id='close-message'>\n";
-			$html .= "<div class='admin-message alert alert-danger alert-dismissable' role='alert'>\n";
-			$html .= "<span class='text-bigger'><strong>".$title."</strong></p><br/>\n";
-			$html .= "<ul id='error_list'>\n";
-			foreach ($this->error_content as $notices) {
-				$html .= "<li>".$notices."</li>\n";
-			}
-			$html .= "</ul>\n";
-			$html .= "</div>\n</div>\n";
-		}
-		return $html;
+	// Marks an input as invalid
+	public function setInputError($input_name) {
+		$this->input_errors[$input_name] = TRUE;
 	}
 
-	/* Inject FUSION_NULL */
-	static function stop($ref = FALSE, $show_notice = FALSE) {
-		if ($ref && $show_notice && !defined('FUSION_NULL')) {
-			notify('There was an error processing your request.', $ref);
-			define('FUSION_NULL', TRUE);
-		} else {
-			if (!defined('FUSION_NULL')) define('FUSION_NULL', TRUE);
+	// Adds the field sessions on document load
+	static function add_field_session(array $array) {
+		$_SESSION['form_fields'][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
+	}
+
+	// Destroys the user field session
+	public static function unset_field_session() {
+		unset($_SESSION['form_fields']);
+	}
+
+	// Inject FUSION_NULL
+	static function stop() {
+		global $locale;
+		if (!defined('FUSION_NULL')) {
+			$locale['error_request'] = 'There was an error while processing your request'; // to be moved
+			addNotice('danger', $locale['error_request']);
 		}
+		if (!defined('FUSION_NULL')) define('FUSION_NULL', TRUE);
 	}
 
 	// Field Verifications Rules
 
-	/* validate and sanitize a text
+	/**
+	 * validate and sanitize a text
  	 * accepts only 50 characters + @ + 4 characters
+ 	 * returns str the sanitized input or bool FALSE
+ 	 * if safemode is set and the check fails
  	 */
 	protected function verify_text() {
 		global $locale;
+
 		if (is_array($this->field_value)) {
 			$vars = array();
 			foreach ($this->field_value as $val) {
 				$vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
 			}
-			$value = implode('|', $vars); // this is where the pipe is.
+			$value = implode('|', $vars);
 		} else {
 			$value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($this->field_value)))); // very strong sanitization.
 		}
-		if ($this->field_config['safemode'] == 1) {
-			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->field_value)) { // invalid chars
-				$this->stop();
-				$this->addError($this->field_config['id']);
-				$this->addHelperText($this->field_config['id'], sprintf($locale['df_400'], $this->field_config['title'])); // maybe name, maybe
-				$this->addNotice(sprintf($locale['df_400'], $this->field_config['title']));
-			} else {
-				$return_value = ($value) ? $value : $this->field_default;
-				return $return_value;
-			}
+
+		if ($this->field_config['safemode'] && !preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) {
+			return FALSE;
 		} else {
-			if ($value) {
-				return $value;
-			} else {
-				return $this->field_default;
-			}
+			return $value;
 		}
 	}
 
-	/* validate an email address
+	/**
+	 * Checks if is a valid email address
 	 * accepts only 50 characters + @ + 4 characters
+	 * returns str the input or bool FALSE if check fails
 	 */
 	protected function verify_email() {
 		global $locale;
-		if ($this->field_value) {
-			$value = stripinput(trim(preg_replace("/ +/i", " ", $this->field_value)));
-			if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $value)) {
-				return $value;
-			} else {
-				$this->stop();
-				$this->addError($this->field_config['id']);
-				$this->addHelperText($this->field_config['id'], sprintf($locale['df_401'], $this->field_config['title']));
-				$this->addNotice(sprintf($locale['df_401'], $this->field_config['title']));
-			}
-		} else {
-			return $this->field_default;
+
+		if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
+			return $this->field_value;
 		}
+
+		return FALSE;
 	}
 
-	/* validate a valid password
+	/**
+	 * Checks if is a valid password
 	 * accepts minimum of 8 and maximum of 64 due to encrypt limit
-	 * returns a default if blank
+	 * returns str the input or bool FALSE if check fails
 	 */
 	protected function verify_password() {
 		global $locale;
+
 		// add min length, add max length, add strong password into roadmaps.
 		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
 			return $this->field_value;
-		} else {
-			// invalid password
-			$this->stop();
-			$this->addError($this->field_config['id']);
-			$this->addHelperText($this->field_config['id'], sprintf($locale['df_402'], $this->field_config['title']));
-			$this->addNotice(sprintf($locale['df_402'], $this->field_config['title']));
 		}
+
+		return FALSE;
 	}
 
-	/* validate a valid number
-	 * accepts only integer and decimal .
-	 * returns a default if blank
+	/**
+	 * Checks if is a valid number
+	 * returns str the input or bool FALSE if check fails
+	 * TODO: support decimal
 	 */
 	protected function verify_number() {
 		global $locale;
+
 		if (is_array($this->field_value)) {
 			$vars = array();
 			foreach ($this->field_value as $val) {
-				$vars[] = stripinput($val);
+				if (isnum($val)) $vars[] = $val; // no need for stripinput(), if ain't a number why bother stripping invalid chars...
 			}
 			$value = implode(',', $vars);
+			return $value; // empty str is returned if $vars ends up empty
+		} elseif (isnum($this->field_value)) {
+			return $this->field_value;
 		} else {
-			$value = intval(stripinput($this->field_value));
-		}
-		if ($value) {
-			if (is_numeric($this->field_value)) {
-				return $this->field_value;
-			} else {
-				$this->stop();
-				$this->addError($this->field_config['id']);
-				$this->addHelperText($this->field_config['id'], sprintf($locale['df_403'], $this->field_config['title']));
-				$this->addNotice(sprintf($locale['df_403'], $this->field_config['title']));
-			}
-		} else {
-			return $this->field_default;
+			return FALSE;
 		}
 	}
 
-	/* validate a valid url
-	* require path.
-	* returns a default if blank
-	*/
+	/**
+	 * Checks if is a valid URL
+	 * require path.
+	 * returns str the input or bool FALSE if check fails
+	 */
 	protected function verify_url() {
-		if ($this->field_value) {
-			return filter_var($this->field_value, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
+		
+		if (filter_var($this->field_value, FILTER_VALIDATE_URL)) {
+			return $this->field_value;
 			//return cleanurl($this->field_value);
-		} else {
-			return $this->field_default;
 		}
+
+		return FALSE;
 	}
 
-	/* returns 10 integer timestamp
+	/** returns 10 integer timestamp
 	 * accepts date format in - , / and . delimiters
 	 * returns a default if blank
 	 */
@@ -504,17 +383,16 @@ class defender {
 				}
 			} else {
 				$this->stop();
-				$this->addError($this->field_config['id']);
-				$this->addHelperText($this->field_config['id'], sprintf($locale['df_404'], $this->field_config['title']));
-				$this->addNotice(sprintf($locale['df_404'], $this->field_config['title']));
+				//$this->addHelperText($this->field_config['id'], sprintf($locale['df_404'], $this->field_config['title']));
+				addNotice('info', sprintf($locale['df_404'], $this->field_config['title']));
 			}
 		} else {
 			return $this->field_default;
 		}
 	}
 
-	/* Verify and upload image on success. Returns array on file, thumb and thumb2 file names */
-	/* You can use this function anywhere whether bottom or top most of your codes - order unaffected */
+	// Verify and upload image on success. Returns array on file, thumb and thumb2 file names
+	// You can use this function anywhere whether bottom or top most of your codes - order unaffected
 	protected function verify_image_upload() {
 		global $locale;
 		require_once INCLUDES."infusions_include.php";
@@ -651,28 +529,27 @@ class defender {
 						$image_info = array("error" => 5);
 					}
 					if ($image_info['error'] != 0) {
-						//$this->stop();
-						$this->addError($this->field_config['id']);
+						$this->stop(); // return FALSE if possible
 						switch ($image_info['error']) {
 							case 1: // Invalid file size
-								$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-								$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+								addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+								//$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 								break;
 							case 2: // Unsupported image type
-								$this->addNotice(sprintf($locale['df_417'], ".gif .jpg .png"));
-								$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
+								addNotice('danger', sprintf($locale['df_417'], ".gif .jpg .png"));
+								//$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
 								break;
 							case 3: // Invalid image resolution
-								$this->addNotice(sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
-								$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width'], $this->field_config['max_height']));
+								addNotice('danger', sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+								//$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width'], $this->field_config['max_height']));
 								break;
 							case 4: // Invalid query string
-								$this->addNotice($locale['df_422']);
-								$this->addHelperText($this->field_config['id'], $locale['df_422']);
+								addNotice('danger', $locale['df_422']);
+								//$this->addHelperText($this->field_config['id'], $locale['df_422']);
 								break;
 							case 5: // Image not uploaded
-								$this->addNotice($locale['df_423']);
-								$this->addHelperText($this->field_config['id'], $locale['df_423']);
+								addNotice('danger', $locale['df_423']);
+								//$this->addHelperText($this->field_config['id'], $locale['df_423']);
 								break;
 						}
 					} else {
@@ -688,27 +565,26 @@ class defender {
 				$upload = upload_image($this->field_config['input_name'], $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'], $this->field_config['max_width'], $this->field_config['max_height'], $this->field_config['max_byte'], $this->field_config['delete_original'], $this->field_config['thumbnail'], $this->field_config['thumbnail2'], 1, $this->field_config['path'].$this->field_config['thumbnail_folder']."/", $this->field_config['thumbnail_suffix'], $this->field_config['thumbnail_w'], $this->field_config['thumbnail_h'], 0, $this->field_config['path'].$this->field_config['thumbnail_folder']."/", $this->field_config['thumbnail2_suffix'], $this->field_config['thumbnail2_w'], $this->field_config['thumbnail2_h']);
 				if ($upload['error'] != 0) {
 					$this->stop();
-					$this->addError($this->field_config['id']);
 					switch ($upload['error']) {
 						case 1: // Invalid file size
-							$this->addNotice(sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
-							$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+							addNotice('info', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+							//$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 							break;
 						case 2: // Unsupported image type
-							$this->addNotice(sprintf($locale['df_417'], ".gif .jpg .png"));
-							$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
+							addNotice('info', sprintf($locale['df_417'], ".gif .jpg .png"));
+							//$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
 							break;
 						case 3: // Invalid image resolution
-							$this->addNotice(sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
-							$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+							addNotice('info', sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+							//$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
 							break;
 						case 4: // Invalid query string
-							$this->addNotice($locale['df_422']);
-							$this->addHelperText($this->field_config['id'], $locale['df_422']);
+							addNotice('info', $locale['df_422']);
+							//$this->addHelperText($this->field_config['id'], $locale['df_422']);
 							break;
 						case 5: // Image not uploaded
-							$this->addNotice($locale['df_423']);
-							$this->addHelperText($this->field_config['id'], $locale['df_423']);
+							addNotice('info', $locale['df_423']);
+							//$this->addHelperText($this->field_config['id'], $locale['df_423']);
 							break;
 					}
 				} else {
@@ -726,197 +602,169 @@ class defender {
 		if (!empty($_FILES[$this->field_config['input_name']]['name']) && is_uploaded_file($_FILES[$this->field_config['input_name']]['tmp_name']) && !defined('FUSION_NULL')) {
 			$upload = upload_file($this->field_config['input_name'], $_FILES[$this->field_config['input_name']]['name'], $this->field_config['path'], $this->field_config['valid_ext'], $this->field_config['max_byte']);
 			if ($upload['error'] != 0) {
-				$this->stop();
-				$this->addError($this->field_config['id']);
+				$this->stop(); // return FALSE
 				switch ($upload['error']) {
 					case 1: // Maximum file size exceeded
-						$parsedMaxSizeText = sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte']));
-						$this->addNotice($parsedMaxSizeText);
-						$this->addHelperText($this->field_config['id'], $parsedMaxSizeText);
+						addNotice('info', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+						//$this->addHelperText($$this->field_config['id'], $locale['df_416']);
 						break;
 					case 2: // Invalid File extensions
-						$this->addNotice(sprintf($locale['df_417'], $this->field_config['valid_ext']));
-						$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], $this->field_config['valid_ext']));
+						addNotice('info', sprintf($locale['df_417'], $this->field_config['valid_ext']));
+						//$this->addHelperText($$this->field_config['id'], $locale['df_417']);
 						break;
 					case 3: // Invalid Query String
-						$this->addNotice($locale['df_422']);
-						$this->addHelperText($this->field_config['id'], $locale['df_422']);
+						addNotice('info', $locale['df_422']);
+						//$this->addHelperText($$this->field_config['id'], $locale['df_422']);
 						break;
 					case 4: // File not uploaded
-						$this->addNotice($locale['df_423']);
-						$this->addHelperText($this->field_config['id'], $locale['df_423']);
+						addNotice('info', $locale['df_423']);
+						//$this->addHelperText($$this->field_config['id'], $locale['df_423']);
 						break;
 				}
 			} else {
 				return $upload;
 			}
 		} else {
-			return array();
+			return FALSE;
 		}
 	}
 
 
 	/**
-	 * Checks whether $_POST contains token.
-	 * @param bool $debug
+	 * Token Sniffer
+	 * Checks whether a post contains a valid token
 	 */
-	public function sniff_token($debug=FALSE) {
+	public function sniff_token() {
 		global $locale;
+
+		$error = FALSE;
+		
 		if (!empty($_POST)) {
-			if (!isset($_POST['fusion_token'])) {
+			// check if a token is being posted
+			if (!isset($_POST['fusion_token']) || !isset($_POST['form_id'])) {
+				$error = "Token was not posted";
+			// check if a session is started already
+			} elseif (!isset($_SESSION['csrf_tokens'])) {
+				$error = "Session not started";
+			// check if the token is valid
+			} elseif (!self::verify_token(0)) {
+				$error = "Token is invalid";
+			}
+
+			// Check if any error was set
+			if ($error !== FALSE) {
+				// Flag that something went wrong
 				$this->stop();
-				$this->addNotice($locale['token_error_2']);
-				if ($debug) print_p($locale['token_error_2']);
-			} else {
-				// check token.
-				if (isset($_POST['token_rings']) && !empty($_POST['token_rings'])) {
-					foreach ($_POST['token_rings'] as $hash => $form_name) {
-						self::verify_tokens($form_name, 0);
-					}
-				} else {
-					// token tampered
-					$this->stop();
-					$this->addNotice($locale['token_error_2']);
-					if ($debug) print_p($locale['token_error_2']." Tampered.");
-				}
+				if ($this->debug) addNotice('danger', $error);
 			}
 		}
+
 	}
 
 
-	public static function generate_token($form, $max_tokens = 10, $return_token = FALSE) {
+	/**
+	 * Generate a Token
+	 * Generates a unique token
+	 *
+	 * @param str	$form_id	The ID of the form
+	 * @param int	$max_tokens	The ammount of tokens to be kept for each form
+	 *							before we start removing older tokens from session
+	 *
+	 * @return str	The token
+	 */
+	public static function generate_token($form_id, $max_tokens = 10) {
 		global $userdata, $defender;
 
-		$user_id = defender::set_sessionUserID();
-		if ($user_id == 0)  $max_tokens = 1;
-
-		$being_posted = 0;
-		if (isset($_POST['token_rings']) && count($_POST['token_rings'])) {
-			foreach ($_POST['token_rings'] as $rings => $form_name) {
-				if ($form_name == $form) {
-					$being_posted = 1;
-				}
-			}
-		}
-
-		if (isset($_POST['fusion_token']) && $being_posted && $defender::verify_tokens($form, $max_tokens)) { // will delete max token out. hence flush out previous token..
+		$user_id = (iMEMBER ? $userdata['user_id'] : 0);
+		// store just one token for each form if the user is a guest
+		if ($user_id == 0) $max_tokens = 1;
+		
+		// atempt to recover a token instead of generating a new one
+		if (isset($_POST['fusion_token']) && isset($_POST['form_id']) && $_POST['form_id'] == $form_id && self::verify_token(0)) {
 			$token = stripinput($_POST['fusion_token']);
-			// remove the token from the array as it has been used
-			if ($max_tokens > 0) { // token with $post_time 0 are reusable
-				foreach ($_SESSION['csrf_tokens'][$form] as $key => $val) {
-					if (isset($_POST['fusion_token']) && $val == $_POST['fusion_token']) {
-						// consume a token
-						unset($_SESSION['csrf_tokens'][$form][$key]);
-						// generate a new token to replenish the used one
-						$token_time = time();
-						$algo = fusion_get_settings('password_algorithm');
-						$key = $user_id.$token_time.$form.SECRET_KEY;
-						$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-						// generate a new token and store it
-						$token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
-						$_SESSION['csrf_tokens'][$form][] = $token;
-					}
-				}
-			}
+			if ($defender->debug) addNotice('info', 'The token for "'.$form_id.'" was recovered and is being reused');
 		} else {
 			$token_time = time();
 			$algo = fusion_get_settings('password_algorithm');
-			$key = $user_id.$token_time.$form.SECRET_KEY;
+			$key = $user_id.$token_time.$form_id.SECRET_KEY;
 			$salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-			// generate a new token and store it
+			// generate a new token
 			$token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
-			// generate a new token.
-			$_SESSION['csrf_tokens'][$form][] = $token;
-			// store just one token for each form, if the user is a guest
-			//print_p("Max token allowed in $form is $max_tokens");
-			if ($max_tokens > 0 && count($_SESSION['csrf_tokens'][$form]) > $max_tokens) {
-				array_shift($_SESSION['csrf_tokens'][$form]); // remove first element - this keeps changing
+			// store the token in session
+			$_SESSION['csrf_tokens'][$form_id][] = $token;
+			// some cleaning, remove oldest token if there are too many
+			if ($max_tokens > 0 && count($_SESSION['csrf_tokens'][$form_id]) > $max_tokens) {
+				array_shift($_SESSION['csrf_tokens'][$form_id]);
 			}
-			//print_p("And we have ".count($_SESSION['csrf_tokens'][$form])." tokens in place...");
+			if ($defender->debug) addNotice('info', 'A new token for "'.$form_id.'" was generated');
 		}
+		//print_p("And we have ".count($_SESSION['csrf_tokens'][$form_id])." tokens in place...");
+		//print_p("Max token allowed in $form_id is $max_tokens");
 
-		$shuffle = str_shuffle("abcdefghijklmnopqrstuvwxyz1234567890");
-		if ($return_token == 1) {
-			$token = stripinput($_POST['fusion_token']);
-			return $token;
-		} else {
-			if (!defined("token-$shuffle")) {
-				define("token-$shuffle", TRUE);
-				$html = "<input type='hidden' name='fusion_token' value='".$token."' />\n";
-				$html .= "<input type='hidden' name='token_rings[$shuffle]' value='".$form."' />\n";
-				return $html;
-			}
-		}
+		return $token;
 	}
 
 	/**
 	 * Token Validation
-	 * @param     $form - formname
-	 * @param int $post_time - 10 for 10 tokens
-	 * @param int $debug - 1 for debug notices
+	 * Makes thorough checks of a posted token
+	 *
+	 * @param int	$post_time	The time in seconds before a posted form is accepted,
+	 *							this is used to prevent spamming post submissions
 	 * @return bool
 	 */
-	public static function verify_tokens($form, $post_time = 10, $debug = false) {
-		global $locale, $userdata;
-		$error = array();
-		// used by sniff token, and then used by form itself.
-		$user_id = self::set_sessionUserID();
-		$algo = fusion_get_settings('password_algorithm');
-		$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-		if ($debug) {
-			print_p($_POST);
-		}
-		// check if a session is started
-		if (!isset($_SESSION['csrf_tokens'])) {
-			$error = $locale['token_error_1'];
-			self::stop($locale['token_error_1'], $debug ? 1 : 0);
-			// check if a token is posted
-		} elseif (!isset($_POST['fusion_token'])) {
-			$error = $locale['token_error_2'];
-			self::stop($locale['token_error_2'], $debug ? 1 : 0);
-			// check if the posted token exists
-		} elseif (!in_array($_POST['fusion_token'], isset($_SESSION['csrf_tokens'][$form]) ? $_SESSION['csrf_tokens'][$form] : array())) {
-			$error = $locale['token_error_3'];
-			self::stop($locale['token_error_3'], $debug ? 1 : 0);
-			// invalid token - will not accept double posting.
+	private static function verify_token($post_time = 5) {
+		global $locale, $userdata, $defender;
+		// TODO: locale indexes for errors don't pass, verify why
+
+		$error = FALSE;
+
+		// check if the token exists in storage
+		if (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][$_POST['form_id']])) {
+			$error = "Cannot find token in storage: ".$_POST['fusion_token'];
 		} else {
 			$token_data = explode(".", stripinput($_POST['fusion_token']));
 			// check if the token has the correct format
 			if (count($token_data) == 3) {
 				list($tuser_id, $token_time, $hash) = $token_data;
-				if ($tuser_id != $user_id) { // check if the logged user has the same ID as the one in token
+
+				$user_id = (iMEMBER ? $userdata['user_id'] : 0);
+				$algo = fusion_get_settings('password_algorithm');
+				$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+				// check if the logged user has the same ID as the one in token
+				if ($tuser_id != $user_id) {
 					$error = $locale['token_error_4'];
-					self::stop($locale['token_error_4'], $debug ? 1 : 0);
-				} elseif (!isnum($token_time)) { // make sure the token datestamp is a number before performing calculations
+				// make sure the token datestamp is a number
+				} elseif (!isnum($token_time)) {
 					$error = $locale['token_error_5'];
-					self::stop($locale['token_error_5'], $debug ? 1 : 0);
-					// token is not a number.
-				} elseif (time()-$token_time < $post_time) { // post made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-					$error = $locale['token_error_6'];
-					self::stop($locale['token_error_6'], $debug ? 1 : 0);
-					// check if the hash in token is valid
-				} elseif ($hash != hash_hmac($algo, $user_id.$token_time.$form.SECRET_KEY, $salt)) {
+				// check if the hash is valid
+				} elseif ($hash != hash_hmac($algo, $user_id.$token_time.$_POST['form_id'].SECRET_KEY, $salt)) {
 					$error = $locale['token_error_7'];
-					self::stop($locale['token_error_7'], $debug ? 1 : 0);
+				// check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
+				} elseif (time()-$token_time < $post_time) {
+					$error = $locale['token_error_6'];
 				}
 			} else {
-				// token incorrect format.
+				// token format is incorrect
 				$error = $locale['token_error_8'];
-				self::stop($locale['token_error_8'], $debug ? 1 : 0);
 			}
 		}
-		if ($error) {
-			if ($debug) print_p($error);
-			return false;
-		} else {
-			if ($debug) notify("Token Verification Success!", "The token on token ring has been passed and validated successfully.", array('icon' => 'notify_icon n-magic'));
+
+		// Check if any error was set
+		if ($error !== FALSE) {
+			if ($defender->debug) addNotice('danger', $error);
+			return FALSE;
 		}
-		return true;
-		}
+		
+		// If we made it so far everything is good
+		if ($defender->debug) addNotice('info', 'The token for "'.$_POST['form_id'].'" has been validated successfully');
+		return TRUE;
 	}
+}
 
 function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang = FALSE) {
 	global $defender, $locale;
+
+	// DEV: To be reviewed
 	if ($input_name) {
 		$val = array();
 		if ($multilang) {
@@ -924,8 +772,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			// copy the first available value to the next one.
 			foreach (fusion_get_enabled_languages() as $lang => $language) {
 				$iname = $input_name."[".$lang."]";
-				if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$iname])) {
-					$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$iname];
+				if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$iname])) {
+					$defender->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$iname];
 					if ($lang == LANGUAGE) {
 						$main_field_name = $defender->field_config['title'];
 						$main_field_id = $defender->field_config['id'];
@@ -933,16 +781,16 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 					$defender->field_name = $iname;
 					$defender->field_value = $value[$lang];
 					$defender->field_default = $default;
-					$val[$lang] = $defender->defender();
+					$val[$lang] = $defender->validate();
 				}
 			}
-			if ($defender->field_config['required'] == 1 && (!$value[LANGUAGE])) {
-				$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['df_error_text'], $main_field_name);
-						$defender->stop();
-				$defender->addError($main_field_id);
-				$defender->addHelperText($main_field_id, $helper_text);
-						$defender->addNotice($helper_text);
-					} else {
+			if ($defender->field_config['required'] && (!$value[LANGUAGE])) {
+				//$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['df_error_text'], $main_field_name);
+				$defender->stop();
+				//$defender->addError($main_field_id);
+				//$defender->addHelperText($main_field_id, $helper_text);
+				//$defender->addNotice($helper_text);
+			} else {
 				foreach($val as $lang => $value) {
 					if (empty($value)) {
 						$val[$lang] = $val[LANGUAGE];
@@ -951,22 +799,40 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				return serialize($val);
 			}
 		} else {
-			if (isset($_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name])) {
-				$defender->field_config = $_SESSION['form_fields'][defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name];
+			// Most input checks will fall into this
+			if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
+				$defender->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
 				$defender->field_name = $input_name;
+
 				$defender->field_value = $value;
-				$defender->field_default = $default;
-				if ($defender->field_config['required'] == 1 && (!$value)) { // it is required field but does not contain any value.. do reject.
-					$helper_text = $defender->field_config['error_text'] ? : sprintf($locale['df_error_text'], $defender->field_config['title']);
+				$defender->field_default = $default; // to be removed
+
+				// These two checks won't be neccesary after we add the options in all inputs
+				$callback = isset($defender->field_config['callback_check']) ? $defender->field_config['callback_check'] : FALSE;
+				$regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
+
+				$finalval = $defender->validate();
+				// If truly FALSE the check failed
+				if (	$finalval === FALSE ||
+						($defender->field_config['required'] && ($finalval === FALSE || $finalval == '')) ||
+						($regex && !preg_match('/^'.$regex.'$/i', $value)) || // regex will fail for an imploded array, maybe move this check
+						($callback && (!function_exists($callback) || !$callback($finalval)))
+					) {
+					// Flag that something went wrong
 					$defender->stop();
-					$defender->addError($defender->field_config['id']);
-					$defender->addHelperText($defender->field_config['id'], $helper_text);
-					$defender->addNotice($helper_text);
+					// Mark this input as invalid, if wasn't already
+					if (!$defender->inputHasError($input_name)) $defender->setInputError($input_name);
+					// Add a notice
+					if ($defender->debug) addNotice('warning', '<strong>'.$input_name.':</strong>'.($defender->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
+					// Return user's input for correction
+					return $defender->field_value;
 				} else {
-					return $defender->defender();
+					if ($defender->debug) addNotice('info', $input_name.' = '.(is_array($finalval) ? 'array' : $finalval));
+					return $finalval;
 				}
 			}
 		}
+	// DEV: To be reviewed
 	} else {
 		// returns descript, sanitized value.
 		if ($value) {
@@ -979,7 +845,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			} else {
 				// flatten array;
 				$secured = array();
-				foreach($value as $arr=>$unsecured) {
+				foreach($value as $arr => $unsecured) {
 					if (intval($unsecured)) {
 						$secured[] = stripinput($unsecured); // numbers
 					} else {
@@ -995,12 +861,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 		}
 	}
 
-	// Amend the only broken element to be found.
-	// This is left here to detect $_SESSION exist, not crash everything.
-	if ($value !=="" && $value !== NULL) {
-		throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
-	}
-
+	throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
 }
 
 function sanitize_array($array) {

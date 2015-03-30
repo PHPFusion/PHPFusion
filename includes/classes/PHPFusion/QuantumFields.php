@@ -405,8 +405,8 @@ class QuantumFields {
 		}
 		echo opentab($tab_title, $tab_active, 'amd');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
-		echo openform('addfield', 'addfield', 'post', FUSION_SELF.$aidlink, array('notice' => 0, 'downtime' => 1));
-		echo form_button($locale['fields_0311'], 'add_cat', 'add_cat', 'add_cat', array('class' => 'm-t-20 m-b-20 btn-sm btn-primary btn-block',
+		echo openform('addfield', 'post', FUSION_SELF.$aidlink, array('notice' => 0, 'max_tokens' => 1));
+		echo form_button('add_cat', $locale['fields_0311'], 'add_cat', array('class' => 'm-t-20 m-b-20 btn-sm btn-primary btn-block',
 			'icon' => 'entypo plus-circled'));
 		if (!empty($this->cat_list)) {
 			echo "<div class='row m-t-20'>\n";
@@ -422,11 +422,11 @@ class QuantumFields {
 		if (!empty($this->cat_list)) {
 			echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
 			// list down modules.
-			echo openform('addfield', 'addfield', 'post', FUSION_SELF.$aidlink, array('notice' => 0, 'downtime' => 1));
+			echo openform('addfield', 'post', FUSION_SELF.$aidlink, array('notice' => 0, 'max_tokens' => 1));
 			echo "<div class='m-t-20'>\n";
 			foreach ($this->available_field_info as $title => $module_data) {
 				echo "<div class='list-group-item'>";
-				echo form_button($locale['fields_0312'], 'add_module', 'add_module-'.$title, $title, array('class' => 'btn-sm btn-default pull-right m-l-10'));
+				echo form_button('add_module', $locale['fields_0312'], 'add_module-'.$title, $title, array('class' => 'btn-sm btn-default pull-right m-l-10'));
 				echo "<div class='overflow-hide'>\n";
 				echo "<span class='text-dark strong'>".$module_data['title']."</span><br/>\n";
 				echo "<span>".$module_data['description']."</span>\n<br/>";
@@ -776,7 +776,7 @@ class QuantumFields {
 					}
 					if (isset($this->page[$data['field_parent']]) or $field_list[$_GET['cat_id']] > 0) {
 						echo openmodal("delete", $locale['fields_0313'], array('class'=>'modal-lg modal-center zindex-boost', 'static'=>1));
-						echo openform('delete_cat_form', 'delete_cat_form', 'post', $form_action, array('downtime'=>1));
+						echo openform('delete_cat_form', 'post', $form_action, array('max_tokens' => 1));
 						if (isset($this->page[$_GET['cat_id']])) {
 							echo "<div class='row'>\n";
 							echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n<span class='strong'>".sprintf($locale['fields_0600'], count($this->page[$_GET['cat_id']]) )."</span><br/>\n";
@@ -811,8 +811,8 @@ class QuantumFields {
 							echo form_checkbox($locale['fields_0317'], 'delete_field', 'delete_field', '');
 							echo "</div></div>";
 						}
-						echo form_button($locale['fields_0313'], 'delete_cat', 'delete_cat', $locale['fields_0313'], array('class'=>'btn-danger btn-sm'));
-						echo form_button($locale['cancel'], 'cancel', 'cancel', $locale['cancel'], array('class'=>'btn-default m-l-10 btn-sm'));
+						echo form_button('delete_cat', $locale['fields_0313'], $locale['fields_0313'], array('class'=>'btn-danger btn-sm'));
+						echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class'=>'btn-default m-l-10 btn-sm'));
 						echo closeform();
 						echo closemodal();
 					}
@@ -1155,7 +1155,7 @@ class QuantumFields {
 		}
 
 		echo "<div class='m-t-20'>\n";
-		echo openform('fieldform', 'fieldform', 'post', $form_action, array('downtime' => 1));
+		echo openform('fieldform', 'post', $form_action, array('max_tokens' => 1));
 		$disable_opts = array();
 		foreach ($this->page_list as $index => $v) {
 			$disable_opts[] = $index;
@@ -1163,7 +1163,7 @@ class QuantumFields {
 		// ok the value generated needs to be parsed by quantum
 		echo form_select_tree($locale['fields_0450'], 'field_cat', 'field_cat', $this->field_data['field_cat'], array('no_root' => 1, 'width'=>'100%', 'disable_opts' => $disable_opts), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 		echo self::quantum_multilocale_fields($locale['fields_0451'], 'field_title', 'field_title', $this->field_data['field_title'], array('required'=>1));
-		echo form_text($locale['fields_0453'], 'field_name', 'field_name', $this->field_data['field_name'], array('placeholder' => $locale['fields_0454'], 'required' => 1));
+		echo form_text('field_name', $locale['fields_0453'], $this->field_data['field_name'], array('placeholder' => $locale['fields_0454'], 'required' => 1));
 		if ($this->field_data['field_type'] == 'select') echo form_select($locale['fields_0455'], 'field_options', 'field_options', array(), $this->field_data['field_options'], array('required' => 1,
 			'tags' => 1,
 			'multiple' => 1));
@@ -1195,12 +1195,12 @@ class QuantumFields {
 			$calc_b = $config['field_max_b']/$calc_c;
 			$file_upload_type = array('file' => $locale['fields_0456'], 'image' => 'Image Only');
 			echo form_select($locale['fields_0457'], 'field_upload_type', 'field_upload_type', $file_upload_type, $config['field_upload_type']);
-			echo form_text($locale['fields_0458'], 'field_upload_path', 'field_upload_path', $config['field_upload_path'], array('placeholder' => $locale['fields_0459'],
+			echo form_text('field_upload_path', $locale['fields_0458'], $config['field_upload_path'], array('placeholder' => $locale['fields_0459'],
 				'required' => 1));
 			echo "<label for='field_max_b'>".$locale['fields_0460']."</label>\n<br/>";
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-			echo form_text('', 'field_max_b', 'field_max_b', $calc_b, array('class' => 'm-b-0',
+			echo form_text('field_max_b', '', $calc_b, array('class' => 'm-b-0',
 				'number' => 1,
 				'required' => 1));
 			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
@@ -1220,42 +1220,42 @@ class QuantumFields {
 			echo "<label>".$locale['fields_0463']."</label>\n<br/>";
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-			echo form_text($locale['fields_0464'], 'field_image_max_w', 'field_image_max_w', $config_2['field_image_max_w'], array('number' => 1,
+			echo form_text('field_image_max_w', $locale['fields_0464'], $config_2['field_image_max_w'], array('number' => 1,
 				'placeholder' => $locale['fields_0466'],
 				'required' => 1));
 			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
-			echo form_text($locale['fields_0465'], 'field_image_max_h', 'field_image_max_h', $config_2['field_image_max_h'], array('number' => 1,
+			echo form_text('field_image_max_h', $locale['fields_0465'], $config_2['field_image_max_h'], array('number' => 1,
 				'placeholder' => $locale['fields_0466'],
 				'required' => 1));
 			echo "</div>\n</div>\n";
 			echo form_checkbox($locale['fields_0467'], 'field_thumbnail', 'field_thumbnail', $config_2['field_thumbnail']);
 			echo "<div id='field_t1'>\n";
-			echo form_text($locale['fields_0468'], 'field_thumb_upload_path', 'field_thumb_upload_path', $config_2['field_thumb_upload_path'], array('placeholder' => $locale['fields_0469'],
+			echo form_text('field_thumb_upload_path', $locale['fields_0468'], $config_2['field_thumb_upload_path'], array('placeholder' => $locale['fields_0469'],
 				'required' => 1));
 			echo "<label>".$locale['fields_0470']."</label>\n<br/>";
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-			echo form_text($locale['fields_0471'], 'field_thumb_w', 'field_thumb_w', $config_2['field_thumb_w'], array('number' => 1,
+			echo form_text('field_thumb_w', $locale['fields_0471'], $config_2['field_thumb_w'], array('number' => 1,
 				'placeholder' => $locale['fields_0466'],
 				'required' => 1));
 			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
-			echo form_text($locale['fields_0472'], 'field_thumb_h', 'field_thumb_h', $config_2['field_thumb_h'], array('number' => 1,
+			echo form_text('field_thumb_h', $locale['fields_0472'], $config_2['field_thumb_h'], array('number' => 1,
 				'placeholder' => $locale['fields_0466'],
 				'required' => 1));
 			echo "</div>\n</div>\n";
 			echo "</div>\n";
 			echo form_checkbox($locale['fields_0473'], 'field_thumbnail_2', 'field_thumbnail_2', $config_2['field_thumbnail_2']);
 			echo "<div id='field_t2'>\n";
-			echo form_text($locale['fields_0474'], 'field_thumb2_upload_path', 'field_thumb2_upload_path', $config_2['field_thumb2_upload_path'], array('placeholder' => $locale['fields_0469'],
+			echo form_text('field_thumb2_upload_path', $locale['fields_0474'], $config_2['field_thumb2_upload_path'], array('placeholder' => $locale['fields_0469'],
 				'required' => 1));
 			echo "<label>".$locale['fields_0475']."</label>\n<br/>";
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
-			echo form_text($locale['fields_0476'], 'field_thumb2_w', 'field_thumb2_w', $config_2['field_thumb2_h'], array('number' => 1,
+			echo form_text('field_thumb2_w', $locale['fields_0476'], $config_2['field_thumb2_h'], array('number' => 1,
 				'placeholder' => $locale['fields_0466'],
 				'required' => 1));
 			echo "</div><div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-l-0'>\n";
-			echo form_text($locale['fields_0477'], 'field_thumb2_h', 'field_thumb2_h', $config_2['field_thumb2_h'], array('number' => 1,
+			echo form_text('field_thumb2_h', $locale['fields_0477'], $config_2['field_thumb2_h'], array('number' => 1,
 				'placeholder' => $locale['fields_0466'],
 				'required' => 1));
 			echo "</div>\n</div>\n";
@@ -1292,16 +1292,16 @@ class QuantumFields {
 			");
 		} else {
 			// @todo add config for textarea
-			if ($this->field_data['field_type'] !== 'textarea') echo form_text($locale['fields_0480'], 'field_default', 'field_default', $this->field_data['field_default']);
-			echo form_text($locale['fields_0481'], 'field_error', 'field_error', $this->field_data['field_error']);
+			if ($this->field_data['field_type'] !== 'textarea') echo form_text('field_default', $locale['fields_0480'], $this->field_data['field_default']);
+			echo form_text('field_error', $locale['fields_0481'], $this->field_data['field_error']);
 		}
 		echo form_checkbox($locale['fields_0482'], 'field_required', 'field_required', $this->field_data['field_required']);
 		echo form_checkbox($locale['fields_0483'], 'field_log', 'field_log', $this->field_data['field_log']);
-		echo form_text($locale['fields_0484'], 'field_order', 'field_order', $this->field_data['field_order'], array('number' => 1));
+		echo form_text('field_order', $locale['fields_0484'], $this->field_data['field_order'], array('number' => 1));
 		echo form_checkbox($locale['fields_0485'], 'field_registration', 'field_registration', $this->field_data['field_registration']);
 		echo form_hidden('', 'add_field', 'add_field', $this->field_data['field_type']);
 		echo form_hidden('', 'field_id', 'field_id', $this->field_data['field_id']);
-		echo form_button($locale['fields_0488'], 'save_field', 'save_field', 'save', array('class' => 'btn-sm btn-primary'));
+		echo form_button('save_field', $locale['fields_0488'], 'save', array('class' => 'btn-sm btn-primary'));
 		echo closeform();
 		echo "</div>\n";
 	}
@@ -1366,7 +1366,7 @@ class QuantumFields {
 		}
 
 		echo "<div class='m-t-20'>\n";
-		echo openform('fieldform', 'fieldform', 'post', $form_action, array('downtime' => 1));
+		echo openform('fieldform', 'post', $form_action, array('max_tokens' => 1));
 		echo "<p class='strong text-dark'>".$user_field_name."</p>\n";
 		echo "<div class='well'>\n";
 		echo "<p class='strong'>".$locale['fields_0400']."</p>\n";
@@ -1402,7 +1402,7 @@ class QuantumFields {
 			echo form_checkbox($locale['fields_0413'], 'field_registration', 'field_registration', $this->field_data['field_registration']);
 		}
 
-		echo form_text($locale['fields_0414'], 'field_order', 'field_order', $this->field_data['field_order']);
+		echo form_text('field_order', $locale['fields_0414'], $this->field_data['field_order']);
 		echo form_hidden('', 'add_module', 'add_module', $this->field_data['add_module']);
 		echo form_hidden('', 'field_name', 'field_name', $user_field_dbname);
 		echo form_hidden('', 'field_title', 'field_title', $user_field_name);
@@ -1412,7 +1412,7 @@ class QuantumFields {
 		echo form_hidden('', 'field_error', 'field_error', isset($user_field_error) ? $user_field_error : '');
 		echo form_hidden('', 'field_config', 'field_config', isset($user_field_config) ? $user_field_config : '');
 		echo form_hidden('', 'field_id', 'field_id', $this->field_data['field_id']);
-		echo form_button(($this->field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416']), 'enable', 'enable', ($this->field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416']), array('class' => 'btn-primary btn-sm'));
+		echo form_button('enable', ($this->field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416']), ($this->field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416']), array('class' => 'btn-primary btn-sm'));
 		echo closeform();
 		echo "</div>\n";
 	}
@@ -1527,23 +1527,23 @@ class QuantumFields {
 			}
 		}
 
-		$html = openform('cat_form', 'cat_form', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+		$html = openform('cat_form', 'cat_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 		$html .= self::quantum_multilocale_fields($locale['fields_0430'], 'field_cat_name', 'field_cat_name', $this->field_cat_data['field_cat_name'], array('required'=>1));
 		$html .= form_select_tree($locale['fields_0431'], 'field_parent', 'field_parent', $this->field_cat_data['field_parent'], array('parent_value' => $locale['fields_0432'], 'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-		$html .= form_text($locale['fields_0433'], 'field_cat_order', 'field_cat_order', $this->field_cat_data['field_cat_order'], array('number' => 1));
+		$html .= form_text('field_cat_order', $locale['fields_0433'], $this->field_cat_data['field_cat_order'], array('number' => 1));
 		$html .= form_hidden('', 'field_cat_id', 'field_cat_id', $this->field_cat_data['field_cat_id'], array('number' => 1));
 		$html .= form_hidden('', 'add_cat', 'add_cat', 'add_cat');
 		// root settings
 		$html .= "<div id='page_settings'>\n";
 		$html .= "<div class='text-smaller m-b-10'>".$locale['fields_0111']."</div>\n";
-		$html .= form_text(sprintf($locale['fields_0434'], DB_PREFIX), 'field_cat_db', 'field_cat_db', $this->field_cat_data['field_cat_db'], array('placeholder' => 'users'));
+		$html .= form_text('field_cat_db', sprintf($locale['fields_0434'], DB_PREFIX), $this->field_cat_data['field_cat_db'], array('placeholder' => 'users'));
 		$html .= "<div class='text-smaller m-b-10'>".$locale['fields_0112']."</div>\n";
-		$html .= form_text($locale['fields_0435'], 'field_cat_index', 'field_cat_index', $this->field_cat_data['field_cat_index'], array('placeholder' => 'user_id'));
+		$html .= form_text('field_cat_index', $locale['fields_0435'], $this->field_cat_data['field_cat_index'], array('placeholder' => 'user_id'));
 		$html .= "<div class='text-smaller m-b-10'>".$locale['fields_0113']."</div>\n";
-		$html .= form_text($locale['fields_0436'], 'field_cat_class', 'field_cat_class', $this->field_cat_data['field_cat_class'], array('placeholder' => 'entypo xxxxx'));
+		$html .= form_text('field_cat_class', $locale['fields_0436'], $this->field_cat_data['field_cat_class'], array('placeholder' => 'entypo xxxxx'));
 		$html .= form_hidden('', 'add_cat', 'add_cat', 'add_cat');
 		$html .= "</div>\n";
-		$html .= form_button($locale['fields_0318'], 'save_cat', 'save_cat', 'save_cat', array('class' => 'btn-sm btn-primary'));
+		$html .= form_button('save_cat', $locale['fields_0318'], 'save_cat', array('class' => 'btn-sm btn-primary'));
 		$html .= closeform();
 		return $html;
 	}
@@ -1652,7 +1652,7 @@ class QuantumFields {
 				break;
 			case 'number':
 				if ($method == 'input') {
-					$options += array('number'=>1);
+					$options += array('type' => 'number');
 					return  form_text($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);
@@ -1660,7 +1660,7 @@ class QuantumFields {
 				break;
 			case 'url':
 				if ($method == 'input') {
-					$options += array('url'=>1);
+					$options += array('type' => 'url');
 					return  form_text($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);
@@ -1668,7 +1668,7 @@ class QuantumFields {
 				break;
 			case 'email':
 				if ($method == 'input') {
-					$options += array('email'=>1);
+					$options += array('type' => 'email');
 					return  form_text($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);

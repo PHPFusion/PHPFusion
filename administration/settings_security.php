@@ -106,7 +106,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	}
 }
 echo "<div class='well'>".$locale['security_description']."</div>\n";
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
@@ -114,8 +114,8 @@ openside('');
 echo form_select($locale['693'], 'captcha', 'captcha', $available_captchas, $settings['captcha'], array('inline'=>1));
 echo "<div class='recaptcha_keys' ".($settings['captcha'] !== 'recaptcha' ? "class='display-none'" : '')." style='margin-top:5px;'>\n";
 echo "<label class='m-t-10' for='recaptcha_public'>".$locale['694']."</label>\n";
-echo form_text('', 'recaptcha_public', 'recaptcha_public', $settings['recaptcha_public']);
-echo form_text($locale['695'], 'recaptcha_private', 'recaptcha_private', $settings['recaptcha_private']);
+echo form_text('recaptcha_public', '', $settings['recaptcha_public']);
+echo form_text('recaptcha_private', $locale['695'], $settings['recaptcha_private']);
 $theme_opts = array('red' => $locale['697r'], 'blackglass' => $locale['697b'], 'clean' => $locale['697c'], 'white' => $locale['697w'],);
 echo form_select($locale['697'], 'recaptcha_theme', 'recaptcha_theme', $theme_opts, $settings['recaptcha_theme']);
 echo "</div>\n";
@@ -133,17 +133,17 @@ closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
 $flood_opts = array('1' => $locale['502'], '0' => $locale['503']);
-echo form_text($locale['660'], 'flood_interval', 'flood_interval', $settings['flood_interval'], array('max_length' => 2));
+echo form_text('flood_interval', $locale['660'], $settings['flood_interval'], array('max_length' => 2));
 echo form_select($locale['680'], 'flood_autoban', 'flood_autoban', $flood_opts, $settings['flood_autoban'], array('width'=>'100%'));
 closeside();
 openside('');
 $yes_no_array = array('1' => $locale['518'], '0' => $locale['519']);
 echo form_select($locale['659'], 'bad_words_enabled', 'bad_words_enabled', $yes_no_array, $settings['bad_words_enabled']);
-echo form_text($locale['654'], 'bad_word_replace', 'bad_word_replace', $settings['bad_word_replace']);
+echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']);
 echo form_textarea($locale['651'], 'bad_words', 'bad_words', $settings['bad_words'], array('placeholder'=>$locale['652'], 'autosize'=>1));
 closeside();
 echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
 add_to_jquery("

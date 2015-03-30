@@ -85,11 +85,11 @@ if (!empty($result)) {
 		$visibility_opts[$user_group['0']] = $user_group['1'];
 	}
 
-	echo openform('inputform', 'inputform', 'post', $formaction, array('downtime' => 1));
+	echo openform('inputform', 'post', $formaction, array('max_tokens' => 1));
 	echo "<table cellspacing='0' cellpadding='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='weblink_name'>".$locale['520']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'weblink_name', 'weblink_name', $weblink_name, array('required' => 1, 'error_text' => $locale['462']));
+	echo form_text('weblink_name', '', $weblink_name, array('required' => 1, 'error_text' => $locale['462']));
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td valign='top' width='80' class='tbl'><label for='weblink_description'>".$locale['521']."</label></td>\n";
@@ -101,7 +101,7 @@ if (!empty($result)) {
 	echo "</tr>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for'weblink_url'>".$locale['522']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', 'weblink_url', 'weblink_url', $weblink_url);
+	echo form_text('weblink_url', '', $weblink_url);
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='weblink_cat'>".$locale['523']."</label></td>\n";
 	echo "<td class='tbl'>\n";
@@ -116,7 +116,7 @@ if (!empty($result)) {
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
 		echo "<input type='checkbox' name='update_datestamp' value='1'> ".$locale['524']."<br /><br />\n";
 	}
-	echo form_button($locale['525'], 'save_link', 'save_link', $locale['525'], array('class' => 'btn-primary m-t-10'));
+	echo form_button('save_link', $locale['525'], $locale['525'], array('class' => 'btn-primary m-t-10'));
 	echo "</tr>\n</table>\n</form>\n";
 	closetable();
 	opentable($locale['502']);

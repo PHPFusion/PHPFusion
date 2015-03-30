@@ -81,7 +81,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 		echo admin_message($message);
 	}
 }
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 $opts = array('1' => $locale['518'], '0' => $locale['519']);
 echo "<div class='well'>".$locale['register_description']."</div>\n";
 echo "<div class='row'>\n";
@@ -98,7 +98,7 @@ echo form_select($locale['557'], 'admin_activation', 'admin_activation', $opts, 
 echo form_select($locale['553'], 'display_validation', 'display_validation', $opts, $settings2['display_validation']);
 closeside();
 echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";

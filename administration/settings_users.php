@@ -100,15 +100,15 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
 	}
 }
 echo "<div class='well'>".$locale['user_description']."</div>";
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 $choice_opts = array('0' => $locale['519'], '1' => $locale['518']);
 echo form_select($locale['1002'], 'enable_deactivation', 'enable_deactivation', $choice_opts, $settings2['enable_deactivation']);
-echo form_text($locale['1003'], 'deactivation_period', 'deactivation_period', $settings2['deactivation_period'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
+echo form_text('deactivation_period', $locale['1003'], $settings2['deactivation_period'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1004'].")</span>";
-echo form_text($locale['1005'], 'deactivation_response', 'deactivation_response', $settings2['deactivation_response'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
+echo form_text('deactivation_response', $locale['1005'], $settings2['deactivation_response'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1006'].")</span>";
 $action_opts = array('0'=>$locale['1012'], '1'=>$locale['1013']);
 echo form_select($locale['1011'], 'deactivation_action', 'deactivation_action', $action_opts, $settings2['deactivation_action']);
@@ -120,9 +120,9 @@ echo "
 	<label for='photo_max_w'>".$locale['1008']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'avatar_width', 'avatar_width', $settings2['avatar_width'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	".form_text('avatar_width', '', $settings2['avatar_width'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
 	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
-	".form_text('', 'avatar_height', 'avatar_height', $settings2['avatar_height'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	".form_text('avatar_height', '', $settings2['avatar_height'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
 	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
 	</div>
 </div>";
@@ -136,7 +136,7 @@ echo "
 	<label for='calc_b'>".$locale['605']."</label>
 	</div>
 	<div class='col-xs-12 col-sm-9'>
-	".form_text('', 'calc_b', 'calc_b', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
 	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
 	</div>
 </div>
@@ -156,7 +156,7 @@ echo form_select($locale['1014'], 'multiple_logins', 'multiple_logins', $choice_
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>".$locale['1014a']."</span>\n";
 closeside();
 echo "</div>\n</div>\n";
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-success'));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
 

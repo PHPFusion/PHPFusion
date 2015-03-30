@@ -19,27 +19,35 @@ require_once "../maincore.php";
 if (!checkrights("PL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
 	redirect("../index.php");
 }
+
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 include LOCALE.LOCALESET."admin/permalinks.php";
 
+$settings_seo = array(
+	'site_seo'		=> fusion_get_settings('site_seo'),
+	'normalize_seo'	=> fusion_get_settings('normalize_seo'),
+	'debug_seo'		=> fusion_get_settings('debug_seo'),
+	);
 
+// TODO: Check if we can or did write .htaccess file before saving settings to DB
 if (isset($_POST['savesettings'])) {
+	// No need for these anymore, form sanitizer can handle it
+	/*$settings_seo['site_seo']		= (isset($_POST['site_seo']) ? 1 : 0);
+	$settings_seo['normalize_seo']	= (isset($_POST['normalize_seo']) ? 1 : 0);
+	$settings_seo['debug_seo']		= (isset($_POST['debug_seo']) ? 1 : 0);*/
 
-	$site_seo = form_sanitizer($_POST['site_seo'], 0, 'site_seo');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$site_seo' WHERE settings_name='site_seo'") : '';
+	foreach ($settings_seo as $key => $value) {
+		$settings_seo[$key] = form_sanitizer($settings_seo[$key], '', $key);
+		// No need to check for FUSION_NULL here because we have only checkboxes
+		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_seo[$key]."' WHERE settings_name='".$key."'");
+	}
 
-	$normalize_seo = form_sanitizer($_POST['normalize_seo'], 0, 'normalize_seo');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$normalize_seo' WHERE settings_name='normalize_seo'") : '';
-
-	$debug_seo = form_sanitizer($_POST['debug_seo'], 0, 'debug_seo');
-	$result = !defined('FUSION_NULL') ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$debug_seo' WHERE settings_name='debug_seo'") : '';
-	
-	if ($site_seo == 1) {
+	if ($settings_seo['site_seo'] == 1) {
 		// create .htaccess
 		if (!file_exists(BASEDIR.".htaccess")) {
 			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+				rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
 			} else {
 				$handle = fopen(BASEDIR.".htaccess", "w");
 				fclose($handle);
@@ -47,32 +55,32 @@ if (isset($_POST['savesettings'])) {
 		}
 		// write file. wipe out all .htaccess current configuration.
 		$htc = '';
-		$htc .= "#Force utf-8 charset\r\n";
-		$htc .= "AddDefaultCharset utf-8\r\n";
-		$htc .= "#Security\r\n";
-		$htc .= "ServerSignature Off\r\n";
-		$htc .= "#secure htaccess file\r\n";
+		$htc .= "# Force utf-8 charset\r\n";
+		$htc .= "AddDefaultCharset utf-8\r\n\n";
+		$htc .= "# Security\r\n";
+		$htc .= "ServerSignature Off\r\n\n";
+		$htc .= "# Secure htaccess file\r\n";
 		$htc .= "<Files .htaccess>\r\n";
 		$htc .= "order allow,deny\r\n";
 		$htc .= "deny from all\r\n";
-		$htc .= "</Files>\r\n";
-		$htc .= "#protect config.php\r\n";
+		$htc .= "</Files>\r\n\n";
+		$htc .= "# Protect config.php\r\n";
 		$htc .= "<Files config.php>\r\n";
 		$htc .= "order allow,deny\r\n";
 		$htc .= "deny from all\r\n";
-		$htc .= "</Files>\r\n";
-		$htc .= "#Block Nasty Bots\r\n";
+		$htc .= "</Files>\r\n\n";
+		$htc .= "# Block Nasty Bots\r\n";
 		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT\r\n";
 		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT\r\n";
-		$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n";
-		$htc .= "#Disable directory listing\r\n";
+		$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n\n";
+		$htc .= "# Disable directory listing\r\n";
 		$htc .= "Options -Indexes\r\n";
 		$htc .= "Options +SymLinksIfOwnerMatch\r\n";
 		$htc .= "RewriteEngine On\r\n";
-		$htc .= "RewriteBase ".$settings['site_path']."\r\n";
+		$htc .= "RewriteBase ".$settings['site_path']."\r\n\n";
 		$htc .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\r\n";
 		$htc .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\r\n";
-		$htc .= "RewriteRule .* - [F,L]\r\n";
+		$htc .= "RewriteRule .* - [F,L]\r\n\n";
 		$htc .= "# Exclude /assets and /manager directories and images from rewrite rules\r\n";
 		$htc .= "RewriteRule ^(administration|themes)/*$ - [L]\r\n";
 		$htc .= "RewriteCond %{REQUEST_FILENAME} !-f\r\n";
@@ -95,7 +103,7 @@ if (isset($_POST['savesettings'])) {
 				fclose($handle);
 			}
 		}
-		//  Wipe out all .htaccess rewrite rules and add defaults and error handler only
+		// Wipe out all .htaccess rewrite rules and add defaults and error handler only
 		$htc = "#Force utf-8 charset\r\n";
 		$htc .= "AddDefaultCharset utf-8\r\n";
 		$htc .= "#Security\r\n";
@@ -126,20 +134,23 @@ if (isset($_POST['savesettings'])) {
 			fclose($temp);
 		}
 	}
+
+	if (!defined('FUSION_NULL')) {
+		// Everything went as expected
+		addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
+		redirect(FUSION_SELF.$aidlink);
+	}
 }
 
-$settings2 = array();
-$result = dbquery("SELECT * FROM ".DB_SETTINGS);
-while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
-}
-echo openform('settingsform', 'settingsform', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+echo openform('settingsseo', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 2));
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
+$locale['seo_htc_warning'] = 'Please note that if you change any of these settings the content of <strong>.htaccess</strong> will be overwritten and any changes previously done to this file will be lost.'; // to be moved
+echo "<div class='admin-message alert alert-warning'><i class='fa fa-lg fa-warning m-r-10'></i>".$locale['seo_htc_warning']."</div>";
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings2['site_seo'], array('inline' => 1));
-echo form_toggle($locale['439'], 'normalize_seo', 'normalize_seo', $opts, $settings2['normalize_seo'], array('inline' => 1));
-echo form_toggle($locale['440'], 'debug_seo', 'debug_seo', $opts, $settings2['debug_seo'], array('inline' => 1));
-echo form_button($locale['750'], 'savesettings', 'savesettings', $locale['750'], array('class' => 'btn-primary','inline' => 1));
+echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings_seo['site_seo'], array('inline' => 1));
+echo form_toggle($locale['439'], 'normalize_seo', 'normalize_seo', $opts, $settings_seo['normalize_seo'], array('child_of' => 'site_seo', 'inline' => 1));
+echo form_toggle($locale['440'], 'debug_seo', 'debug_seo', $opts, $settings_seo['debug_seo'], array('child_of' => 'site_seo', 'inline' => 1));
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary','inline' => 1));
 echo "</div></div>\n";
 echo closeform();
 
@@ -176,7 +187,7 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
 		$result = dbquery("SELECT p.* FROM ".DB_PERMALINK_REWRITE." r INNER JOIN ".DB_PERMALINK_METHOD." p ON r.rewrite_id=p.pattern_type WHERE r.rewrite_name='".$rewrite_name."'");
 		if (dbrows($result)) {
 			opentable(sprintf($locale['405'], $permalink_name));
-			echo openform('editpatterns', 'editpatterns', 'post', FUSION_SELF.$aidlink, array('downtime' => 1));
+			echo openform('editpatterns', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 			echo "<table cellpadding='0' cellspacing='1' width='100%' class='table table-responsive tbl-border center'>\n";
 			if (isset($permalink_tags_desc) && is_array($permalink_tags_desc)) {
 				echo "<tr>\n";

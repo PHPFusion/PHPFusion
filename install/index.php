@@ -130,25 +130,25 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$content .= "<span class='display-block m-t-20 m-b-10'>".$locale['setup_1003']."</span>\n";
 			$content .= "<div class='well'>\n";
 			$content .= "<span class='strong display-inline-block m-b-10'>".$locale['setup_1017']."</span><br/><p>".$locale['setup_1018']."</p>";
-			$content .= form_button($locale['setup_1019'], 'step', 'step-exit', '8', array('class' => 'btn-success btn-sm m-t-10'));
+			$content .= form_button('step', $locale['setup_1019'], '8', array('class' => 'btn-success btn-sm m-t-10'));
 			$content .= "</div>\n";
 			$content .= "<div class='well'>\n";
 			$content .= "<span class='strong display-inline-block m-b-10'>".$locale['setup_1004']."</span><br/><p>".$locale['setup_1005']." <span class='strong'>".$locale['setup_1006']."</span></p>";
-			$content .= form_button($locale['setup_1007'], 'uninstall', 'uninstall', 'uninstall', array('class' => 'btn-danger btn-sm m-t-10'));
+			$content .= form_button('uninstall', $locale['setup_1007'], 'uninstall', array('class' => 'btn-danger btn-sm m-t-10'));
 			$content .= "</div>\n";
 			$content .= "<div class='well'>\n";
 			$content .= "<span class='strong display-inline-block m-b-10'>".$locale['setup_1008']."</span>\n<br/><p>".$locale['setup_1009']."</p>";
-			$content .= form_button($locale['setup_1010'], 'step', 'step-sysinstall', '5', array('class' => 'btn-primary btn-sm m-r-10'));
+			$content .= form_button('step', $locale['setup_1010'], '5', array('class' => 'btn-primary btn-sm m-r-10'));
 			$content .= "</div>\n";
 			$content .= "<div class='well'>\n";
 			$content .= "<span class='strong display-inline-block m-b-10'>".$locale['setup_1011']."</span>\n<br/><p>".$locale['setup_1012']."</p>";
-			$content .= form_button($locale['setup_1013'], 'step', 'step-superadmin', '6', array('class' => 'btn-primary btn-sm m-r-10'));
+			$content .= form_button('step', $locale['setup_1013'], '6', array('class' => 'btn-primary btn-sm m-r-10'));
 			$content .= "</div>\n";
 			$content .= "<input type='hidden' name='localeset' value='".stripinput($_GET['localeset'])."' />\n";
 			if (isset($db_prefix)) {
 				$content .= "<div class='well'>\n";
 				$content .= "<span class='strong display-inline-block m-b-10'>".$locale['setup_1014']."</span>\n<br/><p>".$locale['setup_1015']."</p>";
-				$content .= form_button($locale['setup_1016'], 'htaccess', 'htaccess', 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
+				$content .= form_button('htaccess', $locale['setup_1016'], 'htaccess', array('class' => 'btn-primary btn-sm m-r-10'));
 				$content .= "</div>\n";
 			}
 		} /* Without click uninstall this is the opening page of installer - just for safety. if not, an else suffices */ elseif (!isset($_POST['uninstall'])) {
@@ -530,7 +530,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 					$content .= "<div class='row'>\n";
 					$content .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".ucwords($v['title']);
 					$content .= "<div class='pull-right'>\n";
-					$content .= form_button($locale['setup_1405'], 'uninstall', 'uninstall-'.$k, $v['key'], array('class' => 'btn-xs btn-default',
+					$content .= form_button('uninstall', $locale['setup_1405'], $v['key'], array('class' => 'btn-xs btn-default',
 						'icon' => 'entypo trash'));
 					$content .= "</div>\n";
 					$content .= "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>".$v['description']."";
@@ -543,7 +543,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 					$content .= "<div class='row'>\n";
 					$content .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".ucwords($v['title']);
 					$content .= "<div class='pull-right'>\n";
-					$content .= form_button($locale['setup_1404'], 'install', 'install-'.$k, $v['key'], array('class' => 'btn-xs btn-default',
+					$content .= form_button('install', $locale['setup_1404'], $v['key'], array('class' => 'btn-xs btn-default',
 						'icon' => 'entypo publish'));
 					$content .= "</div>\n";
 					$content .= "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>".$v['description']."";

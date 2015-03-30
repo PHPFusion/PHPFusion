@@ -108,7 +108,7 @@ class UserFields extends QuantumFields {
 			$user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
 			$this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
 			if (iADMIN || $this->_userNameChange) {
-				$this->info['user_name'] .= form_text($locale['u127'], 'user_name', 'user_name', $user_name, array('max_length' => 30,
+				$this->info['user_name'] .= form_text('user_name', $locale['u127'], $user_name, array('max_length' => 30,
 					'required' => 1,
 					'error_text' => $locale['u122'],
 					'inline' => 1));
@@ -116,13 +116,13 @@ class UserFields extends QuantumFields {
 			// User Password
 			$this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');
 			if ($this->registration) {
-				$this->info['user_password'] .= form_text($locale['u134a'], 'user_password1', ' user_password1', '', array('password' => 1,
+				$this->info['user_password'] .= form_text($locale['u134a'], 'user_password1', ' user_password1', '', array('type' => 'password',
 					'autocomplete_off' => 1,
 					'inline' => 1,
 					'max_length' => 64,
 					'error_text' => $locale['u133'],
 					'required' => 1));
-				$this->info['user_password'] .= form_text($locale['u134b'], 'user_password2', 'user_password2', '', array('password' => 1,
+				$this->info['user_password'] .= form_text('user_password2', $locale['u134b'], '', array('type' => 'password',
 					'autocomplete_off' => 1,
 					'inline' => 1,
 					'max_length' => 64,
@@ -130,17 +130,17 @@ class UserFields extends QuantumFields {
 					'required' => 1));
 			} else {
 				$this->info['user_password'] .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0);
-				$this->info['user_password'] .= form_text($locale['u135a'], 'user_password', 'user_password', '', array('password' => 1,
+				$this->info['user_password'] .= form_text('user_password', $locale['u135a'], '', array('type' => 'password',
 					'autocomplete_off' => 1,
 					'inline' => 1,
 					'max_length' => 64,
 					'error_text' => $locale['u133']));
-				$this->info['user_password'] .= form_text($locale['u135b'], 'user_password1', ' user_password1', '', array('password' => 1,
+				$this->info['user_password'] .= form_text('user_password1', $locale['u135b'], '', array('type' => 'password',
 					'autocomplete_off' => 1,
 					'inline' => 1,
 					'max_length' => 64,
 					'error_text' => $locale['u133']));
-				$this->info['user_password'] .= form_text($locale['u135c'], 'user_password2', 'user_password2', '', array('password' => 1,
+				$this->info['user_password'] .= form_text('user_password2', $locale['u135c'], '', array('type' => 'password',
 					'autocomplete_off' => 1,
 					'inline' => 1,
 					'max_length' => 64,
@@ -152,25 +152,25 @@ class UserFields extends QuantumFields {
 			$this->info['user_admin_password'] = '';
 			if (!$this->registration && iADMIN && !defined('ADMIN_PANEL')) {
 				if ($this->userData['user_admin_password']) {
-					$this->info['user_admin_password'] = form_text($locale['u144a'], 'user_admin_password', 'user_admin_password', '', array('password' => 1,
+					$this->info['user_admin_password'] = form_text('user_admin_password', $locale['u144a'], '', array('type' => 'password',
 						'autocomplete_off' => 1,
 						'inline' => 1,
 						'max_length' => 64,
 						'error_text' => $locale['u136']));
-					$this->info['user_admin_password'] .= form_text($locale['u144'], 'user_admin_password1', 'user_admin_password1', '', array('password' => 1,
+					$this->info['user_admin_password'] .= form_text('user_admin_password1', $locale['u144'], '', array('type' => 'password',
 						'autocomplete_off' => 1,
 						'inline' => 1,
 						'max_length' => 64,
 						'error_text' => $locale['u136']));
 				} else {
-					$this->info['user_admin_password'] = form_text($locale['u144'], 'user_admin_password', 'user_admin_password', '', array('password' => 1,
+					$this->info['user_admin_password'] = form_text('user_admin_password', $locale['u144'], '', array('type' => 'password',
 						'autocomplete_off' => 1,
 						'inline' => 1,
 						'max_length' => 64,
 						'error_text' => $locale['u136']));
 				}
-				$this->info['user_admin_password'] .= form_text($locale['u145'], 'user_admin_password2', 'user_admin_password2', '', array('class' => 'm-b-0',
-					'password' => 1,
+				$this->info['user_admin_password'] .= form_text('user_admin_password2', $locale['u145'], '', array('class' => 'm-b-0',
+					'type' => 'password',
 					'autocomplete_off' => 1,
 					'inline' => 1,
 					'max_length' => 64,
@@ -197,8 +197,8 @@ class UserFields extends QuantumFields {
 				}
 			}
 			// Email
-			$this->info['user_email'] = form_text($locale['u128'], 'user_email', 'user_email', $user_email, array('tip' => $locale['u100'],
-				'email' => 1,
+			$this->info['user_email'] = form_text('user_email', $locale['u128'], $user_email, array('tip' => $locale['u100'],
+				'type' => 'email',
 				'inline' => 1,
 				'max_length' => '100',
 				'error_text' => $locale['u126']));
@@ -212,8 +212,8 @@ class UserFields extends QuantumFields {
 		}
 		$this->info += array('register' => $this->registration,
 			'pages' => ($this->paginate && !$this->registration) ? $this->info['section'] = $this->renderPageLink() : '',
-			'openform' => openform($this->formname, $this->formname, 'post', FUSION_REQUEST, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."",
-				'downtime' => 1)),
+			'openform' => openform($this->formname, 'post', FUSION_REQUEST, array('enctype' => "".($this->showAvatarInput ? 1 : 0)."",
+				'max_tokens' => 1)),
 			'closeform' => closeform(),
 			'button' => $this->renderButton(),);
 		$this->get_userFields();
@@ -432,7 +432,7 @@ class UserFields extends QuantumFields {
 		$html .= ob_get_contents();
 		ob_end_clean();
 		if (!$_CAPTCHA_HIDE_INPUT) {
-			$html .= form_text('', 'captcha_code', 'captcha_code', '', array('inline' => 1,
+			$html .= form_text('captcha_code', '', '', array('inline' => 1,
 				'required' => 1,
 				'autocomplete_off' => 1,
 				'width' => '200px',

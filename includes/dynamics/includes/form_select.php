@@ -29,37 +29,39 @@
  * @param array $options
  * @return string
  */
-function form_select($title, $input_name, $input_id, array $option_array = array(), $input_value = 0, array $options = array()) {
+function form_select($title, $input_name, $input_id, array $option_array = array(), $input_value = FALSE, array $options = array()) {
 	global $defender;
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
 		add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js'></script>");
 		add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
 	}
-	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+	$input_value = ($input_value) ? $input_value : '0';
 
 	$options = array(
-		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
-		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
-		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
-		'allowclear' => !empty($options['allowclear']) && $options['allowclear'] == '1' ? 'allowClear: true' : '',
-		'multiple' => !empty($options['multiple']) && $options['multiple'] == 1 ? '1' : '0',
-		'width' => !empty($options['width']) ? $options['width'] : '',
-		'keyflip' => !empty($options['keyflip']) && $options['keyflip'] == 1 ? '1' : '0',
-		'tags' => !empty($options['tags']) && $options['tags'] == 1 ? 1 : 0,
-		'jsonmode' => !empty($options['jsonmode']) && $options['jsonmode'] == 1 ? '1' : '0',
-		'chainable' => !empty($options['chainable']) ? $options['chainable'] : '',
-		'maxselect' => !empty($options['maxselect']) && isnum($options['maxselect']) ? $options['maxselect'] : 30,
-		'error_text' => !empty($options['error_text']) ? $options['error_text'] : '',
-		'class' => !empty($options['class']) ? $options['class'] : '',
-		'inline' => !empty($options['inline']) ? $options['inline'] : '',
-		'tip' => !empty($options['tip']) ? $options['tip'] : '',
-		'delimiter' => !empty($options['delimiter']) ? $options['delimiter'] : ',',
+		'required'			=> !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
+		'regex'				=> !empty($options['regex']) ? $options['regex'] : FALSE,
+		'placeholder'		=> !empty($options['placeholder']) ? $options['placeholder'] : '',
+		'deactivate'		=> !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
+		'safemode'			=> !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
+		'allowclear'		=> !empty($options['allowclear']) && $options['allowclear'] == '1' ? 'allowClear: true' : '',
+		'multiple'			=> !empty($options['multiple']) && $options['multiple'] == 1 ? '1' : '0',
+		'width'				=> !empty($options['width']) ? $options['width'] : '',
+		'keyflip'			=> !empty($options['keyflip']) && $options['keyflip'] == 1 ? '1' : '0',
+		'tags'				=> !empty($options['tags']) && $options['tags'] == 1 ? 1 : 0,
+		'jsonmode'			=> !empty($options['jsonmode']) && $options['jsonmode'] == 1 ? '1' : '0',
+		'chainable'			=> !empty($options['chainable']) ? $options['chainable'] : '',
+		'maxselect'			=> !empty($options['maxselect']) && isnum($options['maxselect']) ? $options['maxselect'] : 30,
+		'error_text'		=> !empty($options['error_text']) ? $options['error_text'] : '',
+		'class'				=> !empty($options['class']) ? $options['class'] : '',
+		'inline'			=> !empty($options['inline']) ? $options['inline'] : '',
+		'tip'				=> !empty($options['tip']) ? $options['tip'] : '',
+		'delimiter'			=> !empty($options['delimiter']) ? $options['delimiter'] : ',',
+		'callback_check'	=> !empty($options['callback_check']) ? $options['callback_check'] : FALSE
 	);
 
 	if ($options['multiple']) {
-		if ($input_value !=='') {
+		if ($input_value) {
 			$input_value = construct_array($input_value,FALSE,$options['delimiter']);
 		} else {
 			$input_value = array();
@@ -89,6 +91,7 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 				} else { // normal mode = store array keys
 					$chain = ($options['chainable']) ? "class='$arr'" : '';
 					$select = '';
+					//if ($input_value || $input_value === '0') {
 					if ($input_value  !== NULL) {
 						$input_value = stripinput($input_value); // not sure if can turn 0 to zero not null.
 						$select = (isset($input_value) && $input_value == $arr) ? 'selected' : '';
@@ -100,7 +103,6 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 		}
 		$html .= "</select>\n";
 	}
-
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= ($options['inline']) ? "</div>\n" : '';
 	$html .= "</div>\n";
@@ -108,18 +110,17 @@ function form_select($title, $input_name, $input_id, array $option_array = array
 		$html .= "<input class='req' id='dummy-$input_id' type='hidden'>\n"; // for jscheck
 	}
 
-
-
 	// Generate Defender Tag
 	$input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 	$defender->add_field_session(array(
 							 'input_name' 	=> 	$input_name,
 							 'type'			=>	'dropdown',
-							 'title'		=>	$title2,
+							 'regex'		=> $options['regex'],
 							 'id' 			=>	$input_id,
 							 'required'		=>	$options['required'],
 							 'safemode' 	=> 	$options['safemode'],
-							 'error_text'	=> 	$options['error_text']
+							 'error_text'	=> 	$options['error_text'],
+							 'callback_check'	=> $options['callback_check']
 						 ));
 	// Initialize Select2
 	// Select 2 Multiple requires hidden DOM.
@@ -253,7 +254,7 @@ function form_user_select($title, $input_name, $input_id, $input_value = FALSE, 
                     if(!item.id) {return item.text;}
                     var avatar = item.avatar;
                     var level = item.level;
-                    return '<table><tr><td style=\"\"><img style=\"height:25px;\" class=\"img-rounded\" src=\"".IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
+                    return '<table><tr><td style=\"\"><img style=\"height:30px;\" class=\"img-rounded\" src=\"".IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:10px\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
                 }
 
                 $('#".$input_id."').select2({
@@ -317,7 +318,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 	$cat_col = (isset($cat_col) && ($cat_col != "")) ? stripinput($cat_col) : '';
 
 	/* Documentation Included */
-	$options = array(
+	$options += array(
 		'required' => !empty($options['required']) && $options['required'] == 1 ? 1 : 0, // to set required field
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? 1 : 0, // to init safemode filter
 		'allowclear' => !empty($options['allowclear']) ? 1 : 0, // to have an "X" to reset selection
@@ -351,7 +352,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$level = 0;
 		$html = "<div id='$input_id-field' class='form-group ".$options['class']."' ".($options['inline'] && $options['width'] && !$title ? "style='width: ".$options['width']." !important;'" : '').">\n";
 		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
-		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12 p-l-0")." p-l-0'>\n" : "";
+		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")." p-l-0'>\n" : "";
 	}
 	if ($level == 0) {
 		$html = &$html;
@@ -361,7 +362,7 @@ function form_select_tree($title, $input_name, $input_id, $input_value = FALSE, 
 		$allowclear
 		});
 		");
-		$html .= "<select name='$input_name' style='".($options['width'] ? "width: ".$options['width']." " : 'min-width:250px;')."' id='$input_id' class='".$options['class']."' ".($options['deactivate'] == 1 ? "disabled" : '')." $multiple>";
+		$html .= "<select name='$input_name' style='".($options['width'] ? "width: ".$options['width']." " : 'min-width:250px;')."' id='$input_id' class='".$options['class']."' ".($options['deactivate'] == 1 ? "readonly" : '')." $multiple>";
 		$html .= $options['allowclear'] ? "<option value=''></option>" : '';
 		if ($options['no_root'] !== 1) { // api options to remove root from selector. used in items creation.
 			$this_select = '';

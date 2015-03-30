@@ -68,9 +68,9 @@ elseif (isset($_GET['step']) && $_GET['step'] == "inactive" && !$user_id && $set
 		}
 	}
 	echo "</div>\n<div class='tbl1' style='text-align:center;'>\n";
-	echo openform('member_form', 'member_form', 'post', FUSION_SELF.$aidlink."&amp;step=inactive", array('downtime' => 1));
-	echo form_button($locale['418'], 'cancel', 'cancel', $locale['418'], array('class' => 'btn-primary'));
-	echo form_button($button, 'deactivate_users', 'deactivate_users', $button, array('class' => 'btn-primary'));
+	echo openform('member_form', 'post', FUSION_SELF.$aidlink."&amp;step=inactive", array('max_tokens' => 1));
+	echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary'));
+	echo form_button('deactivate_users', $button, $button, array('class' => 'btn-primary'));
 	echo closeform();
 	echo "</div>\n";
 	closetable();
@@ -333,7 +333,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 1 && $user_id && (!$isAdmin
 				$ban_title = $locale['409']." ".$udata['user_name'];
 			}
 			opentable($ban_title);
-			echo openform('ban_user', 'ban_user', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=1&amp;user_id=".$user_id, array('downtime' => 1));
+			echo openform('ban_user', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=1&amp;user_id=".$user_id, array('max_tokens' => 1));
 			echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n<tr>\n";
 			echo "<td colspan='2' class='tbl'><strong>".$locale['585a'].$udata['user_name'].".</strong></td>\n";
 			echo "</tr>\n<tr>\n";
@@ -342,8 +342,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 1 && $user_id && (!$isAdmin
 			echo form_textarea('', 'ban_reason', 'ban_reason', '');
 			echo "</td>\n</tr>\n<tr>\n";
 			echo "<td colspan='2' align='center'>\n";
-			echo form_button($locale['418'], 'cancel', 'cancel', $locale['418'], array('class' => 'btn-primary m-r-10'));
-			echo form_button($ban_title, 'ban_user', 'ban_user', $ban_title, array('class' => 'btn-primary'));
+			echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary m-r-10'));
+			echo form_button('ban_user', $ban_title, $ban_title, array('class' => 'btn-primary'));
 			echo "</tbody>\n</tr>\n</table>\n";
 			echo closeform();
 			closetable();
@@ -401,7 +401,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 3 && $user_id && (!$isAdmin
 				$action = $locale['592'];
 			}
 			opentable($suspend_title);
-			echo openform('ban_user', 'ban_user', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=3&amp;user_id=".$user_id, array('downtime' => 1));
+			echo openform('ban_user', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=3&amp;user_id=".$user_id, array('max_tokens' => 1));
 			echo "<table cellpadding='0' cellspacing='0' width='460' class='table table-responsive center'>\n<tbody>\n<tr>\n";
 			echo "<td colspan='2' class='tbl'><strong>".$locale['594'].$action.$locale['595'].$udata['user_name'].".</strong></td>\n";
 			if ($udata['user_status'] != 3) {
@@ -415,8 +415,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 3 && $user_id && (!$isAdmin
 			echo form_textarea('', 'suspend_reason', 'suspend_reason', '');
 			echo "</td>\n</tr>\n<tr>\n";
 			echo "<td colspan='2' align='center'>\n";
-			echo form_button($locale['418'], 'cancel', 'cancel', $locale['418'], array('class' => 'btn-primary m-r-10'));
-			echo form_button($suspend_title, 'suspend_user', 'suspend_user', $suspend_title, array('class' => 'btn-primary'));
+			echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary m-r-10'));
+			echo form_button('suspend_user', $suspend_title, $suspend_title, array('class' => 'btn-primary'));
 			echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
 			closetable();
 			display_suspend_log($user_id, 3, 10, 10);
@@ -453,7 +453,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 4 && $user_id && (!$isAdmin
 				$action = $locale['601'];
 			}
 			opentable($ban_title);
-			echo openform('sban_users', 'sban_users', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=4&amp;user_id=".$user_id, array('downtime' => 1));
+			echo openform('sban_users', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;action=4&amp;user_id=".$user_id, array('max_tokens' => 1));
 			echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n<tr>\n";
 			echo "<td colspan='2' class='tbl'><strong>".$locale['594'].$action.$locale['595'].$udata['user_name'].".</strong></td>\n";
 			echo "</tr>\n<tr>\n";
@@ -462,8 +462,8 @@ elseif (isset($_GET['action']) && $_GET['action'] == 4 && $user_id && (!$isAdmin
 			echo form_textarea('', 'sban_reason', 'sban_reason', '');
 			echo "</td>\n</tr>\n<tr>\n";
 			echo "<td colspan='2' align='center'>\n";
-			echo form_button($locale['418'], 'cancel', 'cancel', $locale['418'], array('class' => 'btn-primary m-r-10'));
-			echo form_button($ban_title, 'sban_user', 'sban_user', $ban_title, array('class' => 'btn-primary'));
+			echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary m-r-10'));
+			echo form_button('sban_user', $ban_title, $ban_title, array('class' => 'btn-primary'));
 			echo "</td>\n</tr>\n</tbody>\n</table>\n</form>\n";
 			closetable();
 			display_suspend_log($user_id, 4, 10, 10);
@@ -557,7 +557,7 @@ else {
 		ORDER BY user_level DESC, user_name
 		LIMIT $rowstart,20");
 
-	echo openform('viewstatus', 'viewstatus', 'get', FUSION_SELF.$aidlink, array('downtime'=>1, 'class'=>'clearfix'));
+	echo openform('viewstatus', 'get', FUSION_SELF.$aidlink, array('max_tokens' => 1, 'class'=>'clearfix'));
 	echo "<div class='btn-group'>\n";
 	echo "<a class='button btn btn-sm btn-primary' href='".FUSION_SELF.$aidlink."&amp;step=add'>".$locale['402']."</a>\n";
 	if ($settings['enable_deactivation'] == 1) {
@@ -654,11 +654,11 @@ else {
 
 	echo "<hr />\n";
 
-	echo openform('searchform', 'searchform', 'get', FUSION_SELF.$aidlink, array('downtime' => 1, 'notice' => 0));
+	echo openform('searchform', 'get', FUSION_SELF.$aidlink, array('max_tokens' => 1, 'notice' => 0));
 	echo form_hidden('', 'aid', 'aid', iAUTH);
 	echo form_hidden('', 'status', 'status', $status);
-	echo form_text($locale['415'], 'search_text', 'search_text', '', array('inline'=>1));
-	echo form_button($locale['416'], 'search', 'search', $locale['416'], array('class' => 'col-sm-offset-3 btn-sm btn-primary'));
+	echo form_text('search_text', $locale['415'], '', array('inline'=>1));
+	echo form_button('search', $locale['416'], $locale['416'], array('class' => 'col-sm-offset-3 btn-sm btn-primary'));
 	echo closeform();
 
 	closetable();
