@@ -867,7 +867,7 @@ class Products {
 		echo "<a href='".FUSION_SELF.$aidlink."&amp;status=1' ".($item_status ? "class='text-dark'" : '').">Unlisted (".number_format(dbcount("(id)", DB_ESHOP, "status='0'")).")</a>\n - ";
 		echo "</div>\n";
 		echo "<div class='display-inline-block'>\n";
-		echo openform('get_filter', 'get_filters', 'post', clean_request('', array('aid', 'status', 'section')), array('notice'=>0, 'max_tokens' => 1));
+		echo openform('get_filter', 'post', clean_request('', array('aid', 'status', 'section')), array('notice'=>0, 'max_tokens' => 1));
 		echo "</div>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
 		echo form_select_tree('', 'category', 'category', $category, array('no_root'=>1, 'width'=>'200px', 'allowclear'=>1, 'placeholder'=>$locale['ESHFEAT125']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');

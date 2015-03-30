@@ -171,7 +171,7 @@ while ($i != $opt_count) {
 	$poll_opt = isset($poll_option[$i]) ? $poll_option[$i] : "";
 	echo "<tr>\n<td width='80' class='tbl'><label for='poll_option[$i]'>".$locale['432']."$opt </label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('', "poll_option[".$i."]", "poll_option[".$i."]", $poll_opt);
+	echo form_text("poll_option[".$i."]", '',  $poll_opt);
 	// <input type='text' name='poll_option[".$i."]' value='".$poll_opt."' class='textbox' style='width:200px' /></td>\n</tr>\n";
 	$i++;
 	$opt++;
