@@ -450,190 +450,121 @@ function fieldgenerator($db) {
 
 /**
  * MYSQL Row modifiers. Insert/Update/Delete
- * @param       $db
- * @param       $inputdata
- * @param       $mode
+ *
+ * @param string $table
+ * @param array $inputdata
+ * @param string $mode save|update|delete
  * @param array $options
- * @return int
+ * 	<ul>
+ * 		<li><strong>debug (boolean)</strong>:
+ * 			If TRUE, do nothing, just show the SQL. FALSE by default</li>
+ * 		<li><strong>primary_key (string|string[])</strong>:
+ * 			Names of primary key columns. If it is empty,
+ * 			columns will detected automatically.</li>
+ * 		<li><strong>no_unique (boolean)</strong>:
+ * 			If TRUE, primary key columns will be not removed
+ * 			from $inputdata. FALSE by default.</li>
+ * 		<li><strong>keep_session (boolean)</strong>:
+ * 			If TRUE, defender will not unset field sessions.</li>
+ * 	</ul>
+ * @return int|FALSE
+ * 	If an error happens, it returns FALSE.
+ * 	Otherwise, if $mode is save and the primary key column is
+ * 	incremented automatically, this function returns the last inserted id.
+ * 	In other cases it always returns 0.
  */
-function dbquery_insert($db, $inputdata, $mode, array $options = array()) {
-	global $defender;
-	require_once INCLUDES."notify/notify.inc.php";
-	if (defined("ADMIN_PANEL")) {
-		global $aidlink;
-	} else {
-		$aidlink = '?';
+function dbquery_insert($table, $inputdata, $mode, array $options = array()) {
+	$options += array(
+		'debug' => FALSE,
+		'primary_key' => '',
+		'no_unique' => FALSE,
+		'keep_session' => FALSE
+	);
+
+	if (defined("FUSION_NULL")) {
+		if ($options['debug']) {
+			print_p('Fusion Null Declared. Developer, check form tokens.');
+		}
+		return FALSE;
 	}
 
-	$options += array(
-		'url' => !empty($options['url']) ? : '',
-		'debug' => !empty($options['debug']) ? 1 : 0,
-		'primary_key' => !empty($options['primary_key']) ? $options['primary_key'] : 0,
-		'no_unique' => !empty($options['no_unique']) && $options['no_unique'] == 1 ? 1 : 0,
-		'keep_session' => !empty($options['keep_session']) && $options['keep_session'] == 1 ? 1 : 0
+	global $defender;
+
+	$cresult = dbquery("SHOW COLUMNS FROM $table");
+	$columns = array();
+	$pkcolumns = array();
+	while ($cdata = dbarray($cresult)) {
+		$columns[] = $cdata['Field'];
+		if ($cdata['Key'] === 'PRI') {
+			$pkcolumns[$cdata['Field']] = $cdata['Field'];
+		}
+	}
+	if ($options['primary_key']) {
+		$options['primary_key'] = (array) $options['primary_key'];
+		$pkcolumns = array_combine($options['primary_key'], $options['primary_key']);
+	}
+	$sanitized_input = array();
+	$data = array_intersect_key($inputdata, array_flip($columns));
+	$pkvalues = array_intersect_key($data, $pkcolumns);
+	if (!$options['no_unique'] and $mode !== 'save') {
+		foreach ($pkcolumns as $c) {
+			unset($data[$c]);
+		}
+	}
+
+	if (!$data) {
+		if ($options['debug']) {
+			print_p('$inputdata does not contain any valid column.');
+		}
+		return FALSE;
+	}
+
+	$sqlPatterns = array(
+		'save'   => 'INSERT INTO `{table}` SET {values}',
+		'update' => 'UPDATE `{table}` SET {values} WHERE {where}',
+		'delete' => 'DELETE FROM `{table}` WHERE {where}'
 	);
-	if (!defined("FUSION_NULL")) {
-		$columns = fieldgenerator($db);
-		$col_rows = count($columns);
-		$col_names = array();
-		$sanitized_input = array();
-		// for save, status=success
-		// for update, status=updated
-		// for delete, status=del
-		//@todo: optimize code later. there are repeated sections.
-		// Prime Module
-		foreach ($columns as $arr => $v) {
-			if ($options['no_unique']) {
-				// no_unique  - that every single column have a value.
-				if ($mode == "save") { // if have AI column, just save in.
-					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
-				} elseif ($mode == "update") {
-					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v"; // all with no comma
-				}
-				// check whether there is a value or not.
-				if (array_key_exists($v, $inputdata)) {
-					$values = $inputdata[$v]; // go through the super sanitizer first.
-					/* if (isset($error) && ($values == $error)) {
-						redirect(FUSION_SELF.$aidlink."&status=error".($error ? "&error=$error" : ""));
-					} */
-					if ($mode == "save") {
-						$sanitized_input[] = ($arr == ($col_rows-1)) ? "'$values'" : "'$values',";
-					} elseif ($mode == "update") {
-						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v='$values'" : "$v='$values',";
-					}
-				} else {
-					if ($mode == "save" && $pkey !==$v) {
-						$sanitized_input[] = ($arr == ($col_rows-1)) ? "''" : "'',";
-					} elseif ($mode == "update") {
-						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v=''" : "$v='',";
-					}
-				}
-			} elseif ($options['primary_key']) {
-				// using PKEY - when the UNIQUE Auto Increment Column is NOT in the first column. - not to save on AI.
-				if ($mode == "save" && $options['primary_key'] !==$v) {
-				//if ($mode == "save") { // if have AI column, just save in.
-					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
-				} elseif ($mode == "update") {
-					$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v"; // all with no comma
-				}
-				// check whether there is a value or not.
-				if (array_key_exists($v, $inputdata)) {
-					$values = $inputdata[$v]; // go through the super sanitizer first.
-					/* if (isset($error) && ($values == $error)) {
-						redirect(FUSION_SELF.$aidlink."&status=error".($error ? "&error=$error" : ""));
-					} */
-					if ($mode == "save") {
-						$sanitized_input[] = ($arr == ($col_rows-1)) ? "'$values'" : "'$values',";
-					} elseif ($mode == "update") {
-						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v='$values'" : "$v='$values',";
-					}
-				} else {
-					if ($mode == "save" && $options['primary_key'] !==$v) {
-						$sanitized_input[] = ($arr == ($col_rows-1)) ? "''" : "'',";
-					} elseif ($mode == "update") {
-						$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v=''" : "$v='',";
-					}
-				}
-			} else {
-				// Skip 1st column - we assume that UNIQUE Auto Increment is The First Column.
-				if ($arr !== 0) {
-					if ($mode == "save") {
-						$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v,"; // with or without comma
-					} elseif ($mode == "update") {
-						$col_names[] = ($arr == ($col_rows-1)) ? "$v" : "$v"; // all with no comma
-					}
-					// check whether there is a value or not.
-					if (array_key_exists($v, $inputdata)) {
-						$values = $inputdata[$v]; // go through the super sanitizer first.
-						if ($mode == "save") {
-							$sanitized_input[] = ($arr == ($col_rows-1)) ? "'$values'" : "'$values',";
-						} elseif ($mode == "update") {
-							$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v='$values'" : "$v='$values',";
-						}
-					} else {
-						if ($mode == "save") {
-							$sanitized_input[] = ($arr == ($col_rows-1)) ? "''" : "'',";
-						} elseif ($mode == "update") {
-							$sanitized_input[] = ($arr == ($col_rows-1)) ? "$v=''" : "$v='',";
-						}
-					}
-				} // skips 1st id array.
-			}
+
+	foreach ($data as $name => $value) {
+		$sanitized_input[] = "`$name` = '$value'";
+	}
+
+	if (!isset($sqlPatterns[$mode])) {
+		// TODO Replace die with something better. I kept the old way (Rimelek)
+		die();
+	}
+	$where = '';
+
+	if ($mode === 'update' or $mode === 'delete') {
+		$pkwhere = array();
+		foreach ($pkvalues as $name => $pkvalue) {
+			$pkwhere[] = "`$name`='$pkvalue'";
 		}
-		$key = 0;
-		if ($options['primary_key']) {
-			foreach($columns as $ckey => $col) {
-				if ($col == $options['primary_key']) {
-					$key = $ckey;
-					break;
-				}
-			}
+		$where = implode(' AND ', $pkwhere);
+	}
+	$sql = strtr($sqlPatterns[$mode], array(
+		'{table}' => $table,
+		'{values}' => implode(', ', $sanitized_input),
+		'{where}' => $where
+	));
+	$result = NULL;
+	if ($options['debug']) {
+		if ($options['debug']) {
+			print_p($where);
+			print_p($sanitized_input);
 		}
-		if ($mode == "save") {
-			// counter to make sure it's the same.
-			$the_column = "";
-			$the_value = "";
-			foreach ($col_names as $arr => $v) {
-				$the_column .= "$v";
-			}
-			foreach ($sanitized_input as $arr => $v) {
-				$the_value .= "$v";
-			}
-			if ($options['debug']) {
-				print_p($col_names);
-				print_p($sanitized_input);
-			}
-			if (count($col_names) !== count($sanitized_input)) {
-				die();
-			} else {
-				if ($options['debug']) {
-					$result = "INSERT INTO ".$db." ($the_column) VALUES ($the_value)";
-					print_p($result);
-				} else {
-					$result = dbquery("INSERT INTO ".$db." ($the_column) VALUES ($the_value)");
-					if (!$options['keep_session']) $defender->unset_field_session();
-					return dblastid();
-				}
-			}
-		} elseif ($mode == "update") {
-			$the_value = "";
-			foreach ($sanitized_input as $arr => $v) {
-				$the_value .= "$v";
-			}
-			// settings to use which field as the core for update.
-			$update_core = "".$columns[$key]."='".$inputdata[$columns[$key]]."'";
-			if ($options['debug']) {
-				print_p($update_core);
-				print_p($the_value);
-			}
-			if (count($col_names) !== count($sanitized_input)) {
-				die();
-			} else {
-				if ($options['debug']) {
-					print_p("UPDATE ".$db." SET $the_value WHERE $update_core");
-				} else {
-					$result = dbquery("UPDATE ".$db." SET $the_value WHERE $update_core");
-					if (!$options['keep_session']) $defender->unset_field_session();
-				}
-			}
-		} elseif ($mode == "delete") {
-			if ($aidlink !== "") { // since only admin can launch deletion?
-				$col = $columns[$key];
-				$values = $inputdata[$col];
-				if ($options['debug']) {
-					print_p("DELETE FROM ".$db." WHERE $col='$values'");
-				} else {
-					$result = dbquery("DELETE FROM ".$db." WHERE $col='$values'");
-					if (!$options['keep_session']) $defender->unset_field_session();
-				}
-			}
-		} else {
-			die();
+		print_p($sql);
+	} else {
+		$result = dbquery($sql);
+		if (!$options['keep_session']) {
+			$defender->unset_field_session();
 		}
 	}
-	elseif ($options['debug']) {
-		print_p('Fusion Null Declared. Developer, check form tokens.');
+	if ($result === FALSE) {
+		// Because dblastid() can return the id of the last record of the error log.
+		return FALSE;
 	}
+	return ($mode === 'save') ? dblastid() : 0;
 }
 
 

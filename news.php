@@ -273,6 +273,5 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	}
 }
 render_main_news($info);
-if ($rows > $settings['newsperpage'] && (!isset($_GET['readmore']) || !isnum($_GET['readmore']))) echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $settings['newsperpage'], $rows , 3)."\n</div>\n";
 require_once THEMES."templates/footer.php";
 ?>
