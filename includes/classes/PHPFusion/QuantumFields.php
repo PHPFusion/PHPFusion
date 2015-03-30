@@ -567,7 +567,7 @@ class QuantumFields {
 	}
 
 	/** Outputs a multilocale single field */
-	public static function quantum_multilocale_fields($title, $input_name, $input_id, $input_value, array $options = array()) {
+	public static function quantum_multilocale_fields($title, $input_name, $input_value, array $options = array()) {
 		$html = '';
 		$language_opts = fusion_get_enabled_languages();
 		$input_value = self::is_serialized($input_value) ? unserialize($input_value) : $input_value;
@@ -583,9 +583,10 @@ class QuantumFields {
 			'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
 			'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
 			'icon' => !empty($options['icon']) ?  $options['icon']  : '',
+			'input_id' => !empty($options['input_id']) ?  $options['input_id']  : $input_name,
 		);
 		$required = $options['required'];
-		$html .= "<div id='$input_id-field' class='form-group m-t-10 ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
+		$html .= "<div id='".$options['input_id']."-field' class='form-group m-t-10 ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
 		$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9 well p-l-15" : "col-sm-12 col-md-12 col-lg-12")."'>\n" : "<div class='p-t-10 p-b-10 well'>";
 		$main_html = ''; $sub_html = '';
@@ -593,6 +594,7 @@ class QuantumFields {
 			$options['field_title'] = $title." (".$lang.")";
 			if ($lang == LANGUAGE) {
 				$options['required'] = $required;
+				// Fix this
 				$main_html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, isset($input_value[$lang]) ? $input_value[$lang] : $input_value, $options);
 			} else {
 				$options['required'] = 0;
@@ -1162,7 +1164,7 @@ class QuantumFields {
 		}
 		// ok the value generated needs to be parsed by quantum
 		echo form_select_tree($locale['fields_0450'], 'field_cat', 'field_cat', $this->field_data['field_cat'], array('no_root' => 1, 'width'=>'100%', 'disable_opts' => $disable_opts), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-		echo self::quantum_multilocale_fields($locale['fields_0451'], 'field_title', 'field_title', $this->field_data['field_title'], array('required'=>1));
+		echo self::quantum_multilocale_fields($locale['fields_0451'], 'field_title', $this->field_data['field_title'], array('required'=>1));
 		echo form_text('field_name', $locale['fields_0453'], $this->field_data['field_name'], array('placeholder' => $locale['fields_0454'], 'required' => 1));
 		if ($this->field_data['field_type'] == 'select') echo form_select($locale['fields_0455'], 'field_options', 'field_options', array(), $this->field_data['field_options'], array('required' => 1,
 			'tags' => 1,
@@ -1527,8 +1529,8 @@ class QuantumFields {
 			}
 		}
 
-		$html = openform('cat_form', 'cat_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-		$html .= self::quantum_multilocale_fields($locale['fields_0430'], 'field_cat_name', 'field_cat_name', $this->field_cat_data['field_cat_name'], array('required'=>1));
+		$html = openform('cat_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+		$html .= self::quantum_multilocale_fields($locale['fields_0430'], 'field_cat_name', $this->field_cat_data['field_cat_name'], array('required'=>1));
 		$html .= form_select_tree($locale['fields_0431'], 'field_parent', 'field_parent', $this->field_cat_data['field_parent'], array('parent_value' => $locale['fields_0432'], 'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 		$html .= form_text('field_cat_order', $locale['fields_0433'], $this->field_cat_data['field_cat_order'], array('number' => 1));
 		$html .= form_hidden('', 'field_cat_id', 'field_cat_id', $this->field_cat_data['field_cat_id'], array('number' => 1));
