@@ -178,7 +178,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$info['blog_nav'] = makepagenav($_GET['rowstart'], 1, $item['blog_pagecount'], 3, BASEDIR."blog.php?readmore=".$_GET['readmore']."&amp;")."\n";
 			}
 			add_to_breadcrumbs(array('link' => BASEDIR."blog.php?readmore=".$_GET['readmore'], 'title' => $item['blog_subject']));
-			add_to_title($item['blog_subject']);
+			add_to_title($locale['global_201'].$item['blog_subject']);
 			add_to_meta($item['blog_subject'].($item['blog_keywords'] ? ",".$item['blog_keywords'] : ''));
 			$item['blog_subject'] = "<a class='text-dark' href='".BASEDIR."blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>";
 			$info['blog_item'] = $item;
