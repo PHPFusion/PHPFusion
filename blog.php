@@ -126,6 +126,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$item['blog_thumb_1'] = thumbnail($lowRes_image_path, '80px', $hiRes_image_path, true);
 				$item['blog_thumb_2'] = thumbnail($hiRes_image_path, '200px', $hiRes_image_path, true);
 			} else {
+				$item['blog_image_link'] = '';
+				$item['blog_thumb_1_link'] = '';
 				$item['blog_blog'] = '';
 				$item['blog_image'] = '';
 				$item['blog_image_t1'] = '';
