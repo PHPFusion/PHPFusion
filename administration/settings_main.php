@@ -93,13 +93,13 @@ if (isset($_POST['savesettings'])) {
 			// Others
 			} else {
 				// form_sanitizer needs patching, doesn't accept int|str 0 as default value
-				$settings_main[$key] = form_sanitizer($_POST[$key], '', $key);
+				$settings_main[$key] = form_sanitizer($_POST[$key], $settings_main[$key], $key);
 			}
 
 			// Changes info
 			//addNotice("info", "<b>".$key."</b>: ".htmlspecialchars($settings_main[$key])." -> ".htmlspecialchars($_POST[$key]));
 		} else {
-			$settings_main[$key] = form_sanitizer($settings_main[$key], '', $key);
+			$settings_main[$key] = form_sanitizer($settings_main[$key], $settings_main[$key], $key);
 			//addNotice('info', $key." was NOT posted, the default value was used");
 		}
 

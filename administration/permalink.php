@@ -38,7 +38,7 @@ if (isset($_POST['savesettings'])) {
 	$settings_seo['debug_seo']		= (isset($_POST['debug_seo']) ? 1 : 0);*/
 
 	foreach ($settings_seo as $key => $value) {
-		$settings_seo[$key] = form_sanitizer($settings_seo[$key], '', $key);
+		$settings_seo[$key] = form_sanitizer($settings_seo[$key], $settings_seo[$key], $key);
 		// No need to check for FUSION_NULL here because we have only checkboxes
 		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_seo[$key]."' WHERE settings_name='".$key."'");
 	}

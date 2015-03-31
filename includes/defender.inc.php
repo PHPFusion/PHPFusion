@@ -766,8 +766,10 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 
 	// DEV: To be reviewed
 	if ($input_name) {
+
 		$val = array();
 		if ($multilang) {
+
 			$main_field_name = ''; $main_field_id = '';
 			// copy the first available value to the next one.
 			foreach (fusion_get_enabled_languages() as $lang => $language) {
@@ -799,7 +801,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				return serialize($val);
 			}
 		} else {
-			// Most input checks will fall into this
+			// Make sure that the input was actually defined in code
 			if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
 				$defender->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
 				$defender->field_name = $input_name;
@@ -830,6 +832,10 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 					if ($defender->debug) addNotice('info', $input_name.' = '.(is_array($finalval) ? 'array' : $finalval));
 					return $finalval;
 				}
+			} else {
+			// The input was not defined in code, the default value will be returned
+			// Default value is most of the times data previously saved in DB
+				return $default;
 			}
 		}
 	// DEV: To be reviewed
@@ -861,6 +867,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 		}
 	}
 
+	//addNotice('warning', '<b> *** WARNING:</b> No input defined in source code for <b>'.$input_name.'</b>');
 	throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
 }
 
