@@ -26,7 +26,7 @@
 // - Don't traslate/localise debug notices, is unnecessary
 
 class defender {
-	public $debug = TRUE;
+	public $debug = FALSE;
 	public $ref = array();
 	//public $error_content = array();
 	public $error_title = '';
