@@ -116,7 +116,7 @@ class UserFields extends QuantumFields {
 			// User Password
 			$this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');
 			if ($this->registration) {
-				$this->info['user_password'] .= form_text($locale['u134a'], 'user_password1', ' user_password1', '', array('type' => 'password',
+				$this->info['user_password'] .= form_text('user_password1', $locale['u134a'], '', array('type' => 'password',
 					'autocomplete_off' => 1,
 					'inline' => 1,
 					'max_length' => 64,
