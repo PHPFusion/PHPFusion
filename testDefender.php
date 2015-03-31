@@ -73,7 +73,7 @@ if (isset($_POST['submit'])) {
 		// will be returned, this can be a valid value previously saved in the DB
 		} else {
 			$settings_test[$key] = form_sanitizer($settings_test[$key], $settings_test[$key], $key);
-			addNotice('info', $key." was NOT posted, the default value was used");
+			//addNotice('info', $key." was NOT posted, the default value was used");
 		}
 	}
 
@@ -85,7 +85,7 @@ if (isset($_POST['submit'])) {
 	}
 }
 
-echo openform('form', 'post', FUSION_SELF, array('downtime' => 5));
+echo openform('form', 'post', FUSION_SELF, array('max_tokens' => 5));
 
 echo form_text('text_input_required', 'Required text input', $settings_test['text_input_required'], array('required' => 1, 'tip' => 'Information', 'error_text' => 'CUSTOM ERROR: This field cannot be left empty', 'inline' => 1));
 echo form_text('text_input_safe', 'Required text input in SAFEMODE', $settings_test['text_input_safe'], array('required' => 1, 'safemode' => 1, 'inline' => 1));
