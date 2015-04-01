@@ -25,7 +25,7 @@ echo "<div class='overlay'>\n";
 open_grid('section-1', 1);
 echo "<div class='row hidden-xs'>\n";
 echo "<div id='logo' class='col-xs-12 col-md-3 col-lg-3 p-t-5 text-smaller'>\n";
-echo "&nsbp;";
+echo "&nbsp;";
 echo "</div>\n";
 echo "<div class='col-xs-9 col-md-9 col-lg-9 text-right clearfix p-t-5'>\n";
 echo openform('searchform', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.BASEDIR.'search.php?stype=all', array('max_tokens' => 1, 'class'=>'display-inline-block pull-right m-r-10', 'notice'=>0));

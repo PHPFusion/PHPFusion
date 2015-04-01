@@ -127,7 +127,7 @@ if (!function_exists('blog_cat_menu')) {
 		if (!empty($info[$cat_id])) {
 			foreach($info[$cat_id] as $blog_cat_id => $cdata) {
 				$active = ($blog_cat_id == $_GET['cat_id'] && $_GET['cat_id'] !=='') ? 1 : 0;
-				$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nsbp;', $level)." ".$cdata['blog_cat_link']."</li>\n";
+				$html .= "<li ".($active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['blog_cat_link']."</li>\n";
 				if ($active && $blog_cat_id !=0) {
 					if (!empty($info[$blog_cat_id])) {
 						$html .= blog_cat_menu($info, $blog_cat_id, $level++);
