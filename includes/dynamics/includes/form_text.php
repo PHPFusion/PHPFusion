@@ -43,7 +43,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 	$valid_types = array('text', 'number', 'password', 'email', 'url');
 
 	$options += array(
-		'type'				=> !empty($options['type']) && in_array($options['type'], $valid_types) ? $options['type'] : 'textbox',
+		'type'				=> !empty($options['type']) && in_array($options['type'], $valid_types) ? $options['type'] : 'text',
 		'required'			=> !empty($options['required']) && $options['required'] == 1 ? 1 : 0,
 		'safemode'			=> !empty($options['safemode']) && $options['safemode'] == 1 ? 1 : 0,
 		'regex'				=> !empty($options['regex']) ? $options['regex'] : FALSE,
@@ -107,7 +107,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "<div class='input-group'>\n" : "";
 	$html .= ($options['prepend_button']) ? "<span class='input-group-btn'>\n<button id='".$options['input_id']."-prepend-btn' name='p-submit-".$options['input_id']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button></span>" : "";
-	$html .= "<input type='".($options['type'] == "password" ? "password" : "textbox")."' data-type='".$options['type']."' class='form-control textbox' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='$input_name' id='".$options['input_id']."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+	$html .= "<input type='".$options['type']."' data-type='".$options['type']."' class='form-control textbox' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='$input_name' id='".$options['input_id']."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 	$html .= ($options['append_button']) ? "<span class='input-group-btn'><button id='".$options['input_id']."-append-btn' name='p-submit-".$options['input_id']."' type='".$options['append_type']."' value='".$options['append_form_value']."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button></span>" : "";
 	$html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='glyphicon ".$options['icon']."'></i></div>\n" : "";
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "</div>\n" : "";
