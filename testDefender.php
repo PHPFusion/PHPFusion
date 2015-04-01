@@ -33,13 +33,14 @@ $settings_test = array(
 	'text_input_safe'		=> '',
 	'password_input'		=> '',
 	'text_input'			=> '',
-	'number_input'			=> '',
+	'number_input'			=> '321',
 	'checkbox_input'		=> 1,
 	'checkbox_input2'		=> 0,
-	'checkbox_input3'		=> 1,
+	'undefined_input'		=> 'foo', // this input is expected but not defined in code
+	//'checkbox_input3'		=> 1,
 	//'checkbox_input4'		=> 1,
 	'name_input'			=> '',
-	'address_input'			=> 'Some|Address',
+	//'address_input'			=> 'Some|Address',
 	'email_input'			=> 'valid@email.com',
 	'url_input'				=> '',
 	'regex_input'			=> 'abc',
@@ -54,16 +55,24 @@ if (isset($_POST['submit'])) {
 	// will be returned and also checked if valid.
 	// If other inputs are posted they will simply be ingored.
 	foreach ($settings_test as $key => $value) {
+		// We process the inputs posted here
 		if (isset($_POST[$key])) {
 			// aditional input processing
 			if ($key == 'some_input') {
 				//$settings_test[$key] = 1;
 			} else {
-				$settings_test[$key] = form_sanitizer($_POST[$key], '', $key);
+				$settings_test[$key] = form_sanitizer($_POST[$key], $settings_test[$key], $key);
 			}
 			//addNotice('info', $key." was posted, the user's input was used");
+		// Here go the inputs that we expected but didn't make it
+		// There can be more reasons and situations for this:
+		// - INPUT NOT POSTED: if the input was defined in source code but not posted
+		// the $value will checked and returned, but only if is not a checkbox in which
+		// case we assume it was unchecked and int 0 is returned
+		// - INPUT NOT DEFINED: if the input was not defined in source code then the $default
+		// will be returned, this can be a valid value previously saved in the DB
 		} else {
-			$settings_test[$key] = form_sanitizer($settings_test[$key], '', $key);
+			$settings_test[$key] = form_sanitizer($settings_test[$key], $settings_test[$key], $key);
 			//addNotice('info', $key." was NOT posted, the default value was used");
 		}
 	}
@@ -76,7 +85,7 @@ if (isset($_POST['submit'])) {
 	}
 }
 
-echo openform('form', 'post', FUSION_SELF, array('downtime' => 5));
+echo openform('form', 'post', FUSION_SELF, array('max_tokens' => 5));
 
 echo form_text('text_input_required', 'Required text input', $settings_test['text_input_required'], array('required' => 1, 'tip' => 'Information', 'error_text' => 'CUSTOM ERROR: This field cannot be left empty', 'inline' => 1));
 echo form_text('text_input_safe', 'Required text input in SAFEMODE', $settings_test['text_input_safe'], array('required' => 1, 'safemode' => 1, 'inline' => 1));
