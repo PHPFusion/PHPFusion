@@ -106,7 +106,7 @@ if ($settings['opening_page'] == FUSION_SELF) {
 	} else {
 		$link_name = $settings['sitename'];
 	}
-	//add_to_head('<style>.heading h2 { display:none !important; } .footer {margin-top:0px;} .section-showcase { height:150px; }</style>');
+	add_to_head('<style>.heading h2 { display:none !important; } .footer {margin-top:0px;} .section-showcase { height:150px; }</style>');
 	echo "<h2 class='text-center text-uppercase' style='letter-spacing:10px; font-weight:300; font-size:36px;'>".$link_name."</h2>\n";
 }
 if (FUSION_SELF == 'login.php') {
