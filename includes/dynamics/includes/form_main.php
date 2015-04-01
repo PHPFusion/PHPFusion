@@ -18,7 +18,7 @@
 function openform($form_name, $method, $action_url, array $options = array()) {
 	//global $defender;
 
-	$method = ($method == strtolower('post')) ? 'post' : 'get';
+	$method = (strtolower($method) == 'post') ? 'post' : 'get';
 
 	$options += array(
 		'form_id'	=> !empty($options['form_id']) ? $options['form_id'] : $form_name,
