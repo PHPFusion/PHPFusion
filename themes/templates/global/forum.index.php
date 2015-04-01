@@ -506,7 +506,7 @@ if (!function_exists('render_post')) {
 			echo opentabbody('', isset($_GET['section']) ? $_GET['section'] : 'oldest', $tab_active, 'oldest');
 			echo "<div id='top' class='thread_pagenav m-t-5'>\n".$info['page_nav']."</div>\n";
 			echo "<!--pre_forum_thread-->\n";
-			echo iMOD ? openform('mod_form', 'mod_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('max_tokens' => 1,'notice' => 0)) : '';
+			echo iMOD ? openform('mod_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;rowstart=".$_GET['rowstart'], array('max_tokens' => 1,'notice' => 0)) : '';
 			$i = 0;
 			// items
 			foreach($info['post_items'] as $post_id => $post_data) {
