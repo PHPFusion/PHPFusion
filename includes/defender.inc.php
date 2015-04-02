@@ -804,7 +804,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				$defender->field_default = $default; // to be removed
 
 				// These two checks won't be neccesary after we add the options in all inputs
-				$callback = isset($defender->field_config['callback_check']) ? $defender->field_config['callback_check'] : FALSE;
+				$callback = isset($defender->field_config['callback_check']) ? $defender->field_config['callback_check'] : 'stripinput';
 				$regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
 
 				$finalval = $defender->validate();
