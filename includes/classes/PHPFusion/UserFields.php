@@ -406,7 +406,7 @@ class UserFields extends QuantumFields {
 		$html = "<div class='form-group clearfix'>";
 		$html .= "<label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['u192']." <span class='required'>*</span></label>";
 		$html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
-		$html .= form_checkbox($locale['u193'], 'agreement', 'agreement', '');
+		$html .= form_checkbox('agreement', $locale['u193'], '');
 		$html .= "</div>\n";
 		add_to_jquery("
 		$('#agreement').bind('click', function() {
