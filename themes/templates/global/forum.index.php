@@ -556,7 +556,7 @@ if (!function_exists('render_post')) {
 				echo "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
 				echo form_textarea('', 'post_message', 'post_message', '', array('bbcode' => 1, 'required' => 1, 'autosize'=>1, 'preview'=>1, 'form_name'=>'qr_form'));
 				echo "<div class='m-t-10 pull-right'>\n";
-				echo $settings['site_seo'] ? '' : form_button('previewreply', $locale['forum_0173'], 'previewreply', $locale['forum_0173'], array('class' => 'btn-default btn-sm m-r-10')); // post lost.
+				echo $settings['site_seo'] ? '' : form_button('previewreply', $locale['forum_0173'], $locale['forum_0173'], array('class' => 'btn-default btn-sm m-r-10')); // post lost.
 				echo form_button('postreply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";

@@ -50,7 +50,7 @@ $forumCollapse = TRUE;
  * 	add_to_title($locale['global_201'].$data['forum_name']);
 	set_meta("description", $data['forum_name']);
  */
-if (isset($_GET['section'])) {
+if ($_GET['section'] !== 'thread') {
 	switch($_GET['section']) {
 		case 'mypost':
 			include FORUM."sections/my_posts.php";
@@ -244,7 +244,7 @@ if (isset($_GET['section'])) {
                 LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
                 LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
-                WHERE t.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' AND ".groupaccess('fourm.forum_access')." $sql_condition
+                WHERE t.forum_id='".$_GET['forum_id']."' AND thread_hidden='0' AND ".groupaccess('forum.forum_access')." $sql_condition
                 GROUP BY t.thread_id $sql_order LIMIT ".$_GET['rowstart'].", ".$info['threads_per_page']."
                 ");
 

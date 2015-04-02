@@ -94,7 +94,7 @@ elseif ($_GET['post'] == "new") {
 }
 elseif ($_GET['post'] == "reply") {
 	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-		redirects("index.php"); // thread id will resutl postfy fail. will need to check if this happens. wait for people to report on line number.
+		redirect("index.php"); // thread id will resutl postfy fail. will need to check if this happens. wait for people to report on line number.
 	}
 	add_to_title($locale['global_201'].$locale['forum_0503']);
 	opentable($locale['forum_0503']);
@@ -106,7 +106,7 @@ elseif ($_GET['post'] == "reply") {
 	}
 	if ($_GET['error'] < "2") {
 		if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) {
-			redirects("index.php"); // i will crash this -- quick reply not working due here. if that's the case, see post_actions.php / bug when forum_merge allowed. post_id not assigned
+			redirect("index.php"); // i will crash this -- quick reply not working due here. if that's the case, see post_actions.php / bug when forum_merge allowed. post_id not assigned
 		}
 		add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 		if (fusion_get_settings('thread_notify')) {
@@ -159,7 +159,7 @@ elseif ($_GET['post'] == "reply") {
 		echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
 	} else {
 		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-			redirects("index.php");
+			redirect("index.php");
 		}
 		$data = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
 		add_to_head("<meta http-equiv='refresh' content='4; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
