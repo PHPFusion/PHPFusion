@@ -240,6 +240,17 @@ class defender {
 		$this->input_errors[$input_name] = TRUE;
 	}
 
+	/**
+	 * ID for Session
+	 * No $userName because it can be changed and tampered via Edit Profile.
+	 * Using IP address extends for guest
+	 * @return mixed
+	 */
+	static function set_sessionUserID() {
+		global $userdata;
+		return isset($userdata['user_id']) && !isset($_POST['login']) ? (int) $userdata['user_id'] : str_replace('.', '-', USER_IP);
+	}
+
 	// Adds the field sessions on document load
 	static function add_field_session(array $array) {
 		$_SESSION['form_fields'][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
