@@ -57,14 +57,14 @@ function postform($data, $info) {
 			'error_text' => '',
 			'class' => 'm-t-20 m-b-20'));
 	}
-	echo form_textarea($locale['forum_0601'], 'post_message', 'post_message', $data['post_message'], array('required' => 1,
+	echo form_textarea('post_message', $locale['forum_0601'], $data['post_message'], array('required' => 1,
 		'error_text' => '',
 		'autosize' => 1,
 		'no_resize' => 1,
 		'preview' => 1,
 		'form_name' => 'input_form',
 		'bbcode' => 1));
-	echo $data['edit'] ? form_text($locale['forum_0611'], 'post_editreason', 'post_editreason', $data['post_editreason'], array('placeholder' => 'Edit reasons',
+	echo $data['edit'] ? form_text('post_editreason', $locale['forum_0611'], $data['post_editreason'], array('placeholder' => 'Edit reasons',
 		'error_text' => '',
 		'class' => 'm-t-20 m-b-20')) : '';
 	// Tabs
@@ -140,7 +140,7 @@ function postform($data, $info) {
 		$i = 1;
 		if (isset($data['poll_opts']) && !empty($data['poll_opts'])) {
 			foreach ($data['poll_opts'] as $poll_option) {
-				echo form_text($locale['forum_0605'].' '.$i, "poll_options[$i]", "poll_options[$i]", $poll_option, array('max_length' => 255,
+				echo form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, $poll_option, array('max_length' => 255,
 					'placeholder' => 'Poll Options',
 					'inline' => 1,
 					'class' => 'm-b-0'));
@@ -154,7 +154,7 @@ function postform($data, $info) {
 				if ($i == count($data['poll_opts'])) {
 					if ($data['edit']) {
 						$i++;
-						echo form_text($locale['forum_0605'].' '.$i, "poll_options[$i]", "poll_options[$i]", '', array('max_length' => 255,
+						echo form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, '', array('max_length' => 255,
 							'placeholder' => 'Poll Options',
 							'inline' => 1,
 							'class' => 'm-b-0'));
@@ -171,10 +171,10 @@ function postform($data, $info) {
 				$i++;
 			}
 		} else {
-			echo form_text($locale['forum_0606'], "poll_options[1]", "poll_options[1]", '', array('max_length' => 255,
+			echo form_text("poll_options[1]", $locale['forum_0606'], '', array('max_length' => 255,
 				'placeholder' => 'Poll Options',
 				'inline' => 1));
-			echo form_text($locale['forum_0607'], "poll_options[2]", "poll_options[2]", '', array('max_length' => 255,
+			echo form_text("poll_options[2]", $locale['forum_0607'], '', array('max_length' => 255,
 				'placeholder' => 'Poll Options',
 				'inline' => 1));
 			echo "<div class='col-xs-12 col-sm-offset-3'>\n";
@@ -192,7 +192,7 @@ function postform($data, $info) {
 	echo form_button('previewpost', $data['edit'] ? $locale['forum_0505'] : $locale['forum_0500'], $data['edit'] ? $locale['forum_0505'] : $locale['forum_0500'], array('class' => 'btn-default btn-sm m-r-10'));
 	echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default pull-right btn-sm m-l-10'));
 	if ($data['edit']) {
-		echo form_button($locale['forum_0508'], "savechanges", "savechanges", $locale['forum_0508'], array('class' => 'btn-primary pull-right btn-sm'));
+		echo form_button("savechanges", $locale['forum_0508'], $locale['forum_0508'], array('class' => 'btn-primary pull-right btn-sm'));
 	} elseif ($data['reply']) {
 		echo form_button('postreply', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary pull-right btn-sm'));
 	} else {
