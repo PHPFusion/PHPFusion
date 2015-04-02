@@ -49,6 +49,7 @@ class defender {
 	);
 
 	// Sanitize Fields Automatically
+	/** @noinspection PhpInconsistentReturnPointsInspection */
 	public function validate() {
 		global $locale;
 		/**
@@ -280,8 +281,6 @@ class defender {
  	 * if safemode is set and the check fails
  	 */
 	protected function verify_text() {
-		global $locale;
-
 		if (is_array($this->field_value)) {
 			$vars = array();
 			foreach ($this->field_value as $val) {
@@ -291,7 +290,6 @@ class defender {
 		} else {
 			$value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($this->field_value)))); // very strong sanitization.
 		}
-
 		if ($this->field_config['safemode'] && !preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) {
 			return FALSE;
 		} else {
@@ -305,12 +303,9 @@ class defender {
 	 * returns str the input or bool FALSE if check fails
 	 */
 	protected function verify_email() {
-		global $locale;
-
 		if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
 			return $this->field_value;
 		}
-
 		return FALSE;
 	}
 
@@ -320,8 +315,6 @@ class defender {
 	 * returns str the input or bool FALSE if check fails
 	 */
 	protected function verify_password() {
-		global $locale;
-
 		// add min length, add max length, add strong password into roadmaps.
 		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
 			return $this->field_value;
@@ -336,8 +329,6 @@ class defender {
 	 * TODO: support decimal
 	 */
 	protected function verify_number() {
-		global $locale;
-
 		if (is_array($this->field_value)) {
 			$vars = array();
 			foreach ($this->field_value as $val) {
@@ -607,6 +598,7 @@ class defender {
 		}
 	}
 
+	/** @noinspection PhpInconsistentReturnPointsInspection */
 	protected function verify_file_upload() {
 		global $locale;
 		require_once INCLUDES."infusions_include.php";
@@ -646,10 +638,7 @@ class defender {
 	 * Checks whether a post contains a valid token
 	 */
 	public function sniff_token() {
-		global $locale;
-
 		$error = FALSE;
-		
 		if (!empty($_POST)) {
 			// check if a token is being posted
 			if (!isset($_POST['fusion_token']) || !isset($_POST['form_id'])) {
@@ -669,21 +658,16 @@ class defender {
 				if ($this->debug) addNotice('danger', $error);
 			}
 		}
-
 	}
-
 
 	/**
 	 * Generate a Token
 	 * Generates a unique token
-	 *
-	 * @param str	$form_id	The ID of the form
-	 * @param int	$max_tokens	The ammount of tokens to be kept for each form
-	 *							before we start removing older tokens from session
-	 *
-	 * @return str	The token
+	 * @param string $form_id 	The ID of the form
+	 * @param int    $max_tokens 	The ammount of tokens to be kept for each form before we start removing older tokens from session
+	 * @return string|string[] The token
 	 */
-	public static function generate_token($form_id, $max_tokens = 10) {
+	public static function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
 		global $userdata, $defender;
 
 		$user_id = (iMEMBER ? $userdata['user_id'] : 0);
@@ -773,15 +757,14 @@ class defender {
 }
 
 function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang = FALSE) {
-	global $defender, $locale;
+	global $defender;
 
 	// DEV: To be reviewed
 	if ($input_name) {
 
 		$val = array();
 		if ($multilang) {
-
-			$main_field_name = ''; $main_field_id = '';
+			//$main_field_name = ''; $main_field_id = '';
 			// copy the first available value to the next one.
 			foreach (fusion_get_enabled_languages() as $lang => $language) {
 				$iname = $input_name."[".$lang."]";
