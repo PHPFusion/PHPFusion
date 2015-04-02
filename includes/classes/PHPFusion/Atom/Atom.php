@@ -633,13 +633,13 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Base Font Sizes', 'base-font-size');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Base Font Size", "base_font_size", "base_font_size", $this->data['base_font_size'], $font_size_options);
-		echo form_text("Line Spacing", "base_font_height", "base_font_height", $this->data['base_font_height'], $font_size_options);
+		echo form_text("base_font_size", "Base Font Size", $this->data['base_font_size'], $font_size_options);
+		echo form_text("base_font_height", "Line Spacing", $this->data['base_font_height'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Base Font Size Large", "base_font_size_l", "base_font_size_l", $this->data['base_font_size_l'], $font_size_options);
+		echo form_text("base_font_size_l", "Base Font Size Large", $this->data['base_font_size_l'], $font_size_options);
 		echo form_colorpicker('Font Color', "base_font_color", "base_font_color", $this->data['base_font_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Base Font Size Small", "base_font_size_s", "base_font_size_s", $this->data['base_font_size_s'], $font_size_options);
+		echo form_text("base_font_size_s", "Base Font Size Small", $this->data['base_font_size_s'], $font_size_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h1
@@ -648,8 +648,8 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 1', 'h1');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Font Size", "font_size_h1", "font_size_h1", $this->data['font_size_h1'], $font_size_options);
-		echo form_text("Line Spacing", "font_height_h1", "font_height_h1", $this->data['font_height_h1'], $font_size_options);
+		echo form_text("font_size_h1", "Font Size", $this->data['font_size_h1'], $font_size_options);
+		echo form_text("font_height_h1", "Line Spacing", $this->data['font_height_h1'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h1", "font_color_h1", $this->data['font_color_h1'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -662,8 +662,8 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 2', 'h2');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Font Size", "font_size_h2", "font_size_h2", $this->data['font_size_h2'], $font_size_options);
-		echo form_text("Line Spacing", "font_height_h2", "font_height_h2", $this->data['font_height_h2'], $font_size_options);
+		echo form_text("font_size_h2", "Font Size", $this->data['font_size_h2'], $font_size_options);
+		echo form_text("font_height_h2", "Line Spacing", $this->data['font_height_h2'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h2", "font_color_h2", $this->data['font_color_h2'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -676,8 +676,8 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 3', 'h3');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Font Size", "font_size_h3", "font_size_h2", $this->data['font_size_h3'], $font_size_options);
-		echo form_text("Line Spacing", "font_height_h3", "font_height_h3", $this->data['font_height_h3'], $font_size_options);
+		echo form_text("font_size_h3", "Font Size", $this->data['font_size_h3'], $font_size_options);
+		echo form_text("font_height_h3", "Line Spacing", $this->data['font_height_h3'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h3", "font_color_h3", $this->data['font_color_h3'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -690,8 +690,8 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 4', 'h4');
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-		echo form_text("Font Size", "font_size_h4", "font_size_h4", $this->data['font_size_h4'], $font_size_options);
-		echo form_text("Line Spacing", "font_height_h4", "font_height_h4", $this->data['font_height_h4'], $font_size_options);
+		echo form_text("font_size_h4", "Font Size", $this->data['font_size_h4'], $font_size_options);
+		echo form_text("font_height_h4", "Line Spacing", $this->data['font_height_h4'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h4", "font_color_h4", $this->data['font_color_h4'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
@@ -704,8 +704,8 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 5', 'h5');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Font Size", "font_size_h5", "font_size_h5", $this->data['font_size_h5'], $font_size_options);
-		echo form_text("Line Spacing", "font_height_h5", "font_height_h5", $this->data['font_height_h5'], $font_size_options);
+		echo form_text("font_size_h5", "Font Size", $this->data['font_size_h5'], $font_size_options);
+		echo form_text("font_height_h5", "Line Spacing", $this->data['font_height_h5'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h5", "font_color_h5", $this->data['font_color_h5'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -718,8 +718,8 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Heading 6', 'h6');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Font Size", "font_size_h6", "font_size_h6", $this->data['font_size_h6'], $font_size_options);
-		echo form_text("Line Spacing", "font_height_h6", "font_height_h6", $this->data['font_height_h6'], $font_size_options);
+		echo form_text("font_size_h6", "Font Size", $this->data['font_size_h6'], $font_size_options);
+		echo form_text("font_height_h6", "Line Spacing", $this->data['font_height_h6'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h6", "font_color_h6", $this->data['font_color_h6'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -758,8 +758,8 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Blockquote', 'blockquote');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Font Size", "quote_size", "quote_size", $this->data['quote_size'], $font_size_options);
-		echo form_text("Line Spacing", "quote_height", "quote_height", $this->data['quote_height'], $font_size_options);
+		echo form_text("quote_size", "Font Size", $this->data['quote_size'], $font_size_options);
+		echo form_text("quote_height", "Line Spacing", $this->data['quote_height'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "quote_color", "quote_color", $this->data['quote_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -778,11 +778,11 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Max Theme Width Settings', 'max_width');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Tablets", "container_sm", "container_sm", $this->data['container_sm'], $width_options);
+		echo form_text("container_sm", "Tablets", $this->data['container_sm'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Laptops", "container_md", "container_md", $this->data['container_md'], $width_options);
+		echo form_text("container_md", "Laptops", $this->data['container_md'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Large Screens", "container_lg", "container_lg", $this->data['container_lg'], $width_options);
+		echo form_text("container_lg", "Large Screens", $this->data['container_lg'], $width_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// primary color themes
@@ -811,9 +811,9 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_select("Fill Type", "btn_fill", "btn_fill", $this->fills, $this->data['btn_fill'],  $fill_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Border Widths", "btn_border", "btn_border", $this->data['btn_border'], $width_options);
+		echo form_text("btn_border", "Border Widths", $this->data['btn_border'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Border Radius", "btn_radius", "btn_radius", $this->data['btn_radius'], $width_options);
+		echo form_text("btn_radius", "Border Radius", $this->data['btn_radius'], $width_options);
 		echo "</div>\n</div>\n";
 		echo "<hr>\n";
 		// button primary
@@ -989,11 +989,11 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Horizontal Navbar Settings', 'navbar-h');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Navbar Height", "navbar_height", "navbar_height", $this->data['navbar_height'], $width_options);
+		echo form_text("navbar_height", "Navbar Height", $this->data['navbar_height'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Navbar Border Widths", "navbar_border", "navbar_border", $this->data['navbar_border'], $width_options);
+		echo form_text("navbar_border", "Navbar Border Widths", $this->data['navbar_border'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Navbar Border Radius", "navbar_radius", "navbar_radius", $this->data['navbar_radius'], $width_options);
+		echo form_text("navbar_radius", "Navbar Border Radius", $this->data['navbar_radius'], $width_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		openside('');
@@ -1016,9 +1016,9 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Navbar Borders', 'navbar-h2');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Link Border Width", "navbar_link_border", "navbar_link_border", $this->data['navbar_link_border'], $width_options);
+		echo form_text("navbar_link_border", "Link Border Width", $this->data['navbar_link_border'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("Link Border Radius", "navbar_link_radius", "navbar_link_radius", $this->data['navbar_link_radius'], $width_options);
+		echo form_text("navbar_link_radius", "Link Border Radius", $this->data['navbar_link_radius'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker("Border Color", "navbar_link_border_color", "navbar_link_border_color", $this->data['navbar_link_border_color'], $color_options);
 		echo "</div>\n</div>\n";

@@ -1647,7 +1647,7 @@ class QuantumFields {
 				break;
 			case 'textbox':
 				if ($method == 'input') {
-					return  form_text($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
+					return form_text($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);
 				}
@@ -1655,7 +1655,7 @@ class QuantumFields {
 			case 'number':
 				if ($method == 'input') {
 					$options += array('type' => 'number');
-					return  form_text($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
+					return form_text($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);
 				}
@@ -1663,7 +1663,7 @@ class QuantumFields {
 			case 'url':
 				if ($method == 'input') {
 					$options += array('type' => 'url');
-					return  form_text($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
+					return form_text($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);
 				}
@@ -1671,7 +1671,7 @@ class QuantumFields {
 			case 'email':
 				if ($method == 'input') {
 					$options += array('type' => 'email');
-					return  form_text($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
+					return form_text($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);
 				}

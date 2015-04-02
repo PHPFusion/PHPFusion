@@ -46,7 +46,7 @@ function postform($data, $info) {
 		if ($data['reply']) {
 			echo "<h4 class='m-b-20'>".$locale['forum_2000'].$data['thread_subject']."</h4>\n ".form_hidden('', 'thread_subject', 'thread_subject', $data['thread_subject']);
 		} else {
-			echo $data['first_post'] == $_GET['post_id'] ? form_text($locale['forum_0600'], 'thread_subject', 'thread_subject', $data['thread_subject'], array('required' => 1,
+			echo $data['first_post'] == $_GET['post_id'] ? form_text('thread_subject', $locale['forum_0600'], $data['thread_subject'], array('required' => 1,
 				'placeholder' => $locale['forum_2001'],
 				'error_text' => '',
 				'class' => 'm-t-20 m-b-20')) : "<h4 class='m-b-20'>".$locale['forum_2002'].$data['thread_subject']."</h4>\n ".form_hidden('', 'thread_subject', 'thread_subject', $data['thread_subject']);
