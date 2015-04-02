@@ -163,7 +163,7 @@ foreach ($admin_theme_files as $file) {
 	$opts[$file] = $file;
 }
 echo form_select($locale['418a'], 'admin_theme', 'admin_theme', $opts, $settings_main['admin_theme'], array('inline'=>1, 'error_text' => $locale['error_value'], 'width' => '100%'));
-echo form_checkbox($locale['437'], 'bootstrap', 'bootstrap', $settings_main['bootstrap'], array('inline' => 1));
+echo form_checkbox('bootstrap', $locale['437'], $settings_main['bootstrap'], array('toggle' => 1, 'inline' => 1));
 closeside();
 
 openside('');

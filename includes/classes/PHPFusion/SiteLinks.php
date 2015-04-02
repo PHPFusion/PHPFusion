@@ -346,7 +346,7 @@ class SiteLinks {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>\n";
 		echo form_select($locale['SL_0022'], 'link_visibility', 'link_visibility', self::getVisibility(), $this->data['link_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
-		echo form_checkbox($locale['SL_0028'], 'link_window', 'link_window', $this->data['link_window']);
+		echo form_checkbox('link_window', $locale['SL_0028'], $this->data['link_window']);
 		echo form_hidden('', 'link_id', 'link_id', '', array('writable'=>1));
 		echo "</div>\n";
 		echo "</div>\n";
@@ -431,7 +431,7 @@ class SiteLinks {
 							  DB_SITE_LINKS, "link_name", "link_id", "link_cat");
 		echo form_select($locale['global_ML100'], 'link_language', 'link_languages', $this->language_opts, $this->data['link_language'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
 		echo form_select($locale['SL_0022'], 'link_visibility', 'link_visibilitys', self::getVisibility(), $this->data['link_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
-		echo form_checkbox($locale['SL_0028'], 'link_window', 'link_windows', $this->data['link_window']);
+		echo form_checkbox('link_window', $locale['SL_0028'], $this->data['link_window']);
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";

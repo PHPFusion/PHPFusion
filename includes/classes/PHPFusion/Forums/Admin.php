@@ -663,13 +663,13 @@ class Admin {
 		}
 		closeside();
 		openside('');
-		echo form_checkbox($locale['forum_026'], 'forum_lock', 'forum_lock', $this->data['forum_lock']);
-		echo form_checkbox($locale['forum_024'], 'forum_users', 'forum_users', $this->data['forum_users']);
-		echo form_checkbox($locale['forum_021'], 'forum_quick_edit', 'forum_quick_edit', $this->data['forum_quick_edit']);
-		echo form_checkbox($locale['forum_019'], 'forum_merge', 'forum_merge', $this->data['forum_merge']);
-		echo form_checkbox($locale['forum_020'], 'forum_allow_attach', 'forum_allow_attach', $this->data['forum_allow_attach']);
-		echo form_checkbox($locale['forum_022'], 'forum_poll', 'forum_poll', $this->data['forum_poll']);
-		echo form_checkbox($locale['forum_023'], 'forum_post_ratings', 'forum_post_ratings', $this->data['forum_post_ratings']);
+		echo form_checkbox('forum_lock', $locale['forum_026'], $this->data['forum_lock']);
+		echo form_checkbox('forum_users', $locale['forum_024'], $this->data['forum_users']);
+		echo form_checkbox('forum_quick_edit', $locale['forum_021'], $this->data['forum_quick_edit']);
+		echo form_checkbox('forum_merge', $locale['forum_019'], $this->data['forum_merge']);
+		echo form_checkbox('forum_allow_attach', $locale['forum_020'], $this->data['forum_allow_attach']);
+		echo form_checkbox('forum_poll', $locale['forum_022'], $this->data['forum_poll']);
+		echo form_checkbox('forum_post_ratings', $locale['forum_023'], $this->data['forum_post_ratings']);
 		echo form_hidden('', 'forum_id', 'forum_id', $this->data['forum_id']);
 		echo form_hidden('', 'forum_branch', 'forum_branch', $this->data['forum_branch']);
 		closeside();
@@ -892,14 +892,14 @@ class Admin {
 		echo "<span class='text-dark strong'>".$locale['forum_052']."</span><br/>\n";
 		echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
 		echo form_select_tree('', 'move_threads', 'move_threads', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_opts'=>$_GET['forum_id'], 'hide_disabled'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
-		echo form_checkbox($locale['forum_053'], 'delete_threads', 'delete_threads', '');
+		echo form_checkbox('delete_threads', $locale['forum_053'], '');
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
 		echo "<span class='text-dark strong'>".$locale['forum_054']."</span><br/>\n"; // if you move, then need new hcat_key
 		echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
 		echo form_select_tree('', 'move_forums', 'move_forums', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_opts'=>$_GET['forum_id'], 'hide_disabled'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
-		echo form_checkbox($locale['forum_055'], 'delete_forums', 'delete_forums', '');
+		echo form_checkbox('delete_forums', $locale['forum_055'], '');
 		echo "</div>\n</div>\n";
 		echo "<div class='clearfix'>\n";
 		echo form_hidden('', 'forum_remove', 'forum_remove', 1); // key to launch next sequence

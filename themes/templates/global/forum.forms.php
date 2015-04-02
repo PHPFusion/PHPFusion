@@ -86,23 +86,23 @@ function postform($data, $info) {
 	echo opentab($tab_title, $tab_active, 'newthreadopts');
 	echo opentabbody($tab_title['title'][0], 'postopts', $tab_active);
 	if ($data['edit']) {
-		echo form_checkbox($locale['forum_0624'], 'delete', 'delete', '', array('class' => 'm-b-0'));
+		echo form_checkbox('delete', $locale['forum_0624'], '', array('class' => 'm-b-0'));
 		echo "<hr class='m-t-5 m-b-10'>\n";
 	}
-	echo form_checkbox($locale['forum_0622'], 'post_smileys', 'post_smileys', $data['post_smileys'], array('class' => 'm-b-0'));
+	echo form_checkbox('post_smileys', $locale['forum_0622'], $data['post_smileys'], array('class' => 'm-b-0'));
 	if ((iMOD || iSUPERADMIN) && !$data['reply']) {
-		echo form_checkbox($locale['forum_0620'], 'thread_sticky', 'thread_sticky', $data['thread_sticky'], array('class' => 'm-b-0'));
-		echo form_checkbox($locale['forum_0621'], 'thread_locked', 'thread_locked', $data['thread_locked'], array('class' => 'm-b-0'));
+		echo form_checkbox('thread_sticky', $locale['forum_0620'], $data['thread_sticky'], array('class' => 'm-b-0'));
+		echo form_checkbox('thread_locked', $locale['forum_0621'], $data['thread_locked'], array('class' => 'm-b-0'));
 		if ($data['edit']) {
-			echo form_checkbox($locale['forum_0627'], 'hide_edit', 'hide_edit', '', array('class' => 'm-b-0'));
-			echo form_checkbox($locale['forum_0628'], 'post_locked', 'post_locked', $data['post_locked'], array('class' => 'm-b-0'));
+			echo form_checkbox('hide_edit', $locale['forum_0627'], '', array('class' => 'm-b-0'));
+			echo form_checkbox('post_locked', $locale['forum_0628'], $data['post_locked'], array('class' => 'm-b-0'));
 		}
 	}
 	if (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) {
-		echo form_checkbox($locale['forum_0623'], 'post_showsig', 'post_showsig', $data['post_showsig'], array('class' => 'm-b-0'));
+		echo form_checkbox('post_showsig', $locale['forum_0623'], $data['post_showsig'], array('class' => 'm-b-0'));
 	}
 	if ($settings['thread_notify'] && !$data['edit']) {
-		echo form_checkbox($locale['forum_0626'], 'notify_me', 'notify_me', $data['notify_me'], array('class' => 'm-b-0'));
+		echo form_checkbox('notify_me', $locale['forum_0626'], $data['notify_me'], array('class' => 'm-b-0'));
 	}
 	echo closetabbody();
 	if ($info['forum_attach'] && checkgroup($info['forum_attach']) && $info['forum_allow_attach']) {

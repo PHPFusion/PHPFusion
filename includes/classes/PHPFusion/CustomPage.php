@@ -376,10 +376,10 @@ class CustomPage {
 								  'disable_opts' => $data['link_id'],
 								  'hide_disabled' => 1), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
 		if (!$data['page_id']) { // we need to get rid of this if we want to constant pairing.
-			echo form_checkbox($locale['426'], 'add_link', 'add_link', 1);
+			echo form_checkbox('add_link', $locale['426'], 1);
 		}
-		echo form_checkbox($locale['427'], 'page_allow_comments', 'page_allow_comments', $data['page_allow_comments'],  array('class'=>'m-b-0'));
-		echo form_checkbox($locale['428'], 'page_allow_ratings', 'page_allow_ratings', $data['page_allow_ratings'], array('class'=>'m-b-0'));
+		echo form_checkbox('page_allow_comments', $locale['427'], $data['page_allow_comments'],  array('class'=>'m-b-0'));
+		echo form_checkbox('page_allow_ratings', $locale['428'], $data['page_allow_ratings'], array('class'=>'m-b-0'));
 		echo form_hidden('', 'link_id', 'link_id', $data['link_id']);
 		echo form_hidden('', 'link_order', 'link_order', $data['link_order']);
 		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-success m-r-10 m-t-10', 'icon'=>'fa fa-check-square-o'));

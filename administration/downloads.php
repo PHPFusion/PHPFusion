@@ -266,7 +266,7 @@ function download_form() {
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
 			echo "<span class='text-dark strong'>".$locale['download_0220']."</span>\n";
-			echo form_checkbox($locale['download_0216'], 'del_image', 'del_image', '');
+			echo form_checkbox('del_image', $locale['download_0216'], '');
 			echo form_hidden('', 'download_hidden_image', 'download_hidden_image', $data['download_image']);
 			echo form_hidden('', 'download_hidden_image_thumb', 'download_hidden_image_thumb', $data['download_image_thumb']);
 			echo "</div>\n";
@@ -302,7 +302,7 @@ function download_form() {
 	echo opentabbody($tab_title['title'][0], 'dlf', $tab_active);
 	if (!empty($data['download_file'])) {
 		echo "<div class='list-group-item m-t-10'>".$locale['download_0214']." - <a href='".DOWNLOADS.$data['download_file']."'>".DOWNLOADS.$data['download_file']."</a>\n";
-		echo form_checkbox($locale['download_0216'], 'del_upload', 'del_upload', '', array('class'=>'m-b-0'));
+		echo form_checkbox('del_upload', $locale['download_0216'], '', array('class'=>'m-b-0'));
 		echo "</div>\n";
 		echo form_hidden('', 'download_hidden_file', 'download_hidden_file', $data['download_file']);
 	} else {
@@ -315,7 +315,7 @@ function download_form() {
 		echo sprintf($locale['download_0218'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
 		echo "</div>\n";
 		echo "<div class='list-group-item'>\n";
-		echo form_checkbox($locale['download_0217'], 'calc_upload', 'calc_upload', '');
+		echo form_checkbox('calc_upload', $locale['download_0217'], '');
 		echo "</div>\n";
 		echo "</div>\n";
 	}
@@ -364,11 +364,11 @@ function download_form() {
 	closeside();
 
 	openside('');
-	echo form_checkbox($locale['download_0223'], 'download_allow_comments', 'download_allow_comments', $data['download_allow_comments'], array('class'=>'m-b-0'));
-	echo form_checkbox($locale['download_0224'], 'download_allow_ratings', 'download_allow_ratings', $data['download_allow_ratings'], array('class'=>'m-b-0'));
+	echo form_checkbox('download_allow_comments', $locale['download_0223'], $data['download_allow_comments'], array('class'=>'m-b-0'));
+	echo form_checkbox('download_allow_ratings', $locale['download_0224'], $data['download_allow_ratings'], array('class'=>'m-b-0'));
 
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
-		echo form_checkbox($locale['download_0213'], 'update_datestamp', 'update_datestamp', '', array('class'=>'m-b-0'));
+		echo form_checkbox('update_datestamp', $locale['download_0213'], '', array('class'=>'m-b-0'));
 	}
 	closeside();
 	echo "</div>\n</div>\n"; // end row.

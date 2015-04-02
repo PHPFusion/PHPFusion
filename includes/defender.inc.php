@@ -290,6 +290,7 @@ class defender {
 		} else {
 			$value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($this->field_value)))); // very strong sanitization.
 		}
+		
 		if ($this->field_config['safemode'] && !preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) {
 			return FALSE;
 		} else {
@@ -804,13 +805,18 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				$defender->field_default = $default; // to be removed
 
 				// These two checks won't be neccesary after we add the options in all inputs
-				$callback = isset($defender->field_config['callback_check']) ? $defender->field_config['callback_check'] : 'stripinput';
+				// NOTE: Please don't pass 'stripinput' as callback, before we reach a callback
+				// everything is checked and sanitized already. The callback should only check
+				// if certain conditions are met then return TRUE|FALSE and not do any alterations
+				// the the value itself
+				$callback = isset($defender->field_config['callback_check']) ? $defender->field_config['callback_check'] : FALSE;
 				$regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
 
 				$finalval = $defender->validate();
+				
 				// If truly FALSE the check failed
 				if (	$finalval === FALSE ||
-						($defender->field_config['required'] && ($finalval === FALSE || $finalval == '')) ||
+						($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) ||
 						($regex && !preg_match('/^'.$regex.'$/i', $value)) || // regex will fail for an imploded array, maybe move this check
 						($callback && (!function_exists($callback) || !$callback($finalval)))
 					) {
@@ -822,6 +828,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 					if ($defender->debug) addNotice('warning', '<strong>'.$input_name.':</strong>'.($defender->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
 					// Return user's input for correction
 					return $defender->field_value;
+
 				} else {
 					if ($defender->debug) addNotice('info', $input_name.' = '.(is_array($finalval) ? 'array' : $finalval));
 					return $finalval;

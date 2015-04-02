@@ -703,7 +703,7 @@ function download_submissions_review() {
 				echo "<div class='overflow-hide'>\n";
 				echo "<span class='strong'>".$locale['653']."</span><br/>\n";
 				echo "<a href='".DOWNLOADS."submissions/images/".$submit_criteria['download_image']."' target='_blank'>File </a>";
-				echo form_checkbox($locale['658'], 'del_image', 'del_image', '');
+				echo form_checkbox('del_image', $locale['658'], '');
 				echo "</div>\n";
 			}
 			echo form_text('download_license', $locale['649'], $submit_criteria['download_license'], array('inline'=>1));
@@ -712,8 +712,8 @@ function download_submissions_review() {
 			echo form_text('download_homepage', $locale['654'], $submit_criteria['download_homepage'], array('inline'=>1));
 			echo form_text('download_copyright', $locale['645'], $submit_criteria['download_copyright'], array('inline'=>1));
 			echo form_text('download_filesize', $locale['652'], $submit_criteria['download_filesize'], array('inline'=>1));
-			echo form_checkbox($locale['656'], 'download_allow_comments', 'download_allow_comments', '', array('inline'=>1));
-			echo form_checkbox($locale['657'], 'download_allow_ratings', 'download_allow_ratings', '', array('inline'=>1));
+			echo form_checkbox('download_allow_comments', $locale['656'], '', array('inline'=>1));
+			echo form_checkbox('download_allow_ratings', $locale['657'], '', array('inline'=>1));
 			echo "</div>\n";
 			echo "</div>\n";
 			echo closeform();

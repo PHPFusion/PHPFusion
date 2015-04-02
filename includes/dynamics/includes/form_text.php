@@ -107,11 +107,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "<div class='input-group'>\n" : "";
 	$html .= ($options['prepend_button']) ? "<span class='input-group-btn'>\n<button id='".$options['input_id']."-prepend-btn' name='p-submit-".$options['input_id']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button></span>" : "";
-	$html .= "<input type='".$options['type']."' data-type='".$options['type']."' class='form-control textbox' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='$input_name' id='".$options['input_id']."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+	$html .= "<input type='".($options['type'] == "password" ? "password" : "text")."' data-type='".$options['type']."' class='form-control textbox' ".($options['width'] ? "style='width:".$options['width'].";'" : '')." ".($options['max_length'] ? "maxlength='".$options['max_length']."'" : '')." name='$input_name' id='".$options['input_id']."' value='$input_value' placeholder='".$options['placeholder']."' ".($options['autocomplete_off'] ? "autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 	$html .= ($options['append_button']) ? "<span class='input-group-btn'><button id='".$options['input_id']."-append-btn' name='p-submit-".$options['input_id']."' type='".$options['append_type']."' value='".$options['append_form_value']."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button></span>" : "";
 	$html .= ($options['icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='glyphicon ".$options['icon']."'></i></div>\n" : "";
 	$html .= ($options['append_button'] || $options['prepend_button']) ? "</div>\n" : "";
-	$html .= (($options['required'] === TRUE && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= ($options['inline']) ? "</div>\n" : "";
 	$html .= "</div>\n";
 
@@ -131,7 +131,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		add_to_jquery("$('input[data-type=number]').keypress(function(e) {
 		var key_codes = [46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
 		if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
-		});");
+		});\n");
 	}
 
 	//var_dump($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name]);

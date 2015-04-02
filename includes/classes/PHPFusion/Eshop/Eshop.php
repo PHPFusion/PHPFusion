@@ -926,7 +926,7 @@ class Eshop {
 		global $locale;
 		include_once INCLUDES.'theme_functions_include.php';
 		$html = "<span class='display-block m-b-10 strong'><a id='ag_read' class='pointer'>".$locale['ESHPCHK117']."</a></span>";
-		$html .= form_checkbox($locale['ESHPCHK119'], 'agreement', 'agreement', '', array("required"=>1, 'inline'=>1, 'class'=>'pull-left m-r-10'));
+		$html .= form_checkbox('agreement', $locale['ESHPCHK119'], '', array("required"=>1, 'inline'=>1, 'class'=>'pull-left m-r-10'));
 		$html .= openmodal('agmodal', sprintf($locale['agreement_title'], fusion_get_settings('sitename')), array('button_id'=>'ag_read'));
 		$html .= fusion_get_settings('eshop_terms');
 		$html .= closemodal();

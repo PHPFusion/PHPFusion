@@ -226,7 +226,7 @@ class Admin {
 				$this->blogCatData['blog_cat_language'] = (is_array($this->blogCatData['blog_cat_language'])) ? $this->blogCatData['blog_cat_language'] : fusion_get_enabled_languages();
 				$check = in_array($lang, $this->blogCatData['blog_cat_language']) ? 1 : 0;
 			}
-			echo form_checkbox($lang, "blog_cat_language[]", "blog_cat_lang-".$lang, $check, array('inline'=>1, 'class'=>'display-inline', 'width'=>"100px", 'value'=>$lang));
+			echo form_checkbox("blog_cat_language[]", $lang, $check, array('input_id' => "blog_cat_lang-".$lang, 'inline'=>1, 'class'=>'display-inline', 'width'=>"100px", 'value'=>$lang));
 		}
 		echo "</div>\n";
 		echo "</div>\n";

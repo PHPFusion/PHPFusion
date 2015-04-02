@@ -170,7 +170,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$content .= "</script>\n";
 			$content .= "<div>".$locale['setup_1001']."</div>\n";
 			$content .= "<hr>\n";
-			$content .= form_checkbox($locale['setup_0005'], 'license', 'license', '');
+			$content .= form_checkbox('license', $locale['setup_0005'], '');
 			$content .= "<hr>\n";
 			$nextStep = 2;
 			$buttonMode = 'next';

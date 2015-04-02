@@ -205,8 +205,8 @@ if (!function_exists('render_inbox')) {
 
 			echo "<div class='list-group-item' style='margin:15px;'>\n";
 			echo openform('pm_form', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder'], array('max_tokens' => 1));
-			echo form_checkbox($locale['621'], 'pm_email_notify', 'pm_email_notify', $info['pm_email_notify']);
-			echo form_checkbox($locale['622'], 'pm_save_sent', 'pm_save_sent', $info['pm_save_sent']);
+			echo form_checkbox('pm_email_notify', $locale['621'], $info['pm_email_notify']);
+			echo form_checkbox('pm_save_sent', $locale['622'], $info['pm_save_sent']);
 			echo form_button('save_options', $locale['623'], $locale['623'], array('class' => 'btn btn-sm btn-default'));
 			echo closeform();
 			echo "</div>\n";

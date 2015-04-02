@@ -793,7 +793,7 @@ class QuantumFields {
 							if (count($page_list) >0) {
 								echo form_select($locale['fields_0314'], 'move_subcat', 'move_subcat', $page_list, '');
 							}
-							echo form_checkbox($locale['fields_0315'], 'delete_subcat', 'delete_subcat', '');
+							echo form_checkbox('delete_subcat', $locale['fields_0315'], '');
 							echo "</div></div>";
 						}
 						if (isset($field_list[$_GET['cat_id']])) {
@@ -810,7 +810,7 @@ class QuantumFields {
 								$exclude_list[] = $page_id;
 							}
 							echo form_select_tree($locale['fields_0316'], 'move_field', 'move_field', '', array('no_root'=>1, 'disable_opts'=>$exclude_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-							echo form_checkbox($locale['fields_0317'], 'delete_field', 'delete_field', '');
+							echo form_checkbox('delete_field', $locale['fields_0317'], '');
 							echo "</div></div>";
 						}
 						echo form_button('delete_cat', $locale['fields_0313'], $locale['fields_0313'], array('class'=>'btn-danger btn-sm'));
@@ -1230,7 +1230,7 @@ class QuantumFields {
 				'placeholder' => $locale['fields_0466'],
 				'required' => 1));
 			echo "</div>\n</div>\n";
-			echo form_checkbox($locale['fields_0467'], 'field_thumbnail', 'field_thumbnail', $config_2['field_thumbnail']);
+			echo form_checkbox('field_thumbnail', $locale['fields_0467'], $config_2['field_thumbnail']);
 			echo "<div id='field_t1'>\n";
 			echo form_text('field_thumb_upload_path', $locale['fields_0468'], $config_2['field_thumb_upload_path'], array('placeholder' => $locale['fields_0469'],
 				'required' => 1));
@@ -1246,7 +1246,7 @@ class QuantumFields {
 				'required' => 1));
 			echo "</div>\n</div>\n";
 			echo "</div>\n";
-			echo form_checkbox($locale['fields_0473'], 'field_thumbnail_2', 'field_thumbnail_2', $config_2['field_thumbnail_2']);
+			echo form_checkbox('field_thumbnail_2', $locale['fields_0473'], $config_2['field_thumbnail_2']);
 			echo "<div id='field_t2'>\n";
 			echo form_text('field_thumb2_upload_path', $locale['fields_0474'], $config_2['field_thumb2_upload_path'], array('placeholder' => $locale['fields_0469'],
 				'required' => 1));
@@ -1262,7 +1262,7 @@ class QuantumFields {
 				'required' => 1));
 			echo "</div>\n</div>\n";
 			echo "</div>\n";
-			echo form_checkbox($locale['fields_0478'], 'field_delete_original', 'field_delete_original', $config_2['field_delete_original']);
+			echo form_checkbox('field_delete_original', $locale['fields_0478'], $config_2['field_delete_original']);
 			echo "</div>\n";
 			add_to_jquery("
 			if ($('#field_upload_type').select2().val() == 'image') {
@@ -1297,10 +1297,10 @@ class QuantumFields {
 			if ($this->field_data['field_type'] !== 'textarea') echo form_text('field_default', $locale['fields_0480'], $this->field_data['field_default']);
 			echo form_text('field_error', $locale['fields_0481'], $this->field_data['field_error']);
 		}
-		echo form_checkbox($locale['fields_0482'], 'field_required', 'field_required', $this->field_data['field_required']);
-		echo form_checkbox($locale['fields_0483'], 'field_log', 'field_log', $this->field_data['field_log']);
+		echo form_checkbox('field_required', $locale['fields_0482'], $this->field_data['field_required']);
+		echo form_checkbox('field_log', $locale['fields_0483'], $this->field_data['field_log']);
 		echo form_text('field_order', $locale['fields_0484'], $this->field_data['field_order'], array('number' => 1));
-		echo form_checkbox($locale['fields_0485'], 'field_registration', 'field_registration', $this->field_data['field_registration']);
+		echo form_checkbox('field_registration', $locale['fields_0485'], $this->field_data['field_registration']);
 		echo form_hidden('', 'add_field', 'add_field', $this->field_data['field_type']);
 		echo form_hidden('', 'field_id', 'field_id', $this->field_data['field_id']);
 		echo form_button('save_field', $locale['fields_0488'], 'save', array('class' => 'btn-sm btn-primary'));
@@ -1386,7 +1386,7 @@ class QuantumFields {
 		echo form_select_tree($locale['fields_0410'], 'field_cat', 'field_cat', $this->field_data['field_cat'], array('no_root' => 1, 'disable_opts' => $disable_opts), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 		if ($user_field_dbinfo != "") {
 			if (version_compare($user_field_api_version, "1.01.00", ">=")) {
-				echo form_checkbox($locale['fields_0411'], 'field_required', 'field_required', $this->field_data['field_required']);
+				echo form_checkbox('field_required', $locale['fields_0411'], $this->field_data['field_required']);
 			} else {
 				echo "<p>\n".$locale['428']."</p>\n";
 			}
@@ -1394,14 +1394,14 @@ class QuantumFields {
 
 		if ($user_field_dbinfo != "") {
 			if (version_compare($user_field_api_version, "1.01.00", ">=")) {
-				echo form_checkbox($locale['fields_0412'], 'field_log', 'field_log', $this->field_data['field_log']);
+				echo form_checkbox('field_log', $locale['fields_0412'], $this->field_data['field_log']);
 			} else {
 				echo "<p>\n".$locale['429a']."</p>\n";
 			}
 		}
 
 		if ($user_field_dbinfo != "") {
-			echo form_checkbox($locale['fields_0413'], 'field_registration', 'field_registration', $this->field_data['field_registration']);
+			echo form_checkbox('field_registration', $locale['fields_0413'], $this->field_data['field_registration']);
 		}
 
 		echo form_text('field_order', $locale['fields_0414'], $this->field_data['field_order']);
@@ -1708,7 +1708,7 @@ class QuantumFields {
 				break;
 			case 'checkbox':
 				if ($method == 'input') {
-					return form_checkbox($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
+					return form_checkbox($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);
 				}
@@ -1749,9 +1749,11 @@ class QuantumFields {
 				}
 				break;
 			case'toggle':
-				$option_array = array($locale['off'], $locale['on']);
+				$options['toggle'] = 1;
+				$options['toggle_text'] = array($locale['off'], $locale['on']);
+
 				if ($method == 'input') {
-					return form_toggle($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $option_array, $data['field_name'], $field_value, $options);
+					return form_checkbox($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$option_array[$callback_data[$data['field_name']]]);
 				}

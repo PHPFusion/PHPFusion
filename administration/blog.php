@@ -404,7 +404,7 @@ function blog_form() {
 		echo "<div class='pull-left'>\n";
 		$image_thumb = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2']);
 		echo thumbnail($image_thumb, '100px');
-		echo form_checkbox($locale['421'], 'del_image', 'del_image', 'y');
+		echo form_checkbox('del_image', $locale['421'], 'y');
 		echo "</div><div class='overflow-hide'>\n";
 		echo form_hidden('', 'blog_hidden_image', 'blog_hidden_image', $data['blog_image']);
 		echo form_hidden('', 'blog_hidden_image_t1', 'blog_hidden_image_t1', $data['blog_image_t1']);
@@ -472,13 +472,13 @@ function blog_form() {
 		}
 		echo "<span class='required m-r-5'>*</span>".sprintf($locale['452'], $sys)."</span><br/>\n";
 	}
-	echo form_checkbox($locale['431'], 'blog_draft', 'blog_draft', $data['blog_draft'], array('class'=>'m-b-0'));
-	echo form_checkbox($locale['432'], 'blog_sticky', 'blog_sticky', $data['blog_sticky'], array('class'=>'m-b-0'));
+	echo form_checkbox('blog_draft', $locale['431'], $data['blog_draft'], array('class'=>'m-b-0'));
+	echo form_checkbox('blog_sticky', $locale['432'], $data['blog_sticky'], array('class'=>'m-b-0'));
 	if (!$tinyMce) {
-		echo form_checkbox($locale['433'], 'blog_breaks', 'blog_breaks', $data['blog_breaks'], array('class'=>'m-b-0'));
+		echo form_checkbox('blog_breaks', $locale['433'], $data['blog_breaks'], array('class'=>'m-b-0'));
 	}
-	echo form_checkbox($locale['434'], 'blog_allow_comments', 'blog_allow_comments', $data['blog_allow_comments'], array('class'=>'m-b-0'));
-	echo form_checkbox($locale['435'], 'blog_allow_ratings', 'blog_allow_ratings', $data['blog_allow_ratings'], array('class'=>'m-b-0'));
+	echo form_checkbox('blog_allow_comments', $locale['434'], $data['blog_allow_comments'], array('class'=>'m-b-0'));
+	echo form_checkbox('blog_allow_ratings', $locale['435'], $data['blog_allow_ratings'], array('class'=>'m-b-0'));
 	closeside();
 	if (isset($_GET['action']) && isset($_GET['blog_id']) && isnum($_GET['blog_id']) || (isset($_POST['preview']) && (isset($_POST['blog_id']) && isnum($_POST['blog_id']))) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {
 		$blog_id = isset($_GET['blog_id']) && isnum($_GET['blog_id']) ? $_GET['blog_id'] : '';

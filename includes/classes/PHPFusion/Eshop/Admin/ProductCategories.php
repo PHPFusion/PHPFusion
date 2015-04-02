@@ -347,7 +347,7 @@ class ProductCategories {
 				$check = (in_array($lang, $this->data['cat_languages'])) ? 1 : 0;
 			}
 			echo "<div class='display-inline-block text-left m-r-10'>\n";
-			echo form_checkbox($lang, 'cat_languages[]', 'lang-'.$lang, $check, array('value' => $lang));
+			echo form_checkbox('cat_languages[]', $lang, $check, array('input_id' => 'lang-'.$lang, 'value' => $lang));
 			echo "</div>\n";
 		}
 

@@ -34,12 +34,13 @@ $settings_test = array(
 	'password_input'		=> '',
 	'text_input'			=> '',
 	'number_input'			=> '321',
-	'checkbox_input'		=> 1,
+	'checkbox_input'		=> 0,
 	'checkbox_input2'		=> 0,
+	'checkbox_input_bs'		=> 0,
 	'undefined_input'		=> 'foo', // this input is expected but not defined in code
 	//'checkbox_input3'		=> 1,
 	//'checkbox_input4'		=> 1,
-	'name_input'			=> '',
+	//'name_input'			=> '',
 	//'address_input'			=> 'Some|Address',
 	'email_input'			=> 'valid@email.com',
 	'url_input'				=> '',
@@ -96,15 +97,17 @@ echo form_text('email_input', 'Email', $settings_test['email_input'], array('req
 echo form_text('url_input', 'URL',  $settings_test['url_input'], array('type' => 'url', 'inline' => 1));
 echo form_text('regex_input', 'Regex', $settings_test['regex_input'], array('tip' => 'Characters from A to Z only', 'regex' => '[a-z]+', 'inline' => 1));
 echo form_text('number_input', 'Number', $settings_test['number_input'], array('required' => 1, 'type' => 'number', 'inline' => 1));
-echo form_checkbox('Checkbox', 'checkbox_input', 'checkbox_input', $settings_test['checkbox_input'], array('inline' => 1));
+echo form_checkbox('checkbox_input', 'Checkbox', $settings_test['checkbox_input'], array('required' => 1, 'inline' => 1));
 // Experimental 'child_of'
-//echo form_checkbox('Checkbox 2, child of Checkbox', 'checkbox_input2', 'checkbox_input2', $settings_test['checkbox_input2'], array('child_of' => 'checkbox_input', 'inline' => 1));
+echo form_checkbox('checkbox_input2', 'Checkbox 2, child of Checkbox', $settings_test['checkbox_input2'], array('child_of' => 'checkbox_input', 'inline' => 1));
+echo form_checkbox('checkbox_input_bs', 'Bootstrap switch checkbox', $settings_test['checkbox_input_bs'], array('toggle' => 1, 'toggle_text'=> array('OFF', 'ON'), 'disabled' => 0, 'inline' => 1));
 //echo form_checkbox('Checkbox 3, child of Checkbox', 'checkbox_input3', 'checkbox_input3', $settings_test['checkbox_input3'], array('child_of' => 'checkbox_input', 'inline' => 1));
 //echo form_checkbox('Checkbox 4, child of Checkbox 3', 'checkbox_input4', 'checkbox_input4', $settings_test['checkbox_input4'], array('child_of' => 'checkbox_input3', 'inline' => 1));
-echo form_name('Name', 'name_input', 'name_input', $settings_test['name_input'], array('required' => 1, 'inline' => 1));
+//echo form_name('Name', 'name_input', 'name_input', $settings_test['name_input'], array('required' => 1, 'inline' => 1));
 //echo form_address('Address', 'address_input', 'address_input', explode('|', $settings_test['address_input']), array('inline' => 1));
 echo form_textarea('Text area', 'textarea', 'textarea', $settings_test['textarea'], array('autosize'=>1, 'inline' => 1));
 
+//var_dump($_SESSION['form_fields'][$_SERVER['PHP_SELF']]);
 $file_options = array(
 				'max_width' => $settings['download_screen_max_w'],
 				'max_height' => $settings['download_screen_max_w'],

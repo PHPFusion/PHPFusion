@@ -147,9 +147,9 @@ echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 $locale['seo_htc_warning'] = 'Please note that if you change any of these settings the content of <strong>.htaccess</strong> will be overwritten and any changes previously done to this file will be lost.'; // to be moved
 echo "<div class='admin-message alert alert-warning'><i class='fa fa-lg fa-warning m-r-10'></i>".$locale['seo_htc_warning']."</div>";
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
-echo form_toggle($locale['438'], 'site_seo', 'site_seo', $opts, $settings_seo['site_seo'], array('inline' => 1));
-echo form_toggle($locale['439'], 'normalize_seo', 'normalize_seo', $opts, $settings_seo['normalize_seo'], array('child_of' => 'site_seo', 'inline' => 1));
-echo form_toggle($locale['440'], 'debug_seo', 'debug_seo', $opts, $settings_seo['debug_seo'], array('child_of' => 'site_seo', 'inline' => 1));
+echo form_checkbox('site_seo', $locale['438'], $settings_seo['site_seo'], array('toggle' => 1, 'inline' => 1));
+echo form_checkbox('normalize_seo', $locale['439'], $settings_seo['normalize_seo'], array('toggle' => 1, 'child_of' => 'site_seo', 'inline' => 1));
+echo form_checkbox('debug_seo', $locale['440'], $settings_seo['debug_seo'], array('toggle' => 1, 'child_of' => 'site_seo', 'inline' => 1));
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary','inline' => 1));
 echo "</div></div>\n";
 echo closeform();

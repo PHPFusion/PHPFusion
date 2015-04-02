@@ -560,12 +560,12 @@ if (!function_exists('render_post')) {
 				echo form_button('postreply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";
-				echo form_checkbox($locale['forum_0169'], 'post_smileys', 'post_smileys', '', array('class'=>'m-b-0'));
+				echo form_checkbox('post_smileys', $locale['forum_0169'], '', array('class'=>'m-b-0'));
 				if (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) {
-					echo form_checkbox($locale['forum_0170'], 'post_showsig', 'post_showsig', '1', array('class'=>'m-b-0'));
+					echo form_checkbox('post_showsig', $locale['forum_0170'], '1', array('class'=>'m-b-0'));
 				}
 				if ($settings['thread_notify']) {
-					echo form_checkbox($locale['forum_0171'], 'notify_me', 'notify_me', $info['tracked_threads'], array('class'=>'m-b-0'));
+					echo form_checkbox('notify_me', $locale['forum_0171'], $info['tracked_threads'], array('class'=>'m-b-0'));
 				}
 				echo "</div>\n";
 				echo closeform();

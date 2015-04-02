@@ -664,7 +664,7 @@ class Products {
 		foreach (fusion_get_enabled_languages() as $lang) {
 			$check = (in_array($lang, $this->data['product_languages'])) ? 1 : 0;
 			echo "<div class='display-inline-block text-left m-r-10'>\n";
-			echo form_checkbox($lang, 'product_languages[]', 'lang-'.$lang, $check, array('value' => $lang));
+			echo form_checkbox('product_languages[]', $lang, $check, array('input_id' => 'lang-'.$lang, 'value' => $lang));
 			echo "</div>\n";
 		}
 		echo "</div>\n";
@@ -831,9 +831,9 @@ class Products {
 		}
 		echo form_select($locale['ESHPPRO156'], 'rpage', 'rpage', $page_array, $this->data['rpage'], array('placeholder'=>$locale['ESHPPRO158'], 'width'=>'100%'));
 
-		echo form_checkbox($locale['ESHPPRO193'], 'qty', 'qty', $this->data['qty'], array('placeholder'=>$locale['ESHPPRO151'], 'width'=>'100%'));
-		echo form_checkbox($locale['ESHPPRO188'], 'ratings', 'ratings', $this->data['ratings'], array('placeholder'=>$locale['ESHPPRO188']));
-		echo form_checkbox($locale['ESHPPRO189'], 'comments', 'comments', $this->data['comments'], array('placeholder'=>$locale['ESHPPRO189']));
+		echo form_checkbox('qty', $locale['ESHPPRO193'], $this->data['qty'], array('placeholder'=>$locale['ESHPPRO151'], 'width'=>'100%'));
+		echo form_checkbox('ratings', $locale['ESHPPRO188'], $this->data['ratings'], array('placeholder'=>$locale['ESHPPRO188']));
+		echo form_checkbox('comments', $locale['ESHPPRO189'], $this->data['comments'], array('placeholder'=>$locale['ESHPPRO189']));
 		echo "</div></div>\n";
 
 		echo form_hidden('', 'dateadded', 'dateadded', $this->data['dateadded']);
