@@ -235,7 +235,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		if ($_GET['cat_id'] > 0) {
 			$res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'"));
 			add_to_breadcrumbs(array('link' => BASEDIR."blog.php?cat_id=".$_GET['cat_id'], 'title' => $res['blog_cat_name']));
-			add_to_title($res['blog_cat_name']);
+			add_to_title($locale['global_201'].$res['blog_cat_name']);
 			add_to_meta($res['blog_cat_name']);
 			$info['blog_title'] = $res['blog_cat_name'];
 		}
