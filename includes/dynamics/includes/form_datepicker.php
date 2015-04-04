@@ -21,16 +21,26 @@
 /**
  * Input to save date using datepicker
  *
- * TODO: Document safemode
- * TODO: Document fieldicon_off
- *
  * @param $input_name
  * @param string $label
  * @param string $input_value
  * @param array $options
  * 	<ul>
+ * 		<li><strong>class</strong> (string): Empty string by default.
+ * 			The value of attribute class of the input.</li>
+ * 		<li><strong>date_format</strong> (string): dd-mm-yyyy by default.
+ * 			Date format for datepicker plugin.</li>
+ * 		<li><strong>deactivate</strong> (boolean): FALSE by default.
+ * 			You can pass TRUE and turn off the javascript datepicker plugin</li>
+ * 		<li><strong>error_text</strong> (string): empty string by default.
+ * 			An error message</li>
+ * 		<li><strong>fieldicon_off</strong> (boolean): FALSE by default.
+ * 			If TRUE, the calendar icon will be not displayed in the input.</li>
+ * 		<li><strong>inline</strong> (boolean): FALSE by default.
+ * 			TRUE if the input should be an inline element.</li>
  * 		<li><strong>input_id</strong> (string): $input name by default.
  * 			The value of attribute id of input.</li>
+ *		<li><strong>required</strong> (boolean): FALSE by default</li>
  * 		<li><strong>type</strong> (string): timestamp by default.
  * 			Valid types:
  * 			<ul>
@@ -38,25 +48,11 @@
  * 				<li>timestamp: A timestamp will be saved as an integer</li>
  * 			</ul>
  * 		</li>
- * 		<li><strong>date_format</strong> (string): dd-mm-yyyy by default.
- * 			Date format for datepicker plugin.</li>
- *		<li><strong>required</strong> (boolean): FALSE by default</li>
- * 		<li><strong>deactivate</strong> (boolean): FALSE by default.
- * 			You can pass TRUE and turn off the javascript datepicker plugin</li>
- * 		<li><strong>width</strong> (string): 250px by default.
- * 			A valid value for CSS width</li>
- * 		<li><strong>class</strong> (string): Empty string by default.
- * 		The value of attribute class of the input.</li>
- * 		<li><strong>inline</strong> (boolean): FALSE by default.
- * 			TRUE if the input should be an inline element.</li>
- * 		<li><strong>error_text</strong> (string): empty string by default.
- * 			An error message</li>
- * 		<li><strong>safemode</strong> (boolean): FALSE by default. </li>
- * 		<li><strong>icon</strong> (string): Empty string by default.
- * 			The CSS class of the glyphicon. </li>
  * 		<li><strong>week_start</strong> (int): 0 by default.
  * 			An integer between 0 and 6. It is the same as
  * 			the attribute weekStart of datepicker.</li>
+ * 		<li><strong>width</strong> (string): 250px by default.
+ * 			A valid value for CSS width</li>
  * 	</ul>
  * @return string
  */
@@ -84,8 +80,6 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 		'class' => '',
 		'inline' => FALSE,
 		'error_text' => '',
-		'safemode' => FALSE,
-		'icon' => '',
 		'date_format' => 'dd-mm-yyyy',
 		'fieldicon_off' => FALSE,
 		'type' => 'timestamp',
@@ -100,13 +94,12 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 	}
 	$options['week_start'] = (int) $options['week_start'];
 	$input_id = $options['input_id'] ? : $default_options['input_id'];
-	$html = "<div id='$input_id-field' class='form-group ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
+	$html = "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
 	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= "<div class='input-group date' ".($options['width'] ? "style='width:".$options['width'].";'" : '').">\n";
 	$html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' placeholder='".$options['placeholder']."' />\n";
-	$html .= $options['icon'] ? "<div class='form-control-feedback'><i class='glyphicon ".$options['icon']."'></i></div>\n" : '';
-	$html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display_none' : '')."'><i class='entypo calendar'></i></span>\n";
+	$html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."'><i class='entypo calendar'></i></span>\n";
 	$html .= "</div>\n";
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= $options['inline'] ? "</div>\n" : "";
@@ -119,7 +112,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 			 'title'		=>	$label,
 			 'id' 			=>	$input_id,
 			 'required'		=>	$options['required'],
-			 'safemode' 	=> 	$options['safemode'],
+			 'safemode' 	=> 	TRUE,
 			 'error_text'	=> 	$options['error_text']
 		 ));
 	if (!$options['deactivate']) {
