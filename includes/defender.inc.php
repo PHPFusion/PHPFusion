@@ -57,7 +57,7 @@ class defender {
 		 * This solution was needed to load the defender.inc.php before
 		 * defining LOCALESET
 		 */
-		include LOCALE.LOCALESET."defender.php";
+		//include LOCALE.LOCALESET."defender.php";
 
 		// declare the validation rules and assign them
 		// type of fields vs type of validator

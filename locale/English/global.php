@@ -466,4 +466,8 @@ $locale['fmt_views'] = "view|views";
 $locale['fmt_weblink'] = "weblink|weblinks";
 $locale['fmt_week'] = "week|weeks";
 $locale['fmt_year'] = "year|years";
+
+// Load defender locale from here, is more reliable
+// and now if part of the core, we could merge it in
+include "defender.php";
 ?>
