@@ -568,6 +568,7 @@ class QuantumFields {
 
 	/** Outputs a multilocale single field */
 	public static function quantum_multilocale_fields($title, $input_name, $input_value, array $options = array()) {
+		global $locale;
 		$html = '';
 		$language_opts = fusion_get_enabled_languages();
 		$input_value = self::is_serialized($input_value) ? unserialize($input_value) : $input_value;
@@ -592,30 +593,35 @@ class QuantumFields {
 		$main_html = ''; $sub_html = '';
 		foreach($language_opts as $lang) {
 			$options['field_title'] = $title." (".$lang.")";
+			$options['input_id'] = $input_name."-".$lang;
 			if ($lang == LANGUAGE) {
 				$options['required'] = $required;
 				// Fix this
-				$main_html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, isset($input_value[$lang]) ? $input_value[$lang] : $input_value, $options);
+				$main_html .= $options['function']($input_name."[$lang]", $lang, isset($input_value[$lang]) ? $input_value[$lang] : $input_value, $options);
 			} else {
 				$options['required'] = 0;
-				$sub_html .= $options['function']($lang, "".$input_name."[$lang]", $input_name."-".$lang, isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
+				$sub_html .= $options['function']($input_name."[$lang]", $lang, isset($input_value[$lang]) ? $input_value[$lang] : '', $options);
 			}
 		}
 		$html .= $main_html.$sub_html;
 		if (count($language_opts)>1) {
 			$html .= "<div class='dropdown ".($options['inline'] ? "col-sm-offset-3" : "")."'>\n";
-			$html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>Add Language Translations <span class='caret'></span></button>\n";
+			$html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['fields_0114']." <span class='caret'></span></button>\n";
 			$html .= "<ul class='dropdown-menu' style='margin-top:10px; !important;'>\n";
 			foreach($language_opts as $Lang) {
 				if ($Lang !== LANGUAGE) {
 					$html .= "<li><a data-add='".$Lang."' class='pointer data-add'>Add ".$Lang."</a></li>\n";
-					if ($Lang !== LANGUAGE) { add_to_jquery("$('#".$input_name."-".$Lang."-field').hide();");	}
+					if ($Lang !== LANGUAGE) {
+						add_to_jquery("$('#".$input_name."-".$Lang."-field').hide();");
+
+					}
 				}
 			}
 			$html .= "</ul>\n";
 			$html .= "</div>\n";
 
 			add_to_jquery("
+
 			$('.data-add').bind('click', function() {
 				var lang = $(this).data('add');
 				var dom = $('#".$input_name."-'+lang+'-field');

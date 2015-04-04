@@ -10,7 +10,9 @@ $locale['ac05'] = "Infusions";
 
 $locale['ac10'] = "Admin Dashboard";
 
+
 $locale['201'] = "Administrators";
+$locale['202'] = "User Profile Configuration";
 
 $locale['AC'] = "Article Categories";
 $locale['A'] = "Articles";
