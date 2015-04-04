@@ -172,8 +172,7 @@ class Atom {
 		'navbar_link_decoration_hover' => 0,
 		'navbar_link_color_active' => '#555',
 		'navbar_link_decoration_active' => 0,
-	); 
-
+	);
 	private $less_var = array();
 	private $theme_data = array();
 
@@ -218,7 +217,7 @@ class Atom {
 
 	/* to roll out only on future versions */
 	public function render_theme_presets() {
-		global $settings, $aidlink;
+		global $locale, $aidlink;
 		$theme_dbfile = '/theme_db.php';
 		if (file_exists(THEMES.$this->theme_name.$theme_dbfile)) { // new 9.00
 			include THEMES.$this->theme_name.$theme_dbfile;
@@ -229,20 +228,18 @@ class Atom {
 		$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' ORDER BY theme_datestamp DESC");
 		if (dbrows($result) > 0) {
 			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
-			echo openform('preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0,
-				'max_tokens' => 1));
-			echo form_button('new_preset', 'Create New', 'new_preset', array('class' => 'btn-sm btn-primary pull-right', 'icon' => 'entypo plus'));
-			echo form_para('Theme Presets', 'theme_presets');
+			echo openform('preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0, 'max_tokens' => 1));
+			echo form_button('new_preset', $locale['theme_1001'], 'new_preset', array('class' => 'btn-sm btn-primary pull-right', 'icon' => 'entypo plus'));
+			echo form_para($locale['theme_1002'], 'theme_presets');
 			while ($preset = dbarray($result)) {
-				echo "<div class='list-group-item m-t-10' style='display:inline-block; clear:both; text-align:center;'>\n".thumbnail($screenshot, '150px')."<div class='display-block panel-title text-smaller strong m-t-10'>".trimlink($preset['theme_title'], 30)."</div>";
+				echo "<div class='list-group-item m-t-10 display-inline-block clearfix text-center'>\n".thumbnail($screenshot, '150px')."<div class='display-block panel-title text-smaller strong m-t-10'>".trimlink($preset['theme_title'], 30)."</div>";
 				echo "<div class='btn-group m-t-10 m-b-10'>\n";
 				if ($this->data['theme_id'] == $preset['theme_id']) {
-					echo form_button('active', 'Loaded', 'active', array('class' => 'btn-sm btn-default active',
-						'deactivate' => 1));
+					echo form_button('active', $locale['theme_1003'], 'active', array('class' => 'btn-sm btn-default active', 'deactivate' => 1));
 				} else {
-					echo form_button('load_preset', 'Load', $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo upload'));
+					echo form_button('load_preset', $locale['theme_1004'], $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo upload'));
 				}
-				echo form_button('delete_preset', 'Delete', $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo trash'));
+				echo form_button('delete_preset', $locale['delete'], $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo trash'));
 				echo form_hidden('', 'theme', 'theme', $preset['theme_name']);
 				echo "</div>\n";
 				echo "</div>\n";
@@ -290,17 +287,16 @@ class Atom {
 			} catch (\Exception $e) {
 				$error_message = $e->getMessage();
 				$defender->stop();
-				$defender->addNotice($error_message);
+				addNotice('danger', $error_message);
 			}
 		} else {
 			if (!$this->Compiler) {
 				$defender->stop();
-				$defender->setNoticeTitle('Compiler is turned OFF:');
-				$defender->addNotice('No CSS Output.');
+				addNotice('danger', 'Compiler is turned OFF');
+				addNotice('warning', 'No CSS Output');
 			} else {
 				$defender->stop();
-				$defender->setNoticeTitle('Theme cannot rebuild due to the following reason(s):');
-				$defender->addNotice('Variables were not set or form is has error.');
+				addNotice('danger', 'Theme cannot rebuild due to the following reason(s): - Variables were not set or form is has error.');
 			}
 		}
 	}
@@ -557,13 +553,13 @@ class Atom {
 	/* Administration Menus - Main */
 	public function theme_editor() {
 		global $aidlink, $locale;
-		$tab_title['title'][] = 'Base Fonts';
+		$tab_title['title'][] = $locale['theme_2001'];
 		$tab_title['id'][] = 'font';
 		$tab_title['icon'][] = 'fa fa-text-width m-r-10';
-		$tab_title['title'][] = 'Theme Components';
+		$tab_title['title'][] = $locale['theme_2002'];
 		$tab_title['id'][] = 'grid';
 		$tab_title['icon'][] = 'fa fa-magic m-r-10';
-		$tab_title['title'][] = 'Navigation';
+		$tab_title['title'][] = $locale['theme_2003'];
 		$tab_title['id'][] = 'nav';
 		$tab_title['icon'][] = 'fa fa-navicon m-r-10';
 		$tab_active = tab_active($tab_title, 0);
@@ -571,18 +567,16 @@ class Atom {
 			print_p($_POST);
 		}
 		// do a pop up notice. important. pressing save twice will create a massive stress on server resource.
-		echo openmodal('dbi', 'Rebuilding New '.$this->theme_name.' Theme', array('class' => 'zindex-boost modal-center',
-			'button_id' => 'save_theme',
-			'static' => 1));
+		echo openmodal('dbi', sprintf($locale['theme_2005'], $this->theme_name), array('class' => 'zindex-boost modal-center', 'button_id' => 'save_theme', 'static' => 1));
 		echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
-		echo "<div class='overflow-hide text-smaller'>\n<strong>The Atom Theme Engine is currently rebuilding your theme and may take up to 15 to 30 seconds depending of network status.</strong><br/>Please do not close or refresh the window.</div>\n";
+		echo "<div class='overflow-hide text-smaller'>".$locale['theme_2006']."</div>\n";
 		echo closemodal();
 		echo openform('theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('max_tokens' => 1));
 		echo form_hidden('', 'theme_id', 'theme_id', $this->data['theme_id']);
-		echo form_text('theme_title', 'Style Title', $this->data['theme_title'], array('inline' => 1, 'required' => 1));
-		echo form_text('theme_name', 'Template', $this->theme_name, array('inline' => 1, 'deactivate' => 1));
-		echo form_button('close_theme', 'Close', 'close_theme', array('class' => 'btn-default m-l-10 pull-right'));
-		echo form_button('save_theme', 'Save Theme', 'save_theme', array('class' => 'btn-primary pull-right'));
+		echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], array('inline' => 1, 'required' => 1));
+		echo form_text('theme_name', $locale['theme_2008'], $this->theme_name, array('inline' => 1, 'deactivate' => 1));
+		echo form_button('close_theme', $locale['close'], 'close_theme', array('class' => 'btn-default m-l-10 pull-right'));
+		echo form_button('save_theme', $locale['save_changes'], 'save_theme', array('class' => 'btn-primary pull-right'));
 		echo opentab($tab_title, $tab_active, 'atom');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 		echo "<div class='m-t-20'>\n";
@@ -604,139 +598,142 @@ class Atom {
 	}
 	/* Administration Menus - Part I - Font Settings */
 	private function font_admin() {
+		global $locale;
 		$base_font = array_values(array_flip($this->base_font()));
 		$web_font = array_values(array_flip($this->google_font()));
 		$font_list = array_merge($base_font, $web_font);
-		$color_options = array("placeholder" => "Choose Color", 'width' => '100%', "format" => "hex");
+		$color_options = array("placeholder" => $locale['theme_2009'], 'width' => '100%', "format" => "hex");
 		$font_options = array('width' => '100%',
-			'placeholder' => 'Pick the font and build your collection.',
+			'placeholder' => $locale['theme_2010'],
 			'tags' => 1,
 			'multiple' => 1,
 			'max_select' => 6,
 			'inline' => 1);
-		$font_type_options = array('placeholder' => 'Select a Base Font', 'width' => '280px', 'inline' => 1);
+		$font_type_options = array('placeholder' => $locale['theme_2011'], 'width' => '280px', 'inline' => 1);
 		$font_size_options = array('placeholder' => '(px)',
 			'width' => '100%',
 			'number' => 1,
 			'class' => 'pull-left display-inline m-r-10');
-		$fonts_family_opts = array('0' => 'Sans Serif Font Family',
-			'1' => 'Monospace Font Family',
-			'2' => 'Serif Font Family');
+		$fonts_family_opts = array(
+			'0' => 	$locale['theme_2012'],
+			'1' =>	$locale['theme_2013'],
+			'2' =>	$locale['theme_2014'],
+		);
 		echo form_hidden('', 'theme', 'theme', $_POST['theme']);
 
 		openside('');
-		echo form_select("Sans-Serif Collection", "sans_serif_fonts", "sans_serif_fonts", $font_list, $this->data['sans_serif_fonts'], $font_options);
-		echo form_select("Serif Collection", "serif_fonts", "serif_fonts", $font_list, $this->data['serif_fonts'], $font_options);
-		echo form_select("Monospace Collection", "monospace_fonts", "monospace_fonts", $font_list, $this->data['monospace_fonts'], $font_options);
-		echo form_select("Base Font", "base_font", "base_font", $fonts_family_opts, $this->data['base_font'], $font_type_options);
+		echo form_select("sans_serif_fonts", $locale['theme_2015'], $font_list, $this->data['sans_serif_fonts'], $font_options);
+		echo form_select("serif_fonts", $locale['theme_2016'], $font_list, $this->data['serif_fonts'], $font_options);
+		echo form_select("monospace_fonts", $locale['theme_2017'], $font_list, $this->data['monospace_fonts'], $font_options);
+		echo form_select("base_font", $locale['theme_2001'], $fonts_family_opts, $this->data['base_font'], $font_type_options);
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Base Font Sizes', 'base-font-size');
+		echo form_para($locale['theme_2018'], 'base-font-size');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("base_font_size", "Base Font Size", $this->data['base_font_size'], $font_size_options);
-		echo form_text("base_font_height", "Line Spacing", $this->data['base_font_height'], $font_size_options);
+		echo form_text("base_font_size", $locale['theme_2019'], $this->data['base_font_size'], $font_size_options);
+		echo form_text("base_font_height", $locale['theme_2019'], $this->data['base_font_height'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("base_font_size_l", "Base Font Size Large", $this->data['base_font_size_l'], $font_size_options);
-		echo form_colorpicker("base_font_color", 'Font Color', $this->data['base_font_color'], $color_options);
+		echo form_text("base_font_size_l", $locale['theme_2021'], $this->data['base_font_size_l'], $font_size_options);
+		echo form_colorpicker("base_font_color", $locale['theme_2022'], $this->data['base_font_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("base_font_size_s", "Base Font Size Small", $this->data['base_font_size_s'], $font_size_options);
+		echo form_text("base_font_size_s", $locale['theme_2023'], $this->data['base_font_size_s'], $font_size_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h1
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Heading 1', 'h1');
+		echo form_para($locale['theme_2024'].' 1', 'h1');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("font_size_h1", "Font Size", $this->data['font_size_h1'], $font_size_options);
-		echo form_text("font_height_h1", "Line Spacing", $this->data['font_height_h1'], $font_size_options);
+		echo form_text("font_size_h1", $locale['theme_2019'], $this->data['font_size_h1'], $font_size_options);
+		echo form_text("font_height_h1", $locale['theme_2020'], $this->data['font_height_h1'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("font_color_h1", 'Font Color', $this->data['font_color_h1'], $color_options);
+		echo form_colorpicker("font_color_h1", $locale['theme_2022'], $this->data['font_color_h1'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h1", "font_decoration_h1", $this->font_decoration_options, $this->data['font_decoration_h1'], $color_options);
+		echo form_select("font_decoration_h1", $locale['theme_2025'], $this->font_decoration_options, $this->data['font_decoration_h1'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h2
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-		echo form_para('Heading 2', 'h2');
+		echo form_para($locale['theme_2024'].' 2', 'h2');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("font_size_h2", "Font Size", $this->data['font_size_h2'], $font_size_options);
-		echo form_text("font_height_h2", "Line Spacing", $this->data['font_height_h2'], $font_size_options);
+		echo form_text("font_size_h2", $locale['theme_2019'], $this->data['font_size_h2'], $font_size_options);
+		echo form_text("font_height_h2", $locale['theme_2020'], $this->data['font_height_h2'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("font_color_h2", 'Font Color', $this->data['font_color_h2'], $color_options);
+		echo form_colorpicker("font_color_h2", $locale['theme_2022'], $this->data['font_color_h2'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h2", "font_decoration_h2", $this->font_decoration_options, $this->data['font_decoration_h2'], $color_options);
+		echo form_select("font_decoration_h2", $locale['theme_2025'], $this->font_decoration_options, $this->data['font_decoration_h2'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h3
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-		echo form_para('Heading 3', 'h3');
+		echo form_para($locale['theme_2024'].' 3', 'h3');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("font_size_h3", "Font Size", $this->data['font_size_h3'], $font_size_options);
-		echo form_text("font_height_h3", "Line Spacing", $this->data['font_height_h3'], $font_size_options);
+		echo form_text("font_size_h3", $locale['theme_2019'], $this->data['font_size_h3'], $font_size_options);
+		echo form_text("font_height_h3", $locale['theme_2020'], $this->data['font_height_h3'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("font_color_h3", 'Font Color', $this->data['font_color_h3'], $color_options);
+		echo form_colorpicker("font_color_h3", $locale['theme_2022'], $this->data['font_color_h3'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h3", "font_decoration_h3", $this->font_decoration_options, $this->data['font_decoration_h3'], $color_options);
+		echo form_select("font_decoration_h3", $locale['theme_2025'], $this->font_decoration_options, $this->data['font_decoration_h3'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h4
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Heading 4', 'h4');
+		echo form_para($locale['theme_2024'].' 4', 'h4');
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-		echo form_text("font_size_h4", "Font Size", $this->data['font_size_h4'], $font_size_options);
-		echo form_text("font_height_h4", "Line Spacing", $this->data['font_height_h4'], $font_size_options);
+		echo form_text("font_size_h4", $locale['theme_2019'], $this->data['font_size_h4'], $font_size_options);
+		echo form_text("font_height_h4", $locale['theme_2020'], $this->data['font_height_h4'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("font_color_h4", 'Font Color', $this->data['font_color_h4'], $color_options);
+		echo form_colorpicker("font_color_h4", $locale['theme_2022'], $this->data['font_color_h4'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h4", "font_decoration_h4", $this->font_decoration_options, $this->data['font_decoration_h4'], $color_options);
+		echo form_select("font_decoration_h4", $locale['theme_2025'], $this->font_decoration_options, $this->data['font_decoration_h4'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h5
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-		echo form_para('Heading 5', 'h5');
+		echo form_para($locale['theme_2024'].' 5', 'h5');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("font_size_h5", "Font Size", $this->data['font_size_h5'], $font_size_options);
-		echo form_text("font_height_h5", "Line Spacing", $this->data['font_height_h5'], $font_size_options);
+		echo form_text("font_size_h5", $locale['theme_2019'], $this->data['font_size_h5'], $font_size_options);
+		echo form_text("font_height_h5", $locale['theme_2020'], $this->data['font_height_h5'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("font_color_h5", "font_color_h5", $this->data['font_color_h5'], $color_options);
+		echo form_colorpicker("font_color_h5", $locale['theme_2022'], $this->data['font_color_h5'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h5", "font_decoration_h5", $this->font_decoration_options, $this->data['font_decoration_h5'], $color_options);
+		echo form_select("font_decoration_h5", $locale['theme_2025'], $this->font_decoration_options, $this->data['font_decoration_h5'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h6
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Heading 6', 'h6');
+		echo form_para($locale['theme_2024'].' 6', 'h6');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("font_size_h6", "Font Size", $this->data['font_size_h6'], $font_size_options);
-		echo form_text("font_height_h6", "Line Spacing", $this->data['font_height_h6'], $font_size_options);
+		echo form_text("font_size_h6", $locale['theme_2019'], $this->data['font_size_h6'], $font_size_options);
+		echo form_text("font_height_h6", $locale['theme_2020'], $this->data['font_height_h6'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("font_color_h6", 'Font Color', $this->data['font_color_h6'], $color_options);
+		echo form_colorpicker("font_color_h6", $locale['theme_2022'], $this->data['font_color_h6'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h6", "font_decoration_h6", $this->font_decoration_options, $this->data['font_decoration_h6'], $color_options);
+		echo form_select("font_decoration_h6", $locale['theme_2025'], $this->font_decoration_options, $this->data['font_decoration_h6'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// link
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Link Settings', 'link');
+		echo form_para($locale['theme_2026'], 'link');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("link_color", 'Link Base Color', $this->data['link_color'], $color_options);
-		echo form_colorpicker("link_hover_color", 'Link Hover Color', $this->data['link_hover_color'], $color_options);
+		echo form_colorpicker("link_color", $locale['theme_2027'], $this->data['link_color'], $color_options);
+		echo form_colorpicker("link_hover_color", $locale['theme_2028'], $this->data['link_hover_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "link_decoration", "link_decoration", $this->font_decoration_options, $this->data['link_decoration'], $color_options);
-		echo form_select('Hover Font Styling', "link_hover_decoration", "link_hover_decoration", $this->font_decoration_options, $this->data['link_hover_decoration'], $color_options);
+		echo form_select("link_decoration", $locale['theme_2025'], $this->font_decoration_options, $this->data['link_decoration'], $color_options);
+		echo form_select("link_hover_decoration", $locale['theme_2029'], $this->font_decoration_options, $this->data['link_hover_decoration'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
 		closeside();
@@ -744,45 +741,46 @@ class Atom {
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Code Font Settings', 'link');
+		echo form_para($locale['theme_2030'], 'link');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("code_color", 'Code Base Color', $this->data['code_color'], $color_options);
+		echo form_colorpicker("code_color", $locale['theme_2027'], $this->data['code_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("code_bgcolor", 'Background Color', $this->data['code_bgcolor'], $color_options);
+		echo form_colorpicker("code_bgcolor", $locale['theme_2031'], $this->data['code_bgcolor'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
 		closeside();
-		// blockquote
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Blockquote', 'blockquote');
+		echo form_para($locale['theme_2032'], 'blqte');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("quote_size", "Font Size", $this->data['quote_size'], $font_size_options);
-		echo form_text("quote_height", "Line Spacing", $this->data['quote_height'], $font_size_options);
+		echo form_text("quote_size", $locale['theme_2019'], $this->data['quote_size'], $font_size_options);
+		echo form_text("quote_height", $locale['theme_2020'], $this->data['quote_height'], $font_size_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("quote_color", 'Font Color', $this->data['quote_color'], $color_options);
+		echo form_colorpicker("quote_color", $locale['theme_2022'], $this->data['quote_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "quote_decoration", "quote_decoration", $this->font_decoration_options, $this->data['quote_decoration'], $color_options);
+		echo form_select("quote_decoration", $locale['theme_2029'], $this->font_decoration_options, $this->data['quote_decoration'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 	}
+
 	/* Administration Menus - Part II - Components & Layout Settings */
 	private function layout_admin() {
+		global $locale;
 		$width_options = array("width" => "100%", 'placeholder'=>'px');
-		$color_options = array("placeholder" => "Choose Color", "width" => "100%", "format" => "hex");
-		$fill_options = array("placeholder" => "Select Background Color Fill Type", "width" => "280px");
+		$color_options = array("placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex");
+		$fill_options = array("placeholder" => $locale['theme_2033'], "width" => "280px");
 		// max widths
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Max Theme Width Settings', 'max_width');
+		echo form_para($locale['theme_3001'], 'max_width');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("container_sm", "Tablets", $this->data['container_sm'], $width_options);
+		echo form_text("container_sm", $locale['theme_3002'], $this->data['container_sm'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("container_md", "Laptops", $this->data['container_md'], $width_options);
+		echo form_text("container_md", $locale['theme_3003'], $this->data['container_md'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("container_lg", "Large Screens", $this->data['container_lg'], $width_options);
+		echo form_text("container_lg", $locale['theme_3004'], $this->data['container_lg'], $width_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// primary color themes
@@ -790,15 +788,15 @@ class Atom {
 		echo "<hr>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Default Info Colors', 'info-default');
+		echo form_para($locale['theme_3005'], 'info-default');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("primary_color", 'Primary Color', $this->data['primary_color'], $color_options);
-		echo form_colorpicker("warning_color", "Warning Color", $this->data['warning_color'], $color_options);
+		echo form_colorpicker("primary_color", $locale['theme_3006'], $this->data['primary_color'], $color_options);
+		echo form_colorpicker("warning_color", $locale['theme_3007'], $this->data['warning_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("success_color", 'Success Color', $this->data['success_color'], $color_options);
-		echo form_colorpicker("danger_color", 'Danger Color', $this->data['danger_color'], $color_options);
+		echo form_colorpicker("success_color", $locale['theme_3008'], $this->data['success_color'], $color_options);
+		echo form_colorpicker("danger_color", $locale['theme_3009'], $this->data['danger_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("info_color", 'Info Color', $this->data['info_color'], $color_options);
+		echo form_colorpicker("info_color", $locale['theme_3010'], $this->data['info_color'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 
@@ -807,43 +805,44 @@ class Atom {
 		echo "<hr>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Button Parameters', 'btneff');
+		echo form_para($locale['theme_3011'], 'btneff');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select("Fill Type", "btn_fill", "btn_fill", $this->fills, $this->data['btn_fill'],  $fill_options);
+		echo form_select("btn_fill", $locale['theme_3012'], $this->fills, $this->data['btn_fill'],  $fill_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("btn_border", "Border Widths", $this->data['btn_border'], $width_options);
+		echo form_text("btn_border", $locale['theme_3013'], $this->data['btn_border'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("btn_radius", "Border Radius", $this->data['btn_radius'], $width_options);
+		echo form_text("btn_radius", $locale['theme_3014'], $this->data['btn_radius'], $width_options);
 		echo "</div>\n</div>\n";
 		echo "<hr>\n";
+
 		// button primary
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Primary Type', 'btn-p');
+		echo form_para($locale['theme_3015'], 'btn-p');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Normal State', 'btn-p-normal');
+		echo form_para($locale['theme_3016'], 'btn-p-normal');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_primary", "Background", $this->data['btn_primary'], $color_options);
+		echo form_colorpicker("btn_primary", $locale['theme_2031'], $this->data['btn_primary'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_primary_color", "Font Color", $this->data['btn_primary_color'], $color_options);
+		echo form_colorpicker("btn_primary_color", $locale['theme_2022'], $this->data['btn_primary_color'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Hover State', 'btn-p-hover');
+		echo form_para($locale['theme_3017'], 'btn-p-hover');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_primary_hover", "Hover Background", $this->data['btn_primary_hover'], $color_options);
+		echo form_colorpicker("btn_primary_hover", $locale['theme_3019'],  $this->data['btn_primary_hover'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_primary_color_hover", "Font Color", $this->data['btn_primary_color_hover'], $color_options);
+		echo form_colorpicker("btn_primary_color_hover", $locale['theme_2022'], $this->data['btn_primary_color_hover'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Active State', 'btn-p-active');
+		echo form_para($locale['theme_3018'], 'btn-p-active');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_primary_active", "Active Background", $this->data['btn_primary_active'], $color_options);
+		echo form_colorpicker("btn_primary_active", $locale['theme_3020'], $this->data['btn_primary_active'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_primary_color_active", "Font Color", $this->data['btn_primary_color_active'], $color_options);
+		echo form_colorpicker("btn_primary_color_active", $locale['theme_2022'], $this->data['btn_primary_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
 		closeside();
@@ -852,31 +851,31 @@ class Atom {
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Info Type', 'btn-p');
+		echo form_para($locale['theme_3021'], 'btn-p');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Normal State', 'btn-info-normal');
+		echo form_para($locale['theme_3016'], 'btn-info-normal');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_info", "Background", $this->data['btn_info'], $color_options);
+		echo form_colorpicker("btn_info", $locale['theme_2031'], $this->data['btn_info'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_info_color", "Font Color", $this->data['btn_info_color'], $color_options);
+		echo form_colorpicker("btn_info_color", $locale['theme_2022'], $this->data['btn_info_color'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Hover State', 'btn-p-hover');
+		echo form_para($locale['theme_3017'], 'btn-p-hover');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_info_hover", "Font Color", $this->data['btn_info_hover'], $color_options);
+		echo form_colorpicker("btn_info_hover", $locale['theme_2022'], $this->data['btn_info_hover'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_info_color_hover", "Font Color", $this->data['btn_info_color_hover'], $color_options);
+		echo form_colorpicker("btn_info_color_hover", $locale['theme_2022'], $this->data['btn_info_color_hover'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Active State', 'btn-p-active');
+		echo form_para($locale['theme_3018'], 'btn-p-active');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_info_active", "Active Background", $this->data['btn_info_active'], $color_options);
+		echo form_colorpicker("btn_info_active", $locale['theme_3020'], $this->data['btn_info_active'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_info_color_active", "Font Color", $this->data['btn_info_color_active'], $color_options);
+		echo form_colorpicker("btn_info_color_active", $locale['theme_2022'], $this->data['btn_info_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
 		closeside();
@@ -884,31 +883,31 @@ class Atom {
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Success Type', 'btn-scs');
+		echo form_para($locale['theme_3022'],'btn-scs');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Normal State', 'btn-success-normal');
+		echo form_para($locale['theme_3016'], 'btn-success-normal');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_success", "Background", $this->data['btn_success'], $color_options);
+		echo form_colorpicker("btn_success", $locale['theme_2031'], $this->data['btn_success'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_success_color", "Font Color", $this->data['btn_success_color'], $color_options);
+		echo form_colorpicker("btn_success_color", $locale['theme_2022'], $this->data['btn_success_color'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Hover State', 'btn-p-hover');
+		echo form_para($locale['theme_3017'], 'btn-p-hover');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_success_hover", "Hover Background", $this->data['btn_success_hover'], $color_options);
+		echo form_colorpicker("btn_success_hover", $locale['theme_3019'], $this->data['btn_success_hover'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_success_color_hover", "Font Color", $this->data['btn_success_color_hover'], $color_options);
+		echo form_colorpicker("btn_success_color_hover", $locale['theme_2022'], $this->data['btn_success_color_hover'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Active State', 'btn-p-active');
+		echo form_para($locale['theme_3018'], 'btn-p-active');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_success_active", "Active Background", $this->data['btn_success_active'], $color_options);
+		echo form_colorpicker("btn_success_active",$locale['theme_3020'], $this->data['btn_success_active'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_success_color_active", "Font Color", $this->data['btn_success_color_active'], $color_options);
+		echo form_colorpicker("btn_success_color_active", $locale['theme_2022'], $this->data['btn_success_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
 		closeside();
@@ -916,31 +915,31 @@ class Atom {
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Warning Type', 'btn-warning');
+		echo form_para($locale['theme_3023'], 'btn-warning');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Normal State', 'btn-warning-normal');
+		echo form_para($locale['theme_3016'], 'btn-warning-normal');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_warning", "Background", $this->data['btn_warning'], $color_options);
+		echo form_colorpicker("btn_warning", $locale['theme_2031'], $this->data['btn_warning'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_warning_color", "Font Color", $this->data['btn_warning_color'], $color_options);
+		echo form_colorpicker("btn_warning_color", $locale['theme_2022'], $this->data['btn_warning_color'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Hover State', 'btn-p-hover');
+		echo form_para($locale['theme_3017'], 'btn-p-hover');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_warning_hover", "Hover Background", $this->data['btn_warning_hover'], $color_options);
+		echo form_colorpicker("btn_warning_hover", $locale['theme_3019'], $this->data['btn_warning_hover'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_warning_color_hover", "Font Color", $this->data['btn_warning_color_hover'], $color_options);
+		echo form_colorpicker("btn_warning_color_hover", $locale['theme_2022'], $this->data['btn_warning_color_hover'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Active State', 'btn-p-active');
+		echo form_para($locale['theme_3018'], 'btn-p-active');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_warning_active", "Active Background", $this->data['btn_warning_active'], $color_options);
+		echo form_colorpicker("btn_warning_active", $locale['theme_3020'], $this->data['btn_warning_active'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_warning_color_active", "Font Color", $this->data['btn_warning_color_active'], $color_options);
+		echo form_colorpicker("btn_warning_color_active", $locale['theme_2022'], $this->data['btn_warning_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
 		closeside();
@@ -948,31 +947,31 @@ class Atom {
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Danger Type', 'btn-danger');
+		echo form_para($locale['theme_3024'], 'btn-danger');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Normal State', 'btn-danger-normal');
+		echo form_para($locale['theme_3016'], 'btn-danger-normal');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_danger", "Background", $this->data['btn_danger'], $color_options);
+		echo form_colorpicker("btn_danger", $locale['theme_2031'], $this->data['btn_danger'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_danger_color", "Font Color", $this->data['btn_danger_color'], $color_options);
+		echo form_colorpicker("btn_danger_color", $locale['theme_2022'], $this->data['btn_danger_color'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Hover State', 'btn-p-hover');
+		echo form_para($locale['theme_3017'], 'btn-p-hover');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_danger_hover", "Hover Background", $this->data['btn_danger_hover'], $color_options);
+		echo form_colorpicker("btn_danger_hover", $locale['theme_3017'], $this->data['btn_danger_hover'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_danger_color_hover", "Font Color", $this->data['btn_danger_color_hover'], $color_options);
+		echo form_colorpicker("btn_danger_color_hover", $locale['theme_2022'], $this->data['btn_danger_color_hover'], $color_options);
 		echo "</div></div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Active State', 'btn-p-active');
+		echo form_para($locale['theme_3018'], 'btn-p-active');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_danger_active", "Active Background", $this->data['btn_danger_active'], $color_options);
+		echo form_colorpicker("btn_danger_active", $locale['theme_3018'], $this->data['btn_danger_active'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("btn_danger_color_active", "Font Color", $this->data['btn_danger_color_active'], $color_options);
+		echo form_colorpicker("btn_danger_color_active", $locale['theme_2022'], $this->data['btn_danger_color_active'], $color_options);
 		echo "</div></div>\n";
 		echo "</div>\n</div>\n";
 		closeside();
@@ -981,70 +980,72 @@ class Atom {
 	/* Administration Menus - Part III - Navigation Settings */
 	private function nav_admin() {
 		global $locale;
+
 		$width_options = array("width" => "100%", 'placeholder'=>'px');
-		$color_options = array("placeholder" => "Choose Color", "width" => "100%", "format" => "hex");
-		$fill_options = array("placeholder" => "Select Background Color Fill Type", "width" => "280px");
+		$color_options = array("placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex");
+		$fill_options = array("placeholder" => $locale['theme_2033'], "width" => "280px");
+
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Horizontal Navbar Settings', 'navbar-h');
+		echo form_para($locale['theme_4001'], 'navbar-h');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("navbar_height", "Navbar Height", $this->data['navbar_height'], $width_options);
+		echo form_text("navbar_height", $locale['theme_4002'], $this->data['navbar_height'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("navbar_border", "Navbar Border Widths", $this->data['navbar_border'], $width_options);
+		echo form_text("navbar_border", $locale['theme_4003'], $this->data['navbar_border'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("navbar_radius", "Navbar Border Radius", $this->data['navbar_radius'], $width_options);
+		echo form_text("navbar_radius", $locale['theme_4004'], $this->data['navbar_radius'], $width_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		openside('');
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Navbar Background', 'navbar-h2a');
+		echo form_para($locale['theme_4005'], 'navbar-h2a');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
-		echo form_select("Fill Type", "navbar_fill", "navbar_fill", $this->fills, $this->data['navbar_fill'],  $fill_options);
+		echo form_select("navbar_fill", $locale['theme_4006'], $this->fills, $this->data['navbar_fill'],  $fill_options);
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("navbar_bg", "Background Color", $this->data['navbar_bg'], $color_options);
+		echo form_colorpicker("navbar_bg", $locale['theme_2031'], $this->data['navbar_bg'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("navbar_bg_hover", 'Hover Background Color', $this->data['navbar_bg_hover'], $color_options);
+		echo form_colorpicker("navbar_bg_hover", $locale['theme_3019'], $this->data['navbar_bg_hover'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("navbar_bg_active", 'Active Background Color', $this->data['navbar_bg_active'], $color_options);
+		echo form_colorpicker("navbar_bg_active", $locale['theme_3020'], $this->data['navbar_bg_active'], $color_options);
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Navbar Borders', 'navbar-h2');
+		echo form_para($locale['theme_4007'], 'navbar-h2');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("navbar_link_border", "Link Border Width", $this->data['navbar_link_border'], $width_options);
+		echo form_text("navbar_link_border", $locale['theme_4008'], $this->data['navbar_link_border'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_text("navbar_link_radius", "Link Border Radius", $this->data['navbar_link_radius'], $width_options);
+		echo form_text("navbar_link_radius", $locale['theme_4009'], $this->data['navbar_link_radius'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("navbar_link_border_color", "Border Color", $this->data['navbar_link_border_color'], $color_options);
+		echo form_colorpicker("navbar_link_border_color", $locale['theme_4010'], $this->data['navbar_link_border_color'], $color_options);
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Horizontal Logo Texts', 'navbar-h3');
+		echo form_para($locale['theme_4011'], 'navbar-h3');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("navbar_brand_color", 'Logo Text Color', $this->data['navbar_brand_color'], $color_options);
-		echo form_colorpicker("navbar_font_color", 'Font Color', $this->data['navbar_font_color'], $color_options);
+		echo form_colorpicker("navbar_brand_color", $locale['theme_4012'], $this->data['navbar_brand_color'], $color_options);
+		echo form_colorpicker("navbar_font_color", $locale['theme_4013'], $this->data['navbar_font_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Logo Text Styling', "navbar_brand_decoration", "navbar_brand_decoration", $this->font_decoration_options, $this->data['navbar_brand_decoration'], $color_options);
-		echo form_select('Font Styling', "navbar_font_decoration", "navbar_font_decoration", $this->font_decoration_options, $this->data['navbar_font_decoration'], $color_options);
+		echo form_select("navbar_brand_decoration", $locale['theme_4014'], $this->font_decoration_options, $this->data['navbar_brand_decoration'], $color_options);
+		echo form_select("navbar_font_decoration", $locale['theme_2025'], $this->font_decoration_options, $this->data['navbar_font_decoration'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_para('Horizontal Navbar Links', 'navbar-h4');
+		echo form_para($locale['theme_4015'], 'navbar-h4');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("navbar_link_color", 'Link Color', $this->data['navbar_link_color'], $color_options);
-		echo form_select('Link Styling', "navbar_link_decoration", "navbar_link_decoration", $this->font_decoration_options, $this->data['navbar_link_decoration'], $color_options);
+		echo form_colorpicker("navbar_link_color", $locale['theme_4013'], $this->data['navbar_link_color'], $color_options);
+		echo form_select("navbar_link_decoration", $locale['theme_4016'], $this->font_decoration_options, $this->data['navbar_link_decoration'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("navbar_link_color_hover", 'Link Hover Color', $this->data['navbar_link_color_hover'], $color_options);
-		echo form_select('Link Hover Styling', "navbar_link_decoration_hover", "navbar_link_decoration_hover", $this->font_decoration_options, $this->data['navbar_link_decoration_hover'], $color_options);
+		echo form_colorpicker("navbar_link_color_hover", $locale['theme_2028'], $this->data['navbar_link_color_hover'], $color_options);
+		echo form_select("navbar_link_decoration_hover", $locale['theme_2025'], $this->font_decoration_options, $this->data['navbar_link_decoration_hover'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_colorpicker("navbar_link_color_active", 'Link Active Color', $this->data['navbar_link_color_active'], $color_options);
-		echo form_select('Link Active Styling', "navbar_link_decoration_active", "navbar_link_decoration_active", $this->font_decoration_options, $this->data['navbar_link_decoration_active'], $color_options);
+		echo form_colorpicker("navbar_link_color_active", $locale['theme_2034'], $this->data['navbar_link_color_active'], $color_options);
+		echo form_select("navbar_link_decoration_active", $locale['theme_2035'], $this->font_decoration_options, $this->data['navbar_link_decoration_active'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 
@@ -1741,7 +1742,8 @@ class Atom {
 
 	/* return the font sets */
 	static function parse_font_set($font) {
-		$fonts_family_opts = array('0' => '@font-family-sans-serif',
+		$fonts_family_opts = array(
+			'0' => '@font-family-sans-serif',
 			'1' => '@font-family-monospace',
 			'2' => '@font-family-serif');
 		return $fonts_family_opts[$font];
@@ -1856,6 +1858,4 @@ class Atom {
 				return $hex;
 		}
 	}
-
-
 }
