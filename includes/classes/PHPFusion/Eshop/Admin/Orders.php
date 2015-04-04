@@ -165,7 +165,7 @@ class Orders {
 			echo openform('inputform', 'post', FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;action=updateorder", array('max_tokens' => 1));
 			echo form_select($locale['ESHP309'], 'opaid', 'opaid', array($locale['no'], $locale['yes']), $odata['opaid'], array('inline'=>1));
 			echo form_select($locale['ESHP310'], 'ocompleted', 'ocompleted', array($locale['no'], $locale['yes']), $odata['ocompleted'], array('inline'=>1));
-			echo form_textarea($locale['ESHP308'], 'oamessage', 'oamessage', $odata['oamessage']);
+			echo form_textarea('oamessage', $locale['ESHP308'], $odata['oamessage']);
 			echo form_hidden('', 'oid', 'oid', $odata['oid']);
 			echo form_button('save', $locale['save_changes'], $locale['save_changes'], array('class'=>'btn btn-success', 'icon'=>'fa fa-check-square-o'));
 			echo closeform();

@@ -1701,7 +1701,7 @@ class QuantumFields {
 				break;
 			case 'textarea':
 				if ($method == 'input') {
-					return form_textarea($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
+					return form_textarea($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);
 				}

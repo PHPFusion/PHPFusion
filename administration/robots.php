@@ -100,7 +100,7 @@ echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' style='text-align:center;'><a href='http://www.robotstxt.org/' target='_blank'>".$locale['421']."</a></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' style='text-align:center;'>\n";
-echo form_textarea('', 'robots_content', 'robots_content', openFile($file, 'READ'));
+echo form_textarea('robots_content', '', openFile($file, 'READ'));
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' style='text-align:center;'>";

@@ -194,7 +194,7 @@ if (!empty($result)) {
 		echo "</tr>\n<tr>\n";
 		echo "<td valign='top' width='100' class='tbl'><label for='body'>".$locale['articles_0202']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_textarea('', 'body', 'body', $body);
+		echo form_textarea('body', '', $body);
 		echo "</td>\n";
 		echo "</tr>\n";
 		if ($settings['tinymce_enabled'] != 1) {
@@ -204,7 +204,7 @@ if (!empty($result)) {
 		}
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='body2'>".$locale['articles_0203']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_textarea('', 'body2', 'body2', $body2);
+		echo form_textarea('body2', '', $body2);
 		echo "</tr>\n";
 		if ($settings['tinymce_enabled'] != 1) {
 			echo "<tr>\n<td class='tbl'></td><td class='tbl'>\n";

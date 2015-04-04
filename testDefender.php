@@ -105,7 +105,7 @@ echo form_checkbox('checkbox_input_bs', 'Bootstrap switch checkbox', $settings_t
 //echo form_checkbox('Checkbox 4, child of Checkbox 3', 'checkbox_input4', 'checkbox_input4', $settings_test['checkbox_input4'], array('child_of' => 'checkbox_input3', 'inline' => 1));
 //echo form_name('Name', 'name_input', 'name_input', $settings_test['name_input'], array('required' => 1, 'inline' => 1));
 //echo form_address('Address', 'address_input', 'address_input', explode('|', $settings_test['address_input']), array('inline' => 1));
-echo form_textarea('Text area', 'textarea', 'textarea', $settings_test['textarea'], array('autosize'=>1, 'inline' => 1));
+echo form_textarea('textarea', 'Text area', $settings_test['textarea'], array('autosize'=>1, 'inline' => 1));
 
 //var_dump($_SESSION['form_fields'][$_SERVER['PHP_SELF']]);
 $file_options = array(

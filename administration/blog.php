@@ -427,9 +427,9 @@ function blog_form() {
 	}
 	closeside();
 
-	echo form_textarea($locale['425'], 'blog_blog', 'blog_blog', $data['blog_blog'], $fusion_mce);
+	echo form_textarea('blog_blog', $locale['425'], $data['blog_blog'], $fusion_mce);
 
-	echo form_textarea($locale['426'], 'blog_extended', 'blog_extended', $data['blog_extended'], $fusion_mce);
+	echo form_textarea('blog_extended', $locale['426'], $data['blog_extended'], $fusion_mce);
 
 	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";

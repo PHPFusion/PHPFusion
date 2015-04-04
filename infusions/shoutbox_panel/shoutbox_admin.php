@@ -69,7 +69,7 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 				$data = dbarray($result);
 				opentable($locale['SB_edit_shout']);
 				echo openform('input_form', 'post', FUSION_SELF.$aidlink."&amp;shout_id=".$data['shout_id']."", array('max_tokens' => 1, 'notice' => 0));
-				echo form_textarea($locale['SB_message'], 'shout_message', 'shout_message', $data['shout_message'], array('required' => 1, 'bbcode' => 1));
+				echo form_textarea('shout_message', $locale['SB_message'], $data['shout_message'], array('required' => 1, 'bbcode' => 1));
 				echo form_button('saveshout', $locale['SB_save_shout'], $locale['SB_save_shout'], array('class' => 'btn-primary'));
 				echo closeform();
 				closetable();

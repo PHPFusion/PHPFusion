@@ -170,7 +170,7 @@ echo "<td class='tbl'>\n";
 echo form_text('group_name', '', $group_name, array('required' => 1, 'error_text' => $locale['464']));
 echo "</td>\n</tr>\n<tr>\n<td class='tbl' width='1%' style='white-space:nowrap;'><label for='group_description'>".$locale['433']."</label></td>\n";
 echo "<td class='tbl'>\n";
-echo form_textarea('', 'group_description', 'group_description', $group_description, array());
+echo form_textarea('group_description', '', $group_description, array());
 echo "</td>\n</tr>\n<tr>\n<td align='center' colspan='2' class='tbl'><br />\n";
 echo form_button('save_group', $locale['434'], $locale['434'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</tbody>\n</table>\n</form>";

@@ -364,7 +364,7 @@ class fusion_panels {
 		");
 
 		echo "<div id='pgrp'>\n";
-		echo form_textarea($locale['455'], 'panel_content', 'panel_content', $this->data['panel_content'], array('html'=>1, 'form_name'=>'panel_form', 'autosize'=>1, 'preview'=>1));
+		echo form_textarea('panel_content', $locale['455'], $this->data['panel_content'], array('html'=>1, 'form_name'=>'panel_form', 'autosize'=>1, 'preview'=>1));
 		echo "</div>\n";
 
 		openside('');

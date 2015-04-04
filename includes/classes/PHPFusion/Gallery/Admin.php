@@ -800,7 +800,7 @@ class Admin {
 		echo openform('albumform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype' => 1));
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
 		echo form_text('album_title', $locale['607'], $this->album_data['album_title'], array('placeholder' => $locale['608'], 'inline' => 1, 'required' => 1));
-		echo form_textarea($locale['609'], 'album_description', 'album_description', $this->album_data['album_description'], array('placeholder' => $locale['610'],
+		echo form_textarea('album_description', $locale['609'], $this->album_data['album_description'], array('placeholder' => $locale['610'],
 			'inline' => 1));
 		echo form_fileinput('Upload Picture', 'album_file', 'album_file', $this->image_upload_dir, '', $this->upload_settings);
 		echo form_hidden('', 'album_hfile', 'album_hfile', $this->album_data['album_thumb']);
@@ -839,7 +839,7 @@ class Admin {
 			'multiple' => 1,
 			'width' => '100%',
 			'tags' => 1));
-		echo form_textarea($locale['627'], 'photo_description', 'photo_description', $this->photo_data['photo_description'], array('placeholder' => $locale['628'],
+		echo form_textarea('photo_description', $locale['627'], $this->photo_data['photo_description'], array('placeholder' => $locale['628'],
 			'inline' => 1));
 		echo form_select($locale['629'], 'photo_allow_comments', 'photo_allow_comments', array($locale['yes'],
 			$locale['no']), $this->photo_data['photo_allow_comments'], array('inline' => 1));

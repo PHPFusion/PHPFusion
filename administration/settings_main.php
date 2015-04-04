@@ -167,10 +167,10 @@ echo form_checkbox('bootstrap', $locale['437'], $settings_main['bootstrap'], arr
 closeside();
 
 openside('');
-echo form_textarea($locale['407'], 'siteintro', 'siteintro', stripslashes($settings_main['siteintro']), array('autosize'=>1));
-echo form_textarea($locale['409'], 'description', 'description', $settings_main['description'], array('autosize'=>1));
-echo form_textarea($locale['410']."<br/><small>".$locale['411']."</small>", 'keywords', 'keywords', $settings_main['keywords'], array('autosize'=>1));
-echo form_textarea($locale['412'], 'footer', 'footer', stripslashes($settings_main['footer']), array('autosize' => 1));
+echo form_textarea('siteintro', $locale['407'], stripslashes($settings_main['siteintro']), array('autosize'=>1));
+echo form_textarea('description', $locale['409'], $settings_main['description'], array('autosize'=>1));
+echo form_textarea('keywords', $locale['410']."<br/><small>".$locale['411']."</small>", $settings_main['keywords'], array('autosize'=>1));
+echo form_textarea('footer', $locale['412'], stripslashes($settings_main['footer']), array('autosize' => 1));
 closeside();
 echo "</div><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
@@ -195,12 +195,12 @@ closeside();
 
 openside('');
 echo "<div class='alert alert-info'>".$locale['424']."</div>";
-echo form_textarea($locale['420'], 'exclude_left', 'exclude_left', $settings_main['exclude_left'], array('autosize' => 1,));
-echo form_textarea($locale['421'], 'exclude_upper', 'exclude_upper', $settings_main['exclude_upper'], array('autosize' => 1));
-echo form_textarea($locale['435'], 'exclude_aupper', 'exclude_aupper', $settings_main['exclude_aupper'], array('autosize' => 1));
-echo form_textarea($locale['422'], 'exclude_lower', 'exclude_lower', $settings_main['exclude_lower'], array('autosize' => 1));
-echo form_textarea($locale['436'], 'exclude_blower', 'exclude_blower', $settings_main['exclude_blower'], array('autosize' => 1));
-echo form_textarea($locale['423'], 'exclude_right', 'exclude_right', $settings_main['exclude_right'], array('autosize' => 1));
+echo form_textarea('exclude_left', $locale['420'], $settings_main['exclude_left'], array('autosize' => 1,));
+echo form_textarea('exclude_upper', $locale['421'], $settings_main['exclude_upper'], array('autosize' => 1));
+echo form_textarea('exclude_aupper', $locale['435'], $settings_main['exclude_aupper'], array('autosize' => 1));
+echo form_textarea('exclude_lower', $locale['422'], $settings_main['exclude_lower'], array('autosize' => 1));
+echo form_textarea('exclude_blower', $locale['436'], $settings_main['exclude_blower'], array('autosize' => 1));
+echo form_textarea('exclude_right', $locale['423'], $settings_main['exclude_right'], array('autosize' => 1));
 closeside();
 
 echo "</div>\n</div>\n";

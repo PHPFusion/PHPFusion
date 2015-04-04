@@ -72,7 +72,7 @@ echo "<div class='panel-body'>\n";
 echo form_text('mailname', $locale['402'], '', array('required' => 1, 'error_text' => $locale['420'], 'max_length' => 50));
 echo form_text('email', $locale['403'], '', array('required' => 1, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 50));
 echo form_text('subject', $locale['404'], '', array('required' => 1, 'error_text' => $locale['422']));
-echo form_textarea($locale['405'], 'message', 'message', '', array('required' => 1, 'error_text' => $locale['423']));
+echo form_textarea('message', $locale['405'], '', array('required' => 1, 'error_text' => $locale['423']));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body clearfix'>\n";
 echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6 p-b-20'>\n";

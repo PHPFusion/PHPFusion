@@ -339,7 +339,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 1 && $user_id && (!$isAdmin
 			echo "</tr>\n<tr>\n";
 			echo "<td valign='top' width='80' class='tbl'>".$locale['515'].":</td>\n";
 			echo "<td class='tbl'>\n";
-			echo form_textarea('', 'ban_reason', 'ban_reason', '');
+			echo form_textarea('ban_reason', '', '');
 			echo "</td>\n</tr>\n<tr>\n";
 			echo "<td colspan='2' align='center'>\n";
 			echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary m-r-10'));
@@ -412,7 +412,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 3 && $user_id && (!$isAdmin
 			echo "</tr>\n<tr>\n";
 			echo "<td valign='top' width='80' class='tbl'>".$locale['552']."</td>\n";
 			echo "<td class='tbl'>\n";
-			echo form_textarea('', 'suspend_reason', 'suspend_reason', '');
+			echo form_textarea('suspend_reason', '', '');
 			echo "</td>\n</tr>\n<tr>\n";
 			echo "<td colspan='2' align='center'>\n";
 			echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary m-r-10'));
@@ -459,7 +459,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 4 && $user_id && (!$isAdmin
 			echo "</tr>\n<tr>\n";
 			echo "<td valign='top' width='80' class='tbl'>".$locale['604']."</td>\n";
 			echo "<td class='tbl'>\n";
-			echo form_textarea('', 'sban_reason', 'sban_reason', '');
+			echo form_textarea('sban_reason', '', '');
 			echo "</td>\n</tr>\n<tr>\n";
 			echo "<td colspan='2' align='center'>\n";
 			echo form_button('cancel', $locale['418'], $locale['418'], array('class' => 'btn-primary m-r-10'));

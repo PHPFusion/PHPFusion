@@ -199,7 +199,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 		echo "</tr>\n<tr>\n";
 		echo "<td valign='top' class='tbl'><label for='faq_answer'>".$locale['522']."</label> <span class='required'>*</span></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_textarea('', 'faq_answer', 'faq_answer', $faq_answer, array('required' => 1));
+		echo form_textarea('faq_answer', '', $faq_answer, array('required' => 1));
 		echo "</td>\n";
 		echo "</tr>\n<tr>\n";
 		echo "<td class='tbl'></td><td class='tbl'>\n";

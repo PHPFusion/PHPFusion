@@ -682,8 +682,8 @@ function download_submissions_review() {
 			echo "<div class='col-xs-12 col-sm-8'>\n";
 
 			echo form_text('download_title', $locale['645'], $submit_criteria['download_title'], array('inline'=>1));
-			echo form_textarea($locale['645'], 'download_description_short', 'download_description_short', $submit_criteria['download_description_short'], array('inline'=>1, 'autosize'=>1));
-			echo form_textarea($locale['646'], 'download_description', 'download_description', $submit_criteria['download_description'], array('bbcode'=>1, 'form_name'=>'publish', 'inline'=>1));
+			echo form_textarea('download_description_short', $locale['645'], $submit_criteria['download_description_short'], array('inline'=>1, 'autosize'=>1));
+			echo form_textarea('download_description', $locale['646'], $submit_criteria['download_description'], array('bbcode'=>1, 'form_name'=>'publish', 'inline'=>1));
 
 			if (!empty($submit_criteria['download_file'])) {
 				echo "<div class='col-sm-offset-3'>\n";
