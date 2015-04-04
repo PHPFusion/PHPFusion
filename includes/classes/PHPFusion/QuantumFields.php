@@ -371,7 +371,7 @@ class QuantumFields {
 			$tab_title['icon'][] = '';
 			$tab_active = (!empty($this->cat_list)) ? tab_active($tab_title, 2) : tab_active($tab_title, 1);
 		} // add field
-		elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->dynamics_type()))) {
+		elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], $this->dynamics_type())) {
 			$tab_title['title'][] = $locale['fields_0306'];
 			$tab_title['id'][] = 'add';
 			$tab_title['icon'][] = '';
@@ -413,7 +413,7 @@ class QuantumFields {
 			$field_type = $this->dynamics_type();
 			unset($field_type['file']);
 			foreach ($field_type as $type => $name) {
-				echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, 'add_field-'.$name, array('type' => $type, 'class' => 'btn-block btn-sm btn-default'))."</div>\n";
+				echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, $name, array('type' => $type, 'class' => 'btn-block btn-sm btn-default'))."</div>\n";
 			}
 			echo "</div>\n";
 		}
@@ -447,7 +447,9 @@ class QuantumFields {
 			echo $this->quantum_category_form();
 			echo "</div>\n";
 			echo closetabbody();
-		} elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->dynamics_type())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
+		}
+
+		elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], $this->dynamics_type()) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
 			echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
 			$this->quantum_dynamics_form();
 			echo closetabbody();
@@ -1004,7 +1006,7 @@ class QuantumFields {
 							if ($this->debug) print_p("Renaming ".$target_database." column ".$cat_data['field_name']." to ".$data['field_name']);
 						} else {
 							$defender->stop();
-							$defender->addNotice(sprintf($locale['fields_0104'], $cat_data['field_cat_name']));
+							addNotice('danger', sprintf($locale['fields_0104'], $cat_data['field_cat_name']));
 						}
 					}
 					// make ordering of the same table.
@@ -1023,7 +1025,7 @@ class QuantumFields {
 				if (!$this->debug && !defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.'&amp;status=field_updated');
 			} else {
 				$defender->stop();
-				$defender->addNotice($locale['fields_0105']);
+				addNotice('danger', $locale['fields_0105']);
 			}
 		} else {
 			if ($this->debug) print_p('Save Mode');
@@ -1041,7 +1043,7 @@ class QuantumFields {
 					if ($this->debug) print_p("Alter DB_".$target_database." with ".$data['field_name']." on ".$field_attr);
 				} else {
 					$defender->stop();
-					$defender->addNotice($locale['fields_0106']);
+					addNotice('danger', $locale['fields_0106']);
 				}
 				// ordering
 				if ($this->debug) print_p($data);
@@ -1050,7 +1052,7 @@ class QuantumFields {
 				if (!$this->debug && !defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.'&amp;status=field_added');
 			} else {
 				$defender->stop();
-				$defender->addNotice($locale['fields_0107']);
+				addNotice('danger', $locale['fields_0107']);
 			}
 		}
 	}
@@ -1153,7 +1155,7 @@ class QuantumFields {
 					$config = array_merge($config, $config_2);
 				} else {
 					$defender->stop();
-					$defender->addNotice($locale['fields_0108']);
+					addNotice('danger', $locale['fields_0108']);
 				}
 				if (!defined('FUSION_NULL')) {
 					$this->field_data['config'] = serialize($config);
@@ -1346,11 +1348,11 @@ class QuantumFields {
 			include $this->plugin_folder.stripinput($this->field_data['add_module'])."_include_var.php";
 			$this->user_field_dbinfo = $user_field_dbinfo;
 			if (!$user_field_dbinfo) {
-				$defender->addNotice($locale['fields_0602']);
+				addNotice('warning', $locale['fields_0602']);
 			}
 		} else {
 			$defender->stop();
-			$defender->addNotice($locale['fields_0109']);
+			addNotice('danger', $locale['fields_0109']);
 		}
 		// Script Execution
 		if (isset($_POST['enable'])) {
@@ -1494,7 +1496,7 @@ class QuantumFields {
 								) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 				} else {
 					$defender->stop();
-					$defender->addNotice($locale['fields_0110']);
+					addNotice('danger', $locale['fields_0110']);
 				}
 				return $result;
 			}
@@ -1510,7 +1512,7 @@ class QuantumFields {
 						$result = build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
 					} else {
 						$defender->stop();
-						$defender->addNotice($locale['fields_0110']);
+						addNotice('danger', $locale['fields_0110']);
 					}
 				}
 				if (!$this->debug && !defined('FUSION_NULL')) dbquery_insert($this->category_db, $this->field_cat_data, 'update');
