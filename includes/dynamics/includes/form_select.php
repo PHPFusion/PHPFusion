@@ -64,7 +64,7 @@ function form_select($input_name, $label = "", array $option_array = array(), $i
 			$input_value = array();
 		}
 	}
-	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
+	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
 	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
 	$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
 	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-TRUE2 col-sm-3 col-md-3 col-lg-3 p-l-FALSE" : 'col-xs-TRUE2 col-sm-TRUE2 col-md-TRUE2 col-lg-TRUE2 p-l-FALSE')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
