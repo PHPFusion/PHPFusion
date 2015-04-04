@@ -744,7 +744,7 @@ class Eshop {
 		$customer_name = implode('|', $customer_name);
 		$html .= form_name('Customer Name', 'cname', 'cname', $customer_name, array('required'=>1, 'inline'=>1));
 		$html .= form_text('cemail', $locale['ESHPCHK115'], $customer_info['cemail'], array('inline'=>1, 'required'=>1, 'type' => 'email'));
-		$html .= form_datepicker($locale['ESHPCHK105'], 'cdob', 'cdob', $customer_info['cdob'], array('inline'=>1, 'required'=>1));
+		$html .= form_datepicker('cdob', $locale['ESHPCHK105'], $customer_info['cdob'], array('inline'=>1, 'required'=>1));
 		$customer_address[] = $customer_info['caddress']; // use this as backdoor.
 		$customer_address[] = $customer_info['caddress2'];
 		$customer_address[] = $customer_info['ccountry'];

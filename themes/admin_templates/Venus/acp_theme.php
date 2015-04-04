@@ -82,6 +82,14 @@ function open_ap() {
 		echo "Venus Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
 		echo showcopyright();
 
+		// Render time
+		if ($settings['rendertime_enabled']) {
+			echo "<br /><br />";
+			// Make showing of queries and memory usage separate settings
+			echo showrendertime();
+			echo showMemoryUsage();
+		}
+
 		add_to_jquery("
 		var init_hgt = $(window).height();
 		$('#acp-left').css('height', init_hgt);

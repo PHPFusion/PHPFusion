@@ -43,14 +43,17 @@ echo "<p class='text-left'>".stripslashes(strip_tags($settings['footer']))."</p>
 	<p>Septenary Theme by <a href='http://www.phpfusionmods.co.uk' target='_blank'>Craig</a> and <a href='http://www.guildsquare.com' target='_blank'>Hien</a></p>
 	<p>";
 if ($settings['visitorcounter_enabled']) {
-	echo "".showcounter();
+	echo showcounter();
 }
 if ($settings['rendertime_enabled'] == '1' || $settings['rendertime_enabled'] == '2') {
 	if ($settings['visitorcounter_enabled']) {
-		echo " | ";
+		echo "<br />";
 	}
+	// Make showing of queries and memory usage separate settings
 	echo showrendertime();
+	echo showMemoryUsage();
 }
+
 echo "</p>\n";
 echo "</div>\n";
 echo "</div>\n";

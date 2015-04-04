@@ -210,9 +210,9 @@ echo form_text('thumbs_per_row', $locale['609'], $settings2['thumbs_per_row'], a
 echo form_text('thumbs_per_page', $locale['610'], $settings2['thumbs_per_page'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 closeside();
 openside('');
-echo form_colorpicker($locale['614'], 'photo_watermark_text_color1', 'photo_watermark_text_color1', $settings2['photo_watermark_text_color1'], array('inline'=>1, 'deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo form_colorpicker($locale['615'], 'photo_watermark_text_color2', 'photo_watermark_text_color2', $settings2['photo_watermark_text_color2'], array('inline'=>1, 'deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo form_colorpicker($locale['616'], 'photo_watermark_text_color3', 'photo_watermark_text_color3', $settings2['photo_watermark_text_color3'], array('inline'=>1, 'deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_colorpicker('photo_watermark_text_color1', $locale['614'],  $settings2['photo_watermark_text_color1'], array('inline'=>1, 'deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_colorpicker('photo_watermark_text_color2', $locale['615'],  $settings2['photo_watermark_text_color2'], array('inline'=>1, 'deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
+echo form_colorpicker('photo_watermark_text_color3', $locale['616'],  $settings2['photo_watermark_text_color3'], array('inline'=>1, 'deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
 closeside();
 echo "</div><div class='col-xs-12 col-sm-3'>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success m-b-10'));

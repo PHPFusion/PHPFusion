@@ -445,9 +445,9 @@ function blog_form() {
 
 	openside('');
 	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker($locale['427'], 'blog_start', 'blog_start', $data['blog_start'], array('placeholder' => $locale['429']));
+	echo form_datepicker('blog_start', $locale['427'], $data['blog_start'], array('placeholder' => $locale['429']));
 	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker($locale['428'], 'blog_end', 'blog_end', $data['blog_end'], array('placeholder' => $locale['429']));
+	echo form_datepicker('blog_end', $locale['428'], $data['blog_end'], array('placeholder' => $locale['429']));
 	echo "</div>\n";
 	closeside();
 

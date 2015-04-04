@@ -360,9 +360,9 @@ function news_form() {
 	// move keywords here because it's required
 	echo form_select('news_keywords', $locale['news_0205'], array(), $data['news_keywords'], array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['news_0255'], 'tags'=>1, 'multiple' => 1));
 	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker($locale['news_0206'], 'news_start', 'news_start', $data['news_start'], array('placeholder' => $locale['news_0208']));
+	echo form_datepicker('news_start', $locale['news_0206'], $data['news_start'], array('placeholder' => $locale['news_0208']));
 	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker($locale['news_0207'], 'news_end', 'news_end', $data['news_end'], array('placeholder' => $locale['news_0208']));
+	echo form_datepicker('news_end', $locale['news_0207'], $data['news_end'], array('placeholder' => $locale['news_0208']));
 	echo "</div>\n";
 	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";

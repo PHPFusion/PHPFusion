@@ -196,10 +196,10 @@ class Coupons {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-9'>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
-		echo form_datepicker($locale['ESHPCUPNS105'], 'custart', 'custart', $this->data['custart'], array('required'=>1));
+		echo form_datepicker('custart', $locale['ESHPCUPNS105'], $this->data['custart'], array('required'=>1));
 		echo "</div>\n";
 		echo "<div class='display-inline-block'>\n";
-		echo form_datepicker($locale['ESHPCUPNS106'], 'cuend', 'cuend', $this->data['cuend'], array('required'=>1));
+		echo form_datepicker('cuend', $locale['ESHPCUPNS106'], $this->data['cuend'], array('required'=>1));
 		echo "</div>\n";
 		echo "</div>\n</div>\n";
 		closeside();

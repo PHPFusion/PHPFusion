@@ -241,6 +241,7 @@ $locale['global_170'] = "unique visit";
 $locale['global_171'] = "unique visits";
 $locale['global_172'] = "Render time: %s seconds";
 $locale['global_173'] = "Queries";
+$locale['global_174'] = "Memory used";
 // Admin Navigation
 $locale['global_180'] = "Admin Home";
 $locale['global_181'] = "Return to Site";
@@ -465,4 +466,8 @@ $locale['fmt_views'] = "view|views";
 $locale['fmt_weblink'] = "weblink|weblinks";
 $locale['fmt_week'] = "week|weeks";
 $locale['fmt_year'] = "year|years";
+
+// Load defender locale from here, is more reliable
+// and now if part of the core, we could merge it in
+include __DIR__."/defender.php";
 ?>

@@ -25,7 +25,7 @@ if ($profile_method == "input") {
 		$user_birthdate = '0';
 	}
 	$options +=array('inline'=>1, 'type'=>'date');
-	$user_fields = form_datepicker($options['show_title'] ? $locale['uf_birthdate'] : '', 'user_birthdate', 'user_birthdate', $user_birthdate, $options);
+	$user_fields = form_datepicker('user_birthdate', $options['show_title'] ? $locale['uf_birthdate'] : '', $user_birthdate, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
 	include LOCALE.LOCALESET."global.php";
