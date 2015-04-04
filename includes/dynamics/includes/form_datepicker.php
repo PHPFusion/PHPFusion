@@ -25,13 +25,12 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
 		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datepicker.js'></script>");
 		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/locales/bootstrap-datepicker.".$locale['datepicker'].".js'></script>");
 	}
+
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
 
-	if ($input_value && strstr($input_value, "-")) { // must be -
-		$input_value = $input_value;
-	} else {
+	if ($input_value && !strstr($input_value, "-")) { // must be -
 		$input_value = ($input_value) ? date("d-m-Y", $input_value) : '';
 	}
 

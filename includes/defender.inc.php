@@ -813,13 +813,12 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				$regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
 
 				$finalval = $defender->validate();
-				
 				// If truly FALSE the check failed
 				if (	$finalval === FALSE ||
 						($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) ||
 						($regex && !preg_match('/^'.$regex.'$/i', $value)) || // regex will fail for an imploded array, maybe move this check
-						($callback && (!function_exists($callback) || !$callback($finalval)))
-					) {
+						(is_callable($callback) && !$callback($finalval))
+				) {
 					// Flag that something went wrong
 					$defender->stop();
 					// Mark this input as invalid, if wasn't already
