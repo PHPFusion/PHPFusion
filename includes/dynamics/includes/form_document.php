@@ -18,17 +18,17 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_document($title = FALSE, $input_name, $input_id, $input_value = FALSE, array $options = array()) {
+function form_document($input_name, $label = FALSE, $input_value = FALSE, array $options = array()) {
 	global $locale, $defender, $settings;
 	if (!defined('DATEPICKER')) {
 		define('DATEPICKER', TRUE);
 		add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datepicker3.css' rel='stylesheet' />");
 		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datepicker.js'></script>");
 	}
-	$title = (isset($title) && (!empty($title))) ? $title : "";
-	$title2 = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+	$label = (isset($label) && (!empty($label))) ? $label : "";
+	$label2 = (isset($label) && (!empty($label))) ? $label : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
+	$input_id = (isset($options['input_id']) && (!empty($options['input_id']))) ? stripinput($options['input_id']) : "";
 	// NOTE (remember to parse readback value as of '|' seperator)
 	if (isset($input_value) && (!empty($input_value))) {
 		if (!is_array($input_value)) {
@@ -68,7 +68,7 @@ function form_document($title = FALSE, $input_name, $input_id, $input_value = FA
 
 	$html = "";
 	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$options['class']."' >\n";
-	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title".($options['required'] ? "<span class='required'> *</span>" : '')."</label>\n" : '';
+	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$label".($options['required'] ? "<span class='required'> *</span>" : '')."</label>\n" : '';
 	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
 
 	$html .= "<div class='row'>\n";
@@ -113,7 +113,7 @@ function form_document($title = FALSE, $input_name, $input_id, $input_value = FA
 	$defender->add_field_session(array(
 		 'input_name' 	=> 	$input_name,
 		 'type'			=>	'document',
-		 'title'		=>	$title2,
+		 'label'		=>	$label2,
 		 'id' 			=>	$input_id,
 		 'required'		=>	$options['required'],
 		 'safemode'		=> 	$options['safemode'],
