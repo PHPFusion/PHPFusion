@@ -70,7 +70,7 @@ class QuantumFields {
 	protected $cat_list = array();
 
 	// debug mode
-	protected $debug = false;
+	protected $debug = true;
 	protected $module_debug = false;
 	protected $dom_debug = false;
 

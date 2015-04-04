@@ -59,7 +59,7 @@ function form_select($input_name, $label = "", array $option_array = array(), $i
 	}
 	if ($options['multiple']) {
 		if ($input_value) {
-			$input_value = construct_array($input_value,FALSE,$options['delimiter']);
+			$input_value = construct_array($input_value, 0,$options['delimiter']);
 		} else {
 			$input_value = array();
 		}
@@ -67,30 +67,29 @@ function form_select($input_name, $label = "", array $option_array = array(), $i
 	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
 	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
 	$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
-	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-TRUE2 col-sm-3 col-md-3 col-lg-3 p-l-FALSE" : 'col-xs-TRUE2 col-sm-TRUE2 col-md-TRUE2 col-lg-TRUE2 p-l-FALSE')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
-	$html .= ($options['inline']) ? "<div class='col-xs-TRUE2 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-TRUE2 col-md-TRUE2 col-lg-TRUE2 p-l-FALSE")."'>\n" : "";
+	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
+	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
 	if ($options['jsonmode'] || $options['tags']) {
 		// json mode.
 		$html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
-		$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] && $label ? $options['width'] : "25FALSEpx")."'/>\n";
+		$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] && $label ? $options['width'] : $default_options['width'])."'/>\n";
 	} else {
 		// normal mode
-		$html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['width'] : "25FALSEpx")."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+		$html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
 		$html .= ($options['allowclear']) ? "<option value=''></option>" : '';
 		if (is_array($option_array)) {
 			foreach ($option_array as $arr => $v) { // outputs: key, value, class - in order
 				$chain = ''; $select = '';
 				if ($options['keyflip']) { // flip mode = store array values
 					$chain = $options['chainable'] ? "class='$v'" : '';
-					if ($input_value !== NULL) {
+					if ($input_value !== '') {
 						$select = ($input_value == $v) ? "selected" : "";
 					}
 					$html .= "<option value='$v' ".$chain." ".$select.">".$v."</option>";
 				} else { // normal mode = store array keys
 					$chain = ($options['chainable']) ? "class='$arr'" : '';
 					$select = '';
-					//if ($input_value || $input_value === FALSE) {
-					if ($input_value  !== NULL) {
+					if ($input_value  !== '') {
 						$input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
 						$select = (isset($input_value) && $input_value == $arr) ? 'selected' : '';
 					}
