@@ -586,12 +586,12 @@ class Atom {
 		echo closetabbody();
 		echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
 		echo "<div class='m-t-20'>\n";
-		//$this->layout_admin();
+		$this->layout_admin();
 		echo "</div>\n";
 		echo closetabbody();
 		echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
 		echo "<div class='m-t-20'>\n";
-		//$this->nav_admin();
+		$this->nav_admin();
 		echo "</div>\n";
 		echo closetabbody();
 		echo closetab();
