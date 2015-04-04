@@ -47,11 +47,13 @@ class defender {
 		'thumbnail_1' => '',
 		'thumbnail_2' => '',
 	);
+	private $tokenIsValid = TRUE;
 
 	// Sanitize Fields Automatically
 	/** @noinspection PhpInconsistentReturnPointsInspection */
 	public function validate() {
 		global $locale;
+
 		/**
 		 * Keep this include in the constructor
 		 * This solution was needed to load the defender.inc.php before
@@ -230,6 +232,14 @@ class defender {
 		}
 	}
 
+	// Generates a md5 hash of the current page
+	// Used to make token session array more unique in order
+	// to avoid validation pass of tokens in forms for which
+	// they weren't intended/generated
+	private static function pageHash() {
+		return md5(FUSION_REQUEST);
+	}
+
 	// Checks whether an input was marked as invalid
 	public function inputHasError($input_name) {
 		if (isset($this->input_errors[$input_name])) return TRUE;
@@ -304,6 +314,7 @@ class defender {
 	 * returns str the input or bool FALSE if check fails
 	 */
 	protected function verify_email() {
+		// TODO: This regex was reported previously as flawed and should be reviewed and fixed
 		if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
 			return $this->field_value;
 		}
@@ -639,34 +650,43 @@ class defender {
 	 * Checks whether a post contains a valid token
 	 */
 	public function sniff_token() {
+		global $defender;
+
 		$error = FALSE;
 		if (!empty($_POST)) {
-			// check if a token is being posted
-			if (!isset($_POST['fusion_token']) || !isset($_POST['form_id'])) {
+			// Check if a token is being posted and make sure is a string
+			if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
 				$error = "Token was not posted";
-			// check if a session is started already
-			} elseif (!isset($_SESSION['csrf_tokens'])) {
-				$error = "Session not started";
-			// check if the token is valid
+			// Check if a session is started already
+			} elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+				$error = "Cannot find any token for this form";
+			// Check if the token exists in storage
+			} elseif (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+				$error = "Cannot find token in storage: ".stripinput($_POST['fusion_token']);
+			// Check if the token is valid
 			} elseif (!self::verify_token(0)) {
-				$error = "Token is invalid";
+				$error = "Token is invalid: ".stripinput($_POST['fusion_token']);
 			}
 
 			// Check if any error was set
 			if ($error !== FALSE) {
+				// Flag the token as invalid
+				$defender->tokenIsValid = FALSE;
 				// Flag that something went wrong
 				$this->stop();
 				if ($this->debug) addNotice('danger', $error);
 			}
+
 		}
 	}
+
 
 	/**
 	 * Generate a Token
 	 * Generates a unique token
-	 * @param string $form_id 	The ID of the form
-	 * @param int    $max_tokens 	The ammount of tokens to be kept for each form before we start removing older tokens from session
-	 * @return string|string[] The token
+	 * @param string $form_id		The ID of the form
+	 * @param int    $max_tokens	The ammount of tokens to be kept for each form before we start removing older tokens from session
+	 * @return string|string[]		The token
 	 */
 	public static function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
 		global $userdata, $defender;
@@ -675,10 +695,13 @@ class defender {
 		// store just one token for each form if the user is a guest
 		if ($user_id == 0) $max_tokens = 1;
 		
-		// atempt to recover a token instead of generating a new one
-		if (isset($_POST['fusion_token']) && isset($_POST['form_id']) && $_POST['form_id'] == $form_id && self::verify_token(0)) {
+		// Attempt to recover the token instead of generating a new one
+		// Checks if a token is being posted and if is valid, and then
+		// checks if the form for which this token was intended is
+		// the same form for which we are trying to generate a token
+		if (isset($_POST['fusion_token']) && $defender->tokenIsValid && ($form_id == stripinput($_POST['form_id']))) {
 			$token = stripinput($_POST['fusion_token']);
-			if ($defender->debug) addNotice('info', 'The token for "'.$form_id.'" was recovered and is being reused');
+			if ($defender->debug) addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
 		} else {
 			$token_time = time();
 			$algo = fusion_get_settings('password_algorithm');
@@ -687,10 +710,10 @@ class defender {
 			// generate a new token
 			$token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
 			// store the token in session
-			$_SESSION['csrf_tokens'][$form_id][] = $token;
+			$_SESSION['csrf_tokens'][self::pageHash()][$form_id][] = $token;
 			// some cleaning, remove oldest token if there are too many
-			if ($max_tokens > 0 && count($_SESSION['csrf_tokens'][$form_id]) > $max_tokens) {
-				array_shift($_SESSION['csrf_tokens'][$form_id]);
+			if ($max_tokens > 0 && count($_SESSION['csrf_tokens'][self::pageHash()][$form_id]) > $max_tokens) {
+				array_shift($_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
 			}
 			if ($defender->debug) addNotice('info', 'A new token for "'.$form_id.'" was generated');
 		}
@@ -702,7 +725,7 @@ class defender {
 
 	/**
 	 * Token Validation
-	 * Makes thorough checks of a posted token
+	 * Makes thorough checks of a posted token, and the token alone
 	 *
 	 * @param int	$post_time	The time in seconds before a posted form is accepted,
 	 *							this is used to prevent spamming post submissions
@@ -710,39 +733,33 @@ class defender {
 	 */
 	private static function verify_token($post_time = 5) {
 		global $locale, $userdata, $defender;
-		// TODO: locale indexes for errors don't pass, verify why
 
 		$error = FALSE;
 
-		// check if the token exists in storage
-		if (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][$_POST['form_id']])) {
-			$error = "Cannot find token in storage: ".$_POST['fusion_token'];
-		} else {
-			$token_data = explode(".", stripinput($_POST['fusion_token']));
-			// check if the token has the correct format
-			if (count($token_data) == 3) {
-				list($tuser_id, $token_time, $hash) = $token_data;
+		$token_data = explode(".", stripinput($_POST['fusion_token']));
+		// check if the token has the correct format
+		if (count($token_data) == 3) {
+			list($tuser_id, $token_time, $hash) = $token_data;
 
-				$user_id = (iMEMBER ? $userdata['user_id'] : 0);
-				$algo = fusion_get_settings('password_algorithm');
-				$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
-				// check if the logged user has the same ID as the one in token
-				if ($tuser_id != $user_id) {
-					$error = $locale['token_error_4'];
-				// make sure the token datestamp is a number
-				} elseif (!isnum($token_time)) {
-					$error = $locale['token_error_5'];
-				// check if the hash is valid
-				} elseif ($hash != hash_hmac($algo, $user_id.$token_time.$_POST['form_id'].SECRET_KEY, $salt)) {
-					$error = $locale['token_error_7'];
-				// check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-				} elseif (time()-$token_time < $post_time) {
-					$error = $locale['token_error_6'];
-				}
-			} else {
-				// token format is incorrect
-				$error = $locale['token_error_8'];
+			$user_id = (iMEMBER ? $userdata['user_id'] : 0);
+			$algo = fusion_get_settings('password_algorithm');
+			$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+			// check if the logged user has the same ID as the one in token
+			if ($tuser_id != $user_id) {
+				$error = $locale['token_error_4'];
+			// make sure the token datestamp is a number
+			} elseif (!isnum($token_time)) {
+				$error = $locale['token_error_5'];
+			// check if the hash is valid
+			} elseif ($hash != hash_hmac($algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt)) {
+				$error = $locale['token_error_7'];
+			// check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
+			} elseif (time()-$token_time < $post_time) {
+				$error = $locale['token_error_6'];
 			}
+		} else {
+			// token format is incorrect
+			$error = $locale['token_error_8'];
 		}
 
 		// Check if any error was set
@@ -752,7 +769,7 @@ class defender {
 		}
 		
 		// If we made it so far everything is good
-		if ($defender->debug) addNotice('info', 'The token for "'.$_POST['form_id'].'" has been validated successfully');
+		if ($defender->debug) addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been validated successfully');
 		return TRUE;
 	}
 }
@@ -821,8 +838,8 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				) {
 					// Flag that something went wrong
 					$defender->stop();
-					// Mark this input as invalid, if wasn't already
-					if (!$defender->inputHasError($input_name)) $defender->setInputError($input_name);
+					// Mark this input as invalid
+					$defender->setInputError($input_name);
 					// Add a notice
 					if ($defender->debug) addNotice('warning', '<strong>'.$input_name.':</strong>'.($defender->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
 					// Return user's input for correction
