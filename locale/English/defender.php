@@ -1,6 +1,16 @@
 <?php
 $locale['validate'] = "Please check and revalidate the field.";
 
+// Text fields errors
+$locale['error_input_default']	= 'Please fill out this field';
+$locale['error_input_password']	= 'Please enter a valid password';
+$locale['error_input_email']	= 'Please enter a valid email';
+$locale['error_input_number']	= 'Please enter a valid number';
+$locale['error_input_url']		= 'Please enter a valid URL';
+$locale['error_input_regex']	= 'Please enter a valid pattern';
+$locale['error_input_safemode']	= 'Please fill out this field properly';
+
+
 // Admin Login
 $locale['cookie_title'] = "Session Timed Out";
 $locale['cookie_description'] = "There are no valid authentication / or your session has probably timed out. Please login again.";

@@ -73,15 +73,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		'error_text'		=> ''
 	);
 
-	// to be moved
-	$locale['error_input_default']	= 'Please fill out this field';
-	$locale['error_input_password']	= 'Please enter a valid password';
-	$locale['error_input_email']	= 'Please enter a valid email';
-	$locale['error_input_number']	= 'Please enter a valid number';
-	$locale['error_input_url']		= 'Please enter a valid URL';
-	$locale['error_input_regex']	= 'Please enter a valid pattern';
-	$locale['error_input_safemode']	= 'Please fill out this field properly';
-
 	// Error messages based on settings
 	if ($options['type'] == 'password') {
 		$options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
