@@ -916,7 +916,7 @@ class Eshop {
 	public static function display_message_form() {
 		global $locale;
 		$html = openform('shippingform', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0));
-		$html .= form_textarea($locale['ESHPCHK116'], 'message', 'message', self::get('customer_message'));
+		$html .= form_textarea('message', $locale['ESHPCHK116'], self::get('customer_message'));
 		$html .= form_button('save_message', $locale['save_changes'], $locale['save'], array('class'=>'btn-success'));
 		$html .= closeform();
 		return $html;

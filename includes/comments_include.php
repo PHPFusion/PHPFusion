@@ -199,7 +199,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 			if (iGUEST) {
 				echo form_text('comment_name', $locale['c104'], '', array('max_length'=>30));
 			}
-			echo form_textarea('', 'comment_message', 'comment_message', $comment_message, array('required' => 1, 'autosize'=>1, 'form_name'=>'inputform', 'bbcode'=>1));
+			echo form_textarea('comment_message', '', $comment_message, array('required' => 1, 'autosize'=>1, 'form_name'=>'inputform', 'bbcode'=>1));
 			if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
 				$_CAPTCHA_HIDE_INPUT = FALSE;
 				echo "<div style='width:360px; margin:10px auto;'>";

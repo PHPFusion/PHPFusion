@@ -88,7 +88,12 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo form_select($locale['558'], 'enable_terms', 'enable_terms', $opts, $settings2['enable_terms']);
-echo form_textarea($locale['559'], 'license_agreement', 'enable_license_agreement', $settings2['license_agreement'], array('form_name'=>'settingsform', 'autosize'=>!$settings['tinymce_enabled'] ? 1 : 0, 'html'=>!$settings['tinymce_enabled'] ? 1 : 0));
+echo form_textarea('license_agreement', $locale['559'], $settings2['license_agreement'], array(
+	'form_name' => 'settingsform',
+	'input_id' => 'enable_license_agreement',
+	'autosize' => !$settings['tinymce_enabled'],
+	'html'=> !$settings['tinymce_enabled'])
+);
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');

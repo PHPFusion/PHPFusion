@@ -563,7 +563,7 @@ class Banners {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		echo form_text('featitem_title', $locale['ESHFEAT90a'], '', array('required'=>1, 'inline'=>1));
-		echo form_textarea($locale['ESHFEAT90b'], 'featitem_description', 'featitem_descriptions', '', array('required'=>1, 'autosize'=>1, 'inline'=>1));
+		echo form_textarea('featitem_description', $locale['ESHFEAT90b'], '', array('required'=>1, 'autosize'=>1, 'inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		openside('');
@@ -706,7 +706,7 @@ class Banners {
 		echo form_hidden('', 'featitem_id', 'featitem_id', $this->idata['featitem_id']);
 		echo form_select($locale['ESHFEAT113'], 'featitem_item', 'featitem_item',  self::get_productOpts(), $this->idata['featitem_item'], array('inline'=>1));
 		echo form_text('featitem_title', $locale['ESHFEAT90a'], $this->idata['featitem_title'], array('required'=>1, 'inline'=>1));
-		echo form_textarea($locale['ESHFEAT90b'], 'featitem_description', 'featitem_description', $this->idata['featitem_description'], array('required'=>1, 'autosize'=>1, 'inline'=>1));
+		echo form_textarea('featitem_description', $locale['ESHFEAT90b'], $this->idata['featitem_description'], array('required'=>1, 'autosize'=>1, 'inline'=>1));
 		echo form_select_tree($locale['ESHFEAT125'], 'featitem_cid', 'featitem_cid', $this->idata['featitem_cid'], array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		closeside();
 		echo "</div>\n";

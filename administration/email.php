@@ -196,7 +196,7 @@ if (multilang_table("ET")) {
 echo "<tr>\n";
 echo "<td class='tbl1' style='width:15%;vertical-align:top;'><label for='template_subject'>".$locale['434'].":</label>  <span class='required'>*</span></td>\n";
 echo "<td class='tbl1'>\n";
-echo form_textarea('', 'template_subject', 'template_subject', $template_subject, array('required' => 1, 'error_text' => $locale['470']));
+echo form_textarea('template_subject', '', $template_subject, array('required' => 1, 'error_text' => $locale['470']));
 echo "<div class='btn-group'>\n";
 echo "<button type='button' class='btn btn-sm btn-default button' value='[SITENAME]' onclick=\"insertText('template_subject', '[SITENAME]', 'emailtemplateform');\">SITENAME</button>\n";
 echo "<button type='button' class='btn btn-sm btn-default button' value='[SITEURL]' onclick=\"insertText('template_subject', '[SITEURL]', 'emailtemplateform');\">SITEURL</button>\n";
@@ -209,7 +209,7 @@ echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' style='width:15%;vertical-align:top;'><label for='template_content'>".$locale['435'].":</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl1'>\n";
-echo form_textarea('', 'template_content', 'template_content', $template_content, array('required' => 1, 'error_text' => $locale['471']));
+echo form_textarea('template_content', '', $template_content, array('required' => 1, 'error_text' => $locale['471']));
 echo "<div class='btn-group'>\n";
 echo "<button type='button' class='btn btn-sm btn-default button' value='[SUBJECT]' onclick=\"insertText('template_content', '[SUBJECT]', 'emailtemplateform');\">SUBJECT</button>\n";
 echo "<button type='button' class='btn btn-sm btn-default button' value='[MESSAGE]' onclick=\"insertText('template_content', '[MESSAGE]', 'emailtemplateform');\">MESSAGE</button>\n";

@@ -333,7 +333,7 @@ class CustomPage {
 										   'multiple' => 1,
 									   )
 		);
-		echo form_textarea('', 'page_content', 'page_content', $data['page_content'], (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && fusion_get_settings('tinymce_enabled') ? array() : array(
+		echo form_textarea('page_content', '', $data['page_content'], (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && fusion_get_settings('tinymce_enabled') ? array() : array(
 			'autosize'=>1,
 			'form_name'=>'inputform',
 			'html'=>1,

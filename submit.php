@@ -115,8 +115,8 @@ if ($_GET['stype'] == "l") {
 	echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=n", array('max_tokens' => 1));
 	echo form_text('news_subject', $locale['471'], $news_subject, array("required" => 1));
 	echo form_select($locale['476'], 'news_cat', 'news_cat', $cat_list, $news_cat, array("required" => 1));
-	echo form_textarea($locale['478'], 'news_snippet', 'news_snippet', $news_snippet, array('bbcode' => 1, 'form_name' => 'submit_form'));
-	echo form_textarea($locale['472'], 'news_body', 'news_body', $news_body, array("required" => 1, 'bbcode' => 1, 'form_name' => 'submit_form'));
+	echo form_textarea('news_snippet', $locale['478'], $news_snippet, array('bbcode' => 1, 'form_name' => 'submit_form'));
+	echo form_textarea('news_body', $locale['472'], $news_body, array("required" => 1, 'bbcode' => 1, 'form_name' => 'submit_form'));
 	echo $settings['site_seo'] ? '' : form_button('preview_news', $locale['474'], $locale['474'], array('class' => 'btn-primary m-r-10'));
 	echo form_button('submit_news', $locale['475'], $locale['475'], array('class' => 'btn-primary'));
 	echo closeform();
@@ -173,8 +173,8 @@ if ($_GET['stype'] == "l") {
 	echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=b", array('max_tokens' => 1));
 	echo form_text('blog_subject', $locale['471b'], $blog_subject, array("required" => 1));
 	echo form_select($locale['476b'], 'blog_cat', 'blog_cat', $cat_list, $blog_cat, array("required" => 1));
-	echo form_textarea($locale['478b'], 'blog_snippet', 'blog_snippet', $blog_snippet, array('bbcode' => 1, 'form_name' => 'submit_form'));
-	echo form_textarea($locale['472b'], 'blog_body', 'blog_body', $blog_body, array("required" => 1, 'bbcode' => 1, 'form_name' => 'submit_form'));
+	echo form_textarea('blog_snippet', $locale['478b'], $blog_snippet, array('bbcode' => 1, 'form_name' => 'submit_form'));
+	echo form_textarea('blog_body', $locale['472b'], $blog_body, array("required" => 1, 'bbcode' => 1, 'form_name' => 'submit_form'));
 	echo $settings['site_seo'] ? '' : form_button('preview_blog', $locale['474b'], $locale['474b'], array('class' => 'btn-primary m-r-10'));
 	echo form_button('submit_blog', $locale['475b'], $locale['475b'], array('class' => 'btn-primary'));
 	echo closeform();
@@ -228,8 +228,8 @@ if ($_GET['stype'] == "l") {
 			echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=a", array('max_tokens' => 1));
 			echo form_select($locale['521'], 'article_cat', 'article_cat', $cat_list, isset($_POST['preview_article']) ? $_POST['preview_article'] : '');
 			echo form_text('article_subject', $locale['522'], $article_subject, array('required' => 1));
-			echo form_textarea($locale['523'], 'article_snippet', 'article_snippet', $article_snippet, array('bbcode' => 1, 'required' => 1, 'form_name' => 'submit_form'));
-			echo form_textarea($locale['524'], 'article_body', 'article_body', $article_body, array('bbcode' => 1, 'required' => 1, 'form_name' => 'submit_form'));
+			echo form_textarea('article_snippet', $locale['523'], $article_snippet, array('bbcode' => 1, 'required' => 1, 'form_name' => 'submit_form'));
+			echo form_textarea('article_body', $locale['524'], $article_body, array('bbcode' => 1, 'required' => 1, 'form_name' => 'submit_form'));
 			echo "</div>\n</div>\n";
 			echo $settings['site_seo'] ? '' : form_button('preview_article', $locale['526'], 'preview_article', $locale['526'], array('class' => 'btn-primary m-r-10'));
 			echo form_button('submit_article', $locale['527'], $locale['527'], array('class' => 'btn-primary'));
@@ -274,7 +274,7 @@ if ($_GET['stype'] == "l") {
 		echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['620']."</div>\n";
 		echo form_select($locale['625'], 'album_id', 'album_id', $opts, '');
 		echo form_text('photo_title', $locale['621'], '', array('required' => 1));
-		echo form_textarea($locale['622'], 'photo_description', 'photo_description', '');
+		echo form_textarea('photo_description', $locale['622'], '');
 		echo sprintf($locale['624'], parsebytesize($settings['photo_max_b']), $settings['photo_max_w'], $settings['photo_max_h'])."<br/>\n";
 		echo form_fileinput($locale['623'], 'photo_pic_file', 'photo_pic_file', PHOTOS."submissions/", '', array('type' => 'image', 'required' => 1));
 		echo "</div>\n</div>\n";
@@ -369,8 +369,8 @@ if ($_GET['stype'] == "l") {
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 		echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['680']."</div>\n";
 		echo form_text('download_title', $locale['681'], '', array('required' => 1, 'error_text' => $locale['674']));
-		echo form_textarea($locale['682b'], 'download_description_short', 'download_description_short', '', array('bbcode' => 1, 'required' => 1, 'error_text' => $locale['676'],  'form_name' => 'submit_form'));
-		echo form_textarea($locale['682'], 'download_description', 'download_description', '', array('bbcode' =>1, 'form_name' => 'submit_form'));
+		echo form_textarea('download_description_short', $locale['682b'], '', array('bbcode' => 1, 'required' => 1, 'error_text' => $locale['676'],  'form_name' => 'submit_form'));
+		echo form_textarea('download_description', $locale['682'], '', array('bbcode' =>1, 'form_name' => 'submit_form'));
 		echo form_text('download_url', $locale['683'], '', array('error_text' => $locale['675']));
 		echo "<div class='pull-right'>\n<small>\n";
 		echo sprintf($locale['694'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";

@@ -138,7 +138,7 @@ echo "<td class='tbl1'>".form_select('', 'reset_admin', 'reset_admin', $reset_op
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' width='250' valign='top'><label for='reset_message'>".$locale['404']."</label></td>\n";
-echo "<td class='tbl1'>".form_textarea('', 'reset_message', 'reset_message', '');
+echo "<td class='tbl1'>".form_textarea('reset_message', '', '');
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' width='250' valign='top'></td>\n";
 echo "<td class='tbl1'><label><input type='checkbox' name='reset_login' value='1' /> ".$locale['405']."</label></td>\n";

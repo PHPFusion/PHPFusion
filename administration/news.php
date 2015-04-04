@@ -412,8 +412,8 @@ function news_form() {
 		$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
 	}
 	closeside();
-	echo form_textarea($locale['news_0203'], 'news_news', 'news_news', $data['news_news'], $fusion_mce);
-	echo form_textarea($locale['news_0204'], 'news_extended', 'news_extended', $data['news_extended'], $fusion_mce);
+	echo form_textarea('news_news', $locale['news_0203'], $data['news_news'], $fusion_mce);
+	echo form_textarea('news_extended', $locale['news_0204'], $data['news_extended'], $fusion_mce);
 	echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	if (multilang_table("NS")) {

@@ -559,7 +559,7 @@ class Admin {
 		echo openform('inputform', 'post', FUSION_SELF.$aidlink.$this->ext, array('enctype'=>1, 'max_tokens' => 1));
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 		echo form_text('forum_name', $locale['forum_006'], $this->data['forum_name'], array('required'=>1, 'error_text'=>$locale['forum_error_1']));
-		echo form_textarea($locale['forum_007'], 'forum_description', 'forum_description', $this->data['forum_description'], array('autosize'=>1, 'bbcode'=>1));
+		echo form_textarea('forum_description', $locale['forum_007'], $this->data['forum_description'], array('autosize'=>1, 'bbcode'=>1));
 		echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 		openside('');
 		$self_id = $this->data['forum_id'] ? $this->data['forum_id'] : '';
@@ -612,7 +612,7 @@ class Admin {
 			echo closetab();
 		}
 
-		echo form_textarea($locale['forum_017'], 'forum_rules', 'forum_rules', $this->data['forum_rules'], array('autosize'=>1, 'bbcode'=>1));
+		echo form_textarea('forum_rules', $locale['forum_017'], $this->data['forum_rules'], array('autosize'=>1, 'bbcode'=>1));
 		echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 		openside('');
 		echo form_select_tree($locale['forum_025'], 'forum_permissions', 'forum_permissions', '', array('no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');

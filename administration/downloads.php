@@ -257,7 +257,7 @@ function download_form() {
 	echo form_hidden('', 'download_id', 'download_id', $data['download_id']);
 	echo form_hidden('', 'download_datestamp', 'download_datestamp', $data['download_datestamp']);
 	echo form_text('download_title', $locale['download_0200'], $data['download_title'], array('required' => 1, 'error_text'=>$locale['download_0110']));
-	echo form_textarea($locale['download_0202'], 'download_description_short', 'download_description_short', $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['download_0112'], 'maxlength' => '255', 'autosize' => 1));
+	echo form_textarea('download_description_short', $locale['download_0202'], $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['download_0112'], 'maxlength' => '255', 'autosize' => 1));
 	if ($settings['download_screenshot']) {
 		if (!empty($data['download_image']) && !empty($data['download_image_thumb'])) {
 			echo "<div class='clearfix list-group-item m-b-20'>\n";
@@ -331,7 +331,7 @@ function download_form() {
 	echo closetabbody();
 	echo closetab();
 	closeside('');
-	echo form_textarea($locale['download_0201'], 'download_description', 'download_description', $data['download_description'], array('no_resize' => '1', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
+	echo form_textarea('download_description', $locale['download_0201'], $data['download_description'], array('no_resize' => '1', 'form_name' => 'inputform', 'html' => 1, 'autosize' => 1, 'preview' => 1));
 	echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
 	openside();
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {

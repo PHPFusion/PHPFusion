@@ -768,18 +768,18 @@ class Products {
 		openside('');
 		echo form_select($locale['ESHPPRO190'], 'linebreaks', 'linebreaks', array($locale['no'], $locale['yes']), $this->data['linebreaks'], array('inline'=>1));
 		if (fusion_get_settings('eshop_pretext')) {
-			echo form_textarea($locale['ESHPPRO160'], 'introtext', 'introtext', $this->data['introtext'], array('placeholder'=>$locale['ESHPPRO161'], 'autosize'=>1));
+			echo form_textarea('introtext', $locale['ESHPPRO160'], $this->data['introtext'], array('placeholder'=>$locale['ESHPPRO161'], 'autosize'=>1));
 		} else {
 			echo form_hidden('', 'introtext', 'introtext', $this->data['introtext']);
 		}
-		echo form_textarea($locale['ESHPPRO162'], 'description', 'description', $this->data['description'], array('inline'=>1,'autosize'=>1));
+		echo form_textarea('description', $locale['ESHPPRO162'], $this->data['description'], array('inline'=>1,'autosize'=>1));
 		//'placeholder'=>$locale['ESHPPRO163'],
 		echo form_text('anything1n', $locale['ESHPPRO201']." 1", $this->data['anything1n'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO198']));
-		echo form_textarea('', 'anything1', 'anything1', $this->data['anything1'], array('autosize'=>1));
+		echo form_textarea('anything1', '', $this->data['anything1'], array('autosize'=>1));
 		echo form_text('anything2n', $locale['ESHPPRO201']." 2", $this->data['anything2n'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO198']));
-		echo form_textarea('', 'anything2', 'anything2', $this->data['anything2'], array('autosize'=>1));
+		echo form_textarea('anything2', '', $this->data['anything2'], array('autosize'=>1));
 		echo form_text('anything3n', $locale['ESHPPRO201']." 3", $this->data['anything3n'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO198']));
-		echo form_textarea('', 'anything3', 'anything3', $this->data['anything3'], array('autosize'=>1));
+		echo form_textarea('anything3', '', $this->data['anything3'], array('autosize'=>1));
 		closeside();
 
 		// end of column 1

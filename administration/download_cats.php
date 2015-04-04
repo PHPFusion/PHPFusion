@@ -166,7 +166,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
 		echo form_text('cat_name', $locale['download_0300'], $cat_name, array('required' => 1, 'error_text' => $locale['download_0351']));
-		echo form_textarea($locale['download_0301'], 'cat_description', 'cat_description', $cat_description, array('resize'=>0, 'autosize'=>1));
+		echo form_textarea('cat_description', $locale['download_0301'], $cat_description, array('resize'=>0, 'autosize'=>1));
 		echo "<div class='clearfix'>\n";
 		echo form_select($locale['download_0302'], 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10', 'width'=>'200px'));
 		echo form_select('', 'cat_sort_order', 'cat_sort_order', $array2, $cat_sort_order, array('placeholder' => $locale['choose'], 'class'=>'pull-left', 'width'=>'200px'));

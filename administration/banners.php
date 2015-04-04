@@ -73,7 +73,7 @@ opentable($locale['850']);
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody><tr>\n";
 echo "<td class='tbl'>\n";
-echo form_textarea($locale['851'], 'sitebanner1', 'sitebanner1', $sitebanner1);
+echo form_textarea('sitebanner1', $locale['851'], $sitebanner1);
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'>\n";
 echo "<input type='button' value='<?php?>' class='button' style='width:60px;' onclick=\"addText('sitebanner1', '<?php\\n', '\\n?>', 'settingsform');\" />\n";
@@ -86,7 +86,7 @@ if (isset($_POST['preview_banners']) && $sitebanner1) {
 	}
 }
 echo "<td class='tbl'>\n";
-echo form_textarea($locale['852'], 'sitebanner2', 'sitebanner2', $sitebanner2);
+echo form_textarea('sitebanner2', $locale['852'], $sitebanner2);
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'>\n";
 echo "<input type='button' value='<?php?>' class='button' style='width:60px;' onclick=\"addText('sitebanner2', '<?php\\n', '\\n?>', 'settingsform');\" />\n";

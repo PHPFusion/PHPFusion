@@ -203,7 +203,7 @@ if (dbrows($result) != 0) {
 	echo form_select($locale['ESHP821'], 'eshop_inorder', 'eshop_inorder', array('1'=>$locale['ESHP828'], '0'=>$locale['ESHP829']), $settings2['eshop_inorder'], array('placeholder'=>$locale['ESHP822'], 'inline'=>1));
 	closeside();
 	openside('');
-	echo form_textarea($locale['ESHP831'], 'eshop_terms', 'eshop_terms', $data['eshop_terms'], array('autosize'=>1));
+	echo form_textarea('eshop_terms', $locale['ESHP831'],  $data['eshop_terms'], array('autosize'=>1));
 	closeside();
 	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-4'>\n";

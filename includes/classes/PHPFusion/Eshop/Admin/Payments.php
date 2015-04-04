@@ -159,10 +159,10 @@ class Payments {
 		echo form_select($locale['ESHPPMTS104'], 'cfile', 'cfile', self::get_paymentFile(), $this->data['cfile'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS106']));
 		closeside();
 		openside('');
-		echo form_textarea($locale['ESHPPMTS107'], 'description', 'description', $this->data['description'], array('inline'=>1, 'autosize'=>1, 'tip'=>$locale['ESHPPMTS108']));
+		echo form_textarea('description', $locale['ESHPPMTS107'], $this->data['description'], array('inline'=>1, 'autosize'=>1, 'tip'=>$locale['ESHPPMTS108']));
 		closeside();
 		openside('');
-		echo form_textarea($locale['ESHPPMTS113'], 'code', 'code', $this->data['code'], array('tip'=>$locale['ESHPPMTS114'], 'placeholder'=>'<?php .... ?>', 'html'=>1, 'preview'=>1, 'form_name'=>'paymentform', 'autosize'=>1));
+		echo form_textarea('code', $locale['ESHPPMTS113'], $this->data['code'], array('tip'=>$locale['ESHPPMTS114'], 'placeholder'=>'<?php .... ?>', 'html'=>1, 'preview'=>1, 'form_name'=>'paymentform', 'autosize'=>1));
 		closeside();
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";

@@ -150,7 +150,7 @@ if (iMEMBER || $shout_settings['guest_shouts'] == "1") {
 		echo $locale['SB_message']."<br />\n";
 	}
 	echo display_bbcodes("150px;", "shout_message", "shout_form", "smiley|b|u|url|color")."\n";
-	echo form_textarea('', 'shout_message', 'shout_message', $shout_message);
+	echo form_textarea('shout_message', '', $shout_message);
 	if (iGUEST) {
 		echo $locale['SB_validation_code']."<br />\n";
 		echo "<img id='sb_captcha' src='".INCLUDES."captchas/securimage/securimage_show.php' alt='' /><br />\n";

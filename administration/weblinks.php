@@ -94,7 +94,7 @@ if (!empty($result)) {
 	echo "</tr>\n<tr>\n";
 	echo "<td valign='top' width='80' class='tbl'><label for='weblink_description'>".$locale['521']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_textarea('', 'weblink_description', 'weblink_description', $weblink_description);
+	echo form_textarea('weblink_description', '', $weblink_description);
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td class='tbl'></td><td class='tbl'>\n";
 	echo display_html("inputform", "weblink_description", TRUE)."</td>\n";
