@@ -1,5 +1,5 @@
 <?php
-
+	add_to_title($locale['global_200'].$locale['global_042']);
 	$_GET['rowstart'] = 0;
 	$result = dbquery("SELECT tt.*, tf.*, tp.post_id, tp.post_datestamp,
 				u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
@@ -14,8 +14,7 @@
             	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")."
         	    ".groupaccess('tf.forum_access')." AND tt.thread_hidden='0'
     	        ".(isset($_POST['filter']) && $_POST['filter'] ? "AND tt.thread_lastpost < '".(time()-($_POST['filter']*24*3600))."'" : '')."
-	            GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT ".$_GET['rowstart'].", ".$info['threads_per_page']."
-	            ");
+	            GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT ".$_GET['rowstart'].", ".$settings['threads_per_page']);
 	// link also need to change
 	$info['post_rows'] = dbrows($result);
 	if (dbrows($result) > 0) {

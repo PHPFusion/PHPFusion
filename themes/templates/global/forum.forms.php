@@ -1,7 +1,7 @@
 <?php
 // new thread does not have a category.
 function postform($data, $info) {
-	global $locale, $userdata, $settings, $can_poll;
+	global $locale, $userdata, $settings;
 	$data += array('edit' => !empty($data['edit']) && $data['edit'] == 1 ? 1 : 0,
 		'new' => !empty($data['new']) && $data['new'] == 1 ? 1 : 0,
 		'reply' => !empty($data['reply']) && $data['reply'] == 1 ? 1 : 0,
@@ -22,8 +22,7 @@ function postform($data, $info) {
 		// only for post edit.
 		'post_editreason' => !empty($data['post_editreason']) && !empty($data['edit']) ? $data['post_editreason'] : '',
 	);
-	add_to_head("<link href='".THEMES."templates/global/css/forum.css' rel='stylesheet'/>\n");
-	echo render_breadcrumbs();
+	//echo render_breadcrumbs();
 	echo "<!--pre_postnewthread-->";
 	if ($data['edit']) {
 		opentable($locale['forum_0507']);
@@ -34,11 +33,14 @@ function postform($data, $info) {
 	}
 	$formaction = $settings['site_seo'] == 1 ? FUSION_ROOT : '';
 	if ($data['edit']) {
-		$formaction .= FORUM."post.php?action=edit&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id'];
+		$formaction .= FORUM."viewthread.php?action=edit&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id'];
 	} elseif ($data['reply']) {
-		$formaction .= FORUM."post.php?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'];
+		$formaction .= FORUM."viewthread.php?action=reply&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'];
+		if (isset($_GET['quote'])) {
+			$formaction .= FORUM."viewthread.php?action=edit&amp;forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id']."&amp;quote=".$_GET['quote'];
+		}
 	} elseif ($data['new']) {
-		$formaction .= FORUM."post.php?action=newthread&amp;forum_id=".$_GET['forum_id'];
+		$formaction .= FORUM."newthread.php?action=newthread&amp;forum_id=".$_GET['forum_id'];
 	}
 
 	echo openform('input_form', 'post', $formaction, array('enctype' => 1, 'max_tokens' => 1));
@@ -82,9 +84,9 @@ function postform($data, $info) {
 		$tab_title['icon'][2] = '';
 	}
 	$tab_active = tab_active($tab_title, isset($_POST['add_poll_option']) ? 2 : 0);
-	echo "<div class='panel panel-default'>\n";
 	echo opentab($tab_title, $tab_active, 'newthreadopts');
 	echo opentabbody($tab_title['title'][0], 'postopts', $tab_active);
+	echo "<div class='p-15'>\n";
 	if ($data['edit']) {
 		echo form_checkbox('delete', $locale['forum_0624'], '', array('class' => 'm-b-0'));
 		echo "<hr class='m-t-5 m-b-10'>\n";
@@ -104,9 +106,11 @@ function postform($data, $info) {
 	if ($settings['thread_notify'] && !$data['edit']) {
 		echo form_checkbox('notify_me', $locale['forum_0626'], $data['notify_me'], array('class' => 'm-b-0'));
 	}
+	echo "</div>\n";
 	echo closetabbody();
 	if ($info['forum_attach'] && checkgroup($info['forum_attach']) && $info['forum_allow_attach']) {
 		echo opentabbody($tab_title['title'][1], 'attach', $tab_active);
+		echo "<div class='p-15 clearfix'>\n";
 		add_to_head("<script type='text/javascript' src='".INCLUDES."multi_attachment.js'></script>\n");
 		if (isset($info['attachment']) && !empty($info['attachment'])) {
 			$i = 0;
@@ -120,6 +124,7 @@ function postform($data, $info) {
 		echo "<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($settings['attachmax']), str_replace(',', ' ', $settings['attachtypes']), $settings['attachmax_count'])."</div>\n";
 		echo "<input id='my_file_element' type='file' name='file_1' class='textbox' style='width:200px;' />\n";
 		echo "<div class='m-t-10' id='files_list'></div>\n";
+		echo "</div>\n";
 		echo "<script>\n";
 		echo "/* <![CDATA[ */\n";
 		echo "<!-- Create an instance of the multiSelector class, pass it the output target and the max number of files -->\n";
@@ -132,7 +137,7 @@ function postform($data, $info) {
 	}
 	if ($info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new'])) {
 		echo opentabbody($tab_title['title'][2], 'pollopts', $tab_active);
-		echo "<div class='clearfix'>\n";
+		echo "<div class='p-15 clearfix'>\n";
 		echo form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255,
 			'placeholder' => 'Enter a Poll Title',
 			'inline' => 1));
@@ -182,10 +187,10 @@ function postform($data, $info) {
 			echo "</div>\n";
 		}
 		echo "</div>\n";
+		echo "</div>\n";
 		echo closetabbody();
 	}
 	echo closetab();
-	echo "</div>\n";
 	echo "<hr/>\n";
 	echo "<div class='m-b-20'>\n";
 	echo form_hidden('', 'forum_id', 'forum_id', $data['forum_id']);

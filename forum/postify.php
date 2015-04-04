@@ -6,6 +6,7 @@
 +--------------------------------------------------------+
 | Filename: postify.php
 | Author: Nick Jones (Digitanium)
+| Co-author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,9 +20,16 @@ require_once "../maincore.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum.php";
 add_to_title($locale['global_204']);
-if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) {
-	redirect("index.php");
-}
+$settings = fusion_get_settings();
+$debug = false;
+
+if (!isset($_GET['post'])) throw new \Exception('$_GET[ post ] is blank, and not passed! Please report this.');
+if (!isset($_GET['forum_id'])) throw new \Exception('$_GET[ forum_id ] is blank, and not passed! Please report this.');
+if (!isset($_GET['thread_id'])) throw new \Exception('$_GET[ thread_id ] is blank, and not passed! Please report this.');
+$base_redirect_link = FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'];
+//if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) redirect("index.php");
+
+$errorb = '';
 if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $_GET['error'] > 6) {
 	$_GET['error'] = 0;
 	$errorb = "";
@@ -38,10 +46,11 @@ if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $
 } elseif ($_GET['error'] == 6) {
 	$errorb = sprintf($locale['forum_0556'], $settings['forum_edit_timelimit']);
 }
+
 $valid_get = array("on", "off", "new", "reply", "edit");
-if (!iMEMBER || !in_array($_GET['post'], $valid_get)) {
-	redirect("index.php");
-}
+if (!iMEMBER || !in_array($_GET['post'], $valid_get)) redirect("index.php");
+
+
 if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notify']) {
 	$output = FALSE;
 	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
@@ -72,10 +81,11 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	}
 	if (!$output) redirect("index.php");
 }
-elseif ($_GET['post'] == "new") {
+
+if ($_GET['post'] == "new") {
 	add_to_title($locale['global_201'].$locale['forum_0501']);
 	opentable($locale['forum_0501']);
-	echo "<div class='alert ".($errorb ? "alert-warning" : "alert-info")."' style='text-align:center'><br />\n";
+	echo "<div class='alert ".($errorb ? "alert-warning" : "well")." text-center'>\n";
 	if ($errorb) {
 		echo $errorb."<br /><br />\n";
 	} else {
@@ -85,31 +95,28 @@ elseif ($_GET['post'] == "new") {
 		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
 			redirect("index.php");
 		}
-		echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
-		add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
+		echo "<a href='".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
+		add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' />\n");
 	}
-	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='index.php'>".$locale['forum_0550']."</a><br /><br /></div>\n";
 	closetable();
 }
-elseif ($_GET['post'] == "reply") {
-	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-		redirect("index.php"); // thread id will resutl postfy fail. will need to check if this happens. wait for people to report on line number.
-	}
+
+if ($_GET['post'] == "reply") {
+
 	add_to_title($locale['global_201'].$locale['forum_0503']);
 	opentable($locale['forum_0503']);
-	echo "<div class='alert ".($errorb ? "alert-warning" : "alert-info")."' style='text-align:center'><br />\n";
+	echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n";
 	if ($errorb) {
 		echo $errorb."<br /><br />\n";
 	} else {
 		echo $locale['forum_0544']."<br /><br />\n";
 	}
+
 	if ($_GET['error'] < "2") {
-		if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) {
-			redirect("index.php"); // i will crash this -- quick reply not working due here. if that's the case, see post_actions.php / bug when forum_merge allowed. post_id not assigned
-		}
-		add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
-		if (fusion_get_settings('thread_notify')) {
+
+		if ($settings['thread_notify']) {
 			$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
 				FROM ".DB_FORUM_THREAD_NOTIFY." tn
 				LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id
@@ -121,7 +128,7 @@ elseif ($_GET['post'] == "reply") {
 					FROM ".DB_FORUM_THREADS." tt
 					INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=tt.forum_id
 					WHERE thread_id='".$_GET['thread_id']."'"));
-				$link = fusion_get_settings('siteurl')."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&pid=".$_GET['post_id']."#post_".$_GET['post_id'];
+				$link = $settings['siteurl']."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&pid=".$_GET['post_id']."#post_".$_GET['post_id'];
 				$template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='POST' LIMIT 1");
 				if (dbrows($template_result)) {
 					$template_data = dbarray($template_result);
@@ -156,25 +163,32 @@ elseif ($_GET['post'] == "reply") {
 				$result = dbquery("UPDATE ".DB_FORUM_THREAD_NOTIFY." SET notify_status='0' WHERE thread_id='".$_GET['thread_id']."' AND notify_user!='".$userdata['user_id']."'");
 			}
 		}
-		echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
-	} else {
-		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-			redirect("index.php");
+
+		if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) {
+			if (!isset($_GET['post_id'])) throw new \Exception('$_GET[ post_id ] is blank, and not passed! Please report this.');
 		}
+
+		add_to_head("<meta http-equiv='refresh' content='2; url=".$base_redirect_link."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
+		echo "<a href='".$base_redirect_link."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
+
+	} else {
+
 		$data = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
-		add_to_head("<meta http-equiv='refresh' content='4; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
-		echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$locale['forum_0548']."</a> ::\n";
+		add_to_head("<meta http-equiv='refresh' content='4; url=".$base_redirect_link."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
+		echo "<a href='".$base_redirect_link."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$locale['forum_0548']."</a> ::\n";
 	}
 	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
-	echo "<a href='index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
+	echo "<a href='".FORUM."index.php'>".$locale['forum_0550']."</a></div>\n";
 	closetable();
 
-} elseif ($_GET['post'] == "edit") {
+}
+
+if ($_GET['post'] == "edit") {
 	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
 		redirect("index.php");
 	}
 	add_to_title($locale['global_201'].$locale['forum_0508']);
-	add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
+	add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 	opentable($locale['forum_0508']);
 	echo "<div class='alert ".($errorb ? 'alert-warning' : 'alert-info')."' style='text-align:center'><br />\n";
 	if ($errorb) {
@@ -182,10 +196,11 @@ elseif ($_GET['post'] == "reply") {
 	} else {
 		echo $locale['forum_0547']."<br /><br />\n";
 	}
-	echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
+	echo "<a href='".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
 	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='".FORUM."index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
 	closetable();
 }
+
 require_once THEMES."templates/footer.php";
 ?>

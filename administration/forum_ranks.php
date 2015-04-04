@@ -17,10 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("FR") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('FR');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/forum_ranks.php";
 

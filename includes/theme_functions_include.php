@@ -455,7 +455,7 @@ function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
  * @return string
  */
 function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class='img-thumbnail') {
-	$userdata += array(
+	$userdata = array(
 		'user_id' => 0,
 		'user_name' => '',
 		'user_avatar' => '',
@@ -657,8 +657,6 @@ function tab_active($tab_title, $default_active, $link_mode = FALSE) {
 	}
 }
 
-
-
 function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE) {
 	global $aidlink;
 	$link_mode = $link ? $link : 0;
@@ -670,7 +668,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		$v_title = str_replace("-", " ", $v);
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
 		$inner_id = $tab_title['id'][$arr];
-		$link_url = $link ? clean_request('section='.$inner_id, array('aid', 'a_page', 'thread_id')) : '#';
+		$link_url = $link ? clean_request('section='.$inner_id, array('aid', 'a_page', 'thread_id', 'forum_id', 'ref', 'id', 'parent_id')) : '#';
 		if ($link_mode) {
 			$html .= ($link_active_arrkey == $inner_id) ? "<li class='active'>\n" : "<li>\n";
 		} else {

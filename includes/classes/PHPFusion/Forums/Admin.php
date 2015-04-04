@@ -183,10 +183,10 @@ class Admin {
 		global $aidlink, $locale;
 		if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['order']) && isnum($_GET['order'])) {
 			$data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
-			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
-			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
-			notify($locale['forum_notice_6'], sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
-			redirect(FUSION_SELF.$aidlink.$this->ext."&status=mup");
+			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".intval($data['forum_id'])."'");
+			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".intval($_GET['forum_id'])."'");
+			addNotice('success', $locale['forum_notice_6']." ".sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
+			redirect(FUSION_SELF.$aidlink.$this->ext);
 		}
 	}
 
@@ -200,7 +200,8 @@ class Admin {
 			$data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$_GET['parent_id']."' AND forum_order='".$_GET['order']."'"));
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
-			notify($locale['forum_notice_7'], sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
+			addNotice('success', $locale['forum_notice_7']." ".sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
+			redirect(FUSION_SELF.$aidlink.$this->ext);
 		}
 	}
 
@@ -208,7 +209,7 @@ class Admin {
 	 * Delete checking
 	 */
 	private function validate_forum_removal() {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isset($_GET['forum_id']) && isnum($_GET['forum_id']) && isset($_GET['forum_cat']) && isnum($_GET['forum_cat'])) {
 			// check if there are subforums, threads or posts.
 			$forum_count = dbcount("('forum_id')", DB_FORUMS, "forum_cat='".$_GET['forum_id']."'");
@@ -222,7 +223,8 @@ class Admin {
 				self::prune_threads($_GET['forum_id']);
 				self::recalculate_post($_GET['forum_id']);
 				self::prune_forums('', $_GET['forum_id']); // without index, this prune will delete only one.
-				redirect(FUSION_SELF.$aidlink."&status=crf");
+				addNotice('info', $locale['forum_notice_5']);
+				redirect(FUSION_SELF.$aidlink);
 			}
 		}
 	}
@@ -231,7 +233,7 @@ class Admin {
 	 * Remove a forum uploaded image
 	 */
 	private function remove_forum_image() {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isset($_POST['remove_image']) && isset($_POST['forum_id'])) {
 			$data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
 			if ($data['forum_id']) {
@@ -242,7 +244,8 @@ class Admin {
 						$data['forum_image'] = '';
 					}
 					dbquery_insert(DB_FORUMS, $data, 'update');
-					redirect(FUSION_SELF.$aidlink."&status=rim");
+					addNotice('info', $locale['forum_notice_8']);
+					redirect(FUSION_SELF.$aidlink);
 				}
 			}
 		}
@@ -306,7 +309,8 @@ class Admin {
 				$defender->addNotice($locale['forum_notice_na']);
 			}
 			self::prune_forums($action_data['forum_id']);
-			redirect(FUSION_SELF.$aidlink."&status=crf");
+			addNotice('info', $locale['forum_notice_5']);
+			redirect(FUSION_SELF.$aidlink);
 		}
 	}
 
@@ -314,7 +318,7 @@ class Admin {
 	 * Update Forum Permissions
 	 */
 	function set_forumPermissionsDB() {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isset($_POST['save_permission'])) {
 			$this->data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
 			$this->data = self::get_forum($this->data['forum_id']);
@@ -330,7 +334,8 @@ class Admin {
 				$this->data['forum_attach_download'] = form_sanitizer($_POST['forum_attach_download'], USER_LEVEL_MEMBER, 'forum_attach_download');
 				$this->data['forum_mods'] = form_sanitizer($_POST['forum_mods'], '', 'forum_mods');
 				dbquery_insert(DB_FORUMS, $this->data, 'update');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.$this->ext."&amp;status=psv");
+				addnotice('success', $locale['forum_notice_10']);
+				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.$this->ext);
 			}
 		}
 	}
@@ -352,7 +357,7 @@ class Admin {
 			}
 			if ($name_check) {
 				$defender->stop();
-				$defender->addNotice($locale['forum_error_7']);
+				addNotice('danger', $locale['forum_error_7']);
 			} else {
 				return $forum_name;
 			}
@@ -464,12 +469,13 @@ class Admin {
 				if ($result) {
 					dbquery_insert(DB_FORUMS, $this->data, 'update');
 				}
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.$this->ext."&amp;status=csup");
+				addNotice('success', $locale['forum_notice_9']);
+				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.$this->ext);
 			} else {
 				$new_forum_id = 0;
 				$result = dbquery_order(DB_FORUMS, $this->data['forum_order'], 'forum_order', false, false, $this->data['forum_cat'], 'forum_cat', 1, 'forum_language', 'save');
 				if ($result) {
-					dbquery_insert(DB_FORUMS, $this->data, 'save', array('noredirect'=>1));
+					dbquery_insert(DB_FORUMS, $this->data, 'save');
 					$new_forum_id = dblastid();
 				}
 				if (!$this->data['forum_cat']) {
@@ -477,64 +483,21 @@ class Admin {
 				} else {
 					switch($this->data['forum_type']) {
 						case '1':
-							redirect(FUSION_SELF.$aidlink.$this->ext."&amp;status=cns");
+							addNotice('success', $locale['forum_notice_1']);
 							break;
 						case '2':
-							redirect(FUSION_SELF.$aidlink.$this->ext."&amp;status=cfs");
+							addNotice('success', $locale['forum_notice_2']);
 							break;
 						case '3':
-							redirect(FUSION_SELF.$aidlink.$this->ext."&amp;status=cls");
+							addNotice('success', $locale['forum_notice_3']);
 							break;
 						case '4':
-							redirect(FUSION_SELF.$aidlink.$this->ext."&amp;status=cas");
+							addNotice('success', $locale['forum_notice_4']);
 							break;
 					}
+					redirect(FUSION_SELF.$aidlink.$this->ext);
 				}
 			}
-		}
-	}
-
-	/**
-	 * Show Status Messages
-	 */
-	private function display_forum_message() {
-		global $locale;
-		$message = '';
-		switch($_GET['status']) {
-			case 'cns':
-				$message = $locale['forum_notice_1'];
-				break;
-			case 'cfs':
-				$message = $locale['forum_notice_2'];
-				break;
-			case 'cls':
-				$message = $locale['forum_notice_3'];
-				break;
-			case 'cas':
-				$message = $locale['forum_notice_4'];
-				break;
-			case 'crf':
-				$message = $locale['forum_notice_5'];
-				break;
-			case 'mup':
-				$message = $locale['forum_notice_6'];
-				break;
-			case 'md':
-				$message = $locale['forum_notice_7'];
-				break;
-			case 'rim':
-				$message = $locale['forum_notice_8'];
-				break;
-			case 'csup':
-				$message = $locale['forum_notice_9'];
-				break;
-			case 'psv':
-				$message = $locale['forum_notice_10'];
-				break;
-		}
-
-		if ($message) {
-			echo admin_message($message);
 		}
 	}
 
@@ -558,12 +521,7 @@ class Admin {
 			// show forum permissions form
 			self::display_forum_permissions_form();
 		} else {
-			// index page
-			if (defined('FUSION_NULL')) {
-				echo $defender->showNotice();
-			}
 			self::display_forum_jumper();
-			self::display_forum_message();
 			self::display_forum_list();
 			self::quick_create_forum();
 		}
@@ -818,7 +776,7 @@ class Admin {
 	 */
 	private function display_forum_list() {
 		global $locale, $aidlink, $settings;
-		$title = !empty($this->level) ? sprintf($locale['forum_000b'], $this->level['title'][0]) : $locale['forum_000c'];
+		$title = !empty($this->level['title']) ? sprintf($locale['forum_000b'], $this->level['title'][0]) : $locale['forum_000c'];
 		add_to_title($title.$locale['global_201']);
 		opentable($title);
 		$threads_per_page = $settings['threads_per_page'];

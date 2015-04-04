@@ -48,7 +48,6 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		'safemode'			=> !empty($options['safemode']) && $options['safemode'] == 1 ? 1 : 0,
 		'regex'				=> !empty($options['regex']) ? $options['regex'] : FALSE,
 		'callback_check'	=> !empty($options['callback_check']) ? $options['callback_check'] : FALSE,
-
 		'input_id'			=> !empty($options['input_id']) ? $options['input_id'] : $input_name,
 		'placeholder'		=> !empty($options['placeholder']) ? $options['placeholder'] : '',
 		'deactivate'		=> !empty($options['deactivate']) && $options['deactivate'] == 1 ? 1 : 0,

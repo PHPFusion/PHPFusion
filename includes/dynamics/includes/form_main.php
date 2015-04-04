@@ -20,11 +20,10 @@ function openform($form_name, $method, $action_url, array $options = array()) {
 
 	$method = (strtolower($method) == 'post') ? 'post' : 'get';
 
-	$options += array(
+	$options = array(
 		'form_id'	=> !empty($options['form_id']) ? $options['form_id'] : $form_name,
 		'class'		=> !empty($options['class']) ? $options['class'] : '',
 		'enctype'	=> !empty($options['enctype']) && $options['enctype'] == 1 ? 1 : 0,
-		//'notice'	=> !empty($options['notice']) && $options['notice'] == 1 ? 1 : 0, // unused
 		'max_tokens'=> !empty($options['max_tokens']) && isnum($options['max_tokens']) ? $options['max_tokens'] : 10,
 	);
 

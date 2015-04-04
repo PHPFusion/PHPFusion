@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: post_actions.php
 | Author: PHP-Fusion Development Team
-| Co-Author: Superman
+| Co-author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -27,11 +27,11 @@ $error = 0;
 $data['edit'] = (isset($data['edit']) && $data['edit'] == 1) ? 1 : 0;
 $data['new'] = (isset($data['new']) && $data['new'] == 1) ? 1 : 0;
 $data['reply'] = (isset($data['reply']) && $data['reply'] == 1) ? 1 : 0;
+
 // Debug 1 will stop all scripts from execution of save/update/delete. Use it when fixing isset errors.
 // Debug 2 will stop just the redirection itself so you can compare to your tables.
 $debug = false; // this will stop all scripts from execution save/update/delete.
 $debug2 = false; // to stop just the redirection
-//print_p($_POST);
 /* -------------------
 | The Button Roullette
 + ---------------------*/
@@ -40,6 +40,7 @@ $acceptable_postName = array(
 	'postreply',
 	'postnewthread',
 	'add_poll_option',
+	'delete_poll',
 	'update_poll_title',
 	'update_poll_option',
 	'delete_poll_option',
@@ -52,15 +53,18 @@ foreach($acceptable_postName as $name) {
 	}
 }
 
+if (!$executable) throw new \Exception('Non-executable POST actions');
+
 /* -------------------
 | Form Processing
 + ---------------------*/
 if ($executable && iMEMBER) {
 	// thread data
-	$data['thread_subject'] = form_sanitizer($_POST['thread_subject'], '', 'thread_subject');
+	$data['thread_subject'] = isset($_POST['thread_subject']) ? form_sanitizer($_POST['thread_subject'], '', 'thread_subject') : '';
 	$data['forum_id'] = isset($_POST['forum_id']) && isnum($_POST['forum_id']) ? form_sanitizer($_POST['forum_id'], '', 'forum_id') : $_GET['forum_id'];
-	$data['thread_sticky'] = isset($_POST['thread_sticky']) && (iMOD || iSUPERADMIN) ? 1 : 0; //
-	$data['thread_locked'] = isset($_POST['thread_locked']) && (iMOD || iSUPERADMIN) ? 1 : 0; //
+	// only moderators or superadmin can lock and sticky
+	$data['thread_sticky'] = isset($_POST['thread_sticky']) && (iMOD || iSUPERADMIN) ? 1 : 0;
+	$data['thread_locked'] = isset($_POST['thread_locked']) && (iMOD || iSUPERADMIN) ? 1 : 0;
 	$data['thread_postcount'] = 1;
 	$data['thread_poll'] = isset($_POST['thread_poll']) ? form_sanitizer($_POST['thread_poll'], '', 'thread_poll') : '';
 	$data['thread_lastuser'] = $userdata['user_id'];
@@ -89,16 +93,21 @@ if ($executable && iMEMBER) {
 	+ ------------------*/
 	if ($data['edit']) {
 		if (isset($_POST['hide_edit'])) {
-			$post_edit_time = 0;
-			$reason = "";
+			$post_edittime = 0;
+			$post_editreason = '';
+			$post_edituser = 0;
 		} else {
+			$post_edituser = $userdata['user_id'];
+			$post_edittime = time();
+			$post_editreason = form_sanitizer($_POST['post_editreason'], '', 'post_editreason');
+
 			$thread_lastpost = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
 			if ($thread_lastpost['post_id'] == $_GET['post_id'] && time()-$data['post_datestamp'] < 5*60) {
-				$data['post_edittime'] = 0;
-				$data['post_editreason'] = '';
-			} elseif ($settings['forum_editpost_to_lastpost']) {
-				$data['post_edittime'] = time();
-				$data['post_editreason'] = form_sanitizer($_POST['post_editreason'], '', 'post_editreason');
+				$post_edittime = 0;
+				$post_editreason = '';
+				$post_edituser = 0;
+			}
+			if ($settings['forum_editpost_to_lastpost']) {
 				$lastPost = dbcount("(thread_id)", DB_FORUM_THREADS, "thread_lastpostid='".$_GET['post_id']."'");
 				// update thread_laspost time
 				if ($lastPost > 0) {
@@ -109,10 +118,8 @@ if ($executable && iMEMBER) {
 				if ($forum_lastpost['post_id'] == $_GET['post_id']) {
 					$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['post_edittime']."' WHERE forum_id='".$_GET['forum_id']."'");
 				}
-			} else {
-				$data['post_edittime'] = time();
-				$data['post_editreason'] = form_sanitizer($_POST['post_editreason'], '', 'post_editreason');
 			}
+			$result = dbquery("UPDATE ".DB_FORUM_POSTS." SET post_edituser = '".$post_edituser."', post_edittime = '".$post_edittime."', post_editreason = '".$post_editreason."' WHERE post_id='".intval($_GET['post_id'])."'");
 		}
 	}
 
@@ -125,7 +132,7 @@ if ($executable && iMEMBER) {
 	// only execute add poll in edit or newthread mode.
 	if ($data['edit'] or $data['new']) {
 		if ($can_poll) {
-			$data['forum_poll_title'] = form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title');
+			$data['forum_poll_title'] = isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '';
 			// to update poll title
 			if (isset($_POST['update_poll_title']) && $data['forum_poll_title'] && $can_edit_poll) {
 				// to update poll title
@@ -224,9 +231,8 @@ if ($executable && iMEMBER) {
 	}
 
 	// On Edit Post Execution
-	if (isset($_POST['savechanges']) && checkgroup($info['forum_post'])) {
+	if (isset($_POST['savechanges']) && $data['edit'] && checkgroup($info['forum_post'])) {
 		// Delete Action - maybe can change to a stand alone button
-		if (!$data['edit']) redirect(FORUM."index.php");
 		if (isset($_POST['delete']) && !defined('FUSION_NULL')) { // added token protection.
 			$result = dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE post_id='".$_GET['post_id']."' AND thread_id='".$_GET['thread_id']."'");
 			if (dbrows($result)) {
@@ -286,7 +292,13 @@ if ($executable && iMEMBER) {
 				closetable();
 			}
 		} else {
-			dbquery_insert(DB_FORUM_POSTS, $data, 'update', array('noredirect'=>1, 'primary_key'=>'post_id'));
+			if ($post_edittime) {
+				unset($data['post_datestamp']);
+				unset($data['post_editreason']);
+				unset($data['post_edituser']);
+				unset($data['post_edittime']);
+			}
+			dbquery_insert(DB_FORUM_POSTS, $data, 'update', array('primary_key'=>'post_id'));
 			if ($data['first_post'] == $_GET['post_id'] && $data['thread_subject'] != "") {
 				$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_subject='".$data['thread_subject']."' WHERE thread_id='".$_GET['thread_id']."'");
 			}
@@ -298,7 +310,6 @@ if ($executable && iMEMBER) {
 		if ($data['post_message']) {
 			require_once INCLUDES."flood_include.php";
 			if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
-
 				if ($info['forum_merge'] && $data['thread_lastuser'] == $userdata['user_id']) {
 					$mergeData = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
 					$data['post_message'] = $mergeData['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$data['post_message'];
@@ -333,9 +344,10 @@ if ($executable && iMEMBER) {
 				$defender->stop();
 				$defender->addNotice('Flood control nice message.');
 			}
+		} else {
+			print_p('there are no post messages');
 		}
 	}
-
 
 	// this need to drop..
 	elseif (isset($_POST['add_poll_option'])) {
@@ -349,6 +361,7 @@ if ($executable && iMEMBER) {
 
 	// On Preview Execution
 	elseif (isset($_POST['previewpost'])) {
+
 		// Prepare Preview Data
 		if (!$data['post_message']) {
 			$data['preview_message'] = $locale['forum_0520'];
@@ -357,7 +370,7 @@ if ($executable && iMEMBER) {
 			if ($data['post_showsig']) {
 				$data['preview_message'] .= "\n\n".$userdata['user_sig'];
 			}
-			if ($data['post_smileys']) {
+			if (isset($data['post_smileys'])) {
 				$data['preview_message'] = parsesmileys($data['preview_message']);
 			}
 			$data['preview_message'] = nl2br(parseubb($data['preview_message']));
@@ -516,23 +529,25 @@ if ($executable && iMEMBER) {
 		print_p($_attach);
 		echo "</div>\n";
 	}
-	//print_p("postify.php?post=reply&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$data['post_id']."");
+
 	/* -------------------
 	| Handle Redirection.
 	+ ---------------------*/
 	if (!defined('FUSION_NULL') && !$debug && !$debug2) {
 		if ($data['reply']) {
-			redirect("postify.php?post=reply&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$data['post_id']);
+			redirect("postify.php?post=reply&error=$error&amp;forum_id=".intval($_GET['forum_id'])."&amp;thread_id=".intval($_GET['thread_id'])."&amp;post_id=".intval($data['post_id']));
 		} elseif ($data['edit']) {
-			redirect("postify.php?post=edit&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
+			redirect("postify.php?post=edit&error=$error&amp;forum_id=".intval($_GET['forum_id'])."&amp;thread_id=".intval($_GET['thread_id'])."&amp;post_id=".intval($_GET['post_id']));
 		} elseif ($data['new']) {
-			redirect("postify.php?post=new&error=$error&forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."&amp;thread_id=".$data['thread_id']."");
+			// get parent id and branch id.
+			$forum_data = dbarray(dbquery("SELECT forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".intval($data['forum_id'])."'"));
+			redirect("postify.php?post=new&error=$error&amp;forum_id=".intval($data['forum_id'])."&amp;parent_id=".intval($forum_data['forum_cat'])."&amp;thread_id=".intval($data['thread_id'].""));
 		}
 	}
 } else {
 	if ($data['new'] or $data['reply'] or $data['edit']) {
 	} else {
-		redirect(FORUM."postify.php?post=new&error=4&forum_id=".$_GET['forum_id']."&amp;parent_id=".$data['forum_id']);
+		if (!$executable) throw new \Exception('$data new, reply or edit was not found');
 	}
 }
 

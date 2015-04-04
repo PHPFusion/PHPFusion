@@ -12,6 +12,7 @@ $locale['forum_0008'] = "Directory";
 $locale['forum_0009'] = "Display posts from previous";
 $locale['forum_0010'] = "Forum Board Index";
 $locale['forum_0011'] = "My Posts";
+$locale['forum_0012'] = "Latest Threads";
 // View Forum
 $locale['forum_0050'] = "View Forum";
 $locale['forum_0051'] = "Subject";
@@ -50,7 +51,7 @@ $locale['forum_0164'] = "Edited by ";
 $locale['forum_0165'] = "Reason";
 $locale['forum_0166'] = "Click here to show the edit reason.";
 $locale['forum_0167'] = " on ";
-$locale['forum_0168'] = "Quick Reply";
+$locale['forum_0168'] = "Reply to this thread";
 $locale['forum_0169'] = "Disable Smileys";
 $locale['forum_0170'] = "Show My Signature in this Post";
 $locale['forum_0171'] = "Notify me when a reply is posted";
@@ -103,13 +104,14 @@ $locale['forum_0260'] = "New Posts";
 $locale['forum_0261'] = "No New Posts";
 $locale['forum_0262'] = "Sticky Thread";
 $locale['forum_0263'] = "Locked Thread";
-$locale['forum_0264'] = "New Thread";
+$locale['forum_0264'] = "Start New Thread";
 $locale['forum_0265'] = "Edit";
 $locale['forum_0266'] = "Quote";
 $locale['forum_0267'] = "wrote";
 $locale['forum_0268'] = "IP";
 $locale['forum_0269'] = "No threads found.";
 $locale['forum_0270'] = "No post found.";
+$locale['forum_0271'] = "There are no post in this thread anymore. Please return to the <a href='".FORUM."index.php'>Forum Index</a>";
 // Move Posts
 $locale['forum_0300'] = "Move posts";
 $locale['forum_0301'] = "Select new forum";
@@ -199,8 +201,8 @@ $locale['forum_0520'] = "No Message, Post will be rejected if you do not include
 $locale['forum_0521'] = "Posts:";
 $locale['forum_0522'] = "Location:";
 $locale['forum_0523'] = "Joined:";
-$locale['forum_0524'] = "Posted on ";
-$locale['forum_0525'] = "Latest post";
+$locale['forum_0524'] = "Posted ";
+$locale['forum_0525'] = "Latest Post";
 $locale['forum_0526'] = "Latest %s posts";
 // Post Error/Success
 $locale['forum_0540'] = "Attachment file type not allowed.";
@@ -336,4 +338,12 @@ $locale['forum_p090'] = '3 Months';
 $locale['forum_p180'] = '6 Months';
 $locale['forum_p365'] = '1 Year';
 $locale['forum_p999'] = "All Results";
+
+$locale['error-MP000'] = "Move posts - error";
+$locale['error-MP001'] = "New thread doesn't exist.";
+$locale['error-MP002'] = "Posts which you're marked to move don't exists or someone else already moved them.";
+$locale['error-MP003'] = "No posts to move.";
+$locale['success-DP001'] = "Post removed successfully";
+$locale['success-DP002'] = "All post successfully. Forum threads have been removed because it no longer contains any post.";
+$locale['error-DP001'] = "No posts to be removed.";
 ?>
