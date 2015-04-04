@@ -17,8 +17,8 @@
 +--------------------------------------------------------*/
 //credits: eternicode @ http://bootstrap-datepicker.readthedocs.org/en/latest/
 //http://bootstrap-datepicker.readthedocs.org/en/release/options.html
-function form_datepicker($input_name, $label, $input_value, array $options = array()) {
-	global $defender, $settings, $locale;
+function form_datepicker($input_name, $label = '', $input_value = '', array $options = array()) {
+	global $defender, $locale;
 	if (!defined('DATEPICKER')) {
 		define('DATEPICKER', TRUE);
 		add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datepicker3.css' rel='stylesheet' />");
