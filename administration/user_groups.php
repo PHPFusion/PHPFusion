@@ -140,7 +140,7 @@ if (dbrows($result)) {
 	while ($data = dbarray($result)) {
 		$sel_opts[$data['group_id']] = "ID: ".$data['group_id']." - ".$data['group_name'];
 	}
-	echo form_select('', 'group_id', 'group_id', $sel_opts, '', array('placeholder' => $locale['choose'], 'class' => 'pull-left'));
+	echo form_select('group_id', '', $sel_opts, '', array('placeholder' => $locale['choose'], 'class' => 'pull-left'));
 	echo form_button('edit', $locale['421'], $locale['421'], array('class' => 'btn-primary m-l-10 pull-left'));
 	echo form_button('delete', $locale['422'], $locale['422'], array('class' => 'btn-primary m-l-10 pull-left'));
 	echo closeform();

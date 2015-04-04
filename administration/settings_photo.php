@@ -199,13 +199,13 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
-	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	".form_select('calc_c', '', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
 	</div>
 </div>
 ";
 closeside();
 openside('');
-echo form_select($locale['606'], 'thumb_compression', 'thumb_compression', $gd_opts, $settings2['thumb_compression'], array('inline'=>1, 'width'=>'250px'));
+echo form_select('thumb_compression', $locale['606'], $gd_opts, $settings2['thumb_compression'], array('inline'=>1, 'width'=>'250px'));
 echo form_text('thumbs_per_row', $locale['609'], $settings2['thumbs_per_row'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 echo form_text('thumbs_per_page', $locale['610'], $settings2['thumbs_per_page'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 closeside();
@@ -217,13 +217,13 @@ closeside();
 echo "</div><div class='col-xs-12 col-sm-3'>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success m-b-10'));
 openside('');
-echo form_select($locale['611'], 'photo_watermark', 'photo_watermark', $choice_opts, $settings2['photo_watermark'], array('width'=>'100%'));
-echo form_select($locale['617'], 'photo_watermark_save', 'photo_watermark_save', $choice_opts, $settings2['photo_watermark_save'], array('width'=>'100%'));
+echo form_select('photo_watermark', $locale['611'], $choice_opts, $settings2['photo_watermark'], array('width'=>'100%'));
+echo form_select('photo_watermark_save', $locale['617'], $choice_opts, $settings2['photo_watermark_save'], array('width'=>'100%'));
 echo form_button('delete_watermarks', $locale['619'], $locale['619'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0, 'class' => 'btn-sm btn-danger', 'icon'=>'fa fa-trash'));
 closeside();
 openside('');
 echo form_text('photo_watermark_image', $locale['612'], $settings2['photo_watermark_image'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0));
-echo form_select($locale['613'], 'photo_watermark_text', 'photo_watermark_text', $choice_opts, $settings2['photo_watermark_text'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0, 'width'=>'100%'));
+echo form_select('photo_watermark_text',$locale['613'], $choice_opts, $settings2['photo_watermark_text'], array('deactivate' => !$settings2['photo_watermark'] ? 1 : 0, 'width'=>'100%'));
 closeside();
 echo "</div></div>
 ";

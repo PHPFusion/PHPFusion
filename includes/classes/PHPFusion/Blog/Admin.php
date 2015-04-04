@@ -209,8 +209,8 @@ class Admin {
 		echo "</div><div class='col-xs-12 col-sm-4'>\n";
 		openside('');
 		$this->blogCatData['blog_cat_parent'] = isset($_GET['parent_id']) ? $_GET['parent_id'] : $this->blogCatData['blog_cat_parent'];
-		echo form_select_tree($locale['437'], "blog_cat_parent", "blog_cat_parent", $this->blogCatData['blog_cat_parent'], array("disable_opts" => array($this->blogCatData['blog_cat_id']), "hide_disabled" => 1), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
-		echo form_select($locale['431'], 'blog_cat_image', 'blog_cat_image', ImageRepo::getFileList(IMAGES_BC), $this->blogCatData['blog_cat_image']);
+		echo form_select_tree("blog_cat_parent", $locale['437'], $this->blogCatData['blog_cat_parent'], array("disable_opts" => array($this->blogCatData['blog_cat_id']), "hide_disabled" => 1), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
+		echo form_select('blog_cat_image', $locale['431'], ImageRepo::getFileList(IMAGES_BC), $this->blogCatData['blog_cat_image']);
 		echo form_hidden('', 'blog_cat_id', 'blog_cat_id', $this->blogCatData['blog_cat_id']);
 		closeside();
 		echo form_button('save_cat', $locale['432'], $locale['432'], array('class' => 'btn-primary m-b-20'));

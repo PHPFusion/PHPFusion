@@ -168,15 +168,15 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		echo form_text('cat_name', $locale['download_0300'], $cat_name, array('required' => 1, 'error_text' => $locale['download_0351']));
 		echo form_textarea('cat_description', $locale['download_0301'], $cat_description, array('resize'=>0, 'autosize'=>1));
 		echo "<div class='clearfix'>\n";
-		echo form_select($locale['download_0302'], 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10', 'width'=>'200px'));
-		echo form_select('', 'cat_sort_order', 'cat_sort_order', $array2, $cat_sort_order, array('placeholder' => $locale['choose'], 'class'=>'pull-left', 'width'=>'200px'));
+		echo form_select('cat_sort_by', $locale['download_0302'], $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10', 'width'=>'200px'));
+		echo form_select('cat_sort_order', '', $array2, $cat_sort_order, array('placeholder' => $locale['choose'], 'class'=>'pull-left', 'width'=>'200px'));
 		echo "</div>\n";
 		closeside();
 		echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
-		echo form_select_tree($locale['download_0308'], "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1, 'width'=>'100%'), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
+		echo form_select_tree("cat_parent", $locale['download_0308'], $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1, 'width'=>'100%'), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 		if (multilang_table("DL")) {
-			echo form_select($locale['global_ML100'], 'cat_language', 'cat_language', $language_opts, $cat_language, array('placeholder' => $locale['choose'], 'width'=>'100%'));
+			echo form_select('cat_language', $locale['global_ML100'], $language_opts, $cat_language, array('placeholder' => $locale['choose'], 'width'=>'100%'));
 		} else {
 			form_hidden('', 'cat_language', 'cat_language', $cat_language);
 		}

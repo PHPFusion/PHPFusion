@@ -122,7 +122,7 @@ if (!empty($result)) {
 			opentable($locale['articles_0000']);
 			echo openform('selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('max_tokens' => 1));
 			echo "<div class='text-center'>\n";
-			echo form_select('', 'article_id', 'article_id', $editlist, '', array('placeholder' => $locale['choose'], 'inline' => 1, 'class' => 'pull-left'));
+			echo form_select('article_id', '', $editlist, '', array('placeholder' => $locale['choose'], 'inline' => 1, 'class' => 'pull-left'));
 			echo form_button('edit', $locale['edit'], $locale['edit'], array('class' => 'pull-left btn-primary m-l-10 m-r-10'));
 			echo form_button('delete', $locale['delete'], $locale['delete'], array('class' => 'pull-left btn-primary'));
 			add_to_jquery("
@@ -185,7 +185,7 @@ if (!empty($result)) {
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='article_cat'>".$locale['articles_0201']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select_tree("", "article_cat", "article_cat", $article_cat, array("no_root" => 1, "placeholder" => $locale['choose'], "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
+		echo form_select_tree("article_cat", "", $article_cat, array("no_root" => 1, "placeholder" => $locale['choose'], "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 		echo "</td>\n</tr>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='subject'>".$locale['articles_0200']." <span class='required'>*</span></label></td>\n";
 		echo "<td class='tbl'>\n";
@@ -215,12 +215,12 @@ if (!empty($result)) {
 
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='keywords'>".$locale['articles_0204']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('', 'keywords', 'keywords', array(), $keywords, array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['articles_0257'], 'tags'=>1, 'multiple' => 1));
+		echo form_select('keywords', '', array(), $keywords, array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['articles_0257'], 'tags'=>1, 'multiple' => 1));
 		echo "</td>\n</tr>\n";
 					
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='article_visibility'>".$locale['articles_0211']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select("", 'article_visibility', 'article_visibility', $visibility_opts, $data['article_visibility'], array('placeholder' => $locale['choose']));
+		echo form_select('article_visibility', '', $visibility_opts, $data['article_visibility'], array('placeholder' => $locale['choose']));
 		echo "</td>\n</tr>\n";
 					
 		echo "<tr>\n";

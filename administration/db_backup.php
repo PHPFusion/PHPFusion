@@ -332,7 +332,7 @@ if (isset($_POST['btn_do_restore'])) {
 		$opts['.gz'] = ".sql.gz ".$locale['456'];
 	}
 	$opts['.sql'] = ".sql";
-	echo form_select('', 'backup_type', 'backup_type', $opts, '', array('placeholder' => $locale['choose']));
+	echo form_select('backup_type', '', $opts, '', array('placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td align='right' class='tbl'><label for='user_admin_password'>".$locale['460']."</label> <span class='required'>*</span></td>\n";
 	echo "<td class='tbl'>\n";

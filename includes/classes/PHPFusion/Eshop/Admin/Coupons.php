@@ -217,7 +217,7 @@ class Coupons {
 		echo "</div>\n";
 
 		echo "<div class='display-inline-block'>\n";
-		echo form_select($locale['ESHPCUPNS103'], 'cutype', 'cutype', self::getCouponType(), $this->data['cutype']);
+		echo form_select('cutype',$locale['ESHPCUPNS103'], self::getCouponType(), $this->data['cutype']);
 		echo "</div>\n";
 
 		echo "</div>\n</div>\n";
@@ -225,7 +225,7 @@ class Coupons {
 
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>\n";
 		openside('');
-		echo form_select($locale['ESHPCUPNS107'], 'active', 'active', self::getCouponStatus(), $this->data['active'], array('inline'=>1));
+		echo form_select('active',$locale['ESHPCUPNS107'],  self::getCouponStatus(), $this->data['active'], array('inline'=>1));
 		echo form_button('save_coupons', $locale['save'], $locale['ESHPCUPNS111'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 
@@ -333,7 +333,7 @@ class Coupons {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-5'>\n";
 		echo form_text('cuname', $locale['ESHPCUPNS102'], $this->data['cuname'], array('inline'=>1, 'required'=>1));
-		echo form_select($locale['ESHPCUPNS107'], 'active', 'actives', self::getCouponStatus(), $this->data['active'], array('inline'=>1));
+		echo form_select('active', $locale['ESHPCUPNS107'], self::getCouponStatus(), $this->data['active'], array('inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-7'>\n";
 		echo "<div class='row'>\n";
@@ -346,7 +346,7 @@ class Coupons {
 		echo "<span class='text-smaller'>".$locale['ESHPCUPNS118']."</span>\n";
 		echo "</div>\n";
 		echo "<div class='display-inline-block'>\n";
-		echo form_select($locale['ESHPCUPNS103'], 'cutype', 'cutypes', self::getCouponType(), $this->data['cutype']);
+		echo form_select('cutype', $locale['ESHPCUPNS103'],  self::getCouponType(), $this->data['cutype']);
 		echo "</div>\n";
 		echo "</div>\n</div>\n";
 		echo form_hidden('', 'cuid', 'cuids', '', array('writable' => 1));

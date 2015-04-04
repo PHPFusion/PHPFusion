@@ -260,7 +260,7 @@ class ErrorLogs {
 				<?php
 				echo openform('error_logform', 'post', FUSION_REQUEST, array('max_tokens' => 1));
 				openside('');
-				echo form_select($locale['440'], 'delete_status', 'delete_status', self::get_logTypes(), '', array('allowclear'=>1, 'width'=>'100%'));
+				echo form_select('delete_status', $locale['440'], self::get_logTypes(), '', array('allowclear'=>1, 'width'=>'100%'));
 				echo form_button('delete_entries', $locale['453'], $locale['453'], array('class'=>'btn-primary'));
 				closeside();
 				echo closeform();
@@ -384,7 +384,7 @@ class ErrorLogs {
 					<?php
 					echo openform('logform', 'post', FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file", array('max_tokens' => 1));
 					echo form_hidden('', 'error_id', 'error_id', $data['error_id']);
-					echo form_select('Mark As', 'error_status', 'error_status_sel', self::get_logTypes(), $data['error_status'], array("inline"=>1));
+					echo form_select('error_status', 'Mark As', self::get_logTypes(), $data['error_status'], array("inline"=>1));
 					echo closeform();
 					?>
 				</div>

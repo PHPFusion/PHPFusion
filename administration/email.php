@@ -142,7 +142,7 @@ echo "<td class='tbl1'>\n";
 $opts = array('1' => $locale['424'], // yes
 	'0' => $locale['425'] // no
 );
-echo form_select('', 'template_active', 'template_active', $opts, $data['template_active'], array('placeholder' => $locale['choose']));
+echo form_select('template_active', '', $opts, $data['template_active'], array('placeholder' => $locale['choose']));
 echo "<div class='m-t-10'>\n";
 echo "<div id='active_info' ".$template_active_info." >".sprintf($locale['422'], $html_text)."</div>\n";
 echo "<div id='inactive_info' ".$template_inactive_info." >".$locale['423']."</div>\n";
@@ -152,7 +152,7 @@ echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' width='1%' style='vertical-align:top; white-space:nowrap;'><label for='template_format'>".$locale['426']."</label></td>\n";
 echo "<td class='tbl1'>\n";
 $opts = array('html' => $locale['418'], 'plain' => $locale['419']);
-echo form_select('', 'template_format', 'template_format', $opts, $data['template_format'], array('placeholder' => $locale['choose']));
+echo form_select('template_format', '', $opts, $data['template_format'], array('placeholder' => $locale['choose']));
 echo "<div id='html_info' class='m-t-10 ".$html_active_info."' >".$locale['427']."</div>\n";
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
@@ -188,7 +188,7 @@ if (multilang_table("ET")) {
 	echo "<tr><td class='tbl'><label for='template_language'>".$locale['global_ML100']."</label></td>\n";
 	$opts = get_available_languages_list($selected_language = "$template_language");
 	echo "<td class='tbl'>\n";
-	echo form_select('', 'template_language', 'template_language', $language_opts, $template_language, array('placeholder' => $locale['choose']));
+	echo form_select('template_language', '', $language_opts, $template_language, array('placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 } else {
 	echo form_hidden('', 'template_language', 'template_language', $template_language);
@@ -231,7 +231,7 @@ $opts = array();
 foreach ($image_files as $image) {
 	$opts[$image] = $image;
 }
-echo form_select('', 'insertimage', 'insertimage', $opts, '', array('placeholder' => $locale['469'], 'allowclear' => 1));
+echo form_select('insertimage', '', $opts, '', array('placeholder' => $locale['469'], 'allowclear' => 1));
 echo "</div>\n";
 echo "</td>\n";
 echo "</tr>\n<tr>\n";

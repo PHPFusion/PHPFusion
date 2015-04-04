@@ -55,7 +55,7 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 			echo closeform();
 		} else {
 			echo openform('postrating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('max_tokens' => 1, 'notice'=>0, 'class'=>'text-center'));
-			echo form_select($locale['r106'], 'rating', 'rating', $ratings, '', array('width'=>'100%'));
+			echo form_select('rating', $locale['r106'], $ratings, '', array('width'=>'100%'));
 			echo form_button('post_rating', $locale['r103'], $locale['r103'], array('class'=>'btn-primary btn-sm', 'icon'=>'fa fa-thumbs-up m-r-10'));
 			echo closeform();
 		}

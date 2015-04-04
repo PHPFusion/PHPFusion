@@ -280,7 +280,7 @@ class Shipping {
 		openside('');
 		echo thumbnail(SHIP_DIR.$this->cdata['image'], '70px');
 		echo "<div class='overflow-hide p-l-15'>\n";
-		echo form_select('Shipping Type', 'image', 'image',  self::get_ImageOpts(), $this->cdata['image']);
+		echo form_select('image', 'Shipping Type', self::get_ImageOpts(), $this->cdata['image']);
 		echo form_hidden('', 'cid', 'cid', $_GET['cid']);
 		echo "</div>\n";
 		add_to_jquery("
@@ -412,9 +412,9 @@ class Shipping {
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 			echo form_text('method', $locale['ESHPSHPMTS107'],$this->sdata['method'], array('required'=>1, 'inline'=>1));
-			echo form_select($locale['ESHPSHPMTS108'], 'dtime', 'dtime', self::get_dTimeOpts(), $this->sdata['dtime'], array('required'=>1, 'inline'=>1));
-			echo form_select($locale['ESHPSHPMTS109'], 'destination', 'destination', self::get_destOpts(), $this->sdata['destination'], array('inline'=>1));
-			echo form_select($locale['ESHPSHPMTS114'], 'active', 'active', self::get_activeOpts(), $this->sdata['active'], array('inline'=>1));
+			echo form_select('dtime', $locale['ESHPSHPMTS108'],  self::get_dTimeOpts(), $this->sdata['dtime'], array('required'=>1, 'inline'=>1));
+			echo form_select('destination',$locale['ESHPSHPMTS109'],  self::get_destOpts(), $this->sdata['destination'], array('inline'=>1));
+			echo form_select('active', $locale['ESHPSHPMTS114'], self::get_activeOpts(), $this->sdata['active'], array('inline'=>1));
 			echo "</div>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 			echo form_text('weightmin', $locale['ESHPSHPMTS110']." (".fusion_get_settings('eshop_weightscale').")", $this->sdata['weightmin'], array('number'=>1, 'inline'=>1));

@@ -163,7 +163,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "faq") {
 	if (multilang_table("FQ")) {
 		echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('', 'cat_language', 'cat_language', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
+		echo form_select('cat_language', '', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
 		echo "</td>\n";
 		echo "</tr>\n";
 	} else {
@@ -189,7 +189,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 		echo "<table cellpadding='0' cellspacing='0' class='center table table-responsive'>\n<tr>\n";
 		echo "<td class='tbl'><label for='faq_cat'>".$locale['520']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('', 'faq_cat', 'faq_cat', $cat_opts, isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id']) ? $_GET['faq_cat_id'] : 0, array('placeholder' => $locale['choose']));
+		echo form_select('faq_cat', '', $cat_opts, isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id']) ? $_GET['faq_cat_id'] : 0, array('placeholder' => $locale['choose']));
 		echo "</td>\n";
 		echo "</tr>\n<tr>\n";
 		echo "<td class='tbl'><label for='faq_question'>".$locale['521']."</label> <span class='required'>*</span></td>\n";

@@ -105,12 +105,12 @@ if ($settings['forum_ranks']) {
 	foreach ($image_files as $value) {
 		$opts[$value] = $value;
 	}
-	echo form_select('', 'rank_image', 'rank_image', $opts, $rank_image, array('placeholder' => $locale['choose']));
+	echo form_select('rank_image', '', $opts, $rank_image, array('placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 	if (multilang_table("FR")) {
 		echo "<tr><td class='tbl'><label for='rank_language'>".$locale['global_ML100']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('', 'rank_language', 'rank_language', $language_opts, $rank_language, array('placeholder' => $locale['choose']));
+		echo form_select('rank_language', '', $language_opts, $rank_language, array('placeholder' => $locale['choose']));
 		echo "</td>\n</tr>\n";
 	} else {
 		echo form_hidden('', 'rank_language', 'rank_language', $rank_language);
@@ -130,7 +130,7 @@ if ($settings['forum_ranks']) {
 	echo "<td class='tbl'><label for='rank_apply_normal'>".$locale['423']."</label></td>\n<td class='tbl'>\n";
 	$array = array(USER_LEVEL_MEMBER => $locale['424'], '104' => $locale['425'], USER_LEVEL_ADMIN => $locale['426'], USER_LEVEL_SUPER_ADMIN => $locale['427']);
 	echo "<span id='select_normal' ".($rank_type == 2 ? "class='display-none'" : "")." >";
-	echo form_select('', 'rank_apply_normal', 'rank_apply_normal', $array, $rank_apply, array('placeholder' => $locale['choose']));
+	echo form_select('rank_apply_normal', '', $array, $rank_apply, array('placeholder' => $locale['choose']));
 	echo "</span>\n";
 	// Special Select
 	$groups_arr = getusergroups();
@@ -142,7 +142,7 @@ if ($settings['forum_ranks']) {
 		}
 	}
 	echo "<span id='select_special'".($rank_type != 2 ? " class='display-none'" : "").">";
-	echo form_select('', 'rank_apply_special', 'rank_apply_special', $group_opts, $rank_apply, array('placeholder' => $locale['choose']));
+	echo form_select('rank_apply_special', '', $group_opts, $rank_apply, array('placeholder' => $locale['choose']));
 	echo "</span>\n";
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";

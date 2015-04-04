@@ -639,7 +639,7 @@ class Products {
 		// now defaulted - always use cart
 		echo form_hidden($locale['ESHPPRO149'], 'cart_on', 'cart_on', 1, array('placeholder'=>$locale['ESHPPRO150'], 'width'=>'100%'));
 		echo form_text('title', $locale['ESHPPRO104'], $this->data['title'], array('required'=>1, 'inline'=>1));
-		echo form_select($locale['ESHPPRO192'], 'keywords', 'keywords', array(), $this->data['keywords'], array('width'=>'100%', 'tags'=>1, 'multiple'=>1, 'inline'=>1));
+		echo form_select('keywords', $locale['ESHPPRO192'], array(), $this->data['keywords'], array('width'=>'100%', 'tags'=>1, 'multiple'=>1, 'inline'=>1));
 		//'placeholder'=>$locale['ESHPPRO136']
 		echo form_text('demo', $locale['ESHP013'], $this->data['demo'], array('inline'=>1, 'placeholder'=>'http://'));
 
@@ -701,8 +701,8 @@ class Products {
 		echo opentabbody($pricing['title'][1], $pricing['id'][1], $_active);
 		echo "<div class='m-t-10'>\n";
 		openside('');
-		echo form_select($locale['ESHPPRO182'], 'cupons', 'cupons', array($locale['no'], $locale['yes']), $this->data['cupons'], array('inline'=>1));
-		echo form_select($locale['ESHPPRO184'], 'campaign', 'campaign',  array($locale['no'], $locale['yes']), $this->data['campaign'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO185']));
+		echo form_select('cupons', $locale['ESHPPRO182'], array($locale['no'], $locale['yes']), $this->data['cupons'], array('inline'=>1));
+		echo form_select('campaign', $locale['ESHPPRO184'], array($locale['no'], $locale['yes']), $this->data['campaign'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO185']));
 		echo form_text('xprice', $locale['ESHPPRO112'], $this->data['xprice'], array('number'=>1, 'inline'=>1, 'width'=>'250px', 'placeholder'=>$settings['eshop_currency']));
 		closeside();
 		echo "</div>\n";
@@ -766,7 +766,7 @@ class Products {
 
 
 		openside('');
-		echo form_select($locale['ESHPPRO190'], 'linebreaks', 'linebreaks', array($locale['no'], $locale['yes']), $this->data['linebreaks'], array('inline'=>1));
+		echo form_select('linebreaks', $locale['ESHPPRO190'],  array($locale['no'], $locale['yes']), $this->data['linebreaks'], array('inline'=>1));
 		if (fusion_get_settings('eshop_pretext')) {
 			echo form_textarea('introtext', $locale['ESHPPRO160'], $this->data['introtext'], array('placeholder'=>$locale['ESHPPRO161'], 'autosize'=>1));
 		} else {
@@ -798,15 +798,15 @@ class Products {
 		echo form_hidden($locale['ESHPPRO124'], 'sellcount', 'sellcount', $this->data['sellcount'], array('deactivate'=>1, 'placeholder'=>$locale['ESHPPRO125']));
 		openside('');
 		if (self::category_check()) {
-			echo form_select_tree($locale['ESHPPRO105'], 'cid', 'cid', $this->data['cid'], array('no_root'=>1, 'width'=>'100%', 'placeholder'=>$locale['ESHP016']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+			echo form_select_tree('cid', $locale['ESHPPRO105'], $this->data['cid'], array('no_root'=>1, 'width'=>'100%', 'placeholder'=>$locale['ESHP016']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		} else {
 			echo $locale['ESHPPRO105']." : ".$locale['ESHPPRO106'];
 			echo form_hidden('', 'cid', 'cid', 0);
 		}
-		echo form_select($locale['ESHPPRO147'], 'active', 'active', array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['active'], array('placeholder'=>$locale['ESHPPRO148'], 'width'=>'100%'));
-		echo form_select($locale['ESHPPRO145'], 'status', 'status', array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['status'], array('placeholder'=>$locale['ESHPPRO146'], 'width'=>'100%'));
-		echo form_select($locale['ESHPCATS109'], 'access', 'access', self::getVisibilityOpts(), $this->data['access'], array('placeholder'=>$locale['ESHPPRO159'],'width'=>'100%'));
-		echo form_select($locale['ESHPPRO137'], 'stock', 'stock', array('1'=>$locale['yes'],'2'=>$locale['no']), $this->data['stock'], array('placeholder'=> $locale['ESHPPRO140'], 'width'=>'100%'));
+		echo form_select('active', $locale['ESHPPRO147'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['active'], array('placeholder'=>$locale['ESHPPRO148'], 'width'=>'100%'));
+		echo form_select('status', $locale['ESHPPRO145'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['status'], array('placeholder'=>$locale['ESHPPRO146'], 'width'=>'100%'));
+		echo form_select('access', $locale['ESHPCATS109'], self::getVisibilityOpts(), $this->data['access'], array('placeholder'=>$locale['ESHPPRO159'],'width'=>'100%'));
+		echo form_select('stock', $locale['ESHPPRO137'], array('1'=>$locale['yes'],'2'=>$locale['no']), $this->data['stock'], array('placeholder'=> $locale['ESHPPRO140'], 'width'=>'100%'));
 		echo form_text('instock', $locale['ESHPPRO141'], $this->data['instock'], array('placeholder'=>$locale['ESHP019'], 'number'=>1));
 		echo form_button('save_cat', $locale['save_changes'], $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		closeside();
@@ -821,15 +821,15 @@ class Products {
 		} else {
 			$list[1] = $locale['on'];
 		}
-		echo form_select($locale['ESHPPRO126'], 'gallery', 'gallery', $list, $this->data['gallery'], array('width'=>'100%', 'placeholder'=>$locale['ESHPPRO129']));
+		echo form_select('gallery', $locale['ESHPPRO126'], $list, $this->data['gallery'], array('width'=>'100%', 'placeholder'=>$locale['ESHPPRO129']));
 
-		echo form_select($locale['ESHPPRO154'], 'buynow', 'buynow', array('0'=>$locale['no'], '1'=> $locale['yes']), $this->data['buynow'], array('placeholder'=>$locale['ESHPPRO155'], 'width'=>'100%'));
+		echo form_select('buynow', $locale['ESHPPRO154'], array('0'=>$locale['no'], '1'=> $locale['yes']), $this->data['buynow'], array('placeholder'=>$locale['ESHPPRO155'], 'width'=>'100%'));
 		$page_array = array();
 		$callback_dir = makefilelist(BASEDIR."eshop/purchasescripts/", ".|..|index.php", TRUE, "files");
 		foreach($callback_dir as $page) {
 			$page_array[$page] = $page;
 		}
-		echo form_select($locale['ESHPPRO156'], 'rpage', 'rpage', $page_array, $this->data['rpage'], array('placeholder'=>$locale['ESHPPRO158'], 'width'=>'100%'));
+		echo form_select('rpage', $locale['ESHPPRO156'], $page_array, $this->data['rpage'], array('placeholder'=>$locale['ESHPPRO158'], 'width'=>'100%'));
 
 		echo form_checkbox('qty', $locale['ESHPPRO193'], $this->data['qty'], array('placeholder'=>$locale['ESHPPRO151'], 'width'=>'100%'));
 		echo form_checkbox('ratings', $locale['ESHPPRO188'], $this->data['ratings'], array('placeholder'=>$locale['ESHPPRO188']));
@@ -870,10 +870,10 @@ class Products {
 		echo openform('get_filter', 'post', clean_request('', array('aid', 'status', 'section')), array('notice'=>0, 'max_tokens' => 1));
 		echo "</div>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
-		echo form_select_tree('', 'category', 'category', $category, array('no_root'=>1, 'width'=>'200px', 'allowclear'=>1, 'placeholder'=>$locale['ESHFEAT125']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo form_select_tree('category', '', $category, array('no_root'=>1, 'width'=>'200px', 'allowclear'=>1, 'placeholder'=>$locale['ESHFEAT125']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo "</div>\n";
 		echo "<div class='display-inline-block m-r-10'>\n";
-		echo form_select('', 'access', 'access-filter', self::getVisibilityOpts(), $access, array('width'=>'150px', 'allowclear'=>1, 'placeholder'=>$locale['ESHPCATS109']));
+		echo form_select('access', '', self::getVisibilityOpts(), $access, array('input_id'=>'afilter', 'width'=>'150px', 'allowclear'=>1, 'placeholder'=>$locale['ESHPCATS109']));
 		echo "</div>\n";
 		echo "<div class='display-inline-block' >\n";
 		echo form_button('filter', 'Filter', 'go_filter', array('class'=>'btn-default'));
@@ -976,8 +976,8 @@ class Products {
 		echo form_text('instock', $locale['ESHPPRO141'], $this->data['instock'], array('number'=>1, 'inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-4'>\n";
-		echo form_select($locale['ESHPPRO147'], 'active', 'actives', array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['active'], array('width'=>'100%'));
-		echo form_select($locale['ESHPPRO145'], 'status', 'statuss', array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['status'], array('width'=>'100%'));
+		echo form_select('active',$locale['ESHPPRO147'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['active'], array('width'=>'100%'));
+		echo form_select('status',$locale['ESHPPRO145'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['status'], array('width'=>'100%'));
 		echo form_hidden('', 'id', 'ids', '', array('writable' => 1));
 		echo "</div>\n";
 		echo "</div>\n";

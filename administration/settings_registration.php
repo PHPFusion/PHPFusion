@@ -87,7 +87,7 @@ echo "<div class='well'>".$locale['register_description']."</div>\n";
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-echo form_select($locale['558'], 'enable_terms', 'enable_terms', $opts, $settings2['enable_terms']);
+echo form_select('enable_terms', $locale['558'], $opts, $settings2['enable_terms']);
 echo form_textarea('license_agreement', $locale['559'], $settings2['license_agreement'], array(
 	'form_name' => 'settingsform',
 	'input_id' => 'enable_license_agreement',
@@ -97,10 +97,10 @@ echo form_textarea('license_agreement', $locale['559'], $settings2['license_agre
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select($locale['551'], 'enable_registration', 'enable_registration', $opts, $settings2['enable_registration']);
-echo form_select($locale['552'], 'email_verification', 'email_verification', $opts, $settings2['email_verification']);
-echo form_select($locale['557'], 'admin_activation', 'admin_activation', $opts, $settings2['admin_activation']);
-echo form_select($locale['553'], 'display_validation', 'display_validation', $opts, $settings2['display_validation']);
+echo form_select('enable_registration', $locale['551'], $opts, $settings2['enable_registration']);
+echo form_select('email_verification', $locale['552'], $opts, $settings2['email_verification']);
+echo form_select('admin_activation', $locale['557'],  $opts, $settings2['admin_activation']);
+echo form_select('display_validation', $locale['553'], $opts, $settings2['display_validation']);
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));

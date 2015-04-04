@@ -102,7 +102,7 @@ echo form_text('smiley_code', '', $smiley_code, array('required' => 1, 'error_te
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'><label for='smiley_image'>".$locale['421']."</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl'>\n";
-echo form_select('', 'smiley_image', 'smiley_image', $smiley_opts, $smiley_image, array('placeholder' => $locale['choose'], 'required' => 1, 'error_text' => $locale['438']));
+echo form_select('smiley_image', '', $smiley_opts, $smiley_image, array('placeholder' => $locale['choose'], 'required' => 1, 'error_text' => $locale['438']));
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl'><strong>".$locale['424']."</strong></td>\n";
 echo "<td class='tbl'><img class='img-thumbnail' src='".($smiley_image ? IMAGES."smiley/".$smiley_image : IMAGES."imagenotfound.jpg")."' alt='smiley' id='smiley_preview' /></td>\n";

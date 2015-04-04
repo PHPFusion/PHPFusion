@@ -497,7 +497,7 @@ if (!function_exists('render_laft')) {
 			'90' => '3 Months', '180' => '6 Months', '365' => '1 Year');
 		echo "<hr/>\n";
 		echo openform('filter_form', 'post', FORUM."index.php?section=latest", array('downtime' => 1));
-		echo form_select($locale['forum_0009'], 'filter', 'filter', $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '300px', 'class'=>'pull-left m-r-10'));
+		echo form_select('filter', $locale['forum_0009'], $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '300px', 'class'=>'pull-left m-r-10'));
 		echo form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default btn-sm m-b-20'));
 		echo closeform();
 	}
@@ -622,7 +622,7 @@ if (!function_exists('forum_newtopic')) {
 			}
 			echo openform('qp_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').FORUM.'index.php', array('notice'=>0, 'max_tokens' => 1));
 			echo "<div class='well clearfix m-t-10'>\n";
-			echo form_select($locale['forum_0395'], 'forum_sel', 'forum_sel', $options, '', array('inline'=>1, 'width'=>'100%'));
+			echo form_select('forum_sel', $locale['forum_0395'],  $options, '', array('inline'=>1, 'width'=>'100%'));
 			echo "<div class='display-inline-block col-xs-12 col-sm-offset-3'>\n";
 			echo form_button('select_forum', $locale['forum_0396'], 'select_forum', array('class'=>'btn-primary btn-sm'));
 			echo "</div>\n";

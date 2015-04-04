@@ -31,7 +31,7 @@ if ($profile_method == "input") {
 			$theme_opts[$theme] = $theme;
 		}
 		$options +=array('inline'=>1);
-		$user_fields = form_select($locale['uf_theme'], 'user_theme', 'user_theme_input', $theme_opts, $user_theme, $options);
+		$user_fields = form_select('user_theme', $locale['uf_theme'], $theme_opts, $user_theme, $options);
 	}
 
 

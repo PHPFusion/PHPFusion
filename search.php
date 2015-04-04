@@ -167,7 +167,7 @@ $date_opts = array(
 	'7257600' => $locale['426'],
 	'14515200' => $locale['427'],
 );
-echo form_select('', 'datelimit', 'datelimit', $date_opts, $_POST['datelimit'], array('disabled'=> ($_GET['stype'] != "all" ? (in_array("datelimit", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
+echo form_select('datelimit', '', $date_opts, $_POST['datelimit'], array('disabled'=> ($_GET['stype'] != "all" ? (in_array("datelimit", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>&nbsp;</td>\n";
@@ -182,7 +182,7 @@ $sort_opts = array(
 	'subject' => $locale['442'],
 	'author' => $locale['443']
 );
-echo form_select('', 'sort', 'sort', $sort_opts, $_POST['sort'], array('disabled'=> ($_GET['stype'] != "all" ? (in_array("sort", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
+echo form_select('sort', '', $sort_opts, $_POST['sort'], array('disabled'=> ($_GET['stype'] != "all" ? (in_array("sort", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl1'>&nbsp;</td>\n";
 echo "<td class='tbl1'><label><input type='radio' id='order1' name='order' value='0'".($_POST['order'] == 0 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("order1", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['450']."</label><br />\n";
@@ -196,7 +196,7 @@ $char_opts = array(
 	'150' => '150',
 	'200' => '200'
 );
-echo form_select('', 'chars', 'chars', $sort_opts, $_POST['sort'], array('disabled'=> ($_GET['stype'] != "all" ? (in_array("chars", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
+echo form_select('chars', '', $sort_opts, $_POST['sort'], array('disabled'=> ($_GET['stype'] != "all" ? (in_array("chars", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
 echo "</td>\n</tr>\n</tbody>\n</table>\n";
 echo "</div>\n</div>\n";
 echo "</div></div>\n";

@@ -141,13 +141,13 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "</tr>\n<tr>\n";
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_parent'>".$locale['articles_0308']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_select_tree("", "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
+	echo form_select_tree("cat_parent", "", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 	echo "</td>\n";
 	echo "</tr>\n";
 	if (multilang_table("AR")) {
 		echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('', 'cat_language', 'cat_language', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
+		echo form_select('cat_language', '', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
 		echo "</tr>\n";
 	} else {
 		echo form_hidden('', 'cat_language', 'cat_language', $cat_language);
@@ -155,9 +155,9 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "<tr><td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_sort_by'>".$locale['articles_0302']."</label></td>\n";
 	echo "<td class='tbl'>\n";
 	$array = array('1' => $locale['articles_0303'], '2' => $locale['articles_0304'], '3' => $locale['articles_0305']);
-	echo form_select('', 'cat_sort_by', 'cat_sort_by', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
+	echo form_select('cat_sort_by', '', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
 	$array = array('ASC' => $locale['articles_0306'], 'DESC' => $locale['articles_0307']);
-	echo form_select('', 'cat_sort_order', 'cat_sort_order', $array, $cat_sort_order, array('placeholder' => $locale['choose']));
+	echo form_select('cat_sort_order', '', $array, $cat_sort_order, array('placeholder' => $locale['choose']));
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";

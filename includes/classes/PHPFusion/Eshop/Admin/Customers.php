@@ -169,7 +169,7 @@ class Customers {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 		openside('');
-		echo form_user_select($locale['ESHPCHK156'], 'cuid', 'cuid', $this->data['cuid']);
+		echo form_user_select('cuid', $locale['ESHPCHK156'], $this->data['cuid']);
 		// to do an import button here
 		echo form_button('import', 'Find Records', 'find', array('class'=>'btn-default m-r-10', 'type'=>'button'));
 		echo form_button('save_customer', $locale['save'], $locale['save'], array('class'=>'btn-primary'));

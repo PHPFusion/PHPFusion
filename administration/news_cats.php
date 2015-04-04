@@ -109,20 +109,20 @@ echo form_text('cat_name', '', $cat_name, array('required' => 1, 'error_text' =>
 echo "</td>\n</tr>\n";
 echo "<tr><td width='130' class='tbl'><label for='cat_image'>".$locale['news_0305']."</label></td>\n";
 echo "<td class='tbl'>\n";
-echo form_select_tree("", "cat_parent", "cat_parent", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
+echo form_select_tree("cat_parent", "", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 echo "</td>\n</tr>\n";
 if (multilang_table("NS")) {
 	echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
 	$opts = get_available_languages_list($selected_language = "$cat_language");
 	echo "<td class='tbl'>\n";
-	echo form_select('', 'cat_language', 'cat_language', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
+	echo form_select('cat_language', '', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 } else {
 	echo form_hidden('', 'cat_language', 'cat_language', $cat_language);
 }
 echo "<tr><td width='130' class='tbl'><label for='cat_image'>".$locale['news_0301']."</label></td>\n";
 echo "<td class='tbl'>\n";
-echo form_select('', 'cat_image', 'cat_image', $image_list, $cat_image, array('placeholder' => $locale['choose']));
+echo form_select('cat_image', '', $image_list, $cat_image, array('placeholder' => $locale['choose']));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td align='center' colspan='2' class='tbl'><br />\n";
 echo form_button('save_cat', $locale['news_0302'], $locale['news_0302'], array('class' => 'btn-primary'));

@@ -540,7 +540,7 @@ echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' =
 echo "<table class='table table-responsive'>\n<tbody>\n<tr>\n";
 echo "<td width='50%' class='tbl'><label for='localeset'>".$locale['417']."<label> <span class='required'>*</span></td>\n";
 echo "<td width='50%' class='tbl'>\n";
-echo form_select('', 'localeset', 'localeset', $language_opts, $settings2['locale'], array('required' => 1, 'error_text' => $locale['error_value']));
+echo form_select('localeset', '', $language_opts, $settings2['locale'], array('required' => 1, 'error_text' => $locale['error_value']));
 $locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td valign='top' width='50%' class='tbl'><strong>".$locale['684ML']."</strong><br /><span class='small2'>".$locale['685ML']."</span></td>\n";

@@ -211,7 +211,7 @@ class Thread {
 								".form_button('delete_posts', $locale['forum_0177'], $locale['forum_0177'], array('class' => 'btn-default btn-sm'))."
 								<div class='pull-right'>
 								".form_button('go', $locale['forum_0208'], $locale['forum_0208'], array('class' => 'btn-default pull-right btn-sm m-t-0 m-l-10'))."
-								".form_select('', 'step', 'step', $this->thread_info['mod_options'], '', array('placeholder' => $locale['forum_0200'], 'width'=>'250px', 'allowclear'=>1, 'class'=>'m-b-0 m-t-5', 'inline'=>1))."
+								".form_select('step', '', $this->thread_info['mod_options'], '', array('placeholder' => $locale['forum_0200'], 'width'=>'250px', 'allowclear'=>1, 'class'=>'m-b-0 m-t-5', 'inline'=>1))."
 							</div>\n
 						</div>\n";
 		}

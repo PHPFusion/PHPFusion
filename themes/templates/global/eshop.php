@@ -410,7 +410,7 @@ if (!function_exists('render_eshop_product')) {
 			$title = $data['dynf'] ? $data['dynf'] : 'Category';
 			$dync = str_replace('&quot;', '', $data['dync']);
 			$dync_opts = array_filter(explode('.', $dync));
-			echo form_select($title, 'product_type', 'product_type', $dync_opts, 1, array('inline'=>1, 'width'=>'200px', 'class'=>'product-selector m-b-0'));
+			echo form_select('product_type', $title, $dync_opts, 1, array('inline'=>1, 'width'=>'200px', 'class'=>'product-selector m-b-0'));
 		}
 		if ($data['icolor']) {
 			echo "<div class='form-group m-t-10'>\n";

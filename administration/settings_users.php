@@ -105,13 +105,13 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 $choice_opts = array('0' => $locale['519'], '1' => $locale['518']);
-echo form_select($locale['1002'], 'enable_deactivation', 'enable_deactivation', $choice_opts, $settings2['enable_deactivation']);
+echo form_select('enable_deactivation', $locale['1002'],  $choice_opts, $settings2['enable_deactivation']);
 echo form_text('deactivation_period', $locale['1003'], $settings2['deactivation_period'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1004'].")</span>";
 echo form_text('deactivation_response', $locale['1005'], $settings2['deactivation_response'], array('max_length' => 3, 'width' => '100px', 'number' => 1));
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>(".$locale['1006'].")</span>";
 $action_opts = array('0'=>$locale['1012'], '1'=>$locale['1013']);
-echo form_select($locale['1011'], 'deactivation_action', 'deactivation_action', $action_opts, $settings2['deactivation_action']);
+echo form_select( 'deactivation_action', $locale['1011'], $action_opts, $settings2['deactivation_action']);
 closeside();
 openside('');
 echo "
@@ -137,22 +137,22 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
-	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	".form_select('calc_c', '', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
 	</div>
 </div>
 ";
 $ratio_opts = array('0' => $locale['955'], '1' => $locale['956']);
-echo form_select($locale['1001'], 'avatar_ratio', 'avatar_ratio', $ratio_opts, $settings2['avatar_ratio'],  array('inline'=>1, 'width'=>'100%'));
+echo form_select('avatar_ratio', $locale['1001'], $ratio_opts, $settings2['avatar_ratio'],  array('inline'=>1, 'width'=>'100%'));
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select($locale['673'], 'hide_userprofiles', 'hide_userprofiles', $choice_opts, $settings2['hide_userprofiles']);
+echo form_select('hide_userprofiles',$locale['673'], $choice_opts, $settings2['hide_userprofiles']);
 closeside();
 openside('');
-echo form_select($locale['691'], 'userNameChange', 'userNameChange', $choice_opts, $settings2['userNameChange']);
-echo form_select($locale['668'], 'userthemes', 'userthemes', $choice_opts, $settings2['userthemes']);
-echo form_select($locale['1014'], 'multiple_logins', 'multiple_logins', $choice_opts, $settings2['multiple_logins']);
+echo form_select('userNameChange',$locale['691'], $choice_opts, $settings2['userNameChange']);
+echo form_select('userthemes', $locale['668'], $choice_opts, $settings2['userthemes']);
+echo form_select('multiple_logins', $locale['1014'], $choice_opts, $settings2['multiple_logins']);
 echo "<span class='text-smaller mid-opacity display-block m-b-10'>".$locale['1014a']."</span>\n";
 closeside();
 echo "</div>\n</div>\n";

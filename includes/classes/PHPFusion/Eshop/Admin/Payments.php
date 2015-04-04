@@ -144,7 +144,7 @@ class Payments {
 		openside('');
 		echo thumbnail(PAYMENT_DIR.$this->data['image'], '70px');
 		echo "<div class='overflow-hide p-l-15'>\n";
-		echo form_select('Payment Type', 'image', 'image',  self::get_paymentOpts(), $this->data['image']);
+		echo form_select('image', 'Payment Type', self::get_paymentOpts(), $this->data['image']);
 		add_to_jquery("
 		$('#image').bind('change', function(e) {
 			$('.thumb > img').prop('src', '".PAYMENT_DIR."'+ $(this).val());
@@ -156,7 +156,7 @@ class Payments {
 		echo form_hidden('', 'pid', 'pid', $this->data['pid']);
 		echo form_text('method', $locale['ESHPPMTS100'], $this->data['method'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS101']));
 		echo form_text('surcharge', $locale['ESHPPMTS102'], $this->data['surcharge'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS103']));
-		echo form_select($locale['ESHPPMTS104'], 'cfile', 'cfile', self::get_paymentFile(), $this->data['cfile'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS106']));
+		echo form_select('cfile', $locale['ESHPPMTS104'], self::get_paymentFile(), $this->data['cfile'], array('inline'=>1, 'required'=>1, 'tip'=>$locale['ESHPPMTS106']));
 		closeside();
 		openside('');
 		echo form_textarea('description', $locale['ESHPPMTS107'], $this->data['description'], array('inline'=>1, 'autosize'=>1, 'tip'=>$locale['ESHPPMTS108']));
@@ -167,7 +167,7 @@ class Payments {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
-		echo form_select($locale['ESHPPMTS109'], 'active', 'active', self::get_activeOpts(), $this->data['active'], array('tip'=>$locale['ESHPPMTS112']));
+		echo form_select('active', $locale['ESHPPMTS109'], self::get_activeOpts(), $this->data['active'], array('tip'=>$locale['ESHPPMTS112']));
 		echo form_button('save_payment', $locale['save'], $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 		echo "</div>\n";

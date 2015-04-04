@@ -134,7 +134,7 @@ opentable($locale['apw_title']);
 echo openform('admin_reset', 'POST', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive admin-reset tbl-border center'>\n<tr>\n";
 echo "<td class='tbl1' width='250'><label for='reset_admin'>".$locale['400']."</label></td>\n";
-echo "<td class='tbl1'>".form_select('', 'reset_admin', 'reset_admin', $reset_opts, '', array('placeholder' => $locale['choose'], 'allowclear' => 1));
+echo "<td class='tbl1'>".form_select('reset_admin', '', $reset_opts, '', array('placeholder' => $locale['choose'], 'allowclear' => 1));
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' width='250' valign='top'><label for='reset_message'>".$locale['404']."</label></td>\n";

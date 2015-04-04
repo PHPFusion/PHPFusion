@@ -604,7 +604,7 @@ if (function_exists('gd_info')) {
 			}
 			echo "<label for='move_photo'>".$locale['430']."</label>\n<br/>\n";
 			echo form_button('move_photo', $locale['431'], $locale['431'], array('class' => 'btn-primary'));
-			echo form_select('', 'move_album_id', 'move_album_id', $array, '', array('placeholder' => $locale['473'], 'class' => 'pull-left m-r-10'));
+			echo form_select('move_album_id', '', $array, '', array('placeholder' => $locale['473'], 'class' => 'pull-left m-r-10'));
 			echo "</div></div>\n";
 		}
 	}
@@ -872,7 +872,7 @@ if (function_exists('gd_info')) {
 			while ($data = dbarray($result)) {
 				$opts[$data['album_id']] = $data['album_title'];
 			}
-			echo form_select('', 'move_album_id', 'move_album_id2', $opts, '', array('placeholder' => $locale['473'], 'allowclear' => 1, 'class' => 'display-block m-b-10'));
+			echo form_select('move_album_id', '', $opts, '', array('placeholder' => $locale['473'], 'allowclear' => 1, 'class' => 'display-block m-b-10', 'input_id'=>'move_album_id2'));
 		}
 		echo "<a class='clearfix btn btn-block btn-primary m-t-20' href='".FUSION_SELF.$aidlink."'>".$locale['476']."</a>";
 		echo "</div></div>\n";

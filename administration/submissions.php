@@ -696,7 +696,7 @@ function download_submissions_review() {
 			echo "</div>\n";
 			echo "<div class='col-xs-12 col-sm-4'>\n";
 			$cat_hidden = array();
-			echo form_select_tree($locale['648'], "download_cat", "download_cat", $submit_criteria['download_cat'], array("disable_opts" => $cat_hidden, "hide_disabled" => 1, 'width'=>'100%'), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
+			echo form_select_tree("download_cat", $locale['648'], $submit_criteria['download_cat'], array("disable_opts" => $cat_hidden, "hide_disabled" => 1, 'width'=>'100%'), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
 			if (!empty($submit_criteria['download_image']) && !empty($submit_criteria['download_image_thumb'])) {
 				echo "<div class='list-group-item clearfix'>\n";
 				echo "<div class='pull-left'>".thumbnail(DOWNLOADS."submissions/images/".$submit_criteria['download_image_thumb'], '80px')."</div>\n";

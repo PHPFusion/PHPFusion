@@ -625,10 +625,10 @@ class Atom {
 		echo form_hidden('', 'theme', 'theme', $_POST['theme']);
 
 		openside('');
-		echo form_select("Sans-Serif Collection", "sans_serif_fonts", "sans_serif_fonts", $font_list, $this->data['sans_serif_fonts'], $font_options);
-		echo form_select("Serif Collection", "serif_fonts", "serif_fonts", $font_list, $this->data['serif_fonts'], $font_options);
-		echo form_select("Monospace Collection", "monospace_fonts", "monospace_fonts", $font_list, $this->data['monospace_fonts'], $font_options);
-		echo form_select("Base Font", "base_font", "base_font", $fonts_family_opts, $this->data['base_font'], $font_type_options);
+		echo form_select("sans_serif_fonts", "Sans-Serif Collection", $font_list, $this->data['sans_serif_fonts'], $font_options);
+		echo form_select("serif_fonts", "Serif Collection",  $font_list, $this->data['serif_fonts'], $font_options);
+		echo form_select("monospace_fonts","Monospace Collection", $font_list, $this->data['monospace_fonts'], $font_options);
+		echo form_select("base_font","Base Font", $fonts_family_opts, $this->data['base_font'], $font_type_options);
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Base Font Sizes', 'base-font-size');
@@ -653,7 +653,7 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h1", "font_color_h1", $this->data['font_color_h1'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h1", "font_decoration_h1", $this->font_decoration_options, $this->data['font_decoration_h1'], $color_options);
+		echo form_select("font_decoration_h1", 'Font Styling H1', $this->font_decoration_options, $this->data['font_decoration_h1'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h2
@@ -667,7 +667,7 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h2", "font_color_h2", $this->data['font_color_h2'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h2", "font_decoration_h2", $this->font_decoration_options, $this->data['font_decoration_h2'], $color_options);
+		echo form_select("font_decoration_h2", 'Font Styling H2', $this->font_decoration_options, $this->data['font_decoration_h2'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h3
@@ -681,7 +681,7 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h3", "font_color_h3", $this->data['font_color_h3'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h3", "font_decoration_h3", $this->font_decoration_options, $this->data['font_decoration_h3'], $color_options);
+		echo form_select("font_decoration_h3", 'Font Styling H3',  $this->font_decoration_options, $this->data['font_decoration_h3'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h4
@@ -695,7 +695,7 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h4", "font_color_h4", $this->data['font_color_h4'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h4", "font_decoration_h4", $this->font_decoration_options, $this->data['font_decoration_h4'], $color_options);
+		echo form_select("font_decoration_h4", 'Font Styling H4', $this->font_decoration_options, $this->data['font_decoration_h4'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h5
@@ -709,7 +709,7 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h5", "font_color_h5", $this->data['font_color_h5'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h5", "font_decoration_h5", $this->font_decoration_options, $this->data['font_decoration_h5'], $color_options);
+		echo form_select("font_decoration_h5", 'Font Styling H5', $this->font_decoration_options, $this->data['font_decoration_h5'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// h6
@@ -723,7 +723,7 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "font_color_h6", "font_color_h6", $this->data['font_color_h6'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "font_decoration_h6", "font_decoration_h6", $this->font_decoration_options, $this->data['font_decoration_h6'], $color_options);
+		echo form_select("font_decoration_h6",'Font Styling H6', $this->font_decoration_options, $this->data['font_decoration_h6'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 		// link
@@ -735,8 +735,8 @@ class Atom {
 		echo form_colorpicker('Link Base Color', "link_color", "link_color", $this->data['link_color'], $color_options);
 		echo form_colorpicker('Link Hover Color', "link_hover_color", "link_hover_color", $this->data['link_hover_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "link_decoration", "link_decoration", $this->font_decoration_options, $this->data['link_decoration'], $color_options);
-		echo form_select('Hover Font Styling', "link_hover_decoration", "link_hover_decoration", $this->font_decoration_options, $this->data['link_hover_decoration'], $color_options);
+		echo form_select("link_decoration", 'Font Styling Link',  $this->font_decoration_options, $this->data['link_decoration'], $color_options);
+		echo form_select("link_hover_decoration",'Hover Font Styling Hover', $this->font_decoration_options, $this->data['link_hover_decoration'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
 		closeside();
@@ -763,7 +763,7 @@ class Atom {
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Font Color', "quote_color", "quote_color", $this->data['quote_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Font Styling', "quote_decoration", "quote_decoration", $this->font_decoration_options, $this->data['quote_decoration'], $color_options);
+		echo form_select("quote_decoration",'Font Quote', $this->font_decoration_options, $this->data['quote_decoration'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 	}
@@ -809,7 +809,7 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Button Parameters', 'btneff');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select("Fill Type", "btn_fill", "btn_fill", $this->fills, $this->data['btn_fill'],  $fill_options);
+		echo form_select("btn_fill","Fill Type", $this->fills, $this->data['btn_fill'],  $fill_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_text("btn_border", "Border Widths", $this->data['btn_border'], $width_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -1001,7 +1001,7 @@ class Atom {
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_para('Navbar Background', 'navbar-h2a');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n";
-		echo form_select("Fill Type", "navbar_fill", "navbar_fill", $this->fills, $this->data['navbar_fill'],  $fill_options);
+		echo form_select("navbar_fill","Fill Type",  $this->fills, $this->data['navbar_fill'],  $fill_options);
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
@@ -1029,8 +1029,8 @@ class Atom {
 		echo form_colorpicker('Logo Text Color', "navbar_brand_color", "navbar_brand_color", $this->data['navbar_brand_color'], $color_options);
 		echo form_colorpicker('Font Color', "navbar_font_color", "navbar_font_color", $this->data['navbar_font_color'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
-		echo form_select('Logo Text Styling', "navbar_brand_decoration", "navbar_brand_decoration", $this->font_decoration_options, $this->data['navbar_brand_decoration'], $color_options);
-		echo form_select('Font Styling', "navbar_font_decoration", "navbar_font_decoration", $this->font_decoration_options, $this->data['navbar_font_decoration'], $color_options);
+		echo form_select("navbar_brand_decoration",'Logo Text Styling', $this->font_decoration_options, $this->data['navbar_brand_decoration'], $color_options);
+		echo form_select("navbar_font_decoration", 'Font Styling', $this->font_decoration_options, $this->data['navbar_font_decoration'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";
@@ -1038,13 +1038,13 @@ class Atom {
 		echo form_para('Horizontal Navbar Links', 'navbar-h4');
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Link Color', "navbar_link_color", "navbar_link_color", $this->data['navbar_link_color'], $color_options);
-		echo form_select('Link Styling', "navbar_link_decoration", "navbar_link_decoration", $this->font_decoration_options, $this->data['navbar_link_decoration'], $color_options);
+		echo form_select("navbar_link_decoration", 'Link Styling',  $this->font_decoration_options, $this->data['navbar_link_decoration'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Link Hover Color', "navbar_link_color_hover", "navbar_link_color_hover", $this->data['navbar_link_color_hover'], $color_options);
-		echo form_select('Link Hover Styling', "navbar_link_decoration_hover", "navbar_link_decoration_hover", $this->font_decoration_options, $this->data['navbar_link_decoration_hover'], $color_options);
+		echo form_select("navbar_link_decoration_hover", 'Link Hover Styling', $this->font_decoration_options, $this->data['navbar_link_decoration_hover'], $color_options);
 		echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
 		echo form_colorpicker('Link Active Color', "navbar_link_color_active", "navbar_link_color_active", $this->data['navbar_link_color_active'], $color_options);
-		echo form_select('Link Active Styling', "navbar_link_decoration_active", "navbar_link_decoration_active", $this->font_decoration_options, $this->data['navbar_link_decoration_active'], $color_options);
+		echo form_select("navbar_link_decoration_active", 'Link Active Styling', $this->font_decoration_options, $this->data['navbar_link_decoration_active'], $color_options);
 		echo "</div>\n</div>\n";
 		closeside();
 

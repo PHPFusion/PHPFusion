@@ -220,7 +220,7 @@ class CustomPage {
 			echo "<div class='pull-right'>\n";
 			echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('max_tokens' => 1));
 			echo "<div class='pull-left m-t-5 m-r-10'>\n";
-			echo form_select('', 'cpid', 'cpid', $edit_opts, isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '');
+			echo form_select('cpid', '', $edit_opts, isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '');
 			echo form_hidden('', 'section', 'section', 'cp2');
 			echo form_hidden('', 'aid', 'aid', iAUTH);
 			echo "</div>\n";
@@ -327,7 +327,7 @@ class CustomPage {
 		echo "<div class='row m-t-20' >\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		echo form_text('page_title', $locale['422'], $data['page_title'], array('required' => 1));
-		echo form_select($locale['432'], 'page_keywords', 'page_keywords', array(), $data['page_keywords'], array('max_length' => 320,
+		echo form_select('page_keywords', $locale['432'], array(), $data['page_keywords'], array('max_length' => 320,
 										   'width' => '100%',
 										   'tags' => 1,
 										   'multiple' => 1,
@@ -368,7 +368,7 @@ class CustomPage {
 		}
 
 		openside();
-		echo form_select_tree($locale['SL_0029'], "page_link_cat", "page_link_cat", $data['page_link_cat'],
+		echo form_select_tree("page_link_cat", $locale['SL_0029'],  $data['page_link_cat'],
 							  array(
 								  "parent_value" => $locale['parent'],
 								  'width' => '100%',
@@ -387,14 +387,14 @@ class CustomPage {
 
 		openside();
 		if (multilang_table("CP")) {
-			echo form_select($locale['global_ML100'], 'page_language', 'page_language', fusion_get_enabled_languages(), $data['page_language'], array('width'=>'100%'));
+			echo form_select('page_language', $locale['global_ML100'], fusion_get_enabled_languages(), $data['page_language'], array('width'=>'100%'));
 		} else {
 			echo form_hidden('', 'page_language', 'page_language', $data['page_language']);
 		}
 		closeside();
 
 		openside();
-		echo form_select($locale['423'], 'page_access', 'page_access', self::get_visibilityOpts(), $data['page_access'], array('width'=>'100%'));
+		echo form_select('page_access', $locale['423'], self::get_visibilityOpts(), $data['page_access'], array('width'=>'100%'));
 		closeside();
 
 		echo "</div></div>\n";

@@ -345,13 +345,13 @@ function download_form() {
 		}
 		echo "<div class='well'>".sprintf($locale['download_0256'], $sys)."</div>\n";
 	}
-	echo form_select_tree($locale['download_0207'], "download_cat", "download_cat", $data['download_cat'], array("no_root" => 1, "placeholder" => $locale['choose'],  'width'=>'100%', "query" => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
-	echo form_select($locale['download_0205'], 'download_visibility', 'download_visibility', $visibility_opts, $data['download_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
+	echo form_select_tree("download_cat", $locale['download_0207'], $data['download_cat'], array("no_root" => 1, "placeholder" => $locale['choose'],  'width'=>'100%', "query" => (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")), DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
+	echo form_select('download_visibility', $locale['download_0205'], $visibility_opts, $data['download_visibility'], array('placeholder' => $locale['choose'], 'width'=>'100%'));
 	echo form_button('save_download', $locale['download_0212'], $locale['download_0212'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
 	closeside();
 
 	openside('');
-	echo form_select($locale['download_0203'], 'download_keywords', 'download_keywords', array(), $data['download_keywords'], array('max_length' => 320, 'width'=>'100%', 'tags'=>1, 'multiple' => 1));
+	echo form_select('download_keywords', $locale['download_0203'], array(), $data['download_keywords'], array('max_length' => 320, 'width'=>'100%', 'tags'=>1, 'multiple' => 1));
 	closeside();
 
 	openside();

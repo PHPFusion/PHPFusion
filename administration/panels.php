@@ -351,9 +351,9 @@ class fusion_panels {
 		openside('');
 		echo form_hidden('', 'panel_id', 'panel_id', $this->data['panel_id']);
 		echo form_text('panel_name', $locale['452'], $this->data['panel_name'], array('inline'=>1, 'required'=>1, )); //'error_text'=>$locale['470']
-		echo form_select($locale['453'], 'panel_filename', 'panel_filename', self::get_panelOpts(), $this->data['panel_filename'], array('inline'=>1));
+		echo form_select('panel_filename', $locale['453'], self::get_panelOpts(), $this->data['panel_filename'], array('inline'=>1));
         $grid_opts = self::get_panel_grid();
-		echo form_select($locale['453'], 'panel_side', 'panel_side', $grid_opts, $this->data['panel_side'], array('inline'=>1));
+		echo form_select('panel_side', $locale['453'], $grid_opts, $this->data['panel_side'], array('inline'=>1));
 		closeside();
 
 		add_to_jquery("
@@ -374,10 +374,10 @@ class fusion_panels {
 			if ($(this).val() == '3' || $(this).val() == '2') { $('#panel_url_list-grp').hide(); } else { $('#panel_url_list-grp').show(); }
 		});
 		");
-		echo form_select('Filter Type', 'panel_restriction', 'panel_restriction', self::get_includeOpts(), $this->data['panel_restriction'], array('inline'=>1));
+		echo form_select('panel_restriction', 'Filter Type', self::get_includeOpts(), $this->data['panel_restriction'], array('inline'=>1));
 		echo "<div id='panel_url_list-grp'>\n";
 		echo "<div class='text-smaller'></div>\n";
-		echo form_select($locale['462'], 'panel_url_list', 'panel_url_list', self::get_panel_url_list(), $this->data['panel_url_list'], array('inline'=>1, 'tags'=>1, 'multiple'=>1, 'width'=>'100%'));
+		echo form_select('panel_url_list', $locale['462'], self::get_panel_url_list(), $this->data['panel_url_list'], array('inline'=>1, 'tags'=>1, 'multiple'=>1, 'width'=>'100%'));
 		echo "</div>\n";
 		echo form_hidden('', 'panel_display', 'panel_display', $this->data['panel_display']);
 		closeside();
@@ -385,7 +385,7 @@ class fusion_panels {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
-		echo form_select($locale['458'], 'panel_access', 'panel_access', self::get_accessOpts(), $this->data['panel_access']);
+		echo form_select('panel_access',$locale['458'], self::get_accessOpts(), $this->data['panel_access']);
 		echo form_button('panel_save', $locale['461'], $locale['461'], array('class'=>'btn-primary'));
 		closeside();
 

@@ -409,7 +409,7 @@ function blog_form() {
 		echo form_hidden('', 'blog_hidden_image', 'blog_hidden_image', $data['blog_image']);
 		echo form_hidden('', 'blog_hidden_image_t1', 'blog_hidden_image_t1', $data['blog_image_t1']);
 		echo form_hidden('', 'blog_hidden_image_t1', 'blog_hidden_image_t1', $data['blog_image_t2']);
-		echo form_select($locale['442'], 'blog_ialign', 'blog_ialign', $align_options, $data['blog_ialign']);
+		echo form_select('blog_ialign', $locale['442'], $align_options, $data['blog_ialign']);
 		echo "</div></div>\n";
 	} else {
 		echo form_fileinput($locale['439'], 'blog_image', 'blog_image', IMAGES_B, '', array(
@@ -423,7 +423,7 @@ function blog_form() {
 											)
 		);
 		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['blog_photo_max_b']))."</div>\n";
-		echo form_select($locale['442'], 'blog_ialign', 'blog_ialign', $align_options, $data['blog_ialign'], array('inline'=>1));
+		echo form_select('blog_ialign', $locale['442'], $align_options, $data['blog_ialign'], array('inline'=>1));
 	}
 	closeside();
 
@@ -434,13 +434,13 @@ function blog_form() {
 	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
-	echo form_select_tree($locale['423'], "blog_cat", "blog_cat", $data['blog_cat'], array("parent_value" => $locale['424'], "query" => (multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
+	echo form_select_tree("blog_cat", $locale['423'], $data['blog_cat'], array("parent_value" => $locale['424'], "query" => (multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
 	echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
 	echo form_button('save', $locale['437'], $locale['437'], array('class' => 'btn-success btn-sm', 'icon'=>'fa fa-check-square-o'));
 	closeside();
 
 	openside('');
-	echo form_select($locale['443'], 'blog_keywords', 'blog_keywords', array(), $data['blog_keywords'], array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1, 'multiple' => 1));
+	echo form_select('blog_keywords', $locale['443'], array(), $data['blog_keywords'], array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['457'], 'tags'=>1, 'multiple' => 1));
 	closeside();
 
 	openside('');
@@ -453,12 +453,12 @@ function blog_form() {
 
 	openside('');
 	if (multilang_table("BL")) {
-		echo form_select($locale['global_ML100'], 'blog_language', 'blog_language', $language_opts, $data['blog_language'], array('placeholder' => $locale['choose'], 'width' => '100%'));
+		echo form_select('blog_language', $locale['global_ML100'], $language_opts, $data['blog_language'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	} else {
 		echo form_hidden('', 'blog_language', 'blog_langugage', $data['blog_language']);
 	}
 	echo form_hidden('', 'blog_datestamp', 'blog_datestamp', $data['blog_datestamp']);
-	echo form_select($locale['430'], 'blog_visibility', 'blog_visibility', $visibility_opts, $data['blog_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
+	echo form_select('blog_visibility',$locale['430'], $visibility_opts, $data['blog_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	closeside();
 	openside('');
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {

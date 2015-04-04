@@ -109,7 +109,7 @@ if (!function_exists('render_inbox')) {
 				echo openform('inputform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_send=".$_GET['msg_send']."", array('max_tokens' => 1));
 				if (iADMIN && !isset($_GET['msg_id'])) {
 					echo "<a class='pull-right m-b-10 display-inline-block' id='mass_send'>".$locale['434']."</a><br/>";
-					echo form_user_select('', 'msg_send', 'msg_send', isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array('placeholder' => $locale['421']));
+					echo form_user_select('msg_send', '', isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array('placeholder' => $locale['421']));
 					$user_groups = getusergroups();
 					while (list($key, $user_group) = each($user_groups)) {
 						if ($user_group['0'] != "0") {
@@ -119,7 +119,7 @@ if (!function_exists('render_inbox')) {
 					echo "<div id='msg_to_group-field' class='form-group display-none'>\n";
 					echo "<label for='mg_to_group' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['434']." <input id='all_check' name='chk_sendtoall' type='checkbox' class='pull-left display-inline-block' style='margin-right:10px !important;' /></label>\n";
 					echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n";
-					echo form_select('', 'msg_to_group', 'msg_to_group', $user_types, '', array('width' => '250px', 'class' => 'm-b-0'));
+					echo form_select('msg_to_group', '', $user_types, '', array('width' => '250px', 'class' => 'm-b-0'));
 					echo "</div>\n</div>\n";
 					add_to_jquery("
 						$('#mass_send').bind('click', function() {
@@ -134,7 +134,7 @@ if (!function_exists('render_inbox')) {
 						});
 					");
 				} elseif (!isset($_GET['msg_id'])) {
-					echo form_user_select('', 'msg_send', 'msg_send', isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array('inline' => 1, 'placeholder' => $locale['421']));
+					echo form_user_select('msg_send', '', isset($_GET['msg_send']) && isnum($_GET['msg_send'] ? : ''), array('input_id'=>'msgsend2', 'inline' => 1, 'placeholder' => $locale['421']));
 				}
 				echo form_text('subject', '', '', array('max_length' => 32, 'placeholder' => $locale['405']));
 				echo "<hr class='m-t-0'/><br/>";

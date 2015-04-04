@@ -534,7 +534,7 @@ class Admin {
 		/* JS Menu Jumper */
 		global $aidlink, $locale;
 		echo "<div class='clearfix'>\n";
-		echo form_select_tree('', 'forum_jump', 'forum_jump', $_GET['parent_id'], array('inline'=>1,  'class'=>'pull-right', 'parent_value'=>$locale['forum_root']), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
+		echo form_select_tree('forum_jump', '', $_GET['parent_id'], array('inline'=>1,  'class'=>'pull-right', 'parent_value'=>$locale['forum_root']), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 		echo "<label for='forum_jump' class='text-dark strong pull-right m-r-10 m-t-3'>".$locale['forum_044']."</label>\n";
 		add_to_jquery("
 		$('#forum_jump').change(function() {
@@ -563,16 +563,16 @@ class Admin {
 		echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 		openside('');
 		$self_id = $this->data['forum_id'] ? $this->data['forum_id'] : '';
-		echo form_select_tree($locale['forum_008'], 'forum_cat', 'forum_cat', $this->data['forum_cat'], array('add_parent_opts'=>1, 'disable_opts'=>$self_id, 'hide_disabled'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id);
-		echo form_select($locale['forum_009'], 'forum_type', 'forum_type', $type_opts, $this->data['forum_type']);
-		echo form_select($locale['forum_010'], 'forum_language', 'forum_lang', $language_opts, $this->data['forum_language']);
+		echo form_select_tree('forum_cat', $locale['forum_008'], $this->data['forum_cat'], array('add_parent_opts'=>1, 'disable_opts'=>$self_id, 'hide_disabled'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id);
+		echo form_select('forum_type', $locale['forum_009'],  $type_opts, $this->data['forum_type']);
+		echo form_select('forum_language', $locale['forum_010'],  $language_opts, $this->data['forum_language']);
 		echo form_text('forum_order', $locale['forum_043'], $this->data['forum_order'], array('number'=>1));
 		echo form_button('save_forum', $this->data['forum_id'] ? $locale['forum_000a'] : $locale['forum_000'], $locale['forum_000'], array('class'=>'btn btn-sm btn-success'));
 		closeside();
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 		echo form_text('forum_alias', $locale['forum_011'], $this->data['forum_alias']); // need ajax check
-		echo form_select($locale['forum_012'], 'forum_meta', 'forum_meta', array(), $this->data['forum_meta'], array('tags'=>1, 'multiple'=>1, 'width'=>'100%'));
+		echo form_select('forum_meta', $locale['forum_012'], array(), $this->data['forum_meta'], array('tags'=>1, 'multiple'=>1, 'width'=>'100%'));
 		// possible bug? - if image is tied to a url. we can remove it after assigning to other's people page? what if i split to image_url ?
 		if ($this->data['forum_image'] && file_exists(IMAGES."forum/".$this->data['forum_image'])) {
 			openside();
@@ -606,7 +606,7 @@ class Admin {
 				'1' => 'http://',
 				'2' => 'https://'
 			);
-			echo form_select($locale['forum_056'], 'forum_image_header', 'forum_image_header', $header_opts, '', array('inline'=>1));
+			echo form_select('forum_image_header', $locale['forum_056'], $header_opts, '', array('inline'=>1));
 			echo form_text('forum_image_url', $locale['forum_014'], '', array('placeholder'=>'images/forum/', 'inline'=>1));
 			echo closetabbody();
 			echo closetab();
@@ -615,7 +615,7 @@ class Admin {
 		echo form_textarea('forum_rules', $locale['forum_017'], $this->data['forum_rules'], array('autosize'=>1, 'bbcode'=>1));
 		echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 		openside('');
-		echo form_select_tree($locale['forum_025'], 'forum_permissions', 'forum_permissions', '', array('no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
+		echo form_select_tree('forum_permissions', $locale['forum_025'], '', array('no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 		if ($this->data['forum_id']) {
 			echo form_button('jp_forum', $locale['forum_029'], $locale['forum_029'], array('class'=>'btn-sm btn-default m-r-10'));
 		}
@@ -660,17 +660,17 @@ class Admin {
 		echo "<span class='strong display-inline-block m-b-20'>".$locale['forum_006']." : ".$data['forum_name']."</span>\n";
 		openside();
 		echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_000']."</span><br/>\n";
-		echo form_select($locale['forum_031'], 'forum_access', 'forum_access', $access_opts, $data['forum_access'], array('inline'=>1));
+		echo form_select('forum_access', $locale['forum_031'],  $access_opts, $data['forum_access'], array('inline'=>1));
 		unset($access_opts[0]); // remove public away.
-		echo form_select($locale['forum_032'], 'forum_post', 'forum_post', $access_opts, $data['forum_post'], array('inline'=>1));
-		echo form_select($locale['forum_033'], 'forum_reply', 'forum_reply', $access_opts, $data['forum_reply'], array('inline'=>1));
-		echo form_select($locale['forum_039'], 'forum_post_ratings', 'forum_post_ratings', $access_opts, $data['forum_post_ratings'], array('inline'=>1));
+		echo form_select('forum_post', $locale['forum_032'], $access_opts, $data['forum_post'], array('inline'=>1));
+		echo form_select('forum_reply', $locale['forum_033'], $access_opts, $data['forum_reply'], array('inline'=>1));
+		echo form_select('forum_post_ratings', $locale['forum_039'], $access_opts, $data['forum_post_ratings'], array('inline'=>1));
 		closeside();
 
 		openside();
 		echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_001']."</span><br/>\n";
-		echo form_select($locale['forum_036'], 'forum_poll', 'forum_poll', $access_opts, $data['forum_poll'], array('inline'=>1));
-		echo form_select($locale['forum_037'], 'forum_vote', 'forum_vote', $access_opts, $data['forum_vote'], array('inline'=>1));
+		echo form_select('forum_poll', $locale['forum_036'],  $access_opts, $data['forum_poll'], array('inline'=>1));
+		echo form_select( 'forum_vote', $locale['forum_037'], $access_opts, $data['forum_vote'], array('inline'=>1));
 		closeside();
 
 		openside();
@@ -688,13 +688,13 @@ class Admin {
 			"90 ".$locale['forum_points'],
 			"100 ".$locale['forum_points']
 		);
-		echo form_select($locale['forum_040'], 'forum_answer_threshold', 'forum_answer_threshold', $selection, $data['forum_answer_threshold'], array('inline'=>1));
+		echo form_select('forum_answer_threshold', $locale['forum_040'], $selection, $data['forum_answer_threshold'], array('inline'=>1));
 		closeside();
 
 		openside();
 		echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_002']."</span><br/>\n";
-		echo form_select($locale['forum_034'], 'forum_attach', 'forum_attach', $access_opts, $data['forum_attach'], array('inline'=>1));
-		echo form_select($locale['forum_035'], 'forum_attach_download', 'forum_attach_download', $access_opts, $data['forum_attach_download'], array('inline'=>1));
+		echo form_select('forum_attach', $locale['forum_034'], $access_opts, $data['forum_attach'], array('inline'=>1));
+		echo form_select('forum_attach_download', $locale['forum_035'], $access_opts, $data['forum_attach_download'], array('inline'=>1));
 		closeside();
 
 		openside();
@@ -849,7 +849,7 @@ class Admin {
 		echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
 		echo "<span class='text-dark strong'>".$locale['forum_052']."</span><br/>\n";
 		echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
-		echo form_select_tree('', 'move_threads', 'move_threads', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_opts'=>$_GET['forum_id'], 'hide_disabled'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
+		echo form_select_tree('move_threads', '', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_opts'=>$_GET['forum_id'], 'hide_disabled'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
 		echo form_checkbox('delete_threads', $locale['forum_053'], '');
 		echo "</div>\n</div>\n";
 		echo "<div class='row'>\n";

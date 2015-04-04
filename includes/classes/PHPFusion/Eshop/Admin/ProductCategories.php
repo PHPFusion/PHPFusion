@@ -332,8 +332,8 @@ class ProductCategories {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 		echo QuantumFields::quantum_multilocale_fields($locale['ESHPCATS100'], 'cattitle', 'cattitle', $this->data['title'], array('inline'=>1, 'required'=>1));
-		echo form_select_tree($locale['ESHPCATS106'], 'parentid', 'parentids', $this->data['parentid'], array('inline' => 1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
-		echo form_select($locale['ESHPCATS105'], 'image', 'images', self::getImageOpts(), $this->data['image'], array('inline' => 1));
+		echo form_select_tree('parentid', $locale['ESHPCATS106'], $this->data['parentid'], array('input_id'=>'cparentId', 'inline' => 1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo form_select('image', $locale['ESHPCATS105'], self::getImageOpts(), $this->data['image'], array('inline' => 1));
 		// Languages in a row.
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
@@ -357,8 +357,8 @@ class ProductCategories {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 		openside('');
-		echo form_select($locale['ESHPCATS101'], 'status', 'statuses', self::getSizeOpts(), $this->data['status'], array('width' => '100%',	'placeholder' => $locale['ESHPCATS102']));
-		echo form_select($locale['ESHPCATS109'], 'access', 'accesses', self::getVisibilityOpts(), $this->data['access'], array('width' => '100%'));
+		echo form_select('status', $locale['ESHPCATS101'], self::getSizeOpts(), $this->data['status'], array('width' => '100%',	'placeholder' => $locale['ESHPCATS102']));
+		echo form_select('access', $locale['ESHPCATS109'], self::getVisibilityOpts(), $this->data['access'], array('width' => '100%'));
 		closeside();
 		echo form_hidden('', 'cid', 'cids', $this->data['cid']);
 		echo "</div>\n</div>\n";
@@ -434,11 +434,11 @@ class ProductCategories {
 		echo QuantumFields::quantum_multilocale_fields($locale['ESHPCATS100'], 'title', 'title', '', array('max_length'=>100, 'inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-3'>\n";
-		echo form_select($locale['ESHPCATS105'], 'image', 'image', self::getImageOpts(), '', array('width'=>'100%'));
-		echo form_select($locale['ESHPCATS101'], 'status', 'status', self::getSizeOpts(), '', array('placeholder' => $locale['ESHPCATS102'], 'width'=>'100%'));
+		echo form_select('image', $locale['ESHPCATS105'], self::getImageOpts(), '', array('width'=>'100%'));
+		echo form_select('status', $locale['ESHPCATS101'],  self::getSizeOpts(), '', array('placeholder' => $locale['ESHPCATS102'], 'width'=>'100%'));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-3'>\n";
-		echo form_select($locale['ESHPCATS109'], 'access', 'access', self::getVisibilityOpts(), '', array('width'=>'100%'));
+		echo form_select('access', $locale['ESHPCATS109'], self::getVisibilityOpts(), '', array('width'=>'100%'));
 		echo form_hidden('', 'cid', 'cid', '', array('writable' => 1));
 		echo "</div>\n";
 		echo "</div>\n";

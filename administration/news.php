@@ -358,7 +358,7 @@ function news_form() {
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 	echo form_text('news_subject', $locale['news_0200'], $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['news_0250']));
 	// move keywords here because it's required
-	echo form_select($locale['news_0205'], 'news_keywords', 'news_keywords', array(), $data['news_keywords'], array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['news_0255'], 'tags'=>1, 'multiple' => 1));
+	echo form_select('news_keywords', $locale['news_0205'], array(), $data['news_keywords'], array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['news_0255'], 'tags'=>1, 'multiple' => 1));
 	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
 	echo form_datepicker($locale['news_0206'], 'news_start', 'news_start', $data['news_start'], array('placeholder' => $locale['news_0208']));
 	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
@@ -367,7 +367,7 @@ function news_form() {
 	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
-	echo form_select_tree($locale['news_0201'], "news_cat", "news_cat", $data['news_cat'], array("parent_value" => $locale['news_0202'], "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
+	echo form_select_tree("news_cat", $locale['news_0201'], $data['news_cat'], array("parent_value" => $locale['news_0202'], "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 	echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
 	echo form_button('save', $locale['news_0241'], $locale['news_0241'], array('class' => 'btn-success', 'icon'=>'fa fa-square-check-o'));
 	closeside();
@@ -384,7 +384,7 @@ function news_form() {
 		echo "<input type='hidden' name='news_image_t1' value='".$data['news_image_t1']."' />\n";
 		echo "<input type='hidden' name='news_image_t2' value='".$data['news_image_t2']."' />\n";
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select($locale['news_0218'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
+		echo form_select('news_ialign', $locale['news_0218'], $options, $data['news_ialign']);
 	} else {
 		$file_input_options = array(
 			'max_width' => $settings['news_photo_max_w'],
@@ -405,7 +405,7 @@ function news_form() {
 		echo form_fileinput($locale['news_0216'], 'news_image', 'news_image', IMAGES_N, '', $file_input_options);
 		echo "<div class='small m-b-10'>".sprintf($locale['news_0217'], parsebytesize($settings['news_photo_max_b']))."</div>\n";
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select($locale['news_0218'], 'news_ialign', 'news_ialign', $options, $data['news_ialign']);
+		echo form_select('news_ialign', $locale['news_0218'], $options, $data['news_ialign']);
 	}
 	$fusion_mce = array();
 	if (!$settings['tinymce_enabled']) {
@@ -417,12 +417,12 @@ function news_form() {
 	echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	if (multilang_table("NS")) {
-		echo form_select($locale['global_ML100'], 'news_language', 'news_language', $language_opts, $data['news_language'], array('placeholder' => $locale['choose'], 'width' => '100%'));
+		echo form_select('news_language', $locale['global_ML100'], $language_opts, $data['news_language'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	} else {
 		echo form_hidden('', 'news_language', 'news_langugage', $data['news_language']);
 	}
 	echo form_hidden('', 'news_datestamp', 'news_datestamp', $data['news_datestamp']);
-	echo form_select($locale['news_0209'], 'news_visibility', 'news_visibility', getgroupOpts(), $data['news_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
+	echo form_select('news_visibility', $locale['news_0209'], getgroupOpts(), $data['news_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	closeside();
 	openside('');
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {

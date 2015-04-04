@@ -155,14 +155,14 @@ $opts['invalid_theme'] = 'None (test purposes)'; // just for test purposes durin
 // We are using a callback function to check the validity of the theme, it's simpler
 // but we could instead do extra processing upon post using an in_array(posted_theme, available_themes) check
 $locale['error_invalid_theme'] = 'Please select a valid theme'; // to be moved
-echo form_select($locale['418'], 'theme', 'theme', $opts, $settings_main['theme'], array('callback_check' => 'theme_exists', 'inline'=>1, 'error_text' => $locale['error_invalid_theme'], 'width' => '100%'));
+echo form_select('theme', $locale['418'], $opts, $settings_main['theme'], array('callback_check' => 'theme_exists', 'inline'=>1, 'error_text' => $locale['error_invalid_theme'], 'width' => '100%'));
 
 // Admin Panel theme requires extra checks
 $opts = array();
 foreach ($admin_theme_files as $file) {
 	$opts[$file] = $file;
 }
-echo form_select($locale['418a'], 'admin_theme', 'admin_theme', $opts, $settings_main['admin_theme'], array('inline'=>1, 'error_text' => $locale['error_value'], 'width' => '100%'));
+echo form_select('admin_theme', $locale['418a'], $opts, $settings_main['admin_theme'], array('inline'=>1, 'error_text' => $locale['error_value'], 'width' => '100%'));
 echo form_checkbox('bootstrap', $locale['437'], $settings_main['bootstrap'], array('toggle' => 1, 'inline' => 1));
 closeside();
 
@@ -183,14 +183,14 @@ echo "<span id='display_path'>".$settings_main['site_path']."</span>";
 echo "</div>\n";
 $opts = array('http' => 'http://', 'https' => 'https://');
 $opts['invalid_protocol'] = 'Invalid (test purposes)';
-echo form_select($locale['426'], 'site_protocol', 'site_protocol', $opts, $settings_main['site_protocol'], array('regex' => 'http(s)?', 'width' => '100%', 'error_text' => $locale['error_value']));
+echo form_select('site_protocol', $locale['426'], $opts, $settings_main['site_protocol'], array('regex' => 'http(s)?', 'width' => '100%', 'error_text' => $locale['error_value']));
 echo form_text('site_host', $locale['427'], $settings_main['site_host'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
 echo form_text('site_path', $locale['429'], $settings_main['site_path'], array('regex' => '\/([a-z0-9-_]+\/)?+', 'max_length' => 255, 'required' => 1));
 echo form_text('site_port', $locale['430'], $settings_main['site_port'], array('max_length' => 5));
 closeside();
 
 openside('');
-echo form_select($locale['419'], 'default_search', 'default_search', $search_opts, $settings_main['default_search'], array('width' => '100%'));
+echo form_select('default_search', $locale['419'], $search_opts, $settings_main['default_search'], array('width' => '100%'));
 closeside();
 
 openside('');

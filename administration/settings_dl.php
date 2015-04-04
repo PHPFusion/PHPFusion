@@ -116,7 +116,7 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
-	".form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	".form_select('calc_c', '', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
 	</div>
 </div>
 ";
@@ -127,17 +127,17 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_bb', '', $calc_bb, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
-	".form_select('', 'calc_cc', 'calc_cc', $calc_opts, $calc_cc, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	".form_select('calc_cc', '', $calc_opts, $calc_cc, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
 	</div>
 </div>
 ";
 closeside();
 openside();
-echo form_select($locale['932'], 'download_types[]', 'download_types', $mime_opts, $settings2['download_types'], array('error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%', 'delimiter' => '|'));
+echo form_select('download_types[]', $locale['932'], $mime_opts, $settings2['download_types'], array('input_id'=>'dltype', 'error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%', 'delimiter' => '|'));
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select($locale['938'], 'download_screenshot', 'download_screenshot', $choice_opts, $settings2['download_screenshot']);
+echo form_select('download_screenshot', $locale['938'], $choice_opts, $settings2['download_screenshot']);
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));

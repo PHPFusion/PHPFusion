@@ -412,7 +412,7 @@ class Admin {
 								foreach ($list as $album_id => $album_title) {
 									$options[$album_id] = 'Move to .. Gallery Album '.$album_title;
 								}
-								echo form_select('Please select one of the following:', 'delete_action', 'delete_action', $options, '', array('inline' => 1,
+								echo form_select('delete_action', 'Please select one of the following:', $options, '', array('inline' => 1,
 									'width' => '300px'));
 								echo form_button('confirm_delete', $locale['confirm'], $album_id, array('class' => 'btn-sm btn-danger col-sm-offset-3',
 									'icon' => 'fa fa-trash'));
@@ -804,10 +804,10 @@ class Admin {
 			'inline' => 1));
 		echo form_fileinput('Upload Picture', 'album_file', 'album_file', $this->image_upload_dir, '', $this->upload_settings);
 		echo form_hidden('', 'album_hfile', 'album_hfile', $this->album_data['album_thumb']);
-		echo form_select($locale['611'], 'album_access', 'album_access', getgroupOpts(), $this->album_data['album_access'], array('inline' => 1));
+		echo form_select('album_access', $locale['611'],  getgroupOpts(), $this->album_data['album_access'], array('inline' => 1));
 		echo form_hidden('', 'album_id', 'album_id', $this->album_data['album_id']);
-		echo form_select($locale['612'], 'album_language', 'album_language', fusion_get_enabled_languages(), $this->album_data['album_language'], array('inline' => 1));
-		echo form_select($locale['613'], 'album_order', 'album_order', range(0, $this->album_max_order), $this->album_data['album_order'], array('inline' => 1,
+		echo form_select('album_language', $locale['612'],  fusion_get_enabled_languages(), $this->album_data['album_language'], array('inline' => 1));
+		echo form_select('album_order', $locale['613'], range(0, $this->album_max_order), $this->album_data['album_order'], array('inline' => 1,
 			'width' => '150px')); // 0 picture, 1. ok.
 		echo form_button('upload_album', $locale['save_changes'], 'upload_album', array('class' => 'btn-success btn-sm m-r-10'));
 		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
@@ -827,24 +827,22 @@ class Admin {
 		echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
 		echo form_text('photo_title', $locale['622'], $this->photo_data['photo_title'], array('placeholder' => $locale['623'], 'inline' => 1));
 		$sel = (isset($_GET['gallery']) && isnum($_GET['gallery'])) ? $_GET['gallery'] : $this->photo_data['album_id'];
-		echo form_select($locale['624'], 'album_id', 'album_ids', $album_list, $sel, array('inline' => 1));
+		echo form_select('album_id', $locale['624'], $album_list, $sel, array('inline' => 1));
 		echo form_hidden('', 'photo_id', 'photo_id', $this->photo_data['photo_id']);
 		echo form_hidden('', 'photo_order', 'photo_order', $this->photo_data['photo_order']);
 		echo form_fileinput('Upload Picture', 'photo_file', 'photo_file', $this->image_upload_dir, '', $this->upload_settings);
 		echo form_hidden('', 'photo_hfile', 'photo_hfile', $this->photo_data['photo_filename']);
 		echo form_hidden('', 'photo_hthumb1', 'photo_hthumb1', $this->photo_data['photo_thumb1']);
 		echo form_hidden('', 'photo_hthumb2', 'photo_hthumb2', $this->photo_data['photo_thumb2']);
-		echo form_select($locale['625'], 'photo_keywords', 'photo_keywords', array(), $this->photo_data['photo_keywords'], array('placeholder' => $locale['626'],
+		echo form_select('photo_keywords', $locale['625'],  array(), $this->photo_data['photo_keywords'], array('placeholder' => $locale['626'],
 			'inline' => 1,
 			'multiple' => 1,
 			'width' => '100%',
 			'tags' => 1));
 		echo form_textarea('photo_description', $locale['627'], $this->photo_data['photo_description'], array('placeholder' => $locale['628'],
 			'inline' => 1));
-		echo form_select($locale['629'], 'photo_allow_comments', 'photo_allow_comments', array($locale['yes'],
-			$locale['no']), $this->photo_data['photo_allow_comments'], array('inline' => 1));
-		echo form_select($locale['630'], 'photo_allow_ratings', 'photo_allow_ratings', array($locale['yes'],
-			$locale['no']), $this->photo_data['photo_allow_ratings'], array('inline' => 1));
+		echo form_select('photo_allow_comments', $locale['629'], array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_comments'], array('inline' => 1));
+		echo form_select('photo_allow_ratings', $locale['630'], array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_ratings'], array('inline' => 1));
 		echo form_button('upload_photo', $locale['631'], 'upload_photo', array('class' => 'btn-success btn-sm m-r-10'));
 		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
 		echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";

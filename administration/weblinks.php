@@ -109,7 +109,7 @@ if (!empty($result)) {
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='weblink_visibility'>".$locale['428a']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_select("", 'weblink_visibility', 'weblink_visibility', $visibility_opts, $weblink_visibility, array('placeholder' => $locale['choose']));
+	echo form_select('weblink_visibility', '', $visibility_opts, $weblink_visibility, array('placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 	echo "<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>";

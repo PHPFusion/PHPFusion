@@ -434,16 +434,16 @@ class Banners {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		echo form_text('featbanner_title', $locale['ESHFEAT90'], '', array('required'=>1, 'inline'=>1));
-		echo form_select_tree($locale['ESHFEAT125'], 'featbanner_cid', 'featbanner_cids', '', array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo form_select_tree('featbanner_cid', $locale['ESHFEAT125'],  '', array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		openside('');
 		echo "<strong>".$locale['ESHFEAT96']." <i class='fa fa-question-circle pointer' title='".$locale['ESHFEAT96a']."'></i></strong>\n";
 		echo "<hr/>\n";
-		echo form_select_tree($locale['ESHFEAT113a'], 'featbanner_cat', 'featbanner_cats', '', array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo form_select_tree('featbanner_cat', $locale['ESHFEAT113a'], '', array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		$product_opts[0] = '--';
 		$product_opts += self::get_productOpts();
-		echo form_select($locale['ESHFEAT113'], 'featbanner_id', 'featbanner_ids', $product_opts, $this->data['featbanner_id'], array('inline'=>1));
+		echo form_select('featbanner_id', $locale['ESHFEAT113'],  $product_opts, $this->data['featbanner_id'], array('inline'=>1));
 		echo form_text('featbanner_url', $locale['ESHFEAT127'], $this->data['featbanner_url'], array('inline'=>1, 'placeholder'=>fusion_get_settings('siteurl')));
 		closeside();
 		echo form_hidden('', 'featbanner_aid', 'featbanner_aids', '', array('writable' => 1));
@@ -567,7 +567,7 @@ class Banners {
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		openside('');
-		echo form_select_tree($locale['ESHFEAT125'], 'featitem_cid', 'featitem_cids', '', array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo form_select_tree('featitem_cid', $locale['ESHFEAT125'], '', array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		closeside();
 		echo form_hidden('', 'featitem_id', 'featitem_ids', '', array('writable' => 1));
 		echo "</div>\n";
@@ -646,7 +646,7 @@ class Banners {
 		openside('');
 		echo form_hidden('', 'featbanner_aid', 'featbanner_aid', $this->data['featbanner_aid']);
 		echo form_text('featbanner_title', $locale['ESHFEAT90'], $this->data['featbanner_title'], array('required'=>1, 'inline'=>1));
-		echo form_select_tree($locale['ESHFEAT125'], 'featbanner_cid', 'featbanner_cid', $this->data['featbanner_cid'], array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo form_select_tree('featbanner_cid', $locale['ESHFEAT125'],  $this->data['featbanner_cid'], array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		closeside();
 		openside('');
 		echo form_hidden('', 'featbanner_hidden', 'featbanner_hidden', $this->data['featbanner_banner']);
@@ -665,10 +665,10 @@ class Banners {
 		openside('');
 		echo "<strong>".$locale['ESHFEAT96']." <i class='fa fa-question-circle pointer' title='".$locale['ESHFEAT96a']."'></i> <span class='required'>*</span></strong>\n";
 		echo "<hr/>\n";
-		echo form_select_tree($locale['ESHFEAT113a'], 'featbanner_cat', 'featbanner_cat', $this->data['featbanner_cat'], array('inline'=>1, 'parent_value'=>'--'), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo form_select_tree('featbanner_cat', $locale['ESHFEAT113a'],  $this->data['featbanner_cat'], array('inline'=>1, 'parent_value'=>'--'), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		$product_opts[0] = '--';
 		$product_opts += self::get_productOpts();
-		echo form_select($locale['ESHFEAT113'], 'featbanner_id', 'featbanner_id', $product_opts, $this->data['featbanner_id'], array('inline'=>1));
+		echo form_select('featbanner_id',$locale['ESHFEAT113'], $product_opts, $this->data['featbanner_id'], array('inline'=>1));
 		echo form_text('featbanner_url', $locale['ESHFEAT127'], $this->data['featbanner_url'], array('inline'=>1, 'placeholder'=>fusion_get_settings('siteurl')));
 		closeside();
 
@@ -704,10 +704,10 @@ class Banners {
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
 		echo form_hidden('', 'featitem_id', 'featitem_id', $this->idata['featitem_id']);
-		echo form_select($locale['ESHFEAT113'], 'featitem_item', 'featitem_item',  self::get_productOpts(), $this->idata['featitem_item'], array('inline'=>1));
+		echo form_select('featitem_item', $locale['ESHFEAT113'],   self::get_productOpts(), $this->idata['featitem_item'], array('inline'=>1));
 		echo form_text('featitem_title', $locale['ESHFEAT90a'], $this->idata['featitem_title'], array('required'=>1, 'inline'=>1));
 		echo form_textarea('featitem_description', $locale['ESHFEAT90b'], $this->idata['featitem_description'], array('required'=>1, 'autosize'=>1, 'inline'=>1));
-		echo form_select_tree($locale['ESHFEAT125'], 'featitem_cid', 'featitem_cid', $this->idata['featitem_cid'], array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
+		echo form_select_tree('featitem_cid', $locale['ESHFEAT125'], $this->idata['featitem_cid'], array('inline'=>1, 'parent_value'=>$locale['ESHFEAT128']), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		closeside();
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";

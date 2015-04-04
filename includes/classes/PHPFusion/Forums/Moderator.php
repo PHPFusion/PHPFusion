@@ -391,7 +391,7 @@ class Moderator {
 			redirect(FORUM."viewthread.php?forum_id=".$_POST['new_forum_id']."&amp;thread_id=".$this->thread_id);
 		} else {
 			echo openform('moveform', 'moveform', 'post', FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move", array('downtime' => 1));
-			echo form_select_tree($locale['forum_0751'], 'new_forum_id', 'new_forum_id2', '', array('no_root'=>1, 'inline'=>1, 'disable_opts' => $this->forum_id),  DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
+			echo form_select_tree('new_forum_id', $locale['forum_0751'], '', array('input_id'=>"newfrmid", 'no_root'=>1, 'inline'=>1, 'disable_opts' => $this->forum_id),  DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 			echo form_button($locale['forum_0750'], 'move_thread', 'move_thread', $locale['forum_0750'], array('class'=>'btn-primary'));
 			echo closeform();
 		}
@@ -528,7 +528,7 @@ class Moderator {
 									}
 								}
 								echo openform('modopts', 'modopts', 'post', $this->form_action, array('downtime' => 1));
-								echo form_select_tree($locale['forum_0301'], 'new_forum_id', 'new_forum_id', '', array('disable_opts' => $category_excluded,
+								echo form_select_tree('new_forum_id', $locale['forum_0301'], '', array('disable_opts' => $category_excluded,
 									'no_root' => 1,
 									'inline' => 1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 								foreach ($array_post as $value) {
@@ -562,7 +562,7 @@ class Moderator {
 								}
 								echo openform('modopts', 'modopts', 'post', $this->form_action."&amp;sv", array('downtime' => 1));
 								echo form_hidden('', 'new_forum_id', 'new_forum_id', $_POST['new_forum_id']);
-								echo form_select($locale['forum_0303'], 'new_thread_id', 'new_thread_id', $forum_list, '', array('inline' => 1));
+								echo form_select('new_thread_id', $locale['forum_0303'], $forum_list, '', array('inline' => 1));
 								foreach ($array_post as $value) {
 									echo form_hidden('', "delete_post[]", "delete_post[$value]", $value);
 								}
