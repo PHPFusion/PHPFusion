@@ -465,7 +465,5 @@ $locale['fmt_weblink'] = "ссылка|ссылки|ссылок";
 $locale['fmt_week'] = "неделя|недели|недель";
 $locale['fmt_year'] = "год|года|лет";
 
-// Load defender locale from here, is more reliable
-// and now if part of the core, we could merge it in
-include "defender.php";
+include __DIR__."/defender.php";
 ?>

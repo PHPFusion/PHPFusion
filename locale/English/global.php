@@ -469,5 +469,5 @@ $locale['fmt_year'] = "year|years";
 
 // Load defender locale from here, is more reliable
 // and now if part of the core, we could merge it in
-include "defender.php";
+include __DIR__."/defender.php";
 ?>
