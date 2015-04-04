@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 //credits: eternicode @ http://bootstrap-datepicker.readthedocs.org/en/latest/
 //http://bootstrap-datepicker.readthedocs.org/en/release/options.html
-function form_datepicker($title, $input_name, $input_id, $input_value, array $options = array()) {
+function form_datepicker($input_name, $label, $input_value, array $options = array()) {
 	global $defender, $settings, $locale;
 	if (!defined('DATEPICKER')) {
 		define('DATEPICKER', TRUE);
@@ -25,33 +25,40 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
 		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datepicker.js'></script>");
 		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/locales/bootstrap-datepicker.".$locale['datepicker'].".js'></script>");
 	}
-
-	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
+	$label = stripinput($label);
+	$input_name = stripinput($input_name);
 
 	if ($input_value && !strstr($input_value, "-")) { // must be -
-		$input_value = ($input_value) ? date("d-m-Y", $input_value) : '';
+		$input_value = date("d-m-Y", $input_value);
 	}
 
-	$options += array(
-		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
-		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
-		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
-		'width' => !empty($options['width']) ?  $options['width']  : '250px',
-		'class' => !empty($options['class']) ?  $options['class']  : '',
-		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
-		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
-		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
-		'icon' => !empty($options['icon']) ?  $options['icon']  : '',
-		'date_format' => !empty($options['date_format']) ?  $options['date_format']  : 'dd-mm-yyyy',
-		'fieldicon_off' => !empty($options['fieldicon']) && $options['fieldicon'] == 1 ?  1  : 0,
-		'type' => !empty($options['type']) && $options['type'] == 'date' ? 'date' : 'timestamp',
-		'week_start' => !empty($options['week_start']) && isnum($options['week_start']) ? $options['week_start'] : isset($settings['week_start']) && isnum($settings['week_start']) ? $settings['week_start'] : 0
+	$default_options = array(
+		'input_id' => $input_name,
+		'required' => FALSE,
+		'placeholder' => '',
+		'deactivate' => FALSE,
+		'width' => '250px',
+		'class' => '',
+		'inline' => FALSE,
+		'error_text' => '',
+		'safemode' => FALSE,
+		'icon' => '',
+		'date_format' => 'dd-mm-yyyy',
+		'fieldicon_off' => FALSE,
+		'type' => 'datestamp',
+		'week_start' => fusion_get_settings('week_start')
 	);
-
+	$options += $default_options;
+	if (!$options['width']){
+		$options['width'] = $default_options['width'];
+	}
+	if (!in_array($options['type'], array('date', 'datestamp'))) {
+		$options['type'] = $default_options['type'];
+	}
+	$options['week_start'] = (int) $options['week_start'];
+	$input_id = $options['input_id'] ? : $default_options['input_id'];
 	$html = "<div id='$input_id-field' class='form-group ".$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'>\n";
-	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= "<div class='input-group date' ".($options['width'] ? "style='width:".$options['width'].";'" : '').">\n";
 	$html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' placeholder='".$options['placeholder']."' />\n";
@@ -66,7 +73,7 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
 	$defender->add_field_session(array(
 			 'input_name' 	=> 	$input_name,
 			 'type'			=>	$options['type'],
-			 'title'		=>	$title2,
+			 'title'		=>	$label,
 			 'id' 			=>	$input_id,
 			 'required'		=>	$options['required'],
 			 'safemode' 	=> 	$options['safemode'],
@@ -86,5 +93,3 @@ function form_datepicker($title, $input_name, $input_id, $input_value, array $op
 	}
 	return $html;
 }
-
-?>

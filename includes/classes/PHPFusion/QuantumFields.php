@@ -1715,7 +1715,7 @@ class QuantumFields {
 				break;
 			case 'datepicker':
 				if ($method == 'input') {
-					return form_datepicker($options['show_title'] ? self::parse_label($data['field_title']) : '', $data['field_name'], $data['field_name'], $field_value, $options);
+					return form_datepicker($data['field_name'], $options['show_title'] ? self::parse_label($data['field_title']) : '', $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>showdate('shortdate', $callback_data[$data['field_name']]));
 				}

@@ -155,7 +155,7 @@ class Customers {
 		$customer_name = implode('|', $customer_name);
 		echo form_name('Customer Name', 'cname', 'cname', $customer_name, array('required'=>1, 'inline'=>1));
 		echo form_text('cemail', $locale['ESHPCHK115'], $this->data['cemail'], array('inline'=>1, 'type' => 'email'));
-		echo form_datepicker($locale['ESHPCHK105'], 'cdob', 'cdob', $this->data['cdob'], array('inline'=>1));
+		echo form_datepicker('cdob', $locale['ESHPCHK105'], $this->data['cdob'], array('inline'=>1));
 		$customer_address[] = $this->data['caddress']; // use this as backdoor.
 		$customer_address[] = $this->data['caddress2'];
 		$customer_address[] = $this->data['ccountry'];
