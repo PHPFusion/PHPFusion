@@ -1,6 +1,15 @@
 <?php
 $locale['validate'] = "Пожалуйста, проверьте повторно поле ввода.";
 
+// Text fields errors
+$locale['error_input_default']	= "Пожалуйста, заполните это поле";
+$locale['error_input_password']	= "Пожалуйста, введите корректный пароль";
+$locale['error_input_email']	= "Пожалуйста, введите корректный адрес электропочты";
+$locale['error_input_number']	= "Пожалуйста, введите корректное число";
+$locale['error_input_url']		= "Пожалуйста, введите корректную ссылку";
+$locale['error_input_regex']	= "Пожалуйста, введите соответственно шаблону";
+$locale['error_input_safemode']	= "Пожалуйста, заполните это поле правильно";
+
 // Admin login
 $locale['cookie_title'] = "Время сессии истекло.";
 $locale['cookie_description'] = "Авторизация не осуществлена или, вероятно, время сессии истекло. Пожалуйста, авторизуйтесь повторно.";
