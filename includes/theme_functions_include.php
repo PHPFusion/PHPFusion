@@ -357,11 +357,19 @@ function showrendertime($queries = TRUE) {
 	}
 	if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
 		$res = sprintf($locale['global_172'], substr((microtime(TRUE)-START_TIME), 0, 4));
-		$res .= ($queries ? " - $mysql_queries_count ".$locale['global_173'] : "");
+		$res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : "");
 		return $res;
 	} else {
 		return "";
 	}
+}
+
+function showMemoryUsage() {
+	global $locale;
+	$memory_allocated = parsebytesize(memory_get_peak_usage(TRUE));
+	$memory_used = parsebytesize(memory_get_peak_usage(FALSE));
+
+	return " | ".$locale['global_174'].": ".$memory_used."/".$memory_allocated;
 }
 
 function showcopyright($class = "", $nobreak = FALSE) {
