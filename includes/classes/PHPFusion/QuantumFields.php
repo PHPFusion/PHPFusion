@@ -373,7 +373,7 @@ class QuantumFields {
 			$tab_title['icon'][] = '';
 			$tab_active = (!empty($this->cat_list)) ? tab_active($tab_title, 2) : tab_active($tab_title, 1);
 		} // add field
-		elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], $this->dynamics_type())) {
+		elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->dynamics_type()))) {
 			$tab_title['title'][] = $locale['fields_0306'];
 			$tab_title['id'][] = 'add';
 			$tab_title['icon'][] = '';
@@ -415,7 +415,7 @@ class QuantumFields {
 			$field_type = $this->dynamics_type();
 			unset($field_type['file']);
 			foreach ($field_type as $type => $name) {
-				echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, $name, array('type' => $type, 'class' => 'btn-block btn-sm btn-default'))."</div>\n";
+				echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, $type, array('class' => 'btn-block btn-sm btn-default'))."</div>\n";
 			}
 			echo "</div>\n";
 		}
@@ -451,7 +451,7 @@ class QuantumFields {
 			echo closetabbody();
 		}
 
-		elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], $this->dynamics_type()) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
+		elseif (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->dynamics_type())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
 			echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
 			$this->quantum_dynamics_form();
 			echo closetabbody();
