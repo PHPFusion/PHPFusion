@@ -966,7 +966,7 @@ class Products {
 		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array('max_tokens' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-4'>\n";
-		echo QuantumFields::quantum_multilocale_fields($locale['ESHPPRO172'], 'title', 'titles', '', array('required'=>1, 'inline'=>1));
+		echo QuantumFields::quantum_multilocale_fields('title', $locale['ESHPPRO172'], '', array('input_id'=>'eshppro172', 'required'=>1, 'inline'=>1));
 		echo form_text('artno', $locale['ESHPPRO107'], '', array('inline'=>1));
 		echo form_text('sartno', $locale['ESHPPRO174'], '', array('inline'=>1));
 		echo "</div>\n";

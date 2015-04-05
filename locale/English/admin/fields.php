@@ -15,7 +15,6 @@ $locale['fields_0110'] = "Table already exist. Please choose another table name"
 $locale['fields_0111'] = "User field page can be extended to read other database on view.";
 $locale['fields_0112'] = "Which table primarily is used by this page?";
 $locale['fields_0113'] = "Which column in your primary is your User ID column?";
-$locale['fields_0114'] = "Add Language Translations";
 
 $locale['field_0200'] = 'Field category has been deleted';
 $locale['field_0201'] = 'Field has been deleted';

@@ -22,6 +22,7 @@ namespace PHPFusion;
 
 include LOCALE.LOCALESET.'admin/fields.php';
 
+
 class QuantumFields {
 	/**
 	 * Set the Quantum System Fields Page Title
@@ -610,11 +611,11 @@ class QuantumFields {
 		$html .= $main_html.$sub_html;
 		if (count($language_opts)>1) {
 			$html .= "<div class='dropdown ".($options['inline'] ? "col-sm-offset-3" : "")."'>\n";
-			$html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['fields_0114']." <span class='caret'></span></button>\n";
+			$html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['add_language']." <span class='caret'></span></button>\n";
 			$html .= "<ul class='dropdown-menu' style='margin-top:10px; !important;'>\n";
 			foreach($language_opts as $Lang) {
 				if ($Lang !== LANGUAGE) {
-					$html .= "<li><a data-add='".$Lang."' class='pointer data-add'>Add ".$Lang."</a></li>\n";
+					$html .= "<li><a data-add='".$Lang."' class='pointer data-add'>".sprintf($locale['add_lang'], $Lang)."</a></li>\n";
 					if ($Lang !== LANGUAGE) {
 						add_to_jquery("$('#".$input_name."-".$Lang."-field').hide();");
 
