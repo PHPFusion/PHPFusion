@@ -95,32 +95,7 @@ class Banners {
 		global $locale;
 		if (isset($_GET['status'])) {
 			$message = '';
-			switch($_GET['status']) {
-				case 'su':
-					$message = $locale['ESHFEAT110b'];
-					break;
-				case 'sn':
-					$message = $locale['ESHFEAT110'];
-					break;
-				case 'refresh':
-					$message = $locale['ESHFEAT111'];
-					break;
-				case 'del':
-					$message = $locale['ESHFEAT112'];
-					break;
-				case 'isn':
-					$message = $locale['ESHFEAT110a'];
-					break;
-				case 'isu':
-					$message = $locale['ESHFEAT110c'];
-					break;
-				case 'idel':
-					$message = $locale['ESHFEAT110d'];
-					break;
-			}
-			if ($message) {
-				echo admin_message($message);
-			}
+
 		}
 	}
 
@@ -175,14 +150,17 @@ class Banners {
 	 * @param $id
 	 */
 	static function delete_banner($id) {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isnum($id)) {
 			$data = self::get_bannerData($_GET['b_id']);
 			if (!empty($data)) {
 				dbquery("UPDATE ".DB_ESHOP_FEATBANNERS." SET featbanner_order=featbanner_order-1 WHERE featbanner_order>'".$data['featbanner_order']."' AND featbanner_cid = '".$data['featbanner_cid']."'");
 				if ($data['featbanner_banner']) @unlink(FPHOTOROOT.$data['featbanner_banner']);
 				dbquery("DELETE FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_aid = '".intval($id)."'");
-				redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner&amp;status=del");
+				if (!defined('FUSION_NULL')) {
+					addNotice('warning', $locale['ESHFEAT112']);
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner");
+				}
 			}
 		}
 	}
@@ -191,13 +169,16 @@ class Banners {
 	 * @param $id
 	 */
 	static function delete_item($id) {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isnum($id)) {
 			$data = self::get_itemData($_GET['i_id']);
 			if (!empty($data)) {
 				dbquery("UPDATE ".DB_ESHOP_FEATITEMS." SET featitem_order=featitem_order-1 WHERE featitem_order>'".$data['featitem_order']."' AND featitem_cid = '".$data['featbanner_cid']."'");
 				dbquery("DELETE FROM ".DB_ESHOP_FEATITEMS." WHERE featitem_id = '".intval($id)."'");
-				redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items&amp;status=idel");
+				if (!defined('FUSION_NULL')) {
+					addNotice('warning', $locale['ESHFEAT110d']);
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items");
+				}
 			}
 		}
 	}
@@ -219,7 +200,10 @@ class Banners {
 				if (dbrows($c_result) > 0) {
 					$quick += dbarray($c_result);
 					dbquery_insert(DB_ESHOP_FEATBANNERS, $quick, 'update');
-					redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner&amp;status=su");
+					if (!defined('FUSION_NULL')) {
+						addNotice('info', $locale['ESHFEAT110b']);
+						redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner");
+					}
 				}
 			}
 		}
@@ -262,7 +246,7 @@ class Banners {
 			if ($this->data['featbanner_cat']) $i++;
 			if ($i > 1) {
 				$defender->stop();
-				$defender->addNotice($locale['ESHFEAT131']);
+				addNotice('danger', $locale['ESHFEAT131']);
 			}
 			$this->data['featbanner_title'] = isset($_POST['featbanner_title']) ? form_sanitizer($_POST['featbanner_title'], '', 'featbanner_title') : '';
 			$this->data['featbanner_cid'] = isset($_POST['featbanner_cid']) ? form_sanitizer($_POST['featbanner_cid'], '', 'featbanner_cid') : 0;
@@ -278,7 +262,7 @@ class Banners {
 				$this->data['featbanner_banner'] = form_sanitizer($_POST['featbanner_hidden'], '', 'featbanner_hidden');
 				if (!$this->data['featbanner_banner']) {
 					$defender->stop();
-					$defender->addNotice($locale['ESHFEAT130']);
+					addNotice('danger', $locale['ESHFEAT130']);
 				}
 			}
 
@@ -301,13 +285,19 @@ class Banners {
 					}
 				}
 				dbquery_insert(DB_ESHOP_FEATBANNERS, $this->data, 'update');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner&amp;status=su");
+				if (!defined('FUSION_NULL')) {
+					addNotice('info', $locale['ESHFEAT110b']);
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner");
+				}
 			} else {
 				// sort order
 				if (!$this->data['featbanner_order']) $this->data['featbanner_order'] = dbresult(dbquery("SELECT MAX(featbanner_order) FROM ".DB_ESHOP_FEATBANNERS." WHERE featbanner_cid='".$this->data['featbanner_cid']."'"), 0)+1;
 				dbquery("UPDATE ".DB_ESHOP_FEATBANNERS." SET featbanner_order=featbanner_order+1 WHERE featbanner_cid='".$this->data['featbanner_cid']."' AND featbanner_order>='".$this->data['featbanner_order']."'");
 				dbquery_insert(DB_ESHOP_FEATBANNERS, $this->data, 'save');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner&amp;status=sn");
+				if (!defined('FUSION_NULL')) {
+					addNotice('success', $locale['ESHFEAT110']);
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=banner");
+				}
 			}
 		}
 	}
@@ -343,13 +333,19 @@ class Banners {
 					}
 				}
 				dbquery_insert(DB_ESHOP_FEATITEMS, $this->idata, 'update');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items&amp;status=isu");
+				if (!defined('FUSION_NULL')) {
+					addNotice('info', $locale['ESHFEAT110c']);
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items");
+				}
 			} else {
 				// sort order
 				if (!$this->idata['featitem_order']) $this->idata['featitem_order'] = dbresult(dbquery("SELECT MAX(featitem_order) FROM ".DB_ESHOP_FEATITEMS." WHERE featitem_cid='".$this->idata['featitem_cid']."'"), 0)+1;
 				dbquery("UPDATE ".DB_ESHOP_FEATITEMS." SET featitem_order=featitem_order+1 WHERE featitem_cid='".$this->idata['featitem_cid']."' AND featitem_order>='".$this->idata['featitem_order']."'");
 				dbquery_insert(DB_ESHOP_FEATITEMS, $this->idata, 'save');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items&amp;status=isn");
+				if (!defined('FUSION_NULL')) {
+					addNotice('success', $locale['ESHFEAT110a']);
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=featured&amp;section=items&amp;status=isn");
+				}
 			}
 		}
 	}

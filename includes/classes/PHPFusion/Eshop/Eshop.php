@@ -1182,7 +1182,7 @@ class Eshop {
 		$id = iMEMBER ? $userdata['user_id'] : $_SERVER['REMOTE_ADDR'];
 		if (isset($_GET['clearcart']) && isnum($id)) {
 			dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE puid ='".$id."'");
-			echo admin_message($locale['ESHPC100']);
+			echo form_alert($locale['ESHPC100'], '', array('class'=>'warning'));
 		}
 	}
 
