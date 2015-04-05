@@ -525,6 +525,7 @@ class fusion_panels {
 
 		echo "<div class='m-t-20'>\n";
 		echo "<div id='info'></div>\n";
+		echo "<div class='well text-center'>".$locale['410']."</div>\n";
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
 		echo self::panel_reactor(5);

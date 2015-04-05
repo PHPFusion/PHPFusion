@@ -10,6 +10,7 @@ $locale['406'] = "Options";
 $locale['407'] = "Current Panels";
 $locale['408'] = "Add Panel";
 $locale['409'] = "Edit Panel";
+$locale['410'] = "You can drag and drop the panels across the panels window to switch positions or shuffle the panel ordering.";
 // Panel Settings
 $locale['420'] = "Left";
 $locale['421'] = "Upper Center";
