@@ -42,8 +42,8 @@ if (isset($_POST['savesettings'])) {
 		$download_screenshot = form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot');
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$download_screenshot' WHERE settings_name='download_screenshot'");
 		if (!defined('FUSION_NULL')) {
-			set_admin_pass($admin_password);
-			redirect(FUSION_SELF.$aidlink."&amp;error=0");
+			addNotice('success', $locale['900']);
+			redirect(FUSION_SELF.$aidlink);
 		}
 	}
 }
@@ -71,15 +71,6 @@ foreach ($mime as $m => $Mime) {
 
 opentable($locale['download_settings']);
 echo "<div class='well'>".$locale['download_description']."</div>";
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-		if (isset($message)) {
-			echo admin_message($message);
-		}
-	}
-}
-
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>";
