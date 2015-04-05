@@ -18,7 +18,6 @@
  --------------------------------------------------------*/
 
 namespace PHPFusion\Atom;
-require_once LOCALE.LOCALESET.'admin/atom.php';
 require_once LOCALE.LOCALESET."admin/theme.php";
 
 class Atom {
@@ -26,27 +25,30 @@ class Atom {
 	public $theme_name = '';
 	public $compress = FALSE;
 	public $debug = FALSE;
-	public $Compiler = TRUE;
-	// bootstrap default configurations here.
-	private $font_decoration_options = array('Normal',
-		'Bold',
-		'Italic',
-		'Underlined',
-		'Bold and Underlined',
-		'Italic and Bold',
-		'Italic and Underlined',
-		'Italic, Bold and Underlined');
+	public $Compiler = TRUE; // turn off compiler here.
+	private $font_decoration_options = array();
+	private $fills = array();
+
+	/**
+	 * For internals CSS compilers - These are actual css properties. Do not translate.
+	 */
 	private $text_weight = array('400', '600', '400', '400', '600', '600', '400', '600');
-	private $text_decoration = array('none',
+	private $text_decoration = array(
 		'none',
 		'none',
+		'none',
 		'underline',
 		'underline',
 		'none',
 		'underline',
-		'underline');
-	private $fills = array('Flat Color', 'Horizontal Gradient', 'Vertical Gradient', 'Radial Gradient', 'Diagonal Gradient');
+		'underline'
+	);
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
+
+	/**
+	 * Initialize Data
+	 * @var array
+	 */
 	private $data = array(
 		'theme_id' => 0,
 		'theme_title' => '',
@@ -178,7 +180,7 @@ class Atom {
 	private $theme_data = array();
 
 	public function load_theme_actions() {
-		global $defender, $aidlink;
+		global $defender, $locale, $aidlink;
 		$result = null;
 		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
 		// when we click delete preset
@@ -534,8 +536,8 @@ class Atom {
 					addNotice('info', $locale['theme_success_003']);
 					redirect(FUSION_SELF.$aidlink);
 				}
-
 			} else {
+				// debug messages
 				print_p('Update Mode');
 				print_p($data);
 			}
@@ -550,6 +552,7 @@ class Atom {
 					redirect(FUSION_SELF.$aidlink);
 				}
 			} else {
+				// debug messages
 				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
 				$data['theme_active'] = $rows < 1 ? 1 : 0;
 				$data['theme_config'] = addslashes(serialize($this->data));
@@ -561,6 +564,26 @@ class Atom {
 	/* Administration Menus - Main */
 	public function theme_editor() {
 		global $aidlink, $locale;
+
+		$this->font_decoration_options = array(
+			$locale['theme_5000'],
+			$locale['theme_5001'],
+			$locale['theme_5002'],
+			$locale['theme_5003'],
+			$locale['theme_5004'],
+			$locale['theme_5005'],
+			$locale['theme_5006'],
+			$locale['theme_5007'],
+		);
+
+		$this->fills = array(
+			$locale['theme_5008'],
+			$locale['theme_5009'],
+			$locale['theme_5010'],
+			$locale['theme_5011'],
+			$locale['theme_5012'],
+		);
+
 		$tab_title['title'][] = $locale['theme_2001'];
 		$tab_title['id'][] = 'font';
 		$tab_title['icon'][] = 'fa fa-text-width m-r-10';
@@ -579,13 +602,13 @@ class Atom {
 		echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
 		echo "<div class='overflow-hide text-smaller'>".$locale['theme_2006']."</div>\n";
 		echo closemodal();
+
 		echo openform('theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('max_tokens' => 1));
 		echo form_hidden('', 'theme_id', 'theme_id', $this->data['theme_id']);
 		echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], array('inline' => 1, 'required' => 1));
 		echo form_text('theme_name', $locale['theme_2008'], $this->theme_name, array('inline' => 1, 'deactivate' => 1));
 		echo form_button('close_theme', $locale['close'], 'close_theme', array('class' => 'btn-default m-l-10 pull-right'));
 		echo form_button('save_theme', $locale['save_changes'], 'save_theme', array('class' => 'btn-primary pull-right'));
-
 		echo opentab($tab_title, $tab_active, 'atom');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 		echo "<div class='m-t-20'>\n";
@@ -605,9 +628,13 @@ class Atom {
 		echo closetab();
 		echo closeform();
 	}
+
 	/* Administration Menus - Part I - Font Settings */
 	private function font_admin() {
 		global $locale;
+
+
+
 		$base_font = array_values(array_flip($this->base_font()));
 		$web_font = array_values(array_flip($this->google_font()));
 		$font_list = array_merge($base_font, $web_font);

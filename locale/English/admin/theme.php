@@ -46,7 +46,6 @@ $locale['theme_2033'] = 'Pick the Background Fill Type';
 $locale['theme_2034'] = 'Active Color';
 $locale['theme_2035'] = 'Active Styling';
 
-
 $locale['theme_3001'] = 'Max Theme Width Settings';
 $locale['theme_3002'] = 'Tablets';
 $locale['theme_3003'] = 'Laptops';
@@ -92,6 +91,23 @@ $locale['theme_4014'] = 'Text Styling';
 $locale['theme_4015'] = 'Horizontal Text Styling';
 $locale['theme_4016'] = 'Link Styling';
 $locale['theme_4016'] = 'Horizontal Text Styling';
+
+$locale['theme_5000'] = 'Normal';
+$locale['theme_5001'] = 'Bold';
+$locale['theme_5002'] = 'Italic';
+$locale['theme_5003'] = 'Underlined';
+$locale['theme_5004'] = 'Bold and Underlined';
+$locale['theme_5005'] = 'Italic and Bold';
+$locale['theme_5006'] = 'Italic and Underlined';
+$locale['theme_5007'] = 'Italic, Bold and Underlined';
+
+$locale['theme_5008'] = 'Flat Color';
+$locale['theme_5009'] = 'Horizontal Gradient';
+$locale['theme_5010'] = 'Vertical Gradient';
+$locale['theme_5011'] = 'Radial Gradient';
+$locale['theme_5012'] = 'Diagonal Gradient';
+
+
 
 $locale['theme_success_001'] = "Theme was uploaded to your theme folder";
 $locale['theme_success_002'] = "Theme Presets deleted";

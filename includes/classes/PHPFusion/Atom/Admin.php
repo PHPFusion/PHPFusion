@@ -2,24 +2,33 @@
 
 namespace PHPFusion\Atom;
 require_once LOCALE.LOCALESET."admin/theme.php";
+
+/**
+ * Administration Page for Theme Settings
+ * Class Admin
+ * @package PHPFusion\Atom
+ */
 class Admin {
+
 	public function __construct() {
-		global $aidlink;
+		global $aidlink, $locale;
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		$_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
-		add_to_breadcrumbs(array('link'=>ADMIN."theme.php".$aidlink, 'title'=>'Theme Administration'));
+		add_to_breadcrumbs(array('link'=>ADMIN."theme.php".$aidlink, 'title'=>$locale['theme_1000']));
 		self::set_theme_active();
 	}
+
 	protected function set_theme_active() {
 		global $aidlink;
 		if (isset($_POST['activate'])) {
-			$theme_name = stripinput($_POST['activate']);
+			$theme_name = form_sanitizer($_POST['activate'], '');
 			if (self::verify_theme($theme_name)) {
 				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$theme_name."' WHERE settings_name='theme'");
 				if ($result) redirect(FUSION_SELF.$aidlink);
 			}
 		}
 	}
+
 	static function get_edit_status() {
 		$theme_name = isset($_POST['theme']) ? stripinput($_POST['theme']) : '';
 		return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') == $theme_name) ? true : false;
