@@ -752,7 +752,7 @@ class Eshop {
 		$customer_address[] = $customer_info['ccity'];
 		$customer_address[] = $customer_info['cpostcode'];
 		$customer_address = implode('|', $customer_address);
-		$html .= form_address($locale['ESHPCHK106'], 'caddress', 'caddress', $customer_address, array('required'=>1, 'inline'=>1));
+		$html .= form_address('caddress', $locale['ESHPCHK106'], $customer_address, array('input_id'=>'customer_address', 'required'=>1, 'inline'=>1));
 		$html .= form_text('cphone', $locale['ESHPCHK113'], $customer_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
 		$html .= form_text('cfax', $locale['ESHPCHK114'], $customer_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
 		$html .= form_hidden('', 'cuid', 'cuid', $customer_info['cuid']);

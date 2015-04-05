@@ -228,7 +228,11 @@ $locale['ESHPCHK154'] = "No customers have been saved";
 $locale['ESHPCHK155'] = "Customer form";
 $locale['ESHPCHK156'] = "Please select user account";
 $locale['ESHPCHK157'] = "Both first and last name works here: ";
+
 $locale['ESHPCHK158'] = "Add Customer";
+$locale['ESHPCHK158a'] = "Edit Customer";
+$locale['ESHPCHK158b'] = "Current Customers";
+
 $locale['ESHPCHK159'] = "Checkout Completed";
 $locale['ESHPCHK160'] = "Included";
 $locale['ESHPCHK161'] = "Excluded";

@@ -209,7 +209,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 		'tags' => FALSE,
 		'jsonmode' => FALSE,
 		'chainable' => FALSE,
-		'maxselect' => FALSE,
+		'maxselect' => 1,
 		'error_text' => '',
 		'class' => '',
 		'inline' => FALSE,
@@ -223,13 +223,13 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 		$options['width'] = $default_options['width'];
 	}
 	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
-	$length = "minimumInputLength: TRUE,";
+	$length = "minimumInputLength: 1,";
 	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
 
 	$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."'>\n";
-	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-TRUE2 col-sm-3 col-md-3 col-lg-3  p-l-FALSE" : '')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-	$html .= ($options['inline']) ? "<div class='col-xs-TRUE2 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-TRUE2 col-md-TRUE2 col-lg-TRUE2")." p-l-FALSE'>\n" : "";
-	$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:TRUEFALSEFALSE%;' ".($options['deactivate'] ? 'disabled' : '')." />";
+	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")." p-l-0'>\n" : "";
+	$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:100%;' ".($options['deactivate'] ? 'disabled' : '')." />";
 	if ($options['deactivate']) {
 		$html .= form_hidden("", $input_name, $options['input_id'], $input_value);
 	}
@@ -355,6 +355,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
 	$multiple = $options['multiple'] ? 'multiple' : '';
 	$disable_opts = '';
+
 	if ($options['disable_opts']) {
 		$disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
 	}

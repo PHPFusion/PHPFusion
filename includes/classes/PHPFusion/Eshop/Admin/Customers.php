@@ -163,7 +163,7 @@ class Customers {
 		$customer_address[] = $this->data['ccity'];
 		$customer_address[] = $this->data['cpostcode'];
 		$customer_address = implode('|', $customer_address);
-		echo form_address($locale['ESHPCHK106'], 'caddress', 'caddress', $customer_address, array('required'=>1, 'inline'=>1));
+		echo form_address('caddress', $locale['ESHPCHK106'], $customer_address, array('input_id'=>'customer_add', 'required'=>1, 'inline'=>1));
 		echo form_text('cphone', $locale['ESHPCHK113'], $this->data['cphone'], array('inline'=>1, 'number'=>1));
 		echo form_text('cfax', $locale['ESHPCHK114'], $this->data['cfax'], array('inline'=>1, 'number'=>1));
 		echo "</div>\n";
@@ -278,7 +278,7 @@ class Customers {
 		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=customers", array('max_tokens' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
-		echo form_address($locale['ESHPCHK106'], 'caddress', 'qaddress','', array('required'=>1, 'inline'=>1));
+		echo form_address('caddress', $locale['ESHPCHK106'],'', array('input_id'=>'cadd2', 'required'=>1, 'inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
 		echo form_text('cphone', $locale['ESHPCHK113'], '', array('inline'=>1, 'required'=>1));

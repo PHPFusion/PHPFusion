@@ -179,10 +179,10 @@ class Main {
 		global $locale, $aidlink;
 		$customer = new Customers();
 		$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $customer->verify_customer($_GET['cuid']) : 0;
-		$tab_title['title'][] = 'Current Customers'; //$locale['ESHPCUPNS100'];
+		$tab_title['title'][] = $locale['ESHPCHK158b'];
 		$tab_title['id'][] = 'customer';
 		$tab_title['icon'][] = '';
-		$tab_title['title'][] =  $edit ? 'Edit Customer' : 'Add Customer'; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
+		$tab_title['title'][] =  $edit ? $locale['ESHPCHK158a'] : $locale['ESHPCHK158']; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
 		$tab_title['id'][] = 'customerform';
 		$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 		$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1);
@@ -195,7 +195,6 @@ class Main {
 			$customer->add_customer_form();
 			echo closetabbody();
 		}
-
 		// this one has not been deciphered yet.
 		if (isset($_GET['step']) && $_GET['step'] == "deletecode") {
 			$codetoremove = dbarray(dbquery("SELECT ccupons FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid='".$_GET['cuid']."'"));
