@@ -133,10 +133,6 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 	return $html;
 }
 
-function admin_message() {
-	addNotice('warning', "<b>admin_message()</b>: this function has been deprecated. Please use <b>addNotice('succes|info|warning|danger', 'The notice message')</b> instead.");
-}
-
 function check_panel_status($side) {
 	global $settings;
 	$exclude_list = "";
