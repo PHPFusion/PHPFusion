@@ -572,7 +572,7 @@ class QuantumFields {
 	}
 
 	/** Outputs a multilocale single field */
-	public static function quantum_multilocale_fields($title, $input_name, $input_value, array $options = array()) {
+	public static function quantum_multilocale_fields($input_name, $title, $input_value, array $options = array()) {
 		global $locale;
 		$html = '';
 		$language_opts = fusion_get_enabled_languages();
@@ -1195,7 +1195,7 @@ class QuantumFields {
 		}
 		// ok the value generated needs to be parsed by quantum
 		echo form_select_tree('field_cat', $locale['fields_0450'],  $this->field_data['field_cat'], array('no_root' => 1, 'width'=>'100%', 'disable_opts' => $disable_opts), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
-		echo self::quantum_multilocale_fields($locale['fields_0451'], 'field_title', $this->field_data['field_title'], array('required'=>1));
+		echo self::quantum_multilocale_fields('field_title', $locale['fields_0451'], $this->field_data['field_title'], array('required'=>1));
 		echo form_text('field_name', $locale['fields_0453'], $this->field_data['field_name'], array('placeholder' => $locale['fields_0454'], 'required' => 1));
 		if ($this->field_data['field_type'] == 'select') echo form_select('field_options', $locale['fields_0455'], array(), $this->field_data['field_options'], array('required' => 1,
 			'tags' => 1,
@@ -1573,7 +1573,7 @@ class QuantumFields {
 		}
 
 		$html = openform('cat_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-		$html .= self::quantum_multilocale_fields($locale['fields_0430'], 'field_cat_name', $this->field_cat_data['field_cat_name'], array('required'=>1));
+		$html .= self::quantum_multilocale_fields('field_cat_name', $locale['fields_0430'], $this->field_cat_data['field_cat_name'], array('required'=>1));
 		$html .= form_select_tree('field_parent', $locale['fields_0431'], $this->field_cat_data['field_parent'], array('parent_value' => $locale['fields_0432'], 'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 		$html .= form_text('field_cat_order', $locale['fields_0433'], $this->field_cat_data['field_cat_order'], array('number' => 1));
 		$html .= form_hidden('', 'field_cat_id', 'field_cat_id', $this->field_cat_data['field_cat_id'], array('number' => 1));

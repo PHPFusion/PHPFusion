@@ -331,7 +331,7 @@ class ProductCategories {
 		echo openform('addcat', 'post', $form_action, array('class' => 'm-t-20', 'max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-		echo QuantumFields::quantum_multilocale_fields($locale['ESHPCATS100'], 'cattitle', 'cattitle', $this->data['title'], array('inline'=>1, 'required'=>1));
+		echo QuantumFields::quantum_multilocale_fields('cattitle', $locale['ESHPCATS100'], $this->data['title'], array('inline'=>1, 'required'=>1));
 		echo form_select_tree('parentid', $locale['ESHPCATS106'], $this->data['parentid'], array('input_id'=>'cparentId', 'inline' => 1), DB_ESHOP_CATS, 'title', 'cid', 'parentid');
 		echo form_select('image', $locale['ESHPCATS105'], self::getImageOpts(), $this->data['image'], array('inline' => 1));
 		// Languages in a row.
@@ -431,14 +431,14 @@ class ProductCategories {
 			'notice' => 0));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-6'>\n";
-		echo QuantumFields::quantum_multilocale_fields($locale['ESHPCATS100'], 'title', 'title', '', array('max_length'=>100, 'inline'=>1));
+		echo QuantumFields::quantum_multilocale_fields('title', $locale['ESHPCATS100'], '', array('max_length'=>100, 'inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-3'>\n";
-		echo form_select('image', $locale['ESHPCATS105'], self::getImageOpts(), '', array('width'=>'100%'));
-		echo form_select('status', $locale['ESHPCATS101'],  self::getSizeOpts(), '', array('placeholder' => $locale['ESHPCATS102'], 'width'=>'100%'));
+		echo form_select('image', $locale['ESHPCATS105'], self::getImageOpts(), '', array('input_id'=>'qe_image', 'width'=>'100%'));
+		echo form_select('status', $locale['ESHPCATS101'],  self::getSizeOpts(), '', array('input_id'=>'qe_status', 'placeholder' => $locale['ESHPCATS102'], 'width'=>'100%'));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-3'>\n";
-		echo form_select('access', $locale['ESHPCATS109'], self::getVisibilityOpts(), '', array('width'=>'100%'));
+		echo form_select('access', $locale['ESHPCATS109'], self::getVisibilityOpts(), '', array('input_id'=>'qe_access', 'width'=>'100%'));
 		echo form_hidden('', 'cid', 'cid', '', array('writable' => 1));
 		echo "</div>\n";
 		echo "</div>\n";

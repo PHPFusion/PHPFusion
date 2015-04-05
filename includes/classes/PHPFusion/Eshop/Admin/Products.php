@@ -965,8 +965,8 @@ class Products {
 		echo "<div class='list-group-item m-t-20 m-b-20'>\n";
 		echo openform('quick_edit', 'post', FUSION_SELF.$aidlink."&amp;a_page=main", array('max_tokens' => 1, 'notice' => 0));
 		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-4'>\n";
-		echo QuantumFields::quantum_multilocale_fields('title', $locale['ESHPPRO172'], '', array('input_id'=>'eshppro172', 'required'=>1, 'inline'=>1));
+		echo "<div class='col-xs-12 col-sm-12 col-lg-4'>\n";
+		echo QuantumFields::quantum_multilocale_fields('title', $locale['ESHPPRO172'], '', array('input_id'=>'qe_title', 'required'=>1, 'inline'=>1));
 		echo form_text('artno', $locale['ESHPPRO107'], '', array('inline'=>1));
 		echo form_text('sartno', $locale['ESHPPRO174'], '', array('inline'=>1));
 		echo "</div>\n";
@@ -975,9 +975,9 @@ class Products {
 		echo form_text('xprice', $locale['ESHPPRO112'], $this->data['xprice'], array('number'=>1, 'width'=>'100%', 'inline'=>1, 'placeholder'=>$settings['eshop_currency']));
 		echo form_text('instock', $locale['ESHPPRO141'], $this->data['instock'], array('number'=>1, 'inline'=>1));
 		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-4'>\n";
-		echo form_select('active',$locale['ESHPPRO147'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['active'], array('width'=>'100%'));
-		echo form_select('status',$locale['ESHPPRO145'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['status'], array('width'=>'100%'));
+		echo "<div class='col-xs-12 col-sm-6 col-lg-4'>\n";
+		echo form_select('active', $locale['ESHPPRO147'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['active'], array('input_id'=>'qe_active', 'width'=>'100%'));
+		echo form_select('status',$locale['ESHPPRO145'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['status'], array('input_id'=>'qe_status', 'width'=>'100%'));
 		echo form_hidden('', 'id', 'ids', '', array('writable' => 1));
 		echo "</div>\n";
 		echo "</div>\n";

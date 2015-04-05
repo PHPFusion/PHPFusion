@@ -201,7 +201,7 @@ class Admin {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		if (multilang_table("BL")) {
-			echo QuantumFields::quantum_multilocale_fields($locale['430'], 'blog_cat_name', 'blog_cat_name', $this->blogCatData['blog_cat_name'], array('required' => 1, 'class'=>'m-b-5', 'error_text' => $locale['460']));
+			echo QuantumFields::quantum_multilocale_fields('blog_cat_name', $locale['430'],  $this->blogCatData['blog_cat_name'], array('required' => 1, 'class'=>'m-b-5', 'error_text' => $locale['460']));
 		} else {
 			echo form_text('blog_cat_name', $locale['430'], $this->blogCatData['blog_cat_name'], array('required' => 1, 'error_text' => $locale['460']));
 		}
