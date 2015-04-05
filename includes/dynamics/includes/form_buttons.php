@@ -44,7 +44,7 @@ function form_button($input_name, $title, $input_value, array $options = array()
 }
 
 
-function form_btngroup($input_name, $label = "", $opts, $input_value, array $options = array()) {
+function form_btngroup($input_name, $label = "", array $opts = array(), $input_value, array $options = array()) {
 	global $defender;
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";

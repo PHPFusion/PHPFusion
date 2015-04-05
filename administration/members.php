@@ -577,7 +577,7 @@ else {
 	}
 
 	echo "<div class='display-inline-block pull-right'>\n";
-	echo form_select('status', 'status', $locale['405'], $opts, isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array('placeholder' => $locale['choose'], 'class'=>'col-sm-3 col-md-3 col-lg-3', 'inline'=>1, 'allowclear' => 1));
+	echo form_select('status', $locale['405'], $opts, isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array('placeholder' => $locale['choose'], 'class'=>'col-sm-3 col-md-3 col-lg-3', 'inline'=>1, 'allowclear' => 1));
 	echo "</div>\n";
 	add_to_jquery("$('#status').on('change', function() { this.form.submit(); });");
 	echo form_hidden('', 'rowstart', 'rowstart', $rowstart);
