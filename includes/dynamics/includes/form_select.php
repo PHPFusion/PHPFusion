@@ -30,13 +30,13 @@
  * @return string
  */
 function form_select($input_name, $label = "", array $option_array = array(), $input_value, array $options = array()) {
-	global $defender;
+	global $defender, $locale;
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$default_options = array(
 		'required' => FALSE,
 		'regex' => '',
 		'input_id' => $input_name,
-		'placeholder' => '',
+		'placeholder' => $locale['choose'],
 		'deactivate' => FALSE,
 		'safemode' => FALSE,
 		'allowclear' => FALSE,
