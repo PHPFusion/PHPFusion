@@ -762,13 +762,19 @@ class QuantumFields {
 						$result = dbquery("UPDATE ".$this->field_db." SET field_cat='".intval($new_parent)."' WHERE field_cat='".intval($_GET['cat_id'])."'");
 						$result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'");
 					}
-					if (!$this->debug) redirect(FUSION_SELF.$aidlink."&amp;status=cat_deleted");
+					if (!$this->debug) {
+						addNotice('warning', $locale['field_0200']);
+						redirect(FUSION_SELF.$aidlink);
+					}
 				}
 				else {
 					//delete just the category as it is without child.
 					if (!$this->debug) $result = dbquery("DELETE FROM ".$this->category_db." WHERE field_cat_id='".intval($_GET['cat_id'])."'");
 				}
-				if (!$this->debug) redirect(FUSION_SELF.$aidlink."&amp;status=cat_deleted");
+				if (!$this->debug) {
+					addNotice('warning', $locale['field_0200']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			}
 			// show interior form
 			else {
@@ -865,10 +871,16 @@ class QuantumFields {
 					if ($this->debug) print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
 					if (!$this->debug) $result = dbquery("DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'");
 				}
-				if (!$this->debug) redirect(FUSION_SELF.$aidlink."&amp;status=field_deleted");
+				if (!$this->debug) {
+					addNotice('warning', $locale['field_0201']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			} else {
 				if ($this->debug) print_p('Did not get field data.');
-				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
+				if (!$this->debug) {
+					addNotice('warning', $locale['field_0202']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			}
 		}
 	}
@@ -1024,7 +1036,10 @@ class QuantumFields {
 				}
 				if ($this->debug) print_p('Going to Synthesize this'); print_p($data);
 				if (!$this->debug && !defined('FUSION_NULL')) dbquery_insert($this->field_db, $data, 'update');
-				if (!$this->debug && !defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.'&amp;status=field_updated');
+				if (!$this->debug && !defined('FUSION_NULL')) {
+					addNotice('info', $locale['field_0203']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			} else {
 				$defender->stop();
 				addNotice('danger', $locale['fields_0105']);
@@ -1051,7 +1066,10 @@ class QuantumFields {
 				if ($this->debug) print_p($data);
 				if (!$this->debug && !defined('FUSION_NULL')) dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
 				if (!$this->debug && !defined('FUSION_NULL')) dbquery_insert($this->field_db, $data, 'save');
-				if (!$this->debug && !defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.'&amp;status=field_added');
+				if (!$this->debug && !defined('FUSION_NULL')) {
+					addNotice('success', $locale['field_0204']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			} else {
 				$defender->stop();
 				addNotice('danger', $locale['fields_0107']);
@@ -1095,7 +1113,7 @@ class QuantumFields {
 
 		if (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
 			$form_action .= "&amp;action=".$_GET['action']."&amp;field_id=".$_GET['field_id'];
-			$result = dbquery("SELECT * FROM ".$this->field_db." WHERE field_id='".$_GET['field_id']."'");
+			$result = dbquery("SELECT * FROM ".$this->field_db." WHERE field_id='".intval($_GET['field_id'])."'");
 			if (dbrows($result) > 0) {
 				$this->field_data = dbarray($result);
 				if ($this->field_data['field_type'] == 'upload') {
@@ -1103,7 +1121,9 @@ class QuantumFields {
 					if ($this->debug) print_p($this->field_data);
 				}
 			} else {
-				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
+				if (!$this->debug) {
+					redirect(FUSION_SELF.$aidlink);
+				}
 			}
 		}
 
@@ -1334,7 +1354,10 @@ class QuantumFields {
 					print_p($this->field_data);
 				}
 			} else {
-				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
+				if (!$this->debug) {
+					addNotice('warning', $locale['field_0205']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			}
 		}
 		$this->field_data['add_module'] = isset($_POST['add_module']) ? form_sanitizer($_POST['add_module']) : $this->field_data['field_name'];
@@ -1462,7 +1485,10 @@ class QuantumFields {
 			if (dbrows($result) > 0) {
 				$this->field_cat_data = dbarray($result);
 			} else {
-				if (!$this->debug) redirect(FUSION_SELF.$aidlink);
+				if (!$this->debug) {
+					addNotice('warning', $locale['field_0206']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			}
 		}
 
@@ -1518,7 +1544,10 @@ class QuantumFields {
 					}
 				}
 				if (!$this->debug && !defined('FUSION_NULL')) dbquery_insert($this->category_db, $this->field_cat_data, 'update');
-				if (!$this->debug && !defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=update_cat");
+				if (!$this->debug && !defined('FUSION_NULL')) {
+					addNotice('info', $locale['field_0207']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			} else {
 				if ($this->debug) print_p('Save Mode');
 				if ($this->debug) print_p($this->field_cat_data);
@@ -1527,7 +1556,10 @@ class QuantumFields {
 				}
 				dbquery_order($this->category_db, $this->field_cat_data['field_cat_order'], 'field_cat_order', $this->field_cat_data['field_cat_id'], 'field_cat_id', $this->field_cat_data['field_parent'], 'field_parent', true, 'field_cat_name', 'save');
 				if (!$this->debug && !defined('FUSION_NULL')) dbquery_insert($this->category_db, $this->field_cat_data, 'save');
-				if (!$this->debug && !defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&status=cat_save");
+				if (!$this->debug && !defined('FUSION_NULL')) {
+					addNotice('success', $locale['field_0208']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			}
 		}
 
