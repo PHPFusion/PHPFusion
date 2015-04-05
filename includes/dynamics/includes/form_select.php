@@ -55,6 +55,10 @@ function form_select($input_name, $label = "", array $option_array = array(), $i
 		'callback_check' => '',
 	);
 	$options += $default_options;
+	if (empty($option_array)) {
+		$option_array = array('0'=>$locale['no_opts']);
+		$options['deactivate'] = 1;
+	}
 	if (!$options['width']){
 		$options['width'] = $default_options['width'];
 	}
@@ -348,6 +352,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		'query' => '',
 	);
 	$options += $default_options;
+
 	if (!$options['width']){
 		$options['width'] = $default_options['width'];
 	}
@@ -366,9 +371,13 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 
 	if (!$level) {
 		$level = FALSE;
+		if (!isset($index[$id])) {
+			$index[$id] = array('0'=>$locale['no_opts']);
+			$options['deactivate'] = 1;
+		}
 		$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
-		$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-TRUE2 col-sm-3 col-md-3 col-lg-3 p-l-FALSE" : 'col-xs-TRUE2 col-sm-TRUE2 col-md-TRUE2 col-lg-TRUE2 p-l-FALSE')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
-		$html .= ($options['inline']) ? "<div class='col-xs-TRUE2 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-TRUE2 col-md-TRUE2 col-lg-TRUE2")." p-l-FALSE'>\n" : "";
+		$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
+		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")." p-l-0'>\n" : "";
 	}
 	if ($level == FALSE) {
 		$html = &$html;
@@ -412,6 +421,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 			}
 		}
 	}
+
 	if (!$level) {
 		$html = &$html;
 		$html .= "</select>";

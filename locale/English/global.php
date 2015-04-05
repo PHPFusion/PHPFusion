@@ -398,6 +398,7 @@ $locale['info'] = 'Info';
 $locale['image'] = 'Image';
 // Forms
 $locale['choose'] = 'Please Choose One...';
+$locale['no_opts'] = 'No selection';
 $locale['root'] = 'As Parent';
 $locale['choose-user'] = 'Please Choose a User...';
 $locale['choose-location'] = 'Please Choose a Location';
