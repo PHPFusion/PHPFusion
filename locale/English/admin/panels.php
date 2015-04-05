@@ -7,6 +7,9 @@ $locale['403'] = "Order";
 $locale['404'] = "Type";
 $locale['405'] = "Access";
 $locale['406'] = "Options";
+$locale['407'] = "Current Panels";
+$locale['408'] = "Add Panel";
+$locale['409'] = "Edit Panel";
 // Panel Settings
 $locale['420'] = "Left";
 $locale['421'] = "Upper Center";

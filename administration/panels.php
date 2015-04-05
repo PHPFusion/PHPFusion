@@ -19,9 +19,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("P") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('P');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/panels.php";
 
@@ -90,30 +88,6 @@ class fusion_panels {
 	}
 
 	/**
-	 * Message Relay
-	 */
-	static function getMessage() {
-		global $locale;
-		$message = '';
-		if (isset($_GET['status'])) {
-			switch ($_GET['status']) {
-				case 'sn' :
-					$message = $locale['485'];
-					break;
-				case 'su' :
-					$message = $locale['482'];
-					break;
-				case 'del' :
-					$message = $locale['489'];
-					break;
-			}
-			if ($message) {
-				echo admin_message($message);
-			}
-		}
-	}
-
-	/**
 	 * MYSQL save/update panels
 	 */
 	private function set_paneldb() {
@@ -129,9 +103,8 @@ class fusion_panels {
 			$result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$this->data['panel_name']."' AND panel_id !='".$this->data['panel_id']."'");
 			if ($result) {
 				$defender->stop();
-				$defender->addNotice($locale['471']);
+				addNotice('danger', $locale['471']);
 			}
-
 			$this->data['panel_filename'] = isset($_POST['panel_filename']) ? form_sanitizer($_POST['panel_filename'], '', 'panel_filename') : '';
 			// panel content formatting
 			if (!$this->data['panel_filename']) {
@@ -173,8 +146,7 @@ class fusion_panels {
                     }
                 } else {
 					$defender->stop();
-					$defender->addNotice($locale['475']);
-					$defender->addError('panel_url_list');
+					addNotice('danger', $locale['475']);
 				}
 			}
 
@@ -192,10 +164,11 @@ class fusion_panels {
 			} */
 			if ($this->data['panel_id'] && self::verify_panel($this->data['panel_id'])) {
 				dbquery_insert(DB_PANELS, $this->data, 'update');
+				addNotice('info', $locale['482']);
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=su");
 			} else {
-				//print_p($this->data);
 				dbquery_insert(DB_PANELS, $this->data, 'save');
+				addNotice('success', $locale['485']);
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=sn");
 			}
 		}
@@ -317,11 +290,12 @@ class fusion_panels {
 	 * @param $id
 	 */
 	static function delete_panel($id) {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (self::verify_panel($id)) {
 			$data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'"));
 			$result = dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".$_GET['panel_id']."'");
 			$result = dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".$data['panel_side']."' AND panel_order>='".$data['panel_order']."'");
+			addNotice('warning', $locale['489']);
 			redirect(FUSION_SELF.$aidlink."&amp;status=del");
 		}
 	}
@@ -592,14 +566,13 @@ opentable($locale['600']);
 $fusion_panel = new fusion_panels();
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $fusion_panel->verify_panel($_GET['panel_id']) : 0;
 // build a new interface
-$fusion_panel->getMessage();
-$tab_title['title'][] = 'Current Panels';
+$tab_title['title'][] = $locale['407'];
 $tab_title['id'][] = 'listpanel';
 $tab_title['icon'][] = '';
-$tab_title['title'][] = $edit ? 'Edit Panel' : 'Add New Panel';
+$tab_title['title'][] = $edit ? $locale['409'] : $locale['408'];
 $tab_title['id'][] = 'panelform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-$tab_active = tab_active($tab_title, $edit ? 1 : 0, 1, 1);
+$tab_active = tab_active($tab_title, $edit ? 1 : 0, true, 1);
 echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink);
 echo opentabbody($tab_title['title'][0], 'listpanel', $tab_active, 1);
 $fusion_panel->panel_listing();
