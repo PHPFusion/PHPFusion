@@ -18,7 +18,7 @@
 require_once "../maincore.php";
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-pageAccess('S3', false);
+pageAccess('S3');
 
 add_to_breadcrumbs(array('link'=>ADMIN.'settings_forum.php'.$aidlink, 'title'=>$locale['forum_settings']));
 if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
@@ -59,7 +59,8 @@ if (isset($_POST['savesettings'])) {
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$forum_last_post_avatar' WHERE settings_name='forum_last_post_avatar'") : '';
 		$forum_editpost_to_lastpost = form_sanitizer($_POST['forum_editpost_to_lastpost'], '0', 'forum_editpost_to_lastpost');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$forum_editpost_to_lastpost' WHERE settings_name='forum_editpost_to_lastpost'") : '';
-		redirect(FUSION_SELF.$aidlink."&error=0");
+		addNotice('success', $locale['900']);
+		redirect(FUSION_SELF.$aidlink);
 	}
 }
 
@@ -77,20 +78,13 @@ $num_opts = range(1,30);
 
 opentable($locale['forum_settings']);
 echo "<div class='well'>".$locale['forum_description']."</div>";
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	}
-	if (isset($message)) {
-		echo admin_message($message);
-	}
-}
+
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo "<span class='small pull-right'>* ".$locale['506']."</span><br/>\n";
-echo form_select('numofthreads',$locale['505'], $num_opts, $settings2['numofthreads'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('numofthreads', $locale['505'], $num_opts, $settings2['numofthreads'], array('error_text' => $locale['error_value'], 'inline' => 1));
 closeside();
 openside('');
 echo form_select('thread_notify', $locale['512'], $yes_no_array, $settings2['thread_notify'], array('error_text' => $locale['error_value'], 'inline' => 1));
@@ -122,12 +116,12 @@ echo "<div class='clearfix'>\n";
 	echo "<span class='pull-right small'>".$locale['509']."</span>";
 	echo "<label for='calc_c'>".$locale['508']."</label><br />\n";
 	echo form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => '3', 'class' => 'm-r-10 pull-left'));
-	echo form_select('', 'calc_c', 'calc_c', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '100%'));
+	echo form_select('calc_c', '', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '100%'));
 echo "</div>\n";
 echo "<div class='clearfix'>\n";
 	echo "<span class='small pull-right'>".$locale['535']."</span>\n";
 	echo "<label for='attachmax_count'>".$locale['534']."</label>\n";
-	echo form_select('', 'attachmax_count', 'attachmax_count', range(1, 10), $settings2['attachmax_count'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
+	echo form_select('attachmax_count', '', range(1, 10), $settings2['attachmax_count'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
 echo "</div>\n";
 echo "<div class='clearfix'>\n";
 	echo "<span class='small pull-right'>".$locale['511']."</span>\n";
@@ -142,12 +136,15 @@ $array_opts = array('0' => $locale['519'], '1' => $locale['533']);
 for ($i = 2; $i <= 20; $i++) {
 	$array_opts[$i] = sprintf($locale['532'], $i);
 }
-echo isset($_GET['action']) && $_GET['action'] == "count_posts" ? admin_message($locale['524']) : '';
+if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
+	echo form_alert($locale['524'], '', array('class'=>'warning'));
+}
+
 echo "<div class='clearfix'>\n";
-	echo form_select('popular_threads_timeframe',$locale['525'],  $timeframe_opts, $settings2['popular_threads_timeframe'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
+	echo form_select('popular_threads_timeframe', $locale['525'], $timeframe_opts, $settings2['popular_threads_timeframe'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
 echo "</div>\n";
 echo "<div class='clearfix'>\n";
-	echo form_select('forum_last_posts_reply',$locale['531'], $array_opts, $settings2['forum_last_posts_reply'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
+	echo form_select('forum_last_posts_reply', $locale['531'], $array_opts, $settings2['forum_last_posts_reply'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
 echo "</div>\n";
 echo "<a class='btn btn-sm btn-primary btn-block' href='".FUSION_SELF.$aidlink."&amp;action=count_posts'>".$locale['523']."</a>";
 closeside();
