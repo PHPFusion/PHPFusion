@@ -34,16 +34,19 @@ $errorMessage = "";
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id'])) && (isset($_GET['t']) && $_GET['t'] == "cat")) {
 	$result = dbcount("(faq_cat_id)", DB_FAQS, "faq_cat_id='".$_GET['faq_cat_id']."'");
 	if (!empty($result)) {
-		redirect(FUSION_SELF.$aidlink."&status=delcn");
+		addNotice('warning', $locale['412']." - <span class='small'>".$locale['413']."</span>");
+		redirect(FUSION_SELF.$aidlink);
 	} else {
 		$result = dbquery("DELETE FROM ".DB_FAQ_CATS." WHERE faq_cat_id='".$_GET['faq_cat_id']."'");
+		addNotice('warning', $locale['414']);
 		redirect(FUSION_SELF.$aidlink."&status=delcy");
 	}
 } elseif ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq_id']) && isnum($_GET['faq_id'])) && (isset($_GET['t']) && $_GET['t'] == "faq")) {
 	$faq_count = dbcount("(faq_id)", DB_FAQS, "faq_id='".$_GET['faq_id']."'");
 	$result = dbquery("DELETE FROM ".DB_FAQS." WHERE faq_id='".$_GET['faq_id']."'");
+	addNotice('warning', $locale['512']);
 	if ($faq_count) {
-		redirect(FUSION_SELF.$aidlink."&faq_cat_id=".intval($_GET['faq_cat_id'])."&status=del");
+		redirect(FUSION_SELF.$aidlink."&faq_cat_id=".intval($_GET['faq_cat_id']));
 	} else {
 		redirect(FUSION_SELF.$aidlink."&status=del");
 	}
@@ -57,10 +60,12 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq
 			if ($faq_cat_name) {
 				if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id'])) && (isset($_GET['t']) && $_GET['t'] == "cat")) {
 					$result = dbquery("UPDATE ".DB_FAQ_CATS." SET faq_cat_name='$faq_cat_name', faq_cat_description='$faq_cat_description', faq_cat_language = '$cat_language' WHERE faq_cat_id='".$_GET['faq_cat_id']."'");
-					redirect(FUSION_SELF.$aidlink."&status=scu");
+					addNotice('info', $locale['411']);
+					redirect(FUSION_SELF.$aidlink);
 				} else {
 					$result = dbquery("INSERT INTO ".DB_FAQ_CATS." (faq_cat_name, faq_cat_description, faq_cat_language) VALUES('$faq_cat_name', '$faq_cat_description', '$cat_language')");
-					redirect(FUSION_SELF.$aidlink."&status=scn");
+					addNotice('success', $locale['410']);
+					redirect(FUSION_SELF.$aidlink);
 				}
 			}
 		} else {
@@ -75,14 +80,15 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq
 	if (!defined('FUSION_NULL')) {
 		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['faq_id']) && isnum($_GET['faq_id'])) && (isset($_GET['t']) && $_GET['t'] == "faq")) {
 			$result = dbquery("UPDATE ".DB_FAQS." SET faq_cat_id='$faq_cat', faq_question='$faq_question', faq_answer='$faq_answer' WHERE faq_id='".$_GET['faq_id']."'");
-			redirect(FUSION_SELF.$aidlink."&faq_cat_id=$faq_cat&status=su");
+			addNotice('warning', $locale['511']);
 		} else {
 			$result = dbquery("INSERT INTO ".DB_FAQS." (faq_cat_id, faq_question, faq_answer) VALUES ('$faq_cat', '$faq_question', '$faq_answer')");
-			redirect(FUSION_SELF.$aidlink."&faq_cat_id=$faq_cat&status=sn");
+			addNotice('warning', $locale['510']);
 		}
+		redirect(FUSION_SELF.$aidlink."&faq_cat_id=".$faq_cat);
 	} else {
 		$defender->stop();
-		$defender->addNotice($locale['462']);
+		addNotice('danger', $locale['462']);
 	}
 } elseif (isset($_GET['action']) && $_GET['action'] == "edit") {
 	if ((isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id'])) && (isset($_GET['t']) && $_GET['t'] == "cat")) { // edit cat
@@ -121,28 +127,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq
 		} else {
 			redirect(FUSION_SELF.$aidlink);
 		}
-	}
-}
-
-
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "scn") {
-		$message = $locale['410'];
-	} elseif ($_GET['status'] == "scu") {
-		$message = $locale['411'];
-	} elseif ($_GET['status'] == "delcn") {
-		$message = $locale['412']."<br />\n<span class='small'>".$locale['413']."</span>";
-	} elseif ($_GET['status'] == "delcy") {
-		$message = $locale['414'];
-	} elseif ($_GET['status'] == "sn") {
-		$message = $locale['510'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['511'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['512'];
-	}
-	if ($message) {
-		echo admin_message($message);
 	}
 }
 
