@@ -85,43 +85,7 @@ class QuantumFields {
 	private $available_field_info = array();
 	private $user_field_dbinfo = '';
 
-	/**
-	 * @return array
-	 */
-	public function getCatList() {
-		return $this->cat_list;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getFields() {
-		return $this->fields;
-	}
-
-	/* Shorthand Constructor for Quantum Admin UI */
-	public function boot() {
-		global $locale;
-		pageAccess($this->admin_rights);
-		define('IN_QUANTUM', true);
-
-		if ($this->system_title) {
-			add_to_breadcrumbs(array('link' => FUSION_REQUEST, 'title' => $this->system_title));
-			add_to_title($this->system_title.' | ');
-		}
-
-		$this->install_quantum();
-		if ($this->method == 'input') {
-			$this->get_structureData();
-			$this->load_field_cats();
-			$this->sql_move_fields();
-			$this->sql_delete_category();
-			$this->sql_delete_fields();
-			$this->get_available_modules();
-		}
-		$this->quantum_display_fields();
-	}
-
+	/** Setters */
 	/**
 	 * `input` renders field.
 	 * `display` renders data
@@ -200,6 +164,44 @@ class QuantumFields {
 	 */
 	public function setAdminRights($admin_rights) {
 		$this->admin_rights = $admin_rights;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getCatList() {
+		return $this->cat_list;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getFields() {
+		return $this->fields;
+	}
+
+	/* Shorthand Constructor for Quantum Admin UI */
+	public function boot() {
+		global $locale;
+		pageAccess($this->admin_rights);
+		define('IN_QUANTUM', true);
+
+		if ($this->system_title) {
+			add_to_breadcrumbs(array('link' => FUSION_REQUEST, 'title' => $this->system_title));
+			add_to_title($this->system_title.' | ');
+		}
+
+		$this->install_quantum();
+		if ($this->method == 'input') {
+			$this->get_structureData();
+			$this->load_field_cats();
+			$this->sql_move_fields();
+			$this->sql_delete_category();
+			$this->sql_delete_fields();
+			$this->get_available_modules();
+		}
+		$this->quantum_display_fields();
 	}
 
 	/**
@@ -1034,7 +1036,7 @@ class QuantumFields {
 								FROM ".$this->category_db." cat
 								LEFT JOIN ".$this->category_db." root ON (cat.field_parent = root.field_cat_id)
 								WHERE cat.field_cat_id='".$data['field_cat']."'");
-			if (dbrows($cresult) > 0 && !defined('FUSION_NULL')) {
+			if (dbrows($cresult) > 0) {
 				$cat_data = dbarray($cresult);
 				$target_database = $cat_data['field_cat_db'] ? DB_PREFIX.$cat_data['field_cat_db'] : DB_USERS;
 				$field_arrays = fieldgenerator($target_database);
@@ -1113,7 +1115,7 @@ class QuantumFields {
 				'field_id' =>  form_sanitizer($_POST['field_id'], '0', 'field_id'),
 				'field_title' =>  form_sanitizer($_POST['field_title'], '', 'field_title' , 1),
 				'field_name' => form_sanitizer($_POST['field_name'], '', 'field_name'),
-				'field_cat' => form_sanitizer($_POST['field_cat'], '', 'field_cat'),
+				'field_cat' => form_sanitizer($_POST['field_cat'], '0', 'field_cat'),
 				'field_options' => isset($_POST['field_options']) ? form_sanitizer($_POST['field_options'], '', 'field_options') : $this->field_data['field_options'],
 				'field_default' => isset($_POST['field_default']) ? form_sanitizer($_POST['field_default'], '', 'field_default') : $this->field_data['field_default'],
 				'field_error' => form_sanitizer($_POST['field_error'], '', 'field_error'),

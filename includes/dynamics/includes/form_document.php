@@ -18,15 +18,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_document($input_name, $label = FALSE, $input_value = FALSE, array $options = array()) {
+function form_document($input_name, $label = '', $input_value = FALSE, array $options = array()) {
 	global $locale, $defender, $settings;
 	if (!defined('DATEPICKER')) {
 		define('DATEPICKER', TRUE);
 		add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datepicker3.css' rel='stylesheet' />");
 		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datepicker.js'></script>");
 	}
+	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$label = (isset($label) && (!empty($label))) ? $label : "";
-	$label2 = (isset($label) && (!empty($label))) ? $label : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	$input_id = (isset($options['input_id']) && (!empty($options['input_id']))) ? stripinput($options['input_id']) : "";
 	// NOTE (remember to parse readback value as of '|' seperator)
@@ -113,7 +113,7 @@ function form_document($input_name, $label = FALSE, $input_value = FALSE, array 
 	$defender->add_field_session(array(
 		 'input_name' 	=> 	$input_name,
 		 'type'			=>	'document',
-		 'label'		=>	$label2,
+		 'label'		=>	$title,
 		 'id' 			=>	$input_id,
 		 'required'		=>	$options['required'],
 		 'safemode'		=> 	$options['safemode'],

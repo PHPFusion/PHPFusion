@@ -31,6 +31,7 @@
  */
 function form_select($input_name, $label = "", array $option_array = array(), $input_value, array $options = array()) {
 	global $defender;
+	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$default_options = array(
 		'required' => FALSE,
 		'regex' => '',
@@ -111,6 +112,8 @@ function form_select($input_name, $label = "", array $option_array = array(), $i
 	$input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 	$defender->add_field_session(array(
 							 'input_name' 	=> 	$input_name,
+							 'title'		=> $title,
+							 'id'			=> $options['input_id'],
 							 'type'			=>	'dropdown',
 							 'regex'		=> $options['regex'],
 							 'required'		=>	$options['required'],
@@ -191,7 +194,7 @@ function form_select($input_name, $label = "", array $option_array = array(), $i
 
 function form_user_select($input_name, $label = "", $input_value = FALSE, array $options = array()) {
 	global $locale, $defender;
-
+	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$default_options = array(
 		'required' => FALSE,
 		'regex' => '',
@@ -244,6 +247,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 
 	$defender->add_field_session(array(
 									 'input_name' 	=> 	$input_name,
+									 'title' 		=> $title,
+									 'id'			=> $options['input_id'],
 									 'type'			=>	'dropdown',
 									 'required'		=>	$options['required'],
 									 'safemode' 	=> 	$options['safemode'],
@@ -311,7 +316,7 @@ function user_search($user_id) {
 // Returns a full hierarchy nested dropdown.
 function form_select_tree($input_name, $label = "", $input_value = FALSE, array $options = array(), $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
 	global $defender, $locale;
-
+	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$default_options = array(
 		'required' => FALSE,
 		'regex' => '',
@@ -417,6 +422,8 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		}
 		$defender->add_field_session(array(
 			 'input_name' 	=> 	$input_name,
+			 'title'		=> $title,
+			 'id'			=> $options['input_id'],
 			 'type'			=>	'dropdown',
 			 'required'		=>	$options['required'],
 			 'safemode' 	=> 	$options['safemode'],

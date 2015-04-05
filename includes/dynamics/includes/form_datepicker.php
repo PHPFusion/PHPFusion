@@ -64,6 +64,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datepicker.js'></script>");
 		add_to_head("<script src='".DYNAMICS."assets/datepicker/js/locales/bootstrap-datepicker.".$locale['datepicker'].".js'></script>");
 	}
+	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$label = stripinput($label);
 	$input_name = stripinput($input_name);
 
@@ -109,7 +110,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 	$defender->add_field_session(array(
 			 'input_name' 	=> 	$input_name,
 			 'type'			=>	$options['type'],
-			 'title'		=>	$label,
+			 'title'		=>	$title,
 			 'id' 			=>	$input_id,
 			 'required'		=>	$options['required'],
 			 'safemode' 	=> 	TRUE,

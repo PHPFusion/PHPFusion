@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_checkbox($input_name, $label, $input_value = '0', array $options = array()) {
+function form_checkbox($input_name, $label = '', $input_value = '0', array $options = array()) {
 	global $defender, $locale;
 
 	$locale['error_input_checkbox'] = 'Please tick this checkbox'; // to be moved
@@ -49,7 +49,7 @@ function form_checkbox($input_name, $label, $input_value = '0', array $options =
 		// Target by class and type, not IDs. We don't want repetitive code
 		add_to_jquery("$('.is-bootstrap-switch input[type=checkbox]').bootstrapSwitch();");
 	}
-
+	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$error_class = $defender->inputHasError($input_name) ? "has-error" : "";
 	$switch_class = $options['toggle'] ? "is-bootstrap-switch" : "";
 
@@ -71,6 +71,8 @@ function form_checkbox($input_name, $label, $input_value = '0', array $options =
 
 	$defender->add_field_session(array(
 		'input_name'	=> $input_name,
+		'title'			=> $title,
+		'id'			=> $options['input_id'],
 		'type'			=> 'checkbox',
 		'child_of'		=> $options['child_of'],
 		'required'		=> $options['required'],

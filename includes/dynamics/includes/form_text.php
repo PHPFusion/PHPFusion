@@ -108,6 +108,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 	// Add input settings in the SESSION
 	$defender->add_field_session(array(
 			'input_name'	=> $input_name,
+			'title'			=> $input_name, // Line 792 of defender.inc.php required this
+			'id'			=> $options['input_id'], // Line 793 of defender.inc.php required this
 			'type'			=> $options['type'],
 			'required'		=> $options['required'],
 			'safemode'		=> $options['safemode'],

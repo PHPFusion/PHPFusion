@@ -44,12 +44,13 @@ function form_button($input_name, $title, $input_value, array $options = array()
 }
 
 
-function form_btngroup($title, $input_name, $input_id, $opts, $input_value, array $options = array()) {
+function form_btngroup($input_name, $label = "", $opts, $input_value, array $options = array()) {
 	global $defender;
-	$title2 = ucfirst(strtolower(str_replace("_", " ", $input_name)));
+	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : "";
 
 	$options += array(
+		'input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
 		'class' => !empty($options['class']) ? $options['class'] : 'btn-default',
 		'icon' => !empty($options['icon']) ? $options['icon']  : '',
 		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
@@ -58,10 +59,11 @@ function form_btngroup($title, $input_name, $input_id, $opts, $input_value, arra
 		'safemode' => !empty($options['safemode']) ? $options['safemode']  : 0,
 		'required' => !empty($options['required']) && $options['required'] == 1 ? 1 : 0,
 	);
+	$input_id = $options['input_id'];
 
 	$html = '';
 	$html .= "<div id='$input_id-field' class='form-group clearfix'>\n";
-	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$title ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='$input_id'>$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
 	$html .= "<div class='btn-group' id='".$input_id."'>";
 	$x = 1;
@@ -78,12 +80,10 @@ function form_btngroup($title, $input_name, $input_id, $opts, $input_value, arra
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= $options['inline'] ? "</div>\n" : '';
 	$html .= "</div>\n";
-
-	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=text],[title=$title2],[id=$input_id],[required=".$options['required']."],[safemode=".$options['safemode']."]' />";
 	$defender->add_field_session(array(
 			 'input_name' 	=> 	$input_name,
 			 'type'			=>	'text',
-		 	 'title'		=>	$title2,
+		 	 'title'		=>	$title,
 			 'id' 			=>	$input_id,
 			 'required'		=>	$options['required'],
 			 'safemode' 	=> 	$options['safemode'],

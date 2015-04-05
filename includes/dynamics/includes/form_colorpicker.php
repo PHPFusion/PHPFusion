@@ -25,7 +25,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 		add_to_head("<link href='".DYNAMICS."assets/colorpick/css/bootstrap-colorpicker.css' rel='stylesheet' media='screen' />");
 		add_to_head("<script src='".DYNAMICS."assets/colorpick/js/bootstrap-colorpicker.js'></script>");
 	}
-	$label = stripinput($label);
+	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = stripinput($input_name);
 	$input_value = stripinput($input_value);
 	$default_options = array(
@@ -62,7 +62,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 	$defender->add_field_session(array(
 		'input_name' 	=> 	$input_name,
 		'type'			=>	'color',
-	 	'title'			=>	$label,
+	 	'title'			=>	$title,
 		'id' 			=>	$input_id,
 		'required'		=>	$options['required'],
 		'safemode' 		=> 	$options['safemode'],
