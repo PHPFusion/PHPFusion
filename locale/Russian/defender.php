@@ -1,5 +1,6 @@
 <?php
 $locale['validate'] = "Пожалуйста, проверьте повторно поле ввода.";
+$locale['error_request'] = "Во время обработки Вашего запроса возникла ошибка";
 
 // Text fields errors
 $locale['error_input_default']	= "Пожалуйста, заполните это поле";
