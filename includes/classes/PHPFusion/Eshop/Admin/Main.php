@@ -107,7 +107,6 @@ class Main {
 			$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 		}
 		$tab_active = tab_active($tab_title, ($edit ? 'itemform' : 'product'), 1);
-		$item->getMessage();
 		echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=main");
 		echo opentabbody($tab_title['title'][0], 'product', $tab_active, 1);
 		$item->product_listing();
@@ -134,7 +133,6 @@ class Main {
 		$tab_title['id'][] = 'catform';
 		$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 		$tab_active = tab_active($tab_title, $edit, 1);
-		$category->getMessage();
 		echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink."&amp;a_page=categories", 1);
 		echo opentabbody($tab_title['title'][0], 'listcat', $tab_active, 1);
 		$category->category_listing();
@@ -211,7 +209,6 @@ class Main {
 	private function Banners_Admin() {
 		global $locale, $aidlink;
 		$banner = new \PHPFusion\Eshop\Admin\Banners();
-		$banner->getMessage();
 		$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $banner->verify_banner($_GET['b_id']) : 0;
 		$cedit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $banner->verify_item($_GET['i_id']) : 0;
 
@@ -324,7 +321,7 @@ class Main {
 	 */
 	private function Orders_Admin() {
 		global $locale, $aidlink;
-		$orders = new \PHPFusion\Eshop\Admin\Orders();
+		$orders = new Orders();
 		$tab_title['title'][] = $locale['ESHP301'];
 		$tab_title['id'][] = 'orders';
 		$tab_title['icon'][] = '';
@@ -350,7 +347,7 @@ class Main {
 	 */
 	private function Shipping_Admin() {
 		global $locale, $aidlink;
-		$shipping = new \PHPFusion\Eshop\Admin\Shipping();
+		$shipping = new Shipping();
 		$cview = (isset($_GET['action']) && $_GET['action'] == 'view') ? $shipping->verify_shippingCats($_GET['cid']) : 0;
 		$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $shipping->verify_shippingCats($_GET['cid']) : 0;
 		$tab_title['title'][] = $cview ? $locale['ESHPSS107'] : $locale['ESHPSS108'];

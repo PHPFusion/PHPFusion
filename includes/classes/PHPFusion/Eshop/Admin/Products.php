@@ -268,32 +268,6 @@ class Products {
 	}
 
 	/**
-	 * Shows Message based on $_GET['status']
-	 */
-	static function getMessage() {
-		global $locale;
-		$message = '';
-		if (isset($_GET['status'])) {
-			switch ($_GET['status']) {
-				case 'sn' :
-					$message = $locale['ESHP432'];
-					break;
-				case 'su' :
-					$message = $locale['ESHP431'];
-					break;
-				case 'del' :
-					$message = $locale['ESHPPRO101'];
-					break;
-				case 'refresh' :
-					$message = $locale['ESHPPRO100'];
-			}
-			if ($message) {
-				echo admin_message($message);
-			}
-		}
-	}
-
-	/**
 	 * MYSQL insert or update
 	 */
 	private function set_productdb() {
