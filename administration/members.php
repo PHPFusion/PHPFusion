@@ -105,7 +105,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 		$userInput->registration = TRUE;
 		$userInput->skipCurrentPass = TRUE;
 		$userInput->saveInsert();
-		$userInput->displayMessages();
 		unset($userInput);
 	}
 
@@ -173,7 +172,6 @@ elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmi
 		$userInput->isAdminPanel = TRUE;
 		$userInput->skipCurrentPass = TRUE;
 		$userInput->saveUpdate();
-		$userInput->displayMessages();
 		$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
 		unset($userInput);
 	}

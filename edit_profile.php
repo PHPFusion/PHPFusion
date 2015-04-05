@@ -31,7 +31,6 @@ if (isset($_POST['update_profile'])) {
 	$userInput->userData = $userdata;
 	$userInput->saveUpdate();
 	if (empty($errors) && $userInput->themeChanged()) redirect(BASEDIR.'index.php');
-	$userInput->displayMessages();
 	unset($userInput);
 	$userdata = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."'"));
 

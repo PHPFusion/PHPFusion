@@ -56,6 +56,7 @@ class UserFieldsInput {
 	private $_themeChanged = FALSE;
 
 	public function saveInsert() {
+		global $locale;
 		$this->_method = "validate_insert";
 		self::_setEmptyFields();
 		if ($this->_userNameChange) {
@@ -69,11 +70,13 @@ class UserFieldsInput {
 		} else {
 			$this->_setUserDataInput();
 		}
-
+		if (!defined('FUSION_NULL')) {
+			addNotice('success', $locale['u170']);
+		}
 	}
 
 	public function saveUpdate() {
-		global $defender;
+		global $locale;
 		$this->_method = "validate_update";
 		$this->data = $this->userData;
 		self::_setEmptyFields();
@@ -83,29 +86,11 @@ class UserFieldsInput {
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setUserAvatar();
-
+		if (!defined('FUSION_NULL')) {
+			addNotice('info', $locale['u169']);
+		}
 		//print_p($this->data);
 		$this->_setUserDataUpdate();
-	}
-
-	public function displayMessages() {
-		global $locale;
-		$title = '';
-		$message = '';
-		if (!defined('FUSION_NULL')) {
-			if ($this->_method == "validate_insert") {
-				$title = $locale['u170'];
-				$message = $this->_completeMessage;
-			} else {
-				$title = $locale['u169'];
-				$message = $this->_completeMessage;
-			}
-			echo "<div class='m-t-20'>\n";
-			opentable($title);
-			echo admin_message("$message");
-			closetable();
-			echo "</div>\n";
-		}
 	}
 
 	public function setUserNameChange($value) {
