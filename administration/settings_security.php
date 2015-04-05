@@ -88,23 +88,17 @@ if (isset($_POST['savesettings'])) {
 		if (!$result) {
 			$error = 1;
 		}
-		redirect(FUSION_SELF.$aidlink."&error=".$error);
+		if ($error == 0) {
+			addNotice('success', $locale['900']);
+		} elseif ($error == 1) {
+			addNotice('danger', $locale['901']);
+		} elseif ($error == 2) {
+			addNotice('danger', $locale['696']);
+		}
+		redirect(FUSION_SELF.$aidlink);
 	}
 }
 opentable($locale['683']);
-
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	} elseif ($_GET['error'] == 2) {
-		$message = $locale['696'];
-	}
-	if (isset($message)) {
-		echo admin_message($message);
-	}
-}
 echo "<div class='well'>".$locale['security_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 

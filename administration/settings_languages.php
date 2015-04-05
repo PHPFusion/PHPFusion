@@ -516,7 +516,7 @@ if (isset($_POST['savesettings'])) {
 				$error = 1;
 			}
 		}
-		if ($error == 1) {
+		if ($error) {
 			addNotice('danger', $locale['901']);
 		} else {
 			addNotice('success', $locale['900']);

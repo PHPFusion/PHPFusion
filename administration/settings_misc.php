@@ -87,20 +87,16 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	if (!$result) {
 		$error = 1;
 	}
-	redirect(FUSION_SELF.$aidlink."&error=".$error);
+	if ($error) {
+		addNotice('danger', $locale['901']);
+	} else {
+		addNotice('success', $locale['900']);
+	}
+	redirect(FUSION_SELF.$aidlink);
 }
 
 opentable($locale['misc_settings']);
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo admin_message($message);
-	}
-}
+
 echo "<div class='well'>".$locale['misc_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='row'>\n";

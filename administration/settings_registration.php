@@ -66,21 +66,15 @@ if (isset($_POST['savesettings'])) {
 	if (!$result) {
 		$error = 1;
 	}
-	redirect(FUSION_SELF.$aidlink."&error=".$error);
+	if ($error) {
+		addNotice('danger', $locale['901']);
+	} else {
+		addNotice('success', $locale['900']);
+	}
+	redirect(FUSION_SELF.$aidlink);
 }
 
 opentable($locale['register_settings']);
-
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo admin_message($message);
-	}
-}
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 $opts = array('1' => $locale['518'], '0' => $locale['519']);
 echo "<div class='well'>".$locale['register_description']."</div>\n";
