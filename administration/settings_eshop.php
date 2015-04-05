@@ -134,7 +134,8 @@ if (isset($_POST['update_settings'])) {
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_coupons'])."' WHERE settings_name='eshop_coupons'");
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['eshop_freeshipsum'])."' WHERE settings_name='eshop_freeshipsum'");
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['eshop_terms']))."' WHERE settings_name='eshop_terms'");
-	echo admin_message($locale['ESHP500']);
+	addNotice('success', $locale['ESHP500']);
+	redirect(FUSION_SELF.$aidlink);
 }
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);

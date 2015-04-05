@@ -39,7 +39,8 @@ if (isset($_POST['savesettings'])) {
 	$posts_per_page = form_sanitizer($_POST['posts_per_page'], 20, 'posts_per_page');
 	$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$posts_per_page' WHERE settings_name='posts_per_page'") : '';
 	if (!defined('FUSION_NULL')) {
-		redirect(FUSION_SELF.$aidlink."&error=0");
+		addNotice('success', $locale['900']);
+		redirect(FUSION_SELF.$aidlink);
 	}
 }
 $settings2 = array();
@@ -48,14 +49,6 @@ while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 opentable($locale['ipp_settings']);
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	}
-	if (isset($message)) {
-		echo admin_message($message);
-	}
-}
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='well'>".$locale['ipp_description']."</div>";
 echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>";
