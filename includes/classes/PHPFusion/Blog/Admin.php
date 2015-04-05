@@ -57,32 +57,14 @@ class Admin {
 	}
 
 	private function delete_blogCat() {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (Functions::validate_blogCat($_GET['cat_id'])) {
 			$result = dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".$_GET['cat_id']."'");
-			redirect(FUSION_SELF.$aidlink."&status=dy");
+			addNotice('warning', $locale['424']);
 		} else {
-			redirect(FUSION_SELF.$aidlink."&status=dn");
+			addNotice('warning', $locale['422']."-<span class='small'>".$locale['423']."</span>");
 		}
-	}
-
-	public static function display_blogcat_message() {
-		global $locale;
-		if (isset($_GET['status']) && !isset($message)) {
-			$message = '';
-			if ($_GET['status'] == "sn") {
-				$message = $locale['420'];
-			} elseif ($_GET['status'] == "su") {
-				$message = $locale['421'];
-			} elseif ($_GET['status'] == "dn") {
-				$message = $locale['422']."<br />\n<span class='small'>".$locale['423']."</span>";
-			} elseif ($_GET['status'] == "dy") {
-				$message = $locale['424'];
-			}
-			if ($message) {
-				echo admin_message($message);
-			}
-		}
+		redirect(FUSION_SELF.$aidlink);
 	}
 
 	private function set_blogcatDB() {
@@ -100,14 +82,20 @@ class Admin {
 				self::check_duplicated_names();
 				if (Functions::validate_blogCat($this->blogCatData['blog_cat_id'])) {
 					dbquery_insert(DB_BLOG_CATS, $this->blogCatData, 'update');
-					if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.(isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '')."&amp;&status=su");
+					if (!defined('FUSION_NULL')) {
+						addNotice('info', $locale['421']);
+						redirect(FUSION_SELF.$aidlink.(isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : ''));
+					}
 				} else {
 					dbquery_insert(DB_BLOG_CATS, $this->blogCatData, 'save');
-					if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink.(isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '')."&amp;status=sn");
+					if (!defined('FUSION_NULL')) {
+						addNotice('success', $locale['420']);
+						redirect(FUSION_SELF.$aidlink.(isset($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : ''));
+					}
 				}
 			} else {
 				$defender->stop();
-				$defender->addNotice($locale['461']);
+				addNotice('danger', $locale['461']);
 			}
 		}
 	}

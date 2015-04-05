@@ -23,10 +23,12 @@ include LOCALE.LOCALESET."admin/blog-cats.php";
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'") || dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
-		redirect(FUSION_SELF.$aidlink."&status=dn");
+		addNotice('warning', $locale['424']);
+		redirect(FUSION_SELF.$aidlink);
 	} else {
 		$result = dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".$_GET['cat_id']."'");
-		redirect(FUSION_SELF.$aidlink."&status=dy");
+		addNotice('warning', $locale['422']."-<span class='small'>".$locale['423']."</span>");
+		redirect(FUSION_SELF.$aidlink);
 	}
 } elseif (isset($_POST['save_cat'])) {
 	$cat_name = form_sanitizer($_POST['cat_name'], '', 'cat_name');
@@ -36,16 +38,18 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	if ($cat_name && $cat_image && !defined('FUSION_NULL')) {
 		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 			$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='$cat_name', blog_cat_parent='$cat_parent', blog_cat_image='$cat_image', blog_cat_language='$cat_language' WHERE blog_cat_id='".$_GET['cat_id']."'");
-			redirect(FUSION_SELF.$aidlink."&status=su");
+			addNotice('info', $locale['421']);
+			redirect(FUSION_SELF.$aidlink);
 		} else {
 			$checkCat = dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_name='".$cat_name."'");
 			if ($checkCat == 0) {
 				$result = dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_parent, blog_cat_image, blog_cat_language) VALUES ('$cat_name', '$cat_parent', '$cat_image', '$cat_language')");
-				redirect(FUSION_SELF.$aidlink."&status=sn");
+				addNotice('success', $locale['420']);
+				redirect(FUSION_SELF.$aidlink);
 			} else {
 				$error = 2;
 				$defender->stop();
-				$defender->addNotice($locale['461']);
+				addNotice('danger', $locale['461']);
 				$formaction = FUSION_SELF.$aidlink;
 				$openTable = $locale['401'];
 			}
