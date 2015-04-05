@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__)."../../maincore.php";
+require_once __DIR__."/../maincore.php";
 require_once INCLUDES."forum_include.php";
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum.php";
