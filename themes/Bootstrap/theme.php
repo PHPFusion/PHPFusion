@@ -26,7 +26,7 @@ function render_page($license = FALSE) {
 	//add_handler("theme_output");
 	global $settings, $main_style, $locale, $userdata, $aidlink, $mysql_queries_time;
 	// set variables
-	$brand = $settings['sitebanner'] ? "<img title='".$settings['sitename']."' style='margin-left:-20px; width:100%; margin-top:-35px;' src='".$settings['sitebanner']."'/>" : $settings['sitename'];
+	$brand = $settings['sitebanner'] ? "<img title='".$settings['sitename']."' style='margin-left:-20px; width:100%; margin-top:-35px;' src='".BASEDIR.$settings['sitebanner']."'/>" : $settings['sitename'];
 	// set size - max of 12 min of 0
 	$side_grid_settings = array(
 		'desktop_size' => 2,

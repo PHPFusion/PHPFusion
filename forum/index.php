@@ -21,8 +21,10 @@ require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum.php";
 require_once INCLUDES."forum_include.php";
 include THEMES."templates/global/forum.index.php";
+
 $forum = new PHPFusion\Forums\Forum();
 $forum->set_ForumInfo();
 $info = $forum->getForumInfo();
 render_forum($info);
+// temporary
 require_once THEMES."templates/footer.php";

@@ -17,6 +17,11 @@ class Forum {
 	public function set_ForumInfo() {
 		global $settings, $userdata, $locale;
 
+		if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
+			if ($_GET['section'] == 'latest') redirect(FORUM.'index.php?section=latest');
+			if ($_GET['section'] == 'mypost') redirect(FORUM.'index.php?section=mypost');
+			if ($_GET['section'] == 'tracked') redirect(FORUM.'index.php?section=tracked');
+		}
 		$this->forum_info = array(
 			'forum_id' => (isset($_GET['forum_id']) && verify_forum($_GET['forum_id'])) ? $_GET['forum_id'] : 0,
 			'parent_id' => (isset($_GET['parent_id']) && verify_forum($_GET['parent_id'])) ? $_GET['parent_id'] : 0,
