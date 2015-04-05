@@ -40,7 +40,8 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 	if ($settings['tinymce_enabled'] == 1) {
 		include INCLUDES."buildlist.php";
 	}
-	redirect(FUSION_SELF.$aidlink."&status=del&ifolder=".$_GET['ifolder']);
+	addNotice('warning', $locale['400']);
+	redirect(FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']);
 } elseif (isset($_POST['uploadimage'])) {
 	$error = "";
 	$image_types = array(".gif", ".GIF", ".jpeg", ".JPEG", ".jpg", ".JPG", ".png", ".PNG");
@@ -49,32 +50,20 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 	$imgsize = $_FILES['myfile']['size'];
 	$imgtemp = $_FILES['myfile']['tmp_name'];
 	if (!in_array($imgext, $image_types)) {
-		redirect(FUSION_SELF.$aidlink."&status=upn&ifolder=".$_GET['ifolder']);
+		addNotice('success', $locale['420']);
+		redirect(FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']);
 	} elseif (is_uploaded_file($imgtemp)) {
 		move_uploaded_file($imgtemp, $afolder.$imgname.$imgext);
 		@chmod($afolder.$imgname.$imgext, 0644);
 		if ($settings['tinymce_enabled'] == 1) {
 			include INCLUDES."buildlist.php";
 		}
-		redirect(FUSION_SELF.$aidlink."&status=upy&ifolder=".$_GET['ifolder']."&img=".$imgname.$imgext);
+		addNotice('success', $locale['420']);
+		redirect(FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."&img=".$imgname.$imgext);
 	}
 } else {
 	opentable($locale['420']);
 	add_to_breadcrumbs(array('link'=>ADMIN."images.php".$aidlink, 'title'=>$locale['420']));
-	if (isset($_GET['status'])) {
-		if ($_GET['status'] == "del") {
-			$title = $locale['400'];
-			$message = "<strong>".$locale['401']."</strong>";
-		} elseif ($_GET['status'] == "upn") {
-			$title = $locale['420'];
-			$message = "<strong>".$locale['425']."</strong>";
-		} elseif ($_GET['status'] == "upy") {
-			$title = $locale['420'];
-			$message = "<img src='".$afolder.stripinput($_GET['img'])."' alt='".stripinput($_GET['img'])."' /><br /><br />\n<strong>".$locale['426']."</strong>";
-		}
-		echo admin_message($message);
-	}
-
 	echo openform('uploadform', 'post', "".FUSION_SELF.$aidlink."&amp;ifolder=".$_GET['ifolder']."", array('enctype' => 1, 'max_tokens' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 	echo "<td width='80' class='tbl'><label for='myfile'>".$locale['421']."</label></td>\n";
