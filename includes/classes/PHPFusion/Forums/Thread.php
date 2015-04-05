@@ -222,11 +222,12 @@ class Thread {
 	 */
 	private function set_ThreadFilterlinks() {
 		// Filters
-		$this->thread_info['post-filters'][0] = array('value' => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=oldest', 'locale' => 'Oldest');
-		$this->thread_info['post-filters'][1] = array('value' => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=latest', 'locale' => 'Latest');
+		global $locale;
+		$this->thread_info['post-filters'][0] = array('value' => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=oldest', 'locale' => $locale['forum_0180']);
+		$this->thread_info['post-filters'][1] = array('value' => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=latest', 'locale' => $locale['forum_0181']);
 		if ($this->thread_info['permissions']['can_rate']) {
 			$this->thread_info['allowed-post-filters'][2] = 'high';
-			$this->thread_info['post-filters'][2] = array('value' => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=high', 'locale' => 'Highest Ratings');
+			$this->thread_info['post-filters'][2] = array('value' => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=high', 'locale' => $locale['forum_0182']);
 		}
 	}
 
