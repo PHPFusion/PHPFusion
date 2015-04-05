@@ -91,7 +91,6 @@ if (!function_exists('render_forum_main')) {
 					echo "<a class='forum-subject' href='".FORUM."index.php?viewforum&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch']."'>".$data['forum_name']."</a><br/>";
 					echo $data['forum_description'] ? "<span class='text-smaller'>".$data['forum_description']."</span>\n<br/>" : '';
 					echo "</div>\n";
-
 					if (isset($info['forums'][$forum_id])) {
 						echo "<div class='m-10'>\n";
 						$i = 1;
@@ -268,6 +267,7 @@ if (!function_exists('forum_viewforum')) {
 		} else {
 			echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
 		}
+		echo "</div>\n";
 		echo "</div>\n";
 	}
 }
