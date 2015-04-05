@@ -62,8 +62,6 @@ elseif (isset($_POST['register'])) {
 	$userInput->skipCurrentPass = TRUE;
 	$userInput->registration = TRUE;
 	$userInput->saveInsert();
-	$userInput->displayMessages();
-
 	unset($userInput);
 } else {
 	// hide by default
