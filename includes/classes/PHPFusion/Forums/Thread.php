@@ -538,7 +538,7 @@ class Thread {
 			$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').FORUM."viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'];
 			$html .= openform('qr_form', 'post', $form_action, array('class'=>'m-b-20 m-t-20', 'downtime' => 1));
 			$html .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
-			$html .= form_textarea('post_message', '', '', array('bbcode' => 1, 'required' => 1, 'autosize'=>1, 'preview'=>1, 'form_name'=>'qr_form'));
+			$html .= form_textarea('post_message', $locale['forum_0601'], '', array('bbcode' => 1, 'required' => 1, 'autosize'=>1, 'preview'=>1, 'form_name'=>'qr_form'));
 			$html .= "<div class='m-t-10 pull-right'>\n";
 			//$html .= $settings['site_seo'] ? '' : form_button($locale['forum_0173'], 'previewreply', 'previewreply', $locale['forum_0173'], array('class' => 'btn-default btn-sm m-r-10')); // post lost.
 			$html .= form_button('postreply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
