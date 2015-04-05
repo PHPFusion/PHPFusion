@@ -90,7 +90,7 @@ class Admin {
 			echo "<div class='panel-body'>\n";
 			echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
 			echo "<div class='btn-group pull-right m-t-20'>\n";
-			echo openform('editfrm-active-'.$theme_name, 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'max_tokens' => 1));
+			echo openform('editfrm-active-'.$theme_name, 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'max_tokens' => 2));
 			echo form_button('theme', $locale['theme_1005'], $theme_name, array('class'=>'btn-default'));
 			echo closeform();
 			echo "</div>\n";
@@ -114,7 +114,7 @@ class Admin {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-body'>\n";
 			echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
-			echo openform('editfrm-inactive-'.$theme_name, 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('class'=>'pull-right', 'notice'=>0, 'max_tokens' => 1));
+			echo openform('editfrm-inactive-'.$theme_name, 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('class'=>'pull-right', 'notice'=>0, 'max_tokens' => 2));
 			echo form_button('activate', $locale['theme_1012'], $theme_name, array('class'=>'btn-primary'));
 			echo closeform();
 			echo "<div class='overflow-hide'>\n";

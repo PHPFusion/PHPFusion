@@ -650,7 +650,7 @@ class defender {
 	 */
 	public function sniff_token() {
 		global $defender;
-
+		//$this->debug = true;
 		$error = FALSE;
 		if (!empty($_POST)) {
 			// Check if a token is being posted and make sure is a string
