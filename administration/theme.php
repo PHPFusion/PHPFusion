@@ -23,15 +23,15 @@ require_once LOCALE.LOCALESET."admin/theme.php";
 opentable($locale['theme_1000']);
 $theme_admin = new \PHPFusion\Atom\Admin();
 if ($theme_admin::get_edit_status()) {
-	$tab_title['title'][] = 'Edit Theme';
+	$tab_title['title'][] = $locale['theme_1009'];
 	$tab_title['id'][] = 'edt';
 	$tab_title['icon'][] = '';
 	$active_tab = tab_active($tab_title, 0);
 } else {
-	$tab_title['title'][] = 'Current Themes';
+	$tab_title['title'][] = $locale['theme_1010'];
 	$tab_title['id'][] = 'its';
 	$tab_title['icon'][] = '';
-	$tab_title['title'][] = 'Install New Theme';
+	$tab_title['title'][] = $locale['theme_1011'];
 	$tab_title['id'][] = 'upt';
 	$tab_title['icon'][] = '';
 	$active_set = isset($_POST['upload']) ? 1 : 0;

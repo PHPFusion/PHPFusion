@@ -9,6 +9,10 @@ $locale['theme_1005'] = 'Configure Theme';
 $locale['theme_1006'] = 'Current Active Theme';
 $locale['theme_1007'] = 'Upload Theme ZIP file';
 $locale['theme_1008'] = 'Upload Theme';
+$locale['theme_1009'] = 'Edit Theme';
+$locale['theme_1010'] = 'Current Themes';
+$locale['theme_1011'] = 'Upload New Theme';
+$locale['theme_1012'] = 'Set Active';
 
 $locale['theme_2001'] = 'Base Fonts';
 $locale['theme_2002'] = 'Theme Components';

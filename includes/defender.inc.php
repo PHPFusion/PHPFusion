@@ -276,7 +276,6 @@ class defender {
 	static function stop() {
 		global $locale;
 		if (!defined('FUSION_NULL')) {
-			$locale['error_request'] = 'There was an error while processing your request'; // to be moved
 			addNotice('danger', $locale['error_request']);
 		}
 		if (!defined('FUSION_NULL')) define('FUSION_NULL', TRUE);
@@ -669,7 +668,7 @@ class defender {
 			}
 
 			// Check if any error was set
-			if ($error !== FALSE) {
+			if ($error) {
 				// Flag the token as invalid
 				$defender->tokenIsValid = FALSE;
 				// Flag that something went wrong

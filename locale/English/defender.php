@@ -1,5 +1,6 @@
 <?php
 $locale['validate'] = "Please check and revalidate the field.";
+$locale['error_request'] = 'There was an error while processing your request'; // to be moved
 
 // Text fields errors
 $locale['error_input_default']	= 'Please fill out this field';

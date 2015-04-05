@@ -51,6 +51,7 @@ class Admin {
 		$atom->render_theme_presets();
 		$atom->theme_editor();
 	}
+
 	static function list_theme() {
 		global $locale, $aidlink, $settings;
 		$data = array();
@@ -89,7 +90,7 @@ class Admin {
 			echo "<div class='panel-body'>\n";
 			echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
 			echo "<div class='btn-group pull-right m-t-20'>\n";
-			echo openform('editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'max_tokens' => 1));
+			echo openform('editfrm-active-'.$theme_name, 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'max_tokens' => 1));
 			echo form_button('theme', $locale['theme_1005'], $theme_name, array('class'=>'btn-default'));
 			echo closeform();
 			echo "</div>\n";
@@ -113,8 +114,8 @@ class Admin {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-body'>\n";
 			echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
-			echo openform('editfrm', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('class'=>'pull-right', 'notice'=>0, 'max_tokens' => 1));
-			echo form_button('activate', 'Set Active', $theme_name, array('class'=>'btn-primary'));
+			echo openform('editfrm-inactive-'.$theme_name, 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('class'=>'pull-right', 'notice'=>0, 'max_tokens' => 1));
+			echo form_button('activate', $locale['theme_1012'], $theme_name, array('class'=>'btn-primary'));
 			echo closeform();
 			echo "<div class='overflow-hide'>\n";
 			echo "<h4 class='strong text-dark m-b-20'>".$theme_data['title']."</h4>";
@@ -129,8 +130,10 @@ class Admin {
 			echo "</div>\n</div>\n";
 		}
 	}
+
 	static function theme_uploader() {
 		global $locale, $aidlink, $defender;
+
 		if (isset($_POST['upload'])) {
 			require_once INCLUDES."infusions_include.php";
 			$src_file = 'theme_files';
@@ -189,6 +192,7 @@ class Admin {
 				}
 			}
 		}
+
 		echo openform('inputform', 'post', FUSION_SELF.$aidlink, array('enctype'=>1, 'max_tokens' => 1));
 		echo form_fileinput($locale['theme_1007'], 'theme_files', 'theme_files', '', '', array());
 		echo form_button('upload', $locale['theme_1007'], 'upload theme', array('class'=>'btn btn-primary'));
