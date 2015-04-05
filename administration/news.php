@@ -39,7 +39,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_i
 		$result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$_POST['news_id']."' and comment_type='N'");
 		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$_POST['news_id']."' and rating_type='N'");
 		dbquery_insert(DB_NEWS, $del_data, 'delete');
-		redirect(FUSION_SELF.$aidlink."&amp;status=del");
+		addNotice('warning', $locale['news_0102']);
+		redirect(FUSION_SELF.$aidlink);
 	} else {
 		redirect(FUSION_SELF.$aidlink);
 	}
@@ -57,20 +58,6 @@ $master_title['id'][] = 'nform';
 $master_title['icon'] = '';
 
 $tab_active =  tab_active($master_title, $_GET['section'] , 1);
-
-if (isset($_GET['status'])) {
-	$message = '';
-	if ($_GET['status'] == "sn") {
-		$message = $locale['news_0100'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['news_0101'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['news_0102'];
-	}
-	if ($message) {
-		echo admin_message($message);
-	}
-}
 
 opentable($locale['news_0001']);
 echo opentab($master_title, $tab_active, 'news', 1);
@@ -283,9 +270,11 @@ function news_form() {
 		$rows = dbcount("('news_id')", DB_NEWS, "news_id='".$data['news_id']."'");
 		if ($rows >0) {
 			dbquery_insert(DB_NEWS, $data, 'update');
+			addNotice('info', $locale['news_0101']);
 			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su");
 		} else {
 			dbquery_insert(DB_NEWS, $data, 'save');
+			addNotice('sucess', $locale['news_0100']);
 			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
 		}
 	}
