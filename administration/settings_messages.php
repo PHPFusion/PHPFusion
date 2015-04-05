@@ -22,7 +22,6 @@ include LOCALE.LOCALESET."admin/settings.php";
 add_to_breadcrumbs(array('link'=>ADMIN."settings_messages.php".$aidlink, 'title'=>$locale['message_settings']));
 $count = 0;
 if (isset($_POST['saveoptions'])) {
-	$error = 0;
 	if (!defined('FUSION_NULL')) {
 		dbquery("UPDATE ".DB_MESSAGES_OPTIONS." SET
 		pm_email_notify = '".(isnum($_POST['pm_email_notify']) ? $_POST['pm_email_notify'] : 0)."',
@@ -32,9 +31,11 @@ if (isset($_POST['saveoptions'])) {
 		pm_savebox = '".(isnum($_POST['pm_savebox']) ? $_POST['pm_savebox'] : 0)."'
 		WHERE user_id='0'");
 		if (!$result) {
-			$error = 1;
+			addNotice('danger', $locale['901']);
+		} else {
+			addNotice('success', $locale['900']);
 		}
-		redirect(FUSION_SELF.$aidlink."&error=".$error);
+		redirect(FUSION_SELF.$aidlink);
 	}
 }
 $options = dbarray(dbquery("SELECT * FROM ".DB_MESSAGES_OPTIONS." WHERE user_id='0'"), 0);
@@ -42,16 +43,6 @@ $pm_inbox = $options['pm_inbox'];
 $pm_sentbox = $options['pm_sentbox'];
 $pm_savebox = $options['pm_savebox'];
 opentable($locale['message_settings']);
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo admin_message($message);
-	}
-}
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='well'>".$locale['message_description']."</div>\n";
 echo "<div class='row'>";

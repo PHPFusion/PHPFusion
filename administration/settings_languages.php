@@ -516,25 +516,22 @@ if (isset($_POST['savesettings'])) {
 				$error = 1;
 			}
 		}
-		redirect(FUSION_SELF.$aidlink."&error=".$error);
+		if ($error == 1) {
+			addNotice('danger', $locale['901']);
+		} else {
+			addNotice('success', $locale['900']);
+		}
+		redirect(FUSION_SELF.$aidlink);
 	}
 }
+
 $settings2 = array();
 $result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 opentable($locale['682ML']);
-if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
-	if ($_GET['error'] == 0) {
-		$message = $locale['900'];
-	} elseif ($_GET['error'] == 1) {
-		$message = $locale['901'];
-	}
-	if (isset($message)) {
-		echo admin_message($message);
-	}
-}
+
 echo "<div class='well'>".$locale['language_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table class='table table-responsive'>\n<tbody>\n<tr>\n";
