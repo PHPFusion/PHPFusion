@@ -246,7 +246,7 @@ class Products {
 	 *
 	 */
 	static function product_delete() {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isset($_GET['id']) && isnum($_GET['id'])) {
 			$remove = dbarray(dbquery("SELECT picture,thumb,thumb2,iorder,cid FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'"));
 			$picture = BASEDIR."eshop/pictures/".$remove['picture'];
@@ -263,6 +263,7 @@ class Products {
 			}
 			dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder-1 WHERE iorder>'".$remove['iorder']."' AND cid = '".$remove['cid']."'");
 			dbquery("DELETE FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'");
+			addNotice('warning', $locale['ESHPPRO101']);
 			redirect(FUSION_SELF.$aidlink."&amp;a_page=main");
 		}
 	}
@@ -284,7 +285,9 @@ class Products {
 				$this->data['thumb'] = '';
 				$this->data['thumb2'] = '';
 				dbquery_insert(DB_ESHOP, $this->data, 'update');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$this->data['id']);
+				if (!defined('FUSION_NULL')) {
+					redirect(FUSION_SELF.$aidlink."&amp;a_page=main&amp;section=itemform&amp;action=edit&amp;id=".$this->data['id']);
+				}
 			}
 		}
 
@@ -499,12 +502,18 @@ class Products {
 					}
 				}
 				dbquery_insert(DB_ESHOP, $this->data, 'update');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;parent_id=".$_GET['parentid']."&amp;status=su");
+				if (!defined('FUSION_NULL')) {
+					addNotice('info', $locale['ESHP431']);
+					redirect(FUSION_SELF.$aidlink."&amp;parent_id=".$_GET['parentid']."&amp;status=su");
+				}
 			} else {
 				if (!$this->data['iorder']) $this->data['iorder'] = dbresult(dbquery("SELECT MAX(iorder) FROM ".DB_ESHOP." WHERE cid='".$this->data['cid']."'"), 0)+1;
 				$result = dbquery("UPDATE ".DB_ESHOP." SET iorder=iorder+1 WHERE cid = '".$this->data['cid']."' AND iorder>='".$this->data['iorder']."'");
 				dbquery_insert(DB_ESHOP, $this->data, 'save', array('keep_session'=>1));
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;parent_id=".$_GET['parentid']."&amp;status=sn");
+				if (!defined('FUSION_NULL')) {
+					addNotice('success', $locale['ESHP432']);
+					redirect(FUSION_SELF.$aidlink."&amp;parent_id=".$_GET['parentid']."&amp;status=sn");
+				}
 			}
 		}
 	}
