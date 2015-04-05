@@ -110,7 +110,10 @@ class SiteLinks {
 				break;
 			case 'delete':
 				$result = self::delete_sitelinks($_GET['link_id']);
-				if ($result) redirect(FUSION_SELF.$aidlink."&status=del");
+				if ($result) {
+					addNotice('warning', $locale['SL_0017']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 				break;
 			default:
 				$this->form_action = FUSION_SELF.$aidlink."&amp;section=nform";
@@ -154,7 +157,7 @@ class SiteLinks {
 	 * MYSQL Save or Update Site Links
 	 */
 	public static function set_sitelinkdb($data) {
-		global $aidlink, $defender;
+		global $aidlink, $locale;
 		if (isset($_POST['savelink'])) {
 			$data['link_id'] = isset($_POST['link_id']) ? form_sanitizer($_POST['link_id'], '', 'link_id') : 0;
 			$data['link_name'] = isset($_POST['link_name']) ? form_sanitizer($_POST['link_name'], '', 'link_name') : '';
@@ -184,12 +187,18 @@ class SiteLinks {
 					}
 				}
 				dbquery_insert(DB_SITE_LINKS, $data, 'update');
-				if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=su&amp;link_cat=".$_GET['link_cat']);
+				if (!defined("FUSION_NULL")) {
+					addNotice('info', $locale['SL_0016']);
+					redirect(FUSION_SELF.$aidlink."&amp;link_cat=".$_GET['link_cat']);
+				}
 			} else {
 				// save
 				$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order+1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_cat='".$data['link_cat']."' AND link_order>='".$data['link_order']."'");
 				dbquery_insert(DB_SITE_LINKS, $data, 'save');
-				if (!defined("FUSION_NULL")) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
+				if (!defined("FUSION_NULL")) {
+					addNotice('success', $locale['SL_0015']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			}
 			return $data;
 		}
@@ -241,31 +250,6 @@ class SiteLinks {
 			return dbcount("(link_id)", DB_SITE_LINKS, "link_id='".intval($link_id)."'");
 		}
 		return false;
-	}
-
-	/**
-	 * Message Display
-	 */
-	static function getMessage() {
-		global $locale;
-		if (isset($_GET['status']) && !isset($message)) {
-			switch($_GET['status']) {
-				case 'sn':
-					$message = $locale['SL_0015'];
-					break;
-				case 'su':
-					$message = $locale['SL_0016'];
-					break;
-				case 'del':
-					$message = $locale['SL_0017'];
-					break;
-				default:
-					$message = '';
-			}
-			if ($message) {
-				echo admin_message($message);
-			}
-		}
 	}
 
 	/**
