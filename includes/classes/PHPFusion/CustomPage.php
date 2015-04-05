@@ -47,7 +47,6 @@ class CustomPage {
 				opentable($locale['400']);
 		}
 		self::customPage_selector();
-		self::get_message();
 		add_to_breadcrumbs(array('link'=>ADMIN.'custom_pages.php'.$aidlink, 'title'=>$locale['403']));
 		$this->data = self::set_customPage($this->data);
 		$this->data = self::preview_custompage($this->data);
@@ -79,7 +78,7 @@ class CustomPage {
 	 * @return array
 	 */
 	protected function set_customPage($data) {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isset($_POST['save'])) {
 			$data = array(
 				'page_id' => form_sanitizer($_POST['page_id'], 0, 'page_id'),
@@ -100,7 +99,10 @@ class CustomPage {
 				if (isset($_POST['add_link'])) {
 					self::set_customPageLinks($data);
 				}
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su&amp;pid=".$data['page_id']);
+				if (!defined('FUSION_NULL')) {
+	 				addNotice('info', $locale['411']);
+					redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
+				}
 			} else {
 				// save
 				dbquery_insert(DB_CUSTOM_PAGES, $data, 'save');
@@ -108,7 +110,10 @@ class CustomPage {
 				if (isset($_POST['add_link'])) {
 					self::set_customPageLinks($data);
 				}
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn&amp;pid=".$data['page_id']);
+				if (!defined('FUSION_NULL')) {
+					addNotice('success', $locale['410']);
+					redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
+				}
 			}
 		}
 		return $data;
@@ -148,11 +153,14 @@ class CustomPage {
 	 * @param $page_id
 	 */
 	protected function delete_customPage($page_id) {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isnum($page_id) && self::verify_customPage($page_id)) {
 			$result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id='".intval($page_id)."'");
 			if ($result) $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=".intval($page_id)."'");
-			if ($result) redirect(FUSION_SELF.$aidlink."&status=del");
+			if ($result) {
+				addNotice('warning', $locale['413']);
+				redirect(FUSION_SELF.$aidlink);
+			}
 		}
 	}
 
@@ -166,29 +174,6 @@ class CustomPage {
 			return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id='".intval($id)."'");
 		}
 		return FALSE;
-	}
-
-
-	/**
-	 * Display Message Output
-	 */
-	public static function get_message() {
-		global $locale;
-		$message = '';
-		switch ($_GET['status']) {
-			case 'sn':
-				$message = $locale['410'];
-				break;
-			case 'su':
-				$message = $locale['411'];
-				break;
-			case 'del':
-				$message = $locale['413'];
-				break;
-		}
-		if ($message) {
-			echo admin_message($message);
-		}
 	}
 
 	/**
