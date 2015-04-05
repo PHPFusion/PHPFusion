@@ -36,6 +36,7 @@ $locale['city'] = "City";
 $locale['postcode'] = "Postcode";
 $locale['sel_country'] = "Select Country";
 $locale['sel_state'] = "Select State";
+$locale['sel_user'] = "Please type a user name";
 // Name
 $locale['name'] = 'Full Name';
 $locale['username_pretext'] = 'Your public username is also the same as your user profile address located at:<div class="alert alert-info m-t-10 p-10">%s<strong>%s</strong></div>';
