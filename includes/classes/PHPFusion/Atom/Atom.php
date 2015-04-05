@@ -19,6 +19,7 @@
 
 namespace PHPFusion\Atom;
 require_once LOCALE.LOCALESET.'admin/atom.php';
+require_once LOCALE.LOCALESET."admin/theme.php";
 
 class Atom {
 	public $target_folder = '';
@@ -186,7 +187,8 @@ class Atom {
 			$file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'"));
 			@unlink(THEMES.$file['theme_file']);
 			$result = dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'");
-			redirect(FUSION_SELF.$aidlink."&amp;status=deleted");
+			addNotice('warning', $locale['theme_success_002']);
+			redirect(FUSION_SELF.$aidlink);
 		}
 		// when we click load preset
 		elseif (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
@@ -251,7 +253,7 @@ class Atom {
 
 	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
 	protected function buildCss() {
-		global $defender;
+		global $locale, $defender;
 		$inputFile = CLASSES."PHPFusion/Atom/less/atom.less";
 		$outputFolder = THEMES.$this->target_folder."/";
 		$outputFile = THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
@@ -292,11 +294,10 @@ class Atom {
 		} else {
 			if (!$this->Compiler) {
 				$defender->stop();
-				addNotice('danger', 'Compiler is turned OFF');
-				addNotice('warning', 'No CSS Output');
+				addNotice('danger', $locale['theme_error_008']);
 			} else {
 				$defender->stop();
-				addNotice('danger', 'Theme cannot rebuild due to the following reason(s): - Variables were not set or form is has error.');
+				addNotice('danger', $locale['theme_error_007']);
 			}
 		}
 	}
@@ -511,7 +512,7 @@ class Atom {
 	}
 
 	private function save_theme() {
-		global $userdata, $aidlink;
+		global $locale, $userdata, $aidlink;
 		$old_file = isset($this->data['theme_file']) ? $this->data['theme_file'] : '';
 		if (isset($this->data['theme_config'])) unset($this->data['theme_config']); // will need to rebuild. unset it.
 		if (isset($this->data['theme_file'])) unset($this->data['theme_file']); // important to unset.
@@ -529,7 +530,11 @@ class Atom {
 			if (!$this->debug && $data['theme_file']) {
 				@unlink(THEMES.$old_file);
 				dbquery_insert(DB_THEME, $data, 'update');
-				redirect(FUSION_SELF.$aidlink."&amp;status=su");
+				if (!defined("FUSION_NULL")) {
+					addNotice('info', $locale['theme_success_003']);
+					redirect(FUSION_SELF.$aidlink);
+				}
+
 			} else {
 				print_p('Update Mode');
 				print_p($data);
@@ -540,7 +545,10 @@ class Atom {
 				$data['theme_active'] = $rows < 1 ? 1 : 0;
 				$data['theme_config'] = addslashes(serialize($this->data));
 				dbquery_insert(DB_THEME, $data, 'save');
-				redirect(FUSION_SELF.$aidlink."&amp;status=sn");
+				if (!defined("FUSION_NULL")) {
+					addNotice('success', $locale['theme_success_004']);
+					redirect(FUSION_SELF.$aidlink);
+				}
 			} else {
 				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
 				$data['theme_active'] = $rows < 1 ? 1 : 0;
