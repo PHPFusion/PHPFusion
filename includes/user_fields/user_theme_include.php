@@ -19,10 +19,6 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
 	if (fusion_get_settings('userthemes') == 1 || iADMIN) {
-		$user_theme = isset($user_data['user_theme']) ? $user_data['user_theme'] : "";
-		//if ($this->isError()) {
-			$user_theme = isset($_POST['user_theme']) ? stripinput($_POST['user_theme']) : $user_theme;
-		//}
 		$theme_files = makefilelist(THEMES, ".|..|admin_templates|templates|.svn", TRUE, "folders");
 		array_unshift($theme_files, "Default");
 
@@ -31,7 +27,7 @@ if ($profile_method == "input") {
 			$theme_opts[$theme] = $theme;
 		}
 		$options +=array('inline'=>1);
-		$user_fields = form_select('user_theme', $locale['uf_theme'], $theme_opts, $user_theme, $options);
+		$user_fields = form_select('user_theme', $locale['uf_theme'], $theme_opts, $field_value, $options);
 	}
 
 
