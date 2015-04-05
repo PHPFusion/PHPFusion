@@ -428,7 +428,7 @@ class QuantumFields {
 			echo "<div class='m-t-20'>\n";
 			foreach ($this->available_field_info as $title => $module_data) {
 				echo "<div class='list-group-item'>";
-				echo form_button('add_module', $locale['fields_0312'], 'add_module-'.$title, array('class' => 'btn-sm btn-default pull-right m-l-10'));
+				echo form_button('add_module', $locale['fields_0312'], $title, array('class' => 'btn-sm btn-default pull-right m-l-10'));
 				echo "<div class='overflow-hide'>\n";
 				echo "<span class='text-dark strong'>".$module_data['title']."</span><br/>\n";
 				echo "<span>".$module_data['description']."</span>\n<br/>";
