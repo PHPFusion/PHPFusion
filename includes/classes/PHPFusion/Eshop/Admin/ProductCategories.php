@@ -183,13 +183,16 @@ class ProductCategories {
 	 * SQL Action Delete Category
 	 */
 	static function cats_delete() {
-		global $aidlink;
+		global $aidlink, $locale;
 		if (isset($_GET['cid']) && isnum($_GET['cid'])) {
 			$data = dbarray(dbquery("SELECT cat_order, parentid FROM ".DB_ESHOP_CATS." WHERE cid = '".$_GET['cid']."'"));
 			$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE parentid='".$data['parentid']."' AND cat_order > '".($data['cat_order'])."'");
 			$result = dbquery("DELETE FROM ".DB_ESHOP_CATS." WHERE cid='".intval($_GET['cid'])."'");
 			$result2 = dbquery("UPDATE ".DB_ESHOP." SET cid='0' WHERE cid='".intval($_GET['cid'])."'"); // what holds this?
-			redirect(FUSION_SELF.$aidlink."&amp;a_page=categories&amp;status=del");
+			if (!defined('FUSION_NULL')) {
+				addNotice('warning', $locale['ESHPCATS118']);
+				redirect(FUSION_SELF.$aidlink."&amp;a_page=categories");
+			}
 		}
 	}
 
@@ -232,30 +235,6 @@ class ProductCategories {
 	}
 
 	/**
-	 * Shows Message based on $_GET['status']
-	 */
-	static function getMessage() {
-		global $locale;
-		$message = '';
-		if (isset($_GET['status'])) {
-			switch ($_GET['status']) {
-				case 'sn' :
-					$message = $locale['ESHPCATS119'];
-					break;
-				case 'su' :
-					$message = $locale['ESHPCATS120'];
-					break;
-				case 'del' :
-					$message = $locale['ESHPCATS118'];
-					break;
-			}
-			if ($message) {
-				echo admin_message($message);
-			}
-		}
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getRef() {
@@ -276,7 +255,7 @@ class ProductCategories {
 	 * MYSQL Actions - Save or Update
 	 */
 	private function set_categorydb() {
-		global $aidlink;
+		global $aidlink, $locale;
 
 		$this->data = array(
 			'cid' => 	isset($_POST['cid']) ? form_sanitizer($_POST['cid'], '0', 'cid') : 0,
@@ -299,11 +278,17 @@ class ProductCategories {
 				$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order-1 WHERE parentid='".$this->data['parentid']."' AND cat_order>'".$old_order['cat_order']."' AND cat_order<='".$this->data['cat_order']."'");
 			} // else no change.
 			dbquery_insert(DB_ESHOP_CATS, $this->data, 'update');
-			if (!defined("FUSION_NULL")) redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$this->data['parentid']."&amp;status=su");
+			if (!defined("FUSION_NULL")) {
+				addNotice('info', $locale['ESHPCATS120']);
+				redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$this->data['parentid']);
+			}
 		} else { // this is save
 			$result = dbquery("UPDATE ".DB_ESHOP_CATS." SET cat_order=cat_order+1 WHERE parentid='".$this->data['parentid']."' AND cat_order>='".$this->data['cat_order']."'");
 			dbquery_insert(DB_ESHOP_CATS, $this->data, 'save');
-			if (!defined("FUSION_NULL")) redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$this->data['parentid']."&amp;status=sn");
+			if (!defined("FUSION_NULL")) {
+				addNotice('success', $locale['ESHPCATS119']);
+				redirect("".FUSION_SELF.$aidlink."&amp;a_page=categories&amp;parent_id=".$this->data['parentid']);
+			}
 		}
 	}
 

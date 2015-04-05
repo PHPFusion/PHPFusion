@@ -41,7 +41,7 @@ class Orders {
 		if (self::validate_order($_GET['orderid'])) {
 			$oquery = dbarray(dbquery("SELECT oitems FROM ".DB_ESHOP_ORDERS." WHERE oid='".intval($_GET['orderid'])."'"));
 			$items = unserialize($oquery['oitems']);
-			echo admin_message($locale['ESHP303']);
+			echo form_alert($locale['ESHP303'], '', array('class'=>'info'));
 			foreach($items as $itemData) {
 				$item_count = $itemData['cqty'];
 				dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount-$item_count WHERE id = '".$itemData['prid']."'");
