@@ -1,5 +1,15 @@
 <?php
 $locale['validate'] = "Будь ласка, перевірте і повторно підтвердіть значення поля.";
+$locale['error_request'] = "Під час обробки запиту сталась помилка";
+
+// Text fields errors
+$locale['error_input_default'] = "Будь ласка, заповніть це поле";
+$locale['error_input_password'] = "Будь ласка, введіть коректний пароль";
+$locale['error_input_email'] = "Будь ласка, введіть коректну електронну адресу";
+$locale['error_input_number'] = "Будь ласка, введіть коректне число";
+$locale['error_input_url'] = "Будь ласка, введіть коректне посилання";
+$locale['error_input_regex'] = "Будь ласка, введіть за коректним шаблоном";
+$locale['error_input_safemode'] = "Будь ласка, заповніть це поле належним чином";
 
 // Admin Login
 $locale['cookie_title'] = "Термін дії сесії вичерпано";

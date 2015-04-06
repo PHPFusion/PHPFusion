@@ -17,7 +17,7 @@ $locale['datepicker'] = "ua";
 // Full & Short Months
 $locale['months'] = "&nbsp;|Січень|Лютий|Березень|Квітень|Травень|Червень|Липень|Серпень|Вересень|Жовтень|Листопад|Грудень";
 $locale['shortmonths'] = "&nbsp|Січ|Лют|Бер|Кві|Тра|Чер|Лип|Сер|Вер|Жов|Лис|Гру";
-$locale['weekdays'] = "Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday"; // translate this line
+$locale['weekdays'] = "Неділя|Понеділок|Вівторок|Середа|Четвер|П&lsquo;ятниця|Субота";
 
 // Timers
 $locale['year'] = "рік";
@@ -42,6 +42,9 @@ $locale['city'] = "Місто";
 $locale['postcode'] = "Поштовий індекс";
 $locale['sel_country'] = "Країна";
 $locale['sel_state'] = "Регіон";
+$locale['sel_user'] = "Будь ласка, введіть ім&lsquo;я";
+$locale['add_language'] = "Додати мови";
+$locale['add_lang'] = "Додати %s";
 
 // Name
 $locale['name'] = "Повне ім&lsquo;я";
@@ -152,26 +155,17 @@ $locale['global_075'] = "Друк";
 $locale['print'] = "Друк";
 $locale['global_076'] = "Редагувати";
 $locale['global_077'] = "Новини";
-$locale['global_077b'] = "Блог";
 $locale['global_078'] = "Новини відсутні";
-$locale['global_078b'] = "Дописи відсутні";
 $locale['global_079'] = "Розділ: ";
 $locale['global_080'] = "Несортовані";
 $locale['global_081'] = "На початок";
 $locale['global_082'] = "Новини";
-$locale['global_081b'] = "На початок";
-$locale['global_082b'] = "Блог";
-$locale['global_082c'] = "Архів дописів у блог";
 $locale['global_083'] = "Останнє оновлення";
 $locale['global_084'] = "Розділ новин";
-$locale['global_084b'] = "Розділ блогу";
 $locale['global_085'] = "Всі розділи";
 $locale['global_086'] = "Останні новини";
 $locale['global_087'] = "Найбільш коментовані новини";
 $locale['global_088'] = "Новини з найвищою оцінкою";
-$locale['global_086b'] = "Останні дописи в блог";
-$locale['global_087b'] = "Найбільш коментовані дописи";
-$locale['global_088b'] = "Дописи з найвищою оцінкою";
 $locale['global_089'] = "Прокоментуйте першим %s !";
 $locale['global_089a'] = "Оцініть першим %s !";
 
@@ -274,6 +268,7 @@ $locale['global_170'] = "відвідувач";
 $locale['global_171'] = "відвідувачів";
 $locale['global_172'] = "Завантажено за %s сек.";
 $locale['global_173'] = "Запити";
+$locale['global_174'] = "Використано пам&lsquo;яті";
 
 // Admin Navigation
 $locale['global_180'] = "Центр керування";
@@ -405,9 +400,9 @@ $locale['or'] = "або";
 $locale['by'] = "за";
 $locale['in'] = "в";
 $locale['of'] = "з";
-$locale['and'] = "and"; // please translate
+$locale['and'] = "та";
 $locale['na'] = "не доступно";
-$locale['joined'] = "Joined since: "; // please translate
+$locale['joined'] = "Приєднання: ";
 
 // Navigation
 $locale['next'] = "Наступний";
@@ -423,7 +418,7 @@ $locale['move_down'] = "Нижче";
 $locale['add'] = "Додати";
 $locale['save'] = "Зберегти";
 $locale['save_changes'] = "Зберегти зміни";
-$locale['confirm'] = "Confirm"; // please translate
+$locale['confirm'] = "Ухвалити";
 $locale['update'] = "Оновити";
 $locale['updated'] = "Оновлено";
 $locale['remove'] = "Видалити";
@@ -449,6 +444,7 @@ $locale['info'] = "Додатково";
 
 // Forms
 $locale['choose'] = "Будь ласка, виберіть...";
+$locale['no_opts'] = "не вибрано";
 $locale['root'] = "як кореневий";
 $locale['choose-user'] = "Будь ласка, виберіть користувача...";
 $locale['parent'] = "Створити як кореневий..";
@@ -481,27 +477,25 @@ $locale['center'] = "Центр";
 $locale['right'] = "Справа";
 
 // User status
-$locale['online'] = "Online"; // please translate these 2 lines
-$locale['offline'] = "Offline";
+$locale['online'] = "В мережі";
+$locale['offline'] = "Не в мережі";
 
 // Comments and ratings
 $locale['comments'] = "Коментарі";
 $locale['ratings'] = "Оцінки";
 $locale['comments_ratings'] = "Коментарі та оцінки";
 $locale['user_account'] = "Обліковий запис";
-$locale['testimonial_rank'] = "Я %s цього сайту";
-$locale['testimonial_location'] = " і на даний час проживаю в %s";
-$locale['testimonial_join'] = ". Мене зареєстровано на цьому сайті %s";
-$locale['testimonial_web'] = ". Також мене можна знайти на сайті %s";
-$locale['testimonial_contact'] = ". Зв&lsquo;язатися зі мною можна за цими контактними  даними %s";
-$locale['testimonial_email'] = ". Також можете надіслати мені електронного листа за адресою %s";
+$locale['about'] = "Опис";
 
 // Words for formatting to single and plural forms. Count of forms is language-dependent
 $locale['fmt_article'] = "стаття|статті|статей";
 $locale['fmt_blog'] = "блог|блоги|блогу";
 $locale['fmt_comment'] = "коментар|коментаря|коментарів";
+$locale['fmt_vote'] = "голос|голоса|голосів";
+$locale['fmt_rating'] = "оцінка|оцінки|оцінок";
 $locale['fmt_day'] = "день|дня|днів";
 $locale['fmt_download'] = "завантаження|завантаження|завантажень";
+$locale['fmt_follower'] = "послідовник|послідовника|послідовників";
 $locale['fmt_forum'] = "форум|форуму|форумів";
 $locale['fmt_guest'] = "гість|гостя|гостей";
 $locale['fmt_hour'] = "година|години|годин";
@@ -514,8 +508,7 @@ $locale['fmt_news'] = "новина|новини|новин";
 $locale['fmt_photo'] = "світлина|світлини|світлин";
 $locale['fmt_post'] = "повідомлення|повідомлення|повідомлень";
 $locale['fmt_question'] = "запитання|запитання|запитань";
-$locale['fmt_rating'] = "оцінка|оцінки|оцінок";
-$locale['fmt_reads'] = "прочитання|прочитання|прочитань";
+$locale['fmt_read'] = "прочитання|прочитання|прочитань";
 $locale['fmt_second'] = "секунда|секунди|секунд";
 $locale['fmt_shouts'] = "повідомлення|повідомлення|повідомлень";
 $locale['fmt_thread'] = "тема|теми|тем";
@@ -524,4 +517,8 @@ $locale['fmt_views'] = "перегляд|перегляди|переглядів
 $locale['fmt_weblink'] = "посилання|посилання|посилань";
 $locale['fmt_week'] = "тиждень|тижня|тижнів";
 $locale['fmt_year'] = "рік|роки|років";
+
+// Load defender locale from here, is more reliable
+// and now if part of the core, we could merge it in
+include __DIR__."/defender.php";
 ?>
