@@ -20,4 +20,6 @@ $locale['416'] = "Start en ny linje med BB koder";
 // Test BB Codes
 $locale['417'] = "Resultat af testen";
 $locale['418'] = "Slå smileys fra i denne test";
+$locale['418a'] = "Testbesked";
+$locale['418b'] = "Indskriv en besked for at teste BB-koder.";
 ?>

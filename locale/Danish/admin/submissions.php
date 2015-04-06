@@ -8,6 +8,7 @@ $locale['403'] = "Tilbage til administrationsside";
 $locale['410'] = "Brugerforslag";
 $locale['411'] = "Foreslåede links:";
 $locale['412'] = "Foreslåede nyheder:";
+$locale['412b'] = "Foreslåede blogindlæg:";
 $locale['413'] = "Foreslåede artikler:";
 $locale['414'] = "Ingen links afventer godkendelse.";
 $locale['415'] = "Ingen nyheder afventer godkendelse.";
