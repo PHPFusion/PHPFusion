@@ -24,7 +24,6 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 	include_once LOCALE.LOCALESET."admin/html_buttons.php";
 	include_once LOCALE.LOCALESET."error.php";
 
-	$label = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
 	$options = array(
