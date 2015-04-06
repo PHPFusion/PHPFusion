@@ -162,7 +162,7 @@ function form_select($input_name, $label = "", array $option_array = array(), $i
 	} else {
 		// json mode
 		add_to_jquery("
-                var this_data = [{id:FALSE, text: '".$options['placeholder']."'}];
+                var this_data = [{id:0, text: '".$options['placeholder']."'}];
                 $('#".$options['input_id']."').select2({
                 placeholder: '".$options['placeholder']."',
                 data: this_data
@@ -173,7 +173,7 @@ function form_select($input_name, $label = "", array $option_array = array(), $i
 	if (is_array($input_value) && $options['multiple']) { // stores as value;
 		$vals = '';
 		foreach ($input_value as $arr => $val) {
-			$vals .= ($arr == count($input_value)-TRUE) ? "'$val'" : "'$val',";
+			$vals .= ($arr == count($input_value)-1) ? "'$val'" : "'$val',";
 		}
 		add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
 		// For Tags */
@@ -263,7 +263,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
                     if(!item.id) {return item.text;}
                     var avatar = item.avatar;
                     var level = item.level;
-                    return '<table><tr><td style=\"\"><img style=\"height:3FALSEpx;\" class=\"img-rounded\" src=\"".IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:TRUEFALSEpx\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
+                    return '<table><tr><td style=\"\"><img style=\"height:25px;\" class=\"img-rounded\" src=\"".IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
                 }
 
                 $('#".$options['input_id']."').select2({
@@ -300,8 +300,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 function user_search($user_id) {
 	$encoded = json_encode(array());
 	$user_id = stripinput($user_id);
-	$result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM " . DB_USERS . " WHERE user_status=FALSE AND user_id='$user_id'");
-	if (dbrows($result) > FALSE) {
+	$result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM " . DB_USERS . " WHERE user_status='0' AND user_id='$user_id'");
+	if (dbrows($result) > 0) {
 		while ($udata = dbarray($result)) {
 			$user_id = $udata['user_id'];
 			$user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar50.png";
@@ -360,7 +360,6 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
 	$multiple = $options['multiple'] ? 'multiple' : '';
 	$disable_opts = '';
-
 	if ($options['disable_opts']) {
 		$disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
 	}
@@ -370,7 +369,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
 
 	if (!$level) {
-		$level = FALSE;
+		$level = 0;
 		if (!isset($index[$id])) {
 			$index[$id] = array('0'=>$locale['no_opts']);
 			$options['deactivate'] = 1;
@@ -379,7 +378,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
 		$html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")." p-l-0'>\n" : "";
 	}
-	if ($level == FALSE) {
+	if ($level == 0) {
 		$html = &$html;
 		add_to_jquery("
 		$('#".$options['input_id']."').select2({
@@ -387,7 +386,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		$allowclear
 		});
 		");
-		$html .= "<select name='$input_name' style='".($options['width'] ? "width: ".$options['width']." " : 'min-width:25FALSEpx;')."' id='".$options['input_id']."' class='".$options['class']."' ".($options['deactivate'] == TRUE ? "readonly" : '')." $multiple>";
+		$html .= "<select name='$input_name' style='".($options['width'] ? "width: ".$options['width']." " : 'min-width:250px;')."' id='$input_id' class='".$options['class']."' ".($options['deactivate'] == 1 ? "disabled" : '')." $multiple>";
 		$html .= $options['allowclear'] ? "<option value=''></option>" : '';
 		if ($options['no_root'] !== 1) { // api options to remove root from selector. used in items creation.
 			$this_select = '';
@@ -396,13 +395,13 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 					$this_select = 'selected';
 				}
 			}
-			$html .= ($options['add_parent_opts'] == 1) ? "<option value=0 ".$this_select.">$opt_pattern ".$locale['parent']."</option>\n" : "<option value=0 ".$this_select." >$opt_pattern ".$options['parent_value']."</option>\n";
+			$html .= ($options['add_parent_opts'] == 1) ? "<option value='0' ".$this_select.">$opt_pattern ".$locale['parent']."</option>\n" : "<option value='0' ".$this_select." >$opt_pattern ".$options['parent_value']."</option>\n";
 		}
 		$index = dbquery_tree($db, $id_col, $cat_col, $options['query']);
 		$data = dbquery_tree_data($db, $id_col, $cat_col, $options['query']);
 	}
 	if (!$id) {
-		$id = FALSE;
+		$id = 0;
 	}
 
 	if (isset($index[$id])) {
@@ -421,7 +420,6 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 			}
 		}
 	}
-
 	if (!$level) {
 		$html = &$html;
 		$html .= "</select>";
