@@ -386,7 +386,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		$allowclear
 		});
 		");
-		$html .= "<select name='$input_name' style='".($options['width'] ? "width: ".$options['width']." " : 'min-width:250px;')."' id='$input_id' class='".$options['class']."' ".($options['deactivate'] == 1 ? "disabled" : '')." $multiple>";
+		$html .= "<select name='$input_name' style='".($options['width'] ? "width: ".$options['width']." " : 'min-width:250px;')."' id='".$options['input_id']."' class='".$options['class']."' ".($options['deactivate'] == 1 ? "disabled" : '')." $multiple>";
 		$html .= $options['allowclear'] ? "<option value=''></option>" : '';
 		if ($options['no_root'] !== 1) { // api options to remove root from selector. used in items creation.
 			$this_select = '';
