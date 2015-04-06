@@ -11,7 +11,8 @@ $locale['forum_0007'] = "Модератор: ";
 $locale['forum_0008'] = "Каталог";
 $locale['forum_0009'] = "Показати останні повідомлення";
 $locale['forum_0010'] = "Повернутись до початку";
-$locale['forum_0011'] = "My Posts"; // translate this line
+$locale['forum_0011'] = "Мої повідомлення";
+$locale['forum_0012'] = "Останні теми";
 
 // View Forum
 $locale['forum_0050'] = "Перегляд форуму";
@@ -21,7 +22,7 @@ $locale['forum_0053'] = "Перегляди";
 $locale['forum_0054'] = "Відповіді";
 $locale['forum_0055'] = "Сторінка: ";
 $locale['forum_0056'] = "Теми відсутні";
-$locale['forum_0057'] = "Start a New Thread"; // translate this line please
+$locale['forum_0057'] = "Створити тему";
 
 // View Forum Moderator options
 $locale['forum_0080'] = "Відмітити все";
@@ -54,7 +55,7 @@ $locale['forum_0164'] = "Редагування ";
 $locale['forum_0165'] = "Підстава";
 $locale['forum_0166'] = "Показати підставу редагування.";
 $locale['forum_0167'] = " в ";
-$locale['forum_0168'] = "Швидка відповідь";
+$locale['forum_0168'] = "Відповідь";
 $locale['forum_0169'] = "Заборонити усміхайлики";
 $locale['forum_0170'] = "Показувати мій підпис";
 $locale['forum_0171'] = "Сповістити мене про нову відповідь";
@@ -118,6 +119,7 @@ $locale['forum_0267'] = "написано";
 $locale['forum_0268'] = "Адреса IP";
 $locale['forum_0269'] = "Теми відстуні.";
 $locale['forum_0270'] = "Повідомлення відсутні.";
+$locale['forum_0271'] = "Тепер ця тема порожня. Будь ласка, поверніться до <a href='".FORUM."index.php'>початку форуму</a>";
 
 // Move Posts
 $locale['forum_0300'] = "Перемістити повідомлення";
@@ -195,7 +197,7 @@ $locale['forum_0520'] = "Відсутній текст. Відповідь не 
 $locale['forum_0521'] = "Повідомлення:";
 $locale['forum_0522'] = "Місцезнаходження:";
 $locale['forum_0523'] = "Зареєстровано:";
-$locale['forum_0524'] = "Відповідь в ";
+$locale['forum_0524'] = "Відповідь ";
 $locale['forum_0525'] = "Останнє повідомлення";
 $locale['forum_0526'] = "Останні %s повідомлень";
 
@@ -313,9 +315,9 @@ $locale['forum_0758'] = "Оновити тему";
 $locale['forum_0759'] = "Тему оновлено успішно.";
 
 // Post vote errors
-$locale['forum_0800'] = "Vote rejected"; // please translate these three lines
-$locale['forum_0801'] = "You cannot vote for a second time per thread";
-$locale['forum_0802'] = "You cannot vote at your own post.";
+$locale['forum_0800'] = "Голос відхилено";
+$locale['forum_0801'] = "Ви не можете голосувати вдруге у одній темі";
+$locale['forum_0802'] = "Ви не можете голосувати за власне повідомлення.";
 
 // forum.forms.php
 $locale['forum_2000'] = "Тема: ";
@@ -335,4 +337,12 @@ $locale['forum_p090'] = "3 місяці";
 $locale['forum_p180'] = "6 місяців";
 $locale['forum_p365'] = "1 рік";
 $locale['forum_p999'] = "Всі";
+
+$locale['error-MP000'] = "Помилка переміщення повідомлень";
+$locale['error-MP001'] = "Цільова тема не існує.";
+$locale['error-MP002'] = "Вибрані для переміщення повідомлення не існують або хтось раніше їх перемістив.";
+$locale['error-MP003'] = "Повідомлення для переміщення відсутні.";
+$locale['success-DP001'] = "Повідомлення переміщено успішно";
+$locale['success-DP002'] = "Всі повідомлення видалено. Теми також видалено, оскільки вони більше не містять жодного повідомлення.";
+$locale['error-DP001'] = "Повідомлення для видалення відсутні.";
 ?>

@@ -60,7 +60,7 @@ $locale['461'] = "для гостей";
 $locale['462'] = "Часовий зсув на сервері";
 $locale['463'] = "Налаштуйте серверний час на GMT 0";
 $locale['464'] = "Стандартна часова зона";
-$locale['465'] = "First day of week"; // translate this
+$locale['465'] = "Початок тижня";
 
 // Forum Settings
 $locale['500'] = "Параметри форуму";
@@ -297,10 +297,8 @@ $locale['1014a'] = "рекомендується заборонити для в�
 
 // Social integration
 $locale['1030'] = "Створення метатегів OpenGraph для соціальних мереж";
-
-// translate next two lines and remove this comment after
-$locale['1031'] = "Allow index URLs in BB Codes";
-$locale['1032'] = "Allow index URLs in user profiles";
+$locale['1031'] = "Дозволити індексування посилань у BB кодах";
+$locale['1032'] = "Дозволити індексуваня посилань в облікових записах користувачів";
 
 // Date format options (you can add/delete lines)
 // More info at: http://php.net/manual/en/function.strftime.php
