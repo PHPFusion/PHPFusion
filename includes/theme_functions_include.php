@@ -459,7 +459,7 @@ function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
  * @return string
  */
 function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class='img-thumbnail') {
-	$userdata = array(
+	$userdata += array(
 		'user_id' => 0,
 		'user_name' => '',
 		'user_avatar' => '',
