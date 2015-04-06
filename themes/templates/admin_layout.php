@@ -59,7 +59,8 @@
                     'save table contextmenu directionality emoticons template paste textcolor'
                 ],
                 image_list: <?php echo $tinymce_list ?>,
-                content_css: '".THEME."styles.css',
+				document_base_url: '<?php echo fusion_get_settings('site_path') ?>',
+                content_css: '<?php echo THEME.'styles.css' ?>',
                 toolbar1: 'insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
                 toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
                 toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
