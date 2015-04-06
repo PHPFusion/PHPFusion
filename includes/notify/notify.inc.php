@@ -130,6 +130,14 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
  */
 function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
 	$type = $removeAfterAccess ? 'once' : 'persist';
+	if (is_array($value)) {
+		$return = "<ol style='list-style: decimal'>\n";
+		foreach($value as $text) {
+			$return .= "<li>".$text."</li>";
+		}
+		$return .= "</ol>\n";
+		$value = $return;
+	}
 	if (isset($_SESSION['notices'][$type][$key][$status])) {
 		array_push($_SESSION['notices'][$type][$key][$status], $value);
 	} else {

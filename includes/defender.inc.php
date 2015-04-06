@@ -59,7 +59,7 @@ class defender {
 		 * This solution was needed to load the defender.inc.php before
 		 * defining LOCALESET
 		 */
-		//include LOCALE.LOCALESET."defender.php";
+		include_once LOCALE.LOCALESET."defender.php";
 
 		// declare the validation rules and assign them
 		// type of fields vs type of validator
@@ -650,35 +650,30 @@ class defender {
 	 */
 	public function sniff_token() {
 		global $defender;
-		//$this->debug = true;
 		$error = FALSE;
 		if (!empty($_POST)) {
 			// Check if a token is being posted and make sure is a string
 			if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
 				$error = "Token was not posted";
-			// Check if a session is started already
-			} elseif (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-				$error = "Cannot find any token for this form";
-			// Check if the token exists in storage
-			} elseif (!in_array($_POST['fusion_token'], $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-				$error = "Cannot find token in storage: ".stripinput($_POST['fusion_token']);
-			// Check if the token is valid
-			} elseif (!self::verify_token(0)) {
+			}
+			if (!self::verify_token(0)) {
 				$error = "Token is invalid: ".stripinput($_POST['fusion_token']);
+				if (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+					$error = "Cannot find any token for this form - ".$_POST['form_id'];
+				}
 			}
-
-			// Check if any error was set
-			if ($error) {
-				// Flag the token as invalid
-				$defender->tokenIsValid = FALSE;
-				// Flag that something went wrong
-				$this->stop();
-				if ($this->debug) addNotice('danger', $error);
-			}
-
 		}
-	}
 
+		// Check if any error was set
+		if ($error) {
+			// Flag the token as invalid
+			$defender->tokenIsValid = FALSE;
+			// Flag that something went wrong
+			$this->stop();
+			if ($this->debug) addNotice('danger', $error);
+		}
+
+	}
 
 	/**
 	 * Generate a Token
@@ -689,18 +684,16 @@ class defender {
 	 */
 	public static function generate_token($form_id = 'phpfusion', $max_tokens = 10) {
 		global $userdata, $defender;
-
 		$user_id = (iMEMBER ? $userdata['user_id'] : 0);
 		// store just one token for each form if the user is a guest
 		if ($user_id == 0) $max_tokens = 1;
-		
 		// Attempt to recover the token instead of generating a new one
 		// Checks if a token is being posted and if is valid, and then
 		// checks if the form for which this token was intended is
 		// the same form for which we are trying to generate a token
 		if (isset($_POST['fusion_token']) && $defender->tokenIsValid && ($form_id == stripinput($_POST['form_id']))) {
 			$token = stripinput($_POST['fusion_token']);
-			if ($defender->debug) addNotice('info', 'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
+			if ($defender->debug) addNotice('success', 'The token for "'.stripinput($_POST['form_id']).'" has been recovered and is being reused');
 		} else {
 			$token_time = time();
 			$algo = fusion_get_settings('password_algorithm');
@@ -710,21 +703,41 @@ class defender {
 			$token = $user_id.".".$token_time.".".hash_hmac($algo, $key, $salt);
 			// store the token in session
 			$_SESSION['csrf_tokens'][self::pageHash()][$form_id][] = $token;
+
+			if ($defender->debug) addNotice('info', 'A new token for "'.$form_id.'" was generated : '.$token);
+
+			if ($defender->debug) {
+				//print_p("And we have ".count($_SESSION['csrf_tokens'][$form_id])." tokens in place...");
+				//print_p("Max token allowed in $form_id is $max_tokens");
+				if (defined('FUSION_NULL')) addNotice('danger', 'FUSION NULL is DECLARED');
+				if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
+					addNotice('danger', 'Current Token That is Going to be validated in this page: ');
+					addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
+				} else {
+					addNotice('warning', 'There is no token for this page this round');
+				}
+			}
 			// some cleaning, remove oldest token if there are too many
 			if ($max_tokens > 0 && count($_SESSION['csrf_tokens'][self::pageHash()][$form_id]) > $max_tokens) {
+				if ($defender->debug) addNotice('warning', 'Token that is <b>erased</b> '.$_SESSION['csrf_tokens'][self::pageHash()][$form_id][0].'. This token cannot be validated anymore.');
 				array_shift($_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
 			}
-			if ($defender->debug) addNotice('info', 'A new token for "'.$form_id.'" was generated');
-		}
-		//print_p("And we have ".count($_SESSION['csrf_tokens'][$form_id])." tokens in place...");
-		//print_p("Max token allowed in $form_id is $max_tokens");
 
+			if ($defender->debug) {
+				if (!empty($_SESSION['csrf_tokens'][self::pageHash()][$form_id])) {
+					addNotice('danger', 'After clean up, the token remaining is: ');
+					addNotice('danger', $_SESSION['csrf_tokens'][self::pageHash()][$form_id]);
+				} else {
+					addNotice('warning', 'There is no token for this page this round');
+				}
+			}
+		}
 		return $token;
 	}
 
 	/**
-	 * Token Validation
-	 * Makes thorough checks of a posted token, and the token alone
+	 * Plain Token Validation
+	 * Makes thorough checks of a posted token, and the token alone. It does not unset token.
 	 *
 	 * @param int	$post_time	The time in seconds before a posted form is accepted,
 	 *							this is used to prevent spamming post submissions
@@ -738,11 +751,13 @@ class defender {
 		$token_data = explode(".", stripinput($_POST['fusion_token']));
 		// check if the token has the correct format
 		if (count($token_data) == 3) {
+
 			list($tuser_id, $token_time, $hash) = $token_data;
 
 			$user_id = (iMEMBER ? $userdata['user_id'] : 0);
 			$algo = fusion_get_settings('password_algorithm');
 			$salt = md5(isset($userdata['user_salt']) && !isset($_POST['login']) ? $userdata['user_salt'].SECRET_KEY_SALT : SECRET_KEY_SALT);
+
 			// check if the logged user has the same ID as the one in token
 			if ($tuser_id != $user_id) {
 				$error = $locale['token_error_4'];
