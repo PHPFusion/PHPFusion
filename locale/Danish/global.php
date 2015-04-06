@@ -57,6 +57,7 @@ $locale['user1'] = "Bruger";
 $locale['user2'] = "Administrator";
 $locale['user3'] = "Super Administrator";
 $locale['user_na'] = "N/A";
+$locale['user_guest'] = "Gæst";
 $locale['user_anonymous'] = "Anonym Bruger";
 $locale['genitive'] = "%s'ere %eres";
 // Standard User Status
@@ -128,7 +129,9 @@ $locale['global_072'] = "Læs mere";
 $locale['global_073'] = " Kommentarer";
 $locale['global_073b'] = " Kommentar";
 $locale['global_074'] = " Fremvisninger";
+$locale['global_074b'] = " Fremvisning";
 $locale['global_075'] = "Udskriv";
+$locale['print'] = 'Udskriv';
 $locale['global_076'] = "Rediger";
 $locale['global_077'] = "Nyheder";
 $locale['global_078'] = "Der er ikke oprettet nyheder endnu";
@@ -136,19 +139,12 @@ $locale['global_079'] = "I ";
 $locale['global_080'] = "Ukategoriseret";
 $locale['global_081'] = "Nyhederne startside";
 $locale['global_082'] = "Nyhedscenter";
-$locale['global_081b'] = "Blog start";
-$locale['global_082b'] = "Blog center";
-$locale['global_082c'] = "Blog arkiv";
 $locale['global_083'] = "Senest opdateret";
 $locale['global_084'] = "Nyhedskategori";
-$locale['global_084b'] = "Blogkategori";
 $locale['global_085'] = "Alle andre kategorier";
 $locale['global_086'] = "Seneste nyt";
 $locale['global_087'] = "Mest kommenterede nyheder";
 $locale['global_088'] = "Nyheder med højeste vurdering";
-$locale['global_086b'] = "Nyeste blogindlæg";
-$locale['global_087b'] = "Mest kommenterede blogindlæg";
-$locale['global_088b'] = "Højest vurderede blogindlæg";
 $locale['global_089'] = "Bliv den første til at kommentere på %s";
 $locale['global_089a'] = "Bliv den første til at vurdere dette %s";
 // Page Navigation
@@ -211,6 +207,7 @@ $locale['UM095'] = "Foreslå blogindlæg";
 $locale['UM095'] = "Velkommen: ";
 $locale['UM096'] = "Privat menu";
 $locale['UM097'] = "Skift sprog";
+$locale['UM101'] = "Skift sprog";
 // Gauges
 $locale['UM098'] = "Indbakke:";
 $locale['UM099'] = "Udbakke:";
@@ -230,6 +227,10 @@ $locale['global_140'] = "Se";
 $locale['global_141'] = "Se afstemning";
 $locale['global_142'] = "Der er endnu ikke oprettet afstemninger.";
 $locale['global_143'] = "Vurderinger";
+
+// Keywords and Meta
+$locale['tags'] = "Tags";
+
 // Captcha
 $locale['global_150'] = "Sikkerhedskode:";
 $locale['global_151'] = "Indskriv sikkerhedskode:";
@@ -379,6 +380,8 @@ $locale['move_down'] = "Flyt nedad";
 // Action
 $locale['add'] = 'Tilføj';
 $locale['save'] = 'Gem';
+$locale['save_changes'] = 'Gem ændringer';
+$locale['confirm'] = 'Bekræft';
 $locale['update'] = 'Opdater';
 $locale['updated'] = 'Opdateret';
 $locale['remove'] = 'Fjern';
@@ -440,18 +443,15 @@ $locale['comments'] = "Kommentarer";
 $locale['ratings'] = "Vurderinger";
 $locale['comments_ratings'] = "Kommentarer og vurderinger";
 $locale['user_account'] = "Brugerkonto";
-$locale['testimonial_rank'] = "Jeg er %s på denne side ";
-$locale['testimonial_location'] = "og aktuelt bor jeg i %s";
-$locale['testimonial_join'] = ". Jeg blev oprettet som bruger her på siden %s";
-$locale['testimonial_web'] = ". Jeg har også en anden side, nemlig %s";
-$locale['testimonial_contact'] = ". Hvis du har brug for at kontakte  mig, kan du få fat i mig her %s";
-$locale['testimonial_email'] = ". Du kan også sende mig en mail på %s";
+$locale['about'] = "Om";
 // Words for formatting to single and plural forms. Count of forms is language-dependent
 $locale['fmt_article'] = "artikel|artikler";
 $locale['fmt_blog'] = "blog|blogs";
 $locale['fmt_comment'] = "kommentar|kommentarer";
+$locale['fmt_vote'] = "stemme|stemmer";
 $locale['fmt_day'] = "dag|dage";
 $locale['fmt_download'] = "download|downloads";
+$locale['fmt_follower'] = "følger|følgere";
 $locale['fmt_forum'] = "debat|debatter";
 $locale['fmt_guest'] = "gæst|gæster";
 $locale['fmt_hour'] = "time|timer";
@@ -464,8 +464,8 @@ $locale['fmt_news'] = "nyhed|nyheder";
 $locale['fmt_photo'] = "billede|billeder";
 $locale['fmt_post'] = "indlæg|indlæg";
 $locale['fmt_question'] = "spørgsmål|spørgsmål";
+$locale['fmt_read'] = "visning|visninger";
 $locale['fmt_rating'] = "stemme|stemmer";
-$locale['fmt_reads'] = "visning|visninger";
 $locale['fmt_second'] = "sekund|sekunder";
 $locale['fmt_shouts'] = "replik|replikker";
 $locale['fmt_thread'] = "emne|emner";

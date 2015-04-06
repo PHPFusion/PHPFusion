@@ -23,6 +23,7 @@ $locale['419'] = "Der er ingen private beskeder";
 $locale['420'] = "Send en privat besked";
 $locale['421'] = "Til";
 $locale['422'] = "tekst";
+$locale['422a'] = "Oprindelig besked";
 $locale['423'] = "BB Code";
 $locale['424'] = "Smileys";
 $locale['425'] = "Valgmuligheder";

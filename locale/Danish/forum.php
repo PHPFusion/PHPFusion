@@ -12,6 +12,7 @@ $locale['forum_0008'] = "Struktur";
 $locale['forum_0009'] = "Vis indlæg fra foregående";
 $locale['forum_0010'] = "Indholdsfortegnelse over debat";
 $locale['forum_0011'] = "Mine indlæg";
+$locale['forum_0012'] = "Seneste emner";
 // View Forum
 $locale['forum_0050'] = "Se debat";
 $locale['forum_0051'] = "Emne";
@@ -20,7 +21,7 @@ $locale['forum_0053'] = "Fremvisninger";
 $locale['forum_0054'] = "Svar";
 $locale['forum_0055'] = "Side: ";
 $locale['forum_0056'] = "Ingen debatter i dette debatområde";
-$locale['forum_0057'] = "Start a New Thread"; // translate this line please
+$locale['forum_0057'] = "Påbegynd et nyt emne"; // translate this line please
 // View Forum Moderator options
 $locale['forum_0080'] = "Vælg alle";
 $locale['forum_0081'] = "Fjern markering fra alle";
@@ -103,13 +104,15 @@ $locale['forum_0260'] = "Nye indlæg";
 $locale['forum_0261'] = "Ingen nye indlæg";
 $locale['forum_0262'] = "Fastholdte debatter";
 $locale['forum_0263'] = "Låste debatter";
-$locale['forum_0264'] = "Ny debat";
+$locale['forum_0264'] = "Nyt emne";
 $locale['forum_0265'] = "Rediger";
 $locale['forum_0266'] = "Citer";
 $locale['forum_0267'] = "skrev";
 $locale['forum_0268'] = "IP";
 $locale['forum_0269'] = "Ingen debatter fundet.";
 $locale['forum_0270'] = "Ingen indlæg fundet.";
+$locale['forum_0271'] = "Der er ikke længere indlæg under dette emne. Gå tilbage til debattens <a href='".FORUM."index.php'>Indholdsfortegnelse</a>";
+
 // Move Posts
 $locale['forum_0300'] = "Flyt indlæg";
 $locale['forum_0301'] = "Vælg en ny debat";
@@ -136,7 +139,7 @@ $locale['forum_0327'] = 'Der er ikke defineret debatemner i denne kategori';
 $locale['forum_0328'] = 'Ingen debatter.';
 
 $locale['forum_0340'] = 'Spørgsmål';
-$locale['forum_0341'] = 'Temaer';
+$locale['forum_0341'] = 'Emner';
 
 $locale['forum_0350'] = " Debatregler:";
 $locale['forum_0351'] = "Underdebatter";
@@ -145,7 +148,7 @@ $locale['forum_0352'] = "Bekendtgørelser";
 $locale['forum_0360'] = " Tilføj et svar";
 $locale['forum_0361'] = "&middot; Side ";
 $locale['forum_0362'] = ' indlæg ';
-$locale['forum_0363'] = "Swenest opdateret den ";
+$locale['forum_0363'] = "Senest opdateret den ";
 $locale['forum_0364'] = " Brugerens hjemmeside";
 $locale['forum_0365'] = " Svar";
 
@@ -162,12 +165,12 @@ $locale['forum_0378'] = 'Løst';
 $locale['forum_0379'] = 'Uløst';
 
 $locale['forum_0380'] = 'Forfatter';
-$locale['forum_0381'] = 'Indlæggets tidspunkt';
+$locale['forum_0381'] = 'Tidspunkt for indlæg';
 $locale['forum_0382'] = 'Emne';
 $locale['forum_0383'] = 'Svar';
 $locale['forum_0384'] = 'Fremvisninger';
 
-$locale['forum_0385'] = 'Opstigende';
+$locale['forum_0385'] = 'Stigende';
 $locale['forum_0386'] = 'Faldende';
 
 $locale['forum_0387'] = "Alle tidspunkter";
@@ -182,7 +185,7 @@ $locale['forum_0391'] = 'Skrevet';
 
 $locale['forum_0395'] = 'Vælg debat';
 $locale['forum_0396'] = 'Bekræft dit valg af debat';
-$locale['forum_0397'] = "Der er endnu ikke defineret debatter.";
+$locale['forum_0397'] = "Der er endnu ikke oprettet emner.";
 
 // Post Titles
 $locale['forum_0500'] = "Se emne før det gemmes";
@@ -195,7 +198,7 @@ $locale['forum_0506'] = "Slet indlæg";
 $locale['forum_0507'] = "Rediger indlæg";
 $locale['forum_0508'] = "Gem ændringer";
 // Post Preview
-$locale['forum_0520'] = "Ingen besked - indlægget vil blive afvist, hvis du ikke skriver en besked";
+$locale['forum_0520'] = "Ingen tekst - indlægget vil blive afvist, hvis du ikke skriver en tekst";
 $locale['forum_0521'] = "Indlæg:";
 $locale['forum_0522'] = "Hjemsted:";
 $locale['forum_0523'] = "Blev oprettet:";
@@ -205,9 +208,9 @@ $locale['forum_0526'] = "Seneste %s indlæg";
 // Post Error/Success
 $locale['forum_0540'] = "Der er ikke tilladt at tilknytte filer af denne type.";
 $locale['forum_0541'] = "Forbudt filnavn eller forkert størrelse.";
-$locale['forum_0542'] = "Fejl: Du har glemt at skrive et emne og eller en besked";
+$locale['forum_0542'] = "Fejl: Du har glemt at skrive et emne og eller en tekst.";
 $locale['forum_0543'] = "Dit emne er blevet gemt";
-$locale['forum_0544'] = "Dit svar er blewvet gemt";
+$locale['forum_0544'] = "Dit svar er blevet gemt";
 $locale['forum_0545'] = "Emnet er slettet";
 $locale['forum_0546'] = "Indlægget er blevet slettet";
 $locale['forum_0547'] = "Dit indlæg er blevet opdateret";
@@ -235,9 +238,9 @@ $locale['forum_0576'] = " Stemmer i afstemninger er slettet";
 $locale['forum_0577'] = " Valgmuligheder under afstemninger er slettet";
 $locale['forum_0580'] = " Slet records i forbindelse med udvikling ";
 $locale['forum_0581'] = "Aktuelt modus er --- ";
-$locale['forum_0582'] = "EDIT MODE";
-$locale['forum_0583'] = "REPLY MODE";
-$locale['forum_0584'] = "POST NEW THREAD MODE.";
+$locale['forum_0582'] = "REDIGERINGSTILSTAND";
+$locale['forum_0583'] = "SVARTILSTAND";
+$locale['forum_0584'] = "NYT INDLÆG.";
 
 $locale['forum_0591'] = 'Slet indlæg';
 $locale['forum_0592'] = 'Slet emner';
@@ -246,10 +249,10 @@ $locale['forum_0595'] = 'Slet afstemning';
 
 // Post Form
 $locale['forum_0600'] = "Emne";
-$locale['forum_0601'] = "Besked";
+$locale['forum_0601'] = "Svartekst";
 $locale['forum_0602'] = "Valgmuligheder";
 $locale['forum_0603'] = "Rediger afstemning";
-$locale['forum_0604'] = "Afstem ningens overskrift";
+$locale['forum_0604'] = "Afstemningens overskrift";
 $locale['forum_0605'] = "Valgmuligheder";
 $locale['forum_0606'] = $locale['forum_0605']." 1";
 $locale['forum_0607'] = $locale['forum_0605']." 2";
@@ -269,7 +272,7 @@ $locale['forum_0627'] = "Gem redigeringsmulighed";
 $locale['forum_0628'] = "Lås indlægget";
 
 // Forum Post Merger
-$locale['forum_0640'] = "Sammenflettet den";
+$locale['forum_0640'] = "Sammenflettet den ";
 
 // Search Forum Form
 
@@ -279,23 +282,23 @@ $locale['forum_0650'] = 'Du har skrevet for mange svar for hurtigt. Sæt farten 
 $locale['forum_0660'] = "Der er kommet svar i debatten - {THREAD_SUBJECT}";
 $locale['forum_0661'] = "Hej {USERNAME},
 
-Der er skrevet et svar i den debat med emnet '{THREAD_SUBJECT}' som du følger på ".fusion_get_settings('sitename').". Du kan bruge nedenstående link til at se svaret:
+Der er lavet et svar i den debat med emnet '{THREAD_SUBJECT}' som du følger på ".fusion_get_settings('sitename').". Du kan bruge nedenstående link til at se svaret:
 
 {THREAD_URL}
 
-Hvis du ikke længere ønsker at følge denne debat, kan du klikke på linket 'Hold op med at følgde denne debat' i toppen af emnet.
+Hvis du ikke længere ønsker at følge denne debat, kan du klikke på linket 'Hold op med at følge denne debat' i toppen af emnet.
 
 Venligst
 ".fusion_get_settings('siteusername').".";
 
 // Delete Thread
-$locale['forum_0700'] = "Slet emnet";
+$locale['forum_0700'] = "Slet emne";
 $locale['forum_0701'] = "Emnet er nu slettet.";
 $locale['forum_0702'] = "Vend tilbage til denne debat";
-$locale['forum_0703'] = "Vend tilbage til debatovberblikket";
+$locale['forum_0703'] = "Vend tilbage til debatoverblikket";
 $locale['forum_0704'] = "Er du sikker på, at du ønsker at slette dette emne?";
 // Lock Thread
-$locale['forum_0710'] = "Lås emnet";
+$locale['forum_0710'] = "Lås emne";
 $locale['forum_0711'] = "Emnet er låst.";
 // Unlock Thread
 $locale['forum_0720'] = "Lås emnet op";
@@ -304,8 +307,8 @@ $locale['forum_0721'] = "Emnet er nu låst op.";
 $locale['forum_0730'] = "Få dette emne til at stå øverst.";
 $locale['forum_0731'] = "Emnet står nu øverst.";
 // Make Thread Non-Sticky
-$locale['forum_0740'] = "Løsgør dette emne fra toppen";
-$locale['forum_0741'] = "Emnet er nu fjernetr fra toppen.";
+$locale['forum_0740'] = "Frigør dette emne fra toppen";
+$locale['forum_0741'] = "Emnet er nu fjernet fra toppen.";
 // Move Thread
 $locale['forum_0750'] = "Flyt emnet";
 $locale['forum_0751'] = "Flyt emnet til:";
@@ -314,9 +317,9 @@ $locale['forum_0752'] = "Emnet er nu flyttet.";
 $locale['forum_0758'] = "Genopfrisk emnet";
 $locale['forum_0759'] = "Emnet er nu genopfrisket.";
 // Post vote errors
-$locale['forum_0800'] = "Vote rejected"; // please translate these three lines
-$locale['forum_0801'] = "You cannot vote for a second time per thread";
-$locale['forum_0802'] = "You cannot vote at your own post.";
+$locale['forum_0800'] = "Din stemme er afvist"; // please translate these three lines
+$locale['forum_0801'] = "Du kan ikke stemme mere end en gang pr. afstemning";
+$locale['forum_0802'] = "Du kan ikke stemme i dit eget indlæg.";
 
 // forum.forms.php
 $locale['forum_2000'] = "Tema: ";
@@ -336,4 +339,12 @@ $locale['forum_p090'] = '3 måneder';
 $locale['forum_p180'] = '6 måneder';
 $locale['forum_p365'] = '1 år';
 $locale['forum_p999'] = "Alle resultater";
+
+$locale['error-MP000'] = "Flytning af indlæg: Fejl";
+$locale['error-MP001'] = "Det nye emne eksisterer ikke.";
+$locale['error-MP002'] = "De indlæg du har markeret eksisterer ikke, eller også har en anden allerede flyttet dem.";
+$locale['error-MP003'] = "Der er ingen indlæg, som kan flyttes.";
+$locale['success-DP001'] = "Indlæggene er flyttet";
+$locale['success-DP002'] = "Alle indlæg under emnet er flyttet. Emnet er blevet flyttet, fordi det ikke længere indeholder indlæg.";
+$locale['error-DP001'] = "Der er ingen indlæg, som kan flyttes.";
 ?>

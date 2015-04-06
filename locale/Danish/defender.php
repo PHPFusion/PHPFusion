@@ -1,5 +1,5 @@
 <?php
-$locale['validate'] = "Kontrolller og gentag valideringen af feltet.";
+$locale['validate'] = "Kontroller og gentag valideringen af feltet.";
 
 // Admin Login
 $locale['cookie_title'] = "Din session fik timeout";
@@ -23,6 +23,13 @@ $locale['field_error_blank'] = "%s må ikke være tomt.";
 $locale['firstname_error'] = "Fornavn skal kontrolleres.";
 $locale['lastname_error'] = "Efternavn skal kontrolleres.";
 $locale['name_error'] = "Fornavn og efternavn må ikke være identiske.";
+
+// Document errors
+$locale['doc_type_error'] = "Dokumenttypen skal kontrolleres.";
+$locale['doc_series_error'] = "Dokumentserien er fejlbehæftet.";
+$locale['doc_number_error'] = "Dokumentnummeret skal kontrolleres.";
+$locale['doc_authority_error'] = "Document authority requires attention.";
+$locale['date_issue_error'] = "Dokumentdatoen skal kontrolleres.";
 
 // Tokens
 $locale['token_error_title'] = "Fejl i forbindelse med token";

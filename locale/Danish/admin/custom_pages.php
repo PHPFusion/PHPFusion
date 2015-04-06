@@ -1,8 +1,16 @@
 <?php
+$locale['cp_100'] = 'Side';
+$locale['cp_101'] = 'Sideoverskrift';
+$locale['cp_102'] = 'Adgang for';
+$locale['cp_103'] = 'Sprog';
+$locale['cp_104'] = 'Tillad kommentarer';
+$locale['cp_105'] = 'Tillad vurdering';
+$locale['cp_106'] = 'Internt link';
 // Custom Pages titles
 $locale['400'] = "Tilføj brugeroprettet side";
 $locale['401'] = "Rediger brugeroprettet side";
 $locale['402'] = "Aktuelle brugeroprettede sider";
+$locale['403'] = "Brugeroprettede sider";
 // Custom Pages messages
 $locale['410'] = "Siden er gemt";
 $locale['411'] = "Siden er opdateret";

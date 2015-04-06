@@ -1,9 +1,11 @@
 <?php
 // Delete blacklisted user
 $locale['400'] = "Ophæv udelukkelse af bruger";
-$locale['401'] = "Brugerens udelukkelse er oph&aelig;vet";
+$locale['401'] = "Brugerens udelukkelse er ophævet";
 $locale['402'] = "Tilbage til administration af udelukkelse";
 $locale['403'] = "Tilbage til administrationsside";
+$locale['404'] = "Indskriv en IP-adresse eller en mail adresse";
+$locale['405'] = "Mailadressen er ikke gyldig.";
 // Add/Edit Blacklist Titles
 $locale['420'] = "Udeluk bruger";
 $locale['421'] = "Rediger oplysninger for udelukket bruger";

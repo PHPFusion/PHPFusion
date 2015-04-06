@@ -1,5 +1,8 @@
 <?php
 // Album titles
+$locale['photo_000'] = 'Fotoalbums';
+$locale['photo_001'] = 'Billeder';
+$locale['photo_002'] = 'Masseupload';
 $locale['400'] = "Tilføj album";
 $locale['401'] = "Rediger album";
 $locale['402'] = "Aktuelt oprettede albums";
@@ -41,7 +44,57 @@ $locale['467'] = "Nedad";
 $locale['468'] = "Rediger";
 $locale['469'] = "Slet";
 $locale['470'] = "Genopfrisk alle data";
+$locale['470a'] = "Rækkefølgen for albums og billeder er blevet genopfrisket";
+$locale['470c'] = "Genopfrisk rækkefølge";
 $locale['471'] = "Der er endnu ikke oprettet albums.";
 // Delete Album
 $locale['500'] = "Skal dette album slettes?";
+// new admin
+$locale['600'] = "Opret album";
+$locale['601'] = "Tilføj billeder";
+
+$locale['605'] = "Opret fotogalleri";
+$locale['606'] = "Rediger fotogalleri";
+$locale['607'] = "Overskrift";
+$locale['608'] = "Galleriets navn";
+$locale['609'] = "Beskrivelse";
+$locale['610'] = "Hvad handler dit galleri om?";
+$locale['611'] = "Adgangsrettigheder";
+$locale['612'] = "Sprog";
+$locale['613'] = "Rækkefølge";
+
+$locale['620'] = "Opload et billede";
+$locale['621'] = "Rediger et billede";
+$locale['622'] = "Billedoverskrift";
+$locale['623'] = "Galleriets navn";
+$locale['624'] = "Fotoalbum";
+$locale['625'] = "Billedets nøgleord";
+$locale['626'] = "Nøgleord";
+$locale['627'] = "Billedbeskrivelse";
+$locale['628'] = "Hvad handler dit galleri om?";
+$locale['629'] = "Tillad kommentarer";
+$locale['630'] = "Tillad vurdering";
+$locale['631'] = "Opload billede";
+
+$locale['635'] = "Galleri :";
+$locale['636'] = "Oploadet af:";
+$locale['637'] = "Dato for tilføjelse:";
+$locale['638'] = "Vurdér";
+$locale['639'] = "Kommentér";
+$locale['640'] = "Billedbeskrivelse:";
+$locale['641'] = "Antal visninger";
+$locale['642'] = "Vurderinger";
+$locale['643'] = "Kommentarer";
+$locale['644'] = "Dimensioner";
+$locale['645'] = "Billedtype";
+$locale['646'] = "Kanaler";
+$locale['647'] = "Bits";
+$locale['648'] = "ISO";
+$locale['649'] = "Belysning";
+$locale['650'] = "Blænde";
+$locale['651'] = "Kamera";
+$locale['652'] = "Kameramodel";
+$locale['655'] = "Nøgleord:";
+
+$locale['660'] = "Der er ikke lagt billeder ind i dette album";
 ?>

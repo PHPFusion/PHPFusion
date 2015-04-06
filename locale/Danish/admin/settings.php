@@ -163,6 +163,7 @@ $locale['683ML'] = "Slå flersprogsfunktionen til";
 $locale['684ML'] = "Tilgængelige sprog";
 $locale['685ML'] = "Vælg de tilladte sprog. <br /><b>Bemærk</b>: Fjerner du et sprog, fjerner du også alle tilpassede interne links, kategorier og andet flersproget indhold i det pågældende sprog fra siden.";
 $locale['669'] = "Nyheder pr. side";
+$locale['669b'] = "Blogs";
 $locale['670'] = "Bør være et ulige tal";
 $locale['671'] = "Slå kommentarsystem til?";
 $locale['672'] = "Slå vurderingssystem til";
@@ -218,6 +219,8 @@ $locale['800'] = "Ryd op i debatter";
 $locale['801'] = "Slettede indlæg: ";
 $locale['802'] = "Slettede emner: ";
 $locale['803'] = "Slettede filer: ";
+// Privacy policy
+$locale['820'] = "Privatlivspolitik";
 // Banners Settings
 $locale['850'] = "Bannere";
 $locale['851'] = "Banner 1";
@@ -252,6 +255,7 @@ $locale['950'] = "Upload af billeder";
 $locale['951'] = "Billedlink:";
 $locale['952'] = "Kategori";
 $locale['953'] = "Nyhed";
+$locale['953b'] = "Blogindlæg";
 $locale['954'] = "Formindskelsesratio:";
 $locale['955'] = "Original";
 $locale['956'] = "Kvadratisk";
