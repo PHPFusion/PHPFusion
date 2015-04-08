@@ -18,7 +18,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 add_to_title($locale['global_201'].$locale['forum_0501']);
-
+global $defender;
 // poll add option not adding option.
 $can_poll = $info['forum_poll'] && checkgroup($info['forum_poll']) ? 1  : 0;
 $can_attach = $info['forum_attach'] && checkgroup($info['forum_attach']) ? 1 : 0;
@@ -398,6 +398,8 @@ if ($executable && iMEMBER) {
 	if ($can_attach) {
 		$i = count($_FILES)-1;
 		$file_type = 0;
+		require_once INCLUDES."infusions_include.php";
+		require_once INCLUDES."mimetypes_include.php";
 		foreach($_FILES as $attach) {
 			if (!empty($attach['name'])) {
 				if (isset($attach['type']) && in_array($attach['type'], img_mimeTypes())) {
@@ -413,25 +415,25 @@ if ($executable && iMEMBER) {
 					$defender->stop();
 					if ($file_type == '1') {
 						if ($upload['error'] == 1) {
-							$defender->addNotice("Photo Max size exceeded. You can only upload up to ".($settings['photo_max_b']/1000)." mb");
+							addNotice('warning', 'Photo Max size exceeded. You can only upload up to '.($settings['photo_max_b']/1000).' mb');
 						} elseif ($upload['error'] == 2) {
-							$defender->addNotice('2');
+							addNotice('warning', '2');
 						} elseif ($upload['error'] == 3) {
-							$defender->addNotice('3');
+							addNotice('warning', '3');
 						} elseif ($upload['error'] == 4) {
-							$defender->addNotice('4');
+							addNotice('warning', '4');
 						} elseif ($upload['error'] == 5) {
-							$defender->addNotice('Image not uploaded');
+							addNotice('warning', 'Image not uploaded');
 						}
 					} elseif ($file_type =='2') {
 						if ($upload['error'] == 1) {
-							$defender->addNotice('');
+							addNotice('warning', '');
 						} elseif ($upload['error'] == 2) {
-							$defender->addNotice('');
+							addNotice('warning', '');
 						} elseif ($upload['error'] == 3) {
-							$defender->addNotice('');
+							addNotice('warning', '');
 						} elseif ($upload['error'] == 4) {
-							$defender->addNotice('');
+							addNotice('warning', '');
 						}
 					}
 				} else {
