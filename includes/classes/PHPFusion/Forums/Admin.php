@@ -201,7 +201,6 @@ class Admin {
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$data['forum_id']."'");
 			$result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
 			addNotice('success', $locale['forum_notice_7']." ".sprintf($locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
-			redirect(FUSION_SELF.$aidlink.$this->ext);
 		}
 	}
 
@@ -788,7 +787,7 @@ class Admin {
 				 ");
 		$rows = dbrows($result);
 		if ($rows > 0) {
-			$type_icon = array('1'=>'entypo folder', '2'=>'entypo chat', '3'=>'entypo link', '4'=>'entypo graduation-cap');
+			$type_icon = array('1'=>'fa fa-folder fa-fw fa-2x', '2'=>'fa fa-chat-o fa-fw fa-2x', '3'=>'fa fa-link fa-fw fa-2x', '4'=>'fa fa-lightbulb-o fa-fw fa-2x');
 			$i = 1;
 			while ($data = dbarray($result)) {
 				$up = $data['forum_order']-1;
@@ -796,7 +795,7 @@ class Admin {
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-body'>\n";
 				echo "<div class='pull-left m-r-10'>\n";
-				echo "<i class='".$type_icon[$data['forum_type']]." icon-sm'></i>\n";
+				echo "<i class='".$type_icon[$data['forum_type']]." m-t-10'></i>\n";
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";
 				echo "<div class='row'>\n";
@@ -856,7 +855,7 @@ class Admin {
 		echo "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5'>\n";
 		echo "<span class='text-dark strong'>".$locale['forum_054']."</span><br/>\n"; // if you move, then need new hcat_key
 		echo "</div><div class='col-xs-12 col-sm-7 col-md-7 col-lg-7'>\n";
-		echo form_select_tree('', 'move_forums', 'move_forums', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_opts'=>$_GET['forum_id'], 'hide_disabled'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
+		echo form_select_tree('move_forums', '', $_GET['forum_id'], array('width'=>'100%', 'inline'=>1, 'disable_opts'=>$_GET['forum_id'], 'hide_disabled'=>1, 'no_root'=>1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $_GET['forum_id']);
 		echo form_checkbox('delete_forums', $locale['forum_055'], '');
 		echo "</div>\n</div>\n";
 		echo "<div class='clearfix'>\n";
