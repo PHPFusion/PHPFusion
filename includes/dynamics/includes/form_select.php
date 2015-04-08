@@ -372,7 +372,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		$level = 0;
 		if (!isset($index[$id])) {
 			$index[$id] = array('0'=>$locale['no_opts']);
-			$options['deactivate'] = 1;
+			//$options['deactivate'] = 1;
 		}
 		$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
 		$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 p-l-0" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=\"".$options['tip']."\"></i>" : '')."</label>\n" : '';
@@ -406,7 +406,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 
 	if (isset($index[$id])) {
 		foreach ($index[$id] as $key => $value) {
-			//$hide = $disable_branch && $value == $self_id ? TRUE : FALSE;
+			//$hide = $disable_branch && $value == $self_id ? 1 : 0;
 			$html = &$html;
 			$name = $data[$value][$name_col];
 			$name = PHPFusion\QuantumFields::parse_label($name);
