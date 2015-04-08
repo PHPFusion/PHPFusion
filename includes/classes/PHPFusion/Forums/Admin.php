@@ -787,7 +787,7 @@ class Admin {
 				 ");
 		$rows = dbrows($result);
 		if ($rows > 0) {
-			$type_icon = array('1'=>'fa fa-folder fa-fw fa-2x', '2'=>'fa fa-chat-o fa-fw fa-2x', '3'=>'fa fa-link fa-fw fa-2x', '4'=>'fa fa-lightbulb-o fa-fw fa-2x');
+			$type_icon = array('1'=>'fa fa-folder fa-fw fa-2x', '2'=>'fa fa-chat-o fa-fw fa-2x', '3'=>'fa fa-external-link fa-fw fa-2x', '4'=>'fa fa-lightbulb-o fa-fw fa-2x');
 			$i = 1;
 			while ($data = dbarray($result)) {
 				$up = $data['forum_order']-1;
