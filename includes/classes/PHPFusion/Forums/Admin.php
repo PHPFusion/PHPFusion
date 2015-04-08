@@ -290,7 +290,7 @@ class Admin {
 					self::recalculate_post($action_data['forum_id']); // wipe
 				} else {
 					$defender->stop();
-					$defender->addNotice($locale['forum_notice_na']);
+                    addNotice('danger', $locale['forum_notice_na']);
 				}
 
 				/**
@@ -301,11 +301,11 @@ class Admin {
 					".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
 				} elseif (!$action_data['delete_forums']) {
 					$defender->stop();
-					$defender->addNotice($locale['forum_notice_na']);
+                    addNotice('danger', $locale['forum_notice_na']);
 				}
 			} else {
 				$defender->stop();
-				$defender->addNotice($locale['forum_notice_na']);
+				addNotice('error', $locale['forum_notice_na']);
 			}
 			self::prune_forums($action_data['forum_id']);
 			addNotice('info', $locale['forum_notice_5']);
@@ -373,7 +373,7 @@ class Admin {
 				'forum_id' => form_sanitizer($_POST['forum_id'], 0, 'forum_id'),
 				'forum_name' => form_sanitizer($_POST['forum_name'], '', 'forum_name'),
 				'forum_description' => form_sanitizer($_POST['forum_description'], '', 'forum_description'),
-				'forum_cat' => form_sanitizer($_POST['forum_cat'], '', 'forum_cat'),
+				'forum_cat' => form_sanitizer($_POST['forum_cat'], 0, 'forum_cat'),
 				'forum_type' => form_sanitizer($_POST['forum_type'], '', 'forum_type'),
 				'forum_language' => form_sanitizer($_POST['forum_language'], '', 'forum_language'),
 				'forum_alias' => form_sanitizer($_POST['forum_alias'], '', 'forum_alias'),
@@ -429,7 +429,7 @@ class Admin {
 						$upload = copy_file(IMAGES."forum/", $this->data['forum_image']);
 					} else {
 						$defender->stop();
-						$defender->addNotice($locale['forum_error_8']);
+						addNotice('warning', $locale['forum_error_8']);
 					}
 				} else {
 					require_once INCLUDES."photo_functions_include.php";
@@ -437,7 +437,7 @@ class Admin {
 				}
 				if (isset($upload['error'])) {
 					$defender->stop();
-					$defender->addNotice($locale['forum_error_9']);
+					addNotice('warning', $locale['forum_error_9']);
 				} else {
 					$this->data['forum_image'] = $upload['name'];
 				}
