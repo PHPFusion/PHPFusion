@@ -404,7 +404,7 @@ class Admin {
 				}
 				if ($alias_check) {
 					$defender->stop();
-					$defender->addNotice($locale['forum_error_6']);
+					addNotice('warning', $locale['forum_error_6']);
 				}
 			}
 
