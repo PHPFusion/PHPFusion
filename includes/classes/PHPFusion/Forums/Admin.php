@@ -45,7 +45,7 @@ class Admin {
 		'forum_threadcount' => 0,
 		'forum_lastuser' => 0,
 		'forum_merge' => 0,
-		'forum_language' => '',
+		'forum_language' => LANGUAGE,
 		'forum_meta' => '',
 		'forum_alias' => ''
 	);
