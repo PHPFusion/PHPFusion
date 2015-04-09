@@ -16,21 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("MAIL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('MAIL');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/emails.php";
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "su") {
-		$message = $locale['410']."\n";
-	} elseif ($_GET['status'] == "snd") {
-		$message = sprintf($locale['411'], $_GET['testmail']);
-	}
-	if ($message) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
+
 if (isset($_POST['save_template'])) {
 	$template_id = form_sanitizer($_POST['template_id'], '', 'template_id');
 	$template_format = form_sanitizer($_POST['template_format'], '', 'template_format');
@@ -51,7 +40,8 @@ if (isset($_POST['save_template'])) {
 		template_language = '".$template_language."'
 		WHERE template_id = '".$template_id."'
 	    ");
-		redirect(FUSION_SELF.$aidlink."&amp;status=su&amp;template_id=".$template_id);
+		addNotice('success', $locale['410']);
+		redirect(FUSION_SELF.$aidlink."&amp;template_id=".$template_id);
 	}
 } elseif (isset($_POST['test_template'])) {
 	$template_id = form_sanitizer($_POST['template_id'], '', 'template_id');
@@ -76,7 +66,8 @@ if (isset($_POST['save_template'])) {
         ");
 		require_once INCLUDES."sendmail_include.php";
 		sendemail_template($template_key, $locale['412'], $locale['413'], $locale['414'], $locale['415'], $locale['416'], $userdata['user_email']);
-		redirect(FUSION_SELF.$aidlink."&amp;status=snd&amp;template_id=".$template_id."&amp;testmail=".$userdata['user_email']);
+		addNotice('success', sprintf($locale['411'], $_GET['testmail']));
+		redirect(FUSION_SELF.$aidlink."&amp;template_id=".$template_id."&amp;testmail=".$userdata['user_email']);
 	}
 }
 $result = dbquery("SELECT template_id, template_key, template_name, template_language FROM ".DB_EMAIL_TEMPLATES." ".(multilang_table("ET") ? "WHERE template_language='".LANGUAGE."'" : "")." ORDER BY template_id ASC");
@@ -94,13 +85,14 @@ foreach ($template as $id => $tname) {
 	$tab_title['icon'][$id] = '';
 }
 
-$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 1;
-$tab_active = isset($_GET['section']) ? $_GET['section'] : tab_active($tab_title, $_GET['section'], 1);
+$tab_id = array_values($tab_title['id']);
+$_GET['section'] = isset($_GET['section']) && isnum($_GET['section']) ? $_GET['section'] : $tab_id[0];
+$tab_active = $_GET['section'];
 
 echo opentab($tab_title, $tab_active, 'menu', 1);
-echo opentabbody($tab_title['title'][$_GET['section']], $_GET['section'], $tab_active);
-$template_id = isset($_GET['section']) && isnum($_GET['section']) ? $_GET['section'] : 0;
-$result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id='".$template_id."' LIMIT 1");
+echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $tab_active, 1);
+
+$result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id='".intval($_GET['section'])."' LIMIT 1");
 if (dbrows($result)) {
 	$data = dbarray($result);
 	$template_id = $data['template_id'];
@@ -128,10 +120,10 @@ if (dbrows($result)) {
 		$html_buttons = "display-none";
 		$html_text = $locale['419'];
 	}
-} else {
-	//redirect(FUSION_SELF.$aidlink);
 }
+
 add_to_breadcrumbs(array('link'=>ADMIN.$aidlink, 'title'=>$locale['400']));
+
 opentable($locale['400']);
 require_once INCLUDES."html_buttons_include.php";
 echo openform('emailtemplateform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
@@ -248,6 +240,7 @@ echo "</form>\n";
 echo closetabbody();
 echo closetab();
 closetable();
+
 if (isset($_GET['section']) && isnum($_GET['section']) || isset($_POST['section']) && isnum($_POST['section'])) {
 	opentable($locale['450']);
 	echo "<table class='table table-responsive center' cellpadding='1' cellspacing='0'>\n<tbody>\n";
