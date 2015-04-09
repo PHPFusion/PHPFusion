@@ -518,6 +518,7 @@ class Thread {
 										WHERE thread_id='".intval($this->thread_info['thread_id'])."' and post_id='".intval($_GET['quote'])."'
 										");
 							if (dbrows($quote_result) > 0) {
+							require_once INCLUDES."bbcode_include.php";
 								$quote_data = dbarray($quote_result);
 								$data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]".strip_bbcodes($quote_data['post_message'])."[/quote]\r\r";
 							} else {
