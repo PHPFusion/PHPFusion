@@ -15,7 +15,7 @@ class CustomPage {
 		'page_access' => 0,
 		'page_content' => '',
 		'page_keywords' => '',
-		'page_language' => '',
+		'page_language' => LANGUAGE,
 		'page_allow_comments' => 0,
 		'page_allow_ratings' => 0,
 	);
