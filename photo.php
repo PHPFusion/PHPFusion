@@ -16,7 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
-
+if (!db_exists(DB_PHOTO_ALBUMS)) {
+	$_GET['code'] = 404;
+	require_once __DIR__.'/error.php';
+	exit;
+}
 if (!@ini_get("safe_mode")) {
 	define("SAFEMODE", FALSE);
 } else {

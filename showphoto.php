@@ -17,6 +17,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "maincore.php";
+if (!db_exists(DB_PHOTO_ALBUMS)) {
+	$_GET['code'] = 404;
+	require_once __DIR__.'/error.php';
+	exit;
+}
 include LOCALE.LOCALESET."photogallery.php";
 
 define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);

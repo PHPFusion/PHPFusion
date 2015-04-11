@@ -16,6 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once dirname(__FILE__)."/maincore.php";
+if (!db_exists(DB_ESHOP)) {
+	$_GET['code'] = 404;
+	require_once __DIR__.'/error.php';
+	exit;
+}
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."eshop.php";
 require_once THEMES."templates/global/eshop.php";
