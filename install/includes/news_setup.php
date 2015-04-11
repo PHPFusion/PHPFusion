@@ -16,17 +16,17 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (isset($_POST['uninstall'])) {
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."news");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."news_cats");
-	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='NC'");
-	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='N'");
-	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='S8'");
+	dbquery("DROP TABLE IF EXISTS ".$db_prefix."news");
+	dbquery("DROP TABLE IF EXISTS ".$db_prefix."news_cats");
+	dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='NC'");
+	dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='N'");
+	dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='S8'");
 	dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='news.php'");
-	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='news_cats.php'");
-	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='submit.php?stype=n'");
+	dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='news_cats.php'");
+	dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='submit.php?stype=n'");
 } else {
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."news");
-	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."news_cats");
+	dbquery("DROP TABLE IF EXISTS ".$db_prefix."news");
+	dbquery("DROP TABLE IF EXISTS ".$db_prefix."news_cats");
 	$result = dbquery("CREATE TABLE ".$db_prefix."news (
 			news_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 			news_subject VARCHAR(200) NOT NULL DEFAULT '',
