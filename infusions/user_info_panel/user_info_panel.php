@@ -16,6 +16,20 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+$modules = array(
+	'n' => array($locale['UM090'], DB_NEWS),
+	'b' => array($locale['UM095'], DB_BLOG),
+	'l' => array($locale['UM091'], DB_WEBLINKS),
+	'a' => array($locale['UM092'], DB_ARTICLES),
+	'p' => array($locale['UM093'], DB_PHOTO_ALBUMS),
+	'd' => array($locale['UM094'], DB_DOWNLOADS)
+);
+$installedModules = array();
+foreach ($modules as $k => $v) {
+	if (db_exists($v[1])) {
+		$installedModules[$k] = $v[0];
+	}
+}
 
 if (iMEMBER) {
 	if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
@@ -23,7 +37,7 @@ if (iMEMBER) {
 	} else {
 		openside($locale['UM096'].$userdata['user_name']);
 }
-	
+
 $inbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='0'");
 $outbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='1'");
 $archive_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='2'");
@@ -64,17 +78,16 @@ if (db_exists(DB_FORUM_THREADS)) {
 }
 echo "<li><a class='side' href='".BASEDIR."members.php'>".$locale['UM082']." <i class='pull-right entypo users'></i></a></li>\n";
 echo (iADMIN) ? "<li><a class='side' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'>".$locale['UM083']." <i class='pull-right entypo cog'></i></a></li>\n" : '';
-echo "<li><a class='side' href=\"javascript:show_hide('ShowHide001')\">".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a></li>\n";
-echo "<li>\n";
-echo "<div id='ShowHide001' style='display:none'>\n";
-echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=n'>".$locale['UM090']."</a>\n";
-echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=b'>".$locale['UM095']."</a>\n";
-echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=l'>".$locale['UM091']."</a>\n";
-echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=a'>".$locale['UM092']."</a>\n";
-echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=p'>".$locale['UM093']."</a>\n";
-echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=d'>".$locale['UM094']."</a>\n";
-echo "</div>\n";
-echo "</li>\n";
+if ($installedModules) {
+	echo "<li><a class='side' href=\"javascript:show_hide('ShowHide001')\">".$locale['UM089']." <i class='pull-right entypo upload-cloud'></i></a></li>\n";
+	echo "<li>\n";
+	echo "<div id='ShowHide001' style='display:none'>\n";
+	foreach ($installedModules as $stype => $text) {
+		echo "<a class='side p-l-20' href='".BASEDIR."submit.php?stype=".$stype."'>".$text."</a>\n";
+	}
+	echo "</div>\n";
+	echo "</li>\n";
+}
 echo "</ul>\n";
 echo "</div>\n";
 echo "<div class='m-t-20'>\n";

@@ -22,11 +22,20 @@ include LOCALE.LOCALESET."submit.php";
 if (!iMEMBER) {
 	redirect("index.php");
 }
-if (!isset($_GET['stype']) || !preg_check("/^[a-z]$/", $_GET['stype'])) {
-	redirect("index.php");
-}
+$stype = filter_input(INPUT_GET, 'stype') ? : '';
 $submit_info = array();
-if ($_GET['stype'] == "l") {
+$modules = array(
+	'n' => db_exists(DB_NEWS),
+	'p' => db_exists(DB_PHOTO_ALBUMS),
+	'a' => db_exists(DB_ARTICLES),
+	'd' => db_exists(DB_DOWNLOADS),
+	'l' => db_exists(DB_WEBLINKS),
+	'b' => db_exists(DB_BLOG)
+);
+$sum = array_sum($modules);
+if (!$sum or empty($modules[$stype])) {
+	redirect("index.php");
+} elseif ($stype === "l") {
 	if (isset($_POST['submit_link'])) {
 		$submit_info['link_category'] = form_sanitizer($_POST['link_category'], '', 'link_category');
 		$submit_info['link_name'] = form_sanitizer($_POST['link_name'], '', 'link_name');
@@ -64,8 +73,7 @@ if ($_GET['stype'] == "l") {
 		echo "<div class='well' style='text-align:center'><br />\n".$locale['551']."<br /><br />\n</div>\n";
 	}
 	closetable();
-} elseif ($_GET['stype'] == "n") {
-
+} elseif ($stype === "n") {
 	if (isset($_POST['submit_news'])) {
 		$submit_info['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
 		$submit_info['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
@@ -99,7 +107,7 @@ if ($_GET['stype'] == "l") {
 		$news_snippet = "";
 		$news_body = "";
 	}
-	
+
 	$result2 = dbquery("SELECT news_cat_id, news_cat_name, news_cat_language FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
 
 	if (dbrows($result2)) {
@@ -122,8 +130,7 @@ if ($_GET['stype'] == "l") {
 	echo closeform();
 	echo "</div>\n</div>\n";
 	closetable();
-} elseif ($_GET['stype'] == "b") {
-
+} elseif ($stype === "b") {
 	if (isset($_POST['submit_blog'])) {
 		$submit_info['blog_subject'] = form_sanitizer($_POST['blog_subject'], '', 'blog_subject');
 		$submit_info['blog_cat'] = isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : "0";
@@ -180,7 +187,7 @@ if ($_GET['stype'] == "l") {
 	echo closeform();
 	echo "</div>\n</div>\n";
 	closetable();
-} elseif ($_GET['stype'] == "a") {
+} elseif ($stype === "a") {
 	if (isset($_POST['submit_article'])) {
 		if ($_POST['article_subject'] != "" && $_POST['article_body'] != "") {
 			$submit_info['article_cat'] = isnum($_POST['article_cat']) ? $_POST['article_cat'] : "0";
@@ -239,7 +246,7 @@ if ($_GET['stype'] == "l") {
 		}
 		closetable();
 	}
-} elseif ($_GET['stype'] == "p") {
+} elseif ($stype === "p") {
 	if (isset($_POST['submit_photo'])) {
 		require_once INCLUDES."photo_functions_include.php";
 		$error = "";
@@ -284,7 +291,7 @@ if ($_GET['stype'] == "l") {
 		echo "<div class='well' style='text-align:center'><br />\n".$locale['552']."<br /><br />\n</div>\n";
 	}
 	closetable();
-} elseif ($_GET['stype'] == "d") {
+} elseif ($stype === "d") {
 
 	add_to_title($locale['global_200'].$locale['650']);
 
@@ -412,8 +419,6 @@ if ($_GET['stype'] == "l") {
 		echo "<div class='well' style='text-align:center'><br />\n".$locale['551']."<br /><br />\n</div>\n";
 	}
 	closetable();
-} else {
-	redirect("index.php");
 }
 require_once THEMES."templates/footer.php";
 ?>
