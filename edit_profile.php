@@ -23,7 +23,9 @@ if (!iMEMBER) {	redirect("index.php"); }
 $_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 
 add_to_title($locale['global_200'].$locale['u102']);
+$errors = array();
 
+$_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 if (isset($_POST['update_profile'])) {
 	$userInput = new PHPFusion\UserFieldsInput();
 	$userInput->setUserNameChange(fusion_get_settings('userNameChange')); // accept or not username change.
@@ -31,17 +33,13 @@ if (isset($_POST['update_profile'])) {
 	$userInput->userData = $userdata;
 	$userInput->saveUpdate();
 	if (empty($errors) && $userInput->themeChanged()) redirect(BASEDIR.'index.php');
-	unset($userInput);
-	$userdata = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."'"));
-
+	redirect(BASEDIR.'edit_profile.php');
 }
 
 elseif (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
 	$userInput = new PHPFusion\UserFieldsInput();
 	$userInput->verifyCode($_GET['code']);
-	$userInput->displayMessages();
-	$userdata = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$userdata['user_id']."'"));
-	unset($userInput);
+	redirect(BASEDIR.'edit_profile.php');
 }
 
 opentable($locale['u102']);
@@ -53,7 +51,6 @@ if (fusion_get_settings('email_verification') == 1) {
 		echo "<div class='tbl2' style='text-align:center; width:500px; margin: 5px auto 10px auto;'>".sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201']."\n</div>\n";
 	}
 }
-
 
 $userFields = new PHPFusion\UserFields();
 $userFields->postName = "update_profile";
@@ -67,4 +64,3 @@ $userFields->method = 'input';
 $userFields->render_profile_input();
 closetable();
 require_once THEMES."templates/footer.php";
-?>

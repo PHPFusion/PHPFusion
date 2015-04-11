@@ -89,7 +89,6 @@ class UserFieldsInput {
 		if (!defined('FUSION_NULL')) {
 			addNotice('info', $locale['u169']);
 		}
-		//print_p($this->data);
 		$this->_setUserDataUpdate();
 	}
 
