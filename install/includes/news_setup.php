@@ -21,6 +21,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='NC'");
 	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='N'");
 	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='S8'");
+	dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='news.php'");
 	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='news_cats.php'");
 	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='submit.php?stype=n'");
 } else {
