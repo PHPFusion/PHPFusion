@@ -55,6 +55,7 @@
 					selector: 'textarea',
 					theme: 'modern',
 					entity_encoding: 'raw',
+					relative_urls: false,
 					language: '<?php echo $locale['tinymce'] ?>',
 					width: '100%',
 					height: 300,

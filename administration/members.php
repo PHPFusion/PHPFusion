@@ -531,7 +531,6 @@ elseif (isset($_GET['action']) && $_GET['action'] == 7 && $user_id && (!$isAdmin
 }
 else {
 	opentable($locale['400']);
-	$rowstart = 0;
 	if (isset($_GET['search_text']) && preg_check("/^[-0-9A-Z_@\s]+$/i", $_GET['search_text'])) {
 		$user_name = " user_name LIKE '".stripinput($_GET['search_text'])."%' AND";
 		$list_link = "search_text=".stripinput($_GET['search_text']);

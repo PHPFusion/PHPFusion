@@ -65,7 +65,7 @@ if ($custompage['count']>0) {
 }
 echo "<!--custompages-after-content-->\n";
 
-if (dbrows($cp_result) && checkgroup($cp_data['page_access']) && in_array(LANGUAGE, $page_languages)) {
+if (dbrows($cp_result) && checkgroup($cp_data['page_access'])) {
 	if ($cp_data['page_allow_comments']) {
 		showcomments("C", DB_CUSTOM_PAGES, "page_id", $_GET['page_id'], BASEDIR."viewpage.php?page_id=".$_GET['page_id']);
 	}

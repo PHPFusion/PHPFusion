@@ -102,9 +102,9 @@ function format_word_English($count, $words, $add_count = 1) {
 }
 
 function format_word_Russian($count, $words, $add_count = 1) {
-	$count = $count % 100;
-	$a = $count % 10;
-	$b = floor($count / 10);
+	$fcount = $count % 100;
+	$a = $fcount % 10;
+	$b = floor($fcount / 10);
 
 	$form = 2; // second plural form
 
@@ -126,9 +126,9 @@ function format_word_Russian($count, $words, $add_count = 1) {
 }
 
 function format_word_Ukrainian($count, $words, $add_count = 1) {
-	$count = $count % 100;
-	$a = $count % 10;
-	$b = floor($count / 10);
+	$fcount = $count % 100;
+	$a = $fcount % 10;
+	$b = floor($fcount / 10);
 
 	$form = 2; // second plural form
 
