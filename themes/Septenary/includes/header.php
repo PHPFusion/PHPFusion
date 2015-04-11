@@ -71,32 +71,51 @@ if ($settings['opening_page'] == FUSION_SELF) {
 	echo "<div class='text-center logo'> ".showbanners()." </div>\n";
 	echo "<h2 class='text-center text-uppercase' style='letter-spacing:10px; font-weight:300; font-size:36px;'>".$settings['sitename']."</h2>\n";
 	echo "<div class='text-center' style='font-size:19.5px; line-height:35px; font-weight:300; color:rgba(255,255,255,0.8'>".stripslashes($settings['siteintro'])."</div>\n";
-	echo "<div class='section-2-row row'>\n";
-	echo "<div class='col-sm-3 col-md-3 col-lg-3 section-2-tab text-center'>\n";
-	echo "<a href='".BASEDIR."news.php'>\n";
-	echo "<i class='entypo pencil'></i>\n";
-	echo "<h4>".$locale['sept_007']."</h4>";
-	echo "</a>\n";
-	echo "</div>\n";
-	echo "<div class='col-sm-3 col-md-3 col-lg-3 section-2-tab text-center'>\n";
-	echo "<a href='".BASEDIR."photogallery.php'>\n";
-	echo "<i class='entypo camera'></i>\n";
-	echo "<h4>".$locale['sept_008']."</h4>";
-	echo "</a>\n";
-	echo "</div>\n";
-	echo "<div class='col-sm-3 col-md-3 col-lg-3 section-2-tab text-center'>\n";
-	echo "<a href='".BASEDIR."forum/index.php'>\n";
-	echo "<i class='entypo icomment'></i>\n";
-	echo "<h4>".$locale['sept_009']."</h4>";
-	echo "</a>\n";
-	echo "</div>\n";
-	echo "<div class='col-sm-3 col-md-3 col-lg-3 section-2-tab text-center'>\n";
-	echo "<a href='".BASEDIR."downloads.php'>\n";
-	echo "<i class='entypo window'></i>\n";
-	echo "<h4>".$locale['sept_010']."</h4>";
-	echo "</a>\n";
-	echo "</div>\n";
-	echo "</div>\n";
+	$modules = array(
+		DB_NEWS => db_exists(DB_NEWS),
+		DB_PHOTO_ALBUMS => db_exists(DB_PHOTO_ALBUMS),
+		DB_FORUMS => db_exists(DB_FORUMS),
+		DB_DOWNLOADS => db_exists(DB_DOWNLOADS)
+	);
+	$sum = array_sum($modules);
+	if ($sum) {
+		$size = 12 / $sum;
+		$sizeClasses = 'col-sm-'.$size.' col-md-'.$size.' col-lg-'.$size;
+		echo "<div class='section-2-row row'>\n";
+		if ($modules[DB_NEWS]) {
+			echo "<div class='$sizeClasses section-2-tab text-center'>\n";
+			echo "<a href='".BASEDIR."news.php'>\n";
+			echo "<i class='entypo pencil'></i>\n";
+			echo "<h4>".$locale['sept_007']."</h4>";
+			echo "</a>\n";
+			echo "</div>\n";
+		}
+		if ($modules[DB_PHOTO_ALBUMS]) {
+			echo "<div class='$sizeClasses section-2-tab text-center'>\n";
+			echo "<a href='".BASEDIR."photogallery.php'>\n";
+			echo "<i class='entypo camera'></i>\n";
+			echo "<h4>".$locale['sept_008']."</h4>";
+			echo "</a>\n";
+			echo "</div>\n";
+		}
+		if ($modules[DB_FORUMS]) {
+			echo "<div class='$sizeClasses section-2-tab text-center'>\n";
+			echo "<a href='".BASEDIR."forum/index.php'>\n";
+			echo "<i class='entypo icomment'></i>\n";
+			echo "<h4>".$locale['sept_009']."</h4>";
+			echo "</a>\n";
+			echo "</div>\n";
+		}
+		if ($modules[DB_DOWNLOADS]) {
+			echo "<div class='$sizeClasses section-2-tab text-center'>\n";
+			echo "<a href='".BASEDIR."downloads.php'>\n";
+			echo "<i class='entypo window'></i>\n";
+			echo "<h4>".$locale['sept_010']."</h4>";
+			echo "</a>\n";
+			echo "</div>\n";
+		}
+		echo "</div>\n";
+	}
 } else {
 	// use SQL search for page title.
 	$result = dbquery("SELECT link_name FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")."  link_url='".FUSION_SELF."'");

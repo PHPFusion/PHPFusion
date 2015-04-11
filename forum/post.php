@@ -15,7 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__)."../../maincore.php";
+require_once __DIR__."/../maincore.php";
+if (!db_exists(DB_FORUMS)) {
+	$_GET['code'] = 404;
+	require_once __DIR__.'/../error.php';
+	exit;
+}
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."forum.php";
 add_to_title($locale['global_204']);

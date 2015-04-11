@@ -18,6 +18,11 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 require_once THEMES."templates/header.php";
+if (!db_exists(DB_FORUMS)) {
+	$_GET['code'] = 404;
+	require_once __DIR__.'/../error.php';
+	exit;
+}
 include LOCALE.LOCALESET."forum.php";
 add_to_title($locale['global_204']);
 $settings = fusion_get_settings();
