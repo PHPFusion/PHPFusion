@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 // Display user field input
 if ($profile_method == "input") {
-	$options +=array('inline'=>1, 'number'=>1, 'max_length'=>16);
+	$options = array('inline'=>1, 'number'=>1, 'max_length'=>16);
 	$user_fields = form_text('user_icq', $locale['uf_icq'], $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {

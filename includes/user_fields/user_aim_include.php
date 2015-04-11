@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 // Display user field input
 if ($profile_method == "input") {
-	$options +=array('inline'=>1, 'max_length'=>16, 'width'=>'200px');
+	$options =array('inline'=>1, 'max_length'=>16, 'width'=>'200px');
 	$user_fields = form_text('user_aim', $locale['uf_aim'], $field_value, $options);
 } elseif ($profile_method == "display") {
 	if ($field_value) {

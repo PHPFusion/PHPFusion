@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) die("Access Denied");
 // Display user field input
 if ($profile_method == "input") {
 	require_once INCLUDES."bbcode_include.php";
-	$options +=array('bbcode'=>1, 'inline'=>1, 'form_name'=>'inputform');
+	$options = array('bbcode'=>1, 'inline'=>1, 'form_name'=>'inputform');
 	$user_fields = form_textarea('user_sig', $options['show_title'] ? $locale['uf_sig'] : '', $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {

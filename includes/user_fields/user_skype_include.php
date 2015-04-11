@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
 if ($profile_method == "input") {
-	$options += array('inline'=>1, 'max_length'=>32, 'max_width'=>'200px');
+	$options = array('inline'=>1, 'max_length'=>32, 'max_width'=>'200px');
 	$user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
 } elseif ($profile_method == "display") {
 	if ($field_value) {

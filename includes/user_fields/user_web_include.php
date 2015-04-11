@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
-	$options +=array('inline'=>1, 'max_width'=>'200px');
+	$options = array('inline'=>1, 'max_width'=>'200px');
 	//$field_value = str_replace('http://', '', $field_value);
 	//$field_value = str_replace('https://', '', $field_value);
 	$user_fields = form_text('user_web', $options['show_title'] ? $locale['uf_web'] : '', $field_value, $options);

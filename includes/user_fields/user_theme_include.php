@@ -26,7 +26,7 @@ if ($profile_method == "input") {
 		foreach($theme_files as $theme) {
 			$theme_opts[$theme] = $theme;
 		}
-		$options +=array('inline'=>1);
+		$options = array('inline'=>1);
 		$user_fields = form_select('user_theme', $locale['uf_theme'], $theme_opts, $field_value, $options);
 	}
 

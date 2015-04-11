@@ -20,7 +20,7 @@ if (!defined("IN_FUSION")) {
 }
 // Display user field input
 if ($profile_method == "input") {
-	$options +=array('inline'=>1, 'max_length'=>50);
+	$options = array('inline'=>1, 'max_length'=>50);
 	$user_fields = form_text('user_location', $locale['uf_location'], $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
