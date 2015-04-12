@@ -1638,35 +1638,79 @@ class QuantumFields {
 		}
 	}
 
-	/** Display fields for each fieldDB record entry */
-	public static function display_fields($data, $callback_data, $method = 'input', array $options = array()) {
+	/**
+	 * Display fields for each fieldDB record entry
+	 *
+	 * @param array $data The array of the user field.
+	 * @param $callback_data
+	 * @param string $method input or display. In case of any other value
+	 * 	the method return FALSE. See the description of return for more details.
+	 * @param array $options
+	 * 	<ul>
+	 * 		<li><strong>deactivate</strong> (boolean): FALSE by default.
+	 * 			disable fields</li>
+	 * 		<li><strong>debug</strong> (bolean): FALSE by default.
+	 * 			Show some information to debug.</li>
+	 * 		<li><strong>encrypt</strong> (boolean): FALSE by default.
+	 * 			encrypt field names</li>
+	 * 		<li><strong>error_text</strong> (string): empty string by default.
+	 * 			sets the field error text</li>
+	 * 		<li><strong>hide_value</strong> (boolean): FALSE by default.
+	 * 			input value is not shown on fields render</li>
+	 * 		<li><strong>inline</strong> (boolean): FALSE by default.
+	 * 			sets the field inline</li>
+	 * 		<li><strong>required</strong> (boolean): FALSE by default.
+	 * 			input must be filled when validate</li>
+	 * 		<li><strong>show_title</strong> (boolean): FALSE by default.
+	 * 			display field label</li>
+	 * 		<li><strong>placeholder</strong> (string): empty string by default.
+	 * 			helper text in field value</li>
+	 * 		<li><strong>plugin_folder</strong> (string): INCLUDES.'user_fields/' by default
+	 * 			The folder's path where the field's source files are.</li>
+	 * 		<li><strong>plugin_locale_folder</strong> (string): LOCALE.LOCALESET.'/user_fields/' by default.
+	 * 			The folder's path where the field's locale files are.</li>
+	 * 	</ul>
+
+	 * @return array|bool|string
+	 * 	<ul>
+	 * 		<li>FALSE on failure</li>
+	 * 		<li>string if $method 'display'</li>
+	 * 		<li>array if $method is 'input'</li>
+	 * </ul>
+	 */
+	public static function display_fields(array $data, $callback_data, $method = 'input', array $options = array()) {
 		global $locale;
-		/**
-		 * Options
-		 * =========
-		 * hide_value = input value is not shown on fields render (off by default)
-		 * encrypt = encrypt field names (off by default)
-		 * show_title = display field label (off by default)
-		 * deactivate = disable fields (off by default)
-		 * inline = sets the field inline (off by default)
-		 * error_text = sets the field error text (off by default)
-		 * required = input must be filled when validate (off by default)
-		 * placeholder = helper text in field name (off by default)
-		 */
-		$options['error_text'] = !empty($data['field_error']) ? $data['field_error'] : '';
-		$options += array(
-			'hide_value' => !empty($options['hide_value']) && $options['hide_value'] == 1 ? 1 : 0,
-			'encrypt'	=> !empty($options['encrypt']) && $options['encrypt'] == 1 ? 1 : 0,
-			'show_title' => !empty($options['show_title'])  && $options['show_title'] == 1 ? 1 : 0,
-			'deactivate' => !empty($options['deactivate'])  && $options['deactivate'] == 1 ? 1 : 0,
-			'inline'	=> !empty($options['inline']) && $options['inline'] == 1 ? 1 : 0,
-			'error_text' => !empty($options['error_text']) ? $options['error_text'] : '',
-			'required' => !empty($data['field_required']) || !empty($options['required']) ? $data['field_required'] : 0,
-			'placeholder' => !empty($data['field_default']) || !empty($options['placeholder']) ? $data['field_default'] : '',
-			'plugin_folder' => !empty($data['plugin_folder']) ? $data['plugin_folder'] : '',
-			'plugin_locale_folder' => !empty($data['plugin_locale_folder']) ? $data['plugin_locale_folder'] : '',
-			'debug' => !empty($data['debug']) && $data['debug'] == 1 ? 1 : 0
+		$data += array(
+			'field_required' => FALSE,
+			'field_error' => '',
+			'field_default' => ''
 		);
+		$default_options = array(
+			'hide_value' => FALSE,
+			'encrypt'	=> FALSE,
+			'show_title' => FALSE,
+			'deactivate' => FALSE,
+			'inline'	=> FALSE,
+			'error_text' => $data['field_error'],
+			'required' => (bool) $data['field_required'],
+			'placeholder' => $data['field_default'],
+			'plugin_folder' => INCLUDES.'user_fields/',
+			'plugin_locale_folder' => LOCALE.LOCALESET.'/user_fields/',
+			'debug' => FALSE
+		);
+		$options += $default_options;
+		if (!$options['plugin_folder']) {
+			$options['plugin_folder'] = $default_options['plugin_folder'];
+		}
+		if (!$options['plugin_locale_folder']) {
+			$options['plugin_locale_folder'] = $default_options['plugin_locale_folder'];
+		}
+		if (substr($options['plugin_folder'], -1) !== '/') {
+			$options['plugin_folder'] .= '/';
+		}
+		if (substr($options['plugin_locale_folder'], -1) !== '/') {
+			$options['plugin_locale_folder'] .= '/';
+		}
 		$option_list = $data['field_options'] ? explode(',', $data['field_options']) : array();
 
 		$field_value = isset($callback_data[$data['field_name']]) ? $callback_data[$data['field_name']] : '';
@@ -1678,14 +1722,27 @@ class QuantumFields {
 
 		switch($data['field_type']) {
 			case 'file':
+				// Do not remove it. It is used in included files.
 				$profile_method = $method;
 				// can access options vars
-				if (file_exists($options['plugin_locale_folder'].$data['field_name'].".php")) include $options['plugin_locale_folder'].$data['field_name'].".php";
-				if (file_exists($options['plugin_folder'].$data['field_name']."_include.php")) include $options['plugin_folder'].$data['field_name']."_include.php";
-				if ($options['debug']) print_p("Finding ".$options['plugin_locale_folder'].$data['field_name'].".php");
-				if ($options['debug'] && file_exists($options['plugin_locale_folder'].$data['field_name'].".php")) print_p($data['field_name']." locale loaded");
-				if ($options['debug']) print_p("Finding ".$options['plugin_folder'].$data['field_name']."_include.php");
-				if ($options['debug'] && file_exists($options['plugin_folder'].$data['field_name']."_include.php")) print_p($data['field_name']." module loaded");
+				if (file_exists($options['plugin_locale_folder'].$data['field_name'].".php")) {
+					include $options['plugin_locale_folder'].$data['field_name'].".php";
+				}
+				if (file_exists($options['plugin_folder'].$data['field_name']."_include.php")) {
+					include $options['plugin_folder'].$data['field_name']."_include.php";
+				}
+				if ($options['debug']) {
+					print_p("Finding ".$options['plugin_locale_folder'].$data['field_name'].".php");
+					if (file_exists($options['plugin_locale_folder'].$data['field_name'].".php")) {
+						print_p($data['field_name']." locale loaded");
+					}
+					print_p("Finding ".$options['plugin_folder'].$data['field_name']."_include.php");
+					if (file_exists($options['plugin_folder'].$data['field_name']."_include.php")) {
+
+					}
+					print_p($data['field_name']." module loaded");
+				}
+
 				if (isset($user_fields)) return $user_fields;
 				break;
 			case 'textbox':
@@ -1801,9 +1858,8 @@ class QuantumFields {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$option_array[$callback_data[$data['field_name']]]);
 				}
 				break;
-			default:
-				return false;
 		}
+		return FALSE;
 	}
 
 	/* DEPRECATE */

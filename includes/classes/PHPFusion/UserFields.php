@@ -338,9 +338,9 @@ class UserFields extends QuantumFields {
 							$this->info['user_field'] .= form_para($cat, $cat_id, 'profile_category_name');
 							foreach ($item[$cat_id] as $field_id => $field) {
 								$options = array(
-									'show_title' => 1,
-									'inline' => 1,
-									'required' => $field['field_required'] ? 1 : 0
+									'show_title' => TRUE,
+									'inline' => TRUE,
+									'required' => (bool) $field['field_required']
 								);
 								if ($field['field_type'] == 'file') {
 									$options += array(
