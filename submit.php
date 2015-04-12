@@ -238,7 +238,7 @@ if (!$sum or empty($modules[$stype])) {
 			echo form_textarea('article_snippet', $locale['523'], $article_snippet, array('bbcode' => 1, 'required' => 1, 'form_name' => 'submit_form'));
 			echo form_textarea('article_body', $locale['524'], $article_body, array('bbcode' => 1, 'required' => 1, 'form_name' => 'submit_form'));
 			echo "</div>\n</div>\n";
-			echo $settings['site_seo'] ? '' : form_button('preview_article', $locale['526'], 'preview_article', $locale['526'], array('class' => 'btn-primary m-r-10'));
+			echo $settings['site_seo'] ? '' : form_button('preview_article', $locale['526'], $locale['526'], array('class' => 'btn-primary m-r-10'));
 			echo form_button('submit_article', $locale['527'], $locale['527'], array('class' => 'btn-primary'));
 			echo closeform();
 		} else {
