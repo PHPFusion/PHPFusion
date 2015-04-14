@@ -22,9 +22,10 @@ if (!function_exists('render_eshop_nav')) {
 	 * @param array $info
 	 */
 	function render_eshop_nav(array $info) {
-		$res = "<div class='navbar navbar-default eshop-nav' role='navigation'>\n";
-		$res .= "<div class='navbar-collapse collapse'>\n";
-		$res .= "<ul class='nav navbar-nav'>\n";
+		global $locale;
+			$res = "<div class='navbar navbar-default eshop-nav' role='navigation'>\n";
+			$res .= "<div class='navbar-collapse collapse'>\n";
+			$res .= "<ul class='nav navbar-nav'>\n";
 		if ($_GET['category']) {
 			if (!empty($info['previous_category'])) {
 				$res .= "<li><a href='".$info['previous_category']['link']."'>".$locale['ESHP330']." ".$info['previous_category']['title']."</a></li>\n";
