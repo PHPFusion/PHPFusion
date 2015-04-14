@@ -141,18 +141,16 @@ $locale['global_079'] = "In ";
 $locale['global_080'] = "Uncategorised";
 $locale['global_081'] = "News Home";
 $locale['global_082'] = "News";
-
-
 $locale['global_083'] = "Last Updated";
 $locale['global_084'] = "News Category";
-
 $locale['global_085'] = "All Other Categories";
 $locale['global_086'] = "Most Recent News";
 $locale['global_087'] = "Most Commented News";
 $locale['global_088'] = "Highest Rating News";
-
 $locale['global_089'] = "Be the first to comment on %s";
 $locale['global_089a'] = "Be the first to rate on this %s";
+$locale['global_089b'] = "Thumb view";
+$locale['global_089c'] = "List view";
 // Page Navigation
 $locale['global_090'] = "Prev";
 $locale['global_091'] = "Next";
@@ -460,7 +458,6 @@ $locale['fmt_news'] = "news|news";
 $locale['fmt_photo'] = "photo|photos";
 $locale['fmt_post'] = "post|posts";
 $locale['fmt_question'] = "question|questions";
-
 $locale['fmt_read'] = "read|reads";
 $locale['fmt_second'] = "second|seconds";
 $locale['fmt_shouts'] = "shout|shouts";

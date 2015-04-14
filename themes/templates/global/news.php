@@ -105,8 +105,8 @@ if (!function_exists('render_main_news')) {
 			echo openform('viewform', 'post', FUSION_REQUEST, array('max_tokens' => 1,'class' => 'pull-right display-inline-block m-l-10'));
 			echo "<div class='btn-group'>\n";
 			$active = isset($_COOKIE['fusion_news_view']) ? $_COOKIE['fusion_news_view'] : '';
-			echo form_button('switchview', '', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",'icon' => 'entypo layout','alt' =>'Thumb View'));
-			echo form_button('switchview', '', '2', array('class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",'icon' => 'entypo menu','alt' =>'List View'));
+			echo form_button('switchview', '', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",'icon' => 'entypo layout','alt' =>$locale['global_089b']));
+			echo form_button('switchview', '', '2', array('class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",'icon' => 'entypo menu','alt' =>$locale['global_089c']));
 			echo "</div>\n";
 			echo closeform();
 			// Filters
