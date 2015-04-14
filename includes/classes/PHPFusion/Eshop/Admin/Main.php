@@ -298,10 +298,10 @@ class Main {
 		if (isset($_GET['payid']) && !isnum($_GET['payid'])) die("Denied");
 		$payment = new \PHPFusion\Eshop\Admin\Payments();
 		$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $payment->verify_payment($_GET['pid']) : 0;
-		$tab_title['title'][] = 'Current Payment Method'; //$locale['ESHPCUPNS100'];
+		$tab_title['title'][] = $locale['ESHPPMTS119'];
 		$tab_title['id'][] = 'payment';
 		$tab_title['icon'][] = '';
-		$tab_title['title'][] =  $edit ? 'Edit Payment Method' : 'Add Payment Method'; // $locale['ESHPCUPNS115'] : $locale['ESHPCUPNS114'];
+		$tab_title['title'][] =  $edit ? $locale['ESHPPMTS120'] : $locale['ESHPPMTS121'];
 		$tab_title['id'][] = 'paymentform';
 		$tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 		$tab_active = tab_active($tab_title, $edit ? 1 : 0 , 1);
@@ -338,7 +338,6 @@ class Main {
 			$orders->list_history();
 			echo closetabbody();
 		}
-
 		echo closetab();
 	}
 
@@ -371,5 +370,4 @@ class Main {
 			echo closetabbody();
 		}
 	}
-
 }

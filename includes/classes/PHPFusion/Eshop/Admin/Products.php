@@ -728,10 +728,10 @@ class Products {
 		");
 
 		echo "<div class='form-group'>\n";
-		echo "<label class='col-xs-12 col-sm-3'>Choose Product Colors</label>\n";
+		echo "<label class='col-xs-12 col-sm-3'>".$locale['ESHPPRO119']."</label>\n";
 		echo "<div class='col-xs-12 col-sm-9'>\n";
 		echo "<div class='btn-group'>\n";
-		echo "<button title='Color' class='dropdown-toggle btn btn-default m-b-10 button' data-toggle='dropdown'><i class='fa fa-eyedropper m-r-10'></i> Add Color <span class='caret'></span></button>\n";
+		echo "<button title='Color' class='dropdown-toggle btn btn-default m-b-10 button' data-toggle='dropdown'><i class='fa fa-eyedropper m-r-10'></i> ".$locale['ESHPPRO120']." <span class='caret'></span></button>\n";
 		echo "<ul class='dropdown-menu' role='text-color' style='width:300px;'>\n";
 		echo "<li>\n";
 		echo "<div class='display-block p-l-10 p-r-5 p-t-5 p-b-0' style='width:100%'>\n";
@@ -756,7 +756,6 @@ class Products {
 			echo form_hidden('', 'introtext', 'introtext', $this->data['introtext']);
 		}
 		echo form_textarea('description', $locale['ESHPPRO162'], $this->data['description'], array('inline'=>1,'autosize'=>1));
-		//'placeholder'=>$locale['ESHPPRO163'],
 		echo form_text('anything1n', $locale['ESHPPRO201']." 1", $this->data['anything1n'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO198']));
 		echo form_textarea('anything1', '', $this->data['anything1'], array('autosize'=>1));
 		echo form_text('anything2n', $locale['ESHPPRO201']." 2", $this->data['anything2n'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO198']));

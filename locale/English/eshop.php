@@ -125,7 +125,6 @@ $locale['ESHPF128'] = "Shipping method";
 $locale['ESHPF129'] = "Cost";
 $locale['ESHPF130'] = "Order summary";
 $locale['ESHPF131'] = "Subtotal";
-
 $locale['ESHPF132'] = "item(s) : ";
 $locale['ESHPF133'] = "VAT :";
 $locale['ESHPF134'] = "Total weight : ";
@@ -520,6 +519,9 @@ $locale['ESHPPMTS115'] = "- Save -";
 $locale['ESHPPMTS116'] = "Name";
 $locale['ESHPPMTS117'] = "Delete";
 $locale['ESHPPMTS118'] = "No payment methods have been saved";
+$locale['ESHPPMTS119'] = "Current Payment Method";
+$locale['ESHPPMTS120'] = "Edit Payment Method";
+$locale['ESHPPMTS121'] = "Add Payment Method";
 
 //Administration categories
 $locale['ESHPCATS099'] = "Current Categories";
