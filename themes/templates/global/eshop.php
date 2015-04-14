@@ -27,9 +27,9 @@ if (!function_exists('render_eshop_nav')) {
 		$res .= "<ul class='nav navbar-nav'>\n";
 		if ($_GET['category']) {
 			if (!empty($info['previous_category'])) {
-				$res .= "<li><a href='".$info['previous_category']['link']."'>Back to ".$info['previous_category']['title']."</a></li>\n";
+				$res .= "<li><a href='".$info['previous_category']['link']."'>".$locale['ESHP330']." ".$info['previous_category']['title']."</a></li>\n";
 			} else {
-				$res .= "<li><a href='".BASEDIR."eshop.php'>Store Front</a></li>\n";
+				$res .= "<li><a href='".BASEDIR."eshop.php'>".$locale['ESHP329']."</a></li>\n";
 			}
 			if (!empty($info['current_category'])) {
 				$res .= "<li class='active'><a href='".BASEDIR."eshop.php?category=".$info['current_category']['cid']."'>".$info['current_category']['title']."</a></li>\n";
@@ -65,43 +65,29 @@ if (!function_exists('render_eshop_featured_product')) {
 			<a href='".BASEDIR."eshop.php?product=".$banner['featbanner_id']."'>
 			<img class='img-responsive' style='width:100%' src='".$banner['featbanner_banner']."' />
 			<div class='carousel-caption'>".$banner['featbanner_title']."</div>
-			</a>
-			</div>
-			";
+			</a></div>";
 					$i++;
 				}
 			}
 		}
 		if ($indicator) {
-			?>
-			<div class='panel panel-default m-t-20'>
-				<div class='panel-body'>
-					<div id="carousel-example-generic" class="carousel slide" style='max-height:400px;'
-						 data-ride="carousel">
+			echo "<div class='panel panel-default m-t-20'>
+					<div class='panel-body'>
+					<div id='carousel-example-generic' class='carousel slide' style='max-height:400px;' data-ride='carousel'>
 						<!-- Indicators -->
-						<ol class="carousel-indicators">
-							<?php echo $indicator ?>
-						</ol>
+						<ol class='carousel-indicators'>".$indicator."</ol>
 						<!-- Wrapper for slides -->
-						<div class="carousel-inner" role="listbox">
-							<?php echo $slides ?>
-						</div>
-
+						<div class='carousel-inner' role='listbox'>".$slides."</div>
 						<!-- Controls -->
-						<a class="left carousel-control" href="#carousel-example-generic" role="button"
-						   data-slide="prev">
-							<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-							<span class="sr-only">Previous</span>
-						</a>
-						<a class="right carousel-control" href="#carousel-example-generic" role="button"
-						   data-slide="next">
-							<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-							<span class="sr-only">Next</span>
-						</a>
+						<a class='left carousel-control' href='#carousel-example-generic' role='button' data-slide='prev'>
+							<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
+							<span class='sr-only'>".$locale['ESHP002']."</span></a>
+						<a class='right carousel-control' href='#carousel-example-generic' role='button' data-slide='next'>
+							<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
+							<span class='sr-only'>".$locale['ESHP004']."</span></a>
 					</div>
 				</div>
-			</div>
-		<?php
+			</div>";
 		}
 	}
 }
@@ -122,11 +108,10 @@ if (!function_exists('render_eshop_featured_category')) {
 				}
 			}
 		}
+
 		if ($cat) {
-			?>
-			<h3>Featured Category</h3>
-			<?php echo $cat; ?>
-		<?php
+			echo "<h3>".$locale['ESHPP103']."</h3>\n";
+			echo $cat;
 		}
 	}
 }
@@ -147,11 +132,10 @@ if (!function_exists('render_eshop_featured_url')) {
 				}
 			}
 		}
+
 		if ($cat) {
-			?>
-			<h3>Featured Sections</h3>
-			<?php echo $cat; ?>
-		<?php
+			echo "<h3>".$locale['ESHPP104']."</h3>\n";
+			echo $cat;
 		}
 	}
 }
@@ -163,7 +147,7 @@ if (!function_exists('render_eshop_page_content')) {
 	 */
 	function render_eshop_page_content(array $info) {
 		global $locale;
-		echo $_GET['category'] ? "<h3>Latest in ".$info['title']."</h3>" : "<h3>New Arrivals in Store</h3>\n";
+		echo $_GET['category'] ? "<h3>Latest in ".$info['title']."</h3>" : "<h3>".$locale['ESHPP105']."</h3>\n";
 		if (!empty($info['item'])) {
 			$i = 1;
 			$calculated_bs = col_span(fusion_get_settings('eshop_ipr'), 1);
@@ -172,57 +156,45 @@ if (!function_exists('render_eshop_page_content')) {
 				echo "<div class='row eshop-rows'>\n";
 				foreach ($info['item'] as $product_id => $item_data) {
 					if ($_GET['category'] && $item_data['cid'] == $_GET['category'] || !$_GET['category']) {
-						?>
-						<div class='col-xs-12 eshop-column col-sm-<?php echo $calculated_bs ?> text-center m-t-20 m-b-20'>
-							<a class='display-inline-block' style='margin:0 auto; min-height: <?php echo fusion_get_settings('eshop_image_th')*1.1 ?>px;' href='<?php echo $item_data['link'] ?>'>
-								<?php echo thumbnail($item_data['picture'], fusion_get_settings('eshop_image_tw'))
-								//<img class='img-responsive' src='".$item_data['picture']."' style='width: ".fusion_get_settings('eshop_image_tw')."px; max-height: ".fusion_get_settings('eshop_image_th')."px;'>\n
-								?>
-							</a>
-							<div class='text-left p-l-20 m-b-20' style='min-height: <?php echo (fusion_get_settings('eshop_image_th')*0.5) ?>px; '>
-								<a href='<?php echo $item_data['link'] ?>'><span class='eshop-product-title'><?php echo $item_data['title'] ?></span></a>
-								<?php
-									if ($item_data['xprice']) { ?>
-										<div class='eshop-price'>
-											<span><small><?php echo fusion_get_settings('eshop_currency')?></small><?php echo number_format($item_data['xprice']) ?></span>
-											<span class='eshop-discount label label-danger'><?php echo number_format(100-($item_data['xprice']/$item_data['price']*100))?>% <?php echo $locale['off'] ?></span>
-										</div>
-										<span class='eshop-xprice'><small><?php echo fusion_get_settings('eshop_currency') ?></small><?php echo number_format($item_data['price'])?></span>
-									<?php } else { ?>
-										<div class='eshop-price'><small><?php echo fusion_get_settings('eshop_currency') ?></small><?php echo number_format($item_data['price']) ?></div>
-									<?php }
-								?>
-							</div>
-						</div>
-						<?php
+						echo "<div class='col-xs-12 eshop-column col-sm-".$calculated_bs." text-center m-t-20 m-b-20'><a class='display-inline-block' style='margin:0 auto; min-height: ".fusion_get_settings('eshop_image_th')."*1.1px;' href='".$item_data['link']."'>";
+							echo thumbnail($item_data['picture'], fusion_get_settings('eshop_image_tw'));
+							echo "</a>";
+							echo "<div class='text-left p-l-20 m-b-20' style='min-height: ".(fusion_get_settings('eshop_image_th'))."*0.5px;'>
+								 <a href='".$item_data['link']."'><span class='eshop-product-title'>".$item_data['title']."</span></a>";
+									if ($item_data['xprice']) { 
+										echo "<div class='eshop-price'>
+											<span><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['xprice'])."</span>
+											<span class='eshop-discount label label-danger'>".number_format(100-($item_data['xprice']/$item_data['price']*100))." % ".$locale['off']."</span>									
+											</div>
+											<span class='eshop-xprice'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</span>";
+										} else { 
+											echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</div>";
+									 }
+							echo "</div></div>";
 						$i++;
 					}
 				}
-				?>
-				</div>
-				<?php
+echo "</div>";
 			} else {
-				?>
-				<div class='text-center m-t-20'>
-					<span>There are no products found</span><br/>
-				</div>\n
-				<?php
+				echo "<div class='well text-center m-t-20'>
+					<span>".$locale['ESHPP107']."</span><br />
+					</div>\n";
 			}
+			
 			// Related Products Lineup
 			if ($_GET['category']) {
 				$i = 1;
-				$a_html = "<h3>Related Products</h3>\n<div class='row eshop-rows'>\n";
+				$a_html = "<h3>".$locale['ESHPP108']."</h3>\n<div class='row eshop-rows'>\n";
 				$html = "";
 				foreach ($info['item'] as $product_id => $item_data) {
 					if ($item_data['cid'] !== $_GET['category']) {
 						$html .= "
-						<div class='col-xs-12 eshop-column col-sm-$calculated_bs text-center m-t-20 m-b-20'>\n
+						<div class='col-xs-12 eshop-column col-sm-".$calculated_bs." text-center m-t-20 m-b-20'>\n
 							<a class='display-inline-block' style='margin:0px auto; min-height: ".(fusion_get_settings('eshop_image_th')*1.1)."px;' href='".$item_data['link']."'>
 							<img class='img-responsive' src='".$item_data['picture']."' style='width: ".fusion_get_settings('eshop_image_tw')."px; max-height: ".fusion_get_settings('eshop_image_th')."px;'>\n
 							</a>
 						<div class='text-left p-l-20 m-b-20' style='min-height: ".(fusion_get_settings('eshop_image_th')*0.5)."px;'>
-						<a href='".$item_data['link']."'><span class='eshop-product-title'>".$item_data['title']."</span></a>
-					";
+						<a href='".$item_data['link']."'><span class='eshop-product-title'>".$item_data['title']."</span></a>";
 						if ($item_data['xprice']) {
 							$html .= "
 							<div class='eshop-price'>
@@ -244,12 +216,10 @@ if (!function_exists('render_eshop_page_content')) {
 				}
 			}
 		} else {
-			?>
-			<div class='text-center m-t-20'>
-				<span>There are no products found</span><br/>
-				<a href='<?php echo BASEDIR."eshop.php" ?>'>Go back to Store Front</a>
-			</div>
-		<?php
+			echo "<div class='well text-center m-t-20'>
+				<span>".$locale['ESHPP107']."</span><br />
+				<a href='".BASEDIR."eshop.php'>".$locale['ESHP329']."</a><br />
+			</div>";
 		}
 	}
 }
@@ -360,10 +330,10 @@ if (!function_exists('render_eshop_product')) {
 		}
 		echo "<h2 class='product-title'>".$data['title']."</h2>";
 
-	//echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info.
+	//echo $eShop->display_social_buttons($data['id'], $data['picture'], $data['title']); // there is a wierd behavior in social buttons i cannot push this array into $info. <- We need it to be operational, perhaps even for news, blog, it is popular.
 	// product basic information
 	echo "<div class='text-smaller'>\n";
-	echo "<span class='display-block'>Product-Serial: ".$data['artno']."</span>\n";
+	echo "<span class='display-block'>".$locale['ESHPF139']." ".$data['artno']."</span>\n";
 	echo "<span class='display-block'>".$data['stock_status']."</span>\n";
 	echo "<span class='display-block'>".$data['version']."</span>";
 	echo "<span class='display-block'>".$data['shipping']."</span>";
@@ -527,38 +497,38 @@ if (!function_exists('render_eshop_product')) {
 if (!function_exists('render_checkout')) {
 	function render_checkout(array $info) {
 		global $locale;
-		echo "<h4>Checkout - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
+		echo "<h4>".$locale['ESHPF106']." - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
 		echo $info['item_form'];
-		if ($info['customer_message']) echo "<div class='alert alert-warning'><span class='strong'>Customer Message:</span><div class='m-t-10'>".$info['customer_message']."</div></div>\n";
+		if ($info['customer_message']) echo "<div class='alert alert-warning'><span class='strong'>".$locale['ESHPCHK116']."</span><div class='m-t-10'>".$info['customer_message']."</div></div>\n";
 		echo "<div class='text-smaller m-b-20'><span class='required'>*</span>".$locale['ESHPCHK118']."</div>\n";
 		// list accordion item
 		echo opencollapse('cart-list');
 		// customer info
-		echo opencollapsebody('Your Information', 'cif', 'cart-list', $info['customer'] ? 0 : 1);
+		echo opencollapsebody($locale['ESHPCHK102'], 'cif', 'cart-list', $info['customer'] ? 0 : 1);
 		echo "<div class='p-15'>\n";
 		echo $info['customer_form'];
 		echo "</div>\n";
 		echo closecollapsebody();
 		// Coupon code
-		echo opencollapsebody('Use Coupon Codes', 'cpn', 'cart-list', $info['coupon_code'] ? 0 : 1);
+		echo opencollapsebody($locale['ESHPCHK171'], 'cpn', 'cart-list', $info['coupon_code'] ? 0 : 1);
 		echo "<div class='p-15'>\n";
 		echo $info['coupon_form'];
 		echo "</div>\n";
 		echo closecollapsebody();
 		// Estimate shipping rates
-		echo opencollapsebody('Select Shipping Options', 'ship', 'cart-list', $info['shipping_method'] ? 0 : 1);
+		echo opencollapsebody($locale['ESHPCHK123'], 'ship', 'cart-list', $info['shipping_method'] ? 0 : 1);
 		echo "<div class='p-15'>\n";
 		echo $info['shipping_form'];
 		echo "</div>\n";
 		echo closecollapsebody();
 		// Estimate Payment Surcharge
-		echo opencollapsebody('Payment Options', 'payment', 'cart-list', $info['payment_method'] ? 0 : 1);
+		echo opencollapsebody($locale['ESHPCHK120'], 'payment', 'cart-list', $info['payment_method'] ? 0 : 1);
 		echo "<div class='p-15'>\n";
 		echo $info['payment_form'];
 		echo "</div>\n";
 		echo closecollapsebody();
 		// customer message
-		echo opencollapsebody('Your Message', 'message', 'cart-list', 0);
+		echo opencollapsebody($locale['ESHPCHK116'], 'message', 'cart-list', 0);
 		echo "<div class='p-15'>\n";
 		echo $info['message_form'];
 		echo "</div>\n";
@@ -586,7 +556,7 @@ if (!function_exists('render_checkout')) {
 		echo "</div>\n"; // end pull-right
 		echo "<div class='display-block  p-l-0 p-r-0 m-t-20 col-xs-12'>\n";
 		echo "<a id='agreement_checked' class='btn btn-primary pull-right' href='".BASEDIR."eshop.php?order'>".$locale['ESHPCHK135']."</a>\n";
-		echo "<a class='btn btn-default pull-left' href='".BASEDIR."eshop.php'>Continue Shopping</a>\n";
+		echo "<a class='btn btn-default pull-left' href='".BASEDIR."eshop.php'>".$locale['ESHP329']."</a>\n";
 		echo "</div>\n";
 		add_to_jquery("
 		function validate_check(id) {

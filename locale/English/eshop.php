@@ -33,6 +33,12 @@ $locale['ESHP031'] = " - eShop";
 $locale['ESHPP100'] = "eShop Categories";
 $locale['ESHPP101'] = "There are no eShop categories created";
 $locale['ESHPP102'] = "There is nothing to list in this category";
+$locale['ESHPP103'] = "Featured Categegory";
+$locale['ESHPP104'] = "Featured Sections";
+$locale['ESHPP105'] = "New arrivals in the shop";
+$locale['ESHPP106'] = "Latest in";
+$locale['ESHPP107'] = "There are no products found";
+$locale['ESHPP108'] = "Related Products";
 
 //campaigns
 $locale['ESHCMP100'] = "Current Campaigns";
@@ -185,7 +191,7 @@ $locale['ESHPCHK111'] = "Address (line 2)";
 $locale['ESHPCHK112'] = "Zip/Postal code";
 $locale['ESHPCHK113'] = "Contact Phone";
 $locale['ESHPCHK114'] = "Fax";
-$locale['ESHPCHK115'] = 'Email'; // dup at $locale['UM061a'];
+$locale['ESHPCHK115'] = 'Email'; 
 $locale['ESHPCHK116'] = "Customer notes";
 $locale['ESHPCHK117'] = "Terms and Conditions";
 $locale['ESHPCHK118'] = "Symbols that the fields are required ";
@@ -228,11 +234,9 @@ $locale['ESHPCHK154'] = "No customers have been saved";
 $locale['ESHPCHK155'] = "Customer form";
 $locale['ESHPCHK156'] = "Please select user account";
 $locale['ESHPCHK157'] = "Both first and last name works here: ";
-
 $locale['ESHPCHK158'] = "Add Customer";
 $locale['ESHPCHK158a'] = "Edit Customer";
 $locale['ESHPCHK158b'] = "Current Customers";
-
 $locale['ESHPCHK159'] = "Checkout Completed";
 $locale['ESHPCHK160'] = "Included";
 $locale['ESHPCHK161'] = "Excluded";
@@ -608,7 +612,7 @@ $locale['ESHP325'] = "You have no paid orders!";
 $locale['ESHP326'] = "Orders that are waiting for payment confirmation";
 $locale['ESHP327'] = "You have no unhandled orders!";
 $locale['ESHP328'] = "Order ID or Customer Name";
-$locale['ESHP329'] = "Index";
+$locale['ESHP329'] = "eShop Frontpage";
 $locale['ESHP330'] = "Go back to";
 $locale['ESHP331'] = "There are no orders for the current selection";
 $locale['ESHP332'] = "Orders registered on";
@@ -843,18 +847,15 @@ $ESHPHOTOSL['470'] = "Delete";
 $ESHPHOTOSL['480'] = "No Photos added.";
 $ESHPHOTOSL['481'] = "Close Album";
 
-
 $locale['product_updated'] = 'Product Updated';
 $locale['product_message'] = 'Your cart have been successfully updated';
 $locale['product_error_001'] = 'Product Not Updated';
 $locale['product_error_002'] = 'Product Not Found (Response-1)';
 $locale['no_product'] = 'There are no products in your cart.';
-
 $locale['cart_title'] = 'My Cart';
 $locale['cart_empty'] = 'There are no items in your cart';
 $locale['cart_purchases'] = 'Recently added item';
 $locale['check_out'] = 'Checkout';
-
 $locale['cart_remove'] = 'Item Removed';
 $locale['cart_remove_message'] = 'You have removed item to your cart';
 $locale['cart_error_001'] = 'Product Cannot be Removed (Code 2)';
