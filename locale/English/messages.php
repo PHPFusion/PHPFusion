@@ -13,7 +13,7 @@ $locale['409'] = "Do with the checked items:";
 $locale['410'] = "Check all";
 $locale['411'] = "Uncheck all";
 $locale['412'] = "Save Conversation";
-$locale['413'] = "Unsave"; // lets not unsave.
+$locale['413'] = "Unsave";
 $locale['414'] = "Read";
 $locale['415'] = "Unread";
 $locale['416'] = "Delete Conversation";
@@ -45,6 +45,7 @@ $locale['440'] = "(received %s)";
 $locale['441'] = "Write as Site Owner";
 $locale['442'] = "User Levels";
 $locale['443'] = "Groups";
+$locale['444'] = "All conversation with";
 
 // Search Options
 $locale['450'] = "Search and Sort Options";
@@ -63,13 +64,11 @@ $locale['462'] = "Subject";
 $locale['463'] = "Message";
 $locale['464'] = "Sender";
 $locale['465'] = "Date/Time received";
-
 $locale['466'] = 'Not Selected';
 $locale['467'] = 'No Conversation Selected';
 $locale['468'] = 'Start a new conversation with %s';
 $locale['469'] = 'Reply to %s';
 $locale['470'] = 'Search Filter (Not functional yet)';
-
 $locale['471'] = "There are no messages";
 
 // Error Messages
