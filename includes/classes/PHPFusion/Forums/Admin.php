@@ -817,11 +817,11 @@ class Admin {
 				echo "<a title='".$locale['forum_048']."' href='".FUSION_SELF.$aidlink."&amp;action=edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'><i class='entypo cog m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; // edit
 				echo "<a title='".$locale['forum_049']."' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$data['forum_id']."&amp;forum_cat=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch'].$this->ext."' onclick=\"return confirm('".$locale['delete_notice']."');\"><i class='entypo icancel m-l-0 m-r-0' style='font-size:18px; padding:0; line-height:14px;'></i></a>"; // delete
 				echo "</div>\n";
-				echo "<span class='text-dark text-smaller strong'>Topics: ".number_format($data['forum_threadcount'])." / Posts: ".number_format($data['forum_postcount'])." </span>\n<br/>";
+				echo "<span class='text-dark text-smaller strong'>".$locale['forum_057']." ".number_format($data['forum_threadcount'])." / ".$locale['forum_059']." ".number_format($data['forum_postcount'])." </span>\n<br/>";
 				$subforums = get_child($this->forum_index, $data['forum_id']);
 				$subforums = !empty($subforums) ? count($subforums) : 0;
-				echo "<span class='text-dark text-smaller strong'>".$locale['forum_050'].": ".number_format($subforums)."</span>\n<br/>";
-				echo "<span class='text-smaller text-dark strong'>".$locale['forum_051'].":</span> <span class='text-smaller'>".$data['forum_alias']." </span>\n";
+				echo "<span class='text-dark text-smaller strong'>".$locale['forum_058']." ".number_format($subforums)."</span>\n<br/>";
+				echo "<span class='text-smaller text-dark strong'>".$locale['forum_051']." </span> <span class='text-smaller'>".$data['forum_alias']." </span>\n";
 				echo "</div></div>\n"; // end row
 				echo "</div>\n";
 				echo "</div>\n</div>\n";

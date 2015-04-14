@@ -55,12 +55,15 @@ $locale['forum_047'] = 'Edit Permissions';
 $locale['forum_048'] = 'Edit Forum';
 $locale['forum_049'] = 'Remove Forum';
 $locale['forum_050'] = 'Subforum';
-$locale['forum_051'] = 'Alias';
+$locale['forum_051'] = 'Alias : ';
 $locale['forum_052'] = 'Move Forum Threads and Posts';
 $locale['forum_053'] = 'No, Delete Forum Threads and Posts';
 $locale['forum_054'] = 'Move Subforums';
 $locale['forum_055'] = 'No, Delete Subforums';
 $locale['forum_056'] = 'Base Directory';
+$locale['forum_057'] = 'Topics : ';
+$locale['forum_058'] = 'Subforums : ';
+$locale['forum_059'] = 'Posts : ';
 $locale['forum_060'] = 'Forum Removal Options';
 
 /* Needed in forum_functions_include.php */
