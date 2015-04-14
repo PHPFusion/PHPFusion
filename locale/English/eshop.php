@@ -68,6 +68,16 @@ $locale['ESHPI103'] = "Confirmation of your order";
 //paypal
 $locale['ESHPPP100'] = "Thank you for your order.";
 $locale['ESHPPP101'] = "Please standby while PayPal handles our request, you have waited :";
+$locale['ESHPPP102'] = " seconds";
+$locale['ESHPPP103'] = "Click here to continue if you are not automatically redirected";
+
+//prepayment
+$locale['ESHPPRP101'] = "Prepayment";
+$locale['ESHPPRP102'] = "Prepayment option";
+$locale['ESHPPRP103'] = "Thank you for your order";
+$locale['ESHPPRP104'] = "Please insert money to our account 555-9645 Bank International";
+$locale['ESHPPRP105'] = "please state the following order id on your payment, order id : ";
+$locale['ESHPPRP106'] = "We expect that you have transfered the requested amount within 5 working days.";
 
 //Cart actions
 $locale['ESHPC100'] = " Your cart has been cleared";
@@ -90,7 +100,6 @@ $locale['ESHPC116'] = "has been updated";
 $locale['ESHPC117'] = "has been added to your cart";
 $locale['ESHPC118'] = "Products, Total";
 $locale['ESHPC119'] = "Empty cart";
-
 
 //functions
 $locale['ESHPF100'] = "Something went wrong!";
@@ -328,8 +337,6 @@ $locale['ESHPPRO144'] = "Devlivery can be anything from 5 - 30 days. Just leave 
 $locale['ESHPPRO145'] = "Product Available Now?";
 $locale['ESHPPRO145a'] = "Not Available";
 $locale['ESHPPRO145b'] = "Available";
-
-
 $locale['ESHPPRO146'] = "Setting buyable to No will make the ribbon Incoming appear and the cart options will not be available.";
 $locale['ESHPPRO147'] = "List the Product?";
 $locale['ESHPPRO148'] = "Setting this to Disabled will remove the product from your lists.";
@@ -863,7 +870,6 @@ $locale['cart_remove_message'] = 'You have removed item to your cart';
 $locale['cart_error_001'] = 'Product Cannot be Removed (Code 2)';
 $locale['cart_error_003'] = 'Product Cannot be Added (Code 1)';
 $locale['cart_error_002'] = 'There are error in processing your request. Please contact the Site Admin.';
-
 $locale['eshop_e1000'] = 'An error is found and the cart is not updated.';
 $locale['eshop_e1002'] = 'Cart Not Updated';
 $locale['eshop_e1003'] = 'Invalid Product Code. Cart Not Updated';

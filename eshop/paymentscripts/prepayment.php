@@ -18,37 +18,20 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 echo '<br /><table border="0" width="600" cellspacing="0" cellpadding="0" align="center"><tr>
-
-<td bgcolor="#ADCBE7" align="left" height="12" width="3%">
-
-<font color="#FFFFFF" size="2"><b>
+<td bgcolor="#ADCBE7" align="left" height="12" width="3%"><font color="#FFFFFF" size="2"><b>
 <img border="0" src="'.INFUSIONS.'eshop/img/paymenticon.png" width="25" height="12"></b></font></td>
-
 <td bgcolor="#ADCBE7" align="left" height="12">
-<font color="#FFFFFF" size="2"><b> Prepayment</b></font></td>
-
+<font color="#FFFFFF" size="2"><b>'.$locale['ESHPPRP101'].'</b></font></td>
 <td bgcolor="#ADCBE7" align="left" height="12"> </td></tr>
-
-<tr>
-<td height="22" bordercolor="#CEE4ED" bordercolorlight="#CEE4ED" bordercolordark="#CEE4ED" style="border-left-style: solid; border-left-width: 1px; border-right-style: none; border-right-width: medium; border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px" width="18%" colspan="2">
-
+<tr><td height="22" bordercolor="#CEE4ED" bordercolorlight="#CEE4ED" bordercolordark="#CEE4ED" style="border-left-style: solid; border-left-width: 1px; border-right-style: none; border-right-width: medium; border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px" width="18%" colspan="2">
 <span><img border="0" src="'.INFUSIONS.'eshop/img/creditcard.jpg" width="194" height="156"><font size="3"><b><br /> </b></font></span><p align="center">
-
-<img border="0" src="'.INFUSIONS.'eshop/img/yes.gif" width="63" height="56"><br />Prepayment option<br />
-
+<img border="0" src="'.INFUSIONS.'eshop/img/yes.gif" width="63" height="56"><br />'.$locale['ESHPPRP102'].'<br />
 <br /><br /><br /><br /> </td>
-
-<td valign="top" height="22" bordercolor="#CEE4ED" bordercolorlight="#CEE4ED" bordercolordark="#CEE4ED" style="border-left-style: none; border-left-width: medium; border-right-style: solid; border-right-width: 1px; border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px" width="81%">
-
-<span><br /><br />
-<h2><font size="3"><b><br />
- Thank you for your order</h2></b></font> <br /><br /><br /><br />
-
-<p><font face="Verdana" size="2">Please insert money to our account 555-9645 Bank International </font></p>
-
-<p><font face="Verdana" size="2">please state the following order id on your payment, order id : '.$odata['oid'].' </font></p>
-
-<p><font face="Verdana" size="2">We expect that you have transfered the requested amount within 5 working days.</font></p>
+<td valign="top" height="22" bordercolor="#CEE4ED" bordercolorlight="#CEE4ED" bordercolordark="#CEE4ED" style="border-left-style: none; border-left-width: medium; border-right-style: solid; border-right-width: 1px; border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px" width="81%">span><br /><br />
+<h2><font size="3"><b><br /> '.$locale['ESHPPRP103'].'</h2></b></font> <br /><br /><br /><br />
+<p><font face="Verdana" size="2">'.$locale['ESHPPRP104'].'</font></p>
+<p><font face="Verdana" size="2">'.$locale['ESHPPRP105'].''.$odata['oid'].' </font></p>
+<p><font face="Verdana" size="2">'.$locale['ESHPPRP106'].'</font></p>
 <p> </td></tr></table><p></FONT><br /></p>';
 
 //clear the cart.

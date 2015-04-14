@@ -61,7 +61,7 @@ echo "<center><div style = 'font-family : Verdana, Arial, Helvetica, sans-serif;
 	-moz-border-radius-topleft: 5px;
 	-moz-border-radius-topright: 5px;
 	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;';> ".$locale['ESHPPP101']." <span id='counter'>0</span> seconds</div></center>";
+	border-top-right-radius: 5px;';> ".$locale['ESHPPP101']." <span id='counter'>0</span>".$locale['ESHPPP102']."</div></center>";
 
 echo "
 <script type='text/javascript'>
@@ -71,8 +71,6 @@ function countdown() {
 }
 setInterval(function(){ countdown(); },1000);
 </script>";
-//If we do IPN checks, it will be scrapped first version.
-//<input type="hidden" name="notify_url" value="'.$settings['siteurl'].'eshop/ipnverify.php" />
 echo '
 <form name="cart" id="cart" action="https://www.paypal.com/cgi-bin/webscr" method="post" />
 <input type="hidden" name="cmd" value="_cart" readonly /> 
@@ -122,10 +120,9 @@ echo '<input type="hidden" name="tax_cart" value="'.$uodata['ovat'].'" />';
 } else {
 echo '<input type="hidden" name="tax_cart" value="0" />';	
 }
-echo '<br /><center><input name="mySubmit" type="submit" id="mySubmit" value="Click here to continue if you are not automatically redirected" /></center>';
+echo '<br /><center><input name="mySubmit" type="submit" id="mySubmit" value="'.$locale['ESHPPP103'].'" /></center>';
 echo "</form>";
 echo '<script type="text/javascript">';
 echo 'window.onload = function(){document.cart.submit()}';
 echo '</script>';
-
 ?>
