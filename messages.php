@@ -23,11 +23,9 @@ if (!iMEMBER) {	redirect("index.php"); }
 if (isset($_POST['save_options'])) {
 	$pm_email_notify = isset($_POST['pm_email_notify']) && isnum($_POST['pm_email_notify']) ? "1" : "0";
 	$pm_save_sent = isset($_POST['pm_save_sent']) && isnum($_POST['pm_save_sent']) ? "1" : "0";
-
 	$result = dbquery("INSERT INTO ".DB_MESSAGES_OPTIONS." (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox)
 						VALUES ('".$userdata['user_id']."', '$pm_email_notify', '$pm_save_sent', '0', '0', '0')
 						ON DUPLICATE KEY UPDATE pm_email_notify='$pm_email_notify', pm_save_sent='$pm_save_sent'");
-
 	redirect(FUSION_SELF."?folder=inbox");
 }
 define('RIGHT_OFF', 1);
@@ -45,8 +43,10 @@ if (iADMIN || $userdata['user_id'] == 1) {
 	$msg_settings['pm_savebox'] = 0;
 	$msg_settings['pm_sentbox'] = 0;
 }
+
 $info['chat_rows'] = 0;
 $info['channel'] = '';
+
 // Check if the folder name is a valid one
 if (!isset($_GET['folder']) || !preg_check("/^(inbox|outbox|archive|options)$/", $_GET['folder'])) {
 	$_GET['folder'] = "inbox";
@@ -126,7 +126,6 @@ if (isset($_GET['msg_read']) && isnum($_GET['msg_read'])) {
 
 // Read or Unread Message
 if ($msg_ids && $check_count > 0) {
-
 	$msg_ids = explode(',', $msg_ids);
 	if (isset($_POST['read_msg'])) {
 		foreach($msg_ids as $id) {
@@ -371,9 +370,9 @@ if (isset($_POST['send_message'])) {
 		}
 	} else {
 		if ($error == 2) {
-			notify('The target user inbox is full. You cannot send him anymore message.', 'Debug Notice');
+			notify($locale['628'], '');
 		} else {
-			notify('Something went wrong', "error generated $error");
+			notify($locale['488'], "$error");
 		}
 	}
 	redirect(BASEDIR."messages.php?folder=".$_GET['folder']."".(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read']."" : ''));
@@ -402,7 +401,6 @@ if (isset($_GET['error'])) {
 $folders = array("inbox" => $locale['402'], "outbox" => $locale['403'], "archive" => $locale['404'], "options" => $locale['425']);
 
 $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart'])) ? : 0;
-
 
 $info['inbox_total'] = dbrows(dbquery("SELECT count('message_id') as total FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='0' GROUP BY message_subject"));
 $info['outbox_total'] = dbrows(dbquery("SELECT count('message_id') as total FROM ".DB_MESSAGES." WHERE message_user='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_subject"));

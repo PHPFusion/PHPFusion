@@ -80,6 +80,7 @@ $locale['484'] = "Your Private Messaging facility has been withdrawn due to misu
 $locale['485'] = "Please select at least one message";
 $locale['486'] = "You must complete all fields: Subject and Message";
 $locale['487'] = "Flooding! Please wait %s seconds before you write the next message.";
+$locale['488'] = "An unknown error occurred with the message, ";
 
 // Tooltips
 $locale['500'] = "Click to write a new message";
@@ -109,7 +110,7 @@ $locale['624'] = "Saved Options";
 $locale['625'] = "You have a new private message waiting at ".fusion_get_settings('sitename');
 $locale['626'] = ",\r\nYou have received a new Private Message titled [SUBJECT] from [USER] at ".fusion_get_settings('sitename').". You can read your private message at ".fusion_get_settings('siteurl')."messages.php\r\n\r\nYou can disable email notification through the options panel of the Private Message page if you no longer wish to be notified of new messages.";
 $locale['627'] = "Error";
-$locale['628'] = "Unable to send the Private Message. The user's inbox is full.";
+$locale['628'] = "Unable to send the Private Message. The recipient's inbox is full.";
 $locale['629'] = "You cannot move the selected message(s) into the specified folder as it will exceed the maximum message limit.";
 $locale['630'] = " Message Limit";
 $locale['631'] = "Yes";
