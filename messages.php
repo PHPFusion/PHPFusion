@@ -376,7 +376,7 @@ if (isset($_POST['send_message'])) {
 			notify('Something went wrong', "error generated $error");
 		}
 	}
-	redirect(BASEDIR."messages.php?folder=".$_GET['folder']."&msg_user=".$_GET['msg_user'].(isset($_GET['msg_read']) ? "&msg_read=".$_GET['msg_read']."" : ''));
+	redirect(BASEDIR."messages.php?folder=".$_GET['folder']."".(isset($_GET['msg_read']) ? "&amp;msg_read=".$_GET['msg_read']."" : ''));
 }
 
 // Error Section.
