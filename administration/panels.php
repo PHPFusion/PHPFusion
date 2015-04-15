@@ -97,7 +97,6 @@ class fusion_panels {
 			$this->data['panel_id'] = isset($_POST['panel_id']) ? form_sanitizer($_POST['panel_id'], '0', 'panel_id') : 0;
 			$this->data['panel_name'] = isset($_POST['panel_name']) ? form_sanitizer($_POST['panel_name'], '', 'panel_name') : '';
 			$this->data['panel_side'] = isset($_POST['panel_side']) ? form_sanitizer($_POST['panel_side'], 1, 'panel_side') : 1;
-
 			$this->data['panel_access'] = isset($_POST['panel_access']) ? form_sanitizer($_POST['panel_access'], '0', 'panel_access') : 0;
 			// panel name is unique
 			$result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$this->data['panel_name']."' AND panel_id !='".$this->data['panel_id']."'");
@@ -138,7 +137,7 @@ class fusion_panels {
 				// require panel_url_list in this case
 				$this->data['panel_url_list'] = isset($_POST['panel_url_list']) ? form_sanitizer($_POST['panel_url_list'], '', 'panel_url_list') : '';
 				if ($this->data['panel_url_list']) {
-					$this->data['panel_url_list'] = str_replace("|", "\r\n", $this->data['panel_url_list']);
+					$this->data['panel_url_list'] = str_replace(",", "\r\n", $this->data['panel_url_list']);
                     if ($this->data['panel_restriction'] == 1) { // exclude mode
                         $this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
                     } else { // include mode
