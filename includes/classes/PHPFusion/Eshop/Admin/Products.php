@@ -32,7 +32,7 @@ class Products {
 		'active' => 1,
 		'gallery' => 1,
 		'cart_on' => 1,
-		'buynow' => 1,
+		'buynow' => 0,
 		'delivery' => '',
 		'demo'=> '',
 		'rpage'=> 0,
@@ -619,23 +619,20 @@ class Products {
 		echo "<div class='row m-t-20'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-9'>\n";
 		openside('');
-		// now defaulted - always use cart
 		echo form_hidden($locale['ESHPPRO149'], 'cart_on', 'cart_on', 1, array('placeholder'=>$locale['ESHPPRO150'], 'width'=>'100%'));
 		echo form_text('title', $locale['ESHPPRO104'], $this->data['title'], array('required'=>1, 'inline'=>1));
-		echo form_select('keywords', $locale['ESHPPRO192'], array(), $this->data['keywords'], array('width'=>'100%', 'tags'=>1, 'multiple'=>1, 'inline'=>1));
+		echo form_text('price', $locale['ESHPPRO111'], $this->data['price'], array('number'=>1, 'required'=>1, 'width'=>'250px', 'inline'=>1, 'placeholder'=>$settings['eshop_currency']));
 		//'placeholder'=>$locale['ESHPPRO136']
-		echo form_text('demo', $locale['ESHP013'], $this->data['demo'], array('inline'=>1, 'placeholder'=>'http://'));
-
 		$this->upload_settings += array('inline'=>1);
 		echo form_fileinput($locale['ESHPPRO109'], 'imagefile', 'imagefile', BASEDIR."eshop/pictures/", '', $this->upload_settings);
-
+		echo form_select('keywords', $locale['ESHPPRO192'], array(), $this->data['keywords'], array('width'=>'100%', 'tags'=>1, 'multiple'=>1, 'inline'=>1));
 		//echo "<span class='text-smaller display-inline-block m-b-10'>".$locale['ESHPPRO110']."</span>\n";
 		echo form_hidden('', 'picture', 'picture', $this->data['picture']);
 		echo form_hidden('', 'thumb', 'thumb', $this->data['thumb']);
 		echo form_hidden('', 'thumb2', 'thumb2', $this->data['thumb2']);
-
 		echo form_text('artno', $locale['ESHPPRO107'], $this->data['artno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
 		echo form_text('sartno', $locale['ESHPPRO108'], $this->data['sartno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
+		echo form_text('demo', $locale['ESHP013'], $this->data['demo'], array('inline'=>1, 'placeholder'=>'http://'));
 		echo form_text('version', $locale['ESHPPRO133'], $this->data['version'], array('inline'=>1, 'width'=>'250px', 'placeholder'=>$locale['ESHPPRO134']));
 		echo form_text('weight', $locale['ESHPPRO114'], $this->data['weight'], array('inline'=>1, 'number'=>1, 'width'=>'250px', 'placeholder'=> fusion_get_settings('eshop_weightscale')));
 		echo form_text('iorder', $locale['ESHPPRO122'], $this->data['iorder'], array('inline'=>1, 'number'=>1, 'width'=>'100px', 'placeholder'=>$locale['ESHPPRO123']));
@@ -656,13 +653,13 @@ class Products {
 		/**
 		 * Pricing
 		 */
-		echo form_para($locale['ESHPPRO194b'], 'cst', 'cst', array('placeholder'=>$locale['ESHPPRO117']));
+		echo form_para('', 'cst', 'cst', array('placeholder'=>$locale['ESHPPRO117']));
 
-		$pricing['title'][] = 'Product Pricing';
+		$pricing['title'][] = $locale['ESHPPRO202'];
 		$pricing['id'][] = 'ppp';
 		$pricing['icon'][] = 'fa fa-gift fa-lg m-r-10';
 
-		$pricing['title'][] = 'Coupons and Campaign';
+		$pricing['title'][] = $locale['ESHPPRO203'];
 		$pricing['id'][] = 'ppc';
 		$pricing['icon'][] = 'fa fa-gift fa-lg m-r-10';
 
@@ -672,9 +669,10 @@ class Products {
 		echo opentabbody($pricing['title'][0], $pricing['id'][0], $_active);
 		echo "<div class='m-t-10'>\n";
 		openside('');
-		echo form_text('price', $locale['ESHPPRO111'], $this->data['price'], array('number'=>1, 'required'=>1, 'width'=>'250px', 'inline'=>1, 'placeholder'=>$settings['eshop_currency']));
 		//'placeholder'=>$locale['ESHPPRO144'],
-		echo form_text('delivery', $locale['ESHPPRO143'], $this->data['delivery'], array( 'inline'=>1, 'width'=>'250px', 'number'=>1, 'placeholder'=>$locale['ESHPPRO200']));
+		echo form_select('stock', $locale['ESHPPRO137'], array('1'=>$locale['yes'],'2'=>$locale['no']), $this->data['stock'], array('inline'=>1,'placeholder'=> $locale['ESHPPRO140'], 'width'=>'250px'));
+		echo form_text('instock', $locale['ESHPPRO141'], $this->data['instock'], array('inline'=>1,'width'=>'250px','placeholder'=>$locale['ESHP019'], 'number'=>1));
+		echo form_text('delivery', $locale['ESHPPRO143'], $this->data['delivery'], array('inline'=>1, 'width'=>'250px', 'number'=>1, 'placeholder'=>$locale['ESHPPRO200']));
 		//echo "<span class='pull-right text-smaller m-b-10 mid-opacity'>".$locale['ESHPPRO153']."</span>\n";
 		echo form_text('dmulti', $locale['ESHPPRO152'], $this->data['dmulti'], array('inline'=>1, 'placeholder'=>$locale['ESHP019'], 'width'=>'250px'));
 		closeside();
@@ -788,8 +786,6 @@ class Products {
 		echo form_select('active', $locale['ESHPPRO147'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['active'], array('placeholder'=>$locale['ESHPPRO148'], 'width'=>'100%'));
 		echo form_select('status', $locale['ESHPPRO145'], array('0'=>$locale['no'], '1'=>$locale['yes']), $this->data['status'], array('placeholder'=>$locale['ESHPPRO146'], 'width'=>'100%'));
 		echo form_select('access', $locale['ESHPCATS109'], self::getVisibilityOpts(), $this->data['access'], array('placeholder'=>$locale['ESHPPRO159'],'width'=>'100%'));
-		echo form_select('stock', $locale['ESHPPRO137'], array('1'=>$locale['yes'],'2'=>$locale['no']), $this->data['stock'], array('placeholder'=> $locale['ESHPPRO140'], 'width'=>'100%'));
-		echo form_text('instock', $locale['ESHPPRO141'], $this->data['instock'], array('placeholder'=>$locale['ESHP019'], 'number'=>1));
 		echo form_button('save_cat', $locale['save_changes'], $locale['save'], array('class'=>'btn-success', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 
