@@ -54,13 +54,15 @@ $locale['forum_047'] = "Изменить разрешения";
 $locale['forum_048'] = "Изменить форум";
 $locale['forum_049'] = "Удалить форум";
 $locale['forum_050'] = "Подфорум";
-$locale['forum_051'] = "Псевдоним";
+$locale['forum_051'] = "Псевдоним :";
 $locale['forum_052'] = "Переместить темы и сообщения";
 $locale['forum_053'] = "Удалить форум вместе с темами и сообщениями";
 $locale['forum_054'] = "Переместить подфорумы";
 $locale['forum_055'] = "Удалить подфорумы";
 $locale['forum_056'] = "Базовая папка";
-
+$locale['forum_057'] = 'Темы : ';
+$locale['forum_058'] = 'Подфорумы : ';
+$locale['forum_059'] = 'Сообщения : ';
 $locale['forum_060'] = 'Параметры удаления форума';
 
 /* Needed in forum_functions_include.php */
