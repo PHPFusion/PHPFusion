@@ -326,7 +326,7 @@ class fusion_panels {
 		echo form_text('panel_name', $locale['452'], $this->data['panel_name'], array('inline'=>1, 'required'=>1, )); //'error_text'=>$locale['470']
 		echo form_select('panel_filename', $locale['453'], self::get_panelOpts(), $this->data['panel_filename'], array('inline'=>1));
         $grid_opts = self::get_panel_grid();
-		echo form_select('panel_side', $locale['453'], $grid_opts, $this->data['panel_side'], array('inline'=>1));
+		echo form_select('panel_side', $locale['457'], $grid_opts, $this->data['panel_side'], array('inline'=>1));
 		closeside();
 
 		add_to_jquery("
