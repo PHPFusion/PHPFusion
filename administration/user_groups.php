@@ -178,8 +178,7 @@ closetable();
 if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	opentable($locale['440']);
 	if (!isset($_POST['search_users'])) {
-		// no need token for this form.
-		echo "<form name='searchform' method='post' action='".FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id']."'>\n";
+		echo openform('searchform', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1, 'notice' => 0));
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n";
 		echo "<tr>\n<td align='center' class='tbl'><div class='well'>".$locale['441']."<br />".$locale['442']."</div>\n";
 		echo form_text('search_criteria', '', '');
@@ -188,7 +187,8 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 		echo "<label><input type='radio' name='search_type' value='user_id' />&nbsp;".$locale['443']."</label></td>\n";
 		echo "</tr>\n<tr>\n<td align='center' class='tbl'>\n";
 		echo form_button('search_users', $locale['445'], $locale['445'], array('class' => 'btn-primary'));
-		echo "</td>\n</tr>\n</table>\n</form>\n";
+		echo "</td>\n</tr>\n</table>\n";
+		echo closeform();
 	}
 	if (isset($_POST['search_users']) && isset($_POST['search_criteria'])) {
 		$search_items = explode(",", $_POST['search_criteria']);
@@ -211,7 +211,7 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 			$result = dbquery("SELECT user_id,user_name,user_groups,user_level FROM ".DB_USERS." WHERE ".$mysql_search." ORDER BY user_level DESC, user_name");
 		}
 		if (isset($result) && dbrows($result)) {
-			echo "<form name='add_users_form' method='post' action='".FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id']."'>\n";
+			echo openform('add_users_form', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1, 'notice' => 0));
 			echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
 			$i = 0;
 			$users = "";
@@ -237,7 +237,8 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 				echo "<tr>\n<td align='center' colspan='2' class='tbl'>".$locale['451']."<br /><br />\n";
 				echo "<a href='".FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id']."'>".$locale['452']."</a>\n</td>\n</tr>\n";
 			}
-			echo "</table>\n</form>\n";
+			echo "</table>\n";
+			closeform();
 		} else {
 			echo "<div style='text-align:center'><br />\n".$locale['451']."<br />\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id']."'>".$locale['452']."</a><br />\n</div>\n";
@@ -245,7 +246,7 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	}
 	closetable();
 	opentable($locale['460']);
-	echo "<form name='rem_users_form' method='post' action='".FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id']."'>\n";
+	echo openform('rem_users_form', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1, 'notice' => 0));
 	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
 	$rows = dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')");
 	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
@@ -273,7 +274,8 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	} else {
 		echo "<tr>\n<td align='center' colspan='2' class='tbl1'>".$locale['463']."</td>\n</tr>\n";
 	}
-	echo "</table>\n</form>\n";
+	echo "</table>\n";
+	echo closeform();
 	if ($rows > 20) {
 		echo "<div align='center' style='margin-top:5px;'>\n".makePageNav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id']."&amp;")."\n</div>\n";
 	}
