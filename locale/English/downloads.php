@@ -20,7 +20,7 @@ $locale['download_1019'] = "Editor's Full Review";
 $locale['download_1020'] = "File Size";
 $locale['download_1021'] = "Publication Date";
 // filters
-$locale['download_2001'] = 'Most Popular';
+$locale['download_2001'] = 'Most Comments';
 $locale['download_2002'] = 'Most Recent';
 $locale['download_2003'] = 'Most Downloaded';
 $locale['download_2004'] = 'Top Rated Download';

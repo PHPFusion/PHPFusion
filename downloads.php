@@ -25,7 +25,9 @@ if (!db_exists(DB_DOWNLOADS)) {
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."downloads.php";
 include THEMES."templates/global/downloads.php";
+if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
 add_to_title($locale['global_200'].$locale['download_1000']);
+}
 add_to_breadcrumbs(array('link' => BASEDIR.'downloads.php', 'title' => $locale['download_1001']));
 $result = null;
 
@@ -46,7 +48,8 @@ if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 			exit;
 		} elseif (!empty($data['download_url'])) {
 			$res = 1;
-			redirect($data['download_url']);
+			$url_prefix = !strstr($data['download_url'], "http://") ? "http://" : "";
+			redirect($url_prefix.$data['download_url']);
 		}
 	}
 	if ($res == 0) {

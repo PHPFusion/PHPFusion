@@ -181,7 +181,7 @@ function download_form() {
 				$data['download_filesize'] = '';
 			}
 		}
-		if (isset($_FILES['download_file'])) {
+		if (!empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
 			$upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
 			if ($upload) {
 				$data['download_file'] = $upload['target_file'];
@@ -221,7 +221,7 @@ function download_form() {
 		// Break form and return errors
 		if (!$data['download_file'] && !$data['download_url']) {
 			$defender->stop();
-			addNotice('danger',$locale['download_0111']);
+			addNotice('info',$locale['download_0111']);
 		}
 		if (dbcount("(download_id)", DB_DOWNLOADS, "download_id='".$data['download_id']."'")) {
 			dbquery_insert(DB_DOWNLOADS, $data, 'update');
