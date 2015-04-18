@@ -221,9 +221,8 @@ function download_form() {
 		// Break form and return errors
 		if (!$data['download_file'] && !$data['download_url']) {
 			$defender->stop();
-			$defender->addNotice($locale['download_0111']);
+			addNotice('danger',$locale['download_0111']);
 		}
-
 		if (dbcount("(download_id)", DB_DOWNLOADS, "download_id='".$data['download_id']."'")) {
 			dbquery_insert(DB_DOWNLOADS, $data, 'update');
 			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&status=su");
