@@ -211,7 +211,7 @@ function news_form() {
 	if (isset($_POST['save'])) {
 
 		$data = array(
-			'news_id' => form_sanitizer($_POST['news_id'], 0, 'news_id'),
+			'news_id' => isset($_POST['news_id']) ? form_sanitizer($_POST['news_id'], '', 'news_id') : '',
 			'news_subject' => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
 			'news_cat' => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
 			'news_name' =>  $userdata['user_id'],
