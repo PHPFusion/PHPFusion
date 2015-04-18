@@ -40,14 +40,14 @@ if (!function_exists('render_downloads')) {
 			echo "<div class='overflow-hide'><h4 class='m-t-5 m-b-0 strong'>".$locale['download_1007']."</h4>\n ".$locale['download_1020'].": ".$data['download_filesize']." </div>\n";
 			echo "</div><div class='col-xs-7 col-sm-7 col-md-7 col-lg-7'>\n";
 			echo "<div class='pull-left m-b-20'>\n";
-			echo $data['download_post_author'];
-			echo "</div>\n";
-
-			if ($data['download_allow_ratings']) {
+			if (!$data['download_allow_ratings']) {
+				echo $data['download_post_author'];
+			} else {
 				echo "<span class='strong'>".$locale['download_1008'].":</span><br/>\n";
 				echo "<a id='rateJump'>".$locale['download_3003']."</a>\n";
 				add_to_jquery("	$('#rateJump').bind('click', function() { $('html,body').animate({scrollTop: $('#rate').offset().top}, 'slow');	});	");
 			}
+			echo "</div>\n";
 			echo "</div>\n</div>\n";
 
 			echo "</div><div class='panel-body p-b-0'>\n";

@@ -28,5 +28,5 @@ $locale['download_2004'] = 'Top Rated Download';
 $locale['download_3000'] = "No Downloads has been added yet";
 $locale['download_3001'] = "No Category";
 $locale['download_3002'] = "No Publisher";
-$locale['download_3003'] = "Be the first to rate this download";
+$locale['download_3003'] = "View and rate this download";
 ?>

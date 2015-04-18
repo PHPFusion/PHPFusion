@@ -26,9 +26,9 @@ require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."downloads.php";
 include THEMES."templates/global/downloads.php";
 add_to_title($locale['global_200'].$locale['download_1000']);
-add_to_breadcrumbs(array('link' => BASEDIR.'downloads.php', 'title' => $locale['download_1001'])); // blog needs to be localised
+add_to_breadcrumbs(array('link' => BASEDIR.'downloads.php', 'title' => $locale['download_1001']));
 $result = null;
-// download the file
+
 if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
 	$download_id = stripinput($_GET['file_id']);
 	$res = 0;
@@ -97,10 +97,6 @@ switch($_GET['type']) {
 		$filter_condition = 'download_count DESC';
 }
 
-/*
- * Fix flaw 1: Seperated download_id and cat_id.
-*/
-
 if (isset($_GET['download_id'])) {
 	if (validate_download($_GET['download_id'])) {
 		$result = dbquery("SELECT d.*, dc.*,
@@ -116,9 +112,10 @@ if (isset($_GET['download_id'])) {
 					LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'
 					".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('download_visibility')." AND
 					download_id='".$_GET['download_id']."'
-					GROUP BY download_id
-					");
+					GROUP BY download_id");
+			
 		$info['download_rows'] = dbrows($result);
+
 		if ($info['download_rows'] > 0) {
 			include INCLUDES."comments_include.php";
 			include INCLUDES."ratings_include.php";
@@ -144,12 +141,13 @@ if (isset($_GET['download_id'])) {
 
 			/* Admin link */
 			$data['admin_link'] = '';
-			if (iADMIN && checkrights('BLOG')) {
+			if (iADMIN && checkrights('D')) {
 				$data['admin_link'] = array(
 					'edit' => ADMIN."download.php".$aidlink."&amp;action=edit&amp;section=nform&amp;download_id=".$data['download_id'],
 					'delete' => ADMIN."download.php".$aidlink."&amp;action=delete&amp;section=nform&amp;download_id=".$data['download_id'],
 				);
 			}
+
 			$info['download_title'] = $data['download_title'];
 			$info['download_updated'] = $locale['global_049']." ".timer($data['download_datestamp']);
 			add_to_breadcrumbs(array('link' => BASEDIR."downloads.php?download_id=".$_GET['download_id'], 'title' => $data['download_title']));
@@ -240,7 +238,6 @@ if (($info['download_max_rows'] > $settings['downloads_per_page']) && (!isset($_
 
 if (!empty($info['download_rows'])) {
 	while ($data = dbarray($result)) {
-		// Blog Image
 		$download_image ='';
 		if ($data['download_image'] && $settings['download_screenshot']) {
 			$hiRes_image_path = get_download_image_path($data['download_image'], $data['download_image_thumb'], true);
