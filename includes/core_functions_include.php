@@ -1014,6 +1014,10 @@ function makefileopts(array $files, $selected = "") {
  */
 function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart") {
 	global $locale, $settings;
+
+/* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
+   In such case this function will not work properly.
+   With this fix (used $settings instead fusion_get_settings) function will work.*/
 	if ($settings['bootstrap']) {
 		$tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
 		$tpl_currpage = "<a class='btn btn-sm btn-default active' href=''><strong>%d</strong></a>\n";
