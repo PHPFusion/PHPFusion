@@ -1013,8 +1013,8 @@ function makefileopts(array $files, $selected = "") {
  * @return boolean|string FALSE if $count is invalid
  */
 function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart") {
-	global $locale;
-	if (fusion_get_settings('bootstrap')) {
+	global $locale, $settings;
+	if ($settings['bootstrap']) {
 		$tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
 		$tpl_currpage = "<a class='btn btn-sm btn-default active' href=''><strong>%d</strong></a>\n";
 		$tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
