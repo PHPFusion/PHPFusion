@@ -168,3 +168,4 @@ if (!$contents) {
 }
 
 require_once THEMES."templates/footer.php";
+?>
