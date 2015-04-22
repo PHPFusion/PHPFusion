@@ -97,6 +97,7 @@ if ($settings['cronjob_day'] < (time()-86400)) {
 	}
 	dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$new_time."' WHERE settings_name='cronjob_day'");
 }
+
 // Error handling
 $footerError = (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0 && !defined('no_debugger'))
 	?  "<button title='".$locale['err_102']."' id='turbo_debugger' class='btn btn-sm btn-default m-r-10'><i class='fa fa-bug fa-lg'></i></button> ".str_replace("[ERROR_LOG_URL]", ADMIN."errors.php".$aidlink, $locale['err_101'])." <span class='badge'>".count($_errorHandler)."</span>\n ".fusion_turbo_debugger().""
@@ -105,14 +106,20 @@ $footerError = (iADMIN && checkrights("ERRO") && count($_errorHandler) > 0 && !d
 if (!isset($fusion_jquery_tags)) {
 	$fusion_jquery_tags = '';
 }
+
+// Load layout
 require_once __DIR__.(defined('ADMIN_PANEL') ? '/admin_layout.php' : '/layout.php');
+
+// Catch the output
 $output = ob_get_contents(); //ob_start() called in maincore
 if (ob_get_length() !== FALSE) {
 	ob_end_clean();
 }
+
 // Do the final output manipulation
 $output = handle_output($output);
 
+// Search in output and replace normal links with SEF links
 if (!defined("ADMIN_PANEL") && $settings['site_seo']) {
 	$output = PermalinksDisplay::getInstance()->getOutput($output);
 }

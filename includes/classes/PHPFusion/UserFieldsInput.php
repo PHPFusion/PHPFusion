@@ -86,10 +86,10 @@ class UserFieldsInput {
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setUserAvatar();
-		if (!defined('FUSION_NULL')) {
-			addNotice('info', $locale['u169']);
-		}
 		$this->_setUserDataUpdate();
+		if (!defined('FUSION_NULL')) {
+			addNotice('success', $locale['u169']);
+		}
 	}
 
 	public function setUserNameChange($value) {

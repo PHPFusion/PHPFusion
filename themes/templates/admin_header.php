@@ -16,17 +16,38 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 define("ADMIN_PANEL", TRUE);
+
+if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || ($settings['maintenance_level'] < $userdata['user_level']))) {
+	redirect(BASEDIR."maintenance.php");
+}
+
+/*
+if (isset($_GET['checklogin'])) {
+	$answer = array();
+	$password = isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : '';
+	if (check_admin_pass($password)) {
+		$answer['isLogged'] = "1";
+	} else {
+		$answer['isLogged'] = "0";
+	}
+	//$answer['notice'] = getNotices();
+	$answer = json_encode($answer);
+	exit($answer);
+}
+*/
+
 require_once INCLUDES."breadcrumbs.php";
 require_once INCLUDES."header_includes.php";
 require_once THEMES."templates/render_functions.php";
-if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || ($settings['maintenance_level'] < $userdata['user_level']))) {
-	redirect(BASEDIR."maintenance.php");
+
+if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exists(THEMES."admin_templates/".$settings['admin_theme']."/acp_theme.php")) {
+	require_once THEMES."admin_templates/".$settings['admin_theme']."/acp_theme.php";
 } else {
-	if (file_exists(THEMES."admin_templates/".$settings['admin_theme']."/acp_theme.php") && preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme'])) {
-		require_once THEMES."admin_templates/".$settings['admin_theme']."/acp_theme.php";
-	}
+	die('WARNING: Invalid Admin Panel Theme'); // TODO: improve this
 }
+
 if (iMEMBER) {
 	$result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".$userdata['user_id']."'");
 }
@@ -53,6 +74,26 @@ if ($settings['tinymce_enabled'] == 1) {
 	}
 	$tinymce_list = json_encode($tinymce_list);
 }
+
 require_once THEMES."templates/panels.php";
 ob_start();
+
+require_once ADMIN."admin.php";
+$admin = new Admin();
+// Dashboard breadcrumb
 add_to_breadcrumbs(array('link'=>ADMIN.'index.php'.$aidlink.'&amp;pagenum=0', 'title'=>$locale['ac10']));
+// Page group breadcrump
+// TODO: Fix breadcrumb for infusions
+$activetab = (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) ? $_GET['pagenum'] : $admin->_isActive();
+if ($activetab != 0) {
+	add_to_breadcrumbs(array('link'=>ADMIN.$aidlink."&amp;pagenum=$activetab", 'title'=>$locale['ac0'.$activetab]));
+}
+// If the user is not logged in as admin then don't parse the administration page
+// otherwise it could result in bypass of the admin password and one could do
+// changes to the system settings without even being logged into Admin Panel.
+// After relogin the user can simply click back in browser and their input will
+// still be there so nothing is lost
+if (!check_admin_pass('')) {
+	require_once "footer.php";
+	exit;
+}

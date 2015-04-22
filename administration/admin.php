@@ -35,22 +35,22 @@ class Admin {
 	 * @var array
 	 */
 	public $admin_link_icons = array(
-		'AC' 	=> 	'fa fa-fw fa-book', 		// articles categories
-		'A' 	=> 	'fa fa-fw fa-book', 		// articles
-		'BLOG' 	=> 	'fa fa-fw fa-graduation-cap', 		// blog
-		'BLC' 	=> 	'fa fa-fw fa-graduation-cap', 		// blog categories
-		'CP' 	=> 	'fa fa-fw fa-leaf', 		// custom page
-		'DC' 	=> 	'fa fa-fw fa-cloud-download', 		//download categories
-		'D' 	=> 	'fa fa-fw fa-cloud-download', 		//downloads
-		'ESHP' 	=> 	'fa fa-fw fa-shopping-cart',			// eshop
-		'FQ' 	=> 	'fa fa-fw fa-life-buoy',			// frequent asked questions
-		'F' 	=> 	'fa fa-fw fa-comment-o',			// forum
-		'IM' 	=> 	'fa fa-fw fa-picture-o',			// Images
-		'N' 	=> 	'fa fa-fw fa-newspaper-o',			// news
-		'NC' 	=> 	'fa fa-fw fa-newspaper-o',			// news categories
-		'PM' 	=> 	'fa fa-fw fa-envelope-o',			// private message
-		'PH' 	=> 	'fa fa-fw fa-camera-retro',			// photo album ?
-		'PO' 	=> 	'fa fa-fw fa-bar-chart',			// Poll
+		'AC' 	=> 	'fa fa-fw fa-book', 			// articles categories
+		'A' 	=> 	'fa fa-fw fa-book', 			// articles
+		'BLOG' 	=> 	'fa fa-fw fa-graduation-cap', 	// blog
+		'BLC' 	=> 	'fa fa-fw fa-graduation-cap', 	// blog categories
+		'CP' 	=> 	'fa fa-fw fa-leaf', 			// custom page
+		'DC' 	=> 	'fa fa-fw fa-cloud-download', 	// download categories
+		'D' 	=> 	'fa fa-fw fa-cloud-download', 	// downloads
+		'ESHP' 	=> 	'fa fa-fw fa-shopping-cart',	// eshop
+		'FQ' 	=> 	'fa fa-fw fa-life-buoy',		// frequent asked questions
+		'F' 	=> 	'fa fa-fw fa-comment-o',		// forum
+		'IM' 	=> 	'fa fa-fw fa-picture-o',		// Images
+		'N' 	=> 	'fa fa-fw fa-newspaper-o',		// news
+		'NC' 	=> 	'fa fa-fw fa-newspaper-o',		// news categories
+		'PM' 	=> 	'fa fa-fw fa-envelope-o',		// private message
+		'PH' 	=> 	'fa fa-fw fa-camera-retro',		// photo album ?
+		'PO' 	=> 	'fa fa-fw fa-bar-chart',		// Poll
 		'WC'	=>	'fa fa-fw fa-sitemap',			// weblink cats
 		'W'		=>	'fa fa-fw fa-sitemap',			// weblinks
 		'APWR'	=>	'fa fa-fw fa-medkit',			// Admin Password Reset
@@ -162,6 +162,10 @@ class Admin {
 		}
 
 		$html = "<ul id='adl' class='admin-vertical-link'>\n";
+		// TODO: Using 'for' is rather restrictive as we expect to be only 6 page groups at any given
+		// time, but why not allow more pages, one could add more groups to Admin Panel without having to
+		// alter this code. Solution: get all pages in one query(so we don't do a query for each group
+		// either from now on) then use 'foreach' to itereate through them and group them by 'admin_page'
 		for ($i = 0; $i < 6; $i++) {
 			$result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_link !='reserved' ORDER BY admin_title ASC");
 			$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
@@ -191,7 +195,9 @@ class Admin {
 	/**
 	 * @return int|string
 	 */
-	private function _isActive() {
+	// TODO: Rename the function and it also detect pagenum param
+	// The final purpose is to detect the page group while in Admin Panel
+	public function _isActive() {
 		global $admin_pages, $settings, $aidlink;
 		$inf_page_request = FUSION_REQUEST;
 		if (isset($_GET['section'])) {
@@ -218,8 +224,6 @@ class Admin {
 		$html .= "</ul>\n";
 		return $html;
 	}
-
-
 }
 
 ?>

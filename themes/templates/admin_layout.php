@@ -16,6 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+header("Content-Type: text/html; charset=".$locale['charset']."");
 ?>
 <!DOCTYPE html>
 <head>
@@ -31,17 +32,17 @@
 	<!-- Default CSS styling which applies to all themes but can be overriden -->
 	<link href='<?php echo THEMES."templates/default.css" ?>' rel='stylesheet' type='text/css' media='screen'/>
 	<!-- Admin Panel Theme CSS -->
-	<link href='<?php echo THEMES."admin_templates/".$settings['admin_theme']."/acp_styles.css" ?>' rel='stylesheet'
-		  type='text/css' media='screen'/>
+	<link href='<?php echo THEMES."admin_templates/".$settings['admin_theme']."/acp_styles.css" ?>' rel='stylesheet' type='text/css' media='screen'/>
+	<!-- jQuery -->
+	<script type='text/javascript' src='<?php echo INCLUDES."jquery/jquery.js" ?>'></script>
+	<script type='text/javascript' src='<?php echo INCLUDES."jscript.js" ?>'></script>
+	
 	<?php
 	echo render_favicons(IMAGES);
 	if (function_exists("get_head_tags")) {
 		echo get_head_tags();
 	}
 	?>
-	<script type='text/javascript' src='<?php echo INCLUDES."jquery/jquery.js" ?>'></script>
-	<script type='text/javascript' src='<?php echo INCLUDES."jscript.js" ?>'></script>
-	<script type='text/javascript' src='<?php echo INCLUDES."jquery/admin-msg.js" ?>'></script>
 	<?php if (fusion_get_settings('tinymce_enabled')) : ?>
 		<style type='text/css'>
 			.mceIframeContainer iframe {
@@ -55,7 +56,6 @@
 					selector: 'textarea',
 					theme: 'modern',
 					entity_encoding: 'raw',
-					relative_urls: false,
 					language: '<?php echo $locale['tinymce'] ?>',
 					width: '100%',
 					height: 300,
@@ -88,6 +88,7 @@
 					selector: 'textarea',
 					theme: 'modern',
 					entity_encoding: 'raw',
+					relative_urls: false,
 					language: '<?php echo $locale['tinymce'] ?>'
 				});
 			}
@@ -104,18 +105,32 @@
 </head>
 <body>
 <?php
-open_ap();
+
+// Check if the user is logged in
+if (!check_admin_pass('')) {
+	render_admin_login();
+} else {
+	render_admin_panel();
+}
+
+if ($footerError) {
+	?>
+	<div class='alert alert-warning m-t-10 error-message'><?php echo $footerError ?></div>
+	<?php
+}
+
+echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-msg.js'></script>\n";
+
+echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
+
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
-if ($footerError) : ?>
-	<div class='alert alert-warning m-t-10 error-message'><?php echo $footerError ?></div>
-<?php
-endif;
-close_ap();
+ 
+// Output lines added with add_to_jquery()
 if (!empty($fusion_jquery_tags)) : ?>
 	<script type="text/javascript">
 		$(function () {
-			<?php echo $fusion_jquery_tags; // Output lines added with add_to_jquery() ?>
+			<?php echo $fusion_jquery_tags;?>
 		});
 	</script>
 <?php endif; ?>

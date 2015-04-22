@@ -32,8 +32,8 @@ if (isset($_POST['update_profile'])) {
 	$userInput->verifyNewEmail = TRUE;
 	$userInput->userData = $userdata;
 	$userInput->saveUpdate();
-	if (empty($errors) && $userInput->themeChanged()) redirect(BASEDIR.'index.php');
-	redirect(BASEDIR.'edit_profile.php');
+
+	if (!defined('FUSION_NULL')) redirect(FUSION_SELF);
 }
 
 elseif (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {

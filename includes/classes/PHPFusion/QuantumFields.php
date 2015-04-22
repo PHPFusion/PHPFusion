@@ -1670,7 +1670,6 @@ class QuantumFields {
 	 * 		<li><strong>plugin_locale_folder</strong> (string): LOCALE.LOCALESET.'/user_fields/' by default.
 	 * 			The folder's path where the field's locale files are.</li>
 	 * 	</ul>
-
 	 * @return array|bool|string
 	 * 	<ul>
 	 * 		<li>FALSE on failure</li>
@@ -1681,22 +1680,22 @@ class QuantumFields {
 	public static function display_fields(array $data, $callback_data, $method = 'input', array $options = array()) {
 		global $locale;
 		$data += array(
-			'field_required' => FALSE,
-			'field_error' => '',
-			'field_default' => ''
+			'field_required'=> FALSE,
+			'field_error'	=> '',
+			'field_default'	=> ''
 		);
 		$default_options = array(
-			'hide_value' => FALSE,
-			'encrypt'	=> FALSE,
-			'show_title' => FALSE,
-			'deactivate' => FALSE,
-			'inline'	=> FALSE,
-			'error_text' => $data['field_error'],
-			'required' => (bool) $data['field_required'],
-			'placeholder' => $data['field_default'],
-			'plugin_folder' => INCLUDES.'user_fields/',
+			'hide_value'	=> FALSE,
+			'encrypt'		=> FALSE,
+			'show_title'	=> FALSE,
+			'deactivate'	=> FALSE,
+			'inline'		=> FALSE,
+			'error_text'	=> $data['field_error'],
+			'required'		=> (bool) $data['field_required'],
+			'placeholder'	=> $data['field_default'],
+			'plugin_folder'	=> INCLUDES.'user_fields/',
 			'plugin_locale_folder' => LOCALE.LOCALESET.'/user_fields/',
-			'debug' => FALSE
+			'debug'			=> FALSE
 		);
 		$options += $default_options;
 		if (!$options['plugin_folder']) {
@@ -1731,18 +1730,16 @@ class QuantumFields {
 				if (file_exists($options['plugin_folder'].$data['field_name']."_include.php")) {
 					include $options['plugin_folder'].$data['field_name']."_include.php";
 				}
-				if ($options['debug']) {
+				if (isset($options['debug']) && $options['debug']) {
 					print_p("Finding ".$options['plugin_locale_folder'].$data['field_name'].".php");
 					if (file_exists($options['plugin_locale_folder'].$data['field_name'].".php")) {
 						print_p($data['field_name']." locale loaded");
 					}
 					print_p("Finding ".$options['plugin_folder'].$data['field_name']."_include.php");
 					if (file_exists($options['plugin_folder'].$data['field_name']."_include.php")) {
-
+						print_p($data['field_name']." module loaded");
 					}
-					print_p($data['field_name']." module loaded");
 				}
-
 				if (isset($user_fields)) return $user_fields;
 				break;
 			case 'textbox':
@@ -1848,7 +1845,7 @@ class QuantumFields {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>implode('|', $callback_data[$data['field_name']]));
 				}
 				break;
-			case'toggle':
+			case 'toggle':
 				$options['toggle'] = 1;
 				$options['toggle_text'] = array($locale['off'], $locale['on']);
 

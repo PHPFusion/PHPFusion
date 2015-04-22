@@ -22,9 +22,9 @@ $admin_mess = '';
 
 if (iADMIN && !defined("ADMIN_PANEL")) {
 	//$admin_mess .= "<a id='content'></a>\n";
-	if (iSUPERADMIN && file_exists(BASEDIR."install/")) addNotice("danger", $locale['global_198'], 'all');
-	if ($settings['maintenance']) addNotice("danger", $locale['global_190'], 'all');
-	if (!$userdata['user_admin_password']) addNotice("danger", $locale['global_199'], 'all');
+	if (iSUPERADMIN && file_exists(BASEDIR."install/")) setNotice("danger", $locale['global_198'], 'all');
+	if ($settings['maintenance']) addNotice("warning", $locale['global_190'], 'all');
+	if (!$userdata['user_admin_password']) addNotice("warning", $locale['global_199'], 'all');
 	/*if (!empty($ad_mess)) {
 		$admin_mess .= "<div class='alert alert-danger admin-message m-t-10'>";
 		foreach ($ad_mess as $message) {

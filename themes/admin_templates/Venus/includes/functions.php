@@ -28,7 +28,7 @@ function closeside($title = FALSE) {
 }
 
 function opentable($title, $class = FALSE) {
-	echo "<div class='panel panel-default $class' style='border:none;'>\n<div class='panel-body'>\n";
+	echo "<div class='panel panel-default $class' style='border:none; box-shadow:none'>\n<div class='panel-body'>\n";
 	echo "<h3>".$title."</h3>\n";
 }
 
@@ -335,7 +335,7 @@ function render_admin_icon() {
 	echo "<div class='row'>\n";
 	if (count($admin_icons['data']) > 0) {
 		foreach ($admin_icons['data'] as $i => $data) {
-			echo "<div class='icon-wrapper col-xs-12 col-sm-4 col-md-2 col-lg-2'>\n";
+			echo "<div class='icon-wrapper col-xs-6 col-sm-3 col-md-2 col-lg-2'>\n";
 			if ($admin_images) {
 				echo "<div class='icon-container'>\n";
 				echo "<a href='".$data['admin_link'].$aidlink."'><img src='".get_image("ac_".$data['admin_rights'])."' alt='".$data['admin_title']."'/>\n</a>\n";
