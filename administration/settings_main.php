@@ -185,7 +185,7 @@ $opts = array('http' => 'http://', 'https' => 'https://');
 $opts['invalid_protocol'] = 'Invalid (test purposes)';
 echo form_select('site_protocol', $locale['426'], $opts, $settings_main['site_protocol'], array('regex' => 'http(s)?', 'width' => '100%', 'error_text' => $locale['error_value']));
 echo form_text('site_host', $locale['427'], $settings_main['site_host'], array('max_length' => 255, 'required' => 1, 'error_text' => $locale['error_value']));
-echo form_text('site_path', $locale['429'], $settings_main['site_path'], array('regex' => '\/([a-z0-9-_]+\/)?+', 'max_length' => 255, 'required' => 1));
+echo form_text('site_path', $locale['429'], $settings_main['site_path'], array('regex' => '\/([a-z0-9-_]+\/)*?', 'max_length' => 255, 'required' => 1));
 echo form_text('site_port', $locale['430'], $settings_main['site_port'], array('max_length' => 5));
 closeside();
 
