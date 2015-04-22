@@ -27,9 +27,9 @@ set_forumIcons(
 );
 */
 
-/* Forum index master template */
-if (!function_exists('render_forum')) {
-	function render_forum($info) {
+/* Old Forum index master template either drop it or make it 100% LAFT replacement*/
+if (!function_exists('render_forum2')) {
+	function render_forum2($info) {
 		global $locale;
 		echo render_breadcrumbs();
 		$tab_title['title'][] = $locale['forum_0001'];
@@ -74,6 +74,19 @@ if (!function_exists('render_forum')) {
 	}
 }
 
+if (!function_exists('render_forum')) {
+	function render_forum($info) {
+		global $locale;
+		echo render_breadcrumbs();
+				if (isset($_GET['viewforum'])) {
+					forum_viewforum($info);
+			} else {
+				render_forum_main($info);
+		}
+	}
+}
+
+/* Forum index master template */
 if (!function_exists('render_forum_main')) {
 	/**
 	 * Main Forum Page - Recursive
