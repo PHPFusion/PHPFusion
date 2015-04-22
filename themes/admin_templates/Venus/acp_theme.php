@@ -83,7 +83,7 @@ function render_admin_panel() {
 	//$enabled_languages = array_keys($languages); //remove it if it is not needed
 
 	// Admin panel page
-	echo "<div id='admin-panel' class='clearfix".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? " in" : "")."'>\n";
+	echo "<div id='admin-panel' class='clearfix".(isset($_COOKIE[COOKIE_PREFIX."acp_sidemenu"]) && $_COOKIE[COOKIE_PREFIX."acp_sidemenu"] ? " in" : "")."'>\n";
 		// Top header section
 		echo "<section id='acp-header' class='pull-left affix clearfix' data-offset-top='0' data-offset-bottom='0'>\n";
 			// Top left logo
@@ -179,6 +179,28 @@ function render_admin_panel() {
 		height: null
 	});
 
+	// Function to toggle side menu
+	function toggleSideMenu(state) {
+		var panel_state = null;
+
+		if (state == 'show') {
+			$('#admin-panel').addClass('in');
+			var panel_state = 1;
+		} else if (state == 'hide') {
+			$('#admin-panel').removeClass('in');
+			var panel_state = 0;
+		} else {
+			$('#admin-panel').toggleClass('in');
+			var panel_state = $('#admin-panel').hasClass('in');
+		}
+
+		if (panel_state) {
+			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '1', {expires: 7});
+		} else {
+			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '0', {expires: 7});
+		}
+	}
+
 	// Adjust side menu height on page load, resize or orientation change
 	$(window).on('load resize orientationchange', function(event) {
 		var init_hgt = $(window).height();
@@ -189,21 +211,13 @@ function render_admin_panel() {
 		$('#acp-left').css('height', hgt);
 		$('.admin-vertical-link').css('height', panel_height);
 
-		// Hide side menu on resize or orientation change
-		if (event.type !== 'load') {
-			$('#admin-panel').removeClass('in');
+		// Hide side menu on orientation change
+		if (event.type === 'orientationchange') {
+			toggleSideMenu('hide');
 		}
 	});
 
 	// Side menu toggler
-	$('#toggle-canvas').bind('click', function(e) {
-		$('#admin-panel').toggleClass('in');
-		panel_state = $('#admin-panel').hasClass('in');
-		if (panel_state) {
-			$.cookie('Venus', '1', {expires: 7});
-		} else {
-			$.cookie('Venus', '0', {expires: 7});
-		}
-	});
+	$('#toggle-canvas').on('click', toggleSideMenu);
 	");
 }
