@@ -19,13 +19,19 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Display user field input
 if ($profile_method == "input") {
-	$options = array('inline'=>1, 'max_length'=>100, 'width'=>'200px');
+	$options = array('inline'		=> 1,
+					 'max_length'	=> 100,
+					 'width'		=> '200px',
+					 'regex'		=> '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
+					 // TODO: Change the error text in case a value was entered but is not valid
+					 'error_text'	=> $locale['uf_yahoo_error']
+					 );
 	$user_fields = form_text('user_yahoo', $locale['uf_yahoo'], $field_value, $options);
-	// Display in profile
+
+// Display in profile
 } elseif ($profile_method == "display") {
 	if ($field_value) {
 		$user_fields = array('title'=>$locale['uf_yahoo'], 'value'=>$field_value);
 	}
-	// Insert and update
 }
 ?>

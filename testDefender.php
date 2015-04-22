@@ -23,6 +23,8 @@ require_once THEMES."templates/header.php";
 
 opentable("Testing Inputs with Defender");
 
+add_to_head('<style>.bootstrap-switch-container span, .bootstrap-switch-label {height:auto !important}</style>');
+
 // These are the defaults, they are values
 // pulled from DB most of the times, and we
 // assume these values are already valid.
@@ -41,10 +43,12 @@ $settings_test = array(
 	//'checkbox_input3'		=> 1,
 	//'checkbox_input4'		=> 1,
 	//'name_input'			=> '',
-	//'address_input'			=> 'Some|Address',
-	'email_input'			=> 'valid@email.com',
+	//'address_input'		=> 'Some|Address',
+	'email_input'			=> '',
+	'email_input_required'	=> 'valid@email.com',
 	'url_input'				=> '',
-	'regex_input'			=> 'abc',
+	'regex_input'			=> '',
+	'regex_input_required'	=> 'abc',
 	'textarea'				=> '',
 	'file_input'			=> ''
 	);
@@ -94,8 +98,10 @@ echo form_text('password_input', 'Password input', $settings_test['password_inpu
 echo form_text('text_input', 'Text input', $settings_test['text_input'], array('required' => 1, 'inline' => 1));
 echo form_text('text_input2', 'An extra text input<br /><small>This input is not accounted for and will be ignored</small>', 'something', array('required' => 1, 'inline' => 1));
 echo form_text('email_input', 'Email', $settings_test['email_input'], array('required' => 0, 'type' => 'email', 'inline' => 1));
+echo form_text('email_input_required', 'Email required', $settings_test['email_input_required'], array('required' => 1, 'type' => 'email', 'inline' => 1));
 echo form_text('url_input', 'URL',  $settings_test['url_input'], array('type' => 'url', 'inline' => 1));
 echo form_text('regex_input', 'Regex', $settings_test['regex_input'], array('tip' => 'Characters from A to Z only', 'regex' => '[a-z]+', 'inline' => 1));
+echo form_text('regex_input_required', 'Regex required', $settings_test['regex_input_required'], array('required' => 1, 'tip' => 'Characters from A to Z only', 'regex' => '[a-z]+', 'inline' => 1));
 echo form_text('number_input', 'Number', $settings_test['number_input'], array('required' => 1, 'type' => 'number', 'inline' => 1));
 echo form_checkbox('checkbox_input', 'Checkbox', $settings_test['checkbox_input'], array('required' => 1, 'inline' => 1));
 // Experimental 'child_of'

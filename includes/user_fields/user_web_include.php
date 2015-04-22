@@ -19,7 +19,11 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Display user field input
 if ($profile_method == "input") {
-	$options = array('inline'=>1, 'max_width'=>'200px');
+	$options = array('type'			=> 'url',
+					 'inline'		=> 1,
+					 'max_width'	=> '200px'
+					 // TODO: Change the error text in case a value was entered but is not valid
+					 );
 	$user_fields = form_text('user_web', $locale['uf_web'], $field_value, $options);
 
 // Display in profile

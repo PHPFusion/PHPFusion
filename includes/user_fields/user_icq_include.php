@@ -17,12 +17,18 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-//Display user field input
+// Display user field input
 if ($profile_method == "input") {
-	$options = array('inline'=>1, 'number'=>1, 'max_length'=>16);
+	$options = array('inline'		=> 1,
+					 'number'		=> 1,
+					 'max_length'	=> 16,
+					 'regex'		=> '[0-9]{9,9}',
+					 // TODO: Change the error text in case a value was entered but is not valid
+					 'error_text'	=> $locale['uf_icq_error']
+					);
 	$user_fields = form_text('user_icq', $locale['uf_icq'], $field_value, $options);
 
-//Display in profile
+// Display in profile
 } elseif ($profile_method == "display") {
 	if ($field_value) {
 		$user_fields = array('title'=>$locale['uf_icq'], 'value'=>$field_value);

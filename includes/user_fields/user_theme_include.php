@@ -26,11 +26,16 @@ if ($profile_method == "input") {
 		foreach($theme_files as $theme) {
 			$theme_opts[$theme] = $theme;
 		}
-		$options = array('inline'=>1);
+		$options = array('inline'			=> 1,
+						 'callback_check' 	=> 'theme_exists',
+						 // TODO: Change the error text in case a value was entered but is not valid
+						 'error_text'		=> $locale['uf_theme_error']
+						 );
 		$user_fields = form_select('user_theme',$locale['uf_theme'], $theme_opts, $field_value, $options);
 	}
-	// Display in profile
+
+// Display in profile
 } elseif ($profile_method == "display") {
-	// no displaying.
+	// no to display
 }
 ?>

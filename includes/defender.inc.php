@@ -19,11 +19,11 @@
 +--------------------------------------------------------*/
 
 // Notes regarding further development:
-// - The check functions should return the value being passed
-// to as is or pre-processed(sanitized) or TRUE upon success
-// and should not make direct calls to stop() on a failure
-// but rather return FALSE, form sanitizer will do the rest
-// - Don't traslate/localise debug notices, is unnecessary
+// - The check functions should return the value being passed to
+// as is or pre-processed(sanitized) or TRUE upon success and
+// should not make direct calls to stop() on a failure but rather
+// return FALSE, form sanitizer will do the rest.
+// - Don't traslate/localise debug notices, is unnecessary.
 
 class defender {
 	public $debug = FALSE;
@@ -53,6 +53,9 @@ class defender {
 	/** @noinspection PhpInconsistentReturnPointsInspection */
 	public function validate() {
 		global $locale;
+
+		// Don't bother processing and validating empty inputs
+		if ($this->field_value == '') return $this->field_value;
 
 		/**
 		 * Keep this include in the constructor
@@ -317,6 +320,7 @@ class defender {
 		if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
 			return $this->field_value;
 		}
+
 		return FALSE;
 	}
 
@@ -360,7 +364,6 @@ class defender {
 	 * returns str the input or bool FALSE if check fails
 	 */
 	protected function verify_url() {
-		
 		if (filter_var($this->field_value, FILTER_VALIDATE_URL)) {
 			return $this->field_value;
 			//return cleanurl($this->field_value);
@@ -847,7 +850,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				// If truly FALSE the check failed
 				if (	$finalval === FALSE ||
 						($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) ||
-						($regex && !preg_match('/^'.$regex.'$/i', $value)) || // regex will fail for an imploded array, maybe move this check
+						($finalval != '' && $regex && !preg_match('/^'.$regex.'$/i', $value)) || // regex will fail for an imploded array, maybe move this check
 						(is_callable($callback) && !$callback($finalval))
 				) {
 					// Flag that something went wrong
