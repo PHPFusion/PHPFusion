@@ -15,9 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (!function_exists('show_blacklist')) {
 	function show_blacklist($data) {
 		global $locale;
@@ -37,29 +36,28 @@ if (!function_exists('show_blacklist')) {
 					}
 				}
 			}
-		} else {
-			//echo $locale['uf_blacklist_003'];
+		} 
+
+add_to_jquery("
+	$('.unblock').bind('click', function(e) {
+	var user_id = $(this).val();
+	$.ajax({
+		type: 'POST',
+		url: '".INCLUDES."user_fields/user_blacklist.ajax.php',
+		data: { user_id : user_id },
+		dataType: 'html',
+		success: function(data) {
+			alert(data);
+			$('#'+user_id+'-user-list').addClass('display-none');
+			$('#ignore-message').html(data).removeClass('display-none');
+		},
+		error: function() {
+			alert('".$locale['uf_blacklist_desc']."');
 		}
-		add_to_jquery("
-            $('.unblock').bind('click', function(e) {
-            var user_id = $(this).val();
-            $.ajax({
-                type: 'POST',
-                url: '".INCLUDES."user_fields/user_blacklist.ajax.php',
-                data: { user_id : user_id },
-                dataType: 'html',
-                success: function(data) {
-                    alert(data);
-                    $('#'+user_id+'-user-list').addClass('display-none');
-                    $('#ignore-message').html(data).removeClass('display-none');
-                },
-                error: function() {
-                    alert('".$locale['uf_blacklist_desc']."');
-                }
-                });
-            });
-            ");
-	}
+		});
+	});
+	");
+}
 }
 
 // Display user field input
@@ -69,32 +67,11 @@ if ($profile_method == "input") {
 	} else {
 		$user_blacklist = "";
 	}
-	// read back.
-	/*echo "<tr>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_blacklist")."'>";
-	echo "<label for='user_blacklist'>".$locale['uf_blacklist'].$required."</label></td>\n";
-	echo "<td class='tbl".$this->getErrorClass("user_blacklist")."'>";
-	echo "<p>".$locale['uf_blacklist_message']."</p>";
-	echo "</td></tr>\n";
-	echo "<tr>\n";
-	echo "<td colspan='2' class='tbl".$this->getErrorClass("user_blacklist")."'>";
-	echo "<div class='well'>\n";
-	echo form_user_select('', 'user_blacklist', 'user_blacklist', '', '', array('placeholder' => $locale['uf_blacklist_desc']));
-	echo "</div>\n";
-	echo "</td></tr>\n";
-	echo "<td colspan='2' class='tbl".$this->getErrorClass("user_blacklist")."'>";
-	echo "<p><strong>".$locale['uf_blacklist_000']."</strong></p>";
-	$user_blacklist = array_filter(explode(".", $user_blacklist));
-	show_blacklist($user_blacklist);
-	echo "</td></tr>\n";
-	if ($required) {
-		$this->setRequiredJavaScript("user_blacklist", $locale['uf_blacklist_error']);
-	}
-	// Display in profile */
-} elseif ($profile_method == "display") {
 
+// Display in profile 
+} elseif ($profile_method == "display") {
+//Are we not missing something here?
 } elseif ($profile_method == "validate_insert" || $profile_method == "validate_update") {
-	// Get input data // format
 	$user_blacklist = '';
 	$userdata = $this->userData;
 	$userdata_blacklist = isset($userdata) && array_key_exists('user_blacklist', $userdata) ? explode('.', $userdata['user_blacklist']) : array();
@@ -105,7 +82,6 @@ if ($profile_method == "input") {
 		$userdata_blacklist = $userdata['user_blacklist'];
 	}
 	if ($userdata_blacklist != 0 || $this->_isNotRequired("user_blacklist")) {
-		// Set update or insert user data
 		$this->_setDBValue("user_blacklist", $userdata_blacklist);
 	} else {
 		$this->_setError("user_blacklist", $locale['uf_blacklist_error'], TRUE);

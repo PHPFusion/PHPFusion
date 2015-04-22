@@ -16,13 +16,13 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 // Display user field input
 if ($profile_method == "input") {
 	$options = array('inline'=>1);
-	$user_fields = form_address('user_address', $options['show_title'] ? $locale['uf_address'] : '', $field_value, $options);
+	$user_fields = form_address('user_address', $locale['uf_address'], $field_value, $options);
 }
 elseif ($profile_method == "display") {
-
 	if ($field_value) {
 		$address = explode('|', $field_value);
 		$field_value = '';
@@ -32,7 +32,6 @@ elseif ($profile_method == "display") {
 	} else {
 		$field_value = $locale['na'];
 	}
-
 	$user_fields = array('title'=>$locale['uf_address'], 'value'=>$field_value);
-
 }
+?>

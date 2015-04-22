@@ -15,9 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if ($profile_method == "input") {
 	$options = array('inline'=>1, 'max_length'=>32, 'max_width'=>'200px');
 	$user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
@@ -26,3 +25,4 @@ if ($profile_method == "input") {
 		$user_fields = array('title'=>$locale['uf_skype'], 'value'=>$field_value);
 	}
 }
+?>

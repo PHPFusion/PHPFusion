@@ -15,9 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 // Display user field input
 if ($profile_method == "input") {
 	$options =array('inline'=>1, 'max_length'=>16, 'width'=>'200px');
@@ -27,3 +26,4 @@ if ($profile_method == "input") {
 		$user_fields = array('title'=>$locale['uf_aim'], 'value'=>$field_value);
 	}
 }
+?>

@@ -6,8 +6,6 @@
 +--------------------------------------------------------+
 | Filename: user_timezone_include.php
 | Author: Maarten Kossen (mistermartin75)
-| Fixed: Chubatyj Vitalij (Rizado) Oct 20 2014
-| Reason: some new timezones
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -21,7 +19,6 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Display user field input
 if ($profile_method == "input") {
-
 	$timezones = timezone_abbreviations_list();
 	$timezoneArray = array();
 	foreach ($timezones as $zones) {
@@ -33,7 +30,6 @@ if ($profile_method == "input") {
 			}
 		}
 	}
-
 	unset($timezones);
 	$options = array('inline'=>1, 'width' => '300px', 'input_id'=>'user_timezone');
 	$user_fields =  form_select('user_timezone', $locale['uf_timezone'], $timezoneArray, $field_value, $options);
@@ -42,5 +38,5 @@ if ($profile_method == "input") {
 } elseif ($profile_method == "display") {
 	// Insert and update
 	$user_fields = array('title'=>$locale['uf_timezone'], 'value'=>$field_value);
-
 }
+?>
