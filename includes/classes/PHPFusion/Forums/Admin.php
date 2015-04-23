@@ -36,7 +36,7 @@ private $data = array(
 	'forum_cat' => 0,
 	'forum_branch' => 0,
 	'forum_name' => '',
-	'forum_type' => '',
+	'forum_type' => '2',
 	'forum_answer_threshold' => 0,
 	'forum_lock' => 0,
 	'forum_order' => 0,
@@ -684,7 +684,7 @@ private function display_forum_permissions_form() {
 	openside();
 	echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_001']."</span><br/>\n";
 	echo form_select('forum_poll', $locale['forum_036'],  $access_opts, $data['forum_poll'], array('inline'=>1));
-	echo form_select( 'forum_vote', $locale['forum_037'], $access_opts, $data['forum_vote'], array('inline'=>1));
+	echo form_select('forum_vote', $locale['forum_037'], $access_opts, $data['forum_vote'], array('inline'=>1));
 	closeside();
 
 	openside();
