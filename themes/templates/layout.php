@@ -64,7 +64,11 @@ echo "<head>\n";
 	echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo "</head>\n";
 echo "<body>\n";
-	
+	if (iADMIN) {
+		if (iSUPERADMIN && file_exists(BASEDIR."install/")) addNotice("danger", $locale['global_198'], 'all');
+		if ($settings['maintenance']) addNotice("warning", $locale['global_190'], 'all');
+		if (!$userdata['user_admin_password']) addNotice("warning", $locale['global_199'], 'all');
+	}
 	render_page();
 	// Output lines added with add_to_footer()
 	echo $fusion_page_footer_tags;
