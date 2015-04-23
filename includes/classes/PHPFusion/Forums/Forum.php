@@ -1,5 +1,20 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: Forum.php
+| Author: Hien (Frederick MC Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Forums;
 
 class Forum {
@@ -205,8 +220,8 @@ class Forum {
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND ".groupaccess('f2.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
-				ORDER BY forum_cat ASC
-				");
+				ORDER BY forum_cat ASC");
+				
 			$refs = array();
 			if (dbrows($result)>0) {
 				while ($row = dbarray($result)) {
@@ -305,8 +320,7 @@ class Forum {
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
 								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND thread_hidden='0' AND ".groupaccess('forum.forum_access')." $sql_condition
-								GROUP BY t.thread_id $sql_order LIMIT ".$_GET['rowstart'].", ".$this->forum_info['threads_per_page']."
-								");
+								GROUP BY t.thread_id $sql_order LIMIT ".$_GET['rowstart'].", ".$this->forum_info['threads_per_page']."");
 
 							if (dbrows($t_result)>0) {
 								while ($threads = dbarray($t_result)) {
@@ -422,3 +436,4 @@ class Forum {
 		}
 	}
 }
+?>
