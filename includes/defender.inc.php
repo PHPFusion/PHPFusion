@@ -54,6 +54,10 @@ class defender {
 	public function validate() {
 		global $locale;
 
+		// Are there situations were inputs could have leading
+		// or trailing spaces? If not then uncomment line below
+		//$this->field_value = trim($this->field_value);
+
 		// Don't bother processing and validating empty inputs
 		if ($this->field_value == '') return $this->field_value;
 
@@ -364,6 +368,9 @@ class defender {
 	 * returns str the input or bool FALSE if check fails
 	 */
 	protected function verify_url() {
+		// If there is no protocol lets add one
+		if (!preg_match('#^http(s)?://#i', $this->field_value)) $this->field_value = 'http://'.$this->field_value;
+
 		if (filter_var($this->field_value, FILTER_VALIDATE_URL)) {
 			return $this->field_value;
 			//return cleanurl($this->field_value);
