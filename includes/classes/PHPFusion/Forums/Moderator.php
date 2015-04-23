@@ -551,7 +551,7 @@ class Moderator {
 								}
 								echo form_hidden('', 'move_posts', 'move_posts', 1);
 								echo "<div class='clearfix'>\n<div class='col-xs-12 col-md-offset-3 col-lg-offset-3'>\n";
-								echo form_button($locale['forum_0302'], 'go', 'go', $locale['forum_0302'], array('class' => 'btn-primary'));
+								echo form_button($locale['forum_0302'], $locale['forum_0208'] , $locale['forum_0208'] , array('inline'=>1, 'class'=>'btn-primary'));
 								echo "</div>\n</div>\n";
 								echo closeform();
 							} else {
@@ -582,8 +582,8 @@ class Moderator {
 									echo form_hidden('', "delete_post[]", "delete_post[$value]", $value);
 								}
 								echo form_hidden('', 'move_posts', 'move_posts', 1);
-								echo form_button($locale['forum_0304'], 'go', 'go', $locale['forum_0302'], array('class' => 'btn-primary btn-sm'));
-							} else {
+								echo form_button($locale['forum_0304'], $locale['forum_0208'] , $locale['forum_0208'] , array('class'=>'btn-primary btn-sm'));
+								} else {
 								echo "<div id='close-message'><div class='admin-message'>".$locale['forum_0308']."<br /><br />\n";
 								echo "<a href='".FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$pdata['thread_id']."'>".$locale['forum_0309']."</a>\n";
 								echo "</div></div><br />\n";
