@@ -22,29 +22,17 @@ if (!isset($lastvisited) || !isnum($lastvisited)) {
 	$lastvisited = time();
 }
 
-$data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
-	t.thread_id, t.thread_lastpost,t.thread_lastuser, t.thread_lastpostid, t.thread_subject,
+$result = dbquery("SELECT f.forum_id, f.forum_name, f.forum_lastpost, f.forum_postcount,
+	f.forum_threadcount, f.forum_lastuser, f.forum_access,
+	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll, 
 	u.user_id, u.user_name, u.user_status, u.user_avatar
 	FROM ".DB_FORUMS." f
-	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
-	LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
-	".(multilang_table("FO") ? "WHERE f2.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3'
-	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads'].""));
+	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
+	LEFT JOIN ".DB_USERS." u ON t.thread_lastuser = u.user_id
+	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0' 
+	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$settings['numofthreads']."");	
 
-$timeframe = empty($data['thread_lastpost']) ? 0 : $data['thread_lastpost'];
-
-$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
-	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_poll, t.thread_views, t.thread_postcount, t.thread_subject,
-	u.user_id, u.user_name, u.user_status, u.user_avatar
-	FROM ".DB_FORUMS." f
-	LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
-	LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
-	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f2.forum_access')." AND t.thread_lastpost >= ".$timeframe."
-	GROUP BY thread_id ORDER BY t.thread_lastpost LIMIT ".$settings['numofthreads']."");
-	
-if (dbrows($result)) {
+	if (dbrows($result)) {
 $i = 0;
 opentable($locale['global_040']);
 echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n<tr>\n";
@@ -73,7 +61,7 @@ echo "</tr>\n";
 			$thread_poll = "";
 		}
 		echo "</td>\n";
-		echo "<td width='100%' class='".$row_color."'>".$thread_poll."<a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)."</a><br />\n".$data['forum_name']."</td>\n";
+		echo "<td width='100%' class='".$row_color."'>".$thread_poll."<a href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 30)." <i class='fa fa-external-link-square'></i></a><br />\n ".$locale['in']." <a href='".FORUM."index.php?viewforum&forum_id=".$data['forum_id']."' title='".$data['forum_name']."'>".trimlink($data['forum_name'], 30)." <i class='fa fa-external-link-square'></i></a></td>\n";
 		echo "<td width='1%' class='".$row_color."' style='text-align:center;white-space:nowrap'>".$data['thread_views']."</td>\n";
 		echo "<td width='1%' class='".$row_color."' style='text-align:center;white-space:nowrap'>".($data['thread_postcount']-1)."</td>\n";
 		echo "<td width='1%' class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['thread_lastuser'], $data['user_name'], $data['user_status'])."<br />\n".showdate("forumdate", $data['thread_lastpost'])."</td>\n";
