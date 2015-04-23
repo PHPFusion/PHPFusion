@@ -407,7 +407,7 @@ class Moderator {
 		} else {
 			echo openform('moveform', 'moveform', 'post', FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move", array('downtime' => 1));
 			echo form_select_tree('new_forum_id', $locale['forum_0751'], '', array('input_id'=>"newfrmid", 'no_root'=>1, 'inline'=>1, 'disable_opts' => $this->forum_id),  DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
-			echo form_button($locale['forum_0750'], 'move_thread', 'move_thread', $locale['forum_0750'], array('class'=>'btn-primary'));
+			echo form_button($locale['forum_0750'], $locale['forum_0206'], $locale['forum_0206'], array('class'=>'btn-primary'));
 			echo closeform();
 		}
 		echo closemodal();
