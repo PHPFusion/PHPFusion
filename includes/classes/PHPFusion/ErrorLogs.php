@@ -1,5 +1,20 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: ErrorLogs.php
+| Author: Hans Kristian Flaatten (Starefossen)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion;
 
 class ErrorLogs {
@@ -153,11 +168,6 @@ class ErrorLogs {
 
 	}
 
-	public function add_breadcrumb() {
-		global $aidlink;
-		add_to_breadcrumbs(array('link'=>ADMIN."errors.php".$aidlink, 'title'=>$this->locale['400']));;
-	}
-
 	static function get_logTypes() {
 		global $locale;
 		return array(
@@ -199,8 +209,9 @@ class ErrorLogs {
 	public static function getGitsrc($file, $line_number) {
 		$repository_address = "https://github.com/php-fusion/PHP-Fusion/blob/";
 		$version = "9.00";
-		$file_path = substr($file, strlen(FUSION_ROOT_DIR));
-		return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."/#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
+		// Strip slashes and convert backslashes to forward slashes for browsers
+		$file_path = substr(str_replace('\\', '/', stripslashes($file)), strlen(FUSION_ROOT_DIR));
+		return "<a class='btn btn-default' href='".$repository_address.$version."/".$file_path."#L".$line_number."' target='new_window'><i class='fa fa-git'></i></a>";
 	}
 
 
@@ -314,10 +325,8 @@ class ErrorLogs {
 		<?php }
 	}
 
-
-
 	// @todo: need some love on the html.
-	public function show_error_notice() {
+	public function show_error_log() {
 		global $aidlink;
 		$locale = $this->locale;
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
@@ -354,7 +363,7 @@ class ErrorLogs {
 			$line_start = max($data['error_line']-10, 1);
 			$line_end = min($data['error_line']+10, count($thisFileContent));
 			$output = implode("", array_slice($thisFileContent, $line_start-1, $line_end - $line_start + 1));
-			$pageFilePath = BASEDIR.substr($data['error_page'], strlen(fusion_get_settings('site_path')));
+			$pageFilePath = BASEDIR.$data['error_page'];
 			$pageContent = is_file($pageFilePath) ? file_get_contents($pageFilePath) : '';
 			//echo "<a class='btn btn-default m-b-20 pull-right' href='#top' title='".$locale['422']."'>".$locale['422']."</a>\n";
 			add_to_jquery("
