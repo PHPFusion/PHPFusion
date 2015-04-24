@@ -138,10 +138,11 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
 		$return .= "</ol>\n";
 		$value = $return;
 	}
-	if (isset($_SESSION['notices'][$type][$key][$status])) {
-		array_push($_SESSION['notices'][$type][$key][$status], $value);
-	} else {
-		$_SESSION['notices'][$type][$key][$status] = array($value);
+	if (!isset($_SESSION['notices'][$type][$key][$status])) {
+		$_SESSION['notices'][$type][$key][$status] = array();
+	}
+	if (array_search($value, $_SESSION['notices'][$type][$key][$status]) === FALSE) {
+		$_SESSION['notices'][$type][$key][$status][] = $value;
 	}
 }
 
