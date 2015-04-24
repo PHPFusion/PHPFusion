@@ -20,6 +20,8 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Display user field input
 if ($profile_method == "input") {
 	$options = array('type'			=> 'url',
+					 // We only accept websites that start with http(s)
+					 'regex'		=> 'http(s)?\:\/\/(.*?)',
 					 'inline'		=> 1,
 					 'max_width'	=> '200px'
 					 // TODO: Change the error text in case a value was entered but is not valid
@@ -28,8 +30,7 @@ if ($profile_method == "input") {
 
 // Display in profile
 } elseif ($profile_method == "display") {
-	$url_prefix = !strstr($field_value, "http://") ? "http://" : "";
-	$field_value = $url_prefix.$field_value;
+	$field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "http://".$field_value : $field_value;
 	$user_fields = array('title'=>$locale['uf_web'], 'value'=>(fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_web_001']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->"));
 }
 ?>

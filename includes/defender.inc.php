@@ -368,9 +368,13 @@ class defender {
 	 * returns str the input or bool FALSE if check fails
 	 */
 	protected function verify_url() {
-		// If there is no protocol lets add one
-		if (!preg_match('#^http(s)?://#i', $this->field_value)) $this->field_value = 'http://'.$this->field_value;
 
+		$url_parts = parse_url($this->field_value);
+		// If no scheme/protocol is found but a path is present then let's add a protocol,
+		// chances are the user won't even know he has to add a protocol for the url to validate
+		if (!isset($url_parts['scheme']) && isset($url_parts['path'])) $this->field_value = 'http://'.$this->field_value;
+
+		// Make sure the URL is valid
 		if (filter_var($this->field_value, FILTER_VALIDATE_URL)) {
 			return $this->field_value;
 			//return cleanurl($this->field_value);
@@ -854,10 +858,11 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				$regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
 
 				$finalval = $defender->validate();
+
 				// If truly FALSE the check failed
 				if (	$finalval === FALSE ||
-						($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) ||
-						($finalval != '' && $regex && !preg_match('/^'.$regex.'$/i', $value)) || // regex will fail for an imploded array, maybe move this check
+						($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) || // remove FALSE check?
+						($finalval != '' && $regex && !preg_match('@^'.$regex.'$@i', $finalval)) || // regex will fail for an imploded array, maybe move this check
 						(is_callable($callback) && !$callback($finalval))
 				) {
 					// Flag that something went wrong
