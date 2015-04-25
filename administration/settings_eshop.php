@@ -20,7 +20,7 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."eshop.php";
 include LOCALE.LOCALESET."admin/settings.php";
 pageAccess('ESHP');
-add_to_breadcrumbs(array('link'=>ADMIN.'settings_eshop.php'.$aidlink, 'title'=>$locale['eshop_settings']));
+add_breadcrumb(array('link'=>ADMIN.'settings_eshop.php'.$aidlink, 'title'=>$locale['eshop_settings']));
 opentable($locale['eshop_settings']);
 echo "<div class='well'>".$locale['eshop_description']."</div>";
 $data = array(

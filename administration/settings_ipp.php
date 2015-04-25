@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('S10');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-add_to_breadcrumbs(array('link'=>ADMIN.'settings_ipp.php'.$aidlink, 'title'=>$locale['ipp_settings']));
+add_breadcrumb(array('link'=>ADMIN.'settings_ipp.php'.$aidlink, 'title'=>$locale['ipp_settings']));
 if (isset($_POST['savesettings'])) {
 	// why no check admin pass?
 	$newsperpage = form_sanitizer($_POST['newsperpage'], 12, 'newsperpage');

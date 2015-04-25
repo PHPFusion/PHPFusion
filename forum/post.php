@@ -50,8 +50,8 @@ if (dbrows($result)) {
 // Define Mods
 define_forum_mods($info);
 // Set breadcrumbs on post form.
-add_to_breadcrumbs(array('link'=>FORUM.'index.php', 'title'=>'Forum Board Index'));
-add_to_breadcrumbs(array('link'=>FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title'=>$info['forum_name']));
+add_breadcrumb(array('link'=>FORUM.'index.php', 'title'=>'Forum Board Index'));
+add_breadcrumb(array('link'=>FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title'=>$info['forum_name']));
 
 
 if (isset($_GET['action']) && ($_GET['action'] == 'voteup' or $_GET['action'] == 'votedown') && ($info['forum_vote'] != 0 && checkgroup($info['forum_vote'])) && isset($_GET['thread_id']) && isnum($_GET['thread_id']) && isset($_GET['post_id']) && isnum($_GET['post_id'])) {
@@ -95,7 +95,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'voteup' or $_GET['action'] ==
 elseif ((isset($_GET['action']) && $_GET['action'] == 'newthread') && ($info['forum_post'] != 0 && checkgroup($info['forum_post']))) {
 	// Make new thread - actio nmust be newthread
 	$data['new'] = 1;
-	add_to_breadcrumbs(array('link'=>FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title'=>'New Thread'));
+	add_breadcrumb(array('link'=>FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title'=>'New Thread'));
 
 } elseif (isset($_GET['action']) && $_GET['action'] == 'reply' && ($info['forum_reply'] != 0 && checkgroup($info['forum_reply'])) && isset($_GET['thread_id']) && isnum($_GET['thread_id'])) {
 	// verify thread existed
@@ -105,8 +105,8 @@ elseif ((isset($_GET['action']) && $_GET['action'] == 'newthread') && ($info['fo
 		if ($data['thread_locked']) { redirect(FORUM.'index.php'); }
 		$data['reply'] = 1;
 		add_to_title($locale['global_201'].$locale['forum_0503']);
-		add_to_breadcrumbs(array('link'=>FORUM."viewthread.php?thread_id=".$data['thread_id'], 'title'=>$data['thread_subject']));
-		add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['forum_0503']));
+		add_breadcrumb(array('link'=>FORUM."viewthread.php?thread_id=".$data['thread_id'], 'title'=>$data['thread_subject']));
+		add_breadcrumb(array('link'=>'', 'title'=>$locale['forum_0503']));
 		if (isset($_GET['quote']) && isnum($_GET['quote'])) {
 			$quote_result = dbquery("SELECT a.post_message, b.user_name
 			FROM ".DB_FORUM_POSTS." a

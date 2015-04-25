@@ -21,7 +21,7 @@ require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."bbcode_include.php";
 include LOCALE.LOCALESET."admin/gallery.php";
-add_to_breadcrumbs(array('link'=>ADMIN."photoalbums.php".$aidlink, 'title'=>$locale['photo_000']));
+add_breadcrumb(array('link'=>ADMIN."photoalbums.php".$aidlink, 'title'=>$locale['photo_000']));
 $eshop_gallery = new PHPFusion\Gallery\Admin();
 $eshop_gallery->setUploadSettings(
 	array(

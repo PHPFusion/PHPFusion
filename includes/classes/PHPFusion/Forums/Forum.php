@@ -54,7 +54,7 @@ class Forum {
 		);
 		$this->forum_info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."'");
 		add_to_title($locale['global_200'].$locale['forum_0000']);
-		add_to_breadcrumbs(array('link'=>FORUM.'index.php', 'title'=>$locale['forum_0010']));
+		add_breadcrumb(array('link'=>FORUM.'index.php', 'title'=>$locale['forum_0010']));
 		$_GET['forum_id'] = $this->forum_info['forum_id'];
 		forum_breadcrumbs($this->forum_info['forum_index']);
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_rows']) ? $_GET['rowstart'] : '0';
@@ -65,19 +65,19 @@ class Forum {
 				case 'mypost':
 					include FORUM."sections/my_posts.php";
 					add_to_title($locale['global_201'].$locale['forum_0011']);
-					add_to_breadcrumbs(array('link'=>FORUM."index.php?section=mypost", 'title'=>$locale['forum_0011']));
+					add_breadcrumb(array('link'=>FORUM."index.php?section=mypost", 'title'=>$locale['forum_0011']));
 					set_meta("description", $locale['forum_0011']);
 					break;
 				case 'latest': // take this section out.
 					include FORUM."sections/laft.php";
 					add_to_title($locale['global_201'].$locale['global_021']);
-					add_to_breadcrumbs(array('link'=>FORUM."index.php?section=latest", 'title'=>$locale['global_021']));
+					add_breadcrumb(array('link'=>FORUM."index.php?section=latest", 'title'=>$locale['global_021']));
 					set_meta("description", $locale['global_021']);
 					break;
 				case 'tracked':
 					include FORUM."sections/tracked.php";
 					add_to_title($locale['global_201'].$locale['global_056']);
-					add_to_breadcrumbs(array('link'=>FORUM."index.php?section=tracked", 'title'=>$locale['global_056']));
+					add_breadcrumb(array('link'=>FORUM."index.php?section=tracked", 'title'=>$locale['global_056']));
 					set_meta("description", $locale['global_056']);
 					break;
 			}

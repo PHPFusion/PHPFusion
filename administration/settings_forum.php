@@ -20,7 +20,7 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 pageAccess('S3');
 
-add_to_breadcrumbs(array('link'=>ADMIN.'settings_forum.php'.$aidlink, 'title'=>$locale['forum_settings']));
+add_breadcrumb(array('link'=>ADMIN.'settings_forum.php'.$aidlink, 'title'=>$locale['forum_settings']));
 if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
 	$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
 	if (dbrows($result)) {

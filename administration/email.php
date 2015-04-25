@@ -122,7 +122,7 @@ if (dbrows($result)) {
 	}
 }
 
-add_to_breadcrumbs(array('link'=>ADMIN.$aidlink, 'title'=>$locale['400']));
+add_breadcrumb(array('link'=>ADMIN.$aidlink, 'title'=>$locale['400']));
 
 opentable($locale['400']);
 require_once INCLUDES."html_buttons_include.php";

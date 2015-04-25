@@ -47,7 +47,7 @@ class CustomPage {
 				opentable($locale['400']);
 		}
 		self::customPage_selector();
-		add_to_breadcrumbs(array('link'=>ADMIN.'custom_pages.php'.$aidlink, 'title'=>$locale['403']));
+		add_breadcrumb(array('link'=>ADMIN.'custom_pages.php'.$aidlink, 'title'=>$locale['403']));
 		$this->data = self::set_customPage($this->data);
 		$this->data = self::preview_custompage($this->data);
 		if (isset($_POST['cancel'])) redirect(FUSION_SELF.$aidlink);

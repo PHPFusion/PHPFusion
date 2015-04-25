@@ -40,7 +40,7 @@ echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active, 1);
 $customPage::listPage();
 echo closetabbody();
 if ($_GET['section'] == 'cp2') {
-	add_to_breadcrumbs(array('link'=>ADMIN.'custom_pages.php'.$aidlink, 'title'=>$edit ? $locale['401'] : $locale['400']));
+	add_breadcrumb(array('link'=>ADMIN.'custom_pages.php'.$aidlink, 'title'=>$edit ? $locale['401'] : $locale['400']));
 	$data = $customPage->getData();
 	echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active, 1);
 	$customPage::customPage_form($data);

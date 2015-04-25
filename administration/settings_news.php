@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('S8');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-add_to_breadcrumbs(array('link'=>ADMIN."settings_news.php".$aidlink, 'title'=>$locale['news_settings']));
+add_breadcrumb(array('link'=>ADMIN."settings_news.php".$aidlink, 'title'=>$locale['news_settings']));
 
 if (isset($_POST['savesettings'])) {
 	$error = 0;

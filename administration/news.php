@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('N');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/news.php";
-add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['news_0000']));
+add_breadcrumb(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['news_0000']));
 if (isset($_POST['cancel'])) { redirect(FUSION_SELF.$aidlink); }
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
 	$del_data['news_id'] = $_GET['news_id'];
@@ -65,7 +65,7 @@ echo opentabbody($master_title['title'][0], 'news', $tab_active, 1);
 news_listing();
 echo closetabbody();
 if ($_GET['section'] == 'nform') {
-	add_to_breadcrumbs(array('link'=>'', 'title'=>$edit ? $locale['news_0003'] : $locale['news_0002']));
+	add_breadcrumb(array('link'=>'', 'title'=>$edit ? $locale['news_0003'] : $locale['news_0002']));
 	echo opentabbody($master_title['title'][1], 'nform', $tab_active, 1);
 	news_form();
 	echo closetabbody();

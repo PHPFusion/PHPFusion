@@ -27,7 +27,7 @@ include LOCALE.LOCALESET."photogallery.php";
 require_once THEMES."templates/global/photos.php";
 define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 add_to_title($locale['global_200'].$locale['400']);
-add_to_breadcrumbs(array('link'=>BASEDIR.'photogallery.php', 'title'=>$locale['400']));
+add_breadcrumb(array('link'=>BASEDIR.'photogallery.php', 'title'=>$locale['400']));
 
 /* View Photo */
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
@@ -72,8 +72,8 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 
-		add_to_breadcrumbs(array('link'=>BASEDIR."photogallery.php?album_id=".$data['album_id'], 'title'=>$data['album_title']));
-		add_to_breadcrumbs(array('link'=>BASEDIR."photogallery.php?photo_id=".$data['photo_id'], 'title'=>$data['photo_title']));
+		add_breadcrumb(array('link'=>BASEDIR."photogallery.php?album_id=".$data['album_id'], 'title'=>$data['album_title']));
+		add_breadcrumb(array('link'=>BASEDIR."photogallery.php?photo_id=".$data['photo_id'], 'title'=>$data['photo_title']));
 
 		if ($settings['photo_watermark']) {
 			if ($settings['photo_watermark_save']) {
@@ -135,7 +135,7 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 	if (dbrows($result)>0) {
 		$info = dbarray($result);
 		add_to_title($locale['global_201'].$info['album_title']);
-		add_to_breadcrumbs(array('link'=>BASEDIR.'photogallery.php?album_id='.$_GET['album_id'], 'title'=>$info['album_title']));
+		add_breadcrumb(array('link'=>BASEDIR.'photogallery.php?album_id='.$_GET['album_id'], 'title'=>$info['album_title']));
 		/* Category Info */
 		$info['album_thumb'] = ($info['album_thumb'] && file_exists(PHOTOS."thumbs/".$info['album_thumb'])) ? PHOTOS."thumbs/".$info['album_thumb'] : '';
 		$info['album_link'] = array('link'=>BASEDIR.'photogallery.php?album_id='.$_GET['album_id'], 'name'=>$info['album_title']);

@@ -160,9 +160,9 @@ private function make_forum_breadcrumbs() {
 	}
 	// then we make a infinity recursive function to loop/break it out.
 	$crumb = breadcrumb_arrays($this->forum_index, $_GET['parent_id']);
-	add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['forum_000c']));
+	add_breadcrumb(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['forum_000c']));
 	for ($i = count($crumb['title'])-1; $i >= 0; $i--) {
-		add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$crumb['title'][$i]));
+		add_breadcrumb(array('link'=>$crumb['link'][$i], 'title'=>$crumb['title'][$i]));
 	}
 	return $crumb;
 }
@@ -564,7 +564,7 @@ private function display_forum_jumper() {
 private function display_forum_form() {
 	global $aidlink, $settings, $locale;
 	$language_opts = fusion_get_enabled_languages();
-	add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['forum_001']));
+	add_breadcrumb(array('link'=>'', 'title'=>$locale['forum_001']));
 	if (!isset($_GET['action']) && $_GET['parent_id']) {
 		$data['forum_cat'] = $_GET['parent_id'];
 	}
@@ -662,7 +662,7 @@ private function display_forum_permissions_form() {
 		'forum_id' => !empty($data['forum_id']) && isnum($data['forum_id']) ? $data['forum_id'] : 0,
 		'forum_type' => !empty($data['forum_type']) ? $data['forum_type'] : '', // redirect if not exist? no..
 	);
-	add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['forum_030']));
+	add_breadcrumb(array('link'=>'', 'title'=>$locale['forum_030']));
 	opentable($locale['forum_030']);
 	$_access = getusergroups();
 	$access_opts['0'] = $locale['531'];

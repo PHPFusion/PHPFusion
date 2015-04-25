@@ -27,7 +27,7 @@ require_once THEMES."templates/global/blog.php";
 include LOCALE.LOCALESET."blog.php";
 
 add_to_title($locale['blog_1000']);
-add_to_breadcrumbs(array('link' => BASEDIR.'blog.php', 'title' => $locale['blog_1001'])); // blog needs to be localised
+add_breadcrumb(array('link' => BASEDIR.'blog.php', 'title' => $locale['blog_1001'])); // blog needs to be localised
 $_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : '';
 $settings = fusion_get_settings();
 $result = null;
@@ -182,7 +182,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			if ($item['blog_pagecount'] > 1) {
 				$info['blog_nav'] = makepagenav($_GET['rowstart'], 1, $item['blog_pagecount'], 3, BASEDIR."blog.php?readmore=".$_GET['readmore']."&amp;")."\n";
 			}
-			add_to_breadcrumbs(array('link' => BASEDIR."blog.php?readmore=".$_GET['readmore'], 'title' => $item['blog_subject']));
+			add_breadcrumb(array('link' => BASEDIR."blog.php?readmore=".$_GET['readmore'], 'title' => $item['blog_subject']));
 			add_to_title($locale['global_201'].$item['blog_subject']);
 			add_to_meta($item['blog_subject'].($item['blog_keywords'] ? ",".$item['blog_keywords'] : ''));
 			$item['blog_subject'] = "<a class='text-dark' href='".BASEDIR."blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>";
@@ -211,7 +211,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
 		if ($info['blog_max_rows'] > 0) {
 			$author_res = dbresult(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval($_GET['author'])."'"), 0);
-			add_to_breadcrumbs(array('link' => BASEDIR."blog.php?author=".$_GET['author'], 'title' =>$locale['global_070'].$author_res));
+			add_breadcrumb(array('link' => BASEDIR."blog.php?author=".$_GET['author'], 'title' =>$locale['global_070'].$author_res));
 			$result = dbquery("SELECT tn.*, tc.*,
 				tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 				SUM(tr.rating_vote) AS sum_rating,
@@ -239,13 +239,13 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		/* given a datestamp, calculate min of the month and max of the month */
 		if ($_GET['cat_id'] > 0) {
 			$res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'"));
-			add_to_breadcrumbs(array('link' => BASEDIR."blog.php?cat_id=".$_GET['cat_id'], 'title' => $res['blog_cat_name']));
+			add_breadcrumb(array('link' => BASEDIR."blog.php?cat_id=".$_GET['cat_id'], 'title' => $res['blog_cat_name']));
 			add_to_title($locale['global_201'].$res['blog_cat_name']);
 			add_to_meta($res['blog_cat_name']);
 			$info['blog_title'] = $res['blog_cat_name'];
 		}
 		elseif ($_GET['cat_id'] == 0) {
-			add_to_breadcrumbs(array('link' => BASEDIR."blog.php?cat_id=".$_GET['cat_id'], 'title' => $locale['global_080']));
+			add_breadcrumb(array('link' => BASEDIR."blog.php?cat_id=".$_GET['cat_id'], 'title' => $locale['global_080']));
 			add_to_title($locale['global_080']);
 			add_to_meta($locale['global_080']);
 			$info['blog_title'] = $locale['global_080'];

@@ -20,7 +20,7 @@ pageAccess('S1');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
-add_to_breadcrumbs(array('link' => ADMIN."settings_main.php".$aidlink, 'title' => $locale['main_settings']));
+add_breadcrumb(array('link' => ADMIN."settings_main.php".$aidlink, 'title' => $locale['main_settings']));
 
 // These are the default settings and the only settings we expect to be posted
 $settings_main = array(

@@ -20,7 +20,7 @@ pageAccess('LANG');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
-add_to_breadcrumbs(array('link'=>ADMIN."settings_languages.php".$aidlink, 'title'=>$locale['682ML']));
+add_breadcrumb(array('link'=>ADMIN."settings_languages.php".$aidlink, 'title'=>$locale['682ML']));
 $locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (isset($_POST['savesettings'])) {
 	$error = 0;

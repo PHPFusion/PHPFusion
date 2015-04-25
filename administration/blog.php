@@ -21,7 +21,7 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/blog.php";
 $settings = fusion_get_settings();
 
-add_to_breadcrumbs(array('link'=>ADMIN.'blog.php'.$aidlink, 'title'=>$locale['405']));
+add_breadcrumb(array('link'=>ADMIN.'blog.php'.$aidlink, 'title'=>$locale['405']));
 
 if (isset($_POST['cancel'])) { redirect(FUSION_SELF.$aidlink); }
 
@@ -90,7 +90,7 @@ echo opentabbody($master_title['title'][0], 'blog', $tab_active, 1);
 blog_listing();
 echo closetabbody();
 if (isset($_GET['section']) && $_GET['section'] == 'nform') {
-	add_to_breadcrumbs(array('link'=>'', 'title'=>isset($_GET['blog_id']) ? $locale['402'] : $locale['401']));
+	add_breadcrumb(array('link'=>'', 'title'=>isset($_GET['blog_id']) ? $locale['402'] : $locale['401']));
 	echo opentabbody($master_title['title'][1], 'nform', $tab_active, 1);
 	blog_form();
 	echo closetabbody();

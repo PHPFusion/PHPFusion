@@ -1096,7 +1096,7 @@ class Admin {
 		if ($_GET['gallery']>0) {
 
 			$gallery_info = self::get_album($_GET['gallery']);
-			add_to_breadcrumbs(array('link' => clean_request("gallery=".$_GET['gallery'], array('gallery',	'action'), FALSE, '&amp;'), 'title' => $gallery_info['album_title']));
+			add_breadcrumb(array('link' => clean_request("gallery=".$_GET['gallery'], array('gallery',	'action'), FALSE, '&amp;'), 'title' => $gallery_info['album_title']));
 		}
 		$list = array();
 		$rows = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : dbcount("('album_id')", $this->photo_cat_db);

@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('DC');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/downloads.php";
-add_to_breadcrumbs(array('link'=>ADMIN."download_cats.php".$aidlink, 'title'=>$locale['download_0001']));
+add_breadcrumb(array('link'=>ADMIN."download_cats.php".$aidlink, 'title'=>$locale['download_0001']));
 
 if (isset($_POST['cancel'])) {
 	redirect(FUSION_SELF.$aidlink);
@@ -156,7 +156,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "</div>\n";
 	echo closetabbody();
 	if ($_GET['section'] == 'dadd') {
-		add_to_breadcrumbs(array('link'=>'', 'title'=>$edit ? $locale['download_0021'] : $locale['download_0022']));
+		add_breadcrumb(array('link'=>'', 'title'=>$edit ? $locale['download_0021'] : $locale['download_0022']));
 		fusion_confirm_exit();
 		echo opentabbody($tab_title['title'][1], 'dadd', $tab_active, 1);
 		echo openform('addcat', 'post', $formaction, array('max_tokens' => 1, 'class'=>'m-t-20'));

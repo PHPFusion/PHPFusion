@@ -21,7 +21,7 @@ pageAccess('D');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include LOCALE.LOCALESET."admin/downloads.php";
-add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['download_0001']));
+add_breadcrumb(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['download_0001']));
 $message = '';
 if (isset($_GET['status'])) {
 	switch($_GET['status']) {
@@ -70,7 +70,7 @@ download_listing();
 echo closetabbody();
 if ($_GET['section'] == 'dlopts') {
 	fusion_confirm_exit();
-	add_to_breadcrumbs(array('link'=>'', 'title'=>$edit ? $locale['download_0003']: $locale['download_0002']));
+	add_breadcrumb(array('link'=>'', 'title'=>$edit ? $locale['download_0003']: $locale['download_0002']));
 	echo opentabbody($master_tab_title['title'][1], 'dlopts', $master_tab_active, 1);
 	echo "<div class='m-t-20'>\n";
 	download_form();

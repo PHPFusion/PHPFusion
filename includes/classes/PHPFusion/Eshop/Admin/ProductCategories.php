@@ -131,10 +131,10 @@ class ProductCategories {
 		// then we loop it out using Dan's breadcrumb.
 		if (count($crumb['title']) > 1) {
 			foreach ($crumb['title'] as $i => $value) {
-				add_to_breadcrumbs(array('link' => $crumb['link'][$i], 'title' => $value));
+				add_breadcrumb(array('link' => $crumb['link'][$i], 'title' => $value));
 			}
 		} elseif (isset($crumb['title'])) {
-			add_to_breadcrumbs(array('link' => $crumb['link'], 'title' => $crumb['title']));
+			add_breadcrumb(array('link' => $crumb['link'], 'title' => $crumb['title']));
 		}
 		// hola!
 	}

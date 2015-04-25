@@ -519,8 +519,8 @@ if (function_exists('gd_info')) {
 
 	$data3 = dbarray(dbquery("SELECT album_title FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".$_GET['album_id']."'"));
 	$album_title = $data3['album_title'];
-	add_to_breadcrumbs(array('link'=>ADMIN."photoalbums.php".$aidlink,'title'=>'Photo Gallery'));
-	add_to_breadcrumbs(array('link'=>ADMIN."photos.php".$aidlink."&amp;album_id=".$_GET['album_id'],'title'=>$album_title));
+	add_breadcrumb(array('link'=>ADMIN."photoalbums.php".$aidlink,'title'=>'Photo Gallery'));
+	add_breadcrumb(array('link'=>ADMIN."photos.php".$aidlink."&amp;album_id=".$_GET['album_id'],'title'=>$album_title));
 
 	// data callback
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {

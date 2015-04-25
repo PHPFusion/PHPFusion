@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('S9');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-add_to_breadcrumbs(array('link'=>ADMIN."settings_security.php".$aidlink, 'title'=>$locale['security_settings']));
+add_breadcrumb(array('link'=>ADMIN."settings_security.php".$aidlink, 'title'=>$locale['security_settings']));
 $available_captchas = array();
 if ($temp = opendir(INCLUDES."captchas/")) {
 	while (FALSE !== ($file = readdir($temp))) {

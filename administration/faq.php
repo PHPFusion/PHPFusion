@@ -20,7 +20,7 @@ pageAccess('FQ');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include LOCALE.LOCALESET."admin/faq.php";
-add_to_breadcrumbs(array('link'=>ADMIN."faq.php".$aidlink, 'title'=>$locale['502']));
+add_breadcrumb(array('link'=>ADMIN."faq.php".$aidlink, 'title'=>$locale['502']));
 $faq_cat_name = "";
 $faq_cat_description = "";
 $cat_language = LANGUAGE;

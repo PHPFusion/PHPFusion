@@ -28,7 +28,7 @@ if (dbrows($cp_result)) {
 	$cp_data = dbarray($cp_result);
 	$custompage['title'] = $cp_data['page_title'];
 	add_to_title($locale['global_200'].$cp_data['page_title']);
-	add_to_breadcrumbs(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
+	add_breadcrumb(array('link'=>BASEDIR."viewpage.php?page_id=".$_GET['page_id'], 'title'=>$cp_data['page_title']));
 	if ($cp_data['page_keywords'] !=="") { set_meta("keywords", $cp_data['page_keywords']); }
 
 	ob_start();

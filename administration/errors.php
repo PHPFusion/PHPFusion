@@ -22,7 +22,7 @@ require_once THEMES."templates/admin_header.php";
 use PHPFusion\ErrorLogs;
 $fusion_errors = new ErrorLogs();
 
-add_to_breadcrumbs(array('link'=>ADMIN."errors.php".$aidlink, 'title'=>$locale['400']));
+add_breadcrumb(array('link'=>ADMIN."errors.php".$aidlink, 'title'=>$locale['400']));
 
 opentable($locale['400']);
 $fusion_errors->show_error_log();

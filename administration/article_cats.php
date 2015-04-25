@@ -125,7 +125,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$formaction = FUSION_SELF.$aidlink;
 		$openTable = $locale['articles_0021'];
 	}
-	add_to_breadcrumbs(array('link'=>ADMIN.'article_cats.php'.$aidlink,'title'=>$openTable));
+	add_breadcrumb(array('link'=>ADMIN.'article_cats.php'.$aidlink,'title'=>$openTable));
 	opentable($openTable);
 	echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";

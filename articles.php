@@ -27,7 +27,7 @@ include LOCALE.LOCALESET."articles.php";
 include THEMES."templates/global/articles.php";
 $info = array();
 add_to_title($locale['global_200'].$locale['400']);
-add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php', 'title'=>$locale['400']));
+add_breadcrumb(array('link'=>BASEDIR.'articles.php', 'title'=>$locale['400']));
 /* Render Articles */
 if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 
@@ -50,8 +50,8 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		$pagecount = count($article);
 		$article_subject = stripslashes($data['article_subject']);
 
-		add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php?cat_id='.$data['article_cat_id'], 'title'=>$data['article_cat_name']));
-		add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php?article_id='.$_GET['article_id'], 'title'=>$data['article_subject']));
+		add_breadcrumb(array('link'=>BASEDIR.'articles.php?cat_id='.$data['article_cat_id'], 'title'=>$data['article_cat_name']));
+		add_breadcrumb(array('link'=>BASEDIR.'articles.php?article_id='.$_GET['article_id'], 'title'=>$data['article_subject']));
 
 		if ($data['article_keywords'] !=="") { set_meta("keywords", $data['article_keywords']); }
 
@@ -103,7 +103,7 @@ else {
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
 		add_to_title($locale['global_201'].$cdata['article_cat_name']);
-		add_to_breadcrumbs(array('link'=>BASEDIR.'articles.php?cat_id='.$_GET['cat_id'], 'title'=>$cdata['article_cat_name']));
+		add_breadcrumb(array('link'=>BASEDIR.'articles.php?cat_id='.$_GET['cat_id'], 'title'=>$cdata['article_cat_name']));
 		$info['articles']['category'] = $cdata;
 		$info['articles_max_rows'] = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."' AND article_draft='0'");
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['articles_max_rows']) ? $_GET['rowstart'] : 0;

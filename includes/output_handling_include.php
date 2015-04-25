@@ -122,13 +122,3 @@ function handle_output($output) {
 function add_to_jquery($tag = "") {
 	OutputHandler::addToJQuery($tag);
 }
-
-/**
- * Add a link to the breadcrumb
- *
- * @global array $breadcrumbs
- * @param array $link Keys: link, title
- */
-function add_to_breadcrumbs(array $link=array()) {
-	OutputHandler::addToBreadCrumbs($link);
-}

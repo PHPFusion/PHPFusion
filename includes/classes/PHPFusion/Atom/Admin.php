@@ -14,7 +14,7 @@ class Admin {
 		global $aidlink, $locale;
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		$_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
-		add_to_breadcrumbs(array('link'=>ADMIN."theme.php".$aidlink, 'title'=>$locale['theme_1000']));
+		add_breadcrumb(array('link'=>ADMIN."theme.php".$aidlink, 'title'=>$locale['theme_1000']));
 		self::set_theme_active();
 	}
 
@@ -41,7 +41,7 @@ class Admin {
 	static function theme_editor() {
 		global $aidlink;
 		if (!isset($_POST['theme'])) redirect(FUSION_SELF.$aidlink);
-		add_to_breadcrumbs(array('link'=>'', 'title'=>'Theme Configuration'));
+		add_breadcrumb(array('link'=>'', 'title'=>'Theme Configuration'));
 		// The working engine class to build css and set the db
 		$atom = new \PHPFusion\Atom\Atom();
 		$atom->target_folder = $_POST['theme'];

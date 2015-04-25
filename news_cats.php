@@ -37,7 +37,7 @@ if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 		if ($rows) {
 			$res = 1;
 			// Render the breadcrumbs
-			echo render_breadcrumbs($data);
+			echo render_breadcrumbs();
 			echo "<!--pre_news_cat--><table cellpadding='0' cellspacing='1' width='100%' class='tbl-border'>\n";
 			if ($_GET['cat_id'] != 0) {
 				echo "<tr>\n<td width='150' class='tbl1' style='vertical-align:top'><!--news_cat_image--><img class='news-category' src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' /><br /><br />\n";

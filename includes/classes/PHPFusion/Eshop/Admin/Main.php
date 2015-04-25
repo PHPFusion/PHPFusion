@@ -35,7 +35,7 @@ class Main {
 			'customers' => array('title' => $locale['ESHP208'], 'file' => ADMIN."eshop/customers.php"),
 			'orders' => array('title' => $locale['ESHP209']."<span class='badge m-l-10'>".$orders_count."</span>", 'file' => ADMIN."eshop/orders.php")
 		);
-		add_to_breadcrumbs(array('link'=>ADMIN.'eshop.php'.$aidlink,'title'=>$locale['ESHP201']));
+		add_breadcrumb(array('link'=>ADMIN.'eshop.php'.$aidlink,'title'=>$locale['ESHP201']));
 		add_to_jquery("
 		function confirmdelete() {
 		return confirm(\"".$locale['ESHP210']."\")
@@ -56,7 +56,7 @@ class Main {
 		echo "<ul class='nav navbar-nav'>\n";
 		foreach ($this->pages as $page_get => $page) {
 			if ($_GET['a_page'] == $page_get) {
-				add_to_breadcrumbs(array('link' => FUSION_SELF.$aidlink."&amp;a_page=".$_GET['a_page'], 'title' => $this->pages[$_GET['a_page']]['title']));
+				add_breadcrumb(array('link' => FUSION_SELF.$aidlink."&amp;a_page=".$_GET['a_page'], 'title' => $this->pages[$_GET['a_page']]['title']));
 			}
 			if ($page_get == 'categories') {
 				if (\PHPFusion\Eshop\Admin\Products::category_check()) {

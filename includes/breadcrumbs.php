@@ -15,40 +15,38 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-// This file is under development and it's content
-// is subjected to being moved into a function
-
 if (!defined('IN_FUSION')) { die('Access Denied'); }
 
-function generate_breadcrumbs($data) {
-	global $locale;
-	// Demo of usage:
-	// articles.php
-	if (defined('ARTICLES')) {
-		// Articles page
-		add_to_breadcrumbs(array('link' => BASEDIR.'articles.php', 'title' => $locale['400']));
-		// Category
-		$cat_id = isset($_GET['cat_id']) ? $_GET['cat_id'] : $data['article_cat'];
-		add_to_breadcrumbs(array('link' => BASEDIR.'articles.php?cat_id='.$cat_id, 'title' => $data['article_cat_name']));
-		// Article
-		if (isset($_GET['article_id'])) {
-			add_to_breadcrumbs(array('link' => BASEDIR.'articles.php?article_id='.$_GET['article_id'], 'title' => $data['article_subject']));
-		}
-	} elseif (defined('NEWS_CAT') or (defined('NEWS'))) {
-		// news_cat.php
-		if (!$data['news_cat_id']) {
-			$data['news_cat_id'] = 0;
-			$data['news_cat_name'] = $locale['global_080'];
-		}
-		add_to_breadcrumbs(array('link' => BASEDIR.'news.php', 'title' => 'News')); // News needs to be localised
-		add_to_breadcrumbs(array('link' => BASEDIR.'news_cats.php?cat_id='.$data['news_cat_id'], 'title' => $data['news_cat_name']));
-		// news.php
-		if (defined('NEWS') && isset($_GET['readmore'])) {
-			add_to_breadcrumbs(array('link' => BASEDIR.'news.php?readmore='.$_GET['readmore'], 'title' => $data['news_subject']));
-		}
+$breadcrumbs = array();
+
+/**
+ * Add a link to the breadcrumb
+ *
+ * @global array $breadcrumbs
+ * @param array $link Keys: link, title
+ */
+function add_breadcrumb(array $link = array()) {
+	global $breadcrumbs;
+
+	$link += array(
+				'title' => '',
+				'link' => ''
+			);
+	$link['title'] = trim($link['title']);
+	if (!empty($link['title'])) {
+		$breadcrumbs[] = $link;
 	}
-	return PHPFusion\OutputHandler::getBreadcrumbs();
+}
+
+/**
+ * Get breadcrumbs
+ *
+ * @return array Keys of elements: title, link
+ */
+function get_breadcrumbs() {
+	global $breadcrumbs;
+
+	return $breadcrumbs;
 }
 
 function catFullPath($cat_id, $cat_tbl, $col_id, $col_parent, $col_title) {

@@ -338,7 +338,8 @@ if (!function_exists('render_thread')) {
 			$pdata = $info['post_items'];
 			$buttons = $info['buttons'];
 			$data = $info['thread'];
-
+			
+			echo render_breadcrumbs();
 			echo "<div class='clearfix m-b-20'>\n";
 				echo "<div class='thread-buttons btn-group pull-right m-t-20'>\n";
 					echo isset($buttons['notify']) ? "<a class='btn btn-default btn-sm' href='".$buttons['notify']['link']."'><i class='entypo twitter'></i> ".$buttons['notify']['name']."</a>\n" : '';
@@ -371,6 +372,7 @@ if (!function_exists('render_thread')) {
 				}
 			}
 			$tab_active = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : 'oldest';
+
 			echo opentab($p_title, $tab_active, 'post_tabs', 1);
 			echo opentabbody('', $tab_active, $tab_active, 1);
 			echo "<div id='forum_top' class='text-left m-b-10 m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";

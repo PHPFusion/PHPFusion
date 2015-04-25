@@ -60,9 +60,9 @@ public function setThreadInfo() {
 		}
 		$this->forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 		add_to_title($locale['global_201'].$thread_data['thread_subject']);
-		add_to_breadcrumbs(array('link'=>FORUM.'index.php', 'title'=>$locale['forum_0000']));
+		add_breadcrumb(array('link'=>FORUM.'index.php', 'title'=>$locale['forum_0000']));
 		forum_breadcrumbs($this->forum_index);
-		add_to_breadcrumbs(array('link' => FORUM.'viewthread.php?forum_id='.$thread_data['forum_id'].'&amp;thread_id='.$thread_data['thread_id'], 'title' => $thread_data['thread_subject']));
+		add_breadcrumb(array('link' => FORUM.'viewthread.php?forum_id='.$thread_data['forum_id'].'&amp;thread_id='.$thread_data['thread_id'], 'title' => $thread_data['thread_subject']));
 		$this->thread_info['thread']['forum_link'] = FORUM."index.php?viewforum&amp;forum_id=".$thread_data['forum_id']."&amp;forum_cat=".$thread_data['forum_cat']."&amp;forum_branch=".$thread_data['forum_branch'];
 		self::set_ThreadPermissions();
 		self::set_ThreadFilterlinks();
@@ -527,7 +527,7 @@ private function set_QuickReply() {
 				if (dbrows($result)) {
 					$data = dbarray($result);
 					add_to_title($locale['global_201'].$locale['forum_0503']);
-					add_to_breadcrumbs(array('link' => '', 'title' => $locale['forum_0503']));
+					add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
 					if (isset($_GET['quote']) && isnum($_GET['quote'])) {
 						$quote_result = dbquery("SELECT a.post_message, b.user_name
 									FROM ".DB_FORUM_POSTS." a
@@ -703,7 +703,7 @@ private function set_ForumPostDB() {
 					break;
 				//case 'newthread':
 				//	$data['new'] = 1;
-				//	add_to_breadcrumbs(array('link' => FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title' => 'New Thread'));
+				//	add_breadcrumb(array('link' => FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title' => 'New Thread'));
 				//	include "post_actions.php";
 				//	postform($data, $info);
 				//	break;
@@ -713,7 +713,7 @@ private function set_ForumPostDB() {
 						if (dbrows($result)) {
 							$data = dbarray($result);
 							add_to_title($locale['global_201'].$locale['forum_0503']);
-							add_to_breadcrumbs(array('link' => '', 'title' => $locale['forum_0503']));
+							add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
 							if (isset($_GET['quote']) && isnum($_GET['quote'])) {
 								$quote_result = dbquery("SELECT a.post_message, b.user_name
 									FROM ".DB_FORUM_POSTS." a

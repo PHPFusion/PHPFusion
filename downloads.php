@@ -28,7 +28,7 @@ include THEMES."templates/global/downloads.php";
 if (!isset($_GET['download_id']) && !isset($_GET['cat_id'])) {
 add_to_title($locale['global_200'].$locale['download_1000']);
 }
-add_to_breadcrumbs(array('link' => BASEDIR.'downloads.php', 'title' => $locale['download_1001']));
+add_breadcrumb(array('link' => BASEDIR.'downloads.php', 'title' => $locale['download_1001']));
 $result = null;
 
 if (isset($_GET['file_id']) && isnum($_GET['file_id'])) {
@@ -153,7 +153,7 @@ if (isset($_GET['download_id'])) {
 
 			$info['download_title'] = $data['download_title'];
 			$info['download_updated'] = $locale['global_049']." ".timer($data['download_datestamp']);
-			add_to_breadcrumbs(array('link' => BASEDIR."downloads.php?download_id=".$_GET['download_id'], 'title' => $data['download_title']));
+			add_breadcrumb(array('link' => BASEDIR."downloads.php?download_id=".$_GET['download_id'], 'title' => $data['download_title']));
 			add_to_title($data['download_title']);
 			add_to_meta($data['download_title'].($data['download_keywords'] ? ",".$data['download_keywords'] : ''));
 			if ($data['download_keywords'] !=="") { set_meta("keywords", $data['download_keywords']); }
@@ -177,7 +177,7 @@ if (isset($_GET['download_id'])) {
 		/* given a datestamp, calculate min of the month and max of the month */
 		if ($_GET['cat_id'] > 0) {
 			$res = dbarray(dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id='".intval($_GET['cat_id'])."'"));
-			add_to_breadcrumbs(array('link' => BASEDIR."downloads.php?cat_id=".$_GET['cat_id'], 'title' => $res['download_cat_name']));
+			add_breadcrumb(array('link' => BASEDIR."downloads.php?cat_id=".$_GET['cat_id'], 'title' => $res['download_cat_name']));
 			add_to_title($res['download_cat_name']);
 			add_to_meta($res['download_cat_name']);
 			$info['download_title'] = $res['download_cat_name'];

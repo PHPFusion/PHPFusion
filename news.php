@@ -31,7 +31,7 @@ if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {	$_GET['rowstart'] 
 $i = 0;
 add_to_title($locale['global_200'].$locale['global_077']);
 $info = array();
-add_to_breadcrumbs(array('link' => BASEDIR.'news.php', 'title' => $locale['global_081'])); // News needs to be localised
+add_breadcrumb(array('link' => BASEDIR.'news.php', 'title' => $locale['global_081'])); // News needs to be localised
 
 if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 
@@ -89,8 +89,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			"news_sticky" => $data['news_sticky']
 		);
 		add_to_title($locale['global_201'].$news_subject);
-		add_to_breadcrumbs(array('link'=>BASEDIR."news.php?cat_id=".$data['news_cat'], 'title'=>$data['news_cat_name']));
-		add_to_breadcrumbs(array('link'=>BASEDIR."news.php?readmore=".$data['news_id'], 'title'=>$data['news_subject']));
+		add_breadcrumb(array('link'=>BASEDIR."news.php?cat_id=".$data['news_cat'], 'title'=>$data['news_cat_name']));
+		add_breadcrumb(array('link'=>BASEDIR."news.php?readmore=".$data['news_id'], 'title'=>$data['news_subject']));
 		$info['news_item'] = $news_info;
 		$info['news_item']['page_count'] = $pagecount;
 	} else {
@@ -172,7 +172,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				GROUP BY news_id
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$settings['newsperpage']);
 				$info['news_item_rows'] = $rows;
-				add_to_breadcrumbs(array('link'=>BASEDIR."news.php?cat_id=".$data['news_cat_id'], 'title'=>$data['news_cat_name']));
+				add_breadcrumb(array('link'=>BASEDIR."news.php?cat_id=".$data['news_cat_id'], 'title'=>$data['news_cat_name']));
 			}
 		} elseif ($_GET['cat_id'] == 0) {
 			$rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") AND news_draft='0'");
@@ -193,7 +193,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				GROUP BY news_id
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$settings['newsperpage']);
 				$info['news_item_rows'] = $rows;
-				add_to_breadcrumbs(array('link'=>BASEDIR."news.php?cat_id=".$_GET['cat_id'], 'title'=>$locale['global_080']));
+				add_breadcrumb(array('link'=>BASEDIR."news.php?cat_id=".$_GET['cat_id'], 'title'=>$locale['global_080']));
 			}
 		} else {
 		redirect(BASEDIR."news.php");

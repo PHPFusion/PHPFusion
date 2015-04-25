@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('S6');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-add_to_breadcrumbs(array('link'=>ADMIN."settings_misc.php".$aidlink, 'title'=>$locale['misc_settings']));
+add_breadcrumb(array('link'=>ADMIN."settings_misc.php".$aidlink, 'title'=>$locale['misc_settings']));
 if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	$error = 0;
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['tinymce_enabled']) && isnum($_POST['tinymce_enabled']) ? $_POST['tinymce_enabled'] : "0")."' WHERE settings_name='tinymce_enabled'");

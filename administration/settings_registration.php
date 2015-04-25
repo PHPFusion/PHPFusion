@@ -19,7 +19,7 @@ require_once "../maincore.php";
 pageAccess('S4');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-add_to_breadcrumbs(array('link'=>ADMIN."settings_register.php".$aidlink, 'title'=>$locale['register_settings']));
+add_breadcrumb(array('link'=>ADMIN."settings_register.php".$aidlink, 'title'=>$locale['register_settings']));
 if ($settings['tinymce_enabled']) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 } else {

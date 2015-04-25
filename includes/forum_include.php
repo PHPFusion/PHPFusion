@@ -167,14 +167,14 @@ function forum_breadcrumbs($forum_index) {
 	if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
 	if (count($crumb['title']) > 1) {
 		foreach($crumb['title'] as $i => $value) {
-			add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$value));
+			add_breadcrumb(array('link'=>$crumb['link'][$i], 'title'=>$value));
 			if ($i == count($crumb['title'])-1) {
 				add_to_title($locale['global_201'].$value);
 			}
 		}
 	} elseif (isset($crumb['title'])) {
 		add_to_title($locale['global_201'].$crumb['title']);
-		add_to_breadcrumbs(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
+		add_breadcrumb(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
 	}
 }
 ?>

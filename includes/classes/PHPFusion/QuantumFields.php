@@ -189,7 +189,7 @@ class QuantumFields {
 		define('IN_QUANTUM', true);
 
 		if ($this->system_title) {
-			add_to_breadcrumbs(array('link' => FUSION_REQUEST, 'title' => $this->system_title));
+			add_breadcrumb(array('link' => FUSION_REQUEST, 'title' => $this->system_title));
 			add_to_title($this->system_title.' | ');
 		}
 

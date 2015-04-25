@@ -37,7 +37,7 @@ if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
 	}
 }
 add_to_title($locale['global_200'].$locale['400']);
-add_to_breadcrumbs(array('link'=>BASEDIR.'weblinks.php', 'title'=>$locale['400']));
+add_breadcrumb(array('link'=>BASEDIR.'weblinks.php', 'title'=>$locale['400']));
 
 if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	$info['item'] = array();
@@ -69,7 +69,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 		$cdata = dbarray($result);
 		$info = $cdata;
 		add_to_title($locale['global_201'].$cdata['weblink_cat_name']);
-		add_to_breadcrumbs(array('link'=>'', 'title'=>$cdata['weblink_cat_name']));
+		add_breadcrumb(array('link'=>'', 'title'=>$cdata['weblink_cat_name']));
 
 		$max_rows = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$_GET['cat_id']."' AND ".groupaccess('weblink_visibility'));
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart']<= $max_rows ? $_GET['rowstart'] : 0;

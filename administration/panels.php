@@ -82,7 +82,7 @@ class fusion_panels {
 				$this->formaction = FUSION_SELF.$aidlink."&amp;section=panelform";
 		}
 
-		add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['600']));
+		add_breadcrumb(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['600']));
 
 		self::set_paneldb();
 	}

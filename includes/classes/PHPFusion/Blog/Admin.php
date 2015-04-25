@@ -129,7 +129,7 @@ class Admin {
 
 	public function display_blogcat_list() {
 		global $locale, $aidlink;
-		add_to_breadcrumbs(array('link'=>ADMIN.'blog_cats.php'.$aidlink, 'title'=>'Blogs'));
+		add_breadcrumb(array('link'=>ADMIN.'blog_cats.php'.$aidlink, 'title'=>'Blogs'));
 		$index = $this->catIndex;
 		self::make_breads($this->catIndex);
 		add_to_jquery("
@@ -251,7 +251,7 @@ class Admin {
 		}
 		$crumb = breadcrumb_arrays($index, $_GET['parent_id']);
 		for ($i = count($crumb['title'])-1; $i >= 0; $i--) {
-			add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$crumb['title'][$i]));
+			add_breadcrumb(array('link'=>$crumb['link'][$i], 'title'=>$crumb['title'][$i]));
 		}
 	}
 

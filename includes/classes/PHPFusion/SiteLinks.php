@@ -49,13 +49,13 @@ class SiteLinks {
 		// then we sort in reverse.
 		if (count($crumb['title']) > 1)  { krsort($crumb['title']); krsort($crumb['link']); }
 		// then we loop it out using Dan's breadcrumb.
-		add_to_breadcrumbs(array('link'=>FUSION_SELF.$aidlink, 'title'=>'Site Link Index'));
+		add_breadcrumb(array('link'=>FUSION_SELF.$aidlink, 'title'=>'Site Link Index'));
 		if (count($crumb['title']) > 1) {
 			foreach($crumb['title'] as $i => $value) {
-				add_to_breadcrumbs(array('link'=>$crumb['link'][$i], 'title'=>$value));
+				add_breadcrumb(array('link'=>$crumb['link'][$i], 'title'=>$value));
 			}
 		} elseif (isset($crumb['title'])) {
-			add_to_breadcrumbs(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
+			add_breadcrumb(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
 		}
 		// hola!
 	}

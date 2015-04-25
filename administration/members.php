@@ -30,7 +30,7 @@ $sortby = (isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
 $status = (isset($_GET['status']) && isnum($_GET['status'] && $_GET['status'] < 9) ? $_GET['status'] : 0);
 $user_id = (isset($_GET['user_id']) && isnum($_GET['user_id']) ? $_GET['user_id'] : FALSE);
 $action = (isset($_GET['action']) && isnum($_GET['action']) ? $_GET['action'] : "");
-add_to_breadcrumbs(array('link'=>ADMIN.'members.php'.$aidlink, 'title'=>$locale['400']));
+add_breadcrumb(array('link'=>ADMIN.'members.php'.$aidlink, 'title'=>$locale['400']));
 
 define("USER_MANAGEMENT_SELF", FUSION_SELF.$aidlink."&sortby=$sortby&status=$status&rowstart=$rowstart");
 $checkRights = dbcount("(user_id)", DB_USERS, "user_id='".$user_id."' AND user_level>101");
@@ -110,7 +110,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "add" && (!$isAdmin || iSUPERAD
 
 	if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && defined('FUSION_NULL'))) {
 		opentable($locale['480']);
-		add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['480']));
+		add_breadcrumb(array('link'=>'', 'title'=>$locale['480']));
 		//member_nav(member_url("add", "")."| ".$locale['480']);
 		$userFields = new \PHPFusion\UserFields();
 		$userFields->postName = "add_user";
@@ -177,7 +177,7 @@ elseif (isset($_GET['step']) && $_GET['step'] == "edit" && $user_id && (!$isAdmi
 	}
 
 	opentable($locale['430']);
-	add_to_breadcrumbs(array('link'=>'', 'title'=>$locale['430']));
+	add_breadcrumb(array('link'=>'', 'title'=>$locale['430']));
 	$userFields = new UserFields();
 	$userFields->postName = "savechanges";
 	$userFields->postValue = $locale['430'];

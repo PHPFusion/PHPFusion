@@ -21,7 +21,7 @@ pageAccess('S11');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 require_once INCLUDES."mimetypes_include.php";
-add_to_breadcrumbs(array('link'=>ADMIN.'settings_dl.php'.$aidlink, 'title'=>$locale['download_settings']));
+add_breadcrumb(array('link'=>ADMIN.'settings_dl.php'.$aidlink, 'title'=>$locale['download_settings']));
 if (isset($_POST['savesettings'])) {
 	$admin_password = (isset($_POST['admin_password'])) ? form_sanitizer($_POST['admin_password'], '', 'admin_password') : '';
 	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "") && !defined('FUSION_NULL')) {
