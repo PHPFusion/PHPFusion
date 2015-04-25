@@ -17,16 +17,13 @@
 +--------------------------------------------------------*/
 if (!defined('IN_FUSION')) { die('Access Denied'); }
 
-$breadcrumbs = array();
-
 /**
  * Add a link to the breadcrumb
  *
- * @global array $breadcrumbs
  * @param array $link Keys: link, title
  */
 function add_breadcrumb(array $link = array()) {
-	global $breadcrumbs;
+	$breadcrumbs = &get_breadcrumbs();
 
 	$link += array(
 				'title' => '',
@@ -43,8 +40,8 @@ function add_breadcrumb(array $link = array()) {
  *
  * @return array Keys of elements: title, link
  */
-function get_breadcrumbs() {
-	global $breadcrumbs;
+function &get_breadcrumbs() {
+	static $breadcrumbs = array();
 
 	return $breadcrumbs;
 }
