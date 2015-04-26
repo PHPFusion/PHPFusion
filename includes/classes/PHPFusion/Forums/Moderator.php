@@ -279,8 +279,8 @@ class Moderator {
 		if (!isset($_POST['deletethread'])) {
 			echo "<form name='delform' method='post' action='".FUSION_SELF."?step=delete&amp;forum_id=".intval($this->forum_id)."&amp;thread_id=".intval($this->thread_id)."'>\n";
 			echo $locale['forum_0704']."<br /><br />\n";
-			echo form_button($locale['yes'], 'deletethread', 'deletethread', $locale['yes'], array('class'=>'m-r-10 btn-danger'));
-			echo form_button($locale['no'], 'cancelDelete', 'cancelDelete', $locale['no'], array('class'=>'m-r-10 btn-default'));
+			echo form_button('deletethread', $locale['yes'], $locale['yes'], array('class'=>'m-r-10 btn-danger'));
+			echo form_button('cancelDelete', $locale['no'], $locale['no'], array('class'=>'m-r-10 btn-default'));
 			echo "</form>\n";
 			echo closeform();
 		} else {
