@@ -27,17 +27,14 @@ echo "<div class='hidden-xs col-sm-3 col-md-3 col-lg-3 leftbar'>\n";
 echo RIGHT.LEFT;
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 main-content'>\n";
-echo U_CENTER;
-
 // Get all notices, we also include notices that are meant to be displayed on all pages
 $notices = getNotices(array('all', FUSION_SELF));
 echo renderNotices($notices);
-
+echo U_CENTER;
 echo CONTENT;
 echo L_CENTER;
 echo "</div>\n";
 echo BL_CENTER ? "<div class='bl-content'>".BL_CENTER."</div>\n" : '';
 echo "</div>\n";
 close_grid(1);
-
 ?>
