@@ -379,27 +379,35 @@ class Moderator {
 		global $locale;
 		echo openmodal('movethread',$locale['forum_0750'], array('class'=>'modal-center'));
 		if (isset($_POST['move_thread'])) {
-			echo "<div class='text-center'>\n";
-			if (!isset($_POST['new_forum_id']) || !self::verify_forum($_POST['new_forum_id'])) redirect("index.php");
-			if (!dbcount("(forum_id)", DB_FORUMS, "forum_id='".$_POST['new_forum_id']."'")) redirect("../index.php");
-			if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id='".intval($this->thread_id)."' AND thread_hidden='0'")) redirect("../index.php");
-			$post_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id='".intval($this->thread_id)."'"); // total post in this thread
-			$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET forum_id='".intval($_POST['new_forum_id'])."' WHERE thread_id='".intval($this->thread_id)."'");
-			$result = dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id='".intval($_POST['new_forum_id'])."' WHERE thread_id='".intval($this->thread_id)."'");
-			$ex_rsc = dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".intval($this->forum_id)."' AND thread_hidden='0' ORDER BY thread_lastpost DESC LIMIT 1");
+			$new_forum_id = filter_input(INPUT_POST, 'new_forum_id', FILTER_VALIDATE_INT);
+			$forum_id = intval($this->forum_id);
+			$thread_id = intval($this->thread_id);
+			if (!isset($new_forum_id) || !self::verify_forum($new_forum_id)) {
+				redirect("index.php");
+			}
+			if (!dbcount("(forum_id)", DB_FORUMS, "forum_id=".$new_forum_id)) {
+				redirect("../index.php");
+			}
+			if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id=".$thread_id." AND thread_hidden='0'")) {
+				redirect("../index.php");
+			}
+			$post_count = dbcount("(post_id)", DB_FORUM_POSTS, "thread_id=".$thread_id); // total post in this thread
+			dbquery("UPDATE ".DB_FORUM_THREADS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
+			dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
+			$ex_rsc = dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id=".$forum_id." AND thread_hidden='0' ORDER BY thread_lastpost DESC LIMIT 1");
 			// update current forum.
 			if (dbrows($ex_rsc)>0) {
 				$old_data = dbarray($ex_rsc);
-				$update_old_forum = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$old_data['thread_lastpost']."', forum_postcount = forum_postcount-".$post_count.", forum_threadcount=forum_threadcount-1, forum_lastuser='".$old_data['thread_lastuser']."' WHERE forum_id='".intval($this->forum_id)."'");
+				dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$old_data['thread_lastpost']."', forum_postcount = forum_postcount-".$post_count.", forum_threadcount=forum_threadcount-1, forum_lastuser='".$old_data['thread_lastuser']."' WHERE forum_id=".$forum_id);
 			} else {
-				$update_old_forum = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastpostid = '0', forum_postcount=forum_postcount-".$post_count.", forum_threadcount=forum_threadcount-1, forum_lastuser='0' WHERE forum_id='".intval($this->forum_id)."'");
+				dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastpostid = '0', forum_postcount=forum_postcount-".$post_count.", forum_threadcount=forum_threadcount-1, forum_lastuser='0' WHERE forum_id=".$forum_id);
 			}
-			$new_rsc = dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".intval($_POST['new_forum_id'])."' AND thread_hidden='0' ORDER BY thread_lastpost DESC LIMIT 1");
+			$new_rsc = dbquery("SELECT thread_lastpost, thread_lastpostid, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id=".$new_forum_id." AND thread_hidden='0' ORDER BY thread_lastpost DESC LIMIT 1");
 			if (dbrows($new_rsc)) {
 				$new_data = dbarray($new_rsc);
-				$update_new_forum = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$new_data['thread_lastpost']."', forum_lastpostid = '".$new_data['thread_lastpostid']."', forum_postcount=forum_postcount+".$post_count.", forum_threadcount=forum_threadcount+1, forum_lastuser='".$new_data['thread_lastuser']."' WHERE forum_id='".intval($_POST['new_forum_id'])."'", 1);
+				dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$new_data['thread_lastpost']."', forum_lastpostid = '".$new_data['thread_lastpostid']."', forum_postcount=forum_postcount+".$post_count.", forum_threadcount=forum_threadcount+1, forum_lastuser='".$new_data['thread_lastuser']."' WHERE forum_id=".$new_forum_id, 1);
 			} else {
-				$update_new_forum = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastpostid ='0', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+".$post_count.", forum_lastuser='0' WHERE forum_id='".intval($_POST['new_forum_id'])."'");
+				dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastpostid ='0', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+".$post_count.", forum_lastuser='0' WHERE forum_id=".$new_forum_id);
 			}
 			addNotice('success', $locale['forum_0752']);
 			redirect(FORUM."viewthread.php?forum_id=".$_POST['new_forum_id']."&amp;thread_id=".$this->thread_id);
