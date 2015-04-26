@@ -24,7 +24,7 @@ class Moderator {
 	private $allowed_actions = array(
 		'renew',
 		'delete',
-		'unsticky',
+		'nonsticky',
 		'sticky',
 		'lock',
 		'unlock',
