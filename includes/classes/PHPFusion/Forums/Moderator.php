@@ -192,7 +192,6 @@ class Moderator {
 				self::mod_nonsticky_thread();
 				break;
 			case 'move':
-				echo 'here';
 				self::mod_move_thread();
 				break;
 		}
@@ -405,9 +404,9 @@ class Moderator {
 			addNotice('success', $locale['forum_0752']);
 			redirect(FORUM."viewthread.php?forum_id=".$_POST['new_forum_id']."&amp;thread_id=".$this->thread_id);
 		} else {
-			echo openform('moveform', 'moveform', 'post', FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move", array('downtime' => 1));
+			echo openform('moveform', 'post', FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move", array('downtime' => 1));
 			echo form_select_tree('new_forum_id', $locale['forum_0751'], '', array('input_id'=>"newfrmid", 'no_root'=>1, 'inline'=>1, 'disable_opts' => $this->forum_id),  DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
-			echo form_button($locale['forum_0750'], $locale['forum_0206'], $locale['forum_0206'], array('class'=>'btn-primary'));
+			echo form_button('move_thread', $locale['forum_0206'], $locale['forum_0206'], array('class'=>'btn-primary'));
 			echo closeform();
 		}
 		echo closemodal();
