@@ -382,7 +382,7 @@ class Moderator {
 			$new_forum_id = filter_input(INPUT_POST, 'new_forum_id', FILTER_VALIDATE_INT);
 			$forum_id = intval($this->forum_id);
 			$thread_id = intval($this->thread_id);
-			if (!isset($new_forum_id) || !self::verify_forum($new_forum_id)) {
+			if (!$new_forum_id || !self::verify_forum($new_forum_id)) {
 				redirect("index.php");
 			}
 			if (!dbcount("(forum_id)", DB_FORUMS, "forum_id=".$new_forum_id)) {
