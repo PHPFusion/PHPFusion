@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined('IN_FUSION')) { die('Access Denied'); }
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 /**
  * Add a link to the breadcrumb
@@ -23,16 +23,9 @@ if (!defined('IN_FUSION')) { die('Access Denied'); }
  * @param array $link Keys: link, title
  */
 function add_breadcrumb(array $link = array()) {
-	$breadcrumbs = &get_breadcrumbs();
+	global $breadcrumbs;
 
-	$link += array(
-				'title' => '',
-				'link' => ''
-			);
-	$link['title'] = trim($link['title']);
-	if (!empty($link['title'])) {
-		$breadcrumbs[] = $link;
-	}
+	$breadcrumbs->addBreadCrumb($link);
 }
 
 /**
@@ -40,10 +33,10 @@ function add_breadcrumb(array $link = array()) {
  *
  * @return array Keys of elements: title, link
  */
-function &get_breadcrumbs() {
-	static $breadcrumbs = array();
+function get_breadcrumbs() {
+	global $breadcrumbs;
 
-	return $breadcrumbs;
+	return $breadcrumbs->getBreadCrumbs();
 }
 
 function catFullPath($cat_id, $cat_tbl, $col_id, $col_parent, $col_title) {

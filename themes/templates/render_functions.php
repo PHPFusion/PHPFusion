@@ -61,23 +61,20 @@ if (!function_exists("render_comments")) {
 
 // Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
-	function render_breadcrumbs($class = 'breadcrumb', $show_home = TRUE, $last_no_link = TRUE) {
-		global $locale;
+	function render_breadcrumbs() {
+		global $locale, $breadcrumbs;
 
-		// Generates and populates the breacrumbs array
-		$breadcrumbs = get_breadcrumbs();
-		$count = count($breadcrumbs);
-		if ($last_no_link and $count) {
-			$breadcrumbs[$count-1]['link'] = '';
-		}
+		// Testing
+		/*$breadcrumbs->class = 'breadcrumb custom-class';
+		$breadcrumbs->show_home = FALSE;
+		$breadcrumbs->last_no_link = FALSE;*/
 
-		$html = "<ol class='$class'>\n";
-		if ($show_home) {
-			$html .= "<li class='crumb'><a href='".BASEDIR."index.php' title='".$locale['home']."'>".$locale['home']."</a></li>\n";
-		}
-		foreach ($breadcrumbs as $breadcrumb) {
-			$html .= "<li class='crumb'>";
-			$html .= ($breadcrumb['link']) ? "<a title='".$breadcrumb['title']."' href='".$breadcrumb['link']."'>".$breadcrumb['title']."</a>" : $breadcrumb['title'];
+		$crumbs = get_breadcrumbs();
+
+		$html = "<ol class='".$breadcrumbs->class."'>\n";
+		foreach ($crumbs as $crumb) {
+			$html .= "<li class='".$crumb['class']."'>";
+			$html .= ($crumb['link']) ? "<a title='".$crumb['title']."' href='".$crumb['link']."'>".$crumb['title']."</a>" : $crumb['title'];
 			$html .= "</li>\n";
 		}
 		$html .= "</ol>\n";
