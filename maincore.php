@@ -67,6 +67,17 @@ if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
 	redirect($settings['siteurl']);
 }
 
+// Check if mod_rewrite is enabled
+$mod_rewrite = FALSE;
+if ( function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()) ) {
+	$mod_rewrite = TRUE;
+} elseif ( isset($_SERVER['IIS_UrlRewriteModule']) ) {
+	$mod_rewrite = TRUE;
+} elseif ( isset($_SERVER['MOD_REWRITE']) ) {
+	$mod_rewrite = TRUE;
+}
+define('MOD_REWRITE', $mod_rewrite);
+
 // Disable FUSION_SELF and FUSION_QUERY in SEO mode.
 if (!defined("IN_PERMALINK")) {
 	define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");

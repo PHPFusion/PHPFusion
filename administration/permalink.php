@@ -14,15 +14,19 @@
 | at www.gnu.org/licenses/agpl.html. Removal of this
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
-	+--------------------------------------------------------*/
++--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("PL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+
+pageAccess('PL');
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 include LOCALE.LOCALESET."admin/permalinks.php";
+
+$locale['rewrite_disabled'] = "It looks like <strong>mod_rewrite</strong> is not enabled on your host. Enabling SEF urls might break your website. Please contact your hosting provider about enabling <strong>mod_rewrite</strong> on your host.";
+if (!MOD_REWRITE) {
+	addNotice('danger', "<i class='fa fa-lg fa-warning m-r-10'></i>".$locale['rewrite_disabled']);
+}
 
 $settings_seo = array(
 	'site_seo'		=> fusion_get_settings('site_seo'),
@@ -32,10 +36,6 @@ $settings_seo = array(
 
 // TODO: Check if we can or did write .htaccess file before saving settings to DB
 if (isset($_POST['savesettings'])) {
-	// No need for these anymore, form sanitizer can handle it
-	/*$settings_seo['site_seo']		= (isset($_POST['site_seo']) ? 1 : 0);
-	$settings_seo['normalize_seo']	= (isset($_POST['normalize_seo']) ? 1 : 0);
-	$settings_seo['debug_seo']		= (isset($_POST['debug_seo']) ? 1 : 0);*/
 
 	foreach ($settings_seo as $key => $value) {
 		$settings_seo[$key] = form_sanitizer($settings_seo[$key], $settings_seo[$key], $key);
@@ -43,101 +43,76 @@ if (isset($_POST['savesettings'])) {
 		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_seo[$key]."' WHERE settings_name='".$key."'");
 	}
 
+	$htc = "# Force utf-8 charset".PHP_EOL;
+	$htc .= "AddDefaultCharset utf-8".PHP_EOL.PHP_EOL;
+	$htc .= "# Security".PHP_EOL;
+	$htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
+	$htc .= "# Secure htaccess file".PHP_EOL;
+	$htc .= "<Files .htaccess>".PHP_EOL;
+	$htc .= "order allow,deny".PHP_EOL;
+	$htc .= "deny from all".PHP_EOL;
+	$htc .= "</Files>".PHP_EOL.PHP_EOL;
+	$htc .= "# Protect config.php".PHP_EOL;
+	$htc .= "<Files config.php>".PHP_EOL;
+	$htc .= "order allow,deny".PHP_EOL;
+	$htc .= "deny from all".PHP_EOL;
+	$htc .= "</Files>".PHP_EOL.PHP_EOL;
+	$htc .= "# Block Nasty Bots".PHP_EOL;
+	$htc .= "<IfModule mod_setenvifno.c>".PHP_EOL;
+	$htc .= "	SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT".PHP_EOL;
+	$htc .= "	SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT".PHP_EOL;
+	$htc .= "	Deny from env=HTTP_SAFE_BADBOT".PHP_EOL;
+	$htc .= "</IfModule>".PHP_EOL.PHP_EOL;
+	$htc .= "# Disable directory listing".PHP_EOL;
+	$htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
+
 	if ($settings_seo['site_seo'] == 1) {
-		// create .htaccess
-		if (!file_exists(BASEDIR.".htaccess")) {
-			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-				rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
-			} else {
-				$handle = fopen(BASEDIR.".htaccess", "w");
-				fclose($handle);
-			}
-		}
-		// write file. wipe out all .htaccess current configuration.
-		$htc = '';
-		$htc .= "# Force utf-8 charset\r\n";
-		$htc .= "AddDefaultCharset utf-8\r\n\n";
-		$htc .= "# Security\r\n";
-		$htc .= "ServerSignature Off\r\n\n";
-		$htc .= "# Secure htaccess file\r\n";
-		$htc .= "<Files .htaccess>\r\n";
-		$htc .= "order allow,deny\r\n";
-		$htc .= "deny from all\r\n";
-		$htc .= "</Files>\r\n\n";
-		$htc .= "# Protect config.php\r\n";
-		$htc .= "<Files config.php>\r\n";
-		$htc .= "order allow,deny\r\n";
-		$htc .= "deny from all\r\n";
-		$htc .= "</Files>\r\n\n";
-		$htc .= "# Block Nasty Bots\r\n";
-		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT\r\n";
-		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT\r\n";
-		$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n\n";
-		$htc .= "# Disable directory listing\r\n";
-		$htc .= "Options -Indexes\r\n";
-		$htc .= "Options +SymLinksIfOwnerMatch\r\n";
-		$htc .= "RewriteEngine On\r\n";
-		$htc .= "RewriteBase ".$settings['site_path']."\r\n\n";
-		$htc .= "# Fix Apache internal dummy connections from breaking [(site_url)] cache\r\n";
-		$htc .= "RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]\r\n";
-		$htc .= "RewriteRule .* - [F,L]\r\n\n";
-		$htc .= "# Exclude /assets and /manager directories and images from rewrite rules\r\n";
-		$htc .= "RewriteRule ^(administration|themes)/*$ - [L]\r\n";
-		$htc .= "RewriteCond %{REQUEST_FILENAME} !-f\r\n";
-		$htc .= "RewriteCond %{REQUEST_FILENAME} !-d\n";
-		$htc .= "RewriteCond %{REQUEST_FILENAME} !-l\r\n";
-		$htc .= "RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)\r\n";
-		$htc .= "RewriteRule ^(.*?)$ rewrite.php [L]\r\n";
-		$temp = fopen(BASEDIR.".htaccess", "w");
-		if (fwrite($temp, $htc)) {
-			fclose($temp);
-		}
+		// Rewrite urls settings
+		$htc .= "Options +SymLinksIfOwnerMatch".PHP_EOL;
+		$htc .= "<IfModule mod_rewrite.c>".PHP_EOL;
+		$htc .= "	# Let PHP know mod_rewrite is enabled".PHP_EOL;
+		$htc .= "	<IfModule mod_env.c>".PHP_EOL;
+		$htc .= "		SetEnv MOD_REWRITE On".PHP_EOL;
+		$htc .= "	</IfModule>".PHP_EOL;
+		$htc .= "	RewriteEngine On".PHP_EOL;
+		$htc .= "	RewriteBase ".$settings['site_path'].PHP_EOL;
+		$htc .= "	# Fix Apache internal dummy connections from breaking [(site_url)] cache".PHP_EOL;
+		$htc .= "	RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]".PHP_EOL;
+		$htc .= "	RewriteRule .* - [F,L]".PHP_EOL;
+		$htc .= "	# Exclude /assets and /manager directories and images from rewrite rules".PHP_EOL;
+		$htc .= "	RewriteRule ^(administration|themes)/*$ - [L]".PHP_EOL;
+		$htc .= "	RewriteCond %{REQUEST_FILENAME} !-f".PHP_EOL;
+		$htc .= "	RewriteCond %{REQUEST_FILENAME} !-d".PHP_EOL;
+		$htc .= "	RewriteCond %{REQUEST_FILENAME} !-l".PHP_EOL;
+		$htc .= "	RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)".PHP_EOL;
+		$htc .= "	RewriteRule ^(.*?)$ rewrite.php [L]".PHP_EOL;
+		$htc .= "</IfModule>".PHP_EOL;
 	} else {
-		// enable default error handler in .htaccess
-		if (!file_exists(BASEDIR.".htaccess")) {
-			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
-				@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
-			} else {
-				// create a file.
-				$handle = fopen(BASEDIR.".htaccess", "w");
-				fclose($handle);
-			}
+		// Error pages
+		$htc .= "ErrorDocument 400 ".$settings['site_path']."error.php?code=400".PHP_EOL;
+		$htc .= "ErrorDocument 401 ".$settings['site_path']."error.php?code=401".PHP_EOL;
+		$htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403".PHP_EOL;
+		$htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404".PHP_EOL;
+		$htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500".PHP_EOL;
+	}
+
+	// Create the .htaccess file
+	if (!file_exists(BASEDIR.".htaccess")) {
+		if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {
+			@rename(BASEDIR."_htaccess", BASEDIR.".htaccess");
+		} else {
+			touch(BASEDIR.".htaccess");
 		}
-		// Wipe out all .htaccess rewrite rules and add defaults and error handler only
-		$htc = "#Force utf-8 charset\r\n";
-		$htc .= "AddDefaultCharset utf-8\r\n";
-		$htc .= "#Security\r\n";
-		$htc .= "ServerSignature Off\r\n";
-		$htc .= "#secure htaccess file\r\n";
-		$htc .= "<Files .htaccess>\r\n";
-		$htc .= "order allow,deny\r\n";
-		$htc .= "deny from all\r\n";
-		$htc .= "</Files>\r\n";
-		$htc .= "#protect config.php\r\n";
-		$htc .= "<Files config.php>\r\n";
-		$htc .= "order allow,deny\r\n";
-		$htc .= "deny from all\r\n";
-		$htc .= "</Files>\r\n";
-		$htc .= "#Block Nasty Bots\r\n";
-		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(craftbot|download|extract|stripper|sucker|ninja|clshttp|webspider|leacher|collector|grabber|webpictures) HTTP_SAFE_BADBOT\r\n";
-		$htc .= "SetEnvIfNoCase ^User-Agent$ .*(libwww-perl|aesop_com_spiderman) HTTP_SAFE_BADBOT\r\n";
-		$htc .= "Deny from env=HTTP_SAFE_BADBOT\r\n";
-		$htc .= "#Disable directory listing\r\n";
-		$htc .= "Options All -Indexes\r\n";
-		$htc .= "ErrorDocument 400 ".$settings['siteurl']."error.php?code=400\r\n";
-		$htc .= "ErrorDocument 401 ".$settings['siteurl']."error.php?code=401\r\n";
-		$htc .= "ErrorDocument 403 ".$settings['siteurl']."error.php?code=403\r\n";
-		$htc .= "ErrorDocument 404 ".$settings['siteurl']."error.php?code=404\r\n";
-		$htc .= "ErrorDocument 500 ".$settings['siteurl']."error.php?code=500\r\n";
-		$temp = fopen(BASEDIR.".htaccess", "w");
-		if (fwrite($temp, $htc)) {
-			fclose($temp);
-		}
+	}
+	// Write the contents to .htaccess
+	$temp = fopen(BASEDIR.".htaccess", "w");
+	if (fwrite($temp, $htc)) {
+		fclose($temp);
 	}
 
 	if (!defined('FUSION_NULL')) {
 		// Everything went as expected
-		addNotice("success", "<i class='fa fa-check-square-o m-r-10 fa-lg'></i>".$locale['900']);
+		addNotice("success", "<i class='fa fa-lg fa-check-square-o m-r-10'></i>".$locale['900']);
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
@@ -145,7 +120,7 @@ if (isset($_POST['savesettings'])) {
 echo openform('settingsseo', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 2));
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 $locale['seo_htc_warning'] = 'Please note that if you change any of these settings the content of <strong>.htaccess</strong> will be overwritten and any changes previously done to this file will be lost.'; // to be moved
-echo "<div class='admin-message alert alert-warning'><i class='fa fa-lg fa-warning m-r-10'></i>".$locale['seo_htc_warning']."</div>";
+echo "<div class='admin-message alert alert-info'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
 echo form_checkbox('site_seo', $locale['438'], $settings_seo['site_seo'], array('toggle' => 1, 'inline' => 1));
 echo form_checkbox('normalize_seo', $locale['439'], $settings_seo['normalize_seo'], array('toggle' => 1, 'child_of' => 'site_seo', 'inline' => 1));
