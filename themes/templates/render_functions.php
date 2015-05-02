@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+use PHPFusion\BreadCrumbs;
+
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 // Render comments template
 if (!function_exists("render_comments")) {
@@ -62,17 +64,10 @@ if (!function_exists("render_comments")) {
 // Render breadcrumbs template
 if (!function_exists("render_breadcrumbs")) {
 	function render_breadcrumbs() {
-		global $locale, $breadcrumbs;
+		$breadcrumbs = BreadCrumbs::getInstance();
 
-		// Testing
-		/*$breadcrumbs->class = 'breadcrumb custom-class';
-		$breadcrumbs->show_home = FALSE;
-		$breadcrumbs->last_no_link = FALSE;*/
-
-		$crumbs = get_breadcrumbs();
-
-		$html = "<ol class='".$breadcrumbs->class."'>\n";
-		foreach ($crumbs as $crumb) {
+		$html = "<ol class='".$breadcrumbs->getCssClasses()."'>\n";
+		foreach ($breadcrumbs->toArray() as $crumb) {
 			$html .= "<li class='".$crumb['class']."'>";
 			$html .= ($crumb['link']) ? "<a title='".$crumb['title']."' href='".$crumb['link']."'>".$crumb['title']."</a>" : $crumb['title'];
 			$html .= "</li>\n";

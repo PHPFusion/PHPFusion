@@ -274,7 +274,5 @@ $fusion_page_head_tags = & \PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = & \PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = & \PHPFusion\OutputHandler::$jqueryTags;
 
-$breadcrumbs = new PHPFusion\BreadCrumbs();
-
 // set admin login procedures
 Authenticate::setAdminLogin();
