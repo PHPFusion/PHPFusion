@@ -5,7 +5,8 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: breadcrumbs.php
-| Author: JoiNNN
+| Author: Takács Ákos (Rimelek)
+| Co-Author: Dan C. (JoiNNN)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
