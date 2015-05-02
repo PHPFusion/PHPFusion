@@ -168,6 +168,7 @@ $locale['setup_3053'] = "Электронный магазин";
 $locale['setup_3054'] = "Категории блогов";
 $locale['setup_3055'] = "Блог";
 $locale['setup_3056'] = "Темы";
+$locale['setup_3057'] = "Инструмент миграции";
 //Multilanguage table rights
 $locale['setup_3200'] = "Статьи";
 $locale['setup_3201'] = "Страницы";
