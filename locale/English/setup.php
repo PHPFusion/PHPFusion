@@ -181,6 +181,7 @@ $locale['setup_3053'] = "eShop";
 $locale['setup_3054'] = "Blog Categories";
 $locale['setup_3055'] = "Blog";
 $locale['setup_3056'] = "Theme";
+$locale['setup_3057'] = "Migration Tool";
 //Multilanguage table rights
 $locale['setup_3200'] = "Articles";
 $locale['setup_3201'] = "Custom Pages";

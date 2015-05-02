@@ -771,19 +771,16 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		// Messages
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."messages ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from");
 		// UF 2.00
-
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_parent MEDIUMINT(8) NOT NULL AFTER field_cat_name");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_db VARCHAR(200) NOT NULL AFTER field_parent");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_index VARCHAR(200) NOT NULL AFTER field_cat_db");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_field_cats ADD field_cat_class VARCHAR(50) NOT NULL AFTER field_cat_index");
-
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_title VARCHAR(50) NOT NULL AFTER field_id");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_type VARCHAR(25) NOT NULL AFTER field_cat");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_default TEXT NOT NULL AFTER field_type");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_options TEXT NOT NULL AFTER field_default");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_error VARCHAR(50) NOT NULL AFTER field_options");
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."user_fields ADD field_config TEXT NOT NULL AFTER field_order");
-
         $result = dbquery("INSERT INTO ".DB_PREFIX."user_field_cats (field_cat_id, field_cat_name, field_cat_db, field_cat_index, field_cat_class, field_cat_page, field_cat_order) VALUES (5, 'Privacy', '', '', 'entypo shareable', 1, 5)");
 		$result = dbquery("INSERT INTO ".DB_PREFIX."user_fields (field_id, field_name, field_cat, field_required, field_log, field_registration, field_order) VALUES ('', 'user_blacklist', '5', '0', '0', '0', '1'");
 		// Add black list table
@@ -803,6 +800,12 @@ if (str_replace(".", "", $settings['version']) < "90000") {
 		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Septenary' WHERE settings_name='theme'");
 		//User sig issue
 		$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_sig user_sig VARCHAR(255) NOT NULL DEFAULT ''");
+		//user migration tool
+		$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MI', 'members.gif', '".$locale['setup_3057']."', 'migrate.php', '2')");
+		$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
+			while ($data = dbarray($result)) {
+				$result2 = dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".MI' WHERE user_id='".$data['user_id']."'");
+			}
 		// enable a default error handler with .htaccess and create a backup of existing one
 		if (!file_exists(BASEDIR.".htaccess")) {
 			if (file_exists(BASEDIR."_htaccess") && function_exists("rename")) {

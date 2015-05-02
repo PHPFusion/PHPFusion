@@ -605,6 +605,7 @@ if (isset($_POST['uninstall'])) {
 		"('I', 'infusions.gif', '".$locale['setup_3014']."', 'infusions.php', '3')",
 		"('IP', '', '".$locale['setup_3015']."', 'reserved', '3')",
 		"('M', 'members.gif', '".$locale['setup_3016']."', 'members.php', '2')",
+		"('MI', 'members.gif', '".$locale['setup_3057']."', 'migrate.php', '2')",
 		"('P', 'panels.gif', '".$locale['setup_3019']."', 'panels.php', '3')",
 		"('PL', 'permalink.gif', '".$locale['setup_3052']."', 'permalink.php', '3')",
 		"('PI', 'phpinfo.gif', '".$locale['setup_3021']."', 'phpinfo.php', '3')",

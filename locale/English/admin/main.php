@@ -7,13 +7,9 @@ $locale['ac02'] = "User Admin";
 $locale['ac03'] = "System Admin";
 $locale['ac04'] = "Settings";
 $locale['ac05'] = "Infusions";
-
 $locale['ac10'] = "Admin Dashboard";
-
-
 $locale['201'] = "Administrators";
 $locale['202'] = "User Profile Configuration";
-
 $locale['AC'] = "Article Categories";
 $locale['A'] = "Articles";
 $locale['BLOG'] = "Blog";
@@ -28,6 +24,7 @@ $locale['IM'] = "Images";
 $locale['I'] = "Infusions";
 $locale['IP'] = "Infusion Panels";
 $locale['M'] = "Members";
+$locale['MI'] = "Migration Tool";
 $locale['N'] = "News";
 $locale['P'] = "Panels";
 $locale['PH'] = "Photo Albums";
