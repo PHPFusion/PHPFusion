@@ -83,7 +83,7 @@ class BreadCrumbs {
 	 *
 	 * @var bool
 	 */
-	public $isLastClickable = FALSE;
+	private $isLastClickable = FALSE;
 
 	/**
 	 * The class wrapping the breacrumbs
