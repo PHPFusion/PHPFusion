@@ -39,15 +39,14 @@ if (iMEMBER) {
 }
 
 $messages_count = dbquery("SELECT 
-	SUM(if(message_folder='0',1,0)) AS inbox_count,
-	SUM(if(message_folder='1',1,0)) AS outbox_count,
-	SUM(if(message_folder='2',1,0)) AS archive_count,
-	SUM(case when message_read='0' AND message_folder='0' then 1 else 0 end) AS unread_count
+	SUM(message_folder=0) AS inbox_count,
+	SUM(message_folder=1) AS outbox_count,
+	SUM(message_folder=2) AS archive_count,
+	SUM(message_read=0 AND message_folder=0) AS unread_count
 	FROM ".DB_MESSAGES." 
 	WHERE message_to='".$userdata['user_id']."'
 	");
 $messages_count = dbarray($messages_count);
-//var_dump($messages_count);
 
 $inbox_count = (int)$messages_count['inbox_count'];
 $outbox_count = (int)$messages_count['outbox_count'];
