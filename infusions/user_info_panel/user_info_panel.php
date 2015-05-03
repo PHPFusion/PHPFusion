@@ -38,9 +38,22 @@ if (iMEMBER) {
 		openside($locale['UM096'].$userdata['user_name']);
 }
 
-$inbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='0'");
-$outbox_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='1'");
-$archive_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='2'");
+$messages_count = dbquery("SELECT 
+	SUM(if(message_folder='0',1,0)) AS inbox_count,
+	SUM(if(message_folder='1',1,0)) AS outbox_count,
+	SUM(if(message_folder='2',1,0)) AS archive_count,
+	SUM(case when message_read='0' AND message_folder='0' then 1 else 0 end) AS unread_count
+	FROM ".DB_MESSAGES." 
+	WHERE message_to='".$userdata['user_id']."'
+	");
+$messages_count = dbarray($messages_count);
+//var_dump($messages_count);
+
+$inbox_count = (int)$messages_count['inbox_count'];
+$outbox_count = (int)$messages_count['outbox_count'];
+$archive_count = (int)$messages_count['archive_count'];
+$msg_count = (int)$messages_count['unread_count'];
+
 echo "<div class='clearfix'>\n";
 echo "<div class='avatar-row text-center'>\n";
 echo "<div class='pull-left m-r-10'>\n".display_avatar($userdata, '90px')."</div>\n";
@@ -49,7 +62,6 @@ echo "<h4 class='m-t-10 m-b-0'><strong>".$userdata['user_name']."</strong></h4>\
 echo "<small>".getuserlevel($userdata['user_level'])."</small>\n<br/>";
 echo "</div>\n";
 echo "<ul class='user-info-bar'>\n";
-$msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
 echo ($msg_count) ? "<li><a href='".BASEDIR."messages.php?folder=inbox' title='".sprintf($locale['UM085'], $msg_count).($msg_count == 1 ? $locale['UM086'] : $locale['UM087'])."' ><i class='entypo icomment'></i><label style='position:absolute; margin-left:-20px;' class='pointer label label-danger'>$msg_count</label></a>\n</li>\n" : "";
 echo "</ul>\n";
 $result = dbquery("SELECT * FROM ".DB_PREFIX."messages_options WHERE user_id='0'");
