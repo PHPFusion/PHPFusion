@@ -165,11 +165,11 @@ function write_htaccess($site_path) {
 	$htc .= "</IfModule>".PHP_EOL.PHP_EOL;
 	$htc .= "# Disable directory listing".PHP_EOL;
 	$htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
-	$htc .= "ErrorDocument 400 ".$settings['site_path']."error.php?code=400".PHP_EOL;
-	$htc .= "ErrorDocument 401 ".$settings['site_path']."error.php?code=401".PHP_EOL;
-	$htc .= "ErrorDocument 403 ".$settings['site_path']."error.php?code=403".PHP_EOL;
-	$htc .= "ErrorDocument 404 ".$settings['site_path']."error.php?code=404".PHP_EOL;
-	$htc .= "ErrorDocument 500 ".$settings['site_path']."error.php?code=500".PHP_EOL;
+	$htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
+	$htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
+	$htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
+	$htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
+	$htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
 	file_put_contents(BASEDIR.".htaccess", $htc);
 }
 
