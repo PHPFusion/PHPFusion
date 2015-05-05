@@ -16,14 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message, $type = "plain", $cc = "", $bcc = "") {
 	global $settings, $locale;
-	require_once INCLUDES."class.phpmailer.php";
+
+	require_once CLASSES."PHPMailer/PHPMailerAutoload.php";
 	$mail = new PHPMailer();
-	if (file_exists(INCLUDES."language/phpmailer.lang-".$locale['phpmailer'].".php")) {
-		$mail->SetLanguage($locale['phpmailer'], INCLUDES."language/");
+	if (file_exists(CLASSES."PHPMailer/language/phpmailer.lang-".$locale['phpmailer'].".php")) {
+		$mail->SetLanguage($locale['phpmailer'], CLASSES."PHPMailer/language/");
 	} else {
-		$mail->SetLanguage("en", INCLUDES."language/");
+		$mail->SetLanguage("en", CLASSES."PHPMailer/language/");
 	}
 	if (!$settings['smtp_host']) {
 		$mail->IsMAIL();
@@ -73,6 +75,7 @@ function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message,
 
 function sendemail_template($template_key, $subject, $message, $user, $receiver, $thread_url = "", $toemail, $sender = "", $fromemail = "") {
 	global $settings;
+
 	$data = dbarray(dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='".$template_key."' LIMIT 1"));
 	$message_subject = $data['template_subject'];
 	$message_content = $data['template_content'];
