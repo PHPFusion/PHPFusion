@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+use PHPFusion\Database\DatabaseFactory;
+
 ini_set('display_errors', 1);
 define('BASEDIR', '../');
 require_once 'setup_includes.php';
@@ -60,16 +62,25 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 	$db_pass = stripinput(trim(strval(filter_input(INPUT_POST, 'db_pass')))) ? : $db_pass;
 	$db_name = stripinput(trim(strval(filter_input(INPUT_POST, 'db_name')))) ? : $db_name;
 	$db_prefix = stripinput(trim(strval(filter_input(INPUT_POST, 'db_prefix')))) ? : $db_prefix;
+	require_once INCLUDES."sqlhandler.inc.php";
+	//New database handler functions
 }
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
 //require_once INCLUDES."output_handling_include.php";
 include_once INCLUDES."dynamics/dynamics.inc.php";
-require_once INCLUDES."sqlhandler.inc.php";
-//New database handler functions
-//require_once INCLUDES."db_handlers/all_functions_include.php";
-//DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+if ($db_host && $db_user && $db_name && $db_pass) {
+	DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+	DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
+		'host' => $db_host,
+		'user' => $db_user,
+		'password' => $db_pass,
+		'database' => $db_name,
+		'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
+	));
+}
+require_once INCLUDES."db_handlers/all_functions_include.php";
 //Old database handler functions
-require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
+//require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
 require_once LOCALE.LOCALESET.'global.php';
 $dynamics = new dynamics();
 $dynamics->boot();
