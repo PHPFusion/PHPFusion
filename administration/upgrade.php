@@ -37,7 +37,9 @@ opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 
 if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing purposes
-	echo "<form name='upgradeform' type='post' action='".FUSION_SELF.$aidlink."'>";
+	//echo "<form id='upgradeform' name='upgradeform' type='post' action='".FUSION_SELF.$aidlink."'>";
+	// Might not have required resources(SECRET_KEY etc.) to call this function in case of an upgrade from 7 to 9
+	echo openform('upgradeform', 'post', FUSION_SELF.$aidlink); 
 	$content = "";
 	switch (filter_input(INPUT_POST, 'stage', FILTER_VALIDATE_INT) ? : 1) {
 		case 1:
