@@ -34,7 +34,32 @@ register_shutdown_function(function() {
 				unset($log[$connectionid]);
 			}
 		}
-		print_p($log);
+		//print_p($log);
+
+		$html = "<a href='#queries' class='queries-btn btn btn-primary pull-left'>View Queries</a>\n";
+		$html .= "<div id='queries' class='well queries-log' style='display: none'>\n";
+		foreach ($log as $connID => $queries) {
+			$queries_time = 0;
+			$queries_log = '';
+			$html .= "Database connection ID: '<strong>".$connID."</strong>'<br/>\n";
+
+			foreach ($queries as $key => $query) {
+				$queries_time = $queries_time + $query[0];
+				$queries_log .= "<strong>#".($key + 1)." Time: ".$query[0]."</strong><br/>\n".trim(htmlspecialchars($query[1], ENT_QUOTES, 'utf-8'))."<hr/>\n";
+			}
+
+			$html .= "Total time taken by queries to execute in this connection: <strong>".$queries_time."</strong> seconds<br/>\n";
+			$html .= "<code>".$queries_log."</code>\n";
+		}
+		$html .= "</div>\n";
+		$html .= "<style>.queries-log code {white-space: normal} .queries-log hr {border-color: #ccc}</style>\n";
+		$html .= "<script>$('.queries-btn').click(function(){
+			$(this).hide();
+			$('.queries-log').toggle();
+		})</script>";
+
+		echo $html;
+
 	}
 });
 

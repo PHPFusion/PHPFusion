@@ -110,26 +110,6 @@ if (!isset($fusion_jquery_tags)) {
 // Load layout
 require_once __DIR__.(defined('ADMIN_PANEL') ? '/admin_layout.php' : '/layout.php');
 
-// Output queries debug info
-define('QUERIES_DEBUG', FALSE);
-if (QUERIES_DEBUG) {
-	$time = 0;
-	$queries = '';
-	foreach ($mysql_queries_time as $key => $value) {
-		$time = $time+$value[0];
-		$queries .= "#$key Time: ".trim($value[0])."<br/>".$value[1]."<hr/>";
-	}
-	replace_in_output("</body>", "</body><a href='#queries' class='queries-btn btn btn-primary pull-left'>View Queries</a>
-	<div id='queries' class='well queries-log' style='display: none'>Total time taken by queries to execute: ".$time." seconds<br/><br/>
-	<pre>".$queries."</pre>
-	</div>
-	<style>.queries-log pre {white-space: normal} .queries-log hr {border-color: #ccc}</style>
-	<script>$('.queries-btn').click(function(){
-		$(this).hide();
-		$('.queries-log').toggle();
-	})</script>");
-}
-
 // Catch the output
 $output = ob_get_contents(); //ob_start() called in maincore
 if (ob_get_length() !== FALSE) {
