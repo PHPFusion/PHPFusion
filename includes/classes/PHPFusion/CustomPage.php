@@ -89,7 +89,7 @@ class CustomPage {
 				'page_access' => form_sanitizer($_POST['page_access'], 0, 'page_access'),
 				'page_content' => addslash($_POST['page_content']),
 				'page_keywords' => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
-				'page_language' => form_sanitizer($_POST['page_language'], '', 'page_language'),
+				'page_language' => implode('.', isset($_POST['page_language']) ? sanitize_array($_POST['page_language']) : array()),
 				'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
 				'page_allow_ratings' => isset($_POST['page_allow_ratings']) ? 1 : 0,
 			);
@@ -372,7 +372,11 @@ class CustomPage {
 
 		openside();
 		if (multilang_table("CP")) {
-			echo form_select('page_language', $locale['global_ML100'], fusion_get_enabled_languages(), $data['page_language'], array('width'=>'100%'));
+//			echo form_select('page_language', $locale['global_ML100'], fusion_get_enabled_languages(), $data['page_language'], array('width'=>'100%'));
+			$languages = !empty($data['page_language']) ? explode('.', $data['page_language']) : array();
+			foreach(fusion_get_enabled_languages() as $language) {
+				echo form_checkbox('page_language[]', $language, in_array($language, $languages) ? 1 : 0, array('class'=>'m-b-0', 'value'=>$language, 'input_id' => 'page_lang-'.$language));
+			}
 		} else {
 			echo form_hidden('', 'page_language', 'page_language', $data['page_language']);
 		}
