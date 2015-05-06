@@ -198,10 +198,11 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
 }
 
 // Language detector for multilingual content hub, Redirect´s to the correct language if it is not set
-if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) && count($enabled_languages) > 1 && (!empty($_GET))) { 
-$data = dbarray(dbquery("SELECT news_language FROM ".DB_NEWS." WHERE news_id='".$_GET['readmore']."'"));
+//if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) && count($enabled_languages) > 1 && (!empty($_GET))) { 
+if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) && count($enabled_languages) > 1 && (isset($_GET['readmore']) && isnum($_GET['readmore']))) { 
+$data = dbarray(dbquery("SELECT news_language FROM ".DB_NEWS." WHERE news_id='".stripinput($_GET['readmore'])."'"));
 	if ($data['news_language'] != LANGUAGE) {
-		redirect(BASEDIR."news.php?readmore=".$_GET['readmore']."&amp;lang=".$data['news_language']);
+		redirect(BASEDIR."news.php?readmore=".stripinput($_GET['readmore'])."&amp;lang=".$data['news_language']);
 	}
 }
 
