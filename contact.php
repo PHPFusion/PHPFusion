@@ -17,21 +17,42 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
+
 include LOCALE.LOCALESET."contact.php";
+
 add_to_title($locale['global_200'].$locale['400']);
+
+$input = array(
+	'mailname'	=> '',
+	'email'		=> '',
+	'subject'	=> '',
+	'message'	=> '',
+	'captcha_code' => '',
+	);
+
 if (isset($_POST['sendmessage'])) {
-	$error = "";
-	$mailname = form_sanitizer($_POST['mailname'], '', 'mailname');
-	$email = form_sanitizer($_POST['email'], '', 'email');
-	$subject = isset($_POST['subject']) ? substr(str_replace(array("\r", "\n", "@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 50) : ""; // most unique in the entire CMS. keep.
-	$subject = form_sanitizer($subject, '', 'subject');
-	$message = form_sanitizer($_POST['message'], '', 'message');
-	$captcha_code = form_sanitizer($_POST['captcha_code'], '', 'captcha_code');
+
+	foreach ($input as $key => $value) {
+		if (isset($_POST[$key])) {
+			// Subject needs 'special' treatment
+			if ($key == 'subject') {
+				$input['subject'] = substr(str_replace(array("\r", "\n", "@"), "", descript(stripslash(trim($_POST['subject'])))), 0, 128); // most unique in the entire CMS. keep.
+				$input['subject'] = form_sanitizer($input['subject'], $input[$key], $key);
+			// Others don't
+			} else {
+				$input[$key] = form_sanitizer($_POST[$key], $input[$key], $key);
+			}
+		// Input not posted, fallback to the default
+		} else {
+			$input[$key] = form_sanitizer($input[$key], $input[$key], $key);
+		}
+	}
+
 	$_CAPTCHA_IS_VALID = FALSE;
 	include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php"; // Dynamics need to develop Captcha. Before that, use method 2.
 	if ($_CAPTCHA_IS_VALID == FALSE) {
 		$defender->stop();
-		$defender->addNotice($locale['424']);
+		addNotice('warning', $locale['424']);
 	}
 	if (!defined('FUSION_NULL')) {
 		require_once INCLUDES."sendmail_include.php";
@@ -43,20 +64,20 @@ if (isset($_POST['sendmessage'])) {
 		if (dbrows($template_result)) {
 			$template_data = dbarray($template_result);
 			if ($template_data['template_active'] == "1") {
-				if (!sendemail_template("CONTACT", $subject, $message, "", $template_data['template_sender_name'], "", $template_data['template_sender_email'], $mailname, $email)) {
+				if (!sendemail_template("CONTACT", $input['subject'], $input['message'], "", $template_data['template_sender_name'], "", $template_data['template_sender_email'], $input['mailname'], $input['email'])) {
 					$defender->stop();
-					$defender->addNotice($locale['425']);
+					addNotice('warning', $locale['425']);
 				}
 			} else {
-				if (!sendemail($settings['siteusername'], $settings['siteemail'], $mailname, $email, $subject, $message)) {
+				if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
 					$defender->stop();
-					$defender->addNotice($locale['425']);
+					addNotice('warning', $locale['425']);
 				}
 			}
 		} else {
-			if (!sendemail($settings['siteusername'], $settings['siteemail'], $mailname, $email, $subject, $message)) {
+			if (!sendemail($settings['siteusername'], $settings['siteemail'], $input['mailname'], $input['email'], $input['subject'], $input['message'])) {
 				$defender->stop();
-				$defender->addNotice($locale['425']);
+				addNotice('warning', $locale['425']);
 			}
 		}
 		opentable($locale['400']);
@@ -66,13 +87,16 @@ if (isset($_POST['sendmessage'])) {
 }
 opentable($locale['400']);
 echo $locale['401']."<br /><br />\n";
-echo openform('userform', 'post', FUSION_SELF, array('max_tokens' => 1));
+echo openform('contactform', 'post', FUSION_SELF, array('max_tokens' => 1));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
-echo form_text('mailname', $locale['402'], '', array('required' => 1, 'error_text' => $locale['420'], 'max_length' => 50));
-echo form_text('email', $locale['403'], '', array('required' => 1, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 50));
-echo form_text('subject', $locale['404'], '', array('required' => 1, 'error_text' => $locale['422']));
-echo form_textarea('message', $locale['405'], '', array('required' => 1, 'error_text' => $locale['423']));
+
+echo form_text('mailname', $locale['402'], $input['mailname'], array('required' => 1, 'error_text' => $locale['420'], 'max_length' => 64));
+echo form_text('email', $locale['403'], $input['email'], array('required' => 1, 'error_text' => $locale['421'], 'type' => 'email', 'max_length' => 64));
+echo form_text('subject', $locale['404'], $input['subject'], array('required' => 1, 'error_text' => $locale['422'], 'max_length' => 64));
+// TODO: Add character count
+echo form_textarea('message', $locale['405'], $input['message'], array('required' => 1, 'error_text' => $locale['423'], 'max_length' => 128));
+
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body clearfix'>\n";
 echo "<div class='row m-0'>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6 p-b-20'>\n";
