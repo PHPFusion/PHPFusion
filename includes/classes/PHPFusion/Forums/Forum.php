@@ -218,7 +218,7 @@ class Forum {
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
 				LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
-				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND ".groupaccess('f2.forum_access')."
+				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
 				ORDER BY forum_cat ASC");
 				
@@ -313,13 +313,13 @@ class Forum {
 								p.forum_poll_title,
 								count(v.post_id) AS vote_count
 								FROM ".DB_FORUM_THREADS." t
-								INNER JOIN ".DB_FORUMS." forum on t.forum_id = t.forum_id
+								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
 								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
 								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
-								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND thread_hidden='0' AND ".groupaccess('forum.forum_access')." $sql_condition
+								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
 								GROUP BY t.thread_id $sql_order LIMIT ".$_GET['rowstart'].", ".$this->forum_info['threads_per_page']."");
 
 							if (dbrows($t_result)>0) {

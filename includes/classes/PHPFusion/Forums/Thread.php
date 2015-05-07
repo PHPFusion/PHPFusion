@@ -380,18 +380,16 @@ private function set_PostInfo() {
 			// Print Thread
 			$pdata['print'] = array('link'=>BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$pdata['post_id']."&amp;nr=".($i+$_GET['rowstart']), 'name'=>$locale['forum_0179']);
 			// Website
-			$pdata['user_web'] = '';
-			if (isset($pdata['user_web']) && $pdata['user_web'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
-				$pdata['user_web'] = array('link'=>$pdata['user_web'], 'name'=>$locale['forum_0364']);
+			if ($pdata['user_web'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
+				$user_web_url_prefix = !strstr($pdata['user_web'], "http://") ? "http://" : "";
+				$pdata['user_web'] = array('link'=>$user_web_url_prefix.$pdata['user_web'], 'name'=>$locale['forum_0364']);
 			}
 			// PM link
-			$pdata['user_message'] = '';
 			if (iMEMBER && $pdata['user_id'] != $userdata['user_id'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
 				$pdata['user_message'] = array('link'=>BASEDIR.'messages.php?msg_send='.$pdata['user_id'], 'name'=>$locale['send_message']);
 			}
 			// User Sig
-			$pdata['user_sig'] = '';
-			if ($pdata['post_showsig'] && isset($pdata['user_sig']) && $pdata['user_sig'] && $pdata['user_status'] != 6 && $pdata['user_status'] != 5) {
+			if ($pdata['user_sig'] && isset($pdata['post_showsig']) && $pdata['user_status'] != 6 && $pdata['user_status'] != 5) {
 				$pdata['user_sig'] = nl2br(parseubb(parsesmileys(stripslashes($pdata['user_sig'])), "b|i|u||center|small|url|mail|img|color"));
 			}
 
@@ -500,7 +498,6 @@ private function set_PostInfo() {
 
 			// Post Date
 			$pdata['post_date'] = $locale['forum_0524']." ".timer($pdata['post_datestamp'])." - ".showdate('forumdate', $pdata['post_datestamp']);
-
 			$this->thread_info['post_items'][$pdata['post_id']] = $pdata;
 			$i++;
 		}
