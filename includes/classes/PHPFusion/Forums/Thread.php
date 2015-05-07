@@ -681,7 +681,7 @@ private function set_ThreadAttach() {
  */
 private function set_ForumPostDB() {
 	global $locale, $settings, $userdata;
-	if (iMEMBER && Functions::verify_forum($this->thread_info['forum_id'])) {
+	if (Functions::verify_forum($this->thread_info['forum_id'])) {
 		$info = $this->thread_info['thread'];
 		if ($info['forum_type'] == 1) redirect(FORUM.'index.php');
 		$info['lock_edit'] = $settings['forum_edit_lock'] == 1 ? TRUE : FALSE;
