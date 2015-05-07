@@ -134,7 +134,7 @@ abstract class AbstractDatabaseDriver
 	public static function getGlobalQueryCount() {
 		$count = 0;
 		foreach (self::getGlobalQueryLog() as $connectionID => $queries) {
-			$count = count($queries);
+			$count = $count + count($queries);
 		}
 
 		return $count;
