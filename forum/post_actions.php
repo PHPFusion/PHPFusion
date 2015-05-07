@@ -309,6 +309,9 @@ if ($executable && iMEMBER) {
 	if (isset($_POST['postreply']) && checkgroup($info['forum_reply'])) {
 		if ($data['post_message']) {
 			require_once INCLUDES."flood_include.php";
+			// If flood control passes but FUSION_NULL is defined then any other action passes but
+			// the ones that individually check for FUSION_NULL won't resulting in incomplete data
+			// being inserted in the database, what's the reasoning behind that? *Confused*
 			if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
 				if ($info['forum_merge'] && $data['thread_lastuser'] == $userdata['user_id']) {
 					$mergeData = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
@@ -342,10 +345,10 @@ if ($executable && iMEMBER) {
 			} else {
 				// flood control error.
 				$defender->stop();
-				$defender->addNotice('Flood control nice message.');
+				//addNotice('warning', 'Flood control nice message.');
 			}
 		} else {
-			print_p('there are no post messages');
+			addNotice('info', 'Please enter a message in the reply'); // TODO: localise
 		}
 	}
 
