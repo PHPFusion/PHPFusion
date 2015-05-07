@@ -187,6 +187,7 @@ $locale['setup_3053'] = "Інтернет магазин";
 $locale['setup_3054'] = "Розділи блогу";
 $locale['setup_3055'] = "Блог";
 $locale['setup_3056'] = "Тема";
+$locale['setup_3057'] = "Міграція";
 
 //Multilanguage table rights
 $locale['setup_3200'] = "Статті";
