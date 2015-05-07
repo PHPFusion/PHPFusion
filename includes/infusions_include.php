@@ -78,7 +78,7 @@ if (!function_exists('filename_exists')) {
 			$prefix = $parts['filename'].$hash;
 			$new_file = $prefix.$parts['extension'];
 			$i = 0;
-			while (file_exists($new_file)) {
+			while (file_exists($directory.$new_file)) {
 				$new_file = $prefix.'_'.++$i.$parts['extension'];
 			}
 		}
