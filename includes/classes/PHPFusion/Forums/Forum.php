@@ -215,14 +215,13 @@ class Forum {
 				'Ascending' => $orderLink.'&amp;order=ascending'
 			);
 
-
 			 // Load forum
-			$result = dbquery("SELECT f.forum_id, f.forum_name, f.forum_lastpost, f.forum_postcount,
-				f.forum_threadcount, f.forum_lastuser, f.forum_access,
-				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, t.thread_postcount, t.thread_views, t.thread_lastuser, t.thread_poll, 
+				$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
+				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
 				u.user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".DB_FORUMS." f
-				LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
+				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
+				LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
