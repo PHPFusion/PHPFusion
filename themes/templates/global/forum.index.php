@@ -441,6 +441,7 @@ if (!function_exists('render_post_item')) {
 
 			echo "<hr /><div class='forum_sig'>".$data['user_sig']."</div>";
 			echo "<br /> <div class='edit_reason'>".$data['post_edit_reason']."</div>";
+			echo $data['post_attachments'];
 
 		echo "</div>\n";
 		echo "</div>";
