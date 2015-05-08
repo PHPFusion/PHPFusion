@@ -248,6 +248,9 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 			$content .= "<input type='submit' name='upgrade_database' value='Upgrade Database' class='button btn btn-primary'><br /><br />\n";
 			
 			if (1==2 && isset($_POST['upgrade_database'])) { // 1==2 to disable it for testing purposes
+				// New access rights need a larger table for users
+				$result = dbquery("ALTER TABLE ".DB_USERS." CHANGE user_level user_level TINYINT(4) NOT NULL DEFAULT '-101'");
+
 				// Modify All Users Level > 0
 				$result = dbquery("SELECT user_id, user_level FROM ".DB_USERS."");
 				if (dbrows($result)>0) {
@@ -257,6 +260,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						}
 					}
 				}
+				
 				// change link_visibility
 				$result = dbquery("ALTER TABLE ".DB_SITE_LINKS." CHANGE link_visibility link_visibility CHAR(4) NOT NULL DEFAULT ''");
 				$link_result = dbquery("SELECT link_id, link_visibility FROM ".DB_SITE_LINKS."");
@@ -884,10 +888,17 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Septenary' WHERE settings_name='theme'");
 				//User sig issue
 				$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_sig user_sig VARCHAR(255) NOT NULL DEFAULT ''");
-
+				// New access rights need a larger table for forum ranks
+				$result = dbquery("ALTER TABLE ".DB_FORUM_RANKS." CHANGE rank_apply rank_apply TINYINT(4) NOT NULL DEFAULT '-101'");
+				// Modify All Rank Levels 
+				$result = dbquery("SELECT rank_id, rank_apply FROM ".DB_FORUM_RANKS."");
+				if (dbrows($result)>0) {
+					while ($data = dbarray($result)) {
+							dbquery("UPDATE ".DB_FORUM_RANKS." SET rank_apply ='-".$data['rank_apply']."' WHERE rank_id='".$data['rank_id']."' ");
+					}
+				}
 				//Set the new version
 				dbquery("UPDATE ".DB_SETTINGS." SET settings_value='9.00.00' WHERE settings_name='version'");
-
 				addNotice('success', 'The database was upgraded');
 			}
 			break;
