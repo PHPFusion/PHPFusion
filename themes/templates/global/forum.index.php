@@ -352,12 +352,14 @@ if (!function_exists('render_thread')) {
 			echo "</div>\n";
 			echo "</div>\n";
 
-			// buttons
+			// Thread buttons, top
+		if (iMEMBER && $info['permissions']['can_post']) {
 			echo "<div class='pull-right'>\n";
-				echo "<a class='btn btn-primary btn-sm m-r-5 ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['name']."</a>\n";
-				echo "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
-				echo "</div>\n";
-
+			echo "<a class='btn btn-primary btn-sm m-r-5 ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['name']."</a>\n";
+			echo "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
+			echo "</div>\n";
+		}
+		
 			// filter UI vars
 			$icon = array(
 				'fa fa-sort-alpha-asc fa-fw',
@@ -390,15 +392,18 @@ if (!function_exists('render_thread')) {
 			echo "<div id='forum_bottom' class='text-left m-b-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
 			// Moderation Panel
 			if (iMOD) echo $info['mod_form'];
-			// buttons
-			echo "<div class='text-right m-t-20'>\n";
-			echo "<a class='btn btn-primary btn-sm m-r-5 ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['name']."</a>\n";
-			echo "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
-			echo "</div>\n";
+
+			// Thread buttons, bottom
+			if (iMEMBER && $info['permissions']['can_post']) {
+				echo "<div class='text-right m-t-20'>\n";
+				echo "<a class='btn btn-primary btn-sm m-r-5 ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['name']."</a>\n";
+				echo "<a class='btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
+				echo "</div>\n";
+			}
 			echo $info['close_post_form'];
 			echo $info['quick_reply_form'];
-				echo "</div>\n";
-				echo "</div>\n";
+			echo "</div>\n";
+			echo "</div>\n";
 			echo "</div>\n";
 		} else {
 			echo "<div class='text-center well'>".$locale['forum_0270']."</div>\n";
