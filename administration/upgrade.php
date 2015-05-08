@@ -769,9 +769,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				$result = dbquery("ALTER TABLE ".DB_PREFIX."eshop_cats ADD cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['locale']."' AFTER cat_order");
 				$result = dbquery("RENAME TABLE `".DB_PREFIX."eshop_cupons` TO `".DB_PREFIX."eshop_coupons`");		
 
-				// Modify User Table
-				$result = dbquery("ALTER TABLE ".DB_PREFIX."users CHANGE user_level user_level TINYINT(1) NOT NULL DEFAULT ''");
-
 				// Email templates admin section
 				$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 				if ($result) {
