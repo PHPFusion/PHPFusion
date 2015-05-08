@@ -102,6 +102,7 @@ if ($executable && iMEMBER) {
 			$post_editreason = form_sanitizer($_POST['post_editreason'], '', 'post_editreason');
 
 			$thread_lastpost = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
+
 			if ($thread_lastpost['post_id'] == $_GET['post_id'] && time()-$data['post_datestamp'] < 5*60) {
 				$post_edittime = 0;
 				$post_editreason = '';
@@ -309,11 +310,9 @@ if ($executable && iMEMBER) {
 	if (isset($_POST['postreply']) && checkgroup($info['forum_reply'])) {
 		if ($data['post_message']) {
 			require_once INCLUDES."flood_include.php";
-			// If flood control passes but FUSION_NULL is defined then any other action passes but
-			// the ones that individually check for FUSION_NULL won't resulting in incomplete data
-			// being inserted in the database, what's the reasoning behind that? *Confused*
 			if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
-				if ($info['forum_merge'] && $data['thread_lastuser'] == $userdata['user_id']) {
+				$lastpost_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
+				if ($info['forum_merge'] && $lastpost_author['post_author'] == $userdata['user_id']) {
 					$mergeData = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
 					$data['post_message'] = $mergeData['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$data['post_message'];
 					$data['post_edittime'] = time();
@@ -345,16 +344,13 @@ if ($executable && iMEMBER) {
 			} else {
 				// flood control error.
 				$defender->stop();
-				//addNotice('warning', 'Flood control nice message.');
 			}
 		} else {
 			addNotice('info', 'Please enter a message in the reply'); // TODO: localise
 		}
 	}
 
-	// this need to drop..
 	elseif (isset($_POST['add_poll_option'])) {
-		//$is_mod = iMOD && iUSER < "102" ? true : false;
 		if (isset($_POST['add_poll_option'])) {
 			if (count($data['poll_opts'])) {
 				array_push($data['poll_opts'], '');
