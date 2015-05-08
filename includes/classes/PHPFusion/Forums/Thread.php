@@ -444,8 +444,7 @@ private function set_PostInfo() {
 				$this->edit_reason = true;
 			}
 
-			// Attachments
-			// attachments - $image and $files
+			// Attachments - $image and $files
 			$pdata['attach-files-count'] = 0;
 			$pdata['attach-image-count'] = 0;
 			$pdata['post_attachments'] = '';
@@ -486,9 +485,9 @@ private function set_PostInfo() {
 				$pdata['attach-image-count'] = $i_image;
 			}
 
-			/**
-			 * Custom Post Message Link/Buttons
-			 */
+			
+			// Custom Post Message Link/Buttons
+			
 			$pdata['post_links']  = '';
 			$pdata['post_links'] .= !empty($pdata['post_quote']) ? "<a class='btn btn-xs btn-default' title='".$pdata['post_quote']['name']."' href='".$pdata['post_quote']['link']."'>".$pdata['post_quote']['name']."</a>\n" : '';
 			$pdata['post_links'] .= !empty($pdata['post_edit']) ? "<a class='btn btn-xs btn-default' title='".$pdata['post_edit']['name']."' href='".$pdata['post_edit']['link']."'>".$pdata['post_edit']['name']."</a>\n" : '';
@@ -504,15 +503,12 @@ private function set_PostInfo() {
 	}
 }
 
-/**
- * Quick Reply Form Sample
- */
+
+ // Quick Reply Form Sample
+ 
 private function set_QuickReply() {
 	global $userdata, $settings, $locale;
-	/**
-	 * Quick Reply Form
-	 */
-	//($this->thread_info['thread']['thread_locked'] && (!iMOD or !iSUPERADMIN))
+
 	if ($this->thread_info['permissions']['can_reply'] && $this->thread_info['thread']['forum_quick_edit']) {
 
 		if (isset($_POST['postreply'])) {
@@ -556,7 +552,6 @@ private function set_QuickReply() {
 		$html .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
 		$html .= form_textarea('post_message', $locale['forum_0601'], '', array('bbcode' => 1, 'required' => 1, 'autosize'=>1, 'preview'=>1, 'form_name'=>'qr_form'));
 		$html .= "<div class='m-t-10 pull-right'>\n";
-		//$html .= $settings['site_seo'] ? '' : form_button($locale['forum_0173'], 'previewreply', 'previewreply', $locale['forum_0173'], array('class' => 'btn-default btn-sm m-r-10')); // post lost.
 		$html .= form_button('postreply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
 		$html .= "</div>\n";
 		$html .= "<div class='overflow-hide'>\n";
@@ -586,11 +581,9 @@ private function set_ThreadButtons(){
 
 private function set_ThreadPolls() {
 	global $userdata, $settings, $locale;
-	/**
-	 * Polling Access
-	 */
+
 	if ($this->thread_info['thread']['thread_poll'] && $this->thread_info['permissions']['can_view_poll']) {
-		// thread has poll and user have access to view poll
+
 		if ($this->thread_info['permissions']['can_vote_poll']) {
 			$poll_result = dbquery("SELECT tfp.forum_poll_title, tfp.forum_poll_votes, tfv.forum_vote_user_id
 				FROM ".DB_FORUM_POLLS." tfp
@@ -601,9 +594,8 @@ private function set_ThreadPolls() {
 			$poll_result = dbquery("SELECT tfp.forum_poll_title, tfp.forum_poll_votes FROM ".DB_FORUM_POLLS." tfp WHERE tfp.thread_id='".$_GET['thread_id']."'");
 		}
 		if (dbrows($poll_result) > 0) {
-			// poll has options
 			$this->thread_info['poll'] = dbarray($poll_result);
-			// get the options
+
 			$p_options = dbquery("SELECT forum_poll_option_votes, forum_poll_option_text
 				FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."'
 				ORDER BY forum_poll_option_id ASC
@@ -616,10 +608,8 @@ private function set_ThreadPolls() {
 				}
 			}
 
-			// if voted, cannot vote
 			$this->thread_info['permissions']['can_vote_poll'] = isset($this->thread_info['poll']['forum_vote_user_id']) ? 0 : 1;
 			if ((isset($_POST['poll_option']) && isnum($_POST['poll_option']) && $_POST['poll_option'] <= $this->thread_info['poll']['max_option_id']) && $this->thread_info['permissions']['can_vote_poll'] && !defined('FUSION_NULL')) {
-				/** @noinspection PhpUnusedLocalVariableInspection */
 				dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_votes=forum_poll_option_votes+1 WHERE thread_id='".$_GET['thread_id']."' AND forum_poll_option_id='".$_POST['poll_option']."'");
 				dbquery("UPDATE ".DB_FORUM_POLLS." SET forum_poll_votes=forum_poll_votes+1 WHERE thread_id='".$_GET['thread_id']."'");
 				dbquery("INSERT INTO ".DB_FORUM_POLL_VOTERS." (thread_id, forum_vote_user_id, forum_vote_user_ip, forum_vote_user_ip_type) VALUES ('".$this->thread_info['thread_id']."', '".$userdata['user_id']."', '".USER_IP."', '".USER_IP_TYPE."')");
@@ -628,7 +618,7 @@ private function set_ThreadPolls() {
 
 			$html = '';
 			if ($this->thread_info['permissions']['can_vote_poll']) {
-				$html = openform('voteform', 'voteform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."viewthread.php?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread_id'], array('notice'=>0, 'downtime'=>1));
+				$html = openform('voteform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."viewthread.php?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread_id'], array('notice'=>0, 'downtime'=>1));
 			}
 			$html .= "<span class='text-bigger strong display-inline-block m-b-10'><i class='entypo chart-pie'></i>".$this->thread_info['poll']['forum_poll_title']."</span>\n";
 			$html .= "<hr class='m-t-0 m-b-10'/>\n";
@@ -658,9 +648,8 @@ private function set_ThreadPolls() {
 	}
 }
 
-/**
- * Forum Attachment Access - this have to move into post query perhaps.
- */
+// Forum Attachment Access - this have to move into post query perhaps.
+ 
 private function set_ThreadAttach() {
 	if ($this->thread_info['permissions']['can_download_attach']) {
 		$a_result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".$this->thread_info['thread_id']."' ORDER BY post_id ASC");
@@ -685,7 +674,6 @@ private function set_ForumPostDB() {
 		$info = $this->thread_info['thread'];
 		if ($info['forum_type'] == 1) redirect(FORUM.'index.php');
 		$info['lock_edit'] = $settings['forum_edit_lock'] == 1 ? TRUE : FALSE;
-
 		if (isset($_GET['action'])) {
 			switch ($_GET['action']) {
 				case 'voteup':
@@ -698,12 +686,6 @@ private function set_ForumPostDB() {
 						set_forumVotes($info, -1);
 					}
 					break;
-				//case 'newthread':
-				//	$data['new'] = 1;
-				//	add_breadcrumb(array('link' => FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title' => 'New Thread'));
-				//	include "post_actions.php";
-				//	postform($data, $info);
-				//	break;
 				case 'reply':
 					if (checkgroup($info['forum_reply']) && $this->thread_info['thread_id']) {
 						$result = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_id='".$this->thread_info['thread_id']."' ".(iMOD || iSUPERADMIN ? '' : "AND thread_locked = '0'")." AND thread_hidden='0'");
@@ -736,7 +718,6 @@ private function set_ForumPostDB() {
 					break;
 				case 'edit':
 					if (checkgroup($info['forum_reply']) && $this->thread_info['thread_id'] && isset($this->thread_info['post_items'][$this->thread_info['post_id']])) {
-						// fetch data.
 						$result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
 							FROM ".DB_FORUM_POSTS." tp
 							INNER JOIN ".DB_FORUM_THREADS." tt on tp.thread_id=tt.thread_id
@@ -745,27 +726,21 @@ private function set_ForumPostDB() {
 							");
 						if (dbrows($result) > 0) {
 							$data = dbarray($result);
-							// no edit except author, mod or superadmin.
 							if ($userdata['user_id'] != $data['post_author'] && !iMOD && !iSUPERADMIN) {
 								redirect(FORUM.'index.php');
 							}
-							// no edit if locked
 							if ($data['post_locked'] && !iMOD) {
 								redirect("postify.php?post=edit&error=5&forum_id=".$this->thread_info['forum_id']."&thread_id=".$this->thread_info['thread_id']."&post_id=".$this->thread_info['post_id']);
 							}
-							// no edit if time limit reached
 							if (!iMOD && ($settings['forum_edit_timelimit'] > 0 && time()-$settings['forum_edit_timelimit']*60 > $data['post_datestamp'])) {
 								redirect(FORUM."postify.php?post=edit&error=6&forum_id=".$this->thread_info['forum_id']."&thread_id=".$this->thread_info['thread_id']."&post_id=".$this->thread_info['post_id']);
 							}
-							// if forum edit locked, only can edit the last post unless you are the moderator.
 							$last_post = dbarray(dbquery("SELECT post_id
 													FROM ".DB_FORUM_POSTS."
 													WHERE thread_id='".$this->thread_info['thread_id']."' AND forum_id='".$this->thread_info['forum_id']."' AND post_hidden='0'
 													ORDER BY post_datestamp DESC LIMIT 1"));
-							// EDIT CHECK
 							if (iMOD || !$data['thread_locked'] && (($info['forum_edit_lock'] && $last_post['post_id'] == $data['post_id'] && $userdata['user_id'] == $data['post_author']) || (!$info['forum_edit_lock'] && $userdata['user_id'] == $data['post_author']))) {
 								$data['edit'] = 1;
-								// Attachments Info
 								if ($info['forum_attach'] && checkgroup($info['forum_attach'])) {
 									$result = dbquery("SELECT attach_id, attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$this->thread_info['post_id']."'");
 									$counter = 0;
@@ -777,7 +752,6 @@ private function set_ForumPostDB() {
 										$info['attachmax_count'] = ($settings['attachmax_count']-$counter <= 0 ? "-2" : $settings['attachmax_count']-$counter);
 									}
 								}
-								// Poll Data
 								if ($info['forum_poll'] && checkgroup($info['forum_poll'])) {
 									if ($data['thread_poll'] && ($data['post_author'] == $data['thread_author']) && ($userdata['user_id'] == $data['thread_author'] || iSUPERADMIN || iMOD)) {
 										$result = dbquery("SELECT * FROM ".DB_FORUM_POLLS." WHERE thread_id='".$this->thread_info['thread_id']."'");
@@ -802,7 +776,7 @@ private function set_ForumPostDB() {
 						}
 					}
 					break;
-			} // end switch
+			} 
 		}
 	} else {
 		redirect(FORUM.'index.php');
