@@ -146,7 +146,7 @@ if (!function_exists('render_forum_item_type')) {
 		}
 		echo "<div class='pull-left m-r-10 forum-thumbnail'>\n";
 		if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
-			echo thumbnail(IMAGES."forum/".$data['forum_image'], '50px');
+			echo thumbnail(IMAGES."forum/".$data['forum_image'], '40px');
 		} else {
 			echo $data['forum_icon_lg'];
 		}
