@@ -158,7 +158,7 @@ if (!function_exists('render_forum_item_type')) {
 			echo "<div class='col-xs-12 col-sm-12'>\n";
 				echo "<a class='display-inline-block forum-subject' href='".$data['forum_link']."'>".$data['forum_name']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
 				echo $data['forum_description'] ? "<div class='forum-description'>".$data['forum_description']."</div>\n" : '';
-				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_modeators']."</span>\n" : "")."\n";
+				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
 		if (isset($data['child'])) {
 			echo "<div class='clearfix'>\n";
 			echo "<div class='pull-left'>\n";
@@ -181,7 +181,7 @@ if (!function_exists('render_forum_item_type')) {
 				echo "<div class='col-xs-12 col-sm-6'>\n";
 				echo "<a class='display-inline-block text-bigger strong' href='".$data['forum_link']."'>".$data['forum_name']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
 				echo $data['forum_description'] ? "<div class='forum-description'>".$data['forum_description']."</div>\n" : '';
-				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_modeators']."</span>\n" : "")."\n";
+				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
 				if (isset($data['child'])) {
 					echo "<div class='clearfix'>\n";
 					echo "<div class='pull-left'>\n";
@@ -409,6 +409,7 @@ if (!function_exists('render_thread')) {
 /* Post Item */
 if (!function_exists('render_post_item')) {
 	function render_post_item($data) {
+		global $locale;
 		echo "<!--forum_thread_prepost_".$data['post_id']."-->\n";
 		echo "<div class='panel panel-default'>";
 		echo "<div class='panel-heading'>";
@@ -433,15 +434,24 @@ if (!function_exists('render_post_item')) {
 					echo $data['post_votebox'];
 			echo "</div>\n";
 		}
-				echo "<div class='overflow-hide'>\n";
-				echo "<div class='text-lighter m-b-10'>".$data['post_date']."</div>";
-				echo $data['post_message'];
-				echo "<!--sub_forum_post_message-->";
-				echo $data['post_edit_reason'];
-				echo $data['user_sig'];
-				echo $data['post_attachments'];
+			echo "<div class='overflow-hide'>\n";
+			echo "<div class='text-lighter m-b-10'>".$data['post_date']."</div>";
+			echo $data['post_message'];
+			echo "<!--sub_forum_post_message-->";
+
+			echo "<hr /><div class='forum_sig'>".$data['user_sig']."</div>";
+			echo "<br /> <div class='edit_reason'>".$data['post_edit_reason']."</div>";
+
+	// Images, files? both in same or?
+		if ($data['post_attachments']>0) {
+			echo "<div class='emulated-fieldset'>\n";
+			echo "<span class='emulated-legend'>".profile_link($data['user_id'], $data['user_name'], $data['user_status']).$locale['506'].($data['post_attachments'] > 1 ? $locale['506d'] : $locale['506c'])."</span>\n";
+			echo "<div class='attachments-list'>".$data['post_attachments']."</div>\n";
+			echo "</div>\n";
+		}
+
 		echo "</div>\n";
-			echo "</div>";
+		echo "</div>";
 		echo "</div>\n";
 
 		echo "</div><div class='panel-footer text-right'>";
