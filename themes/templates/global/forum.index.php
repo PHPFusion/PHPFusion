@@ -442,14 +442,6 @@ if (!function_exists('render_post_item')) {
 			echo "<hr /><div class='forum_sig'>".$data['user_sig']."</div>";
 			echo "<br /> <div class='edit_reason'>".$data['post_edit_reason']."</div>";
 
-	// Images, files? both in same or?
-		if ($data['post_attachments']>0) {
-			echo "<div class='emulated-fieldset'>\n";
-			echo "<span class='emulated-legend'>".profile_link($data['user_id'], $data['user_name'], $data['user_status']).$locale['506'].($data['post_attachments'] > 1 ? $locale['506d'] : $locale['506c'])."</span>\n";
-			echo "<div class='attachments-list'>".$data['post_attachments']."</div>\n";
-			echo "</div>\n";
-		}
-
 		echo "</div>\n";
 		echo "</div>";
 		echo "</div>\n";
