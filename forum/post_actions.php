@@ -538,11 +538,13 @@ if ($executable && iMEMBER) {
 		if ($data['reply']) {
 			redirect("postify.php?post=reply&error=$error&amp;forum_id=".intval($_GET['forum_id'])."&amp;thread_id=".intval($_GET['thread_id'])."&amp;post_id=".intval($data['post_id']));
 		} elseif ($data['edit']) {
-			redirect("postify.php?post=edit&error=$error&amp;forum_id=".intval($_GET['forum_id'])."&amp;thread_id=".intval($_GET['thread_id'])."&amp;post_id=".intval($_GET['post_id']));
-		} elseif ($data['new']) {
-			// get parent id and branch id.
+		// get parent id and branch id.
 			$forum_data = dbarray(dbquery("SELECT forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".intval($data['forum_id'])."'"));
-			redirect("postify.php?post=new&error=$error&amp;forum_id=".intval($data['forum_id'])."&amp;parent_id=".intval($forum_data['forum_cat'])."&amp;thread_id=".intval($data['thread_id'].""));
+			redirect("postify.php?post=edit&error=$error&amp;forum_id=".intval($_GET['forum_id'])."&amp;parent_id=".intval($forum_data['forum_cat'])."&amp;forum_branch=".intval($forum_data['forum_branch'])."&amp;thread_id=".intval($_GET['thread_id'])."&amp;post_id=".intval($_GET['post_id']));
+		} elseif ($data['new']) {
+		// get parent id and branch id.
+			$forum_data = dbarray(dbquery("SELECT forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".intval($data['forum_id'])."'"));
+			redirect("postify.php?post=new&error=$error&amp;forum_id=".intval($data['forum_id'])."&amp;parent_id=".intval($forum_data['forum_cat'])."&amp;forum_branch=".intval($forum_data['forum_branch'])."&amp;thread_id=".intval($data['thread_id'].""));
 		}
 	}
 } else {
