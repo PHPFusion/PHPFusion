@@ -166,8 +166,8 @@ if ($info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or 
 				'class' => 'm-b-0'));
 			if ($data['edit']) {
 				echo "<div class='col-xs-12 col-sm-offset-3 m-t-5'>\n";
-				echo form_button($locale['forum_0609'], "update_poll_option[$i]", "update_poll_option[$i]", $locale['forum_0609'], array('class' => 'btn-xs btn-default m-r-10'));
-				echo form_button($locale['forum_0610'], "delete_poll_option[$i]", "delete_poll_option[$i]", $locale['forum_0610'], array('class' => 'btn-xs btn-default m-r-10'));
+				echo form_button("update_poll_option[$i]", $locale['forum_0609'], $locale['forum_0609'], array('class' => 'btn-xs btn-default m-r-10'));
+				echo form_button("delete_poll_option[$i]", $locale['forum_0610'], $locale['forum_0610'], array('class' => 'btn-xs btn-default m-r-10'));
 				echo "</div>\n";
 			}
 			echo "<hr/>";
