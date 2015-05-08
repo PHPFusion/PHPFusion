@@ -171,10 +171,10 @@ class Forum {
 			$typeExt = isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '';
 			$sortExt = isset($_GET['sort']) ? "&amp;sort=".$_GET['sort'] : '';
 			$orderExt = isset($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
-			$baseLink = FORUM.'index.php?viewforum&amp;forum_id='.$_GET['forum_id'].'&amp;parent_id='.$_GET['parent_id'].'&amp;';
+			$baseLink =	FORUM.'index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
 			$timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
 			$this->forum_info['filter']['time'] = array(
-				'All Time' => FORUM.'index.php?viewforum&amp;forum_id='.$_GET['forum_id'].'&amp;parent_id='.$_GET['parent_id'],
+				'All Time' => FORUM.'index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : ''),
 				'Today' => $timeLink.'&amp;time=today', // must be static.
 				'2 Days' => $timeLink.'&amp;time=2days',
 				'1 Week'=> $timeLink.'&amp;time=1week',
