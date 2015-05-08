@@ -73,7 +73,7 @@ if (isset($_POST['uninstall'])) {
 			rank_image VARCHAR(100) NOT NULL DEFAULT '',
 			rank_posts iNT(10) UNSIGNED NOT NULL DEFAULT '0',
 			rank_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-			rank_apply SMALLINT(5) UNSIGNED NOT NULL DEFAULT '101',
+			rank_apply TINYINT(4) DEFAULT '-101',
 			rank_language VARCHAR(50) NOT NULL DEFAULT '".$_POST['localeset']."',
 			PRIMARY KEY (rank_id)
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
@@ -220,15 +220,15 @@ if (isset($_POST['uninstall'])) {
 	$forum_ranks_sql = "INSERT INTO ".$db_prefix."forum_ranks VALUES \n";
 	$forum_ranks_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
-		return "(NULL, '".$locale['setup_3600']."', 'rank_super_admin.png', 0, '1', 103, '".$language."'),
-				(NULL, '".$locale['setup_3601']."', 'rank_admin.png', 0, '1', 102, '".$language."'),
-				(NULL, '".$locale['setup_3602']."', 'rank_mod.png', 0, '1', 104, '".$language."'),
-				(NULL, '".$locale['setup_3603']."', 'rank0.png', 0, '0', 101, '".$language."'),
-				(NULL, '".$locale['setup_3604']."', 'rank1.png', 10, '0', 101, '".$language."'),
-				(NULL, '".$locale['setup_3605']."', 'rank2.png', 50, '0', 101, '".$language."'),
-				(NULL, '".$locale['setup_3606']."', 'rank3.png', 200, '0', 101, '".$language."'),
-				(NULL, '".$locale['setup_3607']."', 'rank4.png', 500, '0', 101, '".$language."'),
-				(NULL, '".$locale['setup_3608']."', 'rank5.png', 1000, '0', 101, '".$language."')";
+		return "(NULL, '".$locale['setup_3600']."', 'rank_super_admin.png', 0, '1', -103, '".$language."'),
+				(NULL, '".$locale['setup_3601']."', 'rank_admin.png', 0, '1', -102, '".$language."'),
+				(NULL, '".$locale['setup_3602']."', 'rank_mod.png', 0, '1', -104, '".$language."'),
+				(NULL, '".$locale['setup_3603']."', 'rank0.png', 0, '0', -101, '".$language."'),
+				(NULL, '".$locale['setup_3604']."', 'rank1.png', 10, '0', -101, '".$language."'),
+				(NULL, '".$locale['setup_3605']."', 'rank2.png', 50, '0', -101, '".$language."'),
+				(NULL, '".$locale['setup_3606']."', 'rank3.png', 200, '0', -101, '".$language."'),
+				(NULL, '".$locale['setup_3607']."', 'rank4.png', 500, '0', -101, '".$language."'),
+				(NULL, '".$locale['setup_3608']."', 'rank5.png', 1000, '0', -101, '".$language."')";
 	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($forum_ranks_sql)) {
 		$fail = TRUE;
