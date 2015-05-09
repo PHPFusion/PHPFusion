@@ -290,7 +290,7 @@ closetable();
 				}
 			}
 			redirect(USER_MANAGEMENT_SELF."&status=dok");
-		} else {
+			} else {
 			redirect(USER_MANAGEMENT_SELF."&status=der");
 		}
 	} elseif (isset($_POST['cancel'])) {
@@ -299,10 +299,10 @@ closetable();
 		$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".$user_id."'"));
 		opentable($locale['410']." ".$locale['612'].": ".$user_data['user_name']);
 		echo sprintf($locale['425'], $user_data['user_name']);
-		echo "<form name='mod_form' method='post' action='".FUSION_SELF."?aid=".iAUTH."&amp;step=delete&amp;user_id=".$user_id."'>\n";
-		echo "<input type='submit' name='delete_user' value='".$locale['426']."' class='button' />\n";
-		echo "<input type='submit' name='cancel' value='".$locale['427']."' class='button' />\n";
-		echo "</form>";
+		echo openform('mod_form', 'post', stripinput(USER_MANAGEMENT_SELF)."&amp;step=delete&amp;user_id=".$user_id, array('max_tokens' => 1));
+		echo form_button('delete_user', $locale['426'], $locale['426'], array('class' => 'btn-primary m-r-10'));
+		echo form_button('cancel', $locale['427'], $locale['427'], array('class' => 'btn-primary'));
+		echo closeform();
 		closetable();
 	}
 	// Ban User
@@ -602,7 +602,7 @@ if ($rows) {
 				echo "<a class='btn button btn-sm btn-default' href='".stripinput(USER_MANAGEMENT_SELF."&action=$status&user_id=".$data['user_id'])."'>$title</a>\n";
 			}
 			echo "<div class='btn-group'>\n";
-			echo "<a class='btn button btn-sm btn-default' href='".stripinput(USER_MANAGEMENT_SELF."&step=delete&user_id=".$data['user_id'])."' onclick='return DeleteMember();'>".$locale['410']."</a>\n";
+			echo "<a class='btn button btn-sm btn-default' href='".stripinput(USER_MANAGEMENT_SELF."&step=delete&user_id=".$data['user_id'])."'>".$locale['410']."</a>\n";
 			// more actions.
 			echo "<a class='btn button btn-sm btn-default dropdown-toggle' data-toggle='dropdown'>\n<span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></a>\n";
 			echo "<ul class='dropdown-menu text-left' role='action-menu'>\n";
@@ -654,8 +654,6 @@ closetable();
 if ($rows > 20) {
 	echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($rowstart, 20, $rows, 3, FUSION_SELF.$aidlink."&amp;sortby=".$sortby."&amp;status=".$status."&amp;")."\n</div>\n";
 }
-echo "<script type='text/javascript'>"."\n"."function DeleteMember(username) {\n";
-echo "return confirm('".$locale['423']."');\n}\n</script>\n";
 }
 require_once THEMES."templates/footer.php";
 ?>
