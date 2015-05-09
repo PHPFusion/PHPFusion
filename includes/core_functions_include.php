@@ -148,11 +148,16 @@ function get_available_languages_array(array $language_list) {
  * Language switcher function
  */
 function lang_switcher() {
-	$enabled_languages = array_keys(fusion_get_enabled_languages());
+global $settings;
+
+$enabled_languages = array_keys(fusion_get_enabled_languages());
 	if (count($enabled_languages) <= 1) {
 		return;
 	}
+	
 	$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
+	$link_prefix = str_replace($settings['site_path'], "", $link_prefix);
+	
 	foreach ($enabled_languages as $row => $language) {
 		$lang_text = translate_lang_names($language);
 		$icon = "<img class='display-block img-responsive' alt='".$language."' src='".LOCALE.$language."/".$language.".png' alt='' title='".$lang_text."' style='min-width:20px;'>";
