@@ -38,7 +38,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		FROM ".DB_ARTICLES." ta
 		INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 		LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-		WHERE ".groupaccess('article_visibility')." AND article_id='".$_GET['article_id']."' AND article_draft='0'");
+		".(multilang_table("AR") ?  "WHERE tac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('article_visibility')." AND article_id='".$_GET['article_id']."' AND article_draft='0'");
 
 	if (dbrows($result)>0) {
 		$data = dbarray($result);
@@ -85,7 +85,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	$result = dbquery("SELECT ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, COUNT(a.article_cat) AS article_count FROM ".DB_ARTICLES." a
 		LEFT JOIN ".DB_ARTICLE_CATS." ac ON a.article_cat=ac.article_cat_id
-		".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('a.article_visibility')."
+		".(multilang_table("AR") ? "WHERE ac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('a.article_visibility')."
 		GROUP BY ac.article_cat_id
 		ORDER BY ac.article_cat_name");
 	$info['articles_rows'] = dbrows($result);
@@ -95,11 +95,9 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 		}
 	}
 	render_articles_main($info);
-}
-
-/* Category View */
-else {
-	$result = dbquery("SELECT article_cat_name, article_cat_sorting FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$_GET['cat_id']."'");
+} else {
+// Category view
+	$result = dbquery("SELECT article_cat_name, article_cat_sorting FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ?  "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_cat_id='".$_GET['cat_id']."'");
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
 		add_to_title($locale['global_201'].$cdata['article_cat_name']);
