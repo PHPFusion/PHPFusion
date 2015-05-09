@@ -113,7 +113,7 @@ if (!empty($result)) {
 			echo "</div>\n</div>\n";
 			closetable();
 		}
-		$result = dbquery("SELECT article_id, article_subject, article_draft FROM ".DB_ARTICLES." ORDER BY article_draft DESC, article_datestamp DESC");
+		$result = dbquery("SELECT article_id, article_subject, article_draft FROM ".DB_ARTICLES." ".(multilang_table("AR") ? "WHERE article_language='".LANGUAGE."'" : "")." ORDER BY article_draft DESC, article_datestamp DESC");
 		if (dbrows($result)) {
 			$editlist = array();
 			while ($data = dbarray($result)) {
