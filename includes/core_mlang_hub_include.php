@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Articles
-if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['article_id']) && isnum($_GET['article_id']))) { 
+if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['article_id']) && isnum($_GET['article_id']))) { 
 $data = dbarray(dbquery("SELECT ac.article_cat_id,ac.article_cat_language, a.article_id
 						FROM ".DB_ARTICLE_CATS." ac
 						LEFT JOIN ".DB_ARTICLES." a ON ac.article_cat_id = a.article_cat 
@@ -30,7 +30,7 @@ $data = dbarray(dbquery("SELECT ac.article_cat_id,ac.article_cat_language, a.art
 }
 
 // Article Cats
-if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
+if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
 $data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".stripinput($_GET['cat_id'])."'"));
 	if ($data['article_cat_language'] != LANGUAGE) {
 			redirect(BASEDIR."articles.php?cat_id=".stripinput($_GET['cat_id'])."&amp;lang=".$data['article_cat_language']."&amp;hub");
@@ -38,7 +38,7 @@ $data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_ARTICLE_CATS." WH
 }
 
 // Blog
-if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['readmore']) && isnum($_GET['readmore']))) { 
+if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['readmore']) && isnum($_GET['readmore']))) { 
 $data = dbarray(dbquery("SELECT blog_language FROM ".DB_BLOG." WHERE blog_id='".stripinput($_GET['readmore'])."'"));
 	if ($data['blog_language'] != LANGUAGE) {
 		redirect(BASEDIR."blog.php?readmore=".stripinput($_GET['readmore'])."&amp;lang=".$data['blog_language']."&amp;hub");
@@ -46,7 +46,7 @@ $data = dbarray(dbquery("SELECT blog_language FROM ".DB_BLOG." WHERE blog_id='".
 }
 
 // Blog Cats
-if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
+if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
 $data = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".stripinput($_GET['cat_id'])."'"));
 	if ($data['blog_cat_language'] != LANGUAGE) {
 			redirect(BASEDIR."blog.php?cat_id=".stripinput($_GET['cat_id'])."&amp;lang=".$data['blog_cat_language']."&amp;hub");
@@ -54,7 +54,7 @@ $data = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_BLOG_CATS." WHERE bl
 }
 
 // Downloads
-if (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['download_id']) && isnum($_GET['download_id']))) { 
+if (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['download_id']) && isnum($_GET['download_id']))) { 
 $data = dbarray(dbquery("SELECT dlc.download_cat_id,dlc.download_cat_language, dl.download_id
 						FROM ".DB_DOWNLOAD_CATS." dlc
 						LEFT JOIN ".DB_DOWNLOADS." dl ON dlc.download_cat_id = dl.download_cat 
@@ -66,7 +66,7 @@ $data = dbarray(dbquery("SELECT dlc.download_cat_id,dlc.download_cat_language, d
 }
 
 // Download Cats
-if (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
+if (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
 $data = dbarray(dbquery("SELECT download_cat_language FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id='".stripinput($_GET['cat_id'])."'"));
 	if ($data['download_cat_language'] != LANGUAGE) {
 			redirect(BASEDIR."downloads.php?cat_id=".stripinput($_GET['cat_id'])."&amp;lang=".$data['download_cat_language']."&amp;hub");
@@ -74,7 +74,7 @@ $data = dbarray(dbquery("SELECT download_cat_language FROM ".DB_DOWNLOAD_CATS." 
 }
 
 // News
-if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['readmore']) && isnum($_GET['readmore']))) { 
+if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['readmore']) && isnum($_GET['readmore']))) { 
 $data = dbarray(dbquery("SELECT news_language FROM ".DB_NEWS." WHERE news_id='".stripinput($_GET['readmore'])."'"));
 	if ($data['news_language'] != LANGUAGE) {
 		redirect(BASEDIR."news.php?readmore=".stripinput($_GET['readmore'])."&amp;lang=".$data['news_language']."&amp;hub");
@@ -82,7 +82,7 @@ $data = dbarray(dbquery("SELECT news_language FROM ".DB_NEWS." WHERE news_id='".
 }
 
 // News Cats
-if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
+if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
 $data = dbarray(dbquery("SELECT news_cat_language FROM ".DB_NEWS_CATS." WHERE news_cat_id='".stripinput($_GET['cat_id'])."'"));
 	if ($data['news_cat_language'] != LANGUAGE) {
 			redirect(BASEDIR."news.php?cat_id=".stripinput($_GET['cat_id'])."&amp;lang=".$data['news_cat_language']."&amp;hub");
@@ -90,7 +90,7 @@ $data = dbarray(dbquery("SELECT news_cat_language FROM ".DB_NEWS_CATS." WHERE ne
 }
 
 // FaQ´s
-if (preg_match('/faq.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
+if (preg_match('/faq.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
 $data = dbarray(dbquery("SELECT fqc.faq_cat_id, fqc.faq_cat_language, fq.faq_cat_id
 						FROM ".DB_FAQ_CATS." fqc
 						LEFT JOIN ".DB_FAQS." fq ON fqc.faq_cat_id = fq.faq_cat_id 
@@ -102,7 +102,7 @@ $data = dbarray(dbquery("SELECT fqc.faq_cat_id, fqc.faq_cat_language, fq.faq_cat
 }
 
 // Forum threads
-if (preg_match('/viewthread.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['thread_id']) && isnum($_GET['thread_id']))) {
+if (preg_match('/viewthread.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['thread_id']) && isnum($_GET['thread_id']))) {
 $data = dbarray(dbquery("SELECT f.forum_id,f.forum_language, t.thread_id
 						FROM ".DB_FORUMS." f
 						LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
@@ -114,7 +114,7 @@ $data = dbarray(dbquery("SELECT f.forum_id,f.forum_language, t.thread_id
 }
 
 // Forum topics
-if (preg_match('/index.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['viewforum']) && isnum($_GET['forum_id']))) {
+if (preg_match('/index.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['viewforum']) && isnum($_GET['forum_id']))) {
 $data = dbarray(dbquery("SELECT forum_cat, forum_branch, forum_language FROM ".DB_FORUMS." WHERE forum_id='".stripinput($_GET['forum_id'])."'"));
 	if ($data['forum_language'] != LANGUAGE) {
 		redirect(FORUM."index.php?viewforum&amp;forum_id=".stripinput($_GET['forum_id'])."&amp;parent_id=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch']."&amp;lang=".$data['forum_language']."&amp;hub");
@@ -122,7 +122,7 @@ $data = dbarray(dbquery("SELECT forum_cat, forum_branch, forum_language FROM ".D
 }
 
 // Photo´s
-if (preg_match('/photogallery.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) { 
+if (preg_match('/photogallery.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) { 
 $data = dbarray(dbquery("SELECT pha.album_id, pha.album_language, ph.album_id
 						FROM ".DB_PHOTO_ALBUMS." pha
 						LEFT JOIN ".DB_PHOTOS." ph ON pha.album_id = ph.album_id
@@ -134,7 +134,7 @@ $data = dbarray(dbquery("SELECT pha.album_id, pha.album_language, ph.album_id
 }
 
 // Photo Albums
-if (preg_match('/photogallery.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['album_id']) && isnum($_GET['album_id']))) { 
+if (preg_match('/photogallery.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['album_id']) && isnum($_GET['album_id']))) { 
 $data = dbarray(dbquery("SELECT album_language FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".stripinput($_GET['album_id'])."'"));
 	if ($data['album_language'] != LANGUAGE) {
 			redirect(BASEDIR."photogallery.php?album_id=".stripinput($_GET['album_id'])."&amp;lang=".$data['album_language']."&amp;hub");
@@ -142,7 +142,7 @@ $data = dbarray(dbquery("SELECT album_language FROM ".DB_PHOTO_ALBUMS." WHERE al
 }
 
 // Weblinks
-if (preg_match('/weblinks.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
+if (preg_match('/weblinks.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
 $data = dbarray(dbquery("SELECT weblink_cat_language FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".stripinput($_GET['cat_id'])."'"));
 	if ($data['weblink_cat_language'] != LANGUAGE) {
 		redirect(BASEDIR."weblinks.php?cat_id=".stripinput($_GET['cat_id'])."&amp;lang=".$data['weblink_cat_language']."&amp;hub");

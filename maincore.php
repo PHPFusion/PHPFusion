@@ -198,8 +198,9 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
 }
 
 // Language detection hub for multilingual content, detect, set and redirect users to the correct language if it is not set
-require __DIR__.'/includes/core_mlang_hub_include.php';
-
+if (!isset($_GET['hub']) && count($enabled_languages) > 1) {
+	require __DIR__.'/includes/core_mlang_hub_include.php';
+}
 // IP address functions
 include INCLUDES."ip_handling_include.php";
 
