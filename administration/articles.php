@@ -114,7 +114,7 @@ if (!empty($result)) {
 			closetable();
 		}
 
-		$result = dbquery("SELECT ta.article_cat, tac.article_cat_name, ta.article_id, ta.article_subject FROM ".DB_ARTICLES." ta
+		$result = dbquery("SELECT ta.article_cat, tac.article_cat_name, ta.article_id, ta.article_draft, ta.article_subject FROM ".DB_ARTICLES." ta
 						   LEFT JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 						   ".(multilang_table("AR") ?  "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_draft DESC, article_datestamp DESC");
 		if (dbrows($result)) {
