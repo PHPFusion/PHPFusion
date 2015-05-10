@@ -197,55 +197,8 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
 	define ("LOCALESET", $settings['locale']."/");
 }
 
-// Language detector for multilingual content hub, Redirect´s to the correct language if it is not set
-
-// Articles
-if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['article_id']) && isnum($_GET['article_id']))) { 
-$data = dbarray(dbquery("SELECT ac.article_cat_id,ac.article_cat_language, a.article_id
-						FROM ".DB_ARTICLE_CATS." ac
-						LEFT JOIN ".DB_ARTICLES." a ON ac.article_cat_id = a.article_cat 
-						WHERE a.article_id='".stripinput($_GET['article_id'])."'
-						GROUP BY a.article_id"));
-	if ($data['article_cat_language'] != LANGUAGE) {
-		redirect(BASEDIR."articles.php?article_id=".stripinput($_GET['article_id'])."&amp;lang=".$data['article_cat_language']."&amp;hub");
-	}
-}
-
-// Article Cats
-if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
-$data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".stripinput($_GET['cat_id'])."'"));
-	if ($data['article_cat_language'] != LANGUAGE) {
-			redirect(BASEDIR."articles.php?cat_id=".stripinput($_GET['cat_id'])."&amp;lang=".$data['article_cat_language']."&amp;hub");
-	}
-}
-
-// News
-if (preg_match('/news.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['readmore']) && isnum($_GET['readmore']))) { 
-$data = dbarray(dbquery("SELECT news_language FROM ".DB_NEWS." WHERE news_id='".stripinput($_GET['readmore'])."'"));
-	if ($data['news_language'] != LANGUAGE) {
-		redirect(BASEDIR."news.php?readmore=".stripinput($_GET['readmore'])."&amp;lang=".$data['news_language']."&amp;hub");
-	}
-}
-
-// Forum threads
-if (preg_match('/viewthread.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['thread_id']) && isnum($_GET['thread_id']))) {
-$data = dbarray(dbquery("SELECT f.forum_id,f.forum_language, t.thread_id
-						FROM ".DB_FORUMS." f
-						LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
-						WHERE t.thread_id='".stripinput($_GET['thread_id'])."'
-						GROUP BY t.thread_id"));
-	if ($data['forum_language'] != LANGUAGE) {
-		redirect(FORUM."viewthread.php?forum_id=".$data['forum_id']."&amp;thread_id=".stripinput($_GET['thread_id'])."&amp;lang=".$data['forum_language']."&amp;hub");
-	}
-}
-
-// Forum topics
-if (preg_match('/index.php/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub']) && count($enabled_languages) > 1 && (isset($_GET['viewforum']) && isnum($_GET['forum_id']))) {
-$data = dbarray(dbquery("SELECT forum_cat, forum_branch, forum_language FROM ".DB_FORUMS." WHERE forum_id='".stripinput($_GET['forum_id'])."'"));
-	if ($data['forum_language'] != LANGUAGE) {
-		redirect(FORUM."index.php?viewforum&amp;forum_id=".stripinput($_GET['forum_id'])."&amp;parent_id=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch']."&amp;lang=".$data['forum_language']."&amp;hub");
-	}
-}
+// Language detection hub for multilingual content, detect, set and redirect users to the correct language if it is not set
+require __DIR__.'/includes/core_mlang_hub_include.php';
 
 // IP address functions
 include INCLUDES."ip_handling_include.php";
