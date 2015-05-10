@@ -155,14 +155,26 @@ define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
-// If language change is initiated and if the selected language is valid
-if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
-	$lang = stripinput($_GET['lang']);
+// Language detection hub for multilingual content, detect, set he correct language if it is not set
+if (!isset($_GET['hub']) && count($enabled_languages) > 1) {
+	require __DIR__.'/includes/core_mlang_hub_include.php';
+}
+
+// Set the requested language
+function set_language($lang) {
 	if (iMEMBER) {
 		dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
 	} else {
 		setcookie(COOKIE_PREFIX."guest_language", $lang, time()+86400*60, COOKIE_PATH, COOKIE_DOMAIN, FALSE, FALSE);
 	}
+}
+
+// If language change is initiated and if the selected language is valid
+if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
+	$lang = stripinput($_GET['lang']);
+
+echo set_language($lang);
+
 	// Redirect handler to keep position upon lang switch
 	$this_redir = '';
 	if (FUSION_QUERY != "") {
@@ -197,10 +209,6 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
 	define ("LOCALESET", $settings['locale']."/");
 }
 
-// Language detection hub for multilingual content, detect, set and redirect users to the correct language if it is not set
-if (!isset($_GET['hub']) && count($enabled_languages) > 1) {
-	require __DIR__.'/includes/core_mlang_hub_include.php';
-}
 // IP address functions
 include INCLUDES."ip_handling_include.php";
 
