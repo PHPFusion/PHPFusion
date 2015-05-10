@@ -37,8 +37,6 @@ opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 
 if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing purposes
-	//echo "<form id='upgradeform' name='upgradeform' type='post' action='".FUSION_SELF.$aidlink."'>";
-	// Might not have required resources(SECRET_KEY etc.) to call this function in case of an upgrade from 7 to 9
 	echo openform('upgradeform', 'post', FUSION_SELF.$aidlink); 
 	$content = "";
 	switch (filter_input(INPUT_POST, 'stage', FILTER_VALIDATE_INT) ? : 1) {
@@ -84,7 +82,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				$content .= "</code><br />";
 				$content .= "Please note that you need to change the <code>\$pdo_enabled = \"0\"</code> to <code>\$pdo_enabled = \"1\"</code> manually in order to enable PDO</div><br />\n";
 			} else {
-				$content .= sprintf($locale['500'], $locale['504'])."<br />\n".$locale['501']."<br /><br />\n";
+				$content .= sprintf($locale['500'], $locale['503'])."<br />\n".$locale['501']."<br /><br />\n";
 				$content .= "<input type='hidden' name='stage' value='2'>\n";
 				$content .= "<input type='submit' name='upgrade' value='".$locale['400']."' class='button btn btn-primary'><br /><br />\n";
 			}
@@ -166,15 +164,10 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				}
 				$content .= "<input type='submit' name='remove_old_files' value='Remove Files' class='button btn btn-primary'>\n";
 				$content .= "</div>\n";
-				break; // we only break if there are files to be removed, if not continue to step 3
+				break; 
 			} elseif (isset($_POST['remove_old_files'])) {
-				/*$content .= "All old files and folders were removed, click the button below to continue.<br />";
-				$content .= "<input type='hidden' name='stage' value='3'>\n";
-				$content .= "<input type='submit' name='upgrade' value='Continue' class='button btn btn-primary'><br /><br />\n";
-				break;*/
 				addNotice('success', 'All unnecessary files were removed');
 			}
-
 		case 3:
 			if (!isset($_POST['write_htaccess'])) {
 				$content .= "<div class='well'>\n";
@@ -225,7 +218,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				$temp = fopen(BASEDIR.".htaccesss", "w");
 				if (fwrite($temp, $htc)) {
 					fclose($temp);
-
 					addNotice('success', 'The contents of .htaccess were updated');
 				}/* else {
 					$content .= "<div class='well'>\n";
@@ -238,7 +230,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					break;
 				}*/
 			}
-
 		case 4:
 			$content .= "<div class='well'>\n";
 			$content .= "Several changes will be made to the database.<br />
@@ -248,6 +239,172 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 			$content .= "<input type='submit' name='upgrade_database' value='Upgrade Database' class='button btn btn-primary'><br /><br />\n";
 			
 			if (1==2 && isset($_POST['upgrade_database'])) { // 1==2 to disable it for testing purposes
+
+			// Force the database to UTF-8 because we'll convert to it
+				dbquery("SET NAMES 'utf8'");
+		 
+			$result = dbquery("SHOW TABLES");
+				while($row = dbarray($result)) {
+				  foreach ($row as $key => $table) {
+					dbquery("ALTER TABLE " . $table . " CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci");
+					$result2 = dbquery("SHOW COLUMNS FROM ".$table);
+					// We must change all data like find/replace in columns of broken chars, this may differ for each locales, please complete this list if you know what´s missing.
+						while($column = dbarray($result2)) {
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¥','Å')"); 
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¤','Ä')"); 
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field']." ,'Ã¶','Ö')"); 
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'ð', 'ğ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'ý', 'ı')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'þ', 'ş')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ð', 'Ğ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ý', 'İ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Þ', 'Ş')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã‰','É')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'â€œ','\"')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'â€','\"')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã‡','Ç')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ãƒ','Ã')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¥','Å')"); 
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¤','Ä')"); 
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¶','Ö')"); 
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã ','À')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ãº','ú')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'â€¢','-')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã˜','Ø')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ãµ','õ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã­','í')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¢','â')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã£','ã')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ãª','ê')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã¡','á')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã©','é')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã³','ó')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'â€“','–')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã§','ç')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Âª','ª')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Âº','º')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", 'Ã ','à')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ccedil;','ç')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&atilde;','ã')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&aacute;','á')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&acirc;','â')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&eacute;','é')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&iacute;','í')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&otilde;','õ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&uacute;','ú')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ccedil;','ç')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Aacute;','Á')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Acirc;','Â')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Eacute;','É')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Iacute;','Í')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Otilde;','Õ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Uacute;','Ú')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Ccedil;','Ç')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Atilde;','Ã')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Agrave;','À')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Ecirc;','Ê')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Oacute;','Ó')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Ocirc;','Ô')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Uuml;','Ü')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&atilde;','ã')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&agrave;','à')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ecirc;','ê')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&oacute;','ó')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ocirc;','ô')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&uuml;','ü')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&amp;','&')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&gt;','>')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&lt;','<')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&circ;','ˆ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&tilde;','˜')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&uml;','¨')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&cute;','´')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&cedil;','¸')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&quot;','\"')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ldquo;','“')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&rdquo;','”')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&lsquo;','‘')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&rsquo;','’')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&lsaquo;','‹')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&rsaquo;','›')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&laquo;','«')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&raquo;','»')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ordm;','º')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ordf;','ª')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ndash;','–')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&mdash;','—')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&macr;','¯')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&hellip;','…')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&brvbar;','¦')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&bull;','•')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&para;','¶')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&sect;','§')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&sup1;','¹')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&sup2;','²')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&sup3;','³')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&frac12;','½')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&frac14;','¼')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&frac34;','¾')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&#8539;','⅛')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&#8540;','⅜')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&#8541;','⅝')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&#8542;','⅞')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&gt;','>')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&lt;','<')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&plusmn;','±')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&minus;','−')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&times;','×')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&divide;','÷')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&lowast;','∗')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&frasl;','⁄')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&permil;','‰')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&int;','∫')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&sum;','∑')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&prod;','∏')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&radic;','√')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&infin;','∞')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&asymp;','≈')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&cong;','≅')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&prop;','∝')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&equiv;','≡')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ne;','≠')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&le;','≤')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ge;','≥')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&there4;','∴')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&sdot;','⋅')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&middot;','·')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&part;','∂')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&image;','ℑ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&real;','ℜ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&prime;','′')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Prime;','″')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&deg;','°')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&ang;','∠')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&perp;','⊥')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&nabla;','∇')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&oplus;','⊕')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&otimes;','⊗')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&alefsym;','ℵ')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&oslash;','ø')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&Oslash;','Ø')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&isin;','∈')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&notin;','∉')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&cap;','∩')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&cup;','∪')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&sub;','⊂')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&sup;','⊃')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&sube;','⊆')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&supe;','⊇')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&exist;','∃')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&forall;','∀')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&empty;','∅')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&not;','¬')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&and;','∧')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&or;','∨')");
+							dbquery("UPDATE ".$table." SET ".$column['Field']." = REPLACE(".$column['Field'].", '&crarr;','↵')");
+					}
+				  }
+				}
 				// New access rights need a larger table for users
 				$result = dbquery("ALTER TABLE ".DB_USERS." CHANGE user_level user_level TINYINT(4) NOT NULL DEFAULT '-101'");
 
