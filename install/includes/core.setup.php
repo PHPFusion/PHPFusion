@@ -77,7 +77,7 @@ $core_tables = array("admin" => " (
 		page_keywords VARCHAR(250) NOT NULL DEFAULT '',
 		page_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 		page_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-		page_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+		page_language VARCHAR(255) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
 		PRIMARY KEY (page_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"comments" => " (

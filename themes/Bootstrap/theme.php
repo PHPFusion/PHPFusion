@@ -31,8 +31,8 @@ function render_page($license = FALSE) {
 	$side_grid_settings = array(
 		'desktop_size' => 2,
 		'laptop_size' => 3,
-		'tablet_size' => 0,
-		'phone_size' => 0,
+		'tablet_size' => 3,
+		'phone_size' => 4,
 	);
 
 	// Render Theme
