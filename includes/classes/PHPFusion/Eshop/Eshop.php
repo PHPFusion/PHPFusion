@@ -40,7 +40,7 @@ class Eshop {
 	private $banner_path = '';
 
 	public function __construct() {
-		$this->banner_path = BASEDIR."eshop/pictures/banners/";
+		$this->banner_path = SHOP."pictures/banners/";
 		$_GET['category'] = isset($_GET['category']) && isnum($_GET['category']) ?  $_GET['category'] : 0;
 		$_GET['product'] = isset($_GET['product']) && isnum($_GET['product']) ? $_GET['product'] : 0;
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->max_rows ? : 0;
@@ -186,7 +186,7 @@ class Eshop {
 		if (dbrows($result)>0) {
 			$vat_rate = fusion_get_settings('eshop_vat') > 0 ? intval(fusion_get_settings('eshop_vat'))/100 : intval(0);
 			while ($data = dbarray($result)) {
-				$data['cimage'] = $data['cimage'] ? self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/thumbs/".$data['cimage']) : self::picExist('fake.png');
+				$data['cimage'] = $data['cimage'] ? self::picExist(SHOP."pictures/album_".$data['cid']."/thumbs/".$data['cimage']) : self::picExist('fake.png');
 				// this is price inclusive of tax or not for visual purposes only. It is not used against calculations of tax vs coupons.
 				$data['item_price'] = fusion_get_settings('eshop_vat_default') ? $data['cprice']+($data['cprice'] * ($vat_rate)) : $data['cprice']; // unit
 				$data['item_subtotal'] = $data['item_price'] * $data['cqty'];
@@ -1271,7 +1271,7 @@ class Eshop {
 		if (!fusion_get_settings('site_seo') && fusion_get_settings('eshop_shareing') == 1) {
 			//Load scripts to enable share buttons
 			$meta = "<meta property='og:image' content='".fusion_get_settings('siteurl')."eshop/img/nopic.gif' />\n";
-			if (file_exists(BASEDIR."eshop/pictures/".$product_picture)) {
+			if (file_exists(SHOP."pictures/".$product_picture)) {
 				$meta = "<meta property='og:image' content='".fusion_get_settings('siteurl')."eshop/pictures/".$product_picture."' />\n";
 			}
 			add_to_head("".$meta."<meta property='og:title' content='".$product_title."' />");
@@ -1544,13 +1544,13 @@ class Eshop {
 					$data['category_title'] = isnum($data['category_title']) ? "Front Page" : $data['category_title'];
 					$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
 					$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
-					if ($data['thumb']) $data['thumb'] = self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/thumbs/".$data['thumb']);
-					if ($data['thumb2']) {
-						$data['picture'] = self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['thumb2']);
+					if ($data['thumb']) { $data['thumb'] = self::picExist(SHOP."pictures/album_".$data['cid']."/thumbs/".$data['thumb']); }
+					if ($data['thumb2']) { $data['thumb2'] = self::picExist(SHOP."pictures/album_".$data['cid']."/".$data['thumb2']);
 					} else {
-						if ($data['picture']) $data['picture'] = self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['picture']);
-						echo "<img src='".$data['picture']."'>";
+					if ($data['picture']) $data['picture'] = self::picExist(SHOP."pictures/album_".$data['cid']."/".$data['picture']);
+//						echo "<img src='".SHOP."pictures/album_".$data['cid']."/".$data['picture']."'>";
 					}
+
 					$info['item'][$data['id']] = $data;
 					$this->info['title'] = $data['title'];
 					// push for title and meta
@@ -1559,7 +1559,6 @@ class Eshop {
 					$this->info['product_title'] = $data['title'];
 					$this->info['product_link'] = BASEDIR."eshop.php?product=".$data['id'];
 					$this->info['keywords'] = $data['keywords'];
-
 					return $info;
 				}
 			}
@@ -1591,12 +1590,12 @@ class Eshop {
 					$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
 					$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
 					if ($data['thumb']) {
-						$data['thumb'] = BASEDIR."eshop/pictures/album_".$data['cid']."/thumbs/".$data['thumb'];
+						$data['thumb'] = SHOP."pictures/album_".$data['cid']."/thumbs/".$data['thumb'];
 					}
 					if ($data['thumb2']) {
-						$data['picture'] = BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['thumb2'];
+						$data['picture'] = SHOP."pictures/album_".$data['cid']."/".$data['thumb2'];
 					} else {
-						if ($data['picture']) $data['picture'] = BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['picture'];
+						if ($data['picture']) $data['picture'] = SHOP."pictures/album_".$data['cid']."/".$data['picture'];
 						echo "<img src='".$data['picture']."'>";
 					}
 					$info['item'][$data['id']] = $data;
