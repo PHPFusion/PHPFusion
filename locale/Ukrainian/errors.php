@@ -15,5 +15,5 @@ $locale['E_ALL'] = "Визначення усіх повідомлень, крі
 $locale['E_STRICT'] = "";
 $locale['err_100'] = "немає";
 $locale['err_101'] = "<strong>Увага!</strong><br>Під час формування сторінки сталася помилка. Будь ласка, перевірте деталі у <a href='[ERROR_LOG_URL]'>журналі помилок</a> PHP-Fusion.";
-// Error Managemetn
+$locale['err_102'] = "Показати помилку!";
 ?>
