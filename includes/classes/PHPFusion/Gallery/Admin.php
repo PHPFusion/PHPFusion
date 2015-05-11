@@ -82,7 +82,10 @@ class Admin {
 		'photo_allow_ratings' => 0,);
 	private $gallery_data = array(); // list out data
 	/**
-	 * Install Gallery if Table does not exist
+	 * Install Gallery if The prerequisite table does not exist.
+	 * This feature is shut down and for development purposes only.
+	 * The real installer will be in install.php, but this function
+	 * can be used on script to install tables on load when executed.
 	 */
 	private function Install_Gallery() {
 		if (!db_exists($this->photo_cat_db) && $this->enable_album) {
@@ -126,6 +129,9 @@ class Admin {
 		}
 	}
 
+	/**
+	 * Instantiated default variables.
+	 */
 	public function __construct() {
 		// Using GET to set the vars so it can be accessed in the entire class
 		$this->album_id = isset($_GET['album_id']) && isnum($_GET['album_id']) ? $_GET['album_id'] : 0;
@@ -162,7 +168,7 @@ class Admin {
 	}
 
 	/**
-	 *
+	 * Boot function. Execute to start gallery
 	 */
 	public function boot() {
 		global $locale;
