@@ -171,12 +171,11 @@ if (!function_exists('render_photo')) {
 		echo "<div class='pull-left'>\n";
 		echo display_avatar($userdata, '50px', '', TRUE, '');
 		echo "</div>\n";
-
 		echo "<div class='btn-group pull-right'>\n";
 		echo isset($info['nav']['first']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['first']['link']."' title='".$info['nav']['first']['name']."'><i class='entypo to-start'></i></a>\n" : '';
 		echo isset($info['nav']['prev']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['prev']['link']."' title='".$info['nav']['prev']['name']."'><i class='entypo left-dir'></i></a>\n" : '';
 		echo isset($info['nav']['next']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['next']['link']."' title='".$info['nav']['next']['name']."'><i class='entypo right-dir'></i></a>\n" : '';
-		echo isset($info['nav']['last']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['last']['link']."' title='".$info['nav']['first']['last']."'><i class='entypo to-end'></i></a>\n" : '';
+		echo isset($info['nav']['last']) ? "<a class='btn btn-default btn-sm' href='".$info['nav']['last']['link']."' title='".$info['nav']['last']['name']."'><i class='entypo to-end'></i></a>\n" : '';
 		echo "</div>\n";
 
 		echo "<div class='overflow-hide m-b-20'>\n";
