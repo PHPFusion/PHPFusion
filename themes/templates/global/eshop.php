@@ -231,6 +231,63 @@ if (!function_exists('render_eshop_product')) {
 	 * @param $info
 	 */
 	function render_eshop_product($info) {
+
+	/*
+	 * [item] => Array
+        (
+            [16] => Array
+                (
+					[qty] - unrestricted quantity buy at a go
+                    [id] => 16
+                    [title] => Mobile 99
+                    [cid] => 16
+                    [picture] => ./eshop/pictures/cover_large.jpg
+                    [thumb] => ./eshop/pictures/thumb/cover_large_t1.jpg
+                    [thumb2] => cover_large_t2.jpg
+                    [introtext] =>
+                    [description] =>
+                    [anything1] =>
+                    [anything1n] =>
+                    [anything2] =>
+                    [anything2n] =>
+                    [anything3] =>
+                    [anything3n] =>
+                    [weight] =>
+
+                    [stock] => 1 // show stock?
+                    [version] =>
+                    [status] => 1 // in stock?
+                    [active] => 1
+                    [gallery_on] => 1
+                    [delivery] => 0
+                    [demo] =>
+                    [cart_on] => 1
+                    [buynow] => 1
+
+	[rpage] => crl.php
+                    [icolor] =>
+                    [dynf] =>
+                    [dync] =>
+
+
+                    [dmulti] => 1
+                    [cupons] => 1
+                    [access] => 0
+                    [campaign] => 0
+
+
+                    [category_title] => Game
+                    [category_link] => ./category=16
+                    [link] => ./eshop.php?product=16
+
+
+	 [comments] => 1
+                    [ratings] => 1
+                    [linebreaks] => 1
+                )
+
+        )
+	 */
 	global $locale;
 	$data = $info['item'][$_GET['product']];
 	echo "<div class='m-t-10'>\n";
@@ -364,7 +421,7 @@ if (!function_exists('render_eshop_product')) {
 				'prepend_value'=> "<i class='fa fa-minus m-t-5'></i>",
 				'prepend_type'=>'button',
 			));
-
+			// now add some simple js
 			add_to_jquery("
 			$('#product_quantity-prepend-btn').bind('click', function(e) {
 				var order_qty = $('#product_quantity').val();

@@ -98,6 +98,7 @@ class Eshop {
 		}
 	}
 
+
 	/* Reset the entire Eshop Session */
 	private static function restart() {
 		$token = self::get_token();
@@ -146,7 +147,6 @@ class Eshop {
 			// what's the difference between buy now and checkout cart item?
 			// do you want to clear the cart when this button clicked?
 			// what if someone added A LOT of items in the cart  and accidentally clicked this button? we will have a very pissed off customer...
-			//Buynow is for scripts or instant checkouts, it does not read cart originally.
 			//self::clear_cart(); <--- uncomment this to clear the whole cart.
 			$data = array(
 				'tid' => 0,
@@ -186,7 +186,7 @@ class Eshop {
 		if (dbrows($result)>0) {
 			$vat_rate = fusion_get_settings('eshop_vat') > 0 ? intval(fusion_get_settings('eshop_vat'))/100 : intval(0);
 			while ($data = dbarray($result)) {
-				$data['cimage'] = $data['cimage'] ? self::picExist(BASEDIR."eshop/pictures/thumbs/".$data['cimage']) : self::picExist('fake.png');
+				$data['cimage'] = $data['cimage'] ? self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/thumbs/".$data['cimage']) : self::picExist('fake.png');
 				// this is price inclusive of tax or not for visual purposes only. It is not used against calculations of tax vs coupons.
 				$data['item_price'] = fusion_get_settings('eshop_vat_default') ? $data['cprice']+($data['cprice'] * ($vat_rate)) : $data['cprice']; // unit
 				$data['item_subtotal'] = $data['item_price'] * $data['cqty'];
@@ -1486,8 +1486,8 @@ class Eshop {
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_PHOTOS." WHERE album_id='".intval($_GET['product'])."' ORDER BY photo_order");
 		if (dbrows($result)>0) {
 			while ($data = dbarray($result)) {
-				$data['photo_filename'] = self::picExist(SHOP."pictures/".$data['photo_filename']);
-				$data['photo_thumb1'] = self::picExist(SHOP."pictures/thumbs/".$data['photo_thumb1']);
+				$data['photo_filename'] = self::picExist(SHOP."pictures/album_".$data['album_id']."/".$data['photo_filename']);
+				$data['photo_thumb1'] = self::picExist(SHOP."pictures/album_".$data['album_id']."/".$data['photo_thumb1']);
 				$info['photos'][] = $data;
 			}
 		}
@@ -1544,10 +1544,13 @@ class Eshop {
 					$data['category_title'] = isnum($data['category_title']) ? "Front Page" : $data['category_title'];
 					$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
 					$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
-					if ($data['thumb']) { $data['picture'] = self::picExist(BASEDIR."eshop/pictures/thumbs/".$data['thumb']); }
-					elseif ($data['thumb2']) { $data['picture'] = self::picExist(BASEDIR."eshop/pictures/thumbs/".$data['thumb2']);	} 
-					else { $data['picture'] = self::picExist(BASEDIR."eshop/pictures/".$data['picture']); }
-//					echo "<img src='".$data['picture']."'>"; // Why SRC this above all?
+					if ($data['thumb']) $data['thumb'] = self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/thumbs/".$data['thumb']);
+					if ($data['thumb2']) {
+						$data['picture'] = self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['thumb2']);
+					} else {
+						if ($data['picture']) $data['picture'] = self::picExist(BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['picture']);
+						echo "<img src='".$data['picture']."'>";
+					}
 					$info['item'][$data['id']] = $data;
 					$this->info['title'] = $data['title'];
 					// push for title and meta
@@ -1556,6 +1559,7 @@ class Eshop {
 					$this->info['product_title'] = $data['title'];
 					$this->info['product_link'] = BASEDIR."eshop.php?product=".$data['id'];
 					$this->info['keywords'] = $data['keywords'];
+
 					return $info;
 				}
 			}
@@ -1586,10 +1590,15 @@ class Eshop {
 					$data['category_title'] = isnum($data['category_title']) ? $locale['eshop_1001'] : QuantumFields::parse_label($data['category_title']);
 					$data['category_link'] = isnum($data['category_title']) ? BASEDIR."eshop.php" : BASEDIR."category=".$data['cid'];
 					$data['link'] = BASEDIR."eshop.php?product=".$data['id'];
-					if ($data['thumb']) { $data['picture'] = BASEDIR."eshop/pictures/thumbs/".$data['thumb'];	} 
-					elseif ($data['thumb2']) {	$data['picture'] = BASEDIR."eshop/pictures/".$data['thumb2']; } 
-					elseif ($data['picture']) { $data['picture'] = BASEDIR."eshop/pictures/".$data['picture'];	}
-//					echo "<img src='".$data['picture']."'>";
+					if ($data['thumb']) {
+						$data['thumb'] = BASEDIR."eshop/pictures/album_".$data['cid']."/thumbs/".$data['thumb'];
+					}
+					if ($data['thumb2']) {
+						$data['picture'] = BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['thumb2'];
+					} else {
+						if ($data['picture']) $data['picture'] = BASEDIR."eshop/pictures/album_".$data['cid']."/".$data['picture'];
+						echo "<img src='".$data['picture']."'>";
+					}
 					$info['item'][$data['id']] = $data;
 				}
 			}
