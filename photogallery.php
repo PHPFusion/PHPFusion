@@ -130,7 +130,13 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 
 /* View Album */
 elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
+
+	// There are 2 errors here:
+	// Notice: Use of undefined constant LANGUAGE - assumed 'LANGUAGE' in /Applications/MAMP/htdocs/PHP-Fusion/includes/core_mlang_hub_include.php on line 139
+    // Notice: Undefined variable: userdata in /Applications/MAMP/htdocs/PHP-Fusion/maincore.php on line 166
+
 	define("PHOTODIR", PHOTOS.(!SAFEMODE ? "album_".$_GET['album_id']."/" : ""));
+
 	$result = dbquery("SELECT album_title, album_description, album_thumb, album_access FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess('album_access')." AND album_id='".intval($_GET['album_id'])."'");
 	if (dbrows($result)>0) {
 		$info = dbarray($result);
