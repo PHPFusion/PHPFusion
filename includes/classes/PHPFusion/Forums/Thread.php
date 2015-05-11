@@ -613,7 +613,7 @@ private function set_ThreadPolls() {
 				dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_votes=forum_poll_option_votes+1 WHERE thread_id='".$_GET['thread_id']."' AND forum_poll_option_id='".$_POST['poll_option']."'");
 				dbquery("UPDATE ".DB_FORUM_POLLS." SET forum_poll_votes=forum_poll_votes+1 WHERE thread_id='".$_GET['thread_id']."'");
 				dbquery("INSERT INTO ".DB_FORUM_POLL_VOTERS." (thread_id, forum_vote_user_id, forum_vote_user_ip, forum_vote_user_ip_type) VALUES ('".$this->thread_info['thread_id']."', '".$userdata['user_id']."', '".USER_IP."', '".USER_IP_TYPE."')");
-				redirect(FUSION_SELF."?thread_id=".$this->thread_info['thread_id']);
+				redirect(FUSION_SELF."?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread_id']);
 			}
 
 			$html = '';
