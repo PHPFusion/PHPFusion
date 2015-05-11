@@ -196,7 +196,7 @@ if (!function_exists('render_photo')) {
 		echo "<strong>".$locale['437']."</strong>".$info['photo_ratings']."<br/>\n";
 		echo "<strong>".$locale['436']."</strong>".$info['photo_comment']."<br/>\n";
 		echo "</div>\n</div>\n";
-		echo "</div>\n";
+		echo "</div>\n</div>\n";
 		echo "<!--sub_photo-->";
 		if ($info['photo_allow_comments']) {
 			showcomments("P", DB_PHOTOS, "photo_id", $_GET['photo_id'], BASEDIR."photogallery.php?photo_id=".$_GET['photo_id']);
