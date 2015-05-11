@@ -103,7 +103,6 @@ if (!function_exists('render_photo_category')) {
 /* The photo container */
 if (!function_exists('render_photo_item')) {
 	function render_photo_item($data) {
-		print_p($data);
 		global $locale;
 		echo "<div class='panel panel-default'>\n";
 		echo "<a title='".$data['album_link']['name']."' href='".$data['album_link']['link']."'><div class='panel-image'>\n";
