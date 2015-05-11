@@ -35,9 +35,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_i
 		if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
 			unlink(IMAGES_N_T.$data['news_image_t2']);
 		}
-		$result = dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='".$_POST['news_id']."'");
-		$result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$_POST['news_id']."' and comment_type='N'");
-		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$_POST['news_id']."' and rating_type='N'");
+		$result = dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='".$del_data['news_id'] ."'");
+		$result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$del_data['news_id'] ."' and comment_type='N'");
+		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$del_data['news_id'] ."' and rating_type='N'");
 		dbquery_insert(DB_NEWS, $del_data, 'delete');
 		addNotice('warning', $locale['news_0102']);
 		redirect(FUSION_SELF.$aidlink);
@@ -45,18 +45,18 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_i
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
+
 $allowed_pages = array('news', 'nform');
+
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'news';
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id']) && isnum($_GET['news_id'])) ? 1 : 0;
 
 $master_title['title'][] = $locale['news_0000'];
 $master_title['id'][] = 'news';
 $master_title['icon'] = '';
-
 $master_title['title'][] = $edit ? $locale['news_0003'] : $locale['news_0002'];
 $master_title['id'][] = 'nform';
 $master_title['icon'] = '';
-
 $tab_active =  tab_active($master_title, $_GET['section'] , 1);
 
 opentable($locale['news_0001']);
