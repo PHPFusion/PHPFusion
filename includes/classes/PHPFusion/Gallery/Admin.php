@@ -728,22 +728,21 @@ class Admin {
 	 * @param $current_thumb
 	 */
 	private function refresh_album_thumb($album_id, $current_thumb) {
-		$result = dbquery("SELECT photo_thumb1 FROM ".$this->photo_db." WHERE album_id='".intval($album_id)."' ORDER BY photo_order DESC");
+		$result = dbquery("SELECT photo_thumb1 FROM ".$this->photo_db." WHERE album_id='".intval($album_id)."' ORDER BY photo_datestamp DESC LIMIT 0,1");
 		if (dbrows($result) > 0) {
-			while ($photo_data = dbarray($result)) {
-				if ($current_thumb !== $photo_data['photo_thumb1']) {
-					$thumbnail = rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb1'];
-					if (file_exists($thumbnail) && !is_dir($thumbnail)) {
-						$result = dbquery("UPDATE ".$this->photo_cat_db." SET album_thumb='".$photo_data['photo_thumb1']."' WHERE album_id='".intval($album_id)."'");
-						if ($result) break;
-					}
+			$thumb_data = dbarray($result);
+			if ($current_thumb !== $thumb_data['photo_thumb1']) {
+				$folder = self::get_virtual_path($album_id);
+				$thumbnail = $folder.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$thumb_data['photo_thumb1'];
+				if (file_exists($thumbnail) && !is_dir($thumbnail)) {
+					dbquery("UPDATE ".$this->photo_cat_db." SET album_thumb='".$thumb_data['photo_thumb1']."' WHERE album_id='".intval($album_id)."'");
 				}
 			}
 		}
 	}
 
 	/**
-	 * Deletion of thumb - not useful and very unfriendly
+	 * Deletion of thumb - not used.
 	 */
 	private function delete_album_thumb() {
 		if (isset($_POST['delete_album_thumb'])) {
@@ -1120,6 +1119,7 @@ class Admin {
 		$multiplier = $rows > $this->albums_per_page ? $this->albums_per_page : $rows;
 		$max_items_per_col = $multiplier/$this->gallery_rows;
 		// get in current language.
+		$current_rows = 0;
 		if ($rows) {
 			if ($_GET['gallery'] >0 ) { // view photos
 				$result = dbquery("SELECT photos.*, photos.photo_user as user_id, album.*, album.album_id as gallery_id, album.album_thumb, u.user_name, u.user_status, u.user_avatar,
@@ -1148,6 +1148,10 @@ class Admin {
 				while ($data = dbarray($result)) {
 					$this->gallery_data[] = $data;
 					self::refresh_album_thumb($data['album_id'], $data['album_thumb']);
+
+
+
+
 					$list[$i][$data['album_id']] = $data;
 					if ($count >= $max_items_per_col) {
 						$i++;
