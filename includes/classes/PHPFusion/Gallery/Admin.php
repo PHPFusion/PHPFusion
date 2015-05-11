@@ -455,7 +455,7 @@ class Admin {
 	 * SQL save or update album
 	 */
 	private function set_albumDB() {
-		global $userdata;
+		global $userdata, $locale;
 		if (isset($_POST['upload_album'])) {
 			// keep the modal open to listen to error messages
 			add_to_jquery("$('#add_album-Modal').modal('show');");
@@ -540,7 +540,7 @@ class Admin {
 					if (!empty($this->photo_data) && self::validate_photo($this->photo_data['photo_id'])) {
 						dbquery_insert($this->photo_db, $this->photo_data, 'update');
 					}
-					addNotice('success', 'write something to locale file here...photo album edited etc.');
+					addNotice('success', $locale['700']);
 					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type'), FALSE));
 				}
 			} else {
@@ -559,7 +559,7 @@ class Admin {
 							dbquery_insert($this->photo_db, $this->photo_data, 'save');
 						}
 					}
-					addNotice('success', 'write something to locale file here...photo success etc.');
+					addNotice('success', $locale['701']);
 					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type'), FALSE));
 				}
 			}
@@ -632,7 +632,7 @@ class Admin {
 	 * SQL batch upload
 	 */
 	private function set_batchPhotoDB() {
-		global $userdata;
+		global $userdata, $locale;
 		if (isset($_POST['batch_upload'])) {
 			$album_id = form_sanitizer($_POST['album_id'], '0', 'album_id');
 			if (self::validate_album($album_id)) {
@@ -666,7 +666,7 @@ class Admin {
 	 * SQL save or update photo
 	 */
 	private function set_photoDB() {
-		global $userdata;
+		global $userdata, $locale;
 		if (isset($_POST['upload_photo'])) {
 			$this->photo_data = array(
 				'photo_id' => isset($_POST['photo_id']) ? form_sanitizer($_POST['photo_id'], '', 'photo_id') : 0,
@@ -707,16 +707,16 @@ class Admin {
 				$result = dbquery_order($this->photo_db, $this->photo_data['photo_order'], 'photo_order', $this->photo_data['photo_id'], 'photo_id', $this->photo_data['album_id'], 'album_id', FALSE, FALSE, 'update');
 				if ($result) {
 					dbquery_insert($this->photo_db, $this->photo_data, 'update');
-					if (!defined('FUSION_NULL')) redirect(clean_request('status=pu', array('gallery_edit',
-						'gallery_type'), FALSE));
+					addNotice('success', $locale['703']);
+					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type'), FALSE));
 				}
 			} else {
 				// new saves
 				$result = dbquery_order($this->photo_db, $this->photo_data['photo_order'], 'photo_order', FALSE, FALSE, $this->photo_data['album_id'], 'album_id', FALSE, FALSE, 'save');
 				if ($result) {
 					dbquery_insert($this->photo_db, $this->photo_data, 'save');
-					if (!defined('FUSION_NULL')) redirect(clean_request('status=pn', array('gallery_edit',
-						'gallery_type'), FALSE));
+					addNotice('success', $locale['702']);
+					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type'), FALSE));
 				}
 			}
 		}

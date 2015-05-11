@@ -98,4 +98,8 @@ $locale['652'] = "Camera Model";
 $locale['655'] = "Keywords:";
 
 $locale['660'] = "There are no photos in this album";
+$locale['700'] = "Photo album updated";
+$locale['701'] = "Photo album created";
+$locale['702'] = "Photo uploaded";
+$locale['703'] = "Photo updated";
 ?>
