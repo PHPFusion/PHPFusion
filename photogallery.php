@@ -25,7 +25,7 @@ if (!db_exists(DB_PHOTO_ALBUMS)) {
 require_once THEMES."templates/header.php";
 include LOCALE.LOCALESET."photogallery.php";
 require_once THEMES."templates/global/photos.php";
-define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 add_to_title($locale['global_200'].$locale['400']);
 add_breadcrumb(array('link'=>BASEDIR.'photogallery.php', 'title'=>$locale['400']));
 
@@ -44,7 +44,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		LEFT JOIN ".DB_USERS." tu ON tp.photo_user=tu.user_id
 		LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tp.photo_id AND tr.rating_type='P'
 		LEFT JOIN ".DB_COMMENTS." tc ON tc.comment_item_id=tp.photo_id AND comment_type='P'
-		WHERE ".groupaccess('album_access')." AND photo_id='".$_GET['photo_id']."' GROUP BY tp.photo_id");
+		WHERE ".groupaccess('album_access')." AND photo_id='".intval($_GET['photo_id'])."' GROUP BY tp.photo_id");
 	$info = array();
 
 
@@ -131,7 +131,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 /* View Album */
 elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 	define("PHOTODIR", PHOTOS.(!SAFEMODE ? "album_".$_GET['album_id']."/" : ""));
-	$result = dbquery("SELECT album_title, album_description, album_thumb, album_access FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess('album_access')." AND album_id='".$_GET['album_id']."'");
+	$result = dbquery("SELECT album_title, album_description, album_thumb, album_access FROM ".DB_PHOTO_ALBUMS." WHERE ".groupaccess('album_access')." AND album_id='".intval($_GET['album_id'])."'");
 	if (dbrows($result)>0) {
 		$info = dbarray($result);
 		add_to_title($locale['global_201'].$info['album_title']);
@@ -146,7 +146,7 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 			$latest_update = dbarray(dbquery("
 					SELECT tp.photo_datestamp, tu.user_id, tu.user_name, tu.user_status FROM ".DB_PHOTOS." tp
 					LEFT JOIN ".DB_USERS." tu ON tp.photo_user=tu.user_id
-					WHERE album_id='".$_GET['album_id']."' ORDER BY photo_datestamp DESC LIMIT 1")); // get photo data?
+					WHERE album_id='".intval($_GET['album_id'])."' ORDER BY photo_datestamp DESC LIMIT 1")); // get photo data?
 			$info['album_stats'] = $locale['422'].$info['max_rows']."<br />\n";
 			$info['album_stats'] .= $locale['423'].profile_link($latest_update['user_id'], $latest_update['user_name'], $latest_update['user_status'])."".$locale['424'].showdate("longdate", $latest_update['photo_datestamp'])."\n";
 			$result = dbquery("SELECT tp.photo_id, tp.photo_title, tp.photo_thumb1, tp.photo_description, tp.photo_views, tp.photo_datestamp, tp.photo_allow_comments, tp.photo_allow_ratings,
@@ -154,7 +154,7 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 					FROM ".DB_PHOTOS." tp
 					LEFT JOIN ".DB_USERS." tu ON tp.photo_user=tu.user_id
 					LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tp.photo_id AND tr.rating_type='P'
-					WHERE album_id='".$_GET['album_id']."' GROUP BY photo_id ORDER BY photo_order LIMIT ".$_GET['rowstart'].",".$settings['thumbs_per_page']);
+					WHERE album_id='".$_GET['album_id']."' GROUP BY photo_id ORDER BY photo_order LIMIT ".intval($_GET['rowstart']).",".$settings['thumbs_per_page']);
 			$info['photo_rows'] = dbrows($result);
 
 			$info['page_nav'] = $info['max_rows'] > $settings['thumbs_per_page'] ? makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $info['max_rows'], 3, BASEDIR."photogallery.php?album_id=".$_GET['album_id']."&amp;") : '';
@@ -164,6 +164,7 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 					// data manipulation
 					$data['album_link'] = array('link'=>BASEDIR."photogallery.php?photo_id=".$data['photo_id'], 'name'=>$data['photo_title']);
 					$data['image'] = ($data['photo_thumb1'] && file_exists(PHOTODIR."thumbs/".$data['photo_thumb1'])) ? PHOTODIR."thumbs/".$data['photo_thumb1'] : '';
+
 					$data['title'] = ($data['photo_title']) ? $data['photo_title'] : $data['image'];
 					$data['description'] = ($data['photo_description']) ? $data['photo_description'] : '';
 					if ($data['photo_allow_comments']) {
@@ -181,9 +182,6 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 	}
 	render_photo_category($info);
 }
-
-
-
 /* Main Index */
 else {
 
@@ -199,7 +197,8 @@ else {
 			LIMIT ".$_GET['rowstart'].",".$settings['thumbs_per_page']);
 		while ($data = dbarray($result)) {
 			$data['album_link'] = array('link'=>BASEDIR."photogallery.php?album_id=".$data['album_id'], 'name'=>$data['album_title']);
-			$data['image'] = ($data['album_thumb'] && file_exists(PHOTOS."/thumbs/".$data['album_thumb'])) ? PHOTOS."/thumbs/".$data['album_thumb'] : '';
+			$photo_directory = !SAFEMODE ? "album_".$data['album_id'] : '';
+			$data['image'] = ($data['album_thumb'] && file_exists(PHOTOS.$photo_directory."/thumbs/".$data['album_thumb'])) ? PHOTOS.$photo_directory."/thumbs/".$data['album_thumb'] : '';
 			$data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
 			$data['description'] = $data['album_description'] ? $data['album_description'] : '';
 			$_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar

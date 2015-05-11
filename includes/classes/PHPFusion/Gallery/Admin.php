@@ -1148,10 +1148,6 @@ class Admin {
 				while ($data = dbarray($result)) {
 					$this->gallery_data[] = $data;
 					self::refresh_album_thumb($data['album_id'], $data['album_thumb']);
-
-
-
-
 					$list[$i][$data['album_id']] = $data;
 					if ($count >= $max_items_per_col) {
 						$i++;
