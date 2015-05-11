@@ -63,8 +63,10 @@ class Admin {
 		'album_access' => 0,
 		'album_order' => 0,
 		'album_datestamp' => 0,
-		'album_language' => '',);
-	private $photo_data = array('photo_id' => 0,
+		'album_language' => '',
+	);
+	private $photo_data = array(
+		'photo_id' => 0,
 		'album_id' => 0,
 		'photo_title' => '',
 		'photo_description' => '',
@@ -180,7 +182,7 @@ class Admin {
 			 * Display the requirements of booting
 			 */
 			$error = self::check_api();
-			if (empty($error)) {
+			if (empty($error)) { // if all system go, load scripts
 				self::delete_gallery();
 				self::set_albumDB();
 				self::set_photoDB();
@@ -465,12 +467,12 @@ class Admin {
 			// point of injection of altered if you know the album_id -- possible bug: high volume sites will not be able to book the id unless record is made?
 			if (!$this->album_data['album_id']) {
 				$next_album_id = dbnextid($this->photo_cat_db);
-				self::set_modified_upload_path($next_album_id, 'imagefile', 1);
+				self::set_modified_upload_path($next_album_id, 'album_file', 1);
 			} else {
-				self::set_modified_upload_path($this->album_data['album_id'], 'imagefile', 1);
+				self::set_modified_upload_path($this->album_data['album_id'], 'album_file', 1);
 			}
-			self::set_modified_upload_path($next_album_id, 'album_file', 1);
 			$upload_result = form_sanitizer($_FILES['album_file'], '', 'album_file');
+
 			/** Note: Ensure your hidden field return does not bear the same input name as the fileinput name else form sanitizer will not sanitize properely as both bears same identifier */
 			$this->album_data['album_thumb'] = form_sanitizer($_POST['album_hfile'], '', 'album_hfile');
 			if (isset($upload_result['error']) && $upload_result['error'] !== '0') {
@@ -481,6 +483,7 @@ class Admin {
 				$thumb1_name = $upload_result['thumb1_name'];
 				$thumb2_name = $upload_result['thumb2_name'];
 			}
+
 			/**
 			 * Photo_data sourced from 2 place. If Album history exist, photo_data will follow sql. if not, follow the OOP field construct we initialized.
 			 * Either way, there is no need to !empty() or isset() check.
@@ -498,6 +501,7 @@ class Admin {
 					@unlink(rtrim($this->image_upload_dir, '/').'/'.$this->photo_data['photo_filename']);
 				}
 			}
+
 			/**
 			 * Recompile New Photo Data Output.
 			 * 3 Elements in play for key - filename, thumb1 and thumb2.
@@ -505,7 +509,8 @@ class Admin {
 			 * b. $this->photo_data will be `overwritten` if we have an album thumb change.
 			 * c. If both a & b does not exist, it will follow the blank defaults.
 			 */
-			$this->photo_data = array('photo_id' => $this->photo_data['photo_id'],
+			$this->photo_data = array(
+				'photo_id' => $this->photo_data['photo_id'],
 				'album_id' => $this->photo_data['album_id'],
 				'photo_title' => $this->album_data['album_title'],
 				'photo_description' => $this->album_data['album_description'],
@@ -518,22 +523,26 @@ class Admin {
 				'photo_views' => $this->photo_data['photo_views'],
 				'photo_order' => $this->photo_data['photo_order'],
 				'photo_allow_comments' => $this->photo_data['photo_allow_comments'],
-				'photo_allow_ratings' => $this->photo_data['photo_allow_ratings'],);
+				'photo_allow_ratings' => $this->photo_data['photo_allow_ratings']
+			);
+
 			if ($this->album_data['album_id'] && self::validate_album($this->album_data['album_id'])) {
+				// update
 				$result = dbquery_order($this->photo_cat_db, $this->album_data['album_order'], 'album_order', $this->album_data['album_id'], 'album_id', FALSE, FALSE, 1, 'album_language', 'update');
 				if ($result) {
 					dbquery_insert($this->photo_cat_db, $this->album_data, 'update');
 					if (!empty($this->photo_data) && self::validate_photo($this->photo_data['photo_id'])) {
 						dbquery_insert($this->photo_db, $this->photo_data, 'update');
 					}
-					if (!defined('FUSION_NULL')) redirect(clean_request('status=au', array('gallery_edit',
-						'gallery_type'), FALSE));
+					if (!defined('FUSION_NULL')) redirect(clean_request('status=au', array('gallery_edit', 'gallery_type'), FALSE));
 				}
 			} else {
 				// new saves
 				$result = dbquery_order($this->photo_cat_db, $this->album_data['album_order'], 'album_order', FALSE, FALSE, FALSE, FALSE, 1, 'album_language', 'save');
 				if ($result) {
+					// create photo album
 					dbquery_insert($this->photo_cat_db, $this->album_data, 'save');
+
 					$this->album_data['album_id'] = dblastid();
 					if (!empty($this->photo_data) && $this->album_data['album_id']) {
 						if (!$this->photo_data['photo_order']) $this->photo_data['photo_order'] = $this->photo_data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".$this->photo_db." WHERE album_id='".intval($this->album_data['album_id'])."'"), 0)+1;
@@ -543,14 +552,14 @@ class Admin {
 							dbquery_insert($this->photo_db, $this->photo_data, 'save');
 						}
 					}
-					if (!defined('FUSION_NULL')) redirect(clean_request('status=an', array('gallery_edit',
-						'gallery_type'), FALSE));
+					//if (!defined('FUSION_NULL')) redirect(clean_request('status=an', array('gallery_edit', 'gallery_type'), FALSE));
 				}
 			}
 		}
 	}
 
 	/**
+	 * Stable Version - Tested 11/5/2015
 	 * Returns a modified path based on php ini safe mode
 	 * This is for making a album_$id for better file organization
 	 * @param $album_id
@@ -563,11 +572,11 @@ class Admin {
 			switch ($type) {
 				case '1':
 					$upload_dir = !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
-					$_SESSION['form_fields'][\defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name]['path'] = $upload_dir;
+					$_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name]['path'] = $upload_dir;
 					break;
 				case '2':
 					$upload_dir = !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$album_id."/" : $this->image_upload_dir;
-					$_SESSION['form_fields'][\defender::set_sessionUserID()][$_SERVER['PHP_SELF']][$input_name]['path'] = $upload_dir;
+					$_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name]['path'] = $upload_dir;
 					break;
 			}
 		}
@@ -592,20 +601,20 @@ class Admin {
 	 * @param bool $hiRes
 	 * @return bool|string
 	 */
-	public function get_album_image($album_id, $thumbnail_folder, $picture, $thumb1, $thumb2, $hiRes=false) {
+	public function get_album_image($album_id, $picture, $thumb1, $thumb2, $hiRes=false) {
 		$path = self::get_virtual_path($album_id);
 		if (!$hiRes) {
-			if ($thumb1 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb1)) return $path.rtrim($thumbnail_folder, '/')."/".$thumb1;
+			if ($thumb1 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb1)) return $path.rtrim($this->upload_settings['thumbnail_folder'],  '/')."/".$thumb1;
 			if ($thumb1 && file_exists($path.$thumb1)) return $path.$thumb1;
-			if ($thumb2 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb2)) return $path.rtrim($thumbnail_folder, '/')."/".$thumb2;
-			if ($thumb2 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb2)) return $path.$thumb2;
+			if ($thumb2 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$thumb2)) return $path.rtrim($this->upload_settings['thumbnail_folder'],  '/')."/".$thumb2;
+			if ($thumb2 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'],  '/')."/".$thumb2)) return $path.$thumb2;
 			if ($picture && file_exists($path.$picture)) return $path.$picture;
 		} else {
 			if ($picture && file_exists($path.$picture)) return $path.$picture;
 			if ($thumb2 && file_exists($path.$thumb2)) return $path.$thumb2;
-			if ($thumb2 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb2)) return $path.rtrim($thumbnail_folder, '/')."/".$thumb2;
+			if ($thumb2 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'],  '/')."/".$thumb2)) return $path.rtrim($this->upload_settings['thumbnail_folder'],  '/')."/".$thumb2;
 			if ($thumb1 && file_exists($path.$thumb1)) return $path.$thumb1;
-			if ($thumb1 && file_exists($path.rtrim($thumbnail_folder, '/')."/".$thumb1)) return $path.rtrim($thumbnail_folder, '/')."/".$thumb1;
+			if ($thumb1 && file_exists($path.rtrim($this->upload_settings['thumbnail_folder'],  '/')."/".$thumb1)) return $path.rtrim($this->upload_settings['thumbnail_folder'],  '/')."/".$thumb1;
 		}
 		return false;
 	}
@@ -898,7 +907,7 @@ class Admin {
 				$time = $_SESSION['gallery'][$data['photo_id']][$session_id];
 				if ($time <= time()-($days_to_keep_session*3600*24)) unset($_SESSION['gallery'][$data['photo_id']][$session_id]);
 			}
-			$img_path = self::get_album_image($data['album_id'], $this->upload_settings['thumbnail_folder'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], true);
+			$img_path = self::get_album_image($data['album_id'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], true);
 			$img_src = file_exists($img_path) && !is_dir($img_path) ? $img_path : 'holder.js/170x170/grey/text:'.$locale['na'];
 			$file_exif = exif($img_src);
 			echo openmodal('photo_show', '', array('class' => 'modal-lg'));
@@ -1263,11 +1272,11 @@ class Admin {
 				</div>
 				<div class='image_container'>
 					<?php if ($type == 1) {
-						$img_src = self::get_album_image($data['album_id'], $this->upload_settings['thumbnail_folder'], $data['album_thumb'], '', '');
+						$img_src = self::get_album_image($data['album_id'], $data['album_thumb'], $data['album_thumb'], $data['album_thumb']);
 						$img_src = file_exists($img_src) && !is_dir($img_src) ? $img_src : 'holder.js/170x170/grey/text:'.$locale['na'];
 						echo "<img class='img-responsive' src='".$img_src."' alt='".$data['album_title']."'/>";
 					} elseif ($type == 2) {
-						$img_src = self::get_album_image($data['album_id'], $this->upload_settings['thumbnail_folder'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2']);
+						$img_src = self::get_album_image($data['album_id'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2']);
 						$img_src = file_exists($img_src) && !is_dir($img_src) ? $img_src : 'holder.js/170x170/grey/text:'.$locale['na'];
 						echo "<img src='".$img_src."' alt='".$data['photo_title']."'/>";
 					} ?>
