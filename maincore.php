@@ -36,14 +36,18 @@ $settings = fusion_get_settings();
 if (empty($settings)) {
 	die("Settings do not exist, please check your config.php file or run install/index-php again.");
 }
+
 // Settings dependent functions
 date_default_timezone_set($settings['default_timezone']);
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
+
 // Session lifetime. After this time stored data will be seen as 'garbage' and cleaned up by the garbage collection process.
 ini_set('session.gc_maxlifetime', 172800); // 48 hours
+
 // Session cookie life time
 ini_set('session.cookie_lifetime', 172800); // 48 hours
+
 // Prevent document expiry when user hits Back in browser
 session_cache_limiter('private, must-revalidate');
 session_name(COOKIE_PREFIX.'session');
@@ -128,7 +132,6 @@ if (!defined("IN_PERMALINK")) {
 }
 
 // Autenticate user
-// Log in user
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {
 	$auth = new Authenticate($_POST['user_name'], $_POST['user_pass'], (isset($_POST['remember_me']) ? TRUE : FALSE));
 	$userdata = $auth->getUserData();
@@ -151,17 +154,17 @@ define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 
 // Get enabled language settings
-// @todo find occurrences of $language_opts (26) and $enabled_languages (143) and change the codes to use one of them
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
 // Language detection hub for multilingual content, detect, set he correct language if it is not set
-if (!isset($_GET['hub']) && count($enabled_languages) > 1) {
+if (count($enabled_languages) > 1) {
 	require __DIR__.'/includes/core_mlang_hub_include.php';
 }
 
 // Set the requested language
 function set_language($lang) {
+global $userdata;
 	if (iMEMBER) {
 		dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
 	} else {
@@ -175,7 +178,7 @@ if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 
 echo set_language($lang);
 
-	// Redirect handler to keep position upon lang switch
+// Redirect handler to keep position upon lang switch
 	$this_redir = '';
 	if (FUSION_QUERY != "") {
 		if (stristr(FUSION_QUERY, '?')) {
@@ -190,10 +193,9 @@ echo set_language($lang);
 		$this_redir = "?";
 	}
 // Everything is instanced, strip issets after lang switch unless we are in The Administration
-if (!preg_match('/administration/i', $_SERVER['PHP_SELF']) && !isset($_GET['hub'])) {
+if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 	$this_redir = preg_replace("/(.*?)?(.*)/", "$1", $this_redir);
 }
-$this_redir = str_replace("&amp;hub", "", $this_redir);
 redirect(FUSION_SELF.$this_redir."");
 }
 
@@ -223,6 +225,7 @@ if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
 // Load the Global language file
 include LOCALE.LOCALESET."global.php";
 
+// Define aidlink
 if (iADMIN) {
 	define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
 	$aidlink = "?aid=".iAUTH;
@@ -281,10 +284,10 @@ $defender->debug_notice = FALSE; // turn this off after beta.
 $dynamic = new dynamics();
 $dynamic->boot();
 
-// & is important after equal sign!
 $fusion_page_head_tags = & \PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = & \PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = & \PHPFusion\OutputHandler::$jqueryTags;
 
-// set admin login procedures
+// Set admin login procedures
 Authenticate::setAdminLogin();
+?>
