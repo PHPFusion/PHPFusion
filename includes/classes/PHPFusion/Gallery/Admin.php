@@ -534,7 +534,8 @@ class Admin {
 					if (!empty($this->photo_data) && self::validate_photo($this->photo_data['photo_id'])) {
 						dbquery_insert($this->photo_db, $this->photo_data, 'update');
 					}
-					if (!defined('FUSION_NULL')) redirect(clean_request('status=au', array('gallery_edit', 'gallery_type'), FALSE));
+					addNotice('success', 'write something to locale file here...photo album edited etc.');
+					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type'), FALSE));
 				}
 			} else {
 				// new saves
@@ -552,7 +553,8 @@ class Admin {
 							dbquery_insert($this->photo_db, $this->photo_data, 'save');
 						}
 					}
-					//if (!defined('FUSION_NULL')) redirect(clean_request('status=an', array('gallery_edit', 'gallery_type'), FALSE));
+					addNotice('success', 'write something to locale file here...photo success etc.');
+					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type'), FALSE));
 				}
 			}
 		}
