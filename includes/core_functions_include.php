@@ -156,7 +156,6 @@ $enabled_languages = array_keys(fusion_get_enabled_languages());
 	}
 	
 	$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
-	$link_prefix = str_replace($settings['site_path'], "", $link_prefix);
 	
 	foreach ($enabled_languages as $row => $language) {
 		$lang_text = translate_lang_names($language);
