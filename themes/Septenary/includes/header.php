@@ -38,7 +38,6 @@ if (count(fusion_get_enabled_languages()) > 1) {
 	$language_opts .= "<ul class='dropdown-menu' role='lang-menu'>\n";
 	foreach(fusion_get_enabled_languages() as $languages) {
 	$link_prefix = clean_request('lang='.$languages, array('lang'), false, '&amp;');
-	$link_prefix = str_replace($settings['site_path'], "", $link_prefix);
 	$language_opts .= "<li class='display-block text-left'><a class='display-block' style='width:100%' href='".$link_prefix."'> <img alt='".$languages."' class='m-r-5' src='".BASEDIR."locale/$languages/$languages-s.png'> $languages</a></li>\n";
 		
 	}
