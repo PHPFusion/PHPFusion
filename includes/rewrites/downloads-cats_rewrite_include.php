@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,11 +18,10 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array("%download_cat_id%" => "([0-9]+)", "%download_cat_name%" => "([0-9a-zA-Z._\W]+)");
-$pattern = array("dl-cats/%download_cat_id%/%download_cat_name%" => "downloads.php?cat_id=%download_cat_id%",);
+$pattern = array("download-cat/%download_cat_id%/%download_cat_name%" => "downloads.php?cat_id=%download_cat_id%",);
 
 $dir_path = ROOT;
 $dbname = DB_DOWNLOAD_CATS;
 $dbid = array("%download_cat_id%" => "download_cat_id");
 $dbinfo = array("%download_cat_name%" => "download_cat_name");
-
 ?>

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,20 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-$regex = array(
-	"%album_id%" => "([0-9]+)",
-	"%album_title%" => "([0-9a-zA-Z._\W]+)",
-);
 
-$pattern = array(
-	"gallery" => "photogallery.php",
-	"gallery/%album_id%/%album_title%" => "photogallery.php?album_id=%album_id%",
-	);
+$regex = array("%album_id%" => "([0-9]+)","%album_title%" => "([0-9a-zA-Z._\W]+)");
+
+$pattern = array("gallery" => "photogallery.php", "gallery/%album_id%/%album_title%" => "photogallery.php?album_id=%album_id%");
 
 $dbname = DB_PHOTO_ALBUMS;
 $dbid = array("%album_id%" => "album_id");
-$dbinfo = array(
-	"%album_title%" => "album_title"
-);
-
+$dbinfo = array("%album_title%" => "album_title");
 ?>

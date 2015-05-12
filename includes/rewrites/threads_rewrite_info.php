@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,7 +18,6 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $permalink_name = $locale['pl_threads_title'];
 $permalink_desc = $locale['pl_threads_desc'];
-
 $permalink_tags_desc = array("%thread_id%" => $locale['pl_tags_001'], "%thread_title%" => $locale['pl_tags_002'],
 							 "%post_id%" => $locale['pl_tags_003'], "%thread_rowstart%" => $locale['pl_tags_004']);
 ?>

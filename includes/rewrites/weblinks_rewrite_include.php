@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,16 +17,14 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array(
-	"%weblink_id%" => "([0-9]+)",
-	"%rowstart%" => "([0-9]+)",
-	"%weblink_cat_id%" => "([0-9]+)",
-);
-$pattern = array(
-	"links/%weblink_id%/%weblink_cat_id%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
-	"links/browse/%weblink_cat_id%/%rowstart%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%"
-);
+$regex = array("%weblink_id%" => "([0-9]+)",
+			   "%rowstart%" => "([0-9]+)",
+			   "%weblink_cat_id%" => "([0-9]+)
+			   ");
+			   
+$pattern = array("links/%weblink_id%/%weblink_cat_id%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
+			     "links/browse/%weblink_cat_id%/%rowstart%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%
+				 ");
 
 $dir_path = BASEDIR;
-
 ?>

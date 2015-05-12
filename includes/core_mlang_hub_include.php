@@ -18,29 +18,33 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Articles
-if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['article_id']) && isnum($_GET['article_id']))) { 
-$data = dbarray(dbquery("SELECT ac.article_cat_id,ac.article_cat_language, a.article_id
-						FROM ".DB_ARTICLE_CATS." ac
-						LEFT JOIN ".DB_ARTICLES." a ON ac.article_cat_id = a.article_cat 
-						WHERE a.article_id='".stripinput($_GET['article_id'])."'
-						GROUP BY a.article_id"));
-	if ($data['article_cat_language']." != ".LANGUAGE) {
-		echo set_language($data['article_cat_language']);
+if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) || preg_match('|/articles/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
+	if (isset($_GET['article_id']) && isnum($_GET['article_id']) || $matches['1'] > 0) {
+		$data = dbarray(dbquery("SELECT ac.article_cat_id,ac.article_cat_language, a.article_id
+								 FROM ".DB_ARTICLE_CATS." ac
+								 LEFT JOIN ".DB_ARTICLES." a ON ac.article_cat_id = a.article_cat 
+								 WHERE a.article_id='".(isset($_GET['article_id']) ? $_GET['article_id'] : $matches['1'])."'
+								 GROUP BY a.article_id"));
+		if ($data['article_cat_language']." != ".LANGUAGE) {
+			echo set_language($data['article_cat_language']);
+		}
 	}
 }
 
 // Article Cats
-if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
-$data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".stripinput($_GET['cat_id'])."'"));
-	if ($data['article_cat_language']." != ".LANGUAGE) {
-		echo set_language($data['article_cat_language']);
+if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) || preg_match('|/article-category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
+	if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || $matches['1'] > 0) {
+		$data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".(isset($_GET['article_id']) ? $_GET['article_id'] : $matches['1'])."'"));
+		if ($data['article_cat_language']." != ".LANGUAGE) {
+			echo set_language($data['article_cat_language']);
+		}
 	}
 }
 
-// Blog ->This is about how we need to do it for full support with Permalinks enabled, I will extend to the other sections later.
+// Blog
 if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blog/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
 	if (isset($_GET['readmore']) && isnum($_GET['readmore']) || $matches['1'] > 0) {
-	$data = dbarray(dbquery("SELECT blog_language FROM ".DB_BLOG." WHERE blog_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
+		$data = dbarray(dbquery("SELECT blog_language FROM ".DB_BLOG." WHERE blog_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
 		if ($data['blog_language']." != ".LANGUAGE) {
 			echo set_language($data['blog_language']);
 		}
@@ -48,10 +52,12 @@ if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blog/([0-9]
 }
 
 // Blog Cats
-if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) { 
-$data = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".stripinput($_GET['cat_id'])."'"));
-	if ($data['blog_cat_language']." != ".LANGUAGE) {
-		echo set_language($data['blog_cat_language']);
+if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blog-category/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
+	if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || $matches['1'] > 0) {
+		$data = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
+		if ($data['blog_cat_language']." != ".LANGUAGE) {
+			echo set_language($data['blog_cat_language']);
+		}
 	}
 }
 

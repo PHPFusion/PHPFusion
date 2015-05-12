@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,12 +18,11 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array("%category%" => "([0-9]+)", 
-				  "%title%" => "([0-9a-zA-Z._\W]+)");
+			   "%title%" => "([0-9a-zA-Z._\W]+)");
 				  
 $pattern = array("shop-category/%category%/%title%" => "eshop.php?category=%category%");
 
 $dir_path = ROOT;
-
 $dbname = DB_ESHOP_CATS;
 $dbid = array("%category%" => "cid");
 $dbinfo = array("%title%" => "title");

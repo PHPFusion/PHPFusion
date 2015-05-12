@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,15 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-$regex = array("%download_id%" => "([0-9]+)", "%cat_id%" => "([0-9]+)", "%download_title%" => "([0-9a-zA-Z._\W]+)",
-			   "%file_id%" => "([0-9]+)",);
-$pattern = array("download" => "downloads.php",
-				 "download/%cat_id%/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
-				 "download/%download_id%/%download_title%" => "downloads.php?download_id=%download_id%",
-				 "download/file/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%");
+
+$regex = array("%download_id%" => "([0-9]+)", "%cat_id%" => "([0-9]+)", "%download_title%" => "([0-9a-zA-Z._\W]+)", "%file_id%" => "([0-9]+)",);
+
+$pattern = array("downloads" => "downloads.php",
+				 "downloads/%cat_id%/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
+				 "downloads/%download_id%/%download_title%" => "downloads.php?download_id=%download_id%",
+				 "downloads/file/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%");
+
 $dir_path = BASEDIR;
 $dbname = DB_DOWNLOADS;
 $dbid = array("%download_id%" => "download_id");
 $dbinfo = array("%download_title%" => "download_title");
-
 ?>

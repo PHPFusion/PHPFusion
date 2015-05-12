@@ -4,7 +4,7 @@
 | Copyright (C) 2002 - 2011 Nick Jones
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: articles_rewrite_include.php
+| File Category: Core Rewrite Modules
 | Author: Ankur Thakur
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,16 +17,13 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array(
-	"%weblink_id%" => "([0-9]+)",
-	"%rowstart%" => "([0-9]+)",
-	"%weblink_cat_id%" => "([0-9]+)",
-	"%weblink_name%" => "([0-9a-zA-Z._\W]+)"
-);
+$regex = array("%weblink_id%" => "([0-9]+)",
+			   "%rowstart%" => "([0-9]+)",
+			   "%weblink_cat_id%" => "([0-9]+)",
+			   "%weblink_name%" => "([0-9a-zA-Z._\W]+)
+			   ");
 
-$pattern = array(
-	"links/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%"
-);
+$pattern = array("links/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%");
 
 $dir_path = BASEDIR;
 $dbname = DB_WEBLINKS;

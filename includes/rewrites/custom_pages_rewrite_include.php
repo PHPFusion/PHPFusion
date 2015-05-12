@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -21,11 +21,10 @@ $regex = array(
 	"%cp_id%" => "([0-9]+)",
 	"%cp_title%" => "([0-9a-zA-Z._\W]+)",
 );
-$pattern = array(
-	"pages/%cp_id%/%cp_title%" => "viewpage.php?page_id=%cp_id%",
-);
+
+$pattern = array("pages/%cp_id%/%cp_title%" => "viewpage.php?page_id=%cp_id%",);
+
 $dbname = DB_CUSTOM_PAGES;
 $dbid = array("%cp_id%" => "page_id");
 $dbinfo = array("%cp_title%" => "page_title");
-
 ?>

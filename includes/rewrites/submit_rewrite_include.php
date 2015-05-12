@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,13 +17,11 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$pattern = array(
-	"submit" => "submit.php",
-	"submit/weblinks" => "submit.php?stype=l",
-	"submit/files" => "submit.php?stype=d",
-	"submit/articles" => "submit.php?stype=a",
-	"submit/news" => "submit.php?stype=n",
-	"submit/photos" => "submit.php?stype=p",
-);
-
+$pattern = array("submit" => "submit.php",
+				 "submit/weblinks" => "submit.php?stype=l",
+				 "submit/files" => "submit.php?stype=d",
+				 "submit/articles" => "submit.php?stype=a",
+				 "submit/news" => "submit.php?stype=n",
+				 "submit/photos" => "submit.php?stype=p
+				 ");
 ?>

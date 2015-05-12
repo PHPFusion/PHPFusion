@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,28 +17,26 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array(
-	"%news_id%" => "([0-9]+)",
-	"%news_title%" => "([0-9a-zA-Z._\W]+)",
-	"%news_step%" => "([0-9]+)",
- 	"%news_rowstart%" => "([0-9]+)",
-	"%c_start%" => "([0-9]+)",
-	);
+$regex = array("%news_id%" => "([0-9]+)",
+			   "%news_title%" => "([0-9a-zA-Z._\W]+)",
+  			   "%news_step%" => "([0-9]+)",
+			   "%news_rowstart%" => "([0-9]+)",
+			   "%c_start%" => "([0-9]+)
+			   ");
 
-$pattern = array(
-	"news" => "news.php",
-	"news/%news_id%/%news_title%" => "news.php?readmore=%news_id%",
-	"news/%news_id%/%news_title%#comments" => "news.php?readmore=%news_id%#comments",
-	"news/%c_start%/%news_id%/%news_title%" => "news.php?readmore=%news_id%&amp;c_start=%c_start%"
-	);
+$pattern = array("news" => "news.php",
+				 "news/%news_id%/%news_title%" => "news.php?readmore=%news_id%",
+				 "news/%news_id%/%news_title%#comments" => "news.php?readmore=%news_id%#comments",
+				 "news/%c_start%/%news_id%/%news_title%" => "news.php?readmore=%news_id%&amp;c_start=%c_start%
+				 ");
 
 $alias_pattern = array("news/%alias%" => "%alias_target%",
 					   "news/%alias%#comments" => "%alias_target%#comments",
 					   "news/%alias%/%news_step%/%news_rowstart%" => "%alias_target%&amp;step=%news_step%&amp;rowstart=%news_rowstart%",
 					   "news/%alias%/%news_step%" => "%alias_target%&amp;step=%news_step%
 					   ");
+					   
 $dbname = DB_NEWS;
 $dbid = array("%news_id%" => "news_id");
 $dbinfo = array("%news_title%" => "news_subject", "%news_start%" => "news_start");
-
 ?>

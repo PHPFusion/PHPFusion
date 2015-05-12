@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules for 7.03
+| File Category: Core Rewrite Modules
 | Author: Hien (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-$regex = array("%time%" => "([0-9]+)",);
-$pattern = array("create/ref=%time%" => "register.php?ref=%time%");
 
+$regex = array("%time%" => "([0-9]+)");
+$pattern = array("create/ref=%time%" => "register.php?ref=%time%");
 ?>
