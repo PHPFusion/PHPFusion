@@ -157,19 +157,21 @@ define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
-// Language detection hub for multilingual content, detect, set he correct language if it is not set
-if (count($enabled_languages) > 1) {
-	require __DIR__.'/includes/core_mlang_hub_include.php';
-}
-
 // Set the requested language
 function set_language($lang) {
 global $userdata;
 	if (iMEMBER) {
 		dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
+		$userdata['user_language'] = $lang;
 	} else {
-		setcookie(COOKIE_PREFIX."guest_language", $lang, time()+86400*60, COOKIE_PATH, COOKIE_DOMAIN, FALSE, FALSE);
+	// might be forced to do a database solution here again.
+	setcookie(COOKIE_PREFIX."guest_language", $lang, time()+86400*60, COOKIE_PATH, COOKIE_DOMAIN, FALSE, FALSE);
 	}
+}
+
+// Language detection hub for multilingual content, detect, set he correct language if it is not set
+if (count($enabled_languages) > 1) {
+	require __DIR__.'/includes/core_mlang_hub_include.php';
 }
 
 // If language change is initiated and if the selected language is valid

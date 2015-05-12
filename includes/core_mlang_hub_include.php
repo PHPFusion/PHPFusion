@@ -37,11 +37,13 @@ $data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_ARTICLE_CATS." WH
 	}
 }
 
-// Blog
-if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['readmore']) && isnum($_GET['readmore']))) { 
-$data = dbarray(dbquery("SELECT blog_language FROM ".DB_BLOG." WHERE blog_id='".stripinput($_GET['readmore'])."'"));
-	if ($data['blog_language']." != ".LANGUAGE) {
-		echo set_language($data['blog_language']);
+// Blog ->This is about how we need to do it for full support with Permalinks enabled, I will extend to the other sections later.
+if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blog/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
+	if (isset($_GET['readmore']) && isnum($_GET['readmore']) || $matches['1'] > 0) {
+	$data = dbarray(dbquery("SELECT blog_language FROM ".DB_BLOG." WHERE blog_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
+		if ($data['blog_language']." != ".LANGUAGE) {
+			echo set_language($data['blog_language']);
+		}
 	}
 }
 
