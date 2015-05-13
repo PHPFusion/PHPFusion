@@ -70,8 +70,14 @@ global $userdata;
 		dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
 		$userdata['user_language'] = $lang;
 	} else {
-	// might be forced to do a database solution here again.
-	setcookie(COOKIE_PREFIX."guest_language", $lang, time()+86400*60, COOKIE_PATH, COOKIE_DOMAIN, FALSE, FALSE);
+		$rows = dbrows(dbquery("SELECT user_language FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
+	if ($rows != 0) {
+		dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
+	} else {
+		dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".time()."');");
+	}
+// Sanitize guest sessions occasionally
+	dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time()-(86400 * 60))."'");
 	}
 }
 
@@ -168,7 +174,8 @@ $enabled_languages = array_keys(fusion_get_enabled_languages());
 	}
 	
 	$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
-	
+	// Must have this on my test
+	$link_prefix = str_replace($settings['site_path'], "", $link_prefix);	
 	foreach ($enabled_languages as $row => $language) {
 		$lang_text = translate_lang_names($language);
 		$icon = "<img class='display-block img-responsive' alt='".$language."' src='".LOCALE.$language."/".$language.".png' alt='' title='".$lang_text."' style='min-width:20px;'>";

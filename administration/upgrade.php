@@ -428,6 +428,13 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						}
 					}
 				}
+				
+				//Create guest visitors language session tables
+				$result = dbquery("CREATE TABLE ".DB_PREFIX."language_sessions (
+				user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
+				user_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."',
+				user_datestamp INT(10) NOT NULL default '0'   
+				) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci;");
 
 				//Add language tables to infusions and main content
 				$result = dbquery("ALTER TABLE ".DB_ARTICLE_CATS." ADD article_cat_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER article_cat_access");
@@ -988,7 +995,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					}
 				}
 				// install theme db.
-				$result = dbquery("CREATE TABLE ".$db_prefix."theme (
+				$result = dbquery("CREATE TABLE ".DB_PREFIX."theme (
 						theme_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 						theme_name VARCHAR(50) NOT NULL,
 						theme_title VARCHAR(50) NOT NULL,
@@ -999,7 +1006,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						theme_config TEXT NOT NULL,
 						PRIMARY KEY (theme_id)
 						) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-				$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')");
+				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')");
 				$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 				if ($result) {
 					$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");

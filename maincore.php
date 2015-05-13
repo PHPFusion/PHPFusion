@@ -193,12 +193,18 @@ redirect(FUSION_SELF.$this_redir."");
 if (iMEMBER && valid_language($userdata['user_language'])) {
 	define("LANGUAGE", $userdata['user_language']);
 	define("LOCALESET", $userdata['user_language']."/");
-} elseif (isset($_COOKIE[COOKIE_PREFIX.'guest_language']) && valid_language($_COOKIE[COOKIE_PREFIX.'guest_language'])) {
-	define("LANGUAGE", $_COOKIE[COOKIE_PREFIX.'guest_language']);
-	define("LOCALESET", $_COOKIE[COOKIE_PREFIX.'guest_language']."/");
 } else {
-	define ("LANGUAGE", $settings['locale']);
-	define ("LOCALESET", $settings['locale']."/");
+$data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
+	if ($data['user_language']) {
+	   define("LANGUAGE",$data['user_language']);    
+	   define("LOCALESET",$data['user_language']."/");
+    } 
+}
+
+// Check if definitions have been set, if not set the default language to system language
+if (!defined("LANGUAGE")) {
+      define ("LANGUAGE", $settings['locale']);
+      define ("LOCALESET", $settings['locale']."/");
 }
 
 // IP address functions

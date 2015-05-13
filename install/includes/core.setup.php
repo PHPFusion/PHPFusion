@@ -32,6 +32,11 @@ $core_tables = array("admin" => " (
 		mlt_status VARCHAR(50) NOT NULL DEFAULT '',
 		PRIMARY KEY (mlt_rights)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+   "language_sessions" => " (
+	    user_ip VARCHAR(20) NOT NULL DEFAULT '0.0.0.0',
+	    user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+		user_datestamp INT(10) NOT NULL default '0'   
+		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"admin_resetlog" => " (
 		reset_id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
 		reset_admin_id mediumint(8) unsigned NOT NULL default '1',

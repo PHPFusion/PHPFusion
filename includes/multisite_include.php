@@ -63,6 +63,7 @@ define("DB_FORUMS", DB_PREFIX."forums");
 define("DB_INFUSIONS", DB_PREFIX."infusions");
 define("DB_INFUSIONS_CAT", DB_PREFIX."infusions_cat");
 define("DB_LANGUAGE_TABLES", DB_PREFIX."mlt_tables");
+define("DB_LANGUAGE_SESSIONS", DB_PREFIX."language_sessions");
 define("DB_MESSAGES", DB_PREFIX."messages");
 define("DB_MESSAGES_OPTIONS", DB_PREFIX."messages_options");
 define("DB_NEW_USERS", DB_PREFIX."new_users");
