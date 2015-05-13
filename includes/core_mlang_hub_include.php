@@ -73,7 +73,7 @@ if (preg_match('/viewpage.php/i', $_SERVER['PHP_SELF']) || preg_match('|/pages/(
 }
 
 // Downloads
-if (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) || preg_match('|/Downloads/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
+if (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) || preg_match('|/file-downloads/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
 	if (isset($_GET['download_id']) && isnum($_GET['download_id']) || $matches['1'] > 0) {
 		$data = dbarray(dbquery("SELECT dlc.download_cat_id,dlc.download_cat_language, dl.download_id
 								FROM ".DB_DOWNLOAD_CATS." dlc
