@@ -17,7 +17,8 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%photo_id%" => "([0-9]+)","%photo_title%" => "([0-9a-zA-Z._\W]+)");
+$regex = array("%photo_id%" => "([0-9]+)",
+			   "%photo_title%" => "([0-9a-zA-Z._\W]+)");
 
 $pattern = array("photo/%photo_id%/%photo_title%" => "photogallery.php?photo_id=%photo_id%");
 

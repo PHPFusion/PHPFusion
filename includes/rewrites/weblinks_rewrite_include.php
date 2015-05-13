@@ -18,13 +18,12 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array("%weblink_id%" => "([0-9]+)",
-			   "%rowstart%" => "([0-9]+)",
-			   "%weblink_cat_id%" => "([0-9]+)
-			   ");
-			   
-$pattern = array("links/%weblink_id%/%weblink_cat_id%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%",
-			     "links/browse/%weblink_cat_id%/%rowstart%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%
-				 ");
+  			   "%weblink_name%" => "([0-9a-zA-Z._\W]+)",
+			   "%weblink_cat_id%" => "([0-9]+)");
 
-$dir_path = BASEDIR;
+$pattern = array("weblink/%weblink_id%/%weblink_name%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%");
+
+$dbname = DB_WEBLINKS;
+$dbid = array("%weblink_id%" => "weblink_id");
+$dbinfo = array("%weblink_name%" => "weblink_name", "%weblink_cat_id%" => "weblink_cat");
 ?>

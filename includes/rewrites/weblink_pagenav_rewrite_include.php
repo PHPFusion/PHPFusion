@@ -20,8 +20,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array("%weblink_id%" => "([0-9]+)",
 			   "%rowstart%" => "([0-9]+)",
 			   "%weblink_cat_id%" => "([0-9]+)",
-			   "%weblink_name%" => "([0-9a-zA-Z._\W]+)
-			   ");
+			   "%weblink_name%" => "([0-9a-zA-Z._\W]+)");
 
 $pattern = array("links/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;rowstart=%rowstart%");
 

@@ -18,12 +18,10 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $regex = array("%weblinks_cat_id%" => "([0-9]+)",
-			   "%weblink_cat_name%" => "([0-9a-zA-Z._\W]+)
-			   ");
+			   "%weblink_cat_name%" => "([0-9a-zA-Z._\W]+)");
 
-$pattern = array("links" => "weblinks.php",
-				 "links/%weblinks_cat_id%/%weblink_cat_name%" => "weblinks.php?cat_id=%weblinks_cat_id%
-				 ");
+$pattern = array("weblinks" => "weblinks.php",
+				 "weblinks/%weblinks_cat_id%/%weblink_cat_name%" => "weblinks.php?cat_id=%weblinks_cat_id%");
 
 $dir_path = BASEDIR;
 $dbname = DB_WEBLINK_CATS;

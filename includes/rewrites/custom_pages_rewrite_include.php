@@ -17,10 +17,8 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array(
-	"%cp_id%" => "([0-9]+)",
-	"%cp_title%" => "([0-9a-zA-Z._\W]+)",
-);
+$regex = array("%cp_id%" => "([0-9]+)",
+			   "%cp_title%" => "([0-9a-zA-Z._\W]+)");
 
 $pattern = array("pages/%cp_id%/%cp_title%" => "viewpage.php?page_id=%cp_id%",);
 

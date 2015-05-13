@@ -17,12 +17,15 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%download_id%" => "([0-9]+)", "%cat_id%" => "([0-9]+)", "%download_title%" => "([0-9a-zA-Z._\W]+)", "%file_id%" => "([0-9]+)",);
+$regex = array("%download_id%" => "([0-9]+)", 
+			   "%cat_id%" => "([0-9]+)", 
+			   "%download_title%" => "([0-9a-zA-Z._\W]+)", 
+			   "%file_id%" => "([0-9]+)");
 
-$pattern = array("downloads" => "downloads.php",
-				 "downloads/%cat_id%/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
-				 "downloads/%download_id%/%download_title%" => "downloads.php?download_id=%download_id%",
-				 "downloads/file/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%");
+$pattern = array("file-downloads" => "downloads.php",
+				 "file-downloads/%cat_id%/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
+				 "file-downloads/%download_id%/%download_title%" => "downloads.php?download_id=%download_id%",
+				 "file-downloads/file/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%");
 
 $dir_path = BASEDIR;
 $dbname = DB_DOWNLOADS;

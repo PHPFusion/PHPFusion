@@ -25,11 +25,9 @@ $regex = array("%stype%" => "([0-9a-zA-Z._\W]+)",
 			   "%sort%" => "([\p{L}a-zA-Z]+)",
 			   "%order%" => "([0-9]+)",
 			   "%chars%" => "([\p{L}a-zA-Z]+)",
-			   "%forum_id%" => "([0-9]+)
-			   ");
+			   "%forum_id%" => "([0-9]+)");
 
 $pattern = array("search" => "search.php",
 				 "search/%stype%" => "search.php?stype=%stype%",
-				 "search/%stype%/%method%/%datelimit%/%fields%/%sort%/%order%/%chars%/%forum_id%" => "search.php?stype=%stype%&amp;stext=%stext%&amp;method=%method%&amp;datelimit=%datelimit%&amp;fields=%fields%&amp;sort=%sort%&amp;order=%order%&amp;chars=%chars%&amp;forum_id=%forum_id%&amp;
-				 ");
+				 "search/%stype%/%method%/%datelimit%/%fields%/%sort%/%order%/%chars%/%forum_id%" => "search.php?stype=%stype%&amp;stext=%stext%&amp;method=%method%&amp;datelimit=%datelimit%&amp;fields=%fields%&amp;sort=%sort%&amp;order=%order%&amp;chars=%chars%&amp;forum_id=%forum_id%&amp;");
 ?>
