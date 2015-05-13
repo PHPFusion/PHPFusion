@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Path definitions
 if (!defined('BASEDIR')) define("BASEDIR", strpos(fusion_get_relative_path_to_config(), '/') === FALSE ? '' : dirname(fusion_get_relative_path_to_config()).'/');
