@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -16,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 use PHPFusion\Authenticate;
 
@@ -60,6 +60,18 @@ function valid_language($lang, $file_check = FALSE) {
 		return TRUE;
 	} else {
 		return FALSE;
+	}
+}
+
+// Set the requested language
+function set_language($lang) {
+global $userdata;
+	if (iMEMBER) {
+		dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
+		$userdata['user_language'] = $lang;
+	} else {
+	// might be forced to do a database solution here again.
+	setcookie(COOKIE_PREFIX."guest_language", $lang, time()+86400*60, COOKIE_PATH, COOKIE_DOMAIN, FALSE, FALSE);
 	}
 }
 
@@ -1253,3 +1265,4 @@ function fusion_get_enabled_languages() {
 	}
 	return $enabled_languages;
 }
+?>

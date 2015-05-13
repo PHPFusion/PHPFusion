@@ -15,38 +15,32 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 use PHPFusion\Database\DatabaseFactory;
 
 require_once __DIR__.'/autoloader.php';
-
 require_once __DIR__.'/core_functions_include.php';
 require_once fusion_detect_installation();
 require_once __DIR__.'/core_constants_include.php';
 require_once __DIR__.'/multisite_include.php';
 
-// TODO: Remove this check and keep only the new version
-// if (isset($OOPDBLayer) and $OOPDBLayer === TRUE) {
-	//New database handler functions based on enhanced OO solution
-	DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
-	DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
-		'host' => $db_host,
-		'user' => $db_user,
-		'password' => $db_pass,
-		'database' => $db_name,
-		'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
-	));
-	DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
-	require_once DB_HANDLERS."all_functions_include.php";
-/*} else {
-	//old database handler functions
-	require_once DB_HANDLERS.(intval($pdo_enabled) === 1 ? 'pdo' : 'mysql')."_functions_include.php";
-}*/
+// Database handler functions
+DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
+	'host' => $db_host,
+	'user' => $db_user,
+	'password' => $db_pass,
+	'database' => $db_name,
+	'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
+));
+DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
+require_once DB_HANDLERS."all_functions_include.php";
 require_once __DIR__."/system_images.php";
-
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/translate_include.php";
 require_once __DIR__."/notify/notify.inc.php";
 require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/defender.inc.php";
 require_once __DIR__."/dynamics/dynamics.inc.php";
+?>

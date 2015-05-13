@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 // Path definitions
 if (!defined('BASEDIR')) define("BASEDIR", strpos(fusion_get_relative_path_to_config(), '/') === FALSE ? '' : dirname(fusion_get_relative_path_to_config()).'/');
@@ -41,11 +42,14 @@ define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
 define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
 define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
 define("USER_IP", $_SERVER['REMOTE_ADDR']);
+
 // Define script start time
 define("START_TIME", microtime(TRUE));
 define("FUSION_ROOT_DIR", dirname(__DIR__).'/');
 
+// Define user levels
 const USER_LEVEL_SUPER_ADMIN = -103;
 const USER_LEVEL_ADMIN = -102;
 const USER_LEVEL_MEMBER = -101;
 const USER_LEVEL_PUBLIC = 0;
+?>

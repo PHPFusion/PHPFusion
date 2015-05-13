@@ -42,7 +42,7 @@ if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) || preg_match('|/article
 }
 
 // Blog
-if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blog/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
+if (preg_match('/blog.php/i', $_SERVER['PHP_SELF']) || preg_match('|/blogs/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
 	if (isset($_GET['readmore']) && isnum($_GET['readmore']) || $matches['1'] > 0) {
 		$data = dbarray(dbquery("SELECT blog_language FROM ".DB_BLOG." WHERE blog_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
 		if ($data['blog_language']." != ".LANGUAGE) {
