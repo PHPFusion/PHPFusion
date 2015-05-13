@@ -176,7 +176,7 @@ if (preg_match('/photogallery.php/i', $_SERVER['PHP_SELF']) || preg_match('|/gal
 }
 
 // Weblinks
-if (preg_match('/weblinks.php/i', $_SERVER['PHP_SELF']) || preg_match('|/gallery/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
+if (preg_match('/weblinks.php/i', $_SERVER['PHP_SELF']) || preg_match('|/weblinks/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches)) {
 	if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || $matches['1'] > 0) {
 		$data = dbarray(dbquery("SELECT weblink_cat_language FROM ".DB_WEBLINK_CATS." WHERE weblink_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
 		if ($data['weblink_cat_language']." != ".LANGUAGE) {
