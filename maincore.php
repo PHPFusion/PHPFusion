@@ -17,9 +17,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) { die(); }
+define("IN_FUSION", TRUE);
 
 use PHPFusion\Authenticate;
-define("IN_FUSION", TRUE);
 require __DIR__.'/includes/core_resources_include.php';
 
 // Prevent any possible XSS attacks via $_GET.

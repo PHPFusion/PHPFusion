@@ -15,13 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+define("IN_FUSION", TRUE);
 use PHPFusion\Database\DatabaseFactory;
 
 ini_set('display_errors', 1);
 define('BASEDIR', '../');
 require_once 'setup_includes.php';
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
-define("IN_FUSION", TRUE);
 if (!defined('DYNAMICS')) {
 	define('DYNAMICS', INCLUDES."dynamics/");
 }
