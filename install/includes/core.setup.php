@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-// Installs 33 Core Tables and Inserts
-//<editor-fold desc="create table sql for core tables" >
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $core_tables = array("admin" => " (
 		admin_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 		admin_rights CHAR(4) NOT NULL DEFAULT '',

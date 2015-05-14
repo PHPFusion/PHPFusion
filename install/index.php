@@ -25,6 +25,7 @@ define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 if (!defined('DYNAMICS')) {
 	define('DYNAMICS', INCLUDES."dynamics/");
 }
+
 if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_dir(LOCALE.$_GET['localeset'])) {
 	include LOCALE.$_GET['localeset']."/setup.php";
 	define("LOCALESET", $_GET['localeset']."/");
@@ -33,9 +34,11 @@ if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_di
 	define("LOCALESET", "English/");
 	include LOCALE.LOCALESET."setup.php";
 }
+
 require_once INCLUDES."defender.inc.php";
 include INCLUDES."output_handling_include.php";
 $defender = new defender();
+
 if (isset($_POST['step']) && $_POST['step'] == "8") {
 	if (file_exists(BASEDIR.'config_temp.php')) {
 		@rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
@@ -43,18 +46,21 @@ if (isset($_POST['step']) && $_POST['step'] == "8") {
 	}
 	redirect(BASEDIR.'index.php');
 }
-//determine the chosen database functions
+
+// Determine the chosen database functions
 $pdo_enabled = filter_input(INPUT_POST, 'pdo_enabled', FILTER_VALIDATE_BOOLEAN);
 $db_host = 'localhost';
 $db_user = '';
 $db_pass = '';
 $db_name = '';
 $db_prefix = '';
+
 if (file_exists(BASEDIR.'config.php')) {
 	include BASEDIR.'config.php';
 } elseif (file_exists(BASEDIR.'config_temp.php')) {
 	include BASEDIR.'config_temp.php';
 }
+
 if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 	$pdo_enabled = (bool)intval($pdo_enabled);
 	$db_host = stripinput(trim(strval(filter_input(INPUT_POST, 'db_host')))) ? : $db_host;
@@ -63,11 +69,11 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 	$db_name = stripinput(trim(strval(filter_input(INPUT_POST, 'db_name')))) ? : $db_name;
 	$db_prefix = stripinput(trim(strval(filter_input(INPUT_POST, 'db_prefix')))) ? : $db_prefix;
 	require_once INCLUDES."sqlhandler.inc.php";
-	//New database handler functions
 }
+
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
-//require_once INCLUDES."output_handling_include.php";
 include_once INCLUDES."dynamics/dynamics.inc.php";
+
 if ($db_host && $db_user && $db_name && $db_pass) {
 	DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
 	DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
@@ -78,13 +84,12 @@ if ($db_host && $db_user && $db_name && $db_pass) {
 		'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
 	));
 }
+
 require_once INCLUDES."db_handlers/all_functions_include.php";
-//Old database handler functions
-//require_once INCLUDES."db_handlers/".($pdo_enabled ? 'pdo' : 'mysql')."_functions_include.php";
 require_once LOCALE.LOCALESET.'global.php';
 $dynamics = new dynamics();
 $dynamics->boot();
-$system_apps = array(// dbname to locale application title
+$system_apps = array(
 	'articles' => $locale['articles']['title'],
 	'blog' => $locale['blog']['title'],
 	'downloads' => $locale['downloads']['title'],
@@ -95,15 +100,18 @@ $system_apps = array(// dbname to locale application title
 	'photos' => $locale['photos']['title'],
 	'polls' => $locale['polls']['title'],
 	'weblinks' => $locale['weblinks']['title']);
+	
 $buttons = array('next' => array('next', $locale['setup_0121']),
 	'finish' => array('next', $locale['setup_0123']),
 	'done' => array('done', $locale['setup_0120']),
 	'refresh' => array('next', $locale['setup_1105']),
 	'tryagain' => array('next', $locale['setup_0122']),
 	'back' => array('back', $locale['setup_0122']));
+
 $buttonMode = NULL;
 $nextStep = 1;
 $content = "";
+
 switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 	// Introduction
 	case 1:
@@ -665,10 +673,12 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		} elseif ($returnValue == 3) {
 			$error .= $locale['setup_5013']."<br /><br />\n";
 		}
+		
 		$adminPass = new \PHPFusion\PasswordAuth($password_algorithm);
 		$adminPass->inputNewPassword = (isset($_POST['admin_password1']) ? stripinput(trim($_POST['admin_password1'])) : "");
 		$adminPass->inputNewPassword2 = (isset($_POST['admin_password2']) ? stripinput(trim($_POST['admin_password2'])) : "");
 		$returnValue = $adminPass->isValidNewPassword();
+
 		if ($returnValue == 0) {
 			$adminPassword = $adminPass->getNewHash();
 			$adminSalt = $adminPass->getNewSalt();
@@ -734,15 +744,20 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		}
 		break;
 }
+
 $localeset = filter_input(INPUT_POST, 'localeset');
 ob_start();
 opensetup();
 echo $content;
+
 if ($localeset) {
 	echo "<input type='hidden' name='localeset' value='".stripinput($localeset)."' />\n";
 }
+
 if ($buttonMode) {
 	echo '<input type="hidden" name="step" value="'.$nextStep.'" />';
 	renderButton($buttons[$buttonMode][0], $buttons[$buttonMode][1], $buttonMode);
 }
+
 closesetup();
+?>

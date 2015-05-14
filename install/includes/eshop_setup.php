@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (isset($_POST['uninstall'])) {
 	dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop");
 	dbquery("DROP TABLE IF EXISTS ".$db_prefix."eshop_cats");

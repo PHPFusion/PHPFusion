@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 define('iMEMBER', false);
 require_once __DIR__.'/../includes/autoloader.php';
 require_once __DIR__.'/../includes/core_functions_include.php';
@@ -201,3 +203,4 @@ function fusion_file_put_contents($file, $data, $flags = null) {
 	}
 	return $bytes;
 }
+?>
