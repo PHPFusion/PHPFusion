@@ -88,6 +88,7 @@ $image_list = array();
 foreach ($image_files as $image) {
 	$image_list[$image] = $image;
 }
+
 add_breadcrumb(array('link'=>ADMIN.'blog_cats.php'.$aidlink, 'title'=>$openTable));
 opentable($openTable);
 

@@ -19,7 +19,9 @@ require_once "../maincore.php";
 pageAccess('S7');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
+
 add_breadcrumb(array('link'=>ADMIN."settings_messages.php".$aidlink, 'title'=>$locale['message_settings']));
+
 $count = 0;
 if (isset($_POST['saveoptions'])) {
 	if (!defined('FUSION_NULL')) {
@@ -65,3 +67,4 @@ echo form_button('saveoptions', $locale['750'], $locale['750'], array('class' =>
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";
+?>

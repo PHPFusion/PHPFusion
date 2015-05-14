@@ -30,4 +30,5 @@ $locale['425'] = "Permalinks for %s are already enabled.";
 $locale['426'] = "Disabled Permalinks for %s successfully.";
 // Other
 $locale['427'] = "No Permalinks are enabled.";
+$locale['428'] = "Permalinks";
 ?>

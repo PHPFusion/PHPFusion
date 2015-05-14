@@ -20,6 +20,8 @@ pageAccess('APWR');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/admin_reset.php";
 
+add_breadcrumb(array('link'=>ADMIN.'admin_reset.php'.$aidlink, 'title'=>$locale['apw_title']));
+
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "pw") {
 		$message = $locale['411'];

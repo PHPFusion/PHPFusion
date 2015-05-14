@@ -20,6 +20,8 @@ pageAccess('B');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/blacklist.php";
 
+add_breadcrumb(array('link'=>ADMIN.'blacklist.php'.$aidlink, 'title'=>$locale['406']));
+
 $message = '';
 if (isset($_GET['status'])) {
 	switch($_GET['status']) {

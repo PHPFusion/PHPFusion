@@ -20,6 +20,8 @@ pageAccess('BB');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/bbcodes.php";
 
+add_breadcrumb(array('link'=>ADMIN.'bbcodes.php'.$aidlink, 'title'=>$locale['400']));
+
 if (!isset($_GET['page']) || !isnum($_GET['page'])) {
 	$_GET['page'] = 1;
 }

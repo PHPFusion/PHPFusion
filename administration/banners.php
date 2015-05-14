@@ -21,6 +21,7 @@ require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
+add_breadcrumb(array('link'=>ADMIN.'banners.php'.$aidlink, 'title'=>$locale['850']));
 
 $message = '';
 if (isset($_GET['error'])) {

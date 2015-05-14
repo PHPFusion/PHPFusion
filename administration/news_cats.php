@@ -16,11 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkRights("NC") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('NC');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/news.php";
+
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
 		$message = $locale['news_0150'];
@@ -99,6 +98,8 @@ $image_list = array();
 foreach ($image_files as $image) {
 	$image_list[$image] = $image;
 }
+
+add_breadcrumb(array('link'=>ADMIN.'news_cats.php'.$aidlink, 'title'=>$openTable));
 
 opentable($openTable);
 echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));

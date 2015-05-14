@@ -16,22 +16,20 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
 pageAccess("U");
-
 require_once THEMES."templates/admin_header.php";
-
 if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
 	include LOCALE.LOCALESET."admin/upgrade.php";
 } else {
 	include LOCALE."English/admin/upgrade.php";
 }
-
 if (file_exists(LOCALE.LOCALESET."setup.php")) {
 	include LOCALE.LOCALESET."setup.php";
 } else {
 	include LOCALE."English/setup.php";
 }
+
+add_breadcrumb(array('link'=>ADMIN.'upgrade.php'.$aidlink, 'title'=>$locale['400']));
 
 opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";

@@ -3,6 +3,7 @@
 $locale['400'] = "Add Web Link Category";
 $locale['401'] = "Edit Web Link Category";
 $locale['402'] = "Current Web Link Categories";
+$locale['403'] = "Weblinks";
 // Web Link Category messages
 $locale['410'] = "Web Link Category added";
 $locale['411'] = "Web Link Category updated";

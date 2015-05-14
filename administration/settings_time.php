@@ -19,7 +19,9 @@ require_once "../maincore.php";
 pageAccess('S2');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
+
 add_breadcrumb(array('link'=>ADMIN."settings_time.php".$aidlink, 'title'=>$locale['time_settings']));
+
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	if (!defined('FUSION_NULL')) {
@@ -133,3 +135,4 @@ echo form_button('savesettings', $locale['750'], $locale['750'], array('class' =
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";
+?>

@@ -4,6 +4,7 @@ $locale['400'] = "Add Rank";
 $locale['401'] = "Edit Rank";
 $locale['402'] = "Current Ranks";
 $locale['403'] = "Rank System Disabled";
+$locale['404'] = "Forum Ranks";
 // News messages
 $locale['410'] = "Rank added";
 $locale['411'] = "Rank updated";

@@ -15,9 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if ((!isset($_POST['prune_forum'])) && (isset($_GET['action']) && $_GET['action'] == "prune") && (isset($_GET['forum_id']) && isnum($_GET['forum_id']))) {
 	$result = dbquery("SELECT forum_name FROM ".DB_FORUMS." WHERE forum_id='".$_GET['forum_id']."' AND forum_cat!='0'");
 	if (dbrows($result)) {

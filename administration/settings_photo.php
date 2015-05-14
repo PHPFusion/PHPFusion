@@ -20,6 +20,7 @@ require_once "../maincore.php";
 pageAccess('S5');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
+
 add_breadcrumb(array('link'=>ADMIN.'settings_photo.php'.$aidlink, 'title'=>$locale['photo_settings']));
 
 if (isset($_POST['delete_watermarks'])) {

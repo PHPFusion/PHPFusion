@@ -21,6 +21,7 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/articles.php";
 
 add_breadcrumb(array('link'=>ADMIN.'articles.php'.$aidlink,'title'=>$locale['articles_0001']));
+
 $settings = fusion_get_settings();
 if ($settings['tinymce_enabled'] == 1) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";

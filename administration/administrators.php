@@ -20,6 +20,8 @@ pageAccess('AD');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/admins.php";
 
+add_breadcrumb(array('link'=>ADMIN.'administrators.php'.$aidlink, 'title'=>$locale['420']));
+
 $message = '';
 if (isset($_GET['status'])) {
 	switch($_GET['status']) {

@@ -50,5 +50,4 @@ $eshop_gallery->setEnableRatings(false);
 $eshop_gallery->setAllowComments('comments_enabled');
 $eshop_gallery->setAllowRatings('ratings_enabled');
 $eshop_gallery->boot();
-
 require_once THEMES."templates/footer.php";

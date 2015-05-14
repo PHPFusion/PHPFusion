@@ -19,6 +19,7 @@ require_once "../maincore.php";
 pageAccess('S8');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
+
 add_breadcrumb(array('link'=>ADMIN."settings_news.php".$aidlink, 'title'=>$locale['news_settings']));
 
 if (isset($_POST['savesettings'])) {
@@ -182,3 +183,4 @@ function calculate_byte($download_max_b) {
 	}
 	return 1000000;
 }
+?>

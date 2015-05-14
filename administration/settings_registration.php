@@ -19,7 +19,9 @@ require_once "../maincore.php";
 pageAccess('S4');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
+
 add_breadcrumb(array('link'=>ADMIN."settings_register.php".$aidlink, 'title'=>$locale['register_settings']));
+
 if ($settings['tinymce_enabled']) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 } else {
@@ -101,3 +103,4 @@ echo form_button('savesettings', $locale['750'], $locale['750'], array('class' =
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";
+?>

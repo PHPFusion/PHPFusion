@@ -16,8 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("SL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) { redirect("../index.php"); }
+pageAccess('SL');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/sitelinks.php";
 
@@ -45,3 +44,4 @@ echo closetab();
 closetable();
 
 require_once THEMES."templates/footer.php";
+?>

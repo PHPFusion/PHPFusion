@@ -19,6 +19,7 @@ require_once "../maincore.php";
 pageAccess('DC');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/downloads.php";
+
 add_breadcrumb(array('link'=>ADMIN."download_cats.php".$aidlink, 'title'=>$locale['download_0001']));
 
 if (isset($_POST['cancel'])) {

@@ -24,10 +24,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("PH") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('PH');
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."bbcode_include.php";

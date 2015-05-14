@@ -16,13 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("PO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('PO');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/polls.php";
+
+add_breadcrumb(array('link'=>ADMIN.'polls.php'.$aidlink, 'title'=>$locale['439c']));
 
 if (isset($_GET['poll_id']) && !isnum($_GET['poll_id'])) {
 	redirect(FUSION_SELF);

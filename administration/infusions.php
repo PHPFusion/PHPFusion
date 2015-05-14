@@ -17,13 +17,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
-if (!checkrights("I") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
-
+pageAccess('I');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/infusions.php";
+
+add_breadcrumb(array('link'=>ADMIN.'infusions.php'.$aidlink, 'title'=>$locale['400']));
 
 $inf_title = "";
 $inf_description = "";

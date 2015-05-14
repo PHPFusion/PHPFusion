@@ -17,6 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+pageAccess('S1');
 require_once THEMES."templates/admin_header.php";
 require_once LOCALE.LOCALESET."admin/theme.php";
 

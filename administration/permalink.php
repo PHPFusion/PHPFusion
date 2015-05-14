@@ -16,12 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-
 pageAccess('PL');
-
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 include LOCALE.LOCALESET."admin/permalinks.php";
+
+add_breadcrumb(array('link'=>ADMIN.'permalink.php'.$aidlink, 'title'=>$locale['428']));
 
 $locale['rewrite_disabled'] = "It looks like <strong>mod_rewrite</strong> is not enabled on your host. Enabling SEF urls might break your website. Please contact your hosting provider about enabling <strong>mod_rewrite</strong> on your host.";
 if (!MOD_REWRITE) {

@@ -16,16 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("UL") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('UL');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/user_log.php";
+
+add_breadcrumb(array('link'=>ADMIN.'administrators.php'.$aidlink, 'title'=>$locale['100']));
+
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 	$_GET['rowstart'] = 0;
 }
-// changed GET to POST.
-// Start $_POST Vars
+
 // Set default values
 $dbOrder = "ORDER BY userlog_timestamp DESC";
 $dbWhere = "";
@@ -105,7 +105,6 @@ function userFieldOptions() {
 }
 
 opentable($locale['100']);
-// change to post.
 echo openform('userlog_search', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo form_hidden('', 'aid', 'aid', iAUTH);
 echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<tbody>\n";

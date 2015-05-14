@@ -20,6 +20,7 @@ require_once "../maincore.php";
 pageAccess('S13');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
+
 add_breadcrumb(array('link'=>ADMIN."settings_blog.php".$aidlink, 'title'=>$locale['blog_settings']));
 
 $settings2 = array();
@@ -145,3 +146,4 @@ function calculate_byte($download_max_b) {
 	}
 	return 1000000;
 }
+?>

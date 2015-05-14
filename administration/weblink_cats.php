@@ -16,9 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("WC") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) redirect("../index.php");
+pageAccess('WC');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/weblinks.php";
+
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
 		$message = $locale['410'];
@@ -106,6 +107,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$formaction = FUSION_SELF.$aidlink;
 		$openTable = $locale['400'];
 	}
+
+	add_breadcrumb(array('link'=>ADMIN.'weblink_cats.php'.$aidlink, 'title'=>$openTable));
 
 	opentable($openTable);
 	echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));

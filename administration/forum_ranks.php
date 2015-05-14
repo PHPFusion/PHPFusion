@@ -21,6 +21,8 @@ pageAccess('FR');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/forum_ranks.php";
 
+add_breadcrumb(array('link'=>ADMIN.'administrators.php'.$aidlink, 'title'=>$locale['404']));
+
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
 		$message = $locale['410'];

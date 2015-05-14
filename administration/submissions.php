@@ -23,6 +23,9 @@ if ($settings['tinymce_enabled'] != 1) {
 	require_once INCLUDES."html_buttons_include.php";
 }
 include LOCALE.LOCALESET."admin/submissions.php";
+
+add_breadcrumb(array('link'=>ADMIN.'submissions.php'.$aidlink, 'title'=>$locale['410']));
+
 $links = "";
 $news = "";
 $blog = "";

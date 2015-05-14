@@ -16,14 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("UG") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess("UG");
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/user_groups.php";
+
+add_breadcrumb(array('link'=>ADMIN.'user_groups.php'.$aidlink, 'title'=>$locale['420']));
+
 if (isset($_POST['group_id']) && isnum($_POST['group_id'])) {
 	$_GET['group_id'] = $_POST['group_id'];
 }
+
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "su") {
 		$message = $locale['400'];
@@ -44,6 +46,7 @@ if (isset($_GET['status']) && !isset($message)) {
 		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
 	}
 }
+
 if (isset($_POST['save_group'])) {
 	$group_name = form_sanitizer($_POST['group_name'], '', 'group_name');
 	$group_description = stripinput($_POST['group_description']);
@@ -74,6 +77,7 @@ if (isset($_POST['save_group'])) {
 			}
 		}
 	}
+
 	if ($check_count > 0) {
 		$result = dbquery("SELECT user_id,user_name,user_groups FROM ".DB_USERS." WHERE user_id IN($user_ids)");
 		while ($data = dbarray($result)) {
@@ -163,6 +167,7 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	$form_action = FUSION_SELF.$aidlink;
 	opentable($locale['431']);
 }
+
 echo openform('editform', 'post', $form_action, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n";
 echo "<tr>\n<td class='tbl' width='1%' style='white-space:nowrap;'><label for='group_name'>".$locale['432']."</label></td>\n";
@@ -175,6 +180,7 @@ echo "</td>\n</tr>\n<tr>\n<td align='center' colspan='2' class='tbl'><br />\n";
 echo form_button('save_group', $locale['434'], $locale['434'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</tbody>\n</table>\n</form>";
 closetable();
+
 if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	opentable($locale['440']);
 	if (!isset($_POST['search_users'])) {
@@ -245,6 +251,7 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 		}
 	}
 	closetable();
+
 	opentable($locale['460']);
 	echo openform('rem_users_form', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1, 'notice' => 0));
 	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
@@ -276,10 +283,12 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	}
 	echo "</table>\n";
 	echo closeform();
+
 	if ($rows > 20) {
 		echo "<div align='center' style='margin-top:5px;'>\n".makePageNav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id']."&amp;")."\n</div>\n";
 	}
 	closetable();
+
 	echo "<script type='text/javascript'>\n";
 	echo "/* <![CDATA[ */\n";
 	echo "function setChecked(frmName,chkName,val) {"."\n";
@@ -289,6 +298,7 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	echo "/* ]]>*/\n";
 	echo "</script>\n";
 }
+
 echo "<script type='text/javascript'>\n";
 echo "/* <![CDATA[ */\n";
 echo "function DeleteGroup() {\n";

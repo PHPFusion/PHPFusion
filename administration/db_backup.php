@@ -16,8 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("DB") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) redirect("../index.php");
-// Unstrip text
+pageAccess('DB');
+require_once THEMES."templates/admin_header.php";
+include LOCALE.LOCALESET."admin/db-backup.php";
+
+add_breadcrumb(array('link'=>ADMIN.'db_backup.php'.$aidlink, 'title'=>$locale['450']));
+
 function stripsiteinput($text) {
 	$search = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
 	$replace = array("", "", "", "", "", "", "", "", "");
@@ -119,8 +123,7 @@ if (isset($_POST['btn_create_backup'])) {
 		exit;
 	}
 }
-require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/db-backup.php";
+
 if (!isset($_POST['btn_do_restore']) && (!isset($_GET['action']) || $_GET['action'] != "restore")) {
 	$backup_files = makefilelist(ADMIN."db_backups/", ".|..|index.php", TRUE);
 	if (is_array($backup_files)) {

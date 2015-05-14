@@ -16,11 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-if (!checkrights("SM") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
-	redirect("../index.php");
-}
+pageAccess('SM');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/smileys.php";
+
+add_breadcrumb(array('link'=>ADMIN.'smileys.php'.$aidlink, 'title'=>$locale['403']));
+
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
 		$message = $locale['410'];

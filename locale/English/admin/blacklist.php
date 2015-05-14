@@ -6,6 +6,7 @@ $locale['402'] = "Return to Blacklist Admin";
 $locale['403'] = "Return to Admin Index";
 $locale['404'] = "Please enter Blacklist IP or Blacklist Email";
 $locale['405'] = "Blacklist email address is not valid email.";
+$locale['406'] = "Blacklist";
 // Add/Edit Blacklist Titles
 $locale['420'] = "Blacklist User";
 $locale['421'] = "Edit blacklisted user";
@@ -32,11 +33,4 @@ $locale['465'] = "The blacklist is currently empty.";
 $locale['466'] = "N/A";
 $locale['467'] = "Admin";
 $locale['468'] = "Date";
-/*
-// IPv6 secific
-$locale['480'] = "IPv6 options";
-$locale['481'] = "The specified IPv6 address contains a shortcut (::) therefore cannot be determined unequivocally.";
-$locale['482'] = "Which version would you use?";
-$locale['483'] = "Save";
-*/
 ?>
