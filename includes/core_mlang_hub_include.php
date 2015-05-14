@@ -120,25 +120,27 @@ elseif (preg_match('/news.php/i', $_SERVER['PHP_SELF']) || preg_match('|/news-ca
 elseif (preg_match('/faq.php/i', $_SERVER['PHP_SELF']) || preg_match('|/faq-cat/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("FQ")) {
 	if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || $matches['1'] > 0) {
 		$data = dbarray(dbquery("SELECT fqc.faq_cat_id, fqc.faq_cat_language, fq.faq_cat_id
-						FROM ".DB_FAQ_CATS." fqc
-						LEFT JOIN ".DB_FAQS." fq ON fqc.faq_cat_id = fq.faq_cat_id 
-						WHERE fq.faq_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'
-						GROUP BY fq.faq_cat_id"));
+								FROM ".DB_FAQ_CATS." fqc
+								LEFT JOIN ".DB_FAQS." fq ON fqc.faq_cat_id = fq.faq_cat_id 
+								WHERE fq.faq_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'
+								GROUP BY fq.faq_cat_id"));
 		if ($data['faq_cat_language']." != ".LANGUAGE) {
 			echo set_language($data['faq_cat_language']);
 		}
 	}
 }
 
-// Forum threads, still need to be Permalink fixed when we settled the Forum / Thread linking.
-elseif (preg_match('/viewthread.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['thread_id']) && isnum($_GET['thread_id'])) && multilang_table("FO")) {
-$data = dbarray(dbquery("SELECT f.forum_id,f.forum_language, t.thread_id
-						FROM ".DB_FORUMS." f
-						LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
-						WHERE t.thread_id='".stripinput($_GET['thread_id'])."'
-						GROUP BY t.thread_id"));
-	if ($data['forum_language']." != ".LANGUAGE) {
-		echo set_language($data['forum_language']);
+// Forum threads
+elseif (preg_match('/viewthread.php/i', $_SERVER['PHP_SELF']) || preg_match('|/thread/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("FO")) {
+	if (isset($_GET['thread_id']) && isnum($_GET['thread_id']) || $matches['1'] > 0) {
+		$data = dbarray(dbquery("SELECT f.forum_id,f.forum_language, t.thread_id
+								FROM ".DB_FORUMS." f
+								LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
+								WHERE t.thread_id='".(isset($_GET['thread_id']) ? $_GET['thread_id'] : $matches['1'])."'
+								GROUP BY t.thread_id"));
+		if ($data['forum_language']." != ".LANGUAGE) {
+			echo set_language($data['forum_language']);
+		}
 	}
 }
 

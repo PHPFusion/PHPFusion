@@ -31,7 +31,7 @@ $debug = false;
 if (!isset($_GET['post'])) throw new \Exception('$_GET[ post ] is blank, and not passed! Please report this.');
 if (!isset($_GET['forum_id'])) throw new \Exception('$_GET[ forum_id ] is blank, and not passed! Please report this.');
 if (!isset($_GET['thread_id'])) throw new \Exception('$_GET[ thread_id ] is blank, and not passed! Please report this.');
-$base_redirect_link = FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id'];
+$base_redirect_link = FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
 //if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) redirect("index.php");
 
 $errorb = '';
@@ -67,7 +67,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		if (checkgroup($data['forum_access'])) {
-			add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' />\n");
+			add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
 			$output = TRUE;
 			opentable($locale['forum_0552']);
 			echo "<div class='alert alert-info' style='text-align:center'><br />\n";
@@ -78,8 +78,8 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notif
 				$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'");
 				echo $locale['forum_0554']."<br /><br />\n";
 			}
-			echo "<a href='".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
-			echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+			echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
+			echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 			echo "<a href='".FORUM."index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
 			closetable();
 		}
@@ -100,10 +100,10 @@ if ($_GET['post'] == "new") {
 		if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
 			redirect("index.php");
 		}
-		echo "<a href='".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
-		add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."' />\n");
+		echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
+		add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
 	}
-	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$locale['forum_0549']."</a> ::\n";
+	echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$_GET['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='index.php'>".$locale['forum_0550']."</a><br /><br /></div>\n";
 	closetable();
 }
@@ -182,7 +182,7 @@ if ($_GET['post'] == "reply") {
 		add_to_head("<meta http-equiv='refresh' content='4; url=".$base_redirect_link."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
 		echo "<a href='".$base_redirect_link."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$locale['forum_0548']."</a> ::\n";
 	}
-	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+	echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='".FORUM."index.php'>".$locale['forum_0550']."</a></div>\n";
 	closetable();
 
@@ -193,7 +193,7 @@ if ($_GET['post'] == "edit") {
 		redirect("index.php");
 	}
 	add_to_title($locale['global_201'].$locale['forum_0508']);
-	add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
+	add_to_head("<meta http-equiv='refresh' content='2; url=".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 	opentable($locale['forum_0508']);
 	echo "<div class='alert ".($errorb ? 'alert-warning' : 'alert-info')."' style='text-align:center'><br />\n";
 	if ($errorb) {
@@ -201,8 +201,8 @@ if ($_GET['post'] == "edit") {
 	} else {
 		echo $locale['forum_0547']."<br /><br />\n";
 	}
-	echo "<a href='".FORUM."viewthread.php?forum_id=".$_GET['forum_id']."&amp;thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
-	echo "<a href='".FORUM."viewforum.php?forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+	echo "<a href='".FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
+	echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='".FORUM."index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
 	closetable();
 }
