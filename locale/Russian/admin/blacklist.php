@@ -6,6 +6,7 @@ $locale['402'] = "Вернуться в управление чёрным спи
 $locale['403'] = "Перейти в начало админпанели";
 $locale['404'] = "Пожалуйста, введите IP-адрес или электропочту";
 $locale['405'] = "Введённая электропочта не является корректным адресом.";
+$locale['406'] = "Чёрный список";
 // Add/Edit Blacklist Titles
 $locale['420'] = "Добавление в чёрный список";
 $locale['421'] = "Изменить пользователя из чёрного списка";
@@ -32,11 +33,4 @@ $locale['465'] = "Чёрный список пустой.";
 $locale['466'] = "Нет данных";
 $locale['467'] = "Администратор";
 $locale['468'] = "Дата";
-/*
-// IPv6 secific
-$locale['480'] = "IPv6 options";
-$locale['481'] = "The specified IPv6 address contains a shortcut (::) therefore cannot be determined unequivocally.";
-$locale['482'] = "Which version would you use?";
-$locale['483'] = "Save";
-*/
 ?>
