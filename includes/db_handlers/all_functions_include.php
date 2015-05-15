@@ -106,6 +106,10 @@ register_shutdown_function(function() {
  * @return mixed The result of query or FALSE on error
  */
 function dbquery($query, array $parameters = array()) {
+	// Temporary check to detect the bug in installer
+	if (dbconnection() === null) {
+		debug_print_backtrace();
+	}
 	return dbconnection()->query($query, $parameters);
 }
 
