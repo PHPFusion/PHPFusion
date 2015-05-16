@@ -50,10 +50,10 @@ if (isset($_POST['step']) && $_POST['step'] == "8") {
 // Determine the chosen database functions
 $pdo_enabled = filter_input(INPUT_POST, 'pdo_enabled', FILTER_VALIDATE_BOOLEAN);
 $db_host = 'localhost';
-$db_user = '';
-$db_pass = '';
-$db_name = '';
-$db_prefix = '';
+$db_user = NULL;
+$db_pass = NULL;
+$db_name = NULL;
+$db_prefix = NULL;
 
 if (file_exists(BASEDIR.'config.php')) {
 	include BASEDIR.'config.php';
@@ -63,18 +63,18 @@ if (file_exists(BASEDIR.'config.php')) {
 
 if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 	$pdo_enabled = (bool)intval($pdo_enabled);
-	$db_host = stripinput(trim(strval(filter_input(INPUT_POST, 'db_host')))) ? : $db_host;
-	$db_user = stripinput(trim(strval(filter_input(INPUT_POST, 'db_user')))) ? : $db_user;
-	$db_pass = stripinput(trim(strval(filter_input(INPUT_POST, 'db_pass')))) ? : $db_pass;
-	$db_name = stripinput(trim(strval(filter_input(INPUT_POST, 'db_name')))) ? : $db_name;
-	$db_prefix = stripinput(trim(strval(filter_input(INPUT_POST, 'db_prefix')))) ? : $db_prefix;
+	$db_host = (string) (stripinput(trim(filter_input(INPUT_POST, 'db_host'))) ? : $db_host);
+	$db_user = (string) (stripinput(trim(filter_input(INPUT_POST, 'db_user'))) ? : $db_user);
+	$db_pass = (string) (stripinput(filter_input(INPUT_POST, 'db_pass')) ? : $db_pass);
+	$db_name = (string) (stripinput(trim(filter_input(INPUT_POST, 'db_name'))) ? : $db_name);
+	$db_prefix = (string) (stripinput(trim(filter_input(INPUT_POST, 'db_prefix'))) ? : $db_prefix);
 	require_once INCLUDES."sqlhandler.inc.php";
 }
 
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
 include_once INCLUDES."dynamics/dynamics.inc.php";
 
-if ($db_host && $db_user && $db_name && $db_pass) {
+if ($db_user !== NULL && $db_name !== NULL && $db_pass !== NULL) {
 	DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
 	DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
 		'host' => $db_host,
