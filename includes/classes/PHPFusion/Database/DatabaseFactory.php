@@ -18,6 +18,8 @@
 
 namespace PHPFusion\Database;
 
+use PHPFusion\Database\Exception\UndefinedConfigurationException;
+
 class DatabaseFactory {
 
 	/**
@@ -214,13 +216,13 @@ class DatabaseFactory {
 	 * Get the database connection object
 	 *
 	 * @param string $id
+	 * @throws UndefinedConfigurationException
 	 * @return AbstractDatabaseDriver
 	 */
 	public static function getConnection($id = NULL) {
 		$id = strtolower($id ? : self::getDefaultConnectionID());
 		if (!isset(self::$configurations[$id])) {
-			// TODO Exception
-			return NULL;
+			throw new UndefinedConfigurationException("Unknown configuration id: ".$id);
 		}
 		if (!isset(self::$connections[$id]) or self::$connections[$id]->isClosed()) {
 			$conf = self::$configurations[$id];

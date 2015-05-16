@@ -368,7 +368,31 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$db_select = $connection_info['dbselection_success'];
 			if ($db_connect) {
 				if ($db_select) {
-					if (dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'")) == "0") {
+					$countRows = 0;
+					try {
+						$countRows = dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'"));
+					} catch (\PHPFusion\Database\Exception\UndefinedConfigurationException $e) {
+						$debugInfo = array(
+							'connection_info' => $connection_info,
+							'db_prefix' => $db_prefix,
+							'db_user_empty' => (int) empty($db_user),
+							'db_user_type' => gettype($db_user),
+							'db_pass_empty' => (int) empty($db_pass),
+							'db_pass_type' => gettype($db_pass),
+							'db_name_empty' => (int) empty($db_name),
+							'db_name_type' => gettype($db_name),
+							'db_host_empty' => (int) empty($db_host),
+							'db_host_type' => gettype($db_host),
+							'pdo_enabled' => (int) $pdo_enabled,
+							'php_version' => phpversion(),
+							'opcache' => (int) function_exists('opcache_reset'),
+							'register_globals' => (int) @ini_get('register_globals')
+						);
+						print_p($debugInfo);
+						print_p($e);
+						exit;
+					}
+					if ($countRows) {
 						$table_name = uniqid($db_prefix, FALSE);
 						$can_write = TRUE;
 						$result = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
