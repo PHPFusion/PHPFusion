@@ -75,14 +75,14 @@ $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
 include_once INCLUDES."dynamics/dynamics.inc.php";
 
 if ($db_host && $db_user && $db_name && $db_pass) {
-	DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
+/*	DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
 	DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
 		'host' => $db_host,
 		'user' => $db_user,
 		'password' => $db_pass,
 		'database' => $db_name,
 		'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
-	));
+	));*/
 }
 
 require_once INCLUDES."db_handlers/all_functions_include.php";
@@ -389,7 +389,12 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 							'register_globals' => (int) @ini_get('register_globals')
 						);
 						print_p($debugInfo);
-						print_p($e);
+						print_p($e->getMessage());
+						$trace = $e->getTrace();
+						foreach ($trace as &$item) {
+							$item['file'] = str_replace(dirname(__DIR__), '', str_replace('\\', '/', $item['file']));
+						}
+						print_p($trace);
 						exit;
 					}
 					if ($countRows) {
