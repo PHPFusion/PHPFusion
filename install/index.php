@@ -391,13 +391,13 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 						print_p($debugInfo);
 						print_p($e->getMessage());
 						$trace = $e->getTrace();
-						foreach ($trace as &$item) {
-							$item['file'] = str_replace(dirname(__DIR__), '', str_replace('\\', '/', $item['file']));
+						foreach ($trace as &$_item) {
+							$item['file'] = str_replace(dirname(__DIR__), '', str_replace('\\', '/', $_item['file']));
 						}
 						print_p($trace);
 						exit;
 					}
-					if ($countRows) {
+					if (!$countRows) {
 						$table_name = uniqid($db_prefix, FALSE);
 						$can_write = TRUE;
 						$result = dbquery("CREATE TABLE ".$table_name." (test_field VARCHAR(10) NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
