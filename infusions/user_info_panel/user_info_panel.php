@@ -31,12 +31,20 @@ foreach ($modules as $k => $v) {
 	}
 }
 
+if (!preg_match('/administration/i', $_SERVER['PHP_SELF']) && count($enabled_languages) > 1) {
+	openside($locale['global_ML102']);
+	echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
+	echo lang_switcher();
+	closeside();
+}
+
 if (iMEMBER) {
 	if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 		opensidex($locale['UM096'].$userdata['user_name'], "off");
 	} else {
 		openside($locale['UM096'].$userdata['user_name']);
-}
+
+		}
 
 $messages_count = dbquery("SELECT 
 	SUM(message_folder=0) AS inbox_count,
@@ -74,10 +82,6 @@ echo progress_bar($outbox_percent, $locale['UM099']);
 $archive_cfg = ($data['pm_savebox'] != 0 ? $data['pm_savebox'] : 1);
 $archive_percent = $archive_cfg !== 1 ? number_format(($archive_count/$archive_cfg)*99, 0) : number_format(0*99,0);
 echo progress_bar($archive_percent, $locale['UM100']);
-if (count($enabled_languages) > 1) {
-echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
-echo lang_switcher();
-}
 echo "<div id='navigation-user'>\n";
 echo "<h5><strong>".$locale['UM097']."</strong></h5>\n";
 echo "<hr class='side-hr'>\n";
