@@ -89,12 +89,9 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['smile
 }
 opentable($form_title);
 $image_files = makefilelist(IMAGES."smiley/", ".|..|index.php", TRUE);
-$smiley_opts = array();
-if (count($image_files) > 0) {
-	foreach ($image_files as $smileys) {
-		$smiley_opts[$smileys] = $smileys;
-	}
-}
+$image_list = "<option value=''>&nbsp;</option>\n";
+$image_list .= makefileopts($image_files, $smiley_image);
+
 echo openform('smiley_form', 'post', $form_action, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n<tr>\n";
 echo "<td class='tbl'><label for='smiley_code'>".$locale['420']."</label></td>\n";
@@ -103,10 +100,10 @@ echo form_text('smiley_code', '', $smiley_code, array('required' => 1, 'error_te
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl'><label for='smiley_image'>".$locale['421']."</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl'>\n";
-echo form_select('smiley_image', '', $smiley_opts, $smiley_image, array('placeholder' => $locale['choose'], 'required' => 1, 'error_text' => $locale['438']));
+echo "<select name='smiley_image' id='smiley_image' class='textbox' onchange=\"PreviewSmiley();\">".$image_list."</select>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl'><strong>".$locale['424']."</strong></td>\n";
-echo "<td class='tbl'><img class='img-thumbnail' src='".($smiley_image ? IMAGES."smiley/".$smiley_image : IMAGES."imagenotfound.jpg")."' alt='smiley' id='smiley_preview' /></td>\n";
+echo "<td class='tbl'><img class='img-thumbnail' src='".($smiley_image ? IMAGES."smiley/".$smiley_image : IMAGES."imagenotfound.jpg")."' alt='smiley' style='border:none' id='smiley_preview' /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl'><label for='smiley_text'>".$locale['422']."</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl'>\n";
