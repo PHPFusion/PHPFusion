@@ -36,7 +36,7 @@ $inf_droptable = "";
 $inf_altertable = "";
 $inf_deldbrow = "";
 $inf_sitelink = "";
-// changed from id defusing to folder defusing, because inf_folder is also unique.
+
 if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defuse'])) {
 	$temp = opendir(INFUSIONS);
 	$inf = array();
@@ -96,7 +96,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 					if ($item['inf_status'] > 1) {
 						echo form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet'));
 					} else {
-						echo form_button('defuse', $locale['401'], "defuse-$i", array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash'));
+						echo form_button('defuse', $locale['411'], "defuse-$i", array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash'));
 					}
 				} else {
 					echo form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
@@ -232,7 +232,6 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 add_to_jquery("
     $('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
     ");
-
 
 require_once THEMES."templates/footer.php";
 ?>
