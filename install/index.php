@@ -576,7 +576,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				foreach ($apps[1] as $k => $v) {
 					$content .= "<hr class='m-t-5 m-b-5'/>\n";
 					$content .= "<div class='row'>\n";
-					$content .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".ucwords($v['title']);
+					$content .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".$v['title'];
 					$content .= "<div class='pull-right'>\n";
 					$content .= form_button('uninstall', $locale['setup_1405'], $v['key'], array('class' => 'btn-xs btn-default',
 						'icon' => 'entypo trash'));
@@ -589,7 +589,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				foreach ($apps[0] as $k => $v) {
 					$content .= "<hr class='m-t-5 m-b-5'/>\n";
 					$content .= "<div class='row'>\n";
-					$content .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".ucwords($v['title']);
+					$content .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".($v['title'];
 					$content .= "<div class='pull-right'>\n";
 					$content .= form_button('install', $locale['setup_1404'], $v['key'], array('class' => 'btn-xs btn-default',
 						'icon' => 'entypo publish'));
