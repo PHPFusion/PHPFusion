@@ -49,7 +49,6 @@ class CustomPage {
 		self::customPage_selector();
 		add_breadcrumb(array('link'=>ADMIN.'custom_pages.php'.$aidlink, 'title'=>$locale['403']));
 		$this->data = self::set_customPage($this->data);
-		$this->data = self::preview_custompage($this->data);
 		if (isset($_POST['cancel'])) redirect(FUSION_SELF.$aidlink);
 	}
 
@@ -177,21 +176,6 @@ class CustomPage {
 	}
 
 	/**
-	 * @param $data
-	 * @return mixed
-	 */
-	private function preview_custompage($data) {
-		if (isset($_POST['preview'])) {
-			$page_title = stripinput($_POST['page_title']);
-			$page_content = stripslash($_POST['page_content']);
-			echo openmodal('page_preview', $page_title, array('class'=>'modal-center modal-lg'));
-			eval("?>".$page_content."<?php ");
-			echo closemodal();
-		}
-		return $data;
-	}
-
-	/**
 	 * Displays Custom Page Selector
 	 */
 	public static function customPage_selector() {
@@ -263,11 +247,6 @@ class CustomPage {
 			echo "<tbody id='custompage-links' class='connected'>\n";
 			foreach($data as $id => $pageData) {
 				$display_lang = $pageData['page_language'];
-				/*$page_languages = explode('.', $pageData['page_language']);
-				$display_lang = '';
-				foreach($page_languages as $lang) {
-					$display_lang .= "<span class='badge m-r-10'>".$lang."</span>";
-				} */
 				echo "<tr id='listItem_".$pageData['page_id']."' data-id='".$pageData['page_id']."' class='list-result pointer'>\n";
 				echo "<td>".$pageData['page_id']."</td>\n";
 				echo "<td class='col-sm-4'>".$pageData['page_title']."\n";
@@ -308,7 +287,7 @@ class CustomPage {
 		if (isset($_POST['edit']) && isset($_POST['page_id'])) {
 			echo form_hidden('', 'edit', 'edit', 'edit');
 		}
-		// port to dynamics now.
+
 		echo "<div class='row m-t-20' >\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		echo form_text('page_title', $locale['422'], $data['page_title'], array('required' => 1));
@@ -319,10 +298,11 @@ class CustomPage {
 									   )
 		);
 		echo form_textarea('page_content', '', $data['page_content'], (isset($_COOKIE['custom_pages_tinymce']) && $_COOKIE['custom_pages_tinymce'] == 1 && fusion_get_settings('tinymce_enabled') ? array() : array(
-			'autosize'=>1,
-			'form_name'=>'inputform',
-			'html'=>1,
-			'class'=>'m-t-20',
+				'width' => '100%',
+				'height' => '260px',
+				'form_name'=>'inputform',
+				'html'=>1,
+				'class'=>'m-t-20',
 		)));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
@@ -360,7 +340,7 @@ class CustomPage {
 								  'query' => (multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : '')." link_position >= 2",
 								  'disable_opts' => $data['link_id'],
 								  'hide_disabled' => 1), DB_SITE_LINKS, "link_name", "link_id", "link_cat");
-		if (!$data['page_id']) { // we need to get rid of this if we want to constant pairing.
+		if (!$data['page_id']) {
 			echo form_checkbox('add_link', $locale['426'], 1);
 		}
 		echo form_checkbox('page_allow_comments', $locale['427'], $data['page_allow_comments'],  array('class'=>'m-b-0'));
@@ -372,7 +352,6 @@ class CustomPage {
 
 		openside();
 		if (multilang_table("CP")) {
-//			echo form_select('page_language', $locale['global_ML100'], fusion_get_enabled_languages(), $data['page_language'], array('width'=>'100%'));
 			$languages = !empty($data['page_language']) ? explode('.', $data['page_language']) : array();
 			foreach(fusion_get_enabled_languages() as $language) {
 				echo form_checkbox('page_language[]', $language, in_array($language, $languages) ? 1 : 0, array('class'=>'m-b-0', 'value'=>$language, 'input_id' => 'page_lang-'.$language));
@@ -389,7 +368,6 @@ class CustomPage {
 		echo "</div></div>\n";
 
 		echo form_hidden('', 'page_id', 'page_id', $data['page_id']);
-		echo form_button('preview', $locale['429'], $locale['429'], array('class' => 'btn-default m-r-10'));
 		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
 		if (isset($_POST['edit'])) echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
 		echo closeform();
@@ -397,7 +375,7 @@ class CustomPage {
 
 		add_to_jquery("
 			$('#delete').bind('click', function() { confirm('".$locale['450']."'); });
-			$('#save, #preview').bind('click', function() {
+			$('#save').bind('click', function() {
 			var page_title = $('#page_title').val();
 			if (page_title =='') { alert('".$locale['451']."'); return false; }
 			});
