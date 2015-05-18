@@ -81,7 +81,7 @@ if (isset($_GET['msg_read']) && isnum($_GET['msg_read'])) {
 		if (dbrows($_sresult) > 0) {
 			$sdata = dbarray($_sresult);
 			$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
-			AND message_user='".$userdata['user_id']."'	ORDER BY message_datestamp ASC");
+			AND message_user='".$userdata['user_id']."'	ORDER BY message_datestamp DESC");
 			if (dbrows($c_sresult) > 0) {
 				while ($cdata = dbarray($c_sresult)) {
 					// reformat conversation
@@ -97,23 +97,13 @@ if (isset($_GET['msg_read']) && isnum($_GET['msg_read'])) {
 			}
 		}
 		redirect(FUSION_SELF."?folder=archive".($error ? "&error=$error" : ""));
-	}
-	elseif (isset($_POST['unsave'])) {
-		// do we even need unarchive? doesn't look like very useful.
-		//$inbox_total = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='0'");
-		//if ($msg_settings['pm_inbox'] == "0" || ($inbox_total+1) <= $msg_settings['pm_inbox']) {
-		//	$result = dbquery("UPDATE ".DB_MESSAGES." SET message_folder='0' WHERE message_id='".$_GET['msg_id']."' AND message_to='".$userdata['user_id']."'");
-		//} else {
-		//	$error = "1";
-		//}
-		//redirect(FUSION_SELF."?folder=archive".($error ? "&error=$error" : ""));
 	} elseif (isset($_POST['delete'])) {
 		$_sresult = dbquery("SELECT message_subject FROM ".DB_MESSAGES." WHERE message_id='".$_GET['msg_read']."' LIMIT 1");
 		if (dbrows($_sresult) > 0) {
 			$sdata = dbarray($_sresult);
 			$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
 			AND message_user='".$userdata['user_id']."'
-			ORDER BY message_datestamp ASC");
+			ORDER BY message_datestamp DESC");
 			if (dbrows($c_sresult) > 0) {
 				while ($cdata = dbarray($c_sresult)) {
 					dbquery_insert(DB_MESSAGES, $cdata, 'delete', array('noredirect' => 1));
@@ -134,7 +124,7 @@ if ($msg_ids && $check_count > 0) {
 				$sdata = dbarray($_sresult);
 				$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
 				AND message_user='".$userdata['user_id']."' AND message_folder='".$sdata['message_folder']."'
-				ORDER BY message_datestamp ASC");
+				ORDER BY message_datestamp DESC");
 				if (dbrows($c_sresult) > 0) {
 					while ($cdata = dbarray($c_sresult)) {
 						$cdata['message_read'] = 1;
@@ -151,7 +141,7 @@ if ($msg_ids && $check_count > 0) {
 				$sdata = dbarray($_sresult);
 				$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
 				AND message_user='".$userdata['user_id']."' AND message_folder='".$sdata['message_folder']."'
-				ORDER BY message_datestamp ASC");
+				ORDER BY message_datestamp DESC");
 				if (dbrows($c_sresult) > 0) {
 					while ($cdata = dbarray($c_sresult)) {
 						$cdata['message_read'] = 0;
@@ -168,7 +158,7 @@ if ($msg_ids && $check_count > 0) {
 				$sdata = dbarray($_sresult);
 				$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
 				AND message_user='".$userdata['user_id']."'
-				ORDER BY message_datestamp ASC");
+				ORDER BY message_datestamp DESC");
 				if (dbrows($c_sresult) > 0) {
 					while ($cdata = dbarray($c_sresult)) {
 						if ($cdata['message_folder'] == 1) {
@@ -191,7 +181,7 @@ if ($msg_ids && $check_count > 0) {
 				$sdata = dbarray($_sresult);
 				$c_sresult = dbquery("SELECT * FROM ".DB_MESSAGES." WHERE message_subject='".$sdata['message_subject']."'
 				AND message_user='".$userdata['user_id']."'
-				ORDER BY message_datestamp ASC");
+				ORDER BY message_datestamp DESC");
 				if (dbrows($c_sresult) > 0) {
 					while ($cdata = dbarray($c_sresult)) {
 						dbquery_insert(DB_MESSAGES, $cdata, 'delete');
@@ -201,30 +191,6 @@ if ($msg_ids && $check_count > 0) {
 		}
 	}
 	redirect(FUSION_SELF."?folder=".$_GET['folder']);
-
-	// Old codes with checks...
-	/*if (isset($_POST['save_msg'])) {
-		$archive_total = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='2'");
-		if ($msg_settings['pm_savebox'] == "0" || ($archive_total+$check_count) <= $msg_settings['pm_savebox']) {
-			$result = dbquery("UPDATE ".DB_MESSAGES." SET message_folder='2' WHERE message_id IN(".$msg_ids.") AND message_to='".$userdata['user_id']."'");
-		} else {
-			$error = "1";
-		}
-	} elseif (isset($_POST['unsave_msg'])) {
-		$inbox_total = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_folder='0'");
-		if ($msg_settings['pm_inbox'] == "0" || ($inbox_total+$check_count) <= $msg_settings['pm_inbox']) {
-			$result = dbquery("UPDATE ".DB_MESSAGES." SET message_folder='0' WHERE message_id IN(".$msg_ids.") AND message_to='".$userdata['user_id']."'");
-		} else {
-			$error = "1";
-		}
-	} elseif (isset($_POST['read_msg'])) {
-		$result = dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id IN(".$msg_ids.") AND message_to='".$userdata['user_id']."'");
-	} elseif (isset($_POST['unread_msg'])) {
-		$result = dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id IN(".$msg_ids.") AND message_to='".$userdata['user_id']."'");
-	} elseif (isset($_POST['delete_msg'])) {
-		$result = dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id IN(".$msg_ids.") AND message_to='".$userdata['user_id']."'");
-	}
-	redirect(FUSION_SELF."?folder=".$_GET['folder'].($error ? "&error=$error" : ""));*/
 }
 
 // Reply and Send actions
@@ -306,9 +272,8 @@ if (isset($_POST['send_message'])) {
 				}
 			}
 		} elseif (isnum($_GET['msg_send'])) {
-			// Send to Individuals.
 			require_once INCLUDES."flood_include.php";
-			//if (!flood_control("message_datestamp", DB_MESSAGES, "message_from='".$userdata['user_id']."'")) {
+			if (!flood_control("message_datestamp", DB_MESSAGES, "message_from='".$userdata['user_id']."'")) {
 			$result = dbquery("SELECT u.user_id, u.user_name, u.user_email, u.user_level, mo.pm_email_notify, s.pm_inbox, COUNT(message_id) as message_count
 				FROM ".DB_USERS." u
 				LEFT JOIN ".DB_MESSAGES_OPTIONS." mo USING(user_id)
@@ -345,17 +310,16 @@ if (isset($_POST['send_message'])) {
 			} else {
 				redirect(FUSION_SELF."?folder=inbox&error=noresult");
 			}
+		} else {
+			redirect(FUSION_SELF."?folder=inbox&error=flood");
 		}
 	}
+}
 	if (!$error && !defined('FUSION_NULL')) {
 		$cdata['outbox_count'] = 0;
 		$cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message
 		FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_to"));
 		if ($my_settings['pm_save_sent']) {
-			// deactivate message deletion, because we are going to delete one whole chunk now.
-			if ($cdata['outbox_count'] && ($cdata['outbox_count']+1) > $msg_settings['pm_sentbox']) {
-				//$result = dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id='".$cdata['last_message']."' AND message_to='".$userdata['user_id']."'");
-			}
 			if (isset($_POST['chk_sendtoall']) && isnum($_POST['msg_to_group'])) {
 				$postdata['message_from'] = $userdata['user_id'];
 			} elseif (isset($_GET['msg_send']) && isnum($_GET['msg_send'])) {
@@ -432,8 +396,7 @@ if ($_GET['folder'] == "inbox" || $_GET['folder'] == 'options') {
 			LEFT JOIN ".DB_USERS." up ON (m.message_from=up.user_id)
 			WHERE m.message_user='".$userdata['user_id']."' AND m.message_folder ='0'
 			GROUP BY m.message_from
-			ORDER BY m.message_datestamp ASC
-			");
+			ORDER BY m.message_datestamp DESC");
 			$info['chat_rows'] = dbrows($result);
 			if (dbrows($result)>0) {
 				add_to_title($locale['global_201'].$folders[$_GET['folder']]);
@@ -449,8 +412,7 @@ if ($_GET['folder'] == "inbox" || $_GET['folder'] == 'options') {
 						FROM ".DB_MESSAGES." m
 						LEFT JOIN ".DB_USERS." u ON m.message_from=u.user_id
 						WHERE m.message_user='".$userdata['user_id']."' AND m.message_from='".$_GET['msg_user']."' and message_folder='0'
-						GROUP BY message_subject ORDER BY message_datestamp DESC
-						");
+						GROUP BY message_subject ORDER BY message_datestamp DESC");
 					$info['max_rows'] = dbrows($result);
 					if ($info['max_rows']>0) {
 						while ($topics = dbarray($result)) {
@@ -479,8 +441,7 @@ elseif ($_GET['folder'] == "outbox") {
 			LEFT JOIN ".DB_USERS." up ON (m.message_from=up.user_id)
 			WHERE m.message_user='".$userdata['user_id']."' AND m.message_folder ='1'
 			GROUP BY m.message_to
-			ORDER BY m.message_datestamp ASC
-			");
+			ORDER BY m.message_datestamp DESC");
 		$info['chat_rows'] = dbrows($result);
 		if (dbrows($result)>0) {
 			add_to_title($locale['global_201'].$folders[$_GET['folder']]);
@@ -524,8 +485,7 @@ elseif ($_GET['folder'] == "archive") {
 			LEFT JOIN ".DB_USERS." up ON IF(m.message_from='".$userdata['user_id']."', m.message_to=up.user_id, m.message_from=up.user_id)
 			WHERE m.message_user='".$userdata['user_id']."' AND m.message_folder ='2'
 			GROUP BY m.message_subject
-			ORDER BY m.message_datestamp ASC
-			");
+			ORDER BY m.message_datestamp DESC");
 		$info['chat_rows'] = dbrows($result);
 		if (dbrows($result)>0) {
 			add_to_title($locale['global_201'].$folders[$_GET['folder']]);
@@ -573,14 +533,14 @@ if ((isset($_GET['msg_read']) && isnum($_GET['msg_read'])) && ($_GET['folder'] =
 				LEFT JOIN ".DB_USERS." u ON IF(message_folder=1, m.message_to=u.user_id, m.message_from=u.user_id)
 				WHERE message_from !='".$userdata['user_id']."' AND message_subject='$message_subject' AND message_folder='0' OR
 				message_to='".$userdata['user_id']."' AND message_subject='".$p_data['message_subject']."' AND message_folder='1' AND message_user='".$userdata['user_id']."'
-				ORDER BY message_datestamp ASC");
+				ORDER BY message_datestamp DESC");
 		} elseif ($_GET['folder'] == 'outbox') {
 			$result = dbquery("SELECT  m.message_id, m.message_subject, m.message_message, m.message_smileys,
 				m.message_datestamp, m.message_folder, u.user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".DB_MESSAGES." m
 				LEFT JOIN ".DB_USERS." u ON m.message_to=u.user_id
 				WHERE message_to='".$userdata['user_id']."' AND message_subject='".$p_data['message_subject']."' AND message_folder='1' AND message_user='".$userdata['user_id']."'
-				ORDER BY message_datestamp ASC");
+				ORDER BY message_datestamp DESC");
 		} elseif ($_GET['folder'] == 'archive') {
 			$result = dbquery("SELECT  m.message_id, m.message_to, m.message_from, m.message_subject, m.message_message, m.message_smileys,
 				m.message_datestamp, m.message_folder, u.user_id, u.user_name, u.user_status, u.user_avatar
@@ -588,7 +548,7 @@ if ((isset($_GET['msg_read']) && isnum($_GET['msg_read'])) && ($_GET['folder'] =
 				LEFT JOIN ".DB_USERS." u ON IF(message_folder=1, m.message_to=u.user_id, m.message_from=u.user_id)
 				WHERE message_from='".$userdata['user_id']."' AND message_subject='$message_subject' AND message_folder='2' OR
 					  message_to='".$userdata['user_id']."' AND message_subject='".$p_data['message_subject']."' AND message_folder='2' AND message_user='".$userdata['user_id']."'
-				ORDER BY message_datestamp ASC");
+				ORDER BY message_datestamp DESC");
 		}
 		if (dbrows($result) > 0) {
 			while ($data = dbarray($result)) {
