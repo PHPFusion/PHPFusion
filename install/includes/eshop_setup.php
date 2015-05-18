@@ -34,6 +34,7 @@ if (isset($_POST['uninstall'])) {
 	// Remove Custom Inserts
 	dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='ESHP'");
 	dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_name='".$locale['setup_3053']."'");
+	dbquery("DELETE FROM ".$db_prefix."panels WHERE panel_name='eShop cart panel'");
 	dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_cats'");
 	dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_cat_disp'");
 	dbquery("DELETE FROM ".$db_prefix."settings WHERE settings_name='eshop_nopp'");
@@ -484,6 +485,10 @@ if (isset($_POST['uninstall'])) {
 	if (!$result) $fail = TRUE;
 	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['setup_3053']."', 'settings_eshop.php', '4')");
 	if (!$result) $fail = TRUE;
+	// Insert the cart panel
+	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('eShop cart panel', 'eshop_cart_panel', '', '4', '3', 'file', '0', '1', '1', '', '')");
+	if (!$result) $fail = TRUE;
+	
 	// Local Inserts
 	$result = dbquery("INSERT INTO ".$db_prefix."eshop_shippingcats (cid, title, image) VALUES 
 				(1, 'Generic', 'generic.png'),
@@ -494,7 +499,6 @@ if (isset($_POST['uninstall'])) {
 				(6, 'Ptt', 'ptt.png'),
 				(7, 'TNT', 'tnt.png')");
 	if (!$result) $fail = TRUE;
-
 	$result = dbquery("INSERT INTO ".$db_prefix."eshop_shippingitems (sid, cid, method, dtime, destination, weightmin, weightmax, weightcost, initialcost, active) VALUES
 				(1, 1, 'No Shipping - Visit store', '0', '0', '0.00', '0', 0, 0, '1'),
 				(2, 4, 'UPS Express', '1', '2', '0.00', '150', 0, 250, '1'),
