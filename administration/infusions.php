@@ -156,7 +156,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 				if (isset($inf_sitelink) && is_array($inf_sitelink)) {
 					foreach ($inf_sitelink as $item) {
 						$link_order = dbresult(dbquery("SELECT MAX(link_order) FROM ".DB_SITE_LINKS), 0)+1;
-						dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order) VALUES ('".$item['title']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$item['url']."', '".$item['visibility']."', '1', '0', '".$link_order."')");
+						dbquery("INSERT INTO ".DB_SITE_LINKS." (link_name, link_url, link_icon, link_visibility, link_position, link_window,link_language, link_order) VALUES ('".$item['title']."', '".str_replace("../", "", INFUSIONS).$inf_folder."/".$item['url']."', '".$item['icon']."', '".$item['visibility']."', '".$item['position']."', '0', '".LANGUAGE."', '".$link_order."')");
 					}
 				}
 				//Multilang rights
