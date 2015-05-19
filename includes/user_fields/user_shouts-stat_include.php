@@ -19,12 +19,15 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if ($profile_method == "input") {
 	//Nothing here
+	$user_fields = '';
+	if (defined('ADMIN_PANEL')) { // To show in admin panel only.
+		include_once INFUSIONS."shoutbox_panel/infusion_db.php";
+		$user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_shouts-stat']."</div>";
+	}
 } elseif ($profile_method == "display") {
 	include_once INFUSIONS."shoutbox_panel/infusion_db.php";
-	echo "<tr>\n";
-	echo "<td class='tbl1'>".$locale['uf_shouts-stat']."</td>\n";
-	echo "<td align='right' class='tbl1'>".number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".$user_data['user_id']."'"))."</td>\n";
-	echo "</tr>\n";
+	$field_value = number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval($_GET['lookup'])."'"));
+	$user_fields = array('title'=>$locale['uf_shouts-stat'], 'value'=>$field_value);
 } elseif ($profile_method == "validate_insert") {
 	//Nothing here
 } elseif ($profile_method == "validate_update") {

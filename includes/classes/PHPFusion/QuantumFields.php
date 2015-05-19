@@ -1373,7 +1373,7 @@ class QuantumFields {
 			include $this->plugin_locale_folder.stripinput($this->field_data['add_module']).".php";
 			include $this->plugin_folder.stripinput($this->field_data['add_module'])."_include_var.php";
 			$this->user_field_dbinfo = $user_field_dbinfo;
-			if (!$user_field_dbinfo) {
+			if (!isset($user_field_dbinfo)) {
 				addNotice('warning', $locale['fields_0602']);
 			}
 		} else {
@@ -1718,7 +1718,6 @@ class QuantumFields {
 		} elseif ($options['hide_value']) {
 			$field_value = '';
 		}
-
 		switch($data['field_type']) {
 			case 'file':
 				// Do not remove it. It is used in included files.

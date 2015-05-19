@@ -231,6 +231,7 @@ class UserFields extends QuantumFields {
 	public function renderOutput() {
 		$this->UserProfile();
 		require_once THEMES."templates/global/profile.php";
+
 		render_userprofile($this->info);
 	}
 
@@ -303,7 +304,7 @@ class UserFields extends QuantumFields {
 	// reacts with $method var ('input', 'display');
 	private function get_userFields() {
 		$this->callback_data = $this->userData;
-		$index_page_id = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
+		$index_page_id = isset($_GET['profiles']) && isnum($_GET['profiles']) ? intval($_GET['profiles']) : 1;
 		$result = dbquery("SELECT field.*,
 				cat.field_cat_id, cat.field_cat_name, cat.field_parent,
 				root.field_cat_id as page_id, root.field_cat_name as page_name, root.field_cat_db, root.field_cat_index
@@ -357,7 +358,7 @@ class UserFields extends QuantumFields {
 							$this->info['user_field'][$cat_id]['title'] = form_para($cat, $cat_id, 'profile_category_name');
 							foreach ($item[$cat_id] as $field_id => $field) {
 								$render = $this->display_fields($field, $this->userData, $this->method);
-								if (isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] && $render) {
+								if ((isset($this->callback_data[$field['field_name']]) && $this->callback_data[$field['field_name']] || $field['field_type'] == 'file') && $render) {
 									$this->info['user_field'][$cat_id]['fields'][$field['field_id']] = $render;
 								}
 							}
