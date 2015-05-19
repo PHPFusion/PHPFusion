@@ -1679,6 +1679,17 @@ class QuantumFields {
 	 */
 	public static function display_fields(array $data, $callback_data, $method = 'input', array $options = array()) {
 		global $locale;
+
+		// Add compatibality to V7's UF module.
+		// Security concerns: remove all password hashes and salt
+		unset($callback_data['user_algo']);
+		unset($callback_data['user_salt']);
+		unset($callback_data['user_password']);
+		unset($callback_data['user_admin_algo']);
+		unset($callback_data['user_admin_salt']);
+		unset($callback_data['user_admin_password']);
+		$user_data = $callback_data;
+
 		$data += array(
 			'field_required'=> FALSE,
 			'field_error'	=> '',
