@@ -74,16 +74,7 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
 include_once INCLUDES."dynamics/dynamics.inc.php";
 
-if ($db_user !== NULL && $db_name !== NULL && $db_pass !== NULL) {
-	DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
-	DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), array(
-		'host' => $db_host,
-		'user' => $db_user,
-		'password' => $db_pass,
-		'database' => $db_name,
-		'debug' => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
-	));
-}
+DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
 
 require_once INCLUDES."db_handlers/all_functions_include.php";
 require_once LOCALE.LOCALESET.'global.php';
@@ -368,35 +359,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$db_select = $connection_info['dbselection_success'];
 			if ($db_connect) {
 				if ($db_select) {
-					$countRows = 0;
-					try {
-						$countRows = dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'"));
-					} catch (\PHPFusion\Database\Exception\UndefinedConfigurationException $e) {
-						$debugInfo = array(
-							'connection_info' => $connection_info,
-							'db_prefix' => $db_prefix,
-							'db_user_empty' => (int) empty($db_user),
-							'db_user_type' => gettype($db_user),
-							'db_pass_empty' => (int) empty($db_pass),
-							'db_pass_type' => gettype($db_pass),
-							'db_name_empty' => (int) empty($db_name),
-							'db_name_type' => gettype($db_name),
-							'db_host_empty' => (int) empty($db_host),
-							'db_host_type' => gettype($db_host),
-							'pdo_enabled' => (int) $pdo_enabled,
-							'php_version' => phpversion(),
-							'opcache' => (int) function_exists('opcache_reset'),
-							'register_globals' => (int) @ini_get('register_globals')
-						);
-						print_p($debugInfo);
-						print_p($e->getMessage());
-						$trace = $e->getTrace();
-						foreach ($trace as &$_item) {
-							$item['file'] = str_replace(dirname(__DIR__), '', str_replace('\\', '/', $_item['file']));
-						}
-						print_p($trace);
-						exit;
-					}
+					$countRows = dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'"));
 					if (!$countRows) {
 						$table_name = uniqid($db_prefix, FALSE);
 						$can_write = TRUE;

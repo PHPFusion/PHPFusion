@@ -202,6 +202,9 @@ class DatabaseFactory {
 			'debug' => $configuration->isDebug()
 		);
 		$id = strtolower($options['connectionid']);
+		if (!isset(self::$configurations[$id])) {
+			self::registerConfiguration($id, $configuration->toArray());
+		}
 		if (!isset(self::$connections[$id]) or self::$connections[$id]->isClosed()) {
 			$class = self::getDriverClass(strtolower($options['driver']));
 			/**@var $connection AbstractDatabaseDriver*/

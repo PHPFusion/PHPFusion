@@ -49,4 +49,8 @@ class Configuration {
 		}
 		return $this->configuration[$index];
 	}
+
+	public function toArray() {
+		return $this->configuration;
+	}
 }
