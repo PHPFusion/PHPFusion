@@ -19,11 +19,12 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if ($profile_method == "input") {
 	//Nothing here
+	$user_fields = '';
+	if (defined('ADMIN_PANEL')) { // To show in admin panel only.
+		$user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_forum-stat']."</div>";
+	}
 } elseif ($profile_method == "display") {
-	echo "<tr>\n";
-	echo "<td class='tbl1'>".$locale['uf_forum-stat']."</td>\n";
-	echo "<td align='right' class='tbl1'>".number_format($user_data['user_posts'])."</td>\n";
-	echo "</tr>\n";
+	$user_fields = array('title'=>$locale['uf_forum-stat'], 'value'=>$user_data['user_posts']);
 } elseif ($profile_method == "validate_insert") {
 	//Nothing here
 } elseif ($profile_method == "validate_update") {
