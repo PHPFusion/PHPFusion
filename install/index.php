@@ -68,8 +68,9 @@ if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 	$db_pass = (string) (stripinput(filter_input(INPUT_POST, 'db_pass')) ? : $db_pass);
 	$db_name = (string) (stripinput(trim(filter_input(INPUT_POST, 'db_name'))) ? : $db_name);
 	$db_prefix = (string) (stripinput(trim(filter_input(INPUT_POST, 'db_prefix'))) ? : $db_prefix);
-	require_once INCLUDES."sqlhandler.inc.php";
 }
+
+
 
 $locale_files = makefilelist("../locale/", ".svn|.|..", TRUE, "folders");
 include_once INCLUDES."dynamics/dynamics.inc.php";
