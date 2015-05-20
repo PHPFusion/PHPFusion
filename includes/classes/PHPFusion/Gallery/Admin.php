@@ -173,6 +173,7 @@ class Admin {
 	public function boot() {
 		global $locale;
 		require_once LOCALE.LOCALESET."admin/gallery.php";
+		add_to_head("<link href='".THEMES."templates/global/css/gallery.css' rel='stylesheet'/>\n");
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		$_GET['order'] = isset($_GET['order']) && isnum($_GET['order']) ? $_GET['order'] : 1;
 		$_GET['gallery'] = isset($_GET['gallery']) && self::validate_album($_GET['gallery']) ? $_GET['gallery'] : '';
@@ -1324,11 +1325,5 @@ class Admin {
 	<?php
 	}
 
-	/**
-	 * CSS injection - will port to css file.
-	 */
-	private function gallery_css() {
-		add_to_head("<link href='".THEMES."templates/global/css/gallery.css' rel='stylesheet'/>\n");
-	}
 
 }
