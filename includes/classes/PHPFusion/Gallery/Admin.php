@@ -1105,7 +1105,6 @@ class Admin {
 	 */
 	private function display_gallery() {
 		global $locale;
-		self::gallery_css();
 		self::display_photo(FALSE);
 		/**
 		 * Breadcrumb
