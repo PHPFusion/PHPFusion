@@ -252,10 +252,6 @@ class Forum {
 						if ($settings['forum_last_post_avatar']) {
 							$row['forum_last_post_avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
 						}
-						//$row['forum_last_post_thread_link'] = FORUM."viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'];
-						//$row['forum_last_post_link'] = FORUM."viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'];
-						//$row['forum_last_post_profile_link'] = $locale['by']." ".profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']);
-						//$row['forum_last_post_date'] = showdate("forumdate", $row['forum_lastpost']);
 						$row['forum_last_post_thread_link'] = FORUM."viewthread.php?thread_id=".$row['thread_id'];
 						$row['forum_last_post_link'] = FORUM."viewthread.php?thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'];
 						$row['forum_last_post_profile_link'] = $locale['by']." ".profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']);
@@ -332,7 +328,6 @@ class Forum {
 									$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
 
 									 // Threads Customized Output
-									//$threads['thread_link'] = FORUM."viewthread.php?forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id'];
 									$threads['thread_link'] = FORUM."viewthread.php?thread_id=".$threads['thread_id'];
 									$threads['thread_pages'] = '';
 
@@ -344,7 +339,6 @@ class Forum {
 										$middle = FALSE;
 										while ($ctr2 <= $reps) {
 											if ($reps < 5 || ($reps > 4 && ($ctr2 == 1 || $ctr2 > ($reps-3)))) {
-												//$pnum = "<a href='".FORUM."viewthread.php?forum_id=".$threads['forum_id']."&amp;thread_id=".$threads['thread_id']."&amp;rowstart=$ctr'>$ctr2</a> ";
 												$pnum = "<a href='".FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;rowstart=$ctr'>$ctr2</a> ";
 											} else {
 												if ($middle == FALSE) {

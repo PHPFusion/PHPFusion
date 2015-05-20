@@ -160,14 +160,21 @@ class Moderator {
 		if (isset($_POST['step']) && $_POST['step'] != "") { $_GET['step'] = $_POST['step']; }
 		$_GET['step'] = isset($_GET['step']) && in_array($_GET['step'], $this->allowed_actions) ? $_GET['step'] : '';
 		$_GET['error'] = isset($_GET['error']) ? $_GET['error'] : '';
+
+		if ($this->thread_id && !$this->forum_id) {
+		$forum_id_data = dbarray(dbquery("SELECT forum_id FROM ".DB_FORUM_THREADS." WHERE thread_id='".$this->thread_id."'"));
+		$this->forum_id = $forum_id_data['forum_id'];
+		}
+		
 		$this->form_action = FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;rowstart=".$_GET['rowstart'];
+
 		// get forum parents
 		$branch_data = dbarray(dbquery("SELECT forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$this->forum_id."'"));
 		$this->parent_id = $branch_data['forum_cat'];
 		$this->branch_id = $branch_data['forum_branch'];
 
 		// at any time when cancel is clicked, redirect to forum id.
-		if (isset($_POST['cancelDelete'])) redirect("viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".intval($this->thread_id));
+		if (isset($_POST['cancelDelete'])) redirect("viewthread.php?thread_id=".intval($this->thread_id));
 
 		/**
 		 * Thread actions
@@ -410,7 +417,7 @@ class Moderator {
 				dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastpostid ='0', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+".$post_count.", forum_lastuser='0' WHERE forum_id=".$new_forum_id);
 			}
 			addNotice('success', $locale['forum_0752']);
-			redirect(FORUM."viewthread.php?forum_id=".$_POST['new_forum_id']."&amp;thread_id=".$this->thread_id);
+			redirect(FORUM."viewthread.php?thread_id=".$this->thread_id);
 		} else {
 			echo openform('moveform', 'post', FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$this->thread_id."&amp;step=move", array('downtime' => 1));
 			echo form_select_tree('new_forum_id', $locale['forum_0751'], '', array('input_id'=>"newfrmid", 'no_root'=>1, 'inline'=>1, 'disable_opts' => $this->forum_id),  DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
@@ -464,6 +471,7 @@ class Moderator {
 				addNotice('success', $locale['success-DP001']);
 				if (!$thread_count) { // no remaining thread
 					addNotice('success', $locale['success-DP002']);
+					echo " me ";
 					redirect(FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id);
 				}
 			} else {
@@ -478,6 +486,10 @@ class Moderator {
 	 */
 	private function mod_move_posts() {
 		global $locale;
+
+		// Might do an isset check for forum ID..
+		//$this->form_action = FORUM."viewthread.php?thread_id=".$this->thread_id."&amp;rowstart=".$_GET['rowstart'];
+
 		if (isset($_POST['move_posts'])) {
 			$remove_first_post = FALSE;
 			$f_post_blo = FALSE;
@@ -503,7 +515,7 @@ class Moderator {
 					// validate whether the selected post exists
 					$move_result = dbquery("SELECT forum_id, thread_id, COUNT(post_id) as num_posts
 									FROM ".DB_FORUM_POSTS."
-									WHERE post_id IN (".$move_posts.") AND forum_id='".intval($this->forum_id)."'
+									WHERE post_id IN (".$move_posts.")
 									AND thread_id='".intval($this->thread_id)."'
 									GROUP BY thread_id");
 					if (dbrows($move_result) > 0) {
@@ -522,7 +534,7 @@ class Moderator {
 							}
 							if ($remove_first_post && count($array_post) == 1) {
 								echo "<br /><strong>".$locale['forum_0307']."</strong><br /><br />\n"; // no post to move.
-								echo "<a href='".FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['forum_0309']."</a>";
+								echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['forum_0309']."</a>";
 								$f_post_blo = TRUE;
 							}
 							echo "</div></div>\n";
@@ -549,7 +561,7 @@ class Moderator {
 										$category_excluded[] = $cf_data['forum_id'];
 									}
 								}
-								echo openform('modopts', 'modopts', 'post', $this->form_action, array('downtime' => 1));
+								echo openform('modopts', 'post', $this->form_action, array('max_tokens' => 1, 'downtime' => 1));
 								echo form_select_tree('new_forum_id', $locale['forum_0301'], '', array('disable_opts' => $category_excluded,
 									'no_root' => 1,
 									'inline' => 1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
@@ -564,7 +576,7 @@ class Moderator {
 							} else {
 								echo "<div class='well'>\n";
 								echo "<strong>".$locale['forum_0310']."</strong><br /><br />\n";
-								echo "<a href='".FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['forum_0309']."</a><br /><br />\n";
+								echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."&amp;rowstart=".$_GET['rowstart']."'>".$locale['forum_0309']."</a><br /><br />\n";
 								echo "</div>\n";
 							}
 						}
@@ -582,7 +594,7 @@ class Moderator {
 								while ($tl_data = dbarray($tl_result)) {
 									$forum_list[$tl_data['thread_id']] = $tl_data['thread_subject'];
 								}
-								echo openform('modopts', 'modopts', 'post', $this->form_action."&amp;sv", array('downtime' => 1));
+								echo openform('modopts', 'post', $this->form_action."&amp;sv", array('max_tokens' => 1, 'downtime' => 1));
 								echo form_hidden('', 'new_forum_id', 'new_forum_id', $_POST['new_forum_id']);
 								echo form_select('new_thread_id', $locale['forum_0303'], $forum_list, '', array('inline' => 1));
 								foreach ($array_post as $value) {
@@ -592,7 +604,7 @@ class Moderator {
 								echo form_button($locale['forum_0304'], $locale['forum_0208'] , $locale['forum_0208'] , array('class'=>'btn-primary btn-sm'));
 								} else {
 								echo "<div id='close-message'><div class='admin-message'>".$locale['forum_0308']."<br /><br />\n";
-								echo "<a href='".FORUM."viewthread.php?forum_id=".$this->forum_id."&amp;thread_id=".$pdata['thread_id']."'>".$locale['forum_0309']."</a>\n";
+								echo "<a href='".FORUM."viewthread.php?thread_id=".$pdata['thread_id']."'>".$locale['forum_0309']."</a>\n";
 								echo "</div></div><br />\n";
 							}
 						} elseif (isset($_GET['sv']) && isset($_POST['new_forum_id']) && isnum($_POST['new_forum_id']) && isset($_POST['new_thread_id']) && isnum($_POST['new_thread_id'])) {
