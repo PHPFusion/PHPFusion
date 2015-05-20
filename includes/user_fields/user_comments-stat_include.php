@@ -5,7 +5,7 @@
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: user_comments-stat_include.php
-| Author: Digitanium
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,12 +18,12 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if ($profile_method == "input") {
-	//Nothing here
+	$user_fields = '';
+	if (defined('ADMIN_PANEL')) {
+	$user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_comments-stat']."</div>";
+	}
 } elseif ($profile_method == "display") {
-	echo "<tr>\n";
-	echo "<td class='tbl1'>".$locale['uf_comments-stat']."</td>\n";
-	echo "<td align='right' class='tbl1'>".number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".$user_data['user_id']."'"))."</td>\n";
-	echo "</tr>\n";
+	$user_fields = array('title'=>$locale['uf_comments-stat'], 'value'=>number_format(dbcount("(comment_id)", DB_COMMENTS, "comment_name='".$user_data['user_id']."'"))."");
 } elseif ($profile_method == "validate_insert") {
 	//Nothing here
 } elseif ($profile_method == "validate_update") {
