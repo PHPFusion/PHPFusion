@@ -245,6 +245,7 @@ $locale['forum_0585'] = "Please enter a message in the reply";
 $locale['forum_0586'] = "Post ID is blank, and not passed! Please report this to your system Administrator.";
 $locale['forum_0587'] = "Forum ID is blank, and not passed! Please report this to your system Administrator.";
 $locale['forum_0588'] = "Thread ID is blank, and not passed! Please report this to your system Administrator.";
+$locale['forum_0589'] = "There was no data found in , new, reply or edit.";
 
 $locale['forum_0591'] = 'Flush Post';
 $locale['forum_0592'] = 'Flush Threads';

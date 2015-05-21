@@ -536,11 +536,11 @@ if ($executable && iMEMBER) {
 	if (!defined('FUSION_NULL') && !$debug && !$debug2) {
 		if ($data['reply']) {
 			redirect("postify.php?post=reply&error=$error&amp;forum_id=".intval($_GET['forum_id'])."&amp;thread_id=".intval($_GET['thread_id'])."&amp;post_id=".intval($data['post_id']));
-		} elseif ($data['edit']) {
+		} elseif ($data['edit'] && !isset($_POST['add_poll_option']) && !isset($_POST['previewpost'])) {
 		// get parent id and branch id.
 			$forum_data = dbarray(dbquery("SELECT forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".intval($data['forum_id'])."'"));
 			redirect("postify.php?post=edit&error=$error&amp;forum_id=".intval($_GET['forum_id'])."&amp;parent_id=".intval($forum_data['forum_cat'])."&amp;forum_branch=".intval($forum_data['forum_branch'])."&amp;thread_id=".intval($_GET['thread_id'])."&amp;post_id=".intval($_GET['post_id']));
-		} elseif ($data['new']) {
+		} elseif ($data['new'] && !isset($_POST['add_poll_option']) && !isset($_POST['previewpost'])) {
 		// get parent id and branch id.
 			$forum_data = dbarray(dbquery("SELECT forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".intval($data['forum_id'])."'"));
 			redirect("postify.php?post=new&error=$error&amp;forum_id=".intval($data['forum_id'])."&amp;parent_id=".intval($forum_data['forum_cat'])."&amp;forum_branch=".intval($forum_data['forum_branch'])."&amp;thread_id=".intval($data['thread_id'].""));
@@ -549,7 +549,7 @@ if ($executable && iMEMBER) {
 } else {
 	if ($data['new'] or $data['reply'] or $data['edit']) {
 	} else {
-		if (!$executable) throw new \Exception('$data new, reply or edit was not found');
+		if (!$executable) throw new \Exception($locale['forum_0589']);
 	}
 }
 ?>
