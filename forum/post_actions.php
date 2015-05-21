@@ -19,6 +19,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 add_to_title($locale['global_201'].$locale['forum_0501']);
 global $defender;
+
 // poll add option not adding option.
 $can_poll = $info['forum_poll'] && checkgroup($info['forum_poll']) ? 1  : 0;
 $can_attach = $info['forum_attach'] && checkgroup($info['forum_attach']) ? 1 : 0;
@@ -346,16 +347,14 @@ if ($executable && iMEMBER) {
 				$defender->stop();
 			}
 		} else {
-			addNotice('info', 'Please enter a message in the reply'); // TODO: localise
+			addNotice('info',$locale['forum_0585']);
 		}
 	}
 
 	elseif (isset($_POST['add_poll_option'])) {
-		if (isset($_POST['add_poll_option'])) {
 			if (count($data['poll_opts'])) {
 				array_push($data['poll_opts'], '');
 			}
-		}
 	}
 
 	// On Preview Execution
@@ -553,5 +552,4 @@ if ($executable && iMEMBER) {
 		if (!$executable) throw new \Exception('$data new, reply or edit was not found');
 	}
 }
-
 ?>

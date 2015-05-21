@@ -28,11 +28,11 @@ add_to_title($locale['global_204']);
 $settings = fusion_get_settings();
 $debug = false;
 
-if (!isset($_GET['post'])) throw new \Exception('$_GET[ post ] is blank, and not passed! Please report this.');
-if (!isset($_GET['forum_id'])) throw new \Exception('$_GET[ forum_id ] is blank, and not passed! Please report this.');
-if (!isset($_GET['thread_id'])) throw new \Exception('$_GET[ thread_id ] is blank, and not passed! Please report this.');
+if (!isset($_GET['post'])) throw new \Exception($locale['forum_0586']);
+if (!isset($_GET['forum_id'])) throw new \Exception($locale['forum_0587']);
+if (!isset($_GET['thread_id'])) throw new \Exception($locale['forum_0588']);
 $base_redirect_link = FORUM."viewthread.php?thread_id=".$_GET['thread_id'];
-//if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) redirect("index.php");
+if (!isset($_GET['forum_id']) || !isnum($_GET['forum_id'])) redirect("index.php");
 
 $errorb = '';
 if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $_GET['error'] > 6) {

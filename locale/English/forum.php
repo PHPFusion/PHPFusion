@@ -241,6 +241,11 @@ $locale['forum_0582'] = "EDIT MODE";
 $locale['forum_0583'] = "REPLY MODE";
 $locale['forum_0584'] = "POST NEW THREAD MODE.";
 
+$locale['forum_0585'] = "Please enter a message in the reply";
+$locale['forum_0586'] = "Post ID is blank, and not passed! Please report this to your system Administrator.";
+$locale['forum_0587'] = "Forum ID is blank, and not passed! Please report this to your system Administrator.";
+$locale['forum_0588'] = "Thread ID is blank, and not passed! Please report this to your system Administrator.";
+
 $locale['forum_0591'] = 'Flush Post';
 $locale['forum_0592'] = 'Flush Threads';
 $locale['forum_0593'] = 'Flush Attachments';
