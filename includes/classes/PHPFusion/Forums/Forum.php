@@ -246,7 +246,8 @@ class Forum {
 					$row['forum_description'] = nl2br(parseubb($row['forum_description']));
 					$row['forum_postcount'] = format_word($row['forum_postcount'], $locale['fmt_post']);
 					$row['forum_threadcount'] = format_word($row['forum_threadcount'], $locale['fmt_thread']);
-
+					$row['forum_threadcounter'] = $row['forum_threadcount']+1;
+					
 					 // Last posts section
 					if ($row['forum_lastpostid']) {
 						if ($settings['forum_last_post_avatar']) {
