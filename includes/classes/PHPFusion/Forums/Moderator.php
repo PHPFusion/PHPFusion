@@ -471,7 +471,6 @@ class Moderator {
 				addNotice('success', $locale['success-DP001']);
 				if (!$thread_count) { // no remaining thread
 					addNotice('success', $locale['success-DP002']);
-					echo " me ";
 					redirect(FORUM."index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id."&amp;branch_id=".$this->branch_id);
 				}
 			} else {
@@ -486,9 +485,6 @@ class Moderator {
 	 */
 	private function mod_move_posts() {
 		global $locale;
-
-		// Might do an isset check for forum ID..
-		//$this->form_action = FORUM."viewthread.php?thread_id=".$this->thread_id."&amp;rowstart=".$_GET['rowstart'];
 
 		if (isset($_POST['move_posts'])) {
 			$remove_first_post = FALSE;
@@ -661,7 +657,7 @@ class Moderator {
 										$result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$old_thread['post_datestamp']."', forum_postcount=forum_postcount-".intval($pdata['num_posts']).", forum_lastuser='".$old_thread['post_author']."' WHERE forum_id='".$pdata['forum_id']."'");
 									}
 									$pid = count($array_post)-1;
-									redirect($this->form_action."&amp;pid=".$array_post[$pid]."#post_".$array_post[$pid]);
+									redirect(FORUM."viewthread.php?thread_id=".$_POST['new_thread_id']."&amp;pid=".$array_post[$pid]."#post_".$array_post[$pid]);
 								} else {
 									addNotice('danger', $locale['error-MP002']);
 									redirect($this->form_action); // or here.
