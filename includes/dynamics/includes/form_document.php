@@ -60,7 +60,14 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
 		'width' => !empty($options['width']) ?  $options['width']  : '100%',
 		'class' => !empty($options['class']) ?  $options['class']  : '',
 		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
-		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
+		// Vitalij, please fix these error text defaults. which is which?
+		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : $locale['doc_type_error'],
+		'error_text_2' => !empty($options['error_text_2']) ?  $options['error_text_2']  : $locale['doc_series_error'],
+		'error_text_3' => !empty($options['error_text_3']) ?  $options['error_text_3']  : $locale['doc_number_error'],
+		'error_text_4' => !empty($options['error_text_4']) ?  $options['error_text_4']  : $locale['doc_authority_error'],
+		'error_text_5' => !empty($options['error_text_5']) ?  $options['error_text_5']  : $locale['doc_issue_error'],
+		'error_text_6' => !empty($options['error_text_6']) ?  $options['error_text_6']  : '',
+
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
 		'date_format' => !empty($options['date_format']) ?  $options['date_format']  : 'dd-mm-yyyy',
 		'week_start' => !empty($options['week_start']) && isnum($options['week_start']) ? $options['week_start'] : isset($settings['week_start']) && isnum($settings['week_start']) ? $settings['week_start'] : 0
@@ -74,36 +81,36 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
 	$html .= "<div class='row'>\n";
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-doc_type' value='".$input_value['0']."' placeholder='".$locale['doc_type'].($options['required'] ? ' *':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= "<div id='$input_id-doc_type-help'></div>";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[0])) || $defender->inputHasError($input_name[0])) ? "<div id='".$input_id."-doc_type-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-3 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-doc_series' value='".$input_value['1']."' placeholder='".$locale['doc_series'].($options['required'] ? ' *':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />";
-	$html .= "<div id='$input_id-doc_series-help'></div>";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[1])) || $defender->inputHasError($input_name[1])) ? "<div id='".$input_id."-doc_series-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-8 col-sm-8 col-md-8 col-lg-6 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-doc_number' value='".$input_value['2']."' placeholder='".$locale['doc_number'].($options['required'] ? ' *':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />";
-	$html .= "<div id='$input_id-doc_number-help'></div>";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[2])) || $defender->inputHasError($input_name[2])) ? "<div id='".$input_id."-doc_number-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-doc_authority' value='".$input_value['3']."' placeholder='".$locale['doc_authority'].($options['required'] ? ' *':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= "<div id='$input_id-doc_authority-help'></div>";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[3])) || $defender->inputHasError($input_name[3])) ? "<div id='".$input_id."-doc_authority-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-5'>\n";
 	$html .= "<div class='input-group date' ".($options['width'] ? "style='width:".$options['width'].";'" : '').">\n";
 	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-doc_date_issue' value='".$input_value[4]."' class='form-control textbox' placeholder='".$locale['doc_date_issue'].($options['required'] ? ' *':'')."' />\n";
 	$html .= "<span class='input-group-addon '><i class='entypo calendar'></i></span>\n";
-	$html .= "<div id='$input_id-doc_date_issue-help'></div>";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[4])) || $defender->inputHasError($input_name[4])) ? "<div id='".$input_id."-doc_issue-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-5'>\n";
 	$html .= "<div class='input-group date' ".($options['width'] ? "style='width:".$options['width'].";'" : '').">\n";
 	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-doc_date_expire' value='".$input_value[5]."' class='form-control textbox' placeholder='".$locale['doc_date_expire']."' />\n";
 	$html .= "<span class='input-group-addon '><i class='entypo calendar'></i></span>\n";
-	$html .= "<div id='$input_id-doc_date_expire-help'></div>";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[5])) || $defender->inputHasError($input_name[5])) ? "<div id='".$input_id."-doc_expire-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n</div>\n";
 
 	$html .= "</div>\n"; // close inner row

@@ -47,24 +47,35 @@ function form_address($input_name, $label = '', $input_value = FALSE, array $opt
 		'width' => !empty($options['width']) ?  $options['width']  : '100%',
 		'class' => !empty($options['class']) ?  $options['class']  : '',
 		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
-		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
+		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : $locale['street_error'],
+		'error_text_2' => !empty($options['error_text_2']) ?  $options['error_text_2']  : $locale['street_error'],
+		'error_text_3' => !empty($options['error_text_3']) ?  $options['error_text_3']  : $locale['country_error'],
+		'error_text_4' => !empty($options['error_text_4']) ?  $options['error_text_4']  : $locale['state_error'],
+		'error_text_5' => !empty($options['error_text_5']) ?  $options['error_text_5']  : $locale['city_error'],
+		'error_text_6' => !empty($options['error_text_6']) ?  $options['error_text_6']  : $locale['postcode_error'],
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
 		'flag' => !empty($options['flag']) ?  $options['flag']  : '',
 	);
 	$input_id = $options['input_id'];
-	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
-
+	$has_error = false;
+	for($i=0; $i<=6; $i++) {
+		if ($defender->inputHasError($input_name[$i])) {
+			$has_error = true;
+		}
+	}
+	$error_class = $has_error ? "has-error " : "";
 	$html = "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$error_class.$options['class']."' >\n";
 	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
 	$html .= "<div class='row'>\n";
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[0])) || $defender->inputHasError($input_name[0])) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[1])) || $defender->inputHasError($input_name[1])) ? "<div id='".$options['input_id']."-street-2-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
@@ -76,21 +87,20 @@ function form_address($input_name, $label = '', $input_value = FALSE, array $opt
 		$html .= "<option value='$country_key' ".$select.">".$countryname."</option>";
 	}
 	$html .= "</select>\n";
-
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[2])) || $defender->inputHasError($input_name[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 m-b-10'>\n";
 	$html .= "<div id='state-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
 	$html .= "<input type='hidden' name='".$input_name."[]' id='$input_id-state' value='".$input_value['3']."' style='width:100%;' />\n";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[3])) || $defender->inputHasError($input_name[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control textbox' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-city-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[4])) || $defender->inputHasError($input_name[4])) ? "<div id='".$options['input_id']."-city-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_5']."</div>" : "";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control textbox' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[5])) || $defender->inputHasError($input_name[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
 	$html .= "</div>\n";
 	$html .= "</div>\n"; // close inner row
 	$html .= ($options['inline']) ? "</div>\n" : "";
@@ -102,7 +112,12 @@ function form_address($input_name, $label = '', $input_value = FALSE, array $opt
 		 'id' 			=>	$input_id,
 		 'required'		=>	$options['required'],
 		 'safemode'		=> 	$options['safemode'],
-		 'error_text'	=> 	$options['error_text']
+		 'error_text'	=> 	$options['error_text'],
+		 'error_text_2'	=> 	$options['error_text_2'],
+		 'error_text_3'	=> 	$options['error_text_3'],
+		 'error_text_4'	=> 	$options['error_text_4'],
+		 'error_text_5'	=> 	$options['error_text_5'],
+		 'error_text_6'	=> 	$options['error_text_6']
 	 ));
 
 	if (!defined("SELECT2")) {

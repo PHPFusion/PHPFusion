@@ -80,12 +80,13 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 		'width' => '250px',
 		'class' => '',
 		'inline' => FALSE,
-		'error_text' => '',
+		'error_text' => $locale['error_input_default'],
 		'date_format' => 'dd-mm-yyyy',
 		'fieldicon_off' => FALSE,
 		'type' => 'timestamp',
 		'week_start' => fusion_get_settings('week_start')
 	);
+
 	$options += $default_options;
 	if (!$options['width']){
 		$options['width'] = $default_options['width'];
@@ -94,15 +95,17 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 		$options['type'] = $default_options['type'];
 	}
 	$options['week_start'] = (int) $options['week_start'];
+	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
+
 	$input_id = $options['input_id'] ? : $default_options['input_id'];
-	$html = "<div id='$input_id-field' class='form-group ".$options['class']."'>\n";
+	$html = "<div id='$input_id-field' class='form-group ".$error_class.$options['class']."'>\n";
 	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
 	$html .= "<div class='input-group date' ".($options['width'] ? "style='width:".$options['width'].";'" : '').">\n";
 	$html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' placeholder='".$options['placeholder']."' />\n";
 	$html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."'><i class='entypo calendar'></i></span>\n";
 	$html .= "</div>\n";
-	$html .= "<div id='$input_id-help'></div>";
+	$html .= ($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name) ?  "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= $options['inline'] ? "</div>\n" : "";
 	$html .= "</div>\n";
 	// Generate Defender Strings

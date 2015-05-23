@@ -42,22 +42,23 @@ function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 		'width' => !empty($options['width']) ?  $options['width']  : '100%',
 		'class' => !empty($options['class']) ?  $options['class']  : '',
 		'inline' => !empty($options['inline']) ?  $options['inline']  : '',
-		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : '',
+		'error_text' => !empty($options['error_text']) ?  $options['error_text']  : $locale['firstname_error'],
+		'error_text_2' => !empty($options['error_text']) ?  $options['error_text_2']  : $locale['lastname_error'],
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
 	);
-
-	$html .= "<div id='$input_id-field' class='form-group clearfix ".$options['class']."' >\n";
+	$error_class = $defender->inputHasError($input_name[0]) || $defender->inputHasError($input_name[1]) ? "has-error " : "";
+	$html .= "<div id='$input_id-field' class='form-group clearfix ".$error_class.$options['class']."' >\n";
 	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12  p-l-0")."'>\n" : "";
 	$html .= "<div class='row p-l-15'>\n";
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10 p-l-0'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$input_id."-firstname' value='".$input_value['0']."' placeholder='".$locale['first_name']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= "<div id='$input_id-firstname-help'></div>";
+	$html .= ($options['required'] == 1 && $defender->inputHasError($input_name[0])) || $defender->inputHasError($input_name[0]) ?  "<div id='".$input_id."-firstname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$input_id."-lastname' value='".$input_value['1']."' placeholder='".$locale['last_name']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= "<div id='$input_id-lastname-help'></div>";
+	$html .= ($options['required'] == 1 && $defender->inputHasError($input_name[1])) || $defender->inputHasError($input_name[1]) ?  "<div id='".$input_id."-lastname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "</div>\n"; // close inner row
@@ -70,7 +71,8 @@ function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 									 'id' 			=>	$input_id,
 									 'required'		=>	$options['required'],
 									 'safemode'		=> 	$options['safemode'],
-									 'error_text'	=> 	$options['error_text']
+									 'error_text'	=> 	$options['error_text'],
+									 'error_text_2'	=> 	$options['error_text_2']
 								 ));
 	return $html;
 }

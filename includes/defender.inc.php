@@ -59,7 +59,7 @@ class defender {
 		//$this->field_value = trim($this->field_value);
 
 		// Don't bother processing and validating empty inputs
-		if ($this->field_value == '') return $this->field_value;
+		//if ($this->field_value == '') return $this->field_value;
 
 		/**
 		 * Keep this include in the constructor
@@ -79,7 +79,7 @@ class defender {
 			'checkbox'	=> 'checkbox',
 			'password'	=> 'password',
 			'date'		=> 'date',
-			'timestamp'	=> 'date',
+			'timestamp'	=> 'timestamp',
 			'number'	=> 'number',
 			'email'		=> 'email',
 			'address'	=> 'address',
@@ -100,6 +100,9 @@ class defender {
 					case 'date':
 						return $this->verify_date();
 						break;
+					case 'timestamp':
+						return $this->verify_date();
+						break;
 					case 'password':
 						return $this->verify_password();
 						break;
@@ -117,66 +120,52 @@ class defender {
 						return $this->verify_url();
 						break;
 					case 'checkbox' :
-						// Should it be able to actually process the values of checkboxes?
 						if (isset($_POST[$this->field_name])) {
 							return 1;
-							/*if ($this->field_config['subtype'] == 'number') {
-								return $this->verify_number();
-							}
-							return $this->verify_text();*/
 						} else {
-							// If a checkbox is not posted we assume that is unchecked
-							// and return 0 instead of using the default value from DB
 							return 0;
 						}
 						break;
-					// DEV: To be reviewed
 					case 'name':
 						$name = $this->field_name;
-
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-firstname', $locale['firstname_error']);
-							//addNotice('info', $locale['firstname_error']);
+							self::setInputError($name[0]);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][1]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-lastname', $locale['lastname_error']);
-							//addNotice('info', $locale['lastname_error']);
+							self::setInputError($name[1]);
 						}
 						if (!defined('FUSION_NULL')) {
 							$return_value = $this->verify_text();
 							return $return_value;
 						}
 						break;
-					// DEV: To be reviewed
 					case 'address':
 						$name = $this->field_name;
-						//$def = $this->get_full_options($this->field_config);
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-street', $locale['street_error']);
-							//addNotice('info', $locale['street_error']);
+							self::setInputError($name[0]);
+						}
+						if ($this->field_config['required'] && !$_POST[$name][1]) {
+							$this->stop();
+							self::setInputError($name[1]);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][2]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-country', $locale['country_error']);
-							//addNotice('info', $locale['country_error']);
+							self::setInputError($name[2]);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][3]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-state', $locale['state_error']);
-							//addNotice('info', $locale['state_error']);
+							self::setInputError($name[3]);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][4]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-city', $locale['city_error']);
-							//addNotice('info', $locale['city_error']);
+							self::setInputError($name[4]);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][5]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-postcode', $locale['postcode_error']);
-							//addNotice('info', $locale['postcode_error']);
+							self::setInputError($name[5]);
 						}
 
 						if (!defined('FUSION_NULL')) {
@@ -195,28 +184,23 @@ class defender {
 						$name = $this->field_name;
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-doc_type', $locale['doc_type_error']);
-							//addNotice('info', $locale['doc_type_error']);
+							self::setInputError($name[0]);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][1]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-doc_series', $locale['doc_series_error']);
-							//addNotice('info', $locale['doc_series_error']);
+							self::setInputError($name[1]);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][2]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-doc_number', $locale['doc_number_error']);
-							//addNotice('info', $locale['doc_number_error']);
+							self::setInputError($name[2]);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][3]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-doc_authority', $locale['doc_authority_error']);
-							//addNotice('info', $locale['doc_authority_error']);
+							self::setInputError($name[3]);
 						}
 						if ($this->field_config['required'] && !$_POST[$name][4]) {
 							$this->stop();
-							//$this->addHelperText($this->field_config['id'].'-date_issue', $locale['date_issue_error']);
-							//addNotice('info', $locale['date_issue_error']);
+							self::setInputError($name[4]);
 						}
 						if (!defined('FUSION_NULL')) {
 							$return_value = $this->verify_text();
@@ -306,7 +290,7 @@ class defender {
 		} else {
 			$value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($this->field_value)))); // very strong sanitization.
 		}
-		
+		if ($this->field_config['required'] && !$value) self::setInputError($this->field_name);
 		if ($this->field_config['safemode'] && !preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) {
 			return FALSE;
 		} else {
@@ -321,10 +305,10 @@ class defender {
 	 */
 	protected function verify_email() {
 		// TODO: This regex was reported previously as flawed and should be reviewed and fixed
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
 		if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $this->field_value)) {
 			return $this->field_value;
 		}
-
 		return FALSE;
 	}
 
@@ -335,6 +319,7 @@ class defender {
 	 */
 	protected function verify_password() {
 		// add min length, add max length, add strong password into roadmaps.
+		if ($this->field_config['required'] && !$value) self::setInputError($this->field_name);
 		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
 			return $this->field_value;
 		}
@@ -348,6 +333,7 @@ class defender {
 	 * TODO: support decimal
 	 */
 	protected function verify_number() {
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
 		if (is_array($this->field_value)) {
 			$vars = array();
 			foreach ($this->field_value as $val) {
@@ -368,7 +354,7 @@ class defender {
 	 * returns str the input or bool FALSE if check fails
 	 */
 	protected function verify_url() {
-
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
 		$url_parts = parse_url($this->field_value);
 		// If no scheme/protocol is found but a path is present then let's add a protocol,
 		// chances are the user won't even know he has to add a protocol for the url to validate
@@ -410,10 +396,11 @@ class defender {
 				}
 			} else {
 				$this->stop();
-				//$this->addHelperText($this->field_config['id'], sprintf($locale['df_404'], $this->field_config['title']));
+				self::setInputError($this->field_name);
 				addNotice('info', sprintf($locale['df_404'], $this->field_config['title']));
 			}
 		} else {
+			if ($this->field_config['required'])  self::setInputError($this->field_name);
 			return $this->field_default;
 		}
 	}
@@ -560,22 +547,27 @@ class defender {
 						switch ($image_info['error']) {
 							case 1: // Invalid file size
 								addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+								self::setInputError($this->field_name);
 								//$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 								break;
 							case 2: // Unsupported image type
 								addNotice('danger', sprintf($locale['df_417'], ".gif .jpg .png"));
+								self::setInputError($this->field_name);
 								//$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
 								break;
 							case 3: // Invalid image resolution
 								addNotice('danger', sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+								self::setInputError($this->field_name);
 								//$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width'], $this->field_config['max_height']));
 								break;
 							case 4: // Invalid query string
 								addNotice('danger', $locale['df_422']);
+								self::setInputError($this->field_name);
 								//$this->addHelperText($this->field_config['id'], $locale['df_422']);
 								break;
 							case 5: // Image not uploaded
 								addNotice('danger', $locale['df_423']);
+								self::setInputError($this->field_name);
 								//$this->addHelperText($this->field_config['id'], $locale['df_423']);
 								break;
 						}
@@ -595,22 +587,27 @@ class defender {
 					switch ($upload['error']) {
 						case 1: // Invalid file size
 							addNotice('info', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+							self::setInputError($this->field_name);
 							//$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 							break;
 						case 2: // Unsupported image type
 							addNotice('info', sprintf($locale['df_417'], ".gif .jpg .png"));
+							self::setInputError($this->field_name);
 							//$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
 							break;
 						case 3: // Invalid image resolution
 							addNotice('info', sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+							self::setInputError($this->field_name);
 							//$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
 							break;
 						case 4: // Invalid query string
 							addNotice('info', $locale['df_422']);
+							self::setInputError($this->field_name);
 							//$this->addHelperText($this->field_config['id'], $locale['df_422']);
 							break;
 						case 5: // Image not uploaded
 							addNotice('info', $locale['df_423']);
+							self::setInputError($this->field_name);
 							//$this->addHelperText($this->field_config['id'], $locale['df_423']);
 							break;
 					}
@@ -634,18 +631,22 @@ class defender {
 				switch ($upload['error']) {
 					case 1: // Maximum file size exceeded
 						addNotice('info', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+						self::setInputError($this->field_name);
 						//$this->addHelperText($$this->field_config['id'], $locale['df_416']);
 						break;
 					case 2: // Invalid File extensions
 						addNotice('info', sprintf($locale['df_417'], $this->field_config['valid_ext']));
+						self::setInputError($this->field_name);
 						//$this->addHelperText($$this->field_config['id'], $locale['df_417']);
 						break;
 					case 3: // Invalid Query String
 						addNotice('info', $locale['df_422']);
+						self::setInputError($this->field_name);
 						//$this->addHelperText($$this->field_config['id'], $locale['df_422']);
 						break;
 					case 4: // File not uploaded
 						addNotice('info', $locale['df_423']);
+						self::setInputError($this->field_name);
 						//$this->addHelperText($$this->field_config['id'], $locale['df_423']);
 						break;
 				}
@@ -845,7 +846,6 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 			if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
 				$defender->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
 				$defender->field_name = $input_name;
-
 				$defender->field_value = $value;
 				$defender->field_default = $default; // to be removed
 
@@ -856,7 +856,6 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				// the the value itself
 				$callback = isset($defender->field_config['callback_check']) ? $defender->field_config['callback_check'] : FALSE;
 				$regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
-
 				$finalval = $defender->validate();
 
 				// If truly FALSE the check failed
@@ -867,13 +866,12 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				) {
 					// Flag that something went wrong
 					$defender->stop();
-					// Mark this input as invalid
-					$defender->setInputError($input_name);
+					// Mark this input as invalid -- Remove marking. Moved to defender for better array marking since resources have been spent on $defender->validate();
+
 					// Add a notice
 					if ($defender->debug) addNotice('warning', '<strong>'.$input_name.':</strong>'.($defender->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
 					// Return user's input for correction
 					return $defender->field_value;
-
 				} else {
 					if ($defender->debug) addNotice('info', $input_name.' = '.(is_array($finalval) ? 'array' : $finalval));
 					return $finalval;
@@ -884,7 +882,6 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				return $default;
 			}
 		}
-	// DEV: To be reviewed
 	} else {
 		// returns descript, sanitized value.
 		if ($value) {
