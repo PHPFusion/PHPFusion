@@ -20,8 +20,7 @@ namespace PHPFusion\Database;
 /**
  * Abstract class for new database handler classes
  */
-abstract class AbstractDatabaseDriver
-{
+abstract class AbstractDatabaseDriver {
 	/**
 	 * This is a MySQL error code
 	 *
@@ -84,8 +83,8 @@ abstract class AbstractDatabaseDriver
 	/**
 	 * @param bool $debug
 	 */
-	public function setDebug($debug = TRUE)  {
-		$this->debug = (bool) intval($debug);
+	public function setDebug($debug = TRUE) {
+		$this->debug = (bool)intval($debug);
 	}
 
 	/**
@@ -106,20 +105,20 @@ abstract class AbstractDatabaseDriver
 		self::$queries[$this->connectionid][] = array(0, $query, $parameters);
 		$query_time = microtime(TRUE);
 		$result = $this->_query($query, $parameters);
-		$query_time = round((microtime(TRUE)-$query_time), 7);
+		$query_time = round((microtime(TRUE) - $query_time), 7);
 		self::$queries[$this->connectionid][count(self::$queries[$this->connectionid]) - 1][0] = $query_time;
-		return $result ? : FALSE;
+		return $result ?: FALSE;
 	}
 
 	/**
 	 * Get all queries of all connections
 	 *
 	 * @return array structure: array(
-	 * 		$connectionid => array(
-	 *			array($time, $sql, $parameters),
-	 * 			//...
-	 * 		),
-	 * 		//...
+	 *        $connectionid => array(
+	 *            array($time, $sql, $parameters),
+	 *            //...
+	 *        ),
+	 *        //...
 	 * )
 	 */
 	public static function getGlobalQueryLog() {
@@ -159,11 +158,11 @@ abstract class AbstractDatabaseDriver
 	 * Get all queries of this connection
 	 *
 	 * @return array structure: array(
-	 * 		$connection_hash => array(
-	 *			array($time, $sql),
-	 * 			//...
-	 * 		),
-	 * 		//...
+	 *        $connection_hash => array(
+	 *            array($time, $sql),
+	 *            //...
+	 *        ),
+	 *        //...
 	 * )
 	 */
 	public function getQueryLog() {
@@ -235,7 +234,7 @@ abstract class AbstractDatabaseDriver
 			'SELECT auto_increment FROM information_schema.tables WHERE
 				table_schema = database() AND
 				table_name = :table', array(':table' => $table)));
-		return empty($status) ? false : (int) $status['auto_increment'];
+		return empty($status) ? FALSE : (int)$status['auto_increment'];
 	}
 
 	/**
@@ -243,13 +242,13 @@ abstract class AbstractDatabaseDriver
 	 *
 	 * @param string $parameter
 	 * @return string
-	 * 	Possible values:
-	 * 	<ul>
-	 * 		<li>{@link AbstractDatabaseDriver::PARAM_INT}</li>
-	 * 		<li>{@link AbstractDatabaseDriver::PARAM_STR}</li>
-	 * 		<li>{@link AbstractDatabaseDriver::PARAM_BOOL}</li>
-	 * 		<li>{@link AbstractDatabaseDriver::PARAM_NULL}</li>
-	 * 	</ul>
+	 *    Possible values:
+	 *    <ul>
+	 *        <li>{@link AbstractDatabaseDriver::PARAM_INT}</li>
+	 *        <li>{@link AbstractDatabaseDriver::PARAM_STR}</li>
+	 *        <li>{@link AbstractDatabaseDriver::PARAM_BOOL}</li>
+	 *        <li>{@link AbstractDatabaseDriver::PARAM_NULL}</li>
+	 *    </ul>
 	 */
 	public static function getParameterType($parameter) {
 		if ($parameter === NULL) {
@@ -356,5 +355,12 @@ abstract class AbstractDatabaseDriver
 	 * @return string
 	 */
 	abstract public function quote($value);
+
+	/**
+	 * Get the database server version
+	 *
+	 * @return string
+	 */
+	abstract public function getServerVersion();
 
 }

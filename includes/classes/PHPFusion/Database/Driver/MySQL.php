@@ -183,4 +183,13 @@ class MySQL extends AbstractDatabaseDriver {
 		return (int) mysql_insert_id($this->connection);
 	}
 
+	/**
+	 * Get the database server version
+	 *
+	 * @return string
+	 */
+	public function getServerVersion() {
+		return mysql_get_server_info($this->connection);
+	}
+
 }
