@@ -16,10 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (!preg_match('/administration/i', $_SERVER['PHP_SELF']) && count($enabled_languages) > 1) {
 
 // Articles
 if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) || preg_match('|/articles/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("AR")) {
-	if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
+	if (isset($_GET['article_id']) && isnum($_GET['article_id']) || $matches['1'] > 0) {
 		$data = dbarray(dbquery("SELECT ac.article_cat_id,ac.article_cat_language, a.article_id
 								 FROM ".DB_ARTICLE_CATS." ac
 								 LEFT JOIN ".DB_ARTICLES." a ON ac.article_cat_id = a.article_cat 
@@ -185,5 +186,6 @@ elseif (preg_match('/weblinks.php/i', $_SERVER['PHP_SELF']) || preg_match('|/web
 			echo set_language($data['weblink_cat_language']);
 		}
 	}
+}
 }
 ?>

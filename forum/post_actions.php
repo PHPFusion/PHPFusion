@@ -19,6 +19,7 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 add_to_title($locale['global_201'].$locale['forum_0501']);
 global $defender;
+
 // poll add option not adding option.
 $can_poll = $info['forum_poll'] && checkgroup($info['forum_poll']) ? 1  : 0;
 $can_attach = $info['forum_attach'] && checkgroup($info['forum_attach']) ? 1 : 0;
@@ -346,16 +347,14 @@ if ($executable && iMEMBER) {
 				$defender->stop();
 			}
 		} else {
-			addNotice('info', 'Please enter a message in the reply'); // TODO: localise
+			addNotice('info',$locale['forum_0585']);
 		}
 	}
 
 	elseif (isset($_POST['add_poll_option'])) {
-		if (isset($_POST['add_poll_option'])) {
 			if (count($data['poll_opts'])) {
 				array_push($data['poll_opts'], '');
 			}
-		}
 	}
 
 	// On Preview Execution
@@ -537,11 +536,11 @@ if ($executable && iMEMBER) {
 	if (!defined('FUSION_NULL') && !$debug && !$debug2) {
 		if ($data['reply']) {
 			redirect("postify.php?post=reply&error=$error&amp;forum_id=".intval($_GET['forum_id'])."&amp;thread_id=".intval($_GET['thread_id'])."&amp;post_id=".intval($data['post_id']));
-		} elseif ($data['edit']) {
+		} elseif ($data['edit'] && !isset($_POST['add_poll_option']) && !isset($_POST['previewpost'])) {
 		// get parent id and branch id.
 			$forum_data = dbarray(dbquery("SELECT forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".intval($data['forum_id'])."'"));
 			redirect("postify.php?post=edit&error=$error&amp;forum_id=".intval($_GET['forum_id'])."&amp;parent_id=".intval($forum_data['forum_cat'])."&amp;forum_branch=".intval($forum_data['forum_branch'])."&amp;thread_id=".intval($_GET['thread_id'])."&amp;post_id=".intval($_GET['post_id']));
-		} elseif ($data['new']) {
+		} elseif ($data['new'] && !isset($_POST['add_poll_option']) && !isset($_POST['previewpost'])) {
 		// get parent id and branch id.
 			$forum_data = dbarray(dbquery("SELECT forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".intval($data['forum_id'])."'"));
 			redirect("postify.php?post=new&error=$error&amp;forum_id=".intval($data['forum_id'])."&amp;parent_id=".intval($forum_data['forum_cat'])."&amp;forum_branch=".intval($forum_data['forum_branch'])."&amp;thread_id=".intval($data['thread_id'].""));
@@ -550,8 +549,7 @@ if ($executable && iMEMBER) {
 } else {
 	if ($data['new'] or $data['reply'] or $data['edit']) {
 	} else {
-		if (!$executable) throw new \Exception('$data new, reply or edit was not found');
+		if (!$executable) throw new \Exception($locale['forum_0589']);
 	}
 }
-
 ?>

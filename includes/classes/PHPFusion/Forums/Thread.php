@@ -91,10 +91,6 @@ private function set_thread_visitor() {
 			dbquery("UPDATE ".DB_USERS." SET user_threads='".$userdata['user_threads'].".".stripslashes($thread_match)."' WHERE user_id='".$userdata['user_id']."'");
 		}
 	}
-	//$visit_result = dbquery("SELECT user_id, user_name, user_status FROM ".DB_USERS." WHERE ".in_group('user_threads', intval($this->thread_info['thread_id']))."");
-	//while ($vdata = dbarray($visit_result)) {
-	//print_p($vdata);
-	//}
 }
 
 /**
@@ -216,7 +212,7 @@ private function set_ThreadMods() {
 											'move' => $locale['forum_0206']
 										);
 
-		$this->thread_info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.FORUM."viewthread.php?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id']."&amp;rowstart=".$_GET['rowstart'];
+		$this->thread_info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.FORUM."viewthread.php?thread_id=".$this->thread_info['thread']['thread_id']."&amp;rowstart=".$_GET['rowstart'];
 		$this->thread_info['open_post_form'] = openform('mod_form', 'post', $this->thread_info['form_action'], array('max_tokens' => 1,'notice' => 0));
 		$this->thread_info['close_post_form'] = closeform();
 		$this->thread_info['mod_form'] = "<div class='list-group-item'>\n
