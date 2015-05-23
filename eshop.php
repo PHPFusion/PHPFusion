@@ -60,10 +60,10 @@ if ($_GET['category']) {
 	}
 	elseif (isset($_POST['agreement_checked'])) {
 		// validate the form.
-		$validate_success = $eShop->validate_order();
-		if ($validate_success) {
-			//print_p('is_successful');
-		} else {
+		$validate_success = $eShop->validate_order(); // is true or false.
+		if ($validate_success) { // if true
+			echo stripslashes($validate_success);
+		} else { // if false, show the form again, with validated errors buffers
 			render_checkout($info);
 		}
 	}

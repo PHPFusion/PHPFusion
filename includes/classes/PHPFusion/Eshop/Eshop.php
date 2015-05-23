@@ -510,16 +510,14 @@ class Eshop {
 			'opaid' => 0,
 			'odate'=> time()
 		);
-
 		foreach($items as $itemData) {
 			if ($itemData['cqty']>0) {
-				//dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount+".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
-				//dbquery("UPDATE ".DB_ESHOP." SET instock=instock-".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
+				dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount+".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
+				dbquery("UPDATE ".DB_ESHOP." SET instock=instock-".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
 			}
 		}
-		//dbquery_insert(DB_ESHOP_ORDERS, $order_data, 'save'); // what next after save order?
-		//if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?confirm");
-		return true;
+		dbquery_insert(DB_ESHOP_ORDERS, $order_data, 'save'); // what next after save order?
+		return $responsive_bill_template;
 	}
 
 	public function handle_payments() {
