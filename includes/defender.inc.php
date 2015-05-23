@@ -169,9 +169,7 @@ class defender {
 						}
 
 						if (!defined('FUSION_NULL')) {
-
 							$return_value = $this->verify_text();
-							var_dump($return_value);
 							return $return_value;
 						}
 						break;
@@ -866,8 +864,6 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				) {
 					// Flag that something went wrong
 					$defender->stop();
-					// Mark this input as invalid -- Remove marking. Moved to defender for better array marking since resources have been spent on $defender->validate();
-
 					// Add a notice
 					if ($defender->debug) addNotice('warning', '<strong>'.$input_name.':</strong>'.($defender->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
 					// Return user's input for correction

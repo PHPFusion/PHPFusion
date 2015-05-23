@@ -90,11 +90,12 @@ class Customers {
 		return false;
 	}
 
+	/* Fetch values from Eshop Customer Database */
 	public static function get_customerData($cuid) {
 		if (isnum($cuid)) {
 			$result = dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid='".intval($cuid)."'");
 			if (dbrows($result)>0) {
-				return dbarray($result);
+				return (array) dbarray($result);
 			}
 		}
 		return array();

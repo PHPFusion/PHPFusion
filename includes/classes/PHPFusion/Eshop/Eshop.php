@@ -254,11 +254,13 @@ class Eshop {
 		}
 	}
 
-	// we start here.
+	// Get Customer Data if Customer Exist
 	private function set_customer() {
 		$user_id = \defender::set_sessionUserID();
 		$customer = Customers::get_customerData($user_id); // binds the above
-		self::set_session('customer', $customer);
+		if (!empty($customer)) {
+			self::set_session('customer', $customer);
+		}
 	}
 
 	// Cart Polling.
@@ -508,16 +510,14 @@ class Eshop {
 			'opaid' => 0,
 			'odate'=> time()
 		);
-
 		foreach($items as $itemData) {
 			if ($itemData['cqty']>0) {
-				//dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount+".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
-				//dbquery("UPDATE ".DB_ESHOP." SET instock=instock-".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
+				dbquery("UPDATE ".DB_ESHOP." SET sellcount=sellcount+".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
+				dbquery("UPDATE ".DB_ESHOP." SET instock=instock-".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
 			}
 		}
-		//dbquery_insert(DB_ESHOP_ORDERS, $order_data, 'save'); // what next after save order?
-		//if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?confirm");
-		return true;
+		dbquery_insert(DB_ESHOP_ORDERS, $order_data, 'save'); // what next after save order?
+		return $responsive_bill_template;
 	}
 
 	public function handle_payments() {
@@ -692,26 +692,23 @@ class Eshop {
 	private static function set_customerDB() {
 		global $userdata;
 		if (isset($_POST['save_customer'])) {
+
 			$customer_info['cuid'] = intval($userdata['user_id']);
 			$customer_info['cemail'] = form_sanitizer($_POST['cemail'], '', 'cemail');
 			$customer_info['cdob'] = form_sanitizer($_POST['cdob'], '', 'cdob');
 			$customer_info['cname'] = implode('|', $_POST['cname']); // backdoor to traverse back to dynamic
 			$name = form_sanitizer($_POST['cname'], '', 'cname');
-			if (!empty($name[0]) && !empty($name[1])) {
+			if (!empty($name)) {
+				$name = explode('|', $name);
 				$customer_info['cfirstname'] = $name[0];
 				$customer_info['clastname'] = $name[1];
 			}
 			// this goes back to form.
-			$customer_info['caddress'] = implode('|', $_POST['caddress']);
-			$address = form_sanitizer($_POST['caddress'], '', 'caddress');
-			// validate address
-			$has_error = false;
-			for($i=0; $i<=5; $i++) {
-				$has_error = (empty($address[$i])) ? true: false;
-			}
-			if (!$has_error) {
-				$address = explode('|', $address);
+			$customer_info['address'] = implode('|', $_POST['caddress']); // backdoor to traverse back to dynamic
+			$address = form_sanitizer($_POST['caddress'], '', 'caddress'); // returns str.
+			if (!empty($address)) {
 				// this go into sql only
+				$address = explode('|', $address);
 				$customer_info['caddress'] = $address[0];
 				$customer_info['caddress2'] = $address[1];
 				$customer_info['ccountry'] = $address[2];
@@ -727,65 +724,43 @@ class Eshop {
 				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
 				self::set_session('customer', $customer_info);
 			} else { // new save
-
 				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
-
 				self::set_session('customer', $customer_info);
 				print_p(self::get('customer'));
-
 			}
 		}
 	}
 
 	public static function display_customer_form($have_form = false) {
 		global $locale;
-		$customer_info = self::get('customer');
-		if (!empty($customer_info)) {
-			$customer_info['cfirstname'] = !empty($customer_info['cname']) ? explode('|', $customer_info['cname'])[0] : '';
-			$customer_info['clastname'] = !empty($customer_info['cname']) ? explode('|', $customer_info['cname'])[1] : '';
+		$c_info = self::get('customer');
+		if (!empty($c_info)) {
+			$c_info['cname'] = !empty($c_info['cname']) ? $c_info['cname'] : '|';
+			$c_info['address'] = !empty($c_info['address']) ? $c_info['address'] : '||||';
+			$c_info['cname'] = !empty($c_info['cname']) ? $c_info['cname'] : '|';
+			$c_info['cemail'] = !empty($c_info['cemail']) ? $c_info['cemail'] : '';
+			$c_info['cdob'] = !empty($c_info['cdob']) ? $c_info['cdob'] : '';
+			$c_info['cphone'] = !empty($c_info['cphone']) ? $c_info['cphone'] : '';
+			$c_info['cfax'] = !empty($c_info['cfax']) ? $c_info['cfax'] : '';
+			$c_info['cuid'] = !empty($c_info['cuid']) ? $c_info['cuid'] : 0;
 		}
-
-		$customer_info += array(
-			'clastname' => '',
-			'cemail' => '',
-			'cdob' => '',
-			'caddress' => '',
-			'caddress2' => '',
-			'ccountry' => '',
-			'cregion' => '',
-			'ccity' => '',
-			'cpostcode' => '',
-			'cphone' => '',
-			'cfax' => '',
-			'cuid' => '',
-		);
-		print_p(self::get('customer'));
-		global $defender;
-		print_p($defender->input_errors, 1);
-		print_p($customer_info);
-
-
-
-
+		print_p($c_info);
 		$html = "<div class='m-t-20'>\n";
 		$html .= $have_form ? openform('customerform', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0)) : '';
-
-		$customer_name = $customer_info['cfirstname'].'|'.$customer_info['clastname'];
-		print_p($customer_name);
-		$html .= form_name('Customer Name', 'cname', 'cname', $customer_name, array('required'=>1, 'inline'=>1));
-		$html .= form_text('cemail', $locale['ESHPCHK115'], $customer_info['cemail'], array('inline'=>1, 'required'=>1, 'type' => 'email'));
-		$html .= form_datepicker('cdob', $locale['ESHPCHK105'], $customer_info['cdob'], array('inline'=>1, 'required'=>1));
-		$customer_address[] = $customer_info['caddress']; // use this as backdoor.
-		$customer_address[] = $customer_info['caddress2'];
-		$customer_address[] = $customer_info['ccountry'];
-		$customer_address[] = $customer_info['cregion'];
-		$customer_address[] = $customer_info['ccity'];
-		$customer_address[] = $customer_info['cpostcode'];
+		$html .= form_name($locale['ESHP318'], 'cname', 'cname', $c_info['cname'], array('required'=>1, 'inline'=>1));
+		$html .= form_text('cemail', $locale['ESHPCHK115'], $c_info['cemail'], array('inline'=>1, 'required'=>1, 'type' => 'email'));
+		$html .= form_datepicker('cdob', $locale['ESHPCHK105'], $c_info['cdob'], array('inline'=>1, 'required'=>1));
+		$customer_address[] = $c_info['caddress']; // use this as backdoor.
+		$customer_address[] = $c_info['caddress2'];
+		$customer_address[] = $c_info['ccountry'];
+		$customer_address[] = $c_info['cregion'];
+		$customer_address[] = $c_info['ccity'];
+		$customer_address[] = $c_info['cpostcode'];
 		$customer_address = implode('|', $customer_address);
 		$html .= form_address('caddress', $locale['ESHPCHK106'], $customer_address, array('input_id'=>'customer_address', 'required'=>1, 'inline'=>1));
-		$html .= form_text('cphone', $locale['ESHPCHK113'], $customer_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
-		$html .= form_text('cfax', $locale['ESHPCHK114'], $customer_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
-		$html .= form_hidden('', 'cuid', 'cuid', $customer_info['cuid']);
+		$html .= form_text('cphone', $locale['ESHPCHK113'], $c_info['cphone'], array('required'=>1, 'inline'=>1, 'number'=>1));
+		$html .= form_text('cfax', $locale['ESHPCHK114'], $c_info['cfax'], array('inline'=>1, 'number'=>1)); // this not compulsory
+		$html .= form_hidden('', 'cuid', 'cuid', $c_info['cuid']);
 		$html .= $have_form ? form_button('save_customer', $locale['save_changes'], $locale['save'], array('class'=>'btn-success')) : form_hidden('', 'save_customer', 'save_customer', 1);
 		$html .= $have_form ? closeform() : '';
 		$html .= "</div>\n";
