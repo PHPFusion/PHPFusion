@@ -57,9 +57,17 @@ function form_address($input_name, $label = '', $input_value = FALSE, array $opt
 		'flag' => !empty($options['flag']) ?  $options['flag']  : '',
 	);
 	$input_id = $options['input_id'];
+	$validation_key = array(
+		0 => 'street-1',
+		1 => 'street-2',
+		2 => 'country',
+		3 => 'region',
+		4 => 'city',
+		5 => 'postcode',
+	);
 	$has_error = false;
 	for($i=0; $i<=6; $i++) {
-		if ($defender->inputHasError($input_name[$i])) {
+		if ($defender->inputHasError($input_name.'-'.$validation_key[$i])) {
 			$has_error = true;
 		}
 	}

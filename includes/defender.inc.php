@@ -130,11 +130,11 @@ class defender {
 						$name = $this->field_name;
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							self::setInputError($name[0]);
+							self::setInputError($name.'-firstname');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][1]) {
 							$this->stop();
-							self::setInputError($name[1]);
+							self::setInputError($name.'-lastname');
 						}
 						if (!defined('FUSION_NULL')) {
 							$return_value = $this->verify_text();
@@ -145,27 +145,27 @@ class defender {
 						$name = $this->field_name;
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							self::setInputError($name[0]);
+							self::setInputError($name.'-street-1');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][1]) {
 							$this->stop();
-							self::setInputError($name[1]);
+							self::setInputError($name.'-street-2');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][2]) {
 							$this->stop();
-							self::setInputError($name[2]);
+							self::setInputError($name.'-country');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][3]) {
 							$this->stop();
-							self::setInputError($name[3]);
+							self::setInputError($name.'-region');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][4]) {
 							$this->stop();
-							self::setInputError($name[4]);
+							self::setInputError($name.'-city');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][5]) {
 							$this->stop();
-							self::setInputError($name[5]);
+							self::setInputError($name.'-postcode');
 						}
 
 						if (!defined('FUSION_NULL')) {
@@ -179,28 +179,28 @@ class defender {
 					case 'image' :
 						return $this->verify_image_upload();
 						break;
-					// DEV: To be reviewed
+					// need to know what is this field.
 					case 'document':
 						$name = $this->field_name;
 						if ($this->field_config['required'] && !$_POST[$name][0]) {
 							$this->stop();
-							self::setInputError($name[0]);
+							self::setInputError($name.'-doc-1');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][1]) {
 							$this->stop();
-							self::setInputError($name[1]);
+							self::setInputError($name.'-doc-2');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][2]) {
 							$this->stop();
-							self::setInputError($name[2]);
+							self::setInputError($name.'-doc-3');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][3]) {
 							$this->stop();
-							self::setInputError($name[3]);
+							self::setInputError($name.'-doc-4');
 						}
 						if ($this->field_config['required'] && !$_POST[$name][4]) {
 							$this->stop();
-							self::setInputError($name[4]);
+							self::setInputError($name.'-doc-5');
 						}
 						if (!defined('FUSION_NULL')) {
 							$return_value = $this->verify_text();

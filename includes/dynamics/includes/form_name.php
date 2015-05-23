@@ -46,7 +46,8 @@ function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 		'error_text_2' => !empty($options['error_text']) ?  $options['error_text_2']  : $locale['lastname_error'],
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
 	);
-	$error_class = $defender->inputHasError($input_name[0]) || $defender->inputHasError($input_name[1]) ? "has-error " : "";
+	$error_class = $defender->inputHasError($input_name.'-firstname') || $defender->inputHasError($input_name.'-lastname') ? "has-error " : "";
+
 	$html .= "<div id='$input_id-field' class='form-group clearfix ".$error_class.$options['class']."' >\n";
 	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12  p-l-0")."'>\n" : "";
