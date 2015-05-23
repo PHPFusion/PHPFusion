@@ -317,7 +317,7 @@ class defender {
 	 */
 	protected function verify_password() {
 		// add min length, add max length, add strong password into roadmaps.
-		if ($this->field_config['required'] && !$value) self::setInputError($this->field_name);
+		if ($this->field_config['required'] && !$this->field_value) self::setInputError($this->field_name);
 		if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;]{8,64}$/i", $this->field_value)) {
 			return $this->field_value;
 		}
