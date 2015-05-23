@@ -210,8 +210,10 @@ class Eshop {
 		self::set_coupon_rate();
 		self::set_payment_rate();
 		self::set_net_price();
-		self::set_customerDB();
-		self::set_customer();
+
+		self::set_customer(); // pull from db first. if yes, recall data.
+		self::set_customerDB(); // override from save
+
 		self::set_customer_message();
 		//self::restart();
 	}
@@ -362,23 +364,10 @@ class Eshop {
 	}
 
 
-	/* Checkout check */
-	public function saveorder() {
-	global $locale, $settings;
-
-		// record session
-		self::set_checkout_items(); // build checkout items into session
-		self::set_vat_rate(); // set VAT into session
-		self::set_shipping_rate();
-		self::set_coupon_rate();
-		self::set_payment_rate();
-		self::set_net_price();
-		self::set_customerDB();
-		self::set_customer();
-		self::set_customer_message();
-
+	/* Checkout check -- validation process */
+	public function validate_order() {
+		global $locale, $settings;
 		$locale['invoice'] = "Invoice";
-
 		if ($settings['site_seo'] == "1") $settings['siteurl'] = str_replace("../", "", $settings['siteurl']);
 		/**
 		 * Required fields errors
@@ -386,7 +375,9 @@ class Eshop {
 		 */
 		$item_count = self::get('item_count');
 		$item_form = self::display_item_form(true);
+
 		$customerData = self::get('customer'); // customer information array
+
 		$items = self::get('items'); // customer ordered items
 		$payment_method = self::get('payment_method'); // payment method
 		$shipping_method = self::get('shipping_method'); // shipping method
@@ -395,13 +386,9 @@ class Eshop {
 		$total_vat = self::get('total_vat');
 		$total_price = self::get('net_price');
 		$customer_message = self::get('customer_message');
-
-		print_p($_POST);
-
-
-		$destination = $locale['na'];
 		$initial_shipping_cost = 0;
 		$weight_cost = 0;
+		$destination = $locale['na'];
 		$bt_payment_info = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_PAYMENTS." WHERE active='1' AND pid='".$payment_method."' ORDER BY pid ASC"));
 		if ($shipping_method) {
 			$bt_ship_info = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_SHIPPINGITEMS." WHERE active='1' AND sid='".$shipping_method."' ORDER BY cid,sid ASC"));
@@ -415,9 +402,8 @@ class Eshop {
 		$total_weight = self::get('total_weight');
 		$total_shipping = self::get('total_shipping');
 		$total_surcharge = self::get('total_surcharge');
-
 		$error = array(
-			'customer_id_error' => empty($customerData['cuid']) ? true : false, // no id.
+			'customer_id_error' => empty($customerData['cuid']) && iGUEST ? true : false, // no id.
 			'customer_name_error' => empty($customerData['cfirstname']) || empty($customerData['clastname']) ? true : false, // no name
 			'customer_email_error' => empty($customerData['cemail']) ? true : false, // no email
 			'customer_dob_error' => empty($customerData['cdob']) ? true : false, // no dob
@@ -431,13 +417,13 @@ class Eshop {
 			'payment_error' => dbcount("('pid')", DB_ESHOP_PAYMENTS) && empty($payment_method) ? true : false, // have payment options but ommitted
 			'shipping_error' => dbcount("('sid')", DB_ESHOP_SHIPPINGITEMS) && empty($shipping_method) ? true : false, // have ship items options but omitted
 		);
-		/* deprecate this part */
+
 		foreach($error as $key => $value) {
 			if ($value == true) {
-				//redirect(BASEDIR."eshop.php?checkout&amp;error=$key");
+				return false;
 			}
 		}
-
+		// save order
 		$responsive_bill_template = "
 		<h2>".strtoupper($locale['invoice'])."</h2>
 			<div class='row'>
@@ -531,6 +517,7 @@ class Eshop {
 		}
 		//dbquery_insert(DB_ESHOP_ORDERS, $order_data, 'save'); // what next after save order?
 		//if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?confirm");
+		return true;
 	}
 
 	public function handle_payments() {
@@ -642,6 +629,7 @@ class Eshop {
 			self::set_session('subtotal', $subtotal_message);
 		}
 	}
+
 	private static function set_coupon_rate() {
 		global $locale, $defender;
 		if (isset($_POST['apply_coupon'])) {
@@ -661,7 +649,7 @@ class Eshop {
 			} else {
 				//print_p('The Coupon Code is not valid');
 				$defender->stop();
-				$defender->addNotice($locale['coupon_invalid']);
+				addNotice('warning', $locale['coupon_invalid']);
 			}
 		} elseif (self::get('coupon_code')) {
 			self::set_session('coupon_code', self::get('coupon_cide'));
@@ -671,6 +659,7 @@ class Eshop {
 			self::update_payment();
 		}
 	}
+
 	public static function display_coupon_form() {
 		global $locale;
 		$html = '';
@@ -701,22 +690,26 @@ class Eshop {
 
 	/* Customer form fields */
 	private static function set_customerDB() {
+		global $userdata;
 		if (isset($_POST['save_customer'])) {
-			global $userdata;
 			$customer_info['cuid'] = intval($userdata['user_id']);
 			$customer_info['cemail'] = form_sanitizer($_POST['cemail'], '', 'cemail');
 			$customer_info['cdob'] = form_sanitizer($_POST['cdob'], '', 'cdob');
 			$customer_info['cname'] = implode('|', $_POST['cname']); // backdoor to traverse back to dynamic
 			$name = form_sanitizer($_POST['cname'], '', 'cname');
 			if (!empty($name[0]) && !empty($name[1])) {
-				$name = explode('|', $name);
 				$customer_info['cfirstname'] = $name[0];
 				$customer_info['clastname'] = $name[1];
 			}
 			// this goes back to form.
 			$customer_info['caddress'] = implode('|', $_POST['caddress']);
 			$address = form_sanitizer($_POST['caddress'], '', 'caddress');
-			if (!empty($address)) {
+			// validate address
+			$has_error = false;
+			for($i=0; $i<=5; $i++) {
+				$has_error = (empty($address[$i])) ? true: false;
+			}
+			if (!$has_error) {
 				$address = explode('|', $address);
 				// this go into sql only
 				$customer_info['caddress'] = $address[0];
@@ -730,14 +723,16 @@ class Eshop {
 			$customer_info['cfax'] = form_sanitizer($_POST['cfax'], '', 'cfax');
 			// check this part
 			$customer_info['ccupons'] = isset($_POST['ccupons']) ? form_sanitizer($_POST['ccupons'], '', 'ccupons') : '';
-			if (Customers::verify_customer($customer_info['cuid'])) {
+			if (Customers::verify_customer($customer_info['cuid'])) { // has record in the eshop_customer already - update.
 				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
 				self::set_session('customer', $customer_info);
-				//if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout");
-			} else {
+			} else { // new save
+
 				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
+
 				self::set_session('customer', $customer_info);
-				//if (!defined('FUSION_NULL')) redirect(BASEDIR."eshop.php?checkout");
+				print_p(self::get('customer'));
+
 			}
 		}
 	}
@@ -745,26 +740,38 @@ class Eshop {
 	public static function display_customer_form($have_form = false) {
 		global $locale;
 		$customer_info = self::get('customer');
-		if (empty($customer_info)) {
-			$customer_info = array(
-				'cfirstname' => '',
-				'clastname' => '',
-				'cemail' => '',
-				'cdob' => '',
-				'caddress' => '',
-				'caddress2' => '',
-				'ccountry' => '',
-				'cregion' => '',
-				'ccity' => '',
-				'cpostcode' => '',
-				'cphone' => '',
-				'cfax' => '',
-				'cuid' => '',
-			);
+		if (!empty($customer_info)) {
+			$customer_info['cfirstname'] = !empty($customer_info['cname']) ? explode('|', $customer_info['cname'])[0] : '';
+			$customer_info['clastname'] = !empty($customer_info['cname']) ? explode('|', $customer_info['cname'])[1] : '';
 		}
+
+		$customer_info += array(
+			'clastname' => '',
+			'cemail' => '',
+			'cdob' => '',
+			'caddress' => '',
+			'caddress2' => '',
+			'ccountry' => '',
+			'cregion' => '',
+			'ccity' => '',
+			'cpostcode' => '',
+			'cphone' => '',
+			'cfax' => '',
+			'cuid' => '',
+		);
+		print_p(self::get('customer'));
+		global $defender;
+		print_p($defender->input_errors, 1);
+		print_p($customer_info);
+
+
+
+
 		$html = "<div class='m-t-20'>\n";
 		$html .= $have_form ? openform('customerform', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0)) : '';
-		$customer_name = implode('|', array($customer_info['cfirstname'], $customer_info['clastname']));
+
+		$customer_name = $customer_info['cfirstname'].'|'.$customer_info['clastname'];
+		print_p($customer_name);
 		$html .= form_name('Customer Name', 'cname', 'cname', $customer_name, array('required'=>1, 'inline'=>1));
 		$html .= form_text('cemail', $locale['ESHPCHK115'], $customer_info['cemail'], array('inline'=>1, 'required'=>1, 'type' => 'email'));
 		$html .= form_datepicker('cdob', $locale['ESHPCHK105'], $customer_info['cdob'], array('inline'=>1, 'required'=>1));
@@ -827,7 +834,7 @@ class Eshop {
 	}
 	public static function display_shipping_form($have_form = false) {
 		global $locale;
-		//redirect();
+
 		$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
 		$html = "<div class='display-inline-block text-smaller m-b-10'><span class='required'>**</span> ".$locale['ESHPCHK126']."</div>\n";
 		$total_weight = self::get('total_weight');
@@ -841,10 +848,16 @@ class Eshop {
 			while ($data = dbarray($result)) {
 				$list[$data['destination']][$data['sid']] = $data;
 			}
+			// validation injection.
+			if (isset($_POST['agreement_checked']) && !isset($_POST['product_delivery'])) {
+				$html .= "<div class='alert alert-danger m-t-10'><i class='fa fa-plane'></i> ".$locale['ESHPB112']."</div>\n";
+			}
+
 		}
 		if (!empty($list)) {
 			$dest_opts = Shipping::get_destOpts();
 			$locale['est_delivery_time'] = " %s days";
+
 			$html .= $have_form ? openform('shippingform', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0)) : '';
 			foreach($list as $destination => $data) {
 				$html .= "<div class='panel panel-default'>\n";
@@ -902,6 +915,10 @@ class Eshop {
 		$html = '';
 		$result = dbquery("SELECT * FROM ".DB_ESHOP_PAYMENTS." WHERE active='1' ORDER BY pid ASC");
 		if (dbrows($result)>0) {
+			// validation injection.
+			if (isset($_POST['agreement_checked']) && !isset($_POST['product_paymethod'])) {
+				$html .= "<div class='alert alert-danger m-t-10'><i class='fa fa-credit-card'></i> ".$locale['ESHPCHK120a']."</div>\n";
+			}
 			$html .= $have_form ? openform('shippingform', 'post', BASEDIR."eshop.php?checkout", array('max_tokens' => 1, 'notice'=>0)) : '';
 			$html .= "<ul class='list-group'>";
 			$html .= "<li class='strong m-b-10'>".$locale['ESHPCHK120']."</li>\n";
@@ -932,7 +949,6 @@ class Eshop {
 		if (isset($_POST['save_message'])) {
 			$message = form_sanitizer($_POST['message'], '', 'message');
 			self::set_session('customer_message', $message);
-			//redirect(BASEDIR."eshop.php?checkout");
 		}
 	}
 	public static function display_message_form($have_form = false) {

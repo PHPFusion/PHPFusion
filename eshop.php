@@ -51,15 +51,26 @@ if ($_GET['category']) {
 } elseif ($_GET['product']) {
 	// view product page
 	render_eshop_product($info);
+
 } elseif (isset($_GET['checkout'])) {
+	print_p($_POST);
 	$info = $eShop->get_checkout_info();
-	render_checkout($info);
-} elseif (isset($_GET['order'])) {
-	$eShop->saveorder();
-} elseif (isset($_GET['confirm'])) {
-	$eShop->confirm_Payment();
-} elseif (isset($_GET['payment'])) {
-	$eShop->handle_payments();
+	if (isset($_POST['confirm_payout'])) {
+		$eShop->handle_payments();
+	}
+	elseif (isset($_POST['agreement_checked'])) {
+		// validate the form.
+		$validate_success = $eShop->validate_order();
+		if ($validate_success) {
+			print_p('is_successful');
+		} else {
+			render_checkout($info);
+		}
+	}
+	else {
+		// do checkout form
+		render_checkout($info);
+	}
 } else {
 	render_eshop_featured_url($info);
 	render_eshop_featured_product($info);
