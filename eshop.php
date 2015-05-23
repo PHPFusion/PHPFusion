@@ -62,7 +62,7 @@ if ($_GET['category']) {
 		// validate the form.
 		$validate_success = $eShop->validate_order();
 		if ($validate_success) {
-			print_p('is_successful');
+			//print_p('is_successful');
 		} else {
 			render_checkout($info);
 		}

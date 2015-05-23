@@ -66,7 +66,7 @@ function form_address($input_name, $label = '', $input_value = FALSE, array $opt
 		5 => 'postcode',
 	);
 	$has_error = false;
-	for($i=0; $i<=6; $i++) {
+	for($i=0; $i<=5; $i++) {
 		if ($defender->inputHasError($input_name.'-'.$validation_key[$i])) {
 			$has_error = true;
 		}
@@ -78,12 +78,12 @@ function form_address($input_name, $label = '', $input_value = FALSE, array $opt
 	$html .= "<div class='row'>\n";
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[0])) || $defender->inputHasError($input_name[0])) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[0])) || $defender->inputHasError($input_name.'-'.$validation_key[0])) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[1])) || $defender->inputHasError($input_name[1])) ? "<div id='".$options['input_id']."-street-2-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[1])) || $defender->inputHasError($input_name.'-'.$validation_key[1])) ? "<div id='".$options['input_id']."-street-2-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
@@ -95,12 +95,12 @@ function form_address($input_name, $label = '', $input_value = FALSE, array $opt
 		$html .= "<option value='$country_key' ".$select.">".$countryname."</option>";
 	}
 	$html .= "</select>\n";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[2])) || $defender->inputHasError($input_name[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[2])) || $defender->inputHasError($input_name.'-'.$validation_key[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 m-b-10'>\n";
 	$html .= "<div id='state-spinner' style='display:none;'>\n<img src='".IMAGES."loader.gif'>\n</div>\n";
 	$html .= "<input type='hidden' name='".$input_name."[]' id='$input_id-state' value='".$input_value['3']."' style='width:100%;' />\n";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[3])) || $defender->inputHasError($input_name[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[3])) || $defender->inputHasError($input_name.'-'.$validation_key[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control textbox' value='".$input_value['4']."' placeholder='".$locale['city']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
@@ -108,7 +108,7 @@ function form_address($input_name, $label = '', $input_value = FALSE, array $opt
 	$html .= "</div>\n";
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
 	$html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control textbox' value='".$input_value['5']."' placeholder='".$locale['postcode']."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name[5])) || $defender->inputHasError($input_name[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name.'-'.$validation_key[5])) || $defender->inputHasError($input_name.'-'.$validation_key[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
 	$html .= "</div>\n";
 	$html .= "</div>\n"; // close inner row
 	$html .= ($options['inline']) ? "</div>\n" : "";
