@@ -269,6 +269,15 @@ or
 
 	$lastId = dblastid();
 	
+### Get the database server's version
+
+#### Object-oriented style
+
+	$version = $conn->getServerVersion();
+	
+#### Procedural style
+
+Not implemented
 
 ## Statistics
 
