@@ -441,67 +441,54 @@ if (!function_exists('render_eshop_product')) {
 if (!function_exists('render_checkout')) {
 	function render_checkout(array $info) {
 		global $locale;
-		echo "<h4>".$locale['ESHPF106']." - ".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
-		echo $info['item_form'];
-		if ($info['customer_message']) echo "<div class='alert alert-warning'><span class='strong'>".$locale['ESHPCHK116']."</span><div class='m-t-10'>".$info['customer_message']."</div></div>\n";
-		echo "<div class='text-smaller m-b-20'><span class='required'>*</span>".$locale['ESHPCHK118']."</div>\n";
-		// list accordion item
-		echo opencollapse('cart-list');
-		// customer info
-		echo opencollapsebody($locale['ESHPCHK102'], 'cif', 'cart-list', $info['customer'] ? 0 : 1);
-		echo "<div class='p-15'>\n";
-		echo $info['customer_form'];
-		echo "</div>\n";
-		echo closecollapsebody();
-		// Coupon code
-		echo opencollapsebody($locale['ESHPCHK171'], 'cpn', 'cart-list', $info['coupon_code'] ? 0 : 1);
-		echo "<div class='p-15'>\n";
-		echo $info['coupon_form'];
-		echo "</div>\n";
-		echo closecollapsebody();
-		// Estimate shipping rates
-		echo opencollapsebody($locale['ESHPCHK123'], 'ship', 'cart-list', $info['shipping_method'] ? 0 : 1);
-		echo "<div class='p-15'>\n";
-		echo $info['shipping_form'];
-		echo "</div>\n";
-		echo closecollapsebody();
-		// Estimate Payment Surcharge
-		echo opencollapsebody($locale['ESHPCHK120'], 'payment', 'cart-list', $info['payment_method'] ? 0 : 1);
-		echo "<div class='p-15'>\n";
-		echo $info['payment_form'];
-		echo "</div>\n";
-		echo closecollapsebody();
-		// customer message
-		echo opencollapsebody($locale['ESHPCHK116'], 'message', 'cart-list', 0);
-		echo "<div class='p-15'>\n";
-		echo $info['message_form'];
-		echo "</div>\n";
-		echo closecollapsebody();
-		echo closecollapse();
-		if ($info['coupon_message']) echo "<div class='alert alert-info'>".$info['coupon_message']."</div>\n";
-		if ($info['shipping_message']) echo "<div class='alert alert-info'>".$info['shipping_message']."</div>\n";
-		if ($info['payment_message']) echo "<div class='alert alert-info'>".$info['payment_message']."</div>\n";
-		echo "<div class='pull-left'>\n";
-		echo $info['agreement'];
-		echo "</div>\n";
-		echo "<div class='col-xs-12 col-sm-6 p-r-0 pull-right'>\n";
-		echo "<div class='panel panel-default'>\n";
-		echo "<div class='panel-heading'><span class='strong'>".$locale['ESHPCHK127']."</span></div>\n";
-		echo "<div class='panel-body'>\n";
-		echo "<div class='display-block m-r-10'>".$info['subtotal']."</div>\n";
-		echo "<div class='display-block m-r-10'>".$info['vat']."</div>\n";
-		echo "<div class='display-block m-r-10'>".$info['nett']."</div>\n";
+		// all the codes will be refined during the clean up process.
+
+		echo "<style>
+		.checkout-bar > li { padding: 5px 10px; border-right:1px solid #ccc; text-align:center; }
+		.checkout-bar > li:last-child { border-right:0;  }
+		.checkout-bar > li > a { color: #31708F !important;   }
+		.checkout-bar > li > a:hover, .checkout-bar > li > a:focus { text-decoration: underline;   }
+		</style>\n";
+
+		$locale['ESHOPCHK_001'] = '1.Review';
+		$locale['ESHOPCHK_002'] = '2.Confirm';
+		$locale['ESHOPCHK_003'] = '3.Pay';
+
+		// navigation menu sample
+		echo "<ul class='checkout-bar list-group-item clearfix m-b-20'>";
+		for ($i=1; $i<4; $i++) {
+			$active = (isset($_GET['step']) && $_GET['step'] == $i) || (!isset($_GET['step']) && $i == 1) ? true :false;
+			echo "<li class='col-xs-12 col-sm-4 ".($active ? "active" : '')."'>\n";
+			echo (isset($_GET['step']) && $_GET['step'] > $i) || (!isset($_GET['step']) && $i == 1) ? "<a href='".BASEDIR."eshop.php?checkout' class='strong'>".$locale['ESHOPCHK_00'.$i]."</a>" : $locale['ESHOPCHK_00'.$i];
+			echo "</li>\n";
+		}
+		echo "</ul>\n";
+		echo $info['item_count'] < 1 ? "<a class='btn btn-default pull-right' href='".BASEDIR."eshop.php'>".$locale['back']."</a>\n" : '';
+		echo "<h2>".$locale['ESHPF106']."</h2>\n";
+
+		//echo "<h4>".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
 		echo "<hr/>\n";
-		echo "<div class='display-block m-r-10'><span class='strong'>".$info['shipping']."</div>\n";
-		echo "<div class='display-block m-r-10'>".$info['payment']."</div>\n";
-		echo "</div>\n<div class='panel-footer'>\n";
-		echo "<div class='display-block m-r-10'>".$info['grandtotal']."</div>\n";
-		echo "</div></div>\n";
-		echo "</div>\n"; // end pull-right
-		echo "<div class='display-block  p-l-0 p-r-0 m-t-20 col-xs-12'>\n";
-		echo "<a id='agreement_checked' class='btn btn-primary pull-right' href='".BASEDIR."eshop.php?order'>".$locale['ESHPCHK135']."</a>\n";
-		echo "<a class='btn btn-default pull-left' href='".BASEDIR."eshop.php'>".$locale['ESHP329']."</a>\n";
-		echo "</div>\n";
+
+		echo $info['item_form'];
+		if ($info['item_count'] > 0) {
+			echo openform('orderform', 'post', BASEDIR.'eshop.php?checkout', array('max_tokens'=>1, 'form_id'=>'order_form'));
+			// customer message form
+			echo "<hr/>\n";
+			echo "<h3>".$locale['ESHPCHK116']."</h3>\n";
+			echo $info['message_form'];
+			// shipping form
+			echo "<h3>".$locale['ESHPCHK123']."</h3>\n";
+			echo $info['shipping_form'];
+			echo "<hr/>\n";
+			// customer form
+			echo "<h3>".$locale['ESHPCHK102']."</h3>\n";
+			echo "<div class='text-smaller text-lighter m-b-20'><span class='required m-r-5'>*</span>".$locale['ESHPCHK118']."</div>\n";
+			echo $info['customer_form'];
+			// payment form
+			echo "<hr/>\n";
+			echo "<h3>".$locale['ESHPCHK120']."</h3>\n";
+			echo $info['payment_form'];
+
 		add_to_jquery("
 		function validate_check(id) {
 			if ($('#'+id).prop('checked')) {
@@ -513,5 +500,37 @@ if (!function_exists('render_checkout')) {
 		validate_check('agreement');
 		$('#agreement').bind('click', function() { validate_check('agreement');	});
 		");
+		}
+
+		// summary statement
+		echo "<div class='panel panel-default m-t-20'>\n";
+		echo "<div class='panel-heading'><span class='strong'>".$locale['ESHPCHK127']."</span></div>\n";
+		echo "<div class='panel-body'>\n";
+		echo "<div class='display-block m-r-10'>".$info['subtotal']."</div>\n";
+		echo "<div class='display-block m-r-10'>".$info['vat']."</div>\n";
+		echo "<div class='display-block m-r-10'>".$info['nett']."</div>\n";
+		echo "<hr/>\n";
+		echo "<div class='display-block m-r-10'><span class='strong'>".$info['shipping']."</div>\n";
+		echo "<div class='display-block m-r-10'>".$info['payment']."</div>\n";
+		echo "</div>\n<div class='panel-footer'>\n";
+		echo "<div class='display-block m-r-10'>".$info['grandtotal']."</div>\n";
+		echo "</div></div>\n";
+
+		// agreement and pay button
+		if ($info['item_count'] > 0) {
+			echo "<div class='text-right'>\n";
+			echo $info['agreement'];
+			echo form_button('agreement_checked', $locale['ESHPCHK135'], '1', array('class'=>'btn-primary'));
+			//echo "<a id='agreement_checked' class='btn btn-primary' href='".BASEDIR."eshop.php?order'>".$locale['ESHPCHK135']."</a>\n";
+			echo "</div>\n";
+			echo closeform();
+		}
+// 		if ($info['customer_message']) echo "<div class='alert alert-warning'><span class='strong'>".$locale['ESHPCHK116']."</span><div class='m-t-10'>".$info['customer_message']."</div></div>\n";
+//		if ($info['coupon_message']) echo "<div class='alert alert-info'>".$info['coupon_message']."</div>\n";
+//		if ($info['shipping_message']) echo "<div class='alert alert-info'>".$info['shipping_message']."</div>\n";
+//		if ($info['payment_message']) echo "<div class='alert alert-info'>".$info['payment_message']."</div>\n";
+
+
+
 	}
 }

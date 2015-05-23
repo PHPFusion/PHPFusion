@@ -56,6 +56,8 @@ if ($_GET['category']) {
 	render_checkout($info);
 } elseif (isset($_GET['order'])) {
 	$eShop->saveorder();
+} elseif (isset($_GET['confirm'])) {
+	$eShop->confirm_Payment();
 } elseif (isset($_GET['payment'])) {
 	$eShop->handle_payments();
 } else {

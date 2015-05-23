@@ -8,7 +8,8 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");        // HTTP/1.0
 require_once dirname(__FILE__)."../../../maincore.php";
 require_once LOCALE.LOCALESET."eshop.php";
-if ($defender->verify_tokens('productfrm', 0)) {
+
+if (!defined('FUSION_NULL')) {
 	// remotely refer form_sanitizer from the referer script treating this form executed from eshop form
 	$data['tid'] = 0; // let it auto increment
 	$data['prid'] = form_sanitizer($_POST['id'], ''); // product id
@@ -28,13 +29,13 @@ if ($defender->verify_tokens('productfrm', 0)) {
 		$data['ccupons'] = $product['cupons']; // accept coupons or not
 		// now check if order exist.
 		$response = \PHPFusion\Eshop\Cart::add_to_cart($data); // returns json responses
-		$response['error_id'] = 0;
+		$response['error_id'] = false;
 		$response['title'] = $locale['product_updated'];
 		$response['message'] = $locale['product_message'];
 		echo json_encode($response);
 		\PHPFusion\Eshop\Eshop::refresh_session();
 	} else {
-		$defender->stop();
+		define('FUSION_NULL', true);
 		echo json_encode(array('error_id'=>1, 'title'=>$locale['product_error_001'], 'message'=>$locale['product_error_002']));
 	}
 }

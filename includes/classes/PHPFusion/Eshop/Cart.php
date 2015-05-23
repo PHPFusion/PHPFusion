@@ -66,39 +66,40 @@ class Cart {
 					});
 				});
 			}
+
     	// add action
     	$('#add_cart').bind('click', function() {
 		var sendData = $('#productfrm').serialize();
 		$.ajax({
 			url: '".INFUSIONS."eshop_cart_panel/cart.ajax.php',
 			type: 'POST',
-			dataType: 'html',
+			dataType: 'json',
 			data : sendData,
-			success: function(result){
-				//console.log(result);
-				if (result.error_id == 0) {
+			success: function(data){
+				if (!data.error_id) {
 					$('#cart').addClass('open');
 					$('.cart-blank').remove();
-					$('#cart-list').append(result.html);
-					$(result.remove).remove();
-					if (result.subtotal > 0) {
-					$('#subtotal_price').text(parseFloat(result.subtotal));
+					$('#cart-list').append(data.html);
+					$(data.remove).remove();
+					if (data.subtotal > 0) {
+					$('#subtotal_price').text(parseFloat(data.subtotal));
 					} else {
 					$('#subtotal_price').text(parseFloat('0'));
 					}
-					deleteItem(result.tid);
+					deleteItem(data.tid);
 					new PNotify({
-						title: result.title,
-						text: result.message,
+						title: data.title,
+						text: data.message,
 						icon : 'notify_icon n-gift',
 						animation: 'fade',
 						width: 'auto',
 						delay: '2500',
 					});
 				} else {
+					console.log('error happened');
 					new PNotify({
-						title: result.title,
-						text: result.message,
+						title: data.title,
+						text: data.message,
 						icon : 'notify_icon n-gift',
 						animation: 'fade',
 						width: 'auto',
@@ -118,6 +119,7 @@ class Cart {
 			}
 		});
 		});
+
 		// remove cart
 		$('.remove-cart-item').on('click', function(e) {
 				var Data = {
@@ -178,6 +180,11 @@ class Cart {
 		");
 	}
 
+	/**
+	 * Outputs JSON response
+	 * @param $data
+	 * @return array
+	 */
 	static function add_to_cart($data) {
 		// when $data is inserted
 		$json_response = array(

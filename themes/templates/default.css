@@ -1,5 +1,7 @@
 /* Default PHP-Fusion CSS3 Class */
-
+.label-danger {
+	margin-top:5px;
+}
 /* positioning */
 .top-0 {
 	top: 0px !important;
