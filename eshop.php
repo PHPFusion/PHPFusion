@@ -53,7 +53,7 @@ if ($_GET['category']) {
 	render_eshop_product($info);
 
 } elseif (isset($_GET['checkout'])) {
-	print_p($_POST);
+	//print_p($_POST);
 	$info = $eShop->get_checkout_info();
 	if (isset($_POST['confirm_payout'])) {
 		$eShop->handle_payments();
