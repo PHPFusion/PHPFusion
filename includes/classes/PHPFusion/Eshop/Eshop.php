@@ -390,7 +390,6 @@ class Eshop {
 		$total_shipping = self::get('total_shipping');
 		$total_surcharge = self::get('total_surcharge');
 		$error = array(
-			'customer_id_error' => empty($customerData['cuid']) && iGUEST ? true : false, // no id.
 			'customer_name_error' => empty($customerData['cfirstname']) || empty($customerData['clastname']) ? true : false, // no name
 			'customer_email_error' => empty($customerData['cemail']) ? true : false, // no email
 			'customer_dob_error' => empty($customerData['cdob']) ? true : false, // no dob
@@ -407,6 +406,7 @@ class Eshop {
 
 		foreach($error as $key => $value) {
 			if ($value == true) {
+				print_p($key.' failed validation');
 				return false;
 			}
 		}
@@ -694,7 +694,7 @@ class Eshop {
 			$customer_info['cdob'] = form_sanitizer($_POST['cdob'], '', 'cdob');
 			$customer_info['cname'] = implode('|', $_POST['cname']); // backdoor to traverse back to dynamic
 			$name = form_sanitizer($_POST['cname'], '', 'cname');
-			if (!$name) {
+			if ($name !=='' || !$customer_info['cname'] !=='') {
 				$name = explode('|', $name);
 				$customer_info['cfirstname'] = $name[0];
 				$customer_info['clastname'] = $name[1];
@@ -702,7 +702,7 @@ class Eshop {
 			// this goes back to form.
 			$customer_info['address'] = implode('|', $_POST['caddress']); // backdoor to traverse back to dynamic
 			$address = form_sanitizer($_POST['caddress'], '', 'caddress'); // returns str.
-			if (!$address) {
+			if ($address !=='' || $customer_info['address'] !=='') {
 				// this go into sql only
 				$address = explode('|', $address);
 				$customer_info['caddress'] = $address[0];
@@ -729,8 +729,10 @@ class Eshop {
 	public static function display_customer_form($have_form = false) {
 		global $locale;
 		$c_info = self::get('customer');
+
 		print_p($c_info);
-		if (!empty($c_info)) {
+
+		if (!$c_info) {
 			$c_info['cname'] = !empty($c_info['cname']) ? $c_info['cname'] : '|';
 			$c_info['address'] = !empty($c_info['address']) ? $c_info['address'] : '|||||';
 			$c_info['cname'] = !empty($c_info['cname']) ? $c_info['cname'] : '|';
