@@ -195,7 +195,7 @@ function showbanners($display = "") {
 		if ($settings['sitebanner1']) {
 			eval("?>".stripslashes($settings['sitebanner1'])."\n<?php ");
 		} elseif ($settings['sitebanner']) {
-			echo "<a href='".BASEDIR."'><img src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
+			echo "<a href='".BASEDIR."'><img class='img-responsive' src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' style='border: 0;' /></a>\n";
 		} else {
 			echo "<a href='".BASEDIR."'>".$settings['sitename']."</a>\n";
 		}

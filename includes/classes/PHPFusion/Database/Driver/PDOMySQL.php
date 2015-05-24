@@ -186,5 +186,13 @@ class PDOMySQL extends AbstractDatabaseDriver {
 		return $this->connection->quote($value);
 	}
 
+	/**
+	 * Get the database server version
+	 *
+	 * @return string
+	 */
+	public function getServerVersion() {
+		return $this->connection->getAttribute(PDO::ATTR_SERVER_VERSION);
+	}
 
 }
