@@ -56,10 +56,3 @@ if (!iMEMBER) {
 echo "</td>\n</tr>\n</table>\n";
 
 echo "</body>\n</html>\n";
-
-if (ob_get_length() !== FALSE) {
-	ob_end_flush();
-}
-
-mysql_close($db_connect);
-?>
