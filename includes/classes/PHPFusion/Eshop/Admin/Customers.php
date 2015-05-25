@@ -95,7 +95,11 @@ class Customers {
 		if (isnum($cuid)) {
 			$result = dbquery("SELECT * FROM ".DB_ESHOP_CUSTOMERS." WHERE cuid='".intval($cuid)."'");
 			if (dbrows($result)>0) {
-				return (array) dbarray($result);
+				// must return specific
+				$data = dbarray($result);
+				$data['address'] = $data['caddress'].'|'.$data['caddress2'].'|'.$data['ccountry'].'|'.$data['cregion'].'|'.$data['ccity'].'|'.$data['cpostcode'];
+				$data['cname'] = $data['cfirstname'].'|'.$data['clastname'];
+				return (array) $data;
 			}
 		}
 		return array();
