@@ -549,14 +549,13 @@ function dbquery_insert($table, $inputdata, $mode, array $options = array()) {
 	));
 	$result = NULL;
 	if ($options['debug']) {
-		if ($options['debug']) {
-			print_p($where);
-			print_p($sanitized_input);
-		}
+		print_p($where);
+		print_p($sanitized_input);
 		print_p($sql);
 	} else {
 		$result = dbquery($sql);
 		if (!$options['keep_session']) {
+			//print_p('field session unset during '.$sql);
 			$defender->unset_field_session();
 		}
 	}
