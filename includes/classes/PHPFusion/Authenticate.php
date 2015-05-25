@@ -202,7 +202,7 @@ class Authenticate {
 				$cookieDataArr = explode(".", $_COOKIE[COOKIE_ADMIN]);
 				if (count($cookieDataArr) == 3) {
 					list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
-					if ($cookieExpiration > time()) {
+					if ($cookieExpiration > time() && $userID == $userdata['user_id']) {
 						$result = dbquery("SELECT user_admin_algo, user_admin_salt FROM ".DB_USERS."
 							WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_level < -101 AND  user_status='0' AND user_actiontime='0'
 							LIMIT 1");
