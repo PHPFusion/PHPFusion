@@ -47,7 +47,9 @@ if (count(fusion_get_enabled_languages()) > 1) {
 
 if (!iMEMBER) {
 	echo "<li class='pull-left m-r-10'><a href='".BASEDIR."login.php'>".$locale['sept_001']."</a></li>\n";
-	echo "<li class='pull-left m-r-10 m-l-10'><a href='".BASEDIR."register.php'>".$locale['sept_002']."</a></li>\n";
+	if ($settings['enable_registration']) {
+		echo "<li class='pull-left m-r-10 m-l-10'><a href='".BASEDIR."register.php'>".$locale['sept_002']."</a></li>\n";
+	}
 	echo $language_opts;
 } else {
 	if (iADMIN) {
