@@ -511,14 +511,25 @@ class Eshop {
 		global $locale, $settings, $userdata;
 		// New Payment page here.
 		echo "<h1>Welcome to Paypal</h1>";
-		echo "<p>This page is under development and must integrated with API and a welcome message.</p>";
-		// REQUIRED: what information to send to paypal. order have been saved during
+		echo "<p>Example at classes/Eshop/Eshop.php Line #518</p>";
 
 		// with session it's simply very fast method. NO SQL needed. just read session.
 		// EXAMPLE of Session PULL or do a $_SESSION print to view all
 		$customer_data = self::get('customer');
 		$user_id = $customer_data['cuid'];
-		$payment_method = self::get('payment_method');
+		$payment_method = self::get('payment_method'); // check similar set() to use get() to read session.
+
+		// REQUIRED: how to do the paypal form? what is required? Do they need a bill etc?
+		// Example:
+		echo "<h4>Please pay ".self::get('grandtotal')."</h4>";
+		echo "<div class='well m-t-20'>\n";
+		echo openform('paypal_form', 'post', 'http://www.paypal.com/whatever_module?payment_form_phpfusion&merchant_id=12345&you_get_the_point', array('max_tokens'=>1));
+		echo form_text('paypal_login', 'Paypal Login ID', '', array('inline'=>1, 'email'=>1, 'required'=>1));
+		echo form_text('paypal_password', 'Paypal Password', '', array('inline'=>1));
+		echo form_text('paypal_hidden_field', 'Secret Stuff to send ot Paypal', self::get('grandtotal'), array('inline'=>1));
+		echo form_button('paypal_pay', 'Pay Now', '', array('class'=>'btn-primary'));
+		echo closeform();
+		echo "</div>\n";
 
 		// OLD CODES PROVIDED - to change: no need to show back the whole template.
 		// Things to DO:
