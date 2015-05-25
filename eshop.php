@@ -53,14 +53,13 @@ if ($_GET['category']) {
 	render_eshop_product($info);
 
 } elseif (isset($_GET['checkout'])) {
-	//print_p($_POST);
 	$info = $eShop->get_checkout_info();
-	if (isset($_POST['confirm_payout'])) {
+	if (isset($_POST['save_order'])) {
 		$eShop->handle_payments();
 	}
 	elseif (isset($_POST['agreement_checked'])) {
-		// validate the form.
-		$validate_success = $eShop->validate_order(); // is true or false.
+		// validate the form and attempt to save the order
+		$validate_success = $eShop->validate_order(); // is true (then save order into DB_ORDER) or false (display checkout_form) again.
 		if ($validate_success) { // if true
 			echo stripslashes($validate_success);
 		} else { // if false, show the form again, with validated errors buffers
@@ -68,7 +67,6 @@ if ($_GET['category']) {
 		}
 	}
 	else {
-		// do checkout form
 		render_checkout($info);
 	}
 } else {
@@ -77,5 +75,4 @@ if ($_GET['category']) {
 	render_eshop_page_content($info);
 	render_eshop_featured_category($info);
 }
-
 require_once THEMES."templates/footer.php";

@@ -210,10 +210,8 @@ class Eshop {
 		self::set_coupon_rate();
 		self::set_payment_rate();
 		self::set_net_price();
-
 		self::set_customer(); // pull from db first. if yes, recall data.
 		self::set_customerDB(); // override from save
-
 		self::set_customer_message();
 		//self::restart();
 	}
@@ -502,16 +500,35 @@ class Eshop {
 				dbquery("UPDATE ".DB_ESHOP." SET instock=instock-".intval($itemData['cqty'])." WHERE id = '".intval($itemData['prid'])."'");
 			}
 		}
-		dbquery_insert(DB_ESHOP_ORDERS, $order_data, 'save'); // what next after save order?
-		return $responsive_bill_template;
+		dbquery_insert(DB_ESHOP_ORDERS, $order_data, 'save', array('keep_session'=>true)); // what next after save order?
+		$html = openform('order_form', 'post', BASEDIR.'eshop.php?checkout', array('max_tokens'=>1, 'form_id'=>'oform'));
+		$html .= $responsive_bill_template;
+		$html .= closeform();
+		return $html;
 	}
 
 	public function handle_payments() {
 		global $locale, $settings, $userdata;
-		//include INCLUDES."eshop_functions_include.php";
-		add_to_title($locale['ESHPCHK159']);
+		// New Payment page here.
+		echo "<h1>Welcome to Paypal</h1>";
+		echo "<p>This page is under development and must integrated with API and a welcome message.</p>";
+		// REQUIRED: what information to send to paypal. order have been saved during
+
+		// with session it's simply very fast method. NO SQL needed. just read session.
+		// EXAMPLE of Session PULL or do a $_SESSION print to view all
+		$customer_data = self::get('customer');
+		$user_id = $customer_data['cuid'];
+		$payment_method = self::get('payment_method');
+
+		// OLD CODES PROVIDED - to change: no need to show back the whole template.
+		// Things to DO:
+		//. Just process and give Receipt ID confirmation.
+		//. remove need to show invoice, it has been shown previously.
+
+		/*
+		 * add_to_title($locale['ESHPCHK159']);
 		opentable($locale['ESHPCHK159']);
-		$odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid='".\defender::set_sessionUserID()."' ORDER BY oid DESC LIMIT 0,1"));
+		$odata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid='".intval($user_id)."' ORDER BY oid DESC LIMIT 0,1"));
 		if ($odata) {
 			//handle payments
 			$pdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_PAYMENTS." WHERE pid='".$odata['opaymethod']."'"));
@@ -540,6 +557,8 @@ class Eshop {
 		//send a mail confirmation of the whole order to the customer
 		sendemail($odata['oname'],$odata['oemail'],$settings['sitename'],$settings['siteemail'],$locale['ESHPI103'],$odata['oorder'],$type="html");
 		closetable();
+		 */
+
 	}
 
 	/* Persistent now since construct function will fill in session values if blank */
@@ -680,8 +699,8 @@ class Eshop {
 		$user_id = \defender::set_sessionUserID();
 		$customer = Customers::get_customerData($user_id); // binds the above
 		if (!empty($customer)) {
-			$customer_data = self::get('customer');
-			if (empty($customer_data)) {
+			$session_var = self::get('customer');
+			if (empty($session_var)) {
 				self::set_session('customer', $customer);
 			}
 		}
@@ -693,9 +712,10 @@ class Eshop {
 		global $userdata;
 		/**
 		 * Problems... refreshing screen will reset all information.
+		 * Debugging shows $_SESSION['form_fields'] went missing, and $customer_info did not generate anything.
+		 * Solved - session was removed at validate_order.
 		 */
 		if (isset($_POST['save_customer'])) {
-			echo 'executed this';
 			$customer_info['cuid'] = intval($userdata['user_id']);
 			$customer_info['cemail'] = form_sanitizer($_POST['cemail'], '', 'cemail');
 			$customer_info['cdob'] = form_sanitizer($_POST['cdob'], '', 'cdob');
@@ -720,13 +740,14 @@ class Eshop {
 			$customer_info['cfax'] = form_sanitizer($_POST['cfax'], '', 'cfax');
 			// check this part
 			$customer_info['ccupons'] = isset($_POST['ccupons']) ? form_sanitizer($_POST['ccupons'], '', 'ccupons') : '';
-
 			if (Customers::verify_customer($customer_info['cuid'])) { // has record in the eshop_customer already - update.
 				self::set_session('customer', $customer_info);
-				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid'));
+				// did not update?
+				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'update', array('no_unique'=>1, 'primary_key'=>'cuid', 'keep_session'=>true));
 			} else { // new save
-				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid'));
 				self::set_session('customer', $customer_info);
+				// did not save?
+				dbquery_insert(DB_ESHOP_CUSTOMERS, $customer_info, 'save',  array('no_unique'=>1, 'primary_key'=>'cuid', 'keep_session'=>true));
 			}
 		}
 	}
@@ -737,14 +758,12 @@ class Eshop {
 		if (!$c_info) {
 			$c_info['cfirstname'] = !empty($c_info['cfirstname']) ? $c_info['cfirstname'] : '';
 			$c_info['clastname'] = !empty($c_info['clastname']) ? $c_info['clastname'] : '';
-
 			$c_info['caddress'] = !empty($c_info['caddress']) ? $c_info['caddress'] : '';
 			$c_info['caddress2'] = !empty($c_info['caddress2']) ? $c_info['caddress2'] : '';
 			$c_info['ccountry'] = !empty($c_info['ccountry']) ? $c_info['ccountry'] : '';
 			$c_info['cregion'] = !empty($c_info['cregion']) ? $c_info['cregion'] : '';
 			$c_info['ccity'] = !empty($c_info['ccity']) ? $c_info['ccity'] : '';
 			$c_info['postcode'] = !empty($c_info['postcode']) ? $c_info['postcode'] : '';
-
 			$c_info['cemail'] = !empty($c_info['cemail']) ? $c_info['cemail'] : '';
 			$c_info['cdob'] = !empty($c_info['cdob']) ? $c_info['cdob'] : '';
 			$c_info['cphone'] = !empty($c_info['cphone']) ? $c_info['cphone'] : '';
@@ -801,7 +820,6 @@ class Eshop {
 					if ($result) $result = self::set_session('shipping_message', $s_message);
 					if ($result) $result = self::set_session('shipping', $shipping);
 					self::update_payment();
-					//if ($result) redirect(BASEDIR."eshop.php?checkout");
 				}
 			}
 		}
@@ -880,7 +898,6 @@ class Eshop {
 			if (Payments::verify_payment($_POST['product_paymethod'])) {
 				self::update_coupon();
 				self::update_payment();
-				//redirect(BASEDIR."eshop.php?checkout");
 			}
 		}
 	}

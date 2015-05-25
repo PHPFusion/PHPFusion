@@ -77,7 +77,6 @@ class Orders {
 				$oamessage = form_sanitizer($_POST['oamessage'], '0', 'oamessage');
 				if (!defined('FUSION_NULL')) {
 					dbquery("UPDATE ".DB_ESHOP_ORDERS." SET opaid='$opaid',ocompleted='$ocompleted',oamessage='$oamessage' WHERE oid='".intval($oid)."'");
-					\defender::unset_field_session();
 					redirect(FUSION_SELF.$aidlink."&amp;a_page=orders");
 				}
 			}
