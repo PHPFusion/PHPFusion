@@ -20,5 +20,5 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $text = preg_replace('#\[flash width=([0-9]*?) height=([0-9]*?)\]([^\s\'\";\+]*?)(\.swf)\[/flash\]#si', '<object type=\'application/x-shockwave-flash\' data=\''.INCLUDES.'bbcodes/flash/flash.swf?path=\3\4\' width=\'\1\' height=\'\2\'><param name=\'movie\' value=\''.INCLUDES.'bbcodes/flash/flash.swf?path=\3\4\'/><img src=\''.INCLUDES.'bbcodes/flash/noflash.gif\' width=\'80\' height=\'60\' alt=\'Flash not found \' /></object>', $text);
 
-?>
+
 

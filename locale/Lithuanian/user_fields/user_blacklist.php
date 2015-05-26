@@ -12,4 +12,4 @@ $locale['uf_blacklist_005'] = "Narys nebuvo užblokuotas.";
 $locale['uf_blacklist_006'] = "Toks narys nerastas.";
 $locale['uf_blacklist_007'] = "Neprieinama.";
 
-?>
+

@@ -22,4 +22,3 @@ Jūsų naujasis slaptažodis ".fusion_get_settings('sitename')." yra:\n
 Linkėjimai,
 ".fusion_get_settings('siteusername');
 $locale['412'] = "Įvyko klaida, prašome pabandyti dar kartą.";
-?>

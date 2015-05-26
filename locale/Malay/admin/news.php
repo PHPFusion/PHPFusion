@@ -65,4 +65,3 @@ $locale['news_0350'] = "Padamkan Kategori Berita?";
 // Error Messages
 $locale['news_0351'] = "Sila isikan nama kategori.";
 $locale['news_0352'] = "Kategori ini telah didapati.";
-?>

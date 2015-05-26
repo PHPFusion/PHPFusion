@@ -227,4 +227,3 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 	}
 }
 
-?>

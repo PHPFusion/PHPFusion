@@ -26,4 +26,3 @@ $dir_path = ROOT;
 $dbname = DB_DOWNLOAD_CATS;
 $dbid = array("%download_cat_id%" => "download_cat_id");
 $dbinfo = array("%download_cat_name%" => "download_cat_name");
-?>

@@ -129,19 +129,19 @@ if (!function_exists('render_userprofile')) {
 			$user_buttons .= "</div>\n";
 		}
 
-		?>
+		
 		<section id='user-profile' class='row'>
 			<div class='col-xs-12 col-sm-3 col-lg-2'>
 				<ul class='profile_link_nav m-t-20'>
-					<?php foreach ($info['section'] as $page_section) {	?>
-						<li <?php echo $page_section['active'] ? "class='active'" : '' ?> >
+					<?php foreach ($info['section'] as $page_section) {	
+						<li <?php echo $page_section['active'] ? "class='active'" : ''  >
 							<a href='<?php echo $page_section['link'] ?>'><?php echo $page_section['name'] ?></a>
 						</li>
-					<?php } ?>
+					<?php } 
 				</ul>
 			</div>
 			<div class='col-xs-12 col-sm-9 col-lg-10'>
-				<?php echo $user_name; ?>
+				<?php echo $user_name; 
 				<div class='clearfix m-t-10'>
 					<div class='pull-left m-r-20'><?php echo $user_avatar ?></div>
 					<div class='overflow-hide'>
@@ -150,7 +150,7 @@ if (!function_exists('render_userprofile')) {
 						echo $user_info;
 						echo $user_buttons;
 						echo $user_field;
-						?>
+						
 					</div>
 				</div>
 			</div>
@@ -174,4 +174,3 @@ if (!function_exists('render_userprofile')) {
 	}
 }
 
-?>

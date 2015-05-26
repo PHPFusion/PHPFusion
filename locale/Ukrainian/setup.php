@@ -337,4 +337,3 @@ $locale['polls']['description'] = "Модуль опитувань та голо
 $locale['weblinks']['title'] = "Посилання";
 $locale['weblinks']['description'] = "Модуль формування каталогів зовнішніх посилань";
 $locale['install'] = "Встановити базову систему";
-?>

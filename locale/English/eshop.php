@@ -891,4 +891,3 @@ $locale['coupon_another'] = "Use Another Coupon";
 $locale['coupon_disabled'] = "Coupon discounts disabled";
 $locale['shipping_message'] = 'You have added %s %s into this order';
 $locale['payment_message'] = "You have selected %s as payment method";
-?>

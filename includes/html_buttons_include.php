@@ -159,4 +159,3 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 	return $res;
 }
 
-?>

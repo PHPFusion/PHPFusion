@@ -33,4 +33,3 @@ $locale['465'] = "Der er aktuelt ingen udelukkede brugere.";
 $locale['466'] = "N/A";
 $locale['467'] = "Administrator";
 $locale['468'] = "Dato";
-?>

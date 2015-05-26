@@ -7,4 +7,3 @@ $locale['412'] = "Apsilankė:";
 // Downloads Notices
 $locale['430'] = "Nesudarytos nuorodų kategorijos";
 $locale['431'] = "Šioje kategorijoje nuorodų nėra";
-?>

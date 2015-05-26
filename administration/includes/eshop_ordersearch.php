@@ -19,7 +19,7 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 			} else {
 				$customer = $data['oname'];
 			}
-			?>
+			
 			<tr>
 				<td><?php echo $data['oid'] ?></td>
 				<td><?php echo $customer ?></td>
@@ -40,7 +40,7 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 		<?php
 		}
 	} else {
-		?>
+		
 		<tr><td colspan='8' class='text-center'><?php echo $locale['ESHP325'] ?></td></tr>
 		<?php
 	}

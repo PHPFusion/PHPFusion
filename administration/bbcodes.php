@@ -237,4 +237,3 @@ if ($_GET['page'] == 1) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

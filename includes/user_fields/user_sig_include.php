@@ -26,4 +26,3 @@ if ($profile_method == "input") {
 } elseif ($profile_method == "display") {
 	$user_fields = array('title'=>$locale['uf_sig'], 'value'=>$field_value ? $field_value : $locale['na']);
 }
-?>

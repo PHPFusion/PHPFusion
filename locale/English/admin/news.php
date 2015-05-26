@@ -65,4 +65,3 @@ $locale['news_0350'] = "Delete this news category?";
 // Error Messages
 $locale['news_0351'] = "Please enter a category name.";
 $locale['news_0352'] = "This category already exists.";
-?>

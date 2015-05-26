@@ -51,4 +51,3 @@ $locale['470'] = "Trinti administratorių";
 $locale['471'] = "Norėdami pašalinti šį administratorių, turėsite įvesti savo administratoriaus slaptažodžį:";
 $locale['472'] = "Patvirtinti";
 $locale['473'] = "Atšaukti";
-?>

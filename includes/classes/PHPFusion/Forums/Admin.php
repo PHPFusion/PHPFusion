@@ -1058,4 +1058,3 @@ static function prune_users_posts($forum_id) {
 	}
 }
 }
-?>

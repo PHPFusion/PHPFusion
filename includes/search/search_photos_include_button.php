@@ -22,4 +22,3 @@ $form_elements['photos']['disabled'] = array();
 $form_elements['photos']['display'] = array();
 $form_elements['photos']['nodisplay'] = array();
 $radio_button['photos'] = "<label><input type='radio' name='stype' value='photos'".($_GET['stype'] == "photos" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['p400']."</label>";
-?>

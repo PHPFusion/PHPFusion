@@ -450,4 +450,3 @@ $locale['fmt_views'] = "tinjauan|tinjauan";
 $locale['fmt_weblink'] = "pautan-laman|pautan-laman";
 $locale['fmt_week'] = "minggu|minggu";
 $locale['fmt_year'] = "tahun|tahun";
-?>

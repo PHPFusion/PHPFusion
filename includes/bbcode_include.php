@@ -128,4 +128,4 @@ function strip_bbcodes($text) {
 	return $text;
 }
 
-?>
+

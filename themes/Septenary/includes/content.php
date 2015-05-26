@@ -37,4 +37,3 @@ echo "</div>\n";
 echo BL_CENTER ? "<div class='bl-content'>".BL_CENTER."</div>\n" : '';
 echo "</div>\n";
 close_grid(1);
-?>

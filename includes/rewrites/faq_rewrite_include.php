@@ -27,4 +27,3 @@ $dir_path = ROOT;
 $dbname = DB_FAQ_CATS;
 $dbid = array("%faq_cat_id%" => "faq_cat_id");
 $dbinfo = array("%faq_cat_name%" => "faq_cat_name");
-?>

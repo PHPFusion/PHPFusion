@@ -307,4 +307,3 @@ if (!function_exists('render_news_item')) {
 		echo "</article>\n";
 	}
 }
-?>

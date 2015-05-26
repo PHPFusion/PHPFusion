@@ -294,4 +294,3 @@ function form_select_chain($title, $input_name, $input_id, $option_array, $input
 	return $html;
 }
 
-?>

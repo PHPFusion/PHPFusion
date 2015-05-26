@@ -41,4 +41,3 @@ Jūsų vartotojo galiojimas puslapyje ".fusion_get_settings('sitename')." dėl �
 [REASON].\n
 Jeigu norite gauti daugiau informacijos susisiekite su puslapio administratorium adresu ".fusion_get_settings('siteemail').".\n
 ".fusion_get_settings('siteusername');
-?>

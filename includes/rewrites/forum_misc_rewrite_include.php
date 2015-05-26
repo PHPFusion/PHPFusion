@@ -32,4 +32,3 @@ $dir = FORUM;
 $dbname = DB_FORUM_POSTS;
 $dbid = array("%post_id%" => "post_id");
 $dbinfo = array("%post_message%" => "post_message");
-?>

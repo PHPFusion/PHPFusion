@@ -685,4 +685,3 @@ class Moderator {
 		}
 	}
 }
-?>

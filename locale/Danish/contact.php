@@ -24,4 +24,3 @@ $locale['440'] = "Din besked er sendt";
 $locale['441'] = "Tak skal du have";
 $locale['442'] = "Din besked blev ikke sendt fordi du har glemt:";
 $locale['443'] = "Prøv igen.";
-?>

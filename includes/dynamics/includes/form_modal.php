@@ -51,4 +51,3 @@ function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
 	return $html;
 }
 
-?>

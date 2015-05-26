@@ -79,4 +79,3 @@ if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-?>

@@ -45,4 +45,3 @@ $locale['T302'] = "[SUBJECT]";
 $locale['T303'] = "[MESSAGE]";
 $locale['UF'] = "Privatumas";
 $locale['SEO'] = "Nekintamos nuorodos";
-?>

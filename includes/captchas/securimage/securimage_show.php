@@ -6,4 +6,4 @@ $img = new securimage();
 
 $img->show();
 
-?>
+

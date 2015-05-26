@@ -168,4 +168,4 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 }
 
 require_once THEMES."templates/footer.php";
-?>
+

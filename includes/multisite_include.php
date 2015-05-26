@@ -94,4 +94,3 @@ define("DB_WEBLINK_CATS", DB_PREFIX."weblink_cats");
 define("DB_WEBLINKS", DB_PREFIX."weblinks");
 define("DB_THEME", DB_PREFIX."theme");
 
-?>

@@ -361,4 +361,3 @@ $locale['register_settings'] = "Реєстрація";
 $locale['security_settings'] = "Безпека";
 $locale['time_settings'] = "Час і дата";
 $locale['user_settings'] = "Користувачі";
-?>

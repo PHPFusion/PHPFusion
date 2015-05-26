@@ -27,4 +27,3 @@ $locale['463'] = "Šis aplankas tuščias";
 $locale['464'] = "Atnaujinti paveikslėlių sąrašą TinyMCE redaktoriui";
 // Popup Error/Warning Messages
 $locale['470'] = "Ištrinti šį paveiksliuką?";
-?>

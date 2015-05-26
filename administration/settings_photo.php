@@ -281,4 +281,3 @@ function color_mapper($field, $value) {
 	$select .= "</select>\n";
 	return $select;
 }
-?>

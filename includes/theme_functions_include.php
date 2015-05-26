@@ -764,4 +764,3 @@ function fusion_confirm_exit() {
 	");
 }
 
-?>

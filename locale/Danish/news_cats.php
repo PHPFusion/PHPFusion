@@ -7,4 +7,3 @@ $locale['404'] = "Der er ingen nyheder i denne kategori.";
 $locale['405'] = "Flere";
 $locale['406'] = "Vis alle kategorier";
 $locale['407'] = "Der er ikke defineret nyhedskategorier endnu";
-?>

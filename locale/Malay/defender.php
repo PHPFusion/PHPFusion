@@ -39,4 +39,3 @@ $locale['df_420'] = "Folder does not exist. Please create the folder via FTP and
 $locale['df_421'] = "Image must be no bigger than %uw x %uh pixels.";
 
 $locale['df_error_text'] = "%s has error and requires your attention.";
-?>

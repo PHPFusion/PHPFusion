@@ -37,4 +37,3 @@ $locale['458'] = "Spausti uždarymui";
 $locale['458'] = "Spauskite, kad uždaryti";
 $locale['459'] = "Pirmoji foto";
 $locale['460'] = "Paskutinė foto";
-?>

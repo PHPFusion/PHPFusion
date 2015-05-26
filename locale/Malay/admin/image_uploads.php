@@ -27,4 +27,3 @@ $locale['463'] = "Direktori ini kosong";
 $locale['464'] = "Kemaskinikan Imej untuk Editor TinyMCE";
 // Popup Error/Warning Messages
 $locale['470'] = "Padam Imej ini?";
-?>

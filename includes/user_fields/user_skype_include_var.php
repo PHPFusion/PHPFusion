@@ -24,4 +24,3 @@ $user_field_desc = $locale['uf_skype_desc'];
 $user_field_dbname = "user_skype";
 $user_field_group = 1;
 $user_field_dbinfo = "VARCHAR(100) NOT NULL DEFAULT ''";
-?>

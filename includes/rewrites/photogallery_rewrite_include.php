@@ -26,4 +26,3 @@ $pattern = array("gallery" => "photogallery.php",
 $dbname = DB_PHOTO_ALBUMS;
 $dbid = array("%album_id%" => "album_id");
 $dbinfo = array("%album_title%" => "album_title");
-?>

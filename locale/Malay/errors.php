@@ -16,4 +16,3 @@ $locale['E_STRICT'] = "";
 $locale['err_100'] = "Tidak Berkenaan";
 $locale['err_101'] = "<strong>AMARAN:</strong> Kesalahan didapati semasa menghurai halaman ini. Sila lihat ke <a href='[ERROR_LOG_URL]' class='alt'>log kesalahan</a> PHP-Fusion untuk keterangan lanjut.";
 $locale['err_102'] = "Tunjukan Kesilapan!";
-?>

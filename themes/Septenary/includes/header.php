@@ -139,4 +139,4 @@ if (FUSION_SELF == 'login.php') {
 close_grid(1);
 echo "</div>\n"; // .overlay
 echo "</header>\n";
-?>
+

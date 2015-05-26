@@ -37,4 +37,3 @@ var RecaptchaOptions = { ".$recaptchaLocale."
 // Hid extra input
 $_CAPTCHA_HIDE_INPUT = TRUE;
 echo recaptcha_get_html($settings['recaptcha_public']);
-?>

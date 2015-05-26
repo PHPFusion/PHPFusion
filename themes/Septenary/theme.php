@@ -60,4 +60,3 @@ function render_page($license = FALSE) {
 require_once THEME."includes/render_comments.php";
 // Panel Functions
 require_once THEME."includes/panel_functions.php";
-?>

@@ -14,4 +14,4 @@ $locale['600'] = "Taisyklės";
 $locale['601'] = "Paskutinis atnaujinimas:";
 //Privacy Policy
 $locale['700'] = "Privatumo politika";
-?>
+

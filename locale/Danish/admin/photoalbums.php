@@ -97,4 +97,3 @@ $locale['652'] = "Kameramodel";
 $locale['655'] = "Nøgleord:";
 
 $locale['660'] = "Der er ikke lagt billeder ind i dette album";
-?>

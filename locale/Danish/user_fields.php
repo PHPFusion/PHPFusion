@@ -159,4 +159,3 @@ Bemærk: Du skal være logget på for at fortsætte.\n
 Venlig hilsen
 ".fusion_get_settings('siteusername')."
 ".fusion_get_settings('sitename');
-?>

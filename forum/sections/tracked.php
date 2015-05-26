@@ -48,4 +48,3 @@ if ($rows) {
 		$info['item'][$data['thread_id']] = $data;
 	}
 }
-?>

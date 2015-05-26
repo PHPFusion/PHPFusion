@@ -97,4 +97,3 @@ $language_data = array('LANG_NAME' => 'HTML', 'COMMENT_SINGLE' => array(), 'COMM
 					   'PARSER_CONTROL' => array('KEYWORDS' => array(2 => array('DISALLOWED_BEFORE' => '(?<=&lt;|&lt;\/)',
 																				'DISALLOWED_AFTER' => '(?=\s|\/|&gt;)',))));
 
-?>

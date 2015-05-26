@@ -5,4 +5,3 @@ $locale['bb_quote_expand'] = "Переглянути повний текст";
 $locale['bb_quote_collapse'] = "Приховати повний текст";
 $locale['bb_quote'] = "Цитата";
 $locale['bb_wrote'] = "написано";
-?>

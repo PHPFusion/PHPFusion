@@ -318,4 +318,3 @@ $locale['polls']['description'] = "A Poll and User Voting System.";
 $locale['weblinks']['title'] = "Weblinks";
 $locale['weblinks']['description'] = "A Web Directory System.";
 $locale['install'] = "Install Core";
-?>

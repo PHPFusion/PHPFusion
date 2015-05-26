@@ -31,4 +31,3 @@ while ($data = dbarray($result)) {
 	}
 }
 
-?>

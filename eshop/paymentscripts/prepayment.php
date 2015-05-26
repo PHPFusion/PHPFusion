@@ -36,4 +36,3 @@ echo '<br /><table border="0" width="600" cellspacing="0" cellpadding="0" align=
 
 //clear the cart.
 dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE puid ='".$username."'");
-?>

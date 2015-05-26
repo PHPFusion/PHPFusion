@@ -28,4 +28,3 @@ $user_field_default = '';
 $user_field_options = '';
 $user_field_error = '';
 $user_field_config = '';
-?>

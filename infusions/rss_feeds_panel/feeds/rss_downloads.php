@@ -59,4 +59,3 @@ if (db_exists(DB_DOWNLOADS) && db_exists(DB_DOWNLOAD_CATS)) {
 	}
 	echo "</channel></rss>";
 }
-?>

@@ -42,4 +42,3 @@ $dir = FORUM;
 $dbid = array("%forum_id%" => "forum_id");
 $dbname = DB_FORUMS;
 $dbinfo = array("%forum_name%" => "forum_name");
-?>

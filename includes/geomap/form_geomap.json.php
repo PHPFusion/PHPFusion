@@ -58,4 +58,3 @@ foreach ($states as $key => $value) {
 echo json_encode($states_array);
 //echo json_encode(array('id'=>"1", 'text'=>"2"));
 //echo json_encode(array('id'=>'1', 'text'=>$_POST['id']));
-?>

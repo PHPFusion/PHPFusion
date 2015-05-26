@@ -23,4 +23,3 @@ $user_field_desc = $locale['uf_name_last_desc'];
 $user_field_dbname = "user_name_last";
 $user_field_group = 2;
 $user_field_dbinfo = "VARCHAR(20) NOT NULL DEFAULT ''";
-?>

@@ -60,4 +60,3 @@ if (isset($_POST['uninstall'])) {
 	// panel
 	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['setup_3407']."', 'member_poll_panel', '', '4', '2', 'file', '0', '0', '0', '')");
 }
-?>

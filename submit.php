@@ -421,4 +421,3 @@ if (!$sum or empty($modules[$stype])) {
 	closetable();
 }
 require_once THEMES."templates/footer.php";
-?>

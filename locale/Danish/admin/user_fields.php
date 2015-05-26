@@ -38,4 +38,3 @@ $locale['452'] = "Brugervalg";
 $locale['453'] = "Statistik";
 // Enable / Edit User Field Part #2
 $locale['480'] = " Oprettelse";
-?>

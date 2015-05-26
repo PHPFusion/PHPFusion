@@ -63,4 +63,3 @@ $locale['461'] = "Muat Turun Sekarang";
 $locale['462'] = "Informasi Muat Turun";
 $locale['463'] = "Jadilah orang pertama untuk menilai Muat Turun ini";
 $locale['464'] = "Layari Halaman Web";
-?>

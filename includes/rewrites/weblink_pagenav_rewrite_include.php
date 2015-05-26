@@ -26,4 +26,3 @@ $pattern = array("links/%weblink_id%/browse/%weblink_cat_id%/%rowstart%" => "web
 
 $dir_path = BASEDIR;
 $dbname = DB_WEBLINKS;
-?>

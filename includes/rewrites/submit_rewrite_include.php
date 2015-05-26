@@ -23,4 +23,3 @@ $pattern = array("submit" => "submit.php",
 				 "submit/articles" => "submit.php?stype=a",
 				 "submit/news" => "submit.php?stype=n",
 				 "submit/photos" => "submit.php?stype=p");
-?>

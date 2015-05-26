@@ -19,4 +19,4 @@ $locale['err_100'] = "Nėra";
 $locale['err_101'] = "<strong>ĮSPĖJIMAS:</strong> Įvyko klaida generuojant puslapį. Norėdami sužinoti platesnę informaciją, peržiūrėkite PHP-Fusion <a href='[ERROR_LOG_URL]'>klaidų žurnalą</a>.";
 
 // Error Managemetn
-?>
+

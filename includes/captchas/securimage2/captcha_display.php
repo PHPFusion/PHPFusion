@@ -31,4 +31,3 @@ echo "<img src='".INCLUDES."captchas/securimage2/images/refresh.gif' alt='' alig
 //	$this->setRequiredJavaScript("captcha_code", $locale['u195']);
 //}
 echo "</div>\n";
-?>

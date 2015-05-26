@@ -43,4 +43,3 @@ require_once __DIR__."/notify/notify.inc.php";
 require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/defender.inc.php";
 require_once __DIR__."/dynamics/dynamics.inc.php";
-?>

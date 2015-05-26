@@ -39,4 +39,3 @@ if ($profile_method == "input") {
 	// Insert and update
 	$user_fields = array('title'=>$locale['uf_timezone'], 'value'=>$field_value);
 }
-?>

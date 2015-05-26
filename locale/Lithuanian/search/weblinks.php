@@ -5,4 +5,3 @@ $locale['w402'] = "Web nuorodos";
 $locale['w403'] = "[NAUJA]";
 $locale['w404'] = "Pridėjimo data:";
 $locale['w405'] = "Aplankė:";
-?>

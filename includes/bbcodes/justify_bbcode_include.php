@@ -17,4 +17,3 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $text = preg_replace('#\[justify\](.*?)\[/justify\]#si', '<div style=\'text-align:justify\'>\1</div>', $text);
-?>

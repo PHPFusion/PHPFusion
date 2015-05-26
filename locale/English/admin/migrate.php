@@ -62,4 +62,3 @@ $locale['159'] = "User Level could not be updated due to a database error";
 $locale['160'] = "New User Level -";
 $locale['161'] = "User Levels was not updated because they are similar or less than the primary account";
 $locale['162'] = "There are no user with ID";
-?>

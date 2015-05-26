@@ -15,5 +15,5 @@ Jūsų vartotojas puslapyje ".fusion_get_settings('sitename')." buvo pakartotina
 Pagarbiai,\n\n
 ".fusion_get_settings('siteusername');
 $locale['506'] = "Reaktyvavo pats vartotojas.";
-?>
+
 

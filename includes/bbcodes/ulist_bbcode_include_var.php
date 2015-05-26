@@ -27,4 +27,3 @@ $__BBCODE__[] = array("description" => $locale['bb_ulist_description'], "value" 
 					  "html_middle" => "<input type='button' value='".$locale['bb_ulist_1']."' class='button' style='width:70px' onclick=\"addText('".$textarea_name."', '[ulist=disc]', '[/ulist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='".$locale['bb_ulist_2']."' class='button' style='width:70px' onclick=\"addText('".$textarea_name."', '[ulist=circle]', '[/ulist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='".$locale['bb_ulist_3']."' class='button' style='width:70px' onclick=\"addText('".$textarea_name."', '[ulist=square]', '[/ulist]', '".$inputform_name."');return false;\" />",
 					  "html_end" => "</div>");
 
-?>

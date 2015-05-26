@@ -115,4 +115,4 @@ $locale['629'] = "Jūs negalite perkelti pasirinktų žinučių į direktorijų,
 $locale['630'] = " Žinučių limitas";
 $locale['631'] = "Taip";
 $locale['632'] = "Ne";
-?>
+

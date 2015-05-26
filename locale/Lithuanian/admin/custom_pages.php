@@ -42,4 +42,4 @@ $locale['457'] = $locale['455']." ir ".$locale['456'];
 $locale['460'] = "TinyMCE:";
 $locale['461'] = "Įjungtas";
 $locale['462'] = "Išjungtas";
-?>
+

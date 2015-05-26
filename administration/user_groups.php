@@ -306,4 +306,3 @@ echo "return confirm('".$locale['423']."');\n}\n";
 echo "/* ]]>*/\n";
 echo "</script>\n";
 require_once THEMES."templates/footer.php";
-?>

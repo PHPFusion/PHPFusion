@@ -60,4 +60,3 @@ $locale['df_422'] = "Ukendt fejl (Query)";
 $locale['df_423'] = "Billedet blev ikke uploadet korrekt. Prøv igen";
 
 $locale['df_error_text'] = "%s er fejlbehæftet og kræver din opmærksomhed.";
-?>

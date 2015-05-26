@@ -25,4 +25,3 @@ $pattern = array("photo/%photo_id%/%photo_title%" => "photogallery.php?photo_id=
 $dbname = DB_PHOTOS;
 $dbid = array("%photo_id%" => "photo_id");
 $dbinfo = array("%photo_title%" => "photo_title");
-?>

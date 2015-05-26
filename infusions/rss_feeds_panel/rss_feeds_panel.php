@@ -47,4 +47,3 @@ if (db_exists(DB_FORUM_POSTS) && db_exists(DB_FORUMS)) {
 }
 echo "</p>\n";
 closeside();
-?>

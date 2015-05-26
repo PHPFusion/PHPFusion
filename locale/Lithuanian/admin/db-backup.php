@@ -47,4 +47,3 @@ $locale['480'] = "Atstatyti kopiją";
 
 $locale['481'] = "Failo pavadinimas:";
 $locale['481b'] = "Prašome įvesti failo pavadinimą:";
-?>

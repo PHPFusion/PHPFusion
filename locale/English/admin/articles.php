@@ -64,4 +64,3 @@ $locale['articles_0350'] = "Delete this article category?";
 // Error Messages
 $locale['articles_0351'] = "Please enter a category name.";
 $locale['articles_0352'] = "This category already exists.";
-?>

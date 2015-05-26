@@ -58,4 +58,3 @@ if (iADMIN && checkrights("M") && $settings['admin_activation'] == "1") {
 $data = dbarray(dbquery("SELECT user_id, user_name, user_status FROM ".DB_USERS." WHERE user_status='0' ORDER BY user_joined DESC LIMIT 0,1"));
 echo THEME_BULLET." ".$locale['global_016'].": <span class='side'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>\n";
 closeside();
-?>

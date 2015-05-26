@@ -147,4 +147,3 @@ $locale['618'] = "It is strongly recommended to change deactivation action to an
 $locale['619'] = "You can do so here.";
 $locale['620'] = "anonymize";
 $locale['621'] = "Automatic deactivation of inactive users.";
-?>

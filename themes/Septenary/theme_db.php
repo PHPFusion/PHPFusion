@@ -26,4 +26,3 @@ $theme_license = 'AGPL3';
 $theme_version = '1.00';
 $theme_description = 'Named after the word 9, Septenary boosts a simple, modern, flat outlook. Septenary is also the current PHP-Fusion Core 9.00 default theme in distributed package.';
 
-?>

@@ -17,4 +17,3 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $text = preg_replace('#\[google\](.*?)\[/google\]#si', '<img src=\'http://www.google.com/logos/Logo_25wht.gif\' width=\'38\' height=\'18\' alt=\'Google Search\' border=\'0\' style=\'vertical-align:middle;\'> <a href=\'http://www.google.com/search?hl=&amp;lr=&amp;q=\1\' target=\'_blank\'>\1</a>', $text);
-?>

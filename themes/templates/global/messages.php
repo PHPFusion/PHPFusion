@@ -280,4 +280,3 @@ if (!function_exists('render_chat_list')) {
 		echo "</div>\n";
 	}
 }
-?>

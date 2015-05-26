@@ -46,4 +46,3 @@ $locale['522'] = "fundet, der passer med søgekriteriet";
 //more than 100 results
 $locale['530'] = "Vær lidt mere præcis i formuleringen af dine søgekriterier. Din søgning giver %s resultater. 
 Vi viser kun de første 100 resultater";
-?>

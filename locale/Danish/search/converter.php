@@ -9,4 +9,3 @@ $filename_locale['members.php'] = "Brugere";
 $filename_locale['news.php'] = "Nyheder";
 $filename_locale['photos.php'] = "Fotoalbum";
 $filename_locale['weblinks.php'] = "Links";
-?>

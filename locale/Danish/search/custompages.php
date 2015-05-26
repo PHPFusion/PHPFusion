@@ -5,4 +5,3 @@ $locale['c402'] = "Brugeroprettede sider";
 $locale['c403'] = "fundet i";
 $locale['c404'] = "sideoverskrift";
 $locale['c405'] = "sideindhold";
-?>

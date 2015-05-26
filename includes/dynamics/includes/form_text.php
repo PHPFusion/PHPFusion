@@ -131,4 +131,3 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 	return $html;
 }
 
-?>

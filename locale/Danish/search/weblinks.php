@@ -5,4 +5,3 @@ $locale['w402'] = "Links";
 $locale['w403'] = "[NY]";
 $locale['w404'] = "Tilføjelsesdato:";
 $locale['w405'] = "Besøg:";
-?>

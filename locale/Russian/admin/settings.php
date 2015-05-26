@@ -346,4 +346,3 @@ $locale['security_settings'] = 'Настройки безопасности';
 $locale['time_settings'] = 'Настройки даты/времени';
 $locale['user_settings'] = 'Параметры управления пользователями';
 
-?>

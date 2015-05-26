@@ -210,4 +210,4 @@ closetable();
 echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF."?")."\n</div>\n";
 
 require_once THEMES."templates/footer.php";
-?>
+

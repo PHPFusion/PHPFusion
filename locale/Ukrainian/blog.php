@@ -21,4 +21,3 @@ $locale['testimonial_join'] = "Мене зареєстровано на цьом
 $locale['testimonial_web'] = "Також мене можна знайти на сайті %s";
 $locale['testimonial_contact'] = "Зв&lsquo;язатися зі мною можна за цими контактними  даними %s";
 $locale['testimonial_email'] = "Також можете надіслати мені електронного листа за адресою %s";
-?>

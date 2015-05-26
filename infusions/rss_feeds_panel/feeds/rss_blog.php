@@ -65,4 +65,3 @@ if (db_exists(DB_BLOG)) {
 	}
 	echo "</channel></rss>";
 }
-?>

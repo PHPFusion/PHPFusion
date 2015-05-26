@@ -87,4 +87,3 @@ if ($profile_method == "input") {
 		$this->_setError("user_blacklist", $locale['uf_blacklist_error'], TRUE);
 	}
 }
-?>

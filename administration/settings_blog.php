@@ -146,4 +146,3 @@ function calculate_byte($download_max_b) {
 	}
 	return 1000000;
 }
-?>

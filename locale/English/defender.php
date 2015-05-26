@@ -72,4 +72,3 @@ $locale['df_422'] = "Unknown error (Query)";
 $locale['df_423'] = "Image was not uploaded properely. Please try again";
 
 $locale['df_error_text'] = "%s has error and requires your attention.";
-?>

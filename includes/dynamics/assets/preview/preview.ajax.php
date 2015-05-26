@@ -47,4 +47,3 @@ if ($_POST['editor'] == 'html_input') {
 echo "<hr>\n";
 echo "</div>\n";
 
-?>

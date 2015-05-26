@@ -44,4 +44,3 @@ $locale['420'] = "Successfull";
 $locale['421'] = "Reason";
 $locale['422'] = "of";
 $locale['423'] = "No reason given.";
-?>

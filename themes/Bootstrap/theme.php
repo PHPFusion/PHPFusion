@@ -72,4 +72,4 @@ function render_page($license = FALSE) {
 
 
 
-?>
+

@@ -57,4 +57,3 @@ $locale['539'] = "Paspauskite čia";
 $locale['540'] = " norėdami keliaudi į nuorodų kategorijas";
 // Delete Web Link
 $locale['550'] = "Ištrintį šią nuorodą?";
-?>

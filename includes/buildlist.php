@@ -90,4 +90,3 @@ if (isset($image_files)) {
 	fwrite($fp, $indhold);
 	fclose($fp);
 }
-?>

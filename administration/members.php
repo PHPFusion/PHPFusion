@@ -656,4 +656,3 @@ if ($rows > 20) {
 }
 }
 require_once THEMES."templates/footer.php";
-?>

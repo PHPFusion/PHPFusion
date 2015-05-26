@@ -40,4 +40,3 @@ if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH) {
 }
 echo json_encode($this_response);
 
-?>

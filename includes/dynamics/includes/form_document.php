@@ -141,4 +141,3 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
 	return $html;
 }
 
-?>

@@ -94,4 +94,4 @@ $locale['652'] = "Camera Model";
 $locale['655'] = "Keywords:";
 
 $locale['660'] = "There are no photos in this album";
-?>
+

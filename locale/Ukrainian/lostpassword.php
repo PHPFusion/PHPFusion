@@ -25,4 +25,3 @@ $locale['411'] = "Вітаємо, [USER_NAME]!\n
 З повагою,
 ".fusion_get_settings('siteusername');
 $locale['412'] = "Сталась помилка, будь ласка, спробуйте ще раз.";
-?>

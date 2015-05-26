@@ -33,4 +33,3 @@ $locale['442'] = "Nerašomas";
 //PHPinfo
 $locale['450'] = "Detalės";
 $locale['451'] = "Neįmanoma gauti duomenų. Patikrinti ar phpinfo() funkcija yra išjungta?";
-?>

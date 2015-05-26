@@ -34,4 +34,3 @@ if ($profile_method == "input") {
 		$user_fields = array('title'=>$locale['uf_aim'], 'value'=>$field_value);
 	}
 }
-?>

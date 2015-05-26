@@ -5,4 +5,4 @@ $locale['bb_quote_expand'] = "Посмотреть полный текст";
 $locale['bb_quote_collapse'] = "Скрыть полный текст";
 $locale['bb_quote'] = "Цитата";
 $locale['bb_wrote'] = "написал(-а)";
-?>
+

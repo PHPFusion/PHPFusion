@@ -40,4 +40,3 @@ $alias_pattern = array("shop/%alias%" => "%alias_target%",
 $dbname = DB_ESHOP;
 $dbid = array("%product%" => "id");
 $dbinfo = array("%title%" => "title");
-?>

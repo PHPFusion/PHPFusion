@@ -110,4 +110,4 @@ if (defined("ADMIN_PANEL") || LEFT && !RIGHT) {
 	$main_style = "";
 }
 
-?>
+

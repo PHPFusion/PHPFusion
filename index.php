@@ -22,4 +22,3 @@ if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php"
 	redirect($settings['opening_page']);
 }
 
-?>

@@ -44,4 +44,3 @@ echo closetab();
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

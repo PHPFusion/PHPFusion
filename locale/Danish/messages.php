@@ -113,4 +113,3 @@ $locale['629'] = "Du kan ikke flytte de valgte beskeder over i den valgte folder
 $locale['630'] = " Maksimalt antal beskeder";
 $locale['631'] = "Ja";
 $locale['632'] = "Nej";
-?>

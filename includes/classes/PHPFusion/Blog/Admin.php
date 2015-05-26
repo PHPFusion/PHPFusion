@@ -139,7 +139,7 @@ class Admin {
 					function(e) { $('#bc-'+ $(this).data('id') +'-actions').hide(); }
 				);
 			");
-		?>
+		
 		<table class='table table-responsive table-hover m-t-10'>
 			<tr>
 				<th>Category Name</th>
@@ -178,7 +178,7 @@ class Admin {
 		} else {
 			echo "<tr><td class='text-center' colspan='6'>".$locale['435']."</td></tr>\n";
 		}
-		?>
+		
 		</table>
 		<?php
 	}

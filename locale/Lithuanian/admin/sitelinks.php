@@ -41,4 +41,3 @@ $locale['SL_0080'] = "Trinti šią nuorodą?";
 // Error
 $locale['SL_0085'] = "Prašom įvesti nuorodos pavadinimą";
 $locale['SL_0086'] = "Prašom įvesti nuorodos adresą";
-?>

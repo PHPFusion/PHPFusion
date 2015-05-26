@@ -39,4 +39,3 @@ $locale['438'] = "Tipas / Skaičiavimas";
 $locale['450'] = "Forumo statusų sistema išjungta.<br />Prašome eitį į %s Administracijos panelę norėdami įjungti.";
 
 $locale['451'] = "Forumo nustatymai";
-?>

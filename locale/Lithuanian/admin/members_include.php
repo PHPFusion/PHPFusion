@@ -38,4 +38,3 @@ $locale['susp112'] = "IP: ";
 $locale['susp113'] = "Nuimtas";
 $locale['susp114'] = "Spendavimo įrašas";
 $locale['susp115'] = "Nariai";
-?>

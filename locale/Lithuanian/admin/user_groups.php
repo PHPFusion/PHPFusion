@@ -40,4 +40,3 @@ $locale['462'] = "Pašalinti visus vartotojus";
 $locale['463'] = "Nėra narių šioje grupėje.";
 // Error Messages
 $locale['464'] = "Prašom įvesti grupės pavadinimą";
-?>

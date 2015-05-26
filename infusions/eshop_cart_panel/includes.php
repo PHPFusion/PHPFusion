@@ -1,4 +1,3 @@
 <?php
 // functions for cart
 
-?>

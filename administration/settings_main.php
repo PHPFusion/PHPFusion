@@ -236,4 +236,3 @@ echo "</script>";
 
 require LOCALE.LOCALESET."global.php";
 require_once THEMES."templates/footer.php";
-?>

@@ -20,4 +20,3 @@ Kata alauan anda untuk log masuk ke akaun anda di ".fusion_get_settings('sitenam
 Daripada,
 ".fusion_get_settings('siteusername');
 $locale['412'] = "Kesalahan didapati, sila ulangi lagi.";
-?>

@@ -151,4 +151,3 @@ add_to_jquery("
         });
     ");
 require_once THEMES."templates/footer.php";
-?>

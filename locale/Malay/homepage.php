@@ -19,4 +19,3 @@ $locale['home_0102'] = "Tiada Kategori";
 
 $locale['home_0105'] = "Diterbitkan oleh ";
 $locale['home_0106'] = " di ";
-?>

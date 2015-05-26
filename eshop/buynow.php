@@ -595,4 +595,3 @@ closetable();
  }
 } //member check
 require_once THEMES."templates/footer.php";
-?>

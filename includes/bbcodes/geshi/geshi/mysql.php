@@ -356,4 +356,3 @@ $language_data = array('LANG_NAME' => 'MySQL',
 																	 24 => array('DISALLOWED_AFTER' => '(?=\()'),
 																	 26 => array('DISALLOWED_AFTER' => '(?=\()'))));
 
-?>

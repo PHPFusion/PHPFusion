@@ -661,4 +661,3 @@ if (!function_exists('forum_newtopic')) {
 		echo closemodal();
 	}
 }
-?>

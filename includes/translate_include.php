@@ -149,4 +149,3 @@ function format_word_Ukrainian($count, $words, $add_count = 1) {
 	return $result;
 }
 
-?>

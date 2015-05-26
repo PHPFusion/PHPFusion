@@ -176,4 +176,3 @@ function member_url($step, $user_id) {
 	return FUSION_SELF.$aidlink."&amp;step=".$step.($user_id ? "&amp;user_id=$user_id" : "");
 }
 
-?>

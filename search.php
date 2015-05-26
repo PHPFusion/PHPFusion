@@ -362,4 +362,3 @@ if ($_POST['stext'] != "" && strlen($_POST['stext']) >= 3) {
 	closetable();
 }
 require_once THEMES."templates/footer.php";
-?>

@@ -17,16 +17,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 header("Content-Type: text/html; charset=".$locale['charset']."");
-?>
+
 <!DOCTYPE html>
 <head>
 	<title><?php echo $settings['sitename'] ?></title>
 	<meta charset='<?php echo $locale['charset'] ?>'/>
-	<?php if ($bootstrap_theme_css_src) : ?>
+	<?php if ($bootstrap_theme_css_src) : 
 		<meta http-equiv='X-UA-Compatible' content='IE=edge'/>
 		<meta name='viewport' content='width=device-width, initial-scale=1.0'/>
 		<link href='<?php echo $bootstrap_theme_css_src ?>' rel='stylesheet' media='screen'/>
-	<?php endif ?>
+	<?php endif 
 	<!-- Entypo icons -->
 	<link href='<?php echo INCLUDES."font/entypo/entypo.css" ?>' rel='stylesheet' media='screen'/>
 	<!-- Default CSS styling which applies to all themes but can be overriden -->
@@ -42,8 +42,8 @@ header("Content-Type: text/html; charset=".$locale['charset']."");
 	if (function_exists("get_head_tags")) {
 		echo get_head_tags();
 	}
-	?>
-	<?php if (fusion_get_settings('tinymce_enabled')) : ?>
+	
+	<?php if (fusion_get_settings('tinymce_enabled')) : 
 		<style type='text/css'>
 			.mceIframeContainer iframe {
 				width: 100% !important;
@@ -101,7 +101,7 @@ header("Content-Type: text/html; charset=".$locale['charset']."");
 				}
 			}
 		</script>
-	<?php endif ?>
+	<?php endif 
 </head>
 <body>
 <?php
@@ -114,7 +114,7 @@ if (!check_admin_pass('')) {
 }
 
 if ($footerError) {
-	?>
+	
 	<div class='alert alert-warning m-t-10 error-message'><?php echo $footerError ?></div>
 	<?php
 }
@@ -127,12 +127,12 @@ echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> H
 echo $fusion_page_footer_tags;
  
 // Output lines added with add_to_jquery()
-if (!empty($fusion_jquery_tags)) : ?>
+if (!empty($fusion_jquery_tags)) : 
 	<script type="text/javascript">
 		$(function () {
 			<?php echo $fusion_jquery_tags;?>
 		});
 	</script>
-<?php endif; ?>
+<?php endif; 
 </body>
 </html>

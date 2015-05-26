@@ -148,4 +148,3 @@ $locale['618'] = "Det anbefales stærkt at ændre den handling, som udløses af 
 $locale['619'] = "Det kan du g�re ved at klikke her.";
 $locale['620'] = "anonymiser";
 $locale['621'] = "Automatisk deaktivering af inaktive brugere.";
-?>

@@ -37,4 +37,3 @@ $locale['438'] = "Type / Count";
 // Forum Ranks Disabled
 $locale['450'] = "Forum ranks are currently disabled.<br />Please go to the %s Admin Panel to enable.";
 $locale['451'] = "Forum Settings";
-?>

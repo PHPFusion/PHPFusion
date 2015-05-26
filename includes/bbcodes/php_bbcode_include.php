@@ -42,4 +42,4 @@ for ($i = 0; $i < count($matches[0]); $i++) {
 	$text = str_replace("</li>\n", "</li>", $text);
 	$text = str_replace("</ol>\n", "</ol>", $text);
 }
-?>
+

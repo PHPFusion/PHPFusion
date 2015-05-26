@@ -47,4 +47,3 @@ $locale['T302'] = "[SUBJECT]";
 $locale['T303'] = "[MESSAGE]";
 $locale['UF'] = "Приватність";
 $locale['SEO'] = "Статичні посилання";
-?>

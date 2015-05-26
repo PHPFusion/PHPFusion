@@ -22,4 +22,3 @@ $locale['testimonial_web'] = "Jeg har også en anden side på %s";
 $locale['testimonial_contact'] = "Hvis du har brug for at kontakte mig, kan du få fat i mig på %s";
 $locale['testimonial_email'] = "Du kan også bruge min mail adresse på %s";
 
-?>

@@ -60,4 +60,3 @@ $locale['470'] = "Pavadinimas negali būti tuščias!";
 $locale['471'] = "Žinutė negali būti tuščia!";
 $locale['472'] = "Siuntėjo vardas negali būti tuščias!";
 $locale['473'] = "Siuntėjo adresas negali būti tuščias!";
-?>

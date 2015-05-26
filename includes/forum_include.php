@@ -177,4 +177,3 @@ function forum_breadcrumbs($forum_index) {
 		add_breadcrumb(array('link'=>$crumb['link'], 'title'=>$crumb['title']));
 	}
 }
-?>

@@ -144,4 +144,3 @@ echo form_button('savesettings', $locale['750'], $locale['750'], array('class' =
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";
-?>

@@ -5,4 +5,3 @@ $locale['c402'] = "Pridėtiniai puslapiai";
 $locale['c403'] = "rasta";
 $locale['c404'] = "puslapio pavadinimas";
 $locale['c405'] = "puslapio turinys";
-?>

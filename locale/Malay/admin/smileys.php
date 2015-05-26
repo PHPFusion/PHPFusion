@@ -30,4 +30,4 @@ $locale['437'] = "Please enter a Smiley Code";
 $locale['438'] = "Please select a Smiley";
 $locale['439'] = "Please enter a Smiley Text";
 
-?>
+

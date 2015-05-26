@@ -16,4 +16,3 @@ $locale['r121'] = "Very Good";
 $locale['r122'] = "Good";
 $locale['r123'] = "Average";
 $locale['r124'] = "Poor";
-?>

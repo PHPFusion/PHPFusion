@@ -74,4 +74,3 @@ if ($_GET['stype'] == "news" || $_GET['stype'] == "all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-?>

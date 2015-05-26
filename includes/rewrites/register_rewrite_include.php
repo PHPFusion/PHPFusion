@@ -20,4 +20,3 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 $regex = array("%time%" => "([0-9]+)");
 
 $pattern = array("create/ref=%time%" => "register.php?ref=%time%");
-?>

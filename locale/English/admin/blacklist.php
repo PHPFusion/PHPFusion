@@ -33,4 +33,3 @@ $locale['465'] = "The blacklist is currently empty.";
 $locale['466'] = "N/A";
 $locale['467'] = "Admin";
 $locale['468'] = "Date";
-?>

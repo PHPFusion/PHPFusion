@@ -26,4 +26,3 @@ $locale['preview'] = "Se teksten";
 $locale['word_count'] = "Karaktertal";
 $locale['error_preview'] = "Se fejl";
 $locale['error_preview_text'] = "Visningen fungerer ikke lige nu. Genindlæs siden og prøv igen.";
-?>

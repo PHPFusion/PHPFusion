@@ -202,4 +202,3 @@ echo "".($items['count'])." ".$locale['ESHPC118']." ".number_format($sum['totals
 //Clean it up
 $result = dbquery ("DELETE FROM ".DB_ESHOP_CART."  WHERE tid = '0' OR prid = '0' OR citem = '';");
 }
-?>

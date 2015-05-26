@@ -191,4 +191,3 @@ while ($data = dbarray($result)) {
 echo "</table>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

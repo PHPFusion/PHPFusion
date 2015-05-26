@@ -28,4 +28,4 @@ if (!function_exists('replace_url')) {
 	}
 }
 $text = preg_replace_callback('#\[url(=(?P<url>((f|ht)tp(s)?://)(.*?)))?\](?P<content>.*?)\[/url\]#i', 'replace_url', $text);
-?>
+

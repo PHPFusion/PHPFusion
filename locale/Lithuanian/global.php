@@ -441,4 +441,3 @@ $locale['testimonial_join'] = ". Prie šio tinklapio prisiregistravau %s.";
 $locale['testimonial_join'] = "Taip pat turiu savo tinklapį %s.";
 $locale['testimonial_contact'] = "Jeigu norite su manimi susisiekti, tą padaryti galite per %s.";
 $locale['testimonial_email'] = "Taip pat galite man rašyti el. paštu %s.";
-?>

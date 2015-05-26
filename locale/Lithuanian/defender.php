@@ -39,4 +39,3 @@ $locale['df_420'] = "Aplankas neegzistuoja. Prašome sukurti aplanką per FTP ir
 $locale['df_421'] = "Paveiksliukas turi būti ne didesnis negu %uw x %uh pikselių.";
 
 $locale['df_error_text'] = "%s klaidingas, prašome patikrinti.";
-?>

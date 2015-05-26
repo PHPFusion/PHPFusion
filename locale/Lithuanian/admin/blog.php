@@ -51,4 +51,3 @@ $locale['457'] = "Prašome nurodyti raktažodžius";
 $locale['left'] = "Kairė";
 $locale['center'] = "Centras";
 $locale['right'] = "Dešinė";
-?>

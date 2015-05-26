@@ -93,4 +93,3 @@ if (iMEMBER) {
 	dbquery("INSERT INTO ".DB_MESSAGES." (message_id, message_to, message_from, message_subject, message_message, message_smileys, message_read, message_datestamp, message_folder) VALUES('', '".$userdata['user_id']."', '1', '$pm_subject', '$pm_message', 'n', '0', '".time()."', '0')");
  }
 }
-?>

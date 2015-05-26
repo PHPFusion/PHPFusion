@@ -15,4 +15,4 @@ Your account at ".fusion_get_settings('sitename')." has been re-activated. We ho
 Regards,\n\n
 ".fusion_get_settings('siteusername');
 $locale['506'] = "Reactivated by user.";
-?>
+

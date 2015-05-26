@@ -23,4 +23,3 @@ redirect($settings['siteurl']."administration/eshop.php".$aidlink."&amp;a_page=o
 } else {
 redirect($settings['siteurl']."administration/eshop.php".$aidlink."&amp;a_page=orders");
 }
-?>

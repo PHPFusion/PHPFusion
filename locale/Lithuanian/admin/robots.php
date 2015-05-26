@@ -13,4 +13,3 @@ $locale['420'] = "Redaguoti robots.txt failą";
 $locale['421'] = "Daugiau informacijos apie robots.txt failą galite rasti čia.";
 $locale['422'] = "Saugoti";
 $locale['423'] = "Atstatyti į pradinę būseną";
-?>

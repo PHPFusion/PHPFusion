@@ -98,4 +98,3 @@ if (!function_exists('render_articles_category')) {
 		}
 	}
 }
-?>

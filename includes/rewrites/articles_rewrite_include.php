@@ -32,4 +32,3 @@ $pattern = array("articles" => "articles.php",
 $dbname = DB_ARTICLES;
 $dbid = array("%article_id%" => "article_id");
 $dbinfo = array("%article_title%" => "article_subject");
-?>

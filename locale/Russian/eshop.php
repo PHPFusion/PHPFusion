@@ -834,4 +834,3 @@ $ESHPHOTOSL['469'] = "Edit";
 $ESHPHOTOSL['470'] = "Delete";
 $ESHPHOTOSL['480'] = "No Photos added.";
 $ESHPHOTOSL['481'] = "Close Album";
-?>

@@ -6,4 +6,3 @@ $locale['bb_geshi_parser1'] = "Примечание парсера";
 $locale['bb_geshi_parser2'] = "Объём кода слишком большой для GeSHi! Используется обычный тэг кода.";
 $locale['bb_geshi_info'] = "Разобрано за <TIME> секунд, GeSHi версии <VERSION>";
 $locale['bb_geshi_save'] = "Скачать исходник";
-?>

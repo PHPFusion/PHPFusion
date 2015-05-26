@@ -82,4 +82,3 @@ $locale['603'] = "Used panels";
 $locale['604'] = "Panels";
 $locale['605'] = "Panel";
 $locale['606'] = "Site content";
-?>

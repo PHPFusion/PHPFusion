@@ -112,4 +112,3 @@ $locale['fields_0510'] = "Adresas";
 
 $locale['fields_0600'] = "Šioje kategorijoje yra %s subkategorija(-ių)";
 $locale['fields_0601'] = "Šioje kategorijoje yra %s laukelis(-ių)";
-?>

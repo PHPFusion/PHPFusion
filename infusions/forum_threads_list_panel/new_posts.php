@@ -71,4 +71,3 @@ if ($threads > 20) {
 	echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], 20, $threads, 3)."\n</div>\n";
 }
 require_once THEMES."templates/footer.php";
-?>

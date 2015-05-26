@@ -8,4 +8,3 @@ $locale['f405'] = "Pranešimas :";
 $locale['f406'] = "rasta";
 $locale['f407'] = "pranešimo pavadinime";
 $locale['f408'] = "pranešime";
-?>

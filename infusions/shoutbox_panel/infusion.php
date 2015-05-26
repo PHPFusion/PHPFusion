@@ -80,4 +80,3 @@ $inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings
 $inf_droptable[1] = DB_SHOUTBOX;
 $inf_deldbrow[1] = DB_PANELS." WHERE panel_filename='".$inf_folder."'";
 $inf_deldbrow[2] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
-?>

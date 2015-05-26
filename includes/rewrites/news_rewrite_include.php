@@ -36,4 +36,3 @@ $alias_pattern = array("news/%alias%" => "%alias_target%",
 $dbname = DB_NEWS;
 $dbid = array("%news_id%" => "news_id");
 $dbinfo = array("%news_title%" => "news_subject", "%news_start%" => "news_start");
-?>

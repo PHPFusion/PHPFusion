@@ -169,4 +169,4 @@ function getNewsCatPath($item_id) {
 }
 
 require_once THEMES."templates/footer.php";
-?>
+

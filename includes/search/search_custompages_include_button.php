@@ -22,4 +22,3 @@ $form_elements['custompages']['disabled'] = array("datelimit", "sort");
 $form_elements['custompages']['display'] = array();
 $form_elements['custompages']['nodisplay'] = array();
 $radio_button['custompages'] = "<label><input type='radio' name='stype' value='custompages'".($_GET['stype'] == "custompages" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['c400']."</label>";
-?>

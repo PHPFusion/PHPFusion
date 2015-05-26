@@ -118,4 +118,3 @@ $locale['531'] = 'Off';
 $locale['560'] = "No Forum Categories defined";
 $locale['561'] = "No Forums defined";
 $locale['562'] = "Refresh Forum Ordering";
-?>

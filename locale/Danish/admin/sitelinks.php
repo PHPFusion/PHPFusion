@@ -41,4 +41,3 @@ $locale['SL_0080'] = "Skal dette interne link slettes?";
 // Error
 $locale['SL_0085'] = "Du skal give linket et navn";
 $locale['SL_0086'] = "Du skal tilføje en URL til linket";
-?>

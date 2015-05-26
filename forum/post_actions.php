@@ -552,4 +552,3 @@ if ($executable && iMEMBER) {
 		if (!$executable) throw new \Exception($locale['forum_0589']);
 	}
 }
-?>

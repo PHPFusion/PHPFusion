@@ -25,4 +25,3 @@ if ($profile_method == "input") {
 		$user_fields = array('title'=>$locale['uf_name_middle'], 'value'=>$field_value);
 	}
 }
-?>

@@ -76,4 +76,3 @@ $locale['603'] = "Naudojamos panelės";
 $locale['604'] = "Panelės";
 $locale['605'] = "Panelė";
 $locale['606'] = "Tinklapio turinys";
-?>

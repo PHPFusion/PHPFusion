@@ -55,4 +55,3 @@ echo "<title>".$settings['sitename'].$locale['rss004']."</title>\n
 }
 echo "</channel></rss>";
 }
-?>

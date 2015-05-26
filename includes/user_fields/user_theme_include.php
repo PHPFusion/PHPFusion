@@ -38,4 +38,3 @@ if ($profile_method == "input") {
 } elseif ($profile_method == "display") {
 	// no to display
 }
-?>

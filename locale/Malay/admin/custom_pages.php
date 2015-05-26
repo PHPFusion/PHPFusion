@@ -41,4 +41,4 @@ $locale['460'] = "TinyMCE:";
 $locale['461'] = "Aktif";
 $locale['462'] = "Henti";
 
-?>
+

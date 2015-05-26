@@ -15,4 +15,3 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 		echo json_encode($data);
 	}
 }
-?>

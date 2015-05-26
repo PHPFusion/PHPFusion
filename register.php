@@ -80,4 +80,3 @@ elseif (isset($_POST['register'])) {
 	closetable();
 }
 require_once THEMES."templates/footer.php";
-?>

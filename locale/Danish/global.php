@@ -474,4 +474,3 @@ $locale['fmt_views'] = "visning|visninger";
 $locale['fmt_weblink'] = "link|links";
 $locale['fmt_week'] = "uge|uger";
 $locale['fmt_year'] = "år|år";
-?>

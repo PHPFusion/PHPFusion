@@ -148,4 +148,3 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['bla
 	}
 }
 require_once THEMES."templates/footer.php";
-?>

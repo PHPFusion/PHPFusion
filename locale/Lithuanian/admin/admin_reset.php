@@ -56,4 +56,3 @@ $locale['420'] = "Sėkmingai";
 $locale['421'] = "Priežastis";
 $locale['422'] = "";
 $locale['423'] = "Priežastis nenurodyta.";
-?>

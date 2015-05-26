@@ -38,4 +38,3 @@ $locale['SB_yes'] = "Yes";
 $locale['SB_no'] = "No";
 $locale['SB_submit'] = "Submit";
 $locale['SB_update_ok'] = "Settings Updated";
-?>

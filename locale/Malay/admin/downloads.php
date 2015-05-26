@@ -89,4 +89,3 @@ $locale['download_0350'] = "Padamkan Kategori Muat Turun ini?";
 // Error Messages
 $locale['download_0351'] = "Sila isikan tajuk Kategori.";
 $locale['download_0352'] = "Tajuk Kategori didapati.";
-?>

@@ -115,4 +115,3 @@ $locale['531'] = 'Fra';
 $locale['560'] = "Der er ikke oprettet debatkategorier";
 $locale['561'] = "Der er ikke oprettet sektioner";
 $locale['562'] = "Genopfrisk sektionernes rækkefølge";
-?>

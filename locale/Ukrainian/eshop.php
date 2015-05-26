@@ -883,4 +883,3 @@ $locale['coupon_another'] = "Використати ще одну знижку";
 $locale['coupon_disabled'] = "Знижки не діють";
 $locale['shipping_message'] = "У цьому замовленні Ви додали %s %s";
 $locale['payment_message'] = "Метод оплати: %s";
-?>

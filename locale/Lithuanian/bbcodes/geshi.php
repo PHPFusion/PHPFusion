@@ -6,4 +6,3 @@ $locale['bb_geshi_parser1'] = "Apdorojimo pastaba";
 $locale['bb_geshi_parser2'] = "Kodas per didelis! Naudokite kodo tagą";
 $locale['bb_geshi_info'] = "Apdorota per <TIME> sekundžių, naudojant GeSHi <VERSION>";
 $locale['bb_geshi_save'] = "Atsisiųsti";
-?>

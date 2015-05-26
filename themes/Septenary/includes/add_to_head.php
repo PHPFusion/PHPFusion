@@ -35,4 +35,4 @@ if (FUSION_SELF !== "maintenance.php" && FUSION_SELF !== "go.php") {
 			<script src='".THEME."js/css3-mediaqueries.js'></script>
 			<![endif]-->");
 }
-?>
+

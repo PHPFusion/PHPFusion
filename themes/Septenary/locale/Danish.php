@@ -10,4 +10,3 @@ $locale['sept_008'] = "Fotoalbum";
 $locale['sept_009'] = "Debat";
 $locale['sept_010'] = "Downloads";
 $locale['sept_011'] = "";
-?>

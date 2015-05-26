@@ -25,4 +25,3 @@ $locale['home_0102'] = "Uncategorized";
 
 $locale['home_0105'] = "Published by ";
 $locale['home_0106'] = " in ";
-?>

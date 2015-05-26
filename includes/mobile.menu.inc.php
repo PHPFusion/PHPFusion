@@ -8,4 +8,3 @@ $default_mobile_icon = array('index.php' => 'entypo home', 'articles.php' => 'en
 							 'submit.php?stype=l' => 'entypo cloud', 'submit.php?stype=n' => 'entypo cloud',
 							 'submit.php?stype=a' => 'entypo cloud', 'submit.php?stype=p' => 'entypo cloud',
 							 'submit.php?stype=d' => 'entypo cloud',);
-?>

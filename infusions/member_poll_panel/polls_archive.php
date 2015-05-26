@@ -91,4 +91,3 @@ if (isset($_POST['view']) && (isset($_POST['viewpoll_id']) && isnum($_POST['view
 	}
 }
 require_once THEMES."templates/footer.php";
-?>

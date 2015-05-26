@@ -7,4 +7,3 @@ $locale['err500'] = "Внутрішня помилка серверу!";
 $locale['errunk'] = "Невідома помилка";
 $locale['errret'] = "Повернутись на сайт";
 // Error Managemetn
-?>

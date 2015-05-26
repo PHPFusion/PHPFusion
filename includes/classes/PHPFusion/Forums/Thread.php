@@ -780,4 +780,3 @@ private function set_ForumPostDB() {
 	}
 }
 }
-?>

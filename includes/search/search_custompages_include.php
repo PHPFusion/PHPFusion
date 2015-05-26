@@ -65,4 +65,3 @@ if ($_GET['stype'] == "custompages" || $_GET['stype'] == "all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-?>

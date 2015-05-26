@@ -273,4 +273,3 @@ if (dbrows($result)>0) {
 		echo "<div class='well text-center'>".$locale['162']." $user_temp_id.</div>\n";
 	}
 }require_once THEMES."templates/footer.php";
-?>

@@ -6,4 +6,3 @@ $locale['bb_geshi_parser1'] = "Note til parseren";
 $locale['bb_geshi_parser2'] = "Koderne er for omfattende for GeSHi! Bruger kodemarkering i stedet for";
 $locale['bb_geshi_info'] = "Markeret på <TIME> sekunder med GeSHi <VERSION>";
 $locale['bb_geshi_save'] = "Downloadkilde";
-?>

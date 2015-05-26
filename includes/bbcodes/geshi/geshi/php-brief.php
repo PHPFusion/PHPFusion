@@ -238,4 +238,3 @@ $language_data = array('LANG_NAME' => 'PHP (brief)', 'COMMENT_SINGLE' => array(1
 					   'HIGHLIGHT_STRICT_BLOCK' => array(0 => TRUE, 1 => TRUE, 2 => TRUE, 3 => TRUE, 4 => TRUE,
 														 5 => TRUE), 'TAB_WIDTH' => 4);
 
-?>

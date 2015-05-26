@@ -40,4 +40,3 @@ if (dbrows($result) > 0) {
 }
 echo json_encode($user_opts);
 
-?>

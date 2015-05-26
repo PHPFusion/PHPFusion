@@ -198,4 +198,3 @@ if (dbrows($result)) {
 	echo "<div>".$locale['SB_no_msgs']."</div>\n";
 }
 closeside();
-?>

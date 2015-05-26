@@ -64,4 +64,3 @@ sendemail($odata['oname'],$odata['oemail'],$settings['sitename'],$settings['site
 
 closetable();
 require_once THEMES."templates/footer.php";
-?>

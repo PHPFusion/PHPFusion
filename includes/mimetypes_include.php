@@ -281,4 +281,3 @@ if (!function_exists('img_mimeTypes')) {
 		);
 	}
 }
-?>

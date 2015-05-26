@@ -151,4 +151,3 @@ $language_data = array('LANG_NAME' => 'CSS', 'COMMENT_SINGLE' => array(1 => '@')
 					   'HIGHLIGHT_STRICT_BLOCK' => array(), 'TAB_WIDTH' => 4,
 					   'PARSER_CONTROL' => array('KEYWORDS' => array('DISALLOWED_AFTER' => '(?![a-zA-Z0-9_\|%\\-&\.])')));
 
-?>

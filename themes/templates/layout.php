@@ -106,4 +106,3 @@ echo "<body>\n";
 
 echo "</body>";
 echo "</html>";
-?>

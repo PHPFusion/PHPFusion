@@ -62,4 +62,3 @@ dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE puid ='".$username."'");
 
 closetable();
 require_once THEMES."templates/footer.php";
-?>

@@ -121,4 +121,3 @@ $locale['693'] = "Failo dydis:";
 $locale['694'] = "Max. failo dydis: %s / Leidžiami failų tipai: %s";
 $locale['694b'] = "Max. dydis: %s / Leidžiami failų tipai: %s / Max plotis: %spx, Max. aukštis: %spx";
 $locale['695'] = "Pateikti siuntinį";
-?>

@@ -142,4 +142,3 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 
 	return $html;
 }
-?>

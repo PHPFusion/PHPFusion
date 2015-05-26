@@ -165,4 +165,4 @@ function closeside() {
 	echo "</td>\n</tr>\n</table>\n";
 }
 
-?>
+

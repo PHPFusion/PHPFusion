@@ -919,13 +919,13 @@ class Admin {
 			$img_src = file_exists($img_path) && !is_dir($img_path) ? $img_path : 'holder.js/170x170/grey/text:'.$locale['na'];
 			$file_exif = exif($img_src);
 			echo openmodal('photo_show', '', array('class' => 'modal-lg'));
-			?>
+			
 			<div class='row'>
 				<div class='col-xs-12 col-sm-8 col-md-8 col-lg-9 display-inline-block'
 					 style='border-right:1px solid #ddd'>
 					<h2 class='m-t-0'><?php echo $data['photo_title'] ?></h2>
 					<div class='text-smaller m-b-20'><span
-							class='text-uppercase strong'><?php echo $locale['635']; ?></span> <?php echo $data['album_title'] ?>
+							class='text-uppercase strong'><?php echo $locale['635']; ?></span> <?php echo $data['album_title'] 
 					</div>
 					<div class='display-inline' style='overflow: hidden;'>
 						<img style='max-width:100%; display:block;' src='<?php echo $img_src ?>'>
@@ -936,17 +936,17 @@ class Admin {
 						require_once INCLUDES."comments_include.php";
 						showcomments($this->gallery_rights, $this->photo_db, 'photo_id', $data['photo_id'], FUSION_REQUEST);
 					}
-					?>
+					
 				</div>
 				<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>
 					<div class='text-uppercase text-smaller strong'><?php echo $locale['636']; ?></div>
 					<div class='pull-left m-r-10'>
-						<?php echo display_avatar($data, '50px', '', '', 'img-rounded m-t-10'); ?>
+						<?php echo display_avatar($data, '50px', '', '', 'img-rounded m-t-10'); 
 					</div>
 					<div class='overflow-hide'>
 						<h4><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_id'], 'text-dark') ?></h4>
 						<div>
-							<i class='fa fa-calendar m-r-10'></i> <?php echo $locale['637'].showdate('shortdate', $data['photo_datestamp']) ?>
+							<i class='fa fa-calendar m-r-10'></i> <?php echo $locale['637'].showdate('shortdate', $data['photo_datestamp']) 
 						</div>
 					</div>
 					<hr>
@@ -955,7 +955,7 @@ class Admin {
 						'icon' => 'fa fa-star'));
 					echo form_button('comment', $locale['639'], 1, array('class' => 'btn-success btn-sm btn-block m-b-20',
 						'icon' => 'fa fa-comments-o'));
-					?>
+					
 
 					<?php
 					add_to_jquery("
@@ -974,7 +974,7 @@ class Admin {
 						<div class='text-uppercase text-smaller strong'>".$locale['640']."</div>
 						".$data['photo_description'];
 					}
-					?>
+					
 					<hr>
 					<div>
 						<div class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i><span
@@ -983,7 +983,7 @@ class Admin {
 						</div>
 						<div class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i><span
 								class='text-smaller'><?php echo $locale['642']; ?></span><span
-								class='pull-right  text-bigger strong'><?php echo $data['rating_count'] ? number_format(($data['rating_count']/$data['total_votes']*100)) : '0' ?>
+								class='pull-right  text-bigger strong'><?php echo $data['rating_count'] ? number_format(($data['rating_count']/$data['total_votes']*100)) : '0' 
 								/100</span></div>
 						<div class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i><span
 								class='text-smaller'><?php echo $locale['643']; ?></span><span
@@ -1028,7 +1028,7 @@ class Admin {
 						}
 						echo "</div>\n";
 					}
-					?>
+					
 				</div>
 			</div>
 			<?php
@@ -1162,11 +1162,11 @@ class Admin {
 		$container_span_md = 12/$this->gallery_rows;
 		echo "<h4>".(isset($_GET['gallery']) ? $locale['photo_001'] : $locale['photo_000'])."</h4>\n";
 		if (!empty($albums)) {
-			?>
+			
 			<div class='row'>
-				<?php for ($i = 1; $i <= $this->gallery_rows; $i++) { // construct columns ?>
+				<?php for ($i = 1; $i <= $this->gallery_rows; $i++) { // construct columns 
 					<div
-						class='col-xs-12 col-sm-<?php echo $container_span_sm ?> col-md-<?php echo $container_span_md ?>'>
+						class='col-xs-12 col-sm-<?php echo $container_span_sm  col-md-<?php echo $container_span_md ?>'>
 						<?php
 						if (!empty($albums[$i])) {
 							foreach ($albums[$i] as $albumData) {
@@ -1176,9 +1176,9 @@ class Admin {
 								}
 							}
 						}
-						?>
+						
 					</div>
-				<?php } ?>
+				<?php } 
 			</div>
 		<?php
 			// pagination
@@ -1242,7 +1242,7 @@ class Admin {
 			}
 		}
 
-		?>
+		
 
 		<div class='gallery_album panel panel-default'>
 		<div class='gallery_actions'>
@@ -1264,7 +1264,7 @@ class Admin {
 						</a>";
 				}
 			}
-			?>
+			
 			</div>
 				<div class='gallery_writer pull-right'>
 					<a class='btn button btn-sm btn-default'
@@ -1287,7 +1287,7 @@ class Admin {
 						$img_src = self::get_album_image($data['album_id'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2']);
 						$img_src = file_exists($img_src) && !is_dir($img_src) ? $img_src : 'holder.js/170x170/grey/text:'.$locale['na'];
 						echo "<img src='".$img_src."' alt='".$data['photo_title']."'/>";
-					} ?>
+					} 
 				</div>
 			</div>
 			<div class='panel-body'>
@@ -1319,7 +1319,7 @@ class Admin {
 					</div>
 					</div>";
 				}
-				?>
+				
 		</div>
 	<?php
 	}

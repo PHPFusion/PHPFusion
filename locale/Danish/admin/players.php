@@ -35,5 +35,5 @@ $locale['KUR_509'] = "Holdbetegnelse";
 $locale['KUR_510'] = "Holdbillede";
 $locale['KUR_511'] = "Gem hold";
 $locale['KUR_512'] = "Slet hold";
-?>
+
 

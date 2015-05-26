@@ -89,4 +89,3 @@ $locale['download_0350'] = "Skal denne downloadkategori slettes?";
 // Error Messages
 $locale['download_0351'] = "Du skal angive et kategorinavn.";
 $locale['download_0352'] = "Denne kategori er allerede oprettet.";
-?>

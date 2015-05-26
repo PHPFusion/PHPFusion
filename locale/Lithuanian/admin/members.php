@@ -155,4 +155,3 @@ $locale['618'] = "Rekomenduotina pakeisti deaktyvacijos veiksmą iš ištrynimo 
 $locale['619'] = "Tai gali padaryti čia.";
 $locale['620'] = "anonimizuoti";
 $locale['621'] = "Automatinis neaktyvių vartotojų deaktyvavimas.";
-?>

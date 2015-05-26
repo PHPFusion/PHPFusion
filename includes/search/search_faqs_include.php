@@ -60,4 +60,3 @@ if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-?>

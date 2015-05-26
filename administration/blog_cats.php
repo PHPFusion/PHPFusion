@@ -173,4 +173,3 @@ if ($rows != 0) {
 echo "<div style='text-align:center'><br />\n<a class='btn btn-primary' href='".ADMIN."images.php".$aidlink."&amp;ifolder=imagesbc'>".$locale['436']."</a><br /><br />\n</div>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

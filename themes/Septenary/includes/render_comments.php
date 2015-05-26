@@ -56,4 +56,3 @@ function render_comments($c_data, $c_info) {
 		echo "<div class='nocomments-message spacer'>".$locale['c101']."</div>\n";
 	}
 }
-?>

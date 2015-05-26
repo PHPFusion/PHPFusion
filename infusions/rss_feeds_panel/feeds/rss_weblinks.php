@@ -61,4 +61,3 @@ if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
 	}
 	echo "</channel></rss>";
 }
-?>

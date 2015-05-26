@@ -83,4 +83,3 @@ $locale['520'] = "%s yra išjungti visiems dalykams.<br />Šis nustatymas pradė
 $locale['521'] = "Komentarai";
 $locale['522'] = "Reitingai";
 $locale['523'] = $locale['521']." ir ".$locale['522'];
-?>

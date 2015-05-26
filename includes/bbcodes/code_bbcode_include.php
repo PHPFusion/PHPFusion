@@ -44,4 +44,4 @@ for ($i=0; $i < $code_count; $i++) {
 		$text = preg_replace("#\[code\](.*?)\[/code\]#sie", "'<div class=\'code_bbcode\'><div class=\'tbl-border tbl2 tbl-code\'><strong/>".$locale['bb_code_code']."</strong>".$code_save."</div><div class=\'tbl-border tbl1\' style=\'width:100%;white-space:nowrap;overflow:auto\'><pre class=\'prettyprint linenums\' style=\'white-space:nowrap\'/>'.formatcode('\\1').'</pre></div></div>'", $text, 1);
 	}
 }
-?>
+

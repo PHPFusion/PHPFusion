@@ -49,4 +49,3 @@ function closeside() {
 	}
 	echo "</div>";
 }
-?>

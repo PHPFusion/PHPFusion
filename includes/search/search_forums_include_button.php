@@ -47,4 +47,3 @@ $form_elements['forums']['display'] = array();
 $form_elements['forums']['nodisplay'] = array();
 $radio_button['forums'] = "<label><input type='radio' name='stype' value='forums'".($_GET['stype'] == "forums" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['f400']."</label> ".$forum_list;
 
-?>

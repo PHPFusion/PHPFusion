@@ -17,4 +17,3 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $text = preg_replace('#\[small2\](.*?)\[/small2\]#si', '<span class=\'small2\'>\1</span>', $text);
-?>

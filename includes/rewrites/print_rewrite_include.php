@@ -21,4 +21,3 @@ $regex = array("%item_id%" => "([0-9]+)",
 			   "%item_type%" => "([N|A])");
 
 $pattern = array("print-document/%item_type%/%item_id%" => "print.php?type=%item_type%&amp;item_id=%item_id%");
-?>

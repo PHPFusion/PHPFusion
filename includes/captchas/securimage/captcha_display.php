@@ -25,4 +25,3 @@ echo "<img src='".INCLUDES."captchas/securimage/images/audio_icon.gif' alt='' al
 echo "<a href='#' onclick=\"document.getElementById('captcha').src = '".INCLUDES."captchas/securimage/securimage_show.php?sid=' + Math.random(); return false\">";
 echo "<img src='".INCLUDES."captchas/securimage/images/refresh.gif' alt='' align='bottom' class='tbl-border' /></a>\n";
 echo "</div>\n";
-?>

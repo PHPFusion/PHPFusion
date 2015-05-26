@@ -19,4 +19,3 @@ $locale['116'] = "Delete";
 $locale['117'] = "Options";
 $locale['118'] = "All entries older than %d days are deleted.";
 $locale['119'] = "User log entry deleted";
-?>

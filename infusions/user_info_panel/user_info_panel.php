@@ -141,4 +141,4 @@ echo $locale['global_106']."\n</div>\n";
 closeside();
 	}
 }
-?>
+

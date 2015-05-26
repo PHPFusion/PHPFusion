@@ -72,4 +72,3 @@ if ($_GET['stype'] == "blog" || $_GET['stype'] == "all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-?>

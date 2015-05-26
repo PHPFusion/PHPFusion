@@ -109,4 +109,3 @@ $locale['531'] = 'Išjungti';
 $locale['560'] = "Nėra priskirtų forumo kategorijų";
 $locale['561'] = "Nėra priskirtų forumų";
 $locale['562'] = "Atnaujinti forumų tvarką";
-?>

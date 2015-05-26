@@ -1012,5 +1012,5 @@ $ESHPCLRS['132'] = "Hvid";
 $ESHPCLRS['133'] = "Rødhvid";
 $ESHPCLRS['134'] = "Gul";
 $ESHPCLRS['135'] = "Grøngul";
-?>
+
 

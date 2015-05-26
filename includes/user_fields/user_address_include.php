@@ -34,4 +34,3 @@ elseif ($profile_method == "display") {
 	}
 	$user_fields = array('title'=>$locale['uf_address'], 'value'=>$field_value);
 }
-?>

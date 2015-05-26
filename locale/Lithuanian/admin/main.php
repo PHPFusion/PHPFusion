@@ -113,4 +113,3 @@ $locale['282'] = "Keisti kalbą";
 $locale['283'] = "Infusions"; // translate these three lines
 $locale['284'] = "There are no infusions installed";
 $locale['285'] = "Manage Infusions";
-?>

@@ -22,4 +22,3 @@ $locale['450'] = "Skal denne nyhedskategori slettes?";
 // Error Messages
 $locale['460'] = "Der skal angives et kategorinavn.";
 $locale['461'] = "Denne kategori eksisterer allerede.";
-?>

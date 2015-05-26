@@ -44,4 +44,3 @@ $locale['470'] = "Slet Admin";
 $locale['471'] = "For at kunne fjerne denne Administrator, skal du indtaste dit admin kodeord:";
 $locale['472'] = "Bekræft";
 $locale['473'] = "Fortryd";
-?>

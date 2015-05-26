@@ -9,4 +9,3 @@ $filename_locale['members.php'] = "Користувачі";
 $filename_locale['news.php'] = "Новини";
 $filename_locale['photos.php'] = "Фотогалерея";
 $filename_locale['weblinks.php'] = "Посилання";
-?>

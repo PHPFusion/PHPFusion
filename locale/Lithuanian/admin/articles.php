@@ -80,4 +80,3 @@ $locale['articles_0350'] = "Ištrinti šią straipsnių kategoriją?";
 // Error Messages
 $locale['articles_0351'] = "Prašom įvesti kategorijos pavadinimą.";
 $locale['articles_0352'] = "Tokia kategorija jau yra sukurta.";
-?>

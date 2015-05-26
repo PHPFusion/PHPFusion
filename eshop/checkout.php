@@ -253,4 +253,3 @@ echo "<div class='clear'></div>";
 
 closetable();
 require_once THEMES."templates/footer.php";
-?>

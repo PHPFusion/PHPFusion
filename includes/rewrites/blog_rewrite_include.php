@@ -36,4 +36,3 @@ $alias_pattern = array("blogs/%alias%" => "%alias_target%",
 $dbname = DB_BLOG;
 $dbid = array("%blog_id%" => "blog_id");
 $dbinfo = array("%blog_title%" => "blog_subject", "%blog_start%" => "blog_start");
-?>

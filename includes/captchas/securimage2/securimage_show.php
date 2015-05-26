@@ -83,4 +83,3 @@ $img->signature_font = "./ttf_fonts/AHGBold.ttf";
 $img->signature_color = new Securimage_Color("#000");
 $img->show();
 
-?>

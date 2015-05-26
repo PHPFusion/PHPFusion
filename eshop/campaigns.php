@@ -67,4 +67,4 @@ dbquery("UPDATE ".DB_ESHOP_CART." SET puid = '".$userdata['user_id']."' WHERE pu
 //Sanitize the cart from 1 month old orders.
 dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE cadded < ".time()."-2592180");
 require_once THEMES."templates/footer.php";
-?>
+

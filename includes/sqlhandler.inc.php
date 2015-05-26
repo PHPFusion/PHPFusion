@@ -800,4 +800,3 @@ function search_field($columns, $text) {
 	return $condition;
 }
 
-?>

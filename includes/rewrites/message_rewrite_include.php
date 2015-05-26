@@ -25,4 +25,3 @@ $pattern = array("message" => "messages.php",
 				 "message/%msg_send%/send" => "messages.php?msg_send=%msg_send%",
 				 "message/%folder%" => "messages.php?folder=%folder%",
 				 "message/%folder%/%msg_read%" => "messages.php?folder=%folder%&amp;msg_read=%msg_read%");
-?>

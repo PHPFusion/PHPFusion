@@ -158,4 +158,4 @@ Regards,
 ".fusion_get_settings('siteusername')."
 ".fusion_get_settings('sitename');
 
-?>
+

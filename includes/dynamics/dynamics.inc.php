@@ -81,4 +81,3 @@ function load_tablesorter($id) {
 	return "tablesorter";
 }
 
-?>

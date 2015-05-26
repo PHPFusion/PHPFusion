@@ -25,4 +25,3 @@ $pattern = array("pages/%cp_id%/%cp_title%" => "viewpage.php?page_id=%cp_id%",);
 $dbname = DB_CUSTOM_PAGES;
 $dbid = array("%cp_id%" => "page_id");
 $dbinfo = array("%cp_title%" => "page_title");
-?>

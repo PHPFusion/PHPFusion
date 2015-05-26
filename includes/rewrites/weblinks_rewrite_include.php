@@ -26,4 +26,3 @@ $pattern = array("weblink/%weblink_id%/%weblink_name%" => "weblinks.php?cat_id=%
 $dbname = DB_WEBLINKS;
 $dbid = array("%weblink_id%" => "weblink_id");
 $dbinfo = array("%weblink_name%" => "weblink_name", "%weblink_cat_id%" => "weblink_cat");
-?>

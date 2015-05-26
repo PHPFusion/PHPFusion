@@ -30,4 +30,3 @@ $locale['442'] = "Not writeable";
 //PHPinfo
 $locale['450'] = "Details";
 $locale['451'] = "Unable to get data. Check if phpinfo() function is switched off?";
-?>

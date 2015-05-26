@@ -352,4 +352,3 @@ $locale['error-MP003'] = "No posts to move.";
 $locale['success-DP001'] = "Post removed successfully";
 $locale['success-DP002'] = "All Post deleted. Forum threads have been removed because it no longer contains any post.";
 $locale['error-DP001'] = "No posts to be removed.";
-?>

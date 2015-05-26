@@ -18,4 +18,3 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 $permalink_name = $locale['pl_search_title'];
 $permalink_desc = $locale['pl_search_desc'];
-?>

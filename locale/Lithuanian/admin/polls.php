@@ -26,4 +26,3 @@ $locale['438'] = "Išsaugoti apklausą";
 $locale['439'] = "Neapibūdinta";
 $locale['439a'] = "Prašom įvesti apklausos pavadinimą";
 $locale['439b'] = "Būtina įvesti bent 1 atsakymo variantą";
-?>

@@ -1073,4 +1073,3 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 echo "</div>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

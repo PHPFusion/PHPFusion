@@ -4,4 +4,4 @@ $locale['bb_search_usage'] = "Tekstas paieškai";
 $locale['bb_search_prefix'] = "Ieškoti ";
 $locale['bb_search_suffix'] = " ";
 $locale['bb_search_where'] = "Kur";
-?>
+

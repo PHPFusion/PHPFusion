@@ -23,4 +23,3 @@ function form_para($title, $id, $class = 'underline', array $options = array()) 
 	return $html;
 }
 
-?>

@@ -190,4 +190,3 @@ function setNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
 	}
 	});
  */
-?>

@@ -52,4 +52,3 @@ $locale['457'] = "Please specify keywords";
 $locale['left'] = "Left";
 $locale['center'] = "Center";
 $locale['right'] = "Right";
-?>

@@ -103,4 +103,3 @@ if (!function_exists('render_favicons')) {
 }
 
 
-?>

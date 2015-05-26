@@ -14,4 +14,3 @@ if (checkrights("SL") && defined("iAUTH") && $aid == iAUTH) {
 		echo json_encode($data);
 	}
 }
-?>

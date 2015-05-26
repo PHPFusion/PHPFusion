@@ -102,4 +102,3 @@ $locale['700'] = "Photo album updated";
 $locale['701'] = "Photo album created";
 $locale['702'] = "Photo uploaded";
 $locale['703'] = "Photo updated";
-?>

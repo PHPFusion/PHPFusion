@@ -14,4 +14,3 @@ $locale['431'] = "Trinti";
 $locale['432'] = "Vartotojo IP:";
 $locale['433'] = "Trinti komentarą?";
 $locale['434'] = "Komentarų nėra.";
-?>

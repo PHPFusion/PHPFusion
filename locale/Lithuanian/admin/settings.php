@@ -324,4 +324,4 @@ $locale['ipp_settings'] = 'Items Per Page Settings';
 $locale['photo_settings'] = 'Photo Settings';
 $locale['main_settings'] = 'Main Settings';
 $locale['misc_settings'] = 'Miscellaneous Settings';
-?>
+

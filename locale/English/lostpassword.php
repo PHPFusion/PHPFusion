@@ -22,4 +22,3 @@ Your new password to access your ".fusion_get_settings('sitename')." account is:
 Regards,
 ".fusion_get_settings('siteusername');
 $locale['412'] = "There was an error, please try again.";
-?>

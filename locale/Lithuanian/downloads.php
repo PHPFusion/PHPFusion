@@ -60,4 +60,3 @@ $locale['461'] = "Atsisiųsti";
 $locale['462'] = "Siuntinio informacija";
 $locale['463'] = "Būkite pirmas įvertinęs šį siuntinį";
 $locale['464'] = "Apsilankyti tinklapyje";
-?>

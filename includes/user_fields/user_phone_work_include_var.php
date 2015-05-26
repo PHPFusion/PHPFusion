@@ -24,4 +24,3 @@ $user_field_desc = $locale['uf_phone_work_desc'];
 $user_field_dbname = "user_phone_work";
 $user_field_group = 2;
 $user_field_dbinfo = "VARCHAR(20) NOT NULL DEFAULT ''";
-?>

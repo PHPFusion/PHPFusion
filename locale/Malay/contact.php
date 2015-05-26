@@ -23,4 +23,4 @@ $locale['440'] = "Mesej berjaya dihantarkan";
 $locale['441'] = "Terima Kasih";
 $locale['442'] = "Mesej anda tidak dihantar oleh sebab-sebab berikut:";
 $locale['443'] = "Sila cuba sekali lagi.";
-?>
+

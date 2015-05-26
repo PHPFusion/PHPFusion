@@ -38,4 +38,3 @@ if ($_GET['stype'] == "members" || $_GET['stype'] == "all") {
 		$items_count .= THEME_BULLET."&nbsp;0 <span class='small'>(".$locale['m403'].")</span><br />\n";
 	}
 }
-?>

@@ -26,4 +26,3 @@ $locale['438'] = "Gem afstemning";
 $locale['439'] = "Udefineret";
 $locale['439a'] = "Din afstemning skal have en overskrift";
 $locale['439b'] = "Du skal indskrive mindst et svaralternativ";
-?>

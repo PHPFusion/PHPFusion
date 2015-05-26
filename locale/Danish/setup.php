@@ -317,4 +317,4 @@ $locale['polls']['description'] = "Et system til oprettelse af brugerafstemninge
 $locale['weblinks']['title'] = "Links";
 $locale['weblinks']['description'] = "Et system til håndtering af links.";
 $locale['install'] = "Installer systemet";
-?>
+

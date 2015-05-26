@@ -81,4 +81,3 @@ echo "</div>\n";
 }
 closetable();
 }
-?>

@@ -98,4 +98,3 @@ echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='".($settin
 closetable();
 
 require_once THEMES."templates/footer.php";
-?>

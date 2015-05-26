@@ -26,4 +26,3 @@ $locale['preview'] = "Peržiūrėti";
 $locale['word_count'] = "Simbolių kiekis";
 $locale['error_preview'] = "Peržiūros klaida";
 $locale['error_preview_text'] = "Peržiūros vaizdas laikinai negali būti rodomas. Prašom perkrauti puslapį ir bandyti dar kartą.";
-?>

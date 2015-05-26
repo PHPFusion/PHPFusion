@@ -160,4 +160,3 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 	return $html;
 }
 
-?>

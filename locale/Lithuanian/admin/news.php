@@ -76,4 +76,3 @@ $locale['news_0350'] = "Ištrinti šią naujienų kategoriją?";
 $locale['news_0351'] = "Prašom įvesti kategorijos pavadinimą.";
 $locale['news_0352'] = "Tokia kategorija jau yra sukurta.";
 
-?>

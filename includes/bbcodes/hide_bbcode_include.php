@@ -21,4 +21,3 @@ if (iADMIN) {
 } else {
 	$text = preg_replace('#\[hide\](.*?)\[/hide\]#si', '', $text);
 }
-?>

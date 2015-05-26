@@ -753,4 +753,3 @@ if ($buttonMode) {
 }
 
 closesetup();
-?>

@@ -111,4 +111,3 @@ $locale['282'] = "Skift sprog";
 $locale['283'] = "Infusioner";
 $locale['284'] = "Der er endnu ikke installeret nogen infusioner";
 $locale['285'] = "Administrer infusioner";
-?>

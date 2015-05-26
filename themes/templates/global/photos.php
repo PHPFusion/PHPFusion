@@ -207,4 +207,3 @@ if (!function_exists('render_photo')) {
 		closetable();
 	}
 }
-?>

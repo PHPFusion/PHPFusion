@@ -122,4 +122,3 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	render_articles_category($info);
 }
 require_once THEMES."templates/footer.php";
-?>

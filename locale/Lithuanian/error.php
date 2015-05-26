@@ -5,4 +5,4 @@ $locale['err404'] = "Šis puslapis nerastas!";
 $locale['err500'] = "Vidinė serverio klaida!";
 $locale['errunk'] = "Nežinoma klaida";
 $locale['errret'] = "Grįžti į pradinį puslapį";
-?>
+

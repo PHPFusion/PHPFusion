@@ -200,4 +200,3 @@ if (iMEMBER){
 
 require_once THEMES."templates/footer.php";
 
-?>

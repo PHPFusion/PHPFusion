@@ -58,4 +58,3 @@ function form_hidden($title, $input_name, $input_id, $input_value, array $option
 	return $html;
 }
 
-?>

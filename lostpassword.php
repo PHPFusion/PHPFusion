@@ -36,4 +36,3 @@ if (isset($_GET['user_email']) && isset($_GET['account'])) {
 }
 closetable();
 require_once THEMES."templates/footer.php";
-?>

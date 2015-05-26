@@ -19,4 +19,3 @@ $locale['116'] = "Ištrinti";
 $locale['117'] = "Nustatymai";
 $locale['118'] = "Visi įrašai senesni nei %d dienų yra ištrinti.";
 $locale['119'] = "Vartotojų žurnalo įrašas ištrintas";
-?>

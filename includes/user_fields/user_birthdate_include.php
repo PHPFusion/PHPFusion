@@ -38,4 +38,3 @@ if ($profile_method == "input") {
 		$user_fields = array('title'=>$locale['uf_birthdate'], 'value'=>$locale['na']);
 	}
 }
-?>

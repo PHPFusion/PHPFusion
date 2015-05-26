@@ -5,4 +5,4 @@ $locale['pl_tags_001'] = "Emnets ID.";
 $locale['pl_tags_002'] = "Emnets overskrift.";
 $locale['pl_tags_003'] = "ID for indlæg i debatten.";
 $locale['pl_tags_004'] = "Værdien af startrækken i emnet.";
-?>
+

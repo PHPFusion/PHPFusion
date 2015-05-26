@@ -341,4 +341,3 @@ if (count($available_rewrites) != count($enabled_rewrites)) {
 echo "</tbody>\n</table>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

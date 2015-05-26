@@ -207,4 +207,4 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 } else {
 	redirect("index.php");
 }
-?>
+

@@ -429,4 +429,3 @@ public static function set_forumIcons(array $icons = array()) {
 	);
 }
 }
-?>

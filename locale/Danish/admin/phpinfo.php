@@ -32,4 +32,3 @@ $locale['442'] = "Ikke skrivbar";
 //PHPinfo
 $locale['450'] = "Detaljer";
 $locale['451'] = "Ude af stand til at hente data. Se efter om funktionen phpinfo() er slÃ¥et fra?";
-?>

@@ -38,4 +38,3 @@ if (dbrows($user_query) > 0) {
 } else {
 	echo $locale['uf_blacklist_006'];
 }
-?>

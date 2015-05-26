@@ -248,4 +248,3 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("INSERT INTO ".$db_prefix."panels (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '2', 'file', '0', '0', '0', '')");
 	if (!$result) $fail = TRUE;
 }
-?>

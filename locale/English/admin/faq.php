@@ -38,4 +38,3 @@ $locale['547'] = "Delete this FAQ?";
 $locale['460'] = "Please enter a category name.";
 $locale['461'] = "This category already exists.";
 $locale['462'] = "Please enter a faq question and faq answer.";
-?>

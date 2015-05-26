@@ -239,4 +239,3 @@ function makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname
 	return $html;
 }
 
-?>

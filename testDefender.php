@@ -143,4 +143,3 @@ var_dump($_SESSION['csrf_tokens']['form']);
 
 closetable();
 require_once THEMES."templates/footer.php";
-?>

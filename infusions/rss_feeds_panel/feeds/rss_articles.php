@@ -60,4 +60,3 @@ if (db_exists(DB_ARTICLES) && db_exists(DB_ARTICLE_CATS)) {
 	}
 	echo "</channel></rss>";
 }
-?>

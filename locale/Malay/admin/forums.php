@@ -115,4 +115,3 @@ $locale['531'] = 'Tutup';
 $locale['560'] = "Tidak ada Kategori Forum didapati";
 $locale['561'] = "Tidak ada Forum didapati";
 $locale['562'] = "Kemaskinikan Susunan Forum";
-?>

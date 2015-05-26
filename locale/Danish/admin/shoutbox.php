@@ -22,4 +22,3 @@ $locale['443'] = "Der er ikke skrevet replikker.";
 // Popup Error/Warning Messages
 $locale['450'] = "Skal replikkerne slettes?";
 $locale['451'] = "Skal denne replik slettes?";
-?>

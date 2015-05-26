@@ -129,4 +129,3 @@ $locale['theme_error_008'] = "Compiler error. Theme was not updated.";
 
 
 
-?>

@@ -14,4 +14,4 @@ $locale['600'] = "Syarat Syarat Pengunaan";
 $locale['601'] = "Dikemaskinikan pada:";
 $locale['700'] = "Polisi Privasi";
 
-?>
+

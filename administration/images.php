@@ -121,4 +121,3 @@ if (isset($_GET['del']) && in_array($_GET['del'], $image_list)) {
 	}
 }
 require_once THEMES."templates/footer.php";
-?>

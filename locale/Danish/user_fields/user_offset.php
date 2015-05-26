@@ -34,4 +34,3 @@ $locale['offset_p0950'] = "(GMT +9:30) Adelaide, Darwin";
 $locale['offset_p1000'] = "(GMT +10:00) Eastern Australia, Guam, Vladivostok";
 $locale['offset_p1100'] = "(GMT +11:00) Magadan, Solomon Islands, New Caledonia";
 $locale['offset_p1200'] = "(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka";
-?>

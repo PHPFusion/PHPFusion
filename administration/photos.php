@@ -903,4 +903,4 @@ if (function_exists('gd_info')) {
 
 
 require_once THEMES."templates/footer.php";
-?>
+

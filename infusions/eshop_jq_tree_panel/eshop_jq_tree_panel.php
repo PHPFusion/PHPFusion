@@ -78,4 +78,3 @@ createTreeView($arrayCategories, 0);
 echo "</div>";
 
 closeside();
-?>

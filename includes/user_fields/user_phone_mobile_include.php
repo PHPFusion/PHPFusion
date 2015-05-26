@@ -25,4 +25,3 @@ if ($profile_method == "input") {
 		$user_fields = array('title'=>$locale['uf_phone_mobile'], 'value'=>$field_value);
 	}
 }
-?>

@@ -137,4 +137,3 @@ $locale['660'] = "%s yra išjungti visiems dalykams.<br />Šis nustatymas pradė
 $locale['661'] = "Komentarai";
 $locale['662'] = "Reitingai";
 $locale['663'] = $locale['661']." ir ".$locale['662'];
-?>

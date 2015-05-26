@@ -82,4 +82,3 @@ $locale['603'] = "Brugte elementer";
 $locale['604'] = "Elementer";
 $locale['605'] = "Element";
 $locale['606'] = "Sidens indhold";
-?>

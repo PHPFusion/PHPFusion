@@ -16,4 +16,3 @@ $locale['r121'] = "Labai gerai";
 $locale['r122'] = "Gerai";
 $locale['r123'] = "Patenkinamai";
 $locale['r124'] = "Blogai";
-?>

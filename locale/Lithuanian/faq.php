@@ -5,4 +5,3 @@ $locale['402'] = "Top";
 // Notices
 $locale['410'] = "Nėra DUK kategorijų.";
 $locale['411'] = "Nėra klausimų.";
-?>

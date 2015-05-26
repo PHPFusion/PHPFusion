@@ -45,4 +45,3 @@ $locale['521'] = "sutapimai";
 $locale['522'] = "rastas sutapimas";
 //more than 100 results
 $locale['530'] = "Būkite detalesni paieškoje. Jūsų paieška rado %s sutapimus. Daugiausiai galima rodyti 100 sutapimų.";
-?>

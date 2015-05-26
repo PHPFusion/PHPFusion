@@ -45,4 +45,4 @@ $locale['521'] = "kecocokan";
 $locale['522'] = "ditemukan kriteria kecocokan pencarian";
 //more than 100 results
 $locale['530'] = "Sila menggunakan teks pencarian lebih telus dan jelas. Permintaan anda menemukan %s hasil. Sistem menampilkan hanya 100 hasil utama";
-?>
+

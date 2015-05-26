@@ -65,4 +65,3 @@ if (!defined('T_CLONE')) {
 	define('T_CLONE', -1);
 }
 
-?>

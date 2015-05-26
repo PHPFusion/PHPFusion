@@ -27,4 +27,3 @@ $dir_path = BASEDIR;
 $dbname = DB_WEBLINK_CATS;
 $dbid = array("%weblinks_cat_id%" => "weblink_cat_id");
 $dbinfo = array("%weblink_cat_name%" => "weblink_cat_name");
-?>

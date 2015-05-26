@@ -123,4 +123,3 @@ $locale['693'] = "Filstørrelse:";
 $locale['694'] = "Maksimal filstørrelse: %s / Tilladte filtyper: %s";
 $locale['694b'] = "Maksimal filstørrelse: %s / Tilladte filtyper: %s / Maksimal bredde: %spx, Maksimal højde: %spx";
 $locale['695'] = "Foreslå download";
-?>

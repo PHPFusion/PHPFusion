@@ -102,4 +102,3 @@ function form_antibot($title = FALSE, $input_name, $input_id, $input_value = FAL
 	return $html;
 }
 
-?>

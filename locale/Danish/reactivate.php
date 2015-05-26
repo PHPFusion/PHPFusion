@@ -15,4 +15,3 @@ Din brugerkonto på ".$settings['sitename']." er blevet genaktiveret. Vi håber 
 Med venlig hilsen\n\n
 ".$settings['siteusername'];
 $locale['506'] = "Genaktiveret af bruger.";
-?>

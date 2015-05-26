@@ -194,4 +194,3 @@ if (!function_exists('display_download_menu')) {
 		return $str;
 	}
 }
-?>

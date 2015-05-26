@@ -35,4 +35,3 @@ if ($profile_method == "input") {
 		$user_fields = array('title'=>$locale['uf_skype'], 'value'=>$field_value);
 	}
 }
-?>

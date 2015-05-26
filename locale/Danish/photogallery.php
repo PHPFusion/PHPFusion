@@ -40,4 +40,3 @@ $locale['461'] = "Billede";
 $locale['462'] = "Billeder";
 $locale['463'] = "Redaktør";
 $locale['464'] = "Tilføjelsesdato:";
-?>

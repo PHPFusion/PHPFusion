@@ -470,4 +470,3 @@ $locale['fmt_week'] = "неделя|недели|недель";
 $locale['fmt_year'] = "год|года|лет";
 
 include __DIR__."/defender.php";
-?>

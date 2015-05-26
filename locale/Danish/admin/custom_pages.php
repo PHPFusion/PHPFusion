@@ -44,4 +44,3 @@ $locale['457'] = $locale['455']." and ".$locale['456'];
 $locale['460'] = "TinyMCE:";
 $locale['461'] = "Slå til";
 $locale['462'] = "Slå fra";
-?>

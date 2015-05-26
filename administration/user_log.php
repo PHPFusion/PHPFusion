@@ -179,4 +179,3 @@ echo "</tbody>\n</table>\n";
 echo "</form>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

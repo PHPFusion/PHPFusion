@@ -23,4 +23,3 @@ if (iADMIN) {
 } else {
 	$__BBCODE_NOT_QUOTABLE__[] = "hide";
 }
-?>

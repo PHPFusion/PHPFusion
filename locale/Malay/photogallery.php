@@ -34,4 +34,3 @@ $locale['457'] = "Dilihat: ";
 $locale['458'] = "Klik untuk menutup";
 $locale['459'] = "Gambar Pertama";
 $locale['460'] = "Gambar Terakhir";
-?>

@@ -110,4 +110,4 @@ $locale['629'] = "Anda tidak dapat memindah pesan terpilih ke folder tujuan kare
 $locale['630'] = " Batasan Mesej";
 $locale['631'] = "Ya";
 $locale['632'] = "Tidak";
-?>
+

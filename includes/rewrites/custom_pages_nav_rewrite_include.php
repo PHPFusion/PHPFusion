@@ -23,4 +23,3 @@ $regex = array("%page_id%" => "([0-9]+)",
 
 $pattern = array("pages/browse/%page_id%/%rowstart%" => "viewpage.php?page_id=%page_id%&amp;rowstart=%rowstart%",
 				 "pages/comments/%page_id%/%c_start%" => "viewpage.php?page_id=%page_id%&amp;c_start=%c_start%");
-?>

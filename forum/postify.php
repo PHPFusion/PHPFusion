@@ -208,4 +208,3 @@ if ($_GET['post'] == "edit") {
 }
 
 require_once THEMES."templates/footer.php";
-?>

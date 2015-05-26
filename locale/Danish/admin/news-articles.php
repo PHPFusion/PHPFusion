@@ -94,4 +94,4 @@ $locale['521'] = " for at springe til artikelkategorier";
 $locale['550'] = "Du skal angive en overskrift";
 $locale['551'] = "Skal denne nyhed slettes?";
 $locale['552'] = "Skal denne artikel slettes?";
-?>
+

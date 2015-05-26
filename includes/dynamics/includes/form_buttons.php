@@ -100,4 +100,3 @@ function form_btngroup($input_name, $label = "", array $opts = array(), $input_v
 	return $html;
 }
 
-?>

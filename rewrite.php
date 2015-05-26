@@ -66,4 +66,3 @@ if ($filepath != "") {
 if (!defined("FUSION_SELF")) {
 	define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 }
-?>

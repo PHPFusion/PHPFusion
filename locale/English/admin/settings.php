@@ -342,4 +342,4 @@ $locale['security_settings'] = 'Security Settings';
 $locale['time_settings'] = 'Time Date Settings';
 $locale['user_settings'] = 'User Management Settings';
 
-?>
+

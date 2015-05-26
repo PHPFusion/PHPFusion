@@ -52,4 +52,3 @@ $locale['457'] = "Du skal angive nøgleord";
 $locale['left'] = "Venstre";
 $locale['center'] = "Midter stillet";
 $locale['right'] = "Højre";
-?>

@@ -24,4 +24,4 @@ $locale['440'] = "Your Message has been sent";
 $locale['441'] = "Thank You";
 $locale['442'] = "Your message was not sent for the following reason(s):";
 $locale['443'] = "Please try again.";
-?>
+

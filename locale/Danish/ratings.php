@@ -18,4 +18,3 @@ $locale['r121'] = "Rigtigt godt";
 $locale['r122'] = "Godt";
 $locale['r123'] = "Hverken godt eller dårligt";
 $locale['r124'] = "Dårligt";
-?>

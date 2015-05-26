@@ -24,4 +24,3 @@ $user_field_desc = $locale['uf_web_desc'];
 $user_field_dbname = "user_web";
 $user_field_group = 1;
 $user_field_dbinfo = "VARCHAR(200) NOT NULL DEFAULT ''";
-?>

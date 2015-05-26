@@ -50,4 +50,4 @@ $__BBCODE__[] = array('description' => $locale['bb_search_description'], 'value'
 					  'includejscript' => "", 'calljscript' => "",
 					  'phpfunction' => "echo generate_search_opts('".$textarea_name."', '".$inputform_name."');",
 					  'html_middle' => "", 'html_end' => "</div>");
-?>
+

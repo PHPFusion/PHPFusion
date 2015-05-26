@@ -336,4 +336,3 @@ $locale['forum_p090'] = '3 mėnesiai';
 $locale['forum_p180'] = '6 mėnesiai';
 $locale['forum_p365'] = '1 metai';
 $locale['forum_p999'] = "Visi rezultatai";
-?>

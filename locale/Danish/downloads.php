@@ -29,4 +29,3 @@ $locale['download_3000'] = "Der er ikke tilføjet downloads endnu";
 $locale['download_3001'] = "Ingen kategori";
 $locale['download_3002'] = "Ingen forfatter";
 $locale['download_3003'] = "Vær den første til at vurdere denne download";
-?>

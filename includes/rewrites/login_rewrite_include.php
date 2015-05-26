@@ -21,4 +21,3 @@ $pattern = array("login-to-website" => "login.php", "edit-profile" => "edit_prof
 				 "website-members" => "members.php", "private-messages" => "messages.php",
 				 "logout-from-website" => "index.php?logout=yes",
 			     "home" => "index.php");
-?>

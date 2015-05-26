@@ -25,4 +25,3 @@ $regex = array("%album_id%" => "([0-9]+)",
 $pattern = array("gallery/browse/%rowstart%" => "photogallery.php?rowstart=%rowstart%",
  				 "gallery/browse/%album_id%/%rowstart%" => "photogallery.php?album_id=%album_id%&amp;rowstart=%rowstart%",
 				 "photo/browse/%photo_id%/%c_start%" => "photogallery.php?photo_id=%album_id%&amp;c_start=%c_start%");
-?>

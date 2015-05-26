@@ -25,4 +25,3 @@ $pattern = array("profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id
 $dbname = DB_USERS;
 $dbid = array("%user_id%" => "user_id");
 $dbinfo = array("%user_name%" => "user_name");
-?>

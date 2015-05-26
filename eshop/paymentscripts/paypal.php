@@ -125,4 +125,3 @@ echo "</form>";
 echo '<script type="text/javascript">';
 echo 'window.onload = function(){document.cart.submit()}';
 echo '</script>';
-?>

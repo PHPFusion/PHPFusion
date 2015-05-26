@@ -347,4 +347,3 @@ $locale['error-MP003'] = "Der er ingen indlæg, som kan flyttes.";
 $locale['success-DP001'] = "Indlæggene er flyttet";
 $locale['success-DP002'] = "Alle indlæg under emnet er flyttet. Emnet er blevet flyttet, fordi det ikke længere indeholder indlæg.";
 $locale['error-DP001'] = "Der er ingen indlæg, som kan flyttes.";
-?>

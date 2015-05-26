@@ -166,4 +166,3 @@ $locale['u203'] = "Вітаємо, [USER_NAME]!\n
 З повагою,
 ".fusion_get_settings('siteusername')."
 ".fusion_get_settings('sitename');
-?>

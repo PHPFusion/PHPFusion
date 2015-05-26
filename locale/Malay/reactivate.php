@@ -15,4 +15,4 @@ Akan anda di ".fusion_get_settings('sitename')." telah diaktifkan. Kami berharap
 Sekian,\n\n
 ".fusion_get_settings('siteusername');
 $locale['506'] = "Diaktifkan oleh User.";
-?>
+

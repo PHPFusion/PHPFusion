@@ -9,4 +9,4 @@ $locale['406'] = "Tidak didaftarkan kepada apa-apa kumpulan User";
 $locale['407'] = "Akses ke Kumpulan User";
 $locale['408'] = "Semakan Keahlian:";
 $locale['409'] = "Cari";
-?>
+

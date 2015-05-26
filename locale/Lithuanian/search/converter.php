@@ -9,4 +9,3 @@ $filename_locale['members.php'] = "Nariai";
 $filename_locale['news.php'] = "Naujienos";
 $filename_locale['photos.php'] = "Nuotraukų galerija";
 $filename_locale['weblinks.php'] = "Interneto nuorodos";
-?>

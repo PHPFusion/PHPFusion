@@ -22,4 +22,3 @@ $locale['411'] = "Hello [USER_NAME],\n
 С наилучшими пожеланиями,
 ".fusion_get_settings('siteusername');
 $locale['412'] = "Произошла ошибка, пожалуйста, попробуйте снова.";
-?>

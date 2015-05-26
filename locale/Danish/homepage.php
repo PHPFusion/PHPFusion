@@ -25,4 +25,3 @@ $locale['home_0102'] = "Ikke kategoriseret";
 
 $locale['home_0105'] = "Offentliggjort af ";
 $locale['home_0106'] = " i ";
-?>

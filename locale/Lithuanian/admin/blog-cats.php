@@ -22,4 +22,3 @@ $locale['450'] = "Trinti šią kategoriją?";
 // Error Messages
 $locale['460'] = "Prašome įvesti kategorijos pavadinimą.";
 $locale['461'] = "Tokia kategorija jau egzistuoja.";
-?>

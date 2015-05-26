@@ -14,4 +14,4 @@ $locale['600'] = "Terms of Agreement";
 $locale['601'] = "Last updated on:";
 //Privacy Policy
 $locale['700'] = "Privacy Policy";
-?>
+

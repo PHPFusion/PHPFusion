@@ -315,4 +315,3 @@ $locale['polls']['description'] = "Опросы и голосование пол
 $locale['weblinks']['title'] = "Ссылки";
 $locale['weblinks']['description'] = "Каталог ссылок на сайты.";
 $locale['install'] = "Установить ядро";
-?>

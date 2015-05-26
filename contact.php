@@ -112,4 +112,3 @@ echo "</div>\n</div>\n";
 echo closeform();
 closetable();
 require_once THEMES."templates/footer.php";
-?>

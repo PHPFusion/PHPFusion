@@ -113,4 +113,3 @@ echo form_button('save_banners', $locale['854'], $locale['854'], array('class' =
 echo "</td>\n</tr>\n</table>\n</form>\n";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

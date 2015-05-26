@@ -112,4 +112,3 @@ $locale['282'] = "Switch Language";
 $locale['283'] = "Infusions";
 $locale['284'] = "There are no infusions installed";
 $locale['285'] = "Manage Infusions";
-?>

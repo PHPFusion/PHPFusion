@@ -183,4 +183,3 @@ function showcatlist($parent = 0, $level = 0) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

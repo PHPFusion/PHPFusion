@@ -7,4 +7,3 @@ $locale['412'] = "Visits:";
 // Downloads Notices
 $locale['430'] = "No Web Link Categories defined";
 $locale['431'] = "No Web Links have been added to this Category";
-?>

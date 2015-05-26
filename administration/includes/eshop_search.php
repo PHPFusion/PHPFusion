@@ -114,4 +114,3 @@ if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
 		echo "<tr>\n<td class='text-center' colspan='12'>".$locale['ESHPPRO177']."</td>\n</tr>\n";
 	}
 }
-?>

@@ -103,4 +103,3 @@ $locale['download_0350'] = "Ištrinti šią siuntinių kategoriją?";
 // Error Messages
 $locale['download_0351'] = "Prašom įvesti kategorijos pavadinimą.";
 $locale['download_0352'] = "Tokia kategorija jau yra sukurta.";
-?>

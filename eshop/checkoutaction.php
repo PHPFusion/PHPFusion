@@ -144,4 +144,3 @@ echo "".$locale['ESHPCHK133']." ".$shippingtotal." ".$settings['eshop_currency']
 $total = $totalincvat-$discalc+$shippingtotal+$paymentsurcharge;
 echo "".$locale['ESHPCHK134']."".number_format($total, 2)." ".$settings['eshop_currency']."";
 }
-?>

@@ -44,4 +44,3 @@ $locale['420'] = "Virksomt";
 $locale['421'] = "Årsag";
 $locale['422'] = "af";
 $locale['423'] = "Ingen årsag angivet.";
-?>

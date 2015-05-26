@@ -7,4 +7,3 @@ $locale['404'] = "Nėra jokių elementų šioje naujienų kategorijoje.";
 $locale['405'] = "Daugiau";
 $locale['406'] = "Rodyti visas kategorijas";
 $locale['407'] = "Nėra sukurtų naujienų kategorijų";
-?>

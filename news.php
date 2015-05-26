@@ -279,4 +279,3 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 }
 render_main_news($info);
 require_once THEMES."templates/footer.php";
-?>

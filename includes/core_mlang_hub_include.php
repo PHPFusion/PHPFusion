@@ -188,4 +188,3 @@ elseif (preg_match('/weblinks.php/i', $_SERVER['PHP_SELF']) || preg_match('|/web
 	}
 }
 }
-?>

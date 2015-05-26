@@ -18,4 +18,4 @@ $locale['err_101'] = "<strong>ADVARSEL:</strong> Der opstod en fejl i forbindels
 Se i PHP-Fusion's <a href='[ERROR_LOG_URL]'>error log</a> for yderligere detaljer.";
 $locale['err_102'] = "Vis fejlen!";
 // Error Management
-?>
+

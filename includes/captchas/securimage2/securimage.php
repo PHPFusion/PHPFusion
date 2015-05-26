@@ -444,7 +444,7 @@ class Securimage {
 	 *   include 'securimage.php';
 	 *   $securimage = new Securimage();
 	 *   $securimage->show('bg.jpg');
-	 *   ?>
+	 *   
 	 * </code>
 	 * @param string $background_image The path to an image to use as the background for the CAPTCHA
 	 */
@@ -1241,4 +1241,3 @@ class Securimage_Color {
 	}
 }
 
-?>

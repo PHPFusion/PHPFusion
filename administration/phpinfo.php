@@ -116,4 +116,3 @@ echo $navigation;
 echo $phpinfo;
 closetable();
 require_once THEMES."templates/footer.php";
-?>

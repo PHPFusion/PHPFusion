@@ -26,4 +26,3 @@ $dir_path = ROOT;
 $dbname = DB_NEWS_CATS;
 $dbid = array("%news_cat_id%" => "news_cat_id");
 $dbinfo = array("%news_cat_name%" => "news_cat_name");
-?>

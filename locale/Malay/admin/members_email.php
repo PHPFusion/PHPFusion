@@ -37,4 +37,3 @@ Your account on ".fusion_get_settings('sitename')." has been suspended by ".$use
 [REASON].\n
 If you want more information about this suspension, please, contact the site administrator at ".fusion_get_settings('siteemail').".\n
 ".fusion_get_settings('siteusername');
-?>

@@ -104,4 +104,3 @@ jQuery('.quote-link').click(function(e) {
 });/* ]]> */
 </script>");
 }
-?>

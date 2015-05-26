@@ -318,4 +318,3 @@ $locale['polls']['description'] = "Sistem Pengundian Ahli.";
 $locale['weblinks']['title'] = "Link Web";
 $locale['weblinks']['description'] = "Sistem Direktori Link Web";
 $locale['install'] = "Pemasangan Teras";
-?>

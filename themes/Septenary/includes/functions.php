@@ -42,4 +42,3 @@ function theme_output($output) {
 	return $output;
 }
 
-?>

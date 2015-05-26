@@ -40,4 +40,3 @@ $dir = FORUM;
 $dbname = DB_FORUM_THREADS;
 $dbid = array("%thread_id%" => "thread_id");
 $dbinfo = array("%thread_name%" => "thread_subject");
-?>

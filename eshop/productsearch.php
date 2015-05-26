@@ -69,4 +69,3 @@ if ($numRecords > $settings['eshop_nopp']) echo "<div align='center' style='marg
 echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='eshpbutton ".$settings['eshop_return_color']."' href='javascript:history.back(-1)'>&laquo; Return</a></div>";
 closetable();
 require_once THEMES."templates/footer.php";
-?>

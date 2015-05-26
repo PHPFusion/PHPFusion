@@ -23,4 +23,4 @@ $locale['418'] = "Disable smileys in this test";
 $locale['418a'] = "Test Message";
 $locale['418b'] = "Please enter a message to test BBcodes.";
 
-?>
+

@@ -356,4 +356,3 @@ function render_admin_icon() {
 	closetable();
 }
 
-?>

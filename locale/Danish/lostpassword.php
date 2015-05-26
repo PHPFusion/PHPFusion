@@ -22,4 +22,3 @@ Dit nye kodeord til ".$settings['sitename']." er:\n
 Venligst,
 ".$settings['siteusername'];
 $locale['412'] = "Der opstod en fejl. Prøv igen senere.";
-?>

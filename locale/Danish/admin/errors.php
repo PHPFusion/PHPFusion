@@ -24,4 +24,3 @@ $locale['451'] = "Løst";
 $locale['452'] = "Ignoreret";
 $locale['453'] = "Anvend";
 $locale['454'] = "Væsentlighed";
-?>

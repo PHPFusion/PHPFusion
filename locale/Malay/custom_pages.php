@@ -3,4 +3,3 @@ $locale['400'] = "<span style='color:#ff0000;'><b>Kemasukan ditolak</b></span><b
 $locale['401'] = "Kesalahan Pendalaman";
 $locale['402'] = "Tidak dapat memuat isi halaman.";
 $locale['403'] = "Kembali";
-?>

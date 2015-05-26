@@ -219,10 +219,10 @@ class ErrorLogs {
 	public function show_error_logs() {
 		global $aidlink;
 		$locale = $this->locale;
-		?>
+		
 		<div class='row'>
 			<div class='col-xs-12 col-sm-12 col-md-9'>
-				<?php if ($this->errors) : ?>
+				<?php if ($this->errors) : 
 				<a name='top'></a>
 				<table class='table table-responsive center'>
 					<tr>
@@ -232,7 +232,7 @@ class ErrorLogs {
 						<th class='col-xs-4'><?php echo $locale['414'] ?></th>
 					</tr>
 					<?php foreach ($this->errors as $i => $data) {
-					$row_color = ($i%2 == 0 ? "tbl1" : "tbl2"); ?>
+					$row_color = ($i%2 == 0 ? "tbl1" : "tbl2"); 
 					<tr <?php echo "id='rmd-".$data['error_id']."'" ?>>
 						<td class='<?php echo $row_color ?>'>
 							<a href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id'] ?>#file' title='<?php echo stripslashes($data['error_file']) ?>'>
@@ -243,29 +243,29 @@ class ErrorLogs {
 						</td>
 						<td class='<?php echo $row_color ?>'>
 							<div class='btn-group'>
-								<?php echo self::getGitsrc($data['error_file'], $data['error_line']); ?>
+								<?php echo self::getGitsrc($data['error_file'], $data['error_line']); 
 							</div>
 						</td>
 						<td class='<?php echo $row_color ?>'><?php echo self::get_errorTypes($data['error_level']); ?></td>
 						<td class='<?php echo $row_color ?>' style='white-space:nowrap;'>
 							<div <?php echo "id='errgrp-".$data['error_id']."'"; ?>' class='btn-group'>
-							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='0' class='btn <?php echo $data['error_status'] == 0 ? 'active' : '';  ?> e_status_0 button btn-default move_error_log'><?php echo $locale['450'] ?></a>
-							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='1' class='btn <?php echo $data['error_status'] == 1 ? 'active' : '';  ?> e_status_1 button btn-default move_error_log'><?php echo $locale['451'] ?></a>
-							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='2' class='btn <?php echo $data['error_status'] == 2 ? 'active' : '';  ?> e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
-							<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='999' class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'";  data-type='0' class='btn <?php echo $data['error_status'] == 0 ? 'active' : '';   e_status_0 button btn-default move_error_log'><?php echo $locale['450'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'";  data-type='1' class='btn <?php echo $data['error_status'] == 1 ? 'active' : '';   e_status_1 button btn-default move_error_log'><?php echo $locale['451'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'";  data-type='2' class='btn <?php echo $data['error_status'] == 2 ? 'active' : '';   e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
+							<a <?php echo "data-id='".$data['error_id']."'";  data-type='999' class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
 							</div>
 						</td>
 					</tr>
-				<?php } ?>
+				<?php } 
 				</table>
-				<?php else : ?>
+				<?php else : 
 				<div style='text-align:center'><br />
 					<?php echo $locale['418'] ?><br /><br />
 				</div>
 			<?php endif;
-			if ($this->rows > 20) : ?>
+			if ($this->rows > 20) : 
 				<div style='margin-top:5px;text-align:center;'><?php echo makepagenav($this->rowstart, 20, $this->rows, 3, FUSION_SELF.$aidlink."&amp;") ?></div>
-			<?php endif; ?>
+			<?php endif; 
 			</div>
 			<div class='col-xs-12 col-sm-12 col-md-3'>
 				<?php
@@ -275,7 +275,7 @@ class ErrorLogs {
 				echo form_button('delete_entries', $locale['453'], $locale['453'], array('class'=>'btn-primary'));
 				closeside();
 				echo closeform();
-				?>
+				
 			</div>
 		</div>
 		<?php
@@ -288,11 +288,11 @@ class ErrorLogs {
 			echo openform('error_logform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'notice'=>0, 'class'=>'text-right'));
 			echo form_button('delete_all_logs', $locale['delete'], $locale['453'], array('class'=>'btn-block btn-primary', 'icon'=>'fa fa-bitbucket fa-lg m-r-10'));
 			echo closeform();
-			?>
+			
 			<table class='table table-responsive'>
 			<?php foreach ($this->errors as $i => $data) {
 				$row_color = ($i%2 == 0 ? "tbl1" : "tbl2");
-				?>
+				
 				<tr <?php echo "id='rmd-".$data['error_id']."'" ?>>
 					<td class='col-xs-6 <?php echo $row_color ?>'>
 						<a href='<?php echo ADMIN."errors.php".$aidlink."&amp;error_id=".$data['error_id'] ?>#file' title='<?php echo stripslashes($data['error_file']) ?>'>
@@ -303,22 +303,22 @@ class ErrorLogs {
 					</td>
 					<td class='<?php echo $row_color ?>'>
 						<div class='btn-group'>
-							<?php echo self::getGitsrc($data['error_file'], $data['error_line']); ?>
+							<?php echo self::getGitsrc($data['error_file'], $data['error_line']); 
 						</div>
 					</td>
 					<td class='<?php echo $row_color ?>'><?php echo self::get_errorTypes($data['error_level']); ?></td>
 					<td class='<?php echo $row_color ?>' style='white-space:nowrap;'>
 						<div <?php echo "id='errgrp-".$data['error_id']."'"; ?>' class='btn-group'>
-						<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='0' class='btn <?php echo $data['error_status'] == 0 ? 'active' : '';  ?> e_status_0 button btn-default move_error_log'><?php echo $locale['450'] ?></a>
-						<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='1' class='btn <?php echo $data['error_status'] == 1 ? 'active' : '';  ?> e_status_1 button btn-default move_error_log'><?php echo $locale['451'] ?></a>
-						<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='2' class='btn <?php echo $data['error_status'] == 2 ? 'active' : '';  ?> e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
-						<a <?php echo "data-id='".$data['error_id']."'"; ?> data-type='999' class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
+						<a <?php echo "data-id='".$data['error_id']."'";  data-type='0' class='btn <?php echo $data['error_status'] == 0 ? 'active' : '';   e_status_0 button btn-default move_error_log'><?php echo $locale['450'] ?></a>
+						<a <?php echo "data-id='".$data['error_id']."'";  data-type='1' class='btn <?php echo $data['error_status'] == 1 ? 'active' : '';   e_status_1 button btn-default move_error_log'><?php echo $locale['451'] ?></a>
+						<a <?php echo "data-id='".$data['error_id']."'";  data-type='2' class='btn <?php echo $data['error_status'] == 2 ? 'active' : '';   e_status_2 button btn-default move_error_log'><?php echo $locale['452'] ?></a>
+						<a <?php echo "data-id='".$data['error_id']."'";  data-type='999' class='btn e_status_999 button btn-default move_error_log'><?php echo $locale['delete'] ?></a>
 						</div>
 					</td>
 				</tr>
-			<?php } ?>
+			<?php } 
 			</table>
-		<?php } else { ?>
+		<?php } else { 
 			<div style='text-align:center'><br />
 				<?php echo $locale['418'] ?><br /><br />
 			</div>
@@ -348,9 +348,9 @@ class ErrorLogs {
 
 		echo opentab($tab_title, $tab_active, 'error_tab');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
-		?>
+		
 		<div class='m-t-20'>
-		<?php self::show_error_logs(); ?>
+		<?php self::show_error_logs(); 
 		</div>
 		<?php echo closetabbody();
 		if ($this->error_id) {
@@ -371,7 +371,7 @@ class ErrorLogs {
 			");
 
 			echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
-			?>
+			
 
 			<div class='m-t-20'>
 				<h2><?php echo $data['error_message'] ?></h2>
@@ -383,8 +383,8 @@ class ErrorLogs {
 							<?php echo self::getMaxFolders($data['error_page'], 3); ?></a>
 					</div>
 					<span class='text-lighter'>generated by</span>
-					<div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'><strong><?php echo $locale['412']."-".$locale['416'] ?>
-							<?php echo $data['error_user_level'] ?> -- <?php echo $locale['417']." ".$data['error_user_ip'] ?></strong>
+					<div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'><strong><?php echo $locale['412']."-".$locale['416'] 
+							<?php echo $data['error_user_level']  -- <?php echo $locale['417']." ".$data['error_user_ip'] ?></strong>
 					</div>
 					<span class='text-lighter'><?php echo lcfirst($locale['on']) ?></span>
 					<div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'><strong class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong></div>
@@ -395,12 +395,12 @@ class ErrorLogs {
 					echo form_hidden('', 'error_id', 'error_id', $data['error_id']);
 					echo form_select('error_status', 'Mark As', self::get_logTypes(), $data['error_status'], array("inline"=>1));
 					echo closeform();
-					?>
+					
 				</div>
 			</div>
 
 			<div class='m-t-10'>
-				<?php openside('') ?>
+				<?php openside('') 
 				<table class='table table-responsive'>
 					<tr>
 						<td colspan='4' class='tbl2'><strong><?php echo $locale['421'] ?></strong> (<?php echo $locale['415']." ".$line_start." - ".$line_end ?>)</td>
@@ -409,15 +409,15 @@ class ErrorLogs {
 						<td colspan='4'><?php echo self::printCode($output, $line_start, $data['error_line'], array('time'=>$data['error_timestamp'], 'text'=>$data['error_message'])) ?></td>
 					</tr>
 				</table>
-				<?php closeside() ?>
+				<?php closeside() 
 			</div>
 
 			<?php
 			echo closetabbody();
 			echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
-			?>
+			
 			<div class='m-t-10'>
-			<?php openside('') ?>
+			<?php openside('') 
 			<table class='table table-responsive'>
 				<tr>
 				<td class='tbl2'><a name='page'></a>
@@ -428,7 +428,7 @@ class ErrorLogs {
 					<td><?php echo self::printCode($pageContent, "1") ?></td>
 				</tr>
 			</table>
-			<?php closeside() ?>
+			<?php closeside() 
 			</div>
 			<?php
 			echo closetabbody();

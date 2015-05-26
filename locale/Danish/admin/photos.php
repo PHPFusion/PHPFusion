@@ -87,4 +87,3 @@ Denne valgmulighed vil først blive tilgængelig igen, når funktionerne er slå
 $locale['521'] = "Kommentar";
 $locale['522'] = "Vurdering";
 $locale['523'] = $locale['521']." and ".$locale['522'];
-?>

@@ -22,4 +22,3 @@ echo "<br /><div class='admin-message'>".$locale['ESHPI100']." ".$pdata['method'
 
 //clear the cart.
 dbquery("DELETE FROM ".DB_ESHOP_CART." WHERE puid ='".$username."'");
-?>

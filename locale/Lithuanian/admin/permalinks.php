@@ -30,4 +30,3 @@ $locale['425'] = "Nuorodos %s jau yra įjungtos.";
 $locale['426'] = "Nuorodų išjungimas %s sėkmingas.";
 // Other
 $locale['427'] = "Nėra įjungtų jokių nekintamų nuorodų.";
-?>

@@ -115,4 +115,3 @@ $locale['629'] = "You cannot move the selected message(s) into the specified fol
 $locale['630'] = " Message Limit";
 $locale['631'] = "Yes";
 $locale['632'] = "No";
-?>

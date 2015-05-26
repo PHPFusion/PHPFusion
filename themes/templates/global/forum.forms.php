@@ -311,4 +311,3 @@ function post_preview($data) {
 	echo closemodal();
 }
 }
-?>

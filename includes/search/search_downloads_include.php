@@ -80,4 +80,3 @@ if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-?>

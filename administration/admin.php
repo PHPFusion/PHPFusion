@@ -212,4 +212,3 @@ public function horiziontal_admin_nav() {
 	return $html;
 }
 }
-?>

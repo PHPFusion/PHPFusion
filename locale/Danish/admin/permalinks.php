@@ -30,4 +30,3 @@ $locale['425'] = "Permalinks for %s er allerede slået til.";
 $locale['426'] = "Slog permalinks for %s fra.";
 // Other
 $locale['427'] = "Ingen permalinks er slået til.";
-?>

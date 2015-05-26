@@ -743,4 +743,3 @@ $locale['ESHP848'] = "Pengunaan Kupon";
 $locale['ESHP849'] = "Anda boleh tutupkan sistem kupon di sini.";
 $locale['ESHP850'] = "Guna Sistem Pengesahan IPN?";
 $locale['ESHP851'] = "Anda perlu mengaktifkan IPN untuk Akaun PayPal anda untuk menggunkan IPN";
-?>

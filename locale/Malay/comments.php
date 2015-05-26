@@ -10,4 +10,3 @@ $locale['c107'] = "Jangan mengguna Smileys untuk komen ini";
 $locale['c108'] = "Sunting";
 $locale['c109'] = "Padam";
 $locale['c110'] = "Padam semua Komen?";
-?>

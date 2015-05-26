@@ -53,4 +53,3 @@ Enter your domain name : <input type='text' name='domain' class='textbox' style=
 }
 closetable();
 require_once THEMES."templates/footer.php";
-?>

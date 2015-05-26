@@ -22,4 +22,4 @@ $locale['440'] = "Jūsų žinutė išsiųsta";
 $locale['441'] = "Ačiū";
 $locale['442'] = "Jūsų žinutė neišsiųsta dėl šių priežasčių:";
 $locale['443'] = "Prašome bandyti dar kartą.";
-?>
+

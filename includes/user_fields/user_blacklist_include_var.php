@@ -23,4 +23,3 @@ $user_field_desc = $locale['uf_blacklist_desc'];
 $user_field_dbname = "user_blacklist";
 $user_field_group = 3;
 $user_field_dbinfo = "TEXT NOT NULL";
-?>

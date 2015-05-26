@@ -55,4 +55,3 @@ if (!iMEMBER) {
 
 echo "</td>\n</tr>\n</table>\n";
 echo "</body>\n</html>\n";
-?>

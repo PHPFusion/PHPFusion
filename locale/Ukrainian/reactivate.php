@@ -16,4 +16,3 @@ $locale['505'] = "Вітаємо, [USER_NAME]!\n
 З повагою,\n\n
 ".fusion_get_settings('siteusername');
 $locale['506'] = "Відновлено користувачем.";
-?>

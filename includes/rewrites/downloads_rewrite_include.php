@@ -31,4 +31,3 @@ $dir_path = BASEDIR;
 $dbname = DB_DOWNLOADS;
 $dbid = array("%download_id%" => "download_id");
 $dbinfo = array("%download_title%" => "download_title");
-?>

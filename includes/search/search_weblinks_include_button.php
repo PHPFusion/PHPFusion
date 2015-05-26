@@ -22,4 +22,3 @@ $form_elements['weblinks']['disabled'] = array();
 $form_elements['weblinks']['display'] = array();
 $form_elements['weblinks']['nodisplay'] = array();
 $radio_button['weblinks'] = "<label><input type='radio' name='stype' value='weblinks'".($_GET['stype'] == "weblinks" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['w400']."</label>";
-?>

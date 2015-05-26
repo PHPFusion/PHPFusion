@@ -131,4 +131,3 @@ $locale['660'] = "%s er deaktiveret for alle elementer.<br />Denne valgmulighed 
 $locale['661'] = "Bemærkninger";
 $locale['662'] = "Vurderinger";
 $locale['663'] = $locale['661']." and ".$locale['662'];
-?>

@@ -42,4 +42,3 @@ foreach($data as $blog_year => $blog_months) {
 	echo $locale['global_078b'];
 }
 closeside();
-?>

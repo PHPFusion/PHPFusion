@@ -10,4 +10,3 @@ $locale['sept_008'] = "Gallery";
 $locale['sept_009'] = "Forum";
 $locale['sept_010'] = "Downloads";
 $locale['sept_011'] = "Made on HTML5 and CSS3";
-?>

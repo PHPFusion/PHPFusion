@@ -12,4 +12,4 @@ $locale['uf_blacklist_004'] = "Brugeren %s er blevet fjernet fra sin sorte liste
 $locale['uf_blacklist_005'] = "Brugeren var ikke udelukket.";
 $locale['uf_blacklist_006'] = "Ingen bruger fundet.";
 
-?>
+

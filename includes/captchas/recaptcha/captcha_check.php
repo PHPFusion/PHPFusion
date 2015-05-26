@@ -25,4 +25,3 @@ if (isset($_POST["recaptcha_challenge_field"]) && isset($_POST["recaptcha_respon
 		$_CAPTCHA_IS_VALID = TRUE;
 	}
 }
-?>

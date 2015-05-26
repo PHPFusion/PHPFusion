@@ -343,4 +343,3 @@ $locale['register_settings'] = 'Tilmeldingsopsætning';
 $locale['security_settings'] = 'Sikkerhedsopsætning';
 $locale['time_settings'] = 'Opsætning af dato og tid';
 $locale['user_settings'] = 'Opsætning af brugeradministration';
-?>

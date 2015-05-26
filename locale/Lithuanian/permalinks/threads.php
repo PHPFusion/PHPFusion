@@ -5,4 +5,4 @@ $locale['pl_tags_001'] = "Temos ID.";
 $locale['pl_tags_002'] = "Temos pavadinimas.";
 $locale['pl_tags_003'] = "Pranešimo ID.";
 $locale['pl_tags_004'] = "Temoje rodomų pranešimų puslapiaivmo skaičius.";
-?>
+

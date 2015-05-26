@@ -49,4 +49,3 @@ $css_file = icon::get_css('entypo.css');
 echo icon::show_icons($css_file);
 require_once THEMES."templates/footer.php";
 
-?>

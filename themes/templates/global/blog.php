@@ -105,7 +105,7 @@ if (!function_exists('display_blog_index')) {
 		} else {
 			echo "<div class='well text-center'>".$locale['blog_3000']."</div>\n";
 		}
-		?>
+		
 		<?php
 		$str = ob_get_contents();
 		ob_end_clean();

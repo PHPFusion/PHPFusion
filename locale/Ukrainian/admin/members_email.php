@@ -37,4 +37,3 @@ $locale['email_suspend_message'] = "Вітаємо, [USER_NAME].\n
 [REASON].\n
 Якщо бажаєте отримати детальну інформацію про це призупинення, будь ласка, зв&lsquo;яжіться з адміністрацією сайту з допомогою електронної пошти ".fusion_get_settings('siteemail').".\n
 ".fusion_get_settings('siteusername');
-?>

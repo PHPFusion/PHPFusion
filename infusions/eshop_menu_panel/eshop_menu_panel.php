@@ -167,4 +167,3 @@ echo "<div class='navigeringv1'>
 echo "<br /><center><a class='eshpbutton red' href='".SHOP."campaigns.php' title='".$locale['ESHPF004']."'>".$locale['ESHPF004']."</a></center>";
 
 closeside();
-?>

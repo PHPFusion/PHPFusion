@@ -29,4 +29,3 @@ if ($profile_method == "input") {
 } elseif ($profile_method == "validate_update") {
 	//Nothing here
 }
-?>

@@ -2,4 +2,3 @@
 $locale['uf_address'] = "Адреса користувача";
 $locale['uf_address_desc'] = "Адреса користувача";
 $locale['uf_address_error'] = "Поле адреси не може бути порожнім";
-?>

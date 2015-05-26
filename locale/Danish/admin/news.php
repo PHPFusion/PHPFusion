@@ -65,4 +65,3 @@ $locale['news_0350'] = "Skal denne nyhed skategori slettes?";
 // Error Messages
 $locale['news_0351'] = "Du skal give kategorien et navn.";
 $locale['news_0352'] = "Denne kategori er allerede oprettet.";
-?>

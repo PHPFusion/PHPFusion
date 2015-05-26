@@ -29,4 +29,4 @@ $locale['436'] = "Nėra pridėtų šypsenėlių.";
 $locale['437'] = "Prašom įvesti šypsenėlės kodą";
 $locale['438'] = "Prašom pasirinkti šypsenėlę";
 $locale['439'] = "Prašom įvesti šypsenėlės tekstą";
-?>
+

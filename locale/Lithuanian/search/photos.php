@@ -6,4 +6,3 @@ $locale['p403'] = "[Nauja]";
 $locale['p404'] = "Albumas:";
 $locale['p405'] = "Įkėlimo data:";
 $locale['p406'] = "Peržiūros:";
-?>

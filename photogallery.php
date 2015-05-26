@@ -254,4 +254,3 @@ function photo_thumbnail($data) {
 }
 
 require_once THEMES."templates/footer.php";
-?>

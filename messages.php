@@ -575,4 +575,3 @@ $('#setcheck_all').bind('click', function() { $('.checkbox').prop('checked', tru
 $('#setcheck_none').bind('click', function() { $('.checkbox').prop('checked', false); });
 ");
 require_once THEMES."templates/footer.php";
-?>

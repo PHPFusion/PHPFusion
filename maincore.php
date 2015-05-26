@@ -286,4 +286,3 @@ $fusion_jquery_tags = & \PHPFusion\OutputHandler::$jqueryTags;
 
 // Set admin login procedures
 Authenticate::setAdminLogin();
-?>

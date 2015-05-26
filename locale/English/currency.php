@@ -166,4 +166,3 @@ $locale = array(
 	"ZWD" => "Zimbabwe Dollar",
 	"NA" => "Not Available",
 );
-?>

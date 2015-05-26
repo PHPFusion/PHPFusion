@@ -23,4 +23,3 @@ $locale['450'] = "Skal denne blogkategori slettes?";
 // Error Messages
 $locale['460'] = "Du skal lave et navn for kategorien.";
 $locale['461'] = "Denne kategori eksisterer allerede i forvejen.";
-?>

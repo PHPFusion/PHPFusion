@@ -39,4 +39,3 @@ if (count($enabled_languages) > 1) {
 ");
 	closeside();
 }
-?>

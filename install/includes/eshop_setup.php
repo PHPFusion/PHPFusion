@@ -513,4 +513,3 @@ if (isset($_POST['uninstall'])) {
 				(4, 'Visit store', 'If you select this option you will need to visit our store and pay your order.\r\n Please bring your OrderID.', 'cash.png', 0, '', '', '1')");
 				if (!$result) $fail = TRUE;
 }
-?>

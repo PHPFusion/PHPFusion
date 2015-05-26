@@ -23,4 +23,3 @@ $locale['419'] = "Valgmuligheder";
 $locale['420'] = "Version";
 $locale['421'] = "Udgiver";
 $locale['422'] = "Download flere udvidelser";
-?>

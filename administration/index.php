@@ -200,4 +200,3 @@ if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
 
 render_admin_dashboard();
 require_once THEMES."templates/footer.php";
-?>

@@ -26,4 +26,3 @@ $dir_path = ROOT;
 $dbname = DB_ESHOP_CATS;
 $dbid = array("%category%" => "cid");
 $dbinfo = array("%title%" => "title");
-?>

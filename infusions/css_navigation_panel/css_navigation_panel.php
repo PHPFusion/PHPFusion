@@ -79,4 +79,3 @@ $('.fusion_css_navigation_panel ul li').hover(
 $('.fusion_css_navigation_panel li:has(ul)').find('a:first').append(' »');
 ");
 closeside();
-?>

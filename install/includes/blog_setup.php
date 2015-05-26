@@ -109,4 +109,3 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 }
-?>

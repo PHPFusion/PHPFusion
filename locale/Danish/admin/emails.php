@@ -50,4 +50,3 @@ $locale['470'] = "Emnefeltet må ikke være tomt!";
 $locale['471'] = "Beskedfeltet må ikke være tomt!";
 $locale['472'] = "Afsenderfeltet må ikke være tomt!";
 $locale['473'] = "Afsenders mail skal angives!";
-?>

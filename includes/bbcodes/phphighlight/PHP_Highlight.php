@@ -448,4 +448,3 @@ class PHP_Highlight {
 	}
 }
 
-?>

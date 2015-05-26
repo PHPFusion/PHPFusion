@@ -47,4 +47,4 @@ $__BBCODE__[] = array('description' => $locale['bb_geshi_description'], 'value' 
 					  'includejscript' => "", 'calljscript' => "",
 					  'phpfunction' => "echo generate_geshi_langs('".$textarea_name."', '".$inputform_name."');",
 					  'html_middle' => "", 'html_end' => "</div>");
-?>
+

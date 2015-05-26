@@ -42,4 +42,3 @@ function form_alert($title, $text, $array = FALSE) {
 	return $html;
 }
 
-?>

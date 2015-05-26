@@ -54,4 +54,3 @@ function form_photosize($title, $input_name, $input_id, $input_value_width, $inp
 	return $html;
 }
 
-?>

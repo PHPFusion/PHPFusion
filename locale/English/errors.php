@@ -16,4 +16,3 @@ $locale['E_STRICT'] = "";
 $locale['err_100'] = "N/A";
 $locale['err_101'] = "<strong>WARNING:</strong> An error occurred while parsing the page. Please see PHP-Fusion's <a href='[ERROR_LOG_URL]' class='strong'>error log</a> for more details.";
 $locale['err_102'] = "Show me the bug!";
-?>

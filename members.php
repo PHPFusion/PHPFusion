@@ -82,4 +82,3 @@ if ($rows > 20) {
 	echo "<div align='center' style='margin-top:5px;'>".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF."?sortby=".$_GET['sortby']."&amp;")."</div>\n";
 }
 require_once THEMES."templates/footer.php";
-?>

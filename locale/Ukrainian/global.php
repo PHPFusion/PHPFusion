@@ -523,4 +523,3 @@ $locale['fmt_year'] = "рік|роки|років";
 // Load defender locale from here, is more reliable
 // and now if part of the core, we could merge it in
 include __DIR__."/defender.php";
-?>

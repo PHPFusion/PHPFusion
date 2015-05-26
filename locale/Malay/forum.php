@@ -303,4 +303,3 @@ $locale['forum_p090'] = '3 Bulan';
 $locale['forum_p180'] = '6 Bulan';
 $locale['forum_p365'] = '1 Tahun';
 $locale['forum_p999'] = "Semua";
-?>

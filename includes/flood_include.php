@@ -54,4 +54,3 @@ function flood_control($field, $table, $where, $debug = FALSE) {
 	return $flood;
 }
 
-?>

@@ -38,4 +38,3 @@ $locale['456'] = "Vis";
 $locale['457'] = "Der er ingen RSS feeds defineret";
 // Delete RSS feed
 $locale['460'] = "Slet dette RSS feed?";
-?>

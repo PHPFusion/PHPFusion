@@ -325,4 +325,3 @@ $locale['polls']['description'] = "Apklausų ir narių balsavimo sistema.";
 $locale['weblinks']['title'] = "Nuorodų katalogas";
 $locale['weblinks']['description'] = "Internetinių nuorodų katalogo sistema.";
 $locale['install'] = "Įdiegti branduolį";
-?>

@@ -22,4 +22,4 @@ $securimage = new Securimage();
 if (isset($_POST['captcha_code']) && $securimage->check($_POST['captcha_code']) == TRUE) {
 	$_CAPTCHA_IS_VALID = TRUE;
 }
-?>
+

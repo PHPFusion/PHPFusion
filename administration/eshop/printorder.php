@@ -78,4 +78,3 @@ if ($odata) {
 }
 
 echo '<body onload="window.print(); parent.$.fn.colorbox.close();">';
-?>

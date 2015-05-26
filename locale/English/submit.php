@@ -123,4 +123,3 @@ $locale['693'] = "Filesize:";
 $locale['694'] = "Max. filesize: %s / Allowed filetypes: %s";
 $locale['694b'] = "Max. filesize: %s / Allowed filetypes: %s / Max width: %spx, Max. height: %spx";
 $locale['695'] = "Submit Download";
-?>

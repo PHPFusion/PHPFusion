@@ -73,4 +73,4 @@ if ($rows) {
 }
 
 require_once THEMES."templates/footer.php";
-?>
+

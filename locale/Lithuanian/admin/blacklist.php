@@ -48,4 +48,3 @@ $locale['481'] = "Nurodytas IPv6 adrese yra trumpinys (::), todėl ji negali bū
 $locale['482'] = "Kurią versija jūs naudosite?";
 $locale['483'] = "Saugoti";
 */
-?>

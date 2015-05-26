@@ -72,4 +72,3 @@ $language_data = array('LANG_NAME' => 'Javascript', 'COMMENT_SINGLE' => array(1 
 													1 => array('<script language="javascript">' => '</script>')),
 					   'HIGHLIGHT_STRICT_BLOCK' => array(0 => TRUE, 1 => TRUE));
 
-?>

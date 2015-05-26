@@ -44,4 +44,3 @@ $locale['460'] = "Prašome įvesti kategorijos pavadinimą.";
 $locale['461'] = "Tokia kategorija jau egzistuoja.";
 
 $locale['462'] = "Prašome įvesti D.U.K. klausimą ir atsakymą.";
-?>

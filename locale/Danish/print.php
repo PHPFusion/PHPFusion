@@ -14,4 +14,3 @@ $locale['600'] = "Betingelser for medlemskab";
 $locale['601'] = "Sidst ændret:";
 //Privacy Policy
 $locale['700'] = "Privatlivsbetingelser";
-?>

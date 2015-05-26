@@ -251,4 +251,3 @@ notify($locale['ESHP501'], '');
 }
 closetable();
 require_once THEMES."templates/footer.php";
-?>

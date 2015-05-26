@@ -7,4 +7,3 @@ $locale['404'] = "Tiada blog ditambah dalam kategori ini.";
 $locale['405'] = "Lebih";
 $locale['406'] = "Paparkan Semua Kategori";
 $locale['407'] = "Tiada Senarai Kategori Blog";
-?>

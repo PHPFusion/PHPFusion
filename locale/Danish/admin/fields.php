@@ -118,4 +118,3 @@ $locale['fields_0515'] = "Webadresse";
 $locale['fields_0600'] = "Der er oprettet %s underkategori(er) under denne kategori";
 $locale['fields_0601'] = "Der eksisterer %s felt(er) under denne kategori";
 $locale['fields_0602'] = "Dette modul kan ikke installeres. Der mangler nødvendig tabelinformation.";
-?>
