@@ -1,9 +1,24 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------*
+| Filename: Downloads.php
+| Author: Frederick MC Chan (hien)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Downloads;
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class Functions {
-
 	/**
 	 * Download Category Hierarchy Full Data
 	 * @return array
@@ -11,7 +26,6 @@ class Functions {
 	public static function get_downloadCats() {
 		return dbquery_tree_full(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent', (multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."");
 	}
-
 	/**
 	 * Get Single Download Category Data
 	 * @param $id
@@ -97,5 +111,4 @@ class Functions {
 		}
 		return false;
 	}
-
 }

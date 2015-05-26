@@ -3,9 +3,9 @@
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
-+--------------------------------------------------------+
++--------------------------------------------------------*
 | Filename: Geomap.php
-| Author: Hien
+| Author: Frederick MC Chan (hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,11 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 namespace PHPFusion;
 
 class Geomap {
-
 	/**
 	 * @return mixed|string
 	 */
@@ -293,7 +292,5 @@ class Geomap {
 		return null;
 	}
 	 */
-
-
 }
 

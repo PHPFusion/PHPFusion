@@ -16,7 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+namespace PHPFusion;
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 /*
 | Permalinks API for PHP-Fusion
 |
@@ -25,8 +26,6 @@
 | SEO Links or Permalinks.
 |
 */
-namespace PHPFusion;
-
 class PermalinksDisplay {
 	/*
 	* The Output
@@ -1318,7 +1317,6 @@ class PermalinksDisplay {
 	*/
 
 function normalize($string) {
-
 	$table = array(
 		'&amp;' => 'and',   '@' => 'at',    '©' => 'c', '®' => 'r', 'À' => 'a',
 		'Á' => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae','Ç' => 'c',
@@ -1374,7 +1372,5 @@ function normalize($string) {
 		'נ' => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
 		'צ' => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
 	);
-
 	return \strtr($string, $table);
 }
-

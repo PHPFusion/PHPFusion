@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) 2002 - 2011 Nick Jones
@@ -16,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 /**
  * A class to handle imagepaths

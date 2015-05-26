@@ -1,9 +1,24 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------*
+| Filename: Admin/Orders.php
+| Author: Frederick MC Chan (hien)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 namespace PHPFusion\Eshop\Admin;
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class Orders {
-
 	private $filter_Sql = '';
 	private $months = array();
 	private $showfilter = true;
@@ -171,14 +186,14 @@ class Orders {
 			closeside();
 			echo "</div>\n";
 			echo closetabbody();
-			echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
-			
+			echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active); ?>
+
 			<a class='btn button printorder btn-sm pull-right btn-success' href='<?php echo ADMIN."eshop/printorder.php".$aidlink."&amp;orderid=".$_GET['orderid'] ?>'><?php echo $locale['ESHP314'] ?></a>
 			<?php echo stripslashes($odata['oorder']);
 			echo closetabbody();
 			echo closetab();
-		} else {
-			
+		} else { 
+		?>
 			<div class='text-center alert alert-warning'><?php echo $locale['ESHP315'] ?></div>
 		<?php
 		}
@@ -192,8 +207,7 @@ class Orders {
 
 		$rows = dbcount("('oid')", DB_ESHOP_ORDERS, $this->filter_Sql);
 		if ($this->showfilter) self::orders_view_filters();
-		
-
+		?>	
 		<table class='table table-responsive table-striped m-t-20'>
 		<tr>
 			<th><?php echo $locale['ESHP317'] ?></th>
@@ -214,7 +228,7 @@ class Orders {
 							INNER JOIN ".DB_ESHOP_PAYMENTS." payment on orders.opaymethod = payment.pid
 							INNER JOIN ".DB_ESHOP_SHIPPINGITEMS." delivery on orders.oshipmethod = delivery.sid
 							".($this->filter_Sql ? "WHERE $this->filter_Sql" : '')." ORDER BY orders.oid ASC  LIMIT ".$_GET['rowstart']." , 15");
-			
+			?>	
 			<tbody id='eshopitem-links' class='connected'>
 			<?php
 			while ($data = dbarray($result)) {
@@ -225,7 +239,7 @@ class Orders {
 				} else {
 					$customer = $data['oname'];
 				}
-				
+			?>			
 			<tr>
 				<td><?php echo $data['oid'] ?></td>
 				<td><?php echo $customer ?></td>
@@ -245,19 +259,19 @@ class Orders {
 			</tr>
 			<?php
 			}
-			
+			?>			
 			</tbody>
 			</table>
 			<div class='text-right m-t-5'>
-				<?php echo makePageNav($_GET['rowstart'], 15, $rows, 3, FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;sortby=".$_GET['sortby']."&amp;") 
+				<?php echo makePageNav($_GET['rowstart'], 15, $rows, 3, FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=orders&amp;sortby=".$_GET['sortby']."&amp;") ?>
 			</div>
 		<?php
 		} else {
-			
+		?>			
 			<tr><td colspan='8' class='text-center'><?php echo $locale['ESHP325'] ?></td></tr>
 		<?php
 		}
-		
+		?>
 		</table>
 	<?php
 	}
@@ -274,7 +288,7 @@ class Orders {
 		switch ($_GET['mode']) {
 
 			case 'y':
-				add_to_title(" - ".$_GET['year']); 
+				add_to_title(" - ".$_GET['year']); ?>
 				<p class='m-t-20'><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history" ?>'><?php echo $locale['ESHP329'] ?></a></p>
 				<table class='table table-responsive table-striped'>
 					<tr>
@@ -291,10 +305,10 @@ class Orders {
 						FROM ".DB_ESHOP_ORDERS." WHERE odate > '".$m_min."' && odate < '".$m_max."' GROUP BY month ASC ORDER BY oid ASC");
 					if (dbrows($dates)) {
 						while ($id = dbarray($dates)) {
-							
+						?>							
 							<tr>
 								<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=".$_GET['year']."&amp;month=".$id['month'] ?>'>
-										<?php echo $months[$id['month']] 
+										<?php echo $months[$id['month']] ?>
 									</a>
 								</td>
 								<td><?php echo $id['orders'] ?></td>
@@ -303,17 +317,17 @@ class Orders {
 						<?php
 						}
 					} else {
-						
+					?>						
 						<tr><td class='text-center' colspan='4'><?php echo $locale['ESHP331'] ?></td></tr>
 					<?php
 					}
-					
+					?>					
 				</table>
 				<?php
 				break;
 
 			case 'm':
-				add_to_title(" - ".$months[$_GET['month']]." ".$_GET['year']); 
+				add_to_title(" - ".$months[$_GET['month']]." ".$_GET['year']); ?>
 				<p class='m-t-20'><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history" ?>'><?php echo $locale['ESHP329'] ?></a></p>
 				<table class='table table-responsive table-striped'>
 					<tr>
@@ -334,10 +348,10 @@ class Orders {
 						FROM ".DB_ESHOP_ORDERS." WHERE odate > '".$m_min."' && odate < '".$m_max."' GROUP BY day ASC ORDER BY oid ASC");
 					if (dbrows($dates)) {
 						while ($id = dbarray($dates)) {
-							
+?>							
 							<tr>
 								<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=d&amp;year=".$_GET['year']."&amp;month=".$_GET['month']."&amp;day=".$id['day'] ?>'>
-										<?php echo $locale['ESHP334'][date("w", mktime(1, 1, 1, $_GET['month'], $id['day'], $_GET['year']))] 
+										<?php echo $locale['ESHP334'][date("w", mktime(1, 1, 1, $_GET['month'], $id['day'], $_GET['year']))] ?>
 									</a>
 								</td>
 								<td><?php echo $id['day'] ?></td>
@@ -346,28 +360,25 @@ class Orders {
 							</tr>
 						<?php
 						}
-						
-					<?php
 					} else {
-						
+						?>						
 						<tr><td class='text-center' colspan='4'><?php echo $locale['ESHP331'] ?></td></tr>
 					<?php
 					}
-					
+					?>
 				</table>
 				<?php
 				break;
-
 			case 'd':
 				add_to_title(" - ".$_GET['day']." ".$months[$_GET['month']]." ".$_GET['year']);
 				$d_min = mktime(23, 59, 59, $_GET['month'], $_GET['day']-1, $_GET['year']);
 				$d_max = $d_min + (24 * 60 * 60);
 				$this->filter_Sql = "odate > '".$d_min."' AND odate < '".$d_max."' "; // just set another variety of listing filter and use list_order() function.
-				$this->showfilter = false;
-				
+				$this->showfilter = false; 
+				?>
 				<p class='m-t-20'>
 					<a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history" ?>'><?php echo $locale['ESHP329'] ?></a> -
-					<a href='<?Php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=".$_GET['year']."&amp;month=".$_GET['month'] ?>'> <?php echo $months[$_GET['month']]." ".$_GET['year']  </a>
+					<a href='<?Php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=".$_GET['year']."&amp;month=".$_GET['month'] ?>'> <?php echo $months[$_GET['month']]." ".$_GET['year'] ?> </a>
 				</p>
 				<?php
 				self::list_order();
@@ -377,7 +388,7 @@ class Orders {
 						 FROM ".DB_ESHOP_ORDERS."
 						 GROUP BY YEAR(from_unixtime(odate)) DESC, MONTH(from_unixtime(odate)) DESC
 						 ORDER BY year DESC, month DESC");
-				
+				?>
 					<table class='table table-responsive table-striped m-t-20'>
 					<tr>
 						<th>Year</th>
@@ -388,7 +399,7 @@ class Orders {
 				<?php
 
 				while ($id = dbarray($dates)) {
-					
+					?>
 					<tr>
 						<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=y&amp;year=".$id['year'] ?>'><?php echo $id['year'] ?></td>
 						<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=".$id['year']."&amp;month=".$id['month'] ?>'><?php echo $months[$id['month']] ?></a></td>
@@ -397,7 +408,7 @@ class Orders {
 					</tr>
 					<?php
 				}
-				
+				?>
 				</table>
 				<?php
 		}

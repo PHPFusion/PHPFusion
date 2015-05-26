@@ -16,9 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 $settings = fusion_get_settings();
 $fusion_domain = (strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host']);
 define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);

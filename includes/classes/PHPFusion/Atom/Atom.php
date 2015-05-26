@@ -1,13 +1,12 @@
 <?php
-/*------------------------------------------------------- 
+/*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
- -------------------------------------------------------- 
-| Filename: Atom.php
-| Author: Frederick MC Chan (Hien)
-| Co-Author: PHP-Fusion Development Team
- -------------------------------------------------------- 
++--------------------------------------------------------*
+| Filename: Atom/Atom.php
+| Author: Frederick MC Chan (hien)
++--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
 | modify it under the terms of this license which you
@@ -15,8 +14,7 @@
 | at www.gnu.org/licenses/agpl.html. Removal of this
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
- --------------------------------------------------------*/
-
++--------------------------------------------------------*/
 namespace PHPFusion\Atom;
 require_once LOCALE.LOCALESET."admin/theme.php";
 

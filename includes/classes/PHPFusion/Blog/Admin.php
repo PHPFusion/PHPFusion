@@ -17,6 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Blog;
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 use PHPFusion\ImageRepo;
 use PHPFusion\QuantumFields;
@@ -254,5 +255,4 @@ class Admin {
 			add_breadcrumb(array('link'=>$crumb['link'][$i], 'title'=>$crumb['title'][$i]));
 		}
 	}
-
 }

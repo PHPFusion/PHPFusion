@@ -16,8 +16,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 /**
  * Class BreadCrumbs
  *
@@ -60,7 +61,8 @@ namespace PHPFusion;
  *
  * @package PHPFusion
  */
-class BreadCrumbs {
+
+ class BreadCrumbs {
 
 	/**
 	 * @var static[]
@@ -222,5 +224,4 @@ class BreadCrumbs {
 
 		return $breadcrumbs;
 	}
-
 }

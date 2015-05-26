@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 /*
 | Rewrite API for PHP-Fusion
 |
@@ -25,8 +24,8 @@
 | You can use this API to Add custom rules for handling
 | requests.
 */
-
 namespace PHPFusion;
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class Rewrite {
 	/*

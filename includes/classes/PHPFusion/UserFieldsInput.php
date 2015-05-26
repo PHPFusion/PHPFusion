@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class UserFieldsInput {
 	public $adminActivation = 1;
