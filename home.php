@@ -145,15 +145,15 @@ foreach($contents as $content) :
 	opentable($content['blockTitle']);
 	if ($colwidth) :
 		$classes = "col-xs-".$colwidth." col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content";
-		
+		?>
 		<div class='row'>
-		<?php foreach($content['data'] as $data) : 
+		<?php foreach($content['data'] as $data) : ?>
 			<div class='<?php echo $classes ?>'>
 				<h3><a href='<?php echo $data['url'] ?>'><?php echo $data['title'] ?></a></h3>
 				<div class='small m-b-10'><?php echo $data['meta'] ?></div>
 				<div><?php echo $data['content'] ?></div>
 			</div>
-		<?php endforeach 
+		<?php endforeach ?>
 		</div>
 	<?php else :
 		echo $content['norecord'];
