@@ -15,7 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 add_to_head("<link href='".THEMES."templates/global/css/eshop.css' rel='stylesheet'/>\n");
+
 if (!function_exists('render_eshop_nav')) {
 	/**
 	 * Shop Navigation
@@ -529,8 +532,5 @@ if (!function_exists('render_checkout')) {
 //		if ($info['coupon_message']) echo "<div class='alert alert-info'>".$info['coupon_message']."</div>\n";
 //		if ($info['shipping_message']) echo "<div class='alert alert-info'>".$info['shipping_message']."</div>\n";
 //		if ($info['payment_message']) echo "<div class='alert alert-info'>".$info['payment_message']."</div>\n";
-
-
-
 	}
 }

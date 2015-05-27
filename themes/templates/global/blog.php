@@ -16,6 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if (!function_exists('render_main_blog')) {
 	function render_main_blog($info) {
@@ -106,7 +107,6 @@ if (!function_exists('display_blog_index')) {
 			echo "<div class='well text-center'>".$locale['blog_3000']."</div>\n";
 		}
 		
-		<?php
 		$str = ob_get_contents();
 		ob_end_clean();
 		return $str;

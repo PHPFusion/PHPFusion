@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>\n");
 
 if (!function_exists('render_userform')) {
@@ -128,20 +130,19 @@ if (!function_exists('render_userprofile')) {
 			}
 			$user_buttons .= "</div>\n";
 		}
-
-		
+		?>		
 		<section id='user-profile' class='row'>
 			<div class='col-xs-12 col-sm-3 col-lg-2'>
 				<ul class='profile_link_nav m-t-20'>
-					<?php foreach ($info['section'] as $page_section) {	
-						<li <?php echo $page_section['active'] ? "class='active'" : ''  >
+					<?php foreach ($info['section'] as $page_section) {	?>
+						<li <?php echo $page_section['active'] ? "class='active'" : ''  ?> 
 							<a href='<?php echo $page_section['link'] ?>'><?php echo $page_section['name'] ?></a>
 						</li>
-					<?php } 
+					<?php } ?>
 				</ul>
 			</div>
 			<div class='col-xs-12 col-sm-9 col-lg-10'>
-				<?php echo $user_name; 
+				<?php echo $user_name; ?>
 				<div class='clearfix m-t-10'>
 					<div class='pull-left m-r-20'><?php echo $user_avatar ?></div>
 					<div class='overflow-hide'>
@@ -150,27 +151,11 @@ if (!function_exists('render_userprofile')) {
 						echo $user_info;
 						echo $user_buttons;
 						echo $user_field;
-						
+						?>
 					</div>
 				</div>
 			</div>
 		</section>
-
-
-
-
 		<?php
-
-		/* if (!isset($_GET['profiles']) or isset($_GET['profiles']) && $_GET['profiles'] == 1) {
-			//echo opencollapse('uf_module');
-			//echo "<span class='display-inline-block' style='width:100%'><span class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>&nbsp;</span><a ".collapse_header_link('uf_module', '0', '0', '').">Show Full Information</a></span>\n";
-			//echo "<div ".collapse_footer_link('uf_module','0', '0').">\n";
-
-			//echo "</div>\n";
-			//echo closecollapse();
-		} */
-		//echo $ext_info;
-		// photo gallery
 	}
 }
-

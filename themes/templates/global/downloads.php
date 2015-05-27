@@ -15,9 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-/**
- * Main Downloads Template
- */
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 if (!function_exists('render_downloads')) {
 	function render_downloads($info) {
 		global $settings, $locale;

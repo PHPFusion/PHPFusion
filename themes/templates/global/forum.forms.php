@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 function postform($data, $info) {
 global $locale, $userdata, $settings;
@@ -309,5 +310,5 @@ function post_preview($data) {
 	echo "</div>\n";
 	echo "</div>\n";
 	echo closemodal();
-}
+	}
 }

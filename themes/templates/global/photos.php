@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 add_to_head("<link href='".THEMES."templates/global/css/photos.css' rel='stylesheet'/>\n");
 
 /* Main Index Photogallery */

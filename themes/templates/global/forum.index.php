@@ -15,19 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-/* New API in forum template
-set_forumIcons(
-	array(
-		'main' => 'entypo folder',
-		'thread' => 'entypo chat',
-		'link'	=>	'entypo link',
-		'question' => 'entypo graduation cap',
-	)
-);
-*/
-
-/* Old Forum index master template either drop it or make it 100% LAFT replacement*/
 if (!function_exists('render_forum2')) {
 	function render_forum2($info) {
 		global $locale;
