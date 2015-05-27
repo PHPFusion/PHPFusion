@@ -78,6 +78,7 @@ if (!empty($settings['enabled_languages'])) {
 $enabled_languages = explode('.', $settings['enabled_languages']);
 $k = 4;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
+	include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3002']."', 'infusions/articles/articles.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
 		$k++;
 	}

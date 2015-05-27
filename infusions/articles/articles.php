@@ -19,7 +19,7 @@
 require_once "../../maincore.php";
 if (!db_exists(DB_ARTICLES)) {
 	$_GET['code'] = 404;
-	require_once __DIR__.'/error.php';
+	require_once BASEDIR."error.php";
 	exit;
 }
 
