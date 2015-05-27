@@ -15,12 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 pageAccess('A');
-require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/articles.php";
 
-add_breadcrumb(array('link'=>ADMIN.'articles.php'.$aidlink,'title'=>$locale['articles_0001']));
+require_once THEMES."templates/admin_header.php";
+include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
+
+add_breadcrumb(array('link'=>INFUSIONS.'articles/articles_admin.php'.$aidlink,'title'=>$locale['articles_0001']));
 
 $settings = fusion_get_settings();
 if ($settings['tinymce_enabled'] == 1) {
@@ -278,9 +279,8 @@ if (!empty($result)) {
 } else {
 	opentable($locale['articles_0001']);
 	echo "<div style='text-align:center'>".$locale['articles_0252']."<br />\n".$locale['articles_0253']."<br />\n";
-	echo "<a href='article_cats.php".$aidlink."'>".$locale['articles_0254']."</a>".$locale['articles_0255']."</div>\n";
+	echo "<a href='".INFUSIONS."articles/article_cats_admin.php".$aidlink."'>".$locale['articles_0254']."</a>".$locale['articles_0255']."</div>\n";
 	closetable();
 }
 
 require_once THEMES."templates/footer.php";
-

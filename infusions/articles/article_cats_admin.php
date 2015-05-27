@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: article_cats.php
+| Filename: article_cats_admin.php
 | Author: Nick Jones (Digitanium)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,10 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 pageAccess('AC');
+
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/articles.php";
+include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
 
 $message = '';
 if (isset($_GET['status'])) {
@@ -82,9 +83,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 					$result = dbquery("INSERT INTO ".DB_ARTICLE_CATS." (article_cat_name, article_cat_description, article_cat_sorting, article_cat_parent, article_cat_language) VALUES ('$cat_name', '$cat_description', '$cat_sorting', '$cat_parent', '".$cat_language."')");
 					redirect(FUSION_SELF.$aidlink."&status=sn");
 				} else {
-					// method to validate.
-					$defender->stop();
-					$defender->addNotice($locale['articles_0352']);
+					addNotice('warning', $locale['articles_0352']);
 				}
 			}
 		}
@@ -125,7 +124,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$formaction = FUSION_SELF.$aidlink;
 		$openTable = $locale['articles_0021'];
 	}
-	add_breadcrumb(array('link'=>ADMIN.'article_cats.php'.$aidlink,'title'=>$openTable));
+	add_breadcrumb(array('link'=>INFUSIONS.'article_cats_admin.php'.$aidlink,'title'=>$openTable));
 	opentable($openTable);
 	echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
@@ -202,5 +201,4 @@ function showcatlist($parent = 0, $level = 0) {
 		}
 	}
 }
-
 require_once THEMES."templates/footer.php";

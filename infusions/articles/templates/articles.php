@@ -20,14 +20,14 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (!function_exists('render_article')) {
 	function render_article($subject, $article, $info) {
 		global $locale, $settings, $aidlink;
-		$category = "<a href='".BASEDIR."articles.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>\n";
-		$comment = "<a href='".BASEDIR."articles.php?article_id=".$info['article_id']."#comments'>".$info['article_comments']." comment</a>\n";
+		$category = "<a href='".INFUSIONS."articles/articles.php?cat_id=".$info['cat_id']."'>".$info['cat_name']."</a>\n";
+		$comment = "<a href='".INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments'>".$info['article_comments']." comment</a>\n";
 		echo render_breadcrumbs();
 		echo "<!--pre_article-->";
 		echo "<article>\n";
 		echo "<div class='news-action text-right'>";
 		echo "<a title='".$locale['global_075']."' href='".BASEDIR."print.php?type=A&amp;item_id=".$info['article_id']."'><i class='entypo print'></i></a>";
-		echo iADMIN && checkrights("A") ? "<a href='".ADMIN."articles.php".$aidlink."&amp;action=edit&amp;article_id=".$info['article_id']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : '';
+		echo iADMIN && checkrights("A") ? "<a href='".INFUSIONS."articles/articles_admin.php".$aidlink."&amp;action=edit&amp;article_id=".$info['article_id']."' title='".$locale['global_076']."' /><i class='entypo pencil'></i></a>\n" : '';
 		echo "</div>\n";
 		echo "<div class='news-info'>".ucfirst($locale['posted'])." <span class='news-date'>".showdate("%d %b %Y", $info['article_date'])."</span> ".$locale['in']." $category ".$locale['and']." $comment</div>\n";
 		echo "<h2 class='news-title'>$subject</h2>";
@@ -64,7 +64,7 @@ if (!function_exists('render_articles_main')) {
 				}
 				echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
 				echo "<!--article_idx_cat_name-->\n";
-				echo "<h4><a href='".BASEDIR."articles.php?cat_id=".$data['article_cat_id']."'><strong>".$data['article_cat_name']."</a></strong> <span class='small2'>(".$data['article_count'].")</span></h4>";
+				echo "<h4><a href='".INFUSIONS."articles/articles.php?cat_id=".$data['article_cat_id']."'><strong>".$data['article_cat_name']."</a></strong> <span class='small2'>(".$data['article_count'].")</span></h4>";
 				echo ($data['article_cat_description'] != "") ? $data['article_cat_description'] : "";
 				echo "</div>\n";
 				$counter++;
@@ -88,7 +88,7 @@ if (!function_exists('render_articles_category')) {
 			opentable($locale['400'].": ".$data['article_cat_name']);
 			if (isset($info['articles']['item'])) {
 				foreach($info['articles']['item'] as $cdata) {
-					echo "<h4 class='display-inline-block strong'><a href='".BASEDIR."articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong></h4> <span class='label label-success m-l-5'>".$cdata['new']."</span><br/>\n";
+					echo "<h4 class='display-inline-block strong'><a href='".INFUSIONS."articles/articles.php?article_id=".$cdata['article_id']."'>".$cdata['article_subject']."</a></strong></h4> <span class='label label-success m-l-5'>".$cdata['new']."</span><br/>\n";
 					echo preg_replace("/<!?--\s*pagebreak\s*-->/i", "", stripslashes($cdata['article_snippet']))."\n";
 				}
 				echo !empty($info['page_nav']) ? "<div class='m-t-5'>".$info['page_nav']."</div>\n" : '';
