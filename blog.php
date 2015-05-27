@@ -195,8 +195,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 } else {
 	// archive filter activation
 	$condition = "";
-	if (isset($_GET['archive']) && isnum($_GET['archive']) && stristr($_GET['archive'], '/')) {
-		$date = explode('/', $_GET['archive']);
+	if (isset($_GET['archive']) && isnum($_GET['archive']) && stristr($_GET['archive'], '#')) {
+		$date = explode('#', $_GET['archive']);
 		$start_time = mktime('0', '0', '0', $date[1], 1, $date[0]);
 		$end_time = mktime('0', '0', '0', $date[1]+1, 1, $date[0])-(3600*24);
 		$condition = "AND blog_datestamp >= '".intval($start_time)."' AND blog_datestamp <= '".intval($end_time)."'";
@@ -369,9 +369,9 @@ $archive_result = dbquery("
 				");
 if (dbrows($archive_result)) {
 	while ($a_data = dbarray($archive_result)) {
-		$active = isset($_GET['archive']) && $_GET['archive'] == $a_data['blog_year']."/".$a_data['blog_month'] ? 1 : 0;
+		$active = isset($_GET['archive']) && $_GET['archive'] == $a_data['blog_year']."#".$a_data['blog_month'] ? 1 : 0;
 		$month_locale = explode('|', $locale['months']);
-		$info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] =  array('title'=>$month_locale[$a_data['blog_month']], 'link'=>BASEDIR."blog.php?archive=".$a_data['blog_year']."/".$a_data['blog_month'], 'count' => $a_data['blog_count'], 'active'=>$active);
+		$info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] =  array('title'=>$month_locale[$a_data['blog_month']], 'link'=>BASEDIR."blog.php?archive=".$a_data['blog_year']."#".$a_data['blog_month'], 'count' => $a_data['blog_count'], 'active'=>$active);
 	}
 }
 
