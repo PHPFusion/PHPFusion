@@ -24,6 +24,7 @@ $modules = array(
 	'p' => array($locale['UM093'], DB_PHOTO_ALBUMS),
 	'd' => array($locale['UM094'], DB_DOWNLOADS)
 );
+
 $installedModules = array();
 foreach ($modules as $k => $v) {
 	if (db_exists($v[1])) {
@@ -121,10 +122,6 @@ if (preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 		}
 
 openside($locale['global_100']);
-if (count($enabled_languages) > 1) {
-echo "<h5 class='m-b-10'><strong>".$locale['UM101']."</strong></h5>";
-echo lang_switcher();
-}
 echo "<div class='m-t-10'>\n";
 echo openform('loginform', 'post', $action_url, array('max_tokens' => 1, 'notice'=>0));
 echo form_text('user_name', $locale['global_101'], '', array('placeholder' => $locale['global_101'],'required' => 1));
