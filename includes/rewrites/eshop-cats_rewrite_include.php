@@ -17,8 +17,10 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%category%" => "([0-9]+)", 
-			   "%title%" => "([0-9a-zA-Z._\W]+)");
+$regex = array(
+	"%category%" => "([0-9]+)", 
+	"%title%" => "([0-9a-zA-Z._\W]+)",
+);
 				  
 $pattern = array("shop-category/%category%/%title%" => "eshop.php?category=%category%");
 

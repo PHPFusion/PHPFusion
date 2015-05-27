@@ -17,8 +17,10 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%article_cat_id%" => "([0-9]+)", 
-			   "%article_cat_title%" => "([0-9a-zA-Z._\W]+)");
+$regex = array(
+	"%article_cat_id%" => "([0-9]+)", 
+	"%article_cat_title%" => "([0-9a-zA-Z._\W]+)",
+);
 
 $pattern = array("article-category/%article_cat_id%/%article_cat_title%" => "articles.php?cat_id=%article_cat_id%");
 

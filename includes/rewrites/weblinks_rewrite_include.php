@@ -17,9 +17,11 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%weblink_id%" => "([0-9]+)",
-  			   "%weblink_name%" => "([0-9a-zA-Z._\W]+)",
-			   "%weblink_cat_id%" => "([0-9]+)");
+$regex = array(
+	"%weblink_id%" => "([0-9]+)",
+	"%weblink_name%" => "([0-9a-zA-Z._\W]+)",
+	"%weblink_cat_id%" => "([0-9]+)",
+);
 
 $pattern = array("weblink/%weblink_id%/%weblink_name%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%");
 

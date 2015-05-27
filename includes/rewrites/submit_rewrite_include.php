@@ -17,9 +17,11 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$pattern = array("submit" => "submit.php",
-				 "submit/weblinks" => "submit.php?stype=l",
-				 "submit/files" => "submit.php?stype=d",
-				 "submit/articles" => "submit.php?stype=a",
-				 "submit/news" => "submit.php?stype=n",
-				 "submit/photos" => "submit.php?stype=p");
+$pattern = array(
+	"submit" => "submit.php",
+	"submit/weblinks" => "submit.php?stype=l",
+	"submit/files" => "submit.php?stype=d",
+	"submit/articles" => "submit.php?stype=a",
+	"submit/news" => "submit.php?stype=n",
+	"submit/photos" => "submit.php?stype=p",
+);

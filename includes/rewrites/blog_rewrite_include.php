@@ -17,21 +17,27 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%blog_id%" => "([0-9]+)",
-  			   "%blog_title%" => "([0-9a-zA-Z._\W]+)",
-			   "%blog_step%" => "([0-9]+)",
-			   "%blog_rowstart%" => "([0-9]+)",
-			   "%c_start%" => "([0-9]+)");
+$regex = array(
+	"%blog_id%" => "([0-9]+)",
+	"%blog_title%" => "([0-9a-zA-Z._\W]+)",
+	"%blog_step%" => "([0-9]+)",
+	"%blog_rowstart%" => "([0-9]+)",
+	"%c_start%" => "([0-9]+)",
+);
 
-$pattern = array("blogs" => "blog.php",
-				 "blogs/%blog_id%/%blog_title%" => "blog.php?readmore=%blog_id%",
-				 "blogs/%blog_id%/%blog_title%#comments" => "blog.php?readmore=%blog_id%#comments",
-				 "blogs/%c_start%/%blog_id%/%blog_title%" => "blog.php?readmore=%blog_id%&amp;c_start=%c_start%");
+$pattern = array(
+	"blogs" => "blog.php",
+	"blogs/%blog_id%/%blog_title%" => "blog.php?readmore=%blog_id%",
+	"blogs/%blog_id%/%blog_title%#comments" => "blog.php?readmore=%blog_id%#comments",
+	"blogs/%c_start%/%blog_id%/%blog_title%" => "blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
+);
 
-$alias_pattern = array("blogs/%alias%" => "%alias_target%",
-					   "blogs/%alias%#comments" => "%alias_target%#comments",
-					   "blogs/%alias%/%blog_step%/%blog_rowstart%" => "%alias_target%&amp;step=%blog_step%&amp;rowstart=%blog_rowstart%",
-					   "blogs/%alias%/%blog_step%" => "%alias_target%&amp;step=%blog_step%");
+$alias_pattern = array(
+	"blogs/%alias%" => "%alias_target%",
+	"blogs/%alias%#comments" => "%alias_target%#comments",
+	"blogs/%alias%/%blog_step%/%blog_rowstart%" => "%alias_target%&amp;step=%blog_step%&amp;rowstart=%blog_rowstart%",
+	"blogs/%alias%/%blog_step%" => "%alias_target%&amp;step=%blog_step%",
+);
 
 $dbname = DB_BLOG;
 $dbid = array("%blog_id%" => "blog_id");

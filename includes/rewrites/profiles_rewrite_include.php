@@ -17,8 +17,10 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%user_id%" => "([0-9]+)", 
-			   "%user_name%" => "([0-9a-zA-Z._\W]+)");
+$regex = array(
+	"%user_id%" => "([0-9]+)", 
+	"%user_name%" => "([0-9a-zA-Z._\W]+)",
+);
 			   
 $pattern = array("profile/%user_id%/%user_name%" => "profile.php?lookup=%user_id%");
 

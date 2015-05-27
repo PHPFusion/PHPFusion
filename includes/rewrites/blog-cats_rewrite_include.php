@@ -17,8 +17,10 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%blog_cat_id%" => "([0-9]+)", 
-			   "%blog_cat_name%" => "([0-9a-zA-Z._\W]+)");
+$regex = array(
+	"%blog_cat_id%" => "([0-9]+)", 
+	"%blog_cat_name%" => "([0-9a-zA-Z._\W]+)",
+);
 			   
 $pattern = array("blog-category/%blog_cat_id%/%blog_cat_name%" => "blog.php?cat_id=%blog_cat_id%");
 

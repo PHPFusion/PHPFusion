@@ -19,4 +19,3 @@
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 $pattern = array("homepage" => "home.php");
-

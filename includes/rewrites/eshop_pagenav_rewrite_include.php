@@ -17,13 +17,17 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-$regex = array("%category%" => "([0-9]+)",
-			   "%details%" => "([0-9]+)",
-			   "%rowstart%" => "([0-9]+)",
-			   "%c_start%" => "([0-9]+)");
+$regex = array(
+	"%category%" => "([0-9]+)",
+	"%details%" => "([0-9]+)",
+	"%rowstart%" => "([0-9]+)",
+	"%c_start%" => "([0-9]+)",
+);
 
-$pattern = array("shop/browse/%rowstart%" => "eshop.php?rowstart=%rowstart%",
-				 "shop/browse/%rowstart%" => "eshop.php?rowstart=%rowstart%",
-				 "shop/browse/%category%/%rowstart%" => "eshop.php?category=%category%&amp;rowstart=%rowstart%",
-				 "shop/browse/%category%/%rowstart%" => "eshop.php?rowstart=%rowstart%&amp;category=%category%",
-				 "shop/browse/%details%/%c_start%" => "eshop.php?product=%details%&amp;c_start=%c_start%");
+$pattern = array(
+"shop/browse/%rowstart%" => "eshop.php?rowstart=%rowstart%",
+"shop/browse/%rowstart%" => "eshop.php?rowstart=%rowstart%",
+"shop/browse/%category%/%rowstart%" => "eshop.php?category=%category%&amp;rowstart=%rowstart%",
+"shop/browse/%category%/%rowstart%" => "eshop.php?rowstart=%rowstart%&amp;category=%category%",
+"shop/browse/%details%/%c_start%" => "eshop.php?product=%details%&amp;c_start=%c_start%",
+);
