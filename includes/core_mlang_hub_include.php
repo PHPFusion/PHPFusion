@@ -100,7 +100,7 @@ elseif (preg_match('/downloads.php/i', $_SERVER['PHP_SELF']) || preg_match('|/do
 // News
 elseif (preg_match('/news.php/i', $_SERVER['PHP_SELF']) || preg_match('|/news/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("NS")) {
 	if (isset($_GET['readmore']) && isnum($_GET['readmore']) || $matches['1'] > 0) {
-		$data = dbarray(dbquery("SELECT news_language FROM ".DB_news." WHERE news_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
+		$data = dbarray(dbquery("SELECT news_language FROM ".DB_NEWS." WHERE news_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $matches['1'])."'"));
 		if ($data['news_language']." != ".LANGUAGE) {
 			echo set_language($data['news_language']);
 		}
