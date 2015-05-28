@@ -41,7 +41,7 @@ if (db_exists(DB_WEBLINKS) && db_exists(DB_WEBLINK_CATS)) {
 
 	if (dbrows($result) != 0) {
 
-		echo "<title>".$settings['sitename'].$locale['rss006'].(multilang_table("WL")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n";
+		echo "<title>".$settings['sitename'].$locale['rss005'].(multilang_table("WL")?" ".$locale['rss007']." ".LANGUAGE:"")."</title>\n";
 		echo "<link>".$settings['siteurl']."</link>\n<description>".$settings['description']."</description>\n";
 
 		while ($row=dbarray($result)) {
