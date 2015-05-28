@@ -21,7 +21,7 @@ include LOCALE.LOCALESET."setup.php";
 
 // Infusion general information
 $inf_title = $locale['setup_3002'];
-$inf_description = "Infusion";
+$inf_description = $locale['setup_3002'];
 $inf_version = "1.00";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "";

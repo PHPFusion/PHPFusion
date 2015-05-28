@@ -15,10 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once "../../maincore.php";
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."faq.php";
+
+include INFUSIONS."faq/locale/".LOCALESET."faq.php";
+
 add_to_title($locale['global_203']);
+
 if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	opentable($locale['400']);
 	echo "<!--pre_faq_idx-->";
@@ -33,7 +36,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 				echo "</tr>\n<tr>\n";
 			}
 			$num = dbcount("(faq_id)", DB_FAQS, "faq_cat_id='".$data['faq_cat_id']."'");
-			echo "<td valign='top'><a href='".FUSION_SELF."?cat_id=".$data['faq_cat_id']."'>".$data['faq_cat_name']."</a> <span class='small2'>($num)</span>\n";
+			echo "<td valign='top'><a href='".INFUSIONS."faq/faq.php?cat_id=".$data['faq_cat_id']."'>".$data['faq_cat_name']."</a> <span class='small2'>($num)</span>\n";
 			if ($data['faq_cat_description']) {
 				echo "<br />\n<span class='small'>".$data['faq_cat_description']."</span>";
 			}
@@ -50,8 +53,8 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 		add_to_title($locale['global_201'].$data['faq_cat_name']);
 		opentable($locale['401'].": ".$data['faq_cat_name']);
 		echo "<table cellpadding='0' cellspacing='1' width='100%'>\n<tr>\n";
-		echo "<td class='tbl2'>\n<a href='".FUSION_SELF."'>".$locale['400']."</a> &gt;";
-		echo "<a href='".FUSION_SELF."?cat_id=".$_GET['cat_id']."'>".$data['faq_cat_name']."</a></td>\n";
+		echo "<td class='tbl2'>\n<a href='".INFUSIONS."faq/faq.php'>".$locale['400']."</a> &gt;";
+		echo "<a href='".INFUSIONS."faq/faq.php?cat_id=".$_GET['cat_id']."'>".$data['faq_cat_name']."</a></td>\n";
 		echo "</tr>\n</table>\n";
 		$rows = dbcount("(faq_id)", DB_FAQS, "faq_cat_id='".$_GET['cat_id']."'");
 		if ($rows) {
@@ -66,10 +69,10 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 				if ($i != 0 && ($i%$columns == 0)) {
 					echo "</tr>\n<tr>\n";
 				}
-				echo "<td class='tbl1' width='25%'><a href='#faq_".$data['faq_id']."'>".$data['faq_question']."</a></td>";
+				echo "<td class='tbl1' width='25%'><a href='".INFUSIONS."faq/faq.php#faq_".$data['faq_id']."'>".$data['faq_question']."</a></td>";
 				$faq_content .= "<div class='".($ii%2 == 0 ? "tbl1" : "tbl2")."' style='display:block; padding:10px 5px'>\n";
 				$faq_content .= "<a id='faq_".$data['faq_id']."'></a><strong>".$data['faq_question']."</strong><br />\n".nl2br(stripslashes($data['faq_answer']));
-				$faq_content .= "<br style='clear:both' /><a href='#content'><span class='small'>".$locale['402']."</span></a><br />\n";
+				$faq_content .= "<br style='clear:both' /><a href='".INFUSIONS."faq/faq.php#content'><span class='small'>".$locale['402']."</span></a><br />\n";
 				$faq_content .= "</div>\n";
 				$i++;
 				$ii++;
