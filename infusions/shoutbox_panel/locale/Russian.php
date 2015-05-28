@@ -1,46 +1,46 @@
 <?php
-$locale['SB_title'] = "Shoutbox";
+$locale['SB_title'] = "Мини-чат";
 
-$locale['SB_desc'] = "Shoutbox (Official AddOn)";
-$locale['SB_admin1'] = "Shoutbox Admin";
+$locale['SB_desc'] = "Мини-чат (официальное дополнение)";
+$locale['SB_admin1'] = "Управление мини-чатом";
 
 // Shoutbox
-$locale['SB_title'] = "Shoutbox";
-$locale['SB_name'] = "Name:";
-$locale['SB_message'] = "Message:";
-$locale['SB_shout'] = "Shout";
-$locale['SB_login_req'] = "You must login to post a message.";
-$locale['SB_archive'] = "Shoutbox Archive";
-$locale['SB_no_msgs'] = "No messages have been posted.";
-$locale['SB_delete'] = "Delete";
-$locale['SB_validation_code'] = "Validation Code:";
-$locale['SB_enter_validation_code'] = "Enter Validation Code:";
+$locale['SB_title'] = "Мини-чат";
+$locale['SB_name'] = "Имя:";
+$locale['SB_message'] = "Сообщение:";
+$locale['SB_shout'] = "Опубликовать";
+$locale['SB_login_req'] = "Вы должны авторизоваться для отправки сообщений.";
+$locale['SB_archive'] = "Архив мини-чата";
+$locale['SB_no_msgs'] = "Пока что сообщений нет.";
+$locale['SB_delete'] = "Удалить";
+$locale['SB_validation_code'] = "Код проверки:";
+$locale['SB_enter_validation_code'] = "Введите код проверки:";
 
-$locale['SB_edit_shout'] = "Edit Shout";
+$locale['SB_edit_shout'] = "Изменить сообщение";
 // Shoutbox messages
-$locale['SB_shout_updated'] = "Shout updated";
-$locale['SB_shout_deleted'] = "Shout deleted";
-$locale['SB_shouts_deleted'] = "Shouts deleted";
+$locale['SB_shout_updated'] = "Сообщение обновлено";
+$locale['SB_shout_deleted'] = "Сообщение удалено";
+$locale['SB_shouts_deleted'] = "Сообщения удалены";
 // Edit Shout form
-$locale['SB_save_shout'] = "Save Shout";
+$locale['SB_save_shout'] = "Сохранить сообщение";
 // Prune Shoutbox
-$locale['SB_delete_old'] = "Delete Shouts older than";
-$locale['SB_days'] = " days";
-$locale['SB_delete_shouts'] = "Delete Shouts";
+$locale['SB_delete_old'] = "Удалить сообщения старше чем ";
+$locale['SB_days'] = " дней";
+$locale['SB_delete_shouts'] = "Удалить сообщения";
 // Current Shouts
-$locale['SB_edit'] = "Edit";
-$locale['SB_userip'] = "User IP: ";
-$locale['SB_on_date'] = " on "; // shout date: on march 30
+$locale['SB_edit'] = "Изменить";
+$locale['SB_userip'] = "IP пользователя: ";
+$locale['SB_on_date'] = " "; // shout date: on march 30 // а в русском так не пишется, потому просто пробел
 // Popup Error/Warning Messages
-$locale['SB_warning_shouts'] = "Delete shouts?";
-$locale['SB_warning_shout'] = "Delete this shout?";
+$locale['SB_warning_shouts'] = "Удалить сообщения?";
+$locale['SB_warning_shout'] = "Удалить сообщение?";
 
 // Settings
-$locale['SB_settings'] = "Shoutbox Settings";
-$locale['SB_visible_shouts'] = "Visible Shouts";
-$locale['SB_guest_shouts'] = "Guests can shout?";
-$locale['SB_yes'] = "Yes";
-$locale['SB_no'] = "No";
-$locale['SB_submit'] = "Submit";
-$locale['SB_update_ok'] = "Settings Updated";
+$locale['SB_settings'] = "Настройки мини-чата";
+$locale['SB_visible_shouts'] = "Отображение сообщений";
+$locale['SB_guest_shouts'] = "Гости могут писать?";
+$locale['SB_yes'] = "Да";
+$locale['SB_no'] = "Нет";
+$locale['SB_submit'] = "Сохранить";
+$locale['SB_update_ok'] = "Настройки обновлены";
 
