@@ -157,10 +157,6 @@ define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
-// Language detection hub for multilingual content, detect, set he correct language if it is not set
-if (count($enabled_languages) > 1) {
-	require __DIR__.'/includes/core_mlang_hub_include.php';
-}
 
 // If language change is initiated and if the selected language is valid
 if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
@@ -205,6 +201,11 @@ $data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='"
 if (!defined("LANGUAGE")) {
       define ("LANGUAGE", $settings['locale']);
       define ("LOCALESET", $settings['locale']."/");
+}
+
+// Language detection hub for multilingual content, detect, set correct language if it is not set
+if (count($enabled_languages) > 1) {
+	require __DIR__.'/includes/core_mlang_hub_include.php';
 }
 
 // IP address functions

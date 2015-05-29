@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-if (!preg_match('/administration/i', $_SERVER['PHP_SELF']) && count($enabled_languages) > 1) {
+if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 
 // Articles
 if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) || preg_match('|/articles/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("AR")) {
@@ -187,4 +187,5 @@ elseif (preg_match('/weblinks.php/i', $_SERVER['PHP_SELF']) || preg_match('|/web
 		}
 	}
 }
+
 }
