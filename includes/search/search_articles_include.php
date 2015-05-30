@@ -61,7 +61,7 @@ if ($_GET['stype'] == "articles" || $_GET['stype'] == "all") {
 			$subj_c = search_stringscount($data['article_subject']);
 			$text_c = search_stringscount($data['article_snippet']." ".$data['article_article']);
 			// $text_frag = highlight_words($swords, $text_frag);
-			$search_result .= "<a href='articles.php?article_id=".$data['article_id']."'>".$data['article_subject']."</a>"."<br /><br />\n";
+			$search_result .= "<a href='infusions/articles/articles.php?article_id=".$data['article_id']."'>".$data['article_subject']."</a>"."<br /><br />\n";
 			// $search_result .= "<a href='articles.php?article_id=".$data['article_id']."'>".highlight_words($swords, $data['article_subject'])."</a>"."<br /><br />\n";
 			$search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
 			$search_result .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";

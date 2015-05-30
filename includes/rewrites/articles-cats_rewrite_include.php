@@ -22,7 +22,7 @@ $regex = array(
 	"%article_cat_title%" => "([0-9a-zA-Z._\W]+)",
 );
 
-$pattern = array("article-category/%article_cat_id%/%article_cat_title%" => "articles.php?cat_id=%article_cat_id%");
+$pattern = array("article-category/%article_cat_id%/%article_cat_title%" => "infusions/articles/articles.php?cat_id=%article_cat_id%");
 
 $dir_path = ROOT;
 $dbname = DB_ARTICLE_CATS;

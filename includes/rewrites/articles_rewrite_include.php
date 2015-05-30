@@ -26,14 +26,14 @@ $regex = array(
 
 $pattern = array(
 	"articles" => "articles.php",
-	"articles/%article_id%/article/%article_title%" => "articles.php?article_id=%article_id%",
-	"articles/%article_id%-%rowstart%/article/%article_title%" => "articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",
-	"articles/%article_id%/article/%article_title%#comments" => "articles.php?article_id=%article_id%#comments",
-	"articles/%article_id%-%rowstart%/article/%article_title%#comments" => "articles.php?article_id=%article_id%&amp;rowstart=%rowstart%#comments",
-	"articles/%article_id%/article/%article_title%/edit-comments/%comment_id%#edit_comment" => "articles.php?article_id=%article_id%&amp;c_action=edit&amp;comment_id=%comment_id%#edit_comment",
-	"articles/%article_id%-%rowstart%/article/%article_title%/edit-comments/%comment_id%#edit_comment" => "articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=edit&amp;comment_id=%comment_id%#edit_comment",
-	"articles/%article_id%/article/%article_title%/delete-comments/%comment_id%" => "articles.php?article_id=%article_id%&amp;c_action=delete&amp;comment_id=%comment_id%",
-	"articles/%article_id%-%rowstart%/article/%article_title%/delete-comments/%comment_id%" => "articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=delete&amp;comment_id=%comment_id%",
+	"articles/%article_id%/article/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%",
+	"articles/%article_id%-%rowstart%/article/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",
+	"articles/%article_id%/article/%article_title%#comments" => "infusions/articles/articles.php?article_id=%article_id%#comments",
+	"articles/%article_id%-%rowstart%/article/%article_title%#comments" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%#comments",
+	"articles/%article_id%/article/%article_title%/edit-comments/%comment_id%#edit_comment" => "infusions/articles/articles.php?article_id=%article_id%&amp;c_action=edit&amp;comment_id=%comment_id%#edit_comment",
+	"articles/%article_id%-%rowstart%/article/%article_title%/edit-comments/%comment_id%#edit_comment" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=edit&amp;comment_id=%comment_id%#edit_comment",
+	"articles/%article_id%/article/%article_title%/delete-comments/%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;c_action=delete&amp;comment_id=%comment_id%",
+	"articles/%article_id%-%rowstart%/article/%article_title%/delete-comments/%comment_id%" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%&amp;c_action=delete&amp;comment_id=%comment_id%",
 );
 
 $dbname = DB_ARTICLES;
