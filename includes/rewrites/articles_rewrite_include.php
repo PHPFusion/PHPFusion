@@ -25,7 +25,7 @@ $regex = array(
 );
 
 $pattern = array(
-	"articles" => "articles.php",
+	"articles" => "infusions/articles/articles.php",
 	"articles/%article_id%/article/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%",
 	"articles/%article_id%-%rowstart%/article/%article_title%" => "infusions/articles/articles.php?article_id=%article_id%&amp;rowstart=%rowstart%",
 	"articles/%article_id%/article/%article_title%#comments" => "infusions/articles/articles.php?article_id=%article_id%#comments",
