@@ -58,8 +58,8 @@ $configs[DB_ARTICLES] = array(
 		'norecord' => $locale['home_0051'],
 		'blockTitle' => $locale['home_0001'],
 	),
-	'categoryLinkPattern' => BASEDIR."articles.php?cat_id={cat_id}",
-	'contentLinkPattern' => BASEDIR."articles.php?article_id={id}"
+	'categoryLinkPattern' => INFUSIONS."articles/articles.php?cat_id={cat_id}",
+	'contentLinkPattern' => INFUSIONS."articles/articles.php?article_id={id}"
 );
 
 $configs[DB_BLOG] = array(
