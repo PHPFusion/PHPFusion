@@ -53,17 +53,17 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 		$res .= "</div>\n";
 
 		$res .= "<div class='btn-group'>\n";
-		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['html_016']."' onclick=\"insertText('".$textarea."', '&lt;!--PAGEBREAK--&gt;');\">".$locale['html_016']."</button>\n";
-		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;');\">&lt;?php?&gt;</button>\n";
-		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;p&gt;' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;');\">&lt;p&gt;</button>\n";
-		$res .= "<button type='button' class='btn btn-default btn-sm button m-b-10' value='&lt;br /&gt;' onclick=\"insertText('".$textarea."', '&lt;br /&gt;');\">&lt;br /&gt;</button>\n";
+		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='".$locale['html_016']."' onclick=\"insertText('".$textarea."', '&lt;!--PAGEBREAK--&gt;', '".$formname."');\">".$locale['html_016']."</button>\n";
+		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;?php?&gt;' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;', '".$formname."');\">&lt;?php?&gt;</button>\n";
+		$res .= "<button type='button' class='btn btn-sm btn-default button m-b-10' value='&lt;p&gt;' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;', '".$formname."');\">&lt;p&gt;</button>\n";
+		$res .= "<button type='button' class='btn btn-default btn-sm button m-b-10' value='&lt;br /&gt;' onclick=\"insertText('".$textarea."', '&lt;br /&gt;', '".$formname."');\">&lt;br /&gt;</button>\n";
 		$res .= "</div>\n";
 
 		$res .= "<div class='btn-group'>\n";
-		$res .= "<button type='button' value='left' title='".$locale['html_006']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:left;\'/&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-left'></i></button>\n";
-		$res .= "<button type='button' value='center' title='".$locale['html_007']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:center;\'/&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-center'></i></button>\n";
-		$res .= "<button type='button' value='right' title='".$locale['html_008']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:right;\'/&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-right'></i></button>\n";
-		$res .= "<button type='button' value='justify' title='".$locale['html_009']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:justify;\'/&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-justify'></i></button>\n";
+		$res .= "<button type='button' value='left' title='".$locale['html_006']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:left;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-left'></i></button>\n";
+		$res .= "<button type='button' value='center' title='".$locale['html_007']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:center;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-center'></i></button>\n";
+		$res .= "<button type='button' value='right' title='".$locale['html_008']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:right;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-right'></i></button>\n";
+		$res .= "<button type='button' value='justify' title='".$locale['html_009']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:justify;\'&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='glyphicon glyphicon-align-justify'></i></button>\n";
 		$res .= "</div>\n";
 		$res .= "<div class='btn-group'>\n";
 		$res .= "<button type='button' value='link' title='".$locale['html_010']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;a href=\'', '\' target=\'_blank\'>Link&lt;/a&gt;', '".$formname."');\"><i class='glyphicon glyphicon-paperclip'></i></button>\n";
