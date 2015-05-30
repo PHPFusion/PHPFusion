@@ -21,7 +21,7 @@ if (isset($_POST['uninstall'])) {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."faq_cats");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."faqs");
 	$result = dbquery("DELETE FROM ".$db_prefix."admin WHERE admin_rights='FQ'");
-	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='faq.php'");
+	$result = dbquery("DELETE FROM ".$db_prefix."site_links WHERE link_url='infusions/faq/faq.php'");
 } else {
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."faq_cats");
 	$result = dbquery("DROP TABLE IF EXISTS ".$db_prefix."faqs");
@@ -43,13 +43,13 @@ if (isset($_POST['uninstall'])) {
 			PRIMARY KEY(faq_id)
 			) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 	if (!$result) 	$fail = TRUE;
-	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FQ', 'faq.gif', '".$locale['setup_3011']."', 'faq.php', '1')");
+	$result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FQ', 'faq.gif', '".$locale['setup_3011']."', 'infusions/faq/faq_admin.php', '1')");
 	if (!$result) 	$fail = TRUE;
 
 	$links_sql = "INSERT INTO ".$db_prefix."site_links (link_name, link_cat, link_icon, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES \n";
 	$links_sql .= implode(",\n", array_map(function ($language) {
 		include LOCALE.$language."/setup.php";
-		return "('".$locale['setup_3303']."', '0', '', 'faq.php', '0', '1', '0', '4', '".$language."')";
+		return "('".$locale['setup_3303']."', '0', '', 'infusions/faq/faq.php', '0', '1', '0', '4', '".$language."')";
 	}, explode('.', fusion_get_settings('enabled_languages'))));
 	if(!dbquery($links_sql)) {
 		$fail = TRUE;
