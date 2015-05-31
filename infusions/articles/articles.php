@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
+require_once ($settings['site_seo'] == "1" ? "" : "../../")."maincore.php";
 if (!db_exists(DB_ARTICLES)) {
 	$_GET['code'] = 404;
 	require_once BASEDIR."error.php";
@@ -53,8 +53,8 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 		$pagecount = count($article);
 		$article_subject = stripslashes($data['article_subject']);
 
-		add_breadcrumb(array('link'=>BASEDIR.'articles.php?cat_id='.$data['article_cat_id'], 'title'=>$data['article_cat_name']));
-		add_breadcrumb(array('link'=>BASEDIR.'articles.php?article_id='.$_GET['article_id'], 'title'=>$data['article_subject']));
+		add_breadcrumb(array('link'=>INFUSIONS.'articles/articles.php?cat_id='.$data['article_cat_id'], 'title'=>$data['article_cat_name']));
+		add_breadcrumb(array('link'=>INFUSIONS.'articles/articles.php?article_id='.$_GET['article_id'], 'title'=>$data['article_subject']));
 
 		if ($data['article_keywords'] !=="") { set_meta("keywords", $data['article_keywords']); }
 
@@ -74,13 +74,13 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 			"article_reads" => $data['article_reads'],
 			"article_allow_comments" => $data['article_allow_comments'],
 			"article_allow_ratings" => $data['article_allow_ratings'],
-			"page_nav" =>  $pagecount > 1 ? makepagenav($_GET['rowstart'], 1, $pagecount, 3, BASEDIR."articles.php?article_id=".$_GET['article_id']."&amp;") : ''
+			"page_nav" =>  $pagecount > 1 ? makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."articles/articles.php?article_id=".$_GET['article_id']."&amp;") : ''
 		);
 
 		add_to_title($locale['global_201'].$article_subject);
 		render_article($article_subject, $article[$_GET['rowstart']], $article_info);
 	} else {
-		redirect(BASEDIR.'articles.php');
+		redirect(INFUSIONS."articles/articles.php");
 	}
 }
 
@@ -104,7 +104,7 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
 		add_to_title($locale['global_201'].$cdata['article_cat_name']);
-		add_breadcrumb(array('link'=>BASEDIR.'articles.php?cat_id='.$_GET['cat_id'], 'title'=>$cdata['article_cat_name']));
+		add_breadcrumb(array('link'=>INFUSIONS.'articles/articles.php?cat_id='.$_GET['cat_id'], 'title'=>$cdata['article_cat_name']));
 		$info['articles']['category'] = $cdata;
 		$info['articles_max_rows'] = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."' AND article_draft='0'");
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['articles_max_rows']) ? $_GET['rowstart'] : 0;
@@ -120,7 +120,7 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 			$info['page_nav'] = ($info['articles_rows'] > $settings['articles_per_page']) ? makepagenav($_GET['rowstart'], $settings['articles_per_page'], $info['articles_rows'], 3, FUSION_SELF."?cat_id=".$_GET['cat_id']."&amp;") : '';
 		}
 	} else {
-		redirect(BASEDIR.'articles.php');
+		redirect(INFUSIONS.'articles/articles.php');
 	}
 	render_articles_category($info);
 }
