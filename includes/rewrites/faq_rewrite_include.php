@@ -23,8 +23,8 @@ $regex = array(
 );
 
 $pattern = array(
-	"Frequently_asked_Questions" => "infusions/faq/faq.php",
-	"faq-cat/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
+	"Frequently-asked-Questions" => "infusions/faq/faq.php",
+	"faq-category/%faq_cat_id%/%faq_cat_name%" => "infusions/faq/faq.php?cat_id=%faq_cat_id%",
 );
 
 $dir_path = ROOT;
