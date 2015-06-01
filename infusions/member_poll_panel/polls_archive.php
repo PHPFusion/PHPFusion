@@ -17,7 +17,11 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 require_once THEMES."templates/header.php";
+
+include INFUSIONS."member_poll_panel/locale/".LOCALESET."member_poll_panel.php";
+
 add_to_title($locale['global_200'].$locale['global_138']);
+
 $result = dbquery("SELECT * FROM ".DB_POLLS." ".(multilang_table("PO") ? "WHERE poll_language='".LANGUAGE."' AND" : "WHERE")." poll_ended!='0' ORDER BY poll_id DESC");
 if (dbrows($result)) {
 	$view_list = "";
@@ -90,4 +94,5 @@ if (isset($_POST['view']) && (isset($_POST['viewpoll_id']) && isnum($_POST['view
 		redirect(FUSION_SELF);
 	}
 }
+
 require_once THEMES."templates/footer.php";
