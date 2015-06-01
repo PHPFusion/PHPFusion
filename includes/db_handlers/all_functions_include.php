@@ -107,10 +107,7 @@ register_shutdown_function(function() {
  */
 function dbquery($query, array $parameters = array()) {
 	// Temporary check to detect the bug in installer
-	if (dbconnection() === null) {
-		debug_print_backtrace();
-	}
-	return dbconnection()->query($query, $parameters);
+	return DatabaseFactory::getConnection('default')->query($query, $parameters);
 }
 
 /**
@@ -123,7 +120,7 @@ function dbquery($query, array $parameters = array()) {
  * @return boolean
  */
 function dbcount($field, $table, $conditions = "", array $parameters = array()) {
-	return dbconnection()->count($field, $table, $conditions, $parameters);
+	return DatabaseFactory::getConnection('default')->count($field, $table, $conditions, $parameters);
 }
 
 /**
@@ -134,7 +131,7 @@ function dbcount($field, $table, $conditions = "", array $parameters = array()) 
  * @return mixed
  */
 function dbresult($result, $row) {
-	return dbconnection()->fetchFirstColumn($result, $row);
+	return DatabaseFactory::getConnection('default')->fetchFirstColumn($result, $row);
 }
 
 /**
@@ -144,7 +141,7 @@ function dbresult($result, $row) {
  * @return int
  */
 function dbrows($result) {
-	return dbconnection()->countRows($result);
+	return DatabaseFactory::getConnection('default')->countRows($result);
 }
 
 /**
@@ -154,7 +151,7 @@ function dbrows($result) {
  * @return array Associative array
  */
 function dbarray($result) {
-	return dbconnection()->fetchAssoc($result);
+	return DatabaseFactory::getConnection('default')->fetchAssoc($result);
 }
 
 /**
@@ -164,7 +161,7 @@ function dbarray($result) {
  * @return array Numeric array
  */
 function dbarraynum($result) {
-	return dbconnection()->fetchRow($result);
+	return DatabaseFactory::getConnection('default')->fetchRow($result);
 }
 
 /**
@@ -211,7 +208,7 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $halt_on_error = TRUE
  * @return int|false
  */
 function dbnextid($table) {
-	return dbconnection()->getNextId($table);
+	return DatabaseFactory::getConnection('default')->getNextId($table);
 }
 
 /**
@@ -220,7 +217,7 @@ function dbnextid($table) {
  * @return int
  */
 function dblastid() {
-	return (int) dbconnection()->getLastId();
+	return (int) DatabaseFactory::getConnection('default')->getLastId();
 }
 
 /**
@@ -229,5 +226,5 @@ function dblastid() {
  * @return AbstractDatabaseDriver
  */
 function dbconnection() {
-	return DatabaseFactory::getConnection();
+	return DatabaseFactory::getConnection('default');
 }

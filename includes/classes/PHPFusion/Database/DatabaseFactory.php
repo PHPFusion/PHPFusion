@@ -227,14 +227,15 @@ class DatabaseFactory {
 		if (!isset(self::$configurations[$id])) {
 			throw new UndefinedConfigurationException("Unknown configuration id: ".$id);
 		}
-		if (!isset(self::$connections[$id]) or self::$connections[$id]->isClosed()) {
-			$conf = self::$configurations[$id];
-			self::connect($conf->getHost(), $conf->getUser(), $conf->getPassword(), $conf->getDatabase(), array(
-				'driver' => $conf->getDriver(),
-				'connectionid' => $id,
-				'debug' => $conf->isDebug()
-			));
+		if (isset(self::$connections[$id]) and self::$connections[$id]->isConnected()) {
+			return self::$connections[$id];
 		}
+		$conf = self::$configurations[$id];
+		self::connect($conf->getHost(), $conf->getUser(), $conf->getPassword(), $conf->getDatabase(), array(
+			'driver' => $conf->getDriver(),
+			'connectionid' => $id,
+			'debug' => $conf->isDebug()
+		));
 		return self::$connections[$id];
 	}
 
