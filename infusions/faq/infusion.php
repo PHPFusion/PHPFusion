@@ -72,3 +72,4 @@ $inf_droptable[1] = DB_FAQS;
 $inf_droptable[2] = DB_FAQ_CATS;
 $inf_deldbrow[1] = DB_ADMIN." WHERE admin_rights='FQ'";
 $inf_deldbrow[2] = DB_SITE_LINKS." WHERE link_url='infusions/faq/faq.php'";
+$inf_deldbrow[3] = DB_LANGUAGE_TABLES." WHERE mlt_rights='FQ'";

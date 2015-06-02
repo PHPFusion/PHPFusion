@@ -94,3 +94,4 @@ $inf_deldbrow[2] = DB_ADMIN." WHERE admin_rights='A'";
 $inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='AC'";
 $inf_deldbrow[4] = DB_SITE_LINKS." WHERE link_url='infusions/articles/articles.php'";
 $inf_deldbrow[5] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=a'";
+$inf_deldbrow[6] = DB_LANGUAGE_TABLES." WHERE mlt_rights='AR'";

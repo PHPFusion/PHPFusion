@@ -26,11 +26,15 @@ exit;
 require_once THEMES."templates/header.php";
 include INFUSIONS."blog/locale/".LOCALESET."blog.php";
 require_once INFUSIONS."blog/templates/blog.php";
+require_once INCLUDES."infusions_include.php";
+
+$blog_settings = get_settings("blog");
 
 add_to_title($locale['blog_1000']);
 add_breadcrumb(array('link' => INFUSIONS.'blog/blog.php', 'title' => $locale['blog_1001']));
 
 $_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : '';
+
 $result = null;
 
 $info = array(
@@ -58,7 +62,7 @@ $filter = array_keys($info['allowed_filters']);
 $_GET['type'] = isset($_GET['type']) && in_array($_GET['type'], array_keys($info['allowed_filters'])) ? $_GET['type'] : '';
 
 foreach ($info['allowed_filters'] as $type => $filter_name) {
-	$filter_link = BASEDIR."blog.php?".($_GET['cat_id'] !=='' ? "cat_id=".$_GET['cat_id']."&amp;" : '').(isset($_GET['archive']) ? "archive=".$_GET['archive']."&amp;" : '')."type=".$type;
+	$filter_link = INFUSIONS."blog/blog.php?".($_GET['cat_id'] !=='' ? "cat_id=".$_GET['cat_id']."&amp;" : '').(isset($_GET['archive']) ? "archive=".$_GET['archive']."&amp;" : '')."type=".$type;
 	$active = isset($_GET['type']) && $_GET['type'] == $type ? 1 : 0;
 	$info['blog_filter'][$type] = array('title'=>$filter_name, 'link'=>$filter_link, 'active' => $active);
 	unset($filter_link);
@@ -139,7 +143,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			}
 
 			$item['blog_post_author'] = display_avatar($item, '25px', '', true, 'img-rounded').profile_link($item['user_id'], $item['user_name'], $item['user_status']);
-			$item['blog_post_cat'] = $locale['in']." <a href='".BASEDIR."blog.php?cat_id=".$item['blog_cat']."'>".$item['blog_cat_name']."</a>";
+			$item['blog_post_cat'] = $locale['in']." <a href='".INFUSIONS."blog/blog.php?cat_id=".$item['blog_cat']."'>".$item['blog_cat_name']."</a>";
 			$item['blog_post_time'] = $locale['global_049']." ".timer($item['blog_datestamp']);
 
 			$user_contact = '';
@@ -173,8 +177,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 
 			if (iADMIN && checkrights('BLOG')) {
 				$item['admin_link'] = array(
-					'edit' => ADMIN."blog.php".$aidlink."&amp;action=edit&amp;section=nform&amp;blog_id=".$item['blog_id'],
-					'delete' => ADMIN."blog.php".$aidlink."&amp;action=delete&amp;section=nform&amp;blog_id=".$item['blog_id'],
+					'edit' => INFUSIONS."blog/blog_admin.php".$aidlink."&amp;action=edit&amp;section=nform&amp;blog_id=".$item['blog_id'],
+					'delete' => INFUSIONS."blog/blog_admin.php".$aidlink."&amp;action=delete&amp;section=nform&amp;blog_id=".$item['blog_id'],
 				);
 			}
 
@@ -182,18 +186,18 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$info['blog_updated'] = $locale['global_049']." ".timer($item['blog_datestamp']);
 
 			if ($item['blog_pagecount'] > 1) {
-				$info['blog_nav'] = makepagenav($_GET['rowstart'], 1, $item['blog_pagecount'], 3, BASEDIR."blog.php?readmore=".$_GET['readmore']."&amp;")."\n";
+				$info['blog_nav'] = makepagenav($_GET['rowstart'], 1, $item['blog_pagecount'], 3, INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']."&amp;")."\n";
 			}
 
-			add_breadcrumb(array('link' => BASEDIR."blog.php?readmore=".$_GET['readmore'], 'title' => $item['blog_subject']));
+			add_breadcrumb(array('link' => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'], 'title' => $item['blog_subject']));
 			add_to_title($locale['global_201'].$item['blog_subject']);
 			add_to_meta($item['blog_subject'].($item['blog_keywords'] ? ",".$item['blog_keywords'] : ''));
-			$item['blog_subject'] = "<a class='text-dark' href='".BASEDIR."blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>";
+			$item['blog_subject'] = "<a class='text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>";
 			$info['blog_item'] = $item;
 			update_blogReads($item['blog_id']);
 	}
 } else {
-		redirect(BASEDIR."blog.php");
+		redirect(INFUSIONS."blog/blog.php");
 	}
 } else {
 $condition = "";
@@ -211,7 +215,7 @@ if (isset($_GET['author']) && isnum($_GET['author'])) {
 
 	if ($info['blog_max_rows'] > 0) {
 		$author_res = dbresult(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval($_GET['author'])."'"), 0);
-		add_breadcrumb(array('link' => BASEDIR."blog.php?author=".$_GET['author'], 'title' =>$locale['global_070'].$author_res));
+		add_breadcrumb(array('link' => INFUSIONS."blog/blog.php?author=".$_GET['author'], 'title' =>$locale['global_070'].$author_res));
 		$result = dbquery("SELECT tn.*, tc.*,
 			tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 			SUM(tr.rating_vote) AS sum_rating,
@@ -226,19 +230,19 @@ if (isset($_GET['author']) && isnum($_GET['author'])) {
 			".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND blog_cat='0' AND (blog_start='0'||blog_start<=".time().")
 			AND (blog_end='0'||blog_end>=".time().") AND blog_draft='0' AND blog_name='".$_GET['author']."'
 			GROUP BY blog_id
-			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".$_GET['rowstart'].",".$settings['blogperpage']
+			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".$_GET['rowstart'].",".$blog_settings['blog_pagination']
 		);
 		$info['blog_rows'] = dbrows($result);
 	}
 } elseif (isset($_GET['cat_id']) && validate_blogCats($_GET['cat_id'])) {
 	if ($_GET['cat_id'] > 0) {
 		$res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'"));
-		add_breadcrumb(array('link' => BASEDIR."blog.php?cat_id=".$_GET['cat_id'], 'title' => $res['blog_cat_name']));
+		add_breadcrumb(array('link' => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'], 'title' => $res['blog_cat_name']));
 		add_to_title($locale['global_201'].$res['blog_cat_name']);
 		add_to_meta($res['blog_cat_name']);
 		$info['blog_title'] = $res['blog_cat_name'];
 	} elseif ($_GET['cat_id'] == 0) {
-		add_breadcrumb(array('link' => BASEDIR."blog.php?cat_id=".$_GET['cat_id'], 'title' => $locale['global_080']));
+		add_breadcrumb(array('link' => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'], 'title' => $locale['global_080']));
 		add_to_title($locale['global_080']);
 		add_to_meta($locale['global_080']);
 		$info['blog_title'] = $locale['global_080'];
@@ -264,7 +268,7 @@ if (isset($_GET['author']) && isnum($_GET['author'])) {
 			AND blog_draft='0'
 			AND blog_cat = '".intval($_GET['cat_id'])."'
 			GROUP BY tn.blog_id
-			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($settings['blogperpage'])
+			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination'])
 		);
 		$info['blog_rows'] = dbrows($result);
 	}
@@ -289,34 +293,34 @@ if (isset($_GET['author']) && isnum($_GET['author'])) {
 			AND (blog_end='0'||blog_end>=".time().") AND blog_draft='0'
 			".$condition."
 			GROUP BY tn.blog_id
-			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($settings['blogperpage'])
+			ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT ".intval($_GET['rowstart']).",".intval($blog_settings['blog_pagination'])
 		);
 		$info['blog_rows'] = dbrows($result);
 	}
 }
 
-if (($info['blog_max_rows'] > $settings['blogperpage']) && (!isset($_GET['readmore']) || !isnum($_GET['readmore']))) {
-	$info['blog_nav'] = makepagenav($_GET['rowstart'], $settings['blogperpage'], $info['blog_max_rows'], 3);
+if (($info['blog_max_rows'] > $blog_settings['blog_pagination']) && (!isset($_GET['readmore']) || !isnum($_GET['readmore']))) {
+	$info['blog_nav'] = makepagenav($_GET['rowstart'], $blog_settings['blog_pagination'], $info['blog_max_rows'], 3);
 }
 
 if (!empty($info['blog_rows'])) {
 	while ($data = dbarray($result)) {
 		$blog_image ='';
-		if ($data['blog_image'] && $settings['blog_image_frontpage'] == 0) {
+		if ($data['blog_image'] && $blog_settings['blog_image_frontpage'] == 0) {
 			$hiRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], true);
 			$lowRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], false);
-			$blog_image = "<a href='".BASEDIR."blog.php?readmore=".$data['blog_id']."'>".thumbnail($lowRes_image_path, '150px')."</a>";
+			$blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail($lowRes_image_path, '150px')."</a>";
 		}
 
 		$blog_cat_image = '';
-		if ($settings['blog_image_frontpage'] == 0) {
+		if ($blog_settings['blog_image_frontpage'] == 0) {
 			if ($blog_image) {
-				$blog_cat_image = "<a href='".($settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : BASEDIR."blog.php?readmore=".$data['blog_id'])."'>";
+				$blog_cat_image = "<a href='".($blog_settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : INFUSIONS."blog/blog.php?readmore=".$data['blog_id'])."'>";
 				$blog_cat_image .= $blog_image;
 				$blog_cat_image .= "</a>";
 			}
 		} else {
-			$blog_cat_image = "<a href='".($settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : BASEDIR."blog.php?readmore=".$data['blog_id'])."'>";
+			$blog_cat_image = "<a href='".($blog_settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : INFUSIONS."blog/blog.php?readmore=".$data['blog_id'])."'>";
 			$blog_cat_image .= "<img src='".get_image("bl_".$data['blog_cat_name'])."' alt='".$data['blog_cat_name']."' class='img-responsive blog-category' />";
 			$blog_cat_image .= "</a>";
 		}
@@ -326,9 +330,9 @@ if (!empty($info['blog_rows'])) {
 			'blog_anchor'			=> 		"<a name='blog_".$data['blog_id']."' id='blog_".$data['blog_id']."'></a>",
 			'blog_blog' 			=>		preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] ? nl2br(stripslashes($data['blog_blog'])) : stripslashes($data['blog_blog']))),
 			'blog_extended'			=> 		preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] ? nl2br(stripslashes($data['blog_extended'])) : nl2br(stripslashes($data['blog_extended'])))),
-			'blog_link'				=>		BASEDIR."blog.php?readmore=".$data['blog_id'],
-			'blog_category_link'	=>		"<a href='".BASEDIR."blog.php?cat_id=".$data['blog_cat']."'>".$data['blog_cat_name']."</a>\n",
-			'blog_readmore_link'	=> 		"<a href='".BASEDIR."blog.php?readmore=".$data['blog_id']."'>".$locale['blog_1006']."</a>\n",
+			'blog_link'				=>		INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
+			'blog_category_link'	=>		"<a href='".INFUSIONS."blog/blog.php?cat_id=".$data['blog_cat']."'>".$data['blog_cat_name']."</a>\n",
+			'blog_readmore_link'	=> 		"<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".$locale['blog_1006']."</a>\n",
 			'blog_subject' 			=>		stripslashes($data['blog_subject']),
 			'blog_image'			=> 		$blog_image,
 			'blog_cat_image'		=>		$blog_cat_image,
@@ -358,7 +362,7 @@ if (dbrows($archive_result)) {
 	while ($a_data = dbarray($archive_result)) {
 		$active = isset($_GET['archive']) && $_GET['archive'] == $a_data['blog_year']."#".$a_data['blog_month'] ? 1 : 0;
 		$month_locale = explode('|', $locale['months']);
-		$info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] =  array('title'=>$month_locale[$a_data['blog_month']], 'link'=>BASEDIR."blog.php?archive=".$a_data['blog_year']."#".$a_data['blog_month'], 'count' => $a_data['blog_count'], 'active'=>$active);
+		$info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] =  array('title'=>$month_locale[$a_data['blog_month']], 'link'=>INFUSIONS."blog/blog.php?archive=".$a_data['blog_year']."#".$a_data['blog_month'], 'count' => $a_data['blog_count'], 'active'=>$active);
 	}
 }
 
@@ -370,7 +374,7 @@ $author_result = dbquery("SELECT b.blog_name, count(b.blog_id) as blog_count, u.
 if (dbrows($author_result)) {
 	while ($at_data = dbarray($author_result)) {
 		$active = isset($_GET['author']) && $_GET['author'] == $at_data['blog_name'] ? 1 : 0;
-		$info['blog_author'][$at_data['blog_name']] =  array('title'=>$at_data['user_name'], 'link'=>BASEDIR."blog.php?author=".$at_data['blog_name'], 'count' => $at_data['blog_count'], 'active'=>$active);
+		$info['blog_author'][$at_data['blog_name']] =  array('title'=>$at_data['user_name'], 'link'=>INFUSIONS."blog/blog.php?author=".$at_data['blog_name'], 'count' => $at_data['blog_count'], 'active'=>$active);
 	}
 }
 

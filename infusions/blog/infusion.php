@@ -80,41 +80,55 @@ $inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_
 $inf_insertdbrow[3] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('BLOG', 'blog.png', '".$locale['setup_3055']."', '".INFUSIONS."blog/blog_admin.php', '1')";
 $inf_insertdbrow[4] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('S13', 'settings_blog.gif', '".$locale['setup_3055']."', '".INFUSIONS."blog/settings_blog.php', '4')";
 
+// Insert settings
+$inf_insertdbrow[5] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_image_readmore', '0', 'blog')";
+$inf_insertdbrow[6] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_image_frontpage', '0', 'blog')";
+$inf_insertdbrow[7] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_ratio', '0', 'blog')";
+$inf_insertdbrow[8] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_image_link', '1', 'blog')";
+$inf_insertdbrow[9] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_w', '400', 'blog')";
+$inf_insertdbrow[10] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_h', '300', 'blog')";
+$inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_w', '100', 'blog')";
+$inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_thumb_h', '100', 'blog')";
+$inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_w', '1800', 'blog')";
+$inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_h', '1600', 'blog')";
+$inf_insertdbrow[15] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_b', '150000', 'blog')";
+$inf_insertdbrow[16] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_pagination', '12', 'blog')";
+
 // Create a link for all installed languages
-if (!empty($settings['enabled_languages'])) {
 $enabled_languages = explode('.', $settings['enabled_languages']);
-$k = 5;
+
+if (!empty($settings['enabled_languages'])) {
+$k = 17;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 	include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3055']."', 'infusions/blog/blog.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
 		$k++;
 	}
 } else {
-		$inf_insertdbrow[5] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3055']."', 'infusions/blog/blog.php', '0', '2', '0', '2', '".LANGUAGE."')";
+		$inf_insertdbrow[17] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3055']."', 'infusions/blog/blog.php', '0', '2', '0', '2', '".LANGUAGE."')";
 }
 
 // Reset locale
 include LOCALE.LOCALESET."setup.php";
 
-if (!empty($settings['enabled_languages'])) {
-	for ($i=0;$i<sizeof($enabled_languages );$i++) {
-	include LOCALE."".$enabled_languages[$i]."/setup.php";
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3502']."', 'games.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3503']."', 'graphics.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3504']."', 'hardware.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3505']."', 'journal.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3506']."', 'members.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3507']."', 'mods.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3508']."', 'movies.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3509']."', 'network.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3511']."', 'php-fusion.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3512']."', 'security.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3513']."', 'software.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3514']."', 'themes.gif', '".$enabled_languages[$i]."')");
-		$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3515']."', 'windows.gif', '".$enabled_languages[$i]."')");
-	}
+// Create categories for each installed language
+for ($i=0;$i<sizeof($enabled_languages);$i++) {
+include LOCALE."".$enabled_languages[$i]."/setup.php";
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3502']."', 'games.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3503']."', 'graphics.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3504']."', 'hardware.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3505']."', 'journal.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3506']."', 'members.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3507']."', 'mods.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3508']."', 'movies.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3509']."', 'network.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3511']."', 'php-fusion.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3512']."', 'security.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3513']."', 'software.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3514']."', 'themes.gif', '".$enabled_languages[$i]."')");
+	$result = dbquery("INSERT INTO ".$db_prefix."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3515']."', 'windows.gif', '".$enabled_languages[$i]."')");
 }
 
 // Defuse cleaning	
@@ -123,6 +137,7 @@ $inf_droptable[2] = DB_BLOG_CATS;
 $inf_deldbrow[1] = DB_PANELS." WHERE panel_filename='Blog archive panel'";
 $inf_deldbrow[2] = DB_ADMIN." WHERE admin_rights='BLOG'";
 $inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='BLC'";
-$inf_deldbrow[4] = DB_ADMIN." WHERE admin_rights='S13'";
+$inf_deldbrow[4] = DB_SETTINGS_INF." WHERE settings_inf='blog'";
 $inf_deldbrow[5] = DB_SITE_LINKS." WHERE link_url='infusions/blog/blog.php'";
 $inf_deldbrow[6] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=b'";
+$inf_deldbrow[7] = DB_LANGUAGE_TABLES." WHERE mlt_rights='BL'";
