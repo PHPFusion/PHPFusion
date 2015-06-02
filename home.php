@@ -78,8 +78,8 @@ $configs[DB_BLOG] = array(
 		'norecord' => $locale['home_0052'],
 		'blockTitle' => $locale['home_0002']
 	),
-	'categoryLinkPattern' => BASEDIR."blog_cats.php?cat_id={cat_id}",
-	'contentLinkPattern' => BASEDIR."blog.php?readmore={id}"
+	'categoryLinkPattern' => INFUSIONS."blog/blog.php?cat_id={cat_id}",
+	'contentLinkPattern' => INFUSIONS."blog/blog.php?readmore={id}"
 );
 
 $configs[DB_DOWNLOADS] = array(

@@ -27,9 +27,9 @@ $regex = array(
 
 $pattern = array(
 	"blogs" => "blog.php",
-	"blogs/%blog_id%/%blog_title%" => "blog.php?readmore=%blog_id%",
-	"blogs/%blog_id%/%blog_title%#comments" => "blog.php?readmore=%blog_id%#comments",
-	"blogs/%c_start%/%blog_id%/%blog_title%" => "blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
+	"blogs/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%",
+	"blogs/%blog_id%/%blog_title%#comments" => "infusions/blog/blog.php?readmore=%blog_id%#comments",
+	"blogs/%c_start%/%blog_id%/%blog_title%" => "infusions/blog/blog.php?readmore=%blog_id%&amp;c_start=%c_start%",
 );
 
 $alias_pattern = array(
