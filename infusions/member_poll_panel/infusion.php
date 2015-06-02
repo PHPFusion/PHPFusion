@@ -71,5 +71,5 @@ $inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_
 // Defuse cleaning	
 $inf_droptable[1] = DB_POLLS;
 $inf_droptable[2] = DB_POLL_VOTES;
-$inf_deldbrow[1] = DB_PANELS." WHERE panel_filename='".$locale['setup_3407']."'";
+$inf_deldbrow[1] = DB_PANELS." WHERE panel_name='".$locale['setup_3407']."'";
 $inf_deldbrow[2] = DB_ADMIN." WHERE admin_rights='PO'";
