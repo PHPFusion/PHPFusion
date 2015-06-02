@@ -62,11 +62,11 @@ if (!function_exists('display_blog_item')) {
 		}
 		echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
 		if ($data['blog_allow_comments']) {
-			showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
+			showcomments("B", DB_BLOG, "blog_id", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
 		}
 
 		if ($data['blog_allow_ratings']) {
-			showratings("B", $_GET['readmore'], BASEDIR."blog.php?readmore=".$_GET['readmore']);
+			showratings("B", $_GET['readmore'], INFUSIONS."blog/blog.php?readmore=".$_GET['readmore']);
 		}
 		$str = ob_get_contents();
 		ob_end_clean();
