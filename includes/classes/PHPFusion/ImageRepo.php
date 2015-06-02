@@ -180,14 +180,13 @@ class ImageRepo {
             $image = "";
             switch ($data['prefix']) {
                 case 'ac_':
-                    $image = file_exists(ADMIN."images/".$data['image'])
-                        ? ADMIN."images/".$data['image']
-                        : (file_exists(INFUSIONS.$data['image'])
-                            ? INFUSIONS.$data['image']
-                            : ADMIN."images/infusion_panel.gif");
-                    break;
-                case 'bl_': case 'nc_': default:
-                $image = file_exists(IMAGES_NC.$data['image']) ? IMAGES_NC.$data['image'] : IMAGES."imagenotfound.jpg";
+                    $image = file_exists(ADMIN."images/".$data['image']) ? ADMIN."images/".$data['image'] : (file_exists(INFUSIONS.$data['image']) ? INFUSIONS.$data['image'] : ADMIN."images/infusion_panel.gif");
+                break;
+                case 'nl_': default :
+					$image = file_exists(IMAGES_NC.$data['image']) ? IMAGES_NC.$data['image'] : IMAGES."imagenotfound.jpg";
+				break;
+				case 'bl_': 
+					$image = file_exists(IMAGES_BC.$data['image']) ? IMAGES_BC.$data['image'] : IMAGES."imagenotfound.jpg";
                 break;
             }
             self::$imagePaths[$data['prefix'].$data['name']] = $image;

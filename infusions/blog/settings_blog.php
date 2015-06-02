@@ -16,12 +16,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 pageAccess('S13');
+
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
-add_breadcrumb(array('link'=>ADMIN."settings_blog.php".$aidlink, 'title'=>$locale['blog_settings']));
+add_breadcrumb(array('link'=>INFUSIONS."blog/settings_blog.php".$aidlink, 'title'=>$locale['blog_settings']));
 
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS);

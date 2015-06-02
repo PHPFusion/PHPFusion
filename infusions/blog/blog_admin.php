@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: blog.php
+| Filename: blog_admin.php
 | Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,16 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 pageAccess('BLOG');
-require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/blog.php";
-$settings = fusion_get_settings();
 
-add_breadcrumb(array('link'=>ADMIN.'blog.php'.$aidlink, 'title'=>$locale['405']));
+require_once THEMES."templates/admin_header.php";
+include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
+
+add_breadcrumb(array('link'=>INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title'=>$locale['405']));
 
 if (isset($_POST['cancel'])) { redirect(FUSION_SELF.$aidlink); }
-
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) {
 	$del_data['blog_id'] = $_GET['blog_id'];
 	$result = dbquery("SELECT blog_image, blog_image_t1, blog_image_t2 FROM ".DB_BLOG." WHERE blog_id='".$del_data['blog_id']."'");

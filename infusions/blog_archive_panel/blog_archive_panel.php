@@ -16,10 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-openside($locale['global_082c']);
+include INFUSIONS."blog/locale/".LOCALESET."blog.php";
 
+openside($locale['blog_1004']);
 $result = dbquery("SELECT blog_id,blog_subject,blog_datestamp FROM ".DB_BLOG." ORDER BY blog_datestamp DESC");
-
 if (dbrows($result)) {
 $data = array();
    
@@ -39,6 +39,6 @@ foreach($data as $blog_year => $blog_months) {
 		}
 }
 } else {
-	echo $locale['global_078b'];
+	echo $locale['blog_3000'];
 }
 closeside();
