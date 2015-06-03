@@ -20,6 +20,8 @@ pageAccess('BLOG');
 
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
+require_once INFUSIONS."blog/classes/Functions.php";
+require_once INFUSIONS."blog/classes/Admin.php";
 
 add_breadcrumb(array('link'=>INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title'=>$locale['405']));
 

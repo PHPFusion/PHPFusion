@@ -45,7 +45,7 @@ class Admin {
 			switch($_GET['action']) {
 				case 'edit_cat':
 					$this->blogCatData = Functions::get_blogCatData($_GET['cat_id']);
-					$this->formaction = ADMIN."blog_cats.php".$aidlink."&amp;section=blog-form&amp;action=edit_cat&amp;cat_id=".$_GET['cat_id'];
+					$this->formaction = INFUSIONS."blog/blog/blog_cats.php".$aidlink."&amp;section=blog-form&amp;action=edit_cat&amp;cat_id=".$_GET['cat_id'];
 					break;
 				case 'delete_cat':
 					self::delete_blogCat();
@@ -140,7 +140,7 @@ class Admin {
 					function(e) { $('#bc-'+ $(this).data('id') +'-actions').hide(); }
 				);
 			");
-		
+?>		
 		<table class='table table-responsive table-hover m-t-10'>
 			<tr>
 				<th>Category Name</th>
@@ -179,7 +179,7 @@ class Admin {
 		} else {
 			echo "<tr><td class='text-center' colspan='6'>".$locale['435']."</td></tr>\n";
 		}
-		
+?>		
 		</table>
 		<?php
 	}

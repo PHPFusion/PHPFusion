@@ -25,6 +25,7 @@ exit;
 
 require_once THEMES."templates/header.php";
 include INFUSIONS."blog/locale/".LOCALESET."blog.php";
+require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/templates/blog.php";
 require_once INCLUDES."infusions_include.php";
 
@@ -315,12 +316,12 @@ if (!empty($info['blog_rows'])) {
 		$blog_cat_image = '';
 		if ($blog_settings['blog_image_frontpage'] == 0) {
 			if ($blog_image) {
-				$blog_cat_image = "<a href='".($blog_settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : INFUSIONS."blog/blog.php?readmore=".$data['blog_id'])."'>";
+				$blog_cat_image = "<a href='".($blog_settings['blog_image_link'] == 0 ? INFUSIONS."blog/blog.php?cat_id=".$data['blog_cat'] : INFUSIONS."blog/blog.php?readmore=".$data['blog_id'])."'>";
 				$blog_cat_image .= $blog_image;
 				$blog_cat_image .= "</a>";
 			}
 		} else {
-			$blog_cat_image = "<a href='".($blog_settings['blog_image_link'] == 0 ? "blog.php?cat_id=".$data['blog_cat'] : INFUSIONS."blog/blog.php?readmore=".$data['blog_id'])."'>";
+			$blog_cat_image = "<a href='".($blog_settings['blog_image_link'] == 0 ? INFUSIONS."blog/blog.php?cat_id=".$data['blog_cat'] : INFUSIONS."blog/blog.php?readmore=".$data['blog_id'])."'>";
 			$blog_cat_image .= "<img src='".get_image("bl_".$data['blog_cat_name'])."' alt='".$data['blog_cat_name']."' class='img-responsive blog-category' />";
 			$blog_cat_image .= "</a>";
 		}
