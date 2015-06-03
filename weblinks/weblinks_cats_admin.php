@@ -15,10 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 pageAccess('WC');
+
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/weblinks.php";
+include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
 
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {

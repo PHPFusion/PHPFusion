@@ -15,11 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 pageAccess('W');
+
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
-include LOCALE.LOCALESET."admin/weblinks.php";
+include INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php";
+
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
 		$message = $locale['510'];
@@ -169,7 +171,7 @@ if (!empty($result)) {
 } else {
 	opentable($locale['536']);
 	echo "<div class='text-center'>\n".$locale['537']."<br />\n".$locale['538']."<br />\n<br />\n";
-	echo "<a href='weblink_cats.php".$aidlink."'>".$locale['539']."</a>".$locale['540']."</div>\n";
+	echo "<a href='".INFUSIONS."weblinks/weblinks_cats_admin.php".$aidlink."'>".$locale['539']."</a>".$locale['540']."</div>\n";
 	closetable();
 }
 require_once THEMES."templates/footer.php";

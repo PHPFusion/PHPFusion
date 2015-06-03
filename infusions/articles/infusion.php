@@ -30,7 +30,7 @@ $inf_folder = "articles";
 
 // Multilanguage table for Administration
 $inf_mlt[1] = array(
-"title" => $locale['setup_3001'], 
+"title" => $locale['articles']['title'], 
 "rights" => "AR",
 );
 

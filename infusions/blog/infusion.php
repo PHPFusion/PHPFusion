@@ -72,7 +72,7 @@ $inf_newtable[2] = DB_BLOG_CATS." (
 	PRIMARY KEY (blog_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-// Automatic enable of the latest articles panel
+// Automatic enable the archives panel
 $inf_insertdbrow[1] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('Blog archive panel', 'blog_archive_panel', '', '1', '5', 'file', '0', '0', '1', '', '')";
 
 // Position these links under Content Administration
@@ -138,7 +138,7 @@ if (db_exists(DB_BLOG_CATS)) {
 // Defuse cleanup
 $inf_droptable[1] = DB_BLOG;
 $inf_droptable[2] = DB_BLOG_CATS;
-$inf_deldbrow[1] = DB_PANELS." WHERE panel_filename='Blog archive panel'";
+$inf_deldbrow[1] = DB_PANELS." WHERE panel_name='Blog archive panel'";
 $inf_deldbrow[2] = DB_ADMIN." WHERE admin_rights='BLOG'";
 $inf_deldbrow[3] = DB_ADMIN." WHERE admin_rights='BLC'";
 $inf_deldbrow[4] = DB_SETTINGS_INF." WHERE settings_inf='blog'";
