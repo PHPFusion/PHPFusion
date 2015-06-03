@@ -1,6 +1,0 @@
-[03-Jun-2015 09:41:55 Europe/London] PHP Parse error:  syntax error, unexpected '<' in /home/nextphpf/public_html/RC7/infusions/blog/classes/Admin.php on line 144
-[03-Jun-2015 09:42:07 Europe/London] PHP Parse error:  syntax error, unexpected '<' in /home/nextphpf/public_html/RC7/infusions/blog/classes/Admin.php on line 144
-[03-Jun-2015 09:42:08 Europe/London] PHP Parse error:  syntax error, unexpected '<' in /home/nextphpf/public_html/RC7/infusions/blog/classes/Admin.php on line 144
-[03-Jun-2015 09:42:20 Europe/London] PHP Parse error:  syntax error, unexpected '<' in /home/nextphpf/public_html/RC7/infusions/blog/classes/Admin.php on line 183
-[03-Jun-2015 09:42:21 Europe/London] PHP Parse error:  syntax error, unexpected '<' in /home/nextphpf/public_html/RC7/infusions/blog/classes/Admin.php on line 183
-[03-Jun-2015 09:42:33 Europe/London] PHP Fatal error:  Class 'PHPFusion\Blog\Functions' not found in /home/nextphpf/public_html/RC7/infusions/blog/blog_admin.php on line 264
