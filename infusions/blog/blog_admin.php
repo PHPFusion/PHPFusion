@@ -61,12 +61,9 @@ $master_title['title'][] = isset($_GET['blog_id']) ? $locale['402'] : $locale['4
 $master_title['id'][] = 'nform';
 $master_title['icon'] = '';
 
-$settings_access = pageAccess('S13');
-if ($settings_access !==0) {
 $master_title['title'][] = isset($_GET['settings']) ? $locale['406'] : $locale['406'];
 $master_title['id'][] = 'sform';
 $master_title['icon'] = '';
-}
 
 $tab_active = tab_active($master_title, $_GET['section'], 1);
 
@@ -109,10 +106,9 @@ echo closetab();
 closetable();
 
 if (isset($_GET['section']) && $_GET['section'] == 'sform') {
-pageAccess('S13');
 include LOCALE.LOCALESET."admin/settings.php";
 
-//add_breadcrumb(array('link'=>INFUSIONS."blog/settings_blog.php".$aidlink, 'title'=>$locale['blog_settings']));
+add_breadcrumb(array('link'=>'', 'title'=>$locale['blog_settings']));
 
 $settings2 = array();
 $result = dbquery("SELECT * FROM ".DB_SETTINGS_INF);

@@ -40,8 +40,8 @@ $configs[DB_NEWS] = array(
 		'norecord' => $locale['home_0050'],
 		'blockTitle' => $locale['home_0000'],
 	),
-	'categoryLinkPattern' => BASEDIR."news_cats.php?cat_id={cat_id}",
-	'contentLinkPattern' => BASEDIR."news.php?readmore={id}"
+	'categoryLinkPattern' => INFUSIONS."news/news_cats.php?cat_id={cat_id}",
+	'contentLinkPattern' => INFUSIONS."news/news.php?readmore={id}"
 );
 
 $configs[DB_ARTICLES] = array(

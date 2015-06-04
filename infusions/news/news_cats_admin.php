@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: news_cats.php
+| Filename: news_cats_admin.php
 | Author: Nick Jones (Digitanium)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,10 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 pageAccess('NC');
+
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/news.php";
+include INFUSIONS."news/locale/".LOCALESET."news_admin.php";
 
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "sn") {
@@ -34,6 +35,7 @@ if (isset($_GET['status']) && !isset($message)) {
 		echo "<div id='close-message'><div class='alert alert-info m-t-10 admin-message'>".$message."</div></div>\n";
 	}
 }
+
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(news_cat)", DB_NEWS, "news_cat='".$_GET['cat_id']."'") || dbcount("(news_cat_id)", DB_NEWS_CATS, "news_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
@@ -169,4 +171,3 @@ function getNewsCatPath($item_id) {
 }
 
 require_once THEMES."templates/footer.php";
-

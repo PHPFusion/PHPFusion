@@ -272,9 +272,9 @@ function newsopts($info, $sep, $class = "") {
 	global $locale, $settings;
 	$res = "";
 	$link_class = $class ? " class='$class' " : "";
-	if (!isset($_GET['readmore']) && $info['news_ext'] == "y") $res = "<a href='news.php?readmore=".$info['news_id']."'".$link_class.">".$locale['global_072']."</a> ".$sep." ";
+	if (!isset($_GET['readmore']) && $info['news_ext'] == "y") $res = "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."'".$link_class.">".$locale['global_072']."</a> ".$sep." ";
 	if ($info['news_allow_comments'] && $settings['comments_enabled'] == "1") {
-		$res .= "<a href='news.php?readmore=".$info['news_id']."#comments'".$link_class.">".$info['news_comments'].($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep." ";
+		$res .= "<a href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."#comments'".$link_class.">".$info['news_comments'].($info['news_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep." ";
 	}
 	if ($info['news_ext'] == "y" || ($info['news_allow_comments'] && $settings['comments_enabled'] == "1")) {
 		$res .= $info['news_reads'].$locale['global_074']."\n ".$sep;
@@ -335,11 +335,11 @@ function itemoptions($item_type, $item_id) {
 	$res = "";
 	if ($item_type == "N") {
 		if (iADMIN && checkrights($item_type)) {
-			$res .= "<!--article_news_opts--> &middot; <a href='".ADMIN."news.php".$aidlink."&amp;action=edit&amp;news_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
+			$res .= "<!--article_news_opts--> &middot; <a href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;news_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
 		}
 	} elseif ($item_type == "A") {
 		if (iADMIN && checkrights($item_type)) {
-			$res .= "<!--article_admin_opts--> &middot; <a href='".ADMIN."articles.php".$aidlink."&amp;action=edit&amp;article_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
+			$res .= "<!--article_admin_opts--> &middot; <a href='".INFUSIONS."articles/articles_admin.php".$aidlink."&amp;action=edit&amp;article_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
 		}
 	}
 	return $res;
@@ -730,7 +730,7 @@ function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE
 	$average = $total_votes > 0 ? number_format($total_sum/$total_votes, 2) : 0;
 	$str = $mode == 1 ? $average.$locale['global_094'].format_word($total_votes, $locale['fmt_rating']) : "$average/$total_votes";
 	if ($total_votes > 0) {
-		$answer = $start_link."<i title='".$locale['global_143']."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
+		$answer = $start_link."<i title='".$locale['ratings']."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
 	} else {
 		$answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='entypo thumbs-up high-opacity m-l-0'></i>".$str.$end_link;
 	}

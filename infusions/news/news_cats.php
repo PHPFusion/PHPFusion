@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once ($settings['site_seo'] == "1" ? "" : "../../")."maincore.php";
 if (!db_exists(DB_NEWS)) {
 	$_GET['code'] = 404;
 	require_once __DIR__.'/error.php';
@@ -25,8 +25,10 @@ if (!db_exists(DB_NEWS)) {
 define('NEWS_CAT', TRUE);
 
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."news_cats.php";
+include INFUSIONS."news/locale/".LOCALESET."news_cats.php";
+
 add_to_title($locale['global_200'].$locale['400']);
+
 opentable($locale['400']);
 if (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
 	$res = 0;
