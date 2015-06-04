@@ -20,6 +20,8 @@ pageAccess('N');
 
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."news/locale/".LOCALESET."news_admin.php";
+require_once INCLUDES."infusions_include.php";
+$news_settings = get_settings("news");
 
 add_breadcrumb(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['news_0000']));
 
@@ -350,7 +352,7 @@ function news_listing() {
 }
 
 function news_form() {
-	global $userdata, $locale, $settings, $aidlink, $defender;
+	global $userdata, $locale, $news_settings, $settings, $aidlink, $defender;
 	$language_opts = fusion_get_enabled_languages();
 	$formaction = FUSION_SELF.$aidlink."&amp;section=nform";
 
@@ -552,23 +554,23 @@ function news_form() {
 		echo form_select('news_ialign', $locale['news_0218'], $options, $data['news_ialign']);
 	} else {
 		$file_input_options = array(
-			'max_width' => $settings['news_photo_max_w'],
-			'max_height' => $settings['news_photo_max_h'],
-			'max_byte' => $settings['news_photo_max_b'],
+			'max_width' => $news_settings['news_photo_max_w'],
+			'max_height' => $news_settings['news_photo_max_h'],
+			'max_byte' => $news_settings['news_photo_max_b'],
 			// set thumbnail
 			'thumbnail' => 1,
-			'thumbnail_w' => $settings['news_thumb_w'],
-			'thumbnail_h' => $settings['news_thumb_h'],
+			'thumbnail_w' => $news_settings['news_thumb_w'],
+			'thumbnail_h' => $news_settings['news_thumb_h'],
 			'thumbnail_folder' => 'thumbs',
 			'delete_original' => 0,
 			// set thumbnail 2 settings
 			'thumbnail2' => 1,
-			'thumbnail2_w' => $settings['news_photo_w'],
-			'thumbnail2_h' => $settings['news_photo_h'],
+			'thumbnail2_w' => $news_settings['news_photo_w'],
+			'thumbnail2_h' => $news_settings['news_photo_h'],
 			'type' => 'image'
 		);
 		echo form_fileinput($locale['news_0216'], 'news_image', 'news_image', IMAGES_N, '', $file_input_options);
-		echo "<div class='small m-b-10'>".sprintf($locale['news_0217'], parsebytesize($settings['news_photo_max_b']))."</div>\n";
+		echo "<div class='small m-b-10'>".sprintf($locale['news_0217'], parsebytesize($news_settings['news_photo_max_b']))."</div>\n";
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
 		echo form_select('news_ialign', $locale['news_0218'], $options, $data['news_ialign']);
 	}

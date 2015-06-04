@@ -22,6 +22,8 @@ require_once THEMES."templates/admin_header.php";
 include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/classes/Admin.php";
+require_once INCLUDES."infusions_include.php";
+$blog_settings = get_settings("blog");
 
 add_breadcrumb(array('link'=>INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title'=>$locale['405']));
 
@@ -361,7 +363,7 @@ function blog_listing() {
  */
 function blog_form() {
 	fusion_confirm_exit();
-	global $userdata, $locale, $settings, $aidlink;
+	global $userdata, $locale, $blog_settings, $settings, $aidlink;
 	$tinyMce = $settings['tinymce_enabled'] ? true : false;
 	$fusion_mce = array();
 	if ($tinyMce) {
@@ -557,14 +559,14 @@ function blog_form() {
 		echo form_fileinput($locale['439'], 'blog_image', 'blog_image', IMAGES_B, '', array(
 											  'thumbnail_folder'=> 'thumbs',
 											  'thumbnail'=>1,
-											  'max_width'=> $settings['blog_photo_max_w'],
-											  'max_height' => $settings['blog_photo_max_w'],
-											  'max_byte'=> $settings['blog_photo_max_b'],
+											  'max_width'=> $blog_settings['blog_photo_max_w'],
+											  'max_height' => $blog_settings['blog_photo_max_w'],
+											  'max_byte'=> $blog_settings['blog_photo_max_b'],
 											  'thumbnail2' => 1,
 											  'type' => 'image'
 											)
 		);
-		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($settings['blog_photo_max_b']))."</div>\n";
+		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($blog_settings['blog_photo_max_b']))."</div>\n";
 		echo form_select('blog_ialign', $locale['442'], $align_options, $data['blog_ialign'], array('inline'=>1));
 	}
 	closeside();
