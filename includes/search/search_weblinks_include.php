@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 include LOCALE.LOCALESET."search/weblinks.php";
+
 if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
 	if ($_POST['sort'] == "datestamp") {
 		$sortby = "weblink_datestamp";
@@ -63,11 +65,9 @@ if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
 			$text_all = $data['weblink_description'];
 			$text_all = search_striphtmlbbcodes($text_all);
 			$text_frag = search_textfrag($text_all);
-			// $text_frag = highlight_words($swords, $text_frag);
 			$subj_c = search_stringscount($data['weblink_name'])+search_stringscount($data['weblink_url']);
 			$text_c = search_stringscount($data['weblink_description']);
-			$search_result .= "<a href='weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id']."' target='_blank'>".$data['weblink_name']."</a>".$new."<br /><br />\n";
-			// $search_result .= "<a href='weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id']."' target='_blank'>".highlight_words($swords, $data['weblink_name'])."</a>".$new."<br /><br />\n";
+			$search_result .= "<a href='".INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id']."' target='_blank'>".$data['weblink_name']."</a>".$new."<br /><br />\n";
 			if ($text_frag != "") {
 				$search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
 			}
