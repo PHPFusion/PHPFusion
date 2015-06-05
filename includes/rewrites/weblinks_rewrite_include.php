@@ -23,7 +23,7 @@ $regex = array(
 	"%weblink_cat_id%" => "([0-9]+)",
 );
 
-$pattern = array("weblink/%weblink_id%/%weblink_name%" => "weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%");
+$pattern = array("weblink/%weblink_id%/%weblink_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblink_cat_id%&amp;weblink_id=%weblink_id%");
 
 $dbname = DB_WEBLINKS;
 $dbid = array("%weblink_id%" => "weblink_id");

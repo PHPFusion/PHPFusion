@@ -54,7 +54,7 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 		while ($data = dbarray($result)) {
 			$itemcount = dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat='".$data['weblink_cat_id']."' AND ".groupaccess('weblink_visibility'));
 			if ($itemcount > 0) {
-				$data['weblink_item'] = array('link'=>FUSION_SELF."?cat_id=".$data['weblink_cat_id'], 'name'=>$data['weblink_cat_name']);
+				$data['weblink_item'] = array('link'=>INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat_id'], 'name'=>$data['weblink_cat_name']);
 				$data['weblink_count'] = $itemcount;
 				$info['item'][$data['weblink_cat_id']] = $data;
 			}
@@ -80,11 +80,11 @@ if (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 			".groupaccess('weblink_visibility')." AND weblink_cat='".$_GET['cat_id']."' ORDER BY ".$cdata['weblink_cat_sorting']." LIMIT ".$_GET['rowstart'].",".$settings['links_per_page']);
 			$numrows = dbrows($result);
 			$info['weblink_rows'] = $numrows;
-			$info['page_nav'] = $max_rows > $settings['links_per_page'] ? makepagenav($_GET['rowstart'], $settings['links_per_page'], $rows, 3, BASEDIR."weblinks.php?cat_id=".$_GET['cat_id']."&amp;") : 0;
+			$info['page_nav'] = $max_rows > $settings['links_per_page'] ? makepagenav($_GET['rowstart'], $settings['links_per_page'], $rows, 3, INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id']."&amp;") : 0;
 			if (dbrows($result)>0) {
 				while ($data = dbarray($result)) {
 					$data['new'] = ($data['weblink_datestamp']+604800 > time()+($settings['timeoffset']*3600)) ? 1 : 0;
-					$data['weblink'] = array('link'=>BASEDIR."weblinks.php?cat_id=".$_GET['cat_id']."&amp;weblink_id=".$data['weblink_id'], 'name'=>$data['weblink_name']);
+					$data['weblink'] = array('link'=>INFUSIONS."weblinks/weblinks.php?cat_id=".$_GET['cat_id']."&amp;weblink_id=".$data['weblink_id'], 'name'=>$data['weblink_name']);
 					$info['item'][$data['weblink_id']] = $data;
 				}
 			}

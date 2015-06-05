@@ -24,10 +24,9 @@ $regex = array(
 
 $pattern = array(
 	"weblinks" => "weblinks.php",
-	"weblinks/%weblinks_cat_id%/%weblink_cat_name%" => "weblinks.php?cat_id=%weblinks_cat_id%",
+	"weblinks/%weblinks_cat_id%/%weblink_cat_name%" => "infusions/weblinks/weblinks.php?cat_id=%weblinks_cat_id%",
 );
 
-$dir_path = BASEDIR;
 $dbname = DB_WEBLINK_CATS;
 $dbid = array("%weblinks_cat_id%" => "weblink_cat_id");
 $dbinfo = array("%weblink_cat_name%" => "weblink_cat_name");
