@@ -4,6 +4,7 @@ $locale['news_0000'] = "Esamos naujienos";
 $locale['news_0001'] = "Naujiena";
 $locale['news_0002'] = "Pridėti naujieną";
 $locale['news_0003'] = "Redagiuoti naujieną";
+$locale['news_0004'] = "Settings"; // Translate this line and remove comment
 // News Categories titles
 $locale['news_0020'] = "Esamos naujienų kategorijos";
 $locale['news_0021'] = "Redaguoti naujienų kategoriją";

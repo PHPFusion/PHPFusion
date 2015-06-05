@@ -4,6 +4,7 @@ $locale['news_0000'] = "Aktuelle nyheder";
 $locale['news_0001'] = "Nyheder";
 $locale['news_0002'] = "Tilføj nyhed";
 $locale['news_0003'] = "Rediger nyhed";
+$locale['news_0004'] = "Settings"; // Translate this line and remove comment
 // News Categories titles
 $locale['news_0020'] = "Aktuelle nyhedskategorier";
 $locale['news_0021'] = "Rediger nyhedskategori";

@@ -1,7 +1,7 @@
 <?php
 $locale['SB_title'] = "Мини-чат";
 
-$locale['SB_desc'] = "Мини-чат (официальное дополнение)";
+$locale['SB_desc'] = "Мини-чат";
 $locale['SB_admin1'] = "Управление мини-чатом";
 
 // Shoutbox

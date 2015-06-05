@@ -4,6 +4,7 @@ $locale['news_0000'] = "Поточні новини";
 $locale['news_0001'] = "Новини";
 $locale['news_0002'] = "Створення новини";
 $locale['news_0003'] = "Редагування новини";
+$locale['news_0004'] = "Settings"; // Translate this line and remove comment
 
 // News Categories titles
 $locale['news_0020'] = "Поточні розділи новин";
