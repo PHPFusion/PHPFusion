@@ -1,7 +1,7 @@
 <?php
 $locale['SB_title'] = "Чат";
 
-$locale['SB_desc'] = "Чат (Офіційний додаток)";
+$locale['SB_desc'] = "Чат";
 $locale['SB_admin1'] = "Керування чатом";
 
 // Shoutbox
@@ -33,11 +33,11 @@ $locale['SB_delete_shouts'] = "Видалити";
 // Current Shouts
 $locale['SB_edit'] = "Редагувати";
 $locale['SB_userip'] = "Адреса IP: ";
-$locale['SB_on_date'] = " "; // shout date: on march 30
+$locale['SB_on_date'] = " ";
 
 // Popup Error/Warning Messages
-$locale['SB_warning_shouts'] = "Ви справді бажаєте видалити повідомлення?";
-$locale['SB_warning_shout'] = "Ви справді бажаєте видалити повідомлення?";
+$locale['SB_warning_shouts'] = "Ви дійсно бажаєте видалити повідомлення?";
+$locale['SB_warning_shout'] = "Ви дійсно бажаєте видалити повідомлення?";
 
 // Settings
 $locale['SB_settings'] = "Налаштування";
@@ -47,4 +47,3 @@ $locale['SB_yes'] = "так";
 $locale['SB_no'] = "ні";
 $locale['SB_submit'] = "Зберегти";
 $locale['SB_update_ok'] = "Налаштування чату успішно оновлено";
-
