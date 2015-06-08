@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (db_exists(DB_PHOTOS)) {
 include LOCALE.LOCALESET."search/photos.php";
 
 if (!defined("SAFEMODE")) {
@@ -96,4 +96,4 @@ if ($_GET['stype'] == "photos" || $_GET['stype'] == "all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-
+}
