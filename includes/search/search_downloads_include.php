@@ -64,9 +64,7 @@ if ($_GET['stype'] == "downloads" || $_GET['stype'] == "all") {
 			$text_frag = search_textfrag($text_all);
 			$subj_c = search_stringscount($data['download_title']);
 			$text_c = search_stringscount($data['download_description']);
-			// $text_frag = highlight_words($swords, $text_frag);
-			$search_result .= "<a href='downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']."' target='_blank'>".$data['download_title']."</a> - ".$data['download_filesize']." ".$new."<br /><br />\n";
-			// $search_result .= "<a href='downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']."' target='_blank'>".highlight_words($swords, $data['download_title'])."</a> - ".$data['download_filesize']." ".$new."<br /><br />\n";
+			$search_result .= "<a href='".DOWNLOADS."downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']."' target='_blank'>".$data['download_title']."</a> - ".$data['download_filesize']." ".$new."<br /><br />\n";
 			if ($text_frag != "") $search_result .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
 			$search_result .= "<span class='small'><span class='alt'>".$locale['d404']."</span> ".$data['download_license']." |\n";
 			$search_result .= "<span class='alt'>".$locale['d405']."</span> ".$data['download_os']." |\n";

@@ -22,7 +22,7 @@ $regex = array(
 	"%download_cat_name%" => "([0-9a-zA-Z._\W]+)",
 );
 
-$pattern = array("download-cat/%download_cat_id%/%download_cat_name%" => "downloads.php?cat_id=%download_cat_id%");
+$pattern = array("download-cat/%download_cat_id%/%download_cat_name%" => "infusions/downloads/downloads.php?cat_id=%download_cat_id%");
 
 $dir_path = ROOT;
 $dbname = DB_DOWNLOAD_CATS;

@@ -96,8 +96,8 @@ $configs[DB_DOWNLOADS] = array(
 		'norecord' => $locale['home_0053'],
 		'blockTitle' => $locale['home_0003']
 	),
-	'categoryLinkPattern' => BASEDIR."downloads.php?cat_id={cat_id}",
-	'contentLinkPattern' => BASEDIR."downloads.php?cat_id={cat_id}&download_id={id}"
+	'categoryLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}",
+	'contentLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}&download_id={id}"
 );
 
 $contents = array();

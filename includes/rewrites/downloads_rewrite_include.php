@@ -25,10 +25,10 @@ $regex = array(
 );
 
 $pattern = array(
-	"file-downloads" => "downloads.php",
-	"file-downloads/%cat_id%/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
-	"file-downloads/%download_id%/%download_title%" => "downloads.php?download_id=%download_id%",
-	"file-downloads/file/%download_id%/%download_title%" => "downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
+	"file-downloads" => "infusions/downloads/downloads.php",
+	"file-downloads/%cat_id%/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;download_id=%download_id%",
+	"file-downloads/%download_id%/%download_title%" => "infusions/downloads/downloads.php?download_id=%download_id%",
+	"file-downloads/file/%download_id%/%download_title%" => "infusions/downloads/downloads.php?cat_id=%cat_id%&amp;file_id=%download_id%",
 );
 
 $dir_path = BASEDIR;
