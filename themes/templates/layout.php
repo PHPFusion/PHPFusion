@@ -79,10 +79,9 @@ echo "<body>\n";
 
 	// Output lines added with add_to_jquery()
 	if (!empty($fusion_jquery_tags)) {
+		$fusion_jquery_tags = \PHPFusion\Minifier::minify($fusion_jquery_tags, array('flaggedComments' => false));
 		echo "<script type='text/javascript'>
-		$(function() {
-			$fusion_jquery_tags; 
-		});
+		$(function() { $fusion_jquery_tags; });
 		</script>\n";
 	}
 
