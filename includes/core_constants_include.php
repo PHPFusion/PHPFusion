@@ -21,7 +21,6 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (!defined('BASEDIR')) define("BASEDIR", strpos(fusion_get_relative_path_to_config(), '/') === FALSE ? '' : dirname(fusion_get_relative_path_to_config()).'/');
 define("ADMIN", BASEDIR."administration/");
 define("CLASSES", BASEDIR."includes/classes/");
-define("DOWNLOADS", BASEDIR."downloads/");
 define("IMAGES", BASEDIR."images/");
 define("IMAGES_A", IMAGES."articles/");
 define("IMAGES_N", IMAGES."news/");
@@ -35,6 +34,7 @@ define("INCLUDES", BASEDIR."includes/");
 define("LOCALE", BASEDIR."locale/");
 define("FORUM", BASEDIR."forum/");
 define("INFUSIONS", BASEDIR."infusions/");
+define("DOWNLOADS", INFUSIONS."downloads/");
 define("PHOTOS", IMAGES."photoalbum/");
 define("SHOP", BASEDIR."eshop/");
 define("THEMES", BASEDIR."themes/");

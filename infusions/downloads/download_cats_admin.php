@@ -15,16 +15,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 pageAccess('DC');
+
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/downloads.php";
+include INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php";
 
 add_breadcrumb(array('link'=>ADMIN."download_cats.php".$aidlink, 'title'=>$locale['download_0001']));
 
 if (isset($_POST['cancel'])) {
 	redirect(FUSION_SELF.$aidlink);
 }
+
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(download_cat)", DB_DOWNLOADS, "download_cat='".$_GET['cat_id']."'") || dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, "download_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {

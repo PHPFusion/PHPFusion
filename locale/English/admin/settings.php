@@ -250,6 +250,7 @@ $locale['935'] = "Width x Height";
 $locale['936'] = "Maximum screenshot file size (bytes):";
 $locale['937'] = "Maximum screenshot thumb size:";
 $locale['938'] = "Enable screenshots?";
+$locale['939'] = "Download items per page";
 // Blog & News Settings
 $locale['950'] = "Image Upload";
 $locale['951'] = "Image link:";

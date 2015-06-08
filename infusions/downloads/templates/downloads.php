@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if (!function_exists('render_downloads')) {
 	function render_downloads($info) {
-		global $settings, $locale;
+		global $settings, $dl_settings, $locale;
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9'>\n";
@@ -51,7 +51,7 @@ if (!function_exists('render_downloads')) {
 
 			echo "</div><div class='panel-body p-b-0'>\n";
 
-			if ($settings['download_screenshot'] && $data['download_image']) {
+			if ($dl_settings['download_screenshot'] && $data['download_image']) {
 				echo "<div class='pull-left m-l-0 m-10'>\n";
 				echo thumbnail(DOWNLOADS."images/".$data['download_image'],'120px');
 				echo "<p class='mid-opacity strong text-smaller m-t-0'>".$locale['download_1009']."</h4>\n";
@@ -157,7 +157,7 @@ if (!function_exists('display_download_menu')) {
 		ob_start();
 
 		echo "<ul class='m-b-20'>\n";
-		echo "<li><a title='".$locale['download_1001']."' href='".BASEDIR."downloads.php'>".$locale['download_1001']."</a></li>\n";
+		echo "<li><a title='".$locale['download_1001']."' href='".DOWNLOADS."downloads.php'>".$locale['download_1001']."</a></li>\n";
 		echo "</ul>\n";
 
 		echo "<ul class='m-b-20'>\n";

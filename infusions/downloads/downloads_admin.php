@@ -16,11 +16,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 pageAccess('D');
+
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
-include LOCALE.LOCALESET."admin/downloads.php";
+include INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php";
+include LOCALE.LOCALESET."admin/settings.php";
+require_once INCLUDES."infusions_include.php";
+$dl_settings = get_settings("downloads");
 
 add_breadcrumb(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['download_0001']));
 
@@ -49,9 +53,12 @@ if (isset($_GET['status'])) {
 }
 
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;
-$allowed_section = array('downloads', 'dlopts');
+
+$allowed_section = array('downloads', 'dlopts', 'sform');
+
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
 $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? 1 : 0;
+
 // master template
 $master_tab_title['title'][] = $locale['download_0000'];
 $master_tab_title['id'][] = "downloads";
@@ -62,6 +69,10 @@ if (dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "")) {
 	$master_tab_title['id'][] = "dlopts";
 	$master_tab_title['icon'][] =  $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 }
+
+$master_tab_title['title'][] = $locale['download_settings'];
+$master_tab_title['id'][] = "sform";
+$master_tab_title['icon'][] = "";
 
 $master_tab_active = tab_active($master_tab_title, $_GET['section'], 1);
 
@@ -79,6 +90,140 @@ if ($_GET['section'] == 'dlopts') {
 	echo "</div>\n";
 	echo closetabbody();
 }
+
+if ($_GET['section'] == 'sform') {
+	add_breadcrumb(array('link'=>'', 'title'=>$locale['download_settings']));
+	echo opentabbody($master_tab_title['title'][1], 'sform', $master_tab_active, 1);
+	echo "<div class='m-t-20'>\n";
+
+require_once INCLUDES."mimetypes_include.php";
+
+if (isset($_POST['savesettings'])) {
+	$admin_password = (isset($_POST['admin_password'])) ? form_sanitizer($_POST['admin_password'], '', 'admin_password') : '';
+	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "") && !defined('FUSION_NULL')) {
+		$download_max_b = form_sanitizer($_POST['calc_b'], 1, 'calc_b')*form_sanitizer($_POST['calc_c'], 1000000, 'calc_c');
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['calc_b']) && isnum($_POST['calc_c']) ? $download_max_b : "150000")."' WHERE settings_name='download_max_b'") : '';
+		$download_types = form_sanitizer($_POST['download_types'], '', 'download_types');
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$download_types' WHERE settings_name='download_types'") : '';
+		$download_screen_max_w = form_sanitizer($_POST['download_screen_max_w'], 0, 'download_screen_max_w');
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$download_screen_max_w' WHERE settings_name='download_screen_max_w'") : '';
+		$download_screen_max_h = form_sanitizer($_POST['download_screen_max_h'], 0, 'download_screen_max_h');
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$download_screen_max_h' WHERE settings_name='download_screen_max_h'") : '';
+		$download_screen_max_b = form_sanitizer($_POST['calc_bb'], 200, 'calc_bb')*form_sanitizer($_POST['calc_cc'], 1000, 'calc_cc');
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$download_screen_max_b' WHERE settings_name='download_screen_max_b'") : '';
+		$download_thumb_max_h = form_sanitizer($_POST['download_thumb_max_h'], 100, 'download_thumb_max_h');
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['download_thumb_max_h']) ? $_POST['download_thumb_max_h'] : "100")."' WHERE settings_name='download_thumb_max_h'");
+		$download_thumb_max_w = form_sanitizer($_POST['download_thumb_max_w'], 100, 'download_thumb_max_w');
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['download_thumb_max_w']) ? $_POST['download_thumb_max_w'] : "100")."' WHERE settings_name='download_thumb_max_w'");
+		$download_screenshot = form_sanitizer($_POST['download_screenshot'], 0, 'download_screenshot');
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$download_screenshot' WHERE settings_name='download_screenshot'");
+		$download_pagination = form_sanitizer($_POST['download_pagination'], 12, 'download_pagination');
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['download_pagination']) ? $_POST['download_pagination'] : "12")."' WHERE settings_name='download_pagination'");
+		if (!defined('FUSION_NULL')) {
+			addNotice('success', $locale['900']);
+			redirect(FUSION_SELF.$aidlink."&amp;section=sform");
+		}
+	}
+}
+$settings2 = array();
+$result = dbquery("SELECT * FROM ".DB_SETTINGS_INF);
+while ($data = dbarray($result)) {
+	$settings2[$data['settings_name']] = $data['settings_value'];
+}
+/**
+ * Options for dropdown field
+ */
+$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+$calc_c = calculate_byte($settings2['download_max_b']);
+$calc_b = $settings2['download_max_b']/$calc_c;
+$calc_cc = calculate_byte($settings2['download_screen_max_b']);
+$calc_bb = $settings2['download_screen_max_b']/$calc_cc;
+
+$choice_opts = array('1' => $locale['yes'], '0' => $locale['no']);
+$mime = mimeTypes();
+$mime_opts = array();
+foreach ($mime as $m => $Mime) {
+	$ext = ".$m";
+	$mime_opts[$ext] = $ext;
+}
+
+echo "<div class='well'>".$locale['download_description']."</div>";
+$formaction = FUSION_SELF.$aidlink."&amp;section=sform";
+echo openform('settingsform', 'post', $formaction, array('max_tokens' => 1));
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-8'>\n";
+openside('');
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-2'>
+	<label for='download_pagination'>".$locale['939']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-10'>
+	".form_text('download_pagination', '', $settings2['download_pagination'], array('class' => 'pull-left', 'max_length' => 4, 'number'=>1, 'width'=>'150px'))."
+	</div>";
+echo "<div class='col-xs-12 col-sm-8'>";
+echo "<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='photo_w'>".$locale['934']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('download_screen_max_w', '', $settings2['download_screen_max_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('download_screen_max_h', '', $settings2['download_screen_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
+
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='photo_w'>".$locale['937']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('download_thumb_max_w', '', $settings2['download_thumb_max_w'], array('class' => 'pull-left m-r-10', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<i class='entypo icancel pull-left m-r-10 m-l-0 m-t-10'></i>
+	".form_text('download_thumb_max_h', '', $settings2['download_thumb_max_h'], array('class' => 'pull-left', 'max_length' => 4, 'number' => 1, 'width'=>'150px'))."
+	<small class='m-l-10 mid-opacity text-uppercase pull-left m-t-10'>( ".$locale['604']." )</small>
+	</div>
+</div>";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='calc_b'>".$locale['930']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_select('calc_c', '', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	</div>
+</div>
+";
+echo "
+<div class='row'>
+	<div class='col-xs-12 col-sm-3'>
+	<label for='calc_bb'>".$locale['936']."</label>
+	</div>
+	<div class='col-xs-12 col-sm-9'>
+	".form_text('calc_bb', '', $calc_bb, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
+	".form_select('calc_cc', '', $calc_opts, $calc_cc, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	</div>
+</div>
+";
+closeside();
+openside();
+echo form_select('download_types[]', $locale['932'], $mime_opts, $settings2['download_types'], array('input_id'=>'dltype', 'error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%', 'delimiter' => '|'));
+closeside();
+echo "</div><div class='col-xs-12 col-sm-4'>\n";
+openside('');
+echo form_select('download_screenshot', $locale['938'], $choice_opts, $settings2['download_screenshot']);
+closeside();
+echo "</div>\n</div>\n";
+echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
+echo closeform();
+echo "</div>\n";
+echo closetabbody();
+}
+
+
 echo closetab();
 closetable();
 
@@ -99,7 +244,7 @@ require_once THEMES."templates/footer.php";
 
 /* Download Form */
 function download_form() {
-	global $locale, $settings, $userdata, $aidlink, $defender;
+	global $locale, $settings, $dl_settings, $userdata, $aidlink, $defender;
 	$upload_directory = DOWNLOADS."files/";
 	$data = array(
 		'download_id' => 0,
@@ -259,7 +404,7 @@ function download_form() {
 	echo form_hidden('', 'download_datestamp', 'download_datestamp', $data['download_datestamp']);
 	echo form_text('download_title', $locale['download_0200'], $data['download_title'], array('required' => 1, 'error_text'=>$locale['download_0110']));
 	echo form_textarea('download_description_short', $locale['download_0202'], $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['download_0112'], 'maxlength' => '255', 'autosize' => 1));
-	if ($settings['download_screenshot']) {
+	if ($dl_settings['download_screenshot']) {
 		if (!empty($data['download_image']) && !empty($data['download_image_thumb'])) {
 			echo "<div class='clearfix list-group-item m-b-20'>\n";
 			echo "<div class='pull-left m-r-10'>\n";
@@ -274,20 +419,20 @@ function download_form() {
 			echo "</div>\n";
 		} else {
 			$file_options = array(
-				'max_width' => $settings['download_screen_max_w'],
-				'max_height' => $settings['download_screen_max_w'],
-				'max_byte' => $settings['download_screen_max_b'],
+				'max_width' => $dl_settings['download_screen_max_w'],
+				'max_height' => $dl_settings['download_screen_max_w'],
+				'max_byte' => $dl_settings['download_screen_max_b'],
 				'type' => 'image',
 				'delete_original' => 0,
 				'thumbnail_folder' => '',
 				'thumbnail' => 1,
 				'thumbnail_suffix'=> '_thumb',
-				'thumbnail_w'=> $settings['download_thumb_max_w'],
-				'thumbnail_h' => $settings['download_thumb_max_h'],
+				'thumbnail_w'=> $dl_settings['download_thumb_max_w'],
+				'thumbnail_h' => $dl_settings['download_thumb_max_h'],
 				'thumbnail2' => 0
 			);
 			echo form_fileinput($locale['download_0220'], 'download_image', 'download_image', DOWNLOADS."images/", '', $file_options); // all file types.
-			echo "<small>".sprintf($locale['download_0219'], parsebytesize($settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $settings['download_screen_max_w'], $settings['download_screen_max_h'])."</small>\n";
+			echo "<small>".sprintf($locale['download_0219'], parsebytesize($dl_settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $dl_settings['download_screen_max_w'], $dl_settings['download_screen_max_h'])."</small>\n";
 		}
 	}
 
@@ -308,12 +453,12 @@ function download_form() {
 		echo form_hidden('', 'download_hidden_file', 'download_hidden_file', $data['download_file']);
 	} else {
 		$file_options = array(
-			'max_bytes' => $settings['download_max_b'],
-			'valid_ext' => $settings['download_types'],
+			'max_bytes' => $dl_settings['download_max_b'],
+			'valid_ext' => $dl_settings['download_types'],
 		);
 		echo "<div class='list-group m-t-10'><div class='list-group-item'>\n";
 		echo form_fileinput($locale['download_0214'], 'download_file', 'download_file', DOWNLOADS."files/", '', $file_options);
-		echo sprintf($locale['download_0218'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
+		echo sprintf($locale['download_0218'], parsebytesize($dl_settings['download_max_b']), str_replace(',', ' ', $dl_settings['download_types']))."<br />\n";
 		echo "</div>\n";
 		echo "<div class='list-group-item'>\n";
 		echo form_checkbox('calc_upload', $locale['download_0217'], '');
@@ -399,8 +544,8 @@ function download_listing() {
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-heading clearfix'>\n";
 				echo "<div class='btn-group pull-right m-t-5'>\n";
-				echo "<a class='btn btn-default btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=edit&amp;section=dadd&amp;cat_id=".$data['download_cat_id']."'><i class='fa fa-pencil fa-fw'></i> ".$locale['edit']."</a>\n";
-				echo "<a class='btn btn-default btn-sm' href='".ADMIN."download_cats.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
+				echo "<a class='btn btn-default btn-sm' href='".INFUSIONS."downloads/download_cats_admin.php".$aidlink."&amp;action=edit&amp;section=dadd&amp;cat_id=".$data['download_cat_id']."'><i class='fa fa-pencil fa-fw'></i> ".$locale['edit']."</a>\n";
+				echo "<a class='btn btn-default btn-sm' href='".INFUSIONS."downloads/download_cats_admin.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
 				echo "</div>\n";
 				echo "<div class='overflow-hide p-r-10'>\n";
 				echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('download-list', $data['download_cat_id'], '0', 'm-r-10 text-bigger strong').">".$data['download_cat_name']."</a> <span class='badge'>".$data['download_count']."</h4>\n";
@@ -450,8 +595,19 @@ function download_listing() {
 	} else {
 		echo "<div class='well text-center'>\n";
 		echo "".$locale['download_0251']."<br />\n".$locale['download_0252']."<br />\n";
-		echo "<a href='download_cats.php".$aidlink."'>".$locale['download_0253']."</a>".$locale['download_0254'];
+		echo "<a href='".INFUSIONS."downloads/download_cats_admin.php".$aidlink."&amp;section=dadd'>".$locale['download_0253']."</a>".$locale['download_0254'];
 		echo "</div>\n";
 	}
 	echo "</div>\n";
 }
+
+function calculate_byte($download_max_b) {
+	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+	foreach ($calc_opts as $byte => $val) {
+		if ($download_max_b/$byte <= 999) {
+			return $byte;
+		}
+	}
+	return 1000000;
+}
+

@@ -71,7 +71,7 @@ class Functions {
 		$data = dbquery_tree_full(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent', "".(multilang_table("BL") ? "WHERE download_cat_language='".LANGUAGE."'" : '')."");
 		foreach($data as $index => $cat_data) {
 			foreach($cat_data as $download_cat_id => $cat) {
-				$data[$index][$download_cat_id]['download_cat_link'] = "<a href='".BASEDIR."downloads.php?cat_id=".$cat['download_cat_id']."'>".$cat['download_cat_name']."</a>";
+				$data[$index][$download_cat_id]['download_cat_link'] = "<a href='".DOWNLOADS."downloads.php?cat_id=".$cat['download_cat_id']."'>".$cat['download_cat_name']."</a>";
 			}
 		}
 		return $data;
