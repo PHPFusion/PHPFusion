@@ -26,8 +26,8 @@ include INFUSIONS."forum/locale/".LOCALESET."forum.php";
 require_once INCLUDES."forum_include.php";
 require_once THEMES."templates/header.php";
 // Load Template
-include THEMES."templates/global/forum.index.php";
-include THEMES."templates/global/forum.forms.php";
+include INFUSIONS."forum/templates/forum_main.php";
+include INFUSIONS."forum/templates/forum_input.php";
 $thread = new PHPFusion\Forums\Thread();
 $thread->setThreadInfo();
 $info = $thread->getThreadInfo();

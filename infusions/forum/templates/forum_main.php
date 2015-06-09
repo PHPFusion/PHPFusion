@@ -65,12 +65,11 @@ if (!function_exists('render_forum2')) {
 
 if (!function_exists('render_forum')) {
 	function render_forum($info) {
-		global $locale;
 		echo render_breadcrumbs();
-				if (isset($_GET['viewforum'])) {
-					forum_viewforum($info);
-			} else {
-				render_forum_main($info);
+		if (isset($_GET['viewforum'])) {
+			forum_viewforum($info);
+		} else {
+			render_forum_main($info);
 		}
 	}
 }
@@ -223,7 +222,6 @@ if (!function_exists('forum_viewforum')) {
 		$data = $info['item'][$_GET['forum_id']];
 		echo "<h3 class='m-t-20 m-b-5'>".$data['forum_name']."</h3>\n";
 		echo $data['forum_description'];
-
 		// subforums
 		if (isset($info['item'][$_GET['forum_id']]['child'])) {
 			echo "<div class='panel panel-default m-t-10'>\n";

@@ -49,9 +49,9 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 	define_forum_mods($info);
 
 	$info['lock_edit'] = $settings['forum_edit_lock'] == 1 ? TRUE : FALSE;
-	add_breadcrumb(array('link'=>FORUM.'index.php', 'title'=>$locale['forum_0000']));
-	add_breadcrumb(array('link'=>FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title'=>$info['forum_name']));
-	add_breadcrumb(array('link'=>FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title'=>'New Thread'));
+	add_breadcrumb(array('link'=>INFUSIONS.'forum/index.php', 'title'=>$locale['forum_0000']));
+	add_breadcrumb(array('link'=>INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title'=>$info['forum_name']));
+	add_breadcrumb(array('link'=>INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title'=>'New Thread'));
 	$data['new'] = 1;
 	if (isset($_POST['postnewthread']) ||
 		isset($_POST['previewpost']) ||
@@ -65,7 +65,6 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 	}
 	postform($data, $info);
 } else {
-	redirect('index.php');
+	redirect(INFUSIONS.'forum/index.php');
 }
-
 require_once THEMES."templates/footer.php";
