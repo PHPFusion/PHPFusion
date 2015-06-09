@@ -359,7 +359,8 @@ function showrendertime($queries = TRUE) {
 		$diff = 0;
 		if (isset($_SESSION['performance'])) {
 			$average_speed = substr(array_sum($_SESSION['performance'])/count($_SESSION['performance']), 0, 7);
-			$diff = $render_time - array_values(array_slice( $_SESSION['performance'], -2, 1, TRUE ))[0];
+			$previous_render = array_values(array_slice( $_SESSION['performance'], -2, 1, TRUE ));
+			$diff = $render_time - (!empty($previous_render) ? $previous_render[0] : 0);
 		}
 		$res = sprintf($locale['global_172'], $render_time)." | ".sprintf($locale['global_175'], $average_speed." ($diff)");
 		$res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : "");
