@@ -60,10 +60,10 @@ public function setThreadInfo() {
 		}
 		$this->forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 		add_to_title($locale['global_201'].$thread_data['thread_subject']);
-		add_breadcrumb(array('link'=>FORUM.'index.php', 'title'=>$locale['forum_0000']));
+		add_breadcrumb(array('link'=>INFUSIONS.'forum/index.php', 'title'=>$locale['forum_0000']));
 		forum_breadcrumbs($this->forum_index); 
-		add_breadcrumb(array('link' => FORUM.'viewthread.php?forum_id='.$thread_data['forum_id'].'&amp;thread_id='.$thread_data['thread_id'], 'title' => $thread_data['thread_subject']));
-		$this->thread_info['thread']['forum_link'] = FORUM."index.php?viewforum&amp;forum_id=".$thread_data['forum_id']."&amp;forum_cat=".$thread_data['forum_cat']."&amp;forum_branch=".$thread_data['forum_branch'];
+		add_breadcrumb(array('link' => INFUSIONS.'forum/viewthread.php?forum_id='.$thread_data['forum_id'].'&amp;thread_id='.$thread_data['thread_id'], 'title' => $thread_data['thread_subject']));
+		$this->thread_info['thread']['forum_link'] = INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$thread_data['forum_id']."&amp;forum_cat=".$thread_data['forum_cat']."&amp;forum_branch=".$thread_data['forum_branch'];
 		self::set_ThreadPermissions();
 		self::set_ThreadFilterlinks();
 		self::increment_threadview();
@@ -171,7 +171,7 @@ private function set_ThreadJs() {
 	$viewthread_js .= "});";
 	// below functions could be made more unobtrusive thanks to jQuery, giving a more accessible cms
 	$viewthread_js .= "function jumpforum(forum_id){";
-	$viewthread_js .= "document.location.href='".FORUM."viewforum.php?forum_id='+forum_id;";
+	$viewthread_js .= "document.location.href='".INFUSIONS."forum/viewforum.php?forum_id='+forum_id;";
 	$viewthread_js .= "}";
 	if (iMOD) { // only moderators need this javascript
 		$viewthread_js .= "function setChecked(frmName,chkName,val){";
@@ -212,7 +212,7 @@ private function set_ThreadMods() {
 											'move' => $locale['forum_0206']
 										);
 
-		$this->thread_info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.FORUM."viewthread.php?thread_id=".$this->thread_info['thread']['thread_id']."&amp;rowstart=".$_GET['rowstart'];
+		$this->thread_info['form_action'] = $settings['site_seo'] ? FUSION_ROOT : ''.INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_info['thread']['thread_id']."&amp;rowstart=".$_GET['rowstart'];
 		$this->thread_info['open_post_form'] = openform('mod_form', 'post', $this->thread_info['form_action'], array('max_tokens' => 1,'notice' => 0));
 		$this->thread_info['close_post_form'] = closeform();
 		$this->thread_info['mod_form'] = "<div class='list-group-item'>\n
@@ -236,11 +236,11 @@ private function set_ThreadMods() {
 private function set_ThreadFilterlinks() {
 	// Filters
 	global $locale;
-	$this->thread_info['post-filters'][0] = array('value' => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=oldest', 'locale' => $locale['forum_0180']);
-	$this->thread_info['post-filters'][1] = array('value' => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=latest', 'locale' => $locale['forum_0181']);
+	$this->thread_info['post-filters'][0] = array('value' => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=oldest', 'locale' => $locale['forum_0180']);
+	$this->thread_info['post-filters'][1] = array('value' => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=latest', 'locale' => $locale['forum_0181']);
 	if ($this->thread_info['permissions']['can_rate']) {
 		$this->thread_info['allowed-post-filters'][2] = 'high';
-		$this->thread_info['post-filters'][2] = array('value' => FORUM.'viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=high', 'locale' => $locale['forum_0182']);
+		$this->thread_info['post-filters'][2] = array('value' => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=high', 'locale' => $locale['forum_0182']);
 	}
 }
 
@@ -249,9 +249,9 @@ private function set_ThreadFilterlinks() {
  */
 private function prepare_ThreadInfo() {
 	global $settings;
-	if (!isset($_GET['thread_id'])) redirect(FORUM.'index.php');
+	if (!isset($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
 	list($this->post_count, $this->last_post_id, $this->first_post_id) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($_GET['thread_id'])."' AND post_hidden='0' GROUP BY thread_id"));
-	if (!$this->post_count) redirect(FORUM.'index.php');
+	if (!$this->post_count) redirect(INFUSIONS.'forum/index.php');
 	$this->thread_info += array(
 		'forum_id' => isset($_GET['forum_id']) && verify_forum($_GET['forum_id']) ? $_GET['forum_id'] : '',
 		'forum_cat' => isset($_GET['forum_cat']) && verify_forum($_GET['forum_cat']) ? $_GET['forum_cat'] : '',
@@ -317,7 +317,7 @@ private function set_PostInfo() {
 		/* Set Threads Navigation */
 		$this->thread_info['page_nav'] = format_word($this->thread_info['post_rows'], $locale['fmt_post']);
 		if ($this->post_count > $this->thread_info['posts_per_page']) {
-			$this->thread_info['page_nav'] .= "<div class='pull-right'>".makepagenav($_GET['rowstart'], $this->thread_info['posts_per_page'], $this->post_count, 3, FORUM."viewthread.php?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
+			$this->thread_info['page_nav'] .= "<div class='pull-right'>".makepagenav($_GET['rowstart'], $this->thread_info['posts_per_page'], $this->post_count, 3, INFUSIONS."forum/viewthread.php?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
 		}
 
 		$i = 1;
@@ -341,12 +341,12 @@ private function set_PostInfo() {
 			// Quote & Edit Link
 			if (iMEMBER && ($this->thread_info['permissions']['can_post'] || $this->thread_info['permissions']['can_reply'])) {
 				if (!$this->thread_info['thread']['thread_locked']) {
-					$pdata['post_quote'] = array('link'=>FORUM."viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'], 'name'=>$locale['forum_0266']);
+					$pdata['post_quote'] = array('link'=>INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'], 'name'=>$locale['forum_0266']);
 					if (iMOD || (($this->thread_info['permissions']['edit_lock'] && $pdata['is_last_post'] || !$this->thread_info['permissions']['edit_lock'])) && ($userdata['user_id'] == $pdata['post_author']) && ($settings['forum_edit_timelimit'] <= 0 || time()-$settings['forum_edit_timelimit']*60 < $pdata['post_datestamp'])) {
-						$pdata['post_edit'] =  array('link'=>FORUM."viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'], 'name'=>$locale['forum_0265']);
+						$pdata['post_edit'] =  array('link'=>INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'], 'name'=>$locale['forum_0265']);
 					}
 				} elseif (iMOD) {
-					$pdata['post_edit'] = array('link'=>FORUM."viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'], 'name'=>$locale['forum_0265']);
+					$pdata['post_edit'] = array('link'=>INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'], 'name'=>$locale['forum_0265']);
 				}
 			}
 			$pdata['user_profile_link'] = profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']);
@@ -404,8 +404,8 @@ private function set_PostInfo() {
 				if (checkgroup($this->thread_info['forum_vote'])) { // everyone can vote as long pass checkgroup.
 					// check for own vote link.
 					if ($pdata['user_id'] !== $userdata['user_id']) {
-						$pdata['vote_up'] = array('link'=>FORUM."post.php?action=voteup&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'], 'name'=>$locale['forum_0265']);
-						$pdata['vote_down'] = array('link'=>FORUM."post.php?action=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'], 'name'=>$locale['forum_0265']);
+						$pdata['vote_up'] = array('link'=>INFUSIONS."forum/post.php?action=voteup&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'], 'name'=>$locale['forum_0265']);
+						$pdata['vote_down'] = array('link'=>INFUSIONS."forum/post.php?action=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'], 'name'=>$locale['forum_0265']);
 					}
 					$pdata['vote_points'] = !empty($pdata['vote_points']) ? $pdata['vote_points'] : 0;
 				} else {
@@ -455,7 +455,7 @@ private function set_PostInfo() {
 						$i_image++;
 					} else {
 						$pdata['attach-files'] .= "<div class='display-inline-block'><i class='entypo attach'></i><a href='".FUSION_SELF."?thread_id=".$_GET['thread_id']."&amp;getfile=".$attach['attach_id']."'>".$attach['attach_name']."</a>&nbsp;";
-						$pdata['attach-files'] .= "[<span class='small'>".parsebytesize(filesize(FORUM."attachments/".$attach['attach_name']))." / ".$attach['attach_count'].$locale['forum_0162']."</span>]</div>\n";
+						$pdata['attach-files'] .= "[<span class='small'>".parsebytesize(filesize(INFUSIONS."forum/attachments/".$attach['attach_name']))." / ".$attach['attach_count'].$locale['forum_0162']."</span>]</div>\n";
 						$i_files++;
 					}
 				}
@@ -509,7 +509,7 @@ private function set_QuickReply() {
 
 		if (isset($_POST['postreply'])) {
 			$info = $this->thread_info['thread'];
-			if ($info['forum_type'] == 1) redirect(FORUM.'index.php');
+			if ($info['forum_type'] == 1) redirect(INFUSIONS.'forum/index.php');
 			$info['lock_edit'] = $settings['forum_edit_lock'] == 1 ? TRUE : FALSE;
 			if (checkgroup($info['forum_reply']) && $this->thread_info['thread_id']) {
 				$result = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_id='".$this->thread_info['thread_id']."' ".(iMOD || iSUPERADMIN ? '' : "AND thread_locked = '0'")." AND thread_hidden='0'");
@@ -528,7 +528,7 @@ private function set_QuickReply() {
 							$quote_data = dbarray($quote_result);
 							$data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]".strip_bbcodes($quote_data['post_message'])."[/quote]\r\r";
 						} else {
-							redirect(FORUM.'index.php');
+							redirect(INFUSIONS.'forum/index.php');
 						}
 					}
 					if (isset($_POST['postreply']) or isset($_POST['previewpost'])) {
@@ -536,14 +536,14 @@ private function set_QuickReply() {
 					}
 					$data['reply'] = 1;
 				} else {
-					redirect(FORUM.'index.php'); // no threads
+					redirect(INFUSIONS.'forum/index.php'); // no threads
 				}
 			}
 			include "post_actions.php";
 		}
 
 		$html = "<!--sub_forum_thread-->\n";
-		$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').FORUM."viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'];
+		$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'];
 		$html .= openform('qr_form', 'post', $form_action, array('class'=>'m-b-20 m-t-20', 'downtime' => 1));
 		$html .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
 		$html .= form_textarea('post_message', $locale['forum_0601'], '', array('bbcode' => 1, 'required' => 1, 'autosize'=>1, 'preview'=>1, 'form_name'=>'qr_form'));
@@ -569,9 +569,9 @@ private function set_ThreadButtons(){
 	global $locale;
 	$this->thread_info['buttons'] = array(
 		'print' => array('link'=>BASEDIR."print.php?type=F&amp;thread=".$this->thread_info['thread_id']."&amp;rowstart=".$_GET['rowstart'], 'name'=>$locale['forum_0178']),
-		'newthread' => $this->thread_info['permissions']['can_post'] ? array('link'=>FORUM."newthread.php?forum_id=".$this->thread_info['thread']['forum_id'], 'name'=>$locale['forum_0264']) : array(),
-		'reply' => $this->thread_info['permissions']['can_reply'] ? array('link'=>FORUM."viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name'=>$locale['forum_0360']) : array(),
-		'notify' => $this->thread_info['thread']['user_tracked'] ? array('link'=>FORUM."postify.php?post=off&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name'=>$locale['forum_0174']) : array('link'=>FORUM."postify.php?post=on&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name'=>$locale['forum_0175']),
+		'newthread' => $this->thread_info['permissions']['can_post'] ? array('link'=>INFUSIONS."forum/newthread.php?forum_id=".$this->thread_info['thread']['forum_id'], 'name'=>$locale['forum_0264']) : array(),
+		'reply' => $this->thread_info['permissions']['can_reply'] ? array('link'=>INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name'=>$locale['forum_0360']) : array(),
+		'notify' => $this->thread_info['thread']['user_tracked'] ? array('link'=>INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name'=>$locale['forum_0174']) : array('link'=>INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name'=>$locale['forum_0175']),
 	);
 }
 
@@ -614,7 +614,7 @@ private function set_ThreadPolls() {
 
 			$html = '';
 			if ($this->thread_info['permissions']['can_vote_poll']) {
-				$html = openform('voteform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').FORUM."viewthread.php?thread_id=".$this->thread_info['thread_id'], array('notice'=>0, 'downtime'=>1));
+				$html = openform('voteform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_info['thread_id'], array('notice'=>0, 'downtime'=>1));
 			}
 			$html .= "<span class='text-bigger strong display-inline-block m-b-10'><i class='entypo chart-pie'></i>".$this->thread_info['poll']['forum_poll_title']."</span>\n";
 			$html .= "<hr class='m-t-0 m-b-10'/>\n";
@@ -651,7 +651,7 @@ private function set_ThreadAttach() {
 		$a_result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".$this->thread_info['thread_id']."' ORDER BY post_id ASC");
 		if (dbrows($a_result) > 0) {
 			while ($a_data = dbarray($a_result)) {
-				if (file_exists(FORUM."attachments/".$a_data['attach_name'])) {
+				if (file_exists(INFUSIONS."forum/attachments/".$a_data['attach_name'])) {
 					$this->thread_info['attachments'][$a_data['post_id']][] = $a_data;
 				}
 			}
@@ -668,7 +668,7 @@ private function set_ForumPostDB() {
 	global $locale, $settings, $userdata;
 	if (Functions::verify_thread($this->thread_info['thread_id'])) {
 		$info = $this->thread_info['thread'];
-		if ($info['forum_type'] == 1) redirect(FORUM.'index.php');
+		if ($info['forum_type'] == 1) redirect(INFUSIONS.'forum/index.php');
 		$info['lock_edit'] = $settings['forum_edit_lock'] == 1 ? TRUE : FALSE;
 		if (isset($_GET['action'])) {
 			switch ($_GET['action']) {
@@ -699,7 +699,7 @@ private function set_ForumPostDB() {
 									$quote_data = dbarray($quote_result);
 									$data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]".strip_bbcodes($quote_data['post_message'])."[/quote]\r\r";
 								} else {
-									redirect(FORUM.'index.php');
+									redirect(INFUSIONS.'forum/index.php');
 								}
 							}
 							if (isset($_POST['postreply']) or isset($_POST['previewpost'])) {
@@ -708,7 +708,7 @@ private function set_ForumPostDB() {
 							$data['reply'] = 1;
 							postform($data, $info);
 						} else {
-							redirect(FORUM.'index.php'); // no threads
+							redirect(INFUSIONS.'forum/index.php'); // no threads
 							echo "yes";
 						}
 					}
@@ -724,13 +724,13 @@ private function set_ForumPostDB() {
 						if (dbrows($result) > 0) {
 							$data = dbarray($result);
 							if ($userdata['user_id'] != $data['post_author'] && !iMOD && !iSUPERADMIN) {
-								redirect(FORUM.'index.php');
+								redirect(INFUSIONS.'forum/index.php');
 							}
 							if ($data['post_locked'] && !iMOD) {
 								redirect("postify.php?post=edit&error=5&forum_id=".$this->thread_info['forum_id']."&thread_id=".$this->thread_info['thread_id']."&post_id=".$this->thread_info['post_id']);
 							}
 							if (!iMOD && ($settings['forum_edit_timelimit'] > 0 && time()-$settings['forum_edit_timelimit']*60 > $data['post_datestamp'])) {
-								redirect(FORUM."postify.php?post=edit&error=6&forum_id=".$this->thread_info['forum_id']."&thread_id=".$this->thread_info['thread_id']."&post_id=".$this->thread_info['post_id']);
+								redirect(INFUSIONS."forum/postify.php?post=edit&error=6&forum_id=".$this->thread_info['forum_id']."&thread_id=".$this->thread_info['thread_id']."&post_id=".$this->thread_info['post_id']);
 							}
 							$last_post = dbarray(dbquery("SELECT post_id
 													FROM ".DB_FORUM_POSTS."
@@ -766,17 +766,17 @@ private function set_ForumPostDB() {
 								}
 								postform($data, $info);
 							} else {
-								redirect(FORUM.'index.php'); // edit rules failed.
+								redirect(INFUSIONS.'forum/index.php'); // edit rules failed.
 							}
 						} else {
-							redirect(FORUM.'index.php'); // cannot find post_id.
+							redirect(INFUSIONS.'forum/index.php'); // cannot find post_id.
 						}
 					}
 					break;
 			} 
 		}
 	} else {
-		redirect(FORUM.'index.php');
+		redirect(INFUSIONS.'forum/index.php');
 	}
 }
 }

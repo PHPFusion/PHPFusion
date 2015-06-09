@@ -23,8 +23,11 @@ if (!db_exists(DB_FORUMS)) {
 	exit;
 }
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
-require_once INCLUDES."forum_include.php";
 require_once THEMES."templates/header.php";
+require_once INFUSIONS."forum/classes/Thread.php";
+require_once INFUSIONS."forum/classes/Functions.php";
+require_once INFUSIONS."forum/classes/Moderator.php";
+require_once INFUSIONS."forum/forum_include.php";
 // Load Template
 include INFUSIONS."forum/templates/forum_main.php";
 include INFUSIONS."forum/templates/forum_input.php";
