@@ -185,28 +185,37 @@ function exif($imagePath) {
 
 /**
  * Copy a file from any source to any destination
- * @param $source
- * @param $destination
+ * @param $source -- copy file from URL
+ * @param $destination -- copy file to folder
  */
 function copy_file($source, $destination) {
-	$filename['name'] = '';
-	$filename['error'] = 1;
-	if (phpversion() >= 5) {
-		copy($source, $destination);
-		$file = pathinfo($source);
-		$filename['name'] = $file['filename'];
-		unset($filename['error']);
-	} else {
-		if (function_exists('fopen')) {
-			$content = file_get_contents($source);
-			//Store in the filesystem.
-			$fp = fopen($destination, "w");
-			fwrite($fp, $content);
-			fclose($fp);
-			$file = pathinfo($source);
-			$filename['name'] = $file['filename'];
-			unset($filename['error']);
+	$upload['name'] = '';
+	$upload['error'] = true;
+	function getimg($url) {
+		$headers[] = 'Accept: image/gif, image/x-bitmap, image/jpeg, image/pjpeg';
+		$headers[] = 'Connection: Keep-Alive';
+		$headers[] = 'Content-type: application/x-www-form-urlencoded;charset=UTF-8';
+		$user_agent = 'php';
+		$process = curl_init($url);
+		curl_setopt($process, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($process, CURLOPT_HEADER, 0);
+		curl_setopt($process, CURLOPT_USERAGENT, $useragent);
+		curl_setopt($process, CURLOPT_TIMEOUT, 30);
+		curl_setopt($process, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($process, CURLOPT_FOLLOWLOCATION, 1);
+		$return = curl_exec($process);
+		curl_close($process);
+		return $return;
+	}
+	$file = basename($source);
+	$image_name = image_exists($destination, $file);
+	$image = getimg($source);
+	if ($image) {
+		$fopen = file_put_contents($destination.'/'.$image_name, $image);
+		if (!empty($fopen)) {
+			$upload['name'] = $file;
+			$upload['error'] = false;
 		}
 	}
-	return $filename;
+	return $upload;
 }

@@ -435,29 +435,19 @@ private function set_forumDB() {
 
 		// Uploads or copy forum image
 		if (!empty($_FILES['forum_image']['name']) && is_uploaded_file($_FILES['forum_image']['tmp_name'])) {
+			// Upload tested and working fine -- date 9/6/2015 15:49 8GMT
 			$upload = form_sanitizer($_FILES['forum_image'], '', 'forum_image');
 			if ($upload['error'] == 0) {
 				$this->data['forum_image'] = $upload['thumb1_name'];
 			}
-		} elseif (isset($_POST['forum_himage']) && $_POST['forum_himage'] != "") {
-			// if not uploaded, here on both save and update.
+		} elseif (isset($_POST['forum_image_url']) && $_POST['forum_image_url'] != "") {
+			require_once INCLUDES."photo_functions_include.php";
+			// if forum_image_header is not empty
 			$type_opts = array('0'=>BASEDIR, '1'=>'http://', '2'=>'https://');
-			$this->data['forum_image'] = $type_opts[form_sanitizer($_POST['forum_image_header'], '0', 'forum_image_header')].form_sanitizer($_POST['forum_image_url'], '', 'forum_image_url');
-			if ($this->data['forum_id']) {
-				$image_check = dbarray(dbquery("SELECT forum_image FROM ".DB_FORUMS." WHERE forum_id='".$this->data['forum_id']."'"));
-				$image_found =  ($image_check['forum_image'] && file_exists(IMAGES."forum/".$image_check['forum_image'])) ? 1 : 0;
-				if (!$image_found) {
-					require_once INCLUDES."photo_functions_include.php";
-					$upload = copy_file(IMAGES."forum/", $this->data['forum_image']);
-				} else {
-					$defender->stop();
-					addNotice('warning', $locale['forum_error_8']);
-				}
-			} else {
-				require_once INCLUDES."photo_functions_include.php";
-				$upload = copy_file(IMAGES."forum/", $this->data['forum_image']);
-			}
-			if (isset($upload['error'])) {
+			// the url
+			$this->data['forum_image'] = $type_opts[intval($_POST['forum_image_header'])].form_sanitizer($_POST['forum_image_url'], '', 'forum_image_url');
+			$upload = copy_file($this->data['forum_image'], INFUSIONS."forum/images/");
+			if ($upload['error'] == true) {
 				$defender->stop();
 				addNotice('warning', $locale['forum_error_9']);
 			} else {
@@ -571,6 +561,7 @@ private function display_forum_jumper() {
 public function display_forum_form() {
 	global $aidlink, $settings, $locale;
 
+	require_once INCLUDES.'photo_functions_include.php';
 	$language_opts = fusion_get_enabled_languages();
 	add_breadcrumb(array('link'=>'', 'title'=>$locale['forum_001']));
 	if (!isset($_GET['action']) && $_GET['parent_id']) {
@@ -595,7 +586,7 @@ public function display_forum_form() {
 	echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 	echo form_text('forum_alias', $locale['forum_011'], $this->data['forum_alias']); // need ajax check
 	echo form_select('forum_meta', $locale['forum_012'], array(), $this->data['forum_meta'], array('tags'=>1, 'multiple'=>1, 'width'=>'100%'));
-	// possible bug? - if image is tied to a url. we can remove it after assigning to other's people page? what if i split to image_url ?
+
 	if ($this->data['forum_image'] && file_exists(IMAGES."forum/".$this->data['forum_image'])) {
 		openside();
 		echo "<div class='pull-left m-r-10'>\n";
@@ -604,11 +595,12 @@ public function display_forum_form() {
 		echo "</div>\n<div class='overflow-hide'>\n";
 		echo "<span class='strong'>".$locale['forum_013']."</span><br/>\n";
 		echo "<span class='text-smaller'>".sprintf($locale['forum_027'], $image_size[0], $image_size[1])."</span><br/>";
-		echo form_button('remove_image', $locale['forum_028'], $locale['forum_028'], array('class'=>'btn-danger btn-xs m-t-10', 'icon'=>'fa fa-trash'));
-		// this form has forum_id - onclick of button - will also post forum_id @ L475
+		echo form_button('remove_image', $locale['forum_028'], $locale['forum_028'], array('class'=>'btn-danger btn-sm m-t-10', 'icon'=>'fa fa-trash'));
 		echo "</div>\n";
 		closeside();
+
 	} else {
+
 		$tab_title['title'][] = $locale['forum_013'];
 		$tab_title['id'][] = 'fir';
 		$tab_title['icon'][] = '';
@@ -617,10 +609,12 @@ public function display_forum_form() {
 		$tab_title['icon'][] = '';
 		$tab_active = tab_active($tab_title, 0);
 		echo opentab($tab_title, $tab_active, 'forum-image-tab');
+		// Upload Image
 		echo opentabbody($tab_title['title'][0], 'fir', $tab_active);
 		echo "<span class='display-inline-block m-t-10 m-b-10'>".sprintf($locale['forum_015'], parsebytesize(fusion_get_settings('download_max_b')))."</span>\n";
 		echo form_fileinput('', 'forum_image', 'forum_image', IMAGES."forum", '', array('thumbnail'=>IMAGES."forum/thumbnail", 'type'=>'image'));
 		echo closetabbody();
+		// Upload image via Web Address
 		echo opentabbody($tab_title['title'][1], 'ful', $tab_active);
 		echo "<span class='display-inline-block m-t-10 m-b-10'>".$locale['forum_016']."</strong></span>\n";
 		$header_opts = array(
@@ -825,8 +819,8 @@ private function display_forum_list() {
 			echo "<div class='row'>\n";
 			echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
 			$html2 = '';
-			if ($data['forum_image'] && file_exists(IMAGES."forum/".$data['forum_image'])) {
-				echo "<div class='pull-left m-r-10'>\n".thumbnail(IMAGES."forum/".$data['forum_image'], '50px')."</div>\n";
+			if ($data['forum_image'] && file_exists(INFUSIONS."forum/images/".$data['forum_image'])) {
+				echo "<div class='pull-left m-r-10'>\n".thumbnail(INFUSIONS."forum/images/".$data['forum_image'], '50px')."</div>\n";
 				echo "<div class='overflow-hide'>\n";
 				$html2 = "</div>\n";
 			}
