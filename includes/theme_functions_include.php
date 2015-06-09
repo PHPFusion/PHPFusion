@@ -355,8 +355,12 @@ function showrendertime($queries = TRUE) {
 		$render_time = substr((microtime(TRUE)-START_TIME), 0, 7);
 		$_SESSION['performance'][] = $render_time;
 		if (count($_SESSION['performance']) > 5) array_shift($_SESSION['performance']);
-		$average_speed = isset($_SESSION['performance']) ? substr(array_sum($_SESSION['performance'])/count($_SESSION['performance']), 0, 7) : $render_time;
-		$diff = $render_time - array_values(array_slice( $_SESSION['performance'], -2, 1, TRUE ))[0];
+		$average_speed = $render_time;
+		$diff = 0;
+		if (isset($_SESSION['performance'])) {
+			$average_speed = substr(array_sum($_SESSION['performance'])/count($_SESSION['performance']), 0, 7);
+			$diff = $render_time - array_values(array_slice( $_SESSION['performance'], -2, 1, TRUE ))[0];
+		}
 		$res = sprintf($locale['global_172'], $render_time)." | ".sprintf($locale['global_175'], $average_speed." ($diff)");
 		$res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : "");
 		return $res;
