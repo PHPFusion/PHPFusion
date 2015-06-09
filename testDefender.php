@@ -18,6 +18,9 @@
 
 // ADD MORE INPUTS FOR TESTS
 
+// Email validation is not working
+// Password validation is not working
+
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
 
