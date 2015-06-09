@@ -258,8 +258,8 @@ private function remove_forum_image() {
 		if ($data['forum_id']) {
 			$data = self::get_forum($data['forum_id']);
 			if (!empty($data)) {
-				if (!empty($data['forum_image']) && file_exists(IMAGES."forum/".$data['forum_image']) && !is_dir(IMAGES."forum/".$data['forum_image'])) {
-					@unlink(IMAGES."forum/".$data['forum_image']);
+				if (!empty($data['forum_image']) && file_exists(INFUSIONS."forum/images/".$data['forum_image']) && !is_dir(INFUSIONS."forum/images/".$data['forum_image'])) {
+					@unlink(INFUSIONS."forum/images/".$data['forum_image']);
 					$data['forum_image'] = '';
 				}
 				dbquery_insert(DB_FORUMS, $data, 'update');
