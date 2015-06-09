@@ -29,10 +29,11 @@ if (!db_exists(DB_FORUMS)) {
 require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
 add_to_title($locale['global_204']);
-require_once INCLUDES."forum_include.php";
-require_once INCLUDES."bbcode_include.php";
-require_once THEMES."templates/global/forum.forms.php";
 require_once INCLUDES."mimetypes_include.php";
+require_once INCLUDES."bbcode_include.php";
+require_once INFUSIONS."forum/classes/functions.php";
+require_once INFUSIONS."forum/forum_include.php";
+require_once INFUSIONS."forum/templates/forum_input.php";
 
 if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 	// yield forum_id and forum_id before that
@@ -43,7 +44,6 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 						AND ".groupaccess('f.forum_access')."
 					")
 			);
-
 	if ($info['forum_type'] == 1) redirect("index.php");
 
 	define_forum_mods($info);
@@ -69,4 +69,3 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 }
 
 require_once THEMES."templates/footer.php";
-

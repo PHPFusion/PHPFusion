@@ -27,7 +27,7 @@ include INFUSIONS."forum/locale/".LOCALESET."forum.php";
 require_once INFUSIONS."forum/classes/forum.php";
 require_once INFUSIONS."forum/classes/functions.php";
 require_once INFUSIONS."forum/forum_include.php";
-include THEMES."templates/global/forum.index.php";
+include INFUSIONS."forum/templates/forum_main.php";
 $forum = new PHPFusion\Forums\Forum;
 $forum->set_ForumInfo();
 $info = $forum->getForumInfo();
