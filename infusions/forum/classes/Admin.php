@@ -443,7 +443,7 @@ private function set_forumDB() {
 		} elseif (isset($_POST['forum_image_url']) && $_POST['forum_image_url'] != "") {
 			require_once INCLUDES."photo_functions_include.php";
 			// if forum_image_header is not empty
-			$type_opts = array('0'=>BASEDIR, '1'=>'http://', '2'=>'https://');
+			$type_opts = array('0'=>BASEDIR, '1'=>'');
 			// the url
 			$this->data['forum_image'] = $type_opts[intval($_POST['forum_image_header'])].form_sanitizer($_POST['forum_image_url'], '', 'forum_image_url');
 			$upload = copy_file($this->data['forum_image'], INFUSIONS."forum/images/");
@@ -618,9 +618,8 @@ public function display_forum_form() {
 		echo opentabbody($tab_title['title'][1], 'ful', $tab_active);
 		echo "<span class='display-inline-block m-t-10 m-b-10'>".$locale['forum_016']."</strong></span>\n";
 		$header_opts = array(
-			'0' => $settings['siteurl'],
-			'1' => 'http://',
-			'2' => 'https://'
+			'0' => 'Local Server',
+			'1' => 'URL',
 		);
 		echo form_select('forum_image_header', $locale['forum_056'], $header_opts, '', array('inline'=>1));
 		echo form_text('forum_image_url', $locale['forum_014'], '', array('placeholder'=>'images/forum/', 'inline'=>1));
