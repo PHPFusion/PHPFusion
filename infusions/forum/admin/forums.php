@@ -16,10 +16,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once __DIR__."/../../../maincore.php";
+if (!db_exists(DB_FORUMS)) {
+	$_GET['code'] = 404;
+	require_once BASEDIR.'error.php';
+	exit;
+}
 pageAccess('F');
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/forums.php";
+include INFUSIONS."forum/locale/".LOCALESET."forum_admin.php";
 $forum_admin = new PHPFusion\Forums\Admin();
 $forum_admin->display_forum_admin();
 require_once THEMES."templates/footer.php";
