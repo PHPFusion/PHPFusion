@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (db_exists(DB_FAQS)) {
 include LOCALE.LOCALESET."search/faqs.php";
 if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
 	$sortby = "faq_id";
@@ -59,4 +60,5 @@ if ($_GET['stype'] == "faqs" || $_GET['stype'] == "all") {
 		$items_count .= THEME_BULLET."&nbsp;0 ".$locale['fq402']." ".$locale['522']."<br />\n";
 	}
 	$navigation_result = search_navigation($rows);
+}
 }

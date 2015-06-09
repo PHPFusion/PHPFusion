@@ -16,9 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (db_exists(DB_FORUMS)) {
 include LOCALE.LOCALESET."search/forums.php";
-
 if ($_GET['stype'] == "forums" || $_GET['stype'] == "all") {
 	if ($_POST['sort'] == "datestamp") {
 		$sortby = "post_datestamp";
@@ -80,4 +79,4 @@ if ($_GET['stype'] == "forums" || $_GET['stype'] == "all") {
 	}
 	$navigation_result = search_navigation($rows);
 }
-
+}

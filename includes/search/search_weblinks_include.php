@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (db_exists(DB_WEBLINKS)) {
 include LOCALE.LOCALESET."search/weblinks.php";
 
 if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
@@ -78,4 +78,5 @@ if ($_GET['stype'] == "weblinks" || $_GET['stype'] == "all") {
 		$items_count .= THEME_BULLET."&nbsp;0 ".$locale['w402']." ".$locale['522']."<br />\n";
 	}
 	$navigation_result = search_navigation($rows);
+}
 }

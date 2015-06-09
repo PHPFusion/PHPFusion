@@ -16,8 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (db_exists(DB_NEWS)) {
 include LOCALE.LOCALESET."search/news.php";
-
 if ($_GET['stype'] == "news" || $_GET['stype'] == "all") {
 	if ($_POST['sort'] == "datestamp") {
 		$sortby = "news_datestamp";
@@ -72,4 +72,5 @@ if ($_GET['stype'] == "news" || $_GET['stype'] == "all") {
 		$items_count .= THEME_BULLET."&nbsp;0 ".$locale['n402']." ".$locale['522']."<br />\n";
 	}
 	$navigation_result = search_navigation($rows);
+}
 }

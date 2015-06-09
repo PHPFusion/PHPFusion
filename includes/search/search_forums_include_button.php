@@ -17,6 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+if (db_exists(DB_FORUMS)) {
 include LOCALE.LOCALESET."search/forums.php";
 $forum_list = "";
 $current_cat = "";
@@ -46,4 +47,4 @@ $form_elements['forums']['disabled'] = array();
 $form_elements['forums']['display'] = array();
 $form_elements['forums']['nodisplay'] = array();
 $radio_button['forums'] = "<label><input type='radio' name='stype' value='forums'".($_GET['stype'] == "forums" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['f400']."</label> ".$forum_list;
-
+}
