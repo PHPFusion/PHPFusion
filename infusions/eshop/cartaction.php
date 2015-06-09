@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../maincore.php";
 header("Cache-Control: no-cache");
 header("Pragma: nocache");
 header("Content-type: text/html; charset=UTF-8");
@@ -31,8 +31,8 @@ if (isset($_GET['plusone']) && !isnum($_GET['plusone'])) die("Denied");
 if (isset($_GET['minusone']) && !isnum($_GET['minusone'])) die("Denied");
 $username = "";
 
-include LOCALE.LOCALESET."eshop.php";
-include LOCALE.LOCALESET."colors.php";
+include SHOP."locale/".LOCALESET."eshop.php";
+include SHOP."locale/".LOCALESET."colors.php";
 
 if (iMEMBER) { $username = $userdata['user_id']; } else { $username = $_SERVER['REMOTE_ADDR']; }
 $product = "";

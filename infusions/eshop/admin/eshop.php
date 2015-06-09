@@ -20,6 +20,7 @@ pageAccess('ESHP');
 require_once THEMES."templates/admin_header.php";
 include SHOP."locale/".LOCALESET."eshop.php";
 require_once INCLUDES."infusions_include.php";
+require_once SHOP."classes/Eshop.php";
 require_once SHOP."classes/Admin/Banners.php";
 require_once SHOP."classes/Admin/Customers.php";
 require_once SHOP."classes/Admin/Orders.php";
