@@ -36,7 +36,7 @@ define("FORUM", BASEDIR."forum/");
 define("INFUSIONS", BASEDIR."infusions/");
 define("DOWNLOADS", INFUSIONS."downloads/");
 define("PHOTOS", IMAGES."photoalbum/");
-define("SHOP", BASEDIR."eshop/");
+define("SHOP", INFUSIONS."eshop/");
 define("THEMES", BASEDIR."themes/");
 define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
 define("FUSION_IP", $_SERVER['REMOTE_ADDR']);

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------*
-| Filename: Cart.php
+| Filename: Eshop.php
 | Author: Frederick MC Chan (hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,10 +18,12 @@
 namespace PHPFusion\Eshop;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-use PHPFusion\Eshop\Admin\Coupons;
-use PHPFusion\Eshop\Admin\Customers;
-use PHPFusion\Eshop\Admin\Payments;
-use PHPFusion\Eshop\Admin\Shipping;
+require_once SHOP."classes/Admin/Coupons.php";
+require_once SHOP."classes/Admin/Customers.php";
+require_once SHOP."classes/Admin/Payments.php";
+require_once SHOP."classes/Admin/Shipping.php";
+require_once CLASSES."PHPFusion/QuantumFields.php";
+
 use PHPFusion\QuantumFields;
 
 class Eshop {

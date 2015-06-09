@@ -15,17 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once dirname(__FILE__)."/maincore.php";
+require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
+
 if (!db_exists(DB_ESHOP)) {
-	$_GET['code'] = 404;
-	require_once __DIR__.'/error.php';
-	exit;
+$_GET['code'] = 404;
+require_once __DIR__.'/../../error.php';
+exit;
 }
+
 require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."eshop.php";
-require_once THEMES."templates/global/eshop.php";
-//include INCLUDES."eshop_functions_include.php";
-//Close the tree when eShop home have been clicked... where is the tree?
+include SHOP."locale/".LOCALESET."eshop.php";
+require_once SHOP."classes/Eshop.php";
+require_once SHOP."templates/eshop.php";
+
+//include INCLUDES."eshop_functions_include.php"; // < not needed? 
+//Close the tree when eShop home have been clicked... where is the tree? - In the cat Panel if enabled.
 /*
 if ($settings['eshop_cats'] == "1") {
 echo '<script type="text/javascript"> 
@@ -33,6 +37,7 @@ echo '<script type="text/javascript">
 </script>';
 }
 */
+
 $eShop = new PHPFusion\Eshop\Eshop();
 $eShop->__construct_checkout();
 $info = $eShop->get_category();
