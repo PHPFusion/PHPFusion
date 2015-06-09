@@ -247,7 +247,7 @@ if (!function_exists('forum_viewforum')) {
 		echo "<!--pre_forum-->\n";
 		echo "<div class='panel panel-default m-t-15'>\n";
 		if (!empty($data['forum_threadcounter'])) {
-			echo "<div class='panel-heading strong p-b-15'>".format_word(isset($data['forum_threadcounter']) ? $data['forum_threadcounter'] : 0, $locale['fmt_thread'])."</div>\n";
+			echo "<div class='panel-heading strong p-b-15'>".$data['forum_threadcounter']."</div>\n";
 		}
 		echo $data['forum_rules'] ? "<div class='panel-heading p-5'><div class='alert alert-info m-b-0'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div></div>" : '';
 		if ($data['forum_type'] > 1) {

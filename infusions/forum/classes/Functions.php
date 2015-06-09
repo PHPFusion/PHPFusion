@@ -62,7 +62,7 @@ public static function verify_post($post_id) {
  * @return string
  */
 public static function attach_exists($file) {
-	$dir = FORUM."attachments/";
+	$dir = INFUSIONS."forum/attachments/";
 	$i = 1;
 	$file_name = substr($file, 0, strrpos($file, "."));
 	$file_ext = strrchr($file, ".");
@@ -160,7 +160,7 @@ public static function show_forum_rank($posts, $level, $groups) {
  * @return string
  */
 public static function display_image($file) {
-	$size = @getimagesize(FORUM."attachments/".$file);
+	$size = @getimagesize(INFUSIONS."forum/attachments/".$file);
 	if ($size[0] > 300 || $size[1] > 200) {
 		if ($size[0] <= $size[1]) {
 			$img_w = round(($size[0]*200)/$size[1]);
@@ -177,9 +177,9 @@ public static function display_image($file) {
 		$img_h = $size[1];
 	}
 	if ($size[0] != $img_w || $size[1] != $img_h) {
-		$res = "<a href='".FORUM."attachments/".$file."'><img src='".FORUM."attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' /></a>";
+		$res = "<a href='".INFUSIONS."forum/attachments/".$file."'><img src='".INFUSIONS."forum/attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' /></a>";
 	} else {
-		$res = "<img src='".FORUM."attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' />";
+		$res = "<img src='".INFUSIONS."forum/attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' />";
 	}
 	return $res;
 }
@@ -193,7 +193,7 @@ public static function display_image($file) {
  * @return string
  */
 public static function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
-	$size = @getimagesize(FORUM."attachments/".$file);
+	$size = @getimagesize(INFUSIONS."forum/attachments/".$file);
 	if ($size [0] > $height || $size [1] > $width) {
 		if ($size [0] < $size [1]) {
 			$img_w = round(($size [0]*$width)/$size [1]);
@@ -209,7 +209,7 @@ public static function display_image_attach($file, $width = 50, $height = 50, $r
 		$img_w = $size [0];
 		$img_h = $size [1];
 	}
-	$res = "<a target='_blank' href='".FORUM."attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img class='img-thumbnail' src='".FORUM."attachments/".$file."' alt='".$file."' style='border:0px; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
+	$res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img class='img-thumbnail' src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='border:0px; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
 	return $res;
 }
 
@@ -311,7 +311,7 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 				$row['forum_new_status'] = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
 			}
 		}
-		$row['forum_link'] = FORUM."index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat']."&amp;forum_branch=".$row['forum_branch'];
+		$row['forum_link'] = INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat']."&amp;forum_branch=".$row['forum_branch'];
 		$row['forum_description'] = nl2br(parseubb($row['forum_description']));
 		$row['forum_postcount'] = format_word($row['forum_postcount'], $locale['fmt_post']);
 		$row['forum_threadcount'] = format_word($row['forum_threadcount'], $locale['fmt_thread']);
@@ -322,8 +322,8 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 			if ($settings['forum_last_post_avatar']) {
 				$row['forum_last_post_avatar'] = display_avatar($data, '30px', '', '', 'img-rounded');
 			}
-			$row['forum_last_post_thread_link'] = FORUM."viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'];
-			$row['forum_last_post_link'] = FORUM."viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'];
+			$row['forum_last_post_thread_link'] = INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'];
+			$row['forum_last_post_link'] = INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'];
 			$row['forum_last_post_profile_link'] = $locale['by']." ".profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']);
 			$row['forum_last_post_date'] = showdate("forumdate", $row['forum_lastpost']);
 		}

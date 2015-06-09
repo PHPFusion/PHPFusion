@@ -24,7 +24,9 @@ if (!db_exists(DB_FORUMS)) {
 }
 require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
-require_once INCLUDES."forum_include.php";
+require_once INFUSIONS."forum/classes/forum.php";
+require_once INFUSIONS."forum/classes/functions.php";
+require_once INFUSIONS."forum/forum_include.php";
 include THEMES."templates/global/forum.index.php";
 $forum = new PHPFusion\Forums\Forum;
 $forum->set_ForumInfo();

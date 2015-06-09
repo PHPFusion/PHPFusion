@@ -46,8 +46,8 @@ class Forum {
 			'threads_per_page' => $settings['threads_per_page'],
 			'forum_index' => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'),
 			'permissions' => array(
-			'can_post' => 0
-			),
+								'can_post' => 0
+								),
 			'threads' => array(),
 			'section' => isset($_GET['section']) ? $_GET['section'] : 'thread',
 		);
@@ -246,7 +246,7 @@ class Forum {
 					$row['forum_description'] = nl2br(parseubb($row['forum_description']));
 					$row['forum_postcount'] = format_word($row['forum_postcount'], $locale['fmt_post']);
 					$row['forum_threadcount'] = format_word($row['forum_threadcount'], $locale['fmt_thread']);
-					$row['forum_threadcounter'] = $row['forum_threadcount']+1;
+					$row['forum_threadcounter'] = $row['forum_threadcount'];
 					
 					 // Last posts section
 					if ($row['forum_lastpostid']) {
