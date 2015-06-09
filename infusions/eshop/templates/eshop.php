@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-add_to_head("<link href='".THEMES."templates/global/css/eshop.css' rel='stylesheet'/>\n");
+add_to_head("<link href='".SHOP."css/eshop.css' rel='stylesheet'/>\n");
 
 if (!function_exists('render_eshop_nav')) {
 	/**
@@ -154,25 +154,25 @@ if (!function_exists('render_eshop_page_content')) {
 		echo $_GET['category'] ? "<h3>Latest in ".$info['title']."</h3>" : "<h3>".$locale['ESHPP105']."</h3>\n";
 		if (!empty($info['item'])) {
 			$i = 1;
-			$calculated_bs = col_span(fusion_get_settings('eshop_ipr'), 1);
+			$calculated_bs = col_span(get_settings('eshop_ipr'), 1);
 			// Main Products Lineup
 			if (!$_GET['category'] || tree_count($info['item'], 'cid', $_GET['category'])) {
 				echo "<div class='row eshop-rows'>\n";
 				foreach ($info['item'] as $product_id => $item_data) {
 					if ($_GET['category'] && $item_data['cid'] == $_GET['category'] || !$_GET['category']) {
-						echo "<div class='col-xs-12 eshop-column col-sm-".$calculated_bs." text-center m-t-20 m-b-20'><a class='display-inline-block' style='margin:0 auto; min-height: ".fusion_get_settings('eshop_image_th')."*1.1px;' href='".$item_data['link']."'>";
-							echo thumbnail($item_data['thumb'], fusion_get_settings('eshop_image_tw'));
+						echo "<div class='col-xs-12 eshop-column col-sm-".$calculated_bs." text-center m-t-20 m-b-20'><a class='display-inline-block' style='margin:0 auto; min-height: ".get_settings('eshop_image_th')."*1.1px;' href='".$item_data['link']."'>";
+							echo thumbnail($item_data['thumb'], get_settings('eshop_image_tw'));
 							echo "</a>";
-							echo "<div class='text-left p-l-20 m-b-20' style='min-height: ".(fusion_get_settings('eshop_image_th'))."*0.5px;'>
+							echo "<div class='text-left p-l-20 m-b-20' style='min-height: ".(get_settings('eshop_image_th'))."*0.5px;'>
 								 <a href='".$item_data['link']."'><span class='eshop-product-title'>".$item_data['title']."</span></a>";
 									if ($item_data['xprice']) { 
 										echo "<div class='eshop-price'>
-											<span><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['xprice'])."</span>
+											<span><small>".get_settings('eshop_currency')."</small>".number_format($item_data['xprice'])."</span>
 											<span class='eshop-discount label label-danger'>".number_format(100-($item_data['xprice']/$item_data['price']*100))." % ".$locale['off']."</span>									
 											</div>
-											<span class='eshop-xprice'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</span>";
+											<span class='eshop-xprice'><small>".get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</span>";
 										} else { 
-											echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</div>";
+											echo "<div class='eshop-price'><small>".get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</div>";
 									 }
 							echo "</div></div>";
 						$i++;
@@ -194,20 +194,20 @@ echo "</div>";
 					if ($item_data['cid'] !== $_GET['category']) {
 						$html .= "
 						<div class='col-xs-12 eshop-column col-sm-".$calculated_bs." text-center m-t-20 m-b-20'>\n
-							<a class='display-inline-block' style='margin:0px auto; min-height: ".(fusion_get_settings('eshop_image_th')*1.1)."px;' href='".$item_data['link']."'>
-							<img class='img-responsive' src='".$item_data['picture']."' style='width: ".fusion_get_settings('eshop_image_tw')."px; max-height: ".fusion_get_settings('eshop_image_th')."px;'>\n
+							<a class='display-inline-block' style='margin:0px auto; min-height: ".(get_settings('eshop_image_th')*1.1)."px;' href='".$item_data['link']."'>
+							<img class='img-responsive' src='".$item_data['picture']."' style='width: ".get_settings('eshop_image_tw')."px; max-height: ".get_settings('eshop_image_th')."px;'>\n
 							</a>
-						<div class='text-left p-l-20 m-b-20' style='min-height: ".(fusion_get_settings('eshop_image_th')*0.5)."px;'>
+						<div class='text-left p-l-20 m-b-20' style='min-height: ".(get_settings('eshop_image_th')*0.5)."px;'>
 						<a href='".$item_data['link']."'><span class='eshop-product-title'>".$item_data['title']."</span></a>";
 						if ($item_data['xprice']) {
 							$html .= "
 							<div class='eshop-price'>
-								<span><small>".fusion_get_settings('eshop_currency')."</small> ".number_format($item_data['xprice'])."</span>
+								<span><small>".get_settings('eshop_currency')."</small> ".number_format($item_data['xprice'])."</span>
 								<span class='eshop-discount label label-danger'>".number_format(100-($item_data['xprice']/$item_data['price']*100))."% ".$locale['off']."</span>
 							</div>
-							<span class='eshop-xprice'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</span>\n";
+							<span class='eshop-xprice'><small>".get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</span>\n";
 						} else {
-							$html .= "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</div>\n";
+							$html .= "<div class='eshop-price'><small>".get_settings('eshop_currency')."</small>".number_format($item_data['price'])."</div>\n";
 						}
 						$html .= "</div>\n";
 						$html .= "</div>\n";
@@ -247,12 +247,12 @@ if (!function_exists('render_eshop_product')) {
 	} else if ($data['campaign'] == "1") {
 		echo "<div class='ribbon-wrapper-red'><div class='ribbon-red'>".$locale['ESHPF146']."</div></div>";
 	} else {
-		if ($data['dateadded']+fusion_get_settings('eshop_newtime') >= time()) {
+		if ($data['dateadded']+get_settings('eshop_newtime') >= time()) {
 			echo "<div class='ribbon-wrapper-blue'><div class='ribbon-blue'>".$locale['ESHPF145']."</div></div>";
 		}
 	}
 	// picture container
-	echo "<img title='".$data['title']."' alt='".$data['title']."' id='photo_container' ".(fusion_get_settings('eshop_ratios') ? "class='img-responsive'" : "style='width:".fusion_get_settings('eshop_idisp_w2')."px; height: ".fusion_get_settings('eshop_idisp_h2')."px;' ")." src='".SHOP."pictures/album_".$data['cid']."/".$data['picture']."'>\n";
+	echo "<img title='".$data['title']."' alt='".$data['title']."' id='photo_container' ".(get_settings('eshop_ratios') ? "class='img-responsive'" : "style='width:".get_settings('eshop_idisp_w2')."px; height: ".get_settings('eshop_idisp_h2')."px;' ")." src='".SHOP."pictures/album_".$data['cid']."/".$data['picture']."'>\n";
 	echo "</div>\n";
 
 	if ($data['gallery_on'] == "1") {
@@ -307,20 +307,20 @@ if (!function_exists('render_eshop_product')) {
 		echo "<div class='m-t-20'>\n";
 		echo "
 		<div class='eshop-price'>
-			<span><small>".fusion_get_settings('eshop_currency')."</small> ".number_format($data['xprice'],2)."</span>
+			<span><small>".get_settings('eshop_currency')."</small> ".number_format($data['xprice'],2)."</span>
 			<span class='eshop-discount label label-danger'>".number_format(100-($data['xprice']/$data['price']*100))."% ".$locale['off']."</span>
 		</div>
-		<span class='eshop-xprice'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</span>\n";
+		<span class='eshop-xprice'><small>".get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</span>\n";
 		echo "</div>\n";
 	} else {
 		echo "<div class='m-t-20'>\n";
-		echo "<div class='eshop-price'><small>".fusion_get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</div>\n";
+		echo "<div class='eshop-price'><small>".get_settings('eshop_currency')."</small>".number_format($data['price'],2)."</div>\n";
 		echo "</div>\n";
 	}
 
 	/* This part need to be MVC - its going to be too hard for theme developers to go through everything */
 
-	if (fusion_get_settings('eshop_shopmode')) {
+	if (get_settings('eshop_shopmode')) {
 		echo openform('productfrm', 'post', BASEDIR."eshop.php?product=".$_GET['product'], array('max_tokens' => 1)); // sends data to ajax
 		echo "<div class='m-t-20'>\n";
 		if (!empty($data['dync'])) {
@@ -386,12 +386,12 @@ if (!function_exists('render_eshop_product')) {
 		if ($data['status'] == "1") {
 			echo "<div class='m-t-20'>\n";
 			if ($data['buynow'] == "1") { // use post action instead
-				echo form_button('buy_now', $locale['ESHP020'], $locale['ESHP020'], array('class'=>'m-r-10 '.fusion_get_settings('eshop_buynow_color')));
+				echo form_button('buy_now', $locale['ESHP020'], $locale['ESHP020'], array('class'=>'m-r-10 '.get_settings('eshop_buynow_color')));
 				//echo "<a class='btn m-r-10 ".."' href='".BASEDIR."eshop/buynow.php?id=".$data['id']."'>".$locale['ESHP020']."</a>";
 			}
 			if ($data['cart_on'] == "1") {
-				echo form_button('add_cart', $locale['ESHP021'], $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.fusion_get_settings('eshop_addtocart_color'), 'type'=>'button'));
-				//echo "<a class='btn m-r-10 ".fusion_get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
+				echo form_button('add_cart', $locale['ESHP021'], $locale['ESHP021'], array('icon'=>'fa fa-shopping-cart m-r-5 m-t-5', 'class'=>'m-r-10 '.get_settings('eshop_addtocart_color'), 'type'=>'button'));
+				//echo "<a class='btn m-r-10 ".get_settings('eshop_addtocart_color')."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'><i class='fa fa-shopping-cart m-t-5 m-r-10'></i> ".$locale['ESHP021']."</a>";
 			}
 			echo "</div>\n";
 		}
@@ -437,7 +437,7 @@ if (!function_exists('render_eshop_product')) {
 		}
 	}
 	echo closetab();
-	echo "<a class='m-t-20 btn ".fusion_get_settings('eshop_return_color')."' href='javascript:;' onclick='javascript:history.back(-1); return false;'><i class='fa fa-reply m-t-5 m-r-5'></i> ".$locale['ESHP030']."</a>";
+	echo "<a class='m-t-20 btn ".get_settings('eshop_return_color')."' href='javascript:;' onclick='javascript:history.back(-1); return false;'><i class='fa fa-reply m-t-5 m-r-5'></i> ".$locale['ESHP030']."</a>";
 	}
 }
 
@@ -469,7 +469,7 @@ if (!function_exists('render_checkout')) {
 		echo $info['item_count'] < 1 ? "<a class='btn btn-default pull-right' href='".BASEDIR."eshop.php'>".$locale['back']."</a>\n" : '';
 		echo "<h2>".$locale['ESHPF106']."</h2>\n";
 
-		//echo "<h4>".number_format($info['total_weight'], 2)." ".fusion_get_settings('eshop_weightscale')."</h4>\n";
+		//echo "<h4>".number_format($info['total_weight'], 2)." ".get_settings('eshop_weightscale')."</h4>\n";
 		echo "<hr/>\n";
 
 		echo $info['item_form'];

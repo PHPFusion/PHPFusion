@@ -50,22 +50,22 @@ $result1st = dbquery("SELECT * FROM ".DB_ESHOP." WHERE title LIKE '%$search%' OR
 if (dbrows($result1st) != 0) {
 $numRecords = dbrows($result1st);
 echo "<div class='clear'><div class='admin-message'><center>".$locale['SRCH152']." <b><font color='red'>".$numRecords."</b></font> ".$locale['SRCH153']."</center></div><br />";
-$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE title LIKE '%$search%' ORDER BY ".$filter." LIMIT ".$_GET['rowstart'].",".$settings['eshop_nopp']."");
+$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE title LIKE '%$search%' ORDER BY ".$filter." LIMIT ".$_GET['rowstart'].",".$eshop_settings['eshop_nopp']."");
 	$counter = 0; 
 	echo "<table cellpadding='0' cellspacing='0' width='100%' style='margin: 0 auto;'><tr>\n";
 	while ($data = dbarray($result)) {
-		if ($counter != 0 && ($counter % $settings['eshop_ipr'] == 0)) echo "</tr>\n<tr>\n";
+		if ($counter != 0 && ($counter % $eshop_settings['eshop_ipr'] == 0)) echo "</tr>\n<tr>\n";
       		echo "<td align='center' valign='top' class='tbl'>\n";
 		eshopitems();
 		echo "</td>\n";
 		$counter++;
 		}
 		echo "</tr>\n</table>\n";
-if ($numRecords > $settings['eshop_nopp']) echo "<div align='center' style='margin-top:5px;'>\n".makeeshoppagenav($_GET['rowstart'],$settings['eshop_nopp'],$numRecords,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;esrchtext=".$search."&amp;" : "esrchtext=".$search."&amp" )."")."\n</div>\n";
+if ($numRecords > $eshop_settings['eshop_nopp']) echo "<div align='center' style='margin-top:5px;'>\n".makeeshoppagenav($_GET['rowstart'],$eshop_settings['eshop_nopp'],$numRecords,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;esrchtext=".$search."&amp;" : "esrchtext=".$search."&amp" )."")."\n</div>\n";
 } else {
 	echo "<br /><div class='clear'></div><div class='admin-message'><center>".$locale['SRCH155']."</center></div><br />";
  }
 }
-echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='eshpbutton ".$settings['eshop_return_color']."' href='javascript:history.back(-1)'>&laquo; Return</a></div>";
+echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='eshpbutton ".$eshop_settings['eshop_return_color']."' href='javascript:history.back(-1)'>&laquo; Return</a></div>";
 closetable();
 require_once THEMES."templates/footer.php";

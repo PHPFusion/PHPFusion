@@ -31,7 +31,7 @@ require_once SHOP."templates/eshop.php";
 //include INCLUDES."eshop_functions_include.php"; // < not needed? 
 //Close the tree when eShop home have been clicked... where is the tree? - In the cat Panel if enabled.
 /*
-if ($settings['eshop_cats'] == "1") {
+if ($eshop_settings['eshop_cats'] == "1") {
 echo '<script type="text/javascript"> 
 	d.closeAll();
 </script>';

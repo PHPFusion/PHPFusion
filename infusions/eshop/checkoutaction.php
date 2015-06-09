@@ -43,10 +43,10 @@ $discalc = "";
 $weight = dbarray(dbquery("SELECT sum(cweight*cqty) as weight FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' ORDER BY tid ASC"));
 $sum = dbarray(dbquery("SELECT sum(cprice*cqty) as totals FROM ".DB_ESHOP_CART." WHERE puid = '".$username."'"));
 
-$vat = $settings['eshop_vat']; 
+$vat = $eshop_settings['eshop_vat']; 
 $price = $sum['totals'];
 $vat = ($price / 100) * $vat;
-if ($settings['eshop_vat_default'] == "0") {
+if ($eshop_settings['eshop_vat_default'] == "0") {
 $totalincvat = $price + $vat;
 } else {
 $totalincvat = $price;
@@ -83,7 +83,7 @@ $cuponexcluded = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART
 } else {
 $discvalue = $cupon['cuvalue'];
 $discalc = $discvalue;
-$discount = "".number_format($discalc)." ".$settings['eshop_currency']."";
+$discount = "".number_format($discalc)." ".$eshop_settings['eshop_currency']."";
 echo '<script type="text/javascript">
 $(document).ready(function() {
 	$(".notify-bar").html(" '.$cupon['cuname'].' '.$locale['ESHPCHK183'].' ").slideDown();
@@ -97,16 +97,16 @@ $(document).ready(function() {
 $cuponexcluded = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='0'"));
 $cuponexcluded = $cuponexcluded['count'];
 $discount = $cupon['cuvalue']; 
-$dvat = $settings['eshop_vat']; 
+$dvat = $eshop_settings['eshop_vat']; 
 $itemstocalc = $cuponsum['totals'];
-if ($settings['eshop_vat_default'] == "0") {
+if ($eshop_settings['eshop_vat_default'] == "0") {
 $dvat = ($itemstocalc / 100) * $dvat;
 $discalc = $itemstocalc + $dvat;
 } else {
 $discalc = $itemstocalc;
 }
 $discalc = ($discalc / 100) * $discount;
-$discount = "".$discalc." ".$settings['eshop_currency']."";
+$discount = "".$discalc." ".$eshop_settings['eshop_currency']."";
 
 echo '<script type="text/javascript">
 $(document).ready(function() {
@@ -134,13 +134,13 @@ $(document).ready(function() {
 }
 
 echo "".$locale['ESHPCHK176']." ".$discount." ";  if ($cuponexcluded) { echo "| <a href='javascript:;' onclick='showexltab(); return false;'>".$cuponexcluded." Item(s) </a> ".$locale['ESHPCHK178'].""; } echo "<br />";
-echo "".$locale['ESHPCHK132']."".$paymentsurcharge." ".$settings['eshop_currency']." <br />";
-if ($settings['eshop_freeshipsum'] !=0) { 
-echo "".$locale['ESHPCHK133']."".($settings['eshop_freeshipsum'] <= $totalincvat ? "<s>$shippingtotal</s>" : "$shippingtotal")." ".$settings['eshop_currency']." <br />";
-if ($settings['eshop_freeshipsum'] <= $totalincvat) { $shippingtotal = ""; } 
+echo "".$locale['ESHPCHK132']."".$paymentsurcharge." ".$eshop_settings['eshop_currency']." <br />";
+if ($eshop_settings['eshop_freeshipsum'] !=0) { 
+echo "".$locale['ESHPCHK133']."".($eshop_settings['eshop_freeshipsum'] <= $totalincvat ? "<s>$shippingtotal</s>" : "$shippingtotal")." ".$eshop_settings['eshop_currency']." <br />";
+if ($eshop_settings['eshop_freeshipsum'] <= $totalincvat) { $shippingtotal = ""; } 
 } else {
-echo "".$locale['ESHPCHK133']." ".$shippingtotal." ".$settings['eshop_currency']." <br />";
+echo "".$locale['ESHPCHK133']." ".$shippingtotal." ".$eshop_settings['eshop_currency']." <br />";
 }
 $total = $totalincvat-$discalc+$shippingtotal+$paymentsurcharge;
-echo "".$locale['ESHPCHK134']."".number_format($total, 2)." ".$settings['eshop_currency']."";
+echo "".$locale['ESHPCHK134']."".number_format($total, 2)." ".$eshop_settings['eshop_currency']."";
 }

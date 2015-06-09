@@ -15,10 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
+require_once "../../../maincore.php";
 pageAccess('ESHP');
 require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."eshop.php";
+include SHOP."locale/".LOCALESET."eshop.php";
+require_once INCLUDES."infusions_include.php";
+require_once SHOP."classes/Admin/Banners.php";
+require_once SHOP."classes/Admin/Customers.php";
+require_once SHOP."classes/Admin/Orders.php";
+require_once SHOP."classes/Admin/Main.php";
+require_once SHOP."classes/Admin/ProductCategories.php";
+require_once SHOP."classes/Admin/Products.php";
+require_once SHOP."classes/Admin/Coupons.php";
+require_once SHOP."classes/Admin/Payments.php";
+require_once SHOP."classes/Admin/Shipping.php";
+
 $eShop = new \PHPFusion\Eshop\Admin\Main();
 $eShop->eshopAdmin();
 require_once THEMES."templates/footer.php";

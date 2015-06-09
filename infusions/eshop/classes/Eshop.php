@@ -18,10 +18,7 @@
 namespace PHPFusion\Eshop;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-require_once SHOP."classes/Admin/Coupons.php";
 require_once SHOP."classes/Admin/Customers.php";
-require_once SHOP."classes/Admin/Payments.php";
-require_once SHOP."classes/Admin/Shipping.php";
 require_once CLASSES."PHPFusion/QuantumFields.php";
 
 use PHPFusion\QuantumFields;
@@ -201,11 +198,11 @@ class Eshop {
 				INNER JOIN ".DB_ESHOP." e on c.prid=e.id
 				WHERE puid='".\defender::set_sessionUserID()."' ORDER BY cadded asc");
 		if (dbrows($result)>0) {
-			$vat_rate = fusion_get_settings('eshop_vat') > 0 ? intval(fusion_get_settings('eshop_vat'))/100 : intval(0);
+			$vat_rate = get_settings('eshop_vat') > 0 ? intval(get_settings('eshop_vat'))/100 : intval(0);
 			while ($data = dbarray($result)) {
 				$data['cimage'] = $data['cimage'] ? self::picExist(SHOP."pictures/album_".$data['cid']."/thumbs/".$data['cimage']) : self::picExist('fake.png');
 				// this is price inclusive of tax or not for visual purposes only. It is not used against calculations of tax vs coupons.
-				$data['item_price'] = fusion_get_settings('eshop_vat_default') ? $data['cprice']+($data['cprice'] * ($vat_rate)) : $data['cprice']; // unit
+				$data['item_price'] = get_settings('eshop_vat_default') ? $data['cprice']+($data['cprice'] * ($vat_rate)) : $data['cprice']; // unit
 				$data['item_subtotal'] = $data['item_price'] * $data['cqty'];
 				$item[$data['tid']] = $data;
 				$this->item_count = $this->item_count+$data['cqty'];
@@ -282,7 +279,7 @@ class Eshop {
 		self::set_session('current_subtotal', $this->total_subtotal);
 		self::set_session('old_subtotal', $this->total_subtotal);
 		$subtotal = "<span class='strong'>".$locale['ESHPCHK128']."</span>
-		<span class='strong pull-right ".(self::get('coupon_code') ? 'required' : '')."'>".fusion_get_settings('eshop_currency').number_format($this->total_subtotal,2)."</span>";
+		<span class='strong pull-right ".(self::get('coupon_code') ? 'required' : '')."'>".get_settings('eshop_currency').number_format($this->total_subtotal,2)."</span>";
 		self::set_session('subtotal', $subtotal);
 		self::update_coupon();
 	}
@@ -320,8 +317,8 @@ class Eshop {
 				$html .= $display ? $data['cqty'] : form_text('qty', '', $data['cqty'], array('append_button'=>1, 'append_form_value'=>$data['tid'], 'append_value'=>"<i class='fa fa-repeat m-t-5 m-b-0'></i>", 'append_type'=>'submit'));
 				$html .= form_hidden('', 'utid', 'utid', $data['tid']);
 				$html .= "</td>\n";
-				$html .= "<td>".fusion_get_settings('eshop_currency').number_format($data['item_price'], 2)."</td>\n";
-				$html .= "<td>".fusion_get_settings('eshop_currency').number_format($data['item_subtotal'], 2)."</td>\n";
+				$html .= "<td>".get_settings('eshop_currency').number_format($data['item_price'], 2)."</td>\n";
+				$html .= "<td>".get_settings('eshop_currency').number_format($data['item_subtotal'], 2)."</td>\n";
 				$html .= $display ? '' : "<td>".form_button('remove', $locale['remove'], 'remove', array('class'=>'btn-danger btn-sm'))."</td>\n";
 				$html .= "</tr>\n";
 				$html .= closeform();
@@ -339,7 +336,7 @@ class Eshop {
 		global $locale;
 		$net_price = self::get('nett_gross') + self::get('total_shipping') + self::get('total_surcharge');
 		self::set_session('net_price', $net_price);
-		$gt = "<span class='strong'>".$locale['grand_total'].":</span><span class='strong pull-right'>+ ".fusion_get_settings('eshop_currency').number_format($net_price,2)."</span>\n";
+		$gt = "<span class='strong'>".$locale['grand_total'].":</span><span class='strong pull-right'>+ ".get_settings('eshop_currency').number_format($net_price,2)."</span>\n";
 		self::set_session('grandtotal', $gt);
 		self::set_session('datestamp', time()); // put here to refresh this value so we know when customer was last seen.
 	}
@@ -347,9 +344,9 @@ class Eshop {
 	/* VAT */
 	private function set_vat_rate() {
 		global $locale;
-		$price_include_vat = fusion_get_settings('eshop_vat_default');
+		$price_include_vat = get_settings('eshop_vat_default');
 		$total_subtotal = self::get('current_subtotal');
-		$vat = fusion_get_settings('eshop_vat');
+		$vat = get_settings('eshop_vat');
 		// toggle 0 vat or show vat only
 		if ($price_include_vat) {
 			$total_vat = 0; // since total gross already include vat calculations
@@ -358,8 +355,8 @@ class Eshop {
 			$total_vat =  $vat_rate;
 		}
 		$nett_gross = $total_vat + $total_subtotal;
-		$vat_output = "<span class='strong'>".$locale['ESHPCHK130']." (".fusion_get_settings('eshop_vat')."% ".($price_include_vat ? $locale['ESHPCHK160'] : $locale['ESHPCHK161']).") :</span><span class='pull-right'>+ ".fusion_get_settings('eshop_currency').number_format($total_vat,2)."</span>";
-		$nett_gross_output = "<span class='strong'>".$locale['ESHPCHK134']."</span><span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($nett_gross,2)."</span>";
+		$vat_output = "<span class='strong'>".$locale['ESHPCHK130']." (".get_settings('eshop_vat')."% ".($price_include_vat ? $locale['ESHPCHK160'] : $locale['ESHPCHK161']).") :</span><span class='pull-right'>+ ".get_settings('eshop_currency').number_format($total_vat,2)."</span>";
+		$nett_gross_output = "<span class='strong'>".$locale['ESHPCHK134']."</span><span class='strong pull-right'>".get_settings('eshop_currency').number_format($nett_gross,2)."</span>";
 		self::set_session('total_vat', $total_vat);
 		self::set_session('nett_gross', $nett_gross); // inclusive VAT
 		self::set_session('vat', $vat_output);
@@ -456,15 +453,15 @@ class Eshop {
 						<tr>
 							<td><img style='width:40px; height:40px;' src='".$settings['siteurl']."eshop/paymentimgs/".$bt_payment_info['image']."' border='0' alt='' /></td>
 							<td align='left' width='55%'>".$bt_payment_info['method']."</td>
-							<td align='left' width='25%'>".$locale['ESHPF127']." <br /> ".$bt_payment_info['surcharge']." ".$settings['eshop_currency']."</td>
+							<td align='left' width='25%'>".$locale['ESHPF127']." <br /> ".$bt_payment_info['surcharge']." ".$eshop_settings['eshop_currency']."</td>
 						</tr>
 					</table>
 					<p class='strong'>".$locale['ESHPF128']."</p>
 					<table class='table table-responsive table-striped'>
 						<tr>
 							<td width='60%'>".$destination."</td>
-							<td width='20%'>".$locale['ESHPF129']."<br /> ".number_format($initial_shipping_cost,2)." ".$settings['eshop_currency']."</td>
-							<td width='20%'>".$locale['ESHPF127']."/".$settings['eshop_weightscale']."<br />".number_format($weight_cost,2)." ".$settings['eshop_currency']."</td>
+							<td width='20%'>".$locale['ESHPF129']."<br /> ".number_format($initial_shipping_cost,2)." ".$eshop_settings['eshop_currency']."</td>
+							<td width='20%'>".$locale['ESHPF127']."/".$eshop_settings['eshop_weightscale']."<br />".number_format($weight_cost,2)." ".$eshop_settings['eshop_currency']."</td>
 						</tr>
 					</table>
 					</div>
@@ -479,13 +476,13 @@ class Eshop {
 			<div class='col-xs-12 col-sm-offset-6 col-sm-6'>
 			<p class='strong'>".$locale['ESHPF130']."</p>
 					<table class='table table-responsive table-striped'>
-						<tr><td>".$locale['ESHPF131']." ".$item_count." ".$locale['ESHPF132']."</td><td>".number_format($total_gross, 2)." ".$settings['eshop_currency']."</td></tr>
-						<tr><td>".$locale['ESHPF133']." ".$settings['eshop_vat']."%</td><td>".number_format($total_vat, 2)." ".$settings['eshop_currency']."</td></tr>
+						<tr><td>".$locale['ESHPF131']." ".$item_count." ".$locale['ESHPF132']."</td><td>".number_format($total_gross, 2)." ".$eshop_settings['eshop_currency']."</td></tr>
+						<tr><td>".$locale['ESHPF133']." ".$eshop_settings['eshop_vat']."%</td><td>".number_format($total_vat, 2)." ".$eshop_settings['eshop_currency']."</td></tr>
 						<tr><td>".$locale['ESHPCHK176']."</td><td> ".$coupon_value."</td></tr>
-						<tr><td>".$locale['ESHPF134']."</td><td>".number_format($total_weight, 2)." ".$settings['eshop_weightscale']."</td></tr>
-						<tr><td>".$locale['ESHPF135']."</td><td>".$bt_payment_info['surcharge']." (".$total_surcharge." in total) ".$settings['eshop_currency']."</td></tr>
-						<tr><td>".$locale['ESHPCHK133']."</td><td>".$total_shipping." ".$settings['eshop_currency']."</td></tr>
-						<tr><td>".$locale['ESHPF137']."</td><td>".number_format($total_price, 2)." ".$settings['eshop_currency']."</td></tr>
+						<tr><td>".$locale['ESHPF134']."</td><td>".number_format($total_weight, 2)." ".$eshop_settings['eshop_weightscale']."</td></tr>
+						<tr><td>".$locale['ESHPF135']."</td><td>".$bt_payment_info['surcharge']." (".$total_surcharge." in total) ".$eshop_settings['eshop_currency']."</td></tr>
+						<tr><td>".$locale['ESHPCHK133']."</td><td>".$total_shipping." ".$eshop_settings['eshop_currency']."</td></tr>
+						<tr><td>".$locale['ESHPF137']."</td><td>".number_format($total_price, 2)." ".$eshop_settings['eshop_currency']."</td></tr>
 					</table>
 			</div>
 			</div>
@@ -638,7 +635,7 @@ class Eshop {
 			$coupon = Coupons::get_couponData($coupon_code);
 			$current_subtotal = self::get('total_gross_taxed'); // this cannot be fluctuated. else we will screw ourselves over.
 			$total_gross = self::get('total_gross');
-			$vat_difference = fusion_get_settings('eshop_vat_default') ? number_format($current_subtotal -$total_gross,2) : 0;
+			$vat_difference = get_settings('eshop_vat_default') ? number_format($current_subtotal -$total_gross,2) : 0;
 
 			if ($coupon['cutype'] == 1) { // if price set at sum
 				$coupon_value = intval($coupon['cuvalue']);
@@ -647,7 +644,7 @@ class Eshop {
 				$coupon_value = intval($coupon['cuvalue']/100*$total_gross); // percent by default.
 				$coupon_calculation = "$coupon_value (".$coupon['cuvalue']."% rebate)";
 			}
-			$coupon_message = sprintf($locale['coupon_message'], $coupon_code, fusion_get_settings('eshop_currency').$coupon_calculation);
+			$coupon_message = sprintf($locale['coupon_message'], $coupon_code, get_settings('eshop_currency').$coupon_calculation);
 			// calculation difference here
 			if ($coupon_value > $total_gross) {
 				$current_subtotal = intval(0)+$vat_difference; // there must be a minimum of tax incur here.
@@ -658,7 +655,7 @@ class Eshop {
 			self::set_session('coupon_message', $coupon_message);
 			self::set_session('coupon_value', $coupon_value);
 			self::set_session('current_subtotal', $current_subtotal);
-			$subtotal_message = sprintf($locale['subtotal_message'], fusion_get_settings('eshop_currency').number_format($current_subtotal,2));
+			$subtotal_message = sprintf($locale['subtotal_message'], get_settings('eshop_currency').number_format($current_subtotal,2));
 			self::set_session('subtotal', $subtotal_message);
 		}
 	}
@@ -696,7 +693,7 @@ class Eshop {
 	public static function display_coupon_form() {
 		global $locale;
 		$html = '';
-		if (fusion_get_settings('eshop_coupons')) {
+		if (get_settings('eshop_coupons')) {
 			if (self::get('coupon_message')) {
 				$html .= "<div id='coupon-text' class='text-center'>\n";
 				$html .= form_button('use_coupon', $locale['coupon_another'], '', array('class'=>'btn-sm btn-info pull-right m-b-10'));
@@ -725,7 +722,8 @@ class Eshop {
 	// Get Customer Data if Customer Exist
 	private function set_customer() {
 		$user_id = \defender::set_sessionUserID();
-		$customer = Customers::get_customerData($user_id); // binds the above
+// This one crashes 
+//		$customer = Customers::get_customerData($user_id); // binds the above
 		if (!empty($customer)) {
 			$session_var = self::get('customer');
 			if (empty($session_var)) {
@@ -818,14 +816,14 @@ class Eshop {
 		global $locale;
 		if (self::get('shipping_method') && !isset($_POST['save_shipping'])) {
 			if (Shipping::verify_itenary(self::get('shipping_method'))) {
-				$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
+				$free_shipping =  (get_settings('eshop_freeshipsum') > 0 && get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
 				$si = Shipping::get_itenary(self::get('shipping_method'));
 				$ci = Shipping::get_shippingco($si['cid']);
 				$ship_cost = intval($si['initialcost']) + ($si['weightcost'] * self::get('total_weight'));
 				$ship_cost = $ship_cost > 0 ? $ship_cost : '0';
 				$s_message = sprintf($locale['shipping_message'], $ci['title'], $si['method']);
 				$shipping = "<span class='strong'>".$locale['ESHPCHK133']." ".($free_shipping ? "- ".$locale['ESHPCHK188'] : '')."</span>
-					<span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($ship_cost,2)."</span>";
+					<span class='strong pull-right'>".get_settings('eshop_currency').number_format($ship_cost,2)."</span>";
 				self::set_session('total_shipping', $ship_cost);
 				self::set_session('shipping_message', $s_message);
 				self::set_session('shipping', $shipping);
@@ -834,14 +832,14 @@ class Eshop {
 		} else {
 			if (isset($_POST['save_shipping']) && isset($_POST['product_delivery']) && isnum($_POST['product_delivery'])) {
 				if (Shipping::verify_itenary($_POST['product_delivery'])) {
-					$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
+					$free_shipping =  (get_settings('eshop_freeshipsum') > 0 && get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
 					$si = Shipping::get_itenary($_POST['product_delivery']);
 					$ci = Shipping::get_shippingco($si['cid']);
 					$ship_cost = intval($si['initialcost']) + ($si['weightcost'] * self::get('total_weight'));
 					$s_message = sprintf($locale['shipping_message'], $ci['title'], $si['method']);
 
 					$shipping = "<span class='strong'>".$locale['ESHPCHK133']." ".($free_shipping ? "- ".$locale['ESHPCHK188'] : '')."</span>
-					<span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($ship_cost,2)."</span>";
+					<span class='strong pull-right'>".get_settings('eshop_currency').number_format($ship_cost,2)."</span>";
 
 					$result = self::set_session('shipping_method', $_POST['product_delivery']);
 					if ($result) $result = self::set_session('total_shipping', $ship_cost);
@@ -855,7 +853,7 @@ class Eshop {
 	public static function display_shipping_form($have_form = false) {
 		global $locale;
 
-		$free_shipping =  (fusion_get_settings('eshop_freeshipsum') > 0 && fusion_get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
+		$free_shipping =  (get_settings('eshop_freeshipsum') > 0 && get_settings('eshop_freeshipsum') <= self::get('current_subtotal')) ? 1 : 0;
 		$html = "<div class='display-inline-block text-smaller m-b-10'><span class='required'>**</span> ".$locale['ESHPCHK126']."</div>\n";
 		$total_weight = self::get('total_weight');
 		$list = array();
@@ -888,7 +886,7 @@ class Eshop {
 					<input id='".$_data['sid']."-choice' type='radio' name='product_delivery' value='".$_data['sid']."'  ".(self::get('shipping_method') == $sid ? 'checked' : '')." />
 					</div>
 					<label style='width:97%' class='overflow-hide row text-normal text-smaller' for='".$_data['sid']."-choice'>
-					<span class='col-xs-2'>".($free_shipping ? "<span class='required'>".$locale['ESHPCHK188']."</span>" : "+".fusion_get_settings('eshop_currency')." ".$_data['delivery_cost'])."</span>
+					<span class='col-xs-2'>".($free_shipping ? "<span class='required'>".$locale['ESHPCHK188']."</span>" : "+".get_settings('eshop_currency')." ".$_data['delivery_cost'])."</span>
 					<span class='m-r-10 text-bigger strong'>".$_data['method']."</span>
 					<span class='text-bigger'>".sprintf($locale['est_delivery_time'], $_data['dtime'])."</span>
 					</label>
@@ -914,7 +912,7 @@ class Eshop {
 			$total_surcharge = $base_cost * ($pay['surcharge']/100);
 			$s_message = sprintf($locale['payment_message'], $pay['method']);
 			$payment = "<span class='strong'>".$locale['ESHPPMTS102']."</span>
-					<span class='strong pull-right'>".fusion_get_settings('eshop_currency').number_format($total_surcharge,2)."</span>";
+					<span class='strong pull-right'>".get_settings('eshop_currency').number_format($total_surcharge,2)."</span>";
 			self::set_session('total_surcharge', $total_surcharge);
 			self::set_session('payment_message', $s_message);
 			self::set_session('payment', $payment);
@@ -947,7 +945,7 @@ class Eshop {
 					<input id='".$data['pid']."-paychoice' type='radio' name='product_paymethod' value='".$data['pid']."'  ".(self::get('payment_method') == $data['pid'] ? 'checked' : '')." />
 					</div>
 					<label style='width:97%' class='overflow-hide row text-normal text-smaller' for='".$data['pid']."-paychoice'>
-					<span class='pull-left m-r-10 col-xs-3'>".$locale['ESHPCHK121']."  +".fusion_get_settings('eshop_currency')." ".$data['surcharge']."</span>
+					<span class='pull-left m-r-10 col-xs-3'>".$locale['ESHPCHK121']."  +".get_settings('eshop_currency')." ".$data['surcharge']."</span>
 					<span class='text-bigger pull-right'><img style='width:40px; height:40px;' src='".SHOP."paymentimgs/".$data['image']."' border='0' alt='' /></span>
 					<div title='".$data['description']."' class='overflow-hide p-r-20 text-bigger strong'>".$data['method']." <br/><span class='text-normal'>".$data['description']."</span></div>
 					</label>
@@ -985,7 +983,7 @@ class Eshop {
 		$html = "<span class='display-block m-b-10 strong'><a id='ag_read' class='pointer'>".$locale['ESHPCHK117']."</a></span>";
 		$html .= form_checkbox('agreement', $locale['ESHPCHK119'], isset($_POST['agreement']) ? 1 : 0, array("required"=>1, 'inline'=>false, 'class'=>'text-smaller'));
 		$html .= openmodal('agmodal', sprintf($locale['agreement_title'], fusion_get_settings('sitename')), array('button_id'=>'ag_read'));
-		$html .= fusion_get_settings('eshop_terms');
+		$html .= get_settings('eshop_terms');
 		$html .= closemodal();
 		return $html;
 	}
@@ -1306,7 +1304,7 @@ class Eshop {
 			add_to_title($locale['global_201'].QuantumFields::parse_label($this->info['title']));
 			add_to_title($locale['global_201'].QuantumFields::parse_label($this->info['category_title']));
 			if ($this->info['keywords']) { set_meta("keywords", $this->info['keywords']); }
-			if (fusion_get_settings('eshop_folderlink') == 1 && fusion_get_settings('eshop_cats') == 1) {
+			if (get_settings('eshop_folderlink') == 1 && get_settings('eshop_cats') == 1) {
 				add_breadcrumb(array('link'=>$this->info['category_link'], 'title'=>QuantumFields::parse_label($this->info['category_title'])));
 				add_breadcrumb(array('link'=>$this->info['product_link'], 'title'=>QuantumFields::parse_label($this->info['product_title'])));
 			}
@@ -1325,7 +1323,7 @@ class Eshop {
 	 * @param $product_title
 	 */
 	static function display_social_buttons($product_id, $product_picture, $product_title) {
-		if (!fusion_get_settings('site_seo') && fusion_get_settings('eshop_shareing') == 1) {
+		if (!fusion_get_settings('site_seo') && get_settings('eshop_shareing') == 1) {
 			//Load scripts to enable share buttons
 			$meta = "<meta property='og:image' content='".fusion_get_settings('siteurl')."eshop/img/nopic.gif' />\n";
 			if (file_exists(SHOP."pictures/".$product_picture)) {
@@ -1570,17 +1568,17 @@ class Eshop {
 			$result = dbquery("SELECT i.*, if(i.cid >0, cat.title, 0) as category_title
 			FROM ".DB_ESHOP." i
 			LEFT JOIN ".DB_ESHOP_CATS." cat on (i.cid=cat.cid)
-			WHERE active = '1' AND id='".intval($_GET['product'])."' AND ".groupaccess('i.access')." LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
+			WHERE active = '1' AND id='".intval($_GET['product'])."' AND ".groupaccess('i.access')." LIMIT ".$_GET['rowstart'].", ".get_settings('eshop_noppf')."");
 			if (!dbrows($result)) {
 				redirect(BASEDIR."eshop.php");
 			} else {
 				$data = dbarray($result);
 				$es_langs = explode('.', $data['product_languages']);
 				if (in_array(LANGUAGE, $es_langs)) {
-					$data['net_price'] = $data['price'] * ((fusion_get_settings('eshop_vat')/100)+1); // 40% increase is 1.(40/100) = 1.4 * price = total
+					$data['net_price'] = $data['price'] * ((get_settings('eshop_vat')/100)+1); // 40% increase is 1.(40/100) = 1.4 * price = total
 					$data['shipping'] = '';
-					if (fusion_get_settings('eshop_freeshipsum')>0) {
-						$data['shipping'] = ($data['net_price'] > fusion_get_settings('eshop_freeshipsum')) ? $locale['ESHP027']." ".$locale['ESHP028'] : $locale['ESHP025']."  ".$locale['ESHP026']." ".fusion_get_settings('eshop_freeshipsum')." ".fusion_get_settings('eshop_currency');
+					if (get_settings('eshop_freeshipsum')>0) {
+						$data['shipping'] = ($data['net_price'] > get_settings('eshop_freeshipsum')) ? $locale['ESHP027']." ".$locale['ESHP028'] : $locale['ESHP025']."  ".$locale['ESHP026']." ".get_settings('eshop_freeshipsum')." ".get_settings('eshop_currency');
 					}
 					$data['version'] = $data['version'] ? $locale['ESHP007']." ".$data['version'] : '';
 					$data['delivery'] = $data['delivery'] && $data['instock'] <=0 ?  $locale['ESHP012']." ".nl2br($data['delivery']) : '';
@@ -1632,11 +1630,11 @@ class Eshop {
 			FROM ".DB_ESHOP." i
 			INNER JOIN ".DB_ESHOP_CATS." cat on i.cid = cat.cid
 			WHERE ".$sql." AND active = '1' AND ".groupaccess('i.access')."
-			ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."
+			ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".get_settings('eshop_noppf')."
 			");
 		} else {
 			// on main page
-			$result = dbquery("SELECT id, cid, title, thumb, thumb2, picture, price, picture, xprice, keywords, product_languages, if(cid=0, 0, 1) as category_title FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".fusion_get_settings('eshop_noppf')."");
+			$result = dbquery("SELECT id, cid, title, thumb, thumb2, picture, price, picture, xprice, keywords, product_languages, if(cid=0, 0, 1) as category_title FROM ".DB_ESHOP." WHERE active = '1' AND ".groupaccess('access')." ORDER BY dateadded DESC LIMIT ".$_GET['rowstart'].", ".get_settings('eshop_noppf')."");
 		}
 		if (dbrows($result)>0) {
 			$locale['eshop_1001'] = 'Front page';
@@ -1661,7 +1659,7 @@ class Eshop {
 		} else {
 			$info['error'] = $locale['ESHPPRO177'];
 		}
-		$info['pagenav'] = ($this->max_rows > fusion_get_settings('eshop_noppf')) ? self::makeeshoppagenav($_GET['rowstart'],fusion_get_settings('eshop_noppf'),$this->max_rows,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;" : "" )."") : '';
+		$info['pagenav'] = ($this->max_rows > get_settings('eshop_noppf')) ? self::makeeshoppagenav($_GET['rowstart'],get_settings('eshop_noppf'),$this->max_rows,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;" : "" )."") : '';
 		return $info;
 	}
 

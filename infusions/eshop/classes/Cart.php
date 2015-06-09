@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Eshop;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+require_once INCLUDES."infusions_include.php";
 
 class Cart {
 	public static function loadCart() {
@@ -248,7 +249,7 @@ class Cart {
 		$html .= "<div class='overflow-hide'>\n";
 		$html .= "<button id='remove-".$cart_data['tid']."' title='".$locale['delete']."' data-product='".$cart_data['prid']."' data-cdyn='".$cart_data['cdyn']."' data-color='".$cart_data['cclr']."' data-added='".$cart_data['cadded']."' data-value='".$cart_data['tid']."' type='button' class='remove-cart-item pull-right'><i class='fa fa-remove'></i></button>\n";
 		$html .= "<a class='display-block product-title' href='".BASEDIR."eshop.php?product=".$cart_data['prid']."'>".$cart_data['citem']."</a>";
-		$html .= "<div class='display-block text-smaller'><span id='qty'>".$cart_data['cqty']."</span> x ".fusion_get_settings('eshop_currency')." <span id='unit-price'>".number_format($cart_data['cprice'], 2)."</span></div>\n";
+		$html .= "<div class='display-block text-smaller'><span id='qty'>".$cart_data['cqty']."</span> x ".get_settings('eshop_currency')." <span id='unit-price'>".number_format($cart_data['cprice'], 2)."</span></div>\n";
 		$html .= "</div>\n";
 		$html .= "</li>\n";
 		return $html;
@@ -266,7 +267,7 @@ class Cart {
 		if (dbrows($result)>0) {
 			$cart_total = Eshop::get_cart_total($puid);
 		}
-		$color = fusion_get_settings('eshop_cart_color');
+		$color = get_settings('eshop_cart_color');
 		switch($color) {
 			case 'red':
 				$color = 'btn-danger';
@@ -282,7 +283,7 @@ class Cart {
 		echo "<a class='cart-tab pointer' title='".$locale['cart_purchases']."' class='display-inline-block'><i class='fa fa-shopping-cart fa-lg m-r-10 m-t-5'></i></a>\n";
 		echo "<h4><i class='fa fa-shopping-cart m-r-10'></i> ".$locale['cart_title']."</h4>";
 		echo "<div class='m-b-20'>\n";
-		echo "<div class='heading'><span class='display-inline m-r-5'>".$locale['ESHPF131'].":</span>".fusion_get_settings('eshop_currency')." <span id='subtotal_price'>".$cart_total."</span></span>\n</div>\n";
+		echo "<div class='heading'><span class='display-inline m-r-5'>".$locale['ESHPF131'].":</span>".get_settings('eshop_currency')." <span id='subtotal_price'>".$cart_total."</span></span>\n</div>\n";
 		echo "<a class='btn btn-sm button m-t-10 ".($color ? $color : 'btn-success')."' href='".BASEDIR."eshop.php?checkout'>".$locale['check_out']."</a>\n";
 		echo "</div>\n";
 		echo "<h4></h4>\n";

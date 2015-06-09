@@ -119,8 +119,8 @@ if ($counter != 0 && ($counter % 1 == 0)) echo "</tr>\n<tr>\n";
 }
 echo "</tr>\n</table>\n";
 }
-echo "<div style='float:left;margin-top:5px;padding:5px;'>&nbsp; <a href='".SHOP."cart.php' title='cart' class='".($settings['eshop_cart_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_cart_color']."")."'>".$locale['ESHPF105']."</a></div>";
-echo "<div style='float:right;margin-top:5px;padding:5px;'><a class='".($settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_return_color']."")."' href='javascript:;' onclick='showordertab(); return false;'>".$locale['ESHPCHK180']."</a> &nbsp; </div>";
+echo "<div style='float:left;margin-top:5px;padding:5px;'>&nbsp; <a href='".SHOP."cart.php' title='cart' class='".($eshop_settings['eshop_cart_color'] =="default" ? "button" : "eshpbutton ".$eshop_settings['eshop_cart_color']."")."'>".$locale['ESHPF105']."</a></div>";
+echo "<div style='float:right;margin-top:5px;padding:5px;'><a class='".($eshop_settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$eshop_settings['eshop_return_color']."")."' href='javascript:;' onclick='showordertab(); return false;'>".$locale['ESHPCHK180']."</a> &nbsp; </div>";
 echo "</div>";
 echo "<div class='clear'></div>";
 
@@ -129,7 +129,7 @@ echo "<div id='exltab'>";
 echo "<div class='tbl2' align='left' style='margin:10px;padding:5px;'><b>".$locale['ESHPCHK182']."</b></div>\n";
 echo "<div class='clear'></div>";
 
-if ($settings['eshop_coupons'] == "1") {
+if ($eshop_settings['eshop_coupons'] == "1") {
 $result = dbquery("SELECT * FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' AND ccupons='0' ORDER BY tid ASC");
 if (dbrows($result) != 0) {
 $counter = 0; 
@@ -154,8 +154,8 @@ if ($counter != 0 && ($counter % 1 == 0)) echo "</tr>\n<tr>\n";
 echo "</tr>\n</table>\n";
 }
 }
-echo "<div style='float:left;margin-top:5px;padding:5px;'>&nbsp; <a href='".SHOP."cart.php' title='cart' class='".($settings['eshop_cart_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_cart_color']."")."'>".$locale['ESHPF105']."</a></div>";
-echo "<div style='float:right;margin-top:5px;padding:5px;'><a class='".($settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_return_color']."")."' href='javascript:;' onclick='showexltab(); return false;'>".$locale['ESHPCHK180']."</a> &nbsp; </div>";
+echo "<div style='float:left;margin-top:5px;padding:5px;'>&nbsp; <a href='".SHOP."cart.php' title='cart' class='".($eshop_settings['eshop_cart_color'] =="default" ? "button" : "eshpbutton ".$eshop_settings['eshop_cart_color']."")."'>".$locale['ESHPF105']."</a></div>";
+echo "<div style='float:right;margin-top:5px;padding:5px;'><a class='".($eshop_settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$eshop_settings['eshop_return_color']."")."' href='javascript:;' onclick='showexltab(); return false;'>".$locale['ESHPCHK180']."</a> &nbsp; </div>";
 echo "</div>";
 echo "<div class='clear'></div>";
 
@@ -247,7 +247,7 @@ var shipcheck = scheck.filter(':checked').val();
 //}
 
 echo "<div class='clear'></div>";
-echo "<div style='float:left;margin-top:15px;padding:10px;'><a class='".($settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_return_color']."")."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>&laquo; ".$locale['ESHP030']."</a> &nbsp;&nbsp; </div>";
+echo "<div style='float:left;margin-top:15px;padding:10px;'><a class='".($eshop_settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$eshop_settings['eshop_return_color']."")."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>&laquo; ".$locale['ESHP030']."</a> &nbsp;&nbsp; </div>";
 echo "<div class='clear'></div>";
 }
 

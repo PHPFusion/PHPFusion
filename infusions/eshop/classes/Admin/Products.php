@@ -21,6 +21,8 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 use PHPFusion\Eshop\Eshop;
 use PHPFusion\QuantumFields;
 
+$eshop_settings = get_settings("blog");
+
 class Products {
 	private $data = array(
 		'id' => 0,
@@ -85,7 +87,7 @@ class Products {
 	 * Constructor and Sanitize Globals
 	 */
 	public function __construct() {
-		global $aidlink, $settings;
+		global $aidlink, $settings, $eshop_settings;
 		$_GET['id'] = isset($_GET['id']) && isnum($_GET['id']) ? $_GET['id'] : 0;
 		$_GET['parent_id'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
 		$this->max_rowstart = dbcount("(i.id)", DB_ESHOP." i LEFT JOIN ".DB_ESHOP_CATS ." cat on (cat.cid=i.cid)", "cat.parentid='".intval($_GET['parent_id'])."'");
@@ -109,27 +111,27 @@ class Products {
 			case 'edit' :
 				if (self::verify_product_edit($_GET['id'])) {
 					$this->data = self::products_data();
-					$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&id=".$_GET['id']."".($settings['eshop_cats'] == "1" ? "&amp;section=itemform&amp;parent_id=".$_GET['parent_id']."" : "");
+					$this->formaction = FUSION_SELF.$aidlink."&amp;action=edit&id=".$_GET['id']."".($eshop_settings['eshop_cats'] == "1" ? "&amp;section=itemform&amp;parent_id=".$_GET['parent_id']."" : "");
 				}
 				break;
 			default :
-				$this->formaction = FUSION_SELF.$aidlink."".($settings['eshop_cats'] == "1" && isset($_GET['parent_id']) ? "&amp;section=itemform&amp;parent_id=".$_GET['parent_id']."" : "");
+				$this->formaction = FUSION_SELF.$aidlink."".($eshop_settings['eshop_cats'] == "1" && isset($_GET['parent_id']) ? "&amp;section=itemform&amp;parent_id=".$_GET['parent_id']."" : "");
 		}
 
 		$this->upload_settings = array(
 			'thumbnail_folder'=>'thumbs',
 			'thumbnail' => 1,
-			'thumbnail_w' =>  fusion_get_settings('eshop_image_tw'),
-			'thumbnail_h' =>  fusion_get_settings('eshop_image_th'),
+			'thumbnail_w' =>  get_settings('eshop_image_tw'),
+			'thumbnail_h' =>  get_settings('eshop_image_th'),
 			'thumbnail_suffix' =>'_t1',
 			'thumbnail2'=>1,
-			'thumbnail2_w' 	=>  fusion_get_settings('eshop_image_t2w'),
-			'thumbnail2_h' 	=>  fusion_get_settings('eshop_image_t2h'),
+			'thumbnail2_w' 	=>  get_settings('eshop_image_t2w'),
+			'thumbnail2_h' 	=>  get_settings('eshop_image_t2h'),
 			'thumbnail2_suffix' => '_t2',
 			'delete_original' => 1,
-			'max_width'		=>	fusion_get_settings('eshop_image_w'),
-			'max_height'	=>	fusion_get_settings('eshop_image_h'),
-			'max_byte'		=>	fusion_get_settings('eshop_image_b'),
+			'max_width'		=>	get_settings('eshop_image_w'),
+			'max_height'	=>	get_settings('eshop_image_h'),
+			'max_byte'		=>	get_settings('eshop_image_b'),
 			'multiple' => 0,
 			'type'=>'image',
 		);
@@ -144,7 +146,7 @@ class Products {
 	 * @return bool
 	 */
 	static function category_check() {
-		return (boolean) fusion_get_settings('eshop_cats');
+		return (boolean) get_settings('eshop_cats');
 	}
 
 	/**
@@ -152,7 +154,7 @@ class Products {
 	 * @return bool|string
 	 */
 	static function category_count() {
-		if (fusion_get_settings('eshop_cats') == 1) {
+		if (get_settings('eshop_cats') == 1) {
 			return dbcount("(cid)", DB_ESHOP_CATS);
 		}
 		return false;
@@ -221,14 +223,14 @@ class Products {
 	 * Refresh Order
 	 */
 	static function refresh_order() {
-		global $aidlink, $settings;
+		global $aidlink, $settings, $eshop_settings;
 		//$i = 1;
 		//$result = dbquery("SELECT * FROM ".DB_ESHOP." WHERE cid = '".$_REQUEST['category']."' ORDER BY iorder");
 		//while ($data = dbarray($result)) {
 		//	$result2 = dbquery("UPDATE ".DB_ESHOP." SET iorder='$i' WHERE id='".$data['id']."'");
 		//	$i++;
 		//}
-		//redirect(FUSION_SELF.$aidlink."&amp;iorderrefresh".($settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
+		//redirect(FUSION_SELF.$aidlink."&amp;iorderrefresh".($eshop_settings['eshop_cats'] == "1" ? "&amp;category=".$_REQUEST['category']."" : "")."");
 	}
 
 	/**
@@ -550,7 +552,7 @@ class Products {
 	 * The Form Template
 	 */
 	public function product_form() {
-		global $locale, $settings;
+		global $locale, $settings, $eshop_settings;
 		$enabled_languages = fusion_get_enabled_languages();
 		$this->data['product_languages'] = is_array($this->data['product_languages']) ? $this->data['product_languages'] : $enabled_languages;
 		$itemcolors = '';
@@ -636,7 +638,7 @@ class Products {
 		openside('');
 		echo form_hidden($locale['ESHPPRO149'], 'cart_on', 'cart_on', 1, array('placeholder'=>$locale['ESHPPRO150'], 'width'=>'100%'));
 		echo form_text('title', $locale['ESHPPRO104'], $this->data['title'], array('required'=>1, 'inline'=>1));
-		echo form_text('price', $locale['ESHPPRO111'], $this->data['price'], array('number'=>1, 'required'=>1, 'width'=>'250px', 'inline'=>1, 'placeholder'=>$settings['eshop_currency']));
+		echo form_text('price', $locale['ESHPPRO111'], $this->data['price'], array('number'=>1, 'required'=>1, 'width'=>'250px', 'inline'=>1, 'placeholder'=>$eshop_settings['eshop_currency']));
 		//'placeholder'=>$locale['ESHPPRO136']
 		$this->upload_settings += array('inline'=>1);
 		echo form_fileinput($locale['ESHPPRO109'], 'imagefile', 'imagefile', BASEDIR."eshop/pictures/", '', $this->upload_settings);
@@ -649,7 +651,7 @@ class Products {
 		echo form_text('sartno', $locale['ESHPPRO108'], $this->data['sartno'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO199']));
 		echo form_text('demo', $locale['ESHP013'], $this->data['demo'], array('inline'=>1, 'placeholder'=>'http://'));
 		echo form_text('version', $locale['ESHPPRO133'], $this->data['version'], array('inline'=>1, 'width'=>'250px', 'placeholder'=>$locale['ESHPPRO134']));
-		echo form_text('weight', $locale['ESHPPRO114'], $this->data['weight'], array('inline'=>1, 'number'=>1, 'width'=>'250px', 'placeholder'=> fusion_get_settings('eshop_weightscale')));
+		echo form_text('weight', $locale['ESHPPRO114'], $this->data['weight'], array('inline'=>1, 'number'=>1, 'width'=>'250px', 'placeholder'=> get_settings('eshop_weightscale')));
 		echo form_text('iorder', $locale['ESHPPRO122'], $this->data['iorder'], array('inline'=>1, 'number'=>1, 'width'=>'100px', 'placeholder'=>$locale['ESHPPRO123']));
 		// languages
 		echo "<div class='row'>\n";
@@ -699,7 +701,7 @@ class Products {
 		openside('');
 		echo form_select('cupons', $locale['ESHPPRO182'], array($locale['no'], $locale['yes']), $this->data['cupons'], array('inline'=>1));
 		echo form_select('campaign', $locale['ESHPPRO184'], array($locale['no'], $locale['yes']), $this->data['campaign'], array('inline'=>1, 'placeholder'=>$locale['ESHPPRO185']));
-		echo form_text('xprice', $locale['ESHPPRO112'], $this->data['xprice'], array('number'=>1, 'inline'=>1, 'width'=>'250px', 'placeholder'=>$settings['eshop_currency']));
+		echo form_text('xprice', $locale['ESHPPRO112'], $this->data['xprice'], array('number'=>1, 'inline'=>1, 'width'=>'250px', 'placeholder'=>$eshop_settings['eshop_currency']));
 		closeside();
 		echo "</div>\n";
 		echo closetabbody();
@@ -763,7 +765,7 @@ class Products {
 
 		openside('');
 		echo form_select('linebreaks', $locale['ESHPPRO190'],  array($locale['no'], $locale['yes']), $this->data['linebreaks'], array('inline'=>1));
-		if (fusion_get_settings('eshop_pretext')) {
+		if (get_settings('eshop_pretext')) {
 			echo form_textarea('introtext', $locale['ESHPPRO160'], $this->data['introtext'], array('placeholder'=>$locale['ESHPPRO161'], 'autosize'=>1));
 		} else {
 			echo form_hidden('', 'introtext', 'introtext', $this->data['introtext']);
@@ -897,7 +899,7 @@ class Products {
 	 * The Listing Template
 	 */
 	public function product_listing() {
-		global $locale, $aidlink, $settings;
+		global $locale, $aidlink, $settings, $eshop_settings;
 
 		add_to_jquery("
 		$('.actionbar').hide();
@@ -964,8 +966,8 @@ class Products {
 		echo form_text('sartno', $locale['ESHPPRO174'], '', array('inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-4'>\n";
-		echo form_text('price', $locale['ESHPPRO111'], $this->data['price'], array('number'=>1, 'inline'=>1, 'required'=>1, 'width'=>'100%', 'placeholder'=>$settings['eshop_currency']));
-		echo form_text('xprice', $locale['ESHPPRO112'], $this->data['xprice'], array('number'=>1, 'width'=>'100%', 'inline'=>1, 'placeholder'=>$settings['eshop_currency']));
+		echo form_text('price', $locale['ESHPPRO111'], $this->data['price'], array('number'=>1, 'inline'=>1, 'required'=>1, 'width'=>'100%', 'placeholder'=>$eshop_settings['eshop_currency']));
+		echo form_text('xprice', $locale['ESHPPRO112'], $this->data['xprice'], array('number'=>1, 'width'=>'100%', 'inline'=>1, 'placeholder'=>$eshop_settings['eshop_currency']));
 		echo form_text('instock', $locale['ESHPPRO141'], $this->data['instock'], array('number'=>1, 'inline'=>1));
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-6 col-lg-4'>\n";
@@ -1006,8 +1008,8 @@ class Products {
 				<a class='delete' href='".FUSION_SELF.$aidlink."&amp;a_page=main&amp;action=delete&amp;id=".$data['id']."' onclick=\"return confirm('".$locale['ESHPCATS134']."');\">".$locale['delete']."</a>
 				";
 				echo "</td>\n";
-				echo "<td>".($settings['eshop_cats'] ? QuantumFields::parse_label($data['cat_title']) : $locale['global_080'])."</td>\n";
-				echo "<td>".$settings['eshop_currency']." ".number_format($data['price'], 2, '.', ',')."</td>\n";
+				echo "<td>".($eshop_settings['eshop_cats'] ? QuantumFields::parse_label($data['cat_title']) : $locale['global_080'])."</td>\n";
+				echo "<td>".$eshop_settings['eshop_currency']." ".number_format($data['price'], 2, '.', ',')."</td>\n";
 				echo "<td>".$data['artno']."</td>\n";
 				echo "<td>".$data['sartno']."</td>\n";
 				echo "<td>\n";
@@ -1034,7 +1036,7 @@ class Products {
 		}
 		echo "</table>\n";
 		if ($this->max_rowstart > $rows) {
-			echo "<div class='text-center'>".makePageNav($_GET['rowstart'], 15, $this->max_rowstart, 3, FUSION_SELF.$aidlink."&amp;status=".$_GET['status'].($settings['eshop_cats'] ? "&amp;parent_id=".$_GET['parent_id'] : ''))."</div>\n";
+			echo "<div class='text-center'>".makePageNav($_GET['rowstart'], 15, $this->max_rowstart, 3, FUSION_SELF.$aidlink."&amp;status=".$_GET['status'].($eshop_settings['eshop_cats'] ? "&amp;parent_id=".$_GET['parent_id'] : ''))."</div>\n";
 		}
 		echo "</div>\n";
 	}

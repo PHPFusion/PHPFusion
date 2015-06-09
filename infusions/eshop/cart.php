@@ -62,26 +62,26 @@ $items = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART." WHERE
 $sum = dbarray(dbquery("SELECT sum(cprice*cqty) as totals FROM ".DB_ESHOP_CART." WHERE puid = '".$username."'"));
 
 echo "<div style='float:left;margin-top:10px;'><a class='eshpbutton red' href='".BASEDIR."eshop.php?clearcart'>".$locale['ESHPC119']."</a></div>";
-$vat = $settings['eshop_vat']; 
+$vat = $eshop_settings['eshop_vat']; 
 $price = $sum['totals'];
 $vat = ($price / 100) * $vat;
-if ($settings['eshop_vat_default'] == "0") {
+if ($eshop_settings['eshop_vat_default'] == "0") {
 $totalincvat = $price + $vat;
 } else {
 $totalincvat = $price;
 }
 
-echo "<div style='float:right;margin-top:8px;'>".$locale['ESHPC108']." ".$items['count']." ".$locale['ESHPC109']." ".($settings['eshop_vat_default'] =="1" ? "".number_format($totalincvat, 2)."" : "".number_format($sum['totals'], 2)."")."  ".$settings['eshop_currency']." <br />";
+echo "<div style='float:right;margin-top:8px;'>".$locale['ESHPC108']." ".$items['count']." ".$locale['ESHPC109']." ".($eshop_settings['eshop_vat_default'] =="1" ? "".number_format($totalincvat, 2)."" : "".number_format($sum['totals'], 2)."")."  ".$eshop_settings['eshop_currency']." <br />";
 
-if ($settings['eshop_vat_default'] == "1") {
-	echo "".$settings['eshop_vat']."% VAT (".number_format($vat, 2)." ".$settings['eshop_currency'].") ".$locale['ESHPC110']."<br />";
+if ($eshop_settings['eshop_vat_default'] == "1") {
+	echo "".$eshop_settings['eshop_vat']."% VAT (".number_format($vat, 2)." ".$eshop_settings['eshop_currency'].") ".$locale['ESHPC110']."<br />";
 } else { 
-	echo "".$settings['eshop_vat']."% VAT (".number_format($vat, 2)." ".$settings['eshop_currency'].") ".$locale['ESHPC111']."<br />";
-	echo "".$locale['ESHPC112']."  ".number_format($totalincvat, 2)." ".$settings['eshop_currency']."<br />";
+	echo "".$eshop_settings['eshop_vat']."% VAT (".number_format($vat, 2)." ".$eshop_settings['eshop_currency'].") ".$locale['ESHPC111']."<br />";
+	echo "".$locale['ESHPC112']."  ".number_format($totalincvat, 2)." ".$eshop_settings['eshop_currency']."<br />";
 }
 
 if ($weight['weight']) {
-	echo "<div style='float:right;margin-top:0px;'>".$locale['ESHPC113']."".number_format($weight['weight'], 2)." ".$settings['eshop_weightscale']."</div>";
+	echo "<div style='float:right;margin-top:0px;'>".$locale['ESHPC113']."".number_format($weight['weight'], 2)." ".$eshop_settings['eshop_weightscale']."</div>";
 }
 
 echo "</div><div style='clear:both;'></div>";
@@ -93,8 +93,8 @@ echo "</div><div style='clear:both;'></div>";
 echo "</div>"; //incart div end.
 
 echo "<div style='clear:both;'></div>";
-echo "<div style='float:right;margin-top 15px;padding:10px;'><a class='".($settings['eshop_checkout_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_checkout_color']."")."' href='".BASEDIR."eshop/checkout.php'>".$locale['ESHPC115']." &raquo;</a></div>";
-echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='".($settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$settings['eshop_return_color']."")."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>&laquo; ".$locale['ESHP030']."</a></div>";
+echo "<div style='float:right;margin-top 15px;padding:10px;'><a class='".($eshop_settings['eshop_checkout_color'] =="default" ? "button" : "eshpbutton ".$eshop_settings['eshop_checkout_color']."")."' href='".BASEDIR."eshop/checkout.php'>".$locale['ESHPC115']." &raquo;</a></div>";
+echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='".($eshop_settings['eshop_return_color'] =="default" ? "button" : "eshpbutton ".$eshop_settings['eshop_return_color']."")."' href='javascript:;' onclick='javascript:history.back(-1); return false;'>&laquo; ".$locale['ESHP030']."</a></div>";
 closetable();
 
 require_once THEMES."templates/footer.php";

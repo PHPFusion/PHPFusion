@@ -274,46 +274,46 @@ $(".terms").colorbox({inline:true, width:"640px",maxWidth:"1280px",transition:"e
 
 function eshopitems() {
 	global $data, $locale, $settings, $aidlink;
-	echo "<fieldset class='rib-wrap' style='width:".$settings['eshop_itembox_w']." !important; height:".$settings['eshop_itembox_h']." !important;'>";
+	echo "<fieldset class='rib-wrap' style='width:".$eshop_settings['eshop_itembox_w']." !important; height:".$eshop_settings['eshop_itembox_h']." !important;'>";
 	if (!$data['status'] == "1") {
 		echo "<div class='ribbon-wrapper-green'><div class='ribbon-green'>".$locale['ESHPF147']."</div></div>";
 	} else if ($data['campaign'] == "1") {
 		echo "<div class='ribbon-wrapper-red'><div class='ribbon-red'>".$locale['ESHPF146']."</div></div>";
 	} else {
-		if ($data['dateadded']+$settings['eshop_newtime'] >= time()) {
+		if ($data['dateadded']+$eshop_settings['eshop_newtime'] >= time()) {
 			echo "<div class='ribbon-wrapper-blue'><div class='ribbon-blue'>".$locale['ESHPF145']."</div></div>";
 		}
 	}
 	echo "<legend style='width:85% !important;text-align:center;word-break:normal;'>";
 	if (checkrights("ESHP")) {
-		echo "<a href='".ADMIN."eshop.php".$aidlink."&amp;a_page=Main&action=edit&id=".$data['id']."".($settings['eshop_cats'] == "1" ? "&amp;category=".$data['cid']."" : "")."'><img style='float:left;width:10px;height:10px;margin-top:3px;' src='".IMAGES."edit.png' border='0' /></a>";
+		echo "<a href='".ADMIN."eshop.php".$aidlink."&amp;a_page=Main&action=edit&id=".$data['id']."".($eshop_settings['eshop_cats'] == "1" ? "&amp;category=".$data['cid']."" : "")."'><img style='float:left;width:10px;height:10px;margin-top:3px;' src='".IMAGES."edit.png' border='0' /></a>";
 	}
 	echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><b> ".$data['title']." </b></a></legend>";
 	echo "<table width='100%' cellspacing='0' cellpadding='0' border='0' class='product_slot_".$data['id']."'>";
-	echo "<tr><td ".($settings['eshop_pretext'] == "1" ? "align='left' style='width:100%;padding-top:6px;'" : "align='center' style='width:100%;padding-top:6px;'").">";
-	if ($settings['eshop_ratios'] == "1") {
+	echo "<tr><td ".($eshop_settings['eshop_pretext'] == "1" ? "align='left' style='width:100%;padding-top:6px;'" : "align='center' style='width:100%;padding-top:6px;'").">";
+	if ($eshop_settings['eshop_ratios'] == "1") {
 		echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:100%;padding:4px;' /></a>";
 	} else {
-		echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:".$settings['eshop_idisp_h']."px;width:".$settings['eshop_idisp_w']."px;padding:4px;' /></a>";
+		echo "<a href='".BASEDIR."eshop.php?product=".$data['id']."'><img src='".($data['thumb'] ? "".checkeShpImageExists(SHOP."pictures/".$data['thumb']."")."" : "".SHOP."img/nopic_thumb.gif")."' alt='' border='0' style='height:".$eshop_settings['eshop_idisp_h']."px;width:".$eshop_settings['eshop_idisp_w']."px;padding:4px;' /></a>";
 	}
 	echo "</td>";
-	if ($settings['eshop_pretext'] == "1") {
-		echo "<td valign='top' align='left' width='100%'><div style='margin-top:15px;padding:4px;word-wrap: break-word;vertical-align:middle;width:".$settings['eshop_pretext_w'].";'>".parseubb(nl2br($data['introtext']))."</div></td>";
+	if ($eshop_settings['eshop_pretext'] == "1") {
+		echo "<td valign='top' align='left' width='100%'><div style='margin-top:15px;padding:4px;word-wrap: break-word;vertical-align:middle;width:".$eshop_settings['eshop_pretext_w'].";'>".parseubb(nl2br($data['introtext']))."</div></td>";
 	}
-	if ($settings['eshop_listprice'] == "1") {
-		if ($settings['eshop_pretext'] == "1") {
-			echo "</tr><tr><td colspan='2' valign='top' align='center' width='100%'><div style='display:block;margin-top:4px;margin-bottom:4px;'> ".$locale['ESHPF107']." ".($data['xprice'] ? "<s> ".$data['price']." </s> <b><font color='red'>".$data['xprice']."</font> </b>" : "".$data['price']."")." ".$settings['eshop_currency']."</div></td>";
+	if ($eshop_settings['eshop_listprice'] == "1") {
+		if ($eshop_settings['eshop_pretext'] == "1") {
+			echo "</tr><tr><td colspan='2' valign='top' align='center' width='100%'><div style='display:block;margin-top:4px;margin-bottom:4px;'> ".$locale['ESHPF107']." ".($data['xprice'] ? "<s> ".$data['price']." </s> <b><font color='red'>".$data['xprice']."</font> </b>" : "".$data['price']."")." ".$eshop_settings['eshop_currency']."</div></td>";
 		} else {
-			echo "</tr><tr><td valign='top' align='center' width='100%'><div style='display:block;margin-top:4px;margin-bottom:4px;'> ".$locale['ESHPF107']." ".($data['xprice'] ? "<s> ".$data['price']." </s> <b><font color='red'>".$data['xprice']."</font> </b>" : "".$data['price']."")." ".$settings['eshop_currency']."</div></td>";
+			echo "</tr><tr><td valign='top' align='center' width='100%'><div style='display:block;margin-top:4px;margin-bottom:4px;'> ".$locale['ESHPF107']." ".($data['xprice'] ? "<s> ".$data['price']." </s> <b><font color='red'>".$data['xprice']."</font> </b>" : "".$data['price']."")." ".$eshop_settings['eshop_currency']."</div></td>";
 		}
 	}
 	echo "</tr>";
 	if ($data['status'] == "1") {
 		ppform();
 	} else {
-		if ($settings['eshop_shopmode'] == "1") {
-			echo "<tr><td ".($settings['eshop_pretext'] == "1" ? "colspan='2' style='height:50px;padding:6px;'" : "")." align='center' style='height:77px;padding:6px;'>";
-			echo "&nbsp;&nbsp;<a class='".($settings['eshop_info_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?product=".$data['id']."'>".$locale['ESHPF108']."</a>";
+		if ($eshop_settings['eshop_shopmode'] == "1") {
+			echo "<tr><td ".($eshop_settings['eshop_pretext'] == "1" ? "colspan='2' style='height:50px;padding:6px;'" : "")." align='center' style='height:77px;padding:6px;'>";
+			echo "&nbsp;&nbsp;<a class='".($eshop_settings['eshop_info_color'] == "default" ? "button" : "eshpbutton ".$eshop_settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?product=".$data['id']."'>".$locale['ESHPF108']."</a>";
 			echo "</td></tr>";
 		}
 	}
@@ -343,10 +343,10 @@ function buildeshopheader() {
 				$sum = "";
 				$items = dbarray(dbquery("SELECT sum(cqty) as count FROM ".DB_ESHOP_CART." WHERE puid = '".$username."' ORDER BY tid ASC"));
 				$sum = dbarray(dbquery("SELECT sum(cprice*cqty) as totals FROM ".DB_ESHOP_CART." WHERE puid = '".$username."'"));
-				$vat = $settings['eshop_vat'];
+				$vat = $eshop_settings['eshop_vat'];
 				$price = $sum['totals'];
 				$vat = ($price/100)*$vat;
-				if ($settings['eshop_vat_default'] == "0") {
+				if ($eshop_settings['eshop_vat_default'] == "0") {
 					$totalincvat = $price+$vat;
 				} else {
 					$totalincvat = $price;
@@ -359,13 +359,13 @@ function buildeshopheader() {
 					echo "<img src ='".($settings['site_seo'] == "1" ? FUSION_ROOT : '').SHOP."img/emptycart.png' alt='' border='0' style='height:35px;' id='cartimg' />";
 				}
 				echo "</div><div style='float:left;margin-left:4px;margin-top:1px;'><div id='cart' style='float:left;margin-top:8px;'>";
-				echo "".($items['count'] ? $items['count'] : 0)." ".$locale['ESHPF104']." ".($settings['eshop_vat_default'] == "1" ? "".number_format($totalincvat, 2)."" : "".number_format($sum['totals'], 2)."")." ".$settings['eshop_currency']."";
+				echo "".($items['count'] ? $items['count'] : 0)." ".$locale['ESHPF104']." ".($eshop_settings['eshop_vat_default'] == "1" ? "".number_format($totalincvat, 2)."" : "".number_format($sum['totals'], 2)."")." ".$eshop_settings['eshop_currency']."";
 				echo "</div>";
 				echo "</div>";
-				echo "<div style='float:left;margin-left:3px;margin-right:3px;margin-top:5px;'><a href='".SHOP."cart.php' title='cart' class='".($settings['eshop_cart_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_cart_color']."")."'>".$locale['ESHPF105']."</a></div>";
+				echo "<div style='float:left;margin-left:3px;margin-right:3px;margin-top:5px;'><a href='".SHOP."cart.php' title='cart' class='".($eshop_settings['eshop_cart_color'] == "default" ? "button" : "eshpbutton ".$eshop_settings['eshop_cart_color']."")."'>".$locale['ESHPF105']."</a></div>";
 			}
 			if (!preg_match('/checkout.php/i', $_SERVER['PHP_SELF']) && (!preg_match('/checkedout.php/i', $_SERVER['PHP_SELF']))) {
-				echo "<div style='float:left;margin-left:3px;margin-right:3px;margin-top:5px;'><a href='".SHOP."checkout.php' title='checkout' class='".($settings['eshop_checkout_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_checkout_color']."")."'>".$locale['ESHPF106']."</a></div>";
+				echo "<div style='float:left;margin-left:3px;margin-right:3px;margin-top:5px;'><a href='".SHOP."checkout.php' title='checkout' class='".($eshop_settings['eshop_checkout_color'] == "default" ? "button" : "eshpbutton ".$eshop_settings['eshop_checkout_color']."")."'>".$locale['ESHPF106']."</a></div>";
 			}
 			echo "</div>"; //col 3 end
 		}
@@ -383,9 +383,9 @@ function buildeshopheader() {
 
 function ppform() { // shop/buynow.php -- is this the checkout?
 	global $locale, $data, $settings, $settings;
-	if ($settings['eshop_shopmode'] == "1") {
+	if ($eshop_settings['eshop_shopmode'] == "1") {
 		//options
-		echo "<tr><td ".($settings['eshop_pretext'] == "1" ? "colspan='2' style='height:32px;padding:6px;'" : "")." align='center' style='height:32px;padding:6px;'>";
+		echo "<tr><td ".($eshop_settings['eshop_pretext'] == "1" ? "colspan='2' style='height:32px;padding:6px;'" : "")." align='center' style='height:32px;padding:6px;'>";
 		echo "<div class='prodthreecol'>";
 		echo "<div class='col'>";
 		if ($data['dync']) {
@@ -904,7 +904,7 @@ function ppform() { // shop/buynow.php -- is this the checkout?
 		echo "<div style='clear:both;'></div>";
 		echo "</td></tr>";
 		//buttons
-		echo "<tr><td ".($settings['eshop_pretext'] == "1" ? "colspan='2'" : "")." align='center' style='padding:6px;'>";
+		echo "<tr><td ".($eshop_settings['eshop_pretext'] == "1" ? "colspan='2'" : "")." align='center' style='padding:6px;'>";
 		echo "<div class='prodthreecol'>";
 		if ($data['cart_on'] == "1") {
 			echo "<input name='prod_".$data['id']."' id='prod_".$data['id']."' value='".$data['title']."' type='hidden' />";
@@ -913,12 +913,12 @@ function ppform() { // shop/buynow.php -- is this the checkout?
 			echo "<input name='weight_".$data['id']."' id='weight_".$data['id']."' value='".($data['weight'] ? $data['weight'] : "0")."' type='hidden' />";
 			echo "<input name='cprice_".$data['id']."' id='cprice_".$data['id']."' value='".($data['xprice'] ? $data['xprice'] : $data['price'])."' type='hidden' />";
 			echo "<input name='cupon_".$data['id']."' id='cupon_".$data['id']."' value='".$data['cupons']."' type='hidden' />";
-			echo "<div class='col'>&nbsp;&nbsp;<a class='".($settings['eshop_addtocart_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_addtocart_color']."")."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'>".$locale['ESHPF110']."</a></div>";
+			echo "<div class='col'>&nbsp;&nbsp;<a class='".($eshop_settings['eshop_addtocart_color'] == "default" ? "button" : "eshpbutton ".$eshop_settings['eshop_addtocart_color']."")."' href='javascript:;' onclick='javascript:cartaction(".$data['id']."); return false;'>".$locale['ESHPF110']."</a></div>";
 		}
 		if ($data['buynow'] == "1") {
-			echo "<div class='col'>&nbsp;&nbsp;<a class='".($settings['eshop_buynow_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_buynow_color']."")."' href='".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."buynow.php?id=".$data['id']."'>".$locale['ESHPF111']."</a></div>";
+			echo "<div class='col'>&nbsp;&nbsp;<a class='".($eshop_settings['eshop_buynow_color'] == "default" ? "button" : "eshpbutton ".$eshop_settings['eshop_buynow_color']."")."' href='".($settings['site_seo'] ? FUSION_ROOT : "").SHOP."buynow.php?id=".$data['id']."'>".$locale['ESHPF111']."</a></div>";
 		}
-		echo "<div class='col'>&nbsp;&nbsp;<a class='".($settings['eshop_info_color'] == "default" ? "button" : "eshpbutton ".$settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?product=".$data['id']."'>".$locale['ESHPF108']."</a></div>";
+		echo "<div class='col'>&nbsp;&nbsp;<a class='".($eshop_settings['eshop_info_color'] == "default" ? "button" : "eshpbutton ".$eshop_settings['eshop_info_color']."")."' href='".BASEDIR."eshop.php?product=".$data['id']."'>".$locale['ESHPF108']."</a></div>";
 		echo "</div>";
 		echo "<div style='clear:both;'></div>";
 		echo "</td></tr>";
@@ -1003,7 +1003,7 @@ function dupedel($itemlist) {
 
 /** Domi's original code calculations for vat/subtotal/grandtotal/
 /* Domi's Calculation Codes
-$vat = $settings['eshop_vat'];
+$vat = $eshop_settings['eshop_vat'];
 if (isset($_POST['buynow'])) {
 $itemdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_POST['id']."'"));
 $price = ($itemdata['xprice'] ? $itemdata['xprice'] : $itemdata['price']);
@@ -1011,7 +1011,7 @@ $price = ($itemdata['xprice'] ? $itemdata['xprice'] : $itemdata['price']);
 $price = $sum['totals'];
 }
 $vat = ($price/100)*$vat;
-if ($settings['eshop_vat_default'] == "0") {
+if ($eshop_settings['eshop_vat_default'] == "0") {
 $totalincvat = $price+$vat;
 } else {
 $totalincvat = $price;
@@ -1037,20 +1037,20 @@ $cupons = "";
 } else {
 $discvalue = $cupon['cuvalue'];
 $discalc = $discvalue;
-$discount = "".number_format($discvalue)." ".$settings['eshop_currency']."";
+$discount = "".number_format($discvalue)." ".$eshop_settings['eshop_currency']."";
 }
 } else if ($cupon['cutype'] == "0") {
 $discount = $cupon['cuvalue'];
-$dvat = $settings['eshop_vat'];
+$dvat = $eshop_settings['eshop_vat'];
 $itemstocalc = $cuponsum['totals'];
-if ($settings['eshop_vat_default'] == "0") {
+if ($eshop_settings['eshop_vat_default'] == "0") {
 $dvat = ($itemstocalc/100)*$dvat;
 $discalc = $itemstocalc+$dvat;
 } else {
 $discalc = $itemstocalc;
 }
 $discalc = ($discalc/100)*$discount;
-$discount = "".number_format($discalc)." ".$settings['eshop_currency']."";
+$discount = "".number_format($discalc)." ".$eshop_settings['eshop_currency']."";
 } else {
 $discount = $locale['ESHPCHK179'];
 $cupons = "";

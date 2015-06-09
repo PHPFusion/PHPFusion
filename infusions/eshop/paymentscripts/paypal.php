@@ -75,12 +75,12 @@ echo '
 <form name="cart" id="cart" action="https://www.paypal.com/cgi-bin/webscr" method="post" />
 <input type="hidden" name="cmd" value="_cart" readonly /> 
 <input type="hidden" name="upload" value="1" readonly />
-<input type="hidden" name="business" value="'.$settings['eshop_ppmail'].'" readonly />
+<input type="hidden" name="business" value="'.$eshop_settings['eshop_ppmail'].'" readonly />
 <input type="hidden" name="page_style" value="PayPal" readonly />
-<input type="hidden" name="return" value="'.$settings['siteurl'].'eshop/'.$settings['eshop_returnpage'].'" readonly />
-<input type="hidden" name="currency_code" value="'.$settings['eshop_currency'].'" readonly />
+<input type="hidden" name="return" value="'.$settings['siteurl'].'eshop/'.$eshop_settings['eshop_returnpage'].'" readonly />
+<input type="hidden" name="currency_code" value="'.$eshop_settings['eshop_currency'].'" readonly />
 <input type="hidden" name="cancel_return" value="'.$settings['siteurl'].'eshop/eshop.php" readonly />';
-if ($settings['eshop_ipn']) {
+if ($eshop_settings['eshop_ipn']) {
 echo '<input type="hidden" name="notify_url" value="' . $settings['siteurl'] . 'eshop/ipn_verify.php" readonly />';
 }
 $uodata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP_ORDERS." WHERE ouid = '".$username."' ORDER BY oid DESC LIMIT 0,1"));
@@ -111,11 +111,11 @@ $shippingtotal = $shippingsurcharge+$shippinginitial;
 $discount = preg_replace("/[^0-9]/","",''.$uodata['odiscount'].'');
 echo '<input type="hidden" name="discount_amount_cart" value="'.$discount.'" readonly />';
 
-if ($settings['eshop_freeshipsum'] !=0) { 
-if ($settings['eshop_freeshipsum'] <= $totalincvat) { $shippingtotal = "0"; } 
+if ($eshop_settings['eshop_freeshipsum'] !=0) { 
+if ($eshop_settings['eshop_freeshipsum'] <= $totalincvat) { $shippingtotal = "0"; } 
 }
 echo '<input type="hidden" name="shipping_1" value="'.$shippingtotal.'" />';
-if ($settings['eshop_vat_default'] == "0") {
+if ($eshop_settings['eshop_vat_default'] == "0") {
 echo '<input type="hidden" name="tax_cart" value="'.$uodata['ovat'].'" />';	
 } else {
 echo '<input type="hidden" name="tax_cart" value="0" />';	

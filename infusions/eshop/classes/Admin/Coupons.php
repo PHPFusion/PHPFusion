@@ -69,7 +69,7 @@ class Coupons {
 		global $locale, $settings;
 		return array(
 			'0'	=> $locale['ESHPCUPNS112'],
-			'1' => $locale['ESHPCUPNS113']." (".$settings['eshop_currency'].")",
+			'1' => $locale['ESHPCUPNS113']." (".$eshop_settings['eshop_currency'].")",
 		);
 	}
 

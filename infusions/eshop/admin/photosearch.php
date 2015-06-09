@@ -75,5 +75,5 @@ echo "</tr>\n</table>\n";
 echo "<br /><div class='admin-message'><center>".$locale['SRCH155']."</center></div><br />";
 }
 }
-echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='eshpbutton ".$settings['eshop_return_color']."' href='javascript:history.back(-1)'>&laquo; ".$locale['ESHP030']."</a></div>";
+echo "<div style='float:left;margin-top 15px;padding:10px;'><a class='eshpbutton ".$eshop_settings['eshop_return_color']."' href='javascript:history.back(-1)'>&laquo; ".$locale['ESHP030']."</a></div>";
 echo '<div style="clear:both"></div>';

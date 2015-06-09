@@ -246,7 +246,7 @@ class Orders {
 				<td><?php echo $data['oemail'] ?></td>
 				<td><?php echo $data['payment_method'] ?></td>
 				<td><?php echo $data['delivery_method'] ?></td>
-				<td><?php echo number_format($data['ototal'],2)." ".fusion_get_settings('eshop_currency') ?></td>
+				<td><?php echo number_format($data['ototal'],2)." ".get_settings('eshop_currency') ?></td>
 				<td><?php echo $data['opaid'] ? $locale['ESHP309'] : $locale['ESHP320'] ?></td>
 				<td><?php echo $data['ocompleted'] ? $locale['ESHP321b'] : $locale['ESHP321'] ?></td>
 				<td>
@@ -312,7 +312,7 @@ class Orders {
 									</a>
 								</td>
 								<td><?php echo $id['orders'] ?></td>
-								<td><?php echo $id['total_sales'].' '.fusion_get_settings('eshop_currency') ?></td>
+								<td><?php echo $id['total_sales'].' '.get_settings('eshop_currency') ?></td>
 							</tr>
 						<?php
 						}
@@ -356,7 +356,7 @@ class Orders {
 								</td>
 								<td><?php echo $id['day'] ?></td>
 								<td><?php echo $id['orders'] ?></td>
-								<td><?php echo $id['total_sales'].' '.fusion_get_settings('eshop_currency') ?></td>
+								<td><?php echo $id['total_sales'].' '.get_settings('eshop_currency') ?></td>
 							</tr>
 						<?php
 						}
@@ -404,7 +404,7 @@ class Orders {
 						<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=y&amp;year=".$id['year'] ?>'><?php echo $id['year'] ?></td>
 						<td><a href='<?php echo FUSION_SELF.$aidlink."&amp;a_page=orders&amp;section=history&amp;mode=m&amp;year=".$id['year']."&amp;month=".$id['month'] ?>'><?php echo $months[$id['month']] ?></a></td>
 						<td><?php echo $id['orders'] ?></td>
-						<td><?php echo $id['total_sales']." ".fusion_get_settings('eshop_currency') ?></td>
+						<td><?php echo $id['total_sales']." ".get_settings('eshop_currency') ?></td>
 					</tr>
 					<?php
 				}

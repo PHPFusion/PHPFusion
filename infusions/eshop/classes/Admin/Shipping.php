@@ -334,8 +334,8 @@ class Shipping {
 		echo "<th>".$locale['ESHPSS100']."</th>\n";
 		echo "<th>".$locale['ESHPSS101']."</th>\n";
 		echo "<th>".$locale['ESHPSS102']."</th>\n";
-		echo "<th>".$locale['ESHPSS103']." ".fusion_get_settings('eshop_weightscale')."</th>\n";
-		echo "<th>".$locale['ESHPSS104']." ".fusion_get_settings('eshop_weightscale')."</th>\n";
+		echo "<th>".$locale['ESHPSS103']." ".get_settings('eshop_weightscale')."</th>\n";
+		echo "<th>".$locale['ESHPSS104']." ".get_settings('eshop_weightscale')."</th>\n";
 		echo "<th>".$locale['ESHPSS105']."</th>\n";
 		echo "<th>".$locale['ESHPSS106']."</th>\n";
 		echo "</tr>\n";
@@ -371,8 +371,8 @@ class Shipping {
 				echo "<td>".$delivery_opts[$data['max_delivery_time']]."</td>\n";
 				echo "<td>".number_format($data['min_weight'], 2)."</td>\n";
 				echo "<td>".number_format($data['max_weight'], 2)."</td>\n";
-				echo "<td>".number_format($data['min_cost'], 2)." ".fusion_get_settings('eshop_currency')."</td>\n";
-				echo "<td>".number_format($data['max_cost'], 2)." ".fusion_get_settings('eshop_currency')."</td>\n";
+				echo "<td>".number_format($data['min_cost'], 2)." ".get_settings('eshop_currency')."</td>\n";
+				echo "<td>".number_format($data['max_cost'], 2)." ".get_settings('eshop_currency')."</td>\n";
 				echo "</tr>";
 				$i++;
 			}
@@ -414,10 +414,10 @@ class Shipping {
 		echo "<th class='col-xs-3 col-sm-3'>".$locale['ESHPSHPMTS107']."</th>\n";
 		echo "<th>".$locale['ESHPSHPMTS108']."</th>\n";
 		echo "<th>".$locale['ESHPSHPMTS109']."</th>\n";
-		echo "<th>".$locale['ESHPSHPMTS110']." (".fusion_get_settings('eshop_weightscale').")</th>\n";
-		echo "<th>".$locale['ESHPSHPMTS111']." (".fusion_get_settings('eshop_weightscale').")</th>\n";
+		echo "<th>".$locale['ESHPSHPMTS110']." (".get_settings('eshop_weightscale').")</th>\n";
+		echo "<th>".$locale['ESHPSHPMTS111']." (".get_settings('eshop_weightscale').")</th>\n";
 		echo "<th>".$locale['ESHPSHPMTS112']."</th>\n";
-		echo "<th>".$locale['ESHPSHPMTS113']." (".fusion_get_settings('eshop_weightscale').")</th>\n";
+		echo "<th>".$locale['ESHPSHPMTS113']." (".get_settings('eshop_weightscale').")</th>\n";
 		echo "<th>".$locale['ESHPSHPMTS114']."</th>\n";
 		echo "</tr>\n";
 
@@ -435,10 +435,10 @@ class Shipping {
 			echo form_select('active', $locale['ESHPSHPMTS114'], self::get_activeOpts(), $this->sdata['active'], array('inline'=>1));
 			echo "</div>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-6'>\n";
-			echo form_text('weightmin', $locale['ESHPSHPMTS110']." (".fusion_get_settings('eshop_weightscale').")", $this->sdata['weightmin'], array('number'=>1, 'inline'=>1));
-			echo form_text('weightmax', $locale['ESHPSHPMTS111']." (".fusion_get_settings('eshop_weightscale').")", $this->sdata['weightmax'], array('number'=>1, 'inline'=>1));
-			echo form_text('initialcost', $locale['ESHPSHPMTS112']." (".fusion_get_settings('eshop_currency').")", $this->sdata['initialcost'], array('number'=>1, 'inline'=>1));
-			echo form_text('weightcost', $locale['ESHPSHPMTS113']." (".fusion_get_settings('eshop_weightscale').")", $this->sdata['weightcost'], array('number'=>1, 'inline'=>1));
+			echo form_text('weightmin', $locale['ESHPSHPMTS110']." (".get_settings('eshop_weightscale').")", $this->sdata['weightmin'], array('number'=>1, 'inline'=>1));
+			echo form_text('weightmax', $locale['ESHPSHPMTS111']." (".get_settings('eshop_weightscale').")", $this->sdata['weightmax'], array('number'=>1, 'inline'=>1));
+			echo form_text('initialcost', $locale['ESHPSHPMTS112']." (".get_settings('eshop_currency').")", $this->sdata['initialcost'], array('number'=>1, 'inline'=>1));
+			echo form_text('weightcost', $locale['ESHPSHPMTS113']." (".get_settings('eshop_weightscale').")", $this->sdata['weightcost'], array('number'=>1, 'inline'=>1));
 			echo form_hidden('', 'sid', 'sid', $this->sdata['sid'], array('writable' => 1));
 			echo form_hidden('', 'cid', 'cid', $_GET['cid'], array('writable' => 1));
 			echo "</div>\n";
@@ -480,8 +480,8 @@ class Shipping {
 				echo "<td>".$dest_opts[$data['destination']]."</td>\n";
 				echo "<td>".number_format($data['weightmin'],2)."</td>\n";
 				echo "<td>".number_format($data['weightmax'],2)."</td>\n";
-				echo "<td>".number_format($data['initialcost'],2)." ".fusion_get_settings('eshop_currency')."</td>\n";
-				echo "<td>".number_format($data['weightcost'],2)."  ".fusion_get_settings('eshop_currency')."</td>\n";
+				echo "<td>".number_format($data['initialcost'],2)." ".get_settings('eshop_currency')."</td>\n";
+				echo "<td>".number_format($data['weightcost'],2)."  ".get_settings('eshop_currency')."</td>\n";
 				echo "<td>".$active_opts[$data['active']]."</td>\n";
 				echo "</tr>\n";
 				$i++;

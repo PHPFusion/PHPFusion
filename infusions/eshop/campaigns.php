@@ -33,18 +33,18 @@ buildfilters();
 $result = dbquery("select * FROM ".DB_ESHOP." WHERE active = '1' AND campaign='1' AND ".groupaccess('access')." ORDER BY ".$filter."");
 $rows = dbrows($result);
 if ($rows) {
-$result = dbquery("select * FROM ".DB_ESHOP." WHERE active = '1' AND campaign='1' AND ".groupaccess('access')." ORDER BY ".$filter." LIMIT ".$_GET['rowstart'].",".$settings['eshop_noppf']."");
+$result = dbquery("select * FROM ".DB_ESHOP." WHERE active = '1' AND campaign='1' AND ".groupaccess('access')." ORDER BY ".$filter." LIMIT ".$_GET['rowstart'].",".$eshop_settings['eshop_noppf']."");
 	$counter = 0; 
 	echo "<table cellpadding='0' cellspacing='0' width='100%' align='center'><tr>\n";
 	while ($data = dbarray($result)) {
-	if ($counter != 0 && ($counter % $settings['eshop_ipr'] == 0)) echo "</tr>\n<tr>\n";
+	if ($counter != 0 && ($counter % $eshop_settings['eshop_ipr'] == 0)) echo "</tr>\n<tr>\n";
     echo "<td align='center' class='tbl'>\n";
 	eshopitems();
 	echo "</td>\n";
 	$counter++;
 }
 	echo "</tr>\n</table>\n";
-	if ($rows > $settings['eshop_noppf']) echo "<div align='center' style='margin-top:5px;'>\n".makeeshoppagenav($_GET['rowstart'],$settings['eshop_noppf'],$rows,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;" : "" )."")."\n</div>\n";
+	if ($rows > $eshop_settings['eshop_noppf']) echo "<div align='center' style='margin-top:5px;'>\n".makeeshoppagenav($_GET['rowstart'],$eshop_settings['eshop_noppf'],$rows,3,FUSION_SELF."?".(isset($_COOKIE['Filter']) ? "FilterSelect=".$_COOKIE['Filter']."&amp;" : "" )."")."\n</div>\n";
 
 } else {
 	echo '<div style="clear:both"></div>';

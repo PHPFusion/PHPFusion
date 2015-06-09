@@ -260,7 +260,7 @@ $inf_newtable[13] = DB_ESHOP_ORDERS." (
 $inf_insertdbrow[1] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('eShop cart panel', 'eshop_cart_panel', '', '4', '3', 'file', '0', '1', '1', '', '')";
 
 // Position these links under Content Administration
-$inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['eshop']['title']."', '".INFUSIONS."eshop/eshop.php', '1')";
+$inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['eshop']['title']."', '".SHOP."admin/eshop.php', '1')";
 
 // Create a link for all installed languages
 if (!empty($settings['enabled_languages'])) {

@@ -96,17 +96,17 @@ $data = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_POST['id']."'"
 echo '
 <form name="paypal" id="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post" />
 <input type="hidden" name="cmd" value="_xclick" />
-<input type="hidden" name="business" value="'.$settings['eshop_ppmail'].'" />
+<input type="hidden" name="business" value="'.$eshop_settings['eshop_ppmail'].'" />
 <input type="hidden" name="item_name" value="'.$data['title'].'" />
 <input type="hidden" name="page_style" value="PayPal" />
 <input type="hidden" name="no_shipping" value="1" />
-<input type="hidden" name="return" value="'.$settings['siteurl'].'eshop/purchasescripts/'.($data['rpage'] ? $data['rpage'] : $settings['eshop_returnpage']).'" />
+<input type="hidden" name="return" value="'.$settings['siteurl'].'eshop/purchasescripts/'.($data['rpage'] ? $data['rpage'] : $eshop_settings['eshop_returnpage']).'" />
 <input type="hidden" name="cancel_return" value="'.$settings['siteurl'].'" />
-<input type="hidden" name="currency_code" value="'.$settings['eshop_currency'].'" />
+<input type="hidden" name="currency_code" value="'.$eshop_settings['eshop_currency'].'" />
 <input type="hidden" name="cancel_return" value="'.$settings['siteurl'].'eshop/eshop.php" />
 <input type="hidden" name="amount" value="'.($data['xprice'] ? $data['xprice'] : $data['price']).'" />
 <br /><center><input name="mySubmit" type="submit" id="mySubmit" value="Click here to continue if you are not automatically redirected" /></center>';
-if ($settings['eshop_vat_default'] == "0") { echo '<input type="hidden" name="tax_rate" value="'.$settings['eshop_vat'].'" />'; }
+if ($eshop_settings['eshop_vat_default'] == "0") { echo '<input type="hidden" name="tax_rate" value="'.$eshop_settings['eshop_vat'].'" />'; }
 
 echo "</form>";
 closetable();
@@ -458,7 +458,7 @@ echo "</tr>";
 echo "</table></fieldset></div>";
 
 echo "<div style='display:none'><div id='terms_content' style='padding:10px;text-align:left'>";
-echo stripslashes(nl2br($settings['eshop_terms']));
+echo stripslashes(nl2br($eshop_settings['eshop_terms']));
 echo "</div></div>";
 
 
@@ -470,12 +470,12 @@ echo "<table width='345' height='100%' align='center' cellspacing='0' cellpaddin
 	$itemdata = dbarray(dbquery("SELECT * FROM ".DB_ESHOP." WHERE id='".$_GET['id']."'"));
 
     echo "<tr><td class='tbl' align='left'  width='25%'><a href='".BASEDIR."eshop/eshop.php?product=".$itemdata['id']."'><img src='".($itemdata['thumb'] ? "".checkeShpImageExists(INFUSIONS."eshop/pictures/".$itemdata['thumb']."")."" : "".BASEDIR."eshop/img/nopic_thumb.gif")."' alt='' width='60' border='0' /></a></td>";
- 	if ($settings['eshop_pretext'] == "1") {
-	echo "<td class='tbl' align='left' width='50%'><div style='padding:4px;word-wrap: break-word;vertical-align:middle;width:".$settings['eshop_pretext_w'].";'>".parseubb(nl2br($itemdata['introtext']))."</div></td>";
+ 	if ($eshop_settings['eshop_pretext'] == "1") {
+	echo "<td class='tbl' align='left' width='50%'><div style='padding:4px;word-wrap: break-word;vertical-align:middle;width:".$eshop_settings['eshop_pretext_w'].";'>".parseubb(nl2br($itemdata['introtext']))."</div></td>";
 	} else {
 	echo "<td class='tbl' align='left' width='50%'><div style='padding:4px;word-wrap: break-word;vertical-align:middle;'>".$itemdata['title']."</div></td>";
 	}
-    echo "<td class='tbl' align='left' width='25%'>".($itemdata['xprice'] ? $itemdata['xprice'] : $itemdata['price'])." ".$settings['eshop_currency']."</td>
+    echo "<td class='tbl' align='left' width='25%'>".($itemdata['xprice'] ? $itemdata['xprice'] : $itemdata['price'])." ".$eshop_settings['eshop_currency']."</td>
 	</tr>";
 echo "<tr><td><div style='margin-top:5px;'></div></td></tr>";
 echo "</table></fieldset></div>";
@@ -495,7 +495,7 @@ while ($data = dbarray($result)) {
       echo "<tr><td class='tbl' align='left'  width='5%'><input type='radio' name='paymethod' id='payment_".$data['pid']."' value='".$data['pid']."' checked /></td>
       <td class='tbl' align='left' width='20%'><img src='".BASEDIR."eshop/paymentimgs/".$data['image']."' border='0' alt='' width='40' /></td>
 	  <td class='tbl' align='left' width='55%'>".$data['method']." </td>
-	  <td class='tbl' align='left' width='25%'>".$locale['ESHPCHK121']." <br /> ".$data['surcharge']." ".$settings['eshop_currency']."</td>
+	  <td class='tbl' align='left' width='25%'>".$locale['ESHPCHK121']." <br /> ".$data['surcharge']." ".$eshop_settings['eshop_currency']."</td>
 	  </tr>";
 echo "<tr><td><div style='margin-top:5px;'></div></td></tr>";
  } 
@@ -517,7 +517,7 @@ echo "<table width='345' height='100%' align='center' cellspacing='0' cellpaddin
 echo "</table></fieldset></div>";
 $price = ($itemdata['xprice'] ? $itemdata['xprice'] : $itemdata['price']);
 $vat = ($price / 100) * $vat;
-if ($settings['eshop_vat_default'] == "0") {
+if ($eshop_settings['eshop_vat_default'] == "0") {
 $totalincvat = $price + $vat;
 } else {
 $totalincvat = $price;
@@ -527,11 +527,11 @@ echo "<div style='float:right;margin-top:5px;padding:1px;'>";
 echo"<fieldset style='width:100%;padding:2px;'><legend style='width:90% !important;'>&nbsp; ".$locale['ESHPCHK127']." &nbsp;</legend>";
 echo "<table width='345' height='100%' align='center' cellspacing='0' cellpadding='2' border='0'>";
 echo "<tr><td class='tbl' align='left'>
-".$locale['ESHPCHK128']." 1 ".$locale['ESHPCHK129']."".($settings['eshop_vat_default'] =="1" ? "".number_format($totalincvat, 2)."" : "".number_format($price, 2)."")."  ".$settings['eshop_currency']."<br />
-".$locale['ESHPCHK130']."".$settings['eshop_vat']."% : ( ".number_format($vat, 2)."  ".($settings['eshop_vat_default'] == "1" ? $locale['ESHPB109'] : $locale['ESHPB110'])." )<br />";
-echo "".$locale['ESHPCHK132']." 0 ".$settings['eshop_currency']."<br />";
-echo "".$locale['ESHPCHK133']." 0 ".$settings['eshop_currency']."<br />";
-echo "".$locale['ESHPCHK134']."".number_format($totalincvat, 2)." ".$settings['eshop_currency']."";
+".$locale['ESHPCHK128']." 1 ".$locale['ESHPCHK129']."".($eshop_settings['eshop_vat_default'] =="1" ? "".number_format($totalincvat, 2)."" : "".number_format($price, 2)."")."  ".$eshop_settings['eshop_currency']."<br />
+".$locale['ESHPCHK130']."".$eshop_settings['eshop_vat']."% : ( ".number_format($vat, 2)."  ".($eshop_settings['eshop_vat_default'] == "1" ? $locale['ESHPB109'] : $locale['ESHPB110'])." )<br />";
+echo "".$locale['ESHPCHK132']." 0 ".$eshop_settings['eshop_currency']."<br />";
+echo "".$locale['ESHPCHK133']." 0 ".$eshop_settings['eshop_currency']."<br />";
+echo "".$locale['ESHPCHK134']."".number_format($totalincvat, 2)." ".$eshop_settings['eshop_currency']."";
 echo "</td></tr>";
 echo "</table></fieldset></div>";
 echo "<div class='clear'></div>";
