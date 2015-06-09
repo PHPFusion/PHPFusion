@@ -722,8 +722,9 @@ class Eshop {
 	// Get Customer Data if Customer Exist
 	private function set_customer() {
 		$user_id = \defender::set_sessionUserID();
+
 // This one crashes 
-//		$customer = Customers::get_customerData($user_id); // binds the above
+		$customer = Customers::get_customerData($user_id); // binds the above
 		if (!empty($customer)) {
 			$session_var = self::get('customer');
 			if (empty($session_var)) {
