@@ -545,20 +545,9 @@ if (isset($_POST['uninstall'])) {
 		$fail = TRUE;
 	}
 	$mlt_sql = "INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ";
-	$mlt_sql .= implode(",\n", array("('AR', '".$locale['setup_3200']."', '1')",
-		"('BL', '".$locale['setup_3213']."', '1')",
+	$mlt_sql .= implode(",\n", array(
 		"('CP', '".$locale['setup_3201']."', '1')",
-		"('DL', '".$locale['setup_3202']."', '1')",
-		"('ES', '".$locale['setup_3214']."', '1')",
-		"('FQ', '".$locale['setup_3203']."', '1')",
-		"('FO', '".$locale['setup_3204']."', '1')",
-		"('FR', '".$locale['setup_3212']."', '1')",
-		"('NS', '".$locale['setup_3205']."', '1')",
-		"('PG', '".$locale['setup_3206']."', '1')",
-		"('PO', '".$locale['setup_3207']."', '1')",
 		"('ET', '".$locale['setup_3208']."', '1')",
-		"('WL', '".$locale['setup_3209']."', '1')",
-		"('SL', '".$locale['setup_3210']."', '1')",
 		"('PN', '".$locale['setup_3211']."', '1')"));
 	if (!dbquery($mlt_sql)) {
 		$fail = TRUE;
