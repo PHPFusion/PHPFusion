@@ -90,7 +90,7 @@ if (!function_exists('render_forum_main')) {
 				if ($data['forum_type'] == '1') {
 					echo "<div class='panel panel-default'>\n";
 					echo "<div class='panel-heading' ".(isset($data['child']) ? 'style="border-bottom:0;"' : '').">\n";
-					echo "<a class='forum-subject' href='".FORUM."index.php?viewforum&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch']."'>".$data['forum_name']."</a><br/>";
+					echo "<a class='forum-subject' href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch']."'>".$data['forum_name']."</a><br/>";
 					echo $data['forum_description'] ? "<span class='text-smaller'>".$data['forum_description']."</span>\n<br/>" : '';
 					echo "</div>\n";
 					if (isset($info['forums'][$forum_id])) {
@@ -159,7 +159,7 @@ if (!function_exists('render_forum_item_type')) {
 				if (isset($cdata['forum_type'])) {
 							echo $data['forum_icon'];
 				}
-				echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
+				echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
 			}
 			echo "</div>\n";
 			echo "</div>\n";
@@ -182,7 +182,7 @@ if (!function_exists('render_forum_item_type')) {
 						if (isset($cdata['forum_type'])) {
 							echo $data['forum_icon'];
 						}
-						echo "<a href='".FORUM."index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
+						echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$cdata['forum_id']."&amp;parent_id=".$cdata['forum_cat']."&amp;forum_branch=".$cdata['forum_branch']."' class='forum-subforum display-inline-block m-r-10'>".$cdata['forum_name']."</a></span>";
 					}
 			        echo "</div>\n";
 					echo "</div>\n";
@@ -473,7 +473,7 @@ if (!function_exists('render_mypost')) {
 				echo "<i class='".$type_icon[$data['forum_type']]." icon-sm low-opacity'></i>";
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";
-				echo "<a class='post_title strong' href='".FORUM."viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 40)."</a>\n";
+				echo "<a class='post_title strong' href='".INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' title='".$data['thread_subject']."'>".trimlink($data['thread_subject'], 40)."</a>\n";
 				echo "<br/><span class='forum_name'>".trimlink($data['forum_name'], 30)."</span> <span class='thread_date'>&middot; ".showdate("forumdate", $data['post_datestamp'])."</span>\n";
 				echo "</div>\n";
 				echo "</div>\n";
@@ -510,7 +510,7 @@ if (!function_exists('render_laft')) {
 		$opts = array('0' => 'All Results', '1' => '1 Day', '7' => '7 Days', '14' => '2 Weeks', '30' => '1 Month',
 			'90' => '3 Months', '180' => '6 Months', '365' => '1 Year');
 		echo "<hr/>\n";
-		echo openform('filter_form', 'post', FORUM."index.php?section=latest", array('downtime' => 1));
+		echo openform('filter_form', 'post', INFUSIONS."forum/index.php?section=latest", array('downtime' => 1));
 		echo form_select('filter', $locale['forum_0009'], $opts, isset($_POST['filter']) && $_POST['filter'] ? $_POST['filter'] : 0, array('width' => '300px', 'class'=>'pull-left m-r-10'));
 		echo form_button('go', $locale['go'], $locale['go'], array('class' => 'btn-default btn-sm m-b-20'));
 		echo closeform();

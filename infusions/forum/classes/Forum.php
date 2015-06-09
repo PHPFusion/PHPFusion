@@ -31,9 +31,9 @@ class Forum {
 		global $settings, $userdata, $locale;
 
 		if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
-			if ($_GET['section'] == 'latest') redirect(FORUM.'index.php?section=latest');
-			if ($_GET['section'] == 'mypost') redirect(FORUM.'index.php?section=mypost');
-			if ($_GET['section'] == 'tracked') redirect(FORUM.'index.php?section=tracked');
+			if ($_GET['section'] == 'latest') redirect(INFUSIONS.'forum/index.php?section=latest');
+			if ($_GET['section'] == 'mypost') redirect(INFUSIONS.'forum/index.php?section=mypost');
+			if ($_GET['section'] == 'tracked') redirect(INFUSIONS.'forum/index.php?section=tracked');
 		}
 
 		$this->forum_info = array(
@@ -54,7 +54,7 @@ class Forum {
 		
 		$this->forum_info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."'");
 		add_to_title($locale['global_200'].$locale['forum_0000']);
-		add_breadcrumb(array('link'=>FORUM.'index.php', 'title'=>$locale['forum_0010']));
+		add_breadcrumb(array('link'=>INFUSIONS.'forum/index.php', 'title'=>$locale['forum_0010']));
 		$_GET['forum_id'] = $this->forum_info['forum_id'];
 		forum_breadcrumbs($this->forum_info['forum_index']);
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_rows']) ? $_GET['rowstart'] : '0';
@@ -63,21 +63,21 @@ class Forum {
 		if (isset($_GET['section'])) {
 			switch($_GET['section']) {
 				case 'mypost':
-					include FORUM."sections/my_posts.php";
+					include INFUSIONS."forum/sections/my_posts.php";
 					add_to_title($locale['global_201'].$locale['forum_0011']);
-					add_breadcrumb(array('link'=>FORUM."index.php?section=mypost", 'title'=>$locale['forum_0011']));
+					add_breadcrumb(array('link'=>INFUSIONS."forum/index.php?section=mypost", 'title'=>$locale['forum_0011']));
 					set_meta("description", $locale['forum_0011']);
 					break;
 				case 'latest': // Let´s just take this section out(?)
-					include FORUM."sections/laft.php";
+					include INFUSIONS."forum/sections/laft.php";
 					add_to_title($locale['global_201'].$locale['global_021']);
-					add_breadcrumb(array('link'=>FORUM."index.php?section=latest", 'title'=>$locale['global_021']));
+					add_breadcrumb(array('link'=>INFUSIONS."forum/index.php?section=latest", 'title'=>$locale['global_021']));
 					set_meta("description", $locale['global_021']);
 					break;
 				case 'tracked':
-					include FORUM."sections/tracked.php";
+					include INFUSIONS."forum/sections/tracked.php";
 					add_to_title($locale['global_201'].$locale['global_056']);
-					add_breadcrumb(array('link'=>FORUM."index.php?section=tracked", 'title'=>$locale['global_056']));
+					add_breadcrumb(array('link'=>INFUSIONS."forum/index.php?section=tracked", 'title'=>$locale['global_056']));
 					set_meta("description", $locale['global_056']);
 					break;
 			}
@@ -172,10 +172,10 @@ class Forum {
 			$typeExt = isset($_GET['type']) ? "&amp;type=".$_GET['type'] : '';
 			$sortExt = isset($_GET['sort']) ? "&amp;sort=".$_GET['sort'] : '';
 			$orderExt = isset($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
-			$baseLink =	FORUM.'index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
+			$baseLink =	INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
 			$timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
 			$this->forum_info['filter']['time'] = array(
-				'All Time' => FORUM.'index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : ''),
+				'All Time' => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : ''),
 				'Today' => $timeLink.'&amp;time=today', // must be static.
 				'2 Days' => $timeLink.'&amp;time=2days',
 				'1 Week'=> $timeLink.'&amp;time=1week',
@@ -242,7 +242,7 @@ class Forum {
 							$row['forum_new_status'] = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".Functions::get_forumIcons('new')."'></i></span>";
 						}
 					}
-					$row['forum_link'] = FORUM."index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat']."&amp;forum_branch=".$row['forum_branch'];
+					$row['forum_link'] = INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$row['forum_id']."&amp;parent_id=".$row['forum_cat']."&amp;forum_branch=".$row['forum_branch'];
 					$row['forum_description'] = nl2br(parseubb($row['forum_description']));
 					$row['forum_postcount'] = format_word($row['forum_postcount'], $locale['fmt_post']);
 					$row['forum_threadcount'] = format_word($row['forum_threadcount'], $locale['fmt_thread']);
@@ -253,8 +253,8 @@ class Forum {
 						if ($settings['forum_last_post_avatar']) {
 							$row['forum_last_post_avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
 						}
-						$row['forum_last_post_thread_link'] = FORUM."viewthread.php?thread_id=".$row['thread_id'];
-						$row['forum_last_post_link'] = FORUM."viewthread.php?thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'];
+						$row['forum_last_post_thread_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id'];
+						$row['forum_last_post_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'];
 						$row['forum_last_post_profile_link'] = $locale['by']." ".profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']);
 						$row['forum_last_post_date'] = showdate("forumdate", $row['forum_lastpost']);
 						}
@@ -293,7 +293,7 @@ class Forum {
 						define_forum_mods($row);
 						if (iMOD || iSUPERADMIN || ($row['forum_post'] && checkgroup($row['forum_post']) && !$row['forum_lock'])) {
 							$this->forum_info['permissions']['can_post'] = 1;
-							$this->forum_info['new_thread_link'] = FORUM."newthread.php?forum_id=".$row['forum_id'];
+							$this->forum_info['new_thread_link'] = INFUSIONS."forum/newthread.php?forum_id=".$row['forum_id'];
 						}
 						
 						 // Second query to get all threads of this forum. SQL filter conditions override applicable.
@@ -329,7 +329,7 @@ class Forum {
 									$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
 
 									 // Threads Customized Output
-									$threads['thread_link'] = FORUM."viewthread.php?thread_id=".$threads['thread_id'];
+									$threads['thread_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'];
 									$threads['thread_pages'] = '';
 
 									$reps = ($this->forum_info['thread_max_rows'] > $this->forum_info['threads_per_page']) ? ceil($threads['thread_max_rows']/$this->forum_info['threads_per_page']) : 0;
@@ -340,7 +340,7 @@ class Forum {
 										$middle = FALSE;
 										while ($ctr2 <= $reps) {
 											if ($reps < 5 || ($reps > 4 && ($ctr2 == 1 || $ctr2 > ($reps-3)))) {
-												$pnum = "<a href='".FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;rowstart=$ctr'>$ctr2</a> ";
+												$pnum = "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id']."&amp;rowstart=$ctr'>$ctr2</a> ";
 											} else {
 												if ($middle == FALSE) {
 													$middle = TRUE;
@@ -427,7 +427,7 @@ class Forum {
 					}
 				}
 			} else {
-				redirect(FORUM.'index.php');
+				redirect(INFUSIONS.'forum/index.php');
 			}
 		} else {
 			$this->forum_info['forums'] = Functions::get_forum();
