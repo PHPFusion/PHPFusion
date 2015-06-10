@@ -45,16 +45,19 @@ class Viewthread {
 		}
 	}
 
+	public function get_thread_info() {
+		return $this->thread_info;
+	}
 
 	public function __construct() {
-		global $locale, $userdata, $settings;
+		global $locale, $userdata, $settings, $inf_settings;
 		// exit no.1
 		if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
 		add_to_title($locale['global_200'].$locale['forum_0000']);
 
 		$thread_data = \PHPFusion\Forums\Functions::get_thread($_GET['thread_id']); // fetch query and define iMOD
 		$thread_stat = self::get_thread_stats($_GET['thread_id']); // get post_count, lastpost_id, first_post_id.
-		$inf_settings = get_settings('forum');
+
 		$_GET['forum_id'] = $thread_data['forum_id'];
 
 		//$_GET['forum_id'] = $this->thread_info['forum_id'];
@@ -93,8 +96,6 @@ class Viewthread {
 			'allowed_post_filters' => array('oldest', 'latest', 'high'),
 			'attachtypes' => explode(",", $settings['attachtypes']),
 			'quick_reply_form' => '',
-
-
 			// moderator form info
 			'mod_options' => array(),
 			'form_action' => '',
@@ -118,8 +119,8 @@ class Viewthread {
 										);
 		 // Quick reply form
 		 if ($this->thread_info['permissions']['can_post'] && $thread_data['forum_quick_edit']) {
-			$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'];
-			$html = "<!--sub_forum_thread-->\n";
+			$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'];
+			 $html = "<!--sub_forum_thread-->\n";
 			$html .= openform('quick_reply_form', 'post', $form_action, array('class' => 'm-b-20 m-t-20', 'downtime' => 1));
 			$html .= "<h4 class='m-t-20 pull-left'>".$locale['forum_0168']."</h4>\n";
 			$html .= form_textarea('post_message', $locale['forum_0601'], '', array('bbcode' => 1,
@@ -129,7 +130,7 @@ class Viewthread {
 																					'form_name' => 'quick_reply_form')
 																					);
 			$html .= "<div class='m-t-10 pull-right'>\n";
-			$html .= form_button('postreply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
+			$html .= form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], array('class' => 'btn-primary btn-sm m-r-10'));
 			$html .= "</div>\n";
 			$html .= "<div class='overflow-hide'>\n";
 			$html .= form_checkbox('post_smileys', $locale['forum_0169'], '', array('class' => 'm-b-0'));
@@ -144,7 +145,7 @@ class Viewthread {
 			$this->thread_info['quick_reply_form'] = $html;
 		}
 
-		// Polls
+		// Build Polls Info
 		if ($this->thread_info['thread']['thread_poll'] && $this->thread_info['permissions']['can_view_poll']) {
 			if ($this->thread_info['permissions']['can_vote_poll']) {
 				$poll_result = dbquery("SELECT tfp.forum_poll_title, tfp.forum_poll_votes, tfv.forum_vote_user_id
@@ -207,7 +208,7 @@ class Viewthread {
 			}
 		}
 
-		// Find attachments
+		// Build basic Attachment Info
 		if ($this->thread_info['permissions']['can_download_attach']) {
 			$a_result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".$this->thread_info['thread_id']."' ORDER BY post_id ASC");
 			if (dbrows($a_result) > 0) {
@@ -220,60 +221,10 @@ class Viewthread {
 		}
 
 		if (!empty($thread_data)) {
-
-			// Post execution for quick reply -- preview take out.
-			//@todo: review
-			if (isset($_POST['postreply'])) {
-				/**
-				 * Editing
-				 */
-				if ($this->thread_info['permissions']['can_reply'] && $this->thread_info['permissions']['edit_lock'] == false) { // can reply and has id.
-					$data = $thread_data;
-					add_to_title($locale['global_201'].$locale['forum_0503']);
-					add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
-					if (isset($_GET['quote']) && isnum($_GET['quote'])) {
-						$quote_result = dbquery("SELECT a.post_message, b.user_name
-								FROM ".DB_FORUM_POSTS." a
-								INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
-								WHERE thread_id='".intval($this->thread_info['thread_id'])."' and post_id='".intval($_GET['quote'])."'
-								");
-						if (dbrows($quote_result) > 0) {
-							require_once INCLUDES."bbcode_include.php";
-							$quote_data = dbarray($quote_result);
-							$data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]".strip_bbcodes($quote_data['post_message'])."[/quote]\r\r";
-						} else {
-							redirect(INFUSIONS.'forum/index.php');
-						}
-					}
-				} else {
-					redirect(INFUSIONS.'forum/index.php'); // no threads
-				}
-				include "post_actions.php";
-			}
-
-			add_to_title($locale['global_201'].$thread_data['thread_subject']);
-			// generate thread breadcrumbs
-			$this->forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-			forum_breadcrumbs($this->forum_index);
-			add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
-			add_breadcrumb(array('link' => INFUSIONS.'forum/viewthread.php?forum_id='.$thread_data['forum_id'].'&amp;thread_id='.$thread_data['thread_id'], 'title' => $thread_data['thread_subject']));
-
-			// Make thread filter links
-			$this->thread_info['post-filters'][0] = array(
-														'value' => INFUSIONS.'forum/viewthread.php?thread_id='.$thread_data['thread_id'].'&amp;section=oldest',
-														'locale' => $locale['forum_0180']
-													);
-			$this->thread_info['post-filters'][1] = array(
-														'value' => INFUSIONS.'forum/viewthread.php?thread_id='.$thread_data['thread_id'].'&amp;section=latest',
-														'locale' => $locale['forum_0181']
-													);
-			if ($this->thread_info['permissions']['can_rate']) {
-				$this->thread_info['allowed-post-filters'][2] = 'high';
-				$this->thread_info['post-filters'][2] = array(
-															'value' => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=high',
-															'locale' => $locale['forum_0182']
-														);
-			}
+			/**
+			 * SAFE - 4 redirect have been made for XSS injections. Permissions info set.
+			 * Whatever validation has to be done by this point.
+			 */
 
 			/* Do moderation */
 			if (iMOD) {
@@ -310,26 +261,35 @@ class Viewthread {
 				</div>\n";
 			}
 
+			// listen and execute $_POST event
+			$this->exec_post_actions();
 
-			switch ($this->thread_info['section']) {
-				case 'oldest':
-					$this->sortCol = 'post_datestamp ASC';
-					break;
-				case 'latest':
-					$this->sortCol = 'post_datestamp DESC';
-					break;
-				case 'high':
-					$this->sortCol = 'vote_points DESC';
-					break;
-				default:
-					$this->sortCol = 'post_datestamp ASC';
+			add_to_title($locale['global_201'].$thread_data['thread_subject']);
+			// generate thread breadcrumbs
+			$this->forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
+			forum_breadcrumbs($this->forum_index);
+			add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
+			add_breadcrumb(array('link' => INFUSIONS.'forum/viewthread.php?forum_id='.$thread_data['forum_id'].'&amp;thread_id='.$thread_data['thread_id'], 'title' => $thread_data['thread_subject']));
+
+			// Make thread filter links
+			$this->thread_info['post-filters'][0] = array(
+														'value' => INFUSIONS.'forum/viewthread.php?thread_id='.$thread_data['thread_id'].'&amp;section=oldest',
+														'locale' => $locale['forum_0180']
+													);
+			$this->thread_info['post-filters'][1] = array(
+														'value' => INFUSIONS.'forum/viewthread.php?thread_id='.$thread_data['thread_id'].'&amp;section=latest',
+														'locale' => $locale['forum_0181']
+													);
+			if ($this->thread_info['permissions']['can_rate']) {
+				$this->thread_info['allowed-post-filters'][2] = 'high';
+				$this->thread_info['post-filters'][2] = array(
+															'value' => INFUSIONS.'forum/viewthread.php?thread_id='.$this->thread_info['thread_id'].'&amp;section=high',
+															'locale' => $locale['forum_0182']
+														);
 			}
 
+			$this->get_thread_post();
 
-
-			self::set_PostInfo();
-
-			//self::set_PostInfo();
 			//self::set_ThreadJs();
 			// execute in the end.
 			//self::set_ForumPostDB();
@@ -460,94 +420,44 @@ class Viewthread {
 		}
 	}
 
-
-	private function set_ThreadJs() {
-		global $locale;
-		//javascript to footer
-		$highlight_js = "";
-		$colorbox_js = "";
-		$edit_reason_js = '';
-		/** javascript **/
-		// highlight jQuery plugin
-		if (isset($_GET['highlight'])) {
-			$words = explode(" ", urldecode($_GET['highlight']));
-			$higlight = "";
-			$i = 1;
-			$c_words = count($words);
-			foreach ($words as $hlight) {
-				$hlight = htmlentities($hlight, ENT_QUOTES);
-				$higlight .= "'".$hlight."'";
-				$higlight .= ($i < $c_words ? "," : "");
-				$i++;
-			}
-			add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.highlight.js'></script>");
-			$highlight_js .= "jQuery('.search_result').highlight([".$higlight."],{wordsOnly:true});";
-			$highlight_js .= "jQuery('.highlight').css({backgroundColor:'#FFFF88'});"; //better via theme or settings
-		}
-		if ($this->edit_reason) {
-			$edit_reason_js .= "
-		$('.reason_div').hide();
-		$('div').find('.reason_button').css({cursor: 'pointer' });
-		$('.reason_button').bind('click', function(e) {
-			var target = $(this).data('target');
-			$('#'+target).stop().slideToggle('fast');
-		});
-		";
-		}
-		// viewthread javascript, moved to footer
-		$viewthread_js = "<script type='text/javascript'>";
-		$viewthread_js .= "/*<![CDATA[*/";
-		$viewthread_js .= "jQuery(document).ready(function(){";
-		if (!empty($highlight_js) || !empty($colorbox_js) || !empty($edit_reason_js)) {
-			$viewthread_js .= $highlight_js.$colorbox_js.$edit_reason_js;
-		}
-		$viewthread_js .= "jQuery('a[href=#top]').click(function(){";
-		$viewthread_js .= "jQuery('html, body').animate({scrollTop:0}, 'slow');";
-		$viewthread_js .= "return false;";
-		$viewthread_js .= "});";
-		$viewthread_js .= "});";
-		// below functions could be made more unobtrusive thanks to jQuery, giving a more accessible cms
-		$viewthread_js .= "function jumpforum(forum_id){";
-		$viewthread_js .= "document.location.href='".INFUSIONS."forum/viewforum.php?forum_id='+forum_id;";
-		$viewthread_js .= "}";
-		if (iMOD) { // only moderators need this javascript
-			$viewthread_js .= "function setChecked(frmName,chkName,val){";
-			$viewthread_js .= "dml=document.forms[frmName];";
-			$viewthread_js .= "len=dml.elements.length;";
-			$viewthread_js .= "for(i=0;i<len;i++){";
-			$viewthread_js .= "if(dml.elements[i].name==chkName){";
-			$viewthread_js .= "dml.elements[i].checked=val;";
-			$viewthread_js .= "}";
-			$viewthread_js .= "}";
-			$viewthread_js .= "}";
-		}
-		$viewthread_js .= "/*]]>*/";
-		$viewthread_js .= "</script>";
-		add_to_footer($viewthread_js);
-	}
-
-	private function set_PostInfo() {
-		global $settings, $locale, $userdata;
+	/**
+	 * Get thread posts info
+	 */
+	private function get_thread_post() {
+		global $settings, $inf_settings, $locale, $userdata;
 		$user_field = array('user_sig' => '',
-			'user_web' => '',);
+							'user_web' => '',);
 		$result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS." WHERE field_name='user_sig' OR field_name='user_web'");
 		while ($uf_data = dbarray($result)) {
 			$user_field[$uf_data['field_name']] = TRUE;
 		}
+		switch ($this->thread_info['section']) {
+			case 'oldest':
+				$sortCol = 'post_datestamp ASC';
+				break;
+			case 'latest':
+				$sortCol = 'post_datestamp DESC';
+				break;
+			case 'high':
+				$sortCol = 'vote_points DESC';
+				break;
+			default:
+				$sortCol = 'post_datestamp ASC';
+		}
 		$result = dbquery("SELECT p.forum_id, p.thread_id, p.post_id, p.post_message, p.post_showsig, p.post_smileys, p.post_author,
-	p.post_datestamp, p.post_ip, p.post_ip_type, p.post_edituser, p.post_edittime, p.post_editreason,
-	t.thread_id,
-	u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups, u.user_joined, u.user_lastvisit, u.user_ip,
-	".($user_field['user_sig'] ? " u.user_sig," : "").($user_field['user_web'] ? " u.user_web," : "")."
-	u2.user_name AS edit_name, u2.user_status AS edit_status,
-	SUM(v.vote_points) as vote_points
-	FROM ".DB_FORUM_POSTS." p
-	INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
-	LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id = p.post_id
-	LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
-	LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
-	WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0' ".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".$this->thread_info['first_post_id']."'" : '')."
-	GROUP by p.post_id ORDER BY $this->sortCol LIMIT ".$_GET['rowstart'].", ".$this->thread_info['posts_per_page']);
+					p.post_datestamp, p.post_ip, p.post_ip_type, p.post_edituser, p.post_edittime, p.post_editreason,
+					t.thread_id,
+					u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups, u.user_joined, u.user_lastvisit, u.user_ip,
+					".($user_field['user_sig'] ? " u.user_sig," : "").($user_field['user_web'] ? " u.user_web," : "")."
+					u2.user_name AS edit_name, u2.user_status AS edit_status,
+					SUM(v.vote_points) as vote_points
+					FROM ".DB_FORUM_POSTS." p
+					INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
+					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id = p.post_id
+					LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
+					LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
+					WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0' ".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".$this->thread_info['first_post_id']."'" : '')."
+					GROUP by p.post_id ORDER BY $sortCol LIMIT ".intval($_GET['rowstart']).", ".intval($inf_settings['posts_per_page']));
 		$this->thread_info['post_rows'] = dbrows($result);
 		if ($this->thread_info['post_rows'] > 0) {
 			/* Set Threads Navigation */
@@ -728,6 +638,171 @@ class Viewthread {
 		}
 	}
 
-}
 
+	private function set_ThreadJs() {
+		$viewthread_js = '';
+		//javascript to footer
+		$highlight_js = "";
+		$colorbox_js = "";
+		$edit_reason_js = '';
+		/** javascript **/
+		// highlight jQuery plugin
+		if (isset($_GET['highlight'])) {
+			$words = explode(" ", urldecode($_GET['highlight']));
+			$higlight = "";
+			$i = 1;
+			$c_words = count($words);
+			foreach ($words as $hlight) {
+				$hlight = htmlentities($hlight, ENT_QUOTES);
+				$higlight .= "'".$hlight."'";
+				$higlight .= ($i < $c_words ? "," : "");
+				$i++;
+			}
+			add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.highlight.js'></script>");
+			$highlight_js .= "$('.search_result').highlight([".$higlight."],{wordsOnly:true});";
+			$highlight_js .= "$('.highlight').css({backgroundColor:'#FFFF88'});"; //better via theme or settings
+		}
+
+		$edit_reason_js .= "
+			$('.reason_div').hide();
+			$('div').find('.reason_button').css({cursor: 'pointer' });
+			$('.reason_button').bind('click', function(e) {
+				var target = $(this).data('target');
+				$('#'+target).stop().slideToggle('fast');
+			});
+			";
+
+		// viewthread javascript, moved to footer
+
+		if (!empty($highlight_js) || !empty($colorbox_js) || !empty($edit_reason_js)) {
+			$viewthread_js .= $highlight_js.$colorbox_js.$edit_reason_js;
+		}
+		$viewthread_js .= "$('a[href=#top]').click(function(){";
+		$viewthread_js .= "$('html, body').animate({scrollTop:0}, 'slow');";
+		$viewthread_js .= "return false;";
+		$viewthread_js .= "});";
+		$viewthread_js .= "});";
+		// below functions could be made more unobtrusive thanks to jQuery, giving a more accessible cms
+		$viewthread_js .= "function jumpforum(forum_id){";
+		$viewthread_js .= "document.location.href='".INFUSIONS."forum/viewforum.php?forum_id='+forum_id;";
+		$viewthread_js .= "}";
+		if (iMOD) { // only moderators need this javascript
+			$viewthread_js .= "function setChecked(frmName,chkName,val){";
+			$viewthread_js .= "dml=document.forms[frmName];";
+			$viewthread_js .= "len=dml.elements.length;";
+			$viewthread_js .= "for(i=0;i<len;i++){";
+			$viewthread_js .= "if(dml.elements[i].name==chkName){";
+			$viewthread_js .= "dml.elements[i].checked=val;";
+			$viewthread_js .= "}";
+			$viewthread_js .= "}";
+			$viewthread_js .= "}";
+		}
+		//$viewthread_js .= "/*]]>*/";
+		//$viewthread_js .= "</script>";
+		add_to_jquery($viewthread_js);
+	}
+
+	/**
+	 * Handle Forum $_POST and Save/Update on SQL
+	 */
+	private function exec_post_actions() {
+		// Post Quick Reply -- please see the function itself. it's not corelated to any other scripts anymore.
+		if (isset($_POST['post_quick_reply'])) $this->handle_quickreply();
+
+		// normal reply and normal edit.
+	}
+
+	/*
+	 * Execute quick reply posts
+	 */
+	protected function handle_quickreply() {
+		global $userdata, $inf_settings, $locale;
+		if ($this->thread_info['permissions']['can_reply']) {
+			$thread_data = self::get_thread_data();
+			require_once INCLUDES."flood_include.php";
+			if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
+				$post_data = array(
+					'forum_id' => $this->thread_info['thread']['forum_id'],
+					'thread_id' => $this->thread_info['thread']['thread_id'],
+					'post_id' => 0,
+					'post_message' => form_sanitizer($_POST['post_message'], '', 'post_message'),
+					'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
+					'post_smileys' => isset($_POST['post_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 0 : 1,
+					'post_author' => $userdata['user_id'],
+					'post_datestamp' => time(),
+					'post_ip' =>  USER_IP,
+					'post_ip_type' => USER_IP_TYPE,
+					'post_edituser' => 0,
+					'post_edittime' => 0,
+					'post_editreason' => '',
+					'post_hidden' => false,
+					'post_locked' => $inf_settings['edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
+				);
+				$update_forum_lastpost = false;
+				// Prepare forum merging action
+				$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
+				if ($last_post_author == $post_data['post_author'] && $thread_data['forum_merge']) {
+					$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
+					$post_data['post_id'] = $last_message['post_id'];
+					$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
+					dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key'=>'post_id'));
+				} else {
+					$update_forum_lastpost = true;
+					dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key'=>'post_id'));
+					$post_data['post_id'] = dblastid();
+					if (!defined("FUSION_NULL")) dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
+				}
+				if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
+					// Update stats in forum and threads
+					if ($update_forum_lastpost) {
+						// find all parents and update them
+						$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
+						foreach($list_of_forums as $fid) {
+							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+						}
+						// update current forum
+						dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
+						// update current thread
+						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
+					}
+					// set notify
+					if ($inf_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id']) {
+						if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
+							dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
+						}
+					}
+				}
+				redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+			}
+		}
+	}
+
+
+	/**
+	 * Editing
+	 */
+//if ($this->thread_info['permissions']['can_reply'] && $this->thread_info['permissions']['edit_lock'] == false) { // can reply and has id.
+	/* $data = $thread_data;
+	add_to_title($locale['global_201'].$locale['forum_0503']);
+	add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
+	if (isset($_GET['quote']) && isnum($_GET['quote'])) {
+		$quote_result = dbquery("SELECT a.post_message, b.user_name
+				FROM ".DB_FORUM_POSTS." a
+				INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
+				WHERE thread_id='".intval($this->thread_info['thread_id'])."' and post_id='".intval($_GET['quote'])."'
+				");
+		if (dbrows($quote_result) > 0) {
+			require_once INCLUDES."bbcode_include.php";
+			$quote_data = dbarray($quote_result);
+			$data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]".strip_bbcodes($quote_data['post_message'])."[/quote]\r\r";
+		} else {
+			redirect(INFUSIONS.'forum/index.php');
+		}
+	}
+	*/
+//} else {
+//	redirect(INFUSIONS.'forum/index.php'); // no threads
+//}
+
+}
 

@@ -193,8 +193,8 @@ if (iMEMBER){
 	postform($data, $info);
 } else {
 	// cookie suddenly expire.
-	$defender->stop();
-	$defender->AddNotice('Sorry we cannot process your post. Please relogin to access the forum posting again.');
+	//$defender->stop();
+	//$defender->AddNotice('Sorry we cannot process your post. Please relogin to access the forum posting again.');
 	//redirect("postify.php?post=edit&error=$error&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
 }
 
