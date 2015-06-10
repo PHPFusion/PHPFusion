@@ -16,7 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once ($settings['site_seo'] == "1" ? "" : "../../")."maincore.php";
+require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_ARTICLES)) {
 	$_GET['code'] = 404;
 	require_once BASEDIR."error.php";

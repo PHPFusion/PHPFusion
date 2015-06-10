@@ -2,11 +2,10 @@
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
-+--------------------------------------------------------*
-| Filename: eshop_cart_panel.php
-| Author: Frederick MC Chan (hien)
-| Co-Author: J.Falk (Domi)
+| http://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: msghandler.php
+| Author: Joakim Falk (Domi)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,7 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-include SHOP."locale/".LOCALESET."eshop.php";
-require_once SHOP."classes/Cart.php";
-\PHPFusion\Eshop\Cart::render_cart();
+require_once "../../../maincore.php";
+if (!iADMIN && checkrights("ESHP")){ die("Denied"); }
+if (isset($_GET['id']) && !isnum($_GET['id'])) die("Denied");
+if (isset($_GET['id'])) {
+redirect($settings['siteurl']."infusions/eshop/admin/eshop.php".$aidlink."&amp;a_page=orders&amp;vieworder&amp;orderid=".$_GET['id']);
+} else {
+redirect($settings['siteurl']."infusions/eshop/admin/eshop.php".$aidlink."&amp;a_page=orders");
+}
