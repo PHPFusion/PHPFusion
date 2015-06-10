@@ -226,6 +226,8 @@ if (db_exists(DB_FORUM_RANKS)) {
 }
 
 // Settings for Forum
+$inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('threads_per_page', '20', 'forum')";
+$inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('posts_per_page', '20', 'forum')";
 $inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('forum_ips', '0', 'forum')";
 $inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('forum_ranks', '0', 'forum')";
 $inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('forum_edit_lock', '0', 'forum')";
