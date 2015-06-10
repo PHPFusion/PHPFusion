@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once ($settings['site_seo'] == "1" ? "" : "../../")."maincore.php";
+require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 require_once THEMES."templates/header.php";
 
 include INFUSIONS."faq/locale/".LOCALESET."faq.php";
