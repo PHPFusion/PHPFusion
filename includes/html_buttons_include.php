@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."admin/html_buttons.php";
-include SHOP."locale/".LOCALESET."colors.php";
+include LOCALE.LOCALESET."colors.php";
 
 /**
  * Get the color name
