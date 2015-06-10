@@ -34,7 +34,7 @@ class Payments {
 
 	public function __construct() {
 		global $aidlink;
-		define("PAYMENT_DIR", BASEDIR."eshop/paymentimgs/");
+		define("PAYMENT_DIR", SHOP."paymentimgs/");
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 		$this->max_rowstart = dbcount("(pid)", DB_ESHOP_PAYMENTS);
 		switch($_GET['action']) {
@@ -71,8 +71,8 @@ class Payments {
 
 	static function get_paymentFile() {
 		$payment_file = array();
-		if (file_exists(BASEDIR.'eshop/paymentscripts')) {
-			$payment_dir = makefilelist(BASEDIR."eshop/paymentscripts/",  ".|..|index.php", true, "files");
+		if (file_exists(SHOP.'paymentscripts')) {
+			$payment_dir = makefilelist(SHOP."paymentscripts/",  ".|..|index.php", true, "files");
 			foreach($payment_dir as $paymentfile) {
 				$payment_file[$paymentfile] = $paymentfile;
 			}

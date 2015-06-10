@@ -383,7 +383,7 @@ class ProductCategories {
 		$('.qedit').bind('click', function(e) {
 			// ok now we need jquery, need some security at least.token for example. lets serialize.
 			$.ajax({
-				url: '".ADMIN."includes/eshop_cats.php',
+				url: '".SHOP."admin/includes/eshop_cats.php',
 				dataType: 'json',
 				type: 'post',
 				data: { q: $(this).data('id'), token: '".$aidlink."' },

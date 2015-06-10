@@ -66,7 +66,7 @@ class Coupons {
 	 * @return array
 	 */
 	static function getCouponType() {
-		global $locale, $settings;
+		global $locale, $settings, $eshop_settings;
 		return array(
 			'0'	=> $locale['ESHPCUPNS112'],
 			'1' => $locale['ESHPCUPNS113']." (".$eshop_settings['eshop_currency'].")",
@@ -274,7 +274,7 @@ class Coupons {
 		add_to_jquery("
 		$('#search-coupon').bind('click', function(e) {
 			$.ajax({
-				url: '".ADMIN."includes/eshop_cpnsearch.php',
+				url: '".SHOP."admin/includes/eshop_cpnsearch.php',
 				dataType: 'html',
 				type: 'post',
 				beforeSend: function(e) { $('#eshopitem-links').html('<tr><td class=\"text-center\"colspan=\'12\'><img src=\"".IMAGES."loader.gif\"/></td></tr>'); },
@@ -308,7 +308,7 @@ class Coupons {
 		$('.qform').hide();
 		$('.qedit').bind('click', function(e) {
 			$.ajax({
-				url: '".ADMIN."includes/eshop_coupon.php',
+				url: '".SHOP."admin/includes/eshop_coupon.php',
 				dataType: 'json',
 				type: 'post',
 				data: { q: $(this).data('id'), token: '".$aidlink."' },

@@ -18,6 +18,7 @@
 namespace PHPFusion\Eshop;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
+require_once INCLUDES."infusions_include.php";
 require_once SHOP."classes/Admin/Customers.php";
 require_once CLASSES."PHPFusion/QuantumFields.php";
 
@@ -1065,7 +1066,7 @@ class Eshop {
 	 */
 	static function get_iColor($key= 0) {
 		global $locale;
-		include SHOP."locale/".LOCALESET."colors.php";
+		include LOCALE.LOCALESET."colors.php";
 		$ESHOPCOLOURS[1] = array('hex'=>'#F0F8FF', 'title'=>$locale['color_1']);
 		$ESHOPCOLOURS[2] = array('hex'=>'#FAEBD7', 'title'=>$locale['color_2']);
 		$ESHOPCOLOURS[3] = array('hex'=>'#00FFFF', 'title'=>$locale['color_3']);

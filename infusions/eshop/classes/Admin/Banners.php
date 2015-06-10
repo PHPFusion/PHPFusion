@@ -402,7 +402,7 @@ class Banners {
 		$('.qform').hide();
 		$('.qedit').bind('click', function(e) {
 			$.ajax({
-				url: '".ADMIN."includes/eshop_banner.php',
+				url: '".SHOP."admin/includes/eshop_banner.php',
 				dataType: 'json',
 				type: 'post',
 				data: { q: $(this).data('id'), token: '".$aidlink."' },
@@ -533,7 +533,7 @@ class Banners {
 		$('.qform2').hide();
 		$('.qedit2').bind('click', function(e) {
 			$.ajax({
-				url: '".ADMIN."includes/eshop_featitem.php',
+				url: '".SHOP."admin/includes/eshop_featitem.php',
 				dataType: 'json',
 				type: 'post',
 				data: { q: $(this).data('id'), token: '".$aidlink."' },

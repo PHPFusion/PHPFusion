@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
+require_once "../../../maincore.php";
 if (!checkrights("ESHP") || !defined("iAUTH") || $_GET['aid'] != iAUTH) { die("Denied"); }
 if (isset($_GET['orderid']) && !isnum($_GET['orderid'])) die("Denied");
 require_once THEMES."templates/admin_header.php";

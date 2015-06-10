@@ -21,8 +21,6 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 use PHPFusion\Eshop\Eshop;
 use PHPFusion\QuantumFields;
 
-$eshop_settings = get_settings("blog");
-
 class Products {
 	private $data = array(
 		'id' => 0,
@@ -820,7 +818,7 @@ class Products {
 
 		echo form_select('buynow', $locale['ESHPPRO154'], array('0'=>$locale['no'], '1'=> $locale['yes']), $this->data['buynow'], array('placeholder'=>$locale['ESHPPRO155'], 'width'=>'100%'));
 		$page_array = array();
-		$callback_dir = makefilelist(BASEDIR."eshop/purchasescripts/", ".|..|index.php", TRUE, "files");
+		$callback_dir = makefilelist(SHOP."purchasescripts/", ".|..|index.php", TRUE, "files");
 		foreach($callback_dir as $page) {
 			$page_array[$page] = $page;
 		}
@@ -878,7 +876,7 @@ class Products {
 		add_to_jquery("
 		$('#search-btn').bind('click', function(e) {
 			$.ajax({
-				url: '".ADMIN."includes/eshop_search.php',
+				url: '".SHOP."admin/includes/eshop_search.php',
 				dataType: 'html',
 				type: 'post',
 				beforeSend: function(e) { $('#eshopitem-links').html('<tr><td class=\"text-center\"colspan=\'12\'><img src=\"".IMAGES."loader.gif\"/></td></tr>'); },
@@ -912,7 +910,7 @@ class Products {
 		$('.qedit').bind('click', function(e) {
 			// ok now we need jquery, need some security at least.token for example. lets serialize.
 			$.ajax({
-				url: '".ADMIN."includes/eshop_products.php',
+				url: '".SHOP."admin/includes/eshop_products.php',
 				dataType: 'json',
 				type: 'post',
 				data: { q: $(this).data('id'), token: '".$aidlink."' },

@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Eshop\Admin;
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 /**
  * Class eShop
  */
@@ -40,17 +41,18 @@ class Main {
 		$orders_count = dbcount("(oid)", DB_ESHOP_ORDERS, "opaid = '' || ocompleted = ''");
 		$product_count = dbcount("(id)", DB_ESHOP, "");
 		$this->pages = array(
-			'main' => array('title' => $locale['ESHP202']."<span class='badge m-l-10'>".$product_count."</span>", 'file' => ADMIN."eshop/products.php"),
-			'categories' => array('title' => $locale['ESHP203'], 'file' => ADMIN."eshop/categories.php"),
-			'photos' => array('title' => $locale['ESHP204'], 'file' => ADMIN."eshop/photosadmin.php"),
-			'coupons' => array('title' => $locale['ESHP211'], 'file' => ADMIN."eshop/coupons.php"),
-			'featured' => array('title' => $locale['ESHP212'], 'file' => ADMIN."eshop/featured.php"),
-			'payments' => array('title' => $locale['ESHP206'], 'file' => ADMIN."eshop/payments.php"),
-			'shipping' => array('title' => $locale['ESHP207'], 'file' => ADMIN."eshop/shipping.php"),
-			'customers' => array('title' => $locale['ESHP208'], 'file' => ADMIN."eshop/customers.php"),
-			'orders' => array('title' => $locale['ESHP209']."<span class='badge m-l-10'>".$orders_count."</span>", 'file' => ADMIN."eshop/orders.php")
+			'main' => array('title' => $locale['ESHP202']."<span class='badge m-l-10'>".$product_count."</span>", 'file' => SHOP."admin/products.php"),
+			'categories' => array('title' => $locale['ESHP203'], 'file' => SHOP."admin/categories.php"),
+			'photos' => array('title' => $locale['ESHP204'], 'file' => SHOP."admin/photosadmin.php"),
+			'coupons' => array('title' => $locale['ESHP211'], 'file' => SHOP."admin/coupons.php"),
+			'featured' => array('title' => $locale['ESHP212'], 'file' => SHOP."admin/featured.php"),
+			'payments' => array('title' => $locale['ESHP206'], 'file' => SHOP."admin/payments.php"),
+			'shipping' => array('title' => $locale['ESHP207'], 'file' => SHOP."admin/shipping.php"),
+			'settings' => array('title' => $locale['ESHP205'], 'file' => SHOP."admin/settings.php"),
+			'customers' => array('title' => $locale['ESHP208'], 'file' => SHOP."admin/sustomers.php"),
+			'orders' => array('title' => $locale['ESHP209']."<span class='badge m-l-10'>".$orders_count."</span>", 'file' => SHOP."admin/orders.php")
 		);
-		add_breadcrumb(array('link'=>ADMIN.'eshop.php'.$aidlink,'title'=>$locale['ESHP201']));
+		add_breadcrumb(array('link'=>SHOP.'admin/eshop.php'.$aidlink,'title'=>$locale['ESHP201']));
 		add_to_jquery("
 		function confirmdelete() {
 		return confirm(\"".$locale['ESHP210']."\")
@@ -103,6 +105,7 @@ class Main {
 		if ($_GET['a_page'] == 'orders') self::Orders_Admin();
 		if ($_GET['a_page'] == 'payments') self::Payments_Admin();
 		if ($_GET['a_page'] == 'shipping') self::Shipping_Admin();
+		if ($_GET['a_page'] == 'settings') self::Settings_Admin();
 		if ($_GET['a_page'] == 'main' || !$_GET['a_page'])	self::Products_Admin();
 	}
 
@@ -385,4 +388,12 @@ class Main {
 			echo closetabbody();
 		}
 	}
+
+	/**
+	 * Shipping Admin Page
+	 */
+	private function Settings_Admin() {
+		global $locale, $aidlink;
+	include SHOP."admin/settings.php";
+}
 }

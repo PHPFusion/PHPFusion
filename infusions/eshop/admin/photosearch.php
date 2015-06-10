@@ -45,7 +45,7 @@ $result = dbquery("SELECT id,cid,title,artno,sartno,thumb FROM ".DB_ESHOP." WHER
 
 
 }
-add_to_title(" Customer Search");
+add_to_title(" Photo Search");
 
 if (dbrows($result) != 0) {
 $numRecords = dbrows($result);

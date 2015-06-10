@@ -225,7 +225,7 @@ class Customers {
 		add_to_jquery("
 		$('#search-customer').bind('click', function(e) {
 			$.ajax({
-				url: '".ADMIN."includes/eshop_customersearch.php',
+				url: '".SHOP."admin/includes/eshop_customersearch.php',
 				dataType: 'html',
 				type: 'post',
 				beforeSend: function(e) { $('#eshopitem-links').html('<tr><td class=\"text-center\"colspan=\'12\'><img src=\"".IMAGES."loader.gif\"/></td></tr>'); },
@@ -255,7 +255,7 @@ class Customers {
 			$('.qform').hide();
 			$('.qedit').bind('click', function(e) {
 				$.ajax({
-					url: '".ADMIN."includes/eshop_customers.php',
+					url: '".SHOP."admin/includes/eshop_customers.php',
 					dataType: 'json',
 					type: 'post',
 					data: { q: $(this).data('id'), token: '".$aidlink."' },

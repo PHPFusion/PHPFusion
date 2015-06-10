@@ -137,7 +137,7 @@ class Orders {
 		add_to_jquery("
 		$('#search-order').bind('click', function(e) {
 			$.ajax({
-				url: '".ADMIN."includes/eshop_ordersearch.php',
+				url: '".SHOP."admin/ordersearch.php',
 				dataType: 'html',
 				type: 'post',
 				beforeSend: function(e) { $('#eshopitem-links').html('<tr><td class=\"text-center\"colspan=\'12\'><img src=\"".IMAGES."loader.gif\"/></td></tr>'); },

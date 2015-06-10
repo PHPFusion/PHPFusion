@@ -54,7 +54,7 @@ class Shipping {
 	 */
 	public function __construct() {
 		global $aidlink;
-		define("SHIP_DIR", BASEDIR."eshop/shippingimgs/");
+		define("SHIP_DIR", SHOP."shippingimgs/");
 		$this->max_rowstart = dbcount("(cid)", DB_ESHOP_SHIPPINGCATS);
 		$this->max_srowstart = dbcount("(sid)", DB_ESHOP_SHIPPINGITEMS);
 		$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] < $this->max_rowstart ? $_GET['rowstart'] : 0;

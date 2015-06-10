@@ -4,8 +4,9 @@
 | Copyright (C) PHP-Fusion Inc
 | http://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: msghandler.php
+| Filename: eshop_products.php
 | Author: Joakim Falk (Domi)
+| Co-Author: Frederick MC Chan (hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,11 +16,19 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../../maincore.php";
-if (!iADMIN && checkrights("ESHP")){ die("Denied"); }
-if (isset($_GET['id']) && !isnum($_GET['id'])) die("Denied");
-if (isset($_GET['id'])) {
-redirect($settings['siteurl']."infusions/eshop/admin/eshop.php".$aidlink."&amp;a_page=orders&amp;vieworder&amp;orderid=".$_GET['id']);
-} else {
-redirect($settings['siteurl']."infusions/eshop/admin/eshop.php".$aidlink."&amp;a_page=orders");
+require_once "../../../../maincore.php";
+
+$aid = isset($_POST['token']) ? explode('=', $_POST['token']) : '';
+if (!empty($aid)) {
+	$aid = $aid[1];
+}
+$q = isset($_POST['q']) && isnum($_POST['q']) ? $_POST['q'] : 0;
+
+if (checkrights("ESHP") && defined("iAUTH") && $aid == iAUTH) {
+	$result = dbquery("SELECT id, title, artno, sartno, price, xprice, instock, active, status
+	 FROM ".DB_ESHOP." WHERE id='".intval($_POST['q'])."'");
+	if (dbrows($result)>0) {
+		$data = dbarray($result);
+		echo json_encode($data);
+	}
 }
