@@ -29,6 +29,7 @@ function postform($info) {
 	echo $info['openform'];
 	echo $info['subject_field'];
 	echo $info['message_field'];
+	echo $info['edit_reason_field'];
 	echo $info['forum_id_field'];
 	echo $info['thread_id_field'];
 

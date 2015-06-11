@@ -898,41 +898,17 @@ class Viewthread {
 				'subject_field' => form_hidden('', 'thread_subject', 'thread_subject', $thread_data['thread_subject']),
 				'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1, 'error_text' => '', 'autosize' => 1, 'no_resize' => 1, 'preview' => 1, 'form_name' => 'input_form', 'bbcode' => 1)),
 				// happens only in EDIT
-				'delete_field' => '', //echo form_checkbox('delete', $locale['forum_0624'], '', array('class' => 'm-b-0'));
-				'edit_reason_field' => '', //form_text('post_editreason', $locale['forum_0611'], $data['post_editreason'], array('placeholder' => 'Edit reasons','error_text' => '', 'class' => 'm-t-20 m-b-20'))				'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1, 'error_text' => '', 'autosize' => 1, 'no_resize' => 1, 'preview' => 1, 'form_name' => 'input_form', 'bbcode' => 1)),
+				'delete_field' => '',
+				'edit_reason_field' => '',
 				'attachment_field' => $this->thread_info['permissions']['can_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
-					/*
-					 * if (isset($info['attachment']) && !empty($info['attachment'])) {
-			$i = 0;
-			foreach ($info['attachment'] as $attach_id => $attach_name) {
-				echo "<label><input type='checkbox' name='delete_attach_".$attach_id."' value='1' /> ".$locale['forum_0625']."</label>\n";
-				echo "<a href='".INFUSIONS."forum/attachments/".$attach_name."'>".$attach_name."</a> [".parsebytesize(filesize(INFUSIONS."forum/attachments/".$attach_name))."]\n";
-				echo "<br/>\n";
-				$i++;
-			}
-		}
-					 */
-					// the file selector is not functional -- will change toform_fileinput() once max file count settings are in;
 					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($settings['attachmax']), str_replace(',', ' ', $inf_settings['attachtypes']), $inf_settings['attachmax_count'])."</div>\n
 					".form_fileinput('', 'file_attachments[]', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$inf_settings['attachmax_count'], 'valid_ext'=>$inf_settings['attachtypes']))
 					) : array(),
-				// only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
 				'poll_field' => array(),
-
 				'smileys_field' => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0')),
 				'signature_field' => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ?form_checkbox('post_showsig', $locale['forum_0623'], $post_data['post_showsig'], array('class' => 'm-b-0')) : '',
-
-				//sticky only in new thread or edit first post
-				/* if ((iMOD || iSUPERADMIN) && !$data['reply']) {
-				 * //echo form_checkbox('thread_sticky', $locale['forum_0620'], $data['thread_sticky'], array('class' => 'm-b-0'));
-		//echo form_checkbox('thread_locked', $locale['forum_0621'], $data['thread_locked'], array('class' => 'm-b-0')); */
 				'sticky_field' => '',
 				'lock_field' => '',
-
-				/* edit mode only
-				 * //echo form_checkbox('hide_edit', $locale['forum_0627'], '', array('class' => 'm-b-0'));
-			//echo form_checkbox('post_locked', $locale['forum_0628'], $data['post_locked'], array('class' => 'm-b-0'));
-				 */
 				'hide_edit_field' => '',
 				'post_locked_field' => '',
 				// not available in edit mode.
@@ -940,8 +916,6 @@ class Viewthread {
 				'post_buttons' => form_button('post_reply', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary btn-sm')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-l-10')),
 				'last_posts_reply' => '',
 			);
-
-			/* @todo: replace (Not functional -- seriously need upgrade.. (~_~;) */
 			// only in reply
 			if ($inf_settings['forum_last_posts_reply']) {
 				$result = dbquery("SELECT p.thread_id, p.post_message, p.post_smileys, p.post_author, p.post_datestamp, p.post_hidden,
