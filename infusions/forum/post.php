@@ -104,18 +104,6 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'reply' && ($info['forum_re
 		if ($data['thread_locked']) { redirect(FORUM.'index.php'); }
 		$data['reply'] = 1;
 
-		if (isset($_GET['quote']) && isnum($_GET['quote'])) {
-			$quote_result = dbquery("SELECT a.post_message, b.user_name
-			FROM ".DB_FORUM_POSTS." a
-			INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
-			WHERE thread_id='".$_GET['thread_id']."' and post_id='".$_GET['quote']."'");
-			if (dbrows($quote_result)>0) {
-				$quote_data = dbarray($quote_result);
-				$data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]".strip_bbcodes($quote_data['post_message'])."[/quote]";
-			} else {
-				redirect(FORUM.'index.php');
-			}
-		}
 	} else {
 		redirect("index.php"); // no threads
 	}

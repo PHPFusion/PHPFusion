@@ -36,6 +36,7 @@ $inf_settings = get_settings('forum');
 $thread = new PHPFusion\Forums\Viewthread();
 $info = $thread->get_thread_data();
 if (isset($_GET['action']) && $_GET['action'] == 'reply') {
+
 	$thread->render_reply_form();
 } elseif (!isset($_GET['action'])) {
 	render_thread($info);

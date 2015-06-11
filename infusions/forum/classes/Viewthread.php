@@ -53,7 +53,7 @@ class Viewthread {
 		global $locale, $userdata, $settings, $inf_settings;
 		// exit no.1
 		if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
-		add_to_title($locale['global_200'].$locale['forum_0000']);
+
 
 		$thread_data = \PHPFusion\Forums\Functions::get_thread($_GET['thread_id']); // fetch query and define iMOD
 		$thread_stat = self::get_thread_stats($_GET['thread_id']); // get post_count, lastpost_id, first_post_id.
@@ -84,7 +84,7 @@ class Viewthread {
 								'can_vote_poll' => checkgroup($thread_data['forum_vote']) ? true : false,
 								'can_view_poll' => checkgroup($thread_data['forum_poll']) ? true : false,
 								'edit_lock' => $inf_settings['forum_edit_lock'] ? true : false,
-								'can_attach' => iMOD or iSUPERADMIN ? true : checkgroup($thread_data['forum_attach']) ? true : false,
+								'can_attach' => iMOD or iSUPERADMIN ? true : checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? true : false,
 								'can_download_attach' => iMOD or iSUPERADMIN ? true : checkgroup($thread_data['forum_attach_download']) ? true : false,
 								),
 			'max_post_items' => $thread_stat['post_count'],
@@ -263,12 +263,12 @@ class Viewthread {
 
 			// listen and execute $_POST event
 			$this->exec_post_actions();
-
-			add_to_title($locale['global_201'].$thread_data['thread_subject']);
+			add_to_title($thread_data['thread_subject']);
 			// generate thread breadcrumbs
+			add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
 			$this->forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 			forum_breadcrumbs($this->forum_index);
-			add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
+
 			add_breadcrumb(array('link' => INFUSIONS.'forum/viewthread.php?forum_id='.$thread_data['forum_id'].'&amp;thread_id='.$thread_data['thread_id'], 'title' => $thread_data['thread_subject']));
 
 			// Make thread filter links
@@ -704,8 +704,6 @@ class Viewthread {
 	private function exec_post_actions() {
 		// Post Quick Reply -- please see the function itself. it's not corelated to any other scripts anymore.
 		if (isset($_POST['post_quick_reply'])) $this->handle_quickreply();
-
-
 	}
 
 	/*
@@ -776,14 +774,31 @@ class Viewthread {
 
 	public function render_reply_form() {
 		// must be able to reply
-		global $locale;
-		if ($this->thread_info['permissions']['can_reply']) {
+		global $locale, $userdata, $inf_settings, $settings;
+		if ($this->thread_info['permissions']['can_reply']) { // if ($data['thread_locked']) { redirect(FORUM.'index.php'); }
 			$thread_data = $this->thread_info['thread'];
 			add_to_title($locale['global_201'].$locale['forum_0503']);
 			add_breadcrumb(array('link'=>'', 'title'=>$locale['forum_0503']));
-			$thread_data['page_title'] = $locale['forum_0503'];
+			// field data
+			$post_data = array(
+				'forum_id' => $this->thread_info['thread']['forum_id'],
+				'thread_id' => $this->thread_info['thread']['thread_id'],
+				'post_id' => 0,
+				'post_message' => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',
+				'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
+				'post_smileys' => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? false : true,
+				'post_author' => $userdata['user_id'],
+				'post_datestamp' => time(),
+				'post_ip' =>  USER_IP,
+				'post_ip_type' => USER_IP_TYPE,
+				'post_edituser' => 0,
+				'post_edittime' => 0,
+				'post_editreason' => '',
+				'post_hidden' => false,
+				'notify_me' => false,
+				'post_locked' => 0, //$inf_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
+			);
 			// Quote Get
-			$callback_data = array();
 			if (isset($_GET['quote']) && isnum($_GET['quote'])) {
 				$quote_result = dbquery("SELECT a.post_message, b.user_name
 										FROM ".DB_FORUM_POSTS." a
@@ -791,18 +806,138 @@ class Viewthread {
 										WHERE thread_id='".$thread_data['thread_id']."' and post_id='".$_GET['quote']."'");
 				if (dbrows($quote_result)>0) {
 					$quote_data = dbarray($quote_result);
-					$callback_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".strip_bbcodes($quote_data['post_message'])."[/quote]";
+					// do not do this. to silently inject.
+					$post_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".strip_bbcodes($quote_data['post_message'])."[/quote]".$post_data['post_message'];
 				} else {
 					redirect(clean_request('', array('thread_id'), true));
 				}
 			}
-			postform($callback_data, $thread_data);
-		} else {
-			redirect('index.php');
+
+			// execute form post actions
+			if (isset($_POST['post_reply'])) {
+				require_once INCLUDES."flood_include.php";
+				// all data is sanitized here.
+				//if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
+				//}
+			}
+
+			// template data
+			$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
+			if (isset($_GET['quote'])) {
+				$form_action .= "&amp;post_id=".$_GET['post_id']."&amp;quote=".$_GET['quote'];
+			}
+
+			$info = array(
+				'title' => $locale['forum_0503'],
+				'description' => $locale['forum_2000'].$thread_data['thread_subject'],
+				'openform' =>  openform('input_form', 'post', $form_action, array('enctype' => 1, 'max_tokens' => 1)),
+				'closeform' => closeform(),
+				'forum_id_field' => form_hidden('', 'forum_id', 'forum_id', $post_data['forum_id']),
+				'thread_id_field' => form_hidden('', 'thread_id', 'thread_id', $post_data['thread_id']),
+				// in edit or in new thread is a textbox
+				/*
+				 * echo $data['first_post'] == $_GET['post_id'] ? form_text('thread_subject', $locale['forum_0600'], $data['thread_subject'], array('required' => 1,
+				'placeholder' => $locale['forum_2001'],
+				'error_text' => '',
+				'class' => 'm-t-20 m-b-20')) : "<h4 class='m-b-20'>".$locale['forum_2002'].$data['thread_subject']."</h4>\n ".form_hidden('', 'thread_subject', 'thread_subject', $data['thread_subject']);
+				 */
+				'subject_field' => form_hidden('', 'thread_subject', 'thread_subject', $thread_data['thread_subject']),
+				'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1, 'error_text' => '', 'autosize' => 1, 'no_resize' => 1, 'preview' => 1, 'form_name' => 'input_form', 'bbcode' => 1)),
+				// happens only in EDIT
+				'delete_field' => '', //echo form_checkbox('delete', $locale['forum_0624'], '', array('class' => 'm-b-0'));
+				'edit_reason_field' => '', //form_text('post_editreason', $locale['forum_0611'], $data['post_editreason'], array('placeholder' => 'Edit reasons','error_text' => '', 'class' => 'm-t-20 m-b-20'))				'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1, 'error_text' => '', 'autosize' => 1, 'no_resize' => 1, 'preview' => 1, 'form_name' => 'input_form', 'bbcode' => 1)),
+				'attachment_field' => $this->thread_info['permissions']['can_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
+					/*
+					 * if (isset($info['attachment']) && !empty($info['attachment'])) {
+			$i = 0;
+			foreach ($info['attachment'] as $attach_id => $attach_name) {
+				echo "<label><input type='checkbox' name='delete_attach_".$attach_id."' value='1' /> ".$locale['forum_0625']."</label>\n";
+				echo "<a href='".INFUSIONS."forum/attachments/".$attach_name."'>".$attach_name."</a> [".parsebytesize(filesize(INFUSIONS."forum/attachments/".$attach_name))."]\n";
+				echo "<br/>\n";
+				$i++;
+			}
 		}
+					 */
+					// the file selector is not functional -- will change toform_fileinput() once max file count settings are in;
+					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($settings['attachmax']), str_replace(',', ' ', $settings['attachtypes']), $settings['attachmax_count'])."</div>\n
+					<input id='my_file_element' type='file' name='file_1' class='textbox' style='width:100%;' multiple='1'/>\n
+					<div class='m-t-10' id='files_list'></div>\n"
+					) : array(),
+					/* ".form_fileinput('', '', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'file', 'multiple'=>true)) */
+				// only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
+				'poll_field' => array(),
 
-		// get current post.
+				'smileys_field' => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0')),
+				'signature_field' => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ?form_checkbox('post_showsig', $locale['forum_0623'], $post_data['post_showsig'], array('class' => 'm-b-0')) : '',
 
+				//sticky only in new thread or edit first post
+				/* if ((iMOD || iSUPERADMIN) && !$data['reply']) {
+				 * //echo form_checkbox('thread_sticky', $locale['forum_0620'], $data['thread_sticky'], array('class' => 'm-b-0'));
+		//echo form_checkbox('thread_locked', $locale['forum_0621'], $data['thread_locked'], array('class' => 'm-b-0')); */
+				'sticky_field' => '',
+				'lock_field' => '',
+
+				/* edit mode only
+				 * //echo form_checkbox('hide_edit', $locale['forum_0627'], '', array('class' => 'm-b-0'));
+			//echo form_checkbox('post_locked', $locale['forum_0628'], $data['post_locked'], array('class' => 'm-b-0'));
+				 */
+				'hide_edit_field' => '',
+				'post_locked_field' => '',
+				// not available in edit mode.
+				'notify_field' => $inf_settings['thread_notify'] ? form_checkbox('notify_me', $locale['forum_0626'], $post_data['notify_me'], array('class' => 'm-b-0')) : '',
+				'post_buttons' => form_button('post_reply', $locale['forum_0504'], $locale['forum_0504'], array('class' => 'btn-primary btn-sm')).form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-l-10')),
+				'last_posts_reply' => '',
+			);
+
+			/* @todo: replace (Not functional -- seriously need upgrade.. (~_~;) */
+			// only in reply
+			if ($inf_settings['forum_last_posts_reply']) {
+				$result = dbquery("SELECT p.thread_id, p.post_message, p.post_smileys, p.post_author, p.post_datestamp, p.post_hidden,
+							u.user_id, u.user_name, u.user_status, u.user_avatar
+							FROM ".DB_FORUM_POSTS." p
+							LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
+							WHERE p.thread_id='".$thread_data['thread_id']."' AND p.post_hidden='0'
+							ORDER BY p.post_datestamp DESC LIMIT 0,".$inf_settings['forum_last_posts_reply']);
+				if (dbrows($result)) {
+					$title = sprintf($locale['forum_0526'], $settings['forum_last_posts_reply']);
+					if ($settings['forum_last_posts_reply'] == "1") {
+						$title = $locale['forum_0525'];
+					}
+					// backdoor to stringify echo'ed opentable.
+					ob_start();
+					opentable($title);
+					echo "<table class='tbl-border forum_thread_table table table-responsive'>\n";
+					$i = $settings['forum_last_posts_reply'];
+					while ($data = dbarray($result)) {
+						$message = $data['post_message'];
+						if ($data['post_smileys']) {
+							$message = parsesmileys($message);
+						}
+						$message = parseubb($message);
+						echo "<tr>\n<td class='tbl2 forum_thread_user_name' style='width:10%'><!--forum_thread_user_name-->".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
+						echo "<td class='tbl2 forum_thread_post_date'>\n";
+						echo "<div style='float:right' class='small'>\n";
+						echo $i.($i == $settings['forum_last_posts_reply'] ? " (".$locale['forum_0525'].")" : "");
+						echo "</div>\n";
+						echo "<div class='small'>".$locale['forum_0524'].showdate("forumdate", $data['post_datestamp'])."</div>\n";
+						echo "</td>\n";
+						echo "</tr>\n<tr>\n<td valign='top' class='tbl2 forum_thread_user_info' style='width:10%'>\n";
+						echo display_avatar($data, '50px');
+						echo "</td>\n<td valign='top' class='tbl1 forum_thread_user_post'>\n";
+						echo nl2br($message);
+						echo "</td>\n</tr>\n";
+						$i--;
+					}
+					echo "</table>\n";
+					closetable();
+					$info['last_posts_reply'] = ob_get_contents();
+					ob_end_clean();
+				}
+			}
+			postform($info);
+		} else {
+			redirect(INFUSIONS.'forum/index.php');
+		}
 	}
 
 

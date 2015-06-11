@@ -54,7 +54,7 @@ class Forum {
 		
 		$this->forum_info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."'");
 		add_to_title($locale['global_200'].$locale['forum_0000']);
-		add_breadcrumb(array('link'=>INFUSIONS.'forum/index.php', 'title'=>$locale['forum_0010']));
+		add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
 		$_GET['forum_id'] = $this->forum_info['forum_id'];
 		forum_breadcrumbs($this->forum_info['forum_index']);
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_rows']) ? $_GET['rowstart'] : '0';

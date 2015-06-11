@@ -21,7 +21,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
 	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-
+	// need max files settings to be able to include in forum.
 	$options += array(
 		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
