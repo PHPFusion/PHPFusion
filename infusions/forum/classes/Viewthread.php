@@ -773,12 +773,11 @@ class Viewthread {
 		}
 	}
 
-
 	public function render_reply_form() {
-		// must be able to reply
 		global $locale, $userdata, $inf_settings, $settings;
-		if ($this->thread_info['permissions']['can_reply']) { // if ($data['thread_locked']) { redirect(FORUM.'index.php'); }
-			$thread_data = $this->thread_info['thread'];
+		$thread_data = $this->thread_info['thread'];
+		if (!iMOD || iSUPERADMIN || $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
+		if ($this->thread_info['permissions']['can_reply']) {
 			add_to_title($locale['global_201'].$locale['forum_0503']);
 			add_breadcrumb(array('link'=>'', 'title'=>$locale['forum_0503']));
 			// field data
@@ -838,7 +837,6 @@ class Viewthread {
 					if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
 						// save all file attachments and get error
 						$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
-						print_p($upload);
 						if ($upload['error'] == 0) {
 							foreach($upload['target_file'] as $arr => $file_name) {
 								$attachment = array(
@@ -993,7 +991,12 @@ class Viewthread {
 		}
 	}
 
+	public function render_edit_form() {
 
+
+
+
+	}
 
 	/**
 	 * Editing
