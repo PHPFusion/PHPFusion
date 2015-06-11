@@ -112,7 +112,7 @@ function postformssss($info) {
 	); */
 
 	/* if ($data['edit']) {
-		opentable($locale['forum_0507']);
+		opentable();
 	} elseif ($data['reply']) {
 		opentable($locale['forum_0503']);
 	} else {

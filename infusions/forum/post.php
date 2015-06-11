@@ -94,19 +94,9 @@ elseif ((isset($_GET['action']) && $_GET['action'] == 'newthread') && ($info['fo
 	// Make new thread - actio nmust be newthread
 	$data['new'] = 1;
 	add_breadcrumb(array('link'=>FORUM.'index.php?viewforum&amp;forum_id='.$info['forum_id'].'&amp;parent_id='.$info['forum_cat'], 'title'=>'New Thread'));
-
 }
 elseif (isset($_GET['action']) && $_GET['action'] == 'reply' && ($info['forum_reply'] != 0 && checkgroup($info['forum_reply'])) && isset($_GET['thread_id']) && isnum($_GET['thread_id'])) {
-	// verify thread existed
-	$result = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$info['forum_id']."' AND thread_hidden='0'");
-	if (dbrows($result)) {
-		$data = dbarray($result);
-		if ($data['thread_locked']) { redirect(FORUM.'index.php'); }
-		$data['reply'] = 1;
-	} else {
-		redirect("index.php"); // no threads
-	}
-
+// fully ported
 }
 elseif (isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['thread_id']) && isnum($_GET['thread_id']) && isset($_GET['post_id']) && isnum($_GET['post_id'])) {
 	// fetch data.
@@ -122,14 +112,6 @@ elseif (isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['thre
 			$data = dbarray($result);
 			// verify mode
 			$data['edit'] = 1;
-			// no edit except author, mod or superadmin.
-			if ($userdata['user_id'] != $data['post_author'] && !iMOD && !iSUPERADMIN) { redirect("index.php"); }
-			// no edit if locked
-			if ($data['post_locked'] && !iMOD) { redirect("postify.php?post=edit&error=5&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);	}
-			// no edit if time limit reached
-			if (!iMOD && ($settings['forum_edit_timelimit'] > 0 && time()-$settings['forum_edit_timelimit']*60 > $data['post_datestamp'])) {
-				redirect("postify.php?post=edit&error=6&forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&post_id=".$_GET['post_id']);
-			}
 			// if forum edit locked, only can edit the last post unless you are the moderator.
 			$last_post = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' AND forum_id='".$_GET['forum_id']."' AND post_hidden='0' ORDER BY post_datestamp DESC LIMIT 1"));
 			if (iMOD || !$data['thread_locked'] && (($info['forum_edit_lock'] && $last_post['post_id'] == $data['post_id'] && $userdata['user_id'] == $data['post_author']) || (!$info['forum_edit_lock'] && $userdata['user_id'] == $data['post_author']))) {
