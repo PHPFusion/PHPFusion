@@ -6,6 +6,10 @@ class Viewthread {
 
 	private $thread_info = array();
 
+	public function get_thread_data() {
+		return $this->thread_info;
+	}
+
 	static function get_thread_stats($thread_id) {
 		list($array['post_count'], $array['last_post_id'], $array['first_post_id']) = dbarraynum(dbquery("SELECT COUNT(post_id), MAX(post_id), MIN(post_id) FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($thread_id)."' AND post_hidden='0' GROUP BY thread_id"));
 		if (!$array['post_count']) redirect(INFUSIONS.'forum/index.php'); // exit no.2
@@ -43,10 +47,6 @@ class Viewthread {
 				dbquery("UPDATE ".DB_USERS." SET user_threads='".$userdata['user_threads'].".".stripslashes($thread_match)."' WHERE user_id='".$userdata['user_id']."'");
 			}
 		}
-	}
-
-	public function get_thread_info() {
-		return $this->thread_info;
 	}
 
 	public function __construct() {
@@ -294,10 +294,6 @@ class Viewthread {
 			// execute in the end.
 			//self::set_ForumPostDB();
 		}
-	}
-
-	public function get_thread_data() {
-		return $this->thread_info;
 	}
 
 	/**
@@ -709,7 +705,7 @@ class Viewthread {
 		// Post Quick Reply -- please see the function itself. it's not corelated to any other scripts anymore.
 		if (isset($_POST['post_quick_reply'])) $this->handle_quickreply();
 
-		// normal reply and normal edit.
+
 	}
 
 	/*
@@ -776,6 +772,39 @@ class Viewthread {
 			}
 		}
 	}
+
+
+	public function render_reply_form() {
+		// must be able to reply
+		global $locale;
+		if ($this->thread_info['permissions']['can_reply']) {
+			$thread_data = $this->thread_info['thread'];
+			add_to_title($locale['global_201'].$locale['forum_0503']);
+			add_breadcrumb(array('link'=>'', 'title'=>$locale['forum_0503']));
+			$thread_data['page_title'] = $locale['forum_0503'];
+			// Quote Get
+			$callback_data = array();
+			if (isset($_GET['quote']) && isnum($_GET['quote'])) {
+				$quote_result = dbquery("SELECT a.post_message, b.user_name
+										FROM ".DB_FORUM_POSTS." a
+										INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
+										WHERE thread_id='".$thread_data['thread_id']."' and post_id='".$_GET['quote']."'");
+				if (dbrows($quote_result)>0) {
+					$quote_data = dbarray($quote_result);
+					$callback_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".strip_bbcodes($quote_data['post_message'])."[/quote]";
+				} else {
+					redirect(clean_request('', array('thread_id'), true));
+				}
+			}
+			postform($callback_data, $thread_data);
+		} else {
+			redirect('index.php');
+		}
+
+		// get current post.
+
+	}
+
 
 
 	/**
