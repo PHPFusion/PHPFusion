@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: settings_photos.php
+| Filename: settings_gallery.php
 | Author: Nick Jones (Digitanium)
 | Co-Author: Robert Gaudyn (Wooya)
 +--------------------------------------------------------+
@@ -16,12 +16,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
-pageAccess('S5');
-require_once THEMES."templates/admin_header.php";
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 include LOCALE.LOCALESET."admin/settings.php";
 
-add_breadcrumb(array('link'=>ADMIN.'settings_photo.php'.$aidlink, 'title'=>$locale['photo_settings']));
+add_breadcrumb(array('link'=>INFUSIONS.'gallery/settings_gallery.php'.$aidlink, 'title'=>$locale['photo_settings']));
 
 if (isset($_POST['delete_watermarks'])) {
 	define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
@@ -41,9 +40,9 @@ if (isset($_POST['delete_watermarks'])) {
 			if (file_exists($photodir.$watermark2)) unlink($photodir.$watermark2);
 			unset($parts);
 		}
-		redirect(FUSION_SELF.$aidlink);
+		redirect(FUSION_SELF.$aidlink."&amp;action=settings");
 	} else {
-		redirect(FUSION_SELF.$aidlink);
+		redirect(FUSION_SELF.$aidlink."&amp;action=settings");
 	}
 }
 else if (isset($_POST['savesettings'])) {
@@ -55,72 +54,68 @@ else if (isset($_POST['savesettings'])) {
 	$_POST['photo_watermark_text_color3'] = isset($_POST['photo_watermark_text_color3']) ? $_POST['photo_watermark_text_color3'] : $settings['photo_watermark_text_color3'];
 	$error = 0;
 	if (!defined('FUSION_NULL')) {
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['thumb_w']) ? $_POST['thumb_w'] : "100")."' WHERE settings_name='thumb_w'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['thumb_w']) ? $_POST['thumb_w'] : "100")."' WHERE settings_name='thumb_w'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['thumb_h']) ? $_POST['thumb_h'] : "100")."' WHERE settings_name='thumb_h'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['thumb_h']) ? $_POST['thumb_h'] : "100")."' WHERE settings_name='thumb_h'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['photo_w']) ? $_POST['photo_w'] : "400")."' WHERE settings_name='photo_w'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['photo_w']) ? $_POST['photo_w'] : "400")."' WHERE settings_name='photo_w'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['photo_h']) ? $_POST['photo_h'] : "300")."' WHERE settings_name='photo_h'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['photo_h']) ? $_POST['photo_h'] : "300")."' WHERE settings_name='photo_h'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['photo_max_w']) ? $_POST['photo_max_w'] : "1800")."' WHERE settings_name='photo_max_w'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['photo_max_w']) ? $_POST['photo_max_w'] : "1800")."' WHERE settings_name='photo_max_w'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['photo_max_h']) ? $_POST['photo_max_h'] : "1600")."' WHERE settings_name='photo_max_h'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['photo_max_h']) ? $_POST['photo_max_h'] : "1600")."' WHERE settings_name='photo_max_h'");
 		if (!$result) {
 			$error = 1;
 		}
 		$photo_max_b = form_sanitizer($_POST['calc_b'], '512', 'calc_b')*form_sanitizer($_POST['calc_c'], '100000', 'calc_c');
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$photo_max_b' WHERE settings_name='photo_max_b'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$photo_max_b' WHERE settings_name='photo_max_b'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['thumb_compression'])."' WHERE settings_name='thumb_compression'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['thumbs_per_row']) ? $_POST['thumbs_per_row'] : "4")."' WHERE settings_name='thumbs_per_row'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['thumbs_per_row']) ? $_POST['thumbs_per_row'] : "4")."' WHERE settings_name='thumbs_per_row'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['thumbs_per_page']) ? $_POST['thumbs_per_page'] : "12")."' WHERE settings_name='thumbs_per_page'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['thumbs_per_page']) ? $_POST['thumbs_per_page'] : "12")."' WHERE settings_name='thumbs_per_page'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['photo_watermark']) ? $_POST['photo_watermark'] : "0")."' WHERE settings_name='photo_watermark'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['photo_watermark']) ? $_POST['photo_watermark'] : "0")."' WHERE settings_name='photo_watermark'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['photo_watermark_save']) ? $_POST['photo_watermark_save'] : "0")."' WHERE settings_name='photo_watermark_save'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['photo_watermark_save']) ? $_POST['photo_watermark_save'] : "0")."' WHERE settings_name='photo_watermark_save'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".stripinput($_POST['photo_watermark_image'])."' WHERE settings_name='photo_watermark_image'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['photo_watermark_image'])."' WHERE settings_name='photo_watermark_image'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['photo_watermark_text']) ? $_POST['photo_watermark_text'] : "0")."' WHERE settings_name='photo_watermark_text'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['photo_watermark_text']) ? $_POST['photo_watermark_text'] : "0")."' WHERE settings_name='photo_watermark_text'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(preg_match("/^([0-9A-F]){6}$/i", $_POST['photo_watermark_text_color1']) ? $_POST['photo_watermark_text_color1'] : "FF6600")."' WHERE settings_name='photo_watermark_text_color1'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(preg_match("/^([0-9A-F]){6}$/i", $_POST['photo_watermark_text_color1']) ? $_POST['photo_watermark_text_color1'] : "FF6600")."' WHERE settings_name='photo_watermark_text_color1'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(preg_match("/^([0-9A-F]){6}$/i", $_POST['photo_watermark_text_color2']) ? $_POST['photo_watermark_text_color2'] : "FFFF00")."' WHERE settings_name='photo_watermark_text_color2'");
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(preg_match("/^([0-9A-F]){6}$/i", $_POST['photo_watermark_text_color2']) ? $_POST['photo_watermark_text_color2'] : "FFFF00")."' WHERE settings_name='photo_watermark_text_color2'");
-		if (!$result) {
-			$error = 1;
-		}
-		$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(preg_match("/^([0-9A-F]){6}$/i", $_POST['photo_watermark_text_color3']) ? $_POST['photo_watermark_text_color3'] : "FFFFFF")."' WHERE settings_name='photo_watermark_text_color3'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(preg_match("/^([0-9A-F]){6}$/i", $_POST['photo_watermark_text_color3']) ? $_POST['photo_watermark_text_color3'] : "FFFFFF")."' WHERE settings_name='photo_watermark_text_color3'");
 		if (!$result) {
 			$error = 1;
 		}
@@ -129,20 +124,20 @@ else if (isset($_POST['savesettings'])) {
 		} else {
 			addNotice('success', $locale['900']);
 		}
-		redirect(FUSION_SELF.$aidlink);
+		redirect(FUSION_SELF.$aidlink."&amp;action=settings");
 	}
 }
 
 $settings2 = array();
-$result = dbquery("SELECT * FROM ".DB_SETTINGS);
+$result = dbquery("SELECT * FROM ".DB_SETTINGS_INF." WHERE settings_inf='gallery'");
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
 
 opentable($locale['photo_settings']);
 echo "<div class='well'>".$locale['photo_description']."</div>";
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-$gd_opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
+$formaction = FUSION_SELF.$aidlink."&amp;action=settings";
+echo openform('settingsform', 'post', $formaction, array('max_tokens' => 1));
 $choice_opts = array('1' => $locale['518'], '0' => $locale['519']);
 $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 $calc_c = calculate_byte($settings2['photo_max_b']);
@@ -200,7 +195,6 @@ echo "
 ";
 closeside();
 openside('');
-echo form_select('thumb_compression', $locale['606'], $gd_opts, $settings2['thumb_compression'], array('inline'=>1, 'width'=>'250px'));
 echo form_text('thumbs_per_row', $locale['609'], $settings2['thumbs_per_row'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 echo form_text('thumbs_per_page', $locale['610'], $settings2['thumbs_per_page'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 closeside();
@@ -249,7 +243,6 @@ add_to_jquery("
         }
         });
     ");
-require_once THEMES."templates/footer.php";
 
 function calculate_byte($download_max_b) {
 	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');

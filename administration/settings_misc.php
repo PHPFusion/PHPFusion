@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 pageAccess('S6');
+
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
@@ -50,6 +51,10 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 		$error = 1;
 	}
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['login_method']) && isnum($_POST['login_method']) ? $_POST['login_method'] : "0")."' WHERE settings_name='login_method'");
+	if (!$result) {
+		$error = 1;
+	}
+	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['thumb_compression'])."' WHERE settings_name='thumb_compression'");
 	if (!$result) {
 		$error = 1;
 	}
@@ -125,6 +130,8 @@ echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 openside('');
 $opts = array('0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['699b']);
 echo form_select('login_method', $locale['699'], $opts, $settings['login_method'], array('width'=>'100%'));
+$gd_opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
+echo form_select('thumb_compression', $locale['606'], $gd_opts, $settings['thumb_compression'], array('width'=>'100%'));
 echo form_select('mime_check', $locale['699f'], $choice_arr, $settings['mime_check'], array('width'=>'100%'));
 echo form_select('guestposts',$locale['655'],  $choice_arr, $settings['guestposts'],  array('width'=>'100%'));
 echo form_select('comments_enabled', $locale['671'], $choice_arr, $settings['comments_enabled'],  array('width'=>'100%'));

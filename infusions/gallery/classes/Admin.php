@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Photo/Admin.php
+| Filename: Admin.php
 | Author: Frederick MC Chan (Photo Gallery Admin UI)
 | Implementing my idea of centralized Interface for Gallery of all sorts
 +--------------------------------------------------------+
@@ -17,6 +17,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Gallery;
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class Admin {
 	private $image_upload_dir = '';
@@ -172,13 +173,11 @@ class Admin {
 	 */
 	public function boot() {
 		global $locale;
-		require_once LOCALE.LOCALESET."admin/gallery.php";
-		add_to_head("<link href='".THEMES."templates/global/css/gallery.css' rel='stylesheet'/>\n");
+		add_to_head("<link href='".INFUSIONS."gallery/css/gallery.css' rel='stylesheet' />\n");
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		$_GET['order'] = isset($_GET['order']) && isnum($_GET['order']) ? $_GET['order'] : 1;
 		$_GET['gallery'] = isset($_GET['gallery']) && self::validate_album($_GET['gallery']) ? $_GET['gallery'] : '';
 		if (function_exists('gd_info')) {
-			//self::Install_Gallery();
 			// set album max order
 			$this->album_max_order = dbresult(dbquery("SELECT MAX(album_order) FROM ".$this->photo_cat_db." WHERE album_language='".LANGUAGE."'"), 0)+1;
 			if (isset($_GET['gallery']) && $_GET['gallery'] > 0) {
@@ -194,9 +193,13 @@ class Admin {
 				self::set_albumDB();
 				self::set_photoDB();
 				self::set_batchPhotoDB();
+				self::display_gallery_filters();
 				switch ($_GET['action']) {
 					case 'refresh':
 						self::refresh_album_order();
+						break;
+					case 'settings':
+						self::gallery_settings();
 						break;
 					case 'mu':
 						self::refresh_order('mu');
@@ -211,8 +214,9 @@ class Admin {
 						self::refresh_order('mdp');
 						break;
 				}
-				self::display_gallery_filters();
+				if ($_GET['action'] !=="settings") {
 				self::display_gallery();
+				}
 			}
 		} else {
 			notify("gd_info() ".$locale['na'], '');
@@ -797,7 +801,9 @@ class Admin {
 		echo form_button('add_album', $locale['600'], 'add_album', array('class' => 'btn-primary btn-sm m-r-10', 'icon' => 'fa fa-image'));
 		echo form_button('add_photo', $locale['601'], 'add_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-camera'));
 		if ($_GET['gallery']) echo form_button('batch_photo', $locale['photo_002'], 'batch_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-cloud-upload'));
+		echo "<a title='Settings' class='btn button btn-sm btn-default m-r-10' href='".clean_request('action=settings', array('action'), FALSE)."'><i class='fa fa-pencil'></i> Settings</a>";
 		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".clean_request('action=refresh', array('action'), FALSE)."'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
+
 		echo "</div>\n";
 		if ($_GET['gallery']) {
 			echo openmodal('batch_album', $locale['photo_002'], array('button_id'=>'batch_photo', 'static'=>1));
@@ -1057,8 +1063,15 @@ class Admin {
 		//redirect(FUSION_SELF.$aidlink);
 	}
 
-	private function refresh_order($action_type) {
+	/**
+	 * Include and run Gallery settings
+	 */
+	public function gallery_settings() {
+	global $locale, $aidlink;
+	include INFUSIONS."gallery/settings_gallery.php";
+	}
 
+	private function refresh_order($action_type) {
 		switch($action_type) {
 			case 'md': // move down album + 1 order
 				if (isnum($_GET['gallery_item']) && self::validate_album($_GET['gallery_item'])) {
