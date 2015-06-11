@@ -25,7 +25,7 @@ $regex = array(
 );
 
 $pattern = array(
-	"gallery/browse/%rowstart%" => "photogallery.php?rowstart=%rowstart%",
-	"gallery/browse/%album_id%/%rowstart%" => "photogallery.php?album_id=%album_id%&amp;rowstart=%rowstart%",
-	"photo/browse/%photo_id%/%c_start%" => "photogallery.php?photo_id=%album_id%&amp;c_start=%c_start%",
+	"gallery/browse/%rowstart%" => "infusions/gallery/gallery.php?rowstart=%rowstart%",
+	"gallery/browse/%album_id%/%rowstart%" => "infusions/gallery/gallery.php?album_id=%album_id%&amp;rowstart=%rowstart%",
+	"photo/browse/%photo_id%/%c_start%" => "infusions/gallery/gallery.php?photo_id=%album_id%&amp;c_start=%c_start%",
 );

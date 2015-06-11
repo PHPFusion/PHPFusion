@@ -23,8 +23,8 @@ $regex = array(
 );
 
 $pattern = array(
-	"gallery" => "photogallery.php", 
-	"gallery/%album_id%/%album_title%" => "photogallery.php?album_id=%album_id%",
+	"gallery" => "infusions/gallery/gallery.php", 
+	"gallery/%album_id%/%album_title%" => "infusions/gallery/gallery.php?album_id=%album_id%",
 );
 
 $dbname = DB_PHOTO_ALBUMS;

@@ -22,7 +22,7 @@ $regex = array(
 	"%photo_title%" => "([0-9a-zA-Z._\W]+)",
 );
 
-$pattern = array("photo/%photo_id%/%photo_title%" => "photogallery.php?photo_id=%photo_id%");
+$pattern = array("photo/%photo_id%/%photo_title%" => "infusions/gallery/gallery.php?photo_id=%photo_id%");
 
 $dbname = DB_PHOTOS;
 $dbid = array("%photo_id%" => "photo_id");
