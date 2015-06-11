@@ -27,7 +27,7 @@ $regex = array(
 $pattern = array(
 "shop/browse/%rowstart%" => "eshop.php?rowstart=%rowstart%",
 "shop/browse/%rowstart%" => "eshop.php?rowstart=%rowstart%",
-"shop/browse/%category%/%rowstart%" => "eshop.php?category=%category%&amp;rowstart=%rowstart%",
-"shop/browse/%category%/%rowstart%" => "eshop.php?rowstart=%rowstart%&amp;category=%category%",
-"shop/browse/%details%/%c_start%" => "eshop.php?product=%details%&amp;c_start=%c_start%",
+"shop/browse/%category%/%rowstart%" => "infusions/eshop/eshop.php?category=%category%&amp;rowstart=%rowstart%",
+"shop/browse/%category%/%rowstart%" => "infusions/eshop/eshop.php?rowstart=%rowstart%&amp;category=%category%",
+"shop/browse/%details%/%c_start%" => "infusions/eshop/eshop.php?product=%details%&amp;c_start=%c_start%",
 );

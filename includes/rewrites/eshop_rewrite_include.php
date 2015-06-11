@@ -27,13 +27,13 @@ $regex = array(
 );
 				  
 $pattern = array(
-	"shop" => "eshop.php",
-	"shop/cart" => "eshop/cart.php",
-	"shop/checkout" => "eshop/checkout.php",
-	"shop/checkout-completed" => "eshop/checkedout.php",
-	"shop/%product%/%title%" => "eshop.php?product=%product%",
-	"shop/%product%/%title%#comments" => "eshop.php?product=%product%#comments",
-	"shop/%c_start%/%product%/%title%" => "eshop.php?product=%product%&amp;c_start=%c_start%",
+	"shop" => "infusions/eshop/eshop.php",
+	"shop/cart" => "infusions/eshop/cart.php",
+	"shop/checkout" => "infusions/eshop/checkout.php",
+	"shop/checkout-completed" => "infusions/eshop/checkedout.php",
+	"shop/%product%/%title%" => "infusions/eshop/eshop.php?product=%product%",
+	"shop/%product%/%title%#comments" => "infusions/eshop/eshop.php?product=%product%#comments",
+	"shop/%c_start%/%product%/%title%" => "infusions/eshop/eshop.php?product=%product%&amp;c_start=%c_start%",
 );
 
 $alias_pattern = array(
