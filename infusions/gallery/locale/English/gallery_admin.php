@@ -1,6 +1,6 @@
 <?php
 // Album titles
-$locale['photo_000'] = 'Photo Albums';
+$locale['photo_000'] = 'Gallery Albums';
 $locale['photo_001'] = 'Photos';
 $locale['photo_002'] = 'Batch Upload';
 $locale['400'] = "Add Album";

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-add_to_head("<link href='".THEMES."templates/global/css/photos.css' rel='stylesheet'/>\n");
+add_to_head("<link href='".INFUSIONS."gallery/css/photos.css' rel='stylesheet' />\n");
 
 /* Main Index Photogallery */
 if (!function_exists('render_photo_main')) {
@@ -201,10 +201,10 @@ if (!function_exists('render_photo')) {
 		echo "</div>\n</div>\n";
 		echo "<!--sub_photo-->";
 		if ($info['photo_allow_comments']) {
-			showcomments("P", DB_PHOTOS, "photo_id", $_GET['photo_id'], BASEDIR."photogallery.php?photo_id=".$_GET['photo_id']);
+			showcomments("P", DB_PHOTOS, "photo_id", $_GET['photo_id'], INFUSIONS."gallery/gallery.php?photo_id=".$_GET['photo_id']);
 		}
 		if ($info['photo_allow_ratings']) {
-			showratings("P", $_GET['photo_id'], BASEDIR."photogallery.php?photo_id=".$_GET['photo_id']);
+			showratings("P", $_GET['photo_id'], INFUSIONS."gallery/gallery.php?photo_id=".$_GET['photo_id']);
 		}
 		closetable();
 	}
