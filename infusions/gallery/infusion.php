@@ -89,7 +89,7 @@ $inf_insertdbrow[16] = DB_SETTINGS_INF." (settings_name, settings_value, setting
 $inf_insertdbrow[17] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_save', '0', 'gallery')";
 
 // Position the link under Content Administration
-$inf_insertdbrow[18] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('PH', 'photoalbums.gif', '".$locale['setup_3020']."', '".INFUSIONS."gallery/gallery_admin.php', '1')";
+$inf_insertdbrow[18] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('PH', 'photoalbums.gif', '".$locale['photos']['title']."', '".INFUSIONS."gallery/gallery_admin.php', '1')";
 		
 // Create a link for all installed languages
 if (!empty($settings['enabled_languages'])) {
