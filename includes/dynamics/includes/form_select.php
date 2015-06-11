@@ -116,7 +116,7 @@ function form_select($input_name, $label = "", array $option_array = array(), $i
 	$input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 	$defender->add_field_session(array(
 							 'input_name' 	=> 	$input_name,
-							 'title'		=> $title,
+							 'title'		=> trim($title, '[]'),
 							 'id'			=> $options['input_id'],
 							 'type'			=>	'dropdown',
 							 'regex'		=> $options['regex'],

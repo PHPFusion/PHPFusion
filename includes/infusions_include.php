@@ -185,6 +185,7 @@ if (!function_exists('send_pm')) {
 if (!function_exists('upload_file')) {
 	function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "") {
 		if (is_uploaded_file($_FILES[$source_file]['tmp_name'])) {
+
 			$valid_ext = explode(",", $valid_ext);
 			$file = $_FILES[$source_file];
 			if ($target_file == "" || preg_match("/[^a-zA-Z0-9_-]/", $target_file)) {

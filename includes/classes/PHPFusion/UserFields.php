@@ -66,6 +66,22 @@ class UserFields extends QuantumFields {
 		$this->_userNameChange = $value;
 	}
 
+	/**
+	 * Check whether a user field is available/installed
+	 * @param $field_name
+	 * @return bool
+	 */
+	public static function check_user_field($field_name) {
+		static $list;
+		$result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS);
+		if (dbrows($result)>0) {
+			while ($data = dbarray($result)) {
+				$list[] = $data['field_name'];
+			}
+		}
+		return in_array($field_name, $list) ? true : false;
+	}
+
 	/* Page Navigation with UF Cats */
 	private function renderPageLink() {
 		// build this page.

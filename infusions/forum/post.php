@@ -103,7 +103,6 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'reply' && ($info['forum_re
 		$data = dbarray($result);
 		if ($data['thread_locked']) { redirect(FORUM.'index.php'); }
 		$data['reply'] = 1;
-
 	} else {
 		redirect("index.php"); // no threads
 	}

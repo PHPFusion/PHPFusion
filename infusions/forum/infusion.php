@@ -236,6 +236,8 @@ $inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, setti
 $inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('forum_last_posts_reply', '10', 'forum')";
 $inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('forum_last_post_avatar', '1', 'forum')";
 $inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('thread_notify', '1', 'forum')";
+$inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('attachmax_count', '5', 'forum')";
+$inf_insertdbrow[$i++] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('attachtypes', '5', '.jpg,.bmp,.gif,.png,.zip,.doc,.docx')";
 
 // reset counter for tables
 $i = 0;

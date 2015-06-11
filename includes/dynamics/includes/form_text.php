@@ -33,12 +33,8 @@
  */
 function form_text($input_name, $label = "", $input_value = "", array $options = array()) {
 	global $defender, $locale;
-
+	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$html = "";
-
-	// No need for isset() checks, an insufficient args error will pop if you don't pass a value
-	$input_name = stripinput($input_name);
-
 	//var_dump($options);
 	$valid_types = array('text', 'number', 'password', 'email', 'url');
 
@@ -108,7 +104,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 	// Add input settings in the SESSION
 	$defender->add_field_session(array(
 			'input_name'	=> $input_name,
-			'title'			=> $input_name, // Line 792 of defender.inc.php required this
+			'title'			=> $title, // Line 792 of defender.inc.php required this
 			'id'			=> $options['input_id'], // Line 793 of defender.inc.php required this
 			'type'			=> $options['type'],
 			'required'		=> $options['required'],

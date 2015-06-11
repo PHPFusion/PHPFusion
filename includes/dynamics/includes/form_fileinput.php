@@ -18,8 +18,9 @@
 /* http://plugins.krajee.com/file-input  - many many more options */
 function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $input_value = FALSE, array $options = array()) {
 	global $locale, $settings, $defender;
-	$title = (isset($title) && (!empty($title))) ? stripinput($title) : "";
-	$title2 = (isset($title) && (!empty($title))) ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
+	$title2 = $title ? stripinput($title) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
 	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 	// need max files settings to be able to include in forum.
 	$options += array(
@@ -35,7 +36,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		'icon' => !empty($options['icon']) && $options['icon'] ? $options['icon'] : 'entypo upload-cloud', // upload button class
 		'preview_off' => !empty($options['preview_off']) && $options['preview_off'] == 1 ? 1 : 0,
 		'type' => !empty($options['type']) && $options['type'] ? $options['type'] : 'object', // ['image', 'html', 'text', 'video', 'audio', 'flash', 'object'] <--- defender goes for this maybe
-		'valid_ext' => !empty($options['valid_ext']) && $options['valid_ext'] ? $options['valid_ext'] : '',
+		'valid_ext' => !empty($options['valid_ext']) ? $options['valid_ext'] : '',
 		// ajax
 		'jsonurl' => !empty($options['jsonurl']) && $options['jsonurl'] ? $options['jsonurl'] : 0,
 		// the only real thumbnail
@@ -54,6 +55,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		'max_width'		=>	!empty($options['max_width']) && isnum($options['max_width']) ? $options['max_width'] : 1800,
 		'max_height'	=>	!empty($options['max_height']) && isnum($options['max_height']) ? $options['max_height'] : 1600,
 		'max_byte'		=>	!empty($options['max_byte']) && isnum($options['max_byte']) ? $options['max_byte'] : 1500000, // 1.5 million bytes is 1.5mb
+		'max_count' 	=> 	!empty($options['max_count']) && isnum($options['max_count']) ? $options['max_count'] : 1,
 		'multiple' => !empty($options['multiple']) && $options['multiple'] == 1 ? 1 : 0,
 	);
 	// default max file size
@@ -101,7 +103,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 	$defender->add_field_session(array(
 		'input_name' 	=> 	trim($input_name, '[]'),
 		'type'			=>	((array)$options['type']==array('image') ? 'image' : 'file'),
-		'title'			=>	$title2,
+		'title'			=>	trim($title2, '[]'),
 		'id' 			=>	$input_id,
 		'required'		=>	$options['required'],
 		'safemode' 		=> 	$options['safemode'],
@@ -122,6 +124,7 @@ function form_fileinput($title = FALSE, $input_name, $input_id, $upload_path, $i
 		'max_byte'		=>	$options['max_byte'],
 		'multiple'		=>	$options['multiple'],
 		'valid_ext'		=>	$options['valid_ext'],
+		'max_count' 	=> 	$options['max_count'],
 	 ));
 	add_to_jquery("
 	$('#".$input_id."').fileinput({
