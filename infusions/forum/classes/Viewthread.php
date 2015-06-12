@@ -773,7 +773,7 @@ class Viewthread {
 		}
 	}
 
-
+	// bug: quote post has problem
 	public function render_reply_form() {
 		global $locale, $userdata, $inf_settings, $settings;
 		$thread_data = $this->thread_info['thread'];
@@ -800,21 +800,6 @@ class Viewthread {
 				'notify_me' => false,
 				'post_locked' => 0, //$inf_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
 			);
-			// Quote Get
-			if (isset($_GET['quote']) && isnum($_GET['quote'])) {
-				$quote_result = dbquery("SELECT a.post_message, b.user_name
-										FROM ".DB_FORUM_POSTS." a
-										INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
-										WHERE thread_id='".$thread_data['thread_id']."' and post_id='".$_GET['quote']."'");
-				if (dbrows($quote_result)>0) {
-					$quote_data = dbarray($quote_result);
-					// do not do this. to silently inject.
-					$post_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".strip_bbcodes($quote_data['post_message'])."[/quote]".$post_data['post_message'];
-				} else {
-					redirect(clean_request('', array('thread_id'), true));
-				}
-			}
-
 			// execute form post actions
 			if (isset($_POST['post_reply'])) {
 				require_once INCLUDES."flood_include.php";
@@ -837,36 +822,38 @@ class Viewthread {
 
 					if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
 						// save all file attachments and get error
-						$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
-						if ($upload['error'] == 0) {
-							foreach($upload['target_file'] as $arr => $file_name) {
-								$attachment = array(
-									'thread_id' => $thread_data['thread_id'],
-									'post_id' => $post_data['post_id'],
-									'attach_name' => $file_name,
-									'attach_mime' => $upload['type'][$arr],
-									'attach_size' => $upload['source_size'][$arr],
-									'attach_count' => '0', // downloaded times?
-								);
-								dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session'=>true));
+						if (isset($_FILES['file_attachments'])) {
+							$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
+							if ($upload['error'] == 0) {
+								foreach($upload['target_file'] as $arr => $file_name) {
+									$attachment = array(
+										'thread_id' => $thread_data['thread_id'],
+										'post_id' => $post_data['post_id'],
+										'attach_name' => $file_name,
+										'attach_mime' => $upload['type'][$arr],
+										'attach_size' => $upload['source_size'][$arr],
+										'attach_count' => '0', // downloaded times?
+									);
+									dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session'=>true));
+								}
 							}
+						}
 							// Update stats in forum and threads
-							if ($update_forum_lastpost) {
-								// find all parents and update them
-								$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
-								foreach($list_of_forums as $fid) {
-									dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
-								}
-								// update current forum
-								dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
-								// update current thread
-								dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
+						if ($update_forum_lastpost) {
+							// find all parents and update them
+							$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
+							foreach($list_of_forums as $fid) {
+								dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
 							}
-							// set notify
-							if ($inf_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id']) {
-								if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
-									dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
-								}
+							// update current forum
+							dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
+							// update current thread
+							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
+						}
+						// set notify
+						if ($inf_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id']) {
+							if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
+								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
 							}
 						}
 					}
@@ -877,8 +864,21 @@ class Viewthread {
 
 			// template data
 			$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
-			if (isset($_GET['quote'])) {
-				$form_action .= "&amp;post_id=".$_GET['post_id']."&amp;quote=".$_GET['quote'];
+
+			// Quote Get
+			if (isset($_GET['quote']) && isnum($_GET['quote'])) {
+				$quote_result = dbquery("SELECT a.post_message, b.user_name
+										FROM ".DB_FORUM_POSTS." a
+										INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
+										WHERE thread_id='".$thread_data['thread_id']."' and post_id='".$_GET['quote']."'");
+				if (dbrows($quote_result)>0) {
+					$quote_data = dbarray($quote_result);
+					// do not do this. to silently inject.
+					$post_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".strip_bbcodes($quote_data['post_message'])."[/quote]".$post_data['post_message'];
+					$form_action .= "&amp;post_id=".$_GET['post_id']."&amp;quote=".$_GET['quote'];
+				} else {
+					redirect(clean_request('', array('thread_id'), true));
+				}
 			}
 
 			$info = array(
@@ -997,7 +997,7 @@ class Viewthread {
 
 				// if edit, data prevails. then in execute, another time.
 								// execute form post actions
-				if (isset($_POST['post_edits'])) {
+				if (isset($_POST['post_edit'])) {
 					require_once INCLUDES."flood_include.php";
 					// all data is sanitized here.
 					if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
@@ -1006,7 +1006,7 @@ class Viewthread {
 							'forum_id' => $this->thread_info['thread']['forum_id'],
 							'thread_id' => $this->thread_info['thread']['thread_id'],
 							'post_id' => $post_data['post_id'],
-							'post_message' => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',
+							'post_message' => form_sanitizer($_POST['post_message'], '', 'post_message'),
 							'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
 							'post_smileys' => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? false : true,
 							'post_author' => $userdata['user_id'],
@@ -1015,10 +1015,10 @@ class Viewthread {
 							'post_ip_type' => USER_IP_TYPE,
 							'post_edituser' => $userdata['user_id'],
 							'post_edittime' => time(),
-							'post_editreason' => isset($_POST['post_edit_reason']) ? form_sanitizer($_POST['post_edit_reason']) : '',
+							'post_editreason' => form_sanitizer($_POST['post_edit_reason']),
 							'post_hidden' => false,
 							'notify_me' => false,
-							'post_locked' => 0, //$inf_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
+							'post_locked' => $inf_settings['forum_edit_lock'] or isset($_POST['post_locked']) ? true : false
 						);
 
 						$update_forum_lastpost = false;
@@ -1038,36 +1038,40 @@ class Viewthread {
 
 						if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
 							// save all file attachments and get error
-							$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
-							if ($upload['error'] == 0) {
-								foreach($upload['target_file'] as $arr => $file_name) {
-									$attachment = array(
-										'thread_id' => $thread_data['thread_id'],
-										'post_id' => $post_data['post_id'],
-										'attach_name' => $file_name,
-										'attach_mime' => $upload['type'][$arr],
-										'attach_size' => $upload['source_size'][$arr],
-										'attach_count' => '0', // downloaded times?
-									);
-									dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session'=>true));
-								}
-								// Update stats in forum and threads
-								if ($update_forum_lastpost) {
-									// find all parents and update them
-									$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
-									foreach($list_of_forums as $fid) {
-										dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+							if (isset($_FILES['file_attachments'])) {
+								$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
+								if ($upload['error'] == 0) {
+									foreach($upload['target_file'] as $arr => $file_name) {
+										$attachment = array(
+											'thread_id' => $thread_data['thread_id'],
+											'post_id' => $post_data['post_id'],
+											'attach_name' => $file_name,
+											'attach_mime' => $upload['type'][$arr],
+											'attach_size' => $upload['source_size'][$arr],
+											'attach_count' => '0', // downloaded times?
+										);
+										dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session'=>true));
 									}
-									// update current forum
-									dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
-									// update current thread
-									dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
 								}
-								// set notify
-								if ($inf_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id']) {
-									if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
-										dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
-									}
+							}
+
+							// Update stats in forum and threads
+							if ($update_forum_lastpost) {
+								// find all parents and update them
+								$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
+								foreach($list_of_forums as $fid) {
+									dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+								}
+								// update current forum
+								dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$thread_data['forum_id']."'");
+								// update current thread
+								dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
+							}
+
+							// set notify
+							if ($inf_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id']) {
+								if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
+									dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
 								}
 							}
 						}
