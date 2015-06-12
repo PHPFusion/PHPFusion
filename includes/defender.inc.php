@@ -688,19 +688,19 @@ class defender {
 						if ($upload['error'] !==0) {
 							@unlink($file_dest.$target_file);
 						}
+						$upload['source_file'][$i] = $upload_file['source_file'];
+						$upload['source_size'][$i] = $upload_file['source_size'];
+						$upload['source_ext'][$i] = $upload_file['source_ext'];
+						$upload['target_file'][$i] = $upload_file['target_file'];
+						$upload['target_folder'][$i] = $upload_file['target_folder'];
+						$upload['valid_ext'][$i] = $upload_file['valid_ext'];
+						$upload['max_size'][$i] = $upload_file['max_size'];
+						$upload['query'][$i] = $upload_file['query'];
+						$upload['type'][$i] = $file_type;
 					} else {
 						// File not uploaded
 						$upload['error'] = array("error" => 4);
 					}
-					$upload['source_file'][$i] = $upload_file['source_file'];
-					$upload['source_size'][$i] = $upload_file['source_size'];
-					$upload['source_ext'][$i] = $upload_file['source_ext'];
-					$upload['target_file'][$i] = $upload_file['target_file'];
-					$upload['target_folder'][$i] = $upload_file['target_folder'];
-					$upload['valid_ext'][$i] = $upload_file['valid_ext'];
-					$upload['max_size'][$i] = $upload_file['max_size'];
-					$upload['query'][$i] = $upload_file['query'];
-					$upload['type'][$i] = $file_type;
 
 					if ($upload['error'] !== 0) {
 						$this->stop();
