@@ -28,7 +28,6 @@ if (!defined('DYNAMICS')) {
 
 if (isset($_GET['localeset']) && file_exists(LOCALE.$_GET['localeset']) && is_dir(LOCALE.$_GET['localeset'])) {
 	include LOCALE.$_GET['localeset']."/setup.php";
-	include LOCALE.$_GET['localeset']."/admin/infusions.php";
 	define("LOCALESET", $_GET['localeset']."/");
 } else {
 	$_GET['localeset'] = "English";
@@ -133,7 +132,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		if (isset($db_prefix) && $db_prefix) {
 			dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
 			if (isset($_POST['uninstall'])) {
-				include_once 'includes/core.setup.php'; // why does it still produce flash of error message?
+				include_once 'includes/core_setup.php'; // why does it still produce flash of error message?
 				@unlink(BASEDIR.'config_temp.php');
 				@unlink(BASEDIR.'config.php');
 				redirect(BASEDIR."install/index.php", 1); // temp fix.
@@ -398,7 +397,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 									$fail = TRUE;
 								}
 								// install core tables fully injected.
-								include 'includes/core.setup.php';
+								include 'includes/core_setup.php';
 								if (!$fail) {
 									$content .= "<i class='entypo check'></i> ".$locale['setup_1300']."<br /><br />\n<i class='entypo check'></i> ";
 									$content .= $locale['setup_1301']."<br /><br />\n<i class='entypo check'></i> ";
@@ -477,8 +476,8 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		break;
 	// Step 5 - Configure Core System - $settings accessible - Requires Config_temp.php (Shut down site when upgrading).
 	case 5:
-//	print_r($_POST);
-		if (!isset($_POST['done'])) {
+		include LOCALE.$_GET['localeset']."/admin/infusions.php";
+//		if (!isset($_POST['done'])) {
 			// Load Config and SQL handler.
 			if (file_exists(BASEDIR.'config_temp.php')) {
 				/*
@@ -496,8 +495,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				redirect(FUSION_SELF); // start all over again if you tampered config_temp here.
 			}
 			$fail = FALSE;
-			$buttonMode	= "refresh";
-			$step	= "5";
 			$message = "";
 			$inf_title = "";
 			$inf_description = "";
@@ -512,90 +509,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			$inf_altertable = "";
 			$inf_deldbrow = "";
 			$inf_sitelink = "";
-
-if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defuse'])) {
-	$temp = opendir(INFUSIONS);
-	$inf = array();
-	while ($folder = readdir($temp)) {
-		if (!in_array($folder, array("..", "."))) {
-			if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
-				include INFUSIONS.$folder."/infusion.php";
-				$result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder='".$inf_folder."'");
-				if (dbrows($result)) {
-					$data = dbarray($result);
-					if (version_compare($inf_version, $data['inf_version'], ">")) {
-						$inf[] = array('inf_name' => str_replace('_', ' ', $inf_title), 'inf_folder' => $folder, 'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '', 'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta', 'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion', 'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '', 'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '', 'inf_status' => 2);
-					} else {
-						$inf[] = array('inf_name' => str_replace('_', ' ', $inf_title), 'inf_folder' => $folder, 'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '', 'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta', 'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion', 'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '', 'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '', 'inf_status' => 1);
-					}
-				} else {
-					$inf[] = array('inf_name' => str_replace('_', ' ', $inf_title), 'inf_folder' => $folder, 'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '', 'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta', 'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion', 'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '', 'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '', 'inf_status' => 0);
-				}
-				$inf_title = "";
-				$inf_description = "";
-				$inf_version = "";
-				$inf_developer = "";
-				$inf_email = "";
-				$inf_weburl = "";
-				$inf_folder = "";
-				$inf_newtable = "";
-				$inf_insertdbrow = "";
-				$inf_droptable = "";
-				$inf_altertable = "";
-				$inf_deldbrow = "";
-				$inf_sitelink = "";
-			}
-		}
-	}
-	closedir($temp);
-	sort($inf);
-	$content .= "<div>\n";
-	if ($inf) {
-		$content .= "<div class='list-group'>\n";
-		if ($inf) {
-			$content .= "<div class='list-group-item hidden-xs'>\n";
-			$content .= "<div class='row'>\n";
-			$content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['419']."</strong></div>\n";
-			$content .= "<div class='col-xs-5 col-sm-5 col-md-4 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
-			$content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
-			$content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
-			$content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
-			$content .= "</div>\n</div>\n";
-			$formaction = FUSION_SELF;
-			foreach ($inf as $i => $item) {
-				$content .= openform('infuseform', 'post', $formaction, array('max_tokens' => 1));
-				$content .= form_hidden('step', 'step', '5', array(''));
-				$content .= "<input type='hidden' name='step' value='5' />\n";
-				$content .= "<div class='list-group-item'>\n";
-				$content .= "<div class='row'>\n";
-				$content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n";
-				$content .= form_hidden('', 'infusion', 'infusion', $item['inf_folder']);
-				if ($item['inf_status'] > 0) {
-					if ($item['inf_status'] > 1) {
-						$content .= form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet'));
-					} else {
-						$content .= form_button('defuse', $locale['411'], "defuse-$i", array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash'));
-					}
-				} else {
-					$content .= form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
-				}
-				$content .= "</div>\n";
-				$content .= "<div class='col-xs-6 col-sm-6 col-md-4 col-lg-4'><strong>".$item['inf_name']."</strong><br/>".trimlink($item['inf_description'], 30)."</div>\n";
-				$content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>".($item['inf_status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
-				$content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($item['inf_version'] ? $item['inf_version'] : '')."</div>\n";
-				$content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($item['inf_url'] ? "<a href='".$item['inf_url']."' target='_blank'>" : "")." ".($item['inf_developer'] ? $item['inf_developer'] : $locale['410'])." ".($item['inf_url'] ? "</a>" : "")." <br/>".($item['inf_email'] ? "<a href='mailto:".$item['inf_email']."'>".$locale['409']."</a>" : '')."</div>\n";
-				$content .= "</div>\n</div>\n";
-				$content .= closeform();
-			}
-		}
-	} else {
-		$content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
-	}
-	$content .=  "</div>\n</div>\n";
-	$content .= "<div class='well text-center m-t-10'>\n";
-	$content .= "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
-	$content .= "</div>\n";
-}
 
 if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 	$error = "";
@@ -656,7 +569,7 @@ if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
 			}
 		}
 	}
-	redirect(FUSION_SELF);
+	//redirect(FUSION_SELF);
 }
 if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 	$infusion = form_sanitizer($_POST['infusion'], '');
@@ -703,91 +616,99 @@ if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
 		}
 	}
 	dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".$_POST['infusion']."'");
-	redirect(FUSION_SELF);
+	//redirect(FUSION_SELF);
 }
 
 add_to_jquery("
-    $('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
+	$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});
     ");
 
-	/*
-			// Do installation
-			if (isset($_POST['install'])) {
-				$_apps = stripinput($_POST['install']);
-				if (file_exists('includes/'.$_apps.'_setup.php')) {
-					include 'includes/'.$_apps.'_setup.php';
-					$message = "<div class='alert alert-success strong'><i class='entypo check'></i>".sprintf($locale['setup_1406'], $system_apps[$_apps])."</div>";
-					if ($fail) {
-						$message = "<div class='alert alert-danger strong'><i class='entypo icancel'></i>".sprintf($locale['setup_1407'], $system_apps[$_apps])."</div>";
-					}
+
+$temp = opendir(INFUSIONS);
+$inf = array();
+while ($folder = readdir($temp)) {
+	if (!in_array($folder, array("..", "."))) {
+		if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
+			include INFUSIONS.$folder."/infusion.php";
+			$result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder='".$inf_folder."'");
+			if (dbrows($result)) {
+				$data = dbarray($result);
+				if (version_compare($inf_version, $data['inf_version'], ">")) {
+					$inf[] = array('inf_name' => str_replace('_', ' ', $inf_title), 'inf_folder' => $folder, 'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '', 'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta', 'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion', 'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '', 'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '', 'inf_status' => 2);
+				} else {
+					$inf[] = array('inf_name' => str_replace('_', ' ', $inf_title), 'inf_folder' => $folder, 'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '', 'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta', 'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion', 'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '', 'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '', 'inf_status' => 1);
 				}
+			} else {
+				$inf[] = array('inf_name' => str_replace('_', ' ', $inf_title), 'inf_folder' => $folder, 'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '', 'inf_version' => isset($inf_version) && $inf_version ? $inf_version : 'beta', 'inf_developer' => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion', 'inf_url' => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '', 'inf_email' => isset($inf_email) && $inf_email ? $inf_email : '', 'inf_status' => 0);
 			}
-			// Do uninstallation
-			if (isset($_POST['uninstall'])) {
-				$_apps = stripinput($_POST['uninstall']);
-				if (file_exists('includes/'.$_apps.'_setup.php')) {
-					include 'includes/'.$_apps.'_setup.php';
-					$message = "<div class='alert alert-warning'><i class='entypo check'></i>".sprintf($locale['setup_1408'], $system_apps[$_apps])."</div>";
-					if ($fail) {
-						$message = "<div class='alert alert-danger'><i class='entypo icancel'></i>".sprintf($locale['setup_1409'], $system_apps[$_apps])."</div>";
-					}
-				}
-			}
-			foreach ($system_apps as $_apps_key => $_apps) {
-				if (file_exists('includes/'.$_apps_key.'_setup.php')) {
-					$installed = db_exists($db_prefix.$_apps_key);
-					$apps_data = array('title' => $locale[$_apps_key]['title'],
-						'description' => $locale[$_apps_key]['description'],
-						'key' => $_apps_key);
-					if ($installed) {
-						$apps['1'][] = $apps_data;
-					} else {
-						$apps['0'][] = $apps_data;
-					}
-				}
-			}
-			$content .= "<div class='m-b-20'><h4>".$locale['setup_1400']."</h4> ".$locale['setup_1401']."</div>\n";
-			$content .= $message;
-			if (!empty($apps[1])) {
-				foreach ($apps[1] as $k => $v) {
-					$content .= "<hr class='m-t-5 m-b-5'/>\n";
-					$content .= "<div class='row'>\n";
-					$content .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".$v['title'];
-					$content .= "<div class='pull-right'>\n";
-					$content .= form_button('uninstall', $locale['setup_1405'], $v['key'], array('class' => 'btn-xs btn-default',
-						'icon' => 'entypo trash'));
-					$content .= "</div>\n";
-					$content .= "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>".$v['description']."";
-					$content .= "</div>\n</div>\n";
-				}
-			}
-			if (!empty($apps[0])) {
-				foreach ($apps[0] as $k => $v) {
-					$content .= "<hr class='m-t-5 m-b-5'/>\n";
-					$content .= "<div class='row'>\n";
-					$content .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n".$v['title'];
-					$content .= "<div class='pull-right'>\n";
-					$content .= form_button('install', $locale['setup_1404'], $v['key'], array('class' => 'btn-xs btn-default',
-						'icon' => 'entypo publish'));
-					$content .= "</div>\n";
-					$content .= "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>".$v['description']."";
-					$content .= "</div>\n</div>\n";
-				}
-			} 
-			*/
-		} elseif (isset($_POST['done'])) {
-			// system ready
-			$content .= "<div class='m-b-20'><h4>".$locale['setup_1402']."</h4> ".$locale['setup_1403']."</div>\n";
+			$inf_title = "";
+			$inf_description = "";
+			$inf_version = "";
+			$inf_developer = "";
+			$inf_email = "";
+			$inf_weburl = "";
+			$inf_folder = "";
+			$inf_newtable = "";
+			$inf_insertdbrow = "";
+			$inf_droptable = "";
+			$inf_altertable = "";
+			$inf_deldbrow = "";
+			$inf_sitelink = "";
 		}
-		if (isset($_POST['done'])) {
-			$nextStep = 6;
-			$buttonMode = 'next';
-		} else {
-			$nextStep = 5;
-			$buttonMode = 'done';
+	}
+}
+closedir($temp);
+sort($inf);
+$content .= "<div>\n";
+if ($inf) {
+	$content .= "<div class='list-group'>\n";
+	if ($inf) {
+		$content .= "<div class='list-group-item hidden-xs'>\n";
+		$content .= "<div class='row'>\n";
+		$content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['419']."</strong></div>\n";
+		$content .= "<div class='col-xs-5 col-sm-5 col-md-4 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
+		$content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
+		$content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
+		$content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0'>\n<strong>".$locale['421']."</strong></div>\n";
+		$content .= "</div>\n</div>\n";
+		$formaction = FUSION_SELF;
+		foreach ($inf as $i => $item) {
+			$content .= openform('infuseform', 'post', $formaction, array('max_tokens' => 1));
+			$content .= form_hidden('step', 'step', '5', array(''));
+			$content .= "<input type='hidden' name='step' value='5' />\n";
+			$content .= "<div class='list-group-item'>\n";
+			$content .= "<div class='row'>\n";
+			$content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n";
+			$content .= form_hidden('', 'infusion', 'infusion', $item['inf_folder']);
+			if ($item['inf_status'] > 0) {
+				if ($item['inf_status'] > 1) {
+					$content .= form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet'));
+				} else {
+					$content .= form_button('defuse', $locale['411'], "defuse-$i", array('class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'entypo trash'));
+				}
+			} else {
+				$content .= form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'entypo install'));
+			}
+			$content .= "</div>\n";
+			$content .= "<div class='col-xs-6 col-sm-6 col-md-4 col-lg-4'><strong>".$item['inf_name']."</strong><br/>".trimlink($item['inf_description'], 30)."</div>\n";
+			$content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>".($item['inf_status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
+			$content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($item['inf_version'] ? $item['inf_version'] : '')."</div>\n";
+			$content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($item['inf_url'] ? "<a href='".$item['inf_url']."' target='_blank'>" : "")." ".($item['inf_developer'] ? $item['inf_developer'] : $locale['410'])." ".($item['inf_url'] ? "</a>" : "")." <br/>".($item['inf_email'] ? "<a href='mailto:".$item['inf_email']."'>".$locale['409']."</a>" : '')."</div>\n";
+			$content .= "</div>\n</div>\n";
+			$content .= closeform();
 		}
+	}
+} else {
+	$content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
+}
+$content .=  "</div>\n</div>\n";
+$content .= "<div class='well text-center m-t-10'>\n";
+$content .= "<a class='btn btn-block btn-primary' href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+$content .= "</div>\n";
+$nextStep = 6;
+$buttonMode = 'next';
 		break;
-	// Step 6 - Primary Admin Details
+		// Step 6 - Primary Admin Details
 	case 6:
 		$iOWNER = 0;
 		$username = (isset($_POST['username']) ? stripinput(trim($_POST['username'])) : "");

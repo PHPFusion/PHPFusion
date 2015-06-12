@@ -90,7 +90,7 @@ $inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, setting
 $inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_max_b', '150000', 'news')";
 $inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_pagination', '12', 'news')";
 
-$enabled_languages = explode('.', $settings['enabled_languages']);
+$enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
 
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
