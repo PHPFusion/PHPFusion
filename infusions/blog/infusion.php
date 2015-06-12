@@ -30,7 +30,7 @@ $inf_folder = "blog";
 
 // Multilanguage table for Administration
 $inf_mlt[1] = array(
-	"title" => $locale['blog']['title'], 
+	"title" => $locale['blog']['title'],
 	"rights" => "BL",
 );
 
@@ -93,10 +93,10 @@ $inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, setting
 $inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_photo_max_b', '150000', 'blog')";
 $inf_insertdbrow[15] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('blog_pagination', '12', 'blog')";
 
-$enabled_languages = explode('.', $settings['enabled_languages']);
+$enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
 
 // Create a link for all installed languages
-if (!empty($settings['enabled_languages'])) {
+if (!empty($enabled_languages)) {
 $k = 16;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 	include LOCALE."".$enabled_languages[$i]."/setup.php";

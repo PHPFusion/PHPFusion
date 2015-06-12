@@ -90,12 +90,14 @@ $inf_insertdbrow[17] = DB_SETTINGS_INF." (settings_name, settings_value, setting
 
 // Position the link under Content Administration
 $inf_insertdbrow[18] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('PH', 'photoalbums.gif', '".$locale['photos']['title']."', '".INFUSIONS."gallery/gallery_admin.php', '1')";
+
+$enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
 		
 // Create a link for all installed languages
-if (!empty($settings['enabled_languages'])) {
-$enabled_languages = explode('.', $settings['enabled_languages']);
+if (!empty($enabled_languages)) {
 $k = 19;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
+		include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['photos']['title']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
 		$k++;
 	}
