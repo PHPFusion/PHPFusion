@@ -1,9 +1,25 @@
-.label-danger {
+.label-super-admin {
 	background-color: #504cc7;
 }
-.label-primary {
+.label-member {
 	background-color: #114CB6;
 }
-.label-warning {
+.label-mod {
 	background-color: orange;
+}
+.fusion_count {
+	color: #444;
+	font-size:20px;
+	text-align:center;
+}
+.fusion_word {
+	text-align:center;
+	display:block;
+	text-transform: uppercase;
+	color: #777;
+	font-weight: 300;
+	font-size: 12px;
+}
+.vatop {
+	vertical-align: top;
 }

@@ -117,9 +117,9 @@ public static function show_forum_rank($posts, $level, $groups, $image = false) 
 	}
 	$forum_rank_cache = forum_rank_cache();
 	$forum_rank_css_class = array(
-		'-101' => 'label-default',
-		'-102' => 'label-warning',
-		'-103' => 'label-danger',
+		'-101' => 'label-member',
+		'-102' => 'label-mod',
+		'-103' => 'label-super-admin',
 	);
 	// Moderator ranks
 	if ($level < USER_LEVEL_MEMBER) {

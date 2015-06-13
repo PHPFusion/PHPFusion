@@ -20,7 +20,7 @@ if (!function_exists('render_thread')) {
 		echo render_breadcrumbs();
 		echo "<div class='clearfix'>\n";
 		echo "<h2 class='m-t-0 thread-header pull-left m-r-20'>".$data['thread_subject']."</h2>\n";
-		echo "<div class='text-smaller text-lighter m-t-10'><i class='fa fa-calendar'></i> ".$locale['forum_0363'].timer($data['thread_lastpost'])." ".showdate('forumdate', $data['thread_lastpost'])."</div>\n";
+		echo "<div class='text-uppercase text-smaller m-t-10'>".$locale['forum_0363'].timer($data['thread_lastpost'])." <i class='fa fa-calendar fa-fw'></i></div>\n";
 		echo "</div>\n";
 
 		// Thread buttons, top
@@ -60,8 +60,8 @@ if (!function_exists('render_thread')) {
 				if ($i == 1 && $info['permissions']['can_post']) {
 					// interject the new thread and reply here.
 					echo "<div class='text-right'>\n";
-					echo $info['thread_posts'];
-					echo "<a class='m-l-20 btn btn-primary btn-sm ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
+					echo "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
+					echo "<a class='m-l-20 btn btn-success btn-md vatop ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
 					echo "</div>\n";
 				}
 			}
@@ -95,21 +95,22 @@ if (!function_exists('render_post_item')) {
 	function render_post_item($data) {
 		// global $locale, $inf_settings, $settings; -- these are accessible, but i'm not using it. ;)
 		echo "
-		<div id='".$data['marker']['id']."' class='m-b-20 m-t-20 list-group-item'>\n
-			<div class='pull-left text-center m-r-15'>\n
+		<div id='".$data['marker']['id']."' class='clearfix m-b-20 m-t-20 list-group-item'>\n
+			<div class='pull-left text-center m-r-15 m-b-10'>\n
 				".$data['user_avatar']."
 				<div class='forum_rank text-smaller m-10'>\n".$data['user_rank']."</div>\n
 				<div class='text-lighter text-smaller'>".$data['user_post_count']."</div>
 			</div>\n
 			<div class='dropdown pull-right'>\n
-				<a class='dropdown' data-toggle='dropdown'><i class='fa fa-fw fa-ellipsis-v'></i></a>
+				<a class='dropdown' data-toggle='dropdown'><i class='text-dark fa fa-fw fa-ellipsis-v'></i></a>
 				<ul class='dropdown-menu'>\n
 					<li class='dropdown-header'>".$data['user_ip']."</li>\n
+					".($data['user_message']['link'] !=="" ? "<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['name']."'>".$data['user_message']['name']."</a></li>\n" : "")."
+					".($data['user_web']['link'] !=="" ? "<li><a href='".$data['user_web']['link']."' title='".$data['user_web']['name']."'>".$data['user_web']['name']."</a></li>\n" : "")."
+					<li><a href='".$data['print']['link']."' title='".$data['print']['name']."'>".$data['print']['name']."</a></li>\n
+					<li class='divider'></li>\n
 					<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a></li>\n
 					<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a></li>\n
-					<li><a href='".$data['print']['link']."' title='".$data['print']['name']."'>".$data['print']['name']."</a></li>\n
-					<li><a href='".$data['user_web']['link']."' title='".$data['user_web']['name']."'>".$data['user_web']['name']."</a></li>\n
-					<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['name']."'>".$data['user_message']['name']."</a></li>\n
 				</ul>
 			</div>
 			<div class='overflow-hide'>
@@ -137,8 +138,8 @@ if (!function_exists('render_post_item')) {
 					<div class='pull-right m-l-10'>".$data['post_checkbox']."</div>\n
 				</div>
 				<div class='text-right m-t-10'>
-					<a class='btn btn-default btn-sm' href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a>
-					<a class='btn btn-default btn-sm' href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a>
+					<a class='btn btn-primary btn-xs' href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a>
+					<a class='btn btn-default btn-xs' href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a>
 				</div>\n
 			</div>
 		</div>

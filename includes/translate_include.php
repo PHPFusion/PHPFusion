@@ -15,10 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Denied");
-	exit;
-}
+if (!defined("IN_FUSION")) die("Access Denied");
+
 function translate_lang_names($language) {
 	$translated_langs = array(
 						"Chinese" => '中文',
@@ -84,7 +82,7 @@ function format_word_Danish($count, $words, $add_count = 1) {
 	$words_array = explode("|", $words);
 	$result = $words_array[$form];
 	if ($add_count) {
-		$result = $count." ".$result;
+		$result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
 	}
 
 	return $result;
@@ -96,7 +94,7 @@ function format_word_English($count, $words, $add_count = 1) {
 	$words_array = explode("|", $words);
 	$result = $words_array[$form];
 	if ($add_count) {
-		$result = $count." ".$result;
+		$result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
 	}
 
 	return $result;
@@ -120,7 +118,7 @@ function format_word_Russian($count, $words, $add_count = 1) {
 	$words_array = explode("|", $words);
 	$result = $words_array[$form];
 	if ($add_count) {
-		$result = $count." ".$result;
+		$result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
 	}
 
 	return $result;
@@ -144,7 +142,7 @@ function format_word_Ukrainian($count, $words, $add_count = 1) {
 	$words_array = explode("|", $words);
 	$result = $words_array[$form];
 	if ($add_count) {
-		$result = $count." ".$result;
+		$result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
 	}
 
 	return $result;
