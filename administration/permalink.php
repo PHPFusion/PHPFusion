@@ -119,7 +119,6 @@ if (isset($_POST['savesettings'])) {
 
 echo openform('settingsseo', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 2));
 echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-$locale['seo_htc_warning'] = 'Please note that if you change any of these settings the content of <strong>.htaccess</strong> will be overwritten and any changes previously done to this file will be lost.'; // to be moved
 echo "<div class='admin-message alert alert-info'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
 echo form_checkbox('site_seo', $locale['438'], $settings_seo['site_seo'], array('toggle' => 1, 'inline' => 1));
