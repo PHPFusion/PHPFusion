@@ -512,16 +512,6 @@ class Viewthread {
 						$pdata['user_rank'] =  getuserlevel($pdata['user_level']);
 					}
 				} else {
-					/* should be no need because iMOD already defined
-					$is_mod = FALSE;
-					if (!empty($pdata['mod_groups'])) {
-						foreach ($pdata['mod_groups'] as $mod_group) {
-							if (!$is_mod && preg_match("(^\.{$mod_group}$|\.{$mod_group}\.|\.{$mod_group}$)", $pdata['user_groups'])) {
-								$is_mod = TRUE;
-							}
-						}
-					}
-					*/
 					if ($inf_settings['forum_ranks']) {
 						$pdata['user_rank'] = iMOD ? show_forum_rank($pdata['user_posts'], 104, $pdata['user_groups']) : show_forum_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
 					} else {
@@ -538,10 +528,11 @@ class Viewthread {
 					'name' => $locale['forum_0179']
 				);
 				// Website
-				$pdata['user_web'] = array('link'=>'', 'name' =>'');
 				if ($pdata['user_web'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
 					$user_web_url_prefix = !strstr($pdata['user_web'], "http://") ? "http://" : "";
 					$pdata['user_web'] = array('link' => $user_web_url_prefix.$pdata['user_web'], 'name' => $locale['forum_0364']);
+				} else {
+					$pdata['user_web'] = array('link'=>'', 'name' =>'');
 				}
 				// PM link
 				$pdata['user_message'] = array('link'=>'', 'name' =>'');

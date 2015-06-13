@@ -34,7 +34,6 @@ if (!function_exists('render_thread')) {
 		echo "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['print']['link']."'>".$buttons['print']['name']." <i class='fa fa-print'></i> </a>\n";
 		echo "</div>\n";
 
-
 		$p_title = array();
 		foreach($info['post-filters'] as $i => $filters) {
 			$p_title['title'][] = $filters['locale'];
@@ -45,7 +44,9 @@ if (!function_exists('render_thread')) {
 
 		echo opentab($p_title, $tab_active, 'post_tabs', 1);
 			echo opentabbody('', $tab_active, $tab_active, 1);
-			echo "<div id='forum_top' class='text-left m-b-10 m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
+			if (isset($info['page_nav'])) {
+				echo "<div id='forum_top' class='text-left m-b-10 m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
+			}
 			if (isset($info['poll'])) {
 				echo $info['poll_form'];
 			}
@@ -64,7 +65,9 @@ if (!function_exists('render_thread')) {
 					echo "</div>\n";
 				}
 			}
-			echo "<div id='forum_bottom' class='text-left m-b-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
+			if (isset($info['page_nav'])) {
+				echo "<div id='forum_bottom' class='text-left m-b-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
+			}
 			// Moderation Panel
 			if (iMOD) echo $info['mod_form'];
 
@@ -140,11 +143,5 @@ if (!function_exists('render_post_item')) {
 			</div>
 		</div>
 		";
-//".$data['post_links']."
-/*
- *
-
- */
-
 	}
 }
