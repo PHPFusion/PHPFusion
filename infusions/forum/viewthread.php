@@ -31,6 +31,7 @@ require_once INFUSIONS."forum/classes/Moderator.php";
 require_once INFUSIONS."forum/forum_include.php";
 // Load Template
 include INFUSIONS."forum/templates/forum_main.php";
+include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
 $inf_settings = get_settings('forum');
 $thread = new PHPFusion\Forums\Viewthread();

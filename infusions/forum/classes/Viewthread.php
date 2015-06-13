@@ -62,6 +62,7 @@ class Viewthread {
 
 		//$_GET['forum_id'] = $this->thread_info['forum_id'];
 		if ($thread_data['forum_type'] == 1) redirect(INFUSIONS.'forum/index.php');
+		if ($thread_stat['post_count'] < 1) redirect(INFUSIONS.'forum/index.php');
 		// extra helper information
 		$thread_data['forum_link'] =  INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$thread_data['forum_id']."&amp;forum_cat=".$thread_data['forum_cat']."&amp;forum_branch=".$thread_data['forum_branch'];
 
@@ -456,9 +457,10 @@ class Viewthread {
 		$this->thread_info['post_rows'] = dbrows($result);
 		if ($this->thread_info['post_rows'] > 0) {
 			/* Set Threads Navigation */
-			$this->thread_info['page_nav'] = format_word($this->thread_info['post_rows'], $locale['fmt_post']);
+			$this->thread_info['thread_posts'] = format_word($this->thread_info['post_rows'], $locale['fmt_post']);
+			$this->thread_info['page_nav'] = '';
 			if ($this->thread_info['max_post_items'] > $this->thread_info['posts_per_page']) {
-				$this->thread_info['page_nav'] .= "<div class='pull-right'>".makepagenav($_GET['rowstart'], $this->thread_info['posts_per_page'], $this->thread_info['max_post_items'], 3, INFUSIONS."forum/viewthread.php?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
+				$this->thread_info['page_nav'] = "<div class='pull-right'>".makepagenav($_GET['rowstart'], $this->thread_info['posts_per_page'], $this->thread_info['max_post_items'], 3, INFUSIONS."forum/viewthread.php?forum_id=".$this->thread_info['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'].(isset($_GET['highlight']) ? "&amp;highlight=".urlencode($_GET['highlight']) : '')."&amp;")."</div>";
 			}
 			$i = 1;
 
@@ -471,9 +473,11 @@ class Viewthread {
 				$pdata['post_message'] = $pdata['post_smileys'] ? parsesmileys($pdata['post_message']) : $pdata['post_message'];
 				$pdata['post_message'] = nl2br(parseubb($pdata['post_message']));
 				$pdata['post_message'] = (isset($_GET['highlight'])) ? "<div class='search_result'>".$pdata['post_message']."</div>\n" : $pdata['post_message'];
+
 				/**
 				 * User Stuffs, Sig, User Message, Web
 				 */
+
 				// Quote & Edit Link
 				if (iMEMBER && ($this->thread_info['permissions']['can_post'] || $this->thread_info['permissions']['can_reply'])) {
 					if (!$this->thread_info['thread']['thread_locked']) {
@@ -487,6 +491,10 @@ class Viewthread {
 								'name' => $locale['forum_0265']
 							);
 						}
+						$pdata['post_reply'] = array(
+							'link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+							'name' => $locale['forum_0509']
+						);
 					} elseif (iMOD) {
 						$pdata['post_edit'] = array(
 							'link' => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
@@ -495,7 +503,7 @@ class Viewthread {
 					}
 				}
 				$pdata['user_profile_link'] = profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']);
-				$pdata['user_avatar'] = display_avatar($pdata, '50px', '', '', 'img-rounded');
+				$pdata['user_avatar'] = display_avatar($pdata, '40px', '', '', '');
 				// rank img
 				if ($pdata['user_level'] <= USER_LEVEL_ADMIN) {
 					$pdata['rank_img'] = $settings['forum_ranks'] ? show_forum_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']) : getuserlevel($pdata['user_level']);
@@ -563,9 +571,11 @@ class Viewthread {
 					$pdata['post_votebox'] .= "</div>\n";
 				}
 				// Marker
-				$pdata['marker'] = array('link' => "#post_".$pdata['post_id'],
-					'name' => "#".($i+$_GET['rowstart']),
-					'id' => "post_".$pdata['post_id']);
+				$pdata['marker'] = array(
+									'link' => "#post_".$pdata['post_id'],
+									'name' => "#".($i+$_GET['rowstart']),
+									'id' => "post_".$pdata['post_id']
+									);
 				$pdata['post_marker'] = !empty($pdata['marker']) ? "<a class='marker' href='".$pdata['marker']['link']."' id='".$pdata['marker']['id']."'>".$pdata['marker']['name']."</a>" : '';
 				$pdata['post_marker'] .= "<a title='".$locale['forum_0241']."' href='#top'><i class='entypo up-open'></i></a>\n";
 				// Edit Reason - NOT WORKING?
@@ -631,6 +641,8 @@ class Viewthread {
 				$pdata['post_links'] .= !empty($pdata['user_message']) ? "<a class='btn btn-xs btn-default' href='".$pdata['user_message']['link']."' target='_blank'>".$pdata['user_message']['name']."</a>\n" : '';
 				// Post Date
 				$pdata['post_date'] = $locale['forum_0524']." ".timer($pdata['post_datestamp'])." - ".showdate('forumdate', $pdata['post_datestamp']);
+				$pdata['post_shortdate'] = $locale['forum_0524']." ".timer($pdata['post_datestamp']);
+				$pdata['post_longdate'] = $locale['forum_0524']." ".showdate('forumdate', $pdata['post_datestamp']);
 				$this->thread_info['post_items'][$pdata['post_id']] = $pdata;
 				$i++;
 			}

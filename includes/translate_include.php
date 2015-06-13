@@ -62,6 +62,7 @@ function translate_country_names($country) {
 }
 
 // select correct single and plural form for languages
+// added span wrapper for styling purposes
 function format_word($count, $words, $add_count = 1) {
 	$lang_func_name = "format_word_".LANGUAGE;
 	$result = "";
@@ -71,7 +72,7 @@ function format_word($count, $words, $add_count = 1) {
 		$words_array = explode("|", $words);
 		$result = $words_array[0];
 		if ($add_count) {
-			$result = $count." ".$result;
+			$result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
 		}
 	}
 	return $result;
