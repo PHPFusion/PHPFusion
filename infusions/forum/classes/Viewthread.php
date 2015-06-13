@@ -503,11 +503,16 @@ class Viewthread {
 					}
 				}
 				$pdata['user_profile_link'] = profile_link($pdata['user_id'], $pdata['user_name'], $pdata['user_status']);
-				$pdata['user_avatar'] = display_avatar($pdata, '40px', '', '', '');
+				$pdata['user_avatar'] = display_avatar($pdata, '40px', '', '', ''); // @todo: to go for settings base - class & size.
 				// rank img
 				if ($pdata['user_level'] <= USER_LEVEL_ADMIN) {
-					$pdata['rank_img'] = $settings['forum_ranks'] ? show_forum_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']) : getuserlevel($pdata['user_level']);
+					if ($inf_settings['forum_ranks']) {
+						$pdata['user_rank'] =  show_forum_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']); // in fact now is get forum rank
+					} else {
+						$pdata['user_rank'] =  getuserlevel($pdata['user_level']);
+					}
 				} else {
+					/* should be no need because iMOD already defined
 					$is_mod = FALSE;
 					if (!empty($pdata['mod_groups'])) {
 						foreach ($pdata['mod_groups'] as $mod_group) {
@@ -516,14 +521,15 @@ class Viewthread {
 							}
 						}
 					}
-					if ($settings['forum_ranks']) {
-						$pdata['rank_img'] = $is_mod ? show_forum_rank($pdata['user_posts'], 104, $pdata['user_groups']) : show_forum_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
+					*/
+					if ($inf_settings['forum_ranks']) {
+						$pdata['user_rank'] = iMOD ? show_forum_rank($pdata['user_posts'], 104, $pdata['user_groups']) : show_forum_rank($pdata['user_posts'], $pdata['user_level'], $pdata['user_groups']);
 					} else {
-						$pdata['rank_img'] = $is_mod ? $locale['userf1'] : getuserlevel($pdata['user_level']);
+						$pdata['user_rank'] = iMOD ? $locale['userf1'] : getuserlevel($pdata['user_level']);
 					}
 				}
 				// IP
-				$pdata['user_ip'] = (($settings['forum_ips'] && iMEMBER) || iMOD or USER_LEVEL_SUPER_ADMIN) ? $locale['forum_0268'].' '.$pdata['post_ip'] : '';
+				$pdata['user_ip'] = (($inf_settings['forum_ips'] && iMEMBER) || iMOD or USER_LEVEL_SUPER_ADMIN) ? $locale['forum_0268'].' '.$pdata['post_ip'] : '';
 				// Post count
 				$pdata['user_post_count'] = format_word($pdata['user_posts'], $locale['fmt_post']);
 				// Print Thread
@@ -532,11 +538,13 @@ class Viewthread {
 					'name' => $locale['forum_0179']
 				);
 				// Website
+				$pdata['user_web'] = array('link'=>'', 'name' =>'');
 				if ($pdata['user_web'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
 					$user_web_url_prefix = !strstr($pdata['user_web'], "http://") ? "http://" : "";
 					$pdata['user_web'] = array('link' => $user_web_url_prefix.$pdata['user_web'], 'name' => $locale['forum_0364']);
 				}
 				// PM link
+				$pdata['user_message'] = array('link'=>'', 'name' =>'');
 				if (iMEMBER && $pdata['user_id'] != $userdata['user_id'] && (iADMIN || $pdata['user_status'] != 6 && $pdata['user_status'] != 5)) {
 					$pdata['user_message'] = array('link' => BASEDIR.'messages.php?msg_send='.$pdata['user_id'], 'name' => $locale['send_message']);
 				}

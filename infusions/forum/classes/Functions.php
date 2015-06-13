@@ -109,13 +109,18 @@ public static function forum_rank_cache() {
  * @param array $groups The groups of the member
  * @return string HTML source of forum rank images
  */
-public static function show_forum_rank($posts, $level, $groups) {
+public static function show_forum_rank($posts, $level, $groups, $image = false) {
 	$settings = fusion_get_settings();
 	$ranks = array();
 	if (!$settings['forum_ranks']) {
 		return '';
 	}
 	$forum_rank_cache = forum_rank_cache();
+	$forum_rank_css_class = array(
+		'-101' => 'label-default',
+		'-102' => 'label-warning',
+		'-103' => 'label-danger',
+	);
 	// Moderator ranks
 	if ($level < USER_LEVEL_MEMBER) {
 		foreach ($forum_rank_cache['mod'] as $rank) {
@@ -149,7 +154,11 @@ public static function show_forum_rank($posts, $level, $groups) {
 	}
 	$res = '';
 	foreach ($ranks as $rank) {
-		$res .= $rank['rank_title']."<br />\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' /><br />";
+		if ($image) {
+			$res .= $rank['rank_title']."<br />\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' /><br />";
+		} else {
+			$res .= "<label class='label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '>".$rank['rank_title']."</label>\n";
+		}
 	}
 	return $res;
 }

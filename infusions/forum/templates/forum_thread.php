@@ -1,6 +1,7 @@
 <?php
 
 /* Viewthread.php */
+
 if (!function_exists('render_thread')) {
 	function render_thread($info) {
 		global $locale;
@@ -94,7 +95,7 @@ if (!function_exists('render_post_item')) {
 		<div class='m-b-20 m-t-20 list-group-item'>\n
 			<div class='pull-left text-center m-r-15'>\n
 				".$data['user_avatar']."
-				<div class='forum_rank text-smaller m-t-10'>\n".$data['rank_img']."</div>\n
+				<div class='forum_rank text-smaller m-10'>\n".$data['user_rank']."</div>\n
 				<div class='text-lighter text-smaller'>".$data['user_post_count']."</div>
 			</div>\n
 			<div id='".$data['marker']['link']."' class='dropdown pull-right'>\n
@@ -103,6 +104,9 @@ if (!function_exists('render_post_item')) {
 					<li class='dropdown-header'>".$data['user_ip']."</li>\n
 					<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a></li>\n
 					<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a></li>\n
+					<li><a href='".$data['print']['link']."' title='".$data['print']['name']."'>".$data['print']['name']."</a></li>\n
+					<li><a href='".$data['user_web']['link']."' title='".$data['user_web']['name']."'>".$data['user_web']['name']."</a></li>\n
+					<li><a href='".$data['user_message']['link']."' title='".$data['user_message']['name']."'>".$data['user_message']['name']."</a></li>\n
 				</ul>
 			</div>
 			<div class='overflow-hide'>

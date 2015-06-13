@@ -33,6 +33,7 @@ require_once INFUSIONS."forum/forum_include.php";
 include INFUSIONS."forum/templates/forum_main.php";
 include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
+add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
 $inf_settings = get_settings('forum');
 $thread = new PHPFusion\Forums\Viewthread();
 $info = $thread->get_thread_data();
@@ -45,13 +46,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'edit') {
 	render_thread($info);
 }
 //@ todo: clean up logic here.
-
-
-
-
-
-
-//$info = $thread->getThreadInfo();
 
 
 /* Errors */
