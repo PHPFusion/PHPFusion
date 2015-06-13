@@ -95,13 +95,13 @@ if (!function_exists('render_post_item')) {
 	function render_post_item($data) {
 		// global $locale, $inf_settings, $settings; -- these are accessible, but i'm not using it. ;)
 		echo "
-		<div class='m-b-20 m-t-20 list-group-item'>\n
+		<div id='".$data['marker']['id']."' class='m-b-20 m-t-20 list-group-item'>\n
 			<div class='pull-left text-center m-r-15'>\n
 				".$data['user_avatar']."
 				<div class='forum_rank text-smaller m-10'>\n".$data['user_rank']."</div>\n
 				<div class='text-lighter text-smaller'>".$data['user_post_count']."</div>
 			</div>\n
-			<div id='".$data['marker']['link']."' class='dropdown pull-right'>\n
+			<div class='dropdown pull-right'>\n
 				<a class='dropdown' data-toggle='dropdown'><i class='fa fa-fw fa-ellipsis-v'></i></a>
 				<ul class='dropdown-menu'>\n
 					<li class='dropdown-header'>".$data['user_ip']."</li>\n
