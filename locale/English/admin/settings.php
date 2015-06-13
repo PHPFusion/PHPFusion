@@ -103,7 +103,7 @@ $locale['557'] = "New members activated by admin?";
 $locale['558'] = "Enable terms of agreement?";
 $locale['559'] = "Terms of Agreement";
 // Photo Gallery Settings
-$locale['600'] = "Photo Gallery";
+$locale['600'] = "Gallery";
 $locale['601'] = "Thumb size:";
 $locale['602'] = "Photo size:";
 $locale['603'] = "Maximum photo size:";
@@ -334,7 +334,7 @@ $locale['download_settings'] = 'Download Settings';
 $locale['eshop_settings'] = 'Eshop Settings';
 $locale['forum_settings'] = 'Forum Settings';
 $locale['ipp_settings'] = 'Items Per Page Settings';
-$locale['photo_settings'] = 'Photo Settings';
+$locale['photo_settings'] = 'Gallery Settings';
 $locale['main_settings'] = 'Main Settings';
 $locale['misc_settings'] = 'Miscellaneous Settings';
 $locale['news_settings'] = 'News Settings';

@@ -54,9 +54,10 @@ $inf_newtable[2] = DB_FAQ_CATS." (
 // Position these links under Content Administration
 $inf_insertdbrow[1] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FQ', 'faq.gif', '".$locale['setup_3011']."', '".INFUSIONS."faq/faq_admin.php', '1')";
 
+$enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
+
 // Create a link for all installed languages
-if (!empty($settings['enabled_languages'])) {
-$enabled_languages = explode('.', $settings['enabled_languages']);
+if (!empty($enabled_languages)) {
 $k = 2;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 	include LOCALE."".$enabled_languages[$i]."/setup.php";

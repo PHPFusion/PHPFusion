@@ -90,13 +90,13 @@ $inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, setting
 $inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_photo_max_b', '150000', 'news')";
 $inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('news_pagination', '12', 'news')";
 
-$enabled_languages = explode('.', $settings['enabled_languages']);
+$enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
 
 // Create a link for all installed languages
-if (!empty($settings['enabled_languages'])) {
+if (!empty($enabled_languages)) {
 $k = 15;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
-	include LOCALE."".$enabled_languages[$i]."/setup.php";
+		include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
 		$k++;
 	}

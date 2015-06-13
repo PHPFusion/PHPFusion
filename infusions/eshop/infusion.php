@@ -80,7 +80,7 @@ $inf_newtable[1] = DB_ESHOP." (
 	ratings char(1) NOT NULL default '',
 	linebreaks char(1) NOT NULL default '',
 	keywords varchar(255) NOT NULL default '',
-	product_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['enabled_languages']."',
+	product_languages VARCHAR(200) NOT NULL DEFAULT '".fusion_get_settings('enabled_languages')."',
 	dateadded int(10) unsigned NOT NULL default '1',
 	PRIMARY KEY  (id),
 	KEY cid (cid)	
@@ -94,7 +94,7 @@ $inf_newtable[2] = DB_ESHOP_CATS." (
 	parentid mediumint(8) NOT NULL default '0',
 	status char(1) NOT NULL default '0',
 	cat_order mediumint(8) unsigned NOT NULL,
-	cat_languages VARCHAR(200) NOT NULL DEFAULT '".$settings['enabled_languages']."',
+	cat_languages VARCHAR(200) NOT NULL DEFAULT '".fusion_get_settings('enabled_languages')."',
 	PRIMARY KEY  (cid)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
@@ -262,11 +262,13 @@ $inf_insertdbrow[1] = DB_PANELS." (panel_name, panel_filename, panel_content, pa
 // Position these links under Content Administration
 $inf_insertdbrow[2] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('ESHP', 'eshop.gif', '".$locale['eshop']['title']."', '".SHOP."admin/eshop.php', '1')";
 
+$enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
+
 // Create a link for all installed languages
-if (!empty($settings['enabled_languages'])) {
-$enabled_languages = explode('.', $settings['enabled_languages']);
+if (!empty($enabled_languages)) {
 $k = 3;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
+		include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES ('".$locale['eshop']['title']."', 'infusions/eshop/eshop.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
 		$k++;
 	}
