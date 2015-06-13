@@ -26,8 +26,6 @@ require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
 add_to_title($locale['global_204']);
 $debug = false;
-
-if (!isset($_GET['post'])) throw new \Exception($locale['forum_0586']);
 if (!isset($_GET['forum_id'])) throw new \Exception($locale['forum_0587']);
 if (!isset($_GET['thread_id'])) throw new \Exception($locale['forum_0588']);
 $base_redirect_link = INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id'];
@@ -48,14 +46,14 @@ if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $
 } elseif ($_GET['error'] == 5) {
 	$errorb = $locale['forum_0555'];
 } elseif ($_GET['error'] == 6) {
-	$errorb = sprintf($locale['forum_0556'], $settings['forum_edit_timelimit']);
+	$errorb = sprintf($locale['forum_0556'], $inf_settings['forum_edit_timelimit']);
 }
 
-$valid_get = array("on", "off", "new", "reply", "edit");
-if (!iMEMBER || !in_array($_GET['post'], $valid_get)) redirect("index.php");
+$valid_get = array("on", "off", "new", "reply", "edit", "newpoll");
+if (!iMEMBER || !in_array($_GET['post'], $valid_get)) redirect(INFUSIONS."forum/index.php");
 
 
-if (($_GET['post'] == "on" || $_GET['post'] == "off") && $settings['thread_notify']) {
+if (($_GET['post'] == "on" || $_GET['post'] == "off") && $inf_settings['thread_notify']) {
 	$output = FALSE;
 	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
 		redirect("index.php");
@@ -108,7 +106,6 @@ if ($_GET['post'] == "new") {
 }
 
 if ($_GET['post'] == "reply") {
-
 	add_to_title($locale['global_201'].$locale['forum_0503']);
 	opentable($locale['forum_0503']);
 	echo "<div class='".($errorb ? "alert alert-warning" : "well")." text-center'>\n";
@@ -187,9 +184,7 @@ if ($_GET['post'] == "reply") {
 }
 
 if ($_GET['post'] == "edit") {
-	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
-		redirect("index.php");
-	}
+	if (!isset($_GET['post'])) throw new \Exception($locale['forum_0586']);
 	add_to_title($locale['global_201'].$locale['forum_0508']);
 	add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
 	opentable($locale['forum_0508']);
@@ -200,6 +195,18 @@ if ($_GET['post'] == "edit") {
 		echo $locale['forum_0547']."<br /><br />\n";
 	}
 	echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
+	echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
+	echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
+	closetable();
+}
+
+
+if ($_GET['post'] == 'newpoll') {
+	add_to_title($locale['global_201'].$locale['forum_0607']);
+	add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."' />\n");
+	opentable($locale['forum_0607']);
+	echo "<div class='alert well' style='text-align:center'><br />\n";
+	echo "<a href='".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum/index.php'>".$locale['forum_0550']."</a><br /><br />\n</div>\n";
 	closetable();

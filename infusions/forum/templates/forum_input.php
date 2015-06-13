@@ -89,6 +89,14 @@ function postform($info) {
 	}
 }
 
+function pollform($info) {
+	echo render_breadcrumbs();
+	opentable($info['title']);
+	echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
+	echo "<!--pre_form-->\n";
+	echo $info['field'];
+	closetable();
+}
 
 
 /**

@@ -150,6 +150,7 @@ $locale['forum_0362'] = ' posts ';
 $locale['forum_0363'] = "Last updated on ";
 $locale['forum_0364'] = " User Website";
 $locale['forum_0365'] = " Responses";
+$locale['forum_0366'] = " Add Poll";
 
 $locale['forum_0370'] = "Views";
 $locale['forum_0371'] = "Posts";
@@ -260,9 +261,9 @@ $locale['forum_0602'] = "Options";
 $locale['forum_0603'] = "Edit Poll";
 $locale['forum_0604'] = "Poll Title";
 $locale['forum_0605'] = "Poll Option";
-$locale['forum_0606'] = $locale['forum_0605']." 1";
-$locale['forum_0607'] = $locale['forum_0605']." 2";
-$locale['forum_0608'] = "Add Option";
+$locale['forum_0606'] = $locale['forum_0605']." %s";
+$locale['forum_0607'] = "Poll added";
+$locale['forum_0608'] = "Add Poll Option";
 $locale['forum_0609'] = "Update";
 $locale['forum_0610'] = "Delete";
 $locale['forum_0611'] = "Edit Reason";
@@ -328,10 +329,12 @@ $locale['forum_0801'] = "You cannot vote for a second time per thread";
 $locale['forum_0802'] = "You cannot vote at your own post.";
 
 // forum.forms.php
-$locale['forum_2000'] = "Topic: ";
+$locale['forum_2000'] = "Thread topic : ";
 $locale['forum_2001'] = 'What is on your mind?';
 $locale['forum_2002'] = "Re: ";
 $locale['forum_2010'] = 'Cast Vote';
+$locale['forum_2011'] = 'Create Poll';
+$locale['forum_2012'] = 'Edit Poll';
 
 // Period for search & filter
 $locale['forum_p000'] = 'Today';

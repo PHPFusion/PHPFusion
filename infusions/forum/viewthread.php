@@ -36,13 +36,26 @@ include INFUSIONS."forum/templates/forum_input.php";
 add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
 $inf_settings = get_settings('forum');
 $thread = new PHPFusion\Forums\Viewthread();
-$info = $thread->get_thread_data();
 echo renderNotices(getNotices());
-if (isset($_GET['action']) && $_GET['action'] == 'edit') {
-	$thread->render_edit_form();
-} if (isset($_GET['action']) && $_GET['action'] == 'reply') {
-	$thread->render_reply_form();
-} elseif (!isset($_GET['action'])) {
+if (isset($_GET['action'])) {
+	switch($_GET['action']) {
+		case 'editpoll':
+			$thread->render_poll_form(true);
+			break;
+		case 'newpoll':
+			$thread->render_poll_form();
+			break;
+		case 'edit':
+			$thread->render_edit_form();
+			break;
+		case 'reply':
+			$thread->render_reply_form();
+			break;
+		default:
+			redirect(clean_request('', array('action'), false));
+	}
+} else {
+	$info = $thread->get_thread_data();
 	render_thread($info);
 }
 //@ todo: clean up logic here.

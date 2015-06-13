@@ -30,11 +30,18 @@ if (!function_exists('render_thread')) {
 		echo "<h2 class='m-t-0 thread-header pull-left m-r-20'>".$data['thread_subject']."</h2>\n";
 		echo "<div class='text-uppercase text-smaller m-t-10'>".$locale['forum_0363'].timer($data['thread_lastpost'])." <i class='fa fa-calendar fa-fw'></i></div>\n";
 		echo "</div>\n";
+
+		if (isset($info['poll'])) echo "<div class='well'>".$info['poll_form']."</div>\n";
+
 		if ($info['permissions']['can_post']) {
 			echo "<div class='pull-right'>\n";
+			if ($info['permissions']['can_poll']) {
+				echo "<a class='btn btn-success btn-sm ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['name']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['name']." <i class='fa fa-pie-chart'></i> </a>\n";
+			}
 			echo "<a class='btn btn-primary btn-sm m-r-5 ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['name']."</a>\n";
 			echo "</div>\n";
 		}
+
 		echo "<div class='btn-group pull-right m-r-10'>\n";
 		echo isset($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['name']." <i class='fa fa-eye'></i></a>\n" : '';
 		echo "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['print']['link']."'>".$buttons['print']['name']." <i class='fa fa-print'></i> </a>\n";
@@ -49,7 +56,6 @@ if (!function_exists('render_thread')) {
 		echo opentab($p_title, $tab_active, 'post_tabs', 1);
 		echo opentabbody('', $tab_active, $tab_active, 1);
 		if (isset($info['page_nav'])) echo "<div id='forum_top' class='text-left m-b-10 m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
-		if (isset($info['poll'])) echo $info['poll_form'];
 		echo "<!--pre_forum_thread-->\n";
 		echo $info['open_post_form'];
 		$i = 0;
