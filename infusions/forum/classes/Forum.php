@@ -327,12 +327,10 @@ class Forum {
 							if (dbrows($t_result)>0) {
 								while ($threads = dbarray($t_result)) {
 									$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
-
 									 // Threads Customized Output
 									$threads['thread_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'];
 									$threads['thread_pages'] = '';
-
-									$reps = ($this->forum_info['thread_max_rows'] > $this->forum_info['threads_per_page']) ? ceil($threads['thread_max_rows']/$this->forum_info['threads_per_page']) : 0;
+									$reps = ($this->forum_info['thread_max_rows'] > $this->forum_info['threads_per_page']) ? ceil($this->forum_info['thread_max_rows']/$this->forum_info['threads_per_page']) : 0;
 									if ($reps > 1) {
 										$ctr = 0;
 										$ctr2 = 1;

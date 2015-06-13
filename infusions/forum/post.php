@@ -127,19 +127,6 @@ elseif (isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['thre
 						$info['attachmax_count'] = ($settings['attachmax_count']-$counter <= 0 ? "-2" : $settings['attachmax_count']-$counter);
 					}
 				}
-				// Poll Data
-				if ($info['forum_poll'] && checkgroup($info['forum_poll'])) {
-					if ($data['thread_poll'] && ($data['post_author'] == $data['thread_author']) && ($userdata['user_id'] == $data['thread_author'] || iSUPERADMIN || iMOD)) {
-						$result = dbquery("SELECT * FROM ".DB_FORUM_POLLS." WHERE thread_id='".$_GET['thread_id']."'");
-						if (dbrows($result)>0) {
-							$data += dbarray($result);
-							$result = dbquery("SELECT forum_poll_option_text FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY forum_poll_option_id ASC");
-							while ($_pdata = dbarray($result)) {
-								$data['poll_opts'][] = $_pdata['forum_poll_option_text'];
-							}
-						}
-					}
-				}
 			} else {
 				redirect(FORUM."index.php"); // edit rules failed.
 			}
