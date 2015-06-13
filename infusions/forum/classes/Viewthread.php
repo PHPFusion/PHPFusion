@@ -1267,41 +1267,21 @@ class Viewthread {
 				if (dbrows($result)>0) {
 					$poll_data = dbarray($result);
 					$result = dbquery("SELECT forum_poll_option_text FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY forum_poll_option_id ASC");
-					$opts_rows = dbrows($result);
 					$i = 1;
-					$poll_field .= form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'], array('max_length' => 255, 'placeholder' => 'Enter a Poll Title', 'inline' => 1)).
-								   form_hidden('', 'thread_poll', 'thread_poll', $thread_data['thread_poll']);
+					$poll_field .= form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'], array('max_length' => 255, 'placeholder' => 'Enter a Poll Title', 'inline' => 1));
 					while ($_pdata = dbarray($result)) {
-						//$poll_data['poll_opts'][] = $_pdata['forum_poll_option_text'];
-						$poll_field .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, $_pdata['forum_poll_option_text'], array('max_length' => 255, 'placeholder' => 'Poll Options', 'inline' => 1, 'class' => 'm-b-0'));
-						// only in edit mode
-						$poll_field .= "<div class='col-xs-12 col-sm-offset-3 m-t-5'>\n";
-						$poll_field .= form_button("update_poll_option[$i]", $locale['forum_0609'], $locale['forum_0609'], array('class' => 'btn-xs btn-default m-r-10'));
-						$poll_field .= form_button("delete_poll_option[$i]", $locale['forum_0610'], $locale['forum_0610'], array('class' => 'btn-xs btn-default m-r-10'));
-						$poll_field .= "</div>\n";
-						$poll_field .= "<hr/>";
-						if ($i == $opts_rows) {
-							$i++;
-							$poll_field .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, '', array('max_length' => 255, 'placeholder' => 'Poll Options', 'inline' => 1, 'class' => 'm-b-0'));
-						}
-						$poll_field .= "<div class='col-xs-12 col-sm-offset-3 m-b-10'>\n";
-						$poll_field .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-default btn-sm m-r-10', 'icon' => 'entypo plus-circled'));
-						//only in edit mode
-						$poll_field .= form_button('update_poll_title', $locale['forum_0609'], $locale['forum_0609'], array('class' => 'btn-default btn-sm m-r-10'));
-						$poll_field .= form_button('delete_poll', $locale['forum_0610'], $locale['forum_0610'], array('class' => 'btn-default btn-sm m-r-10'));
-						$poll_field .= "</div>\n";
+						$poll_field .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, $_pdata['forum_poll_option_text'], array('max_length' => 255, 'placeholder' => 'Poll Options', 'inline' => 1));
 						$i++;
 					}
+					$poll_field .= form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-warning btn-md'));
 				} else {
 					// redirect because the poll id is not available.
-					redirect(INFUSIONS.'forum/index.php', false, true);
+					redirect(INFUSIONS.'forum/index.php');
 				}
 			} else {
 				// blank poll - no poll on edit or new thread
 				$poll_field .= form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255, 'placeholder' => 'Enter a Poll Title', 'inline' => 1, 'required'=>true));
-				print_p($option_data);
 				for ($i=1; $i<=$data['forum_poll_length']; $i++) {
-
 					$poll_field .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i], array('max_length' => 255, 'placeholder' => $locale['forum_0605'], 'inline' => 1, 'required'=> $i<=2 ? true :false ));
 				}
 				$poll_field .= "<div class='col-xs-12 col-sm-offset-3'>\n";

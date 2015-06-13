@@ -335,6 +335,7 @@ $locale['forum_2002'] = "Re: ";
 $locale['forum_2010'] = 'Cast Vote';
 $locale['forum_2011'] = 'Create Poll';
 $locale['forum_2012'] = 'Edit Poll';
+$locale['forum_2013'] = 'Update Poll';
 
 // Period for search & filter
 $locale['forum_p000'] = 'Today';
