@@ -209,15 +209,23 @@ function check_admin_pass($password) {
  * Redirect browser using header or script function
  * @param string  $location Destination URL
  * @param boolean $script   TRUE if you want to redirect via javascript
+ * @param boolean $debug 	TRUE if you want to see location line that redirect happens
  */
-function redirect($location, $script = FALSE) {
-	if (!$script) {
-		header("Location: ".str_replace("&amp;", "&", $location));
-		exit;
+function redirect($location, $script = FALSE, $debug=false) {
+	if (!$debug) {
+		if (!$script) {
+			header("Location: ".str_replace("&amp;", "&", $location));
+			exit;
+		} else {
+			echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
+			exit;
+		}
 	} else {
-		echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
-		exit;
+		debug_print_backtrace();
+		echo 'redirected to '.$location;
 	}
+
+
 }
 
 /**
