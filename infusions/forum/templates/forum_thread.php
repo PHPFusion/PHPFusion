@@ -11,8 +11,8 @@ if (!function_exists('render_thread')) {
 		$pdata = $info['post_items'];
 		// filter UI vars
 		$icon = array(
-			'fa fa-sort-alpha-asc fa-fw',
-			'fa fa-sort-alpha-desc fa-fw',
+			'',
+			'',
 			'fa fa-trophy fa-fw'
 		);
 
@@ -127,7 +127,6 @@ if (!function_exists('render_post_item')) {
 
 				<div class='text-right'>
 					<div class='edit_reason m-b-10'>".$data['post_edit_reason']."</div>
-
 					<div class='pull-right m-l-10'>".$data['post_checkbox']."</div>\n
 				</div>
 				<div class='text-right m-t-10'>
