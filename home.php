@@ -25,79 +25,79 @@ add_to_title($locale['home']);
 
 $configs = array();
 $configs[DB_NEWS] = array(
-	'select' => "SELECT
-					ne.news_id as id, ne.news_subject as title, ne.news_news as content,
-					ne.news_datestamp as datestamp, us.user_id, us.user_name,
-					us.user_status, nc.news_cat_id as cat_id, nc.news_cat_name as cat_name
-				FROM ".DB_NEWS." as ne
-				LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ne.news_cat
-				INNER JOIN ".DB_USERS." as us ON ne.news_name = us.user_id
-				WHERE (".time()." > ne.news_start OR ne.news_start = 0)
-					AND (".time()." < ne.news_end OR ne.news_end = 0)
-					AND ".groupaccess('ne.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
-				ORDER BY ne.news_datestamp DESC LIMIT 3",
+	'select' => "SELECT	
+	ne.news_id as id, ne.news_subject as title, ne.news_news as content,
+	ne.news_datestamp as datestamp, us.user_id, us.user_name,
+	us.user_status, nc.news_cat_id as cat_id, nc.news_cat_name as cat_name
+	FROM ".DB_NEWS." as ne
+	LEFT JOIN ".DB_NEWS_CATS." as nc ON nc.news_cat_id = ne.news_cat
+	INNER JOIN ".DB_USERS." as us ON ne.news_name = us.user_id
+	WHERE (".time()." > ne.news_start OR ne.news_start = 0)
+	AND (".time()." < ne.news_end OR ne.news_end = 0)
+	AND ".groupaccess('ne.news_visibility')." ".(multilang_table("NS") ? "AND news_language='".LANGUAGE."'" : "")."
+	ORDER BY ne.news_datestamp DESC LIMIT 3",
 	'locale' => array(
-		'norecord' => $locale['home_0050'],
-		'blockTitle' => $locale['home_0000'],
+	'norecord' => $locale['home_0050'],
+	'blockTitle' => $locale['home_0000'],
 	),
 	'categoryLinkPattern' => INFUSIONS."news/news_cats.php?cat_id={cat_id}",
-	'contentLinkPattern' => INFUSIONS."news/news.php?readmore={id}"
+	'contentLinkPattern' => INFUSIONS."news/news.php?readmore={id}",
 );
 
 $configs[DB_ARTICLES] = array(
 	'select' => "SELECT
-					ar.article_id as id, ar.article_subject as title, ar.article_snippet as content,
-					ar.article_datestamp as datestamp, ac.article_cat_id as cat_id, ac.article_cat_name as cat_name,
-					us.user_id, us.user_name, us.user_status
-				FROM ".DB_ARTICLES." as ar
-				INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat
-				INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name
-				WHERE ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
-				ORDER BY ar.article_datestamp DESC LIMIT 3",
+	ar.article_id as id, ar.article_subject as title, ar.article_snippet as content,
+	ar.article_datestamp as datestamp, ac.article_cat_id as cat_id, ac.article_cat_name as cat_name,
+	us.user_id, us.user_name, us.user_status
+	FROM ".DB_ARTICLES." as ar
+	INNER JOIN ".DB_ARTICLE_CATS." as ac ON ac.article_cat_id = ar.article_cat
+	INNER JOIN ".DB_USERS." as us ON us.user_id = ar.article_name
+	WHERE ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ac.article_cat_language='".LANGUAGE."'" : "")."
+	ORDER BY ar.article_datestamp DESC LIMIT 3",
 	'locale' => array(
-		'norecord' => $locale['home_0051'],
-		'blockTitle' => $locale['home_0001'],
+	'norecord' => $locale['home_0051'],
+	'blockTitle' => $locale['home_0001'],
 	),
 	'categoryLinkPattern' => INFUSIONS."articles/articles.php?cat_id={cat_id}",
-	'contentLinkPattern' => INFUSIONS."articles/articles.php?article_id={id}"
+	'contentLinkPattern' => INFUSIONS."articles/articles.php?article_id={id}",
 );
 
 $configs[DB_BLOG] = array(
 	'select' => "SELECT
-					bl.blog_id as id, bl.blog_subject as title, bl.blog_blog as content,
-					bl.blog_datestamp as datestamp, us.user_id, us.user_name,
-					us.user_status, bc.blog_cat_id as cat_id, bc.blog_cat_name as cat_name
-				FROM ".DB_BLOG." as bl
-				LEFT JOIN ".DB_BLOG_CATS." as bc ON bc.blog_cat_id = bl.blog_cat
-				INNER JOIN ".DB_USERS." as us ON bl.blog_name = us.user_id
-				WHERE (".time()." > bl.blog_start OR bl.blog_start = 0)
-					AND (".time()." < bl.blog_end OR bl.blog_end = 0)
-					AND ".groupaccess('bl.blog_visibility')." ".(multilang_table("BL") ? "AND blog_language='".LANGUAGE."'" : "")."
-				ORDER BY bl.blog_datestamp DESC LIMIT 3",
+	bl.blog_id as id, bl.blog_subject as title, bl.blog_blog as content,
+	bl.blog_datestamp as datestamp, us.user_id, us.user_name,
+	us.user_status, bc.blog_cat_id as cat_id, bc.blog_cat_name as cat_name
+	FROM ".DB_BLOG." as bl
+	LEFT JOIN ".DB_BLOG_CATS." as bc ON bc.blog_cat_id = bl.blog_cat
+	INNER JOIN ".DB_USERS." as us ON bl.blog_name = us.user_id
+	WHERE (".time()." > bl.blog_start OR bl.blog_start = 0)
+	AND (".time()." < bl.blog_end OR bl.blog_end = 0)
+	AND ".groupaccess('bl.blog_visibility')." ".(multilang_table("BL") ? "AND blog_language='".LANGUAGE."'" : "")."
+	ORDER BY bl.blog_datestamp DESC LIMIT 3",
 	'locale' => array(
-		'norecord' => $locale['home_0052'],
-		'blockTitle' => $locale['home_0002']
+	'norecord' => $locale['home_0052'],
+	'blockTitle' => $locale['home_0002']
 	),
 	'categoryLinkPattern' => INFUSIONS."blog/blog.php?cat_id={cat_id}",
-	'contentLinkPattern' => INFUSIONS."blog/blog.php?readmore={id}"
+	'contentLinkPattern' => INFUSIONS."blog/blog.php?readmore={id}",
 );
 
 $configs[DB_DOWNLOADS] = array(
 	'select' => "SELECT
-					dl.download_id as id, dl.download_title as title, dl.download_description_short as content,
-					dl.download_datestamp as datestamp, dc.download_cat_id as cat_id, dc.download_cat_name as cat_name,
-					us.user_id, us.user_name, us.user_status
-				FROM ".DB_DOWNLOADS." dl
-				INNER JOIN ".DB_DOWNLOAD_CATS." dc ON dc.download_cat_id = dl.download_cat
-				INNER JOIN ".DB_USERS." us ON us.user_id = dl.download_user
-				WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
-				ORDER BY dl.download_datestamp DESC LIMIT 3",
+	dl.download_id as id, dl.download_title as title, dl.download_description_short as content,
+	dl.download_datestamp as datestamp, dc.download_cat_id as cat_id, dc.download_cat_name as cat_name,
+	us.user_id, us.user_name, us.user_status
+	FROM ".DB_DOWNLOADS." dl
+	INNER JOIN ".DB_DOWNLOAD_CATS." dc ON dc.download_cat_id = dl.download_cat
+	INNER JOIN ".DB_USERS." us ON us.user_id = dl.download_user
+	WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
+	ORDER BY dl.download_datestamp DESC LIMIT 3",
 	'locale' => array(
-		'norecord' => $locale['home_0053'],
-		'blockTitle' => $locale['home_0003']
+	'norecord' => $locale['home_0053'],
+	'blockTitle' => $locale['home_0003']
 	),
 	'categoryLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}",
-	'contentLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}&download_id={id}"
+	'contentLinkPattern' => DOWNLOADS."downloads.php?cat_id={cat_id}&download_id={id}",
 );
 
 $contents = array();
@@ -140,31 +140,30 @@ foreach ($configs as $table => $config) {
 	$contents[$table]['data'] = $data;
 }
 
-foreach($contents as $content) :
-	$colwidth = $content['colwidth'];
-	opentable($content['blockTitle']);
-	if ($colwidth) :
+foreach($contents as $content) {
+$colwidth = $content['colwidth'];
+opentable($content['blockTitle']);
+	if ($colwidth) {
 		$classes = "col-xs-".$colwidth." col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content";
-		?>
-		<div class='row'>
-		<?php foreach($content['data'] as $data) : ?>
-			<div class='<?php echo $classes ?>'>
-				<h3><a href='<?php echo $data['url'] ?>'><?php echo $data['title'] ?></a></h3>
-				<div class='small m-b-10'><?php echo $data['meta'] ?></div>
-				<div><?php echo $data['content'] ?></div>
-			</div>
-		<?php endforeach ?>
-		</div>
-	<?php else :
+		echo "<div class='row'>";
+			foreach($content['data'] as $data) {
+				echo "<div class='".$classes."'>";
+				echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
+				echo "<div class='small m-b-10'>".$data['meta']."</div>";
+				echo "<div>".$data['content']."</div>";
+				echo "</div>";
+			}
+		echo "</div>";
+	} else {
 		echo $content['norecord'];
-	endif;
-	closetable();
-endforeach;
+	}
+closetable();
+}
 
 if (!$contents) {
-	opentable($locale['home_0100']);
+opentable($locale['home_0100']);
 	echo $locale['home_0101'];
-	closetable();
+closetable();
 }
 
 require_once THEMES."templates/footer.php";
