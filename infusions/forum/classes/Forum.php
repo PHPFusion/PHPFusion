@@ -295,18 +295,7 @@ class Forum {
 							$this->forum_info['permissions']['can_post'] = 1;
 							$this->forum_info['new_thread_link'] = INFUSIONS."forum/newthread.php?forum_id=".$row['forum_id'];
 						}
-						
 						 // Second query to get all threads of this forum. SQL filter conditions override applicable.
-						$this->forum_info['thread_max_rows'] = dbcount("('t.thread_id')",
-														   	DB_FORUM_THREADS." t
-															LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
-															LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
-															LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id
-															LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
-															LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id",
-														   "t.forum_id='".$this->forum_info['forum_id']."' AND thread_hidden='0' $sql_condition group by p1.thread_id
-															");
-
 						$count = dbarray(dbquery("SELECT count('t.thread_id') as thread_max_rows FROM
 							".DB_FORUM_THREADS." t
 							LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
