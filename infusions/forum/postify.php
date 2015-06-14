@@ -24,6 +24,9 @@ if (!db_exists(DB_FORUMS)) {
 }
 require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
+require_once INCLUDES."infusions_include.php";
+$inf_settings = get_settings('forum');
+
 add_to_title($locale['global_204']);
 $debug = false;
 if (!isset($_GET['forum_id'])) throw new \Exception($locale['forum_0587']);
