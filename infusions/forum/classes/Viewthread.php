@@ -193,6 +193,7 @@ class Viewthread {
 					addNotice('success', $locale['forum_0614']);
 					redirect(INFUSIONS."forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
 				}
+
 				$html = '';
 				if ($this->thread_info['permissions']['can_vote_poll']) {
 					$html .= openform('voteform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_info['thread_id'], array('notice' => 0, 'downtime' => 1));
@@ -1149,6 +1150,9 @@ class Viewthread {
 		}
 	}
 
+	/*
+	 * Execute delete poll
+	 */
 	public function delete_poll() {
 		if ($this->thread_info['thread']['thread_poll'] && $this->thread_info['permissions']['can_poll']) {
 			$thread_data = $this->thread_info['thread'];
@@ -1163,72 +1167,6 @@ class Viewthread {
 			}
 		}
 	}
-
-
-	// poll voting .
-	/*
-
-		if ($this->thread_info['permissions']['can_vote_poll']) {
-			$poll_result = dbquery("SELECT tfp.forum_poll_title, tfp.forum_poll_votes, tfv.forum_vote_user_id
-			FROM ".DB_FORUM_POLLS." tfp
-			LEFT JOIN ".DB_FORUM_POLL_VOTERS." tfv
-			ON tfp.thread_id=tfv.thread_id AND forum_vote_user_id='".$userdata['user_id']."'
-			WHERE tfp.thread_id='".$_GET['thread_id']."'");
-		} else {
-			$poll_result = dbquery("SELECT tfp.forum_poll_title, tfp.forum_poll_votes FROM ".DB_FORUM_POLLS." tfp WHERE tfp.thread_id='".$_GET['thread_id']."'");
-		}
-		if (dbrows($poll_result) > 0) {
-			$this->thread_info['poll'] = dbarray($poll_result);
-			$p_options = dbquery("SELECT forum_poll_option_votes, forum_poll_option_text
-			FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."'
-			ORDER BY forum_poll_option_id ASC
-			");
-			$poll_option_rows = dbrows($p_options);
-			$this->thread_info['poll']['max_option_id'] = $poll_option_rows;
-			if ($poll_option_rows > 0) {
-				while ($pdata = dbarray($p_options)) {
-					$this->thread_info['poll']['poll_opts'][] = $pdata;
-				}
-			}
-			$this->thread_info['permissions']['can_vote_poll'] = isset($this->thread_info['poll']['forum_vote_user_id']) ? 0 : 1;
-			if ((isset($_POST['poll_option']) && isnum($_POST['poll_option']) && $_POST['poll_option'] <= $this->thread_info['poll']['max_option_id']) && $this->thread_info['permissions']['can_vote_poll'] && !defined('FUSION_NULL')) {
-				dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_votes=forum_poll_option_votes+1 WHERE thread_id='".$_GET['thread_id']."' AND forum_poll_option_id='".$_POST['poll_option']."'");
-				dbquery("UPDATE ".DB_FORUM_POLLS." SET forum_poll_votes=forum_poll_votes+1 WHERE thread_id='".$_GET['thread_id']."'");
-				dbquery("INSERT INTO ".DB_FORUM_POLL_VOTERS." (thread_id, forum_vote_user_id, forum_vote_user_ip, forum_vote_user_ip_type) VALUES ('".$this->thread_info['thread_id']."', '".$userdata['user_id']."', '".USER_IP."', '".USER_IP_TYPE."')");
-				redirect(FUSION_SELF."?thread_id=".$this->thread_info['thread_id']);
-			}
-			$html = '';
-			if ($this->thread_info['permissions']['can_vote_poll']) {
-				$html = openform('voteform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_info['thread_id'], array('notice' => 0,
-					'downtime' => 1));
-			}
-			$html .= "<span class='text-bigger strong display-inline-block m-b-10'><i class='entypo chart-pie'></i>".$this->thread_info['poll']['forum_poll_title']."</span>\n";
-			$html .= "<hr class='m-t-0 m-b-10'/>\n";
-			$html .= "<ul class='p-l-20 p-t-0'>\n";
-			$i = 1;
-			if (!empty($this->thread_info['poll']['poll_opts'])) {
-				foreach ($this->thread_info['poll']['poll_opts'] as $poll_option) {
-					if ($this->thread_info['permissions']['can_vote_poll']) {
-						$html .= "<li><label for='opt-".$i."'><input id='opt-".$i."' type='radio' name='poll_option' value='".$i."' class='m-r-20'> <span class='m-l-10'>".$poll_option['forum_poll_option_text']."</span>\n</label></li>\n";
-					} else {
-						$option_votes = ($this->thread_info['poll']['forum_poll_votes'] ? number_format(100/$this->thread_info['poll']['forum_poll_votes']*$poll_option['forum_poll_option_votes']) : 0);
-						$html .= progress_bar($option_votes, $poll_option['forum_poll_option_text'], '', '10px');
-					}
-					$i++;
-				}
-			}
-			$html .= "</ul>\n";
-			if ($this->thread_info['permissions']['can_vote_poll']) {
-				$html .= "<hr class='m-t-10 m-b-10'/>\n";
-				$html .= form_button('vote', $locale['forum_2010'], 'vote', array('class' => 'btn btn-sm btn-primary m-l-20 '));
-				$html .= closeform();
-			}
-			$html .= "</div>\n";
-			$html .= "</div>\n";
-			$this->thread_info['poll_form'] = $html;
-		}
-	}
-	*/
 
 	// Poll form
 	public function render_poll_form($edit = 0) {

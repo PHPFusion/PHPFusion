@@ -44,6 +44,7 @@ function postform($info) {
 	$tab_content .= "<div class='p-15'>\n";
 	$tab_content .= $info['delete_field'];
 	$tab_content .= $info['sticky_field'];
+	$tab_content .= $info['notify_field'];
 	$tab_content .= $info['lock_field'];
 	$tab_content .= $info['hide_edit_field'];
 	$tab_content .= $info['smileys_field'];

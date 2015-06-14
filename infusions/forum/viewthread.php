@@ -61,8 +61,6 @@ if (isset($_GET['action'])) {
 	$info = $thread->get_thread_data();
 	render_thread($info);
 }
-//@ todo: clean up logic here.
-
 
 /* Errors */
 /* changed

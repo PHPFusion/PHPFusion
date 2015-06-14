@@ -58,13 +58,9 @@ if (!function_exists('render_thread')) {
 			echo "<li><a class='text-smaller' href='".$filters['value']."'>".$filters['locale']."</a></li>\n";
 		}
 		echo "</ul>\n";
-
 		echo isset($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['name']." <i class='fa fa-eye'></i></a>\n" : '';
 		echo "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['print']['link']."'>".$buttons['print']['name']." <i class='fa fa-print'></i> </a>\n";
-
-
 		echo "</span>\n";
-
 		echo "</div>\n";
 
 		echo "<!--pre_forum_thread-->\n";
