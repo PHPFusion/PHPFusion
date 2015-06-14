@@ -220,8 +220,25 @@ if (!function_exists('forum_viewforum')) {
 	function forum_viewforum($info) {
 		global $locale;
 		$data = $info['item'][$_GET['forum_id']];
-		echo "<h3 class='m-t-20 m-b-5'>".$data['forum_name']."</h3>\n";
+
+		if (iMEMBER && $info['permissions']['can_post']) {
+			echo "
+			<div class='clearfix m-b-20 m-t-20'>\n
+				<a title='".$locale['forum_0264']."' class='btn btn-primary btn-sm text-white pull-right' href='".$info['new_thread_link']."'>".$locale['forum_0264']."</a>\n
+			</div>\n
+			";
+		}
+
+		// forum type just present as icons
+		/*
+		 *
+		if ($data['forum_type'] > 1) {
+			echo "<div class='panel-heading'>\n</div>\n";
+		}
+		 */
+		echo "<h4 class='forum-title'>".$data['forum_name']." <span class='sub-title'>".$data['forum_threadcounter']."</span></h4>\n";
 		echo $data['forum_description'];
+		echo $data['forum_rules'] ? "<div class='alert alert-info m-b-0'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>\n" : '';
 		// subforums
 		if (isset($info['item'][$_GET['forum_id']]['child'])) {
 			echo "<div class='panel panel-default m-t-10'>\n";
@@ -236,26 +253,14 @@ if (!function_exists('forum_viewforum')) {
 			echo "</div>\n";
 		}
 
-		if (iMEMBER && $info['permissions']['can_post']) {
-			echo "<div class='clearfix m-b-20 m-t-20'>\n
-					<a title='".$locale['forum_0264']."' class='btn btn-primary btn-sm text-white pull-right' href='".$info['new_thread_link']."'>".$locale['forum_0264']."</a>
-				</div>";
-		}
-
 		echo "<!--pre_forum-->\n";
-		echo "<div class='panel panel-default m-t-15'>\n";
-		if (!empty($data['forum_threadcounter'])) {
-			echo "<div class='panel-heading strong p-b-15'>".$data['forum_threadcounter']."</div>\n";
-		}
-		echo $data['forum_rules'] ? "<div class='panel-heading p-5'><div class='alert alert-info m-b-0'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div></div>" : '';
-		if ($data['forum_type'] > 1) {
-			echo "<div class='panel-heading'>\n";
-			forum_filter($info);
-			echo "</div>\n";
-		}
-		echo "<div class='panel-body'>\n";
+		echo "<div class='filter'>\n";
+		forum_filter($info);
+		echo "</div>\n";
 		echo $info['forum_moderators'];
+
 		if (!empty($info['threads'])) {
+			echo "<div class='forum-container'>\n";
 			if (!empty($info['threads']['sticky'])) {
 				foreach ($info['threads']['sticky'] as $cdata) {
 					render_thread_item($cdata);
@@ -266,11 +271,10 @@ if (!function_exists('forum_viewforum')) {
 					render_thread_item($cdata);
 				}
 			}
+			echo "</div>\n";
 		} else {
 			echo "<div class='text-center'>".$locale['forum_0269']."</div>\n";
 		}
-		echo "</div>\n";
-		echo "</div>\n";
 	}
 }
 
@@ -279,41 +283,46 @@ if (!function_exists('render_thread_item')) {
 	function render_thread_item($data) {
 		global $locale, $info, $userdata;
 
-		echo "<div id='thread_".$data['thread_id']."' class='list-group-item'>\n";
-
+		echo "<div class='thread-item' id='thread_".$data['thread_id']."'>\n";
 		echo "<div class='row m-0'>\n";
 		echo "<div class='col-xs-12 col-sm-9 col-md-6 p-l-0'>\n";
-			echo "<div class='pull-left m-r-10 m-t-5' style='width:30px; font-size:150%;'>\n".$data['thread_status']['icon']."</div>\n";
-				// unset icon, since it's used
-				unset($data['thread_status']['icon']);
-				$thead_icons = '';
-				foreach($data['thread_status'] as $icon) {
-					$thead_icons .= $icon;
-				}
-			echo "<div class='overflow-hide'>\n";
-			echo "<a class='text-bigger' href='".$data['thread_link']."'>".$data['thread_subject']."</a> <span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>  ".$data['thread_pages']."";
-			echo "<div class='m-b-10'>".$data['thread_starter']."</div>\n";
-			echo isset($data['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$data['track_button']['link']."'>".$data['track_button']['name']."</a>\n</div>\n" : '';
-			echo "</div>\n";
+		echo "<div class='pull-left m-r-10 m-t-5'>\n".$data['thread_lastuser']['avatar']."</div>\n";
+		unset($data['thread_status']['icon']);
+		$thead_icons = '';
+		foreach($data['thread_status'] as $icon) {
+			$thead_icons .= $icon;
+		}
+		echo "<div class='overflow-hide'>\n";
+		echo "<a class='forum-link' href='".$data['thread_link']."'>".$data['thread_subject']."</a>\n<span class='m-l-10 m-r-10 text-lighter'>".$thead_icons."</span>\n";
+		echo "<div class='text-smaller'>".$data['thread_starter']."</div>\n";
+		echo $data['thread_pages'];
+		echo isset($data['track_button']) ? "<div class='forum_track'><a onclick=\"return confirm('".$locale['global_060']."');\" href='".$data['track_button']['link']."'>".$data['track_button']['name']."</a>\n</div>\n" : '';
+		echo "</div>\n";
 		echo "</div>\n"; // end grid
+
 		echo "<div class='hidden-xs col-sm-3 col-md-3 p-l-0 p-r-0 text-center'>\n";
-		echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
+		echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
 		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['thread_views'])."</h4>\n";
 		echo "<span>".format_word($data['thread_views'], $locale['fmt_views'], 0)."</span>";
 		echo "</div>\n";
-		echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
+
+		echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
 		echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['thread_postcount'])."</h4>\n";
 		echo "<span>".format_word($data['thread_postcount'], $locale['fmt_post'], 0)."</span>";
 		echo "</div>\n";
 
 		if ($data['forum_type'] == '4') {
-			echo "<div class='display-inline-block forum-stats well p-5 m-r-5 m-b-0'>\n";
+			echo "<div class='display-inline-block forum-stats p-5 m-r-5 m-b-0'>\n";
 			echo "<h4 class='text-bigger strong text-dark m-0'>".number_format($data['vote_count'])."</h4>\n";
 			echo "<span>".format_word($data['vote_count'], $locale['fmt_vote'], 0)."</span>";
 			echo "</div>\n";
 		}
 		echo "</div>\n"; // end grid
-		echo "<div class='hidden-xs hidden-sm col-md-3 p-l-0'>".$data['thread_lastuser']."</div>\n";
+
+		echo "<div class='forum-lastuser hidden-xs hidden-sm col-md-3'>
+			".$data['thread_lastuser']['profile_link']." ".timer($data['thread_lastuser']['time'])."<br/>
+			".fusion_first_words($data['thread_lastuser']['post_message'], 10)."
+		</div>\n";
 		echo "</div>\n";
 		echo "</div>\n";
 	}
@@ -437,43 +446,44 @@ if (!function_exists('forum_filter')) {
 			'descending' => $locale['forum_0386'],
 		);
 		echo $locale['forum_0388'];
-		echo "<span class='display-inline-block m-l-10 m-r-10' style='position:relative; vertical-align:middle;'>\n";
+		echo "<div class='forum-filter'>\n";
 		echo "<button class='btn btn-xs btn-default' data-toggle='dropdown' class='dropdown-toggle'>".(isset($_GET['time']) && in_array($_GET['time'], array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0387'])." <span class='caret'></span></button>\n";
 		echo "<ul class='dropdown-menu'>\n";
 		foreach($info['filter']['time'] as $filter_locale => $filter_link) {
 			echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
 		}
 		echo "</ul>\n";
-		echo "</span>\n";
+		echo "</div>\n";
 		echo $locale['forum_0389'];
 
-		echo "<span class='display-inline-block m-l-10 m-r-10' style='position:relative; vertical-align:middle;'>\n";
+		echo "<div class='forum-filter'>\n";
 		echo "<button class='btn btn-xs btn-default' data-toggle='dropdown' class='dropdown-toggle'>".(isset($_GET['type']) && in_array($_GET['type'], array_flip($selector2)) ? $selector2[$_GET['type']] : $locale['forum_0390'])." <span class='caret'></span></button>\n";
 		echo "<ul class='dropdown-menu'>\n";
 		foreach($info['filter']['type'] as $filter_locale => $filter_link) {
 			echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
 		}
 		echo "</ul>\n";
-		echo "</span>\n";
+		echo "</div>\n";
+
 		echo $locale['forum_0225'];
 
-		echo "<span class='display-inline-block m-l-10 m-r-10' style='position:relative; vertical-align:middle;'>\n";
+		echo "<div class='forum-filter'>\n";
 		echo "<button class='btn btn-xs btn-default' data-toggle='dropdown' class='dropdown-toggle'>".(isset($_GET['sort']) && in_array($_GET['sort'], array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0391'])." <span class='caret'></span></button>\n";
 		echo "<ul class='dropdown-menu'>\n";
 		foreach($info['filter']['sort'] as $filter_locale => $filter_link) {
 			echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
 		}
 		echo "</ul>\n";
-		echo "</span>\n";
+		echo "</div>\n";
 
-		echo "<span class='display-inline-block' style='position:relative; vertical-align:middle;'>\n";
+		echo "<div class='forum-filter'>\n";
 		echo "<button class='btn btn-xs btn-default' data-toggle='dropdown' class='dropdown-toggle'>".(isset($_GET['order']) && in_array($_GET['order'], array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0385'])." <span class='caret'></span></button>\n";
 		echo "<ul class='dropdown-menu'>\n";
 		foreach($info['filter']['order'] as $filter_locale => $filter_link) {
 			echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
 		}
 		echo "</ul>\n";
-		echo "</span>\n";
+		echo "</div>\n";
 	}
 }
 

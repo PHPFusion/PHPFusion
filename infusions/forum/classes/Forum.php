@@ -87,7 +87,7 @@ class Forum {
 
 	// Main view forum structure.
 	private function view_forum() {
-		global $locale, $userdata, $settings;
+		global $locale, $userdata, $inf_settings, $settings;
 
 		if ($this->forum_info['forum_id'] && isset($this->forum_info['parent_id']) && isset($_GET['viewforum'])) {
 			/**
@@ -304,14 +304,27 @@ class Forum {
 															LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id
 															LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
 															LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id",
-														   "t.forum_id='".$this->forum_info['forum_id']."' AND thread_hidden='0' $sql_condition
+														   "t.forum_id='".$this->forum_info['forum_id']."' AND thread_hidden='0' $sql_condition group by p1.thread_id
 															");
+
+						$count = dbarray(dbquery("SELECT count('t.thread_id') as thread_max_rows FROM
+							".DB_FORUM_THREADS." t
+							LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
+							LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
+							LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
+							LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
+							WHERE t.forum_id='".$this->forum_info['forum_id']."' AND thread_hidden='0' $sql_condition
+							GROUP BY t.thread_id
+						"));
+						$this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
+
 						if ($this->forum_info['thread_max_rows'] > 0) {
 							// anti-XSS filtered rowstart
 							$_GET['rowstart_thread'] = isset($_GET['rowstart_thread']) && isnum($_GET['rowstart_thread']) && $_GET['rowstart_thread'] <= $this->forum_info['thread_item_rows'] ? $_GET['rowstart_thread'] : 0;
+
 							$t_result = dbquery("SELECT t.*, tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
 								tu2.user_name AS last_user_name, tu2.user_status AS last_user_status, tu2.user_avatar AS last_user_avatar,
-								p1.post_datestamp,
+								p1.post_datestamp, p1.post_message,
 								p.forum_poll_title,
 								count(v.post_id) AS vote_count
 								FROM ".DB_FORUM_THREADS." t
@@ -326,34 +339,11 @@ class Forum {
 
 							if (dbrows($t_result)>0) {
 								while ($threads = dbarray($t_result)) {
+									$threads['thread_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'];
 									$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
 									 // Threads Customized Output
-									$threads['thread_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'];
-									$threads['thread_pages'] = '';
-									$reps = ($this->forum_info['thread_max_rows'] > $this->forum_info['threads_per_page']) ? ceil($this->forum_info['thread_max_rows']/$this->forum_info['threads_per_page']) : 0;
-									if ($reps > 1) {
-										$ctr = 0;
-										$ctr2 = 1;
-										$pages = '';
-										$middle = FALSE;
-										while ($ctr2 <= $reps) {
-											if ($reps < 5 || ($reps > 4 && ($ctr2 == 1 || $ctr2 > ($reps-3)))) {
-												$pnum = "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id']."&amp;rowstart=$ctr'>$ctr2</a> ";
-											} else {
-												if ($middle == FALSE) {
-													$middle = TRUE;
-													$pnum = "... ";
-												} else {
-													$pnum = "";
-												}
-											}
-											$pages .= $pnum;
-											$ctr = $ctr+$this->forum_info['threads_per_page'];
-											$ctr2++;
-										}
-										$threads['thread_pages'] = "<span class='forum-pages'><small>(".$locale['forum_0055'].trim($pages).")</small></span>\n";
-									}
 
+									$threads['thread_pages'] = "<div class='forum-pages'>".makepagenav(0, $inf_settings['posts_per_page'], $threads['thread_postcount'], 3, 'rowstart')."</div>\n";
 									// Set up icons
 									$attach_image = 0; $attach_file = 0;
 									$a_result = dbquery("SELECT attach_id, attach_mime FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id ='".$threads['thread_id']."'");
@@ -399,7 +389,7 @@ class Forum {
 										'user_status'=> $threads['author_status'],
 										'user_avatar' => $threads['author_avatar']
 									);
-									$threads['thread_starter'] = $locale['forum_0006'].display_avatar($author, '20px', '', '', 'img-rounded')." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span> ".$locale['on']." ".showdate('forumdate', $threads['post_datestamp']);
+									$threads['thread_starter'] = $locale['forum_0006'].timer($threads['post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>";
 
 									$lastuser = array(
 										'user_id' => $threads['thread_lastuser'],
@@ -408,8 +398,14 @@ class Forum {
 										'user_avatar' => $threads['last_user_avatar']
 									);
 
-									$threads['thread_lastuser'] = "
-									<div class='pull-left m-r-10'>".display_avatar($lastuser, '30px', '', '', 'img-rounded')."</div>
+									$threads['thread_lastuser'] = array(
+										'avatar' => display_avatar($lastuser, '30px', '', '', ''),
+										'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
+										'time' => $threads['post_datestamp'],
+										'post_message' => parseubb(parsesmileys($threads['post_message'])),
+									);
+									$threads['thread_lastuser']['formatted'] = "
+									<div class='pull-left'>".display_avatar($lastuser, '30px', '', '', '')."</div>
 									<div class='overflow-hide'>".$locale['forum_0373']." <span class='forum_profile_link'>".profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status'])."</span><br/>
 									".timer($threads['post_datestamp'])."
 									</div>";
