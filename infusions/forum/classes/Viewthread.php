@@ -117,10 +117,10 @@ class Viewthread {
 				array('link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0360'])
 				:
 				array(),
-		'notify' => $thread_data['user_tracked'] ?
-				array('link' => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0174'])
-				:
-				array('link' => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0175']),
+			'notify' => $thread_data['user_tracked'] && iMEMBER ?
+					array('link' => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0174'])
+					:
+					iMEMBER ? array('link' => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0175']) : array(),
 		'poll' => $this->thread_info['permissions']['can_poll'] ?
 				array('link' => INFUSIONS."forum/viewthread.php?action=newpoll&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0366'])
 				:
