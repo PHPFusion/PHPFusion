@@ -70,7 +70,7 @@ function format_word($count, $words, $add_count = 1) {
 		$words_array = explode("|", $words);
 		$result = $words_array[0];
 		if ($add_count) {
-			$result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
+			$result = "<span class='fusion_count'>$count</span> <span class='fusion_word'>".$result."</span>";
 		}
 	}
 	return $result;
@@ -94,7 +94,7 @@ function format_word_English($count, $words, $add_count = 1) {
 	$words_array = explode("|", $words);
 	$result = $words_array[$form];
 	if ($add_count) {
-		$result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
+		$result = "<span class='fusion_count'>$count</span> <span class='fusion_word'>".$result."</span>";
 	}
 
 	return $result;
@@ -118,7 +118,7 @@ function format_word_Russian($count, $words, $add_count = 1) {
 	$words_array = explode("|", $words);
 	$result = $words_array[$form];
 	if ($add_count) {
-		$result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
+		$result = "<span class='fusion_count'>$count</span> <span class='fusion_word'>".$result."</span>";
 	}
 
 	return $result;
@@ -142,7 +142,7 @@ function format_word_Ukrainian($count, $words, $add_count = 1) {
 	$words_array = explode("|", $words);
 	$result = $words_array[$form];
 	if ($add_count) {
-		$result = "<span class='fusion_count'>$count</span><span class='fusion_word'>".$result."</span>";
+		$result = "<span class='fusion_count'>$count</span> <span class='fusion_word'>".$result."</span>";
 	}
 
 	return $result;

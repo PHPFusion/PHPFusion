@@ -1,3 +1,13 @@
+.forum_rank, .forum_poster {
+	display: inline-block;
+	margin-right: 10px;
+	font-weight: 600;
+}
+.forum_avatar {
+	float:left;
+	margin-right: 5px;
+	margin-bottom:10px;
+}
 .label-super-admin {
 	background-color: #504cc7;
 }
@@ -7,12 +17,12 @@
 .label-mod {
 	background-color: orange;
 }
-.fusion_count {
+.display-inline-block > .fusion_count {
 	color: #444;
 	font-size:20px;
 	text-align:center;
 }
-.fusion_word {
+.display-inline-block > .fusion_word {
 	text-align:center;
 	display:block;
 	text-transform: uppercase;
@@ -35,7 +45,11 @@
 	margin:25px 0 10px;
 }
 .forum_sig {
+	display: block;
 	font-style: italic;
+	opacity: 0.8;
+	margin-top:10px;
+	margin-bottom:10px;
 }
 .forum_sig:before {
 	content: "- ";
@@ -44,5 +58,7 @@
 	border-left: 3px solid #ccc;
 	padding: 10px 20px;
 	font-size:11px;
-
+}
+.quote-link, .reply-link, .edit-link {
+	text-transform: lowercase;
 }

@@ -92,7 +92,7 @@ if (!function_exists('render_post_item')) {
 		// global $locale, $inf_settings, $settings; -- these are accessible, but i'm not using it. ;)
 		echo "
 		<div id='".$data['marker']['id']."' class='clearfix post_items'>\n
-		<div class='pull-left text-center m-r-15 m-b-10'>\n
+		<div class='forum_avatar'>\n
 		".$data['user_avatar']."
 		</div>\n
 
@@ -115,11 +115,11 @@ if (!function_exists('render_post_item')) {
 		<!--forum_thread_user_name-->\n
 		<div class='m-b-10'>\n
 		<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='fa ".($data['user_online'] ? "fa-circle" : "fa-circle-thin")."'></i></span>\n
-		<span class='text-smaller'><strong>".$data['user_profile_link']."</strong> - <span class='forum_rank'>\n".$data['user_rank']."</span>\n ".$data['post_shortdate']." </span>\n
+		<span class='text-smaller'><span class='forum_poster'>".$data['user_profile_link']."</span><span class='forum_rank'>\n".$data['user_rank']."</span>\n ".$data['post_shortdate']." </span>\n
 		<span class='text-smaller'>\n
-		&middot; <a href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a>\n
-		&middot; <a href='".$data['post_reply']['link']."' title='".$data['post_reply']['name']."'>".$data['post_reply']['name']."</a>\n
-		&middot; <a href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a>\n
+		&middot; <a class='quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a>\n
+		&middot; <a class='reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['name']."'>".$data['post_reply']['name']."</a>\n
+		&middot; <a class='edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a>\n
 		</span>\n
 		</div>\n
 		<!--forum_thread_prepost_".$data['post_id']."-->\n
