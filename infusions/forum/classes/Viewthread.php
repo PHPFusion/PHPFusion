@@ -990,7 +990,6 @@ class Viewthread {
 
 	/*
 	 * Render and execute edit form
-	 * @todo: poll execution and render if is first post.
 	 */
 	public function render_edit_form() {
 		global $locale, $userdata, $inf_settings, $settings;
@@ -1019,59 +1018,6 @@ class Viewthread {
 				// no edit if time limit reached
 				if (!iMOD or ($inf_settings['forum_edit_timelimit'] > 0 && time()-$inf_settings['forum_edit_timelimit']*60 > $post_data['post_datestamp'])) {
 					redirect("postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
-				}
-
-				// Fetch Poll Data and poll model.
-				// @todo: add option.
-				// @remove poll from all forms. seperate it out.
-				$poll_field = '';
-				if ($this->thread_info['permissions']['can_poll'] && $thread_data['forum_allow_poll'] && $is_first_post) {
-					$result = dbquery("SELECT * FROM ".DB_FORUM_POLLS." WHERE thread_id='".$thread_data['thread_id']."'");
-					if (dbrows($result)>0) {
-						$poll_data = dbarray($result);
-						$result = dbquery("SELECT forum_poll_option_text FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY forum_poll_option_id ASC");
-						$opts_rows = dbrows($result);
-						$i = 1;
-						$poll_field .= form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'], array('max_length' => 255, 'placeholder' => 'Enter a Poll Title', 'inline' => 1)).
-									   form_hidden('', 'thread_poll', 'thread_poll', $thread_data['thread_poll']);
-						while ($_pdata = dbarray($result)) {
-							//$poll_data['poll_opts'][] = $_pdata['forum_poll_option_text'];
-							$poll_field .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, $_pdata['forum_poll_option_text'], array('max_length' => 255, 'placeholder' => 'Poll Options', 'inline' => 1, 'class' => 'm-b-0'));
-							// only in edit mode
-							$poll_field .= "<div class='col-xs-12 col-sm-offset-3 m-t-5'>\n";
-							$poll_field .= form_button("update_poll_option[$i]", $locale['forum_0609'], $locale['forum_0609'], array('class' => 'btn-xs btn-default m-r-10'));
-							$poll_field .= form_button("delete_poll_option[$i]", $locale['forum_0610'], $locale['forum_0610'], array('class' => 'btn-xs btn-default m-r-10'));
-							$poll_field .= "</div>\n";
-							$poll_field .= "<hr/>";
-							if ($i == $opts_rows) {
-								$i++;
-								$poll_field .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, '', array('max_length' => 255,
-									'placeholder' => 'Poll Options',
-									'inline' => 1,
-									'class' => 'm-b-0'));
-							}
-							$poll_field .= "<div class='col-xs-12 col-sm-offset-3 m-b-10'>\n";
-							$poll_field .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-default btn-sm m-r-10', 'icon' => 'entypo plus-circled'));
-							//only in edit mode
-							$poll_field .= form_button('update_poll_title', $locale['forum_0609'], $locale['forum_0609'], array('class' => 'btn-default btn-sm m-r-10'));
-							$poll_field .= form_button('delete_poll', $locale['forum_0610'], $locale['forum_0610'], array('class' => 'btn-default btn-sm m-r-10'));
-							$poll_field .= "</div>\n";
-							$i++;
-						}
-					} else {
-						// blank poll - no poll on edit or new thread
-						$poll_field .= form_text('forum_poll_title', $locale['forum_0604'], '', array('max_length' => 255, 'placeholder' => 'Enter a Poll Title', 'inline' => 1)).
-									   form_hidden('', 'thread_poll', 'thread_poll', $thread_data['thread_poll']);
-						$poll_field .= form_text("poll_options[1]", $locale['forum_0606'], '', array('max_length' => 255,
-							'placeholder' => 'Poll Options',
-							'inline' => 1));
-						$poll_field .= form_text("poll_options[2]", $locale['forum_0607'], '', array('max_length' => 255,
-							'placeholder' => 'Poll Options',
-							'inline' => 1));
-						$poll_field .= "<div class='col-xs-12 col-sm-offset-3'>\n";
-						$poll_field .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-default btn-sm'));
-						$poll_field .= "</div>\n";
-					}
 				}
 
 				// if edit, data prevails. then in execute, another time.
@@ -1197,8 +1143,7 @@ class Viewthread {
 		}
 	}
 
-	// NEW POLL form -
-	// @todo: delete the method where utilize poll database to populate options. would cause async like error on live site.
+	// Poll form
 	public function render_poll_form($edit = 0) {
 		global $locale;
 		$poll_field = '';
@@ -1291,7 +1236,7 @@ class Viewthread {
 					}
 					// how to make sure values containing options votes
 					$poll_field = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=editpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id'], array('max_tokens'=>1));
-					$poll_field .= "<div class='alert alert-info'>Field marked with <span class='required'>*</span> contains votes or is required.</div>\n";
+					$poll_field .= "<div class='alert alert-info'>".$locale['forum_0613']."</div>\n";
 					$poll_field .= form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255, 'placeholder' => 'Enter a Poll Title', 'inline' => 1, 'required'=> true));
 					if ($load == false) {
 						for ($i=1; $i<= count($option_data); $i++) {
