@@ -13,6 +13,7 @@ $locale['forum_0009'] = "Display posts from previous";
 $locale['forum_0010'] = "Forum Index";
 $locale['forum_0011'] = "My Posts";
 $locale['forum_0012'] = "Latest Threads";
+$locale['forum_0013'] = "Forum Categories";
 // View Forum
 $locale['forum_0050'] = "View Forum";
 $locale['forum_0051'] = "Subject";

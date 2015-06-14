@@ -33,6 +33,14 @@
 	font-size:13px;
 	margin-top:10px;
 }
+.forum_profile_link {
+	font-size:11px;
+	margin-top:10px;
+}
+.forum_profile_link > a {
+	color: #444;
+	font-weight: 600;
+}
 .forum-pages > nav > .btn-group > a {
 	background: none;
 	-webkit-box-shadow: none;
@@ -41,7 +49,13 @@
 	padding: 0 5px;
 	font-size: 11px;
 }
-
+.lastpost-title {
+	font-weight: 500;
+	font-size:12px;
+}
+.lastpost-goto {
+	font-size:11px;
+}
 .thread-item {
 	margin: 20px 2px;
 }
@@ -90,10 +104,16 @@
 .label-mod {
 	background-color: orange;
 }
-.display-inline-block > .fusion_count {
-	color: #444;
+.display-inline-block > .fusion_count, .count > .fusion_count {
+	color: #000;
 	font-size:20px;
 	text-align:center;
+}
+.count > .fusion_word {
+	text-transform: uppercase;
+	color: #777;
+	font-weight: 300;
+	font-size: 12px;
 }
 .display-inline-block > .fusion_word {
 	text-align:center;
@@ -114,7 +134,7 @@
 	display:block;
 	margin-bottom:30px;
 }
-.post_items {
+.post_items, .forum-list {
 	margin:25px 0 10px;
 	padding:10px;
 	border: 1px solid #DDD;
@@ -122,7 +142,7 @@
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
-.post_items:hover {
+.post_items:hover, .forum-list:hover {
 	border: 1px solid #ddd;
 	-webkit-box-shadow: 0 0 15px #ccc;
 	-moz-box-shadow: 0 0 15px #ccc;

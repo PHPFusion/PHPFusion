@@ -82,9 +82,11 @@ if (!function_exists('render_forum_main')) {
 	 */
 	function render_forum_main($info, $id = 0) {
 		global $locale;
+		echo "<div class='forum-title'>".$locale['forum_0013']."</div>\n";
 		if (!empty($info['forums'][$id])) {
 			$forums = $info['forums'][$id];
 			$x = 1;
+			// can fix types icon here.
 			foreach($forums as $forum_id => $data) {
 				if ($data['forum_type'] == '1') {
 					echo "<div class='panel panel-default'>\n";
@@ -144,7 +146,7 @@ if (!function_exists('render_forum_item_type')) {
 		switch($data['forum_type']) {
 			case '3':
 			echo "<div class='col-xs-12 col-sm-12'>\n";
-				echo "<a class='display-inline-block forum-subject' href='".$data['forum_link']."'>".$data['forum_name']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
+				echo "<a class='display-inline-block forum-link' href='".$data['forum_link']."'>".$data['forum_name']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
 				echo $data['forum_description'] ? "<div class='forum-description'>".$data['forum_description']."</div>\n" : '';
 				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
 		if (isset($data['child'])) {
@@ -167,7 +169,7 @@ if (!function_exists('render_forum_item_type')) {
 				break;
 			default:
 				echo "<div class='col-xs-12 col-sm-6'>\n";
-				echo "<a class='display-inline-block text-bigger strong' href='".$data['forum_link']."'>".$data['forum_name']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
+				echo "<a class='display-inline-block forum-link' href='".$data['forum_link']."'>".$data['forum_name']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
 				echo $data['forum_description'] ? "<div class='forum-description'>".$data['forum_description']."</div>\n" : '';
 				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
 				if (isset($data['child'])) {
@@ -188,8 +190,8 @@ if (!function_exists('render_forum_item_type')) {
 				}
 				echo "</div>\n";
 				echo "<div class='col-xs-12 col-sm-2 text-right'>\n";
-				echo "<div class='text-lighter'>".$data['forum_postcount']."</div>\n";
-				echo "<div class='text-lighter'>".$data['forum_threadcount']."</div>\n";
+				echo "<div class='text-lighter count'>".$data['forum_postcount']."</div>\n";
+				echo "<div class='text-lighter count'>".$data['forum_threadcount']."</div>\n";
 				echo "</div><div class='col-xs-12 col-sm-4'>\n";
 				if ($data['forum_lastpostid'] == 0) {
 				echo $locale['forum_0005'];
@@ -228,14 +230,6 @@ if (!function_exists('forum_viewforum')) {
 			</div>\n
 			";
 		}
-
-		// forum type just present as icons
-		/*
-		 *
-		if ($data['forum_type'] > 1) {
-			echo "<div class='panel-heading'>\n</div>\n";
-		}
-		 */
 		echo "<h4 class='forum-title'>".$data['forum_name']." <span class='sub-title'>".$data['forum_threadcounter']."</span></h4>\n";
 		echo $data['forum_description'];
 		echo $data['forum_rules'] ? "<div class='alert alert-info m-b-0'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>\n" : '';
