@@ -161,9 +161,9 @@ closetable();
 }
 
 if (!$contents) {
-opentable($locale['home_0100']);
+	opentable($locale['home_0100']);
 	echo $locale['home_0101'];
-closetable();
+	closetable();
 }
 
 require_once THEMES."templates/footer.php";
