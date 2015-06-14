@@ -267,6 +267,7 @@ $locale['forum_0608'] = "Add Poll Option";
 $locale['forum_0609'] = "Update";
 $locale['forum_0610'] = "Delete";
 $locale['forum_0611'] = "Edit Reason";
+$locale['forum_0612'] = "Poll edited";
 // Post Form Options
 $locale['forum_0620'] = "Make this Thread Sticky";
 $locale['forum_0621'] = "Lock this Thread";

@@ -1200,14 +1200,13 @@ class Viewthread {
 	// NEW POLL form -
 	// @todo: delete the method where utilize poll database to populate options. would cause async like error on live site.
 	public function render_poll_form($edit = 0) {
-		global $locale, $settings;
+		global $locale;
+		$poll_field = '';
 		// Build Polls Info.
-		$poll_field = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id'], array('max_tokens'=>1));
 		$thread_data = $this->thread_info['thread'];
 		if ($this->thread_info['permissions']['can_poll'] && $thread_data['forum_allow_poll']) { // if permitted to create new poll.
 			// edit callback
 			// add poll without saving to database.
-			print_p($_POST);
 			$data = array(
 				'thread_id' => $thread_data['thread_id'],
 				'forum_poll_title' => isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '',
@@ -1218,70 +1217,129 @@ class Viewthread {
 			// counter of lengths
 			$option_data[1] = "";
 			$option_data[2] = "";
+			// calculate poll lengths
 			if (isset($_POST['poll_options'])) {
 				// callback on post.
 				foreach($_POST['poll_options'] as $i => $value) {
 					$option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
 				}
-				// dynamic populate poll_options field if more than 2.
-				if (count($_POST['poll_options']) > 2) {
-					$count = 0;
-					foreach($_POST['poll_options'] as $poll_text) {
-						if (!empty($poll_text)) $count++;
-					}
-					$data['forum_poll_length'] = $data['forum_poll_length'] < 2 ? 2 : $count;
+				// reindex the whole array with blank values.
+				if (!defined('FUSION_NULL')) {
+					$option_data = array_values(array_filter($option_data));
+					array_unshift($option_data, null);
+					unset($option_data[0]);
+					$data['forum_poll_length'] = count($option_data);
 				}
 			}
 
 			// add a Blank Poll option
-			if (isset($_POST['add_poll_option'])) {
-				$data['forum_poll_length'] = $data['forum_poll_length']+1; // will add 1 field because of for loop.
-				$options_posted = count($option_data); // will definitely have minimum of 2. L 1246/7
-				for($i=$options_posted; $i<=$data['forum_poll_length']; $i++) { // now populate the difference
-					$option_data[$i] = '';
-				}
-			}
-
-			// Save New Poll
-			if (isset($_POST['add_poll'])) {
-				dbquery_insert(DB_FORUM_POLLS, $data, 'save');
-				$data['forum_poll_id'] = dblastid();
-				$i = 1;
-				foreach ($option_data as $option_text) {
-					if ($option_text) {
-						$data['forum_poll_option_id'] = $i;
-						$data['forum_poll_option_text'] = $option_text;
-						$data['forum_poll_option_votes'] = 0;
-						dbquery_insert(DB_FORUM_POLL_OPTIONS, $data, 'save');
-						$i++;
-					}
-				}
-				if (!defined('FUSION_NULL')) {
-					dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$thread_data['thread_id']."'");
-					redirect("postify.php?post=newpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
-				}
+			if (isset($_POST['add_poll_option']) && !defined('FUSION_NULL')) {
+				array_push($option_data, '');
 			}
 
 			if ($edit) {
 				$result = dbquery("SELECT * FROM ".DB_FORUM_POLLS." WHERE thread_id='".$thread_data['thread_id']."'");
 				if (dbrows($result)>0) {
-					$poll_data = dbarray($result);
-					$result = dbquery("SELECT forum_poll_option_text FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY forum_poll_option_id ASC");
-					$i = 1;
-					$poll_field .= form_text('forum_poll_title', $locale['forum_0604'], $poll_data['forum_poll_title'], array('max_length' => 255, 'placeholder' => 'Enter a Poll Title', 'inline' => 1));
-					while ($_pdata = dbarray($result)) {
-						$poll_field .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, $_pdata['forum_poll_option_text'], array('max_length' => 255, 'placeholder' => 'Poll Options', 'inline' => 1));
-						$i++;
+
+					if (isset($_POST['update_poll']) || isset($_POST['add_poll_option'])) {
+						$load = false;
+						$data += dbarray($result); // append if not available.
+					} else {
+						$load = true;
+						$data = dbarray($result); // call
 					}
+
+					if (isset($_POST['update_poll'])) {
+						$data = array(
+							'thread_id' => $thread_data['thread_id'],
+							'forum_poll_title' => form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title'),
+							'forum_poll_start' => $data['forum_poll_start'], // time poll started
+							'forum_poll_length' => $data['forum_poll_length'], // how many poll options we have
+						);
+						dbquery_insert(DB_FORUM_POLLS, $data, 'update', array('primary_key'=>'thread_id', 'no_unique'=>true));
+						$i = 1;
+						// populate data for matches
+						$poll_result = dbquery("SELECT forum_poll_option_id FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$thread_data['thread_id']."'");
+						while ($_data = dbarray($poll_result)) {
+							$_poll[$_data['forum_poll_option_id']] = $_data;
+							// Prune the emptied fields AND field is not required.
+							if (empty($option_data[$_data['forum_poll_option_id']]) && !defined('FUSION_NULL')) {
+								dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$thread_data['thread_id']."' AND forum_poll_option_id='".$_data['forum_poll_option_id']."'");
+							}
+						}
+						foreach ($option_data as $option_text) {
+							if ($option_text) {
+								if (!defined('FUSION_NULL')) {
+									if (isset($_poll[$i])) { // has record
+										dbquery("UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_text='".$option_text."' WHERE thread_id='".$thread_data['thread_id']."' AND forum_poll_option_id='".$i."'");
+									} else { // no record - create
+										$array = array(
+											'thread_id' => $thread_data['thread_id'],
+											'forum_poll_option_id' => $i,
+											'forum_poll_option_text' => $option_text,
+											'forum_poll_option_votes' => 0,
+										);
+										dbquery_insert(DB_FORUM_POLL_OPTIONS, $array, 'save');
+									}
+								}
+								$i++;
+							}
+						}
+						if (!defined('FUSION_NULL')) {
+							redirect("postify.php?post=editpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
+						}
+					}
+					// how to make sure values containing options votes
+					$poll_field = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=editpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id'], array('max_tokens'=>1));
+					$poll_field .= "<div class='alert alert-info'>Field marked with <span class='required'>*</span> contains votes or is required.</div>\n";
+					$poll_field .= form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255, 'placeholder' => 'Enter a Poll Title', 'inline' => 1, 'required'=> true));
+					if ($load == false) {
+						for ($i=1; $i<= count($option_data); $i++) {
+							$poll_field .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i], array('max_length' => 255, 'placeholder' => $locale['forum_0605'], 'inline' => 1, 'required'=> $i<=2 ? true :false ));
+						}
+					} else {
+						$result = dbquery("SELECT forum_poll_option_text, forum_poll_option_votes FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY forum_poll_option_id ASC");
+						$i = 1;
+						while ($_pdata = dbarray($result)) {
+							$poll_field .= form_text("poll_options[$i]", $locale['forum_0605'].' '.$i, $_pdata['forum_poll_option_text'], array('max_length' => 255, 'placeholder' => 'Poll Options', 'inline' => 1, 'required'=> $i <= 2 or $_pdata['forum_poll_option_votes'] ? true : false));
+							$i++;
+						}
+					}
+
+					$poll_field .= "<div class='col-xs-12 col-sm-offset-3'>\n";
+					$poll_field .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
+					$poll_field .= "</div>\n";
 					$poll_field .= form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-warning btn-md'));
+					$poll_field .= closeform();
 				} else {
-					// redirect because the poll id is not available.
-					redirect(INFUSIONS.'forum/index.php');
+					redirect(INFUSIONS.'forum/index.php'); // redirect because the poll id is not available.
 				}
 			} else {
+
+				// Save New Poll
+				if (isset($_POST['add_poll'])) {
+					dbquery_insert(DB_FORUM_POLLS, $data, 'save');
+					$data['forum_poll_id'] = dblastid();
+					$i = 1;
+					foreach ($option_data as $option_text) {
+						if ($option_text) {
+							$data['forum_poll_option_id'] = $i;
+							$data['forum_poll_option_text'] = $option_text;
+							$data['forum_poll_option_votes'] = 0;
+							dbquery_insert(DB_FORUM_POLL_OPTIONS, $data, 'save');
+							$i++;
+						}
+					}
+					if (!defined('FUSION_NULL')) {
+						dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".$thread_data['thread_id']."'");
+						redirect("postify.php?post=newpoll&error=0&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']);
+					}
+				}
+
 				// blank poll - no poll on edit or new thread
+				$poll_field = openform('pollform', 'post', INFUSIONS.'forum/viewthread.php?action=newpoll&forum_id='.$_GET['forum_id'].'&thread_id='.$_GET['thread_id'], array('max_tokens'=>1));
 				$poll_field .= form_text('forum_poll_title', $locale['forum_0604'], $data['forum_poll_title'], array('max_length' => 255, 'placeholder' => 'Enter a Poll Title', 'inline' => 1, 'required'=>true));
-				for ($i=1; $i<=$data['forum_poll_length']; $i++) {
+				for ($i=1; $i<=count($option_data); $i++) {
 					$poll_field .= form_text("poll_options[$i]", sprintf($locale['forum_0606'], $i), $option_data[$i], array('max_length' => 255, 'placeholder' => $locale['forum_0605'], 'inline' => 1, 'required'=> $i<=2 ? true :false ));
 				}
 				$poll_field .= "<div class='col-xs-12 col-sm-offset-3'>\n";
@@ -1298,10 +1356,6 @@ class Viewthread {
 			);
 			pollform($info);
 		}
-
-
-
-
 
 
 
