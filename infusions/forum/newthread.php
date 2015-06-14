@@ -29,7 +29,7 @@ require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
 add_to_title($locale['global_204']);
 require_once INCLUDES."infusions_include.php";
-require_once INFUSIONS."forum/classes/functions.php";
+require_once INFUSIONS."forum/classes/Functions.php";
 require_once INFUSIONS."forum/forum_include.php";
 require_once INFUSIONS."forum/templates/forum_input.php";
 
