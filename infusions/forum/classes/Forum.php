@@ -28,7 +28,7 @@ class Forum {
 	}
 
 	public function set_ForumInfo() {
-		global $settings, $userdata, $locale;
+		global $inf_settings, $userdata, $locale;
 
 		if (stristr($_SERVER['PHP_SELF'], 'forum_id')) {
 			if ($_GET['section'] == 'latest') redirect(INFUSIONS.'forum/index.php?section=latest');
@@ -42,8 +42,8 @@ class Forum {
 			'forum_branch' => (isset($_GET['forum_branch']) && verify_forum($_GET['forum_branch'])) ? $_GET['forum_branch'] : 0,
 			'new_thread_link' => '',
 			'lastvisited' => (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time(),
-			'posts_per_page' => $settings['posts_per_page'],
-			'threads_per_page' => $settings['threads_per_page'],
+			'posts_per_page' => $inf_settings['posts_per_page'],
+			'threads_per_page' => $inf_settings['threads_per_page'],
 			'forum_index' => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'),
 			'permissions' => array(
 								'can_post' => 0
@@ -217,11 +217,11 @@ class Forum {
 
 			 // Load forum
 				$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
-				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
+				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, count(t.thread_id) as forum_threadcount,
 				u.user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".DB_FORUMS." f
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-				LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
+				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id or t.forum_id = f2.forum_id
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
@@ -230,7 +230,6 @@ class Forum {
 			$refs = array();
 			if (dbrows($result)>0) {
 				while ($row = dbarray($result)) {
-
 					$this->forum_info['forum_moderators'] = parse_forumMods($row['forum_mods']);
 					$row['forum_moderators'] = Functions::parse_forumMods($row['forum_mods']);
 
