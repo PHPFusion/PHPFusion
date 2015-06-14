@@ -42,6 +42,9 @@ if (isset($_GET['action'])) {
 		case 'editpoll':
 			$thread->render_poll_form(true);
 			break;
+		case 'deletepoll':
+			$thread->delete_poll();
+			break;
 		case 'newpoll':
 			$thread->render_poll_form();
 			break;
@@ -82,6 +85,7 @@ if (isset($_GET['pid']) && isnum($_GET['pid'])) {
 } */
 
 //locale dependent forum buttons
+/*
 if ($settings['locale'] != "English") {
 	$newpath = "";
 	$oldpath = explode("/", get_image('newthread'));
@@ -92,5 +96,5 @@ if ($settings['locale'] != "English") {
 	if (is_dir($newpath.$settings['locale'])) {
 		redirect_img_dir($newpath, $newpath.$settings['locale']."/");
 	}
-}
+}*/
 require_once THEMES."templates/footer.php";

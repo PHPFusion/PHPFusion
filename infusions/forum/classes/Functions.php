@@ -121,6 +121,12 @@ public static function show_forum_rank($posts, $level, $groups, $image = false) 
 		'-102' => 'label-mod',
 		'-103' => 'label-super-admin',
 	);
+	$forum_rank_icon_class = array(
+		'-101' => 'fa fa-user fa-fw',
+		'-102' => 'fa fa-shield fa-fw',
+		'-103' => 'fa fa-shield fa-fw',
+	);
+
 	// Moderator ranks
 	if ($level < USER_LEVEL_MEMBER) {
 		foreach ($forum_rank_cache['mod'] as $rank) {
@@ -157,7 +163,7 @@ public static function show_forum_rank($posts, $level, $groups, $image = false) 
 		if ($image) {
 			$res .= $rank['rank_title']."<br />\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' /><br />";
 		} else {
-			$res .= "<label class='label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '>".$rank['rank_title']."</label>\n";
+			$res .= "<label class='label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '><i class='".$forum_rank_icon_class[$rank['rank_apply']]."'></i> ".$rank['rank_title']."</label>\n";
 		}
 	}
 	return $res;

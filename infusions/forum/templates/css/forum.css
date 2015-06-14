@@ -23,3 +23,26 @@
 .vatop {
 	vertical-align: top;
 }
+.emulated-legend {
+	font-size:11px;
+	margin-bottom:10px;
+}
+.emulated-fieldset {
+	display:block;
+	margin-bottom:30px;
+}
+.post_items {
+	margin:25px 0 10px;
+}
+.forum_sig {
+	font-style: italic;
+}
+.forum_sig:before {
+	content: "- ";
+}
+.quote {
+	border-left: 3px solid #ccc;
+	padding: 10px 20px;
+	font-size:11px;
+
+}

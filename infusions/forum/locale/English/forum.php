@@ -269,6 +269,9 @@ $locale['forum_0610'] = "Delete";
 $locale['forum_0611'] = "Edit Reason";
 $locale['forum_0612'] = "Poll edited";
 $locale['forum_0613'] = "Field marked with <span class='required'>*</span> contains votes or is required. Otherwise, leave blank to remove poll options";
+$locale['forum_0614'] = "Thank you for voting. Your vote has been polled.";
+$locale['forum_0615'] = "Poll deleted";
+$locale['forum_0616'] = "Warning: Deleting poll will also delete all votes polled.";
 // Post Form Options
 $locale['forum_0620'] = "Make this Thread Sticky";
 $locale['forum_0621'] = "Lock this Thread";

@@ -94,7 +94,10 @@ function pollform($info) {
 	opentable($info['title']);
 	echo "<h4 class='m-b-20'>".$info['description']."</h4>\n";
 	echo "<!--pre_form-->\n";
-	echo $info['field'];
+	echo $info['field']['openform'];
+	echo $info['field']['poll_field'];
+	echo $info['field']['poll_button'];
+	echo $info['field']['closeform'];
 	closetable();
 }
 
