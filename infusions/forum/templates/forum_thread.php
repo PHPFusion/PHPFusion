@@ -26,11 +26,12 @@ if (!function_exists('render_thread')) {
 		$p_title = array();
 
 		echo render_breadcrumbs();
-		echo "<div class='clearfix m-b-20'>\n";
+		echo "<div class='clearfix'>\n";
 		if (isset($info['page_nav'])) echo "<div id='forum_top' class='pull-right m-t-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";
 		echo "<h2 class='m-t-0 thread-header pull-left m-r-20'>".$data['thread_subject']."</h2>\n";
-		echo "<div class='text-uppercase text-smaller m-t-10'>".$locale['forum_0363'].timer($data['thread_lastpost'])." <i class='fa fa-calendar fa-fw'></i></div>\n";
 		echo "</div>\n";
+
+		echo "<div class='last-updated'>".$locale['forum_0363'].timer($data['thread_lastpost'])." <i class='fa fa-calendar fa-fw'></i></div>\n";
 
 		if (isset($info['poll'])) echo "<div class='well'>".$info['poll_form']."</div>\n";
 
@@ -39,23 +40,32 @@ if (!function_exists('render_thread')) {
 			if ($info['permissions']['can_poll']) {
 				echo "<a class='btn btn-success btn-sm ".(!empty($info['thread']['thread_poll']) ? 'disabled' : '')."' title='".$buttons['poll']['name']."' href='".$buttons['poll']['link']."'>".$buttons['poll']['name']." <i class='fa fa-pie-chart'></i> </a>\n";
 			}
-			echo "<a class='btn btn-primary btn-sm m-r-5 ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['name']."</a>\n";
+			echo "<a class='btn btn-primary btn-sm ".(empty($buttons['newthread']) ? 'disabled' : '')." ' href='".$buttons['newthread']['link']."'>".$buttons['newthread']['name']."</a>\n";
 			echo "</div>\n";
 		}
 
-		echo "<div class='btn-group pull-right m-r-10'>\n";
+		echo "<div class='top-action-bar'>\n";
+
+		// now change the whole thing to dropdown selector
+		$selector['oldest'] = $locale['forum_0180'];
+		$selector['latest'] = $locale['forum_0181'];
+		echo "<span class='display-inline-block m-r-10 btn-group' style='position:relative; vertical-align:middle;'>\n";
+		echo "<a class='btn btn-sm btn-default' data-toggle='dropdown' class='dropdown-toggle'><strong>".$locale['forum_0183']."</strong>
+		".(isset($_GET['section']) && in_array($_GET['section'], array_flip($selector)) ? $selector[$_GET['section']] : $locale['forum_0180'])." <span class='caret'></span>
+		</a>\n";
+		echo "<ul class='dropdown-menu'>\n";
+		foreach($info['post-filters'] as $i => $filters) {
+			echo "<li><a class='text-smaller' href='".$filters['value']."'>".$filters['locale']."</a></li>\n";
+		}
+		echo "</ul>\n";
+
 		echo isset($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['name']." <i class='fa fa-eye'></i></a>\n" : '';
 		echo "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['print']['link']."'>".$buttons['print']['name']." <i class='fa fa-print'></i> </a>\n";
-		echo "</div>\n";
 
-		foreach($info['post-filters'] as $i => $filters) {
-			$p_title['title'][] = $filters['locale'];
-			$p_title['id'][] = $info['allowed_post_filters'][$i];
-			$p_title['icon'][] = $icon[$i];
-		}
-		$tab_active = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : 'oldest';
-		echo opentab($p_title, $tab_active, 'post_tabs', 1);
-		echo opentabbody('', $tab_active, $tab_active, 1);
+
+		echo "</span>\n";
+
+		echo "</div>\n";
 
 		echo "<!--pre_forum_thread-->\n";
 		echo $info['open_post_form'];
@@ -64,7 +74,7 @@ if (!function_exists('render_thread')) {
 			$i++;
 			echo "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
 			render_post_item($post_data, $i);
-			if ($i == 1 && $info['permissions']['can_post']) {
+			if ($post_id == $info['post_firstpost'] && $info['permissions']['can_post']) {
 				echo "<div class='text-right'>\n";
 				echo "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
 				echo "<a class='m-l-20 btn btn-success btn-md vatop ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
@@ -82,7 +92,8 @@ if (!function_exists('render_thread')) {
 		}
 		echo $info['close_post_form'];
 		echo $info['quick_reply_form'];
-		echo "</div>\n</div>\n</div>\n";
+		//echo "</div>\n</div>\n</div>\n";
+		//echo "</div>\n</div>\n</div>\n";
 	}
 }
 

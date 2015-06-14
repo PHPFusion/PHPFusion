@@ -66,6 +66,7 @@ $locale['forum_0179'] = "Print Post";
 $locale['forum_0180'] = "Oldest";
 $locale['forum_0181'] = "Latest";
 $locale['forum_0182'] = "Highest Ratings";
+$locale['forum_0183'] = "Sort By: ";
 // Moderator Options
 $locale['forum_0200'] = "Moderator Options";
 $locale['forum_0201'] = "Delete Thread";

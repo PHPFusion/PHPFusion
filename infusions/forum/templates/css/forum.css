@@ -1,3 +1,12 @@
+.top-action-bar {
+	margin-bottom:20px;
+	margin-top:15px;
+}
+.last-updated {
+	font-size:11px;
+	margin-bottom:10px;
+	display: block;
+}
 .forum_rank, .forum_poster {
 	display: inline-block;
 	margin-right: 10px;
@@ -43,6 +52,17 @@
 }
 .post_items {
 	margin:25px 0 10px;
+	padding:10px;
+	border: 1px solid #DDD;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.post_items:hover {
+	border: 1px solid #ddd;
+	-webkit-box-shadow: 0 0 15px #ccc;
+	-moz-box-shadow: 0 0 15px #ccc;
+	box-shadow: 0 0 15px #ccc;
 }
 .forum_sig {
 	display: block;
@@ -61,4 +81,7 @@
 }
 .quote-link, .reply-link, .edit-link {
 	text-transform: lowercase;
+}
+.fa-ellipsis-v {
+	color: #777 !important;
 }
