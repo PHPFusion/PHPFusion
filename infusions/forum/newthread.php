@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: post.php
+| Filename: newthread.php
 | Author: Nick Jones (Digitanium)
 | Co-author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
@@ -16,18 +16,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-/**
- * Now just post new thread
- */
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_FORUMS)) {
 	$_GET['code'] = 404;
 	require_once BASEDIR.'error.php';
 	exit;
 }
+
 require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
+
 add_to_title($locale['global_204']);
+
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/classes/Functions.php";
 require_once INFUSIONS."forum/forum_include.php";

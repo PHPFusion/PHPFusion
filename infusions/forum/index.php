@@ -31,6 +31,7 @@ include INFUSIONS."forum/templates/forum_main.php";
 include INCLUDES."infusions_include.php";
 
 add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
+
 $inf_settings = get_settings('forum');
 $forum = new PHPFusion\Forums\Forum;
 $forum->set_ForumInfo();
