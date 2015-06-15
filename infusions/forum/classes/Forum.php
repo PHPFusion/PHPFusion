@@ -228,7 +228,7 @@ class Forum {
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
-				ORDER BY forum_cat ASC");
+				group by f.forum_id ORDER BY forum_cat ASC");
 
 			$refs = array();
 			if (dbrows($result)>0) {
@@ -292,7 +292,7 @@ class Forum {
 					$thisref = &$refs[$row['forum_id']];
 					$thisref = $row;
 					if ($row['forum_cat'] == $this->forum_info['parent_id']) {
-						$this->forum_info['item'][$row['forum_id']] = &$thisref;
+						$this->forum_info['item'][$row['forum_id']] = &$thisref; // will push main item out.
 					} else {
 						$refs[$row['forum_cat']]['child'][$row['forum_id']] = &$thisref;
 					}

@@ -142,7 +142,7 @@ if (!function_exists('render_forum_item_type')) {
 		}
 		echo "</div>\n";
 		echo "<div class='overflow-hide'>\n";
-		echo "<div class='row'>\n";
+		echo "<div class='row m-0'>\n";
 		switch($data['forum_type']) {
 			case '3':
 			echo "<div class='col-xs-12 col-sm-12'>\n";
@@ -170,15 +170,14 @@ if (!function_exists('render_forum_item_type')) {
 			default:
 				echo "<div class='col-xs-12 col-sm-6'>\n";
 				echo "
-				<a class='display-inline-block forum-link' href='".$data['forum_link']."'>".$data['forum_name']."</a>\n
-				<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
+				<a class='display-inline-block forum-link' href='".$data['forum_link']."'>".$data['forum_name']."</a>\n<span class='m-l-5'>".$data['forum_new_status']."</span><br/>";
 				echo $data['forum_description'] ? "<div class='forum-description'>".$data['forum_description']."</div>\n" : '';
 				echo ($data['forum_moderators'] ? "<span class='forum-moderators text-smaller'><strong>".$locale['forum_0007']."</strong>".$data['forum_moderators']."</span>\n" : "")."\n";
 				if (isset($data['child'])) {
 					echo "<div class='clearfix sub-forum'>\n";
 					echo "<div class='pull-left'>\n";
 					echo "<i class='entypo level-down'></i>\n";
-			echo "</div>\n";
+					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
 					foreach($data['child'] as $cdata) {
 						echo "<span class='nowrap'>\n";
@@ -191,16 +190,16 @@ if (!function_exists('render_forum_item_type')) {
 					echo "</div>\n";
 				}
 				echo "</div>\n";
-				echo "<div class='col-xs-12 col-sm-2 text-right'>\n";
+				echo "<div class='hidden-xs col-sm-3 col-md-2 p-l-0 p-r-0 text-center'>\n";
 				echo "<div class='text-lighter count'>".$data['forum_postcount']."</div>\n";
 				echo "<div class='text-lighter count'>".$data['forum_threadcount']."</div>\n";
-				echo "</div><div class='col-xs-12 col-sm-4 forum-lastuser'>\n";
+				echo "</div><div class='forum-lastuser hidden-xs hidden-sm col-md-4'>\n";
 				if ($data['forum_lastpostid'] == 0) {
-				echo $locale['forum_0005'];
-			} else {
-				echo "<div class='clearfix'>\n";
-				if (!empty($data['last_post']['avatar'])) echo "<div class='pull-left lastpost-avatar m-t-5'>".$data['last_post']['avatar']."</div>";
-				echo "<div class='overflow-hide'>\n";
+					echo $locale['forum_0005'];
+				} else {
+					echo "<div class='clearfix'>\n";
+					if (!empty($data['last_post']['avatar'])) echo "<div class='pull-left lastpost-avatar m-t-5'>".$data['last_post']['avatar']."</div>";
+					echo "<div class='overflow-hide'>\n";
 					echo "<span class='forum_profile_link'>".$data['last_post']['profile_link']." ".$data['last_post']['time']."</span>\n";
 					echo "<a class='lastpost-goto' href='".$data['last_post']['post_link']."' title='".$data['thread_subject']."'><i class='fa fa-external-link-square'></i></a><br />\n";
 					echo $data['last_post']['message'];
@@ -218,7 +217,9 @@ if (!function_exists('render_forum_item_type')) {
 	}
 }
 
-/* Forum View - ex viewforum.php */
+/**
+ * For $_GET['viewforum'] view present.
+ */
 if (!function_exists('forum_viewforum')) {
 	function forum_viewforum($info) {
 		global $locale;
@@ -237,21 +238,21 @@ if (!function_exists('forum_viewforum')) {
 		echo "</div>\n";
 
 		echo $data['forum_rules'] ? "<div class='alert alert-info m-b-0'><span class='strong'><i class='fa fa-exclamation fa-fw'></i>".$locale['forum_0350']."</span> ".$data['forum_rules']."</div>\n" : '';
+
 		// subforums
 		if (isset($info['item'][$_GET['forum_id']]['child'])) {
-			echo "<div class='panel panel-default m-t-10'>\n";
-			echo "<div class='panel-heading strong'>".$locale['forum_0351']."</div>\n";
+			echo "<div class='forum-title m-t-20'><h6>".$locale['forum_0351']."</h6>\n</div>\n";
 			$i = 1;
-			echo "<div class='panel-body'>\n";
 			foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
 				render_forum_item_type($subforum_data, $i);
 				$i++;
 			}
-			echo "</div>\n";
-			echo "</div>\n";
 		}
 
+
+
 		echo "<!--pre_forum-->\n";
+		echo "<div class='forum-title m-t-20'><h6>".$locale['forum_0341']."</h6>\n</div>\n";
 		echo "<div class='filter'>\n";
 		forum_filter($info);
 		echo "</div>\n";
