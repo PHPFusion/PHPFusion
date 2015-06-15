@@ -80,13 +80,13 @@ public static function attach_exists($file) {
  * @return array Cached forum ranks
  */
 public static function forum_rank_cache() {
+	global $inf_settings;
 	static $forum_rank_cache = NULL;
-	$settings = fusion_get_settings();
 	$known_types = array(
 		0 => 'post',
 		1 => 'mod'
 	);
-	if ($forum_rank_cache === NULL and $settings['forum_ranks']) {
+	if ($forum_rank_cache === NULL and $inf_settings['forum_ranks']) {
 		$forum_rank_cache = array(
 			'post' => array(),
 			'mod' => array(),
@@ -110,9 +110,9 @@ public static function forum_rank_cache() {
  * @return string HTML source of forum rank images
  */
 public static function show_forum_rank($posts, $level, $groups, $image = false) {
-	$settings = fusion_get_settings();
+	global $inf_settings;
 	$ranks = array();
-	if (!$settings['forum_ranks']) {
+	if (!$inf_settings['forum_ranks']) {
 		return '';
 	}
 	$forum_rank_cache = forum_rank_cache();
@@ -233,7 +233,7 @@ public static function display_image_attach($file, $width = 50, $height = 50, $r
  * @param $info
  */
 public static function define_forum_mods($info) {
-	if (iSUPERADMIN) { define("iMOD", TRUE); }
+	if (iSUPERADMIN && !defined('iMOD')) { define("iMOD", TRUE); }
 	if (!defined("iMOD") && iMEMBER && $info['forum_mods']) {
 		$mod_groups = explode(".", $info['forum_mods']);
 		foreach ($mod_groups as $mod_group) {
@@ -270,7 +270,7 @@ public static function parse_forumMods($forum_mods) {
  * @return mixed
  */
 public static function get_recentTopics($forum_id = 0) {
-	global $settings;
+	global $inf_settings;
 	$result = dbquery("SELECT tt.*, tf.*, tp.post_id, tp.post_datestamp,
 			u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
 			uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
@@ -284,7 +284,7 @@ public static function get_recentTopics($forum_id = 0) {
 			".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")."
 			".groupaccess('tf.forum_access')." AND tt.thread_hidden='0'
 			".($forum_id ? "AND forum_id='".intval($forum_id)."'" : '')."
-			GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT 0, ".$settings['threads_per_page']."");
+			GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT 0, ".$inf_settings['threads_per_page']."");
 			
 	$info['rows'] = dbrows($result);
 	if ($info['rows'] > 0) {
@@ -301,15 +301,16 @@ public static function get_recentTopics($forum_id = 0) {
  * @return array
  */
 public static function get_forum($forum_id = false, $branch_id = false) { // only need to fetch child.
-	global $locale, $userdata, $settings;
+	global $locale, $userdata, $inf_settings;
 	$data = array();
 	$index = array();
 	$query = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
 	tf.forum_type, tf.forum_mods, tf.forum_threadcount, tf.forum_postcount, tf.forum_order, tf.forum_lastuser, tf.forum_access, tf.forum_lastpost, tf.forum_lastpostid,
-	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
+	t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, p.post_message,
 	u.user_id, u.user_name, u.user_status, u.user_avatar
 	FROM ".DB_FORUMS." tf
 	LEFT JOIN ".DB_FORUM_THREADS." t ON tf.forum_lastpostid = t.thread_lastpostid
+	LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
 	LEFT JOIN ".DB_USERS." u ON tf.forum_lastuser = u.user_id
 	".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
 	".($forum_id && $branch_id ? "AND tf.forum_id = '".intval($forum_id)."' or tf.forum_cat = '".intval($forum_id)."' OR tf.forum_branch = '".intval($branch_id)."'" : '')."
@@ -334,13 +335,19 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 		 * Last post section
 		 */
 		if ($row['forum_lastpostid']) {
-			if ($settings['forum_last_post_avatar']) {
-				$row['forum_last_post_avatar'] = display_avatar($data, '30px', '', '', 'img-rounded');
+			$last_post = array(
+				'avatar' => '',
+				'message' => parseubb(parsesmileys($row['post_message'])),
+				'profile_link' => profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']),
+				'time' => timer($row['forum_lastpost']),
+				'date' => showdate("forumdate", $row['forum_lastpost']),
+				'thread_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'],
+				'post_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
+			);
+			if ($inf_settings['forum_last_post_avatar']) {
+				$last_post['avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
 			}
-			$row['forum_last_post_thread_link'] = INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'];
-			$row['forum_last_post_link'] = INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'];
-			$row['forum_last_post_profile_link'] = $locale['by']." ".profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']);
-			$row['forum_last_post_date'] = showdate("forumdate", $row['forum_lastpost']);
+			$row['last_post'] = $last_post;
 		}
 		/**
 		 * Icons
@@ -363,9 +370,21 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 				$row['forum_icon_lg'] = "<i class='".self::get_forumIcons('question')." fa-3x fa-fw m-r-10'></i>";
 				break;
 		}
+
+
+		$thisref = &$refs[$row['forum_id']];
+		$thisref = $row;
+		if ($row['forum_cat'] == 0) {
+			$index[0][$row['forum_id']] = &$thisref;
+		} else {
+			$refs[$row['forum_cat']]['child'][$row['forum_id']] = &$thisref;
+		}
+		//print_p($index);
+/*
 		$id = $row['forum_id'];
-		$parent_id = $row['forum_cat'] === NULL ? "0" : $row['forum_cat'];
-		$index[$parent_id][$id] = $row;
+		$parent_id = $row['forum_cat'] === NULL ? "NULL" : $row['forum_cat'];
+		$index[$parent_id][$id] = $row; */
+
 	}
 	return (array) $index;
 }

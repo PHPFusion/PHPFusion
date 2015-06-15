@@ -46,12 +46,12 @@ class Forum {
 			'threads_per_page' => $inf_settings['threads_per_page'],
 			'forum_index' => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'),
 			'permissions' => array(
-								'can_post' => 0
-								),
+				'can_post' => 0
+			),
 			'threads' => array(),
 			'section' => isset($_GET['section']) ? $_GET['section'] : 'thread',
 		);
-		
+
 		$this->forum_info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."'");
 		add_to_title($locale['global_200'].$locale['forum_0000']);
 		add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
@@ -174,6 +174,7 @@ class Forum {
 			$orderExt = isset($_GET['order']) ? "&amp;order=".$_GET['order'] : '';
 			$baseLink =	INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : '');
 			$timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
+
 			$this->forum_info['filter']['time'] = array(
 				'All Time' => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : ''),
 				'Today' => $timeLink.'&amp;time=today', // must be static.
@@ -215,23 +216,26 @@ class Forum {
 				'Ascending' => $orderLink.'&amp;order=ascending'
 			);
 
-			 // Load forum
-				$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
-				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject, count(t.thread_id) as forum_threadcount,
+			// Load forum
+			$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
+				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
+				count(t.thread_id) as forum_threadcount, p.post_message,
 				u.user_id, u.user_name, u.user_status, u.user_avatar
 				FROM ".DB_FORUMS." f
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat = f2.forum_id
-				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id or t.forum_id = f2.forum_id
+				LEFT JOIN ".DB_FORUM_THREADS." t ON t.forum_id = f.forum_id
+				LEFT JOIN ".DB_FORUM_POSTS." p on p.thread_id = t.thread_id and p.post_id = t.thread_lastpostid
 				LEFT JOIN ".DB_USERS." u ON f.forum_lastuser = u.user_id
 				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')."
 				AND f.forum_id='".intval($this->forum_info['forum_id'])."' OR f.forum_cat='".intval($this->forum_info['forum_id'])."' OR f.forum_branch='".intval($this->forum_info['forum_branch'])."'
 				ORDER BY forum_cat ASC");
-				
+
 			$refs = array();
 			if (dbrows($result)>0) {
 				while ($row = dbarray($result)) {
-					$this->forum_info['forum_moderators'] = parse_forumMods($row['forum_mods']);
+
 					$row['forum_moderators'] = Functions::parse_forumMods($row['forum_mods']);
+					$this->forum_info['forum_moderators'] = $row['forum_moderators'];
 
 					$row['forum_new_status'] = '';
 					$forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
@@ -246,19 +250,25 @@ class Forum {
 					$row['forum_postcount'] = format_word($row['forum_postcount'], $locale['fmt_post']);
 					$row['forum_threadcount'] = format_word($row['forum_threadcount'], $locale['fmt_thread']);
 					$row['forum_threadcounter'] = $row['forum_threadcount'];
-					
-					 // Last posts section
+
+					// Last posts section
 					if ($row['forum_lastpostid']) {
-						if ($settings['forum_last_post_avatar']) {
-							$row['forum_last_post_avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
+						$last_post = array(
+							'avatar' => '',
+							'message' => parseubb(parsesmileys($row['post_message'])),
+							'profile_link' => profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']),
+							'time' => timer($row['forum_lastpost']),
+							'date' => showdate("forumdate", $row['forum_lastpost']),
+							'thread_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'],
+							'post_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
+						);
+						if ($inf_settings['forum_last_post_avatar']) {
+							$last_post['avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
 						}
-						$row['forum_last_post_thread_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id'];
-						$row['forum_last_post_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'];
-						$row['forum_last_post_profile_link'] = $locale['by']." ".profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']);
-						$row['forum_last_post_date'] = showdate("forumdate", $row['forum_lastpost']);
-						}
-					
-					 // Icons
+						$row['last_post'] = $last_post;
+					}
+
+					// Icons
 					switch($row['forum_type']) {
 						case '1':
 							$row['forum_icon'] = "<i class='".Functions::get_forumIcons('forum')." fa-fw m-r-10'></i>";
@@ -278,9 +288,9 @@ class Forum {
 							break;
 					}
 
+					// child hierarchy data.
 					$thisref = &$refs[$row['forum_id']];
 					$thisref = $row;
-
 					if ($row['forum_cat'] == $this->forum_info['parent_id']) {
 						$this->forum_info['item'][$row['forum_id']] = &$thisref;
 					} else {
@@ -294,7 +304,7 @@ class Forum {
 							$this->forum_info['permissions']['can_post'] = 1;
 							$this->forum_info['new_thread_link'] = INFUSIONS."forum/newthread.php?forum_id=".$row['forum_id'];
 						}
-						 // Second query to get all threads of this forum. SQL filter conditions override applicable.
+						// Second query to get all threads of this forum. SQL filter conditions override applicable.
 						$count = dbarray(dbquery("SELECT count('t.thread_id') as thread_max_rows FROM
 							".DB_FORUM_THREADS." t
 							LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
@@ -329,7 +339,7 @@ class Forum {
 								while ($threads = dbarray($t_result)) {
 									$threads['thread_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'];
 									$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
-									 // Threads Customized Output
+									// Threads Customized Output
 									$threads['thread_pages'] = "<div class='forum-pages'>".makepagenav(0, $inf_settings['posts_per_page'], $threads['thread_postcount'], 3, 'rowstart')."</div>\n";
 									// Set up icons
 									$attach_image = 0; $attach_file = 0;
