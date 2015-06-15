@@ -111,7 +111,7 @@ class Viewthread {
 			'threads_per_page' => $inf_settings['threads_per_page'],
 			'lastvisited' => (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time(),
 			'allowed_post_filters' => array('oldest', 'latest', 'high'),
-			'attachtypes' => explode(",", $settings['attachtypes']),
+			'attachtypes' => explode(",", $inf_settings['attachtypes']),
 			'quick_reply_form' => '',
 			// moderator form info
 			'mod_options' => array(),
@@ -945,7 +945,7 @@ class Viewthread {
 				'delete_field' => '',
 				'edit_reason_field' => '',
 				'attachment_field' => $this->thread_info['permissions']['can_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
-					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($settings['attachmax']), str_replace(',', ' ', $inf_settings['attachtypes']), $inf_settings['attachmax_count'])."</div>\n
+					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($inf_settings['attachmax_count']), str_replace(',', ' ', $inf_settings['attachtypes']), $inf_settings['attachmax_count'])."</div>\n
 					".form_fileinput('', 'file_attachments[]', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$inf_settings['attachmax_count'], 'valid_ext'=>$inf_settings['attachtypes']))
 					) : array(),
 				'poll' => array(),
@@ -969,15 +969,15 @@ class Viewthread {
 							WHERE p.thread_id='".$thread_data['thread_id']."' AND p.post_hidden='0'
 							ORDER BY p.post_datestamp DESC LIMIT 0,".$inf_settings['forum_last_posts_reply']);
 				if (dbrows($result)) {
-					$title = sprintf($locale['forum_0526'], $settings['forum_last_posts_reply']);
-					if ($settings['forum_last_posts_reply'] == "1") {
+					$title = sprintf($locale['forum_0526'], $inf_settings['forum_last_posts_reply']);
+					if ($inf_settings['forum_last_posts_reply'] == "1") {
 						$title = $locale['forum_0525'];
 					}
 					// backdoor to stringify echo'ed opentable.
 					ob_start();
 					opentable($title);
 					echo "<table class='tbl-border forum_thread_table table table-responsive'>\n";
-					$i = $settings['forum_last_posts_reply'];
+					$i = $inf_settings['forum_last_posts_reply'];
 					while ($data = dbarray($result)) {
 						$message = $data['post_message'];
 						if ($data['post_smileys']) {
@@ -987,7 +987,7 @@ class Viewthread {
 						echo "<tr>\n<td class='tbl2 forum_thread_user_name' style='width:10%'><!--forum_thread_user_name-->".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
 						echo "<td class='tbl2 forum_thread_post_date'>\n";
 						echo "<div style='float:right' class='small'>\n";
-						echo $i.($i == $settings['forum_last_posts_reply'] ? " (".$locale['forum_0525'].")" : "");
+						echo $i.($i == $inf_settings['forum_last_posts_reply'] ? " (".$locale['forum_0525'].")" : "");
 						echo "</div>\n";
 						echo "<div class='small'>".$locale['forum_0524'].showdate("forumdate", $data['post_datestamp'])."</div>\n";
 						echo "</td>\n";

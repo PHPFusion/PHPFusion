@@ -122,7 +122,7 @@ if ($_GET['post'] == "reply") {
 
 	if ($_GET['error'] < "2") {
 
-		if ($settings['thread_notify']) {
+		if ($inf_settings['thread_notify']) {
 			$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
 				FROM ".DB_FORUM_THREAD_NOTIFY." tn
 				LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id

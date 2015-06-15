@@ -199,7 +199,7 @@ $inf_insertdbrow[8] = DB_SETTINGS_INF." (settings_name, settings_value, settings
 $inf_insertdbrow[9] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_post_avatar', '1', 'forum')";
 $inf_insertdbrow[10] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thread_notify', '1', 'forum')";
 $inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('attachmax_count', '5', 'forum')";
-$inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('attachtypes', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum')";
+$inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('attachtypes', '.pdf|.gif|.jpg|.png|.zip|.rar|.tar|.bz2|.7z', 'forum')";
 $inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('popular_threads_timeframe', '', 'forum')";
 $inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('numofthreads', '15', 'forum')";
    
@@ -209,21 +209,21 @@ $inf_insertdbrow[16] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin
 $inf_insertdbrow[17] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('FR', 'forum_ranks.gif', '".$locale['setup_3038']."', '".INFUSIONS."forum/admin/forum_ranks.php', '5')";
 
 // Insert Panels
-$inf_insertdbrow[18] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '')";
-$inf_insertdbrow[19] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '2', 'file', '0', '0', '0', '')";
-
+$inf_insertdbrow[18] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '', '')";
+$inf_insertdbrow[19] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '0', '1', '', '')";
+																																																		
 $enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
 
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-$k = 19;
+$k = 20;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 	include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3304']."', 'infusions/forum/', '0', '2', '0', '5', '".$enabled_languages[$i]."')";
 		$k++;
 	}
 } else {
-		$inf_insertdbrow[19] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3304']."', 'infusions/forum/', '0', '2', '0', '5', '".LANGUAGE."')";
+		$inf_insertdbrow[20] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3304']."', 'infusions/forum/', '0', '2', '0', '5', '".LANGUAGE."')";
 }
 
 // Reset locale
