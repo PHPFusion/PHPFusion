@@ -27,6 +27,8 @@ $settings_theme = array(
 		'admin_theme' => fusion_get_settings('admin_theme'),
 		'theme' =>  fusion_get_settings('theme'),
 		'bootstrap' => fusion_get_settings('bootstrap'),
+		'entypo' => fusion_get_settings('entypo'),
+		'fontawesome' => fusion_get_settings('fontawesome'),
 	);
 
 // Saving settings
