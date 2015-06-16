@@ -204,9 +204,10 @@ $inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, setting
 $inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('numofthreads', '15', 'forum')";
    
 // Admin links
-$inf_insertdbrow[15] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('F', 'forums.gif', '".$locale['setup_3012']."', '".INFUSIONS."forum/admin/forums.php', '5')";
-$inf_insertdbrow[16] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('S3', 'settings_forum.gif', '".$locale['setup_3032']."', '".INFUSIONS."forum/admin/settings_forum.php', '5')";
-$inf_insertdbrow[17] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('FR', 'forum_ranks.gif', '".$locale['setup_3038']."', '".INFUSIONS."forum/admin/forum_ranks.php', '5')";
+$inf_insertdbrow[15] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('F', 'forums.gif', '".$locale['setup_3012']."', '".INFUSIONS."forum/admin/forums.php', '1')";
+// This might get tabbed and this text is a reminder to do so
+$inf_insertdbrow[16] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('S3', 'settings_forum.gif', '".$locale['setup_3032']."', '".INFUSIONS."forum/admin/settings_forum.php', '1')";
+$inf_insertdbrow[17] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('FR', 'forum_ranks.gif', '".$locale['setup_3038']."', '".INFUSIONS."forum/admin/forum_ranks.php', '1')";
 
 // Insert Panels
 $inf_insertdbrow[18] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '', '')";
