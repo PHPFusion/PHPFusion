@@ -50,7 +50,7 @@ echo "<head>\n";
 	}
 
 	// Entypo icons
-	echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />\n";
+	//echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />\n";
 	// Default CSS styling which applies to all themes but can be overriden
 	echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
 	// Theme CSS
