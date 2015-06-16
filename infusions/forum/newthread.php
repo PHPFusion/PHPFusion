@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: post.php
+| Filename: newthread.php
 | Author: Nick Jones (Digitanium)
 | Co-author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
@@ -16,18 +16,18 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-/**
- * Now just post new thread
- */
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_FORUMS)) {
 	$_GET['code'] = 404;
 	require_once BASEDIR.'error.php';
 	exit;
 }
+
 require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
+
 add_to_title($locale['global_204']);
+
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/classes/Functions.php";
 require_once INFUSIONS."forum/forum_include.php";
@@ -163,7 +163,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1, 'error_text' => '', 'autosize' => 1, 'no_resize' => 1, 'preview' => 1, 'form_name' => 'input_form', 'bbcode' => 1)),
 			// happens only in EDIT
 			'attachment_field' => $info['permissions']['can_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
-					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($settings['attachmax']), str_replace(',', ' ', $inf_settings['attachtypes']), $inf_settings['attachmax_count'])."</div>\n
+					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($inf_settings['attachmax_count']), str_replace(',', ' ', $inf_settings['attachtypes']), $inf_settings['attachmax_count'])."</div>\n
 					".form_fileinput('', 'file_attachments[]', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$inf_settings['attachmax_count'], 'valid_ext'=>$inf_settings['attachtypes']))
 				) : array(),
 			'poll' => array(),

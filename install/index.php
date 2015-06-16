@@ -132,7 +132,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		if (isset($db_prefix) && $db_prefix) {
 			dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
 			if (isset($_POST['uninstall'])) {
-				include_once 'includes/core_setup.php'; // why does it still produce flash of error message?
+				include_once 'includes/core_setup.php'; // why does it still produce flash of error message?, Locale ?
 				@unlink(BASEDIR.'config_temp.php');
 				@unlink(BASEDIR.'config.php');
 				redirect(BASEDIR."install/index.php", 1); // temp fix.
@@ -199,20 +199,10 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			}
 		}
 		$check_arr = array("administration/db_backups" => FALSE,
-			"forum/attachments" => FALSE,
 			"ftp_upload" => FALSE,
 			"images" => FALSE,
 			"images/imagelist.js" => FALSE,
-			"images/articles" => FALSE,
 			"images/avatars" => FALSE,
-			"images/news" => FALSE,
-			"images/news/thumbs" => FALSE,
-			"images/news_cats" => FALSE,
-			"images/news" => FALSE,
-			"images/blog/thumbs" => FALSE,
-			"images/blog_cats" => FALSE,
-			"images/photoalbum" => FALSE,
-			"images/photoalbum/submissions" => FALSE,
 			"config_temp.php" => FALSE,
 			"robots.txt" => FALSE);
 		$write_check = TRUE;
@@ -296,7 +286,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 		}
 		$content .= "</td>\n</tr>\n";
 		$content .= "<tr>\n<td class='tbl1'>".$locale['setup_1213']."</td>\n";
-		$content .= "<td class='tbl1' style='text-align:right'><input type='text' name='username' value='".$username."' placeholder='Admin' maxlength='255' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
+		$content .= "<td class='tbl1' style='text-align:right'><input type='text' name='username' value='".$username."' maxlength='255' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
 		$content .= "<tr>\n<td class='tbl1'>".$locale['setup_1509']."</td>\n";
 		$content .= "<td class='tbl1' style='text-align:right'><input type='text' name='email' value='".$email."' maxlength='100' class='form-control input-sm textbox' style='width:200px' /></td></tr>\n";
 		$content .= "<tr><td class='tbl1'>".$locale['setup_1212']."</td>\n";

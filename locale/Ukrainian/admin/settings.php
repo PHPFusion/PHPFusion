@@ -108,7 +108,7 @@ $locale['558'] = "Погодження з правилами сайту";
 $locale['559'] = "Правила";
 
 // Photo Gallery Settings
-$locale['600'] = "Фотогалерея";
+$locale['600'] = "Світлини";
 $locale['601'] = "Розмір мініатюри";
 $locale['602'] = "Розмір зображення";
 $locale['603'] = "Максимальний розмір зображення";
@@ -352,7 +352,7 @@ $locale['download_settings'] = "Завантаження";
 $locale['eshop_settings'] = "Інтернет магазин";
 $locale['forum_settings'] = "Форум";
 $locale['ipp_settings'] = "Наповнення сторінок";
-$locale['photo_settings'] = "Фотогалерея";
+$locale['photo_settings'] = "Світлини";
 $locale['main_settings'] = "Головне";
 $locale['misc_settings'] = "Різне";
 $locale['news_settings'] = "Новини";

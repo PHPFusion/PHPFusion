@@ -22,6 +22,7 @@ if (!db_exists(DB_FORUMS)) {
 	require_once __DIR__.'/../../error.php';
 	exit;
 }
+
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
 require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
@@ -29,13 +30,16 @@ require_once INFUSIONS."forum/classes/Viewthread.php";
 require_once INFUSIONS."forum/classes/Functions.php";
 require_once INFUSIONS."forum/classes/Moderator.php";
 require_once INFUSIONS."forum/forum_include.php";
+
 // Load Template
 include INFUSIONS."forum/templates/forum_main.php";
 include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
+
 add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
 $inf_settings = get_settings('forum');
 $thread = new PHPFusion\Forums\Viewthread();
+
 echo renderNotices(getNotices());
 if (isset($_GET['action'])) {
 	switch($_GET['action']) {

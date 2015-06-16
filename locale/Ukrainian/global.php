@@ -255,6 +255,7 @@ $locale['global_171'] = "відвідувачів";
 $locale['global_172'] = "Завантажено за %s сек.";
 $locale['global_173'] = "Запити";
 $locale['global_174'] = "Використано пам&lsquo;яті";
+$locale['global_175'] = "Середнє: %s сек.";
 
 // Admin Navigation
 $locale['global_180'] = "Центр керування";

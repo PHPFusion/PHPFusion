@@ -22,9 +22,14 @@ if (!db_exists(DB_FORUMS)) {
 	require_once BASEDIR.'error.php';
 	exit;
 }
+
 pageAccess('FR');
+
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php";
+include INCLUDES."infusions_include.php";
+$inf_settings = get_settings('forum');
+
 add_breadcrumb(array('link'=>ADMIN.'administrators.php'.$aidlink, 'title'=>$locale['404']));
 
 if (isset($_GET['status']) && !isset($message)) {
@@ -42,7 +47,7 @@ if (isset($_GET['status']) && !isset($message)) {
 	}
 }
 
-if ($settings['forum_ranks']) {
+if ($inf_settings['forum_ranks']) {
 	if (isset($_POST['save_rank'])) {
 		$rank_title = form_sanitizer($_POST['rank_title'], '', 'rank_title');
 		$rank_image = stripinput($_POST['rank_image']);

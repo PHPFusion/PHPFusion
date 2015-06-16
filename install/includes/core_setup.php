@@ -382,9 +382,10 @@ $core_tables = array("admin" => " (
 		theme_config TEXT NOT NULL,
 		PRIMARY KEY (theme_id)
 		) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-//</editor-fold>
+
 if (isset($_POST['uninstall'])) {
 	// drop all custom tables.
+/*
 	foreach (array('articles',
 				 'blog',
 				 'downloads',
@@ -397,6 +398,7 @@ if (isset($_POST['uninstall'])) {
 				 'weblinks') as $table) {
 		include __DIR__.'/'.$table.'_setup.php';
 	}
+*/
 	foreach (array_keys($core_tables) as $table) {
 		dbquery("DROP TABLE IF EXISTS ".$db_prefix.$table);
 	}
@@ -447,18 +449,6 @@ if (isset($_POST['uninstall'])) {
 		"('timeoffset', 'Europe/London')",
 		"('serveroffset', 'Europe/London')",
 		"('week_start', '0')",
-		"('numofthreads', '15')",
-		"('forum_ips', '0')",
-		"('attachmax', '150000')",
-		"('attachmax_count', '5')",
-		"('attachtypes', '.gif,.jpg,.png,.zip,.rar,.tar,.7z')",
-		"('thread_notify', '1')",
-		"('forum_ranks', '1')",
-		"('forum_edit_lock', '0')",
-		"('forum_edit_timelimit', '0')",
-		"('forum_editpost_to_lastpost', '1')",
-		"('forum_last_posts_reply', '10')",
-		"('forum_last_post_avatar', '1')",
 		"('enable_registration', '1')",
 		"('email_verification', '1')",
 		"('admin_activation', '0')",
@@ -505,7 +495,6 @@ if (isset($_POST['uninstall'])) {
 		"('flood_autoban', '1')",
 		"('visitorcounter_enabled', '1')",
 		"('rendertime_enabled', '0')",
-		"('popular_threads_timeframe', '')",
 		"('maintenance_level', ".USER_LEVEL_ADMIN.")",
 		"('deactivation_action', '0')",
 		"('captcha', 'securimage2')",
@@ -530,6 +519,7 @@ if (isset($_POST['uninstall'])) {
 	}
 	$mlt_sql = "INSERT INTO ".$db_prefix."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ";
 	$mlt_sql .= implode(",\n", array(
+		"('SL', '".$locale['setup_3023']."', '1')",
 		"('CP', '".$locale['setup_3201']."', '1')",
 		"('ET', '".$locale['setup_3208']."', '1')",
 		"('PN', '".$locale['setup_3211']."', '1')"));

@@ -16,6 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
+include INCLUDES."infusions_include.php";
+
+$inf_settings = get_settings('forum');
+
 global $lastvisited;
 
 if (!isset($lastvisited) || !isnum($lastvisited)) {
@@ -74,7 +79,7 @@ if (iMEMBER) {
 	echo "<div class='tbl1' style='text-align:center'><a href='".INFUSIONS."forum_threads_list_panel/my_threads.php'>".$locale['global_041']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum_threads_list_panel/my_posts.php'>".$locale['global_042']."</a> ::\n";
 	echo "<a href='".INFUSIONS."forum_threads_list_panel/new_posts.php'>".$locale['global_043']."</a>";
-	if ($settings['thread_notify']) {
+	if ($inf_settings['thread_notify']) {
 		echo " ::\n<a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php'>".$locale['global_056']."</a>";
 	}
 echo "</div>\n";

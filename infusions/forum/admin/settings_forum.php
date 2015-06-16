@@ -41,38 +41,38 @@ if (isset($_POST['savesettings'])) {
 	$admin_password = (isset($_POST['admin_password'])) ? form_sanitizer($_POST['admin_password'], '', 'admin_password') : '';
 	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "") && !defined('FUSION_NULL')) {
 		$numofthreads = form_sanitizer($_POST['numofthreads'], 5, 'numofthreads');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$numofthreads' WHERE settings_name='numofthreads'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$numofthreads' WHERE settings_name='numofthreads'") : '';
 		$forum_ips = form_sanitizer($_POST['forum_ips'], 103, 'forum_ips');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."' WHERE settings_name='forum_ips'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['forum_ips']) ? $_POST['forum_ips'] : "103")."' WHERE settings_name='forum_ips'") : '';
 		$attachmax = form_sanitizer($_POST['calc_b'], 2, 'calc_b')*form_sanitizer($_POST['calc_c'], 1000000, 'calc_c');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$attachmax' WHERE settings_name='attachmax'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax' WHERE settings_name='attachmax'") : '';
 		$attachmax_count = form_sanitizer($_POST['attachmax_count'], 5, 'attachmax_count');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$attachmax_count' WHERE settings_name='attachmax_count'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax_count' WHERE settings_name='attachmax_count'") : '';
 		$attachtypes = form_sanitizer($_POST['attachtypes'], '', 'attachtypes');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$attachtypes' WHERE settings_name='attachtypes'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachtypes' WHERE settings_name='attachtypes'") : '';
 		$thread_notify = form_sanitizer($_POST['thread_notify'], '', 'thread_notify');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$thread_notify' WHERE settings_name='thread_notify'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$thread_notify' WHERE settings_name='thread_notify'") : '';
 		$forum_ranks = form_sanitizer($_POST['forum_ranks'], '0', 'forum_ranks');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$forum_ranks' WHERE settings_name='forum_ranks'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_ranks' WHERE settings_name='forum_ranks'") : '';
 		$forum_edit_lock = form_sanitizer($_POST['forum_edit_lock'], '0', 'forum_edit_lock');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$forum_edit_lock' WHERE settings_name='forum_edit_lock'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_edit_lock' WHERE settings_name='forum_edit_lock'") : '';
 		$forum_edit_timelimit = form_sanitizer($_POST['forum_edit_timelimit'], '0', 'forum_edit_timelimit');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$forum_edit_timelimit' WHERE settings_name='forum_edit_timelimit'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_edit_timelimit' WHERE settings_name='forum_edit_timelimit'") : '';
 		$popular_threads_timeframe = form_sanitizer($_POST['popular_threads_timeframe'], '604800', 'popular_threads_timeframe');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$popular_threads_timeframe' WHERE settings_name='popular_threads_timeframe'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$popular_threads_timeframe' WHERE settings_name='popular_threads_timeframe'") : '';
 		$forum_last_posts_reply = form_sanitizer($_POST['forum_last_posts_reply'], '0', 'forum_last_posts_reply');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$forum_last_posts_reply' WHERE settings_name='forum_last_posts_reply'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_last_posts_reply' WHERE settings_name='forum_last_posts_reply'") : '';
 		$forum_last_post_avatar = form_sanitizer($_POST['forum_last_post_avatar'], '0', 'forum_last_post_avatar');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$forum_last_post_avatar' WHERE settings_name='forum_last_post_avatar'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_last_post_avatar' WHERE settings_name='forum_last_post_avatar'") : '';
 		$forum_editpost_to_lastpost = form_sanitizer($_POST['forum_editpost_to_lastpost'], '0', 'forum_editpost_to_lastpost');
-		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$forum_editpost_to_lastpost' WHERE settings_name='forum_editpost_to_lastpost'") : '';
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_editpost_to_lastpost' WHERE settings_name='forum_editpost_to_lastpost'") : '';
 		addNotice('success', $locale['900']);
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
 
 $settings2 = array();
-$result = dbquery("SELECT * FROM ".DB_SETTINGS);
+$result = dbquery("SELECT * FROM ".DB_SETTINGS_INF);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
@@ -109,8 +109,8 @@ echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
 $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
-$calc_c = calculate_byte($settings2['attachmax']);
-$calc_b = $settings2['attachmax']/$calc_c;
+$calc_c = calculate_byte($settings2['attachmax_count']);
+$calc_b = $settings2['attachmax_count']/$calc_c;
 require_once INCLUDES."mimetypes_include.php";
 $mime = mimeTypes();
 $mime_opts = array();
