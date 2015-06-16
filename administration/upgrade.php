@@ -45,7 +45,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				if (isset($_POST['enable_maintenance'])) {
 					dbquery("UPDATE ".DB_SETTINGS." SET settings_value='1' WHERE settings_name='maintenance'");
 					addNotice('success', 'Maintenance mode was enabled, you can now continue with the upgrade process');
-
 					redirect(FUSION_SELF.$aidlink);
 				}
 
@@ -1004,7 +1003,14 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 						theme_config TEXT NOT NULL,
 						PRIMARY KEY (theme_id)
 						) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+
+				// Change forum settings if exist, All of these need a check for paths as well.
+				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='SF' WHERE settings_value='S3'");
+				// Insert theme global settings
+				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'rocket.gif', '".$locale['setup_3058']."', 'settings_theme.php', '4')");
+				// Insert theme template settings
 				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('TS', 'rocket.gif', '".$locale['setup_3056']."', 'theme.php', '3')");
+				// Insert email template settings
 				$result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.gif', '".$locale['T001']."', 'email.php', '1')");
 				if ($result) {
 					$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level='-103'");
@@ -1043,6 +1049,10 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('admin_theme', 'Venus')");
 				// Bootstrap
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('bootstrap', '1')");
+				// Entypo
+				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('entypo', '1')");
+				// Font-Awesome
+				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('fontawesome', '1')");
 				// Set a new default theme to prevent issues during upgrade
 				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Septenary' WHERE settings_name='theme'");
 				//User sig issue

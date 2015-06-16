@@ -1,4 +1,5 @@
 <?php
+// Index
 $locale['setup_0000'] = "PHP-Fusion Core 9 Edition Setup";
 $locale['setup_0001'] = "PHP-Fusion Core 9 Edition Setup";
 $locale['setup_0002'] = 'Welcome to PHP-Fusion 9.00 Installation';
@@ -8,7 +9,6 @@ $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree
 $locale['setup_0010'] = '9.0';
 $locale['setup_0011'] = "en";
 $locale['setup_0012'] = "iso-8859-1";
-// Index
 $locale['setup_0101'] = "Step 1: Introduction";
 $locale['setup_0102'] = "Step 2: File and Folder Diagnostics";
 $locale['setup_0103'] = "Step 3: Database Settings";
@@ -16,11 +16,13 @@ $locale['setup_0104'] = "Step 4: Config / Database Setup";
 $locale['setup_0105'] = "Step 5: Configure Core System";
 $locale['setup_0106'] = "Step 6: Primary Admin Details";
 $locale['setup_0107'] = "Step 7: Final Settings";
+
 // Buttons
 $locale['setup_0120'] = "Finish Configuration";
 $locale['setup_0121'] = "Next";
 $locale['setup_0122'] = "Try Again";
 $locale['setup_0123'] = "Finish";
+
 // Step 1
 $locale['setup_1000'] = "Please select the required locale (language):";
 $locale['setup_1001'] = "Download more locales from <a href='https://www.php-fusion.co.uk/downloads.php#langpacks'><strong>PHP-Fusion Official Support Site</strong></a>";
@@ -69,6 +71,7 @@ $locale['setup_1210'] = "No";
 $locale['setup_1211'] = "Yes";
 $locale['setup_1212'] = "Select languages to use:";
 $locale['setup_1213'] = "Site Owner Name";
+
 // Step 4 - Database Setup
 $locale['setup_1300'] = "Database connection established.";
 $locale['setup_1301'] = "Config file successfully written.";
@@ -88,6 +91,7 @@ $locale['setup_1314'] = "Could not write or delete MySQL tables.";
 $locale['setup_1315'] = "Please make sure your MySQL user has read, write and delete permission for the selected database.";
 $locale['setup_1316'] = "Empty fields.";
 $locale['setup_1317'] = "Please make sure you have filled out all the MySQL connection fields.";
+
 // Step 5
 $locale['setup_1400'] = "Please configure your core system.";
 $locale['setup_1401'] = "IMPORTANT: Please back up your data if any before proceed. Removing a System will permanently erase all existing records.";
@@ -99,6 +103,7 @@ $locale['setup_1406'] = '%s system have been successfully installed.';
 $locale['setup_1407'] = '%s system system installation failed.';
 $locale['setup_1408'] = '%s system have been successfully removed.';
 $locale['setup_1409'] = '%s system cannot be removed or failed.';
+
 // Step 6 - Super Admin login
 $locale['setup_1500'] = "Primary Super Admin Account";
 $locale['setup_1501'] = "Configure your Super Administrator account details.";
@@ -110,6 +115,7 @@ $locale['setup_1506'] = "Repeat Login password:";
 $locale['setup_1507'] = "Admin Password:";
 $locale['setup_1508'] = "Repeat Admin password:";
 $locale['setup_1509'] = "Email address:";
+
 // Step 6 - User details validation
 $locale['setup_5010'] = "User name contains invalid characters.";
 $locale['setup_5011'] = "User name field can not be left empty.";
@@ -123,6 +129,7 @@ $locale['setup_5018'] = "Admin password fields can not be left empty.";
 $locale['setup_5019'] = "Your email address does not appear to be valid.";
 $locale['setup_5020'] = "Email field can not be left empty.";
 $locale['setup_5021'] = "Your user settings are not correct:";
+
 // Step 6 - Admin Panels
 $locale['setup_3000'] = "Administrators";
 $locale['setup_3001'] = "Article Categories";
@@ -180,8 +187,10 @@ $locale['setup_3052'] = "Permalinks";
 $locale['setup_3053'] = "eShop";
 $locale['setup_3054'] = "Blog Categories";
 $locale['setup_3055'] = "Blog";
-$locale['setup_3056'] = "Theme";
+$locale['setup_3056'] = "Theme Customizations";
 $locale['setup_3057'] = "Migration Tool";
+$locale['setup_3058'] = "Theme Settings";
+
 //Multilanguage table rights
 $locale['setup_3200'] = "Articles";
 $locale['setup_3201'] = "Custom Pages";
@@ -198,6 +207,7 @@ $locale['setup_3211'] = "Panels";
 $locale['setup_3212'] = "Forum Ranks";
 $locale['setup_3213'] = "Blog";
 $locale['setup_3214'] = "eShop";
+
 // Step 6 - Navigation Links
 $locale['setup_3300'] = "Home";
 $locale['setup_3301'] = "Articles";
@@ -215,6 +225,7 @@ $locale['setup_3312'] = "Submit Article";
 $locale['setup_3313'] = "Submit Photo";
 $locale['setup_3314'] = "Submit Download";
 $locale['setup_3315'] = "Submissions";
+
 // Stage 6 - Panels
 $locale['setup_3400'] = "Navigation";
 $locale['setup_3401'] = "Online Users";
@@ -224,6 +235,7 @@ $locale['setup_3404'] = "Welcome Message";
 $locale['setup_3405'] = "Forum Threads List";
 $locale['setup_3406'] = "User Info";
 $locale['setup_3407'] = "Members Poll";
+
 // Stage 6 - News Categories
 $locale['setup_3500'] = "Bugs";
 $locale['setup_3501'] = "Downloads";
@@ -241,6 +253,7 @@ $locale['setup_3512'] = "Security";
 $locale['setup_3513'] = "Software";
 $locale['setup_3514'] = "Themes";
 $locale['setup_3515'] = "Windows";
+
 // Stage 6 - Sample Forum Ranks
 $locale['setup_3600'] = "Super Admin";
 $locale['setup_3601'] = "Admin";
@@ -251,6 +264,7 @@ $locale['setup_3605'] = "Member";
 $locale['setup_3606'] = "Senior Member";
 $locale['setup_3607'] = "Veteran Member";
 $locale['setup_3608'] = "Fusioneer";
+
 // Stage 6 - Sample Smileys
 $locale['setup_3620'] = "Smile";
 $locale['setup_3621'] = "Wink";
@@ -261,6 +275,7 @@ $locale['setup_3625'] = "Pfft";
 $locale['setup_3626'] = "Cool";
 $locale['setup_3627'] = "Grin";
 $locale['setup_3628'] = "Angry";
+
 // Stage 6 - User Field Categories
 $locale['setup_3640'] = "Profile";
 $locale['setup_3641'] = "Contact Information";
@@ -268,13 +283,16 @@ $locale['setup_3642'] = "Miscellaneous Information";
 $locale['setup_3643'] = "Options";
 $locale['setup_3644'] = "Statistics";
 $locale['setup_3645'] = "Privacy";
+
 // Welcome message
 $locale['setup_3650'] = "Welcome to your site";
+
 // Final message
 $locale['setup_1600'] = "Setup is Complete";
 $locale['setup_1601'] = "PHP-Fusion 9.00 is now ready for use. Click Finish to rewrite your config_temp.php file to config.php<br/>";
 $locale['setup_1602'] = "<strong>Note: After you enter your site you should delete the entire /install folder and chmod your config.php back to 0644 for security reasons.</strong>";
 $locale['setup_1603'] = "Thank you for choosing PHP-Fusion.";
+
 // Default time settings
 // http://php.net/manual/en/function.strftime.php
 $locale['setup_3700'] = "%d.%m.%y";
@@ -282,6 +300,7 @@ $locale['setup_3701'] = "%B %d %Y %H:%M:%S";
 $locale['setup_3702'] = "%d-%m-%Y %H:%M";
 $locale['setup_3703'] = "%B %d %Y";
 $locale['setup_3704'] = "%B %d %Y %H:%M:%S";
+
 // Email Template Setup
 // Please do NOT translate the words between brackets [] !
 $locale['setup_3800'] = "Email Templates";
@@ -294,8 +313,10 @@ $locale['setup_3806'] = "Hello [RECEIVER],\r\n\r\nA reply has been posted in the
 $locale['setup_3807'] = "Contact form";
 $locale['setup_3808'] = "[SUBJECT]";
 $locale['setup_3809'] = "[MESSAGE]";
+
 // Language Admin
 $locale['setup_3900'] = "Multi Language";
+
 // Official Supported System List
 $locale['articles']['title'] = "Articles";
 $locale['articles']['description'] = "A Standard Documentation System.";

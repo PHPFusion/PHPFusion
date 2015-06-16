@@ -42,6 +42,9 @@ $locale['437'] = "Enable Bootstrap Responsive Framework";
 $locale['438'] = "Search Engine Friendly URL (SEF):";
 $locale['439'] = "Normalize Friendly URLs:";
 $locale['440'] = "Enable SEO Debug Mode:";
+$locale['441'] = "Enable Entypo";
+$locale['442'] = "Enable Font-Awesome";
+
 // Time & Date Settings
 $locale['450'] = "Time and Date";
 $locale['451'] = "Short date format:";
@@ -59,6 +62,7 @@ $locale['462'] = "Server offset";
 $locale['463'] = "Set this so server time is GMT 0";
 $locale['464'] = "Default timezone";
 $locale['465'] = "First day of week";
+
 // Forum Settings
 $locale['500'] = "Forum";
 $locale['501'] = "Latest active forum threads panel:";
@@ -94,6 +98,7 @@ $locale['536'] = "Time limit for editing";
 $locale['537'] = "(In minutes, 0 for no limit)";
 $locale['538'] = "Update time on edit";
 $locale['539'] = "Show lastpost avatar";
+
 // Registration Settings
 $locale['550'] = "Registration";
 $locale['551'] = "Enable registration system?";
@@ -102,6 +107,7 @@ $locale['553'] = "Display validation code?";
 $locale['557'] = "New members activated by admin?";
 $locale['558'] = "Enable terms of agreement?";
 $locale['559'] = "Terms of Agreement";
+
 // Photo Gallery Settings
 $locale['600'] = "Gallery";
 $locale['601'] = "Thumb size:";
@@ -124,6 +130,7 @@ $locale['617'] = "Save generated watermarks?";
 $locale['618'] = "Reduces server load; occupies more disk space";
 $locale['619'] = "Delete existing watermarks";
 $locale['620'] = "Delete existing watermarks?";
+
 // Other Settings
 $locale['650'] = "Miscellaneous";
 $locale['651'] = "Bad words list:";
@@ -202,6 +209,7 @@ $locale['699'] = "Login method";
 $locale['699b'] = "Both";
 $locale['699e'] = "Email";
 $locale['699f'] = "Check uploaded files for MIME type?";
+
 // Private Message Settings
 $locale['700'] = "Private Messages";
 $locale['701'] = "Inbox limit:";
@@ -213,15 +221,19 @@ $locale['708'] = "Default values for user options";
 $locale['709'] = "Email notification?";
 $locale['710'] = "Save sent PM's?";
 $locale['711'] = "Note: Individual user options take precedence if they're set. If no user option is set, then the global options are applied.";
+
 // Save Settings
 $locale['750'] = "Save Settings";
+
 // Other Settings
 $locale['800'] = "Prune forums";
 $locale['801'] = "Posts deleted: ";
 $locale['802'] = "Threads deleted: ";
 $locale['803'] = "Attachments deleted: ";
+
 // Privacy policy
 $locale['820'] = "Privacy Policy";
+
 // Banners Settings
 $locale['850'] = "Banners";
 $locale['851'] = "Banner 1";
@@ -229,10 +241,12 @@ $locale['852'] = "Banner 2";
 $locale['853'] = "Admin Password:";
 $locale['854'] = "Save Banners";
 $locale['855'] = "Preview Banners";
+
 // Settings Error
 $locale['900'] = "Settings Updated";
 $locale['901'] = "Database update error occurs: Settings were not Updated!";
 $locale['902'] = "Site host can not be left empty!";
+
 // Item per Page
 $locale['910'] = "Articles";
 $locale['911'] = "Downloads";
@@ -240,6 +254,7 @@ $locale['912'] = "Links";
 $locale['913'] = "Comments";
 $locale['914'] = "Threads";
 $locale['915'] = "Posts";
+
 // Downloads Settings
 $locale['930'] = "Maximum size uploads:";
 $locale['931'] = "Maximum file size in bytes";
@@ -251,6 +266,7 @@ $locale['936'] = "Maximum screenshot file size (bytes):";
 $locale['937'] = "Maximum screenshot thumb size:";
 $locale['938'] = "Enable screenshots?";
 $locale['939'] = "Download items per page";
+
 // Blog & News Settings
 $locale['950'] = "Image Upload";
 $locale['951'] = "Image link:";
@@ -264,6 +280,7 @@ $locale['957'] = "Image on Front-page";
 $locale['958'] = "Image on Read-more";
 $locale['959'] = "Uploaded Photo";
 $locale['960'] = "Category Image";
+
 // User Management
 $locale['1001'] = "Avatar ratio:";
 $locale['1002'] = "De-activation system enabled";
@@ -280,10 +297,12 @@ $locale['1012'] = "Anonymize Users";
 $locale['1013'] = "Delete Users";
 $locale['1014'] = "Users can log in on different devices simultaneously?";
 $locale['1014a'] = "Disable for better security";
+
 // Social integration
 $locale['1030'] = "Create OpenGraph meta tags for Social networks";
 $locale['1031'] = "Allow index URLs in BB Codes";
 $locale['1032'] = "Allow index URLs in user profiles";
+
 // Date format options (you can add/delete lines)
 // More info at: http://php.net/manual/en/function.strftime.php
 $locale['dateformats'][] = "%m/%d/%Y";
@@ -312,7 +331,6 @@ $locale['error_type'] = 'Please enter Extension Type.';
 $locale['error_width'] = 'Please enter Width.';
 $locale['error_height'] = 'Please enter Height.';
 $locale['error_value'] = 'Please enter a value.';
-
 $locale['blog_description'] = "The configuration settings for Blog system";
 $locale['news_description'] = "The configuration settings for News system";
 $locale['ipp_description'] = "The configuration settings for default numbers of results items to be listed";
@@ -328,7 +346,6 @@ $locale['register_description'] = "The configuration settings for User Registrat
 $locale['security_description'] = "The configuration settings for Security system";
 $locale['time_description'] = "The configuration settings for server Time and Date system";
 $locale['user_description'] = "The configuration settings for Users Management system";
-
 $locale['blog_settings'] = 'Blog Settings';
 $locale['download_settings'] = 'Download Settings';
 $locale['eshop_settings'] = 'Eshop Settings';
@@ -343,5 +360,4 @@ $locale['register_settings'] = 'Registration Settings';
 $locale['security_settings'] = 'Security Settings';
 $locale['time_settings'] = 'Time Date Settings';
 $locale['user_settings'] = 'User Management Settings';
-
-
+$locale['theme_settings'] = 'Theme Settings';

@@ -25,7 +25,7 @@ require_once THEMES."templates/admin_header.php";
 // later to move into forum_admin.php
 //include INFUSIONS."forum/locale/".LOCALESET."forum_admin.php";
 include LOCALE.LOCALESET."admin/settings.php";
-pageAccess('S3');
+pageAccess('SF');
 
 add_breadcrumb(array('link'=>ADMIN.'settings_forum.php'.$aidlink, 'title'=>$locale['forum_settings']));
 if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
