@@ -1,0 +1,55 @@
+<?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: themes/templates/global/home.php
+| Author: Chubatyj Vitalij (Rizado)
+| Web: http://chubatyj.ru/
+| Co-Author: Takács Ákos (Rimelek)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+
+/**
+ * Show home modules info
+ */
+if (!function_exists('display_home_item')) {
+	function display_home_item($info) {
+		$colwidth = $info['colwidth'];
+		opentable($info['blockTitle']);
+		if ($colwidth) {
+			$classes = "col-xs-".$colwidth." col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content";
+			echo "<div class='row'>";
+			foreach($info['data'] as $data) {
+				echo "<div class='".$classes."'>";
+				echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
+				echo "<div class='small m-b-10'>".$data['meta']."</div>";
+				echo "<div>".$data['content']."</div>";
+				echo "</div>";
+			}
+			echo "</div>";
+		} else {
+			echo $info['norecord'];
+		}
+		closetable();
+	}
+}
+/**
+ * Show that no module have been installed
+ */
+if (!function_exists('display_no_item')) {
+	function display_no_item() {
+		global $locale;
+		opentable($locale['home_0100']);
+		echo $locale['home_0101'];
+		closetable();
+	}
+}

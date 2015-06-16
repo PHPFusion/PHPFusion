@@ -19,6 +19,7 @@
 +--------------------------------------------------------*/
 require_once "maincore.php";
 require_once THEMES."templates/header.php";
+require_once THEMES."templates/global/home.php";
 include LOCALE.LOCALESET."homepage.php";
 
 add_to_title($locale['home']);
@@ -141,29 +142,11 @@ foreach ($configs as $table => $config) {
 }
 
 foreach($contents as $content) {
-$colwidth = $content['colwidth'];
-opentable($content['blockTitle']);
-	if ($colwidth) {
-		$classes = "col-xs-".$colwidth." col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content";
-		echo "<div class='row'>";
-			foreach($content['data'] as $data) {
-				echo "<div class='".$classes."'>";
-				echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
-				echo "<div class='small m-b-10'>".$data['meta']."</div>";
-				echo "<div>".$data['content']."</div>";
-				echo "</div>";
-			}
-		echo "</div>";
-	} else {
-		echo $content['norecord'];
-	}
-closetable();
+	display_home_item($content);
 }
 
 if (!$contents) {
-	opentable($locale['home_0100']);
-	echo $locale['home_0101'];
-	closetable();
+	display_no_item();
 }
 
 require_once THEMES."templates/footer.php";
