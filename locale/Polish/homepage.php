@@ -1,27 +1,27 @@
 <?php
 // block titles
-$locale['home_0000'] = "Latest News";
-$locale['home_0001'] = "Latest Articles";
-$locale['home_0002'] = "Latest Blogs";
-$locale['home_0003'] = "Latest Downloads";
+$locale['home_0000'] = "Najnowsze newsy";
+$locale['home_0001'] = "Najnowsze artykuły";
+$locale['home_0002'] = "Najnowsze blogi";
+$locale['home_0003'] = "Najnowsze pliki";
 
-$locale['submit_0000'] = '%s News';
-$locale['submit_0001'] = '%s Articles';
-$locale['submit_0002'] = '%s Downloads';
-$locale['submit_0003'] = '%s Photos';
-$locale['submit_0004'] = '%s Weblinks';
+$locale['submit_0000'] = '% News';
+$locale['submit_0001'] = '% Artykuł';
+$locale['submit_0002'] = '% Plik';
+$locale['submit_0003'] = '% Zdjęcie';
+$locale['submit_0004'] = '% Link';
 
 // no content messages
-$locale['home_0050'] = "No News to display";
-$locale['home_0051'] = "No Articles to display";
-$locale['home_0052'] = "No Blogs to display";
-$locale['home_0053'] = "No Downloads to display";
+$locale['home_0050'] = "Brak newsów do wyświetlenia";
+$locale['home_0051'] = "Brak artykułów do wyświetlenia";
+$locale['home_0052'] = "Brak Blogów do wyświetlenia";
+$locale['home_0053'] = "Brak plików do wyświetlenia";
 
 // common text
-$locale['home_0100'] = "Content modules not installed";
-$locale['home_0101'] = "Please install at least one module for text content or change start page in Main Settings.";
+$locale['home_0100'] = "Moduł nie został zainstalowany";
+$locale['home_0101'] = "Proszę zainstalować co najmniej jeden moduł dla zawartości tekstowej lub strony startowej w Ustawieniach głównych.";
 
-$locale['home_0102'] = "Uncategorized";
+$locale['home_0102'] = "Bez kategorii";
 
-$locale['home_0105'] = "Published by ";
-$locale['home_0106'] = " in ";
+$locale['home_0105'] = "Opublikowane przez ";
+$locale['home_0106'] = " w ";
