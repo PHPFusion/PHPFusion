@@ -1,7 +1,7 @@
 <?php
-$locale['bb_ulist_description'] = "Creates unordered list from specified type";
-$locale['bb_ulist_usage'] = "Text 1 :enter: Text 2 :enter: etc";
-$locale['bb_ulist_1'] = "disc";
-$locale['bb_ulist_2'] = "circle";
-$locale['bb_ulist_3'] = "square";
+$locale['bb_ulist_description'] = "Wyświetla zaznaczony tekst jako listę nieuporządkowaną";
+$locale['bb_ulist_usage'] = "pierwszy tekst :enter: drugi tekst :enter: itd.";
+$locale['bb_ulist_1'] = "dysk";
+$locale['bb_ulist_2'] = "kółko";
+$locale['bb_ulist_3'] = "kwadrat";
 

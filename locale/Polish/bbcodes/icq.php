@@ -1,5 +1,5 @@
 <?php
 $locale['bb_icq'] = "ICQ";
-$locale['bb_icq_description'] = "ICQ Status Display";
-$locale['bb_icq_usage'] = "ICQ communicator user ID";
+$locale['bb_icq_description'] = "Wyświetla status użytkownika ICQ";
+$locale['bb_icq_usage'] = "numer użytkownika ICQ";
 

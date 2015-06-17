@@ -1,4 +1,4 @@
 <?php
-$locale['bb_u_description'] = "Makes selected text underlined";
-$locale['bb_u_usage'] = "Text to underline";
+$locale['bb_u_description'] = "Podkreśla zaznaczony tekst";
+$locale['bb_u_usage'] = "podkreślony tekst";
 

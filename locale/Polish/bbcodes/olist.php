@@ -1,4 +1,4 @@
 <?php
-$locale['bb_olist_description'] = "Creates ordered list for specified type";
-$locale['bb_olist_usage'] = "Text 1 :enter: Text 2 :enter: etc";
+$locale['bb_olist_description'] = "Wyświetla zaznaczony tekst jako listę uporządkowana";
+$locale['bb_olist_usage'] = "pierwszy tekst :enter: drugi tekst :enter: itd.";
 

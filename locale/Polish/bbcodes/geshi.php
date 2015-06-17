@@ -1,8 +1,8 @@
 <?php
-$locale['bb_geshi_description'] = "GeSHi code highlighter Utiliser";
-$locale['bb_geshi_usage'] = "Text code to highlight via GeSHi Class";
-$locale['bb_geshi_lang'] = "Code language name";
-$locale['bb_geshi_parser1'] = "Parser note";
-$locale['bb_geshi_parser2'] = "Code too big for GeSHi! Using code tag instead";
-$locale['bb_geshi_info'] = "Parsed in <TIME> seconds, using GeSHi <VERSION>";
-$locale['bb_geshi_save'] = "Download source";
+$locale['bb_geshi_description'] = "GeSHi - narzędzie do kolorowania kodu źródłowego";
+$locale['bb_geshi_usage'] = "kod źródłowy do pokolorowania przez klasę GeSHi";
+$locale['bb_geshi_lang'] = "język programowania";
+$locale['bb_geshi_parser1'] = "Informacja interpretatora";
+$locale['bb_geshi_parser2'] = "Kod jest za duży dla GeSHi! Skorzystaj z&nbsp;tagu code.";
+$locale['bb_geshi_info'] = "Zinterpretowano w sekund: <TIME>, wykorzystano GeSHi <VERSION>";
+$locale['bb_geshi_save'] = "Pobierz kod źródłowy";

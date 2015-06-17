@@ -1,4 +1,4 @@
 <?php
-$locale['bb_small2_description'] = "Displays selected text as alt. small";
-$locale['bb_small2_usage'] = "Text to alt. small";
+$locale['bb_small2_description'] = "Wyświetla zaznaczony tekst alternatywnym pomniejszonym stylem";
+$locale['bb_small2_usage'] = "alternatywny pomniejszony tekst";
 

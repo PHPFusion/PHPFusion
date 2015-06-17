@@ -1,5 +1,5 @@
 <?php
 $locale['bb_php'] = "PHP";
-$locale['bb_php_description'] = "Highlight selected text as PHP code";
-$locale['bb_php_usage'] = "PHP code to highlight";
-$locale['bb_php_save'] = "Download source";
+$locale['bb_php_description'] = "Koloruje zaznaczony tekst jako kod PHP";
+$locale['bb_php_usage'] = "kod PHP do pokolorowania";
+$locale['bb_php_save'] = "Pobierz kod źródłowy";

@@ -1,4 +1,4 @@
 <?php
-$locale['bb_left_description'] = "Aligns selected text to left";
-$locale['bb_left_usage'] = "Text to align left";
+$locale['bb_left_description'] = "Wyrównuje zaznaczony tekst do lewego marginesu";
+$locale['bb_left_usage'] = "tekst wyrównany do lewego marginesu";
 
