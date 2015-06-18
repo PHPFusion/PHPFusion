@@ -923,11 +923,10 @@ class Viewthread {
 					redirect(clean_request('', array('thread_id'), true));
 				}
 			}
-
 			$info = array(
 				'title' => $locale['forum_0503'],
 				'description' => $locale['forum_2000'].$thread_data['thread_subject'],
-				'openform' =>  openform('input_form', 'post', $form_action, array('enctype' => 1, 'max_tokens' => 1)),
+				'openform' =>  openform('input_form', 'post', $form_action, array('enctype' => $thread_data['forum_allow_attach'] ? 1 : 0, 'max_tokens' => 1)),
 				'closeform' => closeform(),
 				'forum_id_field' => form_hidden('', 'forum_id', 'forum_id', $post_data['forum_id']),
 				'thread_id_field' => form_hidden('', 'thread_id', 'thread_id', $post_data['thread_id']),
@@ -943,7 +942,7 @@ class Viewthread {
 				// happens only in EDIT
 				'delete_field' => '',
 				'edit_reason_field' => '',
-				'attachment_field' => $this->thread_info['permissions']['can_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
+				'attachment_field' => $this->thread_info['permissions']['can_attach'] && $thread_data['forum_allow_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
 					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($inf_settings['attachmax_count']), str_replace(',', ' ', $inf_settings['attachtypes']), $inf_settings['attachmax_count'])."</div>\n
 					".form_fileinput('', 'file_attachments[]', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$inf_settings['attachmax_count'], 'valid_ext'=>$inf_settings['attachtypes']))
 					) : array(),
