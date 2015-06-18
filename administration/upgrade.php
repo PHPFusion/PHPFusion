@@ -71,6 +71,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					}
 					return $key;
 				}
+				
 				$secret_key = createRandomToken();
 				$secret_key_salt = createRandomToken();
 				$content .= "<div class='well'>\n";
@@ -93,12 +94,11 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 					INCLUDES."language/",
 					);
 
-					function rmdir_recursively($dir) {
+			function rmdir_recursively($dir) {
 				foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $path) {
 					$path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
 				}
 				rmdir($dir);
-
 				if (!file_exists($dir)) return TRUE;
 				return FALSE;
 			}
@@ -390,7 +390,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				$result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS."");
 				while ($data = dbarray($result)) {
 					$new_rights = str_replace(".S13", "", $data['user_rights']);
-					$new_rights = str_replace(".S3", "", $new_rights);
 					$new_rights = str_replace(".S8", "", $new_rights);
 					$new_rights = str_replace(".S5", "", $new_rights);
 					$new_rights = str_replace(".S11", "", $new_rights);
@@ -684,9 +683,6 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 									theme_config TEXT NOT NULL,
 									PRIMARY KEY (theme_id)
 						) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-
-				// Change forum settings if exist, All of these need a check for paths as well.
-				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='SF' WHERE settings_value='S3'");
 
 				// Insert theme global settings
 				$result = dbquery("INSERT INTO ".DB_PREFIX."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S3', 'rocket.gif', '".$locale['setup_3058']."', 'settings_theme.php', '4')");
