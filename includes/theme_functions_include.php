@@ -420,17 +420,24 @@ function panelstate($state, $bname, $element = "div") {
 }
 
 // v6 compatibility
-function opensidex($title, $state = "on") {
-	openside($title, TRUE, $state);
+if (!function_exists('opensidex')) {
+	function opensidex($title, $state = "on") {
+		openside($title, TRUE, $state);
+	}
 }
 
-function closesidex() {
-	closeside();
+if (!function_exists('closesidex')) {
+	function closesidex() {
+		closeside();
+	}
 }
 
-function tablebreak() {
-	return TRUE;
+if (!function_exists('tablebreak')) {
+	function tablebreak() {
+		return TRUE;
+	}
 }
+
 
 // this one set for removal... we only need 1 set of breadcrumbs.
 function make_breadcrumb($title, $db, $id_col, $cat_col, $name_col, $id, $class = FALSE) {
@@ -468,27 +475,30 @@ function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
  * @param string $img_class Classes for the image
  * @return string
  */
-function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class='img-thumbnail') {
-	$userdata += array(
-		'user_id' => 0,
-		'user_name' => '',
-		'user_avatar' => '',
-		'user_status' => ''
-	);
-	if (!$userdata['user_id']) {
-		$userdata['user_id'] = 1;
+if (!function_exists('display_avatar')) {
+	function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class='img-thumbnail') {
+		$userdata += array(
+			'user_id' => 0,
+			'user_name' => '',
+			'user_avatar' => '',
+			'user_status' => ''
+		);
+		if (!$userdata['user_id']) {
+			$userdata['user_id'] = 1;
+		}
+		$class = ($class) ? "class='$class'" : '';
+		$hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
+		$imgTpl = "<img class='img-responsive $img_class %s' alt='".$userdata['user_name']."' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
+		$img = sprintf($imgTpl,
+					   $hasAvatar ? '' : 'm-r-10',
+					   $hasAvatar ? IMAGES."avatars/".$userdata['user_avatar'] : IMAGES.'avatars/noavatar100.png'
+		);
+		return $link
+			? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img)
+			: $img;
 	}
-	$class = ($class) ? "class='$class'" : '';
-	$hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
-	$imgTpl = "<img class='img-responsive $img_class %s' alt='".$userdata['user_name']."' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
-	$img = sprintf($imgTpl,
-		$hasAvatar ? '' : 'm-r-10',
-		$hasAvatar ? IMAGES."avatars/".$userdata['user_avatar'] : IMAGES.'avatars/noavatar100.png'
-	);
-	return $link
-		? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img)
-		: $img;
 }
+
 
 /**
  * Thumbnail function
@@ -735,7 +745,7 @@ function closetab() { return "</div>\n</div>\n"; }
 /* Standard ratings display */
 function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE, $mode = '1') {
 	global $locale;
-	$start_link = $link ? "<a class='comments-item m-r-10 ".$class."' href='".$link."'>" : '';
+	$start_link = $link ? "<a class='comments-item ".$class."' href='".$link."'>" : '';
 	$end_link = $link ? "</a>\n" : '';
 	$average = $total_votes > 0 ? number_format($total_sum/$total_votes, 2) : 0;
 	$str = $mode == 1 ? $average.$locale['global_094'].format_word($total_votes, $locale['fmt_rating']) : "$average/$total_votes";
@@ -750,7 +760,7 @@ function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE
 /* Standard comment display */
 function display_comments($news_comments, $link = FALSE, $class = FALSE, $mode = '1') {
 	global $locale;
-	$start_link = $link ? "<a class='comments-item m-r-10 ".$class."' href='".$link."'>" : '';
+	$start_link = $link ? "<a class='comments-item ".$class."' href='".$link."'>" : '';
 	$end_link = $link ? "</a>\n" : '';
 	$str = $mode == 1 ? format_word($news_comments, $locale['fmt_comment']) : $news_comments;
 	if ($news_comments > 0) {
