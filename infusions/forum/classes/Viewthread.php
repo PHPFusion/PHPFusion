@@ -94,8 +94,8 @@ class Viewthread {
 			'permissions' => array(
 								'can_post' => iMOD or iSUPERADMIN ? true : (checkgroup($thread_data['forum_post']) && checkgroup($thread_data['forum_lock'])) ? true : false,
 								'can_edit' => iMOD or iSUPERADMIN ? true : checkgroup($thread_data['forum_post']) &&  $userdata['user_id'] == $thread_data['thread_author'] ? true : false,
-								'can_poll' => (iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll'] ? true : checkgroup($thread_data['forum_post'] && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll']) ? true : false,
 								'can_vote_poll' => (iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll'] ? true : checkgroup($thread_data['forum_post'] && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll']) ? true : false,
+								'can_poll' => ((iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll']) ? true : checkgroup($thread_data['forum_post']) && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] ? true : false,
 								'can_reply' => iMOD or iSUPERADMIN ? true : (checkgroup($thread_data['forum_reply']) && checkgroup($thread_data['forum_reply']) && !$thread_data['forum_lock']) ? true : false,
 								'can_rate' => ($thread_data['forum_type'] == 4 && ((iMOD or iSUPERADMIN) or ($thread_data['forum_allow_ratings'] && checkgroup($thread_data['forum_post_ratings']) && !$thread_data['forum_lock']))) ? true : false,
 								'can_vote' => checkgroup($thread_data['forum_vote']) ? true : false,
