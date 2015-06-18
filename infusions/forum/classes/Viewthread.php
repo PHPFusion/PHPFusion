@@ -98,7 +98,7 @@ class Viewthread {
 								'can_reply' => iMOD or iSUPERADMIN ? true : (checkgroup($thread_data['forum_reply']) && iMEMBER && checkgroup($thread_data['forum_reply']) && !$thread_data['forum_lock']) ? true : false,
 								'can_rate' => ($thread_data['forum_type'] == 4 && ((iMOD or iSUPERADMIN) or ($thread_data['forum_allow_ratings'] && iMEMBER && checkgroup($thread_data['forum_post_ratings']) && !$thread_data['forum_lock']))) ? true : false,
 								'can_vote' => iMEMBER && checkgroup($thread_data['forum_vote']) ? true : false,
-								'can_view_poll' => iMEMBER && checkgroup($thread_data['forum_poll']) ? true : false,
+								'can_view_poll' => checkgroup($thread_data['forum_poll']) ? true : false,
 								'edit_lock' => $inf_settings['forum_edit_lock'] ? true : false,
 								'can_attach' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? true : false,
 								'can_download_attach' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach_download']) ? true : false,
