@@ -23,7 +23,7 @@ if (!function_exists('render_main_news')) {
 	 * @param $info
 	 */
 	function render_main_news($info) {
-		global $userdata, $settings, $locale;
+		global $userdata, $settings, $news_settings, $locale;
 		add_to_head("<link href='".INFUSIONS."news/css/news.css' rel='stylesheet'/>\n");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery.cookie.js'></script>");
 		if (isset($_POST['switchview'])) {
@@ -132,10 +132,10 @@ if (!function_exists('render_main_news')) {
 					echo "</div>\n";
 				}
 				echo "</div>\n";
-				if ($info['news_item_rows'] > $settings['newsperpage']) {
+				if ($info['news_item_rows'] > $news_settings['newsperpage']) {
 					$type_start = isset($_GET['type']) ? "type=".$_GET['type']."&amp;" : '';
 					$cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '';
-					echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'], $settings['newsperpage'], $info['news_item_rows'], 3, INFUSIONS."news/news.php?".$cat_start.$type_start)."</div>\n";
+					echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'], $news_settings['newsperpage'], $info['news_item_rows'], 3, INFUSIONS."news/news.php?".$cat_start.$type_start)."</div>\n";
 				}
 
 			} else {
@@ -156,7 +156,7 @@ if (!function_exists('render_news')) {
 	 */
 	 
 	function render_news($info, $list_view = FALSE) {
-		global $locale, $settings, $aidlink;
+		global $locale, $settings, $news_settings, $aidlink;
 		$parameter = $settings['siteurl']."news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
 		if ($list_view) {
@@ -191,7 +191,7 @@ if (!function_exists('render_news')) {
 			if ($info['news_image']) {
 				echo "<div class='overflow-hide news-img-header'>\n";
 				echo $info['news_image'];
-				echo "<a class='opacity-none transition news-snippet' href='".($settings['news_image_link'] == 0 ? "news.php?cat_id=".$info['cat_id'] : FUSION_SELF."?readmore=".$info['news_id'])."'>".fusion_first_words($info['news_news'], 20)."</a>\n";
+				echo "<a class='opacity-none transition news-snippet' href='".($news_settings['news_image_link'] == 0 ? "news.php?cat_id=".$info['cat_id'] : FUSION_SELF."?readmore=".$info['news_id'])."'>".fusion_first_words($info['news_news'], 20)."</a>\n";
 				add_to_jquery("
 				$('.news-img-header').hover(
 					function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 1}); },
@@ -229,7 +229,7 @@ if (!function_exists('render_news_item')) {
 	 * @param $info
 	 */
 	function render_news_item($info) {
-		global $locale, $settings, $aidlink;
+		global $locale, $settings, $news_settings, $aidlink;
 		$data = $info['news_item'];
 		add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
@@ -262,9 +262,9 @@ if (!function_exists('render_news_item')) {
 		echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
 		echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
 		if ($data['news_image']) {
-		echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$settings['news_photo_h']."; overflow:hidden;' /></a>";
+		echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; overflow:hidden;' /></a>";
 		} elseif ($data['cat_name']) {
-		echo "<a class='".$data['news_ialign']."' href='news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
+		echo "<a class='".$data['news_ialign']."' href='news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
 		}
 		echo $data['news_news'];
 		echo "</div>\n";

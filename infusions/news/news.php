@@ -22,11 +22,12 @@ if (!db_exists(DB_NEWS)) {
 	require_once __DIR__.'/error.php';
 	exit;
 }
+
 require_once THEMES."templates/header.php";
-require_once INFUSIONS."news/templates/news.php";
 require_once INCLUDES."infusions_include.php";
 $news_settings = get_settings("news");
-$settings = fusion_get_settings();
+require_once INFUSIONS."news/templates/news.php";
+
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {	$_GET['rowstart'] = 0;	$rows = 0; }
 
 // Predefined variables, do not edit these values
@@ -36,7 +37,6 @@ $info = array();
 add_breadcrumb(array('link' => INFUSIONS.'news/news.php', 'title' => $locale['global_081']));
 
 if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
-
 	$result = dbquery("SELECT tn.*, tc.*, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar , tu.user_level, tu.user_joined,
 	 				SUM(tr.rating_vote) AS sum_rating,
 					COUNT(tr.rating_item_id) AS count_votes,
