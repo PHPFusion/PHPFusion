@@ -645,9 +645,8 @@ class defender {
 						'query' => '',
 						'error' => 0,
 					);
-
 					if (is_uploaded_file($_FILES[$source_file]['tmp_name'][$i])) {
-						$valid_ext = explode(",", $valid_ext);
+						$valid_ext = explode("|", $valid_ext);
 						$file = $_FILES[$source_file];
 						$file_type = $file['type'][$i];
 						if ($target_file == "" || preg_match("/[^a-zA-Z0-9_-]/", $target_file)) {
@@ -686,7 +685,7 @@ class defender {
 							}
 						}
 						if ($upload['error'] !==0) {
-							@unlink($file_dest.$target_file);
+							@unlink($file_dest.$target_file.$file_ext);
 						}
 						$upload['source_file'][$i] = $upload_file['source_file'];
 						$upload['source_size'][$i] = $upload_file['source_size'];
@@ -711,7 +710,7 @@ class defender {
 								//$this->addHelperText($$this->field_config['id'], $locale['df_416']);
 								break;
 							case 2: // Invalid File extensions
-								addNotice('info', sprintf($locale['df_417'], $this->field_config['valid_ext']));
+								addNotice('info', sprintf($locale['df_417'], str_replace('|', ', ', $this->field_config['valid_ext'])));
 								self::setInputError($this->field_name);
 								//$this->addHelperText($$this->field_config['id'], $locale['df_417']);
 								break;
