@@ -26,7 +26,7 @@ require_once THEMES."templates/header.php";
 require_once INFUSIONS."news/templates/news.php";
 require_once INCLUDES."infusions_include.php";
 $news_settings = get_settings("news");
-
+$settings = fusion_get_settings();
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {	$_GET['rowstart'] = 0;	$rows = 0; }
 
 // Predefined variables, do not edit these values
@@ -49,11 +49,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 					".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')." AND news_id='".$_GET['readmore']."' AND news_draft='0'
 					LIMIT 1
 					");
-
 	if (dbrows($result)) {
 		include INCLUDES."comments_include.php";
 		include INCLUDES."ratings_include.php";
 		$data = dbarray($result);
+		if ($data['news_keywords'] !=="") { set_meta("keywords", $data['news_keywords']); }
 		if (!isset($_POST['post_comment']) && !isset($_POST['post_rating'])) {
 			$result2 = dbquery("UPDATE ".DB_NEWS." SET news_reads=news_reads+1 WHERE news_id='".$_GET['readmore']."'");
 			$data['news_reads']++;
@@ -78,6 +78,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			"cat_image" => $data['news_cat_image'],
 			"news_subject" => $data['news_subject'],
 			"news_descr" => $data['news_news'],
+			'news_url' => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
 			'news_news' => $news_news[$_GET['rowstart']],
 			"news_ext" => "n",
 			"news_keywords" => $data['news_keywords'],
@@ -89,6 +90,20 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			'news_allow_ratings' => $data['news_allow_ratings'],
 			"news_sticky" => $data['news_sticky']
 		);
+		if ($settings['create_og_tags']) {
+			add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
+			add_to_head("<meta property='og:description' content='".strip_tags($data['news_news'])."' />");
+			add_to_head("<meta property='og:site_name' content='".$settings['sitename']."' />");
+			add_to_head("<meta property='og:type' content='article' />");
+			add_to_head("<meta property='og:url' content='".$settings['siteurl']."news.php?readmore=".$_GET['readmore']."' />");
+			if ($data['news_image']) {
+				$og_image = IMAGES_N.$data['news_image'];
+			} else {
+				$og_image = IMAGES_NC.$data['cat_image'];
+			}
+			$og_image = str_replace(BASEDIR, $settings['siteurl'], $og_image);
+			add_to_head("<meta property='og:image' content='".$og_image."' />");
+		}
 		add_to_title($locale['global_201'].$news_subject);
 		add_breadcrumb(array('link'=>INFUSIONS."news/news.php?cat_id=".$data['news_cat'], 'title'=>$data['news_cat_name']));
 		add_breadcrumb(array('link'=>INFUSIONS."news/news.php?readmore=".$data['news_id'], 'title'=>$data['news_subject']));
@@ -111,7 +126,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	$result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_id ASC");
 	if (dbrows($result)>0) {
 		while ($cdata = dbarray($result)) {
-			$info['news_categories'][$cdata['news_cat_id']] = $cdata['news_cat_name'];
+			$info['news_categories'][$cdata['news_cat_id']] = array('link'=>INFUSIONS.'news.php?cat_id='.$cdata['news_cat_id'], 'name'=>$cdata['news_cat_name']);
 		}
 		unset($cdata);
 	}
@@ -249,6 +264,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$news_info[$i] = array(
 					"news_id" => $data['news_id'],
 					'news_subject' => $news_subject,
+					"news_url" => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
 					'news_anchor' => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
 					'news_news' => $news_news,
 					"news_keywords" => $data['news_keywords'],
