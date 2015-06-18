@@ -16,15 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-
-add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>\n");
-
+/**
+ * Profile edit form
+ */
 if (!function_exists('render_userform')) {
-
+	add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>\n");
 	function render_userform($info) {
 		// page navigation
 		$endnav = '';
-
 		if (isset($info['section'])) {
 			$i = 1;
 			$tab_title = array();
@@ -70,9 +69,11 @@ if (!function_exists('render_userform')) {
 	}
 }
 
-
+/**
+ * Profile display
+ */
 if (!function_exists('render_userprofile')) {
-
+	add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>\n");
 	function render_userprofile($info) {
 		// Basic User Information
 		$basic_info = isset($info['core_field']) ? $info['core_field'] : array();
@@ -86,7 +87,7 @@ if (!function_exists('render_userprofile')) {
 			if ($field_id == 'profile_user_avatar') {
 				$avatar['user_avatar'] = $data['value'];
 				$avatar['user_status'] = $data['status'];
-				$user_avatar = display_avatar($avatar, '50px', '', FALSE, '');
+				$user_avatar = "<img src='".$data['value']."' style='width:50px;' alt='".$info['core_field']['profile_user_name']['value']."'/>\n";
 			} elseif ($field_id == 'profile_user_name') {
 				$user_name = "<h4>".$data['value']."</h4>\n";
 				$user_name .= "<hr/>\n";
