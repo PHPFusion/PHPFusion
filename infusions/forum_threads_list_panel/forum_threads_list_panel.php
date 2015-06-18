@@ -35,7 +35,7 @@ $result = dbquery("SELECT f.forum_id, f.forum_name, f.forum_lastpost, f.forum_po
 	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
 	LEFT JOIN ".DB_USERS." u ON t.thread_lastuser = u.user_id
 	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0' 
-	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$settings['numofthreads']."");	
+	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$inf_settings['numofthreads']."");	
 
 	if (dbrows($result)) {
 $i = 0;

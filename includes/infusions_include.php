@@ -16,9 +16,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-	die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 // Protect filename from uploader by renaming file.
 if (!function_exists('random_filename')) {
 	function random_filename($filename) {
@@ -27,6 +26,7 @@ if (!function_exists('random_filename')) {
 		return substr(md5($secret_rand), 8, 8).$ext;
 	}
 }
+
 if (!function_exists('filename_exists')) {
 	/**
 	 * Creates an unique filename if file already exists
@@ -104,8 +104,9 @@ if (!function_exists('set_setting')) {
 		return $return;
 	}
 }
+
 // Get the settings for the infusion from the settings_inf table
-if (!function_exists('get_setting')) {
+if (!function_exists('get_settings')) {
 	function get_settings($setting_inf) {
 		$settings_arr = array();
 		$set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_INF." WHERE settings_inf='".$setting_inf."'");
@@ -119,6 +120,7 @@ if (!function_exists('get_setting')) {
 		}
 	}
 }
+
 // Send PM to a user
 if (!function_exists('send_pm')) {
 	function send_pm($to, $from, $subject, $message, $smileys = "y") {
@@ -181,6 +183,7 @@ if (!function_exists('send_pm')) {
 		return $error;
 	}
 }
+
 // Upload file function
 if (!function_exists('upload_file')) {
 	function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "") {
@@ -228,6 +231,7 @@ if (!function_exists('upload_file')) {
 		return $upload_file;
 	}
 }
+
 // Upload image function
 if (!function_exists('upload_image')) {
 	function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "") {
@@ -348,6 +352,7 @@ if (!function_exists('upload_image')) {
 		return $image_info;
 	}
 }
+
 // Download file from server
 if (!function_exists('download_file')) {
 	function download_file($file) {
@@ -360,6 +365,3 @@ if (!function_exists('download_file')) {
 		exit;
 	}
 }
-
-
-

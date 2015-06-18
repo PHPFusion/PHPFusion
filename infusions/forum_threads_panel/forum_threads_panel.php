@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
+include INCLUDES."infusions_include.php";
+$inf_settings = get_settings('forum');
+
 openside($locale['global_020']);
 echo "<div class='side-label'><strong>".$locale['global_021']."</strong></div>\n";
 
@@ -24,7 +27,7 @@ $result = dbquery("SELECT f.forum_id, f.forum_access, t.thread_id, t.thread_subj
 	FROM ".DB_FORUMS." f
 	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id 
 	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0' 
-	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$settings['numofthreads']."");
+	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$inf_settings['numofthreads']."");
 
 
 if (dbrows($result)) {
@@ -35,7 +38,7 @@ if (dbrows($result)) {
 	echo "<div style='text-align:center'>".$locale['global_023']."</div>\n";
 }
 echo "<div class='side-label'><strong>".$locale['global_022']."</strong></div>\n";
-$timeframe = ($settings['popular_threads_timeframe'] != 0 ? "thread_lastpost >= ".(time()-$settings['popular_threads_timeframe']) : "");
+$timeframe = ($inf_settings['popular_threads_timeframe'] != 0 ? "thread_lastpost >= ".(time()-$inf_settings['popular_threads_timeframe']) : "");
 list($min_posts) = dbarraynum(dbquery("SELECT thread_postcount FROM ".DB_FORUM_THREADS.($timeframe ? " WHERE ".$timeframe : "")." ORDER BY thread_postcount DESC LIMIT 4,1"));
 $timeframe = ($timeframe ? " AND t.".$timeframe : "");
 
@@ -44,7 +47,7 @@ $timeframe = ($timeframe ? " AND t.".$timeframe : "");
 	FROM ".DB_FORUMS." tf
 	INNER JOIN ".DB_FORUM_THREADS." t USING(forum_id)
 	".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tf.forum_type!='1' AND tf.forum_type!='3' AND t.thread_hidden='0' AND t.thread_postcount >= '".$min_posts."'".$timeframe."
-	ORDER BY t.thread_postcount DESC, t.thread_lastpost DESC LIMIT ".$settings['numofthreads']."");
+	ORDER BY t.thread_postcount DESC, t.thread_lastpost DESC LIMIT ".$inf_settings['numofthreads']."");
 
 if (dbrows($result) != 0) {
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
