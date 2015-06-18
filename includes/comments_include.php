@@ -17,7 +17,13 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."comments.php";
-
+/**
+ * @param $comment_type - abbr or short ID
+ * @param $comment_db - Current Application DB - DB_BLOG for example.
+ * @param $comment_col - current sql primary key column - 'blog_id' for example
+ * @param $comment_item_id - current sql primary key value '$_GET['blog_id']' for example
+ * @param $clink - current page link 'FUSION_SELF' is ok.
+ */
 function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
 	global $settings, $locale, $userdata, $aidlink;
 	//$clink = BASEDIR.$clink;
@@ -152,15 +158,26 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 					$c_arr['c_con'][$i]['comment_name'] = $data['comment_name'];
 				}
 				$c_arr['c_con'][$i]['user_avatar'] = display_avatar($data, '35px', '', true, 'img-rounded');
-				$c_arr['c_con'][$i]['comment_datestamp'] = timer($data['comment_datestamp']);
+				$c_arr['c_con'][$i]['user'] = array(
+					'user_id' => $data['user_id'],
+					'user_name' => $data['user_name'],
+					'user_avatar' => $avatar = ($data['user_avatar'] !=='') && file_exists(IMAGES.'avatars/'.$data['user_avatar']) ? IMAGES.'avatars/'.$data['user_avatar'] : IMAGES."avatars/noavatar50.png",
+					'user_status' => $data['user_status'],
+				);
+
+				$c_arr['c_con'][$i]['comment_datestamp'] = showdate('shortdate', $data['comment_datestamp']);
+				$c_arr['c_con'][$i]['comment_time'] = timer($data['comment_datestamp']);
 				$c_arr['c_con'][$i]['comment_message'] = "<!--comment_message-->\n".nl2br(parseubb(parsesmileys($data['comment_message'])));
 				if ((iADMIN && checkrights("C")) || (iMEMBER && $data['comment_name'] == $userdata['user_id'] && isset($data['user_name']))) {
-
+					$edit_link = clean_request('c_action=edit&comment_id='.$data['comment_id'], array('c_action', 'comment_id'), false)."#edit_comment";
+					$delete_link = clean_request('c_action=delete&comment_id='.$data['comment_id'], array('c_action', 'comment_id'), false);
+					$c_arr['c_con'][$i]['edit_link'] = array('link'=>$edit_link, 'name'=>$locale['c108']);
+					$c_arr['c_con'][$i]['delete_link'] = array('link'=>$delete_link, 'name'=>$locale['c109']);
 					$c_arr['c_con'][$i]['edit_dell'] = "<!--comment_actions-->\n";
 					$c_arr['c_con'][$i]['edit_dell'] .= "<div class='btn-group'>";
-					$c_arr['c_con'][$i]['edit_dell'] .= "<a class='btn btn-xs btn-default' href='".clean_request('c_action=edit&comment_id='.$data['comment_id'], array('c_action', 'comment_id'), false)."#edit_comment'>";
+					$c_arr['c_con'][$i]['edit_dell'] .= "<a class='btn btn-xs btn-default' href='".$edit_link."'>";
 					$c_arr['c_con'][$i]['edit_dell'] .= $locale['c108']."</a>\n";
-					$c_arr['c_con'][$i]['edit_dell'] .= "<a class='btn btn-xs btn-default' href='".clean_request('c_action=delete&comment_id='.$data['comment_id'], array('c_action', 'comment_id'), false)."' onclick=\"return confirm('".$locale['c110']."');\">";
+					$c_arr['c_con'][$i]['edit_dell'] .= "<a class='btn btn-xs btn-default' href='".$delete_link."' onclick=\"return confirm('".$locale['c110']."');\">";
 					$c_arr['c_con'][$i]['edit_dell'] .= "<i class='fa fa-trash'></i> ".$locale['c109']."</a>";
 					$c_arr['c_con'][$i]['edit_dell'] .= "</div>\n";
 				}
