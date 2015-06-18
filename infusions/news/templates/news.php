@@ -92,8 +92,8 @@ if (!function_exists('render_main_news')) {
 			echo "<ul class='list-group'>\n";
 			echo "<li class='list-group-item'><hr class='m-t-0 m-b-5'>\n";
 			echo "<span class='display-inline-block m-b-10 strong text-smaller text-uppercase'> ".$locale['global_085']."</span><br/>\n";
-			foreach ($info['news_categories'] as $cat_id => $cat_name) {
-				echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."' class='btn btn-sm btn-default'>".$cat_name."</a>";
+			foreach ($info['news_categories'] as $cat_id => $cat_data) {
+				echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".$cat_data['link']."' class='btn btn-sm btn-default'>".$cat_data['name']."</a>";
 			}
 			echo "</li>";
 			echo "</ul>\n";
@@ -230,7 +230,7 @@ if (!function_exists('render_news_item')) {
 	 */
 	function render_news_item($info) {
 		global $locale, $settings, $aidlink;
-
+		$data = $info['news_item'];
 		add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 		add_to_footer('<script type="text/javascript">
@@ -257,22 +257,6 @@ if (!function_exists('render_news_item')) {
 			});
 			</script>');
 
-		$data = $info['news_item'];
-		if ($data['news_keywords'] !=="") { set_meta("keywords", $data['news_keywords']); }
-		if ($settings['create_og_tags']) {
-			add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
-			add_to_head("<meta property='og:description' content='".strip_tags($data['news_descr'])."' />");
-			add_to_head("<meta property='og:site_name' content='".$settings['sitename']."' />");
-			add_to_head("<meta property='og:type' content='article' />");
-			add_to_head("<meta property='og:url' content='".$settings['siteurl']."news.php?readmore=".$_GET['readmore']."' />");
-			if ($data['news_image']) {
-				$og_image = IMAGES_N.$data['news_image'];
-			} else {
-				$og_image = IMAGES_NC.$data['cat_image'];
-			}
-			$og_image = str_replace(BASEDIR, $settings['siteurl'], $og_image);
-			add_to_head("<meta property='og:image' content='".$og_image."' />");
-		}
 		echo "<!--news_pre_readmore-->";
 		echo "<article class='news-item'>\n";
 		echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
