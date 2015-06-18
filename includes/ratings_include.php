@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."ratings.php";
+
 function showratings($rating_type, $rating_item_id, $rating_link) {
 	global $locale, $userdata;
 	$settings = fusion_get_settings();
@@ -47,14 +48,14 @@ function showratings($rating_type, $rating_item_id, $rating_link) {
 		);
 
 		if (!iMEMBER) {
-			echo "<div class='well text-center'>".$locale['r104']."</div>\n";
+			echo "<div class='text-center'>".$locale['r104']."</div>\n";
 		} elseif (isset($d_rating['rating_vote'])) {
 			echo openform('removerating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('max_tokens' => 1, 'notice'=>0, 'class'=>'text-center'));
 			echo sprintf($locale['r105'], $ratings[$d_rating['rating_vote']], showdate("longdate", $d_rating['rating_datestamp']))."<br /><br />\n";
 			echo form_button('remove_rating', $locale['r102'], $locale['r102'], array('class'=>'btn-default btn-sm', 'icon' =>'fa fa-thumbs-down m-r-10'));
 			echo closeform();
 		} else {
-			echo openform('postrating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('max_tokens' => 1, 'notice'=>0, 'class'=>'text-center'));
+			echo openform('postrating', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.$rating_link, array('max_tokens' => 1, 'notice'=>0, 'class'=>'m-b-20 text-center'));
 			echo form_select('rating', $locale['r106'], $ratings, '', array('width'=>'100%'));
 			echo form_button('post_rating', $locale['r103'], $locale['r103'], array('class'=>'btn-primary btn-sm', 'icon'=>'fa fa-thumbs-up m-r-10'));
 			echo closeform();
