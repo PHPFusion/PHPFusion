@@ -246,7 +246,6 @@ class UserFields extends QuantumFields {
 	public function renderOutput() {
 		$this->UserProfile();
 		require_once THEMES."templates/global/profile.php";
-
 		render_userprofile($this->info);
 	}
 
@@ -254,22 +253,18 @@ class UserFields extends QuantumFields {
 	private function UserProfile() {
 		global $locale, $userdata, $aidlink;
 		if (!isset($_GET['profiles']) or isset($_GET['profiles']) && $_GET['profiles'] == 1) {
-			if (empty($this->userData['user_avatar']) or !file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) $this->userData['user_avatar'] = "noavatar100.png";
+			if (empty($this->userData['user_avatar']) || !file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) $this->userData['user_avatar'] = IMAGES."avatars/noavatar150.png";
 			$this->info['core_field']['profile_user_avatar'] = array('title' => $locale['u186'],
 				'value' => $this->userData['user_avatar'],
 				'status' => $this->userData['user_status']);
 			// user name
-			$this->info['core_field']['profile_user_name'] = array('title' => $locale['u068'],
-				'value' => $this->userData['user_name']);
+			$this->info['core_field']['profile_user_name'] = array('title' => $locale['u068'], 'value' => $this->userData['user_name']);
 			// user level
-			$this->info['core_field']['profile_user_level'] = array('title' => $locale['u063'],
-				'value' => getgroupname($this->userData['user_level']));
+			$this->info['core_field']['profile_user_level'] = array('title' => $locale['u063'], 'value' => getgroupname($this->userData['user_level']));
 			// user email
-			if (iADMIN || $this->userData['user_hide_email'] == 0) $this->info['core_field']['profile_user_email'] = array('title' => $locale['u064'],
-				'value' => hide_email($this->userData['user_email']));
+			if (iADMIN || $this->userData['user_hide_email'] == 0) $this->info['core_field']['profile_user_email'] = array('title' => $locale['u064'], 'value' => hide_email($this->userData['user_email']));
 			// user joined
-			$this->info['core_field']['profile_user_joined'] = array('title' => $locale['u066'],
-				'value' => showdate("longdate", $this->userData['user_joined']));
+			$this->info['core_field']['profile_user_joined'] = array('title' => $locale['u066'], 'value' => showdate("longdate", $this->userData['user_joined']));
 			// user last visit
 			$lastVisit = $this->userData['user_lastvisit'] ? showdate("longdate", $this->userData['user_lastvisit']) : $locale['u042'];
 			$this->info['core_field']['profile_user_visit'] = array('title' => $locale['u067'], 'value' => $lastVisit);
@@ -315,7 +310,7 @@ class UserFields extends QuantumFields {
 	}
 
 
-	/* Fetches UF Module Shells and extends Userdata with 3rd party Databases */
+	/* Fetches UF Module extends Userdata with 3rd party Databases */
 	// reacts with $method var ('input', 'display');
 	private function get_userFields() {
 		$this->callback_data = $this->userData;
@@ -414,6 +409,7 @@ class UserFields extends QuantumFields {
 			}
 		}
 		$this->html .= "</tr>\n</table>\n</form>\n";
+		return $this->html;
 	}
 
 	private function renderTerms() {
