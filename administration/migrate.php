@@ -17,8 +17,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-require_once THEMES."templates/admin_header.php";
 pageAccess('MI');
+
+require_once THEMES."templates/admin_header.php";
+
 if (isset($_POST['user_primary']) && !isnum($_POST['user_primary'])) die("Denied");
 if (isset($_POST['user_migrate']) && !isnum($_POST['user_migrate'])) die("Denied");
 
@@ -110,66 +112,79 @@ if (isset($_POST['migrate'])) {
 }
 
 opentable($locale['100']);
-user_posts_migrate_console();
+	user_posts_migrate_console();
 closetable();
 
 function user_posts_migrate_console() {
 global $aidlink,$locale;
 
-$result = dbquery("SELECT user_id, user_name FROM ".DB_USERS."");
-if (dbrows($result)>0) {
-	while ($user_data = dbarray($result)) {
-		$data[$user_data['user_id']] = "".$user_data['user_name']."";
+	$result = dbquery("SELECT user_id, user_name FROM ".DB_USERS."");
+	if (dbrows($result)>0) {
+		while ($user_data = dbarray($result)) {
+			$data[$user_data['user_id']] = "".$user_data['user_name']."";
+		}
+	} else {
+		$data['0'] = $locale['124'];
 	}
-} else {
-	$data['0'] = $locale['124'];
-}
-echo openform('inputform', 'post', "".FUSION_SELF.$aidlink."", array('max_tokens' => 1));
-echo "<table style='width:100%' class='table table-striped'>\n";
-echo "<thead>\n";
-echo "<tr style='height:30px;'><th style='width:33%; text-align:left'>".$locale['125']."</th><th style='width:33%; text-align:left;'>".$locale['126']."</th><th class='text-left'>&nbsp;</th>\n</tr>\n";
-echo "</thead>\n";
-echo "<tbody>\n";
-echo "<tr>\n";
-echo "<td>\n";
-echo form_user_select('user_primary', '', isset($_POST['user_primary']) && isnum($_POST['user_primary'] ? : ''), array('placeholder' => $locale['127']));
-echo "</td>\n";
-echo "<td>\n";
-echo form_user_select('user_migrate', '', isset($_POST['user_migrate']) && isnum($_POST['user_migrate'] ? : ''), array('placeholder' => $locale['128']));
-echo "</td>\n";
-echo "<td>\n";
-echo form_button('migrate', $locale['129'], $locale['129'], array('inline' => '1', 'class' => 'btn btn-sm btn-primary'));
-echo "</td>\n";
-echo "</tr>\n";
-echo "<tr>\n";
-echo "<td>".$locale['130']."</td>";
-echo "<td colspan='2'>\n";
-echo "<input type='checkbox' name='forum' value='1' ".(isset($_POST['forum']) == '1' ? 'checked' : '')."> ".$locale['131']."<br />\n";
-echo "<input type='checkbox' name='comments' value='1' ".(isset($_POST['comments']) == '1' ? 'checked' : '')."> ".$locale['132']."<br />";
-echo "<input type='checkbox' name='ratings' value='1' ".(isset($_POST['ratings']) == '1' ? 'checked' : '')."> ".$locale['133']."<br />";
-echo "<input type='checkbox' name='polls' value='1' ".(isset($_POST['polls']) == '1' ? 'checked' : '')."> ".$locale['134']."<br />";
-$shoutbox = dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='shoutbox_panel'");
-if ($shoutbox >0) {
-echo "<input type='checkbox' name='shoutbox' value='1' ".(isset($_POST['shoutbox']) == '1' ? 'checked' : '')."> ".$locale['135']."<br />";
-}
-echo "<input type='checkbox' name='messages' value='1' ".(isset($_POST['messages']) == '1' ? 'checked' : '')."> ".$locale['136']."<br />";
-echo "<input type='checkbox' name='articles' value='1' ".(isset($_POST['articles']) == '1' ? 'checked' : '')."> ".$locale['137']."<br />";
-echo "<input type='checkbox' name='news' value='1' ".(isset($_POST['news']) == '1' ? 'checked' : '')."> ".$locale['138']."<br />";
-echo "<input type='checkbox' name='blog' value='1' ".(isset($_POST['blog']) == '1' ? 'checked' : '')."> ".$locale['139']."<br />";
-echo "<input type='checkbox' name='downloads' value='1' ".(isset($_POST['downloads']) == '1' ? 'checked' : '')."> ".$locale['140']."<br />";
-echo "<input type='checkbox' name='photos' value='1' ".(isset($_POST['photos']) == '1' ? 'checked' : '')."> ".$locale['141']."<br />";
-echo "<input type='checkbox' name='user_level' value='1' ".(isset($_POST['user_level']) == '1' ? 'checked' : '')."> ".$locale['142']."<br />";
-echo "</td>\n";
-echo "</tr>\n";
-echo "<tr>\n";
-echo "<td>".$locale['143']."</td>";
-echo "<td colspan='3'>\n";
-echo "<input type='checkbox' name='del_user' value='1'> ".$locale['144']."<br /> ".$locale['145']."\n";
-echo "</td>\n";
-echo "</tr>\n";
-echo "</tbody>\n";
-echo "</table>\n";
-echo closeform();
+
+	echo openform('inputform', 'post', "".FUSION_SELF.$aidlink."", array('max_tokens' => 1));
+		echo "<table style='width:100%' class='table table-striped'>\n";
+		echo "<thead>\n";
+		echo "<tr style='height:30px;'><th style='width:33%; text-align:left'>".$locale['125']."</th><th style='width:33%; text-align:left;'>".$locale['126']."</th><th class='text-left'>&nbsp;</th>\n</tr>\n";
+		echo "</thead>\n";
+		echo "<tbody>\n";
+		echo "<tr>\n";
+		echo "<td>\n";
+		echo form_user_select('user_primary', '', isset($_POST['user_primary']) && isnum($_POST['user_primary'] ? : ''), array('placeholder' => $locale['127']));
+		echo "</td>\n";
+		echo "<td>\n";
+		echo form_user_select('user_migrate', '', isset($_POST['user_migrate']) && isnum($_POST['user_migrate'] ? : ''), array('placeholder' => $locale['128']));
+		echo "</td>\n";
+		echo "<td>\n";
+		echo form_button('migrate', $locale['129'], $locale['129'], array('inline' => '1', 'class' => 'btn btn-sm btn-primary'));
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td>".$locale['130']."</td>";
+		echo "<td colspan='2'>\n";
+		echo "<input type='checkbox' name='comments' value='1' ".(isset($_POST['comments']) == '1' ? 'checked' : '')."> ".$locale['132']."<br />";
+		echo "<input type='checkbox' name='ratings' value='1' ".(isset($_POST['ratings']) == '1' ? 'checked' : '')."> ".$locale['133']."<br />";
+		echo "<input type='checkbox' name='polls' value='1' ".(isset($_POST['polls']) == '1' ? 'checked' : '')."> ".$locale['134']."<br />";
+		echo "<input type='checkbox' name='messages' value='1' ".(isset($_POST['messages']) == '1' ? 'checked' : '')."> ".$locale['136']."<br />";
+		echo "<input type='checkbox' name='user_level' value='1' ".(isset($_POST['user_level']) == '1' ? 'checked' : '')."> ".$locale['142']."<br />";
+		if (db_exists(DB_FORUMS)) {
+			echo "<input type='checkbox' name='forum' value='1' ".(isset($_POST['forum']) == '1' ? 'checked' : '')."> ".$locale['131']."<br />\n";
+		}
+		if (db_exists(DB_ARTICLES)) {
+			echo "<input type='checkbox' name='articles' value='1' ".(isset($_POST['articles']) == '1' ? 'checked' : '')."> ".$locale['137']."<br />";
+		}
+		if (db_exists(DB_NEWS)) {
+			echo "<input type='checkbox' name='news' value='1' ".(isset($_POST['news']) == '1' ? 'checked' : '')."> ".$locale['138']."<br />";
+		}
+		if (db_exists(DB_BLOG)) {
+			echo "<input type='checkbox' name='blog' value='1' ".(isset($_POST['blog']) == '1' ? 'checked' : '')."> ".$locale['139']."<br />";
+		}
+		if (db_exists(DB_DOWNLOADS)) {
+			echo "<input type='checkbox' name='downloads' value='1' ".(isset($_POST['downloads']) == '1' ? 'checked' : '')."> ".$locale['140']."<br />";
+		}
+		if (db_exists(DB_PHOTOS)) {
+			echo "<input type='checkbox' name='photos' value='1' ".(isset($_POST['photos']) == '1' ? 'checked' : '')."> ".$locale['141']."<br />";
+		}
+		$shoutbox = dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='shoutbox_panel'");
+		if ($shoutbox >0) {
+			echo "<input type='checkbox' name='shoutbox' value='1' ".(isset($_POST['shoutbox']) == '1' ? 'checked' : '')."> ".$locale['135']."<br />";
+		}
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "<tr>\n";
+		echo "<td>".$locale['143']."</td>";
+		echo "<td colspan='3'>\n";
+		echo "<input type='checkbox' name='del_user' value='1'> ".$locale['144']."<br /> ".$locale['145']."\n";
+		echo "</td>\n";
+		echo "</tr>\n";
+		echo "</tbody>\n";
+		echo "</table>\n";
+	echo closeform();
 }
 
 function user_posts_migrate($user_primary_id, $user_temp_id, $db, $user_column, $name) {
@@ -179,17 +194,17 @@ $users = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='$use
 $p_user = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='$user_primary_id'"));
 $rows = dbcount("($user_column)", $db, "$user_column='$user_temp_id'");
 
-if (($rows)>0) {
-	$result = dbquery("UPDATE ".$db." SET $user_column='$user_primary_id' WHERE $user_column='$user_temp_id'");
-	if (!$result) {
-		echo "<div class='well text-center'>".$locale['146']."</div>";
-	} else {
-		echo "<div class='well text-center'>$rows ".($rows > 1 ? $locale['147'] : $locale['148'])." ".$locale['149']." <strong>$name</strong> ".$locale['150']." ".$users['user_name']." ".$locale['151']." ".$p_user['user_name'].".</div>";
+	if (($rows)>0) {
+		$result = dbquery("UPDATE ".$db." SET $user_column='$user_primary_id' WHERE $user_column='$user_temp_id'");
+		if (!$result) {
+			echo "<div class='well text-center'>".$locale['146']."</div>";
+		} else {
+			echo "<div class='well text-center'>$rows ".($rows > 1 ? $locale['147'] : $locale['148'])." ".$locale['149']." <strong>$name</strong> ".$locale['150']." ".$users['user_name']." ".$locale['151']." ".$p_user['user_name'].".</div>";
+		}
+		} else {
+			echo "<div class='well text-center'>".$locale['152']." <strong>$name</strong></div>\n";
+		}
 	}
-	} else {
-		echo "<div class='well text-center'>".$locale['152']." <strong>$name</strong></div>\n";
-	}
-}
 
 function user_rights_migrate($user_primary_id, $user_temp_id) {
 global $locale;
@@ -272,4 +287,5 @@ if (dbrows($result)>0) {
 	} else {
 		echo "<div class='well text-center'>".$locale['162']." $user_temp_id.</div>\n";
 	}
-}require_once THEMES."templates/footer.php";
+}
+require_once THEMES."templates/footer.php";
