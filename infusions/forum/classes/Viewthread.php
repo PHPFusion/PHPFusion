@@ -80,7 +80,6 @@ class Viewthread {
 		if ($thread_stat['post_count'] < 1) redirect(INFUSIONS.'forum/index.php');
 		// extra helper information
 		$thread_data['forum_link'] =  INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$thread_data['forum_id']."&amp;forum_cat=".$thread_data['forum_cat']."&amp;forum_branch=".$thread_data['forum_branch'];
-
 		$this->thread_info += array(
 			'thread' => $thread_data,
 			'forum_id' => $thread_data['forum_id'],
@@ -92,17 +91,17 @@ class Viewthread {
 			'section' => isset($_GET['section']) ? $_GET['section'] : '',
 			// logic for viewthread access
 			'permissions' => array(
-								'can_post' => iMOD or iSUPERADMIN ? true : (checkgroup($thread_data['forum_post']) && checkgroup($thread_data['forum_lock'])) ? true : false,
-								'can_edit' => iMOD or iSUPERADMIN ? true : checkgroup($thread_data['forum_post']) &&  $userdata['user_id'] == $thread_data['thread_author'] ? true : false,
-								'can_vote_poll' => (iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll'] ? true : checkgroup($thread_data['forum_post'] && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll']) ? true : false,
-								'can_poll' => ((iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll']) ? true : checkgroup($thread_data['forum_post']) && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] ? true : false,
-								'can_reply' => iMOD or iSUPERADMIN ? true : (checkgroup($thread_data['forum_reply']) && checkgroup($thread_data['forum_reply']) && !$thread_data['forum_lock']) ? true : false,
-								'can_rate' => ($thread_data['forum_type'] == 4 && ((iMOD or iSUPERADMIN) or ($thread_data['forum_allow_ratings'] && checkgroup($thread_data['forum_post_ratings']) && !$thread_data['forum_lock']))) ? true : false,
-								'can_vote' => checkgroup($thread_data['forum_vote']) ? true : false,
-								'can_view_poll' => checkgroup($thread_data['forum_poll']) ? true : false,
+								'can_post' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_post']) && !$thread_data['forum_lock'] ? true : false,
+								'can_edit' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_post']) &&  $userdata['user_id'] == $thread_data['thread_author'] ? true : false,
+								'can_vote_poll' => (iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll'] ? true : iMEMBER && checkgroup($thread_data['forum_post'] && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll']) ? true : false,
+								'can_poll' => ((iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll']) ? true : iMEMBER && checkgroup($thread_data['forum_post']) && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] ? true : false,
+								'can_reply' => iMOD or iSUPERADMIN ? true : (checkgroup($thread_data['forum_reply']) && iMEMBER && checkgroup($thread_data['forum_reply']) && !$thread_data['forum_lock']) ? true : false,
+								'can_rate' => ($thread_data['forum_type'] == 4 && ((iMOD or iSUPERADMIN) or ($thread_data['forum_allow_ratings'] && iMEMBER && checkgroup($thread_data['forum_post_ratings']) && !$thread_data['forum_lock']))) ? true : false,
+								'can_vote' => iMEMBER && checkgroup($thread_data['forum_vote']) ? true : false,
+								'can_view_poll' => iMEMBER && checkgroup($thread_data['forum_poll']) ? true : false,
 								'edit_lock' => $inf_settings['forum_edit_lock'] ? true : false,
-								'can_attach' => iMOD or iSUPERADMIN ? true : checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? true : false,
-								'can_download_attach' => iMOD or iSUPERADMIN ? true : checkgroup($thread_data['forum_attach_download']) ? true : false,
+								'can_attach' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? true : false,
+								'can_download_attach' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach_download']) ? true : false,
 								),
 			'max_post_items' => $thread_stat['post_count'],
 			'post_firstpost' => $thread_stat['first_post_id'],
