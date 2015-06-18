@@ -21,25 +21,27 @@
 /**
  * Show home modules info
  */
-if (!function_exists('display_home_item')) {
-	function display_home_item($info) {
-		$colwidth = $info['colwidth'];
-		opentable($info['blockTitle']);
-		if ($colwidth) {
-			$classes = "col-xs-".$colwidth." col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content";
-			echo "<div class='row'>";
-			foreach($info['data'] as $data) {
-				echo "<div class='".$classes."'>";
-				echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
-				echo "<div class='small m-b-10'>".$data['meta']."</div>";
-				echo "<div>".$data['content']."</div>";
+if (!function_exists('display_home')) {
+	function display_home($info) {
+		foreach($info as $db_id => $content) {
+			$colwidth = $content['colwidth'];
+			opentable($content['blockTitle']);
+			if ($colwidth) {
+				$classes = "col-xs-".$colwidth." col-sm-".$colwidth." col-md-".$colwidth." col-lg-".$colwidth." content";
+				echo "<div class='row'>";
+				foreach($content['data'] as $data) {
+					echo "<div class='".$classes."'>";
+					echo "<h3><a href='".$data['url']."'>".$data['title']."</a></h3>";
+					echo "<div class='small m-b-10'>".$data['meta']."</div>";
+					echo "<div>".$data['content']."</div>";
+					echo "</div>";
+				}
 				echo "</div>";
+			} else {
+				echo $content['norecord'];
 			}
-			echo "</div>";
-		} else {
-			echo $info['norecord'];
+			closetable();
 		}
-		closetable();
 	}
 }
 /**

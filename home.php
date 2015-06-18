@@ -141,12 +141,10 @@ foreach ($configs as $table => $config) {
 	$contents[$table]['data'] = $data;
 }
 
-foreach($contents as $content) {
-	display_home_item($content);
-}
-
 if (!$contents) {
 	display_no_item();
+} else {
+	display_home($contents);
 }
 
 require_once THEMES."templates/footer.php";
