@@ -88,7 +88,7 @@ if ($settings['opening_page'] == FUSION_SELF) {
 		echo "<div class='section-2-row row'>\n";
 		if ($modules[DB_NEWS]) {
 			echo "<div class='$sizeClasses section-2-tab text-center'>\n";
-			echo "<a href='".BASEDIR."news.php'>\n";
+			echo "<a href='".INFUSIONS."news/news.php'>\n";
 			echo "<i class='entypo pencil'></i>\n";
 			echo "<h4>".$locale['sept_007']."</h4>";
 			echo "</a>\n";
@@ -96,7 +96,7 @@ if ($settings['opening_page'] == FUSION_SELF) {
 		}
 		if ($modules[DB_PHOTO_ALBUMS]) {
 			echo "<div class='$sizeClasses section-2-tab text-center'>\n";
-			echo "<a href='".BASEDIR."photogallery.php'>\n";
+			echo "<a href='".INFUSIONS."gallery/gallery.php'>\n";
 			echo "<i class='entypo camera'></i>\n";
 			echo "<h4>".$locale['sept_008']."</h4>";
 			echo "</a>\n";
@@ -104,7 +104,7 @@ if ($settings['opening_page'] == FUSION_SELF) {
 		}
 		if ($modules[DB_FORUMS]) {
 			echo "<div class='$sizeClasses section-2-tab text-center'>\n";
-			echo "<a href='".BASEDIR."forum/index.php'>\n";
+			echo "<a href='".INFUSIONS."forum/index.php'>\n";
 			echo "<i class='entypo icomment'></i>\n";
 			echo "<h4>".$locale['sept_009']."</h4>";
 			echo "</a>\n";
@@ -112,7 +112,7 @@ if ($settings['opening_page'] == FUSION_SELF) {
 		}
 		if ($modules[DB_DOWNLOADS]) {
 			echo "<div class='$sizeClasses section-2-tab text-center'>\n";
-			echo "<a href='".BASEDIR."downloads.php'>\n";
+			echo "<a href='".INFUSIONS."download/downloads.php'>\n";
 			echo "<i class='entypo window'></i>\n";
 			echo "<h4>".$locale['sept_010']."</h4>";
 			echo "</a>\n";
