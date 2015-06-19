@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 include LOCALE.LOCALESET."comments.php";
+
 /**
  * @param $comment_type - abbr or short ID
  * @param $comment_db - Current Application DB - DB_BLOG for example.
@@ -24,12 +25,11 @@ include LOCALE.LOCALESET."comments.php";
  * @param $comment_item_id - current sql primary key value '$_GET['blog_id']' for example
  * @param $clink - current page link 'FUSION_SELF' is ok.
  */
-function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
+
+ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink) {
 	global $settings, $locale, $userdata, $aidlink;
-	//$clink = BASEDIR.$clink;
 	$link = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
 	$link = preg_replace("^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $link);
-	// sanitize the GET comment
 	$_GET['comment'] = isset($_GET['comment']) && isnum($_GET['comment']) ? $_GET['comment'] : 0;
 	$cpp = $settings['comments_per_page'];
 	if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "delete") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
@@ -42,9 +42,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 	}
 
 	if ($settings['comments_enabled'] == "1") {
-
 		if ((iMEMBER || $settings['guestposts'] == "1") && isset($_POST['post_comment'])) {
-
 			if (!iMEMBER && $settings['guestpost'] == 1) {
 				if (!isset($_POST['comment_name'])) {
 					redirect($link);
@@ -61,8 +59,9 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 
 			$comment_data = array(
 				'comment_id' => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : 0,
-				'comment_name' => iMEMBER ? $userdata['user_id'] : form_sanitizer($_POST['comment_name'], '', 'comment_name'), // set required
-				'comment_message' => form_sanitizer($_POST['comment_message'], '', 'comment_message'), // set required
+				'comment_name' => iMEMBER ? $userdata['user_id'] : form_sanitizer($_POST['comment_name'], '', 'comment_name'),
+				'comment_message' => form_sanitizer($_POST['comment_message'], '', 'comment_message'),
+				'comment_datestamp' => time(),
 				'comment_item_id' => $comment_item_id,
 				'comment_type' => $comment_type,
 				'comment_cat' => 0,
@@ -73,15 +72,16 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 
 			if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && $comment_data['comment_id']) {
 				$comment_updated = FALSE;
-				if ((iADMIN && checkrights("C")) || (iMEMBER &&
-													 dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."' AND comment_item_id='".$comment_item_id."'
-															AND comment_type='".$comment_type."' AND comment_name='".$userdata['user_id']."' AND comment_hidden='0'")))
-				{
-					dbquery_insert(DB_COMMENTS, $comment_data, 'update');
-					if ($comment_data['comment_message']) {
-						$result = dbquery("UPDATE ".DB_COMMENTS." SET comment_message='".$comment_data['comment_message']."'
-											WHERE comment_id='".$_GET['comment_id']."' ".(iADMIN ? "" : "AND comment_name='".$userdata['user_id']."'")
-								);
+				if ((iADMIN && checkrights("C")) || (iMEMBER && dbcount("(comment_id)", DB_COMMENTS, "comment_id='".$comment_data['comment_id']."' 
+				AND comment_item_id='".$comment_item_id."'															
+				AND comment_type='".$comment_type."' 
+				AND comment_name='".$userdata['user_id']."' 
+				AND comment_hidden='0'"))) {
+				dbquery_insert(DB_COMMENTS, $comment_data, 'update');
+
+				if ($comment_data['comment_message']) {
+					$result = dbquery("UPDATE ".DB_COMMENTS." SET comment_message='".$comment_data['comment_message']."'
+  									   WHERE comment_id='".$_GET['comment_id']."' ".(iADMIN ? "" : "AND comment_name='".$userdata['user_id']."'"));
 						if ($result) $comment_updated = TRUE;
 					}
 				}
@@ -97,13 +97,9 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 								AND comment_type='".$comment_type."'");
 					$c_start = (ceil($c_count/$cpp)-1)*$cpp;
 				}
-
 				redirect($clink."&amp;c_start=".(isset($c_start) && isnum($c_start) ? $c_start : ""));
-
 			} else {
-
 				if (!dbcount("(".$comment_col.")", $comment_db, $comment_col."='".$comment_item_id."'")) redirect(BASEDIR."index.php");
-
 				if ($comment_data['comment_name'] && $comment_data['comment_message']) {
 					require_once INCLUDES."flood_include.php";
 					if (!flood_control("comment_datestamp", DB_COMMENTS, "comment_ip='".USER_IP."'")) {
@@ -120,7 +116,6 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 				if (!$settings['site_seo']) { redirect($clink."&amp;c_start=".$c_start); }
 			}
 		}
-
 		$c_arr = array(
 			"c_con" => array(),
 			"c_info" => array("c_makepagenav" => FALSE, "admin_link" => FALSE)
@@ -143,11 +138,11 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 					WHERE comment_item_id='".$comment_item_id."' AND comment_type='".$comment_type."' AND comment_hidden='0'
 					ORDER BY comment_datestamp ".$settings['comments_sorting']." LIMIT ".$_GET['c_start'].",".$cpp);
 
-		if (dbrows($result)>0) {
-			$i = ($settings['comments_sorting'] == "ASC" ? $_GET['c_start']+1 : $c_rows-$_GET['c_start']);
-			if ($c_rows > $cpp) {
-				$c_arr['c_info']['c_makepagenav'] = makepagenav($_GET['c_start'], $cpp, $c_rows, 3, $clink."&amp;", "c_start");
-			}
+			if (dbrows($result)>0) {
+				$i = ($settings['comments_sorting'] == "ASC" ? $_GET['c_start']+1 : $c_rows-$_GET['c_start']);
+				if ($c_rows > $cpp) {
+					$c_arr['c_info']['c_makepagenav'] = makepagenav($_GET['c_start'], $cpp, $c_rows, 3, $clink."&amp;", "c_start");
+				}
 			while ($data = dbarray($result)) {
 				$c_arr['c_con'][$i]['comment_id'] = $data['comment_id'];
 				$c_arr['c_con'][$i]['edit_dell'] = FALSE;
@@ -189,9 +184,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 			}
 		}
 
-		// Add / edit comment
 		opentable($locale['c102']);
-
 		$comment_message = "";
 		if (iMEMBER && (isset($_GET['c_action']) && $_GET['c_action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
 			$eresult = dbquery("SELECT tcm.comment_id, tcm.comment_name, tcm.comment_message, tcu.user_name
@@ -209,6 +202,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 				$comment_message = "";
 			}
 		}
+
 		if (iMEMBER || $settings['guestposts'] == "1") {
 			require_once INCLUDES."bbcode_include.php";
 			echo "<a id='edit_comment' name='edit_comment'></a>\n";
@@ -217,6 +211,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 				echo form_text('comment_name', $locale['c104'], '', array('max_length'=>30));
 			}
 			echo form_textarea('comment_message', '', $comment_message, array('required' => 1, 'autosize'=>1, 'form_name'=>'inputform', 'bbcode'=>1));
+
 			if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
 				$_CAPTCHA_HIDE_INPUT = FALSE;
 				echo "<div style='width:360px; margin:10px auto;'>";
@@ -237,10 +232,7 @@ function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id
 		}
 		closetable();
 
-		// Render comments
 		echo "<a id='comments' name='comments'></a>";
 		render_comments($c_arr['c_con'], $c_arr['c_info']);
-
 	}
 }
-
