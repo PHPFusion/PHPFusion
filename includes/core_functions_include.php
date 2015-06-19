@@ -117,8 +117,7 @@ function set_theme($theme) {
 		}
 	}
 	// Don't stop if we are in admin panel since we use different themes now
-	if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) { // need a better check
-		// Change the error message
+	if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) { 
 		addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$locale['global_301']);
 	} else {
 		echo "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n";
@@ -174,8 +173,8 @@ $enabled_languages = array_keys(fusion_get_enabled_languages());
 	}
 	
 	$link_prefix = FUSION_REQUEST.(stristr(FUSION_REQUEST, '?') ? '&amp;' : "?").'lang=';
-	// Must have this on my test
-	$link_prefix = str_replace($settings['site_path'], "", $link_prefix);	
+	$settings['site_seo'] ? $link_prefix = str_replace($settings['site_path'], "", $link_prefix) : $link_prefix = $link_prefix;
+		
 	foreach ($enabled_languages as $row => $language) {
 		$lang_text = translate_lang_names($language);
 		$icon = "<img class='display-block img-responsive' alt='".$language."' src='".LOCALE.$language."/".$language.".png' alt='' title='".$lang_text."' style='min-width:20px;'>";

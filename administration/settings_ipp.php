@@ -30,10 +30,6 @@ if (isset($_POST['savesettings'])) {
 	$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$links_per_page' WHERE settings_name='links_per_page'") : '';
 	$comments_per_page = form_sanitizer($_POST['comments_per_page'], 10, 'comments_per_page');
 	$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$comments_per_page' WHERE settings_name='comments_per_page'") : '';
-	$threads_per_page = form_sanitizer($_POST['threads_per_page'], 20, 'threads_per_page');
-	$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$threads_per_page' WHERE settings_name='threads_per_page'") : '';
-	$posts_per_page = form_sanitizer($_POST['posts_per_page'], 20, 'posts_per_page');
-	$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS." SET settings_value='$posts_per_page' WHERE settings_name='posts_per_page'") : '';
 	if (!defined('FUSION_NULL')) {
 		addNotice('success', $locale['900']);
 		redirect(FUSION_SELF.$aidlink);
@@ -52,8 +48,6 @@ openside('');
 echo form_text('articles_per_page', $locale['910'], $settings2['articles_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
 echo form_text('links_per_page', $locale['912'], $settings2['links_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
 echo form_text('comments_per_page', $locale['913'], $settings2['comments_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text('threads_per_page', $locale['914'], $settings2['threads_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
-echo form_text('posts_per_page', $locale['915'], $settings2['posts_per_page'], array('inline'=>1, 'required' => 1, 'error_text' => $locale['error_value'], 'number' => 1, 'width' => '250px'));
 closeside('');
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));

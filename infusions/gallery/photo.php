@@ -28,6 +28,9 @@ if (!@ini_get("safe_mode")) {
 	define("SAFEMODE", TRUE);
 }
 
+require_once INCLUDES."infusions_include.php";
+$gallery_settings = get_settings("gallery");
+
 function convert_color($hex) {
 	$len = strlen($hex);
 	preg_match("/([0-9]|[A-F]|[a-f]){".$len."}/i", $hex, $arr);
@@ -79,7 +82,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		}
 		header("Content-type: image/jpg");
 		$img = PHOTODIR.$data['photo_filename'];
-		$cop = BASEDIR.$settings['photo_watermark_image'];
+		$cop = BASEDIR.$gallery_settings['photo_watermark_image'];
 		if (preg_match("/.jpg/i", strtolower($img)) || preg_match("/.jpeg/i", strtolower($img))) {
 			$image = ImageCreateFromJPEG($img);
 		} else if (preg_match("/.png/i", strtolower($img))) {
@@ -102,7 +105,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			$image = ImageCreateFromJPEG($tmp);
 			unlink($tmp);
 		}
-		if (file_exists($cop) && preg_match("/.png/i", strtolower($cop)) && $settings['photo_watermark']) {
+		if (file_exists($cop) && preg_match("/.png/i", strtolower($cop)) && $gallery_settings['photo_watermark']) {
 			$image2 = FALSE;
 			$image_dim_x = ImagesX($image);
 			$image_dim_y = ImagesY($image);
@@ -115,36 +118,36 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			$thumb_w = 0;
 			$thumb_h = 0;
 			if (!isset($_GET['full'])) {
-				if ($image_dim_x > $settings['photo_w'] || $image_dim_y > $settings['photo_h']) {
+				if ($image_dim_x > $gallery_settings['photo_w'] || $image_dim_y > $gallery_settings['photo_h']) {
 					if ($image_dim_x < $image_dim_y) {
-						$thumb_w = round(($image_dim_x*$settings['photo_h'])/$image_dim_y);
-						$thumb_h = $settings['photo_h'];
+						$thumb_w = round(($image_dim_x*$gallery_settings['photo_h'])/$image_dim_y);
+						$thumb_h = $gallery_settings['photo_h'];
 					} elseif ($image_dim_x > $image_dim_y) {
-						$thumb_w = $settings['photo_w'];
-						$thumb_h = round(($image_dim_y*$settings['photo_w'])/$image_dim_x);
+						$thumb_w = $gallery_settings['photo_w'];
+						$thumb_h = round(($image_dim_y*$gallery_settings['photo_w'])/$image_dim_x);
 					} else {
-						$thumb_w = $settings['photo_w'];
-						$thumb_h = $settings['photo_h'];
+						$thumb_w = $gallery_settings['photo_w'];
+						$thumb_h = $gallery_settings['photo_h'];
 					}
 				} else {
 					$thumb_w = $image_dim_x;
 					$thumb_h = $image_dim_y;
 				}
 				$image2 = ImageCreateTrueColor($thumb_w, $thumb_h);
-				if ($settings['thumb_compression'] == "gd2") {
+				if ($gallery_settings['thumb_compression'] == "gd2") {
 					ImageCopyResampled($image2, $image, 0, 0, 0, 0, $thumb_w, $thumb_h, $image_dim_x, $image_dim_y);
 				} else {
 					ImageCopyResized($image2, $image, 0, 0, 0, 0, $thumb_w, $thumb_h, $image_dim_x, $image_dim_y);
 				}
 				ImageDestroy($image);
 			}
-			if ($settings['photo_watermark_text']) {
+			if ($gallery_settings['photo_watermark_text']) {
 				$enc = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
 				$dec = array("&", "\"", "'", "\\", '\"', "\'", "<", ">");
 				$black = ImageColorAllocate(($image2 ? $image2 : $image), 0, 0, 0);
-				$colors1 = convert_color($settings['photo_watermark_text_color1']);
-				$colors2 = convert_color($settings['photo_watermark_text_color2']);
-				$colors3 = convert_color($settings['photo_watermark_text_color3']);
+				$colors1 = convert_color($gallery_settings['photo_watermark_text_color1']);
+				$colors2 = convert_color($gallery_settings['photo_watermark_text_color2']);
+				$colors3 = convert_color($gallery_settings['photo_watermark_text_color3']);
 				$color1 = ImageColorAllocate(($image2 ? $image2 : $image), $colors1['r'], $colors1['g'], $colors1['b']);
 				$color2 = ImageColorAllocate(($image2 ? $image2 : $image), $colors2['r'], $colors2['g'], $colors2['b']);
 				$color3 = ImageColorAllocate(($image2 ? $image2 : $image), $colors3['r'], $colors3['g'], $colors3['b']);
@@ -194,7 +197,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			}
 		}
 		//create image
-		if ($settings['photo_watermark_save']) {
+		if ($gallery_settings['photo_watermark_save']) {
 			ImageJPEG(($image2 ? $image2 : $image), $wm_file);
 		}
 		ImageJPEG((isset($image2) && $image2 ? $image2 : $image));

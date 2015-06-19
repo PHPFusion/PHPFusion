@@ -22,17 +22,17 @@ add_to_head("<link href='".INFUSIONS."gallery/css/photos.css' rel='stylesheet' /
 /* Main Index Photogallery */
 if (!function_exists('render_photo_main')) {
 	function render_photo_main($info) {
-		global $locale, $settings;
+		global $locale, $settings, $gallery_settings;
 		echo render_breadcrumbs();
 		opentable($locale['400']);
 		$counter = 0;
 		if (isset($info['item'])) {
 			echo "<div class='row' style='padding:15px;'>\n";
 			foreach($info['item'] as $data) {
-				if ($counter != 0 && ($counter%$settings['thumbs_per_row'] == 0)) {
+				if ($counter != 0 && ($counter%$gallery_settings['thumbs_per_row'] == 0)) {
 					echo "</div>\n<div class='row'>\n";
 				}
-				echo "<div class='col-xs-12 col-sm-".(floor(12/$settings['thumbs_per_row']))." col-md-".(floor(12/$settings['thumbs_per_row']))." col-lg-".(floor(12/$settings['thumbs_per_row']))."'>\n";
+				echo "<div class='col-xs-12 col-sm-".(floor(12/$gallery_settings['thumbs_per_row']))." col-md-".(floor(12/$gallery_settings['thumbs_per_row']))." col-lg-".(floor(12/$gallery_settings['thumbs_per_row']))."'>\n";
 				render_photo_item($data);
 				echo "</div>\n";
 				$counter++;
@@ -49,7 +49,7 @@ if (!function_exists('render_photo_main')) {
 /* Photo Category Page */
 if (!function_exists('render_photo_category')) {
 	function render_photo_category($info) {
-		global $locale, $settings;
+		global $locale, $settings, $gallery_settings;
 		echo render_breadcrumbs();
 		opentable($locale['430']);
 		echo "<!--pre_album_info-->";
@@ -85,10 +85,10 @@ if (!function_exists('render_photo_category')) {
 		if (isset($info['item'])) {
 			echo "<div class='row' style='padding:15px;'>\n";
 			foreach($info['item'] as $data) {
-				if ($counter != 0 && ($counter%$settings['thumbs_per_row'] == 0)) {
+				if ($counter != 0 && ($counter%$gallery_settings['thumbs_per_row'] == 0)) {
 					echo "</div>\n<div class='row'>\n";
 				}
-				echo "<div class='col-xs-12 col-sm-".(floor(12/$settings['thumbs_per_row']))." col-md-".(floor(12/$settings['thumbs_per_row']))." col-lg-".(floor(12/$settings['thumbs_per_row']))."'>\n";
+				echo "<div class='col-xs-12 col-sm-".(floor(12/$gallery_settings['thumbs_per_row']))." col-md-".(floor(12/$gallery_settings['thumbs_per_row']))." col-lg-".(floor(12/$gallery_settings['thumbs_per_row']))."'>\n";
 				render_photo_item($data);
 				echo "</div>\n";
 				$counter++;
@@ -157,7 +157,7 @@ if (!function_exists('render_photo_item')) {
 
 if (!function_exists('render_photo')) {
 	function render_photo($info) {
-		global $locale, $settings, $userdata;
+		global $locale, $settings, $gallery_settings, $userdata;
 
 		opentable($locale['450']);
 		echo render_breadcrumbs();

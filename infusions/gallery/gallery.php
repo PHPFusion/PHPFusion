@@ -80,16 +80,16 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		add_breadcrumb(array('link'=>INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'], 'title'=>$data['album_title']));
 		add_breadcrumb(array('link'=>INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'], 'title'=>$data['photo_title']));
 
-		if ($settings['photo_watermark']) {
-			if ($settings['photo_watermark_save']) {
+		if ($gallery_settings['photo_watermark']) {
+			if ($gallery_settings['photo_watermark_save']) {
 				$parts = explode(".", $data['photo_filename']);
 				$wm_file1 = $parts[0]."_w1.".$parts[1];
 				$wm_file2 = $parts[0]."_w2.".$parts[1];
 				if (!file_exists(PHOTODIR."/thumbs/".$wm_file1)) {
 					if ($data['photo_thumb2']) {
-						$info['photo_thumb'] = "photo.php?photo_id=".$_GET['photo_id'];
+						$info['photo_thumb'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
 					}
-					$info['photo_file'] = "photo.php?photo_id=".$_GET['photo_id']."&amp;full";
+					$info['photo_file'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
 				} else {
 					if ($data['photo_thumb2']) {
 						$info['photo_thumb'] = PHOTODIR."/".$wm_file1;
@@ -98,9 +98,9 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 				}
 			} else {
 				if ($data['photo_thumb2']) {
-					$info['photo_thumb'] = "photo.php?photo_id=".$_GET['photo_id'];
+					$info['photo_thumb'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
 				}
-				$info['photo_file'] = "photo.php?photo_id=".$_GET['photo_id']."&amp;full";
+				$info['photo_file'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
 			}
 			$info['photo_size'] = @getimagesize(PHOTODIR.$data['photo_filename']);
 		} else {
@@ -108,7 +108,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 			$info['photo_file'] = PHOTODIR.$data['photo_filename'];
 			$info['photo_size'] = @getimagesize($photo_file);
 		}
-		$info['photo_byte'] = parsebytesize($settings['photo_watermark'] ? filesize(PHOTODIR.$info['photo_filename']) : filesize($info['photo_file']));
+		$info['photo_byte'] = parsebytesize($gallery_settings['photo_watermark'] ? filesize(PHOTODIR.$info['photo_filename']) : filesize($info['photo_file']));
 		$info['photo_comment'] = $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0;
 		$info['photo_ratings'] = $data['photo_allow_ratings'] ? number_format(ceil($info['sum_rating']/$info['count_votes'])) : '0';
 		$info['photo_description'] = $data['photo_description'] ? nl2br(parseubb($info['photo_description'], "b|i|u|center|small|url|mail|img|quote")) : '';
@@ -165,10 +165,10 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 					FROM ".DB_PHOTOS." tp
 					LEFT JOIN ".DB_USERS." tu ON tp.photo_user=tu.user_id
 					LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tp.photo_id AND tr.rating_type='P'
-					WHERE album_id='".$_GET['album_id']."' GROUP BY photo_id ORDER BY photo_order LIMIT ".intval($_GET['rowstart']).",".$settings['thumbs_per_page']);
+					WHERE album_id='".$_GET['album_id']."' GROUP BY photo_id ORDER BY photo_order LIMIT ".intval($_GET['rowstart']).",".$gallery_settings['thumbs_per_page']);
 			$info['photo_rows'] = dbrows($result);
 
-			$info['page_nav'] = $info['max_rows'] > $settings['thumbs_per_page'] ? makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $info['max_rows'], 3, INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&amp;") : '';
+			$info['page_nav'] = $info['max_rows'] > $gallery_settings['thumbs_per_page'] ? makepagenav($_GET['rowstart'], $gallery_settings['thumbs_per_page'], $info['max_rows'], 3, INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&amp;") : '';
 			if ($info['photo_rows'] >0) {
 				// this is photo
 				while ($data = dbarray($result)) {
@@ -198,13 +198,13 @@ else {
 	$info['max_rows'] = dbcount("(album_id)", DB_PHOTO_ALBUMS, groupaccess('album_access'));
 	$_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows'] ? $_GET['rowstart'] : 0;
 	if ($info['max_rows'] > 0) {
-		$info['page_nav'] = ($info['max_rows'] > $settings['thumbs_per_page']) ? makepagenav($_GET['rowstart'], $settings['thumbs_per_page'], $info['max_rows'], 3) : '';
+		$info['page_nav'] = ($info['max_rows'] > $gallery_settings['thumbs_per_page']) ? makepagenav($_GET['rowstart'], $gallery_settings['thumbs_per_page'], $info['max_rows'], 3) : '';
 		$result = dbquery("SELECT ta.album_id, ta.album_title, ta.album_description, ta.album_thumb, ta.album_datestamp,
 			tu.user_id, tu.user_name, tu.user_status
 			FROM ".DB_PHOTO_ALBUMS." ta
 			LEFT JOIN ".DB_USERS." tu ON ta.album_user=tu.user_id
 			".(multilang_table("PG") ? "WHERE album_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('album_access')." ORDER BY album_order
-			LIMIT ".$_GET['rowstart'].",".$settings['thumbs_per_page']);
+			LIMIT ".$_GET['rowstart'].",".$gallery_settings['thumbs_per_page']);
 		while ($data = dbarray($result)) {
 			$data['album_link'] = array('link'=>INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'], 'name'=>$data['album_title']);
 			$photo_directory = !SAFEMODE ? "album_".$data['album_id'] : '';
@@ -229,7 +229,7 @@ else {
 }
 
 function photo_thumbnail($data) {
-	global $locale, $settings;
+	global $locale, $gallery_settings;
 	echo "<div class='panel panel-default tbl-border'>\n";
 	echo "<div class='p-0'>\n";
 	echo "<!--photogallery_album_photo_".$data['photo_id']."-->";

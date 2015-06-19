@@ -537,7 +537,7 @@ function download_listing() {
 		 		FROM ".DB_DOWNLOAD_CATS." dc
 		 		LEFT JOIN ".DB_DOWNLOADS." d on dc.download_cat_id = d.download_cat
 				".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")."
-				GROUP BY download_id
+				GROUP BY download_cat_id
 				ORDER BY download_cat_name");
 		if (dbrows($result)) {
 			while ($data = dbarray($result)) {
@@ -552,7 +552,6 @@ function download_listing() {
 				echo "<br/><span class='text-smaller text-uppercase'>".$data['download_cat_language']."</span>";
 				echo "</div>\n"; /// end overflow-hide
 				echo "</div>\n"; // end panel heading
-
 				echo "<div ".collapse_footer_link('download-list', $data['download_cat_id'], '0').">\n";
 				echo "<ul class='list-group m-10'>\n";
 				$result2 = dbquery("SELECT download_id, download_title, download_description_short, download_url, download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_cat='".$data['download_cat_id']."' ORDER BY download_title");
