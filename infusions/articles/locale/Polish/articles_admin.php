@@ -1,66 +1,66 @@
 <?php
 // Article titles
-$locale['articles_0000'] = "Current Articles";
-$locale['articles_0001'] = "Articles";
-$locale['articles_0002'] = "Add Article";
-$locale['articles_0003'] = "Edit Article";
+$locale['articles_0000'] = "Istniejące artykuły";
+$locale['articles_0001'] = "Artykuły";
+$locale['articles_0002'] = "Dodaj artykuł";
+$locale['articles_0003'] = "Edytuj artykuł";
 // Category titles
-$locale['articles_0020'] = "Current Article Categories";
-$locale['articles_0021'] = "Add Article Category";
-$locale['articles_0022'] = "Edit Article Category";
+$locale['articles_0020'] = "Istniejące kategorie artykułów";
+$locale['articles_0021'] = "Dodaj kategorię artykułów";
+$locale['articles_0022'] = "Edytuj kategorię artykułów";
 // Article messages
-$locale['articles_0100'] = "Article added";
-$locale['articles_0101'] = "Article updated";
-$locale['articles_0102'] = "Article deleted";
+$locale['articles_0100'] = "Dodano artykuł.";
+$locale['articles_0101'] = "Zaktualizowano artykuł.";
+$locale['articles_0102'] = "Usunięto artykuł.";
 // Category messages
-$locale['articles_0150'] = "Article Category added";
-$locale['articles_0151'] = "Article Category updated";
-$locale['articles_0152'] = "Article Category cannot be deleted";
-$locale['articles_0153'] = "There are Articles or Sub-Categories linked to this category";
-$locale['articles_0154'] = "Article Category deleted";
+$locale['articles_0150'] = "Dodano kategorię artykułów.";
+$locale['articles_0151'] = "Zaktualizowano kategorię artykułów.";
+$locale['articles_0152'] = "Nie można było usunąć kategorii artykułów.";
+$locale['articles_0153'] = "Do kategorii są przypisane artykuły.<br />Przenieś je do innej kategorii.";
+$locale['articles_0154'] = "Usunięto kategorię artykułów.";
 // Category form
-$locale['articles_0200'] = "Subject:";
-$locale['articles_0201'] = "Category:";
-$locale['articles_0202'] = "Snippet:";
-$locale['articles_0203'] = "Article:";
-$locale['articles_0204'] = "Keywords (you need to hit enter for each keyword)";
-$locale['articles_0205'] = "Save as Draft";
-$locale['articles_0206'] = "Automatic Line-Breaks";
-$locale['articles_0207'] = "Enable Comments";
-$locale['articles_0208'] = "Enable Ratings";
-$locale['articles_0209'] = "Page Break";
-$locale['articles_0210'] = "[DRAFT]";
-$locale['articles_0211'] = "Visibility";
-$locale['articles_0240'] = "Preview Article";
-$locale['articles_0241'] = "Save Article";
+$locale['articles_0200'] = "Temat:";
+$locale['articles_0201'] = "Kategoria:";
+$locale['articles_0202'] = "Streszczenie:";
+$locale['articles_0203'] = "Treść:";
+$locale['articles_0204'] = "Słowa kluczowe (trzeba nacisnąć enter dla każdego słowa kluczowego)";
+$locale['articles_0205'] = "Zapisz jako szkic";
+$locale['articles_0206'] = "Włącz automatyczne łamanie linii";
+$locale['articles_0207'] = "Włącz komentarze";
+$locale['articles_0208'] = "Włącz ocenianie";
+$locale['articles_0209'] = "Podział strony";
+$locale['articles_0210'] = "[SZKIC]";
+$locale['articles_0211'] = "Widoczność";
+$locale['articles_0240'] = "Podgląd";
+$locale['articles_0241'] = "Zapisz";
 // Popup Error/Warning Messages
-$locale['articles_0250'] = "Please specify a subject";
-$locale['articles_0251'] = "Delete this article?";
-$locale['articles_0252'] = "There are no Article Categories defined";
-$locale['articles_0253'] = "You must define at least one category before you can add any Articles";
-$locale['articles_0254'] = "Click here";
-$locale['articles_0255'] = " to go to Article Categories";
-$locale['articles_0256'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
-$locale['articles_0257'] = "Please specify keywords";
+$locale['articles_0250'] = "Wpisz temat.";
+$locale['articles_0251'] = "Usunąć artykuł?";
+$locale['articles_0252'] = "Nie zdefiniowano kategorii artykułów";
+$locale['articles_0253'] = "Przed dodaniem artykułów musisz zdefiniować przynajmniej jedną kategorię artykułów.";
+$locale['articles_0254'] = "Kliknij tutaj";
+$locale['articles_0255'] = " aby przejść do Kategorii Artykułów";
+$locale['articles_0256'] = "%s jest wyłączona globalnie i&nbsp;będzie niedostępna, dopóki ustawienia nie ulegną zmianie";
+$locale['articles_0257'] = "Proszę określić słowa kluczowe";
 // Category form
-$locale['articles_0300'] = "Category Name:";
-$locale['articles_0301'] = "Category Description:";
-$locale['articles_0302'] = "Category Sorting:";
-$locale['articles_0303'] = "Article ID";
-$locale['articles_0304'] = "Article Subject";
-$locale['articles_0305'] = "Article Date";
-$locale['articles_0306'] = "Ascending";
-$locale['articles_0307'] = "Descending";
-$locale['articles_0308'] = "Category Parent:";
-$locale['articles_0309'] = "Save Category";
+$locale['articles_0300'] = "Nazwa kategorii:";
+$locale['articles_0301'] = "Opis kategorii:";
+$locale['articles_0302'] = "Sortuj wg:";
+$locale['articles_0303'] = "ID Artykułu";
+$locale['articles_0304'] = "Tematu artykułu";
+$locale['articles_0305'] = "Data dodania";
+$locale['articles_0306'] = "Rosnąco";
+$locale['articles_0307'] = "Malejąco";
+$locale['articles_0308'] = "Dostęp dla:";
+$locale['articles_0309'] = "Zapisz";
 // Current category options
-$locale['articles_0340'] = "Category";
-$locale['articles_0341'] = "Options";
-$locale['edit'] = "Edit";
-$locale['delete'] = "Delete";
-$locale['articles_0342'] = "No Article Categories defined";
+$locale['articles_0340'] = "Kategoria";
+$locale['articles_0341'] = "Opcje";
+$locale['edit'] = "Edytuj";
+$locale['delete'] = "Usuń";
+$locale['articles_0342'] = "Nie zdefiniowano kategorii artykułów";
 // Delete Article category
-$locale['articles_0350'] = "Delete this article category?";
+$locale['articles_0350'] = "Usunąć kategorię artykułów?";
 // Error Messages
-$locale['articles_0351'] = "Please enter a category name.";
-$locale['articles_0352'] = "This category already exists.";
+$locale['articles_0351'] = "Musisz podać nazwę kategorii.";
+$locale['articles_0352'] = "Kategoria o takiej nazwie już istnieje.";
