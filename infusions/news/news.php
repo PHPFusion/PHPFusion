@@ -95,7 +95,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			add_to_head("<meta property='og:description' content='".strip_tags($data['news_news'])."' />");
 			add_to_head("<meta property='og:site_name' content='".$settings['sitename']."' />");
 			add_to_head("<meta property='og:type' content='article' />");
-			add_to_head("<meta property='og:url' content='".$settings['siteurl']."news.php?readmore=".$_GET['readmore']."' />");
+			add_to_head("<meta property='og:url' content='".$settings['siteurl']."infusions/news.php?readmore=".$_GET['readmore']."' />");
 			if ($data['news_image']) {
 				$og_image = IMAGES_N.$data['news_image'];
 			} else {
@@ -248,11 +248,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$news_cat_image = '';	$news_image = '';	$news_img_src = '';
 				$news_subject = stripslashes($data['news_subject']);
 				if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image']) && $news_settings['news_image_frontpage'] == 0) {
-					$news_image = "<a class='img-link' href='".($news_settings['news_image_link'] == 0 ? "news.php?cat_id=".$data['news_cat'] : FUSION_SELF."?readmore=".$data['news_id'])."'>";
+					$news_image = "<a class='img-link' href='".($news_settings['news_image_link'] == 0 ? "news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'])."'>";
 					$news_image .= "<img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' /></a>";
 					$news_img_src = IMAGES_N.$data['news_image'];
 				}
-				$news_cat_image = "<a href='".($news_settings['news_image_link'] == 0 ? "news.php?cat_id=".$data['news_cat'] : FUSION_SELF."?readmore=".$data['news_id'])."'>";
+				$news_cat_image = "<a href='".($news_settings['news_image_link'] == 0 ? "news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'])."'>";
 				if ($data['news_image_t2'] && $news_settings['news_image_frontpage'] == 0) {
 					$news_cat_image .= "<img src='".IMAGES_N_T.$data['news_image_t2']."' alt='".$data['news_subject']."' class='img-responsive news-category' /></a>";
 				} elseif ($data['news_cat_image']) {
