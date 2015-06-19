@@ -192,8 +192,8 @@ header #logo > a {
 	margin-left: 20px;
 }
 
-header #logo > a > img {
-	margin-bottom: -30px;
+header .logo > a > img {
+	margin: 0 auto;
 }
 
 header #search-box {
