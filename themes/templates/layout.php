@@ -29,8 +29,10 @@ echo "<head>\n";
 		echo "<link href='".$bootstrap_theme_css_src."' rel='stylesheet' media='screen' />\n";
 	}
 
-	echo "<link rel='stylesheet' href='".INCLUDES."font/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
-
+	if ($settings['fontawesome']) {
+		echo "<link rel='stylesheet' href='".INCLUDES."font/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
+	}
+	
 	// Load bootstrap stylesheets
 	if ($settings['bootstrap']) {
 		define('BOOTSTRAPPED', TRUE);
@@ -50,9 +52,9 @@ echo "<head>\n";
 	}
 
 	// Entypo icons
-	//echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />\n";
-	// Default CSS styling which applies to all themes but can be overriden
-	echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
+	if ($settings['entypo']) {
+		echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
+	}
 	// Theme CSS
 	echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 
@@ -60,6 +62,7 @@ echo "<head>\n";
 	if (function_exists("get_head_tags")) {
 		echo get_head_tags();
 	}
+
 	echo "<script type='text/javascript' src='".INCLUDES."jquery/jquery.js'></script>\n";
 	echo "<script type='text/javascript' src='".INCLUDES."jscript.js'></script>\n";
 echo "</head>\n";
