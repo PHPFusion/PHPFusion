@@ -646,7 +646,14 @@ class defender {
 						'error' => 0,
 					);
 					if (is_uploaded_file($_FILES[$source_file]['tmp_name'][$i])) {
-						$valid_ext = explode("|", $valid_ext);
+						if (stristr($valid_ext, ',')) {
+							$valid_ext = explode(",", $valid_ext);
+						} elseif (stristr($valid_ext, '|')) {
+							$valid_ext = explode("|", $valid_ext);
+						} else {
+							$this->stop();
+							addNotice('warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
+						}
 						$file = $_FILES[$source_file];
 						$file_type = $file['type'][$i];
 						if ($target_file == "" || preg_match("/[^a-zA-Z0-9_-]/", $target_file)) {
@@ -710,7 +717,7 @@ class defender {
 								//$this->addHelperText($$this->field_config['id'], $locale['df_416']);
 								break;
 							case 2: // Invalid File extensions
-								addNotice('info', sprintf($locale['df_417'], str_replace('|', ', ', $this->field_config['valid_ext'])));
+								addNotice('info', sprintf($locale['df_417'], $this->field_config['valid_ext']));
 								self::setInputError($this->field_name);
 								//$this->addHelperText($$this->field_config['id'], $locale['df_417']);
 								break;

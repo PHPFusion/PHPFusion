@@ -931,13 +931,6 @@ class Viewthread {
 				'closeform' => closeform(),
 				'forum_id_field' => form_hidden('', 'forum_id', 'forum_id', $post_data['forum_id']),
 				'thread_id_field' => form_hidden('', 'thread_id', 'thread_id', $post_data['thread_id']),
-				// in edit or in new thread is a textbox
-				/*
-				 * echo $data['first_post'] == $_GET['post_id'] ? form_text('thread_subject', $locale['forum_0600'], $data['thread_subject'], array('required' => 1,
-				'placeholder' => $locale['forum_2001'],
-				'error_text' => '',
-				'class' => 'm-t-20 m-b-20')) : "<h4 class='m-b-20'>".$locale['forum_2002'].$data['thread_subject']."</h4>\n ".form_hidden('', 'thread_subject', 'thread_subject', $data['thread_subject']);
-				 */
 				'subject_field' => form_hidden('', 'thread_subject', 'thread_subject', $thread_data['thread_subject']),
 				'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1, 'error_text' => '', 'autosize' => 1, 'no_resize' => 1, 'preview' => 1, 'form_name' => 'input_form', 'bbcode' => 1)),
 				// happens only in EDIT

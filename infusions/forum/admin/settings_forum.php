@@ -133,8 +133,12 @@ echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' =
 			echo "</div>\n";
 			echo "<div class='clearfix'>\n";
 			echo "<span class='small pull-right'>".$locale['511']."</span>\n";
-			echo "<label for='attachtypes'>".$locale['510']."</label>";
-			echo form_select('attachtypes[]', '', $mime_opts, $settings2['attachtypes'], array('input_id'=>'attachtypes', 'error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%' , 'delimiter' => '|'));
+			// redo mime
+			sort($mime_opts);
+			// as ","
+			echo form_select('attachtypes', $locale['510'], $mime_opts, $settings2['attachtypes'], array('width'=>'100%', 'error_text' => $locale['error_type'], 'tags'=>1, 'multiple' => 1));
+			// as "|"
+			//echo form_select('attachtypes[]', '', $mime_opts, $settings2['attachtypes'], array('input_id'=>'attachtypes', 'error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%' , 'delimiter' => '|'));
 	echo "</div>\n";
 		closeside();
 
