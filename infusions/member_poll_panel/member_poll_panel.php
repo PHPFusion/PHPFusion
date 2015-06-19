@@ -55,11 +55,14 @@ if (dbrows($result)) {
 			$poll .= "<label><input type='radio' name='voteoption' value='$i' /> $poll_option[$i]</label><br /><br />\n";
 			$i++;
 		}
-		echo "<form name='voteform' method='post' action='".FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")."'>\n";
+		//echo "<form name='voteform' method='post' action='".FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")."'>\n";
+		$form_action = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
+		echo openform('voteform', 'post', $form_action, array('max_tokens' => 1));
 		echo "<strong>".$poll_title."</strong><br /><br />\n".$poll;
 		echo "<div style='text-align:center'><input type='hidden' name='poll_id' value='".$data['poll_id']."' />\n";
 		echo "<input type='submit' name='cast_vote' value='".$locale['global_131']."' class='button' />";
-		echo "</div>\n</form>\n";
+		echo "</div>\n";
+		echo closeform();
 	} else {
 		$poll = "";
 		$i = 0;
