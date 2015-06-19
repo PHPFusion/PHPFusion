@@ -487,7 +487,7 @@ class Atom {
 		$this->data['navbar_border'] = isset($_POST['navbar_border']) ? form_sanitizer($_POST['navbar_border'], '0', 'navbar_border') : $this->data['navbar_border'];
 		$this->data['navbar_radius'] = isset($_POST['navbar_radius']) ? form_sanitizer($_POST['navbar_radius'], '0', 'navbar_radius') : $this->data['navbar_radius'];
 		$this->data['navbar_bg'] = isset($_POST['navbar_bg']) ? form_sanitizer($_POST['navbar_bg'], '', 'navbar_bg') : $this->data['navbar_bg'];
-		$this->data['navbar_height'] = isset($_POST['navbar_height']) ? form_sanitizer($_POST['navbar_bg'], '', 'navbar_height') : $this->data['navbar_height'];
+		$this->data['navbar_height'] = isset($_POST['navbar_height']) ? form_sanitizer($_POST['navbar_height'], '', 'navbar_height') : $this->data['navbar_height'];
 
 		$this->data['navbar_bg_hover'] = isset($_POST['navbar_bg_hover']) ? form_sanitizer($_POST['navbar_bg_hover'], '', 'navbar_bg_hover') : $this->data['navbar_bg_hover'];
 		$this->data['navbar_bg_active'] = isset($_POST['navbar_bg_active']) ? form_sanitizer($_POST['navbar_bg_active'], '', 'navbar_bg_active') : $this->data['navbar_bg_active'];
@@ -630,9 +630,6 @@ class Atom {
 	/* Administration Menus - Part I - Font Settings */
 	private function font_admin() {
 		global $locale;
-
-
-
 		$base_font = array_values(array_flip($this->base_font()));
 		$web_font = array_values(array_flip($this->google_font()));
 		$font_list = array_merge($base_font, $web_font);
