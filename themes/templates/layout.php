@@ -32,7 +32,8 @@ echo "<head>\n";
 	if ($settings['fontawesome']) {
 		echo "<link rel='stylesheet' href='".INCLUDES."font/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 	}
-	
+	// Theme CSS
+	echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 	// Load bootstrap stylesheets
 	if ($settings['bootstrap']) {
 		define('BOOTSTRAPPED', TRUE);
@@ -45,6 +46,7 @@ echo "<head>\n";
 			$theme_css = THEMES.$theme_data['theme_file'];
 		}
 		echo "<link rel='stylesheet' href='".$theme_css."' type='text/css' />\n";
+		// set atom one here. this will override the above file.
 		echo "<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/jquery.smartmenus.bootstrap.css' type='text/css' />\n";
 	} else {
 		echo "<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/sm-core-css.css' type='text/css' />\n";
@@ -55,8 +57,7 @@ echo "<head>\n";
 	if ($settings['entypo']) {
 		echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
 	}
-	// Theme CSS
-	echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
+
 
 	echo render_favicons(IMAGES);
 	if (function_exists("get_head_tags")) {

@@ -506,7 +506,7 @@ class Atom {
 		$this->data['navbar_link_decoration_active'] = isset($_POST['navbar_link_decoration_active']) ? form_sanitizer($_POST['navbar_link_decoration_active'], '0', 'navbar_link_decoration_active') : $this->data['navbar_link_decoration_active'];
 
 		// End Font Settings.
-		if (isset($_POST['save_theme'])) {
+		if (isset($_POST['save_theme']) && !defined("FUSION_NULL")) {
 			$this->save_theme();
 		}
 	}
