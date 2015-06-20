@@ -18,13 +18,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-// Notes regarding further development:
-// - The check functions should return the value being passed to
-// as is or pre-processed(sanitized) or TRUE upon success and
-// should not make direct calls to stop() on a failure but rather
-// return FALSE, form sanitizer will do the rest.
-// - Don't traslate/localise debug notices, is unnecessary.
-
 class defender {
 	public $debug = FALSE;
 	public $ref = array();
