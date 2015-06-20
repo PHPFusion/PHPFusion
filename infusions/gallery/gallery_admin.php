@@ -30,8 +30,6 @@ $gallery_settings = new PHPFusion\Gallery\Admin();
 
 require_once INCLUDES."infusions_include.php";
 $settings_inf = get_settings('gallery');
-
-
 $gallery_settings->setUploadSettings(
 	array(
 		'thumbnail_folder'=>'thumbs',

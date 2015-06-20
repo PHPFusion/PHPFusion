@@ -44,8 +44,8 @@ class Admin {
 	private $allow_ratings = FALSE;
 	private $gallery_rights = '';
 	private $enable_album = TRUE;
-	private $albums_per_page = 30;
-	private $gallery_rows = 6;
+
+	private $gallery_settings = array();
 	private $album_id = 0;
 	private $photo_id = 0;
 	private $rowstart = 0;
@@ -134,13 +134,14 @@ class Admin {
 	 * Instantiated default variables.
 	 */
 	public function __construct() {
+		global $settings_inf;
 		// Using GET to set the vars so it can be accessed in the entire class
 		$this->album_id = isset($_GET['album_id']) && isnum($_GET['album_id']) ? $_GET['album_id'] : 0;
 		$this->photo_id = isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? $_GET['photo_id'] : 0;
-		$this->rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0;
 		$this->action = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		$this->album_data['album_language'] = LANGUAGE;
 		$this->album_data['album_datestamp'] = time();
+
 	}
 
 	/**
@@ -199,7 +200,7 @@ class Admin {
 						self::refresh_album_order();
 						break;
 					case 'settings':
-						self::gallery_settings();
+						self::gallery_settings_admin();
 						break;
 					case 'mu':
 						self::refresh_order('mu');
@@ -1066,7 +1067,7 @@ class Admin {
 	/**
 	 * Include and run Gallery settings
 	 */
-	public function gallery_settings() {
+	public function gallery_settings_admin() {
 	global $locale, $aidlink;
 	include INFUSIONS."gallery/settings_gallery.php";
 	}
@@ -1108,28 +1109,27 @@ class Admin {
 		}
 	}
 
-
 	/**
 	 * Main Gallery HTML output
 	 */
 	private function display_gallery() {
-		global $locale;
+
+		global $locale, $settings_inf;
 		self::display_photo(FALSE);
 		/**
 		 * Breadcrumb
 		 */
 		if ($_GET['gallery']>0) {
-
 			$gallery_info = self::get_album($_GET['gallery']);
 			add_breadcrumb(array('link' => clean_request("gallery=".$_GET['gallery'], array('gallery',	'action'), FALSE, '&amp;'), 'title' => $gallery_info['album_title']));
 		}
-		$list = array();
-		$rows = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : dbcount("('album_id')", $this->photo_cat_db);
-		$multiplier = $rows > $this->albums_per_page ? $this->albums_per_page : $rows;
-		$max_items_per_col = $multiplier/$this->gallery_rows;
+
+		// album total count
+		$row_count = isset($_GET['gallery']) && isnum($_GET['gallery']) ? dbcount("('photo_id')", $this->photo_db, "album_id='".intval($_GET['gallery'])."'") : dbcount("('album_id')", $this->photo_cat_db);
+		// anti-xss
+		$rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $row_count ? $_GET['rowstart'] : 0;
 		// get in current language.
-		$current_rows = 0;
-		if ($rows) {
+		if ($row_count) {
 			if ($_GET['gallery'] >0 ) { // view photos
 				$result = dbquery("SELECT photos.*, photos.photo_user as user_id, album.*, album.album_id as gallery_id, album.album_thumb, u.user_name, u.user_status, u.user_avatar,
 				count(comment_id) as comment_count, sum(rating_vote) as total_votes, count(rating_id) as rating_count
@@ -1140,78 +1140,63 @@ class Admin {
 				LEFT JOIN ".DB_RATINGS." rating on rating.rating_item_id = photos.photo_id AND rating_type = '".$this->gallery_rights."'
 				WHERE ".groupaccess('album.album_access')." AND photos.album_id = '".intval($_GET['gallery'])."'
 				GROUP BY photo_id
-				ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".$this->rowstart.", $this->albums_per_page");
+				ORDER BY photos.photo_order ASC, photos.photo_datestamp DESC LIMIT ".$rowstart.", ".$settings_inf['thumbs_per_page']."");
 			} else { // view album
 				$result = dbquery("SELECT album.*, album.album_user as user_id, u.user_name, u.user_status, u.user_avatar, count(photo.photo_id) as photo_count
 				FROM ".$this->photo_cat_db." album
 				LEFT JOIN ".$this->photo_db." photo on (photo.album_id = album.album_id)
 				INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
 				WHERE ".groupaccess('album.album_access')."
-				GROUP BY album_id ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".$this->rowstart.", $this->albums_per_page");
+				GROUP BY album_id ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".$rowstart.", ".$settings_inf['thumbs_per_page']."");
 			}
 			$current_rows = dbrows($result);
 			if ($current_rows > 0) {
-				$i = 1;
-				$count = 1;
-				$list = array();
-				while ($data = dbarray($result)) {
-					$this->gallery_data[] = $data;
-					self::refresh_album_thumb($data['album_id'], $data['album_thumb']);
-					$list[$i][$data['album_id']] = $data;
-					if ($count >= $max_items_per_col) {
-						$i++;
-						$count = 1;
-					}
-					$count++;
+
+				echo "<h4>".(isset($_GET['gallery']) ? $locale['photo_001'] : $locale['photo_000'])."</h4>\n";
+
+				if ($row_count > $current_rows) {
+					echo "<div class='display-block text-right m-b-10'>\n";
+					echo makepagenav($rowstart, $settings_inf['thumbs_per_page'], $row_count, 3, clean_request('', array(
+						'gallery_edit',
+						'gallery_item',
+						'action',
+						'order',
+						'gallery_edit',
+						'gallery_delete',
+						'gallery_type',
+						'rowstart',
+					), false), '&rowstart');
+					echo "</div>\n";
 				}
+
+				$i = 1;
+				while ($data = dbarray($result)) {
+					self::refresh_album_thumb($data['album_id'], $data['album_thumb']);
+					$span = floor(12/$settings_inf['thumbs_per_row']);
+					if ($span == 1) {
+						$span = 12;
+					}
+					echo "<div class='col-xs-12 col-sm-".$span."'>\n";
+					$lang = explode('.', $data['album_language']);
+					if (in_array(LANGUAGE, $lang)) {
+						self::gallery_album($data, isset($_GET['gallery']) && isnum($_GET['gallery']) ? 2 : 1, $i);
+					}
+					echo "</div>\n";
+					$i++;
+				}
+			} else {
+				echo "<div class='well text-center'>".$locale['660']."</div>";
 			}
 		}
-		$albums = $list;
-		$container_span_sm = 24/$this->gallery_rows;
-		$container_span_md = 12/$this->gallery_rows;
-		echo "<h4>".(isset($_GET['gallery']) ? $locale['photo_001'] : $locale['photo_000'])."</h4>\n";
-		if (!empty($albums)) {
-?>			
-			<div class='row'>
-				<?php for ($i = 1; $i <= $this->gallery_rows; $i++) { // construct columns 
-?>
-				<div class='col-xs-12 col-sm-<?php echo $container_span_sm; ?> col-md-<?php echo $container_span_md; ?>'>
-						<?php
-						if (!empty($albums[$i])) {
-							foreach ($albums[$i] as $albumData) {
-								$lang = explode('.', $albumData['album_language']);
-								if (in_array(LANGUAGE, $lang)) {
-									self::gallery_album($albumData, isset($_GET['gallery']) && isnum($_GET['gallery']) ? 2 : 1);
-								}
-							}
-						}
-?>						
-					</div>
-				<?php } ?>
-			</div>
-		<?php
-			// pagination
-			echo makepagenav($this->rowstart, $current_rows, $rows, 3, clean_request('', array(
-				'gallery_edit',
-				'gallery_item',
-				'action',
-				'order',
-				'gallery_edit',
-				'gallery_delete',
-				'gallery_type'
-			), false));
-		} else {
-			echo "<div class='well text-center'>".$locale['660']."</div>";
-		}
 	}
-
 
 	/**
 	 * @param array $data
 	 * @param int   $type - 1 for album, 2 for photo
 	 */
-	private function gallery_album(array $data = array(), $type = 1) {
-		global $userdata, $locale;
+	private function gallery_album(array $data = array(), $type = 1, $i) {
+		global $locale, $settings_inf;
+
 		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery',
 			'gallery_edit',
 			'gallery_type',
@@ -1225,32 +1210,38 @@ class Admin {
 			'gallery_item',
 			'ratings'), FALSE);
 		$order_btns = '';
-		if ($type == 1 && count($this->gallery_data)>1) {
+		// album
+
+
+		if ($type == 1) {
 			// move up and down
 			$move_up = clean_request("gallery_item=".$data['album_id']."&action=mu&order=".($data['album_order']-1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
 			$move_down = clean_request("gallery_item=".$data['album_id']."&action=md&order=".($data['album_order']+1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
 			if ($data['album_order'] == 1) {
 				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_down."'><i class='fa fa-arrow-down'></i></a>";
-			} elseif ($data['album_order'] == count($this->gallery_data)) {
-				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_up."'><i class='fa fa-arrow-up'></i></a>";
-			} else {
-				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_down."'><i class='fa fa-arrow-down'></i></a>";
-				$order_btns .= "<a class='btn button btn-sm btn-default' href='".$move_up."'><i class='fa fa-arrow-up'></i></a>";
-			}
-		} elseif ($type == 2 && count($this->gallery_data)>1) {
-			// move up and down
-			$move_up = clean_request("gallery=".$_GET['gallery']."&gallery_item=".$data['photo_id']."&action=mup&order=".($data['photo_order']-1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
-			$move_down = clean_request("gallery=".$_GET['gallery']."&gallery_item=".$data['photo_id']."&action=mdp&order=".($data['photo_order']+1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
-			if ($data['photo_order'] == 1) {
-				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_down."'><i class='fa fa-arrow-down'></i></a>";
-			} elseif ($data['photo_order'] == count($this->gallery_data)) {
+			} elseif ($data['album_order'] == $settings_inf['thumbs_per_page']) {
 				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_up."'><i class='fa fa-arrow-up'></i></a>";
 			} else {
 				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_down."'><i class='fa fa-arrow-down'></i></a>";
 				$order_btns .= "<a class='btn button btn-sm btn-default' href='".$move_up."'><i class='fa fa-arrow-up'></i></a>";
 			}
 		}
-?>
+
+		// photo
+		if ($type == 2) {
+			// move up and down
+			$move_up = clean_request("gallery=".$_GET['gallery']."&gallery_item=".$data['photo_id']."&action=mup&order=".($data['photo_order']-1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
+			$move_down = clean_request("gallery=".$_GET['gallery']."&gallery_item=".$data['photo_id']."&action=mdp&order=".($data['photo_order']+1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
+			if ($data['photo_order'] == 1) {
+				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_down."'><i class='fa fa-arrow-down'></i></a>";
+			} elseif ($data['photo_order'] == $settings_inf['thumbs_per_page']) {
+				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_up."'><i class='fa fa-arrow-up'></i></a>";
+			} else {
+				$order_btns = "<a class='btn button btn-sm btn-default' href='".$move_down."'><i class='fa fa-arrow-down'></i></a>";
+				$order_btns .= "<a class='btn button btn-sm btn-default' href='".$move_up."'><i class='fa fa-arrow-up'></i></a>";
+			}
+		}
+	?>
 		<div class='gallery_album panel panel-default'>
 		<div class='gallery_actions'>
 			<a href='<?php echo $request ?>' class='gallery_overlay'></a>
