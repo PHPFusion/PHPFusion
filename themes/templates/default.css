@@ -263,39 +263,6 @@ li.panel {
 	background: none;
 	border: 0px;
 }
-.adl-link.collapsed > span.adl-drop:before {
-	font-family: "entypo" !important;
-	font-style: normal;
-	font-weight: normal;
-	speak: none;
-	display: inline-block;
-	text-decoration: inherit;
-	width: 1em;
-	margin-right: .2em;
-	text-align: center;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1em;
-	margin-left: .2em;
-	content: '\e82a';
-}
-
-.adl-link > span.adl-drop:before {
-	font-family: "entypo" !important;
-	font-style: normal;
-	font-weight: normal;
-	speak: none;
-	display: inline-block;
-	text-decoration: inherit;
-	width: 1em;
-	margin-right: .2em;
-	text-align: center;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1em;
-	margin-left: .2em;
-	content: '\e8d4';
-}
 
 ul > li {
 	padding: 0px;
