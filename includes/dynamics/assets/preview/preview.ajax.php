@@ -19,8 +19,8 @@ require_once dirname(__FILE__)."../../../../../maincore.php";
 $text = stripinput($_POST['text']);
 // filter to relative path conversion
 echo "<div class='preview-response p-t-20 m-b-20'>\n";
-if ($_POST['editor'] == 'html_input') {
-	$text = stripslash(nl2br(parsesmileys($text)));
+if ($_POST['editor'] == 'html') {
+	$text = parsesmileys(nl2br(html_entity_decode(stripslashes($text))));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
 		$images = str_replace('../../../', '', IMAGES);
 		$text = str_replace(IMAGES, $images, $text);
@@ -44,6 +44,7 @@ if ($_POST['editor'] == 'html_input') {
 	}
 	echo nl2br($text) ? : $locale['nopreview'];
 }
+
 echo "<hr>\n";
 echo "</div>\n";
 

@@ -73,7 +73,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		$html .= opentabbody($tab_title['title'][1], "txt-".$options['input_id'], $tab_active);
 	}
 
-	$html .= ($options['bbcode'] || $options['html']) ? "<div class='panel panel-default m-b-0' ".($options['preview'] ? "style='border-top:0 !important; border-radius:0 !important;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
+	$html .= ($options['bbcode'] || $options['html']) ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-top:0 !important; border-radius:0 !important;'" : '').">\n<div class='panel-heading clearfix' style='padding-bottom:0 !important;'>\n" : '';
 	if ($options['bbcode'] && $options['form_name']) {
 		$html .= display_bbcodes('90%', $input_name, $options['form_name']);
 	} elseif ($options['html'] && $options['form_name']) {

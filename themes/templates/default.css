@@ -624,3 +624,7 @@ table {
 .icon-wrapper > .icon-container {
 	text-align: center;
 }
+
+.panel-txtarea, .panel-txtarea > .panel-heading {
+	border-top:0;
+}
