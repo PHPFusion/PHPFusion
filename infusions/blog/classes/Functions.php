@@ -108,6 +108,7 @@ class Functions {
 
 	/**
 	 * Session based blog reads updater
+	 * Not used at this moment
 	 * @param $blog_id
 	 */
 	public static function update_blogReads($blog_id) {
