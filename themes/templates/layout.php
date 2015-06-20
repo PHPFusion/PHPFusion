@@ -28,10 +28,19 @@ echo "<head>\n";
 	  	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
 		echo "<link href='".$bootstrap_theme_css_src."' rel='stylesheet' media='screen' />\n";
 	}
+	if ($settings['entypo']) {
+		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-codes.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-embedded.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-ie7.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-ie7-codes.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/animation.css' type='text/css' />\n";
+	}
 
 	if ($settings['fontawesome']) {
 		echo "<link rel='stylesheet' href='".INCLUDES."font/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 	}
+
 	// Theme CSS
 	echo "<link href='".THEME."styles.css' rel='stylesheet' type='text/css' media='screen' />\n";
 	// Load bootstrap stylesheets
@@ -53,11 +62,9 @@ echo "<head>\n";
 		echo "<link rel='stylesheet' href='".INCLUDES."jquery/smartmenus/sm-simple.css' type='text/css' />\n";
 	}
 
-	// Entypo icons
-	if ($settings['entypo']) {
+	if (!defined('NO_DEFAULT_CSS')) {
 		echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />\n";
 	}
-
 
 	echo render_favicons(IMAGES);
 	if (function_exists("get_head_tags")) {

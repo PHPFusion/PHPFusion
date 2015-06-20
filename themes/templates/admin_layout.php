@@ -26,8 +26,18 @@ if ($bootstrap_theme_css_src) {
 	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />";
 	echo "<link href='".$bootstrap_theme_css_src."' rel='stylesheet' media='screen' />";
 }
+if ($settings['entypo']) {
+	echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo.css' type='text/css' />\n";
+	echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-codes.css' type='text/css' />\n";
+	echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-embedded.css' type='text/css' />\n";
+	echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-ie7.css' type='text/css' />\n";
+	echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-ie7-codes.css' type='text/css' />\n";
+	echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/animation.css' type='text/css' />\n";
+}
 
-echo "<link href='".INCLUDES."font/entypo/entypo.css' rel='stylesheet' media='screen' />";
+if ($settings['fontawesome']) {
+	echo "<link rel='stylesheet' href='".INCLUDES."font/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
+}
 
 // Default CSS styling which applies to all themes but can be overriden
 echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen' />";

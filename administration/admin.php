@@ -21,10 +21,6 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 */
 class Admin {
 /**
- * @var string
- */
-public $icon_repo = 'font-awesome';
-/**
  * @var array
  */
 public $admin_page_icons = array(
@@ -105,7 +101,6 @@ private $pages = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALS
  */
 public function __construct() {
 	global $aidlink, $locale, $pages, $admin_pages, $settings;
-	add_to_head("<link rel='stylesheet' href='".INCLUDES."font/".$this->icon_repo."/css/".$this->icon_repo.".min.css' type='text/css' />");
 	@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
 	add_to_title($locale['global_200'].$locale['global_123'].($title ? $locale['global_201'].$title : ""));
 	$this->admin_pages = $admin_pages;
