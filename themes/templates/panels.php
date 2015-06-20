@@ -78,7 +78,8 @@ foreach ($p_name as $p_key => $p_side) {
 									include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
 								}
 							} else {
-								eval(stripslashes($p_data['panel_content']));
+								// dangerous mission here
+								eval( "?> ".stripslashes($p_data['panel_content'])." <?php ");
 							}
 						}
 					}

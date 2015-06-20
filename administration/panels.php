@@ -106,7 +106,7 @@ class fusion_panels {
 			}
 			$this->data['panel_filename'] = isset($_POST['panel_filename']) ? form_sanitizer($_POST['panel_filename'], '', 'panel_filename') : '';
 			// panel content formatting
-			if (!$this->data['panel_filename']) {
+			if ($this->data['panel_filename'] == 'none') {
 				$this->data['panel_type'] = "php";
 				$this->data['panel_content'] = isset($_POST['panel_content']) ? addslashes($_POST['panel_content']) : '';
 				if (!$this->data['panel_content']) {
@@ -154,18 +154,20 @@ class fusion_panels {
 				$this->data['panel_languages'] = implode('.', $panel_languages);
 			}
 			// panel order .. add to last or sort - no need since we already have drag and drop... but if they dont have jquery this would be a good idea.
-			/* $result = dbquery("SELECT panel_order FROM ".DB_PANELS." WHERE panel_side='".$panel_side."' ORDER BY panel_order DESC LIMIT 1");
-			if (dbrows($result) != 0) {
-				$data = dbarray($result);
-				$neworder = $data['panel_order']+1;
-			} else {
-				$neworder = 1;
-			} */
+
 			if ($this->data['panel_id'] && self::verify_panel($this->data['panel_id'])) {
 				dbquery_insert(DB_PANELS, $this->data, 'update');
 				addNotice('info', $locale['482']);
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=su");
 			} else {
+				// add panel order automatically
+				$result = dbquery("SELECT panel_order FROM ".DB_PANELS." WHERE panel_side='".intval($this->data['panel_side'])."' ORDER BY panel_order DESC LIMIT 1");
+				if (dbrows($result) != 0) {
+					$data = dbarray($result);
+					$this->data['panel_order'] = $data['panel_order']+1;
+				} else {
+					$this->data['panel_order'] = 1;
+				}
 				dbquery_insert(DB_PANELS, $this->data, 'save');
 				addNotice('success', $locale['485']);
 				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;section=listpanel&amp;status=sn");
