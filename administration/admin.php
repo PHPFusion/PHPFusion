@@ -99,12 +99,15 @@ private $pages = array(1 => FALSE, 2 => FALSE, 3 => FALSE, 4 => FALSE, 5 => FALS
 /**
  *	Constructor class. No Params
  */
+	private $current_page = '';
+
 public function __construct() {
 	global $aidlink, $locale, $pages, $admin_pages, $settings;
 	@list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link='".FUSION_SELF."'"));
 	add_to_title($locale['global_200'].$locale['global_123'].($title ? $locale['global_201'].$title : ""));
 	$this->admin_pages = $admin_pages;
 	$this->pages = $pages;
+	$this->current_page = self::_currentPage();
 }
 
 /**
@@ -133,21 +136,8 @@ public function get_admin_page_icons($page_number) {
  * @return string
  */
 public function vertical_admin_nav() {
-	global $aidlink, $locale, $settings;
-
-	$inf_page_request = FUSION_REQUEST;
-	if (isset($_GET['section'])) {
-		$inf_page_request = str_replace("&amp;section=".$_GET['section']."", "", $inf_page_request);
-	}
-	if (stristr(FUSION_REQUEST, '/infusions/')) {
-		$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', $inf_page_request));
-	}
-
+	global $aidlink, $locale;
 	$html = "<ul id='adl' class='admin-vertical-link'>\n";
-	// TODO: Using 'for' is rather restrictive as we expect to be only 6 page groups at any given
-	// time, but why not allow more pages, one could add more groups to Admin Panel without having to
-	// alter this code. Solution: get all pages in one query(so we don't do a query for each group
-	// either from now on) then use 'foreach' to itereate through them and group them by 'admin_page'
 	for ($i = 0; $i < 6; $i++) {
 		$result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_link !='reserved' ORDER BY admin_title ASC");
 		$active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && $this->_isActive() == $i) ? 1 : 0;
@@ -160,7 +150,7 @@ public function vertical_admin_nav() {
 			if (dbrows($result) > 0) {
 				$html .= "<ul class='admin-submenu'>\n";
 				while ($data = dbarray($result)) {
-					$secondary_active = FUSION_SELF == $data['admin_link'] || $inf_page_request == $data['admin_link'] ? "class='active'" : '';
+					$secondary_active = $data['admin_link'] == $this->current_page ? "class='active'" : '';
 					$html .= checkrights($data['admin_rights']) ? "<li $secondary_active><a href='".ADMIN.$data['admin_link'].$aidlink."'> ".$this->get_admin_icons($data['admin_rights'])." ".($data['admin_page'] == 5 ? $data['admin_title'] : $locale[$data['admin_rights']])."</a></li>\n" : '';
 				}
 				$html .= "</ul>\n";
@@ -175,21 +165,27 @@ public function vertical_admin_nav() {
 }
 
 /**
+ * Build a return that always synchronize with the DB_ADMIN url.
+ * by Hien
+ */
+private function _currentPage() {
+	$path_info = pathinfo(START_PAGE);
+	if (stristr(FUSION_REQUEST, '/administration/')) {
+		$path_info = $path_info['filename'].'.php';
+	} else {
+		$path_info = '../'.$path_info['dirname'].'/'.$path_info['filename'].'.php';
+	}
+	return $path_info;
+}
+
+
+/**
  * @return int|string
  */
-// TODO: Rename the function and it also detect pagenum param
-// The final purpose is to detect the page group while in Admin Panel
 public function _isActive() {
-	global $admin_pages, $settings, $aidlink;
-	$inf_page_request = FUSION_REQUEST;
-	if (isset($_GET['section'])) {
-		$inf_page_request = str_replace("&amp;section=".$_GET['section']."", "", $inf_page_request);
-	}
-	if (stristr(FUSION_REQUEST, '/infusions/')) {
-		$inf_page_request = str_replace($settings['site_path'], '', "../".str_replace($aidlink, '', $inf_page_request));
-	}
 	foreach ($this->admin_pages as $key => $data) {
-		if (in_array(FUSION_SELF, $data) || in_array($inf_page_request, $data)) {
+		$data_link = array_flip($data);
+		if (isset($data_link[$this->current_page])) {
 			return $key;
 		}
 	}
