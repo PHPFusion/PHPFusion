@@ -157,7 +157,7 @@ if (!function_exists('render_news')) {
 	 
 	function render_news($info, $list_view = FALSE) {
 		global $locale, $settings, $news_settings, $aidlink;
-		$parameter = $settings['siteurl']."news.php?readmore=".$info['news_id'];
+		$parameter = $settings['siteurl']."infusions/news/news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
 		if ($list_view) {
 			echo "<article class='panel panel-default'>\n";
@@ -191,7 +191,7 @@ if (!function_exists('render_news')) {
 			if ($info['news_image']) {
 				echo "<div class='overflow-hide news-img-header'>\n";
 				echo $info['news_image'];
-				echo "<a class='opacity-none transition news-snippet' href='".($news_settings['news_image_link'] == 0 ? "news.php?cat_id=".$info['cat_id'] : FUSION_SELF."?readmore=".$info['news_id'])."'>".fusion_first_words($info['news_news'], 20)."</a>\n";
+				echo "<a class='opacity-none transition news-snippet' href='".($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$info['cat_id'] : INFUSIONS."news/news.php?readmore=".$info['news_id'])."'>".fusion_first_words($info['news_news'], 20)."</a>\n";
 				add_to_jquery("
 				$('.news-img-header').hover(
 					function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 1}); },
