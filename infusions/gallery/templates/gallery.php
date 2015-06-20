@@ -109,8 +109,7 @@ if (!function_exists('render_photo_item')) {
 		echo "<div class='panel panel-default'>\n";
 		echo "<a title='".$data['album_link']['name']."' href='".$data['album_link']['link']."'><div class='panel-image'>\n";
 		if ($data['image']) {
-			$offset = "style='width:100%;'";
-			echo "<img src='".$data['image']."' ".$offset." title='".$data['title']."'/>\n";
+			echo "<img src='".$data['image']."' style='width:100%;' alt='".$data['title']."'/>\n";
 		} else {
 			echo "<i title='".$data['title']."' class='display-block entypo picture icon-lg mid-opacity' style='margin-top:40px;'></i>\n";
 		}

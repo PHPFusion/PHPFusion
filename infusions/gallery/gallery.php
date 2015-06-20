@@ -208,7 +208,17 @@ else {
 		while ($data = dbarray($result)) {
 			$data['album_link'] = array('link'=>INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'], 'name'=>$data['album_title']);
 			$photo_directory = !SAFEMODE ? "album_".$data['album_id'] : '';
-			$data['image'] = ($data['album_thumb'] && file_exists(PHOTOS.$photo_directory."/thumbs/".$data['album_thumb'])) ? PHOTOS.$photo_directory."/thumbs/".$data['album_thumb'] : '';
+			$data['image'] = '';
+			if ($data['album_thumb']) {
+				// image
+				if (file_exists(PHOTOS.$photo_directory."/".$data['album_thumb']) && !is_dir(PHOTOS.$photo_directory."/".$data['album_thumb'])) {
+					$data['image'] =  PHOTOS.$photo_directory."/".$data['album_thumb'];
+				}
+				// thumbnail (override if exist)
+				if (file_exists(PHOTOS.$photo_directory."/thumbs/".$data['album_thumb']) && !is_dir(PHOTOS.$photo_directory."/thumbs/".$data['album_thumb'])) {
+					$data['image'] =  PHOTOS.$photo_directory."/thumbs/".$data['album_thumb'];
+				}
+			}
 			$data['title'] = $data['album_title'] ? $data['album_title'] : $locale['402'];
 			$data['description'] = $data['album_description'] ? $data['album_description'] : '';
 			$_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar

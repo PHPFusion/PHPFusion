@@ -47,11 +47,11 @@ if (isset($_POST['delete_watermarks'])) {
 }
 else if (isset($_POST['savesettings'])) {
 	$_POST['photo_watermark_save'] = isset($_POST['photo_watermark_save']) ? $_POST['photo_watermark_save'] : 0;
-	$_POST['photo_watermark_image'] = isset($_POST['photo_watermark_image']) ? $_POST['photo_watermark_image'] : $settings['photo_watermark_image'];
+	$_POST['photo_watermark_image'] = isset($_POST['photo_watermark_image']) ? $_POST['photo_watermark_image'] : $settings_inf['photo_watermark_image'];
 	$_POST['photo_watermark_text'] = isset($_POST['photo_watermark_text']) ? $_POST['photo_watermark_text'] : 0;
-	$_POST['photo_watermark_text_color1'] = isset($_POST['photo_watermark_text_color1']) ? $_POST['photo_watermark_text_color1'] : $settings['photo_watermark_text_color1'];
-	$_POST['photo_watermark_text_color2'] = isset($_POST['photo_watermark_text_color2']) ? $_POST['photo_watermark_text_color2'] : $settings['photo_watermark_text_color2'];
-	$_POST['photo_watermark_text_color3'] = isset($_POST['photo_watermark_text_color3']) ? $_POST['photo_watermark_text_color3'] : $settings['photo_watermark_text_color3'];
+	$_POST['photo_watermark_text_color1'] = isset($_POST['photo_watermark_text_color1']) ? $_POST['photo_watermark_text_color1'] : $settings_inf['photo_watermark_text_color1'];
+	$_POST['photo_watermark_text_color2'] = isset($_POST['photo_watermark_text_color2']) ? $_POST['photo_watermark_text_color2'] : $settings_inf['photo_watermark_text_color2'];
+	$_POST['photo_watermark_text_color3'] = isset($_POST['photo_watermark_text_color3']) ? $_POST['photo_watermark_text_color3'] : $settings_inf['photo_watermark_text_color3'];
 	$error = 0;
 	if (!defined('FUSION_NULL')) {
 		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['thumb_w']) ? $_POST['thumb_w'] : "100")."' WHERE settings_name='thumb_w'");
@@ -87,10 +87,15 @@ else if (isset($_POST['savesettings'])) {
 		if (!$result) {
 			$error = 1;
 		}
-		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['thumbs_per_page']) ? $_POST['thumbs_per_page'] : "12")."' WHERE settings_name='thumbs_per_page'");
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['thumbs_per_page']) ? $_POST['thumbs_per_page'] : "4")."' WHERE settings_name='thumbs_per_page'");
 		if (!$result) {
 			$error = 1;
 		}
+		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['admin_thumbs_per_row']) ? $_POST['admin_thumbs_per_row'] : "6")."' WHERE settings_name='admin_thumbs_per_row'");
+		if (!$result) {
+			$error = 1;
+		}
+
 		$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".(isnum($_POST['photo_watermark']) ? $_POST['photo_watermark'] : "0")."' WHERE settings_name='photo_watermark'");
 		if (!$result) {
 			$error = 1;
@@ -128,10 +133,9 @@ else if (isset($_POST['savesettings'])) {
 	}
 }
 
-$settings2 = array();
-$result = dbquery("SELECT * FROM ".DB_SETTINGS_INF." WHERE settings_inf='gallery'");
-while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
+// because this file is included as server side, can use global which was declared in gallery_admin.php
+foreach($settings_inf as $settings_name => $settings_value) {
+	$settings2[$settings_name] = $settings_value;
 }
 
 opentable($locale['photo_settings']);
@@ -189,12 +193,14 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '150px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
-	".form_select('calc_c', '', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	".form_select('calc_c', '', $calc_opts, $calc_c, array('class' => 'pull-left', 'width' => '180px'))."
 	</div>
 </div>
 ";
 closeside();
 openside('');
+// added to control back and front thumbs_per_row
+echo form_text('admin_thumbs_per_row', $locale['609b'], $settings2['admin_thumbs_per_row'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 echo form_text('thumbs_per_row', $locale['609'], $settings2['thumbs_per_row'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 echo form_text('thumbs_per_page', $locale['610'], $settings2['thumbs_per_page'], array('max_length' => 2, 'inline'=>1, 'width'=>'100px'));
 closeside();

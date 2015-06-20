@@ -119,6 +119,7 @@ $locale['606'] = "Thumb compression method";
 $locale['607'] = "GD1";
 $locale['608'] = "GD2";
 $locale['609'] = "Thumbs per row:";
+$locale['609b'] = "Thumbs per row (Admin):";
 $locale['610'] = "Thumbs per page:";
 $locale['611'] = "Enable photos watermark?";
 $locale['612'] = "Specify PNG watermark";

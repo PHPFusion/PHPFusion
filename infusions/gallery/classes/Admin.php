@@ -1068,7 +1068,7 @@ class Admin {
 	 * Include and run Gallery settings
 	 */
 	public function gallery_settings_admin() {
-	global $locale, $aidlink;
+	global $settings_inf, $aidlink;
 	include INFUSIONS."gallery/settings_gallery.php";
 	}
 
@@ -1172,7 +1172,7 @@ class Admin {
 				$i = 1;
 				while ($data = dbarray($result)) {
 					self::refresh_album_thumb($data['album_id'], $data['album_thumb']);
-					$span = floor(12/$settings_inf['thumbs_per_row']);
+					$span = floor(12/$settings_inf['admin_thumbs_per_row']);
 					if ($span == 1) {
 						$span = 12;
 					}
@@ -1211,7 +1211,6 @@ class Admin {
 			'ratings'), FALSE);
 		$order_btns = '';
 		// album
-
 
 		if ($type == 1) {
 			// move up and down
@@ -1262,7 +1261,7 @@ class Admin {
 						</a>";
 				}
 			}
-?>			
+			?>
 			</div>
 				<div class='gallery_writer pull-right'>
 					<a class='btn button btn-sm btn-default'

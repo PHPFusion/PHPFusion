@@ -79,30 +79,31 @@ $inf_insertdbrow[5] = DB_SETTINGS_INF." (settings_name, settings_value, settings
 $inf_insertdbrow[6] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_max_h', '1600', 'gallery')";
 $inf_insertdbrow[7] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_max_b', '15120000', 'gallery')";
 $inf_insertdbrow[9] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumbs_per_row', '4', 'gallery')";
-$inf_insertdbrow[10] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumbs_per_page', '12', 'gallery')";
-$inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark', '1', 'gallery')";
-$inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_image', 'infusions/gallery/albums/watermark.png', 'gallery')";
-$inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text', '0', 'gallery')";
-$inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color1', 'FF6600', 'gallery')";
-$inf_insertdbrow[15] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color2', 'FFFF00', 'gallery')";
-$inf_insertdbrow[16] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color3', 'FFFFFF', 'gallery')";
-$inf_insertdbrow[17] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_save', '0', 'gallery')";
+$inf_insertdbrow[10] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('admin_thumbs_per_row', '6', 'gallery')";
+$inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumbs_per_page', '12', 'gallery')";
+$inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark', '1', 'gallery')";
+$inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_image', 'infusions/gallery/albums/watermark.png', 'gallery')";
+$inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text', '0', 'gallery')";
+$inf_insertdbrow[15] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color1', 'FF6600', 'gallery')";
+$inf_insertdbrow[16] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color2', 'FFFF00', 'gallery')";
+$inf_insertdbrow[17] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color3', 'FFFFFF', 'gallery')";
+$inf_insertdbrow[18] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_save', '0', 'gallery')";
 
 // Position the link under Content Administration
-$inf_insertdbrow[18] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('PH', 'photoalbums.gif', '".$locale['photos']['title']."', '".INFUSIONS."gallery/gallery_admin.php', '1')";
+$inf_insertdbrow[19] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('PH', 'photoalbums.gif', '".$locale['photos']['title']."', '".INFUSIONS."gallery/gallery_admin.php', '1')";
 
 $enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
 		
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-$k = 19;
+$k = 20;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 		include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['photos']['title']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '".$enabled_languages[$i]."')";
 		$k++;
 	}
 } else {
-		$inf_insertdbrow[19] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['photos']['title']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '".LANGUAGE."')";
+		$inf_insertdbrow[20] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['photos']['title']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '".LANGUAGE."')";
 }
 
 // Defuse cleaning	
