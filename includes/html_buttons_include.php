@@ -48,7 +48,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 		$res .= "<button type='button' value='i' title='".$locale['html_001']."' class='btn btn-sm btn-default m-b-10 button' style='font-style:italic;' onclick=\"addText('".$textarea."', '&lt;i&gt;', '&lt;/i&gt;', '".$formname."');\">I</button>\n";
 		$res .= "<button type='button' value='u' title='".$locale['html_002']."' class='btn btn-sm btn-default m-b-10 button' style='text-decoration:underline;' onclick=\"addText('".$textarea."', '&lt;u&gt;', '&lt;/u&gt;', '".$formname."');\">U</button>\n";
 		$res .= "<button type='button' value='strike' title='".$locale['html_003']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;del&gt;', '&lt;/del&gt;', '".$formname."');\"><del>ABC</del></button>\n";
-		$res .= "<button type='button' value='blockquote' title='".$locale['html_004']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;blockquote&gt;', '&lt;/blockquote&gt;', '".$formname."');\"><i class='entypo iquote'></i></button>\n";
+		$res .= "<button type='button' value='blockquote' title='".$locale['html_004']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;blockquote&gt;', '&lt;/blockquote&gt;', '".$formname."');\"><i class='fa fa-quote-left'></i></button>\n";
 		$res .= "<button type='button' value='hr' title='".$locale['html_005']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;hr/&gt;', '', '".$formname."');\"><i class='glyphicon glyphicon-resize-horizontal'></i></button>\n";
 		$res .= "</div>\n";
 
@@ -67,7 +67,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 		$res .= "</div>\n";
 		$res .= "<div class='btn-group'>\n";
 		$res .= "<button type='button' value='link' title='".$locale['html_010']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;a href=\'', '\' target=\'_blank\'>Link&lt;/a&gt;', '".$formname."');\"><i class='glyphicon glyphicon-paperclip'></i></button>\n";
-		$res .= "<button type='button' value='img' title='".$locale['html_011']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."', '\' style=\'margin:5px\' alt=\'\' align=\'left\' /&gt;', '".$formname."');\"><i class='entypo picture'></i></button>\n";
+		$res .= "<button type='button' value='img' title='".$locale['html_011']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."', '\' style=\'margin:5px\' alt=\'\' align=\'left\' /&gt;', '".$formname."');\"><i class='fa fa-picture-o'></i></button>\n";
 		$res .= "<button type='button' value='center' title='".$locale['html_012']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;center&gt;', '&lt;/center&gt;', '".$formname."');\">center</button>\n";
 		$res .= "<button type='button' value='small' title='".$locale['html_013']."' class='btn btn-sm btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'small\'&gt;', '&lt;/span&gt;', '".$formname."');\">small</button>\n";
 		$res .= "<button type='button' value='small2' title='".$locale['html_014']."' class='btn btn-sm  btn-default m-b-10 button' onclick=\"addText('".$textarea."', '&lt;span class=\'small2\'&gt;', '&lt;/span&gt;', '".$formname."');\">small2</button>\n";
@@ -76,7 +76,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 
 		if ($colors) {
 			$res .= "<div class='btn-group'>\n";
-			$res .= "<button title='".$locale['html_017']."' class='dropdown-toggle btn btn-sm btn-default m-b-10 button strong text-bigger' style='padding:2px 10px 3px;' data-toggle='dropdown'><i style='text-decoration: underline !important; font-weight:bold;'>A</i><span class='caret'></span></button>\n";
+			$res .= "<button title='".$locale['html_017']."' class='dropdown-toggle btn btn-sm btn-default button' data-toggle='dropdown'><i class='fa fa-tint m-r-5'></i> <span class='caret'></span></button>\n";
 			$res .= "<ul class='dropdown-menu' role='text-color' style='width:190px;'>\n";
 			$res .= "<li>\n";
 			$res .= "<div class='display-block p-l-10 p-r-5 p-t-5 p-b-0' style='width:100%'>\n";
