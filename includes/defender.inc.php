@@ -921,8 +921,6 @@ class defender {
 
 function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang = FALSE) {
 	global $defender;
-
-	// DEV: To be reviewed
 	if ($input_name) {
 		$val = array();
 		if ($multilang) {
@@ -957,13 +955,13 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				return serialize($val);
 			}
 		} else {
-			// Make sure that the input was actually defined in code
-			if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
+			// Make sure that the input was actually defined in code..
+			// AND there must be a value to worth the processing power expense!
+			if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name]) && !empty($value)) {
 				$defender->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
 				$defender->field_name = $input_name;
 				$defender->field_value = $value;
 				$defender->field_default = $default; // to be removed
-
 				// These two checks won't be neccesary after we add the options in all inputs
 				// NOTE: Please don't pass 'stripinput' as callback, before we reach a callback
 				// everything is checked and sanitized already. The callback should only check
@@ -972,7 +970,6 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 				$callback = isset($defender->field_config['callback_check']) ? $defender->field_config['callback_check'] : FALSE;
 				$regex = isset($defender->field_config['regex']) ? $defender->field_config['regex'] : FALSE;
 				$finalval = $defender->validate();
-
 				// If truly FALSE the check failed
 				if (	$finalval === FALSE ||
 						($defender->field_config['required'] == 1 && ($finalval === FALSE || $finalval == '')) || // remove FALSE check?

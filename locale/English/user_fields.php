@@ -120,7 +120,8 @@ $locale['u161'] = "You can now log in.";
 $locale['u162'] = "An administrator will activate your account shortly.";
 $locale['u163'] = "Profile was successfully updated.";
 $locale['u164'] = "Update failed";
-$locale['u165'] = "Registration failed";
+
+//$locale['u165'] = "Registration failed";
 $locale['u167'] = "for the following reason(s):";
 $locale['u168'] = "Please Try Again.";
 $locale['u169'] = "Profile updated";

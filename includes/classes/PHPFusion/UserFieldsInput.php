@@ -601,7 +601,6 @@ class UserFieldsInput {
 			$this->_completeMessage = $locale['u150'];
 		} else {
 			$defender->stop();
-			$defender->setNoticeTitle($locale['u165']);
 			addNotice('warning', $locale['u153']."<br />".$locale['u154']);
 		}
 	}
