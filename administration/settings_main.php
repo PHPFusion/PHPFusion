@@ -65,9 +65,9 @@ if (isset($_POST['savesettings'])) {
 	foreach ($settings_main as $key => $value) {
 		if (isset($_POST[$key])) {
 			if ($key == 'siteintro') {
-				$settings_main['siteintro'] = addslashes(stripinput($_POST['siteintro']));
+				$settings_main['siteintro'] = descript(addslashes(addslashes($_POST['siteintro'])));
 			} elseif ($key == 'footer') {
-				$settings_main['footer'] = addslashes(stripinput($_POST['footer']));
+				$settings_main['footer'] =  descript(addslashes(addslashes($_POST['footer'])));
 			} elseif ($key == 'site_host') {
 				$settings_main['site_host'] = (empty($_POST['site_host']) ? $settings_main['site_host'] : stripinput($_POST['site_host']));
 				if (strpos($settings_main['site_host'], "/") !== FALSE) {
