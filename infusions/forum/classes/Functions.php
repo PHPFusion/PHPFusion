@@ -337,7 +337,8 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 		if ($row['forum_lastpostid']) {
 			$last_post = array(
 				'avatar' => '',
-				'message' => parseubb(parsesmileys($row['post_message'])),
+				'avatar_src' => $row['user_avatar'] && file_exists(IMAGES.'avatars/'.$row['user_avatar']) && !is_dir(IMAGES.'avatars/'.$row['user_avatar']) ? IMAGES.'avatars/'.$row['user_avatar'] : '',
+				'message' => fusion_first_words(parseubb(parsesmileys($row['post_message'])), 10),
 				'profile_link' => profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']),
 				'time' => timer($row['forum_lastpost']),
 				'date' => showdate("forumdate", $row['forum_lastpost']),

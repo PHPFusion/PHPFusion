@@ -6,7 +6,7 @@ $locale['forum_0002'] = "Threads";
 $locale['forum_0003'] = "Posts";
 $locale['forum_0004'] = "Last Post";
 $locale['forum_0005'] = "No Posts";
-$locale['forum_0006'] = "Started by ";
+$locale['forum_0006'] = "Started ";
 $locale['forum_0007'] = "Moderated by: ";
 $locale['forum_0008'] = "Directory";
 $locale['forum_0009'] = "Display posts from previous";
@@ -343,6 +343,36 @@ $locale['forum_2010'] = 'Cast Vote';
 $locale['forum_2011'] = 'Create Poll';
 $locale['forum_2012'] = 'Edit Poll';
 $locale['forum_2013'] = 'Update Poll';
+
+/* Filters in viewforum */
+$locale['forum_3000'] = 'All Topics';
+$locale['forum_3001'] = 'Discussions';
+$locale['forum_3002'] = 'Attachments';
+$locale['forum_3003'] = 'Polls';
+$locale['forum_3004'] = 'Solved';
+$locale['forum_3005'] = 'Unsolved';
+$locale['forum_3006'] = 'All Time';
+$locale['forum_3007'] = 'Today';
+$locale['forum_3008'] = 'Two Days';
+$locale['forum_3009'] = 'One Week ';
+$locale['forum_3010'] = 'Two Weeks';
+$locale['forum_3011'] = 'One Month';
+$locale['forum_3012'] = 'Two Months';
+$locale['forum_3013'] = 'Three Months';
+$locale['forum_3014'] = 'Six Months';
+$locale['forum_3015'] = '1 Year';
+
+$locale['forum_3016'] = 'Author';
+$locale['forum_3017'] = 'Post Time';
+$locale['forum_3018'] = 'Subject';
+$locale['forum_3019'] = 'Replies';
+$locale['forum_3020'] = 'Views';
+
+$locale['forum_3021'] = 'Descending';
+$locale['forum_3022'] = 'Ascending';
+
+
+
 
 // Period for search & filter
 $locale['forum_p000'] = 'Today';

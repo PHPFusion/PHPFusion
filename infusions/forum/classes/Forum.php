@@ -176,44 +176,44 @@ class Forum {
 			$timeLink = $baseLink.$typeExt.$sortExt.$orderExt;
 
 			$this->forum_info['filter']['time'] = array(
-				'All Time' => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : ''),
-				'Today' => $timeLink.'&amp;time=today', // must be static.
-				'2 Days' => $timeLink.'&amp;time=2days',
-				'1 Week'=> $timeLink.'&amp;time=1week',
-				'2 Weeks' => $timeLink.'&amp;time=2week',
-				'1 Month' => $timeLink.'&amp;time=1month',
-				'2 Months' => $timeLink.'&amp;time=2month',
-				'3 Months' => $timeLink.'&amp;time=3month',
-				'6 Months' => $timeLink.'&amp;time=6month',
-				'1 Year' => $timeLink.'&amp;time=1year'
+				$locale['forum_3006'] => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$_GET['forum_id'].''.(isset($_GET['parent_id']) ? '&amp;parent_id='.$_GET['parent_id'].'' : ''),
+				$locale['forum_3007'] => $timeLink.'&amp;time=today', // must be static.
+				$locale['forum_3008'] => $timeLink.'&amp;time=2days',
+				$locale['forum_3009'] => $timeLink.'&amp;time=1week',
+				$locale['forum_3010'] => $timeLink.'&amp;time=2week',
+				$locale['forum_3011'] => $timeLink.'&amp;time=1month',
+				$locale['forum_3012'] => $timeLink.'&amp;time=2month',
+				$locale['forum_3013'] => $timeLink.'&amp;time=3month',
+				$locale['forum_3014'] => $timeLink.'&amp;time=6month',
+				$locale['forum_3015'] => $timeLink.'&amp;time=1year'
 			);
 
 			$typeLink = $baseLink.$timeExt.$sortExt.$orderExt;
 
 			$this->forum_info['filter']['type'] = array(
-				'All Topics' => $typeLink.'&amp;type=all',
-				'Discussions' => $typeLink.'&amp;type=discussions',
-				'Attachments' => $typeLink.'&amp;type=attachments',
-				'Polls' => $typeLink.'&amp;type=poll',
-				'Solved' => $typeLink.'&amp;type=solved',
-				'Unsolved' => $typeLink.'&amp;type=unsolved',
+				$locale['forum_3000'] => $typeLink.'&amp;type=all',
+				$locale['forum_3001'] => $typeLink.'&amp;type=discussions',
+				$locale['forum_3002'] => $typeLink.'&amp;type=attachments',
+				$locale['forum_3003'] => $typeLink.'&amp;type=poll',
+				$locale['forum_3004'] => $typeLink.'&amp;type=solved',
+				$locale['forum_3005'] => $typeLink.'&amp;type=unsolved',
 			);
 
 			$sortLink = $baseLink.$timeExt.$typeExt.$orderExt;
 
 			$this->forum_info['filter']['sort'] = array(
-				'Author' => $sortLink.'&amp;sort=author',
-				'Post time' => $sortLink.'&amp;sort=time',
-				'Subject' => $sortLink.'&amp;sort=subject',
-				'Replies' => $sortLink.'&amp;sort=reply',
-				'Views' => $sortLink.'&amp;sort=view',
+				$locale['forum_3016'] => $sortLink.'&amp;sort=author',
+				$locale['forum_3017'] => $sortLink.'&amp;sort=time',
+				$locale['forum_3018'] => $sortLink.'&amp;sort=subject',
+				$locale['forum_3019'] => $sortLink.'&amp;sort=reply',
+				$locale['forum_3020'] => $sortLink.'&amp;sort=view',
 			);
 
 			$orderLink = $baseLink.$timeExt.$typeExt.$sortExt;
 
 			$this->forum_info['filter']['order'] = array(
-				'Descending' => $orderLink.'&amp;order=descending',
-				'Ascending' => $orderLink.'&amp;order=ascending'
+				$locale['forum_3021'] => $orderLink.'&amp;order=descending',
+				$locale['forum_3022'] => $orderLink.'&amp;order=ascending'
 			);
 
 			// Load forum
@@ -255,6 +255,7 @@ class Forum {
 					if ($row['forum_lastpostid']) {
 						$last_post = array(
 							'avatar' => '',
+							'avatar_src' => $row['user_avatar'] && file_exists(IMAGES.'avatars/'.$row['user_avatar']) && !is_dir(IMAGES.'avatars/'.$row['user_avatar']) ? IMAGES.'avatars/'.$row['user_avatar'] : '',
 							'message' => fusion_first_words(parseubb(parsesmileys($row['post_message'])), 10),
 							'profile_link' => profile_link($row['forum_lastuser'], $row['user_name'], $row['user_status']),
 							'time' => timer($row['forum_lastpost']),
@@ -262,6 +263,7 @@ class Forum {
 							'thread_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'],
 							'post_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
 						);
+
 						if ($inf_settings['forum_last_post_avatar']) {
 							$last_post['avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
 						}
@@ -305,35 +307,41 @@ class Forum {
 							$this->forum_info['new_thread_link'] = INFUSIONS."forum/newthread.php?forum_id=".$row['forum_id'];
 						}
 						// Second query to get all threads of this forum. SQL filter conditions override applicable.
-						$count = dbarray(dbquery("SELECT count('t.thread_id') as thread_max_rows FROM
-							".DB_FORUM_THREADS." t
-							LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
-							LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
-							LEFT JOIN ".DB_FORUM_ATTACHMENTS." a ON a.thread_id = t.thread_id
-							LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
-							WHERE t.forum_id='".$this->forum_info['forum_id']."' AND thread_hidden='0' $sql_condition
-							GROUP BY t.thread_id
+						// @todo: Purpose is to check whether filter has results
+						$count = dbarray(dbquery("SELECT count('t.thread_id') as thread_max_rows
+								FROM ".DB_FORUM_THREADS." t
+								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
+								LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
+								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
+								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
+								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
+								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
+								LEFT JOIN ".DB_FORUM_ATTACHMENTS." aa on aa.thread_id = t.thread_id
+								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
+								GROUP BY t.thread_id
 						"));
-						$this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
 
+						$this->forum_info['thread_max_rows'] = $count['thread_max_rows'];
 						if ($this->forum_info['thread_max_rows'] > 0) {
 							// anti-XSS filtered rowstart
 							$_GET['rowstart_thread'] = isset($_GET['rowstart_thread']) && isnum($_GET['rowstart_thread']) && $_GET['rowstart_thread'] <= $this->forum_info['thread_item_rows'] ? $_GET['rowstart_thread'] : 0;
 
+							// Filtration Start - Run filter results!
 							$t_result = dbquery("SELECT t.*, tu1.user_name AS author_name, tu1.user_status AS author_status, tu1.user_avatar as author_avatar,
 								tu2.user_name AS last_user_name, tu2.user_status AS last_user_status, tu2.user_avatar AS last_user_avatar,
-								p1.post_datestamp, p1.post_message,
+								p1.post_datestamp, p1.post_message, aa.attach_name, aa.attach_id,
 								p.forum_poll_title,
 								count(v.post_id) AS vote_count
 								FROM ".DB_FORUM_THREADS." t
 								LEFT JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
 								LEFT JOIN ".DB_USERS." tu1 ON t.thread_author = tu1.user_id
 								LEFT JOIN ".DB_USERS." tu2 ON t.thread_lastuser = tu2.user_id
-								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id
+								LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
 								LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
 								LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
+								LEFT JOIN ".DB_FORUM_ATTACHMENTS." aa on aa.thread_id = t.thread_id
 								WHERE t.forum_id='".$this->forum_info['forum_id']."' AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." $sql_condition
-								GROUP BY t.thread_id $sql_order LIMIT ".$_GET['rowstart'].", ".$this->forum_info['threads_per_page']."");
+								GROUP BY t.thread_id $sql_order LIMIT ".intval($_GET['rowstart']).", ".$this->forum_info['threads_per_page']."");
 
 							if (dbrows($t_result)>0) {
 								while ($threads = dbarray($t_result)) {
@@ -386,6 +394,7 @@ class Forum {
 										'user_status'=> $threads['author_status'],
 										'user_avatar' => $threads['author_avatar']
 									);
+
 									$threads['thread_starter'] = $locale['forum_0006'].timer($threads['post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>";
 
 									$lastuser = array(
