@@ -17,52 +17,6 @@
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
 
-if (!function_exists('render_forum2')) {
-	function render_forum2($info) {
-		global $locale;
-		echo render_breadcrumbs();
-		$tab_title['title'][] = $locale['forum_0001'];
-		$tab_title['id'][] = "thread";
-		$tab_title['icon'][] = "fa fa-folder fa-fw";
-
-		$tab_title['title'][] = $locale['forum_0012'];
-		$tab_title['id'][] = "latest";
-		$tab_title['icon'][] = "fa fa-list-alt fa-fw";
-
-		$tab_title['title'][] = $locale['forum_0011'];
-		$tab_title['id'][] = "mypost";
-		$tab_title['icon'][] = "fa fa-user";
-
-		$tab_title['title'][] = $locale['global_056'];
-		$tab_title['id'][] = "tracked";
-		$tab_title['icon'][] = "fa fa-inbox fa-fw";
-
-		$tab_active = isset($_GET['section']) ? $_GET['section'] : 'thread';
-		echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM);
-		echo opentabbody($tab_title['title'], $tab_active, $tab_active, 'viewforum');
-		echo "<div class='m-t-20'>\n";
-		if (isset($_GET['viewforum'])) {
-			forum_viewforum($info);
-		} else {
-			if (isset($_GET['section']) && $_GET['section'] == 'mypost') {
-					render_mypost($info);
-			}
-			elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
-					render_laft($info);
-			}
-			elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
-					render_tracked($info);
-			}
-			elseif (!isset($_GET['section']) || isset($_GET['section']) && $_GET['section'] == 'thread') {
-					render_forum_main($info);
-			}
-		}
-		echo "</div>\n";
-		echo closetabbody();
-		echo closetab();
-	}
-}
-
 if (!function_exists('render_forum')) {
 	function render_forum($info) {
 		echo render_breadcrumbs();
@@ -94,10 +48,10 @@ if (!function_exists('render_forum_main')) {
 					echo "<a class='forum-subject' href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch']."'>".$data['forum_name']."</a><br/>";
 					echo $data['forum_description'] ? "<span class='text-smaller'>".$data['forum_description']."</span>\n<br/>" : '';
 					echo "</div>\n";
-					if (isset($info['forums'][$forum_id])) {
+					if (isset($info['forums'][0][$forum_id]['child'])) {
 						echo "<div class='m-10'>\n";
 						$i = 1;
-						$sub_forums = $info['forums'][$forum_id];
+						$sub_forums = $info['forums'][0][$forum_id]['child'];
 						foreach($sub_forums as $sub_forum_id => $cdata) {
 							render_forum_item_type($cdata, $i);
 							$i++;
@@ -525,5 +479,52 @@ if (!function_exists('forum_newtopic')) {
 			echo "</div>\n";
 		}
 		echo closemodal();
+	}
+}
+
+/** Deprecated but has more advanced features . Keep for reference */
+if (!function_exists('render_forum2')) {
+	function render_forum2($info) {
+		global $locale;
+		echo render_breadcrumbs();
+		$tab_title['title'][] = $locale['forum_0001'];
+		$tab_title['id'][] = "thread";
+		$tab_title['icon'][] = "fa fa-folder fa-fw";
+
+		$tab_title['title'][] = $locale['forum_0012'];
+		$tab_title['id'][] = "latest";
+		$tab_title['icon'][] = "fa fa-list-alt fa-fw";
+
+		$tab_title['title'][] = $locale['forum_0011'];
+		$tab_title['id'][] = "mypost";
+		$tab_title['icon'][] = "fa fa-user";
+
+		$tab_title['title'][] = $locale['global_056'];
+		$tab_title['id'][] = "tracked";
+		$tab_title['icon'][] = "fa fa-inbox fa-fw";
+
+		$tab_active = isset($_GET['section']) ? $_GET['section'] : 'thread';
+		echo opentab($tab_title, $tab_active, 'forum_tabs', FORUM);
+		echo opentabbody($tab_title['title'], $tab_active, $tab_active, 'viewforum');
+		echo "<div class='m-t-20'>\n";
+		if (isset($_GET['viewforum'])) {
+			forum_viewforum($info);
+		} else {
+			if (isset($_GET['section']) && $_GET['section'] == 'mypost') {
+				render_mypost($info);
+			}
+			elseif (isset($_GET['section']) && $_GET['section'] == 'latest') {
+				render_laft($info);
+			}
+			elseif (isset($_GET['section']) && $_GET['section'] == 'tracked') {
+				render_tracked($info);
+			}
+			elseif (!isset($_GET['section']) || isset($_GET['section']) && $_GET['section'] == 'thread') {
+				render_forum_main($info);
+			}
+		}
+		echo "</div>\n";
+		echo closetabbody();
+		echo closetab();
 	}
 }
