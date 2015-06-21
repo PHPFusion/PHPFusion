@@ -19,28 +19,30 @@ require_once "../maincore.php";
 if (!iADMIN || $userdata['user_rights'] == "" || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
 	redirect("../index.php");
 }
+
 require_once THEMES."templates/admin_header.php";
-$settings = fusion_get_settings();
 if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) $_GET['pagenum'] = 1;
 $admin_images = TRUE;
-// Work out which tab is the active default (redirect if no tab available)
-// These come from Panels.
+
+// Work out which tab is the active default (terminate if no tab available)
 $default = FALSE;
 for ($i = 5; $i > 0; $i--) {
 	if ($pages[$i]) {
 		$default = $i;
 	}
 }
+
 if (!$default) {
-	//redirect("../index.php");
+	die("Denied"); exit;
 }
+
 // Dashboard vars
-// Ensure the admin is allowed to access the selected page
 $pages['0'] = 'AcpHome';
 if (!$pages[$_GET['pagenum']]) {
-	//redirect("index.php".$aidlink."&pagenum=$default");
+	die("Denied"); exit;
 }
-// members stats
+
+// Members stats
 $members_registered = dbcount("(user_id)", DB_USERS, "user_status<='1' OR user_status='3' OR user_status='5'");
 $members_unactivated = dbcount("(user_id)", DB_USERS, "user_status='2'");
 $members_security_ban = dbcount("(user_id)", DB_USERS, "user_status='4'");
@@ -53,45 +55,46 @@ if ($settings['enable_deactivation'] == "1") {
 	$time_overdue = time()-(86400*$settings['deactivation_period']);
 	$members['inactive'] = dbcount("(user_id)", DB_USERS, "user_lastvisit<'$time_overdue' AND user_actiontime='0' AND user_joined<'$time_overdue' AND user_status='0'");
 }
+
+// Get Core Infusion´s stats
 if (db_exists(DB_FORUMS)) {
-	// forums stats
 	$forum['count'] = dbcount("('forum_id')", DB_FORUMS);
 	$forum['thread'] = dbcount("('post_id')", DB_FORUM_THREADS);
 	$forum['post'] = dbcount("('post_id')", DB_FORUM_POSTS);
 	$forum['users'] = dbcount("('user_id')", DB_USERS, "user_posts > '0'");
 }
+
 if (db_exists(DB_DOWNLOADS)) {
-	// downloads stats
 	$download['download'] = dbcount("('download_id')", DB_DOWNLOADS);
 	$download['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='d'");
 	$download['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='d'");
 }
+
 if (db_exists(DB_ARTICLES)) {
-	// articles stats
 	$articles['article'] = dbcount("('article_id')", DB_ARTICLES);
 	$articles['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='A'");
 	$articles['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='a'");
 }
+
 if (db_exists(DB_WEBLINKS)) {
-	// weblink stats
 	$weblinks['weblink'] = dbcount("('weblink_id')", DB_WEBLINKS);
 	$weblinks['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='L'");
 	$weblinks['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='l'");
 }
+
 if (db_exists(DB_NEWS)) {
-	// news stats
 	$news['news'] = dbcount("('news_id')", DB_NEWS);
 	$news['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='n'");
 	$news['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'");
 }
+
 if (db_exists(DB_BLOG)) {
-	// blog stats
 	$blog['blog'] = dbcount("('blog_id')", DB_BLOG);
 	$blog['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='b'");
 	$blog['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='b'");
 }
+
 if (db_exists(DB_PHOTOS)) {
-	// photo gallery stats
 	$photos['photo'] = dbcount("('photo_id')", DB_PHOTOS);
 	$photos['comment'] = dbcount("('comment_id')", DB_COMMENTS, "comment_type='P'");
 	$photos['submit'] = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='p'");
@@ -106,22 +109,24 @@ $comments_type = array(
 	'C' => $locale['272a'],
 	'PH' => $locale['261'],
 );
+
 $submit_type = array(
 	'n' => $locale['269'],
 	'd' => $locale['268'],
 	'p' => $locale['272'],
 	'a' => $locale['270'],
 	'l' => $locale['271'],
-	'b' => $locale['269b']
+	'b' => $locale['269b'],
 );
+
 $link_type = array(
-	'N' => $settings['siteurl']."news.php?readmore=%s",
-	'D' => $settings['siteurl']."downloads.php?download_id=%s",
-	'P' => $settings['siteurl']."photogallery.php?photo_id=%s",
-	'A' => $settings['siteurl']."articles.php?article_id=%s",
-	'B' => $settings['siteurl']."blog.php?readmore=%s",
+	'N' => $settings['siteurl']."infusions/news/news.php?readmore=%s",
+	'D' => $settings['siteurl']."infusions/downloads/downloads.php?download_id=%s",
+	'P' => $settings['siteurl']."infusions/gallery/gallery.php?photo_id=%s",
+	'A' => $settings['siteurl']."infusions/articles/articles.php?article_id=%s",
+	'B' => $settings['siteurl']."infusions/blog/blog.php?readmore=%s",
 	'C' => $settings['siteurl']."viewpage.php?page_id=%s",
-	'PH' => $settings['siteurl']."photogallery.php?photo_id=%s",
+	'PH' => $settings['siteurl']."infusions/gallery/gallery.php?photo_id=%s",
 );
 
 // Infusions count
@@ -137,6 +142,7 @@ $comments_result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status, u
 if ($global_comments['rows'] > $settings['comments_per_page']) {
 	$global_comments['nav'] = makepagenav($_GET['c_rowstart'], $settings['comments_per_page'], $global_comments['rows'], 2);
 }
+
 $global_comments['data'] = array();
 if (dbrows($comments_result)) {
 	while ($_comdata = dbarray($comments_result)) {
@@ -184,7 +190,7 @@ if ($global_submissions['rows'] > $settings['comments_per_page']) {
 	$global_submissions['submissions_nav'] = "<span class='pull-right text-smaller'>".makepagenav($_GET['s_rowstart'], $settings['comments_per_page'], $global_submissions['rows'], 2)."</span>\n";
 }
 
-/* Icon Grid */
+// Icon Grid
 if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
 	$result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$_GET['pagenum']."' ORDER BY admin_title");
 	$admin_icons['rows'] = dbrows($result);
