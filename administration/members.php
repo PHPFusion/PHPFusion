@@ -16,9 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-$settings = fusion_get_settings();
-require_once THEMES."templates/admin_header.php";
 pageAccess('M');
+
+require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."suspend_include.php";
 include LOCALE.LOCALESET."admin/members.php";
 include LOCALE.LOCALESET."user_fields.php";
@@ -106,13 +106,13 @@ if (isset($_POST['add_user'])) {
 	$userInput->skipCurrentPass = TRUE;
 	$userInput->saveInsert();
 	unset($userInput);
+	redirect(FUSION_SELF.$aidlink);
 }
 
 if (!isset($_POST['add_user']) || (isset($_POST['add_user']) && defined('FUSION_NULL'))) {
 
 opentable($locale['480']);
 	add_breadcrumb(array('link'=>'', 'title'=>$locale['480']));
-	//member_nav(member_url("add", "")."| ".$locale['480']);
 	$userFields = new \PHPFusion\UserFields();
 	$userFields->postName = "add_user";
 	$userFields->postValue = $locale['480'];
@@ -184,7 +184,6 @@ opentable($locale['430']);
 	$userFields = new UserFields();
 	$userFields->postName = "savechanges";
 	$userFields->postValue = $locale['430'];
-	//$userFields->formaction = FUSION_SELF.$aidlink."&amp;step=edit&amp;user_id=".$user_id;
 	$userFields->displayValidation = 0;
 	$userFields->displayTerms = false;
 	$userFields->plugin_folder = INCLUDES."user_fields/";
@@ -617,7 +616,6 @@ if ($rows) {
 		}
 		echo "</div>\n";
 		echo "</div>\n";
-
 		echo "<div class='overflow-hide'>\n";
 		echo "<a class='strong display-inline-block' href='".FUSION_SELF.$aidlink."&amp;step=view&amp;user_id=".$data['user_id']."'>".$data['user_name']."</a>\n";
 		echo "<br/><span class='text-smaller'>".getuserlevel($data['user_level'])."</span>\n";
@@ -643,6 +641,7 @@ echo "<td rowspan='2' class='tbl2'><a class='strong' href='".FUSION_SELF.$aidlin
 		echo($i == 17 ? "<td rowspan='2' class='tbl2'><a href='".FUSION_SELF.$aidlink."&amp;status=".$status."'>".$locale['414']."</a></td>\n</tr>\n<tr>\n" : "\n");
 	}
 echo "</tr>\n</table>\n";
+
 echo "<hr />\n";
 echo openform('searchform', 'get', FUSION_SELF.$aidlink, array('max_tokens' => 1, 'notice' => 0));
 echo form_hidden('', 'aid', 'aid', iAUTH);
