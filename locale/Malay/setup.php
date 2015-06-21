@@ -83,8 +83,8 @@ $locale['setup_1308'] = "Tidak dapat menjana tables di database.";
 $locale['setup_1309'] = "Silah isikan nama database anda.";
 $locale['setup_1310'] = "Tidak dapat berhubung dengan MySQL database.";
 $locale['setup_1311'] = "MySQL database tidak dijumpai atau langsung tidak wujud.";
-$locale['setup_1312'] = "Kesilapan terdapat di prefix Table.";
-$locale['setup_1313'] = "Prefix Table yang di-isikan sedang digunakan.";
+$locale['setup_1312'] = "Jadual prefix sedang digunakan.";
+$locale['setup_1313'] = "Prefix Table yang di-isikan telah digunakan. Sila membuat pemantauan di langkah 1 atau teruskan ke langkah seterusnya.";
 $locale['setup_1314'] = "Tidak dapat manjana atau memadam MySQL.";
 $locale['setup_1315'] = "Silah tetapkan bahawa penguna MySQL user telah dibagi kebenaran untuk membaca, menulis dan memadam  MySQL untuk database yang di-isikan.";
 $locale['setup_1316'] = "Medan kosong.";
@@ -181,7 +181,10 @@ $locale['setup_3052'] = "Permalinks";
 $locale['setup_3053'] = "eShop";
 $locale['setup_3054'] = "Kategori Blog";
 $locale['setup_3055'] = "Blog";
-$locale['setup_3056'] = "Pengurusan Tema";
+$locale['setup_3056'] = "Tema Kustom";
+$locale['setup_3057'] = "Imigrasi";
+$locale['setup_3058'] = "Pengurusan Tema";
+
 //Multilanguage table rights
 $locale['setup_3200'] = "Artikel";
 $locale['setup_3201'] = "Halaman Kustom";

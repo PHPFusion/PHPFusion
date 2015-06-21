@@ -20,9 +20,9 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 include INFUSIONS."shoutbox_panel/infusion_db.php";
 
 // Check if locale file is available matching the current site locale setting.
-if (file_exists(INFUSIONS."shoutbox_panel/locale/".$settings['locale'].".php")) {
+if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
 	// Load the locale file matching the current site locale setting.
-	include INFUSIONS."shoutbox_panel/locale/".$settings['locale'].".php";
+	include INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php";
 } else {
 	// Load the infusion's default locale file.
 	include INFUSIONS."shoutbox_panel/locale/English.php";
