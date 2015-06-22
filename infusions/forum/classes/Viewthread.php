@@ -354,13 +354,14 @@ class Viewthread {
 					t.thread_id,
 					u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups, u.user_joined, u.user_lastvisit, u.user_ip,
 					".($user_sig_module ? " u.user_sig," : "").($user_web_module ? " u.user_web," : "")."
-					u2.user_name AS edit_name, u2.user_status AS edit_status,
+					u2.user_name AS edit_name, u2.user_status AS edit_status, a.attach_mime,
 					SUM(v.vote_points) as vote_points
 					FROM ".DB_FORUM_POSTS." p
 					INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
 					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id = p.post_id
 					LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 					LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
+					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.post_id = p.post_id
 					WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0' ".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".$this->thread_info['first_post_id']."'" : '')."
 					GROUP by p.post_id ORDER BY $sortCol LIMIT ".intval($_GET['rowstart']).", ".intval($inf_settings['posts_per_page']));
 		$this->thread_info['post_rows'] = dbrows($result);
@@ -537,6 +538,11 @@ class Viewthread {
 						}
 					}
 				}
+				/* Indicator of current post has attachment */
+				if (empty($pdata['post_attachment']) && !empty($pdata['attach_mime'])) {
+					$pdata['post_attachments'] = "<small><i class='fa fa-clipboard'></i> ".$locale['forum_0184']."</small>\n";
+				}
+
 				// Custom Post Message Link/Buttons
 				$pdata['post_links'] = '';
 				$pdata['post_links'] .= !empty($pdata['post_quote']) ? "<a class='btn btn-xs btn-default' title='".$pdata['post_quote']['name']."' href='".$pdata['post_quote']['link']."'>".$pdata['post_quote']['name']."</a>\n" : '';
