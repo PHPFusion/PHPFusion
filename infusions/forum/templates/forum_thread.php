@@ -59,7 +59,7 @@ if (!function_exists('render_thread')) {
 		}
 		echo "</ul>\n";
 		echo !empty($buttons['notify']) ? "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['notify']['link']."'>".$buttons['notify']['name']." <i class='fa fa-eye'></i></a>\n" : '';
-		echo "<a class='btn btn-default btn-sm' title='".$buttons['notify']['name']."' href='".$buttons['print']['link']."'>".$buttons['print']['name']." <i class='fa fa-print'></i> </a>\n";
+		echo "<a class='btn btn-default btn-sm' title='".$buttons['print']['name']."' href='".$buttons['print']['link']."'>".$buttons['print']['name']." <i class='fa fa-print'></i> </a>\n";
 		echo "</span>\n";
 		echo "</div>\n";
 
@@ -88,8 +88,6 @@ if (!function_exists('render_thread')) {
 		}
 		echo $info['close_post_form'];
 		echo $info['quick_reply_form'];
-		//echo "</div>\n</div>\n</div>\n";
-		//echo "</div>\n</div>\n</div>\n";
 	}
 }
 
@@ -114,8 +112,8 @@ if (!function_exists('render_post_item')) {
 		".($data['user_web']['link'] !=="" ? "<li><a href='".$data['user_web']['link']."' title='".$data['user_web']['name']."'>".$data['user_web']['name']."</a></li>\n" : "")."
 		<li><a href='".$data['print']['link']."' title='".$data['print']['name']."'>".$data['print']['name']."</a></li>\n
 		<li class='divider'></li>\n
-		<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a></li>\n
-		<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a></li>\n
+		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "<li><a href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a></li>\n" : '')."
+		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "<li><a href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a></li>\n" : '')."
 		</ul>\n
 		</div>\n
 		<div class='overflow-hide'>\n
@@ -124,9 +122,9 @@ if (!function_exists('render_post_item')) {
 		<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='fa ".($data['user_online'] ? "fa-circle" : "fa-circle-thin")."'></i></span>\n
 		<span class='text-smaller'><span class='forum_poster'>".$data['user_profile_link']."</span><span class='forum_rank'>\n".$data['user_rank']."</span>\n ".$data['post_shortdate']." </span>\n
 		<span class='text-smaller'>\n
-		&middot; <a class='quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a>\n
-		&middot; <a class='reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['name']."'>".$data['post_reply']['name']."</a>\n
-		&middot; <a class='edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a>\n
+		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "&middot; <a class='quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a>\n" : '')."
+		".(isset($data['post_reply']) && !empty($data['post_reply']) ? "&middot; <a class='reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['name']."'>".$data['post_reply']['name']."</a>\n" : '')."
+		".(isset($data['post_edit']) && !empty($data['post_edit']) ? "&middot; <a class='edit-link' href='".$data['post_edit']['link']."' title='".$data['post_edit']['name']."'>".$data['post_edit']['name']."</a>\n" : "")."
 		</span>\n
 		</div>\n
 		<!--forum_thread_prepost_".$data['post_id']."-->\n
