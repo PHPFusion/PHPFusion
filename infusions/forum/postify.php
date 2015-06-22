@@ -105,6 +105,7 @@ if ($_GET['post'] == "new") {
 		echo "<a href='".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."'>".$locale['forum_0548']."</a> ::\n";
 		add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?thread_id=".$_GET['thread_id']."' />\n");
 	}
+
 	echo "<a href='".INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$_GET['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$locale['forum_0549']."</a> ::\n";
 	echo "<a href='index.php'>".$locale['forum_0550']."</a><br /><br /></div>\n";
 	closetable();

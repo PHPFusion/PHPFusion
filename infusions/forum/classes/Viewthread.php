@@ -864,7 +864,7 @@ class Viewthread {
 
 					if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
 						// save all file attachments and get error
-						if (is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
+						if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
 							$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
 							if ($upload['error'] == 0) {
 								foreach($upload['target_file'] as $arr => $file_name) {
