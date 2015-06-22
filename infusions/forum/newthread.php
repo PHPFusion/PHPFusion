@@ -146,7 +146,6 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 					}
 				}
 				$error = defined("FUSION_NULL") ? '1' : '0';
-
 				redirect("postify.php?post=new&error=$error&amp;forum_id=".intval($post_data['forum_id'])."&amp;parent_id=".intval($post_data['forum_cat'])."&amp;thread_id=".intval($post_data['thread_id'].""));
 			}
 		}

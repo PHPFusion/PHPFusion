@@ -1284,7 +1284,7 @@ class Viewthread {
 					$poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
 					$poll_field['poll_field'] .= form_button('add_poll_option', $locale['forum_0608'], $locale['forum_0608'], array('class' => 'btn-primary btn-sm'));
 					$poll_field['poll_field'] .= "</div>\n";
-					$poll_field['poll_button'] .= form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-warning btn-md'));
+					$poll_field['poll_button'] = form_button('update_poll', $locale['forum_2013'], $locale['forum_2013'], array('class' => 'btn-warning btn-md'));
 					$poll_field['closeform'] = closeform();
 				} else {
 					redirect(INFUSIONS.'forum/index.php'); // redirect because the poll id is not available.
