@@ -22,15 +22,11 @@ if (!db_exists(DB_FORUMS)) {
 	require_once BASEDIR.'error.php';
 	exit;
 }
-
 pageAccess('F');
-
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum_admin.php";
 require_once INFUSIONS."forum/classes/Admin.php";
 require_once INFUSIONS."forum/classes/Functions.php";
-
 $forum_admin = new PHPFusion\Forums\Admin;
 $forum_admin->display_forum_admin();
-
 require_once THEMES."templates/footer.php";

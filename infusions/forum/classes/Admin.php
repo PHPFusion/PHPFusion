@@ -641,6 +641,8 @@ public function display_forum_form() {
 	echo form_checkbox('forum_users', $locale['forum_024'], $this->data['forum_users']);
 	echo form_checkbox('forum_quick_edit', $locale['forum_021'], $this->data['forum_quick_edit']);
 	echo form_checkbox('forum_merge', $locale['forum_019'], $this->data['forum_merge']);
+	echo form_checkbox('forum_allow_attach', $locale['forum_020'], $this->data['forum_allow_attach']);
+	echo form_checkbox('forum_allow_poll', $locale['forum_022'], $this->data['forum_allow_poll']);
 	echo form_checkbox('forum_allow_post_ratings', $locale['forum_023'], $this->data['forum_allow_post_ratings']);
 	echo form_hidden('', 'forum_id', 'forum_id', $this->data['forum_id']);
 	echo form_hidden('', 'forum_branch', 'forum_branch', $this->data['forum_branch']);
