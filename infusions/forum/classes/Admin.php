@@ -350,7 +350,7 @@ function set_forumPermissionsDB() {
 			$this->data['forum_vote'] = form_sanitizer($_POST['forum_vote'], USER_LEVEL_MEMBER, 'forum_vote');
 			$this->data['forum_answer_threshold'] = form_sanitizer($_POST['forum_answer_threshold'], 0, 'forum_answer_threshold');
 			$this->data['forum_attach'] = form_sanitizer($_POST['forum_attach'], USER_LEVEL_MEMBER, 'forum_attach');
-			$this->data['forum_attach_download'] = form_sanitizer($_POST['forum_attach_download'], USER_LEVEL_MEMBER, 'forum_attach_download');
+			$this->data['forum_attach_download'] = form_sanitizer($_POST['forum_attach_download'], USER_LEVEL_PUBLIC, 'forum_attach_download');
 			$this->data['forum_mods'] = form_sanitizer($_POST['forum_mods'], '', 'forum_mods');
 			dbquery_insert(DB_FORUMS, $this->data, 'update');
 			addnotice('success', $locale['forum_notice_10']);
