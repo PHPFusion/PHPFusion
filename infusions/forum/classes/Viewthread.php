@@ -100,7 +100,7 @@ class Viewthread {
 								'can_view_poll' => checkgroup($thread_data['forum_poll']) ? true : false,
 								'edit_lock' => $inf_settings['forum_edit_lock'] ? true : false,
 								'can_attach' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? true : false,
-								'can_download_attach' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach_download']) ? true : false,
+								'can_download_attach' => iMOD or iSUPERADMIN ? true : checkgroup($thread_data['forum_attach_download']) ? true : false,
 								),
 			'max_post_items' => $thread_stat['post_count'],
 			'post_firstpost' => $thread_stat['first_post_id'],
