@@ -396,7 +396,7 @@ class Viewthread {
 								if ($data['post_locked'] && !iMOD) {
 									redirect("postify.php?post=edit&error=5&forum_id=".$this->thread_info['forum_id']."&thread_id=".$this->thread_info['thread_id']."&post_id=".$this->thread_info['post_id']);
 								}
-								if (!iMOD && ($settings['forum_edit_timelimit'] > 0 && time()-$settings['forum_edit_timelimit']*60 > $data['post_datestamp'])) {
+								if (!iMOD && ($inf_settings['forum_edit_timelimit'] > 0 && time()-$inf_settings['forum_edit_timelimit']*60 > $data['post_datestamp'])) {
 									redirect(INFUSIONS."forum/postify.php?post=edit&error=6&forum_id=".$this->thread_info['forum_id']."&thread_id=".$this->thread_info['thread_id']."&post_id=".$this->thread_info['post_id']);
 								}
 								$last_post = dbarray(dbquery("SELECT post_id
@@ -513,7 +513,7 @@ class Viewthread {
 							'link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id']."&amp;quote=".$pdata['post_id'],
 							'name' => $locale['forum_0266']
 						);
-						if (iMOD || (($this->thread_info['permissions']['edit_lock'] && $pdata['is_last_post'] || !$this->thread_info['permissions']['edit_lock'])) && ($userdata['user_id'] == $pdata['post_author']) && ($settings['forum_edit_timelimit'] <= 0 || time()-$settings['forum_edit_timelimit']*60 < $pdata['post_datestamp'])) {
+						if (iMOD || (($this->thread_info['permissions']['edit_lock'] && $pdata['is_last_post'] || !$this->thread_info['permissions']['forum_edit_lock'])) && ($userdata['user_id'] == $pdata['post_author']) && ($inf_settings['forum_edit_timelimit'] <= 0 || time()-$inf_settings['forum_edit_timelimit']*60 < $pdata['post_datestamp'])) {
 							$pdata['post_edit'] = array(
 								'link' => INFUSIONS."forum/viewthread.php?action=edit&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
 								'name' => $locale['forum_0265']
@@ -772,7 +772,7 @@ class Viewthread {
 					'post_edittime' => 0,
 					'post_editreason' => '',
 					'post_hidden' => false,
-					'post_locked' => $inf_settings['edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
+					'post_locked' => $inf_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0,
 				);
 				$update_forum_lastpost = false;
 				// Prepare forum merging action
