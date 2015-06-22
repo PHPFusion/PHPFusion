@@ -29,16 +29,16 @@ echo "<head>\n";
 		echo "<link href='".$bootstrap_theme_css_src."' rel='stylesheet' media='screen' />\n";
 	}
 	if ($settings['entypo']) {
-		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo.css' type='text/css' />\n";
-		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-codes.css' type='text/css' />\n";
-		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-embedded.css' type='text/css' />\n";
-		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-ie7.css' type='text/css' />\n";
-		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/entypo-ie7-codes.css' type='text/css' />\n";
-		echo "<link rel='stylesheet' href='".INCLUDES."font/entypo/css/animation.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-codes.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-embedded.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo-ie7-codes.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/animation.css' type='text/css' />\n";
 	}
 
 	if ($settings['fontawesome']) {
-		echo "<link rel='stylesheet' href='".INCLUDES."font/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
+		echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome/css/font-awesome.min.css' type='text/css' />\n";
 	}
 
 	// Theme CSS
