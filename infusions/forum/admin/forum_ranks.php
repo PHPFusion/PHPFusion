@@ -112,7 +112,7 @@ if ($inf_settings['forum_ranks']) {
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td class='tbl'><label for='rank_image'>".$locale['421']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	$image_files = makefilelist(IMAGES."ranks", ".|..|index.php|.svn|.DS_Store", TRUE);
+	$image_files = makefilelist(RANKS."", ".|..|index.php|.svn|.DS_Store", TRUE);
 	foreach ($image_files as $value) {
 		$opts[$value] = $value;
 	}
@@ -177,7 +177,7 @@ if ($inf_settings['forum_ranks']) {
 			echo "<tr>\n";
 			echo "<td class='".$row_color."'>".$data['rank_title']."</td>\n";
 			echo "<td width='1%' class='".$row_color."' style='white-space:nowrap'>".($data['rank_apply'] == 104 ? $locale['425'] : getgroupname($data['rank_apply']))."</td>\n";
-			echo "<td width='1%' class='".$row_color."' style='white-space:nowrap'><img src='".IMAGES."ranks/".$data['rank_image']."' alt='' style='border:0;' /></td>\n";
+			echo "<td width='1%' class='".$row_color."' style='white-space:nowrap'><img src='".RANKS.$data['rank_image']."' alt='' style='border:0;' /></td>\n";
 			echo "<td width='1%' class='".$row_color."' style='white-space:nowrap'>";
 			if ($data['rank_type'] == 0) {
 				echo $data['rank_posts'];
