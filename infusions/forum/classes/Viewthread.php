@@ -328,126 +328,6 @@ class Viewthread {
 	}
 
 	/**
-	 * Set User Input Changes Switch - Save, Update, Edit.
-	 * @todo: have user to be able to delete own post.
-	 * @todo: consolidate post_actions.php into this class - 100% of forum actions are done in viewthread.php except for (new thread (for now..))
-	 */
-	private function set_ForumPostDB() {
-		global $locale, $settings, $userdata;
-		if (Functions::verify_thread($this->thread_info['thread_id'])) {
-			$info = $this->thread_info['thread'];
-			if ($info['forum_type'] == 1) redirect(INFUSIONS.'forum/index.php');
-			$info['lock_edit'] = $settings['forum_edit_lock'] == 1 ? TRUE : FALSE;
-			if (isset($_GET['action'])) {
-				switch ($_GET['action']) {
-					case 'voteup':
-						if (verify_thread($this->thread_info['thread_id']) && verify_post($_GET['post_id'])) {
-							set_forumVotes($info, 1);
-						}
-						break;
-					case 'votedown':
-						if (verify_thread($this->thread_info['thread_id']) && verify_post($_GET['post_id'])) {
-							set_forumVotes($info, -1);
-						}
-						break;
-					case 'reply':
-						if (checkgroup($info['forum_reply']) && $this->thread_info['thread_id']) {
-							$result = dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_id='".$this->thread_info['thread_id']."' ".(iMOD || iSUPERADMIN ? '' : "AND thread_locked = '0'")." AND thread_hidden='0'");
-							if (dbrows($result)) {
-								$data = dbarray($result);
-								add_to_title($locale['global_201'].$locale['forum_0503']);
-								add_breadcrumb(array('link' => '', 'title' => $locale['forum_0503']));
-								if (isset($_GET['quote']) && isnum($_GET['quote'])) {
-									$quote_result = dbquery("SELECT a.post_message, b.user_name
-									FROM ".DB_FORUM_POSTS." a
-									INNER JOIN ".DB_USERS." b ON a.post_author=b.user_id
-									WHERE thread_id='".intval($this->thread_info['thread_id'])."' and post_id='".intval($_GET['quote'])."'
-									");
-									if (dbrows($quote_result) > 0) {
-										$quote_data = dbarray($quote_result);
-										$data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]".strip_bbcodes($quote_data['post_message'])."[/quote]\r\r";
-									} else {
-										redirect(INFUSIONS.'forum/index.php');
-									}
-								}
-								if (isset($_POST['postreply']) or isset($_POST['previewpost'])) {
-									include "post_actions.php";
-								}
-								$data['reply'] = 1;
-								postform($data, $info);
-							} else {
-								redirect(INFUSIONS.'forum/index.php'); // no threads
-							}
-						}
-						break;
-					case 'edit':
-						if (checkgroup($info['forum_reply']) && $this->thread_info['thread_id'] && isset($this->thread_info['post_items'][$this->thread_info['post_id']])) {
-							$result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
-							FROM ".DB_FORUM_POSTS." tp
-							INNER JOIN ".DB_FORUM_THREADS." tt on tp.thread_id=tt.thread_id
-							INNER JOIN ".DB_FORUM_POSTS." tp2 on tp.thread_id=tp2.thread_id
-							WHERE tp.post_id='".$this->thread_info['post_id']."' AND tp.thread_id='".$this->thread_info['thread_id']."' AND tp.forum_id='".$this->thread_info['forum_id']."' GROUP BY tp2.post_id
-							");
-							if (dbrows($result) > 0) {
-								$data = dbarray($result);
-								if ($userdata['user_id'] != $data['post_author'] && !iMOD && !iSUPERADMIN) {
-									redirect(INFUSIONS.'forum/index.php');
-								}
-								if ($data['post_locked'] && !iMOD) {
-									redirect("postify.php?post=edit&error=5&forum_id=".$this->thread_info['forum_id']."&thread_id=".$this->thread_info['thread_id']."&post_id=".$this->thread_info['post_id']);
-								}
-								if (!iMOD && ($inf_settings['forum_edit_timelimit'] > 0 && time()-$inf_settings['forum_edit_timelimit']*60 > $data['post_datestamp'])) {
-									redirect(INFUSIONS."forum/postify.php?post=edit&error=6&forum_id=".$this->thread_info['forum_id']."&thread_id=".$this->thread_info['thread_id']."&post_id=".$this->thread_info['post_id']);
-								}
-								$last_post = dbarray(dbquery("SELECT post_id
-													FROM ".DB_FORUM_POSTS."
-													WHERE thread_id='".$this->thread_info['thread_id']."' AND post_hidden='0'
-													ORDER BY post_datestamp DESC LIMIT 1"));
-								if (iMOD || !$data['thread_locked'] && (($info['forum_edit_lock'] && $last_post['post_id'] == $data['post_id'] && $userdata['user_id'] == $data['post_author']) || (!$info['forum_edit_lock'] && $userdata['user_id'] == $data['post_author']))) {
-									$data['edit'] = 1;
-									if ($info['forum_attach'] && checkgroup($info['forum_attach'])) {
-										$result = dbquery("SELECT attach_id, attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$this->thread_info['post_id']."'");
-										$counter = 0;
-										if (dbrows($result)) {
-											while ($adata = dbarray($result)) {
-												$info['attachment'][$adata['attach_id']] = $adata['attach_name'];
-												$counter++;
-											}
-											$info['attachmax_count'] = ($settings['attachmax_count']-$counter <= 0 ? "-2" : $settings['attachmax_count']-$counter);
-										}
-									}
-									if ($info['forum_poll'] && checkgroup($info['forum_poll'])) {
-										if ($data['thread_poll'] && ($data['post_author'] == $data['thread_author']) && ($userdata['user_id'] == $data['thread_author'] || iSUPERADMIN || iMOD)) {
-											$result = dbquery("SELECT * FROM ".DB_FORUM_POLLS." WHERE thread_id='".$this->thread_info['thread_id']."'");
-											if (dbrows($result) > 0) {
-												$data += dbarray($result);
-												$result = dbquery("SELECT forum_poll_option_text FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".$this->thread_info['thread_id']."' ORDER BY forum_poll_option_id ASC");
-												while ($_pdata = dbarray($result)) {
-													$data['poll_opts'][] = $_pdata['forum_poll_option_text'];
-												}
-											}
-										}
-									}
-									if (isset($_POST['savechanges']) or isset($_POST['previewpost'])) {
-										include "post_actions.php";
-									}
-									postform($data, $info);
-								} else {
-									redirect(INFUSIONS.'forum/index.php'); // edit rules failed.
-								}
-							} else {
-								redirect(INFUSIONS.'forum/index.php'); // cannot find post_id.
-							}
-						}
-						break;
-				}
-			}
-		} else {
-			redirect(INFUSIONS.'forum/index.php');
-		}
-	}
-
-	/**
 	 * Get thread posts info
 	 */
 	private function get_thread_post() {
@@ -1117,7 +997,7 @@ class Viewthread {
 						// happens only in EDIT
 						'delete_field' => form_checkbox('delete', $locale['forum_0624'], '', array('class' => 'm-b-0')),
 						'edit_reason_field' => form_text('post_editreason', $locale['forum_0611'], $post_data['post_editreason'], array('placeholder' => 'Edit reasons','error_text' => '', 'class' => 'm-t-20 m-b-20')),
-						'attachment_field' => $this->thread_info['permissions']['can_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
+						'attachment_field' => $this->thread_info['permissions']['can_attach'] && $thread_data['forum_allow_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
 								"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($inf_settings['attachmax_count']), str_replace(',', ' ', $inf_settings['attachtypes']), $inf_settings['attachmax_count'])."</div>\n
 						".form_fileinput('', 'file_attachments[]', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$inf_settings['attachmax_count'], 'valid_ext'=>$inf_settings['attachtypes']))
 							) : array(),
