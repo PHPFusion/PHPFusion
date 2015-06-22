@@ -671,13 +671,14 @@ private function display_forum_permissions_form() {
 	while (list($key, $option) = each($_access)) {
 		$access_opts[$option['0']] = $option['1'];
 	}
+	$public_access_opts = $access_opts;
+	unset($access_opts[0]); // remove public away.
 
 	echo openform('inputform', 'post', FUSION_SELF.$aidlink.$this->ext."&amp;action=p_edit&amp;forum_id=".$_GET['forum_id'], array('enctype'=>1, 'max_tokens' => 1));
 	echo "<span class='strong display-inline-block m-b-20'>".$locale['forum_006']." : ".$data['forum_name']."</span>\n";
 	openside();
 	echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_000']."</span><br/>\n";
-	echo form_select('forum_access', $locale['forum_031'],  $access_opts, $data['forum_access'], array('inline'=>1));
-	unset($access_opts[0]); // remove public away.
+	echo form_select('forum_access', $locale['forum_031'],  $public_access_opts, $data['forum_access'], array('inline'=>1));
 	echo form_select('forum_post', $locale['forum_032'], $access_opts, $data['forum_post'], array('inline'=>1));
 	echo form_select('forum_reply', $locale['forum_033'], $access_opts, $data['forum_reply'], array('inline'=>1));
 	echo form_select('forum_post_ratings', $locale['forum_039'], $access_opts, $data['forum_post_ratings'], array('inline'=>1));
@@ -710,7 +711,7 @@ private function display_forum_permissions_form() {
 	openside();
 	echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_002']."</span><br/>\n";
 	echo form_select('forum_attach', $locale['forum_034'], $access_opts, $data['forum_attach'], array('inline'=>1));
-	echo form_select('forum_attach_download', $locale['forum_035'], $access_opts, $data['forum_attach_download'], array('inline'=>1));
+	echo form_select('forum_attach_download', $locale['forum_035'], $public_access_opts, $data['forum_attach_download'], array('inline'=>1));
 	closeside();
 
 	openside();

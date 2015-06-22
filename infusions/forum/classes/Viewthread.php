@@ -817,7 +817,7 @@ class Viewthread {
 	public function render_reply_form() {
 		global $locale, $userdata, $inf_settings, $settings;
 		$thread_data = $this->thread_info['thread'];
-		if (!iMOD || !iSUPERADMIN || $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
+		if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
 		if ($this->thread_info['permissions']['can_reply']) {
 			add_to_title($locale['global_201'].$locale['forum_0503']);
 			add_breadcrumb(array('link'=>'', 'title'=>$locale['forum_0503']));
