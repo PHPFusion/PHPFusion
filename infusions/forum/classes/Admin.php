@@ -611,7 +611,7 @@ public function display_forum_form() {
 		// Upload Image
 		echo opentabbody($tab_title['title'][0], 'fir', $tab_active);
 		echo "<span class='display-inline-block m-t-10 m-b-10'>".sprintf($locale['forum_015'], parsebytesize($forum_settings['forum_attachmax']))."</span>\n";
-		echo form_fileinput('', 'forum_image', 'forum_image', IMAGES."forum", '', array('thumbnail'=>IMAGES."forum/thumbnail", 'type'=>'image', 'delete_original'=>true, 'max_byte'=>$forum_settings['forum_attachmax']));
+		echo form_fileinput('', 'forum_image', 'forum_image', IMAGES."forum", '', array('thumbnail'=>IMAGES."forum/thumbnail", 'type'=>'image', 'delete_original'=>1, 'max_byte'=>$forum_settings['forum_attachmax']));
 		echo closetabbody();
 		// Upload image via Web Address
 		echo opentabbody($tab_title['title'][1], 'ful', $tab_active);
