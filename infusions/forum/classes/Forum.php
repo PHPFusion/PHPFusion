@@ -216,7 +216,7 @@ class Forum {
 				$locale['forum_3022'] => $orderLink.'&amp;order=ascending'
 			);
 
-			// Load forums
+			// Load sub-forums
 			$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
 				count(t.thread_id) as forum_threadcount, p.post_message,
@@ -232,11 +232,10 @@ class Forum {
 
 			$refs = array();
 			if (dbrows($result)>0) {
-				while ($row = dbarray($result)) {
+				while ($row = dbarray($result) and checkgroup($row['forum_access'])) {
 
 					if ($row['forum_description'] !=='') { set_meta('description', $row['forum_description']); }
 					if ($row['forum_meta'] !=='') { set_meta('keywords', $row['forum_meta']); }
-
 					$row['forum_moderators'] = Functions::parse_forumMods($row['forum_mods']);
 					$this->forum_info['forum_moderators'] = $row['forum_moderators'];
 					$row['forum_new_status'] = '';
