@@ -233,7 +233,7 @@ class Forum {
 			$refs = array();
 			if (dbrows($result)>0) {
 				while ($row = dbarray($result)) {
-
+					add_to_meta($row['forum_name']);
 					$row['forum_moderators'] = Functions::parse_forumMods($row['forum_mods']);
 					$this->forum_info['forum_moderators'] = $row['forum_moderators'];
 
