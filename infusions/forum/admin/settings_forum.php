@@ -87,14 +87,14 @@ if (isset($_POST['savesettings'])) {
 		$forum_editpost_to_lastpost = form_sanitizer($_POST['forum_editpost_to_lastpost'], '0', 'forum_editpost_to_lastpost');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_editpost_to_lastpost' WHERE settings_name='forum_editpost_to_lastpost' AND settings_inf='forum'") : '';
 		addNotice('success', $locale['900']);
-		redirect(FUSION_SELF.$aidlink);
+		redirect(FUSION_SELF.$aidlink.'&section=fs');
 	}
 }
 /**
  * Options for dropdown field
  */
 $yes_no_array = array('1' => $locale['yes'], '0' => $locale['no']);
-$num_opts = range(1,30);
+
 
 opentable($locale['forum_settings']);
 	echo "<div class='well'>".$locale['forum_description']."</div>";
@@ -117,17 +117,16 @@ opentable($locale['forum_settings']);
  * forum_last_post_avatar = 1 -- ok
  * forum_editpost_to_lastpost = 0 -- ok
  */
-
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
+echo openform('settingsform', 'post', FUSION_SELF.$aidlink.'&amp;section=fs', array('max_tokens' => 1));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo "<span class='small pull-right'>* ".$locale['506']."</span><br/>\n";
-echo form_select('numofthreads', $locale['505'], $num_opts, $forum_settings['numofthreads'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_text('numofthreads', $locale['505'], $forum_settings['numofthreads'], array('error_text' => $locale['error_value'], 'inline' => 1, 'width'=>'150px', 'type'=>'number'));
 closeside();
 openside('');
-echo form_select('threads_per_page', $locale['forum_080'], $num_opts, $forum_settings['threads_per_page'], array('error_text' => $locale['error_value'], 'inline' => 1));
-echo form_select('posts_per_page', $locale['forum_081'], $num_opts, $forum_settings['posts_per_page'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_text('threads_per_page', $locale['forum_080'], $forum_settings['threads_per_page'], array('error_text' => $locale['error_value'], 'inline' => 1, 'width'=>'150px', 'type'=>'number'));
+echo form_text('posts_per_page', $locale['forum_081'], $forum_settings['posts_per_page'], array('error_text' => $locale['error_value'], 'inline' => 1, 'width'=>'150px', 'type'=>'number'));
 closeside();
 
 openside('');
