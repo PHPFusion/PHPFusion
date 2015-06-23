@@ -191,7 +191,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			}
 
 			add_breadcrumb(array('link' => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'], 'title' => $item['blog_subject']));
-			add_to_title($locale['global_201'].$item['blog_subject']);
+			set_title($item['blog_subject']);
+			// set_title($locale['global_201'].$item['blog_subject']); // Do with section definition or not?
 			if ($item['blog_keywords'] !=="") { 
 				set_meta("keywords", $item['blog_keywords']); 
 			}
