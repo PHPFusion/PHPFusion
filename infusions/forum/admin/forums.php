@@ -25,10 +25,12 @@ if (!db_exists(DB_FORUMS)) {
 pageAccess('F');
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum_admin.php";
+include INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php";
 require_once INFUSIONS."forum/classes/Admin.php";
 require_once INFUSIONS."forum/classes/Functions.php";
+require_once INCLUDES.'infusions_include.php';
+$forum_settings = get_settings('forum');
 $forum_admin = new PHPFusion\Forums\Admin;
-
 // want to tab , do it here.
 $tab_title['title'][] = 'Forum Management';
 $tab_title['id'][] = 'fm';
@@ -45,9 +47,10 @@ echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active, true,
 $forum_admin->display_forum_admin();
 echo closetabbody();
 echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active, true, 'section');
-// need to go out for work. continue later..
+include INFUSIONS.'forum/admin/forum_ranks.php';
 echo closetabbody();
 echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active, true, 'section');
-// need to go out for work. continue later..
+include INFUSIONS.'forum/admin/settings_forum.php';
 echo closetabbody();
+echo closetab();
 require_once THEMES."templates/footer.php";

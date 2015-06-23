@@ -16,38 +16,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__."/../../../maincore.php";
-if (!db_exists(DB_FORUMS)) {
-	$_GET['code'] = 404;
-	require_once BASEDIR.'error.php';
-	exit;
-}
-
 pageAccess('FR');
-
 require_once THEMES."templates/admin_header.php";
-include INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php";
-include INCLUDES."infusions_include.php";
-$inf_settings = get_settings('forum');
-
 add_breadcrumb(array('link'=>ADMIN.'administrators.php'.$aidlink, 'title'=>$locale['404']));
 
-if (isset($_GET['status']) && !isset($message)) {
-	if ($_GET['status'] == "sn") {
-		$message = $locale['410'];
-	} elseif ($_GET['status'] == "su") {
-		$message = $locale['411'];
-	} elseif ($_GET['status'] == "del") {
-		$message = $locale['412'];
-	} elseif ($_GET['status'] == "se") {
-		$message = $locale['413'];
-	}
-	if ($message) {
-		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
-	}
-}
-
-if ($inf_settings['forum_ranks']) {
+if ($forum_settings['forum_ranks']) {
 	if (isset($_POST['save_rank'])) {
 		$rank_title = form_sanitizer($_POST['rank_title'], '', 'rank_title');
 		$rank_image = stripinput($_POST['rank_image']);
@@ -61,23 +34,28 @@ if ($inf_settings['forum_ranks']) {
 			if (isset($_GET['rank_id']) && isnum($_GET['rank_id'])) {
 				$data = dbarray(dbquery("SELECT rank_apply FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['rank_id']."'"));
 				if (($rank_apply < USER_LEVEL_MEMBER && $rank_apply != $data['rank_apply']) && (dbcount("(rank_id)", DB_FORUM_RANKS, "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_id!='".$_GET['rank_id']."' AND rank_apply='".$rank_apply."'"))) {
-					redirect(FUSION_SELF.$aidlink."&status=se");
+					addNotice('info', $locale['413']);
+					redirect(FUSION_SELF.$aidlink);
 				} else {
 					$result = dbquery("UPDATE ".DB_FORUM_RANKS." SET rank_title='".$rank_title."', rank_image='".$rank_image."', rank_posts='".$rank_posts."', rank_type='".$rank_type."', rank_apply='".$rank_apply."', rank_language='".$rank_language."' WHERE rank_id='".$_GET['rank_id']."'");
-					redirect(FUSION_SELF.$aidlink."&status=su");
+					addNotice('info',  $locale['411']);
+					redirect(FUSION_SELF.$aidlink);
 				}
 			} else {
 				if ($rank_apply > USER_LEVEL_MEMBER && dbcount("(rank_id)", DB_FORUM_RANKS, "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_apply='".$rank_apply."'")) {
-					redirect(FUSION_SELF.$aidlink."&status=se");
+					addNotice('info', $locale['413']);
+					redirect(FUSION_SELF.$aidlink);
 				} else {
 					$result = dbquery("INSERT INTO ".DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('$rank_title', '$rank_image', '$rank_posts', '$rank_type', '$rank_apply', '$rank_language')");
-					redirect(FUSION_SELF.$aidlink."&status=sn");
+					addNotice('success',  $locale['410']);
+					redirect(FUSION_SELF.$aidlink);
 				}
 			}
 		}
 	} else if (isset($_GET['delete']) && isnum($_GET['delete'])) {
 		$result = dbquery("DELETE FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['delete']."'");
-		redirect(FUSION_SELF.$aidlink."&status=del");
+		addNotice('warning', $locale['412']);
+		redirect(FUSION_SELF.$aidlink);
 	}
 	if (isset($_GET['rank_id']) && isnum($_GET['rank_id'])) {
 		$result = dbquery("SELECT rank_id, rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['rank_id']."'");
@@ -225,6 +203,3 @@ jQuery(function(){
 	});
 });
 </script>";
-
-require_once THEMES."templates/footer.php";
-

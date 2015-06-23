@@ -23,8 +23,7 @@ if (!db_exists(DB_FORUMS)) {
 }
 pageAccess('F');
 
-require_once THEMES."templates/admin_header.php";
-
+//require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 
 add_breadcrumb(array('link'=>ADMIN.'settings_forum.php'.$aidlink, 'title'=>$locale['forum_settings']));
@@ -91,13 +90,6 @@ if (isset($_POST['savesettings'])) {
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-
-$settings2 = array();
-$result = dbquery("SELECT * FROM ".DB_SETTINGS_INF);
-while ($data = dbarray($result)) {
-	$settings2[$data['settings_name']] = $data['settings_value'];
-}
-
 /**
  * Options for dropdown field
  */
@@ -131,33 +123,33 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo "<span class='small pull-right'>* ".$locale['506']."</span><br/>\n";
-echo form_select('numofthreads', $locale['505'], $num_opts, $settings2['numofthreads'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('numofthreads', $locale['505'], $num_opts, $forum_settings['numofthreads'], array('error_text' => $locale['error_value'], 'inline' => 1));
 closeside();
 openside('');
-echo form_select('threads_per_page', $locale['forum_080'], $num_opts, $settings2['threads_per_page'], array('error_text' => $locale['error_value'], 'inline' => 1));
-echo form_select('posts_per_page', $locale['forum_081'], $num_opts, $settings2['posts_per_page'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('threads_per_page', $locale['forum_080'], $num_opts, $forum_settings['threads_per_page'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('posts_per_page', $locale['forum_081'], $num_opts, $forum_settings['posts_per_page'], array('error_text' => $locale['error_value'], 'inline' => 1));
 closeside();
 
 openside('');
-echo form_select('thread_notify', $locale['512'], $yes_no_array, $settings2['thread_notify'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('thread_notify', $locale['512'], $yes_no_array, $forum_settings['thread_notify'], array('error_text' => $locale['error_value'], 'inline' => 1));
 closeside();
 openside('');
 echo "<span class='pull-right position-absolute small' style='right:30px;'>".$locale['537']."</span>\n";
-echo form_select('forum_edit_timelimit', $locale['536'], array('0','10','30','45','60'), $settings2['forum_edit_timelimit'], array('max_length' => 2, 'width' => '100px', 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('forum_edit_timelimit', $locale['536'], array('0','10','30','45','60'), $forum_settings['forum_edit_timelimit'], array('max_length' => 2, 'width' => '100px', 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
 
-echo form_select('forum_ips', $locale['507'], $yes_no_array, $settings2['forum_ips'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('forum_ips', $locale['507'], $yes_no_array, $forum_settings['forum_ips'], array('error_text' => $locale['error_value'], 'inline' => 1));
 
-echo form_select('forum_ranks', $locale['520'], $yes_no_array, $settings2['forum_ranks'], array('error_text' => $locale['error_value'], 'inline' => 1));
-echo form_select('forum_last_post_avatar', $locale['539'], $yes_no_array, $settings2['forum_last_post_avatar'], array('error_text' => $locale['error_value'], 'inline' => 1));
-echo form_select('forum_edit_lock', $locale['521'], $yes_no_array, $settings2['forum_edit_lock'], array('error_text' => $locale['error_value'], 'inline' => 1));
-echo form_select('forum_editpost_to_lastpost', $locale['538'], $yes_no_array, $settings2['forum_editpost_to_lastpost'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('forum_ranks', $locale['520'], $yes_no_array, $forum_settings['forum_ranks'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('forum_last_post_avatar', $locale['539'], $yes_no_array, $forum_settings['forum_last_post_avatar'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('forum_edit_lock', $locale['521'], $yes_no_array, $forum_settings['forum_edit_lock'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('forum_editpost_to_lastpost', $locale['538'], $yes_no_array, $forum_settings['forum_editpost_to_lastpost'], array('error_text' => $locale['error_value'], 'inline' => 1));
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
 $calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
-$calc_c = calculate_byte($settings2['forum_attachmax']);
-$calc_b = $settings2['forum_attachmax']/$calc_c;
+$calc_c = calculate_byte($forum_settings['forum_attachmax']);
+$calc_b = $forum_settings['forum_attachmax']/$calc_c;
 require_once INCLUDES."mimetypes_include.php";
 $mime = mimeTypes();
 $mime_opts = array();
@@ -174,16 +166,16 @@ echo "</div>\n";
 echo "<div class='clearfix'>\n";
 echo "<span class='small pull-right'>".$locale['535']."</span>\n";
 echo "<label for='attachmax_count'>".$locale['534']."</label>\n";
-echo form_select('forum_attachmax_count', '', range(1, 10), $settings2['forum_attachmax_count'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
+echo form_select('forum_attachmax_count', '', range(1, 10), $forum_settings['forum_attachmax_count'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
 echo "</div>\n";
 echo "<div class='clearfix'>\n";
 echo "<span class='small pull-right'>".$locale['511']."</span>\n";
 // redo mime
 sort($mime_opts);
 // as ","
-echo form_select('forum_attachtypes', $locale['510'], $mime_opts, $settings2['forum_attachtypes'], array('width'=>'100%', 'error_text' => $locale['error_type'], 'tags'=>1, 'multiple' => 1));
+echo form_select('forum_attachtypes', $locale['510'], $mime_opts, $forum_settings['forum_attachtypes'], array('width'=>'100%', 'error_text' => $locale['error_type'], 'tags'=>1, 'multiple' => 1));
 // as "|"
-//echo form_select('attachtypes[]', '', $mime_opts, $settings2['attachtypes'], array('input_id'=>'attachtypes', 'error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%' , 'delimiter' => '|'));
+//echo form_select('attachtypes[]', '', $mime_opts, $forum_settings['attachtypes'], array('input_id'=>'attachtypes', 'error_text' => $locale['error_type'], 'placeholder' => $locale['choose'], 'multiple' => 1, 'width' => '100%' , 'delimiter' => '|'));
 echo "</div>\n";
 closeside();
 
@@ -193,10 +185,10 @@ $array_opts = array('0' => $locale['519'], '1' => $locale['533']);
 for ($i = 2; $i <= 20; $i++) { $array_opts[$i] = sprintf($locale['532'], $i); }
 if (isset($_GET['action']) && $_GET['action'] == "count_posts") echo form_alert($locale['524'], '', array('class'=>'warning'));
 echo "<div class='clearfix'>\n";
-echo form_select('popular_threads_timeframe', $locale['525'], $timeframe_opts, $settings2['popular_threads_timeframe'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
+echo form_select('popular_threads_timeframe', $locale['525'], $timeframe_opts, $forum_settings['popular_threads_timeframe'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
 echo "</div>\n";
 echo "<div class='clearfix'>\n";
-echo form_select('forum_last_posts_reply', $locale['531'], $array_opts, $settings2['forum_last_posts_reply'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
+echo form_select('forum_last_posts_reply', $locale['531'], $array_opts, $forum_settings['forum_last_posts_reply'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
 echo "</div>\n";
 echo "<a class='btn btn-sm btn-primary btn-block' href='".FUSION_SELF.$aidlink."&amp;action=count_posts'>".$locale['523']."</a>";
 closeside();

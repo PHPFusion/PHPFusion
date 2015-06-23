@@ -209,45 +209,44 @@ $inf_newtable[10] = DB_FORUM_THREAD_NOTIFY." (
 
 
 // Insert Forum Settings
-$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '-103', 'forum')";
-$inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax', '1000000', 'forum')";
-$inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax_count', '5', 'forum')";
-$inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachtypes', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum')";
-$inf_insertdbrow[10] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thread_notify', '1', 'forum')";
-$inf_insertdbrow[4] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ranks', '1', 'forum')";
-$inf_insertdbrow[5] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_lock', '0', 'forum')";
-$inf_insertdbrow[6] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_timelimit', '0', 'forum')";
-$inf_insertdbrow[6] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('popular_threads_timeframe', '604800', 'forum')";
-$inf_insertdbrow[6] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_posts_reply', '1', 'forum')";
-$inf_insertdbrow[6] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_post_avatar', '1', 'forum')";
-$inf_insertdbrow[7] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_editpost_to_lastpost', '1', 'forum')";
-$inf_insertdbrow[1] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('threads_per_page', '20', 'forum')";
-$inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('posts_per_page', '20', 'forum')";
-$inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('numofthreads', '16', 'forum')";
+$inf_insertdbrow[1] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '-103', 'forum')";
+$inf_insertdbrow[2] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax', '1000000', 'forum')";
+$inf_insertdbrow[3] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax_count', '5', 'forum')";
+$inf_insertdbrow[4] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachtypes', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum')";
+$inf_insertdbrow[5] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thread_notify', '1', 'forum')";
+$inf_insertdbrow[6] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ranks', '1', 'forum')";
+$inf_insertdbrow[7] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_lock', '0', 'forum')";
+$inf_insertdbrow[8] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_timelimit', '0', 'forum')";
+$inf_insertdbrow[9] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('popular_threads_timeframe', '604800', 'forum')";
+$inf_insertdbrow[10] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_posts_reply', '1', 'forum')";
+$inf_insertdbrow[11] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_post_avatar', '1', 'forum')";
+$inf_insertdbrow[12] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_editpost_to_lastpost', '1', 'forum')";
+$inf_insertdbrow[13] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('threads_per_page', '20', 'forum')";
+$inf_insertdbrow[14] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('posts_per_page', '20', 'forum')";
+$inf_insertdbrow[15] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('numofthreads', '16', 'forum')";
 
-   
 // Admin links
-$inf_insertdbrow[15] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('F', 'forums.gif', '".$locale['setup_3012']."', '".INFUSIONS."forum/admin/forums.php', '1')";
+$inf_insertdbrow[16] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('F', 'forums.gif', '".$locale['setup_3012']."', '".INFUSIONS."forum/admin/forums.php', '1')";
 // This might get tabbed and this text is a reminder to do so
-$inf_insertdbrow[16] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('SF', 'settings_forum.gif', '".$locale['setup_3032']."', '".INFUSIONS."forum/admin/settings_forum.php', '1')";
-$inf_insertdbrow[17] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('FR', 'forum_ranks.gif', '".$locale['setup_3038']."', '".INFUSIONS."forum/admin/forum_ranks.php', '1')";
+//$inf_insertdbrow[17] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('SF', 'settings_forum.gif', '".$locale['setup_3032']."', '".INFUSIONS."forum/admin/settings_forum.php', '1')";
+//$inf_insertdbrow[18] = DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES('FR', 'forum_ranks.gif', '".$locale['setup_3038']."', '".INFUSIONS."forum/admin/forum_ranks.php', '1')";
 
 // Insert Panels
-$inf_insertdbrow[18] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '', '')";
-$inf_insertdbrow[19] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '0', '1', '', '')";
+$inf_insertdbrow[17] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '0', '1', '', '')";
+$inf_insertdbrow[18] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '0', '1', '', '')";
 																																																		
 $enabled_languages = explode('.', fusion_get_settings('enabled_languages'));
 
 // Create a link for all installed languages
 if (!empty($enabled_languages)) {
-$k = 20;
+$k = 19;
 	for ($i = 0; $i < count($enabled_languages); $i++) {
 	include LOCALE."".$enabled_languages[$i]."/setup.php";
 		$inf_insertdbrow[$k] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3304']."', 'infusions/forum/', '0', '2', '0', '5', '".$enabled_languages[$i]."')";
 		$k++;
 	}
 } else {
-		$inf_insertdbrow[20] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3304']."', 'infusions/forum/', '0', '2', '0', '5', '".LANGUAGE."')";
+		$inf_insertdbrow[19] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_language) VALUES('".$locale['setup_3304']."', 'infusions/forum/', '0', '2', '0', '5', '".LANGUAGE."')";
 }
 
 // Reset locale
