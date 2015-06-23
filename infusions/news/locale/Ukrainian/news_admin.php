@@ -1,13 +1,13 @@
 <?php
 // News titles
-$locale['news_0000'] = "Поточні новини";
+$locale['news_0000'] = "Наявні новини";
 $locale['news_0001'] = "Новини";
 $locale['news_0002'] = "Створення новини";
 $locale['news_0003'] = "Редагування новини";
 $locale['news_0004'] = "Settings"; // Translate this line and remove comment
 
 // News Categories titles
-$locale['news_0020'] = "Поточні розділи новин";
+$locale['news_0020'] = "Наявні розділи новин";
 $locale['news_0021'] = "Редагування розділу новин";
 $locale['news_0022'] = "Створення розділу новин";
 
