@@ -67,6 +67,11 @@ $locale['forum_059'] = 'Posts : ';
 $locale['forum_060'] = 'Forum Removal Options';
 $locale['forum_061'] = 'User Forum Posts Recounted';
 
+/* Ranks Styling */
+$locale['forum_062'] = 'Image';
+$locale['forum_063'] = 'Label';
+$locale['forum_064'] = 'Forum Rank Style';
+
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Posts Deleted: ";
 $locale['forum_071'] = "Attachments Deleted: ";
@@ -86,11 +91,13 @@ $locale['forum_desc_004'] = 'Forum Answers';
 /* Navs */
 $locale['forum_root'] = 'Forum Index';
 $locale['forum_points'] = 'Forum Points';
+
 /* Type */
 $locale['forum_opts_001'] = 'Category';
 $locale['forum_opts_002'] = 'Forum';
 $locale['forum_opts_003'] = 'Link';
 $locale['forum_opts_004'] = 'Support & Answers';
+
 /* Error Notices */
 $locale['forum_error_1'] = 'Forum Name is required field.';
 $locale['forum_error_2'] = 'Image must be less than %s.';
@@ -127,3 +134,4 @@ $locale['531'] = 'Off';
 $locale['560'] = "No Forum Categories defined";
 $locale['561'] = "No Forums defined";
 $locale['562'] = "Refresh Forum Ordering";
+

@@ -136,6 +136,8 @@ echo form_select('forum_edit_timelimit', $locale['536'], array('0','10','30','45
 echo form_select('forum_ips', $locale['507'], $yes_no_array, $forum_settings['forum_ips'], array('error_text' => $locale['error_value'], 'inline' => 1));
 
 echo form_select('forum_ranks', $locale['520'], $yes_no_array, $forum_settings['forum_ranks'], array('error_text' => $locale['error_value'], 'inline' => 1));
+echo form_select('forum_ranks_style', $locale['forum_064'], array($locale['forum_062'], $locale['forum_063']), $forum_settings['forum_ranks_style'], array('error_text' => $locale['error_value'], 'inline' => 1));
+
 echo form_select('forum_last_post_avatar', $locale['539'], $yes_no_array, $forum_settings['forum_last_post_avatar'], array('error_text' => $locale['error_value'], 'inline' => 1));
 echo form_select('forum_edit_lock', $locale['521'], $yes_no_array, $forum_settings['forum_edit_lock'], array('error_text' => $locale['error_value'], 'inline' => 1));
 echo form_select('forum_editpost_to_lastpost', $locale['538'], $yes_no_array, $forum_settings['forum_editpost_to_lastpost'], array('error_text' => $locale['error_value'], 'inline' => 1));
