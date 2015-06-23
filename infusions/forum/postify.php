@@ -54,8 +54,57 @@ if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $
 	$errorb = sprintf($locale['forum_0556'], $inf_settings['forum_edit_timelimit']);
 }
 
-$valid_get = array("on", "off", "new", "reply", "edit", "newpoll", "editpoll", "deletepoll");
+$valid_get = array("on", "off", "new", "reply", "edit", "newpoll", "editpoll", "deletepoll", "voteup", "votedown");
 if (!iMEMBER || !in_array($_GET['post'], $valid_get)) redirect(INFUSIONS."forum/index.php");
+
+if ($_GET['post'] == 'voteup' or $_GET['post'] == 'votedown') {
+
+	// @todo: extend on user's rank threshold before can vote. - Reputation threshold- Roadmap 9.1
+	include INFUSIONS.'forum/classes/Viewthread.php';
+	include INFUSIONS.'forum/forum_include.php';
+	include INFUSIONS.'forum/classes/Functions.php';
+	$thread = new \PHPFusion\Forums\Viewthread;
+	$thread_info = $thread->get_thread_data();
+
+	if ($thread_info['permissions']['can_rate']) {
+		// init vars
+		$data = array(
+			'forum_id' => $thread_info['forum_id'],
+			'thread_id' => $thread_info['thread_id'],
+			'post_id' => $thread_info['post_id'],
+			'vote_user' => $userdata['user_id'],
+			'vote_datestamp' => time(),
+		);
+		if ($_GET['post'] == 'voteup') {
+			$data['vote_points'] = 1;
+		} elseif ($_GET['post'] == 'votedown') {
+			$data['vote_points'] = -1;
+		}
+		$res = dbcount("('vote_user')", DB_FORUM_VOTES, "vote_user='".intval($userdata['user_id'])."' AND thread_id='".intval($data['thread_id'])."'");
+		if (!$res) { // has not voted
+			$self_post = dbcount("('post_id')", DB_FORUM_POSTS, "post_id='".intval($data['post_id'])."' AND post_user='".$userdata['user_id']."");
+			if (!$self_post) { // cannot vote at your own post.
+				//print_p($data);
+				dbquery_insert(DB_FORUM_VOTES, $data, 'save', array('noredirect'=>1, 'no_unique'=>1));
+				addNotice('success', $locale['forum_0803']);
+				// lock thread if point threshold reached on that specific post id.
+				if ($thread_info['thread']['forum_answer_threshold'] > 0) { // if is 0, is unlimited and do nothing.
+					$vote_result = dbquery("SELECT SUM('vote_points'), thread_id FROM ".DB_FORUM_VOTES." WHERE post_id='".$data['post_id']."'");
+					$v_data = dbarray($vote_result);
+					if ($v_data['vote_points'] >= $thread_info['thread']['forum_answer_threshold']) {
+						$result = dbquery("UPDATE ".DB_FORUM_THREADS." SET 'thread_locked'='1', thread_answered='1' WHERE thread_id='".$v_data['thread_id']."'");
+						// set current post as answer? no. use php logic
+					}
+				}
+			} else {
+				addNotice('danger', $locale['forum_0802']);
+			}
+		} else {
+			addNotice('danger', $locale['forum_0801']);
+		}
+		redirect(INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;post_id=".$data['post_id']);
+	}
+}
 
 
 if (($_GET['post'] == "on" || $_GET['post'] == "off") && $inf_settings['thread_notify']) {

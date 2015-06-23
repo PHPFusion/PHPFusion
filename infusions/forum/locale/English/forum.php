@@ -332,6 +332,7 @@ $locale['forum_0759'] = "The Thread has been renewed.";
 $locale['forum_0800'] = "Vote rejected";
 $locale['forum_0801'] = "You cannot vote for a second time per thread";
 $locale['forum_0802'] = "You cannot vote at your own post.";
+$locale['forum_0803'] = "Vote accepted";
 
 // forum.forms.php
 $locale['forum_2000'] = "Thread topic : ";

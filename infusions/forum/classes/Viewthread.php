@@ -113,8 +113,8 @@ class Viewthread {
 								'can_vote_poll' => (iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll'] ? true : iMEMBER && checkgroup($thread_data['forum_post'] && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll']) ? true : false,
 								'can_poll' => ((iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll']) ? true : iMEMBER && checkgroup($thread_data['forum_post']) && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] ? true : false,
 								'can_reply' => iMOD or iSUPERADMIN ? true : (checkgroup($thread_data['forum_reply']) && iMEMBER && checkgroup($thread_data['forum_reply']) && !$thread_data['forum_lock']) ? true : false,
-								'can_rate' => ($thread_data['forum_type'] == 4 && ((iMOD or iSUPERADMIN) or ($thread_data['forum_allow_ratings'] && iMEMBER && checkgroup($thread_data['forum_post_ratings']) && !$thread_data['forum_lock']))) ? true : false,
-								'can_vote' => iMEMBER && checkgroup($thread_data['forum_vote']) ? true : false,
+								'can_rate' => ($thread_data['forum_type'] == 4 &&
+											   ((iMOD or iSUPERADMIN) or ($thread_data['forum_allow_post_ratings'] && iMEMBER && checkgroup($thread_data['forum_post_ratings']) && !$thread_data['forum_lock']))) ? true : false,
 								'can_view_poll' => checkgroup($thread_data['forum_poll']) ? true : false,
 								'edit_lock' => $forum_settings['forum_edit_lock'] ? true : false,
 								'can_attach' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? true : false,
@@ -352,7 +352,6 @@ class Viewthread {
 
 		$user_sig_module = \PHPFusion\UserFields::check_user_field('user_sig');
 		$user_web_module = \PHPFusion\UserFields::check_user_field('user_web');
-
 		switch ($this->thread_info['section']) {
 			case 'oldest':
 				$sortCol = 'post_datestamp ASC';
@@ -366,20 +365,22 @@ class Viewthread {
 			default:
 				$sortCol = 'post_datestamp ASC';
 		}
+		// @todo: where to calculate has voted without doing it in while loop?
 		$result = dbquery("SELECT p.forum_id, p.thread_id, p.post_id, p.post_message, p.post_showsig, p.post_smileys, p.post_author,
 					p.post_datestamp, p.post_ip, p.post_ip_type, p.post_edituser, p.post_edittime, p.post_editreason,
 					t.thread_id,
 					u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_level, u.user_posts, u.user_groups, u.user_joined, u.user_lastvisit, u.user_ip,
 					".($user_sig_module ? " u.user_sig," : "").($user_web_module ? " u.user_web," : "")."
 					u2.user_name AS edit_name, u2.user_status AS edit_status, a.attach_mime,
-					SUM(v.vote_points) as vote_points
+					SUM(v.vote_points) as vote_points, count(v2.thread_id) as has_voted
 					FROM ".DB_FORUM_POSTS." p
 					INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
 					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id = p.post_id
+					LEFT JOIN ".DB_FORUM_VOTES." v2 on v2.thread_id = p.thread_id AND v2.vote_user = '".$userdata['user_id']."'
 					LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 					LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
 					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.post_id = p.post_id
-					WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0' ".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".$this->thread_info['first_post_id']."'" : '')."
+					WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0' ".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".$this->thread_info['post_firstpost']."'" : '')."
 					GROUP by p.post_id ORDER BY $sortCol LIMIT ".intval($_GET['rowstart']).", ".intval($forum_settings['posts_per_page']));
 		$this->thread_info['post_rows'] = dbrows($result);
 		if ($this->thread_info['post_rows'] > 0) {
@@ -401,7 +402,6 @@ class Viewthread {
 				/**
 				 * User Stuffs, Sig, User Message, Web
 				 */
-
 				// Quote & Edit Link
 				if (iMEMBER && ($this->thread_info['permissions']['can_post'] || $this->thread_info['permissions']['can_reply'])) {
 					if (!$this->thread_info['thread']['thread_locked']) {
@@ -475,25 +475,26 @@ class Viewthread {
 				$pdata['post_checkbox'] = iMOD ? "<input type='checkbox' name='delete_post[]' value='".$pdata['post_id']."'/>" : '';
 				$pdata['post_votebox'] = '';
 				// Answer rating
-				if ($this->thread_info['permissions']['can_rate']) { // can vote.
-					if (checkgroup($this->thread_info['forum_vote'])) { // everyone can vote as long pass checkgroup.
-						// check for own vote link.
-						if ($pdata['user_id'] !== $userdata['user_id']) {
-							$pdata['vote_up'] = array('link' => INFUSIONS."forum/post.php?action=voteup&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-								'name' => $locale['forum_0265']);
-							$pdata['vote_down'] = array('link' => INFUSIONS."forum/post.php?action=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-								'name' => $locale['forum_0265']);
-						}
-						$pdata['vote_points'] = !empty($pdata['vote_points']) ? $pdata['vote_points'] : 0;
-					} else {
-						$pdata['vote_points'] = !empty($pdata['vote_points']) ? $pdata['vote_points'] : 0;
-					}
+				if ($this->thread_info['permissions']['can_rate'] && $pdata['has_voted'] == 0) { // can vote.
+					$pdata['vote_up'] = array(
+						'link' => INFUSIONS."forum/postify.php?post=voteup&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+						'name' => $locale['forum_0265']
+					);
+					$pdata['vote_down'] = array(
+						'link' => INFUSIONS."forum/postify.php?post=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+						'name' => $locale['forum_0265']
+					);
 					$pdata['post_votebox'] = "<div class='text-center'>\n";
-					$pdata['post_votebox'] .= (!empty($pdata['vote_up'])) ? "<a href='".$pdata['vote_up']['link']."' class='mid-opacity text-dark'>\n<i class='fa fa-arrow-up fa-2x'></i></a>" : "<i class='entypo up-dir low-opacity icon-sm'></i>";
-					$pdata['post_votebox'] .= "<h4 class='m-0'>".$pdata['vote_points']."</h4>\n";
-					$pdata['post_votebox'] .= (!empty($pdata['vote_down'])) ? "<a href='".$pdata['vote_down']['link']."' class='mid-opacity text-dark'>\n<i class='fa fa-arrow-down fa-2x'></i></a>" : "<i class='entypo down-dir low-opacity icon-sm'></i>";
+					$pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='btn btn-default btn-xs m-b-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo up-dir icon-xs'></i></a>";
+					$pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
+					$pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='btn btn-default btn-xs m-t-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo down-dir icon-xs'></i></a>";
+					$pdata['post_votebox'] .= "</div>\n";
+				} else {
+					$pdata['post_votebox'] = "<div class='text-center'>\n";
+					$pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
 					$pdata['post_votebox'] .= "</div>\n";
 				}
+
 				// Marker
 				$pdata['marker'] = array(
 				'link' => "#post_".$pdata['post_id'],

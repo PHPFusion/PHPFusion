@@ -145,11 +145,12 @@ if (!function_exists('render_post_item')) {
 		</span>\n
 		</div>\n
 		<!--forum_thread_prepost_".$data['post_id']."-->\n
-		<div class='display-block'>\n
+		".($data['post_votebox'] ? "<div class='pull-left m-r-15'>".$data['post_votebox']."</div>" : '')."
+		<div class='display-block ".($data['post_votebox'] !=='' ? 'overflow-hide' : '')."'>\n
+
 		".$data['post_message']."
 		<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n
-		".($data['post_attachments'] ? "<div class='m-10'>".$data['post_attachments']."</div>" : "")
-		.($data['post_votebox'] ? "<div class='pull-right'>".$data['post_votebox']."</div>" : '')."
+		".($data['post_attachments'] ? "<div class='m-10'>".$data['post_attachments']."</div>" : "")."
 		</div>\n
 		<!--sub_forum_post_message-->\n
 		<div class='text-right'>\n
