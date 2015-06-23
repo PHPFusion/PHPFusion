@@ -37,7 +37,7 @@ include INFUSIONS."forum/templates/forum_thread.php";
 include INFUSIONS."forum/templates/forum_input.php";
 
 add_to_head("<link rel='stylesheet' type='text/css' href='".INFUSIONS."forum/templates/css/forum.css'>");
-$inf_settings = get_settings('forum');
+$forum_settings = get_settings('forum');
 $thread = new PHPFusion\Forums\Viewthread();
 
 echo renderNotices(getNotices());

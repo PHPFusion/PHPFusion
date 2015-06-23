@@ -572,7 +572,7 @@ public function display_forum_form() {
 	echo openform('inputform', 'post', FUSION_SELF.$aidlink.$this->ext, array('enctype'=>1, 'max_tokens' => 1));
 	echo "<div class='row'>\n<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
 	echo form_text('forum_name', $locale['forum_006'], $this->data['forum_name'], array('required'=>1, 'error_text'=>$locale['forum_error_1']));
-	echo form_textarea('forum_description', $locale['forum_007'], $this->data['forum_description'], array('autosize'=>1, 'bbcode'=>1));
+	echo form_textarea('forum_description', $locale['forum_007'], $this->data['forum_description'], array('autosize'=>1, 'bbcode'=>1, 'form_name'=>'inputform'));
 	echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 	openside('');
 	$self_id = $this->data['forum_id'] ? $this->data['forum_id'] : '';

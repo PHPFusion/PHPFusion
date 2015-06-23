@@ -22,8 +22,6 @@ if (!db_exists(DB_FORUMS)) {
 	require_once BASEDIR.'error.php';
 	exit;
 }
-pageAccess('F');
-
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum_admin.php";
 include LOCALE.LOCALESET."admin/settings.php";
@@ -49,7 +47,7 @@ if (isset($_GET['section'])) {
 	switch($_GET['section']) {
 		case 'fr':
 			pageAccess('FR');
-			add_breadcrumb(array('link'=>ADMIN.'administrators.php'.$aidlink, 'title'=>$locale['404']));
+			add_breadcrumb(array('link'=>INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fr', 'title'=>$locale['404']));
 			echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active, true, 'section');
 			include INFUSIONS.'forum/admin/forum_ranks.php';
 			echo closetabbody();
