@@ -28,6 +28,10 @@ $locale['429a'] = "Спеціальний";
 $locale['429b'] = "Адміністратор";
 $locale['429c'] = "По кількості повідомлень";
 
+$locale['forum_admin_000'] = 'Forum Management';
+$locale['forum_admin_001'] = 'Forum Ranks';
+$locale['forum_admin_002'] = 'Forum Settings';
+
 // Current Forum Ranks
 $locale['430'] = "Ранг";
 $locale['431'] = "Для";

@@ -32,13 +32,13 @@ require_once INCLUDES.'infusions_include.php';
 $forum_settings = get_settings('forum');
 $forum_admin = new PHPFusion\Forums\Admin;
 // want to tab , do it here.
-$tab_title['title'][] = 'Forum Management';
+$tab_title['title'][] = $locale['forum_admin_000'];
 $tab_title['id'][] = 'fm';
 $tab_title['icon'][] = '';
-$tab_title['title'][] = 'Forum Ranks';
+$tab_title['title'][] = $locale['forum_admin_001'];
 $tab_title['id'][] = 'fr';
 $tab_title['icon'][] = '';
-$tab_title['title'][] = 'Forum Settings';
+$tab_title['title'][] = $locale['forum_admin_002'];
 $tab_title['id'][] = 'fs';
 $tab_title['icon'][] = '';
 $tab_active = tab_active($tab_title, isset($_GET['section']) ? $_GET['section'] : 'fm', true);

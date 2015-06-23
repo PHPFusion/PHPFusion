@@ -114,6 +114,9 @@ $locale['forum_notice_11'] = "Forum pruning complete.";
 $locale['forum_notice_13'] = 'Forum ID %d has been sorted and now bears the order %d';
 $locale['forum_notice_na'] = 'Invalid forum action';
 
+$locale['forum_admin_000'] = 'Forum Management';
+$locale['forum_admin_001'] = 'Forum Ranks';
+$locale['forum_admin_002'] = 'Forum Settings';
 
 /* Etc */
 $locale['delete_notice'] = 'Delete Forum? Note: This action is irreversible.';
