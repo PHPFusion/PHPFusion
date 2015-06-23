@@ -234,6 +234,7 @@ class Forum {
 			if (dbrows($result)>0) {
 				while ($row = dbarray($result)) {
 					add_to_meta($row['forum_name']);
+					if ($row['forum_meta'] !=='') add_to_meta($row['forum_meta']);
 					$row['forum_moderators'] = Functions::parse_forumMods($row['forum_mods']);
 					$this->forum_info['forum_moderators'] = $row['forum_moderators'];
 
