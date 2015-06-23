@@ -793,7 +793,7 @@ private function quick_create_forum() {
 private function display_forum_list() {
 	global $locale, $aidlink, $settings;
 	$title = !empty($this->level['title']) ? sprintf($locale['forum_000b'], $this->level['title'][0]) : $locale['forum_000c'];
-	add_to_title($title.$locale['global_201']);
+	add_to_title(" ".$title);
 	opentable($title);
 	$threads_per_page = $settings['threads_per_page'];
 	$max_rows = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$_GET['parent_id']."'"); // need max rows
