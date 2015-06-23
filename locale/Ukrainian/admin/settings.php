@@ -43,6 +43,8 @@ $locale['437'] = "Фреймворк Bootstrap:";
 $locale['438'] = "Зручні для використання посилання (SEF URL):";
 $locale['439'] = "Нормалізувати дружні адреси URL:";
 $locale['440'] = "Дозволити режим налаштування SEO:";
+$locale['441'] = "Шрифт Entypo";
+$locale['442'] = "Шрифт Font-Awesome";
 
 // Time & Date Settings
 $locale['450'] = "Параметри часу та дати";
@@ -118,6 +120,7 @@ $locale['606'] = "Метод стиснення мініатюр";
 $locale['607'] = "GD1";
 $locale['608'] = "GD2";
 $locale['609'] = "Мініатюр у рядку";
+$locale['609b'] = "Мініатюр у рядку (для адміністратора):";
 $locale['610'] = "Мініатюр на сторінці";
 $locale['611'] = "Використання водяних знаків";
 $locale['612'] = "Водяний знак (.png)";
@@ -361,3 +364,4 @@ $locale['register_settings'] = "Реєстрація";
 $locale['security_settings'] = "Безпека";
 $locale['time_settings'] = "Час і дата";
 $locale['user_settings'] = "Користувачі";
+$locale['theme_settings'] = "Тема";

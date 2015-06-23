@@ -1,12 +1,12 @@
 <?php
 // Article titles
-$locale['articles_0000'] = "Поточні статті";
+$locale['articles_0000'] = "Наявні статті";
 $locale['articles_0001'] = "Статті";
 $locale['articles_0002'] = "Створення статті";
 $locale['articles_0003'] = "Редагування статті";
 
 // Category titles
-$locale['articles_0020'] = "Поточні розділи статей";
+$locale['articles_0020'] = "Наявні розділи статей";
 $locale['articles_0021'] = "Створення розділу статей";
 $locale['articles_0022'] = "Редагуваня розділу статей";
 
