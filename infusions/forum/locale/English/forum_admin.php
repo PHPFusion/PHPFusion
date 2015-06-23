@@ -65,6 +65,7 @@ $locale['forum_057'] = 'Topics : ';
 $locale['forum_058'] = 'Subforums : ';
 $locale['forum_059'] = 'Posts : ';
 $locale['forum_060'] = 'Forum Removal Options';
+$locale['forum_061'] = 'User Forum Posts Recounted';
 
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Posts Deleted: ";
@@ -81,6 +82,7 @@ $locale['forum_desc_001'] = 'Polls Permissions';
 $locale['forum_desc_002'] = 'Attachments Permissions';
 $locale['forum_desc_003'] = 'Forum Moderators Selection';
 $locale['forum_desc_004'] = 'Forum Answers';
+
 /* Navs */
 $locale['forum_root'] = 'Forum Index';
 $locale['forum_points'] = 'Forum Points';
@@ -117,6 +119,7 @@ $locale['forum_notice_na'] = 'Invalid forum action';
 $locale['forum_admin_000'] = 'Forum Management';
 $locale['forum_admin_001'] = 'Forum Ranks';
 $locale['forum_admin_002'] = 'Forum Settings';
+
 
 /* Etc */
 $locale['delete_notice'] = 'Delete Forum? Note: This action is irreversible.';

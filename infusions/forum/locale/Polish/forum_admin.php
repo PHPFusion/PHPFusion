@@ -65,6 +65,7 @@ $locale['forum_057'] = 'Topics : ';
 $locale['forum_058'] = 'Subforums : ';
 $locale['forum_059'] = 'Posts : ';
 $locale['forum_060'] = 'Forum Removal Options';
+$locale['forum_061'] = 'User Forum Posts Recounted';
 
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Posts Deleted: ";

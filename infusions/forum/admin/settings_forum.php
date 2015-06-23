@@ -23,12 +23,13 @@ if (!db_exists(DB_FORUMS)) {
 }
 add_breadcrumb(array('link'=>ADMIN.'settings_forum.php'.$aidlink, 'title'=>$locale['forum_settings']));
 
-if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
+if (isset($_POST['recount_user_post'])) {
 	$result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");
 	if (dbrows($result)) {
 		while ($data = dbarray($result)) {
 			$result2 = dbquery("UPDATE ".DB_USERS." SET user_posts='".$data['num_posts']."' WHERE user_id='".$data['post_author']."'");
 		}
+		addNotice('success', $locale['forum_061']);
 	}
 }
 /**
@@ -85,6 +86,7 @@ if (isset($_POST['savesettings'])) {
 		redirect(FUSION_SELF.$aidlink.'&section=fs');
 	}
 }
+
 /**
  * Options for dropdown field
  */
@@ -184,7 +186,7 @@ echo "</div>\n";
 echo "<div class='clearfix'>\n";
 echo form_select('forum_last_posts_reply', $locale['531'], $array_opts, $forum_settings['forum_last_posts_reply'], array('error_text' => $locale['error_value'], 'width'=>'100%'));
 echo "</div>\n";
-echo "<a class='btn btn-sm btn-primary btn-block' href='".FUSION_SELF.$aidlink."&amp;action=count_posts'>".$locale['523']."</a>";
+echo form_button('recount_user_post', $locale['523'], '1', array('class'=>'btn-primary btn-block'));
 closeside();
 
 echo "</div>\n";

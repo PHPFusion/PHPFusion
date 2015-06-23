@@ -64,6 +64,7 @@ $locale['forum_057'] = 'Темы : ';
 $locale['forum_058'] = 'Подфорумы : ';
 $locale['forum_059'] = 'Сообщения : ';
 $locale['forum_060'] = 'Параметры удаления форума';
+$locale['forum_061'] = 'User Forum Posts Recounted';
 
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Сообщений удалено: ";

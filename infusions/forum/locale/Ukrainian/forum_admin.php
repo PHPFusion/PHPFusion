@@ -64,6 +64,7 @@ $locale['forum_057'] = "Теми : ";
 $locale['forum_058'] = "Підрозділи : ";
 $locale['forum_059'] = "Повідомлення : ";
 $locale['forum_060'] = "Опції видалення розділу";
+$locale['forum_061'] = 'User Forum Posts Recounted';
 
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Видалено повідомлення: ";
