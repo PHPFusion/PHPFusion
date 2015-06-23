@@ -43,14 +43,25 @@ $tab_title['id'][] = 'fs';
 $tab_title['icon'][] = '';
 $tab_active = tab_active($tab_title, isset($_GET['section']) ? $_GET['section'] : 'fm', true);
 echo opentab($tab_title, $tab_active, 'fmm', true);
-echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active, true, 'section');
-$forum_admin->display_forum_admin();
-echo closetabbody();
-echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active, true, 'section');
-include INFUSIONS.'forum/admin/forum_ranks.php';
-echo closetabbody();
-echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active, true, 'section');
-include INFUSIONS.'forum/admin/settings_forum.php';
-echo closetabbody();
+if (isset($_GET['section'])) {
+	switch($_GET['section']) {
+		case 'fr':
+			echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active, true, 'section');
+			include INFUSIONS.'forum/admin/forum_ranks.php';
+			echo closetabbody();
+			break;
+		case 'fs':
+			echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active, true, 'section');
+			include INFUSIONS.'forum/admin/settings_forum.php';
+			echo closetabbody();
+			break;
+		default :
+			redirect(INFUSIONS.'forum/admin/forums.php'.$aidlink);
+	}
+} else {
+	echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active, true, 'section');
+	$forum_admin->display_forum_admin();
+	echo closetabbody();
+}
 echo closetab();
 require_once THEMES."templates/footer.php";
