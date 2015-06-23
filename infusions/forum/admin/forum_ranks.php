@@ -16,9 +16,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-pageAccess('FR');
-require_once THEMES."templates/admin_header.php";
-add_breadcrumb(array('link'=>ADMIN.'administrators.php'.$aidlink, 'title'=>$locale['404']));
 
 if ($forum_settings['forum_ranks']) {
 	if (isset($_POST['save_rank'])) {
@@ -35,27 +32,27 @@ if ($forum_settings['forum_ranks']) {
 				$data = dbarray(dbquery("SELECT rank_apply FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['rank_id']."'"));
 				if (($rank_apply < USER_LEVEL_MEMBER && $rank_apply != $data['rank_apply']) && (dbcount("(rank_id)", DB_FORUM_RANKS, "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_id!='".$_GET['rank_id']."' AND rank_apply='".$rank_apply."'"))) {
 					addNotice('info', $locale['413']);
-					redirect(FUSION_SELF.$aidlink);
+					redirect(FUSION_SELF.$aidlink.'&section=fr');
 				} else {
 					$result = dbquery("UPDATE ".DB_FORUM_RANKS." SET rank_title='".$rank_title."', rank_image='".$rank_image."', rank_posts='".$rank_posts."', rank_type='".$rank_type."', rank_apply='".$rank_apply."', rank_language='".$rank_language."' WHERE rank_id='".$_GET['rank_id']."'");
 					addNotice('info',  $locale['411']);
-					redirect(FUSION_SELF.$aidlink);
+					redirect(FUSION_SELF.$aidlink.'&section=fr');
 				}
 			} else {
 				if ($rank_apply > USER_LEVEL_MEMBER && dbcount("(rank_id)", DB_FORUM_RANKS, "".(multilang_table("FR") ? "rank_language='".LANGUAGE."' AND" : "")." rank_apply='".$rank_apply."'")) {
 					addNotice('info', $locale['413']);
-					redirect(FUSION_SELF.$aidlink);
+					redirect(FUSION_SELF.$aidlink.'&section=fr');
 				} else {
 					$result = dbquery("INSERT INTO ".DB_FORUM_RANKS." (rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language) VALUES ('$rank_title', '$rank_image', '$rank_posts', '$rank_type', '$rank_apply', '$rank_language')");
 					addNotice('success',  $locale['410']);
-					redirect(FUSION_SELF.$aidlink);
+					redirect(FUSION_SELF.$aidlink.'&section=fr');
 				}
 			}
 		}
 	} else if (isset($_GET['delete']) && isnum($_GET['delete'])) {
 		$result = dbquery("DELETE FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['delete']."'");
 		addNotice('warning', $locale['412']);
-		redirect(FUSION_SELF.$aidlink);
+		redirect(FUSION_SELF.$aidlink.'&section=fr');
 	}
 	if (isset($_GET['rank_id']) && isnum($_GET['rank_id'])) {
 		$result = dbquery("SELECT rank_id, rank_title, rank_image, rank_posts, rank_type, rank_apply, rank_language FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['rank_id']."'");
@@ -67,10 +64,10 @@ if ($forum_settings['forum_ranks']) {
 			$rank_type = $data['rank_type'];
 			$rank_apply = $data['rank_apply'];
 			$rank_language = $data['rank_language'];
-			$form_action = FUSION_SELF.$aidlink."&amp;rank_id=".$_GET['rank_id'];
+			$form_action = FUSION_SELF.$aidlink."&section=fr&rank_id=".$_GET['rank_id'];
 			opentable($locale['401']);
 		} else {
-			redirect(FUSION_SELF.$aidlink);
+			redirect(FUSION_SELF.$aidlink.'&section=fr');
 		}
 	} else {
 		$rank_title = "";
@@ -79,7 +76,7 @@ if ($forum_settings['forum_ranks']) {
 		$rank_type = "2";
 		$rank_apply = "";
 		$rank_language = LANGUAGE;
-		$form_action = FUSION_SELF.$aidlink;
+		$form_action = FUSION_SELF.$aidlink.'&section=fr';
 		opentable($locale['400']);
 	}
 	echo openform('rank_form', 'post', $form_action, array('max_tokens' => 1));
@@ -165,8 +162,8 @@ if ($forum_settings['forum_ranks']) {
 				echo $locale['429a'];
 			}
 			echo "</td>\n<td width='1%' class='".$row_color."' style='white-space:nowrap'>";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;rank_id=".$data['rank_id']."'>".$locale['435']."</a> -\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;delete=".$data['rank_id']."'>".$locale['436']."</a></td>\n</tr>\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;rank_id=".$data['rank_id']."&amp;section=fr'>".$locale['435']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;delete=".$data['rank_id']."&amp;section=fr'>".$locale['436']."</a></td>\n</tr>\n";
 			$i++;
 		}
 		echo "</tbody>\n</table>";
@@ -176,7 +173,7 @@ if ($forum_settings['forum_ranks']) {
 	closetable();
 } else {
 	opentable($locale['403']);
-	echo "<div style='text-align:center'>\n".sprintf($locale['450'], "<a href='settings_forum.php".$aidlink."'>".$locale['451']."</a>")."</div>\n";
+	echo "<div style='text-align:center'>\n".sprintf($locale['450'], "<a href='".FUSION_SELF.$aidlink."&section=fs'>".$locale['451']."</a>")."</div>\n";
 	closetable();
 }
 

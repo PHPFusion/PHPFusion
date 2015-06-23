@@ -21,11 +21,6 @@ if (!db_exists(DB_FORUMS)) {
 	require_once BASEDIR.'error.php';
 	exit;
 }
-pageAccess('F');
-
-//require_once THEMES."templates/admin_header.php";
-include LOCALE.LOCALESET."admin/settings.php";
-
 add_breadcrumb(array('link'=>ADMIN.'settings_forum.php'.$aidlink, 'title'=>$locale['forum_settings']));
 
 if (isset($_GET['action']) && $_GET['action'] == "count_posts") {
@@ -70,9 +65,9 @@ if (isset($_POST['savesettings'])) {
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachmax_count' WHERE settings_name='forum_attachmax_count' AND settings_inf='forum'") : '';
 		$attachtypes = form_sanitizer($_POST['forum_attachtypes'], '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum_attachtypes');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$attachtypes' WHERE settings_name='forum_attachtypes' AND settings_inf='forum'") : '';
-		$thread_notify = form_sanitizer($_POST['thread_notify'], '', 'thread_notify');
+		$thread_notify = form_sanitizer($_POST['thread_notify'], '0', 'thread_notify');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$thread_notify' WHERE settings_name='thread_notify' AND settings_inf='forum'") : '';
-		$forum_ranks = form_sanitizer($_POST['forum_ranks'], '1', 'forum_ranks');
+		$forum_ranks = form_sanitizer($_POST['forum_ranks'], '0', 'forum_ranks');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_ranks' WHERE settings_name='forum_ranks' AND settings_inf='forum'") : '';
 		$forum_edit_lock = form_sanitizer($_POST['forum_edit_lock'], '0', 'forum_edit_lock');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_edit_lock' WHERE settings_name='forum_edit_lock' AND settings_inf='forum'") : '';
@@ -80,9 +75,9 @@ if (isset($_POST['savesettings'])) {
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_edit_timelimit' WHERE settings_name='forum_edit_timelimit' AND settings_inf='forum'") : '';
 		$popular_threads_timeframe = form_sanitizer($_POST['popular_threads_timeframe'], '604800', 'popular_threads_timeframe');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$popular_threads_timeframe' WHERE settings_name='popular_threads_timeframe' AND settings_inf='forum'") : '';
-		$forum_last_posts_reply = form_sanitizer($_POST['forum_last_posts_reply'], '1', 'forum_last_posts_reply');
+		$forum_last_posts_reply = form_sanitizer($_POST['forum_last_posts_reply'], '0', 'forum_last_posts_reply');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_last_posts_reply' WHERE settings_name='forum_last_posts_reply' AND settings_inf='forum'") : '';
-		$forum_last_post_avatar = form_sanitizer($_POST['forum_last_post_avatar'], '1', 'forum_last_post_avatar');
+		$forum_last_post_avatar = form_sanitizer($_POST['forum_last_post_avatar'], '0', 'forum_last_post_avatar');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_last_post_avatar' WHERE settings_name='forum_last_post_avatar' AND settings_inf='forum'") : '';
 		$forum_editpost_to_lastpost = form_sanitizer($_POST['forum_editpost_to_lastpost'], '0', 'forum_editpost_to_lastpost');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_editpost_to_lastpost' WHERE settings_name='forum_editpost_to_lastpost' AND settings_inf='forum'") : '';

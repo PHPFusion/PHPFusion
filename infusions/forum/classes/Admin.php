@@ -544,7 +544,7 @@ public function display_forum_admin() {
 private function display_forum_jumper() {
 	/* JS Menu Jumper */
 	global $aidlink, $locale;
-	echo "<div class='clearfix'>\n";
+	echo "<div class='pull-right m-t-10'>\n";
 	echo form_select_tree('forum_jump', '', $_GET['parent_id'], array('inline'=>1,  'class'=>'pull-right', 'parent_value'=>$locale['forum_root']), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 	echo "<label for='forum_jump' class='text-dark strong pull-right m-r-10 m-t-3'>".$locale['forum_044']."</label>\n";
 	add_to_jquery("
