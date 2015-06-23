@@ -192,7 +192,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 
 			add_breadcrumb(array('link' => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'], 'title' => $item['blog_subject']));
 			add_to_title($locale['global_201'].$item['blog_subject']);
-			add_to_meta($item['blog_subject'].($item['blog_keywords'] ? ",".$item['blog_keywords'] : ''));
+			if ($item['blog_keywords'] !=="") { 
+				set_meta("keywords", $item['blog_keywords']); 
+			}
 			$item['blog_subject'] = "<a class='text-dark' href='".INFUSIONS."blog/blog.php?readmore=".$item['blog_id']."'>".$item['blog_subject']."</a>";
 			$info['blog_item'] = $item;
 			dbquery("UPDATE ".DB_BLOG." SET blog_reads=blog_reads+1 WHERE blog_id='".intval($item['blog_id'])."'");
