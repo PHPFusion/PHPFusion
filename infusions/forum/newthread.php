@@ -68,7 +68,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			'thread_lastpost' => time(),
 			'thread_lastpostid' => 0, // need to run update
 			'thread_lastuser' => $userdata['user_id'],
-			'thread_postcount' => 1,
+			'thread_postcount' => 1, // already insert 1 postcount.
 			'thread_poll' => 0,
 			'thread_sticky' => 0,
 			'thread_locked' => 0,
@@ -108,7 +108,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 				$post_data['post_id'] = dblastid();
 
 				if (!defined('FUSION_NULL')) {
-					dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpostid='".$post_data['post_id']."' WHERE thread_id='".$post_data['thread_id']."'");
+
 					dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
 					// save all file attachments and get error
 					if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
@@ -136,7 +136,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 					// update current forum
 					dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$post_data['forum_id']."'");
 					// update current thread
-					dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$post_data['thread_id']."'");
+					dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$post_data['thread_id']."'");
 					// set notify
 					if ($inf_settings['thread_notify'] && isset($_POST['notify_me']) && $post_data['thread_id']) {
 						if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$post_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
