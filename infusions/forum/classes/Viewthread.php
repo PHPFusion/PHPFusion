@@ -640,12 +640,13 @@ class Viewthread {
 	protected function handle_quickreply() {
 		global $userdata, $forum_settings, $locale;
 		if ($this->thread_info['permissions']['can_reply']) {
-			$thread_data = self::get_thread_data();
+			$info = self::get_thread_data();
+			$thread_data = $info['thread'];
 			require_once INCLUDES."flood_include.php";
 			if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
 				$post_data = array(
-					'forum_id' => $this->thread_info['thread']['forum_id'],
-					'thread_id' => $this->thread_info['thread']['thread_id'],
+					'forum_id' => $thread_data['forum_id'],
+					'thread_id' => $thread_data['thread_id'],
 					'post_id' => 0,
 					'post_message' => form_sanitizer($_POST['post_message'], '', 'post_message'),
 					'post_showsig' => isset($_POST['post_showsig']) ? 1 : 0,
