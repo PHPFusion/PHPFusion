@@ -110,9 +110,8 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 				if (!defined('FUSION_NULL')) {
 					dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpostid='".$post_data['post_id']."' WHERE thread_id='".$post_data['thread_id']."'");
 					dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
-
 					// save all file attachments and get error
-					if (is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
+					if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
 						$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
 						if ($upload['error'] == 0) {
 							foreach($upload['target_file'] as $arr => $file_name) {
@@ -132,10 +131,10 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 					// find all parents and update them
 					$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $post_data['forum_id']);
 					foreach($list_of_forums as $fid) {
-						dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
+						dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$fid."'");
 					}
 					// update current forum
-					dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$post_data['forum_id']."'");
+					dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_postcount=forum_postcount+1, forum_threadcount=forum_threadcount+1, forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$post_data['forum_id']."'");
 					// update current thread
 					dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$post_data['thread_id']."'");
 					// set notify
