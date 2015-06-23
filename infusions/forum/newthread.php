@@ -163,8 +163,8 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 			'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1, 'error_text' => '', 'autosize' => 1, 'no_resize' => 1, 'preview' => 1, 'form_name' => 'input_form', 'bbcode' => 1)),
 			// happens only in EDIT
 			'attachment_field' => $info['permissions']['can_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
-					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($inf_settings['attachmax_count']), str_replace(',', ' ', $inf_settings['attachtypes']), $inf_settings['attachmax_count'])."</div>\n
-					".form_fileinput('', 'file_attachments[]', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$inf_settings['attachmax_count'], 'valid_ext'=>$inf_settings['attachtypes']))
+					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($inf_settings['forum_attachmax']), str_replace(',', ' ', $inf_settings['forum_attachtypes']), $inf_settings['forum_attachmax_count'])."</div>\n
+					".form_fileinput('', 'file_attachments[]', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$inf_settings['forum_attachmax_count'], 'valid_ext'=>$inf_settings['forum_attachtypes']))
 				) : array(),
 			'poll' => array(),
 			'smileys_field' => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0')),
