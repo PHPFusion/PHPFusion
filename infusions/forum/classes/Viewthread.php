@@ -74,9 +74,7 @@ class Viewthread {
 			redirect(FORUM.'index.php');
 		}
 		$thread_stat = self::get_thread_stats($_GET['thread_id']); // get post_count, lastpost_id, first_post_id.
-		add_to_meta($thread_data['forum_name']);
-		if ($thread_data['forum_meta'] !=='') add_to_meta($thread_data['forum_meta']);
-		add_to_meta($thread_data['thread_subject']);
+		if ($thread_data['forum_meta'] !=='') set_meta('keywords', $thread_data['forum_meta']);
 		$_GET['forum_id'] = $thread_data['forum_id'];
 		//$_GET['forum_id'] = $this->thread_info['forum_id'];
 		if ($thread_data['forum_type'] == 1) redirect(INFUSIONS.'forum/index.php');

@@ -216,7 +216,7 @@ class Forum {
 				$locale['forum_3022'] => $orderLink.'&amp;order=ascending'
 			);
 
-			// Load forum
+			// Load forums
 			$result = dbquery("SELECT f.*, f2.forum_name AS forum_cat_name,
 				t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_subject,
 				count(t.thread_id) as forum_threadcount, p.post_message,
@@ -233,11 +233,12 @@ class Forum {
 			$refs = array();
 			if (dbrows($result)>0) {
 				while ($row = dbarray($result)) {
-					add_to_meta($row['forum_name']);
-					if ($row['forum_meta'] !=='') add_to_meta($row['forum_meta']);
+
+					if ($row['forum_description'] !=='') { set_meta('description', $row['forum_description']); }
+					if ($row['forum_meta'] !=='') { set_meta('keywords', $row['forum_meta']); }
+
 					$row['forum_moderators'] = Functions::parse_forumMods($row['forum_mods']);
 					$this->forum_info['forum_moderators'] = $row['forum_moderators'];
-
 					$row['forum_new_status'] = '';
 					$forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
 					$last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
