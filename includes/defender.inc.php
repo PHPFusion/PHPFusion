@@ -539,27 +539,22 @@ class defender {
 							case 1: // Invalid file size
 								addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 								self::setInputError($this->field_name);
-								//$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 								break;
 							case 2: // Unsupported image type
 								addNotice('danger', sprintf($locale['df_417'], ".gif .jpg .png"));
 								self::setInputError($this->field_name);
-								//$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
 								break;
 							case 3: // Invalid image resolution
-								addNotice('danger', sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+								addNotice('danger', sprintf($locale['df_421'], $this->field_config['max_width'], $this->field_config['max_height']));
 								self::setInputError($this->field_name);
-								//$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width'], $this->field_config['max_height']));
 								break;
 							case 4: // Invalid query string
 								addNotice('danger', $locale['df_422']);
 								self::setInputError($this->field_name);
-								//$this->addHelperText($this->field_config['id'], $locale['df_422']);
 								break;
 							case 5: // Image not uploaded
 								addNotice('danger', $locale['df_423']);
 								self::setInputError($this->field_name);
-								//$this->addHelperText($this->field_config['id'], $locale['df_423']);
 								break;
 						}
 					} else {
@@ -577,29 +572,24 @@ class defender {
 					$this->stop();
 					switch ($upload['error']) {
 						case 1: // Invalid file size
-							addNotice('info', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+							addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 							self::setInputError($this->field_name);
-							//$this->addHelperText($this->field_config['id'], sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 							break;
 						case 2: // Unsupported image type
-							addNotice('info', sprintf($locale['df_417'], ".gif .jpg .png"));
+							addNotice('danger', sprintf($locale['df_417'], ".gif .jpg .png"));
 							self::setInputError($this->field_name);
-							//$this->addHelperText($this->field_config['id'], sprintf($locale['df_417'], ".gif .jpg .png"));
 							break;
 						case 3: // Invalid image resolution
-							addNotice('info', sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
+							addNotice('danger', sprintf($locale['df_421'], $this->field_config['max_width'], $this->field_config['max_height']));
 							self::setInputError($this->field_name);
-							//$this->addHelperText($this->field_config['id'], sprintf($locale['df_421'], $this->field_config['max_width']." x ".$this->field_config['max_height']));
 							break;
 						case 4: // Invalid query string
-							addNotice('info', $locale['df_422']);
+							addNotice('danger', $locale['df_422']);
 							self::setInputError($this->field_name);
-							//$this->addHelperText($this->field_config['id'], $locale['df_422']);
 							break;
 						case 5: // Image not uploaded
-							addNotice('info', $locale['df_423']);
+							addNotice('danger', $locale['df_423']);
 							self::setInputError($this->field_name);
-							//$this->addHelperText($this->field_config['id'], $locale['df_423']);
 							break;
 					}
 				} else {
