@@ -920,7 +920,6 @@ class Viewthread {
 						redirect("postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
 					}
 
-					// if edit, data prevails. then in execute, another time.
 					// execute form post actions
 					if (isset($_POST['post_edit'])) {
 						require_once INCLUDES."flood_include.php";
@@ -944,6 +943,14 @@ class Viewthread {
 								'notify_me' 	=> false,
 								'post_locked' 	=> $forum_settings['forum_edit_lock'] or isset($_POST['post_locked']) ? true : false
 							);
+
+							if ($is_first_post == true) {
+								$thread_subject = form_sanitizer($_POST['thread_subject'], '', 'thread_subject');
+								if (!defined('FUSION_NULL')) {
+									dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_subject='".$thread_subject."' WHERE thread_id='".intval($thread_data['thread_id'])."'");
+								}
+							}
+
 							// Prepare forum merging action
 							$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
 							if ($last_post_author == $post_data['post_author'] && $thread_data['forum_merge']) {
