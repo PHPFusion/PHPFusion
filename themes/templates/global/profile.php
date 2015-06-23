@@ -87,7 +87,7 @@ if (!function_exists('render_userprofile')) {
 			if ($field_id == 'profile_user_avatar') {
 				$avatar['user_avatar'] = $data['value'];
 				$avatar['user_status'] = $data['status'];
-				$user_avatar = "<img src='".$data['value']."' style='width:50px;' alt='".$info['core_field']['profile_user_name']['value']."'/>\n";
+				$user_avatar = "<img src='".IMAGES."avatars/".$data['value']."' style='width:50px;' alt='".$info['core_field']['profile_user_name']['value']."'/>\n";
 			} elseif ($field_id == 'profile_user_name') {
 				$user_name = "<h4>".$data['value']."</h4>\n";
 				$user_name .= "<hr/>\n";
