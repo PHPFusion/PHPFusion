@@ -562,7 +562,6 @@ class Viewthread {
 		}
 	}
 
-
 	private function set_ThreadJs() {
 		$viewthread_js = '';
 		//javascript to footer
@@ -736,7 +735,7 @@ class Viewthread {
 					$update_forum_lastpost = false;
 					// Prepare forum merging action
 					$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
-					if ($last_post_author == $post_data['post_author'] && $thread_data['forum_merge']) {
+					if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
 						$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
 						$post_data['post_id'] = $last_message['post_id'];
 						$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
