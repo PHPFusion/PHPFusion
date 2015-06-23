@@ -37,7 +37,7 @@ class Viewthread {
 	 * Duration : 7 days
 	 * @param $thread_id
 	 */
-	static function increment_thread_view($thread_id) {
+	static function increment_thread_views($thread_id) {
 		$days_to_keep_session = 7;
 		if (!isset($_SESSION['thread'][$thread_id])) {
 			$_SESSION['thread'][$thread_id] = time();
@@ -51,10 +51,9 @@ class Viewthread {
 	}
 
 	/**
-	 * Set user viewing this thread
-	 * can know who is visiting here.
+	 * New Status
 	 */
-	private function set_thread_visitor() {
+	public function set_thread_visitor() {
 		global $userdata;
 		if (iMEMBER) {
 			$thread_match = $this->thread_info['thread_id']."\|".$this->thread_info['thread']['thread_lastpost']."\|".$this->thread_info['thread']['forum_id'];
