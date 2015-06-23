@@ -52,7 +52,12 @@ class Forum {
 			'section' => isset($_GET['section']) ? $_GET['section'] : 'thread',
 		);
 
-		$this->forum_info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."'");
+		// security boot due to insufficient access level
+		if ($this->forum_info['forum_id'] == 0 && isset($_GET['viewforum'])) {
+			redirect(INFUSIONS.'forum/index.php');
+		}
+
+		$this->forum_info['max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? "forum_language='".LANGUAGE."' AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
 		add_to_title($locale['global_200'].$locale['forum_0000']);
 		add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
 		$_GET['forum_id'] = $this->forum_info['forum_id'];
@@ -94,7 +99,6 @@ class Forum {
 			 * View Forum
 			 * @todo: This part needs to merge with get_forum() , extend params with `get_thread` to get threads of current forum.
 			 */
-
 			// Filter core
 			$sort = isset($_GET['sort']) ? $_GET['sort'] : '';
 			$time = isset($_GET['time']) ? $_GET['time'] : '';

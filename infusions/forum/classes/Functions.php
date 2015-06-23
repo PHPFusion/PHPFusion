@@ -27,8 +27,9 @@ class Functions {
  */
 public static function verify_forum($forum_id) {
 	if (isnum($forum_id)) {
-		return dbcount("('forum_id')", DB_FORUMS, "forum_id='".$forum_id."'");
+		return (int) dbcount("('forum_id')", DB_FORUMS, "forum_id='".$forum_id."' AND ".groupaccess('forum_access')." ");
 	}
+
 	return false;
 }
 
@@ -320,7 +321,7 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 	".(multilang_table("FO") ? "WHERE forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('tf.forum_access')."
 	".($forum_id && $branch_id ? "AND tf.forum_id = '".intval($forum_id)."' or tf.forum_cat = '".intval($forum_id)."' OR tf.forum_branch = '".intval($branch_id)."'" : '')."
 	GROUP BY tf.forum_id ORDER BY tf.forum_cat ASC, tf.forum_order ASC, t.thread_lastpost DESC");
-	while ($row = dbarray($query)) {
+	while ($row = dbarray($query) and checkgroup($row['forum_access'])) {
 		// add custom data here.
 		$row['forum_moderators'] = self::parse_forumMods($row['forum_mods']);
 		// get new status
