@@ -71,6 +71,9 @@ $locale['forum_070'] = "Posts Deleted: ";
 $locale['forum_071'] = "Attachments Deleted: ";
 $locale['forum_072'] = "Threads Deleted: ";
 
+$locale['forum_080'] = "Threads per Page: ";
+$locale['forum_081'] = "Posts per Page: ";
+
 
 /* Permissions */
 $locale['forum_desc_000'] = 'Post Permissions';

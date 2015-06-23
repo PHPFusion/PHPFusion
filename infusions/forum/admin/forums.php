@@ -28,5 +28,26 @@ include INFUSIONS."forum/locale/".LOCALESET."forum_admin.php";
 require_once INFUSIONS."forum/classes/Admin.php";
 require_once INFUSIONS."forum/classes/Functions.php";
 $forum_admin = new PHPFusion\Forums\Admin;
+
+// want to tab , do it here.
+$tab_title['title'][] = 'Forum Management';
+$tab_title['id'][] = 'fm';
+$tab_title['icon'][] = '';
+$tab_title['title'][] = 'Forum Ranks';
+$tab_title['id'][] = 'fr';
+$tab_title['icon'][] = '';
+$tab_title['title'][] = 'Forum Settings';
+$tab_title['id'][] = 'fs';
+$tab_title['icon'][] = '';
+$tab_active = tab_active($tab_title, isset($_GET['section']) ? $_GET['section'] : 'fm', true);
+echo opentab($tab_title, $tab_active, 'fmm', true);
+echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active, true, 'section');
 $forum_admin->display_forum_admin();
+echo closetabbody();
+echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active, true, 'section');
+// need to go out for work. continue later..
+echo closetabbody();
+echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active, true, 'section');
+// need to go out for work. continue later..
+echo closetabbody();
 require_once THEMES."templates/footer.php";

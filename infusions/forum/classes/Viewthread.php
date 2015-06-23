@@ -76,7 +76,6 @@ class Viewthread {
 		$thread_stat = self::get_thread_stats($_GET['thread_id']); // get post_count, lastpost_id, first_post_id.
 
 		$_GET['forum_id'] = $thread_data['forum_id'];
-
 		//$_GET['forum_id'] = $this->thread_info['forum_id'];
 		if ($thread_data['forum_type'] == 1) redirect(INFUSIONS.'forum/index.php');
 		if ($thread_stat['post_count'] < 1) redirect(INFUSIONS.'forum/index.php');
@@ -121,7 +120,6 @@ class Viewthread {
 			'close_post_form' => '',
 			'mod_form' => '',
 		);
-
 		// Thread buttons
 		$this->thread_info['buttons'] = array(
 		'print' => array('link' => BASEDIR."print.php?type=F&amp;thread=".$this->thread_info['thread_id']."&amp;rowstart=".$_GET['rowstart'], 'name' => $locale['forum_0178']),
@@ -507,8 +505,8 @@ class Viewthread {
 				$pdata['attach_files_count'] = 0;
 				$pdata['attach_image_count'] = 0;
 				$pdata['post_attachments'] = '';
-
-				if (isset($this->thread_info['attachments'][$pdata['post_id']])) {
+				//print_p($this->thread_info['permissions']['can_download_attach']);
+				if (isset($this->thread_info['attachments'][$pdata['post_id']]) && $this->thread_info['permissions']['can_download_attach']) {
 					require_once INCLUDES."mimetypes_include.php";
 					$pdata['attach-image'] = '';
 					$pdata['attach-files'] = '';
@@ -542,7 +540,7 @@ class Viewthread {
 					}
 				}
 				/* Indicator of current post has attachment */
-				if (empty($pdata['post_attachment']) && !empty($pdata['attach_mime'])) {
+				if (!$pdata['post_attachments'] && !empty($pdata['attach_mime'])) {
 					$pdata['post_attachments'] = "<small><i class='fa fa-clipboard'></i> ".$locale['forum_0184']."</small>\n";
 				}
 
