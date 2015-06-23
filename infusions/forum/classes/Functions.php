@@ -396,15 +396,19 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
  */
 public static function get_thread($thread_id = 0) {
 	$data = array();
-	$result = dbquery("SELECT t.*, f.*, f2.forum_name AS forum_cat_name,
+	// where parent access is set to admin only and child access is set to public. follow child access.
+	// where child access is set to admin only and parent is set to public, follow child access.
+	// child to inherit parents access.
+	$result = dbquery("SELECT t.*, f.*, f2.forum_name AS forum_cat_name, f2.forum_access as parent_access,
 				u.user_id, u.user_name, u.user_status, u.user_avatar, u.user_joined,
 				IF (n.thread_id > 0, 1 , 0) as user_tracked
 				FROM ".DB_FORUM_THREADS." t
 				INNER JOIN ".DB_USERS." u on t.thread_author = u.user_id
-				LEFT JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
+				INNER JOIN ".DB_FORUMS." f ON t.forum_id=f.forum_id
 				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
 				LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id
-				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'");
+				".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")."
+				".groupaccess('f.forum_access')." AND t.thread_id='".intval($thread_id)."' AND t.thread_hidden='0'");
 
 		if (dbrows($result) > 0) {
 			$data = dbarray($result);

@@ -70,6 +70,9 @@ class Viewthread {
 		if (!isset($_GET['thread_id']) && !isnum($_GET['thread_id'])) redirect(INFUSIONS.'forum/index.php');
 
 		$thread_data = \PHPFusion\Forums\Functions::get_thread($_GET['thread_id']); // fetch query and define iMOD
+		if (empty($thread_data)) {
+			redirect(FORUM.'index.php');
+		}
 		$thread_stat = self::get_thread_stats($_GET['thread_id']); // get post_count, lastpost_id, first_post_id.
 
 		$_GET['forum_id'] = $thread_data['forum_id'];
