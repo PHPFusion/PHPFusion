@@ -50,6 +50,21 @@ class Viewthread {
 		}
 	}
 
+	/* Get participated users - parsing */
+	public function get_participated_users($info) {
+		$user = array();
+		$result = dbquery("SELECT u.user_id, u.user_name, u.user_status, count(p.post_id) as post_count FROM ".DB_FORUM_POSTS." p
+				INNER JOIN ".DB_USERS." u on (u.user_id=p.post_author)
+				WHERE p.forum_id='".$info['thread']['forum_id']."' AND p.thread_id='".$info['thread']['thread_id']."'");
+		if (dbrows($result)>0) {
+			while ($data = dbarray($result)) {
+				$user[$data['user_id']] = profile_link($data['user_id'], $data['user_name'], $data['user_status']);
+			}
+		}
+		return $user;
+	}
+
+
 	/**
 	 * New Status
 	 */

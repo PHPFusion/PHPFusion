@@ -241,10 +241,7 @@ $locale['forum_0575'] = " Polls deleted";
 $locale['forum_0576'] = " Polls Votes deleted";
 $locale['forum_0577'] = " Polls Options deleted";
 $locale['forum_0580'] = " Wipe records for Developer Use ";
-$locale['forum_0581'] = "Current Mode is --- ";
-$locale['forum_0582'] = "EDIT MODE";
-$locale['forum_0583'] = "REPLY MODE";
-$locale['forum_0584'] = "POST NEW THREAD MODE.";
+$locale['forum_0581'] = "Users who participated in discussion:";
 
 $locale['forum_0585'] = "Please enter a message in the reply";
 $locale['forum_0586'] = "Post ID is blank, and not passed! Please report this to your system Administrator.";

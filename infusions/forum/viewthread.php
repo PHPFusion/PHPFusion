@@ -67,9 +67,11 @@ if (isset($_GET['action'])) {
 	$info = $thread->get_thread_data();
 	// +1 threadviews
 	$thread::increment_thread_views($info['thread']['thread_id']);
-	$thread->set_thread_visitor();
 	// +1 see who is viewing thread
-
+	$thread->set_thread_visitor();
+	if ($info['thread']['forum_users'] == true) {
+		$info['thread_users'] = $thread->get_participated_users($info);
+	}
 	render_thread($info);
 }
 
