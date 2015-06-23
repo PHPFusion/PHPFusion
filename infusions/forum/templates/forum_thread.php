@@ -94,11 +94,12 @@ if (!function_exists('render_thread')) {
 /* Post Item */
 if (!function_exists('render_post_item')) {
 	function render_post_item($data) {
-		// global $locale, $inf_settings, $settings; -- these are accessible, but i'm not using it. ;)
+		global $forum_settings;
 		echo "
 		<div id='".$data['marker']['id']."' class='clearfix post_items'>\n
-		<div class='forum_avatar'>\n
+		<div class='forum_avatar m-r-15 text-center'>\n
 		".$data['user_avatar']."
+		".($forum_settings['forum_rank_style'] == '1' ? "<div class='text-center m-t-10'>".$data['user_rank']."</div>\n": '')."
 		</div>\n
 
 		<div class='pull-right m-l-10'>".$data['post_checkbox']."</div>\n
@@ -120,7 +121,9 @@ if (!function_exists('render_post_item')) {
 		<!--forum_thread_user_name-->\n
 		<div class='m-b-10'>\n
 		<span style='height:5px; width:10px; border-radius:50%; color:#5CB85C'><i class='fa ".($data['user_online'] ? "fa-circle" : "fa-circle-thin")."'></i></span>\n
-		<span class='text-smaller'><span class='forum_poster'>".$data['user_profile_link']."</span><span class='forum_rank'>\n".$data['user_rank']."</span>\n ".$data['post_shortdate']." </span>\n
+		<span class='text-smaller'><span class='forum_poster'>".$data['user_profile_link']."</span>
+		".($forum_settings['forum_rank_style'] == '0' ? "<span class='forum_rank'>\n".$data['user_rank']."</span>\n" : '')."
+		".$data['post_shortdate']." </span>\n
 		<span class='text-smaller'>\n
 		".(isset($data['post_quote']) && !empty($data['post_quote']) ? "&middot; <a class='quote-link' href='".$data['post_quote']['link']."' title='".$data['post_quote']['name']."'>".$data['post_quote']['name']."</a>\n" : '')."
 		".(isset($data['post_reply']) && !empty($data['post_reply']) ? "&middot; <a class='reply-link' href='".$data['post_reply']['link']."' title='".$data['post_reply']['name']."'>".$data['post_reply']['name']."</a>\n" : '')."

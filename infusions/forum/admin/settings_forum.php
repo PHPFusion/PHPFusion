@@ -70,6 +70,8 @@ if (isset($_POST['savesettings'])) {
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$thread_notify' WHERE settings_name='thread_notify' AND settings_inf='forum'") : '';
 		$forum_ranks = form_sanitizer($_POST['forum_ranks'], '0', 'forum_ranks');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_ranks' WHERE settings_name='forum_ranks' AND settings_inf='forum'") : '';
+		$forum_rank_style = form_sanitizer($_POST['forum_rank_style'], '0', 'forum_rank_style');
+		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_rank_style' WHERE settings_name='forum_rank_style' AND settings_inf='forum'") : '';
 		$forum_edit_lock = form_sanitizer($_POST['forum_edit_lock'], '0', 'forum_edit_lock');
 		$result = (!defined('FUSION_NULL')) ? dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='$forum_edit_lock' WHERE settings_name='forum_edit_lock' AND settings_inf='forum'") : '';
 		$forum_edit_timelimit = form_sanitizer($_POST['forum_edit_timelimit'], '0', 'forum_edit_timelimit');
@@ -132,12 +134,9 @@ closeside();
 openside('');
 echo "<span class='pull-right position-absolute small' style='right:30px;'>".$locale['537']."</span>\n";
 echo form_select('forum_edit_timelimit', $locale['536'], array('0','10','30','45','60'), $forum_settings['forum_edit_timelimit'], array('max_length' => 2, 'width' => '100px', 'required' => 1, 'error_text' => $locale['error_value'], 'inline' => 1));
-
 echo form_select('forum_ips', $locale['507'], $yes_no_array, $forum_settings['forum_ips'], array('error_text' => $locale['error_value'], 'inline' => 1));
-
 echo form_select('forum_ranks', $locale['520'], $yes_no_array, $forum_settings['forum_ranks'], array('error_text' => $locale['error_value'], 'inline' => 1));
-echo form_select('forum_ranks_style', $locale['forum_064'], array($locale['forum_062'], $locale['forum_063']), $forum_settings['forum_ranks_style'], array('error_text' => $locale['error_value'], 'inline' => 1));
-
+echo form_select('forum_rank_style', $locale['forum_064'], array($locale['forum_063'], $locale['forum_062']), $forum_settings['forum_rank_style'], array('error_text' => $locale['error_value'], 'inline' => 1));
 echo form_select('forum_last_post_avatar', $locale['539'], $yes_no_array, $forum_settings['forum_last_post_avatar'], array('error_text' => $locale['error_value'], 'inline' => 1));
 echo form_select('forum_edit_lock', $locale['521'], $yes_no_array, $forum_settings['forum_edit_lock'], array('error_text' => $locale['error_value'], 'inline' => 1));
 echo form_select('forum_editpost_to_lastpost', $locale['538'], $yes_no_array, $forum_settings['forum_editpost_to_lastpost'], array('error_text' => $locale['error_value'], 'inline' => 1));

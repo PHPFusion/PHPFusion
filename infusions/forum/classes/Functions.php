@@ -80,13 +80,14 @@ public static function attach_exists($file) {
  * @return array Cached forum ranks
  */
 public static function forum_rank_cache() {
-	global $inf_settings;
+	global $forum_settings;
+
 	static $forum_rank_cache = NULL;
 	$known_types = array(
 		0 => 'post',
 		1 => 'mod'
 	);
-	if ($forum_rank_cache === NULL and $inf_settings['forum_ranks']) {
+	if ($forum_rank_cache === NULL and $forum_settings['forum_ranks']) {
 		$forum_rank_cache = array(
 			'post' => array(),
 			'mod' => array(),
@@ -109,11 +110,15 @@ public static function forum_rank_cache() {
  * @param array $groups The groups of the member
  * @return string HTML source of forum rank images
  */
-public static function show_forum_rank($posts, $level, $groups, $image = false) {
-	global $inf_settings;
+public static function show_forum_rank($posts, $level, $groups) {
+	global $forum_settings;
 	$ranks = array();
-	if (!$inf_settings['forum_ranks']) {
+	if (!$forum_settings['forum_ranks']) {
 		return '';
+	}
+	$image = 0;
+	if ($forum_settings['forum_rank_style'] == 1) {
+		$image = 1;
 	}
 	$forum_rank_cache = forum_rank_cache();
 	$forum_rank_css_class = array(
@@ -270,7 +275,7 @@ public static function parse_forumMods($forum_mods) {
  * @return mixed
  */
 public static function get_recentTopics($forum_id = 0) {
-	global $inf_settings;
+	global $forum_settings;
 	$result = dbquery("SELECT tt.*, tf.*, tp.post_id, tp.post_datestamp,
 			u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
 			uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
@@ -284,7 +289,7 @@ public static function get_recentTopics($forum_id = 0) {
 			".(multilang_table("FO") ? "WHERE tf.forum_language='".LANGUAGE."' AND" : "WHERE")."
 			".groupaccess('tf.forum_access')." AND tt.thread_hidden='0'
 			".($forum_id ? "AND forum_id='".intval($forum_id)."'" : '')."
-			GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT 0, ".$inf_settings['threads_per_page']."");
+			GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT 0, ".$forum_settings['threads_per_page']."");
 			
 	$info['rows'] = dbrows($result);
 	if ($info['rows'] > 0) {
@@ -301,7 +306,7 @@ public static function get_recentTopics($forum_id = 0) {
  * @return array
  */
 public static function get_forum($forum_id = false, $branch_id = false) { // only need to fetch child.
-	global $locale, $userdata, $inf_settings;
+	global $locale, $userdata, $forum_settings;
 	$data = array();
 	$index = array();
 	$query = dbquery("SELECT tf.forum_id, tf.forum_cat, tf.forum_branch, tf.forum_name, tf.forum_description, tf.forum_image,
@@ -345,7 +350,7 @@ public static function get_forum($forum_id = false, $branch_id = false) { // onl
 				'thread_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id'],
 				'post_link' => INFUSIONS."forum/viewthread.php?forum_id=".$row['forum_id']."&amp;thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
 			);
-			if ($inf_settings['forum_last_post_avatar']) {
+			if ($forum_settings['forum_last_post_avatar']) {
 				$last_post['avatar'] = display_avatar($row, '30px', '', '', 'img-rounded');
 			}
 			$row['last_post'] = $last_post;
