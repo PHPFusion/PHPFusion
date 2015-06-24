@@ -68,7 +68,7 @@ $locale['forum_0180'] = "Oldest";
 $locale['forum_0181'] = "Latest";
 $locale['forum_0182'] = "Highest Ratings";
 $locale['forum_0183'] = "Sort By: ";
-$locale['forum_0184'] = "You do not have enough permission to view the attachment";
+$locale['forum_0184'] = "You do not have access to view attachments";
 // Moderator Options
 $locale['forum_0200'] = "Moderator Options";
 $locale['forum_0201'] = "Delete Thread";
