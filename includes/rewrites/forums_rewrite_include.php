@@ -32,14 +32,14 @@ $regex = array(
 );
 
 $pattern = array(
-	"forum" => "forum/index.php",
-	"forum/%forum_id%/view/%forum_name%" => "forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;forum_branch=%forum_branch%",
-	"forum/%forum_id%/view/%forum_name%" => "forum/index.php?viewforum&amp;forum_id=%forum_id%",
-	"forum/%forum_id%/browse/%rowstart%/%forum_name%" => "forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;rowstart=%rowstart%",
-	"forum/%forum_id%/view/%forum_name%" => "forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;forum_branch=%forum_branch%&amp;rowstart=%rowstart%",
-	"forum/%forum_id%/filter/%time%/%type%/%sort%/%order%/%filter%/%forum_name%" => "forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;time=%time%&amp;type=%type%&amp;sort=%sort%&amp;order=%order%&amp;filter=%filter%", // permalink don't work, but rewrite class worked.
-	"forum/%forum_id%/filter/%time%/%type%/%sort%/%order%/%filter%/%rowstart%/%forum_name%" => "forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;time=%time%&amp;type=%type%&amp;sort=%sort%&amp;order=%order%&amp;filter=%filter%&amp;rowstart=%rowstart%", // permalink don't work, but rewrite class worked.
-	"forum/%forum_id%/post/%forum_name%/%action%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%", // create new threads
+	"forum" => "infusions/forum/index.php",
+	"forum/%forum_id%/view/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;forum_branch=%forum_branch%",
+	"forum/%forum_id%/view/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%",
+	"forum/%forum_id%/browse/%rowstart%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;rowstart=%rowstart%",
+	"forum/%forum_id%/view/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;parent_id=%parent_id%&amp;forum_branch=%forum_branch%&amp;rowstart=%rowstart%",
+	"forum/%forum_id%/filter/%time%/%type%/%sort%/%order%/%filter%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;time=%time%&amp;type=%type%&amp;sort=%sort%&amp;order=%order%&amp;filter=%filter%", // permalink don't work, but rewrite class worked.
+	"forum/%forum_id%/filter/%time%/%type%/%sort%/%order%/%filter%/%rowstart%/%forum_name%" => "infusions/forum/index.php?viewforum&amp;forum_id=%forum_id%&amp;time=%time%&amp;type=%type%&amp;sort=%sort%&amp;order=%order%&amp;filter=%filter%&amp;rowstart=%rowstart%", // permalink don't work, but rewrite class worked.
+	"forum/%forum_id%/post/%forum_name%/%action%" => "infusions/forum/post.php?action=%action%&amp;forum_id=%forum_id%", 
 ); 
 
 $dir = FORUM;

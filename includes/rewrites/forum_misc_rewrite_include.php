@@ -27,9 +27,9 @@ $regex = array(
 );
 
 $pattern = array(
-	"forum/%action%/%thread_id%/%forum_id%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%", // reply
-	"forum/%action%/%thread_id%/%forum_id%/%post_id%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%", // edit
-	"forum/%action%/%thread_id%/%forum_id%/%post_id%/%quote_id%" => "forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",  //quote
+	"forum/%action%/%thread_id%/%forum_id%" => "infusions/forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%", // reply
+	"forum/%action%/%thread_id%/%forum_id%/%post_id%" => "infusions/forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%", // edit
+	"forum/%action%/%thread_id%/%forum_id%/%post_id%/%quote_id%" => "infusions/forum/post.php?action=%action%&amp;forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;post_id=%post_id%&amp;quote=%quote_id%",  //quote
 );
 
 $dir = FORUM;
