@@ -67,7 +67,9 @@ class UserFieldsInput {
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
 		if ($this->emailVerification) {
-			$this->_setEmailVerification();
+			if (!defined('FUSION_NULL')) {
+				$this->_setEmailVerification();
+			}
 		} else {
 			$this->_setUserDataInput();
 		}
