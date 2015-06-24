@@ -803,8 +803,8 @@ class Viewthread {
 							}
 						}
 					}
-					$error = defined("FUSION_NULL") ? '1' : '0';
-					if (!defined('FUSION_NULL')) redirect("postify.php?post=reply&error=$error&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+					// error is always 0 now.
+					if (!defined('FUSION_NULL')) redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 				}
 			}
 
