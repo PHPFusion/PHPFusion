@@ -18,9 +18,7 @@
 require_once "../../maincore.php";
 require_once THEMES."templates/header.php";
 
-if (!iMEMBER) {
-	redirect("../../index.php");
-}
+if (!iMEMBER) {	redirect("../../index.php"); }
 
 if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")) {
 	$result = dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id=".$_GET['delete']." AND notify_user=".$userdata['user_id']);
@@ -71,17 +69,16 @@ if ($rows) {
 		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".profile_link($data['user_id2'], $data['user_name2'], $data['user_status2'])."<br />
 		".showdate("forumdate", $data['thread_lastpost'])."</td>\n";
 		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'>".($data['thread_postcount']-1)."</td>\n";
-		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'><a href='".FUSION_SELF."?delete=".$data['thread_id']."' onclick=\"return confirm('".$locale['global_060']."');\">".$locale['global_058']."</a></td>\n";
+		echo "<td class='".$row_color."' style='text-align:center;white-space:nowrap'><a href='".INFUSIONS."forum_threads_list_panel/my_tracked_threads.php?delete=".$data['thread_id']."' onclick=\"return confirm('".$locale['global_060']."');\">".$locale['global_058']."</a></td>\n";
 		echo "</tr>\n";
 		$i++;
 	}
 	echo "</table>\n";
 	closetable();
-	echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 10, $rows, 3, FUSION_SELF."?")."</div>\n";
+	echo "<div align='center' style='margin-top:5px;'>".makePageNav($_GET['rowstart'], 10, $rows, 3, INFUSIONS."forum_threads_list_panel/my_tracked_threads.php?")."</div>\n";
 } else {
 	echo "<div style='text-align:center;'>".$locale['global_059']."</div>\n";
 	closetable();
 }
 
 require_once THEMES."templates/footer.php";
-
