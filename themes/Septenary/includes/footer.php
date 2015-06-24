@@ -29,9 +29,9 @@ if (file_exists(THEME."locale/".LANGUAGE.".php")) {
 
 global $aidlink, $locale;
 
-echo open_grid('footer', 1);
+open_grid('footer', true);
 echo "<div class='footer-row row'>\n";
-echo "<div class='col-xs-12 col-sm-3 col-md-3 col-lg-3'>\n";
+echo "<div class='hidden-xs col-sm-3 col-md-3 col-lg-3'>\n";
 echo "<img style='width:80%;' alt='".$locale['sept_011']."' class='img-responsive' src='".THEME."images/htmlcss.jpg' />";
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9 footer-right-col'>\n";
@@ -57,7 +57,7 @@ if ($settings['rendertime_enabled'] == '1' || $settings['rendertime_enabled'] ==
 echo "</p>\n";
 echo "</div>\n";
 echo "</div>\n";
-echo close_grid(1);
+close_grid(1);
 
 add_to_footer("<script type='text/javascript'>
 function ValidateForm(frm) {

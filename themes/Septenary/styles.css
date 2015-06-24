@@ -327,6 +327,25 @@ nav {
 	background: none !important;
 	border: none !important;
 }
+.navbar-default .navbar-brand {	color: #fff !important; }
+.navbar-default .navbar-toggle { margin-top:10px !important; padding: 10px !important; color: #fff !important; }
+@media (max-width: 768px) {
+	.navbar-default {
+		margin-bottom: 0 !important;
+	}
+	.header-nav {
+		position: fixed;
+		z-index: 1;
+		background-color: rgba(55, 73, 94, 1);
+		width:100%;
+	}
+	.section-1 {
+		display: none;
+	}
+	.section-showcase {
+		min-height: 300px !important;
+	}
+}
 .navbar-nav > li {
 	margin-right:10px;
 }
@@ -1151,10 +1170,8 @@ div.emulated-fieldset div.attachments-list {
 	font-size: 14px !Important;
 }
 
-.forum_breadcrumbs {
-	font-weight: normal;
-	padding: 5px 6px 5px 30px;
-	margin: 0;
+.breadcrumb {
+	padding:0 !important;
 }
 
 /* Thread */

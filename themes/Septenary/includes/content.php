@@ -51,7 +51,6 @@ function how_to_calculate_bootstrap_span() {
 	$how_many_sides_are_visible = 0;
 
 	if (defined('LEFT') && LEFT !=='') $how_many_sides_are_visible++;
-	if (defined('RIGHT') && RIGHT !=='') $how_many_sides_are_visible++;
 
 	if ($how_many_sides_are_visible > 0) {
 		$span =  array(

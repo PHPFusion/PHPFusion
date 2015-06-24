@@ -24,12 +24,10 @@ echo "<header id='top' style='background-image:url(".THEME."images/bg_main.jpg)'
 echo "<div class='overlay'>\n";
 open_grid('section-1', 1);
 echo "<div class='row hidden-xs'>\n";
-echo "<div id='logo' class='col-xs-12 col-md-3 col-lg-3 p-t-5 text-smaller'>\n";
-echo "&nbsp;";
-echo "</div>\n";
-echo "<div class='col-xs-9 col-md-9 col-lg-9 text-right clearfix p-t-5'>\n";
+echo "<div id='logo' class='hidden-xs hidden-md col-lg-3 p-t-5 text-smaller'>\n</div>\n";
+echo "<div class='col-xs-12 col-md-9 col-lg-9 pull-right text-right clearfix p-t-5'>\n";
 echo openform('searchform', 'post', $settings['site_seo'] ? FUSION_ROOT : ''.BASEDIR.'search.php?stype=all', array('max_tokens' => 1, 'class'=>'display-inline-block pull-right m-r-10', 'notice'=>0));
-echo form_text('stext', '', '', array('append_button' => 1, 'placeholder' => $locale['sept_006'], 'class' =>'no-border m-r-20', 'width'=>'250px'));
+echo form_text('stext', '', '', array('append_button' => 1, 'placeholder' => $locale['sept_006'], 'class' =>'no-border m-r-20', 'width'=>'100px'));
 echo closeform();
 echo "<ul id='head_nav' class='display-inline-block m-t-5 m-r-10 pull-right'>\n";
 $language_opts = '';

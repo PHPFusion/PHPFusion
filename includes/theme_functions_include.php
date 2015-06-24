@@ -215,7 +215,21 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 	}
 	if ($id == 0) {
 		$res = "<div class='navbar navbar-default' role='navigation'>\n";
-		$res .= "<div class='navbar-collapse collapse'>\n";
+
+		// this is the mobile button. why is this missing?
+		$res .= "<div class='navbar-header'>\n";
+      	$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#phpfusion-menu' aria-expanded='false'>
+					<span class='sr-only'>Toggle navigation</span>
+					<span class='icon-bar'></span>
+					<span class='icon-bar'></span>
+					<span class='icon-bar'></span>
+      			</button>\n";
+      	$res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".$settings['sitename']."</a>\n";
+    	$res .= "</div>\n";
+
+
+
+		$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
 		$res .= "<ul ".($settings['bootstrap'] ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
 	} else {
 		$res .= "<ul".($settings['bootstrap'] ? " class='dropdown-menu'" : "").">\n";
