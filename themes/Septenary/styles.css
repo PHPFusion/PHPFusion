@@ -1171,6 +1171,7 @@ div.emulated-fieldset div.attachments-list {
 }
 
 .breadcrumb {
+	margin-top:10px !important;
 	padding:0 !important;
 }
 
