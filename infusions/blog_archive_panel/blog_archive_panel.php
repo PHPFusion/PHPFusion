@@ -34,7 +34,7 @@ foreach($data as $blog_year => $blog_months) {
 		foreach($blog_months as $blog_month => $blog_entries) {
 			echo "&nbsp;&nbsp;<strong>".$blog_month."</strong><br />";
 				foreach($blog_entries as $blog_entry) {
-					echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='".BASEDIR."blog.php?readmore=".$blog_entry['blog_id']."'>".$blog_entry['blog_subject']."</a><br />";
+					echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='".INFUSIONS."blog/blog.php?readmore=".$blog_entry['blog_id']."'>".$blog_entry['blog_subject']."</a><br />";
 				}
 		}
 }
