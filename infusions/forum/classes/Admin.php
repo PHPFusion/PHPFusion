@@ -427,14 +427,15 @@ private function set_forumDB() {
 		// check forum name unique
 		$this->data['forum_name'] = self::check_validForumName($this->data['forum_name'], $this->data['forum_id']);
 
-		// Uploads or copy forum image
+		// Uploads or copy forum image or use back the forum image existing
 		if (!empty($_FILES['forum_image']['name']) && is_uploaded_file($_FILES['forum_image']['tmp_name'])) {
 			// Upload tested and working fine -- date 9/6/2015 15:49 8GMT
 			$upload = form_sanitizer($_FILES['forum_image'], '', 'forum_image');
 			if ($upload['error'] == 0) {
 				$this->data['forum_image'] = $upload['thumb1_name'];
 			}
-		} elseif (isset($_POST['forum_image_url']) && $_POST['forum_image_url'] != "") {
+		}
+		elseif (isset($_POST['forum_image_url']) && $_POST['forum_image_url'] != "") {
 			require_once INCLUDES."photo_functions_include.php";
 			// if forum_image_header is not empty
 			$type_opts = array('0'=>BASEDIR, '1'=>'');
@@ -447,6 +448,9 @@ private function set_forumDB() {
 			} else {
 				$this->data['forum_image'] = $upload['name'];
 			}
+		}
+		else {
+			$this->data['forum_image'] = form_sanitizer($_POST['forum_image'], '', 'forum_image');
 		}
 
 		// Set or copy forum_permissions
@@ -594,6 +598,7 @@ public function display_forum_form() {
 		echo "</div>\n<div class='overflow-hide'>\n";
 		echo "<span class='strong'>".$locale['forum_013']."</span><br/>\n";
 		echo "<span class='text-smaller'>".sprintf($locale['forum_027'], $image_size[0], $image_size[1])."</span><br/>";
+		echo form_hidden('', 'forum_image', 'forum_image', $this->data['forum_image']);
 		echo form_button('remove_image', $locale['forum_028'], $locale['forum_028'], array('class'=>'btn-danger btn-sm m-t-10', 'icon'=>'fa fa-trash'));
 		echo "</div>\n";
 		closeside();
