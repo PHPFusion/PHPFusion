@@ -62,6 +62,15 @@ class Forum {
 		add_breadcrumb(array('link' => INFUSIONS.'forum/index.php', 'title' => $locale['forum_0000']));
 		$_GET['forum_id'] = $this->forum_info['forum_id'];
 		forum_breadcrumbs($this->forum_info['forum_index']);
+
+		// use id and set meta
+		$meta_result = dbquery("SELECT forum_meta, forum_description FROM ".DB_FORUMS." WHERE forum_id='".intval($this->forum_info['forum_id'])."'");
+		if (dbrows($meta_result)>0) {
+			$meta_data = dbarray($meta_result);
+			if ($meta_data['forum_description'] !=='') { set_meta('description', $meta_data['forum_description']); }
+			if ($meta_data['forum_meta'] !=='') { set_meta('keywords', $meta_data['forum_meta']); }
+		}
+
 		$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_rows']) ? $_GET['rowstart'] : '0';
 		$this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
 
@@ -238,8 +247,6 @@ class Forum {
 			if (dbrows($result)>0) {
 				while ($row = dbarray($result) and checkgroup($row['forum_access'])) {
 
-					if ($row['forum_description'] !=='') { set_meta('description', $row['forum_description']); }
-					if ($row['forum_meta'] !=='') { set_meta('keywords', $row['forum_meta']); }
 					$row['forum_moderators'] = Functions::parse_forumMods($row['forum_mods']);
 					$this->forum_info['forum_moderators'] = $row['forum_moderators'];
 					$row['forum_new_status'] = '';
