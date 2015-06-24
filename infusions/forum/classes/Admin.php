@@ -428,13 +428,13 @@ private function set_forumDB() {
 		$this->data['forum_name'] = self::check_validForumName($this->data['forum_name'], $this->data['forum_id']);
 
 		// Uploads or copy forum image or use back the forum image existing
-		if (!empty($_FILES['forum_image']['name']) && is_uploaded_file($_FILES['forum_image']['tmp_name'])) {
-			// Upload tested and working fine -- date 9/6/2015 15:49 8GMT
+		if (!empty($_FILES) && is_uploaded_file($_FILES['forum_image']['tmp_name'])) {
 			$upload = form_sanitizer($_FILES['forum_image'], '', 'forum_image');
 			if ($upload['error'] == 0) {
 				$this->data['forum_image'] = $upload['thumb1_name'];
 			}
 		}
+
 		elseif (isset($_POST['forum_image_url']) && $_POST['forum_image_url'] != "") {
 			require_once INCLUDES."photo_functions_include.php";
 			// if forum_image_header is not empty
