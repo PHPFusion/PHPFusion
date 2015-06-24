@@ -184,7 +184,7 @@ if ($_GET['post'] == "reply") {
 					FROM ".DB_FORUM_THREADS." tt
 					INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=tt.forum_id
 					WHERE thread_id='".$_GET['thread_id']."'"));
-				$link = $settings['siteurl']."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&pid=".$_GET['post_id']."#post_".$_GET['post_id'];
+				$link = $settings['siteurl']."infusions/forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&pid=".$_GET['post_id']."#post_".$_GET['post_id'];
 				$template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='POST' LIMIT 1");
 				if (dbrows($template_result)) {
 					$template_data = dbarray($template_result);
