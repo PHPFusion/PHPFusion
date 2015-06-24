@@ -226,14 +226,19 @@ function render_dashboard() {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['283']."</strong></span><span class='pull-right label label-warning'>".number_format($infusions_count)."</span>");
-
 	if ($infusions_count > 0) {
-		closeside("".(checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='entypo right-open-mini'></i></div>\n" : '')."");	
+		global $global_infusions;
+		echo "<div class='comment_content'>\n";
+		foreach($global_infusions as $inf_id => $inf_data) {
+			echo "<label class='label label-info m-r-5'>".$inf_data['inf_title']."</label>\n";
+		}
+		echo "</div>\n";
+		closeside("".(checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='entypo right-open-mini'></i></div>\n" : '')."");
 	} else {
 		echo "<div class='text-center'>".$locale['284']."</div>\n";
 		closeside();
 	}
-
+	// comments
 	echo "</div>\n<div class='col-xs-12 co-sm-6 col-md-6 col-lg-3'>\n";
 	openside("<span class='text-smaller text-uppercase'><strong>".$locale['277']."</strong></span><span class='pull-right label label-warning'>".number_format($global_comments['rows'])."</span>");
 	if (count($global_comments['data']) > 0) {

@@ -131,6 +131,13 @@ $link_type = array(
 
 // Infusions count
 $infusions_count = dbcount("(inf_id)", DB_INFUSIONS);
+$global_infusions = array();
+if ($infusions_count > 0) {
+	$inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS." ORDER BY inf_id ASC");
+	while ($_inf = dbarray($inf_result)) {
+		$global_infusions[$_inf['inf_id']] = $_inf;
+	}
+}
 
 // Latest Comments
 $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
