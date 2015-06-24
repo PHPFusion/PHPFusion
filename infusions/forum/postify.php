@@ -26,7 +26,7 @@ if (!db_exists(DB_FORUMS)) {
 require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
 require_once INCLUDES."infusions_include.php";
-$inf_settings = get_settings('forum');
+$forum_settings = get_settings('forum');
 
 add_to_title($locale['global_204']);
 
@@ -51,7 +51,7 @@ if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $
 } elseif ($_GET['error'] == 5) {
 	$errorb = $locale['forum_0555'];
 } elseif ($_GET['error'] == 6) {
-	$errorb = sprintf($locale['forum_0556'], $inf_settings['forum_edit_timelimit']);
+	$errorb = sprintf($locale['forum_0556'], $forum_settings['forum_edit_timelimit']);
 }
 
 $valid_get = array("on", "off", "new", "reply", "edit", "newpoll", "editpoll", "deletepoll", "voteup", "votedown");
@@ -106,8 +106,7 @@ if ($_GET['post'] == 'voteup' or $_GET['post'] == 'votedown') {
 	}
 }
 
-
-if (($_GET['post'] == "on" || $_GET['post'] == "off") && $inf_settings['thread_notify']) {
+if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread_notify']) {
 	$output = FALSE;
 	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
 		redirect("index.php");
@@ -172,7 +171,7 @@ if ($_GET['post'] == "reply") {
 
 	if ($_GET['error'] < "2") {
 
-		if ($inf_settings['thread_notify']) {
+		if ($forum_settings['thread_notify']) {
 			$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
 				FROM ".DB_FORUM_THREAD_NOTIFY." tn
 				LEFT JOIN ".DB_USERS." tu ON tn.notify_user=tu.user_id

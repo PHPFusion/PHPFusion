@@ -230,7 +230,9 @@ if (!function_exists('upload_file')) {
 				if ($query && !dbquery($query)) {
 					// Invalid query string
 					$upload_file['error'] = 3;
-					unlink($target_folder.$target_file);
+					if (file_exists($target_folder.$target_file)) {
+						@unlink($target_folder.$target_file);
+					}
 				}
 			}
 		} else {
@@ -255,6 +257,7 @@ if (!function_exists('upload_image')) {
 				$image_name = stripfilename(substr($image['name'], 0, strrpos($image['name'], ".")));
 			}
 			$image_ext = strtolower(strrchr($image['name'], "."));
+			// need to run file_exist. @ supress will not work anymore.
 			if (filesize($image['tmp_name']) > 10 && @getimagesize($image['tmp_name'])) {
 				$image_res = @getimagesize($image['tmp_name']);
 				$image_info = array("image" => FALSE,
@@ -345,7 +348,9 @@ if (!function_exists('upload_image')) {
 							}
 						}
 						if ($delete_original && !$noThumb) {
-							unlink($target_folder.$image_name_full);
+							if (file_exists($target_folder.$image_name_full)) {
+								unlink($target_folder.$image_name_full);
+							}
 							$image_info['image'] = FALSE;
 						}
 					}

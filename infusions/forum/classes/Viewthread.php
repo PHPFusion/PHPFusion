@@ -750,40 +750,42 @@ class Viewthread {
 				// all data is sanitized here.
 				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
 					$update_forum_lastpost = false;
-					// Prepare forum merging action
-					$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
-					if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
-						$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
-						$post_data['post_id'] = $last_message['post_id'];
-						$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
-						dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key'=>'post_id', 'keep_session'=>1));
-					} else {
-						$update_forum_lastpost = true;
-						dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key'=>'post_id', 'keep_session'=>1));
-						$post_data['post_id'] = dblastid();
-						if (!defined("FUSION_NULL")) dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
+
+					// try attachment first
+					// save all file attachments and get error
+					if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
+						$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
+						if ($upload['error'] == 0) {
+							foreach($upload['target_file'] as $arr => $file_name) {
+								$attachment = array(
+									'thread_id' => $thread_data['thread_id'],
+									'post_id' => $post_data['post_id'],
+									'attach_name' => $file_name,
+									'attach_mime' => $upload['type'][$arr],
+									'attach_size' => $upload['source_size'][$arr],
+									'attach_count' => '0', // downloaded times?
+								);
+								dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session'=>true));
+							}
+						}
 					}
 
 					if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
-						// save all file attachments and get error
-						if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
-							$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
-							if ($upload['error'] == 0) {
-								foreach($upload['target_file'] as $arr => $file_name) {
-									$attachment = array(
-										'thread_id' => $thread_data['thread_id'],
-										'post_id' => $post_data['post_id'],
-										'attach_name' => $file_name,
-										'attach_mime' => $upload['type'][$arr],
-										'attach_size' => $upload['source_size'][$arr],
-										'attach_count' => '0', // downloaded times?
-									);
-									dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session'=>true));
-								}
-							}
+						// Prepare forum merging action
+						$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
+						if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
+							$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
+							$post_data['post_id'] = $last_message['post_id'];
+							$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
+							dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key'=>'post_id', 'keep_session'=>1));
+						} else {
+							$update_forum_lastpost = true;
+							dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', array('primary_key'=>'post_id', 'keep_session'=>1));
+							$post_data['post_id'] = dblastid();
+							if (!defined("FUSION_NULL")) dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
 						}
 							// Update stats in forum and threads
-						if ($update_forum_lastpost) {
+						if ($update_forum_lastpost && !defined('FUSION_NULL')) {
 							// find all parents and update them
 							$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
 							foreach($list_of_forums as $fid) {
@@ -795,15 +797,14 @@ class Viewthread {
 							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
 						}
 						// set notify
-						if ($forum_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id']) {
+						if ($forum_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id'] && !defined('FUSION_NULL')) {
 							if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
 								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
 							}
 						}
 					}
-
 					$error = defined("FUSION_NULL") ? '1' : '0';
-					redirect("postify.php?post=reply&error=$error&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+					if (!defined('FUSION_NULL')) redirect("postify.php?post=reply&error=$error&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 				}
 			}
 

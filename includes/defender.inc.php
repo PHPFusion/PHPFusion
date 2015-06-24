@@ -482,7 +482,9 @@ class defender {
 							if ($query && !dbquery($query)) {
 								// Invalid query string
 								$image_info['error'] = 4;
-								unlink($target_folder.$image_name_full);
+								if (file_exists($target_folder.$image_name_full)) {
+									@unlink($target_folder.$image_name_full);
+								}
 							} elseif ($thumb1 || $thumb2) {
 								require_once INCLUDES."photo_functions_include.php";
 								$noThumb = FALSE;
@@ -671,11 +673,15 @@ class defender {
 							if ($query && !dbquery($query)) {
 								// Invalid query string
 								$upload['error'] = 3;
-								unlink($file_dest.$target_file);
+								if (file_exists($file_dest.$target_file)) {
+									unlink($file_dest.$target_file);
+								}
 							}
 						}
 						if ($upload['error'] !==0) {
-							@unlink($file_dest.$target_file.$file_ext);
+							if (file_exists($file_dest.$target_file.$file_ext)) {
+								@unlink($file_dest.$target_file.$file_ext);
+							}
 						}
 						$upload['source_file'][$i] = $upload_file['source_file'];
 						$upload['source_size'][$i] = $upload_file['source_size'];
@@ -695,24 +701,20 @@ class defender {
 						$this->stop();
 						switch ($upload['error']) {
 							case 1: // Maximum file size exceeded
-								addNotice('info', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+								addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 								self::setInputError($this->field_name);
-								//$this->addHelperText($$this->field_config['id'], $locale['df_416']);
 								break;
 							case 2: // Invalid File extensions
-								addNotice('info', sprintf($locale['df_417'], $this->field_config['valid_ext']));
+								addNotice('danger', sprintf($locale['df_417'], $this->field_config['valid_ext']));
 								self::setInputError($this->field_name);
-								//$this->addHelperText($$this->field_config['id'], $locale['df_417']);
 								break;
 							case 3: // Invalid Query String
-								addNotice('info', $locale['df_422']);
+								addNotice('danger', $locale['df_422']);
 								self::setInputError($this->field_name);
-								//$this->addHelperText($$this->field_config['id'], $locale['df_422']);
 								break;
 							case 4: // File not uploaded
-								addNotice('info', $locale['df_423']);
+								addNotice('danger', $locale['df_423']);
 								self::setInputError($this->field_name);
-								//$this->addHelperText($$this->field_config['id'], $locale['df_423']);
 								break;
 						}
 					}
@@ -728,24 +730,20 @@ class defender {
 					$this->stop(); // return FALSE
 					switch ($upload['error']) {
 						case 1: // Maximum file size exceeded
-							addNotice('info', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
+							addNotice('danger', sprintf($locale['df_416'], parsebytesize($this->field_config['max_byte'])));
 							self::setInputError($this->field_name);
-							//$this->addHelperText($$this->field_config['id'], $locale['df_416']);
 							break;
 						case 2: // Invalid File extensions
-							addNotice('info', sprintf($locale['df_417'], $this->field_config['valid_ext']));
+							addNotice('danger', sprintf($locale['df_417'], $this->field_config['valid_ext']));
 							self::setInputError($this->field_name);
-							//$this->addHelperText($$this->field_config['id'], $locale['df_417']);
 							break;
 						case 3: // Invalid Query String
-							addNotice('info', $locale['df_422']);
+							addNotice('danger', $locale['df_422']);
 							self::setInputError($this->field_name);
-							//$this->addHelperText($$this->field_config['id'], $locale['df_422']);
 							break;
 						case 4: // File not uploaded
-							addNotice('info', $locale['df_423']);
+							addNotice('danger', $locale['df_423']);
 							self::setInputError($this->field_name);
-							//$this->addHelperText($$this->field_config['id'], $locale['df_423']);
 							break;
 					}
 				} else {
