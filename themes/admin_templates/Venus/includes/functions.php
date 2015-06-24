@@ -229,8 +229,10 @@ function render_dashboard() {
 	if ($infusions_count > 0) {
 		global $global_infusions;
 		echo "<div class='comment_content'>\n";
-		foreach($global_infusions as $inf_id => $inf_data) {
-			echo "<label class='label label-info m-r-5'>".$inf_data['inf_title']."</label>\n";
+		if (!empty($global_infusions)) {
+			foreach($global_infusions as $inf_id => $inf_data) {
+				echo "<label class='label label-info m-r-5'>".$inf_data['inf_title']."</label>\n";
+			}
 		}
 		echo "</div>\n";
 		closeside("".(checkrights("I") ? "<div class='text-right text-uppercase'>\n<a class='text-smaller' href='".ADMIN."infusions.php".$aidlink."'>".$locale['285']."</a><i class='entypo right-open-mini'></i></div>\n" : '')."");
