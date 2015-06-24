@@ -85,23 +85,23 @@ $result = dbquery("SELECT c.comment_id, c.comment_name, c.comment_message, c.com
 	ON c.comment_name=u.user_id
 	WHERE c.comment_type='".$_GET['ctype']."' AND c.comment_item_id='".$_GET['comment_item_id']."' ORDER BY c.comment_datestamp ASC");
 if (dbrows($result)) {
-	echo "<table cellpadding='0' cellspacing='1' width='100%' class='tbl-border center'>\n";
 	while ($data = dbarray($result)) {
-		echo "<tr>\n<td class='".($i%2 == 0 ? "tbl1" : "tbl2")."'><span class='comment-name'>";
+		echo "<div class='list-group-item'>\n";
+		echo "<div class='btn-group pull-right'>\n";
+		echo "<a class='btn btn-xs btn-default' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;comment_id=".$data['comment_id']."&amp;ctype=".$_GET['ctype']."&amp;comment_item_id=".$_GET['comment_item_id']."'>".$locale['430']."</a>";
+		echo "<a class='btn btn-xs btn-default' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;comment_id=".$data['comment_id']."&amp;ctype=".$_GET['ctype']."&amp;comment_item_id=".$_GET['comment_item_id']."' onclick=\"return confirm('".$locale['433']."');\">".$locale['431']."</a>";
+		echo "</div>\n";
+		echo "<span class='comment-name'>";
 		if ($data['user_name']) {
-			echo "<span class='slink'>".profile_link($data['comment_name'], $data['user_name'], $data['user_status'])."</span>";
+			echo "<span class='strong'>".profile_link($data['comment_name'], $data['user_name'], $data['user_status'])."</span>";
 		} else {
 			echo $data['comment_name'];
 		}
-		echo "</span>\n<span class='small'>".$locale['global_071'].showdate("longdate", $data['comment_datestamp'])."</span><br />\n";
-		echo nl2br(parseubb(parsesmileys($data['comment_message'])))."<br />\n";
-		echo "<span class='small'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;comment_id=".$data['comment_id']."&amp;ctype=".$_GET['ctype']."&amp;comment_item_id=".$_GET['comment_item_id']."'>".$locale['430']."</a> -\n";
-		echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;comment_id=".$data['comment_id']."&amp;ctype=".$_GET['ctype']."&amp;comment_item_id=".$_GET['comment_item_id']."' onclick=\"return confirm('".$locale['433']."');\">".$locale['431']."</a> -\n";
-		echo "<strong>".$locale['432']." ".$data['comment_ip']."</strong></span>\n";
-		echo "</td>\n</tr>\n";
+		echo "</span>\n<span>".$locale['global_071'].showdate("longdate", $data['comment_datestamp'])."</span><span class='label label-default m-l-10'>".$locale['432']." ".$data['comment_ip']."</span>\n<br />\n ";
+		echo "<div class='m-t-10'>\n".nl2br(parseubb(parsesmileys($data['comment_message'])))."<br />\n</div>\n";
+		echo "</div>\n";
 		$i++;
 	}
-	echo "</table>\n";
 } else {
 	echo "<div style='text-align:center'><br />".$locale['434']."<br /><br /></div>\n";
 }
