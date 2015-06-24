@@ -64,7 +64,6 @@ class Viewthread {
 		return $user;
 	}
 
-
 	/**
 	 * New Status
 	 */
@@ -92,7 +91,6 @@ class Viewthread {
 		if ($thread_data['forum_meta'] !=='') set_meta('keywords', $thread_data['forum_meta']);
 
 		$_GET['forum_id'] = $thread_data['forum_id'];
-		//$_GET['forum_id'] = $this->thread_info['forum_id'];
 		if ($thread_data['forum_type'] == 1) redirect(INFUSIONS.'forum/index.php');
 		if ($thread_stat['post_count'] < 1) redirect(INFUSIONS.'forum/index.php');
 		// extra helper information
@@ -118,7 +116,7 @@ class Viewthread {
 								'can_view_poll' => checkgroup($thread_data['forum_poll']) ? true : false,
 								'edit_lock' => $forum_settings['forum_edit_lock'] ? true : false,
 								'can_attach' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? true : false,
-								'can_download_attach' => iMOD or iSUPERADMIN ? true : checkgroup($thread_data['forum_attach_download']) ? true : false,
+								'can_download_attach' => iSUPERADMIN ? true : $thread_data['forum_allow_attach'] && checkgroup($thread_data['forum_attach_download']) ? true : false,
 								),
 			'max_post_items' => $thread_stat['post_count'],
 			'post_firstpost' => $thread_stat['first_post_id'],
