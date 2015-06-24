@@ -75,7 +75,9 @@ class Moderator {
 			$result = dbquery("SELECT attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".intval($this->thread_id)."'");
 			if (dbrows($result) != 0) {
 				while ($attach = dbarray($result)) {
-					@unlink(INFUSIONS."forum/attachments/".$attach['attach_name']);
+					if (file_exists(INFUSIONS."forum/attachments/".$attach['attach_name'])) {
+						@unlink(INFUSIONS."forum/attachments/".$attach['attach_name']);
+					}
 				}
 			}
 			dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id='".intval($this->thread_id)."'");
