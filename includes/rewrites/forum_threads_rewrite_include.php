@@ -34,7 +34,7 @@ $regex = array(
 $pattern = array(
 	"thread" => "infusions/forum/viewthread.php",
 	"thread/%thread_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%",
-	"thread/%thread_id%/%post_id%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%",
+	"thread/%thread_id%/%post_id%/%thread_name%#post_%post_id%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%post_id%#post_%post_id%",
 	"thread/%thread_id%/browse/%thread_rowstart%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%thread_rowstart%",
 	"thread/%thread_id%/filter/%time%/%type%/%order%/%filter%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;time=%time%&amp;type=%type%&amp;order=%order%&amp;filter=%filter%",
 	"thread/%thread_id%/filter/%time%/%type%/%order%/%filter%/%thread_rowstart%/%thread_name%" => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;time=%time%&amp;type=%type%&amp;order=%order%&amp;filter=%filter%&amp;rowstart=%thread_rowstart%",
