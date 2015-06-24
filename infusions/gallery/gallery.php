@@ -175,14 +175,16 @@ elseif (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 					// data manipulation
 					$data['album_link'] = array('link'=>INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'], 'name'=>$data['photo_title']);
 					$data['image'] = ($data['photo_thumb1'] && file_exists(PHOTODIR."thumbs/".$data['photo_thumb1'])) ? PHOTODIR."thumbs/".$data['photo_thumb1'] : '';
-
 					$data['title'] = ($data['photo_title']) ? $data['photo_title'] : $data['image'];
 					$data['description'] = ($data['photo_description']) ? $data['photo_description'] : '';
+					$data['photo_views'] = format_word($data['photo_views'], $locale['fmt_views']);
 					if ($data['photo_allow_comments']) {
-						$data['photo_comments'] = array('link'=>$data['album_link']['link'].'#comments', 'name'=>$data['count_votes']);
+						$data['count_votes'] > 0 ? $data['count_votes'] : '0';
+						$data['photo_comments'] = array('link'=>$data['album_link']['link'].'#comments', 'name'=>$data['count_votes'], 'word'=>format_word($data['count_votes'], $locale['fmt_comment']));
 					}
 					if ($data['photo_allow_ratings']) {
-						$data['photo_ratings'] = array('link'=>$data['album_link']['link'].'#ratings', 'name'=>$data['sum_rating']>0 ? $data['sum_rating'] : '0');
+						$data['sum_rating'] > 0 ? $data['sum_rating'] : '0';
+						$data['photo_ratings'] = array('link'=>$data['album_link']['link'].'#ratings', 'name'=>$data['sum_rating'], 'word'=> format_word($data['sum_rating'], $locale['fmt_rating']));
 					}
 					$info['item'][] = $data;
 				}

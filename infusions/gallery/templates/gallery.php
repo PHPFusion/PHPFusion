@@ -70,13 +70,12 @@ if (!function_exists('render_photo_category')) {
 		echo "<span class='album_stats'>\n".$info['album_stats']."</span>\n";
 		echo "</div>\n";
 		echo "</div>\n</div>\n";
-
-		echo "<div class='list-group'>\n";
-		echo "<div class='list-group-item'>\n";
-		echo "<!--photogallery_album_desc-->\n";
-		echo "<span class='album_description'>\n".nl2br(parseubb($info['album_description']))."</span><br/>\n";
-		echo "</div>\n";
-		echo "</div>\n";
+		if ($info['album_description']) {
+			echo "<div class='list-group-item'>\n";
+			echo "<!--photogallery_album_desc-->\n";
+			echo "<span class='album_description'>\n".nl2br(parseubb($info['album_description']))."</span><br/>\n";
+			echo "</div>\n";
+		}
 
 		if (isset($info['page_nav'])) echo "<div class='text-right'>".$info['page_nav']."</div>\n";
 
@@ -117,7 +116,6 @@ if (!function_exists('render_photo_item')) {
 		echo "<div class='panel-body' style='height:100px;'>\n";
 		echo "<a class='photo-item-title' title='".$locale['430']."' href='".$data['album_link']['link']."'>".$data['title']."</a><br/>\n";
 		echo $data['description'] ? "<span class='photo-item-description'>".fusion_first_words($data['description'],10)."</span><br/>\n" : '';
-
 		if (isset($_GET['album_id'])) {
 			// show on viewalbum
 			echo "</div>\n";
@@ -129,9 +127,9 @@ if (!function_exists('render_photo_item')) {
 			echo "</div>\n";
 			echo "</div>\n";
 			echo "<div class='panel-footer'>\n";
-			echo "<span class='album_views'><i class='entypo eye'></i> ".$data['photo_views']."</span>";
-			echo isset($data['photo_comments']) ? "<a class='album_comments' href='".$data['photo_comments']['link']."'><i class='entypo thumbs-up'></i>".$data['photo_comments']['name']."</a>" : '';
-			echo isset($data['photo_ratings']) ? "<a class='album_ratings' href='".$data['photo_ratings']['link']."'><i class='entypo chat'></i>".$data['photo_ratings']['name']."</a>" : '';
+			echo "<span class='album_views'><i class='entypo eye'></i> ".$data['photo_views']."</span><br/>";
+			echo isset($data['photo_comments']) ? "<a class='album_comments' title='aaa' href='".$data['photo_comments']['link']."'><i class='entypo thumbs-up'></i>".$data['photo_comments']['word']."</a>" : '';
+			echo isset($data['photo_ratings']) ? "<a class='album_ratings' href='".$data['photo_ratings']['link']."'><i class='entypo chat'></i>".$data['photo_ratings']['word']."</a>" : '';
 			echo "</div></div>\n";
 		} else {
 			// show on main index
