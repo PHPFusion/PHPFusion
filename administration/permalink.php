@@ -16,14 +16,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
+
 pageAccess('PL');
+
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 include LOCALE.LOCALESET."admin/permalinks.php";
 
 add_breadcrumb(array('link'=>ADMIN.'permalink.php'.$aidlink, 'title'=>$locale['428']));
 
-$locale['rewrite_disabled'] = "It looks like <strong>mod_rewrite</strong> is not enabled on your host. Enabling SEF urls might break your website. Please contact your hosting provider about enabling <strong>mod_rewrite</strong> on your host.";
 if (!MOD_REWRITE) {
 	addNotice('danger', "<i class='fa fa-lg fa-warning m-r-10'></i>".$locale['rewrite_disabled']);
 }
@@ -34,13 +35,17 @@ $settings_seo = array(
 	'debug_seo'		=> fusion_get_settings('debug_seo'),
 	);
 
-// TODO: Check if we can or did write .htaccess file before saving settings to DB
 if (isset($_POST['savesettings'])) {
-
 	foreach ($settings_seo as $key => $value) {
-		$settings_seo[$key] = form_sanitizer($settings_seo[$key], $settings_seo[$key], $key);
-		// No need to check for FUSION_NULL here because we have only checkboxes
-		dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_seo[$key]."' WHERE settings_name='".$key."'");
+		if (isset($_POST[$key])) {
+				$settings_seo[$key] = form_sanitizer($_POST[$key], $settings_seo[$key], $key);
+		} else {
+				$settings_seo[$key] = form_sanitizer($settings_seo[$key], $settings_seo[$key], $key);
+			}
+
+		if (!defined('FUSION_NULL')) {
+			dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_seo[$key]."' WHERE settings_name='".$key."'");
+		}
 	}
 
 	$htc = "# Force utf-8 charset".PHP_EOL;
@@ -67,7 +72,7 @@ if (isset($_POST['savesettings'])) {
 	$htc .= "Options -Indexes".PHP_EOL.PHP_EOL;
 
 	if ($settings_seo['site_seo'] == 1) {
-		// Rewrite urls settings
+		// Rewrite settings
 		$htc .= "Options +SymLinksIfOwnerMatch".PHP_EOL;
 		$htc .= "<IfModule mod_rewrite.c>".PHP_EOL;
 		$htc .= "	# Let PHP know mod_rewrite is enabled".PHP_EOL;
@@ -111,7 +116,6 @@ if (isset($_POST['savesettings'])) {
 	}
 
 	if (!defined('FUSION_NULL')) {
-		// Everything went as expected
 		addNotice("success", "<i class='fa fa-lg fa-check-square-o m-r-10'></i>".$locale['900']);
 		redirect(FUSION_SELF.$aidlink);
 	}
@@ -122,8 +126,8 @@ echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 echo "<div class='admin-message alert alert-info'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
 $opts = array('0' => $locale['no'], '1' => $locale['yes']);
 echo form_checkbox('site_seo', $locale['438'], $settings_seo['site_seo'], array('toggle' => 1, 'inline' => 1));
-echo form_checkbox('normalize_seo', $locale['439'], $settings_seo['normalize_seo'], array('toggle' => 1, 'child_of' => 'site_seo', 'inline' => 1));
-echo form_checkbox('debug_seo', $locale['440'], $settings_seo['debug_seo'], array('toggle' => 1, 'child_of' => 'site_seo', 'inline' => 1));
+echo form_checkbox('normalize_seo', $locale['439'], $settings_seo['normalize_seo'], array('toggle' => 1, 'inline' => 1));
+echo form_checkbox('debug_seo', $locale['440'], $settings_seo['debug_seo'], array('toggle' => 1, 'inline' => 1));
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary','inline' => 1));
 echo "</div></div>\n";
 echo closeform();
