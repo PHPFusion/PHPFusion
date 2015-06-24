@@ -960,57 +960,56 @@ class Viewthread {
 								'post_locked' 	=> $forum_settings['forum_edit_lock'] or isset($_POST['post_locked']) ? true : false
 							);
 
-							if ($is_first_post == true) {
-								$thread_subject = form_sanitizer($_POST['thread_subject'], '', 'thread_subject');
-								if (!defined('FUSION_NULL')) {
-									dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_subject='".$thread_subject."' WHERE thread_id='".intval($thread_data['thread_id'])."'");
+							// Do attachment first.
+							// copied over attachments deletion
+							foreach ($_POST as $key => $value) {
+								if (!strstr($key, "delete_attach")) continue;
+								$key = str_replace("delete_attach_", "", $key);
+								$result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$post_data['post_id']."' AND attach_id='".(isnum($key) ? $key : 0)."'");
+								if (dbrows($result) != 0 && $value) {
+									$adata = dbarray($result);
+									unlink(FORUM."attachments/".$adata['attach_name']);
+									dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$post_data['post_id']."' AND attach_id='".(isnum($key) ? $key : 0)."'");
 								}
 							}
-
-							// Prepare forum merging action
-							$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
-							if ($last_post_author == $post_data['post_author'] && $thread_data['forum_merge']) {
-								$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
-								$post_data['post_id'] = $last_message['post_id'];
-								$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
-								dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key'=>'post_id', 'keep_session'=>1));
-							} else {
-								dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key'=>'post_id', 'keep_session'=>1));
+							// save all file attachments and get error
+							if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
+								$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
+								if ($upload['error'] == 0) {
+									foreach($upload['target_file'] as $arr => $file_name) {
+										$attachment = array(
+											'thread_id' => $thread_data['thread_id'],
+											'post_id' => $post_data['post_id'],
+											'attach_name' => $file_name,
+											'attach_mime' => $upload['type'][$arr],
+											'attach_size' => $upload['source_size'][$arr],
+											'attach_count' => '0', // downloaded times?
+										);
+										dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session'=>true));
+									}
+								}
 							}
-
 							if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
-
-								// copied over attachments deletion
-								foreach ($_POST as $key => $value) {
-									if (!strstr($key, "delete_attach")) continue;
-									$key = str_replace("delete_attach_", "", $key);
-									$result = dbquery("SELECT * FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$post_data['post_id']."' AND attach_id='".(isnum($key) ? $key : 0)."'");
-									if (dbrows($result) != 0 && $value) {
-										$adata = dbarray($result);
-										unlink(FORUM."attachments/".$adata['attach_name']);
-										dbquery("DELETE FROM ".DB_FORUM_ATTACHMENTS." WHERE post_id='".$post_data['post_id']."' AND attach_id='".(isnum($key) ? $key : 0)."'");
+								if ($is_first_post == true) {
+									$thread_subject = form_sanitizer($_POST['thread_subject'], '', 'thread_subject');
+									if (!defined('FUSION_NULL')) {
+										dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_subject='".$thread_subject."' WHERE thread_id='".intval($thread_data['thread_id'])."'");
 									}
 								}
-								// save all file attachments and get error
-								if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
-									$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
-									if ($upload['error'] == 0) {
-										foreach($upload['target_file'] as $arr => $file_name) {
-											$attachment = array(
-												'thread_id' => $thread_data['thread_id'],
-												'post_id' => $post_data['post_id'],
-												'attach_name' => $file_name,
-												'attach_mime' => $upload['type'][$arr],
-												'attach_size' => $upload['source_size'][$arr],
-												'attach_count' => '0', // downloaded times?
-											);
-											dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session'=>true));
-										}
-									}
+
+								// Prepare forum merging action
+								$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
+								if ($last_post_author == $post_data['post_author'] && $thread_data['forum_merge']) {
+									$last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
+									$post_data['post_id'] = $last_message['post_id'];
+									$post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
+									dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key'=>'post_id', 'keep_session'=>1));
+								} else {
+									dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', array('primary_key'=>'post_id', 'keep_session'=>1));
 								}
 							}
-							$error = defined("FUSION_NULL") ? '1' : '0';
-							redirect("postify.php?post=edit&error=$error&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+
+							redirect("postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 						}
 					}
 
