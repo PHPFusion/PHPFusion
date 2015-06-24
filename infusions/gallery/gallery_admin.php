@@ -41,11 +41,11 @@ $gallery_settings->setUploadSettings(
 		'thumbnail2_w' 	=>  $settings_inf['photo_w'],
 		'thumbnail2_h' 	=>  $settings_inf['photo_h'],
 		'thumbnail2_suffix' => '_t2',
-		'delete_original' => 1,
 		'max_width'		=>	$settings_inf['photo_max_w'],
 		'max_height'	=>	$settings_inf['photo_max_h'],
 		'max_byte'		=>	$settings_inf['photo_max_b'],
 		'multiple' => 0,
+		'delete_original' => false,
 	)
 );
 

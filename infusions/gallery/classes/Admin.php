@@ -215,8 +215,8 @@ class Admin {
 						self::refresh_order('mdp');
 						break;
 				}
-				if ($_GET['action'] !=="settings") {
-				self::display_gallery();
+				if ($_GET['action'] !=="settings" && !isset($_GET['add_album']) && !isset($_GET['add_photo']) && !isset($_GET['gallery_edit'])) {
+					self::display_gallery();
 				}
 			}
 		} else {
@@ -447,10 +447,14 @@ class Admin {
 					$photo_id = $_GET['gallery_delete'];
 					if (self::validate_photo($_GET['gallery_delete'])) {
 						$photo_data = self::get_photo($photo_id);
-						@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb']);
-						@unlink(rtrim($this->image_upload_dir, '/').'/'.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb2']);
-						@unlink(rtrim($this->image_upload_dir, '/').'/'.$photo_data['photo_filename']);
+						if (!defined('SAFEMODE')) define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+						$upload_dir = !SAFEMODE ? rtrim($this->image_upload_dir, '/')."/album_".$photo_data['album_id']."/" : $this->image_upload_dir;
+						@unlink($upload_dir.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb1']);
+						@unlink($upload_dir.rtrim($this->upload_settings['thumbnail_folder'], '/').'/'.$photo_data['photo_thumb2']);
+						@unlink($upload_dir.$photo_data['photo_filename']);
 						dbquery_insert($this->photo_db, $photo_data, 'delete');
+						addNotice('warning', $locale['434']);
+						redirect(clean_request('', array('gallery_delete', 'gallery_type'), false));
 					}
 					break;
 			}
@@ -547,7 +551,7 @@ class Admin {
 						dbquery_insert($this->photo_db, $this->photo_data, 'update');
 					}
 					addNotice('success', $locale['700']);
-					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type'), FALSE));
+					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type', 'add_album', 'add_photo'), FALSE));
 				}
 			} else {
 				// new saves
@@ -566,7 +570,7 @@ class Admin {
 						}
 					}
 					addNotice('success', $locale['701']);
-					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type'), FALSE));
+					if (!defined('FUSION_NULL')) redirect(clean_request('', array('gallery_edit', 'gallery_type', 'add_album', 'add_photo'), FALSE));
 				}
 			}
 		}
@@ -778,6 +782,7 @@ class Admin {
 		$album_list = self::get_albumlist();
 		$album_edit = 0;
 		$photo_edit = 0;
+		$album_count = dbcount("('album_id')", $this->photo_cat_db, "");
 		if (isset($_GET['gallery_edit']) && isnum($_GET['gallery_edit']) && isset($_GET['gallery_type']) && isnum($_GET['gallery_type'])) {
 			// have type and edit
 			switch ($_GET['gallery_type']) {
@@ -796,90 +801,97 @@ class Admin {
 					}
 			}
 		}
+
 		$this->upload_settings += array('inline' => 1, 'type' => 'image', 'required' => !$album_edit ? 1 : 0);
-
+		global $aidlink;
 		echo "<div class='m-t-10 m-b-20'>\n";
-		echo form_button('add_album', $locale['600'], 'add_album', array('class' => 'btn-primary btn-sm m-r-10', 'icon' => 'fa fa-image'));
-		echo form_button('add_photo', $locale['601'], 'add_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-camera'));
-		if ($_GET['gallery']) echo form_button('batch_photo', $locale['photo_002'], 'batch_photo', array('class' => 'btn-sm btn-default m-r-10', 'icon' => 'fa fa-cloud-upload'));
-		echo "<a title='Settings' class='btn button btn-sm btn-default m-r-10' href='".clean_request('action=settings', array('action'), FALSE)."'><i class='fa fa-pencil'></i> Settings</a>";
-		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".clean_request('action=refresh', array('action'), FALSE)."'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
-
+		echo "<a class='btn btn-primary m-r-10' href='".FUSION_SELF.$aidlink."&add_album'><i class='fa fa-image'></i> ".$locale['600']."</a>\n";
+		echo "<a class='btn btn-default ".($album_count == 0 ? "disabled" : "")." m-r-10' href='".FUSION_SELF.$aidlink."&add_photo'><i class='fa fa-camera'></i> ".$locale['601']."</a>\n";
+		if ($_GET['gallery']) echo "<a class='btn btn-default m-r-10' href='".FUSION_SELF.$aidlink."&batch_photo'><i class='fa fa-cloud-upload'></i> ".$locale['601']."</a>\n";
+		echo "<a title='".$locale['435']."' class='btn button btn-sm btn-default m-r-10' href='".FUSION_SELF.$aidlink."&action=settings'><i class='fa fa-pencil'></i> ".$locale['435']."</a>";
+		echo "<a title='".$locale['470c']."' class='btn button btn-sm btn-default' href='".FUSION_SELF.$aidlink."&action=refresh'><i class='fa fa-file-o'></i> ".$locale['470c']."</a>";
+		echo closeform();
 		echo "</div>\n";
+
 		if ($_GET['gallery']) {
-			echo openmodal('batch_album', $locale['photo_002'], array('button_id'=>'batch_photo', 'static'=>1));
-			echo openform('batchform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype'=>1));
+			echo openform('batchform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype'=>1, 'class'=>"list-group-item clearfix"));
 			echo "<div class='alert alert-info'>You can select more than 1 photos and submit them as a series into this album. Photo Title will be indexed in numbers.</div>";
 			echo form_text('photo_title', $locale['622'], $this->photo_data['photo_title'], array('placeholder' => $locale['622'], 'inline' => 1));
 			$up_settings = $this->upload_settings;
 			unset($up_settings['multiple']);
-			$up_settings += array('multiple'=>1);
+			$up_settings += array('multiple'=>1, 'preview_off'=>true);
 			echo form_fileinput($locale['631'], 'batch_file[]', 'batch_file', $this->image_upload_dir, '', $up_settings);
 			echo form_hidden('', 'album_id', 'album_id_batch', $_GET['gallery']);
 			echo form_button('batch_upload', $locale['631'], $locale['631'], array('class'=>'btn btn-success'));
 			echo closeform();
-			echo closemodal();
+			echo "<hr>\n";
 		}
 
-		echo openmodal('add_album', $album_edit ? $locale['606'] : $locale['605'], array('button_id' => 'add_album','static' => 1));
-		echo openform('albumform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype' => 1));
-		echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
-		echo form_text('album_title', $locale['607'], $this->album_data['album_title'], array('placeholder' => $locale['608'], 'inline' => 1, 'required' => 1));
-		echo form_textarea('album_description', $locale['609'], $this->album_data['album_description'], array('placeholder' => $locale['610'],
-			'inline' => 1));
-		echo form_fileinput('Upload Picture', 'album_file', 'album_file', $this->image_upload_dir, '', $this->upload_settings);
-		echo form_hidden('', 'album_hfile', 'album_hfile', $this->album_data['album_thumb']);
-		echo form_select('album_access', $locale['611'],  getgroupOpts(), $this->album_data['album_access'], array('inline' => 1));
-		echo form_hidden('', 'album_id', 'album_id', $this->album_data['album_id']);
-		echo form_select('album_language', $locale['612'],  fusion_get_enabled_languages(), $this->album_data['album_language'], array('inline' => 1));
-		echo form_select('album_order', $locale['613'], range(0, $this->album_max_order), $this->album_data['album_order'], array('inline' => 1,
-			'width' => '150px')); // 0 picture, 1. ok.
-		echo form_button('upload_album', $locale['save_changes'], 'upload_album', array('class' => 'btn-success btn-sm m-r-10'));
-		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
-		echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
-		if ($album_edit) {
-			echo "<div id='album_tmb' class='well'>\n";
-			$img_path = self::get_virtual_path($this->album_data['album_id']).rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->album_data['album_thumb'];
-			echo "<img class='img-responsive' style='margin:0 auto;' src='$img_path' alt='".$this->album_data['album_title']."'/>\n";
-			echo "</div>\n";
+		if (isset($_GET['add_album']) or $album_edit == true) {
+			add_breadcrumb(array('link'=>'', 'title'=>$album_edit ? $locale['606'] : $locale['605']));
+			opentable($album_edit ? $locale['606']: $locale['605']);
+			echo openform('albumform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype' => 1, 'class'=>'list-group-item clearfix'));
+			echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
+			echo form_text('album_title', $locale['607'], $this->album_data['album_title'], array('placeholder' => $locale['608'], 'inline' => 1, 'required' => 1));
+			echo form_textarea('album_description', $locale['609'], $this->album_data['album_description'], array('placeholder' => $locale['610'],
+				'inline' => 1));
+			echo form_fileinput('Upload Picture', 'album_file', 'album_file', $this->image_upload_dir, '', $this->upload_settings);
+			echo form_hidden('', 'album_hfile', 'album_hfile', $this->album_data['album_thumb']);
+			echo form_select('album_access', $locale['611'],  getgroupOpts(), $this->album_data['album_access'], array('inline' => 1));
+			echo form_hidden('', 'album_id', 'album_id', $this->album_data['album_id']);
+			echo form_select('album_language', $locale['612'],  fusion_get_enabled_languages(), $this->album_data['album_language'], array('inline' => 1));
+			echo form_select('album_order', $locale['613'], range(0, $this->album_max_order), $this->album_data['album_order'], array('inline' => 1,
+				'width' => '150px')); // 0 picture, 1. ok.
+			echo form_button('upload_album', $locale['save_changes'], 'upload_album', array('class' => 'btn-success btn-sm m-r-10'));
+			echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
+			echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
+			if ($album_edit) {
+				echo "<div id='album_tmb' class='well'>\n";
+				$img_path = self::get_virtual_path($this->album_data['album_id']).rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->album_data['album_thumb'];
+				echo "<img class='img-responsive' style='margin:0 auto;' src='$img_path' alt='".$this->album_data['album_title']."'/>\n";
+				echo "</div>\n";
+			}
+			echo "</div>\n</div>\n";
+			echo closeform();
+			closetable();
 		}
-		echo "</div>\n</div>\n";
-		echo closeform();
-		echo closemodal();
 
-		echo openmodal('add_photo', $photo_edit ? $locale['621'] : $locale['620'], array('button_id' => 'add_photo'));
-		echo openform('photoform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype' => 1));
-		echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
-		echo form_text('photo_title', $locale['622'], $this->photo_data['photo_title'], array('placeholder' => $locale['623'], 'inline' => 1));
-		$sel = (isset($_GET['gallery']) && isnum($_GET['gallery'])) ? $_GET['gallery'] : $this->photo_data['album_id'];
-		echo form_select('album_id', $locale['624'], $album_list, $sel, array('input_id'=>'photo_album_id', 'inline' => 1));
-		echo form_hidden('', 'photo_id', 'photo_id', $this->photo_data['photo_id']);
-		echo form_hidden('', 'photo_order', 'photo_order', $this->photo_data['photo_order']);
-		echo form_fileinput('Upload Picture', 'photo_file', 'photo_file', $this->image_upload_dir, '', $this->upload_settings);
-		echo form_hidden('', 'photo_hfile', 'photo_hfile', $this->photo_data['photo_filename']);
-		echo form_hidden('', 'photo_hthumb1', 'photo_hthumb1', $this->photo_data['photo_thumb1']);
-		echo form_hidden('', 'photo_hthumb2', 'photo_hthumb2', $this->photo_data['photo_thumb2']);
-		echo form_select('photo_keywords', $locale['625'],  array(), $this->photo_data['photo_keywords'], array('input_id'=>'photo_album_keywords', 'placeholder' => $locale['626'],
-			'inline' => 1,
-			'multiple' => 1,
-			'width' => '100%',
-			'tags' => 1));
-		echo form_textarea('photo_description', $locale['627'], $this->photo_data['photo_description'], array('placeholder' => $locale['628'],
-			'inline' => 1));
-		echo form_select('photo_allow_comments', $locale['629'], array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_comments'], array('input_id'=>'photo_album_comment', 'inline' => 1));
-		echo form_select('photo_allow_ratings', $locale['630'], array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_ratings'], array('input_id'=>'photo_album_rating', 'inline' => 1));
-		echo form_button('upload_photo', $locale['631'], 'upload_photo', array('class' => 'btn-success btn-sm m-r-10'));
-		echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
-		echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
-		if ($photo_edit) {
-			echo "<div id='photo_tmb' class='well'>\n";
-			$img_path = self::get_virtual_path($this->photo_data['album_id']).rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->photo_data['photo_thumb1'];
-			echo "<img class='img-responsive' style='margin:0 auto;' src='$img_path' alt='".$this->photo_data['photo_title']."'/>\n";
-			echo "</div>\n";
+		if (isset($_GET['add_photo']) && $album_count or $photo_edit) {
+			add_breadcrumb(array('link'=>'', 'title'=>$album_edit ? $locale['621'] : $locale['620']));
+			opentable($photo_edit ? $locale['621'] : $locale['620']);
+			echo openform('photoform', 'post', FUSION_REQUEST, array('max_tokens' => 1, 'enctype' => 1, 'class'=>'list-group-item clearfix'));
+			echo "<div class='row'>\n<div class='col-xs-12 col-sm-9'>\n";
+			echo form_text('photo_title', $locale['622'], $this->photo_data['photo_title'], array('placeholder' => $locale['623'], 'inline' => 1));
+			$sel = (isset($_GET['gallery']) && isnum($_GET['gallery'])) ? $_GET['gallery'] : $this->photo_data['album_id'];
+			echo form_select('album_id', $locale['624'], $album_list, $sel, array('input_id'=>'photo_album_id', 'inline' => 1));
+			echo form_hidden('', 'photo_id', 'photo_id', $this->photo_data['photo_id']);
+			echo form_hidden('', 'photo_order', 'photo_order', $this->photo_data['photo_order']);
+			echo form_fileinput('Upload Picture', 'photo_file', 'photo_file', $this->image_upload_dir, '', $this->upload_settings);
+			echo form_hidden('', 'photo_hfile', 'photo_hfile', $this->photo_data['photo_filename']);
+			echo form_hidden('', 'photo_hthumb1', 'photo_hthumb1', $this->photo_data['photo_thumb1']);
+			echo form_hidden('', 'photo_hthumb2', 'photo_hthumb2', $this->photo_data['photo_thumb2']);
+			echo form_select('photo_keywords', $locale['625'],  array(), $this->photo_data['photo_keywords'], array('input_id'=>'photo_album_keywords', 'placeholder' => $locale['626'],
+				'inline' => 1,
+				'multiple' => 1,
+				'width' => '100%',
+				'tags' => 1));
+			echo form_textarea('photo_description', $locale['627'], $this->photo_data['photo_description'], array('placeholder' => $locale['628'],
+				'inline' => 1));
+			echo form_select('photo_allow_comments', $locale['629'], array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_comments'], array('input_id'=>'photo_album_comment', 'inline' => 1));
+			echo form_select('photo_allow_ratings', $locale['630'], array($locale['yes'], $locale['no']), $this->photo_data['photo_allow_ratings'], array('input_id'=>'photo_album_rating', 'inline' => 1));
+			echo form_button('upload_photo', $locale['631'], 'upload_photo', array('class' => 'btn-success btn-sm m-r-10'));
+			echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
+			echo "</div>\n<div class='col-xs-12 col-sm-3 text-center'>\n";
+			if ($photo_edit) {
+				echo "<div id='photo_tmb' class='well'>\n";
+				$img_path = self::get_virtual_path($this->photo_data['album_id']).rtrim($this->upload_settings['thumbnail_folder'], '/')."/".$this->photo_data['photo_thumb1'];
+				echo "<img class='img-responsive' style='margin:0 auto;' src='$img_path' alt='".$this->photo_data['photo_title']."'/>\n";
+				echo "</div>\n";
+			}
+			echo "</div>\n</div>\n";
+			echo closeform();
+			closetable();
 		}
-		echo "</div>\n</div>\n";
-		echo closeform();
-		echo closemodal();
 
 		// resets form when create album button
 		add_to_jquery("
@@ -901,7 +913,7 @@ class Admin {
 	}
 
 	/**
-	 * HTML
+	 * HTML --- @todo: redesign this part.
 	 * @param bool $modal
 	 */
 	private function display_photo($modal = FALSE) {
@@ -979,41 +991,47 @@ class Admin {
 					}
 ?>					
 					<hr />
-					<div>
-						<div class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['641']; ?></span><span
-								class='pull-right text-bigger strong'><?php echo number_format($data['photo_views']) ?></span>
+					<div class='display-block'>
+						<div class='display-block m-b-5'><i class='fa fa-eye m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['641']; ?></span>
+							<span class='pull-right text-bigger strong'><?php echo number_format($data['photo_views']) ?></span>
 						</div>
-						<div class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['642']; ?></span><span
-								class='pull-right  text-bigger strong'><?php echo $data['rating_count'] ? number_format(($data['rating_count']/$data['total_votes']*100)) : '0' /100 ?>
-								</span></div>
-						<div class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['643']; ?></span><span
-								class='pull-right text-bigger strong'><?php echo number_format($data['comment_count']) ?></span>
+						<div class='display-block m-b-5'><i class='fa fa-star-o m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['642']; ?></span>
+							<span class='pull-right  text-bigger strong'><?php echo $data['rating_count'] ? number_format(($data['rating_count']/$data['total_votes']*100)) : '0' /100 ?></span>
 						</div>
-						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['644']; ?></span><span
-								class='pull-right text-bigger strong'><?php echo $file_exif['width'].'x'.$file_exif['height'] ?></span>
+						<div class='display-block m-b-5'><i class='fa fa-comment-o m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['643']; ?></span>
+							<span class='pull-right text-bigger strong'><?php echo number_format($data['comment_count']) ?></span>
 						</div>
-						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['645']; ?></span><span
-								class='pull-right text-bigger strong'><?php echo $file_exif['mime'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['646']; ?></span><span
-								class='pull-right text-bigger strong'><?php echo $file_exif['channels'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-file-o m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['647']; ?></span><span
-								class='pull-right text-bigger strong'><?php echo $file_exif['bits'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-instagram m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['648']; ?></span><span
-								class='pull-right text-bigger strong'><?php echo $file_exif['iso'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-sun-o m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['649']; ?></span><span
-								class='pull-right text-bigger strong'><?php echo $file_exif['exposure'] ?></span></div>
-						<div class='display-block m-b-5'><i class='fa fa-eyedropper m-r-10'></i><span
-								class='text-smaller'><?php echo $locale['650']; ?></span><span
-								class='pull-right text-bigger strong'><?php echo $file_exif['aperture'] ?></span></div>
+						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['644']; ?></span>
+							<span class='pull-right text-bigger strong'><?php echo $file_exif['width'].'x'.$file_exif['height'] ?></span>
+						</div>
+						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['645']; ?></span>
+							<span class='pull-right text-bigger strong'><?php echo $file_exif['mime'] ?></span>
+						</div>
+						<div class='display-block m-b-5'><i class='fa fa-file-image-o m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['646']; ?></span>
+							<span class='pull-right text-bigger strong'><?php echo $file_exif['channels'] ?></span>
+						</div>
+						<div class='display-block m-b-5'><i class='fa fa-file-o m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['647']; ?></span>
+							<span class='pull-right text-bigger strong'><?php echo $file_exif['bits'] ?></span>
+						</div>
+						<div class='display-block m-b-5'><i class='fa fa-instagram m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['648']; ?></span>
+							<span class='pull-right text-bigger strong'><?php echo $file_exif['iso'] ?></span>
+						</div>
+						<div class='display-block m-b-5'><i class='fa fa-sun-o m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['649']; ?></span>
+							<span class='pull-right text-bigger strong'><?php echo $file_exif['exposure'] ?></span>
+						</div>
+						<div class='display-block m-b-5'><i class='fa fa-eyedropper m-r-10'></i>
+							<span class='text-smaller'><?php echo $locale['650']; ?></span>
+							<span class='pull-right text-bigger strong'><?php echo $file_exif['aperture'] ?></span>
+						</div>
 						<div class='display-block m-b-5'><i class='fa fa-camera m-r-10'></i><span
 								class='text-smaller'><?php echo $locale['651']; ?></span><span
 								class='pull-right text-bigger strong'><?php echo $file_exif['make'] ?></span></div>
@@ -1150,10 +1168,9 @@ class Admin {
 				GROUP BY album_id ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".$rowstart.", ".$settings_inf['thumbs_per_page']."");
 			}
 			$current_rows = dbrows($result);
+			echo "<div class='list-group-item clearfix' style='margin-bottom:20px;'>\n";
+			echo "<h3>".(isset($_GET['gallery']) ? $locale['photo_000'] : $locale['photo_001'])."</h3>\n";
 			if ($current_rows > 0) {
-
-				echo "<h4>".(isset($_GET['gallery']) ? $locale['photo_001'] : $locale['photo_000'])."</h4>\n";
-
 				if ($row_count > $current_rows) {
 					echo "<div class='display-block text-right m-b-10'>\n";
 					echo makepagenav($rowstart, $settings_inf['thumbs_per_page'], $row_count, 3, clean_request('', array(
@@ -1168,7 +1185,6 @@ class Admin {
 					), false), '&rowstart');
 					echo "</div>\n";
 				}
-
 				$i = 1;
 				while ($data = dbarray($result)) {
 					self::refresh_album_thumb($data['album_id'], $data['album_thumb']);
@@ -1187,6 +1203,9 @@ class Admin {
 			} else {
 				echo "<div class='well text-center'>".$locale['660']."</div>";
 			}
+
+			//closetable();
+			echo "</div>\n";
 		}
 	}
 
@@ -1196,22 +1215,10 @@ class Admin {
 	 */
 	private function gallery_album(array $data = array(), $type = 1, $i) {
 		global $locale, $settings_inf;
-
-		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('gallery',
-			'gallery_edit',
-			'gallery_type',
-			'action',
-			'gallery_item',
-			'ratings'), FALSE) : clean_request('photo='.$data['photo_id'], array('photo',
-			'gallery_edit',
-			'gallery_type',
-			'status',
-			'action',
-			'gallery_item',
-			'ratings'), FALSE);
+		// new request
+		$request = $type == 1 ? clean_request("gallery=".$data['album_id'], array('aid'), true) : clean_request('photo='.$data['photo_id'], array('aid'), true);
 		$order_btns = '';
 		// album
-
 		if ($type == 1) {
 			// move up and down
 			$move_up = clean_request("gallery_item=".$data['album_id']."&action=mu&order=".($data['album_order']-1), array('photo', 'status', 'action', 'gallery', 'gallery_edit', 'gallery_type', 'ratings', 'gallery_item'), FALSE, '&amp;');
@@ -1265,12 +1272,12 @@ class Admin {
 			</div>
 				<div class='gallery_writer pull-right'>
 					<a class='btn button btn-sm btn-default'
-					   href='<?php echo clean_request((isset($_GET['gallery']) ? "gallery=".$_GET['gallery']."&" : '')."gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&gallery_type=$type", array('gallery_edit', 'photo', 'gallery',
+					   href='<?php echo clean_request((isset($_GET['gallery']) && $_GET['gallery'] !=='' ? "gallery=".$_GET['gallery']."&" : '')."gallery_edit=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&gallery_type=$type", array('gallery_edit', 'photo', 'gallery',
 						   'gallery_type'), FALSE, '&amp;') ?>'>
 					<i class='fa fa-pencil fa-lg'></i>
 					</a>
 					<a class='btn button btn-sm btn-danger'
-					   href='<?php echo clean_request((isset($_GET['gallery']) ? "gallery=".$_GET['gallery']."&" : '')."gallery_delete=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&gallery_type=$type", array('gallery_delete', 'photo', 'gallery',
+					   href='<?php echo clean_request((isset($_GET['gallery']) && $_GET['gallery'] !=='' ? "gallery=".$_GET['gallery']."&" : '')."gallery_delete=".($type == 1 ? $data['album_id'] : $data['photo_id'])."&gallery_type=$type", array('gallery_delete', 'photo', 'gallery',
 						   'gallery_type'), FALSE, '&amp;') ?>'>
 					<i class='fa fa-trash fa-lg'></i>
 					</a>

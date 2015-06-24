@@ -25,6 +25,8 @@ $locale['430'] = "Delete album confirmation";
 $locale['431'] = "The Album you are trying delete contains one or more photos.<br />\n"."In order to delete this album, please enter your admin password:";
 $locale['432'] = "Confirm";
 $locale['433'] = "Cancel";
+$locale['434'] = "Album photo deleted";
+$locale['435'] = "Gallery Settings";
 // Album form
 $locale['440'] = "Title: ";
 $locale['441'] = "Description: ";

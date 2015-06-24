@@ -154,7 +154,7 @@ function render_admin_panel() {
 				echo "</div>\n"; // #acp-content
 
 				// Footer section
-				echo "<footer class='m-l-20 display-block m-b-20'>\n";
+				echo "<footer class='m-l-20 display-inline-block m-t-20 m-b-20'>\n";
 					// Copyright
 					echo "Venus Admin &copy; ".date("Y")." created by <a href='https://www.php-fusion.co.uk'><strong>PHP-Fusion Inc.</strong></a>\n";
 					echo showcopyright();

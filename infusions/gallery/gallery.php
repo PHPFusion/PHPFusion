@@ -110,7 +110,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		}
 		$info['photo_byte'] = parsebytesize($gallery_settings['photo_watermark'] ? filesize(PHOTODIR.$info['photo_filename']) : filesize($info['photo_file']));
 		$info['photo_comment'] = $data['photo_allow_comments'] ? number_format($data['comment_count']) : 0;
-		$info['photo_ratings'] = $data['photo_allow_ratings'] ? number_format(ceil($info['sum_rating']/$info['count_votes'])) : '0';
+		$info['photo_ratings'] = $data['photo_allow_ratings'] && $info['count_votes'] > 0 ? number_format(ceil($info['sum_rating']/$info['count_votes'])) : '0';
 		$info['photo_description'] = $data['photo_description'] ? nl2br(parseubb($info['photo_description'], "b|i|u|center|small|url|mail|img|quote")) : '';
 
 		if ((isset($prev['photo_id']) && isnum($prev['photo_id'])) || (isset($next['photo_id']) && isnum($next['photo_id']))) {
