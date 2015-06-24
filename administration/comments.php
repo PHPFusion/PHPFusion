@@ -29,6 +29,8 @@ if (!isset($_GET['comment_item_id']) || !isnum($_GET['comment_item_id'])) {
 	redirect("../index.php");
 }
 
+add_breadcrumb(array('link'=>ADMIN.'comments.php'.$aidlink, 'title'=>$locale['401']));
+
 if (isset($_POST['save_comment']) && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
 	$comment_message = stripinput($_POST['comment_message']);
 	$result = dbquery("UPDATE ".DB_COMMENTS." SET comment_message='$comment_message' WHERE comment_id='".$_GET['comment_id']."'");
