@@ -29,34 +29,17 @@ if (!isset($_GET['comment_item_id']) || !isnum($_GET['comment_item_id'])) {
 	redirect("../index.php");
 }
 
-$message = '';
-if (isset($_GET['status'])) {
-	switch($_GET['status']) {
-		case 'su':
-			$message = $locale['421'];
-			$status = 'info';
-			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
-			break;
-		case 'del':
-			$message = $locale['411'];
-			$status = 'danger';
-			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
-			break;
-	}
-	if ($message) {
-		addNotice($status, $icon.$message);
-	}
-}
-
 if (isset($_POST['save_comment']) && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
 	$comment_message = stripinput($_POST['comment_message']);
 	$result = dbquery("UPDATE ".DB_COMMENTS." SET comment_message='$comment_message' WHERE comment_id='".$_GET['comment_id']."'");
-	redirect("comments.php".$aidlink."&ctype=".$_GET['ctype']."&comment_item_id=".$_GET['comment_item_id']."&status=su");
+	addNotice('success', $locale['421']);
+	redirect("comments.php".$aidlink."&ctype=".$_GET['ctype']."&comment_item_id=".$_GET['comment_item_id']);
 }
 
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
 	$result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id='".$_GET['comment_id']."'");
-	redirect("comments.php".$aidlink."&ctype=".$_GET['ctype']."&comment_item_id=".$_GET['comment_item_id']."&status=del");
+	addNotice('warning', $locale['411']);
+	redirect("comments.php".$aidlink."&ctype=".$_GET['ctype']."&comment_item_id=".$_GET['comment_item_id']);
 }
 
 if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
@@ -67,12 +50,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['comme
 		opentable($locale['400']);
 		$form_action = FUSION_SELF.$aidlink."&amp;comment_id=".$_GET['comment_id']."&amp;ctype=".$_GET['ctype']."&amp;comment_item_id=".$_GET['comment_item_id'];
 		echo openform('settingsform', 'post', $form_action, array('max_tokens' => 1));
-		echo "<table cellpadding='0' cellspacing='0' width='400' class='center'>\n<tr>\n";
-		echo "<td align='center' class='tbl'>\n";
-		echo form_textarea('comment_message', '', $data['comment_message']);
-		echo "</td></tr>\n<tr>\n";
-		echo "<td align='center' class='tbl'><input type='submit' name='save_comment' value='".$locale['421']."' class='button' /></td>\n";
-		echo "</tr>\n</table>\n";
+		echo form_textarea('comment_message', '', $data['comment_message'], array('autosize'=>true, 'bbcode'=>true, 'preview'=>true, 'form_name'=>'settingsform'));
+		echo form_button('save_comment', $locale['421'], $locale['421'], array('class'=>'btn-primary btn-sm'));
 		closeform();
 		closetable();
 	}
