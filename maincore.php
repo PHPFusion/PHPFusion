@@ -66,23 +66,9 @@ if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
 	redirect($settings['siteurl']);
 }
 
-// Check if mod_rewrite is enabled
-$mod_rewrite = FALSE;
-if ( function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()) ) {
-	$mod_rewrite = TRUE;
-} elseif ( isset($_SERVER['IIS_UrlRewriteModule']) ) {
-	$mod_rewrite = TRUE;
-} elseif ( isset($_SERVER['MOD_REWRITE']) ) {
-	$mod_rewrite = TRUE;
-}
-define('MOD_REWRITE', $mod_rewrite);
-
-// Disable FUSION_SELF and FUSION_QUERY in SEO mode.
-if (!defined("IN_PERMALINK")) {
-	define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
-	define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
-	define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
-}
+define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
+define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
+define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
 
 // Variables initializing
 $mysql_queries_count = 0;
@@ -113,7 +99,6 @@ for ($i = 0; $i < $root_count; $i++) { // moved 0 to 1 will crash.
 }
 define("FUSION_ROOT", $fusion_root);
 
-
 // Calculate current true url
 $script_url = explode("/", $_SERVER['PHP_SELF']);
 $url_count = count($script_url);
@@ -125,11 +110,9 @@ while ($base_url_count != 0) {
 	$base_url_count--;
 }
 
-// Disable TRUE_PHP_SELF and START_PAGE
-if (!defined("IN_PERMALINK")) {
-	define("TRUE_PHP_SELF", $current_page);
-	define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "", TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")), 1));
-}
+// Set TRUE_PHP_SELF and START_PAGE
+define("TRUE_PHP_SELF", $current_page);
+define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "", TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")), 1));
 
 // Autenticate user
 if (isset($_POST['login']) && isset($_POST['user_name']) && isset($_POST['user_pass'])) {

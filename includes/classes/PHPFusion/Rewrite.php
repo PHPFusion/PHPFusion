@@ -15,6 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+namespace PHPFusion;
+
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 /*
 | Rewrite API for PHP-Fusion
 |
@@ -24,8 +28,6 @@
 | You can use this API to Add custom rules for handling
 | requests.
 */
-namespace PHPFusion;
-if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 class Rewrite {
 	/*
@@ -955,8 +957,8 @@ class Rewrite {
 	*/
 	private function setservervars() {
 		if (!empty($this->pathtofile)) {
-			$_SERVER['PHP_SELF'] = preg_replace("/rewrite\.php/", $this->pathtofile, $_SERVER['PHP_SELF'], 1);
-			$_SERVER['SCRIPT_NAME'] = preg_replace("/rewrite\.php/", $this->pathtofile, $_SERVER['SCRIPT_NAME'], 1);
+			$_SERVER['PHP_SELF'] = preg_replace("/index\.php/", $this->pathtofile, $_SERVER['PHP_SELF'], 1);
+			$_SERVER['SCRIPT_NAME'] = preg_replace("/index\.php/", $this->pathtofile, $_SERVER['SCRIPT_NAME'], 1);
 		}
 	}
 

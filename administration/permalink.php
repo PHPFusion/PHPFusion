@@ -25,6 +25,17 @@ include LOCALE.LOCALESET."admin/permalinks.php";
 
 add_breadcrumb(array('link'=>ADMIN.'permalink.php'.$aidlink, 'title'=>$locale['428']));
 
+// Check if mod_rewrite is enabled
+$mod_rewrite = FALSE;
+if ( function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()) ) {
+	$mod_rewrite = TRUE;
+} elseif ( isset($_SERVER['IIS_UrlRewriteModule']) ) {
+	$mod_rewrite = TRUE;
+} elseif ( isset($_SERVER['MOD_REWRITE']) ) {
+	$mod_rewrite = TRUE;
+}
+define('MOD_REWRITE', $mod_rewrite);
+
 if (!MOD_REWRITE) {
 	addNotice('danger', "<i class='fa fa-lg fa-warning m-r-10'></i>".$locale['rewrite_disabled']);
 }
@@ -89,8 +100,8 @@ if (isset($_POST['savesettings'])) {
 		$htc .= "	RewriteCond %{REQUEST_FILENAME} !-f".PHP_EOL;
 		$htc .= "	RewriteCond %{REQUEST_FILENAME} !-d".PHP_EOL;
 		$htc .= "	RewriteCond %{REQUEST_FILENAME} !-l".PHP_EOL;
-		$htc .= "	RewriteCond %{REQUEST_URI} !^/(administration|config|rewrite.php)".PHP_EOL;
-		$htc .= "	RewriteRule ^(.*?)$ rewrite.php [L]".PHP_EOL;
+		$htc .= "	RewriteCond %{REQUEST_URI} !^/(administration|config|index.php)".PHP_EOL;
+		$htc .= "	RewriteRule ^(.*?)$ index.php [L]".PHP_EOL;
 		$htc .= "</IfModule>".PHP_EOL;
 	} else {
 		// Error pages

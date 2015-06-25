@@ -17,7 +17,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion;
+
 if (!defined("IN_FUSION")) { die("Access Denied"); }
+
 /*
 | Permalinks API for PHP-Fusion
 |
@@ -26,6 +28,7 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 | SEO Links or Permalinks.
 |
 */
+
 class PermalinksDisplay {
 	/*
 	* The Output
