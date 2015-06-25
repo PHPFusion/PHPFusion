@@ -450,7 +450,7 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 				$result = dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER article_article");
 
 				// Login methods
-				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('login_method', '0')"); // New: Login method feature
+				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('login_method', '0')");
 
 				// Mime check for upload files
 				$result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('mime_check', '0')");
@@ -461,7 +461,134 @@ if (str_replace(".", "", $settings['version']) < "90001") { // 90001 for testing
 
 				// Sub Categories for News
 				$result = dbquery("ALTER TABLE ".DB_NEWS_CATS." ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id");
+				
+	// Insert new Blog settings if exists - The Blog is not installed by default in this upgrade, these setting are for users that previously had the Blog auto installed in early beta.
+				if (db_exists(DB_BLOG)) {
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_image_readmore', '1', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_image_frontpage', '0', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_thumb_ratio', '0', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_image_link', '1', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_photo_w', '400', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_photo_h', '300', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_thumb_w', '100', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_thumb_h', '100', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_photo_max_w', '1800', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_photo_max_h', '1600', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_photo_max_b', '150000', 'blog')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('blog_pagination', '12', 'blog')");
+				}
+				// Clear old settings if they are there regardless of current state
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_image_readmore'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_image_frontpage'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_thumb_ratio'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_image_link'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_photo_w'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_photo_h'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_thumb_w'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_thumb_h'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_photo_max_w'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_photo_max_h'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_photo_max_b'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='blog_pagination'");
 
+				// Insert new Download settings exists
+				if (db_exists(DB_DOWNLOADS)) {
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_max_b', '512000', 'downloads')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_types', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'downloads')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_screen_max_b', '150000', 'downloads')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_screen_max_w', '1024', 'downloads')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_screen_max_h', '768', 'downloads')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_screenshot', '1', 'downloads')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_thumb_max_w', '100', 'downloads')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_thumb_max_h', '100', 'downloads')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('download_pagination', '15', 'downloads')");
+				}
+				// Clear old settings if they are there regardless of current state
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_max_b'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_types'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_screen_max_b'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_screen_max_w'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_screen_max_h'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_screenshot'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_thumb_max_w'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_thumb_max_h'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='download_pagination'");
+
+				// Insert new Forum settings if exists
+				if (db_exists(DB_FORUMS)) {
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ips', '-103', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax', '1000000', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachmax_count', '5', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_attachtypes', '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thread_notify', '1', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_ranks', '1', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_lock', '0', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_edit_timelimit', '0', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('popular_threads_timeframe', '604800', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_posts_reply', '1', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_last_post_avatar', '1', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_editpost_to_lastpost', '1', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('threads_per_page', '20', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('posts_per_page', '20', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('numofthreads', '16', 'forum')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_rank_style', '0', 'forum')");
+				}
+				// Clear old settings if they are there regardless of current state
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_ips'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_attachmax'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_attachmax_count'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_attachtypes'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thread_notify'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_ranks'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_edit_lock'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_edit_timelimit'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='popular_threads_timeframe'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_last_posts_reply'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_last_post_avatar'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_editpost_to_lastpost'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='threads_per_page'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='posts_per_page'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='numofthreads'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='forum_rank_style'");
+
+				// Insert new Gallery settings if exists
+				if (db_exists(DB_PHOTO_ALBUMS)) {
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumb_w', '200', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumb_h', '200', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_w', '400', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_h', '400', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_max_w', '1800', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_max_h', '1600', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_max_b', '15120000', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumbs_per_row', '4', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('admin_thumbs_per_row', '6', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('thumbs_per_page', '12', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark', '1', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_image', 'infusions/gallery/albums/watermark.png', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text', '0', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color1', 'FF6600', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color2', 'FFFF00', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_text_color3', 'FFFFFF', 'gallery')");
+					$result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('photo_watermark_save', '0', 'gallery')");
+				}
+				// Clear old settings if they are there regardless of current state
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thumb_w'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thumb_h'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_w'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_h'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_max_w'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_max_h'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_max_b'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='thumbs_per_row'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='admin_thumbs_per_row'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_image'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_text'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_text_color1'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_text_color2'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_text_color3'");
+				$result = dbquery("DELETE FROM ".DB_SETTINGS." WHERE settings_name='photo_watermark_save'");
+				
 				// Moving access level from article categories to articles and create field for subcategories
 				$result = dbquery("ALTER TABLE ".DB_ARTICLES." ADD article_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_datestamp");
 				$result = dbquery("SELECT article_cat_id, article_cat_access FROM ".DB_ARTICLE_CATS);
