@@ -1,12 +1,12 @@
 <?php
 // Downloads titles
-$locale['download_0000'] = "Поточні завантаження";
+$locale['download_0000'] = "Наявні завантаження";
 $locale['download_0001'] = "Завантаження";
 $locale['download_0002'] = "Створення завантаження";
 $locale['download_0003'] = "Редагування завантаження";
 
 // Download Category titles
-$locale['download_0020'] = "Поточні завантаження";
+$locale['download_0020'] = "Наявні завантаження";
 $locale['download_0021'] = "Редагування розділу завантажень";
 $locale['download_0022'] = "Створення розділу завантажень";
 
