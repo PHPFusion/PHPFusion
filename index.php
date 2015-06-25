@@ -26,8 +26,8 @@ $seo_rewrite->rewritePage();
 $filepath = $seo_rewrite->getFilePath(); 
 
 // We get no error pages at all with the index.php page check inclusion otherwise it works.
-// if ($filepath != "" || FUSION_SELF == $settings['opening_page'] || FUSION_SELF == "home.php" || FUSION_SELF == "index.php") {
-	if ($filepath != "" || FUSION_SELF == $settings['opening_page'] || FUSION_SELF == "home.php") {
+// if ($filepath != "" || FUSION_SELF == $settings['opening_page'] || FUSION_SELF == "home.php") {
+	if ($filepath != "" || FUSION_SELF == $settings['opening_page'] || FUSION_SELF == "home.php" || FUSION_SELF == "index.php") {
 		if ($filepath != "") {
 				require_once $filepath;
 			} else if (empty($settings['opening_page']) || $settings['opening_page'] == "index.php" || $settings['opening_page'] == "/") {
