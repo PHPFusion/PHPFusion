@@ -15,7 +15,7 @@ $locale['forum_008'] = "Первинний розділ";
 $locale['forum_009'] = "Тип";
 $locale['forum_010'] = "Мова";
 $locale['forum_011'] = "Псевдонім";
-$locale['forum_012'] = "Сторінки";
+$locale['forum_012'] = "Ключові слова (кожне починається з нового рядка)";
 $locale['forum_013'] = "Зображення";
 $locale['forum_014'] = "Адреса URL зображення";
 $locale['forum_015'] = "Макс. розмір файлу: %s та дозволені типи файлів";
@@ -64,7 +64,7 @@ $locale['forum_057'] = "Теми : ";
 $locale['forum_058'] = "Підрозділи : ";
 $locale['forum_059'] = "Повідомлення : ";
 $locale['forum_060'] = "Опції видалення розділу";
-$locale['forum_061'] = 'User Forum Posts Recounted';
+$locale['forum_061'] = "Облік повідомлень користувача на форумі оновлено";
 
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Видалено повідомлення: ";
