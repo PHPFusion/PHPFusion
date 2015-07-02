@@ -39,7 +39,12 @@ require_once INCLUDES."defender.inc.php";
 include INCLUDES."output_handling_include.php";
 $defender = new defender();
 
-if (isset($_POST['step']) && $_POST['step'] == "8") {
+define('INSTALLATION_STEP',
+	filter_input(INPUT_POST, 'infuse') || filter_input(INPUT_POST, 'defuse')
+	? 5
+	: filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1);
+
+if (INSTALLATION_STEP === 8) {
 	if (file_exists(BASEDIR.'config_temp.php')) {
 		@rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
 		@chmod(BASEDIR.'config.php', 0644);
@@ -102,7 +107,7 @@ $buttonMode = NULL;
 $nextStep = 1;
 $content = "";
 
-switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
+switch (INSTALLATION_STEP) {
 	// Introduction
 	case 1:
 	default:
@@ -505,9 +510,8 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 			define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
 			define('LANGUAGE', $_GET['localeset']);
 
-			if (isset($_POST['infuse']) && isset($_POST['infusion'])) {
+			if ( ($infusion = filter_input(INPUT_POST, 'infuse')) ) {
 				$error = "";
-				$infusion = stripinput($_POST['infusion']);
 				if (file_exists(INFUSIONS.$infusion."/infusion.php")) {
 					include INFUSIONS.$infusion."/infusion.php";
 					$result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder='".$inf_folder."'");
@@ -566,8 +570,7 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 				}
 				//redirect(FUSION_SELF);
 			}
-			if (isset($_POST['defuse']) && isset($_POST['infusion'])) {
-				$infusion = form_sanitizer($_POST['infusion'], '');
+			if ( ($infusion = filter_input(INPUT_POST, 'defuse')) ) {
 				$result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder='".$infusion."'");
 				$data = dbarray($result);
 				include INFUSIONS.$data['inf_folder']."/infusion.php";
@@ -610,7 +613,9 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 						dbquery("DELETE FROM ".$item);
 					}
 				}
-				dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".$_POST['infusion']."'");
+				dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:infusion", array(
+					':infusion' => $infusion
+				));
 				//redirect(FUSION_SELF);
 			}
 
@@ -667,21 +672,17 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 					$content .= "</div>\n</div>\n";
 					$formaction = FUSION_SELF;
 					foreach ($inf as $i => $item) {
-						$content .= openform('infuseform', 'post', $formaction, array('max_tokens' => 1));
-						$content .= form_hidden('', 'step', 'step', '5', array(''));
-						$content .= "<input type='hidden' name='step' value='5' />\n";
 						$content .= "<div class='list-group-item'>\n";
 						$content .= "<div class='row'>\n";
 						$content .= "<div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>\n";
-						$content .= form_hidden('', 'infusion', 'infusion', $item['inf_folder']);
 						if ($item['inf_status'] > 0) {
 							if ($item['inf_status'] > 1) {
-								$content .= form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-info m-t-5 infuse btn-xs', 'icon' => 'entypo magnet'));
+								$content .= form_button('infuse', $locale['401'], $item['inf_folder'], array('class' => 'btn-info m-t-5 infuse btn-xs', 'icon' => 'entypo magnet'));
 							} else {
-								$content .= form_button('defuse', $locale['411'], "defuse-$i", array('class' => 'btn-default btn-sm m-t-5 btn-xs defuse', 'icon' => 'entypo trash'));
+								$content .= form_button('defuse', $locale['411'], $item['inf_folder'], array('class' => 'btn-default btn-sm m-t-5 btn-xs defuse', 'icon' => 'entypo trash'));
 							}
 						} else {
-							$content .= form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-primary btn-sm m-t-5 infuse btn-xs', 'icon' => 'entypo install'));
+							$content .= form_button('infuse', $locale['401'], $item['inf_folder'], array('class' => 'btn-primary btn-sm m-t-5 infuse btn-xs', 'icon' => 'entypo install'));
 						}
 						$content .= "</div>\n";
 						$content .= "<div class='col-xs-6 col-sm-6 col-md-4 col-lg-4'><strong>".$item['inf_name']."</strong><br/>".trimlink($item['inf_description'], 30)."</div>\n";
@@ -689,7 +690,6 @@ switch (filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1) {
 						$content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($item['inf_version'] ? $item['inf_version'] : '')."</div>\n";
 						$content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-1 col-lg-3 col-lg-offset-0'>".($item['inf_url'] ? "<a href='".$item['inf_url']."' target='_blank'>" : "")." ".($item['inf_developer'] ? $item['inf_developer'] : $locale['410'])." ".($item['inf_url'] ? "</a>" : "")." <br/>".($item['inf_email'] ? "<a href='mailto:".$item['inf_email']."'>".$locale['409']."</a>" : '')."</div>\n";
 						$content .= "</div>\n</div>\n";
-						$content .= closeform();
 					}
 				}
 			} else {
