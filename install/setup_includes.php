@@ -204,3 +204,54 @@ function fusion_file_put_contents($file, $data, $flags = null) {
 	}
 	return $bytes;
 }
+
+/**
+ * @param string $folder
+ * @return array
+ */
+function fusion_load_infusion($folder) {
+	$infusion = array();
+	$inf_title = "";
+	$inf_description = "";
+	$inf_version = "";
+	$inf_developer = "";
+	$inf_email = "";
+	$inf_weburl = "";
+	$inf_folder = "";
+	$inf_newtable = array();
+	$inf_insertdbrow = array();
+	$inf_droptable = array();
+	$inf_altertable = array();
+	$inf_deldbrow = array();
+	$inf_sitelink = array();
+	$inf_adminpanel = array();
+	$inf_mlt = array();
+	if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
+		include INFUSIONS.$folder."/infusion.php";
+		$infusion = array(
+			'name' => str_replace('_', ' ', $inf_title),
+			'title' => $inf_title,
+			'description' => $inf_description,
+			'version' => $inf_version ? : 'beta',
+			'developer' => $inf_developer ? : 'PHP-Fusion',
+			'email' => $inf_email,
+			'url' => $inf_weburl,
+			'folder' => $inf_folder,
+			'newtable' => $inf_newtable,
+			'insertdbrow' => $inf_insertdbrow,
+			'droptable' => $inf_droptable,
+			'alerttable' => $inf_altertable,
+			'deldbrow' => $inf_deldbrow,
+			'sitelink' => $inf_sitelink,
+			'adminpanel' => $inf_adminpanel,
+			'mlt' => $inf_mlt,
+		);
+		$result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
+		$infusion['status'] = dbrows($result)
+			? (version_compare($infusion['version'], dbresult($result, 0), ">")
+				? 2
+				: 1)
+			:  0;
+	}
+	return $infusion;
+}
