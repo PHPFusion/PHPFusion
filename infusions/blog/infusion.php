@@ -111,11 +111,11 @@ $k = 16;
 include LOCALE.LOCALESET."setup.php";
 
 // Check the table and run category creation for each installed language of it is empty.
-if (db_exists(DB_BLOG_CATS)) {
-	$result = dbquery("SELECT * FROM ".DB_BLOG_CATS."");
+if (db_exists(DB_BLOG_CATS, TRUE)) {
+	$result = dbquery("SELECT * FROM ".DB_BLOG_CATS);
 	if (dbrows($result) == 0) {
 		for ($i=0;$i<sizeof($enabled_languages);$i++) {
-		include LOCALE."".$enabled_languages[$i]."/setup.php";
+			include LOCALE.$enabled_languages[$i]."/setup.php";
 			dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.gif', '".$enabled_languages[$i]."')");
 			dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.gif', '".$enabled_languages[$i]."')");
 			dbquery("INSERT INTO ".DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3502']."', 'games.gif', '".$enabled_languages[$i]."')");

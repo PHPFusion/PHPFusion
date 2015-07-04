@@ -255,7 +255,7 @@ $k = 20;
 include LOCALE.LOCALESET."setup.php";
 
 // Check the table and run Forum Ranks inserts for each installed language of it is empty.
-if (db_exists(DB_FORUM_RANKS)) {
+if (db_exists(DB_FORUM_RANKS, TRUE)) {
 	$result = dbquery("SELECT * FROM ".DB_FORUM_RANKS);
 	if (dbrows($result) == 0) {
 		for ($i=0;$i<sizeof($enabled_languages );$i++) {

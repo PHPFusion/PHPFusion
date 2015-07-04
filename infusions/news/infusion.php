@@ -108,7 +108,7 @@ $k = 15;
 include LOCALE.LOCALESET."setup.php";
 
 // Check the table and run category creation for each installed language of it is empty.
-if (db_exists(DB_NEWS_CATS)) {
+if (db_exists(DB_NEWS_CATS, TRUE)) {
 	$result = dbquery("SELECT * FROM ".DB_NEWS_CATS."");
 	if (dbrows($result) == 0) {
 		for ($i=0;$i<sizeof($enabled_languages);$i++) {

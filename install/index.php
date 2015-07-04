@@ -605,7 +605,7 @@ switch (INSTALLATION_STEP) {
 				}
 				if (isset($inf_droptable) && is_array($inf_droptable)) {
 					foreach ($inf_droptable as $item) {
-						dbquery("DROP TABLE ".$item);
+						dbquery("DROP TABLE IF EXISTS ".$item);
 					}
 				}
 				if (isset($inf_deldbrow) && is_array($inf_deldbrow)) {
