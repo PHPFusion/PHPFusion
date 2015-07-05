@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 define("IN_FUSION", TRUE);
 use PHPFusion\Database\DatabaseFactory;
+use PHPFusion\Authenticate;
 
 ini_set('display_errors', 1);
 define('BASEDIR', '../');
@@ -44,13 +45,6 @@ define('INSTALLATION_STEP',
 	? 5
 	: filter_input(INPUT_POST, 'step', FILTER_VALIDATE_INT) ? : 1);
 
-if (INSTALLATION_STEP === 8) {
-	if (file_exists(BASEDIR.'config_temp.php')) {
-		@rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
-		@chmod(BASEDIR.'config.php', 0644);
-	}
-	redirect(BASEDIR.'index.php');
-}
 
 // Determine the chosen database functions
 $pdo_enabled = filter_input(INPUT_POST, 'pdo_enabled', FILTER_VALIDATE_BOOLEAN);
@@ -81,6 +75,21 @@ include_once INCLUDES."dynamics/dynamics.inc.php";
 DatabaseFactory::setDefaultDriver(intval($pdo_enabled) === 1 ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQL);
 
 require_once INCLUDES."db_handlers/all_functions_include.php";
+
+if (defined('DB_PREFIX')) {
+	require_once INCLUDES.'multisite_include.php';
+	dbconnect($db_host, $db_user, $db_pass, $db_name, FALSE);
+}
+$settings = fusion_get_settings();
+if ($settings) {
+	$userdata = Authenticate::validateAuthUser();
+	if (INSTALLATION_STEP != 8 and dbresult(dbquery('SELECT exists(SELECT * FROM '.DB_PREFIX.'users)'), 0) and intval($userdata['user_level']) !== USER_LEVEL_SUPER_ADMIN) {
+		// TODO: handle this case better way
+		exit('You are not superadmin.');
+	}
+}
+
+
 require_once LOCALE.LOCALESET.'global.php';
 $dynamics = new dynamics();
 $dynamics->boot();
@@ -823,6 +832,13 @@ switch (INSTALLATION_STEP) {
 			$nextStep = 8;
 			$buttonMode = 'finish';
 		}
+		break;
+	case 8:
+		if (file_exists(BASEDIR.'config_temp.php')) {
+			@rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
+			@chmod(BASEDIR.'config.php', 0644);
+		}
+		redirect(BASEDIR.'index.php');
 		break;
 }
 
