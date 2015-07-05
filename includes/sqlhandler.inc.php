@@ -630,14 +630,14 @@ function db_exists($table, $updateCache = FALSE) {
 		." FROM information_schema.tables WHERE table_schema = database() "
 		. " AND table_name LIKE :table_pattern";
 	if ($tables === NULL) {
-		$result = dbquery($sql, [':table_pattern' => str_replace('_', '\_', DB_PREFIX)."%"]);
+		$result = dbquery($sql, array(':table_pattern' => str_replace('_', '\_', DB_PREFIX).'%'));
 		while ($row = dbarraynum($result)) {
 			$tables[$row[0]] = TRUE;
 		}
 	} elseif ($updateCache) {
-		$tables[$table] = (bool) dbresult(dbquery('SELECT exists('.$sql.')', [':table_pattern' => DB_PREFIX.$table]), 0);
+		$tables[$table] = dbresult(dbquery('SELECT exists('.$sql.')', [':table_pattern' => DB_PREFIX.$table]), 0);
 	}
-	return isset($tables[$table]);
+	return !empty($tables[$table]);
 }
 
 /**
