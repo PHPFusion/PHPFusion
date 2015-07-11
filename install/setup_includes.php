@@ -246,7 +246,7 @@ function fusion_load_infusion($folder) {
 			'adminpanel' => $inf_adminpanel,
 			'mlt' => $inf_mlt,
 		);
-		$result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
+		$result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", array(':inf_folder' => $folder));
 		$infusion['status'] = dbrows($result)
 			? (version_compare($infusion['version'], dbresult($result, 0), ">")
 				? 2
