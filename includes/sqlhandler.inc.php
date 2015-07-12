@@ -635,7 +635,7 @@ function db_exists($table, $updateCache = FALSE) {
 			$tables[$row[0]] = TRUE;
 		}
 	} elseif ($updateCache) {
-		$tables[$table] = dbresult(dbquery('SELECT exists('.$sql.')', [':table_pattern' => DB_PREFIX.$table]), 0);
+		$tables[$table] = dbresult(dbquery('SELECT exists('.$sql.')', array(':table_pattern' => DB_PREFIX.$table)), 0);
 	}
 	return !empty($tables[$table]);
 }
