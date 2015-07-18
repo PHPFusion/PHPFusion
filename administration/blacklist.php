@@ -63,7 +63,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['bla
 		} else {
 			//echo 'yes here';
 			$defender->stop();
-			$defender->addNotice($locale['404']);
+			addNotice('danger', $locale['404']);
 		}
 	}
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['blacklist_id']) && isnum($_GET['blacklist_id']))) {
