@@ -97,7 +97,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['bla
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td class='tbl'><label for='blacklist_email'>".$locale['442']." <span class='required'>*</span></label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('blacklist_email', '', $blacklist_email, array('type' => 'email', 'error_text' => $locale['405']));
+	echo form_text('blacklist_email', '', $blacklist_email, array('type' => 'text', 'error_text' => $locale['405']));
 	echo "</tr>\n<tr>\n";
 	echo "<td valign='top' class='tbl'><label for='blacklist_reason'>".$locale['443']."</label></td>\n";
 	echo "<td class='tbl'>\n";
