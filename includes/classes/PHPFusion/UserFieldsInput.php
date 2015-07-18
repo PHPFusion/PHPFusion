@@ -391,7 +391,7 @@ class UserFieldsInput {
 			if ($this->_isValidCurrentPassword || $this->registration) {
 				// Require a valid email account
 				if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
-					if (dbcount("(blacklist_id)", DB_BLACKLIST, ":email like if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email))", array(':email' => $this->_userEmail))) {
+					if (dbcount("(blacklist_id)", DB_BLACKLIST, ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')", array(':email' => $this->_userEmail))) {
 						// this email blacklisted.
 						$defender->stop();
 						$defender->setInputError('user_email');
