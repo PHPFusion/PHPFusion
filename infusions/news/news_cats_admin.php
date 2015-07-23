@@ -61,7 +61,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 			} else {
 				$error = 2;
 				$defender->stop();
-				$defender->addNotice($locale['news_0352']);
+				addNotice('info', $locale['news_0352']);
 				$formaction = FUSION_SELF.$aidlink;
 				$openTable = $locale['news_0022'];
 			}
