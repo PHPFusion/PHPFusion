@@ -7,7 +7,7 @@ $locale['setup_0005'] = " Jeg har læst og accepteret de relevante PHP-Fusion <a
 $locale['setup_5000'] = "For at kunne bruge PHP-Fusion, skal du acceptere betingelserne</a>.";
 $locale['setup_0010'] = '9.0';
 $locale['setup_0011'] = "da";
-$locale['setup_0012'] = "iso-8859-1";
+$locale['setup_0012'] = "UTF-8";
 // Index
 $locale['setup_0101'] = "Trin 1: Introduktion";
 $locale['setup_0102'] = "Trin 2: Diagnose på foldere og filer";
