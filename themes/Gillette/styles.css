@@ -1,4 +1,7 @@
 /* Comment element properties */
+h1 {font-size: 18px !important; font-weight: 600 !important; }
+h2 { font-size: 16px !important; font-weight: 600 !important; }
+h3 { font-size: 14px !important; font-weight: 600 !important; }
 
 a {
     color: #04688D;
@@ -93,17 +96,27 @@ form {
 	background: rgb(200, 33, 30) !important;
 	border: 0 !important;
 }
-.button, .button:hover, .button:focus, .button:active .button.active {
+.button, .btn {
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 10px !important;
-    background: rgb(200, 33, 30);
-    background-image: url(images/button.gif);
-    border: 1px solid #000;
-	height: 21px !important;
+    font-size: 11px !important;
+    border: 0;
 	color: #fff !important;
-	padding: 5px !important;
-	line-height: 10px;
+	height: 21px !important;
+	padding: 1px 15px !important;
+	-webkit-border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	border-radius: 0 !important;
+}
+.btn-primary {
+	background-color: #444 !important;
 	border: 0 !important;
+}
+.button:hover, .button:focus, .button:active .button.active, .btn:hover {
+	background-image: url(images/button.gif);
+	border: 0;
+}
+.btn:active, .btn:focus {
+	outline: none !important;
 }
 .bbcode {
     font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -215,7 +228,7 @@ div.emulated-fieldset div.attachments-list {
 }
 .full-header > a > img {
 	max-width: 250px;
-	margin-bottom: -30px;
+	margin: 0 auto -67px;
 }
 
 .main-footer {
@@ -302,7 +315,7 @@ div.emulated-fieldset div.attachments-list {
     background-image: url(images/gradient.gif);
     background-repeat: repeat-x;
     border: 1px solid #DDD;
-    padding: 4px;
+    padding: 4px 10px;
 }
 
 /* Center-Panel properties */
@@ -641,3 +654,25 @@ h3 {
 	font-weight: 600;
 	margin-left:10px;
 }
+
+/* Touch up work to bootstrap */
+body {
+	padding: 0 3%;
+}
+.breadcrumb {
+	background: #ddd !important;
+}
+table td > div.navbar {
+	min-height: 0;
+	margin-bottom: 0;
+}
+table td > div.navbar > div > ul > li > a {
+	padding : 2px 5px 3px;
+}
+table td > div.navbar > div > ul > li > a:hover, table td > div.navbar > div > ul > li > a:focus {
+	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5) inset;
+	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5) inset;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5) inset;
+}
+/* Configure Shoutbox Avatar */
+.avatar-row > div > a > img { max-width: 50px !important; margin-top:10px; margin-right: 0; }
