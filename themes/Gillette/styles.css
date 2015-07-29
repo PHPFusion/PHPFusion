@@ -107,10 +107,6 @@ form {
 	-moz-border-radius: 0 !important;
 	border-radius: 0 !important;
 }
-.btn-primary {
-	background-color: #444 !important;
-	border: 0 !important;
-}
 .button:hover, .button:focus, .button:active .button.active, .btn:hover {
 	background-image: url(images/button.gif);
 	border: 0;
@@ -118,6 +114,15 @@ form {
 .btn:active, .btn:focus {
 	outline: none !important;
 }
+.btn-primary {
+	background-color: #444 !important;
+	border: 0 !important;
+}
+.btn-default {
+	background-color: #777 !important;
+	border: 0 !important;
+}
+
 .bbcode {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 10px;
@@ -676,3 +681,16 @@ table td > div.navbar > div > ul > li > a:hover, table td > div.navbar > div > u
 }
 /* Configure Shoutbox Avatar */
 .avatar-row > div > a > img { max-width: 50px !important; margin-top:10px; margin-right: 0; }
+/* Configure forum */
+.forum-title, .forum-title h6, .forum-title h4 {
+	margin-bottom: 15px !important;
+	font-weight: 600 !important;
+}
+.forum-container { border: 1px solid #ccc; padding:5px; margin: 4px 0 !important;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+.forum-link {font-size:13px !important; font-weight: 600 !important; }
+.fusion_count { font-size: 12px !important;}
+.fusion_word { font-size: 11px !important; font-weight: 600 !important;}
