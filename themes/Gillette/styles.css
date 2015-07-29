@@ -102,7 +102,7 @@ form {
     border: 0;
 	color: #fff !important;
 	height: 21px !important;
-	padding: 1px 15px !important;
+	padding: 3px 15px !important;
 	-webkit-border-radius: 0 !important;
 	-moz-border-radius: 0 !important;
 	border-radius: 0 !important;
@@ -121,6 +121,10 @@ form {
 .btn-default {
 	background-color: #777 !important;
 	border: 0 !important;
+	color: #fff !important;
+}
+.text-dark {
+	color: #fff !important;
 }
 
 .bbcode {
@@ -140,17 +144,20 @@ form {
 }
 .textbox, .btn {
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     color: #555;
-    background-color: #F8F8F8;
-    border: 1px solid #CCC;
+    background-color: #fff;
+    border: 1px solid #eee;
 	padding:2px 5px;
 	height: 26px;
+	-webkit-border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	border-radius: 0 !important;
 }
-
+.form-control { font-size: 11px !important;}
 .textbox:focus {
     color: #000;
-    background-color: #E1E1E1;
+    background-color: #f7f7f7;
 }
 
 div.emulated-fieldset {
@@ -176,7 +183,6 @@ div.emulated-fieldset div.attachments-list {
 }
 
 /* Header and footer properties */
-
 .sub-header {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 10px;
@@ -694,3 +700,4 @@ table td > div.navbar > div > ul > li > a:hover, table td > div.navbar > div > u
 .forum-link {font-size:13px !important; font-weight: 600 !important; }
 .fusion_count { font-size: 12px !important;}
 .fusion_word { font-size: 11px !important; font-weight: 600 !important;}
+#step-field { margin-top:-3px !important;}
