@@ -10,6 +10,7 @@ $locale['xml_lang'] = "en";
 $locale['tinymce'] = "en";
 $locale['phpmailer'] = "en";
 $locale['datepicker'] = "en";
+
 // Full & Short Months
 $locale['months'] = "&nbsp|Januari|Februari|Mac|April|Mei|Jun|Julai|Ogos|September|Oktober|November|Disember";
 $locale['shortmonths'] = "&nbsp|Jan|Feb|Mac|Apr|Mei|Jun|Jul|Ogos|Sept|Okt|Nov|Dis";
@@ -36,13 +37,33 @@ $locale['city'] = "Bandar";
 $locale['postcode'] = "Poskod";
 $locale['sel_country'] = "Sila pilih Negara";
 $locale['sel_state'] = "Sila pilih Negeri";
+$locale['sel_user'] = "Silah pilih nama pengguna";
+$locale['add_language'] = "Tambah Bahasa";
+$locale['add_lang'] = "Tambah %s";
+
+// Name
+$locale['name'] = "Nama Penuh";
+$locale['username_pretext'] = "Nama pengguna juka sama dengan nama profil di <div class='alert alert-info m-t-10 p-10'>%s<strong>%s</strong></div>";
+$locale['first_name'] = 'Nama Pertama';
+$locale['middle_name'] = 'Nama Tengah';
+$locale['last_name'] = 'Nama Keluarga';
+
+// Documents
+$locale['doc_type'] = "Document type";
+$locale['doc_series'] = "Series";
+$locale['doc_number'] = "Number";
+$locale['doc_authority'] = "Authority";
+$locale['doc_date_issue'] = "Date of issue";
+$locale['doc_date_expire'] = "Date of expiry";
 // Standard User Levels
 $locale['user0'] = "Awam";
 $locale['user1'] = "Ahli";
 $locale['user2'] = "Admin";
 $locale['user3'] = "Super Admin";
 $locale['user_na'] = "-";
+$locale['user_guest'] = "Tetamu";
 $locale['user_anonymous'] = "User Diselaputi";
+$locale['genitive'] = "%s %s";
 // Standard User Status
 $locale['status0'] = "Aktif";
 $locale['status1'] = "Diharam";
@@ -55,6 +76,7 @@ $locale['status7'] = "Diaktifkan";
 $locale['status8'] = "Tidak Aktif";
 // Forum Moderator Level(s)
 $locale['userf1'] = "Moderator";
+
 // Navigation
 $locale['global_001'] = "Navigasi";
 $locale['global_002'] = "Belum ada pautan\n";
@@ -108,6 +130,7 @@ $locale['global_060'] = "Berhenti mengikuti utusan forum ini?";
 $locale['global_070'] = "Dibalas oleh ";
 $locale['global_071b'] = "Lihat semua balasan oleh %s";
 $locale['global_071'] = "pada ";
+$locale['global_071b'] = "Pengarang ";
 $locale['global_072'] = "Baca Seterusnya";
 $locale['global_073'] = " Komen";
 $locale['global_073b'] = " Komen";
@@ -134,6 +157,11 @@ $locale['global_085'] = "Semua Kategori";
 $locale['global_086'] = "Berita Terbaru";
 $locale['global_087'] = "Komen Berita Tertinggi";
 $locale['global_088'] = "Berita Ternilai";
+$locale['global_089'] = "Jadi orang pertama untuk komen %s";
+$locale['global_089a'] = "Jadi orang pertama untuk undi %s";
+$locale['global_089b'] = "Jejari";
+$locale['global_089c'] = "Senari";
+
 $locale['global_086b'] = "Blog Terbaru";
 $locale['global_087b'] = "Komen Blog Tertinggi";
 $locale['global_088b'] = "Blog Ternilai";
@@ -219,6 +247,9 @@ $locale['global_141'] = "Lihat Undian";
 $locale['global_142'] = "Belum ada Kempen Undi.";
 $locale['global_143'] = "Penilaian";
 
+// Keywords and Meta
+$locale['tags'] = "Tags";
+
 // Captcha
 $locale['global_150'] = "Kod Pengesahan:";
 $locale['global_151'] = "Sila isikan Kod Pengesahan:";
@@ -227,6 +258,8 @@ $locale['global_170'] = "lawatan unik";
 $locale['global_171'] = "lawatan unik";
 $locale['global_172'] = "Masa Penghasilan Paparan: %s seconds";
 $locale['global_173'] = "Pertanyaan";
+$locale['global_174'] = "Memori diguna";
+$locale['global_175'] = "Purata: %s saat";
 // Admin Navigation
 $locale['global_180'] = "Halaman Utama Admin";
 $locale['global_181'] = "Kembali ke Situs";
@@ -307,11 +340,13 @@ $locale['global_462'] = "kB";
 $locale['global_463'] = "MB";
 $locale['global_464'] = "GB";
 $locale['global_465'] = "TB";
+
 //Safe Redirect
 $locale['global_500'] = "Anda akan diarahkan semula ke %s, sila tunggu. Jika anda tidak ingin diarah ke halaman lain, sila klik pautan ini.";
 // Captcha Locales
 $locale['global_600'] = "Kod Pengesahan";
 $locale['recaptcha'] = "en";
+
 //Miscellaneous
 $locale['global_900'] = "Tidak dapat menukar HEX ke DEC";
 //Language Selection
@@ -343,6 +378,7 @@ $locale['by'] = 'oleh';
 $locale['in'] = 'di';
 $locale['of'] = 'daripada';
 $locale['and'] = "and"; // please translate
+$locale['na'] = 'Tidak ada';
 $locale['joined'] = "Joined since: "; // please translate
 // Navigation
 $locale['next'] = 'Seterusnya';
@@ -357,6 +393,7 @@ $locale['move_down'] = "Pindah Bawah";
 $locale['add'] = 'Tambah';
 $locale['save'] = 'Terima';
 $locale['save_changes'] = 'Terima Perubahan';
+$locale['confirm'] = 'Mengesahi';
 $locale['update'] = 'Kemaskini';
 $locale['updated'] = 'di kemaskinikan';
 $locale['remove'] = 'Padam';
@@ -382,7 +419,8 @@ $locale['image'] = 'Gambar';
 $locale['choose'] = 'Sila pilih antara satu..';
 $locale['root'] = 'Sebagai Dasar Pautan...';
 $locale['choose-user'] = 'Silah pilih Ahli..';
-$locale['parent'] = 'Sebagai Dasar Pautan...';
+$locale['choose-location'] = 'Sila pilih lokasi';
+$locale['parent'] = 'Sebagai Dasar...';
 $locale['order'] = 'Susunan Item';
 $locale['status'] = 'Status';
 $locale['note'] = 'Buat nota item ini';
@@ -408,8 +446,14 @@ $locale['nopreview'] = 'Tiada apa untuk previu';
 $locale['left'] = "Kiri";
 $locale['center'] = "Tengah";
 $locale['right'] = "Kanan";
+// Comments and ratings
+$locale['comments'] = "Komen";
+$locale['ratings'] = "Undian";
+$locale['comments_ratings'] = "Unidan dan Komen";
+$locale['user_account'] = "Akaun Pengguna";
+$locale['about'] = "Pengenaian";
 // User status
-$locale['online'] = "Online"; // please translate these 2 lines
+$locale['online'] = "Online";
 $locale['offline'] = "Offline";
 // Comments and ratings
 $locale['comments'] = "Komen";
@@ -428,6 +472,7 @@ $locale['fmt_blog'] = "blog|blog";
 $locale['fmt_comment'] = "komen|komen";
 $locale['fmt_day'] = "hari|hari";
 $locale['fmt_download'] = "muat-turun|muat-turun";
+$locale['fmt_follower'] = "pengikut|pengikut";
 $locale['fmt_forum'] = "forum|forum";
 $locale['fmt_guest'] = "pelawat|pelawat";
 $locale['fmt_hour'] = "jam|jam";
@@ -441,7 +486,7 @@ $locale['fmt_photo'] = "gambar|gambar";
 $locale['fmt_post'] = "pos|pos";
 $locale['fmt_question'] = "soalan|soalan";
 $locale['fmt_rating'] = "undi|undi";
-$locale['fmt_reads'] = "bacaan|bacaan";
+$locale['fmt_read'] = "bacaan|bacaan";
 $locale['fmt_second'] = "saat|saat";
 $locale['fmt_shouts'] = "suara|suara";
 $locale['fmt_thread'] = "tajuk|tajuk";
@@ -450,3 +495,5 @@ $locale['fmt_views'] = "tinjauan|tinjauan";
 $locale['fmt_weblink'] = "pautan-laman|pautan-laman";
 $locale['fmt_week'] = "minggu|minggu";
 $locale['fmt_year'] = "tahun|tahun";
+
+include __DIR__."/defender.php";

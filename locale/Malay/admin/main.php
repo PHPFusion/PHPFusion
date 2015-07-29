@@ -7,11 +7,8 @@ $locale['ac02'] = "Keahlian";
 $locale['ac03'] = "Sistem";
 $locale['ac04'] = "Pengaturan";
 $locale['ac05'] = "Modul Infusi";
-
 $locale['ac10'] = "Admin Dashboard"; // translate this line
-
 $locale['201'] = "Pengurus";
-
 $locale['AC'] = "Kategori Artikel";
 $locale['A'] = "Artikel";
 $locale['BLOG'] = "Blog";
@@ -26,6 +23,7 @@ $locale['IM'] = "Gambar";
 $locale['I'] = "Modul Infusi";
 $locale['IP'] = "Panel";
 $locale['M'] = "Ahli";
+$locale['MI'] = "Sistem Migrasi";
 $locale['N'] = "Berita";
 $locale['P'] = "Panel";
 $locale['PH'] = "Galeri Gambar";
