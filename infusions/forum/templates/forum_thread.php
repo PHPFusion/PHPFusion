@@ -19,9 +19,9 @@
 if (!function_exists('render_thread')) {
 	function render_thread($info) {
 		global $locale;
-		$buttons = $info['buttons'];
-		$data = $info['thread'];
-		$pdata = $info['post_items'];
+		$buttons = !empty($info['buttons']) ? $info['buttons'] : array();
+		$data = !empty($info['thread']) ? $info['thread'] : array();
+		$pdata = !empty($info['post_items']) ? $info['post_items'] : array();
 		$icon = array('','','fa fa-trophy fa-fw');
 		$p_title = array();
 
@@ -66,15 +66,17 @@ if (!function_exists('render_thread')) {
 		echo "<!--pre_forum_thread-->\n";
 		echo $info['open_post_form'];
 		$i = 0;
-		foreach($pdata as $post_id => $post_data) {
-			$i++;
-			echo "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
-			render_post_item($post_data, $i);
-			if ($post_id == $info['post_firstpost'] && $info['permissions']['can_post']) {
-				echo "<div class='text-right'>\n";
-				echo "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
-				echo "<a class='m-l-20 btn btn-success btn-md vatop ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
-				echo "</div>\n";
+		if (!empty($pdata)) {
+			foreach($pdata as $post_id => $post_data) {
+				$i++;
+				echo "<!--forum_thread_prepost_".$post_data['post_id']."-->\n";
+				render_post_item($post_data, $i);
+				if ($post_id == $info['post_firstpost'] && $info['permissions']['can_post']) {
+					echo "<div class='text-right'>\n";
+					echo "<div class='display-inline-block'>".$info['thread_posts']."</div>\n";
+					echo "<a class='m-l-20 btn btn-success btn-md vatop ".(empty($buttons['reply']) ? 'disabled' : '')."' href='".$buttons['reply']['link']."'>".$buttons['reply']['name']."</a>\n";
+					echo "</div>\n";
+				}
 			}
 		}
 		//if (isset($info['page_nav'])) echo "<div id='forum_bottom' class='text-left m-b-10 text-lighter clearfix'>\n".$info['page_nav']."</div>\n";

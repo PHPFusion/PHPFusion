@@ -67,7 +67,6 @@ class Moderator {
 	private function remove_thread() {
 		$data = array();
 		if (self::verify_thread($this->thread_id) && self::verify_forum($this->forum_id)) {
-
 			dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE thread_id='".intval($this->thread_id)."'");
 			$data['post_deleted'] = mysql_affected_rows();
 			dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE thread_id='".intval($this->thread_id)."'");
@@ -282,9 +281,9 @@ class Moderator {
 	private function mod_delete_thread() {
 		global $locale;
 		echo openmodal('deletethread',$locale['forum_0700'], array('class'=>'modal-center'));
-		echo "<div style='text-align:center'><br />\n";
+		echo "<div class='text-center'><br />\n";
 		if (!isset($_POST['deletethread'])) {
-			echo "<form name='delform' method='post' action='".FUSION_SELF."?step=delete&amp;forum_id=".intval($this->forum_id)."&amp;thread_id=".intval($this->thread_id)."'>\n";
+			echo openform('delform', 'post', FUSION_SELF."?step=delete&amp;forum_id=".intval($this->forum_id)."&amp;thread_id=".intval($this->thread_id), array("max_tokens"=>1));
 			echo $locale['forum_0704']."<br /><br />\n";
 			echo form_button('deletethread', $locale['yes'], $locale['yes'], array('class'=>'m-r-10 btn-danger'));
 			echo form_button('cancelDelete', $locale['no'], $locale['no'], array('class'=>'m-r-10 btn-default'));

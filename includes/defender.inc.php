@@ -759,23 +759,23 @@ class defender {
 	/**
 	 * Token Sniffer
 	 * Checks whether a post contains a valid token
+	 * This function relies on stop(). if v7, stop() doesnt affect any performance.
 	 */
 	public function sniff_token() {
 		global $defender;
 		$error = FALSE;
 		if (!empty($_POST)) {
-			// Check if a token is being posted and make sure is a string
 			if (!isset($_POST['fusion_token']) || !isset($_POST['form_id']) || !is_string($_POST['fusion_token']) || !is_string($_POST['form_id'])) {
 				$error = "Token was not posted";
-			}
-			if (!self::verify_token(0)) {
-				$error = "Token is invalid: ".stripinput($_POST['fusion_token']);
-				if (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
-					$error = "Cannot find any token for this form - ".$_POST['form_id'];
+			} else {
+				if (!self::verify_token(0)) {
+					$error = "Token is invalid: ".stripinput($_POST['fusion_token']);
+					if (!isset($_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']])) {
+						$error = "Cannot find any token for this form - ".$_POST['form_id'];
+					}
 				}
 			}
 		}
-
 		// Check if any error was set
 		if ($error) {
 			// Flag the token as invalid
@@ -784,7 +784,6 @@ class defender {
 			$this->stop();
 			if ($this->debug) addNotice('danger', $error);
 		}
-
 	}
 
 	/**
