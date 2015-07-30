@@ -36,20 +36,20 @@ require_once INFUSIONS."forum/templates/forum_input.php";
 if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 	// yield forum_id and forum_id before that
 	$inf_settings = get_settings('forum');
-	$forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
-						FROM ".DB_FORUMS." f
-						LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
-						WHERE f.forum_id='".intval($_GET['forum_id'])."'
-						AND ".groupaccess('f.forum_access')."
-					")
+	$forum_data = dbarray(
+		dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
+				FROM ".DB_FORUMS." f
+				LEFT JOIN ".DB_FORUMS." f2 ON f.forum_cat=f2.forum_id
+				WHERE f.forum_id='".intval($_GET['forum_id'])."'
+				AND ".groupaccess('f.forum_access')."
+				")
 			);
-	// main forum. // get forum is sanitized
 	if ($forum_data['forum_type'] == 1) redirect(INFUSIONS."forum/index.php");
 	define_forum_mods($forum_data);
 	$forum_data['lock_edit'] = $inf_settings['forum_edit_lock'] == 1 ? TRUE : FALSE;
 	// set permissions.
 	$info['permissions'] = array(
-		'can_post' => iMOD or iSUPERADMIN ? true : (checkgroup($forum_data['forum_post']) && checkgroup($forum_data['forum_lock'])) ? true : false,
+		'can_post' => iMOD or iSUPERADMIN ? true : checkgroup($forum_data['forum_post']) && checkgroup($forum_data['forum_lock']) ? true : false,
 		'can_attach' => iMOD or iSUPERADMIN ? true : checkgroup($forum_data['forum_attach']) && $forum_data['forum_allow_attach'] ? true : false,
 	);
 
@@ -77,6 +77,7 @@ if (iMEMBER && PHPFusion\Forums\Functions::verify_forum($_GET['forum_id'])) {
 
 		$post_data = array(
 			'forum_id' => $forum_data['forum_id'],
+			'forum_cat' => $forum_data['forum_cat'],
 			'thread_id' => 0,
 			'post_id' => 0,
 			'post_message' => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',

@@ -374,11 +374,11 @@ class Viewthread {
 					FROM ".DB_FORUM_POSTS." p
 					INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
 					LEFT JOIN ".DB_FORUM_VOTES." v ON v.post_id = p.post_id
-					LEFT JOIN ".DB_FORUM_VOTES." v2 on v2.thread_id = p.thread_id AND v2.vote_user = '".$userdata['user_id']."'
+					LEFT JOIN ".DB_FORUM_VOTES." v2 on v2.thread_id = p.thread_id AND v2.vote_user = '".intval($userdata['user_id'])."'
 					LEFT JOIN ".DB_USERS." u ON p.post_author = u.user_id
 					LEFT JOIN ".DB_USERS." u2 ON p.post_edituser = u2.user_id AND post_edituser > '0'
 					LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.post_id = p.post_id
-					WHERE p.thread_id='".$_GET['thread_id']."' AND post_hidden='0' ".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".$this->thread_info['post_firstpost']."'" : '')."
+					WHERE p.thread_id='".intval($_GET['thread_id'])."' AND post_hidden='0' ".($this->thread_info['thread']['forum_type'] == '4' ? "OR p.post_id='".intval($this->thread_info['post_firstpost'])."'" : '')."
 					GROUP by p.post_id ORDER BY $sortCol LIMIT ".intval($_GET['rowstart']).", ".intval($forum_settings['posts_per_page']));
 		$this->thread_info['post_rows'] = dbrows($result);
 		if ($this->thread_info['post_rows'] > 0) {
