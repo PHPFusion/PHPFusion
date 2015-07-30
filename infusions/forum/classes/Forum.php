@@ -360,7 +360,7 @@ class Forum {
 									$threads['thread_link'] = INFUSIONS."forum/viewthread.php?thread_id=".$threads['thread_id'];
 									$match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
 									// Threads Customized Output
-									$threads['thread_pages'] = "<div class='forum-pages'>".makepagenav(0, $inf_settings['posts_per_page'], $threads['thread_postcount'], 3, 'rowstart')."</div>\n";
+									$threads['thread_pages'] = "<div class='forum-pages'>".makepagenav(0, $inf_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;", 'rowstart')."</div>\n";
 									// Set up icons
 									$attach_image = 0; $attach_file = 0;
 									$a_result = dbquery("SELECT attach_id, attach_mime FROM ".DB_FORUM_ATTACHMENTS." WHERE thread_id ='".$threads['thread_id']."'");
