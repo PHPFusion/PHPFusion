@@ -171,6 +171,10 @@ if ($_GET['post'] == "reply") {
 
 	if ($_GET['error'] < "2") {
 
+		if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) {
+			throw new \Exception('$_GET[ post_id ] is blank, and not passed! Please report this.');
+		}
+
 		if ($forum_settings['thread_notify']) {
 			$result = dbquery("SELECT tn.*, tu.user_id, tu.user_name, tu.user_email, tu.user_level, tu.user_groups
 				FROM ".DB_FORUM_THREAD_NOTIFY." tn
@@ -183,7 +187,7 @@ if ($_GET['post'] == "reply") {
 					FROM ".DB_FORUM_THREADS." tt
 					INNER JOIN ".DB_FORUMS." tf ON tf.forum_id=tt.forum_id
 					WHERE thread_id='".$_GET['thread_id']."'"));
-				$link = $settings['siteurl']."infusions/forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&pid=".$_GET['post_id']."#post_".$_GET['post_id'];
+				$link = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."&pid=".$_GET['post_id']."#post_".$_GET['post_id'];
 				$template_result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='POST' LIMIT 1");
 				if (dbrows($template_result)) {
 					$template_data = dbarray($template_result);
@@ -200,7 +204,7 @@ if ($_GET['post'] == "reply") {
 								$message_el2 = array($data['user_name'], $data2['thread_subject'], $link);
 								$message_subject = str_replace("{THREAD_SUBJECT}", $data2['thread_subject'], $locale['forum_0660']);
 								$message_content = str_replace($message_el1, $message_el2, $locale['forum_0661']);
-								sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $message_subject, $message_content);
+								sendemail($data['user_name'], $data['user_email'], fusion_get_settings('siteusername'), fusion_get_settings('siteemail'), $message_subject, $message_content);
 							}
 						}
 					}
@@ -211,7 +215,7 @@ if ($_GET['post'] == "reply") {
 							$message_el2 = array($data['user_name'], $data2['thread_subject'], $link);
 							$message_subject = str_replace("{THREAD_SUBJECT}", $data2['thread_subject'], $locale['forum_0660']);
 							$message_content = str_replace($message_el1, $message_el2, $locale['forum_0661']);
-							sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], $message_subject, $message_content);
+							sendemail($data['user_name'], $data['user_email'], fusion_get_settings('siteusername'), fusion_get_settings('siteemail'), $message_subject, $message_content);
 						}
 					}
 				}
@@ -219,15 +223,19 @@ if ($_GET['post'] == "reply") {
 			}
 		}
 
-		if (!isset($_GET['post_id']) || !isnum($_GET['post_id'])) {
-			if (!isset($_GET['post_id'])) throw new \Exception('$_GET[ post_id ] is blank, and not passed! Please report this.');
+		// fix redirection to last page always
+		$thread_data = dbarray(dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE thread_id='".intval($_GET['thread_id'])."'"));
+		$thread_last_page = 0; $redirect_add = "";
+		if ($thread_data['thread_postcount'] > $forum_settings['posts_per_page']) {
+			$thread_last_page = floor(floor($thread_data['thread_postcount']/$forum_settings['posts_per_page']) * $forum_settings['posts_per_page']);
 		}
-
-		add_to_head("<meta http-equiv='refresh' content='2; url=".$base_redirect_link."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
-		echo "<a href='".$base_redirect_link."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
-
+		if ($thread_last_page) {
+			$redirect_add = "&amp;rowstart=".$thread_last_page;
+		}
+		add_to_head("<meta http-equiv='refresh' content='2; url=".$base_redirect_link.$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."' />\n");
+		echo "<a href='".$base_redirect_link.$redirect_add."&amp;pid=".$_GET['post_id']."#post_".$_GET['post_id']."'>".$locale['forum_0548']."</a> ::\n";
 	} else {
-
+		// error = 4
 		$data = dbarray(dbquery("SELECT post_id FROM ".DB_FORUM_POSTS." WHERE thread_id='".$_GET['thread_id']."' ORDER BY post_id DESC"));
 		add_to_head("<meta http-equiv='refresh' content='4; url=".$base_redirect_link."&amp;pid=".$data['post_id']."#post_".$data['post_id']."' />\n");
 		echo "<a href='".$base_redirect_link."&amp;pid=".$data['post_id']."#post_".$data['post_id']."'>".$locale['forum_0548']."</a> ::\n";

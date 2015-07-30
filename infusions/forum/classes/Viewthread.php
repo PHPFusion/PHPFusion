@@ -520,6 +520,7 @@ class Viewthread {
 				$pdata['attach_files_count'] = 0;
 				$pdata['attach_image_count'] = 0;
 				$pdata['post_attachments'] = '';
+				//print_p($this->thread_info['attachments']);
 				//print_p($this->thread_info['permissions']['can_download_attach']);
 				if (isset($this->thread_info['attachments'][$pdata['post_id']]) && $this->thread_info['permissions']['can_download_attach']) {
 					require_once INCLUDES."mimetypes_include.php";
@@ -718,7 +719,9 @@ class Viewthread {
 	 */
 	public function render_reply_form() {
 		global $locale, $userdata, $forum_settings, $settings;
+		$thread_info = $this->thread_info;
 		$thread_data = $this->thread_info['thread'];
+
 		if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked']) redirect(INFUSIONS.'forum/index.php');
 		if ($this->thread_info['permissions']['can_reply']) {
 			add_to_title($locale['global_201'].$locale['forum_0503']);
@@ -748,26 +751,6 @@ class Viewthread {
 				// all data is sanitized here.
 				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
 					$update_forum_lastpost = false;
-
-					// try attachment first
-					// save all file attachments and get error
-					if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
-						$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
-						if ($upload['error'] == 0) {
-							foreach($upload['target_file'] as $arr => $file_name) {
-								$attachment = array(
-									'thread_id' => $thread_data['thread_id'],
-									'post_id' => $post_data['post_id'],
-									'attach_name' => $file_name,
-									'attach_mime' => $upload['type'][$arr],
-									'attach_size' => $upload['source_size'][$arr],
-									'attach_count' => '0', // downloaded times?
-								);
-								dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', array('keep_session'=>true));
-							}
-						}
-					}
-
 					if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
 						// Prepare forum merging action
 						$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
@@ -782,7 +765,26 @@ class Viewthread {
 							$post_data['post_id'] = dblastid();
 							if (!defined("FUSION_NULL")) dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
 						}
-							// Update stats in forum and threads
+
+						// Fix post_id missing on attach upload
+						if (!empty($_FILES) && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])) {
+							$upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
+							if ($upload['error'] == 0) {
+								foreach($upload['target_file'] as $arr => $file_name) {
+									$adata = array(
+										'thread_id' => $thread_data['thread_id'],
+										'post_id' => $post_data['post_id'],
+										'attach_name' => $file_name,
+										'attach_mime' => $upload['type'][$arr],
+										'attach_size' => $upload['source_size'][$arr],
+										'attach_count' => '0', // downloaded times?
+									);
+									dbquery_insert(DB_FORUM_ATTACHMENTS, $adata, 'save', array('keep_session'=>true));
+								}
+							}
+						}
+
+						// Update stats in forum and threads
 						if ($update_forum_lastpost && !defined('FUSION_NULL')) {
 							// find all parents and update them
 							$list_of_forums = get_all_parent(dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat'), $thread_data['forum_id']);
@@ -801,7 +803,6 @@ class Viewthread {
 							}
 						}
 					}
-					// error is always 0 now.
 					if (!defined('FUSION_NULL')) redirect("postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
 				}
 			}
