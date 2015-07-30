@@ -124,6 +124,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
 			$output = TRUE;
 			opentable($locale['forum_0552']);
 			echo "<div class='alert alert-info' style='text-align:center'><br />\n";
+			// track on and user must not exist in db
 			if ($_GET['post'] == "on" && !dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".$userdata['user_id']."'")) {
 				$result = dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$_GET['thread_id']."', '".time()."', '".$userdata['user_id']."', '1')");
 				echo $locale['forum_0553']."<br /><br />\n";

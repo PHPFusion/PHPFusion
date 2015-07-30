@@ -146,7 +146,7 @@ class Viewthread {
 				array('link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0360'])
 				:
 				array(),
-			'notify' => $thread_data['user_tracked'] && iMEMBER ?
+		'notify' => $thread_data['user_tracked'] && iMEMBER ?
 					array('link' => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0174'])
 					:
 					iMEMBER ? array('link' => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0175']) : array(),
@@ -755,7 +755,7 @@ class Viewthread {
 				// all data is sanitized here.
 				if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
 					$update_forum_lastpost = false;
-					if (!defined('FUSION_NULL')) { // post message is invalid or whatever is invalid
+					if (!defined('FUSION_NULL')) {
 						// Prepare forum merging action
 						$last_post_author = dbarray(dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC LIMIT 1"));
 						if ($last_post_author['post_author'] == $post_data['post_author'] && $thread_data['forum_merge']) {
@@ -800,7 +800,6 @@ class Viewthread {
 							// update current thread
 							dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_postcount=thread_postcount+1, thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$thread_data['thread_id']."'");
 						}
-						// set notify
 						if ($forum_settings['thread_notify'] && isset($_POST['notify_me']) && $thread_data['thread_id'] && !defined('FUSION_NULL')) {
 							if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$thread_data['thread_id']."' AND notify_user='".$post_data['post_author']."'")) {
 								dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES('".$thread_data['thread_id']."', '".time()."', '".$post_data['post_author']."', '1')");
