@@ -156,7 +156,7 @@ if (!function_exists('render_forum_item_type')) {
 					echo "<div class='overflow-hide'>\n";
 					echo "<span class='forum_profile_link'>".$data['last_post']['profile_link']." ".$data['last_post']['time']."</span>\n";
 					echo "<a class='lastpost-goto' href='".$data['last_post']['post_link']."' title='".$data['thread_subject']."'><i class='fa fa-external-link-square'></i></a><br />\n";
-					echo $data['last_post']['message'];
+					echo fusion_first_words(strip_tags($data['last_post']['message']), 10);
 				echo "</div>\n</div>\n";
 			}
 			echo "</div>\n";
@@ -271,10 +271,9 @@ if (!function_exists('render_thread_item')) {
 			echo "</div>\n";
 		}
 		echo "</div>\n"; // end grid
-
 		echo "<div class='forum-lastuser hidden-xs hidden-sm col-md-3'>
 			".$data['thread_lastuser']['profile_link']." ".timer($data['thread_lastuser']['time'])."<br/>
-			".fusion_first_words($data['thread_lastuser']['post_message'], 10)."
+			".fusion_first_words(strip_tags($data['thread_lastuser']['post_message']), 10)."
 		</div>\n";
 		echo "</div>\n";
 		echo "</div>\n";
