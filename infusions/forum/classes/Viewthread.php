@@ -146,15 +146,21 @@ class Viewthread {
 				array('link' => INFUSIONS."forum/viewthread.php?action=reply&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0360'])
 				:
 				array(),
-		'notify' => $thread_data['user_tracked'] && iMEMBER ?
-					array('link' => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0174'])
-					:
-					iMEMBER ? array('link' => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0175']) : array(),
 		'poll' => $this->thread_info['permissions']['can_poll'] ?
 				array('link' => INFUSIONS."forum/viewthread.php?action=newpoll&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0366'])
 				:
 				array()
 		);
+		$this->thread_info['buttons']['notify'] = array();
+		if (iMEMBER) {
+			// only member can track the thread
+			if ($thread_data['user_tracked']) {
+				$this->thread_info['buttons']['notify'] = array('link' => INFUSIONS."forum/postify.php?post=off&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0174']);
+			} else {
+				$this->thread_info['buttons']['notify'] = array('link' => INFUSIONS."forum/postify.php?post=on&amp;forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'], 'name' => $locale['forum_0175']);
+			}
+
+		}
 		 // Quick reply form
 		 if ($this->thread_info['permissions']['can_post'] && $thread_data['forum_quick_edit']) {
 			$form_action = ($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?forum_id=".$this->thread_info['thread']['forum_id']."&amp;thread_id=".$this->thread_info['thread']['thread_id'];
