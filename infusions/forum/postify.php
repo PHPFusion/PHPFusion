@@ -25,6 +25,7 @@ if (!db_exists(DB_FORUMS)) {
 
 require_once THEMES."templates/header.php";
 include INFUSIONS."forum/locale/".LOCALESET."forum.php";
+require_once INFUSIONS."forum/classes/Moderator.php";
 require_once INCLUDES."infusions_include.php";
 $forum_settings = get_settings('forum');
 
@@ -57,6 +58,7 @@ if (!isset($_GET['error']) || !isnum($_GET['error']) || $_GET['error'] == 0 || $
 $valid_get = array("on", "off", "new", "reply", "edit", "newpoll", "editpoll", "deletepoll", "voteup", "votedown");
 if (!iMEMBER || !in_array($_GET['post'], $valid_get)) redirect(INFUSIONS."forum/index.php");
 
+// When voting up or down
 if ($_GET['post'] == 'voteup' or $_GET['post'] == 'votedown') {
 
 	// @todo: extend on user's rank threshold before can vote. - Reputation threshold- Roadmap 9.1
@@ -106,6 +108,7 @@ if ($_GET['post'] == 'voteup' or $_GET['post'] == 'votedown') {
 	}
 }
 
+// Turn tracking on or off
 if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread_notify']) {
 	$output = FALSE;
 	if (!isset($_GET['thread_id']) || !isnum($_GET['thread_id'])) {
@@ -137,6 +140,7 @@ if (($_GET['post'] == "on" || $_GET['post'] == "off") && $forum_settings['thread
 	if (!$output) redirect("index.php");
 }
 
+// When submitting new thread
 if ($_GET['post'] == "new") {
 	add_to_title($locale['global_201'].$locale['forum_0501']);
 	opentable($locale['forum_0501']);
@@ -159,6 +163,7 @@ if ($_GET['post'] == "new") {
 	closetable();
 }
 
+// When submitting a reply
 if ($_GET['post'] == "reply") {
 	add_to_title($locale['global_201'].$locale['forum_0503']);
 	opentable($locale['forum_0503']);
@@ -245,6 +250,7 @@ if ($_GET['post'] == "reply") {
 	closetable();
 }
 
+// When editing a reply
 if ($_GET['post'] == "edit") {
 	if (!isset($_GET['post'])) throw new \Exception($locale['forum_0586']);
 	add_to_title($locale['global_201'].$locale['forum_0508']);
@@ -262,7 +268,7 @@ if ($_GET['post'] == "edit") {
 	closetable();
 }
 
-
+// When submitting a new poll
 if ($_GET['post'] == 'newpoll') {
 	add_to_title($locale['global_201'].$locale['forum_0607']);
 	add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."' />\n");
@@ -274,7 +280,7 @@ if ($_GET['post'] == 'newpoll') {
 	closetable();
 }
 
-
+// When editing a poll
 if ($_GET['post'] == 'editpoll') {
 	add_to_title($locale['global_201'].$locale['forum_0612']);
 	add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."' />\n");
@@ -286,8 +292,7 @@ if ($_GET['post'] == 'editpoll') {
 	closetable();
 }
 
-
-
+// When deleting a poll
 if ($_GET['post'] == 'deletepoll') {
 	add_to_title($locale['global_201'].$locale['forum_0615']);
 	add_to_head("<meta http-equiv='refresh' content='2; url=".INFUSIONS."forum/viewthread.php?forum_id=".$_GET['forum_id']."&thread_id=".$_GET['thread_id']."' />\n");
