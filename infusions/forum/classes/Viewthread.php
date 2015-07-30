@@ -106,17 +106,18 @@ class Viewthread {
 			'section' => isset($_GET['section']) ? $_GET['section'] : '',
 			// logic for viewthread access
 			'permissions' => array(
-								'can_post' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_post']) && !$thread_data['forum_lock'] ? true : false,
-								'can_edit' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_post']) &&  $userdata['user_id'] == $thread_data['thread_author'] ? true : false,
-								'can_vote_poll' => (iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll'] ? true : iMEMBER && checkgroup($thread_data['forum_post'] && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll']) ? true : false,
-								'can_poll' => ((iMOD or iSUPERADMIN) && $thread_data['forum_allow_poll']) ? true : iMEMBER && checkgroup($thread_data['forum_post']) && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] ? true : false,
-								'can_reply' => iMOD or iSUPERADMIN ? true : (checkgroup($thread_data['forum_reply']) && iMEMBER && checkgroup($thread_data['forum_reply']) && !$thread_data['forum_lock']) ? true : false,
+								'can_post' => iMOD || iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_post']) && !$thread_data['forum_lock'] ? true : false,
+								'can_edit' => iMOD || iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_post']) &&  $userdata['user_id'] == $thread_data['thread_author'] ? true : false,
+								'can_vote_poll' => (iMOD || iSUPERADMIN) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll'] ? true : iMEMBER && checkgroup($thread_data['forum_post'] && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] && $thread_data['thread_poll']) ? true : false,
+								'can_poll' => ((iMOD || iSUPERADMIN) && $thread_data['forum_allow_poll']) ? true : iMEMBER && checkgroup($thread_data['forum_post']) && checkgroup($thread_data['forum_reply']) && $thread_data['forum_allow_poll'] ? true : false,
+								'can_reply' => iMOD || iSUPERADMIN ? true : (checkgroup($thread_data['forum_reply']) && iMEMBER && checkgroup($thread_data['forum_reply']) && !$thread_data['forum_lock']) ? true : false,
 								'can_rate' => ($thread_data['forum_type'] == 4 &&
-											   ((iMOD or iSUPERADMIN) or ($thread_data['forum_allow_post_ratings'] && iMEMBER && checkgroup($thread_data['forum_post_ratings']) && !$thread_data['forum_lock']))) ? true : false,
+											   ((iMOD || iSUPERADMIN) || ($thread_data['forum_allow_post_ratings'] && iMEMBER && checkgroup($thread_data['forum_post_ratings']) && !$thread_data['forum_lock']))) ? true : false,
 								'can_view_poll' => checkgroup($thread_data['forum_poll']) ? true : false,
+								'can_modify_poll' => iMOD || iSUPERADMIN ? true : $userdata['user_id'] == $thread_data['thread_author'] ? true : false,
 								'edit_lock' => $forum_settings['forum_edit_lock'] ? true : false,
-								'can_attach' => iMOD or iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? true : false,
-								'can_download_attach' => iSUPERADMIN ? true : $thread_data['forum_allow_attach'] && checkgroup($thread_data['forum_attach_download']) ? true : false,
+								'can_attach' => iMOD || iSUPERADMIN ? true : iMEMBER && checkgroup($thread_data['forum_attach']) && $thread_data['forum_allow_attach'] ? true : false,
+								'can_download_attach' => iMOD || iSUPERADMIN ? true : $thread_data['forum_allow_attach'] && checkgroup($thread_data['forum_attach_download']) ? true : false,
 								),
 			'max_post_items' => $thread_stat['post_count'],
 			'post_firstpost' => $thread_stat['first_post_id'],
@@ -226,7 +227,8 @@ class Viewthread {
 				if ($this->thread_info['permissions']['can_vote_poll']) {
 					$html .= openform('voteform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : '').INFUSIONS."forum/viewthread.php?thread_id=".$this->thread_info['thread_id'], array('notice' => 0, 'downtime' => 1));
 				}
-				if ($this->thread_info['permissions']['can_poll']) {
+				// need to fix security.
+				if ($this->thread_info['permissions']['can_modify_poll']) {
 					$html .= "<div class='pull-right btn-group'>\n";
 					$html .= "<a class='btn btn-sm btn-default' href='".INFUSIONS."forum/viewthread.php?action=editpoll&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."'>".$locale['forum_0603']."</a>\n";
 					$html .= "<a class='btn btn-sm btn-default' href='".INFUSIONS."forum/viewthread.php?action=deletepoll&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."' onclick='confirm('".$locale['forum_0616']."');'>".$locale['delete']."</a>\n";
@@ -1105,7 +1107,14 @@ class Viewthread {
 		$poll_field = '';
 		// Build Polls Info.
 		$thread_data = $this->thread_info['thread'];
-		if ($this->thread_info['permissions']['can_poll'] && $thread_data['forum_allow_poll']) { // if permitted to create new poll.
+
+		// secure poll form from being edited by others
+		$access = $this->thread_info['permissions']['can_poll'];
+		if ($edit) {
+			$access = $this->thread_info['permissions']['can_modify_poll'] ? true : false;
+		}
+
+		if ($access == true && $thread_data['forum_allow_poll'])  { // if permitted to create new poll.
 			// edit callback
 			// add poll without saving to database.
 			$data = array(
@@ -1254,6 +1263,8 @@ class Viewthread {
 				'field' => $poll_field,
 			);
 			pollform($info);
+		} else {
+			redirect(FORUM."index.php");
 		}
 	}
 
