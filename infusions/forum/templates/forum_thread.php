@@ -149,7 +149,7 @@ if (!function_exists('render_post_item')) {
 		<div class='display-block ".($data['post_votebox'] !=='' ? 'overflow-hide' : '')."'>\n
 
 		".$data['post_message']."
-		<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n
+		".($data['user_sig'] ? "<div class='forum_sig text-smaller'>".$data['user_sig']."</div>\n" : "")."
 		".($data['post_attachments'] ? "<div class='m-10'>".$data['post_attachments']."</div>" : "")."
 		</div>\n
 		<!--sub_forum_post_message-->\n

@@ -473,24 +473,26 @@ class Viewthread {
 				$pdata['post_checkbox'] = iMOD ? "<input type='checkbox' name='delete_post[]' value='".$pdata['post_id']."'/>" : '';
 				$pdata['post_votebox'] = '';
 				// Answer rating
-				if ($this->thread_info['permissions']['can_rate'] && $pdata['has_voted'] == 0) { // can vote.
-					$pdata['vote_up'] = array(
-						'link' => INFUSIONS."forum/postify.php?post=voteup&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-						'name' => $locale['forum_0265']
-					);
-					$pdata['vote_down'] = array(
-						'link' => INFUSIONS."forum/postify.php?post=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
-						'name' => $locale['forum_0265']
-					);
-					$pdata['post_votebox'] = "<div class='text-center'>\n";
-					$pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='btn btn-default btn-xs m-b-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo up-dir icon-xs'></i></a>";
-					$pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
-					$pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='btn btn-default btn-xs m-t-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo down-dir icon-xs'></i></a>";
-					$pdata['post_votebox'] .= "</div>\n";
-				} else {
-					$pdata['post_votebox'] = "<div class='text-center'>\n";
-					$pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
-					$pdata['post_votebox'] .= "</div>\n";
+				if ($this->thread_info['thread']['forum_type'] == 4) {
+					if ($this->thread_info['permissions']['can_rate'] && $pdata['has_voted'] == 0) { // can vote.
+						$pdata['vote_up'] = array(
+							'link' => INFUSIONS."forum/postify.php?post=voteup&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+							'name' => $locale['forum_0265']
+						);
+						$pdata['vote_down'] = array(
+							'link' => INFUSIONS."forum/postify.php?post=votedown&amp;forum_id=".$pdata['forum_id']."&amp;thread_id=".$pdata['thread_id']."&amp;post_id=".$pdata['post_id'],
+							'name' => $locale['forum_0265']
+						);
+						$pdata['post_votebox'] = "<div class='text-center'>\n";
+						$pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='btn btn-default btn-xs m-b-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo up-dir icon-xs'></i></a>";
+						$pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
+						$pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='btn btn-default btn-xs m-t-5 p-5' title='".$locale['forum_0265']."'>\n<i class='entypo down-dir icon-xs'></i></a>";
+						$pdata['post_votebox'] .= "</div>\n";
+					} else {
+						$pdata['post_votebox'] = "<div class='text-center'>\n";
+						$pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
+						$pdata['post_votebox'] .= "</div>\n";
+					}
 				}
 
 				// Marker
