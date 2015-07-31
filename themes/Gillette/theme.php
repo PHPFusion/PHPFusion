@@ -25,8 +25,9 @@ function render_page($license = FALSE) {
 		$colspan = "colspan='2'";
 	}
 	//Content
+	echo renderNotices(getNotices(array('all', FUSION_SELF)));
 	echo "<table cellpadding='0' cellspacing='0' width='100%' class='$main_style'>\n";
-	echo "AU_CENTER." ? "<tr><td class='main-bg' ".$colspan." valign='top'>".AU_CENTER."</td>\n</tr>\n<tr>\n" : "<tr>\n";
+	echo AU_CENTER ? "<tr><td class='main-bg' ".$colspan." valign='top'>".AU_CENTER."</td>\n</tr>\n<tr>\n" : "<tr>\n";
 	if (LEFT) {
 		echo "<td class='side-border-left' valign='top'>".LEFT."</td>";
 	}
@@ -34,7 +35,7 @@ function render_page($license = FALSE) {
 	if (RIGHT) {
 		echo "<td class='side-border-right' valign='top'>".RIGHT."</td>";
 	}
-	echo "BL_CENTER." ? "</tr>\n<tr><td class='main-bg' ".$colspan." valign='top'>".BL_CENTER."</td>\n</tr>\n<tr>\n" : "";
+	echo BL_CENTER ? "</tr>\n<tr><td class='main-bg' ".$colspan." valign='top'>".BL_CENTER."</td>\n</tr>\n<tr>\n" : "";
 	echo "</tr>\n</table>\n";
 	//Footer
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
