@@ -214,10 +214,10 @@ class defender {
 		}
 	}
 
-	// Generates a md5 hash of the current page
-	// Used to make token session array more unique in order
-	// to avoid validation pass of tokens in forms for which
-	// they weren't intended/generated
+	/**
+	 * Generates a md5 hash of the current page to make token session unique
+	 * @return string
+	 */
 	private static function pageHash() {
 		return md5(FUSION_REQUEST);
 	}
@@ -231,6 +231,18 @@ class defender {
 	// Marks an input as invalid
 	public function setInputError($input_name) {
 		$this->input_errors[$input_name] = TRUE;
+	}
+
+	/**
+	 * Override default error text with custom error text
+	 * @note:
+	 * We need this because dynamics error text is set to "Field cannot be left empty".
+	 * eg: Register.php - user_name field, has 3-4 errors types. Username claimed, username have bad chars, etc. Error doesn not necessary mean empty.
+	 * @param $input_name - field name
+	 * @param $text - your error text.
+	 */
+	public function setErrorText($input_name, $text) {
+		add_to_jquery("$('#".$input_name."-help').text('".$text."');");
 	}
 
 	/**
@@ -768,7 +780,6 @@ class defender {
 			}
 		}
 	}
-
 
 	/**
 	 * Token Sniffer

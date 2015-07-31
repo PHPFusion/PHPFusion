@@ -63,8 +63,9 @@ elseif (isset($_POST['register'])) {
 	$userInput->registration = TRUE;
 	$userInput->saveInsert();
 	unset($userInput);
-} else {
-	// hide by default
+}
+
+if (!isset($_GET['email']) && !isset($_GET['code'])) {
 	opentable($locale['u101']);
 	$userFields = new PHPFusion\UserFields();
 	$userFields->postName = "register";

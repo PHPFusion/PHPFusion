@@ -52,7 +52,6 @@ $locale['uf_106'] = "Basic Information";
 $locale['uf_107'] = "%s has no user information available.";
 $locale['uf_108'] = "User fields not found.";
 
-
 // View User Groups
 $locale['u110'] = "View User Group";
 $locale['u111'] = "%u user";

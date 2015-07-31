@@ -57,7 +57,7 @@ class UserFieldsInput {
 	private $_themeChanged = FALSE;
 
 	public function saveInsert() {
-		global $locale;
+		global $locale, $defender;
 		$this->_method = "validate_insert";
 		self::_setEmptyFields();
 		if ($this->_userNameChange) {
@@ -67,19 +67,19 @@ class UserFieldsInput {
 		$this->_setUserEmail();
 		if ($this->validation == 1) $this->_setValidationError();
 		if ($this->emailVerification) {
-			if (!defined('FUSION_NULL')) {
+			if ($defender->safe()) {
 				$this->_setEmailVerification();
 			}
 		} else {
 			$this->_setUserDataInput();
 		}
-		if (!defined('FUSION_NULL')) {
+		if ($defender->safe()) {
 			addNotice('success', $locale['u170']);
 		}
 	}
 
 	public function saveUpdate() {
-		global $locale;
+		global $locale, $defender;
 		$this->_method = "validate_update";
 		$this->data = $this->userData;
 		self::_setEmptyFields();
@@ -90,7 +90,7 @@ class UserFieldsInput {
 		if ($this->validation == 1) $this->_setValidationError();
 		$this->_setUserAvatar();
 		$this->_setUserDataUpdate();
-		if (!defined('FUSION_NULL')) {
+		if ($defender->safe()) {
 			addNotice('success', $locale['u169']);
 		}
 	}
@@ -138,7 +138,8 @@ class UserFieldsInput {
 			if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
 				$defender->stop();
 				$defender->setInputError('user_name');
-				addNotice('warning', $locale['u120']);
+				$defender->setErrorText('user_name', $locale['u120']);
+				addNotice('danger', $locale['u120']);
 			// Make sure the username is not used already
 			} else {
 				$name_active = dbcount("(user_id)", DB_USERS, "user_name='".$this->_userName."'");
@@ -149,7 +150,8 @@ class UserFieldsInput {
 				} else {
 					$defender->stop();
 					$defender->setInputError('user_name');
-					addNotice('warning', $locale['u121']);
+					$defender->setErrorText('user_name', $locale['u121']);
+					addNotice('danger', $locale['u121']);
 				}
 			}
 		} else {
@@ -157,8 +159,8 @@ class UserFieldsInput {
 			if ($this->_method == 'validate_insert') {
 				$defender->stop();
 				$defender->setInputError('user_name');
-				//$defender->addHelperText('user_name', $locale['u122']);
-				addNotice('warning', $locale['u122']);
+				$defender->setErrorText('user_name', $locale['u122']);
+				addNotice('danger', $locale['u122']);
 			} else {
 				$this->data['user_name'] = $this->_userName;
 			}
@@ -197,29 +199,32 @@ class UserFieldsInput {
 						$defender->stop();
 						$defender->setInputError('user_password');
 						$defender->setInputError('user_new_password');
-						addNotice('warning', $locale['u134'].$locale['u146'].$locale['u133'].".");
+						$defender->setErrorText('user_password', $locale['error_input_check']);
+						$defender->setErrorText('user_new_password', $locale['error_input_check']);
+						addNotice('danger', $locale['u134'].$locale['u146'].$locale['u133'].".");
 						break;
 					case '2':
 						// The two new passwords are not identical
 						$defender->stop();
 						$defender->setInputError('user_new_password');
 						$defender->setInputError('user_new_password2');
-						//$defender->addHelperText('user_password', $locale['u148']);
-						addNotice('warning', $locale['u148']);
+						$defender->setErrorText('user_password', $locale['error_input_check']);
+						$defender->setErrorText('user_new_password', $locale['error_input_check']);
+						addNotice('danger', $locale['u148']);
 						break;
 					case '3':
 						// New password contains invalid chars / symbols
 						$defender->stop();
 						$defender->setInputError('user_new_password');
-						//$defender->addHelperText('user_password', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
-						addNotice('warning', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
+						$defender->setErrorText('user_new_password', $locale['error_input_check']);
+						addNotice('danger', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
 						break;
 				}
 			} else {
 				$defender->stop();
 				$defender->setInputError('user_new_password');
-				//$defender->addHelperText('user_new_password', $locale['u134'].$locale['u143a']);
-				addNotice('warning', $locale['u134'].$locale['u143a']);
+				$defender->setErrorText('user_new_password', $locale['error_input_check']);
+				addNotice('danger', $locale['u134'].$locale['u143a']);
 			}
 		} else {
 			// edit profile have 3 fields
@@ -257,29 +262,32 @@ class UserFieldsInput {
 							$defender->stop();
 							$defender->setInputError('user_password');
 							$defender->setInputError('user_new_password');
-							addNotice('warning', $locale['u134'].$locale['u146'].$locale['u133'].".");
+							$defender->setErrorText('user_password', $locale['error_input_check']);
+							$defender->setErrorText('user_new_password', $locale['error_input_check']);
+							addNotice('danger', $locale['u134'].$locale['u146'].$locale['u133'].".");
 							break;
 						case '2':
 							// The two new passwords are not identical
 							$defender->stop();
 							$defender->setInputError('user_new_password');
 							$defender->setInputError('user_new_password2');
-							//$defender->addHelperText('user_password', $locale['u148']);
-							addNotice('warning', $locale['u148']);
+							$defender->setErrorText('user_password', $locale['error_input_check']);
+							$defender->setErrorText('user_new_password', $locale['error_input_check']);
+							addNotice('danger', $locale['u148']);
 							break;
 						case '3':
 							// New password contains invalid chars / symbols
 							$defender->stop();
 							$defender->setInputError('user_new_password');
-							//$defender->addHelperText('user_password', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
-							addNotice('warning', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
+							$defender->setErrorText('user_new_password', $locale['error_input_check']);
+							addNotice('danger', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
 							break;
 					}
 				} else {
 					$defender->stop();
 					$defender->setInputError('user_password');
-					//$defender->addHelperText('user_password', $locale['u149']);
-					addNotice('warning', $locale['u149']);
+					$defender->setErrorText('user_password', $locale['error_input_check']);
+					addNotice('danger', $locale['u149']);
 				}
 			}
 		}
@@ -339,33 +347,33 @@ class UserFieldsInput {
 						$defender->stop();
 						$defender->setInputError('user_admin_password');
 						$defender->setInputError('user_admin_password1');
-						//$defender->addHelperText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
-						//$defender->addHelperText('user_admin_password1', $locale['u144'].$locale['u146'].$locale['u133']);
-						addNotice('warning', $locale['u144'].$locale['u146'].$locale['u133']);
+						$defender->setErrorText('user_admin_password', $locale['error_input_check']);
+						$defender->setErrorText('user_admin_password1', $locale['error_input_check']);
+						addNotice('danger', $locale['u144'].$locale['u146'].$locale['u133']);
 						break;
 					case '2':
 						// The two new passwords are not identical
 						$defender->stop();
 						$defender->setInputError('user_new_admin_password');
 						$defender->setInputError('user_new_admin_password2');
-						//$defender->addHelperText('user_new_admin_password', $locale['u148a']);
-						//$defender->addHelperText('user_new_admin_password2', $locale['u148a']);
-						addNotice('warning', $locale['u144'].$locale['u148a']);
+						$defender->setErrorText('user_new_admin_password', $locale['error_input_check']);
+						$defender->setErrorText('user_new_admin_password2', $locale['error_input_check']);
+						addNotice('danger', $locale['u144'].$locale['u148a']);
 						break;
 					case '3':
 						// New password contains invalid chars / symbols
 						$defender->stop();
 						$defender->setInputError('user_new_admin_password');
-						//$defender->addHelperText('user_new_admin_password', $locale['u144']);
-						addNotice('warning', $locale['u144'].$locale['u142']."<br />".$locale['u147']);
+						$defender->setErrorText('user_new_admin_password', $locale['error_input_check']);
+						addNotice('danger', $locale['u144'].$locale['u142']."<br />".$locale['u147']);
 						break;
 				}
 			} else {
 				// 149 for admin
 				$defender->stop();
 				$defender->setInputError('user_admin_password');
-				//$defender->addHelperText('user_admin_password', $locale['u149a']);
-				addNotice('warning', $locale['u149a']);
+				$defender->setErrorText('user_admin_password', $locale['error_input_check']);
+				addNotice('danger', $locale['u149a']);
 			}
 		} else { // check db only - admin cannot save profile page without password
 			//print_p($this->userData['user_level']);
@@ -375,8 +383,8 @@ class UserFieldsInput {
 					// 149 for admin
 					$defender->stop();
 					$defender->setInputError('user_admin_password');
-					//$defender->addHelperText('user_admin_password', $locale['u149a']);
-					addNotice('warning', $locale['u149a']);
+					$defender->setErrorText('user_admin_password', $locale['error_input_check']);
+					addNotice('danger', $locale['u149a']);
 				}
 			}
 		}
@@ -395,8 +403,8 @@ class UserFieldsInput {
 						// this email blacklisted.
 						$defender->stop();
 						$defender->setInputError('user_email');
-						//$defender->addHelperText('user_email', $locale['u124']);
-						addNotice('warning', $locale['u124']);
+						$defender->setErrorText('user_email', $locale['u124']);
+						addNotice('danger', $locale['u124']);
 					} else {
 						$email_active = dbcount("(user_id)", DB_USERS, "user_email='".$this->_userEmail."'");
 						$email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
@@ -411,30 +419,30 @@ class UserFieldsInput {
 							// email taken
 							$defender->stop();
 							$defender->setInputError('user_email');
-							//$defender->addHelperText('user_email', $locale['u125']);
-							addNotice('warning', $locale['u125']);
+							$defender->setErrorText('user_admin_password', $locale['u125']);
+							addNotice('danger', $locale['u125']);
 						}
 					}
 				} else {
 					// invalid email address
 					$defender->stop();
 					$defender->setInputError('user_email');
-					//$defender->addHelperText('user_email', $locale['u123']);
-					addNotice('warning', $locale['u123']);
+					$defender->setErrorText('user_email', $locale['u123']);
+					addNotice('danger', $locale['u123']);
 				}
 			} else {
 				// must have a valid password to change email
 				$defender->stop();
 				$defender->setInputError('user_email');
-				//$defender->addHelperText('user_email', $locale['u156']);
-				addNotice('warning', $locale['u156']);
+				$defender->setErrorText('user_email', $locale['u156']);
+				addNotice('danger', $locale['u156']);
 			}
 		} else {
 			if ($this->_method !== 'validate_update') { // for register only
 				$defender->stop();
 				$defender->setInputError('user_email');
-				//$defender->addHelperText('user_email', $locale['u126']);
-				addNotice('warning', $locale['u126']);
+				$defender->setErrorText('user_email', $locale['u126']);
+				addNotice('danger', $locale['u126']);
 			}
 		}
 	}
@@ -465,8 +473,7 @@ class UserFieldsInput {
 		if ($_CAPTCHA_IS_VALID == FALSE) {
 			$defender->stop();
 			$defender->setInputError('user_captcha');
-			//$defender->addHelperText('user_captcha', $locale['u194']);
-			addNotice('warning', $locale['u194']);
+			addNotice('danger', $locale['u194']);
 		}
 	}
 
@@ -506,27 +513,27 @@ class UserFieldsInput {
 				switch ($avatarUpload['error']) {
 					case 1:
 						//$defender->addHelperText('user_avatar', sprintf($locale['u180'], parsebytesize($settings['avatar_filesize'])));
-						addNotice('warning', $locale['u180']);
+						addNotice('danger', $locale['u180']);
 						break;
 					case 2:
 						//$defender->addHelperText('user_avatar', $locale['u181']);
-						addNotice('warning', $locale['u181']);
+						addNotice('danger', $locale['u181']);
 						break;
 					case 3:
 						//$defender->addHelperText('user_avatar', sprintf($locale['u182'], $settings['avatar_width'], $settings['avatar_height']));
-						addNotice('warning', $locale['u182']);
+						addNotice('danger', $locale['u182']);
 						break;
 					case 4:
 						//$defender->addHelperText('user_avatar', $locale['u183']);
-						addNotice('warning', $locale['u183']);
+						addNotice('danger', $locale['u183']);
 						break;
 					case 5:
 						//$defender->addHelperText('user_avatar', $locale['u183']);
-						addNotice('warning', $locale['u183']);
+						addNotice('danger', $locale['u183']);
 						break;
 					default:
 						//$defender->addHelperText('user_avatar', $locale['u183']);
-						addNotice('warning', $locale['u183']);
+						addNotice('danger', $locale['u183']);
 						break;
 				}
 			}
@@ -602,7 +609,7 @@ class UserFieldsInput {
 			$this->_completeMessage = $locale['u150'];
 		} else {
 			$defender->stop();
-			addNotice('warning', $locale['u153']."<br />".$locale['u154']);
+			addNotice('danger', $locale['u153']."<br />".$locale['u154']);
 		}
 	}
 

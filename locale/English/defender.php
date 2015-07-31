@@ -10,7 +10,7 @@ $locale['error_input_number']	= 'Please enter a valid number';
 $locale['error_input_url']		= 'Please enter a valid URL';
 $locale['error_input_regex']	= 'Please enter a valid pattern';
 $locale['error_input_safemode']	= 'Please fill out this field properly';
-
+$locale['error_input_check']	= 'Please fill out a correct field value';
 
 // Admin Login
 $locale['cookie_title'] = "Session Timed Out";
