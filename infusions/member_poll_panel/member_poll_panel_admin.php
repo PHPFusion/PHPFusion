@@ -164,7 +164,7 @@ if (multilang_table("PO")) {
 	echo form_select('poll_language', '', $language_opts, $poll_language, array('placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 } else {
-	echo form_hidden('', 'poll_language', 'poll_language', $poll_language);
+	echo form_hidden('poll_language', '', $poll_language);
 }
 while ($i != $opt_count) {
 	$poll_opt = isset($poll_option[$i]) ? $poll_option[$i] : "";
@@ -183,7 +183,7 @@ if (isset($_GET['poll_id']) && !$_GET['poll_ended']) {
 	echo "<input type='checkbox' name='close' value='yes' />".$locale['433']."<br /><br />\n";
 }
 if (!isset($_GET['poll_id']) || (isset($_GET['poll_id']) && !$_GET['poll_ended'])) {
-	echo form_hidden('', 'opt_count', 'opt_count', $opt_count);
+	echo form_hidden('opt_count', '', $opt_count);
 	echo "<input type='hidden' name='opt_count' value='".$opt_count."' />\n";
 	echo form_button('addoption', $locale['436'], $locale['436'], array('class' => 'btn-primary m-r-10'));
 	echo form_button('preview', $locale['437'], $locale['437'], array('class' => 'btn-primary m-r-10'));

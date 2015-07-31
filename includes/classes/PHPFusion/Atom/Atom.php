@@ -242,7 +242,7 @@ class Atom {
 					echo form_button('load_preset', $locale['theme_1004'], $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo upload'));
 				}
 				echo form_button('delete_preset', $locale['delete'], $preset['theme_id'], array('class' => 'btn-sm btn-default', 'icon' => 'entypo trash'));
-				echo form_hidden('', 'theme', 'theme', $preset['theme_name']);
+				echo form_hidden('theme', '', $preset['theme_name']);
 				echo "</div>\n";
 				echo "</div>\n";
 			}
@@ -602,7 +602,7 @@ class Atom {
 		echo closemodal();
 
 		echo openform('theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('max_tokens' => 1));
-		echo form_hidden('', 'theme_id', 'theme_id', $this->data['theme_id']);
+		echo form_hidden('theme_id', '', $this->data['theme_id']);
 		echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], array('inline' => 1, 'required' => 1));
 		echo form_text('theme_name', $locale['theme_2008'], $this->theme_name, array('inline' => 1, 'deactivate' => 1));
 		echo form_button('close_theme', $locale['close'], 'close_theme', array('class' => 'btn-default m-l-10 pull-right'));
@@ -650,7 +650,7 @@ class Atom {
 			'1' =>	$locale['theme_2013'],
 			'2' =>	$locale['theme_2014'],
 		);
-		echo form_hidden('', 'theme', 'theme', $_POST['theme']);
+		echo form_hidden('theme', '', $_POST['theme']);
 
 		openside('');
 		echo form_select("sans_serif_fonts", $locale['theme_2015'], $font_list, $this->data['sans_serif_fonts'], $font_options);

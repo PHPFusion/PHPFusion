@@ -235,7 +235,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")." p-l-0'>\n" : "";
 	$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:100%;' ".($options['deactivate'] ? 'disabled' : '')." />";
 	if ($options['deactivate']) {
-		$html .= form_hidden("", $input_name, $options['input_id'], $input_value);
+		$html .= form_hidden($input_name, "", $input_value, array("input_id"=>$options['input_id']));
 	}
 	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= $options['inline'] ? "</div>\n" : '';

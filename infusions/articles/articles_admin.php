@@ -261,8 +261,7 @@ if (!empty($result)) {
 		echo "<tr>\n";
 		echo "<td align='center' colspan='2' class='tbl'><br />\n";
 		if ((isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
-			echo form_hidden('', 'article_id', 'article_id', isset($_POST['article_id']) ? $_POST['article_id'] : $_GET['article_id']);
-			//echo "<input type='hidden' name='article_id' value='".(isset($_POST['article_id']) ? $_POST['article_id'] : $_GET['article_id'])."' />\n";
+			echo form_hidden('article_id', '', isset($_POST['article_id']) ? $_POST['article_id'] : $_GET['article_id']);
 		}
 		echo form_button('preview', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-primary m-r-10'));
 		echo form_button('save', $locale['articles_0241'], $locale['articles_0241'], array('class' => 'btn-primary'));

@@ -591,9 +591,9 @@ class Moderator {
 									'no_root' => 1,
 									'inline' => 1), DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
 								foreach ($array_post as $value) {
-									echo form_hidden('', "delete_post[]", "delete_post[$value]", $value);
+									echo form_hidden("delete_post[]", "", $value, array("input_id"=>"delete_post[$value]"));
 								}
-								echo form_hidden('', 'move_posts', 'move_posts', 1);
+								echo form_hidden('move_posts', '', 1);
 								echo "<div class='clearfix'>\n<div class='col-xs-12 col-md-offset-3 col-lg-offset-3'>\n";
 								echo form_button($locale['forum_0302'], $locale['forum_0208'] , $locale['forum_0208'] , array('inline'=>1, 'class'=>'btn-primary'));
 								echo "</div>\n</div>\n";
@@ -620,12 +620,12 @@ class Moderator {
 									$forum_list[$tl_data['thread_id']] = $tl_data['thread_subject'];
 								}
 								echo openform('modopts', 'post', $this->form_action."&amp;sv", array('max_tokens' => 1, 'downtime' => 1));
-								echo form_hidden('', 'new_forum_id', 'new_forum_id', $_POST['new_forum_id']);
+								echo form_hidden('new_forum_id', '', $_POST['new_forum_id']);
 								echo form_select('new_thread_id', $locale['forum_0303'], $forum_list, '', array('inline' => 1));
 								foreach ($array_post as $value) {
-									echo form_hidden('', "delete_post[]", "delete_post[$value]", $value);
+									echo form_hidden("delete_post[]", "", $value, array("input_id"=>"delete_post[$value]"));
 								}
-								echo form_hidden('', 'move_posts', 'move_posts', 1);
+								echo form_hidden('move_posts', '', 1);
 								echo form_button($locale['forum_0304'], $locale['forum_0208'] , $locale['forum_0208'] , array('class'=>'btn-primary btn-sm'));
 								} else {
 								echo "<div id='close-message'><div class='admin-message'>".$locale['forum_0308']."<br /><br />\n";

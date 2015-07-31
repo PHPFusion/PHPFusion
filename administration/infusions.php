@@ -91,7 +91,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defu
 				echo "<div class='list-group-item'>\n";
 				echo "<div class='row'>\n";
 				echo "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>\n";
-				echo form_hidden('', 'infusion', 'infusion', $item['inf_folder']);
+				echo form_hidden('infusion', '', $item['inf_folder']);
 				if ($item['inf_status'] > 0) {
 					if ($item['inf_status'] > 1) {
 						echo form_button('infuse', $locale['401'], "infuse-$i", array('class' => 'btn-info m-t-5 infuse', 'icon' => 'entypo magnet'));

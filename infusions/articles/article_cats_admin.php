@@ -149,7 +149,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		echo form_select('cat_language', '', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
 		echo "</tr>\n";
 	} else {
-		echo form_hidden('', 'cat_language', 'cat_language', $cat_language);
+		echo form_hidden('cat_language', '', $cat_language);
 	}
 	echo "<tr><td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_sort_by'>".$locale['articles_0302']."</label></td>\n";
 	echo "<td class='tbl'>\n";

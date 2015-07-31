@@ -206,8 +206,8 @@ class CustomPage {
 			echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink, array('max_tokens' => 1));
 			echo "<div class='pull-left m-t-5 m-r-10'>\n";
 			echo form_select('cpid', '', $edit_opts, isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : '');
-			echo form_hidden('', 'section', 'section', 'cp2');
-			echo form_hidden('', 'aid', 'aid', iAUTH);
+			echo form_hidden('section', '', 'cp2');
+			echo form_hidden('aid', '', iAUTH);
 			echo "</div>\n";
 			echo form_button('action', $locale['420'], 'edit', array('class' => 'btn-default btn-sm pull-left m-l-10 m-r-10'));
 			echo form_button('action', $locale['421'], 'delete', array('class' => 'btn-danger btn-sm pull-left', 'icon'=>'fa fa-trash'));
@@ -301,7 +301,7 @@ class CustomPage {
 		}
 		echo openform('inputform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 		if (isset($_POST['edit']) && isset($_POST['page_id'])) {
-			echo form_hidden('', 'edit', 'edit', 'edit');
+			echo form_hidden('edit', '', 'edit');
 		}
 
 		echo "<div class='row m-t-20' >\n";
@@ -361,8 +361,8 @@ class CustomPage {
 		}
 		echo form_checkbox('page_allow_comments', $locale['427'], $data['page_allow_comments'],  array('class'=>'m-b-0'));
 		echo form_checkbox('page_allow_ratings', $locale['428'], $data['page_allow_ratings'], array('class'=>'m-b-0'));
-		echo form_hidden('', 'link_id', 'link_id', $data['link_id']);
-		echo form_hidden('', 'link_order', 'link_order', $data['link_order']);
+		echo form_hidden('link_id', '', $data['link_id']);
+		echo form_hidden('link_order', '', $data['link_order']);
 		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-success m-r-10 m-t-10', 'icon'=>'fa fa-check-square-o'));
 		closeside();
 
@@ -373,7 +373,7 @@ class CustomPage {
 				echo form_checkbox('page_language[]', $language, in_array($language, $languages) ? 1 : 0, array('class'=>'m-b-0', 'value'=>$language, 'input_id' => 'page_lang-'.$language));
 			}
 		} else {
-			echo form_hidden('', 'page_language', 'page_language', $data['page_language']);
+			echo form_hidden('page_language', '', $data['page_language']);
 		}
 		closeside();
 
@@ -383,7 +383,7 @@ class CustomPage {
 
 		echo "</div></div>\n";
 
-		echo form_hidden('', 'page_id', 'page_id', $data['page_id']);
+		echo form_hidden('page_id', '', $data['page_id']);
 		echo form_button('save', $locale['430'], $locale['430'], array('class' => 'btn-success m-r-10', 'icon'=>'fa fa-check-square-o'));
 		if (isset($_POST['edit'])) echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
 		echo closeform();

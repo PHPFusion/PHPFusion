@@ -238,7 +238,7 @@ function form_location($title, $input_name, $input_id, $input_value = FALSE, arr
 	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12")." p-l-0'>\n" : "";
 	$html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='$input_id' data-placeholder='".$options['placeholder']."' style='width:100%;' ".($options['deactivate'] ? 'disabled' : '')." />";
 	if ($options['deactivate']) {
-		$html .= form_hidden("", $input_name, $input_id, $input_value);
+		$html .= form_hidden($input_name, "", $input_value, array("input_id"=>$input_id));
 	}
 	$html .= "<div id='$input_id-help'></div>";
 	$html .= $options['inline'] ? "</div>\n" : '';

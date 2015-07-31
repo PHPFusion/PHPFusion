@@ -144,7 +144,7 @@ class UserFields extends QuantumFields {
 					'error_text' => $locale['u133'],
 					'required' => 1));
 			} else {
-				$this->info['user_password'] .= form_hidden('', 'user_id', 'user_id', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0);
+				$this->info['user_password'] .= form_hidden('user_id', '', isset($this->userData['user_id']) && isnum($this->userData['user_id']) ? $this->userData['user_id'] : 0);
 				$this->info['user_password'] .= form_text('user_password', $locale['u135a'], '', array('type' => 'password',
 					'autocomplete_off' => 1,
 					'inline' => 1,
@@ -335,8 +335,8 @@ class UserFields extends QuantumFields {
 			}
 
 			if ($this->method == 'input') {
-				$this->info['user_field'] = $_GET['profiles'] !== 1 ? form_hidden('', 'user_id', 'user_id', $this->userData['user_id']) : '';
-				$this->info['user_field'] .= $_GET['profiles'] !== 1 ? form_hidden('', 'user_name', 'user_name', $this->userData['user_name']) : '';
+				$this->info['user_field'] = $_GET['profiles'] !== 1 ? form_hidden('user_id', '', $this->userData['user_id']) : '';
+				$this->info['user_field'] .= $_GET['profiles'] !== 1 ? form_hidden('user_name', '', $this->userData['user_name']) : '';
 			} elseif ($this->method == 'display') {
 				$this->info['user_field'] = array();
 			}

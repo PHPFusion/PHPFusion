@@ -411,7 +411,7 @@ if (!$sum or empty($modules[$stype])) {
 		echo form_text('download_version', $locale['690'], '');
 		echo form_text('download_homepage', $locale['691'], '');
 		echo form_text('download_copyright', $locale['692'], '');
-		echo form_hidden('', 'calc_upload', 'calc_upload', '1');
+		echo form_hidden('calc_upload', '', '1');
 		echo "</div>\n</div>\n";
 		echo form_button('submit_download', $locale['695'], $locale['695'], array('class' => 'btn-primary'));
 		echo closeform();

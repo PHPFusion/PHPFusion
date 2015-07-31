@@ -550,9 +550,9 @@ function blog_form() {
 		echo thumbnail($image_thumb, '100px');
 		echo form_checkbox('del_image', $locale['421'], 'y');
 		echo "</div><div class='overflow-hide'>\n";
-		echo form_hidden('', 'blog_hidden_image', 'blog_hidden_image', $data['blog_image']);
-		echo form_hidden('', 'blog_hidden_image_t1', 'blog_hidden_image_t1', $data['blog_image_t1']);
-		echo form_hidden('', 'blog_hidden_image_t1', 'blog_hidden_image_t1', $data['blog_image_t2']);
+		echo form_hidden('blog_hidden_image', '', $data['blog_image']);
+		echo form_hidden('blog_hidden_image_t1', '', $data['blog_image_t1']);
+		echo form_hidden('blog_hidden_image_t1', '', $data['blog_image_t2']);
 		echo form_select('blog_ialign', $locale['442'], $align_options, $data['blog_ialign']);
 		echo "</div></div>\n";
 	} else {
@@ -599,9 +599,9 @@ function blog_form() {
 	if (multilang_table("BL")) {
 		echo form_select('blog_language', $locale['global_ML100'], $language_opts, $data['blog_language'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	} else {
-		echo form_hidden('', 'blog_language', 'blog_langugage', $data['blog_language']);
+		echo form_hidden('blog_language', '', $data['blog_language']);
 	}
-	echo form_hidden('', 'blog_datestamp', 'blog_datestamp', $data['blog_datestamp']);
+	echo form_hidden('blog_datestamp', '', $data['blog_datestamp']);
 	echo form_select('blog_visibility',$locale['430'], $visibility_opts, $data['blog_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	closeside();
 	openside('');

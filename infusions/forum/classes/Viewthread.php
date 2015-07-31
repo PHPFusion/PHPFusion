@@ -839,9 +839,9 @@ class Viewthread {
 				'description' => $locale['forum_2000'].$thread_data['thread_subject'],
 				'openform' =>  openform('input_form', 'post', $form_action, array('enctype' => $thread_data['forum_allow_attach'] ? 1 : 0, 'max_tokens' => 1)),
 				'closeform' => closeform(),
-				'forum_id_field' => form_hidden('', 'forum_id', 'forum_id', $post_data['forum_id']),
-				'thread_id_field' => form_hidden('', 'thread_id', 'thread_id', $post_data['thread_id']),
-				'subject_field' => form_hidden('', 'thread_subject', 'thread_subject', $thread_data['thread_subject']),
+				'forum_id_field' => form_hidden('forum_id', '', $post_data['forum_id']),
+				'thread_id_field' => form_hidden('thread_id', '', $post_data['thread_id']),
+				'subject_field' => form_hidden('thread_subject', '', $thread_data['thread_subject']),
 				'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1, 'error_text' => '', 'autosize' => 1, 'no_resize' => 1, 'preview' => 1, 'form_name' => 'input_form', 'bbcode' => 1)),
 				// happens only in EDIT
 				'delete_field' => '',
@@ -1029,8 +1029,8 @@ class Viewthread {
 						'description' => $locale['forum_2000'].$thread_data['thread_subject'],
 						'openform' =>  openform('input_form', 'post', $form_action, array('enctype' => 1, 'max_tokens' => 1)),
 						'closeform' => closeform(),
-						'forum_id_field' => form_hidden('', 'forum_id', 'forum_id', $post_data['forum_id']),
-						'thread_id_field' => form_hidden('', 'thread_id', 'thread_id', $post_data['thread_id']),
+						'forum_id_field' => form_hidden('forum_id', '', $post_data['forum_id']),
+						'thread_id_field' => form_hidden('thread_id', '', $post_data['thread_id']),
 						// in edit or in new thread is a textbox
 						// for new thread --
 						/* 'subject_field' => form_text('thread_subject', $locale['forum_0600'], $thread_data['thread_subject'], array('required' => 1,
@@ -1043,7 +1043,7 @@ class Viewthread {
 																													'error_text' => '',
 																													'class' => 'm-t-20 m-b-20'))
 								:
-								form_hidden('', 'thread_subject', 'thread_subject', $thread_data['thread_subject']),
+								form_hidden("thread_subject", "", $thread_data['thread_subject']),
 						'message_field' => form_textarea('post_message', $locale['forum_0601'], $post_data['post_message'], array('required' => 1, 'error_text' => '', 'autosize' => 1, 'no_resize' => 1, 'preview' => 1, 'form_name' => 'input_form', 'bbcode' => 1)),
 						// happens only in EDIT
 						'delete_field' => form_checkbox('delete', $locale['forum_0624'], '', array('class' => 'm-b-0')),

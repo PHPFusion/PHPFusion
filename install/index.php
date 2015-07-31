@@ -236,7 +236,7 @@ switch (INSTALLATION_STEP) {
 			$buttonMode = 'next';
 		} else {
 			$content .= "<p><strong>".$locale['setup_1104']."</strong></p>\n";
-			$content .= form_hidden('', 'license', 'license', '1');
+			$content .= form_hidden('license', '', '1');
 			$buttonMode = 'refresh';
 			$nextStep = 2;
 		}

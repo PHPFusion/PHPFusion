@@ -99,7 +99,7 @@ if ($forum_settings['forum_ranks']) {
 		echo form_select('rank_language', '', $language_opts, $rank_language, array('placeholder' => $locale['choose']));
 		echo "</td>\n</tr>\n";
 	} else {
-		echo form_hidden('', 'rank_language', 'rank_language', $rank_language);
+		echo form_hidden('rank_language', '', $rank_language);
 	}
 	echo "<tr>\n";
 	echo "<td class='tbl'><strong>".$locale['429']."</strong></td>\n";

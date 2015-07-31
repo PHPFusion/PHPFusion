@@ -598,7 +598,7 @@ public function display_forum_form() {
 		echo "</div>\n<div class='overflow-hide'>\n";
 		echo "<span class='strong'>".$locale['forum_013']."</span><br/>\n";
 		echo "<span class='text-smaller'>".sprintf($locale['forum_027'], $image_size[0], $image_size[1])."</span><br/>";
-		echo form_hidden('', 'forum_image', 'forum_image', $this->data['forum_image']);
+		echo form_hidden('forum_image', '', $this->data['forum_image']);
 		echo form_button('remove_image', $locale['forum_028'], $locale['forum_028'], array('class'=>'btn-danger btn-sm m-t-10', 'icon'=>'fa fa-trash'));
 		echo "</div>\n";
 		closeside();
@@ -648,8 +648,8 @@ public function display_forum_form() {
 	echo form_checkbox('forum_allow_attach', $locale['forum_020'], $this->data['forum_allow_attach']);
 	echo form_checkbox('forum_allow_poll', $locale['forum_022'], $this->data['forum_allow_poll']);
 	echo form_checkbox('forum_allow_post_ratings', $locale['forum_023'], $this->data['forum_allow_post_ratings']);
-	echo form_hidden('', 'forum_id', 'forum_id', $this->data['forum_id']);
-	echo form_hidden('', 'forum_branch', 'forum_branch', $this->data['forum_branch']);
+	echo form_hidden('forum_id', '', $this->data['forum_id']);
+	echo form_hidden('forum_branch', '', $this->data['forum_branch']);
 	closeside();
 	echo "</div>\n</div>\n";
 	echo form_button('save_forum', $this->data['forum_id'] ? $locale['forum_000a'] : $locale['forum_000'], $locale['forum_000'], array('class'=>'btn-sm btn-success'));
@@ -748,8 +748,8 @@ private function display_forum_permissions_form() {
 		}
 	}
 	echo "</select>\n";
-	echo form_hidden('', 'forum_mods', 'forum_mods', $data['forum_mods']);
-	echo form_hidden('', 'forum_id', 'forum_id', $data['forum_id']);
+	echo form_hidden('forum_mods', '', $data['forum_mods']);
+	echo form_hidden('forum_id', '', $data['forum_id']);
 	echo "</div>\n</div>\n";
 	closeside();
 
@@ -885,9 +885,9 @@ private	function display_forum_move_form() {
 	echo form_checkbox('delete_forums', $locale['forum_055'], '');
 	echo "</div>\n</div>\n";
 	echo "<div class='clearfix'>\n";
-	echo form_hidden('', 'forum_remove', 'forum_remove', 1); // key to launch next sequence
-	echo form_hidden('', 'forum_id', 'forum_id', $_GET['forum_id']);
-	echo form_hidden('', 'forum_branch', 'forum_branch', $_GET['forum_branch']);
+	echo form_hidden('forum_remove', '', 1); // key to launch next sequence
+	echo form_hidden('forum_id', '', $_GET['forum_id']);
+	echo form_hidden('forum_branch', '', $_GET['forum_branch']);
 	echo form_button('submit_move', $locale['forum_049'], 'submit_move', array('class'=>'btn-sm btn-danger m-r-10', 'icon'=>'fa fa-trash'));
 	echo "<button type='button' class='btn btn-sm btn-default' data-dismiss='modal'><i class='entypo cross'></i> ".$locale['close']."</button>\n";
 	echo "</div>\n";

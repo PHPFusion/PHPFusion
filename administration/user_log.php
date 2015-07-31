@@ -106,7 +106,7 @@ function userFieldOptions() {
 
 opentable($locale['100']);
 echo openform('userlog_search', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-echo form_hidden('', 'aid', 'aid', iAUTH);
+echo form_hidden('aid', '', iAUTH);
 echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n<tbody>\n";
 echo "<tr>\n";
 echo "<td class='tbl1' align='left'><label for='orderby'>".$locale['107']."</label></td>\n";

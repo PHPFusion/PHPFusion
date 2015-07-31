@@ -586,9 +586,9 @@ function news_form() {
 	if (multilang_table("NS")) {
 		echo form_select('news_language', $locale['global_ML100'], $language_opts, $data['news_language'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	} else {
-		echo form_hidden('', 'news_language', 'news_langugage', $data['news_language']);
+		echo form_hidden('news_language', '', $data['news_language']);
 	}
-	echo form_hidden('', 'news_datestamp', 'news_datestamp', $data['news_datestamp']);
+	echo form_hidden('news_datestamp', '', $data['news_datestamp']);
 	echo form_select('news_visibility', $locale['news_0209'], getgroupOpts(), $data['news_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
 	closeside();
 	openside('');
@@ -613,7 +613,7 @@ function news_form() {
 	closeside();
 	if (isset($_GET['action']) && isset($_GET['news_id']) && isnum($_GET['news_id']) || (isset($_POST['preview']) && (isset($_POST['news_id']) && isnum($_POST['news_id']))) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
 		$news_id = isset($_GET['news_id']) && isnum($_GET['news_id']) ? $_GET['news_id'] : '';
-		echo form_hidden('', 'news_id', 'news_id', $news_id);
+		echo form_hidden('news_id', '', $news_id);
 	}
 	echo "</div>\n</div>\n";
 	echo form_button('preview', $locale['news_0240'], $locale['news_0240'], array('class' => 'btn-default m-r-10'));

@@ -558,9 +558,9 @@ if ($settings['enable_deactivation'] == 1) {
 }
 echo "</div>\n";
 
-echo form_hidden('', 'aid', 'aid', iAUTH);
-echo form_hidden('', 'sortby', 'sortby', $sortby);
-echo form_hidden('', 'rowstart', 'rowstart', $rowstart);
+echo form_hidden('aid', '', iAUTH);
+echo form_hidden('sortby', '', $sortby);
+echo form_hidden('rowstart', '', $rowstart);
 for ($i = 0; $i < 9; $i++) {
 	if ($i < 8 || $settings['enable_deactivation'] == 1) {
 		$opts[$i] = getsuspension($i);
@@ -571,7 +571,7 @@ echo "<div class='display-inline-block pull-right'>\n";
 echo form_select('status', $locale['405'], $opts, isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : '', array('placeholder' => $locale['choose'], 'class'=>'col-sm-3 col-md-3 col-lg-3', 'inline'=>1, 'allowclear' => 1));
 echo "</div>\n";
 add_to_jquery("$('#status').on('change', function() { this.form.submit(); });");
-echo form_hidden('', 'rowstart', 'rowstart', $rowstart);
+echo form_hidden('rowstart', '', $rowstart);
 echo closeform();
 
 if ($rows) {
@@ -644,8 +644,8 @@ echo "</tr>\n</table>\n";
 
 echo "<hr />\n";
 echo openform('searchform', 'get', FUSION_SELF.$aidlink, array('max_tokens' => 1, 'notice' => 0));
-echo form_hidden('', 'aid', 'aid', iAUTH);
-echo form_hidden('', 'status', 'status', $status);
+echo form_hidden('aid', '', iAUTH);
+echo form_hidden('status', '', $status);
 echo form_text('search_text', $locale['415'], '', array('inline'=>1));
 echo form_button('search', $locale['416'], $locale['416'], array('class' => 'col-sm-offset-3 btn-sm btn-primary'));
 echo closeform();

@@ -121,7 +121,7 @@ if (multilang_table("NS")) {
 	echo form_select('cat_language', '', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 } else {
-	echo form_hidden('', 'cat_language', 'cat_language', $cat_language);
+	echo form_hidden('cat_language', '', $cat_language);
 }
 echo "<tr><td width='130' class='tbl'><label for='cat_image'>".$locale['news_0301']."</label></td>\n";
 echo "<td class='tbl'>\n";

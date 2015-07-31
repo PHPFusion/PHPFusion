@@ -346,7 +346,7 @@ class SiteLinks {
 		echo "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-3'>\n";
 		echo form_select('link_visibility', $locale['SL_0022'], self::getVisibility(), $this->data['link_visibility'], array('input_id'=>'sitelinks_visibility', 'width'=>'100%'));
 		echo form_checkbox('link_window', $locale['SL_0028'], $this->data['link_window'], array('input_id'=>'ll_window'));
-		echo form_hidden('', 'link_id', 'link_id', '', array('writable'=>1));
+		echo form_hidden('link_id', '', array('input_id'=>'link_id2', 'writable'=>1));
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";
@@ -410,7 +410,7 @@ class SiteLinks {
 		echo openform('linkform', 'post', $this->form_action, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-12 col-md-8 col-lg-8'>\n";
-		echo form_hidden('', 'link_id', 'linkid', $this->data['link_id']);
+		echo form_hidden('link_id', '', $this->data['link_id']);
 		echo form_text('link_name', $locale['SL_0020'], $this->data['link_name'], array('max_length' => 100, 'required' => 1, 'error_text' => $locale['SL_0085'], 'inline'=>1));
 		echo form_text('link_icon', 'Link Icon', $this->data['link_icon'], array('max_length' => 100, 'inline'=>1));
 		echo form_text('link_url', $locale['SL_0021'], $this->data['link_url'], array('required' => 1, 'error_text' => $locale['SL_0086'], 'inline'=>1));

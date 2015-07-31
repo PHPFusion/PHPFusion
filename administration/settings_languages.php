@@ -515,8 +515,8 @@ $result = dbquery("SELECT * FROM ".DB_LANGUAGE_TABLES."");
 while ($data = dbarray($result)) {
 	echo "<input type='checkbox' value='".$data['mlt_rights']."' name='multilang_tables[]'  ".($data['mlt_status'] == '1' ? "checked='checked'" : "")." /> ".$data['mlt_title']." <br />";
 }
-echo form_hidden('', 'old_localeset', 'old_localeset', $settings2['locale']);
-echo form_hidden('', 'old_enabled_languages', 'old_enabled_languages', $settings['enabled_languages']);
+echo form_hidden('old_localeset', '', $settings2['locale']);
+echo form_hidden('old_enabled_languages', '', $settings['enabled_languages']);
 echo "</td>\n</tr>\n</tbody></table>";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();

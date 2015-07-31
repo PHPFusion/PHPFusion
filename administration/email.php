@@ -183,7 +183,7 @@ if (multilang_table("ET")) {
 	echo form_select('template_language', '', $language_opts, $template_language, array('placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 } else {
-	echo form_hidden('', 'template_language', 'template_language', $template_language);
+	echo form_hidden('template_language', '', $template_language);
 }
 echo "<tr>\n";
 echo "<td class='tbl1' style='width:15%;vertical-align:top;'><label for='template_subject'>".$locale['434'].":</label>  <span class='required'>*</span></td>\n";
@@ -228,8 +228,8 @@ echo "</div>\n";
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td colspan='2' style='text-align:center;'>\n";
-echo form_hidden('', 'template_id', 'template_id', $template_id);
-echo form_hidden('', 'template_key', 'template_key', $template_key);
+echo form_hidden('template_id', '', $template_id);
+echo form_hidden('template_key', '', $template_key);
 echo form_button('test_template', $locale['437'], $locale['437'], array('class' => 'btn-primary m-r-10'));
 echo form_button('save_template', $locale['439'], $locale['439'], array('class' => 'btn-primary m-r-10'));
 echo form_button('reset', $locale['440'], $locale['440'], array('class' => 'btn-primary'));

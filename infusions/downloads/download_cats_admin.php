@@ -181,7 +181,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		if (multilang_table("DL")) {
 			echo form_select('cat_language', $locale['global_ML100'], $language_opts, $cat_language, array('placeholder' => $locale['choose'], 'width'=>'100%'));
 		} else {
-			echo form_hidden('', 'cat_language', 'cat_language', $cat_language);
+			echo form_hidden('cat_language', '', $cat_language);
 		}
 		closeside();
 		echo "</div>\n</div>\n";

@@ -1331,8 +1331,8 @@ class QuantumFields {
 		echo form_checkbox('field_log', $locale['fields_0483'], $this->field_data['field_log']);
 		echo form_text('field_order', $locale['fields_0484'], $this->field_data['field_order'], array('number' => 1));
 		echo form_checkbox('field_registration', $locale['fields_0485'], $this->field_data['field_registration']);
-		echo form_hidden('', 'add_field', 'add_field', $this->field_data['field_type']);
-		echo form_hidden('', 'field_id', 'field_id', $this->field_data['field_id']);
+		echo form_hidden('add_field', '', $this->field_data['field_type']);
+		echo form_hidden('field_id', '', $this->field_data['field_id']);
 		echo form_button('save_field', $locale['fields_0488'], 'save', array('class' => 'btn-sm btn-primary'));
 		echo closeform();
 		echo "</div>\n";
@@ -1438,15 +1438,15 @@ class QuantumFields {
 		}
 
 		echo form_text('field_order', $locale['fields_0414'], $this->field_data['field_order']);
-		echo form_hidden('', 'add_module', 'add_module', $this->field_data['add_module']);
-		echo form_hidden('', 'field_name', 'field_name', $user_field_dbname);
-		echo form_hidden('', 'field_title', 'field_title', $user_field_name);
+		echo form_hidden('add_module', '', $this->field_data['add_module']);
+		echo form_hidden('field_name', '', $user_field_dbname);
+		echo form_hidden('field_title', '', $user_field_name);
 		// new api introduced
-		echo form_hidden('', 'field_default', 'field_default', isset($user_field_default) ? $user_field_default : '');
-		echo form_hidden('', 'field_options', 'field_options', isset($user_field_options) ? $user_field_options : '');
-		echo form_hidden('', 'field_error', 'field_error', isset($user_field_error) ? $user_field_error : '');
-		echo form_hidden('', 'field_config', 'field_config', isset($user_field_config) ? $user_field_config : '');
-		echo form_hidden('', 'field_id', 'field_id', $this->field_data['field_id']);
+		echo form_hidden('field_default', '', isset($user_field_default) ? $user_field_default : '');
+		echo form_hidden('field_options', '', isset($user_field_options) ? $user_field_options : '');
+		echo form_hidden('field_error', '', isset($user_field_error) ? $user_field_error : '');
+		echo form_hidden('field_config', '', isset($user_field_config) ? $user_field_config : '');
+		echo form_hidden('field_id', '', $this->field_data['field_id']);
 		echo form_button('enable', ($this->field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416']), ($this->field_data['field_id'] ? $locale['fields_0415'] : $locale['fields_0416']), array('class' => 'btn-primary btn-sm'));
 		echo closeform();
 		echo "</div>\n";
@@ -1575,8 +1575,8 @@ class QuantumFields {
 		$html .= self::quantum_multilocale_fields('field_cat_name', $locale['fields_0430'], $this->field_cat_data['field_cat_name'], array('required'=>1));
 		$html .= form_select_tree('field_parent', $locale['fields_0431'], $this->field_cat_data['field_parent'], array('parent_value' => $locale['fields_0432'], 'disable_opts' => $cat_list), $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 		$html .= form_text('field_cat_order', $locale['fields_0433'], $this->field_cat_data['field_cat_order'], array('number' => 1));
-		$html .= form_hidden('', 'field_cat_id', 'field_cat_id', $this->field_cat_data['field_cat_id'], array('number' => 1));
-		$html .= form_hidden('', 'add_cat', 'add_cat', 'add_cat');
+		$html .= form_hidden('field_cat_id', '', $this->field_cat_data['field_cat_id'], array('number' => 1));
+		$html .= form_hidden('add_cat', '', 'add_cat');
 		// root settings
 		$html .= "<div id='page_settings'>\n";
 		$html .= "<div class='text-smaller m-b-10'>".$locale['fields_0111']."</div>\n";
@@ -1585,7 +1585,7 @@ class QuantumFields {
 		$html .= form_text('field_cat_index', $locale['fields_0435'], $this->field_cat_data['field_cat_index'], array('placeholder' => 'user_id'));
 		$html .= "<div class='text-smaller m-b-10'>".$locale['fields_0113']."</div>\n";
 		$html .= form_text('field_cat_class', $locale['fields_0436'], $this->field_cat_data['field_cat_class'], array('placeholder' => 'entypo xxxxx'));
-		$html .= form_hidden('', 'add_cat', 'add_cat', 'add_cat');
+		$html .= form_hidden('add_cat', '', 'add_cat');
 		$html .= "</div>\n";
 		$html .= form_button('save_cat', $locale['fields_0318'], 'save_cat', array('class' => 'btn-sm btn-primary'));
 		$html .= closeform();
@@ -1842,7 +1842,7 @@ class QuantumFields {
 				break;
 			case 'hidden':
 				if ($method == 'input') {
-					return form_hidden(self::parse_label($data['field_title']), $data['field_name'], $data['field_name'], $field_value, $options);
+					return form_hidden($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
 				} elseif ($method == 'display' && isset($field_data[$data['field_name']]) && $field_data[$data['field_name']]) {
 					return array('title'=>self::parse_label($data['field_title']), 'value'=>$callback_data[$data['field_name']]);
 				}

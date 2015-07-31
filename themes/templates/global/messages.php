@@ -225,7 +225,7 @@ if (!function_exists('render_inbox')) {
 					echo form_text('subject', '', '', array('placeholder' => $locale['405'], 'resize' => 0, 'autosize' => 1));
 					echo "<hr class='m-t-0'/><br/>\n";
 					echo form_textarea('message', '', '', array('placeholder' => $locale['422'], 'resize' => 0, 'autosize' => 1, 'bbcode' => 1, 'form_name' => 'qform', 'preview' => 1));
-					echo form_hidden('', 'msg_send', 'msg_send', $_GET['msg_user']);
+					echo form_hidden('msg_send', '', $_GET['msg_user']);
 					echo form_button('send_message', $locale['430'], $locale['430'], array('class' => 'btn btn-primary btn-sm'));
 					echo "</div>\n";
 					echo closeform();
@@ -247,8 +247,8 @@ if (!function_exists('render_inbox')) {
 					//print_p($message_subject);
 					// var_dump($message_subject);
 					echo form_textarea('message', '', '', array('placeholder' => $locale['422'], 'resize' => 0, 'autosize' => 1, 'bbcode' => 1, 'form_name' => 'qform', 'preview' => 1));
-					echo form_hidden('', 'subject', 'subject', $message_subject);
-					echo form_hidden('', 'msg_send', 'msg_send', $_GET['msg_user']);
+					echo form_hidden('subject', '', $message_subject);
+					echo form_hidden('msg_send', '', $_GET['msg_user']);
 					echo form_button('send_message', $locale['430'], $locale['430'], array('class' => 'btn btn-primary btn-sm'));
 					echo "</div>\n";
 					echo closeform();

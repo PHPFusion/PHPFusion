@@ -400,8 +400,8 @@ function download_form() {
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8'>\n";
 	openside('');
-	echo form_hidden('', 'download_id', 'download_id', $data['download_id']);
-	echo form_hidden('', 'download_datestamp', 'download_datestamp', $data['download_datestamp']);
+	echo form_hidden('download_id', '', $data['download_id']);
+	echo form_hidden('download_datestamp', '', $data['download_datestamp']);
 	echo form_text('download_title', $locale['download_0200'], $data['download_title'], array('required' => 1, 'error_text'=>$locale['download_0110']));
 	echo form_textarea('download_description_short', $locale['download_0202'], $data['download_description_short'], array('required'=>1, 'error_text'=>$locale['download_0112'], 'maxlength' => '255', 'autosize' => 1));
 	if ($dl_settings['download_screenshot']) {
@@ -413,8 +413,8 @@ function download_form() {
 			echo "<div class='overflow-hide'>\n";
 			echo "<span class='text-dark strong'>".$locale['download_0220']."</span>\n";
 			echo form_checkbox('del_image', $locale['download_0216'], '');
-			echo form_hidden('', 'download_hidden_image', 'download_hidden_image', $data['download_image']);
-			echo form_hidden('', 'download_hidden_image_thumb', 'download_hidden_image_thumb', $data['download_image_thumb']);
+			echo form_hidden('download_hidden_image', '', $data['download_image']);
+			echo form_hidden('download_hidden_image_thumb', '', $data['download_image_thumb']);
 			echo "</div>\n";
 			echo "</div>\n";
 		} else {
@@ -450,7 +450,7 @@ function download_form() {
 		echo "<div class='list-group-item m-t-10'>".$locale['download_0214']." - <a href='".DOWNLOADS.$data['download_file']."'>".DOWNLOADS.$data['download_file']."</a>\n";
 		echo form_checkbox('del_upload', $locale['download_0216'], '', array('class'=>'m-b-0'));
 		echo "</div>\n";
-		echo form_hidden('', 'download_hidden_file', 'download_hidden_file', $data['download_file']);
+		echo form_hidden('download_hidden_file', '', $data['download_file']);
 	} else {
 		$file_options = array(
 			'max_bytes' => $dl_settings['download_max_b'],
@@ -472,7 +472,7 @@ function download_form() {
 		echo form_text('download_url', $locale['download_0206'], $data['download_url']);
 		echo "</div>\n</div>\n";
 	} else {
-		echo form_hidden('', 'download_url', 'download_url', $data['download_url']);
+		echo form_hidden('download_url', '', $data['download_url']);
 	}
 	echo closetabbody();
 	echo closetab();

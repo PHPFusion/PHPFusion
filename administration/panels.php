@@ -324,7 +324,7 @@ class fusion_panels {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
-		echo form_hidden('', 'panel_id', 'panel_id', $this->data['panel_id']);
+		echo form_hidden('panel_id', '', $this->data['panel_id']);
 		echo form_text('panel_name', $locale['452'], $this->data['panel_name'], array('inline'=>1, 'required'=>1, )); //'error_text'=>$locale['470']
 		echo form_select('panel_filename', $locale['453'], self::get_panelOpts(), $this->data['panel_filename'], array('inline'=>1));
         $grid_opts = self::get_panel_grid();
@@ -354,7 +354,7 @@ class fusion_panels {
 		echo "<div class='text-smaller'></div>\n";
 		echo form_select('panel_url_list', $locale['462'], self::get_panel_url_list(), $this->data['panel_url_list'], array('inline'=>1, 'tags'=>1, 'multiple'=>1, 'width'=>'100%'));
 		echo "</div>\n";
-		echo form_hidden('', 'panel_display', 'panel_display', $this->data['panel_display']);
+		echo form_hidden('panel_display', '', $this->data['panel_display']);
 		closeside();
 
 		echo "</div>\n";

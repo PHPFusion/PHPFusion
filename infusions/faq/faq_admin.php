@@ -154,7 +154,7 @@ if (!isset($_GET['t']) || $_GET['t'] != "faq") {
 		echo "</td>\n";
 		echo "</tr>\n";
 	} else {
-		echo form_hidden('', 'cat_language', 'cat_language', $cat_language);
+		echo form_hidden('cat_language', '', $cat_language);
 	}
 	echo "<tr><td align='center' colspan='2' class='tbl'>\n";
 	echo form_button('save_cat', $locale['422'], $locale['422'], array('class' => 'btn-primary m-t-10'));
