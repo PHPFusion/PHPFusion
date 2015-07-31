@@ -197,14 +197,7 @@ $locale['690'] = "Yes (only admins)";
 $locale['691'] = "Allow users to change user name";
 $locale['692'] = "Captcha Settings";
 $locale['693'] = "Captcha";
-$locale['694'] = "Recaptcha Public Key (<a href='https://www.google.com/recaptcha/admin/create' title='Get your key here'>Get your key</a>)";
-$locale['695'] = "Recaptcha Private Key";
-$locale['696'] = "Please enter your public and private reCAPTCHA key!";
-$locale['697'] = "Choose colour scheme";
-$locale['697r'] = "Red";
-$locale['697b'] = "Blackglass";
-$locale['697c'] = "Clean";
-$locale['697w'] = "White";
+// Removed Recaptcha
 $locale['698'] = "SMTP Authentication?";
 $locale['699'] = "Login method";
 $locale['699b'] = "Both";
@@ -244,7 +237,7 @@ $locale['854'] = "Save Banners";
 $locale['855'] = "Preview Banners";
 
 // Settings Error
-$locale['900'] = "Settings Updated";
+$locale['900'] = "Settings successfully updated";
 $locale['901'] = "Database update error occurs: Settings were not Updated!";
 $locale['902'] = "Site host can not be left empty!";
 
@@ -362,3 +355,6 @@ $locale['security_settings'] = 'Security Settings';
 $locale['time_settings'] = 'Time Date Settings';
 $locale['user_settings'] = 'User Management Settings';
 $locale['theme_settings'] = 'Theme Settings';
+
+$locale['securimage'] = "Secure Image";
+$locale['securimage2'] = "Secure Image v.2";
