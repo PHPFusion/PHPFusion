@@ -254,7 +254,21 @@ class defender {
 		unset($_SESSION['form_fields']);
 	}
 
-	// Inject FUSION_NULL
+	/**
+	 * Request whether safe to proceed at all times
+	 * @return bool
+	 */
+	public static function safe(){
+		if (!defined("FUSION_NULL")) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Send an Unsafe Signal acorss all PHP-Fusion Components
+	 * This will automatically halt on all important execution without exiting.
+	 */
 	static function stop() {
 		global $locale;
 		if (!defined('FUSION_NULL')) {
