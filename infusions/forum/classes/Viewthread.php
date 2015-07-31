@@ -848,7 +848,7 @@ class Viewthread {
 				'edit_reason_field' => '',
 				'attachment_field' => $this->thread_info['permissions']['can_attach'] && $thread_data['forum_allow_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
 					"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</div>\n
-					".form_fileinput('', 'file_attachments[]', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$forum_settings['forum_attachmax_count'], 'valid_ext'=>$forum_settings['forum_attachtypes']))
+					".form_fileinput('file_attachments[]', "", "", array('input_id'=>'file_attachments', 'upload_path' => INFUSIONS.'forum/attachments/', 'type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$forum_settings['forum_attachmax_count'], 'valid_ext'=>$forum_settings['forum_attachtypes']))
 					) : array(),
 				'poll' => array(),
 				'smileys_field' => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], array('class' => 'm-b-0')),
@@ -1050,7 +1050,7 @@ class Viewthread {
 						'edit_reason_field' => form_text('post_editreason', $locale['forum_0611'], $post_data['post_editreason'], array('placeholder' => 'Edit reasons','error_text' => '', 'class' => 'm-t-20 m-b-20')),
 						'attachment_field' => $this->thread_info['permissions']['can_attach'] && $thread_data['forum_allow_attach'] ? array('title'=>$locale['forum_0557'], 'field'=>
 								"<div class='m-b-10'>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace(',', ' ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</div>\n
-								".form_fileinput('', 'file_attachments[]', 'file_attachments', INFUSIONS.'forum/attachments', '', array('type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$forum_settings['forum_attachmax_count'], 'valid_ext'=>$forum_settings['forum_attachtypes']))
+								".form_fileinput('file_attachments[]', "", '', array('input_id'=>'file_attachments', 'upload_path'=>INFUSIONS.'forum/attachments/', 'type'=>'object', 'preview_off'=>true, 'multiple'=>true, 'max_count'=>$forum_settings['forum_attachmax_count'], 'valid_ext'=>$forum_settings['forum_attachtypes']))
 								) : array(),
 						// only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
 						//'poll' => $is_first_post && $thread_data['forum_allow_poll'] ? array('title'=>'Forum Poll', 'field'=>$poll_field) : array(),

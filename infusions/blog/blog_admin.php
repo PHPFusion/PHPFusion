@@ -556,14 +556,15 @@ function blog_form() {
 		echo form_select('blog_ialign', $locale['442'], $align_options, $data['blog_ialign']);
 		echo "</div></div>\n";
 	} else {
-		echo form_fileinput($locale['439'], 'blog_image', 'blog_image', IMAGES_B, '', array(
-											  'thumbnail_folder'=> 'thumbs',
-											  'thumbnail'=>1,
-											  'max_width'=> $blog_settings['blog_photo_max_w'],
-											  'max_height' => $blog_settings['blog_photo_max_w'],
-											  'max_byte'=> $blog_settings['blog_photo_max_b'],
-											  'thumbnail2' => 1,
-											  'type' => 'image'
+		echo form_fileinput('blog_image', $locale['439'], '', array(
+											"upload_path" =>  IMAGES_B,
+											"thumbnail_folder"=> "thumbs",
+											"thumbnail"=> true,
+											"max_width"=> $blog_settings['blog_photo_max_w'],
+											"max_height" => $blog_settings['blog_photo_max_w'],
+											"max_byte" => $blog_settings['blog_photo_max_b'],
+											"thumbnail2" => true,
+											"type" => "image"
 											)
 		);
 		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($blog_settings['blog_photo_max_b']))."</div>\n";

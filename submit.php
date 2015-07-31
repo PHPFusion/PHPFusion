@@ -283,7 +283,7 @@ if (!$sum or empty($modules[$stype])) {
 		echo form_text('photo_title', $locale['621'], '', array('required' => 1));
 		echo form_textarea('photo_description', $locale['622'], '');
 		echo sprintf($locale['624'], parsebytesize($settings['photo_max_b']), $settings['photo_max_w'], $settings['photo_max_h'])."<br/>\n";
-		echo form_fileinput($locale['623'], 'photo_pic_file', 'photo_pic_file', PHOTOS."submissions/", '', array('type' => 'image', 'required' => 1));
+		echo form_fileinput('photo_pic_file', $locale['623'], '', array("upload_path"=> PHOTOS."submissions/", "type" => "image", "required" => true));
 		echo "</div>\n</div>\n";
 		echo form_button('submit_photo', $locale['626'], $locale['626'], array('class' => 'btn-primary'));
 		echo closeform();
@@ -383,28 +383,30 @@ if (!$sum or empty($modules[$stype])) {
 		echo sprintf($locale['694'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
 		echo "</small>\n</div>\n";
 		$file_options = array(
-			'max_bytes' => $settings['download_max_b'],
-			'valid_ext' => $settings['download_types'],
+			"upload_path" =>  DOWNLOADS."submissions/",
+			"max_bytes" => fusion_get_settings("download_max_b"),
+			'valid_ext' => fusion_get_settings("download_types"),
 			'error_text' => $locale['675'],
 		);
-		echo form_fileinput($locale['684'], 'download_file', 'download_file', DOWNLOADS."submissions/", '', $file_options);
+		echo form_fileinput('download_file', $locale['684'], '', $file_options);
 		echo "<div class='pull-right'>\n<small>\n";
 		echo sprintf($locale['694b'], parsebytesize($settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $settings['download_screen_max_w'], $settings['download_screen_max_h'])."<br />\n";
 		echo "</small>\n</div>\n";
 		$file_options = array(
-			'max_width' => $settings['download_screen_max_w'],
-			'max_height' => $settings['download_screen_max_w'],
-			'max_byte' => $settings['download_screen_max_b'],
-			'type' => 'image',
-			'delete_original' => 0,
-			'thumbnail_folder' => '',
-			'thumbnail' => 1,
-			'thumbnail_suffix'=> '_thumb',
-			'thumbnail_w'=> $settings['download_thumb_max_w'],
-			'thumbnail_h' => $settings['download_thumb_max_h'],
-			'thumbnail2' => 0
+			"upload_path" =>  DOWNLOADS."submissions/images/",
+			"max_width" => fusion_get_settings("download_screen_max_w"),
+			"max_height" => fusion_get_settings("download_screen_max_w"),
+			"max_byte" => fusion_get_settings("download_screen_max_b"),
+			"type" => "image",
+			"delete_original" => false,
+			"thumbnail_folder" => "",
+			"thumbnail" => true,
+			"thumbnail_suffix"=> "_thumb",
+			"thumbnail_w"=> fusion_get_settings("download_thumb_max_w"),
+			"thumbnail_h" => fusion_get_settings("download_thumb_max_h"),
+			"thumbnail2" => 0
 		);
-		echo form_fileinput($locale['686'], 'download_image', 'download_image', DOWNLOADS."submissions/images/", '', $file_options);
+		echo form_fileinput('download_image', $locale['686'], '', $file_options);
 		echo form_select('download_cat', $locale['687'], $opts, '');
 		echo form_text('download_license', $locale['688'], '');
 		echo form_text('download_os', $locale['689'], '');

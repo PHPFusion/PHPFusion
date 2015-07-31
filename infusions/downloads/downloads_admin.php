@@ -419,6 +419,7 @@ function download_form() {
 			echo "</div>\n";
 		} else {
 			$file_options = array(
+				'upload_path' =>  DOWNLOADS."images/",
 				'max_width' => $dl_settings['download_screen_max_w'],
 				'max_height' => $dl_settings['download_screen_max_w'],
 				'max_byte' => $dl_settings['download_screen_max_b'],
@@ -431,7 +432,7 @@ function download_form() {
 				'thumbnail_h' => $dl_settings['download_thumb_max_h'],
 				'thumbnail2' => 0
 			);
-			echo form_fileinput($locale['download_0220'], 'download_image', 'download_image', DOWNLOADS."images/", '', $file_options); // all file types.
+			echo form_fileinput('download_image', $locale['download_0220'], '', $file_options); // all file types.
 			echo "<small>".sprintf($locale['download_0219'], parsebytesize($dl_settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $dl_settings['download_screen_max_w'], $dl_settings['download_screen_max_h'])."</small>\n";
 		}
 	}
@@ -453,11 +454,12 @@ function download_form() {
 		echo form_hidden('download_hidden_file', '', $data['download_file']);
 	} else {
 		$file_options = array(
-			'max_bytes' => $dl_settings['download_max_b'],
-			'valid_ext' => $dl_settings['download_types'],
+			"upload_path" => DOWNLOADS."files/",
+			"max_bytes" => $dl_settings['download_max_b'],
+			"valid_ext" => $dl_settings['download_types'],
 		);
 		echo "<div class='list-group m-t-10'><div class='list-group-item'>\n";
-		echo form_fileinput($locale['download_0214'], 'download_file', 'download_file', DOWNLOADS."files/", '', $file_options);
+		echo form_fileinput('download_file', $locale['download_0214'], '', $file_options);
 		echo sprintf($locale['download_0218'], parsebytesize($dl_settings['download_max_b']), str_replace(',', ' ', $dl_settings['download_types']))."<br />\n";
 		echo "</div>\n";
 		echo "<div class='list-group-item'>\n";

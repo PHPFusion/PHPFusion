@@ -819,8 +819,8 @@ class Admin {
 			echo form_text('photo_title', $locale['622'], $this->photo_data['photo_title'], array('placeholder' => $locale['622'], 'inline' => 1));
 			$up_settings = $this->upload_settings;
 			unset($up_settings['multiple']);
-			$up_settings += array('multiple'=>1, 'preview_off'=>true);
-			echo form_fileinput($locale['631'], 'batch_file[]', 'batch_file', $this->image_upload_dir, '', $up_settings);
+			$up_settings += array('input_id'=> 'batch_file', 'upload_path'=> $this->image_upload_dir, 'multiple'=>true, 'preview_off'=>true);
+			echo form_fileinput('batch_file[]', $locale['631'], $this->image_upload_dir, '', $up_settings);
 			echo form_hidden('album_id', '', $_GET['gallery'], array("input_id"=>"album_id_batch"));
 			echo form_button('batch_upload', $locale['631'], $locale['631'], array('class'=>'btn btn-success'));
 			echo closeform();
@@ -835,7 +835,8 @@ class Admin {
 			echo form_text('album_title', $locale['607'], $this->album_data['album_title'], array('placeholder' => $locale['608'], 'inline' => 1, 'required' => 1));
 			echo form_textarea('album_description', $locale['609'], $this->album_data['album_description'], array('placeholder' => $locale['610'],
 				'inline' => 1));
-			echo form_fileinput('Upload Picture', 'album_file', 'album_file', $this->image_upload_dir, '', $this->upload_settings);
+			$this->upload_settings['upload_path'] = $this->image_upload_dir;
+			echo form_fileinput('album_file', $locale['621'], "", $this->upload_settings);
 			echo form_hidden('album_hfile', '', $this->album_data['album_thumb']);
 			echo form_select('album_access', $locale['611'],  getgroupOpts(), $this->album_data['album_access'], array('inline' => 1));
 			echo form_hidden('album_id', '', $this->album_data['album_id']);
@@ -866,7 +867,8 @@ class Admin {
 			echo form_select('album_id', $locale['624'], $album_list, $sel, array('input_id'=>'photo_album_id', 'inline' => 1));
 			echo form_hidden('photo_id', '', $this->photo_data['photo_id']);
 			echo form_hidden('photo_order', '', $this->photo_data['photo_order']);
-			echo form_fileinput('Upload Picture', 'photo_file', 'photo_file', $this->image_upload_dir, '', $this->upload_settings);
+			$this->upload_settings['upload_path'] = $this->image_upload_dir;
+			echo form_fileinput('photo_file', $locale['621'], "", $this->upload_settings);
 			echo form_hidden('photo_hfile', '', $this->photo_data['photo_filename']);
 			echo form_hidden('photo_hthumb1', '', $this->photo_data['photo_thumb1']);
 			echo form_hidden('photo_hthumb2', '', $this->photo_data['photo_thumb2']);

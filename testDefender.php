@@ -118,6 +118,7 @@ echo form_textarea('textarea', 'Text area', $settings_test['textarea'], array('a
 
 //var_dump($_SESSION['form_fields'][$_SERVER['PHP_SELF']]);
 $file_options = array(
+				'upload_path' =>  DOWNLOADS."images/",
 				'max_width' => $settings['download_screen_max_w'],
 				'max_height' => $settings['download_screen_max_w'],
 				'max_byte' => $settings['download_screen_max_b'],
@@ -133,7 +134,7 @@ $file_options = array(
 				'inline' => 1,
 				'thumbnail2' => 0
 			);
-echo form_fileinput('File upload', 'file_input', 'file_input', DOWNLOADS."images/", '', $file_options); // all file types.
+echo form_fileinput('file_input', 'File upload', '', $file_options); // all file types.
 
 echo form_button('submit', 'Submit', 'value', array('class' => 'btn-success'));
 echo closeform();

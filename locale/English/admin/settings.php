@@ -131,6 +131,7 @@ $locale['617'] = "Save generated watermarks?";
 $locale['618'] = "Reduces server load; occupies more disk space";
 $locale['619'] = "Delete existing watermarks";
 $locale['620'] = "Delete existing watermarks?";
+$locale['621'] = "Upload Image";
 
 // Other Settings
 $locale['650'] = "Miscellaneous";

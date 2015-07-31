@@ -199,7 +199,10 @@ class UserFields extends QuantumFields {
 					$this->info['user_avatar'] = "<label for='user_avatar_upload'><img src='".IMAGES."avatars/".$this->userData['user_avatar']."' alt='".$locale['u185']."' />
 											</label>\n<br />\n<input type='checkbox' name='delAvatar' value='1' class='textbox' /> ".$locale['u187']."<br />\n<br />\n";
 				} else {
-					$this->info['user_avatar'] = form_fileinput($locale['u185'], 'user_avatar', 'user_avatar_upload', IMAGES."avatars/", '', array('type' => 'image',
+					$this->info['user_avatar'] = form_fileinput('user_avatar', $locale['u185'], '', array(
+						'upload_path' =>  IMAGES."avatars/",
+						'input_id' => 'user_avatar_upload',
+						'type' => 'image',
 						'max_bytes' => fusion_get_settings('avatar_filesize'),
 						'max_height' => fusion_get_settings('avatar_width'),
 						'max_width' => fusion_get_settings('avatar_height'),

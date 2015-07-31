@@ -554,6 +554,7 @@ function news_form() {
 		echo form_select('news_ialign', $locale['news_0218'], $options, $data['news_ialign']);
 	} else {
 		$file_input_options = array(
+			'upload_path' => IMAGES_N,
 			'max_width' => $news_settings['news_photo_max_w'],
 			'max_height' => $news_settings['news_photo_max_h'],
 			'max_byte' => $news_settings['news_photo_max_b'],
@@ -569,7 +570,7 @@ function news_form() {
 			'thumbnail2_h' => $news_settings['news_photo_h'],
 			'type' => 'image'
 		);
-		echo form_fileinput($locale['news_0216'], 'news_image', 'news_image', IMAGES_N, '', $file_input_options);
+		echo form_fileinput("news_image", $locale['news_0216'], "", $file_input_options);
 		echo "<div class='small m-b-10'>".sprintf($locale['news_0217'], parsebytesize($news_settings['news_photo_max_b']))."</div>\n";
 		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
 		echo form_select('news_ialign', $locale['news_0218'], $options, $data['news_ialign']);

@@ -209,7 +209,7 @@ class Admin {
 		}
 
 		echo openform('inputform', 'post', FUSION_SELF.$aidlink, array('enctype'=>1, 'max_tokens' => 1));
-		echo form_fileinput($locale['theme_1007'], 'theme_files', 'theme_files', '', '', array());
+		echo form_fileinput('theme_files', $locale['theme_1007'], '', array());
 		echo form_button('upload', $locale['theme_1007'], 'upload theme', array('class'=>'btn btn-primary'));
 		echo closeform();
 	}
