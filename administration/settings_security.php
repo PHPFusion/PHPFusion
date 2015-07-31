@@ -19,11 +19,7 @@ require_once "../maincore.php";
 pageAccess('S9');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-// maybe people will delete off user fields.
-$captcha_locale_file = LOCALE.LOCALESET."user_fields/user_grecaptcha.php";
-if (file_exists($captcha_locale_file)) {
-	include $captcha_locale_file;
-}
+
 add_breadcrumb(array('link'=>ADMIN."settings_security.php".$aidlink, 'title'=>$locale['security_settings']));
 $available_captchas = array();
 if ($temp = opendir(INCLUDES."captchas/")) {
@@ -36,71 +32,73 @@ if ($temp = opendir(INCLUDES."captchas/")) {
 if (isset($_POST['savesettings'])) {
 	$error = 0; // there is no need for this.
 
-	if (!defined('FUSION_NULL')) {
+	// Custom stuff
+	$privacy_policy = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy']));
+	$maintenance_message = addslash(descript($_POST['maintenance_message']));
 
-		// Custom stuff
-		$privacy_policy = addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['privacy_policy']));
-		$maintenance_message = addslash(descript($_POST['maintenance_message']));
-		// Save settings after validation
-		$StoreArray = array(
-						"captcha" => form_sanitizer($_POST['captcha'], "", "captcha"),
-						"privacy_policy" => $privacy_policy,
-						"flood_interval" => form_sanitizer($_POST['flood_interval'], 15, "flood_interval"),
-						"flood_autoban" => form_sanitizer($_POST['flood_autoban'], 1, "flood_autoban"),
-						"maintenance_level" => form_sanitizer($_POST['maintenance_level'], 102, "maintenance_level"),
-						"maintenance" => form_sanitizer($_POST['maintenance'], 0, "maintenance"),
-						"maintenance_message" => form_sanitizer($_POST['maintenance_message'], "", "maintenance_message"),
-						"bad_words_enabled" => form_sanitizer($_POST['bad_words_enabled'], 0, "bad_words_enabled"),
-						"bad_words" => form_sanitizer($_POST['bad_words'], "", "bad_words"),
-						"bad_word_replace" => form_sanitizer($_POST['bad_word_replace'], "", "bad_word_replace"),
-			);
+	// Save settings after validation
+	$StoreArray = array(
+					"captcha" => form_sanitizer($_POST['captcha'], "", "captcha"),
+					"privacy_policy" => $privacy_policy,
+					"flood_interval" => form_sanitizer($_POST['flood_interval'], 15, "flood_interval"),
+					"flood_autoban" => form_sanitizer($_POST['flood_autoban'], 1, "flood_autoban"),
+					"maintenance_level" => form_sanitizer($_POST['maintenance_level'], 102, "maintenance_level"),
+					"maintenance" => form_sanitizer($_POST['maintenance'], 0, "maintenance"),
+					"maintenance_message" => form_sanitizer($_POST['maintenance_message'], "", "maintenance_message"),
+					"bad_words_enabled" => form_sanitizer($_POST['bad_words_enabled'], 0, "bad_words_enabled"),
+					"bad_words" => form_sanitizer($_POST['bad_words'], "", "bad_words"),
+					"bad_word_replace" => form_sanitizer($_POST['bad_word_replace'], "", "bad_word_replace"),
+		);
 
-		// Validate extra fields
-		if ($StoreArray['captcha'] == "grecaptcha") {
-			// appends captcha settings
-			$StoreArray += array(
-				"recaptcha_public" => form_sanitizer($_POST['recaptcha_public'], "", "recaptcha_public"),
-				"recaptcha_private" => form_sanitizer($_POST['recaptcha_private'], "", "recaptcha_private"),
-				"recaptcha_theme" => form_sanitizer($_POST['recaptcha_theme'], "", "recaptcha_theme"),
-				"recaptcha_time" => form_sanitizer($_POST['recaptcha_time'], "", "recaptcha_time"),
-			);
-		}
-
-		if ($defender->safe()) {
-			foreach($StoreArray as $key => $value) {
-				$result = null;
-				if ($defender->safe()) {
-					$Array = array(
-						"settings_name" => $key,
-						"settings_value" => $value,
-					);
-					dbquery_insert(DB_SETTINGS, $Array, 'update', array("primary_key"=>"settings_name"));
-				}
-				print_p($key.'-'.$value);
-			}
-			addNotice('success', $locale['900']);
-		} else {
-			// send message your settings was not safe. :)
-			addNotice('danger', $locale['901']);
-			addNotice('danger', $locale['696']);
-			addNotice('danger', $locale['900']);
-		}
-		//redirect(FUSION_SELF.$aidlink);
+	// Validate extra fields
+	if ($StoreArray['captcha'] == "grecaptcha") {
+		// appends captcha settings
+		$StoreArray += array(
+			"recaptcha_public" => form_sanitizer($_POST['recaptcha_public'], "", "recaptcha_public"),
+			"recaptcha_private" => form_sanitizer($_POST['recaptcha_private'], "", "recaptcha_private"),
+			"recaptcha_theme" => form_sanitizer($_POST['recaptcha_theme'], "", "recaptcha_theme"),
+			"recaptcha_type" => form_sanitizer($_POST['recaptcha_type'], "", "recaptcha_type"),
+		);
 	}
+
+	if ($defender->safe()) {
+		foreach($StoreArray as $key => $value) {
+			$result = null;
+			if ($defender->safe()) {
+				$Array = array(
+					"settings_name" => $key,
+					"settings_value" => $value,
+				);
+				dbquery_insert(DB_SETTINGS, $Array, 'update', array("primary_key"=>"settings_name"));
+			}
+		}
+		addNotice('success', $locale['900']);
+	} else {
+		// send message your settings was not safe. :)
+		addNotice('danger', $locale['901']);
+		addNotice('danger', $locale['696']);
+		addNotice('danger', $locale['900']);
+	}
+	redirect(FUSION_SELF.$aidlink);
 }
 
 /**
- * Upgrade for Beta Testers
+ * Temporary Upgrade Patch
+ * Upgrade for Beta Testers, will remove this on Stable version.
+ * This is just a convenience for beta testers
  */
-$recaptcha_upgrade = dbcount("(settings_name)", DB_SETTINGS, "settings_name = 'recaptcha_time'");
+$recaptcha_upgrade = dbcount("(settings_name)", DB_SETTINGS, "settings_name = 'recaptcha_type'");
 if (!$recaptcha_upgrade) {
 	$newSettings = array(
-		"settings_name" => "recaptcha_time",
-		"settings_value" => 5,
+		"settings_name" => "recaptcha_type",
+		"settings_value" => "text",
 	);
 	dbquery_insert(DB_SETTINGS, $newSettings, "save",  array("primary_key"=>"settings_name", "keep_session"=>true));
 	addNotice("success", "System reCaptcha is now upgraded to v2");
 }
+/**
+ * end of upgrade
+ */
 
 opentable($locale['683']);
 echo "<div class='well'>".$locale['security_description']."</div>\n";
@@ -119,11 +117,8 @@ echo thumbnail(IMAGES."grecaptcha.png", "150px");
 echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
 echo form_text('recaptcha_public', $locale['grecaptcha_0100'], fusion_get_settings('recaptcha_public'), array("inline"=>true, "placeholder"=>$locale['grecaptcha_placeholder_1'], "required"=>true)); // site key
 echo form_text('recaptcha_private', $locale['grecaptcha_0101'], fusion_get_settings('recaptcha_private'), array("inline"=>true, "placeholder"=>$locale['grecaptcha_placeholder_2'], "required"=>true)); // secret key
-echo form_select('recaptcha_theme', $locale['grecaptcha_0102'], array(
-									  'light' => $locale['grecaptcha_0102a'], 'dark' => $locale['grecaptcha_0102b']
-								  ),
-				 fusion_get_settings('recaptcha_theme'), array("inline"=>true));
-echo form_text('recaptcha_time', $locale['grecaptcha_0103'], fusion_get_settings('recaptcha_time'), array("inline"=>true, "type"=>"number", "width"=>"150px", "placeholder"=>$locale['grecaptcha_placeholder_3'], "required"=>true));
+echo form_select('recaptcha_theme', $locale['grecaptcha_0102'], array("light" => $locale['grecaptcha_0102a'], "dark" => $locale['grecaptcha_0102b']), fusion_get_settings('recaptcha_theme'), array("inline"=>true));
+echo form_select('recaptcha_type', $locale['grecaptcha_0103'], array("text" => $locale['grecaptcha_0103a'], "audio" => $locale['grecaptcha_0103b']), fusion_get_settings('recaptcha_type'), array("inline"=>true, "type"=>"number", "width"=>"150px", "required"=>true));
 echo "</div>\n</div>\n";
 echo "</div>\n";
 closeside();

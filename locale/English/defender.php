@@ -11,6 +11,7 @@ $locale['error_input_url']		= 'Please enter a valid URL';
 $locale['error_input_regex']	= 'Please enter a valid pattern';
 $locale['error_input_safemode']	= 'Please fill out this field properly';
 $locale['error_input_check']	= 'Please fill out a correct field value';
+$locale['df_error_text'] = "%s has error and requires your attention.";
 
 // Admin Login
 $locale['cookie_title'] = "Session Timed Out";
@@ -71,4 +72,19 @@ $locale['df_421'] = "Image must be no bigger than %uw x %uh pixels.";
 $locale['df_422'] = "Unknown error (Query)";
 $locale['df_423'] = "Image was not uploaded properely. Please try again";
 
-$locale['df_error_text'] = "%s has error and requires your attention.";
+// ReCaptcha2
+$locale['grecaptcha'] = "Google Recaptcha";
+$locale['grecaptcha_desc'] = "Google Recaptcha Field Module";
+$locale['grecaptcha_placeholder_1'] = "SITE KEY from Google";
+$locale['grecaptcha_placeholder_2'] = "SECRET-KEY from Google";
+$locale['no_keys'] = "It looks like you don't have any keys yet. Register and obtain your <a href='https://www.google.com/recaptcha/admin' target='_BLANK'>public key here</a>";
+$locale['review_keys'] = "<a href='https://www.google.com/recaptcha/admin' target='_BLANK'><button class='button'>Review your keys at Google reCAPTCHA</button></a>";
+$locale['grecaptcha_0100'] = "Public Key";
+$locale['grecaptcha_0101'] = "Private Key";
+$locale['grecaptcha_0102'] = "Theme";
+$locale['grecaptcha_0102a'] = "Light";
+$locale['grecaptcha_0102b'] = "Dark";
+$locale['grecaptcha_0103'] = "Validation Type";
+$locale['grecaptcha_0103a'] = "Text";
+$locale['grecaptcha_0103b'] = "Audio";
+$locale['grecaptcha_warn'] = "Please enter your public and private reCAPTCHA key";

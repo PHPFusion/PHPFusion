@@ -30,5 +30,5 @@ $googleArray = array(
 $reCaptcha = new ReCaptcha($googleArray['secret']);
 $resp = $reCaptcha->verifyResponse($googleArray['ip'], $googleArray['captcha']);
 if ($resp != null && $resp->success && $error == null) {
-	$_CAPTCHA_IS_VALID = true; //Tell PHP-Fusion it was good...
+	$_CAPTCHA_IS_VALID = true;
 }

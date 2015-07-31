@@ -20,14 +20,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 if (!defined("IN_FUSION")) { die("Access Denied"); }
-include LOCALE.LOCALESET."user_fields/user_grecaptcha.php";
-//include_once INCLUDES."captchas/grecaptcha/functions.php";
 $_CAPTCHA_HIDE_INPUT = true;
 add_to_head("<script type='text/javascript' src='https://www.google.com/recaptcha/api.js?hl=".$locale['xml_lang']."'></script>");
-echo "<div class='g-recaptcha' data-theme='".fusion_get_settings("recaptcha_theme")."' data-sitekey='".fusion_get_settings("recaptcha_public")."'></div>\n";
-add_to_jquery("
-	$('.g-recaptcha').hide();
-	$('.g-recaptcha').delay(".fusion_get_settings("recaptcha_time")."000).fadeIn(1000);
-	$('.loading_container').show();
-	$('.loading_container').delay(".fusion_get_settings("recaptcha_time")."000).fadeOut(0);
-");
+echo "<div class='g-recaptcha' data-type='".fusion_get_settings("recaptcha_type")."' data-theme='".fusion_get_settings("recaptcha_theme")."' data-sitekey='".fusion_get_settings("recaptcha_public")."'></div>\n";
