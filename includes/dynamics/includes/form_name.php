@@ -15,14 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE, array $options) {
+function form_name($input_name, $label = "", $input_value = FALSE, array $options) {
 	global $defender, $locale;
-
-	$title = (isset($title) && (!empty($title))) ? $title : "";
-	$title2 = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
-	$input_id = (isset($input_id) && (!empty($input_id))) ? stripinput($input_id) : "";
-
+	$title = (isset($label) && (!empty($label))) ? $label : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$html = '';
 	// NOTE (remember to parse readback value as of '|' seperator)
 	if (isset($input_value) && (!empty($input_value))) {
@@ -35,7 +30,7 @@ function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 		$input_value['2'] = "";
 	}
 
-	$options += array(
+	$options += array('input_id' => !empty($options['input_id']) ? $options['input_id'] : $input_name,
 		'required' => !empty($options['required']) && $options['required'] == 1 ? '1' : '0',
 		'placeholder' => !empty($options['placeholder']) ? $options['placeholder'] : '',
 		'deactivate' => !empty($options['deactivate']) && $options['deactivate'] == 1 ? '1' : '0',
@@ -47,33 +42,30 @@ function form_name($title = FALSE, $input_name, $input_id, $input_value = FALSE,
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1'  : '0',
 	);
 	$error_class = $defender->inputHasError($input_name.'-firstname') || $defender->inputHasError($input_name.'-lastname') ? "has-error " : "";
-
-	$html .= "<div id='$input_id-field' class='form-group clearfix ".$error_class.$options['class']."' >\n";
-	$html .= ($title) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='$input_id'>$title ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+	$html .= "<div id='".$options['input_id']."-field' class='form-group clearfix ".$error_class.$options['class']."' >\n";
+	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] ? "<span class='required'>*</span>" : '')."</label>\n" : '';
 	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($title ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12 col-md-12 col-lg-12  p-l-0")."'>\n" : "";
 	$html .= "<div class='row p-l-15'>\n";
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10 p-l-0'>\n";
-	$html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$input_id."-firstname' value='".$input_value['0']."' placeholder='".$locale['first_name']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= ($options['required'] == 1 && $defender->inputHasError($input_name[0])) || $defender->inputHasError($input_name[0]) ?  "<div id='".$input_id."-firstname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$options['input_id']."-firstname' value='".$input_value['0']."' placeholder='".$locale['first_name']." ".($options['required'] ? '*' : '')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+	$html .= ($options['required'] == 1 && $defender->inputHasError($input_name[0])) || $defender->inputHasError($input_name[0]) ? "<div id='".$options['input_id']."-firstname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 m-b-10'>\n";
-	$html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$input_id."-lastname' value='".$input_value['1']."' placeholder='".$locale['last_name']." ".($options['required'] ? '*':'')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
-	$html .= ($options['required'] == 1 && $defender->inputHasError($input_name[1])) || $defender->inputHasError($input_name[1]) ?  "<div id='".$input_id."-lastname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
+	$html .= "<input type='text' name='".$input_name."[]' class='form-control textbox' id='".$options['input_id']."-lastname' value='".$input_value['1']."' placeholder='".$locale['last_name']." ".($options['required'] ? '*' : '')."' ".($options['deactivate'] == "1" ? "readonly" : '')." />\n";
+	$html .= ($options['required'] == 1 && $defender->inputHasError($input_name[1])) || $defender->inputHasError($input_name[1]) ? "<div id='".$options['input_id']."-lastname-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_2']."</div>" : "";
 	$html .= "</div>\n";
 
 	$html .= "</div>\n"; // close inner row
 	$html .= ($options['inline']) ? "</div>\n" : "";
 	$html .= "</div>\n";
-	$defender->add_field_session(array(
-									 'input_name' 	=> 	$input_name,
-									 'type'			=>	'name',
-									 'title'		=>	$title2,
-									 'id' 			=>	$input_id,
-									 'required'		=>	$options['required'],
-									 'safemode'		=> 	$options['safemode'],
-									 'error_text'	=> 	$options['error_text'],
-									 'error_text_2'	=> 	$options['error_text_2']
-								 ));
+	$defender->add_field_session(array('input_name' => $input_name,
+									 'type' => 'name',
+									 'title' => $title,
+									 'id' => $options['input_id'],
+									 'required' => $options['required'],
+									 'safemode' => $options['safemode'],
+									 'error_text' => $options['error_text'],
+									 'error_text_2' => $options['error_text_2']));
 	return $html;
 }
