@@ -139,15 +139,15 @@ closeside();
 openside('');
 echo "<span class='pull-right position-absolute small' style='right:30px;'>".$locale['537']."</span>\n";
 echo form_select('forum_edit_timelimit', $locale['536'], $forum_settings['forum_edit_timelimit'], array('options' => array('0',
-										   '10',
-										   '30',
-										   '45',
-										   '60'),
-										   'max_length' => 2,
-										   'width' => '100px',
-										   'required' => 1,
-										   'error_text' => $locale['error_value'],
-										   'inline' => 1));
+	'10',
+	'30',
+	'45',
+	'60'),
+	'max_length' => 2,
+	'width' => '100px',
+	'required' => 1,
+	'error_text' => $locale['error_value'],
+	'inline' => 1));
 echo form_select('forum_ips', $locale['507'], $forum_settings['forum_ips'], array('options' => $yes_no_array,
 	'error_text' => $locale['error_value'],
 	'inline' => 1));
@@ -225,7 +225,7 @@ $lastpost_opts = array('0' => $locale['519'], '1' => $locale['533']);
 for ($i = 2; $i <= 20; $i++) {
 	$array_opts[$i] = sprintf($locale['532'], $i);
 }
-if (isset($_GET['action']) && $_GET['action'] == "count_posts") echo form_alert($locale['524'], '', array('class' => 'warning'));
+if (isset($_GET['action']) && $_GET['action'] == "count_posts") echo alert($locale['524'], '', array('class' => 'warning'));
 echo "<div class='clearfix'>\n";
 echo form_select('popular_threads_timeframe', $locale['525'], $forum_settings['popular_threads_timeframe'], array('options' => $timeframe_opts,
 	'error_text' => $locale['error_value'],

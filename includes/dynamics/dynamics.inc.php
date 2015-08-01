@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -32,7 +33,6 @@ class dynamics {
 		require_once DYNAMICS."includes/form_select.php";
 		require_once DYNAMICS."includes/form_textarea.php";
 		require_once DYNAMICS."includes/form_hidden.php";
-		require_once DYNAMICS."includes/form_alert.php";
 		require_once DYNAMICS."includes/form_buttons.php";
 		require_once DYNAMICS."includes/form_ordering.php";
 		require_once DYNAMICS."includes/form_chain.php";
