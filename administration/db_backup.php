@@ -19,9 +19,7 @@ require_once "../maincore.php";
 pageAccess('DB');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/db-backup.php";
-
-add_breadcrumb(array('link'=>ADMIN.'db_backup.php'.$aidlink, 'title'=>$locale['450']));
-
+add_breadcrumb(array('link' => ADMIN.'db_backup.php'.$aidlink, 'title' => $locale['450']));
 function stripsiteinput($text) {
 	$search = array("&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " ");
 	$replace = array("", "", "", "", "", "", "", "", "");
@@ -123,7 +121,6 @@ if (isset($_POST['btn_create_backup'])) {
 		exit;
 	}
 }
-
 if (!isset($_POST['btn_do_restore']) && (!isset($_GET['action']) || $_GET['action'] != "restore")) {
 	$backup_files = makefilelist(ADMIN."db_backups/", ".|..|index.php", TRUE);
 	if (is_array($backup_files)) {
@@ -279,7 +276,10 @@ if (isset($_POST['btn_do_restore'])) {
 	echo "<a class='btn btn-primary' href=\"javascript:void(0)\" onclick=\"javascript:populateSelectNone()\">".$locale['437']."</a></div></td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td colspan='2' class='tbl'>\n";
-	echo form_text('user_admin_password', $locale['460'], '', array('type' => 'password', 'required' => 1, 'error_text' => $locale['460b'], 'inline' => 1));
+	echo form_text('user_admin_password', $locale['460'], '', array('type' => 'password',
+		'required' => 1,
+		'error_text' => $locale['460b'],
+		'inline' => 1));
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";
 	echo "<input type='hidden' name='file' value='$file' />\n";
@@ -326,7 +326,8 @@ if (isset($_POST['btn_do_restore'])) {
 	echo "</tr>\n<tr>\n";
 	echo "<td align='right' class='tbl'><label for='backup_filename'>".$locale['431']." <span class='required'>*</span>\n</td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('backup_filename', '', "backup_".stripsiteinput($settings['sitename'])."_".date('Y-m-d-Hi')."", array('required' => 1, 'error_text' => $locale['481b']));
+	echo form_text('backup_filename', '', "backup_".stripsiteinput($settings['sitename'])."_".date('Y-m-d-Hi')."", array('required' => 1,
+		'error_text' => $locale['481b']));
 	echo "</tr>\n<tr>\n";
 	echo "<td align='right' class='tbl'><label for='backup_type'>".$locale['455']."</label></td>\n";
 	echo "<td class='tbl'>\n";
@@ -335,11 +336,13 @@ if (isset($_POST['btn_do_restore'])) {
 		$opts['.gz'] = ".sql.gz ".$locale['456'];
 	}
 	$opts['.sql'] = ".sql";
-	echo form_select('backup_type', '', $opts, '', array('placeholder' => $locale['choose']));
+	echo form_select('backup_type', '', '', array('options' => $opts, 'placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td align='right' class='tbl'><label for='user_admin_password'>".$locale['460']."</label> <span class='required'>*</span></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_text('user_admin_password', '', '', array('type' => 'password', 'required' => 1, 'error_text' => $locale['460b']));
+	echo form_text('user_admin_password', '', '', array('type' => 'password',
+		'required' => 1,
+		'error_text' => $locale['460b']));
 	echo "</td>\n</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'><br /><span style='color:#ff0000'>*</span> ".$locale['461']."</td>\n";
 	echo "</tr>\n</tbody>\n</table>\n</td>\n";

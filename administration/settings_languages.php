@@ -19,9 +19,7 @@ require_once "../maincore.php";
 pageAccess('LANG');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
-add_breadcrumb(array('link'=>ADMIN."settings_languages.php".$aidlink, 'title'=>$locale['682ML']));
-
+add_breadcrumb(array('link' => ADMIN."settings_languages.php".$aidlink, 'title' => $locale['682ML']));
 $locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
 if (isset($_POST['savesettings'])) {
 	$error = 0;
@@ -64,16 +62,13 @@ if (isset($_POST['savesettings'])) {
 			$settings[$data['settings_name']] = $data['settings_value'];
 		}
 		if (($settings['enabled_languages'] != $_POST['old_enabled_languages']) && !$error) {
-
 			// Give the Administration new locale based on site´s main locale settings
 			$enabled_languages = explode('.', $settings['enabled_languages']);
 			$old_enabled_languages = explode('.', $old_enabled_languages);
-
 			// Sanitize users languages
 			for ($i = 0; $i < count($enabled_languages); $i++) {
 				$result = dbquery("UPDATE ".DB_USERS." SET user_language = '".$settings['locale']."' WHERE user_language !='".$enabled_languages[$i]."'");
 			}
-
 			// Sanitize and update panel languages
 			$panel_langs = "";
 			for ($i = 0; $i < count($enabled_languages); $i++) {
@@ -84,38 +79,32 @@ if (isset($_POST['savesettings'])) {
 			} else {
 				$result = dbquery("UPDATE ".DB_PANELS." SET panel_languages='".$settings['locale']."'");
 			}
-
 			// Sanitize news_cat_languages
-			if (db_exists(DB_NEWS_CATS)) { 
+			if (db_exists(DB_NEWS_CATS)) {
 				for ($i = 0; $i < count($enabled_languages); $i++) {
 					$result = dbquery("DELETE FROM ".DB_NEWS_CATS." WHERE news_cat_language !='".$enabled_languages[$i]."' AND news_cat_language !='".$settings['locale']."'");
 				}
 			}
-
 			// Sanitize blog_cat_languages
-			if (db_exists(DB_BLOG_CATS)) { 
+			if (db_exists(DB_BLOG_CATS)) {
 				for ($i = 0; $i < count($enabled_languages); $i++) {
 					$result = dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_language !='".$enabled_languages[$i]."' AND blog_cat_language !='".$settings['locale']."'");
 				}
 			}
-			
 			// Sanitize site links_languages
 			for ($i = 0; $i < count($enabled_languages); $i++) {
 				$result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_language !='".$enabled_languages[$i]."' AND link_language !='".$settings['locale']."'");
 			}
-
 			// Sanitize the email templates languages
 			for ($i = 0; $i < count($enabled_languages); $i++) {
 				$result = dbquery("DELETE FROM ".DB_EMAIL_TEMPLATES." WHERE template_language !='".$enabled_languages[$i]."' AND template_language !='".$settings['locale']."'");
 			}
-
 			// Sanitize forum rank languages
-			if (db_exists(DB_FORUM_RANKS)) { 
+			if (db_exists(DB_FORUM_RANKS)) {
 				for ($i = 0; $i < count($enabled_languages); $i++) {
 					$result = dbquery("DELETE FROM ".DB_FORUM_RANKS." WHERE rank_language !='".$enabled_languages[$i]."' AND rank_language !='".$settings['locale']."'");
 				}
 			}
-
 			// Update news cats with a new language if we have it
 			if (db_exists(DB_NEWS_CATS) && !empty($settings['enabled_languages'])) {
 				for ($i = 0; $i < count($enabled_languages); $i++) {
@@ -141,7 +130,6 @@ if (isset($_POST['savesettings'])) {
 					}
 				}
 			}
-
 			// Update blog cats with a new language if we have it
 			if (db_exists(DB_BLOG_CATS) && !empty($settings['enabled_languages'])) {
 				for ($i = 0; $i < count($enabled_languages); $i++) {
@@ -166,7 +154,6 @@ if (isset($_POST['savesettings'])) {
 					}
 				}
 			}
-
 			// Update site links with a new language if we have it
 			if (!empty($settings['enabled_languages'])) {
 				for ($i = 0; $i < count($enabled_languages); $i++) {
@@ -206,7 +193,6 @@ if (isset($_POST['savesettings'])) {
 					}
 				}
 			}
-
 			// Update the email template system locales
 			if (!empty($settings['enabled_languages'])) {
 				for ($i = 0; $i < count($enabled_languages); $i++) {
@@ -219,7 +205,6 @@ if (isset($_POST['savesettings'])) {
 					}
 				}
 			}
-
 			// Update the forum ranks locales
 			if (db_exists(DB_FORUM_RANKS) && !empty($settings['enabled_languages'])) {
 				for ($i = 0; $i < count($enabled_languages); $i++) {
@@ -384,7 +369,6 @@ if (isset($_POST['savesettings'])) {
 				$result = dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_name='".$locale['195']."' WHERE news_cat_language='".$old_localeset."' AND news_cat_image='windows.gif'");
 				$result = dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_language='".$localeset."' WHERE news_cat_language='".$old_localeset."'");
 			}
-			
 			// Update default blog cats with the set language
 			if (db_exists(DB_BLOG_CATS) && !empty($settings['enabled_languages'])) {
 				$result = dbquery("UPDATE ".DB_BLOG_CATS." SET blog_cat_name='".$locale['180']."' WHERE blog_cat_language='".$old_localeset."' AND blog_cat_image='bugs.gif'");
@@ -421,7 +405,6 @@ if (isset($_POST['savesettings'])) {
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['143']."' WHERE link_language='".$old_localeset."' AND link_url='submit.php?stype=p'");
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_name='".$locale['144']."' WHERE link_language='".$old_localeset."' AND link_url='submit.php?stype=d'");
 			$result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_language='".$localeset."' WHERE link_language='".$old_localeset."'");
-
 			// Update multilanguage tables with a new language if we have it
 			$result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$locale['MLT001']."' WHERE mlt_rights='AR'");
 			if (!$result) {
@@ -488,21 +471,20 @@ if (isset($_POST['savesettings'])) {
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-
 $settings2 = array();
 $result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS);
 while ($data = dbarray($result)) {
 	$settings2[$data['settings_name']] = $data['settings_value'];
 }
-
 opentable($locale['682ML']);
-
 echo "<div class='well'>".$locale['language_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<table class='table table-responsive'>\n<tbody>\n<tr>\n";
 echo "<td width='50%' class='tbl'><label for='localeset'>".$locale['417']."<label> <span class='required'>*</span></td>\n";
 echo "<td width='50%' class='tbl'>\n";
-echo form_select('localeset', '', $language_opts, $settings2['locale'], array('required' => 1, 'error_text' => $locale['error_value']));
+echo form_select('localeset', '', $settings2['locale'], array('options' => $language_opts,
+	'required' => TRUE,
+	'error_text' => $locale['error_value']));
 $locale_files = makefilelist(LOCALE, ".|..", TRUE, "folders");
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td valign='top' width='50%' class='tbl'><strong>".$locale['684ML']."</strong><br /><span class='small2'>".$locale['685ML']."</span></td>\n";
@@ -520,6 +502,5 @@ echo form_hidden('old_enabled_languages', '', $settings['enabled_languages']);
 echo "</td>\n</tr>\n</tbody></table>";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
-
 closetable();
 require_once THEMES."templates/footer.php";

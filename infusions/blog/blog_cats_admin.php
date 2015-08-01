@@ -19,7 +19,6 @@ require_once "../../maincore.php";
 pageAccess('BLC');
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."blog/locale/".LOCALESET."blog_cats_admin.php";
-
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'") || dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
@@ -88,13 +87,11 @@ $image_list = array();
 foreach ($image_files as $image) {
 	$image_list[$image] = $image;
 }
-
-add_breadcrumb(array('link'=>ADMIN.'blog_cats.php'.$aidlink, 'title'=>$openTable));
+add_breadcrumb(array('link' => ADMIN.'blog_cats.php'.$aidlink, 'title' => $openTable));
 opentable($openTable);
-
 $message = '';
 if (isset($_GET['status'])) {
-	switch($_GET['status']) {
+	switch ($_GET['status']) {
 		case 'sn':
 			$message = $locale['420'];
 			$status = 'success';
@@ -120,7 +117,6 @@ if (isset($_GET['status'])) {
 		addNotice($status, $icon.$message);
 	}
 }
-
 echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 echo "<td width='130' class='tbl'><label for='cat_name'>".$locale['430']."</label></td>\n";
@@ -129,26 +125,27 @@ echo form_text('cat_name', '', $cat_name, array('required' => 1, 'error_text' =>
 echo "</td>\n</tr>\n";
 echo "<tr><td width='130' class='tbl'><label for='cat_image'>".$locale['437']."</label></td>\n";
 echo "<td class='tbl'>\n";
-echo form_select_tree("cat_parent", "", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
+echo form_select_tree("cat_parent", "", $cat_parent, array("disable_opts" => $cat_hidden,
+	"hide_disabled" => 1), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
 echo "</td>\n</tr>\n";
 if (multilang_table("BL")) {
 	echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
 	$opts = get_available_languages_list($selected_language = "$cat_language");
 	echo "<td class='tbl'>\n";
-	echo form_select('cat_language', '', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
+	echo form_select('cat_language', '', $cat_language, array('options' => $language_opts,
+		'placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 } else {
 	echo form_hidden('cat_language', '', $cat_language);
 }
 echo "<tr><td width='130' class='tbl'><label for='cat_image'>".$locale['431']."</label></td>\n";
 echo "<td class='tbl'>\n";
-echo form_select('cat_image', '', $image_list, $cat_image, array('placeholder' => $locale['choose']));
+echo form_select('cat_image', '', $cat_image, array('options' => $image_list, 'placeholder' => $locale['choose']));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td align='center' colspan='2' class='tbl'><br />\n";
 echo form_button('save_cat', $locale['432'], $locale['432'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</table>\n</form>\n";
 closetable();
-
 opentable($locale['402']);
 $result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
 $rows = dbrows($result);

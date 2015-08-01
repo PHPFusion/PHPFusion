@@ -17,22 +17,18 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 pageAccess('A');
-
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
-
-add_breadcrumb(array('link'=>INFUSIONS.'articles/articles_admin.php'.$aidlink,'title'=>$locale['articles_0001']));
-
+add_breadcrumb(array('link' => INFUSIONS.'articles/articles_admin.php'.$aidlink, 'title' => $locale['articles_0001']));
 $settings = fusion_get_settings();
 if ($settings['tinymce_enabled'] == 1) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 } else {
 	require_once INCLUDES."html_buttons_include.php";
 }
-
 $message = '';
 if (isset($_GET['status'])) {
-	switch($_GET['status']) {
+	switch ($_GET['status']) {
 		case 'sn':
 			$message = $locale['articles_0100'];
 			$status = 'success';
@@ -53,9 +49,7 @@ if (isset($_GET['status'])) {
 		addNotice($status, $icon.$message);
 	}
 }
-
 $result = dbcount("(article_cat_id)", DB_ARTICLE_CATS." ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")."");
-
 if (!empty($result)) {
 	if (isset($_POST['save'])) {
 		$subject = stripinput($_POST['subject']);
@@ -115,10 +109,9 @@ if (!empty($result)) {
 			echo "</div>\n</div>\n";
 			closetable();
 		}
-
 		$result = dbquery("SELECT ta.article_cat, tac.article_cat_name, ta.article_id, ta.article_draft, ta.article_subject FROM ".DB_ARTICLES." ta
 						   LEFT JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
-						   ".(multilang_table("AR") ?  "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_draft DESC, article_datestamp DESC");
+						   ".(multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_draft DESC, article_datestamp DESC");
 		if (dbrows($result)) {
 			$editlist = array();
 			while ($data = dbarray($result)) {
@@ -127,7 +120,10 @@ if (!empty($result)) {
 			opentable($locale['articles_0000']);
 			echo openform('selectform', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('max_tokens' => 1));
 			echo "<div class='text-center'>\n";
-			echo form_select('article_id', '', $editlist, '', array('placeholder' => $locale['choose'], 'inline' => 1, 'class' => 'pull-left'));
+			echo form_select('article_id', '', '', array('options' => $editlist,
+				'placeholder' => $locale['choose'],
+				'inline' => 1,
+				'class' => 'pull-left'));
 			echo form_button('edit', $locale['edit'], $locale['edit'], array('class' => 'pull-left btn-primary m-l-10 m-r-10'));
 			echo form_button('delete', $locale['delete'], $locale['delete'], array('class' => 'pull-left btn-primary'));
 			add_to_jquery("
@@ -163,7 +159,6 @@ if (!empty($result)) {
 		}
 		if ((isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
 			opentable($locale['articles_0003']);
-
 		} else {
 			if (!isset($_POST['preview'])) {
 				$article_cat = '';
@@ -179,18 +174,18 @@ if (!empty($result)) {
 			}
 			opentable($locale['articles_0002']);
 		}
-
 		$visibility_opts = array();
 		$user_groups = getusergroups();
 		while (list($key, $user_group) = each($user_groups)) {
 			$visibility_opts[$user_group['0']] = $user_group['1'];
 		}
-
 		echo openform('input_form', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='article_cat'>".$locale['articles_0201']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select_tree("article_cat", "", $article_cat, array("no_root" => 1, "placeholder" => $locale['choose'], "query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
+		echo form_select_tree("article_cat", "", $article_cat, array("no_root" => 1,
+			"placeholder" => $locale['choose'],
+			"query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 		echo "</td>\n</tr>\n<tr>\n";
 		echo "<td width='100' class='tbl'><label for='subject'>".$locale['articles_0200']." <span class='required'>*</span></label></td>\n";
 		echo "<td class='tbl'>\n";
@@ -217,17 +212,19 @@ if (!empty($result)) {
 			echo display_html("input_form", "body2", TRUE, TRUE, TRUE, IMAGES_A);
 			echo "</td>\n</tr>\n";
 		}
-
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='keywords'>".$locale['articles_0204']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('keywords', '', array(), $keywords, array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['articles_0257'], 'tags'=>1, 'multiple' => 1));
+		echo form_select('keywords', '', $keywords, array('max_length' => 320,
+			'width' => '100%',
+			'error_text' => $locale['articles_0257'],
+			'tags' => 1,
+			'multiple' => 1));
 		echo "</td>\n</tr>\n";
-					
 		echo "<tr>\n<td valign='top' width='100' class='tbl'><label for='article_visibility'>".$locale['articles_0211']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('article_visibility', '', $visibility_opts, $data['article_visibility'], array('placeholder' => $locale['choose']));
+		echo form_select('article_visibility', '', $data['article_visibility'], array('options' => $visibility_opts,
+			'placeholder' => $locale['choose']));
 		echo "</td>\n</tr>\n";
-					
 		echo "<tr>\n";
 		echo "<td class='tbl'></td><td class='tbl'>\n";
 		echo "<label><input type='checkbox' name='article_draft' value='yes'".$draft." /> ".$locale['articles_0205']."</label><br />\n";
@@ -281,5 +278,4 @@ if (!empty($result)) {
 	echo "<a href='".INFUSIONS."articles/article_cats_admin.php".$aidlink."'>".$locale['articles_0254']."</a>".$locale['articles_0255']."</div>\n";
 	closetable();
 }
-
 require_once THEMES."templates/footer.php";

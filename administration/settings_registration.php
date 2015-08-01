@@ -19,9 +19,7 @@ require_once "../maincore.php";
 pageAccess('S4');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
-add_breadcrumb(array('link'=>ADMIN."settings_register.php".$aidlink, 'title'=>$locale['register_settings']));
-
+add_breadcrumb(array('link' => ADMIN."settings_register.php".$aidlink, 'title' => $locale['register_settings']));
 if ($settings['tinymce_enabled']) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 } else {
@@ -75,7 +73,6 @@ if (isset($_POST['savesettings'])) {
 	}
 	redirect(FUSION_SELF.$aidlink);
 }
-
 opentable($locale['register_settings']);
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 $opts = array('1' => $locale['518'], '0' => $locale['519']);
@@ -83,20 +80,18 @@ echo "<div class='well'>".$locale['register_description']."</div>\n";
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-echo form_select('enable_terms', $locale['558'], $opts, $settings2['enable_terms']);
-echo form_textarea('license_agreement', $locale['559'], $settings2['license_agreement'], array(
-	'form_name' => 'settingsform',
-	'input_id' => 'enable_license_agreement',
-	'autosize' => !$settings['tinymce_enabled'],
-	'html'=> !$settings['tinymce_enabled'])
-);
+echo form_select('enable_terms', $locale['558'], $settings2['enable_terms'], array("options" => $opts));
+echo form_textarea('license_agreement', $locale['559'], $settings2['license_agreement'], array('form_name' => 'settingsform',
+										  'input_id' => 'enable_license_agreement',
+										  'autosize' => !$settings['tinymce_enabled'],
+										  'html' => !$settings['tinymce_enabled']));
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('enable_registration', $locale['551'], $opts, $settings2['enable_registration']);
-echo form_select('email_verification', $locale['552'], $opts, $settings2['email_verification']);
-echo form_select('admin_activation', $locale['557'],  $opts, $settings2['admin_activation']);
-echo form_select('display_validation', $locale['553'], $opts, $settings2['display_validation']);
+echo form_select('enable_registration', $locale['551'], $settings2['enable_registration'], array("options" => $opts));
+echo form_select('email_verification', $locale['552'], $settings2['email_verification'], array("options" => $opts));
+echo form_select('admin_activation', $locale['557'], $settings2['admin_activation'], array("options" => $opts));
+echo form_select('display_validation', $locale['553'], $settings2['display_validation'], array("options" => $opts));
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));

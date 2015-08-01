@@ -111,7 +111,9 @@ if (dbrows($result)) {
 	}
 	opentable($locale['402']);
 	echo openform('editform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-	echo form_select('poll_id','', $editlist, '', array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
+	echo form_select('poll_id', '', '', array('options' => $editlist,
+		'placeholder' => $locale['choose'],
+		'class' => 'pull-left m-r-10'));
 	echo form_button('edit', $locale['421'], $locale['421'], array('class' => 'btn-primary m-r-10 pull-left'));
 	echo form_button('delete', $locale['422'], $locale['422'], array('class' => 'btn-primary pull-left'));
 	echo closeform();
@@ -161,7 +163,8 @@ echo "</td>\n</tr>\n";
 if (multilang_table("PO")) {
 	echo "<tr><td class='tbl'><label for='poll_language'>".$locale['global_ML100']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_select('poll_language', '', $language_opts, $poll_language, array('placeholder' => $locale['choose']));
+	echo form_select('poll_language', '', $poll_language, array('options' => $language_opts,
+		'placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 } else {
 	echo form_hidden('poll_language', '', $poll_language);

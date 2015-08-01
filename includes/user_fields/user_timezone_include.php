@@ -15,8 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 // Display user field input
 if ($profile_method == "input") {
 	$timezones = timezone_abbreviations_list();
@@ -31,11 +32,10 @@ if ($profile_method == "input") {
 		}
 	}
 	unset($timezones);
-	$options = array('inline'=>1, 'width' => '300px', 'input_id'=>'user_timezone');
-	$user_fields =  form_select('user_timezone', $locale['uf_timezone'], $timezoneArray, $field_value, $options);
-
+	$options = array('options' => $timezoneArray, 'inline' => 1, 'width' => '300px', 'input_id' => 'user_timezone');
+	$user_fields = form_select('user_timezone', $locale['uf_timezone'], $field_value, $options);
 	// Display in profile
 } elseif ($profile_method == "display") {
 	// Insert and update
-	$user_fields = array('title'=>$locale['uf_timezone'], 'value'=>$field_value);
+	$user_fields = array('title' => $locale['uf_timezone'], 'value' => $field_value);
 }

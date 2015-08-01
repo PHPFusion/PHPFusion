@@ -19,9 +19,7 @@ require_once "../maincore.php";
 pageAccess('S2');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
-add_breadcrumb(array('link'=>ADMIN."settings_time.php".$aidlink, 'title'=>$locale['time_settings']));
-
+add_breadcrumb(array('link' => ADMIN."settings_time.php".$aidlink, 'title' => $locale['time_settings']));
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	if (!defined('FUSION_NULL')) {
@@ -108,27 +106,31 @@ echo "<td valign='top' class='tbl'><strong>".$locale['458']." (".$locale['461'].
 echo "<td class='tbl'>".strftime($settings2['longdate'], time()+(($settings2['serveroffset']+$settings2['timeoffset'])*3600))."</td>\n";
 echo "</tr>\n</tbody>";
 echo "</table>\n";
-
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_select('shortdate', $locale['451'], $date_opts, $settings2['shortdate'], array('placeholder' => $locale['455']));
-echo form_select('longdate', $locale['452'], $date_opts, $settings2['longdate'], array('placeholder' => $locale['455']));
-echo form_select('forumdate', $locale['453'], $date_opts, $settings2['forumdate'], array('placeholder' => $locale['455']));
-echo form_select('newsdate', $locale['457'], $date_opts, $settings2['newsdate'], array('placeholder' => $locale['455']));
-echo form_select('subheaderdate', $locale['454'], $date_opts, $settings2['subheaderdate'], array('placeholder' => $locale['455']));
+echo form_select('shortdate', $locale['451'], $settings2['shortdate'], array('options' => $date_opts,
+	'placeholder' => $locale['455']));
+echo form_select('longdate', $locale['452'], $settings2['longdate'], array('options' => $date_opts,
+	'placeholder' => $locale['455']));
+echo form_select('forumdate', $locale['453'], $settings2['forumdate'], array('options' => $date_opts,
+	'placeholder' => $locale['455']));
+echo form_select('newsdate', $locale['457'], $settings2['newsdate'], array('options' => $date_opts,
+	'placeholder' => $locale['455']));
+echo form_select('subheaderdate', $locale['454'], $settings2['subheaderdate'], array('options' => $date_opts,
+	'placeholder' => $locale['455']));
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_select('serveroffset',$locale['463'], $timezoneArray, $settings2['serveroffset']);
-echo form_select('timeoffset', $locale['456'], $timezoneArray, $settings2['timeoffset']);
-echo form_select('default_timezone', $locale['464'], $timezoneArray, $settings2['default_timezone']);
+echo form_select('serveroffset', $locale['463'], $settings2['serveroffset'], array("options" => $timezoneArray));
+echo form_select('timeoffset', $locale['456'], $settings2['timeoffset'], array("options" => $timezoneArray));
+echo form_select('default_timezone', $locale['464'], $settings2['default_timezone'], array("options" => $timezoneArray));
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_select('week_start', $locale['465'], $weekdayslist, $settings2['week_start']);
+echo form_select('week_start', $locale['465'], $settings2['week_start'], array("options" => $weekdayslist));
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));

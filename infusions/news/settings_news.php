@@ -153,7 +153,10 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
-	".form_select('calc_c', '', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	".form_select('calc_c', '', $calc_c, array('options' => $calc_opts,
+		'placeholder' => $locale['choose'],
+		'class' => 'pull-left',
+		'width' => '180px'))."
 	</div>
 </div>
 ";
@@ -161,10 +164,10 @@ closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('news_image_link', $locale['951'], $opts, $settings2['news_image_link']);
-echo form_select('news_image_frontpage', $locale['957'], $cat_opts, $settings2['news_image_frontpage']);
-echo form_select('news_image_readmore',$locale['958'], $cat_opts, $settings2['news_image_readmore']);
-echo form_select('news_thumb_ratio', $locale['954'], $thumb_opts, $settings2['news_thumb_ratio']);
+echo form_select('news_image_link', $locale['951'], $settings2['news_image_link'], array("options" => $opts));
+echo form_select('news_image_frontpage', $locale['957'], $settings2['news_image_frontpage'], array("options" => $cat_opts));
+echo form_select('news_image_readmore', $locale['958'], $settings2['news_image_readmore'], array("options" => $cat_opts));
+echo form_select('news_thumb_ratio', $locale['954'], $settings2['news_thumb_ratio'], array("options" => $thumb_opts));
 closeside();
 echo "</div></div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary'));

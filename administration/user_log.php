@@ -19,13 +19,10 @@ require_once "../maincore.php";
 pageAccess('UL');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/user_log.php";
-
-add_breadcrumb(array('link'=>ADMIN.'administrators.php'.$aidlink, 'title'=>$locale['100']));
-
+add_breadcrumb(array('link' => ADMIN.'administrators.php'.$aidlink, 'title' => $locale['100']));
 if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
 	$_GET['rowstart'] = 0;
 }
-
 // Set default values
 $dbOrder = "ORDER BY userlog_timestamp DESC";
 $dbWhere = "";
@@ -35,7 +32,9 @@ $orderby = "userlog_timestamp";
 $expr = "DESC";
 $user = "";
 $userField = "";
-$orderbyArray = array($locale['102'] => "userlog_timestamp", $locale['103'] => "user_name", $locale['104'] => "userlog_field");
+$orderbyArray = array($locale['102'] => "userlog_timestamp",
+	$locale['103'] => "user_name",
+	$locale['104'] => "userlog_field");
 $exprArray = array("DESC", "ASC");
 if (isset($_POST) && !empty($_POST)) {
 	if (isset($_POST['orderby']) && in_array($_POST['orderby'], $orderbyArray)) {
@@ -111,8 +110,10 @@ echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-b
 echo "<tr>\n";
 echo "<td class='tbl1' align='left'><label for='orderby'>".$locale['107']."</label></td>\n";
 echo "<td class='tbl1' style='align:right;'>\n";
-echo form_select('orderby', '', orderbyOptions(), $orderby, array('placholder' => $locale['choose'], 'class' => 'pull-right m-r-10'));
-echo form_select('expr', '', exprOptions(), $orderby, array('placholder' => $locale['choose']));
+echo form_select('orderby', '', $orderby, array('options' => orderbyOptions(),
+	'placholder' => $locale['choose'],
+	'class' => 'pull-right m-r-10'));
+echo form_select('expr', '', $orderby, array('options' => exprOptions(), 'placholder' => $locale['choose']));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl1' align='left'><label for='user'>".$locale['108']."</label></td>\n";
 echo "<td class='tbl1' align='right'>\n";
@@ -120,7 +121,9 @@ echo form_text('user', '', $user);
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl1'><label for='userField'>".$locale['115']."</label></td>";
 echo "<td class='tbl1'>\n";
-echo form_select('userField', '', userFieldOptions(), $userField, array('placeholder' => $locale['choose'], 'allowclear' => 1));
+echo form_select('userField', '', $userField, array('options' => userFieldOptions(),
+	'placeholder' => $locale['choose'],
+	'allowclear' => 1));
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl' align='left'></td>\n<td class='tbl' align='right'>\n";
 echo form_button('submit', $locale['109'], $locale['109'], array('class' => 'btn-primary'));
@@ -171,7 +174,11 @@ echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-b
 echo "<tr>\n";
 echo "<td class='tbl' width='50%'><label for='delete'>".$locale['110'].":</label></td>\n";
 echo "<td class='tbl1' align='right'>\n";
-echo form_text('delete', '', '', array('max_length' => 3, 'number' => 1, 'placeholder' => $locale['111'], 'inline' => 1, 'width' => '100px'));
+echo form_text('delete', '', '', array('max_length' => 3,
+	'number' => 1,
+	'placeholder' => $locale['111'],
+	'inline' => 1,
+	'width' => '100px'));
 echo form_button('submit', $locale['109'], $locale['109'], array('class' => 'btn-primary'));
 echo "</td>\n";
 echo "</tr>\n";

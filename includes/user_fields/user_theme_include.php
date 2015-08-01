@@ -15,26 +15,25 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 // Display user field input
 if ($profile_method == "input") {
 	if (fusion_get_settings('userthemes') == 1 || iADMIN) {
 		$theme_files = makefilelist(THEMES, ".|..|admin_templates|templates|.svn", TRUE, "folders");
 		array_unshift($theme_files, "Default");
 		$theme_opts = array();
-		foreach($theme_files as $theme) {
+		foreach ($theme_files as $theme) {
 			$theme_opts[$theme] = $theme;
 		}
-		$options = array('inline'			=> 1,
-						 'callback_check' 	=> 'theme_exists',
-						 // TODO: Change the error text in case a value was entered but is not valid
-						 'error_text'		=> $locale['uf_theme_error']
-						 );
-		$user_fields = form_select('user_theme',$locale['uf_theme'], $theme_opts, $field_value, $options);
+		$options = array('options' => $theme_opts,
+			'inline' => TRUE,
+			'callback_check' => 'theme_exists',
+			'error_text' => $locale['uf_theme_error']);
+		$user_fields = form_select('user_theme', $locale['uf_theme'], $field_value, $options);
 	}
-
-// Display in profile
+	// Display in profile
 } elseif ($profile_method == "display") {
 	// no to display
 }

@@ -19,7 +19,6 @@ require_once "../maincore.php";
 pageAccess('MAIL');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/emails.php";
-
 if (isset($_POST['save_template'])) {
 	$template_id = form_sanitizer($_POST['template_id'], '', 'template_id');
 	$template_format = form_sanitizer($_POST['template_format'], '', 'template_format');
@@ -84,14 +83,11 @@ foreach ($template as $id => $tname) {
 	$tab_title['id'][$id] = $id;
 	$tab_title['icon'][$id] = '';
 }
-
 $tab_id = array_values($tab_title['id']);
 $_GET['section'] = isset($_GET['section']) && isnum($_GET['section']) ? $_GET['section'] : $tab_id[0];
 $tab_active = $_GET['section'];
-
 echo opentab($tab_title, $tab_active, 'menu', 1);
 echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $tab_active, 1);
-
 $result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id='".intval($_GET['section'])."' LIMIT 1");
 if (dbrows($result)) {
 	$data = dbarray($result);
@@ -121,9 +117,7 @@ if (dbrows($result)) {
 		$html_text = $locale['419'];
 	}
 }
-
-add_breadcrumb(array('link'=>ADMIN.$aidlink, 'title'=>$locale['400']));
-
+add_breadcrumb(array('link' => ADMIN.$aidlink, 'title' => $locale['400']));
 opentable($locale['400']);
 require_once INCLUDES."html_buttons_include.php";
 echo openform('emailtemplateform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
@@ -134,7 +128,8 @@ echo "<td class='tbl1'>\n";
 $opts = array('1' => $locale['424'], // yes
 	'0' => $locale['425'] // no
 );
-echo form_select('template_active', '', $opts, $data['template_active'], array('placeholder' => $locale['choose']));
+echo form_select('template_active', '', $data['template_active'], array('options' => $opts,
+	'placeholder' => $locale['choose']));
 echo "<div class='m-t-10'>\n";
 echo "<div id='active_info' ".$template_active_info." >".sprintf($locale['422'], $html_text)."</div>\n";
 echo "<div id='inactive_info' ".$template_inactive_info." >".$locale['423']."</div>\n";
@@ -144,7 +139,8 @@ echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' width='1%' style='vertical-align:top; white-space:nowrap;'><label for='template_format'>".$locale['426']."</label></td>\n";
 echo "<td class='tbl1'>\n";
 $opts = array('html' => $locale['418'], 'plain' => $locale['419']);
-echo form_select('template_format', '', $opts, $data['template_format'], array('placeholder' => $locale['choose']));
+echo form_select('template_format', '', $data['template_format'], array('options' => $opts,
+	'placeholder' => $locale['choose']));
 echo "<div id='html_info' class='m-t-10 ".$html_active_info."' >".$locale['427']."</div>\n";
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
@@ -156,7 +152,8 @@ if ($template_key == "CONTACT") {
 }
 echo "</label>\n <span class='required'>*</span></td>\n";
 echo "<td class='tbl1'>\n";
-echo form_text('template_sender_name', '', $template_sender_name, array('required' => 1, 'error_text' => $locale['472']));
+echo form_text('template_sender_name', '', $template_sender_name, array('required' => 1,
+	'error_text' => $locale['472']));
 if ($template_key == "CONTACT") {
 	echo "&nbsp;<span class='small'>(".$locale['430'].")</span>\n";
 }
@@ -170,7 +167,8 @@ if ($template_key == "CONTACT") {
 }
 echo "</label> <span class='required'>*</span></td>\n";
 echo "<td class='tbl1'>\n";
-echo form_text('template_sender_email', '', $template_sender_email, array('required' => 1, 'error_text' => $locale['473']));
+echo form_text('template_sender_email', '', $template_sender_email, array('required' => 1,
+	'error_text' => $locale['473']));
 if ($template_key == "CONTACT") {
 	echo "&nbsp;<span class='small'>(".$locale['433'].")</span>\n";
 }
@@ -178,9 +176,11 @@ echo "</td>\n";
 echo "</tr>\n";
 if (multilang_table("ET")) {
 	echo "<tr><td class='tbl'><label for='template_language'>".$locale['global_ML100']."</label></td>\n";
+	// ?????
 	$opts = get_available_languages_list($selected_language = "$template_language");
 	echo "<td class='tbl'>\n";
-	echo form_select('template_language', '', $language_opts, $template_language, array('placeholder' => $locale['choose']));
+	echo form_select('template_language', '', $template_language, array('options' => $language_opts,
+		'placeholder' => $locale['choose']));
 	echo "</td>\n</tr>\n";
 } else {
 	echo form_hidden('template_language', '', $template_language);
@@ -223,7 +223,9 @@ $opts = array();
 foreach ($image_files as $image) {
 	$opts[$image] = $image;
 }
-echo form_select('insertimage', '', $opts, '', array('placeholder' => $locale['469'], 'allowclear' => 1));
+echo form_select('insertimage', '', '', array("options" => $opts,
+	"placeholder" => $locale['469'],
+	"allowclear" => TRUE));
 echo "</div>\n";
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
@@ -240,7 +242,6 @@ echo "</form>\n";
 echo closetabbody();
 echo closetab();
 closetable();
-
 if (isset($_GET['section']) && isnum($_GET['section']) || isset($_POST['section']) && isnum($_POST['section'])) {
 	opentable($locale['450']);
 	echo "<table class='table table-responsive center' cellpadding='1' cellspacing='0'>\n<tbody>\n";

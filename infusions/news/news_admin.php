@@ -227,7 +227,10 @@ echo "
 	</div>
 	<div class='col-xs-12 col-sm-9'>
 	".form_text('calc_b', '', $calc_b, array('required' => 1, 'number' => 1, 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4, 'class' => 'pull-left m-r-10'))."
-	".form_select('calc_c', '', $calc_opts, $calc_c, array('placeholder' => $locale['choose'], 'class' => 'pull-left', 'width' => '180px'))."
+	".form_select('calc_c', '', $calc_c, array('options' => $calc_opts,
+		'placeholder' => $locale['choose'],
+		'class' => 'pull-left',
+		'width' => '180px'))."
 	</div>
 </div>
 ";
@@ -235,11 +238,11 @@ closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('news_image_link', $locale['951'], $opts, $settings2['news_image_link']);
-echo form_select('news_image_frontpage', $locale['957'], $cat_opts, $settings2['news_image_frontpage']);
-echo form_select('news_image_readmore',$locale['958'], $cat_opts, $settings2['news_image_readmore']);
-echo form_select('news_thumb_ratio', $locale['954'], $thumb_opts, $settings2['news_thumb_ratio']);
-closeside();
+	echo form_select('news_image_link', $locale['951'], $settings2['news_image_link'], array("options" => $opts));
+	echo form_select('news_image_frontpage', $locale['957'], $settings2['news_image_frontpage'], array("options" => $cat_opts));
+	echo form_select('news_image_readmore', $locale['958'], $settings2['news_image_readmore'], array("options" => $cat_opts));
+	echo form_select('news_thumb_ratio', $locale['954'], $settings2['news_thumb_ratio'], array("options" => $thumb_opts));
+	closeside();
 echo "</div></div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-primary'));
 
@@ -525,7 +528,11 @@ function news_form() {
 	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 	echo form_text('news_subject', $locale['news_0200'], $data['news_subject'], array('required' => 1, 'max_length' => 200, 'error_text' => $locale['news_0250']));
 	// move keywords here because it's required
-	echo form_select('news_keywords', $locale['news_0205'], array(), $data['news_keywords'], array('max_length' => 320, 'width'=>'100%', 'error_text' => $locale['news_0255'], 'tags'=>1, 'multiple' => 1));
+	echo form_select('news_keywords', $locale['news_0205'], $data['news_keywords'], array('max_length' => 320,
+		'width' => '100%',
+		'error_text' => $locale['news_0255'],
+		'tags' => 1,
+		'multiple' => 1));
 	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
 	echo form_datepicker('news_start', $locale['news_0206'], $data['news_start'], array('placeholder' => $locale['news_0208']));
 	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
@@ -550,8 +557,10 @@ function news_form() {
 		echo "<input type='hidden' name='news_image' value='".$data['news_image']."' />\n";
 		echo "<input type='hidden' name='news_image_t1' value='".$data['news_image_t1']."' />\n";
 		echo "<input type='hidden' name='news_image_t2' value='".$data['news_image_t2']."' />\n";
-		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select('news_ialign', $locale['news_0218'], $options, $data['news_ialign']);
+		$alignOptions = array('pull-left' => $locale['left'],
+			'news-img-center' => $locale['center'],
+			'pull-right' => $locale['right']);
+		echo form_select('news_ialign', $locale['news_0218'], $data['news_ialign'], array("options" => $alignOptions));
 	} else {
 		$file_input_options = array(
 			'upload_path' => IMAGES_N,
@@ -572,8 +581,10 @@ function news_form() {
 		);
 		echo form_fileinput("news_image", $locale['news_0216'], "", $file_input_options);
 		echo "<div class='small m-b-10'>".sprintf($locale['news_0217'], parsebytesize($news_settings['news_photo_max_b']))."</div>\n";
-		$options = array('pull-left'=>$locale['left'], 'news-img-center'=>$locale['center'], 'pull-right'=>$locale['right']);
-		echo form_select('news_ialign', $locale['news_0218'], $options, $data['news_ialign']);
+		$alignOptions = array('pull-left' => $locale['left'],
+			'news-img-center' => $locale['center'],
+			'pull-right' => $locale['right']);
+		echo form_select('news_ialign', $locale['news_0218'], $data['news_ialign'], array("options" => $alignOptions));
 	}
 	$fusion_mce = array();
 	if (!$settings['tinymce_enabled']) {
@@ -585,12 +596,16 @@ function news_form() {
 	echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 	openside('');
 	if (multilang_table("NS")) {
-		echo form_select('news_language', $locale['global_ML100'], $language_opts, $data['news_language'], array('placeholder' => $locale['choose'], 'width' => '100%'));
+		echo form_select('news_language', $locale['global_ML100'], $data['news_language'], array('options' => fusion_get_enabled_languages(),
+			'placeholder' => $locale['choose'],
+			'width' => '100%'));
 	} else {
 		echo form_hidden('news_language', '', $data['news_language']);
 	}
 	echo form_hidden('news_datestamp', '', $data['news_datestamp']);
-	echo form_select('news_visibility', $locale['news_0209'], getgroupOpts(), $data['news_visibility'], array('placeholder' => $locale['choose'], 'width' => '100%'));
+	echo form_select('news_visibility', $locale['news_0209'], $data['news_visibility'], array('options' => getgroupOpts(),
+		'placeholder' => $locale['choose'],
+		'width' => '100%'));
 	closeside();
 	openside('');
 	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {

@@ -19,9 +19,7 @@ require_once "../maincore.php";
 pageAccess('S7');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
-add_breadcrumb(array('link'=>ADMIN."settings_messages.php".$aidlink, 'title'=>$locale['message_settings']));
-
+add_breadcrumb(array('link' => ADMIN."settings_messages.php".$aidlink, 'title' => $locale['message_settings']));
 $count = 0;
 if (isset($_POST['saveoptions'])) {
 	if (!defined('FUSION_NULL')) {
@@ -51,16 +49,20 @@ echo "<div class='row'>";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 openside('');
 echo "<span class='pull-right m-b-10 text-smaller'>".$locale['704']."</span>\n";
-echo form_text('pm_inbox', $locale['701'], $pm_inbox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
-echo form_text('pm_sentbox', $locale['702'], $pm_sentbox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
-echo form_text('pm_savebox', $locale['703'], $pm_savebox, array('max_length' => 4, 'width' => '100px', 'inline'=>1));
+echo form_text('pm_inbox', $locale['701'], $pm_inbox, array('max_length' => 4, 'width' => '100px', 'inline' => 1));
+echo form_text('pm_sentbox', $locale['702'], $pm_sentbox, array('max_length' => 4, 'width' => '100px', 'inline' => 1));
+echo form_text('pm_savebox', $locale['703'], $pm_savebox, array('max_length' => 4, 'width' => '100px', 'inline' => 1));
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 openside('');
 $opts = array('0' => $locale['519'], '1' => $locale['518'],);
-echo form_select('pm_email_notify',$locale['709'], $opts, $options['pm_email_notify'], array('inline'=>1, 'width'=>'100%'));
-echo form_select('pm_save_sent',$locale['710'], $opts, $options['pm_save_sent'],  array('inline'=>1, 'width'=>'100%'));
+echo form_select('pm_email_notify', $locale['709'], $options['pm_email_notify'], array('options' => $opts,
+	'inline' => TRUE,
+	'width' => '100%'));
+echo form_select('pm_save_sent', $locale['710'], $options['pm_save_sent'], array('options' => $opts,
+	'inline' => 1,
+	'width' => '100%'));
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('saveoptions', $locale['750'], $locale['750'], array('class' => 'btn-success'));

@@ -19,13 +19,10 @@ require_once "../maincore.php";
 pageAccess("UG");
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/user_groups.php";
-
-add_breadcrumb(array('link'=>ADMIN.'user_groups.php'.$aidlink, 'title'=>$locale['420']));
-
+add_breadcrumb(array('link' => ADMIN.'user_groups.php'.$aidlink, 'title' => $locale['420']));
 if (isset($_POST['group_id']) && isnum($_POST['group_id'])) {
 	$_GET['group_id'] = $_POST['group_id'];
 }
-
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "su") {
 		$message = $locale['400'];
@@ -46,7 +43,6 @@ if (isset($_GET['status']) && !isset($message)) {
 		echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
 	}
 }
-
 if (isset($_POST['save_group'])) {
 	$group_name = form_sanitizer($_POST['group_name'], '', 'group_name');
 	$group_description = stripinput($_POST['group_description']);
@@ -77,7 +73,6 @@ if (isset($_POST['save_group'])) {
 			}
 		}
 	}
-
 	if ($check_count > 0) {
 		$result = dbquery("SELECT user_id,user_name,user_groups FROM ".DB_USERS." WHERE user_id IN($user_ids)");
 		while ($data = dbarray($result)) {
@@ -113,7 +108,11 @@ if (isset($_POST['save_group'])) {
 	if ($check_count > 0) {
 		$result = dbquery("SELECT user_id,user_name,user_groups FROM ".DB_USERS." WHERE user_id IN($user_ids) AND user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')");
 		while ($data = dbarray($result)) {
-			$user_groups = preg_replace(array("(^\.{$_GET['group_id']}$)", "(\.{$_GET['group_id']}\.)", "(\.{$_GET['group_id']}$)"), array("", ".", ""), $data['user_groups']);
+			$user_groups = preg_replace(array("(^\.{$_GET['group_id']}$)",
+											"(\.{$_GET['group_id']}\.)",
+											"(\.{$_GET['group_id']}$)"), array("",
+											".",
+											""), $data['user_groups']);
 			$result2 = dbquery("UPDATE ".DB_USERS." SET user_groups='$user_groups' WHERE user_id='".$data['user_id']."'");
 		}
 		redirect(FUSION_SELF.$aidlink."&status=remsel");
@@ -124,7 +123,11 @@ if (isset($_POST['save_group'])) {
 	$result = dbquery("SELECT user_id,user_name,user_groups FROM ".DB_USERS." WHERE user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')");
 	while ($data = dbarray($result)) {
 		$user_groups = $data['user_groups'];
-		$user_groups = preg_replace(array("(^\.{$_GET['group_id']}$)", "(\.{$_GET['group_id']}\.)", "(\.{$_GET['group_id']}$)"), array("", ".", ""), $user_groups);
+		$user_groups = preg_replace(array("(^\.{$_GET['group_id']}$)",
+										"(\.{$_GET['group_id']}\.)",
+										"(\.{$_GET['group_id']}$)"), array("",
+										".",
+										""), $user_groups);
 		$result2 = dbquery("UPDATE ".DB_USERS." SET user_groups='$user_groups' WHERE user_id='".$data['user_id']."'");
 	}
 	redirect(FUSION_SELF.$aidlink."&status=remall");
@@ -144,7 +147,9 @@ if (dbrows($result)) {
 	while ($data = dbarray($result)) {
 		$sel_opts[$data['group_id']] = "ID: ".$data['group_id']." - ".$data['group_name'];
 	}
-	echo form_select('group_id', '', $sel_opts, '', array('placeholder' => $locale['choose'], 'class' => 'pull-left'));
+	echo form_select('group_id', '', '', array('options' => $sel_opts,
+		'placeholder' => $locale['choose'],
+		'class' => 'pull-left'));
 	echo form_button('edit', $locale['421'], $locale['421'], array('class' => 'btn-primary m-l-10 pull-left'));
 	echo form_button('delete', $locale['422'], $locale['422'], array('class' => 'btn-primary m-l-10 pull-left'));
 	echo closeform();
@@ -167,7 +172,6 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	$form_action = FUSION_SELF.$aidlink;
 	opentable($locale['431']);
 }
-
 echo openform('editform', 'post', $form_action, array('max_tokens' => 1));
 echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tbody>\n";
 echo "<tr>\n<td class='tbl' width='1%' style='white-space:nowrap;'><label for='group_name'>".$locale['432']."</label></td>\n";
@@ -180,11 +184,11 @@ echo "</td>\n</tr>\n<tr>\n<td align='center' colspan='2' class='tbl'><br />\n";
 echo form_button('save_group', $locale['434'], $locale['434'], array('class' => 'btn-primary'));
 echo "</td>\n</tr>\n</tbody>\n</table>\n</form>";
 closetable();
-
 if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	opentable($locale['440']);
 	if (!isset($_POST['search_users'])) {
-		echo openform('searchform', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1, 'notice' => 0));
+		echo openform('searchform', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1,
+			'notice' => 0));
 		echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n";
 		echo "<tr>\n<td align='center' class='tbl'><div class='well'>".$locale['441']."<br />".$locale['442']."</div>\n";
 		echo form_text('search_criteria', '', '');
@@ -217,7 +221,8 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 			$result = dbquery("SELECT user_id,user_name,user_groups,user_level FROM ".DB_USERS." WHERE ".$mysql_search." ORDER BY user_level DESC, user_name");
 		}
 		if (isset($result) && dbrows($result)) {
-			echo openform('add_users_form', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1, 'notice' => 0));
+			echo openform('add_users_form', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1,
+				'notice' => 0));
 			echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
 			$i = 0;
 			$users = "";
@@ -251,9 +256,9 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 		}
 	}
 	closetable();
-
 	opentable($locale['460']);
-	echo openform('rem_users_form', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1, 'notice' => 0));
+	echo openform('rem_users_form', 'post', FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id'], array('max_tokens' => 1,
+		'notice' => 0));
 	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
 	$rows = dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')");
 	if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
@@ -283,12 +288,10 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	}
 	echo "</table>\n";
 	echo closeform();
-
 	if ($rows > 20) {
 		echo "<div align='center' style='margin-top:5px;'>\n".makePageNav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF.$aidlink."&amp;group_id=".$_GET['group_id']."&amp;")."\n</div>\n";
 	}
 	closetable();
-
 	echo "<script type='text/javascript'>\n";
 	echo "/* <![CDATA[ */\n";
 	echo "function setChecked(frmName,chkName,val) {"."\n";
@@ -298,7 +301,6 @@ if (isset($_GET['group_id']) && isnum($_GET['group_id'])) {
 	echo "/* ]]>*/\n";
 	echo "</script>\n";
 }
-
 echo "<script type='text/javascript'>\n";
 echo "/* <![CDATA[ */\n";
 echo "function DeleteGroup() {\n";

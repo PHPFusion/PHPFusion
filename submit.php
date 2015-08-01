@@ -24,14 +24,12 @@ if (!iMEMBER) {
 }
 $stype = filter_input(INPUT_GET, 'stype') ? : '';
 $submit_info = array();
-$modules = array(
-	'n' => db_exists(DB_NEWS),
+$modules = array('n' => db_exists(DB_NEWS),
 	'p' => db_exists(DB_PHOTO_ALBUMS),
 	'a' => db_exists(DB_ARTICLES),
 	'd' => db_exists(DB_DOWNLOADS),
 	'l' => db_exists(DB_WEBLINKS),
-	'b' => db_exists(DB_BLOG)
-);
+	'b' => db_exists(DB_BLOG));
 $sum = array_sum($modules);
 if (!$sum or empty($modules[$stype])) {
 	redirect("index.php");
@@ -62,10 +60,13 @@ if (!$sum or empty($modules[$stype])) {
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 		echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['420']."</div>\n";
 		echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=l", array('max_tokens' => 1));
-		echo form_select('link_category', $locale['421'], $opts, isset($_POST['link_category']) ? $_POST['link_category'] : '', array("required" => 1));
-		echo form_text('link_name', $locale['422'], isset($_POST['link_name']) ? $_POST['link_name'] : '', array("required" => 1));
-		echo form_text('link_url', $locale['423'], isset($_POST['link_url']) ? $_POST['link_url'] : '', array("required" => 1, 'placeholder' => 'http://'));
-		echo form_text('link_description', $locale['424'], isset($_POST['link_description']) ? $_POST['link_description'] : '', array("required" => 1, 'max_length' => '200'));
+		echo form_select('link_category', $locale['421'], isset($_POST['link_category']) ? $_POST['link_category'] : '', array("options" => $opts,
+			"required" => TRUE));
+		echo form_text('link_name', $locale['422'], isset($_POST['link_name']) ? $_POST['link_name'] : '', array("required" => TRUE));
+		echo form_text('link_url', $locale['423'], isset($_POST['link_url']) ? $_POST['link_url'] : '', array("required" => TRUE,
+			'placeholder' => 'http://'));
+		echo form_text('link_description', $locale['424'], isset($_POST['link_description']) ? $_POST['link_description'] : '', array("required" => TRUE,
+			'max_length' => '200'));
 		echo form_button('submit_link', $locale['425'], $locale['425'], array('class' => 'btn-primary'));
 		echo closeform();
 		echo "</div>\n</div>\n";
@@ -91,7 +92,6 @@ if (!$sum or empty($modules[$stype])) {
 			closetable();
 		}
 	}
-
 	if (isset($_POST['preview_news'])) {
 		$news_subject = stripinput($_POST['news_subject']);
 		$news_cat = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
@@ -107,9 +107,7 @@ if (!$sum or empty($modules[$stype])) {
 		$news_snippet = "";
 		$news_body = "";
 	}
-
 	$result2 = dbquery("SELECT news_cat_id, news_cat_name, news_cat_language FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
-
 	if (dbrows($result2)) {
 		$cat_list = array();
 		while ($data2 = dbarray($result2)) {
@@ -120,12 +118,15 @@ if (!$sum or empty($modules[$stype])) {
 	opentable($locale['450']);
 	echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 	echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['470']."</div>\n";
-	echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=n", array('max_tokens' => 1));
+	echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=n", array('max_tokens' => 1));
 	echo form_text('news_subject', $locale['471'], $news_subject, array("required" => 1));
-	echo form_select('news_cat', $locale['476'], $cat_list, $news_cat, array("required" => 1));
-	echo form_textarea('news_snippet', $locale['478'], $news_snippet, array('bbcode' => 1, 'form_name' => 'submit_form'));
-	echo form_textarea('news_body', $locale['472'], $news_body, array("required" => 1, 'bbcode' => 1, 'form_name' => 'submit_form'));
-	echo $settings['site_seo'] ? '' : form_button('preview_news', $locale['474'], $locale['474'], array('class' => 'btn-primary m-r-10'));
+	echo form_select('news_cat', $locale['476'], $news_cat, array("options" => $cat_list, "required" => TRUE));
+	echo form_textarea('news_snippet', $locale['478'], $news_snippet, array('bbcode' => 1,
+		'form_name' => 'submit_form'));
+	echo form_textarea('news_body', $locale['472'], $news_body, array("required" => 1,
+		'bbcode' => 1,
+		'form_name' => 'submit_form'));
+	echo fusion_get_settings("site_seo") ? "" : form_button('preview_news', $locale['474'], $locale['474'], array('class' => 'btn-primary m-r-10'));
 	echo form_button('submit_news', $locale['475'], $locale['475'], array('class' => 'btn-primary'));
 	echo closeform();
 	echo "</div>\n</div>\n";
@@ -148,7 +149,6 @@ if (!$sum or empty($modules[$stype])) {
 			closetable();
 		}
 	}
-
 	if (isset($_POST['preview_blog'])) {
 		$blog_subject = stripinput($_POST['blog_subject']);
 		$blog_cat = isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : "0";
@@ -164,9 +164,7 @@ if (!$sum or empty($modules[$stype])) {
 		$blog_snippet = "";
 		$blog_body = "";
 	}
-	
 	$result2 = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_language FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
-
 	if (dbrows($result2)) {
 		$cat_list = array();
 		while ($data2 = dbarray($result2)) {
@@ -177,12 +175,15 @@ if (!$sum or empty($modules[$stype])) {
 	opentable($locale['450b']);
 	echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 	echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['470b']."</div>\n";
-	echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=b", array('max_tokens' => 1));
+	echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=b", array('max_tokens' => 1));
 	echo form_text('blog_subject', $locale['471b'], $blog_subject, array("required" => 1));
-	echo form_select('blog_cat', $locale['476b'], $cat_list, $blog_cat, array("required" => 1));
-	echo form_textarea('blog_snippet', $locale['478b'], $blog_snippet, array('bbcode' => 1, 'form_name' => 'submit_form'));
-	echo form_textarea('blog_body', $locale['472b'], $blog_body, array("required" => 1, 'bbcode' => 1, 'form_name' => 'submit_form'));
-	echo $settings['site_seo'] ? '' : form_button('preview_blog', $locale['474b'], $locale['474b'], array('class' => 'btn-primary m-r-10'));
+	echo form_select('blog_cat', $locale['476b'], $blog_cat, array("options" => $cat_list, "required" => 1));
+	echo form_textarea('blog_snippet', $locale['478b'], $blog_snippet, array('bbcode' => 1,
+		'form_name' => 'submit_form'));
+	echo form_textarea('blog_body', $locale['472b'], $blog_body, array("required" => 1,
+		'bbcode' => 1,
+		'form_name' => 'submit_form'));
+	echo fusion_get_settings("site_seo") ? "" : form_button('preview_blog', $locale['474b'], $locale['474b'], array('class' => 'btn-primary m-r-10'));
 	echo form_button('submit_blog', $locale['475b'], $locale['475b'], array('class' => 'btn-primary'));
 	echo closeform();
 	echo "</div>\n</div>\n";
@@ -232,13 +233,17 @@ if (!$sum or empty($modules[$stype])) {
 			}
 			echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 			echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['520']."</div>\n";
-			echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=a", array('max_tokens' => 1));
-			echo form_select('article_cat', $locale['521'], $cat_list, isset($_POST['preview_article']) ? $_POST['preview_article'] : '');
+			echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=a", array('max_tokens' => 1));
+			echo form_select('article_cat', $locale['521'], isset($_POST['preview_article']) ? $_POST['preview_article'] : '', array("options" => $cat_list));
 			echo form_text('article_subject', $locale['522'], $article_subject, array('required' => 1));
-			echo form_textarea('article_snippet', $locale['523'], $article_snippet, array('bbcode' => 1, 'required' => 1, 'form_name' => 'submit_form'));
-			echo form_textarea('article_body', $locale['524'], $article_body, array('bbcode' => 1, 'required' => 1, 'form_name' => 'submit_form'));
+			echo form_textarea('article_snippet', $locale['523'], $article_snippet, array('bbcode' => 1,
+				'required' => 1,
+				'form_name' => 'submit_form'));
+			echo form_textarea('article_body', $locale['524'], $article_body, array('bbcode' => 1,
+				'required' => 1,
+				'form_name' => 'submit_form'));
 			echo "</div>\n</div>\n";
-			echo $settings['site_seo'] ? '' : form_button('preview_article', $locale['526'], $locale['526'], array('class' => 'btn-primary m-r-10'));
+			echo fusion_get_settings("site_seo") ? "" : form_button('preview_article', $locale['526'], $locale['526'], array('class' => 'btn-primary m-r-10'));
 			echo form_button('submit_article', $locale['527'], $locale['527'], array('class' => 'btn-primary'));
 			echo closeform();
 		} else {
@@ -276,14 +281,17 @@ if (!$sum or empty($modules[$stype])) {
 		while ($data = dbarray($result)) {
 			$opts[$data['album_id']] = $data['album_title'];
 		}
-		echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=p", array('enc_type' => 1, 'max_tokens' => 1));
+		echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=p", array('enc_type' => 1,
+			'max_tokens' => 1));
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 		echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['620']."</div>\n";
-		echo form_select( 'album_id', $locale['625'], $opts, '');
+		echo form_select('album_id', $locale['625'], '', array("options" => $opts));
 		echo form_text('photo_title', $locale['621'], '', array('required' => 1));
 		echo form_textarea('photo_description', $locale['622'], '');
 		echo sprintf($locale['624'], parsebytesize($settings['photo_max_b']), $settings['photo_max_w'], $settings['photo_max_h'])."<br/>\n";
-		echo form_fileinput('photo_pic_file', $locale['623'], '', array("upload_path"=> PHOTOS."submissions/", "type" => "image", "required" => true));
+		echo form_fileinput('photo_pic_file', $locale['623'], '', array("upload_path" => PHOTOS."submissions/",
+			"type" => "image",
+			"required" => TRUE));
 		echo "</div>\n</div>\n";
 		echo form_button('submit_photo', $locale['626'], $locale['626'], array('class' => 'btn-primary'));
 		echo closeform();
@@ -292,14 +300,10 @@ if (!$sum or empty($modules[$stype])) {
 	}
 	closetable();
 } elseif ($stype === "d") {
-
 	add_to_title($locale['global_200'].$locale['650']);
-
 	if (isset($_POST['submit_download'])) {
 		$error = 0;
-
-		$submit_info = array(
-			'download_title' => form_sanitizer($_POST['download_title'], '', 'download_title'),
+		$submit_info = array('download_title' => form_sanitizer($_POST['download_title'], '', 'download_title'),
 			'download_description' => form_sanitizer($_POST['download_description'], '', 'download_description'),
 			'download_description_short' => form_sanitizer($_POST['download_description_short'], '', 'download_description_short'),
 			'download_cat' => form_sanitizer($_POST['download_cat'], '0', 'download_cat'),
@@ -309,8 +313,7 @@ if (!$sum or empty($modules[$stype])) {
 			'download_os' => form_sanitizer($_POST['download_os'], '', 'download_os'),
 			'download_version' => form_sanitizer($_POST['download_version'], '', 'download_version'),
 			'download_file' => '',
-			'download_url' => '',
-		);
+			'download_url' => '',);
 		/**
 		 * Download File Section
 		 */
@@ -319,13 +322,11 @@ if (!$sum or empty($modules[$stype])) {
 			if ($upload) {
 				$submit_info['download_file'] = $upload['target_file'];
 				$submit_info['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
-
 			}
 			unset($upload);
 		} elseif (isset($_POST['download_url']) && $_POST['download_url'] != "") {
 			$submit_info['download_url'] = form_sanitizer($_POST['download_url'], '', 'download_url');
 		}
-
 		if (isset($_FILES['download_image'])) {
 			$upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
 			if ($upload) {
@@ -334,23 +335,18 @@ if (!$sum or empty($modules[$stype])) {
 				unset($upload);
 			}
 		}
-
 		// Break form and return errors
 		if (!$submit_info['download_file'] && !$submit_info['download_url']) {
 			$defender->stop();
 			$defender->addNotice($locale['675']);
 		}
-
-
 		if (!defined("FUSION_NULL")) {
 			opentable($locale['650']);
 			// this is what goes into DB_SUBMISSIONS
-			$data = array(
-				'submit_type' => 'd',
+			$data = array('submit_type' => 'd',
 				'submit_user' => $userdata['user_id'],
 				'submit_datestamp' => time(),
-				'submit_criteria' => serialize($submit_info),
-			);
+				'submit_criteria' => serialize($submit_info),);
 			$result = dbquery_insert(DB_SUBMISSIONS, $data, 'save');
 			if ($result) {
 				echo "<div class='well'>\n";
@@ -363,7 +359,6 @@ if (!$sum or empty($modules[$stype])) {
 			closetable();
 		}
 	}
-
 	add_to_title($locale['global_200'].$locale['650']);
 	opentable($locale['650']);
 	$result = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ".(multilang_table("DL") ? "WHERE download_cat_language='".LANGUAGE."'" : "")." ORDER BY download_cat_name");
@@ -372,42 +367,43 @@ if (!$sum or empty($modules[$stype])) {
 		while ($data = dbarray($result)) {
 			$opts[$data['download_cat_id']] = $data['download_cat_name'];
 		}
-		echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=d", array('enctype' => 1, 'max_tokens' => 1));
+		echo openform('submit_form', 'post', ($settings['site_seo'] ? FUSION_ROOT : '').BASEDIR."submit.php?stype=d", array('enctype' => 1,
+			'max_tokens' => 1));
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
 		echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['680']."</div>\n";
 		echo form_text('download_title', $locale['681'], '', array('required' => 1, 'error_text' => $locale['674']));
-		echo form_textarea('download_description_short', $locale['682b'], '', array('bbcode' => 1, 'required' => 1, 'error_text' => $locale['676'],  'form_name' => 'submit_form'));
-		echo form_textarea('download_description', $locale['682'], '', array('bbcode' =>1, 'form_name' => 'submit_form'));
+		echo form_textarea('download_description_short', $locale['682b'], '', array('bbcode' => 1,
+			'required' => 1,
+			'error_text' => $locale['676'],
+			'form_name' => 'submit_form'));
+		echo form_textarea('download_description', $locale['682'], '', array('bbcode' => 1,
+			'form_name' => 'submit_form'));
 		echo form_text('download_url', $locale['683'], '', array('error_text' => $locale['675']));
 		echo "<div class='pull-right'>\n<small>\n";
 		echo sprintf($locale['694'], parsebytesize($settings['download_max_b']), str_replace(',', ' ', $settings['download_types']))."<br />\n";
 		echo "</small>\n</div>\n";
-		$file_options = array(
-			"upload_path" =>  DOWNLOADS."submissions/",
+		$file_options = array("upload_path" => DOWNLOADS."submissions/",
 			"max_bytes" => fusion_get_settings("download_max_b"),
 			'valid_ext' => fusion_get_settings("download_types"),
-			'error_text' => $locale['675'],
-		);
+			'error_text' => $locale['675'],);
 		echo form_fileinput('download_file', $locale['684'], '', $file_options);
 		echo "<div class='pull-right'>\n<small>\n";
 		echo sprintf($locale['694b'], parsebytesize($settings['download_screen_max_b']), str_replace(',', ' ', ".jpg,.gif,.png"), $settings['download_screen_max_w'], $settings['download_screen_max_h'])."<br />\n";
 		echo "</small>\n</div>\n";
-		$file_options = array(
-			"upload_path" =>  DOWNLOADS."submissions/images/",
+		$file_options = array("upload_path" => DOWNLOADS."submissions/images/",
 			"max_width" => fusion_get_settings("download_screen_max_w"),
 			"max_height" => fusion_get_settings("download_screen_max_w"),
 			"max_byte" => fusion_get_settings("download_screen_max_b"),
 			"type" => "image",
-			"delete_original" => false,
+			"delete_original" => FALSE,
 			"thumbnail_folder" => "",
-			"thumbnail" => true,
-			"thumbnail_suffix"=> "_thumb",
-			"thumbnail_w"=> fusion_get_settings("download_thumb_max_w"),
+			"thumbnail" => TRUE,
+			"thumbnail_suffix" => "_thumb",
+			"thumbnail_w" => fusion_get_settings("download_thumb_max_w"),
 			"thumbnail_h" => fusion_get_settings("download_thumb_max_h"),
-			"thumbnail2" => 0
-		);
+			"thumbnail2" => 0);
 		echo form_fileinput('download_image', $locale['686'], '', $file_options);
-		echo form_select('download_cat', $locale['687'], $opts, '');
+		echo form_select('download_cat', $locale['687'], '', array("options" => $opts));
 		echo form_text('download_license', $locale['688'], '');
 		echo form_text('download_os', $locale['689'], '');
 		echo form_text('download_version', $locale['690'], '');

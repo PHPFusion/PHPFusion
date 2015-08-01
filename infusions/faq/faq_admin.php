@@ -17,13 +17,10 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 pageAccess('FQ');
-
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."html_buttons_include.php";
 include INFUSIONS."faq/locale/".LOCALESET."faq_admin.php";
-
-add_breadcrumb(array('link'=>INFUSIONS."faq/faq_admin.php".$aidlink, 'title'=>$locale['502']));
-
+add_breadcrumb(array('link' => INFUSIONS."faq/faq_admin.php".$aidlink, 'title' => $locale['502']));
 $faq_cat_name = "";
 $faq_cat_description = "";
 $cat_language = LANGUAGE;
@@ -132,7 +129,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['faq
 		}
 	}
 }
-
 if (!isset($_GET['t']) || $_GET['t'] != "faq") {
 	opentable($faq_cat_title);
 	echo openform('add_faq_cat', 'post', $faq_cat_action, array('max_tokens' => 1));
@@ -150,7 +146,8 @@ if (!isset($_GET['t']) || $_GET['t'] != "faq") {
 	if (multilang_table("FQ")) {
 		echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('cat_language', '', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
+		echo form_select('cat_language', '', $cat_language, array('options' => $language_opts,
+			'placeholder' => $locale['choose']));
 		echo "</td>\n";
 		echo "</tr>\n";
 	} else {
@@ -176,7 +173,8 @@ if (!isset($_GET['t']) || $_GET['t'] != "cat") {
 		echo "<table cellpadding='0' cellspacing='0' class='center table table-responsive'>\n<tr>\n";
 		echo "<td class='tbl'><label for='faq_cat'>".$locale['520']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('faq_cat', '', $cat_opts, isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id']) ? $_GET['faq_cat_id'] : 0, array('placeholder' => $locale['choose']));
+		echo form_select('faq_cat', '', isset($_GET['faq_cat_id']) && isnum($_GET['faq_cat_id']) ? $_GET['faq_cat_id'] : 0, array('options' => $cat_opts,
+			'placeholder' => $locale['choose']));
 		echo "</td>\n";
 		echo "</tr>\n<tr>\n";
 		echo "<td class='tbl'><label for='faq_question'>".$locale['521']."</label> <span class='required'>*</span></td>\n";

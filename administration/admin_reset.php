@@ -19,9 +19,7 @@ require_once "../maincore.php";
 pageAccess('APWR');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/admin_reset.php";
-
-add_breadcrumb(array('link'=>ADMIN.'admin_reset.php'.$aidlink, 'title'=>$locale['apw_title']));
-
+add_breadcrumb(array('link' => ADMIN.'admin_reset.php'.$aidlink, 'title' => $locale['apw_title']));
 if (isset($_GET['status']) && !isset($message)) {
 	if ($_GET['status'] == "pw") {
 		$message = $locale['411'];
@@ -32,8 +30,6 @@ if (isset($_GET['status']) && !isset($message)) {
 		addNotice($status, $icon.$message);
 	}
 }
-
-
 if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_POST['reset_admin'])) {
 	if (check_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "")) {
 		require_once INCLUDES."sendmail_include.php";
@@ -68,10 +64,24 @@ if (isset($_POST['reset_admins']) && isset($_POST['reset_message']) && isset($_P
 				$newLoginPass = $loginPass->getNewPassword(12);
 				$loginPass->inputNewPassword = $newLoginPass;
 				$loginPass->inputNewPassword2 = $newLoginPass;
-				$message = str_replace(array("[USER_NAME]", "[NEW_PASS]", "[NEW_ADMIN_PASS]", "[ADMIN]", "[RESET_MESSAGE]"), array($data['user_name'], $newLoginPass, $newAdminPass, $userdata['user_name'], $reset_message), $locale['409']);
+				$message = str_replace(array("[USER_NAME]",
+										   "[NEW_PASS]",
+										   "[NEW_ADMIN_PASS]",
+										   "[ADMIN]",
+										   "[RESET_MESSAGE]"), array($data['user_name'],
+										   $newLoginPass,
+										   $newAdminPass,
+										   $userdata['user_name'],
+										   $reset_message), $locale['409']);
 				$loginPassIsReset = ($loginPass->isValidNewPassword() === 0 ? TRUE : FALSE);
 			} else {
-				$message = str_replace(array("[USER_NAME]", "[NEW_ADMIN_PASS]", "[ADMIN]", "[RESET_MESSAGE]"), array($data['user_name'], $newAdminPass, $userdata['user_name'], $reset_message), $locale['408']);
+				$message = str_replace(array("[USER_NAME]",
+										   "[NEW_ADMIN_PASS]",
+										   "[ADMIN]",
+										   "[RESET_MESSAGE]"), array($data['user_name'],
+										   $newAdminPass,
+										   $userdata['user_name'],
+										   $reset_message), $locale['408']);
 				$loginPassIsReset = TRUE;
 			}
 			if ($loginPassIsReset && $adminPassIsReset && sendemail($data['user_name'], $data['user_email'], $userdata['user_name'], $userdata['user_email'], $locale['407'].$settings['sitename'], $message)) {
@@ -134,9 +144,11 @@ while ($data = dbarray($result)) {
 }
 opentable($locale['apw_title']);
 echo openform('admin_reset', 'POST', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-echo "<table cellpadding='0' cellspacing='0' class='table table-responsive admin-reset tbl-border center'>\n<tr>\n";
+echo "<table class='table table-responsive admin-reset center'>\n<tr>\n";
 echo "<td class='tbl1' width='250'><label for='reset_admin'>".$locale['400']."</label></td>\n";
-echo "<td class='tbl1'>".form_select('reset_admin', '', $reset_opts, '', array('placeholder' => $locale['choose'], 'allowclear' => 1));
+echo "<td class='tbl1'>".form_select('reset_admin', '', '', array('options' => $reset_opts,
+		'placeholder' => $locale['choose'],
+		'allowclear' => 1));
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' width='250' valign='top'><label for='reset_message'>".$locale['404']."</label></td>\n";

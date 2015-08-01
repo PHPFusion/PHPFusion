@@ -146,7 +146,7 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 	echo openform('shoutbox', 'post', FUSION_SELF.$aidlink."&amp;page=settings", array('max_tokens' => 1));
 	echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 	$array = array('90' => "90 ".$locale['SB_days'], '60' => "60 ".$locale['SB_days'], '30' => "30 ".$locale['SB_days'], '20' => "20 ".$locale['SB_days'], '10' => "10 ".$locale['SB_days'],);
-	echo form_select('num_days', $locale['SB_delete_old'], $array, '', array('inline' => 1));
+	echo form_select('num_days', $locale['SB_delete_old'], '', array('inline' => TRUE, 'options' => $array));
 	echo "<div class='m-t-5 m-b-0'/>\n&nbsp;</div>\n";
 	echo form_button('sb_delete_old', $locale['SB_submit'], $locale['SB_submit'], array('class' => 'btn-primary pull-right'));
 	echo "</div>\n</div>\n";
@@ -158,9 +158,7 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
 	echo "<div class='panel panel-default'>\n<div class='panel-body'>\n";
 	echo form_text('visible_shouts', $locale['SB_visible_shouts'], $inf_settings['visible_shouts'], array('required' => 1, 'inline' => 1));
 	$opts = array('1' => $locale['SB_yes'], '0' => $locale['SB_no'],);
-	echo "<div class='m-t-5 m-b-0'/>\n&nbsp;</div>\n";
 	echo form_select('guest_shouts', $locale['SB_guest_shouts'], $opts, $inf_settings['guest_shouts'], array('inline' => 1));
-	echo "<div class='m-t-5 m-b-0'/>\n&nbsp;</div>\n";
 	echo form_button('sb_settings', $locale['SB_submit'], $locale['SB_submit'], array('class' => 'btn-primary pull-right m-l-20'));
 	echo "</div>\n</div>\n";
 	echo closeform();

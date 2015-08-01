@@ -17,12 +17,9 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 pageAccess('S6');
-
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
-
-add_breadcrumb(array('link'=>ADMIN."settings_misc.php".$aidlink, 'title'=>$locale['misc_settings']));
-
+add_breadcrumb(array('link' => ADMIN."settings_misc.php".$aidlink, 'title' => $locale['misc_settings']));
 if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	$error = 0;
 	$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isset($_POST['tinymce_enabled']) && isnum($_POST['tinymce_enabled']) ? $_POST['tinymce_enabled'] : "0")."' WHERE settings_name='tinymce_enabled'");
@@ -101,9 +98,7 @@ if (isset($_POST['savesettings']) && !defined("FUSION_NULL")) {
 	}
 	redirect(FUSION_SELF.$aidlink);
 }
-
 opentable($locale['misc_settings']);
-
 echo "<div class='well'>".$locale['misc_description']."</div>";
 echo openform('settingsform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
 echo "<div class='row'>\n";
@@ -111,40 +106,57 @@ echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
 openside('');
 echo "<div class='pull-right m-b-10'><span class='small2'>".$locale['663']."</span></div>\n";
 $choice_arr = array('1' => $locale['518'], '0' => $locale['519']);
-echo form_select('tinymce_enabled', $locale['662'], $choice_arr, $settings['tinymce_enabled'], array('inline'=>1));
+echo form_select('tinymce_enabled', $locale['662'], fusion_get_settings("tinymce_enabled"), array('options' => $choice_arr,
+	'inline' => TRUE));
 closeside();
 openside('');
-echo form_text('smtp_host', $locale['664']."<br/>", $settings['smtp_host'], array('max_length' => 200, 'inline'=>1));
-echo form_text('smtp_port', $locale['674'], $settings['smtp_port'], array('max_length' => 10, 'inline'=>1));
+echo form_text('smtp_host', $locale['664']."<br/>", $settings['smtp_host'], array('max_length' => 200,
+	'inline' => TRUE));
+echo form_text('smtp_port', $locale['674'], $settings['smtp_port'], array('max_length' => 10, 'inline' => 1));
 echo "<div class='pull-right m-b-10'><span class='small2'>".$locale['665']."</span></div>\n";
-echo form_select('smtp_auth', $locale['698'], $choice_arr, $settings['smtp_auth'], array('inline'=>1));
-echo form_text('smtp_username', $locale['666'], $settings['smtp_username'], array('max_length' => 100, 'inline'=>1));
-echo form_text('smtp_password', $locale['667'], $settings['smtp_password'], array('max_length' => 100, 'inline'=>1));
+echo form_select('smtp_auth', $locale['698'], $settings['smtp_auth'], array('options' => $choice_arr,
+	'inline' => TRUE));
+echo form_text('smtp_username', $locale['666'], $settings['smtp_username'], array('max_length' => 100,
+	'inline' => TRUE));
+echo form_text('smtp_password', $locale['667'], $settings['smtp_password'], array('max_length' => 100,
+	'inline' => TRUE));
 closeside();
 openside('');
 $opts = array('0' => $locale['519'], '1' => $locale['689'], '2' => $locale['690']);
-echo form_select('rendertime_enabled', $locale['688'], $opts, $settings['rendertime_enabled'], array('inline'=>1));
+echo form_select('rendertime_enabled', $locale['688'], fusion_get_settings("rendertime_enabled"), array('options' => $opts,
+	'inline' => TRUE));
 closeside();
-
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4'>\n";
 openside('');
 $opts = array('0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['699b']);
-echo form_select('login_method', $locale['699'], $opts, $settings['login_method'], array('width'=>'100%'));
+echo form_select('login_method', $locale['699'], fusion_get_settings("login_method"), array('options' => $opts,
+	'width' => '100%'));
 $gd_opts = array('gd1' => $locale['607'], 'gd2' => $locale['608']);
-echo form_select('thumb_compression', $locale['606'], $gd_opts, $settings['thumb_compression'], array('width'=>'100%'));
-echo form_select('mime_check', $locale['699f'], $choice_arr, $settings['mime_check'], array('width'=>'100%'));
-echo form_select('guestposts',$locale['655'],  $choice_arr, $settings['guestposts'],  array('width'=>'100%'));
-echo form_select('comments_enabled', $locale['671'], $choice_arr, $settings['comments_enabled'],  array('width'=>'100%'));
+echo form_select('thumb_compression', $locale['606'], fusion_get_settings("thumb_compression"), array('options' => $gd_opts,
+	'width' => '100%'));
+echo form_select('mime_check', $locale['699f'], fusion_get_settings("mime_check"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('guestposts', $locale['655'], fusion_get_settings("guestposts"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('comments_enabled', $locale['671'], fusion_get_settings("comments_enabled"), array('options' => $choice_arr,
+	'width' => '100%'));
 $sort_opts = array('ASC' => $locale['685'], 'DESC' => $locale['686']);
-echo form_select('comments_sorting', $locale['684'],  $sort_opts, $settings['comments_sorting'], array('width'=>'100%'));
-echo form_select('comments_avatar', $locale['656'], $choice_arr, $settings['comments_avatar'], array('width'=>'100%'));
-echo form_select('ratings_enabled', $locale['672'], $choice_arr, $settings['ratings_enabled'], array('width'=>'100%'));
-echo form_select('visitorcounter_enabled', $locale['679'], $choice_arr, $settings['visitorcounter_enabled'], array('width'=>'100%'));
-echo form_select('create_og_tags', $locale['1030'], $choice_arr, $settings['create_og_tags'], array('width'=>'100%'));
+echo form_select('comments_sorting', $locale['684'], fusion_get_settings("comments_sorting"), array('options' => $sort_opts,
+	'width' => '100%'));
+echo form_select('comments_avatar', $locale['656'], fusion_get_settings("comments_avatar"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('ratings_enabled', $locale['672'], fusion_get_settings("ratings_enabled"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('visitorcounter_enabled', $locale['679'], fusion_get_settings("visitorcounter_enabled"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('create_og_tags', $locale['1030'], fusion_get_settings("create_og_tags"), array('options' => $choice_arr,
+	'width' => '100%'));
 closeside();
 openside('');
-echo form_select('index_url_bbcode', $locale['1031'], $choice_arr, $settings['index_url_bbcode'], array('width'=>'100%'));
-echo form_select('index_url_userweb', $locale['1032'], $choice_arr, $settings['index_url_userweb'], array('width'=>'100%'));
+echo form_select('index_url_bbcode', $locale['1031'], fusion_get_settings("index_url_bbcode"), array('options' => $choice_arr,
+	'width' => '100%'));
+echo form_select('index_url_userweb', $locale['1032'], fusion_get_settings("index_url_userseb"), array('options' => $choice_arr,
+	'width' => '100%'));
 closeside();
 echo "</div>\n</div>";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));

@@ -129,17 +129,22 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	if (multilang_table("WL")) {
 		echo "<tr><td class='tbl'><label for='cat_language'>\n".$locale['global_ML100']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('cat_language', '', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
+		echo form_select('cat_language', '', $cat_language, array('options' => fusion_get_enabled_languages(),
+			'placeholder' => $locale['choose']));
 		echo "</td>\n</tr>\n";
 	} else {
 		echo form_hidden('cat_language', '', $cat_language);
 	}
+	$sortByOpts = array('1' => $locale['423'], '2' => $locale['424'], '3' => $locale['425']);
+	$orderOpts = array('ASC' => $locale['426'], 'DESC' => $locale['427']);
 	echo "<tr><td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_sort_by'>".$locale['422']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	$array = array('1' => $locale['423'], '2' => $locale['424'], '3' => $locale['425'],);
-	echo form_select('cat_sort_by', '', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
-	$array = array('ASC' => $locale['426'], 'DESC' => $locale['427']);
-	echo form_select('cat_sort_order', '', $array, $cat_sort_order, array('placeholder' => $locale['choose'], 'class' => 'pull-left'));
+	echo form_select('cat_sort_by', '', $cat_sort_by, array('options' => $sortByOpts,
+		'placeholder' => $locale['choose'],
+		'class' => 'pull-left m-r-10'));
+	echo form_select('cat_sort_order', '', $cat_sort_order, array('options' => $orderOpts,
+		'placeholder' => $locale['choose'],
+		'class' => 'pull-left'));
 	echo "</td>\n</tr>\n";
 	echo "<tr>\n<td align='center' colspan='2' class='tbl'>\n";
 	echo form_button('save_cat', $locale['429'], $locale['429'], array('class' => 'btn-primary m-t-10'));

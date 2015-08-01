@@ -41,36 +41,33 @@ if (isset($_POST['datelimit'])) {
 } else {
 	$_POST['datelimit'] = (isset($_GET['datelimit']) && $_GET['datelimit']) ? $_GET['datelimit'] : 0;
 }
-
 if (isset($_POST['fields'])) {
 	$_POST['fields'] = isnum($_POST['fields']) ? $_POST['fields'] : 2;
 } else {
 	$_POST['fields'] = (isset($_GET['fields']) && isnum($_GET['fields'])) ? $_GET['fields'] : 2;
 }
-
 if (isset($_POST['sort'])) {
 	$_POST['sort'] = in_array($_POST['sort'], array("datestamp", "subject", "author")) ? $_POST['sort'] : "datestamp";
 } else {
-	$_POST['sort'] = (isset($_GET['sort']) && in_array($_GET['sort'], array('datestamp', 'subject', 'author'))) ? $_GET['sort'] : "datestamp";
+	$_POST['sort'] = (isset($_GET['sort']) && in_array($_GET['sort'], array('datestamp',
+			'subject',
+			'author'))) ? $_GET['sort'] : "datestamp";
 }
 if (isset($_POST['order'])) {
 	$_POST['order'] = isnum($_POST['order']) ? $_POST['order'] : 0;
 } else {
 	$_POST['order'] = (isset($_GET['order']) && isnum($_GET['order'])) ? $_GET['order'] : 0;
 }
-
 if (isset($_POST['chars'])) {
 	$_POST['chars'] = isnum($_POST['chars']) ? ($_POST['chars'] > 200 ? 200 : $_POST['chars']) : 50;
 } else {
 	$_POST['chars'] = (isset($_GET['chars']) && isnum($_GET['chars'])) ? ($_GET['chars'] > 200 ? 200 : $_GET['chars']) : 50;
 }
-
 if (isset($_POST['forum_id'])) {
 	$_POST['forum_id'] = isnum($_POST['forum_id']) ? $_POST['forum_id'] : 0;
 } else {
 	$_POST['forum_id'] = (isset($_GET['forum_id']) && isnum($_GET['forum_id'])) ? $_GET['forum_id'] : 0;
 }
-
 $radio_button = array();
 $form_elements = array();
 $available = array();
@@ -82,7 +79,6 @@ while (FALSE !== ($entry = readdir($dh))) {
 }
 closedir($dh);
 $available[] = "all";
-
 if (isset($_GET['stype']) || isset($_POST['stype'])) {
 	if (isset($_GET['stype']) && in_array($_GET['stype'], $available) || isset($_POST['stype']) && in_array($_POST['stype'], $available)) {
 		$_GET['stype'] = isset($_POST['stype']) ? $_POST['stype'] : $_GET['stype'];
@@ -93,7 +89,6 @@ if (isset($_GET['stype']) || isset($_POST['stype'])) {
 if (!isset($_GET['stype'])) {
 	$_GET['stype'] = isset($_POST['stype']) ? $_POST['stype'] : $settings['default_search'];
 }
-
 $c_available = count($available);
 for ($i = 0; $i < $c_available-1; $i++) {
 	include(INCLUDES."search/search_".$available[$i]."_include_button.php");
@@ -134,16 +129,14 @@ add_to_footer($search_js);
 echo openform('searchform', 'post', "".($settings['site_seo'] ? FUSION_ROOT : BASEDIR)."search.php", array('max_tokens' => 1));
 echo "<div class='panel panel-default tbl-border'>\n";
 echo "<div class='panel-body'>\n";
-
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
 echo "<label class='label-control'>".$locale['401']."</label>\n<br/>";
-echo form_text('stext', '', urldecode($_POST['stext']), array('class'=>'p-l-0 p-r-0 col-xs-12 col-sm-9 col-md-9 col-lg-9'));
-echo form_button('search', $locale['402'], $locale['402'], array('class'=>'btn-primary flright pull-right'));
+echo form_text('stext', '', urldecode($_POST['stext']), array('class' => 'p-l-0 p-r-0 col-xs-12 col-sm-9 col-md-9 col-lg-9'));
+echo form_button('search', $locale['402'], $locale['402'], array('class' => 'btn-primary flright pull-right'));
 echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
 echo "<label><input type='radio' name='method' value='OR'".($_POST['method'] == "OR" ? " checked='checked'" : "")." /> ".$locale['403']."</label><br />\n";
 echo "<label><input type='radio' name='method' value='AND'".($_POST['method'] == "AND" ? " checked='checked'" : "")." /> ".$locale['404']."</label>\n";
 echo "</div>\n</div>\n";
-
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
 echo "<span><strong>".$locale['405']."</strong></span><br/>\n";
 echo "<table width='100%' cellpadding='0' cellspacing='0'>\n";
@@ -158,16 +151,15 @@ echo "<span><strong>".$locale['406']."</strong></span><br/>\n";
 echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 echo "<td class='tbl1'>".$locale['420']."</td>\n";
 echo "<td class='tbl1'>\n";
-$date_opts = array(
-	'0' => $locale['421'],
+$date_opts = array('0' => $locale['421'],
 	'86400' => $locale['422'],
 	'604800' => $locale['423'],
 	'1209600' => $locale['424'],
 	'2419200' => $locale['425'],
 	'7257600' => $locale['426'],
-	'14515200' => $locale['427'],
-);
-echo form_select('datelimit', '', $date_opts, $_POST['datelimit'], array('disabled'=> ($_GET['stype'] != "all" ? (in_array("datelimit", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
+	'14515200' => $locale['427'],);
+echo form_select('datelimit', '', $_POST['datelimit'], array('options' => $date_opts,
+	'disabled' => ($_GET['stype'] != "all" ? (in_array("datelimit", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
 echo "</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>&nbsp;</td>\n";
@@ -177,12 +169,11 @@ echo "<label><input type='radio' id='fields3' name='fields' value='0'".($_POST['
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>".$locale['440']."&nbsp;</td>\n";
 echo "<td class='tbl1'>\n";
-$sort_opts = array(
-	'datestamp' => $locale['441'],
+$sort_opts = array('datestamp' => $locale['441'],
 	'subject' => $locale['442'],
-	'author' => $locale['443']
-);
-echo form_select('sort', '', $sort_opts, $_POST['sort'], array('disabled'=> ($_GET['stype'] != "all" ? (in_array("sort", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
+	'author' => $locale['443']);
+echo form_select('sort', '', $_POST['sort'], array('options' => $sort_opts,
+	'disabled' => ($_GET['stype'] != "all" ? (in_array("sort", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
 echo "</td>\n</tr>\n<tr>\n";
 echo "<td class='tbl1'>&nbsp;</td>\n";
 echo "<td class='tbl1'><label><input type='radio' id='order1' name='order' value='0'".($_POST['order'] == 0 ? " checked='checked'" : "").($_GET['stype'] != "all" ? (in_array("order1", $form_elements[$_GET['stype']]['disabled']) ? " disabled='disabled'" : "") : "")." /> ".$locale['450']."</label><br />\n";
@@ -190,19 +181,17 @@ echo "<label><input type='radio' id='order2' name='order' value='1'".($_POST['or
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1'>".$locale['460']."</td>\n";
 echo "<td class='tbl1'>\n";
-$char_opts = array(
-	'50' => '50',
+$char_opts = array('50' => '50',
 	'100' => '100',
 	'150' => '150',
-	'200' => '200'
-);
-echo form_select('chars', '', $sort_opts, $_POST['sort'], array('disabled'=> ($_GET['stype'] != "all" ? (in_array("chars", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
+	'200' => '200');
+echo form_select('chars', '', $_POST['sort'], array('options' => $sort_opts,
+	'disabled' => ($_GET['stype'] != "all" ? (in_array("chars", $form_elements[$_GET['stype']]['disabled']) ? "1" : "0") : "0")));
 echo "</td>\n</tr>\n</tbody>\n</table>\n";
 echo "</div>\n</div>\n";
 echo "</div></div>\n";
 echo closeform();
 closetable();
-
 function search_striphtmlbbcodes($text) {
 	$text = preg_replace("[\[(.*?)\]]", "", $text);
 	$text = preg_replace("<\<(.*?)\>>", "", $text);
@@ -266,6 +255,7 @@ function search_navigation($rows) {
 	$navigation_result = "<div align='center' style='margin-top:5px;'>\n".makePageNav($_POST['rowstart'], 10, ($site_search_count > 100 || search_globalarray("") ? 100 : $site_search_count), 3, BASEDIR."search.php?stype=".$_GET['stype']."&amp;stext=".urlencode($_POST['stext'])."&amp;".$composevars)."\n</div>\n";
 	return $navigation_result;
 }
+
 $composevars = "method=".$_POST['method']."&amp;datelimit=".$_POST['datelimit']."&amp;fields=".$_POST['fields']."&amp;sort=".$_POST['sort']."&amp;order=".$_POST['order']."&amp;chars=".$_POST['chars']."&amp;forum_id=".$_POST['forum_id']."&amp;";
 $memory_limit = str_replace("m", "", strtolower(ini_get("memory_limit")))*1024*1024;
 $memory_limit = !isnum($memory_limit) ? 8*1024*1024 : $memory_limit < 8*1024*1024 ? 8*1024*1024 : $memory_limit;
@@ -276,7 +266,6 @@ $search_result_array = array();
 $navigation_result = "";
 $items_count = "";
 $_POST['stext'] = urldecode($_POST['stext']);
-
 if ($_POST['stext'] != "" && strlen($_POST['stext']) >= 3) {
 	add_to_title($locale['global_201'].$locale['408']);
 	opentable($locale['408']);
@@ -354,7 +343,6 @@ if ($_POST['stext'] != "" && strlen($_POST['stext']) >= 3) {
 	echo "</div>\n";
 	echo $navigation_result;
 	closetable();
-
 } elseif (isset($_POST['stext'])) {
 	add_to_title($locale['global_201'].$locale['408']);
 	opentable($locale['408']);

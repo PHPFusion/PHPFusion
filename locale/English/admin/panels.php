@@ -57,6 +57,7 @@ $locale['464'] = "Exclude on these pages only";
 $locale['465'] = "Include on these pages only";
 $locale['466'] = "Panel Language:";
 $locale['467'] = "Display on home page only";
+$locale['468'] = "Panel Type";
 // Update/Add new Panel Errors
 $locale['470'] = "Panel name not defined";
 $locale['471'] = "Panel name in use";

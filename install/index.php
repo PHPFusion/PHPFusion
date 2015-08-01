@@ -184,7 +184,8 @@ switch (INSTALLATION_STEP) {
 				$content .= "<span>".$locale['setup_0003']."</span>\n";
 			}
 			$content .= "<span class='display-block m-t-20 m-b-10 strong'>".$locale['setup_1000']."</span>\n";
-			$content .= form_select('localeset', '', array_combine($locale_files, $locale_files), $_GET['localeset'], array('placeholder' => $locale['choose']));
+			$content .= form_select('localeset', '', $_GET['localeset'], array('options' => array_combine($locale_files, $locale_files),
+				'placeholder' => $locale['choose']));
 			$content .= "<script>\n";
 			$content .= "$('#localeset').bind('change', function() {
 				var value = $(this).val();

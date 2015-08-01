@@ -25,21 +25,18 @@
 +--------------------------------------------------------*/
 require_once "../maincore.php";
 pageAccess('PH');
-
 require_once THEMES."templates/admin_header.php";
 require_once INCLUDES."photo_functions_include.php";
 require_once INCLUDES."bbcode_include.php";
 include LOCALE.LOCALESET."admin/photos.php";
-
 require_once INCLUDES."infusions_include.php";
 $gallery_settings = get_settings("gallery");
-
-if (!isset($_GET['album_id']) || !isnum($_GET['album_id'])) {	redirect("photoalbums.php".$aidlink); }
-
+if (!isset($_GET['album_id']) || !isnum($_GET['album_id'])) {
+	redirect("photoalbums.php".$aidlink);
+}
 if (function_exists('gd_info')) {
 	define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
 	define("PHOTODIR", PHOTOS.(!SAFEMODE ? "album_".$_GET['album_id']."/" : "")); // = images/photoalbum/album_2.
-
 	if (isset($_GET['status']) && !isset($message)) {
 		if ($_GET['status'] == "sn") {
 			$message = $locale['410'];
@@ -73,8 +70,7 @@ if (function_exists('gd_info')) {
 	}
 	if (isset($_POST['cancel'])) {
 		redirect(FUSION_SELF.$aidlink."&album_id=".$_GET['album_id']);
-	}
-	elseif (isset($_POST['move_photo']) && (isset($_POST['move_album_id']) && isnum($_POST['move_album_id'])) && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
+	} elseif (isset($_POST['move_photo']) && (isset($_POST['move_album_id']) && isnum($_POST['move_album_id'])) && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
 		$result = dbquery("SELECT MAX(photo_order)+1 as last_order FROM ".DB_PHOTOS." WHERE album_id='".$_POST['move_album_id']."' GROUP BY album_id");
 		if (dbrows($result)) {
 			$data = dbarray($result);
@@ -123,8 +119,7 @@ if (function_exists('gd_info')) {
 			}
 		}
 		redirect(FUSION_SELF.$aidlink."&album_id=".$_POST['move_album_id']."&amp;status=mov");
-	}
-	elseif (isset($_POST['move_sel_photos']) && (isset($_POST['move_album_id']) && isnum($_POST['move_album_id']))) {
+	} elseif (isset($_POST['move_sel_photos']) && (isset($_POST['move_album_id']) && isnum($_POST['move_album_id']))) {
 		$result = dbquery("SELECT MAX(photo_order)+1 as last_order FROM ".DB_PHOTOS." WHERE album_id='".$_POST['move_album_id']."' GROUP BY album_id");
 		if (dbrows($result)) {
 			$data = dbarray($result);
@@ -191,8 +186,7 @@ if (function_exists('gd_info')) {
 		} else {
 			redirect(FUSION_SELF.$aidlink."&album_id=".$_GET['album_id']);
 		}
-	}
-	elseif (isset($_POST['move_all_photos']) && (isset($_POST['move_album_id']) && isnum($_POST['move_album_id']))) {
+	} elseif (isset($_POST['move_all_photos']) && (isset($_POST['move_album_id']) && isnum($_POST['move_album_id']))) {
 		$result = dbquery("SELECT MAX(photo_order)+1 as last_order FROM ".DB_PHOTOS." WHERE album_id='".$_POST['move_album_id']."' GROUP BY album_id");
 		if (dbrows($result)) {
 			$data = dbarray($result);
@@ -230,8 +224,7 @@ if (function_exists('gd_info')) {
 		} else {
 			redirect(FUSION_SELF.$aidlink."&album_id=".$_GET['album_id']);
 		}
-	}
-	elseif ((isset($_GET['action']) && $_GET['action'] == "deletepic") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
+	} elseif ((isset($_GET['action']) && $_GET['action'] == "deletepic") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
 		$data = dbarray(dbquery("SELECT photo_filename,photo_thumb1,photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_id='".$_GET['photo_id']."'"));
 		$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_filename='', photo_thumb1='', photo_thumb2='' WHERE photo_id='".$_GET['photo_id']."'");
 		@unlink(PHOTODIR.$data['photo_filename']);
@@ -240,8 +233,7 @@ if (function_exists('gd_info')) {
 			@unlink(PHOTODIR.$data['photo_thumb2']);
 		}
 		redirect(FUSION_SELF.$aidlink."&status=delt&album_id=".$_GET['album_id']."");
-	}
-	elseif ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
+	} elseif ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
 		$data = dbarray(dbquery("SELECT album_id,photo_filename,photo_thumb1,photo_thumb2,photo_order FROM ".DB_PHOTOS." WHERE photo_id='".$_GET['photo_id']."'"));
 		$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=(photo_order-1) WHERE photo_order>'".$data['photo_order']."' AND album_id='".$_GET['album_id']."'");
 		$result = dbquery("DELETE FROM ".DB_PHOTOS." WHERE photo_id='".$_GET['photo_id']."'");
@@ -257,23 +249,20 @@ if (function_exists('gd_info')) {
 			@unlink(PHOTODIR.$data['photo_thumb2']);
 		}
 		redirect(FUSION_SELF.$aidlink."&status=del&album_id=".$_GET['album_id']."");
-	}
-	elseif ((isset($_GET['action']) && $_GET['action'] == "mup") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
+	} elseif ((isset($_GET['action']) && $_GET['action'] == "mup") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
 		$data = dbarray(dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE album_id='".$_GET['album_id']."' AND photo_order='".intval($_GET['order'])."'"));
 		$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=photo_order+1 WHERE photo_id='".$data['photo_id']."'");
 		$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=photo_order-1 WHERE photo_id='".$_GET['photo_id']."'");
 		$rowstart = $_GET['order'] > $gallery_settings['thumbs_per_page'] ? ((ceil($_GET['order']/$gallery_settings['thumbs_per_page'])-1)*$gallery_settings['thumbs_per_page']) : "0";
 		redirect(FUSION_SELF.$aidlink."&album_id=".$_GET['album_id']."&rowstart=$rowstart");
-	}
-	elseif ((isset($_GET['action']) && $_GET['action'] == "mdown") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
+	} elseif ((isset($_GET['action']) && $_GET['action'] == "mdown") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
 		$data = dbarray(dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE album_id='".$_GET['album_id']."' AND photo_order='".intval($_GET['order'])."'"));
 		$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=photo_order-1 WHERE photo_id='".$data['photo_id']."'");
 		$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_order=photo_order+1 WHERE photo_id='".$_GET['photo_id']."'");
 		$rowstart = $_GET['order'] > $gallery_settings['thumbs_per_page'] ? ((ceil($_GET['order']/$gallery_settings['thumbs_per_page'])-1)*$gallery_settings['thumbs_per_page']) : "0";
 		redirect(FUSION_SELF.$aidlink."&album_id=".$_GET['album_id']."&rowstart=$rowstart");
 		//Photo-Mass Upload start
-	}
-	elseif (isset($_POST['btn_upload_dir']) || isset($_GET['btn_upload_dir'])) {
+	} elseif (isset($_POST['btn_upload_dir']) || isset($_GET['btn_upload_dir'])) {
 		$error = "";
 		if (isset($_POST['upload_dir']) || isset($_GET['upload_dir'])) {
 			$upload_dir = BASEDIR."ftp_upload/".(isset($_GET['upload_dir']) ? $_GET['upload_dir'] : $_POST['upload_dir'])."/";
@@ -347,8 +336,7 @@ if (function_exists('gd_info')) {
 		@rmdir($upload_dir);
 		$rowstart = $photo_order > $gallery_settings['thumbs_per_page'] ? ((ceil($photo_order/$gallery_settings['thumbs_per_page'])-1)*$gallery_settings['thumbs_per_page']) : "0";
 		redirect(ADMIN."photos.php".$aidlink."&amp;status=sn&amp;album_id=".$_GET['album_id']."&amp;rowstart=$rowstart");
-	}
-	elseif (isset($_POST['btn_multi_upload']) || isset($_GET['btn_multi_upload'])) {
+	} elseif (isset($_POST['btn_multi_upload']) || isset($_GET['btn_multi_upload'])) {
 		$error = "";
 		if (isset($_POST['multi_image']) || isset($_GET['multi_image'])) {
 			$upload_dir = BASEDIR."ftp_upload/";
@@ -415,9 +403,7 @@ if (function_exists('gd_info')) {
 		$rowstart = $photo_order > $gallery_settings['thumbs_per_page'] ? ((ceil($photo_order/$gallery_settings['thumbs_per_page'])-1)*$gallery_settings['thumbs_per_page']) : "0";
 		redirect(ADMIN."photos.php".$aidlink."&amp;status=sn&amp;album_id=".$_GET['album_id']."&amp;rowstart=".$rowstart);
 		//Photo-Mass Upload End
-	}
-	/* Need Locale Fixes ! */
-	elseif (isset($_POST['save_photo'])) {
+	} /* Need Locale Fixes ! */ elseif (isset($_POST['save_photo'])) {
 		$data['album_id'] = isset($_GET['album_id']) && isnum($_GET['album_id']) ? $_GET['album_id'] : 0;
 		if (!$data['album_id']) {
 			$defender->stop();
@@ -430,9 +416,7 @@ if (function_exists('gd_info')) {
 		$data['photo_allow_ratings'] = isset($_POST['photo_ratings']) ? 1 : 0;
 		$data['photo_user'] = $userdata['user_id'];
 		$data['photo_datestamp'] = time();
-
 		if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
-
 		} elseif (!empty($_FILES['photo_pic_file']['name']) && is_uploaded_file($_FILES['photo_pic_file']['tmp_name'])) {
 			require_once INCLUDES."infusions_include.php";
 			// Name of $_FILE key which holds the upload
@@ -453,7 +437,7 @@ if (function_exists('gd_info')) {
 			// Maximum file size in bytes
 			$max_size = $gallery_settings['photo_max_b'];
 			$upload = upload_image($source_image, $target_name, $target_folder, $target_width, $target_height, $max_size, FALSE, TRUE, TRUE, 0, $target_folder, "_t1", $thumb1_width, $thumb1_height, 0, $target_folder, "_t2", $thumb2_width, $thumb2_height);
-			if (isset($upload['error']) && $upload['error']>0) {
+			if (isset($upload['error']) && $upload['error'] > 0) {
 				$defender->stop();
 				switch ($upload['error']) {
 					case 1:
@@ -481,8 +465,7 @@ if (function_exists('gd_info')) {
 						$defender->addNotice($locale['419a']);
 						break;
 				}
-			}
-			else {
+			} else {
 				// Successful upload!
 				$data['photo_filename'] = $upload['image_name'];
 				$data['photo_thumb1'] = $upload['thumb1_name'];
@@ -490,7 +473,6 @@ if (function_exists('gd_info')) {
 			}
 		}
 		if (!defined('FUSION_NULL')) {
-
 			if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
 				$old_photo_order = dbresult(dbquery("SELECT photo_order FROM ".DB_PHOTOS." WHERE photo_id='".$_GET['photo_id']."'"), 0);
 				if ($data['photo_order'] > $old_photo_order) {
@@ -503,9 +485,7 @@ if (function_exists('gd_info')) {
 				dbquery_insert(DB_PHOTOS, $data, 'update');
 				$rowstart = $data['photo_order'] > $gallery_settings['thumbs_per_page'] ? ((ceil($data['photo_order']/$gallery_settings['thumbs_per_page'])-1)*$gallery_settings['thumbs_per_page']) : "0";
 				redirect(FUSION_SELF.$aidlink."&status=su&album_id=".$_GET['album_id']."&rowstart=$rowstart");
-			}
-			else {
-
+			} else {
 				if (!$data['photo_order']) {
 					$data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".$_GET['album_id']."'"), 0)+1;
 				}
@@ -516,13 +496,11 @@ if (function_exists('gd_info')) {
 			}
 		}
 	}
-
-
 	$data3 = dbarray(dbquery("SELECT album_title FROM ".DB_PHOTO_ALBUMS." WHERE album_id='".$_GET['album_id']."'"));
 	$album_title = $data3['album_title'];
-	add_breadcrumb(array('link'=>ADMIN."photoalbums.php".$aidlink,'title'=>'Photo Gallery'));
-	add_breadcrumb(array('link'=>ADMIN."photos.php".$aidlink."&amp;album_id=".$_GET['album_id'],'title'=>$album_title));
-
+	add_breadcrumb(array('link' => ADMIN."photoalbums.php".$aidlink, 'title' => 'Photo Gallery'));
+	add_breadcrumb(array('link' => ADMIN."photos.php".$aidlink."&amp;album_id=".$_GET['album_id'],
+					   'title' => $album_title));
 	// data callback
 	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['photo_id']) && isnum($_GET['photo_id']))) {
 		$result = dbquery("SELECT photo_title, photo_description, photo_filename, photo_thumb1, photo_thumb2, photo_order, photo_allow_comments, photo_allow_ratings FROM ".DB_PHOTOS." WHERE photo_id='".$_GET['photo_id']."'");
@@ -555,8 +533,6 @@ if (function_exists('gd_info')) {
 		$formaction = FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id']."";
 		opentable($album_title.": ".$locale['400']);
 	}
-
-
 	echo "<!--- start single photo -->\n";
 	if (!isset($_GET['action'])) {
 		echo "<div class='tbl2 list-group-item' id='show_singleform' style='font-weight:bold;cursor:pointer;margin-bottom:2px;'><i class='entypo camera'></i> ".$locale['493']."</div>";
@@ -566,10 +542,18 @@ if (function_exists('gd_info')) {
 	echo openform('input_form', 'post', $formaction, array('enctype' => 1, 'max_tokens' => 1));
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-8 col-md-8 col-lg-8'>\n";
-	echo form_text('photo_title', $locale['432'], $photo_title, array('max_length' => 100, 'required' => 1, 'error_text' => ''));
-	echo form_textarea('photo_description', $locale['433'], $photo_description, array('bbcode' => 1, 'autosize'=>1, 'resize'=>0));
+	echo form_text('photo_title', $locale['432'], $photo_title, array('max_length' => 100,
+		'required' => 1,
+		'error_text' => ''));
+	echo form_textarea('photo_description', $locale['433'], $photo_description, array('bbcode' => 1,
+		'autosize' => 1,
+		'resize' => 0));
 	if (!isset($_GET['action'])) {
-		echo form_fileinput('photo_pic_file', $locale['436'], '', array('upload_path'=> PHOTODIR, 'type' => 'image', 'thumbnail_path'=>PHOTODIR, 'required' => 1, 'error_text' => $locale['421']));
+		echo form_fileinput('photo_pic_file', $locale['436'], '', array('upload_path' => PHOTODIR,
+			'type' => 'image',
+			'thumbnail_path' => PHOTODIR,
+			'required' => 1,
+			'error_text' => $locale['421']));
 	}
 	echo form_text('photo_order', $locale['434'], $photo_order, array('number' => 1, 'width' => '100px'));
 	echo "</div>\n<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
@@ -593,7 +577,6 @@ if (function_exists('gd_info')) {
 		echo form_button('cancel', $locale['440'], $locale['440'], array('class' => 'btn-default btn-sm m-l-10'));
 	}
 	echo "</div>\n</div>\n";
-
 	// move photos
 	if (isset($_GET['action']) && $_GET['action'] == "edit") {
 		$result2 = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." WHERE album_id!='".$_GET['album_id']."'");
@@ -605,11 +588,12 @@ if (function_exists('gd_info')) {
 			}
 			echo "<label for='move_photo'>".$locale['430']."</label>\n<br/>\n";
 			echo form_button('move_photo', $locale['431'], $locale['431'], array('class' => 'btn-primary'));
-			echo form_select('move_album_id', '', $array, '', array('placeholder' => $locale['473'], 'class' => 'pull-left m-r-10'));
+			echo form_select("move_album_id", "", "", array('options' => $array,
+				'placeholder' => $locale['473'],
+				'class' => 'pull-left m-r-10'));
 			echo "</div></div>\n";
 		}
 	}
-
 	// see photo thumbnail
 	if ((isset($_GET['action']) && $_GET['action'] == 'edit') && ($photo_thumb1 && file_exists(PHOTODIR.$photo_thumb1)) || ($photo_thumb2 && file_exists(PHOTODIR.$photo_thumb2))) {
 		echo "<!-- photo thumbnail-->\n";
@@ -623,13 +607,10 @@ if (function_exists('gd_info')) {
 		echo "</div>\n</div>\n";
 		echo "<!-- end photo thumbnail-->\n";
 	}
-
 	echo "</div>\n</div>\n"; // end row
 	echo closeform();
 	echo "</div>\n</div>\n";
 	echo "<!--- end single photo -->\n";
-
-
 	//Photo-Mass Upload start
 	if (!isset($_GET['action'])) {
 		echo "<div class='list-group-item tbl2' id='show_folderform' style='font-weight:bold;cursor:pointer;margin-bottom:2px;'><i class='entypo folder'></i> ".$locale['494']."</div>";
@@ -639,7 +620,8 @@ if (function_exists('gd_info')) {
 		$gallery_dir = makefilelist($upload_dir, ".|..|index.php", TRUE, "folders");
 		$folder_opts = makefileopts($gallery_dir);
 		if ($can_upload == TRUE) {
-			echo openform('folderuploadform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('enctype' => 1, 'max_tokens' => 1));
+			echo openform('folderuploadform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('enctype' => 1,
+				'max_tokens' => 1));
 			echo "<table class='table table-responsive tbl-border center' cellpadding='2' cellspacing='0'>\n";
 			echo($folder_opts != "" ? "<tr>\n<td class='tbl1' colspan='2' style='text-align:center;'>".$locale['496']."</td>\n</tr>\n" : "");
 			echo "<tr>\n<td class='tbl1' colspan='2' style='text-align:left;'>";
@@ -686,11 +668,9 @@ if (function_exists('gd_info')) {
 			echo "</table></form>\n";
 		} else {
 			echo "<div class='admin-message'>\n";
-
 			echo openform('why_no_formname', 'post', $formaction, array('max_tokens' => 1));
 			echo "<span style='color:red;font-weight:bold;'>".sprintf($locale['502'], $upload_dir)."</span><br />".$locale['503']."<br />";
 			echo form_button('refresh2', $locale['504'], $locale['504'], array('class' => 'btn-primary btn-block'));
-
 			echo "</form>\n";
 			echo "</div>\n";
 		}
@@ -701,7 +681,8 @@ if (function_exists('gd_info')) {
 		$multi_opts = makefileopts($multi_files);
 		if ($can_upload == TRUE) {
 			//echo "<form name='multiform' method='post' action='".."' enctype='multipart/form-data'>\n";
-			echo openform('multiform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('max_tokens' => 1, 'enctype' => 1));
+			echo openform('multiform', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('max_tokens' => 1,
+				'enctype' => 1));
 			echo "<table class='table table-responsive tbl-border center' cellpadding='2' cellspacing='0'>\n";
 			echo($multi_opts != "" ? "<tr>\n<td class='tbl1' colspan='2' style='text-align:center;'>".$locale['496']."</td>\n</tr>\n" : "");
 			echo "<tr>\n<td class='tbl1' colspan='2' style='text-align:left;'>";
@@ -784,7 +765,6 @@ if (function_exists('gd_info')) {
 		//Photo-Mass Upload End
 	}
 	closetable();
-
 	opentable($album_title.": ".$locale['402']);
 	$rows = dbcount("(photo_id)", DB_PHOTOS, "album_id='".$_GET['album_id']."'");
 	if ($rows) {
@@ -798,7 +778,8 @@ if (function_exists('gd_info')) {
 				LIMIT ".$_GET['rowstart'].",".$gallery_settings['thumbs_per_page']);
 		$counter = 0;
 		$k = ($_GET['rowstart'] == 0 ? 1 : $_GET['rowstart']+1);
-		echo openform('move_form', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('notice' => 0, 'max_tokens' => 1));
+		echo openform('move_form', 'post', FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id'], array('notice' => 0,
+			'max_tokens' => 1));
 		echo "<div class='row'>\n";
 		if ($rows > $gallery_settings['thumbs_per_page']) {
 			echo "<div align='center' style='margin-top:5px;'>\n".makepagenav($_GET['rowstart'], $gallery_settings['thumbs_per_page'], $rows, 3, FUSION_SELF.$aidlink."&amp;album_id=".$_GET['album_id']."&amp;")."\n</div>\n";
@@ -873,7 +854,11 @@ if (function_exists('gd_info')) {
 			while ($data = dbarray($result)) {
 				$opts[$data['album_id']] = $data['album_title'];
 			}
-			echo form_select('move_album_id', '', $opts, '', array('placeholder' => $locale['473'], 'allowclear' => 1, 'class' => 'display-block m-b-10', 'input_id'=>'move_album_id2'));
+			echo form_select('move_album_id', '', '', array('options' => $opts,
+				'placeholder' => $locale['473'],
+				'allowclear' => 1,
+				'class' => 'display-block m-b-10',
+				'input_id' => 'move_album_id2'));
 		}
 		echo "<a class='clearfix btn btn-block btn-primary m-t-20' href='".FUSION_SELF.$aidlink."'>".$locale['476']."</a>";
 		echo "</div></div>\n";
@@ -903,8 +888,5 @@ if (function_exists('gd_info')) {
 	echo "<div id='close-message'><div class='admin-message alert alert-warning text-center m-t-20'>".$locale['420']."</div></div>\n";
 	closetable();
 }
-
-
-
 require_once THEMES."templates/footer.php";
 

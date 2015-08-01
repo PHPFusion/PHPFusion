@@ -17,13 +17,11 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 pageAccess('AC');
-
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
-
 $message = '';
 if (isset($_GET['status'])) {
-	switch($_GET['status']) {
+	switch ($_GET['status']) {
 		case 'sn':
 			$message = $locale['articles_0150'];
 			$status = 'success';
@@ -49,7 +47,6 @@ if (isset($_GET['status'])) {
 		addNotice($status, $icon.$message);
 	}
 }
-
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
 	$result = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."'") || dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
@@ -124,7 +121,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 		$formaction = FUSION_SELF.$aidlink;
 		$openTable = $locale['articles_0021'];
 	}
-	add_breadcrumb(array('link'=>INFUSIONS.'article_cats_admin.php'.$aidlink,'title'=>$openTable));
+	add_breadcrumb(array('link' => INFUSIONS.'article_cats_admin.php'.$aidlink, 'title' => $openTable));
 	opentable($openTable);
 	echo openform('addcat', 'post', $formaction, array('max_tokens' => 1));
 	echo "<table cellpadding='0' cellspacing='0' class='table table-responsive center'>\n<tr>\n";
@@ -140,13 +137,15 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "</tr>\n<tr>\n";
 	echo "<td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_parent'>".$locale['articles_0308']."</label></td>\n";
 	echo "<td class='tbl'>\n";
-	echo form_select_tree("cat_parent", "", $cat_parent, array("disable_opts" => $cat_hidden, "hide_disabled" => 1), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
+	echo form_select_tree("cat_parent", "", $cat_parent, array("disable_opts" => $cat_hidden,
+		"hide_disabled" => 1), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
 	echo "</td>\n";
 	echo "</tr>\n";
 	if (multilang_table("AR")) {
 		echo "<tr><td class='tbl'><label for='cat_language'>".$locale['global_ML100']."</label></td>\n";
 		echo "<td class='tbl'>\n";
-		echo form_select('cat_language', '', $language_opts, $cat_language, array('placeholder' => $locale['choose']));
+		echo form_select('cat_language', '', $cat_language, array('options' => $language_opts,
+			'placeholder' => $locale['choose']));
 		echo "</tr>\n";
 	} else {
 		echo form_hidden('cat_language', '', $cat_language);
@@ -154,37 +153,33 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	echo "<tr><td width='1%' class='tbl' style='white-space:nowrap'><label for='cat_sort_by'>".$locale['articles_0302']."</label></td>\n";
 	echo "<td class='tbl'>\n";
 	$array = array('1' => $locale['articles_0303'], '2' => $locale['articles_0304'], '3' => $locale['articles_0305']);
-	echo form_select('cat_sort_by', '', $array, $cat_sort_by, array('placeholder' => $locale['choose'], 'class' => 'pull-left m-r-10'));
+	echo form_select('cat_sort_by', '', $cat_sort_by, array('options' => $array,
+		'placeholder' => $locale['choose'],
+		'class' => 'pull-left m-r-10'));
 	$array = array('ASC' => $locale['articles_0306'], 'DESC' => $locale['articles_0307']);
-	echo form_select('cat_sort_order', '', $array, $cat_sort_order, array('placeholder' => $locale['choose']));
+	echo form_select('cat_sort_order', '', $cat_sort_order, array('options' => $array,
+		'placeholder' => $locale['choose']));
 	echo "</td>\n";
 	echo "</tr>\n<tr>\n";
 	echo "<td align='center' colspan='2' class='tbl'>\n";
-	echo form_button('save_cat', $locale['articles_0309'], $locale['articles_0309'], array('class' => 'btn-primary', 'inline' => 1));
+	echo form_button('save_cat', $locale['articles_0309'], $locale['articles_0309'], array('class' => 'btn-primary',
+		'inline' => 1));
 	echo "</tr>\n</table>\n";
 	echo closeform();
 	closetable();
-
 	opentable($locale['articles_0020']);
 	echo "<table cellpadding='0' cellspacing='1' class='table table-responsive tbl-border center'>\n";
-
 	$row_num = 0;
-	
 	showcatlist();
-
 	if ($row_num == 0) {
 		echo "<tr><td align='center' class='tbl1' colspan='2'>".$locale['articles_0342']."</td></tr>\n";
 	}
 	echo "</table>\n";
-
 	closetable();
 }
-
 function showcatlist($parent = 0, $level = 0) {
 	global $locale, $aidlink, $row_num;
-
 	$result = dbquery("SELECT article_cat_id, article_cat_name, article_cat_description FROM ".DB_ARTICLE_CATS." WHERE article_cat_parent='".$parent."'".(multilang_table("AR") ? " AND article_cat_language='".LANGUAGE."'" : "")." ORDER BY article_cat_name");
-
 	if (dbrows($result) != 0) {
 		while ($data = dbarray($result)) {
 			$cell_color = ($row_num%2 == 0 ? "tbl1" : "tbl2");
@@ -197,8 +192,9 @@ function showcatlist($parent = 0, $level = 0) {
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['article_cat_id']."' onclick=\"return confirm('".$locale['articles_0350']."');\">".$locale['delete']."</a></td>\n";
 			echo "</tr>\n";
 			$row_num++;
-			showcatlist($data['article_cat_id'], $level + 1);
+			showcatlist($data['article_cat_id'], $level+1);
 		}
 	}
 }
+
 require_once THEMES."templates/footer.php";

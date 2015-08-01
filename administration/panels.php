@@ -30,8 +30,7 @@ class fusion_panels {
 	/**
 	 * @var array|bool
 	 */
-	private $data = array(
-		'panel_id' => 0,
+	private $data = array('panel_id' => 0,
 		'panel_name' => '',
 		'panel_filename' => '',
 		'panel_content' => '',
@@ -43,8 +42,7 @@ class fusion_panels {
 		'panel_status' => 0,
 		'panel_url_list' => '',
 		'panel_restriction' => 3,
-		'panel_languages' => '',
-	);
+		'panel_languages' => '',);
 	/**
 	 * @var string
 	 */
@@ -61,12 +59,11 @@ class fusion_panels {
 		global $aidlink, $locale;
 		$this->data['panel_languages'] = LANGUAGE;
 		$this->data['panel_content'] = stripslashes($this->data['panel_content']);
-		$_GET['panel_side'] = isset($_GET['panel_side']) && in_array($_GET['panel_side'] , array_flip(self::get_panel_grid())) ? $_GET['panel_side'] : 0;
+		$_GET['panel_side'] = isset($_GET['panel_side']) && in_array($_GET['panel_side'], array_flip(self::get_panel_grid())) ? $_GET['panel_side'] : 0;
 		$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 		$_GET['status'] = isset($_GET['status']) ? $_GET['status'] : '';
 		$_GET['panel_status'] = isset($_GET['panel_status']) ? $_GET['panel_status'] : 0;
 		$this->panel_data = self::load_all_panels();
-
 		switch ($_GET['action']) {
 			case 'edit':
 				$this->data = self::load_panel($_GET['panel_id']);
@@ -81,9 +78,7 @@ class fusion_panels {
 			default:
 				$this->formaction = FUSION_SELF.$aidlink."&amp;section=panelform";
 		}
-
-		add_breadcrumb(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['600']));
-
+		add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $locale['600']));
 		self::set_paneldb();
 	}
 
@@ -92,7 +87,6 @@ class fusion_panels {
 	 */
 	private function set_paneldb() {
 		global $aidlink, $locale, $defender;
-
 		if (isset($_POST['panel_save'])) {
 			$this->data['panel_id'] = isset($_POST['panel_id']) ? form_sanitizer($_POST['panel_id'], '0', 'panel_id') : 0;
 			$this->data['panel_name'] = isset($_POST['panel_name']) ? form_sanitizer($_POST['panel_name'], '', 'panel_name') : '';
@@ -112,49 +106,47 @@ class fusion_panels {
 				if (!$this->data['panel_content']) {
 					$this->data['panel_content'] = "opentable(\"name\");\n"."echo \"Content\";\n"."closetable();";
 					if ($this->data['panel_side'] == 1 || $this->data['panel_side'] == 4) {
-						$this->data['panel_content'] =  "openside(\"name\");\n"."echo \"Content\";\n"."closeside();";
+						$this->data['panel_content'] = "openside(\"name\");\n"."echo \"Content\";\n"."closeside();";
 					}
 				}
 			} else {
 				$this->data['panel_content'] = '';
 				$this->data['panel_type'] = "file";
 			}
-            // need to add fourth option. only show in front page.
+			// need to add fourth option. only show in front page.
 			$this->data['panel_restriction'] = isset($_POST['panel_restriction']) ? form_sanitizer($_POST['panel_restriction'], '', 'panel_restriction') : 0;
 			// 3, show on all, 2 = show on home page. 1 = exclude , 0 = include
 			//  post 0 to include all , 1 to exclude all, show all.
-            if ($this->data['panel_restriction'] == '3') { // show on all
+			if ($this->data['panel_restriction'] == '3') { // show on all
 				$this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
 				$this->data['panel_url_list'] = '';
-            } elseif ($this->data['panel_restriction'] == '2') {
-                // show on homepage only
-                $this->data['panel_display'] = 0;
-                $this->data['panel_url_list'] = '';
-                if ($this->data['panel_side'] == 1 || $this->data['panel_side'] == 4) {
-                    $this->data['panel_url_list'] = fusion_get_settings('opening_page'); // because 1 and 4 directly overide panel_display.
-                }
+			} elseif ($this->data['panel_restriction'] == '2') {
+				// show on homepage only
+				$this->data['panel_display'] = 0;
+				$this->data['panel_url_list'] = '';
+				if ($this->data['panel_side'] == 1 || $this->data['panel_side'] == 4) {
+					$this->data['panel_url_list'] = fusion_get_settings('opening_page'); // because 1 and 4 directly overide panel_display.
+				}
 			} else {
 				// require panel_url_list in this case
 				$this->data['panel_url_list'] = isset($_POST['panel_url_list']) ? form_sanitizer($_POST['panel_url_list'], '', 'panel_url_list') : '';
 				if ($this->data['panel_url_list']) {
 					$this->data['panel_url_list'] = str_replace(",", "\r\n", $this->data['panel_url_list']);
-                    if ($this->data['panel_restriction'] == 1) { // exclude mode
-                        $this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
-                    } else { // include mode
-                        $this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
-                    }
-                } else {
+					if ($this->data['panel_restriction'] == 1) { // exclude mode
+						$this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
+					} else { // include mode
+						$this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
+					}
+				} else {
 					$defender->stop();
 					addNotice('danger', $locale['475']);
 				}
 			}
-
 			$panel_languages = isset($_POST['panel_languages']) ? sanitize_array($_POST['panel_languages']) : array();
 			if (!empty($panel_languages)) {
 				$this->data['panel_languages'] = implode('.', $panel_languages);
 			}
 			// panel order .. add to last or sort - no need since we already have drag and drop... but if they dont have jquery this would be a good idea.
-
 			if ($this->data['panel_id'] && self::verify_panel($this->data['panel_id'])) {
 				dbquery_insert(DB_PANELS, $this->data, 'update');
 				addNotice('info', $locale['482']);
@@ -182,20 +174,22 @@ class fusion_panels {
 	private function get_panelOpts() {
 		$panel_list = array();
 		$current_panels = array();
-        foreach($this->panel_data as $side => $panels) {
-			foreach($panels as $data) {
+		foreach ($this->panel_data as $side => $panels) {
+			foreach ($panels as $data) {
 				$current_panels[$data['panel_filename']] = $data['panel_filename'];
 			}
 		}
-        // unset this panel if edit mode.
-        if (isset($_GET['panel_id']) && isnum($_GET['panel_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
-            unset($current_panels[$this->data['panel_filename']]);
-        }
+		// unset this panel if edit mode.
+		if (isset($_GET['panel_id']) && isnum($_GET['panel_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
+			unset($current_panels[$this->data['panel_filename']]);
+		}
 		// find current installed panels.
 		$temp = opendir(INFUSIONS);
 		$panel_list['none'] = "None";
 		while ($folder = readdir($temp)) {
-			if (!in_array($folder, array(".", "..")) && !in_array($folder, $current_panels) && strstr($folder, "_panel")) {
+			if (!in_array($folder, array(".",
+					"..")) && !in_array($folder, $current_panels) && strstr($folder, "_panel")
+			) {
 				if (is_dir(INFUSIONS.$folder)) $panel_list[$folder] = $folder;
 			}
 		}
@@ -222,14 +216,12 @@ class fusion_panels {
 	 */
 	static function get_panel_grid() {
 		global $locale;
-		return array(
-			'1' => $locale['420'],
+		return array('1' => $locale['420'],
 			'2' => $locale['421'],
 			'3' => $locale['425'],
 			'4' => $locale['422'],
 			'5' => $locale['426'],
-			'6' => $locale['427'],
-		);
+			'6' => $locale['427'],);
 	}
 
 	/**
@@ -239,7 +231,7 @@ class fusion_panels {
 	static function get_panel_url_list() {
 		$list = array();
 		$file_list = makefilelist(BASEDIR, ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php");
-		foreach($file_list as $files) {
+		foreach ($file_list as $files) {
 			$list[] = $files;
 		}
 		return $list;
@@ -251,12 +243,10 @@ class fusion_panels {
 	 */
 	static function get_includeOpts() {
 		global $locale;
-		return array(
-			'3' => $locale['459'],
+		return array('3' => $locale['459'],
 			'2' => $locale['467'],
 			'1' => $locale['464'],
-			'0' => $locale['465'],
-		);
+			'0' => $locale['465'],);
 	}
 
 	/**
@@ -268,7 +258,7 @@ class fusion_panels {
 		if (isnum($id)) {
 			return dbcount("(panel_id)", DB_PANELS, "panel_id='".intval($id)."'");
 		}
-		return false;
+		return FALSE;
 	}
 
 	/**
@@ -279,7 +269,7 @@ class fusion_panels {
 	static function load_panel($id) {
 		if (isnum($id)) {
 			$result = dbquery("SELECT * FROM ".DB_PANELS." WHERE panel_id='".intval($id)."'");
-			if (dbrows($result)>0) {
+			if (dbrows($result) > 0) {
 				return dbarray($result);
 			}
 		}
@@ -318,30 +308,33 @@ class fusion_panels {
 	 */
 	public function add_panel_form() {
 		global $locale;
-        fusion_confirm_exit();
+		fusion_confirm_exit();
 		echo "<div class='m-t-20'>\n";
 		echo openform('panel_form', 'post', $this->formaction, array('max_tokens' => 1));
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		openside('');
 		echo form_hidden('panel_id', '', $this->data['panel_id']);
-		echo form_text('panel_name', $locale['452'], $this->data['panel_name'], array('inline'=>1, 'required'=>1, )); //'error_text'=>$locale['470']
-		echo form_select('panel_filename', $locale['453'], self::get_panelOpts(), $this->data['panel_filename'], array('inline'=>1));
-        $grid_opts = self::get_panel_grid();
-		echo form_select('panel_side', $locale['457'], $grid_opts, $this->data['panel_side'], array('inline'=>1));
+		echo form_text('panel_name', $locale['452'], $this->data['panel_name'], array('inline' => 1,
+			'required' => 1,)); //'error_text'=>$locale['470']
+		echo form_select('panel_filename', $locale['453'], $this->data['panel_filename'], array('options' => self::get_panelOpts(),
+			'inline' => 1));
+		$grid_opts = self::get_panel_grid();
+		echo form_select('panel_side', $locale['457'], $this->data['panel_side'], array('options' => $grid_opts,
+			'inline' => TRUE));
 		closeside();
-
 		add_to_jquery("
 		".($this->data['panel_filename'] > 0 ? "$('#pgrp').hide();" : "$('#pgrp').show();")."
 		$('#panel_filename').bind('change', function(e) {
 			if ($(this).val() > 0) { $('#pgrp').hide(); } else { $('#pgrp').show(); }
 		});
 		");
-
 		echo "<div id='pgrp'>\n";
-		echo form_textarea('panel_content', $locale['455'], $this->data['panel_content'], array('html'=>1, 'form_name'=>'panel_form', 'autosize'=>1, 'preview'=>1));
+		echo form_textarea('panel_content', $locale['455'], $this->data['panel_content'], array('html' => 1,
+			'form_name' => 'panel_form',
+			'autosize' => 1,
+			'preview' => 1));
 		echo "</div>\n";
-
 		openside('');
 		add_to_jquery("
 		".(($this->data['panel_restriction'] == 3 || $this->data['panel_restriction'] == 2) ? "$('#panel_url_list-grp').hide();" : '')."
@@ -349,31 +342,36 @@ class fusion_panels {
 			if ($(this).val() == '3' || $(this).val() == '2') { $('#panel_url_list-grp').hide(); } else { $('#panel_url_list-grp').show(); }
 		});
 		");
-		echo form_select('panel_restriction', 'Filter Type', self::get_includeOpts(), $this->data['panel_restriction'], array('inline'=>1));
+		echo form_select('panel_restriction', $locale['468'], $this->data['panel_restriction'], array('options' => self::get_includeOpts(),
+			'inline' => 1));
 		echo "<div id='panel_url_list-grp'>\n";
 		echo "<div class='text-smaller'></div>\n";
-		echo form_select('panel_url_list', $locale['462'], self::get_panel_url_list(), $this->data['panel_url_list'], array('inline'=>1, 'tags'=>1, 'multiple'=>1, 'width'=>'100%'));
+		echo form_select('panel_url_list', $locale['462'], $this->data['panel_url_list'], array('options' => self::get_panel_url_list(),
+			'inline' => 1,
+			'tags' => 1,
+			'multiple' => 1,
+			'width' => '100%'));
 		echo "</div>\n";
 		echo form_hidden('panel_display', '', $this->data['panel_display']);
 		closeside();
-
 		echo "</div>\n";
 		echo "<div class='col-xs-12 col-sm-4'>\n";
 		openside('');
-		echo form_select('panel_access',$locale['458'], self::get_accessOpts(), $this->data['panel_access']);
-		echo form_button('panel_save', $locale['461'], $locale['461'], array('class'=>'btn-primary'));
+		echo form_select('panel_access', $locale['458'], $this->data['panel_access'], array("options" => self::get_accessOpts()));
+		echo form_button('panel_save', $locale['461'], $locale['461'], array('class' => 'btn-primary'));
 		closeside();
-
 		openside('');
 		echo "<label class='label-control m-b-10'>".$locale['466']."</label>\n";
 		$languages = !empty($this->data['panel_languages']) ? explode('.', $this->data['panel_languages']) : array();
-		foreach(fusion_get_enabled_languages() as $language) {
-			echo form_checkbox('panel_languages[]', $language, in_array($language, $languages) ? 1 : 0, array('class'=>'m-b-0', 'value'=>$language, 'input_id' => 'panel_lang-'.$language));
+		foreach (fusion_get_enabled_languages() as $language) {
+			echo form_checkbox('panel_languages[]', $language, in_array($language, $languages) ? 1 : 0, array('class' => 'm-b-0',
+				'value' => $language,
+				'input_id' => 'panel_lang-'.$language));
 		}
 		closeside();
 		echo "</div>\n";
 		echo "</div>\n";
-		echo form_button('panel_save', $locale['461'], $locale['460'], array('class'=>'btn-primary'));
+		echo form_button('panel_save', $locale['461'], $locale['460'], array('class' => 'btn-primary'));
 		echo closeform();
 		echo "</div>\n";
 	}
@@ -400,12 +398,10 @@ class fusion_panels {
 			}
 		}
 		closedir($temp);
-
 		if ($panel_id != NULL) {
 			return $panel_list[$panel_id];
 		}
 		sort($panel_list);
-
 		return $panel_list;
 	}
 
@@ -416,7 +412,7 @@ class fusion_panels {
 	private function load_all_panels() {
 		$list = array();
 		$result = dbquery("SELECT * FROM ".DB_PANELS." ORDER BY panel_side ASC, panel_order ASC");
-		if (dbrows($result)>0) {
+		if (dbrows($result) > 0) {
 			while ($data = dbarray($result)) {
 				$list[$data['panel_side']][] = $data;
 			}
@@ -431,7 +427,6 @@ class fusion_panels {
 	 */
 	private function panel_reactor($side) {
 		global $locale, $aidlink;
-
 		$grid_opts = self::get_panel_grid();
 		$type = $grid_opts[$side];
 		$k = 0;
@@ -443,19 +438,16 @@ class fusion_panels {
 		$html .= "</div>\n";
 		$html .= "<ul id='panel-side".$side."' data-side='".$side."' style='list-style: none;' class='panels-list connected list-group p-10'>\n";
 		if (isset($this->panel_data[$side])) {
-			foreach($this->panel_data[$side] as $data) {
+			foreach ($this->panel_data[$side] as $data) {
 				$row_color = ($k%2 == 0 ? "tbl1" : "tbl2");
 				$type = $data['panel_type'] == "file" ? $locale['423'] : $locale['424'];
 				$html .= "<li id='listItem_".$data['panel_id']."' style='border:1px solid #ddd;' class='pointer list-group-item ".$row_color.($data['panel_status'] == 0 ? " pdisabled" : '')."'>\n";
-
 				$html .= "<div class='handle'>\n";
 				$html .= "<i class='pull-right display-inline-block m-t-5 m-r-10 fa fa-arrows-alt' title='move'></i>\n";
-
 				$html .= "<div class='overflow-hide'>\n";
 				$html .= "<a class='dropdown-toggle' data-toggle='dropdown'>\n";
 				$html .= "<strong>".$data['panel_name']."</strong> <span class='caret'></span>\n\n";
 				$html .= "</a>\n";
-
 				$html .= "<ul class='dropdown-menu' role='panel-options'>\n";
 				$html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-bullseye m-r-10 m-t-5'></i> ".getgroupname($data['panel_access'])."</li>\n";
 				$html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-file-o m-r-10 m-t-5'></i> ".$type."</li>\n";
@@ -473,7 +465,6 @@ class fusion_panels {
 				$html .= "</div>\n";
 				$html .= "</li>\n";
 				$k++;
-
 			}
 		}
 		$html .= "</ul>\n";
@@ -486,7 +477,6 @@ class fusion_panels {
 	 */
 	public function panel_listing() {
 		global $locale, $aidlink;
-
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui.js'></script>");
 		add_to_jquery("
 		$('.panels-list').sortable({
@@ -523,7 +513,6 @@ class fusion_panels {
 				}
 			});
 		");
-
 		echo "<div class='m-t-20'>\n";
 		echo "<div id='info'></div>\n";
 		echo "<div class='well text-center'>".$locale['410']."</div>\n";
@@ -542,7 +531,6 @@ class fusion_panels {
 		echo self::panel_reactor(6);
 		echo "</div>\n</div>\n";
 		echo "</div>\n";
-
 		//Unused Panels in the directory
 		$panel_list = self::panels_list();
 		$title = $locale['602'].": ".count($panel_list)." ".(count($panel_list) == 1 ? $locale['605'] : $locale['604']);
@@ -560,7 +548,6 @@ class fusion_panels {
 		}
 		echo "</div>\n</div>\n";
 	}
-
 }
 
 // do the table
@@ -574,7 +561,7 @@ $tab_title['icon'][] = '';
 $tab_title['title'][] = $edit ? $locale['409'] : $locale['408'];
 $tab_title['id'][] = 'panelform';
 $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-$tab_active = tab_active($tab_title, $edit ? 1 : 0, true, 1);
+$tab_active = tab_active($tab_title, $edit ? 1 : 0, TRUE, 1);
 echo opentab($tab_title, $tab_active, 'id', FUSION_SELF.$aidlink);
 echo opentabbody($tab_title['title'][0], 'listpanel', $tab_active, 1);
 $fusion_panel->panel_listing();
