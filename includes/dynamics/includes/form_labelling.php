@@ -46,4 +46,3 @@ function form_badge($title, $array = FALSE) {
 	}
 	return "<span class='badge $class'>$icon $title</span>\n";
 }
-

@@ -25,7 +25,6 @@ class dynamics {
 		//Are these two include really necessary?
 		include LOCALE.LOCALESET."admin/members.php";
 		require_once INCLUDES."defender.inc.php";
-		
 		if (!defined('DYNAMICS')) {
 			define('DYNAMICS', INCLUDES."dynamics/");
 		}
@@ -45,7 +44,6 @@ class dynamics {
 		require_once DYNAMICS."includes/form_colorpicker.php";
 		require_once DYNAMICS."includes/form_geomap.php";
 		require_once DYNAMICS."includes/form_modal.php";
-		require_once DYNAMICS."includes/form_gallery.php";
 		require_once DYNAMICS."includes/form_antibot.php";
 		require_once DYNAMICS."includes/form_checkbox.php";
 		require_once DYNAMICS."includes/form_paragraph.php";

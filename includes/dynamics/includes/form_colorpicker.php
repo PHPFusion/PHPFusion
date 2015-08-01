@@ -6,6 +6,7 @@
 +--------------------------------------------------------+
 | Filename: form_colorpicker.php
 | Author: Frederick MC CHan (Hien)
+| Credits: Mjolnic @ http://mjolnic.github.io/bootstrap-colorpicker/
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +16,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-/*
-Courtesy of : Mjolnic @ http://mjolnic.github.io/bootstrap-colorpicker/
-*/
 function form_colorpicker($input_name, $label = '', $input_value = '', array $options = array()) {
 	global $defender;
 	if (!defined("COLORPICKER")) {
@@ -28,8 +26,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$input_name = stripinput($input_name);
 	$input_value = stripinput($input_value);
-	$default_options = array(
-		'input_id' => $input_name,
+	$default_options = array('input_id' => $input_name,
 		'required' => FALSE,
 		'placeholder' => '',
 		'deactivate' => FALSE,
@@ -42,10 +39,9 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 		'format' => 'hex', //options = the color format - hex | rgb | rgba.
 	);
 	$options += $default_options;
-	if (!$options['width']){
+	if (!$options['width']) {
 		$options['width'] = $default_options['width'];
 	}
-
 	$input_id = $options['input_id'] ? : $default_options['input_id'];
 	$html = "";
 	$html .= "<div id='$input_id-field' class='form-group clearfix m-b-10 ".$options['class']." '>\n";
@@ -59,15 +55,13 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 	$html .= $options['inline'] ? "</div>\n" : "";
 	$html .= "</div>\n";
 	//$html .= "<input type='hidden' name='def[$input_name]' value='[type=color],[title=$title2],[id=$input_id],[required=$required],[safemode=$safemode]' />";
-	$defender->add_field_session(array(
-		'input_name' 	=> 	$input_name,
-		'type'			=>	'color',
-	 	'title'			=>	$title,
-		'id' 			=>	$input_id,
-		'required'		=>	$options['required'],
-		'safemode' 		=> 	$options['safemode'],
-		'error_text'	=> 	$options['error_text']
-	 ));
+	$defender->add_field_session(array('input_name' => $input_name,
+									 'type' => 'color',
+									 'title' => $title,
+									 'id' => $input_id,
+									 'required' => $options['required'],
+									 'safemode' => $options['safemode'],
+									 'error_text' => $options['error_text']));
 	add_to_jquery("$('#$input_id').colorpicker({ format : '".$options['format']."'  });");
 	return $html;
 }
