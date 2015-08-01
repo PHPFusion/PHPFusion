@@ -15,26 +15,30 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+/**
+ * @param       $form_name
+ * @param       $method     - 'post' or 'get'
+ * @param       $action_url - form current uri
+ * @param array $options    :
+ *                          form_id = default as form_name
+ *                          class = default empty
+ *                          enctype = true or false , set true to allow file upload
+ *                          max_tokens = store into session number of tokens , default as 1.
+ * @return string
+ */
 function openform($form_name, $method, $action_url, array $options = array()) {
-	//global $defender;
-
 	$method = (strtolower($method) == 'post') ? 'post' : 'get';
-
 	$options = array(
 		'form_id'	=> !empty($options['form_id']) ? $options['form_id'] : $form_name,
 		'class'		=> !empty($options['class']) ? $options['class'] : '',
-		'enctype'	=> !empty($options['enctype']) && $options['enctype'] == 1 ? 1 : 0,
-		'max_tokens'=> !empty($options['max_tokens']) && isnum($options['max_tokens']) ? $options['max_tokens'] : 10,
-	);
-
+		'enctype' => !empty($options['enctype']) && $options['enctype'] == TRUE ? TRUE : FALSE,
+		'max_tokens' => !empty($options['max_tokens']) && isnum($options['max_tokens']) ? $options['max_tokens'] : 1,);
 	$html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' class='".(defined('FUSION_NULL') ? 'warning ' : '').$options['class']."' ".($options['enctype'] ? "enctype='multipart/form-data'" : '')." >\n";
 	if ($method == 'post') {
 		$token = defender::generate_token($options['form_id'], $options['max_tokens']);
-
 		$html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
 		$html .= "<input type='hidden' name='form_id' value='".$options['form_id']."' />\n";
 	}
-
 	return $html;
 }
 
