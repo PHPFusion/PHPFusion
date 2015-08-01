@@ -335,6 +335,11 @@ function user_search($user_id) {
  */
 function form_select_tree($input_name, $label = "", $input_value = FALSE, array $options = array(), $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
 	global $defender, $locale;
+	if (!defined("SELECT2")) {
+		define("SELECT2", TRUE);
+		add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js' /></script>\n");
+		add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n");
+	}
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 	$default_options = array('required' => FALSE,
 		'regex' => '',
@@ -445,11 +450,5 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 										 'safemode' => $options['safemode'],
 										 'error_text' => $options['error_text']));
 	}
-	if (!defined("SELECT2")) {
-		define("SELECT2", TRUE);
-		add_to_footer("<script src='".DYNAMICS."assets/select2/select2.min.js' /></script>\n");
-		add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n");
-	}
 	return $html;
 }
-
