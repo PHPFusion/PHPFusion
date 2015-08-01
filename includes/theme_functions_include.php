@@ -37,6 +37,19 @@ function dynamic_block($title, $description, $form_input) {
 }
 
 /**
+ * Java script that transform html table sortable
+ * @param $table_id - table ID
+ * @return string
+ */
+function fusion_sort_table($table_id) {
+	add_to_head("<script type='text/javascript' src='".DYNAMICS."assets/tablesorter/jquery.tablesorter.min.js'></script>");
+	add_to_jquery("
+	$('#".$table_id."').tablesorter();
+	");
+	return "tablesorter";
+}
+
+/**
  * Calculate width for column units in % or in bootstrap grid unit
  * @param      $items_per_row
  * @param bool $bootstrap_units

@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -7,9 +6,8 @@
 +--------------------------------------------------------+
 | Project File: Dynamic Form Builder formstack() i/o
 | Filename: dynamics.inc.php
-| Author: PHP-Fusion 8 Development Team
-| Coded by : Frederick MC Chan (Hien)
-| Version : 8.2.1 (please update every commit)
+| Author: Frederick MC Chan (Hien)
+| Version : 9.0
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -49,32 +47,3 @@ class dynamics {
 		require_once DYNAMICS."includes/form_document.php";
 	}
 }
-
-function load_tablesorter($id) {
-	// implementation: use in table();
-	// to add: sortlist:[[0,0],[1,0]]
-	add_to_head("<script type='text/javascript' src='".DYNAMICS."assets/tablesorter/jquery.tablesorter.min.js'></script>");
-	add_to_jquery("
-        $('#".$id."').tablesorter();
-        ");
-	add_to_head("
-        <style>
-        /* tables */
-        table.tablesorter {}
-        table.tablesorter thead tr th, table.tablesorter tfoot tr th {}
-        table.tablesorter thead tr .header {
-        background-image: url(".DYNAMICS."assets/tablesorter/bg.gif);
-        background-repeat: no-repeat;
-        background-position: center right;
-        cursor: pointer;
-        }
-        table.tablesorter tbody td {}
-        table.tablesorter tbody tr.odd td {}
-        table.tablesorter thead tr .headerSortUp { background-image: url(".DYNAMICS."assets/tablesorter/asc.gif);    }
-        table.tablesorter thead tr .headerSortDown {	background-image: url(".DYNAMICS."assets/tablesorter/desc.gif);    }
-        table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {    }
-        </style>
-        ");
-	return "tablesorter";
-}
-
