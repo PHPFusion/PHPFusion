@@ -18,7 +18,7 @@
 /**
  * Note on Tags Support
  * $options['tags'] = default $input_value must not be multidimensional array but only as $value = array(TRUE,'2','3');
- * For tagging - set tags and multiple to TRUE
+ * For tagging - set both tags and multiple to TRUE
  * @param       $label
  * @param       $input_name
  * @param       $options ['input_id']
@@ -50,7 +50,7 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 		'inline' => FALSE,
 		'tip' => '',
 		'delimiter' => ',',
-		'callback_check' => '',);
+		'callback_check' => '');
 	$options += $default_options;
 	if (empty($options['options'])) {
 		$options['options'] = array('0' => $locale['no_opts']);
@@ -190,6 +190,14 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 	return $html;
 }
 
+/**
+ * Selector for registered user
+ * @param        $input_name
+ * @param string $label
+ * @param bool   $input_value - user id
+ * @param array  $options
+ * @return string
+ */
 function form_user_select($input_name, $label = "", $input_value = FALSE, array $options = array()) {
 	global $locale, $defender;
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -246,35 +254,34 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 									 'safemode' => $options['safemode'],
 									 'error_text' => $options['error_text']));
 	add_to_jquery("
-                function avatar(item) {
-                    if(!item.id) {return item.text;}
-                    var avatar = item.avatar;
-                    var level = item.level;
-                    return '<table><tr><td style=\"\"><img style=\"height:25px;\" class=\"img-rounded\" src=\"".IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
-                }
-
-                $('#".$options['input_id']."').select2({
-                $length
-                multiple: true,
-                maximumSelectionSize: ".$options['maxselect'].",
-                placeholder: '".$options['placeholder']."',
-                ajax: {
-                url: '$path',
-                dataType: 'json',
-                data: function (term, page) {
-                        return {q: term};
-                      },
-                      results: function (data, page) {
-                      	console.log(page);
-                        return {results: data};
-                      }
-                },
-                formatSelection: avatar,
-                escapeMarkup: function(m) { return m; },
-                formatResult: avatar,
-                ".$allowclear."
-                })".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
-            ");
+		function avatar(item) {
+			if(!item.id) {return item.text;}
+			var avatar = item.avatar;
+			var level = item.level;
+			return '<table><tr><td style=\"\"><img style=\"height:25px;\" class=\"img-rounded\" src=\"".IMAGES."avatars/' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
+		}
+		$('#".$options['input_id']."').select2({
+		$length
+		multiple: true,
+		maximumSelectionSize: ".$options['maxselect'].",
+		placeholder: '".$options['placeholder']."',
+		ajax: {
+		url: '$path',
+		dataType: 'json',
+		data: function (term, page) {
+				return {q: term};
+			  },
+			  results: function (data, page) {
+				console.log(page);
+				return {results: data};
+			  }
+		},
+		formatSelection: avatar,
+		escapeMarkup: function(m) { return m; },
+		formatResult: avatar,
+		".$allowclear."
+		})".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
+	");
 	if (!defined("SELECT2")) {
 		define("SELECT2", TRUE);
 		add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />");
@@ -307,7 +314,25 @@ function user_search($user_id) {
 	return $encoded;
 }
 
-// Returns a full hierarchy nested dropdown.
+/**
+ * Select2 hierarchy
+ * Returns a full hierarchy nested dropdown.
+ * @param        $input_name
+ * @param string $label
+ * @param bool   $input_value
+ * @param array  $options
+ * @param        $db       - your db
+ * @param        $name_col - the option text to show
+ * @param        $id_col   - unique id
+ * @param        $cat_col  - parent id
+ *                         ## The rest of the Params are used by the function itself -- no need to handle ##
+ * @param bool   $self_id  - not required
+ * @param bool   $id       - not required
+ * @param bool   $level    - not required
+ * @param bool   $index    - not required
+ * @param bool   $data     - not required
+ * @return string
+ */
 function form_select_tree($input_name, $label = "", $input_value = FALSE, array $options = array(), $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
 	global $defender, $locale;
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
