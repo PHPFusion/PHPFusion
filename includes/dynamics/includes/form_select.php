@@ -5,7 +5,8 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: form_select.php
-| Author: Frederick MC CHan (Hien)
+| Author: Frederick MC Chan (Hien)
+| Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
