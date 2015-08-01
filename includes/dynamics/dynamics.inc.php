@@ -35,7 +35,6 @@ class dynamics {
 		require_once DYNAMICS."includes/form_textarea.php";
 		require_once DYNAMICS."includes/form_hidden.php";
 		require_once DYNAMICS."includes/form_alert.php";
-		require_once DYNAMICS."includes/form_labelling.php";
 		require_once DYNAMICS."includes/form_buttons.php";
 		require_once DYNAMICS."includes/form_ordering.php";
 		require_once DYNAMICS."includes/form_chain.php";

@@ -41,6 +41,8 @@ function dynamic_block($title, $description, $form_input) {
  * @param      $items_per_row
  * @param bool $bootstrap_units
  * @return int
+ * Demo Usage: col_span(6), gives 2
+ * @todo: enhance this function
  */
 function col_span($items_per_row, $bootstrap_units = FALSE) {
 	$unit = $bootstrap_units ? 12 : '100';
@@ -50,8 +52,20 @@ function col_span($items_per_row, $bootstrap_units = FALSE) {
 	return (int) $unit;
 }
 
-
-
+if (!function_exists("label")) {
+	function label($label, array $options = array()) {
+		$options += array("class" => !empty($array['class']) ? " ".$array['class'] : "",
+			"icon" => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",);
+		return "<span class='label".$options['class']."'>".$options['icon'].$label."</span>\n";
+	}
+}
+if (!function_exists("badge")) {
+	function badge($label, array $options = array()) {
+		$options += array("class" => !empty($array['class']) ? " ".$array['class'] : "",
+			"icon" => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",);
+		return "<span class='badge".$options['class']."'>".$options['icon'].$label."</span>\n";
+	}
+}
 function openmodal($id, $title, $options=array()) {
 	global $locale;
 	$options += array(
