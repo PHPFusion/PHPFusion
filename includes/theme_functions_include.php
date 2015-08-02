@@ -1,5 +1,4 @@
-<?php
-/*-------------------------------------------------------+
+<?php/*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
@@ -15,12 +14,11 @@
 | at www.gnu.org/licenses/agpl.html. Removal of this
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
-+--------------------------------------------------------*/
++--------------------------------------------------------*/use PHPFusion\Database\DatabaseFactory;
 
-use PHPFusion\Database\DatabaseFactory;
-
-if (!defined("IN_FUSION")) {die("Access Denied");}
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 function dynamic_block($title, $description, $form_input) {
 	return "
 		<div class='dms-switch list-group-item'>\n
@@ -82,31 +80,28 @@ function col_span($items_per_row, $bootstrap_units = FALSE) {
 	if ($items_per_row > 0) {
 		$unit = $bootstrap_units ? floor(12/$items_per_row) : floor(100/$items_per_row);
 	}
-	return (int) $unit;
+	return (int)$unit;
 }
 
 if (!function_exists("label")) {
 	function label($label, array $options = array()) {
-		$options += array("class" => !empty($array['class']) ? " ".$array['class'] : "",
+		$options += array("class" => !empty($array['class']) ? $array['class'] : "",
 			"icon" => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",);
-		return "<span class='label".$options['class']."'>".$options['icon'].$label."</span>\n";
+		return "<span class='label ".$options['class']."'>".$options['icon'].$label."</span>\n";
 	}
 }
 if (!function_exists("badge")) {
 	function badge($label, array $options = array()) {
-		$options += array("class" => !empty($array['class']) ? " ".$array['class'] : "",
+		$options += array("class" => !empty($array['class']) ? $array['class'] : "",
 			"icon" => !empty($array['icon']) ? "<i class='".$array['icon']."'></i> " : "",);
-		return "<span class='badge".$options['class']."'>".$options['icon'].$label."</span>\n";
+		return "<span class='badge ".$options['class']."'>".$options['icon'].$label."</span>\n";
 	}
 }
-function openmodal($id, $title, $options=array()) {
+function openmodal($id, $title, $options = array()) {
 	global $locale;
-	$options += array(
-		'class' => !empty($options['class']) ? : 'modal-lg',
+	$options += array('class' => !empty($options['class']) ? : 'modal-lg',
 		'button_id' => !empty($options['button_id']) ? : 0,
-		'static' => !empty($options['static']) ? : 0,
-	);
-
+		'static' => !empty($options['static']) ? : 0,);
 	if ($options['static'] && $options['button_id']) {
 		add_to_jquery("$('#".$options['button_id']."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); });");
 	} elseif ($options['static'] && empty($options['button_id'])) {
@@ -116,7 +111,6 @@ function openmodal($id, $title, $options=array()) {
 	} else {
 		add_to_jquery("	$('#".$id."-Modal').modal('show');");
 	}
-
 	$html = '';
 	$html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
 	$html .= "<div class='modal-dialog ".$options['class']."'>\n";
@@ -127,7 +121,6 @@ function openmodal($id, $title, $options=array()) {
 		$html .= "<h4 class='modal-title text-dark' id='$id-title'>$title</h4>\n";
 		$html .= "</div>\n";
 	}
-
 	$html .= "<div class='modal-body'>\n";
 	return $html;
 }
@@ -140,26 +133,28 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 	$height = ($height) ? $height : '20px';
 	if (!function_exists('bar_color')) {
 		function bar_color($num, $reverse) {
-		if ($num > 71) {
-			$auto_class = ($reverse) ? 'progress-bar-danger' : 'progress-bar-success';
-		} elseif ($num > 55) {
-			$auto_class = ($reverse) ? 'progress-bar-warning' : 'progress-bar-info';
-		} elseif ($num > 25) {
-			$auto_class = ($reverse) ? 'progress-bar-info' : 'progress-bar-warning';
-		} elseif ($num < 25) {
-			$auto_class = ($reverse) ? 'progress-bar-success' : 'progress-bar-danger';
-		}
-		return $auto_class;
+			if ($num > 71) {
+				$auto_class = ($reverse) ? 'progress-bar-danger' : 'progress-bar-success';
+			} elseif ($num > 55) {
+				$auto_class = ($reverse) ? 'progress-bar-warning' : 'progress-bar-info';
+			} elseif ($num > 25) {
+				$auto_class = ($reverse) ? 'progress-bar-info' : 'progress-bar-warning';
+			} elseif ($num < 25) {
+				$auto_class = ($reverse) ? 'progress-bar-success' : 'progress-bar-danger';
+			}
+			return $auto_class;
 		}
 	}
 	$_barcolor = array('progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger');
-	$_barcolor_reverse = array('progress-bar-success', 'progress-bar-info', 'progress-bar-warning', 'progress-bar-danger');
+	$_barcolor_reverse = array('progress-bar-success',
+		'progress-bar-info',
+		'progress-bar-warning',
+		'progress-bar-danger');
 	$html = '';
-
 	if (is_array($num)) {
 		$html .= "<div class='progress' style='height: ".$height." !important;'>\n";
 		$i = 0;
-		foreach($num as $value) {
+		foreach ($num as $value) {
 			$value = $value > 0 ? $value : '0';
 			$auto_class = ($reverse) ? $_barcolor_reverse[$i] : $_barcolor[$i];
 			$classes = (is_array($class)) ? $class[$i] : $auto_class;
@@ -252,37 +247,31 @@ function showbanners($display = "") {
 	return $output;
 }
 
-
 function showsublinks($sep = "&middot;", $class = "", array $options = array(), $id = 0) {
 	global $userdata, $settings;
 	static $data = array();
-	$res = &$res;
+	$res = & $res;
 	if (empty($data)) {
 		$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position >= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." ORDER BY link_cat, link_order");
 	}
 	if ($id == 0) {
 		$res = "<div class='navbar navbar-default' role='navigation'>\n";
-
 		// this is the mobile button. why is this missing?
 		$res .= "<div class='navbar-header'>\n";
-      	$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#phpfusion-menu' aria-expanded='false'>
+		$res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#phpfusion-menu' aria-expanded='false'>
 					<span class='sr-only'>Toggle navigation</span>
 					<span class='icon-bar'></span>
 					<span class='icon-bar'></span>
 					<span class='icon-bar'></span>
       			</button>\n";
-      	$res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".$settings['sitename']."</a>\n";
-    	$res .= "</div>\n";
-
-
-
+		$res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='#'>".$settings['sitename']."</a>\n";
+		$res .= "</div>\n";
 		$res .= "<div class='navbar-collapse collapse' id='phpfusion-menu'>\n";
 		$res .= "<ul ".($settings['bootstrap'] ? "class='nav navbar-nav'" : "id='main-menu' class='sm sm-simple'").">\n";
 	} else {
 		$res .= "<ul".($settings['bootstrap'] ? " class='dropdown-menu'" : "").">\n";
 	}
-
-	foreach($data[$id] as $link_id => $link_data) {
+	foreach ($data[$id] as $link_id => $link_data) {
 		$li_class = $class;
 		if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 			$link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : "");
@@ -303,14 +292,12 @@ function showsublinks($sep = "&middot;", $class = "", array $options = array(), 
 			echo "<li class='divider'></li>";
 		}
 	}
-
 	if ($id == 0) {
 		$res .= "</ul>\n";
 		$res .= "</div>\n</div>\n";
 	} else {
 		$res .= "</ul>\n";
 	}
-
 	return $res;
 }
 
@@ -409,7 +396,7 @@ function itemoptions($item_type, $item_id) {
 function showrendertime($queries = TRUE) {
 	global $locale, $mysql_queries_count;
 	$db = DatabaseFactory::getConnection();
-	if($db) {
+	if ($db) {
 		$mysql_queries_count = $db->getGlobalQueryCount();
 	}
 	if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
@@ -420,8 +407,8 @@ function showrendertime($queries = TRUE) {
 		$diff = 0;
 		if (isset($_SESSION['performance'])) {
 			$average_speed = substr(array_sum($_SESSION['performance'])/count($_SESSION['performance']), 0, 7);
-			$previous_render = array_values(array_slice( $_SESSION['performance'], -2, 1, TRUE ));
-			$diff = $render_time - (!empty($previous_render) ? $previous_render[0] : 0);
+			$previous_render = array_values(array_slice($_SESSION['performance'], -2, 1, TRUE));
+			$diff = $render_time-(!empty($previous_render) ? $previous_render[0] : 0);
 		}
 		$res = sprintf($locale['global_172'], $render_time)." | ".sprintf($locale['global_175'], $average_speed." ($diff)");
 		$res .= ($queries ? " | ".ucfirst($locale['global_173']).": $mysql_queries_count" : "");
@@ -435,7 +422,6 @@ function showMemoryUsage() {
 	global $locale;
 	$memory_allocated = parsebytesize(memory_get_peak_usage(TRUE));
 	$memory_used = parsebytesize(memory_get_peak_usage(FALSE));
-
 	return " | ".$locale['global_174'].": ".$memory_used."/".$memory_allocated;
 }
 
@@ -486,20 +472,16 @@ if (!function_exists('opensidex')) {
 		openside($title, TRUE, $state);
 	}
 }
-
 if (!function_exists('closesidex')) {
 	function closesidex() {
 		closeside();
 	}
 }
-
 if (!function_exists('tablebreak')) {
 	function tablebreak() {
 		return TRUE;
 	}
 }
-
-
 // this one set for removal... we only need 1 set of breadcrumbs.
 function make_breadcrumb($title, $db, $id_col, $cat_col, $name_col, $id, $class = FALSE) {
 	global $aidlink;
@@ -508,6 +490,7 @@ function make_breadcrumb($title, $db, $id_col, $cat_col, $name_col, $id, $class 
 	breadcrumb_items($db, $id_col, $cat_col, $name_col, $id);
 	echo "</ol>\n";
 }
+
 // this one set for removal... we only need 1 set of breadcrumbs.
 function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
 	global $aidlink;
@@ -524,43 +507,34 @@ function breadcrumb_items($db, $id_col, $cat_col, $name_col, $id) {
 }
 
 /**
- * @param array $userdata
- * 	Indexes:
- * 		- user_id
- * 		- user_name
- * 		- user_avatar
- * 		- user_status
- * @param string $size A valid size for CSS max-width and max-height.
- * @param string $class Classes for the link
- * @param bool $link FALSE if you want to display the avatar without link. TRUE by default.
+ * @param array  $userdata
+ *                          Indexes:
+ *                          - user_id
+ *                          - user_name
+ *                          - user_avatar
+ *                          - user_status
+ * @param string $size      A valid size for CSS max-width and max-height.
+ * @param string $class     Classes for the link
+ * @param bool   $link      FALSE if you want to display the avatar without link. TRUE by default.
  * @param string $img_class Classes for the image
  * @return string
  */
 if (!function_exists('display_avatar')) {
-	function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class='img-thumbnail') {
-		$userdata += array(
-			'user_id' => 0,
+	function display_avatar(array $userdata, $size, $class = '', $link = TRUE, $img_class = 'img-thumbnail') {
+		$userdata += array('user_id' => 0,
 			'user_name' => '',
 			'user_avatar' => '',
-			'user_status' => ''
-		);
+			'user_status' => '');
 		if (!$userdata['user_id']) {
 			$userdata['user_id'] = 1;
 		}
 		$class = ($class) ? "class='$class'" : '';
 		$hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
 		$imgTpl = "<img class='img-responsive $img_class %s' alt='".$userdata['user_name']."' style='display:inline; max-width:$size; max-height:$size;' src='%s'>";
-		$img = sprintf($imgTpl,
-					   $hasAvatar ? '' : 'm-r-10',
-					   $hasAvatar ? IMAGES."avatars/".$userdata['user_avatar'] : IMAGES.'avatars/noavatar100.png'
-		);
-		return $link
-			? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img)
-			: $img;
+		$img = sprintf($imgTpl, $hasAvatar ? '' : 'm-r-10', $hasAvatar ? IMAGES."avatars/".$userdata['user_avatar'] : IMAGES.'avatars/noavatar100.png');
+		return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
 	}
 }
-
-
 /**
  * Thumbnail function
  * @param      $src
@@ -581,10 +555,13 @@ function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = T
 		$_size = explode('px', $size);
 		$_offset_w = 0;
 		$_offset_h = 0;
-		if ($width > $_size[0]) { $_offset_w = ($width - $_size[0])/2; } // get surplus and negative by half.
-		if ($height > $_size[0]) { $_offset_h = ($height - $_size[0])/2; } // get surplus and negative by half.
+		if ($width > $_size[0]) {
+			$_offset_w = ($width-$_size[0])/2;
+		} // get surplus and negative by half.
+		if ($height > $_size[0]) {
+			$_offset_h = ($height-$_size[0])/2;
+		} // get surplus and negative by half.
 	}
-
 	$html = "<div style='max-height:".$size."; max-width:".$size."' class='display-inline-block image-wrap thumb text-center overflow-hide  m-2'>\n";
 	$html .= $url || $colorbox ? "<a ".($colorbox && $src ? "class='colorbox'" : '')."  ".($url ? "href='".$url."'" : '')." >" : '';
 	if ($src && file_exists($src) && !is_dir($src)) {
@@ -596,13 +573,11 @@ function thumbnail($src, $size, $url = FALSE, $colorbox = FALSE, $responsive = T
 	$html .= $url || $colorbox ? "</a>" : '';
 	$html .= "</div>\n";
 	if ($colorbox && $src && !defined('colorbox')) {
-		define('colorbox', true);
+		define('colorbox', TRUE);
 		add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
 		add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 		add_to_jquery("$('.colorbox').colorbox();");
 	}
-
-
 	return $html;
 }
 
@@ -634,16 +609,19 @@ function timer($updated = FALSE) {
 	if ($calculated < 1) {
 		return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$locale['just_now']."</abbr>\n";
 	}
-//	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
-//	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
-
-	$timer = array($year => $locale['fmt_year'], $month => $locale['fmt_month'], $day => $locale['fmt_day'], $hour => $locale['fmt_hour'], $minute => $locale['fmt_minute'], $second => $locale['fmt_second']);
-
+	//	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
+	//	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
+	$timer = array($year => $locale['fmt_year'],
+		$month => $locale['fmt_month'],
+		$day => $locale['fmt_day'],
+		$hour => $locale['fmt_hour'],
+		$minute => $locale['fmt_minute'],
+		$second => $locale['fmt_second']);
 	foreach ($timer as $arr => $unit) {
 		$calc = $calculated/$arr;
 		if ($calc >= 1) {
 			$answer = round($calc);
-//			$string = ($answer > 1) ? $timer_b[$arr] : $unit;
+			//			$string = ($answer > 1) ? $timer_b[$arr] : $unit;
 			$string = format_word($answer, $unit, 0);
 			return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $updated)."'>".$answer." ".$string." ".$locale['ago']."</abbr>";
 		}
@@ -665,10 +643,18 @@ function countdown($time) {
 	$day = 24*$hour;
 	$month = days_current_month()*$day;
 	$year = (date("L", $updated) > 0) ? 366*$day : 365*$day;
-
-	$timer = array($year => $locale['year'], $month => $locale['month'], $day => $locale['day'], $hour => $locale['hour'], $minute => $locale['minute'], $second => $locale['second']);
-	$timer_b = array($year => $locale['year_a'], $month => $locale['month_a'], $day => $locale['day_a'], $hour => $locale['hour_a'], $minute => $locale['minute_a'], $second => $locale['second_a']);
-
+	$timer = array($year => $locale['year'],
+		$month => $locale['month'],
+		$day => $locale['day'],
+		$hour => $locale['hour'],
+		$minute => $locale['minute'],
+		$second => $locale['second']);
+	$timer_b = array($year => $locale['year_a'],
+		$month => $locale['month_a'],
+		$day => $locale['day_a'],
+		$hour => $locale['hour_a'],
+		$minute => $locale['minute_a'],
+		$second => $locale['second_a']);
 	foreach ($timer as $arr => $unit) {
 		$calc = $updated/$arr;
 		if ($calc >= 1) {
@@ -686,14 +672,14 @@ function opencollapse($id) {
 	return "<div class='panel-group' id='".$id."' role='tablist' aria-multiselectable='true'>\n";
 }
 
-function opencollapsebody($title, $unique_id, $grouping_id, $active = 0, $class = false) {
+function opencollapsebody($title, $unique_id, $grouping_id, $active = 0, $class = FALSE) {
 	$html = "<div class='panel panel-default'>\n";
 	$html .= "<div class='panel-heading clearfix'>\n";
 	$html .= "<div class='overflow-hide'>\n";
 	$html .= "<span class='display-inline-block strong'><a ".collapse_header_link($grouping_id, $unique_id, $active, $class).">".$title."</a></span>\n";
 	$html .= "</div>\n";
 	$html .= "</div>\n";
-	$html .= "<div ".collapse_footer_link($grouping_id,$unique_id, $active).">\n"; // body.
+	$html .= "<div ".collapse_footer_link($grouping_id, $unique_id, $active).">\n"; // body.
 	return $html;
 }
 
@@ -705,19 +691,19 @@ function closecollapsebody() {
 
 function collapse_header_link($id, $title, $active, $class = '') {
 	$active = ($active) ? '' : 'collapsed';
-	$title_id_cc =  preg_replace('/[^A-Z0-9-]+/i', "-", $title);
+	$title_id_cc = preg_replace('/[^A-Z0-9-]+/i', "-", $title);
 	return "class='$class $active' data-toggle='collapse' data-parent='#".$id."' href='#".$title_id_cc."-".$id."' aria-expanded='true' aria-controls='".$title_id_cc."-".$id."'";
 }
+
 function collapse_footer_link($id, $title, $active, $class = '') {
 	$active = ($active) ? 'in' : '';
-	$title_id_cc =  preg_replace('/[^A-Z0-9-]+/i', "-", $title);
+	$title_id_cc = preg_replace('/[^A-Z0-9-]+/i', "-", $title);
 	return "id='".$title_id_cc."-".$id."' class='panel-collapse collapse ".$active." ".$class."' role='tabpanel' aria-labelledby='headingOne'";
 }
+
 function closecollapse() {
 	return "</div>\n";
 }
-
-
 
 function tab_active($tab_title, $default_active, $link_mode = FALSE) {
 	if ($link_mode) {
@@ -753,7 +739,13 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		$v_title = str_replace("-", " ", $v);
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
 		$inner_id = $tab_title['id'][$arr];
-		$link_url = $link ? clean_request('section='.$inner_id, array('aid', 'a_page', 'thread_id', 'forum_id', 'ref', 'id', 'parent_id')) : '#';
+		$link_url = $link ? clean_request('section='.$inner_id, array('aid',
+			'a_page',
+			'thread_id',
+			'forum_id',
+			'ref',
+			'id',
+			'parent_id')) : '#';
 		if ($link_mode) {
 			$html .= ($link_active_arrkey == $inner_id) ? "<li class='active'>\n" : "<li>\n";
 		} else {
@@ -801,7 +793,6 @@ function opentabbody($tab_title, $id, $link_active_arrkey = FALSE, $link = FALSE
 function closetabbody() { return "</div>\n"; }
 
 function closetab() { return "</div>\n</div>\n"; }
-
 
 /* Standard ratings display */
 function display_ratings($total_sum, $total_votes, $link = FALSE, $class = FALSE, $mode = '1') {
