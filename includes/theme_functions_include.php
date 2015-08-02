@@ -1,4 +1,5 @@
-<?php/*-------------------------------------------------------+
+<?php
+/*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
@@ -15,6 +16,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 use PHPFusion\Database\DatabaseFactory;
 
 if (!defined("IN_FUSION")) {
