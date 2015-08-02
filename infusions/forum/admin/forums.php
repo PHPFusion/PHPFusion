@@ -32,6 +32,7 @@ require_once INCLUDES.'infusions_include.php';
 $forum_settings = get_settings('forum');
 $forum_admin = new PHPFusion\Forums\Admin;
 // want to tab , do it here.
+opentable($locale['forum_000c']);
 $tab_title['title'][] = $locale['forum_admin_000'];
 $tab_title['id'][] = 'fm';
 $tab_title['icon'][] = '';
@@ -69,4 +70,5 @@ if (isset($_GET['section'])) {
 	echo closetabbody();
 }
 echo closetab();
+closetable();
 require_once THEMES."templates/footer.php";
