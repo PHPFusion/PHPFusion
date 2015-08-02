@@ -66,6 +66,11 @@ $locale['forum_059'] = "Повідомлення : ";
 $locale['forum_060'] = "Опції видалення розділу";
 $locale['forum_061'] = "Облік повідомлень користувача на форумі оновлено";
 
+/* Ranks Styling */
+$locale['forum_062'] = "Зображення";
+$locale['forum_063'] = "Назва";
+$locale['forum_064'] = "Стиль рангів";
+
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Видалено повідомлення: ";
 $locale['forum_071'] = "Видалено приєднання: ";
