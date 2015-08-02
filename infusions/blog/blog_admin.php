@@ -546,7 +546,7 @@ function blog_form() {
 		echo form_hidden('blog_hidden_image', '', $data['blog_image']);
 		echo form_hidden('blog_hidden_image_t1', '', $data['blog_image_t1']);
 		echo form_hidden('blog_hidden_image_t1', '', $data['blog_image_t2']);
-		echo form_select('blog_ialign', $locale['442'], $align_options, $data['blog_ialign']);
+		echo form_select('blog_ialign', $locale['442'], $data['blog_ialign'], array("options"=>$align_options));
 		echo "</div></div>\n";
 	} else {
 		echo form_fileinput('blog_image', $locale['439'], '', array("upload_path" => IMAGES_B,
@@ -558,7 +558,7 @@ function blog_form() {
 											"thumbnail2" => TRUE,
 											"type" => "image"));
 		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($blog_settings['blog_photo_max_b']))."</div>\n";
-		echo form_select('blog_ialign', $locale['442'], $align_options, $data['blog_ialign'], array('inline' => 1));
+		echo form_select('blog_ialign', $locale['442'], $data['blog_ialign'], array('inline' => true, 'options'=>$align_options));
 	}
 	closeside();
 	echo form_textarea('blog_blog', $locale['425'], $data['blog_blog'], $fusion_mce);
@@ -573,7 +573,7 @@ function blog_form() {
 		'icon' => 'fa fa-check-square-o'));
 	closeside();
 	openside('');
-	echo form_select('blog_keywords', $locale['443'], array(), $data['blog_keywords'], array('max_length' => 320,
+	echo form_select('blog_keywords', $locale['443'], $data['blog_keywords'], array('max_length' => 320,
 		'width' => '100%',
 		'error_text' => $locale['457'],
 		'tags' => 1,
@@ -588,13 +588,17 @@ function blog_form() {
 	closeside();
 	openside('');
 	if (multilang_table("BL")) {
-		echo form_select('blog_language', $locale['global_ML100'], $language_opts, $data['blog_language'], array('placeholder' => $locale['choose'],
+		echo form_select('blog_language', $locale['global_ML100'], $data['blog_language'], array(
+			'options'=>$language_opts,
+			'placeholder' => $locale['choose'],
 			'width' => '100%'));
 	} else {
 		echo form_hidden('blog_language', '', $data['blog_language']);
 	}
 	echo form_hidden('blog_datestamp', '', $data['blog_datestamp']);
-	echo form_select('blog_visibility', $locale['430'], $visibility_opts, $data['blog_visibility'], array('placeholder' => $locale['choose'],
+	echo form_select('blog_visibility', $locale['430'], $data['blog_visibility'], array(
+		'options'=>$visibility_opts,
+		'placeholder' => $locale['choose'],
 		'width' => '100%'));
 	closeside();
 	openside('');

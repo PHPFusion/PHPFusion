@@ -216,9 +216,9 @@ class Admin {
 				echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
 				echo "<div class='btn-group pull-right m-l-20 m-t-20'>\n";
 				if ($status == true) {
-					echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&amp;theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
+					echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&amp;theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
 				} else {
-					echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&amp;theme=".$theme_name."'><i class='fa fa-upload fa-fw'></i> ".$locale['theme_1012']."</a>";
+					echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&amp;theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
 				}
 				echo "</div>\n";
 				echo "<div class='overflow-hide'>\n";
