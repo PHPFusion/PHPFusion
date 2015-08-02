@@ -31,49 +31,147 @@ class Admin {
 		$_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
 		add_breadcrumb(array('link'=>ADMIN."theme.php".$aidlink, 'title'=>$locale['theme_1000']));
 		self::set_theme_active();
+		if (isset($_POST['install_widget']) && fusion_get_settings('theme') == $_POST['install_widget']) {
+			$widget_name = form_sanitizer($_POST['install_widget'], '');
+			self::install_widget($widget_name);
+		}
 	}
 
+	/**
+	 * Set them as active
+	 */
 	protected function set_theme_active() {
 		global $aidlink;
 		if (isset($_POST['activate'])) {
 			$theme_name = form_sanitizer($_POST['activate'], '');
-			if (self::verify_theme($theme_name)) {
+			if (self::theme_installable($theme_name)) {
 				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$theme_name."' WHERE settings_name='theme'");
 				if ($result) redirect(FUSION_SELF.$aidlink);
 			}
 		}
 	}
 
-	static function get_edit_status() {
-		$theme_name = isset($_POST['theme']) ? stripinput($_POST['theme']) : '';
+	/**
+	 * Process the sql insertion
+	 * @param $theme_folder
+	 */
+	private function install_widget($theme_folder) {
+		global $locale, $aidlink;
+		if (iADMIN && self::get_edit_status($theme_folder) && file_exists(THEMES.$theme_folder."/theme_db.php") && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$theme_folder."'"))
+		{
+			include THEMES.$theme_folder."/theme_db.php";
+
+			if (isset($theme_newtable) && is_array($theme_newtable)) {
+				foreach ($theme_newtable as $item) {
+					dbquery("CREATE TABLE ".$item);
+				}
+			}
+
+			if (isset($theme_insertdbrow) && is_array($theme_insertdbrow)) {
+				foreach ($theme_insertdbrow as $item) {
+					print_p($item);
+					dbquery("INSERT INTO ".$item);
+				}
+			}
+			addNotice('success', sprintf($locale['theme_1019'], ucwords($theme_folder)));
+			redirect(FUSION_SELF.$aidlink);
+		}
+
+	}
+
+	/**
+	 * Verify theme exist
+	 * @param $theme_name
+	 * @return bool
+	 */
+	public static function verify_theme($theme_name) {
 		return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') == $theme_name) ? true : false;
 	}
-	// what else to verify on theme?
-	static function verify_theme($theme_name) {
+
+	/**
+	 * Verify that theme exist and not active
+	 * @param $theme_name
+	 * @return bool
+	 */
+	static function theme_installable($theme_name) {
 		return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') !== $theme_name) ? true : false;
 	}
 
-	static function theme_editor() {
-		global $aidlink;
-		if (!isset($_POST['theme'])) redirect(FUSION_SELF.$aidlink);
-		add_breadcrumb(array('link'=>'', 'title'=>'Theme Configuration'));
-		// The working engine class to build css and set the db
+	public static function display_theme_editor($theme_name) {
+		global $aidlink, $locale;
+		// sanitize theme exist
+		$theme_name = self::verify_theme($theme_name) ? $theme_name : "";
+		if (!$theme_name) { redirect(clean_request("", array("aid"), true)); }
+		add_breadcrumb(array('link'=>'', 'title'=>$locale['theme_1018']));
+
+
+
+		// Problem: Need 2 seperate section, with 2 seperate button actions
+		// Build a Dynamic Navbar that listens to $_GET['ref'];
+		$pageSection = array();
+		$pageSection += array(
+			"dashboard" => array("icon"=>"fa fa-edit fa-fw", "title"=>$locale['theme_1022']),
+			"widgets"=> array("icon"=>"fa fa-cube fa-fw", "title"=>$locale['theme_1023']),
+			"css"=> array("icon"=>"fa fa-css3 fa-fw", "title"=>$locale['theme_1024']),
+		);
+		if (isset($_GET['action'])) {
+			$pageSection['close'] = array("icon"=>"fa fa-close fa-fw", "title"=>$locale['theme_1029']);
+		}
+
+		$_GET['ref'] = isset($_GET['ref']) && isset($pageSection[$_GET['ref']]) ? $_GET['ref'] : 'dashboard';
+		echo "<nav class='navbar navbar-default'>\n";
+		echo "<ul class='navbar navbar-nav'>\n";
+		$i = 0;
+		foreach($pageSection as $key=>$value) {
+			$class_active =  (isset($_GET['ref'])) && $_GET['ref'] == $key ? "class='active'" : "";
+			echo "<li ".$class_active.">
+					<a href='".clean_request("ref=".$key, array("aid", "action", "theme"), true)."'>\n
+					<i class='".$value['icon']."'></i> ".$value['title']."
+					</a>
+				</li>\n";
+			$i++;
+		}
+		echo "</ul>\n";
+		echo "</nav>\n";
+
 		$atom = new \PHPFusion\Atom\Atom();
-		$atom->target_folder = $_POST['theme'];
-		$atom->theme_name = $_POST['theme'];
-		$atom->load_theme_actions();
+		$atom->target_folder = $theme_name;
+		$atom->theme_name = $theme_name;
 		$atom->set_theme();
-		$atom->render_theme_presets();
-		$atom->theme_editor();
+		$atom->load_theme_actions();
+
+		// now include the thing as necessary
+		switch($_GET['ref']) {
+			case "dashboard":
+				// Show theme presets available and load it.
+				$atom->render_theme_overview();
+				break;
+			case "widgets":
+				// Show theme widgets
+
+				break;
+			case "css":
+
+
+				$atom->theme_editor();
+				break;
+			case "close":
+				redirect(FUSION_SELF.$aidlink);
+				break;
+			default:
+				break;
+		}
+
 	}
 
-	static function list_theme() {
+	public static function display_theme_list() {
 		global $locale, $aidlink, $settings;
 		$data = array();
 		$_dir = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
 		foreach($_dir as $folder) {
 			$theme_dbfile = '/theme_db.php';
 			$status = $settings['theme'] == $folder ? 1 : 0;
+
 			if (file_exists(THEMES.$folder.$theme_dbfile)) {
 				// 9.00 compatible theme.
 				$theme_folder = '';
@@ -87,6 +185,16 @@ class Admin {
 				$data[$status][$folder]['license'] = isset($theme_license) ? $theme_license : '';
 				$data[$status][$folder]['version'] = isset($theme_version) ? $theme_version : '';
 				$data[$status][$folder]['description'] = isset($theme_description) ? $theme_description : '';
+
+				// Find widgets
+				if (isset($theme_newtable) || isset($theme_insertdbrow)) {
+					$data[$status][$folder]['widget'] = true;
+					// count how many widget components
+					$data[$status][$folder]['widgets'] = isset($theme_newtable) ? count($theme_newtable) : 0;
+					// check if widgets installed - @todo: how to handle theme that only have new table but no row.
+					$data[$status][$folder]['widget_status'] = dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$theme_folder."'") > 0 ? true : false;
+				}
+
 			} else {
 				// older legacy theme.
 				if (file_exists(THEMES.$folder.'/theme.php')) {
@@ -98,55 +206,46 @@ class Admin {
 				}
 			}
 		}
-		// list down the active one.
-		foreach ($data[1] as $theme_name => $theme_data) {
-			//print_p($theme_data);
-			echo "<div class='panel panel-default'>\n";
-			echo "<div class='panel-body'>\n";
-			echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
-			echo "<div class='btn-group pull-right m-t-20'>\n";
-			echo openform('editfrm-active-'.$theme_name, 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice'=>0, 'max_tokens' => 2));
-			echo form_button('theme', $locale['theme_1005'], $theme_name, array('class'=>'btn-default'));
-			echo closeform();
-			echo "</div>\n";
-			echo "<div class='overflow-hide'>\n";
-			echo "<h4 class='strong text-dark m-b-20'>".$theme_data['title']."</h4>";
-			echo "<div>\n";
-			if (!empty($theme_data['description'])) echo "<span>".$theme_data['description']."</span><br/>";
-			if (!empty($theme_data['license'])) echo "<span class='display-inline-block m-r-10'><span class='text-dark'>License</span> ".$theme_data['license']."</span>\n";
-			if (!empty($theme_data['version'])) echo "<span class='display-inline-block m-r-10'><span class='text-dark'>Version</span> ".$theme_data['version']."</span>\n";
-			if (!empty($theme_data['author'])) echo "<span class='display-inline-block m-r-10'>Created by ".$theme_data['author']."</span>";
-			if (!empty($theme_data['web'])) echo  "<span><a href='".$theme_data['web']."'>".$theme_data['web']."</a></span>";
-			echo "<h5><label class='label label-success'>".$locale['theme_1006']."</label></h5>\n";
-			echo "</div>\n";
-			echo "</div>\n";
 
-			echo "</div>\n</div>\n";
-		}
-		// list down the rest of the themes
-		foreach ($data[0] as $theme_name => $theme_data) {
-			//print_p($theme_data);
-			echo "<div class='panel panel-default'>\n";
-			echo "<div class='panel-body'>\n";
-			echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
-			echo openform('editfrm-inactive-'.$theme_name, 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('class'=>'pull-right', 'notice'=>0, 'max_tokens' => 2));
-			echo form_button('activate', $locale['theme_1012'], $theme_name, array('class'=>'btn-primary'));
-			echo closeform();
-			echo "<div class='overflow-hide'>\n";
-			echo "<h4 class='strong text-dark m-b-20'>".$theme_data['title']."</h4>";
-			echo "<div>\n";
-			if (!empty($theme_data['description'])) echo "<span>".$theme_data['description']."</span><br/>";
-			if (!empty($theme_data['license'])) echo "<span class='display-inline-block m-r-10'><span class='text-dark'>License</span> ".$theme_data['license']."</span>\n";
-			if (!empty($theme_data['version'])) echo "<span class='display-inline-block m-r-10'><span class='text-dark'>Version</span> ".$theme_data['version']."</span>\n";
-			if (!empty($theme_data['author'])) echo "<span class='display-inline-block m-r-10'>Created by ".$theme_data['author']."</span>";
-			if (!empty($theme_data['web'])) echo  "<span><a href='".$theme_data['web']."'>".$theme_data['web']."</a></span>";
-			echo "</div>\n";
-			echo "</div>\n";
-			echo "</div>\n</div>\n";
+		krsort($data);
+		foreach ($data as $status => $themes) {
+			foreach($themes as $theme_name => $theme_data) {
+				echo "<div class='panel panel-default'>\n";
+				echo "<div class='panel-body'>\n";
+				// Links
+				echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
+				echo "<div class='btn-group pull-right m-l-20 m-t-20'>\n";
+				if ($status == true) {
+					echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&amp;theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
+				} else {
+					echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&amp;theme=".$theme_name."'><i class='fa fa-upload fa-fw'></i> ".$locale['theme_1012']."</a>";
+				}
+				echo "</div>\n";
+				echo "<div class='overflow-hide'>\n";
+				echo "<h4 class='strong text-dark'>".($status == true ? "<i class='fa fa-diamond fa-fw'></i>" : "").$theme_data['title']."</h4>";
+				echo "<div>\n";
+				if (!empty($theme_data['description'])) echo "<div class='display-block m-b-10'>".$theme_data['description']."</div>";
+				if (!empty($theme_data['license'])) echo "<span class='display-inline-block m-r-10'><span class='text-dark'>".$locale['theme_1013']."</span> ".$theme_data['license']."</span>\n";
+				if (!empty($theme_data['version'])) echo "<span class='display-inline-block m-r-10'><span class='text-dark'>".$locale['theme_1014']."</span> ".$theme_data['version']."</span>\n";
+				if (!empty($theme_data['author'])) echo "<span class='display-inline-block m-r-10'>".$theme_data['author']."</span>";
+				if (!empty($theme_data['web'])) echo  "<span><a title='".$locale['theme_1015']."' href='".$theme_data['web']."'>".$locale['theme_1015']."</a></span>";
+				echo "<div class='m-t-10'>\n";
+				if ($status == true) {
+					echo "<label class='label label-success m-r-5'>".$locale['theme_1006']."</label>\n";
+				}
+				if (isset($theme_data['widgets'])) {
+					echo "<label class='label label-default'>".format_word($theme_data['widgets'], $locale['theme_1021'])."</label>\n";
+				}
+				echo "</div>\n";
+				echo "</div>\n";
+				echo "</div>\n";
+				echo "</div>\n</div>\n";
+				unset($theme_data);
+			}
 		}
 	}
 
-	static function theme_uploader() {
+	public static function theme_uploader() {
 		global $locale, $aidlink, $defender;
 
 		if (isset($_POST['upload'])) {

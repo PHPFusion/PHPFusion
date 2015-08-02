@@ -1,18 +1,37 @@
 <?php
 
 $locale['theme_1000'] = 'Theme Administration';
-$locale['theme_1001'] = 'Create New';
+$locale['theme_1001'] = 'Theme Name:';
 $locale['theme_1002'] = 'Theme Presets';
 $locale['theme_1003'] = 'Loaded';
 $locale['theme_1004'] = 'Load';
-$locale['theme_1005'] = 'Configure Theme';
+$locale['theme_1005'] = 'Manage Theme';
 $locale['theme_1006'] = 'Current Active Theme';
 $locale['theme_1007'] = 'Upload Theme ZIP file';
 $locale['theme_1008'] = 'Upload Theme';
-$locale['theme_1009'] = 'Edit Theme';
+$locale['theme_1009'] = 'Theme Styling';
 $locale['theme_1010'] = 'Current Themes';
 $locale['theme_1011'] = 'Upload New Theme';
-$locale['theme_1012'] = 'Set Active';
+$locale['theme_1012'] = 'Set as Active';
+$locale['theme_1013'] = 'License:';
+$locale['theme_1014'] = 'Version:';
+$locale['theme_1015'] = 'Developer\'s Website: ';
+$locale['theme_1016'] = 'Install Widget';
+$locale['theme_1017'] = 'Uninstall Widget';
+$locale['theme_1018'] = 'Theme Styles Configuration';
+$locale['theme_1019'] = '%s theme widgets has been installed';
+$locale['theme_1020'] = 'Widget Settings';
+$locale['theme_1021'] = 'widget|widgets';
+$locale['theme_1022'] = "Theme Overview";
+$locale['theme_1023'] = "Widgets Control";
+$locale['theme_1024'] = "Current Theme Styling";
+$locale['theme_1025'] = 'Theme Description: ';
+$locale['theme_1026'] = 'Theme Developer: ';
+$locale['theme_1027'] = 'Theme Widgets: ';
+$locale['theme_1028'] = 'Total Presets: ';
+$locale['theme_1029'] = 'Return to Themes';
+$locale['theme_1030'] = 'No custom presets defined';
+
 
 $locale['theme_2001'] = 'Base Fonts';
 $locale['theme_2002'] = 'Theme Components';
@@ -20,7 +39,7 @@ $locale['theme_2003'] = 'Navigation';
 $locale['theme_2004'] = 'Base Fonts';
 $locale['theme_2005'] = 'Rebuilding New %s Theme';
 $locale['theme_2006'] = '<strong>The Atom Theme Engine is currently rebuilding your theme and may take up to 15 to 30 seconds depending of network status.</strong><br/>Please do not close or refresh the window.';
-$locale['theme_2007'] = 'Style Title';
+$locale['theme_2007'] = 'Custom Preset Title';
 $locale['theme_2008'] = 'Template';
 $locale['theme_2009'] = 'Choose Color';
 $locale['theme_2010'] = 'Pick the font and build your collection';
@@ -64,13 +83,10 @@ $locale['theme_3011'] = 'Buttons';
 $locale['theme_3012'] = 'Fill Type';
 $locale['theme_3013'] = 'Border Width';
 $locale['theme_3014'] = 'Border Radius';
-
 $locale['theme_3015'] = 'Primary';
-
 $locale['theme_3016'] = 'Normal State';
 $locale['theme_3017'] = 'Hover State';
 $locale['theme_3018'] = 'Active State';
-
 $locale['theme_3019'] = 'Hover Background Color';
 $locale['theme_3020'] = 'Active Background Color';
 $locale['theme_3021'] = 'Info';
@@ -111,6 +127,7 @@ $locale['theme_5010'] = 'Vertical Gradient';
 $locale['theme_5011'] = 'Radial Gradient';
 $locale['theme_5012'] = 'Diagonal Gradient';
 
+$locale['theme_5013'] = "Save Preset";
 
 
 $locale['theme_success_001'] = "Theme was uploaded to your theme folder";

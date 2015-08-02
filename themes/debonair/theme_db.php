@@ -41,7 +41,7 @@ define('DB_DEBONAIR', DB_PREFIX."debonair");
 // which page shows the master slider? use tags.
 
 // how many slides to insert? what is the next slide? install a new table.
-$inf_newtable[1] = DB_DEBONAIR." (
+$theme_newtable[1] = DB_DEBONAIR." (
 	banner_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 	banner_subject VARCHAR(200) NOT NULL DEFAULT '',
 	banner_description text not null,
@@ -55,16 +55,16 @@ $inf_newtable[1] = DB_DEBONAIR." (
 	PRIMARY KEY (banner_id),
 	KEY news_datestamp (banner_datestamp)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-$inf_droptable[1] = DB_DEBONAIR;
+$theme_droptable[1] = DB_DEBONAIR;
 
 // main settings of first canvas.
-$theme_insertdbrow[1] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES('main_banner_url', 'home.php', '".$theme_folder."')";
-$theme_insertdbrow[2] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES('banner_title', '', '".$theme_folder."')";
-$theme_insertdbrow[3] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES('banner_description', '', '".$theme_folder."')";
-$theme_insertdbrow[4] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES('banner_image', '', '".$theme_folder."')";
+$theme_insertdbrow[1] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('main_banner_url', 'home.php', '".$theme_folder."')";
+$theme_insertdbrow[2] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('banner_title', '', '".$theme_folder."')";
+$theme_insertdbrow[3] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('banner_description', '', '".$theme_folder."')";
+$theme_insertdbrow[4] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('banner_image', '', '".$theme_folder."')";
 
 
-$inf_deldbrow[1] = DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'";
+$theme_deldbrow[1] = DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'";
 // pull latest content from which infusions? make list of installed.
 
 // Bottom Settings

@@ -30,20 +30,24 @@ class Atom {
 	 * For internals CSS compilers - These are actual css properties. Do not translate.
 	 */
 	private $text_weight = array('400', '600', '400', '400', '600', '600', '400', '600');
-	private $text_decoration = array('none',
-		'none',
-		'none',
-		'underline',
-		'underline',
-		'none',
-		'underline',
-		'underline');
+	private $text_decoration = array(
+								'none',
+								'none',
+								'none',
+								'underline',
+								'underline',
+								'none',
+								'underline',
+								'underline'
+							);
 	private $text_style = array('normal', 'normal', 'italic', 'normal', 'normal', 'italic', 'italic', 'italic');
+
 	/**
 	 * Initialize Data
 	 * @var array
 	 */
-	private $data = array('theme_id' => 0,
+	private $data = array(
+		'theme_id' => 0,
 		'theme_title' => '',
 		'sans_serif_fonts' => 'Helvetica Neue, Helvetica, Arial, sans-serif',
 		'serif_fonts' => 'Georgia, Times New Roman, Times, serif',
@@ -173,7 +177,9 @@ class Atom {
 	public function load_theme_actions() {
 		global $defender, $locale, $aidlink;
 		$result = NULL;
+
 		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
+
 		// when we click delete preset
 		if (isset($_POST['delete_preset']) && isnum($_POST['delete_preset'])) {
 			// check if active, if not delete and remove css file
@@ -183,6 +189,7 @@ class Atom {
 			addNotice('warning', $locale['theme_success_002']);
 			redirect(FUSION_SELF.$aidlink);
 		} // when we click load preset
+
 		elseif (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_id='".$_POST['load_preset']."'");
 		} // except for save theme, or click on new - will load
@@ -209,25 +216,48 @@ class Atom {
 	}
 
 	/* to roll out only on future versions */
-	public function render_theme_presets() {
+	public function render_theme_overview() {
 		global $locale, $aidlink;
+
 		$theme_dbfile = '/theme_db.php';
+		$data = array(
+			"theme_name" => $this->theme_name,
+			"theme_screenshot" => "",
+			"theme_author" => "",
+			"theme_web" => "",
+			"theme_license" => 'AGPL3',
+			"theme_version" => "",
+			"theme_description" => "",
+		);
 		if (file_exists(THEMES.$this->theme_name.$theme_dbfile)) { // new 9.00
 			include THEMES.$this->theme_name.$theme_dbfile;
-			$screenshot = isset($theme_screenshot) && file_exists(THEMES.$this->theme_name."/".$theme_screenshot) ? THEMES.$this->theme_name."/".$theme_screenshot : IMAGES.'imagenotfound.jpg';
+			$data['theme_name'] = !empty($theme_title) ? $theme_title : $data['theme_name'];
+			$data['theme_screenshot'] = isset($theme_screenshot) && file_exists(THEMES.$this->theme_name."/".$theme_screenshot) ? THEMES.$this->theme_name."/".$theme_screenshot : IMAGES.'imagenotfound.jpg';
+			$data['theme_author'] = !empty($theme_author) ? $theme_author : $data['theme_author'];
+			$data['theme_web'] = !empty($theme_web) ? $theme_web : $data['theme_web'];
+			$data['theme_license'] = !empty($theme_license) ? $theme_license : $data['theme_license'];
+			$data['theme_version'] = !empty($theme_version) ? $theme_version : $data['theme_version'];
+			$data['theme_description'] = !empty($theme_description) ? $theme_description : $data['theme_description'];
+			// Find widgets
+			if (isset($theme_newtable) || isset($theme_insertdbrow)) {
+				// count how many widget components
+				$data['theme_widgets'] = isset($theme_newtable) ? count($theme_newtable) : 0;
+				$data['theme_widget_status'] = dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$data['theme_name']."'") > 0 ? true : false;
+			}
 		} else {
-			$screenshot = file_exists(THEMES.$this->theme_name."/screenshot.jpg") ? THEMES.$this->theme_name."/screenshot.jpg" : IMAGES.'imagenotfound.jpg';
+			$data['theme_screenshot'] = file_exists(THEMES.$this->theme_name."/screenshot.jpg") ? THEMES.$this->theme_name."/screenshot.jpg" : IMAGES.'imagenotfound.jpg';
 		}
+
+		echo "<div class='well'>\n";
+
 		$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' ORDER BY theme_datestamp DESC");
 		if (dbrows($result) > 0) {
 			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
-			echo openform('preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0,
-				'max_tokens' => 1));
-			echo form_button('new_preset', $locale['theme_1001'], 'new_preset', array('class' => 'btn-sm btn-primary pull-right',
-				'icon' => 'entypo plus'));
-			echo form_para($locale['theme_1002'], 'theme_presets');
+			echo openform('preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0, 'max_tokens' => 1));
 			while ($preset = dbarray($result)) {
-				echo "<div class='list-group-item m-t-10 display-inline-block clearfix text-center'>\n".thumbnail($screenshot, '150px')."<div class='display-block panel-title text-smaller strong m-t-10'>".trimlink($preset['theme_title'], 30)."</div>";
+				// @to fix: set as active, edit, delete options.
+				echo "<div class='list-group-item m-t-10 display-inline-block clearfix text-center'>\n".thumbnail($data['theme_screenshot'], '150px')."
+				<div class='display-block strong m-t-10'>".trimlink($preset['theme_title'], 30)."</div>";
 				echo "<div class='btn-group m-t-10 m-b-10'>\n";
 				if ($this->data['theme_id'] == $preset['theme_id']) {
 					echo form_button('active', $locale['theme_1003'], 'active', array('class' => 'btn-sm btn-default active',
@@ -244,7 +274,25 @@ class Atom {
 			}
 			echo closeform();
 			echo "</div>\n";
+		} else {
+			echo "<div class='alert alert-warning'>".$locale['theme_1030']."</div>\n";
 		}
+
+		echo "<div class='row'>\n";
+		echo "<div class='col-xs-12 col-sm-6'>\n";
+		echo "<span><strong>".$locale['theme_1001']."</strong> ".$data['theme_name']."</span><br/>";
+		if ($data['theme_description']) echo "<span><strong>".$locale['theme_1025']."</strong> ".$data['theme_description']."</span><br/>";
+		if (isset($data['theme_widgets'])) echo "<span><strong>".$locale['theme_1027']."</strong> ".format_word($data['theme_widgets'], $locale['theme_1021'])."</span><br/>";
+		echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
+		if ($data['theme_author']) echo "<span><strong>".$locale['theme_1026']."</strong> ".$data['theme_author']."</span><br/>";
+		if ($data['theme_web']) echo "<span><strong>".$locale['theme_1015']."</strong><a href='".$data['theme_web']."'> Link</a></span><br/>";
+		if ($data['theme_version']) echo "<span><strong>".$locale['theme_1014']."</strong> ".$data['theme_version']."</span><br/>";
+		if ($data['theme_license']) echo "<span><strong>".$locale['theme_1013']."</strong> ".$data['theme_license']."</span><br/>";
+		echo "<span><strong>".$locale['theme_1028']."</strong> ".dbrows($result)."</span><br/>";
+		echo "</div>\n";
+		echo "</div>\n";
+
+		echo "</div>\n";
 	}
 
 	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
@@ -382,165 +430,59 @@ class Atom {
 
 	/* Handling Posts and Feedback. Watch out for Unsets */
 	public function set_theme() {
-		global $userdata, $aidlink;
-		// Feedback to Form
-		$this->data['theme_id'] = isset($_POST['theme_id']) ? form_sanitizer($_POST['theme_id'], '', 'theme_id') : $this->data['theme_id'];
-		$this->data['theme_title'] = isset($_POST['theme_title']) ? form_sanitizer($_POST['theme_title'], '', 'theme_title') : $this->data['theme_title'];
-		// Font Settings
-		$this->data['sans_serif_fonts'] = isset($_POST['sans_serif_fonts']) ? form_sanitizer($_POST['sans_serif_fonts'], '', 'sans_serif_fonts') : $this->data['sans_serif_fonts'];
-		$this->data['serif_fonts'] = isset($_POST['serif_fonts']) ? form_sanitizer($_POST['serif_fonts'], '', 'serif_fonts') : $this->data['serif_fonts'];
-		$this->data['monospace_fonts'] = isset($_POST['monospace_fonts']) ? form_sanitizer($_POST['monospace_fonts'], '', 'monospace_fonts') : $this->data['monospace_fonts'];
-		$this->data['base_font'] = isset($_POST['base_font']) ? form_sanitizer($_POST['base_font'], '0', 'base_font') : $this->data['base_font'];
-		$this->data['base_font_size'] = isset($_POST['base_font_size']) ? form_sanitizer($_POST['base_font_size'], '', 'base_font_size') : $this->data['base_font_size'];
-		$this->data['base_font_color'] = isset($_POST['base_font_color']) ? form_sanitizer($_POST['base_font_color'], '', 'base_font_color') : $this->data['base_font_color'];
-		$this->data['base_font_height'] = isset($_POST['base_font_height']) ? form_sanitizer($_POST['base_font_height'], '', 'base_font_height') : $this->data['base_font_height'];
-		$this->data['base_font_size_l'] = isset($_POST['base_font_size_l']) ? form_sanitizer($_POST['base_font_size_l'], '', 'base_font_size_l') : $this->data['base_font_size_l'];
-		$this->data['base_font_size_s'] = isset($_POST['base_font_size_s']) ? form_sanitizer($_POST['base_font_size_s'], '', 'base_font_size_s') : $this->data['base_font_size_s'];
-		$this->data['font_size_h1'] = isset($_POST['font_size_h1']) ? form_sanitizer($_POST['font_size_h1'], '', 'font_size_h1') : $this->data['font_size_h1'];
-		$this->data['font_height_h1'] = isset($_POST['font_height_h1']) ? form_sanitizer($_POST['font_height_h1'], '', 'font_height_h1') : $this->data['font_height_h1'];
-		$this->data['font_color_h1'] = isset($_POST['font_color_h1']) ? form_sanitizer($_POST['font_color_h1'], '', 'font_color_h1') : $this->data['font_color_h1'];
-		$this->data['font_decoration_h1'] = isset($_POST['font_decoration_h1']) ? form_sanitizer($_POST['font_decoration_h1'], '0', 'font_decoration_h1') : $this->data['font_decoration_h1'];
-		$this->data['font_size_h2'] = isset($_POST['font_size_h2']) ? form_sanitizer($_POST['font_size_h2'], '', 'font_size_h2') : $this->data['font_size_h2'];
-		$this->data['font_height_h2'] = isset($_POST['font_height_h2']) ? form_sanitizer($_POST['font_height_h2'], '', 'font_height_h2') : $this->data['font_height_h2'];
-		$this->data['font_color_h2'] = isset($_POST['font_color_h2']) ? form_sanitizer($_POST['font_color_h2'], '', 'font_color_h2') : $this->data['font_color_h2'];
-		$this->data['font_decoration_h2'] = isset($_POST['font_decoration_h2']) ? form_sanitizer($_POST['font_decoration_h2'], '0', 'font_decoration_h2') : $this->data['font_decoration_h2'];
-		$this->data['font_size_h3'] = isset($_POST['font_size_h3']) ? form_sanitizer($_POST['font_size_h3'], '', 'font_size_h3') : $this->data['font_size_h3'];
-		$this->data['font_height_h3'] = isset($_POST['font_height_h3']) ? form_sanitizer($_POST['font_height_h3'], '', 'font_height_h3') : $this->data['font_height_h3'];
-		$this->data['font_color_h3'] = isset($_POST['font_color_h3']) ? form_sanitizer($_POST['font_color_h3'], '', 'font_color_h3') : $this->data['font_color_h3'];
-		$this->data['font_decoration_h3'] = isset($_POST['font_decoration_h3']) ? form_sanitizer($_POST['font_decoration_h3'], '0', 'font_decoration_h3') : $this->data['font_decoration_h3'];
-		$this->data['font_size_h4'] = isset($_POST['font_size_h4']) ? form_sanitizer($_POST['font_size_h4'], '', 'font_size_h4') : $this->data['font_size_h4'];
-		$this->data['font_height_h4'] = isset($_POST['font_height_h4']) ? form_sanitizer($_POST['font_height_h4'], '', 'font_height_h4') : $this->data['font_height_h4'];
-		$this->data['font_color_h4'] = isset($_POST['font_color_h4']) ? form_sanitizer($_POST['font_color_h4'], '', 'font_color_h4') : $this->data['font_color_h4'];
-		$this->data['font_decoration_h4'] = isset($_POST['font_decoration_h4']) ? form_sanitizer($_POST['font_decoration_h4'], '0', 'font_decoration_h4') : $this->data['font_decoration_h4'];
-		$this->data['font_size_h5'] = isset($_POST['font_size_h5']) ? form_sanitizer($_POST['font_size_h5'], '', 'font_size_h5') : $this->data['font_size_h5'];
-		$this->data['font_height_h5'] = isset($_POST['font_height_h5']) ? form_sanitizer($_POST['font_height_h5'], '', 'font_height_h5') : $this->data['font_height_h5'];
-		$this->data['font_color_h5'] = isset($_POST['font_color_h5']) ? form_sanitizer($_POST['font_color_h5'], '', 'font_color_h5') : $this->data['font_color_h5'];
-		$this->data['font_decoration_h5'] = isset($_POST['font_decoration_h5']) ? form_sanitizer($_POST['font_decoration_h5'], '0', 'font_decoration_h5') : $this->data['font_decoration_h5'];
-		$this->data['font_size_h6'] = isset($_POST['font_size_h6']) ? form_sanitizer($_POST['font_size_h6'], '', 'font_size_h6') : $this->data['font_size_h6'];
-		$this->data['font_height_h6'] = isset($_POST['font_height_h6']) ? form_sanitizer($_POST['font_height_h6'], '', 'font_height_h6') : $this->data['font_height_h6'];
-		$this->data['font_color_h6'] = isset($_POST['font_color_h6']) ? form_sanitizer($_POST['font_color_h6'], '', 'font_color_h6') : $this->data['font_color_h6'];
-		$this->data['font_decoration_h6'] = isset($_POST['font_decoration_h6']) ? form_sanitizer($_POST['font_decoration_h6'], '0', 'font_decoration_h6') : $this->data['font_decoration_h6'];
-		$this->data['link_color'] = isset($_POST['link_color']) ? form_sanitizer($_POST['link_color'], '', 'link_color') : $this->data['link_color'];
-		$this->data['link_hover_color'] = isset($_POST['link_hover_color']) ? form_sanitizer($_POST['link_hover_color'], '', 'link_hover_color') : $this->data['link_hover_color'];
-		$this->data['link_decoration'] = isset($_POST['link_decoration']) ? form_sanitizer($_POST['link_decoration'], '0', 'link_decoration') : $this->data['link_decoration'];
-		$this->data['link_hover_decoration'] = isset($_POST['link_hover_decoration']) ? form_sanitizer($_POST['link_hover_decoration'], '0', 'link_hover_decoration') : $this->data['link_hover_decoration'];
-		$this->data['code_color'] = isset($_POST['code_color']) ? form_sanitizer($_POST['code_color'], '', 'code_color') : $this->data['code_color'];
-		$this->data['code_bgcolor'] = isset($_POST['code_bgcolor']) ? form_sanitizer($_POST['code_bgcolor'], '', 'code_bgcolor') : $this->data['code_bgcolor'];
-		$this->data['quote_size'] = isset($_POST['quote_size']) ? form_sanitizer($_POST['quote_size'], '', 'quote_size') : $this->data['quote_size'];
-		$this->data['quote_height'] = isset($_POST['quote_height']) ? form_sanitizer($_POST['quote_height'], '', 'quote_height') : $this->data['quote_height'];
-		$this->data['quote_color'] = isset($_POST['quote_color']) ? form_sanitizer($_POST['quote_color'], '', 'quote_color') : $this->data['quote_color'];
-		$this->data['quote_decoration'] = isset($_POST['quote_decoration']) ? form_sanitizer($_POST['quote_decoration'], '0', 'quote_decoration') : $this->data['quote_decoration'];
-		$this->data['container_sm'] = isset($_POST['container_sm']) ? form_sanitizer($_POST['container_sm'], '0', 'container_sm') : $this->data['container_sm'];
-		$this->data['container_md'] = isset($_POST['container_md']) ? form_sanitizer($_POST['container_md'], '0', 'container_md') : $this->data['container_md'];
-		$this->data['container_lg'] = isset($_POST['container_lg']) ? form_sanitizer($_POST['container_lg'], '0', 'container_lg') : $this->data['container_lg'];
-		$this->data['btn_fill'] = isset($_POST['btn_fill']) ? form_sanitizer($_POST['btn_fill'], '0', 'btn_fill') : $this->data['btn_fill'];
-		$this->data['btn_border'] = isset($_POST['btn_border']) ? form_sanitizer($_POST['btn_border'], '0', 'btn_border') : $this->data['btn_border'];
-		$this->data['btn_radius'] = isset($_POST['btn_radius']) ? form_sanitizer($_POST['btn_radius'], '0', 'btn_radius') : $this->data['btn_radius'];
-		// btn-primary
-		$this->data['btn_primary'] = isset($_POST['btn_primary']) ? form_sanitizer($_POST['btn_primary'], '0', 'btn_primary') : $this->data['btn_primary'];
-		$this->data['btn_primary_color'] = isset($_POST['btn_primary_color']) ? form_sanitizer($_POST['btn_primary_color'], '0', 'btn_primary_color') : $this->data['btn_primary_color'];
-		$this->data['btn_primary_hover'] = isset($_POST['btn_primary_hover']) ? form_sanitizer($_POST['btn_primary_hover'], '0', 'btn_primary_hover') : $this->data['btn_primary_hover'];
-		$this->data['btn_primary_color_hover'] = isset($_POST['btn_primary_color_hover']) ? form_sanitizer($_POST['btn_primary_color_hover'], '0', 'btn_primary_color_hover') : $this->data['btn_primary_color_hover'];
-		$this->data['btn_primary_active'] = isset($_POST['btn_primary_active']) ? form_sanitizer($_POST['btn_primary_active'], '0', 'btn_primary_active') : $this->data['btn_primary_active'];
-		$this->data['btn_primary_color_active'] = isset($_POST['btn_primary_color_active']) ? form_sanitizer($_POST['btn_primary_color_active'], '0', 'btn_primary_color_active') : $this->data['btn_primary_color_active'];
-		// btn-info
-		$this->data['btn_info'] = isset($_POST['btn_info']) ? form_sanitizer($_POST['btn_info'], '0', 'btn_info') : $this->data['btn_info'];
-		$this->data['btn_info_color'] = isset($_POST['btn_info_color']) ? form_sanitizer($_POST['btn_info_color'], '0', 'btn_info_color') : $this->data['btn_info_color'];
-		$this->data['btn_info_hover'] = isset($_POST['btn_info_hover']) ? form_sanitizer($_POST['btn_info_hover'], '0', 'btn_info_hover') : $this->data['btn_info_hover'];
-		$this->data['btn_info_color_hover'] = isset($_POST['btn_info_color_hover']) ? form_sanitizer($_POST['btn_info_color_hover'], '0', 'btn_info_color_hover') : $this->data['btn_info_color_hover'];
-		$this->data['btn_info_active'] = isset($_POST['btn_info_active']) ? form_sanitizer($_POST['btn_info_active'], '0', 'btn_info_active') : $this->data['btn_info_active'];
-		$this->data['btn_info_color_active'] = isset($_POST['btn_info_color_active']) ? form_sanitizer($_POST['btn_info_color_active'], '0', 'btn_info_color_active') : $this->data['btn_info_color_active'];
-		// btn-success
-		$this->data['btn_success'] = isset($_POST['btn_success']) ? form_sanitizer($_POST['btn_success'], '0', 'btn_success') : $this->data['btn_success'];
-		$this->data['btn_success_color'] = isset($_POST['btn_success_color']) ? form_sanitizer($_POST['btn_success_color'], '0', 'btn_success_color') : $this->data['btn_success_color'];
-		$this->data['btn_success_hover'] = isset($_POST['btn_success_hover']) ? form_sanitizer($_POST['btn_success_hover'], '0', 'btn_success_hover') : $this->data['btn_success_hover'];
-		$this->data['btn_success_color_hover'] = isset($_POST['btn_success_color_hover']) ? form_sanitizer($_POST['btn_success_color_hover'], '0', 'btn_success_color_hover') : $this->data['btn_success_color_hover'];
-		$this->data['btn_success_active'] = isset($_POST['btn_success_active']) ? form_sanitizer($_POST['btn_success_active'], '0', 'btn_success_active') : $this->data['btn_success_active'];
-		$this->data['btn_success_color_active'] = isset($_POST['btn_success_color_active']) ? form_sanitizer($_POST['btn_success_color_active'], '0', 'btn_success_color_active') : $this->data['btn_success_color_active'];
-		// btn-warning
-		$this->data['btn_warning'] = isset($_POST['btn_warning']) ? form_sanitizer($_POST['btn_warning'], '0', 'btn_warning') : $this->data['btn_warning'];
-		$this->data['btn_warning_color'] = isset($_POST['btn_warning_color']) ? form_sanitizer($_POST['btn_warning_color'], '0', 'btn_warning_color') : $this->data['btn_warning_color'];
-		$this->data['btn_warning_hover'] = isset($_POST['btn_warning_hover']) ? form_sanitizer($_POST['btn_warning_hover'], '0', 'btn_warning_hover') : $this->data['btn_warning_hover'];
-		$this->data['btn_warning_color_hover'] = isset($_POST['btn_warning_color_hover']) ? form_sanitizer($_POST['btn_warning_color_hover'], '0', 'btn_warning_color_hover') : $this->data['btn_warning_color_hover'];
-		$this->data['btn_warning_active'] = isset($_POST['btn_warning_active']) ? form_sanitizer($_POST['btn_warning_active'], '0', 'btn_warning_active') : $this->data['btn_warning_active'];
-		$this->data['btn_warning_color_active'] = isset($_POST['btn_warning_color_active']) ? form_sanitizer($_POST['btn_warning_color_active'], '0', 'btn_warning_color_active') : $this->data['btn_warning_color_active'];
-		// btn-danger
-		$this->data['btn_danger'] = isset($_POST['btn_danger']) ? form_sanitizer($_POST['btn_danger'], '0', 'btn_danger') : $this->data['btn_danger'];
-		$this->data['btn_danger_color'] = isset($_POST['btn_danger_color']) ? form_sanitizer($_POST['btn_danger_color'], '0', 'btn_danger_color') : $this->data['btn_danger_color'];
-		$this->data['btn_danger_hover'] = isset($_POST['btn_danger_hover']) ? form_sanitizer($_POST['btn_danger_hover'], '0', 'btn_danger_hover') : $this->data['btn_danger_hover'];
-		$this->data['btn_danger_color_hover'] = isset($_POST['btn_danger_color_hover']) ? form_sanitizer($_POST['btn_danger_color_hover'], '0', 'btn_danger_color_hover') : $this->data['btn_danger_color_hover'];
-		$this->data['btn_danger_active'] = isset($_POST['btn_danger_active']) ? form_sanitizer($_POST['btn_danger_active'], '0', 'btn_danger_active') : $this->data['btn_danger_active'];
-		$this->data['btn_danger_color_active'] = isset($_POST['btn_danger_color_active']) ? form_sanitizer($_POST['btn_danger_color_active'], '0', 'btn_danger_color_active') : $this->data['btn_danger_color_active'];
-		$this->data['navbar_fill'] = isset($_POST['navbar_fill']) ? form_sanitizer($_POST['navbar_fill'], '0', 'navbar_fill') : $this->data['navbar_fill'];
-		$this->data['navbar_border'] = isset($_POST['navbar_border']) ? form_sanitizer($_POST['navbar_border'], '0', 'navbar_border') : $this->data['navbar_border'];
-		$this->data['navbar_radius'] = isset($_POST['navbar_radius']) ? form_sanitizer($_POST['navbar_radius'], '0', 'navbar_radius') : $this->data['navbar_radius'];
-		$this->data['navbar_bg'] = isset($_POST['navbar_bg']) ? form_sanitizer($_POST['navbar_bg'], '', 'navbar_bg') : $this->data['navbar_bg'];
-		$this->data['navbar_height'] = isset($_POST['navbar_height']) ? form_sanitizer($_POST['navbar_height'], '', 'navbar_height') : $this->data['navbar_height'];
-		$this->data['navbar_bg_hover'] = isset($_POST['navbar_bg_hover']) ? form_sanitizer($_POST['navbar_bg_hover'], '', 'navbar_bg_hover') : $this->data['navbar_bg_hover'];
-		$this->data['navbar_bg_active'] = isset($_POST['navbar_bg_active']) ? form_sanitizer($_POST['navbar_bg_active'], '', 'navbar_bg_active') : $this->data['navbar_bg_active'];
-		$this->data['navbar_link_border'] = isset($_POST['navbar_link_border']) ? form_sanitizer($_POST['navbar_link_border'], '0', 'navbar_link_border') : $this->data['navbar_link_border'];
-		$this->data['navbar_link_radius'] = isset($_POST['navbar_link_radius']) ? form_sanitizer($_POST['navbar_link_radius'], '0', 'navbar_link_radius') : $this->data['navbar_link_radius'];
-		$this->data['navbar_link_border_color'] = isset($_POST['navbar_link_border_color']) ? form_sanitizer($_POST['navbar_link_border_color'], '0', 'navbar_link_border_color') : $this->data['navbar_link_border_color'];
-		$this->data['navbar_brand_color'] = isset($_POST['navbar_brand_color']) ? form_sanitizer($_POST['navbar_brand_color'], '', 'navbar_brand_color') : $this->data['navbar_brand_color'];
-		$this->data['navbar_font_color'] = isset($_POST['navbar_font_color']) ? form_sanitizer($_POST['navbar_font_color'], '', 'navbar_font_color') : $this->data['navbar_font_color'];
-		$this->data['navbar_brand_decoration'] = isset($_POST['navbar_brand_decoration']) ? form_sanitizer($_POST['navbar_brand_decoration'], '0', 'navbar_brand_decoration') : $this->data['navbar_brand_decoration'];
-		$this->data['navbar_font_decoration'] = isset($_POST['navbar_font_decoration']) ? form_sanitizer($_POST['navbar_font_decoration'], '0', 'navbar_font_decoration') : $this->data['navbar_font_decoration'];
-		$this->data['navbar_link_color'] = isset($_POST['navbar_link_color']) ? form_sanitizer($_POST['navbar_link_color'], '', 'navbar_link_color') : $this->data['navbar_link_color'];
-		$this->data['navbar_link_decoration'] = isset($_POST['navbar_link_decoration']) ? form_sanitizer($_POST['navbar_link_decoration'], '0', 'navbar_link_decoration') : $this->data['navbar_link_decoration'];
-		$this->data['navbar_link_color_hover'] = isset($_POST['navbar_link_color_hover']) ? form_sanitizer($_POST['navbar_link_color_hover'], '', 'navbar_link_color_hover') : $this->data['navbar_link_color_hover'];
-		$this->data['navbar_link_decoration_hover'] = isset($_POST['navbar_link_decoration_hover']) ? form_sanitizer($_POST['navbar_link_decoration_hover'], '0', 'navbar_link_decoration_hover') : $this->data['navbar_link_decoration_hover'];
-		$this->data['navbar_link_color_active'] = isset($_POST['navbar_link_color_active']) ? form_sanitizer($_POST['navbar_link_color_active'], '', 'navbar_link_color_active') : $this->data['navbar_link_color_active'];
-		$this->data['navbar_link_decoration_active'] = isset($_POST['navbar_link_decoration_active']) ? form_sanitizer($_POST['navbar_link_decoration_active'], '0', 'navbar_link_decoration_active') : $this->data['navbar_link_decoration_active'];
-		// End Font Settings.
-		if (isset($_POST['save_theme']) && !defined("FUSION_NULL")) {
-			$this->save_theme();
-		}
-	}
-
-	private function save_theme() {
 		global $locale, $userdata, $aidlink;
-		$old_file = isset($this->data['theme_file']) ? $this->data['theme_file'] : '';
-		if (isset($this->data['theme_config'])) unset($this->data['theme_config']); // will need to rebuild. unset it.
-		if (isset($this->data['theme_file'])) unset($this->data['theme_file']); // important to unset.
-		// rebuild entire structure
-		$data['theme_name'] = $this->theme_name;
-		$data['theme_title'] = form_sanitizer($_POST['theme_title'], '', 'theme_title');
-		$data['theme_id'] = form_sanitizer($_POST['theme_id'], '0', 'theme_id');
-		$data['theme_datestamp'] = time();
-		$data['theme_user'] = $userdata['user_id'];
-		$data['theme_file'] = $this->buildCss();
-		$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'");
-		if ($rows) {
-			$data['theme_active'] = $this->data['theme_active'];
-			$data['theme_config'] = addslashes(serialize($this->data));
-			if (!$this->debug && $data['theme_file']) {
-				@unlink(THEMES.$old_file);
-				dbquery_insert(DB_THEME, $data, 'update');
-				if (!defined("FUSION_NULL")) {
-					addNotice('info', $locale['theme_success_003']);
-					redirect(FUSION_SELF.$aidlink);
-				}
-			} else {
-				// debug messages
-				print_p('Update Mode');
-				print_p($data);
+		if (isset($_POST['save_theme'])) {
+			$fieldArrays = $this->data;
+			foreach($fieldArrays as $fieldNames => $fieldDefaults) {
+				$this->data[$fieldNames] = form_sanitizer($_POST[$fieldNames], $fieldDefaults, $fieldNames);
 			}
-		} else {
-			if (!$this->debug && $data['theme_file']) {
-				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
-				$data['theme_active'] = $rows < 1 ? 1 : 0;
+
+			$old_file = isset($this->data['theme_file']) ? $this->data['theme_file'] : '';
+			if (isset($this->data['theme_config'])) unset($this->data['theme_config']); // will need to rebuild. unset it.
+			if (isset($this->data['theme_file'])) unset($this->data['theme_file']); // important to unset.
+
+			// rebuild entire structure
+			$data['theme_name'] = $this->theme_name;
+			$data['theme_title'] = form_sanitizer($_POST['theme_title'], '', 'theme_title');
+			$data['theme_id'] = form_sanitizer($_POST['theme_id'], '0', 'theme_id');
+			$data['theme_datestamp'] = time();
+			$data['theme_user'] = $userdata['user_id'];
+
+			$data['theme_file'] = $this->buildCss();
+
+			$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".$data['theme_id']."'");
+			if ($rows) {
+				$data['theme_active'] = $this->data['theme_active'];
 				$data['theme_config'] = addslashes(serialize($this->data));
-				dbquery_insert(DB_THEME, $data, 'save');
-				if (!defined("FUSION_NULL")) {
-					addNotice('success', $locale['theme_success_004']);
-					redirect(FUSION_SELF.$aidlink);
+				if (!$this->debug && $data['theme_file']) {
+					@unlink(THEMES.$old_file);
+					dbquery_insert(DB_THEME, $data, 'update');
+					if (!defined("FUSION_NULL")) {
+						addNotice('info', $locale['theme_success_003']);
+						redirect(FUSION_SELF.$aidlink);
+					}
+				} else {
+					// debug messages
+					print_p('Update Mode');
+					print_p($data);
 				}
 			} else {
-				// debug messages
-				$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
-				$data['theme_active'] = $rows < 1 ? 1 : 0;
-				$data['theme_config'] = addslashes(serialize($this->data));
-				print_p($data);
+				if (!$this->debug && $data['theme_file']) {
+					$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
+					$data['theme_active'] = $rows < 1 ? 1 : 0;
+					$data['theme_config'] = addslashes(serialize($this->data));
+					dbquery_insert(DB_THEME, $data, 'save');
+					if (!defined("FUSION_NULL")) {
+						addNotice('success', $locale['theme_success_004']);
+						redirect(FUSION_SELF.$aidlink);
+					}
+				} else {
+					// debug messages
+					$rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
+					$data['theme_active'] = $rows < 1 ? 1 : 0;
+					$data['theme_config'] = addslashes(serialize($this->data));
+					print_p($data);
+				}
 			}
 		}
 	}
@@ -575,19 +517,32 @@ class Atom {
 			print_p($_POST);
 		}
 		// do a pop up notice. important. pressing save twice will create a massive stress on server resource.
+
 		echo openmodal('dbi', sprintf($locale['theme_2005'], $this->theme_name), array('class' => 'zindex-boost modal-center',
 			'button_id' => 'save_theme',
 			'static' => 1));
 		echo "<div class='pull-left m-r-20'><i class='icon_notify n-magic'></i></div>\n";
 		echo "<div class='overflow-hide text-smaller'>".$locale['theme_2006']."</div>\n";
 		echo closemodal();
-		echo openform('theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('max_tokens' => 1));
+
+		echo openform('theme_edit', 'post', FUSION_SELF.$aidlink."&amp;action=manage&amp;theme=".$this->theme_name);
+
+		echo "<div class='list-group-item m-b-15 clearfix'>\n";
+
+		echo "<div class='pull-right m-l-10'>\n";
+		echo form_button('save_theme', $locale['theme_5013'], 'save_theme', array('class' => 'btn-primary m-r-10'));
+		echo form_button('close_theme', $locale['close'], 'close_theme', array('class' => 'btn-default'));
+		echo "</div>\n";
+
+		echo "<div class='overflow-hide'>\n";
 		echo form_hidden('theme_id', '', $this->data['theme_id']);
-		echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], array('inline' => 1,
-			'required' => 1));
-		echo form_text('theme_name', $locale['theme_2008'], $this->theme_name, array('inline' => 1, 'deactivate' => 1));
-		echo form_button('close_theme', $locale['close'], 'close_theme', array('class' => 'btn-default m-l-10 pull-right'));
-		echo form_button('save_theme', $locale['save_changes'], 'save_theme', array('class' => 'btn-primary pull-right'));
+		echo form_text('theme_title', $locale['theme_2007'], $this->data['theme_title'], array('inline' => 1, 'required' => true));
+		echo form_hidden('theme_name', $locale['theme_2008'], $this->theme_name, array('inline' => 1, 'deactivate' => 1));
+		echo "</div>\n";
+
+		echo "</div>\n";
+
+
 		echo opentab($tab_title, $tab_active, 'atom');
 		echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 		echo "<div class='m-t-20'>\n";
@@ -629,7 +584,7 @@ class Atom {
 		$fonts_family_opts = array('0' => $locale['theme_2012'],
 			'1' => $locale['theme_2013'],
 			'2' => $locale['theme_2014'],);
-		echo form_hidden('theme', '', $_POST['theme']);
+		echo form_hidden('theme', '', $this->theme_name);
 		openside('');
 		$font_options['options'] = $font_list;
 		$font_type_options['options'] = $fonts_family_opts;
@@ -1061,6 +1016,7 @@ class Atom {
 	}
 
 	/* Returns list of google_fonts */
+	/*@todo: allow return of jquery Google Font real-time parsing via Google API */
 	static function google_font() {
 		$google_font = array("ABeeZee" => "ABeeZee",
 			"Abel" => "Abel",

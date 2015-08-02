@@ -331,19 +331,23 @@ legend {
 nav ul {
 	list-style: none;
 	margin:	0;
+	border: 0;
 }
 
 nav ul > li {
 	float: left;
 	display: inline-block;
 }
-
+nav > ul > li.active > a {
+	font-weight: 600;
+}
 nav > ul > li > a {
 	padding:13px !important;
-	color: #444;
+	color: #444;	
 	border-left: 1px solid transparent;
 	border-right: 1px solid transparent;
 	display: inline-block;
+	line-height:22px !important;
 }
 
 nav > ul > li > a:hover {

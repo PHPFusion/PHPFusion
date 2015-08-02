@@ -198,6 +198,7 @@ $locale['690'] = "Yes (only admins)";
 $locale['691'] = "Allow users to change user name";
 $locale['692'] = "Captcha Settings";
 $locale['693'] = "Captcha";
+
 // Removed Recaptcha
 $locale['698'] = "SMTP Authentication?";
 $locale['699'] = "Login method";
