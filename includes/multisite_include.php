@@ -79,6 +79,7 @@ define("DB_POLLS", DB_PREFIX."polls");
 define("DB_RATINGS", DB_PREFIX."ratings");
 define("DB_SETTINGS", DB_PREFIX."settings");
 define("DB_SETTINGS_INF", DB_PREFIX."settings_inf");
+define("DB_SETTINGS_THEME", DB_PREFIX."settings_theme");
 define("DB_SITE_LINKS", DB_PREFIX."site_links");
 define("DB_SMILEYS", DB_PREFIX."smileys");
 define("DB_SUBMISSIONS", DB_PREFIX."submissions");

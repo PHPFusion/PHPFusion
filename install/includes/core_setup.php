@@ -244,6 +244,12 @@ $core_tables = array("admin" => " (
 		settings_inf VARCHAR(200) NOT NULL DEFAULT '',
 		PRIMARY KEY (settings_name)
 		) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
+	"settings_theme" => " (
+		settings_name VARCHAR(200) NOT NULL DEFAULT '',
+		settings_value TEXT NOT NULL,
+		settings_theme VARCHAR(200) NOT NULL DEFAULT '',
+		PRIMARY KEY (settings_name)
+		) ENGINE=MYISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci",
 	"site_links" => " (
 		link_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
 		link_cat MEDIUMINT(9) UNSIGNED NOT NULL DEFAULT '0',

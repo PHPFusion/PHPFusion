@@ -20,12 +20,16 @@ pageAccess('S3');
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/settings.php";
 add_breadcrumb(array('link' => ADMIN."settings_theme.php".$aidlink, 'title' => $locale['theme_settings']));
+
 // These are the default settings and the only settings we expect to be posted
-$settings_theme = array('admin_theme' => fusion_get_settings('admin_theme'),
+$settings_theme = array(
+	'admin_theme' => fusion_get_settings('admin_theme'),
 	'theme' => fusion_get_settings('theme'),
 	'bootstrap' => fusion_get_settings('bootstrap'),
 	'entypo' => fusion_get_settings('entypo'),
-	'fontawesome' => fusion_get_settings('fontawesome'),);
+	'fontawesome' => fusion_get_settings('fontawesome'),
+);
+
 // Saving settings
 if (isset($_POST['savesettings'])) {
 	foreach ($settings_theme as $key => $value) {
@@ -55,6 +59,7 @@ foreach ($theme_files as $file) {
 	$opts[$file] = $file;
 }
 $opts['invalid_theme'] = 'None (test purposes)';
+
 echo form_select('theme', $locale['418'], $settings_theme['theme'], array('options' => $opts,
 	'callback_check' => 'theme_exists',
 	'inline' => 1,
@@ -77,5 +82,4 @@ echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
 echo closeform();
 closetable();
-require LOCALE.LOCALESET."global.php";
 require_once THEMES."templates/footer.php";

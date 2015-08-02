@@ -14,7 +14,8 @@
 | at www.gnu.org/licenses/agpl.html. Removal of this
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
-+--------------------------------------------------------*/use PHPFusion\Database\DatabaseFactory;
++--------------------------------------------------------*/
+use PHPFusion\Database\DatabaseFactory;
 
 if (!defined("IN_FUSION")) {
 	die("Access Denied");

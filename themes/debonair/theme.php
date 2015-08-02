@@ -27,6 +27,7 @@ function render_page($license = FALSE) {
 	<script type="text/javascript" src="'.THEME.'js/subnavie6.js"></script>
 	');
 	add_to_head("<link rel='stylesheet' href='".THEME."css/bootstrap_rewrite.css' type='text/css'/>");
+
 	echo "<div id='wrapper'>\n";
 	echo "<div class='container'>\n";
 	echo "<div class='body-wrap'>\n";
@@ -34,8 +35,12 @@ function render_page($license = FALSE) {
 	// start header ----
 	echo "<header class='clearfix m-t-10'>
 		<a class='logo' href='".BASEDIR."index.php'><img src='".THEME."images/logo.gif' alt='Web 2.0 Business Template'/></a>
-		<div class='tagline'>Super Clean Web 2.0 Business Template</div>
-		<div class='call-tag'>".$locale['global_ML102']."\n";
+		<div class='tagline'>Super Clean Web 2.0 Business Template</div>\n";
+	echo "<div class='call-tag'>\n";
+	if (iADMIN) {
+		echo "<span class='display-inline-block m-r-10'><a href='".ADMIN.$aidlink."'>".$locale['global_123']."</a></span>\n";
+	}
+	echo $locale['global_ML102']."\n";
 	foreach (fusion_get_enabled_languages() as $lang => $lang_name) {
 		echo "<a href='".clean_request("lang=".$lang, array(), FALSE)."'>".$lang_name."</a>\n";
 	}
