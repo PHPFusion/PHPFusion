@@ -351,7 +351,7 @@ class SiteLinks {
 			'input_id' => 'sitelinks_visibility',
 			'width' => '100%'));
 		echo form_checkbox('link_window', $locale['SL_0028'], $this->data['link_window'], array('input_id' => 'll_window'));
-		echo form_hidden('link_id', '', array('input_id' => 'link_id2', 'writable' => 1));
+		echo form_hidden('link_id', '', '', array('input_id' => 'link_id2', 'writable' => 1));
 		echo "</div>\n";
 		echo "</div>\n";
 		echo "<div class='m-t-10 m-b-10'>\n";

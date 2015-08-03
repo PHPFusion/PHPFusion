@@ -86,6 +86,7 @@ foreach ($template as $id => $tname) {
 $tab_id = array_values($tab_title['id']);
 $_GET['section'] = isset($_GET['section']) && isnum($_GET['section']) ? $_GET['section'] : $tab_id[0];
 $tab_active = $_GET['section'];
+opentable($locale['400']);
 echo opentab($tab_title, $tab_active, 'menu', 1);
 echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $tab_active, 1);
 $result = dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_id='".intval($_GET['section'])."' LIMIT 1");
@@ -118,11 +119,11 @@ if (dbrows($result)) {
 	}
 }
 add_breadcrumb(array('link' => ADMIN.$aidlink, 'title' => $locale['400']));
-opentable($locale['400']);
+
 require_once INCLUDES."html_buttons_include.php";
 echo openform('emailtemplateform', 'post', FUSION_SELF.$aidlink, array('max_tokens' => 1));
-echo "<h4>".$locale['420'].$template_name."</h4>\n";
-echo "<table class='table table-responsive'>\n<tbody>\n";
+
+echo "<table class='table table-responsive m-t-20'>\n<tbody>\n";
 echo "<td class='tbl1'><label for='template_active'>".$locale['421']."</label></td>\n";
 echo "<td class='tbl1'>\n";
 $opts = array('1' => $locale['424'], // yes
@@ -241,9 +242,8 @@ echo "</table>\n";
 echo "</form>\n";
 echo closetabbody();
 echo closetab();
-closetable();
+
 if (isset($_GET['section']) && isnum($_GET['section']) || isset($_POST['section']) && isnum($_POST['section'])) {
-	opentable($locale['450']);
 	echo "<table class='table table-responsive center' cellpadding='1' cellspacing='0'>\n<tbody>\n";
 	echo "<tr>\n<td class='tbl2' colspan='2' style='text-align:center;font-weight:bold;'><strong>".$locale['451']."</strong></td>\n</tr>\n";
 	echo "<tr>\n";
@@ -275,8 +275,9 @@ if (isset($_GET['section']) && isnum($_GET['section']) || isset($_POST['section'
 	echo "<td class='tbl1'>".$locale['459']."</td>\n";
 	echo "</tr>\n";
 	echo "</tbody>\n</table>\n";
-	closetable();
 }
+closetable();
+
 $loc = $locale['469'];
 add_to_jquery("
      $('#template_active').bind('change', function() {

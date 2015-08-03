@@ -48,7 +48,7 @@ $gallery_settings->setUploadSettings(
 		'delete_original' => false,
 	)
 );
-
+opentable((!isset($_GET['gallery']) ? $locale['photo_000'] : $locale['photo_001']));
 $gallery_settings->setImageUploadDir(INFUSIONS."gallery/albums/");
 $gallery_settings->setPhotoCatDb(DB_PHOTO_ALBUMS);
 $gallery_settings->setPhotoDb(DB_PHOTOS);
@@ -58,5 +58,6 @@ $gallery_settings->setEnableRatings(false);
 $gallery_settings->setAllowComments('comments_enabled');
 $gallery_settings->setAllowRatings('ratings_enabled');
 $gallery_settings->boot();
+closetable();
 
 require_once THEMES."templates/footer.php";

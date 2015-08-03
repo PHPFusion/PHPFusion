@@ -817,7 +817,7 @@ class Admin {
 				'upload_path' => $this->image_upload_dir,
 				'multiple' => TRUE,
 				'preview_off' => TRUE);
-			echo form_fileinput('batch_file[]', $locale['631'], $this->image_upload_dir, '', $up_settings);
+			echo form_fileinput('batch_file[]', $locale['631'], '', $up_settings);
 			echo form_hidden('album_id', '', $_GET['gallery'], array("input_id" => "album_id_batch"));
 			echo form_button('batch_upload', $locale['631'], $locale['631'], array('class' => 'btn btn-success'));
 			echo closeform();
@@ -1189,8 +1189,7 @@ class Admin {
 				GROUP BY album_id ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".$rowstart.", ".$settings_inf['thumbs_per_page']."");
 			}
 			$current_rows = dbrows($result);
-			echo "<div class='list-group-item clearfix' style='margin-bottom:20px;'>\n";
-			echo "<h3>".(isset($_GET['gallery']) ? $locale['photo_000'] : $locale['photo_001'])."</h3>\n";
+			echo "<div class='clearfix' style='margin-bottom:20px;'>\n";
 			if ($current_rows > 0) {
 				if ($row_count > $current_rows) {
 					echo "<div class='display-block text-right m-b-10'>\n";
@@ -1205,6 +1204,7 @@ class Admin {
 					echo "</div>\n";
 				}
 				$i = 1;
+				echo "<div class='row'>\n";
 				while ($data = dbarray($result)) {
 					self::refresh_album_thumb($data['album_id'], $data['album_thumb']);
 					$span = floor(12/$settings_inf['admin_thumbs_per_row']);
@@ -1219,11 +1219,10 @@ class Admin {
 					echo "</div>\n";
 					$i++;
 				}
+				echo "</div>\n";
 			} else {
 				echo "<div class='well text-center'>".$locale['660']."</div>";
 			}
-			//closetable();
-			echo "</div>\n";
 		}
 	}
 
