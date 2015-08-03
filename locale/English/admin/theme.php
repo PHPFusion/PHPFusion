@@ -31,6 +31,7 @@ $locale['theme_1027'] = 'Theme Widgets: ';
 $locale['theme_1028'] = 'Total Presets: ';
 $locale['theme_1029'] = 'Return to Themes';
 $locale['theme_1030'] = 'No custom presets defined';
+$locale['theme_1031'] = 'This theme does not support theme widget';
 
 
 $locale['theme_2001'] = 'Base Fonts';

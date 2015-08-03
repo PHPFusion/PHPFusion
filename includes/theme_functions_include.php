@@ -714,6 +714,7 @@ function closecollapse() {
  * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
  * @param bool $link_mode - set to true if tab is a link
  * @return string
+ * @todo: options base
  */
 function tab_active($array, $default_active, $link_mode = FALSE) {
 	if ($link_mode) {

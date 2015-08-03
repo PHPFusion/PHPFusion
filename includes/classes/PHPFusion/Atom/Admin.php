@@ -97,6 +97,11 @@ class Admin {
 		return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') !== $theme_name) ? true : false;
 	}
 
+	/** Check if a theme widget file exist */
+	static function theme_widget_exists($theme_name) {
+		return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/widget.php")) ? true : false;
+	}
+
 	public static function display_theme_editor($theme_name) {
 		global $aidlink, $locale;
 		// sanitize theme exist
@@ -127,12 +132,19 @@ class Admin {
 		// now include the thing as necessary
 		switch($_GET['section']) {
 			case "dashboard":
-				// Show theme presets available and load it.
-				$atom->render_theme_overview();
+				// when we click delete preset
+				if (isset($_POST['delete_preset']) && isnum($_POST['delete_preset']))
+				{
+					$file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'"));
+					@unlink(THEMES.$file['theme_file']);
+					dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'");
+					addNotice('success', $locale['theme_success_002']);
+					redirect(FUSION_REQUEST);
+				}
+				$atom->display_theme_overview();
 				break;
 			case "widgets":
-				// Show theme widgets
-
+				$atom->display_theme_widgets();
 				break;
 			case "css":
 				$atom->theme_editor();

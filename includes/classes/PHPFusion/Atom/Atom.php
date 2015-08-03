@@ -180,15 +180,6 @@ class Atom {
 
 		if (isset($_POST['close_theme'])) redirect(FUSION_SELF.$aidlink);
 
-		// when we click delete preset
-		if (isset($_POST['delete_preset']) && isnum($_POST['delete_preset'])) {
-			// check if active, if not delete and remove css file
-			$file = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'"));
-			@unlink(THEMES.$file['theme_file']);
-			$result = dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".$_POST['delete_preset']."'");
-			addNotice('warning', $locale['theme_success_002']);
-			redirect(FUSION_SELF.$aidlink);
-		} // when we click load preset
 
 		elseif (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
 			$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_id='".$_POST['load_preset']."'");
@@ -215,8 +206,10 @@ class Atom {
 		}
 	}
 
-	/* to roll out only on future versions */
-	public function render_theme_overview() {
+	/**
+	 * Theme Overview Page
+	 */
+	public function display_theme_overview() {
 		global $locale, $aidlink;
 
 		$theme_dbfile = '/theme_db.php';
@@ -239,7 +232,7 @@ class Atom {
 			$data['theme_version'] = !empty($theme_version) ? $theme_version : $data['theme_version'];
 			$data['theme_description'] = !empty($theme_description) ? $theme_description : $data['theme_description'];
 			// Find widgets
-			if (isset($theme_newtable) || isset($theme_insertdbrow)) {
+			if (isset($theme_newtable) || isset($theme_insertdbrow) && Admin::theme_widget_exists($data['theme_name'])) {
 				// count how many widget components
 				$data['theme_widgets'] = isset($theme_newtable) ? count($theme_newtable) : 0;
 				$data['theme_widget_status'] = dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$data['theme_name']."'") > 0 ? true : false;
@@ -250,8 +243,8 @@ class Atom {
 
 		$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' ORDER BY theme_datestamp DESC");
 		if (dbrows($result) > 0) {
-			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
-			echo openform('preset-form', 'post', FUSION_SELF.$aidlink."&amp;action=edit", array('notice' => 0, 'max_tokens' => 1));
+			echo "<div class='m-b-20 p-b-20 m-t-20' style='overflow-x:scroll;'>\n";
+			echo openform('preset-form', 'post', FUSION_REQUEST, array('notice' => 0, 'max_tokens' => 1));
 			while ($preset = dbarray($result)) {
 				// @to fix: set as active, edit, delete options.
 				echo "<div class='list-group-item m-t-10 display-inline-block clearfix text-center'>\n".thumbnail($data['theme_screenshot'], '150px')."
@@ -273,7 +266,7 @@ class Atom {
 			echo closeform();
 			echo "</div>\n";
 		} else {
-			echo "<div class='alert alert-warning'>".$locale['theme_1030']."</div>\n";
+			echo "<div class='m-t-20 well text-center'>".$locale['theme_1030']."</div>\n";
 		}
 
 		echo "<div class='row'>\n";
@@ -290,6 +283,22 @@ class Atom {
 		echo "</div>\n";
 		echo "</div>\n";
 	}
+
+	/**
+	 * Theme Widget Page
+	 */
+	public function display_theme_widgets()
+	{
+		global $locale;
+		if (Admin::theme_widget_exists($this->theme_name)) {
+			echo "<div class='m-t-20 m-b-20'>\n <!---start widget form--->\n";
+			include THEMES.$this->theme_name."/widget.php";
+			echo "<!---end widget form--->\n</div>\n";
+		} else {
+			echo "<div class='m-t-20 well text-center'>".$locale['theme_1031']."</div>\n";
+		}
+	}
+
 
 	/* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
 	protected function buildCss() {
@@ -483,7 +492,9 @@ class Atom {
 		}
 	}
 
-	/* Administration Menus - Main */
+	/**
+	 * Theme Styler Page
+	 */
 	public function theme_editor() {
 		global $aidlink, $locale;
 		$this->font_decoration_options = array($locale['theme_5000'],
@@ -512,8 +523,7 @@ class Atom {
 		if ($this->debug) {
 			print_p($_POST);
 		}
-		// do a pop up notice. important. pressing save twice will create a massive stress on server resource.
-
+		// Use a modal to block user to avoid double clicking the save button.
 		echo openmodal('dbi', sprintf($locale['theme_2005'], $this->theme_name), array('class' => 'zindex-boost modal-center',
 			'button_id' => 'save_theme',
 			'static' => 1));
