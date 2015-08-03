@@ -708,13 +708,20 @@ function closecollapse() {
 	return "</div>\n";
 }
 
-function tab_active($tab_title, $default_active, $link_mode = FALSE) {
+/**
+ * Current Tab Active Selector
+ * @param      $array - multidimension array consisting of keys 'title', 'id', 'icon'
+ * @param      $default_active - 0 if link_mode is false, $_GET if link_mode is true
+ * @param bool $link_mode - set to true if tab is a link
+ * @return string
+ */
+function tab_active($array, $default_active, $link_mode = FALSE) {
 	if ($link_mode) {
 		$section = isset($_GET['section']) && $_GET['section'] ? $_GET['section'] : $default_active;
-		$count = count($tab_title['title']);
+		$count = count($array['title']);
 		if ($count > 0) {
 			for ($i = 0; $i <= $count; $i++) {
-				$id = $tab_title['id'][$i];
+				$id = $array['id'][$i];
 				if ($section == $id) {
 					return $id;
 				}
@@ -723,8 +730,8 @@ function tab_active($tab_title, $default_active, $link_mode = FALSE) {
 			return $default_active;
 		}
 	} else {
-		$id = $tab_title['id'][$default_active];
-		$title = $tab_title['title'][$default_active];
+		$id = $array['id'][$default_active];
+		$title = $array['title'][$default_active];
 		$v_link = str_replace(" ", "-", $title);
 		$v_link = str_replace("/", "-", $v_link);
 		return "".$id."$v_link";
@@ -743,7 +750,7 @@ function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = F
 		$icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
 		$inner_id = $tab_title['id'][$arr];
 		$link_url = $link ? clean_request('section='.$inner_id, array('aid',
-			'a_page',
+			'a_page', 'action', 'theme',
 			'thread_id',
 			'forum_id',
 			'ref',

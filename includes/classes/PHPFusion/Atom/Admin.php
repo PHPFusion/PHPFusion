@@ -102,46 +102,30 @@ class Admin {
 		// sanitize theme exist
 		$theme_name = self::verify_theme($theme_name) ? $theme_name : "";
 		if (!$theme_name) { redirect(clean_request("", array("aid"), true)); }
+
 		add_breadcrumb(array('link'=>'', 'title'=>$locale['theme_1018']));
 
-
-
-		// Problem: Need 2 seperate section, with 2 seperate button actions
-		// Build a Dynamic Navbar that listens to $_GET['ref'];
-		$pageSection = array();
-		$pageSection += array(
-			"dashboard" => array("icon"=>"fa fa-edit fa-fw", "title"=>$locale['theme_1022']),
-			"widgets"=> array("icon"=>"fa fa-cube fa-fw", "title"=>$locale['theme_1023']),
-			"css"=> array("icon"=>"fa fa-css3 fa-fw", "title"=>$locale['theme_1024']),
-		);
+		// go with tabs
+		$tab['title'] = array($locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']);
+		$tab['id'] = array("dashboard", "widgets", "css");
+		$tab['icon'] = array("fa fa-edit fa-fw", "fa fa-cube fa-fw", "fa fa-css3 fa-fw");
 		if (isset($_GET['action'])) {
-			$pageSection['close'] = array("icon"=>"fa fa-close fa-fw", "title"=>$locale['theme_1029']);
+			$tab['title'][] = $locale['theme_1029'];
+			$tab['id'][] = "close";
+			$tab['icon'][] = "fa fa-close fa-fw";
 		}
 
-		$_GET['ref'] = isset($_GET['ref']) && isset($pageSection[$_GET['ref']]) ? $_GET['ref'] : 'dashboard';
-		echo "<nav class='navbar navbar-default'>\n";
-		echo "<ul class='navbar navbar-nav'>\n";
-		$i = 0;
-		foreach($pageSection as $key=>$value) {
-			$class_active =  (isset($_GET['ref'])) && $_GET['ref'] == $key ? "class='active'" : "";
-			echo "<li ".$class_active.">
-					<a href='".clean_request("ref=".$key, array("aid", "action", "theme"), true)."'>\n
-					<i class='".$value['icon']."'></i> ".$value['title']."
-					</a>
-				</li>\n";
-			$i++;
-		}
-		echo "</ul>\n";
-		echo "</nav>\n";
-
+		$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $tab['id']) ? $_GET['section'] : "dashboard";
+		$tab_active = $_GET['section'];
 		$atom = new \PHPFusion\Atom\Atom();
 		$atom->target_folder = $theme_name;
 		$atom->theme_name = $theme_name;
 		$atom->set_theme();
 		$atom->load_theme_actions();
 
+		echo opentab($tab, $tab_active, "theme_admin", true);
 		// now include the thing as necessary
-		switch($_GET['ref']) {
+		switch($_GET['section']) {
 			case "dashboard":
 				// Show theme presets available and load it.
 				$atom->render_theme_overview();
@@ -151,8 +135,6 @@ class Admin {
 
 				break;
 			case "css":
-
-
 				$atom->theme_editor();
 				break;
 			case "close":
@@ -161,6 +143,7 @@ class Admin {
 			default:
 				break;
 		}
+		echo closetab();
 
 	}
 

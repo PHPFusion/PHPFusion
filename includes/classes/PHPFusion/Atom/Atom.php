@@ -248,8 +248,6 @@ class Atom {
 			$data['theme_screenshot'] = file_exists(THEMES.$this->theme_name."/screenshot.jpg") ? THEMES.$this->theme_name."/screenshot.jpg" : IMAGES.'imagenotfound.jpg';
 		}
 
-		echo "<div class='well'>\n";
-
 		$result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' ORDER BY theme_datestamp DESC");
 		if (dbrows($result) > 0) {
 			echo "<div style='overflow-x:scroll; margin-bottom:20px; padding-bottom:20px;'>\n";
@@ -290,8 +288,6 @@ class Atom {
 		if ($data['theme_license']) echo "<span><strong>".$locale['theme_1013']."</strong> ".$data['theme_license']."</span><br/>";
 		echo "<span><strong>".$locale['theme_1028']."</strong> ".dbrows($result)."</span><br/>";
 		echo "</div>\n";
-		echo "</div>\n";
-
 		echo "</div>\n";
 	}
 
