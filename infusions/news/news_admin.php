@@ -603,7 +603,7 @@ function news_form() {
 		echo form_hidden('news_language', '', $data['news_language']);
 	}
 	echo form_hidden('news_datestamp', '', $data['news_datestamp']);
-	echo form_select('news_visibility', $locale['news_0209'], $data['news_visibility'], array('options' => getgroupOpts(),
+	echo form_select('news_visibility', $locale['news_0209'], $data['news_visibility'], array('options' => fusion_get_groups(),
 		'placeholder' => $locale['choose'],
 		'width' => '100%'));
 	closeside();

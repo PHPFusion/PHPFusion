@@ -27,7 +27,7 @@ $theme_web = 'http://rusfusion.ru/infusions/moddb/view.php?mod_id=777';
 $theme_license = 'AGPL3';
 $theme_version = '1.00';
 $theme_description = 'White and Green theme as well as a slider';
-
+$theme_widgets = true;
 define('DB_DEBONAIR', DB_PREFIX."debonair");
 
 /**
@@ -51,17 +51,20 @@ $theme_newtable[1] = DB_DEBONAIR." (
 	banner_order mediumint(8) unsigned not null default '0',
 	banner_datestamp int(10) unsigned not null default '0',
 	banner_visibility tinyint(4) not null default '0',
-	banner_language varchar(50) not nulld efault '".LANGUAGE."',
-	PRIMARY KEY (banner_id),
-	KEY news_datestamp (banner_datestamp)
+	banner_language varchar(50) not null default '".LANGUAGE."',
+	PRIMARY KEY (banner_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 $theme_droptable[1] = DB_DEBONAIR;
 
 // main settings of first canvas.
 $theme_insertdbrow[1] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('main_banner_url', 'home.php', '".$theme_folder."')";
-$theme_insertdbrow[2] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('banner_title', '', '".$theme_folder."')";
-$theme_insertdbrow[3] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('banner_description', '', '".$theme_folder."')";
-$theme_insertdbrow[4] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('banner_image', '', '".$theme_folder."')";
+$theme_insertdbrow[2] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('ubanner_col_1', '', '".$theme_folder."')";
+$theme_insertdbrow[3] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('ubanner_col_2', '', '".$theme_folder."')";
+$theme_insertdbrow[4] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('ubanner_col_3', '', '".$theme_folder."')";
+$theme_insertdbrow[5] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_1', '', '".$theme_folder."')";
+$theme_insertdbrow[6] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_2', '', '".$theme_folder."')";
+$theme_insertdbrow[7] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_3', '', '".$theme_folder."')";
+$theme_insertdbrow[8] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_4', '', '".$theme_folder."')";
 
 
 $theme_deldbrow[1] = DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'";

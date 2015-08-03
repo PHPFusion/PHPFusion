@@ -503,6 +503,7 @@ dl, dt, dd {
 .editor-wrapper { margin-top: -30px; }
 .editor-wrapper .panel-heading, .editor-wrapper .panel-footer { background: transparent; }
 .editor-wrapper > ul > li { float: right; }
+
 /* List group item */
 .list-group-item.active { background-color: rgba(204, 204, 204, 0.35); }
 /* Parse Users */
@@ -588,9 +589,6 @@ table {
 	text-align: center;
 }
 
-.panel-txtarea, .panel-txtarea > .panel-heading {
-	border-top: 0;
-}
 
 /* Table Sorter */
 table.tablesorter { }

@@ -46,17 +46,38 @@ function dynamic_block($title, $description, $form_input) {
  */
 if (!function_exists("alert")) {
 	function alert($title, $text = "", array $options = array()) {
-		$options += array("class" => !empty($options['class']) ? " ".$options['class'] : "",
-			"dismiss" => !empty($options['dismiss']) && $options['dismiss'] == TRUE ? TRUE : FALSE,);
+		$options += array(
+			"class" => !empty($options['class']) ? $options['class'] : "alert-info",
+			"dismiss" => !empty($options['dismiss']) && $options['dismiss'] == TRUE ? TRUE : FALSE
+		);
 		if ($options['dismiss'] == TRUE) {
-			$html = "<div class='alert alert-dismissable".$options['class']."'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>$title</strong>".($text ? " ".$text : "")."</div>";
+			$html = "<div class='alert alert-dismissable ".$options['class']."'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>$title</strong>".($text ? " ".$text : "")."</div>";
 		} else {
-			$html = "<div class='alert".$options['class']."'><strong>$title</strong>".($text ? " ".$text : "")."</div>";
+			$html = "<div class='alert ".$options['class']."'><strong>$title</strong>".($text ? " ".$text : "")."</div>";
 		}
 		add_to_jquery("$('div.alert a').addClass('alert-link');");
 		return $html;
 	}
 }
+
+// Get the widget settings for the theme settings table
+if (!function_exists('get_theme_settings')) {
+	function get_theme_settings($theme_folder) {
+		$settings_arr = array();
+		$set_result = dbquery("SELECT settings_name, settings_value FROM ".DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'");
+		if (dbrows($set_result)) {
+			while ($set_data = dbarray($set_result)) {
+				$settings_arr[$set_data['settings_name']] = $set_data['settings_value'];
+			}
+			return $settings_arr;
+		} else {
+			return FALSE;
+		}
+	}
+}
+
+
+
 /**
  * Java script that transform html table sortable
  * @param $table_id - table ID

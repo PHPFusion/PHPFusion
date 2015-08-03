@@ -189,6 +189,7 @@ function form_select_chain_hierarchy($title, $input_name, $input_id, $option_arr
 	return $html;
 }
 
+/* To deprecate */
 function form_select_chain($title, $input_name, $input_id, $option_array, $input_value = FALSE, $chain_to_parent_id, $array = FALSE) {
 	global $_POST;
 	if (!defined("SELECT2")) {
@@ -205,9 +206,6 @@ function form_select_chain($title, $input_name, $input_id, $option_array, $input
 	} else {
 		$title = "";
 	}
-	//if (isset($input_name) && ($input_name !=="")) { $input_name = stripinput($input_name); } else { $input_name = ""; }
-	//if (isset($desc) && ($desc !=="")) { $desc = stripinput($desc); } else { $desc = ""; }
-	//if (isset($input_value) && ($input_value !=="")) { $input_value = stripinput($input_value); } else { $input_value = ""; }
 	if (isset($is_order) && ($is_order !== "")) {
 		$is_order = stripinput($is_order);
 	} else {
@@ -252,6 +250,10 @@ function form_select_chain($title, $input_name, $input_id, $option_array, $input
 	if (is_array($option_array)) {
 		foreach ($option_array as $arr) { // outputs: key, value, class - in order
 			//print_p($arr);
+			/*
+			 * "key" => array("value"=>"", "class"=>"");
+			 *
+			 */
 			if ($is_order == 1) {
 				if ($input_value !== "" && ($arr['3'] == "1")) {
 					$select = "selected";

@@ -838,7 +838,7 @@ class Admin {
 			$this->upload_settings['upload_path'] = $this->image_upload_dir;
 			echo form_fileinput('album_file', $locale['621'], "", $this->upload_settings);
 			echo form_hidden('album_hfile', '', $this->album_data['album_thumb']);
-			echo form_select('album_access', $locale['611'], $this->album_data['album_access'], array('options' => getgroupOpts(),
+			echo form_select('album_access', $locale['611'], $this->album_data['album_access'], array('options' => fusion_get_groups(),
 				'inline' => 1));
 			echo form_hidden('album_id', '', $this->album_data['album_id']);
 			echo form_select('album_language', $locale['612'], $this->album_data['album_language'], array('options' => fusion_get_enabled_languages(),

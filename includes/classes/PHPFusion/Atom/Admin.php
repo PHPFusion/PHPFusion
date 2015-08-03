@@ -30,53 +30,6 @@ class Admin {
 		$_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
 		$_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
 		add_breadcrumb(array('link'=>ADMIN."theme.php".$aidlink, 'title'=>$locale['theme_1000']));
-		self::set_theme_active();
-		if (isset($_POST['install_widget']) && fusion_get_settings('theme') == $_POST['install_widget']) {
-			$widget_name = form_sanitizer($_POST['install_widget'], '');
-			self::install_widget($widget_name);
-		}
-	}
-
-	/**
-	 * Set them as active
-	 */
-	protected function set_theme_active() {
-		global $aidlink;
-		if (isset($_POST['activate'])) {
-			$theme_name = form_sanitizer($_POST['activate'], '');
-			if (self::theme_installable($theme_name)) {
-				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$theme_name."' WHERE settings_name='theme'");
-				if ($result) redirect(FUSION_SELF.$aidlink);
-			}
-		}
-	}
-
-	/**
-	 * Process the sql insertion
-	 * @param $theme_folder
-	 */
-	private function install_widget($theme_folder) {
-		global $locale, $aidlink;
-		if (iADMIN && self::get_edit_status($theme_folder) && file_exists(THEMES.$theme_folder."/theme_db.php") && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$theme_folder."'"))
-		{
-			include THEMES.$theme_folder."/theme_db.php";
-
-			if (isset($theme_newtable) && is_array($theme_newtable)) {
-				foreach ($theme_newtable as $item) {
-					dbquery("CREATE TABLE ".$item);
-				}
-			}
-
-			if (isset($theme_insertdbrow) && is_array($theme_insertdbrow)) {
-				foreach ($theme_insertdbrow as $item) {
-					print_p($item);
-					dbquery("INSERT INTO ".$item);
-				}
-			}
-			addNotice('success', sprintf($locale['theme_1019'], ucwords($theme_folder)));
-			redirect(FUSION_SELF.$aidlink);
-		}
-
 	}
 
 	/**
@@ -161,6 +114,15 @@ class Admin {
 
 	public static function display_theme_list() {
 		global $locale, $aidlink, $settings;
+
+		if (isset($_POST['activate'])) {
+			$theme_name = form_sanitizer($_POST['activate'], '');
+			if (self::theme_installable($theme_name)) {
+				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$theme_name."' WHERE settings_name='theme'");
+				if ($result) redirect(FUSION_SELF.$aidlink);
+			}
+		}
+
 		$data = array();
 		$_dir = makefilelist(THEMES, ".|..|templates|admin_templates", TRUE, "folders");
 		foreach($_dir as $folder) {

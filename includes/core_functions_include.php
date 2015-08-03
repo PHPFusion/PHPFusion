@@ -890,7 +890,7 @@ function getgroupname($group_id, $return_desc = FALSE) {
  * Get All Groups Arrays
  * @return array
  */
-function getgroupOpts() {
+function fusion_get_groups() {
 	$visibility_opts = array();
 	foreach (getusergroups() as $groups) {
 		$visibility_opts[$groups[0]] = $groups[1];

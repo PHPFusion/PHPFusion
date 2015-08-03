@@ -290,10 +290,41 @@ class Atom {
 	public function display_theme_widgets()
 	{
 		global $locale;
-		if (Admin::theme_widget_exists($this->theme_name)) {
-			echo "<div class='m-t-20 m-b-20'>\n <!---start widget form--->\n";
-			include THEMES.$this->theme_name."/widget.php";
-			echo "<!---end widget form--->\n</div>\n";
+		if (Admin::theme_widget_exists($this->theme_name))
+		{
+			echo "<div class='m-t-20 m-b-20'>\n";
+			require_once THEMES.$this->theme_name."/theme_db.php";
+			// check if a widget already installed
+			if (isset($_POST['infuse_widget']) && fusion_get_settings('theme') == $_POST['infuse_widget'] && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$this->theme_name."'")) {
+				if (isset($theme_newtable) && is_array($theme_newtable)) {
+					foreach ($theme_newtable as $item) {
+						$result = dbquery("CREATE TABLE ".$item);
+						if (!$result) \defender::stop();
+					}
+				}
+				// insertion ok
+				if (isset($theme_insertdbrow) && is_array($theme_insertdbrow)) {
+					foreach ($theme_insertdbrow as $item) {
+						$result = dbquery("INSERT INTO ".$item);
+						if (!$result) \defender::stop();
+					}
+				}
+				addNotice('success', sprintf($locale['theme_1019'], ucwords($this->theme_name)));
+				redirect(FUSION_REQUEST);
+			}
+			if ((isset($theme_newtable) || isset($theme_insertdbrow)) && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$this->theme_name."'")) {
+				// show alert form
+				$html = openform("widget_infuse", "post", FUSION_REQUEST);
+				$html .= "<div>".$locale['theme_1032']."</div>";
+				$html .= form_button("infuse_widget", $locale['theme_1016'], $this->theme_name, array("class"=>"btn-primary m-t-10"));
+				$html .= closeform();
+				echo alert("", $html);
+			} else {
+				echo "<!---start widget form--->\n";
+				include THEMES.$this->theme_name."/widget.php";
+				echo "<!---end widget form--->\n";
+			}
+			echo "</div>\n";
 		} else {
 			echo "<div class='m-t-20 well text-center'>".$locale['theme_1031']."</div>\n";
 		}
