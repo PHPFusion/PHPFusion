@@ -448,6 +448,7 @@ $locale['version'] = "Версія ";
 $locale['browse'] = "Перегляд ...";
 $locale['close'] = "Закрити";
 $locale['nopreview'] = "Дані для перегляду відсутні";
+$locale['mark_as'] = "Позначити як";
 
 // Alignment
 $locale['left'] = "Зліва";
