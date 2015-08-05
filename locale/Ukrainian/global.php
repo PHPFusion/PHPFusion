@@ -1,9 +1,8 @@
 <?php
 /*
 Ukrainian Language Fileset
-Produced by kot2007
+Produced by Vyacheslav Buchatskiy (kot2007)
 E-mail: koot2007@gmail.com
-v.9.00.00 beta
 */
 
 // Locale Settings
