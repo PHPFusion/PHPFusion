@@ -38,7 +38,6 @@ echo closetabbody();
 echo opentabbody($tab['title'][1], $tab['id'][1], $tab_active);
 debonair_theme_widget();
 echo closetabbody();
-
 echo closetab();
 
 
@@ -187,37 +186,98 @@ function debonair_banner_widget() {
 	}
 }
 
-// settings
-
-
-function debonair_theme_widget() {
-
-
+function debonair_theme_widget()
+{
 	global $locale;
 	$settings = get_theme_settings("debonair");
-	print_p($settings);
+
 
 	$locale['debonair_0300'] = "Main Banner Include";
 	$locale['debonair_0301'] = "Select the page URL where the banner will be used. Non selected pages will instead use the shorter page header.";
 	$locale['debonair_0302'] = "None";
+	$locale['debonair_0303'] = "Display Article";
+	$locale['debonair_0304'] = "Display News";
+	$locale['debonair_0305'] = "Display Blog";
+	$locale['debonair_0306'] = "Display Custom Page";
+	$locale['debonair_0307'] = "Header Column 1 Preset";
+	$locale['debonair_0308'] = "Header Column 2 Preset";
+	$locale['debonair_0309'] = "Header Column 3 Preset";
+	$locale['debonair_0310'] = "Article in %s";
+	$locale['debonair_0311'] = "News in %s";
+	$locale['debonair_0312'] = "Blog in %s";
+	$locale['debonair_0313'] = "Page in %s";
+	$locale['debonair_0314'] = "Custom Page in %s";
+	$locale['debonair_0315'] = "Displays a summary snippet of Articles, Blogs, News or Custom Pages in the header column section under the slider banner.";
 
-	function parseUbannerSelection($input_1, $input_2) {
-		// make a switch
-		switch($input_1) {
-			case "":
+	/**
+	 * Serialization of choices
+	 * @param $input
+	 * @return $string
+	 */
+	function composeSelection($input) {
+		$inputArray = "";
+		if ($input !=="") {
+			$inputArray['selected'] = $input;
+			foreach(fusion_get_enabled_languages() as $lang) {
+				$inputArray['options'][$lang] = form_sanitizer($_POST[$input.'-'.$lang], 0, $input.'-'.$lang);
+			}
+			return serialize($inputArray);
 		}
+		return $inputArray;
 	}
+
+	/**
+	 * Unserialization of choices
+	 * @param $input
+	 * @return array
+	 */
+	function uncomposeSelection($input) {
+		if ($input !=="" && \PHPFusion\QuantumFields::is_serialized($input))
+		{
+			return (array) unserialize($input);
+		}
+		return array();
+	}
+
+	/**
+	 * data parsing
+	 */
+	$ubanner_col_1_data = uncomposeSelection($settings['ubanner_col_1']);
+	$ubanner_col_2_data = uncomposeSelection($settings['ubanner_col_2']);
+	$ubanner_col_3_data = uncomposeSelection($settings['ubanner_col_3']);
+	print_p($ubanner_col_1_data);
+	$settings= array(
+		"main_banner_url" => $settings['main_banner_url'],
+		"ubanner_col_1" => !empty($ubanner_col_1_data['selected']) ? $ubanner_col_1_data['selected'] : 0,
+		"ubanner_col_2" => !empty($ubanner_col_2_data['selected']) ? $ubanner_col_2_data['selected'] : 0,
+		"ubanner_col_3" => !empty($ubanner_col_3_data['selected']) ? $ubanner_col_3_data['selected'] : 0,
+	);
+	print_p($settings);
+
+
+
 	if (isset($_POST['save_settings'])) {
 		$inputArray = array(
 			"main_banner_url" => form_sanitizer($_POST['main_banner_url'], "", "main_banner_url"),
-			"ubanner_col_1" => form_sanitizer($_POST['ubanner_col_1'], "", "ubanner_col_1"),
-			"ubanner_col_2" => form_sanitizer($_POST['ubanner_col_2'], "", "ubanner_col_2"),
-			"ubanner_col_3" => form_sanitizer($_POST['ubanner_col_3'], "", "ubanner_col_3"),
+			"ubanner_col_1" => composeSelection(form_sanitizer($_POST['ubanner_col_1'], "", "ubanner_col_1")),
+			"ubanner_col_2" => composeSelection(form_sanitizer($_POST['ubanner_col_2'], "", "ubanner_col_2")),
+			"ubanner_col_3" => composeSelection(form_sanitizer($_POST['ubanner_col_3'], "", "ubanner_col_3")),
 		);
+		foreach($inputArray as $settings_name => $settings_value) {
+			$sqlArray = array(
+				"settings_name" => $settings_name,
+				"settings_value" => $settings_value,
+				"settings_theme" => "debonair",
+			);
+			dbquery_insert(DB_SETTINGS_THEME, $sqlArray, "update", array("primary_key"=>"settings_name"));
+		}
+		if (defender::safe()) {
+			redirect(FUSION_REQUEST);
+		}
 		// now handle the selection
-		print_p($_POST);
+		//print_p($inputArray);
+		//print_p(uncomposeSelection($inputArray['ubanner_col_1']));
 	}
-
 
 	echo openform("debonair_theme_settings", "post", FUSION_REQUEST);
 	// see now what we have.
@@ -248,7 +308,7 @@ function debonair_theme_widget() {
 			}
 		}
 		if (!empty($articleOpts)) {
-			$templateOpts['articles'] = "Display Article";
+			$templateOpts['articles'] = $locale['debonair_0303'];
 		}
 	}
 	/**
@@ -256,21 +316,16 @@ function debonair_theme_widget() {
 	 */
 	$newsOpts = array();
 	if (db_exists(DB_NEWS)) {
-		$news_result = dbquery("select news_id, news_subject, news_cat_language FROM ".DB_NEWS." n
-	 				left join ".DB_NEWS_CATS." nc on n.news_cat = nc.news_cat_id
-	 				group by n.news_id
-	 				order by n.news_datestamp DESC
-	 				");
+		$news_result = dbquery("select news_id, news_subject, news_language FROM ".DB_NEWS." order by news_datestamp DESC");
 		if (dbrows($news_result)>0) {
 			while ($data = dbarray($news_result)) {
-				$newsOpts[$data['news_cat_language']][$data['news_id']] = $data['news_subject'];
+				$newsOpts[$data['news_language']][$data['news_id']] = $data['news_subject'];
 			}
 		}
 		if (!empty($newsOpts)) {
-			$templateOpts['news'] = "Display News";
+			$templateOpts['news'] = $locale['debonair_0304'];
 		}
 	}
-
 	/**
 	 * Blog Selector
 	 */
@@ -285,7 +340,7 @@ function debonair_theme_widget() {
 			}
 		}
 		if (!empty($blogOpts)) {
-			$templateOpts['blog'] = "Display Blog";
+			$templateOpts['blog'] = $locale['debonair_0305'];
 		}
 	}
 	/**
@@ -302,111 +357,124 @@ function debonair_theme_widget() {
 			}
 		}
 		if (!empty($cpOpts)) {
-			$templateOpts['cp'] = "Display Custom Page";
+			$templateOpts['cp'] = $locale['debonair_0306'];
 		}
 	}
+
 
 	openside("");
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-4'>\n";
-	echo form_select("ubanner_col_1", "Header Column 1 Presets", $settings['ubanner_col_1'], array("options"=>$templateOpts, "inline"=>false));
+	echo form_select("ubanner_col_1", $locale['debonair_0307'], $settings['ubanner_col_1'], array("options"=>$templateOpts, "inline"=>false));
+	if (!empty($articleOpts)) {
+		echo "<div id='ubanner_col_1-articles-choices' class='choices1' ".($settings['ubanner_col_1'] === "articles" ? "" : "style='display:none;'")."'>\n";
+		foreach(fusion_get_enabled_languages() as $lang) {
+			$callback_value = $settings['ubanner_col_1'] === "articles" && !empty($ubanner_col_1_data['options'][$lang]) ? $ubanner_col_1_data['options'][$lang] : "";
+			echo form_select("articles-".$lang, sprintf($locale['debonair_0310'], $lang),  $callback_value, array("options"=>isset($articleOpts[$lang]) ? $articleOpts[$lang] : array()));
+		}
+		echo "</div>\n";
+	}
+	if (!empty($newsOpts)) {
+		echo "<div id='ubanner_col_1-news-choices' class='choices1' ".($settings['ubanner_col_1'] === "news" ? "" : "style='display:none;'").">\n";
+		foreach(fusion_get_enabled_languages() as $lang) {
+			$callback_value = $settings['ubanner_col_1'] === "news" && !empty($ubanner_col_1_data['options'][$lang]) ? $ubanner_col_1_data['options'][$lang] : "";
+			echo form_select("news-".$lang, sprintf($locale['debonair_0311'], $lang), $callback_value, array("options"=>isset($newsOpts[$lang]) ? $newsOpts[$lang] : array()));
+		}
+		echo "</div>\n";
+	}
+	if (!empty($blogOpts)) {
+		echo "<div id='ubanner_col_1-blog-choices' class='choices1' ".($settings['ubanner_col_1'] === "blog" ? "" : "style='display:none;'").">\n";
+		foreach(fusion_get_enabled_languages() as $lang) {
+			$callback_value = $settings['ubanner_col_1'] === "blog" && !empty($ubanner_col_1_data['options'][$lang]) ? $ubanner_col_1_data['options'][$lang] : "";
+			echo form_select("blog-".$lang, sprintf($locale['debonair_0312'], $lang), $callback_value, array("options"=>isset($blogOpts[$lang]) ? $blogOpts[$lang] : array()));
+		}
+		echo "</div>\n";
+	}
+	if (!empty($cpOpts)) {
+		echo "<div id='ubanner_col_1-cp-choices' class='choices1' ".($settings['ubanner_col_1'] === "cp" ? "" : "style='display:none;'").">\n";
+		foreach(fusion_get_enabled_languages() as $lang) {
+			$callback_value = $settings['ubanner_col_1'] === "cp" && !empty($ubanner_col_1_data['options'][$lang]) ? $ubanner_col_1_data['options'][$lang] : "";
+			echo form_select("cp-".$lang, sprintf($locale['debonair_0313'], $lang), $callback_value, array("options"=>isset($cpOpts[$lang]) ? $cpOpts[$lang] : array()));
+		}
+		echo "</div>\n";
+	}
 
+	echo "</div><div class='col-xs-12 col-sm-4'>\n";
+	echo form_select("ubanner_col_2", $locale['debonair_0308'], $settings['ubanner_col_2'], array("options"=>$templateOpts, "inline"=>false));
 	if (!empty($articleOpts)) {
-		echo "<div id='ubanner_col_1-article-choices' class='choices1' style='display:none;'>\n";
+		echo "<div id='ubanner_col_2-articles-choices' class='choices2' ".($settings['ubanner_col_2'] === "articles" ? "" : "style='display:none;'").">\n";
 		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("articles-".$lang, "Article in ".$lang, "", array("options"=>isset($articleOpts[$lang]) ? $articleOpts[$lang] : array()));
+			$callback_value = $settings['ubanner_col_2'] === "articles" && !empty($ubanner_col_2_data['options'][$lang]) ? $ubanner_col_2_data['options'][$lang] : "";
+			echo form_select("articles2-".$lang, sprintf($locale['debonair_0310'], $lang), $callback_value, array("options"=>isset($articleOpts[$lang]) ? $articleOpts[$lang] : array()));
 		}
 		echo "</div>\n";
 	}
 	if (!empty($newsOpts)) {
-		echo "<div id='ubanner_col_1-news-choices' class='choices1' style='display:none;'>\n";
+		echo "<div id='ubanner_col_2-news-choices' class='choices2' ".($settings['ubanner_col_2'] === "news" ? "" : "style='display:none;'").">\n";
 		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("news-".$lang, "News in ".$lang, "", array("options"=>isset($newsOpts[$lang]) ? $newsOpts[$lang] : array()));
+			$callback_value = $settings['ubanner_col_2'] === "news" && !empty($ubanner_col_2_data['options'][$lang]) ? $ubanner_col_2_data['options'][$lang] : "";
+			echo form_select("news2-".$lang, sprintf($locale['debonair_0311'], $lang), $callback_value, array("options"=>isset($newsOpts[$lang]) ? $newsOpts[$lang] : array()));
 		}
 		echo "</div>\n";
 	}
 	if (!empty($blogOpts)) {
-		echo "<div id='ubanner_col_1-blog-choices' class='choices1'  style='display:none;'>\n";
+		echo "<div id='ubanner_col_2-blog-choices' class='choices2' ".($settings['ubanner_col_2'] === "blog" ? "" : "style='display:none;'").">\n";
 		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("blog-".$lang, "Blog in ".$lang, "", array("options"=>isset($blogOpts[$lang]) ? $blogOpts[$lang] : array()));
+			$callback_value = $settings['ubanner_col_2'] === "blog" && !empty($ubanner_col_2_data['options'][$lang]) ? $ubanner_col_2_data['options'][$lang] : "";
+			echo form_select("blog2-".$lang, sprintf($locale['debonair_0312'], $lang), $callback_value, array("options"=>isset($blogOpts[$lang]) ? $blogOpts[$lang] : array()));
 		}
 		echo "</div>\n";
 	}
 	if (!empty($cpOpts)) {
-		echo "<div id='ubanner_col_1-cp-choices' class='choices1'  style='display:none;'>\n";
+		echo "<div id='ubanner_col_2-cp-choices' class='choices2' ".($settings['ubanner_col_2'] === "cp" ? "" : "style='display:none;'").">\n";
 		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("cp-".$lang, "Custom Page in ".$lang, "", array("options"=>isset($cpOpts[$lang]) ? $cpOpts[$lang] : array()));
+			$callback_value = $settings['ubanner_col_2'] === "cp" && !empty($ubanner_col_2_data['options'][$lang]) ? $ubanner_col_2_data['options'][$lang] : "";
+			echo form_select("cp2-".$lang, sprintf($locale['debonair_0313'], $lang), $callback_value, array("options"=>isset($cpOpts[$lang]) ? $cpOpts[$lang] : array()));
 		}
 		echo "</div>\n";
 	}
 	echo "</div><div class='col-xs-12 col-sm-4'>\n";
-	echo form_select("ubanner_col_2", "Header Column 2 Presets", $settings['ubanner_col_2'], array("options"=>$templateOpts, "inline"=>false));
-	if (!empty($articleOpts)) {
-		echo "<div id='ubanner_col_2-article-choices' class='choices2' style='display:none;'>\n";
-		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("articles2-".$lang, "Article in ".$lang, "", array("options"=>isset($articleOpts[$lang]) ? $articleOpts[$lang] : array()));
-		}
-		echo "</div>\n";
-	}
-	if (!empty($newsOpts)) {
-		echo "<div id='ubanner_col_2-news-choices' class='choices2' style='display:none;'>\n";
-		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("news2-".$lang, "News in ".$lang, "", array("options"=>isset($newsOpts[$lang]) ? $newsOpts[$lang] : array()));
-		}
-		echo "</div>\n";
-	}
-	if (!empty($blogOpts)) {
-		echo "<div id='ubanner_col_2-blog-choices' class='choices2'  style='display:none;'>\n";
-		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("blog2-".$lang, "Blog in ".$lang, "", array("options"=>isset($blogOpts[$lang]) ? $blogOpts[$lang] : array()));
-		}
-		echo "</div>\n";
-	}
-	if (!empty($cpOpts)) {
-		echo "<div id='ubanner_col_2-cp-choices' class='choices2'  style='display:none;'>\n";
-		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("cp2-".$lang, "Custom Page in ".$lang, "", array("options"=>isset($cpOpts[$lang]) ? $cpOpts[$lang] : array()));
-		}
-		echo "</div>\n";
-	}
-	echo "</div><div class='col-xs-12 col-sm-4'>\n";
+
 	// 3rd
-	echo form_select("ubanner_col_3", "Header Column 3 Presets", $settings['ubanner_col_3'], array("options"=>$templateOpts, "inline"=>false));
+	echo form_select("ubanner_col_3", $locale['debonair_0309'], $settings['ubanner_col_3'], array("options"=>$templateOpts, "inline"=>false));
 	if (!empty($articleOpts)) {
-		echo "<div id='ubanner_col_3-article-choices' class='choices3' style='display:none;'>\n";
+		echo "<div id='ubanner_col_3-articles-choices' class='choices3' ".($settings['ubanner_col_3'] == "articles" ? "" : "style='display:none;'").">\n";
 		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("articles3-".$lang, "Article in ".$lang, "", array("options"=>isset($articleOpts[$lang]) ? $articleOpts[$lang] : array()));
+			$callback_value = $settings['ubanner_col_3'] === "articles" && !empty($ubanner_col_3_data['options'][$lang]) ? $ubanner_col_3_data['options'][$lang] : "";
+			echo form_select("articles3-".$lang, sprintf($locale['debonair_0310'], $lang), $callback_value, array("options"=>isset($articleOpts[$lang]) ? $articleOpts[$lang] : array()));
 		}
 		echo "</div>\n";
 	}
 	if (!empty($newsOpts)) {
-		echo "<div id='ubanner_col_3-news-choices' class='choices3' style='display:none;'>\n";
+		echo "<div id='ubanner_col_3-news-choices' class='choices3' ".($settings['ubanner_col_3'] === "news" ? "" : "style='display:none;'").">\n";
 		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("news3-".$lang, "News in ".$lang, "", array("options"=>isset($newsOpts[$lang]) ? $newsOpts[$lang] : array()));
+			$callback_value = $settings['ubanner_col_3'] === "news" && !empty($ubanner_col_3_data['options'][$lang]) ? $ubanner_col_3_data['options'][$lang] : "";
+			echo form_select("news3-".$lang, sprintf($locale['debonair_0311'], $lang), $callback_value, array("options"=>isset($newsOpts[$lang]) ? $newsOpts[$lang] : array()));
 		}
 		echo "</div>\n";
 	}
 	if (!empty($blogOpts)) {
-		echo "<div id='ubanner_col_3-blog-choices' class='choices3'  style='display:none;'>\n";
+		echo "<div id='ubanner_col_3-blog-choices' class='choices3' ".($settings['ubanner_col_3'] === "blog" ? "" : "style='display:none;'").">\n";
 		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("blog3-".$lang, "Blog in ".$lang, "", array("options"=>isset($blogOpts[$lang]) ? $blogOpts[$lang] : array()));
+			$callback_value = $settings['ubanner_col_3'] === "blog" && !empty($ubanner_col_3_data['options'][$lang]) ? $ubanner_col_3_data['options'][$lang] : "";
+			echo form_select("blog3-".$lang, sprintf($locale['debonair_0312'], $lang), $callback_value, array("options"=>isset($blogOpts[$lang]) ? $blogOpts[$lang] : array()));
 		}
 		echo "</div>\n";
 	}
 	if (!empty($cpOpts)) {
-		echo "<div id='ubanner_col_3-cp-choices' class='choices3'  style='display:none;'>\n";
+		echo "<div id='ubanner_col_3-cp-choices' class='choices3' ".($settings['ubanner_col_3'] === "cp" ? "" : "style='display:none;'").">\n";
 		foreach(fusion_get_enabled_languages() as $lang) {
-			echo form_select("cp3-".$lang, "Custom Page in ".$lang, "", array("options"=>isset($cpOpts[$lang]) ? $cpOpts[$lang] : array()));
+			$callback_value = $settings['ubanner_col_3'] === "cp" && !empty($ubanner_col_3_data['options'][$lang]) ? $ubanner_col_3_data['options'][$lang] : "";
+			echo form_select("cp3-".$lang, sprintf($locale['debonair_0313'], $lang), $callback_value, array("options"=>isset($cpOpts[$lang]) ? $cpOpts[$lang] : array()));
 		}
 		echo "</div>\n";
 	}
 	echo "</div>\n</div>\n";
-	echo "Displays a summary snippet of Articles, Blogs, News or Custom Pages in the header column section under the slider banner.";
+	echo $locale['debonair_0315'];
 	closeside();
 
 	echo form_button("save_settings", $locale['save_changes'], "save", array("class"=>"btn-success"));
 	echo closeform();
-
 
 	// Now use Jquery to chain the selectors - add_to_jquery combines, include into a single min. document ready script
 	add_to_jquery("
