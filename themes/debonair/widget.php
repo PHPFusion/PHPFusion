@@ -191,7 +191,6 @@ function debonair_theme_widget()
 	global $locale;
 	$settings = get_theme_settings("debonair");
 
-
 	$locale['debonair_0300'] = "Main Banner Include";
 	$locale['debonair_0301'] = "Select the page URL where the banner will be used. Non selected pages will instead use the shorter page header.";
 	$locale['debonair_0302'] = "None";
@@ -208,6 +207,11 @@ function debonair_theme_widget()
 	$locale['debonair_0313'] = "Page in %s";
 	$locale['debonair_0314'] = "Custom Page in %s";
 	$locale['debonair_0315'] = "Displays a summary snippet of Articles, Blogs, News or Custom Pages in the header column section under the slider banner.";
+	$locale['debonair_0316'] = "Displays a summary snippet type in the lower column section above the footer.";
+	$locale['debonair_0317'] = "Lower Column 1 Preset";
+	$locale['debonair_0318'] = "Lower Column 2 Preset";
+	$locale['debonair_0319'] = "Lower Column 3 Preset";
+	$locale['debonair_0320'] = "Lower Column 4 Preset";
 
 	/**
 	 * Serialization of choices
@@ -245,16 +249,17 @@ function debonair_theme_widget()
 	$ubanner_col_1_data = uncomposeSelection($settings['ubanner_col_1']);
 	$ubanner_col_2_data = uncomposeSelection($settings['ubanner_col_2']);
 	$ubanner_col_3_data = uncomposeSelection($settings['ubanner_col_3']);
-	print_p($ubanner_col_1_data);
-	$settings= array(
+
+	$settings = array(
 		"main_banner_url" => $settings['main_banner_url'],
 		"ubanner_col_1" => !empty($ubanner_col_1_data['selected']) ? $ubanner_col_1_data['selected'] : 0,
 		"ubanner_col_2" => !empty($ubanner_col_2_data['selected']) ? $ubanner_col_2_data['selected'] : 0,
 		"ubanner_col_3" => !empty($ubanner_col_3_data['selected']) ? $ubanner_col_3_data['selected'] : 0,
+		"lbanner_col_1" => $settings['lbanner_col_1'],
+		"lbanner_col_2" => $settings['lbanner_col_2'],
+		"lbanner_col_3" => $settings['lbanner_col_3'],
+		"lbanner_col_4" => $settings['lbanner_col_4'],
 	);
-	print_p($settings);
-
-
 
 	if (isset($_POST['save_settings'])) {
 		$inputArray = array(
@@ -262,6 +267,10 @@ function debonair_theme_widget()
 			"ubanner_col_1" => composeSelection(form_sanitizer($_POST['ubanner_col_1'], "", "ubanner_col_1")),
 			"ubanner_col_2" => composeSelection(form_sanitizer($_POST['ubanner_col_2'], "", "ubanner_col_2")),
 			"ubanner_col_3" => composeSelection(form_sanitizer($_POST['ubanner_col_3'], "", "ubanner_col_3")),
+			"lbanner_col_1" => form_sanitizer($_POST['lbanner_col_1'], "", "lbanner_col_1"),
+			"lbanner_col_2" => form_sanitizer($_POST['lbanner_col_2'], "", "lbanner_col_2"),
+			"lbanner_col_3" => form_sanitizer($_POST['lbanner_col_3'], "", "lbanner_col_3"),
+			"lbanner_col_4" => form_sanitizer($_POST['lbanner_col_4'], "", "lbanner_col_4"),
 		);
 		foreach($inputArray as $settings_name => $settings_value) {
 			$sqlArray = array(
@@ -274,17 +283,20 @@ function debonair_theme_widget()
 		if (defender::safe()) {
 			redirect(FUSION_REQUEST);
 		}
-		// now handle the selection
-		//print_p($inputArray);
-		//print_p(uncomposeSelection($inputArray['ubanner_col_1']));
 	}
 
 	echo openform("debonair_theme_settings", "post", FUSION_REQUEST);
-	// see now what we have.
+	$exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php";
 	$list = array();
-	$file_list = makefilelist(BASEDIR, ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt|reactivate.php|rewrite.php|maintenance.php|maincore.php|lostpassword.php|index.php|error.php");
+	$file_list = makefilelist(BASEDIR, $exclude_list);
 	foreach ($file_list as $files) {
 		$list[] = $files;
+	}
+
+	$include_list = array();
+	$file_list = makefilelist(THEMES."/debonair/include/", $exclude_list);
+	foreach ($file_list as $files) {
+		$include_list[$files] = str_replace(".php", "", str_replace("_", " ", ucwords($files)));
 	}
 
 	openside("");
@@ -434,7 +446,6 @@ function debonair_theme_widget()
 		echo "</div>\n";
 	}
 	echo "</div><div class='col-xs-12 col-sm-4'>\n";
-
 	// 3rd
 	echo form_select("ubanner_col_3", $locale['debonair_0309'], $settings['ubanner_col_3'], array("options"=>$templateOpts, "inline"=>false));
 	if (!empty($articleOpts)) {
@@ -473,6 +484,14 @@ function debonair_theme_widget()
 	echo $locale['debonair_0315'];
 	closeside();
 
+	openside("");
+	echo form_select("lbanner_col_1", $locale['debonair_0317'], $settings['lbanner_col_1'], array("options"=>$include_list, "inline"=>true));
+	echo form_select("lbanner_col_2", $locale['debonair_0318'], $settings['lbanner_col_2'], array("options"=>$include_list, "inline"=>true));
+	echo form_select("lbanner_col_3", $locale['debonair_0319'], $settings['lbanner_col_3'], array("options"=>$include_list, "inline"=>true));
+	echo form_select("lbanner_col_4", $locale['debonair_0320'], $settings['lbanner_col_4'], array("options"=>$include_list, "inline"=>true));
+	echo $locale['debonair_0316'];
+	closeside();
+
 	echo form_button("save_settings", $locale['save_changes'], "save", array("class"=>"btn-success"));
 	echo closeform();
 
@@ -490,12 +509,4 @@ function debonair_theme_widget()
 	$('#ubanner_col_2').bind('change', function() { switchSelection(2, $(this).val()); });
 	$('#ubanner_col_3').bind('change', function() { switchSelection(3, $(this).val()); });
 	");
-
-
-	/*
-	"latest_blog" => "Latest Blog",
-	"latest_articles" => "Latest Articles",
-	"latest_news" => "Latest News",
-	*/
-
 }
