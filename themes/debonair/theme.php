@@ -117,7 +117,7 @@ function render_page($license = FALSE) {
 		 	";
 			echo "<!--Slide Customize-->
 			 <li>
-			 <div class='welcome-banner'><div class='slider-corner'></div>
+			 <div class='welcome-banner-2'><div class='slider-corner'></div>
 			 <h1>".$locale['debonair_0502']."</h1>
 			 <h2>".$locale['debonair_0502a']."</h2>
 			 <div class='button-position'>
@@ -223,7 +223,7 @@ function render_page($license = FALSE) {
 		echo "</div>\n</div>\n";
 	} else {
 		// show simple header
-		echo "<aside class='banner'>\n";
+		echo "<aside class='banner m-b-15'>\n";
 		echo "<div class='page-header'>\n";
 		echo "<a href='".BASEDIR."login.php' class='pull-right btn btn-sm btn-success pull-right'><span>Register/Login</span></a>";
 		echo "<div class='holder overflow-hide p-r-10'>\n";

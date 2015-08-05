@@ -54,6 +54,7 @@ body { margin: 0; color: #929292; background: url(../images/bg-page.jpg) no-repe
 /* Banner section */
 .banner {
 	padding: 0;
+	margin-top:15px;
 }
 .banner > .page-header {
 	padding: 10px 20px;
@@ -260,10 +261,11 @@ td, .tbl, .tbl1 {
 	border-radius: 10px 10px 0 0; }
 
 /* Welcome Banner */
-#slider-box .welcome-banner { background: none; height: 258px; overflow: hidden; position: relative; }
-#slider-box .welcome-banner h1 { padding-top: 60px; padding-bottom: 0px; display: block; padding-left: 42px; font-family: Arial, Helvetica, sans-serif; font-size: 42px; color: #FFF; margin: 0px; font-style: italic; font-weight: bold; }
-#slider-box .welcome-banner h2 { padding-bottom: 30px; display: block; padding-left: 42px; font-family: Arial, Helvetica, sans-serif; font-size: 26px; color: #FFF; margin: 0px; font-style: italic; font-weight: normal; }
-#slider-box .welcome-banner h2 span { color: #76AD46 }
+#slider-box .welcome-banner { background-image: url(../images/portfolio/pf8.png); background-position: 0 -280px; background-size: cover; height: 258px; overflow: hidden; position: relative; }
+#slider-box .welcome-banner-2 { background-image: url(../images/portfolio/pf2.jpg); background-position: 0 -280px; background-size: cover; height: 258px; overflow: hidden; position: relative; }
+#slider-box .welcome-banner h1, #slider-box .welcome-banner-2 h1 { padding-top: 60px; padding-bottom: 0px; display: block; padding-left: 42px; font-family: Arial, Helvetica, sans-serif; font-size: 42px; color: #FFF; margin: 0px; font-style: italic; font-weight: bold; }
+#slider-box .welcome-banner h2, #slider-box .welcome-banner-2 h2 { padding-bottom: 30px; display: block; padding-left: 42px; font-family: Arial, Helvetica, sans-serif; font-size: 26px; color: #FFF; margin: 0px; font-style: italic; font-weight: normal; }
+#slider-box .welcome-banner h2 span, #slider-box .welcome-banner-2 h2 span { color: #76AD46 }
 
 /* Inner Banners */
 #slider-box .inner-banner { background: none; height: 258px; overflow: hidden; position: relative; }
