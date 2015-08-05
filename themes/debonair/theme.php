@@ -185,61 +185,39 @@ function render_page($license = FALSE) {
 	if ($theme_settings['lbanner_col_1'] !=="") {
 		include THEME."include/".$theme_settings['lbanner_col_1'];
 	}
-	echo "</div>\n";
 	// column 2
-	echo "<div class='col-xs-12 col-sm-3'>\n
-	<h3 class='icon2'>Lorem Ipsum Generators </h3>
-                        <p>All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</p>
-                        <div class='link-holder'> <a href='#' class='more-dark'>Learn More</a> </div>
-</div>\n";
+	echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
+	if ($theme_settings['lbanner_col_2'] !=="") {
+		include THEME."include/".$theme_settings['lbanner_col_2'];
+	}
 	// column 3
-	echo "<div class='col-xs-12 col-sm-3'>\n
-	<h3 class='icon2'>Lorem Ipsum Generators </h3>
-                        <p>All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet.</p>
-                        <div class='link-holder'> <a href='#' class='more-dark'>Learn More</a> </div>
-</div>\n";
+	echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
+	if ($theme_settings['lbanner_col_3'] !=="") {
+		include THEME."include/".$theme_settings['lbanner_col_3'];
+	}
 	// column 4
-	echo "<div class='col-xs-12 col-sm-3'>\n
-	<h3 class='icon3'>Debonair Newsletter</h3>
-                        <!-- Start Newsletter Form -->
-                        <form id='newsletter' method='get' action='' class='form-add'>
-                           <fieldset>
-                           <div class='row'>
-                              <label for='name'>Your Name:</label>
-                              <div class='txt'>
-                                 <input id='name' name='name' type='text' />
-                              </div>
-                           </div>
-                           <div class='row'>
-                              <label for='email'>Email Address:</label>
-                              <div class='txt'>
-                                 <input id='email' name='email' type='text' />
-                              </div>
-                           </div>
-                           <div class='btn-holder'>
-                              <button type='submit' class='formbutton'><span>Sign Up</span></button>
-                              <a href='#'>Unsubscribe</a> </div>
-                           </fieldset>
-                        </form>
-</div>\n";
+	echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
+	if ($theme_settings['lbanner_col_4'] !=="") {
+		include THEME."include/".$theme_settings['lbanner_col_4'];
+	}
+	echo "</div>\n";
 	echo "</div>\n";
 	// start bottom
-	echo "
-	<div class='bottom'>
-                  <!-- Start Follow Us Links -->
-                  <div class='follow-box'> <strong>Follow us on:</strong>
-                     <ul>
-                        <li><a href='#' class='facebook'>facebook</a></li>
-                        <li><a href='#' class='twitter'>twitter</a></li>
-                        <li><a href='#' class='rss'>rss</a></li>
-                     </ul>
-                  </div>
-                  <!-- End Follow Us Links -->
-                  <div class='txt-holder'>
-                     <p><small>Powered by PHP-Fusion copyright &copy; 2002 - 2012 by Nick Jones. Released as free software without warranties under GNU Affero GPL v3.</small></p>
-                  </div>
-               </div>
-            </div>";
+	echo "<div class='bottom'>
+		<!-- Start Follow Us Links -->
+        <div class='follow-box'> <strong>Follow us on:</strong>
+			 <ul>
+				<li><a href='#' class='facebook'>facebook</a></li>
+				<li><a href='#' class='twitter'>twitter</a></li>
+				<li><a href='#' class='rss'>rss</a></li>
+			 </ul>
+		</div>
+        <!-- End Follow Us Links -->
+        <div class='txt-holder'>
+        <p><small>".str_replace("<br />", "", showcopyright())."</small></p>
+		</div>
+		</div>
+        </div>";
 	echo "</section>\n";
 	echo "</div>\n <!--End Wrapper Sub Elements -->";
 	echo "
