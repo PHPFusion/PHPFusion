@@ -18,7 +18,11 @@
 
 echo "<h3 class='icon2 margin'>".$locale['debonair_0403']."</h3>\n";
 if (db_exists(DB_BLOG)) {
-	$result = dbquery("select blog_id, blog_subject from ".DB_BLOG." where blog_language='".LANGUAGE."' and blog_start <='".time()."' and blog_end >='".time()."' ORDER BY blog_start DESC");
+
+	$result = dbquery("select blog_id, blog_subject from ".DB_BLOG."
+	 ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=".time().")
+	 AND (blog_end='0'||blog_end>=".time().") AND blog_draft='0'
+	 ORDER BY blog_start DESC");
 	if (dbrows($result)>0) {
 		echo "<ul>\n";
 		while ($data = dbarray($result)) {

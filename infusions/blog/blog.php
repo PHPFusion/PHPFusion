@@ -369,7 +369,6 @@ if (dbrows($archive_result)) {
 		$info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] =  array('title'=>$month_locale[$a_data['blog_month']], 'link'=>INFUSIONS."blog/blog.php?archive=".$a_data['blog_year']."#".$a_data['blog_month'], 'count' => $a_data['blog_count'], 'active'=>$active);
 	}
 }
-
 $author_result = dbquery("SELECT b.blog_name, count(b.blog_id) as blog_count, u.user_id, u.user_name, u.user_status
 			FROM ".DB_BLOG." b
 			INNER JOIN ".DB_USERS." u on (b.blog_name = u.user_id)
