@@ -24,7 +24,6 @@ if (db_exists(DB_BLOG)) {
 	 ORDER BY blog_start DESC");
 	if (dbrows($result)>0) {
 		echo "<ul>\n";
-
 		while ($data = dbarray($result)) {
 			echo "<li><a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".$data['blog_subject']."</a></li>\n";
 		}

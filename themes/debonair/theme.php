@@ -1,4 +1,22 @@
 <?php
+/*-------------------------------------------------------+
+| PHP-Fusion Content Management System
+| Copyright (C) PHP-Fusion Inc
+| https://www.php-fusion.co.uk/
++--------------------------------------------------------+
+| Filename: debonair/theme.php
+| Author: HappyTunes (Russia)
+| Co-Author: Frederick MC Chan (Hien)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
@@ -30,6 +48,7 @@ function render_page($license = FALSE) {
 	');
 	add_to_head("<link rel='stylesheet' href='".THEME."css/bootstrap_rewrite.css' type='text/css'/>");
 	include THEME."theme_db.php";
+	$theme_settings = get_theme_settings("debonair");
 
 	echo "<div id='wrapper'>\n";
 	echo "<div class='container'>\n";
@@ -51,20 +70,10 @@ function render_page($license = FALSE) {
 	echo "</div>\n</header>\n";
 	// end header ----
 	// start nav ---
-	/**
-	 * If you want to make an inner search bar, you have to mod showsublinks(),
-	 * Say, add a parameter (i.e. showsublinks(array("search_bar"=>true)) ), and submit your work to us at Github!
-	 * Version 9, Dev Team is a PRO-MOD Team, we'll review and accept. Just talk to any of us.
-	 * We're very fun people!
-	 */
 	echo showsublinks();
 	// end nav --
 
-	// end breadcrumbs
-	// Do you know that using the breadcrumb instance, you can get the title of the page?
-	// Fact: v9 has a very big and robust API.
-
-	$theme_settings = get_theme_settings("debonair");
+	// Header Banner
 	$banner_inclusion_url = explode(",", $theme_settings['main_banner_url']);
 	if (in_array(START_PAGE, $banner_inclusion_url)) {
 		// get the results of the banner
@@ -97,17 +106,25 @@ function render_page($license = FALSE) {
 				echo "<!--End slide ".$data['banner_id']."-->\n";
 			}
 		} else {
-			echo "<!--Slide Welcome-->
+			 echo "<!--Slide Welcome-->
 			 <li>
 			 <div class='welcome-banner'><div class='slider-corner'></div>
 			 <h1>".$locale['debonair_0500']."</h1>
 			 <h2>".$locale['debonair_0501']."</h2>
-			 <p>".$locale['debonair_0502']."</p>
-			 <div class='button-position'>
-			 <div class='btn-group'><a class='btn btn-success btn-sm' href='#'>".$locale['debonair_0503']."</a></div>
-			 </div></div>
+			 </div>
 			 </li>
 			 <!-- End Slide Welcome-->
+		 	";
+			echo "<!--Slide Customize-->
+			 <li>
+			 <div class='welcome-banner'><div class='slider-corner'></div>
+			 <h1>".$locale['debonair_0502']."</h1>
+			 <h2>".$locale['debonair_0502a']."</h2>
+			 <div class='button-position'>
+			 <p>".$locale['debonair_0502c']."</p>
+			 </div></div>
+			 </li>
+			 <!-- End Slide Customize-->
 		 	";
 		}
 		echo "</ul>\n";
@@ -135,7 +152,6 @@ function render_page($license = FALSE) {
 		 </div>
 	  </div>
    </div>";
-
 	} else {
 		// show simple header
 		echo "<aside class='banner'>\n";
@@ -205,12 +221,12 @@ function render_page($license = FALSE) {
 	// start bottom
 	echo "<div class='bottom'>
 		<!-- Start Follow Us Links -->
-        <div class='follow-box'> <strong>Follow us on:</strong>
-			 <ul>
-				<li><a href='#' class='facebook'>facebook</a></li>
-				<li><a href='#' class='twitter'>twitter</a></li>
-				<li><a href='#' class='rss'>rss</a></li>
-			 </ul>
+        <div class='follow-box'> <strong>".$locale['debonair_0510']."</strong>
+			<ul>\n";
+			if ($theme_settings['facebook_url']) echo "<li><a href='".$theme_settings['facebook_url']."' class='facebook'>".$locale['debonair_0511']."</a></li>\n";
+			if ($theme_settings['twitter_url']) echo "<li><a href='".$theme_settings['twitter_url']."' class='twitter'>".$locale['debonair_0512']."</a></li>\n";
+			if (file_exists(INFUSIONS."rss_feeds_panel/rss_feeds_panel.php")) echo "<li><a href='".INFUSIONS."rss_feeds_panel/rss_feeds_panel.php' class='rss'>RSS</a></li>\n";
+			echo "</ul>
 		</div>
         <!-- End Follow Us Links -->
         <div class='txt-holder'>
@@ -239,7 +255,7 @@ function render_page($license = FALSE) {
       <!--End Footer Nav -->
    </div>
 	";
-	echo '<script type="text/javascript"> Cufon.now(); </script>';
+	echo '<script type="text/javascript">Cufon.now();</script>';
 }
 /*
 function render_news($subject, $news, $info) {

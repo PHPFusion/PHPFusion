@@ -61,10 +61,12 @@ $theme_insertdbrow[1] = DB_SETTINGS_THEME." (settings_name, settings_value, sett
 $theme_insertdbrow[2] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('ubanner_col_1', '', '".$theme_folder."')";
 $theme_insertdbrow[3] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('ubanner_col_2', '', '".$theme_folder."')";
 $theme_insertdbrow[4] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('ubanner_col_3', '', '".$theme_folder."')";
-$theme_insertdbrow[5] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_1', '', '".$theme_folder."')";
-$theme_insertdbrow[6] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_2', '', '".$theme_folder."')";
-$theme_insertdbrow[7] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_3', '', '".$theme_folder."')";
-$theme_insertdbrow[8] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_4', '', '".$theme_folder."')";
+$theme_insertdbrow[5] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_1', 'users.php', '".$theme_folder."')";
+$theme_insertdbrow[6] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_2', 'latest_news.php', '".$theme_folder."')";
+$theme_insertdbrow[7] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_3', 'latest_blog.php', '".$theme_folder."')";
+$theme_insertdbrow[8] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('lbanner_col_4', 'about_us.php', '".$theme_folder."')";
+$theme_insertdbrow[9] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('facebook_url', '', '".$theme_folder."')";
+$theme_insertdbrow[10] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES ('twitter_url', '', '".$theme_folder."')";
 
 
 $theme_deldbrow[1] = DB_SETTINGS_THEME." WHERE settings_theme='".$theme_folder."'";

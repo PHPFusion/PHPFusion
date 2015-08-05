@@ -5,28 +5,8 @@
  * First tab is to control widget
  * Second tab is to control theme settings
  */
-
-$locale['debonair_0200'] = "Debonair Banner";
-$locale['debonair_0201'] = "Debonair Settings";
-$locale['debonair_0203'] = "Add New Slides";
-$locale['debonair_0204'] = "Edit Slides";
-$locale['debonair_0205'] = "Subject";
-$locale['debonair_0206'] = "Slide Title/Subject";
-$locale['debonair_0207'] = "Description";
-$locale['debonair_0208'] = "Slide Descriptive Text";
-$locale['debonair_0209'] = "Link URL";
-$locale['debonair_0210'] = "Image";
-$locale['debonair_0211'] = "Order";
-$locale['debonair_0212'] = "Banner slides saved";
-$locale['debonair_0213'] = "There are no slides defined";
-$locale['debonair_0214'] = "Language";
-$locale['debonair_0215'] = "Visibility";
-$locale['debonair_0216'] = "Options";
-$locale['debonair_0217'] = "Slides has been deleted";
-$locale['debonair_0218'] = "Move Up";
-$locale['debonair_0219'] = "Move Down";
-$locale['debonair_0220'] = "Slides has been reordered";
-
+//include THEMES."debonair/locale/".LOCALESET."/locale.php"; // this works
+include "locale/".LOCALESET."locale.php"; // this works too (same as above)
 
 $tab['title'] = array($locale['debonair_0200'], $locale['debonair_0201']);
 $tab['id'] = array("banner", "tsettings");
@@ -191,28 +171,6 @@ function debonair_theme_widget()
 	global $locale;
 	$settings = get_theme_settings("debonair");
 
-	$locale['debonair_0300'] = "Main Banner Include";
-	$locale['debonair_0301'] = "Select the page URL where the banner will be used. Non selected pages will instead use the shorter page header.";
-	$locale['debonair_0302'] = "None";
-	$locale['debonair_0303'] = "Display Article";
-	$locale['debonair_0304'] = "Display News";
-	$locale['debonair_0305'] = "Display Blog";
-	$locale['debonair_0306'] = "Display Custom Page";
-	$locale['debonair_0307'] = "Header Column 1 Preset";
-	$locale['debonair_0308'] = "Header Column 2 Preset";
-	$locale['debonair_0309'] = "Header Column 3 Preset";
-	$locale['debonair_0310'] = "Article in %s";
-	$locale['debonair_0311'] = "News in %s";
-	$locale['debonair_0312'] = "Blog in %s";
-	$locale['debonair_0313'] = "Page in %s";
-	$locale['debonair_0314'] = "Custom Page in %s";
-	$locale['debonair_0315'] = "Displays a summary snippet of Articles, Blogs, News or Custom Pages in the header column section under the slider banner.";
-	$locale['debonair_0316'] = "Displays a summary snippet type in the lower column section above the footer.";
-	$locale['debonair_0317'] = "Lower Column 1 Preset";
-	$locale['debonair_0318'] = "Lower Column 2 Preset";
-	$locale['debonair_0319'] = "Lower Column 3 Preset";
-	$locale['debonair_0320'] = "Lower Column 4 Preset";
-
 	/**
 	 * Serialization of choices
 	 * @param $input
@@ -259,6 +217,8 @@ function debonair_theme_widget()
 		"lbanner_col_2" => $settings['lbanner_col_2'],
 		"lbanner_col_3" => $settings['lbanner_col_3'],
 		"lbanner_col_4" => $settings['lbanner_col_4'],
+		"facebook_url" => $settings['facebook_url'],
+		"twitter_url" => $settings['twitter_url'],
 	);
 
 	if (isset($_POST['save_settings'])) {
@@ -302,6 +262,11 @@ function debonair_theme_widget()
 	openside("");
 	echo form_select("main_banner_url", $locale['debonair_0300'], $settings['main_banner_url'], array("options"=>$list, "tags"=>true, "multiple"=>true, "width"=>"100%", "inline"=>false));
 	echo "<p>".$locale['debonair_0301']."</p>";
+	closeside();
+
+	openside("");
+	echo form_text("facebook_url", $locale['debonair_0321'], $settings['facebook_url'], array("inline"=>true));
+	echo form_text("twitter_url", $locale['debonair_0322'], $settings['twitter_url'], array("inline"=>true));
 	closeside();
 
 	$templateOpts[0] = $locale['debonair_0302'];

@@ -294,7 +294,9 @@ class Atom {
 		{
 			echo "<div class='m-t-20 m-b-20'>\n";
 			require_once THEMES.$this->theme_name."/theme_db.php";
-			// check if a widget already installed
+			/**
+			 * Infuse Widget Action
+			 */
 			if (isset($_POST['infuse_widget']) && fusion_get_settings('theme') == $_POST['infuse_widget'] && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$this->theme_name."'")) {
 				if (isset($theme_newtable) && is_array($theme_newtable)) {
 					foreach ($theme_newtable as $item) {
@@ -312,6 +314,27 @@ class Atom {
 				addNotice('success', sprintf($locale['theme_1019'], ucwords($this->theme_name)));
 				redirect(FUSION_REQUEST);
 			}
+			/**
+			 * Defuse Widget Action
+			 */
+			if (isset($_POST['defuse_widget']) && fusion_get_settings('theme') == $_POST['defuse_widget'] && dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$this->theme_name."'")) {
+				if (isset($theme_droptable) && is_array($theme_droptable)) {
+					foreach ($theme_droptable as $item) {
+						$result = dbquery("DROP TABLE ".$item);
+						if (!$result) \defender::stop();
+					}
+				}
+				// row deletion ok
+				if (isset($theme_deldbrow) && is_array($theme_deldbrow)) {
+					foreach ($theme_deldbrow as $item) {
+						$result = dbquery("DELETE FROM ".$item);
+						if (!$result) \defender::stop();
+					}
+				}
+				addNotice('success', sprintf($locale['theme_1019b'], ucwords($this->theme_name)));
+				redirect(FUSION_REQUEST);
+			}
+
 			if ((isset($theme_newtable) || isset($theme_insertdbrow)) && !dbcount("(settings_name)", DB_SETTINGS_THEME, "settings_theme='".$this->theme_name."'")) {
 				// show alert form
 				$html = openform("widget_infuse", "post", FUSION_REQUEST);
@@ -320,6 +343,21 @@ class Atom {
 				$html .= closeform();
 				echo alert("", $html);
 			} else {
+				$html = openform("widget_defuse", "post", FUSION_REQUEST);
+				$html .= form_button("defuse_widget", $locale['theme_1017'], $this->theme_name, array("class"=>"btn-primary pull-right"));
+				$html .= closeform();
+				add_to_jquery("
+				$('#defuse_widget').bind('click', function(e) {
+					var val = confirm('".$locale['theme_1033']."');
+					if (val == false) {
+						e.preventDefault();
+					}
+				});
+				");
+
+
+				echo $html;
+
 				echo "<!---start widget form--->\n";
 				include THEMES.$this->theme_name."/widget.php";
 				echo "<!---end widget form--->\n";

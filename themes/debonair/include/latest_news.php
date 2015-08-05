@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 echo "<h3 class='icon2 margin'>".$locale['debonair_0406']."</h3>\n";
 if (db_exists(DB_NEWS)) {
 	$result = dbquery("select news_id, news_subject from ".DB_NEWS."
