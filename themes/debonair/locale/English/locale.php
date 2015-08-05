@@ -29,15 +29,14 @@ $locale['debonair_0405'] = "Please install the Official PHP-Fusion Blog Infusion
 $locale['debonair_0406'] = "Latest News";
 $locale['debonair_0407'] = "There are no news defined";
 $locale['debonair_0408'] = "Please install the Official PHP-Fusion News Infusion";
-// Latest Articles
-$locale['debonair_0407'] = "Latest News";
-$locale['debonair_0408'] = "There are no news defined";
-$locale['debonair_0409'] = "Please install the Official PHP-Fusion News Infusion";
-
 // About Us
 $locale['debonair_0410'] = "About Us";
 $locale['debonair_0411'] = "Email:";
 $locale['debonair_0412'] = "Please install the Official PHP-Fusion News Infusion";
+// Latest Articles
+$locale['debonair_0413'] = "Latest Articles";
+$locale['debonair_0414'] = "There are no articles defined";
+$locale['debonair_0415'] = "Please install the Official PHP-Fusion Articles Infusion";
 
 // Banner
 $locale['debonair_0500'] = "Welcome to The PHP-Fusion 9";

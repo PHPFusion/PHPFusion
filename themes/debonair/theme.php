@@ -154,15 +154,15 @@ function render_page($license = FALSE) {
 		echo "</div>\n</div>\n";
 		echo "</aside>\n";
 	}
-
-
-
 	// end of banner
 	// Start of Inner page structure for Bootstrap
-	$side_grid_settings = array('desktop_size' => 2,
+	$side_grid_settings = array(
+		'desktop_size' => 2,
 		'laptop_size' => 3,
 		'tablet_size' => 3,
-		'phone_size' => 4,);
+		'phone_size' => 4
+	);
+
 	echo "<section class='main-content'>\n<div class='main-content-inner'>\n";
 	// now have to do bootstrap calculation
 	// row 1 - go for max width

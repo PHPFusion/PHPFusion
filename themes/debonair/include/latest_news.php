@@ -18,7 +18,11 @@
 
 echo "<h3 class='icon2 margin'>".$locale['debonair_0406']."</h3>\n";
 if (db_exists(DB_NEWS)) {
-	$result = dbquery("select news_id, news_subject from ".DB_NEWS." where news_language='".LANGUAGE."' and news_start <='".time()."' and news_end >='".time()."' ORDER BY news_start DESC");
+	$result = dbquery("select news_id, news_subject from ".DB_NEWS."
+				".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')."
+				AND (news_start='0'||news_start<=".time().")
+				AND (news_end='0'||news_end>=".time().") AND news_draft='0'
+				ORDER BY news_start DESC");
 	if (dbrows($result)>0) {
 		echo "<ul>\n";
 		while ($data = dbarray($result)) {

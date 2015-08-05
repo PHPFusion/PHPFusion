@@ -46,7 +46,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 					LEFT JOIN ".DB_NEWS_CATS." tc ON tn.news_cat=tc.news_cat_id
 					LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = tn.news_id AND tr.rating_type='N'
 					LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'
-					".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')." AND news_id='".$_GET['readmore']."' AND news_draft='0'
+					".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')."
+					AND news_id='".$_GET['readmore']."' AND news_draft='0'
 					LIMIT 1
 					");
 	if (dbrows($result)) {
