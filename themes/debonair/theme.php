@@ -55,8 +55,9 @@ function render_page($license = FALSE) {
 	echo "<div class='body-wrap'>\n";
 	echo "<div class='body-inner-wrap'>\n";
 	// start header ----
+	$banner_path = fusion_get_settings("sitebanner");
 	echo "<header class='clearfix m-t-10'>
-		<a class='logo' href='".BASEDIR."index.php'><img src='".IMAGES."php-fusion-logo.png' alt='PHP-Fusion'/></a>
+		<a class='logo' href='".BASEDIR."index.php'><img src='".($banner_path !== "" ? BASEDIR.$banner_path : IMAGES."php-fusion-logo.png")."' alt='".fusion_get_settings("sitename")."'/></a>
 		<div class='tagline'>Super Clean Web 2.0 Business Template</div>\n";
 	echo "<div class='call-tag'>\n";
 	if (iADMIN) {
