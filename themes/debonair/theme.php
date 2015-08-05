@@ -7,6 +7,8 @@ require_once INCLUDES."theme_functions_include.php";
 include "functions.php";
 function render_page($license = FALSE) {
 	global $userdata, $settings, $locale, $data, $db_prefix, $lookup, $msg_count, $aidlink;
+	include THEME.LOCALE.LOCALESET."locale.php";
+
 	add_to_head('
 	<!--[if lt IE 7]>
 	<script type="text/javascript" src="'.THEME.'js/ie-png.js"></script>
@@ -27,6 +29,7 @@ function render_page($license = FALSE) {
 	<script type="text/javascript" src="'.THEME.'js/subnavie6.js"></script>
 	');
 	add_to_head("<link rel='stylesheet' href='".THEME."css/bootstrap_rewrite.css' type='text/css'/>");
+	include THEME."theme_db.php";
 
 	echo "<div id='wrapper'>\n";
 	echo "<div class='container'>\n";
@@ -56,72 +59,63 @@ function render_page($license = FALSE) {
 	 */
 	echo showsublinks();
 	// end nav --
-	echo "<aside class='banner'>\n";
-	echo "<div class='page-header'>\n";
-	echo "<a href='".BASEDIR."login.php' class='pull-right btn btn-sm btn-success pull-right'><span>Register/Login</span></a>";
-	echo "<div class='holder overflow-hide p-r-10'>\n";
-	// start breadcrumbs
-	echo "<div class='clearfix'>\n";
-	echo "<div class='pull-left m-r-5'><span class='fa fa-map-marker fa-fw'></i>\n</span></div>";
-	echo "<div class='overflow-hide'>\n";
-	echo render_breadcrumbs();
-	echo "</div>\n</div>\n";
+
 	// end breadcrumbs
 	// Do you know that using the breadcrumb instance, you can get the title of the page?
 	// Fact: v9 has a very big and robust API.
-	$title_instance = \PHPFusion\BreadCrumbs::getInstance();
-	$reference = $title_instance->toArray(); // this will give you the whole breadcrumb array
-	$debonAirTitle = (!empty($reference)) ? end($reference) : array('title' => $locale['home']);
-	echo "<h1>".$debonAirTitle['title']."</h1>\n";
-	echo "</div>\n</div>\n";
-	echo "</aside>\n";
-	function display_slider_box() {
+
+	$theme_settings = get_theme_settings("debonair");
+	$banner_inclusion_url = explode(",", $theme_settings['main_banner_url']);
+	if (in_array(START_PAGE, $banner_inclusion_url)) {
+		// get the results of the banner
+		$result = dbquery("SELECT * FROM ".DB_DEBONAIR." where banner_language='".LANGUAGE."' order by banner_order ASC");
+		// show banner
 		echo "<aside class='banner'>\n";
-		//echo "<div class='page-header'>\n";
 		echo "<div id='slider-container'>\n";
 		echo "<ul id='slider-box'>\n";
-		/*
-		 *
-		 */
-		echo "<!-- Slide 1 -->
-		 <li>
-		 <div class='welcome-banner'><div class='slider-corner'></div>
-		 <h1>Welcome to The Debonair Template</h1>
-		 <h2>Super Clean <span>Web 2.0</span> Business Template</h2>
-		 <div class='button-position'>
-		 <div class='btn-group'><a class='btn btn-success btn-sm' href='#'>Learn more</a></div>
-		 </div></div>
-		 </li>
-		 <!-- End slide 1 -->
-		 ";
-		echo "
-		 <!-- Slide 2 -->
-		 <li>
-		 <div class='inner-banner'>
-		 <div class='slider-corner'></div>
-		 <div class='screen'>
-		 <img src='".THEME."images/slider/screenshot1.jpg' alt='Screenshot'/> </div>
-		 <h2>PSD Tuts Tutorial Contribution</h2>
-		 <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s.</p>
-		 <div class='button-position'>
-		 <div class='btn-group'><a class='btn btn-success btn-sm' href='#'>Learn more</a></div>
-		 </div></div>
-		 </li>
-		 <!-- End slide 2 -->
-		";
+		if (dbrows($result)) {
+			while ($data = dbarray($result)) {
+				echo "<!--Slide ".$data['banner_id']."-->\n";
+				echo "<li>\n";
+				echo "<div class='inner-banner'>\n";
+				echo "<div class='slider-corner'></div>\n";
+				if ($data['banner_image']) {
+					echo "<div class='screen'><img src='".THEME."upload/".$data['banner_image']."' alt='".$data['banner_subject']."'/></div>\n";
+				}
+				if ($data['banner_description'] !== "") {
+					echo "<h2>".$data['banner_subject']."</h2>\n";
+					echo "<p>".parseubb(parsesmileys($data['banner_description']))."</p>\n";
+				} else {
+					echo "<h1>".$data['banner_subject']."</h1>\n";
+				}
+				if ($data['banner_link'] !=="") {
+					echo "<div class='button-position'>\n";
+					echo "<div class='btn-group'><a class='btn btn-success btn-sm' href='".BASEDIR.$data['banner_link']."'>Learn more</a></div>\n";
+					echo "</div>\n";
+				}
+				echo "</div>\n</li>\n";
+				echo "<!--End slide ".$data['banner_id']."-->\n";
+			}
+		} else {
+			echo "<!--Slide Welcome-->
+			 <li>
+			 <div class='welcome-banner'><div class='slider-corner'></div>
+			 <h1>".$locale['debonair_0500']."</h1>
+			 <h2>".$locale['debonair_0501']."</h2>
+			 <p>".$locale['debonair_0502']."</p>
+			 <div class='button-position'>
+			 <div class='btn-group'><a class='btn btn-success btn-sm' href='#'>".$locale['debonair_0503']."</a></div>
+			 </div></div>
+			 </li>
+			 <!-- End Slide Welcome-->
+		 	";
+		}
 		echo "</ul>\n";
-		echo "
-		<!-- Start Slider Nav-->
-        <div class='slide-pager-container'>
-		<div id='slide-pager'></div>
-        </div>
-        <!-- End Slider Nav-->
-        </div>
-		";
+		echo "<!-- Start Slider Nav-->\n<div class='slide-pager-container'>\n<div id='slide-pager'></div>\n</div>\n<!-- End Slider Nav-->\n</div>\n";
 		echo "</aside>\n";
-	}
 
-	function display_lower_slider() {
+
+		// upperbanner
 		echo "<div class='lower-banner'>
 	  <div class='holder'>
 		 <div class='col'>
@@ -141,10 +135,28 @@ function render_page($license = FALSE) {
 		 </div>
 	  </div>
    </div>";
+
+	} else {
+		// show simple header
+		echo "<aside class='banner'>\n";
+		echo "<div class='page-header'>\n";
+		echo "<a href='".BASEDIR."login.php' class='pull-right btn btn-sm btn-success pull-right'><span>Register/Login</span></a>";
+		echo "<div class='holder overflow-hide p-r-10'>\n";
+		echo "<div class='clearfix'>\n";
+		echo "<div class='pull-left m-r-5'><span class='fa fa-map-marker fa-fw'></i>\n</span></div>";
+		echo "<div class='overflow-hide'>\n";
+		echo render_breadcrumbs();
+		echo "</div>\n</div>\n";
+		$title_instance = \PHPFusion\BreadCrumbs::getInstance();
+		$reference = $title_instance->toArray(); // this will give you the whole breadcrumb array
+		$debonAirTitle = (!empty($reference)) ? end($reference) : array('title' => $locale['home']);
+		echo "<h1>".$debonAirTitle['title']."</h1>\n";
+		echo "</div>\n</div>\n";
+		echo "</aside>\n";
 	}
 
-	display_slider_box();
-	display_lower_slider();
+
+
 	// end of banner
 	// Start of Inner page structure for Bootstrap
 	$side_grid_settings = array('desktop_size' => 2,
@@ -168,13 +180,12 @@ function render_page($license = FALSE) {
 	// Begin Footer
 	echo "<section class='lower-section'>\n";
 	echo "<div class='row col-holder'>\n";
-	// give it a 4 column design
 	// column 1
-	echo "<div class='col-xs-12 col-sm-3'>\n
-	<h3 class='icon1 margin'>Lorem Ipsum is not simply random text</h3>
-    <p>If you are going to use a passage of Lorem Ipsum, you need to be sure there isnt anything embarrassing hidden in the middle of text.</p>
-	<div class='link-holder'> <a href='#' class='more-dark'>Learn More</a> </div>
-	</div>\n";
+	echo "<div class='col-xs-12 col-sm-3'>\n";
+	if ($theme_settings['lbanner_col_1'] !=="") {
+		include THEME."include/".$theme_settings['lbanner_col_1'];
+	}
+	echo "</div>\n";
 	// column 2
 	echo "<div class='col-xs-12 col-sm-3'>\n
 	<h3 class='icon2'>Lorem Ipsum Generators </h3>

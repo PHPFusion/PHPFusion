@@ -373,7 +373,6 @@ function debonair_theme_widget()
 		}
 	}
 
-
 	openside("");
 	echo "<div class='row'>\n";
 	echo "<div class='col-xs-12 col-sm-4'>\n";
