@@ -115,8 +115,8 @@ class Admin {
 	public static function display_theme_list() {
 		global $locale, $aidlink, $settings;
 
-		if (isset($_POST['activate'])) {
-			$theme_name = form_sanitizer($_POST['activate'], '');
+		if (isset($_GET['action']) && $_GET['action'] == "set_active" && isset($_GET['theme']) && $_GET['theme'] !== "") {
+			$theme_name = form_sanitizer($_GET['theme'], '');
 			if (self::theme_installable($theme_name)) {
 				$result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$theme_name."' WHERE settings_name='theme'");
 				if ($result) redirect(FUSION_SELF.$aidlink);
