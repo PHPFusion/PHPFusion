@@ -92,7 +92,6 @@ $locale['debonair_0502a'] = "Go to <span>Theme Settings</span> and start your cu
 $locale['debonair_0502c'] = "Settings can be accessed Theme Administration > Debonair > Manage Theme > Widgets Control > Debonair Banner";
 $locale['debonair_0504'] = "Lean More";
 
-
 // Footer
 $locale['debonair_0505'] = "Home";
 $locale['debonair_0506'] = "About Us";

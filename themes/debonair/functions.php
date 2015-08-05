@@ -116,3 +116,54 @@ function opentable($title) {
 function closetable() {
 }
 */
+
+
+/*
+function render_news($subject, $news, $info) {
+	echo '<div class="post-holder">
+
+    <div class="post">
+                           <!-- Start date-box -->
+                           <div class="date-box">
+                              <div> '.showdate('<strong>%d</strong> <span<>%m</span> ', $info["news_date"]).'</div>
+                           </div>
+                           <!-- End date-box -->
+                           <div class="heading">
+                              <h2><a href="'.BASEDIR.'news.php?readmore='.$info["news_id"].'">'.$subject.'</a></h2>
+                              <div class="info">
+                                 <p>'.showdate('%d.%m.%y um %H.%M', $info["news_date"]).' Uhr von '.profile_link($info["user_id"], $info["user_name"], $info["user_status"]).'</p>
+                                 <em><a href="'.BASEDIR.'news.php?readmore='.$info["news_id"].'">'.$info["news_comments"].' comments</a></em> </div>
+                           </div>
+                           <div class="txt-content">
+                              <p>'.$news.'</p>
+                           </div>
+                           <div class="more-holder"> <a href="'.BASEDIR.'news.php?readmore='.$info["news_id"].'" class="more-dark">Read More</a> </div>
+                        </div>
+
+    </div>';
+}
+
+function render_article($subject, $article, $info) {
+	echo '<div class="post-holder">
+
+    <div class="post">
+                           <!-- Start date-box -->
+                           <div class="date-box">
+                              <div> '.showdate('<strong>%d</strong> <span<>%m</span> ', $info["article_date"]).'</div>
+                           </div>
+                           <!-- End date-box -->
+                           <div class="heading">
+                              <h2><a href="'.BASEDIR.'articles.php?article_id='.$info["article_id"].'">'.$subject.'</a></h2>
+                              <div class="info">
+                                 <p>'.showdate('%d.%m.%y um %H.%M', $info["article_date"]).' Uhr von '.profile_link($info["user_id"], $info["user_name"], $info["user_status"]).'</p>
+                                 <em><a href="'.BASEDIR.'articles.php?article_id='.$info["article_id"].'">'.$info["article_comments"].' comments</a></em> </div>
+                           </div>
+                           <div class="txt-content">
+                              <p>'.$article.'</p>
+                           </div>
+                           <div class="more-holder"> <a href="'.BASEDIR.'articles.php?article_id='.$info["article_id"].'" class="more-dark">Read More</a> </div>
+                        </div>
+
+    </div>';
+}
+*/
