@@ -77,8 +77,30 @@ function uncomposeSelection($input) {
 }
 
 
-// End of bootstrap calculate
+/** Opentable **/
+function opentable($title) {
+	echo '<div class="txt-content">
+                           <h3>'.$title.'</h3><p>';
+}
 
+/** Closetable **/
+function closetable() {
+	echo "</p>
+          </div>";
+}
+
+/** Openside **/
+function openside($title) {
+	echo '<h3>'.$title.'</h3><p>';
+}
+
+/** Closeside **/
+function closeside() {
+	echo '</p>';
+}
+
+
+// End of bootstrap calculate
 // Standard open and close functions
 /*
 function openside($title) {
@@ -92,7 +114,5 @@ function opentable($title) {
 	echo "<h3>$title</h3>\n";
 }
 function closetable() {
-
 }
 */
-

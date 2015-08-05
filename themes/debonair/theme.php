@@ -370,26 +370,5 @@ function render_article($subject, $article, $info) {
     </div>';
 }
 */
-/** Opentable **/
-function opentable($title) {
-	echo '<div class="txt-content">
-                           <h3>'.$title.'</h3><p>';
-}
-
-/** Closetable **/
-function closetable() {
-	echo "</p>
-          </div>";
-}
-
-/** Openside **/
-function openside($title) {
-	echo '<h3>'.$title.'</h3><p>';
-}
-
-/** Closeside **/
-function closeside() {
-	echo '</p>';
-}
 
 ?>
