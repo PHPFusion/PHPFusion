@@ -45,6 +45,38 @@ function html_prefix(array $array) {
 	return "".$array['phone_size']." ".$array['tablet_size']." ".$array['laptop_size']." ".$array['desktop_size']."";
 }
 
+
+/**
+ * Serialization of choices
+ * @param $input
+ * @return $string
+ */
+function composeSelection($input) {
+	$inputArray = "";
+	if ($input !=="") {
+		$inputArray['selected'] = $input;
+		foreach(fusion_get_enabled_languages() as $lang) {
+			$inputArray['options'][$lang] = isset($_POST[$input.'-'.$lang]) ? form_sanitizer($_POST[$input.'-'.$lang], 0, $input.'-'.$lang) : "";
+		}
+		return serialize($inputArray);
+	}
+	return $inputArray;
+}
+
+/**
+ * Unserialization of choices
+ * @param $input
+ * @return array
+ */
+function uncomposeSelection($input) {
+	if ($input !=="" && \PHPFusion\QuantumFields::is_serialized($input))
+	{
+		return (array) unserialize($input);
+	}
+	return array();
+}
+
+
 // End of bootstrap calculate
 
 // Standard open and close functions

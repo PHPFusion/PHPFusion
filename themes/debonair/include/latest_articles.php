@@ -24,6 +24,7 @@ if (db_exists(DB_ARTICLES)) {
 		FROM ".DB_ARTICLES." ta
 		INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
 		".(multilang_table("AR") ?  "WHERE tac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('article_visibility')."
+		group by ta.article_id
 		order by ta.article_datestamp DESC");
 	if (dbrows($result)>0) {
 		echo "<ul>\n";

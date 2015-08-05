@@ -53,7 +53,9 @@ header .call-tag em > a:hover, header .call-tag em > a:focus {
 	-moz-border-radius: 0 0 10px 10px;
 	border-radius: 0 0 10px 10px; margin-bottom: 20px; }
 .lower-banner .holder { padding: 0 0 0 20px; overflow: hidden; width: 1000px; position: relative; }
-.lower-banner .col { float: left; width: 273px; color: #868685; font-size: 12px; margin-top: 0; margin-right: 41px; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0px; padding-left: 0; }
+.lower-banner .col {
+	color: #868685; font-size: 12px;
+}
 .lower-banner .col h2 { font-weight: normal; font-size: 18px; color: #FFF; margin-top: 0; margin-right: 0; margin-bottom: 9px; margin-left: 0; padding-top: 7px; padding-right: 40px; padding-bottom: 5px; padding-left: 0; }
 .lower-banner .col h2 a { text-decoration: none; color: #FFF; }
 .lower-banner .col p { line-height: 18px; margin-top: 0; margin-bottom: 18px; }

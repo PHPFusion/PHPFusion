@@ -102,3 +102,7 @@ $locale['debonair_0509'] = "Blog";
 $locale['debonair_0510'] = "Follow us on:";
 $locale['debonair_0511'] = "Facebook";
 $locale['debonair_0512'] = "Twitter";
+
+$locale['debonair_0600'] = "Item not found or expired";
+$locale['debonair_0601'] = "Widget Unconfigured";
+$locale['debonair_0602'] = "There are no extensions defined";

@@ -169,38 +169,8 @@ function debonair_banner_widget() {
 function debonair_theme_widget()
 {
 	global $locale;
+	require_once "functions.php";
 	$settings = get_theme_settings("debonair");
-
-	/**
-	 * Serialization of choices
-	 * @param $input
-	 * @return $string
-	 */
-	function composeSelection($input) {
-		$inputArray = "";
-		if ($input !=="") {
-			$inputArray['selected'] = $input;
-			foreach(fusion_get_enabled_languages() as $lang) {
-				$inputArray['options'][$lang] = form_sanitizer($_POST[$input.'-'.$lang], 0, $input.'-'.$lang);
-			}
-			return serialize($inputArray);
-		}
-		return $inputArray;
-	}
-
-	/**
-	 * Unserialization of choices
-	 * @param $input
-	 * @return array
-	 */
-	function uncomposeSelection($input) {
-		if ($input !=="" && \PHPFusion\QuantumFields::is_serialized($input))
-		{
-			return (array) unserialize($input);
-		}
-		return array();
-	}
-
 	/**
 	 * data parsing
 	 */
@@ -231,6 +201,8 @@ function debonair_theme_widget()
 			"lbanner_col_2" => form_sanitizer($_POST['lbanner_col_2'], "", "lbanner_col_2"),
 			"lbanner_col_3" => form_sanitizer($_POST['lbanner_col_3'], "", "lbanner_col_3"),
 			"lbanner_col_4" => form_sanitizer($_POST['lbanner_col_4'], "", "lbanner_col_4"),
+			"facebook_url" => form_sanitizer($_POST['facebook_url'], "", "facebook_url"),
+			"twitter_url" => form_sanitizer($_POST['twitter_url'], "", "twitter_url"),
 		);
 		foreach($inputArray as $settings_name => $settings_value) {
 			$sqlArray = array(
@@ -265,8 +237,8 @@ function debonair_theme_widget()
 	closeside();
 
 	openside("");
-	echo form_text("facebook_url", $locale['debonair_0321'], $settings['facebook_url'], array("inline"=>true));
-	echo form_text("twitter_url", $locale['debonair_0322'], $settings['twitter_url'], array("inline"=>true));
+	echo form_text("facebook_url", $locale['debonair_0321'], $settings['facebook_url'], array("type"=>"url", "inline"=>true, "placeholder"=>"http://www.facebook.com/your-page-id"));
+	echo form_text("twitter_url", $locale['debonair_0322'], $settings['twitter_url'], array("type"=>"url", "inline"=>true, "placeholder"=>"http://www.twitter.com/your-page-id"));
 	closeside();
 
 	$templateOpts[0] = $locale['debonair_0302'];
@@ -322,15 +294,19 @@ function debonair_theme_widget()
 	}
 	/**
 	 * Custom Page Selector
+	 * Note: custom page has a different multilanguage setup.
 	 */
 	$cpOpts = array();
 	if (db_exists(DB_CUSTOM_PAGES)) {
-		$cp_result = dbquery("select page_id, page_title, page_language FROM ".DB_CUSTOM_PAGES."
-	 				order by page_id ASC
-	 				");
+		$cp_result = dbquery("select page_id, page_title, page_language FROM ".DB_CUSTOM_PAGES." order by page_id ASC");
 		if (dbrows($cp_result)>0) {
 			while ($data = dbarray($cp_result)) {
-				$cpOpts[$data['page_language']][$data['page_id']] = $data['page_title'];
+				$acceptedLang = stristr($data['page_language'], ".") ? explode(".", $data['page_language']) : array(0=> $data['page_language']);
+				foreach(fusion_get_enabled_languages() as $lang) {
+					if (in_array($lang, $acceptedLang)) {
+						$cpOpts[$lang][$data['page_id']] = $data['page_title'];
+					}
+				}
 			}
 		}
 		if (!empty($cpOpts)) {

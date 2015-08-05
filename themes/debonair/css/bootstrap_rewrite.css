@@ -255,7 +255,9 @@ td, .tbl, .tbl1 {
 	border-radius: 10px 10px 0 0;
 	background-repeat: no-repeat; height: 258px; width: 100%; overflow: hidden; position: relative; margin: 0px; padding: 0px; }
 #slider-box { position: relative; width: 100%; height: 258px; list-style: none; margin: 0px; padding: 0px; }
-#slider-box li { position: absolute; top: 0px; left: 0px; width: 100%; height: 258px; left: 0; display: none; }
+#slider-box li { position: absolute; top: 0px; left: 0px; width: 100%; height: 258px; left: 0; display: none; -webkit-border-radius: 10px 10px 0 0;
+	-moz-border-radius: 10px 10px 0 0;
+	border-radius: 10px 10px 0 0; }
 
 /* Welcome Banner */
 #slider-box .welcome-banner { background: none; height: 258px; overflow: hidden; position: relative; }

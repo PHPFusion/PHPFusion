@@ -130,28 +130,97 @@ function render_page($license = FALSE) {
 		echo "</ul>\n";
 		echo "<!-- Start Slider Nav-->\n<div class='slide-pager-container'>\n<div id='slide-pager'></div>\n</div>\n<!-- End Slider Nav-->\n</div>\n";
 		echo "</aside>\n";
-
-
 		// upperbanner
-		echo "<div class='lower-banner'>
-	  <div class='holder'>
-		 <div class='col'>
-			<h2 class='icon1'>What is Lorem Ipsum?</h2>
-			<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever. </p>
-			<div class='link-holder'> <a href='#' class='more'>Learn More</a> </div>
-								   </div>
-		 <div class='col'>
-			<h2 class='icon2'>Where does it come from?</h2>
-			<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC.</p>
-			<div class='link-holder'> <a href='#' class='more'>Learn More</a> </div>
-		 </div>
-		 <div class='col'>
-			<h2 class='icon3'>Why do we use it?</h2>
-			<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
-			<div class='link-holder'> <a href='#' class='more'>Learn More</a> </div>
-		 </div>
-	  </div>
-   </div>";
+		echo "<div class='lower-banner'>\n<div class='row holder'>\n";
+		// 3 columns
+		for($i=1; $i<=3; $i++) {
+			echo "<div class='col-xs-12 col-sm-4 col'>\n";
+			if ($theme_settings['ubanner_col_'.$i] !=="") {
+				$data = uncomposeSelection($theme_settings['ubanner_col_'.$i]);
+				if (!empty($data['selected']) && multilang_table("NS") ? !empty($data['options'][LANGUAGE]) : "") {
+					switch($data['selected']) {
+						case "news":
+							if (db_exists(DB_NEWS)) {
+								$result = dbquery("select * from ".DB_NEWS."
+											".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('news_visibility')."
+											AND (news_start='0'||news_start<=".time().")
+											AND (news_end='0'||news_end>=".time().") AND news_draft='0'
+											AND news_id='".$data['options'][LANGUAGE]."'
+											");
+								if (dbrows($result)>0) {
+									$data = dbarray($result);
+									echo "<h2 class='icon1'>".$data['news_subject']."</h2>\n";
+									echo "<p>".fusion_first_words(strip_tags($data['news_news']), 50)."</p>\n";
+									echo "<div class='link-holder'><a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='more'>".$locale['debonair_0504']."</a></div>\n";
+								} else {
+									echo "<p>".$locale['debonair_0600']."</p>\n";
+								}
+							} else {
+								echo "<p>".$locale['debonair_0408']."</p>\n";
+							}
+							break;
+						case "blog":
+							if (db_exists(DB_BLOG)) {
+								$result = dbquery("select * from ".DB_BLOG."
+											".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('blog_visibility')."
+											AND (blog_start='0'||blog_start<=".time().")
+											AND (blog_end='0'||blog_end>=".time().") AND blog_draft='0'
+											AND blog_id='".$data['options'][LANGUAGE]."'
+											");
+								if (dbrows($result)>0) {
+									$data = dbarray($result);
+									echo "<h2 class='icon2'>".$data['blog_subject']."</h2>\n";
+									echo "<p>".fusion_first_words(strip_tags($data['blog_blog']), 50)."</p>\n";
+									echo "<div class='link-holder'><a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."' class='more'>".$locale['debonair_0504']."</a></div>\n";
+								} else {
+									echo "<p>".$locale['debonair_0600']."</p>\n";
+								}
+							} else {
+								echo "<p>".$locale['debonair_0405']."</p>\n";
+							}
+							break;
+						case "articles":
+							if (db_exists(DB_ARTICLES)) {
+								$result = dbquery("SELECT ta.article_subject, ta.article_article,
+											FROM ".DB_ARTICLES." ta
+											INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
+											".(multilang_table("AR") ?  "WHERE tac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('article_visibility')."
+											AND article_id='".$data['options'][LANGUAGE]."'");
+								if (dbrows($result)>0) {
+									$data = dbarray($result);
+									echo "<h2 class='icon2'>".$data['blog_subject']."</h2>\n";
+									echo "<p>".fusion_first_words(strip_tags($data['article_subject']), 50)."</p>\n";
+									echo "<div class='link-holder'><a href='".INFUSIONS."articles/articles.php?article_id=".$data['article_id']."' class='more'>".$locale['debonair_0504']."</a></div>\n";
+								} else {
+									echo "<p>".$locale['debonair_0600']."</p>\n";
+								}
+							} else {
+								echo "<p>".$locale['debonair_0415']."</p>\n";
+							}
+							break;
+						case "cp":
+							$result = dbquery("SELECT page_id, page_title, page_content
+										from ".DB_CUSTOM_PAGES."
+										WHERE ".groupaccess('page_access')."
+										AND page_id='".$data['options'][LANGUAGE]."'");
+							if (dbrows($result)>0) {
+								$data = dbarray($result);
+								echo "<h2 class='icon3'>".$data['page_title']."</h2>\n";
+								echo "<p>".fusion_first_words(strip_tags($data['page_content']), 50)."</p>\n";
+								echo "<div class='link-holder'><a href='".BASEDIR."viewpage.php?page_id=".$data['page_id']."' class='more'>".$locale['debonair_0504']."</a></div>\n";
+							} else {
+								echo "<p>".$locale['debonair_0600']."</p>\n";
+							}
+							break;
+					}
+				}
+			} else {
+				echo "<h2 class='icon3'>".$locale['debonair_0601']."</h2>\n";
+				echo "<p>".$locale['debonair_0602']."</p>\n";
+			}
+			echo "</div>\n";
+		}
+		echo "</div>\n</div>\n";
 	} else {
 		// show simple header
 		echo "<aside class='banner'>\n";
@@ -219,21 +288,15 @@ function render_page($license = FALSE) {
 	echo "</div>\n";
 	echo "</div>\n";
 	// start bottom
-	echo "<div class='bottom'>
-		<!-- Start Follow Us Links -->
-        <div class='follow-box'> <strong>".$locale['debonair_0510']."</strong>
-			<ul>\n";
-			if ($theme_settings['facebook_url']) echo "<li><a href='".$theme_settings['facebook_url']."' class='facebook'>".$locale['debonair_0511']."</a></li>\n";
-			if ($theme_settings['twitter_url']) echo "<li><a href='".$theme_settings['twitter_url']."' class='twitter'>".$locale['debonair_0512']."</a></li>\n";
-			if (file_exists(INFUSIONS."rss_feeds_panel/rss_feeds_panel.php")) echo "<li><a href='".INFUSIONS."rss_feeds_panel/rss_feeds_panel.php' class='rss'>RSS</a></li>\n";
-			echo "</ul>
-		</div>
-        <!-- End Follow Us Links -->
-        <div class='txt-holder'>
-        <p><small>".str_replace("<br />", "", showcopyright())."</small></p>
-		</div>
-		</div>
-        </div>";
+	echo "<div class='bottom'>\n";
+	if ($theme_settings['facebook_url'] || $theme_settings['twitter_url']) {
+		echo "<!-- Start Follow Us Links -->\n<div class='follow-box'> <strong>".$locale['debonair_0510']."</strong><ul>\n";
+		if ($theme_settings['facebook_url']) echo "<li><a href='".$theme_settings['facebook_url']."' class='facebook'>".$locale['debonair_0511']."</a></li>\n";
+		if ($theme_settings['twitter_url']) echo "<li><a href='".$theme_settings['twitter_url']."' class='twitter'>".$locale['debonair_0512']."</a></li>\n";
+		echo "</ul></div><!-- End Follow Us Links -->\n";
+	}
+	echo "<div class='txt-holder'><p><small>".str_replace("<br />", "", showcopyright())."</small></p></div>
+	</div>\n</div>";
 	echo "</section>\n";
 	echo "</div>\n <!--End Wrapper Sub Elements -->";
 	echo "
@@ -257,6 +320,7 @@ function render_page($license = FALSE) {
 	";
 	echo '<script type="text/javascript">Cufon.now();</script>';
 }
+
 /*
 function render_news($subject, $news, $info) {
 	echo '<div class="post-holder">
