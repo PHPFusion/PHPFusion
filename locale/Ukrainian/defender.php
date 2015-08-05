@@ -10,6 +10,9 @@ $locale['error_input_number'] = "Будь ласка, введіть корек�
 $locale['error_input_url'] = "Будь ласка, введіть коректне посилання";
 $locale['error_input_regex'] = "Будь ласка, введіть за коректним шаблоном";
 $locale['error_input_safemode'] = "Будь ласка, заповніть це поле належним чином";
+$locale['error_input_check']	= "Будь ласка, дотримуйтесь відповідності введених значень до шаблону поля";
+$locale['df_error_text'] = "Зверніть увагу, в полі %s помилкове значення.";
+$locale['error_invalid_theme'] = "Будь ласка, виберіть коректну тему оформлення"; // to be moved
 
 // Admin Login
 $locale['cookie_title'] = "Термін дії сесії вичерпано";
@@ -20,6 +23,23 @@ $locale['password_invalid_description'] = "Пароль введено з пом
 $locale['cookie_error'] = "Помилка коржика (cookie)";
 $locale['cookie_error_description'] = "Для можливості адміністрування Ви маєте дозволити переглядачу зберігати коржики (cookie).";
 $locale['validate_title'] = "Зверніть увагу та перевірте!";
+
+// ReCaptcha2
+$locale['grecaptcha'] = "Google Recaptcha";
+$locale['grecaptcha_desc'] = "Поле для Google Recaptcha";
+$locale['grecaptcha_placeholder_1'] = "SITE KEY від Google";
+$locale['grecaptcha_placeholder_2'] = "SECRET-KEY від Google";
+$locale['no_keys'] = "Здається, Ви ще не маєте жодного ключа. Зареєструйтесь та <a href='https://www.google.com/recaptcha/admin' target='_BLANK'>отримайте публічного ключа тут</a>";
+$locale['review_keys'] = "<a href='https://www.google.com/recaptcha/admin' target='_BLANK'><button class='button'>Переглянути Ваші ключі для Google reCAPTCHA</button></a>";
+$locale['grecaptcha_0100'] = "Публічний ключ";
+$locale['grecaptcha_0101'] = "Приватний ключ";
+$locale['grecaptcha_0102'] = "Схема кольорів";
+$locale['grecaptcha_0102a'] = "світла";
+$locale['grecaptcha_0102b'] = "темна";
+$locale['grecaptcha_0103'] = "Тип перевірки";
+$locale['grecaptcha_0103a'] = "Текст";
+$locale['grecaptcha_0103b'] = "Звук";
+$locale['grecaptcha_warn'] = "Будь ласка, вкажіть Ваш публічний та приватний ключі для reCAPTCHA";
 
 // Address errors
 $locale['street_error'] = "Значення адреси потребує уваги.";
