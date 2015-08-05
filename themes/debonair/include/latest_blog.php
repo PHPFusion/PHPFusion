@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 
 echo "<h3 class='icon2 margin'>".$locale['debonair_0403']."</h3>\n";
-if (!db_exists(DB_BLOG)) {
+if (db_exists(DB_BLOG)) {
 	$result = dbquery("select blog_id, blog_subject from ".DB_BLOG." where blog_language='".LANGUAGE."' and blog_start <='".time()."' and blog_end >='".time()."' ORDER BY blog_start DESC");
 	if (dbrows($result)>0) {
 		echo "<ul>\n";

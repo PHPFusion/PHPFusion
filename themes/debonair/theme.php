@@ -7,7 +7,7 @@ require_once INCLUDES."theme_functions_include.php";
 include "functions.php";
 function render_page($license = FALSE) {
 	global $userdata, $settings, $locale, $data, $db_prefix, $lookup, $msg_count, $aidlink;
-	include THEME.LOCALE.LOCALESET."locale.php";
+	include THEME."/locale/".LOCALESET."locale.php";
 
 	add_to_head('
 	<!--[if lt IE 7]>
@@ -183,22 +183,22 @@ function render_page($license = FALSE) {
 	// column 1
 	echo "<div class='col-xs-12 col-sm-3'>\n";
 	if ($theme_settings['lbanner_col_1'] !=="") {
-		include THEME."include/".$theme_settings['lbanner_col_1'];
+		include "include/".$theme_settings['lbanner_col_1'];
 	}
 	// column 2
 	echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
 	if ($theme_settings['lbanner_col_2'] !=="") {
-		include THEME."include/".$theme_settings['lbanner_col_2'];
+		include "include/".$theme_settings['lbanner_col_2'];
 	}
 	// column 3
 	echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
 	if ($theme_settings['lbanner_col_3'] !=="") {
-		include THEME."include/".$theme_settings['lbanner_col_3'];
+		include "include/".$theme_settings['lbanner_col_3'];
 	}
 	// column 4
 	echo "</div>\n<div class='col-xs-12 col-sm-3'>\n";
 	if ($theme_settings['lbanner_col_4'] !=="") {
-		include THEME."include/".$theme_settings['lbanner_col_4'];
+		include "include/".$theme_settings['lbanner_col_4'];
 	}
 	echo "</div>\n";
 	echo "</div>\n";
@@ -227,13 +227,12 @@ function render_page($license = FALSE) {
          <div class='w1'>
             <div class='w2'>
                <ul>
-                  <li><a href='#'>Home</a></li>
-				  <li><a href='#'>About Us</a></li>
-                  <li><a href='#'>Our Services</a></li>
-                  <li><a href='#'>Portfolio</a></li>
-                  <li><a href='#'>Blog</a></li>
-                  <li><a href='#'>Contact Us</a></li>
-               </ul>
+                  <li><a href='".BASEDIR.fusion_get_settings("opening_page")."'>".$locale['debonair_0505']."</a></li>
+				  <li><a href='".BASEDIR."contact.php'>".$locale['debonair_0506']."</a></li>\n";
+					if (db_exists(DB_ARTICLES)) echo "<li><a href='".INFUSIONS."articles/articles.php'>".$locale['debonair_0507']."</a></li>\n";
+					if (db_exists(DB_NEWS)) echo "<li><a href='".INFUSIONS."news/news.php'>".$locale['debonair_0508']."</a></li>\n";
+					if (db_exists(DB_BLOG)) echo "<li><a href='".INFUSIONS."blog/blog.php'>".$locale['debonair_0509']."</a></li>\n";
+               echo "</ul>
             </div>
          </div>
       </div>
@@ -242,7 +241,7 @@ function render_page($license = FALSE) {
 	";
 	echo '<script type="text/javascript"> Cufon.now(); </script>';
 }
-
+/*
 function render_news($subject, $news, $info) {
 	echo '<div class="post-holder">
     
@@ -267,7 +266,6 @@ function render_news($subject, $news, $info) {
     </div>';
 }
 
-/** Artikel erstellen **/
 function render_article($subject, $article, $info) {
 	echo '<div class="post-holder">
     
@@ -291,7 +289,7 @@ function render_article($subject, $article, $info) {
     
     </div>';
 }
-
+*/
 /** Opentable **/
 function opentable($title) {
 	echo '<div class="txt-content">

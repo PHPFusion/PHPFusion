@@ -44,3 +44,11 @@ $locale['debonair_0500'] = "Welcome to The PHP-Fusion 9";
 $locale['debonair_0501'] = "Super Clean <span>Web 3.0</span> Business Template for Your Site";
 $locale['debonair_0502'] = "Customize the content of this rotating banner in the widget by going to Theme Administration > Debonair > Manage Theme > Widgets Control > Debonair Banner";
 $locale['debonair_0503'] = "Sample button";
+$locale['debonair_0504'] = "Lean More";
+
+// Footer
+$locale['debonair_0505'] = "Home";
+$locale['debonair_0506'] = "About Us";
+$locale['debonair_0507'] = "Articles";
+$locale['debonair_0508'] = "News";
+$locale['debonair_0509'] = "Blog";

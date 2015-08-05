@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 
 echo "<h3 class='icon2 margin'>".$locale['debonair_0406']."</h3>\n";
-if (!db_exists(DB_NEWS)) {
+if (db_exists(DB_NEWS)) {
 	$result = dbquery("select news_id, news_subject from ".DB_NEWS." where news_language='".LANGUAGE."' and news_start <='".time()."' and news_end >='".time()."' ORDER BY news_start DESC");
 	if (dbrows($result)>0) {
 		echo "<ul>\n";
