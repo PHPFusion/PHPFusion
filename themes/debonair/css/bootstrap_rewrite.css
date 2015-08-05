@@ -82,6 +82,7 @@ body { margin: 0; color: #929292; background: url(../images/bg-page.jpg) no-repe
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
+	font-size:12px;
 }
 .btn-default {
 	background: #FAFAFA;
@@ -167,10 +168,11 @@ body { margin: 0; color: #929292; background: url(../images/bg-page.jpg) no-repe
 
 /* Breadcrumbs */
 .breadcrumb {
-	display: inline-block;
+	display: block;
+	width: 100%;
 	font-size: 11px;
 	color: #A5A5A5;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 	background: none;
 	padding: 0;
 	float: left;
