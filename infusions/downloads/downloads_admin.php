@@ -584,7 +584,7 @@ function download_listing() {
 				GROUP BY download_cat_id
 				ORDER BY download_cat_name");
 		if (dbrows($result)) {
-
+			$i = 0;
 			while ($data = dbarray($result)) {
 				echo "<div class='panel panel-default'>\n";
 				echo "<div class='panel-heading clearfix'>\n";
@@ -593,11 +593,11 @@ function download_listing() {
 				echo "<a class='btn btn-default btn-sm' href='".INFUSIONS."downloads/download_cats_admin.php".$aidlink."&amp;action=delete&cat_id=".$data['download_cat_id']."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
 				echo "</div>\n";
 				echo "<div class='overflow-hide p-r-10'>\n";
-				echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('download-list', $data['download_cat_id'], '0', 'm-r-10 text-bigger strong').">".$data['download_cat_name']."</a> <span class='badge'>".$data['download_count']."</h4>\n";
+				echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('download-list', $data['download_cat_id'], $i < 1 ? 1 : 0, 'm-r-10 text-bigger strong').">".$data['download_cat_name']."</a> <span class='badge'>".$data['download_count']."</h4>\n";
 				echo "<br/><span class='text-smaller text-uppercase'>".$data['download_cat_language']."</span>";
 				echo "</div>\n"; /// end overflow-hide
 				echo "</div>\n"; // end panel heading
-				echo "<div ".collapse_footer_link('download-list', $data['download_cat_id'], '0').">\n";
+				echo "<div ".collapse_footer_link('download-list', $data['download_cat_id'], $i < 1 ? 1 : 0).">\n";
 				echo "<ul class='list-group m-10'>\n";
 				$result2 = dbquery("SELECT download_id, download_title, download_description_short, download_url, download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_cat='".$data['download_cat_id']."' ORDER BY download_title");
 				if (dbrows($result2) > 0) {
@@ -632,6 +632,7 @@ function download_listing() {
 				echo "</ul>\n";
 				echo "</div>\n"; // panel default
 				echo closecollapse();
+				$i++;
 			}
 		} else {
 			echo "<div class='well text-center'>".$locale['download_0250']."</div>\n";
