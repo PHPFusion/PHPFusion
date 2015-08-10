@@ -16,7 +16,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 use PHPFusion\Database\DatabaseFactory;
 
 if (!defined("IN_FUSION")) {
@@ -176,7 +175,7 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 		'progress-bar-danger');
 	$html = '';
 	if (is_array($num)) {
-		$html .= "<div class='progress' style='height: ".$height." !important;'>\n";
+		$html .= "<div class='progress' style='height: ".$height."'>\n";
 		$i = 0;
 		foreach ($num as $value) {
 			$value = $value > 0 ? $value : '0';
@@ -192,7 +191,7 @@ function progress_bar($num, $title = FALSE, $class = FALSE, $height = FALSE, $re
 		$auto_class = bar_color($num, $reverse);
 		$class = (!$class) ? $auto_class : $class;
 		$html .= "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num ".($as_percent ? '%' : '')."</span></div>\n";
-		$html .= "<div class='progress m-b-10' style='height: ".$height." !important;'>\n";
+		$html .= "<div class='progress m-b-10' style='height: ".$height."'>\n";
 		$html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $num%'>\n";
 		$html .= "</div></div>\n";
 	}
@@ -417,12 +416,20 @@ function itemoptions($item_type, $item_id) {
 	return $res;
 }
 
+/**
+ * Show PHP-Fusion Performance
+ * @param bool $queries
+ * @return string
+ */
 function showrendertime($queries = TRUE) {
 	global $locale, $mysql_queries_count;
-	$db = DatabaseFactory::getConnection();
+
+	// To turn on back when DatabaseFactory is rectified.
+	/* $db = DatabaseFactory::getConnection();
 	if ($db) {
 		$mysql_queries_count = $db->getGlobalQueryCount();
-	}
+	} */
+
 	if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
 		$render_time = substr((microtime(TRUE)-START_TIME), 0, 7);
 		$_SESSION['performance'][] = $render_time;
