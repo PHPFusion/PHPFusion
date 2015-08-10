@@ -105,12 +105,18 @@ $configs[DB_DOWNLOADS] = array(
 	'select' => "SELECT
 	dl.download_id as id, dl.download_title as title, dl.download_description_short as content,
 	dl.download_datestamp as datestamp, dc.download_cat_id as cat_id, dc.download_cat_name as cat_name,
-	us.user_id, us.user_name, us.user_status
+	us.user_id, us.user_name, us.user_status,
+	dl.download_image as image,
+	count(c1.comment_id) as comment_count,
+	count(r1.rating_id) as rating_count
 	FROM ".DB_DOWNLOADS." dl
 	INNER JOIN ".DB_DOWNLOAD_CATS." dc ON dc.download_cat_id = dl.download_cat
 	INNER JOIN ".DB_USERS." us ON us.user_id = dl.download_user
+	LEFT JOIN ".DB_COMMENTS." as c1 on (c1.comment_item_id = dl.download_id and c1.comment_type = 'D')
+	LEFT JOIN ".DB_RATINGS." as r1 on (r1.rating_item_id = dl.download_id AND r1.rating_type = 'D')
 	WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND dc.download_cat_language='".LANGUAGE."'" : "")."
-	ORDER BY dl.download_datestamp DESC LIMIT 30",
+	group by dl.download_id
+	ORDER BY dl.download_datestamp DESC LIMIT 10",
 	'locale' => array(
 	'norecord' => $locale['home_0053'],
 	'blockTitle' => $locale['home_0003']
@@ -142,7 +148,7 @@ foreach ($configs as $table => $config) {
 
 	$contents[$table]['colwidth'] = floor(12 / $items_count);
 
-	// bug there are no news_allow-comments and news_allow_ratings in infusion_settings for news ana blog.
+	// there are no news_allow-comments and news_allow_ratings in infusion_settings for news ana blog?
 	$data = array(); $count = 1;
 	while ($row = dbarray($result)) {
 		$keys = array_keys($row);
@@ -161,7 +167,7 @@ foreach ($configs as $table => $config) {
 			'datestamp' => $row['datestamp'],
 			'cat_name'=> $row['cat_name'],
 		);
-		// can't do a universal var socks. run switch to read and parse settings
+		/* Infusion Settings Readings */
 		switch($table) {
 			case DB_NEWS:
 				if ($config['infSettings']['news_image_frontpage']) { // if it's 0 use uploaded photo, 1 always use category image
@@ -197,6 +203,10 @@ foreach ($configs as $table => $config) {
 					}
 				}
 				break;
+			case DB_DOWNLOADS:
+				if ($row['image']) {
+					$data[$count]['image'] = INFUSIONS."downloads/images/".$row['image'];
+				}
 		// end switch
 		}
 		$count++;
