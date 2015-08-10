@@ -19,7 +19,7 @@
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_BLOG)) {
 $_GET['code'] = 404;
-require_once __DIR__.'/error.php';
+require_once __DIR__.'/../../error.php';
 exit;
 }
 
