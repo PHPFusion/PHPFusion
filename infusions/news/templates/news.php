@@ -93,7 +93,7 @@ if (!function_exists('render_main_news')) {
 			echo "<li class='list-group-item'><hr class='m-t-0 m-b-5'>\n";
 			echo "<span class='display-inline-block m-b-10 strong text-smaller text-uppercase'> ".$locale['global_085']."</span><br/>\n";
 			foreach ($info['news_categories'] as $cat_id => $cat_data) {
-				echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".$cat_data['link']."' class='btn btn-sm btn-default'>".$cat_data['name']."</a>";
+				echo isset($_GET['cat_id']) && $_GET['cat_id'] == $cat_id ? '' : "<a href='".INFUSIONS."news/news.php?cat_id=".$cat_id."' class='btn btn-sm btn-default'>".$cat_data['name']."</a>";
 			}
 			echo "</li>";
 			echo "</ul>\n";
@@ -264,7 +264,7 @@ if (!function_exists('render_news_item')) {
 		if ($data['news_image']) {
 		echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; overflow:hidden;' /></a>";
 		} elseif ($data['cat_name']) {
-		echo "<a class='".$data['news_ialign']."' href='news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
+		echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
 		}
 		echo $data['news_news'];
 		echo "</div>\n";
