@@ -619,25 +619,44 @@ function getcategory($cat) {
  * 	Pass TRUE if you want to update the cached state of the table.
  * @return boolean
  */
-function db_exists($table, $updateCache = FALSE) {
-	static $tables = NULL;
-	
-	$length = strlen(DB_PREFIX);
-	if (substr($table, 0, $length) === DB_PREFIX) {
-		$table = substr($table, $length);
-	}
-	$sql = "SELECT substring(table_name, ".($length+1).") "
-		." FROM information_schema.tables WHERE table_schema = database() "
-		. " AND table_name LIKE :table_pattern";
-	if ($tables === NULL) {
-		$result = dbquery($sql, array(':table_pattern' => str_replace('_', '\_', DB_PREFIX).'%'));
-		while ($row = dbarraynum($result)) {
-			$tables[$row[0]] = TRUE;
+if ($show_mysql_error) {
+	// This is the simple, less beautiful old version. Can remove when SQL error is shown again.
+	function db_exists($table) {
+		static $tables = NULL;
+		$length = strlen(DB_PREFIX);
+		if (substr($table, 0, $length) === DB_PREFIX) {
+			$table = substr($table, $length);
 		}
-	} elseif ($updateCache) {
-		$tables[$table] = dbresult(dbquery('SELECT exists('.$sql.')', array(':table_pattern' => DB_PREFIX.$table)), 0);
+		if ($tables === NULL) {
+			$result = dbquery("SELECT substring(table_name, ".($length+1).") "." FROM information_schema.tables WHERE table_schema = database() "." AND table_name LIKE '".str_replace('_', '\_', DB_PREFIX)."%'");
+			while ($row = dbarraynum($result)) {
+				$tables[$row[0]] = TRUE;
+			}
+		}
+		return isset($tables[$table]);
 	}
-	return !empty($tables[$table]);
+} else {
+	// This is the new one
+	function db_exists($table, $updateCache = FALSE) {
+		static $tables = NULL;
+
+		$length = strlen(DB_PREFIX);
+		if (substr($table, 0, $length) === DB_PREFIX) {
+			$table = substr($table, $length);
+		}
+		$sql = "SELECT substring(table_name, ".($length+1).") "
+			   ." FROM information_schema.tables WHERE table_schema = database() "
+			   . " AND table_name LIKE :table_pattern";
+		if ($tables === NULL) {
+			$result = dbquery($sql, array(':table_pattern' => str_replace('_', '\_', DB_PREFIX).'%'));
+			while ($row = dbarraynum($result)) {
+				$tables[$row[0]] = TRUE;
+			}
+		} elseif ($updateCache) {
+			$tables[$table] = dbresult(dbquery('SELECT exists('.$sql.')', array(':table_pattern' => DB_PREFIX.$table)), 0);
+		}
+		return !empty($tables[$table]);
+	}
 }
 
 /**
