@@ -32,6 +32,7 @@ if (!function_exists('render_main_news')) {
 		}
 		opentable($locale['global_077']);
 		echo render_breadcrumbs();
+
 		/* Slideshow */
 		$carousel_indicators = '';
 		$carousel_item = '';
@@ -42,14 +43,14 @@ if (!function_exists('render_main_news')) {
 				if ($news_item['news_image_src']) {
 					$carousel_active = $res == 0 ? 'active' : '';
 					$res++;
-					$carousel_indicators .= "<li data-target='#news-slideshow' data-slide-to='$i' class='".$carousel_active."'></li>\n";
+					$carousel_indicators .= "<li data-target='#news-carousel' data-slide-to='$i' class='".$carousel_active."'></li>\n";
 					$carousel_item .= "
 					<div class='item ".$carousel_active."'>
 						<img src='".$news_item['news_image_src']."' alt='".$news_item['news_subject']."'>
-						<div class='carousel-caption clearfix'>
+						<div class='carousel-caption'>
 							<div class='overflow-hide'>
 							<a class='text-white' href='".INFUSIONS."news/news.php?readmore=".$news_item['news_id']."'><h4 class='text-white m-t-10'>".$news_item['news_subject']."</h4></a>\n
-							<span class='news-carousel-action m-r-10'><i class='entypo eye'></i>".$news_item['news_reads']."</span>
+							<span class='news-carousel-action m-r-10'><i class='fa fa-eye fa-fw'></i>".$news_item['news_reads']."</span>
 							".($news_item['news_allow_comments'] ? "<span class='m-r-10'>".display_comments($news_item['news_comments'], INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#comments")."</span>" : '')."
 							".($news_item['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($news_item['news_sum_rating'], $news_item['news_count_votes'], INFUSIONS."news/news.php?readmore=".$news_item['news_id']."#postrating")." </span>" : '')."
 							</div>\n
@@ -59,8 +60,9 @@ if (!function_exists('render_main_news')) {
 			    }
 		    }
 		}
+
 		if (!isset($_GET['readmore']) && ($res)) {
-			echo "<div id='news-slideshow' class='carousel slide'  data-interval='20000' data-ride='carousel'>\n";
+			echo "<div id='news-carousel' class='carousel slide'  data-interval='20000' data-ride='carousel'>\n";
 			if ($res > 1) {
 				echo "<ol class='carousel-indicators'>\n";
 				echo $carousel_indicators;
@@ -69,8 +71,18 @@ if (!function_exists('render_main_news')) {
 			echo "<div class='carousel-inner' role='listbox'>\n";
 			echo $carousel_item;
 			echo "</div>\n";
+			echo "<a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
+					<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
+					<span class='sr-only'>Previous</span>
+			  	</a>
+			  	<a class='right carousel-control' href='#news-carousel' role='button' data-slide='next'>
+					<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
+					<span class='sr-only'>Next</span>
+			  	</a>\n
+			";
 			echo "</div>\n";
 		}
+
 		/* Title Panel */
 		if (!isset($_GET['readmore'])) {
 			echo "<div class='panel panel-default panel-news-header'>\n";
