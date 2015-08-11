@@ -313,8 +313,8 @@ function news_listing() {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-heading clearfix'>\n";
 			echo "<div class='btn-group pull-right m-t-5'>\n";
-			echo "<a class='btn btn btn-default' href='".ADMIN."news_cats.php".$aidlink."&amp;action=edit&amp;section=nform&amp;cat_id=".$data['news_cat_id']."'>".$locale['edit']."</a>";
-			echo "<a class='btn btn-danger' href='".ADMIN."news_cats.php".$aidlink."&amp;action=delete&amp;cat_id=".$data['news_cat_id']."' onclick=\"return confirm('".$locale['news_0252']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
+			echo "<a class='btn btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;cat_id=".$data['news_cat_id']."'>".$locale['edit']."</a>";
+			echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cat_id=".$data['news_cat_id']."' onclick=\"return confirm('".$locale['news_0252']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
 			echo "</div>\n";
 			echo "<div class='overflow-hide p-r-10'>\n";
 			echo "<span class='display-inline-block strong'><a ".collapse_header_link('news-list', $data['news_cat_id'], '0', 'm-r-10').">".$data['news_cat_name']."</a></span>\n";
@@ -334,8 +334,8 @@ function news_listing() {
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
 					echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words($data2['news_news'], '50')."</div>\n";
-					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
-					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=nform&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
+					echo "<a href='".INFUSIONS."news/news_cats_admin.php".$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
+					echo "<a href='".INFUSIONS."news/news_cats_admin.php".$aidlink."&amp;action=delete&amp;section=nform&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 					echo "</div>\n";
 					echo "</li>\n";
 				}
