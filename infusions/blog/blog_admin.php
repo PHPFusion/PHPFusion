@@ -623,7 +623,7 @@ function blog_form() {
 	closeside();
 	if (isset($_GET['action']) && isset($_GET['blog_id']) && isnum($_GET['blog_id']) || (isset($_POST['preview']) && (isset($_POST['blog_id']) && isnum($_POST['blog_id']))) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {
 		$blog_id = isset($_GET['blog_id']) && isnum($_GET['blog_id']) ? $_GET['blog_id'] : '';
-		echo form_hidden('', 'blog_id', 'blog_id', $blog_id);
+		echo form_hidden('', 'blog_id', $blog_id);
 	}
 	echo "</div>\n</div>\n";
 	echo form_button('preview', $locale['436'], $locale['436'], array('class' => 'btn-default m-r-10'));

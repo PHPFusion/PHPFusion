@@ -19,7 +19,7 @@
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
 if (!db_exists(DB_PHOTO_ALBUMS)) {
 	$_GET['code'] = 404;
-	require_once __DIR__.'/error.php';
+	require_once __DIR__.'/../../error.php';
 	exit;
 }
 
@@ -59,9 +59,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 		$info = $data;
 		/* Declaration */
 		define("PHOTODIR", PHOTOS.(!SAFEMODE ? "album_".$data['album_id']."/" : ""));
-
 		$result = dbquery("UPDATE ".DB_PHOTOS." SET photo_views=(photo_views+1) WHERE photo_id='".$_GET['photo_id']."'");
-		// order is not working.
 		$pres = dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE photo_order='".($data['photo_order']-1)."' AND album_id='".$data['album_id']."'");
 		$nres = dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE photo_order='".($data['photo_order']+1)."' AND album_id='".$data['album_id']."'");
 		$fres = dbquery("SELECT photo_id FROM ".DB_PHOTOS." WHERE photo_order='1' AND album_id='".$data['album_id']."'");
