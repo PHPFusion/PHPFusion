@@ -23,7 +23,11 @@ echo "<meta charset='".$locale['charset']."' />";
 
 if ($bootstrap_theme_css_src) {
 	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";
-	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />";
+	echo "<meta http-equiv='Cache-control' content='no-cache' />";
+	echo "<meta http-equiv='expires' content='".gmstrftime("%A %d-%b-%y %T %Z", time ()+64800)."'/>";
+	echo "<meta name='robots' content='none' />";
+	echo "<meta name='googlebot' content='noarchive' />";
+    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />";
 	echo "<link href='".$bootstrap_theme_css_src."' rel='stylesheet' media='screen' />";
 }
 if ($settings['entypo']) {

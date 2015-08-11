@@ -22,6 +22,8 @@ echo "<head>\n";
 	echo "<meta charset='".$locale['charset']."' />\n";
 	echo "<meta name='description' content='".$settings['description']."' />\n";
 	echo "<meta name='keywords' content='".$settings['keywords']."' />\n";
+	echo "<meta http-equiv='Cache-control' content='PUBLIC' />";
+	echo "<meta http-equiv='expires' content='".gmstrftime("%A %d-%b-%y %T %Z", time ()+64800)."'/>";
 	$bootstrap_theme_css_src = '';
 	if ($bootstrap_theme_css_src) {
 		echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
