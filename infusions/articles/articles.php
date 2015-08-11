@@ -77,7 +77,7 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 			"page_nav" =>  $pagecount > 1 ? makepagenav($_GET['rowstart'], 1, $pagecount, 3, INFUSIONS."articles/articles.php?article_id=".$_GET['article_id']."&amp;") : ''
 		);
 
-		add_to_title($locale['global_201'].$article_subject);
+		set_title($article_subject.$locale['global_200'].$locale['400']);
 		render_article($article_subject, $article[$_GET['rowstart']], $article_info);
 	} else {
 		redirect(INFUSIONS."articles/articles.php");
@@ -103,7 +103,7 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	$result = dbquery("SELECT article_cat_name, article_cat_sorting FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ?  "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_cat_id='".$_GET['cat_id']."'");
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
-		add_to_title($locale['global_201'].$cdata['article_cat_name']);
+		set_title($cdata['article_cat_name'].$locale['global_200'].$locale['400']);
 		add_breadcrumb(array('link'=>INFUSIONS.'articles/articles.php?cat_id='.$_GET['cat_id'], 'title'=>$cdata['article_cat_name']));
 		$info['articles']['category'] = $cdata;
 		$info['articles_max_rows'] = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."' AND article_draft='0'");
