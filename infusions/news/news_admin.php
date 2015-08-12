@@ -66,12 +66,12 @@ $master_title['title'][] = $locale['news_0000'];
 $master_title['id'][] = 'news';
 $master_title['icon'] = '';
 
-$master_title['title'][] = $locale['news_0020'];
-$master_title['id'][] = 'news_category';
-$master_title['icon'] = '';
-
 $master_title['title'][] = $edit ? $locale['news_0003'] : $locale['news_0002'];
 $master_title['id'][] = 'news_form';
+$master_title['icon'] = '';
+
+$master_title['title'][] = $locale['news_0020'];
+$master_title['id'][] = 'news_category';
 $master_title['icon'] = '';
 
 $master_title['title'][] = isset($_GET['settings']) ? $locale['news_0004'] : $locale['news_0004'];
