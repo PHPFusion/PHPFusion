@@ -97,7 +97,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			if ($data['news_image']) {
 				$og_image = IMAGES_N.$data['news_image'];
 			} else {
-				$og_image = IMAGES_NC.$data['cat_image'];
+				$og_image = IMAGES_NC.$data['news_cat_image'];
 			}
 			$og_image = str_replace(BASEDIR, $settings['siteurl'], $og_image);
 			add_to_head("<meta property='og:image' content='".$og_image."' />");
