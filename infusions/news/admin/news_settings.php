@@ -18,7 +18,6 @@
 
 pageAccess("S8");
 add_breadcrumb(array('link'=>ADMIN."settings_news.php".$aidlink, 'title'=>$locale['news_settings']));
-
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	$inputArray = array(
@@ -35,7 +34,6 @@ if (isset($_POST['savesettings'])) {
 		"news_photo_max_h" =>	form_sanitizer($_POST['news_photo_max_h'], 1600, 'news_photo_max_h'),
 		"news_photo_max_b" =>	form_sanitizer($_POST['calc_b'], 150, 'calc_b')*form_sanitizer($_POST['calc_c'], 100000, 'calc_c'),
 	);
-
 	if (defender::safe()) {
 		foreach($inputArray as $settings_name => $settings_value) {
 			$inputSettings = array(
