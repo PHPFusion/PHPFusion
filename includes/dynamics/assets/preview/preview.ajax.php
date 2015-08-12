@@ -18,7 +18,7 @@
 require_once dirname(__FILE__)."../../../../../maincore.php";
 $text = stripinput($_POST['text']);
 // filter to relative path conversion
-echo "<div class='preview-response p-t-20 m-b-20'>\n";
+echo "<div class='preview-response well m-10'>\n";
 if ($_POST['editor'] == 'html') {
 	$text = parsesmileys(nl2br(html_entity_decode(stripslashes($text))));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
@@ -26,7 +26,7 @@ if ($_POST['editor'] == 'html') {
 		$text = str_replace(IMAGES, $images, $text);
 		$text = str_replace(IMAGES_N, $images, $text);
 	}
-	echo $text ? : $locale['nopreview'];
+	echo $text ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } elseif ($_POST['editor'] == 'bbcode') {
 	$text = parseubb(parsesmileys($text));
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
@@ -34,7 +34,7 @@ if ($_POST['editor'] == 'html') {
 		$text = str_replace(IMAGES, $images, $text);
 		$text = str_replace(IMAGES_N, $images, $text);
 	}
-	echo $text ? : $locale['nopreview'];
+	echo $text ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 } else {
 	$text = parsesmileys($text);
 	if (isset($_POST['mode']) && $_POST['mode'] == 'admin') {
@@ -42,9 +42,6 @@ if ($_POST['editor'] == 'html') {
 		$text = str_replace(IMAGES, $images, $text);
 		$text = str_replace(IMAGES_N, $images, $text);
 	}
-	echo nl2br($text) ? : $locale['nopreview'];
+	echo nl2br($text) ? : "<p class='text-center'>".$locale['nopreview']."</p>\n";
 }
-
-echo "<hr>\n";
 echo "</div>\n";
-

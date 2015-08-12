@@ -108,12 +108,12 @@ label,
 }
 .btn-success {
 	background: #aad649;
-	background: -moz-linear-gradient(top, #aad649 32%, #7eba34 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(32%,#aad649), color-stop(100%,#7eba34));
-	background: -webkit-linear-gradient(top, #aad649 32%,#7eba34 100%);
-	background: -o-linear-gradient(top, #aad649 32%,#7eba34 100%);
-	background: -ms-linear-gradient(top, #aad649 32%,#7eba34 100%);
-	background: linear-gradient(to bottom, #aad649 32%,#7eba34 100%);
+	background: -moz-linear-gradient(top, #aad649 12%, #7eba34 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(12%,#aad649), color-stop(100%,#7eba34));
+	background: -webkit-linear-gradient(top, #aad649 12%,#7eba34 100%);
+	background: -o-linear-gradient(top, #aad649 12%,#7eba34 100%);
+	background: -ms-linear-gradient(top, #aad649 12%,#7eba34 100%);
+	background: linear-gradient(to bottom, #aad649 12%,#7eba34 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aad649', endColorstr='#7eba34',GradientType=0 );
 }
 .btn-success:hover, .btn-success:focus {
@@ -467,9 +467,10 @@ legend {
 .tab-pane, .tab-pane > .panel-default {
 	border: none !important;
 }
-.editor-wrapper {
-	margin-top:0;
-}
+/* The textarea editor */
+.nav-wrapper.editor-wrapper {margin-top:0;}
+.nav-wrapper.editor-wrapper > .tab-content { padding:0;}
+
 nav ul {
 	list-style: none;
 	margin:	0;
@@ -863,7 +864,7 @@ nav > ul > li > a:hover {
 
 	.brand {
 		background: url("../../../images/php-fusion-icon.png") no-repeat scroll 1px -16px;
-		height: 45px;
+		height: 50px;
 		width: 130px;
 		float: right;
 	}

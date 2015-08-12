@@ -32,9 +32,12 @@ $locale['news_0154'] = "News Category deleted";
 $locale['news_0200'] = "Subject";
 $locale['news_0201'] = "Category";
 $locale['news_0202'] = "Uncategorized";
-$locale['news_0203'] = "News";
-$locale['news_0204'] = "Extended News";
-$locale['news_0205'] = "Keywords (you need to hit enter for each keyword)";
+$locale['news_0203'] = "Snippet";
+$locale['news_0203a'] = "Short News Introduction";
+$locale['news_0204'] = "Extended";
+$locale['news_0203b'] = "News Content";
+$locale['news_0205'] = "Keywords";
+$locale['news_0205a'] = "Hit enter after each keywords";
 $locale['news_0206'] = "Start Date";
 $locale['news_0207'] = "End Date";
 $locale['news_0208'] = "(Optional)";
@@ -53,7 +56,7 @@ $locale['news_0240'] = "Preview News";
 $locale['news_0241'] = "Save News";
 
 // Popup Error/Warning Messages
-$locale['news_0250'] = "Please specify a subject";
+$locale['news_0250'] = "Please specify a new subject";
 $locale['news_0251'] = "Delete this News?";
 $locale['news_0252'] = "Delete this news category?";
 $locale['news_0253'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";

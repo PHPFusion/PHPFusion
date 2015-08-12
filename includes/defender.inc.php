@@ -962,7 +962,7 @@ function form_sanitizer($value, $default = "", $input_name = FALSE, $multilang =
 		} else {
 			// Make sure that the input was actually defined in code..
 			// AND there must be a value to worth the processing power expense!
-			if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name]) && !empty($value)) {
+			if (isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
 				$defender->field_config = $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
 				$defender->field_name = $input_name;
 				$defender->field_value = $value;
