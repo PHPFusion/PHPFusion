@@ -60,7 +60,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$news_subject = $data['news_subject'];
 		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']));
 		$pagecount = count($news_news);
-		$news_info = array(	"news_id" => $data['news_id'],
+		$news_info = array(
+			"news_id" => $data['news_id'],
 			"user_id" => $data['user_id'],
 			"user_name" => $data['user_name'],
 			"user_status" => $data['user_status'],
@@ -87,7 +88,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			'news_allow_ratings' => $data['news_allow_ratings'],
 			"news_sticky" => $data['news_sticky']
 		);
-		if ($settings['create_og_tags']) {
+		if (fusion_get_settings("create_og_tags")) {
 			add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
 			add_to_head("<meta property='og:description' content='".strip_tags($data['news_news'])."' />");
 			add_to_head("<meta property='og:site_name' content='".$settings['sitename']."' />");
@@ -239,21 +240,49 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			if ($i == 1) {
 				$info['news_last_updated'] = $data['news_datestamp'];
 			}
-			$news_cat_image = '';	$news_image = '';	$news_img_src = '';
+			$news_cat_image = '';
+			$news_image = '';
+
 			$news_subject = stripslashes($data['news_subject']);
-			if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image']) && $news_settings['news_image_frontpage'] == 0) {
-				$news_image = "<a class='img-link' href='".($news_settings['news_image_link'] == 0 ? "".INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'])."'>";
-				$news_image .= "<img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' /></a>";
-				$news_img_src = IMAGES_N.$data['news_image'];
+
+			// ok, lets start all over again.
+			// the full image
+			$_fullResSource = "";
+			if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
+				$_fullResSource = IMAGES_N.$data['news_image'];
 			}
+			// need to check if want to link.
+			$imageSource = "";
+			if ($data['news_cat_image']) {
+				$imageSource = get_image("nc_".$data['news_cat_name']);
+			}
+			if ($news_settings['news_image_frontpage'] == 0) {
+				if ($data['news_image'] && file_exists(IMAGES_N.$data['news_image'])) {
+					$imageSource = IMAGES_N.$data['news_image'];
+				}
+				if ($data['news_image_t2'] && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+					$imageSource = IMAGES_N_T.$data['news_image_t2'];
+				}
+				if ($data['news_image_t1'] && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+					$imageSource = IMAGES_N_T.$data['news_image_t1'];
+				}
+			}
+			$image = "<img class='img-responsive' src='".$imageSource."' alt='".$data['news_subject']."' />\n";
+
+			$news_image = "<a class='img-link' href='
+					".($news_settings['news_image_link'] == 0 ?
+					INFUSIONS."news/news.php?cat_id=".$data['news_cat']
+					:
+					INFUSIONS."news/news.php?readmore=".$data['news_id'])."
+					'>".$image."</a>\n";
+
 			$news_cat_image = "<a href='".($news_settings['news_image_link'] == 0 ? "".INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'])."'>";
 			if ($data['news_image_t2'] && $news_settings['news_image_frontpage'] == 0) {
-				$news_cat_image .= "<img src='".IMAGES_N_T.$data['news_image_t2']."' alt='".$data['news_subject']."' class='img-responsive news-category' /></a>";
+				$news_cat_image .= $image."</a>";
 			} elseif ($data['news_cat_image']) {
 				$news_cat_image .= "<img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='img-responsive news-category' /></a>";
-			} else {
-				$news_cat_image = "";
 			}
+
 			$news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_news'])) : stripslashes($data['news_news'])));
 			$news_info[$i] = array(
 				"news_id" => $data['news_id'],
@@ -272,7 +301,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				"cat_name" => $data['news_cat_name'],
 				"cat_image" => $news_cat_image,
 				"news_image" => $news_image,
-				'news_image_src' => $news_img_src, // raw rather than preg_replace() usage later.
+				'news_image_src' => $_fullResSource,
 				"news_ext" => $data['news_extended'] ? "y" : "n",
 				"news_reads" => $data['news_reads'],
 				"news_comments" => $data['count_comment'],

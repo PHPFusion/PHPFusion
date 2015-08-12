@@ -15,8 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) { die("Access Denied"); }
-
+if (!defined("IN_FUSION")) {
+	die("Access Denied");
+}
 if (!function_exists('render_main_news')) {
 	/**
 	 * News Page Template
@@ -32,7 +33,6 @@ if (!function_exists('render_main_news')) {
 		}
 		opentable($locale['global_077']);
 		echo render_breadcrumbs();
-
 		/* Slideshow */
 		$carousel_indicators = '';
 		$carousel_item = '';
@@ -56,22 +56,23 @@ if (!function_exists('render_main_news')) {
 							</div>\n
 					</div>\n</div>\n
 					";
-				$i++;
-			    }
-		    }
-		}
-
-		if (!isset($_GET['readmore']) && ($res)) {
-			echo "<div id='news-carousel' class='carousel slide'  data-interval='20000' data-ride='carousel'>\n";
-			if ($res > 1) {
-				echo "<ol class='carousel-indicators'>\n";
-				echo $carousel_indicators;
-				echo "</ol>";
+					$i++;
+				}
 			}
-			echo "<div class='carousel-inner' role='listbox'>\n";
-			echo $carousel_item;
-			echo "</div>\n";
-			echo "<a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
+		}
+		/* Title Panel */
+		if (!isset($_GET['readmore'])) {
+			if ($res) {
+				echo "<div id='news-carousel' class='carousel slide'  data-interval='20000' data-ride='carousel'>\n";
+				if ($res > 1) {
+					echo "<ol class='carousel-indicators'>\n";
+					echo $carousel_indicators;
+					echo "</ol>";
+				}
+				echo "<div class='carousel-inner' role='listbox'>\n";
+				echo $carousel_item;
+				echo "</div>\n";
+				echo "<a class='left carousel-control' href='#news-carousel' role='button' data-slide='prev'>
 					<span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
 					<span class='sr-only'>Previous</span>
 			  	</a>
@@ -79,12 +80,9 @@ if (!function_exists('render_main_news')) {
 					<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
 					<span class='sr-only'>Next</span>
 			  	</a>\n
-			";
-			echo "</div>\n";
-		}
-
-		/* Title Panel */
-		if (!isset($_GET['readmore'])) {
+				";
+				echo "</div>\n";
+			}
 			echo "<div class='panel panel-default panel-news-header'>\n";
 			echo "<div class='panel-body'>\n";
 			echo "<div class='pull-right'>\n";
@@ -110,16 +108,18 @@ if (!function_exists('render_main_news')) {
 			echo "</li>";
 			echo "</ul>\n";
 			echo "</div>\n</div>\n";
-		}
-
-		if (!isset($_GET['readmore'])) {
 			echo "<div class='row m-b-20 m-t-20'>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
-			echo openform('viewform', 'post', FUSION_REQUEST, array('max_tokens' => 1,'class' => 'pull-right display-inline-block m-l-10'));
+			echo openform('viewform', 'post', FUSION_REQUEST, array('max_tokens' => 1,
+				'class' => 'pull-right display-inline-block m-l-10'));
 			echo "<div class='btn-group'>\n";
 			$active = isset($_COOKIE['fusion_news_view']) ? $_COOKIE['fusion_news_view'] : '';
-			echo form_button('switchview', '', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",'icon' => 'entypo layout','alt' =>$locale['global_089b']));
-			echo form_button('switchview', '', '2', array('class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",'icon' => 'entypo menu','alt' =>$locale['global_089c']));
+			echo form_button('switchview', '', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",
+				'icon' => 'entypo layout',
+				'alt' => $locale['global_089b']));
+			echo form_button('switchview', '', '2', array('class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",
+				'icon' => 'entypo menu',
+				'alt' => $locale['global_089c']));
 			echo "</div>\n";
 			echo closeform();
 			// Filters
@@ -131,7 +131,8 @@ if (!function_exists('render_main_news')) {
 				echo "<a href='".$link."' class='display-inline $filter_active m-r-10'>".$title."</a>";
 				$i++;
 			}
-			echo "</div>\n"; // end filter.
+			echo "</div>\n";
+			// end filter.
 			echo "</div>\n</div>\n";
 			$news_span = $active == 2 ? 12 : 4;
 			if (!empty($info['news_items'])) {
@@ -149,7 +150,6 @@ if (!function_exists('render_main_news')) {
 					$cat_start = isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '';
 					echo "<div class='text-center m-t-10 m-b-10'>".makepagenav($_GET['rowstart'], $news_settings['news_pagination'], $info['news_item_rows'], 3, INFUSIONS."news/news.php?".$cat_start.$type_start)."</div>\n";
 				}
-
 			} else {
 				echo "<div class='well text-center'>".$locale['global_078']."</div>\n";
 			}
@@ -159,14 +159,12 @@ if (!function_exists('render_main_news')) {
 		closetable();
 	}
 }
-
 if (!function_exists('render_news')) {
 	/**
 	 * News Item Container
 	 * @param      $info
 	 * @param bool $list_view
 	 */
-	 
 	function render_news($info, $list_view = FALSE) {
 		global $locale, $settings, $news_settings, $aidlink;
 		$parameter = $settings['siteurl']."infusions/news/news.php?readmore=".$info['news_id'];
@@ -200,20 +198,16 @@ if (!function_exists('render_news')) {
 			echo "</article>\n";
 		} else {
 			echo "<article class='panel panel-default' style='min-height:290px'>\n";
-			if ($info['news_image']) {
-				echo "<div class='overflow-hide news-img-header'>\n";
-				echo $info['news_image'];
-				echo "<a class='opacity-none transition news-snippet' href='".($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$info['cat_id'] : INFUSIONS."news/news.php?readmore=".$info['news_id'])."'>".fusion_first_words($info['news_news'], 20)."</a>\n";
-				add_to_jquery("
-				$('.news-img-header').hover(
-					function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 1}); },
-					function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 0}); }
-				);
-				");
-				echo "</div>\n";
-			} else {
-//Display cats
-			}
+			echo "<div class='overflow-hide news-img-header'>\n";
+			add_to_jquery("
+			$('.news-img-header').hover(
+				function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 1}); },
+				function() { $(this).closest('.panel').find('.news-snippet').css({'opacity': 0}); }
+			);
+			");
+			echo $info['news_image'];
+			echo "<a class='opacity-none transition news-snippet' href='".($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$info['cat_id'] : INFUSIONS."news/news.php?readmore=".$info['news_id'])."'>".fusion_first_words($info['news_news'], 20)."</a>\n";
+			echo "</div>\n";
 			echo "<div class='panel-body' ".(empty($info['news_image']) ? "style='min-height:221px;'" : "style='min-height:133px;'")." >\n";
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
 			echo "<h4 class='news-title panel-title'><a class='strong text-dark' href='".INFUSIONS."news/news.php?readmore=".$info['news_id']."' >".$info['news_subject']."</a></h4>\n";
@@ -234,7 +228,6 @@ if (!function_exists('render_news')) {
 		}
 	}
 }
-
 if (!function_exists('render_news_item')) {
 	/**
 	 * News Item Page Template
@@ -268,15 +261,14 @@ if (!function_exists('render_news_item')) {
 			   });
 			});
 			</script>');
-
 		echo "<!--news_pre_readmore-->";
 		echo "<article class='news-item'>\n";
 		echo "<h2 class='text-center'>".$data['news_subject']."</h2>\n";
 		echo "<div class='news_news text-dark m-t-20 m-b-20'>\n";
 		if ($data['news_image']) {
-		echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; overflow:hidden;' /></a>";
+			echo "<a class='".$data['news_ialign']." news-image-overlay' href='".IMAGES_N.$data['news_image']."'><img class='img-responsive' src='".IMAGES_N.$data['news_image']."' alt='".$data['news_subject']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; overflow:hidden;' /></a>";
 		} elseif ($data['cat_name']) {
-		echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
+			echo "<a class='".$data['news_ialign']."' href='".INFUSIONS."news/news.php?cat_id=".$data['cat_id']."'><img class='img-responsive' src='".IMAGES_NC.$data['cat_image']."' style='padding:5px; max-height:".$news_settings['news_photo_h']."; alt='".$data['cat_name']."' /></a>";
 		}
 		echo $data['news_news'];
 		echo "</div>\n";
