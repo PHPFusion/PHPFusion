@@ -169,6 +169,7 @@ if (!function_exists('render_news')) {
 		global $locale, $settings, $news_settings, $aidlink;
 		$parameter = $settings['siteurl']."infusions/news/news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
+
 		if ($list_view) {
 			echo "<article class='panel panel-default'>\n";
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';

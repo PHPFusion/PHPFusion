@@ -252,7 +252,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				$_fullResSource = IMAGES_N.$data['news_image'];
 			}
 			// need to check if want to link.
-			$imageSource = "";
+			$imageSource = IMAGES_N."news_default.jpg";
 			if ($data['news_cat_image']) {
 				$imageSource = get_image("nc_".$data['news_cat_name']);
 			}
