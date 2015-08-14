@@ -20,14 +20,16 @@ header("Content-Type: text/html; charset=".$locale['charset']."");
 echo "<!DOCTYPE html><head>";
 echo "<title>".$settings['sitename']."</title>";
 echo "<meta charset='".$locale['charset']."' />";
-
+echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";
+echo "<meta http-equiv='Cache-control' content='no-cache' />";
+echo "<meta http-equiv='expires' content='".gmstrftime("%A %d-%b-%y %T %Z", time ()+64800)."'/>";
+echo "<meta name='robots' content='none' />";
+echo "<meta name='googlebot' content='noarchive' />";
+if ($settings['bootstrap']) {
+	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
+	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
+}
 if ($bootstrap_theme_css_src) {
-	echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />";
-	echo "<meta http-equiv='Cache-control' content='no-cache' />";
-	echo "<meta http-equiv='expires' content='".gmstrftime("%A %d-%b-%y %T %Z", time ()+64800)."'/>";
-	echo "<meta name='robots' content='none' />";
-	echo "<meta name='googlebot' content='noarchive' />";
-    echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />";
 	echo "<link href='".$bootstrap_theme_css_src."' rel='stylesheet' media='screen' />";
 }
 if ($settings['entypo']) {
