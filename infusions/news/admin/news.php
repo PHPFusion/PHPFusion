@@ -316,7 +316,7 @@ closeside();
 
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 openside("");
-if (!fusion_get_settings("comments_enabled") || fusion_get_settings("ratings_enabled")) {
+if (!fusion_get_settings("comments_enabled") || !fusion_get_settings("ratings_enabled")) {
 	$sys = "";
 	if (!fusion_get_settings("comments_enabled") && !fusion_get_settings("ratings_enabled")) {
 		$sys = $locale['comments_ratings'];
