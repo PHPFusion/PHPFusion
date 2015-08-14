@@ -176,6 +176,7 @@ set_language($lang);
 if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 	//$this_redir = preg_replace("/(.*?)?(.*)/", "$1", $this_redir);
 	$this_redir = clean_request("", array("aid"), true);
+	redirect($this_redir);
 }
 redirect(FUSION_SELF.$this_redir."");
 }
