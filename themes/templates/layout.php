@@ -24,11 +24,13 @@ echo "<head>\n";
 	echo "<meta name='keywords' content='".$settings['keywords']."' />\n";
 	echo "<meta http-equiv='Cache-control' content='PUBLIC' />";
 	echo "<meta http-equiv='expires' content='".gmstrftime("%A %d-%b-%y %T %Z", time ()+64800)."'/>";
-	$bootstrap_theme_css_src = '';
-	if ($bootstrap_theme_css_src) {
+	if ($settings['bootstrap']) {
 		echo "<meta http-equiv='X-UA-Compatible' content='IE=edge' />\n";
-	  	echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
-		echo "<link href='".$bootstrap_theme_css_src."' rel='stylesheet' media='screen' />\n";
+		echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
+	}
+	$theme_css_src = '';
+	if ($theme_css_src) {
+		echo "<link href='".$theme_css_src ."' rel='stylesheet' media='screen' />\n";
 	}
 	if ($settings['entypo']) {
 		echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.css' type='text/css' />\n";

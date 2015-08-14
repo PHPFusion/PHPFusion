@@ -416,6 +416,7 @@ $locale['about'] = "About";
 $locale['online'] = "Online";
 $locale['offline'] = "Offline";
 // Words for formatting to single and plural forms. Count of forms is language-dependent
+$locale['fmt_submission'] = "submission|submissions";
 $locale['fmt_article'] = "article|articles";
 $locale['fmt_blog'] = "blog|blogs";
 $locale['fmt_comment'] = "comment|comments";

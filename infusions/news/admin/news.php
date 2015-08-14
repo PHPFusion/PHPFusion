@@ -24,7 +24,6 @@ $data = array(
 	'news_ialign' => 'pull-left',
 );
 
-
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 	$data['news_breaks'] = 'n';
@@ -53,19 +52,19 @@ if (isset($_POST['save'])) {
 		'news_language' => form_sanitizer($_POST['news_language'], '', 'news_language')
 	);
 
-	if (isset($_FILES['news_image'])) {
+	if (isset($_FILES['news_image'])) { // when files is uploaded.
 		$upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
-		if (!empty($upload)) {
+		if (!empty($upload) && !$upload['error']) {
 			$data['news_image'] = $upload['image_name'];
 			$data['news_image_t1'] = $upload['thumb1_name'];
 			$data['news_image_t2'] = $upload['thumb2_name'];
-			$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
-		} else {
-			$data['news_image'] = (isset($_POST['news_image']) ? $_POST['news_image'] : "");
-			$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "");
-			$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
-			$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
+			$data['news_ialign'] = (isset($_POST['news_ialign']) ? form_sanitizer($_POST['news_ialign'], "pull-left", "news_ialign") : "pull-left");
 		}
+	} else { // when files not uploaded. but there should be exist check.
+		$data['news_image'] = (isset($_POST['news_image']) ? $_POST['news_image'] : "");
+		$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "");
+		$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
+		$data['news_ialign'] = (isset($_POST['news_ialign']) ? form_sanitizer($_POST['news_ialign'], "pull-left", "news_ialign") : "pull-left");
 	}
 
 	if (fusion_get_settings('tinymce_enabled') != 1) {
@@ -122,39 +121,50 @@ if (dbrows($result)) {
 }
 
 if (isset($_POST['preview'])) {
-	$data['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
-	$data['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
-	$data['news_language'] = form_sanitizer($_POST['news_language'], '', 'news_language');
-	$data['news_news'] = phpentities(stripslash($_POST['news_news']));
-	$data['news_news'] = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['news_news']));
-	$data['news_extended'] = '';
-	if ($_POST['news_extended']) {
-		$data['news_extended'] = phpentities(stripslash($_POST['news_extended']));
-		$data['news_extended'] = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['news_extended']));
+
+	$news_news = "";
+	if ($_POST['news_news']) {
+		$news_news = phpentities(stripslash($_POST['news_news']));
+		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['news_news']));
 	}
-	$data['news_keywords'] = form_sanitizer($_POST['news_keywords'], '', 'news_keywords');
+
+	$news_extended = "";
+	if ($_POST['news_extended']) {
+		$news_extended = phpentities(stripslash($_POST['news_extended']));
+		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['news_extended']));
+	}
+	$data = array(
+		"news_subject" => 	form_sanitizer($_POST['news_subject'], '', 'news_subject'),
+		"news_cat" =>	isnum($_POST['news_cat']) ? $_POST['news_cat'] : 0,
+		"news_language"	=>	 form_sanitizer($_POST['news_language'], '', 'news_language'),
+		"news_news"		=> 	form_sanitizer($news_news, "", "news_news"),
+		"news_extended"	=>	form_sanitizer($news_extended, "", "news_extended"),
+		"news_keywords" =>	 form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
+		"news_start"	=>	(isset($_POST['news_start']) && $_POST['news_start']) ? $_POST['news_start'] : '',
+		"news_end"	=>	(isset($_POST['news_end']) && $_POST['news_end']) ? $_POST['news_end'] : '',
+		"news_image" => isset($_POST['news_image']) ? $_POST['news_image'] : '',
+		"news_image_t1" => isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "",
+		"news_image_t2" => isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "",
+		"news_ialign" => (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left"),
+		"news_visibility"	=>	 isnum($_POST['news_visibility']) ? $_POST['news_visibility'] : "0",
+		"news_draft"	=>	isset($_POST['news_draft']) ? true : false,
+		"news_sticky"	=> isset($_POST['news_sticky']) ? true : false,
+		"news_allow_comments" =>	isset($_POST['news_allow_comments']) ? true : false,
+		"news_allow_ratings" =>	isset($_POST['news_allow_ratings']) ? true : false,
+		"news_datestamp" => isset($_POST['news_datestamp']) ? $_POST['news_datestamp'] : "",
+	);
+
 	$data['news_breaks'] = "";
-	if (isset($_POST['line_breaks'])) {
-		$data['news_breaks'] = " 1";
-		$data['news_news'] = nl2br($data['news_news']);
+	if (isset($_POST['news_breaks'])) {
+		$data['news_breaks'] = true;
+		$data['news_news'] = nl2br($callback_data['news_news']);
 		if ($data['news_extended']) {
-			$data['news_extended'] = nl2br($data['news_extended']);
+			$data['news_extended'] = nl2br($callback_data['news_extended']);
 		}
 	}
-	$data['news_start'] = (isset($_POST['news_start']) && $_POST['news_start']) ? $_POST['news_start'] : '';
-	$data['news_end'] = (isset($_POST['news_end']) && $_POST['news_end']) ? $_POST['news_end'] : '';
-	$data['news_image'] = isset($_POST['news_image']) ? $_POST['news_image'] : '';
-	$data['news_image_t1'] = (isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "");
-	$data['news_image_t2'] = (isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "");
-	$data['news_ialign'] = (isset($_POST['news_ialign']) ? $_POST['news_ialign'] : "pull-left");
-	$data['news_visibility'] = isnum($_POST['news_visibility']) ? $_POST['news_visibility'] : "0";
-	$data['news_draft'] = isset($_POST['news_draft']) ? " 1" : "";
-	$data['news_sticky'] = isset($_POST['news_sticky']) ? " 1" : "";
-	$data['news_allow_comments'] = isset($_POST['news_allow_comments']) ? " 1" : "";
-	$data['news_allow_ratings'] = isset($_POST['news_allow_ratings']) ? " 1" : "";
-	$data['news_datestamp'] = isset($_POST['news_datestamp']) ? $_POST['news_datestamp'] : '';
-	if (!defined('FUSION_NULL')) {
-		echo openmodal('news_preview', 'News Preview');
+
+	if (defender::safe()) {
+		echo openmodal('news_preview', $locale['news_0141']);
 		echo $data['news_news'];
 		echo "<hr/>\n";
 		if (isset($data['news_extended'])) {
@@ -251,15 +261,21 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 openside('');
 if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
-	echo "<label><img src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$locale['news_0216']."' /><br />\n";
+	echo "<div class='row'>\n";
+	echo "<div class='col-xs-12 col-sm-6'>\n";
+	echo "<label><img class='img-responsive img-thumbnail' src='".IMAGES_N_T.$data['news_image_t1']."' alt='".$locale['news_0216']."' /><br />\n";
 	echo "<input type='checkbox' name='del_image' value='y' /> ".$locale['delete']."</label>\n";
+	echo "</div>\n";
+	echo "<div class='col-xs-12 col-sm-6'>\n";
+	$alignOptions = array(
+		'pull-left' => $locale['left'],
+		'news-img-center' => $locale['center'],
+		'pull-right' => $locale['right']);
+	echo form_select('news_ialign', $locale['news_0218'], $data['news_ialign'], array("options" => $alignOptions, "inline"=>false));
+	echo "</div>\n</div>\n";
 	echo "<input type='hidden' name='news_image' value='".$data['news_image']."' />\n";
 	echo "<input type='hidden' name='news_image_t1' value='".$data['news_image_t1']."' />\n";
 	echo "<input type='hidden' name='news_image_t2' value='".$data['news_image_t2']."' />\n";
-	$alignOptions = array('pull-left' => $locale['left'],
-		'news-img-center' => $locale['center'],
-		'pull-right' => $locale['right']);
-	echo form_select('news_ialign', $locale['news_0218'], $data['news_ialign'], array("options" => $alignOptions));
 } else {
 	$file_input_options = array(
 		'upload_path' => IMAGES_N,
@@ -300,7 +316,7 @@ closeside();
 
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 openside("");
-if (!fusion_get_settings("comments_enabled") || fusion_get_settings("ratings_enabled")) {
+if (!fusion_get_settings("comments_enabled") || !fusion_get_settings("ratings_enabled")) {
 	$sys = "";
 	if (!fusion_get_settings("comments_enabled") && !fusion_get_settings("ratings_enabled")) {
 		$sys = $locale['comments_ratings'];

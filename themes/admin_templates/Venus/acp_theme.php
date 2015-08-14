@@ -173,6 +173,9 @@ function render_admin_panel() {
 	// Slimscroll script
 	// TODO: Scrolling on mobile devices is very bad, maybe replace this script
 	add_to_footer("<script src='".THEMES."admin_templates/Venus/includes/jquery.slimscroll.min.js'></script>");
+	if (!isset($_COOKIE['acp_sidemenu'])) {
+		setcookie("acp_sidemenu", 1, 64800);
+	}
 	add_to_jquery("
 	// Initialize slimscroll
 	$('#adl').slimScroll({
@@ -195,9 +198,9 @@ function render_admin_panel() {
 		}
 
 		if (panel_state) {
-			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '1', {expires: 7});
+			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '1', {expires: 64800});
 		} else {
-			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '0', {expires: 7});
+			$.cookie('".COOKIE_PREFIX."acp_sidemenu', '0', {expires: 64800});
 		}
 	}
 

@@ -10,6 +10,7 @@ $locale['news_0004'] = "Settings";
 $locale['news_0020'] = "Current News Categories";
 $locale['news_0021'] = "Edit News Category";
 $locale['news_0022'] = "Add News Category";
+$locale['news_0023'] = "Submissions";
 
 // News messages
 $locale['news_0100'] = "News Item added";
@@ -20,6 +21,26 @@ $locale['news_0104'] = "Image must be less than %s.";
 $locale['news_0105'] = "Image must be one of the following file types %s.";
 $locale['news_0106'] = "Image must be no bigger than %s pixels.";
 $locale['news_0107'] = "Unknown error";
+
+// News Submissions messages
+$locale['news_0130'] = "There are currently no news submissions";
+$locale['news_0131'] = "Review News Submission";
+$locale['news_0132'] = "The above news item was submitted by ";
+$locale['news_0133'] = "Do you want to publish or delete this news item?";
+$locale['news_0134'] = "Publish news";
+$locale['news_0135'] = "Delete news";
+$locale['news_0136'] = "Submission Subject for Review";
+$locale['news_0137'] = "There are currently %s pending for your review.";
+$locale['news_0138'] = "Sorry, we currently do not accept any news submissions on this site.";
+
+$locale['news_0141'] = "Preview News";
+$locale['news_0142'] = "Submission Author";
+$locale['news_0143'] = "Submission Time";
+$locale['news_0144'] = "Submission Id";
+$locale['news_0145'] = "New Submission has been deleted";
+$locale['news_0146'] = "News Submissions has been published";
+$locale['news_0147'] =  "News Submissions is saved as draft";
+
 
 // News Categories messages
 $locale['news_0150'] = "News Category added";
@@ -50,7 +71,7 @@ $locale['news_0214'] = "Enable Ratings";
 $locale['news_0215'] = "Draft";
 $locale['news_0216'] = "News Image";
 $locale['news_0217'] = "Max. filesize %s / Allowed filetypes GIF, JPEG or PNG.";
-$locale['news_0218'] = "Select the News image alignment";
+$locale['news_0218'] = "Image Position";
 $locale['news_0219'] = "Pagebreak";
 $locale['news_0240'] = "Preview News";
 $locale['news_0241'] = "Save News";
@@ -77,3 +98,7 @@ $locale['news_0350'] = "Delete this news category?";
 // Error Messages
 $locale['news_0351'] = "Please enter a category name.";
 $locale['news_0352'] = "This category already exists.";
+
+$locale['news_0400'] = "News Submissions";
+$locale['news_0401'] = "Submission Image";
+$locale['news_0402'] = "Required extended news?";

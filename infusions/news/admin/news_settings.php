@@ -21,6 +21,9 @@ add_breadcrumb(array('link'=>ADMIN."settings_news.php".$aidlink, 'title'=>$local
 if (isset($_POST['savesettings'])) {
 	$error = 0;
 	$inputArray = array(
+		"news_allow_submission" =>	form_sanitizer($_POST['news_allow_submission'], 0, "news_allow_submission"),
+		"news_allow_submission_files" => form_sanitizer($_POST['news_allow_submission_files'], 0, "news_allow_submission_files"),
+		"news_extended_required" => isset($_POST['news_extended_required']) ? 1 : 0,
 		"news_pagination" =>	form_sanitizer($_POST['news_pagination'], 0, "news_pagination"),
 		"news_image_link" => form_sanitizer($_POST['news_image_link'], 0, 'news_image_link'),
 		"news_image_frontpage" => form_sanitizer($_POST['news_image_frontpage'], 0, 'news_image_frontpage'),
@@ -113,6 +116,11 @@ echo "
 	</div>
 </div>
 ";
+closeside();
+openside("");
+echo form_select("news_allow_submission", $locale['news_0400'], $news_settings['news_allow_submission'], array("inline"=>true, "options"=>array($locale['disable'], $locale['enable'])));
+echo form_select("news_allow_submission_files", $locale['news_0401'], $news_settings['news_allow_submission'], array("inline"=>true, "options"=>array($locale['disable'], $locale['enable'])));
+echo form_checkbox("news_extended_required", $locale['news_0402'], $news_settings['news_extended_required'], array("inline"=>true));
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";

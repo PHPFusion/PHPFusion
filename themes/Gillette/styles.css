@@ -302,7 +302,7 @@ div.emulated-fieldset div.attachments-list {
     background-color: #555;
     background-image: url(images/side.gif);
     background-repeat: repeat-x;
-    padding: 6px 4px 6px 4px;
+    padding: 6px 4px 4px 4px;
 }
 
 .scapmain-left {
@@ -355,7 +355,7 @@ div.emulated-fieldset div.attachments-list {
     background-color: #555;
     background-image: url(images/cap.gif);
     background-repeat: repeat-x;
-    padding: 6px 4px 6px 4px;
+    padding: 6px 4px 4px 4px;
 }
 
 .capmain-left {

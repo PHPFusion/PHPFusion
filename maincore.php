@@ -156,7 +156,7 @@ $enabled_languages = array_keys($language_opts);
 if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 	$lang = stripinput($_GET['lang']);
 
-echo set_language($lang);
+set_language($lang);
 
 // Redirect handler to keep position upon lang switch
 	$this_redir = '';
@@ -174,7 +174,9 @@ echo set_language($lang);
 	}
 // Everything is instanced, strip issets after lang switch unless we are in The Administration
 if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-	$this_redir = preg_replace("/(.*?)?(.*)/", "$1", $this_redir);
+	//$this_redir = preg_replace("/(.*?)?(.*)/", "$1", $this_redir);
+	$this_redir = clean_request("", array("aid"), true);
+	redirect($this_redir);
 }
 redirect(FUSION_SELF.$this_redir."");
 }

@@ -94,7 +94,7 @@ function render_comments($c_data, $c_info) {
 function render_news($subject, $news, $info) {
 	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
 	echo "<td class='capmain-left'></td>\n";
-	echo "<td class='capmain'>".$subject."</td>\n";
+	echo "<td class='capmain'>".trimlink($subject,30)."</td>\n";
 	echo "<td class='capmain-right'></td>\n";
 	echo "</tr>\n</table>\n";
 	echo "<table width='100%' cellpadding='0' cellspacing='0' class='spacer'>\n<tr>\n";

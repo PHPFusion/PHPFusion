@@ -140,7 +140,7 @@ if (!function_exists('render_main_news')) {
 				foreach ($info['news_items'] as $i => $news_info) {
 					echo "<div class='col-xs-12 col-sm-$news_span col-md-$news_span col-lg-$news_span'>\n";
 					echo "<!--news_prepost_".$i."-->\n";
-					render_news($news_info, $active == 2);
+					render_news($news_info['news_subject'], $news_info['news_news'], $news_info, $active == 2);
 					echo "<!--sub_news_idx-->\n";
 					echo "</div>\n";
 				}
@@ -165,7 +165,7 @@ if (!function_exists('render_news')) {
 	 * @param      $info
 	 * @param bool $list_view
 	 */
-	function render_news($info, $list_view = FALSE) {
+	function render_news($subject, $news, $info, $list_view = FALSE) {
 		global $locale, $settings, $news_settings, $aidlink;
 		$parameter = $settings['siteurl']."infusions/news/news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
@@ -281,7 +281,7 @@ if (!function_exists('render_news_item')) {
 		echo $data['news_allow_comments'] ? display_comments($data['news_comments'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments") : '';
 		echo $data['news_allow_ratings'] ? "<span class='m-r-10'>".display_ratings($data['news_sum_rating'], $data['news_count_votes'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating")." </span>" : '';
 		echo "<a class='m-r-10' title='".$locale['global_075']."' href='".BASEDIR."print.php?type=N&amp;item_id=".$data['news_id']."'><i class='entypo print'></i></a>";
-		echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=nform&amp;news_id=".$data['news_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
+		echo iADMIN && checkrights("N") ? "<a title='".$locale['global_076']."' href='".INFUSIONS."news/news_admin.php".$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data['news_id']."' title='".$locale['global_076']."' />".$locale['global_076']."</a>\n" : "";
 		echo "</div>";
 		echo "<!--news_sub_readmore-->";
 		echo !isset($_GET['readmore']) && $data['news_ext'] == "y" ? "<div class='m-t-20'>\n<a href='".INFUSIONS."news/news.php?readmore=".$data['news_id']."' class='button'>".$locale['global_072']."</a>\n</div>\n" : "";
