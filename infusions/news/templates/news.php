@@ -140,7 +140,7 @@ if (!function_exists('render_main_news')) {
 				foreach ($info['news_items'] as $i => $news_info) {
 					echo "<div class='col-xs-12 col-sm-$news_span col-md-$news_span col-lg-$news_span'>\n";
 					echo "<!--news_prepost_".$i."-->\n";
-					render_news($news_info, $active == 2);
+					render_news($news_info['news_subject'], $news_info['news_news'], $news_info, $active == 2);
 					echo "<!--sub_news_idx-->\n";
 					echo "</div>\n";
 				}
@@ -165,7 +165,7 @@ if (!function_exists('render_news')) {
 	 * @param      $info
 	 * @param bool $list_view
 	 */
-	function render_news($info, $list_view = FALSE) {
+	function render_news($subject, $news, $info, $list_view = FALSE) {
 		global $locale, $settings, $news_settings, $aidlink;
 		$parameter = $settings['siteurl']."infusions/news/news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
