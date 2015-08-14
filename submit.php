@@ -24,7 +24,8 @@ if (!iMEMBER) {
 }
 $stype = filter_input(INPUT_GET, 'stype') ? : '';
 $submit_info = array();
-$modules = array('n' => db_exists(DB_NEWS),
+$modules = array(
+	'n' => db_exists(DB_NEWS),
 	'p' => db_exists(DB_PHOTO_ALBUMS),
 	'a' => db_exists(DB_ARTICLES),
 	'd' => db_exists(DB_DOWNLOADS),
@@ -75,62 +76,7 @@ if (!$sum or empty($modules[$stype])) {
 	}
 	closetable();
 } elseif ($stype === "n") {
-	if (isset($_POST['submit_news'])) {
-		$submit_info['news_subject'] = form_sanitizer($_POST['news_subject'], '', 'news_subject');
-		$submit_info['news_cat'] = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
-		$submit_info['news_snippet'] = nl2br(parseubb(stripinput($_POST['news_snippet'])));
-		$submit_info['news_snippet'] = form_sanitizer($submit_info['news_snippet'], '', 'news_snippet');
-		$submit_info['news_body'] = nl2br(parseubb(stripinput($_POST['news_body'])));
-		$submit_info['news_body'] = form_sanitizer($submit_info['news_body'], '', 'news_body');
-		if (!defined('FUSION_NULL')) {
-			$result = dbquery("INSERT INTO ".DB_SUBMISSIONS." (submit_type, submit_user, submit_datestamp, submit_criteria) VALUES('n', '".$userdata['user_id']."', '".time()."', '".addslashes(serialize($submit_info))."')");
-			add_to_title($locale['global_200'].$locale['450']);
-			opentable($locale['450']);
-			echo "<div style='text-align:center'><br />\n".$locale['460']."<br /><br />\n";
-			echo "<a href='submit.php?stype=n'>".$locale['461']."</a><br /><br />\n";
-			echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
-			closetable();
-		}
-	}
-	if (isset($_POST['preview_news'])) {
-		$news_subject = stripinput($_POST['news_subject']);
-		$news_cat = isnum($_POST['news_cat']) ? $_POST['news_cat'] : "0";
-		$news_snippet = stripinput($_POST['news_snippet']);
-		$news_body = stripinput($_POST['news_body']);
-		opentable($news_subject);
-		echo $locale['478']." ".nl2br(parseubb($news_snippet))."<br /><br />";
-		echo $locale['472']." ".nl2br(parseubb($news_body));
-		closetable();
-	} else {
-		$news_subject = "";
-		$news_cat = "0";
-		$news_snippet = "";
-		$news_body = "";
-	}
-	$result2 = dbquery("SELECT news_cat_id, news_cat_name, news_cat_language FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")." ORDER BY news_cat_name");
-	if (dbrows($result2)) {
-		$cat_list = array();
-		while ($data2 = dbarray($result2)) {
-			$cat_list[$data2['news_cat_id']] = $data2['news_cat_name'];
-		}
-	}
-	add_to_title($locale['global_200'].$locale['450']);
-	opentable($locale['450']);
-	echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-	echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['470']."</div>\n";
-	echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=n", array('max_tokens' => 1));
-	echo form_text('news_subject', $locale['471'], $news_subject, array("required" => 1));
-	echo form_select('news_cat', $locale['476'], $news_cat, array("options" => $cat_list, "required" => TRUE));
-	echo form_textarea('news_snippet', $locale['478'], $news_snippet, array('bbcode' => 1,
-		'form_name' => 'submit_form'));
-	echo form_textarea('news_body', $locale['472'], $news_body, array("required" => 1,
-		'bbcode' => 1,
-		'form_name' => 'submit_form'));
-	echo fusion_get_settings("site_seo") ? "" : form_button('preview_news', $locale['474'], $locale['474'], array('class' => 'btn-primary m-r-10'));
-	echo form_button('submit_news', $locale['475'], $locale['475'], array('class' => 'btn-primary'));
-	echo closeform();
-	echo "</div>\n</div>\n";
-	closetable();
+	include INFUSIONS."news/news_submit.php";
 } elseif ($stype === "b") {
 	if (isset($_POST['submit_blog'])) {
 		$submit_info['blog_subject'] = form_sanitizer($_POST['blog_subject'], '', 'blog_subject');

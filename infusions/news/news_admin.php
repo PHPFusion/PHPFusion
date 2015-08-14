@@ -56,6 +56,7 @@ $allowed_pages = array(
 	"news",
 	"news_category",
 	"news_form",
+	"submissions",
 	"settings"
 );
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'news';
@@ -72,6 +73,10 @@ $master_title['icon'] = '';
 
 $master_title['title'][] = $locale['news_0020'];
 $master_title['id'][] = 'news_category';
+$master_title['icon'] = '';
+
+$master_title['title'][] = $locale['news_0023'];
+$master_title['id'][] = 'submissions';
 $master_title['icon'] = '';
 
 $master_title['title'][] = isset($_GET['settings']) ? $locale['news_0004'] : $locale['news_0004'];
@@ -93,6 +98,10 @@ switch($_GET['section']) {
 	case "news_form":
 		add_breadcrumb(array('link'=>'', 'title'=>$edit ? $locale['news_0003'] : $locale['news_0002']));
 		include "admin/news.php";
+		break;
+	case "submissions":
+		//include LOCALE.LOCALESET."admin/submissions.php";
+		include "admin/news_submissions.php";
 		break;
 	default:
 		news_listing();
@@ -129,7 +138,7 @@ function news_listing() {
 			echo thumbnail($img_thumb, '50px');
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
-			echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words($data2['news_news'], '50')."</div>\n";
+			echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words(stripslashes($data2['news_news']), '50')."</div>\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
 			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 			echo "</div>\n";
@@ -178,7 +187,7 @@ function news_listing() {
 					echo thumbnail($img_thumb, '50px');
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
-					echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words($data2['news_news'], '50')."</div>\n";
+					echo "<div><span class='strong text-dark'>".$data2['news_subject']."</span><br/>".fusion_first_words(stripslashes($data2['news_news']), '50')."</div>\n";
 					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=news_form&amp;news_id=".$data2['news_id']."'>".$locale['edit']."</a> -\n";
 					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;news_id=".$data2['news_id']."' onclick=\"return confirm('".$locale['news_0251']."');\">".$locale['delete']."</a>\n";
 					echo "</div>\n";

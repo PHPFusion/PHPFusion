@@ -15,16 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 function form_textarea($input_name, $label = '', $input_value = '', array $options = array()) {
 	global $locale, $defender, $userdata; // for editor
+	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
 	require_once INCLUDES."bbcode_include.php";
 	require_once INCLUDES."html_buttons_include.php";
 	include_once LOCALE.LOCALESET."admin/html_buttons.php";
 	include_once LOCALE.LOCALESET."error.php";
-
-	$input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
 	$options = array(
 		'input_id'	=> !empty($options['input_id']) ? $options['input_id'] : $input_name,
@@ -36,7 +34,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		'class' => !empty($options['class']) ? $options['class']  : '',
 		'inline' => !empty($options['inline']) && $options['inline'] == 1 ?  '1'  : '0',
 		'length' => !empty($options['length']) ? $options['length'] : '200',
-		'error_text' => !empty($options['error_text']) ? $options['error_text']  : '',
+		'error_text' => !empty($options['error_text']) ? $options['error_text']  : $locale['error_input_default'],
 		'safemode' => !empty($options['safemode']) && $options['safemode'] == 1 ? '1' : '0',
 		'form_name' => !empty($options['form_name']) ? $options['form_name']  : 'input_form',
 		'bbcode' => !empty($options['bbcode']) && $options['bbcode'] == 1 ?  '1' : '0',
@@ -56,10 +54,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		$input_value = html_entity_decode(stripslashes($input_value));
 		$input_value = str_replace("<br />", "", $input_value);
 	}
+	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
 
-	$html = "<div id='".$options['input_id']."-field' class='form-group ".$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
+	$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
 	$html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>$label ".($options['required'] == 1 ? "<span class='required'>*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
-	$html .= ($options['inline']) ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+	$html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9 p-r-0" : "col-sm-12 p-l-0")."'>\n" : "";
 	$tab_active = 0; $tab_title = array();
 	if ($options['preview'] && $options['bbcode'] || $options['html']) {
 		$tab_title['title'][] = $locale['preview'];
@@ -83,8 +82,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 	$html .= "<textarea name='$input_name' style='width:100%; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".$options['class']." ".($options['autosize'] ? 'animated-height' : '')." ".($options['bbcode'] || $options['html'] ? "no-shadow no-border" : '')." textbox ' placeholder='".$options['placeholder']."' id='".$options['input_id']."' ".($options['deactivate'] ? 'readonly' : '').($options['maxlength'] ? "maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
 
 	if ($options['bbcode'] || $options['html']) {
-		$html .= "</div>\n<div class='panel-footer'>\n";
-		$html .= "<small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span></small>";
+		$html .= "</div>\n<div class='panel-footer clearfix'>\n";
+		$html .= "<div class='overflow-hide'><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span></small></div>";
 		add_to_jquery("
 		var init_str = $('#".$options['input_id']."').val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
 		$('#".$options['input_id']."-wordcount').text(init_str);
@@ -143,7 +142,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		$('#".$options['input_id']."').autosize();
 		");
 	}
-	$html .= "<div id='".$options['input_id']."-help'></div>";
+	$html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+	//$html .= "<div id='".$options['input_id']."-help'></div>";
 	$html .= $options['inline'] ? "</div>\n" : '';
 	$html .= "</div>\n";
 	$defender->add_field_session(array(
@@ -155,8 +155,6 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 			 'safemode' 	=> 	$options['safemode'],
 			 'error_text'	=> 	$options['error_text']
 		 ));
-
-
 	return $html;
 }
 
