@@ -156,7 +156,7 @@ $enabled_languages = array_keys($language_opts);
 if (isset($_GET['lang']) && valid_language($_GET['lang'])) {
 	$lang = stripinput($_GET['lang']);
 
-echo set_language($lang);
+set_language($lang);
 
 // Redirect handler to keep position upon lang switch
 	$this_redir = '';
