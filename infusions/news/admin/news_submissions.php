@@ -179,6 +179,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 					"news_draft"	=>	isset($_POST['news_draft']) ? true : false,
 					"news_sticky"	=> isset($_POST['news_sticky']) ? true : false,
 					"news_datestamp" => $callback_data['news_datestamp'], // pull from db.
+					"news_ialign" => isset($_POST['news_ialign']) ? $_POST['news_ialign'] : '',
 					"news_image" => isset($_POST['news_image']) ? $_POST['news_image'] : '',
 					"news_image_t1" => isset($_POST['news_image_t1']) ? $_POST['news_image_t1'] : "",
 					"news_image_t2" => isset($_POST['news_image_t2']) ? $_POST['news_image_t2'] : "",
@@ -276,10 +277,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 				echo form_select('news_ialign', $locale['news_0218'], $callback_data['news_ialign'], array("options" => $alignOptions));
 			}
 			closeside();
-
-
-
-
 			$snippetSettings = array(
 				"required"=>true,
 				"preview"=>true,

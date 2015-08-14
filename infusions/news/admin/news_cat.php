@@ -110,6 +110,7 @@ echo form_select_tree("news_cat_parent", $locale['news_0305'], $data['news_cat_p
 						  "inline"=>true,
 						  "disable_opts" => $data['news_cat_hidden'],
 						  "hide_disabled" => true,
+						  "query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
 					  ),
 					  DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 if (multilang_table("NS")) {
