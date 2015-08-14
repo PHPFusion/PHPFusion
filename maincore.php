@@ -174,7 +174,8 @@ set_language($lang);
 	}
 // Everything is instanced, strip issets after lang switch unless we are in The Administration
 if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
-	$this_redir = preg_replace("/(.*?)?(.*)/", "$1", $this_redir);
+	//$this_redir = preg_replace("/(.*?)?(.*)/", "$1", $this_redir);
+	$this_redir = clean_request("", array("aid"), true);
 }
 redirect(FUSION_SELF.$this_redir."");
 }
