@@ -87,3 +87,7 @@ $locale['blog_0457'] = "Please specify keywords";
 $locale['left'] = "Left";
 $locale['center'] = "Center";
 $locale['right'] = "Right";
+
+$locale['blog_0600'] = "Blog Submissions";
+$locale['blog_0601'] = "Submission Image";
+$locale['blog_0602'] = "Required extended blog?";

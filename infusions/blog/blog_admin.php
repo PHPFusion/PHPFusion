@@ -19,6 +19,7 @@ require_once "../../maincore.php";
 pageAccess('BLOG');
 require_once THEMES."templates/admin_header.php";
 include INFUSIONS."blog/locale/".LOCALESET."blog_admin.php";
+include LOCALE.LOCALESET."admin/settings.php";
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/classes/Admin.php";
 require_once INCLUDES."infusions_include.php";
@@ -128,7 +129,8 @@ if (isset($_GET['section']) && $_GET['section'] == 'sform') {
 	}
 
 	if (isset($_POST['savesettings'])) {
-		$settings2 = array('blog_image_link' => form_sanitizer($_POST['blog_image_link'], '0', 'blog_image_link'),
+		$settings2 = array(
+			'blog_image_link' => form_sanitizer($_POST['blog_image_link'], '0', 'blog_image_link'),
 			'blog_image_frontpage' => form_sanitizer($_POST['blog_image_frontpage'], '0', 'blog_image_frontpage'),
 			'blog_image_readmore' => form_sanitizer($_POST['blog_image_readmore'], '0', 'blog_image_readmore'),
 			'blog_thumb_ratio' => form_sanitizer($_POST['blog_thumb_ratio'], '0', 'blog_thumb_ratio'),

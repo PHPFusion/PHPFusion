@@ -119,7 +119,7 @@ echo "
 closeside();
 openside("");
 echo form_select("news_allow_submission", $locale['news_0400'], $news_settings['news_allow_submission'], array("inline"=>true, "options"=>array($locale['disable'], $locale['enable'])));
-echo form_select("news_allow_submission_files", $locale['news_0401'], $news_settings['news_allow_submission'], array("inline"=>true, "options"=>array($locale['disable'], $locale['enable'])));
+echo form_select("news_allow_submission_files", $locale['news_0401'], $news_settings['news_allow_submission_files'], array("inline"=>true, "options"=>array($locale['disable'], $locale['enable'])));
 echo form_checkbox("news_extended_required", $locale['news_0402'], $news_settings['news_extended_required'], array("inline"=>true));
 closeside();
 echo "</div>\n";
