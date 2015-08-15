@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Database\DatabaseFactory;
+
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
 }
@@ -27,33 +30,44 @@ $_errorHandler = array();
 function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
 	global $userdata, $_errorHandler;
 	$showError = TRUE;
-	$result = dbquery("SELECT error_id, error_status FROM ".DB_ERRORS."
-		WHERE error_level='".intval($error_level)."' AND error_file='".addslash($error_file)."'
-		AND error_line='".intval($error_line)."' AND error_status!='1'
-		ORDER BY error_timestamp DESC LIMIT 1");
-	if (dbrows($result) == 0) {
-		$result = dbquery("INSERT INTO ".DB_ERRORS." (
+	$db = DatabaseFactory::getConnection();
+	$result = $db->query(
+		"SELECT error_id, error_status FROM ".DB_ERRORS."
+		WHERE error_message = :message AND error_file = :file AND error_line = :line AND error_status != '1'
+		ORDER BY error_timestamp DESC LIMIT 1", array(
+			':message' => $error_message,
+			':file' => $error_file,
+			':line' => $error_line,
+		));
+	if ($db->countRows($result) == 0) {
+		$db->query("INSERT INTO ".DB_ERRORS." (
 				error_level, error_message, error_file, error_line, error_page,
 				error_user_level, error_user_ip, error_user_ip_type, error_status, error_timestamp
 			) VALUES (
-				'".intval($error_level)."', '".stripinput($error_message)."',
-				'".addslash($error_file)."', '".intval($error_line)."',
+				:level, :message, :file, :line,
 				'".TRUE_PHP_SELF."', '".$userdata['user_level']."', '".USER_IP."', '".USER_IP_TYPE."',
 				'0', '".time()."'
-			)");
-		$errorId = dblastid();
+			)", array(
+				':level' => $error_level,
+				':message' => $error_message,
+				':file' => $error_file,
+				':line' => $error_line,
+			));
+		$errorId = $db->getLastId();
 	} else {
-		$data = dbarray($result);
+		$data = $db->fetchAssoc($result);
 		$errorId = $data['error_id'];
 		if ($data['error_status'] == 2) {
 			$showError = FALSE;
 		}
 	}
 	if ($showError) {
-		$_errorHandler[] = array("id" => $errorId,
+		$_errorHandler[] = array(
+			"id" => $errorId,
 			"level" => $error_level,
 			"file" => $error_file,
-			"line" => $error_line);
+			"line" => $error_line,
+		);
 	}
 }
 
