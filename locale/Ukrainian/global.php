@@ -466,6 +466,7 @@ $locale['user_account'] = "Обліковий запис";
 $locale['about'] = "Опис";
 
 // Words for formatting to single and plural forms. Count of forms is language-dependent
+$locale['fmt_submission'] = "ухвалення|ухвалення|ухвалень";
 $locale['fmt_article'] = "стаття|статті|статей";
 $locale['fmt_blog'] = "блог|блоги|блогу";
 $locale['fmt_comment'] = "коментар|коментаря|коментарів";
