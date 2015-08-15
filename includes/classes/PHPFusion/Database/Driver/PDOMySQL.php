@@ -91,7 +91,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
 		try {
 			$result = $this->connection->prepare($query);
 			foreach ($parameters as $key => $parameter) {
-				$result->bindParam($key, $parameter, self::$paramTypeMap[self::getParameterType($parameter)]);
+				$result->bindValue($key, $parameter, self::$paramTypeMap[self::getParameterType($parameter)]);
 			}
 			$result->execute();
 			return $result;
