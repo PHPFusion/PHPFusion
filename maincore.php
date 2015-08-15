@@ -20,17 +20,7 @@ if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) { die(); }
 define("IN_FUSION", TRUE);
 
 use PHPFusion\Authenticate;
-
-/**
- * Temporary Solution Fix while waiting for issue fix at:
- * https://www.php-fusion.co.uk/forum/viewthread.php?thread_id=36731&pid=195763#post_195763
- */
-$show_mysql_error = true;
-if ($show_mysql_error) {
-	require __DIR__.'/includes/temp_core_resources_include.php';
-} else {
-	require __DIR__.'/includes/core_resources_include.php';
-}
+require __DIR__.'/includes/core_resources_include.php';
 
 
 // Prevent any possible XSS attacks via $_GET.
