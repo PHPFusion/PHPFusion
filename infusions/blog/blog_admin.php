@@ -23,7 +23,7 @@ require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/classes/Admin.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
-add_breadcrumb(array('link' => INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title' => $locale['405']));
+add_breadcrumb(array('link' => INFUSIONS.'blog/blog_admin.php'.$aidlink, 'title' => $locale['blog_0405']));
 if (isset($_POST['cancel'])) {
 	redirect(FUSION_SELF.$aidlink);
 }
@@ -45,53 +45,73 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_i
 		$result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$del_data['blog_id']."' and comment_type='B'");
 		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$del_data['blog_id']."' and rating_type='B'");
 		dbquery_insert(DB_BLOG, $del_data, 'delete');
-		addNotice('warning', $locale['412']);
+		addNotice('warning', $locale['blog_0412']);
 		redirect(FUSION_SELF.$aidlink);
 	} else {
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-$_GET['section'] = isset($_GET['section']) ? $_GET['section'] : 'blog';
-$master_title['title'][] = $locale['400'];
+
+
+$allowed_pages = array(
+	"blog",
+	"blog_category",
+	"blog_form",
+	"submissions",
+	"settings"
+);
+$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "blog";
+
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) ? true : false;
+
+$master_title['title'][] = $locale['blog_0400'];
 $master_title['id'][] = 'blog';
 $master_title['icon'] = '';
-$master_title['title'][] = isset($_GET['blog_id']) ? $locale['402'] : $locale['401'];
-$master_title['id'][] = 'nform';
+
+$master_title['title'][] = $edit ? $locale['blog_0402'] : $locale['blog_0401'];
+$master_title['id'][] = 'blog_form';
 $master_title['icon'] = '';
-$master_title['title'][] = isset($_GET['settings']) ? $locale['406'] : $locale['406'];
-$master_title['id'][] = 'sform';
+
+$master_title['title'][] = $locale['blog_0502'];
+$master_title['id'][] = 'blog_category';
 $master_title['icon'] = '';
-$tab_active = tab_active($master_title, $_GET['section'], 1);
-opentable($locale['405']);
-$message = '';
-if (isset($_GET['status'])) {
-	switch ($_GET['status']) {
-		case 'sn':
-			$message = $locale['410'];
-			$status = 'success';
-			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
-			break;
-		case 'su':
-			$message = $locale['411'];
-			$status = 'info';
-			$icon = "<i class='fa fa-check-square-o fa-lg fa-fw'></i>";
-			break;
-		case 'del':
-			$message = $locale['412'];
-			$status = 'danger';
-			$icon = "<i class='fa fa-trash fa-lg fa-fw'></i>";
-			break;
-	}
-	if ($message) {
-		addNotice($status, $icon.$message);
-	}
-}
+
+$master_title['title'][] = $locale['blog_0406'];
+$master_title['id'][] = 'settings';
+$master_title['icon'] = '';
+
+$tab_active = $_GET['section'];
+
+opentable($locale['blog_0405']);
 echo opentab($master_title, $tab_active, 'blog', 1);
-echo opentabbody($master_title['title'][0], 'blog', $tab_active, 1);
-blog_listing();
-echo closetabbody();
+
+
+switch($_GET['section']) {
+	case "blog_category":
+		include "admin/blog_cat.php";
+		break;
+	case "settings":
+		include "admin/blog_settings.php";
+		break;
+	case "blog_form":
+		add_breadcrumb(array('link'=>'', 'title'=>$edit ? $locale['blog_0402'] : $locale['blog_0401']));
+		include "admin/blog.php";
+		break;
+	case "submissions":
+		//include LOCALE.LOCALESET."admin/submissions.php";
+		include "admin/blog_submissions.php";
+		break;
+	default:
+		blog_listing();
+}
+echo closetab();
+closetable();
+
+require_once THEMES."templates/footer.php";
+
+
 if (isset($_GET['section']) && $_GET['section'] == 'nform') {
-	add_breadcrumb(array('link' => '', 'title' => isset($_GET['blog_id']) ? $locale['402'] : $locale['401']));
+	add_breadcrumb(array('link' => '', 'title' => isset($_GET['blog_id']) ? $locale['blog_0402'] : $locale['blog_0401']));
 	echo opentabbody($master_title['title'][1], 'nform', $tab_active, 1);
 	blog_form();
 	echo closetabbody();
@@ -100,12 +120,13 @@ echo closetab();
 closetable();
 if (isset($_GET['section']) && $_GET['section'] == 'sform') {
 	include LOCALE.LOCALESET."admin/settings.php";
-	add_breadcrumb(array('link' => '', 'title' => $locale['blog_settings']));
+	add_breadcrumb(array('link' => '', 'title' => $locale['blog_blog_settings']));
 	$settings2 = array();
 	$result = dbquery("SELECT * FROM ".DB_SETTINGS_INF);
 	while ($data = dbarray($result)) {
 		$settings2[$data['settings_name']] = $data['settings_value'];
 	}
+
 	if (isset($_POST['savesettings'])) {
 		$settings2 = array('blog_image_link' => form_sanitizer($_POST['blog_image_link'], '0', 'blog_image_link'),
 			'blog_image_frontpage' => form_sanitizer($_POST['blog_image_frontpage'], '0', 'blog_image_frontpage'),
@@ -123,12 +144,12 @@ if (isset($_GET['section']) && $_GET['section'] == 'sform') {
 			$result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value='".$settings_value."' WHERE settings_name='".$settings_key."'");
 			if (!$result) {
 				$defender->stop();
-				addNotice('danger', $locale['901']);
+				addNotice('danger', $locale['blog_901']);
 				break;
 			}
 		}
 		if (!defined('FUSION_NULL')) {
-			addNotice('success', $locale['900']);
+			addNotice('success', $locale['blog_900']);
 			redirect(FUSION_SELF.$aidlink."&amp;section=sform&amp;settings");
 		}
 	}
@@ -241,93 +262,75 @@ if (isset($_GET['section']) && $_GET['section'] == 'sform') {
 	echo closeform();
 	closetable();
 }
-if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id'])) {
-	add_to_jquery("
-		// change the name of the second tab and activate it.
-		$('#tab-nformAdd-blog').text('".$locale['402']."');
-		$('#blog a:last').tab('show');
-		");
-}
-require_once THEMES."templates/footer.php";
-function calculate_byte($download_max_b) {
-	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
-	foreach ($calc_opts as $byte => $val) {
-		if ($download_max_b/$byte <= 999) {
-			return $byte;
-		}
-	}
-	return 1000000;
-}
-
-/**
- * Function to progressively return closest full image_path
- * @param $blog_image
- * @param $blog_image_t1
- * @param $blog_image_t2
- * @return string
- */
-function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes = FALSE) {
-	return PHPFusion\Blog\Functions::get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes);
-}
 
 /**
  * Blog Listing HTML
  */
 function blog_listing() {
 	global $aidlink, $locale;
+
+	$result2 = dbquery("
+	SELECT blog_id, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft FROM ".DB_BLOG."
+	WHERE ".(multilang_table("BL") ? "blog_language='".LANGUAGE."' AND " : "")." blog_cat='0'
+	ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC
+	");
+
 	echo "<div class='m-t-20'>\n";
 	echo opencollapse('blog-list');
 	// uncategorized listing
 	echo "<div class='panel panel-default'>\n";
 	echo "<div class='panel-heading clearfix'>\n";
 	echo "<div class='overflow-hide'>\n";
-	echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('blog-list', '0', '0', 'm-r-10 text-bigger strong').">".$locale['424']."</a> <span class='badge'>".dbcount("(blog_id)", DB_BLOG, "blog_cat='0'")."</span></h4>\n";
-	echo "<br/><span class='text-smaller text-uppercase'>".LANGUAGE."</span>";
+	echo "<span class='display-inline-block strong'><a ".collapse_header_link('blog-list', '0', true, 'm-r-10').">".$locale['blog_0424']."</a></span>\n";
+	echo "<span class='badge m-r-10'>".dbrows($result2)."</span>\n";
+	echo "<span class='text-smaller mid-opacity'>".LANGUAGE."</span>";
 	echo "</div>\n";
 	echo "</div>\n"; // end panel heading
-	echo "<div ".collapse_footer_link('blog-list', '0', '0').">\n";
+	echo "<div ".collapse_footer_link('blog-list', '0', true).">\n";
 	echo "<ul class='list-group m-10'>\n";
-	$result2 = dbquery("SELECT blog_id, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE blog_language='".LANGUAGE."'" : "")." AND blog_cat='0' ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC");
 	if (dbrows($result2) > 0) {
 		while ($data2 = dbarray($result2)) {
 			echo "<li class='list-group-item'>\n";
 			echo "<div class='pull-left m-r-10'>\n";
 			$image_thumb = get_blog_image_path($data2['blog_image'], $data2['blog_image_t1'], $data2['blog_image_t2']);
+			if (!$image_thumb) $image_thumb =  IMAGES."imagenotfound70.jpg";
 			echo thumbnail($image_thumb, '50px');
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
-			echo "<div class='strong text-dark'>".$data2['blog_subject']."</div>".fusion_first_words($data2['blog_blog'], '50')."\n";
-			echo "<div class='pull-right'>\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;blog_id=".$data2['blog_id']."'>".$locale['420']."</a> -\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=nform&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['451']."');\">".$locale['421']."</a>\n";
-			echo "</div>\n";
+			echo "<div><span class='strong text-dark'>".$data2['blog_subject']."</span><br/>".fusion_first_words(stripslashes($data2['blog_blog']), '50')."</div>\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."'>".$locale['blog_0420']."</a> -\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['blog_0451']."');\">".$locale['blog_0421']."</a>\n";
 			echo "</div>\n";
 			echo "</li>\n";
 		}
 	} else {
 		echo "<div class='panel-body text-center'>\n";
-		echo $locale['456'];
+		echo $locale['blog_0456'];
 		echo "</div>\n";
 	}
 	echo "</ul>\n";
 	echo "</div>\n"; // panel container
 	echo "</div>\n"; // panel default
-	$result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_image, blog_cat_language
-			, count(blog_id) as blog_count
+	$result = dbquery("SELECT blog.*, cat.blog_cat_id, cat.blog_cat_name, cat.blog_cat_image, cat.blog_cat_language,
+			count(blog_id) as blog_count,
+			count(child.blog_cat_id) as blog_parent_count
 			FROM ".DB_BLOG_CATS." cat
+			LEFT JOIN ".DB_BLOG_CATS." child on child.blog_cat_parent = cat.blog_cat_id
 			LEFT JOIN ".DB_BLOG." blog on (cat.blog_cat_id = blog.blog_cat)
-			".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." GROUP BY blog_cat_id ORDER BY blog_cat_name");
+			".(multilang_table("BL") ? "WHERE cat.blog_cat_language='".LANGUAGE."'" : "")." GROUP BY cat.blog_cat_id ORDER BY cat.blog_cat_name");
 	if (dbrows($result) > 0) {
 		while ($data = dbarray($result)) {
 			echo "<div class='panel panel-default'>\n";
 			echo "<div class='panel-heading clearfix'>\n";
 			echo "<div class='btn-group pull-right m-t-5'>\n";
-			echo "<a class='btn btn-default' href='".ADMIN."blog_cats.php".$aidlink."&amp;action=edit&amp;cat_id=".$data['blog_cat_id']."'><i class='fa fa-pencil m-r-5'></i>".$locale['420']."</a>";
-			echo "<a class='btn btn-default' href='".ADMIN."blog_cats.php".$aidlink."&amp;action=delete&amp;cat_id=".$data['blog_cat_id']."' onclick=\"return confirm('".$locale['451b']."');\"><i class='fa fa-trash m-r-5'></i> ".$locale['421']."</a>\n";
+			//echo "<a class='btn btn-default' href='".ADMIN."blog_cats.php".$aidlink."&amp;action=delete&amp;cat_id=".$data['blog_cat_id']."' onclick=\"return confirm('".$locale['']."');\"><i class='fa fa-trash m-r-5'></i> ".$locale['']."</a>\n";
+			echo "<a class='btn btn btn-default' href='".clean_request("section=blog_category&action=edit&cat_id=".$data['blog_cat_id'], array("aid"))."'>".$locale['edit']."</a>";
+			echo "<a class='".($data['blog_count'] || $data['blog_parent_count'] ? "disabled" : "")." btn btn-danger' href='".clean_request("section=blog_category&action=delete&cat_id=".$data['blog_cat_id'], array("aid"))."' onclick=\"return confirm('".$locale['blog_0451b']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a>\n";
 			echo "</div>\n";
 			echo "<div class='overflow-hide p-r-10'>\n";
-			echo "<h4 class='panel-title display-inline-block'><a ".collapse_header_link('blog-list', $data['blog_cat_id'], '0', 'm-r-10 text-bigger strong').">".$data['blog_cat_name']."</a> <span class='badge'>".$data['blog_count']."</h4>\n";
-			echo "<br/><span class='text-smaller text-uppercase'>".$data['blog_cat_language']."</span>";
+			echo "<span class='display-inline-block strong'><a ".collapse_header_link('blog-list', $data['blog_cat_id'], '0', 'm-r-10').">".$data['blog_cat_name']."</a></span>\n";
+			echo "<span class='badge m-r-10'>".$data['blog_count']."</span>";
+			echo "<span class='text-smaller mid-opacity'>".LANGUAGE."</span>";
 			echo "</div>\n"; /// end overflow-hide
 			echo "</div>\n"; // end panel heading
 			echo "<div ".collapse_footer_link('blog-list', $data['blog_cat_id'], '0').">\n";
@@ -338,19 +341,20 @@ function blog_listing() {
 					echo "<li class='list-group-item'>\n";
 					echo "<div class='pull-left m-r-10'>\n";
 					$image_thumb = get_blog_image_path($data2['blog_image'], $data2['blog_image_t1'], $data2['blog_image_t2']);
+					if (!$image_thumb) $image_thumb =  IMAGES."imagenotfound70.jpg";
 					echo thumbnail($image_thumb, '50px');
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
-					echo "<div class='strong text-dark'>".$data2['blog_subject']."</div>".fusion_first_words($data2['blog_blog'], '50')."\n";
+					echo "<div><span class='strong text-dark'>".$data2['blog_subject']."</span><br/>".fusion_first_words(stripslashes($data2['blog_blog']), '50')."\n</div>\n";
 					echo "<div class='pull-right'>\n";
-					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=nform&amp;blog_id=".$data2['blog_id']."'>".$locale['420']."</a> -\n";
-					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=nform&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['451']."');\">".$locale['421']."</a>\n";
+					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."'>".$locale['blog_0420']."</a> -\n";
+					echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['blog_0451']."');\">".$locale['blog_0421']."</a>\n";
 					echo "</div>\n";
 					echo "</li>\n";
 				}
 			} else {
 				echo "<div class='panel-body text-center'>\n";
-				echo $locale['456'];
+				echo $locale['blog_0456'];
 				echo "</div>\n";
 			}
 			// blog listing.
@@ -364,271 +368,26 @@ function blog_listing() {
 }
 
 /**
- * Blog Input Form HTML
+ * Returns nearest data unit
+ * @param $total_bit
+ * @return int
  */
-function blog_form() {
-	fusion_confirm_exit();
-	global $userdata, $locale, $blog_settings, $settings, $aidlink;
-	$tinyMce = $settings['tinymce_enabled'] ? TRUE : FALSE;
-	$fusion_mce = array();
-	if ($tinyMce) {
-		echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
-	} else {
-		$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
-		require_once INCLUDES."html_buttons_include.php";
-	}
-	$language_opts = fusion_get_enabled_languages();
-	$data = array('blog_draft' => 0,
-		'blog_sticky' => 0,
-		'blog_blog' => '',
-		'blog_datestamp' => time(),
-		'blog_extended' => '',
-		'blog_keywords' => '',
-		'blog_breaks' => !$tinyMce ? 1 : 0,
-		'blog_allow_comments' => 1,
-		'blog_allow_ratings' => 1,
-		'blog_language' => LANGUAGE,
-		'blog_visibility' => 0,
-		'blog_subject' => '',
-		'blog_start' => '',
-		'blog_end' => '',
-		'blog_cat' => 0,
-		'blog_image' => '',
-		'blog_ialign' => 'pull-left',
-		'blog_id' => 0,);
-	if (isset($_POST['save'])) {
-		$data = array('blog_id' => isset($_POST['blog_id']) ? form_sanitizer($_POST['blog_id'], '', 'blog_id') : '',
-			'blog_subject' => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
-			'blog_cat' => form_sanitizer($_POST['blog_cat'], 0, 'blog_cat'),
-			'blog_name' => $userdata['user_id'],
-			'blog_image' => isset($_POST['blog_hidden_image']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['blog_hidden_image']) ? $_POST['blog_hidden_image'] : "") : "",
-			'blog_image_t1' => isset($_POST['blog_hidden_image_t1']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['blog_hidden_image_t1']) ? $_POST['blog_hidden_image_t1'] : "") : "",
-			'blog_image_t2' => isset($_POST['blog_hidden_image_t2']) ? (preg_match("/^[-0-9A-Z_\.\[\]]+$/i", $_POST['blog_hidden_image_t2']) ? $_POST['blog_hidden_image_t2'] : "") : "",
-			'blog_ialign' => form_sanitizer($_POST['blog_ialign'], 'pull-left', 'blog_ialign'),
-			'blog_blog' => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_blog'])), // Needed for HTML to work
-			'blog_extended' => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_extended'])),
-			'blog_keywords' => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
-			'blog_datestamp' => form_sanitizer($_POST['blog_datestamp'], time(), 'blog_datestamp'),
-			'blog_start' => form_sanitizer($_POST['blog_start'], 0, 'blog_start'),
-			'blog_end' => form_sanitizer($_POST['blog_end'], 0, 'blog_end'),
-			'blog_visibility' => form_sanitizer($_POST['blog_visibility'], '0', 'blog_visibility'),
-			'blog_draft' => isset($_POST['blog_draft']) ? 1 : 0,
-			'blog_sticky' => isset($_POST['blog_sticky']) ? 1 : 0,
-			'blog_allow_comments' => isset($_POST['blog_allow_comments']) ? 1 : 0,
-			'blog_allow_ratings' => isset($_POST['blog_allow_ratings']) ? 1 : 0,
-			'blog_breaks' => isset($_POST['blog_breaks']) && !$tinyMce ? 1 : 0,
-			'blog_language' => form_sanitizer($_POST['blog_language'], '', 'blog_language'),);
-		if (isset($_FILES['blog_image'])) {
-			$upload = form_sanitizer($_FILES['blog_image'], '', 'blog_image');
-			if (isset($upload['error']) && $upload['error'] == 0) {
-				$data['blog_image'] = $upload['image_name'];
-				$data['blog_image_t1'] = $upload['thumb1_name'];
-				$data['blog_image_t2'] = $upload['thumb2_name'];
-			}
-		}
-		if (isset($data['blog_id']) && PHPFusion\Blog\Functions::validate_blog($data['blog_id'])) {
-			$result = dbquery("SELECT blog_image, blog_image_t1, blog_image_t2, blog_sticky, blog_datestamp FROM ".DB_BLOG." WHERE blog_id='".$_POST['blog_id']."'");
-			if (dbrows($result)) {
-				$data2 = dbarray($result);
-				if ($data['blog_sticky'] == "1") {
-					dbquery("UPDATE ".DB_BLOG." SET blog_sticky='0' WHERE blog_sticky='1'");
-				}
-				if (isset($_POST['del_image'])) {
-					if (!empty($data2['blog_image']) && file_exists(IMAGES_B.$data2['blog_image'])) {
-						@unlink(IMAGES_B.$data2['blog_image']);
-						$data['blog_image'] = "";
-					}
-					if (!empty($data2['blog_image_t1']) && file_exists(IMAGES_B_T.$data2['blog_image_t1'])) {
-						@unlink(IMAGES_B_T.$data2['blog_image_t1']);
-						$data['blog_image_t1'] = "";
-					}
-					if (!empty($data2['blog_image_t2']) && file_exists(IMAGES_B_T.$data2['blog_image_t2'])) {
-						@unlink(IMAGES_B_T.$data2['blog_image_t2']);
-						$data['blog_image_t2'] = "";
-					}
-				}
-				dbquery_insert(DB_BLOG, $data, 'update');
-				if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=su");
-			} else {
-				redirect(FUSION_SELF.$aidlink);
-			}
-		} else {
-			if ($data['blog_sticky'] == "1") {
-				$result = dbquery("UPDATE ".DB_BLOG." SET blog_sticky='0' WHERE blog_sticky='1'");
-			}
-			dbquery_insert(DB_BLOG, $data, 'save');
-			if (!defined('FUSION_NULL')) redirect(FUSION_SELF.$aidlink."&amp;status=sn");
+function calculate_byte($total_bit) {
+	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
+	foreach ($calc_opts as $byte => $val) {
+		if ($total_bit/$byte <= 999) {
+			return (int) $byte;
 		}
 	}
-	$result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
-	$blog_cat_opts = array();
-	$blog_cat_opts['0'] = $locale['424'];
-	if (dbrows($result)) {
-		while ($odata = dbarray($result)) {
-			$blog_cat_opts[$odata['blog_cat_id']] = $odata['blog_cat_name'];
-		}
-	}
-	$visibility_opts = array();
-	$user_groups = getusergroups();
-	while (list($key, $user_group) = each($user_groups)) {
-		$visibility_opts[$user_group['0']] = $user_group['1'];
-	}
-	$formaction = FUSION_SELF.$aidlink."&amp;section=nform";
-	if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['blog_id']) && isnum($_POST['blog_id'])) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {
-		$result = dbquery("SELECT * FROM ".DB_BLOG." WHERE blog_id='".(isset($_POST['blog_id']) ? $_POST['blog_id'] : $_GET['blog_id'])."'");
-		if (dbrows($result)) {
-			$formaction = FUSION_SELF.$aidlink."&amp;section=nform&amp;action=edit&blog_id=".$_GET['blog_id'];
-			$data = dbarray($result);
-		} else {
-			redirect(FUSION_SELF.$aidlink);
-		}
-	}
-	if (isset($_POST['preview'])) {
-		$data['blog_subject'] = form_sanitizer($_POST['blog_subject'], '', 'blog_subject');
-		$data['blog_cat'] = isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : "0";
-		$data['blog_language'] = form_sanitizer($_POST['blog_language'], '', 'blog_language');
-		$data['blog_blog'] = phpentities(stripslash($_POST['blog_blog']));
-		$data['blog_blog'] = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslash($_POST['blog_blog']));
-		$data['blog_extended'] = '';
-		if ($_POST['blog_extended']) {
-			$data['blog_extended'] = phpentities(stripslash($_POST['blog_extended']));
-			$data['blog_extended'] = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslash($_POST['blog_extended']));
-		}
-		$data['blog_keywords'] = form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords');
-		$data['blog_breaks'] = "";
-		if (isset($_POST['line_breaks'])) {
-			$data['blog_breaks'] = " 1";
-			$data['blog_blog'] = nl2br($data['blog_blog']);
-			if ($data['blog_extended']) {
-				$data['blog_extended'] = nl2br($data['blog_extended']);
-			}
-		}
-		$data['blog_start'] = (isset($_POST['blog_start']) && $_POST['blog_start']) ? $_POST['blog_start'] : '';
-		$data['blog_end'] = (isset($_POST['blog_end']) && $_POST['blog_end']) ? $_POST['blog_end'] : '';
-		$data['blog_image'] = isset($_POST['blog_image']) ? $_POST['blog_image'] : '';
-		$data['blog_image_t1'] = (isset($_POST['blog_image_t1']) ? $_POST['blog_image_t1'] : "");
-		$data['blog_image_t2'] = (isset($_POST['blog_image_t2']) ? $_POST['blog_image_t2'] : "");
-		$data['blog_ialign'] = (isset($_POST['blog_ialign']) ? $_POST['blog_ialign'] : "pull-left");
-		$data['blog_visibility'] = isnum($_POST['blog_visibility']) ? $_POST['blog_visibility'] : "0";
-		$data['blog_draft'] = isset($_POST['blog_draft']) ? " 1" : "";
-		$data['blog_sticky'] = isset($_POST['blog_sticky']) ? " 1" : "";
-		$data['blog_allow_comments'] = isset($_POST['blog_allow_comments']) ? " 1" : "";
-		$data['blog_allow_ratings'] = isset($_POST['blog_allow_ratings']) ? " 1" : "";
-		$data['blog_datestamp'] = isset($_POST['blog_datestamp']) ? $_POST['blog_datestamp'] : '';
-		if (!defined('FUSION_NULL')) {
-			echo openmodal('blog_preview', 'blog Preview');
-			echo $data['blog_blog'];
-			echo "<hr/>\n";
-			if (isset($data['blog_extended'])) {
-				echo $data['blog_extended'];
-			}
-			echo closemodal();
-		}
-	}
-	echo "<div class='m-t-20'>\n";
-	echo openform('inputform', 'post', $formaction, array('enctype' => 1, 'max_tokens' => 1));
-	echo "<div class='row'>\n";
-	echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
-	echo form_text('blog_subject', $locale['422'], $data['blog_subject'], array('required' => 1,
-		'max_length' => 200,
-		'error_text' => $locale['450']));
-	openside('');
-	$align_options = array('pull-left' => $locale['left'],
-		'blog-img-center' => $locale['center'],
-		'pull-right' => $locale['right']);
-	if ($data['blog_image']) {
-		echo "<div class='clearfix display-block' style='width:100%'>\n";
-		echo "<div class='pull-left'>\n";
-		$image_thumb = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2']);
-		echo thumbnail($image_thumb, '100px');
-		echo form_checkbox('del_image', $locale['421'], 'y');
-		echo "</div><div class='overflow-hide'>\n";
-		echo form_hidden('blog_hidden_image', '', $data['blog_image']);
-		echo form_hidden('blog_hidden_image_t1', '', $data['blog_image_t1']);
-		echo form_hidden('blog_hidden_image_t1', '', $data['blog_image_t2']);
-		echo form_select('blog_ialign', $locale['442'], $data['blog_ialign'], array("options"=>$align_options));
-		echo "</div></div>\n";
-	} else {
-		echo form_fileinput('blog_image', $locale['439'], '', array("upload_path" => IMAGES_B,
-											"thumbnail_folder" => "thumbs",
-											"thumbnail" => TRUE,
-											"max_width" => $blog_settings['blog_photo_max_w'],
-											"max_height" => $blog_settings['blog_photo_max_w'],
-											"max_byte" => $blog_settings['blog_photo_max_b'],
-											"thumbnail2" => TRUE,
-											"type" => "image"));
-		echo "<div class='small m-b-10'>".sprintf($locale['440'], parsebytesize($blog_settings['blog_photo_max_b']))."</div>\n";
-		echo form_select('blog_ialign', $locale['442'], $data['blog_ialign'], array('inline' => true, 'options'=>$align_options));
-	}
-	closeside();
-	echo form_textarea('blog_blog', $locale['425'], $data['blog_blog'], $fusion_mce);
-	echo form_textarea('blog_extended', $locale['426'], $data['blog_extended'], $fusion_mce);
-	echo "</div>\n";
-	echo "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
-	openside('');
-	echo form_select_tree("blog_cat", $locale['423'], $data['blog_cat'], array("parent_value" => $locale['424'],
-		"query" => (multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
-	echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default btn-sm m-r-10'));
-	echo form_button('save', $locale['437'], $locale['437'], array('class' => 'btn-success btn-sm',
-		'icon' => 'fa fa-check-square-o'));
-	closeside();
-	openside('');
-	echo form_select('blog_keywords', $locale['443'], $data['blog_keywords'], array('max_length' => 320,
-		'width' => '100%',
-		'error_text' => $locale['457'],
-		'tags' => 1,
-		'multiple' => 1));
-	closeside();
-	openside('');
-	echo "<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker('blog_start', $locale['427'], $data['blog_start'], array('placeholder' => $locale['429']));
-	echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
-	echo form_datepicker('blog_end', $locale['428'], $data['blog_end'], array('placeholder' => $locale['429']));
-	echo "</div>\n";
-	closeside();
-	openside('');
-	if (multilang_table("BL")) {
-		echo form_select('blog_language', $locale['global_ML100'], $data['blog_language'], array(
-			'options'=>$language_opts,
-			'placeholder' => $locale['choose'],
-			'width' => '100%'));
-	} else {
-		echo form_hidden('blog_language', '', $data['blog_language']);
-	}
-	echo form_hidden('blog_datestamp', '', $data['blog_datestamp']);
-	echo form_select('blog_visibility', $locale['430'], $data['blog_visibility'], array(
-		'options'=>$visibility_opts,
-		'placeholder' => $locale['choose'],
-		'width' => '100%'));
-	closeside();
-	openside('');
-	if ($settings['comments_enabled'] == "0" || $settings['ratings_enabled'] == "0") {
-		$sys = "";
-		if ($settings['comments_enabled'] == "0" && $settings['ratings_enabled'] == "0") {
-			$sys = $locale['455'];
-		} elseif ($settings['comments_enabled'] == "0") {
-			$sys = $locale['453'];
-		} else {
-			$sys = $locale['454'];
-		}
-		echo "<span class='required m-r-5'>*</span>".sprintf($locale['452'], $sys)."</span><br/>\n";
-	}
-	echo form_checkbox('blog_draft', $locale['431'], $data['blog_draft'], array('class' => 'm-b-0'));
-	echo form_checkbox('blog_sticky', $locale['432'], $data['blog_sticky'], array('class' => 'm-b-0'));
-	if (!$tinyMce) {
-		echo form_checkbox('blog_breaks', $locale['433'], $data['blog_breaks'], array('class' => 'm-b-0'));
-	}
-	echo form_checkbox('blog_allow_comments', $locale['434'], $data['blog_allow_comments'], array('class' => 'm-b-0'));
-	echo form_checkbox('blog_allow_ratings', $locale['435'], $data['blog_allow_ratings'], array('class' => 'm-b-0'));
-	closeside();
-	if (isset($_GET['action']) && isset($_GET['blog_id']) && isnum($_GET['blog_id']) || (isset($_POST['preview']) && (isset($_POST['blog_id']) && isnum($_POST['blog_id']))) || (isset($_GET['blog_id']) && isnum($_GET['blog_id']))) {
-		$blog_id = isset($_GET['blog_id']) && isnum($_GET['blog_id']) ? $_GET['blog_id'] : '';
-		echo form_hidden('', 'blog_id', $blog_id);
-	}
-	echo "</div>\n</div>\n";
-	echo form_button('preview', $locale['436'], $locale['436'], array('class' => 'btn-default m-r-10'));
-	echo form_button('save', $locale['437'], $locale['437'], array('class' => 'btn-success',
-		'icon' => 'fa fa-check-square-o'));
-	echo closeform();
-	echo "</div>\n";
+	return 1000000;
+}
+/**
+ * Function to progressively return closest full image_path
+ * @param $blog_image
+ * @param $blog_image_t1
+ * @param $blog_image_t2
+ * @return string
+ */
+function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes = FALSE) {
+	return PHPFusion\Blog\Functions::get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes);
 }

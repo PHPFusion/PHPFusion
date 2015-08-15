@@ -45,13 +45,11 @@ $info = array(
 	'blog_language' => LANGUAGE,
 	'blog_categories' => get_blogCatsData(),
 	'blog_categories_index' => get_blogCatsIndex(),
-
 	'allowed_filters' => array(
 	'recent' => $locale['blog_2001'],
 	'comment' => $locale['blog_2002'],
 	'rating' => $locale['blog_2003']
 	),
-
 	'blog_last_updated' => 0,
 	'blog_max_rows' => 0,
 	'blog_rows' => 0,
@@ -238,7 +236,8 @@ if (isset($_GET['author']) && isnum($_GET['author'])) {
 		);
 		$info['blog_rows'] = dbrows($result);
 	}
-} elseif (isset($_GET['cat_id']) && validate_blogCats($_GET['cat_id'])) {
+}
+elseif (isset($_GET['cat_id']) && validate_blogCats($_GET['cat_id'])) {
 	if ($_GET['cat_id'] > 0) {
 		$res = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'"));
 		add_breadcrumb(array('link' => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'], 'title' => $res['blog_cat_name']));
@@ -276,7 +275,9 @@ if (isset($_GET['author']) && isnum($_GET['author'])) {
 		);
 		$info['blog_rows'] = dbrows($result);
 	}
-} else {
+}
+else {
+
 	$info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG, groupaccess('blog_visibility')." AND (blog_start='0'||blog_start<=".time().") AND (blog_end='0'||blog_end>=".time().") AND blog_draft='0'");
 	$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? $_GET['rowstart'] : 0;
 
@@ -361,7 +362,6 @@ $archive_result = dbquery("
 			AND (blog_end='0'||blog_end>=".time().") AND blog_draft='0'
 			GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC
 			");
-
 if (dbrows($archive_result)) {
 	while ($a_data = dbarray($archive_result)) {
 		$active = isset($_GET['archive']) && $_GET['archive'] == $a_data['blog_year']."#".$a_data['blog_month'] ? 1 : 0;
@@ -369,6 +369,7 @@ if (dbrows($archive_result)) {
 		$info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] =  array('title'=>$month_locale[$a_data['blog_month']], 'link'=>INFUSIONS."blog/blog.php?archive=".$a_data['blog_year']."#".$a_data['blog_month'], 'count' => $a_data['blog_count'], 'active'=>$active);
 	}
 }
+
 $author_result = dbquery("SELECT b.blog_name, count(b.blog_id) as blog_count, u.user_id, u.user_name, u.user_status
 			FROM ".DB_BLOG." b
 			INNER JOIN ".DB_USERS." u on (b.blog_name = u.user_id)

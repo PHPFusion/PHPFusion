@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: news_cats_admin.php
-| Author: Nick Jones (Digitanium)
+| Author: PHP-Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -69,7 +69,7 @@ if (isset($_POST['save_cat'])) {
 				// FUSION_REQUEST without the "action" gets
 				redirect(clean_request("", array("action"), false));
 			} else {
-				addNotice('error', $locale['news_0352']);
+				addNotice('danger', $locale['news_0352']);
 			}
 		} else {
 			// check category name is unique when saving new
@@ -78,7 +78,7 @@ if (isset($_POST['save_cat'])) {
 				addNotice("success", $locale['news_0150']);
 				redirect(FUSION_REQUEST);
 			} else {
-				addNotice('error', $locale['news_0352']);
+				addNotice('danger', $locale['news_0352']);
 			}
 		}
 	}

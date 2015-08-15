@@ -20,11 +20,211 @@ if (!defined("IN_FUSION")) { die("Access Denied"); }
 
 if (!function_exists('render_main_blog')) {
 	function render_main_blog($info) {
+		/*
+		 * Array
+(
+    [news_cat_id] => 0
+    [news_cat_name] => News
+    [news_cat_image] =>
+    [news_cat_language] => English
+
+    [news_categories] => Array
+        (
+            [1] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=1
+                    [name] => Bugs
+                )
+
+            [2] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=2
+                    [name] => Downloads
+                )
+
+            [3] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=3
+                    [name] => Games
+                )
+
+            [4] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=4
+                    [name] => Graphics
+                )
+
+            [5] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=5
+                    [name] => Hardware
+                )
+
+            [6] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=6
+                    [name] => Journal
+                )
+
+            [7] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=7
+                    [name] => Members
+                )
+
+            [8] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=8
+                    [name] => Mods
+                )
+
+            [9] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=9
+                    [name] => Movies
+                )
+
+            [10] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=10
+                    [name] => Network
+                )
+
+            [11] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=11
+                    [name] => News
+                )
+
+            [12] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=12
+                    [name] => PHP-Fusion
+                )
+
+            [13] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=13
+                    [name] => Security
+                )
+
+            [14] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=14
+                    [name] => Software
+                )
+
+            [15] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=15
+                    [name] => Themes
+                )
+
+            [16] => Array
+                (
+                    [link] => ../../infusions/news.php?cat_id=16
+                    [name] => Windows
+                )
+
+        )
+
+    [allowed_filters] => Array
+        (
+            [recent] => Most Recent News
+            [comment] => Most Commented News
+            [rating] => Highest Rating News
+        )
+
+    [news_filter] => Array
+        (
+            [../../infusions/news/news.php?type=recent] => Most Recent News
+            [../../infusions/news/news.php?type=comment] => Most Commented News
+            [../../infusions/news/news.php?type=rating] => Highest Rating News
+        )
+
+    [news_item_rows] => 2
+    [news_last_updated] => 1439522774
+    [news_items] => Array
+        (
+            [1] => Array
+                (
+                    [news_id] => 6
+                    [news_subject] => Apple Reports Record Second Quarter Results
+                    [news_url] => ../../infusions/news/news.php?readmore=6
+                    [news_anchor] => <a name='news_6' id='news_6'></a>
+                    [news_news] => Apple today announced financial results for its fiscal 2015 second quarter ended March 28. The company posted quarterly revenue of $58 billion and quarterly net profit of $13.6 billion, or $2.33 per diluted share. These results compare to revenue of $45.6 billion and net profit of $10.2 billion, or $1.66 per diluted share, in the year-ago quarter. Gross margin was 40.8 percent compared to 39.3 percent in the year-ago quarter. International sales accounted for 69 percent of the quarter’s revenue. “We are thrilled by the continued strength of iPhone, Mac, and the App Store, which drove our best March quarter results ever,” said Tim Cook, Apple’s CEO. “We’re seeing a higher rate of people switching to iPhone than we’ve experienced in previous cycles, and we’re off to an exciting start to the June quarter with the launch of Apple Watch.” Read more: apple.com/pr
+                    [news_keywords] => Apple
+                    [user_id] => 1
+                    [user_name] => Admin
+                    [user_status] => 0
+                    [user_avatar] =>
+                    [user_level] => -103
+                    [news_date] => 1439522774
+                    [cat_id] => 0
+                    [cat_name] =>
+                    [cat_image] => <a href='../../infusions/news/news.php?readmore=6'><img class='img-responsive' src='../../infusions/news/images/thumbs/o-computer-happy-facebook_t1.jpg' alt='Apple Reports Record Second Quarter Results' />
+</a>
+                    [news_image] => <a class='img-link' href='
+					../../infusions/news/news.php?readmore=6
+					'><img class='img-responsive' src='../../infusions/news/images/thumbs/o-computer-happy-facebook_t1.jpg' alt='Apple Reports Record Second Quarter Results' />
+</a>
+
+                    [news_image_src] => ../../infusions/news/images/o-computer-happy-facebook.jpg
+                    [news_ext] => n
+                    [news_reads] => 12
+                    [news_comments] => 0
+                    [news_sum_rating] => 0
+                    [news_count_votes] => 0
+                    [news_allow_comments] => 0
+                    [news_allow_ratings] => 0
+                    [news_sticky] => 0
+                )
+
+            [2] => Array
+                (
+                    [news_id] => 5
+                    [news_subject] => Apple Announces New Environmental Initiatives in China
+                    [news_url] => ../../infusions/news/news.php?readmore=5
+                    [news_anchor] => <a name='news_5' id='news_5'></a>
+                    [news_news] => Apple today announced that its board of directors has authorized an increase of more than 50 percent to the company’s program to return capital to shareholders. Under the expanded program, Apple plans to utilize a cumulative total of $200 billion of cash by the end of March 2017. As part of the revised program, the board has increased its share repurchase authorization to $140 billion from the $90 billion level announced last year. In addition, the company expects to continue to net-share-settle vesting restricted stock units. The board has also approved an increase of 11 percent to the company’s quarterly dividend, and has declared a dividend of $0.52 per share, payable on May 14, 2015, to shareholders of record as of the close of business on May 11. “We believe Apple has a bright future ahead, and the unprecedented size of our capital return program reflects that strong confidence,” said Tim Cook, Apple’s CEO. “While most of our program will focus on buying back shares, we know that the dividend is very important to many of our investors, so we’re raising it for the third time in less than three years.”
+                    [news_keywords] => 123456
+                    [user_id] => 1
+                    [user_name] => Admin
+                    [user_status] => 0
+                    [user_avatar] =>
+                    [user_level] => -103
+                    [news_date] => 1439522246
+                    [cat_id] => 0
+                    [cat_name] =>
+                    [cat_image] => <a href='../../infusions/news/news.php?readmore=5'><img class='img-responsive' src='../../infusions/news/images/thumbs/texting-phone-woman_1_t1.jpg' alt='Apple Announces New Environmental Initiatives in China' />
+</a>
+                    [news_image] => <a class='img-link' href='
+					../../infusions/news/news.php?readmore=5
+					'><img class='img-responsive' src='../../infusions/news/images/thumbs/texting-phone-woman_1_t1.jpg' alt='Apple Announces New Environmental Initiatives in China' />
+</a>
+
+                    [news_image_src] => ../../infusions/news/images/texting-phone-woman_1.jpg
+                    [news_ext] => n
+                    [news_reads] => 4
+                    [news_comments] => 0
+                    [news_sum_rating] => 0
+                    [news_count_votes] => 0
+                    [news_allow_comments] => 0
+                    [news_allow_ratings] => 0
+                    [news_sticky] => 0
+                )
+
+        )
+
+)
+		 */
+
+
 		echo render_breadcrumbs();
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-9 overflow-hide'>\n";
 		if (isset($_GET['readmore'])) {
-			echo display_blog_item($info);
+			echo display_blog_item($info); // change this integration
 		} else {
 			echo display_blog_index($info);
 		}
