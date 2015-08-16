@@ -32,23 +32,25 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	// FUSION_REQUEST without the "action" gets
 	redirect(clean_request("", array("action"), FALSE));
 }
-$data = array("blog_cat_id" => 0,
-	"blog_cat_name" => "",
-	"blog_cat_hidden" => array(),
-	"blog_cat_parent" => 0,
-	"blog_cat_image" => "",
-	"blog_cat_language" => LANGUAGE,);
+$data = array(
+	"blog_cat_id" => 0, "blog_cat_name" => "", "blog_cat_hidden" => array(), "blog_cat_parent" => 0,
+	"blog_cat_image" => "", "blog_cat_language" => LANGUAGE,
+);
 $formAction = FUSION_REQUEST;
 $formTitle = $locale['blog_0401'];
 // if edit, override $data
 if (isset($_POST['save_cat'])) {
-	$inputArray = array("blog_cat_id" => form_sanitizer($_POST['blog_cat_id'], "", "blog_cat_id"),
+	$inputArray = array(
+		"blog_cat_id" => form_sanitizer($_POST['blog_cat_id'], "", "blog_cat_id"),
 		"blog_cat_name" => form_sanitizer($_POST['blog_cat_name'], "", "blog_cat_name"),
 		"blog_cat_parent" => form_sanitizer($_POST['blog_cat_parent'], 0, "blog_cat_parent"),
 		"blog_cat_image" => form_sanitizer($_POST['blog_cat_image'], "", "blog_cat_image"),
-		"blog_cat_language" => form_sanitizer($_POST['blog_cat_language'], LANGUAGE, "blog_cat_language"),);
-	$categoryNameCheck = array("when_updating" => "blog_cat_name='".$inputArray['blog_cat_name']."' and blog_cat_id !='".$inputArray['blog_cat_id']."'",
-		"when_saving" => "blog_cat_name='".$inputArray['blog_cat_name']."'",);
+		"blog_cat_language" => form_sanitizer($_POST['blog_cat_language'], LANGUAGE, "blog_cat_language"),
+	);
+	$categoryNameCheck = array(
+		"when_updating" => "blog_cat_name='".$inputArray['blog_cat_name']."' and blog_cat_id !='".$inputArray['blog_cat_id']."'",
+		"when_saving" => "blog_cat_name='".$inputArray['blog_cat_name']."'",
+	);
 	if (defender::safe()) {
 		// check category name is unique when updating
 		if (dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_id='".$inputArray['blog_cat_id']."'")) {
@@ -87,22 +89,23 @@ opentable($formTitle);
 echo openform("addcat", "post", $formAction);
 openside("");
 echo form_hidden("blog_cat_id", "", $data['blog_cat_id']);
-echo form_text("blog_cat_name", $locale['blog_0530'], $data['blog_cat_name'], array("required" => TRUE,
-								  "inline" => TRUE,
-								  "error_text" => $locale['blog_0560']));
-echo form_select_tree("blog_cat_parent", $locale['blog_0533'], $data['blog_cat_parent'], array("inline" => TRUE,
-										   "disable_opts" => $data['blog_cat_hidden'],
-										   "hide_disabled" => TRUE,
-										   "query" => (multilang_table("NS") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
+echo form_text("blog_cat_name", $locale['blog_0530'], $data['blog_cat_name'], array(
+	"required" => TRUE, "inline" => TRUE, "error_text" => $locale['blog_0560']
+));
+echo form_select_tree("blog_cat_parent", $locale['blog_0533'], $data['blog_cat_parent'], array(
+	"inline" => TRUE, "disable_opts" => $data['blog_cat_hidden'], "hide_disabled" => TRUE,
+	"query" => (multilang_table("NS") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")
+), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
 if (multilang_table("BL")) {
-	echo form_select("blog_cat_language", $locale['global_ML100'], $data['blog_cat_language'], array("inline" => TRUE,
-											"options" => fusion_get_enabled_languages(),
-											"placeholder" => $locale['choose']));
+	echo form_select("blog_cat_language", $locale['global_ML100'], $data['blog_cat_language'], array(
+		"inline" => TRUE, "options" => fusion_get_enabled_languages(), "placeholder" => $locale['choose']
+	));
 } else {
 	echo form_hidden("blog_cat_language", "", $data['blog_cat_language']);
 }
-echo form_select("blog_cat_image", $locale['blog_0531'], $data['blog_cat_image'], array("inline" => TRUE,
-									 "options" => blogCatImageOpts(),));
+echo form_select("blog_cat_image", $locale['blog_0531'], $data['blog_cat_image'], array(
+	"inline" => TRUE, "options" => blogCatImageOpts(),
+));
 echo form_button("save_cat", $locale['blog_0532'], $locale['blog_0532'], array("class" => "btn-success"));
 closeside();
 openside($locale['blog_0407']);
@@ -118,10 +121,12 @@ if ($rows != 0) {
 		echo "<strong>".getblogCatPath($data['blog_cat_id'])."</strong>\n<br/>\n";
 		echo "<img src='".get_image("bl_".$data['blog_cat_name'])."' alt='".$data['blog_cat_name']."' class='blog-category img-thumbnail m-r-20' />\n";
 		echo "<div class='display-block m-t-5'>\n";
-		echo "<span class='small'><a href='".clean_request("action=edit&cat_id=".$data['blog_cat_id'], array("aid",
-				"section"), TRUE)."'><i class='fa fa-edit'></i> ".$locale['edit']."</a> -\n";
-		echo "<a href='".clean_request("action=delete&cat_id=".$data['blog_cat_id'], array("aid",
-				"section"), TRUE)."' onclick=\"return confirm('".$locale['blog_0550']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a></span></div>\n";
+		echo "<span class='small'><a href='".clean_request("action=edit&cat_id=".$data['blog_cat_id'], array(
+				"aid", "section"
+			), TRUE)."'><i class='fa fa-edit'></i> ".$locale['edit']."</a> -\n";
+		echo "<a href='".clean_request("action=delete&cat_id=".$data['blog_cat_id'], array(
+				"aid", "section"
+			), TRUE)."' onclick=\"return confirm('".$locale['blog_0550']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a></span></div>\n";
 		echo "</div>\n";
 		$counter++;
 	}

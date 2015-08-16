@@ -28,8 +28,9 @@ $inf_email = "";
 $inf_weburl = "https://www.php-fusion.co.uk";
 $inf_folder = "blog";
 // Multilanguage table for Administration
-$inf_mlt[1] = array("title" => $locale['blog']['title'],
-	"rights" => "BL",);
+$inf_mlt[1] = array(
+	"title" => $locale['blog']['title'], "rights" => "BL",
+);
 // Create tables
 $inf_newtable[1] = DB_BLOG." (
 	blog_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,

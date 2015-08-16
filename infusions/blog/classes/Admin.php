@@ -24,11 +24,10 @@ use PHPFusion\QuantumFields;
 
 class Admin {
 	// do category here
-	private $blogCatData = array('blog_cat_id' => 0,
-		'blog_cat_parent' => 0,
-		'blog_cat_name' => '',
-		'blog_cat_image' => '',
-		'blog_cat_language' => '');
+	private $blogCatData = array(
+		'blog_cat_id' => 0, 'blog_cat_parent' => 0, 'blog_cat_name' => '', 'blog_cat_image' => '',
+		'blog_cat_language' => ''
+	);
 	private $edit_category = FALSE;
 	private $formaction = '';
 	private $catIndex = array();
@@ -68,11 +67,13 @@ class Admin {
 	private function set_blogcatDB() {
 		global $defender, $aidlink, $locale;
 		if (isset($_POST['save_cat'])) {
-			$this->blogCatData = array('blog_cat_id' => form_sanitizer($_POST['blog_cat_id'], '', 'blog_cat_id'),
+			$this->blogCatData = array(
+				'blog_cat_id' => form_sanitizer($_POST['blog_cat_id'], '', 'blog_cat_id'),
 				'blog_cat_name' => form_sanitizer($_POST['blog_cat_name'], '', 'blog_cat_name', 1),
 				'blog_cat_image' => stripinput($_POST['blog_cat_image']),
 				'blog_cat_parent' => form_sanitizer($_POST['blog_cat_parent'], '', 'blog_cat_parent'),
-				'blog_cat_language' => form_sanitizer($_POST['blog_cat_language'], '', 'blog_cat_language'),);
+				'blog_cat_language' => form_sanitizer($_POST['blog_cat_language'], '', 'blog_cat_language'),
+			);
 			$this->blogCatData['blog_cat_language'] = str_replace('|', '.', $this->blogCatData['blog_cat_language']);
 			if ($this->blogCatData['blog_cat_name']) {
 				self::check_duplicated_names();
@@ -185,18 +186,20 @@ class Admin {
 		echo "<div class='row'>\n";
 		echo "<div class='col-xs-12 col-sm-8'>\n";
 		if (multilang_table("BL")) {
-			echo QuantumFields::quantum_multilocale_fields('blog_cat_name', $locale['430'], $this->blogCatData['blog_cat_name'], array('required' => 1,
-				'class' => 'm-b-5',
-				'error_text' => $locale['460']));
+			echo QuantumFields::quantum_multilocale_fields('blog_cat_name', $locale['430'], $this->blogCatData['blog_cat_name'], array(
+				'required' => 1, 'class' => 'm-b-5', 'error_text' => $locale['460']
+			));
 		} else {
-			echo form_text('blog_cat_name', $locale['430'], $this->blogCatData['blog_cat_name'], array('required' => 1,
-				'error_text' => $locale['460']));
+			echo form_text('blog_cat_name', $locale['430'], $this->blogCatData['blog_cat_name'], array(
+				'required' => 1, 'error_text' => $locale['460']
+			));
 		}
 		echo "</div><div class='col-xs-12 col-sm-4'>\n";
 		openside('');
 		$this->blogCatData['blog_cat_parent'] = isset($_GET['parent_id']) ? $_GET['parent_id'] : $this->blogCatData['blog_cat_parent'];
-		echo form_select_tree("blog_cat_parent", $locale['437'], $this->blogCatData['blog_cat_parent'], array("disable_opts" => array($this->blogCatData['blog_cat_id']),
-			"hide_disabled" => 1), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
+		echo form_select_tree("blog_cat_parent", $locale['437'], $this->blogCatData['blog_cat_parent'], array(
+			"disable_opts" => array($this->blogCatData['blog_cat_id']), "hide_disabled" => 1
+		), DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
 		echo form_select('blog_cat_image', $locale['431'], $this->blogCatData['blog_cat_image'], array("options" => ImageRepo::getFileList(IMAGES_BC)));
 		echo form_hidden('blog_cat_id', '', $this->blogCatData['blog_cat_id']);
 		closeside();
@@ -213,11 +216,10 @@ class Admin {
 				$this->blogCatData['blog_cat_language'] = (is_array($this->blogCatData['blog_cat_language'])) ? $this->blogCatData['blog_cat_language'] : fusion_get_enabled_languages();
 				$check = in_array($lang, $this->blogCatData['blog_cat_language']) ? 1 : 0;
 			}
-			echo form_checkbox("blog_cat_language[]", $lang, $check, array('input_id' => "blog_cat_lang-".$lang,
-				'inline' => 1,
-				'class' => 'display-inline',
-				'width' => "100px",
-				'value' => $lang));
+			echo form_checkbox("blog_cat_language[]", $lang, $check, array(
+				'input_id' => "blog_cat_lang-".$lang, 'inline' => 1, 'class' => 'display-inline', 'width' => "100px",
+				'value' => $lang
+			));
 		}
 		echo "</div>\n";
 		echo "</div>\n";
@@ -234,12 +236,15 @@ class Admin {
 		global $aidlink, $locale;
 		function breadcrumb_arrays($index, $id) {
 			global $aidlink;
-			$crumb = array('link' => array(),
-				'title' => array());
+			$crumb = array(
+				'link' => array(), 'title' => array()
+			);
 			if (isset($index[get_parent($index, $id)])) {
 				$_name = dbarray(dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($id)."'"));
-				$crumb = array('link' => array(FUSION_SELF.$aidlink."&amp;parent_id=".$_name['blog_cat_id']),
-					'title' => array(QuantumFields::parse_label($_name['blog_cat_name'])));
+				$crumb = array(
+					'link' => array(FUSION_SELF.$aidlink."&amp;parent_id=".$_name['blog_cat_id']),
+					'title' => array(QuantumFields::parse_label($_name['blog_cat_name']))
+				);
 				if (isset($index[get_parent($index, $id)])) {
 					if (get_parent($index, $id) == 0) {
 						return $crumb;
