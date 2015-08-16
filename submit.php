@@ -78,62 +78,7 @@ if (!$sum or empty($modules[$stype])) {
 } elseif ($stype === "n") {
 	include INFUSIONS."news/news_submit.php";
 } elseif ($stype === "b") {
-	if (isset($_POST['submit_blog'])) {
-		$submit_info['blog_subject'] = form_sanitizer($_POST['blog_subject'], '', 'blog_subject');
-		$submit_info['blog_cat'] = isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : "0";
-		$submit_info['blog_snippet'] = nl2br(parseubb(stripinput($_POST['blog_snippet'])));
-		$submit_info['blog_snippet'] = form_sanitizer($submit_info['blog_snippet'], '', 'blog_snippet');
-		$submit_info['blog_body'] = nl2br(parseubb(stripinput($_POST['blog_body'])));
-		$submit_info['blog_body'] = form_sanitizer($submit_info['blog_body'], '', 'blog_body');
-		if (!defined('FUSION_NULL')) {
-			$result = dbquery("INSERT INTO ".DB_SUBMISSIONS." (submit_type, submit_user, submit_datestamp, submit_criteria) VALUES('b', '".$userdata['user_id']."', '".time()."', '".addslashes(serialize($submit_info))."')");
-			add_to_title($locale['global_200'].$locale['450b']);
-			opentable($locale['450b']);
-			echo "<div style='text-align:center'><br />\n".$locale['460b']."<br /><br />\n";
-			echo "<a href='submit.php?stype=b'>".$locale['461b']."</a><br /><br />\n";
-			echo "<a href='index.php'>".$locale['412b']."</a><br /><br />\n</div>\n";
-			closetable();
-		}
-	}
-	if (isset($_POST['preview_blog'])) {
-		$blog_subject = stripinput($_POST['blog_subject']);
-		$blog_cat = isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : "0";
-		$blog_snippet = stripinput($_POST['blog_snippet']);
-		$blog_body = stripinput($_POST['blog_body']);
-		opentable($blog_subject);
-		echo $locale['478b']." ".nl2br(parseubb($blog_snippet))."<br /><br />";
-		echo $locale['472b']." ".nl2br(parseubb($blog_body));
-		closetable();
-	} else {
-		$blog_subject = "";
-		$blog_cat = "0";
-		$blog_snippet = "";
-		$blog_body = "";
-	}
-	$result2 = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_language FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE blog_cat_language='".LANGUAGE."'" : "")." ORDER BY blog_cat_name");
-	if (dbrows($result2)) {
-		$cat_list = array();
-		while ($data2 = dbarray($result2)) {
-			$cat_list[$data2['blog_cat_id']] = $data2['blog_cat_name'];
-		}
-	}
-	add_to_title($locale['global_200'].$locale['450b']);
-	opentable($locale['450b']);
-	echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-	echo "<div class='alert alert-info m-b-20 submission-guidelines'>".$locale['470b']."</div>\n";
-	echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=b", array('max_tokens' => 1));
-	echo form_text('blog_subject', $locale['471b'], $blog_subject, array("required" => 1));
-	echo form_select('blog_cat', $locale['476b'], $blog_cat, array("options" => $cat_list, "required" => 1));
-	echo form_textarea('blog_snippet', $locale['478b'], $blog_snippet, array('bbcode' => 1,
-		'form_name' => 'submit_form'));
-	echo form_textarea('blog_body', $locale['472b'], $blog_body, array("required" => 1,
-		'bbcode' => 1,
-		'form_name' => 'submit_form'));
-	echo fusion_get_settings("site_seo") ? "" : form_button('preview_blog', $locale['474b'], $locale['474b'], array('class' => 'btn-primary m-r-10'));
-	echo form_button('submit_blog', $locale['475b'], $locale['475b'], array('class' => 'btn-primary'));
-	echo closeform();
-	echo "</div>\n</div>\n";
-	closetable();
+	include INFUSIONS."blog/blog_submit.php";
 } elseif ($stype === "a") {
 	if (isset($_POST['submit_article'])) {
 		if ($_POST['article_subject'] != "" && $_POST['article_body'] != "") {

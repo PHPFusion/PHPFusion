@@ -12,37 +12,7 @@ $locale['422'] = "Link Name:";
 $locale['423'] = "Link URL:";
 $locale['424'] = "Link Description:";
 $locale['425'] = "Submit Link";
-// Submit News & Blog
-$locale['450'] = "Submit News";
-$locale['450b'] = "Submit Blog";
-// Submit News & Blog Success
-$locale['460'] = "Thank you for submitting your News";
-$locale['461'] = "Submit another News item";
-$locale['460b'] = "Thank you for submitting your Blog";
-$locale['461b'] = "Submit another Blog item";
-// Submit News & Blog Form
-$locale['470'] = "Use the following form to submit News. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. News
-should be applicable to the content of this site. Unsuitable submissions will be deleted.";
-$locale['471'] = "Subject:";
-$locale['472'] = "News:";
-$locale['473'] = " Enable Automatic Line-Breaks";
-$locale['474'] = "Preview News";
-$locale['475'] = "Submit News";
-$locale['476'] = "Category:";
-$locale['477'] = "- None -";
-$locale['478'] = "News Snippet:";
-$locale['470b'] = "Use the following form to submit a Blog. Your submission will be reviewed by an
-Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. Blog
-should be applicable to the content of this site. Unsuitable submissions will be deleted.";
-$locale['471b'] = "Subject:";
-$locale['472b'] = "Blog:";
-$locale['473b'] = " Enable Automatic Line-Breaks";
-$locale['474b'] = "Preview Blog";
-$locale['475b'] = "Submit Blog";
-$locale['476b'] = "Category:";
-$locale['477b'] = "- None -";
-$locale['478b'] = "Blog Snippet:";
+
 // Submit Article
 $locale['500'] = "Submit Article";
 // Submit Article Success

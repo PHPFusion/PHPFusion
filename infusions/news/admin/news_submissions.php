@@ -100,9 +100,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 	else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
 		$result = dbquery("
 			SELECT
-			ts.submit_datestamp, ts.submit_criteria,
+			ts.submit_datestamp, ts.submit_criteria
 			FROM ".DB_SUBMISSIONS." ts
-			WHERE submit_type='n' where submit_id='".intval($_GET['submit_id'])."'
+			WHERE submit_type='n' and submit_id='".intval($_GET['submit_id'])."'
 		");
 		if (dbrows($result)>0) {
 			$data = dbarray($result);

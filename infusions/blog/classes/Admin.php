@@ -4,8 +4,8 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
-| Filename: Admin.php
-| Author: Frederick Mc CHan (Hien)
+| Filename: classes/Admin.php
+| Author: Frederick Mc Chan (Hien)
 | Dev Scope: To merge Categories and Blog into a single interface.
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,9 +19,7 @@
 namespace PHPFusion\Blog;
 if (!defined("IN_FUSION")) {
 	die("Access Denied");
-}
-
-use PHPFusion\ImageRepo;
+}use PHPFusion\ImageRepo;
 use PHPFusion\QuantumFields;
 
 class Admin {

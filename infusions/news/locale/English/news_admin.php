@@ -50,28 +50,28 @@ $locale['news_0153'] = "There are news items or sub-categories linked to this ca
 $locale['news_0154'] = "News Category deleted";
 
 // News form
-$locale['news_0200'] = "Subject";
-$locale['news_0201'] = "Category";
+$locale['news_0200'] = "Subject:";
+$locale['news_0201'] = "Category:";
 $locale['news_0202'] = "Uncategorized";
-$locale['news_0203'] = "Snippet";
+$locale['news_0203'] = "Snippet:";
 $locale['news_0203a'] = "Short News Introduction";
-$locale['news_0204'] = "Extended";
+$locale['news_0204'] = "Extended:";
 $locale['news_0203b'] = "News Content";
-$locale['news_0205'] = "Keywords";
+$locale['news_0205'] = "Keywords:";
 $locale['news_0205a'] = "Hit enter after each keywords";
-$locale['news_0206'] = "Start Date";
-$locale['news_0207'] = "End Date";
+$locale['news_0206'] = "Start Date:";
+$locale['news_0207'] = "End Date:";
 $locale['news_0208'] = "(Optional)";
-$locale['news_0209'] = "Visibility";
+$locale['news_0209'] = "Visibility:";
 $locale['news_0210'] = "Save as draft";
 $locale['news_0211'] = "Make this news item sticky";
 $locale['news_0212'] = "Automatic Line-Breaks";
 $locale['news_0213'] = "Enable Comments";
 $locale['news_0214'] = "Enable Ratings";
 $locale['news_0215'] = "Draft";
-$locale['news_0216'] = "News Image";
+$locale['news_0216'] = "News Image:";
 $locale['news_0217'] = "Max. filesize %s / Allowed filetypes GIF, JPEG or PNG.";
-$locale['news_0218'] = "Image Position";
+$locale['news_0218'] = "Image Position:";
 $locale['news_0219'] = "Pagebreak";
 $locale['news_0240'] = "Preview News";
 $locale['news_0241'] = "Save News";
@@ -102,3 +102,12 @@ $locale['news_0352'] = "This category already exists.";
 $locale['news_0400'] = "News Submissions";
 $locale['news_0401'] = "Submission Image";
 $locale['news_0402'] = "Required extended news?";
+
+// Public Submissions Form
+$locale['news_0700'] = "Submit News";
+$locale['news_0701'] = "Thank you for submitting your News";
+$locale['news_0702'] = "Submit another News item";
+$locale['news_0703'] = "Use the following form to submit News. Your submission will be reviewed by an
+Administrator. ".fusion_get_settings('sitename')." reserves the right to amend or edit any submission. News
+should be applicable to the content of this site. Unsuitable submissions will be deleted.";
+$locale['news_0704'] = "Return to ".fusion_get_settings('sitename');

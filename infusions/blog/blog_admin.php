@@ -52,42 +52,32 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_i
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-
-
-$allowed_pages = array(
-	"blog",
+$allowed_pages = array("blog",
 	"blog_category",
 	"blog_form",
 	"submissions",
-	"settings"
-);
+	"settings");
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "blog";
-
-$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) ? true : false;
-
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) ? TRUE : FALSE;
 $master_title['title'][] = $locale['blog_0400'];
 $master_title['id'][] = 'blog';
 $master_title['icon'] = '';
-
 $master_title['title'][] = $edit ? $locale['blog_0402'] : $locale['blog_0401'];
 $master_title['id'][] = 'blog_form';
 $master_title['icon'] = '';
-
 $master_title['title'][] = $locale['blog_0502'];
 $master_title['id'][] = 'blog_category';
 $master_title['icon'] = '';
-
 $master_title['title'][] = $locale['blog_0406'];
 $master_title['id'][] = 'settings';
 $master_title['icon'] = '';
-
+$master_title['title'][] = $locale['blog_0600'];
+$master_title['id'][] = 'submissions';
+$master_title['icon'] = '';
 $tab_active = $_GET['section'];
-
 opentable($locale['blog_0405']);
 echo opentab($master_title, $tab_active, 'blog', 1);
-
-
-switch($_GET['section']) {
+switch ($_GET['section']) {
 	case "blog_category":
 		include "admin/blog_cat.php";
 		break;
@@ -95,7 +85,7 @@ switch($_GET['section']) {
 		include "admin/blog_settings.php";
 		break;
 	case "blog_form":
-		add_breadcrumb(array('link'=>'', 'title'=>$edit ? $locale['blog_0402'] : $locale['blog_0401']));
+		add_breadcrumb(array('link' => '', 'title' => $edit ? $locale['blog_0402'] : $locale['blog_0401']));
 		include "admin/blog.php";
 		break;
 	case "submissions":
@@ -107,12 +97,10 @@ switch($_GET['section']) {
 }
 echo closetab();
 closetable();
-
 require_once THEMES."templates/footer.php";
-
-
 if (isset($_GET['section']) && $_GET['section'] == 'nform') {
-	add_breadcrumb(array('link' => '', 'title' => isset($_GET['blog_id']) ? $locale['blog_0402'] : $locale['blog_0401']));
+	add_breadcrumb(array('link' => '',
+					   'title' => isset($_GET['blog_id']) ? $locale['blog_0402'] : $locale['blog_0401']));
 	echo opentabbody($master_title['title'][1], 'nform', $tab_active, 1);
 	blog_form();
 	echo closetabbody();
@@ -127,10 +115,8 @@ if (isset($_GET['section']) && $_GET['section'] == 'sform') {
 	while ($data = dbarray($result)) {
 		$settings2[$data['settings_name']] = $data['settings_value'];
 	}
-
 	if (isset($_POST['savesettings'])) {
-		$settings2 = array(
-			'blog_image_link' => form_sanitizer($_POST['blog_image_link'], '0', 'blog_image_link'),
+		$settings2 = array('blog_image_link' => form_sanitizer($_POST['blog_image_link'], '0', 'blog_image_link'),
 			'blog_image_frontpage' => form_sanitizer($_POST['blog_image_frontpage'], '0', 'blog_image_frontpage'),
 			'blog_image_readmore' => form_sanitizer($_POST['blog_image_readmore'], '0', 'blog_image_readmore'),
 			'blog_thumb_ratio' => form_sanitizer($_POST['blog_thumb_ratio'], '0', 'blog_thumb_ratio'),
@@ -264,38 +250,35 @@ if (isset($_GET['section']) && $_GET['section'] == 'sform') {
 	echo closeform();
 	closetable();
 }
-
 /**
  * Blog Listing HTML
  */
 function blog_listing() {
 	global $aidlink, $locale;
-
 	$result2 = dbquery("
 	SELECT blog_id, blog_subject, blog_image, blog_image_t1, blog_image_t2, blog_blog, blog_draft FROM ".DB_BLOG."
 	WHERE ".(multilang_table("BL") ? "blog_language='".LANGUAGE."' AND " : "")." blog_cat='0'
 	ORDER BY blog_draft DESC, blog_sticky DESC, blog_datestamp DESC
 	");
-
 	echo "<div class='m-t-20'>\n";
 	echo opencollapse('blog-list');
 	// uncategorized listing
 	echo "<div class='panel panel-default'>\n";
 	echo "<div class='panel-heading clearfix'>\n";
 	echo "<div class='overflow-hide'>\n";
-	echo "<span class='display-inline-block strong'><a ".collapse_header_link('blog-list', '0', true, 'm-r-10').">".$locale['blog_0424']."</a></span>\n";
+	echo "<span class='display-inline-block strong'><a ".collapse_header_link('blog-list', '0', TRUE, 'm-r-10').">".$locale['blog_0424']."</a></span>\n";
 	echo "<span class='badge m-r-10'>".dbrows($result2)."</span>\n";
 	echo "<span class='text-smaller mid-opacity'>".LANGUAGE."</span>";
 	echo "</div>\n";
 	echo "</div>\n"; // end panel heading
-	echo "<div ".collapse_footer_link('blog-list', '0', true).">\n";
+	echo "<div ".collapse_footer_link('blog-list', '0', TRUE).">\n";
 	echo "<ul class='list-group m-10'>\n";
 	if (dbrows($result2) > 0) {
 		while ($data2 = dbarray($result2)) {
 			echo "<li class='list-group-item'>\n";
 			echo "<div class='pull-left m-r-10'>\n";
 			$image_thumb = get_blog_image_path($data2['blog_image'], $data2['blog_image_t1'], $data2['blog_image_t2']);
-			if (!$image_thumb) $image_thumb =  IMAGES."imagenotfound70.jpg";
+			if (!$image_thumb) $image_thumb = IMAGES."imagenotfound70.jpg";
 			echo thumbnail($image_thumb, '50px');
 			echo "</div>\n";
 			echo "<div class='overflow-hide'>\n";
@@ -343,7 +326,7 @@ function blog_listing() {
 					echo "<li class='list-group-item'>\n";
 					echo "<div class='pull-left m-r-10'>\n";
 					$image_thumb = get_blog_image_path($data2['blog_image'], $data2['blog_image_t1'], $data2['blog_image_t2']);
-					if (!$image_thumb) $image_thumb =  IMAGES."imagenotfound70.jpg";
+					if (!$image_thumb) $image_thumb = IMAGES."imagenotfound70.jpg";
 					echo thumbnail($image_thumb, '50px');
 					echo "</div>\n";
 					echo "<div class='overflow-hide'>\n";
@@ -378,11 +361,12 @@ function calculate_byte($total_bit) {
 	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 	foreach ($calc_opts as $byte => $val) {
 		if ($total_bit/$byte <= 999) {
-			return (int) $byte;
+			return (int)$byte;
 		}
 	}
 	return 1000000;
 }
+
 /**
  * Function to progressively return closest full image_path
  * @param $blog_image

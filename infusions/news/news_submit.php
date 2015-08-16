@@ -2,7 +2,7 @@
 // News 9.0 submissions
 $news_settings = get_settings("news");
 include INFUSIONS."news/locale/".LOCALESET."news_admin.php";
-opentable("<i class='fa fa-newspaper-o fa-lg m-r-10'></i>".$locale['450']);
+opentable("<i class='fa fa-newspaper-o fa-lg m-r-10'></i>".$locale['news_0400']);
 if (iMEMBER && $news_settings['news_allow_submission']) {
 
 	$criteriaArray = array(
@@ -52,16 +52,16 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 				"submit_criteria" => addslashes(serialize($criteriaArray))
 			);
 			dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
-			addNotice("success", $locale['460']);
+			addNotice("success", $locale['news_0701']);
 			redirect(clean_request("submitted=n", array("stype"), true));
 		}
 	}
 
 	if (isset($_GET['submitted']) && $_GET['submitted'] == "n") {
-		add_to_title($locale['global_200'].$locale['450']);
-		echo "<div class='well text-center'><p><strong>".$locale['460']."</strong></p>";
-		echo "<p><a href='submit.php?stype=n'>".$locale['461']."</a></p>";
-		echo "<p><a href='index.php'>".$locale['412']."</a></p>\n";
+		add_to_title($locale['global_200'].$locale['news_0400']);
+		echo "<div class='well text-center'><p><strong>".$locale['news_0701']."</strong></p>";
+		echo "<p><a href='submit.php?stype=n'>".$locale['news_0702']."</a></p>";
+		echo "<p><a href='index.php'>".$locale['news_0704']."</a></p>\n";
 		echo "</div>\n";
 	} else {
 		// Preview
@@ -71,15 +71,15 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 			$news_snippet = stripinput($_POST['news_news']);
 			$news_body = stripinput($_POST['news_body']);
 			opentable($news_subject);
-			echo $locale['478']." ".nl2br(parseubb($news_snippet))."<br /><br />";
-			echo $locale['472']." ".nl2br(parseubb($news_body));
+			echo $locale['news_0203']." ".nl2br(parseubb($news_snippet))."<br /><br />";
+			echo $locale['news_0204']." ".nl2br(parseubb($news_body));
 			closetable();
 		}
-		add_to_title($locale['global_200'].$locale['450']);
+		add_to_title($locale['global_200'].$locale['news_0400']);
 		echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
-		echo "<div class='m-b-20 submission-guidelines'>".$locale['470']."</div>\n";
+		echo "<div class='m-b-20 submission-guidelines'>".$locale['news_0703']."</div>\n";
 		echo openform('submit_form', 'post', (fusion_get_settings("site_seo") ? FUSION_ROOT : '').BASEDIR."submit.php?stype=n", array("enctype"=>$news_settings['news_allow_submission_files'] ? true : false));
-		echo form_text('news_subject', $locale['471'], $criteriaArray['news_subject'], array("required" => true, "inline"=>true));
+		echo form_text('news_subject', $locale['news_0200'], $criteriaArray['news_subject'], array("required" => true, "inline"=>true));
 		if (multilang_table("NS")) {
 			echo form_select('news_language', $locale['global_ML100'], $criteriaArray['news_language'],
 							 array(
@@ -102,7 +102,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 							 "multiple" => true
 						 )
 		);
-		echo form_select_tree("news_cat", $locale['476'], $criteriaArray['news_cat'],
+		echo form_select_tree("news_cat", $locale['news_0201'], $criteriaArray['news_cat'],
 							  array(
 								  "width" => "250px",
 								  "inline"=>true,
@@ -140,7 +140,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 			);
 			echo form_select('news_ialign', $locale['news_0218'], $criteriaArray['news_ialign'], array("options" => $alignOptions, "inline"=>true));
 		}
-		echo form_textarea('news_news', $locale['478'], $criteriaArray['news_snippet'],
+		echo form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_snippet'],
 						   array(
 							   "required" => true,
 							   "html" => true,
@@ -148,15 +148,15 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 							   "autosize"=>fusion_get_settings("tinymce_enabled") ? false : true
 						   )
 		);
-		echo form_textarea('news_body', $locale['472'], $criteriaArray['news_body'],
+		echo form_textarea('news_body', $locale['news_0203b'], $criteriaArray['news_body'],
 						   array(
 							   "required" => $news_settings['news_extended_required'] ? true : false,
 							   "html" => true,
 							   "form_name" => "submit_form",
 							   "autosize"=>fusion_get_settings("tinymce_enabled") ? false : true)
 		);
-		echo fusion_get_settings("site_seo") ? "" : form_button('preview_news', $locale['474'], $locale['474'], array('class' => 'btn-primary m-r-10'));
-		echo form_button('submit_news', $locale['475'], $locale['475'], array('class' => 'btn-success'));
+		echo fusion_get_settings("site_seo") ? "" : form_button('preview_news', $locale['news_0240'], $locale['news_0240'], array('class' => 'btn-primary m-r-10'));
+		echo form_button('submit_news', $locale['news_0700'], $locale['news_0700'], array('class' => 'btn-success'));
 		echo closeform();
 		echo "</div>\n</div>\n";
 	}
