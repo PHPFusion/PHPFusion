@@ -22,11 +22,10 @@ include INFUSIONS."news/locale/".LOCALESET."news_admin.php";
 include LOCALE.LOCALESET."admin/settings.php";
 require_once INCLUDES."infusions_include.php";
 $news_settings = get_settings("news");
-
-add_breadcrumb(array('link'=>FUSION_SELF.$aidlink, 'title'=>$locale['news_0000']));
-
-if (isset($_POST['cancel'])) { redirect(FUSION_SELF.$aidlink); }
-
+add_breadcrumb(array('link' => FUSION_SELF.$aidlink, 'title' => $locale['news_0000']));
+if (isset($_POST['cancel'])) {
+	redirect(FUSION_SELF.$aidlink);
+}
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
 	$del_data['news_id'] = $_GET['news_id'];
 	$result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS." WHERE news_id='".$del_data['news_id']."'");
@@ -41,9 +40,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_i
 		if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
 			unlink(IMAGES_N_T.$data['news_image_t2']);
 		}
-		$result = dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='".$del_data['news_id'] ."'");
-		$result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$del_data['news_id'] ."' and comment_type='N'");
-		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$del_data['news_id'] ."' and rating_type='N'");
+		$result = dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='".$del_data['news_id']."'");
+		$result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$del_data['news_id']."' and comment_type='N'");
+		$result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$del_data['news_id']."' and rating_type='N'");
 		dbquery_insert(DB_NEWS, $del_data, 'delete');
 		addNotice('warning', $locale['news_0102']);
 		redirect(FUSION_SELF.$aidlink);
@@ -51,44 +50,30 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_i
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-
 $allowed_pages = array(
-	"news",
-	"news_category",
-	"news_form",
-	"submissions",
-	"settings"
+	"news", "news_category", "news_form", "submissions", "settings"
 );
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'news';
-
-$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id']) && isnum($_GET['news_id'])) ? true : false;
-
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['news_id']) && isnum($_GET['news_id'])) ? TRUE : FALSE;
 $master_title['title'][] = $locale['news_0000'];
 $master_title['id'][] = 'news';
 $master_title['icon'] = '';
-
 $master_title['title'][] = $edit ? $locale['news_0003'] : $locale['news_0002'];
 $master_title['id'][] = 'news_form';
 $master_title['icon'] = '';
-
 $master_title['title'][] = $locale['news_0020'];
 $master_title['id'][] = 'news_category';
 $master_title['icon'] = '';
-
 $master_title['title'][] = $locale['news_0023'];
 $master_title['id'][] = 'submissions';
 $master_title['icon'] = '';
-
 $master_title['title'][] = isset($_GET['settings']) ? $locale['news_0004'] : $locale['news_0004'];
 $master_title['id'][] = 'settings';
 $master_title['icon'] = '';
-
 $tab_active = $_GET['section'];
-
 opentable($locale['news_0001']);
 echo opentab($master_title, $tab_active, "news_admin", 1);
-
-switch($_GET['section']) {
+switch ($_GET['section']) {
 	case "news_category":
 		include "admin/news_cat.php";
 		break;
@@ -96,7 +81,7 @@ switch($_GET['section']) {
 		include "admin/news_settings.php";
 		break;
 	case "news_form":
-		add_breadcrumb(array('link'=>'', 'title'=>$edit ? $locale['news_0003'] : $locale['news_0002']));
+		add_breadcrumb(array('link' => '', 'title' => $edit ? $locale['news_0003'] : $locale['news_0002']));
 		include "admin/news.php";
 		break;
 	case "submissions":
@@ -108,9 +93,7 @@ switch($_GET['section']) {
 }
 echo closetab();
 closetable();
-
 require_once THEMES."templates/footer.php";
-
 function news_listing() {
 	global $aidlink, $locale;
 	$result2 = dbquery("
@@ -123,12 +106,12 @@ function news_listing() {
 	echo "<div class='panel panel-default'>\n";
 	echo "<div class='panel-heading clearfix'>\n";
 	echo "<div class='overflow-hide'>\n";
-	echo "<span class='display-inline-block strong'><a ".collapse_header_link('news-list', '0', true, 'm-r-10').">".$locale['news_0202']."</a></span>\n";
+	echo "<span class='display-inline-block strong'><a ".collapse_header_link('news-list', '0', TRUE, 'm-r-10').">".$locale['news_0202']."</a></span>\n";
 	echo "<span class='badge m-r-10'>".dbrows($result2)."</span>";
 	echo "<span class='text-smaller mid-opacity'>".LANGUAGE."</span>";
 	echo "</div>\n";
 	echo "</div>\n"; // end panel heading
-	echo "<div ".collapse_footer_link('news-list','0', true).">\n";
+	echo "<div ".collapse_footer_link('news-list', '0', TRUE).">\n";
 	echo "<ul class='list-group p-15'>\n";
 	if (dbrows($result2) > 0) {
 		while ($data2 = dbarray($result2)) {
@@ -213,7 +196,7 @@ function calculate_byte($total_bit) {
 	$calc_opts = array(1 => 'Bytes (bytes)', 1000 => 'KB (Kilobytes)', 1000000 => 'MB (Megabytes)');
 	foreach ($calc_opts as $byte => $val) {
 		if ($total_bit/$byte <= 999) {
-			return (int) $byte;
+			return (int)$byte;
 		}
 	}
 	return 1000000;

@@ -26,7 +26,10 @@ require_once THEMES."templates/header.php";
 require_once INCLUDES."infusions_include.php";
 $news_settings = get_settings("news");
 require_once INFUSIONS."news/templates/news.php";
-if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {	$_GET['rowstart'] = 0;	$rows = 0; }
+if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
+	$_GET['rowstart'] = 0;
+	$rows = 0;
+}
 // Predefined variables, do not edit these values
 $i = 0;
 add_to_title($locale['global_200'].$locale['global_077']);
@@ -50,7 +53,9 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		include INCLUDES."comments_include.php";
 		include INCLUDES."ratings_include.php";
 		$data = dbarray($result);
-		if ($data['news_keywords'] !=="") { set_meta("keywords", $data['news_keywords']); }
+		if ($data['news_keywords'] !== "") {
+			set_meta("keywords", $data['news_keywords']);
+		}
 		if (!isset($_POST['post_comment']) && !isset($_POST['post_rating'])) {
 			$result2 = dbquery("UPDATE ".DB_NEWS." SET news_reads=news_reads+1 WHERE news_id='".$_GET['readmore']."'");
 			$data['news_reads']++;
@@ -61,32 +66,18 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		$news_news = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news'])) : stripslashes($data['news_extended'] ? $data['news_extended'] : $data['news_news']));
 		$pagecount = count($news_news);
 		$news_info = array(
-			"news_id" => $data['news_id'],
-			"user_id" => $data['user_id'],
-			"user_name" => $data['user_name'],
-			"user_status" => $data['user_status'],
-			"user_joined" => $data['user_joined'],
-			"user_level" => $data['user_level'],
-			"user_avatar" => $data['user_avatar'],
-			"news_date" => $data['news_datestamp'],
-			"news_ialign" => $data['news_ialign'],
-			"cat_id" => $data['news_cat'],
-			"cat_name" => $data['news_cat_name'],
-			"news_image" => $data['news_image'],
-			"cat_image" => $data['news_cat_image'],
-			"news_subject" => $data['news_subject'],
-			"news_descr" => $data['news_news'],
-			'news_url' => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
-			'news_news' => $news_news[$_GET['rowstart']],
-			"news_ext" => "n",
-			"news_keywords" => $data['news_keywords'],
-			"news_reads" => $data['news_reads'],
-			"news_comments" => $data['count_comment'],
+			"news_id" => $data['news_id'], "user_id" => $data['user_id'], "user_name" => $data['user_name'],
+			"user_status" => $data['user_status'], "user_joined" => $data['user_joined'],
+			"user_level" => $data['user_level'], "user_avatar" => $data['user_avatar'],
+			"news_date" => $data['news_datestamp'], "news_ialign" => $data['news_ialign'],
+			"cat_id" => $data['news_cat'], "cat_name" => $data['news_cat_name'], "news_image" => $data['news_image'],
+			"cat_image" => $data['news_cat_image'], "news_subject" => $data['news_subject'],
+			"news_descr" => $data['news_news'], 'news_url' => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
+			'news_news' => $news_news[$_GET['rowstart']], "news_ext" => "n", "news_keywords" => $data['news_keywords'],
+			"news_reads" => $data['news_reads'], "news_comments" => $data['count_comment'],
 			'news_sum_rating' => $data['sum_rating'] ? $data['sum_rating'] : 0,
-			'news_count_votes' => $data['count_votes'],
-			"news_allow_comments" => $data['news_allow_comments'],
-			'news_allow_ratings' => $data['news_allow_ratings'],
-			"news_sticky" => $data['news_sticky']
+			'news_count_votes' => $data['count_votes'], "news_allow_comments" => $data['news_allow_comments'],
+			'news_allow_ratings' => $data['news_allow_ratings'], "news_sticky" => $data['news_sticky']
 		);
 		if (fusion_get_settings("create_og_tags")) {
 			add_to_head("<meta property='og:title' content='".$data['news_subject']."' />");
@@ -103,8 +94,14 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			add_to_head("<meta property='og:image' content='".$og_image."' />");
 		}
 		set_title($news_subject.$locale['global_200'].$locale['global_077']);
-		add_breadcrumb(array('link'=>INFUSIONS."news/news.php?cat_id=".$data['news_cat'], 'title'=>$data['news_cat_name']));
-		add_breadcrumb(array('link'=>INFUSIONS."news/news.php?readmore=".$data['news_id'], 'title'=>$data['news_subject']));
+		add_breadcrumb(array(
+						   'link' => INFUSIONS."news/news.php?cat_id=".$data['news_cat'],
+						   'title' => $data['news_cat_name']
+					   ));
+		add_breadcrumb(array(
+						   'link' => INFUSIONS."news/news.php?readmore=".$data['news_id'],
+						   'title' => $data['news_subject']
+					   ));
 		$info['news_item'] = $news_info;
 		$info['news_item']['page_count'] = $pagecount;
 	} else {
@@ -121,16 +118,20 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 	$info['news_categories'] = '';
 	/* News Category */
 	$result = dbquery("SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : '')." ORDER BY news_cat_id ASC");
-	if (dbrows($result)>0) {
+	if (dbrows($result) > 0) {
 		while ($cdata = dbarray($result)) {
-			$info['news_categories'][$cdata['news_cat_id']] = array('link'=>INFUSIONS.'news.php?cat_id='.$cdata['news_cat_id'], 'name'=>$cdata['news_cat_name']);
+			$info['news_categories'][$cdata['news_cat_id']] = array(
+				'link' => INFUSIONS.'news.php?cat_id='.$cdata['news_cat_id'], 'name' => $cdata['news_cat_name']
+			);
 		}
 		unset($cdata);
 	}
 	/* Filter Construct */
 	$filter = array('recent', 'comment', 'rating');
-	$info['allowed_filters'] = array('recent'=>$locale['global_086'], 'comment'=>$locale['global_087'], 'rating'=>$locale['global_088']);
-	foreach($info['allowed_filters'] as $type => $filter_name) {
+	$info['allowed_filters'] = array(
+		'recent' => $locale['global_086'], 'comment' => $locale['global_087'], 'rating' => $locale['global_088']
+	);
+	foreach ($info['allowed_filters'] as $type => $filter_name) {
 		$filter_link = INFUSIONS."news/news.php?".(isset($_GET['cat_id']) ? "cat_id=".$_GET['cat_id']."&amp;" : '')."type=".$type;
 		$info['news_filter'][$filter_link] = $filter_name;
 		unset($filter_link);
@@ -156,14 +157,11 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 		// Filtered by Category ID.
 		$result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."' AND" : "WHERE")." news_cat_id='".$_GET['cat_id']."'");
 		if (dbrows($result)) {
-
 			$data = dbarray($result);
 			// build categorial data.
 			$info['news_cat_id'] = $data['news_cat_id'];
 			$info['news_cat_name'] = $data['news_cat_name'];
-			$info['news_cat_image'] = $data['news_cat_image'] && file_exists(IMAGES_NC.$data['news_cat_image']) ?
-				"<img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image']."' />" :
-				"<img class='img-responsive' src='holder.js/80x80/text:".$locale['no_image']."/grey' />";
+			$info['news_cat_image'] = $data['news_cat_image'] && file_exists(IMAGES_NC.$data['news_cat_image']) ? "<img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image']."' />" : "<img class='img-responsive' src='holder.js/80x80/text:".$locale['no_image']."/grey' />";
 			$info['news_cat_language'] = $data['news_cat_language'];
 			$rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$data['news_cat_id']."' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") AND news_draft='0'");
 			if ($rows) {
@@ -183,7 +181,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				GROUP BY news_id
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$news_settings['news_pagination']);
 				$info['news_item_rows'] = $rows;
-				add_breadcrumb(array('link'=>INFUSIONS."news/news.php?cat_id=".$data['news_cat_id'], 'title'=>$data['news_cat_name']));
+				add_breadcrumb(array(
+								   'link' => INFUSIONS."news/news.php?cat_id=".$data['news_cat_id'],
+								   'title' => $data['news_cat_name']
+							   ));
 			}
 		} elseif ($_GET['cat_id'] == 0) {
 			$rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<=".time().") AND (news_end='0'||news_end>=".time().") AND news_draft='0'");
@@ -204,7 +205,10 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				GROUP BY news_id
 				ORDER BY news_sticky DESC, ".$cat_filter." LIMIT ".$_GET['rowstart'].",".$news_settings['news_pagination']);
 				$info['news_item_rows'] = $rows;
-				add_breadcrumb(array('link'=>INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'], 'title'=>$locale['global_080']));
+				add_breadcrumb(array(
+								   'link' => INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'],
+								   'title' => $locale['global_080']
+							   ));
 			}
 		} else {
 			redirect(INFUSIONS."news/news.php");
@@ -242,9 +246,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			}
 			$news_cat_image = '';
 			$news_image = '';
-
 			$news_subject = stripslashes($data['news_subject']);
-
 			// ok, lets start all over again.
 			// the full image
 			$_fullResSource = "";
@@ -268,48 +270,30 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 				}
 			}
 			$image = "<img class='img-responsive' src='".$imageSource."' alt='".$data['news_subject']."' />\n";
-
 			$news_image = "<a class='img-link' href='
-					".($news_settings['news_image_link'] == 0 ?
-					INFUSIONS."news/news.php?cat_id=".$data['news_cat']
-					:
-					INFUSIONS."news/news.php?readmore=".$data['news_id'])."
+					".($news_settings['news_image_link'] == 0 ? INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'])."
 					'>".$image."</a>\n";
-
 			$news_cat_image = "<a href='".($news_settings['news_image_link'] == 0 ? "".INFUSIONS."news/news.php?cat_id=".$data['news_cat'] : INFUSIONS."news/news.php?readmore=".$data['news_id'])."'>";
 			if ($data['news_image_t2'] && $news_settings['news_image_frontpage'] == 0) {
 				$news_cat_image .= $image."</a>";
 			} elseif ($data['news_cat_image']) {
 				$news_cat_image .= "<img src='".get_image("nc_".$data['news_cat_name'])."' alt='".$data['news_cat_name']."' class='img-responsive news-category' /></a>";
 			}
-
 			$news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['news_breaks'] == "y" ? nl2br(stripslashes($data['news_news'])) : stripslashes($data['news_news'])));
 			$news_info[$i] = array(
-				"news_id" => $data['news_id'],
-				'news_subject' => $news_subject,
+				"news_id" => $data['news_id'], 'news_subject' => $news_subject,
 				"news_url" => INFUSIONS.'news/news.php?readmore='.$data['news_id'],
 				'news_anchor' => "<a name='news_".$data['news_id']."' id='news_".$data['news_id']."'></a>",
-				'news_news' => $news_news,
-				"news_keywords" => $data['news_keywords'],
-				"user_id" => $data['user_id'],
-				"user_name" => $data['user_name'],
-				"user_status" => $data['user_status'],
-				"user_avatar" => $data['user_avatar'],
-				'user_level' => $data['user_level'],
-				"news_date" => $data['news_datestamp'],
-				"cat_id" => $data['news_cat'],
-				"cat_name" => $data['news_cat_name'],
-				"cat_image" => $news_cat_image,
-				"news_image" => $news_image,
-				'news_image_src' => $_fullResSource,
-				"news_ext" => $data['news_extended'] ? "y" : "n",
-				"news_reads" => $data['news_reads'],
-				"news_comments" => $data['count_comment'],
+				'news_news' => $news_news, "news_keywords" => $data['news_keywords'], "user_id" => $data['user_id'],
+				"user_name" => $data['user_name'], "user_status" => $data['user_status'],
+				"user_avatar" => $data['user_avatar'], 'user_level' => $data['user_level'],
+				"news_date" => $data['news_datestamp'], "cat_id" => $data['news_cat'],
+				"cat_name" => $data['news_cat_name'], "cat_image" => $news_cat_image, "news_image" => $news_image,
+				'news_image_src' => $_fullResSource, "news_ext" => $data['news_extended'] ? "y" : "n",
+				"news_reads" => $data['news_reads'], "news_comments" => $data['count_comment'],
 				'news_sum_rating' => $data['sum_rating'] ? $data['sum_rating'] : 0,
-				'news_count_votes' => $data['count_votes'],
-				"news_allow_comments" => $data['news_allow_comments'],
-				"news_allow_ratings" => $data['news_allow_ratings'],
-				"news_sticky" => $data['news_sticky']
+				'news_count_votes' => $data['count_votes'], "news_allow_comments" => $data['news_allow_comments'],
+				"news_allow_ratings" => $data['news_allow_ratings'], "news_sticky" => $data['news_sticky']
 			);
 		}
 		$info['news_items'] = $news_info;

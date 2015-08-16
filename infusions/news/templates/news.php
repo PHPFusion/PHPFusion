@@ -110,16 +110,19 @@ if (!function_exists('render_main_news')) {
 			echo "</div>\n</div>\n";
 			echo "<div class='row m-b-20 m-t-20'>\n";
 			echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
-			echo openform('viewform', 'post', FUSION_REQUEST, array('max_tokens' => 1,
-				'class' => 'pull-right display-inline-block m-l-10'));
+			echo openform('viewform', 'post', FUSION_REQUEST, array(
+				'max_tokens' => 1, 'class' => 'pull-right display-inline-block m-l-10'
+			));
 			echo "<div class='btn-group'>\n";
 			$active = isset($_COOKIE['fusion_news_view']) ? $_COOKIE['fusion_news_view'] : '';
-			echo form_button('switchview', '', '1', array('class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ",
-				'icon' => 'entypo layout',
-				'alt' => $locale['global_089b']));
-			echo form_button('switchview', '', '2', array('class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."",
-				'icon' => 'entypo menu',
-				'alt' => $locale['global_089c']));
+			echo form_button('switchview', '', '1', array(
+				'class' => "btn-sm btn-default nsv ".($active == 1 ? 'active' : '')." ", 'icon' => 'entypo layout',
+				'alt' => $locale['global_089b']
+			));
+			echo form_button('switchview', '', '2', array(
+				'class' => "btn-sm btn-default nsv ".($active == 2 ? 'active' : '')."", 'icon' => 'entypo menu',
+				'alt' => $locale['global_089c']
+			));
 			echo "</div>\n";
 			echo closeform();
 			// Filters
@@ -169,7 +172,6 @@ if (!function_exists('render_news')) {
 		global $locale, $settings, $news_settings, $aidlink;
 		$parameter = $settings['siteurl']."infusions/news/news.php?readmore=".$info['news_id'];
 		$title = $settings['sitename'].$locale['global_200'].$locale['global_077'].$locale['global_201'].$info['news_subject']."".$locale['global_200'];
-
 		if ($list_view) {
 			echo "<article class='panel panel-default'>\n";
 			echo ($info['news_sticky']) ? "<i class='pull-right entypo ialert icon-sm'></i>\n" : '';
