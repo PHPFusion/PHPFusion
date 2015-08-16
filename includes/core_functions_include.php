@@ -1033,9 +1033,9 @@ function makefileopts(array $files, $selected = "") {
 /**
  * Making Page Navigation
  * @global array $locale
- * @param int    $start       The number of the first listed item
- * @param int    $count       The number of displayed items
- * @param int    $total       The number of all items
+ * @param int    $start       The number of the first listed item - $_GET['rowstart']
+ * @param int    $count       The number of displayed items - current displayed item limit
+ * @param int    $total       The number of all items - a dbcount of total
  * @param int    $range       The number of links before and after the current page
  * @param string $link        The base url before the appended part
  * @param string $getname     the variable name in the query string which stores
@@ -1048,7 +1048,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
    In such case this function will not work properly.
    With this fix (used $settings instead fusion_get_settings) function will work.*/
-	if ($settings['bootstrap']) {
+	if (fusion_get_settings("bootstrap")) {
 		$tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
 		$tpl_currpage = "<a class='btn btn-sm btn-default active' href=''><strong>%d</strong></a>\n";
 		$tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
