@@ -23,6 +23,7 @@ $locale['blog_0402'] = "Edit Blog";
 $locale['blog_0405'] = "Blog";
 $locale['blog_0406'] = "Blog Settings";
 $locale['blog_0407'] = "Blog Categories";
+$locale['blog_0408'] = "Currently displaying %d of %d total blog entries";
 // Blog messages
 $locale['blog_0410'] = "Blog Item added";
 $locale['blog_0411'] = "Blog Item updated";
@@ -70,7 +71,7 @@ $locale['blog_0520'] = "Blog Category added";
 $locale['blog_0521'] = "Blog Category updated";
 $locale['blog_0522'] = "Blog Category cannot be deleted";
 $locale['blog_0523'] = "There are Blog items or Sub-Categories linked to this category";
-$locale['blog_052b'] = "Blog Category deleted";
+$locale['blog_0524b'] = "Blog Category deleted";
 // Blog Categories form
 $locale['blog_0530'] = "Category Name:";
 $locale['blog_0531'] = "Category Image:";
@@ -91,6 +92,11 @@ $locale['blog_0451b'] = "Delete this Blog category?";
 $locale['blog_0452'] = "%s are disabled for all items.<br />This setting will only take effect when they are enabled again.";
 $locale['blog_0456'] = 'There are no Blog in this category.';
 $locale['blog_0457'] = "Please specify keywords";
+// Filters
+$locale['blog_0458'] = "Filter by:";
+$locale['blog_0459'] = "Filter show category by";
+$locale['blog_0460'] = "All Blog Entries";
+
 //Alignment
 $locale['left'] = "Left";
 $locale['center'] = "Center";

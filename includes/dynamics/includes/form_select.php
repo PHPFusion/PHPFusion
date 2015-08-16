@@ -425,14 +425,14 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		");
 		$html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
 		$html .= $options['allowclear'] ? "<option value=''></option>" : '';
-		if ($options['no_root'] !== 1) { // api options to remove root from selector. used in items creation.
+		if ($options['no_root'] == false) { // api options to remove root from selector. used in items creation.
 			$this_select = '';
 			if ($input_value !== NULL) {
 				if ($input_value !== '') {
 					$this_select = 'selected';
 				}
 			}
-			$html .= ($options['add_parent_opts'] == 1) ? "<option value='0' ".$this_select.">$opt_pattern ".$locale['parent']."</option>\n" : "<option value='0' ".$this_select." >$opt_pattern ".$options['parent_value']."</option>\n";
+			$html .= ($options['add_parent_opts'] == true) ? "<option value='0' ".$this_select.">$opt_pattern ".$locale['parent']."</option>\n" : "<option value='0' ".$this_select." >$opt_pattern ".$options['parent_value']."</option>\n";
 		}
 		$index = dbquery_tree($db, $id_col, $cat_col, $options['query']);
 		$data = dbquery_tree_data($db, $id_col, $cat_col, $options['query']);

@@ -39,7 +39,7 @@ $inf_newtable[1] = DB_BLOG." (
 	blog_image_t1 VARCHAR(100) NOT NULL DEFAULT '',
 	blog_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
 	blog_ialign VARCHAR(15) NOT NULL DEFAULT '',
-	blog_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+	blog_cat TEXT NOT NULL,
 	blog_blog TEXT NOT NULL,
 	blog_extended TEXT NOT NULL,
 	blog_keywords VARCHAR(250) NOT NULL DEFAULT '',
