@@ -31,7 +31,8 @@
 function form_select($input_name, $label = "", $input_value, array $options = array()) {
 	global $defender, $locale;
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-	$default_options = array('options' => array(),
+	$default_options = array(
+		'options' => array(),
 		'required' => FALSE,
 		'regex' => '',
 		'input_id' => $input_name,
@@ -51,7 +52,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 		'inline' => FALSE,
 		'tip' => '',
 		'delimiter' => ',',
-		'callback_check' => '');
+		'callback_check' => ''
+	);
 	$options += $default_options;
 	if (empty($options['options'])) {
 		$options['options'] = array('0' => $locale['no_opts']);
@@ -67,6 +69,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 			$input_value = array();
 		}
 	}
+	// always trim id
+	$options['input_id'] = trim($options['input_id'], "[]");
 	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
 	$error_class = $defender->inputHasError($input_name) ? "has-error " : "";
 	$html = "<div id='".$options['input_id']."-field' class='form-group ".$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
@@ -112,7 +116,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 	}
 	// Generate Defender Tag
 	$input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
-	$defender->add_field_session(array('input_name' => $input_name,
+	$defender->add_field_session(array(
+									 'input_name' => $input_name,
 									 'title' => trim($title, '[]'),
 									 'id' => $options['input_id'],
 									 'type' => 'dropdown',
@@ -120,7 +125,9 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 									 'required' => $options['required'],
 									 'safemode' => $options['safemode'],
 									 'error_text' => $options['error_text'],
-									 'callback_check' => $options['callback_check']));
+									 'callback_check' => $options['callback_check'],
+									 'delimiter' => $options['delimiter'],
+								 ));
 	// Initialize Select2
 	// Select 2 Multiple requires hidden DOM.
 	if ($options['jsonmode'] == FALSE) {
@@ -202,7 +209,8 @@ function form_select($input_name, $label = "", $input_value, array $options = ar
 function form_user_select($input_name, $label = "", $input_value = FALSE, array $options = array()) {
 	global $locale, $defender;
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-	$default_options = array('required' => FALSE,
+	$default_options = array(
+		'required' => FALSE,
 		'regex' => '',
 		'input_id' => $input_name,
 		'placeholder' => $locale['sel_user'],
@@ -222,7 +230,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 		'tip' => '',
 		'delimiter' => ',',
 		'callback_check' => '',
-		'file' => '',);
+		'file' => '',
+	);
 	$options += $default_options;
 	if (!$options['width']) {
 		$options['width'] = $default_options['width'];
@@ -247,13 +256,15 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 	} else {
 		$encoded = json_encode(array());
 	}
-	$defender->add_field_session(array('input_name' => $input_name,
+	$defender->add_field_session(array(
+									 'input_name' => $input_name,
 									 'title' => $title,
 									 'id' => $options['input_id'],
 									 'type' => 'dropdown',
 									 'required' => $options['required'],
 									 'safemode' => $options['safemode'],
-									 'error_text' => $options['error_text']));
+									 'error_text' => $options['error_text']
+								 ));
 	add_to_jquery("
 		function avatar(item) {
 			if(!item.id) {return item.text;}
@@ -302,10 +313,12 @@ function user_search($user_id) {
 			$user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar50.png";
 			$user_name = $udata['user_name'];
 			$user_level = getuserlevel($udata['user_level']);
-			$user_opts[] = array('id' => "$user_id",
+			$user_opts[] = array(
+				'id' => "$user_id",
 				'text' => "$user_name",
 				'avatar' => "$user_avatar",
-				"level" => "$user_level");
+				"level" => "$user_level"
+			);
 		}
 		if (!isset($user_opts)) {
 			$user_opts = array();
@@ -342,7 +355,8 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		add_to_head("<link href='".DYNAMICS."assets/select2/select2.css' rel='stylesheet' />\n");
 	}
 	$title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-	$default_options = array('required' => FALSE,
+	$default_options = array(
+		'required' => FALSE,
 		'regex' => '',
 		'input_id' => $input_name,
 		'placeholder' => $locale['choose'],
@@ -369,13 +383,21 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		'hide_disabled' => FALSE,
 		'no_root' => FALSE,
 		'show_current' => FALSE,
-		'query' => '',);
+		'query' => '',
+	);
 	$options += $default_options;
+	$options['input_id'] = trim($options['input_id'], "[]");
+	if ($options['multiple']) {
+		if ($input_value) {
+			$input_value = construct_array($input_value, 0, $options['delimiter']);
+		} else {
+			$input_value = array();
+		}
+	}
 	if (!$options['width']) {
 		$options['width'] = $default_options['width'];
 	}
 	$allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true" : '';
-	$multiple = $options['multiple'] ? 'multiple' : '';
 	$disable_opts = '';
 	if ($options['disable_opts']) {
 		$disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
@@ -401,7 +423,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		$allowclear
 		});
 		");
-		$html .= "<select name='$input_name' style='".($options['width'] ? "width: ".$options['width']." " : 'min-width:250px;')."' id='".$options['input_id']."' class='".$options['class']."' ".($options['deactivate'] == 1 ? "disabled" : '')." $multiple>";
+		$html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
 		$html .= $options['allowclear'] ? "<option value=''></option>" : '';
 		if ($options['no_root'] !== 1) { // api options to remove root from selector. used in items creation.
 			$this_select = '';
@@ -443,13 +465,19 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
 		if ($options['required']) {
 			$html .= "<input class='req' id='dummy-".$options['input_id']."' type='hidden'>\n"; // for jscheck
 		}
-		$defender->add_field_session(array('input_name' => $input_name,
-										 'title' => $title,
+		$input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
+		$defender->add_field_session(array(
+										 'input_name' => $input_name,
+										 'title' => trim($title, '[]'),
 										 'id' => $options['input_id'],
 										 'type' => 'dropdown',
+										 'regex' => $options['regex'],
 										 'required' => $options['required'],
 										 'safemode' => $options['safemode'],
-										 'error_text' => $options['error_text']));
+										 'error_text' => $options['error_text'],
+										 'callback_check' => $options['callback_check'],
+										 'delimiter' => $options['delimiter'],
+									 ));
 	}
 	return $html;
 }

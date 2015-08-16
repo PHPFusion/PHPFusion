@@ -261,6 +261,24 @@ class defender {
 		$_SESSION['form_fields'][$_SERVER['PHP_SELF']][$array['input_name']] = $array;
 	}
 
+	/**
+	 * Return the current document field session or sessions
+	 * Use for debug purposes
+	 * @param string $input_name
+	 * @return string
+	 */
+	static function get_current_field_session($input_name = "") {
+		if ($input_name && isset($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name])) {
+			return $_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name];
+		} else {
+			if ($input_name) {
+				return "The session for this field is not found";
+			} else {
+				return $_SESSION['form_fields'][$_SERVER['PHP_SELF']];
+			}
+		}
+	}
+
 	// Destroys the user field session
 	public static function unset_field_session() {
 		unset($_SESSION['form_fields']);
@@ -303,7 +321,9 @@ class defender {
 			foreach ($this->field_value as $val) {
 				$vars[] = stripinput(trim(preg_replace("/ +/i", " ", censorwords($val))));
 			}
-			$value = implode('|', $vars);
+			// set options for checking on delimiter, and default is pipe (json,serialized val)
+			$delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : "|";
+			$value = implode($delimiter, $vars);
 		} else {
 			$value = stripinput(trim(preg_replace("/ +/i", " ", censorwords($this->field_value)))); // very strong sanitization.
 		}
@@ -356,7 +376,8 @@ class defender {
 			foreach ($this->field_value as $val) {
 				if (isnum($val)) $vars[] = $val; // no need for stripinput(), if ain't a number why bother stripping invalid chars...
 			}
-			$value = implode(',', $vars);
+			$delimiter = (!empty($this->field_config['delimiter'])) ? $this->field_config['delimiter'] : ",";
+			$value = implode($delimiter, $vars);
 			return $value; // empty str is returned if $vars ends up empty
 		} elseif (isnum($this->field_value)) {
 			return $this->field_value;

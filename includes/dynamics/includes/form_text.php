@@ -55,20 +55,22 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		'autocomplete_off'	=> !empty($options['autocomplete_off']) && $options['autocomplete_off'] == 1 ? 1 : 0,
 		'tip'				=> !empty($options['tip']) ? $options['tip'] : '',
 		'append_button'		=> !empty($options['append_button']) ? $options['append_button'] : '',
-		'append_value'		=> !empty($options['append_value']) ? $options['append_value'] : '<i class="entypo search"></i>',
+		'append_value'		=> !empty($options['append_value']) ? $options['append_value'] : '<i class="fa fa-search"></i>',
 		'append_form_value' => !empty($options['append_form_value']) ? $options['append_form_value'] : '',
 		'append_size'		=> !empty($options['append_size']) ? $options['append_size'] : '',
 		'append_class'		=> !empty($options['append_class']) ? $options['append_class'] : 'btn-default',
 		'append_type'		=> !empty($options['append_type']) ? $options['append_type'] : 'submit',
 		'prepend_button'	=> !empty($options['prepend_button']) ? $options['prepend_button'] : '',
-		'prepend_value'		=> !empty($options['prepend_value']) ? $options['prepend_value'] : '<i class="entypo search"></i>',
+		'prepend_value'		=> !empty($options['prepend_value']) ? $options['prepend_value'] : '<i class="fa fa-search"></i>',
 		'prepend_form_value'=> !empty($options['prepend_form_value']) ? $options['prepend_form_value'] : '',
 		'prepend_size'		=> !empty($options['prepend_size']) ? $options['prepend_size'] : '',
 		'prepend_class'		=> !empty($options['prepend_class']) ? $options['prepend_class'] : 'btn-default',
 		'prepend_type'		=> !empty($options['prepend_type']) ? $options['prepend_type'] : 'submit',
-		'error_text'		=> ''
+		'error_text'		=> '',
+		'delimiter' 		=> ',',
 	);
-
+	// always trim id
+	$options['input_id'] = trim($options['input_id'], "[]");
 	// Error messages based on settings
 	if ($options['type'] == 'password') {
 		$options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
@@ -110,7 +112,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 			'required'		=> $options['required'],
 			'safemode'		=> $options['safemode'],
 			'regex'			=> $options['regex'],
-			'callback_check'=> $options['callback_check']
+			'callback_check'=> $options['callback_check'],
+			'delimiter'		=> $options['delimiter'],
 		));
 
 	// This should affect all number inputs by type, not by ID
@@ -121,9 +124,5 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 		if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
 		});\n");
 	}
-
-	//var_dump($_SESSION['form_fields'][$_SERVER['PHP_SELF']][$input_name]);
-
 	return $html;
 }
-
