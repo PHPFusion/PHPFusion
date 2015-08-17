@@ -64,12 +64,20 @@ $locale['forum_057'] = 'Темы : ';
 $locale['forum_058'] = 'Подфорумы : ';
 $locale['forum_059'] = 'Сообщения : ';
 $locale['forum_060'] = 'Параметры удаления форума';
-$locale['forum_061'] = 'User Forum Posts Recounted';
+$locale['forum_061'] = 'Пересчёт сообщений пользователей завершён';
+
+/* Ranks Styling */
+$locale['forum_062'] = 'Изображение';
+$locale['forum_063'] = 'Текст';
+$locale['forum_064'] = 'Стиль';
 
 /* Needed in forum_functions_include.php */
 $locale['forum_070'] = "Сообщений удалено: ";
 $locale['forum_071'] = "Вложений удалено: ";
 $locale['forum_072'] = "Тем удалено: ";
+
+$locale['forum_080'] = "Тем на страницу: ";
+$locale['forum_081'] = "Сообщений на страницу: ";
 
 
 /* Permissions */
@@ -80,7 +88,7 @@ $locale['forum_desc_003'] = "Выбор модераторов форума";
 $locale['forum_desc_004'] = "Ответы форума";
 /* Navs */
 $locale['forum_root'] = "Начало форума";
-$locale['forum_points'] = "Forum Points";
+$locale['forum_points'] = "Пункты Форума";
 /* Type */
 $locale['forum_opts_001'] = "Категория";
 $locale['forum_opts_002'] = "Форум";
