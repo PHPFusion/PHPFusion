@@ -542,7 +542,7 @@ if (isset($_POST['uninstall'])) {
 		"('BB', 'bbcodes.gif', '".$locale['setup_3004']."', 'bbcodes.php', '3')",
 		"('B', 'blacklist.gif', '".$locale['setup_3005']."', 'blacklist.php', '2')",
 		"('C', '', '".$locale['setup_3006']."', 'reserved', '2')",
-		"('CP', 'c-pages.gif', '".$locale['setup_3007']."', 'custom_pages.php', '1')",
+		"('CP', 'c-pages.png', '".$locale['setup_3007']."', 'custom_pages.php', '1')",
 		"('DB', 'db_backup.gif', '".$locale['setup_3008']."', 'db_backup.php', '3')",
 		"('ERRO', 'errors.png', '".$locale['setup_3048']."', 'errors.php', '3')",
 		"('IM', 'images.gif', '".$locale['setup_3013']."', 'images.php', '1')",
