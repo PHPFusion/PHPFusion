@@ -1,4 +1,5 @@
 /* Standard Stock News */
+
 .news-snippet {
 	position: relative;
 	z-index: 1;
@@ -11,29 +12,42 @@
 	color: #FFF !important;
 	text-decoration: none !important;
 }
+
 .carousel-indicators > li {
 	border: 1px solid #EEE;
 }
+
+.news-text {
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
 .news-footer > a {
 	color: rgb(153, 153, 153);
 	font-weight: 600;
 }
+
 .news-footer > a:hover, .news-footer > a:focus, .news-footer > a:active {
 	color: rgb(21, 133, 212) !important;
 }
+
 .news-img-header {
 	max-height: 150px;
 }
+
 .news-img-header > a > img.img-responsive {
 	height: 260px;
 	min-width: 100%;
 }
+
 .news-avatar {
 	background-color: #FFF; position: relative; margin-bottom: 20px; margin-top: -15px; padding-top: 5px; padding-right: 5px; z-index: 100;
 }
+
 .news-profile-link {
 	min-height: 70px;
 }
+
 #newscat > ul > li > a {
 	width: auto !important;
 	margin: 5px;
@@ -42,12 +56,14 @@
 .comments-item {
 	text-decoration: none !important;
 }
+
 .news-img-center {
 	display: block;
 	margin-top: 5px;
 	margin-left: auto;
 	margin-right: auto;
 }
+
 .panel-footer {
 	position: relative;
 	bottom: 0px;
@@ -57,20 +73,30 @@
 	width: 100%;
 	margin-top: 0;
 }
+
 #news-carousel .carousel-inner {
 	max-height: 200px;
 }
+
 #news-carousel .item {
 	max-height: 200px;
 }
-#news-carousel .carousel-caption { position: absolute; top: 30px; padding: 0; }
+
+#news-carousel .carousel-caption { 
+position: absolute; 
+top: 30px; 
+padding: 0; 
+}
+
 #news-carousel .carousel-caption > div {
 	min-height: 80px;
 	width: 100%;
 }
+
 #news-carousel a {
 	color: #FFF !important;
 }
+
 #news-carousel a:hover, #news-carousel a:focus {
 	color: #FFF !important;
 	text-decoration: underline !important;
