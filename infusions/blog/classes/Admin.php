@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: classes/Admin.php
 | Author: Frederick Mc Chan (Hien)
-| Dev Scope: To merge Categories and Blog into a single interface.
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

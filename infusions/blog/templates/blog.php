@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: templates/blog.php
 | Author: Frederick MC Chan (Hien)
-| Version : 9.00
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -47,8 +46,9 @@ if (!function_exists('display_blog_item')) {
 			echo "<a class='btn btn-default btn-sm' href='".$admin_actions['delete']."'>".$locale['delete']."</a>\n";
 			echo "</div>\n";
 		}
-		echo "<h2 class='strong m-t-0 m-b-20'>".$data['blog_subject']."</h2>";
-		echo "<div class='m-b-20'>".$data['blog_post_author']." ".$data['blog_post_time']." ".$data['blog_post_cat']."</div>\n";
+		echo "<h2 class='strong m-t-0 m-b-0'>".$data['blog_subject']."</h2>";
+		echo "<div class='blog-category'>".$data['blog_category_link']."</div>\n";
+		echo "<div class='m-t-20 m-b-20'>".$data['blog_post_author']." ".$data['blog_post_time']."</div>\n";
 		echo "<div class='clearfix m-b-20'>\n";
 		if ($data['blog_image']) {
 			echo "<div class='m-10 m-l-0 ".$data['blog_ialign']."'>".$data['blog_thumb_2']."</div>";
@@ -92,8 +92,9 @@ if (!function_exists('display_blog_index')) {
 							</div>
 							<div class='col-xs-12 col-sm-8'>
 								<h2 class='strong m-b-20 m-t-0'><a class='text-dark' href='".$data['blog_link']."'>".$data['blog_subject']."</a></h2>
-								<i class='fa fa-clock-o m-r-5'></i> ".$locale['global_049']." ".timer($data['blog_datestamp'])." ".$locale['in']." ".$data['blog_category_link']."
-								".($data['blog_cat_image'] ? "<div class='blog-image m-10 ".$data['blog_ialign']."'>".$data['blog_cat_image']."</div>" : '')."
+								<div class='display-block'>".$data['blog_category_link']."</div>
+								<div class='display-block'><i class='fa fa-clock-o m-r-5'></i> ".$locale['global_049']." ".timer($data['blog_datestamp'])."</div>
+								".($data['blog_image'] ? "<div class='blog-image m-10 ".$data['blog_ialign']."'>".$data['blog_image']."</div>" : '')."
 								<div class='m-t-20'>".$data['blog_blog']."<br/>".$data['blog_readmore_link']."</div>
 							</div>
 						</div>

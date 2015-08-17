@@ -576,7 +576,7 @@ function dbquery_insert($table, $inputdata, $mode, array $options = array()) {
  * 			SELECT * FROM ".DB." WHERE ".in_group(language, 'BL')."
  */
 function in_group($column_name, $value, $delim = '.') {
-	return "CONCAT($column_name, '$delim') like '%.$value.%' ";
+	return "CONCAT($column_name, '$delim') like '%$value.%' ";
 	/*if ($delim == '.') {
 		return "$column_name REGEXP('^\\{$value}$|\\\.{$value}\\\.|\\\.{$value}$')";
 	} else {

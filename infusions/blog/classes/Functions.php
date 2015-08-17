@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: classes/Functions.php
 | Author: Frederick MC CHan (Hien)
-| Version: 9.00
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

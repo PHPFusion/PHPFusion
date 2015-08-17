@@ -5,7 +5,7 @@
 | https://www.php-fusion.co.uk/
 +--------------------------------------------------------+
 | Filename: admin/blog.php
-| Author: PHP-Fusion Development Team
+| Author: Frederick MC Chan (Hien)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 $language_opts = fusion_get_enabled_languages();
 $formaction = FUSION_REQUEST;
+
 $data = array(
 	'blog_id' => 0,
 	'blog_draft' => 0,
@@ -37,6 +38,7 @@ $data = array(
 	'blog_image' => '',
 	'blog_ialign' => 'pull-left',
 );
+
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 	$data['blog_breaks'] = 'n';
@@ -45,18 +47,23 @@ if (fusion_get_settings("tinymce_enabled")) {
 	$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
 	$data['blog_breaks'] = 'y';
 }
+
 if (isset($_POST['save'])) {
+	$blog_blog = isset($_POST['blog_blog']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_blog'])) : "";
+	$blog_extended = isset($_POST['blog_extended']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_extended'])) : "";
 	$data = array(
 		'blog_id' => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
 		'blog_subject' => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
-		'blog_cat' => form_sanitizer($_POST['blog_cat'], 0, 'blog_cat'),
+		'blog_cat' => isset($_POST['blog_cat']) ? form_sanitizer($_POST['blog_cat'], 0, 'blog_cat') : "",
 		'blog_name' => $userdata['user_id'],
-		'blog_blog' => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_blog'])),
-		'blog_extended' => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_extended'])),
+		'blog_blog' => form_sanitizer($blog_blog, '', 'blog_blog'),
+		'blog_extended' => form_sanitizer($blog_blog, '', 'blog_extended'),
 		'blog_keywords' => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
+		'blog_ialign' => "pull-left",
+		'blog_image' => "",
 		'blog_datestamp' => form_sanitizer($_POST['blog_datestamp'], time(), 'blog_datestamp'),
-		'blog_start' => form_sanitizer($_POST['blog_start'], 0, 'blog_start'),
-		'blog_end' => form_sanitizer($_POST['blog_end'], 0, 'blog_end'),
+		'blog_start' => form_sanitizer($_POST['blog_start'], "", 'blog_start'),
+		'blog_end' => form_sanitizer($_POST['blog_end'], "", 'blog_end'),
 		'blog_visibility' => form_sanitizer($_POST['blog_visibility'], 0, 'blog_visibility'),
 		'blog_draft' => isset($_POST['blog_draft']) ? "1" : "0",
 		'blog_sticky' => isset($_POST['blog_sticky']) ? "1" : "0",
@@ -118,6 +125,7 @@ if (isset($_POST['save'])) {
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
+
 if (isset($_POST['preview'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
@@ -298,6 +306,7 @@ if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
 		'news-img-center' => $locale['center'],
 		'pull-right' => $locale['right']
 	);
+	print_p($data['blog_ialign']);
 	echo form_select('blog_ialign', $locale['blog_0442'], $data['blog_ialign'], array("options" => $alignOptions));
 }
 closeside();
