@@ -306,7 +306,6 @@ if ($data['blog_image'] != "" && $data['blog_image_t1'] != "") {
 		'news-img-center' => $locale['center'],
 		'pull-right' => $locale['right']
 	);
-	print_p($data['blog_ialign']);
 	echo form_select('blog_ialign', $locale['blog_0442'], $data['blog_ialign'], array("options" => $alignOptions));
 }
 closeside();

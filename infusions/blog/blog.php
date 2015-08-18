@@ -103,8 +103,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			unset($item['user_admin_algo']);
 			unset($item['user_admin_salt']);
 
-			$item['blog_blog'] = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($item['blog_breaks'] ? nl2br(stripslashes($item['blog_blog'])) : stripslashes($item['blog_blog'])));
-			$item['blog_extended'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] ? nl2br(stripslashes($item['blog_extended'])) : stripslashes($item['blog_extended']));
+			$item['blog_blog'] = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($item['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($item['blog_blog']))) : html_entity_decode(stripslashes($item['blog_blog']))));
+			$item['blog_extended'] = preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($item['blog_extended']))) : html_entity_decode(stripslashes($item['blog_extended'])));
 			$item['blog_pagecount'] = 1;
 			if (is_array($item['blog_extended'])) {
 				$item['blog_pagecount'] = count($item['blog_extended']);
@@ -269,7 +269,7 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 							   'link' => INFUSIONS."blog/blog.php?cat_id=".$_GET['cat_id'],
 							   'title' => $locale['global_080']
 						   ));
-			add_to_title($locale['global_080']);
+			add_to_title($locale['global_201'].$locale['global_080']);
 			add_to_meta($locale['global_080']);
 			$info['blog_title'] = $locale['global_080'];
 		}
@@ -382,8 +382,8 @@ if (isset($_GET['readmore']) && isnum($_GET['readmore'])) {
 			$cdata = array(
 				'blog_ialign' => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
 				'blog_anchor' => "<a name='blog_".$data['blog_id']."' id='blog_".$data['blog_id']."'></a>",
-				'blog_blog' => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] ? nl2br(stripslashes($data['blog_blog'])) : stripslashes($data['blog_blog']))),
-				'blog_extended' => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] ? nl2br(stripslashes($data['blog_extended'])) : nl2br(stripslashes($data['blog_extended'])))),
+				'blog_blog' => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($data['blog_blog']))) : stripslashes(html_entity_decode($data['blog_blog'])))),
+				'blog_extended' => preg_replace("/<!?--\s*pagebreak\s*-->/i", "", ($data['blog_breaks'] ? nl2br(html_entity_decode(stripslashes($data['blog_extended']))) : nl2br(html_entity_decode(stripslashes($data['blog_extended']))))),
 				'blog_link' => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
 				'blog_category_link' => "",
 				'blog_readmore_link' => "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".$locale['blog_1006']."</a>\n",
