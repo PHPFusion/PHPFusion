@@ -129,17 +129,20 @@ if (isset($_POST['save'])) {
 if (isset($_POST['preview'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
-		$blog_blog = phpentities(stripslash($_POST['blog_blog']));
-		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['blog_blog']));
+		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['blog_blog']));
+		$blog_blog = html_entity_decode($_POST['blog_blog']);
 	}
+
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
-		$blog_extended = phpentities(stripslash($_POST['blog_extended']));
-		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['blog_extended']));
+		$blog_extended = html_entity_decode(stripslashes($_POST['blog_extended']));
+		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, $_POST['blog_extended']);
 	}
+
 	$data = array(
+		"blog_id" => form_sanitizer($_POST['blog_id'], 0, "blog_id"),
 		"blog_subject" => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
-		"blog_cat" => isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : 0,
+		"blog_cat" => isset($_POST['blog_cat']) && isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : 0,
 		"blog_language" => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
 		"blog_blog" => form_sanitizer($blog_blog, "", "blog_blog"),
 		"blog_extended" => form_sanitizer($blog_extended, "", "blog_extended"),
@@ -157,20 +160,22 @@ if (isset($_POST['preview'])) {
 		"blog_allow_ratings" => isset($_POST['blog_allow_ratings']) ? TRUE : FALSE,
 		"blog_datestamp" => isset($_POST['blog_datestamp']) ? $_POST['blog_datestamp'] : "",
 	);
+
 	$data['blog_breaks'] = "";
 	if (isset($_POST['blog_breaks'])) {
 		$data['blog_breaks'] = TRUE;
-		$data['blog_blog'] = nl2br($callback_data['blog_blog']);
+		$data['blog_blog'] = nl2br(html_entity_decode($data['blog_blog']));
 		if ($data['blog_extended']) {
-			$data['blog_extended'] = nl2br($callback_data['blog_extended']);
+			$data['blog_extended'] = nl2br(html_entity_decode($data['blog_extended']));
 		}
 	}
+
 	if (defender::safe()) {
 		echo openmodal('blog_preview', $locale['blog_0141']);
-		echo $data['blog_blog'];
+		echo html_entity_decode($data['blog_blog']);
 		echo "<hr/>\n";
 		if (isset($data['blog_extended'])) {
-			echo $data['blog_extended'];
+			echo html_entity_decode($data['blog_extended']);
 		}
 		echo closemodal();
 	}
