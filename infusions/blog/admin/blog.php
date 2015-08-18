@@ -49,8 +49,23 @@ if (fusion_get_settings("tinymce_enabled")) {
 }
 
 if (isset($_POST['save'])) {
-	$blog_blog = isset($_POST['blog_blog']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_blog'])) : "";
-	$blog_extended = isset($_POST['blog_extended']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_extended'])) : "";
+
+	//$blog_blog = isset($_POST['blog_blog']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_blog'])) : "";
+	//$blog_extended = isset($_POST['blog_extended']) ? addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['blog_extended'])) : "";
+
+	$blog_blog = "";
+	if ($_POST['blog_blog']) {
+		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
+		$blog_blog = html_entity_decode($blog_blog);
+	}
+
+	$blog_extended = "";
+	if ($_POST['blog_extended']) {
+		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
+		$blog_extended = html_entity_decode($blog_extended);
+	}
+
+
 	$data = array(
 		'blog_id' => form_sanitizer($_POST['blog_id'], 0, 'blog_id'),
 		'blog_subject' => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
@@ -129,14 +144,14 @@ if (isset($_POST['save'])) {
 if (isset($_POST['preview'])) {
 	$blog_blog = "";
 	if ($_POST['blog_blog']) {
-		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['blog_blog']));
-		$blog_blog = html_entity_decode($_POST['blog_blog']);
+		$blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
+		$blog_blog = html_entity_decode($blog_blog);
 	}
 
 	$blog_extended = "";
 	if ($_POST['blog_extended']) {
-		$blog_extended = html_entity_decode(stripslashes($_POST['blog_extended']));
-		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, $_POST['blog_extended']);
+		$blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
+		$blog_extended = html_entity_decode($blog_extended);
 	}
 
 	$data = array(

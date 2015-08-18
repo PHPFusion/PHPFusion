@@ -16,12 +16,26 @@ if (fusion_get_settings("tinymce_enabled")) {
 	$data['news_breaks'] = 'y';
 }
 if (isset($_POST['save'])) {
+
+	$news_news = "";
+	if ($_POST['news_news']) {
+		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_blog']));
+		$news_news = html_entity_decode($news_news);
+	}
+
+	$news_extended = "";
+	if ($_POST['news_extended']) {
+		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
+		$news_extended = html_entity_decode($news_extended);
+	}
+
 	$data = array(
 		'news_id' => form_sanitizer($_POST['news_id'], 0, 'news_id'),
 		'news_subject' => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
-		'news_cat' => form_sanitizer($_POST['news_cat'], 0, 'news_cat'), 'news_name' => $userdata['user_id'],
-		'news_news' => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])),
-		'news_extended' => addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])),
+		'news_cat' => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
+		'news_name' => $userdata['user_id'],
+		'news_news' => form_sanitizer($news_news, "", "news_news"), //addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])),
+		'news_extended' => form_sanitizer($news_extended, "", "news_extended"), //addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])),
 		'news_keywords' => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
 		'news_datestamp' => form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp'),
 		'news_start' => form_sanitizer($_POST['news_start'], 0, 'news_start'),
@@ -96,16 +110,20 @@ if (dbrows($result)) {
 	}
 }
 if (isset($_POST['preview'])) {
+
+
 	$news_news = "";
 	if ($_POST['news_news']) {
-		$news_news = phpentities(stripslash($_POST['news_news']));
-		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['news_news']));
+		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_blog']));
+		$news_news = html_entity_decode($news_news);
 	}
+
 	$news_extended = "";
 	if ($_POST['news_extended']) {
-		$news_extended = phpentities(stripslash($_POST['news_extended']));
-		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslash($_POST['news_extended']));
+		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
+		$news_extended = html_entity_decode($news_extended);
 	}
+
 	$data = array(
 		"news_subject" => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
 		"news_cat" => isnum($_POST['news_cat']) ? $_POST['news_cat'] : 0,
@@ -136,10 +154,10 @@ if (isset($_POST['preview'])) {
 	}
 	if (defender::safe()) {
 		echo openmodal('news_preview', $locale['news_0141']);
-		echo $data['news_news'];
+		echo html_entity_decode($data['news_news']);
 		echo "<hr/>\n";
 		if (isset($data['news_extended'])) {
-			echo $data['news_extended'];
+			echo html_entity_decode($data['news_extended']);
 		}
 		echo closemodal();
 	}
