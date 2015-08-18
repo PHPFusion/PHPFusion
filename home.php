@@ -71,7 +71,7 @@ $configs[DB_ARTICLES] = array(
 	'norecord' => $locale['home_0051'],
 	'blockTitle' => $locale['home_0001'],
 	),
-	'infSettings' => get_settings("article"), // article dont' have settings?
+	'infSettings' => get_settings("article"),
 	'categoryLinkPattern' => INFUSIONS."articles/articles.php?cat_id={cat_id}",
 	'contentLinkPattern' => INFUSIONS."articles/articles.php?article_id={id}",
 );
@@ -150,8 +150,6 @@ foreach ($configs as $table => $config) {
 	}
 
 	$contents[$table]['colwidth'] = floor(12 / $items_count);
-
-	// there are no news_allow-comments and news_allow_ratings in infusion_settings for news ana blog?
 	$data = array(); $count = 1;
 	while ($row = dbarray($result)) {
 		$keys = array_keys($row);
