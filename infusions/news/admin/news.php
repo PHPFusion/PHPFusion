@@ -3,10 +3,24 @@
 $language_opts = fusion_get_enabled_languages();
 $formaction = FUSION_REQUEST;
 $data = array(
-	'news_id' => 0, 'news_draft' => 0, 'news_sticky' => 0, 'news_news' => '', 'news_datestamp' => time(),
-	'news_extended' => '', 'news_keywords' => '', 'news_breaks' => 'n', 'news_allow_comments' => 1,
-	'news_allow_ratings' => 1, 'news_language' => LANGUAGE, 'news_visibility' => 0, 'news_subject' => '',
-	'news_start' => '', 'news_end' => '', 'news_cat' => 0, 'news_image' => '', 'news_ialign' => 'pull-left',
+	'news_id' => 0,
+	'news_draft' => 0,
+	'news_sticky' => 0,
+	'news_news' => '',
+	'news_datestamp' => time(),
+	'news_extended' => '',
+	'news_keywords' => '',
+	'news_breaks' => 'n',
+	'news_allow_comments' => 1,
+	'news_allow_ratings' => 1,
+	'news_language' => LANGUAGE,
+	'news_visibility' => 0,
+	'news_subject' => '',
+	'news_start' => '',
+	'news_end' => '',
+	'news_cat' => 0,
+	'news_image' => '',
+	'news_ialign' => 'pull-left',
 );
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
@@ -16,26 +30,25 @@ if (fusion_get_settings("tinymce_enabled")) {
 	$data['news_breaks'] = 'y';
 }
 if (isset($_POST['save'])) {
-
 	$news_news = "";
 	if ($_POST['news_news']) {
-		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_blog']));
+		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_news']));
 		$news_news = html_entity_decode($news_news);
 	}
-
 	$news_extended = "";
 	if ($_POST['news_extended']) {
 		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
 		$news_extended = html_entity_decode($news_extended);
 	}
-
 	$data = array(
 		'news_id' => form_sanitizer($_POST['news_id'], 0, 'news_id'),
 		'news_subject' => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
 		'news_cat' => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
 		'news_name' => $userdata['user_id'],
-		'news_news' => form_sanitizer($news_news, "", "news_news"), //addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])),
-		'news_extended' => form_sanitizer($news_extended, "", "news_extended"), //addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])),
+		'news_news' => form_sanitizer($news_news, "", "news_news"),
+		//addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_news'])),
+		'news_extended' => form_sanitizer($news_extended, "", "news_extended"),
+		//addslash(preg_replace("(^<p>\s</p>$)", "", $_POST['news_extended'])),
 		'news_keywords' => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
 		'news_datestamp' => form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp'),
 		'news_start' => form_sanitizer($_POST['news_start'], 0, 'news_start'),
@@ -45,7 +58,11 @@ if (isset($_POST['save'])) {
 		'news_sticky' => isset($_POST['news_sticky']) ? "1" : "0",
 		'news_allow_comments' => isset($_POST['news_allow_comments']) ? "1" : "0",
 		'news_allow_ratings' => isset($_POST['news_allow_ratings']) ? "1" : "0",
-		'news_language' => form_sanitizer($_POST['news_language'], '', 'news_language')
+		'news_language' => form_sanitizer($_POST['news_language'], '', 'news_language'),
+		'news_image' => "",
+		'news_ialign' => "",
+		'news_image_t1' => "",
+		'news_iamge_t2' => "",
 	);
 	if (isset($_FILES['news_image'])) { // when files is uploaded.
 		$upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
@@ -110,21 +127,18 @@ if (dbrows($result)) {
 	}
 }
 if (isset($_POST['preview'])) {
-
-
 	$news_news = "";
 	if ($_POST['news_news']) {
-		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_blog']));
-		$news_news = html_entity_decode($news_news);
+		$news_news = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_news']));
+		$news_news = html_entity_decode(stripslashes($news_news));
 	}
-
 	$news_extended = "";
 	if ($_POST['news_extended']) {
 		$news_extended = str_replace("src='".str_replace("../", "", IMAGES_N), "src='".IMAGES_N, stripslashes($_POST['news_extended']));
-		$news_extended = html_entity_decode($news_extended);
+		$news_extended = html_entity_decode(stripslashes($news_extended));
 	}
-
 	$data = array(
+		"news_id" => form_sanitizer($_POST['news_id'], 0, 'news_id'),
 		"news_subject" => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
 		"news_cat" => isnum($_POST['news_cat']) ? $_POST['news_cat'] : 0,
 		"news_language" => form_sanitizer($_POST['news_language'], '', 'news_language'),
@@ -147,15 +161,14 @@ if (isset($_POST['preview'])) {
 	$data['news_breaks'] = "";
 	if (isset($_POST['news_breaks'])) {
 		$data['news_breaks'] = TRUE;
-		$data['news_news'] = nl2br($callback_data['news_news']);
+		$data['news_news'] = nl2br($news_news);
 		if ($data['news_extended']) {
-			$data['news_extended'] = nl2br($callback_data['news_extended']);
+			$data['news_extended'] = nl2br($news_extended);
 		}
 	}
 	if (defender::safe()) {
 		echo openmodal('news_preview', $locale['news_0141']);
 		echo html_entity_decode($data['news_news']);
-		echo "<hr/>\n";
 		if (isset($data['news_extended'])) {
 			echo html_entity_decode($data['news_extended']);
 		}
@@ -168,13 +181,18 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
 echo form_hidden('news_id', "", $data['news_id']);
 echo form_text('news_subject', $locale['news_0200'], $data['news_subject'], array(
-	'required' => 1, 'max_length' => 200, 'error_text' => $locale['news_0250']
+	'required' => 1,
+	'max_length' => 200,
+	'error_text' => $locale['news_0250']
 ));
-// move keywords here because it's required
 echo form_select('news_keywords', $locale['news_0205'], $data['news_keywords'], array(
-									"max_length" => 320, "placeholder" => $locale['news_0205a'], "width" => "100%",
-									"error_text" => $locale['news_0255'], "tags" => TRUE, "multiple" => TRUE
-								));
+	"max_length" => 320,
+	"placeholder" => $locale['news_0205a'],
+	"width" => "100%",
+	"error_text" => $locale['news_0255'],
+	"tags" => TRUE,
+	"multiple" => TRUE
+));
 echo "<div class='pull-left m-r-10 display-inline-block'>\n";
 echo form_datepicker('news_start', $locale['news_0206'], $data['news_start'], array('placeholder' => $locale['news_0208']));
 echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
@@ -183,15 +201,22 @@ echo "</div>\n";
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 openside('');
 echo form_select_tree("news_cat", $locale['news_0201'], $data['news_cat'], array(
-									"width" => "100%", "inline" => TRUE, "parent_value" => $locale['news_0202'],
-									"query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
-								), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
+	"width" => "100%",
+	"inline" => TRUE,
+	"parent_value" => $locale['news_0202'],
+	"query" => (multilang_table("NS") ? "WHERE news_cat_language='".LANGUAGE."'" : "")
+), DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent");
 echo form_select('news_visibility', $locale['news_0209'], $data['news_visibility'], array(
-	'options' => fusion_get_groups(), 'placeholder' => $locale['choose'], 'width' => '100%', "inline" => TRUE,
+	'options' => fusion_get_groups(),
+	'placeholder' => $locale['choose'],
+	'width' => '100%',
+	"inline" => TRUE,
 ));
 if (multilang_table("NS")) {
 	echo form_select('news_language', $locale['global_ML100'], $data['news_language'], array(
-		'options' => fusion_get_enabled_languages(), 'placeholder' => $locale['choose'], 'width' => '100%',
+		'options' => fusion_get_enabled_languages(),
+		'placeholder' => $locale['choose'],
+		'width' => '100%',
 		"inline" => TRUE,
 	));
 } else {
@@ -199,12 +224,17 @@ if (multilang_table("NS")) {
 }
 echo form_button('cancel', $locale['cancel'], $locale['cancel'], array('class' => 'btn-default m-r-10'));
 echo form_button('save', $locale['news_0241'], $locale['news_0241'], array(
-	'class' => 'btn-success', 'icon' => 'fa fa-square-check-o'
+	'class' => 'btn-success',
+	'icon' => 'fa fa-square-check-o'
 ));
 closeside();
 echo "</div>\n</div>\n";
 $snippetSettings = array(
-	"required" => TRUE, "preview" => TRUE, "html" => TRUE, "autosize" => TRUE, "placeholder" => $locale['news_0203a'],
+	"required" => TRUE,
+	"preview" => TRUE,
+	"html" => TRUE,
+	"autosize" => TRUE,
+	"placeholder" => $locale['news_0203a'],
 	"form_name" => "inputform"
 );
 if (fusion_get_settings("tinymce_enabled")) {
@@ -214,7 +244,10 @@ echo form_textarea('news_news', $locale['news_0203'], $data['news_news'], $snipp
 $extendedSettings = array();
 if (!fusion_get_settings("tinymce_enabled")) {
 	$extendedSettings = array(
-		"preview" => TRUE, "html" => TRUE, "autosize" => TRUE, "placeholder" => $locale['news_0203b'],
+		"preview" => TRUE,
+		"html" => TRUE,
+		"autosize" => TRUE,
+		"placeholder" => $locale['news_0203b'],
 		"form_name" => "inputform"
 	);
 }
@@ -231,10 +264,13 @@ if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
 	echo "</div>\n";
 	echo "<div class='col-xs-12 col-sm-6'>\n";
 	$alignOptions = array(
-		'pull-left' => $locale['left'], 'news-img-center' => $locale['center'], 'pull-right' => $locale['right']
+		'pull-left' => $locale['left'],
+		'news-img-center' => $locale['center'],
+		'pull-right' => $locale['right']
 	);
 	echo form_select('news_ialign', $locale['news_0218'], $data['news_ialign'], array(
-		"options" => $alignOptions, "inline" => FALSE
+		"options" => $alignOptions,
+		"inline" => FALSE
 	));
 	echo "</div>\n</div>\n";
 	echo "<input type='hidden' name='news_image' value='".$data['news_image']."' />\n";
@@ -242,19 +278,28 @@ if ($data['news_image'] != "" && $data['news_image_t1'] != "") {
 	echo "<input type='hidden' name='news_image_t2' value='".$data['news_image_t2']."' />\n";
 } else {
 	$file_input_options = array(
-		'upload_path' => IMAGES_N, 'max_width' => $news_settings['news_photo_max_w'],
-		'max_height' => $news_settings['news_photo_max_h'], 'max_byte' => $news_settings['news_photo_max_b'],
+		'upload_path' => IMAGES_N,
+		'max_width' => $news_settings['news_photo_max_w'],
+		'max_height' => $news_settings['news_photo_max_h'],
+		'max_byte' => $news_settings['news_photo_max_b'],
 		// set thumbnail
-		'thumbnail' => 1, 'thumbnail_w' => $news_settings['news_thumb_w'],
-		'thumbnail_h' => $news_settings['news_thumb_h'], 'thumbnail_folder' => 'thumbs', 'delete_original' => 0,
+		'thumbnail' => 1,
+		'thumbnail_w' => $news_settings['news_thumb_w'],
+		'thumbnail_h' => $news_settings['news_thumb_h'],
+		'thumbnail_folder' => 'thumbs',
+		'delete_original' => 0,
 		// set thumbnail 2 settings
-		'thumbnail2' => 1, 'thumbnail2_w' => $news_settings['news_photo_w'],
-		'thumbnail2_h' => $news_settings['news_photo_h'], 'type' => 'image'
+		'thumbnail2' => 1,
+		'thumbnail2_w' => $news_settings['news_photo_w'],
+		'thumbnail2_h' => $news_settings['news_photo_h'],
+		'type' => 'image'
 	);
 	echo form_fileinput("news_image", $locale['news_0216'], "", $file_input_options);
 	echo "<div class='small m-b-10'>".sprintf($locale['news_0217'], parsebytesize($news_settings['news_photo_max_b']))."</div>\n";
 	$alignOptions = array(
-		'pull-left' => $locale['left'], 'news-img-center' => $locale['center'], 'pull-right' => $locale['right']
+		'pull-left' => $locale['left'],
+		'news-img-center' => $locale['center'],
+		'pull-right' => $locale['right']
 	);
 	echo form_select('news_ialign', $locale['news_0218'], $data['news_ialign'], array("options" => $alignOptions));
 }
@@ -286,7 +331,8 @@ closeside();
 echo "</div>\n</div>\n";
 echo form_button('preview', $locale['news_0240'], $locale['news_0240'], array('class' => 'btn-default m-r-10'));
 echo form_button('save', $locale['news_0241'], $locale['news_0241'], array(
-	'class' => 'btn-success', 'icon' => 'fa fa-square-check-o'
+	'class' => 'btn-success',
+	'icon' => 'fa fa-square-check-o'
 ));
 echo closeform();
 echo "</div>\n";
