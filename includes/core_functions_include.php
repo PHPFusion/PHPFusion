@@ -793,9 +793,13 @@ function pageAccess($rights, $debug = FALSE) {
 	if (!isset($_GET['aid'])) {
 		$error[] = 'Aid link error';
 	}
-	if (isset($_GET['aid']) && $_GET['aid'] != iAUTH) {
-		$error[] = 'Aidlink mismatch. '.iAUTH.' != '.$_GET['aid']."<br/>";
-		$error[] .= USER_IP;
+	if (iADMIN && !empty($_GET['aid'])) {
+		if ($_GET['aid'] != iAUTH) {
+			$error[] = 'Aidlink mismatch. '.iAUTH.' != '.$_GET['aid']."<br/>";
+			$error[] .= USER_IP;
+		}
+	} else {
+		$error[] = "You are logged out while accessing admin panel";
 	}
 	if (!checkrights($rights)) {
 		$error[] = 'Checkrights Error';
