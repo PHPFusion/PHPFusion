@@ -23,9 +23,10 @@ include INFUSIONS."articles/locale/".LOCALESET."articles_admin.php";
 require_once INCLUDES."infusions_include.php";
 add_breadcrumb(array('link' => INFUSIONS.'articles/articles_admin.php'.$aidlink, 'title' => $locale['articles_0001']));
 $article_settings = get_settings("article");
+
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 	$del_data['article_id'] = $_GET['article_id'];
-	$result = dbquery("SELECT article_id, article_subject FROM ".DB_BLOG." WHERE article_id='".$del_data['article_id']."'");
+	$result = dbquery("SELECT article_id, article_subject FROM ".DB_ARTICLES." WHERE article_id='".$del_data['article_id']."'");
 	if (dbrows($result)) {
 		$data = dbarray($result);
 		$result = dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_id='".$data['article_id']."'");
@@ -171,18 +172,20 @@ function article_listing() {
 	if ($rows > 0) {
 		while ($data2 = dbarray($result)) {
 			echo "<li class='list-group-item'>\n";
-			echo "<div><span class='strong text-dark'>".$data2['article_subject']."</span><br/>\n";
-			echo "<div class='m-b-10 text-lighter'><strong>".$locale['articles_0340'].":</strong>\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data2['article_cat_id']."&amp;section=article_category'>";
+			echo "<div class='clearfix'>\n";
+			echo "<div class='m-b-10 pull-right'><strong>".$locale['articles_0340'].":</strong>\n";
+			echo "<a class='display-inline-block badge' style='width:auto;' href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;cat_id=".$data2['article_cat_id']."&amp;section=article_category'>";
 			echo $data2['article_cat_name'];
 			echo "</a>";
 			echo "</div>\n";
+			echo "<span class='strong text-dark'>".$data2['article_subject']."</span>\n";
 			echo "</div>\n";
-			$articleText = strip_tags(html_entity_decode($data2['article_snippet']));
+			$articleText = strip_tags(html_entity_decode(stripslashes($data2['article_snippet'])));
 			echo fusion_first_words($articleText, '50');
 			echo "<div class='block m-t-10'>
 			<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=article_form&amp;article_id=".$data2['article_id']."'>".$locale['edit']."</a> -\n";
-			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=article_form&amp;article_id=".$data2['article_id']."' onclick=\"return confirm('".$locale['articles_0351']."');\">".$locale['delete']."</a>\n";
+			echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=article&amp;article_id=".$data2['article_id']."'
+			onclick=\"return confirm('".$locale['articles_0251']."');\">".$locale['delete']."</a>\n";
 			echo "</div>\n";
 			echo "</li>\n";
 		}

@@ -17,7 +17,6 @@ $data = array(
 	"article_allow_comments" => TRUE,
 	"article_allow_ratings" => TRUE,
 );
-
 if (fusion_get_settings("tinymce_enabled")) {
 	echo "<script language='javascript' type='text/javascript'>advanced();</script>\n";
 	$data['article_breaks'] = 'n';
@@ -25,26 +24,24 @@ if (fusion_get_settings("tinymce_enabled")) {
 	$fusion_mce = array('preview' => 1, 'html' => 1, 'autosize' => 1, 'form_name' => 'inputform');
 	$data['article_breaks'] = 'y';
 }
-
 if (isset($_POST['save'])) {
-
 	$article_snippet = "";
 	if ($_POST['article_snippet']) {
 		$article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_snippet']));
 		$article_snippet = html_entity_decode($article_snippet);
 	}
-
 	$article_article = "";
 	if ($_POST['article_article']) {
 		$article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_article']));
 		$article_article = html_entity_decode($article_article);
 	}
-
 	$data = array(
 		"article_id" => form_sanitizer($_POST['article_id'], 0, "article_id"),
+		"article_cat" => form_sanitizer($_POST['article_cat'], 0, "article_cat"),
 		"article_subject" => form_sanitizer($_POST['article_subject'], "", "article_subject"),
 		"article_snippet" => form_sanitizer($article_snippet, "", "article_snippet"),
 		"article_article" => form_sanitizer($article_article, "", "article_article"),
+		"article_language" => form_sanitizer($_POST['article_language'], "", "article_language"),
 		"article_keywords" => form_sanitizer($_POST['article_keywords'], "", "article_keywords"),
 		"article_visibility" => form_sanitizer($_POST['article_visibility'], "", "article_visibility"),
 		"article_draft" => isset($_POST['article_draft']) ? "1" : "0",
@@ -60,29 +57,25 @@ if (isset($_POST['save'])) {
 		if (isset($_POST['article_id']) && dbcount("(article_id)", DB_ARTICLES, "article_id='".intval($data['article_id'])."'")) {
 			dbquery_insert(DB_ARTICLES, $data, "update");
 			addNotice("success", $locale['articles_0101']);
-			redirect(clean_request("", array("aid"), true));
+			redirect(FUSION_SELF.$aidlink);
 		} else {
 			dbquery_insert(DB_ARTICLES, $data, "save");
 			addNotice("success", $locale['articles_0100']);
-			redirect(clean_request("", array("aid"), true));
+			redirect(FUSION_SELF.$aidlink);
 		}
 	}
 }
-
 if (isset($_POST['preview'])) {
-
 	$article_snippet = "";
 	if ($_POST['article_snippet']) {
 		$article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_snippet']));
 		$article_snippet = html_entity_decode($article_snippet);
 	}
-
 	$article_article = "";
 	if ($_POST['article_article']) {
 		$article_article = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, stripslashes($_POST['article_article']));
 		$article_article = html_entity_decode($article_article);
 	}
-
 	$data = array(
 		"article_cat" => form_sanitizer($_POST['article_cat'], 0, "article_cat"),
 		"article_subject" => form_sanitizer($_POST['article_subject'], "", "article_subject"),
@@ -90,12 +83,11 @@ if (isset($_POST['preview'])) {
 		"article_article" => form_sanitizer($article_article, "", "article_article"),
 		"article_keywords" => form_sanitizer($_POST['article_keywords'], "", "article_keywords"),
 		"article_visibility" => form_sanitizer($_POST['article_visibility'], "", "article_visibility"),
-		"article_draft" => isset($_POST['article_draft']) ? true : false,
-		"article_breaks" => isset($_POST['article_breaks']) ? true : false,
-		"article_allow_comments" => isset($_POST['article_allow_comments']) ? true : false,
-		"article_allow_ratings" => isset($_POST['article_allow_ratings']) ? true : false,
+		"article_draft" => isset($_POST['article_draft']) ? TRUE : FALSE,
+		"article_breaks" => isset($_POST['article_breaks']) ? TRUE : FALSE,
+		"article_allow_comments" => isset($_POST['article_allow_comments']) ? TRUE : FALSE,
+		"article_allow_ratings" => isset($_POST['article_allow_ratings']) ? TRUE : FALSE,
 	);
-
 	$bodypreview = html_entity_decode(stripslashes($data['article_snippet']));
 	$body2preview = html_entity_decode(stripslashes($data['article_article']));
 	if (isset($_POST['article_breaks'])) {
@@ -110,9 +102,7 @@ if (isset($_POST['preview'])) {
 		echo closemodal();
 	}
 }
-
-if ((isset($_GET['action']) && $_GET['action'] == "edit")
-	&& (isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
+if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['article_id']) && isnum($_POST['article_id'])) || (isset($_GET['article_id']) && isnum($_GET['article_id']))) {
 	$id = "";
 	if (isset($_POST['article_id']) && isnum($_POST['article_id'])) {
 		$id = $_POST['article_id'];
@@ -120,7 +110,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit")
 		$id = $_GET['article_id'];
 	}
 	$result = dbquery("SELECT * FROM ".DB_ARTICLES." WHERE article_id='".intval($id)."'");
-	if (dbrows($result)>0) {
+	if (dbrows($result) > 0) {
 		$data = dbarray($result);
 		$data['article_snippet'] = phpentities(stripslashes($data['article_snippet']));
 		$data['article_article'] = phpentities(stripslashes($data['article_article']));
@@ -128,12 +118,11 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit")
 		redirect(FUSION_SELF.$aidlink);
 	}
 }
-
-echo openform('input_form', 'post', FUSION_REQUEST, array("class"=>"m-t-20"));
+echo openform('input_form', 'post', FUSION_REQUEST, array("class" => "m-t-20"));
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 echo form_hidden("article_id", "", $data['article_id']);
-echo form_text("article_subject", $locale['articles_0200'], $data['article_subject'], array('required' => true));
+echo form_text("article_subject", $locale['articles_0200'], $data['article_subject'], array('required' => TRUE));
 echo form_select("article_keywords", $locale['articles_0204'], $data['article_keywords'], array(
 	'max_length' => 320,
 	'width' => '100%',
@@ -141,18 +130,16 @@ echo form_select("article_keywords", $locale['articles_0204'], $data['article_ke
 	'tags' => 1,
 	'multiple' => 1
 ));
-
 openside("");
 echo "<label><input type='checkbox' name='article_draft' value='yes' ".($data['article_draft'] ? "checked='checked'" : "")." /> ".$locale['articles_0205']."</label><br />\n";
-if (fusion_get_settings("tinymce_enabled") == false) {
+if (fusion_get_settings("tinymce_enabled") == FALSE) {
 	echo "<label><input type='checkbox' name='article_breaks' value='yes' ".($data['article_breaks'] ? "checked='checked'" : "")."  /> ".$locale['articles_0206']."</label><br />\n";
 }
 closeside();
-
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 echo form_select_tree("article_cat", $locale['articles_0201'], $data['article_cat'], array(
-	"no_root" => true,
+	"no_root" => TRUE,
 	"width" => "100%",
 	"query" => (multilang_table("AR") ? "WHERE article_cat_language='".LANGUAGE."'" : "")
 ), DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent");
@@ -178,22 +165,20 @@ echo "<label><input type='checkbox' name='article_allow_ratings' value='yes' ".(
 closeside();
 echo "</div>\n";
 echo "</div>\n";
-
 $snippet_settings = array(
-	"autosize" => true,
-	"html" => true,
-	"preview" => true,
+	"autosize" => TRUE,
+	"html" => TRUE,
+	"preview" => TRUE,
 	"form_name" => "input_form",
-	"required" => true,
+	"required" => TRUE,
 );
-if (fusion_get_settings("tinymce_enabled") == true) {
+if (fusion_get_settings("tinymce_enabled") == TRUE) {
 	$snippet_settings = array(
-		"required" => true,
+		"required" => TRUE,
 	);
 }
 echo form_textarea('article_snippet', $locale['articles_0202'], $data['article_snippet'], $snippet_settings);
 echo form_textarea("article_article", $locale['articles_0203'], $data['article_article'], $snippet_settings);
-
 echo form_button('preview', $locale['articles_0240'], $locale['articles_0240'], array('class' => 'btn-default m-r-10'));
 echo form_button('save', $locale['articles_0241'], $locale['articles_0241'], array('class' => 'btn-primary'));
 echo closeform();

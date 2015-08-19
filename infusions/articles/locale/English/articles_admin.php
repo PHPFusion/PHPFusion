@@ -103,7 +103,6 @@ $locale['articles_0342'] = "No Article Categories defined";
 $locale['articles_0343'] = "No Article defined";
 // Delete Article category
 $locale['articles_0350'] = "Delete this article category?";
-$locale['articles_0351'] = "Delete this article?";
 // Error Messages
 $locale['articles_0351'] = "Please enter a category name.";
 $locale['articles_0352'] = "This category already exists.";

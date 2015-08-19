@@ -96,11 +96,14 @@ if (isset($_GET['article_id']) && isnum($_GET['article_id'])) {
 /* Main Index View */
 elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	// category query
-	$result = dbquery("SELECT ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, COUNT(a.article_cat) AS article_count FROM ".DB_ARTICLES." a
-		LEFT JOIN ".DB_ARTICLE_CATS." ac ON a.article_cat=ac.article_cat_id
+	$result = dbquery("SELECT
+		ac.article_cat_id, ac.article_cat_name, ac.article_cat_description, COUNT(a.article_cat) 'article_count'
+		FROM ".DB_ARTICLE_CATS." ac
+		LEFT JOIN ".DB_ARTICLES." a on a.article_cat=ac.article_cat_id
 		".(multilang_table("AR") ? "WHERE ac.article_cat_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('a.article_visibility')."
 		GROUP BY ac.article_cat_id
-		ORDER BY ac.article_cat_name");
+		ORDER BY ac.article_cat_name
+		");
 	$info['articles_rows'] = dbrows($result);
 	if ($info['articles_rows']>0) {
 		while ($data = dbarray($result)){
@@ -110,9 +113,9 @@ elseif (!isset($_GET['cat_id']) || !isnum($_GET['cat_id'])) {
 	}
 	render_articles_main($info);
 } else {
-
 	// View articles in a category
 	$result = dbquery("SELECT article_cat_name, article_cat_sorting FROM ".DB_ARTICLE_CATS." ".(multilang_table("AR") ?  "WHERE article_cat_language='".LANGUAGE."' AND" : "WHERE")." article_cat_id='".$_GET['cat_id']."'");
+
 	if (dbrows($result) != 0) {
 		$cdata = dbarray($result);
 		set_title($cdata['article_cat_name'].$locale['global_200'].$locale['400']);

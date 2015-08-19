@@ -21,7 +21,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
 	$result = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$_GET['cat_id']."'") || dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent='".$_GET['cat_id']."'");
 	if (!empty($result)) {
 		addNotice("danger", $locale['articles_0152']."<br />\n<span class='small'>".$locale['articles_0153']."</span>");
-		redirect(clean_request("", array("section", "aid"), true));
+		redirect(clean_request("cat_view=1", array("section", "aid"), true));
 	} else {
 		$result = dbquery("DELETE FROM ".DB_ARTICLE_CATS." WHERE article_cat_id='".$_GET['cat_id']."'");
 		addNotice("success",  $locale['articles_0154']);
